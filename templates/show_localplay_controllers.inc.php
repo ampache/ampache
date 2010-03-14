@@ -19,9 +19,9 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-$web_path = Config::get('web_path'); 
+$web_path = Config::get('web_path');
 ?>
-<!-- Plugin we've found --> 
+<!-- Plugin we've found -->
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
   <col id="col_name" />
@@ -35,19 +35,19 @@ $web_path = Config::get('web_path');
 	<th class="cel_version"><?php echo _('Version'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
-<?php 
-foreach ($controllers as $controller) { 
-	$localplay = new Localplay($controller); 
-	if (!$localplay->player_loaded()) { continue; } 
-	$localplay->format(); 
-	if (Localplay::is_enabled($controller)) { 
-		$action 	= 'confirm_uninstall_localplay'; 
-		$action_txt	= _('Disable'); 
-	} 
-	else { 
+<?php
+foreach ($controllers as $controller) {
+	$localplay = new Localplay($controller);
+	if (!$localplay->player_loaded()) { continue; }
+	$localplay->format();
+	if (Localplay::is_enabled($controller)) {
+		$action 	= 'confirm_uninstall_localplay';
+		$action_txt	= _('Disable');
+	}
+	else {
 		$action = 'install_localplay';
 		$action_txt	= _('Activate');
-	} 
+	}
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td class="cel_name"><?php echo scrub_out($localplay->f_name); ?></td>

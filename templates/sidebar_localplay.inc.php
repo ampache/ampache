@@ -25,8 +25,8 @@
 <?php if ($server_allow = Config::get('allow_localplay_playback') AND $controller = Config::get('localplay_controller') AND $access_check = Access::check('localplay','5')) { ?>
 <?php
 	// Little bit of work to be done here
-	$localplay = new Localplay(Config::get('localplay_controller')); 
-	$current_instance = $localplay->current_instance(); 
+	$localplay = new Localplay(Config::get('localplay_controller'));
+	$current_instance = $localplay->current_instance();
 	$class = $current_instance ? '' : ' class="active_instance"';
 ?>
 <?php if (Access::check('localplay','25')) { ?>
@@ -43,15 +43,15 @@
   <li><h4><?php echo _('Active Instance'); ?></h4>
     <ul class="sb3" id="sb_localplay_instances">
 	<li id="sb_localplay_instances_none"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=0',_('None'),'localplay_instance_none');  ?></li>
-	<?php 
+	<?php
 		// Requires a little work.. :(
-		$instances = $localplay->get_instances(); 
-		foreach ($instances as $uid=>$name) { 
-			$name = scrub_out($name); 
+		$instances = $localplay->get_instances();
+		foreach ($instances as $uid=>$name) {
+			$name = scrub_out($name);
 			$class = '';
-			if ($uid == $current_instance) { 
-				$class = ' class="active_instance"'; 
-			} 
+			if ($uid == $current_instance) {
+				$class = ' class="active_instance"';
+			}
 	?>
 	<li id="sb_localplay_instances_<?php echo $uid; ?>"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=' . $uid,$name,'localplay_instance_' . $uid); ?></li>
 	<?php } ?>

@@ -100,12 +100,12 @@
 <?php show_box_bottom(); ?>
 <div id="browse">
 <?php
-	if (is_array($object_ids)) { 
-		Browse::reset_filters(); 
+	if (is_array($object_ids)) {
+		Browse::reset_filters();
 		Browse::set_type('song');
-		Browse::save_objects($object_ids); 
-		Browse::show_objects(); 
+		Browse::save_objects($object_ids);
+		Browse::show_objects();
 		echo Ajax::observe('window','load',Ajax::action('?action=refresh_rightbar','playlist_refresh_load'));
-	}  
-?>	
+	}
+?>
 </div>

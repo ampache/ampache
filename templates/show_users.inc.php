@@ -48,9 +48,9 @@ $web_path = Config::get('web_path');
   <th class="cel_online"><?php echo _('On-line'); ?></th>
 </tr>
 <?php
-foreach ($object_ids as $user_id) { 
-	$client = new User($user_id); 
-	$client->format(); 
+foreach ($object_ids as $user_id) {
+	$client = new User($user_id);
+	$client->format();
         $last_seen 	= $client->last_seen ? date("m\/d\/Y - H:i",$client->last_seen) : _('Never');
         $create_date	= $client->create_date ? date("m\/d\/Y - H:i",$client->create_date) : _('Unknown');
 ?>

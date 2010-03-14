@@ -21,8 +21,8 @@
 */
 
 // First let's setup some vars we're going to use a lot
-$web_path = Config::get('web_path'); 
-$ajax_url = Config::get('ajax_url'); 
+$web_path = Config::get('web_path');
+$ajax_url = Config::get('ajax_url');
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
@@ -54,14 +54,14 @@ $ajax_url = Config::get('ajax_url');
 <?php } ?>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
-<?php 
-	foreach ($object_ids as $object) { 
-		$song = new Song($object['object_id']); 
-		$song->format(); 
+<?php
+	foreach ($object_ids as $object) {
+		$song = new Song($object['object_id']);
+		$song->format();
 		$playlist_track = $object['track'];
 ?>
 <tr class="<?php echo flip_class(); ?>" id="track_<?php echo $object['track_id']; ?>">
-	<?php require Config::get('prefix') . '/templates/show_playlist_song_row.inc.php'; ?> 
+	<?php require Config::get('prefix') . '/templates/show_playlist_song_row.inc.php'; ?>
 </tr>
 <?php } ?>
 <tr class="th-bottom">

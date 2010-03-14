@@ -1,9 +1,9 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 	define ( 'NS_MMD_1', "http://musicbrainz.org/ns/mmd-1.0#" );
-	
+
 	require_once( 'xml/xmlParser.php' );
-	
+
 	require_once( 'mbUtil.php' );
 	require_once( 'mbRelation.php' );
 	require_once( 'mbEntity.php' );
@@ -39,21 +39,21 @@
 			  $this->ws = new mbWebService();
 			  $this->ownWs = true;
 			}
-			
+
 			$this->clientId = $clientId;
 		}
 
 		function getUserByName( $name ) {
 			$metadata = $this->getFromWebService( "user", "", null, mbUserFilter().name($name) );
 			$list = $metadata->getUserList(true);
-			
+
 			if ( count($list) > 0 ) {
 				return $list[0];
 			}
-			
+
 			throw mbResponseError("response didn't contain user data");
 		}
-		
+
 		function getArtists( mbArtistFilter $artist_filters ) {
 			$metadata = $this->getFromWebService( "artist", "", null, $artist_filters );
 			return $metadata->getArtistResults2(true);
@@ -63,12 +63,12 @@
 			$metadata = $this->getFromWebService( "release", "", null, $release_filters );
 			return $metadata->getReleaseResults2(true);
 		}
-		
+
 		function getTracks( mbTrackFilter $track_filters ) {
 			$metadata = $this->getFromWebService( "track", "", null, $track_filters );
 			return $metadata->getTrackResults2(true);
 		}
-		
+
 		function getArtistById( $aID, mbArtistIncludes $artist_includes ) {
 			try {
 				$id = extractUuid($aID);
@@ -106,7 +106,7 @@
 			$includeList = $includes ? $includes->createIncludeTags() : null;
 			$filterList  = $filters  ? $filters->createParameters()  : null;
 			$content = $this->ws->get( $entity, $id, $includeList, $filterList );
-			
+
 			try {
 				$parser = new mbXmlParser();
 				$parsed_content = $parser->parse($content);

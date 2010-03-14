@@ -22,22 +22,22 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface','100')) { 
-	access_denied(); 
+if (!Access::check('interface','100')) {
+	access_denied();
 	exit;
 }
 
-show_header(); 
+show_header();
 
 /* Switch on Action */
 switch ($_REQUEST['action']) {
 	case 'find_duplicates':
-		$duplicates = Catalog::get_duplicate_songs($_REQUEST['search_type']); 
-		require_once Config::get('prefix') . '/templates/show_duplicate.inc.php'; 
-		require_once Config::get('prefix') . '/templates/show_duplicates.inc.php'; 	
+		$duplicates = Catalog::get_duplicate_songs($_REQUEST['search_type']);
+		require_once Config::get('prefix') . '/templates/show_duplicate.inc.php';
+		require_once Config::get('prefix') . '/templates/show_duplicates.inc.php';
 	break;
 	default:
-		require_once Config::get('prefix') . '/templates/show_duplicate.inc.php'; 
+		require_once Config::get('prefix') . '/templates/show_duplicate.inc.php';
 	break;
 } // end switch on action
 

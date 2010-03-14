@@ -16,7 +16,7 @@
 
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. 
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
@@ -44,16 +44,16 @@ class Artist extends database_object {
 	public function __construct($id='') {
 
 		/* If they failed to pass in an id, just run for it */
-		if (!$id) { return false; } 	
+		if (!$id) { return false; }
 
 		/* Get the information from the db */
 		$info = $this->get_info($id);
-			
-		foreach ($info as $key=>$value) { 
-			$this->$key = $value; 
+
+		foreach ($info as $key=>$value) {
+			$this->$key = $value;
 		} // foreach info
 
-		return true; 
+		return true;
 
 	} //constructor
 
@@ -62,15 +62,15 @@ class Artist extends database_object {
 	 * This is used by the metadata class specifically but fills out a Artist object
 	 * based on a key'd array, it sets $_fake to true
 	 */
-	public static function construct_from_array($data) { 
+	public static function construct_from_array($data) {
 
-		$artist = new Artist(0); 
-		foreach ($data as $key=>$value) { 
-			$artist->$key = $value; 
-		} 
+		$artist = new Artist(0);
+		foreach ($data as $key=>$value) {
+			$artist->$key = $value;
+		}
 
 		//Ack that this is not a real object from the DB
-		$artist->_fake = true; 
+		$artist->_fake = true;
 
 		return $artist;
 
@@ -88,18 +88,18 @@ class Artist extends database_object {
 		$db_results = Dba::read($sql);
 
 	  	while ($row = Dba::fetch_assoc($db_results)) {
-	  		parent::add_to_cache('artist',$row['id'],$row); 
+	  		parent::add_to_cache('artist',$row['id'],$row);
 		}
 
 		// If we need to also pull the extra information, this is normally only used when we are doing the human display
-		if ($extra) { 
+		if ($extra) {
 			$sql = "SELECT `song`.`artist`, COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " .
 			"WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
 			$db_results = Dba::read($sql);
 
-			while ($row = Dba::fetch_assoc($db_results)) { 
-				parent::add_to_cache('artist_extra',$row['artist'],$row); 
-			} 
+			while ($row = Dba::fetch_assoc($db_results)) {
+				parent::add_to_cache('artist_extra',$row['artist'],$row);
+			}
 
 		} // end if extra
 
@@ -111,51 +111,51 @@ class Artist extends database_object {
 	 * get_from_name
 	 * This gets an artist object based on the artist name
 	 */
-	public static function get_from_name($name) { 
+	public static function get_from_name($name) {
 
-		$name = Dba::escape($name); 
-		$sql = "SELECT `id` FROM `artist` WHERE `name`='$name'"; 
-		$db_results = Dba::write($sql); 
+		$name = Dba::escape($name);
+		$sql = "SELECT `id` FROM `artist` WHERE `name`='$name'";
+		$db_results = Dba::write($sql);
 
-		$row = Dba::fetch_assoc($db_results); 
+		$row = Dba::fetch_assoc($db_results);
 
-		$object = new Artist($row['id']); 
+		$object = new Artist($row['id']);
 
-		return $object; 
+		return $object;
 
-	} // get_from_name 
+	} // get_from_name
 
 	/**
 	 * get_albums
 	 * gets the album ids that this artist is a part
 	 * of
 	 */
-	public function get_albums() { 
+	public function get_albums() {
 
 		$results = array();
 
-		$sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` " . 
+		$sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` " .
 			"WHERE `song`.`artist`='$this->id' GROUP BY `album`.`id` ORDER BY `album`.`name`,`album`.`disk`,`album`.`year`";
 		$db_results = Dba::read($sql);
 
-		while ($r = Dba::fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) {
 			$results[] = $r['id'];
 		}
 
 		return $results;
-		
+
 	} // get_albums
 
-	/** 
+	/**
 	 * get_songs
 	 * gets the songs for this artist
 	 */
-	public function get_songs() { 
-	
+	public function get_songs() {
+
 		$sql = "SELECT `song`.`id` FROM `song` WHERE `song`.`artist`='" . Dba::escape($this->id) . "' ORDER BY album, track";
 		$db_results = Dba::read($sql);
 
-		while ($r = Dba::fetch_assoc($db_results)) { 
+		while ($r = Dba::fetch_assoc($db_results)) {
 			$results[] = $r['id'];
 		}
 
@@ -186,27 +186,27 @@ class Artist extends database_object {
 	 * _get_extra info
 	 * This returns the extra information for the artist, this means totals etc
 	 */
-	private function _get_extra_info() { 
+	private function _get_extra_info() {
 
 		// Try to find it in the cache and save ourselves the trouble
-		if (parent::is_cached('artist_extra',$this->id)) { 
-			$row = parent::get_from_cache('artist_extra',$this->id); 
-		} 
-		else { 
-			$uid = Dba::escape($this->id); 
-			$sql = "SELECT `song`.`artist`,COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " . 
+		if (parent::is_cached('artist_extra',$this->id)) {
+			$row = parent::get_from_cache('artist_extra',$this->id);
+		}
+		else {
+			$uid = Dba::escape($this->id);
+			$sql = "SELECT `song`.`artist`,COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " .
 				"WHERE `song`.`artist`='$uid' GROUP BY `song`.`artist`";
 			$db_results = Dba::read($sql);
-			$row = Dba::fetch_assoc($db_results); 
-			parent::add_to_cache('artist_extra',$row['artist'],$row); 
-		} 
-		
+			$row = Dba::fetch_assoc($db_results);
+			parent::add_to_cache('artist_extra',$row['artist'],$row);
+		}
+
 		/* Set Object Vars */
 		$this->songs = $row['song_count'];
 		$this->albums = $row['album_count'];
-		$this->time = $row['time']; 
+		$this->time = $row['time'];
 
-		return $row; 
+		return $row;
 
 	} // _get_extra_info
 
@@ -222,30 +222,30 @@ class Artist extends database_object {
 		/* Combine prefix and name, trim then add ... if needed */
 		$name = truncate_with_ellipsis(trim($this->prefix . " " . $this->name),Config::get('ellipse_threshold_artist'));
 		$this->f_name = $name;
-		$this->f_full_name = trim($this->prefix . " " . $this->name); 
+		$this->f_full_name = trim($this->prefix . " " . $this->name);
 
 		// If this is a fake object, we're done here
-		if ($this->_fake) { return true; } 
+		if ($this->_fake) { return true; }
 
 		$this->f_name_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->full_name . "\">" . $name . "</a>";
-		$this->f_link = Config::get('web_path') . '/artists.php?action=show&amp;artist=' . $this->id; 
+		$this->f_link = Config::get('web_path') . '/artists.php?action=show&amp;artist=' . $this->id;
 
-		// Get the counts 
-		$extra_info = $this->_get_extra_info(); 
+		// Get the counts
+		$extra_info = $this->_get_extra_info();
 
 		//Format the new time thingy that we just got
-		$min = sprintf("%02d",(floor($extra_info['time']/60)%60)); 
-		
-		$sec = sprintf("%02d",($extra_info['time']%60)); 
+		$min = sprintf("%02d",(floor($extra_info['time']/60)%60));
+
+		$sec = sprintf("%02d",($extra_info['time']%60));
 		$hours = floor($extra_info['time']/3600);
 
-		$this->f_time = ltrim($hours . ':' . $min . ':' . $sec,'0:'); 
+		$this->f_time = ltrim($hours . ':' . $min . ':' . $sec,'0:');
 
-		$this->tags = Tag::get_top_tags('artist',$this->id); 
+		$this->tags = Tag::get_top_tags('artist',$this->id);
 
-		$this->f_tags = Tag::get_display($this->tags,$this->id,'artist'); 
+		$this->f_tags = Tag::get_display($this->tags,$this->id,'artist');
 
-		return true; 
+		return true;
 
 	} // format
 
@@ -254,30 +254,30 @@ class Artist extends database_object {
 	 * This takes a key'd array of data and updates the current artist
 	 * it will flag songs as neeed
 	 */
-	public function update($data) { 
+	public function update($data) {
 
 		// Save our current ID
-		$current_id = $this->id; 
+		$current_id = $this->id;
 
-		$artist_id = Catalog::check_artist($data['name'], $this->mbid); 
+		$artist_id = Catalog::check_artist($data['name'], $this->mbid);
 
 		// If it's changed we need to update
-		if ($artist_id != $this->id) { 
-			$songs = $this->get_songs(); 
-			foreach ($songs as $song_id) { 
-				Song::update_artist($artist_id,$song_id); 
-			} 
-			$updated = 1; 
-			$current_id = $artist_id; 
-			Catalog::clean_artists(); 
+		if ($artist_id != $this->id) {
+			$songs = $this->get_songs();
+			foreach ($songs as $song_id) {
+				Song::update_artist($artist_id,$song_id);
+			}
+			$updated = 1;
+			$current_id = $artist_id;
+			Catalog::clean_artists();
 		} // end if it changed
 
-		if ($updated) { 
-			foreach ($songs as $song_id) { 
-				Flag::add($song_id,'song','retag','Interface Artist Update'); 
-				Song::update_utime($song_id); 
-			} 
-			Catalog::clean_stats(); 
+		if ($updated) {
+			foreach ($songs as $song_id) {
+				Flag::add($song_id,'song','retag','Interface Artist Update');
+				Song::update_utime($song_id);
+			}
+			Catalog::clean_stats();
 		} // if updated
 
 		return $current_id;
@@ -293,8 +293,8 @@ class Artist extends database_object {
 
 		debug_event("lyrics", "Initialized Function", "5");
 		$sql = "SELECT `song_data`.`lyrics` FROM `song_data` WHERE `song_id`='" . Dba::escape($song_id) . "'";
-		$db_results = Dba::read($sql); 
-		$results = Dba::fetch_assoc($db_results); 
+		$db_results = Dba::read($sql);
+		$results = Dba::fetch_assoc($db_results);
 
 		// Get Lyrics From id3tag (Lyrics3)
 		$rs = Dba::read("SELECT `song`.`file` FROM `song` WHERE `id`='" . Dba::escape($song_id) . "'");

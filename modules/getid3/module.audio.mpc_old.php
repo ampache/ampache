@@ -22,17 +22,17 @@
 //
 // $Id: module.audio.mpc_old.php,v 1.2 2006/11/02 10:48:01 ah Exp $
 
-        
-        
+
+
 class getid3_mpc_old extends getid3_handler
 {
 
     public function Analyze() {
 
         $getid3 = $this->getid3;
-        
+
         // http://www.uni-jena.de/~pfk/mpp/sv8/header.html
-        
+
         $getid3->info['mpc']['header'] = array ();
         $info_mpc_header = &$getid3->info['mpc']['header'];
 
@@ -46,10 +46,10 @@ class getid3_mpc_old extends getid3_handler
 
         $info_mpc_header['size'] = 8;
         $getid3->info['avdataoffset'] += $info_mpc_header['size'];
-        
+
         $mpc_header_data = fread($getid3->fp, $info_mpc_header['size']);
-            
-        
+
+
         // Most of this code adapted from Jurgen Faul's MPEGplus source code - thanks Jurgen! :)
         $header_dword[0] = getid3_lib::LittleEndian2Int(substr($mpc_header_data, 0, 4));
         $header_dword[1] = getid3_lib::LittleEndian2Int(substr($mpc_header_data, 4, 4));
@@ -69,7 +69,7 @@ class getid3_mpc_old extends getid3_handler
         $info_mpc_header['intensity_stereo']     = (bool)(($header_dword[0] & 0x00400000) >> 22);
         $info_mpc_header['mid-side_stereo']      = (bool)(($header_dword[0] & 0x00200000) >> 21);
         $info_mpc_header['stream_major_version'] =        ($header_dword[0] & 0x001FF800) >> 11;
-        $info_mpc_header['stream_minor_version'] = 0; 
+        $info_mpc_header['stream_minor_version'] = 0;
         $info_mpc_header['max_band']             =        ($header_dword[0] & 0x000007C0) >>  6;  // related to lowpass frequency, not sure how it translates exactly
         $info_mpc_header['block_size']           =        ($header_dword[0] & 0x0000003F);
 
@@ -98,10 +98,10 @@ class getid3_mpc_old extends getid3_handler
         $getid3->info['mpc']['bitrate']   = ($getid3->info['avdataend'] - $getid3->info['avdataoffset']) * 8 * 44100 / $info_mpc_header['frame_count'] / 1152;
         $getid3->info['audio']['bitrate'] = $getid3->info['mpc']['bitrate'];
         $getid3->info['audio']['encoder'] = 'SV'.$info_mpc_header['stream_major_version'];
-        
+
         return true;
     }
-    
+
 }
 
 

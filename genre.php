@@ -28,19 +28,19 @@ require_once 'lib/init.php';
 show_header();
 
 /**
- * switch on action 
+ * switch on action
  */
-switch($_REQUEST['action']) { 
+switch($_REQUEST['action']) {
 	case 'show_songs':
 		$genre = new Genre($_REQUEST['genre_id']);
 		show_genre($_REQUEST['genre_id']);
 		$object_ids = $genre->get_songs();
-		Browse::reset_filters(); 
-		Browse::set_type('song'); 
-		Browse::set_sort('name','ASC'); 
-		Browse::set_static_content(1); 
+		Browse::reset_filters();
+		Browse::set_type('song');
+		Browse::set_sort('name','ASC');
+		Browse::set_static_content(1);
 		Browse::save_objects($object_ids);
-		Browse::show_objects($object_ids); 
+		Browse::show_objects($object_ids);
 	break;
 	case 'show_genre':
 	default:
@@ -48,23 +48,23 @@ switch($_REQUEST['action']) {
 		$genre = new Genre($_REQUEST['genre_id']);
 		show_genre($_REQUEST['genre_id']);
 		$object_ids = $genre->get_albums();
-		Browse::reset_filters(); 
-		Browse::set_type('album'); 
-		Browse::set_sort('name','ASC'); 
-		Browse::set_static_content(1); 
-		Browse::save_objects($object_ids); 
-		Browse::show_objects($object_ids); 
+		Browse::reset_filters();
+		Browse::set_type('album');
+		Browse::set_sort('name','ASC');
+		Browse::set_static_content(1);
+		Browse::save_objects($object_ids);
+		Browse::show_objects($object_ids);
 	break;
 	case 'show_artists':
 		$genre = new Genre($_REQUEST['genre_id']);
 		show_genre($_REQUEST['genre_id']);
 		$object_ids = $genre->get_artists();
-		Browse::reset_filters(); 
-		Browse::set_type('artist'); 
-		Browse::set_sort('name','ASC'); 
-		Browse::set_static_content(1); 
-		Browse::save_objects($object_ids); 
-		Browse::show_objects($object_ids); 
+		Browse::reset_filters();
+		Browse::set_type('artist');
+		Browse::set_sort('name','ASC');
+		Browse::set_static_content(1);
+		Browse::save_objects($object_ids);
+		Browse::show_objects($object_ids);
 	break;
 } // action
 

@@ -31,13 +31,13 @@
 	<th class="cel_preference"><?php echo _('Preference'); ?></th>
 	<th class="cel_level"><?php echo _('Level'); ?></th>
 </tr>
-<?php foreach ($preferences as $preference) { 
+<?php foreach ($preferences as $preference) {
 	unset($is_25,$is_5,$is_100);
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td class="cel_preference"><?php echo scrub_out(_($preference['description'])); ?></td>
 	<td class="cel_level">
-		<?php $level_name = "is_" . $preference['level']; ${$level_name} = 'selected="selected"'; ?> 
+		<?php $level_name = "is_" . $preference['level']; ${$level_name} = 'selected="selected"'; ?>
 		<select name="prefs[<?php echo scrub_out($preference['name']); ?>]">
 			<option value="5" <?php echo $is_5; ?>><?php echo _('Guest'); ?></option>
 			<option value="25" <?php echo $is_25; ?>><?php echo _('User'); ?></option>

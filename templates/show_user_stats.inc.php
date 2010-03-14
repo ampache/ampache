@@ -24,40 +24,40 @@
 <table class="tabledata">
 <tr>
 	<td valign="top">
-	<?php 
-	if (count($favorite_artists)) { 
-		$items = $working_user->format_favorites($favorite_artists); 
-		$title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=artist">' . 
+	<?php
+	if (count($favorite_artists)) {
+		$items = $working_user->format_favorites($favorite_artists);
+		$title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=artist">' .
 			get_user_icon('all', _('Favorite Artists')) . '</a>&nbsp;' .  _('Favorite Artists');
-		show_info_box($title,'artist',$items); 
+		show_info_box($title,'artist',$items);
 	}
-	else { 
+	else {
 		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
 	}
 	?>
 	</td>
 	<td valign="top">
 	<?php
-	if (count($favorite_albums)) { 
+	if (count($favorite_albums)) {
 		$items = $working_user->format_favorites($favorite_albums);
-                $title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=album">' . 
+                $title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=album">' .
                         get_user_icon('all', _('Favorite Albums')) . '</a>&nbsp;' .  _('Favorite Albums');
 		show_info_box($title,'album',$items);
 	}
-	else { 
+	else {
 		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
 	}
 	?>
 	</td>
 	<td valign="top">
 	<?php
-	if (count($favorite_songs)) { 
-		$items = $working_user->format_favorites($favorite_songs); 
-                $title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=song">' . 
+	if (count($favorite_songs)) {
+		$items = $working_user->format_favorites($favorite_songs);
+                $title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=song">' .
                         get_user_icon('all', _('Favorite Songs')) . '</a>&nbsp;' .  _('Favorite Songs');
-		show_info_box($title,'your_song',$items); 
+		show_info_box($title,'your_song',$items);
 	}
-	else { 
+	else {
 		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
 	}
 	?>

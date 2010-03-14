@@ -19,16 +19,16 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-$web_path = Config::get('web_path'); 
-$button = Ajax::button('?page=index&action=random_albums','random',_('Refresh'),'random_refresh'); 
+$web_path = Config::get('web_path');
+$button = Ajax::button('?page=index&action=random_albums','random',_('Refresh'),'random_refresh');
 ?>
 <?php show_box_top(_('Albums of the Moment') . ' ' . $button); ?>
 
-	<?php 
+	<?php
 	if ($albums) {
-		foreach ($albums as $album_id) { 
-			$album = new Album($album_id); 
-			$album->format(); 
+		foreach ($albums as $album_id) {
+			$album = new Album($album_id);
+			$album->format();
 			$name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
         ?>
         <div class="random_album">
@@ -48,7 +48,7 @@ $button = Ajax::button('?page=index&action=random_albums','random',_('Refresh'),
                 ?>
               	<span class="play_album"><?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add',_('Play Album'),'play_full_' . $album->id); ?></span>
         </div>
-       
+
         	<?php } // end foreach ?>
 	<?php } // end if albums ?>
 

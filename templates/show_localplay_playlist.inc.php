@@ -20,8 +20,8 @@
 
 */
 $localplay = new Localplay(Config::get('localplay_controller'));
-$localplay->connect(); 
-$status = $localplay->status(); 
+$localplay->connect();
+$status = $localplay->status();
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
@@ -35,10 +35,10 @@ $status = $localplay->status();
 	<th class="cel_name"><?php echo _('Name'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
-<?php 
-foreach ($object_ids as $object) { 
+<?php
+foreach ($object_ids as $object) {
 	$class = ' class="cel_name"';
-	if ($status['track'] == $object['track']) { $class=' class="cel_name lp_current"'; } 	
+	if ($status['track'] == $object['track']) { $class=' class="cel_name lp_current"'; }
 ?>
 <tr class="<?php echo flip_class(); ?>" id="localplay_playlist_<?php echo $object['id']; ?>">
 	<td class="cel_track">

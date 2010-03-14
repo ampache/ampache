@@ -21,42 +21,42 @@
 */
 require_once 'lib/init.php';
 
-show_header(); 
+show_header();
 
 // Switch on the incomming action
-switch ($_REQUEST['action']) { 
-	case 'add_shout': 
+switch ($_REQUEST['action']) {
+	case 'add_shout':
 		// Must be at least a user to do this
-		if (!Access::check('interface','25')) { 
-			access_denied(); 
-			exit; 
-		} 
+		if (!Access::check('interface','25')) {
+			access_denied();
+			exit;
+		}
 
-		if (!Core::form_verify('add_shout','post')) { 
-			access_denied(); 
-			exit; 
-		} 
+		if (!Core::form_verify('add_shout','post')) {
+			access_denied();
+			exit;
+		}
 
-		$shout_id = shoutBox::create($_POST); 
-		header("Location:" . Config::get('web_path')); 
-	break; 
-	case 'show_add_shout': 
+		$shout_id = shoutBox::create($_POST);
+		header("Location:" . Config::get('web_path'));
+	break;
+	case 'show_add_shout':
 		// Get our object first
-		$object = shoutBox::get_object($_REQUEST['type'],$_REQUEST['id']); 
+		$object = shoutBox::get_object($_REQUEST['type'],$_REQUEST['id']);
 
-		if (!$object->id) { 
-			Error::add('general',_('Invalid Object Selected')); 
-			Error::display('general'); 
+		if (!$object->id) {
+			Error::add('general',_('Invalid Object Selected'));
+			Error::display('general');
 			break;
-		} 
+		}
 
 		// Now go ahead and display the page where we let them add a comment etc
-		require_once Config::get('prefix') . '/templates/show_add_shout.inc.php'; 
-	break; 
-	default: 
-		header("Location:" . Config::get('web_path')); 
+		require_once Config::get('prefix') . '/templates/show_add_shout.inc.php';
+	break;
+	default:
+		header("Location:" . Config::get('web_path'));
 	break;
 } // end switch on action
 
-show_footer(); 
+show_footer();
 ?>

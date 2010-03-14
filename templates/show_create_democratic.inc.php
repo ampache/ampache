@@ -32,7 +32,7 @@ show_box_top(_('Configure Democratic Playlist')); ?>
 	<td><?php show_playlist_select('democratic',$democratic->base_playlist); ?></td>
 </tr>
 <tr>
-	<td><?php echo _('Cooldown Time'); ?></td>	
+	<td><?php echo _('Cooldown Time'); ?></td>
 	<td><input type="text" size="4" maxlength="6" name="cooldown" value="<?php echo $democratic->cooldown; ?>" /><?php echo _('minutes'); ?></td>
 </tr>
 <!--

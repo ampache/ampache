@@ -22,39 +22,39 @@
 
 /**
  * get_themes
- * this looks in /themes and pulls all of the 
- * theme.cfg.php files it can find and returns an 
+ * this looks in /themes and pulls all of the
+ * theme.cfg.php files it can find and returns an
  * array of the results
  */
-function get_themes() { 
+function get_themes() {
 
 	/* Open the themes dir and start reading it */
 	$handle = @opendir(Config::get('prefix') . '/themes');
 
-	if (!is_resource($handle)) { 
-		 debug_event('theme',"Error unable to open Themes Directory",'2'); 
-		 return array(); 
+	if (!is_resource($handle)) {
+		 debug_event('theme',"Error unable to open Themes Directory",'2');
+		 return array();
 	}
 
-	$results = array(); 
+	$results = array();
 
-	while ($file = readdir($handle)) { 
-		
+	while ($file = readdir($handle)) {
+
 		$full_file = Config::get('prefix') . '/themes/' . $file;
 		/* See if it's a directory */
-		if (is_dir($full_file) AND substr($file,0,1) != ".") { 
+		if (is_dir($full_file) AND substr($file,0,1) != ".") {
 			$config_file = $full_file . '/theme.cfg.php';
 			/* Open the theme.cfg.php file */
 			$r = @parse_ini_file($config_file);
 			$r['path'] = $file;
-			$name = $r['name']; 
+			$name = $r['name'];
 			$results[$name] = $r;
 		}
 
 	} // end while directory
 
 	// Sort by the theme name
-	ksort($results); 
+	ksort($results);
 
 	return $results;
 
@@ -65,7 +65,7 @@ function get_themes() {
 	@discussion get a single theme and read the config file
 		then return the results
 */
-function get_theme($name) { 
+function get_theme($name) {
 
 	if (strlen($name) < 1) { return false; }
 
@@ -80,7 +80,7 @@ function get_theme($name) {
 	@function get_theme_author
 	@discussion returns the author of this theme
 */
-function get_theme_author($theme_name) { 
+function get_theme_author($theme_name) {
 
 	$theme_path = conf('prefix') . "/themes/" . conf('theme_name') . "/theme.cfg.php";
 	$results = read_config($theme_path);
@@ -93,12 +93,12 @@ function get_theme_author($theme_name) {
 	@function theme_exists
 	@discussion this function checks to make sure that a theme actually exists
 */
-function theme_exists($theme_name) { 
+function theme_exists($theme_name) {
 
 	$theme_path = conf('prefix') . "/themes/" . $theme_name . "/theme.cfg.php";
 
-	if (!file_exists($theme_path)) { 
-		return false; 
+	if (!file_exists($theme_path)) {
+		return false;
 	}
 
 	return true;

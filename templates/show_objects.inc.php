@@ -20,7 +20,7 @@
 
 */
 
-/* 
+/*
  * Variable/Non-DB object display takes headers & objects
  */
 
@@ -31,9 +31,9 @@
 	<th class="th-top"><?php echo $header; ?></th>
 <?php } ?>
 </tr>
-<?php 
-	foreach ($objects as $object) { 
-		$object->format(); 
+<?php
+	foreach ($objects as $object) {
+		$object->format();
 ?>
 <tr id="object_row_<?php echo $object->id; ?>" class="<?php echo flip_class(); ?>">
 	<?php require Config::get('prefix') . '/templates/show_object_row.inc.php'; ?>

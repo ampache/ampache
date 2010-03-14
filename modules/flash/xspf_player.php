@@ -23,7 +23,7 @@
 require_once '../../lib/init.php';
 
 // Switch on actions
-switch ($_REQUEST['action']) { 
+switch ($_REQUEST['action']) {
 	default:
 	case 'tmp_playlist':
 		// Set for hackage!

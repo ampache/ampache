@@ -25,13 +25,13 @@
  * work, this lists all required functions and the expected
  * input
  */
-interface media { 
+interface media {
 
-	public function format(); 
-	public function native_stream(); 
-	public static function play_url($oid); 
-	public function stream_cmd(); 
-	public function has_flag(); 
+	public function format();
+	public function native_stream();
+	public static function play_url($oid);
+	public function stream_cmd();
+	public function has_flag();
 
 } // end interface
 

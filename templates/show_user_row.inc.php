@@ -40,7 +40,7 @@
 		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&amp;user_id=<?php echo $client->id; ?>"><?php echo get_user_icon('preferences', _('Preferences')); ?></a>
 	<?php
 	//FIXME: Fix this for the extra permission levels
-	if ($client->disabled == '1') { 
+	if ($client->disabled == '1') {
 		echo "<a href=\"".$web_path."/admin/users.php?action=enable&amp;user_id=$client->id\">" . get_user_icon('enable', _('Enable')) . "</a>";
 	}
 	else {
@@ -57,4 +57,4 @@
 	} else {
 		echo "<td class=\"cel_online user_offline\"> &nbsp; </td>";
 	}
-?>	
+?>

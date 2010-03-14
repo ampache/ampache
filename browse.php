@@ -24,7 +24,7 @@
  *
  * Browse By Page
  * This page shows the browse menu, which allows you to browse by many different
- * fields including genre, artist, album, catalog, ??? 
+ * fields including genre, artist, album, catalog, ???
  * this page also handles the actuall browse action
  *
  */
@@ -34,70 +34,70 @@ require_once 'lib/init.php';
 
 // This page is a little wonky we don't want the sidebar until we know what type we're dealing with
 // so we've got a little switch here that creates the type.. this feels hackish...
-switch ($_REQUEST['action']) { 
-	case 'tag': 
-	case 'file': 
-	case 'album': 
-	case 'artist': 
-	case 'playlist': 
-	case 'live_stream': 
-	case 'video': 
-	case 'song': 
-		Browse::set_type($_REQUEST['action']); 
-		Browse::reset(); 
-		Browse::set_simple_browse(true); 
-	break; 
-} // end switch 
+switch ($_REQUEST['action']) {
+	case 'tag':
+	case 'file':
+	case 'album':
+	case 'artist':
+	case 'playlist':
+	case 'live_stream':
+	case 'video':
+	case 'song':
+		Browse::set_type($_REQUEST['action']);
+		Browse::reset();
+		Browse::set_simple_browse(true);
+	break;
+} // end switch
 
-show_header(); 
+show_header();
 
 switch($_REQUEST['action']) {
 	case 'file':
-	break; 
+	break;
 	case 'album':
 		Browse::set_sort('name','ASC');
-		Browse::show_objects(); 
+		Browse::show_objects();
 	break;
-	case 'tag': 
-		Browse::set_sort('count','ASC'); 
+	case 'tag':
+		Browse::set_sort('count','ASC');
 		// This one's a doozy
-		Browse::set_simple_browse(0); 
-		Browse::save_objects(Tag::get_tags(Config::get('offset_limit'),array())); 
-		$keys = array_keys(Browse::get_saved()); 
-		Tag::build_cache($keys); 
-		$object_ids = Browse::get_saved(); 
-		show_box_top(_('Tag Cloud'),$class); 
-		require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php'; 
-		show_box_bottom(); 
-		require_once Config::get('prefix') . '/templates/browse_content.inc.php'; 
-	break; 
+		Browse::set_simple_browse(0);
+		Browse::save_objects(Tag::get_tags(Config::get('offset_limit'),array()));
+		$keys = array_keys(Browse::get_saved());
+		Tag::build_cache($keys);
+		$object_ids = Browse::get_saved();
+		show_box_top(_('Tag Cloud'),$class);
+		require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php';
+		show_box_bottom();
+		require_once Config::get('prefix') . '/templates/browse_content.inc.php';
+	break;
 	case 'artist':
 		Browse::set_sort('name','ASC');
-		Browse::show_objects(); 
+		Browse::show_objects();
 	break;
 	case 'song':
 		Browse::set_sort('title','ASC');
-		Browse::show_objects(); 
+		Browse::show_objects();
 	break;
 	case 'live_stream':
 		Browse::set_sort('name','ASC');
-		Browse::show_objects(); 
+		Browse::show_objects();
 	break;
 	case 'catalog':
-	
+
 	break;
-	case 'playlist': 
+	case 'playlist':
 		Browse::set_sort('type','ASC');
 		Browse::set_filter('playlist_type','1');
-		Browse::show_objects(); 
+		Browse::show_objects();
 	break;
-	case 'video': 
-		Browse::set_sort('title','ASC'); 
-		Browse::show_objects(); 
-	break; 
-	default: 
+	case 'video':
+		Browse::set_sort('title','ASC');
+		Browse::show_objects();
+	break;
+	default:
 
-	break; 
+	break;
 } // end Switch $action
 
 /* Show the Footer */

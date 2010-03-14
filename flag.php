@@ -34,7 +34,7 @@ $action = scrub_in($_REQUEST['action']);
 $flag = new Flag($_REQUEST['flag_id']);
 
 /* Switch on the action */
-switch ($action) { 
+switch ($action) {
 	case 'remove_flag':
 	break;
 	case 'flag':
@@ -42,7 +42,7 @@ switch ($action) {
 		$type		= scrub_in($_REQUEST['type']);
 		$flag_type	= scrub_in($_REQUEST['flag_type']);
 		$comment	= scrub_in($_REQUEST['comment']);
-		$flag->add($id,$type,$flag_type,$comment);		
+		$flag->add($id,$type,$flag_type,$comment);
 		show_confirmation(_('Item Flagged'),_('The specified item has been flagged'),$_SESSION['source_page']);
 	break;
 	case 'show_flag':
@@ -51,10 +51,10 @@ switch ($action) {
 		include(conf('prefix') . '/templates/show_flag.inc.php');
 	break;
 	case 'show_remove_flag':
-	
+
 	break;
 	default:
-	
+
 	break;
 } // end action switch
 

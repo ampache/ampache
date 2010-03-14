@@ -22,21 +22,21 @@
 
 require '../lib/init.php';
 
-if (!Access::check('interface',100)) { 
+if (!Access::check('interface',100)) {
 	access_denied();
 	exit();
 }
 
-show_header(); 
+show_header();
 
-switch ($_REQUEST['action']) { 
-	default: 
+switch ($_REQUEST['action']) {
+	default:
 		// Show Catalogs
-		$catalog_ids = Catalog::get_catalogs(); 	
-		Browse::set_type('catalog'); 
-		Browse::show_objects($catalog_ids); 
+		$catalog_ids = Catalog::get_catalogs();
+		Browse::set_type('catalog');
+		Browse::show_objects($catalog_ids);
 	break;
-} 
+}
 
-show_footer(); 
+show_footer();
 ?>

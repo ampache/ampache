@@ -27,18 +27,18 @@ require_once 'lib/init.php';
 if (!Config::get('allow_public_registration') || Config::get('demo_mode')) {
 	debug_event('DENIED','Error Attempted registration','1');
 	access_denied();
-	exit(); 
+	exit();
 }
 
 /**
- * These are only needed for this page so they aren't included in init.php 
+ * These are only needed for this page so they aren't included in init.php
  * this is for email validation and the cool little graphic
 */
 require_once Config::get('prefix') . '/modules/validatemail/validateEmailFormat.php';
 require_once Config::get('prefix') . '/modules/validatemail/validateEmail.php';
 
 /* Don't even include it if we aren't going to use it */
-if (Config::get('captcha_public_reg')) { 
+if (Config::get('captcha_public_reg')) {
 	define ("CAPTCHA_INVERSE", 1);
 	include Config::get('prefix') . '/modules/captcha/captcha.php';
 }
@@ -46,13 +46,13 @@ if (Config::get('captcha_public_reg')) {
 
 /* Start switch based on action passed */
 switch ($_REQUEST['action']) {
-	case 'validate': 
-		$username 	= scrub_in($_GET['username']); 
-		$validation	= scrub_in($_GET['auth']); 
-		require_once Config::get('prefix') . '/templates/show_user_activate.inc.php'; 
-	break; 
+	case 'validate':
+		$username 	= scrub_in($_GET['username']);
+		$validation	= scrub_in($_GET['auth']);
+		require_once Config::get('prefix') . '/templates/show_user_activate.inc.php';
+	break;
 	case 'add_user':
-		/** 
+		/**
 		 * User information has been entered
 		 * we need to check the database for possible existing username first
 		 * if username exists, error and say "Please choose a different name."
@@ -68,11 +68,11 @@ switch ($_REQUEST['action']) {
 		$pass2 			= scrub_in($_POST['password_2']);
 
 		/* If we're using the captcha stuff */
-		if (Config::get('captcha_public_reg')) { 
-		    	$captcha 		= captcha::solved(); 
+		if (Config::get('captcha_public_reg')) {
+		    	$captcha 		= captcha::solved();
 			if(!isset ($captcha)) {
 				Error::add('captcha',_('Error Captcha Required'));
-			}	
+			}
 			if (isset ($captcha)) {
 				if ($captcha) {
 					$msg="SUCCESS";
@@ -86,7 +86,7 @@ switch ($_REQUEST['action']) {
 		if (Config::get('user_agreement')) {
 			if (!$_POST['accept_agreement']) {
 				Error::add('user_agreement',_("You <U>must</U> accept the user agreement"));
-			} 
+			}
 		} // if they have to agree to something
 
 		if (!$_POST['username']) {
@@ -115,11 +115,11 @@ switch ($_REQUEST['action']) {
 			$mmsg = "MAILOK";
 		}
 	        else {
-	                Error::add('email',_("Error Email address not confirmed") 
+	                Error::add('email',_("Error Email address not confirmed")
 			   . "<br />$validate_results[1]");
 	        }
 		/* End of mailcheck */
-	
+
 		if (!$pass1) {
 			Error::add('password',_("You must enter a password"));
 		}
@@ -128,7 +128,7 @@ switch ($_REQUEST['action']) {
 			Error::add('password',_("Your passwords do not match"));
 		}
 
-		if (!User::check_username($username)) { 
+		if (!User::check_username($username)) {
 			Error::add('duplicate_user',_("Error Username already exists"));
 		}
 
@@ -140,20 +140,20 @@ switch ($_REQUEST['action']) {
 
 		/* Attempt to create the new user */
 		$access = '5';
-		switch (Config::get('auto_user')) { 
-			case 'admin': 
-				$access = '100'; 
+		switch (Config::get('auto_user')) {
+			case 'admin':
+				$access = '100';
 			break;
-			case 'user': 
-				$access = '25'; 
+			case 'user':
+				$access = '25';
 			break;
-			default: 
-			case 'guest': 
-				$access = '5'; 
+			default:
+			case 'guest':
+				$access = '5';
 			break;
 		} // auto-user level
 
-			
+
 		$new_user = User::create($username,$fullname,$email,$pass1,$access);
 
 		if (!$new_user) {
@@ -167,11 +167,11 @@ switch ($_REQUEST['action']) {
 		$client->update_validation($validation);
 
 		Registration::send_confirmation($username, $fullname, $email, $pass1, $validation);
-		require_once Config::get('prefix') . '/templates/show_registration_confirmation.inc.php'; 
+		require_once Config::get('prefix') . '/templates/show_registration_confirmation.inc.php';
 	break;
 	case 'show_add_user':
 	default:
-		require_once Config::get('prefix') . '/templates/show_user_registration.inc.php'; 
+		require_once Config::get('prefix') . '/templates/show_user_registration.inc.php';
 	break;
 } // end switch on action
 ?>

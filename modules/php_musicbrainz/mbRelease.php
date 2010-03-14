@@ -3,7 +3,7 @@
 	class mbRelease extends MusicBrainzEntity {
 		// Types
 		const TYPE_NONE		  = "http://musicbrainz.org/ns/mmd-1.0#None";
-		
+
 		const TYPE_ALBUM		 = "http://musicbrainz.org/ns/mmd-1.0#Album";
 		const TYPE_SINGLE		= "http://musicbrainz.org/ns/mmd-1.0#Single";
 		const TYPE_EP			= "http://musicbrainz.org/ns/mmd-1.0#EP";
@@ -21,7 +21,7 @@
 		const TYPE_PROMOTION	  = "http://musicbrainz.org/ns/mmd-1.0#Promotion";
 		const TYPE_BOOTLEG		= "http://musicbrainz.org/ns/mmd-1.0#Bootleg";
 		const TYPE_PSEUDO_RELEASE = "http://musicbrainz.org/ns/mmd-1.0#Pseudo-Release";
-		
+
 		private $title;
 		private $textLanguage;
 		private $textScript;

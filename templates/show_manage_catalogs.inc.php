@@ -47,7 +47,7 @@
 </table>
 </div>
 <?php show_box_bottom(); ?>
-<?php 
+<?php
                 $catalog_ids = Catalog::get_catalogs();
                 Browse::set_type('catalog');
                 Browse::set_static_content(1);

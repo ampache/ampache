@@ -22,22 +22,22 @@
 //
 // $Id: module.audio.bonk.php,v 1.3 2006/11/02 10:48:01 ah Exp $
 
-        
-        
+
+
 class getid3_bonk extends getid3_handler
 {
 
     public function Analyze() {
 
         $getid3 = $this->getid3;
-        
+
         $getid3->info['bonk'] = array ();
         $info_bonk = &$getid3->info['bonk'];
 
         $info_bonk['dataoffset'] = $getid3->info['avdataoffset'];
         $info_bonk['dataend']    = $getid3->info['avdataend'];
 
-        
+
         // Scan-from-end method, for v0.6 and higher
         fseek($getid3->fp, $info_bonk['dataend'] - 8, SEEK_SET);
         $possible_bonk_tag = fread($getid3->fp, 8);
@@ -54,7 +54,7 @@ class getid3_bonk extends getid3_handler
             $info_bonk[$bonk_tag_name]['size']   = $bonk_tag_size;
             $info_bonk[$bonk_tag_name]['offset'] = $bonk_tag_offset;
             $this->HandleBonkTags($bonk_tag_name);
-            
+
             $next_tag_end_offset = $bonk_tag_offset - 8;
             if ($next_tag_end_offset < $info_bonk['dataoffset']) {
                 if (empty($getid3->info['audio']['encoder'])) {
@@ -119,7 +119,7 @@ class getid3_bonk extends getid3_handler
     }
 
 
-    
+
     private function HandleBonkTags(&$bonk_tag_name) {
 
         // Shortcut to getid3 pointer
@@ -127,14 +127,14 @@ class getid3_bonk extends getid3_handler
         $info_audio = &$getid3->info['audio'];
 
         switch ($bonk_tag_name) {
-            
+
             case 'BONK':
                 // shortcut
                 $info_bonk_BONK = &$getid3->info['bonk']['BONK'];
 
                 $bonk_data = "\x00".'BONK'.fread($getid3->fp, 17);
-                
-                getid3_lib::ReadSequence('LittleEndian2Int', $info_bonk_BONK, $bonk_data, 5, 
+
+                getid3_lib::ReadSequence('LittleEndian2Int', $info_bonk_BONK, $bonk_data, 5,
                     array (
                         'version'            => 1,
                         'number_samples'     => 4,
@@ -147,7 +147,7 @@ class getid3_bonk extends getid3_handler
                         'samples_per_packet' => 2
                     )
                 );
-                
+
                 $info_bonk_BONK['lossless']     = (bool)$info_bonk_BONK['lossless'];
                 $info_bonk_BONK['joint_stereo'] = (bool)$info_bonk_BONK['joint_stereo'];
 
@@ -208,7 +208,7 @@ class getid3_bonk extends getid3_handler
 
                 // ID3v2 checking is optional
                 if (class_exists('getid3_id3v2')) {
-                    
+
                     $id3v2 = new getid3_id3v2($getid3);
                     $id3v2->option_starting_offset = $getid3->info['bonk'][' ID3']['offset'] + 2;
                     $getid3->info['bonk'][' ID3']['valid'] = $id3v2->Analyze();
@@ -223,10 +223,10 @@ class getid3_bonk extends getid3_handler
     }
 
 
-    
+
     public static function BonkIsValidTagName($possible_bonk_tag, $ignore_case=false) {
-                                                                              
-        $ignore_case = $ignore_case ? 'i' : '';                                                                              
+
+        $ignore_case = $ignore_case ? 'i' : '';
         return preg_match('/^(BONK|INFO| ID3|META)$/'.$ignore_case, $possible_bonk_tag);
     }
 

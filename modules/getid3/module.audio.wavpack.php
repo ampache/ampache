@@ -29,12 +29,12 @@ class getid3_wavpack extends getid3_handler
     public function Analyze() {
 
         $getid3 = $this->getid3;
-        
+
         $getid3->include_module('audio-video.riff');
-        
+
         $getid3->info['wavpack'] = array ();
         $info_wavpack = &$getid3->info['wavpack'];
-        
+
         fseek($getid3->fp, $getid3->info['avdataoffset'], SEEK_SET);
 
         while (true) {
@@ -62,7 +62,7 @@ class getid3_wavpack extends getid3_handler
             }
 
             if ((@$info_wavpack_blockheader['block_samples'] <= 0)  ||  (@$info_wavpack_blockheader['total_samples'] <= 0)) {
-                
+
                 // Also, it is possible that the first block might not have
                 // any samples (block_samples == 0) and in this case you should skip blocks
                 // until you find one with samples because the other information (like
@@ -99,7 +99,7 @@ class getid3_wavpack extends getid3_handler
 
                 $info_wavpack_blockheader['track_number']  = ord($wavpack_header{10}); // unused
                 $info_wavpack_blockheader['index_number']  = ord($wavpack_header{11}); // unused
-                
+
                 getid3_lib::ReadSequence('LittleEndian2Int', $info_wavpack_blockheader, $wavpack_header, 12,
                     array (
                         'total_samples' => 4,
@@ -109,8 +109,8 @@ class getid3_wavpack extends getid3_handler
                         'crc'           => 4
                     )
                 );
-                
-                
+
+
                 $info_wavpack_blockheader['flags']['bytes_per_sample']     =    1 + ($info_wavpack_blockheader['flags_raw'] & 0x00000003);
                 $info_wavpack_blockheader['flags']['mono']                 = (bool) ($info_wavpack_blockheader['flags_raw'] & 0x00000004);
                 $info_wavpack_blockheader['flags']['hybrid']               = (bool) ($info_wavpack_blockheader['flags_raw'] & 0x00000008);
@@ -146,7 +146,7 @@ class getid3_wavpack extends getid3_handler
                 // then the decoder simply ignores the metadata, but if it is zero
                 // then the decoder should quit because it means that an understanding
                 // of the metadata is required to correctly decode the audio.
-                
+
                 $metablock['non_decoder'] = (bool) ($metablock['id'] & 0x20);
                 $metablock['padded_data'] = (bool) ($metablock['id'] & 0x40);
                 $metablock['large_block'] = (bool) ($metablock['id'] & 0x80);
@@ -204,24 +204,24 @@ class getid3_wavpack extends getid3_handler
                     switch ($metablock['function_id']) {
 
                         case 0x21: // ID_RIFF_HEADER
-                            
+
                             $original_wav_filesize = getid3_lib::LittleEndian2Int(substr($metablock['data'], 4, 4));
-                            
-                            // Clone getid3 
+
+                            // Clone getid3
                             $clone = clone $getid3;
-                            
+
                             // Analyze clone by string
                             $riff = new getid3_riff($clone);
                             $riff->AnalyzeString($metablock['data']);
-                            
+
                             // Import from clone and destroy
                             $metablock['riff'] = $clone->info['riff'];
                             $getid3->warnings($clone->warnings());
                             unset($clone);
-                            
+
                             // Save RIFF header - we may need it later for RIFF footer parsing
                             $this->riff_header = $metablock['data'];
-                            
+
                             $metablock['riff']['original_filesize'] = $original_wav_filesize;
                             $info_wavpack['riff_trailer_size'] = $original_wav_filesize - $metablock['riff']['WAVE']['data'][0]['size'] - $metablock['riff']['header_size'];
 
@@ -236,19 +236,19 @@ class getid3_wavpack extends getid3_handler
                         case 0x22: // ID_RIFF_TRAILER
 
                             $metablock_riff_footer = $metablock_riff_header.$metablock['data'];
-                            
+
                             $start_offset = $metablock['offset'] + ($metablock['large_block'] ? 4 : 2);
-                            
+
                             $ftell_old = ftell($getid3->fp);
-                            
-                            // Clone getid3 
+
+                            // Clone getid3
                             $clone = clone $getid3;
-                            
+
                             // Call public method that really should be private
                             $riff = new getid3_riff($clone);
                             $metablock['riff'] = $riff->ParseRIFF($start_offset, $start_offset + $metablock['size']);
                             unset($clone);
-                            
+
                             fseek($getid3->fp, $ftell_old, SEEK_SET);
 
                             if (!empty($metablock['riff']['INFO'])) {
@@ -342,7 +342,7 @@ class getid3_wavpack extends getid3_handler
                     }
 
                 }
-            
+
                 if (!empty($metablock)) {
                     $info_wavpack['metablocks'][] = $metablock;
                 }
@@ -390,7 +390,7 @@ class getid3_wavpack extends getid3_handler
             0x25 => 'Config Block',
             0x26 => 'MD5 Checksum',
         );
-        
+
         return (@$lookup[$id]);
     }
 

@@ -22,20 +22,20 @@
 //
 // $Id: module.graphic.gif.php,v 1.2 2006/11/02 10:48:02 ah Exp $
 
-        
-        
+
+
 class getid3_gif extends getid3_handler
 {
 
     public function Analyze() {
-        
+
         $getid3 = $this->getid3;
 
         $getid3->info['fileformat']                  = 'gif';
         $getid3->info['video']['dataformat']         = 'gif';
         $getid3->info['video']['lossless']           = true;
         $getid3->info['video']['pixel_aspect_ratio'] = (float)1;
-        
+
         $getid3->info['gif']['header'] = array ();
         $info_gif_header = &$getid3->info['gif']['header'];
 
@@ -44,7 +44,7 @@ class getid3_gif extends getid3_handler
 
         // Magic bytes
         $info_gif_header['raw']['identifier'] = 'GIF';
-        
+
         getid3_lib::ReadSequence('LittleEndian2Int', $info_gif_header['raw'], $gif_header, 3,
             array (
                 'version'        => -3,      // string
@@ -59,16 +59,16 @@ class getid3_gif extends getid3_handler
         $getid3->info['video']['resolution_x'] = $info_gif_header['raw']['width'];
         $getid3->info['video']['resolution_y'] = $info_gif_header['raw']['height'];
         $getid3->info['gif']['version']        = $info_gif_header['raw']['version'];
-        
+
         $info_gif_header['flags']['global_color_table'] = (bool)($info_gif_header['raw']['flags'] & 0x80);
-        
+
         if ($info_gif_header['raw']['flags'] & 0x80) {
             // Number of bits per primary color available to the original image, minus 1
             $info_gif_header['bits_per_pixel']  = 3 * ((($info_gif_header['raw']['flags'] & 0x70) >> 4) + 1);
         } else {
             $info_gif_header['bits_per_pixel']  = 0;
         }
-        
+
         $info_gif_header['flags']['global_color_sorted'] = (bool)($info_gif_header['raw']['flags'] & 0x40);
         if ($info_gif_header['flags']['global_color_table']) {
             // the number of bytes contained in the Global Color Table. To determine that
@@ -78,7 +78,7 @@ class getid3_gif extends getid3_handler
         } else {
             $info_gif_header['global_color_size'] = 0;
         }
-        
+
         if ($info_gif_header['raw']['aspect_ratio'] != 0) {
             // Aspect Ratio = (Pixel Aspect Ratio + 15) / 64
             $info_gif_header['aspect_ratio'] = ($info_gif_header['raw']['aspect_ratio'] + 15) / 64;

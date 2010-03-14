@@ -25,15 +25,15 @@
  * This handles functions relating to the API written for ampache, initially this is very focused
  * on providing functionality for Amarok so it can integrate with Ampache
  */
-class Api { 
+class Api {
 
-	public static $version = '350001'; 
-	
+	public static $version = '350001';
+
 	/**
  	 * constructor
 	 * This really isn't anything to do here, so it's private
 	 */
-	private function __construct() { 
+	private function __construct() {
 
 		// Rien a faire
 
@@ -45,12 +45,12 @@ class Api {
 	 * and vastly simplier way to the end users so we have to do a little handy work to make them
 	 * work internally
 	 */
-	public static function set_filter($filter,$value) { 
+	public static function set_filter($filter,$value) {
 
-		if (!strlen($value)) { return false; } 
+		if (!strlen($value)) { return false; }
 
-		switch ($filter) { 
-			case 'add': 
+		switch ($filter) {
+			case 'add':
 				// Check for a range, if no range default to gt
 				if (strpos('/',$value)) {
 					$elements = explode('/',$value);
@@ -60,30 +60,30 @@ class Api {
 				else {
 					Browse::set_filter('add_gt',strtotime($value));
 				}
-			break; 
-			case 'update': 
+			break;
+			case 'update':
 				// Check for a range, if no range default to gt
-				if (strpos('/',$value)) { 
-					$elements = explode('/',$value); 
-					Browse::set_filter('update_lt',strtotime($elements['1'])); 
-					Browse::set_filter('update_gt',strtotime($elements['0'])); 		
+				if (strpos('/',$value)) {
+					$elements = explode('/',$value);
+					Browse::set_filter('update_lt',strtotime($elements['1']));
+					Browse::set_filter('update_gt',strtotime($elements['0']));
 				}
-				else { 
-					Browse::set_filter('update_gt',strtotime($value)); 
+				else {
+					Browse::set_filter('update_gt',strtotime($value));
 				}
-			break; 
+			break;
 			case 'alpha_match':
-				Browse::set_filter('alpha_match',$value); 
-			break; 
-			case 'exact_match': 
+				Browse::set_filter('alpha_match',$value);
+			break;
+			case 'exact_match':
 				Browse::set_filter('exact_match',$value);
-			break; 
-			default: 
+			break;
+			default:
 				// Rien a faire
-			break; 
+			break;
 		} // end filter
 
-		return true; 
+		return true;
 
 	} // set_filter
 
@@ -91,106 +91,106 @@ class Api {
 	 * handshake
 	 * This is the function that handles the verifying a new handshake
 	 * this takes a timestamp, auth key, and client IP. Optionally it
-	 * can take a username, if non is passed the ACL must be non-use 
+	 * can take a username, if non is passed the ACL must be non-use
 	 * specific
 	 */
-	public static function handshake($input) { 
+	public static function handshake($input) {
 
-		$timestamp = $input['timestamp']; 
-		$passphrase = $input['auth']; 
-		$ip = $_SERVER['REMOTE_ADDR']; 
-		$username = $input['user']; 
-		$version = $input['version']; 
+		$timestamp = $input['timestamp'];
+		$passphrase = $input['auth'];
+		$ip = $_SERVER['REMOTE_ADDR'];
+		$username = $input['user'];
+		$version = $input['version'];
 
 			// Let them know we're attempting
-			debug_event('API',"Attempting Handshake IP:$ip User:$username Version:$version",'5'); 
+			debug_event('API',"Attempting Handshake IP:$ip User:$username Version:$version",'5');
 
-		if (intval($version) < self::$version) { 
-			debug_event('API','Login Failed version too old','1'); 
-			Error::add('api','Login Failed version too old'); 
-			return false; 
-		} 			
+		if (intval($version) < self::$version) {
+			debug_event('API','Login Failed version too old','1');
+			Error::add('api','Login Failed version too old');
+			return false;
+		}
 
 		// If the timestamp is over 2hr old sucks to be them
-		if ($timestamp < (time() - 14400)) { 
-			debug_event('API','Login Failed, timestamp too old','1'); 
-			Error::add('api','Login Failed, timestamp too old'); 
-			return false; 
-		} 
+		if ($timestamp < (time() - 14400)) {
+			debug_event('API','Login Failed, timestamp too old','1');
+			Error::add('api','Login Failed, timestamp too old');
+			return false;
+		}
 
-		// First we'll filter by username and IP 
-		if (!trim($username)) { 
-			$user_id = '-1'; 
-		} 
-		else { 
-			$client = User::get_from_username($username); 
-			$user_id =$client->id; 
-		} 
+		// First we'll filter by username and IP
+		if (!trim($username)) {
+			$user_id = '-1';
+		}
+		else {
+			$client = User::get_from_username($username);
+			$user_id =$client->id;
+		}
 
 		// Clean incomming variables
-		$user_id 	= Dba::escape($user_id); 
-		$timestamp 	= intval($timestamp); 
+		$user_id 	= Dba::escape($user_id);
+		$timestamp 	= intval($timestamp);
 		$ip 		= inet_pton($ip);
 
 		// Log this attempt
-		debug_event('API','Login Attempt, IP:' . inet_ntop($ip) . ' Time:' . $timestamp . ' User:' . $username . '(' . $user_id . ') Auth:' . $passphrase,'1'); 
+		debug_event('API','Login Attempt, IP:' . inet_ntop($ip) . ' Time:' . $timestamp . ' User:' . $username . '(' . $user_id . ') Auth:' . $passphrase,'1');
 
-		$ip = Dba::escape($ip); 
-		
+		$ip = Dba::escape($ip);
+
 		// Run the query and return the passphrases as we'll have to mangle them
 		// to figure out if they match what we've got
-		$sql = "SELECT * FROM `access_list` " . 
-			"WHERE `type`='rpc' AND (`user`='$user_id' OR `access_list`.`user`='-1') " . 
-			"AND `start` <= '$ip' AND `end` >= '$ip'"; 
-		$db_results = Dba::read($sql); 
+		$sql = "SELECT * FROM `access_list` " .
+			"WHERE `type`='rpc' AND (`user`='$user_id' OR `access_list`.`user`='-1') " .
+			"AND `start` <= '$ip' AND `end` >= '$ip'";
+		$db_results = Dba::read($sql);
 
-		while ($row = Dba::fetch_assoc($db_results)) { 
+		while ($row = Dba::fetch_assoc($db_results)) {
 
-			// Now we're sure that there is an ACL line that matches this user or ALL USERS, 
-			// pull the users password and then see what we come out with 
-			$sql = "SELECT * FROM `user` WHERE `id`='$user_id'"; 
-			$user_results = Dba::read($sql); 
+			// Now we're sure that there is an ACL line that matches this user or ALL USERS,
+			// pull the users password and then see what we come out with
+			$sql = "SELECT * FROM `user` WHERE `id`='$user_id'";
+			$user_results = Dba::read($sql);
 
-			$row = Dba::fetch_assoc($user_results); 
+			$row = Dba::fetch_assoc($user_results);
 
-			if (!$row['password']) { 
-				debug_event('API','Unable to find user with username of ' . $user_id,'1'); 
-				Error::add('api','Invalid Username/Password'); 
-				return false; 
-			} 
+			if (!$row['password']) {
+				debug_event('API','Unable to find user with username of ' . $user_id,'1');
+				Error::add('api','Invalid Username/Password');
+				return false;
+			}
 
-			$sha1pass = hash('sha256',$timestamp . $row['password']); 
+			$sha1pass = hash('sha256',$timestamp . $row['password']);
 
-			if ($sha1pass === $passphrase) { 
+			if ($sha1pass === $passphrase) {
 				// Create the Session, in this class for now needs to be moved
-				$data['username']	= $client->username; 
-				$data['type']		= 'api'; 
-				$data['value']		= $timestamp; 
-				$token = vauth::session_create($data); 
+				$data['username']	= $client->username;
+				$data['type']		= 'api';
+				$data['value']		= $timestamp;
+				$token = vauth::session_create($data);
 
 				// Insert the token into the streamer
-				Stream::insert_session($token,$client->id); 
-				debug_event('API','Login Success, passphrase matched','1'); 
+				Stream::insert_session($token,$client->id);
+				debug_event('API','Login Success, passphrase matched','1');
 
 				// We need to also get the 'last update' of the catalog information in an RFC 2822 Format
-				$sql = "SELECT MAX(`last_update`) AS `update`,MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`"; 
-				$db_results = Dba::read($sql); 
-				$row = Dba::fetch_assoc($db_results); 	 
+				$sql = "SELECT MAX(`last_update`) AS `update`,MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`";
+				$db_results = Dba::read($sql);
+				$row = Dba::fetch_assoc($db_results);
 
 				// Now we need to quickly get the totals of songs
-				$sql = "SELECT COUNT(`id`) AS `song`,COUNT(DISTINCT(`album`)) AS `album`," . 
+				$sql = "SELECT COUNT(`id`) AS `song`,COUNT(DISTINCT(`album`)) AS `album`," .
 					"COUNT(DISTINCT(`artist`)) AS `artist` FROM `song`";
-				$db_results = Dba::read($sql); 
-				$counts = Dba::fetch_assoc($db_results); 
+				$db_results = Dba::read($sql);
+				$counts = Dba::fetch_assoc($db_results);
 
 				// Next the video counts
-				$sql = "SELECT COUNT(`id`) AS `video` FROM `video`"; 
-				$db_results = Dba::read($sql); 
-				$vcounts = Dba::fetch_assoc($db_results); 
-
-				$sql = "SELECT COUNT(`id`) AS `playlist` FROM `playlist`"; 
+				$sql = "SELECT COUNT(`id`) AS `video` FROM `video`";
 				$db_results = Dba::read($sql);
-				$playlist = Dba::fetch_assoc($db_results); 
+				$vcounts = Dba::fetch_assoc($db_results);
+
+				$sql = "SELECT COUNT(`id`) AS `playlist` FROM `playlist`";
+				$db_results = Dba::read($sql);
+				$playlist = Dba::fetch_assoc($db_results);
 
 				echo xmlData::keyed_array(array('auth'=>$token,
 					'api'=>self::$version,
@@ -201,13 +201,13 @@ class Api {
 					'albums'=>$counts['album'],
 					'artists'=>$counts['artist'],
 					'playlists'=>$playlist['playlist'],
-					'videos'=>$vcounts['video'])); 
-			} // match 
+					'videos'=>$vcounts['video']));
+			} // match
 
 		} // end while
 
-		debug_event('API','Login Failed, unable to match passphrase','1'); 
-		xmlData::error('401',_('Error Invalid Handshake - ') . _('Invalid Username/Password')); 
+		debug_event('API','Login Failed, unable to match passphrase','1');
+		xmlData::error('401',_('Error Invalid Handshake - ') . _('Invalid Username/Password'));
 
 	} // handshake
 
@@ -216,7 +216,7 @@ class Api {
 	 * This can be called without being authenticated, it is useful for determining if what the status
 	 * of the server is, and what version it is running/compatible with
 	 */
-	public static function ping($input) { 
+	public static function ping($input) {
 
 		$xmldata = array('server'=>Config::get('version'),'version'=>Api::$version,'compatible'=>'350001');
 
@@ -239,7 +239,7 @@ class Api {
 	 * artist objects. This function is deprecated!
 	 * //DEPRECATED
 	 */
-	public static function artists($input) { 
+	public static function artists($input) {
 
 		Browse::reset_filters();
 		Browse::set_type('artist');
@@ -266,7 +266,7 @@ class Api {
 	 * This returns a single artist based on the UID of said artist
 	 * //DEPRECATED
 	 */
-	public static function artist($input) { 
+	public static function artist($input) {
 
 		$uid = scrub_in($input['filter']);
 		echo xmlData::artists(array($uid));
@@ -277,7 +277,7 @@ class Api {
 	 * artist_albums
 	 * This returns the albums of an artist
 	 */
-	public static function artist_albums($input) { 
+	public static function artist_albums($input) {
 
 		$artist = new Artist($input['filter']);
 
@@ -295,7 +295,7 @@ class Api {
 	 * artist_songs
 	 * This returns the songs of the specified artist
 	 */
-	public static function artist_songs($input) { 
+	public static function artist_songs($input) {
 
 		$artist = new Artist($input['filter']);
 		$songs = $artist->get_songs();
@@ -312,7 +312,7 @@ class Api {
  	 * albums
 	 * This returns albums based on the provided search filters
 	 */
-	public static function albums($input) { 
+	public static function albums($input) {
 
 		Browse::reset_filters();
 		Browse::set_type('album');
@@ -336,7 +336,7 @@ class Api {
 	 * album
 	 * This returns a single album based on the UID provided
 	 */
-	public static function album($input) { 
+	public static function album($input) {
 
 		$uid = scrub_in($input['filter']);
 		echo xmlData::albums(array($uid));
@@ -347,7 +347,7 @@ class Api {
 	 * album_songs
 	 * This returns the songs of a specified album
 	 */
-	public static function album_songs($input) { 
+	public static function album_songs($input) {
 
 			$album = new Album($input['filter']);
 			$songs = $album->get_songs();
@@ -359,13 +359,13 @@ class Api {
 			ob_end_clean();
 			echo xmlData::songs($songs);
 
-	} // album_songs	
+	} // album_songs
 
 	/**
 	 * tags
 	 * This returns the tags based on the specified filter
 	 */
-	public static function tags($input) { 
+	public static function tags($input) {
 
 			Browse::reset_filters();
 			Browse::set_type('tag');
@@ -388,7 +388,7 @@ class Api {
 	 * tag
 	 * This returns a single tag based on UID
 	 */
-	public static function tag($input) { 
+	public static function tag($input) {
 
 			$uid = scrub_in($input['filter']);
 			ob_end_clean();
@@ -400,7 +400,7 @@ class Api {
 	 * tag_artists
 	 * This returns the artists assoicated with the tag in question as defined by the UID
 	 */
-	public static function tag_artists($input) { 
+	public static function tag_artists($input) {
 
 			$artists = Tag::get_tag_objects('artist',$input['filter']);
 
@@ -416,7 +416,7 @@ class Api {
 	 * tag_albums
 	 * This returns the albums assoicated with the tag in question
 	 */
-	public static function tag_albums($input) { 
+	public static function tag_albums($input) {
 
 			$albums = Tag::get_tag_objects('album',$input['filter']);
 
@@ -432,7 +432,7 @@ class Api {
 	 * tag_songs
 	 * returns the songs for this tag
 	 */
-	public static function tag_songs($input) { 
+	public static function tag_songs($input) {
 
 			$songs = Tag::get_tag_objects('song',$input['filter']);
 
@@ -448,7 +448,7 @@ class Api {
 	 * songs
 	 * Returns songs based on the specified filter
 	 */
-	public static function songs($input) { 
+	public static function songs($input) {
 
 			Browse::reset_filters();
 			Browse::set_type('song');
@@ -474,7 +474,7 @@ class Api {
 	 * song
 	 * returns a single song
 	 */
-	public static function song($input) { 
+	public static function song($input) {
 
 			$uid = scrub_in($input['filter']);
 
@@ -487,7 +487,7 @@ class Api {
 	 * url_to_song
 	 * This takes a url and returns the song object in question
 	 */
-	public static function url_to_song($input) { 
+	public static function url_to_song($input) {
 
 			// Don't scrub in we need to give her raw and juicy to the function
 			$url = $input['url'];
@@ -503,7 +503,7 @@ class Api {
  	 * playlists
 	 * This returns playlists based on the specified filter
 	 */
-	public static function playlists($input) { 
+	public static function playlists($input) {
 
 			Browse::reset_filters();
 			Browse::set_type('playlist');
@@ -526,7 +526,7 @@ class Api {
 	 * playlist
 	 * This returns a single playlist
 	 */
-	public static function playlist($input) { 
+	public static function playlist($input) {
 
 			$uid = scrub_in($input['filter']);
 
@@ -539,7 +539,7 @@ class Api {
 	 * playlist_songs
 	 * This returns the songs for a playlist
 	 */
-	public static function playlist_songs($input) { 
+	public static function playlist_songs($input) {
 
 			$playlist = new Playlist($input['filter']);
 			$items = $playlist->get_items();
@@ -561,7 +561,7 @@ class Api {
 	 * search_songs
 	 * This returns the songs and returns... songs
 	 */
-	public static function search_songs($input) { 
+	public static function search_songs($input) {
 
 			$array['s_all'] = $input['filter'];
 			ob_end_clean();
@@ -583,7 +583,7 @@ class Api {
 	 * videos
 	 * This returns video objects!
 	 */
-	public static function videos($input) { 
+	public static function videos($input) {
 
 			Browse::reset_filters();
 			Browse::set_type('video');
@@ -602,10 +602,10 @@ class Api {
 	} // videos
 
 	/**
-	 * video	
+	 * video
 	 * This returns a single video
 	 */
-	public static function video($input) { 
+	public static function video($input) {
 
 			$video_id = scrub_in($input['filter']);
 
@@ -618,7 +618,7 @@ class Api {
 	 * localplay
 	 * This is for controling localplay
 	 */
-	public static function localplay($input) { 
+	public static function localplay($input) {
 
 			// Load their localplay instance
 			$localplay = new Localplay(Config::get('localplay_controller'));
@@ -645,7 +645,7 @@ class Api {
 	 * democratic
 	 * This is for controlling democratic play
 	 */
-	public static function democratic($input) { 
+	public static function democratic($input) {
 
 			// Load up democratic information
 			$democratic = Democratic::get_current_playlist();

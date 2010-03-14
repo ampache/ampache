@@ -50,6 +50,6 @@
 		<?php $button_flip_state_id = 'button_flip_state_' . $song_id; ?>
 		<span id="<?php echo($button_flip_state_id); ?>">
 		<?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$icon,_(ucfirst($icon)),'flip_song_' . $song->id); ?>
-		</span> 
+		</span>
 	<?php } ?>
 </td>

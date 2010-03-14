@@ -4,7 +4,7 @@
 		private $value;
 		private $type;
 		private $script;
-		
+
 		function mbAristAlias( $value='', $type='', $script='' ) {
 			$this->value = $value;
 			$this->type = $type;

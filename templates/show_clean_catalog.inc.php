@@ -7,7 +7,7 @@
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License v2
- as published by the Free Software Foundation. 
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,8 +23,8 @@
 show_box_top();
 /* HINT: Catalog Name */
 printf(_('Cleaning the %s Catalog'), "<strong>[" . $this->name . "]</strong>");
-echo "...<br />"; 
+echo "...<br />";
 echo _('Checking') . ": <span id=\"clean_count_" . $this->id . "\"></span>\n<br />";
 echo _('Reading') . ":<span id=\"clean_dir_" . $this->id . "\"></span><br />";
-show_box_bottom(); 
+show_box_bottom();
 ?>

@@ -34,7 +34,7 @@
 		function getBeginDate() { return $this->beginDate; }
 		function setEndDate( $endDate ) { $this->endDate = $endDate; }
 		function getEndDate() { return $this->endDate; }
-		
+
 		function getUniqueName() {
 			return empty($this->disambiguation) ? $this->name :
 				   $this->name . ' (' . $this->disambiguation . ')';

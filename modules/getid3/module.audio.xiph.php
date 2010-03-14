@@ -23,45 +23,45 @@
 //
 // $Id: module.audio.xiph.php,v 1.5 2006/12/03 21:12:43 ah Exp $
 
-        
-        
+
+
 class getid3_xiph extends getid3_handler
 {
-    
+
     public function Analyze() {
-        
+
         $getid3 = $this->getid3;
-        
-        if ($getid3->option_tags_images) {        
+
+        if ($getid3->option_tags_images) {
             $getid3->include_module('lib.image_size');
         }
-        
+
         fseek($getid3->fp, $getid3->info['avdataoffset'], SEEK_SET);
-        
+
         $magic = fread($getid3->fp, 4);
-        
+
         if ($magic == 'OggS') {
             return $this->ParseOgg();
         }
-        
+
         if ($magic == 'fLaC') {
             return $this->ParseFLAC();
         }
-        
+
     }
-    
-    
-    
+
+
+
     private function ParseOgg() {
-        
+
         $getid3 = $this->getid3;
-        
+
         fseek($getid3->fp, $getid3->info['avdataoffset'], SEEK_SET);
-        
+
         $getid3->info['audio'] = $getid3->info['ogg'] = array ();
-        $info_ogg   = &$getid3->info['ogg'];				
+        $info_ogg   = &$getid3->info['ogg'];
         $info_audio = &$getid3->info['audio'];
-        
+
         $getid3->info['fileformat'] = 'ogg';
 
 
@@ -85,9 +85,9 @@ class getid3_xiph extends getid3_handler
             $info_audio['bitrate_mode'] = 'vbr';
             $info_audio['lossless']     = true;
 
-        } 
-    
-    
+        }
+
+
         // Ogg Vorbis
         elseif (substr($file_data, 1, 6) == 'vorbis') {
 
@@ -96,8 +96,8 @@ class getid3_xiph extends getid3_handler
 
             $info_ogg['pageheader'][$ogg_page_info['page_seqno']]['packet_type'] = getid3_lib::LittleEndian2Int($file_data[0]);
             $info_ogg['pageheader'][$ogg_page_info['page_seqno']]['stream_type'] = substr($file_data, 1, 6); // hard-coded to 'vorbis'
-            
-            getid3_lib::ReadSequence('LittleEndian2Int', $info_ogg, $file_data, 7, 
+
+            getid3_lib::ReadSequence('LittleEndian2Int', $info_ogg, $file_data, 7,
                 array (
                     'bitstreamversion' => 4,
                     'numberofchannels' => 1,
@@ -107,12 +107,12 @@ class getid3_xiph extends getid3_handler
                     'bitrate_min'      => 4
                 )
             );
-                                                                                                                     
+
             $n28 = getid3_lib::LittleEndian2Int($file_data{28});
             $info_ogg['blocksize_small']  = pow(2, $n28 & 0x0F);
             $info_ogg['blocksize_large']  = pow(2, ($n28 & 0xF0) >> 4);
             $info_ogg['stop_bit']         = $n28;
-            
+
             $info_audio['channels']       = $info_ogg['numberofchannels'];
             $info_audio['sample_rate']    = $info_ogg['samplerate'];
 
@@ -122,17 +122,17 @@ class getid3_xiph extends getid3_handler
                 unset($info_ogg['bitrate_max']);
                 $info_audio['bitrate_mode'] = 'abr';
             }
-            
+
             if ($info_ogg['bitrate_nominal'] == 0xFFFFFFFF) {
                 unset($info_ogg['bitrate_nominal']);
             }
-            
+
             if ($info_ogg['bitrate_min'] == 0xFFFFFFFF) {
                 unset($info_ogg['bitrate_min']);
                 $info_audio['bitrate_mode'] = 'abr';
             }
         }
-    
+
 
         // Speex
         elseif (substr($file_data, 0, 8) == 'Speex   ') {
@@ -144,10 +144,10 @@ class getid3_xiph extends getid3_handler
             $info_audio['bitrate_mode'] = 'abr';
             $info_audio['lossless']     = false;
 
-            getid3_lib::ReadSequence('LittleEndian2Int', $info_ogg['pageheader'][$ogg_page_info['page_seqno']], $file_data, 0, 
+            getid3_lib::ReadSequence('LittleEndian2Int', $info_ogg['pageheader'][$ogg_page_info['page_seqno']], $file_data, 0,
                 array (
                     'speex_string'           => -8, 		// hard-coded to 'Speex   '
-                    'speex_version'          => -20,      	// string                  
+                    'speex_version'          => -20,      	// string
                     'speex_version_id'       => 4,
                     'header_size'            => 4,
                     'rate'                   => 4,
@@ -163,7 +163,7 @@ class getid3_xiph extends getid3_handler
                     'reserved2'              => 4
                 )
             );
-                
+
             $getid3->info['speex']['speex_version'] = trim($info_ogg['pageheader'][$ogg_page_info['page_seqno']]['speex_version']);
             $getid3->info['speex']['sample_rate']   = $info_ogg['pageheader'][$ogg_page_info['page_seqno']]['rate'];
             $getid3->info['speex']['channels']      = $info_ogg['pageheader'][$ogg_page_info['page_seqno']]['nb_channels'];
@@ -172,7 +172,7 @@ class getid3_xiph extends getid3_handler
 
             $info_audio['sample_rate'] = $getid3->info['speex']['sample_rate'];
             $info_audio['channels']    = $getid3->info['speex']['channels'];
-            
+
             if ($getid3->info['speex']['vbr']) {
                 $info_audio['bitrate_mode'] = 'vbr';
             }
@@ -216,7 +216,7 @@ class getid3_xiph extends getid3_handler
 
         fseek($getid3->fp, max($getid3->info['avdataend'] - getid3::FREAD_BUFFER_SIZE, 0), SEEK_SET);
         $last_chunk_of_ogg = strrev(fread($getid3->fp, getid3::FREAD_BUFFER_SIZE));
-        
+
         if ($last_OggS_postion = strpos($last_chunk_of_ogg, 'SggO')) {
             fseek($getid3->fp, $getid3->info['avdataend'] - ($last_OggS_postion + strlen('SggO')), SEEK_SET);
             $getid3->info['avdataend'] = ftell($getid3->fp);
@@ -268,15 +268,15 @@ class getid3_xiph extends getid3_handler
 
 
     private function ParseOggPageHeader() {
-        
+
         $getid3 = $this->getid3;
-        
+
         // http://xiph.org/ogg/vorbis/doc/framing.html
         $ogg_header['page_start_offset'] = ftell($getid3->fp);      // where we started from in the file
-        
+
         $file_data = fread($getid3->fp, getid3::FREAD_BUFFER_SIZE);
         $file_data_offset = 0;
-        
+
         while ((substr($file_data, $file_data_offset++, 4) != 'OggS')) {
             if ((ftell($getid3->fp) - $ogg_header['page_start_offset']) >= getid3::FREAD_BUFFER_SIZE) {
                 // should be found before here
@@ -289,10 +289,10 @@ class getid3_xiph extends getid3_handler
                 }
             }
         }
-        
+
         $file_data_offset += 3; // page, delimited by 'OggS'
-        
-        getid3_lib::ReadSequence('LittleEndian2Int', $ogg_header, $file_data, $file_data_offset, 
+
+        getid3_lib::ReadSequence('LittleEndian2Int', $ogg_header, $file_data, $file_data_offset,
             array (
                 'stream_structver' => 1,
                 'flags_raw'        => 1,
@@ -303,7 +303,7 @@ class getid3_xiph extends getid3_handler
                 'page_segments'    => 1
             )
         );
-        
+
         $file_data_offset += 23;
 
         $ogg_header['flags']['fresh'] = (bool)($ogg_header['flags_raw'] & 0x01); // fresh packet
@@ -323,9 +323,9 @@ class getid3_xiph extends getid3_handler
     }
 
 
-    
+
     private function ParseVorbisCommentsFilepointer() {
-        
+
         $getid3 = $this->getid3;
 
         $original_offset      = ftell($getid3->fp);
@@ -334,7 +334,7 @@ class getid3_xiph extends getid3_handler
         $vorbis_comment_page  = 1;
 
         switch ($getid3->info['audio']['dataformat']) {
-            
+
             case 'vorbis':
                 $comment_start_offset = $getid3->info['ogg']['pageheader'][$vorbis_comment_page]['page_start_offset'];  // Second Ogg page, after header block
                 fseek($getid3->fp, $comment_start_offset, SEEK_SET);
@@ -342,13 +342,13 @@ class getid3_xiph extends getid3_handler
                 $comment_data = fread($getid3->fp, getid3_xiph::OggPageSegmentLength($getid3->info['ogg']['pageheader'][$vorbis_comment_page], 1) + $comment_data_offset);
                 $comment_data_offset += (strlen('vorbis') + 1);
                 break;
-                
+
 
             case 'flac':
                 fseek($getid3->fp, $getid3->info['flac']['VORBIS_COMMENT']['raw']['offset'] + 4, SEEK_SET);
                 $comment_data = fread($getid3->fp, $getid3->info['flac']['VORBIS_COMMENT']['raw']['block_length']);
                 break;
-                
+
 
             case 'speex':
                 $comment_start_offset = $getid3->info['ogg']['pageheader'][$vorbis_comment_page]['page_start_offset'];  // Second Ogg page, after header block
@@ -356,7 +356,7 @@ class getid3_xiph extends getid3_handler
                 $comment_data_offset = 27 + $getid3->info['ogg']['pageheader'][$vorbis_comment_page]['page_segments'];
                 $comment_data = fread($getid3->fp, getid3_xiph::OggPageSegmentLength($getid3->info['ogg']['pageheader'][$vorbis_comment_page], 1) + $comment_data_offset);
                 break;
-                
+
 
             default:
                 return false;
@@ -370,7 +370,7 @@ class getid3_xiph extends getid3_handler
 
         $comments_count = getid3_lib::LittleEndian2Int(substr($comment_data, $comment_data_offset, 4));
         $comment_data_offset += 4;
-        
+
         $getid3->info['avdataoffset'] = $comment_start_offset + $comment_data_offset;
 
         for ($i = 0; $i < $comments_count; $i++) {
@@ -405,7 +405,7 @@ class getid3_xiph extends getid3_handler
 
             $comment_data_offset += 4;
             while ((strlen($comment_data) - $comment_data_offset) < $getid3->info['ogg']['comments_raw'][$i]['size']) {
-            
+
                 if (($getid3->info['ogg']['comments_raw'][$i]['size'] > $getid3->info['avdataend']) || ($getid3->info['ogg']['comments_raw'][$i]['size'] < 0)) {
                     throw new getid3_exception('Invalid Ogg comment size (comment #'.$i.', claims to be '.number_format($getid3->info['ogg']['comments_raw'][$i]['size']).' bytes) - aborting reading comments');
                 }
@@ -454,12 +454,12 @@ class getid3_xiph extends getid3_handler
                     $image_chunk_check = getid3_lib_image_size::get($getid3->info['ogg']['comments_raw'][$i]['data']);
                     $getid3->info['ogg']['comments_raw'][$i]['image_mime'] = image_type_to_mime_type($image_chunk_check[2]);
                 }
-                
+
                 if (!@$getid3->info['ogg']['comments_raw'][$i]['image_mime'] || ($getid3->info['ogg']['comments_raw'][$i]['image_mime'] == 'application/octet-stream')) {
                     unset($getid3->info['ogg']['comments_raw'][$i]['image_mime']);
                     unset($getid3->info['ogg']['comments_raw'][$i]['data']);
                 }
-                
+
 
             } else {
 
@@ -495,7 +495,7 @@ class getid3_xiph extends getid3_handler
                         $getid3->info['replay_gain']['track']['peak'] = (float)$commentvalue[0];
                         unset($getid3->info['ogg']['comments'][$index]);
                         break;
-                        
+
                     case 'replaygain_reference_loudness':
                         $getid3->info['replay_gain']['reference_volume'] = (float)$commentvalue[0];
                         unset($getid3->info['ogg']['comments'][$index]);
@@ -512,9 +512,9 @@ class getid3_xiph extends getid3_handler
 
 
     private function ParseFLAC() {
-        
+
         $getid3 = $this->getid3;
-        
+
         // http://flac.sourceforge.net/format.html
 
         $getid3->info['fileformat']            = 'flac';
@@ -528,11 +528,11 @@ class getid3_xiph extends getid3_handler
 
 
     private function FLACparseMETAdata() {
-        
+
         $getid3 = $this->getid3;
 
         do {
-            
+
             $meta_data_block_offset    = ftell($getid3->fp);
             $meta_data_block_header    = fread($getid3->fp, 4);
             $meta_data_last_block_flag = (bool)(getid3_lib::BigEndian2Int($meta_data_block_header[0]) & 0x80);
@@ -590,7 +590,7 @@ class getid3_xiph extends getid3_handler
                         return false;
                     }
                     break;
-                    
+
                 case 'PICTURE':
                     if (!$this->FLACparsePICTURE($getid3->info['flac'][$meta_data_block_type_text]['raw']['block_data'])) {
                         return false;
@@ -648,9 +648,9 @@ class getid3_xiph extends getid3_handler
 
 
     private function FLACparseSTREAMINFO($meta_data_block_data) {
-        
+
         $getid3 = $this->getid3;
-        
+
         getid3_lib::ReadSequence('BigEndian2Int', $getid3->info['flac']['STREAMINFO'], $meta_data_block_data, 0,
             array (
                 'min_block_size' => 2,
@@ -661,7 +661,7 @@ class getid3_xiph extends getid3_handler
         );
 
         $sample_rate_channels_sample_bits_stream_samples = getid3_lib::BigEndian2Bin(substr($meta_data_block_data, 10, 8));
-        
+
         $getid3->info['flac']['STREAMINFO']['sample_rate']     = bindec(substr($sample_rate_channels_sample_bits_stream_samples,  0, 20));
         $getid3->info['flac']['STREAMINFO']['channels']        = bindec(substr($sample_rate_channels_sample_bits_stream_samples, 20,  3)) + 1;
         $getid3->info['flac']['STREAMINFO']['bits_per_sample'] = bindec(substr($sample_rate_channels_sample_bits_stream_samples, 23,  5)) + 1;
@@ -681,7 +681,7 @@ class getid3_xiph extends getid3_handler
 
             throw new getid3_exception('Corrupt METAdata block: STREAMINFO');
         }
-        
+
         unset($getid3->info['flac']['STREAMINFO']['raw']);
 
         return true;
@@ -690,14 +690,14 @@ class getid3_xiph extends getid3_handler
 
 
     private function FLACparseAPPLICATION($meta_data_block_data) {
-        
+
         $getid3 = $this->getid3;
-        
+
         $application_id = getid3_lib::BigEndian2Int(substr($meta_data_block_data, 0, 4));
-        
+
         $getid3->info['flac']['APPLICATION'][$application_id]['name'] = getid3_xiph::FLACapplicationIDLookup($application_id);
         $getid3->info['flac']['APPLICATION'][$application_id]['data'] = substr($meta_data_block_data, 4);
-        
+
         unset($getid3->info['flac']['APPLICATION']['raw']);
 
         return true;
@@ -706,9 +706,9 @@ class getid3_xiph extends getid3_handler
 
 
     private function FLACparseSEEKTABLE($meta_data_block_data) {
-        
+
         $getid3 = $this->getid3;
-        
+
         $offset = 0;
         $meta_data_block_length = strlen($meta_data_block_data);
         while ($offset < $meta_data_block_length) {
@@ -723,36 +723,36 @@ class getid3_xiph extends getid3_handler
             } else {
 
                 $sample_number = getid3_lib::BigEndian2Int($sample_number_string);
-                
+
                 $getid3->info['flac']['SEEKTABLE'][$sample_number]['offset']  = getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 8));
                 $offset += 8;
-                
+
                 $getid3->info['flac']['SEEKTABLE'][$sample_number]['samples'] = getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 2));
                 $offset += 2;
 
             }
         }
-        
+
         unset($getid3->info['flac']['SEEKTABLE']['raw']);
-        
+
         return true;
     }
 
 
 
     private function FLACparseCUESHEET($meta_data_block_data) {
-        
+
         $getid3 = $this->getid3;
-        
+
         $getid3->info['flac']['CUESHEET']['media_catalog_number'] = trim(substr($meta_data_block_data, 0, 128), "\0");
         $getid3->info['flac']['CUESHEET']['lead_in_samples']      = getid3_lib::BigEndian2Int(substr($meta_data_block_data, 128, 8));
         $getid3->info['flac']['CUESHEET']['flags']['is_cd']       = (bool)(getid3_lib::BigEndian2Int($meta_data_block_data[136]) & 0x80);
         $getid3->info['flac']['CUESHEET']['number_tracks']        = getid3_lib::BigEndian2Int($meta_data_block_data[395]);
 
         $offset = 396;
-        
+
         for ($track = 0; $track < $getid3->info['flac']['CUESHEET']['number_tracks']; $track++) {
-        
+
             $track_sample_offset = getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 8));
             $offset += 8;
 
@@ -771,74 +771,74 @@ class getid3_xiph extends getid3_handler
             $getid3->info['flac']['CUESHEET']['tracks'][$track_number]['index_points'] = getid3_lib::BigEndian2Int($meta_data_block_data{$offset++});
 
             for ($index = 0; $index < $getid3->info['flac']['CUESHEET']['tracks'][$track_number]['index_points']; $index++) {
-                
+
                 $index_sample_offset = getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 8));
                 $offset += 8;
-                
+
                 $index_number = getid3_lib::BigEndian2Int($meta_data_block_data{$offset++});
                 $getid3->info['flac']['CUESHEET']['tracks'][$track_number]['indexes'][$index_number] = $index_sample_offset;
-                
+
                 $offset += 3; // reserved
             }
         }
-        
+
         unset($getid3->info['flac']['CUESHEET']['raw']);
-        
+
         return true;
     }
-    
-    
-    
+
+
+
     private function FLACparsePICTURE($meta_data_block_data) {
-        
+
         $getid3 = $this->getid3;
-        
+
         $picture = &$getid3->info['flac']['PICTURE'][sizeof($getid3->info['flac']['PICTURE']) - 1];
-        
+
         $offset = 0;
-        
+
         $picture['type'] = $this->FLACpictureTypeLookup(getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 4)));
         $offset += 4;
-        
+
         $length = getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 4));
         $offset += 4;
-        
+
         $picture['mime_type'] = substr($meta_data_block_data, $offset, $length);
         $offset += $length;
-        
+
         $length = getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 4));
         $offset += 4;
-        
+
         $picture['description'] = substr($meta_data_block_data, $offset, $length);
         $offset += $length;
-        
+
         $picture['width'] = getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 4));
         $offset += 4;
-        
+
         $picture['height'] = getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 4));
         $offset += 4;
-        
+
         $picture['color_depth'] = getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 4));
         $offset += 4;
-        
+
         $picture['colors_indexed'] = getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 4));
         $offset += 4;
-        
+
         $length = getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 4));
         $offset += 4;
-        
+
         $picture['image_data'] = substr($meta_data_block_data, $offset, $length);
         $offset += $length;
-        
+
         unset($getid3->info['flac']['PICTURE']['raw']);
-        
+
         return true;
     }
-    
-    
-    
+
+
+
     public static function SpeexBandModeLookup($mode) {
-        
+
         static $lookup = array (
             0 => 'narrow',
             1 => 'wide',
@@ -851,8 +851,8 @@ class getid3_xiph extends getid3_handler
 
     public static function OggPageSegmentLength($ogg_info_array, $segment_number=1) {
 
-	if (!is_array($ogg_info_array['segment_table'])) { $ogg_info_array['segment_table'] = array(); } 
-        
+	if (!is_array($ogg_info_array['segment_table'])) { $ogg_info_array['segment_table'] = array(); }
+
         for ($i = 0; $i < $segment_number; $i++) {
             $segment_length = 0;
             foreach ($ogg_info_array['segment_table'] as $key => $value) {
@@ -862,7 +862,7 @@ class getid3_xiph extends getid3_handler
                 }
             }
         }
-	$segment_length = !$segment_length ? '1' : $segment_length; 
+	$segment_length = !$segment_length ? '1' : $segment_length;
         return $segment_length;
     }
 
@@ -888,11 +888,11 @@ class getid3_xiph extends getid3_handler
         }
         return round($qval, 1); // 5 or 4.9
     }
-    
-    
-    
+
+
+
     public static function FLACmetaBlockTypeLookup($block_type) {
-    
+
         static $lookup = array (
             0 => 'STREAMINFO',
             1 => 'PADDING',
@@ -908,24 +908,24 @@ class getid3_xiph extends getid3_handler
 
 
     public static function FLACapplicationIDLookup($application_id) {
-        
+
         // http://flac.sourceforge.net/id.html
-        
+
         static $lookup = array (
             0x46746F6C => 'flac-tools',                                                 // 'Ftol'
             0x46746F6C => 'Sound Font FLAC',                                            // 'SFFL'
             0x7065656D => 'Parseable Embedded Extensible Metadata (specification)',     //  'peem'
             0x786D6364 => 'xmcd'
-            
+
         );
         return (isset($lookup[$application_id]) ? $lookup[$application_id] : 'reserved');
     }
 
 
     public static function FLACpictureTypeLookup($type_id) {
-        
+
         static $lookup = array (
-            
+
              0 => 'Other',
              1 => "32x32 pixels 'file icon' (PNG only)",
              2 => 'Other file icon',

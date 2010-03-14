@@ -23,14 +23,14 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE as one
  */
-if (AJAX_INCLUDE != '1') { exit; } 
+if (AJAX_INCLUDE != '1') { exit; }
 
-switch ($_REQUEST['action']) { 
-	default: 
-		$results['rfc3514'] = '0x1'; 
+switch ($_REQUEST['action']) {
+	default:
+		$results['rfc3514'] = '0x1';
 	break;
-} // switch on action; 
+} // switch on action;
 
 // We always do this
-echo xml_from_array($results); 
+echo xml_from_array($results);
 ?>

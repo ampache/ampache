@@ -8,7 +8,7 @@
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; version 2
- of the License. 
+ of the License.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,7 +27,7 @@
 <tr>
 	<td valign="top"><strong><?php echo _('Search Type'); ?>:</strong></td>
         <td>
-	<?php 
+	<?php
 		$name = 'check_' . scrub_in($_REQUEST['search_type']);
 		${$name} = ' checked="checked" ';
 	?>

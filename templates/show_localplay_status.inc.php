@@ -20,8 +20,8 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-$status = $localplay->status();  
-$now_playing = $status['track_title'] ? $status['track_title'] . ' - ' . $status['track_album'] . ' - ' . $status['track_artist'] : ''; 
+$status = $localplay->status();
+$now_playing = $status['track_title'] ? $status['track_title'] . ' - ' . $status['track_album'] . ' - ' . $status['track_artist'] : '';
 ?>
 <?php Ajax::start_container('localplay_status'); ?>
 <?php show_box_top(_('Localplay Control') . ' - '. strtoupper($localplay->type)); ?>
@@ -35,12 +35,12 @@ $now_playing = $status['track_title'] ? $status['track_title'] . ' - ' . $status
 <?php echo _('Volume'); ?>:<?php echo $status['volume']; ?>%
 </li>
 <li>
-	<?php echo print_boolean($status['repeat']); ?> | 
+	<?php echo print_boolean($status['repeat']); ?> |
 	<?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_boolean($status['repeat']),print_boolean(invert_boolean($status['repeat'])),'localplay_repeat'); ?>
 	<?php echo _('Repeat'); ?>
 </li>
 <li>
-	<?php echo print_boolean($status['random']); ?> | 
+	<?php echo print_boolean($status['random']); ?> |
 	<?php echo Ajax::text('?page=localplay&action=random&value=' . invert_boolean($status['random']),print_boolean(invert_boolean($status['random'])),'localplay_random'); ?>
 	<?php echo _('Random'); ?>
 </li>

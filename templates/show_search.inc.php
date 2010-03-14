@@ -100,7 +100,7 @@
                  <?php  } ?>
 		</select>
 	</td>
-</tr>		
+</tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Rating'); ?></td>
 	<td>

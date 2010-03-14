@@ -4,7 +4,7 @@
 		const DIR_BOTH	 = 0;
 		const DIR_FORWARD  = 1;
 		const DIR_BACKWARD = 2;
-		
+
 		const TO_ARTIST  = "http://musicbrainz.org/ns/mmd-1.0#Artist";
 		const TO_TRACK   = "http://musicbrainz.org/ns/mmd-1.0#Track";
 		const TO_RELEASE = "http://musicbrainz.org/ns/mmd-1.0#Release";
@@ -76,7 +76,7 @@
 		function getEndDate() {
 			return $this->endDate;
 		}
-		
+
 		function getDirection() {
 			return $this->direction;
 		}

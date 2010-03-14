@@ -11,7 +11,7 @@
 			$this->country = $country;
 			$this->dateStr = $dateStr;
 		}
-		
+
 		function setCountry	  ( $country  ) { $this->country = $country;		}
 		function getCountry	  (		   ) { return $this->country;			}
 		function setCatalogNumber( $c_number ) { $this->catalogNumber = $c_number; }

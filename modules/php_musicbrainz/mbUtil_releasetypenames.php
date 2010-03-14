@@ -1,6 +1,6 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
-	$mbReleaseTypeNames = array( 
+	$mbReleaseTypeNames = array(
 		"http://musicbrainz.org/ns/mmd-1.0#None" => "None",
 		"http://musicbrainz.org/ns/mmd-1.0#Album" => "Album",
 		"http://musicbrainz.org/ns/mmd-1.0#Single" => "Single",

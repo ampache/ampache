@@ -37,7 +37,7 @@
   </tr>
 <!--
   <tr>
-    <td colspan="2">	
+    <td colspan="2">
  	 <table>
  		 <tr>
 		    <td><?php echo _('Catalog Statistics'); ?>:</td>
@@ -60,7 +60,7 @@
 		        <input type="checkbox" name="pop_artists" value="yes" />
 		    </td>
 		  </tr>
-		
+
 		  <tr>
 		    <td><?php echo _('Latest Album Additions'); ?>:</td>
 		    <td>

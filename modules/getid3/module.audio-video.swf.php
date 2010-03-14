@@ -22,15 +22,15 @@
 //
 // $Id: module.audio-video.swf.php,v 1.2 2006/11/02 10:48:00 ah Exp $
 
-        
-        
+
+
 class getid3_swf extends getid3_handler
 {
 
     public function Analyze() {
-        
+
         $getid3 = $this->getid3;
-        
+
         $getid3->info['fileformat']          = 'swf';
         $getid3->info['video']['dataformat'] = 'swf';
 
@@ -42,7 +42,7 @@ class getid3_swf extends getid3_handler
 
         $getid3->info['swf']['header']['signature']   = substr($swf_file_data, 0, 3);
         switch ($getid3->info['swf']['header']['signature']) {
-        
+
             case 'FWS':
                 $getid3->info['swf']['header']['compressed'] = false;
                 break;
@@ -75,11 +75,11 @@ class getid3_swf extends getid3_handler
         $frame_size_bits_per_value = (ord(substr($swf_file_data, 8, 1)) & 0xF8) >> 3;
         $frame_size_data_length    = ceil((5 + (4 * $frame_size_bits_per_value)) / 8);
         $frame_size_data_string    = str_pad(decbin(ord($swf_file_data[8]) & 0x07), 3, '0', STR_PAD_LEFT);
-        
+
         for ($i = 1; $i < $frame_size_data_length; $i++) {
             $frame_size_data_string .= str_pad(decbin(ord(substr($swf_file_data, 8 + $i, 1))), 8, '0', STR_PAD_LEFT);
         }
-        
+
         list($x1, $x2, $y1, $y2) = explode("\n", wordwrap($frame_size_data_string, $frame_size_bits_per_value, "\n", 1));
         $getid3->info['swf']['header']['frame_width']  = bindec($x2);
         $getid3->info['swf']['header']['frame_height'] = bindec($y2);
@@ -126,7 +126,7 @@ class getid3_swf extends getid3_handler
             $tag_data['id']     = $tag_ID;
             $tag_data['data']   = substr($swf_file_data, $current_offset, $tag_length);
             switch ($tag_ID) {
-                
+
                 case 0: // end of movie
                     break 2;
 

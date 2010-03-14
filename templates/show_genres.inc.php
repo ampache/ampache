@@ -39,9 +39,9 @@
 	<th class="cel_songs"><?php echo _('Songs'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
-<?php 
-foreach ($object_ids as $genre_id) { 
-	$genre = new Genre($genre_id); 
+<?php
+foreach ($object_ids as $genre_id) {
+	$genre = new Genre($genre_id);
 	$genre->format();
 ?>
 	<tr class="<?php echo flip_class(); ?>">

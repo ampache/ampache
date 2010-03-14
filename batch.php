@@ -21,20 +21,20 @@
 */
 
 require_once 'lib/init.php';
-ob_end_clean(); 
+ob_end_clean();
 
 //test that batch download is permitted
-if (!Access::check_function('batch_download')) { 
-	access_denied(); 
-	exit; 
+if (!Access::check_function('batch_download')) {
+	access_denied();
+	exit;
 }
 
 /* Drop the normal Time limit constraints, this can take a while */
 set_time_limit(0);
 
 switch ($_REQUEST['action']) {
-	case 'tmp_playlist': 
-		$media_ids = $GLOBALS['user']->playlist->get_items(); 
+	case 'tmp_playlist':
+		$media_ids = $GLOBALS['user']->playlist->get_items();
 		$name = $GLOBALS['user']->username . ' - Playlist';
 	break;
 	case 'playlist':
@@ -47,28 +47,28 @@ switch ($_REQUEST['action']) {
 		$media_ids = $album->get_songs();
 		$name = $album->name;
 	break;
-	case 'artist': 
-		$artist = new Artist($_REQUEST['id']); 
-		$media_ids = $artist->get_songs(); 
-		$name = $artist->name; 
+	case 'artist':
+		$artist = new Artist($_REQUEST['id']);
+		$media_ids = $artist->get_songs();
+		$name = $artist->name;
 	break;
 	case 'genre':
-		$id = scrub_in($_REQUEST['id']); 
-		$genre = new Genre($id); 
+		$id = scrub_in($_REQUEST['id']);
+		$genre = new Genre($id);
 		$media_ids = $genre->get_songs();
-		$name = $genre->name; 
+		$name = $genre->name;
 	break;
-	case 'browse': 
-		$media_ids = Browse::get_saved(); 
-		$name = 'Batch-' . date("dmY",time()); 
+	case 'browse':
+		$media_ids = Browse::get_saved();
+		$name = 'Batch-' . date("dmY",time());
 	default:
 		// Rien a faire
 	break;
-} // action switch		
+} // action switch
 
 // Take whatever we've got and send the zip
-$song_files = get_song_files($media_ids); 
-set_memory_limit($song_files['1']+32); 
-send_zip($name,$song_files['0']); 
-exit; 
+$song_files = get_song_files($media_ids);
+set_memory_limit($song_files['1']+32);
+send_zip($name,$song_files['0']);
+exit;
 ?>

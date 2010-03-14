@@ -22,20 +22,20 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface','75')) { 
+if (!Access::check('interface','75')) {
 	access_denied();
 	exit();
 }
 
-show_header(); 
+show_header();
 
 // Action switch
-switch ($_REQUEST['action']) { 
+switch ($_REQUEST['action']) {
 	case 'send_mail':
-		if (Config::get('demo_mode')) { 
-			access_denied(); 
+		if (Config::get('demo_mode')) {
+			access_denied();
 			exit;
-		} 
+		}
 
 		// Multi-byte Character Mail
 		if(function_exists('mb_language')) {
@@ -43,21 +43,21 @@ switch ($_REQUEST['action']) {
 			mb_language("uni");
 		}
 
-		$clients = AmpacheMail::get_users($_REQUEST['to']); 
+		$clients = AmpacheMail::get_users($_REQUEST['to']);
 
-		foreach ($clients as $client) { 
+		foreach ($clients as $client) {
 			if(function_exists('mb_encode_mimeheader')) {
 				$recipient .= mb_encode_mimeheader($client['fullname']) ." <" . $client['email'] . ">, ";
 			} else {
 				$recipient .= $client['fullname'] ." <" . $client['email'] . ">, ";
 			}
 		}
-		
+
 		// Remove the last , from the recipient
 		$recipient = rtrim($recipient,", ");
-		
+
 		// Set the vars on the object
-		AmpacheMail::$recipient = $recipient; 
+		AmpacheMail::$recipient = $recipient;
 		if(function_exists('mb_encode_mimeheader')) {
 			AmpacheMail::$fullname = mb_encode_mimeheader($GLOBALS['user']->fullname);
 		} else {
@@ -77,16 +77,16 @@ switch ($_REQUEST['action']) {
 
 		/* Confirmation Send */
 		$url 	= Config::get('web_path') . '/admin/mail.php';
-		$title 	= _('E-mail Sent'); 
+		$title 	= _('E-mail Sent');
 		$body 	= _('Your E-mail was successfully sent.');
 		show_confirmation($title,$body,$url);
 	break;
-	default: 
+	default:
 		require_once Config::get('prefix') . '/templates/show_mail_users.inc.php';
 	break;
 } // end switch
 
-show_footer(); 
+show_footer();
 
 
 ?>

@@ -39,11 +39,11 @@ $web_path = Config::get('web_path');
 	<th class="cel_status"><?php echo _('Status'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
-<?php 
-foreach ($object_ids as $flag_id) { 
-	$flag = new Flag($flag_id); 
-	$flag->format(); 
-	require Config::get('prefix') . '/templates/show_flag_row.inc.php'; 
+<?php
+foreach ($object_ids as $flag_id) {
+	$flag = new Flag($flag_id);
+	$flag->format();
+	require Config::get('prefix') . '/templates/show_flag_row.inc.php';
 ?>
 <?php } if (!count($object_ids)) { ?>
 <tr class="<?php echo flip_class(); ?>">

@@ -22,15 +22,15 @@
 //
 // $Id: module.audio.ac3.php,v 1.3 2006/11/02 10:48:01 ah Exp $
 
-        
-        
+
+
 class getid3_ac3 extends getid3_handler
 {
 
     public function Analyze() {
 
         $getid3 = $this->getid3;
-        
+
         // http://www.atsc.org/standards/a_52a.pdf
 
         $getid3->info['fileformat']            = 'ac3';
@@ -61,7 +61,7 @@ class getid3_ac3 extends getid3_handler
 
         if ($info_ac3_raw['synchinfo']['synchword'] != "\x0B\x77") {
             throw new getid3_exception('Expecting "\x0B\x77" at offset '.$getid3->info['avdataoffset'].', found \x'.strtoupper(dechex($ac3_header['syncinfo']{0})).'\x'.strtoupper(dechex($ac3_header['syncinfo']{1})).' instead');
-        } 
+        }
 
 
         // syncinfo() {
@@ -117,7 +117,7 @@ class getid3_ac3 extends getid3_handler
                 break;
         }
         $getid3->info['audio']['channels'] = $info_ac3['num_channels'];
-        
+
         $offset = 11;
 
         if ($info_ac3_raw_bsi['acmod'] & 0x01) {
@@ -159,7 +159,7 @@ class getid3_ac3 extends getid3_handler
         if ($info_ac3_raw_bsi['compre_flag']) {
             $info_ac3_raw_bsi['compr'] = bindec(substr($ac3_header['bsi'], $offset, 8));
             $offset += 8;
-            
+
             $info_ac3['heavy_compression'] = getid3_ac3::AC3heavyCompression($info_ac3_raw_bsi['compr']);
         }
 
@@ -173,7 +173,7 @@ class getid3_ac3 extends getid3_handler
         if ($info_ac3_raw_bsi['audprodie']) {
             $info_ac3_raw_bsi['mixlevel'] = bindec(substr($ac3_header['bsi'], $offset, 5));
             $offset += 5;
-            
+
             $info_ac3_raw_bsi['roomtyp']  = bindec(substr($ac3_header['bsi'], $offset, 2));
             $offset += 2;
 
@@ -191,14 +191,14 @@ class getid3_ac3 extends getid3_handler
             // The value of 0 is reserved. The values of 1 to 31 are interpreted as -1 dB to -31 dB with respect to digital 100 percent.
             $info_ac3_raw_bsi['dialnorm2'] = bindec(substr($ac3_header['bsi'], $offset, 5));
             $offset += 5;
-            
+
             $info_ac3['dialogue_normalization2'] = '-'.$info_ac3_raw_bsi['dialnorm2'].'dB';
 
             $info_ac3_raw_bsi['compre_flag2'] = $ac3_header['bsi']{$offset++} == '1';
             if ($info_ac3_raw_bsi['compre_flag2']) {
                 $info_ac3_raw_bsi['compr2'] = bindec(substr($ac3_header['bsi'], $offset, 8));
                 $offset += 8;
-                
+
                 $info_ac3['heavy_compression2'] = getid3_ac3::AC3heavyCompression($info_ac3_raw_bsi['compr2']);
             }
 
@@ -212,7 +212,7 @@ class getid3_ac3 extends getid3_handler
             if ($info_ac3_raw_bsi['audprodie2']) {
                 $info_ac3_raw_bsi['mixlevel2'] = bindec(substr($ac3_header['bsi'], $offset, 5));
                 $offset += 5;
-                
+
                 $info_ac3_raw_bsi['roomtyp2']  = bindec(substr($ac3_header['bsi'], $offset, 2));
                 $offset += 2;
 
@@ -278,11 +278,11 @@ class getid3_ac3 extends getid3_handler
             6 => 'associated service: emergency (E)',
             7 => 'main audio service: karaoke'
         );
-        
+
         if ($bsmod == 7  &&  $acmod == 1) {
             return 'associated service: voice over (VO)';
         }
-        
+
         return (isset($lookup[$bsmod]) ? $lookup[$bsmod] : false);
     }
 
@@ -307,7 +307,7 @@ class getid3_ac3 extends getid3_handler
 
 
     public static function AC3centerMixLevelLookup($cmixlev) {
-        
+
         static $lookup;
         if (!@$lookup) {
             $lookup = array (
@@ -323,7 +323,7 @@ class getid3_ac3 extends getid3_handler
 
 
     public static function AC3surroundMixLevelLookup($surmixlev) {
-        
+
         static $lookup;
         if (!@$lookup) {
             $lookup = array (
@@ -348,11 +348,11 @@ class getid3_ac3 extends getid3_handler
         );
         return (isset($lookup[$dsurmod]) ? $lookup[$dsurmod] : false);
     }
-    
-    
+
+
 
     public static function AC3channelsEnabledLookup($acmod, $lfeon) {
-        
+
         return array (
             'ch1'            => $acmod == 0,
             'ch2'            => $acmod == 0,
@@ -422,7 +422,7 @@ class getid3_ac3 extends getid3_handler
 
 
     public static function AC3roomTypeLookup($roomtyp) {
-        
+
         static $lookup = array (
             0 => 'not indicated',
             1 => 'large room, X curve monitor',
@@ -435,7 +435,7 @@ class getid3_ac3 extends getid3_handler
 
 
     public static function AC3frameSizeLookup($frmsizecod, $fscod) {
-        
+
         $padding     = (bool)($frmsizecod % 2);
         $frame_size_id =   floor($frmsizecod / 2);
 
@@ -470,7 +470,7 @@ class getid3_ac3 extends getid3_handler
 
 
     public static function AC3bitrateLookup($frmsizecod) {
-        
+
         static $lookup = array (
             0  => 32000,
             1  => 40000,

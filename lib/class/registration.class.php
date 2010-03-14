@@ -30,7 +30,7 @@ class Registration {
 	 * constructor
 	 * This is what is called when the class is loaded
 	 */
-	public function __construct() { 
+	public function __construct() {
 
 		// Rien a faire
 
@@ -40,7 +40,7 @@ class Registration {
  	 * send_confirmation
 	 * This sends the confirmation e-mail for the specified user
 	 */
-	public static function send_confirmation($username,$fullname,$email,$password,$validation) { 
+	public static function send_confirmation($username,$fullname,$email,$password,$validation) {
 
 		// Multi-byte Character Mail
 		if(function_exists('mb_language')) {
@@ -76,7 +76,7 @@ Password: %s
 
 Your account is currently inactive. You cannot use it until you've visited the following link:
 
-%s 
+%s
 
 Thank you for registering
 "), $username, $password, Config::get('web_path') . "/register.php?action=validate&username=$username&auth=$validation");
@@ -96,7 +96,7 @@ Thank you for registering
 		}
 
 		// Check to see if the admin should be notified
-		if (Config::get('admin_notify_reg')) { 
+		if (Config::get('admin_notify_reg')) {
 			$body = sprintf(_("A new user has registered
 The following values were entered.
 
@@ -113,11 +113,11 @@ E-mail: %s
 						implode("\n", $additional_header),
 						'-f'.Config::get('mail_from'));
 			} else {
-				mail(Config::get('mail_from'),$subject,$body,implode("\r\n", $additional_header),'-f'.Config::get('mail_from')); 
+				mail(Config::get('mail_from'),$subject,$body,implode("\r\n", $additional_header),'-f'.Config::get('mail_from'));
 			}
-		} 
-				
-		return true; 
+		}
+
+		return true;
 
 	} // send_confirmation
 
@@ -125,11 +125,11 @@ E-mail: %s
  	 * show_agreement
 	 * This shows the registration agreement, /config/registration_agreement.php
 	 */
-	public static function show_agreement() { 
+	public static function show_agreement() {
 
 		$filename = Config::get('prefix') . '/config/registration_agreement.php';
 
-		if (!file_exists($filename)) { return false; } 
+		if (!file_exists($filename)) { return false; }
 
 		/* Check for existance */
 		$fp = fopen($filename,'r');

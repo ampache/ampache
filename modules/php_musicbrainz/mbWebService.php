@@ -4,7 +4,7 @@
 	   function get ( $entity, $id, $include, $filter, $version = '1' );
 	   function post( $entity, $id, $data, $version = '1' );
 	}
-	
+
 	class mbWebService implements IWebService {
 		private $host;
 		private $port;
@@ -31,7 +31,7 @@
 
 			return true;
 		}
-		
+
 		function close() {
 			if ( $this->fSock != -1 ) {
 			  fclose($this->fSock);
@@ -47,7 +47,7 @@
 		function parseHeaders( $string ) {
 			$lines = explode( "\n", $string );
 			$this->lastHeaders = array();
-			
+
 			foreach ( $lines as $key => $line ) {
 				// Status line
 				if ( $key == 0 ) {
@@ -81,7 +81,7 @@
 			$this->lastHeaders = array();
 			return false;
 		}
-		
+
 		function getHeaders() {
 			return $this->lastHeaders;
 		}
@@ -91,7 +91,7 @@
 				$this->lastError = "Trying to write to closed socket.";
 				return false;
 			}
-			
+
 			fwrite( $this->fSock, $string . "\r\n" );
 			fwrite( $this->fSock, "Host: " . $this->host . "\r\n"			 );
 			fwrite( $this->fSock, "Accept: */*\r\n"						   );
@@ -109,7 +109,7 @@
 				$this->lastError = "Trying to read from closed socket.";
 				return false;
 			}
-			
+
 			$buffer = "";
 
 			while ( !feof($this->fSock) )
@@ -120,7 +120,7 @@
 
 			return $this->parseHeaders($buffer);
 		}
-		
+
 		function get( $entity, $uid, $includes, $filters, $version="1" ) {
 			$params = array();
 			$params['type'] = "xml";
@@ -142,17 +142,17 @@
 			}
 
 			$URI = $this->pathPrefix . "/" . $version . "/" . $entity . "/" . $uid . "?" . $this->build_query( $params );
-			
+
 			if ( $this->fSock == -1 && !$this->connect() )
 			  return false;
-			  
+
 			$this->sendRequest( "GET $URI HTTP/1.1" );
 			$this->lastResponse = $this->getResponse();
 			$this->close();
 
 			if ( isset($this->lastHeaders['HTTP_status']) && $this->lastHeaders['HTTP_status'] != 200 )
 			  return false;
-			  
+
 			return $this->lastResponse;
 		}
 
@@ -170,11 +170,11 @@
 
 			return $this->lastResponse;
 		}
-		
+
 		function build_query( $array ) {
 			$first = true;
 			$query_string = "";
-			
+
 			if ( !is_array($array) || sizeof($array) == 0 )
 			  return "";
 

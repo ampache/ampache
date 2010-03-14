@@ -22,15 +22,15 @@
 //
 // $Id: module.audio.tta.php,v 1.2 2006/11/02 10:48:01 ah Exp $
 
-        
-        
+
+
 class getid3_tta extends getid3_handler
 {
 
     public function Analyze() {
 
         $getid3 = $this->getid3;
-        
+
         $getid3->info['fileformat']            = 'tta';
         $getid3->info['audio']['dataformat']   = 'tta';
         $getid3->info['audio']['lossless']     = true;
@@ -40,27 +40,27 @@ class getid3_tta extends getid3_handler
         $tta_header = fread($getid3->fp, 26);
 
         $getid3->info['tta']['magic'] = 'TTA';  // Magic bytes
-        
+
         switch ($tta_header{3}) {
-        
+
             case "\x01": // TTA v1.x
             case "\x02": // TTA v1.x
             case "\x03": // TTA v1.x
-                
+
                 // "It was the demo-version of the TTA encoder. There is no released format with such header. TTA encoder v1 is not supported about a year."
                 $getid3->info['tta']['major_version'] = 1;
                 $getid3->info['avdataoffset'] += 16;
-                
-                getid3_lib::ReadSequence('LittleEndian2Int', $getid3->info['tta'], $tta_header, 4, 
+
+                getid3_lib::ReadSequence('LittleEndian2Int', $getid3->info['tta'], $tta_header, 4,
                     array (
                         'channels'            => 2,
                         'bits_per_sample'     => 2,
                         'sample_rate'         => 4,
                         'samples_per_channel' => 4
                     )
-                );                
+                );
                 $getid3->info['tta']['compression_level'] = ord($tta_header{3});
-                
+
                 $getid3->info['audio']['encoder_options']   = '-e'.$getid3->info['tta']['compression_level'];
                 $getid3->info['playtime_seconds']           = $getid3->info['tta']['samples_per_channel'] / $getid3->info['tta']['sample_rate'];
                 break;
@@ -70,7 +70,7 @@ class getid3_tta extends getid3_handler
                 $getid3->info['tta']['major_version'] = 2;
                 $getid3->info['avdataoffset'] += 20;
 
-                getid3_lib::ReadSequence('LittleEndian2Int', $getid3->info['tta'], $tta_header, 4, 
+                getid3_lib::ReadSequence('LittleEndian2Int', $getid3->info['tta'], $tta_header, 4,
                     array (
                         'compression_level' => 2,
                         'audio_format'      => 2,
@@ -79,8 +79,8 @@ class getid3_tta extends getid3_handler
                         'sample_rate'       => 4,
                         'data_length'       => 4
                     )
-                );                
-                
+                );
+
                 $getid3->info['audio']['encoder_options']   = '-e'.$getid3->info['tta']['compression_level'];
                 $getid3->info['playtime_seconds']           = $getid3->info['tta']['data_length'] / $getid3->info['tta']['sample_rate'];
                 break;
@@ -90,7 +90,7 @@ class getid3_tta extends getid3_handler
                 $getid3->info['tta']['major_version'] = 3;
                 $getid3->info['avdataoffset'] += 26;
 
-                getid3_lib::ReadSequence('LittleEndian2Int', $getid3->info['tta'], $tta_header, 4, 
+                getid3_lib::ReadSequence('LittleEndian2Int', $getid3->info['tta'], $tta_header, 4,
                     array (
                         'audio_format'   => 2,
                         'channels'       => 2,
@@ -98,9 +98,9 @@ class getid3_tta extends getid3_handler
                         'sample_rate'    => 4,
                         'data_length'    => 4,
                         'crc32_footer'   => -4,     // string
-                        'seek_point'     => 4 
+                        'seek_point'     => 4
                     )
-                );                
+                );
 
                 $getid3->info['playtime_seconds']    = $getid3->info['tta']['data_length'] / $getid3->info['tta']['sample_rate'];
                 break;

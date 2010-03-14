@@ -20,7 +20,7 @@
 
 */
 
-if (!$_SESSION['state']['sidebar_tab']) { $_SESSION['state']['sidebar_tab'] = 'home'; } 
+if (!$_SESSION['state']['sidebar_tab']) { $_SESSION['state']['sidebar_tab'] = 'home'; }
 $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
 ${$class_name} = ' active';
 
@@ -28,24 +28,24 @@ ${$class_name} = ' active';
 $sidebar_items[] = array('id'=>'home', 'title'=>_('Home'), 'icon'=>'home', 'access'=>5);
 $sidebar_items[] = array('id'=>'localplay', 'title'=>_('Localplay'), 'icon'=>'volumeup', 'access'=>5);
 $sidebar_items[] = array('id'=>'preferences', 'title'=>_('Preferences'), 'icon'=>'edit', 'access'=>5);
-$sidebar_items[] = array('id'=>'modules','title'=>_('Modules'),'icon'=>'plugin','access'=>100); 
+$sidebar_items[] = array('id'=>'modules','title'=>_('Modules'),'icon'=>'plugin','access'=>100);
 $sidebar_items[] = array('id'=>'admin', 'title'=>_('Admin'), 'icon'=>'admin', 'access'=>100);
 
 
 $web_path = Config::get('web_path');
-$ajax_url = Config::get('ajax_url'); 
+$ajax_url = Config::get('ajax_url');
 
 ?>
 <ul id="sidebar-tabs">
-<?php 
-	foreach ($sidebar_items as $item) { 
+<?php
+	foreach ($sidebar_items as $item) {
 		if (Access::check('interface',$item['access'])) {
 			$li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . ${'sidebar_'.$item['id'] } . "'";
 		?><li <?php echo $li_params; ?>>
-      	<?php 
+      	<?php
         // Button
         echo Ajax::button("?page=index&action=sidebar&button=".$item['id'],$item['icon'],$item['title'],'sidebar_'.$item['id']);
-      	
+
       	// Include subnav if it's the selected one
       	// so that it's generated inside its parent li
 	if ($item['id']==$_SESSION['state']['sidebar_tab']) {

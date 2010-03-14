@@ -30,12 +30,12 @@ class getid3_zip extends getid3_handler
     public function Analyze() {
 
         $getid3 = $this->getid3;
-        
+
         $getid3->info['zip'] = array ();
         $info_zip = &$getid3->info['zip'];
-        
+
         $getid3->info['fileformat'] = 'zip';
-        
+
         $info_zip['encoding'] = 'ISO-8859-1';
         $info_zip['files']    = array ();
         $info_zip['compressed_size'] = $info_zip['uncompressed_size'] = $info_zip['entries_count'] = 0;
@@ -97,22 +97,22 @@ class getid3_zip extends getid3_handler
             }
             throw new getid3_exception('Cannot find End Of Central Directory - returned list of files in [zip][entries] array may not be complete');
         }
-        
+
         //throw new getid3_exception('Cannot find End Of Central Directory (truncated file?)');
     }
 
 
 
     private function getZIPHeaderFilepointerTopDown() {
-        
+
         // shortcut
         $getid3 = $this->getid3;
-        
+
         $getid3->info['fileformat'] = 'zip';
-        
+
         $getid3->info['zip'] = array ();
         $info_zip['compressed_size'] = $info_zip['uncompressed_size'] = $info_zip['entries_count'] = 0;
-        
+
         rewind($getid3->fp);
         while ($fileentry = $this->ZIPparseLocalFileHeader()) {
             $info_zip['entries'][] = $fileentry;
@@ -149,10 +149,10 @@ class getid3_zip extends getid3_handler
 
 
     private function getZIPentriesFilepointer() {
-        
+
         // shortcut
         $getid3 = $this->getid3;
-        
+
         $getid3->info['zip'] = array ();
         $info_zip['compressed_size'] = $info_zip['uncompressed_size'] = $info_zip['entries_count'] = 0;
 
@@ -173,36 +173,36 @@ class getid3_zip extends getid3_handler
 
 
     private function ZIPparseLocalFileHeader() {
-        
+
         // shortcut
         $getid3 = $this->getid3;
 
         $local_file_header['offset'] = ftell($getid3->fp);
-        
+
         $zip_local_file_header = fread($getid3->fp, 30);
 
         $local_file_header['raw']['signature'] = getid3_lib::LittleEndian2Int(substr($zip_local_file_header,  0, 4));
-        
+
         // Invalid Local File Header Signature
         if ($local_file_header['raw']['signature'] != 0x04034B50) {
             fseek($getid3->fp, $local_file_header['offset'], SEEK_SET); // seek back to where filepointer originally was so it can be handled properly
             return false;
         }
-        
-        getid3_lib::ReadSequence('LittleEndian2Int', $local_file_header['raw'], $zip_local_file_header,  4, 
+
+        getid3_lib::ReadSequence('LittleEndian2Int', $local_file_header['raw'], $zip_local_file_header,  4,
             array (
-                'extract_version'    => 2, 
-                'general_flags'      => 2, 
-                'compression_method' => 2, 
-                'last_mod_file_time' => 2, 
-                'last_mod_file_date' => 2, 
-                'crc_32'             => 2, 
-                'compressed_size'    => 2, 
-                'uncompressed_size'  => 2, 
-                'filename_length'    => 2, 
+                'extract_version'    => 2,
+                'general_flags'      => 2,
+                'compression_method' => 2,
+                'last_mod_file_time' => 2,
+                'last_mod_file_date' => 2,
+                'crc_32'             => 2,
+                'compressed_size'    => 2,
+                'uncompressed_size'  => 2,
+                'filename_length'    => 2,
                 'extra_field_length' => 2
             )
-        );        
+        );
 
         $local_file_header['extract_version']         = sprintf('%1.1f', $local_file_header['raw']['extract_version'] / 10);
         $local_file_header['host_os']                 = $this->ZIPversionOSLookup(($local_file_header['raw']['extract_version'] & 0xFF00) >> 8);
@@ -229,12 +229,12 @@ class getid3_zip extends getid3_handler
 
         if ($local_file_header['flags']['data_descriptor_used']) {
             $data_descriptor = fread($getid3->fp, 12);
-            
-            getid3_lib::ReadSequence('LittleEndian2Int', $local_file_header['data_descriptor'], $data_descriptor, 0, 
+
+            getid3_lib::ReadSequence('LittleEndian2Int', $local_file_header['data_descriptor'], $data_descriptor, 0,
                 array (
                 'crc_32'            => 4,
                 'compressed_size'   => 4,
-                'uncompressed_size' => 4 
+                'uncompressed_size' => 4
                 )
             );
         }
@@ -245,7 +245,7 @@ class getid3_zip extends getid3_handler
 
 
     private function ZIPparseCentralDirectory() {
-        
+
         // shortcut
         $getid3 = $this->getid3;
 
@@ -254,14 +254,14 @@ class getid3_zip extends getid3_handler
         $zip_central_directory = fread($getid3->fp, 46);
 
         $central_directory['raw']['signature']  = getid3_lib::LittleEndian2Int(substr($zip_central_directory,  0, 4));
-        
+
         // invalid Central Directory Signature
         if ($central_directory['raw']['signature'] != 0x02014B50) {
             fseek($getid3->fp, $central_directory['offset'], SEEK_SET); // seek back to where filepointer originally was so it can be handled properly
             return false;
         }
-        
-        getid3_lib::ReadSequence('LittleEndian2Int', $central_directory['raw'], $zip_central_directory,  4, 
+
+        getid3_lib::ReadSequence('LittleEndian2Int', $central_directory['raw'], $zip_central_directory,  4,
             array (
                 'create_version'       => 2,
                 'extract_version'      => 2,
@@ -281,7 +281,7 @@ class getid3_zip extends getid3_handler
                 'local_header_offset'  => 4
             )
         );
-        
+
         $central_directory['entry_offset']            = $central_directory['raw']['local_header_offset'];
         $central_directory['create_version']          = sprintf('%1.1f', $central_directory['raw']['create_version'] / 10);
         $central_directory['extract_version']         = sprintf('%1.1f', $central_directory['raw']['extract_version'] / 10);
@@ -310,26 +310,26 @@ class getid3_zip extends getid3_handler
         return $central_directory;
     }
 
-    
-    
+
+
     private function ZIPparseEndOfCentralDirectory() {
-        
-        // shortcut             
+
+        // shortcut
         $getid3 = $this->getid3;
-    
+
         $end_of_central_directory['offset'] = ftell($getid3->fp);
 
         $zip_end_of_central_directory = fread($getid3->fp, 22);
 
         $end_of_central_directory['signature'] = getid3_lib::LittleEndian2Int(substr($zip_end_of_central_directory,  0, 4));
-        
+
         // invalid End Of Central Directory Signature
         if ($end_of_central_directory['signature'] != 0x06054B50) {
             fseek($getid3->fp, $end_of_central_directory['offset'], SEEK_SET); // seek back to where filepointer originally was so it can be handled properly
             return false;
         }
-        
-        getid3_lib::ReadSequence('LittleEndian2Int', $end_of_central_directory, $zip_end_of_central_directory,  4, 
+
+        getid3_lib::ReadSequence('LittleEndian2Int', $end_of_central_directory, $zip_end_of_central_directory,  4,
             array (
                 'disk_number_current'         => 2,
                 'disk_number_start_directory' => 2,
@@ -340,14 +340,14 @@ class getid3_zip extends getid3_handler
                 'comment_length'              => 2
             )
         );
-        
+
         if ($end_of_central_directory['comment_length'] > 0) {
             $end_of_central_directory['comment'] = fread($getid3->fp, $end_of_central_directory['comment_length']);
         }
 
         return $end_of_central_directory;
     }
-    
+
 
 
     public static function ZIPparseGeneralPurposeFlags($flag_bytes, $compression_method) {
@@ -386,7 +386,7 @@ class getid3_zip extends getid3_handler
 
 
     public static function ZIPversionOSLookup($index) {
-        
+
         static $lookup = array (
             0  => 'MS-DOS and OS/2 (FAT / VFAT / FAT32 file systems)',
             1  => 'Amiga',
@@ -461,18 +461,18 @@ class getid3_zip extends getid3_handler
         */
         return gmmktime(($DOStime & 0xF800) >> 11, ($DOStime & 0x07E0) >> 5, ($DOStime & 0x001F) * 2, ($DOSdate & 0x01E0) >> 5, $DOSdate & 0x001F, (($DOSdate & 0xFE00) >> 9) + 1980);
     }
-    
-    
-    
+
+
+
     public static function array_merge_clobber($array1, $array2) {
 
         // written by kcØhireability*com
         // taken from http://www.php.net/manual/en/function.array-merge-recursive.php
-        
+
         if (!is_array($array1) || !is_array($array2)) {
             return false;
         }
-        
+
         $newarray = $array1;
         foreach ($array2 as $key => $val) {
             if (is_array($val) && isset($newarray[$key]) && is_array($newarray[$key])) {
@@ -483,9 +483,9 @@ class getid3_zip extends getid3_handler
         }
         return $newarray;
     }
-    
-    
-    
+
+
+
     public static function CreateDeepArray($array_path, $separator, $value) {
 
         // assigns $value to a nested array path:
@@ -494,14 +494,14 @@ class getid3_zip extends getid3_handler
         //   $foo = array ('path'=>array('to'=>'array('my'=>array('file.txt'))));
         // or
         //   $foo['path']['to']['my'] = 'file.txt';
-        
+
         while ($array_path{0} == $separator) {
             $array_path = substr($array_path, 1);
         }
         if (($pos = strpos($array_path, $separator)) !== false) {
             return array (substr($array_path, 0, $pos) => getid3_zip::CreateDeepArray(substr($array_path, $pos + 1), $separator, $value));
         }
-        
+
         return array ($array_path => $value);
     }
 

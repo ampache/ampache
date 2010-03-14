@@ -21,14 +21,14 @@
 */
 ?>
 <div id="play_type_switch">
-<?php 
+<?php
 $name = "is_" . Config::get('play_type');
 ${$name} = 'selected="selected" ';
 
 if (Preference::has_access('play_type')) {
 ?>
 <form method="post" id="play_type_form" action="javascript.void(0);">
-<select id="play_type_select" name="type"> 
+<select id="play_type_select" name="type">
 	<?php if (Config::get('allow_stream_playback')) { ?>
 		<option value="stream" <?php echo $is_stream; ?>><?php echo _('Stream'); ?></option>
 	<?php } if (Config::get('allow_localplay_playback')) { ?>

@@ -22,20 +22,20 @@
 //
 // $Id: module.archive.szip.php,v 1.2 2006/11/02 10:48:00 ah Exp $
 
-        
-        
+
+
 class getid3_szip extends getid3_handler
 {
 
     public function Analyze() {
-        
+
         $getid3 = $this->getid3;
 
         fseek($getid3->fp, $getid3->info['avdataoffset'], SEEK_SET);
         $szip_rkau = fread($getid3->fp, 6);
-        
+
         // Magic bytes:  'SZ'."\x0A\x04"
-            
+
         $getid3->info['fileformat']            = 'szip';
 
         $getid3->info['szip']['major_version'] = getid3_lib::BigEndian2Int(substr($szip_rkau, 4, 1));

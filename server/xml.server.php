@@ -20,30 +20,30 @@
 
 */
 /**
- * This is accessed remotly to allow outside scripts access to ampache information 
- * as such it needs to verify the session id that is passed 
+ * This is accessed remotly to allow outside scripts access to ampache information
+ * as such it needs to verify the session id that is passed
  */
 define('NO_SESSION','1');
 require_once '../lib/init.php';
 
 // If it's not a handshake then we can allow it to take up lots of time
-if ($_REQUEST['action'] != 'handshake') { 
-	set_time_limit(0); 
-} 
+if ($_REQUEST['action'] != 'handshake') {
+	set_time_limit(0);
+}
 
 /* Set the correct headers */
 header("Content-type: text/xml; charset=" . Config::get('site_charset'));
 header("Content-Disposition: attachment; filename=information.xml");
 
 // If we don't even have access control on then we can't use this!
-if (!Config::get('access_control')) { 
-	ob_end_clean(); 
-	debug_event('Access Control','Error Attempted to use XML API with Access Control turned off','3'); 
+if (!Config::get('access_control')) {
+	ob_end_clean();
+	debug_event('Access Control','Error Attempted to use XML API with Access Control turned off','3');
 	echo xmlData::error('501',_('Access Control not Enabled'));
-	exit; 
-}  
+	exit;
+}
 
-/** 
+/**
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
@@ -58,37 +58,37 @@ if (!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 
 $session = vauth::get_session_data($_REQUEST['auth']);
 $username = ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping') ? $_REQUEST['user'] : $session['username'];
 
-if (!Access::check_network('init-api',$username,'5')) { 
+if (!Access::check_network('init-api',$username,'5')) {
         debug_event('Access Denied','Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
-        ob_end_clean(); 
+        ob_end_clean();
         echo xmlData::error('403',_('Unauthorized access attempt to API - ACL Error'));
-        exit(); 
+        exit();
 }
 
-if ($_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') { 
-        vauth::session_extend($_REQUEST['auth']); 
+if ($_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
+        vauth::session_extend($_REQUEST['auth']);
         $GLOBALS['user'] = User::get_from_username($session['username']);
-} 
+}
 
 // Get the list of possible methods for the Ampache API
-$methods = get_class_methods('api'); 
+$methods = get_class_methods('api');
 
 // Define list of internal functions that should be skipped
-$interal_functions = array('set_filter'); 
+$interal_functions = array('set_filter');
 
 // Recurse through them and see if we're calling one of them
-foreach ($methods as $method) { 
-	if (in_array($method,$internal_functions)) { continue; } 	
+foreach ($methods as $method) {
+	if (in_array($method,$internal_functions)) { continue; }
 
 	// If the method is the same as the action being called
 	// Then let's call this function!
-	if ($_GET['action'] == $method) { 
+	if ($_GET['action'] == $method) {
 		call_user_func(array('api',$method),$_GET);
 		// We only allow a single function to be called, and we assume it's cleaned up!
-		exit; 
-	} 
+		exit;
+	}
 
-} // end foreach methods in API 
+} // end foreach methods in API
 
 // If we manage to get here, we still need to hand out an XML document
 ob_end_clean();

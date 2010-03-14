@@ -24,17 +24,17 @@ define('NO_SESSION','1');
 require 'lib/init.php';
 
 // Get the version and format it
-$version = Update::get_version(); 
+$version = Update::get_version();
 
-if ($_REQUEST['action'] == 'update') { 
-	
+if ($_REQUEST['action'] == 'update') {
+
 	/* Run the Update Mojo Here */
 	Update::run_update();
 
 	/* Get the New Version */
 	$version = Update::get_version();
 
-} 
+}
 $htmllang = str_replace("_","-",Config::get('lang'));
 
 ?>
@@ -48,7 +48,7 @@ $htmllang = str_replace("_","-",Config::get('lang'));
 <title><?php echo _('Ampache Update'); ?></title>
 </head>
 <body>
-<div id="header"> 
+<div id="header">
 <h1><?php echo _('Ampache Update'); ?></h1>
 <p>Pour l'Amour de la Musique.</p>
 </div>

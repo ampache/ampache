@@ -22,14 +22,14 @@
 //
 // $Id: module.graphic.pcd.php,v 1.2 2006/11/02 10:48:02 ah Exp $
 
-        
-        
+
+
 class getid3_pcd extends getid3_handler
 {
 
 
     public function Analyze() {
-        
+
         $getid3 = $this->getid3;
 
         $getid3->info['fileformat']          = 'pcd';

@@ -39,16 +39,16 @@ $web_path = Config::get('web_path');
 	<th class="cel_date"><?php echo _('Date Added'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
-<?php 
-foreach ($object_ids as $shout_id) { 
-	$shout = new shoutBox($shout_id); 
+<?php
+foreach ($object_ids as $shout_id) {
+	$shout = new shoutBox($shout_id);
 	$shout->format();
         $object = shoutBox::get_object($shout->object_type,$shout->object_id);
         $object->format();
         $client = new User($shout->user);
         $client->format();
 
-	require Config::get('prefix') . '/templates/show_shout_row.inc.php'; 
+	require Config::get('prefix') . '/templates/show_shout_row.inc.php';
 ?>
 <?php } if (!count($object_ids)) { ?>
 <tr class="<?php echo flip_class(); ?>">

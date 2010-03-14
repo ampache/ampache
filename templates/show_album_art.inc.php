@@ -28,29 +28,29 @@ $i = 0;
 <?php show_box_top(); ?>
 <table class="table-data">
 <tr>
-<?php 
-while ($i <= $rows) { 
+<?php
+while ($i <= $rows) {
 	$j=0;
-	while ($j < 4) { 
+	while ($j < 4) {
 		$key = $i*4+$j;
-		$image_url = Config::get('web_path') . '/image.php?type=session&amp;image_index=' . $key; 
-		$dimensions = Core::image_dimensions(Album::get_image_from_source($_SESSION['form']['images'][$key])); 
-		if (!isset($images[$key])) { echo "<td>&nbsp;</td>\n"; } 
-		else { 
+		$image_url = Config::get('web_path') . '/image.php?type=session&amp;image_index=' . $key;
+		$dimensions = Core::image_dimensions(Album::get_image_from_source($_SESSION['form']['images'][$key]));
+		if (!isset($images[$key])) { echo "<td>&nbsp;</td>\n"; }
+		else {
 ?>
 			<td align="center">
 				<a href="<?php echo $image_url; ?>" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo _('Album Art'); ?>" border="0" height="175" width="175" /></a>
 				<br />
 				<p align="center">
 				<?php if (is_array($dimensions)) { ?>
-				[<?php echo intval($dimensions['width']); ?>x<?php echo intval($dimensions['height']); ?>] 
+				[<?php echo intval($dimensions['width']); ?>x<?php echo intval($dimensions['height']); ?>]
 				<?php } else { ?>
 				<span class="error"><?php echo _('Invalid'); ?></span>
 				<?php } ?>
 				[<a href="<?php echo Config::get('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $key; ?>&amp;album_id=<?php echo intval($_REQUEST['album_id']); ?>"><?php echo _('Select'); ?></a>]
 				</p>
 			</td>
-<?php 
+<?php
 		} // end else
 		$j++;
 	} // end while cells

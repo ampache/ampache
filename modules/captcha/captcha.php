@@ -24,26 +24,26 @@
    This library operates CAPTCHA form submissions, to block spam bots and
    alike. It is easy to hook into existing web sites and scripts. It also
    tries to be "smart" and more user-friendly.
-   
+
    While the operation logic and identifier processing are extremley safe,
    this is a "weak" implementation. Specifically targetted and tweaked OCR
    software could overcome the visual riddle. And if enabled, the textual
    or mathematical riddles are rather simple to overcome if attacked.
    Generic spambots are however blocked already with the default settings.
-   
+
    PRINT captcha::form()
      emits the img and input fields for inclusion into your submit <form>
-   
+
    IF (captcha::solved())
      tests for a correctly entered solution on submit, returns true if ok
-   
+
    Temporary files are created for tracking, verification and basic data
    storage, but will get automatically removed once a CAPTCHA was solved
    to prevent replay attacks. Additionally this library uses "AJAX" super
    powers *lol* to enhance usability. And a short-lasting session cookie
    is also added site-wide, so users may only have to solve the captcha
    once (can be disabled, because that's also just security by obscurity).
-   
+
    Public Domain, available via http://freshmeat.net/p/captchaphp
 */
 
@@ -143,7 +143,7 @@ class easy_captcha {
       srand(microtime() + time()/2 - 21017);
       if ($this->id) { $this->prev[] = $this->id; }
       $this->id = $this->new_id();
-      
+
       #-- meta informations
       $this->created = time();
       $this->{'created$'} = gmdate("r", $this->created);
@@ -160,13 +160,13 @@ class easy_captcha {
       $this->failures = 0;
       $this->shortcut = array();
       $this->grant = 0;  // unchecked access
-      
+
       #-- mk IMAGE/GRAPHIC
       $this->image = (CAPTCHA_IMAGE_TYPE <= 1)
                    ? new easy_captcha_graphic_image_waved()
                    : new easy_captcha_graphic_image_disturbed();
     //$this->image = new easy_captcha_graphic_cute_ponys();
-      
+
       #-- mk MATH/TEXT riddle
       $this->text = (CAPTCHA_NOTEXT >= 1)
                   ? new easy_captcha_text_disable()
@@ -181,11 +181,11 @@ class easy_captcha {
       if (CAPTCHA_NEW_URLS)
       $this->shortcut[] = new easy_captcha_spamfree_no_new_urls();
 
-      #-- store record   
+      #-- store record
       $this->save();
    }
-   
-   
+
+
    #-- examine if captcha data is fresh
    function is_valid() {
       return isset($this->id) && ($this->created)
@@ -212,11 +212,11 @@ class easy_captcha {
          // log, this is either a frustrated user or a bot knocking
          $this->log("::solved", "INVALID", "tries exhausted ($this->tries) or expired(?) captcha");
       }
-      
+
       #-- test
       elseif ($this->sent) {
          $in = $_REQUEST[CAPTCHA_PARAM_INPUT];  // might be empty string
-      
+
          #-- check individual modules
          $ok = $this->grant;
          foreach ($this->shortcut as $test) {
@@ -225,12 +225,12 @@ class easy_captcha {
          $ok = $ok  // either letters or math formula submitted
              || isset($this->image) && $this->image->solved($in)
              || isset($this->text) && $this->text->solved($in);
-               
+
          #-- update state
          if ($ok) {
             $this->passed++;
             $this->log("::solved", "OKAY", "captcha passed ($in) for image({$this->image->solution}) and text({$this->text->solution})");
-            
+
             #-- set cookie on success
             if (CAPTCHA_PERSISTENT) {
                $this->shortcut[0/*FIXME*/]->grant();
@@ -255,15 +255,15 @@ class easy_captcha {
       #-- return result
       return($ok);
    }
-   
-   
+
+
    #-- combines ->image and ->text data into form fields
    function form($add_text="") {
 
       #-- store object data
       $this->sent++;
       $this->save();
-      
+
       #-- prepare output vars
       $p_id = CAPTCHA_PARAM_ID;
       $p_input = CAPTCHA_PARAM_INPUT;
@@ -331,7 +331,7 @@ class easy_captcha {
          fclose($f);
       }
    }
-   
+
    #-- remove $this data file
    function delete() {
       // delete current and all previous data files
@@ -347,7 +347,7 @@ class easy_captcha {
       }
       return(FALSE);  // far if-chaining in ->is_valid()
    }
-   
+
    #-- clean-up or init temporary directory
    function straighten_temp_dir() {
       // create dir
@@ -377,7 +377,7 @@ class easy_captcha {
       $pfix = (int) (time() / $length*CAPTCHA_TIMEOUT) + $dtime;
       return md5("captcha::$pfix:$text::".__FILE__.":$_SERVER[SERVER_NAME]:80");
    }
-   
+
 }
 
 
@@ -493,7 +493,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy {
 class easy_captcha_graphic_image_waved extends easy_captcha_graphic {
 
 
-   /* returns jpeg file stream with unscannable letters encoded 
+   /* returns jpeg file stream with unscannable letters encoded
       in front of colorful disturbing background
    */
    function jpeg() {
@@ -537,7 +537,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic {
          imageline($this->img, 0, $x, 250, $x, 0x333333);
       }
    }
-   
+
    #-- add lines
    function fog() {
       $num = rand(10,25);
@@ -556,7 +556,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic {
       imagesetthickness($this->img, 1);
    }
 
-   
+
    #-- distortion: wave-transform
    function distort() {
 
@@ -567,7 +567,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic {
       $height = $this->height;
       $i = & $this->img;
       $dest = imagecreatetruecolor($width, $height);
-      
+
       #-- URL param ?hires=1 influences used drawing scheme
       if (isset($_GET["hires"])) {
          $single_pixel = 0;
@@ -584,7 +584,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic {
             #-- pixel movement
             list($dx, $dy) = $wave->dxy($x, $y);   // x- and y- sinus wave
            // list($qx, $qy) = $spike->dxy($x, $y);
-            
+
             #-- get source pixel, paint dest
             if ($single_pixel) {
                // single source dot: one-to-one duplicate (unsmooth, hard edges)
@@ -605,10 +605,10 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic {
       }
 
       #-- simply overwrite ->img
-      imagedestroy($i);      
+      imagedestroy($i);
       $this->img = $dest;
    }
-   
+
    #-- get 4 pixels from source image, merges BLUE value simply
    function get_2x2_greyscale(&$i, $x, $y) {
        // this is pretty simplistic method, actually adds more artefacts
@@ -627,7 +627,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic {
        // get R,G,B values from 2x2 source area
        $c00 = $this->get_RGB($i, $x, $y);      //  +------+------+
        $c01 = $this->get_RGB($i, $x, $y+1);    //  |dx,dy | x1,y0|
-       $c10 = $this->get_RGB($i, $x+1, $y);    //  | rx-> |      | 
+       $c10 = $this->get_RGB($i, $x+1, $y);    //  | rx-> |      |
        $c11 = $this->get_RGB($i, $x+1, $y+1);  //  +----##+------+
        // weighting by $dx/$dy fraction part   //  |    ##|<-ry  |
        $rx = $x - floor($x);  $rx_ = 1 - $rx;  //  |x0,y1 | x1,y1|
@@ -674,7 +674,7 @@ class easy_captcha_dxy_wave {
       $this->slow_x = $this->real_rand(7.5, 20.0);    // =wave-width in pixel/3
       $this->slow_y = $this->real_rand(7.5, 15.0);
    }
-   
+
    #-- calculate source pixel position with overlapping sinus x/y-displacement
    function dxy($x, $y) {
       #-- adapting params
@@ -686,7 +686,7 @@ class easy_captcha_dxy_wave {
       #-- result
       return array($dx, $dy);
    }
-   
+
    #-- array of values with random start/end values
    function from_to_rand($max, $a, $b) {
       $BEG = $this->real_rand($a, $b);
@@ -726,7 +726,7 @@ class easy_captcha_dxy_spike {
 class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic {
 
 
-   /* returns jpeg file stream with unscannable letters encoded 
+   /* returns jpeg file stream with unscannable letters encoded
       in front of colorful disturbing background
    */
    function jpeg() {
@@ -743,7 +743,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic {
    function create() {
       $this->img = imagecreatetruecolor($this->width, $this->height);
       imagefilledrectangle($this->img, 0,0, $this->width,$this->height, $this->random_color(222, 255));
-      
+
       #-- encolour bg
       $wd = 20;
       $x = 0;
@@ -752,7 +752,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic {
          $wd += max(10, rand(0, 20) - 10);
       }
    }
-   
+
 
    #-- make interesting background I, lines
    function background_lines() {
@@ -777,8 +777,8 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic {
          }
       }
    }
-   
-      
+
+
    #-- more disturbing II, random letters
    function background_letters() {
       $limit = rand(30,90);
@@ -795,7 +795,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic {
          imagettftext($this->img, $size, $rotation, $x, $y, $this->random_color(130, 240), $this->font(), $letter);
       }
    }
-   
+
 
    #-- add the real text to it
    function text() {
@@ -905,7 +905,7 @@ class easy_captcha_persistent_grant extends easy_captcha {
 
    function easy_captcha_persistent_grant() {
    }
-   
+
 
    #-- give ok, if captach had already been solved recently
    function solved($ignore=0) {
@@ -913,7 +913,7 @@ class easy_captcha_persistent_grant extends easy_captcha {
          return in_array($_COOKIE[$this->cookie()], array($this->validity_token(), $this->validity_token(-1)));
       }
    }
-   
+
    #-- set captcha persistence cookie
    function grant() {
       if (!headers_sent()) {
@@ -986,7 +986,7 @@ class easy_captcha_utility {
 
             #-- JS-RPC request, check entered solution on the fly
             if ($test = @$_REQUEST[CAPTCHA_PARAM_INPUT]) {
-  
+
                #-- check
                if ($expired) {
                }
@@ -1000,7 +1000,7 @@ class easy_captcha_utility {
             }
 
             #-- generate and send image file
-            else { 
+            else {
                if ($expired) {
                   $type = "image/png";
                   $bin = easy_captcha_utility::expired_png();
@@ -1043,7 +1043,7 @@ class easy_captcha_utility {
 /* easy_captcha utility code */
 
 // global vars
-captcha_url_rx = /(https?:\/\/\w[^\/,\]\[=#]+)/ig;  //   
+captcha_url_rx = /(https?:\/\/\w[^\/,\]\[=#]+)/ig;  //
 captcha_form_urls = new Array();
 captcha_sol_cb = "";
 captcha_rpc = 0;

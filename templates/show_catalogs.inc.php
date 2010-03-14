@@ -38,10 +38,10 @@
 	<th class="cel_lastclean"><?php echo _('Last Clean'); ?></th>
 	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
-<?php 
-	foreach ($object_ids as $catalog_id) { 
-		$catalog = new Catalog($catalog_id); 
-		$catalog->format(); 
+<?php
+	foreach ($object_ids as $catalog_id) {
+		$catalog = new Catalog($catalog_id);
+		$catalog->format();
 ?>
 <tr class="<?php echo flip_class(); ?>" id="catalog_<?php echo $catalog->id; ?>">
 	<?php require Config::get('prefix') . '/templates/show_catalog_row.inc.php'; ?>

@@ -24,14 +24,14 @@
 	@function load_gettext
 	@discussion sets the local
 */
-function load_gettext() { 
+function load_gettext() {
 	/* If we have gettext */
-	if (function_exists('bindtextdomain')) { 
+	if (function_exists('bindtextdomain')) {
 		$lang = Config::get('lang');
 		putenv("LANG=" . $lang);
 		putenv("LANGUAGE=" . $lang);
 		/* Try lang, lang + charset and lang + utf-8 */
-		setlocale(LC_ALL, 
+		setlocale(LC_ALL,
 				$lang,
 				$lang . '.UTF-8', //. Config::get('site_charset'),
 				$lang . '.UTF-8',
@@ -41,7 +41,7 @@ function load_gettext() {
 		/* Bind the Text Domain */
 		bindtextdomain('messages', Config::get('prefix') . "/locale/");
 		textdomain('messages');
-		if (function_exists('bind_textdomain_codeset')) { 
+		if (function_exists('bind_textdomain_codeset')) {
 			bind_textdomain_codeset('messages',Config::get('site_charset'));
 		} // if we can codeset the textdomain
 

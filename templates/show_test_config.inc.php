@@ -28,12 +28,12 @@
 <title>Ampache -- Config Debug Page</title>
 <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 <style type="text/css">
-body { 
-	text-align:left; 
-} 
-#content { 
-	padding-left: 10px; 
-} 
+body {
+	text-align:left;
+}
+#content {
+	padding-left: 10px;
+}
 </style>
 </head>
 <body bgcolor="#f0f0f0">
@@ -43,7 +43,7 @@ body {
 </div>
 <div id="content">
 <h3 style="color:red;">Ampache.cfg.php Parse Error</h3>
-<p>You've been redirected to this page because your <strong>/config/ampache.cfg.php</strong> was not parsable. 
+<p>You've been redirected to this page because your <strong>/config/ampache.cfg.php</strong> was not parsable.
 If you are upgrading from 3.3.x please see the directions below.</p>
 
 <h3>Migrating from 3.3.x to 3.4.x</h3>
@@ -59,7 +59,7 @@ This defines which auth methods vauth will attempt to use and in which order, if
 The user must exist locally as well<br />
 <br />
 <strong>tag_order</strong> (<i>id3v2,id3v1,vorbiscomment,quicktime,ape,asf</i>)<br />
-This determines the tag order for all cataloged music. If none of the listed tags are found then ampache will default to 
+This determines the tag order for all cataloged music. If none of the listed tags are found then ampache will default to
 the first tag format that was found. <br />
 <br />
 <strong>album_art_order</strong> (<i>db,id3,folder,lastfm,amazon</i>)<br />

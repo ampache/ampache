@@ -29,35 +29,35 @@ if (!Access::check('interface',100) OR Config::get('demo_mode')) {
 	exit();
 }
 
-show_header(); 
+show_header();
 
 /* Switch on action boys */
-switch ($_REQUEST['action']) { 
+switch ($_REQUEST['action']) {
 	/* This re-generates the config file comparing
 	 * /config/ampache.cfg to .cfg.dist
 	 */
 	case 'generate_config':
-		ob_end_clean(); 
+		ob_end_clean();
 		$current = parse_ini_file(Config::get('prefix') . '/config/ampache.cfg.php');
 		$final = generate_config($current);
-		$browser = new Browser(); 
-		$browser->downloadHeaders('ampache.cfg.php','text/plain',false,filesize(Config::get('prefix') . '/config/ampache.cfg.php.dist')); 
-		echo $final; 
-		exit; 
+		$browser = new Browser();
+		$browser->downloadHeaders('ampache.cfg.php','text/plain',false,filesize(Config::get('prefix') . '/config/ampache.cfg.php.dist'));
+		echo $final;
+		exit;
 	break;
 	case 'reset_db_charset':
-		Dba::reset_db_charset(); 	
-		show_confirmation(_('Database Charset Updated'),_('Your Database and associated tables have been updated to match your currently configured charset'), Config::get('web_path').'/admin/system.php?action=show_debug'); 
-	break; 
-	case 'show_debug': 
+		Dba::reset_db_charset();
+		show_confirmation(_('Database Charset Updated'),_('Your Database and associated tables have been updated to match your currently configured charset'), Config::get('web_path').'/admin/system.php?action=show_debug');
+	break;
+	case 'show_debug':
 		$configuration = Config::get_all();
 		require_once Config::get('prefix') . '/templates/show_debug.inc.php';
-	break; 
-	default: 
+	break;
+	default:
 		// Rien a faire
 	break;
 } // end switch
 
-show_footer(); 
+show_footer();
 
 ?>

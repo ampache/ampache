@@ -34,7 +34,7 @@
 *       require_once 'getid3/getid3.php';
 *       $getid3 = new getid3;
 *       $getid3->encoding = 'UTF-8';
-*       try { 
+*       try {
 *           $info1 = $getid3->Analyse('file1.flac');
 *           $info2 = $getid3->Analyse('file2.wv');
 *           ....

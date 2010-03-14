@@ -22,31 +22,31 @@
 
 require_once 'lib/init.php';
 
-show_header(); 
+show_header();
 
 /**
- * action switch 
+ * action switch
  */
-switch ($_REQUEST['action']) { 
+switch ($_REQUEST['action']) {
 	case 'quick_search':
 		/* This needs to be done because we don't know what thing
 		 * they used the quick search to search on until after they've
-		 * submited it 
+		 * submited it
 		 */
 		$_REQUEST['s_all'] = $_REQUEST['search_string'];
-		
-		if (strlen($_REQUEST['search_string']) < 1) { 
+
+		if (strlen($_REQUEST['search_string']) < 1) {
 			Error::add('keyword',_('Error: No Keyword Entered'));
-			require_once Config::get('prefix') . '/templates/show_search.inc.php'; 
+			require_once Config::get('prefix') . '/templates/show_search.inc.php';
 			break;
 		}
 	case 'search':
-		require_once Config::get('prefix') . '/templates/show_search.inc.php'; 
-		require_once Config::get('prefix') . '/templates/show_search_options.inc.php'; 
+		require_once Config::get('prefix') . '/templates/show_search.inc.php';
+		require_once Config::get('prefix') . '/templates/show_search_options.inc.php';
 		$results = run_search($_REQUEST);
-		Browse::set_type('song'); 
-		Browse::reset(); 
-		Browse::show_objects($results); 
+		Browse::set_type('song');
+		Browse::reset();
+		Browse::show_objects($results);
 	break;
 	case 'save_as_track':
 		$playlist_id = save_search($_REQUEST);
@@ -54,14 +54,14 @@ switch ($_REQUEST['action']) {
 		show_confirmation("Search Saved","Your Search has been saved as a track in $playlist->name",conf('web_path') . "/search.php");
 	break;
 	default:
-		require_once Config::get('prefix') . '/templates/show_search.inc.php'; 
+		require_once Config::get('prefix') . '/templates/show_search.inc.php';
 	break;
-	case 'descriptor': 
+	case 'descriptor':
 		// This is a little special we don't want header/footers so trash what we've got in the OB
-		ob_clean(); 
-		require_once Config::get('prefix') . '/templates/show_search_descriptor.inc.php'; 
-		exit; 
-	break; 
+		ob_clean();
+		require_once Config::get('prefix') . '/templates/show_search_descriptor.inc.php';
+		exit;
+	break;
 }
 
 /* Show the Footer */

@@ -20,7 +20,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-if (INSTALL != '1') { exit; } 
+if (INSTALL != '1') { exit; }
 $prefix = realpath(dirname(__FILE__). "/../");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -31,7 +31,7 @@ $prefix = realpath(dirname(__FILE__). "/../");
 <meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>" />
 </head>
 <body>
-<div id="header"> 
+<div id="header">
 <h1><?php echo _('Ampache Installation'); ?></h1>
 <p>Pour l'Amour de la Musique</p>
 </div>
@@ -92,13 +92,13 @@ $prefix = realpath(dirname(__FILE__). "/../");
 		<table>
 <tr>
         <td class="align"><?php echo _('Ampache.cfg.php Exists'); ?></td>
-        <td>[ 
+        <td>[
         <?php
                 if (!is_readable($configfile)) {
-			echo debug_result('',false); 
+			echo debug_result('',false);
                 }
                 else {
-			echo debug_result('',true); 
+			echo debug_result('',true);
                 }
         ?>
         ]
@@ -108,14 +108,14 @@ $prefix = realpath(dirname(__FILE__). "/../");
         <td class="align">
                 <?php echo _('Ampache.cfg.php Configured?'); ?>
         </td>
-        <td>[ 
+        <td>[
         <?php
                 $results = @parse_ini_file($configfile);
-                if (!check_config_values($results)) { 
-			echo debug_result('',false); 
+                if (!check_config_values($results)) {
+			echo debug_result('',false);
                 }
                 else {
-			echo debug_result('',true); 
+			echo debug_result('',true);
                 }
         ?>
         ]

@@ -23,25 +23,25 @@
 /* config class
  * used to store static arrays of
  * config values, can read from ini files
- * 
+ *
  * has static methods, this uses the global config
  * creating a 'Config' object will allow for local
  * config overides and/or local configs (for like dba)
- * The class should be a static var in the other classes 
+ * The class should be a static var in the other classes
  */
 class Config {
 
 	// These are the settings for this specific class
-	private $_local	= array(); 
+	private $_local	= array();
 
 	// These are the global settings they go where it goes
-	private static $_global = array(); 
+	private static $_global = array();
 
 	/**
 	 * constructor
 	 * This is what is called when the class is loaded
 	 */
-	public function __construct() { 
+	public function __construct() {
 
 		// Rien a faire
 
@@ -62,12 +62,12 @@ class Config {
 	 * get_all
 	 * This returns all of the current config variables as an array
 	 */
-	public static function get_all() { 
+	public static function get_all() {
 
-		return self::$_global; 
+		return self::$_global;
 
 	} // get_all
-	
+
 	/**
 	 * set
 	 * This checks to see if this is an instance or procedure calls
@@ -75,13 +75,13 @@ class Config {
 	 */
 	public static function set($name, $value, $clobber = 0) {
 
-		if (isset(self::$_global[$name]) && !$clobber) { 
-			Error::add('Config Global',"Trying to clobber'$name' without setting clobber"); 
+		if (isset(self::$_global[$name]) && !$clobber) {
+			Error::add('Config Global',"Trying to clobber'$name' without setting clobber");
 			return;
 		}
-		else { 
-			self::$_global[$name] = $value; 
-		} 
+		else {
+			self::$_global[$name] = $value;
+		}
 
 	} // set
 
@@ -90,12 +90,12 @@ class Config {
 	 * This is the same as the set function except it takes an array as input
 	 */
 	public static function set_by_array($array, $clobber = 0) {
-		
-		foreach ($array as $name => $value) { 
-			self::set($name,$value,$clobber); 
-		} 
+
+		foreach ($array as $name => $value) {
+			self::set($name,$value,$clobber);
+		}
 
 	} // set_by_array
-	
+
 } // end Config class
 ?>

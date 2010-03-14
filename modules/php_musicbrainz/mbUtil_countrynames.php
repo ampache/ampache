@@ -1,6 +1,6 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
-	$mbCountryNames = array( 
+	$mbCountryNames = array(
 		"BD" => "Bangladesh",
 		"BE" => "Belgium",
 		"BF" => "Burkina Faso",

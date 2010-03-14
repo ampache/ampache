@@ -22,19 +22,19 @@
 //
 // $Id: module.audio.dts.php,v 1.2 2006/11/16 13:14:26 ah Exp $
 
-        
-        
+
+
 // Specs taken from "DTS Coherent Acoustics;Core and Extensions,  ETSI TS 102 114 V1.2.1 (2002-12)"
 // (http://pda.etsi.org/pda/queryform.asp)
 // With thanks to Gambit <macteam@users.sourceforge.net> http://mac.sourceforge.net/atl/
-        
+
 class getid3_dts extends getid3_handler
 {
 
     public function Analyze() {
-        
+
         $getid3 = $this->getid3;
-        
+
         $getid3->info['dts'] = array ();
         $info_dts = &$getid3->info['dts'];
 
@@ -99,7 +99,7 @@ class getid3_dts extends getid3_handler
 
 
     public static function DTSbitrateLookup($index) {
-        
+
         static $lookup = array (
             0  => 32000,
             1  => 56000,
@@ -137,9 +137,9 @@ class getid3_dts extends getid3_handler
         return @$lookup[$index];
     }
 
-    
+
     public static function DTSsampleRateLookup($index) {
-        
+
         static $lookup = array (
             0  => 'invalid',
             1  => 8000,
@@ -161,9 +161,9 @@ class getid3_dts extends getid3_handler
         return @$lookup[$index];
     }
 
-    
+
     public static function DTSbitPerSampleLookup($index) {
-        
+
         static $lookup = array (
             0  => 16,
             1  => 20,
@@ -173,38 +173,38 @@ class getid3_dts extends getid3_handler
         return @$lookup[$index];
     }
 
-    
+
     public static function DTSnumChannelsLookup($index) {
-        
+
         switch ($index) {
             case 0:
                 return 1;
-                
+
             case 1:
             case 2:
             case 3:
             case 4:
                 return 2;
-                
+
             case 5:
             case 6:
                 return 3;
-                
+
             case 7:
             case 8:
                 return 4;
-                
+
             case 9:
                 return 5;
-                
+
             case 10:
             case 11:
             case 12:
                 return 6;
-                
+
             case 13:
                 return 7;
-                
+
             case 14:
             case 15:
                 return 8;
@@ -212,9 +212,9 @@ class getid3_dts extends getid3_handler
         return false;
     }
 
-    
+
     public static function DTSchannelArrangementLookup($index) {
-        
+
         static $lookup = array (
             0  => 'A',
             1  => 'A + B (dual mono)',
@@ -236,13 +236,13 @@ class getid3_dts extends getid3_handler
         return (@$lookup[$index] ? @$lookup[$index] : 'user-defined');
     }
 
-    
+
     public static function DTSdialogNormalization($index, $version) {
-        
+
         switch ($version) {
             case 7:
                 return 0 - $index;
-                
+
             case 6:
                 return 0 - 16 - $index;
         }

@@ -170,14 +170,14 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 
 	/* Check and see if we should create a user here */
 	if ($_POST['db_user'] == 'create_db_user' || (strlen($dbuser) AND strlen($dbpass))) {
-		
-		$db_user = $_POST['db_username'] ? scrub_in($_POST['db_username']) : $dbuser; 
-		$db_pass = $_POST['db_password'] ? scrub_in($_POST['db_password']) : $dbpass; 
 
-		if (!strlen($db_user) || !strlen($db_pass)) { 
-			Error::add('general','Error: Ampache SQL Username or Password missing'); 
-			return false; 
-		} 
+		$db_user = $_POST['db_username'] ? scrub_in($_POST['db_username']) : $dbuser;
+		$db_pass = $_POST['db_password'] ? scrub_in($_POST['db_password']) : $dbpass;
+
+		if (!strlen($db_user) || !strlen($db_pass)) {
+			Error::add('general','Error: Ampache SQL Username or Password missing');
+			return false;
+		}
 
 		$sql = "GRANT ALL PRIVILEGES ON " . Dba::escape($database) . ".* TO " .
 			"'" . Dba::escape($db_user) . "'@'" . Dba::escape($hostname) . "' IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";
@@ -235,14 +235,14 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
  */
 function install_create_config($web_path,$username,$password,$hostname,$database) {
 
-	$config_file = Config::get('prefix') . '/config/ampache.cfg.php'; 
+	$config_file = Config::get('prefix') . '/config/ampache.cfg.php';
 
 	// Make sure the directory is writeable OR the empty config file is
-	if (!is_writeable(Config::get('prefix') . '/config/') AND !is_writeable($config_file)) { 
+	if (!is_writeable(Config::get('prefix') . '/config/') AND !is_writeable($config_file)) {
 		/* HINT: Config File */
-		Error::add('general',sprintf(_('%s is not writeable'),$config_file)); 
-		return false; 
-	} 
+		Error::add('general',sprintf(_('%s is not writeable'),$config_file));
+		return false;
+	}
 
         $data['database_username'] = $username;
         $data['database_password'] = $password;
@@ -272,14 +272,14 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 	$final = generate_config($data);
 
 	// Open the file and try to write it
-	$fhandle = fopen($config_file,'w'); 
-	if (!fwrite($fhandle,$final)) { 
-		Error::add('general',"Error Writing config file"); 
-		fclose ($fhandle); 
-		return false; 
-	} 
-	fclose ($fhandle); 
-	
+	$fhandle = fopen($config_file,'w');
+	if (!fwrite($fhandle,$final)) {
+		Error::add('general',"Error Writing config file");
+		fclose ($fhandle);
+		return false;
+	}
+	fclose ($fhandle);
+
 
 	return true;
 

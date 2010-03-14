@@ -23,49 +23,49 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE as one
  */
-if (AJAX_INCLUDE != '1') { exit; } 
+if (AJAX_INCLUDE != '1') { exit; }
 
-switch ($_REQUEST['action']) { 
-	case 'reject': 
-		if (!Access::check('interface','75')) { 
-			$results['rfc3514'] = '0x1'; 
-			break; 
-		} 
+switch ($_REQUEST['action']) {
+	case 'reject':
+		if (!Access::check('interface','75')) {
+			$results['rfc3514'] = '0x1';
+			break;
+		}
 
-		// Remove the flag from the table 
-		$flag = new Flag($_REQUEST['flag_id']); 
-		$flag->delete(); 
+		// Remove the flag from the table
+		$flag = new Flag($_REQUEST['flag_id']);
+		$flag->delete();
 
-		$flagged = Flag::get_all(); 
-		ob_start(); 
-		Browse::set_type('flagged'); 
-		Browse::set_static_content(1); 
-		Browse::save_objects($flagged); 
-		Browse::show_objects($flagged); 
-		$results['browse_content'] = ob_get_contents(); 
-		ob_end_clean(); 
+		$flagged = Flag::get_all();
+		ob_start();
+		Browse::set_type('flagged');
+		Browse::set_static_content(1);
+		Browse::save_objects($flagged);
+		Browse::show_objects($flagged);
+		$results['browse_content'] = ob_get_contents();
+		ob_end_clean();
 
 	break;
-	case 'accept': 
-		if (!Access::check('interface','75')) { 
-			$results['rfc3514'] = '0x1'; 
-			break; 
-		} 
+	case 'accept':
+		if (!Access::check('interface','75')) {
+			$results['rfc3514'] = '0x1';
+			break;
+		}
 
-		$flag = new Flag($_REQUEST['flag_id']); 
-		$flag->approve(); 
-		$flag->format(); 
-		ob_start(); 
-		require_once Config::get('prefix') . '/templates/show_flag_row.inc.php'; 
-		$results['flagged_' . $flag->id] = ob_get_contents(); 
-		ob_end_clean(); 
+		$flag = new Flag($_REQUEST['flag_id']);
+		$flag->approve();
+		$flag->format();
+		ob_start();
+		require_once Config::get('prefix') . '/templates/show_flag_row.inc.php';
+		$results['flagged_' . $flag->id] = ob_get_contents();
+		ob_end_clean();
 
-	break; 
-	default: 
-		$results['rfc3514'] = '0x1'; 
 	break;
-} // switch on action; 
+	default:
+		$results['rfc3514'] = '0x1';
+	break;
+} // switch on action;
 
 // We always do this
-echo xml_from_array($results); 
+echo xml_from_array($results);
 ?>

@@ -15,7 +15,7 @@
 		function getParentNode() {
 			return $this->parentNode;
 		}
-		
+
 		function nChildNodes() {
 			return sizeof($this->childNodes);
 		}
@@ -46,7 +46,7 @@
 			return $this->attributes['TEXT'];
 		}
 	}
-	
+
 	class xmlParser {
 		private $_parser;
 		private $_root_node = null;
@@ -69,7 +69,7 @@
 		public function lastError() {
 			return $this->_last_error;
 		}
-		
+
 		public function parse( $data ) {
 			if ( !xml_parse( $this->_parser, $data ) ) {
 				$this->_last_error = xml_get_current_line_number($this->_parser) . ": ". xml_error_string($this->_parser);
@@ -77,7 +77,7 @@
 			}
 			return $this->_root_node;
 		}
-		
+
 		private function start_element_handler( $parser, $name, $attribs ) {
 			if ( !$this->_root_node ) {
 				$new_node = new XMLNode( $name, $attribs );
@@ -90,14 +90,14 @@
 				$old_node->setChildNode( $new_node );
 				$this->_curr_node = $new_node;
 			}
-			
+
 		}
 
 		private function text_handler( $parser, $text ) {
 			if ( $this->_curr_node )
 				$this->_curr_node->setText( $text );
 		}
-		
+
 		private function end_element_handler( $parser, $name ) {
 			if ( $this->_root_node ) {
 				$this->_curr_node = $this->_curr_node->getParentNode();

@@ -19,9 +19,9 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-$web_path = Config::get('web_path'); 
+$web_path = Config::get('web_path');
 ?>
-<!-- Plugin we've found --> 
+<!-- Plugin we've found -->
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
   <col id="col_name" />
@@ -35,9 +35,9 @@ $web_path = Config::get('web_path');
 	<th class="cel_version"><?php echo _('Version'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
-<?php 
-foreach ($plugins as $plugin_name) { 
-	$plugin = new Plugin($plugin_name); 
+<?php
+foreach ($plugins as $plugin_name) {
+	$plugin = new Plugin($plugin_name);
         if (!Plugin::is_installed($plugin->_plugin->name)) {
                 $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                         _('Activate') . "</a>";

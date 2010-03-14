@@ -7,7 +7,7 @@
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License v2
- as published by the Free Software Foundation. 
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -42,11 +42,11 @@ $web_path = Config::get('web_path');
 	<th class="cel_tags"><?php echo _('Tags'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
-<?php 
+<?php
 /* Foreach through every artist that has been passed to us */
-foreach ($object_ids as $video_id) { 
-		$video = new Video($video_id); 
-		$video->format(); 
+foreach ($object_ids as $video_id) {
+		$video = new Video($video_id);
+		$video->format();
 ?>
 <tr id="video_<?php echo $video->id; ?>" class="<?php echo flip_class(); ?>">
 	<?php require Config::get('prefix') . '/templates/show_video_row.inc.php'; ?>

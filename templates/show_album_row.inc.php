@@ -7,7 +7,7 @@
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License v2
- as published by the Free Software Foundation. 
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,7 +25,7 @@
 	<?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random',_('Random'),'random_album_' . $album->id); ?>
 </td>
 <?php
-if (Browse::is_enabled('show_art')) { 
+if (Browse::is_enabled('show_art')) {
 	$name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
 ?>
 <td class="cel_cover">

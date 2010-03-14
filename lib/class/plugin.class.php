@@ -26,21 +26,21 @@ class Plugin {
 	public $name;
 
 	/* constructed objects */
-	public $_plugin; 
+	public $_plugin;
 
 	/**
 	 * Constructor
-	 * This constructor loads the Plugin config file which defines how to 
+	 * This constructor loads the Plugin config file which defines how to
 	 * install/uninstall the plugin from Ampache's database
 	 */
-	public function __construct($name) { 
+	public function __construct($name) {
 
 		/* Load the plugin */
-		if (!$this->_get_info($name)) { 
-			return false; 
+		if (!$this->_get_info($name)) {
+			return false;
 		}
 
-		return true; 
+		return true;
 
 	} // Constructor
 
@@ -50,20 +50,20 @@ class Plugin {
 	 * This actually loads the config file for the plugin the name of the
 	 * class contained within the config file must be Plugin[NAME OF FILE]
 	 */
-	public function _get_info($name) { 
+	public function _get_info($name) {
 
 		/* Require the file we want */
 		require_once Config::get('prefix') . '/modules/plugins/' . $name . '.plugin.php';
 
 		$plugin_name = "Ampache$name";
 
-		$this->_plugin = new $plugin_name(); 
+		$this->_plugin = new $plugin_name();
 
-		if (!$this->is_valid()) { 
-			return false; 
+		if (!$this->is_valid()) {
+			return false;
 		}
 
-		return true; 		
+		return true;
 
 	} // _get_info
 
@@ -71,33 +71,33 @@ class Plugin {
 	 * get_plugins
 	 * This returns an array of plugin names
 	 */
-	public static function get_plugins() { 
+	public static function get_plugins() {
 
-		$results = array(); 
+		$results = array();
 
 		// Open up the plugin dir
-		$handle = opendir(Config::get('prefix') . '/modules/plugins'); 
+		$handle = opendir(Config::get('prefix') . '/modules/plugins');
 
-		if (!is_resource($handle)) { 
-			debug_event('Plugins','Unable to read plugins directory','1'); 
-		} 
+		if (!is_resource($handle)) {
+			debug_event('Plugins','Unable to read plugins directory','1');
+		}
 
 		// Recurse the directory
-		while ($file = readdir($handle)) { 
+		while ($file = readdir($handle)) {
 			// Ignore non-plugin files
-			if (substr($file,-10,10) != 'plugin.php') { continue; } 
-			if (is_dir($file)) { continue; } 
+			if (substr($file,-10,10) != 'plugin.php') { continue; }
+			if (is_dir($file)) { continue; }
 
 			// It's a plugin record it
-			$plugin_name = basename($file,'.plugin.php'); 
-			$results[$plugin_name] = $plugin_name; 
+			$plugin_name = basename($file,'.plugin.php');
+			$results[$plugin_name] = $plugin_name;
 
 		} // end while
 
 		// Little stupid but hey
-		ksort($results); 
+		ksort($results);
 
-		return $results; 
+		return $results;
 
 	} // get_plugins
 
@@ -108,41 +108,41 @@ class Plugin {
 	 * install & uninstall method and Ampache must be within the min/max
 	 * version specifications
 	 */
-	function is_valid() { 
+	function is_valid() {
 
-		/* Check the plugin to make sure it's got the needed vars */ 
-		if (!strlen($this->_plugin->name)) { 
-			return false; 
+		/* Check the plugin to make sure it's got the needed vars */
+		if (!strlen($this->_plugin->name)) {
+			return false;
 		}
-		if (!strlen($this->_plugin->description)) { 
-			return false; 
+		if (!strlen($this->_plugin->description)) {
+			return false;
 		}
-		if (!strlen($this->_plugin->version)) { 
-			return false; 
-		} 
+		if (!strlen($this->_plugin->version)) {
+			return false;
+		}
 
 		/* Make sure we've got the required methods */
-		if (!method_exists($this->_plugin,'install')) { 
-			return false; 
+		if (!method_exists($this->_plugin,'install')) {
+			return false;
 		}
 
-		if (!method_exists($this->_plugin,'uninstall')) { 
-			return false; 
-		} 
+		if (!method_exists($this->_plugin,'uninstall')) {
+			return false;
+		}
 
 		/* Make sure it's within the version confines */
-		$db_version = $this->get_ampache_db_version(); 
+		$db_version = $this->get_ampache_db_version();
 
-		if ($db_version < $this->_plugin->min_ampache) { 
-			return false; 
-		} 
+		if ($db_version < $this->_plugin->min_ampache) {
+			return false;
+		}
 
-		if ($db_version > $this->_plugin->max_ampache) { 
-			return false; 
-		} 
+		if ($db_version > $this->_plugin->max_ampache) {
+			return false;
+		}
 
 		/* We've passed all of the tests its good */
-		return true; 
+		return true;
 
 	} // is_valid
 
@@ -151,42 +151,42 @@ class Plugin {
 	 * This checks to see if the specified plugin is currently installed in the
 	 * database, it doesn't check the files for integrity
 	 */
-	public static function is_installed($plugin_name) { 
+	public static function is_installed($plugin_name) {
 
-		/* All we do is check the version */ 
-		return self::get_plugin_version($plugin_name); 
+		/* All we do is check the version */
+		return self::get_plugin_version($plugin_name);
 
 	} // is_installed
 
 	/**
 	 * install
-	 * This runs the install function of the plugin (must be called install) 
+	 * This runs the install function of the plugin (must be called install)
 	 * at the end it inserts a row into the update_info table to indicate
 	 * That it's installed
 	 */
-	public function install() { 
+	public function install() {
 
-		$installed = $this->_plugin->install(); 
+		$installed = $this->_plugin->install();
 
-		$version = $this->set_plugin_version($this->_plugin->version); 
+		$version = $this->set_plugin_version($this->_plugin->version);
 
-		if (!$installed OR !$version) { return false; } 
+		if (!$installed OR !$version) { return false; }
 
-		return true; 
+		return true;
 
 	} // install
 
-	/** 
+	/**
 	 * uninstall
-	 * This runs the uninstall function of the plugin (must be called uninstall) 
+	 * This runs the uninstall function of the plugin (must be called uninstall)
 	 * at the end it removes the row from the update_info table to indicate
 	 * that it isn't installed
 	 */
-	public function uninstall() { 
+	public function uninstall() {
 
-		$this->_plugin->uninstall(); 
+		$this->_plugin->uninstall();
 
-		$this->remove_plugin_version(); 
+		$this->remove_plugin_version();
 
 	} // uninstall
 
@@ -194,15 +194,15 @@ class Plugin {
 	 * get_plugin_version
 	 * This returns the version of the specified plugin
 	 */
-	public static function get_plugin_version($plugin_name) { 
+	public static function get_plugin_version($plugin_name) {
 
-		$name = Dba::escape('Plugin_' . $plugin_name); 
+		$name = Dba::escape('Plugin_' . $plugin_name);
 
-		$sql = "SELECT * FROM `update_info` WHERE `key`='$name'"; 
-		$db_results = Dba::read($sql); 
+		$sql = "SELECT * FROM `update_info` WHERE `key`='$name'";
+		$db_results = Dba::read($sql);
 
-		$results = Dba::fetch_assoc($db_results); 
-		
+		$results = Dba::fetch_assoc($db_results);
+
 		return $results['value'];
 
 	} // get_plugin_version
@@ -211,12 +211,12 @@ class Plugin {
 	 * get_ampache_db_version
 	 * This function returns the Ampache database version
 	 */
-	function get_ampache_db_version() { 
+	function get_ampache_db_version() {
 
-		$sql = "SELECT * FROM `update_info` WHERE `key`='db_version'"; 
-		$db_results = Dba::read($sql); 
+		$sql = "SELECT * FROM `update_info` WHERE `key`='db_version'";
+		$db_results = Dba::read($sql);
 
-		$results = Dba::fetch_assoc($db_results); 
+		$results = Dba::fetch_assoc($db_results);
 
 		return $results['value'];
 
@@ -226,15 +226,15 @@ class Plugin {
 	 * set_plugin_version
 	 * This sets the plugin version in the update_info table
 	 */
-	public function set_plugin_version($version) { 
+	public function set_plugin_version($version) {
 
 		$name 		= Dba::escape('Plugin_' . $this->_plugin->name);
 		$version	= Dba::escape($version);
 
 		$sql = "INSERT INTO `update_info` SET `key`='$name', `value`='$version'";
-		$db_results = Dba::read($sql); 
+		$db_results = Dba::read($sql);
 
-		return true; 
+		return true;
 
 	} // set_plugin_version
 
@@ -242,14 +242,14 @@ class Plugin {
  	 * remove_plugin_version
 	 * This removes the version row from the db done on uninstall
 	 */
-	public function remove_plugin_version() { 
-	
-		$name	= Dba::escape('Plugin_' . $this->_plugin->name);
-	
-		$sql = "DELETE FROM `update_info` WHERE `key`='$name'"; 
-		$db_results = Dba::read($sql); 
+	public function remove_plugin_version() {
 
-		return true; 
+		$name	= Dba::escape('Plugin_' . $this->_plugin->name);
+
+		$sql = "DELETE FROM `update_info` WHERE `key`='$name'";
+		$db_results = Dba::read($sql);
+
+		return true;
 
 	} // remove_plugin_version
 

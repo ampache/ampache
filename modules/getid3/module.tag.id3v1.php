@@ -22,23 +22,23 @@
 //
 // $Id: module.tag.id3v1.php,v 1.6 2006/11/16 16:19:52 ah Exp $
 
-        
-        
+
+
 class getid3_id3v1 extends getid3_handler
 {
 
     public function Analyze() {
 
         $getid3 = $this->getid3;
-                
+
         fseek($getid3->fp, -256, SEEK_END);
         $pre_id3v1 = fread($getid3->fp, 128);
         $id3v1_tag = fread($getid3->fp, 128);
 
         if (substr($id3v1_tag, 0, 3) == 'TAG') {
-        
+
             $getid3->info['avdataend'] -= 128;
-        
+
             // Shortcut
             $getid3->info['id3v1'] = array ();
             $info_id3v1 = &$getid3->info['id3v1'];
@@ -71,8 +71,8 @@ class getid3_id3v1 extends getid3_handler
 
             $info_id3v1['tag_offset_end']   = filesize($getid3->filename);
             $info_id3v1['tag_offset_start'] = $info_id3v1['tag_offset_end'] - 128;
-        }   
-            
+        }
+
         if (substr($pre_id3v1, 0, 3) == 'TAG') {
             // The way iTunes handles tags is, well, brain-damaged.
             // It completely ignores v1 if ID3v2 is present.
@@ -92,18 +92,18 @@ class getid3_id3v1 extends getid3_handler
 
         return true;
     }
-    
-    
+
+
 
     public static function cutfield($str) {
-        
+
         return trim(substr($str, 0, strcspn($str, "\x00")));
     }
 
 
 
     public static function ArrayOfGenres($allow_SCMPX_extended=false) {
-        
+
         static $lookup = array (
             0    => 'Blues',
             1    => 'Classic Rock',
@@ -290,7 +290,7 @@ class getid3_id3v1 extends getid3_handler
 
 
     public static function LookupGenreName($genre_id, $allow_SCMPX_extended=true) {
-    
+
         switch ($genre_id) {
             case 'RX':
             case 'CR':
@@ -302,10 +302,10 @@ class getid3_id3v1 extends getid3_handler
         $lookup = getid3_id3v1::ArrayOfGenres($allow_SCMPX_extended);
         return (isset($lookup[$genre_id]) ? $lookup[$genre_id] : false);
     }
-    
+
 
     public static function LookupGenreID($genre, $allow_SCMPX_extended=false) {
-        
+
         $lookup = getid3_id3v1::ArrayOfGenres($allow_SCMPX_extended);
         $lower_case_no_space_search_term = strtolower(str_replace(' ', '', $genre));
         foreach ($lookup as $key => $value) {

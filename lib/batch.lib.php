@@ -8,7 +8,7 @@
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License v2
  as published by the Free Software Foundation.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -28,20 +28,20 @@
  */
 function get_song_files($media_ids) {
 
-	$media_files = array(); 
-	
+	$media_files = array();
+
 	foreach ($media_ids as $element) {
-		if (is_array($element)) { 
-			$type = array_shift($element); 
-			$media = new $type(array_shift($element)); 
-		} 
-		else { 
-			$media = new Song($element); 
-		} 
-		if ($media->enabled) { 
+		if (is_array($element)) {
+			$type = array_shift($element);
+			$media = new $type(array_shift($element));
+		}
+		else {
+			$media = new Song($element);
+		}
+		if ($media->enabled) {
 	                $total_size += sprintf("%.2f",($media->size/1048576));
 	                array_push($media_files, $media->file);
-		} 
+		}
         }
 
         return array($media_files,$total_size);
@@ -59,19 +59,19 @@ function send_zip( $name, $song_files ) {
 
 	// Check if they want to save it to a file, if so then make sure they've got
 	// a defined path as well and that it's writeable
-	if (Config::get('file_zip_download') && Config::get('file_zip_path')) { 
+	if (Config::get('file_zip_download') && Config::get('file_zip_path')) {
 		// Check writeable
-		if (!is_writable(Config::get('file_zip_path'))) { 
-			$in_memory = '1'; 
-			debug_event('Error','File Zip Path:' . Config::get('file_zip_path') . ' is not writeable','1'); 
-		} 
-		else { 
-			$in_memory = '0'; 
-			$basedir = Config::get('file_zip_path'); 
-		} 
+		if (!is_writable(Config::get('file_zip_path'))) {
+			$in_memory = '1';
+			debug_event('Error','File Zip Path:' . Config::get('file_zip_path') . ' is not writeable','1');
+		}
+		else {
+			$in_memory = '0';
+			$basedir = Config::get('file_zip_path');
+		}
 
 	} else {
-		$in_memory = '1'; 
+		$in_memory = '1';
 	} // if file downloads
 
 	/* Require needed library */
@@ -84,20 +84,20 @@ function send_zip( $name, $song_files ) {
                 'level'         => 0,    // no compression
 		'comment'	=> Config::get('file_zip_comment')
         );
-	
+
         $arc->set_options( $options );
         $arc->add_files( $song_files );
 
-	if (count($arc->error)) { 
+	if (count($arc->error)) {
 		debug_event('archive',"Error: unable to add songs",'3');
-		return false; 
+		return false;
 	} // if failed to add songs
-	
-        if (!$arc->create_archive()) { 
+
+        if (!$arc->create_archive()) {
 		debug_event('archive',"Error: unable to create archive",'3');
-		return false; 
+		return false;
 	} // if failed to create archive
-	
+
         $arc->download_file();
 
 } // send_zip

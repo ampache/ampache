@@ -44,11 +44,11 @@ switch ($_REQUEST['action']) {
 
 		// Set browse method
 		Browse::set_type('song');
-		Browse::set_filter('tag',$_GET['tag_id']); 
-		$object_ids = Browse::get_objects(); 
-		ob_start(); 
-		Browse::show_objects($object_ids); 
-		$results['browse_content'] = ob_get_clean(); 
+		Browse::set_filter('tag',$_GET['tag_id']);
+		$object_ids = Browse::get_objects();
+		ob_start();
+		Browse::show_objects($object_ids);
+		$results['browse_content'] = ob_get_clean();
 
 		// Retrive current objects of type based on combined filters
 	break;

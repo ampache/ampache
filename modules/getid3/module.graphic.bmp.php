@@ -22,8 +22,8 @@
 //
 // $Id: module.graphic.bmp.php,v 1.4 2006/11/02 10:48:02 ah Exp $
 
-        
-        
+
+
 class getid3_bmp extends getid3_handler
 {
 
@@ -39,7 +39,7 @@ class getid3_bmp extends getid3_handler
         // WORD    bfReserved1;
         // WORD    bfReserved2;
         // DWORD   bfOffBits;
-        
+
         // shortcuts
         $getid3->info['bmp']['header']['raw'] = array ();
         $info_bmp            = &$getid3->info['bmp'];
@@ -51,7 +51,7 @@ class getid3_bmp extends getid3_handler
 
         // Magic bytes
         $info_bmp_header_raw['identifier'] = 'BM';
-        
+
         getid3_lib::ReadSequence('LittleEndian2Int', $info_bmp_header_raw, $bmp_header, 2,
             array (
                 'filesize'    => 4,
@@ -61,34 +61,34 @@ class getid3_bmp extends getid3_handler
                 'header_size' => 4
             )
         );
-        
+
         // Check if the hardcoded-to-1 "planes" is at offset 22 or 26
         $planes22 = getid3_lib::LittleEndian2Int(substr($bmp_header, 22, 2));
         $planes26 = getid3_lib::LittleEndian2Int(substr($bmp_header, 26, 2));
         if (($planes22 == 1) && ($planes26 != 1)) {
             $info_bmp['type_os']      = 'OS/2';
             $info_bmp['type_version'] = 1;
-        } 
+        }
         elseif (($planes26 == 1) && ($planes22 != 1)) {
             $info_bmp['type_os']      = 'Windows';
             $info_bmp['type_version'] = 1;
-        } 
+        }
         elseif ($info_bmp_header_raw['header_size'] == 12) {
             $info_bmp['type_os']      = 'OS/2';
             $info_bmp['type_version'] = 1;
-        } 
+        }
         elseif ($info_bmp_header_raw['header_size'] == 40) {
             $info_bmp['type_os']      = 'Windows';
             $info_bmp['type_version'] = 1;
-        } 
+        }
         elseif ($info_bmp_header_raw['header_size'] == 84) {
             $info_bmp['type_os']      = 'Windows';
             $info_bmp['type_version'] = 4;
-        } 
+        }
         elseif ($info_bmp_header_raw['header_size'] == 100) {
             $info_bmp['type_os']      = 'Windows';
             $info_bmp['type_version'] = 5;
-        } 
+        }
         else {
             throw new getid3_exception('Unknown BMP subtype (or not a BMP file)');
         }
@@ -108,7 +108,7 @@ class getid3_bmp extends getid3_handler
             // DWORD  Height;           /* Bitmap height in pixel */
             // WORD   NumPlanes;        /* Number of bit planes (color depth) */
             // WORD   BitsPerPixel;     /* Number of bits per pixel per plane */
-            
+
             getid3_lib::ReadSequence('LittleEndian2Int', $info_bmp_header_raw, $bmp_header, 18,
                 array (
                     'width'          => 2,
@@ -117,12 +117,12 @@ class getid3_bmp extends getid3_handler
                     'bits_per_pixel' => 2
                 )
             );
-            
+
             $getid3->info['video']['resolution_x']    = $info_bmp_header_raw['width'];
             $getid3->info['video']['resolution_y']    = $info_bmp_header_raw['height'];
             $getid3->info['video']['codec']           = 'BI_RGB '.$info_bmp_header_raw['bits_per_pixel'].'-bit';
             $getid3->info['video']['bits_per_sample'] = $info_bmp_header_raw['bits_per_pixel'];
-            
+
             if ($info_bmp['type_version'] >= 2) {
                 // DWORD  Compression;      /* Bitmap compression scheme */
                 // DWORD  ImageDataSize;    /* Size of bitmap data in bytes */
@@ -138,7 +138,7 @@ class getid3_bmp extends getid3_handler
                 // DWORD  Size2;            /* Reserved for halftoning algorithm use */
                 // DWORD  ColorEncoding;    /* Color model used in bitmap */
                 // DWORD  Identifier;       /* Reserved for application use */
-                
+
                 getid3_lib::ReadSequence('LittleEndian2Int', $info_bmp_header_raw, $bmp_header, 26,
                     array (
                         'compression'      => 4,
@@ -161,11 +161,11 @@ class getid3_bmp extends getid3_handler
                 $info_bmp_header['compression'] = getid3_bmp::BMPcompressionOS2Lookup($info_bmp_header_raw['compression']);
                 $getid3->info['video']['codec'] = $info_bmp_header['compression'].' '.$info_bmp_header_raw['bits_per_pixel'].'-bit';
             }
-            
+
             return true;
-        } 
-    
-        
+        }
+
+
         if ($info_bmp['type_os'] == 'Windows') {
 
             // Windows-format BMP
@@ -201,7 +201,7 @@ class getid3_bmp extends getid3_handler
             foreach (array ('width', 'height', 'resolution_h', 'resolution_v') as $key) {
                 $info_bmp_header_raw[$key] = getid3_lib::LittleEndian2Int($info_bmp_header_raw[$key], true);
             }
-            
+
             $info_bmp_header['compression']           = getid3_bmp::BMPcompressionWindowsLookup($info_bmp_header_raw['compression']);
             $getid3->info['video']['resolution_x']    = $info_bmp_header_raw['width'];
             $getid3->info['video']['resolution_y']    = $info_bmp_header_raw['height'];
@@ -210,8 +210,8 @@ class getid3_bmp extends getid3_handler
 
             // should only be v4+, but BMPs with type_version==1 and BI_BITFIELDS compression have been seen
             if (($info_bmp['type_version'] >= 4) || ($info_bmp_header_raw['compression'] == 3)) {
-  	            
-                
+
+
                 $bmp_header .= fread($getid3->fp, 44);
 
                 // BITMAPV4HEADER - [44 bytes] - http://msdn.microsoft.com/library/en-us/gdi/bitmaps_2k1e.asp
@@ -225,7 +225,7 @@ class getid3_bmp extends getid3_handler
                 // DWORD        bV4GammaRed;
                 // DWORD        bV4GammaGreen;
                 // DWORD        bV4GammaBlue;
-                
+
                 getid3_lib::ReadSequence('LittleEndian2Int', $info_bmp_header_raw, $bmp_header, 54,
                     array (
                         'red_mask'     => 4,
@@ -241,22 +241,22 @@ class getid3_bmp extends getid3_handler
                         'gamma_blue'   => 4
                     )
                 );
-                
+
                 $info_bmp_header['ciexyz_red']   = getid3_bmp::FixedPoint2_30(strrev($info_bmp_header_raw['ciexyz_red']));
                 $info_bmp_header['ciexyz_green'] = getid3_bmp::FixedPoint2_30(strrev($info_bmp_header_raw['ciexyz_green']));
                 $info_bmp_header['ciexyz_blue']  = getid3_bmp::FixedPoint2_30(strrev($info_bmp_header_raw['ciexyz_blue']));
-            
+
 
                 if ($info_bmp['type_version'] >= 5) {
                     $bmp_header .= fread($getid3->fp, 16);
-    
+
                     // BITMAPV5HEADER - [16 bytes] - http://msdn.microsoft.com/library/en-us/gdi/bitmaps_7c36.asp
                     // Win98+, Win2000+
                     // DWORD        bV5Intent;
                     // DWORD        bV5ProfileData;
                     // DWORD        bV5ProfileSize;
                     // DWORD        bV5Reserved;
-                    
+
                     getid3_lib::ReadSequence('LittleEndian2Int', $info_bmp_header_raw, $bmp_header, 98,
                         array (
                             'intent'              => 4,
@@ -265,16 +265,16 @@ class getid3_bmp extends getid3_handler
                             'reserved3'           => 4
                         )
                     );
-                    
+
                 }
             }
-            
+
             return true;
         }
 
 
         throw new getid3_exception('Unknown BMP format in header.');
-        
+
     }
 
 
@@ -295,7 +295,7 @@ class getid3_bmp extends getid3_handler
 
 
     public static function BMPcompressionOS2Lookup($compression_id) {
-        
+
         static $lookup = array (
             0 => 'BI_RGB',
             1 => 'BI_RLE8',
@@ -305,10 +305,10 @@ class getid3_bmp extends getid3_handler
         );
         return (isset($lookup[$compression_id]) ? $lookup[$compression_id] : 'invalid');
     }
-    
-    
+
+
     public static function FixedPoint2_30($raw_data) {
-        
+
         $binary_string = getid3_lib::BigEndian2Bin($raw_data);
         return bindec(substr($binary_string, 0, 2)) + (float)(bindec(substr($binary_string, 2, 30)) / 1073741824);        // pow(2, 30) = 1073741824
     }

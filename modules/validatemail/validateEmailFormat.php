@@ -87,7 +87,7 @@ function validateEmailFormat ( $email ) {
     // Impossible to do properly with a regex, I make do by allowing at most
     // one level of nesting.
     $ctext = " [^$esc$NonASCII$CRlist()] ";
-    
+
     // $Cnested matches one non-nested comment.
     // It is unrolled, with normal of $ctext, special of $quoted_pair.
     $Cnested = "";
@@ -95,7 +95,7 @@ function validateEmailFormat ( $email ) {
         $Cnested .= "$ctext*";                        //       normal*
         $Cnested .= "(?: $quoted_pair $ctext* )*";    //       (special normal*)*
         $Cnested .= "$CloseParen";                    //                         )
-    
+
     // $comment allows one level of nested parentheses
     // It is unrolled, with normal of $ctext, special of ($quoted_pair|$Cnested)
     $comment = "";
@@ -106,29 +106,29 @@ function validateEmailFormat ( $email ) {
         $comment .= "$ctext*";                            //         normal*
         $comment .= ")*";                                //            )*
         $comment .= "$CloseParen";                        //                )
-        
+
     // *********************************************
     // $X is optional whitespace/comments
     $X = "";
         $X .= "[$space$tab]*";                    // Nab whitespace
         $X .= "(?: $comment [$space$tab]* )*";    // If comment found, allow more spaces
-        
-        
+
+
     // Item 10: atom
     $atom_char = "[^($space)<>\@,;:\".$esc$OpenBR$CloseBR$ctrl$NonASCII]";
     $atom = "";
         $atom .= "$atom_char+";        // some number of atom characters ...
         $atom .= "(?!$atom_char)";    // ... not followed by something that
                                     //     could be part of an atom
-                                    
+
     // Item 11: doublequoted string, unrolled.
     $quoted_str = "";
         $quoted_str .= "\"";                            // "
         $quoted_str .= "$qtext *";                        //   normal
         $quoted_str .= "(?: $quoted_pair $qtext * )*";    //   ( special normal* )*
         $quoted_str .= "\"";                            //        "
-    
-    
+
+
     // Item 7: word is an atom or quoted string
     $word = "";
         $word .= "(?:";
@@ -136,10 +136,10 @@ function validateEmailFormat ( $email ) {
         $word .= "|";            // or
         $word .= "$quoted_str";    // Quoted string
         $word .= ")";
-        
+
     // Item 12: domain-ref is just an atom
     $domain_ref = $atom;
-    
+
     // Item 13: domain-literal is like a quoted string, but [...] instead of "..."
     $domain_lit = "";
         $domain_lit .= "$OpenBR";                        // [
@@ -154,28 +154,28 @@ function validateEmailFormat ( $email ) {
         $sub_domain .= "$domain_lit";
         $sub_domain .= ")";
         $sub_domain .= "$X"; // optional trailing comments
-        
+
     // Item 6: domain is a list of subdomains separated by dots
     $domain = "";
         $domain .= "$sub_domain";
         $domain .= "(?:";
         $domain .= "$Period $X $sub_domain";
         $domain .= ")*";
-        
+
     // Item 8: a route. A bunch of "@ $domain" separated by commas, followed by a colon.
     $route = "";
         $route .= "\@ $X $domain";
         $route .= "(?: , $X \@ $X $domain )*"; // additional domains
         $route .= ":";
         $route .= "$X"; // optional trailing comments
-        
+
     // Item 5: local-part is a bunch of $word separated by periods
     $local_part = "";
         $local_part .= "$word $X";
         $local_part .= "(?:";
         $local_part .= "$Period $X $word $X"; // additional words
         $local_part .= ")*";
-        
+
     // Item 2: addr-spec is local@domain
     $addr_spec = "$local_part \@ $X $domain";
 
@@ -185,10 +185,10 @@ function validateEmailFormat ( $email ) {
         $route_addr .= "(?: $route )?"; // optional route
         $route_addr .= "$addr_spec";    // address spec
         $route_addr .= ">";
-        
+
     // Item 3: phrase........
     $phrase_ctrl = '\000-\010\012-\037'; // like ctrl, but without tab
-    
+
     // Like atom-char, but without listing space, and uses phrase_ctrl.
     // Since the class is negated, this matches the same as atom-char plus space and tab
     $phrase_char = "[^()<>\@,;:\".$esc$OpenBR$CloseBR$NonASCII$phrase_ctrl]";
@@ -214,7 +214,7 @@ function validateEmailFormat ( $email ) {
 
     // test it and return results
     $isValid = preg_match("/^$mailbox$/xS",$email);
-    
+
     return($isValid);
 } // END validateEmailFormat
 ?>

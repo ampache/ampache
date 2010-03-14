@@ -25,19 +25,19 @@
 
 class getid3_write_vorbis extends getid3_handler_write
 {
-    
+
     public $comments = array ();
-    
-    
+
+
     public function __construct($filename) {
-        
+
         if (ini_get('safe_mode')) {
             throw new getid3_exception('PHP running in Safe Mode (backtick operator not available). Cannot call vorbiscomment binary.');
         }
-        
+
         static $initialized;
         if (!$initialized) {
-            
+
             // check existance and version of vorbiscomment
             if (!preg_match('/^Vorbiscomment ([0-9]+\.[0-9]+\.[0-9]+)/', `vorbiscomment --version 2>&1`, $r)) {
                 throw new getid3_exception('Fatal: vorbiscomment binary not available.');
@@ -51,20 +51,20 @@ class getid3_write_vorbis extends getid3_handler_write
 
         parent::__construct($filename);
     }
-    
-    
+
+
     public function read() {
-        
+
         // read info with vorbiscomment
         if (!$info = trim(`vorbiscomment -l "$this->filename"`)) {
             return;
         }
-        
+
         // process info
         foreach (explode("\n", $info) as $line) {
-            
+
             $pos    = strpos($line, '=');
-            
+
             $key    = strtolower(substr($line, 0, $pos));
             $value  = substr($line, $pos+1);
 
@@ -77,13 +77,13 @@ class getid3_write_vorbis extends getid3_handler_write
                 $this->comments[$key] = $value[0];
             }
         }
-        
+
         return true;
     }
-    
-    
+
+
     public function write() {
-        
+
         // create temp file with new comments
         $temp_filename = tempnam('*', 'getID3');
         if (!$fp = @fopen($temp_filename, 'wb')) {
@@ -91,14 +91,14 @@ class getid3_write_vorbis extends getid3_handler_write
         }
         fwrite($fp, $this->generate_tag());
         fclose($fp);
-        
+
         // write comments
         $this->save_permissions();
         if ($error = `vorbiscomment -w --raw -c "$temp_filename" "$this->filename" 2>&1`) {
-            throw new getid3_exception('Fatal: vorbiscomment returned error: ' . $error);          
+            throw new getid3_exception('Fatal: vorbiscomment returned error: ' . $error);
         }
         $this->restore_permissions();
-        
+
         // success
         @unlink($temp_filename);
         return true;
@@ -106,27 +106,27 @@ class getid3_write_vorbis extends getid3_handler_write
 
 
     protected function generate_tag() {
-        
+
         if (!$this->comments) {
             throw new getid3_exception('Cannot write empty tag, use remove() instead.');
         }
 
         $result = '';
-            
+
         foreach ($this->comments as $key => $values) {
-            
-            // A case-insensitive vobiscomment field name that may consist of ASCII 0x20 through 0x7D, 0x3D ('=') excluded. 
+
+            // A case-insensitive vobiscomment field name that may consist of ASCII 0x20 through 0x7D, 0x3D ('=') excluded.
             // ASCII 0x41 through 0x5A  inclusive (A-Z) is to be considered equivalent to ASCII 0x61 through 0x7A inclusive (a-z).
             if (preg_match("/[^\x20-\x7D]|\x3D/", $key)) {
                 throw new getid3_exception('Field name "' . $key . '" contains invalid character(s).');
             }
-            
+
             $key = strtolower($key);
-            
+
             if (!is_array($values)) {
                 $values = array ($values);
             }
-            
+
             foreach ($values as $value) {
                 if (strstr($value, "\n") || strstr($value, "\r")) {
                     throw new getid3_exception('Multi-line comments not supported (value contains \n or \r)');
@@ -135,13 +135,13 @@ class getid3_write_vorbis extends getid3_handler_write
             }
 
         }
-        
+
         return $result;
-    }    
-        
-    
+    }
+
+
     public function remove() {
-        
+
         // create temp file with new comments
         $temp_filename = tempnam('*', 'getID3');
         if (!$fp = @fopen($temp_filename, 'wb')) {
@@ -149,15 +149,15 @@ class getid3_write_vorbis extends getid3_handler_write
         }
         fwrite($fp, '');
         fclose($fp);
-        
+
         // write comments
         $this->save_permissions();
         if ($error = `vorbiscomment -w --raw -c "$temp_filename" "$this->filename" 2>&1`) {
-            throw new getid3_exception('Fatal: vorbiscomment returned error: ' . $error);          
+            throw new getid3_exception('Fatal: vorbiscomment returned error: ' . $error);
         }
         $this->restore_permissions();
-        
-        // success when removing non-existant tag 
+
+        // success when removing non-existant tag
         @unlink($temp_filename);
         return true;
     }

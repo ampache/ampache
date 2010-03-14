@@ -29,7 +29,7 @@ $web_path = Config::get('web_path');
 ?>
 <?php /* HINT: Genre Name */ ?>
 <?php show_box_top(sprintf(_('Viewing %s Genre'), $genre->name)); ?>
-		[<?php echo $genre->get_album_count(); ?>] 
+		[<?php echo $genre->get_album_count(); ?>]
 		<a href="<?php echo $web_path; ?>/genre.php?action=show_albums&amp;genre_id=<?php echo $genre->id; ?>">
 			<?php echo _('Albums'); ?></a><br />
 		[<?php echo $genre->get_artist_count(); ?>]

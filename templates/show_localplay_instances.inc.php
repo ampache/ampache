@@ -26,10 +26,10 @@
 <tr>
 	<?php foreach ($fields as $key=>$field) { ?>
 		<th><?php echo $field['description']; ?></th>
-	<?php } ?> 
+	<?php } ?>
 	<th><?php echo _('Action'); ?></th>
 </tr>
-<?php foreach ($instances as $uid=>$name) { 
+<?php foreach ($instances as $uid=>$name) {
 	$instance = $localplay->get_instance($uid);
 ?>
 <tr class="<?php echo flip_class(); ?>" id="localplay_instance_<?php echo $uid; ?>">

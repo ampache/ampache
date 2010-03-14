@@ -5,19 +5,19 @@
 	class mbXmlParser {
 		private $xml_parser;
 		private $factory;
-		
+
 		function mbXmlParser() {
 			$this->xml_parser = new xmlParser();
 			$this->factory	= new mbDefaultFactory();
 		}
-		
+
 		private function parseList( XMLNode $node, array &$list, $func ) {
 			for ( $i = 0; $i < $node->nChildNodes(); $i++ ) {
 			  $cnode = $node->getChildNode($i);
 			  $list[] = call_user_func( array( &$this, $func ), $cnode );
 			}
 		}
-		
+
 		private function parseResults( XMLNode $node, array &$list, $func, $type ) {
 			for ( $i = 0; $i < $node->nChildNodes(); $i++ ) {
 				$cnode = $node->getChildNode($i);
@@ -29,7 +29,7 @@
 				$list[] = $to_add;
 			}
 		}
-		
+
 		private function parseRelations( XMLNode $node, MusicBrainzEntity $entity ) {
 			$targetType = $node->getAttribute("target-type");
 			if ( $targetType == '' )
@@ -44,14 +44,14 @@
 				}
 			}
 		}
-		
+
 		private function parseUserResults( XMLNode $node, array &$userList ) {
 			for ( $i = 0; $i < $node->nChildNodes(); $i++ ) {
 				$cnode = $node->getChildNode($i);
 				$userList[] = $this->createUser( $cnode );
 			}
 		}
-		
+
 		private function createUser( XMLNode $node ) {
 			$user = $this->factory->newUser();
 			for ( $i = 0; $i < $node->nChildNodes(); $i++ ) {
@@ -68,7 +68,7 @@
 			}
 			return $user;
 		}
-		
+
 		private function createArtistAlias( XMLNode $node ) {
 			$aa = $this->factory->newArtistAlias();
 			$aa->setType($node->getAttribute("type"));
@@ -77,14 +77,14 @@
 			return $aa;
 
 		}
-		
+
 		private function createTag( XMLNode $node ) {
 			$tag = $this->factory->newTag();
 			$tag->setCount($node->getAttribute("count"));
 			$tag->setName($node->getText());
 			return $tag;
 		}
-		
+
 		private function createLabelAlias( XML $node ) {
 			$la = $this->factory->newLabelAlias();
 			$la->setType($node->getAttribute("type"));
@@ -92,13 +92,13 @@
 			$la->setValue($node->getText());
 			return $la;
 		}
-		
+
 		private function createDisc( XMLNode $node ) {
 			$disc = $this->factory->newDisc();
 			$disc->setId($node->getAttribute("id"));
 			return $disc;
 		}
-		
+
 		private function createReleaseEvent( XMLNode $node ) {
 			$relEvent = $this->factory->newReleaseEvent();
 			$relEvent->setCountry($node->getAttribute("country"));
@@ -115,7 +115,7 @@
 			}
 			return $relEvent;
 		}
-		
+
 		private function createLabel( XMLNode $node ) {
 			$label = $this->factory->newLabel();
 			$label->setId($node->getAttribute("id"));
@@ -160,7 +160,7 @@
 
 			return $label;
 		}
-		
+
 		private function createArtist( XMLNode $node ) {
 			$artist = $this->factory->newArtist();
 			$artist->setId($node->getAttribute("id"));
@@ -207,7 +207,7 @@
 
 			return $artist;
 		}
-		
+
 		private function createTrack( XMLNode $node ) {
 			$track = $this->factory->newTrack();
 			$track->setId($node->getAttribute("id"));
@@ -238,10 +238,10 @@
 					 break;
 				}
 			}
-			
+
 			return $track;
 		}
-		
+
 		private function createRelease( XMLNode $node ) {
 			$release = $this->factory->newRelease();
 			$release->setId($node->getAttribute("id"));
@@ -294,13 +294,13 @@
 
 			return $release;
 		}
-		
+
 		private function createRelation( XMLNode $node, $type ) {
 			$relation = $this->factory->newRelation();
 			$relation->setType(extractFragment($node->getAttribute("type"))); // TODO: fixme
 			$relation->setTargetType($type);
 			$relation->setTargetId($node->getAttribute("target"));
-			
+
 			$dir = mbRelation::DIR_BOTH;
 			switch( strtolower($node->getAttribute("direction")) ) {
 				case "forward":
@@ -340,7 +340,7 @@
 
 			return $relation;
 		}
-		
+
 		function parse( $data ) {
 			$nodes = $this->xml_parser->parse( $data );
 
@@ -349,7 +349,7 @@
 
 			$md = new mbMetadata();
 
-			
+
 			for ( $i = 0; $i < $nodes->nChildNodes(); $i++ ) {
 				$node = $nodes->getChildNode($i);
 				$name = strtolower($node->getName());

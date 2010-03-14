@@ -7,7 +7,7 @@
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License v2
- as published by the Free Software Foundation. 
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,8 +27,8 @@
 	<td>
 		<input type="text" name="name" size="9" value="<?php echo scrub_out($playlist->name); ?>" />
 	</td>
-	<td>	
-		<?php $name = 'select_' . $playlist->type; ${$name} = ' selected="selected"'; ?> 
+	<td>
+		<?php $name = 'select_' . $playlist->type; ${$name} = ' selected="selected"'; ?>
 		<select name="pl_type">
 			<option value="public"<?php echo $select_public; ?>><?php echo _('Public'); ?></option>
 			<option value="private"<?php echo $select_private; ?>><?php echo _('Private'); ?></option>
@@ -39,7 +39,7 @@
 	<?php echo Ajax::button('?action=edit_object&id=' . $playlist->id . '&type=playlist','download',_('Save Changes'),'save_playlist_' . $playlist->id,'edit_playlist_' . $playlist->id); ?>
 	</td>
 </tr>
-</table> 
+</table>
 </form>
 </td>
 

@@ -1,7 +1,7 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 	class mbValueError extends Exception {}
-	
+
 	function extractFragment( $type ) {
 		if ( ( $p = parse_url( $type ) ) == false ) {
 			return $type;
@@ -12,7 +12,7 @@
 	function extractUuid( $uid ) {
 		if ( empty($uid) )
 		  return $uid;
-		  
+
 		$types = array( "artist/", "release/", "track/" );
 		for ( $i = 0; $i < 3; $i++ ) {
 			if ( ($pos = strpos( $uid, $types[$i] )) !== false ) {
@@ -52,7 +52,7 @@
 
 		return "";
 	}
-	
+
 	require_once( 'mbUtil_releasetypenames.php' );
 	function getReleaseTypeName( $id ) {
 		if ( isset( $mbReleaseTypeNames[$id] ) )

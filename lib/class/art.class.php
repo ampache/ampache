@@ -23,17 +23,17 @@
 /**
  * Art
  * This class handles the images / artwork in ampache
- * This was initially in the album class, but was pulled out 
+ * This was initially in the album class, but was pulled out
  * to be more general, and apply to albums, artists, movies etc
  */
-class Art extends database_object { 
+class Art extends database_object {
 
 
 	/**
 	 * Constructor
 	 * Art constructor, not sure what's here for now
 	 */
-	public function __construct() { 
+	public function __construct() {
 
 
 

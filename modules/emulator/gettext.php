@@ -89,12 +89,12 @@ if (!function_exists("gettext")) {
       #-- give out whatever we have
       return($msg);
    }
-   
+
 
    #-- return plural form array index for algorithm type
    #   (compacted from C expression string beforehand)
    function gettext___plural_guess(&$type, $n) {
-   
+
       #-- guess from string with C expression and set integer shorthand
       if (is_string($type)) {
          if (($type == "nplurals=1;plural=0;") || !strlen($type)) {
@@ -221,7 +221,7 @@ if (!function_exists("gettext")) {
              . @$_ENV['LC_MESSAGE'] .',' . @$_ENV['LANG'] . ','
              . @$_GETTEXT['%locale'] . ',' . @$_SERVER['HTTP_ACCEPT_LANGUAGE']
              . ',C,en';
-          
+
       #-- add shortened language codes (en_UK.UTF-8 -> + en_UK, en)
       foreach (explode(',', $langs) as $d) {
          $d = trim($d);
@@ -258,7 +258,7 @@ if (!function_exists("gettext")) {
             }
          }
       }//foreach
-      
+
       #-- extract headers
       if ($head = $_GETTEXT[$domain][""]) {
          foreach (explode("\n", $head) as $line) {
@@ -266,7 +266,7 @@ if (!function_exists("gettext")) {
             $line = trim(strtok("\n"));
             $_GETTEXT[$domain]['%po-header'][strtolower($header)] = $line;
          }
-      
+
          #-- plural-forms header
          if (function_exists("gettext___plural_guess")
          and ($h = @$_GETTEXT[$domain]['%po-header']["plural-forms"]))
@@ -336,7 +336,7 @@ if (!function_exists("gettext")) {
       global $_GETTEXT;
       $c_esc = array("\\n"=>"\n", "\\r"=>"\r", "\\\\"=>"\\", "\\f"=>"\f", "\\t"=>"\t", "\\"=>"");
 
-      #-- read line-wise from text file   
+      #-- read line-wise from text file
       do {
          $line = trim(fgets($f));
 

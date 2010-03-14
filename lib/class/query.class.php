@@ -817,15 +817,15 @@ class Query {
 		switch (self::$type) {
 		case 'song':
 			switch($filter) {
-				case 'tag': 
+				case 'tag':
 					self::set_join('left','`tag_map`','`tag_map`.`object_id`','`song`.`id`');
-					$filter_sql = " `tag_map`.`object_type`='song' AND ("; 
-					
-					foreach ($value as $tag_id) { 
-						$filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND"; 
+					$filter_sql = " `tag_map`.`object_type`='song' AND (";
+
+					foreach ($value as $tag_id) {
+						$filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
 					}
-					$filter_sql = rtrim($filter_sql,'AND') . ') AND '; 
-				break; 
+					$filter_sql = rtrim($filter_sql,'AND') . ') AND ';
+				break;
 				case 'exact_match':
 					$filter_sql = " `song`.`title` = '" . Dba::escape($value) . "' AND ";
 				break;
@@ -971,9 +971,9 @@ class Query {
 				case 'exact_match':
 					$filter_sql = " `tag`.`name` = '" . Dba::escape($value) . "' AND ";
 				break;
-				case 'tag': 
-					$filter_sql = " `tag`.`id` = '" . Dba::escape($value) . "' AND "; 
-				break; 
+				case 'tag':
+					$filter_sql = " `tag`.`id` = '" . Dba::escape($value) . "' AND ";
+				break;
 				default:
 					// Rien a faire
 				break;

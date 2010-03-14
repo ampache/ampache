@@ -22,15 +22,15 @@
 //
 // $Id: module.audio.au.php,v 1.2 2006/11/02 10:48:01 ah Exp $
 
-        
-        
+
+
 class getid3_au extends getid3_handler
 {
 
     public function Analyze() {
 
         $getid3 = $this->getid3;
-        
+
         fseek($getid3->fp, $getid3->info['avdataoffset'], SEEK_SET);
         $au_header  = fread($getid3->fp, 8);
 
@@ -48,7 +48,7 @@ class getid3_au extends getid3_handler
         $au_header .= fread($getid3->fp, $info_au['header_length'] - 8);
         $getid3->info['avdataoffset'] += $info_au['header_length'];
 
-        getid3_lib::ReadSequence('BigEndian2Int', $info_au, $au_header, 8,  
+        getid3_lib::ReadSequence('BigEndian2Int', $info_au, $au_header, 8,
             array (
                 'data_size'     => 4,
                 'data_format_id'=> 4,
@@ -82,7 +82,7 @@ class getid3_au extends getid3_handler
 
 
     public static function AUdataFormatNameLookup($id) {
-        
+
         static $lookup = array (
             0  => 'unspecified format',
             1  => '8-bit mu-law',
@@ -113,14 +113,14 @@ class getid3_au extends getid3_handler
             26 => 'CCITT g.723 5-bit ADPCM',
             27 => 'A-Law 8-bit'
         );
-        
+
         return (isset($lookup[$id]) ? $lookup[$id] : false);
     }
 
 
 
     public static function AUdataFormatBitsPerSampleLookup($id) {
-        
+
         static $lookup = array (
             1  => 8,
             2  => 8,
@@ -151,7 +151,7 @@ class getid3_au extends getid3_handler
 
 
     public static function AUdataFormatUsedBitsPerSampleLookup($id) {
-        
+
         static $lookup = array (
             1  => 8,
             2  => 8,

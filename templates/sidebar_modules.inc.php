@@ -1,4 +1,4 @@
-<?php 
+<?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /*
 
@@ -20,7 +20,7 @@
 
 */
 
-$ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path'); 
+$ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
 ?>
 <ul class="sb2" id="sb_modules">
 <li><h4><?php echo _('Modules'); ?></h4>

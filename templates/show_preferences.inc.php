@@ -21,8 +21,8 @@
 */
 
 /**
- * This page has a few tabs, as such we need to figure out which tab we are on 
- * and display the information accordingly 
+ * This page has a few tabs, as such we need to figure out which tab we are on
+ * and display the information accordingly
  */
 
 ?>
@@ -42,8 +42,8 @@
 </div>
 <?php
 }  // end if not account
-if ($_REQUEST['tab'] == 'account') { 
-		$client = $GLOBALS['user']; 
+if ($_REQUEST['tab'] == 'account') {
+		$client = $GLOBALS['user'];
 		require Config::get('prefix') . '/templates/show_account.inc.php';
 	}
 ?>

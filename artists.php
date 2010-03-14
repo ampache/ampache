@@ -22,32 +22,32 @@
 
 require_once 'lib/init.php';
 
-show_header(); 
+show_header();
 
 /**
- * Display Switch 
+ * Display Switch
  */
 switch($_REQUEST['action']) {
 	case 'show':
 		$artist = new Artist($_REQUEST['artist']);
-		$artist->format(); 
-		$object_ids = $artist->get_albums(); 
-		$object_type = 'album'; 
+		$artist->format();
+		$object_ids = $artist->get_albums();
+		$object_type = 'album';
 		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
 		break;
 	case 'show_all_songs':
 	    	$artist = new Artist($_REQUEST['artist']);
 		$artist->format();
-		$object_type = 'song'; 
-		$object_ids = $artist->get_songs(); 
+		$object_type = 'song';
+		$object_ids = $artist->get_songs();
 		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
         break;
 	case 'update_from_tags':
 
-		$type		= 'artist'; 
-		$object_id	= intval($_REQUEST['artist']); 
-		$target_url	= Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id; 
-		require_once Config::get('prefix') . '/templates/show_update_items.inc.php'; 
+		$type		= 'artist';
+		$object_id	= intval($_REQUEST['artist']);
+		$target_url	= Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
+		require_once Config::get('prefix') . '/templates/show_update_items.inc.php';
 	break;
 	case 'rename_similar':
 		if (!$user->has_access('100')) { access_denied(); }
@@ -81,14 +81,14 @@ switch($_REQUEST['action']) {
 		} else {
 			$GLOBALS['error']->print_error('general');
 		}
-		
+
 	break;
 	case 'show_similar':
-		if (!$GLOBALS['user']->has_access('75')) { 
-			access_denied(); 
-			exit; 
+		if (!$GLOBALS['user']->has_access('75')) {
+			access_denied();
+			exit;
 		}
-		
+
 		$artist = new Artist($_REQUEST['artist']);
 		//options
 		$similar_artists = $artist->get_similar_artists(
@@ -103,23 +103,23 @@ switch($_REQUEST['action']) {
 		$artist_id = $artist->id;
 		$artist_name = $artist->name;
 		require Config::get('prefix') . '/templates/show_similar_artists.inc.php';
-		 
+
 	break;
 	case 'rename':
 		//die if not enough permissions
 		if (!$user->has_access('100')) { access_denied(); }
-			
+
 		/* Get the artist */
 		$artist = new Artist($_REQUEST['artist']);
 		$catalog = new Catalog();
-		
+
 		//check if we've been given a target
 		if ((isset($_POST['artist_id']) && $_POST['artist_id'] != $artist->id ) || (isset($_POST['artist_name']) &&  $_POST['artist_name'] != "")) {
-		
+
 			//if we want to update id3 tags, then get the array of ids now, it's too late afterwards
 			if (make_bool($_POST['update_id3']))
-				$songs = $artist->get_songs(); 
-			
+				$songs = $artist->get_songs();
+
 			$ret = 0;
 			//the manual rename takes priority, but if they tested out the insert thing ignore
 			if ($_POST['artist_name'] != "" && $_POST['artist_name'] != $artist->name) {
@@ -134,24 +134,24 @@ switch($_REQUEST['action']) {
 				$ret = $artist->merge($_POST['artist_id']);
 				$newid = $_POST['artist_id'];
 				$newname = $ret;
-			} // elseif different artist and id 
+			} // elseif different artist and id
 			//if no changes, no changes
-			
+
 			//now flag for id3tag update if selected, and something actually happaned
 			if ($ret && make_bool($_POST['update_id3'])) {
-			
+
 				/* Set the rename information in the db */
 				foreach ($songs as $song) {
 					$flag = new Flag();
 					$flag->add($song->id,"song","retag","Renamed artist, retag");
-					$flag_qstring = "REPLACE INTO flagged " . 
+					$flag_qstring = "REPLACE INTO flagged " .
 						"SET type = 'setid3', song = '" . $song->id . "', date = '" . time() . "', user = '" . $GLOBALS['user']->username . "'";
-	            			mysql_query($flag_qstring, dbh()); 
+	            			mysql_query($flag_qstring, dbh());
 	    			}
-				
+
 			} // end if they wanted to update
-			
-			// show something other than a blank screen after this			
+
+			// show something other than a blank screen after this
 			if ($ret) {
 				show_confirmation (
 					"Renamed artist",
@@ -159,25 +159,25 @@ switch($_REQUEST['action']) {
 					conf('web_path') . "/artists.php?action=show&artist=" . $newid
 				);
 			}
-		
+
 		}  // if we've got the needed variables
 
 		/* Else we've got an error! But be lenient, and just show the form again */
-		else { 
+		else {
 			require (conf('prefix') . '/templates/show_rename_artist.inc.php');
 		}
-    	break;	
+    	break;
 	case 'show_rename':
 		$artist = new Artist($_REQUEST['artist']);
-		require (conf('prefix') . '/templates/show_rename_artist.inc.php'); 
+		require (conf('prefix') . '/templates/show_rename_artist.inc.php');
 	break;
 	case 'match':
 	case 'Match':
 		$match = scrub_in($_REQUEST['match']);
 		if ($match == "Browse" || $match == "Show_all") { $chr = ""; }
-		else { $chr = $match; } 
+		else { $chr = $match; }
 		/* Enclose this in the purty box! */
-		require (conf('prefix') . '/templates/show_box_top.inc.php'); 
+		require (conf('prefix') . '/templates/show_box_top.inc.php');
 		show_alphabet_list('artists','artists.php',$match);
 		show_alphabet_form($chr,_('Show Artists starting with'),"artists.php?action=match");
 		require (conf('prefix') . '/templates/show_box_bottom.inc.php');
@@ -188,7 +188,7 @@ switch($_REQUEST['action']) {
 		elseif ($match === "Show_all") {
 			$offset_limit = 999999;
 			show_artists();
-		}		
+		}
 	        else {
 			if ($chr == '') {
 				show_artists('A');
@@ -197,7 +197,7 @@ switch($_REQUEST['action']) {
 				show_artists($chr);
 			}
 		}
-	break;	
+	break;
 } // end switch
 
 show_footer();

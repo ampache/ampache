@@ -30,14 +30,14 @@ $base_url = Config::get('ajax_url') . '?action=set_rating&amp;rating_type=' . $r
     // decide width of rating (5 stars -> 20% per star)
     $width = $rating->preciserating*20;
     if ($width < 0) $width = 0;
-    
+
     //set the current rating background
     echo "<li class=\"current-rating\" style=\"width:${width}%\" >" . _('Current rating: ');
     if ($rating->rating <= 0) {
         echo _('not rated yet') . "</li>\n";
     }
     else printf(_('%s of 5') ,$rating->preciserating); echo "</li>\n";
-    
+
     for ($i=1; $i<6; $i++)
     {
     ?>

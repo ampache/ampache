@@ -21,7 +21,7 @@
 
 */
 $htmllang = str_replace("_","-",Config::get('lang'));
-$web_path = Config::get('web_path'); 
+$web_path = Config::get('web_path');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
@@ -42,8 +42,8 @@ $web_path = Config::get('web_path');
 <script src="<?php echo $web_path; ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
 
 <div id="maincontainer">
-<?php 
-    if ($validation == User::get_validation($username) AND strlen($validation)) { 
+<?php
+    if ($validation == User::get_validation($username) AND strlen($validation)) {
 	User::activate_user($username);
 ?>
 <h3><?php echo _('User Activated'); ?></h3>

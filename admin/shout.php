@@ -26,18 +26,18 @@ if (!Access::check('interface','100')) {
 	exit;
 }
 
-show_header(); 
+show_header();
 
 // Switch on the incomming action
-switch ($_REQUEST['action']) { 
-	case 'edit_shout': 
-		$shout_id = $_POST['shout_id']; 
-		$update = shoutBox::update($_POST); 
+switch ($_REQUEST['action']) {
+	case 'edit_shout':
+		$shout_id = $_POST['shout_id'];
+		$update = shoutBox::update($_POST);
 		show_confirmation(_('Shoutbox Post Updated'),'',Config::get('web_path').'/admin/shout.php');
-	break; 
+	break;
 	case 'show_edit':
 		$shout = new shoutBox($_REQUEST['shout_id']);
-		$object = shoutBox::get_object($shout->object_type,$shout->object_id); 
+		$object = shoutBox::get_object($shout->object_type,$shout->object_id);
 		$object->format();
 		$client = new User($shout->user);
 		$client->format();
@@ -48,12 +48,12 @@ switch ($_REQUEST['action']) {
 		show_confirmation(_('Shoutbox Post Deleted'),'',Config::get('web_path').'/admin/shout.php');
 	break;
 	default:
-		Browse::set_type('shoutbox'); 
-		Browse::set_simple_browse(1); 
-		$shoutbox_ids = Browse::get_objects(); 
-		Browse::show_objects($shoutbox_ids); 
-	break; 
+		Browse::set_type('shoutbox');
+		Browse::set_simple_browse(1);
+		$shoutbox_ids = Browse::get_objects();
+		Browse::show_objects($shoutbox_ids);
+	break;
 } // end switch on action
 
-show_footer(); 
+show_footer();
 ?>

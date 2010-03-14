@@ -22,28 +22,28 @@
 //
 // $Id: module.audio.rkau.php,v 1.2 2006/11/02 10:48:01 ah Exp $
 
-        
-        
+
+
 class getid3_rkau extends getid3_handler
 {
 
     public function Analyze() {
 
         $getid3 = $this->getid3;
-        
+
         fseek($getid3->fp, $getid3->info['avdataoffset'], SEEK_SET);
         $rkau_header = fread($getid3->fp, 20);
-        
+
         // Magic bytes 'RKA'
-            
+
         $getid3->info['fileformat']            = 'rkau';
         $getid3->info['audio']['dataformat']   = 'rkau';
         $getid3->info['audio']['bitrate_mode'] = 'vbr';
-        
+
         // Shortcut
         $getid3->info['rkau'] = array ();
         $info_rkau            = &$getid3->info['rkau'];
-        
+
         $info_rkau['raw']['version']   = getid3_lib::LittleEndian2Int(substr($rkau_header, 3, 1));
         $info_rkau['version']          = '1.'.str_pad($info_rkau['raw']['version'] & 0x0F, 2, '0', STR_PAD_LEFT);
         if (($info_rkau['version'] > 1.07) || ($info_rkau['version'] < 1.06)) {
@@ -60,7 +60,7 @@ class getid3_rkau extends getid3_handler
         );
 
         $info_rkau['raw']['quality']   = getid3_lib::LittleEndian2Int(substr($rkau_header, 14, 1));
-        
+
         $quality =  $info_rkau['raw']['quality'] & 0x0F;
 
         $info_rkau['lossless']          = (($quality == 0) ? true : false);
@@ -68,7 +68,7 @@ class getid3_rkau extends getid3_handler
         if (!$info_rkau['lossless']) {
             $info_rkau['quality_setting'] = $quality;
         }
-        
+
         $info_rkau['raw']['flags']            = getid3_lib::LittleEndian2Int(substr($rkau_header, 15, 1));
         $info_rkau['flags']['joint_stereo']   = (bool)(!($info_rkau['raw']['flags'] & 0x01));
         $info_rkau['flags']['streaming']      =  (bool) ($info_rkau['raw']['flags'] & 0x02);
@@ -77,7 +77,7 @@ class getid3_rkau extends getid3_handler
         if ($info_rkau['flags']['streaming']) {
             $getid3->info['avdataoffset'] += 20;
             $info_rkau['compressed_bytes']  = getid3_lib::LittleEndian2Int(substr($rkau_header, 16, 4));
-        } 
+        }
         else {
             $getid3->info['avdataoffset'] += 16;
             $info_rkau['compressed_bytes'] = $getid3->info['avdataend'] - $getid3->info['avdataoffset'] - 1;

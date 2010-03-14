@@ -21,8 +21,8 @@
 */
 
 /**
- * This page has a few tabs, as such we need to figure out which tab we are on 
- * and display the information accordingly 
+ * This page has a few tabs, as such we need to figure out which tab we are on
+ * and display the information accordingly
  */
 
 ?>
@@ -49,7 +49,7 @@
 	<td>
 	<div class="formValidation">
 	<input class="button" type="submit" value="<?php echo _('Update Preferences'); ?>" />
-	<?php echo Core::form_register('update_preference'); ?> 
+	<?php echo Core::form_register('update_preference'); ?>
 	<input type="hidden" name="user_id" value="<?php echo scrub_out($_REQUEST['user_id']); ?>" />
 	</div>
 	</td>

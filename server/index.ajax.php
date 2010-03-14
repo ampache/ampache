@@ -23,33 +23,33 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE as one
  */
-if (AJAX_INCLUDE != '1') { exit; } 
+if (AJAX_INCLUDE != '1') { exit; }
 
-switch ($_REQUEST['action']) { 
-	case 'random_albums': 
-		$albums = Album::get_random_albums('6'); 
-		if (count($albums) AND is_array($albums)) { 
-			ob_start(); 
-			require_once Config::get('prefix') . '/templates/show_random_albums.inc.php'; 
-			$results['random_selection'] = ob_get_clean(); 
-		} 
-		else { 
-			$results['random_selection'] = '<!-- None found -->'; 
-		} 
+switch ($_REQUEST['action']) {
+	case 'random_albums':
+		$albums = Album::get_random_albums('6');
+		if (count($albums) AND is_array($albums)) {
+			ob_start();
+			require_once Config::get('prefix') . '/templates/show_random_albums.inc.php';
+			$results['random_selection'] = ob_get_clean();
+		}
+		else {
+			$results['random_selection'] = '<!-- None found -->';
+		}
 	break;
-	case 'reloadnp': 
-		ob_start(); 
-		show_now_playing(); 
-		$results['now_playing'] = ob_get_clean(); 
-		ob_start(); 
-		$data = Song::get_recently_played(); 
-		Song::build_cache(array_keys($data)); 
-		if (count($data)) { 
+	case 'reloadnp':
+		ob_start();
+		show_now_playing();
+		$results['now_playing'] = ob_get_clean();
+		ob_start();
+		$data = Song::get_recently_played();
+		Song::build_cache(array_keys($data));
+		if (count($data)) {
                         require_once Config::get('prefix') . '/templates/show_recently_played.inc.php';
-		} 
-		$results['recently_played'] = ob_get_clean(); 
-	break; 
-	case 'sidebar': 
+		}
+		$results['recently_played'] = ob_get_clean();
+	break;
+	case 'sidebar':
                 switch ($_REQUEST['button']) {
                         case 'home':
                         case 'modules':
@@ -65,18 +65,18 @@ switch ($_REQUEST['action']) {
                         default:
                                 exit;
                         break;
-                } // end switch on button  
+                } // end switch on button
 
                 ob_start();
                 $_SESSION['state']['sidebar_tab'] = $button;
                 require_once Config::get('prefix') . '/templates/sidebar.inc.php';
                 $results['sidebar'] = ob_get_contents();
                 ob_end_clean();
-	default: 
-		$results['rfc3514'] = '0x1'; 
+	default:
+		$results['rfc3514'] = '0x1';
 	break;
-} // switch on action; 
+} // switch on action;
 
 // We always do this
-echo xml_from_array($results); 
+echo xml_from_array($results);
 ?>

@@ -29,10 +29,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
 if (count($results)) {
-$link = Config::get('use_rss') ? ' ' . AmpacheRSS::get_display('nowplaying') : ''; 
+$link = Config::get('use_rss') ? ' ' . AmpacheRSS::get_display('nowplaying') : '';
 ?>
 <?php show_box_top(_('Now Playing') . $link); ?>
-<?php 
+<?php
 foreach ($results as $item) {
 	$media = $item['media'];
 	$np_user = $item['client'];

@@ -29,7 +29,7 @@ class getid3_write_lyrics3 extends getid3_handler_write
 {
     public $synched;
     public $random_inhibited;
-    
+
     public $lyrics;
     public $comment;
     public $author;
@@ -40,7 +40,7 @@ class getid3_write_lyrics3 extends getid3_handler_write
 
 
     public function read() {
-        
+
         $engine = new getid3;
         $engine->filename = $this->filename;
         $engine->fp = fopen($this->filename, 'rb');
@@ -48,11 +48,11 @@ class getid3_write_lyrics3 extends getid3_handler_write
 
         $tag = new getid3_lyrics3($engine);
         $tag->Analyze();
-        
+
         if (!isset($engine->info['lyrics3']['tag_offset_start'])) {
             return;
         }
-        
+
         $this->lyrics  = @$engine->info['lyrics3']['raw']['LYR'];
         $this->comment = @$engine->info['lyrics3']['raw']['INF'];
         $this->author  = @$engine->info['lyrics3']['raw']['AUT'];
@@ -60,36 +60,36 @@ class getid3_write_lyrics3 extends getid3_handler_write
         $this->artist  = @$engine->info['lyrics3']['raw']['EAR'];
         $this->album   = @$engine->info['lyrics3']['raw']['EAL'];
         $this->images  = @$engine->info['lyrics3']['raw']['IMG'];
-        
+
         return true;
     }
 
 
     public function write() {
-        
+
         // remove existing apetag
         $this->remove();
-        
+
         $engine = new getid3;
         $engine->filename = $this->filename;
         $engine->fp = fopen($this->filename, 'rb');
         $engine->include_module('tag.id3v1');
-        
+
         $tag = new getid3_id3v1($engine);
         $tag->Analyze();
 
         $apetag = $this->generate_tag();
-            
+
         if (!$fp = @fopen($this->filename, 'a+b')) {
             throw new getid3_exception('Could not open a+b: ' . $this->filename);
         }
 
         // init: audio ends at eof
         $post_audio_offset = filesize($this->filename);
-        
+
         // id3v1 tag present
         if (@$engine->info['id3v1']['tag_offset_start']) {
-            
+
             // audio ends before id3v1 tag
             $post_audio_offset = $engine->info['id3v1']['tag_offset_start'];
         }
@@ -106,27 +106,27 @@ class getid3_write_lyrics3 extends getid3_handler_write
         // truncate file before start of new apetag
         fseek($fp, $post_audio_offset, SEEK_SET);
         ftruncate($fp, ftell($fp));
-        
+
         // write new apetag
         fwrite($fp, $apetag, strlen($apetag));
-        
-        // rewrite data after audio 
+
+        // rewrite data after audio
         if (!empty($post_audio_data)) {
             fwrite($fp, $post_audio_data, strlen($post_audio_data));
         }
-        
+
         fclose($fp);
         clearstatcache();
-        
+
         return true;
     }
 
-    
+
     protected function generate_tag() {
-        
+
         // define fields
         static $fields = array (
-            'lyrics'  => 'LYR', 
+            'lyrics'  => 'LYR',
             'comment' => 'INF',
             'author'  => 'AUT',
             'title'   => 'ETT',
@@ -134,40 +134,40 @@ class getid3_write_lyrics3 extends getid3_handler_write
             'album'   => 'EAL',
             'images'  => 'IMG'
         );
-        
+
         // loop thru fields and add to frames
         $frames = '';
         foreach ($fields as $field => $frame_name) {
-        
+
             // field set?
             if ($this->$field) {
                 $frames .= $frame_name . str_pad(strlen($this->$field), 5, '0', STR_PAD_LEFT) . $this->$field;
             }
         }
-        
+
         if (!$frames) {
             throw new getid3_exception('Cannot write empty tag, use remove() instead.');
         }
 
-        // header        
+        // header
         $result  = 'LYRICSBEGIN';
-        
+
         // indicator frame
-        $result .= 'IND00003' . ($this->lyrics ? '1' : '0') . ($this->synched ? '1' : '0') . ($this->random_inibited ? '1' : '0'); 
-        
+        $result .= 'IND00003' . ($this->lyrics ? '1' : '0') . ($this->synched ? '1' : '0') . ($this->random_inibited ? '1' : '0');
+
         // other frames
         $result .= $frames;
-                
+
         // footer
         $result .= str_pad(strlen($result), 6, '0', STR_PAD_LEFT);
         $result .= 'LYRICS200';
-        
+
         return $result;
     }
 
-    
+
     public function remove() {
-        
+
         $engine = new getid3;
         $engine->filename = $this->filename;
         $engine->fp = fopen($this->filename, 'rb');
@@ -175,9 +175,9 @@ class getid3_write_lyrics3 extends getid3_handler_write
 
         $tag = new getid3_lyrics3($engine);
         $tag->Analyze();
-        
+
         if (isset($engine->info['lyrics3']['tag_offset_start']) && isset($engine->info['lyrics3']['tag_offset_end'])) {
-            
+
             if (!$fp = @fopen($this->filename, 'a+b')) {
                 throw new getid3_exception('Could not open a+b: ' . $this->filename);
             }
@@ -201,8 +201,8 @@ class getid3_write_lyrics3 extends getid3_handler_write
             fclose($fp);
             clearstatcache();
         }
-        
-        // success when removing non-existant tag 
+
+        // success when removing non-existant tag
         return true;
     }
 }

@@ -32,7 +32,7 @@
     <col id="col_bitrate" />
     <col id="col_size" />
     <col id="col_filename" />
-</colgroup>	
+</colgroup>
 <tr class="th-top">
 	<th class="cel_disable"><?php echo _('Disable'); ?></th>
 	<th class="cel_song"><?php echo _('Song'); ?></th>
@@ -43,18 +43,18 @@
 	<th class="cel_size"><?php echo _('Size'); ?></th>
 	<th class="cel_filename"><?php echo _('Filename'); ?></th>
 </tr>
-<?php 
+<?php
 	foreach ($duplicates as $item) {
 		// Gather the duplicates
 		$songs = Catalog::get_duplicate_info($item,$search_type);
 
 		foreach ($songs as $key=>$song_id) {
-			$song = new Song($song_id); 
-			$song->format(); 
+			$song = new Song($song_id);
+			$song->format();
 			$row_key = 'duplicate_' . $song_id;
 			$button_flip_state_id = 'button_flip_state_' . $song_id;
-			$current_class = ($key == '0') ? 'row-highlight' : flip_class(); 
-			$button = $song->enabled ? 'disable' : 'enable'; 
+			$current_class = ($key == '0') ? 'row-highlight' : flip_class();
+			$button = $song->enabled ? 'disable' : 'enable';
 		?>
 <tr id="<?php echo $row_key; ?>" class="<?php echo $current_class; ?>">
 	<td class="cel_disable" id="<?php echo($button_flip_state_id); ?>">
@@ -68,8 +68,8 @@
 	<td class="cel_size"><?php echo $song->f_size; ?>MB</td>
 	<td class="cel_filename"><?php echo scrub_out($song->file); ?></td>
 </tr>
-<?php 
-		} // end foreach ($dinfolist as $dinfo)	
+<?php
+		} // end foreach ($dinfolist as $dinfo)
 	} // end foreach ($flags as $flag)
 ?>
 <tr class="th-bottom">

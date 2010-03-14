@@ -34,7 +34,7 @@
 		%T = <?php echo _('track number (padded with leading 0)'); ?><br />
 		%t = <?php echo _('song title'); ?><br />
 		%y = <?php echo _('year'); ?><br />
-		%o = <?php echo _('other'); ?><br /> 
+		%o = <?php echo _('other'); ?><br />
 	</td>
 </tr>
 <tr>

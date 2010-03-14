@@ -20,9 +20,9 @@
 */
 
 /* Check and see if their remember me is the same or lower then local
- * if so disable the checkbox 
+ * if so disable the checkbox
  */
-if (Config::get('session_length') >= Config::get('remember_length')) { 
+if (Config::get('session_length') >= Config::get('remember_length')) {
 	$remember_disabled = 'disabled="disabled"';
 }
 $htmllang = str_replace("_","-",Config::get('lang'));
@@ -56,11 +56,11 @@ function focus(){ document.login.username.focus(); }
 		<form name="login" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/login.php">
 
 			<div class="loginfield" id="usernamefield">
-        <label for="username"><?php echo  _('Username'); ?>:</label> 
+        <label for="username"><?php echo  _('Username'); ?>:</label>
 			  <input class="text_input" type="text" id="username" name="username" value="<?php echo  $_REQUEST['username']; ; ?>" />
       </div>
 			<div class="loginfield" id="passwordfield">
-        <label for="password"><?php echo  _('Password'); ?>:</label> 
+        <label for="password"><?php echo  _('Password'); ?>:</label>
   			<input class="text_input" type="password" id="password" name="password" value="" />
       </div>
 			<div class="loginfield" id="remembermefield"><label for="rememberme">
@@ -75,12 +75,12 @@ function focus(){ document.login.username.focus(); }
     		<input class="button" id="loginbutton" type="submit" value="<?php echo _('Login'); ?>" />
   			<input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
   			<input type="hidden" name="action" value="login" />
-  
+
     		<?php if (Config::get('allow_public_registration')) { ?>
     			<a class="button" id="registerbutton" href="<?php echo Config::get('web_path'); ?>/register.php"><?php echo _('Register'); ?></a>
     		<?php } // end if (conf('allow_public_registration')) ?>
       </div>
-  
+
 		</form>
 	</div>
 </div>

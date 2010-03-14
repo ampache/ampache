@@ -26,13 +26,13 @@
 
 class getid3_write_id3v2 extends getid3_handler_write
 {
-    // NOTE: This module ONLY writes tags in UTF-8. All strings must be UTF-8 encoded. 
-    
+    // NOTE: This module ONLY writes tags in UTF-8. All strings must be UTF-8 encoded.
+
     // For multiple values, specify "array of type" instead of type for all T??? and IPLS params except TXXX.
     /**2.4
     // For multiple values, specify "array of type" instead of type for all T??? params except TXXX.
     */
-    
+
 
     // Identification frames
     public $content_group_description;             // TIT1            string
@@ -142,7 +142,7 @@ class getid3_write_id3v2 extends getid3_handler_write
     public $play_counter;                          // PCNT
 
     // Popularimeter
-    public $popularimeter;                         // POPM            
+    public $popularimeter;                         // POPM
 
     // Recommended buffer size
     public $recommended_buffer_size;               // RBUF
@@ -291,7 +291,7 @@ class getid3_write_id3v2 extends getid3_handler_write
     public $play_counter;                          // PCNT
 
     // Popularimeter
-    public $popularimeter;                         // POPM            
+    public $popularimeter;                         // POPM
 
     // Recommended buffer size
     public $recommended_buffer_size;               // RBUF
@@ -332,14 +332,14 @@ class getid3_write_id3v2 extends getid3_handler_write
     // Audio seek point index
     public $audio_seek_point_index;                // ASPI
     */
-    
-    
+
+
     // internal logic
     protected $padded_length   = 4096;              // minimum length of ID3v2 tag in bytes
     protected $previous_frames = array ();
 
     const major_version = 3;
-    
+
 
     public function read() {
 
@@ -450,25 +450,25 @@ class getid3_write_id3v2 extends getid3_handler_write
     protected function generate_tag() {
 
         $result = '';
-                        
+
         $some_array = array (
             'content_group_description'                        => 'TIT1',
             'title'                                            => 'TIT2',
             'subtitle'                                         => 'TIT3',
         );
-        
+
         foreach ($some_array as $key => $frame_name) {
-            
-            
+
+
             if ($frame_data = $this->generate_frame_data($frame_name, $this->$key)) {
-            
+
                 $frame_length = $this->BigEndian2String(strlen($frame_data), 4, false);
                 $frame_flags  = $this->generate_frame_flags();
             }
-                
+
             $result .= $frame_name.$frame_length.$frame_flags.$frame_data;
         }
-        
+
 
         // calc padded length of tag
         while ($this->padded_length < (strlen($result) + 10)) {
@@ -479,7 +479,7 @@ class getid3_write_id3v2 extends getid3_handler_write
         if ($this->padded_length > (strlen($result) + 10)) {
             $result .= @str_repeat("\x00", $this->padded_length - strlen($result) - 10);
         }
-        
+
         $header  = 'ID3';
         $header .= chr(getid3_id3v2_write::major_version);
         $header .= chr(0);
@@ -504,7 +504,7 @@ class getid3_write_id3v2 extends getid3_handler_write
         $flag .= (@$flags['extendedheader']    ? '1' : '0');  // b - Extended header
         $flag .= (@$flags['experimental']      ? '1' : '0');  // c - Experimental indicator
         $flag .= (@$flags['footer']            ? '1' : '0');  // d - Footer present
-        $flag .= '0000';                                      
+        $flag .= '0000';
         */
 
         return chr(bindec($flag));
@@ -512,29 +512,29 @@ class getid3_write_id3v2 extends getid3_handler_write
 
 
     protected function generate_frame_flags($flags) {
-    
+
         // %abc00000 %ijk00000
         $flag1  = (@$flags['tag_alter']             ? '1' : '0');  // a - Tag alter preservation (true == discard)
         $flag1 .= (@$flags['file_alter']            ? '1' : '0');  // b - File alter preservation (true == discard)
         $flag1 .= (@$flags['read_only']             ? '1' : '0');  // c - Read only (true == read only)
-        $flag1 .= '00000';                          
-                                                    
+        $flag1 .= '00000';
+
         $flag2  = (@$flags['compression']           ? '1' : '0');  // i - Compression (true == compressed)
         $flag2 .= (@$flags['encryption']            ? '1' : '0');  // j - Encryption (true == encrypted)
         $flag2 .= (@$flags['grouping_identity']     ? '1' : '0');  // k - Grouping identity (true == contains group information)
-        $flag2 .= '00000';                          
-                                                    
-        /**2.4                                      
-        // %0abc0000 %0h00kmnp                      
-        $flag1  = '0';                              
+        $flag2 .= '00000';
+
+        /**2.4
+        // %0abc0000 %0h00kmnp
+        $flag1  = '0';
         $flag1  = (@$flags['tag_alter']             ? '1' : '0');  // a - Tag alter preservation (true == discard)
         $flag1 .= (@$flags['file_alter']            ? '1' : '0');  // b - File alter preservation (true == discard)
         $flag1 .= (@$flags['read_only']             ? '1' : '0');  // c - Read only (true == read only)
-        $flag1 .= '0000';                           
-                                                    
-        $flag2  = '0';                              
+        $flag1 .= '0000';
+
+        $flag2  = '0';
         $flag2 .= (@$flags['grouping_identity']     ? '1' : '0');  // h - Grouping identity (true == contains group information)
-        $flag2 .= '00';                             
+        $flag2 .= '00';
         $flag2  = (@$flags['compression']           ? '1' : '0');  // k - Compression (true == compressed)
         $flag2 .= (@$flags['encryption']            ? '1' : '0');  // m - Encryption (true == encrypted)
         $flag2 .= (@$flags['unsynchronisation']     ? '1' : '0');  // n - Unsynchronisation (true == unsynchronised)
@@ -1857,22 +1857,22 @@ class getid3_write_id3v2 extends getid3_handler_write
 
 
     public static function BigEndian2String($number, $min_bytes=1, $synch_safe=false, $signed=false) {
-		
+
 		if ($number < 0) {
 			return false;
 		}
-		
+
 		$maskbyte = (($synch_safe || $signed) ? 0x7F : 0xFF);
-		
+
 		$intstring = '';
-		
+
 		if ($signed) {
 			if ($min_bytes > 4) {
 				die('INTERNAL ERROR: Cannot have signed integers larger than 32-bits in BigEndian2String()');
 			}
 			$number = $number & (0x80 << (8 * ($min_bytes - 1)));
 		}
-		
+
 		while ($number != 0) {
 			$quotient = ($number / ($maskbyte + 1));
 			$intstring = chr(ceil(($quotient - floor($quotient)) * $maskbyte)).$intstring;

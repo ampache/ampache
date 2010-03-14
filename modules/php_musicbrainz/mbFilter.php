@@ -6,11 +6,11 @@
 
 	class mbArtistFilter implements MusicBrainzFilter {
 		private $parameterList = array();
-		
+
 		function createParameters() {
 			return $this->parameterList;
 		}
-		
+
 		function name( $name ) {
 			$this->parameterList['name'] = $name;
 			return $this;
@@ -46,14 +46,14 @@
 
 		function releaseType( $rtype ) {
 			$type = extractFragment($rtype);
-			
+
 			if ( isset( $this->parameters['releasetypes'] ) ) {
 				$this->parameters['releasetypes'] .= ' ' . $type;
 			}
 			else {
 				$this->parameters['releasetypes'] = $type;
 			}
-			
+
 			return $this;
 		}
 
@@ -71,12 +71,12 @@
 			$this->parameters['asin'] = $asin;
 			return $this;
 		}
-		
+
 		function limit( $limit ) {
 			$this->parameters['limit'] = $limit;
 			return $this;
 		}
-		
+
 		function offset( $offset ) {
 			$this->parameterList['offset'] = $offset;
 			return $this;
@@ -135,14 +135,14 @@
 			return $this;
 		}
 	}
-	
+
 	class mbUserFilter implements MusicBrainzFilter {
 		private $parameters = array();
-		
+
 		function createParameters() {
 			return $this->parameters;
 		}
-		
+
 		function name( $value ) {
 			$this->parameters['name'] = $value;
 		}

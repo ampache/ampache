@@ -23,24 +23,24 @@
 
 require_once 'lib/init.php';
 
-show_header(); 
+show_header();
 
-switch ($_REQUEST['action']) { 
-	case 'get_advanced': 
-		$object_ids = Random::advanced($_POST); 
+switch ($_REQUEST['action']) {
+	case 'get_advanced':
+		$object_ids = Random::advanced($_POST);
 
 		// We need to add them to the active playlist
-		foreach ($object_ids as $object_id) { 
-			$GLOBALS['user']->playlist->add_object($object_id,'song'); 
-		} 
+		foreach ($object_ids as $object_id) {
+			$GLOBALS['user']->playlist->add_object($object_id,'song');
+		}
 
 	case 'advanced':
-	default: 
-		require_once Config::get('prefix') . '/templates/show_random.inc.php';	
+	default:
+		require_once Config::get('prefix') . '/templates/show_random.inc.php';
 /*		require_once Config::get('prefix') . '/templates/show_random_rules.inc.php';*/
 
 	break;
-} // end switch 
+} // end switch
 
-show_footer(); 
+show_footer();
 ?>

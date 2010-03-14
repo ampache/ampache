@@ -31,27 +31,27 @@ class getid3_iconv_replacement
         if ($in_charset == $out_charset) {
             return $string;
         }
-        
+
         static $supported_charsets = array (
-            'ISO-8859-1'    => 'iso88591', 
+            'ISO-8859-1'    => 'iso88591',
             'UTF-8'         => 'utf8',
-            'UTF-16BE'      => 'utf16be', 
-            'UTF-16LE'      => 'utf16le', 
+            'UTF-16BE'      => 'utf16be',
+            'UTF-16LE'      => 'utf16le',
             'UTF-16'        => 'utf16'
         );
 
         // Convert
         $function_name = 'iconv_' . @$supported_charsets[$in_charset] . '_' . @$supported_charsets[$out_charset];
-        
+
         if (is_callable(array('getid3_iconv_replacement', $function_name))) {
             return getid3_iconv_replacement::$function_name($string);
         }
-        
+
         // Invalid charset used
         if (!@$supported_charsets[$in_charset]) {
             throw new getid3_exception('PHP does not have iconv() support - cannot use ' . $in_charset . ' charset.');
         }
-        
+
         if (!@$supported_charsets[$out_charset]) {
             throw new getid3_exception('PHP does not have iconv() support - cannot use ' . $out_charset . ' charset.');
         }
@@ -272,15 +272,15 @@ class getid3_iconv_replacement
         return $newcharstring;
     }
 
-    
-    
+
+
     // UTF-8 => UTF-16
     public static function iconv_utf8_utf16($string) {
         return getid3_lib::iconv_utf8_utf16le($string, true);
     }
 
-    
-    
+
+
     // UTF-16BE => ISO-8859-1
     public static function iconv_utf16be_iso88591($string) {
         if (substr($string, 0, 2) == "\xFE\xFF") {
@@ -295,8 +295,8 @@ class getid3_iconv_replacement
         return $newcharstring;
     }
 
-    
-    
+
+
     // UTF-16BE => UTF-8
     public static function iconv_utf16be_utf8($string) {
         if (substr($string, 0, 2) == "\xFE\xFF") {
@@ -310,23 +310,23 @@ class getid3_iconv_replacement
         }
         return $newcharstring;
     }
-    
-    
-    
+
+
+
     // UTF-16BE => UTF-16LE
     public static function iconv_utf16be_utf16le($string) {
         return getid3_iconv_replacement::iconv_utf8_utf16le(getid3_iconv_replacement::iconv_utf16be_utf8($string));
     }
-    
-    
-    
+
+
+
     // UTF-16BE => UTF-16
     public static function iconv_utf16be_utf16($string) {
         return getid3_iconv_replacement::iconv_utf8_utf16(getid3_iconv_replacement::iconv_utf16be_utf8($string));
     }
-    
-    
-    
+
+
+
     // UTF-16LE => ISO-8859-1
     public static function iconv_utf16le_iso88591($string) {
         if (substr($string, 0, 2) == "\xFF\xFE") {
@@ -341,8 +341,8 @@ class getid3_iconv_replacement
         return $newcharstring;
     }
 
-    
-    
+
+
     // UTF-16LE => UTF-8
     public static function iconv_utf16le_utf8($string) {
         if (substr($string, 0, 2) == "\xFF\xFE") {
@@ -357,22 +357,22 @@ class getid3_iconv_replacement
         return $newcharstring;
     }
 
-    
-    
+
+
     // UTF-16LE => UTF-16BE
     public static function iconv_utf16le_utf16be($string) {
         return getid3_iconv_replacement::iconv_utf8_utf16be(getid3_iconv_replacement::iconv_utf16le_utf8($string));
     }
-    
-    
-    
+
+
+
     // UTF-16LE => UTF-16
     public static function iconv_utf16le_utf16($string) {
         return getid3_iconv_replacement::iconv_utf8_utf16(getid3_iconv_replacement::iconv_utf16le_utf8($string));
     }
-    
-    
-    
+
+
+
     // UTF-16 => ISO-8859-1
     public static function iconv_utf16_iso88591($string) {
         $bom = substr($string, 0, 2);
@@ -384,8 +384,8 @@ class getid3_iconv_replacement
         return $string;
     }
 
-    
-    
+
+
     // UTF-16 => UTF-8
     public static function iconv_utf16_utf8($string) {
         $bom = substr($string, 0, 2);
@@ -396,16 +396,16 @@ class getid3_iconv_replacement
         }
         return $string;
     }
-    
-    
-    
+
+
+
     // UTF-16 => UTF-16BE
     public static function iconv_utf16_utf16be($string) {
         return getid3_iconv_replacement::iconv_utf8_utf16be(getid3_iconv_replacement::iconv_utf16_utf8($string));
     }
-    
-    
-    
+
+
+
     // UTF-16 => UTF-16LE
     public static function iconv_utf16_utf16le($string) {
         return getid3_iconv_replacement::iconv_utf8_utf16le(getid3_iconv_replacement::iconv_utf16_utf8($string));

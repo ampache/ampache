@@ -32,7 +32,7 @@ $prefix = realpath(dirname(__FILE__). "/../");
 </head>
 <body>
 <script src="lib/javascript-base.js" language="javascript" type="text/javascript"></script>
-<div id="header"> 
+<div id="header">
 <h1><?php echo _('Ampache Installation'); ?></h1>
 <p>For the love of Music</p>
 </div>

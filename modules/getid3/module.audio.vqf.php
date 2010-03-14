@@ -22,14 +22,14 @@
 //
 // $Id: module.audio.vqf.php,v 1.3 2006/11/16 23:16:31 ah Exp $
 
-        
-        
+
+
 class getid3_vqf extends getid3_handler
 {
 
     public function Analyze() {
-        
-        $getid3 = $this->getid3;    
+
+        $getid3 = $this->getid3;
 
         // based loosely on code from TTwinVQ by Jurgen Faul <jfaulØgmx*de>
         // http://jfaul.de/atl  or  http://j-faul.virtualave.net/atl/atl.html
@@ -51,18 +51,18 @@ class getid3_vqf extends getid3_handler
         $info_vqf_raw['header_tag'] = 'TWIN';   // Magic bytes
         $info_vqf_raw['version']    = substr($vqf_header_data, 4, 8);
         $info_vqf_raw['size']       = getid3_lib::BigEndian2Int(substr($vqf_header_data, 12, 4));
-        
+
         while (ftell($getid3->fp) < $getid3->info['avdataend']) {
 
             $chunk_base_offset = ftell($getid3->fp);
             $chunk_data        = fread($getid3->fp, 8);
             $chunk_name        = substr($chunk_data, 0, 4);
-            
+
             if ($chunk_name == 'DATA') {
                 $getid3->info['avdataoffset'] = $chunk_base_offset;
                 break;
             }
-            
+
             $chunk_size = getid3_lib::BigEndian2Int(substr($chunk_data, 4, 4));
             if ($chunk_size > ($getid3->info['avdataend'] - ftell($getid3->fp))) {
                 throw new getid3_exception('Invalid chunk size ('.$chunk_size.') for chunk "'.$chunk_name.'" at offset 8.');
@@ -72,10 +72,10 @@ class getid3_vqf extends getid3_handler
             }
 
             switch ($chunk_name) {
-                
+
                 case 'COMM':
                     $info_vqf['COMM'] = array ();
-                    getid3_lib::ReadSequence('BigEndian2Int', $info_vqf['COMM'], $chunk_data, 8, 
+                    getid3_lib::ReadSequence('BigEndian2Int', $info_vqf['COMM'], $chunk_data, 8,
                         array (
                             'channel_mode'   => 4,
                             'bitrate'        => 4,
@@ -131,11 +131,11 @@ class getid3_vqf extends getid3_handler
 
         return true;
     }
-    
+
 
 
     public static function VQFchannelFrequencyLookup($frequencyid) {
-        
+
         static $lookup = array (
             11 => 11025,
             22 => 22050,
@@ -147,7 +147,7 @@ class getid3_vqf extends getid3_handler
 
 
     public static function VQFcommentNiceNameLookup($shortname) {
-        
+
         static $lookup = array (
             'NAME' => 'title',
             'AUTH' => 'artist',

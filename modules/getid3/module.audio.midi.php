@@ -22,15 +22,15 @@
 //
 // $Id: module.audio.midi.php,v 1.5 2006/11/02 10:48:01 ah Exp $
 
-        
-        
+
+
 class getid3_midi extends getid3_handler
 {
 
     public function Analyze() {
 
         $getid3 = $this->getid3;
-        
+
         $getid3->info['midi']['raw'] = array ();
         $info_midi     = &$getid3->info['midi'];
         $info_midi_raw = &$info_midi['raw'];
@@ -40,10 +40,10 @@ class getid3_midi extends getid3_handler
 
         fseek($getid3->fp, $getid3->info['avdataoffset'], SEEK_SET);
         $midi_data = fread($getid3->fp, getid3::FREAD_BUFFER_SIZE);
-                
+
         // Magic bytes: 'MThd'
-        
-        getid3_lib::ReadSequence('BigEndian2Int', $info_midi_raw, $midi_data, 4, 
+
+        getid3_lib::ReadSequence('BigEndian2Int', $info_midi_raw, $midi_data, 4,
             array (
                 'headersize'    => 4,
                 'fileformat'    => 2,
@@ -51,25 +51,25 @@ class getid3_midi extends getid3_handler
                 'ticksperqnote' => 2
             )
         );
-        
+
         $offset = 14;
 
         for ($i = 0; $i < $info_midi_raw['tracks']; $i++) {
-            
+
             if ((strlen($midi_data) - $offset) < 8) {
                 $midi_data .= fread($getid3->fp, getid3::FREAD_BUFFER_SIZE);
             }
-            
+
             $track_id = substr($midi_data, $offset, 4);
             $offset += 4;
-            
+
             if ($track_id != 'MTrk') {
                 throw new getid3_exception('Expecting "MTrk" at '.$offset.', found '.$track_id.' instead');
             }
-            
+
             $track_size = getid3_lib::BigEndian2Int(substr($midi_data, $offset, 4));
             $offset += 4;
-                
+
             $track_data_array[$i] = substr($midi_data, $offset, $track_size);
             $offset += $track_size;
         }
@@ -78,7 +78,7 @@ class getid3_midi extends getid3_handler
             throw new getid3_exception('Cannot find MIDI track information');
         }
 
-        
+
         $info_midi['totalticks']          = 0;
         $getid3->info['playtime_seconds'] = 0;
         $current_ms_per_beat              = 500000; // 120 beats per minute;  60,000,000 microseconds per minute -> 500,000 microseconds per beat
@@ -88,9 +88,9 @@ class getid3_midi extends getid3_handler
         foreach ($track_data_array as $track_number => $track_data) {
 
             $events_offset = $last_issued_midi_command = $last_issued_midi_channel = $cumulative_delta_time = $ticks_at_current_bpm = 0;
-            
+
             while ($events_offset < strlen($track_data)) {
-                
+
                 $event_id = 0;
                 if (isset($midi_events[$track_number]) && is_array($midi_events[$track_number])) {
                     $event_id = count($midi_events[$track_number]);
@@ -105,30 +105,30 @@ class getid3_midi extends getid3_handler
                         break;
                     }
                 }
-                
+
                 $cumulative_delta_time += $delta_time;
                 $ticks_at_current_bpm  += $delta_time;
-                
+
                 $midi_events[$track_number][$event_id]['deltatime'] = $delta_time;
-                
+
                 $midi_event_channel                                 = ord($track_data{$events_offset++});
-                
+
                 // OK, normal event - MIDI command has MSB set
                 if ($midi_event_channel & 0x80) {
                     $last_issued_midi_command = $midi_event_channel >> 4;
                     $last_issued_midi_channel = $midi_event_channel & 0x0F;
-                } 
-                
+                }
+
                 // Running event - assume last command
                 else {
                     $events_offset--;
                 }
-                
+
                 $midi_events[$track_number][$event_id]['eventid'] = $last_issued_midi_command;
                 $midi_events[$track_number][$event_id]['channel'] = $last_issued_midi_channel;
-                
+
                 switch ($midi_events[$track_number][$event_id]['eventid']) {
-                    
+
                     case 0x8:       // Note off (key is released)
                     case 0x9:       // Note on (key is pressed)
                     case 0xA:       // Key after-touch
@@ -137,31 +137,31 @@ class getid3_midi extends getid3_handler
                         //$velocity   = ord($track_data{$events_offset++});
                         $events_offset += 2;
                         break;
-                        
-                        
+
+
                     case 0xB:       // Control Change
-                        
+
                         //$controllernum = ord($track_data{$events_offset++});
                         //$newvalue      = ord($track_data{$events_offset++});
                         $events_offset += 2;
                         break;
-                        
-                        
+
+
                     case 0xC:       // Program (patch) change
-                    
+
                         $new_program_num = ord($track_data{$events_offset++});
 
                         $info_midi_raw['track'][$track_number]['instrumentid'] = $new_program_num;
                         $info_midi_raw['track'][$track_number]['instrument']   = $track_number == 10 ? getid3_midi::GeneralMIDIpercussionLookup($new_program_num) : getid3_midi::GeneralMIDIinstrumentLookup($new_program_num);
                         break;
-                        
-                    
+
+
                     case 0xD:       // Channel after-touch
-                        
+
                         //$channelnumber = ord($track_data{$events_offset++});
                         break;
-                        
-                        
+
+
                     case 0xE:       // Pitch wheel change (2000H is normal or no change)
 
                         //$changeLSB = ord($track_data{$events_offset++});
@@ -169,58 +169,58 @@ class getid3_midi extends getid3_handler
                         //$pitchwheelchange = (($changeMSB & 0x7F) << 7) & ($changeLSB & 0x7F);
                         $events_offset += 2;
                         break;
-                        
-    
+
+
                     case 0xF:
 
                         if ($midi_events[$track_number][$event_id]['channel'] == 0xF) {
-    
+
                             $meta_event_command = ord($track_data{$events_offset++});
                             $meta_event_length  = ord($track_data{$events_offset++});
                             $meta_event_data    = substr($track_data, $events_offset, $meta_event_length);
                             $events_offset += $meta_event_length;
-                            
+
                             switch ($meta_event_command) {
-                            
+
                                 case 0x00: // Set track sequence number
-    
+
                                     //$track_sequence_number = getid3_lib::BigEndian2Int(substr($meta_event_data, 0, $meta_event_length));
                                     //$info_midi_raw['events'][$track_number][$event_id]['seqno'] = $track_sequence_number;
                                     break;
-    
-    
+
+
                                 case 0x01: // Text: generic
-                                
+
                                     $text_generic = substr($meta_event_data, 0, $meta_event_length);
                                     //$info_midi_raw['events'][$track_number][$event_id]['text'] = $text_generic;
                                     $info_midi['comments']['comment'][] = $text_generic;
                                     break;
-    
-    
+
+
                                 case 0x02: // Text: copyright
-    
+
                                     $text_copyright = substr($meta_event_data, 0, $meta_event_length);
                                     //$info_midi_raw['events'][$track_number][$event_id]['copyright'] = $text_copyright;
                                     $info_midi['comments']['copyright'][] = $text_copyright;
                                     break;
-    
-    
+
+
                                 case 0x03: // Text: track name
-                                
+
                                     $text_trackname = substr($meta_event_data, 0, $meta_event_length);
                                     $info_midi_raw['track'][$track_number]['name'] = $text_trackname;
                                     break;
-                                    
-    
+
+
                                 case 0x04: // Text: track instrument name
-    
+
                                     //$text_instrument = substr($meta_event_data, 0, $meta_event_length);
                                     //$info_midi_raw['events'][$track_number][$event_id]['instrument'] = $text_instrument;
                                     break;
-    
-    
+
+
                                 case 0x05: // Text: lyrics
-    
+
                                     $text_lyrics = substr($meta_event_data, 0, $meta_event_length);
                                     //$info_midi_raw['events'][$track_number][$event_id]['lyrics'] = $text_lyrics;
                                     if (!isset($info_midi['lyrics'])) {
@@ -228,38 +228,38 @@ class getid3_midi extends getid3_handler
                                     }
                                     $info_midi['lyrics'] .= $text_lyrics . "\n";
                                     break;
-    
-    
+
+
                                 case 0x06: // Text: marker
-    
+
                                     //$text_marker = substr($meta_event_data, 0, $meta_event_length);
                                     //$info_midi_raw['events'][$track_number][$event_id]['marker'] = $text_marker;
                                     break;
-    
-    
+
+
                                 case 0x07: // Text: cue point
 
                                     //$text_cuepoint = substr($meta_event_data, 0, $meta_event_length);
                                     //$info_midi_raw['events'][$track_number][$event_id]['cuepoint'] = $text_cuepoint;
                                     break;
 
-    
+
                                 case 0x2F: // End Of Track
-                                    
+
                                     //$info_midi_raw['events'][$track_number][$event_id]['EOT'] = $cumulative_delta_time;
                                     break;
-    
-    
+
+
                                 case 0x51: // Tempo: microseconds / quarter note
-    
+
                                     $current_ms_per_beat = getid3_lib::BigEndian2Int(substr($meta_event_data, 0, $meta_event_length));
                                     $info_midi_raw['events'][$track_number][$cumulative_delta_time]['us_qnote'] = $current_ms_per_beat;
                                     $current_beats_per_min = (1000000 / $current_ms_per_beat) * 60;
                                     $ms_per_quarter_note_after[$cumulative_delta_time] = $current_ms_per_beat;
                                     $ticks_at_current_bpm = 0;
                                     break;
-    
-    
+
+
                                 case 0x58: // Time signature
                                     $timesig_numerator   = getid3_lib::BigEndian2Int($meta_event_data[0]);
                                     $timesig_denominator = pow(2, getid3_lib::BigEndian2Int($meta_event_data[1])); // $02 -> x/4, $03 -> x/8, etc
@@ -270,63 +270,63 @@ class getid3_midi extends getid3_handler
                                     //$info_midi_raw['events'][$track_number][$event_id]['timesig_text']        = $timesig_numerator.'/'.$timesig_denominator;
                                     $info_midi['timesignature'][] = $timesig_numerator.'/'.$timesig_denominator;
                                     break;
-    
-    
+
+
                                 case 0x59: // Keysignature
-                                    
+
                                     $keysig_sharpsflats = getid3_lib::BigEndian2Int($meta_event_data{0});
                                     if ($keysig_sharpsflats & 0x80) {
                                         // (-7 -> 7 flats, 0 ->key of C, 7 -> 7 sharps)
                                         $keysig_sharpsflats -= 256;
                                     }
-    
+
                                     $keysig_majorminor  = getid3_lib::BigEndian2Int($meta_event_data{1}); // 0 -> major, 1 -> minor
                                     $keysigs = array (-7=>'Cb', -6=>'Gb', -5=>'Db', -4=>'Ab', -3=>'Eb', -2=>'Bb', -1=>'F', 0=>'C', 1=>'G', 2=>'D', 3=>'A', 4=>'E', 5=>'B', 6=>'F#', 7=>'C#');
                                     //$info_midi_raw['events'][$track_number][$event_id]['keysig_sharps'] = (($keysig_sharpsflats > 0) ? abs($keysig_sharpsflats) : 0);
                                     //$info_midi_raw['events'][$track_number][$event_id]['keysig_flats']  = (($keysig_sharpsflats < 0) ? abs($keysig_sharpsflats) : 0);
                                     //$info_midi_raw['events'][$track_number][$event_id]['keysig_minor']  = (bool)$keysig_majorminor;
                                     //$info_midi_raw['events'][$track_number][$event_id]['keysig_text']   = $keysigs[$keysig_sharpsflats].' '.($info_midi_raw['events'][$track_number][$event_id]['keysig_minor'] ? 'minor' : 'major');
-    
+
                                     // $keysigs[$keysig_sharpsflats] gets an int key (correct) - $keysigs["$keysig_sharpsflats"] gets a string key (incorrect)
                                     $info_midi['keysignature'][] = $keysigs[$keysig_sharpsflats].' '.((bool)$keysig_majorminor ? 'minor' : 'major');
                                     break;
-    
-    
+
+
                                 case 0x7F: // Sequencer specific information
-    
+
                                     $custom_data = substr($meta_event_data, 0, $meta_event_length);
                                     break;
-    
-    
+
+
                                 default:
-    
+
                                     $getid3->warning('Unhandled META Event Command: '.$meta_event_command);
                             }
                         }
                         break;
-                            
-                            
-                    default:                                
+
+
+                    default:
                         $getid3->warning('Unhandled MIDI Event ID: '.$midi_events[$track_number][$event_id]['eventid']);
                 }
             }
-            
+
             if (($track_number > 0) || (count($track_data_array) == 1)) {
                 $info_midi['totalticks'] = max($info_midi['totalticks'], $cumulative_delta_time);
             }
         }
-        
+
         $previous_tick_offset = null;
 
-        ksort($ms_per_quarter_note_after); 
+        ksort($ms_per_quarter_note_after);
         foreach ($ms_per_quarter_note_after as $tick_offset => $ms_per_beat) {
-        
+
             if (is_null($previous_tick_offset)) {
                 $prev_ms_per_beat     = $ms_per_beat;
                 $previous_tick_offset = $tick_offset;
                 continue;
             }
-            
+
             if ($info_midi['totalticks'] > $tick_offset) {
                 $getid3->info['playtime_seconds'] += (($tick_offset - $previous_tick_offset) / $info_midi_raw['ticksperqnote']) * ($prev_ms_per_beat / 1000000);
 
@@ -334,7 +334,7 @@ class getid3_midi extends getid3_handler
                 $previous_tick_offset = $tick_offset;
             }
         }
-        
+
         if ($info_midi['totalticks'] > $previous_tick_offset) {
             $getid3->info['playtime_seconds'] += (($info_midi['totalticks'] - $previous_tick_offset) / $info_midi_raw['ticksperqnote']) * ($ms_per_beat / 1000000);
         }
@@ -351,11 +351,11 @@ class getid3_midi extends getid3_handler
     }
 
 
-         
+
     public static function GeneralMIDIinstrumentLookup($instrument_id) {
 
         static $lookup = array (
-        
+
               0 => 'Acoustic Grand',
               1 => 'Bright Acoustic',
               2 => 'Electric Grand',
@@ -487,14 +487,14 @@ class getid3_midi extends getid3_handler
         );
 
         return @$lookup[$instrument_id];
-    }   
-   
-        
-        
+    }
+
+
+
     public static function GeneralMIDIpercussionLookup($instrument_id) {
-        
+
         static $lookup = array (
-        
+
             35 => 'Acoustic Bass Drum',
             36 => 'Bass Drum 1',
             37 => 'Side Stick',
@@ -544,10 +544,10 @@ class getid3_midi extends getid3_handler
         );
 
         return @$lookup[$instrument_id];
-    }   
+    }
 
-        
-}       
-        
-        
+
+}
+
+
 ?>

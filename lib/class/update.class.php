@@ -329,13 +329,13 @@ class Update {
 
 		$version[] = array('version'=>'360001','description'=>$update_string);
 
-		$update_string = '- Add Bandwidth and Feature preferences to simplify how interface is presented<br />' . 
-				'- Change Tables to FULLTEXT() for improved searching<br />' . 
-				'- Increase Filename lengths to 4096<br />' . 
-				'- Remove useless "KEY" reference from ACL and Catalog tables<br />' . 
-				'- Add new Remote User / Remote Password fields to Catalog<br />'; 
+		$update_string = '- Add Bandwidth and Feature preferences to simplify how interface is presented<br />' .
+				'- Change Tables to FULLTEXT() for improved searching<br />' .
+				'- Increase Filename lengths to 4096<br />' .
+				'- Remove useless "KEY" reference from ACL and Catalog tables<br />' .
+				'- Add new Remote User / Remote Password fields to Catalog<br />';
 
-		$version[] = array('version'=>'360002','description'=>$update_string); 
+		$version[] = array('version'=>'360002','description'=>$update_string);
 
 
 		return $version;
@@ -1811,52 +1811,52 @@ class Update {
 	 * This update makes changes to the cataloging to accomodate the new method for syncing between
 	 * Ampache instances, could be adapted to sync with whatever for "full" catalog
 	 */
-	public static function update_360002() { 
+	public static function update_360002() {
 
 		// Drop the key from catalog and ACL
-		$sql = "ALTER TABLE `catalog` DROP `key`"; 
-		$db_results = Dba::write($sql); 	
+		$sql = "ALTER TABLE `catalog` DROP `key`";
+		$db_results = Dba::write($sql);
 
-		$sql = "ALTER TABLE `access_list` DROP `key`"; 
-		$db_results = Dba::write($sql); 	
+		$sql = "ALTER TABLE `access_list` DROP `key`";
+		$db_results = Dba::write($sql);
 
-		// Add in Username / Password for catalog - to be used for remote catalogs 
-		$sql = "ALTER TABLE `catalog` ADD `remote_username` VARCHAR ( 255 ) AFTER `user`"; 
-		$db_results = Dba::write($sql); 
+		// Add in Username / Password for catalog - to be used for remote catalogs
+		$sql = "ALTER TABLE `catalog` ADD `remote_username` VARCHAR ( 255 ) AFTER `user`";
+		$db_results = Dba::write($sql);
 
-		$sql = "ALTER TABLE `catalog` ADD `remote_password` VARCHAR ( 255 ) AFTER `remote_username`"; 
-		$db_results = Dba::write($sql); 
+		$sql = "ALTER TABLE `catalog` ADD `remote_password` VARCHAR ( 255 ) AFTER `remote_username`";
+		$db_results = Dba::write($sql);
 
 		// Adjust the Filename field in song, make it gi-normous. If someone has anything close to
-		// this file length, they seriously need to reconsider what they are doing. 
-		$sql = "ALTER TABLE `song` CHANGE `file` `file` VARCHAR ( 4096 )"; 
-		$db_results = Dba::write($sql); 
+		// this file length, they seriously need to reconsider what they are doing.
+		$sql = "ALTER TABLE `song` CHANGE `file` `file` VARCHAR ( 4096 )";
+		$db_results = Dba::write($sql);
 
-		$sql = "ALTER TABLE `video` CHANGE `file` `file` VARCHAR ( 4096 )"; 
-		$db_results = Dba::write($sql); 
+		$sql = "ALTER TABLE `video` CHANGE `file` `file` VARCHAR ( 4096 )";
+		$db_results = Dba::write($sql);
 
-		$sql = "ALTER TABLE `live_stream` CHANGE `url` `url` VARCHAR ( 4096 )"; 
-		$db_results = Dba::write($sql); 
-		
+		$sql = "ALTER TABLE `live_stream` CHANGE `url` `url` VARCHAR ( 4096 )";
+		$db_results = Dba::write($sql);
+
 		// Index the Artist, Album, and Song tables to prepare for Fulltext searches.
 		$sql = "ALTER TABLE `artist` ADD FULLTEXT(`name`)";
 		$db_results = Dba::write($sql);
-		
+
 		$sql = "ALTER TABLE `album` ADD FULLTEXT(`name`)";
 		$db_results = Dba::write($sql);
-		
+
 		$sql = "ALTER TABLE `song` ADD FULLTEXT(`title`)";
 		$db_results = Dba::write($sql);
-		
+
 		// Now add in the min_object_count preference and the random_method
 		$sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
 			"VALUES ('bandwidth','50','Bandwidth','5','integer','interface')";
 		$db_results = Dba::write($sql);
 
-		$sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " . 
-			"VALUES ('features','50','Features','5','integer','interface')"; 
-		$db_results = Dba::write($sql); 
-		
+		$sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+			"VALUES ('features','50','Features','5','integer','interface')";
+		$db_results = Dba::write($sql);
+
 		/* Fix every users preferences */
 		$sql = "SELECT `id` FROM `user`";
 		$db_results = Dba::read($sql);
@@ -1866,7 +1866,7 @@ class Update {
 		while ($r = Dba::fetch_assoc($db_results)) {
 				User::fix_preferences($r['id']);
 		} // while results
-	
+
 		self::set_version('db_version','360002');
 
 	} // update_360002

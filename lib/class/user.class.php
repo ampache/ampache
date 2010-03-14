@@ -198,9 +198,9 @@ class User extends database_object {
 
 		$sql = "SELECT preference.name, preference.description, preference.catagory, preference.level, user_preference.value " .
 			"FROM preference INNER JOIN user_preference ON user_preference.preference=preference.id " .
-			"WHERE user_preference.user='$user_id' " . $user_limit . 
+			"WHERE user_preference.user='$user_id' " . $user_limit .
 			" ORDER BY preference.catagory, preference.description";
-		
+
 		$db_results = Dba::read($sql);
 
 		/* Ok this is crapy, need to clean this up or improve the code FIXME */
@@ -729,10 +729,10 @@ class User extends database_object {
 		/* Get Users Last ip */
 		if (count($data = $this->get_ip_history(1))) {
 			$this->ip_history = inet_ntop($data['0']['ip']);
-		} 
-		else { 
-			$this->ip_history = _('Not Enough Data'); 
-		} 
+		}
+		else {
+			$this->ip_history = _('Not Enough Data');
+		}
 
 	} // format_user
 

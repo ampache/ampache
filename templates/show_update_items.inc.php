@@ -20,8 +20,8 @@
 
 */
 
-show_box_top(_('Starting Update from Tags')); 
-Catalog::update_single_item($type,$object_id); 
+show_box_top(_('Starting Update from Tags'));
+Catalog::update_single_item($type,$object_id);
 ?>
 <br />
 <strong><?php echo _('Update from Tags Complete'); ?></strong>&nbsp;&nbsp;

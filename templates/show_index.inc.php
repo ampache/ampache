@@ -23,31 +23,31 @@
 <div id="now_playing">
         <?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
-<!-- Randomly selected albums of the moment --> 
-<?php 
-if (Browse::is_enabled('show_art')) { 
-	echo Ajax::observe('window','load',Ajax::action('?page=index&action=random_albums','random_albums')); 
+<!-- Randomly selected albums of the moment -->
+<?php
+if (Browse::is_enabled('show_art')) {
+	echo Ajax::observe('window','load',Ajax::action('?page=index&action=random_albums','random_albums'));
 ?>
 <div id="random_selection">
 	<?php show_box_top(_('Albums of the Moment')); echo _('Loading...'); show_box_bottom(); ?>
-</div> 
+</div>
 <?php } ?>
 <!-- Recently Played -->
 <div id="recently_played">
         <?php
                 $data = Song::get_recently_played();
-		Song::build_cache(array_keys($data)); 
-                require_once Config::get('prefix') . '/templates/show_recently_played.inc.php'; 
+		Song::build_cache(array_keys($data));
+                require_once Config::get('prefix') . '/templates/show_recently_played.inc.php';
         ?>
 </div>
-<!-- Shoutbox Objects, if shoutbox is enabled --> 
+<!-- Shoutbox Objects, if shoutbox is enabled -->
 <?php if (Config::get('sociable')) { ?>
 <div id="shout_objects">
-	<?php 
-		$shouts = shoutBox::get_top('5'); 
-		if (count($shouts)) { 
-			require_once Config::get('prefix') . '/templates/show_shoutbox.inc.php'; 
-		} 
+	<?php
+		$shouts = shoutBox::get_top('5');
+		if (count($shouts)) {
+			require_once Config::get('prefix') . '/templates/show_shoutbox.inc.php';
+		}
 	?>
 </div>
 <?php } ?>

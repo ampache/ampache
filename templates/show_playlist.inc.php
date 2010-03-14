@@ -21,7 +21,7 @@
 /**
  * Playlist Box
  * This box is used for actions on the main screen and on a specific playlist page
- * It changes depending on where it is 
+ * It changes depending on where it is
  */
 ?>
 <?php /* HINT: Playlist Type, Playlist Name */ show_box_top(sprintf(_('%s %s Playlist'), $playlist->f_type, $playlist->name)); ?>
@@ -48,9 +48,9 @@
 </ul>
 </div>
 <?php show_box_bottom(); ?>
-<?php 
-	Browse::set_type('playlist_song'); 
-	Browse::add_supplemental_object('playlist',$playlist->id); 
+<?php
+	Browse::set_type('playlist_song');
+	Browse::add_supplemental_object('playlist',$playlist->id);
 	Browse::set_static_content(1);
-	Browse::show_objects($object_ids); 
+	Browse::show_objects($object_ids);
 ?>

@@ -28,22 +28,22 @@
  */
 
 // Pull these variables out to allow shorthand (easier for lazy programmers)
-$limit	= Config::get('offset_limit') ? Config::get('offset_limit') : '25'; 
-$start	= Browse::get_start(); 
-$total	= Browse::$total_objects; 
-$uid	  = Config::get('list_header_uid'); 
+$limit	= Config::get('offset_limit') ? Config::get('offset_limit') : '25';
+$start	= Browse::get_start();
+$total	= Browse::$total_objects;
+$uid	  = Config::get('list_header_uid');
 $sides  = 5;
 
 // ++ the uid
-Config::set('list_header_uid',$uid+1,1); 
+Config::set('list_header_uid',$uid+1,1);
 
 // Next
 $next_offset = $start + $limit;
 if ($next_offset > $total) { $next_offset = $start; }
 
 // Prev
-$prev_offset = $start - $limit; 
-if ($prev_offset < 0) { $prev_offset = '0'; } 
+$prev_offset = $start - $limit;
+if ($prev_offset < 0) { $prev_offset = '0'; }
 
 /* Calculate how many pages total exist */
 $pages  = ceil($total/$limit);
@@ -52,10 +52,10 @@ $pages  = ceil($total/$limit);
 $page_data = array('up'=>array(),'down'=>array());
 
 // Can't Divide by 0
-if ($start> 0) { 
+if ($start> 0) {
 	$current_page = floor($start/$limit);
 }
-else { 
+else {
 	$current_page = 0;
 }
 
@@ -64,20 +64,20 @@ else {
 $page = $current_page;
 $i = 0;
 /* While we have pages left */
-while ($page > 0) { 
-	if ($i == $sides) { $page_data['down'][1] = '...'; $page_data['down'][0] = '0'; break; } 
+while ($page > 0) {
+	if ($i == $sides) { $page_data['down'][1] = '...'; $page_data['down'][0] = '0'; break; }
 	$i++;
 	$page = $page - 1;
 	$page_data['down'][$page] = $page * $limit;
 } // while page > 0
 
 // Up Next
-$page = $current_page+1; 
+$page = $current_page+1;
 $i = 0;
 /* While we have pages left */
-while ($page <= $pages) { 
+while ($page <= $pages) {
 	if ($page * $limit > $total) { break; }
-	if ($i == $sides) { 
+	if ($i == $sides) {
 		$key = $pages - 1;
 		if (!$page_data['up'][$key]) { $page_data['up'][$key] = '...'; }
 		$page_data['up'][$pages] = ($pages-1) * $limit;
@@ -91,7 +91,7 @@ while ($page <= $pages) {
 // Sort These Arrays of Hotness
 ksort($page_data['up']);
 ksort($page_data['down']);
-$browse_type = Browse::get_type(); 
+$browse_type = Browse::get_type();
 
 // are there enough items to even need this view?
 if ($pages > 1) {
@@ -100,14 +100,14 @@ if ($pages > 1) {
 
   <?php echo Ajax::text('?page=browse&action=page&type=' . $browse_type . '&start=' . $prev_offset,_('Prev'),'browse_' . $uid . 'prev','','prev'); ?>
 	<?php echo Ajax::text('?page=browse&action=page&type=' . $browse_type . '&start=' . $next_offset,_('Next'),'browse_' . $uid . 'next','','next'); ?>
-	<?php 
+	<?php
 		/* Echo Everything below us */
-		foreach ($page_data['down'] as $page => $offset) { 
-			if ($offset === '...') { echo '...&nbsp;'; } 
-			else { 
+		foreach ($page_data['down'] as $page => $offset) {
+			if ($offset === '...') { echo '...&nbsp;'; }
+			else {
 			// Hack Alert
 			$page++;
-				echo Ajax::text('?page=browse&action=page&type=' . $browse_type .'&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb'); 
+				echo Ajax::text('?page=browse&action=page&type=' . $browse_type .'&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb');
 			}
 		} // end foreach down
 
@@ -118,10 +118,10 @@ if ($pages > 1) {
 	<?php
 
 		/* Echo Out Everything Above Us */
-		foreach ($page_data['up'] as $page=>$offset) { 
-			if ($offset === '...') { echo '...&nbsp;'; } 
-			else { 
-				echo Ajax::text('?page=browse&action=page&type=' . $browse_type . '&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb'); 
+		foreach ($page_data['up'] as $page=>$offset) {
+			if ($offset === '...') { echo '...&nbsp;'; }
+			else {
+				echo Ajax::text('?page=browse&action=page&type=' . $browse_type . '&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb');
 			} // end else
 		} // end foreach up
 	?>

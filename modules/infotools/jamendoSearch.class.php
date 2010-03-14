@@ -21,11 +21,11 @@
 */
 
 /**
- * jamendoSearch 
- * This class does XML lookups against the jamendo website 
+ * jamendoSearch
+ * This class does XML lookups against the jamendo website
  * and returns information
  */
-class jamendoSearch { 
+class jamendoSearch {
 
 
 
@@ -36,29 +36,29 @@ class jamendoSearch {
 	 * Constructor
 	 * This function inits the searcher
 	 */
-	function jamendoSearch() { 
+	function jamendoSearch() {
 
 		/* Load the XMLRPC client */
-		$this->_client = new XML_RPC_Client('/xmlrpc/','www.jamendo.com',80); 
+		$this->_client = new XML_RPC_Client('/xmlrpc/','www.jamendo.com',80);
 
 	} // jamendoSearch
 
 	/**
 	 * query
-	 * This runs a XMLRPC query and returns decoded data 
+	 * This runs a XMLRPC query and returns decoded data
 	 */
-	function query($command,$options) { 
-		
+	function query($command,$options) {
+
 		$encoded_command = new XML_RPC_Value($command);
 		$encoded_options = new XML_RPC_Value($options,'struct');
-		$message 	= new XML_RPC_Message('jamendo.get',array($encoded_command,$encoded_options)); 
-		$response 	= $this->_client->send($message,15); 
-		$value 		= $response->value(); 
+		$message 	= new XML_RPC_Message('jamendo.get',array($encoded_command,$encoded_options));
+		$response 	= $this->_client->send($message,15);
+		$value 		= $response->value();
 
-		return XML_RPC_Decode($value); 
+		return XML_RPC_Decode($value);
 
 	} // query
 
-} // jamendoSearch 
+} // jamendoSearch
 
 ?>

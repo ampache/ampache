@@ -96,7 +96,7 @@ class vauth {
 		$key 		= Dba::escape($key);
 		// Check to see if remember me cookie is set, if so use remember length, otherwise use the session length
 		$expire		= isset($_COOKIE[Config::get('session_name') . '_remember']) ? time() + Config::get('remember_length') : time() + Config::get('session_length');
-		
+
 		$sql = "UPDATE `session` SET `value`='$value', `expire`='$expire' WHERE `id`='$key'";
 		$db_results = Dba::read($sql);
 
@@ -196,7 +196,7 @@ class vauth {
 
 	/**
 	 * get_session_data
-	 * This takes a key and returns the raw data from the database, nothing 
+	 * This takes a key and returns the raw data from the database, nothing
 	 * to see here move along people
 	 */
 	public static function get_session_data($key) {
@@ -218,7 +218,7 @@ class vauth {
 
 	/**
 	 * create_cookie
-	 * This is seperated into its own function because of some flaws in 
+	 * This is seperated into its own function because of some flaws in
 	 * specific webservers *cough* IIS *cough* which prevent us from setting
 	 * a cookie at the same time as a header redirect. As such on view of a
 	 * login a cookie is set with the proper name
@@ -402,7 +402,7 @@ class vauth {
 
 		$sid = Dba::escape($sid);
 		$expire = isset($_COOKIE[Config::get('session_name') . '_remember']) ? time() + Config::get('remember_length') : time() + Config::get('session_length');
-		$len = $expire - time(); 
+		$len = $expire - time();
 
 		$sql = "UPDATE `session` SET `expire`='$expire' WHERE `id`='$sid'";
 		$db_results = Dba::write($sql);
@@ -583,7 +583,7 @@ class vauth {
 			$results['error'] = "The PAM authentication PHP module is not installed.";
 			return $results;
 		}
-		
+
 		if (pam_auth($username, $password, &$results['error'])) {
 			$results['success'] = true;
 			$results['type'] = 'local';
@@ -593,7 +593,7 @@ class vauth {
 			$results['success'] = false;
 			$results['error'] = "PAM login attempt failed";
 		}
-		
+
 		return $results;
 	} // local_auth
 
@@ -680,7 +680,7 @@ class vauth {
 	 * This auth method relies on HTTP auth from Apache
 	 */
 	private static function http_auth($username) {
-		if (($_SERVER['REMOTE_USER'] == $username) || 
+		if (($_SERVER['REMOTE_USER'] == $username) ||
 		($_SERVER['HTTP_REMOTE_USER'] == $username)) {
 		$results['success']	= true;
 		$results['type']	= 'http';

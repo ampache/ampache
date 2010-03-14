@@ -21,7 +21,7 @@
 */
 
 /* Define the time places starting at 0 */
-$time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days ago'),_('weeks ago'),_('months ago'),_('years ago')); 
+$time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days ago'),_('weeks ago'),_('months ago'),_('years ago'));
 $link = Config::get('use_rss') ? ' ' . AmpacheRSS::get_display('recently_played') :  '';
 show_box_top(_('Recently Played') . $link);
 ?>
@@ -42,15 +42,15 @@ show_box_top(_('Recently Played') . $link);
 	<th class="cel_username"><?php echo _('Username'); ?></th>
 	<th class="cel_lastplayed"><?php echo _('Last Played'); ?></th>
 </tr>
-<?php foreach ($data as $row) { 
+<?php foreach ($data as $row) {
 	$row_user = new User($row['user']);
-	$song = new Song($row['object_id']); 
-	$amount = intval(time() - $row['date']+2); 
+	$song = new Song($row['object_id']);
+	$amount = intval(time() - $row['date']+2);
 	$time_place = '0';
 
-	while ($amount >= 1) { 
-		$final = $amount; 
-		$time_place++; 
+	while ($amount >= 1) {
+		$final = $amount;
+		$time_place++;
                 if ($time_place <= 2) {
                         $amount = floor($amount/60);
                 }
@@ -66,15 +66,15 @@ show_box_top(_('Recently Played') . $link);
                 if ($time_place == '6') {
                         $amount = floor ($amount/12);
                 }
-		if ($time_place > '6') { 
-			$final = $amount . '+'; 
-			break; 
-		} 
+		if ($time_place > '6') {
+			$final = $amount . '+';
+			break;
+		}
 	}
 
 	$time_string = $final . ' ' . $time_unit[$time_place];
 
-	$song->format(); 
+	$song->format();
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td class="cel_add">

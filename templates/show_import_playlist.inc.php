@@ -28,7 +28,7 @@
         <td>
 		<?php echo _('Filename'); ?>:
 	</td>
-	<td><input type="file" name="filename" value="<?php echo scrub_out($_REQUEST['filename']); ?>" size="45" /></td>	
+	<td><input type="file" name="filename" value="<?php echo scrub_out($_REQUEST['filename']); ?>" size="45" /></td>
 </tr>
 <tr>
 	<td>

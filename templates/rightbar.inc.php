@@ -31,12 +31,12 @@
 		  <li>
 		    <?php echo Ajax::text('?page=playlist&action=create',_('Add to New Playlist'),'rb_create_playlist'); ?>
 		  </li>
-		<?php 
-			$playlists = Playlist::get_users($GLOBALS['user']->id); 
-			Playlist::build_cache($playlists); 
-			foreach ($playlists as $playlist_id) { 
+		<?php
+			$playlists = Playlist::get_users($GLOBALS['user']->id);
+			Playlist::build_cache($playlists);
+			foreach ($playlists as $playlist_id) {
 				$playlist = new Playlist($playlist_id);
-				$playlist->format(); 
+				$playlist->format();
 		?>
 		  <li>
 		    <?php echo Ajax::text('?page=playlist&action=append&playlist_id=' .  $playlist->id,$playlist->f_name,'rb_append_playlist_' . $playlist->id); ?>
@@ -72,34 +72,34 @@
 	  </ul>
 	</li>
 </ul>
-<?php if (Config::get('play_type') == 'localplay') { require_once Config::get('prefix') . '/templates/show_localplay_control.inc.php'; } ?> 
+<?php if (Config::get('play_type') == 'localplay') { require_once Config::get('prefix') . '/templates/show_localplay_control.inc.php'; } ?>
 <ul id="rb_current_playlist">
-<?php 
+<?php
 
-	$objects = array(); 
+	$objects = array();
 
 	//FIXME :: this is kludgy
-	if (NO_SONGS != '1') { 	
-		$objects = $GLOBALS['user']->playlist->get_items(); 
-	} 
+	if (NO_SONGS != '1') {
+		$objects = $GLOBALS['user']->playlist->get_items();
+	}
 
 	// Limit the number of objects we show here
-	if (count($objects) > 100) { 
-		$truncated = (count($objects) - 100); 
-		$objects = array_slice($objects,0,100); 
-	} 
+	if (count($objects) > 100) {
+		$truncated = (count($objects) - 100);
+		$objects = array_slice($objects,0,100);
+	}
 
-	$normal_array = array('radio','song','video','random'); 
+	$normal_array = array('radio','song','video','random');
 
-	foreach ($objects as $uid=>$object_data) { 
+	foreach ($objects as $uid=>$object_data) {
 		$type = array_shift($object_data);
-		if (in_array($type,$normal_array)) { 
-			$object = new $type(array_shift($object_data)); 
-			$object->format(); 
-		} 
-		if ($type == 'random') { 
-			$object->f_link = Random::get_type_name($type); 	
-		} 
+		if (in_array($type,$normal_array)) {
+			$object = new $type(array_shift($object_data));
+			$object->format();
+		}
+		if ($type == 'random') {
+			$object->f_link = Random::get_type_name($type);
+		}
 ?>
 <li class="<?php echo flip_class(); ?>" >
   <?php echo $object->f_link; ?>
@@ -116,12 +116,12 @@
 </ul>
 
 
-<?php 
+<?php
 
 // We do a little magic here to force a iframe reload depending on preference
 // We do this last because we want it to load, and we want to know if there is anything
 // to even pass
-if (count($objects)) { 
-	Stream::run_playlist_method(); 
-} 
+if (count($objects)) {
+	Stream::run_playlist_method();
+}
 ?>

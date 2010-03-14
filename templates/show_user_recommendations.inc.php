@@ -24,34 +24,34 @@
 <table class="tabledata">
 <tr>
 	<td valign="top">
-	<?php 
-	if (count($recommended_artists)) { 
-		$items = $working_user->format_recommendations($recommended_artists,'artist'); 
-		show_info_box(_('Recommended Artists'),'artist',$items); 
+	<?php
+	if (count($recommended_artists)) {
+		$items = $working_user->format_recommendations($recommended_artists,'artist');
+		show_info_box(_('Recommended Artists'),'artist',$items);
 	}
-	else { 
+	else {
 		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
 	}
 	?>
 	</td>
 	<td valign="top">
 	<?php
-	if (count($recommended_albums)) { 
+	if (count($recommended_albums)) {
 		$items = $working_user->format_recommendations($recommended_albums,'album');
 		show_info_box(_('Recommended Albums'),'album',$items);
 	}
-	else { 
+	else {
 		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
 	}
 	?>
 	</td>
 	<td valign="top">
 	<?php
-	if (count($recommended_songs)) { 
+	if (count($recommended_songs)) {
 		$items = $working_user->format_recommendations($recommended_songs,'song');
 		show_info_box(_('Recommended Songs'),'song',$items);
 	}
-	else { 
+	else {
 		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
 	}
 	?>

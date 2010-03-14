@@ -48,7 +48,7 @@ if (Config::get('use_rss')) { ?>
 <script src="<?php echo $web_path; ?>/lib/javascript-base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/kajax/ajax.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
-<!-- rfc3514 implementation --> 
+<!-- rfc3514 implementation -->
 <div id="rfc3514" style="display:none;">0x0</div>
 <div id="maincontainer">
 	<div id="header"><!-- This is the header -->
@@ -71,7 +71,7 @@ if (Config::get('use_rss')) { ?>
 	<div id="rightbar"><!-- This is the rightbar -->
 		<?php require_once Config::get('prefix') . '/templates/rightbar.inc.php'; ?>
 	</div><!-- End rightbar -->
-<!-- Tiny little iframe, used to cheat the system --> 
+<!-- Tiny little iframe, used to cheat the system -->
 <div id="ajax-loading">Loading . . .</div>
 <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo Config::get('web_path'); ?>/util.php"></iframe>
 <div id="content">

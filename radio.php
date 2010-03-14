@@ -22,44 +22,44 @@
 
 require 'lib/init.php';
 
-show_header(); 
+show_header();
 
 // Switch on Action
-switch ($_REQUEST['action']) { 
-	case 'show_create': 
-		if (!Access::check('interface','25')) { 
-			access_denied(); 
-			exit; 
-		} 
+switch ($_REQUEST['action']) {
+	case 'show_create':
+		if (!Access::check('interface','25')) {
+			access_denied();
+			exit;
+		}
 
-		require_once Config::get('prefix') . '/templates/show_add_live_stream.inc.php'; 
+		require_once Config::get('prefix') . '/templates/show_add_live_stream.inc.php';
 
 	break;
-	case 'create': 
-		if (!Access::check('interface','25') || Config::get('demo_mode')) { 
-			access_denied(); 
-			exit; 
-		} 
+	case 'create':
+		if (!Access::check('interface','25') || Config::get('demo_mode')) {
+			access_denied();
+			exit;
+		}
 
-		if (!Core::form_verify('add_radio','post')) { 
-			access_denied(); 
-			exit; 
-		} 
+		if (!Core::form_verify('add_radio','post')) {
+			access_denied();
+			exit;
+		}
 
 		// Try to create the sucker
-		$results = Radio::create($_POST); 
+		$results = Radio::create($_POST);
 
-		if (!$results) { 
-			require_once Config::get('prefix') . '/templates/show_add_live_stream.inc.php'; 
-		} 
-		else { 
-			$body = _('Radio Station Added'); 
-			$title = ''; 
-			show_confirmation($title,$body,Config::get('web_path') . '/index.php'); 
-		} 
+		if (!$results) {
+			require_once Config::get('prefix') . '/templates/show_add_live_stream.inc.php';
+		}
+		else {
+			$body = _('Radio Station Added');
+			$title = '';
+			show_confirmation($title,$body,Config::get('web_path') . '/index.php');
+		}
 	break;
-} // end data collection 
+} // end data collection
 
-show_footer(); 
+show_footer();
 
 ?>

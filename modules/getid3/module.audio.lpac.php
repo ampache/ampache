@@ -22,24 +22,24 @@
 //
 // $Id: module.audio.lpac.php,v 1.2 2006/11/02 10:48:01 ah Exp $
 
-        
-        
+
+
 class getid3_lpac extends getid3_handler
 {
 
     public function Analyze() {
-        
+
         $getid3 = $this->getid3;
-        
+
         $getid3->include_module('audio-video.riff');
-        
+
         // Magic bytes - 'LPAC'
-        
+
         fseek($getid3->fp, $getid3->info['avdataoffset'], SEEK_SET);
         $lpac_header = fread($getid3->fp, 14);
-        
+
         $getid3->info['avdataoffset'] += 14;
-        
+
         $getid3->info['lpac'] = array ();
         $info_lpac = &$getid3->info['lpac'];
 
@@ -47,7 +47,7 @@ class getid3_lpac extends getid3_handler
         $getid3->info['audio']['dataformat']      = 'lpac';
         $getid3->info['audio']['lossless']        = true;
         $getid3->info['audio']['bitrate_mode']    = 'vbr';
-                                                  
+
         $info_lpac['file_version']     = getid3_lib::BigEndian2Int($lpac_header{4});
         $flags['audio_type']                      = getid3_lib::BigEndian2Int($lpac_header{5});
         $info_lpac['total_samples']    = getid3_lib::BigEndian2Int(substr($lpac_header,  6, 4));
@@ -74,9 +74,9 @@ class getid3_lpac extends getid3_handler
         if ($info_lpac['flags']['fast_compress'] && ($info_lpac['max_prediction_order'] != 3)) {
             $getid3->warning('max_prediction_order expected to be "3" if fast_compress is true, actual value is "'.$info_lpac['max_prediction_order'].'"');
         }
-        
+
         switch ($info_lpac['file_version']) {
-        
+
             case 6:
                 if ($info_lpac['flags']['adaptive_quantization']) {
                     $getid3->warning('adaptive_quantization expected to be false in LPAC file stucture v6, actually true');
@@ -86,7 +86,7 @@ class getid3_lpac extends getid3_handler
                 }
                 break;
 
-        
+
             default:
                 //$getid3->warning('This version of getID3() only supports LPAC file format version 6, this file is version '.$info_lpac['file_version'].' - please report to info@getid3.org');
                 break;
@@ -94,11 +94,11 @@ class getid3_lpac extends getid3_handler
 
         // Clone getid3 - messing with something - better safe than sorry
         $clone = clone $getid3;
-        
+
         // Analyze clone by fp
         $riff = new getid3_riff($clone);
         $riff->Analyze();
-        
+
         // Import from clone and destroy
         $getid3->info['avdataoffset']                = $clone->info['avdataoffset'];
         $getid3->info['riff']                        = $clone->info['riff'];
@@ -106,7 +106,7 @@ class getid3_lpac extends getid3_handler
         $getid3->info['audio']['sample_rate']        = $clone->info['audio']['sample_rate'];
         $getid3->warnings($clone->warnings());
         unset($clone);
-        
+
         $getid3->info['audio']['channels'] = ($info_lpac['flags']['stereo'] ? 2 : 1);
 
         if ($info_lpac['flags']['24_bit']) {

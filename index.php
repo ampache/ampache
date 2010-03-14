@@ -22,7 +22,7 @@
 
 require_once 'lib/init.php';
 
-show_header(); 
+show_header();
 
 $action = scrub_in($_REQUEST['action']);
 
@@ -31,14 +31,14 @@ $action = scrub_in($_REQUEST['action']);
  * refresh_javascript include. Must be greater then 5, I'm not
  * going to let them break their servers
  */
-if (Config::get('refresh_limit') > 5) { 
-	$refresh_limit = Config::get('refresh_limit'); 
+if (Config::get('refresh_limit') > 5) {
+	$refresh_limit = Config::get('refresh_limit');
 	$ajax_url = Config::get('ajax_url') . '?page=index&action=reloadnp';
 	require_once Config::get('prefix') . '/templates/javascript_refresh.inc.php';
 }
 
 require_once Config::get('prefix') . '/templates/show_index.inc.php';
 
-show_footer(); 
+show_footer();
 
 ?>

@@ -23,32 +23,32 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE as one
  */
-if (AJAX_INCLUDE != '1') { exit; } 
+if (AJAX_INCLUDE != '1') { exit; }
 
-switch ($_REQUEST['action']) { 
-	case 'flip_state': 
-		if (!Access::check('interface','75')) { 
-			debug_event('DENIED',$GLOBALS['user']->username . ' attempted to change the state of a song','1'); 
-			exit; 
-		} 
+switch ($_REQUEST['action']) {
+	case 'flip_state':
+		if (!Access::check('interface','75')) {
+			debug_event('DENIED',$GLOBALS['user']->username . ' attempted to change the state of a song','1');
+			exit;
+		}
 
-		$song = new Song($_REQUEST['song_id']); 
-		$new_enabled = $song->enabled ? '0' : '1'; 
-		$song->update_enabled($new_enabled,$song->id); 
-		$song->enabled = $new_enabled; 
-		$song->format(); 
-		
+		$song = new Song($_REQUEST['song_id']);
+		$new_enabled = $song->enabled ? '0' : '1';
+		$song->update_enabled($new_enabled,$song->id);
+		$song->enabled = $new_enabled;
+		$song->format();
+
 		//Return the new Ajax::button
 		$id = 'button_flip_state_' . $song->id;
 		$button = $song->enabled ? 'disable' : 'enable';
-		$results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$button,_(ucfirst($button)),'flip_state_' . $song->id);  
+		$results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$button,_(ucfirst($button)),'flip_state_' . $song->id);
 
 	break;
-	default: 
-		$results['rfc3514'] = '0x1'; 
+	default:
+		$results['rfc3514'] = '0x1';
 	break;
-} // switch on action; 
+} // switch on action;
 
 // We always do this
-echo xml_from_array($results); 
+echo xml_from_array($results);
 ?>

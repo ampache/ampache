@@ -7,7 +7,7 @@
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License v2
- as published by the Free Software Foundation. 
+ as published by the Free Software Foundation.
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,7 +20,7 @@
 
 */
 $web_path = Config::get('web_path');
-$ajax_url = Config::get('ajax_url'); 
+$ajax_url = Config::get('ajax_url');
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
@@ -50,17 +50,17 @@ $ajax_url = Config::get('ajax_url');
 	<th class="col_rating"><?php echo _('Rating'); ?></th>
 	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
-<?php 
-	if (Config::get('ratings')) { 
-		Rating::build_cache('album',$object_ids); 
-	} 
+<?php
+	if (Config::get('ratings')) {
+		Rating::build_cache('album',$object_ids);
+	}
 	/* Foreach through the albums */
-	foreach ($object_ids as $album_id) { 
-		$album = new Album($album_id); 
-		$album->format(); 
+	foreach ($object_ids as $album_id) {
+		$album = new Album($album_id);
+		$album->format();
 ?>
 <tr id="album_<?php echo $album->id; ?>" class="<?php echo flip_class(); ?>">
-	<?php require Config::get('prefix') . '/templates/show_album_row.inc.php'; ?> 
+	<?php require Config::get('prefix') . '/templates/show_album_row.inc.php'; ?>
 </tr>
 <?php } //end foreach ($albums as $album) ?>
 <?php if (!count($object_ids)) { ?>

@@ -22,8 +22,8 @@
 //
 // $Id: module.audio-video.mpeg.php,v 1.3 2006/11/02 10:48:00 ah Exp $
 
-        
-        
+
+
 class getid3_mpeg extends getid3_handler
 {
 
@@ -35,21 +35,21 @@ class getid3_mpeg extends getid3_handler
     const VIDEO_SEQUENCE_END    = "\x00\x00\x01\xB7";
     const VIDEO_GROUP_START     = "\x00\x00\x01\xB8";
     const AUDIO_START           = "\x00\x00\x01\xC0";
-    
+
 
     public function Analyze() {
-        
+
         $getid3 = $this->getid3;
-        
+
         $getid3->info['mpeg']['video']['raw'] = array ();
         $info_mpeg_video     = &$getid3->info['mpeg']['video'];
         $info_mpeg_video_raw = &$info_mpeg_video['raw'];
-        
+
         $getid3->info['video'] = array ();
         $info_video = &$getid3->info['video'];
-        
+
         $getid3->include_module('audio.mp3');
-        
+
         if ($getid3->info['avdataend'] <= $getid3->info['avdataoffset']) {
             throw new getid3_exception('"avdataend" ('.$getid3->info['avdataend'].') is unexpectedly less-than-or-equal-to "avdataoffset" ('.$getid3->info['avdataoffset'].')');
         }
@@ -97,7 +97,7 @@ class getid3_mpeg extends getid3_handler
         $info_mpeg_video_raw['framesize_vertical']     = ($frame_size_dword & 0x000FFF);       // 12 bits for vertical frame size
         $info_mpeg_video_raw['pixel_aspect_ratio']     = ($aspect_ratio_frame_rate_dword & 0xF0) >> 4;
         $info_mpeg_video_raw['frame_rate']             = ($aspect_ratio_frame_rate_dword & 0x0F);
-                                                                        
+
         $info_mpeg_video['framesize_horizontal']          = $info_mpeg_video_raw['framesize_horizontal'];
         $info_mpeg_video['framesize_vertical']            = $info_mpeg_video_raw['framesize_vertical'];
 
@@ -110,7 +110,7 @@ class getid3_mpeg extends getid3_handler
         $info_mpeg_video_raw['vbv_buffer_size']        =       bindec(substr($assorted_information, 19, 10));
         $info_mpeg_video_raw['constrained_param_flag'] = (bool)bindec($assorted_information{29});
         $info_mpeg_video_raw['intra_quant_flag']       = (bool)bindec($assorted_information{30});
-        
+
         if ($info_mpeg_video_raw['intra_quant_flag']) {
 
             // read 512 bits
@@ -182,7 +182,7 @@ class getid3_mpeg extends getid3_handler
 
                 // clone getid3 - better safe than sorry
                 $clone = clone $this->getid3;
-                
+
                 // check
                 $mp3 = new getid3_mp3($clone);
                 if ($mp3->decodeMPEGaudioHeader($getid3->fp, ($audio_chunk_offset + 3) + 8 + $i, $dummy, false)) {
@@ -192,7 +192,7 @@ class getid3_mpeg extends getid3_handler
                     $getid3->info['audio']['lossless']     = false;
                     break 2;
                 }
-                
+
                 // destroy copy
                 unset($dummy);
             }
@@ -227,7 +227,7 @@ class getid3_mpeg extends getid3_handler
             //}
             //$getid3->info['playtime_seconds'] *= $multiplier;
             //$getid3->warning('Interleaved MPEG audio/video playtime may be inaccurate. With current hack should be within a few seconds of accurate. Report to info@getid3.org if off by more than 10 seconds.');
-        
+
             if ($info_video['bitrate'] < 50000) {
                 $getid3->warning('Interleaved MPEG audio/video playtime may be slightly inaccurate for video bitrates below 100kbps. Except in extreme low-bitrate situations, error should be less than 1%. Report to info@getid3.org if greater than this.');
             }
@@ -239,7 +239,7 @@ class getid3_mpeg extends getid3_handler
 
 
     public static function MPEGsystemNonOverheadPercentage($video_bitrate, $audio_bitrate) {
-        
+
         $overhead_percentage = 0;
 
         $audio_bitrate = max(min($audio_bitrate / 1000,   384), 32); // limit to range of 32kbps - 384kbps (should be only legal bitrates, but maybe VBR?)
@@ -264,7 +264,7 @@ class getid3_mpeg extends getid3_handler
         $bitrate_to_use_min = $bitrate_to_use_max = $previous_bitrate = 32;
 
         foreach ($overhead_multiplier_by_bitrate as $key => $value) {
-        
+
             if ($audio_bitrate >= $previous_bitrate) {
                 $bitrate_to_use_min = $previous_bitrate;
             }
@@ -274,7 +274,7 @@ class getid3_mpeg extends getid3_handler
             }
             $previous_bitrate = $key;
         }
-        
+
         $factor_a = ($bitrate_to_use_max - $audio_bitrate) / ($bitrate_to_use_max - $bitrate_to_use_min);
 
         $video_bitrate_log10 = log10($video_bitrate);
@@ -295,27 +295,27 @@ class getid3_mpeg extends getid3_handler
 
 
     public static function MPEGvideoFramerateLookup($raw_frame_rate) {
-        
+
         $lookup = array (0, 23.976, 24, 25, 29.97, 30, 50, 59.94, 60);
-        
+
         return (float)(isset($lookup[$raw_frame_rate]) ? $lookup[$raw_frame_rate] : 0);
     }
 
 
 
     public static function MPEGvideoAspectRatioLookup($raw_aspect_ratio) {
-        
+
         $lookup = array (0, 1, 0.6735, 0.7031, 0.7615, 0.8055, 0.8437, 0.8935, 0.9157, 0.9815, 1.0255, 1.0695, 1.0950, 1.1575, 1.2015, 0);
-        
+
         return (float)(isset($lookup[$raw_aspect_ratio]) ? $lookup[$raw_aspect_ratio] : 0);
     }
 
 
 
     public static function MPEGvideoAspectRatioTextLookup($raw_aspect_ratio) {
-        
+
         $lookup = array ('forbidden', 'square pixels', '0.6735', '16:9, 625 line, PAL', '0.7615', '0.8055', '16:9, 525 line, NTSC', '0.8935', '4:3, 625 line, PAL, CCIR601', '0.9815', '1.0255', '1.0695', '4:3, 525 line, NTSC, CCIR601', '1.1575', '1.2015', 'reserved');
-        
+
         return (isset($lookup[$raw_aspect_ratio]) ? $lookup[$raw_aspect_ratio] : '');
     }
 

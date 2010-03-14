@@ -1,7 +1,7 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 	class mbDiscError extends Exception { }
-	
+
 	class mbDisc {
 		private $id;
 		private $sectors = 0;
@@ -22,7 +22,7 @@
 		function getLastTrackNum (		) { return $this->lastTrackNum;	}
 		function setFirstTrackNum( $track ) { $this->firstTrackNum = $track; }
 		function getFirstTrackNum(		) { return $this->firstTrackNum;   }
-		
+
 		function &getTracks() {
 			return $this->tracks;
 		}
@@ -46,7 +46,7 @@
 			foreach ( $disc->getTracks() as $track )
 			  $toc .= '+' . $track[0];
 
-			return "http://" . $netloc . "/bare/cdlookup.html?id=" . $disc->getId() . "&toc=" . $toc . 
+			return "http://" . $netloc . "/bare/cdlookup.html?id=" . $disc->getId() . "&toc=" . $toc .
 				   "&tracks=" . $disc->getLastTrackNum();
 		}
 	}

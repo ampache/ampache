@@ -39,14 +39,14 @@
 	<th class="cel_owner"><?php echo Ajax::text('?page=browse&action=set_sort&type=playlist&sort=user',_('Owner'),'playlist_sort_owner'); ?></th>
 	<th class="cel_action"><?php echo _('Actions'); ?></th>
 </tr>
-<?php 
-foreach ($object_ids as $playlist_id) { 
-	$playlist = new Playlist($playlist_id); 
-	$playlist->format(); 
-	$count = $playlist->get_song_count(); 
+<?php
+foreach ($object_ids as $playlist_id) {
+	$playlist = new Playlist($playlist_id);
+	$playlist->format();
+	$count = $playlist->get_song_count();
 ?>
 <tr class="<?php echo flip_class(); ?>" id="playlist_row_<?php echo $playlist->id; ?>">
-	<?php require Config::get('prefix') . '/templates/show_playlist_row.inc.php'; ?> 
+	<?php require Config::get('prefix') . '/templates/show_playlist_row.inc.php'; ?>
 </tr>
 <?php } // end foreach ($playlists as $playlist) ?>
 <?php if (!count($object_ids)) { ?>

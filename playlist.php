@@ -27,39 +27,39 @@
 
 require_once 'lib/init.php';
 
-show_header(); 
+show_header();
 
 
 /* Switch on the action passed in */
-switch ($_REQUEST['action']) { 
+switch ($_REQUEST['action']) {
 	case 'add_dyn_song':
 		/* Check Rights */
-		if (!$playlist->has_access()) { 
+		if (!$playlist->has_access()) {
 			access_denied();
 			break;
 		}
-		
+
 		$playlist->add_dyn_song();
 		$_SESSION['data']['playlist_id']        = $playlist->id;
 		show_playlist($playlist);
 	break;
 	case 'create_playlist':
 		/* Check rights */
-		if (!Access::check('interface','25')) { 
+		if (!Access::check('interface','25')) {
 			access_denied();
 			break;
-		} 
-		
+		}
+
 		$playlist_name	= scrub_in($_REQUEST['playlist_name']);
 		$playlist_type	= scrub_in($_REQUEST['type']);
 
-		$playlist->create($playlist_name,$playlist_type);	
+		$playlist->create($playlist_name,$playlist_type);
 		$_SESSION['data']['playlist_id']        = $playlist->id;
 		show_confirmation(_('Playlist Created'),$playlist_name . ' (' . $playlist_type . ') ' . _(' has been created'),'playlist.php');
 	break;
 	case 'remove_song':
 		/* Check em for rights */
-		if (!$playlist->has_access()) { 
+		if (!$playlist->has_access()) {
 			access_denied();
 			break;
 		}
@@ -67,10 +67,10 @@ switch ($_REQUEST['action']) {
 		show_playlist($playlist);
 	break;
 	case 'show_playlist':
-		$playlist = new Playlist($_REQUEST['playlist_id']); 
-		$playlist->format(); 
-		$object_ids = $playlist->get_items(); 
-		require_once Config::get('prefix') . '/templates/show_playlist.inc.php'; 
+		$playlist = new Playlist($_REQUEST['playlist_id']);
+		$playlist->format();
+		$object_ids = $playlist->get_items();
+		require_once Config::get('prefix') . '/templates/show_playlist.inc.php';
 	break;
 	case 'show_import_playlist':
 		require_once Config::get('prefix') . '/templates/show_import_playlist.inc.php';
@@ -100,7 +100,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'set_track_numbers':
 		/* Make sure they have permission */
-		if (!$playlist->has_access()) { 
+		if (!$playlist->has_access()) {
 			access_denied();
 			break;
 		}
@@ -116,33 +116,33 @@ switch ($_REQUEST['action']) {
         break;
 	case 'prune_empty':
 		/* Make sure they have permission */
-		if (!$GLOBALS['user']->has_access(100)) { 
-			access_denied(); 
+		if (!$GLOBALS['user']->has_access(100)) {
+			access_denied();
 			break;
 		}
 
-		prune_empty_playlists(); 
+		prune_empty_playlists();
 		$url = Config::get('web_path') . '/playlist.php';
-		$title = _('Empty Playlists Deleted'); 
+		$title = _('Empty Playlists Deleted');
 		$body  = '';
 		show_confirmation($title,$body,$url);
 	break;
 	case 'normalize_tracks':
-		$playlist = new Playlist($_REQUEST['playlist_id']); 
+		$playlist = new Playlist($_REQUEST['playlist_id']);
 
 		/* Make sure they have permission */
-		if (!$playlist->has_access()) { 
+		if (!$playlist->has_access()) {
 			access_denied();
 			break;
 		}
-		
+
 		/* Normalize the tracks */
 		$playlist->normalize_tracks();
-		$object_ids = $playlist->get_items(); 
+		$object_ids = $playlist->get_items();
 	default:
-		require_once Config::get('prefix') . '/templates/show_playlist.inc.php'; 
+		require_once Config::get('prefix') . '/templates/show_playlist.inc.php';
 	break;
 } // switch on the action
 
-show_footer(); 
+show_footer();
 ?>

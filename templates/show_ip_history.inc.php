@@ -25,7 +25,7 @@
 <div id="information_actions">
 <ul>
 <li>
-<?php if (isset($_REQUEST['all'])){ ?>	
+<?php if (isset($_REQUEST['all'])){ ?>
 	<a href="<?php echo Config::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>"><?php echo get_user_icon('disable'); ?></a>
 	<?php echo _('Show Unique'); ?>
 <?php }else{ ?>

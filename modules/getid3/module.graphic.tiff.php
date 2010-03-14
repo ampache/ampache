@@ -22,13 +22,13 @@
 //
 // $Id: module.graphic.tiff.php,v 1.2 2006/11/02 10:48:02 ah Exp $
 
-        
-        
+
+
 class getid3_tiff extends getid3_handler
 {
 
     public function Analyze() {
-        
+
         $getid3 = $this->getid3;
 
         fseek($getid3->fp, $getid3->info['avdataoffset'], SEEK_SET);
@@ -36,7 +36,7 @@ class getid3_tiff extends getid3_handler
 
         $getid3->info['tiff']['byte_order'] = substr($tiff_header, 0, 2) == 'II' ? 'Intel' : 'Motorola';
         $endian2int = substr($tiff_header, 0, 2) == 'II' ? 'LittleEndian2Int' : 'BigEndian2Int';
-                
+
         $getid3->info['fileformat']          = 'tiff';
         $getid3->info['video']['dataformat'] = 'tiff';
         $getid3->info['video']['lossless']   = true;
@@ -55,11 +55,11 @@ class getid3_tiff extends getid3_handler
             $current_ifd['fieldcount'] = getid3_lib::$endian2int(fread($getid3->fp, 2));
 
             for ($i = 0; $i < $current_ifd['fieldcount']; $i++) {
-                
+
                 // shortcut
                 $current_ifd['fields'][$i] = array ();
                 $current_ifd_fields_i = &$current_ifd['fields'][$i];
-                
+
                 $current_ifd_fields_i['raw']['tag']    = getid3_lib::$endian2int(fread($getid3->fp, 2));
                 $current_ifd_fields_i['raw']['type']   = getid3_lib::$endian2int(fread($getid3->fp, 2));
                 $current_ifd_fields_i['raw']['length'] = getid3_lib::$endian2int(fread($getid3->fp, 4));
@@ -183,7 +183,7 @@ class getid3_tiff extends getid3_handler
 
 
     public static function TIFFcompressionMethod($id) {
-        
+
         static $lookup = array (
             1     => 'Uncompressed',
             2     => 'Huffman',
@@ -197,7 +197,7 @@ class getid3_tiff extends getid3_handler
 
 
     public static function TIFFcommentName($id) {
-        
+
         static $lookup = array (
             270 => 'imagedescription',
             271 => 'make',

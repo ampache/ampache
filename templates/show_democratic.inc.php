@@ -20,8 +20,8 @@
 
 */
 /* HINT: Democratic Name */
-$string = $democratic->is_enabled() ? sprintf(_('%s Playlist') ,$democratic->name) : _('Democratic Playlist'); 
-show_box_top($string); 
+$string = $democratic->is_enabled() ? sprintf(_('%s Playlist') ,$democratic->name) : _('Democratic Playlist');
+show_box_top($string);
 ?>
 <div id="information_actions">
 <ul>

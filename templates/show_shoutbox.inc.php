@@ -22,13 +22,13 @@
 ?>
 <?php show_box_top(_('Shoutbox')); ?>
 <div id="shoutbox">
-<?php 
-  foreach ($shouts as $shout_id) { 
-	$shout = new shoutBox($shout_id); 
-	$object = shoutBox::get_object($shout->object_type,$shout->object_id); 
-	$object->format(); 
-	$client = new User($shout->user); 
-	$client->format(); 
+<?php
+  foreach ($shouts as $shout_id) {
+	$shout = new shoutBox($shout_id);
+	$object = shoutBox::get_object($shout->object_type,$shout->object_id);
+	$object->format();
+	$client = new User($shout->user);
+	$client->format();
 ?>
 <div class="shout <?php echo flip_class(); ?>">
 	<?php echo $shout->get_image(); ?>

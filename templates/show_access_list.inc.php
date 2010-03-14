@@ -61,11 +61,11 @@
 	<th><?php echo _('Type'); ?></th>
 	<th><?php echo _('Action'); ?></th>
 </tr>
-<?php 
+<?php
 	/* Start foreach List Item */
-	foreach ($list as $access_id) { 
-		$access = new Access($access_id); 
-		$access->format(); 
+	foreach ($list as $access_id) {
+		$access = new Access($access_id);
+		$access->format();
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo scrub_out($access->name); ?></td>

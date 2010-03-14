@@ -21,7 +21,7 @@
 		function &getRelations( $target_type='', $relation_type='' ) {
 			if ( $target_type == '' && $relation_type == '' )
 				return $this->relations;
-				
+
 			$result = array();
 
 			if ( empty($target_type) ) {

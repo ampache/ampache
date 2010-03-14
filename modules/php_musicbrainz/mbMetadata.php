@@ -54,13 +54,13 @@
 		function &getArtistResults () { return $this->artistList;  }
 		function &getTrackResults  () { return $this->trackList;   }
 		function &getReleaseResults() { return $this->releaseList; }
-		
+
 		function getUserList2( $remove ) {
 			$ul = $this->userList;
 			$this->userList = array();
 			return $ul;
 		}
-		
+
 		function getArtistResults2( $remove ) {
 			$al = $this->artistList;
 			$this->artistList = array();

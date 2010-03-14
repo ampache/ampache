@@ -14,7 +14,7 @@
 		private $releasesCount  = 0;
 		private $releasesOffset = 0;
 		private $aliases = array();
-		
+
 		function mbArtist( $id = '', $type = '', $name = '', $sortName = '' ) {
 			parent::MusicBrainzEntity($id);
 			$this->type = $type;
@@ -102,7 +102,7 @@
 
 			if ( empty( $rresults ) )
 			  return "";
-			
+
 			$keys = array();
 			foreach ( $rresults as $key => $rr ) {
 				$rr = $rr->getRelease();

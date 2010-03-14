@@ -41,11 +41,11 @@ show_box_top(_('Manage Democratic Playlists'));  ?>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 <?php
-	foreach ($playlists as $democratic_id) { 
-		$democratic = new Democratic($democratic_id); 
-		$democratic->format(); 
-		$playlist = new Playlist($democratic->base_playlist); 
-		$playlist->format(); 
+	foreach ($playlists as $democratic_id) {
+		$democratic = new Democratic($democratic_id);
+		$democratic->format();
+		$playlist = new Playlist($democratic->base_playlist);
+		$playlist->format();
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo scrub_out($democratic->name); ?></td>

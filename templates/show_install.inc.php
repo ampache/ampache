@@ -19,7 +19,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-if (INSTALL != '1') { exit; } 
+if (INSTALL != '1') { exit; }
 $prefix = realpath(dirname(__FILE__). "/../");
 $dir = is_rtl($htmllang) ? 'rtl' : 'ltr';
 ?>
@@ -32,7 +32,7 @@ $dir = is_rtl($htmllang) ? 'rtl' : 'ltr';
 </head>
 <body>
 <script src="lib/javascript-base.js" language="javascript" type="text/javascript"></script>
-<div id="header"> 
+<div id="header">
 <h1><?php echo _("Ampache Installation"); ?></h1>
 <p>Pour l'Amour de la Musique</p>
 </div>
@@ -51,7 +51,7 @@ $dir = is_rtl($htmllang) ? 'rtl' : 'ltr';
 <?php echo sprintf(_('Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit %s'),$prefix . '/config/ampache.cfg.php'); ?>
 		</p>
 	</div>
-	
+
 	<div class="content">
 		<strong><?php echo _("Step 1 - Creating and Inserting the Ampache Database"); ?></strong><br />
 		<dl>
@@ -106,7 +106,7 @@ $dir = is_rtl($htmllang) ? 'rtl' : 'ltr';
 	<td><input type="submit" value="<?php echo _("Insert Database"); ?>" /></td>
 </tr>
 </table>
-</form>		
+</form>
 	</div>
 	<div id="bottom">
     	<p><strong>Ampache Installation.</strong><br />

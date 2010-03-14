@@ -20,7 +20,7 @@
 
 */
 $stats = Catalog::get_stats();
-$catalogs = Catalog::get_catalogs(); 
+$catalogs = Catalog::get_catalogs();
 ?>
 <?php show_box_top(_('Statistics')); ?>
 <em><?php echo _('Catalogs'); ?></em>
@@ -70,10 +70,10 @@ $catalogs = Catalog::get_catalogs();
 	<th class="cel_video"><?php echo _('Video'); ?></th>
 	<th class="cel_total"><?php echo _('Catalog Size'); ?></th>
 </tr>
-<?php foreach ($catalogs as $catalog_id) { 
-		$catalog = new Catalog($catalog_id); 
-		$catalog->format(); 
-		$stats = Catalog::get_stats($catalog_id); 
+<?php foreach ($catalogs as $catalog_id) {
+		$catalog = new Catalog($catalog_id);
+		$catalog->format();
+		$stats = Catalog::get_stats($catalog_id);
 ?>
 <tr>
 	<td class="cel_catalog"><?php echo $catalog->name; ?></td>

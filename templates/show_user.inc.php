@@ -22,7 +22,7 @@
 */
 $last_seen      = $client->last_seen ? date("m\/d\/y - H:i",$client->last_seen) : _('Never');
 $create_date    = $client->create_date ? date("m\/d\/y - H:i",$client->create_date) : _('Unknown');
-$client->format(); 
+$client->format();
 ?>
 <?php show_box_top($client->fullname); ?>
 <table cellspacing="0">
@@ -37,18 +37,18 @@ $client->format();
 		<?php } else { ?>
 			<i style="color:red;"><?php echo _('User is Offline Now'); ?></i>
 		<?php } ?>
-		
+
 	</td>
 	<td valign="top">
 		<h2><?php echo _('Active Playlist'); ?></h2>
 		<div style="padding-left:10px;">
-		<?php 
-			$tmp_playlist = new tmpPlaylist(tmpPlaylist::get_from_userid($client->id)); 
-			$object_ids = $tmp_playlist->get_items(); 
-			foreach ($object_ids as $object_data) { 
-				$type = array_shift($object_data); 
-				$object = new $type(array_shift($object_data)); 
-				$object->format(); 
+		<?php
+			$tmp_playlist = new tmpPlaylist(tmpPlaylist::get_from_userid($client->id));
+			$object_ids = $tmp_playlist->get_items();
+			foreach ($object_ids as $object_data) {
+				$type = array_shift($object_data);
+				$object = new $type(array_shift($object_data));
+				$object->format();
 		?>
 		<?php echo $object->f_link; ?><br />
 		<?php } ?>
@@ -57,8 +57,8 @@ $client->format();
 </tr>
 </table>
 <?php show_box_bottom(); ?>
-<?php 
-	$data = Song::get_recently_played($client->id); 
-	require Config::get('prefix') . '/templates/show_recently_played.inc.php'; 
+<?php
+	$data = Song::get_recently_played($client->id);
+	require Config::get('prefix') . '/templates/show_recently_played.inc.php';
 ?>
 
