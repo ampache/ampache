@@ -1018,11 +1018,10 @@ class Catalog extends database_object {
 
 		$id	= Dba::escape($data['catalog_id']);
 		$name	= Dba::escape($data['name']);
-		$key	= Dba::escape($data['key']);
 		$rename	= Dba::escape($data['rename_pattern']);
 		$sort	= Dba::escape($data['sort_pattern']);
 
-		$sql = "UPDATE `catalog` SET `name`='$name', `key`='$key', `rename_pattern`='$rename', " .
+		$sql = "UPDATE `catalog` SET `name`='$name', `rename_pattern`='$rename', " .
 			"`sort_pattern`='$sort' WHERE `id` = '$id'";
 		$db_results = Dba::write($sql);
 
