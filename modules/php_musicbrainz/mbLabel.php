@@ -1,4 +1,5 @@
 <?php
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
     class mbLabel extends MusicBrainzEntity {
         const TYPE_GROUP  = "http://musicbrainz.org/ns/mmd-1.0#Group";
         const TYPE_PERSON = "http://musicbrainz.org/ns/mmd-1.0#Person";

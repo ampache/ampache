@@ -1,4 +1,5 @@
 <?php
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
     interface IWebService {
        function get ( $entity, $id, $include, $filter, $version = '1' );
        function post( $entity, $id, $data, $version = '1' );

@@ -1,4 +1,5 @@
 <?php
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
     class mbRelation {
         const DIR_BOTH     = 0;
         const DIR_FORWARD  = 1;

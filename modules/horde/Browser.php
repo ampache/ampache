@@ -1,4 +1,5 @@
 <?php
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /**
  * The Browser:: class provides capability information for the current
  * web client. Browser identification is performed by examining the

@@ -1,4 +1,5 @@
 <?php require_once 'lib/init.php'; ?>
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 <?php echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n"; ?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
 	<ShortName>Ampache</ShortName>

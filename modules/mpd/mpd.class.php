@@ -1,4 +1,5 @@
 <?php
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /*
  *  mpd.class.php - PHP Object Interface to the MPD Music Player Daemon
  *  Version 1.2, Released 05/05/2004

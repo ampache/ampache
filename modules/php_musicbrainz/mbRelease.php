@@ -1,4 +1,5 @@
 <?php
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
     class mbRelease extends MusicBrainzEntity {
         // Types
         const TYPE_NONE          = "http://musicbrainz.org/ns/mmd-1.0#None";

@@ -1,4 +1,5 @@
 <?php
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /*
 
  Copyright (c) 2001 - 2008 Ampache.org

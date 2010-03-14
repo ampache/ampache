@@ -1,4 +1,5 @@
 <?php
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /*
 $Id: nusoapmime.php,v 1.12 2007/04/17 16:34:03 snichol Exp $
 
