@@ -145,7 +145,6 @@ require_once $prefix . '/modules/phpmailer/class.smtp.php';
 require_once $prefix . '/modules/infotools/Snoopy.class.php';
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
 require_once $prefix . '/modules/infotools/lastfm.class.php';
-require_once $prefix . '/modules/vlc/vlcplayer.class.php'; 
 //require_once $prefix . '/modules/infotools/jamendoSearch.class.php';
 require_once $prefix . '/modules/php_musicbrainz/mbQuery.php';
 
