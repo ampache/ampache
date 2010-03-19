@@ -87,21 +87,21 @@ class AmpacheVlc extends localplay_controller {
          */
         public function install() {
     
-        $sql = "CREATE TABLE `localplay_vlc` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ". 
-            "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " . 
-            "`owner` INT( 11 ) NOT NULL, " . 
-            "`host` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
-            "`port` INT( 11 ) UNSIGNED NOT NULL , " . 
-            "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
-            "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" . 
-            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"; 
-        $db_results = Dba::query($sql); 
+	        $sql = "CREATE TABLE `localplay_vlc` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ". 
+	            "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " . 
+	            "`owner` INT( 11 ) NOT NULL, " . 
+	            "`host` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
+	            "`port` INT( 11 ) UNSIGNED NOT NULL , " . 
+	            "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
+	            "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" . 
+	            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"; 
+	        $db_results = Dba::query($sql); 
 
-        // Add an internal preference for the users current active instance
-        Preference::insert('vlc_active','VLC Active Instance','0','25','integer','internal'); 
-        User::rebuild_all_preferences(); 
+	        // Add an internal preference for the users current active instance
+	        Preference::insert('vlc_active','VLC Active Instance','0','25','integer','internal'); 
+	        User::rebuild_all_preferences(); 
 
-        return true; 
+	        return true; 
 
         } // install
 
@@ -111,13 +111,13 @@ class AmpacheVlc extends localplay_controller {
          */
         public function uninstall() {
 
-        $sql = "DROP TABLE `localplay_vlc`"; 
-        $db_results = Dba::query($sql); 
-
-        // Remove the pref we added for this        
-        Preference::delete('vlc_active'); 
-
-        return true; 
+	        $sql = "DROP TABLE `localplay_vlc`"; 
+	        $db_results = Dba::query($sql); 
+	
+	        // Remove the pref we added for this        
+	        Preference::delete('vlc_active'); 
+	
+	        return true; 
 
         } // uninstall
 
@@ -127,30 +127,30 @@ class AmpacheVlc extends localplay_controller {
          */
         public function add_instance($data) {
 
-        // Foreach and clean up what we need
-        foreach ($data as $key=>$value) { 
-            switch ($key) { 
-                case 'name': 
-                case 'host': 
-                case 'port': 
-                case 'password': 
-                    ${$key} = Dba::escape($value); 
-                break;
-                default: 
-                    // Rien a faire
-                break; 
-            } // end switch on key
-        } // end foreach 
+	        // Foreach and clean up what we need
+	        foreach ($data as $key=>$value) { 
+	            switch ($key) { 
+	                case 'name': 
+	                case 'host': 
+	                case 'port': 
+	                case 'password': 
+	                    ${$key} = Dba::escape($value); 
+	                break;
+	                default: 
+	                    // Rien a faire
+	                break; 
+	            } // end switch on key
+	        } // end foreach 
 
-        $user_id = Dba::escape($GLOBALS['user']->id); 
+	        $user_id = Dba::escape($GLOBALS['user']->id); 
 
-        $sql = "INSERT INTO `localplay_vlc` (`name`,`host`,`port`,`password`,`owner`) " . 
-            "VALUES ('$name','$host','$port','$password','$user_id')"; 
-        $db_results = Dba::query($sql); 
+	        $sql = "INSERT INTO `localplay_vlc` (`name`,`host`,`port`,`password`,`owner`) " . 
+	            "VALUES ('$name','$host','$port','$password','$user_id')"; 
+	        $db_results = Dba::query($sql); 
 
 
-        return $db_results; 
-
+	        return $db_results; 
+	
         } // add_instance
 
         /**
@@ -159,12 +159,12 @@ class AmpacheVlc extends localplay_controller {
          */
         public function delete_instance($uid) {
 
-        $uid = Dba::escape($uid); 
-
-        $sql = "DELETE FROM `localplay_vlc` WHERE `id`='$uid'"; 
-        $db_results = Dba::query($sql); 
-
-        return true; 
+	        $uid = Dba::escape($uid); 
+	
+	        $sql = "DELETE FROM `localplay_vlc` WHERE `id`='$uid'"; 
+	        $db_results = Dba::query($sql); 
+	
+	        return true; 
 
         } // delete_instance
 
@@ -175,35 +175,35 @@ class AmpacheVlc extends localplay_controller {
          */
         public function get_instances() {
 
-        $sql = "SELECT * FROM `localplay_vlc` ORDER BY `name`"; 
-        $db_results = Dba::query($sql); 
+	        $sql = "SELECT * FROM `localplay_vlc` ORDER BY `name`"; 
+	        $db_results = Dba::query($sql); 
 
-        $results = array(); 
+	        $results = array(); 
 
-        while ($row = Dba::fetch_assoc($db_results)) { 
-            $results[$row['id']] = $row['name']; 
-        } 
-
-        return $results; 
-
+	        while ($row = Dba::fetch_assoc($db_results)) { 
+	            $results[$row['id']] = $row['name']; 
+	        } 
+	
+	        return $results; 
+	
         } // get_instances
-
+	
         /**
          * update_instance
          * This takes an ID and an array of data and updates the instance specified
          */
         public function update_instance($uid,$data) { 
 
-        $uid    = Dba::escape($uid); 
-        $port    = Dba::escape($data['port']);
-        $host    = Dba::escape($data['host']); 
-        $name    = Dba::escape($data['name']); 
-        $pass    = Dba::escape($data['password']); 
+	        $uid    = Dba::escape($uid); 
+	        $port    = Dba::escape($data['port']);
+	        $host    = Dba::escape($data['host']); 
+	        $name    = Dba::escape($data['name']); 
+	        $pass    = Dba::escape($data['password']); 
         
-        $sql = "UPDATE `localplay_vlc` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'"; 
-        $db_results = Dba::query($sql); 
+	        $sql = "UPDATE `localplay_vlc` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'"; 
+	        $db_results = Dba::query($sql); 
 
-        return true; 
+	        return true; 
 
         } // update_instance
 
@@ -219,27 +219,27 @@ class AmpacheVlc extends localplay_controller {
                 $fields['port']         = array('description'=>_('Port'),'type'=>'textbox');
                 $fields['password']     = array('description'=>_('Password'),'type'=>'textbox');
 
-        return $fields; 
+        	return $fields; 
 
-    } // instance_fields
+	} // instance_fields
 
-    /** 
-     * get_instance
-     * This returns a single instance and all it's variables
-     */
-    public function get_instance($instance='') { 
+	/** 
+	* get_instance
+	* This returns a single instance and all it's variables
+	*/
+	public function get_instance($instance='') { 
 
-        $instance = $instance ? $instance : Config::get('vlc_active'); 
-        $instance = Dba::escape($instance); 
+		$instance = $instance ? $instance : Config::get('vlc_active'); 
+		$instance = Dba::escape($instance); 
+	
+	        $sql = "SELECT * FROM `localplay_vlc` WHERE `id`='$instance'"; 
+	        $db_results = Dba::query($sql); 
 
-        $sql = "SELECT * FROM `localplay_vlc` WHERE `id`='$instance'"; 
-        $db_results = Dba::query($sql); 
+	        $row = Dba::fetch_assoc($db_results); 
+	
+	        return $row; 
 
-        $row = Dba::fetch_assoc($db_results); 
-
-        return $row; 
-
-        } // get_instance
+	} // get_instance
 
         /**
          * set_active_instance
