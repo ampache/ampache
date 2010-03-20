@@ -130,7 +130,7 @@ function search_song($data,$operator,$method,$limit) {
 				if ($additional_soundex) {
 					$where_sql.= " OR `artist2`.`name` SOUNDS LIKE '$value'";
 					$where_sql.= " OR `album2`.`name` SOUNDS LIKE '$value'";
-					$where_sql.= " OR `song`.`title` SOUNDS LIKE '$value'";
+					$where_sql.= " OR `song`.`title` SOUNDS LIKE '$value' $operator";
 				}
 
 				$table_sql = " LEFT JOIN `album` as `album2` ON `song`.`album`=`album2`.`id`";
