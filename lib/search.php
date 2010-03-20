@@ -125,13 +125,14 @@ function search_song($data,$operator,$method,$limit) {
 				if (!(strpos($value, '-'))) // if we want a fuzzier search
 					$additional_soundex = true;
 
-				$where_sql = " MATCH (`artist2`.`name`, `album2`.`name`, `song`.`title`) AGAINST ('$value' IN BOOLEAN MODE)";
+				$where_sql = "( MATCH (`artist2`.`name`, `album2`.`name`, `song`.`title`) AGAINST ('$value' IN BOOLEAN MODE)";
 
 				if ($additional_soundex) {
 					$where_sql.= " OR `artist2`.`name` SOUNDS LIKE '$value'";
 					$where_sql.= " OR `album2`.`name` SOUNDS LIKE '$value'";
-					$where_sql.= " OR `song`.`title` SOUNDS LIKE '$value' $operator";
+					$where_sql.= " OR `song`.`title` SOUNDS LIKE '$value' ";
 				}
+				$where_sql .= ") $operator";
 
 				$table_sql = " LEFT JOIN `album` as `album2` ON `song`.`album`=`album2`.`id`";
 				$table_sql.= " LEFT JOIN `artist` AS `artist2` ON `song`.`artist`=`artist2`.`id`";
