@@ -37,8 +37,18 @@ if (!vauth::session_exists('interface',$_COOKIE[Config::get('session_name')]) AN
 	exit;
 }
 
+// If we aren't resizing just trash thumb
+if (!Config::get('resize_images')) { unset($_GET['thumb']); } 
+
+// FIXME: Legacy stuff - should be removed after a version or so
+if (!$_GET['object_type']) { 
+	$_GET['object_type'] = 'album'; 
+} 
+
+$type = Art::validate_type($_GET['object_type']); 
+
 /* Decide what size this image is */
-switch ($_REQUEST['thumb']) {
+switch ($_GET['thumb']) {
 	case '1':
 		/* This is used by the now_playing stuff */
 		$size['height'] = '75';
@@ -47,22 +57,20 @@ switch ($_REQUEST['thumb']) {
 	case '2':
 		$size['height']	= '128';
 		$size['width']	= '128';
-	//	$return_raw = true;
 	break;
 	case '3':
 		/* This is used by the flash player */
 		$size['height']	= '80';
 		$size['width']	= '80';
-	//	$return_raw = true;
 	break;
 	default:
 		$size['height'] = '275';
 		$size['width']	= '275';
-		if (!isset($_REQUEST['thumb'])) { $return_raw = true; }
+		if (!isset($_GET['thumb'])) { $return_raw = true; }
 	break;
 } // define size based on thumbnail
 
-switch ($_REQUEST['type']) {
+switch ($_GET['type']) {
 	case 'popup':
 		require_once Config::get('prefix') . '/templates/show_big_art.inc.php';
 	break;
@@ -85,36 +93,30 @@ switch ($_REQUEST['type']) {
 		echo $image;
 	break;
 	default:
-		$album = new Album($_REQUEST['id']);
-
-		// Attempt to pull art from the database
-		$art = $album->get_art($return_raw);
-		$mime = $art['mime'];
-		if (!$mime) {
+		$media = new $type($_GET['id']); 
+		$art = new Art($media->id,$type); 
+		$art->get_db();  
+		
+		if (!$art->raw_mime) { 
 			header('Content-type: image/jpeg');
 			readfile(Config::get('prefix') . Config::get('theme_path') . '/images/blankalbum.jpg');
 			break;
 		} // else no image
 
-		// Print the album art
-		$data = explode("/",$mime);
-		$extension = $data['1'];
+		if (!$art->thumb_mime) { unset($_GET['thumb']); }
 
-		if (empty($_REQUEST['thumb'])) {
-			$art_data = $art['raw'];
-		}
-		else {
-			$art_data = img_resize($art,array('width'=>'275','height'=>'275'),$extension,$_REQUEST['id']);
-		}
-
+		$mime = $_GET['thumb'] ? $art->thumb_mime : $art->raw_mime; 	
+		$source = $_GET['thumb'] ? $art->thumb : $art->raw; 
+		$extension = $art->extension($_GET['thumb']); 
+		
 		// Send the headers and output the image
-                header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
+                header("Expires: Tue, 27 Mar 1984 05:00:00 GMT");
                 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
                 header("Cache-Control: no-store, no-cache, must-revalidate");
                 header("Pragma: no-cache");
 		header("Content-type: $mime");
-		header("Content-Disposition: filename=" . $album->name . "." . $extension);
-		echo $art_data;
+		header("Content-Disposition: filename=" . scrub_out($media->name) . "." . $extension);
+		echo $source;
 
 	break;
 } // end switch type
