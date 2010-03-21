@@ -151,13 +151,20 @@ class xmlData {
 
 		// Foreach it
 		foreach ($array as $key=>$value) {
+
+			// See if the key has attributes
+			if (is_array($value) AND isset($value['<attributes>'])) { 
+				$attribute = ' ' . $value['<attributes>']; 
+				$key = $value['value']; 
+			} 
+
 			// If it's an array, run again
 			if (is_array($value)) {
 				$value = self::keyed_array($value,1);
-				$string .= "<$key>\n$value\n</$key>\n";
+				$string .= "<$key$attribute>\n$value\n</$key>\n";
 			}
 			else {
-				$string .= "\t<$key><![CDATA[$value]]></$key>\n";
+				$string .= "\t<$key$attribute><![CDATA[$value]]></$key>\n";
 			}
 
 		} // end foreach

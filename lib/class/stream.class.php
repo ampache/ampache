@@ -426,6 +426,13 @@ class Stream {
 					$xml['track']['album'] = $media->f_album_full;
 					$length = $media->time;
 				break;
+				case 'video': 
+					$xml['track']['title'] = $media->title; 
+					$xml['track']['creator'] = $media->f_artist_full; 
+					$xml['track']['info'] = Config::get('web_path') . '/browse.php?action=video'; 
+					$xml['track']['image'] = Config::get('web_path') . '/image.php?id=' . $media->id . '&type=video&thumb=3&sid=' . session_id(); 
+					$xml['track']]'meta'] = array('attribute'=>'rel="provider"','value'=>'video'); 
+				break; 
 			} // type
 
 			$xml['track']['location'] = call_user_func(array($type,'play_url'),$media->id);
