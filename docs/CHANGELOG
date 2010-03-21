@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Add -t to catalog_update.inc for generating thumbnails
+	- Generate Thumbnails during catalog art operations
 	- Fixed transcode seeking of Flacs by switching to MM:SS format for
 		flacs being transcoded
 	- Change album_art_order to art_order to reflect general nature of

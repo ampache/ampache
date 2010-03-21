@@ -344,7 +344,7 @@ class Catalog extends database_object {
 			$catalog_id = $this->id;
 			require Config::get('prefix') . '/templates/show_gather_art.inc.php';
 			flush();
-			$this->get_album_art('',1);
+			$this->get_art('',1);
 		}
 
 		if ($options['parse_m3u'] AND count($this->_playlists)) {
@@ -664,16 +664,15 @@ class Catalog extends database_object {
 	} // get_album_ids
 
 	/**
-	 * get_album_art
+	 * get_art
 	 * This runs through all of the needs art albums and trys
 	 * to find the art for them from the mp3s
 	 */
-	public function get_album_art($catalog_id=0,$all='') {
-
+	public function get_art($catalog_id=0,$all='') {
 
 		// Make sure they've actually got methods
-		$album_art_order = Config::get('album_art_order');
-		if (empty($album_art_order)) {
+		$art_order = Config::get('art_order');
+		if (!count($art_order)) {
 			return true;
 		}
 
@@ -697,7 +696,8 @@ class Catalog extends database_object {
 		foreach ($albums as $album_id) {
 
 			// Create the object
-			$album = new Album($album_id);
+			$art = new Art($album_id,'album');
+			$album = new Album($album_id); 
 			// We're going to need the name here
 			$album->format();
 
@@ -711,13 +711,19 @@ class Catalog extends database_object {
 			);
 
 			// Return results
-			$results = $album->find_art($options,1);
+			$results = $art->gather($options,1);
 
 			if (count($results)) {
 				// Pull the string representation from the source
-				$image = Album::get_image_from_source($results['0']);
+				$image = Art::get_from_source($results['0']);
 				if (strlen($image) > '5') {
-					$album->insert_art($image,$results['0']['mime']);
+					$art->insert($image,$results['0']['mime']);
+					// If they've enabled resizing of images generate the thumbnail now
+					if (Config::get('resize_images')) { 
+						$thumb = $art->generate_thumb($image,array('width'=>275,'height'=>275),$results['0']['mime']); 
+						if (is_array($thumb)) { $art->save_thumb($thumb['thumb'],$thumb['thumb_mime']); } 
+					} 
+				
 				}
 				else {
 					debug_event('album_art','Image less then 5 chars, not inserting','3');
@@ -748,7 +754,52 @@ class Catalog extends database_object {
 
 		self::$_art_albums = array();
 
-	} // get_album_art
+	} // get_art
+
+	/**
+	 * generate_thumbnails
+	 * This generates the thumbnails from the images for object
+	 * of this catalog
+	 */
+	public function generate_thumbnails($override=false) { 
+
+		$limit = $override ? '' : ' AND `thumb_mime` IS NULL'; 
+
+		// Albums first
+		$albums = $this->get_album_ids(); 
+
+		$idlist = '(' . implode(',', $albums) . ')';
+
+		$sql = "SELECT `album_id`,`art`,`art_mime` FROM `album_data` WHERE `album_id` IN $idlist $limit"; 
+		$db_results = Dba::read($sql); 
+
+		// Start the ticker
+		$ticker = time(); 
+		$thumb_count = 0; 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			$art = new Art($row['album_id'],'album'); 
+			$data = $art->generate_thumb($row['art'],array('width'=>275,'height'=>275),$row['art_mime']); 
+			$art->save_thumb($data['thumb'],$data['thumb_mime']); 
+		
+			/* Stupid little cutesie thing */
+			$thumb_count++;
+			if ( time() > $ticker+1) {
+				echo "<script type=\"text/javascript\">\n";
+				echo "update_txt('" . $search_count ."','count_thumb_" . $this->id . "');";
+				echo "\n</script>\n";
+				flush();
+				$ticker = time();
+			} //echos thumb count
+
+		} // end while albums
+
+		echo "<script type=\"text/javascript\">\n";
+		echo "update_txt('" . $search_count ."','count_thumb_" . $this->id . "');";
+		echo "\n</script>\n";
+		flush();
+
+	} // generate_thumbnails
 
 	/**
 	 * get_catalog_albums()
@@ -1242,7 +1293,7 @@ class Catalog extends database_object {
 		$catalog_id = $this->id;
 		require Config::get('prefix') . '/templates/show_gather_art.inc.php';
 		flush();
-		$this->get_album_art();
+		$this->get_art();
 
 		/* Update the Catalog last_update */
 		$this->update_last_add();

@@ -31,6 +31,8 @@ ob_end_flush();
 $catclean = 0;		//All off by default
 $catverify = 0;
 $catadd = 0;
+$thumbadd =0; 
+$artadd = 0; 
 
 if (count($_SERVER['argv']) == 0) { 
 	$operations_string = "\n\t- All Catalog Operations"; 
@@ -55,6 +57,10 @@ if (count($_SERVER['argv']) > 0) {
 			$operations_string .= "\n\t- Catalog Art Gather";
 			$artadd = 1; 
 		} 
+		elseif ($_SERVER['argv'][$x] == '-t') { 
+			$operations_string .= "\n\t- Generate Thumbnails"; 
+			$thumbadd = 1; 
+		} 
 		else {
 			if ($where) $where .= " OR ";
 			$where .= "name LIKE '%" . Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $_SERVER['argv'][$x])) . "%'";
@@ -62,16 +68,17 @@ if (count($_SERVER['argv']) > 0) {
 	}
 }
 
-if (count($_SERVER['argv']) != 0 AND $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1) {
+if (count($_SERVER['argv']) != 0 AND $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1 && $thumbadd != 1) {
         usage();
 	exit; 
 }
 
-if ($artadd == 0 && $catclean == 0 && $catverify == 0 && $catadd == 0) {	//didn't pass any clean/verify/add arguments
+if ($thumbadd == 0 && $artadd == 0 && $catclean == 0 && $catverify == 0 && $catadd == 0) {	//didn't pass any clean/verify/add arguments
 	$catclean = 1;						//set them all to on
 	$catverify = 1;
 	$catadd = 1;
 	$artadd = 1; 
+	$thumbadd = 1; 
 }
 
 echo "Starting Catalog Operations... $operations_string\n"; 
@@ -122,6 +129,14 @@ while ($row = Dba::fetch_row($db_results)) {
 		echo "----------------\n\n";
 	} 
 
+	if ($thumbadd == 1) { 
+		// Generate the thumbnails
+		echo _('Generating Thumbnails'); 
+		echo "\n"; 
+		$catalog->generate_thumbnails(); 
+		echo "----------------\n\n";
+	} 
+
 } // end foreach
 ob_end_flush(); 
 echo "\n"; 
@@ -140,7 +155,7 @@ function ob_html_strip($string) {
 function usage() {
 	echo _("- Catalog Update -");
 	echo "\n";
-	echo _("Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a|-g]");
+	echo _("Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a|-g|-t]");
 	echo "\n\t"; 
 	echo _("Default behavior is to do all");
 	echo "\n-c\t";
@@ -151,6 +166,8 @@ function usage() {
 	echo _('Add to Catalogs');
 	echo "\n-g\t";
 	echo _('Gather Art');
+	echo "\n-t\t"; 
+	echo _('Generate Thumbnails');
 	echo "\n";
 	echo "----------------------------------------------------------";
 	echo "\n";
