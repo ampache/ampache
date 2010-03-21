@@ -107,7 +107,7 @@ switch ($_GET['type']) {
 
 		$mime = $_GET['thumb'] ? $art->thumb_mime : $art->raw_mime; 	
 		$source = $_GET['thumb'] ? $art->thumb : $art->raw; 
-		$extension = $art->extension($_GET['thumb']); 
+		$extension = Art::extension($mime); 
 		
 		// Send the headers and output the image
                 header("Expires: Tue, 27 Mar 1984 05:00:00 GMT");

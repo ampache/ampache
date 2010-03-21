@@ -289,13 +289,15 @@ sociable = "true"
 ; DEFAULT: false
 ;resize_images = "false"
 
-; Album Art Gather Order
+; Art Gather Order
 ; Simply arrange the following in the order you would like
 ; ampache to search. If you want to disable one of the search
-; methods simply leave it out.
+; methods simply leave it out. DB should be left as the first
+; method unless you want it to overwrite what's already in the
+; database
 ; POSSIBLE VALUES: db id3 folder amazon lastfm musicbrainz google
-; DEFAULT: db,id3,folder,lastfm,google
-album_art_order = "db,id3,folder,lastfm,google"
+; DEFAULT: db,tag,folder,musicbrainz,lastfm,google
+art_order = "db,tag,folder,musicbrainz,lastfm,google"
 
 ; Amazon Developer Key
 ; These are needed in order to actually use the amazon album art

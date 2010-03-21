@@ -59,12 +59,11 @@ switch ($_REQUEST['action']) {
 
 	break;
 	case 'find_art':
-
 		// If not a user then kick em out
 		if (!Access::check('interface','25')) { access_denied(); exit; }
 
 		// get the Album information
-	        $album = new Album($_REQUEST['album_id']);
+	        $album = new Album($_GET['album_id']);
 		$album->format();
 		$images = array();
 		$cover_url = array();
@@ -74,7 +73,8 @@ switch ($_REQUEST['action']) {
 			$path_info = pathinfo($_FILES['file']['name']);
 			$upload['file'] = $_FILES['file']['tmp_name'];
 			$upload['mime'] = 'image/' . $path_info['extension'];
-			$image_data = Album::get_image_from_source($upload);
+			$art = new Art($album->id,'album'); 
+			$image_data = $art->get_from_source($upload);
 
 			if ($image_data) {
 				$album->insert_art($image_data,$upload['0']['mime']);
