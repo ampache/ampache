@@ -668,7 +668,13 @@ class Stream {
 		$offset   = ( $start*$song->time )/( $song->size );
 		$offsetmm = floor($offset/60);
 		$offsetss = floor($offset-$offsetmm*60);
-		$offset   = sprintf("%02d.%02d",$offsetmm,$offsetss);
+		// If flac then format it slightly differently
+		if ($song->type == 'flac') { 
+			$offset = sprintf("%02d:%02d",$offsetmm,$offsetss);
+		} 
+		else { 
+			$offset   = sprintf("%02d.%02d",$offsetmm,$offsetss);
+		} 
 
 		/* Get EOF */
 		$eofmm  = floor($song->time/60);
