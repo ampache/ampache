@@ -28,9 +28,9 @@ require_once Config::get('prefix') . '/templates/header.inc.php';
 switch ($_REQUEST['action']) {
 	case 'clear_art':
 		if (!$GLOBALS['user']->has_access('75')) { access_denied(); }
-		$album = new Album($_REQUEST['album_id']);
-		$album->clear_art();
-		show_confirmation(_('Album Art Cleared'),_('Album Art information has been removed from the database'),"/albums.php?action=show&amp;album=" . $album->id);
+		$art = new Art($_GET['album_id'],'album'); 
+		$art->reset();
+		show_confirmation(_('Album Art Cleared'),_('Album Art information has been removed from the database'),"/albums.php?action=show&amp;album=" . $art->uid);
 	break;
 	// Upload album art
 	case 'upload_art':
@@ -45,11 +45,12 @@ switch ($_REQUEST['action']) {
 
 		// Pull the image information
 		$data = array('file'=>$_FILES['file']['tmp_name']);
-		$image_data = Album::get_image_from_source($data);
+		$image_data = Art::get_from_source($data);
 
 		// If we got something back insert it
 		if ($image_data) {
-			$album->insert_art($image_data,$_FILES['file']['type']);
+			$art = new Art($album->id,'album'); 
+			$art->insert($image_data,$_FILES['file']['type']);
 			show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&amp;album=" . $album->id);
 		}
 		// Else it failed
@@ -65,6 +66,7 @@ switch ($_REQUEST['action']) {
 		// get the Album information
 	        $album = new Album($_GET['album_id']);
 		$album->format();
+		$art = new Art($album->id,'album'); 
 		$images = array();
 		$cover_url = array();
 
@@ -73,11 +75,10 @@ switch ($_REQUEST['action']) {
 			$path_info = pathinfo($_FILES['file']['name']);
 			$upload['file'] = $_FILES['file']['tmp_name'];
 			$upload['mime'] = 'image/' . $path_info['extension'];
-			$art = new Art($album->id,'album'); 
 			$image_data = $art->get_from_source($upload);
 
 			if ($image_data) {
-				$album->insert_art($image_data,$upload['0']['mime']);
+				$art->insert($image_data,$upload['0']['mime']);
 				show_confirmation(_('Album Art Inserted'),'',"/albums.php?action=show&amp;album=" . $_REQUEST['album_id']);
 				break;
 
@@ -104,7 +105,7 @@ switch ($_REQUEST['action']) {
 		$options['keyword']	= $artist . " " . $album_name;
 
 		// Attempt to find the art.
-		$images = $album->find_art($options,'6');
+		$images = $art->gather($options,'6');
 
 		if (!empty($_REQUEST['cover'])) {
 			$path_info = pathinfo($_REQUEST['cover']);
@@ -146,13 +147,13 @@ switch ($_REQUEST['action']) {
 		$image_id = $_REQUEST['image'];
 		$album_id = $_REQUEST['album_id'];
 
-		$image 	= Album::get_image_from_source($_SESSION['form']['images'][$image_id]);
+		$image 	= Art::get_from_source($_SESSION['form']['images'][$image_id]);
 		$mime	= $_SESSION['form']['images'][$image_id]['mime'];
 
-		$album = new Album($album_id);
-		$album->insert_art($image,$mime);
+		$art = new Art($album_id,'album'); 
+		$art->insert($image,$mime);
 
-		header("Location:" . Config::get('web_path') . "/albums.php?action=show&album=" . $album->id);
+		header("Location:" . Config::get('web_path') . "/albums.php?action=show&album=" . $art->uid);
 	break;
 	case 'update_from_tags':
 		// Make sure they are a 'power' user at least

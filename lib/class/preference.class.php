@@ -312,9 +312,10 @@ class Preference {
 	 */
 	public static function fix_preferences($results) {
 
-		$results['auth_methods']	= trim($results['auth_methods'])	? explode(",",$results['auth_methods']) : array();
-		$results['tag_order']	   = trim($results['tag_order'])		? explode(",",$results['tag_order']) : array();
-		$results['album_art_order']     = trim($results['album_art_order'])	? explode(",",$results['album_art_order']) : array();
+		$results['auth_methods'] = trim($results['auth_methods']) ? explode(",",$results['auth_methods']) : array();
+		$results['tag_order'] = trim($results['tag_order']) ? explode(",",$results['tag_order']) : array();
+		$results['art_order'] = trim($results['art_order']) ? explode(",",$results['art_order']) : array();	
+
 		if (isset($results['amazin_base_urls']))
 			$results['amazon_base_urls']    = trim($results['amazin_base_urls'])	? explode(",",$results['amazon_base_urls']) : array();
 		else

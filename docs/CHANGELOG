@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Fixed transcode seeking of Flacs by switching to MM:SS format for
+		flacs being transcoded
 	- Change album_art_order to art_order to reflect general nature of
 		config option
 	- Fix PHP warning with IP History if no data is found.

@@ -178,7 +178,6 @@ class Art extends database_object {
 		// Default to image/jpeg if they don't pass anything
 		$mime = $mime ? $mime : 'image/jpeg'; 
 
-
 		$image = Dba::escape($image); 
 		$mime = Dba::escape($mime); 
 		$uid = Dba::escape($this->id); 
@@ -197,7 +196,7 @@ class Art extends database_object {
 	 * clear
 	 * This resets the art in the database
 	 */
-	public function clear() { 
+	public function reset() { 
 
 		$type = Dba::escape($this->type); 
 		$uid = Dba::escape($this->id); 
@@ -444,15 +443,17 @@ class Art extends database_object {
                         return array();
                 }
                 elseif (!is_array($config)) {
-                        $config_value = array($config_value);
+                        $config = array($config);
                 }
+
+		debug_event('Art','Searching using:' . print_r($config,1),3);
 
                 foreach ($config AS $method) {
 
                         $data = array();
 
                         $method_name = "gather_" . $method;
-                        if (in_array($method_name,$class_methods)) {
+                        if (in_array($method_name,$methods)) {
                                 // Some of these take options!
                                 switch ($method_name) {
                                         case 'gather_amazon':
@@ -781,9 +782,8 @@ class Art extends database_object {
 	 */
 	public function gather_folder($limit=5) { 
 
-                if (!count($this->_songs)) {
-                        $this->_songs = $this->get_songs();
-                }
+		$media = new Album($this->uid); 
+		$songs = $media->get_songs(); 
                 $data = array();
 
                 /* See if we are looking for a specific filename */
@@ -794,7 +794,7 @@ class Art extends database_object {
 
                 /* Thanks to dromio for origional code */
                 /* Added search for any .jpg, png or .gif - Vollmer */
-                foreach($this->_songs as $song_id) {
+                foreach($songs as $song_id) {
                         $song = new Song($song_id);
                         $dir = dirname($song->file);
 
