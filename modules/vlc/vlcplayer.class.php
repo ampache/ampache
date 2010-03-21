@@ -18,7 +18,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
- * Written by snuffels and me * 
+ * Written by snuffels and adjusted for vlc by dave * 
 
 */
 
@@ -61,11 +61,9 @@ class VlcPlayer {
                    $aurl .= "&";
                    $aurl .= urlencode($name);
                    
-       $args = array('command'=>'in_enqueue','&input'=>$aurl);
-             
-        
+        $args = array('command'=>'in_enqueue','&input'=>$aurl);
         $results = $this->sendCommand('status.xml?', $args);
-        
+        if (is_null($results)) { return null; }
 
         return true;
 
@@ -74,16 +72,13 @@ class VlcPlayer {
     /**
      * version
      * No version returned in the standard xml file, just need to check for xml returned 
-     * all return values are standard true for testing beta purpose
      */
     public function version() { 
 
         $args = array(); 
         $results = $this->sendCommand('status.xml',$args); 
-        
+        if (is_null($results)) { return null; }
        
-
-
         return true; 
 
     } // version
@@ -96,7 +91,7 @@ class VlcPlayer {
     public function clear() {
         $args = array('command'=>'pl_empty');
         $results = $this->sendCommand('status.xml?', $args);
-       
+         if (is_null($results)) { return null; }
 
         return true; 
     
@@ -110,7 +105,7 @@ class VlcPlayer {
 
         $args = array('command'=>'pl_next');
         $results = $this->sendCommand('status.xml?', $args);
-        
+        if (is_null($results)) { return null; }
 
         return true; 
 
@@ -124,7 +119,7 @@ class VlcPlayer {
 
         $args = array('command'=>'pl_previous');
         $results = $this->sendCommand("status.xml?", $args);
-        
+        if (is_null($results)) { return null; }
     
         return true;
 
@@ -138,7 +133,7 @@ class VlcPlayer {
 
         $args = array('command'=>'pl_play','&id'=>$pos); 
         $results = $this->sendCommand('status.xml?',$args); 
-       
+        if (is_null($results)) { return null; }
 
         // Works but if user clicks next afterwards player goes to first song our last song played before 
 
@@ -154,7 +149,7 @@ class VlcPlayer {
 
         $args = array('command'=>'pl_play');
         $results = $this->sendCommand("status.xml?", $args);
-        
+         if (is_null($results)) { return null; }
 
         return true; 
 
@@ -168,7 +163,7 @@ class VlcPlayer {
 
         $args = array('command'=>'pl_pause');
         $results = $this->sendCommand("status.xml?", $args);
-       
+        if (is_null($results)) { return null; }
 
         return true; 
 
@@ -182,7 +177,7 @@ class VlcPlayer {
 
         $args = array('command'=>'pl_stop');
         $results = $this->sendCommand('status.xml?', $args);
-        
+        if (is_null($results)) { return null; } 
 
         return true; 
 
@@ -196,7 +191,7 @@ class VlcPlayer {
         
         $args = array('command'=>'pl_repeat'); 
         $results = $this->sendCommand('status.xml?',$args); 
-        
+        if (is_null($results)) { return null; }
 
         return true;  
 
@@ -210,7 +205,7 @@ class VlcPlayer {
 
         $args = array('command'=>'pl_random'); 
         $results = $this->sendCommand('status.xml?',$args); 
-        
+        if (is_null($results)) { return null; }
 
         return true; 
 
@@ -224,7 +219,7 @@ class VlcPlayer {
                           
         $args = array('command'=>'pl_delete','&id'=>$track); 
         $results = $this->sendCommand('status.xml?',$args); 
-           
+        if (is_null($results)) { return null; }   
 
         return true; 
 
@@ -233,7 +228,6 @@ class VlcPlayer {
     /**
      * state
      * This returns the current state of the Vlc player
-     * This piece of code isn't used at the moment all done by status and fullstate, left it for testing'
      */
     public function state() { 
 
@@ -257,7 +251,8 @@ class VlcPlayer {
     public function fullstate() {
         $args = array();
         
-        $results = $this->sendCommand('status.xml',$args); 
+        $results = $this->sendCommand('status.xml',$args);
+        if (is_null($results)) { return null; } 
         return $results;
         
     }  //fullstate
@@ -270,8 +265,8 @@ class VlcPlayer {
     public function volume_up() { 
 
         $args = array('command'=>'volume','&val'=>'%2B20'); 
-        $noneed = $this->sendCommand('status.xml?',$args); 
-           
+        $results = $this->sendCommand('status.xml?',$args); 
+         if (is_null($results)) { return null; }  
 
         return true; 
 
@@ -285,7 +280,7 @@ class VlcPlayer {
 
         $args = array('command'=>'volume','&val'=>'-20'); 
         $results = $this->sendCommand('status.xml?',$args); 
-       
+        if (is_null($results)) { return null; }
 
         return true; 
 
@@ -301,7 +296,7 @@ class VlcPlayer {
         $value = $value*4; 
         $args = array('command'=>'volume','&val'=>$value); 
         $results = $this->sendCommand('status.xml?',$args); 
-       
+        if (is_null($results)) { return null; }
 
         return true; 
 
@@ -315,19 +310,13 @@ class VlcPlayer {
 
         $args = array('command'=>'pl_empty'); 
         $results = $this->sendcommand('status.xml?',$args); 
-        
+        if (is_null($results)) { return null; }
 
         return true; 
 
     } // clear_playlist
 
-   
-
-   
-
-   
-
-    /**
+     /**
      * get_tracks
      * This returns a delimiated string of all of the filenames
      * current in your playlist, only url's at the moment,normal files put in the playlist with vlc wil not show'
@@ -338,7 +327,7 @@ class VlcPlayer {
         $args = array();
         
         $results = $this->sendCommand('playlist.xml',$args);
-        
+        if (is_null($results)) { return null; }
     
         return $results; 
 
@@ -524,4 +513,3 @@ class VlcPlayer {
 
 } // End VlcPlayer Class
 ?>
-
