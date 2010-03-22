@@ -42,10 +42,11 @@ switch ($_REQUEST['action']) {
 		}
 
 		$album = new Album($_REQUEST['album_id']);
+		$art = new Art($album->id,'album'); 
 
 		// Pull the image information
 		$data = array('file'=>$_FILES['file']['tmp_name']);
-		$image_data = Art::get_from_source($data);
+		$image_data = $art->get_from_source($data);
 
 		// If we got something back insert it
 		if ($image_data) {
@@ -146,11 +147,11 @@ switch ($_REQUEST['action']) {
 		/* Check to see if we have the image url still */
 		$image_id = $_REQUEST['image'];
 		$album_id = $_REQUEST['album_id'];
+		$art = new Art($album_id,'album'); 
 
-		$image 	= Art::get_from_source($_SESSION['form']['images'][$image_id]);
+		$image 	= $art->get_from_source($_SESSION['form']['images'][$image_id]);
 		$mime	= $_SESSION['form']['images'][$image_id]['mime'];
 
-		$art = new Art($album_id,'album'); 
 		$art->insert($image,$mime);
 
 		header("Location:" . Config::get('web_path') . "/albums.php?action=show&album=" . $art->uid);

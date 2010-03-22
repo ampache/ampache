@@ -715,7 +715,7 @@ class Catalog extends database_object {
 
 			if (count($results)) {
 				// Pull the string representation from the source
-				$image = Art::get_from_source($results['0']);
+				$image = $art->get_from_source($results['0']);
 				if (strlen($image) > '5') {
 					$art->insert($image,$results['0']['mime']);
 					// If they've enabled resizing of images generate the thumbnail now
