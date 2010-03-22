@@ -160,7 +160,7 @@ class Art extends database_object {
 		if (Config::get('demo_mode')) { return false; } 
 
 		// Do a low impact test is this image of any size? 
-		if (strlen($image) < 10) { 
+		if (strlen($source) < 10) { 
 			debug_event('Art','Invalid Image passed, not inserting',1); 
 			return false; 
 		} 
@@ -168,8 +168,8 @@ class Art extends database_object {
 		// Check to make sure PHP:GD exists if so we can sanity check this
 		// image
 		if (function_exists('ImageCreateFromString')) { 
-			$image = ImageCreateFromString($image); 
-			if (!$image OR imagesx($iamge) < 5 OR imagesy($image) < 5) { 
+			$image = ImageCreateFromString($source); 
+			if (!$image OR imagesx($image) < 5 OR imagesy($image) < 5) { 
 				debug_event('Art','Image failed PHP-GD test, not inserting',1); 
 				return false; 
 			} 
@@ -178,9 +178,9 @@ class Art extends database_object {
 		// Default to image/jpeg if they don't pass anything
 		$mime = $mime ? $mime : 'image/jpeg'; 
 
-		$image = Dba::escape($image); 
+		$image = Dba::escape($source); 
 		$mime = Dba::escape($mime); 
-		$uid = Dba::escape($this->id); 
+		$uid = Dba::escape($this->uid); 
 		$type = Dba::escape($this->type); 
 
 		// Insert it!
@@ -199,7 +199,7 @@ class Art extends database_object {
 	public function reset() { 
 
 		$type = Dba::escape($this->type); 
-		$uid = Dba::escape($this->id); 
+		$uid = Dba::escape($this->uid); 
 
 		$sql = "UPDATE `" . $type . "_data` SET `art`=NULL, `art_mime`=NULL, `thumb`=NULL, `thumb_mime`=NULL " . 
 			"WHERE `" . $type . "_id`='$uid'"; 
