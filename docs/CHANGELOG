@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Rating search now allows specification of operator (>=, <=, or =)
+		and uses the same ratings as normal display.
 	- Add -t to catalog_update.inc for generating thumbnails
 	- Generate Thumbnails during catalog art operations
 	- Fixed transcode seeking of Flacs by switching to MM:SS format for

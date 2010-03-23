@@ -198,23 +198,34 @@ function search_song($data,$operator,$method,$limit) {
 			break;
 			case 'rating':
 				$value = intval($value);
-
-				// This is a little more complext, pull a list of IDs that have this average rating
-				$rating_sql = "SELECT `object_id`,AVG(`rating`.`rating`) AS `avgrating` FROM `rating` " .
-						"WHERE `object_type`='song' GROUP BY `object_id`";
-				$db_results = Dba::read($rating_sql);
-
-				// Fill it with one value to prevent sql error on no results
-				$where_sql .= " `song`.`id` IN (";
-
-				$ids = array('0');
-
-				while ($row = Dba::fetch_assoc($db_results)) {
-					if ($row['avgrating'] < $value) { continue; }
-					$ids[] = $row['object_id'];
+				$userid = $GLOBALS['user']->id;
+				$rcomparison = '>=';
+				if ($_REQUEST['s_rating_operator'] == '1') { 
+					$rcomparison = '<=';
 				}
+				elseif ($_REQUEST['s_rating_operator'] == '2') {
+					$rcomparison = '<=>';
+				}
+				// Complex SQL follows
+				// We do a join on ratings from the table with a
+				// preference for our own and fall back to the 
+				// FLOORed average of everyone's rating if it's
+				// a song we haven't rated.
+				if ($operator == 'AND') {
+					$table_sql .= ' INNER JOIN';
+				}
+				else {
+					$table_sql .= ' LEFT JOIN';
+				}
+				$table_sql .= "	(SELECT `object_id`, `rating` FROM `rating` WHERE `object_type`='song' AND `user`='$userid'
+					UNION
+					SELECT `object_id`, FLOOR(AVG(`rating`)) AS 'rating' FROM `rating` 
+						WHERE `object_type`='song' AND 
+						`object_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type`='song' AND `user`='$userid')
+						GROUP BY `object_id`
+					) AS realrating ON `song`.`id` = `realrating`.`object_id`";
 
-				$where_sql .= implode(',',$ids) . ') ' . $operator;
+				$where_sql .= " `realrating`.`rating` $rcomparison '$value' $operator";
 			break;
 			case 'tag':
 

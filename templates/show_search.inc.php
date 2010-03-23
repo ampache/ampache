@@ -104,6 +104,11 @@
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Rating'); ?></td>
 	<td>
+		<select id="s_rating_operator" name="s_rating_operator">
+			<option value="0" <?php if($_REQUEST['s_rating_operator']=="0") echo "selected=\"selected\""?>><?php echo _('>='); ?></option>
+			<option value="1" <?php if($_REQUEST['s_rating_operator']=="1") echo "selected=\"selected\""?>><?php echo _('<='); ?></option>
+			<option value="2" <?php if($_REQUEST['s_rating_operator']=="2") echo "selected=\"selected\""?>><?php echo _('='); ?></option>
+		</select>
 		<select id="s_rating" name="s_rating">
 			<option value="">&nbsp;</option>
 			<option value="1" <?php if($_REQUEST['s_rating']=="1") echo "selected=\"selected\""?>><?php echo _('One Star'); ?></option>
