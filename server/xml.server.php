@@ -74,7 +74,7 @@ if ($_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
 $methods = get_class_methods('api');
 
 // Define list of internal functions that should be skipped
-$interal_functions = array('set_filter');
+$internal_functions = array('set_filter');
 
 // Recurse through them and see if we're calling one of them
 foreach ($methods as $method) {
