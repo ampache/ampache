@@ -1680,6 +1680,7 @@ class Catalog extends database_object {
 		// Check and see if _everything_ has gone away, might indicate a dead mount
 		// We call this the AlmightyOatmeal Sanity check
 		if ($dead_files == $count) {
+			debug_event('Clean','Error: All songs would be removed.  Doing nothing.','1');
 			Error::add('general',_('Error All songs would be removed, doing nothing'));
 			return false;
 		}
