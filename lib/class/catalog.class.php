@@ -1650,7 +1650,7 @@ class Catalog extends database_object {
 					$dead_files++;
 
 				} //if error
-				if (!is_readable($results['file'])) {
+				else if (!is_readable($results['file'])) {
 					debug_event('Clean','Error ' . $results['file'] . ' is not readable, but does exist','1');
 				}
 			} // if localtype
