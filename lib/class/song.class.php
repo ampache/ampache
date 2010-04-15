@@ -715,7 +715,7 @@ class Song extends database_object implements media {
 
 	/**
 	 * format_pattern
-	 * This reformates the song information based on the catalog
+	 * This reformats the song information based on the catalog
 	 * rename patterns
 	 */
 	public function format_pattern() {
@@ -734,7 +734,7 @@ class Song extends database_object implements media {
 		/* Create the filename that this file should have */
 		$album  = $this->f_album_full;
 		$artist = $this->f_artist_full;
-		$track  = $this->track;
+		$track  = sprintf('%02d', $this->track);
 		$title  = $this->title;
 		$year   = $this->year;
 
