@@ -201,24 +201,24 @@ class Catalog extends database_object {
 		$results 		= array_merge(self::count_video($catalog_id),$results);
 
 		$hours = floor($results['time']/3600);
-		// Calculate catalog size in bytes, divided by 1000
-		// We do so by first chopping the three least significant decimal digits off
-		// This is needed in case catalog size exceeds 4 GB ( 2 << 31)
-		// The precision lost here is not important, because during
-		// presentation we do not care about less than 0.01 MB.
-		//
-		$sizeStr = (string)$results['size'];
-		if ( strlen( $sizeStr ) > 3 ) {
-			$size = (int)substr( $sizeStr, 0, -3 );
+
+		// Convert size to megabytes
+		$size =  $results['size']/1048576;
+
+		// Do pretty formatting and final unit conversion if needed
+		if ($size > 1048576) {
+			 $results['total_size'] = sprintf("%.2f",($size/1048576));
+			 $results['size_unit']  = 'TB';
+		}
+		else if ($size > 1024) {
+			$results['total_size'] = sprintf("%.2f",($size/1024));
+			$results['size_unit']  = 'GB';
 		}
 		else {
-			$size = 0;
+			$results['total_size'] = sprintf("%.2f",$size);
+			$results['size_unit']  = 'MB';
 		}
-		// Now go to MB's, applying a correction for KB first.
-		//
-		$size = ($size / 1.024) / 1024;
 
-		$size = $results['size']/1048576;
 		$days = floor($hours/24);
 		$hours = $hours%24;
 
@@ -228,18 +228,6 @@ class Catalog extends database_object {
 		$time_text .= ngettext('hour','hours',$hours);
 
 		$results['time_text'] = $time_text;
-
-		if ($size > 1024) {
-			$total_size = sprintf("%.2f",($size/1024));
-			$size_unit = "GB";
-		}
-		else {
-			$total_size = sprintf("%.2f",$size);
-			$size_unit = "MB";
-		}
-
-		$results['total_size'] = $total_size;
-		$results['size_unit'] = $size_unit;
 
 		return $results;
 
