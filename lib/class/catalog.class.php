@@ -190,7 +190,7 @@ class Catalog extends database_object {
 	/**
 	 * get_stats
 	 * This returns an hash with the #'s for the different
-	 * objects that are assoicated with this catalog. This is used
+	 * objects that are associated with this catalog. This is used
 	 * to build the stats box, it also calculates time
 	 */
 	public static function get_stats($catalog_id=0) {
@@ -1711,7 +1711,7 @@ class Catalog extends database_object {
 
 	/**
 	 * clean_tags
-	 * This cleans out tag_maps that are not assoicated with a 'living' object
+	 * This cleans out tag_maps that are not associated with a 'living' object
 	 * and then cleans the tags that have no maps
 	 */
 	public static function clean_tags() {
@@ -2604,7 +2604,7 @@ class Catalog extends database_object {
 
 	/**
 	 * delete
-	 * Deletes the catalog and everything assoicated with it
+	 * Deletes the catalog and everything associated with it
 	 * it takes the catalog id
 	 */
 	public static function delete($catalog_id) {

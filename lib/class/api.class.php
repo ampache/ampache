@@ -398,7 +398,7 @@ class Api {
 
 	/**
 	 * tag_artists
-	 * This returns the artists assoicated with the tag in question as defined by the UID
+	 * This returns the artists associated with the tag in question as defined by the UID
 	 */
 	public static function tag_artists($input) {
 
@@ -414,7 +414,7 @@ class Api {
 
 	/**
 	 * tag_albums
-	 * This returns the albums assoicated with the tag in question
+	 * This returns the albums associated with the tag in question
 	 */
 	public static function tag_albums($input) {
 

@@ -915,7 +915,7 @@ class User extends database_object {
 
 	/**
 	 * delete
-	 * deletes this user and everything assoicated with it. This will affect
+	 * deletes this user and everything associated with it. This will affect
 	 * ratings and tottal stats
 	 */
 	public function delete() {

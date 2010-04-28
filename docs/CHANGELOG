@@ -151,7 +151,7 @@
 	- Added lyricswiki link Ticket #70
 	- Updated README language
 	- Updated getid3 library 2.0.0b4 to 2.0.0b5
-	- Make the Democratic playlist be assoicated with the user
+	- Make the Democratic playlist be associated with the user
 		who sends it to a 'player' 
 	- Fixed missing page headers on democratic playlist
 	- Show who voted for the sogns on democratic playlist

@@ -127,7 +127,7 @@ class shoutBox {
 	/**
 	 * get_image
 	 * This returns an image tag if the type of object we're currently rolling with
-	 * has an image assoicated with it
+	 * has an image associated with it
 	 */
 	public function get_image() {
 

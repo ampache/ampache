@@ -454,7 +454,7 @@ class Tag extends database_object {
 
 	/**
 	 * count
-	 * This returns the count for the all objects assoicated with this tag
+	 * This returns the count for the all objects associated with this tag
 	 * If a type is specific only counts for said type are returned
 	 */
 	public function count($type='') {

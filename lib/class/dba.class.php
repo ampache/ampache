@@ -173,7 +173,7 @@ class Dba {
 
 	/**
 	 * finish
-	 * This closes a result handle and clears the memory assoicated with it
+	 * This closes a result handle and clears the memory associated with it
 	 */
 	public static function finish($resource) {
 
