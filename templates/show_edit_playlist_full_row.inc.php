@@ -20,7 +20,6 @@
 
 */
 ?>
-<td colspan="6">
 <form method="post" id="edit_playlist_<?php echo $playlist->id; ?>" action="javascript:void(0);">
 <table cellpadding="0" cellspacing="0">
 <tr>
@@ -35,11 +34,10 @@
 		</select>
 	<td>
 	<input type="hidden" name="id" value="<?php echo $playlist->id; ?>" />
-	<input type="hidden" name="type" value="playlist" />
-	<?php echo Ajax::button('?action=edit_object&id=' . $playlist->id . '&type=playlist','download',_('Save Changes'),'save_playlist_' . $playlist->id,'edit_playlist_' . $playlist->id); ?>
+	<input type="hidden" name="type" value="playlist_full" />
+	<?php echo Ajax::button('?action=edit_object&id=' . $playlist->id . '&type=playlist_full','download',_('Save Changes'),'save_playlist_' . $playlist->id,'edit_playlist_' . $playlist->id); ?>
 	</td>
 </tr>
 </table>
 </form>
-</td>
 

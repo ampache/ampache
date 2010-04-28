@@ -24,7 +24,12 @@
  * It changes depending on where it is
  */
 ?>
-<?php /* HINT: Playlist Type, Playlist Name */ show_box_top(sprintf(_('%s %s Playlist'), $playlist->f_type, $playlist->name)); ?>
+<?php 
+/* HINT: Playlist Type, Playlist Name */
+show_box_top('<div id="playlist_row_' . $playlist->id . '">' . 
+	sprintf(_('%s %s Playlist'), $playlist->f_type, $playlist->name) .
+	'</div>');
+?>
 <div id="information_actions">
 <ul>
 	<li>
@@ -45,6 +50,18 @@
 		<?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id,'random',_('Add Random'),'play_playlist_random'); ?>
 		<?php echo _('Add Random'); ?>
 	</li>
+	<?php if ($playlist->has_access()) { ?>
+	<li>
+		<?php echo Ajax::button('?action=show_edit_object&type=playlist_full&id=' . $playlist->id,'edit',_('Edit'),'edit_playlist_' . $playlist->id); ?>
+		<?php echo _('Edit'); ?>
+	</li>
+	<li>
+		<a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
+			<?php echo get_user_icon('delete'); ?>
+		</a>
+		<?php echo _('Delete'); ?>
+	</li>
+	<?php } ?>
 </ul>
 </div>
 <?php show_box_bottom(); ?>

@@ -27,6 +27,17 @@
 
 require_once 'lib/init.php';
 
+// We special-case this so we can send a 302 if the delete succeeded
+if ($_REQUEST['action'] == 'delete_playlist') {
+	// Check rights
+	$playlist = new Playlist($_REQUEST['playlist_id']);
+	if ($playlist->has_access()) {
+		$playlist->delete();
+		// Go elsewhere
+		header('Location: ' . Config::get('web_path') . '/browse.php?action=playlist');
+	}
+}
+
 show_header();
 
 
@@ -56,6 +67,10 @@ switch ($_REQUEST['action']) {
 		$playlist->create($playlist_name,$playlist_type);
 		$_SESSION['data']['playlist_id']        = $playlist->id;
 		show_confirmation(_('Playlist Created'),$playlist_name . ' (' . $playlist_type . ') ' . _(' has been created'),'playlist.php');
+	break;
+	case 'delete_playlist':
+		// If we made it here, we didn't have sufficient rights.
+		access_denied();
 	break;
 	case 'remove_song':
 		/* Check em for rights */
