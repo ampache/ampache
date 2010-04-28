@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+	- Added ability to rate Albums of the Moment
+	- Added ability to edit/delete playlists while they are displayed
 	- Fix track numbers not being 0 padded when downloading or renaming.
 	- Rating search now allows specification of operator (>=, <=, or =)
 		and uses the same ratings as normal display.
