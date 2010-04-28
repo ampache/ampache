@@ -82,7 +82,7 @@ switch ($_REQUEST['action']) {
 		// Pull the current active playlist items
 		$objects = $GLOBALS['user']->playlist->get_items();
 
-		$name = $GLOBALS['user']->username . ' - ' . date("d/m/Y H:i:s",time());
+		$name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s",time());
 
 		// generate the new playlist
 		$playlist_id = Playlist::create($name,'public');

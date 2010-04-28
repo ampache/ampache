@@ -27,7 +27,7 @@
 <?php 
 /* HINT: Playlist Type, Playlist Name */
 show_box_top('<div id="playlist_row_' . $playlist->id . '">' . 
-	sprintf(_('%s %s Playlist'), $playlist->f_type, $playlist->name) .
+	sprintf(_('%s %s (Playlist)'), $playlist->f_type, $playlist->name) .
 	'</div>');
 ?>
 <div id="information_actions">

@@ -119,6 +119,7 @@ switch ($_REQUEST['action']) {
 				$radio->format();
 			break;
 			case 'playlist':
+			case 'playlist_full':
 				$key = 'playlist_row_' . $_GET['id'];
 				$playlist = new Playlist($_GET['id']);
 				$playlist->format();
@@ -149,7 +150,7 @@ switch ($_REQUEST['action']) {
 
 		$level = '50';
 
-		if ($_POST['type'] == 'playlist') {
+		if ($_POST['type'] == 'playlist' || $_POST['type'] == 'playlist_full') {
 			$playlist = new Playlist($_POST['id']);
 			if ($GLOBALS['user']->id == $playlist->user) {
 				$level = '25';
@@ -197,6 +198,7 @@ switch ($_REQUEST['action']) {
 				$song->format();
 			break;
 			case 'playlist':
+			case 'playlist_full':
 				$key = 'playlist_row_' . $_POST['id'];
 				$playlist->update($_POST);
 				$playlist->format();

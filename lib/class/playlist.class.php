@@ -26,7 +26,7 @@
  */
 class Playlist extends database_object {
 
-	/* Variables from the Datbase */
+	/* Variables from the database */
 	public $id;
 	public $name;
 	public $user;
@@ -131,8 +131,9 @@ class Playlist extends database_object {
 
 	/**
 	 * get_items
-	 * This returns an array of playlist songs that are in this playlist. Because the same
-	 * song can be on the same playlist twice they are key'd by the uid from playlist_data
+	 * This returns an array of playlist songs that are in this playlist. 
+	 * Because the same song can be on the same playlist twice they are 
+	 * keyed by the uid from playlist_data
 	 */
 	public function get_items() {
 
@@ -436,7 +437,7 @@ class Playlist extends database_object {
 
 	/**
 	 * delete
-	 * This deletes the current playlist and all assoicated data
+	 * This deletes the current playlist and all associated data
 	 */
 	public function delete() {
 
