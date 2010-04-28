@@ -41,9 +41,9 @@ $button = Ajax::button('?page=index&action=random_albums','random',_('Refresh'),
                 </a>
                 <?php
                 if(Config::get('ratings')){
-                        //echo "<div style=\"float:left; display:inline;\" id=\"rating_" . $album->id . "_album\">";
-                        show_rating_static($album->id, 'album');
-                        //echo "</div>";
+                        echo "<div id=\"rating_" . $album->id . "_album\">";
+                        show_rating($album->id, 'album');
+                        echo "</div>";
                 }
                 ?>
               	<span class="play_album"><?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add',_('Play Album'),'play_full_' . $album->id); ?></span>
