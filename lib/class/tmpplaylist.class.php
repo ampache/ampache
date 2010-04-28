@@ -89,7 +89,11 @@ class tmpPlaylist extends database_object {
 		$results = Dba::fetch_row($db_results);
 
 		if (!$results['0']) {
-			$results['0'] = tmpPlaylist::create($session_id,'user','song');
+			$results['0'] = tmpPlaylist::create(array(
+				'session_id'  => $session_id,
+				'type'        => 'user',
+				'object_type' => 'song'
+			));
 		}
 
 		$playlist = new tmpPlaylist($results['0']);
@@ -105,8 +109,9 @@ class tmpPlaylist extends database_object {
 	 */
 	public static function get_from_userid($user_id) {
 
-		// This is a little stupid, because we don't have the user_id in the session or
-		// in the tmp_playlist table we have to do it this way.
+		// This is a little stupid, but because we don't have the 
+		// user_id in the session or in the tmp_playlist table we have 
+		// to do it this way.
 		$client = new User($user_id);
 		$username = Dba::escape($client->username);
 
@@ -199,14 +204,15 @@ class tmpPlaylist extends database_object {
 
 	/**
 	 * create
-	 * This function initializes a new tmpPlaylist it is assoicated with the current
-	 * session rather then a user, as you could have same user multiple locations
+	 * This function initializes a new tmpPlaylist. It is associated with
+	 * the current session rather than a user, as you could have the same 
+	 * user logged in from multiple locations.
 	 */
-	public static function create($sessid,$type,$object_type) {
+	public static function create($data) {
 
-		$sessid 	= Dba::escape($sessid);
-		$type		= Dba::escape($type);
-		$object_type	= Dba::escape($object_type);
+		$sessid 	= Dba::escape($data['session_id']);
+		$type		= Dba::escape($data['type']);
+		$object_type	= Dba::escape($data['object_type']);
 
 		$sql = "INSERT INTO `tmp_playlist` (`session`,`type`,`object_type`) " .
 			" VALUES ('$sessid','$type','$object_type')";
@@ -220,8 +226,8 @@ class tmpPlaylist extends database_object {
 			self::prune_tracks();
 		}
 
-		/* Clean any other playlists assoicated with this session */
-		self::delete($sessid,$id);
+		/* Clean any other playlists associated with this session */
+		self::clean($sessid,$id);
 
 		return $id;
 
@@ -245,10 +251,10 @@ class tmpPlaylist extends database_object {
 
 	/**
 	 * delete
-	 * This deletes any other tmp_playlists assoicated with this
+	 * This deletes any other tmp_playlists associated with this
 	 * session
 	 */
-	public static function delete($sessid,$id) {
+	public static function clean($sessid,$id) {
 
 		$sessid = Dba::escape($sessid);
 		$id	= Dba::escape($id);
@@ -256,7 +262,7 @@ class tmpPlaylist extends database_object {
 		$sql = "DELETE FROM `tmp_playlist` WHERE `session`='$sessid' AND `id` != '$id'";
 		$db_results = Dba::write($sql);
 
-		/* Remove assoicated tracks */
+		/* Remove associated tracks */
 		self::prune_tracks();
 
 		return true;
@@ -265,7 +271,7 @@ class tmpPlaylist extends database_object {
 
 	/**
 	 * prune_playlists
-	 * This deletes and playlists that don't have an assoicated session
+	 * This deletes and playlists that don't have an associated session
 	 */
 	public static function prune_playlists() {
 
@@ -285,7 +291,8 @@ class tmpPlaylist extends database_object {
 	 */
 	public static function prune_tracks() {
 
-		// This prue is always run clears data for playlists that don't have tmp_playlist anymore
+		// This prune is always run and clears data for playlists that 
+		// don't exist anymore
 		$sql = "DELETE FROM tmp_playlist_data USING tmp_playlist_data " .
 			"LEFT JOIN tmp_playlist ON tmp_playlist_data.tmp_playlist=tmp_playlist.id " .
 			"WHERE tmp_playlist.id IS NULL";

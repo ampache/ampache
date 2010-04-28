@@ -550,7 +550,11 @@ class Democratic extends tmpPlaylist {
 
 		if ($db_results) {
 			$insert_id = Dba::insert_id();
-			parent::create($insert_id,'vote','song');
+			parent::create(array(
+				'session_id'  => $insert_id,
+				'type'        => 'vote',
+				'object_type' => 'song'
+			));
 		}
 
 		return $db_results;
