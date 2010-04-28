@@ -48,7 +48,7 @@ $ajax_url = Config::get('ajax_url');
 	<th class="cel_track"><?php echo _('Track'); ?></th>
 	<th class="cel_time"><?php echo _('Time'); ?></th>
 <?php if (Config::get('ratings')) {
-        Rating::build_cache('song', $object_ids);
+        Rating::build_cache('song', array_map(create_function('$i', 'return $i[\'object_id\'];'), $object_ids));
 ?>
         <th class="cel_rating"><?php echo _('Rating'); ?></th>
 <?php } ?>
