@@ -136,7 +136,7 @@ class Art extends database_object {
 				$results['thumb_mime'] = $data['thumb_mime']; 
 			} 
 			else { 
-				debug_event('Art','Unable to retrive/generate thumbnail for ' . $type . '::' . $id,1); 
+				debug_event('Art','Unable to retrieve/generate thumbnail for ' . $type . '::' . $id,1); 
 			} 
 		} // if no thumb, but art and we want to resize
 
@@ -232,9 +232,9 @@ class Art extends database_object {
 
 	/**
 	 * generate_thumb
-	 * this automaticly resizes the image for thumbnail viewing
-	 * only works on gif/jpg/png this function also checks to make
-	 * sure php-gd is enabled
+	 * Automatically resizes the image for thumbnail viewing.
+	 * Only works on gif/jpg/png/bmp. Fails if PHP-GD isn't available
+	 * or lacks support for the requested image type.
 	 */
 	public function generate_thumb($image,$size,$mime) { 
 
