@@ -41,9 +41,10 @@ class Api {
 
 	/**
 	 * set_filter
-	 * This is a play on the browse function, it's different as we expose the filters in a slightly different
-	 * and vastly simplier way to the end users so we have to do a little handy work to make them
-	 * work internally
+	 * This is a play on the browse function, it's different as we expose
+	 * the filters in a slightly different and vastly simpler way to the 
+	 * end users--so we have to do a little extra work to make them work 
+	 * internally.
 	 */
 	public static function set_filter($filter,$value) {
 
@@ -52,7 +53,7 @@ class Api {
 		switch ($filter) {
 			case 'add':
 				// Check for a range, if no range default to gt
-				if (strpos('/',$value)) {
+				if (strpos($value,'/')) {
 					$elements = explode('/',$value);
 					Browse::set_filter('add_lt',strtotime($elements['1']));
 					Browse::set_filter('add_gt',strtotime($elements['0']));
@@ -63,7 +64,7 @@ class Api {
 			break;
 			case 'update':
 				// Check for a range, if no range default to gt
-				if (strpos('/',$value)) {
+				if (strpos($value,'/')) {
 					$elements = explode('/',$value);
 					Browse::set_filter('update_lt',strtotime($elements['1']));
 					Browse::set_filter('update_gt',strtotime($elements['0']));
