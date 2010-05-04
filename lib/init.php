@@ -174,7 +174,7 @@ if ($results['memory_limit'] < 24) {
 }
 
 // Incase the local setting is 0
-ini_set('session.gc_probability','2');
+ini_set('session.gc_probability','5');
 
 set_memory_limit($results['memory_limit']);
 

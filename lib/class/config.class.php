@@ -54,7 +54,8 @@ class Config {
 	 */
 	public static function get($name) {
 
-		return self::$_global[$name];
+		if (isset(self::$_global[$name])) { return self::$_global[$name]; } 
+		else { return null; } 
 
 	} // get
 
