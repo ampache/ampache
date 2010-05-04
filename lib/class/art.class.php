@@ -28,43 +28,43 @@
  */
 class Art extends database_object {
 
-	public $type; 
+	public $type;
 	public $uid; // UID of the object not ID because it's not the ART.ID
 	public $raw; // Raw art data
-	public $raw_mime; 
+	public $raw_mime;
 	
-	public $thumb; 
-	public $thumb_mime; 
+	public $thumb;
+	public $thumb_mime;
 	
 
 	/**
 	 * Constructor
 	 * Art constructor, takes the UID of the object and the
-	 * object type. 
+	 * object type.
 	 */
 	public function __construct($uid,$type) {
 
-		$this->type = Art::validate_type($type); 
+		$this->type = Art::validate_type($type);
 		$this->uid = $uid; 		
 
 	} // constructor
 
-	/** 
+	/**
 	 * validate_type
 	 * This validates the type
-	 */ 
-	public static function validate_type($type) { 
+	 */
+	public static function validate_type($type) {
 
-		switch ($type) { 
-			case 'album': 
-			case 'artist': 
-			case 'video': 
-				return $type; 
-			break; 
-			default: 
-				return 'album'; 
-			break; 
-		} 
+		switch ($type) {
+			case 'album':
+			case 'artist':
+			case 'video':
+				return $type;
+			break;
+			default:
+				return 'album';
+			break;
+		}
 
 	} // validate_type
 
@@ -72,36 +72,36 @@ class Art extends database_object {
 	 * extension
 	 * This returns the file extension for the currently loaded art
 	 */
-	public static function extension($mime) { 
+	public static function extension($mime) {
 		
-		$data = explode("/",$mime); 
-		$extension = $data['1']; 
+		$data = explode("/",$mime);
+		$extension = $data['1'];
 
-		if ($extension == 'jpeg') { $extension = 'jpg'; } 
+		if ($extension == 'jpeg') { $extension = 'jpg'; }
 
-		return $extension; 
+		return $extension;
 
-	} // extension 
+	} // extension
 
-	/** 
+	/**
 	 * get
 	 * This returns the art for our current object, this can
-	 * look in the database and will return the thumb if it 
+	 * look in the database and will return the thumb if it
 	 * exists, if it doesn't depending on settings it will try
-	 * to create it. 
+	 * to create it.
 	 */
-	public function get($raw=false) { 
+	public function get($raw=false) {
 
 		// Get the data either way
-		if (!$this->get_db()) { 
-			return false; 
-		} 
+		if (!$this->get_db()) {
+			return false;
+		}
 
-		if ($raw) { 
-			return $this->raw; 
-		} 
-		else { 
-			return $this->thumb; 
+		if ($raw) {
+			return $this->raw;
+		}
+		else {
+			return $this->thumb;
 		} 		
 			
 	} // get
@@ -113,39 +113,39 @@ class Art extends database_object {
 	 * on if we want to resize and if there is not a thumbnail go
 	 * ahead and try to resize
 	 */
-	public function get_db() { 
+	public function get_db() {
 
-		$type = Dba::escape($this->type); 
-		$id = Dba::escape($this->uid); 
+		$type = Dba::escape($this->type);
+		$id = Dba::escape($this->uid);
 
-		$sql = "SELECT `thumb`,`thumb_mime`,`art`,`art_mime` FROM `" . $type . "_data` WHERE `" . $type . "_id`='$id'"; 
-		$db_results = Dba::read($sql); 
+		$sql = "SELECT `thumb`,`thumb_mime`,`art`,`art_mime` FROM `" . $type . "_data` WHERE `" . $type . "_id`='$id'";
+		$db_results = Dba::read($sql);
 		
-		$results = Dba::fetch_assoc($db_results); 
+		$results = Dba::fetch_assoc($db_results);
 
 		// If we get nothing or there is non mime type return false
-		if (!count($results) OR !strlen($results['art_mime'])) { return false; } 
+		if (!count($results) OR !strlen($results['art_mime'])) { return false; }
 
 		// If there is no thumb, and we want thumbs
-		if (!strlen($results['thumb_mime']) AND Config::get('resize_images')) { 
-			$data = $this->generate_thumb($results['art'],array('width'=>275,'height'=>275),$results['art_mime']); 
+		if (!strlen($results['thumb_mime']) AND Config::get('resize_images')) {
+			$data = $this->generate_thumb($results['art'],array('width'=>275,'height'=>275),$results['art_mime']);
 			// If it works save it!
-			if ($data) { 
-				$this->save_thumb($data['thumb'],$data['thumb_mime']); 
-				$results['thumb'] = $data['thumb']; 
-				$results['thumb_mime'] = $data['thumb_mime']; 
-			} 
-			else { 
-				debug_event('Art','Unable to retrieve/generate thumbnail for ' . $type . '::' . $id,1); 
-			} 
+			if ($data) {
+				$this->save_thumb($data['thumb'],$data['thumb_mime']);
+				$results['thumb'] = $data['thumb'];
+				$results['thumb_mime'] = $data['thumb_mime'];
+			}
+			else {
+				debug_event('Art','Unable to retrieve/generate thumbnail for ' . $type . '::' . $id,1);
+			}
 		} // if no thumb, but art and we want to resize
 
-		$this->raw = $results['art']; 
-		$this->raw_mime = $results['art_mime']; 
-		$this->thumb = $results['thumb']; 
-		$this->thumb_mime = $results['thumb_mime']; 
+		$this->raw = $results['art'];
+		$this->raw_mime = $results['art_mime'];
+		$this->thumb = $results['thumb'];
+		$this->thumb_mime = $results['thumb_mime'];
 
-		return true; 
+		return true;
 
 	} // get_db
 
@@ -154,41 +154,41 @@ class Art extends database_object {
 	 * This takes the string representation of an image and inserts it into the database. You
 	 * must also pass the mime type
 	 */
-	public function insert($source,$mime) { 
+	public function insert($source,$mime) {
 
 		// Disabled in demo mode cause people suck and upload porn
-		if (Config::get('demo_mode')) { return false; } 
+		if (Config::get('demo_mode')) { return false; }
 
-		// Do a low impact test is this image of any size? 
-		if (strlen($source) < 10) { 
-			debug_event('Art','Invalid Image passed, not inserting',1); 
-			return false; 
-		} 
+		// Do a low impact test is this image of any size?
+		if (strlen($source) < 10) {
+			debug_event('Art','Invalid Image passed, not inserting',1);
+			return false;
+		}
 
 		// Check to make sure PHP:GD exists if so we can sanity check this
 		// image
-		if (function_exists('ImageCreateFromString')) { 
-			$image = ImageCreateFromString($source); 
-			if (!$image OR imagesx($image) < 5 OR imagesy($image) < 5) { 
-				debug_event('Art','Image failed PHP-GD test, not inserting',1); 
-				return false; 
-			} 
+		if (function_exists('ImageCreateFromString')) {
+			$image = ImageCreateFromString($source);
+			if (!$image OR imagesx($image) < 5 OR imagesy($image) < 5) {
+				debug_event('Art','Image failed PHP-GD test, not inserting',1);
+				return false;
+			}
 		} // if we have GD
 
 		// Default to image/jpeg if they don't pass anything
-		$mime = $mime ? $mime : 'image/jpeg'; 
+		$mime = $mime ? $mime : 'image/jpeg';
 
-		$image = Dba::escape($source); 
-		$mime = Dba::escape($mime); 
-		$uid = Dba::escape($this->uid); 
-		$type = Dba::escape($this->type); 
+		$image = Dba::escape($source);
+		$mime = Dba::escape($mime);
+		$uid = Dba::escape($this->uid);
+		$type = Dba::escape($this->type);
 
 		// Insert it!
-		$sql = "REPLACE INTO `" . $type . "_data` SET `art`='$image',`art_mime`='$mime', `" . $type . "_id`='$uid', " . 
-			"`thumb`=NULL, `thumb_mime`=NULL"; 
-		$db_results = Dba::write($sql); 
+		$sql = "REPLACE INTO `" . $type . "_data` SET `art`='$image',`art_mime`='$mime', `" . $type . "_id`='$uid', " .
+			"`thumb`=NULL, `thumb_mime`=NULL";
+		$db_results = Dba::write($sql);
 
-		return true; 
+		return true;
 
 	} // insert
 
@@ -196,14 +196,14 @@ class Art extends database_object {
 	 * clear
 	 * This resets the art in the database
 	 */
-	public function reset() { 
+	public function reset() {
 
-		$type = Dba::escape($this->type); 
-		$uid = Dba::escape($this->uid); 
+		$type = Dba::escape($this->type);
+		$uid = Dba::escape($this->uid);
 
-		$sql = "UPDATE `" . $type . "_data` SET `art`=NULL, `art_mime`=NULL, `thumb`=NULL, `thumb_mime`=NULL " . 
-			"WHERE `" . $type . "_id`='$uid'"; 
-		$db_results = Dba::write($sql); 
+		$sql = "UPDATE `" . $type . "_data` SET `art`=NULL, `art_mime`=NULL, `thumb`=NULL, `thumb_mime`=NULL " .
+			"WHERE `" . $type . "_id`='$uid'";
+		$db_results = Dba::write($sql);
 
 	} // clear
 
@@ -211,22 +211,22 @@ class Art extends database_object {
 	 * save_thumb
 	 * This saves the thumbnail that we're passing
 	 */
-	public function save_thumb($source,$mime) { 
+	public function save_thumb($source,$mime) {
 
 		// Quick sanity check
-		if (strlen($source) < 5 OR !strlen($mime)) { 
-			debug_event('Art','Unable to save thumbnail, invalid data passed',1); 
-			return false; 
-		} 
+		if (strlen($source) < 5 OR !strlen($mime)) {
+			debug_event('Art','Unable to save thumbnail, invalid data passed',1);
+			return false;
+		}
 		
-		$source = Dba::escape($source); 
-		$mime = Dba::escape($mime); 
-		$uid = Dba::escape($this->uid); 
-		$type = Dba::escape($this->type); 
+		$source = Dba::escape($source);
+		$mime = Dba::escape($mime);
+		$uid = Dba::escape($this->uid);
+		$type = Dba::escape($this->type);
 		
-		$sql = "UPDATE `" . $type . "_data` SET `thumb`='$source', `thumb_mime`='$mime' " . 
-			"WHERE `" . $type . "_id`='$uid'"; 
-		$db_results = Dba::write($sql); 
+		$sql = "UPDATE `" . $type . "_data` SET `thumb`='$source', `thumb_mime`='$mime' " .
+			"WHERE `" . $type . "_id`='$uid'";
+		$db_results = Dba::write($sql);
 
 	} // save_thumb
 
@@ -236,83 +236,83 @@ class Art extends database_object {
 	 * Only works on gif/jpg/png/bmp. Fails if PHP-GD isn't available
 	 * or lacks support for the requested image type.
 	 */
-	public function generate_thumb($image,$size,$mime) { 
+	public function generate_thumb($image,$size,$mime) {
 
-		$data = explode("/",$mime); 
-		$type = strtolower($data['1']); 
+		$data = explode("/",$mime);
+		$type = strtolower($data['1']);
 
-		if (!function_exists('gd_info')) { 
-			debug_event('Art','PHP-GD Not found - unable to resize art',1); 
-			return false; 
-		} 
+		if (!function_exists('gd_info')) {
+			debug_event('Art','PHP-GD Not found - unable to resize art',1);
+			return false;
+		}
 
 		// Check and make sure we can resize what you've asked us to	
-		if (($type == 'jpg' OR $type == 'jpeg') AND !(imagetypes() & IMG_JPG)) { 
-			debug_event('Art','PHP-GD Does not support JPGs - unable to resize',1); 
-			return false; 
-		} 
-		if ($type == 'png' AND !imagetypes() & IMG_PNG) { 
-			debug_event('Art','PHP-GD Does not support PNGs - unable to resize',1); 
-			return false; 
-		} 
-		if ($type == 'gif' AND !imagetypes() & IMG_GIF) { 
-			debug_event('Art','PHP-GD Does not support GIFs - unable to resize',1); 
-			return false; 
-		} 
-		if ($type == 'bmp' AND !imagetypes() & IMG_WBMP) { 
-			debug_event('Art','PHP-GD Does not support BMPs - unable to resize',1); 
-			return false; 
-		} 
+		if (($type == 'jpg' OR $type == 'jpeg') AND !(imagetypes() & IMG_JPG)) {
+			debug_event('Art','PHP-GD Does not support JPGs - unable to resize',1);
+			return false;
+		}
+		if ($type == 'png' AND !imagetypes() & IMG_PNG) {
+			debug_event('Art','PHP-GD Does not support PNGs - unable to resize',1);
+			return false;
+		}
+		if ($type == 'gif' AND !imagetypes() & IMG_GIF) {
+			debug_event('Art','PHP-GD Does not support GIFs - unable to resize',1);
+			return false;
+		}
+		if ($type == 'bmp' AND !imagetypes() & IMG_WBMP) {
+			debug_event('Art','PHP-GD Does not support BMPs - unable to resize',1);
+			return false;
+		}
 	
 		$source = imagecreatefromstring($image); 	
 
-		if (!$source) { 
-			debug_event('Art','Failed to create Image from string - Source Image is damaged / malformed',1); 
-			return false; 
-		} 
+		if (!$source) {
+			debug_event('Art','Failed to create Image from string - Source Image is damaged / malformed',1);
+			return false;
+		}
 
-		$source_size = array('height'=>imagesy($source),'width'=>imagesx($source)); 
+		$source_size = array('height'=>imagesy($source),'width'=>imagesx($source));
 
 		// Create a new blank image of the correct size
-		$thumbnail = imagecreatetruecolor($size['width'],$size['height']); 
+		$thumbnail = imagecreatetruecolor($size['width'],$size['height']);
 
-		if (!imagecopyresampled($thumbnail,$source,0,0,0,0,$size['width'],$size['height'],$source_size['width'],$source_size['height'])) { 
-			debug_event('Art','Unable to create resized image',1); 
-			return false; 
-		} 
+		if (!imagecopyresampled($thumbnail,$source,0,0,0,0,$size['width'],$size['height'],$source_size['width'],$source_size['height'])) {
+			debug_event('Art','Unable to create resized image',1);
+			return false;
+		}
 
 		// Start output buffer
-		ob_start(); 
+		ob_start();
 		
 		// Generate the image to our OB
-		switch ($type) { 
-			case 'jpg': 
-			case 'jpeg': 
-				imagejpeg($thumbnail,null,75); 
-				$mime_type = image_type_to_mime_type(IMAGETYPE_JPEG); 
-			break; 
-			case 'gif': 
-				imagegif($thumbnail); 
-				$mime_type = image_type_to_mime_type(IMAGETYPE_GIF); 
-			break; 
+		switch ($type) {
+			case 'jpg':
+			case 'jpeg':
+				imagejpeg($thumbnail,null,75);
+				$mime_type = image_type_to_mime_type(IMAGETYPE_JPEG);
+			break;
+			case 'gif':
+				imagegif($thumbnail);
+				$mime_type = image_type_to_mime_type(IMAGETYPE_GIF);
+			break;
 			// Turn bmps into pngs
-			case 'bmp': 
-				$type = 'png'; 
-			case 'png': 
-				imagepng($thumbnail); 
-				$mime_type = image_type_to_mime_type(IMAGETYPE_PNG); 
-			break; 
+			case 'bmp':
+				$type = 'png';
+			case 'png':
+				imagepng($thumbnail);
+				$mime_type = image_type_to_mime_type(IMAGETYPE_PNG);
+			break;
 		} // resized
 		
-		$data = ob_get_contents(); 
-		ob_end_clean(); 
+		$data = ob_get_contents();
+		ob_end_clean();
 	
-		if (!strlen($data)) { 
-			debug_event('Art','Unknown Error resizing art',1); 
-			return false; 
-		} 
+		if (!strlen($data)) {
+			debug_event('Art','Unknown Error resizing art',1);
+			return false;
+		}
 
-		return array('thumb'=>$data,'thumb_mime'=>$mime_type); 
+		return array('thumb'=>$data,'thumb_mime'=>$mime_type);
 			
 	} // generate_thumb
 
@@ -325,7 +325,7 @@ class Art extends database_object {
          * ['file']     = FILENAME *** OPTIONAL ***
          * ['raw']      = Actual Image data, already captured
          */
-	public function get_from_source($data) { 
+	public function get_from_source($data) {
 
                 // Already have the data, this often comes from id3tags
                 if (isset($data['raw'])) {
@@ -336,7 +336,7 @@ class Art extends database_object {
                 if (isset($data['db'])) {
                         // Repull it
                         $uid = Dba::escape($data['db']);
-			$type = Dba::escape($this->type); 
+			$type = Dba::escape($this->type);
 
                         $sql = "SELECT * FROM `" . $type . "_data` WHERE `" . $type . "_id`='$uid'";
                         $db_results = Dba::read($sql);
@@ -390,24 +390,24 @@ class Art extends database_object {
 	 * url
 	 * This returns the constructed URL for the art in question
 	 */
-	public static function url($uid,$type,$sid=false) { 
+	public static function url($uid,$type,$sid=false) {
 
-		$sid = $sid ? scrub_out($sid) : scrub_out(session_id()); 
-		$type = self::validate_type($type); 
+		$sid = $sid ? scrub_out($sid) : scrub_out(session_id());
+		$type = self::validate_type($type);
 
-		$type = Dba::escape($type); 
-		$uid = Dba::escape($uid); 
+		$type = Dba::escape($type);
+		$uid = Dba::escape($uid);
 
-		$sql = "SELECT `art_mime`,`thumb_mime` FROM `" . $type . "_data` WHERE `" . $type . "_id`='$uid'"; 
-		$db_results = Dba::read($sql); 
+		$sql = "SELECT `art_mime`,`thumb_mime` FROM `" . $type . "_data` WHERE `" . $type . "_id`='$uid'";
+		$db_results = Dba::read($sql);
 
-		$row = Dba::fetch_assoc($db_results); 
+		$row = Dba::fetch_assoc($db_results);
 
-		$mime = $row['thumb_mime'] ? $row['thumb_mime'] : $row['art_mime']; 
-		$extension = self::extension($mime); 
+		$mime = $row['thumb_mime'] ? $row['thumb_mime'] : $row['art_mime'];
+		$extension = self::extension($mime);
 		
-		$name = 'art.' . $extension; 
-		$url = Config::get('web_path') . '/image.php?id=' . scrub_out($uid) . 'object_type=' . scrub_out($type) . '&auth=' . $sid . '&name=' . $name; 
+		$name = 'art.' . $extension;
+		$url = Config::get('web_path') . '/image.php?id=' . scrub_out($uid) . 'object_type=' . scrub_out($type) . '&auth=' . $sid . '&name=' . $name;
 		
 		return $url; 	
 
@@ -417,22 +417,22 @@ class Art extends database_object {
 	 * gather
 	 * This tries to get the art in question
 	 */
-	public function gather($options=array(),$limit) { 
+	public function gather($options=array(),$limit) {
 
 		// Define vars
-		$results = array(); 
+		$results = array();
 
-		switch ($this->type) { 
-			case 'album': 
-				$allowed_methods = array('lastfm','folder','amazon','google','musicbrainz','tag'); 
-			break; 
-			case 'artist': 
-				$allowed_methods = array(); 
-			break; 
-			case 'video': 
-				$allowed_methods = array(); 
-			break; 
-		} 
+		switch ($this->type) {
+			case 'album':
+				$allowed_methods = array('lastfm','folder','amazon','google','musicbrainz','tag');
+			break;
+			case 'artist':
+				$allowed_methods = array();
+			break;
+			case 'video':
+				$allowed_methods = array();
+			break;
+		}
 	
 		$config = Config::get('art_order'); 	
                 $methods = get_class_methods('Art');
@@ -486,14 +486,14 @@ class Art extends database_object {
 
 
 	///////////////////////////////////////////////////////////////////////
-	// Art Methods 
+	// Art Methods
 	///////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * gather_musicbrainz
 	 * This function retrives art based on MusicBrainz' Advanced Relationships
 	 */
-	public function gather_musicbrainz($limit=0) { 
+	public function gather_musicbrainz($limit=0) {
 		$images         = array();
 		$num_found      = 0;
 		$mbquery        = new MusicBrainzQuery();
@@ -636,7 +636,7 @@ class Art extends database_object {
 	 * This takes keywords and performs a search of the AMazon website
 	 * for the art. It returns an array of found objects with mime/url keys
 	 */
-	public function gather_amazon($keywords='',$limit=5) { 
+	public function gather_amazon($keywords='',$limit=5) {
 
 
                 $images         = array();
@@ -723,7 +723,7 @@ class Art extends database_object {
                         }
 
                         /* Log this if we're doin debug */
-                        debug_event('amazon-xml',"Searched using $keywords with " . Config::get('amazon_developer_key') . " as key " . count($final_results),1); 
+                        debug_event('amazon-xml',"Searched using $keywords with " . Config::get('amazon_developer_key') . " as key " . count($final_results),1);
 
                         // If we've hit our limit
                         if (!empty($limit) && count($final_results) >= $limit) {
@@ -777,13 +777,13 @@ class Art extends database_object {
 	/**
 	 * gather_folder
 	 * This returns the art from the folder of the files
-	 * If a limit is passed or the preferred filename is found the current results set 
+	 * If a limit is passed or the preferred filename is found the current results set
 	 * is returned
 	 */
-	public function gather_folder($limit=5) { 
+	public function gather_folder($limit=5) {
 
-		$media = new Album($this->uid); 
-		$songs = $media->get_songs(); 
+		$media = new Album($this->uid);
+		$songs = $media->get_songs();
                 $data = array();
 
                 /* See if we are looking for a specific filename */
@@ -855,10 +855,10 @@ class Art extends database_object {
 	 * This looks for the art in the meta-tags of the file
 	 * itself
 	 */
-	public function gather_tags($limit=5) { 
+	public function gather_tags($limit=5) {
 
-		// We need the filenames 
-		$album = new Album($this->uid); 
+		// We need the filenames
+		$album = new Album($this->uid);
 
                 // grab the songs and define our results
                 $songs = $album->get_songs();
@@ -899,11 +899,11 @@ class Art extends database_object {
 	 * gather_google
 	 * Raw google search to retrive the art, not very reliable
 	 */
-	public function gather_google($limit=5) { 
+	public function gather_google($limit=5) {
 
                 $images = array();
-		$media = new $this->type($this->uid); 
-		$media->format(); 
+		$media = new $this->type($this->uid);
+		$media->format();
 
                 $search = $media->full_name;
 
@@ -935,25 +935,25 @@ class Art extends database_object {
 	 * This returns the art from lastfm. It doesn't require an account currently
 	 * but may in the future
 	 */
-	public function gather_lastfm($limit,$options=false) { 
+	public function gather_lastfm($limit,$options=false) {
 
                 // Create the parser object
                 $lastfm = new LastFMSearch();
 
-		switch ($this->type) { 
-			case 'album': 
+		switch ($this->type) {
+			case 'album':
 		                if (is_array($options)) {
 		                        $artist = $options['artist'];
 		                        $album  = $options['album_name'];
 		                }
 		                else {
-					$media = new Album($this->uid); 
-					$media->format(); 
+					$media = new Album($this->uid);
+					$media->format();
 		                        $artist = $media->artist_name;
 		                        $album = $media->full_name;
 		                }
 			break;
-		} 
+		}
 
                 if(Config::get('proxy_host') AND Config::get('proxy_port')) {
                         $proxyhost = Config::get('proxy_host');
