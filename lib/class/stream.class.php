@@ -695,7 +695,7 @@ class Stream {
 		}
 
 		// If we are debugging log this event
-		$message = "Start Downsample: $downsample_command";
+		$message = "Start Downsample using CMD: $downsample_command";
 		debug_event('downsample',$message,'3');
 
 		$fp = popen($downsample_command, 'rb');
