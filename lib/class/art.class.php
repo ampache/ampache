@@ -550,7 +550,7 @@ class Art extends database_object {
 		}
 
 		if ($album->mbid) {
-			debug_event('mbz-gatherart', "Album MBID: " . $this->mbid, '5');
+			debug_event('mbz-gatherart', "Album MBID: " . $album->mbid, '5');
 		}
 		else {
 			return $images;
@@ -559,7 +559,7 @@ class Art extends database_object {
 		$mbquery = new MusicBrainzQuery();
 		$includes = new mbReleaseIncludes();
 		try {
-			$release = $mbquery->getReleaseByID($this->mbid, $includes->urlRelations());
+			$release = $mbquery->getReleaseByID($album->mbid, $includes->urlRelations());
 		} catch (Exception $e) {
 			return $images;
 		}
