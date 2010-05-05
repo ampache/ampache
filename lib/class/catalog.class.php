@@ -709,7 +709,7 @@ class Catalog extends database_object {
 					// If they've enabled resizing of images generate the thumbnail now
 					if (Config::get('resize_images')) { 
 						$thumb = $art->generate_thumb($image,array('width'=>275,'height'=>275),$results['0']['mime']); 
-						if (is_array($thumb)) { $art->save_thumb($thumb['thumb'],$thumb['thumb_mime']); } 
+						if (is_array($thumb)) { $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], '275x275'); } 
 					} 
 				
 				}
@@ -768,7 +768,7 @@ class Catalog extends database_object {
 		while ($row = Dba::fetch_assoc($db_results)) { 
 			$art = new Art($row['album_id'],'album'); 
 			$data = $art->generate_thumb($row['art'],array('width'=>275,'height'=>275),$row['art_mime']); 
-			$art->save_thumb($data['thumb'],$data['thumb_mime']); 
+			$art->save_thumb($data['thumb'], $data['thumb_mime'], '275x275');
 		
 			/* Stupid little cutesie thing */
 			$thumb_count++;

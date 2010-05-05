@@ -337,6 +337,9 @@ class Update {
 
 		$version[] = array('version'=>'360002','description'=>$update_string);
 
+		$update_string = '- Add image table to store images.<br />' .
+				'- Drop album_data and artist_data.<br />';
+		$version[] = array('version'=>'360003','description'=>$update_string);
 
 		return $version;
 
@@ -1871,6 +1874,64 @@ class Update {
 
 	} // update_360002
 
+	/**
+	 * update_360003
+	 * This update moves the image data to its own table.
+	 */
+	public static function update_360003() {
+		$sql = "CREATE TABLE `image` (" .
+			"`id` int(11) unsigned NOT NULL auto_increment," .
+			"`image` mediumblob NOT NULL," .
+			"`mime` varchar(64) collate utf8_unicode_ci NOT NULL," .
+			"`size` varchar(64) collate utf8_unicode_ci NOT NULL," .
+			"`object_type` varchar(64) collate utf8_unicode_ci NOT NULL," .
+			"`object_id` int(11) unsigned NOT NULL," .
+			"PRIMARY KEY  (`id`)," .
+			"KEY `object_type` (`object_type`)," .
+			"KEY `object_id` (`object_id`)" .
+			") ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+		$db_results = Dba::write($sql);
 
+		foreach (array('album', 'artist') as $type) {
+			$sql = "SELECT `" . $type . "_id` AS `object_id`, " .
+				"`art`, `art_mime` FROM `" . $type .
+				"_data` WHERE `art` IS NOT NULL";
+			$db_results = Dba::read($sql);
+			while ($row = Dba::fetch_assoc($db_results)) {
+				$sql = "INSERT INTO `image` " . 
+					"(`image`, `mime`, `size`, " .
+					"`object_type`, `object_id`) " .
+					"VALUES('" . Dba::escape($row['art']) .
+					"', '" . $row['art_mime'] . 
+					"', 'original', '" . $type . "', '" . 
+					$row['object_id'] . "')";
+				$db_other_results = Dba::write($sql);
+			}
+			$sql = "DROP TABLE `" . $type . "_data`";
+			// $db_results = Dba::write($sql);
+		}
+
+		self::set_version('db_version','360003');
+
+	} // update_360003
+
+	/**
+	 * update_360003
+	 * This update adds the search table
+	 */
+	public static function update_360003_b() {
+		$sql = "CREATE TABLE `search` (" .
+			"`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ," .
+			"`user` INT( 11 ) NOT NULL ," .
+			"`type` ENUM('private','public') DEFAULT NULL ," .
+			"`rules` VARCHAR( 65535 ) NOT NULL ," .
+			"`name` VARCHAR( 255 ) NOT NULL ," .
+			"`logic_operator` VARCHAR(3) NOT NULL " . 
+			") ENGINE = MYISAM ";
+		$db_results = Dba::write($sql);
+
+		self::set_version('db_version','360003');
+	} // update_360003
+		
 } // end update class
 ?>

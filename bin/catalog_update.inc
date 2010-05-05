@@ -125,7 +125,7 @@ while ($row = Dba::fetch_row($db_results)) {
 		// Look for album art
 		echo _('Starting Album Art Search');
 		echo "\n"; 
-		$catalog->get_album_art('',1);
+		$catalog->get_art('',1);
 		echo "----------------\n\n";
 	} 
 

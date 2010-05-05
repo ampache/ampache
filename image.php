@@ -102,11 +102,13 @@ switch ($_GET['type']) {
 			readfile(Config::get('prefix') . Config::get('theme_path') . '/images/blankalbum.jpg');
 			break;
 		} // else no image
-
-		if (!$art->thumb_mime) { unset($_GET['thumb']); }
-
-		$mime = $_GET['thumb'] ? $art->thumb_mime : $art->raw_mime; 	
-		$source = $_GET['thumb'] ? $art->thumb : $art->raw; 
+		
+		if ($_GET['thumb']) {
+			$thumb_data = $art->get_thumb($size);
+		}
+				
+		$mime = $thumb_data ? $thumb_data['thumb_mime'] : $art->raw_mime; 	
+		$source = $thumb_data ? $thumb_data['thumb'] : $art->raw; 
 		$extension = Art::extension($mime); 
 		
 		// Send the headers and output the image
