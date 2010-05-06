@@ -222,7 +222,7 @@ class Stats {
 		$type = self::validate_type($type);
 		$object_name = ucfirst($type);
 
-		$sql = "SELECT DISTINCT($type) FROM `song` ORDER BY `addition_time` DESC " .
+		$sql = "SELECT DISTINCT(`$type`), MIN(`addition_time`) AS `real_atime` FROM `song` GROUP BY `$type` ORDER BY `real_atime` DESC " .
 			"LIMIT $limit";
 		$db_results = Dba::read($sql);
 
