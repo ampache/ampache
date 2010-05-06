@@ -1908,7 +1908,7 @@ class Update {
 				$db_other_results = Dba::write($sql);
 			}
 			$sql = "DROP TABLE `" . $type . "_data`";
-			// $db_results = Dba::write($sql);
+			$db_results = Dba::write($sql);
 		}
 
 		self::set_version('db_version','360003');
