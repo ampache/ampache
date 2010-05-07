@@ -1,91 +1,91 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
-	class mbLabel extends MusicBrainzEntity {
-		const TYPE_GROUP  = "http://musicbrainz.org/ns/mmd-1.0#Group";
-		const TYPE_PERSON = "http://musicbrainz.org/ns/mmd-1.0#Person";
+/* vim:set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab: */
+class mbLabel extends MusicBrainzEntity {
+    const TYPE_GROUP  = "http://musicbrainz.org/ns/mmd-1.0#Group";
+    const TYPE_PERSON = "http://musicbrainz.org/ns/mmd-1.0#Person";
 
-		private $type;
-		private $name;
-		private $sortName;
-		private $disambiguation;
-		private $beginDate;
-		private $endDate;
-		private $releases;
-		private $releasesCount;
-		private $releasesOffset;
-		private $aliases;
+    private $type;
+    private $name;
+    private $sortName;
+    private $disambiguation;
+    private $beginDate;
+    private $endDate;
+    private $releases;
+    private $releasesCount;
+    private $releasesOffset;
+    private $aliases;
 
-		function mbLabel( $id='', $type='', $name='', $sortName='' ) {
-			parent::MusicBrainzEntity($id);
-			$this->type = $type;
-			$this->name = $name;
-			$this->sortName = $sortName;
-		}
+    public function __construct($id='', $type='', $name='', $sortName='') {
+        parent::__construct($id);
+        $this->type = $type;
+        $this->name = $name;
+        $this->sortName = $sortName;
+    }
 
-		function setType( $type ) { $this->type = $type; }
-		function getType() { return $this->type; }
-		function setName( $name ) { $this->name = $name; }
-		function getName() { return $this->name; }
-		function setSortName( $sortName ) { $this->sortName = $sortName; }
-		function getSortName() { return $this->sortName; }
-		function setDisambiguation( $disambiguation ) { $this->disambiguation = $disambiguation; }
-		function getDisambiguation() { return $this->disambiguation; }
-		function setBeginDate( $beginDate ) { $this->beginDate = $beginDate; }
-		function getBeginDate() { return $this->beginDate; }
-		function setEndDate( $endDate ) { $this->endDate = $endDate; }
-		function getEndDate() { return $this->endDate; }
+    public function setType($type) { $this->type = $type; }
+    public function getType() { return $this->type; }
+    public function setName($name) { $this->name = $name; }
+    public function getName() { return $this->name; }
+    public function setSortName($sortName) { $this->sortName = $sortName; }
+    public function getSortName() { return $this->sortName; }
+    public function setDisambiguation($disambiguation) { $this->disambiguation = $disambiguation; }
+    public function getDisambiguation() { return $this->disambiguation; }
+    public function setBeginDate($beginDate) { $this->beginDate = $beginDate; }
+    public function getBeginDate() { return $this->beginDate; }
+    public function setEndDate($endDate) { $this->endDate = $endDate; }
+    public function getEndDate() { return $this->endDate; }
 
-		function getUniqueName() {
-			return empty($this->disambiguation) ? $this->name :
-				   $this->name . ' (' . $this->disambiguation . ')';
-		}
+    public function getUniqueName() {
+        return empty($this->disambiguation) ? $this->name :
+               $this->name . ' (' . $this->disambiguation . ')';
+    }
 
-		function &getReleases() {
-			return $this->releases;
-		}
+    public function getReleases() {
+        return $this->releases;
+    }
 
-		function addRelease( mbRelease $release ) {
-			$this->releases[] = $release;
-		}
+    public function addRelease(mbRelease $release) {
+        $this->releases[] = $release;
+    }
 
-		function &getAliases() {
-			return $this->aliases;
-		}
+    public function getAliases() {
+        return $this->aliases;
+    }
 
-		function addAlias( mbLabelAlias $alias ) {
-			$this->aliases[] = $alias;
-		}
+    public function addAlias(mbLabelAlias $alias) {
+        $this->aliases[] = $alias;
+    }
 
-		function getNumReleases() {
-			return count($this->releases);
-		}
+    public function getNumReleases() {
+        return count($this->releases);
+    }
 
-		function &getRelease( $i ) {
-			return $this->releases[$i];
-		}
+    public function getRelease($i) {
+        return $this->releases[$i];
+    }
 
-		function getReleasesOffset() {
-			return $this->releasesOffset;
-		}
+    public function getReleasesOffset() {
+        return $this->releasesOffset;
+    }
 
-		function setReleasesOffset( $relOffset ) {
-			$this->releasesOffset = $relOffset;
-		}
+    public function setReleasesOffset($relOffset) {
+        $this->releasesOffset = $relOffset;
+    }
 
-		function getReleasesCount() {
-			return $this->releasesCount;
-		}
+    public function getReleasesCount() {
+        return $this->releasesCount;
+    }
 
-		function setReleasesCount( $relCount ) {
-			$this->releasesCount = $relCount;
-		}
+    public function setReleasesCount($relCount) {
+        $this->releasesCount = $relCount;
+    }
 
-		function getNumAliases() {
-			return count($this->aliases);
-		}
+    public function getNumAliases() {
+        return count($this->aliases);
+    }
 
-		function &getAlias( $i ) {
-			return $this->aliases[$i];
-		}
-	}
+    public function getAlias($i) {
+        return $this->aliases[$i];
+    }
+}
 ?>

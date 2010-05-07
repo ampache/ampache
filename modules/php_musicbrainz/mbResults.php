@@ -1,70 +1,70 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
-	class mbResult {
-		private $score;
-		private $count;
-		private $offset;
+/* vim:set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab: */
+class mbResult {
+    private $score;
+    private $count;
+    private $offset;
 
-		function mbResult( $score ) {
-			$this->score = $score;
-		}
+    public function __construct($score) {
+        $this->score = $score;
+    }
 
-		function getScore(		) { return $this->score;   }
-		function setScore( $score ) { $this->score = $score; }
-		function getCount(		) { return $this->count;   }
-		function setCount( $count ) { $this->count = $count; }
-		function getOffset(		 ) { return $this->offset;	}
-		function setOffset( $offset ) { $this->offset = $offset; }
-	}
+    public function getScore(      ) { return $this->score;   }
+    public function setScore($score) { $this->score = $score; }
+    public function getCount(      ) { return $this->count;   }
+    public function setCount($count) { $this->count = $count; }
+    public function getOffset(       ) { return $this->offset;    }
+    public function setOffset($offset) { $this->offset = $offset; }
+}
 
-	class mbArtistResult extends mbResult {
-		private $artist;
+class mbArtistResult extends mbResult {
+    private $artist;
 
-		function mbArtistResult( Artist $artist, $score ) {
-			parent::mbResult($score);
-			$this->artist = $artist;
-		}
+    public function __construct(Artist $artist, $score) {
+        parent::__construct($score);
+        $this->artist = $artist;
+    }
 
-		function setArtist( mbArtist $artist ) {
-			$this->artist = $artist;
-		}
+    public function setArtist(mbArtist $artist) {
+        $this->artist = $artist;
+    }
 
-		function getArtist() {
-			return $this->artist;
-		}
-	}
+    public function getArtist() {
+        return $this->artist;
+    }
+}
 
-	class mbReleaseResult extends mbResult {
-		private $release;
+class mbReleaseResult extends mbResult {
+    private $release;
 
-		function mbReleaseResult( mbRelease $release, $score ) {
-			parent::mbResult($score);
-			$this->release = $release;
-		}
+    public function __construct(mbRelease $release, $score) {
+        parent::__construct($score);
+        $this->release = $release;
+    }
 
-		function setRelease( Release $release ) {
-			$this->release = $release;
-		}
+    public function setRelease(Release $release) {
+        $this->release = $release;
+    }
 
-		function getRelease() {
-			return $this->release;
-		}
-	}
+    public function getRelease() {
+        return $this->release;
+    }
+}
 
-	class mbTrackResult extends mbResult {
-		private $track;
+class mbTrackResult extends mbResult {
+    private $track;
 
-		function mbTrackResult( mbTrack $track, $score ) {
-			parent::mbResult($score);
-			$this->track = $track;
-		}
+    public function __construct(mbTrack $track, $score) {
+        parent::__construct($score);
+        $this->track = $track;
+    }
 
-		function setTrack( mbTrack $track ) {
-			$this->track = $track;
-		}
+    public function setTrack(mbTrack $track) {
+        $this->track = $track;
+    }
 
-		function getTrack() {
-			return $this->track;
-		}
-	}
+    public function getTrack() {
+        return $this->track;
+    }
+}
 ?>
