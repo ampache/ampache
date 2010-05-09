@@ -457,6 +457,27 @@ class Art extends database_object {
 
 	} // url
 
+
+	/**
+	 * clean
+	 * This cleans up art that no longer has a corresponding object
+	 */
+	public static function clean() {
+		// iterate over our types and delete the images
+		foreach (array('album', 'artist') as $type) {
+			$sql = "DELETE FROM `image` USING `image` LEFT JOIN `" .
+				$type . "` ON `" . $type . "`.`id`=" .
+				"`image`.`object_id` WHERE `object_type`='" .
+				$type . "' AND `source`.`id` IS NULL";
+			$db_results = Dba::write($sql);
+		} // foreach
+
+		// Optimize the table, large potential space savings
+		$sql = "OPTIMIZE TABLE `image`";
+		$db_results = Dba::write($sql);
+	} // clean
+
+
 	/**
 	 * gather
 	 * This tries to get the art in question

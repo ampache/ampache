@@ -749,26 +749,18 @@ class Catalog extends database_object {
 	 * This generates the thumbnails from the images for object
 	 * of this catalog
 	 */
-	public function generate_thumbnails($override=false) { 
-
-		$limit = $override ? '' : ' AND `thumb_mime` IS NULL'; 
+	public function generate_thumbnails() { 
 
 		// Albums first
 		$albums = $this->get_album_ids(); 
-
-		$idlist = '(' . implode(',', $albums) . ')';
-
-		$sql = "SELECT `album_id`,`art`,`art_mime` FROM `album_data` WHERE `album_id` IN $idlist $limit"; 
-		$db_results = Dba::read($sql); 
 
 		// Start the ticker
 		$ticker = time(); 
 		$thumb_count = 0; 
 
-		while ($row = Dba::fetch_assoc($db_results)) { 
-			$art = new Art($row['album_id'],'album'); 
-			$data = $art->generate_thumb($row['art'],array('width'=>275,'height'=>275),$row['art_mime']); 
-			$art->save_thumb($data['thumb'], $data['thumb_mime'], '275x275');
+		foreach ($albums as $album) { 
+			$art = new Art($album, 'album');
+			$image = $art->get();
 		
 			/* Stupid little cutesie thing */
 			$thumb_count++;
@@ -780,7 +772,7 @@ class Catalog extends database_object {
 				$ticker = time();
 			} //echos thumb count
 
-		} // end while albums
+		} // end foreach albums
 
 		echo "<script type=\"text/javascript\">\n";
 		echo "update_txt('" . $search_count ."','count_thumb_" . $this->id . "');";
@@ -931,38 +923,32 @@ class Catalog extends database_object {
 	} // get_duplicate_info
 
 	/**
-	 * dump_album_art (Added by Cucumber 20050216)
-	 * This runs through all of the albums and trys to dump the
+	 * dump_album_art
+	 * This runs through all of the albums and tries to dump the
 	 * art for them into the 'folder.jpg' file in the appropriate dir
 	 */
-	public static function dump_album_art($catalog_id,$methods=array()) {
+	public static function dump_album_art($catalog_id, $methods=array()) {
 
 		// Get all of the albums in this catalog
 		$albums = self::get_catalog_albums($catalog_id);
 
 		echo "Starting Dump Album Art...\n";
 
-		// Run through them an get the art!
+		// Run through them and get the art!
 		foreach ($albums as $album_id) {
 
 			$album = new Album($album_id);
-
+			$art = new Art($album_id, 'album');
+			
 			// If no art, skip
-			if (!$album->has_art()) { continue; }
+			if ( ! $art->get_db() ) { continue; }
 
-			$image = $album->get_db_art();
-
-			/* Get the first song in the album */
+			// Get the first song in the album
 			$songs = $album->get_songs(1);
 			$song = new Song($songs[0]);
 			$dir = dirname($song->file);
 
-			if ($image['0']['mime'] == 'image/jpeg') {
-				$extension = 'jpg';
-			}
-			else {
-				$extension = substr($image['0']['mime'],strlen($image['0']['mime'])-3,3);
-			}
+			$extension = Art::extension($art->raw_mime);
 
 			// Try the preferred filename, if that fails use folder.???
 			$preferred_filename = Config::get('album_art_preferred_filename');
@@ -970,9 +956,10 @@ class Catalog extends database_object {
 
 			$file = "$dir/$preferred_filename";
 			if ($file_handle = fopen($file,"w")) {
-				if (fwrite($file_handle, $image['0']['raw'])) {
+				if (fwrite($file_handle, $art->raw)) {
 
-					// Also check and see if we should write out some meta data
+					// Also check and see if we should write
+					// out some metadata
 					if ($methods['metadata']) {
 						switch ($methods['metadata']) {
 							case 'windows':
@@ -1549,12 +1536,13 @@ class Catalog extends database_object {
 				debug_event($label, "image_url: " . $server_path,'4');
 				$data['url'] = $server_path;
 
-				$local_album = new Album($local_album_id);
-				$image_data = $local_album->get_image_from_source($data);
+				$local_art = new Art($local_album_id, 'album');
+				$image_data = $local_art->get_from_source($data);
 
 				// If we got something back insert it
 				if ($image_data) {
-					$local_album->insert_art($image_data,"");
+					// TODO: Null argument looks broken
+					$local_art->insert($image_data, "");
 					$total_updated++;
 					debug_event($label, "adding album image succes", '4');
 				} else {
@@ -1774,12 +1762,7 @@ class Catalog extends database_object {
 		$db_results = Dba::write($sql);
 
 		/* Now remove any album art that is now dead */
-		$sql = "DELETE FROM `album_data` USING `album_data` LEFT JOIN `album` ON `album`.`id`=`album_data`.`album_id` WHERE `album`.`id` IS NULL";
-		$db_results = Dba::write($sql);
-
-		// This can save a lot of space so always optomize
-		$sql = "OPTIMIZE TABLE `album_data`";
-		$db_results = Dba::write($sql);
+		Art::clean();
 
 	} // clean_albums
 
@@ -1804,6 +1787,9 @@ class Catalog extends database_object {
 		/* Do a complex delete to get artists where there are no songs */
 		$sql = "DELETE FROM artist USING artist LEFT JOIN song ON song.artist = artist.id WHERE song.id IS NULL";
 		$db_results = Dba::write($sql);
+
+		// Now remove any dead art
+		Art::clean();
 
 	} //clean_artists
 
@@ -2047,22 +2033,23 @@ class Catalog extends database_object {
 
 	/**
 	 * optimize_tables
-	 * This runs an optomize on the tables and updates the stats to improve join speed
-	 * this can be slow, but is a good idea to do from time to time. This is incase the dba
-	 * isn't doing it... which we're going to assume they aren't
+	 * This runs an optimize on the tables and updates the stats to improve
+	 * join speed.
+	 * This can be slow, but is a good idea to do from time to time. We do 
+	 * it in case the dba isn't doing it... which we're going to assume they
+	 * aren't
 	 */
 	public static function optimize_tables() {
+		$sql = "SHOW TABLES";
+		$db_results = Dba::read($sql);
 
-		$sql = "OPTIMIZE TABLE `song_data`,`song`,`rating`,`catalog`,`session`,`object_count`,`album`,`album_data`" .
-			",`artist`,`ip_history`,`flagged`,`now_playing`,`user_preference`,`tag`,`tag_map`,`tmp_playlist`" .
-			",`tmp_playlist_data`,`playlist`,`playlist_data`,`session_stream`,`video`";
-		$db_results = Dba::write($sql);
+		while($row = Dba::fetch_row($db_results)) {
+			$sql = "OPTIMIZE TABLE `" . $row[0] . "`";
+			$db_results_inner = Dba::write($sql);
 
-		$sql = "ANALYZE TABLE `song_data`,`song`,`rating`,`catalog`,`session`,`object_count`,`album`,`album_data`" .
-			",`artist`,`ip_history`,`flagged`,`now_playing`,`user_preference`,`tag`,`tag_map`,`tmp_playlist`" .
-			",`tmp_playlist_data`,`playlist`,`playlist_data`,`session_stream`,`video`";
-		$db_results = Dba::write($sql);
-
+			$sql = "ANALYZE TABLE `" . $row[0] . "`";
+			$db_results_inner = Dba::write($sql);
+		}
 	} // optimize_tables;
 
 	/**

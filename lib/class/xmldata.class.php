@@ -362,7 +362,7 @@ class xmlData {
 
 			$rating = new Rating($song_id,'song');
 
-			$art_url = Album::get_art_url($song->album,$_REQUEST['auth']);
+			$art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
 
 			$string .= "<song id=\"$song->id\">\n" .
 					"\t<title><![CDATA[$song->title]]></title>\n" .
@@ -450,7 +450,7 @@ class xmlData {
 
 			$rating = new Rating($song_id,'song');
 
-			$art_url = Album::get_art_url($song->album,$_REQUEST['auth']);
+			$art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
 
 			$string .= "<song id=\"$song->id\">\n" .
 					"\t<title><![CDATA[$song->title]]></title>\n" .
