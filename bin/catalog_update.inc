@@ -34,11 +34,11 @@ $catadd = 0;
 $thumbadd =0; 
 $artadd = 0; 
 
-if (count($_SERVER['argv']) == 0) { 
+if (count($_SERVER['argv']) == 1) { 
 	$operations_string = "\n\t- All Catalog Operations"; 
 } 
 
-if (count($_SERVER['argv']) > 0) {
+if (count($_SERVER['argv']) > 1) {
 	for ($x = 1; $x < count($_SERVER['argv']); $x++) {
 
 		if ($_SERVER['argv'][$x] == "-c") {
@@ -68,7 +68,7 @@ if (count($_SERVER['argv']) > 0) {
 	}
 }
 
-if (count($_SERVER['argv']) != 0 AND $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1 && $thumbadd != 1) {
+if (count($_SERVER['argv']) != 1 AND $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1 && $thumbadd != 1) {
         usage();
 	exit; 
 }
