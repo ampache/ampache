@@ -468,7 +468,7 @@ class Art extends database_object {
 			$sql = "DELETE FROM `image` USING `image` LEFT JOIN `" .
 				$type . "` ON `" . $type . "`.`id`=" .
 				"`image`.`object_id` WHERE `object_type`='" .
-				$type . "' AND `source`.`id` IS NULL";
+				$type . "' AND `" . $type . "`.`id` IS NULL";
 			$db_results = Dba::write($sql);
 		} // foreach
 
