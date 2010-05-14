@@ -26,6 +26,12 @@ $web_path = Config::get('web_path');
 $htmllang = str_replace("_","-",Config::get('lang'));
 $location = get_location();
 $dir = is_rtl(Config::get('lang')) ? "rtl" : "ltr";
+$themecss = Config::get('theme_path') . '/templates/';
+$css = ($dir == 'rtl') ? $themecss.'default-rtl.css' : $themecss.'default.css';
+$cssdir = Config::get('prefix').$themecss;
+if(!is_file($cssdir.'default-rtl.css')) {
+	$css = $themecss.'default.css';
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir;?>">
@@ -41,7 +47,7 @@ if (Config::get('use_rss')) { ?>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo Config::get('site_charset'); ?>" />
 <title><?php echo scrub_out(Config::get('site_title')); ?> - <?php echo $location['title']; ?></title>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/base.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo $css; ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/print.css" type="text/css" media="print" />
 </head>
 <body>

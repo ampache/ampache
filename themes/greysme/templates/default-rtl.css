@@ -1,0 +1,813 @@
+/*
+
+ Copyright (c) Ampache.org
+ All rights reserved.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation; either version 
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+*/
+
+/***************************************************************/
+
+ Ampache Theme "Greysme"
+ by Mickael Despesse (Spocky) v1.03 (2008/04/18)
+ 
+ Feel free to modify/reuse, just mention my name _somewhere_
+  
+/***************************************************************/
+/* Theme colors : */
+/* ---------------*/
+/* Red : 		#8b3e38 (#5a211c was too dark) */
+/* Light blue : 	#74718a (#5b596d was too dark) */
+/* Dark blue  : 	#2b293d */
+/* Black : 		#050505 */
+/* Dark grey : 		#111    */
+/* Orange:		#e9ad51 */
+
+
+
+
+/************************************************/
+/*    Unify default browsers style rules        */
+/************************************************/
+h1, h2, h3, h4, h5, h6, pre, code	{ font-size: 1em; line-height: 1em; } /* avoid browser default inconsistent font-sizes */
+ol, ul { list-style: none; }
+table {	border-collapse: separate; border-spacing: 0; }
+caption, th, td {	text-align: left;	font-weight: normal; }
+*	{ margin: 0; padding: 0; border:0; } /* White space reset */
+a img, :link img, :visited img { border: 0; } /* no blue linked image borders */
+
+/************************************************/
+/*           General style rules                */
+/************************************************/
+html{ font-size: 62.5%; }
+
+body{ 
+  font-size:1.1em;
+	font-family: Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif;
+	background: #2b293d url(../images/background.jpg) 0 0 repeat-x fixed;
+	/*min-width:90em;*/
+	color:#e9ad51;
+}
+
+ol	{ list-style-type: decimal-leading-zero; }
+p 	{ color: #e9ad51; }
+a	  { color: #74718a; text-decoration: none; }
+
+td 	{ padding: 0 8px; color: #e9ad51; }
+th 	{ font-weight:bold; padding: 0 .3em;}
+
+input, select	{
+	font-size:1em;
+	font-family: Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif;
+	color: #e9ad51;
+	background-color: #111; 
+	border: 1px solid #8b3e38;
+	margin:0 0 0px 0;
+}
+
+input{ padding:0 2px; }
+input:focus, select:focus { border-style: dotted; }
+textarea { background-color: #111; color: #e9ad51; }
+
+/************************************************/
+/*             IE6 behaviors                    */
+/* - csshover2: :hover support on any element   */
+/************************************************/
+body { behavior:url("templates/csshover2.htc"); }
+
+/************************************************/
+/*         Float Clearer                        */
+/************************************************/
+/* float clearing for IE6 */
+* html .clearfix{ height: 1%; overflow: visible; }
+/* float clearing for IE7 */
+/**+html .clearfix{ min-height: 1%; }*/
+/* float clearing for everyone else */
+.clearfix:after{ clear: both; content: "."; display: block; height: 0; visibility: hidden; }
+
+
+/************************************************/
+/*             Main Container                   */
+/************************************************/
+#maincontainer{ margin-top:18px;}
+
+/************************************************/
+/*             Header                           */
+/************************************************/
+#header 	{ padding: 0 0; }
+#headerbox  	{ font-size: 0.9em; text-align: right; color: #e9ad51; position: absolute; top: 3px; right: 0; padding: 3px; }
+#headerbox b 	{ font-weight: normal }
+#headerbox a 	{ color: #e9ad51;}
+#headerlogo 	  { text-align: center; background: url(../images/ampache_back.gif) 0 0 repeat-x;}
+#headerlogo a 	{ }
+#headerbox .box-content    {background:transparent;border:none;}
+#headerbox .box-top{display:none;}
+#headerbox .box-bottom{display:none;}
+
+#play_type_switch {
+        float:left;
+        margin-top:2px;
+}
+
+/************************************************/
+/*               Content block                  */
+/************************************************/
+#content { 
+  margin:10px 14em 10px 13.5em;
+}
+
+/************************************************/
+/*                Footer                        */
+/************************************************/
+#footer {
+  clear:both;
+	text-align:center;
+	font-size:.8em;
+	padding:3px 0;
+	background:#2c2b39;
+	border-top:5px solid #21212a;
+	margin-top:20px;
+}
+
+/************************************************/
+/*                  Buttons                     */
+/************************************************/
+
+.button, input[type=button], input[type=submit] {
+	background:#8b3e38 url(../images/button_back2.png) 0 100% repeat-x !important;
+	background:#8b3e38;
+	color:#e9ad51;
+	padding:0px 0.5em; 
+	margin:4px 0 0 0; 
+	border:0;
+  cursor:pointer;
+}
+.button:hover, input[type=button]:hover, input[type=submit]:hover {
+	background:#74718a url(../images/button_back2.png) 0 100% repeat-x !important;
+	background:#74718a;
+}
+
+a.button              { padding:1px .5em; }
+input[type=checkbox]  { border:0;background:none; }
+
+/************************************************/
+/*                  Sidebar                     */
+/************************************************/
+#sidebar {
+	float:left:
+  position:relative;
+	width: 13em;
+	text-align: left;
+	font-size: 0.8em;
+	padding-top:29px;
+	background:#2b293d url(../images/ampache_menu.gif) 50% 0 no-repeat;
+	z-index:20;
+}
+
+/* For supporting browsers *cough*... I mean not IE6... *cough*, fix sidebar position on the left */
+*>div#sidebar{ position: fixed; } 
+
+#sidebar select		    { width: 95%; }
+
+/* For sidebar tabs */
+/********************/
+#sidebar-tabs, #rightbar #rb_action{
+	border-top:1px solid #000;
+	background:#111;
+}
+
+#sidebar-tabs li.sb1, #rightbar #rb_action li {
+  float: left;
+  padding:1px;
+  background: #111 ; 
+  border-top:0.5em solid #8b3e38;
+  border-right:1px solid #000;width:16px;
+}
+#sidebar-tabs li.active { 
+	border-top-color: #e9ad51;
+} 
+#sidebar-tabs li:hover.sb1, #rightbar #rb_action li:hover
+{
+  background:#000;
+	border-top-color: #e9ad51;
+}
+/* Tabs content */
+/****************/
+#sidebar-page {
+  position:absolute;
+  left:0;
+  top:52px;
+	background: #111;
+	padding-bottom:0.5em;
+  width:13em;
+  color:#8b3e38;
+} 
+#sidebar-page ul.sb2 {
+}
+#sidebar-page ul.sb2 li{
+  margin:1em auto;
+  padding-bottom: 0.5em;
+}
+#sidebar-page ul.sb2 h4{
+  padding:.2em .5em .5em 0;
+  font-style:italic; 
+  font-weight:normal;
+  font-size:1em;
+  letter-spacing:.2em;
+  text-align:right;
+  border-bottom:1px dotted #e9ad51;
+  text-decoration: overline;
+  background: url(../images/puce.gif) -8px -8px no-repeat;
+  color:#e9ad51;
+}
+#sidebar-page ul.sb2 li:hover h4{
+  background-color:#000;
+}
+
+#sidebar-page ul.sb3, #sidebar-page div.sb3 {
+  color:#8b3e38;
+}
+#sidebar-page .sb3 a{ color:#8b3e38; }
+#sidebar-page ul.sb3 li{
+  margin:0;
+  padding:0;
+  border:none;
+  font-weight:normal;
+  background: #111 url(../images/button_back.png) 0 100% repeat-x;
+  border-bottom: 1px solid #000;
+}
+* html #sidebar-page ul.sb3 li{display:inline;background:#111;} /* fix ie6 */
+#sidebar-page .sb3 a, #sidebar-page .sb3 div{
+  padding:.2em .6em;
+  border-left: .5em solid #8b3e38;
+}
+#sidebar-page .sb3 a:hover{ 
+  border-left-color: #e9ad51;
+}
+
+#sidebar-page a{
+  display:block;
+}
+#sidebar-page a:hover{
+  background:#000;
+  color:#e9ad51;
+}
+
+/* SIDEBAR : Home */
+/******************/
+
+/* SIDEBAR : Browse */
+/********************/
+#multi_alpha_filter {
+        width:40px;
+        margin-bottom:4px;
+}
+
+/* SIDEBAR : Localplay */
+/***********************/
+.active_instance { 
+} 
+
+/* SIDEBAR : Preferences */
+/*************************/
+
+/* SIDEBAR : Admin */
+/*******************/
+#sb_admin_catalogs li.sb_admin_catalogs_ctrls img {margin:0;}
+#sb_admin_catalogs li.sb_admin_catalogs_ctrls a{
+  display:inline; 
+  padding:0; 
+  border:none; 
+}
+/************************************************/
+/*                  XSPF Player                 */
+/************************************************/
+#xspf_player { 
+        width:410px;
+	position: relative;
+	float: left;
+	font-family: Verdana,Helvetica,sans-serif;
+} 
+
+
+/************************************************/
+/*                  Rightbar                    */
+/************************************************/
+#rightbar { 
+	width:13em;
+	background:#000;
+	float:right;
+	z-index:21;
+} 
+#rightbar a                       { text-decoration:none; }
+
+
+/* Rightbar Menu */
+#rightbar #rb_action { }
+#rightbar #rb_action li         { }
+#rightbar li#rb_add, #rightbar li#pl_add             { position:relative; z-index:10; }
+/* Rightbar AddItems SubMenu */
+#rightbar li:hover .submenu  {	display:block;} 
+#rightbar .submenu { 
+  display:none; 	
+  position:absolute;
+	right:0px;
+	top:15px;
+  background: #050505 url(../images/button_back.png) 0 100% repeat-x  !important;
+  background: #050505;
+	border:2px solid #e9ad51;
+	width:15em;
+	padding:0.3em;
+	font-size:0.8em;
+	
+}
+* html #rightbar .submenu {right:100px;} /* IE6 fix */
+
+#rightbar #rb_action .submenu li {float:none; width:auto; border:none;}
+#rightbar .submenu a {
+ display:block;
+ padding:0.1em;
+ color:#8b3e38;
+ text-decoration:none;
+ text-align:right;
+}
+#rightbar .submenu a:hover,
+#rightbar #rb_current_playlist a:hover { color:#e9ad51; }
+
+/* Rightbar playlist */
+#rightbar #rb_current_playlist    {
+  background: #111;
+  padding-bottom:0.5em; 
+  clear:both;
+}
+#rightbar #rb_current_playlist li   { 
+  position:relative;
+  font-size:0.9em;
+  line-height:14px;
+  color:#5b5b5b;
+  padding-right:20px;
+  background: #111 url(../images/button_back.png) 0 100% repeat-x;
+  border-bottom: 1px solid #000;
+}
+#rightbar #rb_current_playlist li a { display:block; padding:0.2em;}
+#rightbar .delitem                  { position:absolute;right:0;top:0; }
+
+
+/************************************************/
+/*        Styles for the star ratings           */
+/************************************************/
+.star-rating {
+  position:relative;
+}
+.dynamic-star-rating{
+  width:96px;
+}
+
+.star-rating ul,
+.star-rating a:hover,
+.star-rating .current-rating{
+  background: url(../images/ratings/star_rating.gif) left -1000px repeat-x;
+}
+.star-rating ul{
+  position:relative;
+  width:80px;
+  height:15px;
+  overflow:hidden;
+  list-style:none;
+  margin:0;
+  padding:0;
+  background-position: left top;
+  /*float:left;*/
+}
+.star-rating li{
+  display: inline;
+}
+.star-rating a, .star-rating span,  
+.star-rating .current-rating{
+  position:absolute;
+  top:0;
+  left:0;
+  text-indent:-1000em;
+  height:15px;
+  line-height:15px;
+  outline:none;
+  overflow:hidden;
+  border: none;
+}
+.star-rating .star1 { width:20%; z-index:6; }
+.star-rating .star2 { width:40%; z-index:5; }
+.star-rating .star3 { width:60%; z-index:4; }
+.star-rating .star4 { width:80%; z-index:3; }
+.star-rating .star5 { width:100%; z-index:2;}
+.star-rating .current-rating { z-index:1; background-position: left bottom; }
+
+.star-rating-reset {height:16px;}
+.star-rating a.star0 {
+  left:0px;
+  height:16px;
+  width:16px;
+  background: url(../images/ratings/x_off.gif) left top;
+}
+/* hovering effect only for dynamic star rating */
+#content .dynamic-star-rating a:hover{
+  background-position: left center;
+  background-color:transparent;
+}
+.dynamic-star-rating a:hover.star0 {
+  background: url(../images/ratings/x.gif) left top;
+}
+.dynamic-star-rating ul {
+  left:16px;
+}
+
+/************************************************/
+/*              Box Related Styles              */
+/************************************************/
+.box-title { 
+	display:block;
+	color:#8b3e38;
+	padding:3px 13px 0 28px;
+	background: #000 url(../images/puce.gif) 10px 50% no-repeat;
+	font-size: 1.1em;
+	font-variant:small-caps;
+	border-bottom:1px solid #8b3e38;
+	letter-spacing:0.1em;
+}
+.box-title:first-letter{font-style:italic;}
+
+.box-list { 
+	padding-right: 10px;
+}
+
+/* Enclosing Boxes Styles */
+.box, .info-box { 
+	margin-top: 7px;
+	margin-right: 11px;
+	/*background: url(../images/back-box.gif) 0 0 no-repeat;*/
+	font-size : 0.9em;
+	float:left;
+  clear:left;
+	height:1%; /* IE6 : Holly Hack comes to rescue once again */
+}
+/* Hovering effects on links */
+.box a:hover, .info-box a:hover { /*background-color: #8b3e38;*/ color: #e9ad51;}
+
+.box-inside { 
+/*	background: url(../images/right.gif) top right repeat-y; */
+}
+.box-content {
+	padding:12px 12px;
+	background:#000;
+}
+
+.box-top { 
+	position:relative;
+	background:transparent url(../images/box_top.png) 0 100% repeat-x !important;
+	background:#000;
+}
+.box-left-top { 
+	/*background: url(../images/punaise-tl.gif) no-repeat;*/
+	height:15px;
+	width:17px;
+	position:relative;left:/*-8px*/ 30%;top:-3px;
+}
+.box-right-top {
+	/*background: url(../images/curl.gif) no-repeat;*/
+	background: url(../images/punaise-tl.gif) no-repeat;
+	height:15px;
+	width:17px;
+	position:absolute;left:30%;top:-3px;
+}
+* html .box-right-top {right: expression(-this.parentNode.offsetWidth%2+"px");} /* Fixes an IE6 rounding error */
+.box-bottom { 
+	position:relative;clear:both;
+	background:transparent url(../images/box_bottom.png) 0 0 repeat-x !important;
+	background:#000;
+}
+.box-left-bottom {
+	background: url(../images/punaise-bl.gif) no-repeat;
+	height:15px;
+	width:17px;
+	position:relative;left:-7px;top:-3px;
+}
+.box-right-bottom { 
+	background: url(../images/punaise-br.gif) no-repeat;
+	height:15px;
+	width:17px;
+	position:absolute;right:-7px;top:-3px;
+}
+* html .box-right-bottom {right: expression(-this.parentNode.offsetWidth%2+"px");} /* Fixes an IE6 rounding error */
+
+
+/* Specific to Info Boxes */
+.info-box .album_art {float:left;margin-right:10px;}
+.info-box th {color:#8b3e38;}
+#information_actions { } 
+#information_actions h3 { color:#8b3e38; font-size:1.2em; margin:0.2em; }
+
+/* Specific boxes */
+.box_newest_albums  {}
+.box_newest_artists {clear:none;}
+.box_newest_genres  {clear:none;}
+.box_popular_album  {}
+.box_popular_artists {clear:none;}
+.box_popular_genres {clear:none;}
+.box_preferences h4 {color: #8b3e38;font-size: 1.1em;text-align:center;font-weight: bold;border-bottom:1px solid #8b3e38;padding:1em;}
+
+/************************************************/
+/*         Tables (songs lists...)              */
+/************************************************/
+.tabledata .th-top, .tabledata .th-bottom {
+	background: #111;
+	vertical-align: top;
+	font-size:1em;
+}
+.tabledata th {
+	color:#8b3e38; 
+	font-variant:small-caps;
+	font-weight:normal;
+	border-right:3px solid #000;
+	text-align:center;
+	line-height:2em;
+}
+.tabledata th a {
+	color:#8b3e38;
+	padding-right:10px;
+	background: url(../images/sort_off.gif) 100% 50% no-repeat;
+	display:block;
+}
+.tabledata th a:hover {
+	color:#8b3e38;
+	background-color:transparent;
+	background-image:url(../images/sort_on.gif);
+}
+
+.tableform select {
+        width: 150px;
+}
+
+/* table rows */
+.tabledata .odd, .tabledata .even, .row-highlight		{ background: url(../images/list_back.png) 0 50% repeat-x !important; background-image: none;}
+.tabledata .odd 					{ background-color: #111 !important;}
+.tabledata .even					{ }
+.tabledata .odd:hover, 
+.tabledata .even:hover 		{ background-color: #2b293d !important;}
+.row-highlight:hover			{ background-color: #cc3333 !important;}
+
+/* Misc */
+.border 	{ background: #000; }
+.tabledata input[type=text], .tabledata select{ margin:1px 0; }
+.discnb       { font-style: italic; font-size:0.8em; }
+
+/* specific cells */
+td.cel_cover{padding:6px;}
+.cel_select, .cel_action, .cel_date, .cel_applytoall, .cel_level {text-align:center;}
+td.cel_track {text-align:right;}
+/* specific cells : users login state */
+.user_online{background:#0f0;}
+.user_offline{background:#7f0000;}
+.user_disabled{background:#ccc;}
+/* specific cells : enlarge links */
+.tabledata td a{display:block;}
+.tabledata td.cel_add a, .tabledata td.cel_action a{display:inline;}
+/* specific cells : image links */
+.odd td a img, .even td a img {opacity:0.7;}
+.odd td a img:hover, .even td a img:hover {opacity:1;}
+
+/* specific tables */
+#recently_played .th-bottom {display:none;}
+.box_preferences .th-bottom {display:none;}
+
+/* Inline Editing Tables */
+.inline-edit input, .inline-edit select {
+        font-size: 0.8em;
+}
+
+/************************************************/
+/*          Song details                        */
+/************************************************/
+dl.song_details{font-size:1em;}
+.song_details dt {
+   float:left;
+   clear:both;
+   width:20%;
+   min-width:20%; /*Ie bugfix*/
+   font-weight:bold;
+}
+.song_details dd {
+   float:left;
+   width:79%;
+   min-width:79%; /*Ie bugfix*/
+   margin:0 0 0.2em .3em;
+   padding-left:.2em;
+}
+dt, dt + dd {background: url(../images/list_back.png) 0 50% repeat-x !important; background-image: none;}
+dt, dt + dd { background-color: #111 !important;}
+dt:hover, dt:hover + dd {background-color: #2b293d !important;}
+
+
+/************************************************/
+/*          Albums of the moment                */
+/************************************************/
+.random_album{
+  position:relative;
+  float:left;
+  padding:8px;
+}
+
+.random_album .play_album{
+  position:absolute;
+  top:10px;
+  right:0;
+}
+
+#random_selection .box-content{
+  float:left;
+}
+
+/************************************************/
+/*          Now Playing                         */
+/************************************************/
+#now_playing{
+}
+
+.np_row {
+	padding: 3px;
+	float:left;
+	clear:both;
+}
+.np_cell {
+  padding-left:5px;
+  margin-left:5px;
+}
+
+.np_row label {
+  display:block;
+  font-weight:bold;
+  margin-left:-5px;
+}
+
+.np_group {
+  float:left;
+  padding-left:10px;
+}
+
+#now_playing .box-content{
+background:#000;
+  float:left;
+}
+
+/************************************************/
+/*               Shoutbox                       */
+/************************************************/
+
+
+#shoutbox {
+	font-size:1em;
+	position:relative;
+} 
+
+#shoutbox div.shout { 
+	/*float:left;*/
+	padding:1em 85px 0 30px;  
+} 
+
+#shoutbox span.information { 
+/*	float:left;
+	clear:left;*/
+} 
+#shoutbox .shouttext{display:block;}
+img.shoutboximage { 
+	margin-right:3px;
+	width:25px;
+	height:25px;
+	position:absolute;margin-left:-30px;
+}
+#shoutbox .odd img.shoutboximage {/*float:right;*/}
+#shoutbox .even img.shoutboximage {/*float:right;*/}
+
+div.shout:hover img.shoutboximage{width:75px;height:75px;position:absolute;top:50%;right:0;margin-top:-38px}
+
+/************************************************/
+/*             List Header                      */
+/************************************************/
+.list-header{margin:7px 0; padding:0 4em; text-align:center; font-size: 0.9em;position:relative;} 
+.list-header .prev{position:absolute; top:0; left:0;}
+.list-header .next{position:absolute; top:0; right:0;}
+.list-header .selected{background:#e9ad51;color:#111;}
+.list-header .page-nb{padding:1px;border: 1px solid #111;}
+.list-header a:hover{background: transparent; border-color:#e9ad51;}
+
+/************************************************/
+/*             Errors                           */
+/************************************************/
+.error {
+	color: #990033; 
+}
+
+.fatalerror {
+	padding: 3px;
+	display: table-cell;
+	color: #990033;
+	font-weight:bold;
+ 	border:2px solid #990033;		
+}
+
+
+/************************************************/
+/*             LocalPlay                        */
+/************************************************/
+.lp_box_ctrl, .lp_box_vol {
+	text-align: center; /*for compatibility, may be controlled by themers now*/
+}
+
+td.lp_current a {        
+        font-weight:bold;
+        text-decoration:none;
+}
+
+/************************************************/
+/*         Styles for Login template            */
+/************************************************/
+#loginPage #maincontainer {
+	margin: 5% auto 0px auto;
+	text-align:center;	
+}
+#loginPage h2{
+	color:#111;
+	font-size:0.8em;
+	font-style:italic;
+	font-weight:normal;
+	margin: 0 0 2em 0;
+}
+#loginPage #loginbox{
+}
+.loginfield{
+	text-align:right;
+	margin: 1px 0;
+	width:15em;
+	margin:auto;
+}
+.loginfield input.text_input{
+  width:8em;
+  border:1px solid #74718a;
+}
+
+#loginPage div.fatalerror {
+	padding:5px;
+	margin:10px;
+}
+
+#motd {
+        margin:0 auto 0 auto;
+        width: 437px;
+}
+
+
+/************************************************/
+/*                Misc                          */
+/************************************************/
+
+.formValidation{
+  margin-top:1em;
+  text-align:center;
+}
+
+.text-box, .confirmation-box {
+	display: table-cell;
+	padding:5px;
+	margin:0 0 10px 0;
+	background-color: #111;
+}
+
+#ajax-loading {
+ 	position: absolute;  
+  top:106px;
+  left:42%; 
+  width:265px;
+  height:50px;
+	z-index: 100;
+  background: url(../images/ajax-loader.gif) no-repeat;
+	text-indent:-9999em;
+	display: none;
+}
+
+.information,.information a {
+        font-size: 0.9em;
+        font-style: italic;
+        color: #c0c0c0;
+}
+
