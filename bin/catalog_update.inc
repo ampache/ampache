@@ -35,30 +35,30 @@ $thumbadd =0;
 $artadd = 0; 
 
 if (count($_SERVER['argv']) == 1) { 
-	$operations_string = "\n\t- All Catalog Operations"; 
+	$operations_string = "\n\t". _('- All Catalog Operations');
 } 
 
 if (count($_SERVER['argv']) > 1) {
 	for ($x = 1; $x < count($_SERVER['argv']); $x++) {
 
 		if ($_SERVER['argv'][$x] == "-c") {
-			$operations_string .= "\n\t- Catalog Clean";
+			$operations_string .= "\n\t"._('- Catalog Clean');
 			$catclean = 1;
 		} 
 		elseif ($_SERVER['argv'][$x] == "-v") {
-			$operations_string .= "\n\t- Catalog Verify";
+			$operations_string .= "\n\t"._('- Catalog Verify');
 			$catverify = 1;
 		} 
 		elseif ($_SERVER['argv'][$x] == "-a") {
-			$operations_string .= "\n\t- Catalog Add";
+			$operations_string .= "\n\t"._('- Catalog Add');
 			$catadd = 1;
 		}
 		elseif ($_SERVER['argv'][$x] == "-g") { 
-			$operations_string .= "\n\t- Catalog Art Gather";
+			$operations_string .= "\n\t"._('- Catalog Art Gather');
 			$artadd = 1; 
 		} 
 		elseif ($_SERVER['argv'][$x] == '-t') { 
-			$operations_string .= "\n\t- Generate Thumbnails"; 
+			$operations_string .= "\n\t"._('- Generate Thumbnails');
 			$thumbadd = 1; 
 		} 
 		else {
@@ -81,7 +81,7 @@ if ($thumbadd == 0 && $artadd == 0 && $catclean == 0 && $catverify == 0 && $cata
 	$thumbadd = 1; 
 }
 
-echo "Starting Catalog Operations... $operations_string\n"; 
+echo _("Starting Catalog Operations...") . $operations_string . "\n"; 
 
 if ($where) $where = "($where) AND catalog_type='local'";
 else $where = "catalog_type='local'";
@@ -94,7 +94,7 @@ ob_start("ob_html_strip",'1024',true);
 while ($row = Dba::fetch_row($db_results)) {
 
 	$catalog = new Catalog($row['0']);
-	echo "Reading: $catalog->name";
+	printf(_('Reading: %s'), $catalog->name);
 	ob_flush(); 
 	echo "\n"; 
 	if ($catclean == 1) {
