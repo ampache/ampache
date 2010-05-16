@@ -1,34 +1,34 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
-	class mbUser {
-		private $name;
-		private $showNag = false;
-		private $types = array();
+/* vim:set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab: */
+class mbUser {
+    private $name;
+    private $showNag = false;
+    private $types = array();
 
-		function mbUser() {
-		}
+    public function __construct() {
+    }
 
-		function setName( $name ) { $this->name = $name; }
-		function getName() { return $this->name; }
+    public function setName($name) { $this->name = $name; }
+    public function getName() { return $this->name; }
 
-		function getShowNag() {
-			return $this->showNag;
-		}
+    public function getShowNag() {
+        return $this->showNag;
+    }
 
-		function setShowNag( $value ) {
-			$this->setShowNag = $value;
-		}
+    public function setShowNag($value) {
+        $this->setShowNag = $value;
+    }
 
-		function addType( $type ) {
-			$this->types[] = $type;
-		}
+    public function addType($type) {
+        $this->types[] = $type;
+    }
 
-		function getNumTypes() {
-			return count($this->types);
-		}
+    public function getNumTypes() {
+        return count($this->types);
+    }
 
-		function getType( $i ) {
-			return $this->types[$i];
-		}
-	}
+    public function getType($i) {
+        return $this->types[$i];
+    }
+}
 ?>

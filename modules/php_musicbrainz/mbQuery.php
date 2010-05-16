@@ -123,6 +123,26 @@ class MusicBrainzQuery {
         }
     }
 
+	/*
+	 * submitRatings
+	 * Expects a multidimensional array
+	 * [n] => Array (
+	 *		[mbid] => UUID
+	 *		[entity_type] => [artist|release|track|label]
+	 *		[rating] => [0-5]
+	 * )
+	 */
+	public function submitUserRating($entityURI, $rating) {
+		$mbid = extractUuid($entityURI);
+		$entity = extractEntityType($entityURI);
+
+		$params['id'] = $mbid;
+		$params['entity'] = $entity;
+		$params['rating'] = $rating;
+
+		$this->ws->post('rating', '', $params);
+	}
+
     public function submitPuids(array $tracks2puids) {
         if (empty($this->clientId)) {
             throw WebServiceError("Please supply a client ID");
@@ -133,7 +153,7 @@ class MusicBrainzQuery {
         foreach ($tracks2puids as $puid => $track) {
             $params[] = array('puid', extractUuid($puid).' '.$track);
         }
-        $this->ws->post("track", "", urlencode($params));
+        $this->ws->post("track", "", $params);
     }
 }
 ?>

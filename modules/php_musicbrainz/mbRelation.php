@@ -22,7 +22,7 @@ class mbRelation {
     public function __construct($relationType = '',
 							$targetType = '',
 							$targetId = '',
-							$direction = DIR_BOTH,
+							$direction = self::DIR_BOTH,
 							array $attributes = array(),
 							$beginDate = '',
 							$endDate = '',

@@ -144,6 +144,10 @@ class mbWebService implements IWebService {
         fwrite($this->fSock, "Host: " . $this->host . "\r\n");
         fwrite($this->fSock, "Accept: */*\r\n");
         fwrite($this->fSock, "User-Agent: php_musicbrainz/1.0\r\n");
+		if($post_data) {
+			fwrite($this->fSock, "Content-Type: application/x-www-form-urlencoded\r\n");
+			fwrite($this->fSock, "Content-Length: " . (strlen($post_data . "\r\n")) . "\r\n");
+		}
         if ($this->nonce) {
             $h1 = md5($this->username . ':' . $this->realm . ':' . 
                 $this->password);
@@ -157,7 +161,6 @@ class mbWebService implements IWebService {
         }
         fwrite( $this->fSock, "Connection: close\r\n\r\n");
         fwrite($this->fSock, $post_data . "\r\n\r\n");
-
         return true;
     }
 
@@ -213,7 +216,8 @@ class mbWebService implements IWebService {
         if ($this->fSock == -1 && !$this->connect()) {
             return false;
         }
-
+		$data = $this->build_query($data);
+		$data = ltrim($data, '?');
         return $this->runRequest("POST", $uri, $data);
     }
 

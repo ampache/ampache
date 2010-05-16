@@ -1,4 +1,4 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
-	class mbLabelArtist extends mbArtistAlias { }
+/* vim:set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab: */
+class mbLabelAlias extends mbArtistAlias { }
 ?>
