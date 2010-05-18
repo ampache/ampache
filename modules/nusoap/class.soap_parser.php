@@ -1,5 +1,4 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 
 
 
@@ -10,7 +9,7 @@
 *
 * @author   Dietrich Ayala <dietrich@ganx4.com>
 * @author   Scott Nichol <snichol@users.sourceforge.net>
-* @version  $Id: class.soap_parser.php,v 1.40 2007/04/17 16:34:03 snichol Exp $
+* @version  $Id: class.soap_parser.php,v 1.42 2010/04/26 20:15:08 snichol Exp $
 * @access   public
 */
 class nusoap_parser extends nusoap_base {
@@ -113,6 +112,8 @@ class nusoap_parser extends nusoap_base {
 				$this->debug("XML payload:\n" . $xml);
 				$this->setError($err);
 			} else {
+				$this->debug('in nusoap_parser ctor, message:');
+				$this->appendDebug($this->varDump($this->message));
 				$this->debug('parsed successfully, found root struct: '.$this->root_struct.' of name '.$this->root_struct_name);
 				// get final value
 				$this->soapresponse = $this->message[$this->root_struct]['result'];
@@ -178,16 +179,16 @@ class nusoap_parser extends nusoap_base {
 			$name = substr(strstr($name,':'),1);
 		}
 		// set status
-		if($name == 'Envelope'){
+		if ($name == 'Envelope' && $this->status == '') {
 			$this->status = 'envelope';
-		} elseif($name == 'Header' && $this->status = 'envelope'){
+		} elseif ($name == 'Header' && $this->status == 'envelope') {
 			$this->root_header = $pos;
 			$this->status = 'header';
-		} elseif($name == 'Body' && $this->status = 'envelope'){
+		} elseif ($name == 'Body' && $this->status == 'envelope'){
 			$this->status = 'body';
 			$this->body_position = $pos;
 		// set method
-		} elseif($this->status == 'body' && $pos == ($this->body_position+1)){
+		} elseif($this->status == 'body' && $pos == ($this->body_position+1)) {
 			$this->status = 'method';
 			$this->root_struct_name = $name;
 			$this->root_struct = $pos;
@@ -208,7 +209,7 @@ class nusoap_parser extends nusoap_base {
 			$key_localpart = $this->getLocalPart($key);
 			// if ns declarations, add to class level array of valid namespaces
             if($key_prefix == 'xmlns'){
-				if(ereg('^http://www.w3.org/[0-9]{4}/XMLSchema$',$value)){
+				if(preg_match('/^http:\/\/www.w3.org\/[0-9]{4}\/XMLSchema$/',$value)){
 					$this->XMLSchemaVersion = $value;
 					$this->namespaces['xsd'] = $this->XMLSchemaVersion;
 					$this->namespaces['xsi'] = $this->XMLSchemaVersion.'-instance';
@@ -244,8 +245,8 @@ class nusoap_parser extends nusoap_base {
 				[5]    length    ::=    nextDimension* Digit+
 				[6]    nextDimension    ::=    Digit+ ','
 				*/
-				$expr = '([A-Za-z0-9_]+):([A-Za-z]+[A-Za-z0-9_]+)\[([0-9]+),?([0-9]*)\]';
-				if(ereg($expr,$value,$regs)){
+				$expr = '/([A-Za-z0-9_]+):([A-Za-z]+[A-Za-z0-9_]+)\[([0-9]+),?([0-9]*)\]/';
+				if(preg_match($expr,$value,$regs)){
 					$this->message[$pos]['typePrefix'] = $regs[1];
 					$this->message[$pos]['arrayTypePrefix'] = $regs[1];
 	                if (isset($this->namespaces[$regs[1]])) {
@@ -388,15 +389,17 @@ class nusoap_parser extends nusoap_base {
         	$this->document .= "</" . (isset($prefix) ? $prefix . ':' : '') . "$name>";
         }
 		// switch status
-		if($pos == $this->root_struct){
+		if ($pos == $this->root_struct){
 			$this->status = 'body';
 			$this->root_struct_namespace = $this->message[$pos]['namespace'];
-		} elseif($name == 'Body'){
+		} elseif ($pos == $this->root_header) {
 			$this->status = 'envelope';
-		 } elseif($name == 'Header'){
+		} elseif ($name == 'Body' && $this->status == 'body') {
 			$this->status = 'envelope';
-		} elseif($name == 'Envelope'){
-			//
+		} elseif ($name == 'Header' && $this->status == 'header') { // will never happen
+			$this->status = 'envelope';
+		} elseif ($name == 'Envelope' && $this->status == 'envelope') {
+			$this->status = '';
 		}
 		// set parent back to my parent
 		$this->parent = $this->message[$pos]['parent'];
