@@ -45,8 +45,8 @@ switch ($_REQUEST['action']) {
 		$fullname 	= scrub_in($_POST['fullname']);
 		$email 		= scrub_in($_POST['email']);
 		$access 	= scrub_in($_POST['access']);
-		$pass1 		= scrub_in($_POST['password_1']);
-		$pass2 		= scrub_in($_POST['password_2']);
+		$pass1 		= $_POST['password_1'];
+		$pass2 		= $_POST['password_2'];
 
 		/* Setup the temp user */
 		$client = new User($user_id);
@@ -95,8 +95,8 @@ switch ($_REQUEST['action']) {
 		$fullname	= scrub_in($_POST['fullname']);
 		$email		= scrub_in($_POST['email']);
 		$access		= scrub_in($_POST['access']);
-		$pass1		= scrub_in($_POST['password_1']);
-		$pass2		= scrub_in($_POST['password_2']);
+		$pass1		= $_POST['password_1'];
+		$pass2		= $_POST['password_2'];
 
 		if ($pass1 !== $pass2 || !strlen($pass1)) {
 			Error::add('password',_("Error Passwords don't match"));

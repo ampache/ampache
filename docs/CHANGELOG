@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+        - Fixed handling of unusual characters in passwords
         - Fixed support for requesting different thumbnail sizes
 	- Added ability to rate Albums of the Moment
 	- Added ability to edit/delete playlists while they are displayed
