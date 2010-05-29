@@ -91,7 +91,7 @@ $prefix = realpath(dirname(__FILE__). "/../");
 		<br />
 		<table>
 <tr>
-        <td class="align"><?php echo _('Ampache.cfg.php Exists'); ?></td>
+        <td class="align"><?php echo _('Ampache.cfg.php Exists?'); ?></td>
         <td>[
         <?php
                 if (!is_readable($configfile)) {
