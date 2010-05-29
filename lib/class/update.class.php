@@ -372,7 +372,7 @@ class Update {
 
 		echo "</ul>\n";
 
-		if (!$updated) { echo "<p align=\"center\">No Updates Needed [<a href=\"" . Config::get('web_path') . "\">Return]</a></p>"; }
+		if (!$updated) { echo "<p align=\"center\">No Updates Needed [<a href=\"" . Config::get('web_path') . "\">Return</a>]</p>"; }
 	} // display_update
 
 	/**
