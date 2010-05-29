@@ -691,7 +691,7 @@ class Stream {
 		$downsample_command = str_replace("%SAMPLE%",$sample_rate,$downsample_command,$sample_exists);
 
 		if (!$file_exists || !$offset_exists || !$eof_exists || !$sample_exists) {
-			debug_event('downsample','Error: Downsample command missing a varaible values are File:' . $file_exists . ' Offset:' . $offset_exists . ' Eof:' . $eof_exists . ' Sample:' . $sample_exists,'1');
+			debug_event('downsample', 'Warning: Downsample command missing a variable; values are File:' . $file_exists . ' Offset:' . $offset_exists . ' Eof:' . $eof_exists . ' Sample:' . $sample_exists, '1');
 		}
 
 		// If we are debugging log this event
