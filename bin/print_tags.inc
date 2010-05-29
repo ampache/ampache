@@ -69,7 +69,6 @@ if(isset($catalog->sort_pattern) AND isset($catalog->rename_pattern)) {
 }
 $info->get_info();
 $results = $info->tags;
-$results['file'] = $filename;
 $key = vainfo::get_tag_type($results);
 $ampache_results = vainfo::clean_tag_info($results,$key,$filename);
 

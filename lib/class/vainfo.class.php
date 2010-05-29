@@ -222,10 +222,9 @@ class vainfo {
 		 * adding them to an ordered array as we go
 		 */
 
-		$i = 0;
 		foreach($order as $key) {
 			if ($results[$key]) {
-				$returned_keys[$i++] = $key;
+				$returned_keys[] = $key;
 			}
 		}
 
@@ -235,7 +234,7 @@ class vainfo {
 		 */
 		if (!isset($returned_keys)) {
 			$keys = array_keys($results);
-			$returned_keys[0] = $keys['0'];
+			$returned_keys[] = $keys['0'];
 		}
 
 		return $returned_keys;
@@ -246,7 +245,7 @@ class vainfo {
 	 * clean_tag_info
 	 * This function takes the array from vainfo along with the
 	 * key we've decided on and the filename and returns it in a
-	 * sanatized format that ampache can actually use
+	 * sanitized format that ampache can actually use
 	 */
 	public static function clean_tag_info($results,$keys,$filename) {
 
@@ -257,7 +256,7 @@ class vainfo {
 
 		$info['file']		= $filename;
 
-		/* This are pulled from the info array */
+		/* These are pulled from the info array */
 		$info['bitrate']	= intval($results['info']['bitrate']);
 		$info['rate']		= intval($results['info']['sample_rate']);
 		$info['mode']		= $results['info']['bitrate_mode'];
@@ -931,7 +930,7 @@ class vainfo {
 	 * _parse_filename
 	 * This function uses the passed file and dir patterns
 	 * To pull out extra tag information and populate it into
-	 * it's own array
+	 * its own array
 	 */
 	private function _parse_filename($filename) {
 
