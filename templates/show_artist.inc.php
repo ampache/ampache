@@ -20,12 +20,9 @@
 
 */
 $web_path = Config::get('web_path');
-/* HINT: Artist Fullname */
-$title = sprintf(_('Albums by %s'), $artist->full_name);
 ?>
 <?php
-/* HINT: Object type, Artist Fullname */
-show_box_top(sprintf(gettext('%s by %s'), ucfirst($object_type) ,$artist->f_name),'info-box');
+show_box_top($artist->f_name, 'info-box');
 if (Config::get('ratings')) {
 ?>
 <div id="rating_<?php echo intval($artist->id); ?>_artist" style="display:inline;">
@@ -35,9 +32,15 @@ if (Config::get('ratings')) {
 <div id="information_actions">
 <ul>
 <li>
-	<?php /* HINT: Artist Fullname */ ?>
-	<a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>"><?php echo get_user_icon('view', _("Show All Songs By %s")); ?></a>
-	<a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>"><?php printf(_("Show All Songs By %s"), $artist->f_name); ?></a>
+	<?php if ($object_type == 'album') { ?>
+	<a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
+	<?php echo get_user_icon('view', _("Show All Songs By %s")); ?>
+	<?php printf(_("Show All Songs By %s"), $artist->f_name); ?></a>
+	<?php } else { ?>
+	<a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
+	<?php echo get_user_icon('view', _("Show Albums By %s")); ?>
+	<?php printf(_("Show Albums By %s"), $artist->f_name); ?></a>
+	<?php } ?>
 </li>
 <li>
 	<?php /* HINT: Artist Fullname */ ?>
