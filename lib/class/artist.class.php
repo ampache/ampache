@@ -222,7 +222,7 @@ class Artist extends database_object {
 		/* Combine prefix and name, trim then add ... if needed */
 		$name = truncate_with_ellipsis(trim($this->prefix . " " . $this->name),Config::get('ellipse_threshold_artist'));
 		$this->f_name = $name;
-		$this->f_full_name = trim($this->prefix . " " . $this->name);
+		$this->f_full_name = trim(trim($this->prefix) . ' ' . trim($this->name));
 
 		// If this is a fake object, we're done here
 		if ($this->_fake) { return true; }

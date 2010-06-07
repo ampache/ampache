@@ -59,7 +59,7 @@ class Album extends database_object {
 		}
 
 		// Little bit of formating here
-		$this->full_name = trim($info['prefix'] . ' ' . $info['name']);
+		$this->full_name = trim(trim($info['prefix']) . ' ' . trim($info['name']));
 
 		return true;
 
@@ -230,13 +230,16 @@ class Album extends database_object {
 		$this->f_link 		= $this->f_name_link;
 		$this->f_title		= $full_name;
 		if ($this->artist_count == '1') {
-			$artist = scrub_out(truncate_with_ellipsis(trim($this->artist_prefix . ' ' . $this->artist_name),Config::get('ellipse_threshold_artist')));
+			$artist = trim(trim($this->artist_prefix) . ' ' . trim($this->artist_name));
+			$this->f_artist_name = $artist;
+			$artist = scrub_out(truncate_with_ellipsis($artist), Config::get('ellipse_threshold_artist'));
 			$this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
 			$this->f_artist = $artist;
 		}
 		else {
 			$this->f_artist_link = "<span title=\"$this->artist_count " . _('Artists') . "\">" . _('Various') . "</span>";
 			$this->f_artist = _('Various');
+			$this->f_artist_name =  $this->f_artist;
 		}
 
 		if ($this->year == '0') {
@@ -247,10 +250,6 @@ class Album extends database_object {
 		$this->tags = $tags;
 
 		$this->f_tags = Tag::get_display($tags,$this->id,'album');
-
-
-		// Format the artist name to include the prefix
-		$this->f_artist_name = trim($this->artist_prefix . ' ' . $this->artist_name);
 
 	} // format
 
