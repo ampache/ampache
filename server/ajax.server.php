@@ -303,12 +303,9 @@ switch ($_REQUEST['action']) {
 	/* Setting ratings */
 	case 'set_rating':
 		ob_start();
-		$rating = new Rating($_GET['object_id'],$_GET['rating_type']);
+		$rating = new Rating($_GET['object_id'], $_GET['rating_type']);
 		$rating->set_rating($_GET['rating']);
-		// We have to clear the cache now :(
-		Rating::remove_from_cache('rating_' . $_GET['rating_type'] . '_all',$_GET['object_id']);
-		Rating::remove_from_cache('rating_' . $_GET['rating_type'] . '_user',$_GET['object_id']);
-		Rating::show($_GET['object_id'],$_GET['rating_type']);
+		Rating::show($_GET['object_id'], $_GET['rating_type']);
 		$key = "rating_" . $_GET['object_id'] . "_" . $_GET['rating_type'];
 		$results[$key] = ob_get_contents();
 		ob_end_clean();

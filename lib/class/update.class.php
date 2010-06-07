@@ -341,6 +341,9 @@ class Update {
 				'- Drop album_data and artist_data.<br />';
 		$version[] = array('version'=>'360003','description'=>$update_string);
 
+		$update_string = '- Add uniqueness constraint to ratings.<br />';
+		$version[] = array('version' => '360004','description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -1914,6 +1917,17 @@ class Update {
 		self::set_version('db_version','360003');
 
 	} // update_360003
+
+        /**
+	 * update_360004
+	 * This update creates an index on the rating table.
+	 */
+	public static function update_360004() {
+		$sql = "CREATE UNIQUE INDEX `unique_rating` ON `rating` (`user`, `object_type`, `object_id`)";
+		$db_results = Dba::write($sql);
+
+		self::set_version('db_version','360004');
+	} // update_360004
 
 } // end update class
 ?>
