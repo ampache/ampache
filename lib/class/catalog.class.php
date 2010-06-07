@@ -2053,6 +2053,24 @@ class Catalog extends database_object {
 	} // optimize_tables;
 
 	/**
+	 * trim_prefix
+	 * Splits the prefix from the string
+	 */
+	public static function trim_prefix($string) {
+		$prefix_pattern = '/^(' . implode('\\s|',explode('|',Config::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
+		preg_match($prefix_pattern, $string, $matches);
+
+		if (count($matches)) {
+			$string = trim($matches[2]);
+			$prefix = trim($matches[1]);
+		}
+		else {
+			$prefix = null;
+		}
+
+		return array('string' => $string, 'prefix' => $prefix);
+	}
+	/**
 	 * check_artist
 	 * $artist checks if there then return id else insert and return id
 	 * If readonly is passed then don't create, return false on not found
@@ -2069,13 +2087,9 @@ class Catalog extends database_object {
 		}
 
 		// Remove the prefix so we can sort it correctly
-		$prefix_pattern = '/^(' . implode('\\s|',explode('|',Config::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
-		preg_match($prefix_pattern,$artist,$matches);
-
-		if (count($matches)) {
-			$artist = trim($matches[2]);
-			$prefix = trim($matches[1]);
-		}
+		$trimmed = Catalog::trim_prefix($artist);
+		$artist = $trimmed['string'];
+		$prefix = $trimmed['prefix'];
 
 		// Check to see if we've seen this artist before
 		if (isset(self::$artists[$artist][$mbid])) {
@@ -2173,13 +2187,9 @@ class Catalog extends database_object {
 		}
 
 		// Remove the prefix so we can sort it correctly
-		$prefix_pattern = '/^(' . implode('\\s|',explode('|',Config::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
-		preg_match($prefix_pattern,$album,$matches);
-
-		if (count($matches)) {
-			$album = trim($matches[2]);
-			$prefix = trim($matches[1]);
-		}
+		$trimmed = Catalog::trim_prefix($album);
+		$album = $trimmed['string'];
+		$prefix = $trimmed['prefix'];
 
 		// Check to see if we've seen this album before
 		if (isset(self::$albums[$album][$album_year][$disk][$mbid])) {
