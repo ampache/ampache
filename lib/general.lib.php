@@ -359,17 +359,6 @@ function is_rtl($locale) {
 }
 
 /**
- * format_time
- * This formats seconds into minutes:seconds
- * //FIXME This should be removed, no reason for it!
- */
-function format_time($seconds) {
-
-return sprintf ("%d:%02d", $seconds/60, $seconds % 60);
-
-} //format_time
-
-/**
  * translate_pattern_code
  * This just contains a key'd array which it checks against to give you the 'tag' name
  * that said pattern code corrasponds to, it returns false if nothing is found
