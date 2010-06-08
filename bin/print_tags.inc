@@ -26,10 +26,6 @@ $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 $version = "1.0";
 
-$exts = Config::get('catalog_file_pattern');
-
-$allowexts = preg_split('/\|/', $exts);
-
 if (count($GLOBALS['argv']) == '1') {
 	usage();
 	exit;
@@ -40,13 +36,6 @@ if (count($GLOBALS['argv']) == '1') {
 
 if(!file_exists($filename)) {
 	print _("File not found.");
-	print "\n";
-	usage();
-	exit;
-}
-
-if(file_check($filename, $allowexts) === false) {
-	print _("File type is not allowd.");
 	print "\n";
 	usage();
 	exit;
@@ -102,17 +91,5 @@ function usage() {
 	return print $text;
 
 }// usage()
-
-function file_check($filename, $allowexts) {
-
-	$pathinfo = pathinfo($filename);
-	$exts = $pathinfo['extension'];
-
-	if(in_array($exts, $allowexts)) {
-		return true;
-	} else {
-		return false;
-	}
-} // file_check()
 
 ?>
