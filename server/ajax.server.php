@@ -98,32 +98,41 @@ switch ($_REQUEST['action']) {
 		$level = '50';
 
 		switch ($_GET['type']) {
-			case 'album':
+			case 'album_row':
 				$key = 'album_' . $_GET['id'];
 				$album = new Album($_GET['id']);
 				$album->format();
 			break;
-			case 'artist':
+			case 'artist_row':
 				$key = 'artist_' . $_GET['id'];
 				$artist = new Artist($_GET['id']);
 				$artist->format();
 			break;
-			case 'song':
+			case 'song_row':
 				$key = 'song_' . $_GET['id'];
 				$song = new Song($_GET['id']);
 				$song->format();
 			break;
-			case 'live_stream':
+			case 'live_stream_row':
 				$key = 'live_stream_' . $_GET['id'];
 				$radio = new Radio($_GET['id']);
 				$radio->format();
 			break;
-			case 'playlist':
-			case 'playlist_full':
+			case 'playlist_row':
+			case 'playlist_title':
 				$key = 'playlist_row_' . $_GET['id'];
 				$playlist = new Playlist($_GET['id']);
 				$playlist->format();
 				// If the current user is the owner, only user is required
+				if ($playlist->user == $GLOBALS['user']->id) {
+					$level = '25';
+				}
+			break;
+			case 'smartplaylist_row':
+			case 'smartplaylist_title':
+				$key = 'playlist_row_' . $_GET['id'];
+				$playlist = new Search('song', $_GET['id']);
+				$playlist->format();
 				if ($playlist->user == $GLOBALS['user']->id) {
 					$level = '25';
 				}
@@ -142,7 +151,7 @@ switch ($_REQUEST['action']) {
 		}
 
 		ob_start();
-		require Config::get('prefix') . '/templates/show_edit_' . $_GET['type'] . '_row.inc.php';
+		require Config::get('prefix') . '/templates/show_edit_' . $_GET['type'] . '.inc.php';
 		$results[$key] = ob_get_contents();
 		ob_end_clean();
 	break;
@@ -150,8 +159,15 @@ switch ($_REQUEST['action']) {
 
 		$level = '50';
 
-		if ($_POST['type'] == 'playlist' || $_POST['type'] == 'playlist_full') {
+		if ($_POST['type'] == 'playlist_row' || $_POST['type'] == 'playlist_title') {
 			$playlist = new Playlist($_POST['id']);
+			if ($GLOBALS['user']->id == $playlist->user) {
+				$level = '25';
+			}
+		}
+		if ($_POST['type'] == 'smartplaylist_row' || 
+			$_POST['type'] == 'smartplaylist_title') {
+			$playlist = new Search('song', $_POST['id']);
 			if ($GLOBALS['user']->id == $playlist->user) {
 				$level = '25';
 			}
@@ -164,7 +180,7 @@ switch ($_REQUEST['action']) {
 		}
 
 		switch ($_POST['type']) {
-			case 'album':
+			case 'album_row':
 				$key = 'album_' . $_POST['id'];
 				$album = new Album($_POST['id']);
 				$songs = $album->get_songs();
@@ -177,7 +193,7 @@ switch ($_REQUEST['action']) {
 				}
 				$album->format();
 			break;
-			case 'artist':
+			case 'artist_row':
 				$key = 'artist_' . $_POST['id'];
 				$artist = new Artist($_POST['id']);
 				$songs = $artist->get_songs();
@@ -190,21 +206,29 @@ switch ($_REQUEST['action']) {
 				}
 				$artist->format();
 			break;
-			case 'song':
+			case 'song_row':
 				$key = 'song_' . $_POST['id'];
 				$song = new Song($_POST['id']);
 				Flag::add($song->id,'song','retag','Inline Single Song Update');
 				$song->update($_POST);
 				$song->format();
 			break;
-			case 'playlist':
-			case 'playlist_full':
+			case 'playlist_row':
+			case 'playlist_title':
 				$key = 'playlist_row_' . $_POST['id'];
 				$playlist->update($_POST);
 				$playlist->format();
 				$count = $playlist->get_song_count();
 			break;
-			case 'live_stream':
+			case 'smartplaylist_row':
+			case 'smartplaylist_title':
+				$key = 'playlist_row_' . $_POST['id'];
+				$playlist->name = $_POST['name'];
+				$playlist->type = $_POST['pl_type'];
+				$playlist->update();
+				$playlist->format();
+			break;
+			case 'live_stream_row':
 				$key = 'live_stream_' . $_POST['id'];
 				Radio::update($_POST);
 				$radio = new Radio($_POST['id']);
@@ -218,7 +242,7 @@ switch ($_REQUEST['action']) {
 		} // end switch on type
 
 		ob_start();
-		require Config::get('prefix') . '/templates/show_' . $_POST['type'] . '_row.inc.php';
+		require Config::get('prefix') . '/templates/show_' . $_POST['type'] . '.inc.php';
 		$results[$key] = ob_get_contents();
 		ob_end_clean();
 	break;
@@ -271,6 +295,13 @@ switch ($_REQUEST['action']) {
 			case 'playlist_random':
 				$playlist = new Playlist($_REQUEST['id']);
 				$items = $playlist->get_random_items();
+				foreach ($items as $item) {
+					$GLOBALS['user']->playlist->add_object($item['object_id'],$item['type']);
+				}
+			break;
+			case 'smartplaylist':
+				$playlist = new Search('song', $_REQUEST['id']);
+				$items = $playlist->get_items();
 				foreach ($items as $item) {
 					$GLOBALS['user']->playlist->add_object($item['object_id'],$item['type']);
 				}

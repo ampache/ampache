@@ -49,8 +49,8 @@
 </td>
 <td>
 	<input type="hidden" name="id" value="<?php echo $radio->id; ?>" />
-	<input type="hidden" name="type" value="live_stream" />
-	<?php echo Ajax::button('?action=edit_object&id=' . $radio->id . '&type=live_stream','download',_('Save Changes'),'save_live_stream_' . $radio->id,'edit_live_stream_' . $radio->id); ?>
+	<input type="hidden" name="type" value="live_stream_row" />
+	<?php echo Ajax::button('?action=edit_object&id=' . $radio->id . '&type=live_stream_row','download',_('Save Changes'),'save_live_stream_' . $radio->id,'edit_live_stream_' . $radio->id); ?>
 </td>
 </tr>
 </table>

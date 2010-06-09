@@ -45,8 +45,8 @@
 </td>
 <td>
 	<input type="hidden" name="id" value="<?php echo $album->id; ?>" />
-	<input type="hidden" name="type" value="album" />
-	<?php echo Ajax::button('?action=edit_object&id=' . $album->id . '&type=album','download',_('Save Changes'),'save_album_' . $album->id,'edit_album_' . $album->id); ?>
+	<input type="hidden" name="type" value="album_row" />
+	<?php echo Ajax::button('?action=edit_object&id=' . $album->id . '&type=album_row','download',_('Save Changes'),'save_album_' . $album->id,'edit_album_' . $album->id); ?>
 </td>
 </tr>
 </table>

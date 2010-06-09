@@ -37,6 +37,6 @@
         </a>
 <?php } ?>
 <?php if (Access::check('interface','50')) { ?>
-	<?php echo Ajax::button('?action=show_edit_object&type=artist&id=' . $artist->id,'edit',_('Edit'),'edit_artist_' . $artist->id); ?>
+	<?php echo Ajax::button('?action=show_edit_object&type=artist_row&id=' . $artist->id,'edit',_('Edit'),'edit_artist_' . $artist->id); ?>
 <?php } ?>
 </td>

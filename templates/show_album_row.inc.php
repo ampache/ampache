@@ -52,6 +52,6 @@ if (Browse::is_enabled('show_art')) {
 		</a>
 	<?php } ?>
 	<?php if (Access::check('interface','50')) { ?>
-		<?php echo Ajax::button('?action=show_edit_object&type=album&id=' . $album->id,'edit',_('Edit'),'edit_album_' . $album->id); ?>
+		<?php echo Ajax::button('?action=show_edit_object&type=album_row&id=' . $album->id,'edit',_('Edit'),'edit_album_' . $album->id); ?>
 	<?php } ?>
 </td>

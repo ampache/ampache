@@ -29,9 +29,8 @@
 </td>
 <td>
 	<input type="hidden" name="id" value="<?php echo $artist->id; ?>" />
-	<input type="hidden" name="type" value="artist" />
-	<?php echo Ajax::button('?action=edit_object&id=' . $artist->id . '&type=artist','download',_('Save Changes'),'save_artist_' . $artist->id,'edit_artist_' . $artist->id); ?>
-	<?php echo Ajax::observe('edit_artist_' . $artist->id,'submit',Ajax::action('?action=edit_object&id=' . $artist->id . '&type=artist','edit_artist_' . $artist->id,'edit_artist_' . $artist->id),1); ?>
+	<input type="hidden" name="type" value="artist_row" />
+	<?php echo Ajax::button('?action=edit_object&id=' . $artist->id . '&type=artist_row','download',_('Save Changes'),'save_artist_' . $artist->id,'edit_artist_' . $artist->id); ?>
 
 </tr>
 </table>

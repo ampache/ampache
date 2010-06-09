@@ -35,7 +35,7 @@
                 </a>
         <?php } ?>
 	<?php if ($playlist->has_access()) { ?>
-		<?php echo Ajax::button('?action=show_edit_object&type=playlist&id=' . $playlist->id,'edit',_('Edit'),'edit_playlist_' . $playlist->id); ?>
+		<?php echo Ajax::button('?action=show_edit_object&type=playlist_row&id=' . $playlist->id,'edit',_('Edit'),'edit_playlist_' . $playlist->id); ?>
 		<?php echo Ajax::button('?page=browse&action=delete_object&type=playlist&id=' . $playlist->id,'delete',_('Delete'),'delete_playlist_' . $playlist->id); ?>
 	<?php } ?>
 </td>

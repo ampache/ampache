@@ -25,9 +25,11 @@
  */
 ?>
 <?php 
-/* HINT: Playlist Type, Playlist Name */
-show_box_top('<div id="playlist_row_' . $playlist->id . '">' . 
-	sprintf(_('%s %s (Playlist)'), $playlist->f_type, $playlist->name) .
+ob_start();
+require Config::get('prefix') . '/templates/show_playlist_title.inc.php';
+$title = ob_get_contents();
+ob_end_clean();
+show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . 
 	'</div>');
 ?>
 <div id="information_actions">
@@ -52,7 +54,7 @@ show_box_top('<div id="playlist_row_' . $playlist->id . '">' .
 	</li>
 	<?php if ($playlist->has_access()) { ?>
 	<li>
-		<?php echo Ajax::button('?action=show_edit_object&type=playlist_full&id=' . $playlist->id,'edit',_('Edit'),'edit_playlist_' . $playlist->id); ?>
+		<?php echo Ajax::button('?action=show_edit_object&type=playlist_title&id=' . $playlist->id,'edit',_('Edit'),'edit_playlist_' . $playlist->id); ?>
 		<?php echo _('Edit'); ?>
 	</li>
 	<li>

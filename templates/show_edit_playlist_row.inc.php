@@ -35,8 +35,8 @@
 		</select>
 	<td>
 	<input type="hidden" name="id" value="<?php echo $playlist->id; ?>" />
-	<input type="hidden" name="type" value="playlist" />
-	<?php echo Ajax::button('?action=edit_object&id=' . $playlist->id . '&type=playlist','download',_('Save Changes'),'save_playlist_' . $playlist->id,'edit_playlist_' . $playlist->id); ?>
+	<input type="hidden" name="type" value="playlist_row" />
+	<?php echo Ajax::button('?action=edit_object&id=' . $playlist->id . '&type=playlist_row','download',_('Save Changes'),'save_playlist_' . $playlist->id,'edit_playlist_' . $playlist->id); ?>
 	</td>
 </tr>
 </table>
