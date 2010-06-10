@@ -279,10 +279,6 @@ function get_location() {
 			$location['title']	= _('Artists');
 			$location['section']	= 'browse';
 			break;
-		case 'genre.php':
-			$location['title']	= _('Genre');
-			$location['section']	= 'browse';
-			break;
 		case 'stats.php':
 			$location['title']	= _('Statistics');
 			break;

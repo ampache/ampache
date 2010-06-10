@@ -168,13 +168,6 @@ function get_global_popular($type) {
 			$items[] = $album;
                 } // else not album
 
-		elseif ($type == 'genre') {
-			$genre 	 = new Genre($r['object_id']);
-			$genre->format();
-			$genre->link = "<a href=\"$web_path/browse.php?action=genre&amp;genre=" . $r['object_id'] . "\" title=\"" . scrub_out($genre->name) . "\">" .
-					scrub_out(truncate_with_ellipsis($genre->name,Config::get('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
-			$items[] = $genre;
-		} // end if genre
         } // end foreach
 
         return $items;

@@ -52,12 +52,6 @@ switch ($_REQUEST['action']) {
 		$media_ids = $artist->get_songs();
 		$name = $artist->name;
 	break;
-	case 'genre':
-		$id = scrub_in($_REQUEST['id']);
-		$genre = new Genre($id);
-		$media_ids = $genre->get_songs();
-		$name = $genre->name;
-	break;
 	case 'browse':
 		$media_ids = Browse::get_saved();
 		$name = 'Batch-' . date("dmY",time());
