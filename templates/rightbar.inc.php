@@ -86,7 +86,7 @@
 	// Limit the number of objects we show here
 	if (count($objects) > 100) {
 		$truncated = (count($objects) - 100);
-		$objects = array_slice($objects,0,100);
+		$objects = array_slice($objects, 0, 100, true);
 	}
 
 	$normal_array = array('radio','song','video','random');
