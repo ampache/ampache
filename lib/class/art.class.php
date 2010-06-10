@@ -36,6 +36,7 @@ class Art extends database_object {
 	public $thumb;
 	public $thumb_mime;
 	
+	private static $enabled;
 
 	/**
 	 * Constructor
@@ -48,6 +49,41 @@ class Art extends database_object {
 		$this->uid = $uid; 		
 
 	} // constructor
+
+	/**
+	 * _auto_init
+	 * Called on creation of the class
+	 */
+	public static function _auto_init() {
+		self::$enabled = make_bool($_SESSION['art_enabled']);
+	}
+
+	/**
+	 * is_enabled
+	 * Checks whether the user currently wants art
+	 */
+	public static function is_enabled() {
+		if (self::$enabled || (Config::get('bandwidth') > 25)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * set_enabled
+	 * Changes the value of enabled
+	 */
+	public static function set_enabled($value = null) {
+		if (is_null($value)) {
+			self::$enabled = self::$enabled ? false : true;
+		}
+		else {
+			self::$enabled = make_bool($value);
+		}
+
+		$_SESSION['art_enabled'] = self::$enabled;
+	}
 
 	/**
 	 * validate_type

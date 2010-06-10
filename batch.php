@@ -53,7 +53,9 @@ switch ($_REQUEST['action']) {
 		$name = $artist->name;
 	break;
 	case 'browse':
-		$media_ids = Browse::get_saved();
+		$id = scrub_in($_REQUEST['browse_id']);
+		$browse = new Browse($id);
+		$media_ids = $browse->get_saved();
 		$name = 'Batch-' . date("dmY",time());
 	default:
 		// Rien a faire

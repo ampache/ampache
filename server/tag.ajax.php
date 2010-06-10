@@ -37,20 +37,19 @@ switch ($_REQUEST['action']) {
 		$tag->remove_map($_GET['type'],$_GET['object_id']);
 	break;
 	case 'browse_type':
-		Browse::set_type('tag');
-		Browse::set_filter('object_type',$_GET['type']);
+		$browse = new Browse($_GET['browse_id']);
+		$browse->set_filter('object_type', $_GET['type']);
+		$browse->store();
 	break;
 	case 'add_filter':
-
-		// Set browse method
-		Browse::set_type('song');
-		Browse::set_filter('tag',$_GET['tag_id']);
-		$object_ids = Browse::get_objects();
+		$browse = new Browse($_GET['browse_id']);
+		$browse->set_filter('tag', $_GET['tag_id']);
+		$object_ids = $browse->get_objects();
 		ob_start();
-		Browse::show_objects($object_ids);
+		$browse->show_objects($object_ids);
 		$results['browse_content'] = ob_get_clean();
-
-		// Retrive current objects of type based on combined filters
+		$browse->store();
+		// Retrieve current objects of type based on combined filters
 	break;
 	default:
 		$results['rfc3514'] = '0x1';

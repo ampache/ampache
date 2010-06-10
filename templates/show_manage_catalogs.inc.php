@@ -48,9 +48,12 @@
 </div>
 <?php show_box_bottom(); ?>
 <?php
-                $catalog_ids = Catalog::get_catalogs();
-                Browse::set_type('catalog');
-                Browse::set_static_content(1);
-                Browse::show_objects($catalog_ids);
+		$catalog_ids = Catalog::get_catalogs();
+		$browse = new Browse();
+		$browse->set_type('catalog');
+		$browse->set_static_content(true);
+		$browse->save_objects($catalog_ids);
+		$browse->show_objects($catalog_ids);
+		$browse->store();
 ?>
 

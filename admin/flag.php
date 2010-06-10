@@ -293,19 +293,23 @@ switch ($_REQUEST['action']) {
 		break;
 	case 'show_disabled':
 		$disabled = Flag::get_disabled();
-		Browse::set_type('song');
-		Browse::set_static_content(1);
-		Browse::save_objects($disabled);
-		Browse::show_objects($disabled);
+		$browse = new Browse();
+		$browse->set_type('song');
+		$browse->set_static_content(true);
+		$browse->save_objects($disabled);
+		$browse->show_objects($disabled);
+		$browse->store();
 	break;
 	default:
 	case 'show_flagged':
 		$flagged = Flag::get_all();
 		Flag::build_cache($flagged);
-		Browse::set_type('flagged');
-		Browse::set_static_content(1);
-		Browse::save_objects($flagged);
-		Browse::show_objects($flagged);
+		$browse = new Browse();
+		$browse->set_type('flagged');
+		$browse->set_static_content(true);
+		$browse->save_objects($flagged);
+		$browse->show_objects($flagged);
+		$browse->store();
 	break;
 } // end switch
 

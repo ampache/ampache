@@ -48,10 +48,12 @@ switch ($_REQUEST['action']) {
 		show_confirmation(_('Shoutbox Post Deleted'),'',Config::get('web_path').'/admin/shout.php');
 	break;
 	default:
-		Browse::set_type('shoutbox');
-		Browse::set_simple_browse(1);
-		$shoutbox_ids = Browse::get_objects();
-		Browse::show_objects($shoutbox_ids);
+		$browse = new Browse();
+		$browse->set_type('shoutbox');
+		$browse->set_simple_browse(true);
+		$shoutbox_ids = $browse->get_objects();
+		$browse->show_objects($shoutbox_ids);
+		$browse->store();
 	break;
 } // end switch on action
 

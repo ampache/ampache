@@ -29,40 +29,14 @@
  */
 class Browse extends Query {
 
-	// Public static vars that are cached
-	public static $sql;
-	public static $start;
-	public static $offset;
-	public static $total_objects;
-	public static $type;
-
-	// Boolean if this is a simple browse method (use different paging code)
-	public static $simple_browse;
-
-	// Static Content, this is defaulted to false, if set to true then when we can't
-	// apply any filters that would change the result set.
-	public static $static_content = false;
-	private static $_cache = array();
-
-
-	/**
-	 * constructor
-	 * This should never be called
-	 */
-	private function __construct() {
-
-		// Rien a faire
-
-	} // __construct
-
 	/**
 	 * set_simple_browse
 	 * This sets the current browse object to a 'simple' browse method
 	 * which means use the base query provided and expand from there
 	 */
-	public static function set_simple_browse($value) {
+	public function set_simple_browse($value) {
 
-		parent::set_is_simple($value);
+		$this->set_is_simple($value);
 
 	} // set_simple_browse
 
@@ -70,9 +44,9 @@ class Browse extends Query {
 	 * add_supplemental_object
 	 * Legacy function, need to find a better way to do that
 	 */
-	public static function add_supplemental_object($class,$uid) {
+	public function add_supplemental_object($class, $uid) {
 
-		$_SESSION['browse']['supplemental'][$class] = intval($uid);
+		$_SESSION['browse']['supplemental'][$this->id][$class] = intval($uid);
 
 		return true;
 
@@ -80,12 +54,12 @@ class Browse extends Query {
 
 	/**
 	 * get_supplemental_objects
-	 * This returns an array of 'class','id' for additional objects that need to be
-	 * created before we start this whole browsing thing
+	 * This returns an array of 'class','id' for additional objects that
+	 * need to be created before we start this whole browsing thing.
 	 */
-	public static function get_supplemental_objects() {
+	public function get_supplemental_objects() {
 
-		$objects = $_SESSION['browse']['supplemental'];
+		$objects = $_SESSION['browse']['supplemental'][$this->id];
 
 		if (!is_array($objects)) { $objects = array(); }
 
@@ -94,73 +68,57 @@ class Browse extends Query {
 	} // get_supplemental_objects
 
 	/**
-	 * is_enabled
-	 * This checks if the specified function/feature
-	 * of browsing is enabled, not sure if this is the best
-	 * way to go about it, but hey. Returns boolean t/f
-	 */
-	public static function is_enabled($item) {
-
-		switch ($item) {
-			case 'show_art':
-				if (Browse::get_filter('show_art')) {
-					return true;
-				}
-				if (Config::get('bandwidth') > 25) {
-					return true;
-				}
-			break;
-		} // end switch
-
-		return false;
-
-	} // is_enabled
-
-	/**
 	 * show_objects
 	 * This takes an array of objects
 	 * and requires the correct template based on the
 	 * type that we are currently browsing
 	 */
-	public static function show_objects($object_ids=false) {
+	public function show_objects($object_ids = null) {
 
-		if (parent::is_simple()) {
-			$object_ids = parent::get_saved();
+		if ($this->is_simple() || ! is_array($object_ids)) {
+			$object_ids = $this->get_saved();
 		}
 		else {
-			$object_ids = is_array($object_ids) ? $object_ids : parent::get_saved();
-			parent::save_objects($object_ids);
+			$this->save_objects($object_ids);
 		}
 
-		// Reset the total items
-		self::$total_objects = parent::get_total($object_ids);
-
-		// Limit is based on the users preferences if this is not a simple browse because we've got too much here
-		if (count($object_ids) > parent::get_start() AND !parent::is_simple()) {
-			$object_ids = array_slice($object_ids,parent::get_start(),parent::get_offset(),TRUE);
+		// Limit is based on the user's preferences if this is not a 
+		// simple browse because we've got too much here
+		if ((count($object_ids) > $this->get_start()) && 
+			! $this->is_simple() &&
+			! $this->is_static_content()) {
+			$object_ids = array_slice(
+				$object_ids,
+				$this->get_start(),
+				$this->get_offset(), 
+				true
+			);
 		}
 
 		// Load any additional object we need for this
-		$extra_objects = self::get_supplemental_objects();
+		$extra_objects = $this->get_supplemental_objects();
+		$browse = $this;
 
 		foreach ($extra_objects as $class_name => $id) {
 			${$class_name} = new $class_name($id);
 		}
 
 		// Format any matches we have so we can show them to the masses
-		if ($filter_value = parent::get_filter('alpha_match')) {
+		if ($filter_value = $this->get_filter('alpha_match')) {
 			$match = ' (' . $filter_value . ')';
 		}
-		elseif ($filter_value = parent::get_filter('starts_with')) {
+		elseif ($filter_value = $this->get_filter('starts_with')) {
 			$match = ' (' . $filter_value . ')';
 		}
 
+		$type = $this->get_type();
+
 		// Set the correct classes based on type
-		$class = "box browse_".self::$type;
+		$class = "box browse_" . $type;
 
 		Ajax::start_container('browse_content');
 		// Switch on the type of browsing we're doing
-		switch (parent::get_type()) {
+		switch ($type) {
 			case 'song':
 				show_box_top(_('Songs') . $match, $class);
 				Song::build_cache($object_ids);
@@ -241,45 +199,34 @@ class Browse extends Query {
 				// Rien a faire
 			break;
 		} // end switch on type
+		echo '<script type="text/javascript">ajaxPut("' . Config::get('ajax_url') . '?page=browse&action=get_filters&browse_id=' . $this->id . '","");</script>';
 
 		Ajax::end_container();
 
 	} // show_object
 
 	/**
-	 * _auto_init
-	 * this function reloads information back from the session
-	 * it is called on creation of the class
-	 */
-	public static function _auto_init() {
-
-		$offset = Config::get('offset_limit') ? Config::get('offset_limit') : '25';
-		parent::set_offset($offset);
-
-	} // _auto_init
-
-	/**
  	 * set_filter_from_request
 	 * //FIXME
 	 */
-	public static function set_filter_from_request($r) {
-		foreach($r as $k=>$v) {
+	public function set_filter_from_request($request) {
+		foreach($request as $key => $value) {
 			//reinterpret v as a list of int
-			$vl = explode(',', $v);
-			$ok = 1;
-			foreach($vl as $i) {
-				if (!is_numeric($i)) {
-					$ok = 0;
+			$list = explode(',', $value);
+			$ok = true;
+			foreach($list as $item) {
+				if (!is_numeric($item)) {
+					$ok = false;
 					break;
 				}
 			}
 			if ($ok) {
-				if (sizeof($vl) == 1) {
-					self::set_filter($k, $vl[0]);
+				if (sizeof($list) == 1) {
+					$this->set_filter($key, $list[0]);
 				}
 			}
 			else {
-				self::set_filter($k, $vl);
+				$this->set_filter($key, $list);
 			}
 		}
 	} // set_filter_from_request

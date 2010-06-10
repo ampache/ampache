@@ -28,9 +28,9 @@
  */
 
 // Pull these variables out to allow shorthand (easier for lazy programmers)
-$limit	= Config::get('offset_limit') ? Config::get('offset_limit') : '25';
-$start	= Browse::get_start();
-$total	= Browse::$total_objects;
+$limit	= $browse->get_offset();
+$start	= $browse->get_start();
+$total	= $browse->get_total();
 $uid	  = Config::get('list_header_uid');
 $sides  = 5;
 
@@ -91,15 +91,14 @@ while ($page <= $pages) {
 // Sort These Arrays of Hotness
 ksort($page_data['up']);
 ksort($page_data['down']);
-$browse_type = Browse::get_type();
 
 // are there enough items to even need this view?
 if ($pages > 1) {
 ?>
 <div class="list-header">
 
-  <?php echo Ajax::text('?page=browse&action=page&type=' . $browse_type . '&start=' . $prev_offset,_('Prev'),'browse_' . $uid . 'prev','','prev'); ?>
-	<?php echo Ajax::text('?page=browse&action=page&type=' . $browse_type . '&start=' . $next_offset,_('Next'),'browse_' . $uid . 'next','','next'); ?>
+  <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $prev_offset,_('Prev'),'browse_' . $uid . 'prev','','prev'); ?>
+	<?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $next_offset,_('Next'),'browse_' . $uid . 'next','','next'); ?>
 	<?php
 		/* Echo Everything below us */
 		foreach ($page_data['down'] as $page => $offset) {
@@ -107,7 +106,7 @@ if ($pages > 1) {
 			else {
 			// Hack Alert
 			$page++;
-				echo Ajax::text('?page=browse&action=page&type=' . $browse_type .'&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb');
+				echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb');
 			}
 		} // end foreach down
 
@@ -121,7 +120,7 @@ if ($pages > 1) {
 		foreach ($page_data['up'] as $page=>$offset) {
 			if ($offset === '...') { echo '...&nbsp;'; }
 			else {
-				echo Ajax::text('?page=browse&action=page&type=' . $browse_type . '&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb');
+				echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb');
 			} // end else
 		} // end foreach up
 	?>

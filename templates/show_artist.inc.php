@@ -22,6 +22,8 @@
 $web_path = Config::get('web_path');
 ?>
 <?php
+$browse = new Browse();
+$browse->set_type($object_type);
 show_box_top($artist->f_name, 'info-box');
 if (Config::get('ratings')) {
 ?>
@@ -65,13 +67,12 @@ if (Config::get('ratings')) {
 </li>
 <?php } ?>
 <li>
-        <input type="checkbox" id="show_artist_artCB" <?php echo $string = Browse::get_filter('show_art') ? 'checked="checked"' : ''; ?>/> <?php echo _('Show Art'); ?>
-        <?php echo Ajax::observe('show_artist_artCB','click',Ajax::action('?page=browse&action=browse&key=show_art&value=1&type=album','')); ?>
+        <input type="checkbox" id="show_artist_artCB" <?php echo $string = Art::is_enabled() ? 'checked="checked"' : ''; ?>/> <?php echo _('Show Art'); ?>
+        <?php echo Ajax::observe('show_artist_artCB', 'click', Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id,'')); ?>
 </ul>
 </div>
 <?php show_box_bottom(); ?>
 <?php
-	Browse::set_type($object_type);
-	Browse::reset();
-	Browse::show_objects($object_ids);
+	$browse->show_objects($object_ids);
+	$browse->store();
 ?>

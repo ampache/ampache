@@ -25,7 +25,7 @@
 	<?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random',_('Random'),'random_album_' . $album->id); ?>
 </td>
 <?php
-if (Browse::is_enabled('show_art')) {
+if (Art::is_enabled()) {
 	$name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
 ?>
 <td class="cel_cover">

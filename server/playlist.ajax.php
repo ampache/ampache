@@ -36,10 +36,12 @@ switch ($_REQUEST['action']) {
 
 		$object_ids = $playlist->get_items();
 		ob_start();
-	        Browse::set_type('playlist_song');
-	        Browse::add_supplemental_object('playlist',$playlist->id);
-	        Browse::save_objects($object_ids);
-	        Browse::show_objects($object_ids);
+		$browse = new Browse();
+	        $browse->set_type('playlist_song');
+	        $browse->add_supplemental_object('playlist',$playlist->id);
+	        $browse->save_objects($object_ids);
+	        $browse->show_objects($object_ids);
+		$browse->store();
 		$results['browse_content'] = ob_get_clean();
 	break;
 	case 'edit_track':

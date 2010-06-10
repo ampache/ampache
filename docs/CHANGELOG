@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+        - Changed Browse from a singleton to multiple instances
         - Fixed setting access levels for plugin passwords
         - Fixed handling of unusual characters in passwords
         - Fixed support for requesting different thumbnail sizes

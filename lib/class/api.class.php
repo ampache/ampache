@@ -22,12 +22,15 @@
 
 /**
  * API Class
- * This handles functions relating to the API written for ampache, initially this is very focused
- * on providing functionality for Amarok so it can integrate with Ampache
+ * This handles functions relating to the API written for ampache, initially
+ * this is very focused on providing functionality for Amarok so it can
+ * integrate with Ampache.
  */
 class Api {
 
 	public static $version = '350001';
+
+	private static $browse = null;
 
 	/**
  	 * constructor
@@ -38,6 +41,16 @@ class Api {
 		// Rien a faire
 
 	} // constructor
+
+	/**
+	 * _auto_init
+	 * Automatically called when this class is loaded.
+	 */
+	public static function _auto_init() {
+		if (is_null(self::$browse)) {
+			self::$browse = new Browse();
+		}
+	}
 
 	/**
 	 * set_filter
@@ -55,29 +68,29 @@ class Api {
 				// Check for a range, if no range default to gt
 				if (strpos($value,'/')) {
 					$elements = explode('/',$value);
-					Browse::set_filter('add_lt',strtotime($elements['1']));
-					Browse::set_filter('add_gt',strtotime($elements['0']));
+					self::$browse->set_filter('add_lt',strtotime($elements['1']));
+					self::$browse->set_filter('add_gt',strtotime($elements['0']));
 				}
 				else {
-					Browse::set_filter('add_gt',strtotime($value));
+					self::$browse->set_filter('add_gt',strtotime($value));
 				}
 			break;
 			case 'update':
 				// Check for a range, if no range default to gt
 				if (strpos($value,'/')) {
 					$elements = explode('/',$value);
-					Browse::set_filter('update_lt',strtotime($elements['1']));
-					Browse::set_filter('update_gt',strtotime($elements['0']));
+					self::$browse->set_filter('update_lt',strtotime($elements['1']));
+					self::$browse->set_filter('update_gt',strtotime($elements['0']));
 				}
 				else {
-					Browse::set_filter('update_gt',strtotime($value));
+					self::$browse->set_filter('update_gt',strtotime($value));
 				}
 			break;
 			case 'alpha_match':
-				Browse::set_filter('alpha_match',$value);
+				self::$browse->set_filter('alpha_match',$value);
 			break;
 			case 'exact_match':
-				Browse::set_filter('exact_match',$value);
+				self::$browse->set_filter('exact_match',$value);
 			break;
 			default:
 				// Rien a faire
@@ -242,9 +255,9 @@ class Api {
 	 */
 	public static function artists($input) {
 
-		Browse::reset_filters();
-		Browse::set_type('artist');
-		Browse::set_sort('name','ASC');
+		self::$browse->reset_filters();
+		self::$browse->set_type('artist');
+		self::$browse->set_sort('name','ASC');
 
 		$method = $input['exact'] ? 'exact_match' : 'alpha_match';
 		Api::set_filter($method,$input['filter']);
@@ -255,7 +268,7 @@ class Api {
 		xmlData::set_offset($input['offset']);
 		xmlData::set_limit($input['limit']);
 
-		$artists = Browse::get_objects();
+		$artists = self::$browse->get_objects();
 		// echo out the resulting xml document
 		ob_end_clean();
 		echo xmlData::artists($artists);
@@ -315,15 +328,15 @@ class Api {
 	 */
 	public static function albums($input) {
 
-		Browse::reset_filters();
-		Browse::set_type('album');
-		Browse::set_sort('name','ASC');
+		self::$browse->reset_filters();
+		self::$browse->set_type('album');
+		self::$browse->set_sort('name','ASC');
 		$method = $input['exact'] ? 'exact_match' : 'alpha_match';
 		Api::set_filter($method,$input['filter']);
 		Api::set_filter('add',$input['add']);
 		Api::set_filter('update',$input['update']);
 
-		$albums = Browse::get_objects();
+		$albums = self::$browse->get_objects();
 
 		// Set the offset
 		xmlData::set_offset($input['offset']);
@@ -368,13 +381,13 @@ class Api {
 	 */
 	public static function tags($input) {
 
-			Browse::reset_filters();
-			Browse::set_type('tag');
-			Browse::set_sort('name','ASC');
+			self::$browse->reset_filters();
+			self::$browse->set_type('tag');
+			self::$browse->set_sort('name','ASC');
 
 			$method = $input['exact'] ? 'exact_match' : 'alpha_match';
 			Api::set_filter($method,$input['filter']);
-			$tags = Browse::get_objects();
+			$tags = self::$browse->get_objects();
 
 			// Set the offset
 			xmlData::set_offset($input['offset']);
@@ -451,16 +464,16 @@ class Api {
 	 */
 	public static function songs($input) {
 
-			Browse::reset_filters();
-			Browse::set_type('song');
-			Browse::set_sort('title','ASC');
+			self::$browse->reset_filters();
+			self::$browse->set_type('song');
+			self::$browse->set_sort('title','ASC');
 
 			$method = $input['exact'] ? 'exact_match' : 'alpha_match';
 			Api::set_filter($method,$input['filter']);
 			Api::set_filter('add',$input['add']);
 			Api::set_filter('update',$input['update']);
 
-			$songs = Browse::get_objects();
+			$songs = self::$browse->get_objects();
 
 			// Set the offset
 			xmlData::set_offset($input['offset']);
@@ -506,14 +519,14 @@ class Api {
 	 */
 	public static function playlists($input) {
 
-			Browse::reset_filters();
-			Browse::set_type('playlist');
-			Browse::set_sort('name','ASC');
+			self::$browse->reset_filters();
+			self::$browse->set_type('playlist');
+			self::$browse->set_sort('name','ASC');
 
 			$method = $input['exact'] ? 'exact_match' : 'alpha_match';
 			Api::set_filter($method,$input['filter']);
 
-			$playlist_ids = Browse::get_objects();
+			$playlist_ids = self::$browse->get_objects();
 
 			xmlData::set_offset($input['offset']);
 			xmlData::set_limit($input['limit']);
@@ -586,14 +599,14 @@ class Api {
 	 */
 	public static function videos($input) {
 
-			Browse::reset_filters();
-			Browse::set_type('video');
-			Browse::set_sort('title','ASC');
+			self::$browse->reset_filters();
+			self::$browse->set_type('video');
+			self::$browse->set_sort('title','ASC');
 
 			$method = $input['exact'] ? 'exact_match' : 'alpha_match';
 			Api::set_filter($method,$input['filter']);
 
-			$video_ids = Browse::get_objects();
+			$video_ids = self::$browse->get_objects();
 
 			xmlData::set_offset($input['offset']);
 			xmlData::set_limit($input['limit']);

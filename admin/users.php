@@ -193,12 +193,14 @@ switch ($_REQUEST['action']) {
 		require_once Config::get('prefix') . '/templates/show_user_preferences.inc.php';
 	break;
 	default:
-		Browse::reset_filters();
-		Browse::set_type('user');
-		Browse::set_simple_browse(1);
-		Browse::set_sort('name','ASC');
-		$user_ids = Browse::get_objects();
-		Browse::show_objects($user_ids);
+		$browse = new Browse();
+		$browse->reset_filters();
+		$browse->set_type('user');
+		$browse->set_simple_browse(1);
+		$browse->set_sort('name','ASC');
+		$user_ids = $browse->get_objects();
+		$browse->show_objects($user_ids);
+		$browse->store();
 	break;
 } // end switch on action
 

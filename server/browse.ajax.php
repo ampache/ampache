@@ -25,44 +25,48 @@
  */
 if (AJAX_INCLUDE != '1') { exit; }
 
+if (isset($_REQUEST['browse_id'])) {
+	$browse_id = $_REQUEST['browse_id'];
+}
+else {
+	$browse_id = null;
+}
+
+$browse = new Browse($browse_id);
+
 switch ($_REQUEST['action']) {
 	case 'browse':
-
 		$object_ids = array();
-
-		Browse::set_type($_REQUEST['type']);
 
 		// Check 'value' with isset because it can null
 		//(user type a "start with" word and deletes it)
 		if ($_REQUEST['key'] && (isset($_REQUEST['multi_alpha_filter']) OR isset($_REQUEST['value']))) {
 			// Set any new filters we've just added
-			Browse::set_filter($_REQUEST['key'],$_REQUEST['multi_alpha_filter']);
+			$browse->set_filter($_REQUEST['key'],$_REQUEST['multi_alpha_filter']);
 		}
 
 		if ($_REQUEST['sort']) {
 			// Set the new sort value
-			Browse::set_sort($_REQUEST['sort']);
+			$browse->set_sort($_REQUEST['sort']);
 		}
 
 		ob_start();
-                Browse::show_objects(false);
+                $browse->show_objects();
                 $results['browse_content'] = ob_get_clean();
 	break;
 	case 'set_sort':
 
-		Browse::set_type($_REQUEST['type']);
-
 		if ($_REQUEST['sort']) {
-			Browse::set_sort($_REQUEST['sort']);
+			$browse->set_sort($_REQUEST['sort']);
 		}
 
 		ob_start();
-		Browse::show_objects(false);
+		$browse->show_objects();
 		$results['browse_content'] = ob_get_clean();
 	break;
 	case 'toggle_tag':
 		$type = $_SESSION['tagcloud_type'] ? $_SESSION['tagcloud_type'] : 'song';
-		Browse::set_type($type);
+		$browse->set_type($type);
 
 
 
@@ -94,18 +98,29 @@ switch ($_REQUEST['action']) {
 
 	break;
 	case 'page':
-		Browse::set_type($_REQUEST['type']);
-		Browse::set_start($_REQUEST['start']);
+		$browse->set_start($_REQUEST['start']);
 
 		ob_start();
-		Browse::show_objects();
+		$browse->show_objects();
 		$results['browse_content'] = ob_get_clean();
-
 	break;
+	case 'show_art':
+		Art::set_enabled();
+
+		ob_start();
+		$browse->show_objects();
+		$results['browse_content'] = ob_get_clean();
+	break;
+	case 'get_filters':
+		ob_start();
+		require_once Config::get('prefix') . '/templates/browse_filters.inc.php';
+		$results['browse_filters'] = ob_get_clean();
 	default:
 		$results['rfc3514'] = '0x1';
 	break;
 } // switch on action;
+
+$browse->store();
 
 // We always do this
 echo xml_from_array($results);

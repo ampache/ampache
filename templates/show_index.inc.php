@@ -25,7 +25,7 @@
 </div> <!-- Close Now Playing Div -->
 <!-- Randomly selected albums of the moment -->
 <?php
-if (Browse::is_enabled('show_art')) {
+if (Art::is_enabled()) {
 	echo Ajax::observe('window','load',Ajax::action('?page=index&action=random_albums','random_albums'));
 ?>
 <div id="random_selection">

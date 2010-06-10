@@ -25,12 +25,12 @@
 <div id="information_actions">
 <ul>
 <li>
-	<?php echo Ajax::button('?action=basket&type=browse_set&object_type=song','add',_('Add Search Results'),'add_search_results'); ?>
+	<?php echo Ajax::button('?action=basket&type=browse_set&browse_id=' . $browse->id,'add',_('Add Search Results'),'add_search_results'); ?>
 	<?php echo _('Add Search Results'); ?>
 </li>
 	<?php if (Access::check_function('batch_download')) { ?>
 <li>
-	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=browse"><?php echo get_user_icon('batch_download', _('Batch Download')); ?></a>
+	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=browse&browse_id=<?php echo $browse->id; ?>"><?php echo get_user_icon('batch_download', _('Batch Download')); ?></a>
 	<?php echo _('Batch Download'); ?>
 </li>
 	<?php } ?>

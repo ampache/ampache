@@ -101,10 +101,11 @@
 <div id="browse">
 <?php
 	if (is_array($object_ids)) {
-		Browse::reset_filters();
-		Browse::set_type('song');
-		Browse::save_objects($object_ids);
-		Browse::show_objects();
+		$browse = new Browse();
+		$browse->set_type('song');
+		$browse->save_objects($object_ids);
+		$browse->show_objects();
+		$browse->store();
 		echo Ajax::observe('window','load',Ajax::action('?action=refresh_rightbar','playlist_refresh_load'));
 	}
 ?>

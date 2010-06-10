@@ -268,8 +268,8 @@ switch ($_REQUEST['action']) {
 				} // end foreach
 			break;
 			case 'browse_set':
-				Browse::set_type($_REQUEST['object_type']);
-				$objects = Browse::get_saved();
+				$browse = new Browse($_REQUEST['browse_id']);
+				$objects = $browse->get_saved();
 				foreach ($objects as $object_id) {
 					$GLOBALS['user']->playlist->add_object($object_id,'song');
 				}
@@ -339,25 +339,6 @@ switch ($_REQUEST['action']) {
 		Rating::show($_GET['object_id'], $_GET['rating_type']);
 		$key = "rating_" . $_GET['object_id'] . "_" . $_GET['rating_type'];
 		$results[$key] = ob_get_contents();
-		ob_end_clean();
-	break;
-	// Used to change filter/settings on browse
-	case 'browse':
-		if ($_REQUEST['key'] && $_REQUEST['value']) {
-			// Set any new filters we've just added
-			Browse::set_filter($_REQUEST['key'],$_REQUEST['value']);
-		}
-		if ($_REQUEST['sort']) {
-			// Set the new sort value
-			Browse::set_sort($_REQUEST['sort']);
-		}
-
-		// Refresh the browse div with our new filter options
-		$object_ids = Browse::get_objects();
-
-		ob_start();
-		Browse::show_objects($object_ids, true);
-		$results['browse_content'] = ob_get_contents();
 		ob_end_clean();
 	break;
 	default:

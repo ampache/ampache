@@ -85,10 +85,12 @@ $title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')' . $disk .'&nb
 &nbsp;
 </div>
 <?php
-	Browse::set_type('song');
-	Browse::set_simple_browse(1);
-	Browse::set_filter('album', $album->id);
-	Browse::set_sort('track','ASC');
- 	Browse::get_objects();
-	Browse::show_objects();
+	$browse = new Browse();
+	$browse->set_type('song');
+	$browse->set_simple_browse(true);
+	$browse->set_filter('album', $album->id);
+	$browse->set_sort('track', 'ASC');
+ 	$browse->get_objects();
+	$browse->show_objects();
+	$browse->store();
 ?>

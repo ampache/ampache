@@ -114,10 +114,11 @@ switch ($_REQUEST['action']) {
 		$objects = $democratic->get_items();
 		Song::build_cache($democratic->object_ids);
 		Democratic::build_vote_cache($democratic->vote_ids);
-		Browse::set_type('democratic');
-		Browse::reset();
-		Browse::set_static_content(1);
-		Browse::show_objects($objects);
+		$browse = new Browse();
+		$browse->set_type('democratic');
+		$browse->set_static_content(true);
+		$browse->show_objects($objects);
+		$browse->store();
 	break;
 } // end switch on action
 

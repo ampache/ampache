@@ -38,12 +38,12 @@ $ajax_url = Config::get('ajax_url');
 </colgroup>
 <tr class="th-top">
 	<th class="cel_add"><?php echo _('Add'); ?></th>
-	<th class="cel_song"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=title',_('Song Title'),'sort_song_title'); ?></th>
-	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=artist',_('Artist'),'sort_song_artist'); ?></th>
-	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=album',_('Album'),'sort_song_album'); ?></th>
+	<th class="cel_song"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', _('Song Title'), 'sort_song_title'); ?></th>
+	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist', _('Artist'), 'sort_song_artist'); ?></th>
+	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album', _('Album'), 'sort_song_album'); ?></th>
         <th class="cel_tags"><?php echo _('Tags'); ?></th>
-	<th class="cel_track"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=track',_('Track'),'sort_song_track'); ?></th>
-	<th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=time',_('Time'),'sort_song_time'); ?></th>
+	<th class="cel_track"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track', _('Track'), 'sort_song_track'); ?></th>
+	<th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', _('Time'), 'sort_song_time'); ?></th>
 <?php if (Config::get('ratings')) {
 	Rating::build_cache('song', $object_ids);
 ?>

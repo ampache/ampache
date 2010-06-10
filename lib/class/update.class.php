@@ -344,6 +344,9 @@ class Update {
 		$update_string = '- Add uniqueness constraint to ratings.<br />';
 		$version[] = array('version' => '360004','description' => $update_string);
 
+		$update_string = '- Modify tmp_browse to allow caching of multiple browses per session.<br />';
+		$version[] = array('version' => '360005','description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -1928,6 +1931,26 @@ class Update {
 
 		self::set_version('db_version','360004');
 	} // update_360004
+
+	/**
+	 * update_360005
+	 * This changes the tmp_browse table around.
+	 */
+	public static function update_360005() {
+		$sql = "DROP TABLE `tmp_browse`";
+		$db_results = Dba::write($sql);
+
+		$sql = "CREATE TABLE `tmp_browse` (" .
+		"`id` int(13) NOT NULL auto_increment," .
+		"`sid` varchar(128) character set utf8 NOT NULL default ''," .
+		"`data` longtext collate utf8_unicode_ci NOT NULL," .
+		"`object_data` longtext collate utf8_unicode_ci," .
+		"PRIMARY KEY  (`sid`,`id`)" .
+		") ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+		$db_results = Dba::write($sql);
+
+		self::set_version('db_version','360005');
+	} // update_360005
 
 } // end update class
 ?>

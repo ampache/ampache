@@ -38,10 +38,12 @@ switch ($_REQUEST['action']) {
 
 		$flagged = Flag::get_all();
 		ob_start();
-		Browse::set_type('flagged');
-		Browse::set_static_content(1);
-		Browse::save_objects($flagged);
-		Browse::show_objects($flagged);
+		$browse = new Browse();
+		$browse->set_type('flagged');
+		$browse->set_static_content(true);
+		$browse->save_objects($flagged);
+		$browse->show_objects($flagged);
+		$browse->store();
 		$results['browse_content'] = ob_get_contents();
 		ob_end_clean();
 

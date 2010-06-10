@@ -75,10 +75,11 @@ switch ($_REQUEST['action']) {
 		$results['rightbar'] = ajax_include('rightbar.inc.php');
 
 		// Now setup the browse and show them below!
-		Browse::set_type('song');
-		Browse::save_objects($object_ids);
+		$browse = new Browse();
+		$browse->set_type('song');
+		$browse->save_objects($object_ids);
 		ob_start();
-		Browse::show_objects();
+		$browse->show_objects();
 		$results['browse'] = ob_get_contents();
 		ob_end_clean();
 

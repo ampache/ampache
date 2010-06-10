@@ -73,7 +73,7 @@ $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
   </div>
 </div>
 
-<?php if (Browse::is_enabled('show_art')) { ?>
+<?php if (Art::is_enabled()) { ?>
 <div class="np_group">
   <div class="np_cell cel_albumart">
       <a target="_blank" href="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup" onclick="popup_art('<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup'); return false;">

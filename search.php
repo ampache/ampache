@@ -41,12 +41,13 @@ switch ($_REQUEST['action']) {
 			break;
 		}
 	case 'search':
+		$browse = new Browse();
 		require_once Config::get('prefix') . '/templates/show_search.inc.php';
 		require_once Config::get('prefix') . '/templates/show_search_options.inc.php';
 		$results = run_search($_REQUEST);
-		Browse::set_type('song');
-		Browse::reset();
-		Browse::show_objects($results);
+		$browse->set_type('song');
+		$browse->show_objects($results);
+		$browse->store();
 	break;
 	case 'save_as_track':
 		$playlist_id = save_search($_REQUEST);

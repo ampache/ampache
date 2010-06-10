@@ -79,9 +79,13 @@ switch ($_REQUEST['action']) {
 			break;
 			case 'delete_all':
 				$localplay->delete_all();
-				Browse::save_objects(array());
 				ob_start();
-				Browse::show_objects();
+				$browse = new Browse();
+				$browse->set_type('playlist_localplay');
+				$browse->set_static_content(true);
+				$browse->save_objects(array());
+				$browse->show_objects(array());
+				$browse->store();
 				$results['browse_content'] = ob_get_contents();
 				ob_end_clean();
 			break;
@@ -89,9 +93,12 @@ switch ($_REQUEST['action']) {
 				$localplay->skip(intval($_REQUEST['id']));
 				$objects = $localplay->get();
 				ob_start();
-				Browse::set_type('playlist_localplay');
-				Browse::set_static_content(1);
-				Browse::show_objects($objects);
+				$browse = new Browse();
+				$browse->set_type('playlist_localplay');
+				$browse->set_static_content(true);
+				$browse->save_objects($objects);
+				$browse->show_objects($objects);
+				$browse->store();
 				$results['browse_content'] = ob_get_contents();
 				ob_end_clean();
 			break;
@@ -121,9 +128,12 @@ switch ($_REQUEST['action']) {
 		$status = $localplay->status();
 
 		ob_start();
-		Browse::set_type('playlist_localplay');
-		Browse::set_static_content(1);
-		Browse::show_objects($objects);
+		$browse = new Browse();
+		$browse->set_type('playlist_localplay');
+		$browse->set_static_content(true);
+		$browse->save_objects($objects);
+		$browse->show_objects($objects);
+		$browse->store();
 		$results['browse_content'] = ob_get_contents();
 		ob_end_clean();
 
