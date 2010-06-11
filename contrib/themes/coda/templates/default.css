@@ -1,0 +1,1472 @@
+/*
+
+ Copyright (c) Ampache.org
+ All rights reserved.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License v2
+ as published by the Free Software Foundation
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+*/
+
+
+/************************************************/
+/*    Unify default browsers style rules        */
+/************************************************/
+h1 {
+font-size:10px;
+line-height:10px;
+}
+
+h2 {
+font-size:10px;
+line-height:10px;
+}
+
+h3 {
+font-size:10px;
+line-height:10px;
+}
+
+h4 {
+font-size:10px;
+line-height:10px;
+}
+
+h5 {
+font-size:10px;
+line-height:10px;
+}
+
+h6 {
+font-size:10px;
+line-height:10px;
+}
+
+pre {
+font-size:10px;
+line-height:10px;
+}
+
+code {
+font-size:10px;
+line-height:10px;
+}
+
+ol {
+list-style:none;
+}
+
+ul {
+list-style:none;
+}
+
+table {
+border-collapse:separate;
+border-spacing:0;
+}
+
+caption {
+font-weight:normal;
+text-align:left;
+}
+
+th {
+font-family:Verdana, Helvetica, sans-serif;
+font-size:10px;
+font-weight:bold;
+padding-right:10px;
+text-align:left;
+}
+
+td {
+color:#000;
+font:10px Verdana, Helvetica, sans-serif;
+font-size:10px;
+font-weight:normal;
+padding-left:5px;
+padding-right:10px;
+text-align:left;
+}
+
+* {
+margin:0;
+padding:0;
+}
+
+a img {
+border:0;
+}
+
+:link img {
+border:0;
+}
+
+:visited img {
+border:0;
+}
+
+/* no blue linked image borders 
+**********************************************
+           General style rules                
+***********************************************/
+html {
+height:100%;
+overflow:auto;
+overflow-y:scroll;
+}
+
+* html {
+height:auto;
+}
+
+/***********************************************
+             IE6 behaviors                    
+ - csshover2: :hover support on any element   
+***********************************************/
+body {
+background:#111;
+/*behavior:url("templates/csshover2.htc");*/
+font-family:Arial, Helvetica, Sans-Serif;
+height:100%;
+}
+
+p {
+color:#000;
+margin:1em 0;
+}
+
+a {
+color:#000;
+font-family:Verdana, Helvetica, sans-serif;
+text-decoration:none;
+}
+
+a:visited {
+color:#000;
+font-family:Verdana, Helvetica, sans-serif;
+text-decoration:none;
+}
+
+a:active {
+color:#000;
+font-family:Verdana, Helvetica, sans-serif;
+text-decoration:none;
+}
+
+a:hover {
+color:#606060;
+}
+
+input {
+color:#000;
+font:10px Verdana, Helvetica, sans-serif;
+font-weight:bold;
+margin:2px;
+padding:1px;
+}
+
+select {
+color:#000;
+font:10px Verdana, Helvetica, sans-serif;
+margin:2px;
+}
+
+textarea {
+color:#000;
+font:10px Verdana, Helvetica, sans-serif;
+margin:2px;
+}
+
+/***********************************************
+         Float Clearer                        
+**********************************************
+ float clearing for IE6 */
+* html .clearfix {
+height:1%;
+overflow:visible;
+}
+
+/* float clearing for IE7 
+*+html .clearfix{ min-height: 1%; }
+ float clearing for everyone else */
+.clearfix:after {
+clear:both;
+content:".";
+display:block;
+height:0;
+visibility:hidden;
+}
+
+/***********************************************
+                XSPF Player                   
+***********************************************/
+.xspf_player {
+position:absolute;
+right:20px;
+}
+
+/***********************************************
+             Main Container                   
+***********************************************/
+#maincontainer {
+background:#fff;
+clear:both;
+font-size:10px;
+margin-left:auto;
+margin-right:auto;
+overflow:hidden;
+width:990px;
+}
+
+/***********************************************
+             Header                           
+***********************************************/
+#header {
+background-image:url(../images/headerbg.jpg);
+height:170px;
+padding:0;
+}
+
+#headerbox {
+float:right;
+font-size:10px;
+}
+
+#headerlogo {
+float:left;
+position:relative;
+top:5px;
+z-index:25;
+}
+
+#headerlogo a {
+float:left;
+position:relative;
+top:5px;
+z-index:25;
+}
+
+.box_headerbox {
+display:table;
+}
+
+.box_headerbox #loginInfo {
+display:none;
+/*
+color:#fff;
+font-size:10px;
+margin-left:auto;
+margin-right:auto;
+position:relative;
+text-align:right;
+top:-50px;
+z-index:24;
+*/
+}
+
+/*
+.box_headerbox #loginInfo a {
+color:#ccc;
+text-decoration:none;
+}
+*/
+
+#play_type_switch {
+color:#fff;
+font-size:10px;
+margin-left:auto;
+margin-right:auto;
+padding-right:8px;
+position:relative;
+text-align:right;
+top:-30px;
+z-index:23;
+}
+
+/***********************************************
+ Search 
+***********************************************/
+#sb_Subsearch {
+color:#fff;
+height:20px;
+padding:8px;
+position:relative;
+text-align:right;
+top:129px;
+width:400px;
+z-index:102;
+}
+
+#sb_Subsearch a:link {
+color:#ccc;
+}
+
+#sb_Subsearch a:visited {
+color:#ccc;
+}
+
+#sb_Subsearch a:active {
+color:#ccc;
+}
+
+/***********************************************
+               Content block                  
+***********************************************/
+#content {
+float:left;
+height:100%;
+margin-bottom:10px;
+margin-top:10px;
+min-height:520px;
+padding:10px;
+width:760px;
+}
+
+/***********************************************
+                Footer                        
+***********************************************/
+#footer {
+background:#333 url(../images/black_nav_bg.jpg);
+clear:both;
+color:#ccc;
+font-size:10px;
+height:30px;
+margin-left:auto;
+margin-right:auto;
+text-align:center;
+width:990px;
+}
+
+#footer a:link {
+color:#ccc;
+}
+
+#footer a:visited {
+color:#ccc;
+}
+
+#footer a:active {
+color:#ccc;
+}
+
+.button {
+font-size:10px;
+text-decoration:none;
+}
+
+input[type=button] {
+font-size:10px;
+text-decoration:none;
+}
+
+input[type=submit] {
+font-size:10px;
+text-decoration:none;
+}
+
+a.button {
+padding:1px 3px;
+}
+
+/***********************************************
+ Sidebar 
+***********************************************/
+#sidebar {
+font-size:10px;
+height:40px;
+position:relative;
+top:-70px;
+width:600px;
+z-index:75;
+}
+
+#sidebar select {
+text-align:center;
+}
+
+#sidebar input {
+background:#fff;
+color:#222;
+vertical-align:middle;
+}
+
+#sidebar ul {
+display:block;
+list-style:none;
+}
+
+#sidebar a {
+text-decoration:none;
+}
+
+/* For sidebar tabs 
+*******************/
+#sidebar-tabs {
+padding-bottom:0;
+padding-left:5px;
+padding-top:26px;
+}
+
+#sidebar-tabs li.sb1 {
+float:left;
+padding-left:0;
+padding-right:11px;
+}
+
+#sidebar-tabs li.active {
+margin-top:0;
+}
+
+#sidebar-tabs li.active img {
+margin-top:0;
+position:relative;
+z-index:76;
+}
+
+/* Tabs content 
+***************/
+#sidebar-page {
+border:0;
+color:#fff;
+font-size:12px;
+left:0;
+margin:0;
+padding:0;
+position:absolute;
+top:40px;
+width:990px;
+}
+
+#sidebar-page ul.sb2 h4 {
+background:#333 url(../images/black_nav_bg.jpg);
+color:#ccc;
+display:block;
+font-size:10px;
+margin-right:10px;
+padding:8px 5px 10px 20px;
+}
+
+#sidebar-page ul.sb2 {
+background:#333 url(../images/black_nav_bg.jpg);
+height:30px;
+list-style:none;
+margin:0;
+padding:0;
+}
+
+#sidebar-page ul.sb2 li {
+float:left;
+padding:0;
+}
+
+#sidebar-page ul.sb2 li a {
+background:#333 url(../images/seperator.gif) bottom right no-repeat;
+color:#ccc;
+display:block;
+font-size:10px;
+font-weight:normal;
+line-height:35px;
+margin:0;
+padding:0 25px 5px;
+text-align:left;
+text-decoration:none;
+}
+
+#sidebar-page li a:hover {
+background:#2580a2 url(../images/hover.gif) bottom center no-repeat;
+color:#ccc;
+text-decoration:none;
+}
+
+#sidebar-page ul li:hover a {
+background:#2580a2 url(../images/hover.gif) bottom center no-repeat;
+color:#ccc;
+text-decoration:none;
+}
+
+#sidebar-page li ul.sb3 {
+background:#333;
+border:0;
+display:none;
+height:auto;
+margin:0;
+padding:0;
+position:absolute;
+width:175px;
+z-index:77;
+}
+
+#sidebar-page li:hover ul {
+display:block;
+}
+
+#sidebar-page li li {
+background:url(../images/sub_sep.gif) bottom left no-repeat;
+display:block;
+float:none;
+margin:0;
+padding:0;
+width:175px;
+}
+
+#sidebar-page li:hover li a {
+background:none;
+}
+
+#sidebar-page li ul a {
+display:block;
+font-size:10px;
+font-style:normal;
+height:25px;
+margin:0;
+padding:0 10px 0 15px;
+text-align:left;
+}
+
+#sidebar-page li ul a:hover {
+background:#2580a2 url(../images/hover_sub.gif) center left no-repeat;
+border:0;
+color:#fff;
+text-decoration:none;
+}
+
+#sidebar-page li ul li:hover a {
+background:#2580a2 url(../images/hover_sub.gif) center left no-repeat;
+border:0;
+color:#fff;
+text-decoration:none;
+}
+
+#sidebar-page p {
+clear:left;
+}
+
+/* SIDEBAR : Home 
+****************
+ SIDEBAR : Browse 
+*******************/
+.alphabet {
+background:transparent;
+color:#5b5b5b;
+font-size:10px;
+font-weight:normal;
+margin:0.3em auto;
+}
+
+.alphabet span.link {
+cursor:pointer;
+font-family:monospace, Courier, Georgia;
+margin:0;
+padding:0 5px;
+}
+
+.alphabet span.active {
+background:#5b5b5b;
+color:#fff;
+}
+
+.alphabet span.link:hover {
+background:#9cf;
+color:#fff;
+}
+
+#multi_alpha_filter {
+margin-bottom:4px;
+margin-top:14px;
+width:40px;
+}
+
+#multi_alpha_filterLabel {
+color:#000;
+vertical-align:bottom;
+}
+
+#show_artLabel {
+color:#000;
+vertical-align:bottom;
+}
+
+#show_allplLabel {
+color:#000;
+vertical-align:bottom;
+}
+
+
+/* SIDEBAR : Localplay 
+**********************/
+.active_instance {
+background:#9cf;
+}
+
+/* SIDEBAR : Preferences 
+***********************
+ SIDEBAR : Admin 
+******************/
+#sb_admin_catalogs li.sb_admin_catalogs_ctrls img {
+margin:0;
+}
+
+#sb_admin_catalogs li.sb_admin_catalogs_ctrls a {
+border:none;
+display:inline;
+padding:0;
+}
+
+
+/***********************************************
+                  XSPF Player                 
+***********************************************/
+#xspf_player {
+background:#fff;
+float:left;
+font-family:Verdana,Helvetica,sans-serif;
+width:400px;
+}
+
+/***********************************************
+                  Rightbar                    
+***********************************************/
+#rightbar {
+background:#eee url(../images/rightbar_top.jpg) no-repeat;
+border:1px solid silver;
+clear:both;
+float:right;
+font-family:Verdana,Helvetica,sans-serif;
+margin-bottom:20px;
+margin-right:10px;
+padding-bottom:10px;
+padding-top:28px;
+width:190px;
+}
+
+#rightbar ul {
+list-style:none;
+}
+
+#rightbar a {
+text-decoration:none;
+}
+
+/* Rightbar Menu */
+#rightbar #rb_action {
+padding:4px;
+}
+
+#rightbar #rb_action li {
+display:inline;
+}
+
+#rightbar li#rb_add {
+padding-bottom:0;
+padding-left:5px;
+position:relative;
+z-index:90;
+}
+
+#rightbar li#pl_add {
+padding-bottom:0;
+padding-left:5px;
+position:relative;
+z-index:90;
+}
+
+#rb_clear_playlist {
+padding-bottom:0;
+padding-left:5px;
+position:relative;
+z-index:90;
+}
+
+/* Rightbar AddItems SubMenu */
+#rightbar li:hover .submenu {
+display:block;
+}
+
+#rightbar .submenu {
+background:#fff;
+border:1px solid #8b8b8b;
+display:none;
+font-size:10px;
+margin-top:-10px;
+padding:0.3em;
+position:absolute;
+right:0;
+top:18px;
+width:120px;
+}
+
+* html #rightbar .submenu {
+right:100px;
+}
+
+/* IE6 fix */
+#rightbar .submenu a {
+border-bottom:1px solid silver;
+color:#5b5b5b;
+display:block;
+padding:0.1em;
+text-align:right;
+text-decoration:none;
+}
+
+#rightbar .submenu a:hover {
+background:#9cf;
+color:#000;
+}
+
+#rightbar #rb_current_playlist a:hover {
+background:#9cf;
+color:#000;
+}
+
+/* Rightbar playlist */
+#rightbar #rb_current_playlist {
+padding-bottom:5px;
+padding-left:5px;
+padding-right:5px;
+}
+
+#rightbar #rb_current_playlist li {
+color:#5b5b5b;
+font-size:10px;
+line-height:14px;
+padding-right:20px;
+position:relative;
+}
+
+#rightbar #rb_current_playlist li a {
+display:block;
+padding:0.2em;
+}
+
+#rightbar .delitem {
+position:absolute;
+right:0;
+top:0;
+}
+
+/* Rightbar Localplay Controls */
+#rightbar #localplay-control {
+padding-left:5px;
+}
+
+#localplay-control span {
+cursor:pointer;
+}
+
+/***********************************************
+        Styles for the star ratings           
+***********************************************/
+.star-rating {
+position:relative;
+}
+
+.dynamic-star-rating {
+width:95px;
+}
+
+.star-rating ul {
+background:url(../../../images/ratings/star_rating.gif) left -1000px repeat-x;
+background-position:left top;
+height:15px;
+list-style:none;
+margin:0;
+overflow:hidden;
+padding:0;
+position:relative;
+width:80px;
+}
+
+.star-rating a:hover {
+background:url(../../../images/ratings/star_rating.gif) left -1000px repeat-x;
+}
+
+.star-rating .current-rating {
+background:url(../../../images/ratings/star_rating.gif) left -1000px repeat-x;
+background-position:left bottom;
+border:none;
+height:15px;
+left:0;
+line-height:15px;
+outline:none;
+overflow:hidden;
+position:absolute;
+text-indent:-1000em;
+top:0;
+z-index:1;
+}
+
+.star-rating li {
+display:inline;
+}
+
+.star-rating a {
+border:none;
+height:15px;
+left:0;
+line-height:15px;
+outline:none;
+overflow:hidden;
+position:absolute;
+text-indent:-1000em;
+top:0;
+}
+
+.star-rating span {
+border:none;
+height:15px;
+left:0;
+line-height:15px;
+outline:none;
+overflow:hidden;
+position:absolute;
+text-indent:-1000em;
+top:0;
+}
+
+.star-rating .star1 {
+width:20%;
+z-index:6;
+}
+
+.star-rating .star2 {
+width:40%;
+z-index:5;
+}
+
+.star-rating .star3 {
+width:60%;
+z-index:4;
+}
+
+.star-rating .star4 {
+width:80%;
+z-index:3;
+}
+
+.star-rating .star5 {
+width:100%;
+z-index:2;
+}
+
+.star-rating a.star0 {
+background:url(../../../images/ratings/x_off.gif) left top;
+left:0;
+width:16px;
+}
+
+/* hovering effect only for dynamic star rating */
+.dynamic-star-rating a:hover {
+background-position:left center;
+}
+
+.dynamic-star-rating a:hover.star0 {
+background:url(../../../images/ratings/x.gif) left top;
+}
+
+.dynamic-star-rating ul {
+left:16px;
+}
+
+/***********************************************
+              Box Related Styles              
+***********************************************/
+.box-title {
+border-bottom:solid 1px #000;
+font-size:14px;
+font-weight:bold;
+margin:0 10px 6px;
+padding-bottom:4px;
+}
+
+.box-list {
+padding-right:10px;
+}
+
+.box {
+background:inherit;
+clear:left;
+float:left;
+height:1%;
+}
+
+/* Fixes an IE6 rounding error 
+
+
+ Specific to Info Boxes */
+.info-box {
+background:inherit;
+clear:left;
+float:left;
+height:1%;
+margin-right:10px;
+}
+
+.box-top {
+position:relative;
+}
+
+.box-left-top {
+height:5px;
+left:0;
+position:relative;
+top:0;
+width:5px;
+}
+
+.box-right-top {
+height:5px;
+position:absolute;
+right:0;
+top:0;
+width:5px;
+}
+
+
+/* Fixes an IE6 rounding error */
+.box-bottom {
+clear:both;
+position:relative;
+}
+
+.box-left-bottom {
+height:5px;
+left:0;
+position:relative;
+top:0;
+width:5px;
+}
+
+.box-right-bottom {
+height:5px;
+position:absolute;
+right:0;
+top:0;
+width:5px;
+}
+
+.album_art {
+float:left;
+margin-right:10px;
+}
+
+#information_actions {
+float:left;
+font-size:10px;
+margin-left:5px;
+}
+
+#information_actions h3 {
+font-size:10px;
+margin:0.2em;
+}
+
+/* Specific boxes */
+.box_newest_artists {
+clear:none;
+}
+
+.box_newest_genres {
+clear:none;
+}
+
+.box_popular_artists {
+clear:none;
+}
+
+.box_popular_genres {
+clear:none;
+}
+
+.box_preferences h4 {
+color:#000;
+font:bold 12px Verdana, Helvetica, sans-serif;
+padding:0.8em 0;
+}
+
+.tabledata .th-top {
+font-size:10px;
+text-align:center;
+vertical-align:top;
+}
+
+.tabledata .th-bottom {
+font-size:10px;
+text-align:center;
+vertical-align:top;
+}
+
+.tableform select {
+width:150px;
+}
+
+.tabledata .odd {
+background:#eee;
+border-bottom:1px solid silver;
+font-size:10px;
+}
+
+.tabledata .odd td {
+border-bottom:1px solid silver;
+font-size:10px;
+}
+
+.tabledata .even {
+border-bottom:1px solid silver;
+font-size:10px;
+}
+
+.tabledata .even td {
+border-bottom:1px solid silver;
+font-size:10px;
+}
+
+.row-highlight {
+border-bottom:1px solid silver;
+font-size:10px;
+}
+
+.tabledata .even:hover {
+background:#9cf;
+}
+
+.tabledata .odd:hover {
+background:#9cf;
+}
+
+.row-highlight:hover {
+background:#9cf;
+}
+
+/* Misc */
+.border {
+background:#000;
+}
+
+.tabledata input {
+margin:2px 0;
+}
+
+.tabledata select {
+margin:2px 0;
+}
+
+/* specific cells */
+td.cel_cover {
+padding:6px;
+}
+
+.cel_select {
+text-align:center;
+}
+
+.cel_action {
+text-align:center;
+}
+
+.cel_date {
+text-align:center;
+}
+
+.cel_applytoall {
+text-align:center;
+}
+
+.cel_level {
+text-align:center;
+}
+
+/* specific cells : users login state */
+.user_online {
+background:#0f0;
+}
+
+.user_offline {
+background:#7f0000;
+}
+
+.user_disabled {
+background:#ccc;
+}
+
+/* td.cel_add{width:40px;text-align:right;} 
+ specific tables */
+#recently_played .th-bottom {
+display:none;
+}
+
+.box_preferences .th-bottom {
+display:none;
+}
+
+.inline-edit input {
+font-size:10px;
+}
+
+.inline-edit select {
+font-size:10px;
+}
+
+/***********************************************
+          Song details                        
+***********************************************/
+dl.song_details {
+font-size:12px;
+}
+
+.song_details dt {
+clear:both;
+float:left;
+font-weight:bold;
+min-width:20%;
+width:20%;
+}
+
+.song_details dd {
+float:left;
+margin:0 0 0.2em .3em;
+min-width:79%;
+padding-left:.2em;
+width:79%;
+}
+
+dt + dd {
+border-bottom:1px solid silver;
+}
+
+dt:hover {
+background:#9cf;
+}
+
+dt:hover + dd {
+background:#9cf;
+}
+
+/***********************************************
+          Albums of the moment                
+***********************************************/
+.random_album {
+background:url(../images/album_shadow.png) no-repeat top left !important;
+float:left;
+margin:0 !important;
+padding:0;
+position:relative;
+width:90px;
+}
+
+.random_album img {
+border:0 solid #000;
+display:block;
+margin:0 10px 10px 0;
+position:relative;
+}
+
+.random_album .play_album {
+display:none;
+}
+
+.play_album img {
+border:none;
+margin-top:5px;
+}
+
+/***********************************************
+          Now Playing                         
+***********************************************/
+.np_row {
+display:block;
+float:left;
+font-size:10px;
+padding:3px;
+}
+
+.np_cell {
+margin-left:5px;
+padding-left:5px;
+}
+
+.np_row label {
+display:block;
+font-weight:bold;
+margin:2px 0 0 -5px;
+}
+
+.np_group {
+float:left;
+padding-right:15px;
+}
+
+.np_row a {
+font-size:10px;
+}
+
+/***********************************************
+               Shoutbox                       
+***********************************************/
+#shoutbox {
+font-size:10px;
+}
+
+#shoutbox div.shout {
+border-top:1px solid silver;
+margin:10px 5px 0 0;
+padding-top:0.5em;
+}
+
+#shoutbox div.shout:hover {
+border-top:1px solid #9cf;
+}
+
+#shoutbox .shouttext {
+display:block;
+font-size:10px;
+margin-top:.5em;
+}
+
+img.shoutboximage {
+margin:0 3px;
+}
+
+#shoutbox div.odd {
+margin-right:20%;
+text-align:left;
+}
+
+#shoutbox div.even {
+margin-left:20%;
+text-align:right;
+}
+
+#shoutbox .odd img.shoutboximage {
+float:left;
+}
+
+#shoutbox .even img.shoutboximage {
+float:right;
+}
+
+/***********************************************
+             List Header                      
+***********************************************/
+.list-header {
+font-size:10px;
+margin:7px 0;
+padding:0 4em;
+position:relative;
+text-align:center;
+}
+
+.list-header .prev {
+left:0;
+position:absolute;
+top:0;
+}
+
+.list-header .next {
+position:absolute;
+right:0;
+top:0;
+}
+
+.list-header .selected {
+background:#e0e0e0;
+}
+
+.list-header .page-nb {
+border:1px solid #ccc;
+padding:1px;
+text-decoration:none;
+}
+
+.list-header .page-nb:hover {
+background:#d0d0d0;
+}
+
+/***********************************************
+             Errors                           
+***********************************************/
+.error {
+color:#903;
+}
+
+.fatalerror {
+color:#903;
+display:table-cell;
+font-size:10px;
+font-weight:bold;
+padding:3px;
+}
+
+.lp_box_ctrl {
+text-align:center;
+}
+
+.lp_box_vol {
+text-align:center;
+}
+
+td.lp_current a {
+font-weight:bold;
+text-decoration:none;
+}
+
+/***********************************************
+         Styles for Login template            
+***********************************************/
+#loginPage #maincontainer {
+font-size:10px;
+text-align:center;
+width:990px;
+}
+
+#loginPage #header {
+padding:0;
+}
+
+#loginPage #loginbox {
+height:292px;
+}
+
+#loginPage h2 {
+color:#333;
+font-weight:normal;
+padding-top:60px;
+}
+
+.loginfield {
+margin:1em 0;
+padding-right:100px;
+text-align:center;
+}
+
+.loginfield input.text_input {
+border:1px solid #999;
+width:12em;
+}
+
+.loginfield label {
+font-weight:bold;
+}
+
+.loginfield #rememberme {
+background:none;
+margin-right:5em;
+}
+
+#loginPage div.fatalerror {
+margin:10px;
+padding:5px;
+}
+
+#motd {
+margin:0 auto;
+width:437px;
+}
+
+/***********************************************
+                Misc                          
+***********************************************/
+.formValidation {
+margin-top:1em;
+text-align:center;
+}
+
+.text-box {
+background:#bbb;
+border:2px solid #000;
+display:table-cell;
+margin-bottom:10px;
+padding:5px 5px 0;
+}
+
+.confirmation-box {
+background:#bbb;
+border:2px solid #000;
+display:table-cell;
+margin-bottom:10px;
+padding:5px 5px 0;
+}
+
+#ajax-loading {
+background:url(../images/ajax-loader.gif) no-repeat;
+color:#ccc;
+display: none;
+height:11px;
+margin-left:auto;
+margin-right:auto;
+position:absolute;
+text-align:center;
+text-indent:-9999em;
+top:60px;
+width:990px;
+z-index:100;
+}
+
+
+
+.information {
+color:silver;
+font-size:10px;
+font-style:italic;
+}
+
+.information a {
+color:silver;
+font-size:10px;
+font-style:italic;
+}
+
+/*****************
+ * Tag Definitions
+ *****************/
+.tag_size1 {
+font-size:10px;
+}
+
+.tag_size2 {
+font-size:10px;
+}
+
+.tag_size3 {
+font-size:10px;
+}
+
+.tag_size4 {
+font-size:10px;
+}
+
+a.tag_size1 {
+text-decoration:none;
+}
+
+a.tag_size2 {
+text-decoration:none;
+}
+
+a.tag_size3 {
+text-decoration:none;
+}
+
+a.tag_size4 {
+text-decoration:none;
+}
+
+.hover-add:hover {
+color:#606060;
+text-decoration:none;
+}
+
+.hover-remove:hover {
+color:#606060;
+text-decoration:none;
+}
