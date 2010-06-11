@@ -1527,7 +1527,7 @@ class getid3_mp3 extends getid3_handler
 
 
 
-    public static function ClosestStandardMP3Bitrate($bitrate) {
+    public static function ClosestStandardMP3Bitrate($bit_rate) {
         
         static $standard_bit_rates = array (320000, 256000, 224000, 192000, 160000, 128000, 112000, 96000, 80000, 64000, 56000, 48000, 40000, 32000, 24000, 16000, 8000);
         static $bit_rate_table = array (0=>'-');
@@ -1538,7 +1538,7 @@ class getid3_mp3 extends getid3_handler
             } else {
                 $last_bit_rate = 320000;
                 foreach ($standard_bit_rates as $standard_bit_rate) {
-                    $bit_rate_table[$round_bit_rate] = $standard_bit_rate;
+                    $bit_rate_table[$round_bit_rate] = $last_bit_rate;
                     if ($round_bit_rate >= $standard_bit_rate - (($last_bit_rate - $standard_bit_rate) / 2)) {
                         break;
                     }
