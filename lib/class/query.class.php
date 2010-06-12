@@ -110,7 +110,7 @@ class Query {
 			case 'exact_match':
 			case 'alpha_match':
 			case 'starts_with':
-				if ($this->is_static_content($id)) { return false; }
+				if ($this->is_static_content()) { return false; }
 				$this->_state['filter'][$key] = $value;
 			break;
 			case 'playlist_type':
@@ -125,8 +125,8 @@ class Query {
 		} // end switch
 
 		// If we've set a filter we need to reset the totals
-		$this->reset_total($id);
-		$this->set_start(0, $id);
+		$this->reset_total();
+		$this->set_start(0);
 
 		return true;
 
