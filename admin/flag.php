@@ -35,19 +35,12 @@ switch ($_REQUEST['action']) {
 		$new_song = new Song();
 
 		/* Setup the vars so we can use the update_song function */
-		$new_song->title 	= revert_string(scrub_in($_REQUEST['title']));
-		$new_song->track 	= revert_string(scrub_in($_REQUEST['track']));
-		$new_song->year  	= revert_string(scrub_in($_REQUEST['year']));
-		$new_song->comment	= revert_string(scrub_in($_REQUEST['comment']));
+		$new_song->title 	= unhtmlentities(scrub_in($_REQUEST['title']));
+		$new_song->track 	= unhtmlentities(scrub_in($_REQUEST['track']));
+		$new_song->year  	= unhtmlentities(scrub_in($_REQUEST['year']));
+		$new_song->comment	= unhtmlentities(scrub_in($_REQUEST['comment']));
 
 		/* If no change in string take Drop down */
-		if (strcasecmp(stripslashes($_REQUEST['genre_string']),$song->get_genre_name()) == 0) {
-			$genre = $song->get_genre_name($_REQUEST['genre']);
-		}
-		else {
-			$genre = scrub_in($_REQUEST['genre_string']);
-		}
-
 		if (strcasecmp(stripslashes($_REQUEST['album_string']),$song->get_album_name()) == 0) {
 			$album = $song->get_album_name($_REQUEST['album']);
 		}
@@ -63,15 +56,13 @@ switch ($_REQUEST['action']) {
 		}
 
 		/* Use the check functions to get / create ids for this info */
-		$new_song->genre = $catalog->check_genre(revert_string($genre));
-		$new_song->album = $catalog->check_album(revert_string($album));
-		$new_song->artist = $catalog->check_artist(revert_string($artist));
+		$new_song->album = $catalog->check_album(unhtmlentities($album));
+		$new_song->artist = $catalog->check_artist(unhtmlentities($artist));
 
 		/* Update this mofo, store an old copy for cleaning */
 		$old_song 		= new Song();
 		$old_song->artist 	= $song->artist;
 		$old_song->album	= $song->album;
-		$old_song->genre	= $song->genre;
 		$song->update_song($song->id,$new_song);
 
 		/* Now that it's been updated clean old junk entries */
@@ -203,18 +194,14 @@ switch ($_REQUEST['action']) {
 			$old_song			   = new Song();
 			$old_song->artist	   = $new_song->artist;
 			$old_song->album		= $new_song->album;
-			$old_song->genre		= $new_song->genre;
 
 			/* Restrict which fields can be updated */
 			switch ($object) {
-				case 'genre':
-					$new_song->genre = $catalog->check_genre(revert_string($_REQUEST['update_value']));
-				break;
 				case 'album':
-					$new_song->album = $catalog->check_album(revert_string($_REQUEST['update_value']));
+					$new_song->album = $catalog->check_album(unhtmlentities($_REQUEST['update_value']));
 				break;
 				case 'artist':
-					$new_song->artist = $catalog->check_artist(revert_string($_REQUEST['update_value']));
+					$new_song->artist = $catalog->check_artist(unhtmlentities($_REQUEST['update_value']));
 				break;
 				case 'year':
 					$new_song->year	= intval($_REQUEST['update_value']);

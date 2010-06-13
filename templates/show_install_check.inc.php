@@ -20,7 +20,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 ?>
-<?php if (INSTALL != '1') { exit; } ?>
+<?php if (!defined('INSTALL')) { exit; } ?>
 <h4><?php echo _('Required'); ?></h4>
 <table border="0" cellspacing="0" cellpadding="3">
 <tr>
@@ -49,7 +49,7 @@
 		else {
 			$version_string = phpversion() . " ";
 		}
-		$string = $version_string . _('Hash Function Exists') . " " . print_boolean(function_exists('hash_algos')) . " " . _('SHA256 Support') . " " . print_boolean(in_array('sha256',$algos));
+		$string = $version_string . _('Hash Function Exists') . " " . print_bool(function_exists('hash_algos')) . " " . _('SHA256 Support') . " " . print_bool(in_array('sha256',$algos));
 		echo debug_result($string,false);
 		Error::add('install',_('PHP Version'));
 	}

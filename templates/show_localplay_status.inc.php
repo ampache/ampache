@@ -35,13 +35,13 @@ $now_playing = $status['track_title'] ? $status['track_title'] . ' - ' . $status
 <?php echo _('Volume'); ?>:<?php echo $status['volume']; ?>%
 </li>
 <li>
-	<?php echo print_boolean($status['repeat']); ?> |
-	<?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_boolean($status['repeat']),print_boolean(invert_boolean($status['repeat'])),'localplay_repeat'); ?>
+	<?php echo print_bool($status['repeat']); ?> |
+	<?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_bool($status['repeat']), print_bool(invert_bool($status['repeat'])), 'localplay_repeat'); ?>
 	<?php echo _('Repeat'); ?>
 </li>
 <li>
-	<?php echo print_boolean($status['random']); ?> |
-	<?php echo Ajax::text('?page=localplay&action=random&value=' . invert_boolean($status['random']),print_boolean(invert_boolean($status['random'])),'localplay_random'); ?>
+	<?php echo print_bool($status['random']); ?> |
+	<?php echo Ajax::text('?page=localplay&action=random&value=' . invert_bool($status['random']), print_bool(invert_bool($status['random'])), 'localplay_random'); ?>
 	<?php echo _('Random'); ?>
 </li>
 <li>

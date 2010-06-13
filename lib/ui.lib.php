@@ -29,7 +29,7 @@
  */
 
 /**
- *  show_confirmation
+ * show_confirmation
  * shows a confirmation of an action
  * $next_url	Where to go next
  * $title	The Title of the message
@@ -50,10 +50,9 @@ function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirma
 } // show_confirmation
 
 /**
- *  flip_class
- * takes an array of 2 class names
- *		and flips them back and forth and
- *		then echo's out [0]
+ * flip_class
+ * First called with an array of 2 class names.  Subsequent calls reverse the
+ * array then return the first element.
  */
 function flip_class($array=0) {
 
@@ -70,9 +69,9 @@ function flip_class($array=0) {
 } // flip_class
 
 /**
- *  _
- * checks to see if the alias _ is defined
- *	if it isn't it defines it as a simple return
+ * _
+ * Check to see if the gettext alias _ is defined. If it isn't we define it as
+ * a noop.
  */
 if (!function_exists('_')) {
 
@@ -93,9 +92,8 @@ if (!function_exists('ngettext')) {
 } // if no ngettext
 
 /**
- *  access_denied
- * throws an error if they try to do something
- * 	that they aren't allowed to
+ * access_denied
+ * Throws an error if they try to do something that they aren't allowed to.
  */
 function access_denied() {
 
@@ -107,7 +105,7 @@ function access_denied() {
 } // access_denied
 
 /**
- *  return_referer
+ * return_referer
  * returns the script part of the referer address passed by the web browser
  * this is not %100 accurate. Also because this is not passed by us we need
  * to clean it up, take the filename then check for a /admin/ and dump the rest
@@ -115,14 +113,14 @@ function access_denied() {
 function return_referer() {
 
 	$referer = $_SERVER['HTTP_REFERER'];
-    if (substr($referer, -1)=='/'){
-    	$file = 'index.php';
-    }
-    else {
-    	$file = basename($referer);
+	if (substr($referer, -1)=='/'){
+		$file = 'index.php';
+	}
+	else {
+		$file = basename($referer);
 		/* Strip off the filename */
-    	$referer = substr($referer,0,strlen($referer)-strlen($file));
-    }
+		$referer = substr($referer,0,strlen($referer)-strlen($file));
+	}
 
 	if (substr($referer,strlen($referer)-6,6) == 'admin/') {
 		$file = 'admin/' . $file;
@@ -134,34 +132,33 @@ function return_referer() {
 
 /**
  * truncate_with_ellipsis
- * Correct Spelling function that truncates text to a specific lenght
- * and appends three dots, or an ellipsis to the end
- * @package Web Interface
- * @catagory General
- * @author Nedko Arnaudov
+ * Function that truncates text to a specific length and appends an ellipsis to
+ * the end.
  */
 function truncate_with_ellipsis($text, $max='') {
 
 	$max = $max ? $max : '27';
 
-	/* If we want it to be shorter than three, just throw it back */
-	if ($max > 3) {
+	/* If they want it to be shorter than three, just throw it back */
+	if ($max <= 3) {
+		return $text;
+	}
 
-		/* Make sure the functions exist before doing the iconv mojo */
-		if (function_exists('iconv') && function_exists('iconv_substr') && function_exists('iconv_strlen')) {
-			if (iconv_strlen($text, Config::get('site_charset')) > $max) {
-				$text = iconv_substr($text, 0, $max-3, Config::get('site_charset'));
-				$text .= iconv("ISO-8859-1", Config::get('site_charset'), "...");
-			}
+	/* Make sure the functions exist before doing the iconv mojo */
+	if (function_exists('iconv') &&
+		function_exists('iconv_substr') &&
+		function_exists('iconv_strlen')) {
+		$charset = Config::get('site_charset');
+		if (iconv_strlen($text, $charset) > $max) {
+			$text = iconv_substr($text, 0, $max-3, $charset);
+			$text .= iconv("ISO-8859-1", $charset, "...");
 		}
-
-		/* Do normal substr if we don't have iconv */
-		else {
-			if (strlen($text) > $max) {
-				$text = substr($text,0,$max-3)."...";
-			}
-		} // else no iconv
-	} // else greater than 3
+	}
+	else { // Use normal substr if we don't have iconv
+		if (strlen($text) > $max) {
+			$text = substr($text,0,$max-3)."...";
+		}
+	} // else no iconv
 
 	return $text;
 
@@ -179,13 +176,13 @@ function show_header() {
 } // show_header
 
 /**
- *  show_footer
+ * show_footer
  * shows the footer of the page
  */
 function show_footer() {
 
 	require_once Config::get('prefix') . '/templates/footer.inc.php';
-	if ($_REQUEST['profiling']) {
+	if (isset($_REQUEST['profiling'])) {
 	  Dba::show_profile();
 	}
 
@@ -193,13 +190,14 @@ function show_footer() {
 
 /**
  * get_location
- * This function gets the information about said persons currently location
- * this is used for A) Sidebar highlighting & submenu showing and B) Titlebar information
- * it returns an array of information about what they are currently doing
+ * This function gets the information about a person's current location.
+ * This is used for A) sidebar highlighting & submenu showing and B) titlebar
+ * information. It returns an array of information about what they are currently
+ * doing.
  * Possible array elements
  * ['title']	Text name for the page
  * ['page']	actual page name
- * ['section']	name of the section we are in, admin, browse etc (submenu control)
+ * ['section']	name of the section we are in, admin, browse etc (submenu)
  * @package General
  */
 function get_location() {
@@ -293,9 +291,7 @@ function get_location() {
 
 /**
  * show_preference_box
- * This shows the preference box for the preferences pages
- * it takes a chunck of the crazy preference array and then displays it out
- * it does not contain the <form> </form> tags
+ * This shows the preference box for the preferences pages.
  */
 function show_preference_box($preferences) {
 
@@ -304,44 +300,9 @@ function show_preference_box($preferences) {
 } // show_preference_box
 
 /**
- * good_email
- * Don't get me started... I'm sure the indenting is still wrong on this
- * it shouldn't be named this, it should be documented, yea this needs
- * some serious MOJO work
- */
-function good_email($email) {
-	// First check that there's one @ symbol, and that the lengths are good
-	if (!preg_match("/^[^@]{1,64}@[^@]{1,255}$/", $email)) {
-		// Email invalid because wrong number of characters in one section, or wrong number of @ symbols.
-		return false;
-	}
-
-	// Split it into sections
-	$email_array = explode("@", $email);
-	$local_array = explode(".", $email_array[0]);
-	for ($i = 0; $i < sizeof($local_array); $i++) {
-		if (!preg_match("/^(([A-Za-z0-9!#$%&'*+/=?^_`{|}~-][A-Za-z0-9!#$%&'*+/=?^_`{|}~\.-]{0,63})|(\"[^(\\|\")]{0,62}\"))$/", $local_array[$i])) {
-				return false;
-			}
-		}
-	if (!preg_match("/^\[?[0-9\.]+\]?$/", $email_array[1])) { // Check if domain is IP. If not, it should be valid domain name
-		$domain_array = explode(".", $email_array[1]);
-		if (sizeof($domain_array) < 2) {
-			return false; // Not enough parts to domain
-		}
-		for ($i = 0; $i < sizeof($domain_array); $i++) {
-			if (!preg_match("/^(([A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9])|([A-Za-z0-9]+))$/", $domain_array[$i])) {
-				return false;
-			}
-		}
-	}
-	return true;
-} //good_email
-
-/**
  * show_album_select
- * This displays a select of every album that we've got in Ampache, (it can be hella long) it's used
- * by the Edit page, it takes a $name and a $album_id
+ * This displays a select of every album that we've got in Ampache (which can be
+ * hella long). It's used by the Edit page and takes a $name and a $album_id
  */
 function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0) {
 	// Generate key to use for HTML element ID
@@ -380,7 +341,8 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0) {
 
 /**
  * show_artist_select
- * This is the same as the album select except it's *gasp* for artists how inventive!
+ * This is the same as show_album_select except it's *gasp* for artists! How
+ * inventive!
  */
 function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id=0) {
 	// Generate key to use for HTML element ID
@@ -418,7 +380,8 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id
 
 /**
  * show_catalog_select
- * Yet another one of these buggers. this shows a drop down of all of your catalogs
+ * Yet another one of these buggers. this shows a drop down of all of your
+ * catalogs.
  */
 function show_catalog_select($name='catalog',$catalog_id=0,$style='') {
 
@@ -471,8 +434,7 @@ function show_user_select($name,$selected='',$style='') {
 
 /**
  * show_playlist_select
- * This one is for users! shows a select/option statement so you can pick a user
- * to blame
+ * This one is for playlists!
  */
 function show_playlist_select($name,$selected='',$style='') {
 
@@ -536,19 +498,22 @@ function get_user_icon($name,$title='',$id='') {
 	if (!$title) { $title = _(ucfirst($name)); }
 
 	if ($id) {
-		$id_element = 'id="' . $id . '"';
+		$id = ' id="' . $id . '" ';
 	}
 
 	if (isset($url_cache[$name])) {
 		$img_url = $url_cache[$name];
 		$cache_url = true;
 	}
-	if (isset($url_cache[$hover_name])) {
+
+	if (empty($hover_name)) {
+		$cache_hover = true;
+		$hov_txt = '';
+	}
+	elseif (isset($url_cache[$hover_name])) {
 		$hover_url = $url_cache[$hover_name];
 		$cache_hover = true;
 	}
-
-	if (empty($hover_name)) { $cache_hover = true; }
 
 	if (!isset($cache_url) OR !isset($cache_hover)) {
 
@@ -562,6 +527,8 @@ function get_user_icon($name,$title='',$id='') {
 			$img_url = Config::get('web_path') . '/images/' . $icon_name;
 		}
 
+		$url_cache[$name] = $img_url;
+
 		/* If Hover, then build its url */
 		if (!empty($hover_name)) {
 			$hover_icon = 'icon_' . $hover_name . '.png';
@@ -572,12 +539,13 @@ function get_user_icon($name,$title='',$id='') {
 				$hov_url = Config::get('web_path') . '/images/' . $hover_icon;
 			}
 
-			$hov_txt = "onmouseover=\"this.src='$hov_url'; return true;\" onmouseout=\"this.src='$img_url'; return true;\"";
+			$hov_txt = " onmouseover=\"this.src='$hov_url'; return true;\" onmouseout=\"this.src='$img_url'; return true;\" ";
+			$url_cache[$hover_name] = $hov_txt;
 		} // end hover
 
 	} // end if not cached
 
-	$string = "<img src=\"$img_url\" $id_element alt=\"" . $title . "\" title=\"" . $title . "\" $hov_txt/>";
+	$string = '<img src="' . $img_url . '"' . $id . 'alt="' . $title . '" title="' . $title . '"' . $hov_txt . '/>';
 
 	return $string;
 
@@ -585,58 +553,59 @@ function get_user_icon($name,$title='',$id='') {
 
 /**
  * xml_from_array
- * This takes a one dimensional array and
- * creates a XML document form it for use
- * primarly by the ajax mojo
+ * This takes a one dimensional array and creates a XML document from it. For
+ * use primarily by the ajax mojo.
  */
 function xml_from_array($array,$callback=0,$type='') {
 
-	// If we weren't passed an array then return a blank string
-	if (!is_array($array)) { return ''; }
+	$string = '';
+
+	// If we weren't passed an array then return
+	if (!is_array($array)) { return $string; }
 
 	// The type is used for the different XML docs we pass
 	switch ($type) {
 	case 'itunes':
-	        foreach ($array as $key=>$value) {
-	                if (is_array($value)) {
-        	                $value = xml_from_array($value,1,$type);
-                	        $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-	                }
-        	        else {
-                	        if ($key == "key"){
-                        	$string .= "\t\t<$key>$value</$key>\n";
-	                        } elseif (is_int($value)) {
-        	                $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
-                	        } elseif ($key == "Date Added") {
-                        	$string .= "\t\t\t<key>$key</key><date>$value</date>\n";
-	                        } elseif (is_string($value)) {
-        	                /* We need to escape the value */
-                	        $string .= "\t\t\t<key>$key</key><string><![CDATA[$value]]></string>\n";
-	                        }
-        	        }
+		foreach ($array as $key=>$value) {
+			if (is_array($value)) {
+				$value = xml_from_array($value,1,$type);
+				$string .= "\t\t<$key>\n$value\t\t</$key>\n";
+			}
+			else {
+				if ($key == "key"){
+				$string .= "\t\t<$key>$value</$key>\n";
+				} elseif (is_int($value)) {
+				$string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
+				} elseif ($key == "Date Added") {
+				$string .= "\t\t\t<key>$key</key><date>$value</date>\n";
+				} elseif (is_string($value)) {
+				/* We need to escape the value */
+				$string .= "\t\t\t<key>$key</key><string><![CDATA[$value]]></string>\n";
+				}
+			}
 
-	        } // end foreach
+		} // end foreach
 
 		return $string;
 	break;
 	case 'xspf':
-	        foreach ($array as $key=>$value) {
-	                if (is_array($value)) {
-        	                $value = xml_from_array($value,1,$type);
-                	        $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-	                }
-        	        else {
-                	        if ($key == "key"){
-                        	$string .= "\t\t<$key>$value</$key>\n";
-	                        } elseif (is_numeric($value)) {
-        	                $string .= "\t\t\t<$key>$value</$key>\n";
-	                        } elseif (is_string($value)) {
-        	                /* We need to escape the value */
-                	        $string .= "\t\t\t<$key><![CDATA[$value]]></$key>\n";
-	                        }
-        	        }
+		foreach ($array as $key=>$value) {
+			if (is_array($value)) {
+				$value = xml_from_array($value,1,$type);
+				$string .= "\t\t<$key>\n$value\t\t</$key>\n";
+			}
+			else {
+				if ($key == "key"){
+				$string .= "\t\t<$key>$value</$key>\n";
+				} elseif (is_numeric($value)) {
+				$string .= "\t\t\t<$key>$value</$key>\n";
+				} elseif (is_string($value)) {
+				/* We need to escape the value */
+				$string .= "\t\t\t<$key><![CDATA[$value]]></$key>\n";
+				}
+			}
 
-	        } // end foreach
+		} // end foreach
 
 		return $string;
 	break;
@@ -652,7 +621,7 @@ function xml_from_array($array,$callback=0,$type='') {
 				$string .= "\t<content div=\"$key\"><![CDATA[$value]]></content>\n";
 			}
 		// end foreach elements
-	        }
+		}
 		if (!$callback) {
 			$string = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<root>\n" . $string . "</root>\n";
 		}
@@ -670,28 +639,28 @@ function xml_get_header($type){
 	switch ($type){
 	case 'itunes':
 		$header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
-                "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
-                "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
-                "<plist version=\"1.0\">\n" .
-                "<dict>\n" .
-                "       <key>Major Version</key><integer>1</integer>\n" .
-                "       <key>Minor Version</key><integer>1</integer>\n" .
-                "       <key>Application Version</key><string>7.0.2</string>\n" .
-                "       <key>Features</key><integer>1</integer>\n" .
-                "       <key>Show Content Ratings</key><true/>\n" .
-                "       <key>Tracks</key>\n" .
-                "       <dict>\n";
+		"<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
+		"\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
+		"<plist version=\"1.0\">\n" .
+		"<dict>\n" .
+		"       <key>Major Version</key><integer>1</integer>\n" .
+		"       <key>Minor Version</key><integer>1</integer>\n" .
+		"       <key>Application Version</key><string>7.0.2</string>\n" .
+		"       <key>Features</key><integer>1</integer>\n" .
+		"       <key>Show Content Ratings</key><true/>\n" .
+		"       <key>Tracks</key>\n" .
+		"       <dict>\n";
 		return $header;
 	break;
 	case 'xspf':
-                $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
+		$header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
 			"<!-- XML Generated by Ampache v." .  Config::get('version') . " -->";
-                	"<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n ".
-                	"<title>Ampache XSPF Playlist</title>\n" .
-                	"<creator>" . Config::get('site_title') . "</creator>\n" .
-                	"<annotation>" . Config::get('site_title') . "</annotation>\n" .
-	               	"<info>". Config::get('web_path') ."</info>\n" .
-                	"<trackList>\n\n\n\n";
+			"<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n ".
+			"<title>Ampache XSPF Playlist</title>\n" .
+			"<creator>" . Config::get('site_title') . "</creator>\n" .
+			"<annotation>" . Config::get('site_title') . "</annotation>\n" .
+			"<info>". Config::get('web_path') ."</info>\n" .
+			"<trackList>\n\n\n\n";
 		return $header;
 	break;
 	default:
@@ -708,14 +677,14 @@ function xml_get_header($type){
 function xml_get_footer($type){
 	switch ($type){
 	case 'itunes':
-        	$footer = "      </dict>\n" .
-                "</dict>\n" .
-                "</plist>\n";
+		$footer = "      </dict>\n" .
+		"</dict>\n" .
+		"</plist>\n";
 		return $footer;
 	break;
 	case 'xspf':
-                $footer = "          </trackList>\n" .
-                	  "</playlist>\n";
+		$footer = "	  </trackList>\n" .
+			  "</playlist>\n";
 		return $footer;
 	break;
 	default:
@@ -743,7 +712,7 @@ function ajax_include($include) {
 
 /**
  * toggle_visible
- * this is identicla to the javascript command that it actually calls
+ * This is identical to the javascript command that it actually calls
  */
 function toggle_visible($element) {
 
@@ -754,8 +723,26 @@ function toggle_visible($element) {
 } // toggle_visible
 
 /**
+ * print_bool
+ * This function takes a boolean value and then prints out a friendly text
+ * message.
+ */
+function print_bool($value) {
+
+	if ($value) {
+		$string = '<span class="item_on">' . _('On') . '</span>';
+	}
+	else {
+		$string = '<span class="item_off">' . _('Off') . '</span>';
+	}
+
+	return $string;
+
+} // print_bool
+
+/**
  * show_now_playing
- * This shows the now playing templates and does some garbage colleciont
+ * This shows the now playing templates and does some garbage collecion
  * this should really be somewhere else
  */
 function show_now_playing() {

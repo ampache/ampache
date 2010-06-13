@@ -20,241 +20,121 @@
 
 */
 
-
 /**
- * session_exists
- * checks to make sure they've specified a valid session, can handle xmlrpc
+ * set_memory_limit
+ * This function attempts to change the php memory limit using init_set.
+ * Will never reduce it below the current setting.
  */
-function session_exists($sid,$xml_rpc=0) {
-
-	$found = true;
-
-	$sql = "SELECT * FROM `session` WHERE `id` = '$sid'";
-	$db_results = Dba::read($sql);
-
-	if (!Dba::num_rows($db_results)) {
-		$found = false;
-	}
-
-	/* If we need to check the remote session */
-	if ($xml_rpc) {
-		$server = rawurldecode($_GET['xml_server']);
-		$path	= "/" . rawurldecode($_GET['xml_path']) . "/server/xmlrpc.server.php";
-		$port	= $_GET['xml_port'];
-
-		$path = str_replace("//","/",$path);
-
-		/* Create the XMLRPC client */
-		$client = new XML_RPC_Client($path,$server,$port);
-
-		/* Encode the SID of the incomming client */
-		$encoded_sid 		= new XML_RPC_Value($sid,"string");
-
-		$query = new XML_RPC_Message('remote_session_verify',array($encoded_sid) );
-
-		/* Log this event */
-		debug_event('xmlrpc-client',"Checking for Valid Remote Session:$sid",'3');
-
-		$response = $client->send($query,30);
-
-		$value = $response->value();
-
-		if (!$response->faultCode()) {
-			$data = XML_RPC_Decode($value);
-			$found = $data;
-		}
-
-	} // xml_rpc
-
-	return $found;
-
-} // session_exists
-
-/**
- * extend_session
- * just updates the expire time of the specified session this
- * is used by the the play script after a song finishes
- */
-function extend_session($sid) {
-
-	$new_time = time() + Config::get('session_length');
-
-	if ($_COOKIE['amp_longsess'] == '1') { $new_time = time() + 86400*364; }
-
-	$sql = "UPDATE `session` SET `expire`='$new_time' WHERE `id`='$sid'";
-	$db_results = Dba::write($sql);
-
-} // extend_session
-
-/*!
-	@function scrub_in()
-	@discussion Run on inputs, stuff that might get stuck in our db
-*/
-function scrub_in($str) {
-
-        if (!is_array($str)) {
-                return stripslashes( htmlspecialchars( strip_tags($str) ) );
-        }
-        else {
-                $ret = array();
-                foreach($str as $string) $ret[] = scrub_in($string);
-                return $ret;
-        }
-} // scrub_in
-
-/*!
-	@function set_memory_limit
-	@discussion this function attempts to change the
-		php memory limit using init_set but it will
-		never reduce it
-*/
 function set_memory_limit($new_limit) {
 
-	/* Check their PHP Vars to make sure we're cool here */
-	// Up the memory
 	$current_memory = ini_get('memory_limit');
 	$current_memory = substr($current_memory,0,strlen($current_memory)-1);
 	if ($current_memory < $new_limit) {
-	        $php_memory = $new_limit . "M";
-	        ini_set (memory_limit, "$php_memory");
-	        unset($php_memory);
+		$php_memory = $new_limit . "M";
+		ini_set (memory_limit, "$php_memory");
+		unset($php_memory);
 	}
 
 } // set_memory_limit
 
 /**
- * 	get_global_popular
- *	this function gets the current globally popular items
- * 	from the object_count table, depending on type passed
- * 	@package Web Interface
- * 	@catagory Get
- */
-function get_global_popular($type) {
-
-	$stats = new Stats();
-	$count = Config::get('popular_threshold');
-        $web_path = Config::get('web_path');
-
-	/* Pull the top */
-	$results = $stats->get_top($count,$type);
-
-	foreach ($results as $r) {
-		/* If Songs */
-                if ( $type == 'song' ) {
-                        $song = new Song($r['object_id']);
-			$song->format();
-                        $text = "$song->f_artist_full - $song->title";
-                        /* Add to array */
-                        $song->link = "<a href=\"$web_path/stream.php?action=single_song&amp;song_id=$song->id\" title=\"". scrub_out($text) ."\">" .
-	                           	scrub_out(truncate_with_ellipsis($text, Config::get('ellipse_threshold_title')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
-			$items[] = $song;
-                } // if it's a song
-
-		/* If Artist */
-                elseif ( $type == 'artist' ) {
-                        $artist = new Artist($r['object_id']);
-			$artist->format();
-                        $artist->link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $r['object_id'] . "\" title=\"". scrub_out($artist->full_name) ."\">" .
-                        	           truncate_with_ellipsis($artist->full_name, Config::get('ellipse_threshold_artist')+3) . "&nbsp;(" . $r['count'] . ")</a>";
-			$items[] = $artist;
-                } // if type isn't artist
-
-		/* If Album */
-                elseif ( $type == 'album' ) {
-                        $album   = new Album($r['object_id']);
-			$album->format();
-                        $album->link = "<a href=\"$web_path/albums.php?action=show&amp;album=" . $r['object_id'] . "\" title=\"". scrub_out($album->name) ."\">" .
-                        	           scrub_out(truncate_with_ellipsis($album->name,Config::get('ellipse_threshold_album')+3)) . "&nbsp;(" . $r['count'] . ")</a>";
-			$items[] = $album;
-                } // else not album
-
-        } // end foreach
-
-        return $items;
-
-} // get_global_popular
-
-/**
  * generate_password
- * This generates a random password, of the specified
- * length
+ * This generates a random password of the specified length
  */
 function generate_password($length) {
 
-    $vowels = 'aAeEuUyY12345';
-    $consonants = 'bBdDgGhHjJmMnNpPqQrRsStTvVwWxXzZ6789';
-    $password = '';
+	$vowels = 'aAeEuUyY12345';
+	$consonants = 'bBdDgGhHjJmMnNpPqQrRsStTvVwWxXzZ6789';
+	$password = '';
 
-    $alt = time() % 2;
+	$alt = time() % 2;
 
-    for ($i = 0; $i < $length; $i++) {
-        if ($alt == 1) {
-            $password .= $consonants[(rand(0,strlen($consonants)-1))];
-            $alt = 0;
-        } else {
-            $password .= $vowels[(rand(0,strlen($vowels)-1))];
-            $alt = 1;
-        }
-    }
+	for ($i = 0; $i < $length; $i++) {
+		if ($alt == 1) {
+			$password .= $consonants[(rand(0,strlen($consonants)-1))];
+		$alt = 0;
+		}
+		else {
+			$password .= $vowels[(rand(0,strlen($vowels)-1))];
+			$alt = 1;
+		}
+	}
 
-    return $password;
+	return $password;
 
 } // generate_password
+
+/**
+ * scrub_in
+ * Run on inputs, stuff that might get stuck in our db
+ */
+function scrub_in($input) {
+
+	if (!is_array($input)) {
+		return stripslashes(htmlspecialchars(strip_tags($input)));
+	}
+	else {
+		$results = array();
+		foreach($input as $item) {
+			$results[] = scrub_in($item);
+		}
+		return $results;
+	}
+} // scrub_in
 
 /**
  * scrub_out
  * This function is used to escape user data that is getting redisplayed
  * onto the page, it htmlentities the mojo
  */
-function scrub_out($str) {
+function scrub_out($string) {
 
 	//This feature has been DEPRECATED as of PHP 5.3.0
 	if(version_compare(PHP_VERSION, '5.3.0', '<=') AND ini_get('magic_quotes_gpc') != 'Off') {
-		$str = stripslashes($str);
+		$string = stripslashes($string);
 	}
 
-        $str = htmlentities($str,ENT_QUOTES,Config::get('site_charset'));
+	$string = htmlentities($string, ENT_QUOTES, Config::get('site_charset'));
 
-        return $str;
+	return $string;
 
 } // scrub_out
 
 /**
- * revert_string
- * This returns a scrubed string to it's most normal state
- * Uhh yea better way to do this please?
+ * unhtmlentities
+ * Undoes htmlentities()
  */
-function revert_string($string) {
+function unhtmlentities($string) {
 
-	$string = unhtmlentities($string,ENT_QUOTES,conf('site_charset'));
-	return $string;
+	return html_entity_decode($string, ENT_QUOTES, Config::get('site_charset'));
 
-} // revert_string
+} //unhtmlentities
 
 /**
  * make_bool
- * This takes a value and returns what I consider to be the correct boolean value
- * This is used instead of settype alone because settype considers 0 and "false" to
- * be true
+ * This takes a value and returns what we consider to be the correct boolean
+ * value. We need a special function because PHP considers "false" to be true.
  * @package General
  */
 function make_bool($string) {
 
 	if (strcasecmp($string,'false') == 0) {
-		return '0';
+		return false;
 	}
 
-	if ($string == '0') {
-		return '0';
-	}
-
-	if (strlen($string) < 1) {
-		return '0';
-	}
-
-	return settype($string,"bool");
+	return (bool)$string;
 
 } // make_bool
+
+/**
+ * invert_bool
+ * This returns the opposite of what you've got
+ */
+function invert_bool($value) {
+
+	return make_bool($value) ? false : true;
+
+} // invert_bool
 
 /**
  * get_languages
@@ -353,8 +233,9 @@ function is_rtl($locale) {
 
 /**
  * translate_pattern_code
- * This just contains a key'd array which it checks against to give you the 'tag' name
- * that said pattern code corrasponds to, it returns false if nothing is found
+ * This just contains a keyed array which it checks against to give you the
+ * 'tag' name that said pattern code corrasponds to. It returns false if nothing
+ * is found.
  */
 function translate_pattern_code($code) {
 
@@ -371,82 +252,32 @@ function translate_pattern_code($code) {
 		return $code_array[$code];
 	}
 
-
 	return false;
 
 } // translate_pattern_code
 
 /**
- * print_boolean
- * This function takes a boolean value and then print out  a friendly
- * text message, usefull if you have a 0/1 that you need to turn into
- * a "Off" "On"
- */
-function print_boolean($value) {
-
-
-	if ($value) {
-		$string = '<span class="item_on">' . _('On') . '</span>';
-	}
-	else {
-		$string = '<span class="item_off">' . _('Off') . '</span>';
-	}
-
-	return $string;
-
-} // print_boolean
-
-/**
- * invert_boolean
- * This returns the opposite of what you've got
- */
-function invert_boolean($value) {
-
-	if (make_bool($value)) {
-		return '0';
-	}
-	else {
-		return '1';
-	}
-
-} // invert_boolean
-
-/**
- * unhtmlentities
- * This is required to make thing work.. but holycrap is it ugly
- */
-function unhtmlentities ($string)  {
-
-        $trans_tbl = get_html_translation_table (HTML_ENTITIES);
-        $trans_tbl = array_flip ($trans_tbl);
-        $ret = strtr ($string, $trans_tbl);
-        return preg_replace('/&#(\d+);/me', "chr('\\1')",$ret);
-
-} // unhtmlentities
-
-/**
  * __autoload
- * This function automatically loads any missing
- * classes as they are called so that we don't have to have
- * a million include statements, and load more then we need
+ * This function automatically loads any missing classes as they are needed so 
+ * that we don't use a million include statements which load more than we need.
  */
 function __autoload($class) {
 	// Lowercase the class
-        $class = strtolower($class);
+	$class = strtolower($class);
 
 	$file = Config::get('prefix') . "/lib/class/$class.class.php";
 
 	// See if it exists
-        if (is_readable($file)) {
-                require_once $file;
-                if (is_callable($class . '::_auto_init')) {
-                        call_user_func(array($class, '_auto_init'));
-                }
-        }
+	if (is_readable($file)) {
+		require_once $file;
+		if (is_callable($class . '::_auto_init')) {
+			call_user_func(array($class, '_auto_init'));
+		}
+	}
 	// Else log this as a fatal error
-        else {
-                debug_event('__autoload', "'$class' not found!",'1');
-        }
+	else {
+		debug_event('__autoload', "'$class' not found!",'1');
+	}
 
 } // __autoload
 

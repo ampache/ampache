@@ -59,7 +59,7 @@
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Safe Mode'); ?></td>
-	<td><?php echo print_boolean(ini_get('safe_mode')); ?></td>
+	<td><?php echo print_bool(ini_get('safe_mode')); ?></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td>Open Basedir</td>
@@ -67,19 +67,19 @@
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Zlib Support'); ?></td>
-	<td><?php echo print_boolean(function_exists('gzcompress')); ?></td>
+	<td><?php echo print_bool(function_exists('gzcompress')); ?></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('GD Support'); ?></td>
-	<td><?php echo print_boolean(function_exists('ImageCreateFromString')); ?></td>
+	<td><?php echo print_bool(function_exists('ImageCreateFromString')); ?></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Iconv Support'); ?></td>
-	<td><?php echo print_boolean(function_exists('iconv')); ?></td>
+	<td><?php echo print_bool(function_exists('iconv')); ?></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo _('Gettext Support'); ?></td>
-	<td><?php echo print_boolean(function_exists('bindtextdomain')); ?></td>
+	<td><?php echo print_bool(function_exists('bindtextdomain')); ?></td>
 </tr>
 </table>
 <?php show_box_bottom(); ?>
@@ -104,7 +104,7 @@
 		$value = $string;
 	}
 	if (Preference::is_boolean($key)) {
-		$value = print_boolean($value);
+		$value = print_bool($value);
 	}
 ?>
 <tr class="<?php echo flip_class(); ?>">
