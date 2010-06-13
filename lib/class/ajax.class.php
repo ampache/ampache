@@ -108,15 +108,14 @@ class Ajax {
 
 		// If they passed a span class
 		if ($class) {
-			$class_txt = ' class="' . $class . '"';
+			$class = ' class="' . $class . '"';
 		}
-
 
 		$string = get_user_icon($icon,$alt);
 
 		// Generate a <a> so that it's more compliant with older browsers
 		// (ie :hover actions) and also to unify linkbuttons (w/o ajax) display
-		$string = "<a href=\"javascript:void(0);\" id=\"$source\" $class_txt>".$string."</a>\n";
+		$string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>".$string."</a>\n";
 
 		$string .= self::observe($source,'click',$ajax_string);
 
@@ -126,7 +125,7 @@ class Ajax {
 
 	/**
 	 * text
-	 * This prints out the specified text as a link and setups the required
+	 * This prints out the specified text as a link and sets up the required
 	 * ajax for the link so it works correctly
 	 */
 	public static function text($action,$text,$source,$post='',$class='') {
@@ -136,11 +135,11 @@ class Ajax {
 
 		// If they passed a span class
 		if ($class) {
-			$class_txt = ' class="' . $class . '"';
+			$class = ' class="' . $class . '"';
 		}
 
 		// If we pass a source put it in the ID
-		$string = "<a href=\"javascript:void(0);\" id=\"$source\" $class_txt>$text</a>\n";
+		$string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>$text</a>\n";
 
 		$string .= self::observe($source,'click',$ajax_string);
 
@@ -177,7 +176,7 @@ class Ajax {
 	 */
 	public static function start_container($name) {
 
-		if (AJAX_INCLUDE == '1' AND !self::$include_override) { return true; }
+		if (defined('AJAX_INCLUDE') && !self::$include_override) { return true; }
 
 		echo '<div id="' . scrub_out($name) . '">';
 
@@ -189,7 +188,7 @@ class Ajax {
 	 */
 	public static function end_container() {
 
-		if (AJAX_INCLUDE == '1' AND !self::$include_override) { return true; }
+		if (defined('AJAX_INCLUDE') && !self::$include_override) { return true; }
 
 		echo "</div>";
 

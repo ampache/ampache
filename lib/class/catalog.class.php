@@ -459,7 +459,7 @@ class Catalog extends database_object {
 		}
 
 		// Correctly detect the slash we need to use here
-		if (strstr($path,"/")) {
+		if (strpos($path,"/") !== false) {
 			$slash_type = '/';
 		}
 		else {
@@ -952,7 +952,10 @@ class Catalog extends database_object {
 
 			// Try the preferred filename, if that fails use folder.???
 			$preferred_filename = Config::get('album_art_preferred_filename');
-			if (!$preferred_filename || strstr($preferred_filename,"%")) { $preferred_filename = "folder.$extension"; }
+			if (!$preferred_filename || 
+				strpos($preferred_filename, '%') !== false) {
+				$preferred_filename = "folder.$extension";
+			}
 
 			$file = "$dir/$preferred_filename";
 			if ($file_handle = fopen($file,"w")) {

@@ -937,7 +937,7 @@ class vainfo {
 		$results = array();
 
 		// Correctly detect the slash we need to use here
-		if (strstr($filename,"/")) {
+		if (strpos($filename, '/') !== false) {
 			$slash_type = '/';
 		}
 		else {

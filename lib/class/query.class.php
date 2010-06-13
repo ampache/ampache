@@ -145,6 +145,7 @@ class Query {
 		$this->reset_join();
 		$this->reset_select();
 		$this->reset_having();
+		$this->set_static_content(false);
 		$this->set_is_simple(false);
 		$this->set_start(0);
 		$this->set_offset(Config::get('offset_limit') ? Config::get('offset_limit') : '25');
@@ -219,7 +220,9 @@ class Query {
 
 		// Simple enough, but if we ever move this crap
 		// If we ever move this crap what?
-		return $this->_state['filter'][$key];
+		return isset($this->_state['filter'][$key]) 
+			? $this->_state['filter'][$key]
+			: false;
 
 	} // get_filter
 

@@ -99,8 +99,9 @@ class Tag extends database_object {
 
 	/**
  	 * set_object
-	 * This assoicates the tag with a specified object, we try to get the data
-	 * from the map cache, otherwise I guess we'll just have to look it up
+	 * This associates the tag with a specified object, we try to get the
+	 * data from the map cache, otherwise I guess we'll just have to look it
+	 * up.
 	 */
 	public function set_object($type,$object_id) {
 
@@ -114,7 +115,7 @@ class Tag extends database_object {
 		// If nothing is found, then go ahead and return false
 		if (!is_array($data) OR !count($data)) { return false; }
 
-		$this->weight = $data[$this->id]['count'];
+		$this->weight = count($data[$this->id]['users']);
 
 		if (in_array($GLOBALS['user']->id,$data[$this->id]['users'])) {
 			$this->owner = $GLOBALS['user']->id;
@@ -164,14 +165,18 @@ class Tag extends database_object {
 
 		while ($row = Dba::fetch_assoc($db_results)) {
 			$tags[$row['object_id']][$row['tag_id']]['users'][] = $row['user'];
-			$tags[$row['object_id']][$row['tag_id']]['count']++;
 			$tag_map[$row['object_id']] = array('id'=>$row['id'],'tag_id'=>$row['tag_id'],'user'=>$row['user'],'object_type'=>$type,'object_id'=>$row['object_id']);
 		}
 
-		// Run through our origional ids as we want to cache NULL results
+		// Run through our original ids as we also want to cache NULL
+		// results
 		foreach ($ids as $id) {
-			parent::add_to_cache('tag_top_' . $type,$id,$tags[$id]);
-			parent::add_to_cache('tag_map_' . $type,$id,$tag_map[$id]);
+			if (!isset($tags[$id])) {
+				$tags[$id] = null;
+				$tag_map[$id] = null;
+			}
+			parent::add_to_cache('tag_top_' . $type, $id, $tags[$id]);
+			parent::add_to_cache('tag_map_' . $type, $id, $tag_map[$id]);
 		}
 
 		return true;
@@ -338,7 +343,6 @@ class Tag extends database_object {
 
 		while ($row = Dba::fetch_assoc($db_results)) {
 			$results[$row['tag_id']]['users'][] = $row['user'];
-			$results[$row['tag_id']]['count']++;
 		}
 
 		parent::add_to_cache('tag_top_' . $type,$object_id,$results);

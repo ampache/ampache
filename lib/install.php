@@ -22,8 +22,7 @@
 
 /**
  * split_sql
- * splits up a standard SQL dump file into distinct
- * sql queryies
+ * splits up a standard SQL dump file into distinct sql queries
  */
 function split_sql($sql) {
         $sql = trim($sql);

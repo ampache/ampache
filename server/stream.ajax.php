@@ -21,9 +21,9 @@
 */
 
 /**
- * Sub-Ajax page, requires AJAX_INCLUDE as one
+ * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (AJAX_INCLUDE != '1') { exit; }
+if (!defined('AJAX_INCLUDE')) { exit; }
 
 switch ($_REQUEST['action']) {
 	case 'set_play_type':

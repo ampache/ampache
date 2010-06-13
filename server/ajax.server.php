@@ -37,7 +37,9 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache");
 
-switch ($_REQUEST['page']) {
+$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : null;
+
+switch ($page) {
 	case 'flag':
 		require_once Config::get('prefix') . '/server/flag.ajax.php';
 		exit;

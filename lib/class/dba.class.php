@@ -424,7 +424,10 @@ class Dba {
 
 			// Itterate through the columns of the table
 			while ($table = Dba::fetch_assoc($describe_results)) {
-				if (strstr($table['Type'],'varchar') OR strstr($table['Type'],'enum') OR strstr($table['Table'],'text')) {
+				if (
+				(strpos($table['Type'], 'varchar') !== false) ||
+				(strpos($table['Type'], 'enum') !== false) ||
+				(strpos($table['Table'],'text') !== false)) {
 					$sql = "ALTER TABLE `" . $row['0'] . "` MODIFY `" . $table['Field'] . "` " . $table['Type'] . " CHARACTER SET " . $target_charset;
 					$charset_results = Dba::write($sql);
 					if (!$charset_results) {

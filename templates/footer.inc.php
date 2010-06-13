@@ -22,7 +22,7 @@
 */
 ?>
 <div style="clear:both;"></div>
-<?php if ($_SESSION['userdata']['password'] == 'old') {?>
+<?php if (isset($_SESSION['userdata']['password'])) {?>
 	<span class="fatalerror"><?php echo _('Using Old Password Encryption, Please Reset your Password'); ?></span>
 <?php } ?>
 </div> <!-- end id="content"-->

@@ -79,7 +79,7 @@
 	$objects = array();
 
 	//FIXME :: this is kludgy
-	if (NO_SONGS != '1') {
+	if (!defined('NO_SONGS')) {
 		$objects = $GLOBALS['user']->playlist->get_items();
 	}
 
@@ -108,7 +108,7 @@
 <?php } if (!count($objects)) { ?>
 	<li class="error"><?php echo _('Not Enough Data'); ?></li>
 <?php } ?>
-<?php if ($truncated) { ?>
+<?php if (isset($truncated)) { ?>
 	<li class="<?php echo flip_class(); ?>">
 		<?php echo $truncated . ' ' . _('More'); ?>...
 	</li>

@@ -24,15 +24,16 @@ $web_path = Config::get('web_path');
 $ajax_url = Config::get('ajax_url');
 
 // Title for this album
+$title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')';
 if ($album->disk) {
-	$disk = "<span class=\"discnb disc" .$album->disk. "\">, " . _('Disk') . " " . $album->disk . "</span>";
+	$title .= "<span class=\"discnb disc" . $album->disk . "\">, " . _('Disk') . " " . $album->disk . "</span>";
 }
-$title		= scrub_out($album->name) . '&nbsp;(' . $album->year . ')' . $disk .'&nbsp;-&nbsp;' . $album->f_artist_link;
+$title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
 ?>
 <?php show_box_top($title,'info-box'); ?>
 <div class="album_art">
 	<?php
-	if ($album_name != _('Unknown (Orphaned)')) {
+	if ($album->name != _('Unknown (Orphaned)')) {
         $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
 
 		    $aa_url = $web_path . "/image.php?id=" . $album->id . "&amp;type=popup&amp;sid=" . session_id();

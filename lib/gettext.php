@@ -20,10 +20,10 @@
 
 */
 
-/*!
-	@function load_gettext
-	@discussion sets the local
-*/
+/**
+ * load_gettext
+ * Sets up our local gettext settings.
+ */
 function load_gettext() {
 	/* If we have gettext */
 	if (function_exists('bindtextdomain')) {
@@ -57,9 +57,9 @@ function load_gettext() {
  */
 function __($string,$subject,$replace) {
 
-        $translated = _($string);
-        $result = str_replace($subject,$replace,$translated);
-        return $result;
+	$translated = _($string);
+	$result = str_replace($subject,$replace,$translated);
+	return $result;
 
 } // __
 

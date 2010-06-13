@@ -30,11 +30,12 @@ class Album extends database_object {
 	/* Variables from DB */
 	public $id;
 	public $name;
-	public $full_name; // Prefix + Name, genereated by format();
 	public $disk;
 	public $year;
 	public $prefix;
 	public $mbid; // MusicBrainz ID
+
+	public $full_name; // Prefix + Name, generated
 
 	// cached information
 	public $_songs=array();
@@ -58,7 +59,7 @@ class Album extends database_object {
 			$this->$key = $value;
 		}
 
-		// Little bit of formating here
+		// Little bit of formatting here
 		$this->full_name = trim(trim($info['prefix']) . ' ' . trim($info['name']));
 
 		return true;
@@ -140,11 +141,16 @@ class Album extends database_object {
 			return parent::get_from_cache('album_extra',$this->id);
 		}
 
-		$sql = "SELECT COUNT(DISTINCT(song.artist)) as artist_count,COUNT(song.id) AS song_count,artist.name AS artist_name" .
-			",artist.prefix AS artist_prefix, artist.id AS artist_id ".
-			"FROM `song` " .
-			"INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
-			"WHERE `song`.`album`='$this->id' GROUP BY `song`.`album`";
+		$sql = "SELECT " .
+			"COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, " .
+			"COUNT(`song`.`id`) AS `song_count`, " .
+			"`artist`.`name` AS `artist_name`, " .
+			"`artist`.`prefix` AS `artist_prefix`, " .
+			"`artist`.`id` AS `artist_id` " .
+			"FROM `song` INNER JOIN `artist` " . 
+			"ON `artist`.`id`=`song`.`artist` " .
+			"WHERE `song`.`album`='$this->id' " .
+			"GROUP BY `song`.`album`";
 		$db_results = Dba::read($sql);
 
 		$results = Dba::fetch_assoc($db_results);
@@ -170,12 +176,16 @@ class Album extends database_object {
 
 		$results = array();
 
-		if ($artist) {
-			$artist_sql = "AND `artist`='" . Dba::escape($artist) . "'";
-		}
+		$artist = Dba::escape($artist);
 
-		$sql = "SELECT `id` FROM `song` WHERE `album`='$this->id' $artist_sql ORDER BY `track`, `title`";
-		if ($limit) { $sql .= " LIMIT $limit"; }
+		$sql = "SELECT `id` FROM `song` WHERE `album`='$this->id' ";
+		if ($artist) {
+			$sql .= "AND `artist`='$artist'";
+		}
+		$sql .= "ORDER BY `track`, `title`";
+		if ($limit) {
+			$sql .= " LIMIT $limit";
+		}
 		$db_results = Dba::read($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) {
@@ -228,7 +238,7 @@ class Album extends database_object {
 		$this->f_name_link .="</a>";
 
 		$this->f_link 		= $this->f_name_link;
-		$this->f_title		= $full_name;
+		$this->f_title		= $this->full_name; // FIXME: Legacy?
 		if ($this->artist_count == '1') {
 			$artist = trim(trim($this->artist_prefix) . ' ' . trim($this->artist_name));
 			$this->f_artist_name = $artist;

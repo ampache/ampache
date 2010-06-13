@@ -41,7 +41,7 @@ if (!vauth::session_exists('interface',$_COOKIE[Config::get('session_name')]) AN
 if (!Config::get('resize_images')) { unset($_GET['thumb']); } 
 
 // FIXME: Legacy stuff - should be removed after a version or so
-if (!$_GET['object_type']) { 
+if (!isset($_GET['object_type'])) { 
 	$_GET['object_type'] = 'album'; 
 } 
 

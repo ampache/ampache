@@ -33,10 +33,8 @@ if (floatval(phpversion()) < 5) {
 	exit;
 }
 
-error_reporting(E_ERROR);			// Only show fatal errors in production
+error_reporting(E_ERROR); // Only show fatal errors in production
 
-// This makes this file nolonger need customization
-// the config file is in the same dir as this (init.php) file.
 $ampache_path = dirname(__FILE__);
 $prefix = realpath($ampache_path . "/../");
 $configfile = "$prefix/config/ampache.cfg.php";
@@ -52,7 +50,7 @@ if (!function_exists('gettext')) {
 Config::set('prefix',$prefix);
 
 /*
- Check to see if this is Http or https
+ Check to see if this is http or https
 */
 if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
 	$http_type = "https://";
@@ -62,18 +60,18 @@ else {
 }
 
 /*
- See if the Config File Exists if it doesn't
- then go ahead and move them over to the install
- script
+ Check to make sure the config file exists. If it doesn't then go ahead and send
+ them over to the install script.
 */
 if (!file_exists($configfile)) {
-        $path = preg_replace("/(.*)\/(\w+\.php)$/","\${1}", $_SERVER['PHP_SELF']);
+	$path = preg_replace("/(.*)\/(\w+\.php)$/","\${1}", $_SERVER['PHP_SELF']);
 	$link = $http_type . $_SERVER['HTTP_HOST'] . $path . "/install.php";
 	header ("Location: $link");
 	exit();
 }
 
-// Use the built in PHP function, supress errors here so we can handle it properly
+// Use the built in PHP function, suppress errors here so we can handle it
+// properly below
 $results = @parse_ini_file($configfile);
 
 if (!count($results)) {
@@ -83,7 +81,7 @@ if (!count($results)) {
 	exit();
 }
 
-/** Verify a few commonly removed PHP functions exist and re-direct to /test if not **/
+/** Verify a few commonly disabled PHP functions exist and re-direct to /test if not **/
 if (!function_exists('hash') OR !function_exists('inet_pton') OR (strtoupper(substr(PHP_OS,0,3)) == 'WIN' AND floatval(phpversion()) < 5.3)) {
 	$path = preg_replace("/(.*)\/(\w+\.php)$/","\${1}", $_SERVER['PHP_SELF']);
 	$link = $http_type . $_SERVER['HTTP_HOST'] . $path . "/test.php";
@@ -153,9 +151,8 @@ $results = Preference::fix_preferences($results);
 
 Config::set_by_array($results,1);
 
-// Modules (These are conditionaly included depending upon config values)
+// Modules (These are conditionally included depending upon config values)
 if (Config::get('ratings')) {
-	require_once $prefix . '/lib/class/rating.class.php';
 	require_once $prefix . '/lib/rating.lib.php';
 }
 
@@ -169,20 +166,20 @@ if (substr($post_size,strlen($post_size)-1,strlen($post_size)) != 'M') {
 	ini_set('post_max_size','8M');
 }
 
-if ($results['memory_limit'] < 24) {
+// In case the local setting is 0
+ini_set('session.gc_probability','5');
+
+if (! isset($results['memory_limit']) || $results['memory_limit'] < 24) {
 	$results['memory_limit'] = 24;
 }
-
-// Incase the local setting is 0
-ini_set('session.gc_probability','5');
 
 set_memory_limit($results['memory_limit']);
 
 /**** END Set PHP Vars ****/
 
 // If we want a session
-if (NO_SESSION != '1' AND Config::get('use_auth')) {
-	/* Verify Their session */
+if (!defined('NO_SESSION') && Config::get('use_auth')) {
+	/* Verify their session */
 	if (!vauth::session_exists('interface',$_COOKIE[Config::get('session_name')])) { vauth::logout($_COOKIE[Config::get('session_name')]); exit; }
 
 	// This actually is starting the session
@@ -191,7 +188,7 @@ if (NO_SESSION != '1' AND Config::get('use_auth')) {
 	/* Create the new user */
 	$GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
 
-	/* If they user ID doesn't exist deny them */
+	/* If the user ID doesn't exist deny them */
 	if (!$GLOBALS['user']->id AND !Config::get('demo_mode')) { vauth::logout(session_id()); exit; }
 
 	vauth::session_extend(session_id());
@@ -223,9 +220,9 @@ elseif (!Config::get('use_auth')) {
 		else {
 			$GLOBALS['user'] = new User($auth['username']);
 			$GLOBALS['user']->id = '-1';
-	                $GLOBALS['user']->username = $auth['username'];
-	                $GLOBALS['user']->fullname = $auth['fullname'];
-	                $GLOBALS['user']->access = $auth['access'];
+			$GLOBALS['user']->username = $auth['username'];
+			$GLOBALS['user']->fullname = $auth['fullname'];
+			$GLOBALS['user']->access = $auth['access'];
 		}
 		if (!$GLOBALS['user']->id AND !Config::get('demo_mode')) { vauth::logout(session_id()); exit; }
 		$GLOBALS['user']->update_last_seen();
@@ -266,7 +263,7 @@ header ("Content-Type: text/html; charset=" . Config::get('site_charset'));
 unset($array);
 unset($results);
 
-/* Setup the flip class */
+/* Set up the flip class */
 flip_class(array('odd','even'));
 
 /* Check to see if we need to perform an update */
@@ -284,7 +281,7 @@ if (Config::get('debug')) {
 	error_reporting(E_ALL);
 }
 
-// Merge GET then POST into REQUEST effectivly striping COOKIE without depending on
-// a PHP setting change to take affect
+// Merge GET then POST into REQUEST effectively stripping COOKIE without
+// depending on a PHP setting change for the effect
 $_REQUEST = array_merge($_GET,$_POST);
 ?>

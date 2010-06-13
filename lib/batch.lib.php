@@ -23,8 +23,7 @@
 
 /**
  * get_song_files
- * tmakes array of song ids and returns
- *	array of path to actual files
+ * Takes an array of song ids and returns an array of the actual filenames
  */
 function get_song_files($media_ids) {
 
@@ -57,13 +56,13 @@ function get_song_files($media_ids) {
  */
 function send_zip( $name, $song_files ) {
 
-	// Check if they want to save it to a file, if so then make sure they've got
-	// a defined path as well and that it's writeable
+	// Check if they want to save it to a file, if so then make sure they've
+	// got a defined path as well and that it's writable.
 	if (Config::get('file_zip_download') && Config::get('file_zip_path')) {
 		// Check writeable
 		if (!is_writable(Config::get('file_zip_path'))) {
 			$in_memory = '1';
-			debug_event('Error','File Zip Path:' . Config::get('file_zip_path') . ' is not writeable','1');
+			debug_event('Error','File Zip Path:' . Config::get('file_zip_path') . ' is not writable','1');
 		}
 		else {
 			$in_memory = '0';

@@ -65,6 +65,8 @@ class Rating extends database_object {
 		if (!is_array($ids) OR !count($ids)) { return false; }
 
 		$user_id = intval($GLOBALS['user']->id);
+		$ratings = array();
+		$user_ratings = array();
 
 		$idlist = '(' . implode(',', $ids) . ')';
 		$sql = "SELECT `rating`, `object_id` FROM `rating` " .
@@ -73,7 +75,7 @@ class Rating extends database_object {
 		$db_results = Dba::read($sql);
 
 		while ($row = Dba::fetch_assoc($db_results)) {
-			$user[$row['object_id']] = $row['rating'];
+			$user_ratings[$row['object_id']] = $row['rating'];
 		}
 
 		$sql = "SELECT AVG(`rating`) as `rating`, `object_id` FROM " .
@@ -82,19 +84,26 @@ class Rating extends database_object {
 		$db_results = Dba::read($sql);
 
 		while ($row = Dba::fetch_assoc($db_results)) {
-			$rating[$row['object_id']] = $row['rating'];
+			$ratings[$row['object_id']] = $row['rating'];
   		}
 
 		foreach ($ids as $id) {
-			parent::add_to_cache('rating_' . $type . '_user' . $user_id, $id, intval($user[$id]));
-
-			if (!isset($rating[$id])) {
+			// First store the user-specific rating
+			if (!isset($user_ratings[$id])) {
 				$rating = 0;
 			}
 			else {
-				$rating = round($rating[$id]['rating'], 1);
+				$rating = intval($user_ratings[$id]);
 			}
+			parent::add_to_cache('rating_' . $type . '_user' . $user_id, $id, $rating);
 
+			// Then store the average
+			if (!isset($ratings[$id])) {
+				$rating = 0;
+			}
+			else {
+				$rating = round($ratings[$id]['rating'], 1);
+			}
 			parent::add_to_cache('rating_' . $type . '_all', $id, $rating);
 		}
 
@@ -125,11 +134,14 @@ class Rating extends database_object {
 			"AND `object_id`='$id' AND `object_type`='$type'";
 		$db_results = Dba::read($sql);
 
-		$results = Dba::fetch_assoc($db_results);
+		$rating = 0;
 
-		parent::add_to_cache($key, $id, $results['rating']);
+		if ($results = Dba::fetch_assoc($db_results)) {
+			$rating = $results['rating'];
+		}
 
-		return $results['rating'];
+		parent::add_to_cache($key, $id, $rating);
+		return $rating;
 
 	} // get_user_rating
 

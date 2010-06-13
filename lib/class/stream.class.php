@@ -186,7 +186,7 @@ class Stream {
 		$db_results = Dba::write($sql);
 
 		foreach ($append_array as $append_agent) {
-			if (strstr(strtoupper($agent),$append_agent)) {
+			if (strpos(strtoupper($agent), $append_agent) !== false) {
 				// We're done here jump ship!
 				return true;
 			}
@@ -828,14 +828,15 @@ class Stream {
 
 	/**
 	 * run_playlist_method
-	 * This takes care of the different types of 'playlist methods' the reason this is here
-	 * is because it deals with streaming rather then playlist mojo. If something needs to happen
-	 * this will echo the javascript required to cause a reload of the iframe.
+	 * This takes care of the different types of 'playlist methods'. The
+	 * reason this is here is because it deals with streaming rather than
+	 * playlist mojo. If something needs to happen this will echo the
+	 * javascript required to cause a reload of the iframe.
 	 */
 	public static function run_playlist_method() {
 
 		// If this wasn't ajax included run away
-		if (AJAX_INCLUDE != '1') { return false; }
+		if (!defined('AJAX_INCLUDE')) { return false; }
 
 		// If we're doin the flash magic then run away as well
 		if (Config::get('play_type') == 'xspf_player') { return false; }

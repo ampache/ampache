@@ -875,15 +875,16 @@ class Song extends database_object implements media {
 		$user_id 	= $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
 		$type		= $song->type;
 
-		// Required for some versions of winamp that won't work if the stream doesn't end in
-		// .ogg This will not break any properly working player, don't report this as a bug!
+		// Required for some versions of winamp that won't work if the
+		// stream doesn't end in .ogg This will not break any properly
+		// working player, don't report this as a bug!
 		if ($song->type == 'flac') { $type = 'ogg'; }
 
 		$song->format();
 
 		$song_name = rawurlencode($song->f_artist_full . " - " . $song->title . "." . $type);
 
-		$url = Stream::get_base_url() . "oid=$song->id&uid=$user_id$session_string$ds_string&name=/$song_name";
+		$url = Stream::get_base_url() . "oid=$song->id&uid=$user_id&name=/$song_name";
 
 		return $url;
 
@@ -921,15 +922,14 @@ class Song extends database_object implements media {
 	 */
 	public static function get_recently_played($user_id='') {
 
-		if ($user_id) {
-			$user_limit = " AND `object_count`.`user`='" . Dba::escape($user_id) . "'";
-		}
+		$user_id = Dba::escape($user_id);
 
-		$sql = "SELECT `object_count`.`object_id`,`object_count`.`user`,`object_count`.`object_type`, " .
-			"`object_count`.`date` " .
-			"FROM `object_count` " .
-			"WHERE `object_type`='song'$user_limit " .
-			"ORDER BY `object_count`.`date` DESC ";
+		$sql = "SELECT `object_id`, `user`, `object_type`, `date` " .
+			"FROM `object_count` WHERE `object_type`='song' ";
+		if ($user_id) {
+			$sql .= "AND `user`='$user_id' ";
+		}
+		$sql .= "ORDER BY `date` DESC ";
 		$db_results = Dba::read($sql);
 
 		$results = array();
@@ -946,17 +946,17 @@ class Song extends database_object implements media {
 
 	/**
 	 * native_stream
-	 * This returns true/false if this can be nativly streamed
+	 * This returns true/false if this can be natively streamed
 	 */
 	public function native_stream() {
 
-		if ($this->_transcode) { return false; }
+		if ($this->_transcoded) { return false; }
 
 		$conf_var 	= 'transcode_' . $this->type;
 		$conf_type	= 'transcode_' . $this->type . '_target';
 
 		if (Config::get($conf_var)) {
-			$this->_transcode = true;
+			$this->_transcoded = true;
 			debug_event('auto_transcode','Transcoding to ' . $this->type,'5');
 			return false;
 		}

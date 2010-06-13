@@ -24,7 +24,7 @@ require_once 'lib/init.php';
 
 show_header();
 
-$action = scrub_in($_REQUEST['action']);
+$action = isset($_REQUEST['action']) ? scrub_in($_REQUEST['action']) : null;
 
 /**
  * Check for the refresh mojo, if it's there then require the

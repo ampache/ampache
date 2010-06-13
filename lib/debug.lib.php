@@ -163,20 +163,20 @@ function check_php_pcre() {
 function check_config_values($conf) {
 
 	if (!$conf['database_hostname']) {
-                return false;
-        }
-        if (!$conf['database_name']) {
-                return false;
-        }
-        if (!$conf['database_username']) {
-                return false;
-        }
-        if (!$conf['database_password']) {
-                return false;
-        }
-        if (!$conf['session_length']) {
-                return false;
-        }
+		return false;
+	}
+	if (!$conf['database_name']) {
+		return false;
+	}
+	if (!$conf['database_username']) {
+		return false;
+	}
+	if (!$conf['database_password']) {
+		return false;
+	}
+	if (!$conf['session_length']) {
+		return false;
+	}
 	if (!$conf['session_name']) {
 		return false;
 	}
@@ -192,7 +192,7 @@ function check_config_values($conf) {
 	    }
 	}
 
-        return true;
+	return true;
 
 } // check_config_values
 
@@ -311,35 +311,35 @@ function generate_config($current) {
 
 	/* Start building the new config file */
 	$distfile = Config::get('prefix') . '/config/ampache.cfg.php.dist';
-        $handle = fopen($distfile,'r');
-        $dist = fread($handle,filesize($distfile));
-        fclose($handle);
+	$handle = fopen($distfile,'r');
+	$dist = fread($handle,filesize($distfile));
+	fclose($handle);
 
-        $data = explode("\n",$dist);
+	$data = explode("\n",$dist);
 
-        /* Run throught the lines and set our settings */
-        foreach ($data as $line) {
+	/* Run throught the lines and set our settings */
+	foreach ($data as $line) {
 
-	        /* Attempt to pull out Key */
-	        if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$line,$matches)
+		/* Attempt to pull out Key */
+		if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$line,$matches)
 			|| preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
-	                || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$line,$matches)) {
+			|| preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$line,$matches)) {
 
 			$key    = $matches[1];
-	        	$value  = $matches[2];
+			$value  = $matches[2];
 
-	                /* Put in the current value */
+			/* Put in the current value */
 			if ($key == 'config_version') {
 				$line = $key . ' = ' . $value;
 			}
-	                elseif (isset($current[$key])) {
-	                	$line = $key . ' = "' . $current[$key] . '"';
-	                        unset($current[$key]);
+			elseif (isset($current[$key])) {
+				$line = $key . ' = "' . $current[$key] . '"';
+				unset($current[$key]);
 			} // if set
 
 		} // if key
 
-	        $final .= $line . "\n";
+		$final .= $line . "\n";
 
 	} // end foreach line
 

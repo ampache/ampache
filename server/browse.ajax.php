@@ -21,9 +21,9 @@
 */
 
 /**
- * Sub-Ajax page, requires AJAX_INCLUDE as one
+ * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (AJAX_INCLUDE != '1') { exit; }
+if (!defined('AJAX_INCLUDE')) { exit; }
 
 if (isset($_REQUEST['browse_id'])) {
 	$browse_id = $_REQUEST['browse_id'];

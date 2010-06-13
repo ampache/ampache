@@ -103,6 +103,7 @@ class Browse extends Query {
 			${$class_name} = new $class_name($id);
 		}
 
+		$match = '';
 		// Format any matches we have so we can show them to the masses
 		if ($filter_value = $this->get_filter('alpha_match')) {
 			$match = ' (' . $filter_value . ')';

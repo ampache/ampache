@@ -84,7 +84,7 @@ class vauth {
 	 */
 	public static function write($key, $value) {
 
-		if (NO_SESSION_UPDATE == '1') { return true; }
+		if (defined('NO_SESSION_UPDATE')) { return true; }
 
 		$length		= Config::get('session_length');
 		$value		= Dba::escape($value);
@@ -168,7 +168,7 @@ class vauth {
 
 		// Do a quick check to see if this is an AJAXed logout request
 		// if so use the iframe to redirect
-		if (AJAX_INCLUDE == '1') {
+		if (defined('AJAX_INCLUDE')) {
 			ob_end_clean();
 			ob_start();
 
@@ -455,7 +455,9 @@ class vauth {
 	public static function ungimp_ie() {
 
 		// If no https, no ungimpage required
-		if ($_SERVER['HTTPS'] != 'on') { return true; }
+		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'on') {
+			return true;
+		}
 
 		// Try to detect IE
 		$agent = trim($_SERVER['HTTP_USER_AGENT']);

@@ -25,8 +25,10 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
   <li><h4><?php echo _('Browse'); ?></h4>
   <?php
 	// Build the selected dealie
-	$text = scrub_in($_REQUEST['action']) . '_ac';
-	${$text} = ' selected="selected"';
+	if (isset($_REQUEST['action'])) {
+		$text = scrub_in($_REQUEST['action']) . '_ac';
+		${$text} = ' selected="selected"';
+	}
   ?>
     <ul class="sb3" id="sb_browse_bb">
       <li id="sb_browse_bb_SongTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo _('Song Titles'); ?></a></li>

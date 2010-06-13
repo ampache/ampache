@@ -312,13 +312,15 @@ class Access {
 
 	/**
 	 * check_access
-	 * This is the global 'has_access' function it can check for any 'type' of object
-	 * everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is always used
+	 * This is the global 'has_access' function it can check for any 'type'
+	 * of object.
+	 * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
+	 * always used.
 	 */
 	public static function check($type,$level) {
 
 		if (Config::get('demo_mode')) { return true; }
-		if (INSTALL == '1') { return true; }
+		if (defined('INSTALL')) { return true; }
 
 		$level = intval($level);
 

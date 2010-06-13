@@ -55,7 +55,12 @@ class Art extends database_object {
 	 * Called on creation of the class
 	 */
 	public static function _auto_init() {
-		self::$enabled = make_bool($_SESSION['art_enabled']);
+		if (!isset($_SESSION['art_enabled'])) {
+			$_SESSION['art_enabled'] = (Config::get('bandwidth') > 25);
+		}
+		else {
+			self::$enabled = make_bool($_SESSION['art_enabled']);
+		}
 	}
 
 	/**
@@ -63,7 +68,7 @@ class Art extends database_object {
 	 * Checks whether the user currently wants art
 	 */
 	public static function is_enabled() {
-		if (self::$enabled || (Config::get('bandwidth') > 25)) {
+		if (self::$enabled) {
 			return true;
 		}
 
@@ -718,7 +723,7 @@ class Art extends database_object {
 			$arurl = $ar->getTargetId();
 			debug_event('mbz-gatherart', "Found URL AR: " . $arurl , '5');
 			foreach ($coverartsites as $casite) {
-				if (strstr($arurl, $casite['domain'])) {
+				if (strpos($arurl, $casite['domain']) !== false) {
 					debug_event('mbz-gatherart', "Matched coverart site: " . $casite['name'], '5');
 					if (preg_match($casite['regexp'], $arurl, $matches) == 1) {
 						$num_found++;
@@ -1085,7 +1090,7 @@ class Art extends database_object {
 			$url = $coverart[$key];
 
 			// We need to check the URL for the /noimage/ stuff
-			if (strstr($url,"/noimage/")) {
+			if (strpos($url,"/noimage/") !== false) {
 				debug_event('LastFM','Detected as noimage, skipped ' . $url,'3');
 				continue;
 			}
