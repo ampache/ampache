@@ -598,7 +598,7 @@ class Catalog extends database_object {
 						$file = str_replace(array('(',')','\''),'',$full_file);
 						echo "<script type=\"text/javascript\">\n";
 						echo "update_txt('" . $this->count ."','add_count_" . $this->id . "');";
-						echo "update_txt('" . addslashes(htmlentities($file)) . "','add_dir_" . $this->id . "');";
+						echo "update_txt('" . scrub_out($file) . "','add_dir_" . $this->id . "');";
 						echo "\n</script>\n";
 						flush();
 						$ticker = time();
@@ -619,7 +619,7 @@ class Catalog extends database_object {
 		if ($path == $this->path) {
 			echo "<script type=\"text/javascript\">\n";
 			echo "update_txt('" . $this->count ."','add_count_" . $this->id . "');";
-			echo "update_txt('" . addslashes(htmlentities($file)) . "','add_dir_" . $this->id . "');";
+			echo "update_txt('" . scrub_out($file) . "','add_dir_" . $this->id . "');";
 			echo "\n</script>\n";
 			flush();
 		}
@@ -1604,7 +1604,7 @@ class Catalog extends database_object {
 				$file = str_replace(array('(',')','\''),'',$results['file']);
 				echo "<script type=\"text/javascript\">\n";
 				echo "update_txt('" . $count ."','clean_count_" . $this->id . "');";
-				echo "update_txt('" . addslashes(htmlentities($file)) . "','clean_dir_" . $this->id . "');";
+				echo "update_txt('" . scrub_out($file) . "','clean_dir_" . $this->id . "');";
 				echo "\n</script>\n";
 				flush();
 				$ticker = time();

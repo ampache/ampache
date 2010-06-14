@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+        - Fixed display charset issue with catalog add/update
         - Fixed handling of temporary playlists with >100 items
         - Changed Browse from a singleton to multiple instances
         - Fixed setting access levels for plugin passwords
