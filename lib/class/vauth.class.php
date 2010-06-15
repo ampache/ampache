@@ -138,9 +138,9 @@ class vauth {
 		$sql = "DELETE FROM `session` WHERE `expire` < '" . time() . "'";
 		$db_results = Dba::write($sql);
 
-		$sql = "DELETE FROM `tmp_browse` USING `tmp_browse` LEFT JOIN `session` ON `session`.`id`=`tmp_browse`.`sid` " .
-			"WHERE `session`.`id` IS NULL";
-		$db_results = Dba::write($sql);
+		// Also clean up things that use sessions as keys
+		Query::clean();
+		tmpPlaylist::clean();
 
 		return true;
 

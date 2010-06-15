@@ -32,6 +32,9 @@ class Query {
 	protected $_state = array();
 	protected $_cache;
 
+	private static $allowed_filters;
+	private static $allowed_sorts;
+
 	/**
 	 * constructor
 	 * This should be called
@@ -59,11 +62,146 @@ class Query {
 
 		if ($results = Dba::fetch_assoc($db_results)) {
 			$this->_state = unserialize($results['data']);
-
+			return true;
 		}
 
 		Error::add('browse', _('Browse not found or expired, try reloading the page'));
 		return false;
+	}
+
+	/**
+	 * _auto_init
+	 * Automatically called when the class is loaded.
+	 * Populate static arrays if necessary
+	 */
+	public static function _auto_init() {
+		if (is_array(self::$allowed_filters)) {
+			return true;
+		}
+
+		self::$allowed_filters = array(
+			'album' => array(
+				'add_lt',
+				'add_gt',
+				'update_lt',
+				'update_gt',
+				'show_art',
+				'starts_with',
+				'exact_match',
+				'alpha_match'
+			),
+			'artist' => array(
+				'add_lt',
+				'add_gt',
+				'update_lt',
+				'update_gt',
+				'exact_match',
+				'alpha_match',
+				'starts_with',
+				'tag'
+			),
+			'song' => array(
+				'add_lt',
+				'add_gt',
+				'update_lt',
+				'update_gt',
+				'exact_match',
+				'alpha_match',
+				'starts_with',
+				'tag'
+			),
+			'live_stream' => array(
+				'alpha_match',
+				'starts_with'
+			),
+			'playlist' => array(
+				'alpha_match',
+				'starts_with'
+			),
+			'tag' => array(
+				'tag',
+				'object_type',
+				'exact_match',
+				'alpha_match'
+			),
+			'video' => array(
+				'starts_with',
+				'exact_match',
+				'alpha_match'
+			)
+		);
+
+		if (Access::check('interface','50')) {
+			array_push(self::$allowed_filters['playlist'], 'playlist_type');
+		}
+
+		self::$allowed_sorts = array(
+			'playlist_song' => array(
+				'title',
+				'year',
+				'track',
+				'time',
+				'album',
+				'artist'
+			),
+			'song' => array(
+				'title',
+				'year',
+				'track',
+				'time',
+				'album',
+				'artist'
+			),
+			'artist' => array(
+				'name',
+				'album'
+			),
+			'tag' => array(
+				'tag'
+			),
+			'album' => array(
+				'name',
+				'year',
+				'artist'
+			),
+			'playlist' => array(
+				'name',
+				'user'
+			),
+			'shoutbox' => array(
+				'date',
+				'user',
+				'sticky'
+			),
+			'live_stream' => array(
+				'name',
+				'call_sign',
+				'frequency'
+			),
+			'video' => array(
+				'title',
+				'resolution',
+				'length',
+				'codec'
+			),
+			'user' => array(
+				'fullname',
+				'username',
+				'last_seen',
+				'create_date'
+			)
+		);
+	}
+
+	/**
+	 * clean
+	 * This cleans old data out of the table
+	 */
+	public static function clean() {
+		$sql = "DELETE FROM `tmp_browse` USING `tmp_browse` LEFT JOIN ".
+			"`session` ON `session`.`id`=`tmp_browse`.`sid` " .
+		        "WHERE `session`.`id` IS NULL";
+		$db_results = Dba::write($sql);
 	}
 
 	/**
@@ -73,14 +211,6 @@ class Query {
 	public function set_filter($key, $value) {
 
 		switch ($key) {
-			case 'show_art':
-				if ($this->get_filter($key, $id)) {
-					unset($this->_state['filter'][$key]);
-				}
-				else {
-					$this->_state['filter'][$key] = true;
-				}
-			break;
 			case 'tag':
 				if (is_array($value)) {
 					$this->_state['filter'][$key] = $value;
@@ -290,38 +420,9 @@ class Query {
 	 * sidebar stuff.
 	 */
 	public static function get_allowed_filters($type) {
-
-		switch ($type) {
-			case 'album':
-				$valid_array = array('add_lt','add_gt','update_lt','update_gt','show_art',
-						'starts_with','exact_match','alpha_match');
-			break;
-			case 'artist':
-			case 'song':
-				$valid_array = array('add_lt','add_gt','update_lt','update_gt','exact_match','alpha_match','starts_with','tag');
-			break;
-			case 'live_stream':
-				$valid_array = array('alpha_match','starts_with');
-			break;
-			case 'playlist':
-				$valid_array = array('alpha_match','starts_with');
-				if (Access::check('interface','50')) {
-					array_push($valid_array,'playlist_type');
-				}
-			break;
-			case 'tag':
-				$valid_array = array('tag','object_type','exact_match','alpha_match');
-			break;
-			case 'video':
-				$valid_array = array('starts_with','exact_match','alpha_match');
-			break;
-			default:
-				$valid_array = array();
-			break;
-		} // switch on the browsetype
-
-		return $valid_array;
-
+		return isset(self::$allowed_filters[$type])
+			? self::$allowed_filters[$type]
+			: array();
 	} // get_allowed_filters
 
 	/**
@@ -373,39 +474,8 @@ class Query {
 	 */
 	public function set_sort($sort,$order='') {
 
-		switch ($this->get_type()) {
-			case 'playlist_song':
-			case 'song':
-				$valid_array = array('title','year','track','time','album','artist');
-			break;
-			case 'artist':
-				$valid_array = array('name','album');
-			break;
-			case 'tag':
-				$valid_array = array('tag');
-			break;
-			case 'album':
-				$valid_array = array('name','year','artist');
-			break;
-			case 'playlist':
-				$valid_array = array('name','user');
-			break;
-			case 'shoutbox':
-				$valid_array = array('date','user','sticky');
-			break;
-			case 'live_stream':
-				$valid_array = array('name','call_sign','frequency');
-			break;
-			case 'video':
-				$valid_array = array('title','resolution','length','codec');
-			break;
-			case 'user':
-				$valid_array = array('fullname','username','last_seen','create_date');
-			break;
-		} // end switch
-
 		// If it's not in our list, smeg off!
-		if (!in_array($sort, $valid_array)) {
+		if (!in_array($sort, self::$allowed_sorts[$this->get_type()])) {
 			return false;
 		}
 
