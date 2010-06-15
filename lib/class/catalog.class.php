@@ -1110,10 +1110,10 @@ class Catalog extends database_object {
 
 	/**
 	 * update_media_from_tags
-	 * This is a 'wrapper' function calls the update function for the media type
-	 * in question
+	 * This is a 'wrapper' function calls the update function for the media
+	 * type in question
 	 */
-	public static function update_media_from_tags(&$media,$sort_pattern='',$rename_pattern='') {
+	public static function update_media_from_tags($media, $sort_pattern='', $rename_pattern='') {
 
 		// Check for patterns
 		if (!$sort_pattern OR !$rename_pattern) {
@@ -1131,8 +1131,8 @@ class Catalog extends database_object {
 
 		$results = vainfo::clean_tag_info($vainfo->tags,$key,$media->file);
 
-		// Figure out what type of object this is and call the right function
-		// giving it the stuff we've figured out above
+		// Figure out what type of object this is and call the right
+		// function, giving it the stuff we've figured out above
 		$name = (get_class($media) == 'Song') ? 'song' : 'video';
 
 		$function = 'update_' . $name . '_from_tags';
@@ -1145,8 +1145,7 @@ class Catalog extends database_object {
 
 	/**
 	 * update_video_from_tags
-	 * updates the video info based on tags this is called from a bunch of different places
-	 * and passes in a full song object and the vainfo results
+	 * Updates the video info based on tags
 	 */
 	public static function update_video_from_tags($results,$video) {
 
@@ -1157,9 +1156,11 @@ class Catalog extends database_object {
 
 	/**
 	 * update_song_from_tags
-	 * updates the song info based on tags, this is called from a bunch of different places
-	 * and passes in a full fledged song object, so it's a static function
-	 * FIXME: This is an ugly mess, this really needs to be consolidated and cleaned up
+	 * Updates the song info based on tags; this is called from a bunch of
+	 * different places and passes in a full fledged song object, so it's a
+	 * static function.
+	 * FIXME: This is an ugly mess, this really needs to be consolidated and
+	 * cleaned up.
 	 */
 	public static function update_song_from_tags($results,$song) {
 
@@ -2173,17 +2174,20 @@ class Catalog extends database_object {
 
 	/**
 	 * check_album
-	 * Takes $album and checks if there then return id else insert and return id
+	 * Searches for album; if found returns id else inserts and returns id
 	 */
-	public static function check_album($album,$album_year=0,$disk='',$mbid='',$readonly='') {
+	public static function check_album($album, $album_year = 0, $disk = 0, 
+		$mbid = '', $readonly = false) {
 
-		/* Clean up the album name */
+		/* Clean up the values */
 		$album = trim($album);
 		$album = Dba::escape($album);
-		$album_year = intval($album_year);
-		$album_disk = intval($disk);
+		// Not even sure if these can be negative, but better safe than
+		// llama.
+		$album_year = abs(intval($album_year));
+		$album_disk = abs(intval($disk));
 
-		/* Ohh no the album has lost it's mojo */
+		/* Ohh no the album has lost its mojo */
 		if (!$album) {
 			$album = _('Unknown (Orphaned)');
 			unset($album_year);
@@ -2191,56 +2195,57 @@ class Catalog extends database_object {
 
 		// Remove the prefix so we can sort it correctly
 		$trimmed = Catalog::trim_prefix($album);
-		$album = $trimmed['string'];
-		$prefix = $trimmed['prefix'];
+		$album = Dba::escape($trimmed['string']);
+		$prefix = Dba::escape($trimmed['prefix']);
 
 		// Check to see if we've seen this album before
 		if (isset(self::$albums[$album][$album_year][$disk][$mbid])) {
 			return self::$albums[$album][$album_year][$disk][$mbid];
 		}
 
-		/* Setup the Query */
-		$sql = "SELECT `id` FROM `album` WHERE trim(`name`) = '$album'";
-		if ($album_year) { $sql .= " AND `year`='$album_year'"; }
-		if ($album_disk) { $sql .= " AND `disk`='$album_disk'"; }
-		if ($mbid) { $sql .= " AND `mbid`='$mbid'"; }
-		if ($prefix) { $sql .= " AND `prefix`='" . Dba::escape($prefix) . "'"; }
+		/* Set up the Query */
+		$sql = "SELECT `id` FROM `album` WHERE `name` = '$album'" .
+			" AND `disk`='$album_disk' AND `year`='$album_year'" .
+			" AND `mbid`" . ($mbid ? "='$mbid'" : ' IS NULL') .
+			" AND `prefix`" . ($prefix ? "='$prefix'" : ' IS NULL');
+
 		$db_results = Dba::read($sql);
 
 		/* If it's found */
 		if ($r = Dba::fetch_assoc($db_results)) {
 			$album_id = $r['id'];
 
-			// If we don't have art put it in the 'needs me some art' array
-			if (!strlen($r['art'])) {
+			// If we don't have art put it in the 'needs me some 
+			// art' array
+			$art = new Art($r['id']);
+			$art->get_db();
+			if (!$art->raw) {
 				$key = $r['id'];
 				self::$_art_albums[$key] = $key;
 			}
 
 		} //if found
+		elseif (!$readonly) { // If not found, create
 
-		/* If not found create */
-		elseif (!$readonly) {
-
-			$prefix_txt = $prefix ? "'$prefix'" : 'NULL';
-
+			$prefix = $prefix ? "'$prefix'" : 'NULL';
 			$mbid = $mbid ? "'$mbid'" : 'NULL';
 
 			$sql = "INSERT INTO `album` (`name`, `prefix`,`year`,`disk`,`mbid`) " .
-			"VALUES ('$album',$prefix_txt,'$album_year','$album_disk',$mbid)";
+			"VALUES ('$album',$prefix,'$album_year','$album_disk',$mbid)";
 			$db_results = Dba::write($sql);
 			$album_id = Dba::insert_id();
 
 			if (!$db_results) {
 				debug_event('album',"Error Unable to insert Album:$album",'2');
+				return false;
 			}
 
 			// Add it to the I needs me some album art array
 			self::$_art_albums[$album_id] = $album_id;
 
 		} //not found
-		// If not readonly and not found
 		else {
+			// readonly and not found
 			return false;
 		}
 
