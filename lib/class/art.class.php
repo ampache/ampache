@@ -32,10 +32,10 @@ class Art extends database_object {
 	public $uid; // UID of the object not ID because it's not the ART.ID
 	public $raw; // Raw art data
 	public $raw_mime;
-	
+
 	public $thumb;
 	public $thumb_mime;
-	
+
 	private static $enabled;
 
 	/**
@@ -46,7 +46,7 @@ class Art extends database_object {
 	public function __construct($uid, $type) {
 
 		$this->type = Art::validate_type($type);
-		$this->uid = $uid; 		
+		$this->uid = $uid;
 
 	} // constructor
 
@@ -58,9 +58,7 @@ class Art extends database_object {
 		if (!isset($_SESSION['art_enabled'])) {
 			$_SESSION['art_enabled'] = (Config::get('bandwidth') > 25);
 		}
-		else {
-			self::$enabled = make_bool($_SESSION['art_enabled']);
-		}
+		self::$enabled = make_bool($_SESSION['art_enabled']);
 	}
 
 	/**
@@ -114,7 +112,7 @@ class Art extends database_object {
 	 * This returns the file extension for the currently loaded art
 	 */
 	public static function extension($mime) {
-		
+
 		$data = explode("/", $mime);
 		$extension = $data['1'];
 
@@ -123,6 +121,29 @@ class Art extends database_object {
 		return $extension;
 
 	} // extension
+
+	/**
+	 * test_image
+	 * Runs some sanity checks on the putative image
+	 */
+	public static function test_image($source) {
+		if (strlen($source) < 10) {
+			debug_event('Art', 'Invalid image passed', 1);
+			return false;
+		}
+
+		// Check to make sure PHP:GD exists.  If so, we can sanity check
+		// the image.
+		if (function_exists('ImageCreateFromString')) {
+			 $image = ImageCreateFromString($source);
+			 if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
+				debug_event('Art', 'Image failed PHP-GD test',1);
+				return false;
+			}
+		}
+
+		return true;
+	} //test_image
 
 	/**
 	 * get
@@ -138,13 +159,13 @@ class Art extends database_object {
 			return false;
 		}
 
-		if ($raw) {
+		if ($raw || !$this->thumb) {
 			return $this->raw;
 		}
 		else {
 			return $this->thumb;
-		} 		
-			
+		}
+
 	} // get
 
 
@@ -161,7 +182,7 @@ class Art extends database_object {
 
 		$sql = "SELECT `image`, `mime`, `size` FROM `image` WHERE `object_type`='$type' AND `object_id`='$id'";
 		$db_results = Dba::read($sql);
-		
+
 		while ($results = Dba::fetch_assoc($db_results)) {
 			if ($results['size'] == 'original') {
 				$this->raw = $results['image'];
@@ -204,21 +225,11 @@ class Art extends database_object {
 		// Disabled in demo mode cause people suck and upload porn
 		if (Config::get('demo_mode')) { return false; }
 
-		// Do a low impact test is this image of any size?
-		if (strlen($source) < 10) {
-			debug_event('Art','Invalid Image passed, not inserting',1);
+		// Check to make sure we like this image
+		if (!self::test_image($source)) {
+			debug_event('Art', 'Not inserting image, invalid data passed', 1);
 			return false;
 		}
-
-		// Check to make sure PHP:GD exists if so we can sanity check this
-		// image
-		if (function_exists('ImageCreateFromString')) {
-			$image = ImageCreateFromString($source);
-			if (!$image OR imagesx($image) < 5 OR imagesy($image) < 5) {
-				debug_event('Art','Image failed PHP-GD test, not inserting',1);
-				return false;
-			}
-		} // if we have GD
 
 		// Default to image/jpeg if they don't pass anything
 		$mime = $mime ? $mime : 'image/jpeg';
@@ -260,17 +271,17 @@ class Art extends database_object {
 	public function save_thumb($source, $mime, $size) {
 
 		// Quick sanity check
-		if (strlen($source) < 5 OR !strlen($mime)) {
-			debug_event('Art','Unable to save thumbnail, invalid data passed',1);
+		if (!self::test_image($source)) {
+			debug_event('Art', 'Not inserting thumbnail, invalid data passed', 1);
 			return false;
 		}
-		
+
 		$source = Dba::escape($source);
 		$mime = Dba::escape($mime);
 		$size = Dba::escape($size);
 		$uid = Dba::escape($this->uid);
 		$type = Dba::escape($this->type);
-		
+
 		$sql = "DELETE FROM `image` WHERE `object_id`='$uid' AND `object_type`='$type' AND `size`='$size'";
 		$db_results = Dba::write($sql);
 
@@ -295,7 +306,7 @@ class Art extends database_object {
 
 		$results = Dba::fetch_assoc($db_results);
 		if (count($results)) {
-			return array('thumb' => $results['image'], 
+			return array('thumb' => $results['image'],
 				'thumb_mime' => $results['mime']);
 		}
 
@@ -319,12 +330,17 @@ class Art extends database_object {
 		$data = explode("/",$mime);
 		$type = strtolower($data['1']);
 
+		if (!self::test_image($image)) {
+			debug_event('Art', 'Not trying to generate thumbnail, invalid data passed', 1);
+			return false;
+		}
+
 		if (!function_exists('gd_info')) {
 			debug_event('Art','PHP-GD Not found - unable to resize art',1);
 			return false;
 		}
 
-		// Check and make sure we can resize what you've asked us to	
+		// Check and make sure we can resize what you've asked us to
 		if (($type == 'jpg' OR $type == 'jpeg') AND !(imagetypes() & IMG_JPG)) {
 			debug_event('Art','PHP-GD Does not support JPGs - unable to resize',1);
 			return false;
@@ -341,8 +357,8 @@ class Art extends database_object {
 			debug_event('Art','PHP-GD Does not support BMPs - unable to resize',1);
 			return false;
 		}
-	
-		$source = imagecreatefromstring($image); 	
+
+		$source = imagecreatefromstring($image);
 
 		if (!$source) {
 			debug_event('Art','Failed to create Image from string - Source Image is damaged / malformed',1);
@@ -361,7 +377,7 @@ class Art extends database_object {
 
 		// Start output buffer
 		ob_start();
-		
+
 		// Generate the image to our OB
 		switch ($type) {
 			case 'jpg':
@@ -381,17 +397,17 @@ class Art extends database_object {
 				$mime_type = image_type_to_mime_type(IMAGETYPE_PNG);
 			break;
 		} // resized
-		
+
 		$data = ob_get_contents();
 		ob_end_clean();
-	
+
 		if (!strlen($data)) {
 			debug_event('Art', 'Unknown Error resizing art', 1);
 			return false;
 		}
 
 		return array('thumb' => $data, 'thumb_mime' => $mime_type);
-			
+
 	} // generate_thumb
 
 	/**
@@ -494,7 +510,7 @@ class Art extends database_object {
 		$name = 'art.' . $extension;
 		$url = Config::get('web_path') . '/image.php?id=' . scrub_out($uid) . 'object_type=' . scrub_out($type) . '&auth=' . $sid . '&name=' . $name;
 
-		return $url; 	
+		return $url;
 
 	} // url
 
@@ -539,8 +555,8 @@ class Art extends database_object {
 				$allowed_methods = array();
 			break;
 		}
-	
-		$config = Config::get('art_order'); 	
+
+		$config = Config::get('art_order');
 		$methods = get_class_methods('Art');
 
 		/* If it's not set */
@@ -594,7 +610,7 @@ class Art extends database_object {
 	///////////////////////////////////////////////////////////////////////
 	// Art Methods
 	///////////////////////////////////////////////////////////////////////
-	
+
 	/**
 	 * gather_musicbrainz
 	 * This function retrieves art based on MusicBrainz' Advanced
