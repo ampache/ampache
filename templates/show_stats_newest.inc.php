@@ -20,9 +20,17 @@
 
 */
 ?>
-<i><?php echo _('Newest Albums'); ?></i>
-<?php $object_ids = Stats::get_newest('album'); ?>
-<?php require_once Config::get('prefix') . '/templates/show_albums.inc.php'; ?>
-<?php $object_ids = Stats::get_newest('artist'); ?>
-<i><?php echo _('Newest Artists'); ?></i>
-<?php require_once Config::get('prefix') . '/templates/show_artists.inc.php'; ?>
+<?php
+$object_ids = Stats::get_newest('album');
+$browse = new Browse();
+$browse->set_type('album');
+$browse->show_objects($object_ids);
+$browse->store();
+?>
+<?php
+$object_ids = Stats::get_newest('artist');
+$browse = new Browse();
+$browse->set_type('artist');
+$browse->show_objects($object_ids);
+$browse->store();
+?>

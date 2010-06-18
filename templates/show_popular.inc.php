@@ -21,13 +21,25 @@
 */
 ?>
 <?php show_box_top(_('Information')); ?>
-<em><?php echo _('Songs'); ?></em>
-<?php $object_ids = Stats::get_top('song'); ?>
-<?php require_once Config::get('prefix') . '/templates/show_songs.inc.php'; ?>
-<em><?php echo _('Albums'); ?></em>
-<?php $object_ids = Stats::get_top('album'); ?>
-<?php require_once Config::get('prefix') . '/templates/show_albums.inc.php'; ?>
-<em><?php echo _('Artists'); ?></em>
-<?php $object_ids = Stats::get_top('artist'); ?>
-<?php require_once Config::get('prefix') . '/templates/show_artists.inc.php'; ?>
+<?php
+$object_ids = Stats::get_top('song');
+$browse = new Browse();
+$browse->set_type('song');
+$browse->show_objects($object_ids);
+$browse->store();
+?>
+<?php 
+$object_ids = Stats::get_top('album');
+$browse = new Browse();
+$browse->set_type('album');
+$browse->show_objects($object_ids);
+$browse->store();
+?>
+<?php
+$object_ids = Stats::get_top('artist');
+$browse = new Browse();
+$browse->set_type('artist');
+$browse->show_objects($object_ids);
+$browse->store();
+?>
 <?php show_box_bottom(); ?>
