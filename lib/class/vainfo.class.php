@@ -28,18 +28,16 @@
 class vainfo {
 
 	/* Default Encoding */
-	public $encoding = '';
-	public $encoding_id3v1 = 'ISO-8859-1';
-	public $encoding_id3v2 = 'ISO-8859-1';
+	public $encoding	= '';
+	public $encoding_id3v1	= 'ISO-8859-1';
 
 	/* Loaded Variables */
-	public $filename = '';
-	public $type = '';
-	public $tags = array();
+	public $filename	= '';
+	public $type		= '';
+	public $tags		= array();
 
 	/* Internal Information */
 	public $_raw 		= array();
-	public $_raw2		= array();
 	public $_getID3 	= '';
 	public $_iconv		= false;
 	public $_file_encoding	= '';
@@ -47,16 +45,15 @@ class vainfo {
 	public $_dir_pattern	= '';
 
 	/* Internal Private */
-	private $_binary_parse	= array();
 	private $_pathinfo;
-	private $_broken=false;
+	private $_broken = false;
 
 	/**
 	 * Constructor
 	 * This function just sets up the class, it doesn't
 	 * actually pull the information
 	 */
-	public function __construct($file,$encoding='',$encoding_id3v1='',$encoding_id3v2='',$dir_pattern,$file_pattern) {
+	public function __construct($file, $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern, $file_pattern) {
 
 		/* Check for ICONV */
 		if (function_exists('iconv')) {
@@ -84,24 +81,20 @@ class vainfo {
 		}
 		$this->_pathinfo['extension'] = strtolower($this->_pathinfo['extension']);
 
-		// Before we roll the _getID3 route let's see about using exec + a binary
-/*
-		if (!isset($this->_binary_parse[$this->_pathinfo['extension']])) {
-			// Figure out if we've got binary parse ninja-skills here
-			$this->_binary_parse[$this->_pathinfo['extension']] = $this->can_binary_parse();
-			debug_event('BinaryParse','Binary Parse for ' . $this->_pathinfo['extension'] . ' set to ' . make_bool($this->_binary_parse[$this->_pathinfo['extension']]),'5');
-		}
-*/
 		// Initialize getID3 engine
 		$this->_getID3 = new getID3();
 
-//		if ($this->_binary_parse[$this->_pathinfo['extension']]) { return true; }
+		$this->_getID3->option_md5_data		= false;
+		$this->_getID3->option_md5_data_source	= false;
+		$this->_getID3->option_tags_html	= false;
+		$this->_getID3->option_extra_info	= true;
+		$this->_getID3->option_tag_lyrics3	= true;
+		$this->_getID3->option_tags_process	= true;
+		$this->_getID3->encoding		= $this->encoding;
 
-		// get id3tag encodings
-		// we have to run this right here because we don't know what we have in the files
-		// and so we pull broken, then pull good later... this needs to be fixed
+		// get id3tag encoding (try to work around off-spec id3v1 tags)
 		try {
-			$this->_raw2 = $this->_getID3->analyze($file);
+			$this->_raw = $this->_getID3->analyze($file);
 		}
 		catch (Exception $error) {
 			debug_event('Getid3()',"Broken file detected $file - " . $error->message,'1');
@@ -109,58 +102,47 @@ class vainfo {
 			return false;
 		}
 
-		if(function_exists('mb_detect_encoding')) {
-			$this->encoding_id3v1 = array();
-			$this->encoding_id3v1[] = mb_detect_encoding($this->_raw2['tags']['id3v1']['artist']['0']);
-			$this->encoding_id3v1[] = mb_detect_encoding($this->_raw2['tags']['id3v1']['album']['0']);
-			$this->encoding_id3v1[] = mb_detect_encoding($this->_raw2['tags']['id3v1']['genre']['0']);
-			$this->encoding_id3v1[] = mb_detect_encoding($this->_raw2['tags']['id3v1']['title']['0']);
-			array_multisort($this->encoding_id3v1);
-			array_splice($this->encoding_id3v1, -4, 3);
-			if($this->encoding_id3v1[0] != "ASCII") {
-				$this->encoding_id3v1 = $this->encoding_id3v1[0];
-			} else {
-				$this->encoding_id3v1 = "ISO-8859-1";
+		if ($encoding_id3v1) {
+			$this->encoding_id3v1 = $encoding_id3v1;
+		}
+		elseif (function_exists('mb_detect_encoding')) {
+			$encodings = array();
+			$tags = array('artist', 'album', 'genre', 'title');
+			foreach ($tags as $tag) {
+				if ($value = $this->_raw['id3v1'][$tag]) {
+					$encodings[mb_detect_encoding($value, 'ASCII,UTF-8,EUC-JP,ISO-2022-JP,SJIS,JIS', true)]++;
+				}
 			}
 
-
-			$this->encoding_id3v2 = array();
-			$this->encoding_id3v2[] = mb_detect_encoding($this->_raw2['tags']['id3v2']['artist']['0']);
-			$this->encoding_id3v2[] = mb_detect_encoding($this->_raw2['tags']['id3v2']['album']['0']);
-			$this->encoding_id3v2[] = mb_detect_encoding($this->_raw2['tags']['id3v2']['genre']['0']);
-			$this->encoding_id3v2[] = mb_detect_encoding($this->_raw2['tags']['id3v2']['title']['0']);
-			array_multisort($this->encoding_id3v2);
-			array_splice($this->encoding_id3v2, -4, 3);
-			if($this->encoding_id3v2[0] != "ASCII"){
-				$this->encoding_id3v2 = $this->encoding_id3v2[0];
-			} else {
-				$this->encoding_id3v2 = "ISO-8859-1";
+			debug_event('vainfo', 'encoding detection (id3v1): ' . print_r($encodings, true), 5);
+			$high = 0;
+			foreach ($encodings as $key => $value) {
+				if ($value > $high) {
+					$encoding_id3v1 = $key;
+					$high = $value;
+				}
 			}
+
+			if($encoding_id3v1 != 'ASCII' && $encoding_id3v1 != '0') {
+				$this->encoding_id3v1 = $encoding_id3v1;
+			} else {
+				$this->encoding_id3v1 = 'ISO-8859-1';
+			}
+
+			debug_event('vainfo', 'encoding detection (id3v1) selected ' .  $this->encoding_id3v1, 5);
 		}
 		else {
-			$this->encoding_id3v1 = "ISO-8859-1";
-			$this->encoding_id3v2 = "ISO-8859-1";
+			$this->encoding_id3v1 = 'ISO-8859-1';
 		}
 
-		$this->_getID3->option_md5_data			= false;
-		$this->_getID3->option_md5_data_source	= false;
-		$this->_getID3->option_tags_html		= false;
-		$this->_getID3->option_extra_info		= true;
-		$this->_getID3->option_tag_lyrics3		= true;
-		$this->_getID3->encoding				= $this->encoding;
-		$this->_getID3->encoding_id3v1			= $this->encoding_id3v1;
-		$this->_getID3->encoding_id3v2			= $this->encoding_id3v2;
-		$this->_getID3->option_tags_process		= true;
-
+		$this->_getID3->encoding_id3v1 = $this->encoding_id3v1;
 
 	} // vainfo
 
 
 	/**
 	 * get_info
-	 * This function takes a filename and returns the $_info array
-	 * all filled up with tagie goodness or if specified filename
-	 * pattern goodness
+	 * This function runs the various steps to gathering the metadata
 	 */
 	public function get_info() {
 
@@ -171,52 +153,37 @@ class vainfo {
 			return true;
 		}
 
-		// If we've got a green light try out the binary
-//		if ($this->_binary_parse[$this->_pathinfo['extension']]) {
-//			$this->run_binary_parse();
-//		}
+		/* Get the Raw file information */
+		try {
+			$this->_raw = $this->_getID3->analyze($this->filename);
+		}
+		catch (Exception $error) {
+			debug_event('Getid3()',"Unable to catalog file:" . $error->message,'1');
+		}
 
-//		else {
+		/* Figure out what type of file we are dealing with */
+		$this->type = $this->_get_type();
 
-			/* Get the Raw file information */
-			try {
-				$this->_raw = $this->_getID3->analyze($this->filename);
-			}
-			catch (Exception $error) {
-				debug_event('Getid3()',"Unable to catalog file:" . $error->message,'1');
-			}
-
-			/* Figure out what type of file we are dealing with */
-			$this->type = $this->_get_type();
-
-			/* Get the general information about this file */
-			$info = $this->_get_info();
-//		}
+		/* Get the general information about this file */
+		$info = $this->_get_info();
 
 		/* Gets the Tags */
 		$this->tags = $this->_get_tags();
 		$this->tags['info'] = $info;
 
-		unset($this->_raw);
-
 	} // get_info
 
 	/**
 	 * get_tag_type
-	 * This takes the result set, and the tag_order
-	 * As defined by your config file and trys to figure out
-	 * which tag type(s) it should use, if your tag_order
-	 * doesn't match anything then it just takes the first one
-	 * it finds in the results.
+	 * This takes the result set and the tag_order defined in your config
+	 * file and tries to figure out which tag type(s) it should use. If your
+	 * tag_order doesn't match anything then it throws up its hands and uses
+	 * everything.
 	 */
 	public static function get_tag_type($results) {
 
-		/* Pull In the config option */
-		$order = Config::get('tag_order');
-
-		if (!is_array($order)) {
-			$order = array($order);
-		}
+		/* Pull in the config option */
+		$order = (array)Config::get('tag_order');
 
 		/* Foreach through the defined key order
 		 * adding them to an ordered array as we go
@@ -228,13 +195,11 @@ class vainfo {
 			}
 		}
 
-		/* If we didn't find anything then default it to the
-		 * first in the results set
-		 * We could also just use the whole array.
+		/* If we didn't find anything then default to everything.
 		 */
 		if (!isset($returned_keys)) {
-			$keys = array_keys($results);
-			$returned_keys[] = $keys['0'];
+			$returned_keys = array_keys($results);
+			$returned_keys = sort($returned_keys);
 		}
 
 		return $returned_keys;
@@ -471,21 +436,21 @@ class vainfo {
 				break;
 				case 'flv':
 					debug_event('_get_tags', 'Parsing flv', '5');
-					$results[$key] = $this->_parse_flv($this->_raw2);
+					$results[$key] = $this->_parse_flv($this->_raw);
 				break;
 				case 'mpg':
 				case 'mpeg':
 					debug_event('_get_tags', 'Parsing MPEG', '5');
-					$results[$key] = $this->_parse_mpg($this->_raw2);
+					$results['mpeg'] = $this->_parse_mpg($this->_raw);
 				break;
 				case 'asf':
 				case 'wmv':
 					debug_event('_get_tags', 'Parsing WMV/WMA/ASF', '5');
-					$results[$key] = $this->_parse_wmv($this->_raw2);
+					$results['asf'] = $this->_parse_wmv($this->_raw);
 				break;
 				case 'avi':
 					debug_event('_get_tags', 'Parsing avi', '5');
-					$results[$key] = $this->_parse_avi($this->_raw2);
+					$results[$key] = $this->_parse_avi($this->_raw);
 				break;
 				case 'lyrics3':
 					debug_event('_get_tags', 'Parsing lyrics3', '5');
@@ -549,8 +514,7 @@ class vainfo {
 
 	/**
 	 * _clean_type
-	 * This standardizes the type that we are given into a reconized
-	 * type
+	 * This standardizes the type that we are given into a recognized type.
 	 */
 	private function _clean_type($type) {
 
@@ -647,15 +611,13 @@ class vainfo {
 
 	/**
 	 * _parse_id3v1
-	 * This function takes a id3v1 tag set from getid3() and then
-	 * returns the elements translated using iconv if needed in a
-	 * pretty little format
+	 * This function takes an id3v1 tag set from getid3() and then
+	 * returns the elements (translated using iconv if needed) in a
+	 * pretty little format.
 	 */
 	private function _parse_id3v1($tags) {
 
 		$array = array();
-
-		$encoding = $this->_raw['id3v1']['encoding'];
 
 		/* Go through all the tags */
 		foreach ($tags as $tag=>$data) {
@@ -663,7 +625,7 @@ class vainfo {
 			/* This is our baseline for naming
 			 * so no translation needed
 			 */
-			$array[$tag]	= $this->_clean_tag($data['0'],$encoding);
+			$array[$tag]	= $this->_clean_tag($data['0']);
 
 		} // end foreach
 
@@ -673,9 +635,9 @@ class vainfo {
 
 	/**
 	 * _parse_id3v2
-	 * This function takes a id3v2 tag set from getid3() and then
-	 * returns the lelements translated using iconv if needed in a
-	 * pretty little format
+	 * This function takes an id3v2 tag set from getid3() and then
+	 * returns the elements (translated using iconv if needed) in a
+	 * pretty little format.
 	 */
 	private function _parse_id3v2($tags) {
 
@@ -692,7 +654,7 @@ class vainfo {
 				case 'genre':
 					// multiple genre support
 					foreach($data as $genre) {
-						$array['genre'][] = $this->_clean_tag($genre,'');
+						$array['genre'][] = $this->_clean_tag($genre);
 					}
 				break;
 				case 'pos':
@@ -700,16 +662,16 @@ class vainfo {
 					$array['disk'] = $el[0];
 				break;
 				case 'track_number':
-					$array['track'] = $this->_clean_tag($data['0'],'');
+					$array['track'] = $this->_clean_tag($data['0']);
 				break;
 				case 'comments':
-					$array['comment'] = $this->_clean_tag($data['0'],'');
+					$array['comment'] = $this->_clean_tag($data['0']);
 				break;
 				case 'title':
-					$array['title'] = $this->_clean_tag($data['0'],'');
+					$array['title'] = $this->_clean_tag($data['0']);
 				break;
 				default:
-					$array[$tag]	= $this->_clean_tag($data['0'],'');
+					$array[$tag]	= $this->_clean_tag($data['0']);
 				break;
 			} // end switch on tag
 
@@ -720,16 +682,16 @@ class vainfo {
 		if(!empty($id3v2['UFID'])) {
 			foreach ($id3v2['UFID'] as $ufid) {
 				if ($ufid['ownerid'] == 'http://musicbrainz.org') {
-					$array['mb_trackid'] = $this->_clean_tag($ufid['data'],'');
+					$array['mb_trackid'] = $this->_clean_tag($ufid['data']);
 				}
 			}
 
 			for ($i = 0, $size = sizeof($id3v2['comments']['text']) ; $i < $size ; $i++) {
 				if ($id3v2['TXXX'][$i]['description'] == 'MusicBrainz Album Id') {
-					$array['mb_albumid'] = $this->_clean_tag($id3v2['comments']['text'][$i],'');
+					$array['mb_albumid'] = $this->_clean_tag($id3v2['comments']['text'][$i]);
 				}
 				elseif ($id3v2['TXXX'][$i]['description'] == 'MusicBrainz Artist Id') {
-					$array['mb_artistid'] = $this->_clean_tag($id3v2['comments']['text'][$i],'');
+					$array['mb_artistid'] = $this->_clean_tag($id3v2['comments']['text'][$i]);
 				}
 			}
 		}
@@ -752,12 +714,12 @@ class vainfo {
 				case 'genre':
 					// multiple genre support
 					foreach($data as $genre) {
-						$array['genre'][] = $this->_clean_tag($genre,'');
+						$array['genre'][] = $this->_clean_tag($genre);
 					}
 				break;
 
 				default:
-					$array[$tag] = $this->_clean_tag($data['0'],$this->_file_encoding);
+					$array[$tag] = $this->_clean_tag($data['0'], $this->_file_encoding);
 				break;
 			} // end switch on tag
 
@@ -778,10 +740,10 @@ class vainfo {
 
 			switch ($tag) {
 				case 'product':
-					$array['album'] = $this->_clean_tag($data['0'],$this->_file_encoding);
+					$array['album'] = $this->_clean_tag($data['0'], $this->_file_encoding);
 				break;
 				default:
-					$array[$tag] = $this->_clean_tag($data['0'],$this->_file_encoding);
+					$array[$tag] = $this->_clean_tag($data['0'], $this->_file_encoding);
 				break;
 			} // end switch on tag
 
@@ -821,10 +783,10 @@ class vainfo {
 		} // end foreach
 
 		// Also add in any video related stuff we might find
-		if (strpos($this->_raw2['mime_type'],'video') !== false) {
-			$info = $this->_parse_avi($this->_raw2);
-			$info['video_codec'] = $this->_raw2['quicktime']['ftyp']['fourcc'];
-			$array = array_merge($info,$array);
+		if (strpos($this->_raw['mime_type'], 'video') !== false) {
+			$info = $this->_parse_avi($this->_raw);
+			$info['video_codec'] = $this->_raw['quicktime']['ftyp']['fourcc'];
+			$array = array_merge($info, $array);
 		}
 
 		return $array;
@@ -1003,121 +965,28 @@ class vainfo {
 	 * is, and or if it's different then the encoding recorded
 	 * in the file
 	 */
-	private function _clean_tag($tag,$encoding='') {
+	private function _clean_tag($tag, $encoding = null) {
 
 		// If we've got iconv then go ahead and clear her up
 		if ($this->_iconv) {
-			/* Guess that it's UTF-8 */
-			/* Try GNU iconv //TRANSLIT extension first */
-			if (!$encoding) { $encoding = $this->_getID3->encoding; }
-			$charset = $this->encoding . '//TRANSLIT';
-			$enc_tag = iconv($encoding,$charset,$tag);
-			if(strcmp($enc_tag, "") == 0) {
-				$enc_tag = iconv($encoding,$this->encoding,$tag);
+			// Default to getID3's native encoding
+			if (!$encoding) {
+				$encoding = $this->_getID3->encoding;
+			}
+
+			// Try GNU iconv //TRANSLIT extension first
+			$new_encoding = $this->encoding . '//TRANSLIT';
+			$clean = iconv($encoding, $new_encoding, $tag);
+
+			// If that fails, do a plain conversion
+			if(strcmp($clean, '') == 0) {
+				$clean = iconv($encoding, $this->encoding, $tag);
 			}
 		}
 
-		return $enc_tag;
+		return $clean;
 
 	} // _clean_tag
-
-	/**
-	 * can_binary_parse
-	 * This returns true/false if we can do a binary parse of the file in question
-	 * only the extension is passed so this can be inaccurate
-	 */
-	public function can_binary_parse() {
-
-		// We're going to need exec for this
-		if (!is_callable('exec')) {
-			return false;
-		}
-
-
-		// For now I'm going to use an approved list of apps, later we should allow user config
-		switch ($this->_pathinfo['extension']) {
-			case 'mp3':
-				// Verify the application is there and callable
-				exec('id3v2 -v',$results,$retval);
-				if ($retval == 0) { return true; }
-			break;
-			default:
-				//FAILURE
-			break;
-		}
-
-		return false;
-
-	} // can_binary_parse
-
-	/**
-	 * run_binary_parse
-	 * This runs the binary parse operations here down in Ampache land
-	 * it is passed the filename, and only called if can_binary_parse passes
-	 */
-	public function run_binary_parse() {
-
-		// Switch on the extension
-		switch ($this->_pathinfo['extension']) {
-			case 'mp3':
-				$this->_raw['tags'] = $this->mp3_binary_parse();
-			break;
-			default:
-				$this->_raw['tags'] = array();
-			break;
-		} // switch on extension
-
-	} // run_binary_parse
-
-	/**
-	 * mp3_binary_parse
-	 * This tries to read the tag information from mp3s using a binary and the exec() command
-	 * This will not work on a lot of systems... but it should be faster
-	 */
-	public function mp3_binary_parse() {
-
-		require_once(Config::get('prefix') . '/modules/getid3/module.tag.id3v2.php');
-
-		$filename = escapeshellarg($this->filename);
-
-		exec('id3v2 -l ' . $filename,$info,$retval);
-
-		if ($retval != 0) { return array(); }
-
-		$position=0;
-		$results = array();
-
-		// If we've got Id3v1 tag information
-		if (substr($info[$position],0,5) == 'id3v1') {
-			$position++;
-			$v1['title'][]	= trim(substr($info[$position],8,30));
-			$v1['artist'][]	= trim(substr($info[$position],49,79));
-			$position++;
-			$v1['album'][]	= trim(substr($info[$position],8,30));
-			$v1['year'][]	= trim(substr($info[$position],47,53));
-			$v1['genre'][]	= trim(preg_replace("/\(\d+\)/","",substr($info[$position],60,strlen($info[$position]))));
-			$position++;
-			$v1['comment'][]= trim(substr($info[$position],8,30));
-			$v1['track'][]	= trim(substr($info[$position],48,3));
-			$results['id3v1'] = $v1;
-			$position++;
-		}
-		if (substr($info[$position],0,5) == 'id3v2') {
-			$position++;
-			$element_count = count($info);
-			while ($position < $element_count) {
-				$position++;
-				$element = getid3_id3v2::FrameNameShortLookup(substr($info[$position],0,4));
-				if (!$element) { continue; }
-				$data = explode(":",$info[$position],2);
-				$value = array_pop($data);
-				$results['id3v2'][$element][] = $value;
-			}
-
-		} // end if id3v2
-		return $results;
-
-	} // mp3_binary_parse
 
 	/**
 	 * set_broken
