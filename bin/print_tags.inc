@@ -58,8 +58,8 @@ if(isset($catalog->sort_pattern) AND isset($catalog->rename_pattern)) {
 }
 $info->get_info();
 $results = $info->tags;
-$key = vainfo::get_tag_type($results);
-$ampache_results = vainfo::clean_tag_info($results,$key,$filename);
+$keys = vainfo::get_tag_type($results);
+$ampache_results = vainfo::clean_tag_info($results, $keys, $filename);
 
 if ($send_mail) {
 	$getid3_results = print_r($info,1);
@@ -74,7 +74,7 @@ echo _("Results Seen by GetID3()");
 echo "\n";
 print_r($info);
 echo "\n------------------------------------------------------------------\n";
-printf(_('Results Seen by Ampache using %s'), $key[0]);
+printf(_('Results Seen by Ampache using %s'), implode(' + ', $keys));
 echo "\n";
 print_r($ampache_results);
 
