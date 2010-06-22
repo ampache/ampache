@@ -33,24 +33,32 @@ $web_path = Config::get('web_path');
 	<th class="cel_name"><?php echo _('Name'); ?></th>
 	<th class="cel_description"><?php echo _('Description'); ?></th>
 	<th class="cel_version"><?php echo _('Version'); ?></th>
+	<th class="cel_iversion"><?php echo _('Installed Version'); ?></th>
 	<th class="cel_action"><?php echo _('Action'); ?></th>
 </tr>
 <?php
 foreach ($plugins as $plugin_name) {
 	$plugin = new Plugin($plugin_name);
-        if (!Plugin::is_installed($plugin->_plugin->name)) {
+	$installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
+        if (! $installed_version) {
                 $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                         _('Activate') . "</a>";
         }
         else {
                 $action = "<a href=\"" . $web_path . "/admin/modules.php?action=confirm_uninstall_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                         _('Deactivate') . "</a>";
+		if ($installed_version < $plugin->_plugin->version) {
+			$action .= '&nbsp;&nbsp;<a href="' . $web_path . 
+			'/admin/modules.php?action=upgrade_plugin&amp;plugin=' .
+			scrub_out($plugin_name) . '">' . _('Upgrade') . '</a>';
+		}
         }
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td class="cel_name"><?php echo scrub_out($plugin->_plugin->name); ?></td>
 	<td class="cel_description"><?php echo scrub_out($plugin->_plugin->description); ?></td>
 	<td class="cel_version"><?php echo scrub_out($plugin->_plugin->version); ?></td>
+	<td class="cel_iversion"><?php echo scrub_out($installed_version); ?></td>
 	<td class="cel_action"><?php echo $action; ?></td>
 </tr>
 <?php } if (!count($plugins)) { ?>

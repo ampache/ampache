@@ -123,7 +123,19 @@ switch ($_REQUEST['action']) {
 		show_confirmation($title,$body,$url);
 	break;
 	case 'upgrade_plugin':
-
+		/* Verify that this plugin exists */
+		$plugins = Plugin::get_plugins();
+		if (!array_key_exists($_REQUEST['plugin'],$plugins)) {
+			debug_event('plugins','Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected','1');
+			break;
+		}
+		$plugin = new Plugin($_REQUEST['plugin']);
+		$plugin->upgrade();
+		User::rebuild_all_preferences();
+		$url    = Config::get('web_path') . '/admin/modules.php?action=show_plugins';
+		$title  = _('Plugin Upgraded');
+		$body   = '';
+		show_confirmation($title, $body, $url);
 	break;
 	case 'show_plugins':
 		$plugins = Plugin::get_plugins();

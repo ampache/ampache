@@ -25,18 +25,19 @@ class Ampachelibrefm {
 	public $name		='Libre.FM';
 	public $description	='Records your played songs to your Libre.FM Account';
 	public $url		='';
-	public $version		='000001';
-	public $min_ampache	='350001';
-	public $max_ampache	='360008';
+	public $version		='000002';
+	public $min_ampache	='360003';
+	public $max_ampache	='999999';
 
 	// These are internal settings used by this class, run this->load to
-	// fill em out
+	// fill them out
 	private $username;
 	private $password;
 	private $hostname;
 	private $port;
 	private $path;
 	private $challenge;
+	private $user_id;
 
 	/**
 	 * Constructor
@@ -46,11 +47,11 @@ class Ampachelibrefm {
 
 		return true;
 
-	} // Pluginlibrefm
+	} // constructor
 
 	/**
 	 * install
-	 * This is a required plugin function it inserts the required preferences
+	 * This is a required plugin function. It inserts our preferences
 	 * into Ampache
 	 */
 	public function install() {
@@ -59,7 +60,7 @@ class Ampachelibrefm {
 		if (Preference::exists('librefm_user')) { return false; }
 
 		Preference::insert('librefm_user','Libre.FM Username','','25','string','plugins');
-		Preference::insert('librefm_pass','Libre.FM Password','','25','string','plugins');
+		Preference::insert('librefm_md5_pass','Libre.FM Password','','25','string','plugins');
 		Preference::insert('librefm_port','Libre.FM Submit Port','','25','string','internal');
 		Preference::insert('librefm_host','Libre.FM Submit Host','','25','string','internal');
 		Preference::insert('librefm_url','Libre.FM Submit URL','','25','string','internal');
@@ -71,12 +72,12 @@ class Ampachelibrefm {
 
 	/**
 	 * uninstall
-	 * This is a required plugin function it removes the required preferences from
-	 * the database returning it to its origional form
+	 * This is a required plugin function. It removes our preferences from
+	 * the database returning it to its original form
 	 */
 	public function uninstall() {
 
-		Preference::delete('librefm_pass');
+		Preference::delete('librefm_md5_pass');
 		Preference::delete('librefm_user');
 		Preference::delete('librefm_url');
 		Preference::delete('librefm_host');
@@ -86,30 +87,44 @@ class Ampachelibrefm {
 	} // uninstall
 
 	/**
-	 * submit
-	 * This takes care of queueing and then submiting the tracks eventually this will make sure
-	 * that you've haven't
+	 * upgrade
+	 * This is a recommended plugin function
 	 */
-	public function submit($song,$user_id) {
+	public function upgrade() {
+		$from_version = Plugin::get_plugin_version($this->name);
+		if ($from_version < 2) {
+			Preference::rename('librefm_pass', 'librefm_md5_pass');
+		}
+		return true;
+	} // upgrade
 
-		// Before we start let's pull the last song submited by this user
-		$previous = Stats::get_last_song($user_id);
+	/**
+	 * save_songplay
+	 * This takes care of queueing and then submitting the tracks.
+	 */
+	public function save_songplay($song) {
+
+		// Before we start let's pull the last song submitted by this user
+		$previous = Stats::get_last_song($this->user_id);
 
 		$diff = time() - $previous['date'];
 
 		// Make sure it wasn't within the last min
 		if ($diff < 60) {
-			debug_event('librefm','Last song played within ' . $diff . ' seconds, not recording stats','3');
+			debug_event($this->name,'Last song played within ' . $diff . ' seconds, not recording stats','3');
 			return false;
 		}
 
 		if ($song->time < 30) {
-			debug_event('librefm','Song less then 30 seconds not queueing','3');
+			debug_event($this->name,'Song less then 30 seconds not queueing','3');
 			return false;
 		}
 
 		// Make sure there's actually a username and password before we keep going
-		if (!$this->username || !$this->password) { return false; }
+		if (!$this->username || !$this->password) {
+			debug_event($this->name,'Username or password missing','3');
+			return false;
+		}
 
 		// Create our scrobbler with everything this time and then queue it
 		$scrobbler = new scrobbler($this->username,$this->password,$this->hostname,$this->port,$this->path,$this->challenge,'turtle.libre.fm');
@@ -122,10 +137,10 @@ class Ampachelibrefm {
 
 		// Go ahead and submit it now
 		if (!$scrobbler->submit_tracks()) {
-			debug_event('librefm','Error Submit Failed: ' . $scrobbler->error_msg,'3');
+			debug_event($this->name,'Error Submit Failed: ' . $scrobbler->error_msg,'3');
 			if ($scrobbler->reset_handshake) {
-				debug_event('librefm','Re-running Handshake due to error','3');
-				$this->set_handshake($user_id);
+				debug_event($this->name,'Re-running Handshake due to error','3');
+				$this->set_handshake($this->user_id);
 				// Try try again
 				if ($scrobbler->submit_tracks()) {
 					return true;
@@ -134,7 +149,7 @@ class Ampachelibrefm {
 			return false;
 		}
 
-		debug_event('librefm','Submission Successful','5');
+		debug_event($this->name,'Submission Successful','5');
 
 		return true;
 
@@ -142,9 +157,9 @@ class Ampachelibrefm {
 
 	/**
 	 * set_handshake
-	 * This runs a handshake and properly updates the preferences as needed, it returns the data
-	 * as an array so we don't have to requery the db. This requires a userid so it knows who's
-	 * crap to update
+	 * This runs a handshake and properly updates the preferences as needed.
+	 * It returns the data as an array so we don't have to requery the db.
+	 * This requires a userid so it knows whose crap to update.
 	 */
 	public function set_handshake($user_id) {
 
@@ -152,7 +167,7 @@ class Ampachelibrefm {
 		$data = $scrobbler->handshake();
 
 		if (!$data) {
-			debug_event('librefm','Handshake Failed: ' . $scrobbler->error_msg,'3');
+			debug_event($this->name,'Handshake Failed: ' . $scrobbler->error_msg,'3');
 			return false;
 		}
 
@@ -161,11 +176,11 @@ class Ampachelibrefm {
 		$this->path = $data['submit_url'];
 		$this->challenge = $data['challenge'];
 
-                // Update the preferences
-                Preference::update('librefm_port',$user_id,$data['submit_port']);
-                Preference::update('librefm_host',$user_id,$data['submit_host']);
-                Preference::update('librefm_url',$user_id,$data['submit_url']);
-                Preference::update('librefm_challenge',$user_id,$data['challenge']);
+		// Update the preferences
+		Preference::update('librefm_port',$user_id,$data['submit_port']);
+		Preference::update('librefm_host',$user_id,$data['submit_host']);
+		Preference::update('librefm_url',$user_id,$data['submit_url']);
+		Preference::update('librefm_challenge',$user_id,$data['challenge']);
 
 		return true;
 
@@ -173,46 +188,49 @@ class Ampachelibrefm {
 
 	/**
 	 * load
-	 * This loads up the data we need into this object, this stuff comes from the preferences
-	 * it's passed as a key'd array
+	 * This loads up the data we need into this object, this stuff comes 
+	 * from the preferences.
 	 */
-	public function load($data,$user_id) {
+	public function load() {
+
+		$GLOBALS['user']->set_preferences();
+		$data = $GLOBALS['user']->prefs;
 
 		if (strlen(trim($data['librefm_user']))) {
 			$this->username = trim($data['librefm_user']);
 		}
 		else {
-			debug_event('librefm','No Username, not scrobbling','3');
+			debug_event($this->name,'No Username, not scrobbling','3');
 			return false;
 		}
-		if (strlen(trim($data['librefm_pass']))) {
-			$this->password = trim($data['librefm_pass']);
+		if (strlen(trim($data['librefm_md5_pass']))) {
+			$this->password = trim($data['librefm_md5_pass']);
 		}
 		else {
-			debug_event('librefm','No Password, not scrobbling','3');
+			debug_event($this->name,'No Password, not scrobbling','3');
 			return false;
 		}
 
+		$this->user_id = $GLOBALS['user']->id;
+
 		// If we don't have the other stuff try to get it before giving up
 		if (!$data['librefm_host'] || !$data['librefm_port'] || !$data['librefm_url'] || !$data['librefm_challenge']) {
-			debug_event('librefm','Running Handshake, missing information','3');
-			if (!$this->set_handshake($user_id)) {
-				debug_event('librefm','Handshake failed, you lose','3');
+			debug_event($this->name,'Running Handshake, missing information','3');
+			if (!$this->set_handshake($this->user_id)) {
+				debug_event($this->name,'Handshake failed, you lose','3');
 				return false;
 			}
 		}
 		else {
-	                $this->hostname = $data['librefm_host'];
-	                $this->port = $data['librefm_port'];
-	                $this->path = $data['librefm_url'];
-	                $this->challenge = $data['librefm_challenge'];
+			$this->hostname = $data['librefm_host'];
+			$this->port = $data['librefm_port'];
+			$this->path = $data['librefm_url'];
+			$this->challenge = $data['librefm_challenge'];
 		}
-
 
 		return true;
 
 	} // load
-
 
 } // end Ampachelibrefm
 ?>

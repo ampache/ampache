@@ -71,7 +71,7 @@ class Plugin {
 	 * get_plugins
 	 * This returns an array of plugin names
 	 */
-	public static function get_plugins() {
+	public static function get_plugins($type='') {
 
 		$results = array();
 
@@ -87,11 +87,24 @@ class Plugin {
 			// Ignore non-plugin files
 			if (substr($file,-10,10) != 'plugin.php') { continue; }
 			if (is_dir($file)) { continue; }
-
-			// It's a plugin record it
 			$plugin_name = basename($file,'.plugin.php');
+			if ($type != '') {
+				$plugin = new Plugin($plugin_name);
+				if (! Plugin::is_installed($plugin->_plugin->name)) {
+					debug_event('Plugins', 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 5);
+					continue;
+				}
+				if (! $plugin->is_valid()) {
+					debug_event('Plugins', 'Plugin ' . $plugin_name . ' is not valid, skipping', 5);
+					continue;
+				}
+				if (! method_exists($plugin->_plugin, $type)) {
+					debug_event('Plugins', 'Plugin ' . $plugin_name . ' does not support ' . $type . ', skipping', 5);
+					continue;
+				}
+			}
+			// It's a plugin record it
 			$results[$plugin_name] = $plugin_name;
-
 		} // end while
 
 		// Little stupid but hey
@@ -104,9 +117,10 @@ class Plugin {
 	/**
 	 * is_valid
 	 * This checks to make sure the plugin has the required functions and
-	 * settings, Ampache requires Name/Description/Version (Int) and a
-	 * install & uninstall method and Ampache must be within the min/max
-	 * version specifications
+	 * settings. Ampache requires public variables name, description, and
+	 * version (as an int), and methods install, uninstall, and load. We 
+	 * also check that Ampache's database version falls within the min/max
+	 * version specified by the plugin.
 	 */
 	function is_valid() {
 
@@ -130,6 +144,10 @@ class Plugin {
 			return false;
 		}
 
+		if (!method_exists($this->_plugin,'load')) {
+			return false;
+		}
+
 		/* Make sure it's within the version confines */
 		$db_version = $this->get_ampache_db_version();
 
@@ -141,15 +159,15 @@ class Plugin {
 			return false;
 		}
 
-		/* We've passed all of the tests its good */
+		// We've passed all of the tests
 		return true;
 
 	} // is_valid
 
 	/**
 	 * is_installed
-	 * This checks to see if the specified plugin is currently installed in the
-	 * database, it doesn't check the files for integrity
+	 * This checks to see if the specified plugin is currently installed in
+	 * the database, it doesn't check the files for integrity
 	 */
 	public static function is_installed($plugin_name) {
 
@@ -160,27 +178,22 @@ class Plugin {
 
 	/**
 	 * install
-	 * This runs the install function of the plugin (must be called install)
-	 * at the end it inserts a row into the update_info table to indicate
-	 * That it's installed
+	 * This runs the install function of the plugin and inserts a row into 
+	 * the update_info table to indicate that it's installed.
 	 */
 	public function install() {
+		if ($this->_plugin->install() && 
+			$this->set_plugin_version($this->_plugin->version)) {
+			return true;
+		}
 
-		$installed = $this->_plugin->install();
-
-		$version = $this->set_plugin_version($this->_plugin->version);
-
-		if (!$installed OR !$version) { return false; }
-
-		return true;
-
+		return false;
 	} // install
 
 	/**
 	 * uninstall
-	 * This runs the uninstall function of the plugin (must be called uninstall)
-	 * at the end it removes the row from the update_info table to indicate
-	 * that it isn't installed
+	 * This runs the uninstall function of the plugin and removes the row 
+	 * from the update_info table to indicate that it isn't installed.
 	 */
 	public function uninstall() {
 
@@ -189,6 +202,28 @@ class Plugin {
 		$this->remove_plugin_version();
 
 	} // uninstall
+
+	/**
+	 * upgrade
+	 * This runs the upgrade function of the plugin (if it exists) and 
+	 * updates the database to indicate our new version.
+	 */
+	public function upgrade() {
+		if (method_exists($this->_plugin, 'upgrade')) {
+			if($this->_plugin->upgrade()) {
+				$this->set_plugin_version($this->_plugin->version);
+			}
+		}
+	} // upgrade
+
+	/**
+	 * load
+	 * This calls the plugin's load function
+	 */
+	public function load() {
+		$GLOBALS['user']->set_preferences();
+		return $this->_plugin->load();
+	}
 
 	/**
 	 * get_plugin_version
@@ -201,9 +236,11 @@ class Plugin {
 		$sql = "SELECT * FROM `update_info` WHERE `key`='$name'";
 		$db_results = Dba::read($sql);
 
-		$results = Dba::fetch_assoc($db_results);
+		if ($results = Dba::fetch_assoc($db_results)) {
+			return $results['value'];
+		}
 
-		return $results['value'];
+		return false;
 
 	} // get_plugin_version
 
@@ -231,7 +268,7 @@ class Plugin {
 		$name 		= Dba::escape('Plugin_' . $this->_plugin->name);
 		$version	= Dba::escape($version);
 
-		$sql = "INSERT INTO `update_info` SET `key`='$name', `value`='$version'";
+		$sql = "REPLACE INTO `update_info` SET `key`='$name', `value`='$version'";
 		$db_results = Dba::read($sql);
 
 		return true;

@@ -564,31 +564,22 @@ class User extends database_object {
 
 		if (!strlen($song_info->file)) { return false; }
 
-		// Make sure we didn't just play this song
-		$data = Stats::get_last_song($this->id);
+		// Make sure we've played a significant chunk of the song
+		$data = Stats::get_last_song($user);
 		$last_song = new Song($data['object_id']);
-		if ($data['date']+($song_info->time/2) >= time()) {
-			debug_event('Stats','Not collecting stats less then 50% of song has elapsed','3');
+		if ($data['date'] + ($song_info->time / 2) >= time()) {
+			debug_event('Stats','Not collecting stats less than 50% of song has elapsed','3');
 			return false;
 		}
 
 		$this->set_preferences();
 
-		// Check if lastfm is loaded, if so run the update
-		if (Plugin::is_installed('Last.FM')) {
-			$lastfm = new Plugin('Lastfm');
-			if ($lastfm->_plugin->load($this->prefs,$this->id)) {
-				$lastfm->_plugin->submit($song_info,$this->id);
+		foreach (Plugin::get_plugins('save_songplay') as $plugin_name) {
+			$plugin = new Plugin($plugin_name);
+			if ($plugin->load()) {
+				$plugin->_plugin->save_songplay($song_info);
 			}
-		} // end if is_installed
-
-		// Check and see if librefm is loaded and run scrobblizing
-		if (Plugin::is_installed('Libre.FM')) {
-			$librefm = new Plugin('Librefm');
-			if ($librefm->_plugin->load($this->prefs,$this->id)) {
-				$librefm->_plugin->submit($song_info,$this->id);
-			}
-		} // end if is_installed
+		}
 
 		// Do this last so the 'last played checks are correct'
 		Stats::insert('song',$song_id,$user);

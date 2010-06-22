@@ -202,6 +202,13 @@ class Rating extends database_object {
 
 		parent::add_to_cache('rating_' . $type . '_user' . $user_id, $id, $rating);
 
+		foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
+			$plugin = new Plugin($plugin_name);
+			if ($plugin->load()) {
+				$plugin->_plugin->save_rating($this, $score);
+			}
+		}
+
 		return true;
 
 	} // set_rating

@@ -289,6 +289,18 @@ class Preference {
 	} // delete
 
 	/**
+	 * rename
+	 * This renames a preference in the database
+	 */
+	public static function rename($old, $new) {
+		$old = Dba::escape($old);
+		$new = Dba::escape($new);
+
+		$sql = "UPDATE `preference` SET `name`='$new' WHERE `name`='$old'";
+		$db_results = Dba::write($sql);
+	}
+
+	/**
 	 * rebuild_preferences
 	 * This removes any garbage and then adds back in anything missing preferences wise
 	 */

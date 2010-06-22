@@ -58,15 +58,15 @@ function update_preferences($pref_id=0) {
 			case 'sample_rate':
 				$value = Stream::validate_bitrate($value);
 			break;
-			/* MD5 the LastFM & MyStrands so it's not plainTXT */
-			case 'librefm_pass':
-			case 'lastfm_pass':
-				/* If it's our default blanking thing then don't use it */
-				if ($value == '******') { unset($_REQUEST[$name]); break; }
-				$value = md5($value);
-			break;
 			default:
 			break;
+		}
+
+		if (preg_match('/_pass$/', $name)) {
+			if ($value == '******') { unset($_REQUEST[$name]); }
+			else if (preg_match('/md5_pass$/', $name)) {
+				$value = md5($value);
+			}
 		}
 
 		/* Run the update for this preference only if it's set */
@@ -247,10 +247,6 @@ function create_preference_input($name,$value) {
 			} // foreach themes
 			echo "</select>\n";
 		break;
-		case 'lastfm_pass':
-		case 'librefm_pass':
-			echo "<input type=\"password\" size=\"16\" name=\"$name\" value=\"******\" />";
-		break;
 		case 'playlist_method':
 			${$value} = ' selected="selected"';
 			echo "<select name=\"$name\">\n";
@@ -293,7 +289,12 @@ function create_preference_input($name,$value) {
 			echo "</select>\n";
 		break;
 		default:
-			echo "<input type=\"text\" size=\"$len\" name=\"$name\" value=\"$value\" />";
+			if (preg_match('/_pass$/', $name)) {
+				echo '<input type="password" size="16" name="' . $name . '" value="******" />';
+			}
+			else {
+				echo '<input type="text" size="' . $len . '" name="' . $name . '" value="' . $value .'" />';
+			}
 		break;
 
 	}
