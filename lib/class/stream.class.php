@@ -857,8 +857,7 @@ class Stream {
 
 		// Load our javascript
 		echo "<script type=\"text/javascript\">";
-		//echo "reload_util();";
-		echo "reload_util('".$_SESSION['iframe']['target']."');";
+		echo "reloadUtil('".$_SESSION['iframe']['target']."');";
 		echo "</script>";
 
 	} // run_playlist_method

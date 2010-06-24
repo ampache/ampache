@@ -596,10 +596,8 @@ class Catalog extends database_object {
 					$this->count++;
 					if ( (time() > $ticker+1)) {
 						$file = str_replace(array('(',')','\''),'',$full_file);
-						echo "<script type=\"text/javascript\">\n";
-						echo "update_txt('" . $this->count ."','add_count_" . $this->id . "');";
-						echo "update_txt('" . scrub_out($file) . "','add_dir_" . $this->id . "');";
-						echo "\n</script>\n";
+						update_text('add_count_' . $this->id, $this->count);
+						update_text('add_dir_' . $this->id, scrub_out($file));
 						flush();
 						$ticker = time();
 					} // update our current state
@@ -617,10 +615,8 @@ class Catalog extends database_object {
 
 		// This should only happen on the last run
 		if ($path == $this->path) {
-			echo "<script type=\"text/javascript\">\n";
-			echo "update_txt('" . $this->count ."','add_count_" . $this->id . "');";
-			echo "update_txt('" . scrub_out($file) . "','add_dir_" . $this->id . "');";
-			echo "\n</script>\n";
+			update_text('add_count_' . $this->id, $this->count);
+			update_text('add_dir_' . $this->id, scrub_out($file));
 			flush();
 		}
 
@@ -722,10 +718,8 @@ class Catalog extends database_object {
 			/* Stupid little cutesie thing */
 			$search_count++;
 			if ( time() > $ticker+1) {
-				echo "<script type=\"text/javascript\">\n";
-				echo "update_txt('" . $search_count ."','count_art_" . $this->id . "');";
-				echo "update_txt('" . addslashes($album->name) . "','read_art_" . $this->id . "');";
-				echo "\n</script>\n";
+				update_text('count_art_' . $this->id, $search_count);
+				update_text('read_art_' . $this->id, scrub_out($album->name));
 				flush();
 				$ticker = time();
 			} //echos song count
@@ -734,10 +728,8 @@ class Catalog extends database_object {
 		} // foreach albums
 
 		// One last time for good measure
-		echo "<script type=\"text/javascript\">\n";
-		echo "update_txt('" . $search_count ."','count_art_" . $this->id . "');";
-		echo "update_txt('" . addslashes($album->name) . "','read_art_" . $this->id . "');";
-		echo "\n</script>\n";
+		update_text('count_art_' . $this->id, $search_count);
+		update_text('read_art_' . $this->id, scrub_out($album->name));
 		flush();
 
 		self::$_art_albums = array();
@@ -765,18 +757,14 @@ class Catalog extends database_object {
 			/* Stupid little cutesie thing */
 			$thumb_count++;
 			if ( time() > $ticker+1) {
-				echo "<script type=\"text/javascript\">\n";
-				echo "update_txt('" . $search_count ."','count_thumb_" . $this->id . "');";
-				echo "\n</script>\n";
+				update_text('count_thumb_' . $this->id, $search_count);
 				flush();
 				$ticker = time();
 			} //echos thumb count
 
 		} // end foreach albums
 
-		echo "<script type=\"text/javascript\">\n";
-		echo "update_txt('" . $search_count ."','count_thumb_" . $this->id . "');";
-		echo "\n</script>\n";
+		update_text('count_thumb_' . $this->id, $search_count);
 		flush();
 
 	} // generate_thumbnails
@@ -1603,10 +1591,8 @@ class Catalog extends database_object {
 			$count++;
 			if (time() > $ticker+1) {
 				$file = str_replace(array('(',')','\''),'',$results['file']);
-				echo "<script type=\"text/javascript\">\n";
-				echo "update_txt('" . $count ."','clean_count_" . $this->id . "');";
-				echo "update_txt('" . scrub_out($file) . "','clean_dir_" . $this->id . "');";
-				echo "\n</script>\n";
+				update_text('clean_count_' . $this->id, $count);
+				update_text('clean_dir_' . $this->id, scrub_out($file));
 				flush();
 				$ticker = time();
 			} //echos song count
@@ -1684,9 +1670,7 @@ class Catalog extends database_object {
 		self::clean($catalog_id);
 
 		/* Return dead files, so they can be listed */
-		echo "<script type=\"text/javascript\">\n";
-		echo "update_txt('" . $count ."','clean_count_" . $this->id . "');";
-		echo "\n</script>\n";
+		update_text('clean_count_' . $this->id, $count);
 		show_box_top();
 		echo "<strong>";
 		printf (ngettext('Catalog Clean Done. %d file removed.','Catalog Clean Done. %d files removed.',$dead_files), $dead_files);
@@ -1976,10 +1960,8 @@ class Catalog extends database_object {
 				$count++;
 				if (time() > $ticker+1) {
 					$file = str_replace(array('(',')','\''),'',$media->file);
-					echo "<script type=\"text/javascript\">\n";
-					echo "update_txt('" . $count . "','verify_count_" . $catalog_id . "');";
-					echo "update_txt('" . scrub_out($file) . "','verify_dir_" . $catalog_id . "');";
-					echo "\n</script>\n";
+					update_text('verify_count_' . $catalog_id, $count);
+					update_text('verify_dir_' . $catalog_id, scrub_out($file));
 					flush();
 					$ticker = time();
 				} //echos song count
@@ -2004,9 +1986,7 @@ class Catalog extends database_object {
 		$this->update_last_update();
 
 		// One final time!
-		echo "<script type=\"text/javascript\">\n";
-		echo "update_txt('" . $this->count . "','count_verify_" . $this->id . "');";
-		echo "\n</script>\n";
+		update_text('count_verify_' . $this->id, $this->count);
 		flush();
 
 		show_box_top();

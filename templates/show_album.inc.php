@@ -37,7 +37,7 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
         $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
 
 		    $aa_url = $web_path . "/image.php?id=" . $album->id . "&amp;type=popup&amp;sid=" . session_id();
-		    echo "<a target=\"_blank\" href=\"$aa_url\" onclick=\"popup_art('$aa_url'); return false;\">";
+		    echo "<a target=\"_blank\" href=\"$aa_url\" onclick=\"popupWindow('$aa_url'); return false;\">";
 		    echo "<img src=\"" . $web_path . "/image.php?id=" . $album->id . "&amp;thumb=2\" alt=\"".$name."\" title=\"".$name."\" height=\"128\" width=\"128\" />";
 		    echo "</a>\n";
 	}

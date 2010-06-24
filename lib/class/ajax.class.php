@@ -22,8 +22,9 @@
 
 /**
  * Ajax class
- * This class is specifically for setuping/printing out ajax related
- * elements onto a page it takes care of the observing and all that raz-a-ma-taz
+ * This class is specifically for setting up/printing out ajax related
+ * elements onto a page. It takes care of the observing and all that 
+ * raz-a-ma-taz.
  */
 class Ajax {
 
@@ -41,7 +42,8 @@ class Ajax {
 
 	/**
 	 * observe
-	 * This returns a string with the correct and full ajax 'observe' stuff from prototype
+	 * This returns a string with the correct and full ajax 'observe' stuff
+	 * from prototype
 	 */
 	public static function observe($source,$method,$action,$post='') {
 
@@ -69,8 +71,8 @@ class Ajax {
 
 	/**
 	 * action
-	 * This takes the action, the source and the post (if passed) and generated the full
-	 * ajax link
+	 * This takes the action, the source and the post (if passed) and
+	 * generates the full ajax link
 	 */
 	public static function action($action,$source,$post='') {
 
@@ -98,8 +100,8 @@ class Ajax {
 
 	/**
 	 * button
-	 * This prints out an img of the specified icon with the specified alt text
-	 * and then sets up the required ajax for it
+	 * This prints out an img of the specified icon with the specified alt
+	 * text and then sets up the required ajax for it.
 	 */
 	public static function button($action,$icon,$alt,$source='',$post='',$class='') {
 
@@ -113,8 +115,9 @@ class Ajax {
 
 		$string = get_user_icon($icon,$alt);
 
-		// Generate a <a> so that it's more compliant with older browsers
-		// (ie :hover actions) and also to unify linkbuttons (w/o ajax) display
+		// Generate an <a> so that it's more compliant with older
+		// browsers (ie :hover actions) and also to unify linkbuttons
+		// (w/o ajax) display
 		$string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>".$string."</a>\n";
 
 		$string .= self::observe($source,'click',$ajax_string);
@@ -161,7 +164,8 @@ class Ajax {
 
 	/**
  	 * set_include_override
-	 * This sets the cinlduing div override, used only one place kind of a hack
+	 * This sets the including div override, used only one place. Kind of a
+	 * hack.
 	 */
 	public static function set_include_override($value) {
 
@@ -171,8 +175,8 @@ class Ajax {
 
 	/**
  	 * start_container
-	 * This checks to see if we're AJAX'in if we aren't then it echos out the
-	 * html needed to start a container that can be replaced by Ajax
+	 * This checks to see if we're AJAXin'. If we aren't then it echoes out
+	 * the html needed to start a container that can be replaced by Ajax.
 	 */
 	public static function start_container($name) {
 

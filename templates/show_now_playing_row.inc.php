@@ -76,7 +76,7 @@ $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
 <?php if (Art::is_enabled()) { ?>
 <div class="np_group">
   <div class="np_cell cel_albumart">
-      <a target="_blank" href="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup" onclick="popup_art('<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup'); return false;">
+      <a target="_blank" href="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup" onclick="popupWindow('<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup'); return false;">
         <img align="middle" src="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>" alt="<?php echo scrub_out($media->f_album_full); ?>" title="<?php echo scrub_out($media->f_album_full); ?>" height="75" width="75" />
       </a>
   </div>

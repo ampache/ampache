@@ -31,7 +31,7 @@ $dir = is_rtl($htmllang) ? 'rtl' : 'ltr';
 <meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>" />
 </head>
 <body>
-<script src="lib/javascript-base.js" language="javascript" type="text/javascript"></script>
+<script src="lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <div id="header">
 <h1><?php echo _("Ampache Installation"); ?></h1>
 <p>Pour l'Amour de la Musique</p>

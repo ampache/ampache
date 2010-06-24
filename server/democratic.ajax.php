@@ -53,7 +53,7 @@ switch ($_REQUEST['action']) {
 		}
 
 		$_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
-		$results['rfc3514'] = '<script type="text/javascript">reload_util("'.$_SESSION['iframe']['target'].'")</script>';
+		$results['rfc3514'] = '<script type="text/javascript">reloadUtil("'.$_SESSION['iframe']['target'].'")</script>';
 	break;
 	case 'clear_playlist':
 		if (!Access::check('interface','100')) {

@@ -36,9 +36,9 @@ $web_path = Config::get('web_path');
 <h1><?php echo scrub_out(Config::get('site_title')); ?></h1>
 <?php echo _('Registration Complete'); ?>...
 </div>
-<script src="<?php echo $web_path; ?>/lib/javascript-base.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo $web_path; ?>/modules/kajax/ajax.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <div id="maincontainer">
 <?php echo _('Your account has been created. An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information'); ?>
 <br /><br />

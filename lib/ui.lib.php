@@ -716,11 +716,21 @@ function ajax_include($include) {
  */
 function toggle_visible($element) {
 
-	echo "<script type=\"text/javascript\">\n";
-	echo "toggle_visible('$element');";
-	echo "\n</script>\n";
+	echo '<script type="text/javascript">';
+	echo "toggleVisible('$element');";
+	echo "</script>\n";
 
 } // toggle_visible
+
+/**
+ * update_text
+ * Convenience function
+ */
+function update_text($field, $value) {
+	echo '<script type="text/javascript">';
+	echo "updateText('$field', '$value');";
+	echo "</script>\n";
+}
 
 /**
  * print_bool

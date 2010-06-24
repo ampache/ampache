@@ -180,7 +180,7 @@ class vauth {
 			header("Cache-Control: no-store, no-cache, must-revalidate");
 			header("Pragma: no-cache");
 
-			$results['rfc3514'] = '<script type="text/javascript">reload_logout("'.$target.'")</script>';
+			$results['rfc3514'] = '<script type="text/javascript">reloadRedirect("' . $target . '")</script>';
 			echo xml_from_array($results);
 		}
 		else {
