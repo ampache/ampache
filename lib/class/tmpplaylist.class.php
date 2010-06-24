@@ -316,7 +316,7 @@ class tmpPlaylist extends database_object {
 		$sql = "DELETE FROM `tmp_playlist_data` USING " .
 			"`tmp_playlist_data` LEFT JOIN `tmp_playlist` ON " .
 			"`tmp_playlist_data`.`tmp_playlist`=`tmp_playlist`.`id` " .
-			"WHERE `tmp_playlist`.id` IS NULL";
+			"WHERE `tmp_playlist`.`id` IS NULL";
 		$db_results = Dba::write($sql);
 
 	} // prune_tracks
