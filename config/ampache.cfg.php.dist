@@ -357,7 +357,8 @@ debug_level = 5
 ; This defines where you want ampache to log events to
 ; this will only happen if debug is turned on. Do not
 ; include trailing slash. You will need to make sure that
-; your HTTP server has write access to the specified directory
+; the specified directory exists and your HTTP server has
+; write access.
 ; DEFAULT: NULL
 ;log_path = "/var/log/ampache"
 
