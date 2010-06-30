@@ -556,7 +556,7 @@ function get_user_icon($name,$title='',$id='') {
  * This takes a one dimensional array and creates a XML document from it. For
  * use primarily by the ajax mojo.
  */
-function xml_from_array($array,$callback=0,$type='') {
+function xml_from_array($array, $callback = false, $type = '') {
 
 	$string = '';
 
@@ -610,10 +610,15 @@ function xml_from_array($array,$callback=0,$type='') {
 		return $string;
 	break;
 	default:
-		foreach ($array as $key=>$value) {
-			if (is_numeric($key)) { $key = 'item'; }
+		foreach ($array as $key => $value) {
+			// No numeric keys
+			if (is_numeric($key)) {
+				$key = 'item';
+			}
+
 			if (is_array($value)) {
-				$value = xml_from_array($value,1);
+				// Call ourself
+				$value = xml_from_array($value, true);
 				$string .= "\t<content div=\"$key\">$value</content>\n";
 			}
 			else {
@@ -623,10 +628,21 @@ function xml_from_array($array,$callback=0,$type='') {
 		// end foreach elements
 		}
 		if (!$callback) {
-			$string = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<root>\n" . $string . "</root>\n";
+			$string = '<?xml version="1.0" encoding="utf-8" ?>' .
+				"\n<root>\n" . $string . "</root>\n";
 		}
 
-		return $string;
+		// Remove invalid XML characters.
+		// See http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
+		$clean = preg_replace('/[\x{0}-\x{8}\x{b}\x{c}\x{e}-\x{1f}\x{d800}-\x{dfff}\x{fffe}-\x{ffff}]/u', '', $string);
+
+		if ($clean) {
+			return $clean;
+		}
+		else {
+			debug_event('xml_from_array', 'Charset cleanup failed, generated XML may be invalid', 1);
+			return $string;
+		}
 	break;
 	}
 } // xml_from_array
