@@ -2175,8 +2175,8 @@ class Catalog extends database_object {
 
 		// Remove the prefix so we can sort it correctly
 		$trimmed = Catalog::trim_prefix($album);
-		$album = Dba::escape($trimmed['string']);
-		$prefix = Dba::escape($trimmed['prefix']);
+		$album = $trimmed['string'];
+		$prefix = $trimmed['prefix'];
 
 		// Check to see if we've seen this album before
 		if (isset(self::$albums[$album][$album_year][$disk][$mbid])) {
