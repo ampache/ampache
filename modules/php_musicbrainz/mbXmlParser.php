@@ -24,7 +24,7 @@ class mbXmlParser {
     private $xml_parser;
     private $factory;
 
-    function mbXmlParser() {
+    public function __construct() {
         $this->xml_parser = new xmlParser();
         $this->factory    = new mbDefaultFactory();
     }
@@ -370,7 +370,7 @@ class mbXmlParser {
         return $relation;
     }
 
-    function parse($data) {
+    public function parse($data) {
         $nodes = $this->xml_parser->parse($data);
 
         if ($nodes == false) {

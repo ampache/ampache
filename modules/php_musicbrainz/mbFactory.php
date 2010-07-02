@@ -19,32 +19,32 @@
  along with php_musicbrainz.  If not, see <http://www.gnu.org/licenses/>.
 */
 interface mbIFactory {
-    function newArtist();
-    function newArtistAlias();
-    function newDisc();
-    function newTrack();
-    function newRating();
-    function newRelation();
-    function newRelease();
-    function newReleaseEvent();
-    function newTag();
-    function newLabel();
-    function newLabelAlias();
-    function newUser();
+    public function newArtist();
+    public function newArtistAlias();
+    public function newDisc();
+    public function newTrack();
+    public function newRating();
+    public function newRelation();
+    public function newRelease();
+    public function newReleaseEvent();
+    public function newTag();
+    public function newLabel();
+    public function newLabelAlias();
+    public function newUser();
 }
 
 class mbDefaultFactory implements mbIFactory {
-    function newArtist() { return new mbArtist(); }
-    function newArtistAlias() { return new mbArtistAlias(); }
-    function newDisc() { return new mbDisc(); }
-    function newTrack() { return new mbTrack(); }
-    function newRating() { return new mbRating(); }
-    function newRelation() { return new mbRelation(); }
-    function newRelease() { return new mbRelease(); }
-    function newReleaseEvent() { return new mbReleaseEvent(); }
-    function newTag() { return new mbTag(); }
-    function newLabel() { return new mbLabel(); }
-    function newLabelAlias() { return new mbLabelAlias(); }
-    function newUser() { return new mbUser(); }
+    public function newArtist() { return new mbArtist(); }
+    public function newArtistAlias() { return new mbArtistAlias(); }
+    public function newDisc() { return new mbDisc(); }
+    public function newTrack() { return new mbTrack(); }
+    public function newRating() { return new mbRating(); }
+    public function newRelation() { return new mbRelation(); }
+    public function newRelease() { return new mbRelease(); }
+    public function newReleaseEvent() { return new mbReleaseEvent(); }
+    public function newTag() { return new mbTag(); }
+    public function newLabel() { return new mbLabel(); }
+    public function newLabelAlias() { return new mbLabelAlias(); }
+    public function newUser() { return new mbUser(); }
 }
 ?>

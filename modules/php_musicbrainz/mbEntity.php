@@ -50,7 +50,7 @@ abstract class MusicBrainzEntity {
             }
         }
         else if (empty($relation_type)) {
-            foreach ($this->relation_tracks as $relation) {
+            foreach ($this->relations as $relation) {
                 if ($relation->getTargetType() == $target_type) {
                     $result[] = $relation;
                 }

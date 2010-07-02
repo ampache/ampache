@@ -52,93 +52,93 @@ class mbRelease extends MusicBrainzEntity {
     private $discs = array();
     private $releaseEvents = array();
 
-    function __construct($id = '', $title = '') {
+    public function __construct($id = '', $title = '') {
         parent::__construct($id);
         $this->title = $title;
     }
 
-    function getTitle() { return $this->title; }
-    function setTitle($title) { $this->title = $title; }
-    function getTextLanguage() { return $this->textLanguage; }
-    function setTextLanguage($tlang) { $this->textLanguage = $tlang; }
-    function getTextScript() { return $this->textScript; }
-    function setTextScript($tscript) { $this->textScript = $tscript; }
-    function getAsin() { return $this->asin; }
-    function setAsin($asin) { $this->asin = $asin; }
+    public function getTitle() { return $this->title; }
+    public function setTitle($title) { $this->title = $title; }
+    public function getTextLanguage() { return $this->textLanguage; }
+    public function setTextLanguage($tlang) { $this->textLanguage = $tlang; }
+    public function getTextScript() { return $this->textScript; }
+    public function setTextScript($tscript) { $this->textScript = $tscript; }
+    public function getAsin() { return $this->asin; }
+    public function setAsin($asin) { $this->asin = $asin; }
 
-    function getArtist() {
+    public function getArtist() {
         return $this->artist;
     }
 
-    function setArtist(Artist $artist) {
+    public function setArtist(Artist $artist) {
         $this->artist = $artist;
     }
 
-    function getTracks() {
+    public function getTracks() {
         return $this->tracks;
     }
 
-    function getTracksOffset() {
+    public function getTracksOffset() {
         return $this->tracksOffset;
     }
 
-    function setTracksOffset($value) {
+    public function setTracksOffset($value) {
         $this->tracksOffset = $value;
     }
 
-    function getTracksCount() {
+    public function getTracksCount() {
         return $this->tracksCount;
     }
 
-    function setTracksCount($tracksCount) {
+    public function setTracksCount($tracksCount) {
         $this->tracksCount = $tracksCount;
     }
 
-    function getDiscs() {
+    public function getDiscs() {
         return $this->discs;
     }
 
-    function getReleaseEvents() {
+    public function getReleaseEvents() {
         return $this->releaseEvents;
     }
 
-    function getNumReleaseEvents() {
+    public function getNumReleaseEvents() {
         return count($this->releaseEvents);
     }
 
-    function getReleaseEvent($i) {
+    public function getReleaseEvent($i) {
         return $this->releaseEvents[$i];
     }
 
-    function getNumDiscs() {
+    public function getNumDiscs() {
         return count($this->discs);
     }
 
-    function getDisc($i) {
+    public function getDisc($i) {
         return $this->discs[$i];
     }
 
-    function getNumTracks() {
+    public function getNumTracks() {
         return count($this->tracks);
     }
 
-    function getTrack($i) {
+    public function getTrack($i) {
         return $this->tracks[$i];
     }
 
-    function setTypes(array $types) {
+    public function setTypes(array $types) {
         $this->types = $types;
     }
 
-    function getTypes() {
+    public function getTypes() {
         return $this->types;
     }
 
-    function getNumTypes() {
+    public function getNumTypes() {
         return count($this->types);
     }
 
-    function getType($i) {
+    public function getType($i) {
         return $this->types[$i];
     }
 }
