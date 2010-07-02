@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN $Rev$\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2010-05-14 11:58+0900\n"
+"POT-Creation-Date: 2010-07-02 13:34+0900\n"
 "PO-Revision-Date: 2008-07-14 20:44+0900\n"
 "Last-Translator: momo-i <webmaster at momo-i.org>\n"
 "Language-Team: Japanese\n"
@@ -76,20 +76,12 @@ msgstr "Ampache インストール"
 msgid "Invalid Object Selected"
 msgstr "不正なオブジェクトが選択されました"
 
-#: ../../lib/general.lib.php:340 ../../lib/class/flag.class.php:338
-#: ../../lib/class/localplay.class.php:649 ../../lib/class/user.class.php:696
+#: ../../lib/general.lib.php:213 ../../lib/class/flag.class.php:338
+#: ../../lib/class/localplay.class.php:649 ../../lib/class/user.class.php:687
 #: ../../templates/show_user.inc.php:24 ../../templates/show_users.inc.php:55
 #: ../../modules/localplay/mpd.controller.php:530
 msgid "Unknown"
 msgstr "不明"
-
-#: ../../lib/general.lib.php:407
-msgid "On"
-msgstr "オン"
-
-#: ../../lib/general.lib.php:410
-msgid "Off"
-msgstr "オフ"
 
 #: ../../lib/rating.lib.php:52
 msgid "Don't Play"
@@ -119,50 +111,50 @@ msgstr "すばらしい！"
 msgid "Off the Charts!"
 msgstr "とてつもなくすばらしい！"
 
-#: ../../lib/install.php:73
+#: ../../lib/install.php:72
 msgid "Config file already exists, install is probably completed"
 msgstr "設定ファイルは既に存在し、インストールは恐らく完了しています。"
 
-#: ../../lib/install.php:84
+#: ../../lib/install.php:83
 msgid "Unable to connect to database, check your ampache config"
 msgstr ""
 "データベースへ接続できませんでした。Ampacheのコンフィグをチェックしてくださ"
 "い。"
 
-#: ../../lib/install.php:91
+#: ../../lib/install.php:90
 msgid "Unable to select database, check your ampache config"
 msgstr ""
 "データベースを選択できません。Ampache設定ファイルをチェックしてください。"
 
-#: ../../lib/install.php:101
+#: ../../lib/install.php:100
 msgid "Existing Database detected, unable to continue installation"
 msgstr "既存のデータベースを検出しました。インストールを続行できません。"
 
-#: ../../lib/install.php:138 ../../install.php:101
+#: ../../lib/install.php:137 ../../install.php:101
 msgid "Error: Unable to make Database Connection"
 msgstr "エラー: データベース接続を確立できませんでした。"
 
 #. HINT: Config File
-#: ../../lib/install.php:243
+#: ../../lib/install.php:242
 #, php-format
 msgid "%s is not writeable"
 msgstr "%sは書込不可"
 
-#: ../../lib/install.php:295
+#: ../../lib/install.php:294
 msgid "No Username/Password specified"
 msgstr "指定されたユーザ名/パスワードはありません"
 
-#: ../../lib/install.php:300
+#: ../../lib/install.php:299
 msgid "Passwords do not match"
 msgstr "パスワードが一致しません"
 
-#: ../../lib/preferences.php:166 ../../lib/preferences.php:289
+#: ../../lib/preferences.php:168 ../../lib/preferences.php:287
 #: ../../templates/show_flag_row.inc.php:34
 #: ../../templates/show_user_row.inc.php:44
 msgid "Enable"
 msgstr "有効"
 
-#: ../../lib/preferences.php:167 ../../lib/preferences.php:290
+#: ../../lib/preferences.php:169 ../../lib/preferences.php:288
 #: ../../templates/show_localplay_controllers.inc.php:45
 #: ../../templates/show_duplicates.inc.php:37
 #: ../../templates/show_duplicates.inc.php:76
@@ -170,20 +162,20 @@ msgstr "有効"
 msgid "Disable"
 msgstr "無効"
 
-#: ../../lib/preferences.php:176 ../../lib/preferences.php:218
-#: ../../lib/ui.lib.php:484 ../../templates/sidebar_localplay.inc.php:45
+#: ../../lib/preferences.php:178 ../../lib/preferences.php:220
+#: ../../lib/ui.lib.php:442 ../../templates/sidebar_localplay.inc.php:45
 #: ../../templates/show_gather_art.inc.php:25
 #: ../../templates/show_adds_catalog.inc.php:27
 msgid "None"
 msgstr "無し"
 
-#: ../../lib/preferences.php:178 ../../templates/show_edit_user.inc.php:97
+#: ../../lib/preferences.php:180 ../../templates/show_edit_user.inc.php:97
 #: ../../templates/show_playtype_switch.inc.php:33
 msgid "Stream"
 msgstr "ストリーム"
 
-#: ../../lib/preferences.php:181 ../../templates/sidebar_modules.inc.php:42
-#: ../../templates/sidebar_home.inc.php:92
+#: ../../lib/preferences.php:183 ../../templates/sidebar_modules.inc.php:42
+#: ../../templates/sidebar_home.inc.php:49
 #: ../../templates/show_edit_user.inc.php:94
 #: ../../templates/show_playtype_switch.inc.php:37
 #: ../../modules/localplay/httpq.controller.php:489
@@ -192,48 +184,48 @@ msgstr "ストリーム"
 msgid "Democratic"
 msgstr "デモクラティック"
 
-#: ../../lib/preferences.php:184 ../../templates/sidebar_localplay.inc.php:33
-#: ../../templates/sidebar_home.inc.php:101
+#: ../../lib/preferences.php:186 ../../templates/sidebar_localplay.inc.php:33
+#: ../../templates/sidebar_home.inc.php:58
 #: ../../templates/show_edit_user.inc.php:95
 #: ../../templates/sidebar.inc.php:29
 #: ../../templates/show_playtype_switch.inc.php:35
 msgid "Localplay"
 msgstr "ローカル再生"
 
-#: ../../lib/preferences.php:186
+#: ../../lib/preferences.php:188
 #: ../../templates/show_playtype_switch.inc.php:39
 msgid "Flash Player"
 msgstr "Flashプレーヤー"
 
-#: ../../lib/preferences.php:193
+#: ../../lib/preferences.php:195
 msgid "M3U"
 msgstr "M3U"
 
-#: ../../lib/preferences.php:194
+#: ../../lib/preferences.php:196
 msgid "Simple M3U"
 msgstr "簡易M3U"
 
-#: ../../lib/preferences.php:195
+#: ../../lib/preferences.php:197
 msgid "PLS"
 msgstr "PLS"
 
-#: ../../lib/preferences.php:196
+#: ../../lib/preferences.php:198
 msgid "Asx"
 msgstr "Asx"
 
-#: ../../lib/preferences.php:197
+#: ../../lib/preferences.php:199
 msgid "RAM"
 msgstr "RAM"
 
-#: ../../lib/preferences.php:198
+#: ../../lib/preferences.php:200
 msgid "XSPF"
 msgstr "XSPF"
 
-#: ../../lib/preferences.php:232
+#: ../../lib/preferences.php:234
 msgid "Disabled"
 msgstr "無効"
 
-#: ../../lib/preferences.php:233 ../../lib/class/democratic.class.php:149
+#: ../../lib/preferences.php:235 ../../lib/class/democratic.class.php:149
 #: ../../templates/show_add_access_current.inc.php:45
 #: ../../templates/show_manage_shoutbox.inc.php:36
 #: ../../templates/show_manage_shoutbox.inc.php:60
@@ -253,11 +245,11 @@ msgstr "無効"
 msgid "User"
 msgstr "ユーザ"
 
-#: ../../lib/preferences.php:234
+#: ../../lib/preferences.php:236
 msgid "Manager"
 msgstr "マネージャ"
 
-#: ../../lib/preferences.php:235 ../../lib/class/democratic.class.php:158
+#: ../../lib/preferences.php:237 ../../lib/class/democratic.class.php:158
 #: ../../templates/show_democratic_playlist.inc.php:62
 #: ../../templates/show_democratic_playlist.inc.php:102
 #: ../../templates/show_create_democratic.inc.php:46
@@ -270,145 +262,133 @@ msgstr "マネージャ"
 msgid "Admin"
 msgstr "管理者"
 
-#: ../../lib/preferences.php:255
+#: ../../lib/preferences.php:253
 msgid "Send on Add"
 msgstr "追加を送信"
 
-#: ../../lib/preferences.php:256
+#: ../../lib/preferences.php:254
 msgid "Send and Clear on Add"
 msgstr "追加を送信とクリア"
 
-#: ../../lib/preferences.php:257
+#: ../../lib/preferences.php:255
 msgid "Clear on Send"
 msgstr "送信をクリア"
 
-#: ../../lib/preferences.php:258 ../../lib/preferences.php:281
+#: ../../lib/preferences.php:256 ../../lib/preferences.php:279
 #: ../../templates/show_manage_democratic.inc.php:39
 msgid "Default"
 msgstr "デフォルト"
 
-#: ../../lib/preferences.php:264 ../../lib/preferences.php:272
+#: ../../lib/preferences.php:262 ../../lib/preferences.php:270
 msgid "Low"
 msgstr "低"
 
-#: ../../lib/preferences.php:265 ../../lib/preferences.php:273
+#: ../../lib/preferences.php:263 ../../lib/preferences.php:271
 msgid "Medium"
 msgstr "中"
 
-#: ../../lib/preferences.php:266 ../../lib/preferences.php:274
+#: ../../lib/preferences.php:264 ../../lib/preferences.php:272
 msgid "High"
 msgstr "高"
 
-#: ../../lib/preferences.php:280 ../../lib/class/user.class.php:692
+#: ../../lib/preferences.php:278 ../../lib/class/user.class.php:683
 #: ../../lib/class/catalog.class.php:147 ../../lib/class/catalog.class.php:148
 #: ../../lib/class/catalog.class.php:149 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:54
 msgid "Never"
 msgstr "Never"
 
-#: ../../lib/preferences.php:282
+#: ../../lib/preferences.php:280
 msgid "Always"
 msgstr "常に"
 
-#: ../../lib/ui.lib.php:222 ../../templates/sidebar.inc.php:28
+#: ../../lib/ui.lib.php:220 ../../templates/sidebar.inc.php:28
 msgid "Home"
 msgstr "ホーム"
 
-#: ../../lib/ui.lib.php:225
+#: ../../lib/ui.lib.php:223
 msgid "Upload"
 msgstr "アップロード"
 
-#: ../../lib/ui.lib.php:228
+#: ../../lib/ui.lib.php:226
 msgid "Local Play"
 msgstr "ローカル再生"
 
-#: ../../lib/ui.lib.php:231
+#: ../../lib/ui.lib.php:229
 msgid "Random Play"
 msgstr "ランダム再生"
 
-#: ../../lib/ui.lib.php:234 ../../templates/sidebar_home.inc.php:88
-#: ../../templates/sidebar_home.inc.php:110
+#: ../../lib/ui.lib.php:232 ../../templates/sidebar_home.inc.php:45
+#: ../../templates/sidebar_home.inc.php:67
 #: ../../templates/show_manage_democratic.inc.php:35
 msgid "Playlist"
 msgstr "プレイリスト"
 
-#: ../../lib/ui.lib.php:237 ../../templates/show_search.inc.php:150
+#: ../../lib/ui.lib.php:235 ../../templates/show_search.inc.php:150
 #: ../../templates/show_search_bar.inc.php:30
 msgid "Search"
 msgstr "検索"
 
-#: ../../lib/ui.lib.php:240 ../../templates/sidebar.inc.php:30
+#: ../../lib/ui.lib.php:238 ../../templates/sidebar.inc.php:30
 #: ../../templates/show_user_row.inc.php:40
 #: ../../templates/sidebar_preferences.inc.php:30
 msgid "Preferences"
 msgstr "設定"
 
-#: ../../lib/ui.lib.php:243 ../../lib/ui.lib.php:247
+#: ../../lib/ui.lib.php:241 ../../lib/ui.lib.php:245
 msgid "Admin-Catalog"
 msgstr "管理-カタログ"
 
-#: ../../lib/ui.lib.php:251
+#: ../../lib/ui.lib.php:249
 msgid "Admin-User Management"
 msgstr "管理-ユーザ管理"
 
-#: ../../lib/ui.lib.php:255
+#: ../../lib/ui.lib.php:253
 msgid "Admin-Mail Users"
 msgstr "管理-メール"
 
-#: ../../lib/ui.lib.php:259
+#: ../../lib/ui.lib.php:257
 msgid "Admin-Manage Access Lists"
 msgstr "管理-アクセスリスト管理"
 
-#: ../../lib/ui.lib.php:263
+#: ../../lib/ui.lib.php:261
 msgid "Admin-Site Preferences"
 msgstr "管理-サイト設定"
 
-#: ../../lib/ui.lib.php:267
+#: ../../lib/ui.lib.php:265
 msgid "Admin-Manage Modules"
 msgstr "管理-モジュール管理"
 
-#: ../../lib/ui.lib.php:271
+#: ../../lib/ui.lib.php:269
 msgid "Browse Music"
 msgstr "ミュージック閲覧"
 
-#: ../../lib/ui.lib.php:275 ../../lib/class/browse.class.php:171
+#: ../../lib/ui.lib.php:273 ../../lib/class/browse.class.php:130
+#: ../../templates/browse_filters.inc.php:63
 #: ../../templates/show_stats.inc.php:31
 #: ../../templates/show_artists.inc.php:40
 #: ../../templates/show_artists.inc.php:68
-#: ../../templates/sidebar_home.inc.php:34
-#: ../../templates/sidebar_home.inc.php:79
-#: ../../templates/show_genre.inc.php:34
-#: ../../templates/show_popular.inc.php:27
+#: ../../templates/sidebar_home.inc.php:35
 msgid "Albums"
 msgstr "アルバム"
 
-#: ../../lib/ui.lib.php:279 ../../lib/class/browse.class.php:182
-#: ../../lib/class/album.class.php:238 ../../templates/show_stats.inc.php:32
-#: ../../templates/sidebar_home.inc.php:35
-#: ../../templates/show_genre.inc.php:37
-#: ../../templates/show_popular.inc.php:30
+#: ../../lib/ui.lib.php:277 ../../lib/class/browse.class.php:141
+#: ../../lib/class/album.class.php:250 ../../templates/show_stats.inc.php:32
+#: ../../templates/sidebar_home.inc.php:36
 msgid "Artists"
 msgstr "アーティスト"
 
-#: ../../lib/ui.lib.php:283 ../../templates/show_song.inc.php:48
-#: ../../templates/show_playlist_songs.inc.php:47
-#: ../../templates/show_playlist_songs.inc.php:73
-#: ../../templates/show_genres.inc.php:38
-#: ../../templates/show_genres.inc.php:74
-msgid "Genre"
-msgstr "ジャンル"
-
-#: ../../lib/ui.lib.php:287 ../../templates/show_stats.inc.php:25
-#: ../../templates/sidebar_home.inc.php:116
+#: ../../lib/ui.lib.php:281 ../../templates/show_stats.inc.php:25
+#: ../../templates/sidebar_home.inc.php:73
 msgid "Statistics"
 msgstr "統計"
 
-#: ../../lib/ui.lib.php:378
+#: ../../lib/ui.lib.php:335
 msgid "Add New"
 msgstr "新規追加"
 
-#: ../../lib/ui.lib.php:456 ../../lib/class/access.class.php:405
-#: ../../lib/class/access.class.php:425
+#: ../../lib/ui.lib.php:415 ../../lib/class/access.class.php:407
+#: ../../lib/class/access.class.php:427
 #: ../../templates/show_add_access_current.inc.php:41
 #: ../../templates/show_admin_tools.inc.php:52
 #: ../../templates/show_add_access.inc.php:38
@@ -423,7 +403,15 @@ msgstr "新規追加"
 msgid "All"
 msgstr "全て"
 
-#: ../../lib/class/art.class.php:880 ../../lib/class/catalog.class.php:474
+#: ../../lib/ui.lib.php:759
+msgid "On"
+msgstr "オン"
+
+#: ../../lib/ui.lib.php:762
+msgid "Off"
+msgstr "オフ"
+
+#: ../../lib/class/art.class.php:937 ../../lib/class/catalog.class.php:474
 msgid "Error: Unable to open"
 msgstr "エラー: 開けませんでした"
 
@@ -437,7 +425,7 @@ msgstr "無効なIPv4/IPv6アドレスが入力されました"
 msgid "IP Address Version Mismatch"
 msgstr "IPアドレスバージョンが一致しません"
 
-#: ../../lib/class/access.class.php:408
+#: ../../lib/class/access.class.php:410
 #: ../../templates/show_add_access_current.inc.php:38
 #: ../../templates/show_add_access.inc.php:35
 #: ../../templates/show_edit_access.inc.php:76
@@ -446,7 +434,7 @@ msgstr "IPアドレスバージョンが一致しません"
 msgid "View"
 msgstr "閲覧"
 
-#: ../../lib/class/access.class.php:411
+#: ../../lib/class/access.class.php:413
 #: ../../templates/show_add_access_current.inc.php:39
 #: ../../templates/show_add_access.inc.php:36
 #: ../../templates/show_edit_access.inc.php:77
@@ -455,7 +443,7 @@ msgstr "閲覧"
 msgid "Read"
 msgstr "読取"
 
-#: ../../lib/class/access.class.php:414
+#: ../../lib/class/access.class.php:416
 #: ../../templates/show_add_access_current.inc.php:40
 #: ../../templates/show_add_access.inc.php:37
 #: ../../templates/show_edit_access.inc.php:78
@@ -464,11 +452,11 @@ msgstr "読取"
 msgid "Read/Write"
 msgstr "読取/書込"
 
-#: ../../lib/class/access.class.php:441
+#: ../../lib/class/access.class.php:443
 msgid "API/RPC"
 msgstr "API/RPC"
 
-#: ../../lib/class/access.class.php:444
+#: ../../lib/class/access.class.php:446
 #: ../../templates/show_add_access.inc.php:54
 #: ../../templates/show_edit_access.inc.php:37
 #: ../../templates/show_add_access_local.inc.php:51
@@ -477,25 +465,20 @@ msgstr "API/RPC"
 msgid "Local Network Definition"
 msgstr "ローカルネットワーク定義"
 
-#: ../../lib/class/access.class.php:447
+#: ../../lib/class/access.class.php:449
 #: ../../templates/show_add_access.inc.php:53
 #: ../../templates/show_edit_access.inc.php:36
 #: ../../templates/show_add_access_local.inc.php:52
 msgid "Web Interface"
 msgstr "ウェブインタフェース"
 
-#: ../../lib/class/access.class.php:451
+#: ../../lib/class/access.class.php:453
 #: ../../templates/show_add_access.inc.php:52
 #: ../../templates/show_edit_access.inc.php:35
 #: ../../templates/show_add_access_rpc.inc.php:52
 #: ../../templates/show_add_access_local.inc.php:52
 msgid "Stream Access"
 msgstr "ストリームアクセス"
-
-#: ../../lib/class/vauth.class.php:491 ../../lib/class/vauth.class.php:515
-#: ../../lib/class/vauth.class.php:554
-msgid "Error Username or Password incorrect, please try again"
-msgstr "エラー: ユーザ名かパスワードが間違っています。再試行して下さい"
 
 #: ../../lib/class/random.class.php:413 ../../templates/rightbar.inc.php:67
 msgid "Related Album"
@@ -513,20 +496,20 @@ msgstr "関連するアーティスト"
 msgid "Pure Random"
 msgstr "純粋なランダム"
 
-#: ../../lib/class/api.class.php:211
+#: ../../lib/class/api.class.php:224
 msgid "Error Invalid Handshake - "
 msgstr "不正なハンドシェイクエラー - "
 
-#: ../../lib/class/api.class.php:211
+#: ../../lib/class/api.class.php:224
 msgid "Invalid Username/Password"
 msgstr "不正なユーザ名/パスワードです"
 
-#: ../../lib/class/api.class.php:639 ../../lib/class/api.class.php:695
+#: ../../lib/class/api.class.php:652 ../../lib/class/api.class.php:708
 #: ../../server/xml.server.php:95
 msgid "Invalid Request"
 msgstr "不正なリクエスト"
 
-#: ../../lib/class/api.class.php:660 ../../lib/class/api.class.php:673
+#: ../../lib/class/api.class.php:673 ../../lib/class/api.class.php:686
 msgid "Media Object Invalid or Not Specified"
 msgstr "メディアオブジェクトは不正か指定されていません"
 
@@ -548,7 +531,7 @@ msgstr "保留"
 #: ../../templates/show_playlist_row.inc.php:39
 #: ../../templates/show_live_stream_row.inc.php:35
 #: ../../templates/show_localplay_instances.inc.php:41
-#: ../../templates/show_playlist.inc.php:62
+#: ../../templates/show_playlist.inc.php:64
 #: ../../templates/show_user_row.inc.php:50
 #: ../../templates/show_manage_democratic.inc.php:59
 #: ../../templates/show_shout_row.inc.php:37
@@ -567,67 +550,63 @@ msgstr "再エンコード"
 msgid "Other"
 msgstr "その他"
 
-#: ../../lib/class/browse.class.php:165 ../../templates/show_albums.inc.php:47
+#: ../../lib/class/browse.class.php:124 ../../templates/show_albums.inc.php:47
 #: ../../templates/show_albums.inc.php:78
 #: ../../templates/show_stats.inc.php:33 ../../templates/show_stats.inc.php:69
 #: ../../templates/show_artists.inc.php:39
 #: ../../templates/show_artists.inc.php:67
-#: ../../templates/show_genre.inc.php:40
-#: ../../templates/show_genres.inc.php:39
-#: ../../templates/show_genres.inc.php:75
-#: ../../templates/show_popular.inc.php:24
 #: ../../templates/show_manage_democratic.inc.php:40
 msgid "Songs"
 msgstr "曲"
 
-#: ../../lib/class/browse.class.php:177
+#: ../../lib/class/browse.class.php:136
 msgid "Manage Users"
 msgstr "ユーザ管理"
 
-#: ../../lib/class/browse.class.php:189
-#: ../../templates/sidebar_home.inc.php:38
+#: ../../lib/class/browse.class.php:148
+#: ../../templates/sidebar_home.inc.php:39
 msgid "Radio Stations"
 msgstr "ラジオステーション"
 
-#: ../../lib/class/browse.class.php:195
-#: ../../templates/sidebar_home.inc.php:37
+#: ../../lib/class/browse.class.php:154
+#: ../../templates/sidebar_home.inc.php:38
 msgid "Playlists"
 msgstr "プレイリスト"
 
-#: ../../lib/class/browse.class.php:200
+#: ../../lib/class/browse.class.php:159
 msgid "Playlist Songs"
 msgstr "プレイリスト曲"
 
-#: ../../lib/class/browse.class.php:205
+#: ../../lib/class/browse.class.php:164
 msgid "Current Playlist"
 msgstr "現在のプレイリスト"
 
-#: ../../lib/class/browse.class.php:210
+#: ../../lib/class/browse.class.php:169
 #: ../../templates/show_admin_tools.inc.php:27
 #: ../../templates/show_stats.inc.php:26
 #: ../../templates/sidebar_admin.inc.php:25
 msgid "Catalogs"
 msgstr "カタログ"
 
-#: ../../lib/class/browse.class.php:215
+#: ../../lib/class/browse.class.php:174
 msgid "Shoutbox Records"
 msgstr "シャウトボックスレコード"
 
-#: ../../lib/class/browse.class.php:220
+#: ../../lib/class/browse.class.php:179
 msgid "Flagged Records"
 msgstr "フラグされたレコード"
 
-#: ../../lib/class/browse.class.php:226
-#: ../../templates/sidebar_home.inc.php:36 ../../browse.php:69
+#: ../../lib/class/browse.class.php:185
+#: ../../templates/sidebar_home.inc.php:37 ../../browse.php:70
 msgid "Tag Cloud"
 msgstr "タグクラウド"
 
-#: ../../lib/class/browse.class.php:232
-#: ../../templates/sidebar_home.inc.php:39
+#: ../../lib/class/browse.class.php:191
+#: ../../templates/sidebar_home.inc.php:40
 msgid "Videos"
 msgstr "動画"
 
-#: ../../lib/class/browse.class.php:237
+#: ../../lib/class/browse.class.php:196
 #: ../../templates/show_democratic.inc.php:23
 msgid "Democratic Playlist"
 msgstr "デモクラティックプレイリスト"
@@ -681,8 +660,12 @@ msgstr "停止"
 msgid "Paused"
 msgstr "一時停止"
 
+#: ../../lib/class/query.class.php:68
+msgid "Browse not found or expired, try reloading the page"
+msgstr "参照は見つかったか期限切れです。ページの再読込をしてください。"
+
 #: ../../lib/class/playlist.class.php:84
-#: ../../templates/show_edit_playlist_full_row.inc.php:33
+#: ../../templates/show_edit_playlist_title.inc.php:33
 #: ../../templates/show_edit_playlist_row.inc.php:34
 msgid "Private"
 msgstr "プライベート"
@@ -753,11 +736,11 @@ msgstr ""
 "メールアドレス: %s\n"
 "\n"
 
-#: ../../lib/class/album.class.php:226 ../../templates/show_album.inc.php:28
+#: ../../lib/class/album.class.php:236 ../../templates/show_album.inc.php:29
 msgid "Disk"
 msgstr "ディスク"
 
-#: ../../lib/class/album.class.php:238 ../../lib/class/album.class.php:239
+#: ../../lib/class/album.class.php:250 ../../lib/class/album.class.php:251
 #: ../../templates/show_edit_album_row.inc.php:36
 msgid "Various"
 msgstr "いくつかの"
@@ -772,7 +755,7 @@ msgstr "エラー: ユーザ名は必須です"
 msgid "Error Passwords don't match"
 msgstr "エラー: パスワードが一致しません"
 
-#: ../../lib/class/user.class.php:734 ../../templates/show_albums.inc.php:68
+#: ../../lib/class/user.class.php:725 ../../templates/show_albums.inc.php:68
 #: ../../templates/show_tagcloud.inc.php:34
 #: ../../templates/rightbar.inc.php:109
 #: ../../templates/show_user_recommendations.inc.php:33
@@ -788,7 +771,6 @@ msgstr "エラー: パスワードが一致しません"
 #: ../../templates/show_user_stats.inc.php:48
 #: ../../templates/show_user_stats.inc.php:61
 #: ../../templates/show_catalogs.inc.php:53
-#: ../../templates/show_genres.inc.php:69
 #: ../../templates/show_videos.inc.php:57
 #: ../../templates/show_manage_democratic.inc.php:64
 msgid "Not Enough Data"
@@ -800,12 +782,10 @@ msgid "Recently Played"
 msgstr "最近再生したもの"
 
 #: ../../lib/class/ampacherss.class.php:73
-#: ../../templates/show_stats_newest.inc.php:23
 msgid "Newest Albums"
 msgstr "新着アルバム"
 
 #: ../../lib/class/ampacherss.class.php:74
-#: ../../templates/show_stats_newest.inc.php:27
 msgid "Newest Artists"
 msgstr "新着アーティスト"
 
@@ -884,151 +864,151 @@ msgstr "%sはAmpacheで読み込めません"
 msgid "%s does not match site charset"
 msgstr "%sはサイトのCharsetと一致しません"
 
-#: ../../lib/class/catalog.class.php:1091
-#: ../../lib/class/catalog.class.php:2009 ../../preferences.php:112
+#: ../../lib/class/catalog.class.php:1082
+#: ../../lib/class/catalog.class.php:1993 ../../preferences.php:112
 #: ../../admin/access.php:124
 msgid "Updated"
 msgstr "更新しました"
 
-#: ../../lib/class/catalog.class.php:1098
+#: ../../lib/class/catalog.class.php:1089
 msgid "No Update Needed"
 msgstr "必要な更新はありません"
 
-#: ../../lib/class/catalog.class.php:1232
+#: ../../lib/class/catalog.class.php:1224
 msgid "Running Remote Update"
 msgstr "リモート更新実行中"
 
-#: ../../lib/class/catalog.class.php:1259
+#: ../../lib/class/catalog.class.php:1251
 msgid "Added Playlist From"
 msgstr "次からプレイリストを追加:"
 
-#: ../../lib/class/catalog.class.php:1288
+#: ../../lib/class/catalog.class.php:1280
 msgid "Catalog Update Finished"
 msgstr "カタログ更新完了"
 
-#: ../../lib/class/catalog.class.php:1288
+#: ../../lib/class/catalog.class.php:1280
 msgid "Total Time"
 msgstr "合計時間"
 
-#: ../../lib/class/catalog.class.php:1289
+#: ../../lib/class/catalog.class.php:1281
 msgid "Total Songs"
 msgstr "合計曲"
 
-#: ../../lib/class/catalog.class.php:1289
+#: ../../lib/class/catalog.class.php:1281
 msgid "Songs Per Seconds"
 msgstr "1秒毎の曲"
 
-#: ../../lib/class/catalog.class.php:1303 ../../lib/class/artist.class.php:355
+#: ../../lib/class/catalog.class.php:1295 ../../lib/class/artist.class.php:355
 #: ../../admin/users.php:144
 msgid "Error"
 msgstr "エラー"
 
-#: ../../lib/class/catalog.class.php:1303
+#: ../../lib/class/catalog.class.php:1295
 msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
 msgstr ""
 "pear XMLRPCライブラリを読み込めませんでした。XML-RPCが有効になっているか確認"
 "してください。"
 
-#: ../../lib/class/catalog.class.php:1341
-#: ../../lib/class/catalog.class.php:1415
-#: ../../lib/class/catalog.class.php:1448
-#: ../../lib/class/catalog.class.php:2474
+#: ../../lib/class/catalog.class.php:1333
+#: ../../lib/class/catalog.class.php:1407
+#: ../../lib/class/catalog.class.php:1440
+#: ../../lib/class/catalog.class.php:2472
 msgid "Error connecting to"
 msgstr "接続中のエラー:"
 
-#: ../../lib/class/catalog.class.php:1341
-#: ../../lib/class/catalog.class.php:1415
-#: ../../lib/class/catalog.class.php:1448
-#: ../../lib/class/catalog.class.php:2474
+#: ../../lib/class/catalog.class.php:1333
+#: ../../lib/class/catalog.class.php:1407
+#: ../../lib/class/catalog.class.php:1440
+#: ../../lib/class/catalog.class.php:2472
 msgid "Code"
 msgstr "コード"
 
-#: ../../lib/class/catalog.class.php:1341
-#: ../../lib/class/catalog.class.php:1415
-#: ../../lib/class/catalog.class.php:1448
-#: ../../lib/class/catalog.class.php:2474
+#: ../../lib/class/catalog.class.php:1333
+#: ../../lib/class/catalog.class.php:1407
+#: ../../lib/class/catalog.class.php:1440
+#: ../../lib/class/catalog.class.php:2472
 msgid "Reason"
 msgstr "理由"
 
-#: ../../lib/class/catalog.class.php:1370
+#: ../../lib/class/catalog.class.php:1362
 msgid "Completed updating remote catalog(s)"
 msgstr "リモートカタログの更新完了"
 
-#: ../../lib/class/catalog.class.php:1374
+#: ../../lib/class/catalog.class.php:1366
 msgid "Starting synchronisation of album images"
 msgstr "アルバム画像の同期を開始しています"
 
-#: ../../lib/class/catalog.class.php:1376
+#: ../../lib/class/catalog.class.php:1368
 msgid "Completed synchronisation of album images"
 msgstr "アルバム画像の同期が完了しました"
 
-#: ../../lib/class/catalog.class.php:1411 ../../templates/show_song.inc.php:61
+#: ../../lib/class/catalog.class.php:1403 ../../templates/show_song.inc.php:61
 #: ../../admin/access.php:104
 msgid "Added"
 msgstr "追加しました"
 
-#: ../../lib/class/catalog.class.php:1444
+#: ../../lib/class/catalog.class.php:1436
 msgid "images synchronized: "
 msgstr "同期した画像: "
 
-#: ../../lib/class/catalog.class.php:1579
+#: ../../lib/class/catalog.class.php:1571
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "カタログルートに到達できません。クリーンを停止します"
 
-#: ../../lib/class/catalog.class.php:1618
+#: ../../lib/class/catalog.class.php:1608
 msgid "Error File Not Found or 0 Bytes:"
 msgstr "エラー: ファイルが見つからないか0バイトです:"
 
-#: ../../lib/class/catalog.class.php:1640
+#: ../../lib/class/catalog.class.php:1630
 msgid "Error Remote File Not Found or 0 Bytes:"
 msgstr "エラー: リモートファイルが見つからないか0バイトです:"
 
-#: ../../lib/class/catalog.class.php:1660
+#: ../../lib/class/catalog.class.php:1650
 msgid "Error All songs would be removed, doing nothing"
 msgstr "エラー: 全曲削除しようとしましたが何もしていません。"
 
-#: ../../lib/class/catalog.class.php:1688
+#: ../../lib/class/catalog.class.php:1676
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] "カタログのクリーン完了。%dファイルを削除しました。"
 
-#: ../../lib/class/catalog.class.php:1690
+#: ../../lib/class/catalog.class.php:1678
 msgid "Optimizing Tables"
 msgstr "テーブルを最適化中"
 
 #. HINT: Mediafile
-#: ../../lib/class/catalog.class.php:1987
+#: ../../lib/class/catalog.class.php:1973
 #, php-format
 msgid "%s does not exist or is not readable"
 msgstr "%sは存在しないか読み込めません。"
 
-#: ../../lib/class/catalog.class.php:2009
+#: ../../lib/class/catalog.class.php:1993
 msgid "Update Finished"
 msgstr "更新完了"
 
-#: ../../lib/class/catalog.class.php:2009
+#: ../../lib/class/catalog.class.php:1993
 msgid "Checked"
 msgstr "チェック済み"
 
-#: ../../lib/class/catalog.class.php:2068
-#: ../../lib/class/catalog.class.php:2171
-#: ../../templates/show_album.inc.php:35
+#: ../../lib/class/catalog.class.php:2070
+#: ../../lib/class/catalog.class.php:2172
+#: ../../templates/show_album.inc.php:36
 msgid "Unknown (Orphaned)"
 msgstr "不明(孤立)"
 
-#: ../../lib/class/catalog.class.php:2572
+#: ../../lib/class/catalog.class.php:2570
 msgid "Playlist creation error."
 msgstr "プレイリスト作成エラーです。"
 
-#: ../../lib/class/catalog.class.php:2579
+#: ../../lib/class/catalog.class.php:2577
 #, php-format
 msgid "Playlist Import and Recreate Successful. Total: %d Song"
 msgid_plural "Playlist Import and Recreate Successful. Total: %d Songs"
 msgstr[0] "プレイリストのインポートと再生成に成功しました。合計: %d曲"
 
 #. HINT: filename
-#: ../../lib/class/catalog.class.php:2585
+#: ../../lib/class/catalog.class.php:2583
 #, php-format
 msgid "Parsing %s - Not Found: %d Song. Please check your m3u file."
 msgid_plural "Parsing %s - Not Found: %d Songs. Please check your m3u file."
@@ -1134,10 +1114,10 @@ msgstr "パスワードを%sへ設定しました"
 #: ../../templates/show_recently_played.inc.php:100
 #: ../../templates/show_artists.inc.php:37
 #: ../../templates/show_artists.inc.php:65
-#: ../../templates/show_artist.inc.php:44
+#: ../../templates/show_artist.inc.php:49
 #: ../../templates/show_songs.inc.php:40 ../../templates/show_songs.inc.php:69
 #: ../../templates/show_live_stream.inc.php:27
-#: ../../templates/show_album.inc.php:52
+#: ../../templates/show_album.inc.php:53
 #: ../../templates/show_live_streams.inc.php:36
 #: ../../templates/show_live_streams.inc.php:58
 #: ../../templates/show_add_live_stream.inc.php:70
@@ -1145,9 +1125,6 @@ msgstr "パスワードを%sへ設定しました"
 #: ../../templates/show_playlists.inc.php:58
 #: ../../templates/show_catalog_row.inc.php:30
 #: ../../templates/show_playlist_song_row.inc.php:23
-#: ../../templates/show_genres.inc.php:37
-#: ../../templates/show_genres.inc.php:50
-#: ../../templates/show_genres.inc.php:73
 #: ../../templates/show_videos.inc.php:37
 #: ../../templates/show_videos.inc.php:61
 #: ../../templates/show_playlist_row.inc.php:24
@@ -1167,9 +1144,9 @@ msgid "Post Shout"
 msgstr "シャウトの投稿"
 
 #: ../../templates/show_song_row.inc.php:44
-#: ../../templates/show_song.inc.php:36 ../../templates/show_artist.inc.php:60
-#: ../../templates/show_artist.inc.php:61
-#: ../../templates/show_album.inc.php:77 ../../templates/show_album.inc.php:78
+#: ../../templates/show_song.inc.php:36 ../../templates/show_artist.inc.php:65
+#: ../../templates/show_artist.inc.php:66
+#: ../../templates/show_album.inc.php:78 ../../templates/show_album.inc.php:79
 #: ../../templates/show_playlist_song_row.inc.php:37
 #: ../../templates/show_video_row.inc.php:33
 msgid "Download"
@@ -1182,8 +1159,8 @@ msgstr "ダウンロード"
 #: ../../templates/show_playlist_song_row.inc.php:41
 #: ../../templates/show_playlist_row.inc.php:38
 #: ../../templates/show_live_stream_row.inc.php:32
-#: ../../templates/show_playlist.inc.php:55
-#: ../../templates/show_playlist.inc.php:56
+#: ../../templates/show_playlist.inc.php:57
+#: ../../templates/show_playlist.inc.php:58
 #: ../../templates/show_user_row.inc.php:39
 #: ../../templates/show_shout_row.inc.php:33
 msgid "Edit"
@@ -1219,7 +1196,7 @@ msgstr "現在ホストの追加"
 #: ../../templates/show_add_playlist.inc.php:29
 #: ../../templates/show_edit_live_stream_row.inc.php:27
 #: ../../templates/show_plugins.inc.php:33
-#: ../../templates/show_plugins.inc.php:62
+#: ../../templates/show_plugins.inc.php:70
 #: ../../templates/show_add_access_rpc.inc.php:27
 #: ../../templates/show_add_access_local.inc.php:27
 msgid "Name"
@@ -1283,7 +1260,7 @@ msgstr "カバー"
 #: ../../templates/show_song.inc.php:47 ../../templates/show_search.inc.php:51
 #: ../../templates/show_recently_played.inc.php:40
 #: ../../templates/show_recently_played.inc.php:103
-#: ../../templates/sidebar_home.inc.php:108
+#: ../../templates/sidebar_home.inc.php:65
 #: ../../templates/show_songs.inc.php:43 ../../templates/show_songs.inc.php:72
 #: ../../templates/show_playlist_songs.inc.php:46
 #: ../../templates/show_playlist_songs.inc.php:72
@@ -1302,13 +1279,14 @@ msgstr "アルバム"
 #: ../../templates/show_democratic_playlist.inc.php:59
 #: ../../templates/show_democratic_playlist.inc.php:99
 #: ../../templates/show_edit_song.inc.php:46
-#: ../../templates/show_song.inc.php:46 ../../templates/show_search.inc.php:45
+#: ../../templates/show_song.inc.php:46
+#: ../../templates/browse_filters.inc.php:66
+#: ../../templates/show_search.inc.php:45
 #: ../../templates/show_recently_played.inc.php:41
 #: ../../templates/show_recently_played.inc.php:104
 #: ../../templates/show_artists.inc.php:38
 #: ../../templates/show_artists.inc.php:66
-#: ../../templates/sidebar_home.inc.php:82
-#: ../../templates/sidebar_home.inc.php:109
+#: ../../templates/sidebar_home.inc.php:66
 #: ../../templates/show_songs.inc.php:42 ../../templates/show_songs.inc.php:71
 #: ../../templates/show_playlist_songs.inc.php:45
 #: ../../templates/show_playlist_songs.inc.php:71
@@ -1353,7 +1331,7 @@ msgstr "評価"
 
 #: ../../templates/show_albums.inc.php:51
 #: ../../templates/show_albums.inc.php:82
-#: ../../templates/show_album.inc.php:49
+#: ../../templates/show_album.inc.php:50
 #: ../../templates/show_playlists.inc.php:40
 #: ../../templates/show_playlists.inc.php:63
 #: ../../templates/show_catalogs.inc.php:39
@@ -1398,7 +1376,7 @@ msgstr "追加時間"
 #: ../../templates/show_flagged.inc.php:50
 #: ../../templates/show_localplay_controllers.inc.php:60
 #: ../../templates/show_localplay_playlist.inc.php:56
-#: ../../templates/show_plugins.inc.php:58
+#: ../../templates/show_plugins.inc.php:66
 msgid "No Records Found"
 msgstr "レコードはありません"
 
@@ -1420,10 +1398,9 @@ msgstr "検索結果を追加"
 #: ../../templates/rightbar.inc.php:50
 #: ../../templates/show_artist_row.inc.php:36
 #: ../../templates/show_album_row.inc.php:51
-#: ../../templates/show_genres.inc.php:61
 #: ../../templates/show_playlist_row.inc.php:34
-#: ../../templates/show_playlist.inc.php:41
-#: ../../templates/show_playlist.inc.php:42
+#: ../../templates/show_playlist.inc.php:43
+#: ../../templates/show_playlist.inc.php:44
 msgid "Batch Download"
 msgstr "バッチダウンロード"
 
@@ -1488,10 +1465,8 @@ msgstr "ベースのプレイリストから再生"
 #: ../../templates/show_live_streams.inc.php:63
 #: ../../templates/show_users.inc.php:47 ../../templates/show_users.inc.php:69
 #: ../../templates/show_access_list.inc.php:62
-#: ../../templates/show_genres.inc.php:40
-#: ../../templates/show_genres.inc.php:76
-#: ../../templates/show_plugins.inc.php:36
-#: ../../templates/show_plugins.inc.php:65
+#: ../../templates/show_plugins.inc.php:37
+#: ../../templates/show_plugins.inc.php:73
 #: ../../templates/show_videos.inc.php:43
 #: ../../templates/show_videos.inc.php:67
 #: ../../templates/show_localplay_instances.inc.php:30
@@ -1526,7 +1501,7 @@ msgid "Add Vote"
 msgstr "投票追加"
 
 #: ../../templates/show_edit_playlist_song_row.inc.php:39
-#: ../../templates/show_edit_playlist_full_row.inc.php:38
+#: ../../templates/show_edit_playlist_title.inc.php:38
 #: ../../templates/show_edit_song_row.inc.php:46
 #: ../../templates/show_edit_album_row.inc.php:49
 #: ../../templates/show_edit_playlist_row.inc.php:39
@@ -1543,6 +1518,11 @@ msgstr "アルバムアート"
 #: ../../templates/show_big_art.inc.php:34
 msgid "Click to close window"
 msgstr "ウィンドウを閉じる"
+
+#: ../../templates/show_edit_playlist_title.inc.php:32
+#: ../../templates/show_edit_playlist_row.inc.php:33
+msgid "Public"
+msgstr "公開"
 
 #: ../../templates/show_import_playlist.inc.php:24
 msgid "Importing a Playlist from a File"
@@ -1904,11 +1884,6 @@ msgstr "非活発ユーザを表示"
 msgid "Check for New Version"
 msgstr "新バージョンのチェック"
 
-#: ../../templates/show_edit_playlist_full_row.inc.php:32
-#: ../../templates/show_edit_playlist_row.inc.php:33
-msgid "Public"
-msgstr "公開"
-
 #: ../../templates/sidebar_localplay.inc.php:36
 #: ../../templates/show_localplay_add_instance.inc.php:36
 msgid "Add Instance"
@@ -1950,6 +1925,12 @@ msgstr "詳細"
 #: ../../templates/show_song.inc.php:35
 msgid "Link"
 msgstr "リンク"
+
+#: ../../templates/show_song.inc.php:48
+#: ../../templates/show_playlist_songs.inc.php:47
+#: ../../templates/show_playlist_songs.inc.php:73
+msgid "Genre"
+msgstr "ジャンル"
 
 #: ../../templates/show_song.inc.php:49
 #: ../../templates/show_duplicates.inc.php:41
@@ -2016,10 +1997,9 @@ msgstr "アーティスト更新"
 #. HINT: Artist Fullname
 #: ../../templates/show_artist_row.inc.php:25
 #: ../../templates/show_album_row.inc.php:25
-#: ../../templates/sidebar_home.inc.php:106
-#: ../../templates/show_artist.inc.php:49
-#: ../../templates/show_album.inc.php:56
-#: ../../templates/show_genres.inc.php:53
+#: ../../templates/sidebar_home.inc.php:63
+#: ../../templates/show_artist.inc.php:54
+#: ../../templates/show_album.inc.php:57
 #: ../../templates/show_playlist_row.inc.php:25
 #: ../../templates/show_localplay_status.inc.php:45
 #: ../../modules/localplay/httpq.controller.php:493
@@ -2044,6 +2024,42 @@ msgstr "Sticky"
 #: ../../templates/show_manage_shoutbox.inc.php:63
 msgid "Date Added"
 msgstr "追加日"
+
+#: ../../templates/browse_filters.inc.php:25
+msgid "Filters"
+msgstr "フィルタ"
+
+#: ../../templates/browse_filters.inc.php:29
+msgid "Starts With"
+msgstr "開始 :"
+
+#: ../../templates/browse_filters.inc.php:35
+msgid "Minimum Count"
+msgstr "最小カウント"
+
+#: ../../templates/browse_filters.inc.php:40
+msgid "Rated"
+msgstr "評価"
+
+#: ../../templates/browse_filters.inc.php:45
+msgid "Unplayed"
+msgstr "未再生"
+
+#: ../../templates/browse_filters.inc.php:49
+#: ../../templates/show_artist.inc.php:70
+msgid "Show Art"
+msgstr "アート表示"
+
+#: ../../templates/browse_filters.inc.php:54
+msgid "All Playlists"
+msgstr "全プレイリスト"
+
+#: ../../templates/browse_filters.inc.php:60
+#: ../../templates/show_songs.inc.php:41 ../../templates/show_songs.inc.php:70
+#: ../../templates/show_playlist_songs.inc.php:44
+#: ../../templates/show_playlist_songs.inc.php:70
+msgid "Song Title"
+msgstr "曲タイトル"
 
 #: ../../templates/header.inc.php:70
 msgid "Log out"
@@ -2341,21 +2357,26 @@ msgstr "最後に再生した"
 #: ../../templates/show_localplay_controllers.inc.php:34
 #: ../../templates/show_localplay_controllers.inc.php:65
 #: ../../templates/show_plugins.inc.php:34
-#: ../../templates/show_plugins.inc.php:63
+#: ../../templates/show_plugins.inc.php:71
 msgid "Description"
 msgstr "説明"
 
 #: ../../templates/show_localplay_controllers.inc.php:35
 #: ../../templates/show_localplay_controllers.inc.php:66
 #: ../../templates/show_plugins.inc.php:35
-#: ../../templates/show_plugins.inc.php:64
+#: ../../templates/show_plugins.inc.php:72
 msgid "Version"
 msgstr "バージョン"
 
 #: ../../templates/show_localplay_controllers.inc.php:49
-#: ../../templates/show_plugins.inc.php:43
+#: ../../templates/show_plugins.inc.php:45
 msgid "Activate"
 msgstr "アクティベート"
+
+#: ../../templates/show_playlist_title.inc.php:24
+#, php-format
+msgid "%s %s (Playlist)"
+msgstr "%s %s (プレイリスト)"
 
 #: ../../templates/show_random_rules.inc.php:23
 msgid "Rules"
@@ -2404,21 +2425,21 @@ msgstr "最終追加"
 msgid "Last Clean"
 msgstr "最終クリーン"
 
-#: ../../templates/show_install.inc.php:36
+#: ../../templates/show_install.inc.php:37
 #: ../../templates/show_install_config.inc.php:35
-#: ../../templates/show_install_lang.inc.php:36
+#: ../../templates/show_install_lang.inc.php:37
 #: ../../templates/show_install_account.inc.php:35
 msgid "Ampache Installation"
 msgstr "Ampache インストール"
 
-#: ../../templates/show_install.inc.php:42
-#: ../../templates/show_install_lang.inc.php:41
+#: ../../templates/show_install.inc.php:43
+#: ../../templates/show_install_lang.inc.php:42
 msgid "Requirements"
 msgstr "必要条件"
 
-#: ../../templates/show_install.inc.php:44
+#: ../../templates/show_install.inc.php:45
 #: ../../templates/show_install_config.inc.php:41
-#: ../../templates/show_install_lang.inc.php:43
+#: ../../templates/show_install_lang.inc.php:44
 #: ../../templates/show_install_account.inc.php:42
 msgid ""
 "This Page handles the installation of the Ampache database and the creation "
@@ -2428,25 +2449,25 @@ msgstr ""
 "このページはAmpacheデータベースとampache.cfg.phpファイルの生成のインストール"
 "を扱います。続ける前に以下の事前準備をお願いします。"
 
-#: ../../templates/show_install.inc.php:47
+#: ../../templates/show_install.inc.php:48
 #: ../../templates/show_install_config.inc.php:44
-#: ../../templates/show_install_lang.inc.php:46
+#: ../../templates/show_install_lang.inc.php:47
 #: ../../templates/show_install_account.inc.php:45
 msgid ""
 "A MySQL Server with a username and password that can create/modify databases"
 msgstr "データベースを作成/修正できるユーザ名とパスワードをもったMySQLサーバ"
 
-#: ../../templates/show_install.inc.php:48
+#: ../../templates/show_install.inc.php:49
 #: ../../templates/show_install_config.inc.php:45
-#: ../../templates/show_install_lang.inc.php:47
+#: ../../templates/show_install_lang.inc.php:48
 #: ../../templates/show_install_account.inc.php:46
 #, php-format
 msgid "Your webserver has read access to the %s file and the %s file"
 msgstr "ウェブサーバは%sファイルと%sファイルへのアクセスを読み込みます"
 
-#: ../../templates/show_install.inc.php:51
+#: ../../templates/show_install.inc.php:52
 #: ../../templates/show_install_config.inc.php:48
-#: ../../templates/show_install_lang.inc.php:50
+#: ../../templates/show_install_lang.inc.php:51
 #, php-format
 msgid ""
 "Once you have ensured that you have the above requirements please fill out "
@@ -2457,13 +2478,13 @@ msgstr ""
 "上記の要件を確認したら以下の情報を記入してください。必要なコンフィグの値を求"
 "めるだけです。後々Ampacheへの変更を加えたい場合、単に%sを編集するだけです。"
 
-#: ../../templates/show_install.inc.php:56
+#: ../../templates/show_install.inc.php:57
 #: ../../templates/show_install_config.inc.php:52
 #: ../../templates/show_install_account.inc.php:51
 msgid "Step 1 - Creating and Inserting the Ampache Database"
 msgstr "ステップ1 - Ampacheデータベースの作成と挿入"
 
-#: ../../templates/show_install.inc.php:58
+#: ../../templates/show_install.inc.php:59
 msgid ""
 "This step creates and inserts the Ampache database, as such please provide a "
 "mysql account with database creation rights. This step may take a while "
@@ -2473,65 +2494,65 @@ msgstr ""
 "にAmpacheデータベースを作成し、データを挿入します。マシンの速度によってこのス"
 "テップはしばらく時間がかかるかもしれません。"
 
-#: ../../templates/show_install.inc.php:60
+#: ../../templates/show_install.inc.php:61
 #: ../../templates/show_install_config.inc.php:53
 msgid "Step 2 - Creating the Ampache.cfg.php file"
 msgstr "ステップ2 - Ampache.cfg.phpファイルの作成"
 
-#: ../../templates/show_install.inc.php:61
+#: ../../templates/show_install.inc.php:62
 #: ../../templates/show_install_config.inc.php:57
 #: ../../templates/show_install_account.inc.php:53
 msgid "Step 3 - Setup Initial Account"
 msgstr "ステップ3 - 初期アカウントのセットアップ"
 
-#: ../../templates/show_install.inc.php:65
+#: ../../templates/show_install.inc.php:66
 msgid "Insert Ampache Database"
 msgstr "Ampacheデータベースの挿入"
 
-#: ../../templates/show_install.inc.php:69
+#: ../../templates/show_install.inc.php:70
 #: ../../templates/show_install_config.inc.php:70
 msgid "Desired Database Name"
 msgstr "希望するデータベース名"
 
-#: ../../templates/show_install.inc.php:73
+#: ../../templates/show_install.inc.php:74
 #: ../../templates/show_install_config.inc.php:74
 msgid "MySQL Hostname"
 msgstr "MySQLのホスト名"
 
-#: ../../templates/show_install.inc.php:77
+#: ../../templates/show_install.inc.php:78
 msgid "MySQL Administrative Username"
 msgstr "MySQL管理ユーザ名"
 
-#: ../../templates/show_install.inc.php:81
+#: ../../templates/show_install.inc.php:82
 msgid "MySQL Administrative Password"
 msgstr "MySQL管理パスワード"
 
-#: ../../templates/show_install.inc.php:85
+#: ../../templates/show_install.inc.php:86
 msgid "Create Database User for New Database"
 msgstr "新規データベースのユーザ作成"
 
-#: ../../templates/show_install.inc.php:89
+#: ../../templates/show_install.inc.php:90
 msgid "Ampache Database Username"
 msgstr "Ampacheデータベースユーザ名"
 
-#: ../../templates/show_install.inc.php:93
+#: ../../templates/show_install.inc.php:94
 msgid "Ampache Database User Password"
 msgstr "Ampacheデータベースユーザパスワード"
 
-#: ../../templates/show_install.inc.php:97
+#: ../../templates/show_install.inc.php:98
 msgid "Overwrite Existing"
 msgstr "既存を上書き"
 
-#: ../../templates/show_install.inc.php:101
+#: ../../templates/show_install.inc.php:102
 msgid "Use Existing Database"
 msgstr "既存のデータベースを使用する"
 
-#: ../../templates/show_install.inc.php:106
+#: ../../templates/show_install.inc.php:107
 msgid "Insert Database"
 msgstr "データベース挿入"
 
 #: ../../templates/show_newest.inc.php:23
-#: ../../templates/sidebar_home.inc.php:114
+#: ../../templates/sidebar_home.inc.php:71
 #: ../../templates/show_popular.inc.php:23
 msgid "Information"
 msgstr "情報"
@@ -2565,7 +2586,7 @@ msgstr "フラグ済みの管理"
 
 #: ../../templates/sidebar_modules.inc.php:37
 msgid "Show Disabled"
-msgstr "表示を無効にしました"
+msgstr "表示の無効"
 
 #: ../../templates/sidebar_modules.inc.php:44
 msgid "Manage Playlist"
@@ -2604,8 +2625,8 @@ msgid "Write Config"
 msgstr "コンフィグの書込み"
 
 #: ../../templates/show_install_config.inc.php:94
-msgid "Ampache.cfg.php Exists"
-msgstr "Ampache.cfg.phpは存在します"
+msgid "Ampache.cfg.php Exists?"
+msgstr "Ampache.cfg.phpはありますか？"
 
 #: ../../templates/show_install_config.inc.php:109
 #: ../../templates/show_test.inc.php:167
@@ -2923,63 +2944,27 @@ msgstr "リネーム"
 msgid "Browse"
 msgstr "閲覧"
 
-#: ../../templates/sidebar_home.inc.php:33
+#: ../../templates/sidebar_home.inc.php:34
 msgid "Song Titles"
 msgstr "曲タイトル"
 
-#: ../../templates/sidebar_home.inc.php:43
-msgid "Filters"
-msgstr "フィルタ"
-
 #: ../../templates/sidebar_home.inc.php:47
-msgid "Starts With"
-msgstr "開始 :"
-
-#: ../../templates/sidebar_home.inc.php:53
-msgid "Minimum Count"
-msgstr "最小カウント"
-
-#: ../../templates/sidebar_home.inc.php:57
-msgid "Rated"
-msgstr "評価"
-
-#: ../../templates/sidebar_home.inc.php:61
-msgid "Unplayed"
-msgstr "未再生"
-
-#: ../../templates/sidebar_home.inc.php:65
-#: ../../templates/show_artist.inc.php:65
-msgid "Show Art"
-msgstr "アート表示"
-
-#: ../../templates/sidebar_home.inc.php:70
-msgid "All Playlists"
-msgstr "全プレイリスト"
-
-#: ../../templates/sidebar_home.inc.php:76
-#: ../../templates/show_songs.inc.php:41 ../../templates/show_songs.inc.php:70
-#: ../../templates/show_playlist_songs.inc.php:44
-#: ../../templates/show_playlist_songs.inc.php:70
-msgid "Song Title"
-msgstr "曲タイトル"
-
-#: ../../templates/sidebar_home.inc.php:90
 msgid "Currently Playing"
 msgstr "現在再生中のもの"
 
-#: ../../templates/sidebar_home.inc.php:103
+#: ../../templates/sidebar_home.inc.php:60
 msgid "Import"
 msgstr "インポート"
 
-#: ../../templates/sidebar_home.inc.php:111
+#: ../../templates/sidebar_home.inc.php:68
 msgid "Advanced"
 msgstr "高度"
 
-#: ../../templates/sidebar_home.inc.php:117
+#: ../../templates/sidebar_home.inc.php:74
 msgid "Newest"
 msgstr "最新"
 
-#: ../../templates/sidebar_home.inc.php:118
+#: ../../templates/sidebar_home.inc.php:75
 msgid "Popular"
 msgstr "ポピュラー"
 
@@ -3052,38 +3037,31 @@ msgstr "ユーザは現在オフラインです"
 msgid "Active Playlist"
 msgstr "アクティブなプレイリスト"
 
-#. HINT: Artist Fullname
-#: ../../templates/show_artist.inc.php:24
-#, php-format
-msgid "Albums by %s"
-msgstr "%sによるアルバム"
-
-#. HINT: Object type, Artist Fullname
-#: ../../templates/show_artist.inc.php:28
-#, php-format
-msgid "%s by %s"
-msgstr "%2$sによる%1$s"
-
-#. HINT: Artist Fullname
 #: ../../templates/show_artist.inc.php:39
 #: ../../templates/show_artist.inc.php:40
 #, php-format
 msgid "Show All Songs By %s"
 msgstr "%sで全曲を表示"
 
-#: ../../templates/show_artist.inc.php:45
+#: ../../templates/show_artist.inc.php:43
+#: ../../templates/show_artist.inc.php:44
+#, php-format
+msgid "Show Albums By %s"
+msgstr "%sによるアルバムを表示"
+
+#: ../../templates/show_artist.inc.php:50
 #, php-format
 msgid "Add All Songs By %s"
 msgstr "%sで全曲を追加"
 
-#: ../../templates/show_artist.inc.php:50
+#: ../../templates/show_artist.inc.php:55
 #, php-format
 msgid "Add Random Songs By %s"
 msgstr "%sでランダム曲を追加"
 
-#: ../../templates/show_artist.inc.php:54
-#: ../../templates/show_artist.inc.php:55
-#: ../../templates/show_album.inc.php:71 ../../templates/show_album.inc.php:72
+#: ../../templates/show_artist.inc.php:59
+#: ../../templates/show_artist.inc.php:60
+#: ../../templates/show_album.inc.php:72 ../../templates/show_album.inc.php:73
 msgid "Update from tags"
 msgstr "タグから更新"
 
@@ -3120,19 +3098,19 @@ msgstr "アルバム編集"
 msgid "Update Album"
 msgstr "アルバム更新"
 
-#: ../../templates/show_album.inc.php:53
+#: ../../templates/show_album.inc.php:54
 msgid "Add Album"
 msgstr "アルバム追加"
 
-#: ../../templates/show_album.inc.php:57
+#: ../../templates/show_album.inc.php:58
 msgid "Add Random from Album"
 msgstr "アルバムからランダムに追加"
 
-#: ../../templates/show_album.inc.php:61 ../../templates/show_album.inc.php:62
+#: ../../templates/show_album.inc.php:62 ../../templates/show_album.inc.php:63
 msgid "Reset Album Art"
 msgstr "アルバムアートのリセット"
 
-#: ../../templates/show_album.inc.php:66 ../../templates/show_album.inc.php:67
+#: ../../templates/show_album.inc.php:67 ../../templates/show_album.inc.php:68
 msgid "Find Album Art"
 msgstr "アルバムアートを見つける"
 
@@ -3311,24 +3289,24 @@ msgstr "登録"
 msgid "Message of the Day"
 msgstr "1日のメッセージ"
 
-#: ../../templates/list_header.inc.php:101
+#: ../../templates/list_header.inc.php:100
 msgid "Prev"
 msgstr "前へ"
 
-#: ../../templates/list_header.inc.php:102
+#: ../../templates/list_header.inc.php:101
 #: ../../templates/show_localplay_control.inc.php:30
 msgid "Next"
 msgstr "次へ"
 
-#: ../../templates/show_install_lang.inc.php:56
+#: ../../templates/show_install_lang.inc.php:57
 msgid "Minimum Requirements not met. Unable to Install Ampache."
 msgstr "必要最低限の構成を満たしていません。Ampacheをインストールできません。"
 
-#: ../../templates/show_install_lang.inc.php:61
+#: ../../templates/show_install_lang.inc.php:62
 msgid "Choose installation language."
 msgstr "インストールする言語を選択してください。"
 
-#: ../../templates/show_install_lang.inc.php:82
+#: ../../templates/show_install_lang.inc.php:83
 msgid "Start configuration"
 msgstr "設定の開始"
 
@@ -3380,12 +3358,6 @@ msgstr "終了アドレス"
 #: ../../templates/show_random.inc.php:61
 msgid "Type"
 msgstr "タイプ"
-
-#. HINT: Genre Name
-#: ../../templates/show_genre.inc.php:31
-#, php-format
-msgid "Viewing %s Genre"
-msgstr "%sジャンルを閲覧中"
 
 #: ../../templates/sidebar.inc.php:62
 msgid "Logout"
@@ -3452,9 +3424,17 @@ msgstr "タグから更新を開始"
 msgid "Update from Tags Complete"
 msgstr "タグから更新完了"
 
-#: ../../templates/show_plugins.inc.php:47
+#: ../../templates/show_plugins.inc.php:36
+msgid "Installed Version"
+msgstr "インストール済みバージョン"
+
+#: ../../templates/show_plugins.inc.php:49
 msgid "Deactivate"
 msgstr "無効化"
+
+#: ../../templates/show_plugins.inc.php:53
+msgid "Upgrade"
+msgstr "アップグレード"
 
 #: ../../templates/show_lostpassword_form.inc.php:66
 msgid "Email"
@@ -3650,24 +3630,18 @@ msgstr "全てに適用"
 msgid "Access Level"
 msgstr "アクセスレベル"
 
-#: ../../templates/show_playlist.inc.php:30
-#: ../../templates/show_playlist_full_row.inc.php:24
-#, php-format
-msgid "%s %s (Playlist)"
-msgstr "%s %s (プレイリスト)"
-
-#: ../../templates/show_playlist.inc.php:36
-#: ../../templates/show_playlist.inc.php:37
+#: ../../templates/show_playlist.inc.php:38
+#: ../../templates/show_playlist.inc.php:39
 msgid "Normalize Tracks"
 msgstr "トラックのノーマライズ"
 
-#: ../../templates/show_playlist.inc.php:46
-#: ../../templates/show_playlist.inc.php:47
+#: ../../templates/show_playlist.inc.php:48
+#: ../../templates/show_playlist.inc.php:49
 msgid "Add All"
 msgstr "全て追加"
 
-#: ../../templates/show_playlist.inc.php:50
-#: ../../templates/show_playlist.inc.php:51
+#: ../../templates/show_playlist.inc.php:52
+#: ../../templates/show_playlist.inc.php:53
 msgid "Add Random"
 msgstr "ランダムを追加"
 
@@ -4048,67 +4022,71 @@ msgstr "要求されたプレイリストは削除されています。"
 msgid "Show Artists starting with"
 msgstr "次で開始されるアーティストを表示:"
 
-#: ../../login.php:88
+#: ../../login.php:87
+msgid "Error Username or Password incorrect, please try again"
+msgstr "エラー: ユーザ名かパスワードが間違っています。再試行して下さい"
+
+#: ../../login.php:94
 msgid "User Disabled please contact Admin"
 msgstr "ユーザは無効なので管理者にお問合せください"
 
-#: ../../login.php:104
-msgid "Unable to create new account"
-msgstr "新規アカウントを作成できませんでした"
-
-#: ../../login.php:113
-msgid "No local account found"
-msgstr "ローカルアカウントが見つかりませんでした"
-
-#: ../../login.php:130
+#: ../../login.php:102
 msgid "User Already Logged in"
 msgstr "ユーザはすでにログインしています"
 
-#: ../../admin/flag.php:89
+#: ../../login.php:123
+msgid "Unable to create new account"
+msgstr "新規アカウントを作成できませんでした"
+
+#: ../../login.php:128
+msgid "No local account found"
+msgstr "ローカルアカウントが見つかりませんでした"
+
+#: ../../admin/flag.php:80
 msgid "Song Updated"
 msgstr "曲を更新しました"
 
-#: ../../admin/flag.php:89
+#: ../../admin/flag.php:80
 msgid "The requested song has been updated"
 msgstr "要求された曲を更新しました"
 
-#: ../../admin/flag.php:131
+#: ../../admin/flag.php:122
 msgid "Album Updated"
 msgstr "アルバムを更新しました"
 
-#: ../../admin/flag.php:173
+#: ../../admin/flag.php:164
 msgid "Artist Updated"
 msgstr "アーティストを更新しました"
 
-#: ../../admin/flag.php:238
+#: ../../admin/flag.php:225
 msgid "Songs Updated"
 msgstr "曲を更新しました"
 
-#: ../../admin/flag.php:246
+#: ../../admin/flag.php:233
 msgid "Flag Removed"
 msgstr "フラグを削除しました"
 
-#: ../../admin/flag.php:247
+#: ../../admin/flag.php:234
 msgid "Flag Removed from"
 msgstr "次からフラグを削除しました:"
 
-#: ../../admin/flag.php:262
+#: ../../admin/flag.php:249
 msgid "Flags Updated"
 msgstr "フラグを更新しました"
 
-#: ../../admin/flag.php:281
+#: ../../admin/flag.php:268
 msgid "Songs Disabled"
 msgstr "曲を無効にしました"
 
-#: ../../admin/flag.php:281
+#: ../../admin/flag.php:268
 msgid "The requested song(s) have been disabled"
 msgstr "要求された曲は無効化されました"
 
-#: ../../admin/flag.php:292
+#: ../../admin/flag.php:279
 msgid "Songs Enabled"
 msgstr "曲を有効にしました"
 
-#: ../../admin/flag.php:292
+#: ../../admin/flag.php:279
 msgid "The requested song(s) have been enabled"
 msgstr "要求された曲は有効化されました"
 
@@ -4303,11 +4281,15 @@ msgstr "プラグインをインストールできませんでした"
 msgid "Plugin Activated"
 msgstr "プラグインを有効化しました"
 
-#: ../../admin/modules.php:130
+#: ../../admin/modules.php:136
+msgid "Plugin Upgraded"
+msgstr "プラグインをアップグレードしました"
+
+#: ../../admin/modules.php:142
 msgid "Plugins"
 msgstr "プラグイン"
 
-#: ../../admin/modules.php:136
+#: ../../admin/modules.php:148
 msgid "Localplay Controllers"
 msgstr "ローカル再生コントローラ"
 
@@ -4567,6 +4549,39 @@ msgstr "エラー: %sはすでに存在します"
 msgid "Error: Unable to copy file to %s"
 msgstr "エラー: %sへファイルをコピーできません"
 
+#: ../../bin/catalog_update.inc:38
+msgid "- All Catalog Operations"
+msgstr "- 全カタログの操作"
+
+#: ../../bin/catalog_update.inc:45
+msgid "- Catalog Clean"
+msgstr "- カタログクリーン"
+
+#: ../../bin/catalog_update.inc:49
+msgid "- Catalog Verify"
+msgstr "- カタログ検証"
+
+#: ../../bin/catalog_update.inc:53
+msgid "- Catalog Add"
+msgstr "- カタログ追加"
+
+#: ../../bin/catalog_update.inc:57
+msgid "- Catalog Art Gather"
+msgstr "- カタログアート収集"
+
+#: ../../bin/catalog_update.inc:61
+msgid "- Generate Thumbnails"
+msgstr "- サムネイルの生成"
+
+#: ../../bin/catalog_update.inc:84
+msgid "Starting Catalog Operations..."
+msgstr "カタログ操作の開始..."
+
+#: ../../bin/catalog_update.inc:97 ../../bin/print_tags.inc:44
+#, php-format
+msgid "Reading: %s"
+msgstr "%sを読み込んでいます"
+
 #: ../../bin/catalog_update.inc:102
 msgid "- Starting Clean - "
 msgstr "- 掃除開始 -"
@@ -4611,43 +4626,34 @@ msgstr "カタログへ追加"
 msgid "Generate Thumbnails"
 msgstr "サムネイルの生成"
 
-#: ../../bin/print_tags.inc:42
+#: ../../bin/print_tags.inc:38
 msgid "File not found."
 msgstr "ファイルが見つかりませんでした。"
 
-#: ../../bin/print_tags.inc:49
-msgid "File type is not allowd."
-msgstr "ファイルタイプは許可されていません。"
-
-#: ../../bin/print_tags.inc:55
-#, php-format
-msgid "Reading: %s"
-msgstr "%sを読み込んでいます"
-
-#: ../../bin/print_tags.inc:67
+#: ../../bin/print_tags.inc:56
 #, php-format
 msgid "Using: %s AND %s for file pattern matching"
 msgstr "ファイルパターンのマッチに%sと%sを使用しています"
 
-#: ../../bin/print_tags.inc:85
+#: ../../bin/print_tags.inc:73
 msgid "Results Seen by GetID3()"
 msgstr "GetID3()での結果を表示"
 
-#: ../../bin/print_tags.inc:89
+#: ../../bin/print_tags.inc:77
 #, php-format
 msgid "Results Seen by Ampache using %s"
 msgstr "Ampacheが%sを使用しての結果を表示"
 
-#: ../../bin/print_tags.inc:96
+#: ../../bin/print_tags.inc:84
 #, php-format
 msgid "%s Version %s"
 msgstr "%sバージョン%s"
 
-#: ../../bin/print_tags.inc:98
+#: ../../bin/print_tags.inc:86
 msgid "Usage:"
 msgstr "使用方法:"
 
-#: ../../bin/print_tags.inc:100
+#: ../../bin/print_tags.inc:88
 msgid "php print_tags.inc <Filename>"
 msgstr "php print_tags.inc <ファイル名>"
 
@@ -4758,6 +4764,3 @@ msgstr "インタフェース"
 #: Database words
 msgid "System"
 msgstr "システム"
-
-#~ msgid "XSPF Player"
-#~ msgstr "XSPFプレーヤー"
