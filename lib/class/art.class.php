@@ -414,7 +414,7 @@ class Art extends database_object {
 	 * get_from_source
 	 * This gets an image for the album art from a source as
 	 * defined in the passed array. Because we don't know where
-	 * its comming from we are a passed an array that can look like
+	 * it's coming from we are a passed an array that can look like
 	 * ['url']      = URL *** OPTIONAL ***
 	 * ['file']     = FILENAME *** OPTIONAL ***
 	 * ['raw']      = Actual Image data, already captured
@@ -539,7 +539,7 @@ class Art extends database_object {
 	 * gather
 	 * This tries to get the art in question
 	 */
-	public function gather($options=array(),$limit) {
+	public function gather($options = array(), $limit = false) {
 
 		// Define vars
 		$results = array();
@@ -568,21 +568,21 @@ class Art extends database_object {
 			$config = array($config);
 		}
 
-		debug_event('Art','Searching using:' . print_r($config,1),3);
+		debug_event('Art','Searching using:' . print_r($config, true),3);
 
-		foreach ($config AS $method) {
+		foreach ($config as $method) {
 
 			$data = array();
 
 			$method_name = "gather_" . $method;
-			if (in_array($method_name,$methods)) {
+			if (in_array($method_name, $methods)) {
 				// Some of these take options!
 				switch ($method_name) {
 					case 'gather_amazon':
-						$data = $this->{$method_name}($options['keyword'],$limit);
+						$data = $this->{$method_name}($limit, $options['keyword']);
 					break;
 					case 'gather_lastfm':
-						$data = $this->{$method_name}($limit,$options);
+						$data = $this->{$method_name}($limit, $options);
 					break;
 					default:
 						$data = $this->{$method_name}($limit);
@@ -590,12 +590,10 @@ class Art extends database_object {
 				}
 
 				// Add the results we got to the current set
-				$total_results += count($data);
-				// HACK for PHP 5, $data must be cast as array $results = array_merge($results, (array)$data);
-				$results = array_merge($results,(array)$data);
+				$results = array_merge($results, (array)$data);
 
-				if ($total_results > $limit AND $limit > 0) {
-					return $results;
+				if ($limit && count($results) >= $limit) {
+					return array_slice($results, 0, $limit);
 				}
 
 			} // if the method exists
@@ -616,7 +614,7 @@ class Art extends database_object {
 	 * This function retrieves art based on MusicBrainz' Advanced
 	 * Relationships
 	 */
-	public function gather_musicbrainz($limit=0) {
+	public function gather_musicbrainz($limit = 5) {
 		$images	= array();
 		$num_found = 0;
 
@@ -677,71 +675,73 @@ class Art extends database_object {
 				}
 			}
 		}
-		// The next bit is based directly on the MusicBrainz server code that displays cover art.
-		// I'm leaving in the releaseuri info for the moment, though it's not going to be used.
+		// The next bit is based directly on the MusicBrainz server code
+		// that displays cover art.
+		// I'm leaving in the releaseuri info for the moment, though
+		// it's not going to be used.
 		$coverartsites[] = array(
-			name	    => "CD Baby",
-			domain	  => "cdbaby.com",
-			regexp	  => '@http://cdbaby\.com/cd/(\w)(\w)(\w*)@',
-			imguri	  => 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[1]$matches[2]$matches[3].jpg',
-			releaseuri      => 'http://cdbaby.com/cd/$matches[1]$matches[2]$matches[3]/from/musicbrainz',
+			'name' => "CD Baby",
+			'domain' => "cdbaby.com",
+			'regexp' => '@http://cdbaby\.com/cd/(\w)(\w)(\w*)@',
+			'imguri' => 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[1]$matches[2]$matches[3].jpg',
+			'releaseuri' => 'http://cdbaby.com/cd/$matches[1]$matches[2]$matches[3]/from/musicbrainz',
 		);
 		$coverartsites[] = array(
-			name	    => "CD Baby",
-			domain	  => "cdbaby.name",
-			regexp	  => "@http://cdbaby\.name/([a-z0-9])/([a-z0-9])/([A-Za-z0-9]*).jpg@",
-			imguri	  => 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[3].jpg',
-			releaseuri      => 'http://cdbaby.com/cd/$matches[3]/from/musicbrainz',
+			'name' => "CD Baby",
+			'domain' => "cdbaby.name",
+			'regexp' => "@http://cdbaby\.name/([a-z0-9])/([a-z0-9])/([A-Za-z0-9]*).jpg@",
+			'imguri' => 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[3].jpg',
+			'releaseuri' => 'http://cdbaby.com/cd/$matches[3]/from/musicbrainz',
 		);
 		$coverartsites[] = array(
-			name	    => 'archive.org',
-			domain	  => 'archive.org',
-			regexp	  => '/^(.*\.(jpg|jpeg|png|gif))$/',
-			imguri	  => '$matches[1]',
-			releaseuri      => '',
+			'name' => 'archive.org',
+			'domain' => 'archive.org',
+			'regexp' => '/^(.*\.(jpg|jpeg|png|gif))$/',
+			'imguri' => '$matches[1]',
+			'releaseuri' => '',
 		);
 		$coverartsites[] = array(
-			name	    => "Jamendo",
-			domain	  => "www.jamendo.com",
-			regexp	  => '/http://www\.jamendo\.com/(\w\w/)?album/(\d+)/',
-			imguri	  => 'http://img.jamendo.com/albums/$matches[2]/covers/1.200.jpg',
-			releaseuri      => 'http://www.jamendo.com/album/$matches[2]',
+			'name' => "Jamendo",
+			'domain' => "www.jamendo.com",
+			'regexp' => '/http://www\.jamendo\.com/(\w\w/)?album/(\d+)/',
+			'imguri' => 'http://img.jamendo.com/albums/$matches[2]/covers/1.200.jpg',
+			'releaseuri' => 'http://www.jamendo.com/album/$matches[2]',
 		);
 		$coverartsites[] = array(
-			name	    => '8bitpeoples.com',
-			domain	  => '8bitpeoples.com',
-			regexp	  => '/^(.*)$/',
-			imguri	  => '$matches[1]',
-			releaseuri      => '',
+			'name' => '8bitpeoples.com',
+			'domain' => '8bitpeoples.com',
+			'regexp' => '/^(.*)$/',
+			'imguri' => '$matches[1]',
+			'releaseuri' => '',
 		);
 		$coverartsites[] = array(
-			name	    => 'Encyclopédisque',
-			domain	  => 'encyclopedisque.fr',
-			regexp	  => '/http://www.encyclopedisque.fr/images/imgdb/(thumb250|main)/(\d+).jpg/',
-			imguri	  => 'http://www.encyclopedisque.fr/images/imgdb/thumb250/$matches[2].jpg',
-			releaseuri      => 'http://www.encyclopedisque.fr/',
+			'name' => 'Encyclopédisque',
+			'domain' => 'encyclopedisque.fr',
+			'regexp' => '/http://www.encyclopedisque.fr/images/imgdb/(thumb250|main)/(\d+).jpg/',
+			'imguri' => 'http://www.encyclopedisque.fr/images/imgdb/thumb250/$matches[2].jpg',
+			'releaseuri' => 'http://www.encyclopedisque.fr/',
 		);
 		$coverartsites[] = array(
-			name	    => 'Thastrom',
-			domain	  => 'www.thastrom.se',
-			regexp	  => '/^(.*)$/',
-			imguri	  => '$matches[1]',
-			releaseuri      => '',
+			'name' => 'Thastrom',
+			'domain' => 'www.thastrom.se',
+			'regexp' => '/^(.*)$/',
+			'imguri' => '$matches[1]',
+			'releaseuri' => '',
 		);
 		$coverartsites[] = array(
-			name	    => 'Universal Poplab',
-			domain	  => 'www.universalpoplab.com',
-			regexp	  => '/^(.*)$/',
-			imguri	  => '$matches[1]',
-			releaseuri      => '',
+			'name' => 'Universal Poplab',
+			'domain' => 'www.universalpoplab.com',
+			'regexp' => '/^(.*)$/',
+			'imguri' => '$matches[1]',
+			'releaseuri' => '',
 		);
-		foreach ($release->getRelations($mbRelation->TO_URL) as $ar) {
+		foreach ($release->getRelations(mbRelation::TO_URL) as $ar) {
 			$arurl = $ar->getTargetId();
 			debug_event('mbz-gatherart', "Found URL AR: " . $arurl , '5');
 			foreach ($coverartsites as $casite) {
 				if (strpos($arurl, $casite['domain']) !== false) {
 					debug_event('mbz-gatherart', "Matched coverart site: " . $casite['name'], '5');
-					if (preg_match($casite['regexp'], $arurl, $matches) == 1) {
+					if (preg_match($casite['regexp'], $arurl, $matches)) {
 						$num_found++;
 						eval("\$url = \"$casite[imguri]\";");
 						debug_event('mbz-gatherart', "Generated URL added: " . $url, '5');
@@ -763,15 +763,18 @@ class Art extends database_object {
 
 	/**
 	 * gather_amazon
-	 * This takes keywords and performs a search of the AMazon website
+	 * This takes keywords and performs a search of the Amazon website
 	 * for the art. It returns an array of found objects with mime/url keys
 	 */
-	public function gather_amazon($keywords='',$limit=5) {
-
+	public function gather_amazon($limit = 5, $keywords = '') {
 
 		$images	 = array();
 		$final_results  = array();
-		$possible_keys = array("LargeImage","MediumImage","SmallImage");
+		$possible_keys = array(
+			'LargeImage',
+			'MediumImage',
+			'SmallImage'
+		);
 
 		// Prevent the script from timing out
 		set_time_limit(0);
@@ -782,25 +785,16 @@ class Art extends database_object {
 			if ($this->artist_count == '1') { $keywords .= ' ' . $this->artist_name; }
 		}
 
-		/* Create Base Vars */
-		$amazon_base_urls = array();
-
-		/* Attempt to retrive the album art order */
-		$config_value = Config::get('amazon_base_urls');
+		/* Attempt to retrieve the album art order */
+		$amazon_base_urls = Config::get('amazon_base_urls');
 
 		/* If it's not set */
-		if (empty($config_value)) {
+		if (!count($amazon_base_urls)) {
 			$amazon_base_urls = array('http://webservices.amazon.com');
-		}
-		elseif (!is_array($config_value)) {
-			array_push($amazon_base_urls,$config_value);
-		}
-		else {
-			$amazon_base_urls = array_merge($amazon_base_urls, Config::get('amazon_base_urls'));
 		}
 
 		/* Foreach through the base urls that we should check */
-		foreach ($amazon_base_urls AS $amazon_base) {
+		foreach ($amazon_base_urls as $amazon_base) {
 
 			// Create the Search Object
 			$amazon = new AmazonSearch(Config::get('amazon_developer_public_key'), Config::get('amazon_developer_private_key'), $amazon_base);
@@ -809,13 +803,13 @@ class Art extends database_object {
 					$proxyport = Config::get('proxy_port');
 					$proxyuser = Config::get('proxy_user');
 					$proxypass = Config::get('proxy_pass');
-					debug_print("amazon", "setProxy", "5");
+					debug_event('amazon', 'setProxy', 5);
 					$amazon->setProxy($proxyhost, $proxyport, $proxyuser, $proxypass);
 				}
 
 			$search_results = array();
 
-			/* Setup the needed variables */
+			/* Set up the needed variables */
 			$max_pages_to_search = max(Config::get('max_amazon_results_pages'),$amazon->_default_results_pages);
 			$pages_to_search = $max_pages_to_search; //init to max until we know better.
 			// while we have pages to search
@@ -825,15 +819,10 @@ class Art extends database_object {
 				$total = count($raw_results) + count($search_results);
 
 				// If we've gotten more then we wanted
-				if (!empty($limit) && $total > $limit) {
-					// We don't want ot re-count every loop
-					$i = $total;
-					while ($i > $limit) {
-						array_pop($raw_results);
-						$i--;
-					}
+				if ($limit && $total > $limit) {
+					$raw_results = array_slice($raw_results, 0, -($total - $limit), true);
 
-					debug_event('amazon-xml',"Found $total, Limit $limit reducing and breaking from loop",'5');
+					debug_event('amazon-xml', "Found $total, limit $limit; reducing and breaking from loop", 5);
 					// Merge the results and BREAK!
 					$search_results = array_merge($search_results,$raw_results);
 					break;
@@ -844,7 +833,7 @@ class Art extends database_object {
 				debug_event('amazon-xml', "Searched results page " . ($amazon->_currentPage+1) . "/" . $pages_to_search,'5');
 				$amazon->_currentPage++;
 
-			} while($amazon->_currentPage < $pages_to_search);
+			} while ($amazon->_currentPage < $pages_to_search);
 
 
 			// Only do the second search if the first actually returns something
@@ -853,7 +842,7 @@ class Art extends database_object {
 			}
 
 			/* Log this if we're doin debug */
-			debug_event('amazon-xml',"Searched using $keywords with " . Config::get('amazon_developer_key') . " as key " . count($final_results),1);
+			debug_event('amazon-xml',"Searched using $keywords with " . Config::get('amazon_developer_key') . " as key, results: " . count($final_results), 5);
 
 			// If we've hit our limit
 			if (!empty($limit) && count($final_results) >= $limit) {
@@ -907,76 +896,114 @@ class Art extends database_object {
 	/**
 	 * gather_folder
 	 * This returns the art from the folder of the files
-	 * If a limit is passed or the preferred filename is found the current results set
-	 * is returned
+	 * If a limit is passed or the preferred filename is found the current
+	 * results set is returned
 	 */
-	public function gather_folder($limit=5) {
+	public function gather_folder($limit = 5) {
 
 		$media = new Album($this->uid);
 		$songs = $media->get_songs();
-		$data = array();
+		$results = array();
+		$preferred = false;
+		// For storing which directories we've already done
+		$processed = array();
 
 		/* See if we are looking for a specific filename */
 		$preferred_filename = Config::get('album_art_preferred_filename');
 
-		// Init a horrible hack array of lameness
-		$cache =array();
+		// Array of valid extensions
+		$image_extensions = array(
+			'bmp',
+			'gif',
+			'jp2',
+			'jpeg',
+			'jpg',
+			'png'
+		);
 
-		/* Thanks to dromio for origional code */
-		/* Added search for any .jpg, png or .gif - Vollmer */
-		foreach($songs as $song_id) {
+		foreach ($songs as $song_id) {
+			$data = array();
 			$song = new Song($song_id);
 			$dir = dirname($song->file);
 
-			debug_event('folder_art',"Opening $dir and checking for Album Art",'3');
+			if (isset($processed[$dir])) {
+				continue;
+			}
+
+			debug_event('folder_art', "Opening $dir and checking for Album Art", 3);
 
 			/* Open up the directory */
-			$handle = @opendir($dir);
+			$handle = opendir($dir);
 
-			if (!is_resource($handle)) {
+			if (!$handle) {
 				Error::add('general',_('Error: Unable to open') . ' ' . $dir);
-				debug_event('read',"Error: Unable to open $dir for album art read",'2');
+				debug_event('folder_art', "Error: Unable to open $dir for album art read", 2);
+				continue;
 			}
 
-			/* Recurse through this dir and create the files array */
-			while ( FALSE !== ($file = @readdir($handle)) ) {
-				$extension = substr($file,strlen($file)-3,4);
+			$processed[$dir] = true;
 
-				/* If it's an image file */
-				if ($extension == "jpg" || $extension == "gif" || $extension == "png" || $extension == "jp2" || $extension == "bmp") {
+			// Recurse through this dir and create the files array
+			while ($file = readdir($handle)) {
+				$extension = pathinfo($file);
+				$extension = $extension['extension'];
 
-					if ($extension == 'jpg') { $extension = 'jpeg'; }
+				// Make sure it looks like an image file
+				if (!in_array($extension, $image_extensions)) {
+					continue;
+				}
 
-					// HACK ALERT this is to prevent duplicate filenames
-					$full_filename  = $dir . '/' . $file;
-					$index	  = md5($full_filename);
+				$full_filename = $dir . '/' . $file;
 
-					/* Make sure it's got something in it */
-					if (!filesize($dir . '/' . $file)) { continue; }
+				// Make sure it's got something in it
+				if (!filesize($full_filename)) {
+					debug_event('folder_art', "Empty file, rejecting $file", 5);
+					continue;
+				}
 
-					if ($file == $preferred_filename) {
-						// If we found the preferred filename we're done, wipe out previous results
-						$data = array(array('file' => $full_filename, 'mime' => 'image/' . $extension));
-						return $data;
-					}
-					elseif (!isset($cache[$index])) {
-						$data[] = array('file' => $full_filename, 'mime' => 'image/' . $extension);
-					}
+				// Regularise for mime type
+				if ($extension == 'jpg') {
+					$extension = 'jpeg';
+				}
 
-					$cache[$index] = '1';
+				// Take an md5sum so we don't show duplicate
+				// files.
+				$index = md5($full_filename);
 
-				} // end if it's an image
+				if ($file == $preferred_filename) {
+					// We found the preferred filename and
+					// so we're done.
+					debug_event('folder_art', "Found preferred image file: $file", 5);
+					$preferred[$index] = array(
+						'file' => $full_filename,
+						'mime' => 'image/' . $extension
+					);
+					break;	
+				}
+
+				debug_event('folder_art', "Found image file: $file", 5);
+				$results[$index] = array(
+					'file' => $full_filename,
+					'mime' => 'image/' . $extension
+				);
 
 			} // end while reading dir
-			@closedir($handle);
-
-			if (!empty($limit) && $limit < count($data)) {
-				return $data;
-			}
+			closedir($handle);
 
 		} // end foreach songs
 
-		return $data;
+		if (is_array($preferred)) {
+			// We found our favourite filename somewhere, so we need
+			// to dump the other, less sexy ones.
+			$results = $preferred;
+		}
+
+		debug_event('folder_art', 'Results: ' . print_r($results, true), 5);
+		if ($limit && count($results) > $limit) {
+			$results = array_slice($results, 0, $limit);
+		}
+
+		return array_values($results);
 
 	} // gather_folder
 
@@ -985,7 +1012,7 @@ class Art extends database_object {
 	 * This looks for the art in the meta-tags of the file
 	 * itself
 	 */
-	public function gather_tags($limit=5) {
+	public function gather_tags($limit = 5) {
 
 		// We need the filenames
 		$album = new Album($this->uid);
@@ -1001,22 +1028,29 @@ class Art extends database_object {
 			$getID3 = new getID3();
 			try { $id3 = $getID3->analyze($song->file); }
 			catch (Exception $error) {
-				debug_event('getid3',$error->message,'1');
+				debug_event('getid3', $error->message, 1);
 			}
 
-			if ($id3['format_name'] == "WMA") {
+			if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
 				$image = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
-				$data[] = array('song'=>$song->file,'raw'=>$image['data'],'mime'=>$image['mime']);
+				$data[] = array(
+					'song' => $song->file,
+					'raw' => $image['data'],
+					'mime' => $image['mime']);
 			}
-			elseif (isset($id3['id3v2']['APIC'])) {
+
+			if (isset($id3['id3v2']['APIC'])) {
 				// Foreach incase they have more then one
 				foreach ($id3['id3v2']['APIC'] as $image) {
-					$data[] = array('song'=>$song->file,'raw'=>$image['data'],'mime'=>$image['mime']);
+					$data[] = array(
+						'song' => $song->file,
+						'raw' => $image['data'],
+						'mime' => $image['mime']);
 				}
 			}
 
-			if (!empty($limit) && $limit < count($data)) {
-				return $data;
+			if ($limit && count($data) >= $limit) {
+				return array_slice($data, 0, $limit);
 			}
 
 		} // end foreach
@@ -1027,9 +1061,9 @@ class Art extends database_object {
 
 	/**
 	 * gather_google
-	 * Raw google search to retrive the art, not very reliable
+	 * Raw google search to retrieve the art, not very reliable
 	 */
-	public function gather_google($limit=5) {
+	public function gather_google($limit = 5) {
 
 		$images = array();
 		$media = new $this->type($this->uid);
@@ -1062,10 +1096,10 @@ class Art extends database_object {
 
 	/**
 	 * gather_lastfm
-	 * This returns the art from lastfm. It doesn't require an account currently
-	 * but may in the future
+	 * This returns the art from lastfm. It doesn't currently require an
+	 * account but may in the future.
 	 */
-	public function gather_lastfm($limit,$options=false) {
+	public function gather_lastfm($limit, $options = false) {
 
 		// Create the parser object
 		$lastfm = new LastFMSearch();
@@ -1097,11 +1131,10 @@ class Art extends database_object {
 
 		if (!count($raw_data)) { return array(); }
 
-		$coverart = $raw_data['coverart'];
+		$coverart = ksort($raw_data['coverart']);
+		$i = 0;
 
-		ksort($coverart);
-
-		foreach ($coverart as $key=>$value) {
+		foreach ($coverart as $key => $value) {
 			$i++;
 			$url = $coverart[$key];
 
