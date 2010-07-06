@@ -96,6 +96,8 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'create_config':
 
+		$htmllang = $_REQUEST['htmllang'];
+		$charset  = $_REQUEST['charset'];
 		// Test and make sure that the values they give us actually work
 		if (!check_database($hostname,$username,$password)) {
 			Error::add('config',_('Error: Unable to make Database Connection') . mysql_error());

@@ -84,7 +84,11 @@ $prefix = realpath(dirname(__FILE__). "/../");
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><input type="submit" value="<?php echo _('Write Config'); ?>" /></td>
+	<td>
+		<input type="submit" value="<?php echo _('Write Config'); ?>" />
+		<input type="hidden" name="htmllang" value="<?php echo $htmllang; ?>" />
+		<input type="hidden" name="charset" value="<?php echo $charset; ?>" />
+	</td>
 </tr>
 		</table>
 		</form>
