@@ -295,9 +295,9 @@ sociable = "true"
 ; methods simply leave it out. DB should be left as the first
 ; method unless you want it to overwrite what's already in the
 ; database
-; POSSIBLE VALUES: db id3 folder amazon lastfm musicbrainz google
-; DEFAULT: db,tag,folder,musicbrainz,lastfm,google
-art_order = "db,tag,folder,musicbrainz,lastfm,google"
+; POSSIBLE VALUES: db tags folder amazon lastfm musicbrainz google
+; DEFAULT: db,tags,folder,musicbrainz,lastfm,google
+art_order = "db,tags,folder,musicbrainz,lastfm,google"
 
 ; Amazon Developer Key
 ; These are needed in order to actually use the amazon album art
