@@ -205,7 +205,7 @@ class Rating extends database_object {
 		foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
 			$plugin = new Plugin($plugin_name);
 			if ($plugin->load()) {
-				$plugin->_plugin->save_rating($this, $score);
+				$plugin->_plugin->save_rating($this, $rating);
 			}
 		}
 
