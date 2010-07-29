@@ -307,6 +307,11 @@ art_order = "db,tags,folder,musicbrainz,lastfm,google"
 ;amazon_developer_public_key = ""
 ;amazon_developer_private_key = ""
 
+; LastFM API Key
+; Set this to your api key that you can register
+; on last.fm
+;lastfm_api_key = ""
+
 ; Amazon base urls
 ; An array of Amazon sites to search.
 ; NOTE: This will search each of these sites in turn so don't expect it

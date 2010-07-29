@@ -42,6 +42,15 @@ switch($_REQUEST['action']) {
 		$object_ids = $artist->get_songs();
 		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
         break;
+
+	case 'show_like':
+		$artist = new Artist($_REQUEST['artist']);
+		$artist->format();
+		$object_type = 'artist';
+		$object_ids = $artist->get_like();
+		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
+	break;
+
 	case 'update_from_tags':
 
 		$type		= 'artist';
