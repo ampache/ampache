@@ -157,6 +157,21 @@ function check_php_pcre() {
 } // check_php_pcre
 
 /**
+ * check_php_curl
+ * This makes sure they have cURL (curl_???) support
+ * compiled into PHP this is optional
+ */
+function check_php_curl() {
+
+	if (!extension_loaded('curl')) {
+		return false;
+	}
+
+	return true;
+
+} // check_php_curl
+
+/**
  * check_config_values
  * checks to make sure that they have at least set the needed variables
  */

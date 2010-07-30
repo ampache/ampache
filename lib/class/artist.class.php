@@ -146,6 +146,12 @@ class Artist extends database_object {
 
 	} // get_albums
 	public function get_like() {
+
+		// Are you compiling with cURL?
+		if (!check_php_curl()) {
+			return false;
+		}
+
 		$result = array();
 		$lastfm_api_key = Config::get('lastfm_api_key');
 

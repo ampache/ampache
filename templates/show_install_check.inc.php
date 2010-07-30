@@ -174,5 +174,16 @@
 	}
 ?>
 </td>
+</tr><tr>
+<td><?php echo _('PHP cURL extension Support'); ?>:</td>
+<td>
+<?php
+	if (!check_php_curl()) {
+		echo debug_result(_('Some functions might not run correctly.'), false);
+	}
+	else {
+		echo debug_result(_(''), true);
+	}
+?>
 </tr>
 </table>
