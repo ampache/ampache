@@ -145,44 +145,6 @@ class Artist extends database_object {
 		return $results;
 
 	} // get_albums
-	public function get_like() {
-
-		// Are you compiling with cURL?
-		if (!check_php_curl()) {
-			return false;
-		}
-
-		$result = array();
-		$lastfm_api_key = Config::get('lastfm_api_key');
-
-		$artistsql = "SELECT name FROM artist WHERE id = \"" . $this->id . "\"";
-		$artist_result = Dba::query($artistsql);
-		$r = Dba::fetch_assoc($artist_result);
-		$searchArtist = preg_replace('/ /', '%20', $r['name']);
-
-		$lastsite = "http://ws.audioscrobbler.com/2.0/?method=artist.getsimilar&artist=" . $searchArtist . "&api_key=" . $lastfm_api_key;
-		debug_event('Similar', 'search url : ' . $lastsite, 5);
-		$lastch = curl_init();
-		curl_setopt($lastch, CURLOPT_URL, $lastsite);
-		curl_setopt($lastch, CURLOPT_RETURNTRANSFER, 1);
-
-		$lastxml = simplexml_load_string( curl_exec($lastch) );
-		$lastcontent = curl_exec($lastch);
-		$lastxml = simplexml_load_string( $lastcontent );
-
-		foreach( $lastxml->similarartists->children() as $lastchild ) {
-			$check_query = 'SELECT * FROM artist WHERE name = \'' . $lastchild->name . '\'';
-			$check_result = Dba::query($check_query);
-			$row = Dba::fetch_assoc($check_result);
-			if( !is_null($row['id']) ) {
-				$result[] = $row['id'];
-			//      debug_event('Similar', 'row return: ' . $row['id'], 5);
-			}
-		}
-
-		return $result;
-
-	} // get_like
 
 	/**
 	 * get_songs

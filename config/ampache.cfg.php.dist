@@ -307,9 +307,9 @@ art_order = "db,tags,folder,musicbrainz,lastfm,google"
 ;amazon_developer_public_key = ""
 ;amazon_developer_private_key = ""
 
-; LastFM API Key
-; Set this to your api key that you can register
-; on last.fm
+; Last.FM API Key
+; Set this to your Last.FM api key to actually use Last.FM for
+; recommendations.
 ;lastfm_api_key = ""
 
 ; Amazon base urls

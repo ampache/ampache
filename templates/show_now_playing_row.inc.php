@@ -82,3 +82,41 @@ $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
   </div>
 </div>
 <?php } // end play album art ?>
+
+<?php if (Config::get('show_similar')) { ?>
+<div class="np_group">
+<?php if ($artists = Recommendation::get_artists_like($media->artist, 3, false)) { ?>
+	<div class="np_cel cel_similar">
+		<label><?php echo _('Similar Artists'); ?></label>
+		<?php	foreach ($artists as $a) { ?>
+			<div class="np_cel cel_similar_artist">
+			<?php
+			if (is_null($a['id'])) {
+				echo scrub_out(truncate_with_ellipsis($a['name']), Config::get('ellipse_threshold_artist'));
+			}
+			else {
+				$artist = new Artist($a['id']);
+				$artist->format();
+				echo $artist->f_name_link;
+			}
+			?>
+			</div>
+		<?php } // end foreach ?> 
+	</div>
+<?php } // end show similar artists ?>
+<?php if ($songs = Recommendation::get_songs_like($media->id, 3)) { ?>
+	<div class="np_cel cel_similar">
+		<label><?php echo _('Similar Songs'); ?></label>
+		<?php	foreach ($songs as $s) { ?>
+			<div class="np_cel cel_similar_song">
+			<?php
+			$song = new Song($s['id']);
+			$song->format();
+			echo $song->f_link;
+			?>
+			</div>
+		<?php } // end foreach ?>
+	</div>
+<?php } // end show similar songs ?>
+</div>
+<?php } // end show similar things ?>

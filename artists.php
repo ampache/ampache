@@ -34,6 +34,14 @@ switch($_REQUEST['action']) {
 		$object_ids = $artist->get_albums();
 		$object_type = 'album';
 		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
+		if (Config::get('lastfm_api_key')) {
+			if ($object_ids = Recommendation::get_artists_like($artist->id)) {
+				// Ugly code to grab the relevant entries.
+				// Almost looks like Perl.
+				$object_ids = array_map(create_function('$i', 'return $i[\'id\'];'), $object_ids);
+				require_once Config::get('prefix') . '/templates/show_recommended_artists.inc.php';
+			}
+		}
 		break;
 	case 'show_all_songs':
 	    	$artist = new Artist($_REQUEST['artist']);
@@ -42,15 +50,6 @@ switch($_REQUEST['action']) {
 		$object_ids = $artist->get_songs();
 		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
         break;
-
-	case 'show_like':
-		$artist = new Artist($_REQUEST['artist']);
-		$artist->format();
-		$object_type = 'artist';
-		$object_ids = $artist->get_like();
-		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
-	break;
-
 	case 'update_from_tags':
 
 		$type		= 'artist';

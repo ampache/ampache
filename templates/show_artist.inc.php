@@ -54,9 +54,6 @@ if (Config::get('ratings')) {
 	<?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random',_('Random'),'random_' . $artist->id); ?>
 	<?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id, sprintf(_('Add Random Songs By %s'), $artist->f_name),'random_text_' . $artist->id); ?>
 </li>
-<li>
-	<a href="<?php echo $web_path; ?>/artists.php?action=show_like&amp;artist=<?php echo $artist->id; ?>"><?php echo get_user_icon('view'); ?></a> <a href="<?php echo $web_path; ?>/artists.php?action=show_like&amp;artist=<?php echo $artist->id; ?>"><?php printf(_("Show Similar to %s"), $artist->f_name); ?></a>
-</li>
 <?php if (Access::check('interface','50')) { ?>
 <li>
 	<a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo get_user_icon('cog', _('Update from tags')); ?></a>
