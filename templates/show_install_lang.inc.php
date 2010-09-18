@@ -20,46 +20,17 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 $prefix = realpath(dirname(__FILE__). "/../");
+require $prefix . '/templates/install_header.inc.php';
 ?>
-<?php if (!defined('INSTALL')) { exit; } ?>
-<?php $results = 0; ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
-<head>
-<title>Ampache :: Pour l'Amour de la Musique - Install</title>
-<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
-<meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>" />
-</head>
-<body>
-<script src="modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
-<script src="lib/javascript/base.js" language="javascript" type="text/javascript"></script>
-<div id="header">
-<h1><?php echo _('Ampache Installation'); ?></h1>
-<p>For the love of Music</p>
-</div>
-<div id="text-box">
-	<div class="notify">
-		<h3><?php echo _('Requirements'); ?></h3>
-		<p>
-		<?php echo _('This Page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following pre-requisites'); ?>
-		</p>
-		<ul>
-			<li><?php echo _('A MySQL Server with a username and password that can create/modify databases'); ?></li>
-                        <li><?php echo sprintf(_("Your webserver has read access to the %s file and the %s file"),$prefix . '/sql/ampache.sql',$prefix . '/config/ampache.cfg.php.dist'); ?></li>
-		</ul>
-		<p>
-<?php echo sprintf(_("Once you have ensured that you have the above requirements please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your ampache install at a later date simply edit %s"),$prefix . '/config/ampache.cfg.php'); ?>
-		</p>
 <?php require_once 'templates/show_install_check.inc.php'; ?>
-</div>
 <?php if (Error::occurred()) { ?>
 	<div class="content">
-	<span class="fatalerror"><?php echo _('Minimum Requirements not met. Unable to Install Ampache.'); ?></span>
+	<span class="fatalerror"><?php echo _('Minimum requirements not met. Unable to install Ampache.'); ?></span>
 	</div>
 <?php } ?>
 
 <div class="content">
-	<strong><?php echo _('Choose installation language.'); ?></strong>
+	<strong><?php echo _('Choose Installation Language'); ?></strong>
 	<p>
 	<?php Error::display('general'); ?>
 	</p>

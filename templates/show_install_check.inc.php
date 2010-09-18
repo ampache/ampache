@@ -38,6 +38,20 @@
 </td>
 </tr>
 <tr>
+<td><?php echo sprintf(_('%s is readable'), 'ampache.sql'); ?></td>
+<td>
+<?php
+	if (!is_readable($prefix . '/sql/ampache.sql')) {
+		echo debug_result('', false);
+		Error::add('install', sprintf(_('%s is readable'), 'ampache.sql'));
+	}
+	else {
+		echo debug_result('', true);
+	}
+?>
+</td>
+</tr>
+<tr>
 <td><?php echo _('PHP Version'); ?>:</td>
 <td>
 <?php
@@ -59,12 +73,12 @@
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('Mysql for PHP'); ?>:</td>
+<td><?php echo _('PHP MySQL Support'); ?>:</td>
 <td>
 <?php
 	if (!check_php_mysql()) {
 		echo debug_result('',false);
-		Error::add('install',_('Mysql for PHP'));
+		Error::add('install', _('PHP MySQL Support'));
 	}
 	else {
 		echo debug_result(mysql_get_client_info(),true);
@@ -85,12 +99,12 @@
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('PHP ICONV Support'); ?>:</td>
+<td><?php echo _('PHP iconv Support'); ?>:</td>
 <td>
 <?php
 	if (!check_php_iconv()) {
 		echo debug_result('',false);
-		Error::add('install',_('PHP ICONV Support'));
+		Error::add('install', _('PHP iconv Support'));
 	}
 	else {
 		echo debug_result('',true);
@@ -111,12 +125,12 @@
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('PHP PutENV Support'); ?>:</td>
+<td><?php echo _('PHP putenv Support'); ?>:</td>
 <td>
 <?php
 	if (!check_putenv()) {
 		echo debug_result('',false);
-		Error::add('install',_('PHP PutENV Support'));
+		Error::add('install', _('PHP putenv Support'));
 	}
 	else {
 		echo debug_result('',true);
@@ -126,11 +140,11 @@
 </tr><tr>
 <th colspan="2"><h4><?php echo _('Optional'); ?></h4></th>
 </tr><tr>
-<td><?php echo _('Gettext Support'); ?>:</td>
+<td><?php echo _('PHP gettext Support'); ?>:</td>
 <td>
 <?php
 	if (!check_gettext()) {
-		echo debug_result(_('Gettext Emulator will be used'),false);
+		echo debug_result(_('gettext emulation will be used'), false);
 	}
 	else {
 		echo debug_result('',true);
@@ -138,11 +152,11 @@
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('Mbstring Support'); ?>:</td>
+<td><?php echo _('PHP mbstring Support'); ?>:</td>
 <td>
 <?php
 	if (!check_mbstring()) {
-		echo debug_result(_('Multibyte Character may not detect correct'),false);
+		echo debug_result(_('Multibyte character encodings may not be autodetected correctly'), false);
 	}
 	else {
 		echo debug_result('',true);
@@ -154,7 +168,7 @@
 <td>
 <?php
 	if (!check_php_memory()) {
-		echo debug_result(_('Memory Limit less then recommended size') . ' ' . ini_get('memory_limit'),false);
+		echo debug_result(_('Memory limit less than recommended size') . ' ' . ini_get('memory_limit'), false);
 	}
 	else {
 		echo debug_result(ini_get('memory_limit'),true);
@@ -163,11 +177,11 @@
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('PHP Execution timelimit'); ?>:</td>
+<td><?php echo _('PHP Execution Time Limit'); ?>:</td>
 <td>
 <?php
 	if (!check_php_timelimit()) {
-		echo debug_result(_('Execution timelimit less the recommended') . ' ' . ini_get('max_execution_time'),false);
+		echo debug_result(_('Execution time limit less than recommended') . ' ' . ini_get('max_execution_time'), false);
 	}
 	else {
 		echo debug_result(ini_get('max_execution_time') . ' ' .  _('seconds'),true);
