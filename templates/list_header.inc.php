@@ -31,11 +31,11 @@
 $limit	= $browse->get_offset();
 $start	= $browse->get_start();
 $total	= $browse->get_total();
-$uid	  = Config::get('list_header_uid');
+$uid	= Config::get('list_header_uid');
 $sides  = 5;
 
 // ++ the uid
-Config::set('list_header_uid',$uid+1,1);
+Config::set('list_header_uid', $uid + 1, 1);
 
 // Next
 $next_offset = $start + $limit;
@@ -46,61 +46,64 @@ $prev_offset = $start - $limit;
 if ($prev_offset < 0) { $prev_offset = '0'; }
 
 /* Calculate how many pages total exist */
-$pages  = ceil($total/$limit);
-
-/* Calculate current page and how many we have on each side */
-$page_data = array('up'=>array(),'down'=>array());
-
-// Can't Divide by 0
-if ($start> 0) {
-	$current_page = floor($start/$limit);
+if ($limit > 0 && $total > $limit) {
+	$pages = ceil($total / $limit);
 }
 else {
-	$current_page = 0;
+	$pages = 0;
 }
-
-/* Create 10 pages in either direction */
-// Down First
-$page = $current_page;
-$i = 0;
-/* While we have pages left */
-while ($page > 0) {
-	if ($i == $sides) { $page_data['down'][1] = '...'; $page_data['down'][0] = '0'; break; }
-	$i++;
-	$page = $page - 1;
-	$page_data['down'][$page] = $page * $limit;
-} // while page > 0
-
-// Up Next
-$page = $current_page+1;
-$i = 0;
-/* While we have pages left */
-while ($page <= $pages) {
-	if ($page * $limit > $total) { break; }
-	if ($i == $sides) {
-		$key = $pages - 1;
-		if (!$page_data['up'][$key]) { $page_data['up'][$key] = '...'; }
-		$page_data['up'][$pages] = ($pages-1) * $limit;
-		break;
-	}
-	$i++;
-	$page = $page + 1;
-	$page_data['up'][$page] = ($page-1) * $limit;
-} // end while
-
-// Sort These Arrays of Hotness
-ksort($page_data['up']);
-ksort($page_data['down']);
 
 // are there enough items to even need this view?
 if ($pages > 1) {
+
+	/* Calculate current page and how many we have on each side */
+	$page_data = array('up' => array(), 'down' => array());
+
+	// Can't divide by 0
+	if ($start > 0) {
+		$current_page = floor($start / $limit);
+	}
+	else {
+		$current_page = 0;
+	}
+
+	// Create 10 pages in either direction
+	// Down first
+	$page = $current_page;
+	$i = 0;
+	while ($page > 0) {
+		if ($i == $sides) { $page_data['down'][1] = '...'; $page_data['down'][0] = '0'; break; }
+		$i++;
+		$page = $page - 1;
+		$page_data['down'][$page] = $page * $limit;
+	} // while page > 0
+
+	// Then up
+	$page = $current_page + 1;
+	$i = 0;
+	while ($page <= $pages) {
+		if ($page * $limit > $total) { break; }
+		if ($i == $sides) {
+			$key = $pages - 1;
+			if (!$page_data['up'][$key]) { $page_data['up'][$key] = '...'; }
+			$page_data['up'][$pages] = ($pages - 1) * $limit;
+			break;
+		}
+		$i++;
+		$page = $page + 1;
+		$page_data['up'][$page] = ($page - 1) * $limit;
+	} // end while
+
+	// Sort these arrays of hotness
+	ksort($page_data['up']);
+	ksort($page_data['down']);
 ?>
 <div class="list-header">
 
   <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $prev_offset,_('Prev'),'browse_' . $uid . 'prev','','prev'); ?>
 	<?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $next_offset,_('Next'),'browse_' . $uid . 'next','','next'); ?>
 	<?php
-		/* Echo Everything below us */
+		/* Echo everything below us */
 		foreach ($page_data['down'] as $page => $offset) {
 			if ($offset === '...') { echo '...&nbsp;'; }
 			else {
@@ -110,13 +113,13 @@ if ($pages > 1) {
 			}
 		} // end foreach down
 
-		/* Echo Out current Page */
-		$current_page = $current_page +1;
+		/* Echo current page */
+		$current_page++;
 	?>
 	<span class="page-nb selected"><?php echo $current_page; ?></span>
 	<?php
 
-		/* Echo Out Everything Above Us */
+		/* Echo everything above us */
 		foreach ($page_data['up'] as $page=>$offset) {
 			if ($offset === '...') { echo '...&nbsp;'; }
 			else {
