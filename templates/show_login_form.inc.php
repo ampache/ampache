@@ -46,7 +46,7 @@ function focus(){ document.login.username.focus(); }
 <div id="maincontainer">
 	<div id="header"><!-- This is the header -->
 		<h1 id="headerlogo">
-		  <a href="<?php echo Config::get('web_path'); ?>/login.php">
+		  <a href="<?php echo Config::get('web_path'); ?>">
 		    <img src="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="<?php echo Config::get('site_title'); ?>" alt="<?php echo Config::get('site_title'); ?>" />
 		  </a>
     </h1>
