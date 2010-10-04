@@ -339,10 +339,7 @@ amazon_base_urls = "http://webservices.amazon.com"
 max_amazon_results_pages = 1
 
 ; Debug
-; If this is enabled Ampache will get really chatty
-; warning this can crash browser during catalog builds due to 
-; the amount of text that is dumped out this will also cause 
-; ampache to write to the log file
+; If this is enabled Ampache will write debugging information to the log file
 ; DEFAULT: false
 ;debug = "false"
 
