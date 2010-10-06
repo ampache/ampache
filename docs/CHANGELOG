@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+        - Partial MusicBrainz metadata gathering via plugin
+        - Metadata code cleanup, support for plugins as metadata sources
         - New plugin architecture
         - Fixed display charset issue with catalog add/update
         - Fixed handling of temporary playlists with >100 items

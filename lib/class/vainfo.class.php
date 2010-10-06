@@ -146,8 +146,8 @@ class vainfo {
 	 */
 	public function get_info() {
 
-		// If this is broken, don't waste time figuring it out a second time, just return
-		// their rotting carcass of a media file back on the pile
+		// If this is broken, don't waste time figuring it out a second
+		// time, just return their rotting carcass of a media file.
 		if ($this->_broken) {
 			$this->tags = $this->set_broken();
 			return true;
@@ -164,12 +164,17 @@ class vainfo {
 		/* Figure out what type of file we are dealing with */
 		$this->type = $this->_get_type();
 
-		/* Get the general information about this file */
-		$info = $this->_get_info();
+		$enabled_sources = (array)Config::get('metadata_order');
 
-		/* Gets the Tags */
-		$this->tags = $this->_get_tags();
-		$this->tags['info'] = $info;
+		if (in_array('filename', $enabled_sources)) {
+			$this->tags['filename'] = $this->_parse_filename($this->filename);
+		}
+
+		if (in_array('getID3', $enabled_sources)) {
+			$this->tags['getID3'] = $this->_get_tags();
+		}
+
+		$this->_get_plugin_tags();
 
 	} // get_info
 
@@ -180,13 +185,12 @@ class vainfo {
 	 * tag_order doesn't match anything then it throws up its hands and uses
 	 * everything.
 	 */
-	public static function get_tag_type($results) {
+	public static function get_tag_type($results, $config_key = 'metadata_order') {
 
-		/* Pull in the config option */
-		$order = (array)Config::get('tag_order');
+		$order = (array)Config::get($config_key);
 
-		/* Foreach through the defined key order
-		 * adding them to an ordered array as we go
+		/* Iterate through the defined key order adding them to an
+		 * ordered array as we go.
 		 */
 
 		foreach($order as $key) {
@@ -212,120 +216,141 @@ class vainfo {
 	 * key we've decided on and the filename and returns it in a
 	 * sanitized format that ampache can actually use
 	 */
-	public static function clean_tag_info($results,$keys,$filename) {
+	public static function clean_tag_info($results, $keys, $filename = null) {
 
 		$info = array();
 
-		$clean_array = array("\n","\t","\r","\0");
-		$wipe_array  = array("","","","");
-
-		$info['file']		= $filename;
-
-		/* These are pulled from the info array */
-		$info['bitrate']	= intval($results['info']['bitrate']);
-		$info['rate']		= intval($results['info']['sample_rate']);
-		$info['mode']		= $results['info']['bitrate_mode'];
-
-		// Convert special version of constant bitrate mode to cbr
-		if($info['mode'] == 'con') {
-			$info['mode'] = 'cbr';
+		if ($filename) {
+			$info['file'] = $filename;
 		}
 
-		$info['size']			= $results['info']['filesize'];
-		$info['mime']			= $results['info']['mime'];
-		$into['encoding']		= $results['info']['encoding'];
-		$info['time']			= intval($results['info']['playing_time']);
-		$info['channels']		= intval($results['info']['channels']);
-
-		// Specific Audio Flags
+		// Iteration!
 		foreach ($keys as $key) {
-		if (!$results[$key]['video_codec']) {
-			$slash_point = strpos($results[$key]['disk'],'/');
-			if ($slash_point !== FALSE) {
-				$results[$key]['disk'] = substr($results[$key]['disk'],0,$slash_point);
-			}
-			/* These are used to generate the correct ID's later */
-				$info['title']		= $info['title']
-							? $info['title']
-							: stripslashes(trim($results[$key]['title']));
+			$tags = $results[$key];
 
-				$info['year']		= $info['year']
-							? $info['year']
-							: intval($results[$key]['year']);
+			$info['file']		= $info['file']
+						? $info['file']
+						: $tags['file'];
 
-				$info['disk']		= $info['disk']
-							? $info['disk']
-							: intval($results[$key]['disk']);
 
-				$info['artist']		= $info['artist']
-							? $info['artist']
-							: trim($results[$key]['artist']);
+			$info['bitrate']	= $info['bitrate']
+						? $info['bitrate']
+						: intval($tags['bitrate']);
 
-				$info['album']		= $info['album']
-							? $info['album']
-							: trim($results[$key]['album']);
+			$info['rate']		= $info['rate']
+						? $info['rate']
+						: intval($tags['rate']);
 
-				// multiple genre support
-				if (!$info['genre']) {
-					if (!is_array($results[$key]['genre'])) {
-						// not all tag formats will return an array, but we need one
-						$info['genre'][] = trim($results[$key]['genre']);
-					}
-					else {
-						// if we trim the array we lose everything after 1st entry
-						foreach ($results[$key]['genre'] as $genre) {
-							$info['genre'][] = trim($genre);
-						}
+			$info['mode']		= $info['mode']
+						? $info['mode']
+						: $tags['mode'];
+
+			$info['size']		= $info['size']
+						? $info['size']
+						: $tags['size'];
+
+			$info['mime']		= $info['mime']
+						? $info['mime']
+						: $tags['mime'];
+
+			$info['encoding']       = $info['encoding']
+						? $info['encoding']
+						: $tags['encoding'];
+
+			$info['time']		= $info['time']
+						? $info['time']
+						: intval($tags['time']);
+
+			$info['channels']	= $info['channels']
+						? $info['channels']
+						: $tags['channels'];
+
+			/* These are used to generate the correct IDs later */
+			$info['title']		= $info['title']
+						? $info['title']
+						: stripslashes(trim($tags['title']));
+
+			$info['year']		= $info['year']
+						? $info['year']
+						: intval($tags['year']);
+
+			$info['disk']		= $info['disk']
+						? $info['disk']
+						: intval($tags['disk']);
+
+			$info['artist']		= $info['artist']
+						? $info['artist']
+						: trim($tags['artist']);
+
+			$info['album']		= $info['album']
+						? $info['album']
+						: trim($tags['album']);
+
+			// multiple genre support
+			if ((!$info['genre']) && $tags['genre']) {
+				if (!is_array($tags['genre'])) {
+					// not all tag formats will return an array, but we need one
+					$info['genre'][] = trim($tags['genre']);
+				}
+				else {
+					// if we trim the array we lose everything after 1st entry
+					foreach ($tags['genre'] as $genre) {
+						$info['genre'][] = trim($genre);
 					}
 				}
+			}
 
-				$info['mb_trackid']	= $info['mb_trackid']
-							? $info['mb_trackid']
-							: trim($results[$key]['mb_trackid']);
+			$info['mb_trackid']	= $info['mb_trackid']
+						? $info['mb_trackid']
+						: trim($tags['mb_trackid']);
 
-				$info['mb_albumid']	= $info['mb_albumid']
-							? $info['mb_albumid']
-							: trim($results[$key]['mb_albumid']);
+			$info['mb_albumid']	= $info['mb_albumid']
+						? $info['mb_albumid']
+						: trim($tags['mb_albumid']);
 
-				$info['mb_artistid']	= $info['mb_artistid']
-							? $info['mb_artistid']
-							: trim($results[$key]['mb_artistid']);
+			$info['mb_artistid']	= $info['mb_artistid']
+						? $info['mb_artistid']
+						: trim($tags['mb_artistid']);
 
 			/* @TODO language doesn't import from id3tag. @momo-i */
-				$info['language']	= $info['language']
-							? $info['language']
-							: Dba::escape($results[$key]['language']);
+			$info['language']	= $info['language']
+						? $info['language']
+						: Dba::escape($tags['language']);
 
-				$info['lyrics']		= $info['lyrics']
-							? $info['lyrics']
-							: str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results[$key]['unsynchronised lyric']));
+			$info['lyrics']		= $info['lyrics']
+						? $info['lyrics']
+						: str_replace(
+							array("\r\n","\r","\n"),
+							'<br />',
+							strip_tags($tags['lyrics']));
 
-				$info['track']		= $info['track']
-							? $info['track']
-							: intval($results[$key]['track']);
+			$info['track']		= $info['track']
+						? $info['track']
+						: intval($tags['track']);
+
+			$info['resolution_x']	= $info['resolution_x']
+						? $info['resolution_x']
+						: intval($tags['resolution_x']);
+
+			$info['resolution_y']	= $info['resolution_y']
+						? $info['resolution_y']
+						: intval($tags['resolution_y']);
+
+			$info['audio_codec']	= $info['audio_codec']
+						? $info['audio_codec']
+						: Dba::escape($tags['audio_codec']);
+
+			$info['video_codec']	= $info['video_codec']
+						? $info['video_codec']
+						: Dba::escape($tags['video_codec']);
 		}
-		else {
-				$info['resolution_x']	= $info['resolution_x']
-							? $info['resolution_x']
-							: intval($results[$key]['resolution_x']);
 
-				$info['resolution_y']	= $info['resolution_y']
-							? $info['resolution_y']
-							: intval($results[$key]['resolution_y']);
-
-				$info['audio_codec']	= $info['audio_codec']
-							? $info['audio_codec']
-							: Dba::escape($results[$key]['audio_codec']);
-
-				$info['video_codec']	= $info['video_codec']
-							? $info['video_codec']
-							: Dba::escape($results[$key]['video_codec']);
-			}
+		// I really think this belongs somewhere else
+		$slash_point = strpos($info['disk'], '/');
+		if ($slash_point !== false) {
+			$info['disk'] = substr($info['disk'], 0, $slash_point);
 		}
-		// Lyrics3 v2.0
-		$info['lyrics']	= $info['lyrics']
-				? $info['lyrics']
-				: str_replace(array("\r\n","\r","\n"), '<br />',strip_tags($results['info']['lyrics']['unsynchedlyrics']));
+			
 
 		return $info;
 
@@ -394,21 +419,10 @@ class vainfo {
 
 		$results = array();
 
-		/* Gather Tag information from the filenames */
-		$results['file']	= $this->_parse_filename($this->filename);
-
-		/* Return false if we don't have
-		 * any tags to look at
-		 */
-		if (!is_array($this->_raw['tags'])) {
-			return $results;
-		}
-
 		/* The tags can come in many different shapes and colors
-		 * depending on the encoding time of day and phase of the
-		 * moon
+		 * depending on the encoding time of day and phase of the moon.
 		 */
-		foreach ($this->_raw['tags'] as $key=>$tag_array) {
+		foreach ($this->_raw['tags'] as $key => $tag_array) {
 			switch ($key) {
 				case 'vorbiscomment':
 					debug_event('_get_tags', 'Parsing vorbis', '5');
@@ -461,17 +475,42 @@ class vainfo {
 					$results[$key] = $this->_parse_id3v2($this->_raw['id3v2']['comments']);
 				break;
 			} // end switch
-
 		} // end foreach
 
-		return $results;
+
+		$cleaned = self::clean_tag_info($results, self::get_tag_type($results, 'getid3_tag_order'), $this->filename);
+		$cleaned = array_merge($cleaned, $this->_get_info());
+		$cleaned['raw'] = $results;
+
+		return $cleaned;
 
 	} // _get_tags
 
 	/**
+	 * _get_plugin_tags
+	 * Get additional metadata from plugins
+	 */
+	private function _get_plugin_tags() {
+		$tag_order = Config::get('metadata_order');
+		if (!is_array($tag_order)) {
+			$tag_order = array($tag_order);
+		}
+
+		$plugin_names = Plugin::get_plugins('get_metadata');
+		foreach ($tag_order as $key => $tag_source) {
+			if (in_array($tag_source, $plugin_names)) {
+				$plugin = new Plugin($tag_source);
+				if ($plugin->load()) {
+					$this->tags[$tag_source] = $plugin->_plugin->get_metadata(self::clean_tag_info($this->tags, self::get_tag_type($this->tags), $this->filename));
+				}
+			}
+		}
+	} // _get_plugin_tags
+
+	/**
 	 * _get_info
-	 * This function gathers and returns the general information
-	 * about a song, vbr/cbr sample rate channels etc
+	 * Gather and return the general information about a song (vbr/cbr,
+	 * sample rate, channels, etc.)
 	 */
 	private function _get_info() {
 
@@ -481,7 +520,10 @@ class vainfo {
 		 * the audio array
 		 */
 		if ($this->_raw['audio']['bitrate_mode']) {
-			$array['bitrate_mode'] 	= $this->_raw['audio']['bitrate_mode'];
+			$array['mode'] 	= $this->_raw['audio']['bitrate_mode'];
+			if ($array['mode'] == 'con') {
+				$array['mode'] = 'cbr';
+			}
 		}
 		if ($this->_raw['audio']['bitrate']) {
 			$array['bitrate']	= $this->_raw['audio']['bitrate'];
@@ -490,10 +532,10 @@ class vainfo {
 			$array['channels'] 	= intval($this->_raw['audio']['channels']);
 		}
 		if ($this->_raw['audio']['sample_rate']) {
-			$array['sample_rate']	= intval($this->_raw['audio']['sample_rate']);
+			$array['rate']	= intval($this->_raw['audio']['sample_rate']);
 		}
 		if ($this->_raw['filesize']) {
-			$array['filesize']	= intval($this->_raw['filesize']);
+			$array['size']	= intval($this->_raw['filesize']);
 		}
 		if ($this->_raw['encoding']) {
 			$array['encoding']	= $this->_raw['encoding'];
@@ -502,10 +544,7 @@ class vainfo {
 			$array['mime']		= $this->_raw['mime_type'];
 		}
 		if ($this->_raw['playtime_seconds']) {
-			$array['playing_time']	= $this->_raw['playtime_seconds'];
-		}
-		if ($this->_raw['lyrics3']) {
-			$array['lyrics'] = $this->_raw['lyrics3'];
+			$array['time']	= $this->_raw['playtime_seconds'];
 		}
 
 		return $array;
@@ -556,8 +595,10 @@ class vainfo {
 		$array = array();
 
 		/* go through them all! */
-		foreach ($tags as $tag=>$data) {
-
+		foreach ($tags as $tag => $data) {
+			if ($tag == 'unsynchedlyrics' || $tag == 'unsynchronised lyric') {
+				$tag = 'lyrics';
+			}
 			$array[$tag] = $this->_clean_tag($data['0']);
 
 		} // end foreach
@@ -926,6 +967,8 @@ class vainfo {
 				$results[$new_key] = $value;
 			}
 		} // end foreach matches
+
+		$results['size'] = filesize($filename);
 
 		return $results;
 

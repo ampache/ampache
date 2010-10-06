@@ -91,7 +91,7 @@ if (!function_exists('hash') OR !function_exists('inet_pton') OR (strtoupper(sub
 
 /** This is the version.... fluf nothing more... **/
 $results['version']		= '3.6-Alpha1 '. $svn_version;
-$results['int_config_version']	= '10';
+$results['int_config_version']	= '11';
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];

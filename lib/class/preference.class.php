@@ -323,8 +323,8 @@ class Preference {
 	 * become an array and boolean everythings
 	 */
 	public static function fix_preferences($results) {
-		$arrays = array('auth_methods', 'tag_order', 'art_order',
-			'amazon_base_urls');
+		$arrays = array('auth_methods', 'getid3_tag_order',
+			'metadata_order', 'art_order', 'amazon_base_urls');
 
 		foreach ($arrays as $item) {
 			$results[$item] = trim($results[$item]) 
