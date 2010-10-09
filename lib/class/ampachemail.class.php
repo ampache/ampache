@@ -23,28 +23,52 @@
 class AmpacheMail {
 
 	// The message, recipient and from
-	public static $message;
-	public static $recipient;
-	public static $fromname;
-	public static $subject;
-	public static $to;
-	public static $fullname;
-	public static $sender;
+	public $message;
+	public $subject;
+	public $recipient;
+	public $recipient_name;
+	public $sender;
+	public $sender_name;
 
 	/**
 	 * Constructor
-	 * This isn't used
+	 * This does nothing. Much like goggles.
 	 */
-	private function __construct($name) {
+	public function __construct($name) {
 
-		// Rien a faire
+		// Eh bien.
 
 	} // Constructor
 
 	/**
+	 * set_default_sender
+	 * Does the config magic to figure out the "system" email sender and
+	 * sets it as the sender.
+	 */
+	public function set_default_sender() {
+		$user = Config::get('mail_user');
+		if (!$user) {
+			$user = 'info';
+		}
+
+		$domain = Config::get('mail_domain');
+		if (!$domain) {
+			$domain = 'example.com';
+		}
+		
+		$fromname = Config::get('mail_name');
+		if (!$fromname) {
+			$fromname = 'Ampache';
+		}
+
+		$this->sender = $user . '@' . $domain;
+		$this->sender_name = $fromname;
+	} // set_default_sender
+
+	/**
  	 * get_users
-	 * This returns an array of userid's for people who have e-mail addresses
-	 * based on the passed filter
+	 * This returns an array of userids for people who have e-mail
+	 * addresses based on the passed filter
 	 */
 	public static function get_users($filter) {
 
@@ -79,9 +103,10 @@ class AmpacheMail {
 
 	/**
 	 * add_statistics
-	 * This should be run if we want to add some statistics to this e-mail, appends to self::$message
+	 * This should be run if we want to add some statistics to this e-mail,
+	 * appends to self::$message
 	 */
-	public static function add_statistics($methods) {
+	public function add_statistics($methods) {
 
 
 
@@ -91,39 +116,61 @@ class AmpacheMail {
 	 * send
 	 * This actually sends the mail, how amazing
 	 */
-	public static function send() {
+	public function send($phpmailer = null) {
 
 		$mailtype = Config::get('mail_type');
-		$mail = new PHPMailer();
+		
+		if ($phpmailer == null) {
+			$mail = new PHPMailer();
 
-		$mail->AddAddress(self::$to, self::$fullname);
+			$recipient_name = $this->recipient_name;
+			if(function_exists('mb_encode_mimeheader')) {
+				$recipient_name = mb_encode_mimeheader($recipient_name);
+			}
+			$mail->AddAddress($this->recipient, $recipient_name);
+		}
+		else {
+			$mail = $phpmailer;
+		}
+
 		$mail->CharSet	= Config::get('site_charset');
-		$mail->Encoding	= "base64";
-		$mail->From		= self::$sender;
-		$mail->Sender	= self::$sender;
-		$mail->FromName	= self::$fromname;
-		$mail->Subject	= self::$subject;
-		$mail->Body		= self::$message;
-		$mailhost		= Config::get('mail_host');
-		$mailport		= Config::get('mail_port');
-		$mailauth		= Config::get('mail_auth');
+		$mail->Encoding	= 'base64';
+		$mail->From	= $this->sender;
+		$mail->Sender	= $this->sender;
+		$mail->FromName	= $this->sender_name;
+		$mail->Subject	= $this->subject;
+
+		if(function_exists('mb_eregi_replace')) {
+			$this->message = mb_eregi_replace("\r\n", "\n", $this->message);
+		}
+		$mail->Body	= $this->message;
+
+		$sendmail       = Config::get('sendmail_path');
+		$sendmail	= $sendmail ? $sendmail : '/usr/sbin/sendmail';
+		$mailhost	= Config::get('mail_host');
+		$mailhost	= $mailhost ? $mailhost : 'localhost';
+		$mailport	= Config::get('mail_port');
+		$mailport	= $mailport ? $mailport : 25;
+		$mailauth	= Config::get('mail_auth');
+		$mailuser       = Config::get('mail_auth_user');
+		$mailuser	= $mailuser ? $mailuser : '';
+		$mailpass       = Config::get('mail_auth_pass');
+		$mailpass	= $mailpass ? $mailpass : '';
+
 		switch($mailtype) {
 			case 'smtp':
 				$mail->IsSMTP();
-				isset($mailhost) ? $mail->Host = $mailhost : $mail->Host = "localhost";
-				isset($mailport) ? $mail->Port = $mailport : $mail->Port = 25;
+				$mail->Host = $mailhost;
+				$mail->Port = $mailport;
 				if($mailauth == true) {
 					$mail->SMTPAuth(true);
-					$mailuser	= Config::get('mail_auth_user');
-					$mailpass	= Config::get('mail_auth_pass');
-					isset($mailuser) ? $mail->Username = $mailuser : $mail->Username = "";
-					isset($mailpass) ? $mail->Password = $mailpass : $mail->Password = "";
+					$mail->Username = $mailuser;
+					$mail->Password = $mailpass;
 				}
 			break;
 			case 'sendmail':
 				$mail->IsSendmail();
-				$sendmail	= Config::get('sendmail_path');
-				isset($sendmail) ? $mail->Sendmail = $sendmail : $mail->Sendmail = "/usr/sbin/sendmail";
+				$mail->Sendmail = $sendmail;
 			break;
 			case 'php':
 			default:
@@ -138,6 +185,19 @@ class AmpacheMail {
 			return false;
 		}
 	} // send
+
+	public function send_to_group($group_name) {
+		$mail = new PHPMailer();
+
+		foreach(self::get_users($group_name) as $member) {
+			if(function_exists('mb_encode_mimeheader')) {
+				$member['fullname'] = mb_encode_mimeheader($member['fullname']);
+			}
+			$mail->AddBCC($member['email'], $member['fullname']);
+		}
+
+		return $this->send($mail);
+	}
 
 } // AmpacheMail class
 ?>

@@ -40,34 +40,15 @@ class Registration {
  	 * send_confirmation
 	 * This sends the confirmation e-mail for the specified user
 	 */
-	public static function send_confirmation($username,$fullname,$email,$password,$validation) {
+	public static function send_confirmation($username, $fullname, $email, $password, $validation) {
+		$mailer = new AmpacheMail();
 
-		// Multi-byte Character Mail
-		if(function_exists('mb_language')) {
-			ini_set("mbstring.internal_encoding","UTF-8");
-			mb_language("uni");
-		}
+		// We are the system
+		$mailer->set_default_sender();
 
-		if(function_exists('mb_encode_mimeheader')) {
-			$from = mb_encode_mimeheader(_("From: Ampache "));
-		} else {
-			$from = _("From: Ampache ");
-		}
-		/* HINT: Site Title */
-		$subject = sprintf(_("New User Registration at %s"), Config::get('site_title'));
+		$mailer->subject = sprintf(_("New User Registration at %s"), Config::get('site_title'));
 
-		$additional_header = array();
-		$additional_header[] = 'X-Ampache-Mailer: 0.0.1';
-		$additional_header[] = $from . "<" .Config::get('mail_from') . ">";
-		if(function_exists('mb_send_mail')) {
-			$additional_header[] = 'Content-Type: text/plain; charset=UTF-8';
-			$additional_header[] = 'Content-Transfer-Encoding: 8bit';
-		} else {
-			$additional_header[] = 'Content-Type: text/plain; charset=us-ascii';
-			$additional_header[] = 'Content-Transfer-Encoding: 7bit';
-		}
-
-		$body = sprintf(_("Thank you for registering\n\n
+		$mailer->message = sprintf(_("Thank you for registering\n\n
 Please keep this e-mail for your records. Your account information is as follows:
 ----------------------
 Username: %s
@@ -81,23 +62,14 @@ Your account is currently inactive. You cannot use it until you've visited the f
 Thank you for registering
 "), $username, $password, Config::get('web_path') . "/register.php?action=validate&username=$username&auth=$validation");
 
-		if(function_exists('mb_eregi_replace')) {
-			$body = mb_eregi_replace("\r\n", "\n", $body);
-		}
-		// Send the mail!
-		if(function_exists('mb_send_mail')) {
-			mb_send_mail ($email,
-					$subject,
-					$body,
-					implode("\n", $additional_header),
-					'-f'.Config::get('mail_from'));
-		} else {
-			mail($email,$subject,$body,implode("\r\n", $additional_header),'-f'.Config::get('mail_from'));
-		}
+		$mailer->recipient = $email;
+		$mailer->recipient_name = $fullname;
+
+		$mailer->send();
 
 		// Check to see if the admin should be notified
 		if (Config::get('admin_notify_reg')) {
-			$body = sprintf(_("A new user has registered
+			$mailer->message = sprintf(_("A new user has registered
 The following values were entered.
 
 Username: %s
@@ -106,17 +78,9 @@ E-mail: %s
 
 "), $username, $fullname, $email);
 
-			if(function_exists('mb_send_mail')) {
-				mb_send_mail (Config::get('mail_from'),
-						$subject,
-						$body,
-						implode("\n", $additional_header),
-						'-f'.Config::get('mail_from'));
-			} else {
-				mail(Config::get('mail_from'),$subject,$body,implode("\r\n", $additional_header),'-f'.Config::get('mail_from'));
-			}
+			$mailer->send_to_group('admins');
 		}
-
+		
 		return true;
 
 	} // send_confirmation

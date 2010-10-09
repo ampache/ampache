@@ -95,6 +95,15 @@
   </tr>
 -->
   <tr>
+    <td><?php echo _('From'); ?>:</td>
+    <td>
+      <select name="from">
+        <option value="self" title="Self"><?php echo _('Yourself'); ?></option>
+	<option value="system" title="System"><?php echo _('Ampache'); ?></option>
+      </select>
+    </td>
+  </tr>
+  <tr>
     <td><?php echo _('Subject'); ?>:</td>
     <td colspan="3">
         <input name="subject" value="<?php echo scrub_out($_POST['subject']); ?>" size="50"></input>

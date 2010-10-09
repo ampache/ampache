@@ -43,43 +43,31 @@ switch ($_REQUEST['action']) {
 			mb_language("uni");
 		}
 
-		$clients = AmpacheMail::get_users($_REQUEST['to']);
-
-		foreach ($clients as $client) {
-			if(function_exists('mb_encode_mimeheader')) {
-				$recipient .= mb_encode_mimeheader($client['fullname']) ." <" . $client['email'] . ">, ";
-			} else {
-				$recipient .= $client['fullname'] ." <" . $client['email'] . ">, ";
-			}
-		}
-
-		// Remove the last , from the recipient
-		$recipient = rtrim($recipient,", ");
+		$mailer = new AmpacheMail();
 
 		// Set the vars on the object
-		AmpacheMail::$recipient = $recipient;
-		if(function_exists('mb_encode_mimeheader')) {
-			AmpacheMail::$fullname = mb_encode_mimeheader($GLOBALS['user']->fullname);
-		} else {
-			AmpacheMail::$fullname = $GLOBALS['user']->fullname;
-		}
-		AmpacheMail::$to = $GLOBALS['user']->email;
-		AmpacheMail::$subject = scrub_in($_REQUEST['subject']);
-		if(function_exists('mb_eregi_replace')) {
-			AmpacheMail::$message = mb_eregi_replace("\r\n", "\n", scrub_in($_REQUEST['message']));
-		} else {
-			AmpacheMail::$message = scrub_in($_REQUEST['message']);
-		}
-		AmpacheMail::$sender = $GLOBALS['user']->email;
+		$mailer->subject = scrub_in($_REQUEST['subject']);
+		$mailer->message = scrub_in($_REQUEST['message']);
 
-		AmpacheMail::$fromname	= $fullname;
-		AmpacheMail::send();
+		if ($_REQUEST['from'] == 'system') {
+			$mailer->set_default_sender();
+		}
+		else {
+			$mailer->sender = $GLOBALS['user']->email;
+			$mailer->sender_name = $GLOBALS['user']->fullname;
+		}
 
-		/* Confirmation Send */
-		$url 	= Config::get('web_path') . '/admin/mail.php';
-		$title 	= _('E-mail Sent');
-		$body 	= _('Your E-mail was successfully sent.');
+		if($mailer->send_to_group($_REQUEST['to'])) {
+			$title  = _('E-mail Sent');
+			$body   = _('Your E-mail was successfully sent.');
+		}
+		else {
+			$title 	= _('E-mail Not Sent');
+			$body 	= _('Your E-mail was not sent.');
+		}
+		$url = Config::get('web_path') . '/admin/mail.php';
 		show_confirmation($title,$body,$url);
+
 	break;
 	default:
 		require_once Config::get('prefix') . '/templates/show_mail_users.inc.php';

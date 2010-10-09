@@ -54,18 +54,18 @@ function send_newpassword($email,$current_ip){
 		$newpassword = generate_password(6);
 		$client->update_password($newpassword);
 
-		AmpacheMail::$subject = _("Lost Password");
-		AmpacheMail::$fullname = $client->fullname;
-		AmpacheMail::$to = $client->email;
-		AmpacheMail::$fromname = "Ampache";
-		AmpacheMail::$sender = $GLOBALS['user']->email;
+		$mailer = new AmpacheMail();
+		$mailer->set_default_sender();
+		$mailer->subject = _("Lost Password");
+		$mailer->recipient_name = $client->fullname;
+		$mailer->recipient = $client->email;
 
-		$message  = sprintf(_("A user from %s has requested a new password."), $current_ip);
+		$message  = sprintf(_("A user from %s has requested a password reset for '%s'."), $current_ip, $client->username);
 		$message .= "\n";
 		$message .= sprintf(_("The password has been set to: %s"), $newpassword);
-		AmpacheMail::$message = $message;
+		$mailer->message = $message;
 
-		return AmpacheMail::send();
+		return $mailer->send();
 	}
 	return false;
 }

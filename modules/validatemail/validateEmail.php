@@ -149,25 +149,19 @@ function validateEmail ( $email, $verbose=0 ) {
     // Leave blank to use $SERVER_NAME.
     // Note that most modern MTAs will ignore (but require) whatever you say here ...
     // the server will determine your domain via other means.
-	if (Config::get('mail_check')) {
-		$mail_check = Config::get('mail_check');
-	} else {
-		$mail_check = "strict";
-	}
-
-	if ($mail_check == 'strict' && strncmp(PHP_OS,'WIN',3) === TRUE) {
-		$mail_check = "easy";
-	}
-
-    if (Config::get('mail_domain')) {
-	    $serverName = Config::get('mail_domain');
+    $mail_check = Config::get('mail_check');
+    $mail_check = $mail_check ? $mail_check : 'strict';
+    if ($mail_check == 'strict' && strncmp(PHP_OS, 'WIN', 3) === true) {
+        $mail_check = "easy";
     }
-    else {
-    	$serverName = "domain.tld";
-    }
+
+    $serverName = Config::get('mail_domain');
+    $serverName = $serverNam ? $serverName : 'example.com';
+
     // MAIL FROM -- who's asking?
     // Good values: nobody, postmaster, info, buckwheat, gumby
-    $from = "info";
+    $from = Config::get('mail_user');
+    $from = $from ? $from : 'info';
 
     // fsockopen() timeout - in seconds
     $socketTimeout = 15;
