@@ -462,22 +462,6 @@ refresh_limit = "60"
 ; DEFAULT: false
 ;captcha_public_reg = "false"
 
-; This setting defines the mail domain you're in.
-; DEFAULT: example.com 
-;mail_domain = "example.com"
-
-; This setting will be used as the user part of the mail address for notifications.
-; For example, setting this to 'me' will set the sender to 'me@example.com'.
-; DEFAULT: info
-;mail_user = "info"
-
-; This setting affects how strictly candidate email addresses are checked.
-; You can select "strict" or "easy" or "none".
-; "easy" does a regex match, "strict" actually performs some SMTP transactions to see if
-; we can send to this address.
-; DEFAULT: strict
-;mail_check = "strict"
-
 ; This setting turns on/off admin notification of registration.
 ; DEFAULT: false
 ;admin_notify_reg = "false"
