@@ -70,7 +70,7 @@ Contents:
 	- Integrated Flash Player
 	- Automatic Downsampling based on load
 	- Local/Remote network definition based downsampling
-	- On the Fly Transcoding
+	- On the Fly Transcoding (Requires additional applications)
 	- Localplay
 		- Music Player Daemon (MPD)
 		- Winamp using (HTTPQ)
@@ -78,7 +78,7 @@ Contents:
 		- Icecast2
 	- Democratic Vote based playback
 	- 3rd Party clients using API (Amarok,Coherence,Quickplay)
-	- 3rd Party Mobile clients using API (Amdroid - Android,Amphone - Iphone)
+	- 3rd Party Mobile clients using API (Android,Iphone,Blackberry,PalmOS)
 	
   C) Current Translations
 
