@@ -236,13 +236,6 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 
 	$config_file = Config::get('prefix') . '/config/ampache.cfg.php';
 
-	// Make sure the directory is writeable OR the empty config file is
-	if (!is_writeable(Config::get('prefix') . '/config/') AND !is_writeable($config_file)) {
-		/* HINT: Config File */
-		Error::add('general',sprintf(_('%s is not writeable'),$config_file));
-		return false;
-	}
-
         $data['database_username'] = $username;
         $data['database_password'] = $password;
         $data['database_hostname'] = $hostname;
@@ -270,15 +263,24 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 
 	$final = generate_config($data);
 
-	// Open the file and try to write it
-	$fhandle = fopen($config_file,'w');
-	if (!fwrite($fhandle,$final)) {
-		Error::add('general',"Error Writing config file");
-		fclose ($fhandle);
-		return false;
+	// Make sure the directory is writable OR the empty config file is
+	if (!is_writeable(Config::get('prefix') . '/config/') && !is_writeable($config_file)) {
+		// Fall back to the old method
+		$browser = new Browser();
+		$browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, filesize('config/ampache.cfg.php.dist'));
+		echo $final;
+		exit();
 	}
-	fclose ($fhandle);
-
+	else {
+		// Open the file and try to write it
+		$fhandle = fopen($config_file,'w');
+		if (!fwrite($fhandle,$final)) {
+			Error::add('general',"Error Writing config file");
+			fclose ($fhandle);
+			return false;
+		}
+		fclose ($fhandle);
+	}
 
 	return true;
 
