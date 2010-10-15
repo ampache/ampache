@@ -44,7 +44,7 @@ $catalogs = Catalog::get_catalogs();
         <td><?php echo $stats['songs']; ?></td>
 	<td><?php echo $stats['video']; ?></td>
         <td><?php echo $stats['tags']; ?></td>
-        <td><?php echo $stats['total_size']; ?> <?php echo $stats['size_unit']; ?></td>
+        <td><?php echo $stats['formatted_size']; ?></td>
         <td><?php echo $stats['time_text']; ?></td>
 </tr>
 </table>
@@ -83,7 +83,7 @@ $catalogs = Catalog::get_catalogs();
 	<td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>
 	<td class="cel_songs"><?php echo scrub_out($stats['songs']); ?></td>
 	<td class="cel_video"><?php echo scrub_out($stats['video']); ?></td>
-	<td class="cel_total"><?php echo scrub_out($stats['total_size'] . ' ' . $stats['size_unit']); ?></td>
+	<td class="cel_total"><?php echo scrub_out($stats['formatted_size']); ?></td>
 </tr>
 <?php } ?>
 

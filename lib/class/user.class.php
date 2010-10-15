@@ -699,23 +699,7 @@ class User extends database_object {
 			$total = $total + $r['size'];
 		}
 
-		$divided = 0;
-
-		while (strlen(floor($total)) > 3) {
-			$total = ($total / 1024);
-			$divided++;
-		}
-
-		switch ($divided) {
-			default:
-			case '1': $name = "KB"; break;
-			case '2': $name = "MB"; break;
-			case '3': $name = "GB"; break;
-			case '4': $name = "TB"; break;
-			case '5': $name = "PB"; break;
-		} // end switch
-
-		$this->f_useage = round($total,2) . $name;
+		$this->f_useage = format_bytes($total);
 
 		/* Get Users Last ip */
 		if (count($data = $this->get_ip_history(1))) {

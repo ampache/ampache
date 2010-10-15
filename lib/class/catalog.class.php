@@ -202,22 +202,7 @@ class Catalog extends database_object {
 
 		$hours = floor($results['time']/3600);
 
-		// Convert size to megabytes
-		$size =  $results['size']/1048576;
-
-		// Do pretty formatting and final unit conversion if needed
-		if ($size > 1048576) {
-			 $results['total_size'] = sprintf("%.2f",($size/1048576));
-			 $results['size_unit']  = 'TB';
-		}
-		else if ($size > 1024) {
-			$results['total_size'] = sprintf("%.2f",($size/1024));
-			$results['size_unit']  = 'GB';
-		}
-		else {
-			$results['total_size'] = sprintf("%.2f",$size);
-			$results['size_unit']  = 'MB';
-		}
+		$results['formatted_size'] = format_bytes($results['size']);
 
 		$days = floor($hours/24);
 		$hours = $hours%24;
@@ -450,7 +435,7 @@ class Catalog extends database_object {
 	public function add_files($path,$options) {
 
 		// Profile the memory a bit
-		debug_event('Memory',memory_get_usage(true)/1024/1024 . "MB",1);
+		debug_event('Memory', format_bytes(memory_get_usage(true)), 5);
 
 		// See if we want a non-root path for the add
 		if (isset($options['subdirectory'])) {
@@ -485,7 +470,7 @@ class Catalog extends database_object {
 		// Ensure that we've got our cache
 		$this->_create_filecache();
 
-		debug_event('Memory',memory_get_usage(true)/1024/1024 . "MB",1);
+		debug_event('Memory', format_bytes(memory_get_usage(true)), 5);
 
 		// Set the base "ticker" we will only update ever 5+ seconds
 		$ticker = time();
@@ -497,7 +482,7 @@ class Catalog extends database_object {
 			if (substr($file,0,1) == '.') { continue; }
 
 			debug_event('read',"Starting work on $file inside $path",'5','ampache-catalog');
-			debug_event('Memory',memory_get_usage(true)/1024/1024 . "MB",1);
+			debug_event('Memory', format_bytes(memory_get_usage(true)), 5);
 
 			/* Create the new path */
 			$full_file = $path.$slash_type.$file;

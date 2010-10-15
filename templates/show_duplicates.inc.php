@@ -65,7 +65,7 @@
 	<td class="cel_album"><?php echo $song->f_album_link; ?></td>
 	<td class="cel_length"><?php echo $song->f_time; ?></td>
 	<td class="cel_bitrate"><?php echo $song->f_bitrate; ?></td>
-	<td class="cel_size"><?php echo $song->f_size; ?>MB</td>
+	<td class="cel_size"><?php echo $song->f_size; ?></td>
 	<td class="cel_filename"><?php echo scrub_out($song->file); ?></td>
 </tr>
 <?php

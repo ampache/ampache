@@ -53,7 +53,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
   $songprops[gettext_noop('Catalog Number')]   = scrub_out($song->catalog_number);
   $songprops[gettext_noop('Bitrate')]   = scrub_out($song->f_bitrate);
   if (Access::check('interface','75')) {
-    $songprops[gettext_noop('Filename')]   = scrub_out($song->file) . " " . $song->f_size . "MB";
+    $songprops[gettext_noop('Filename')]   = scrub_out($song->file) . " " . $song->f_size;
   }
   if ($song->update_time) {
     $songprops[gettext_noop('Last Updated')]   = date("d/m/Y H:i",$song->update_time);

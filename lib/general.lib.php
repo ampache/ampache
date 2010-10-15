@@ -111,6 +111,29 @@ function unhtmlentities($string) {
 } //unhtmlentities
 
 /**
+ * format_bytes
+ * Turns a size in bytes into a human-readable value
+ */
+function format_bytes($value, $precision = 2) {
+	$divided = 0;
+	while (strlen(floor($value)) > 3) {
+		$value = ($value / 1024);
+		$divided++;
+	}
+
+	switch ($divided) {
+		case 1: $unit = 'kB'; break;
+		case 2: $unit = 'MB'; break;
+		case 3: $unit = 'GB'; break;
+		case 4: $unit = 'TB'; break;
+		case 5: $unit = 'PB'; break;
+		default: $unit = 'B'; break;
+        } // end switch
+
+	return round($value, $precision) . ' ' . $unit;
+}
+
+/**
  * make_bool
  * This takes a value and returns what we consider to be the correct boolean
  * value. We need a special function because PHP considers "false" to be true.
