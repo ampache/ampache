@@ -34,7 +34,7 @@ class AmpacheMail {
 	 * Constructor
 	 * This does nothing. Much like goggles.
 	 */
-	public function __construct($name) {
+	public function __construct() {
 
 		// Eh bien.
 
