@@ -163,9 +163,12 @@ class AmpacheMail {
 				$mail->Host = $mailhost;
 				$mail->Port = $mailport;
 				if($mailauth == true) {
-					$mail->SMTPAuth(true);
+					$mail->SMTPAuth = true;
 					$mail->Username = $mailuser;
 					$mail->Password = $mailpass;
+				}
+				if ($mailsecure = Config::get('mail_secure_smtp')) {
+					$mail->SMTPSecure = ($mailsecure == 'ssl') ? 'ssl' : 'tls';
 				}
 			break;
 			case 'sendmail':

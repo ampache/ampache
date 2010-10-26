@@ -612,6 +612,11 @@ use_rss = true
 ;DEFAULT: 25
 ;mail_port = 25
 
+;Secure SMTP
+;POSSIBLE VALUES: ssl tls
+;DEFAULT: none
+;mail_secure_smtp = tls
+
 ;Enable SMTP authentication
 ;DEFAULT: false
 ;mail_auth = true
