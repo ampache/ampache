@@ -68,8 +68,13 @@ $database = scrub_in($_REQUEST['local_db']);
 if ($_SERVER['HTTPS'] == 'on') { $http_type = "https://"; }
 else { $http_type = "http://"; }
 
-define('WEB_PATH',$http_type . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/' . basename($_SERVER['PHP_SELF']));
-define('WEB_ROOT',$http_type . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']));
+// Correct potential \ or / in the dirname
+$safe_dirname = rtrim(dirname($_SERVER['PHP_SELF']),"/\\"); 
+
+define('WEB_PATH',$http_type . $_SERVER['HTTP_HOST'] . $safe_dirname . '/' . basename($_SERVER['PHP_SELF']));
+define('WEB_ROOT',$http_type . $_SERVER['HTTP_HOST'] . $safe_dirname);
+
+unset($safe_dirname); 
 
 /* Catch the Current Action */
 switch ($_REQUEST['action']) {
