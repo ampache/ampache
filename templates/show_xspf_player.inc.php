@@ -54,7 +54,8 @@
 </script>
 <div id="mp3player">
 <?php
-$player_url = sprintf("%s/modules/flash/xspf_jukebox.swf?autoplay=true&repeat_playlist=true&crossFade=false&shuffle=false&skin_url=%s/modules/flash/Original/&playlist_url=%s",Config::get('web_path'),Config::get('web_path'),$play_url);
+if (file_exists(Config::get('prefix')."/modules/flash/xspf_jukebox.swf")) {
+    $player_url = sprintf("%s/modules/flash/xspf_jukebox.swf?autoplay=true&repeat_playlist=true&crossFade=false&shuffle=false&skin_url=%s/modules/flash/Original/&playlist_url=%s",Config::get('web_path'),Config::get('web_path'),$play_url);
 ?>
 <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="400" height="170" id="xspf_player" align="middle">
 	<param name="pluginspage" value="http://www.macromedia.com/go/getflashplayer" />
@@ -69,6 +70,9 @@ $player_url = sprintf("%s/modules/flash/xspf_jukebox.swf?autoplay=true&repeat_pl
 	<param name="align"   value="middle" />
 	<embed src="<?php echo $player_url; ?>" quality="high" bgcolor="#ffffff" width="400" height="170" name="xspf_player" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
 </object>
+<?php } else { ?>
+<p style="color:#ffffff;">Debian Policy requires the removal of the XSPF Flash Player, please see /usr/share/doc/ampache/README.Debian.gz for details and a work around.</p>
+<?php } ?>
 </div>
 
 </body>
