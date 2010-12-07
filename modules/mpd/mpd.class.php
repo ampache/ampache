@@ -342,7 +342,7 @@ class mpd {
             $this->_error('QueueCommand', 'Not connected');
             return false;
         }
-        
+
         if (!$this->_command_queue) {
             $this->_command_queue = self::COMMAND_START_BULK . "\n";
         }
@@ -374,7 +374,7 @@ class mpd {
             _error('SendCommandQueue', 'Not connected');
             return false;
         }
-        
+
         $this->_command_queue .= self::COMMAND_END_BULK . "\n";
         $response = $this->SendCommand($this->_command_queue);
 
@@ -394,8 +394,8 @@ class mpd {
     public function RefreshInfo() {
         $stats = $this->SendCommand(self::COMMAND_STATISTICS, null, false);
         $status = $this->SendCommand(self::COMMAND_STATUS, null, false);
-       
-        
+
+
         if (!$stats || !$status) {
             return false;
         }
@@ -823,7 +823,7 @@ class mpd {
         }
 
         $response = $this->SendCommand(self::COMMAND_FIND, array($type, $string), false);
-        
+
         $results = false;
 
         if ($response) {
@@ -888,7 +888,7 @@ class mpd {
         if (!$response = $this->SendCommand(self::COMMAND_TABLE, $params, false)) {
             return false;
         }
-        
+
         $results = array();
         $parsed = self::_parseResponse($response);
 
@@ -953,7 +953,7 @@ class mpd {
         if (!$response) {
             return false;
         }
-            
+
         $results = array();
         $counter = -1;
         $lines = explode("\n", $response);
