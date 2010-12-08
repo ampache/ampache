@@ -679,6 +679,43 @@ class vauth {
 				$retval = ldap_bind($ldap_link, $user_dn, $password);
 
 				if ($retval) {
+					// When the current user needs to be in a specific group to access Ampache,
+					// check whether the 'member' list of this group contains the current user's DN
+					if ($require_group) {
+
+						// read all 'member' entries of the required LDAP group
+						$group_result = ldap_read($ldap_link, $require_group, 'objectclass=*', array('member'));
+						// return failure when ldap_search didn't succeed
+						if (!$group_result) {
+							debug_event('LDAP_GROUP_AUTH',"Reading the LDAP group $require_group didn't succeed",'1');
+							$results['success'] = false;
+							$results['error'] = "The LDAP group $require_group couldn't be read.";
+							return $results;
+						}
+
+						// extract the single member entries from the queried group DN
+						$group_info = ldap_get_entries($ldap_link, $group_result);
+
+						// return when no member at all is defined in the specified LDAP group
+						if ($group_info['count'] < 1) {
+							debug_event('LDAP_GROUP_AUTH',"No members found in the specified LDAP group $require_group",'3');
+							$results['success'] = false;
+							$results['error'] = "The specified LDAP group $require_group doesn't contain any members.";
+							return $results;
+						}
+
+						// grep the list of 'member' entries for the current user's DN
+						$group_match = preg_grep("/^$user_dn\$/i", $group_info[0]['member']);
+
+						// when the current user's DN isn't listed in the 'member' attributes
+						// of the group, do not return success
+						if (!$group_match) {
+							debug_event('LDAP_GROUP_AUTH',"User $user_dn is not a member of the group $require_group",'1');
+							$results['success'] = false;
+							$results['error'] = "User $user_dn is not authorized, as this user is not a member of the LDAP group $require_group";
+							return $results;
+						}
+					}
 					ldap_close($ldap_link);
 					$results['success']  = true;
 					$results['type']     = "ldap";
