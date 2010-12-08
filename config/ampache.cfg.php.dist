@@ -402,44 +402,39 @@ refresh_limit = "60"
 ; DEFAULT: false
 ;auto_create = "false"
 
-; LDAP filter string to use
+; LDAP filter string to use (required)
 ; For OpenLDAP use "uid" 
 ; For Microsoft Active Directory (MAD) use "sAMAccountName"
 ; DEFAULT: null
 ; ldap_filter = "sAMAccountName"
 
-; LDAP objectclass it's required so if you don't know use *
+; LDAP objectclass (required)
 ; OpanLDAP objectclass = "*"
 ; MAD objectclass = "organizationalPerson"
 ; DEFAULT null
 ;ldap_objectclass = "organizationalPerson"
 
-; if this is the case, fill these in here:
+; Initial credentials to bind with for searching (optional)
 ; DEFAULT: null
 ;ldap_username = ""
 ;ldap_password = ""
 
-; NOT YET IMPLEMENTED!!
-; This option checks to see if the specified user is in
-; a specific ldap group, allowing you to give access based
-; on group membership
+; Require that the user is in a specific group (optional)
 ; DEFAULT: null
 ;ldap_require_group = "cn=yourgroup,ou=yourorg,dc=yoursubdomain,dc=yourdomain,dc=yourtld"
 
-; This is the search dn used to find your user, uid=username is added on to 
-; This string 
+; This is the search dn used to find users (required)
 ; DEFAULT: null
 ;ldap_search_dn = "ou=People,dc=yoursubdomain,dc=yourdomain,dc=yourtld"
 
-; This is the address of your ldap server
+; This is the address of your ldap server (required)
 ; DEFAULT: null
 ;ldap_url = ""
 
-; Specify where in your ldap db the following fields are stored:
-; (comment out if you don't have them)
-; OpenLDAP: ldap_name_field = "cn"
+; Attributes where additional user information is stored (optional)
+; OpenLDAP ldap_name_field = "cn"
 ; MAD ldap_name_field = "displayname"
-; DEFAULT: [none]
+; DEFAULT: null
 ;ldap_email_field = "mail"
 ;ldap_name_field  = "cn"
 

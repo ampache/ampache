@@ -626,8 +626,6 @@ class vauth {
 	 * provided.
 	 * Step three, figure out if they are authorized to use ampache:
 	 * TODO: in config but unimplemented:
-	 *      * require-group "The DN fetched from the LDAP directory (or the 
-	 *        username passed by the client) occurs in the LDAP group"
 	 *      * require-dn "Grant access if the DN in the directive matches 
 	 *        the DN fetched from the LDAP directory"
 	 *      * require-attribute "an attribute fetched from the LDAP 
@@ -638,7 +636,6 @@ class vauth {
 		$ldap_username	= Config::get('ldap_username');
 		$ldap_password	= Config::get('ldap_password');
 
-		/* Currently not implemented */
 		$require_group	= Config::get('ldap_require_group');
 
 		// This is the DN for the users (required)
@@ -653,6 +650,13 @@ class vauth {
 		//This is the ldap objectclass (required)
 		$ldap_class	= Config::get('ldap_objectclass');
 
+		if (!($ldap_dn && $ldap_url && $ldap_filter && $ldap_objectclass)) {
+			debug_event('ldap_auth', 'Required config value missing', 1);
+			$results['success'] = false;
+			$results['error'] = 'Incomplete LDAP config';
+			return $results;
+		}
+
 		$ldap_name_field	= Config::get('ldap_name_field');
 		$ldap_email_field	= Config::get('ldap_email_field');
 
@@ -664,7 +668,7 @@ class vauth {
 			// bind using our auth if we need to for initial search
 			if (!ldap_bind($ldap_link, $ldap_username, $ldap_password)) {
 				$results['success'] = false;
-				$results['error'] = "Could not bind to LDAP server.";
+				$results['error'] = 'Could not bind to LDAP server.';
 				return $results;
 			} // If bind fails
 
@@ -679,40 +683,33 @@ class vauth {
 				$retval = ldap_bind($ldap_link, $user_dn, $password);
 
 				if ($retval) {
-					// When the current user needs to be in a specific group to access Ampache,
-					// check whether the 'member' list of this group contains the current user's DN
+					// When the current user needs to be in
+					// a specific group to access Ampache,
+					// check whether the 'member' list of 
+					// the group contains the DN
 					if ($require_group) {
-
-						// read all 'member' entries of the required LDAP group
 						$group_result = ldap_read($ldap_link, $require_group, 'objectclass=*', array('member'));
-						// return failure when ldap_search didn't succeed
 						if (!$group_result) {
-							debug_event('LDAP_GROUP_AUTH',"Reading the LDAP group $require_group didn't succeed",'1');
+							debug_event('ldap_auth', "Failure reading $require_group", 1);
 							$results['success'] = false;
-							$results['error'] = "The LDAP group $require_group couldn't be read.";
+							$results['error'] = 'The LDAP group could not be read';
 							return $results;
 						}
 
-						// extract the single member entries from the queried group DN
 						$group_info = ldap_get_entries($ldap_link, $group_result);
 
-						// return when no member at all is defined in the specified LDAP group
 						if ($group_info['count'] < 1) {
-							debug_event('LDAP_GROUP_AUTH',"No members found in the specified LDAP group $require_group",'3');
+							debug_event('ldap_auth', "No members found in $require_group", 1);
 							$results['success'] = false;
-							$results['error'] = "The specified LDAP group $require_group doesn't contain any members.";
+							$results['error'] = 'Empty LDAP group';
 							return $results;
 						}
 
-						// grep the list of 'member' entries for the current user's DN
 						$group_match = preg_grep("/^$user_dn\$/i", $group_info[0]['member']);
-
-						// when the current user's DN isn't listed in the 'member' attributes
-						// of the group, do not return success
 						if (!$group_match) {
-							debug_event('LDAP_GROUP_AUTH',"User $user_dn is not a member of the group $require_group",'1');
+							debug_event('ldap_auth', "$user_dn is not a member of $require_group",1);
 							$results['success'] = false;
-							$results['error'] = "User $user_dn is not authorized, as this user is not a member of the LDAP group $require_group";
+							$results['error'] = 'LDAP login attempt failed';
 							return $results;
 						}
 					}
