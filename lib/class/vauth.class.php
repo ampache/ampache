@@ -650,7 +650,7 @@ class vauth {
 		//This is the ldap objectclass (required)
 		$ldap_class	= Config::get('ldap_objectclass');
 
-		if (!($ldap_dn && $ldap_url && $ldap_filter && $ldap_objectclass)) {
+		if (!($ldap_dn && $ldap_url && $ldap_filter && $ldap_class)) {
 			debug_event('ldap_auth', 'Required config value missing', 1);
 			$results['success'] = false;
 			$results['error'] = 'Incomplete LDAP config';
