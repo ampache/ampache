@@ -120,13 +120,9 @@ if (($_POST['username'] && $_POST['password']) ||
 			}
 			else {
 				$auth['success'] = false;
-				Error::add('general', _('Unable to create new account'));
+				Error::add('general', _('Unable to create local account'));
 			}
 		} // End if auto_create
-		elseif (!$user->username) {
-			$auth['success'] = false;
-			Error::add('general', _('No local account found'));
-		}
 
 	} // if we aren't in demo mode
 
