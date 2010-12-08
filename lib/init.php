@@ -20,9 +20,6 @@
 
 */
 
-// SVN Fluf
-$svn_version = 'Subversion ' . trim('$Rev$','$ ');
-
 // Use output buffering, this gains us a few things and
 // fixes some CSS issues
 ob_start();
@@ -90,7 +87,7 @@ if (!function_exists('hash') OR !function_exists('inet_pton') OR (strtoupper(sub
 }
 
 /** This is the version.... fluf nothing more... **/
-$results['version']		= '3.6-Alpha1 '. $svn_version;
+$results['version']		= '3.6-Alpha1-DEV';
 $results['int_config_version']	= '11';
 
 $results['raw_web_path']	= $results['web_path'];

@@ -158,7 +158,8 @@ class Access {
 
 		// Check existing ACL's to make sure we're not duplicating values here
 		if (self::exists($data)) {
-			debug_event('ACL Create','Error did not create duplicate ACL entrie for ' . $data['start'] . ' - ' . $data['end'],'1');
+			debug_event('ACL Create','Error: An ACL equal to the created one does already exist. Not adding another one: ' . $data['start'] . ' - ' . $data['end'],'1');
+			Error::add('general',_('Duplicate ACL defined'));
 			return false;
 		}
 
