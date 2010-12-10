@@ -171,6 +171,8 @@ $catalog = new Catalog($media->catalog);
 /* If the song is disabled */
 if (!make_bool($media->enabled)) {
 	debug_event('Play',"Error: $media->file is currently disabled, song skipped",'5');
+	// Check to see if this is a democratic playlist, if so remove it completely
+	if ($demo_id) { $democratic->delete_from_oid($oid,'song'); }
 	exit;
 }
 
@@ -201,13 +203,7 @@ if ($catalog->catalog_type == 'remote') {
 	debug_event('xmlrpc-stream',"Start XML-RPC Stream - " . $media->file . $extra_info,'5');
 
 	/* If this is a voting tmp playlist remove the entry, we do this regardless of play amount */
-	if ($demo_id) {
-	        $row_id = $democratic->get_uid_from_object_id($oid,'song');
-	        if ($row_id) {
-	                debug_event('Democratic','Removing ' . $media->title . ' from Democratic Playlist','1');
-	                $democratic->delete_votes($row_id);
-	        }
-	} // if tmp_playlist
+	if ($demo_id) { $democratic->delete_from_oid($oid,'song'); } // if democratic
 
 	exit;
 } // end if remote catalog
@@ -223,6 +219,8 @@ if (!$media->file OR !is_readable($media->file)) {
 
 	debug_event('Play',"Error song $media->file ($media->title) does not have a valid filename specified",'2');
 	echo "Error: Invalid Song Specified, file not found or file unreadable";
+	// Remove the song votes if this is a democratic song
+	if ($demo_id) { $democratic->delete_from_oid($oid,'song'); }
 	exit;
 }
 
@@ -318,6 +316,7 @@ else {
 
 	if (!is_resource($fp)) {
 		debug_event('Play',"Error: Unable to open $media->file for reading",'2');
+		if ($demo_id) { $democratic->delete_from_oid($oid,'song'); }
 		cleanup_and_exit($lastid);
 	}
 } // else not downsampling
@@ -392,13 +391,7 @@ else {
 
 
 /* If this is a voting tmp playlist remove the entry, we do this regardless of play amount */
-if ($demo_id) {
-	$row_id = $democratic->get_uid_from_object_id($oid,'song');
-        if ($row_id) {
-		debug_event('Democratic','Removing ' . $media->title . ' from Democratic Playlist','1');
-		$democratic->delete_votes($row_id);
-	}
-} // if tmp_playlist
+if ($demo_id) { $democratic->delete_from_oid($oid,'song'); }
 
 /* Clean up any open ends */
 if (Config::get('play_type') == 'downsample' || !$media->native_stream()) {
