@@ -165,12 +165,6 @@ require_localnet_session = "true"
 ; DEFAULT: 42 days
 ;user_ip_cardinality = "42"
 
-; Use XML-RPC
-; Allow XML-RPC connections, if you don't want _any_ possibility of your
-; catalog being streamed from another location comment this out
-; DEFAULT: false
-;xml_rpc 	= "false"
-
 ; Allow Zip Download
 ; This setting allows/disallows using zlib to zip up an entire
 ; playlist/album for download. Even if this is turned on you will
