@@ -1,0 +1,34 @@
+<?php
+        require("twitteroauth/twitteroauth.php");
+        session_start();
+	
+	$link = mysql_connect('db.slamar.com', 'ampache', 'generation');
+	mysql_select_db('ampache', $link) or die("Couldnt connect " . mysql_error() );
+
+	$nowplayq = mysql_query("SELECT object_id FROM now_playing");
+	$nowplayresult = mysql_fetch_array($nowplayq) or die( mysql_error() );
+
+	$songq = mysql_query("SELECT artist,title FROM song WHERE id = " . $nowplayresult['object_id']);
+	$songresult = mysql_fetch_array($songq) or die( mysql_error() );
+
+	$artistq = mysql_query("SELECT name FROM artist WHERE id = " . $songresult['artist'] );
+	$artistresult = mysql_fetch_array($artistq) or die( mysql_error() );
+
+	$return = $songresult['title'] . " by " . $artistresult['name'];
+
+	mysql_select_db('test', $link) or die("Couldnt connect " . mysql_error() );
+
+	$query = mysql_query("SELECT * FROM users WHERE username = 'CrashMann'");
+	$result = mysql_fetch_array($query) or die( mysql_error() );
+
+	mysql_close($link);
+
+	if(!empty($result['username'])) {
+		$twitteroauth = new TwitterOAuth('tCCFlruiduHyUuC2vNQEyQ', 'omRMNdRNktRIqxJVm2uTDyN5iDTUF6Q8eBoinTNgI', $result['oauth_token'], $result['oauth_secret']);
+//		$user_info = $twitteroauth->get('account/verify');
+		$twitteroauth->post('statuses/update', array('status' => 'is listening to ' . $return));
+		
+		echo "Hello " . $result['username'];
+		echo "<br> You are listening to " . $return;
+	}
+?>

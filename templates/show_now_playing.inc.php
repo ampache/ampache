@@ -30,8 +30,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 if (count($results)) {
 $link = Config::get('use_rss') ? ' ' . AmpacheRSS::get_display('nowplaying') : '';
+$link2 = '<a href="' . Config::get('web_path') . '/modules/twitter/twitter_login.php"><img src="' . Config::get('web_path') . '/modules/twitter/Twitter-Icon.png" width="18" height="18"></a>';
 ?>
-<?php show_box_top(_('Now Playing') . $link); ?>
+<?php show_box_top(_('Now Playing') . $link . $link2 ); ?>
 <?php
 foreach ($results as $item) {
 	$media = $item['media'];
