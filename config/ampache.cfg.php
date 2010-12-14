@@ -36,7 +36,7 @@ database_name = "ampachedev"
 
 ; Username for your ampache database
 ; DEFAULT: ""
-database_username = "ampache"
+database_username = "ampdev"
 
 ; Password for your ampache database, this can not be blank
 ; this is a 'forced' security precaution, the default value

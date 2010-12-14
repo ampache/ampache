@@ -52,36 +52,32 @@
         } else {
 		
 		$link = mysql_connect(Config::get('database_hostname'), Config::get('database_username') , Config::get('database_password') );
-        	mysql_select_db('test', $link);
+        	mysql_select_db( Config::get('database_name') , $link);
                 
 		// Let's find the user by its ID
-                $query = mysql_query("SELECT * FROM users WHERE oauth_provider = 'twitter' AND oauth_uid = ". $user_info->id);
+                $query = mysql_query("SELECT * FROM twitter_users WHERE oauth_provider = 'twitter' AND oauth_uid = ". $user_info->id . " AND ampache_id = " . $_SESSION['userdata']['uid']) or die( mysql_error() );
                 $result = mysql_fetch_array($query);
+
+		print_r($result);
+		echo "<br>ampache_id: {$_SESSION['userdata']['uid']}";
+		echo "<br>oauth_uid: {$user_info->id}";
+		echo "<br>oauth_token: {$access_token['oauth_token']}";
+		echo "<br>oauth_secret: {$access_token['oauth_token_secret']}";
+		echo "<br>username: {$user_info->screen_name} <br>";
 
                 // If not, let's add it to the database
                 if(empty($result)){
-                        $query = mysql_query("INSERT INTO users (oauth_provider, 
-				oauth_uid, 
-				username, 
-				oauth_token, 
-				oauth_secret) 
-					VALUES ('twitter', 
-						{$user_info->id},
-						'{$user_info->screen_name}', 
-						'{$access_token['oauth_token']}', 
-						'{$access_token['oauth_token_secret']}
-					')
-			");
+			$query = mysql_query("INSERT INTO twitter_users (ampache_id, oauth_provider, oauth_uid, oauth_token, oauth_secret, username) VALUES ( '{$_SESSION['userdata']['uid']}', 'twitter', '{$user_info->id}', '{$access_token['oauth_token']}', '{$access_token['oauth_token_secret']}', '{$user_info->screen_name}')") or die( mysql_error() );
 
-                        $query = mysql_query("SELECT * FROM users WHERE username = '" . $user_info->screen_name . "'" );
+                        $query = mysql_query("SELECT * FROM twitter_users WHERE username = '" . $user_info->screen_name . "' AND ampache_id = " . $_SESSION['userdata']['uid'] ) or die( mysql_error() );
                         $result = mysql_fetch_array($query);
 			echo "insert: ";
 			print_r($result);
 			echo "<br>";
                 } else {
                         // Update the tokens
-                        $query = mysql_query("UPDATE users SET oauth_token = '{$access_token['oauth_token']}', oauth_secret = '{$access_token['oauth_token_secret']}' WHERE oauth_provider = 'twitter' AND oauth_uid = {$user_info->id}");
-			$query = mysql_query("SELECT * FROM users WHERE username = '" . $user_info->screen_name . "'");
+                        $query = mysql_query("UPDATE twitter_users SET oauth_token = '{$access_token['oauth_token']}', oauth_secret = '{$access_token['oauth_token_secret']}' WHERE oauth_provider = 'twitter' AND oauth_uid = {$user_info->id} AND ampache_id = {$_SESSION['userdata']['uid']}") or die( mysql_error() );
+			$query = mysql_query("SELECT * FROM twitter_users WHERE username = '" . $user_info->screen_name . "'") or die( mysql_error() );
                         $result = mysql_fetch_array($query);
 			echo "update/select";
 			print_r($result);
@@ -97,7 +93,7 @@
 
 		mysql_close($link);
 
-		header('Location: ' . Config::get('web_path') . '/modules/twiter/twitter_update.php');
+		header('Location: ' . Config::get('web_path') . '/modules/twitter/twitter_update.php');
 		echo "session twitterusername: " . $_SESSION['twitterusername'] . "<br>";
 		echo 'got here';
         }

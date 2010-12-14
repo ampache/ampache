@@ -13,9 +13,7 @@
 
 		$return = $nowplayingResults['title'] . " by " . $nowplayingResults['name'];
 
-		mysql_select_db('test', $link) or die("Couldnt connect " . mysql_error() );
-
-		$query = mysql_query("SELECT * FROM users WHERE username = '" . $_SESSION['twitterusername'] . "'");
+		$query = mysql_query("SELECT * FROM twitter_users WHERE username = '" . $_SESSION['twitterusername'] . "' AND ampache_id = " . $_SESSION['userdata']['uid']);
 		$result = mysql_fetch_array($query) or die( mysql_error() );
 
 		mysql_close($link);
