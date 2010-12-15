@@ -28,7 +28,7 @@
 		$user_info = $twitteroauth->get('account/verify');
 		if( $user_info->error == 'Not found' ) {
 			debug_event("Twitter", "Auth Successful! Posting Status", "5");
-			//$twitteroauth->post('statuses/update', array('status' => 'is rocking out to ' . $return));
+			$twitteroauth->post('statuses/update', array('status' => 'is rocking out to ' . $return));
 			header('Location: ' . Config::get('web_path') );
 		}
 		
