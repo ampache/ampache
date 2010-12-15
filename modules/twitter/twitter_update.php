@@ -10,7 +10,7 @@
 
 		$nowplayingQuery = "SELECT song.title,artist.name FROM song,now_playing,artist WHERE song.id = now_playing.object_id AND artist.id = song.artist";
 		debug_event("Twitter", "Now Playing query: " . $nowplayingQuery, "6");
-		$nowplayingRun = mysql_query($nowplayQuery) or die( mysql_error);
+		$nowplayingRun = mysql_query($nowplayingQuery) or die( mysql_error);
 		$nowplayingResults = mysql_fetch_array($nowplayingRun) or die( mysql_error() );
 
 		$return = $nowplayingResults['title'] . " by " . $nowplayingResults['name'];
@@ -28,7 +28,7 @@
 		$user_info = $twitteroauth->get('account/verify');
 		if( $user_info->error == 'Not found' ) {
 			debug_event("Twitter", "Auth Successful! Posting Status", "5");
-			$twitteroauth->post('statuses/update', array('status' => 'is rocking out to ' . $return));
+			//$twitteroauth->post('statuses/update', array('status' => 'is rocking out to ' . $return));
 			header('Location: ' . Config::get('web_path') );
 		}
 		

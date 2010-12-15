@@ -347,7 +347,7 @@ max_amazon_results_pages = 1
 ; Debug
 ; If this is enabled Ampache will write debugging information to the log file
 ; DEFAULT: false
-;debug = "false"
+debug = "true"
 
 ; Debug Level
 ; This should always be set in conjunction with the
@@ -368,7 +368,7 @@ debug_level = 5
 ; the specified directory exists and your HTTP server has
 ; write access.
 ; DEFAULT: NULL
-;log_path = "/var/log/ampache"
+log_path = "/var/log/ampache"
 
 ; Charset of generated HTML pages
 ; Default of UTF-8 should work for most people
@@ -629,6 +629,7 @@ use_rss = true
 ; your mail auth password.
 ;mail_auth_pass = ""
 
-; Twitter Keys
+; Twitter
+twitter = true
 twitter_consumer_key = "tCCFlruiduHyUuC2vNQEyQ"
 twitter_consumer_secret = "omRMNdRNktRIqxJVm2uTDyN5iDTUF6Q8eBoinTNgI"

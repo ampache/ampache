@@ -3,7 +3,7 @@
 	require_once( Config::get('prefix') . "/modules/twitter/twitteroauth/twitteroauth.php");
 	session_start();
 	
-	if( !isset($_SESSION['twitterCount'] ) {
+	if( !isset($_SESSION['twitterCount'] )) {
 		$_SESSION['twitterCount'] = 0;
 	}
 	if( isset($_SESSION['twitterusername']) ) {
