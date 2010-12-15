@@ -5,33 +5,35 @@
 	
 
 	if(!empty($_SESSION['twitterusername'])) {
-		$link = mysql_connect( Config::get('database_hostname'), Config::get('database_username'), Config::get('database_password') );
+		$link = mysql_connect( Config::get('database_hostname'), Config::get('database_username'), Config::get('database_password') ) or die( mysql_error() );;
 		mysql_select_db( Config::get('database_name') , $link) or die("Couldnt connect " . mysql_error() );
 
-		$nowplayingQuery = mysql_query("SELECT song.title,artist.name FROM song,now_playing,artist WHERE song.id = now_playing.object_id AND artist.id = song.artist");
-		$nowplayingResults = mysql_fetch_array($nowplayingQuery) or die( mysql_error() );
+		$nowplayingQuery = "SELECT song.title,artist.name FROM song,now_playing,artist WHERE song.id = now_playing.object_id AND artist.id = song.artist";
+		debug_event("Twitter", "Now Playing query: " . $nowplayingQuery, "6");
+		$nowplayingRun = mysql_query($nowplayQuery) or die( mysql_error);
+		$nowplayingResults = mysql_fetch_array($nowplayingRun) or die( mysql_error() );
 
 		$return = $nowplayingResults['title'] . " by " . $nowplayingResults['name'];
+		debug_event("Twitter", "Song from DB is: " . $return, "5");
 
-		$query = mysql_query("SELECT * FROM twitter_users WHERE username = '" . $_SESSION['twitterusername'] . "' AND ampache_id = " . $_SESSION['userdata']['uid']);
-		$result = mysql_fetch_array($query) or die( mysql_error() );
+		$selectquery = "SELECT * FROM twitter_users WHERE username = '" . $_SESSION['twitterusername'] . "' AND ampache_id = " . $_SESSION['userdata']['uid'];
+		debug_event("Twitter", "Select query: " . $selectquery, "6");
+		$selectrun = mysql_query($selectquery) or die( mysql_error() );
+
+		$result = mysql_fetch_array($selectrun) or die( mysql_error() );
 
 		mysql_close($link);
 
 		$twitteroauth = new TwitterOAuth( Config::get('twitter_consumer_key'), Config::get('twitter_consumer_secret'), $result['oauth_token'], $result['oauth_secret']);
 		$user_info = $twitteroauth->get('account/verify');
 		if( $user_info->error == 'Not found' ) {
+			debug_event("Twitter", "Auth Successful! Posting Status", "5");
 			$twitteroauth->post('statuses/update', array('status' => 'is rocking out to ' . $return));
-			echo "updated";
 			header('Location: ' . Config::get('web_path') );
 		}
 		
-		echo "Hello " . $result['username'];
-		echo "<br> You are listening to " . $return;
-		echo "<br>";
-		print_r($user_info);
 	} else {
-		echo "sessionusername: " . $_SESSION['twitterusername'] . "<br>";
-		echo 'borked';
+			debug_event("Twitter", "Auth Error going back to home.", "5");
+			header('Location: ' . Config::get('web_path') );
 	}
 ?>

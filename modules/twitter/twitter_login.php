@@ -2,8 +2,13 @@
 	require_once '../../lib/init.php';
 	require_once( Config::get('prefix') . "/modules/twitter/twitteroauth/twitteroauth.php");
 	session_start();
-
+	
+	if( !isset($_SESSION['twitterCount'] ) {
+		$_SESSION['twitterCount'] = 0;
+	}
 	if( isset($_SESSION['twitterusername']) ) {
+
+		debug_event("Twitter", "User has logged in this session.", "5");
 		header('Location: twitter_update.php');
 	} else {
 		// The TwitterOAuth instance
@@ -21,9 +26,9 @@
 			// Let's generate the URL and redirect
 			$url = $twitteroauth->getAuthorizeURL($request_token['oauth_token']);
 			header('Location: '. $url);
-			echo "ok";
 		} else {
-			die('Something wrong happened.');
+			debug_event("Twitter", "Could not generate the URL to continue.  Going back.", "5");
+			header('Location: ' . Config::get('web_path') );
 		}
 	}
 ?>
