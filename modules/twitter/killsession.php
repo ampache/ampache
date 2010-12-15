@@ -1,7 +1,8 @@
 <?php
-
+	require_once '../../lib/init.php';
 	session_start();
-	session_destroy();
+	
+	$_SESSION['twitterusername'] = false;
+	header('Location: ' . Config::get('web_path') );
 ?>
 
-<a href="index.html">back</a>

@@ -51,43 +51,44 @@
 		header('Location: ' . Config::get('web_path'));
         } else {
 		
-		$link = mysql_connect(Config::get('database_hostname'), Config::get('database_username') , Config::get('database_password') );
-        	mysql_select_db( Config::get('database_name') , $link);
-                
-		// Let's find the user by its ID
-                $query = mysql_query("SELECT * FROM twitter_users WHERE oauth_provider = 'twitter' AND oauth_uid = ". $user_info->id . " AND ampache_id = " . $_SESSION['userdata']['uid']) or die( mysql_error() );
-                $result = mysql_fetch_array($query);
+		// Let's find the user by its twitterid and ampacheid
+                $idselectquery = "SELECT * FROM twitter_users WHERE oauth_provider = 'twitter' AND oauth_uid = ". $user_info->id . " AND ampache_id = " . $_SESSION['userdata']['uid'];
+		debug_event("Twitter", "Id query: " . $idselectquery, "6");
 
-		echo "<br>ampache_id: {$_SESSION['userdata']['uid']}";
-		echo "<br>oauth_uid: {$user_info->id}";
-		echo "<br>oauth_token: {$access_token['oauth_token']}";
-		echo "<br>oauth_secret: {$access_token['oauth_token_secret']}";
-		echo "<br>username: {$user_info->screen_name} <br>";
+		$idselectrun = Dba::read($idselectquery);
+                $result = Dba::fetch_assoc($idselectrun);
+
+		debug_event("Twitter", "ampache_id: {$_SESSION['userdata']['uid']}");
+		debug_event("Twitter", "oauth_uid: {$user_info->id}", "5");
+		debug_event("Twitter", "oauth_token: {$access_token['oauth_token']}", "5");
+		debug_event("Twitter", "oauth_secret: {$access_token['oauth_token_secret']}", "5");
+		debug_event("Twitter", "username: {$user_info->screen_name}", "5");
 
                 // If not, let's add it to the database
                 if(empty($result)){
 			debug_event("Twitter", "First time user.  Add them to the DB.", "5");
 			$insert_query ="INSERT INTO twitter_users (ampache_id, oauth_provider, oauth_uid, oauth_token, oauth_secret, username) VALUES ( '{$_SESSION['userdata']['uid']}', 'twitter', '{$user_info->id}', '{$access_token['oauth_token']}', '{$access_token['oauth_token_secret']}', '{$user_info->screen_name}')";
 
-			debug_event("Twitter", "Insert query: " . $insert_query, "5");
-			$insert_run = mysql_query($insert_query) or die( mysql_error() );
+			debug_event("Twitter", "Insert query: " . $insert_query, "6");
+			$insert_run = Dba::write($insert_query);
 
                         $select_query = "SELECT * FROM twitter_users WHERE username = '" . $user_info->screen_name . "' AND ampache_id = " . $_SESSION['userdata']['uid']; 
-			debug_event("Twitter", "Select query: {$query}", "5");
-                        $select_run = mysql_query( $select_query ) or die( mysql_error() );
-			$result = mysql_fetch_array($select_run);
+			debug_event("Twitter", "Select query: {$query}", "6");
+                        $select_run = Dba::read( $select_query );
+			$result = Dba::fetch_assoc($select_run);
                 } else {
                         debug_event("Twitter", "Update the DB to hold current tokens", "5");
 
 			$update_query = "UPDATE twitter_users SET oauth_token = '{$access_token['oauth_token']}', oauth_secret = '{$access_token['oauth_token_secret']}' WHERE oauth_provider = 'twitter' AND oauth_uid = {$user_info->id} AND ampache_id = {$_SESSION['userdata']['uid']}";
 			debug_event("Twitter", "update query: " . $update_query, "6");
-			$update_run = mysql_query($update_query) or die( mysql_error);
+
+			$update_run = Dba::write($update_query);
 
 			$select_query = "SELECT * FROM twitter_users WHERE username = '" . $user_info->screen_name . "'";
 			debug_event("Twitter", "select query: " . $select_query, "6");
-			$select_run = mysql_query($select_query) or die( mysql_error() );
 
-                        $result = mysql_fetch_array($select_run);
+			$select_run = Dba::read($select_query);
+                        $result = Dba::fetch_assoc($select_run);
                 }
 
 	        $_SESSION['id'] = $result['id'];
@@ -96,8 +97,6 @@
         	$_SESSION['oauth_provider'] = $result['oauth_provider'];
         	$_SESSION['oauth_token'] = $result['oauth_token'];
         	$_SESSION['oauth_secret'] = $result['oauth_secret'];
-
-		mysql_close($link);
 
 		header('Location: ' . Config::get('web_path') . '/modules/twitter/twitter_update.php');
         }
