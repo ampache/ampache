@@ -6,7 +6,7 @@
 	
 	if(!empty($_SESSION['twitterusername'])) {
 		header('Location: ' . Config::Get('web_path') . '/modules/twitter/twitter_update.php');
-		debug_event("Twitter", "Twitter user has logged in this session." "5");
+		debug_event("Twitter", "Twitter user has logged in this session.", "5");
 	}
 
 	if(!empty($_GET['oauth_verifier']) && !empty($_SESSION['oauth_token']) && !empty($_SESSION['oauth_token_secret'])){
@@ -18,7 +18,7 @@
 			header('Location: ' . Config::Get('web_path') . '/modules/twitter/twitter_login.php');
 		} else {
 			debug_event("Twitter", "Failed to auth too many times.  Giving up.", "5");
-			header('Location: ' . Config::Get('web_path');
+			header('Location: ' . Config::Get('web_path') );
 		}
 	}
 
@@ -26,13 +26,13 @@
 	$twitteroauth = new TwitterOAuth( Config::get('twitter_consumer_key'), Config::get('twitter_consumer_secret'), $_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);
 	if( !isset($twitteroauth) ) {
 		debug_event("Twitter", "Couldn't create OAuth object.", "5");
-		header('Location: ' . Config::get('web_path');
+		header('Location: ' . Config::get('web_path'));
 	}
 	// Let's request the access token
 	$access_token = $twitteroauth->getAccessToken($_GET['oauth_verifier']);
 	if( !isset($access_token) ) {
 		debug_event("Twitter", "Couldn't get access token", "5");
-		header('Location: ' . Config::get('web_path');
+		header('Location: ' . Config::get('web_path'));
 	}
 	// Save it in a session var
 	$_SESSION['access_token'] = $access_token;
@@ -48,7 +48,7 @@
         if( isset($user_info->error)) {
 		debug_event("Twitter", "Error verifying credentials", "5");
 		session_destroy();
-		header('Location: ' . Config::get('web_path');
+		header('Location: ' . Config::get('web_path'));
         } else {
 		
 		$link = mysql_connect(Config::get('database_hostname'), Config::get('database_username') , Config::get('database_password') );
@@ -67,13 +67,13 @@
                 // If not, let's add it to the database
                 if(empty($result)){
 			debug_event("Twitter", "First time user.  Add them to the DB.", "5");
-			$insert_query ="INSERT INTO twitter_users (ampache_id, oauth_provider, oauth_uid, oauth_token, oauth_secret, username) VALUES ( '{$_SESSION['userdata']['uid']}', 'twitter', '{$user_info->id}', '{$access_token['oauth_token']}', '{$access_token['oauth_token_secret']}', '{$user_info->screen_name}')"
+			$insert_query ="INSERT INTO twitter_users (ampache_id, oauth_provider, oauth_uid, oauth_token, oauth_secret, username) VALUES ( '{$_SESSION['userdata']['uid']}', 'twitter', '{$user_info->id}', '{$access_token['oauth_token']}', '{$access_token['oauth_token_secret']}', '{$user_info->screen_name}')";
 
-			debug_event("Twitter", "Insert query: {$insert_query}", "6";
+			debug_event("Twitter", "Insert query: " . $insert_query, "5");
 			$insert_run = mysql_query($insert_query) or die( mysql_error() );
 
                         $select_query = "SELECT * FROM twitter_users WHERE username = '" . $user_info->screen_name . "' AND ampache_id = " . $_SESSION['userdata']['uid']; 
-			debug_event("Twitter", "Select query: {$query}", "6";
+			debug_event("Twitter", "Select query: {$query}", "5");
                         $select_run = mysql_query( $select_query ) or die( mysql_error() );
 			$result = mysql_fetch_array($select_run);
                 } else {
