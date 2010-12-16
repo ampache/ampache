@@ -58,7 +58,7 @@
 		$idselectrun = Dba::read($idselectquery);
                 $result = Dba::fetch_assoc($idselectrun);
 
-		debug_event("Twitter", "ampache_id: {$_SESSION['userdata']['uid']}");
+		debug_event("Twitter", "ampache_id: {$_SESSION['userdata']['uid']}", "5");
 		debug_event("Twitter", "oauth_uid: {$user_info->id}", "5");
 		debug_event("Twitter", "oauth_token: {$access_token['oauth_token']}", "5");
 		debug_event("Twitter", "oauth_secret: {$access_token['oauth_token_secret']}", "5");
