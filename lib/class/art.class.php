@@ -534,12 +534,36 @@ class Art extends database_object {
 		$db_results = Dba::write($sql);
 	} // clean
 
+	public function checkOrderDB($method, $gatherAll) {
 
+		if( !($gatherAll) ) {
+			return true;
+		}
+
+		$config = Config::get('art_order');
+		$config = array($config);
+		$art_order = array();
+		
+
+		for( $i = 0; $i < sizeof($config[0]); $i++) {
+			$art_order[$config[0][$i]] = $i;
+		}
+
+		$sql = 'SELECT object_id FROM image WHERE object_id = ' . $this->uid;
+		debug_event('Art', $sql, 6);
+		$db_results = Dba::read($sql);
+
+		if( $art_order['db'] < $art_order[$method] && (Dba::num_rows($db_results) != 0)  ) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 	/**
 	 * gather
 	 * This tries to get the art in question
 	 */
-	public function gather($options = array(), $limit = false) {
+	public function gather($options = array(), $limit = false, $gatherAll = false) {
 
 		// Define vars
 		$results = array();
@@ -574,18 +598,26 @@ class Art extends database_object {
 
 			$data = array();
 
+			debug_event('Art',"method used " .$method_name,3);
+
 			$method_name = "gather_" . $method;
 			if (in_array($method_name, $methods)) {
 				// Some of these take options!
 				switch ($method_name) {
 					case 'gather_amazon':
-						$data = $this->{$method_name}($limit, $options['keyword']);
+						if($this->checkOrderDB($method,$gatherAll)) {
+							$data = $this->{$method_name}($limit, $options['keyword']);
+						}
 					break;
 					case 'gather_lastfm':
-						$data = $this->{$method_name}($limit, $options);
+						if($this->checkOrderDB($method,$gatherAll)) {
+							$data = $this->{$method_name}($limit, $options);
+						}
 					break;
 					default:
-						$data = $this->{$method_name}($limit);
+						if($this->checkOrderDB($method,$gatherAll)) { 
+							$data = $this->{$method_name}($limit);
+						}
 					break;
 				}
 
@@ -901,6 +933,10 @@ class Art extends database_object {
 	 */
 	public function gather_folder($limit = 5) {
 
+		if( !($this->checkOrderDB('folder')) ) {
+			return;
+		}
+			
 		$media = new Album($this->uid);
 		$songs = $media->get_songs();
 		$results = array();

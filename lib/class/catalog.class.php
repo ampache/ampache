@@ -680,7 +680,7 @@ class Catalog extends database_object {
 			);
 
 			// Return results
-			$results = $art->gather($options,1);
+			$results = $art->gather($options,1,true);
 
 			if (count($results)) {
 				// Pull the string representation from the source
