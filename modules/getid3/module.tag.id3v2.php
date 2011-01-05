@@ -595,7 +595,6 @@ class getid3_id3v2
 			// Owner identifier        <text string> $00
 			// Identifier              <up to 64 bytes binary data>
             @list($parsedFrame['ownerid'], $parsedFrame['data']) = explode("\x00", $parsedFrame['data'], 2);
-			unset($parsedFrame['data']);
 
 		} elseif ((($id3v2_majorversion >= 3) && ($parsedFrame['frame_name'] == 'TXXX')) || // 4.2.2 TXXX User defined text information frame
 				(($id3v2_majorversion == 2) && ($parsedFrame['frame_name'] == 'TXX'))) {    // 4.2.2 TXX  User defined text information frame
