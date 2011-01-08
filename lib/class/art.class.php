@@ -922,10 +922,6 @@ class Art extends database_object {
 	 */
 	public function gather_folder($limit = 5) {
 
-		if( !($this->checkOrderDB('folder')) ) {
-			return;
-		}
-			
 		$media = new Album($this->uid);
 		$songs = $media->get_songs();
 		$results = array();
