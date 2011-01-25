@@ -497,9 +497,12 @@ class Democratic extends tmpPlaylist {
 	 * This takes an OID and type and removes the object from the democratic playlist
 	 */
 	public function delete_from_oid($oid,$object_type) { 
-
-		$row_id = $democratic ->get_uid_from_object_id($oid,$object_type); 
-		if ($row_id) { $democratic->delete_votes($row_id); } 
+		
+		$row_id = $this->get_uid_from_object_id($oid,$object_type); 
+		if ($row_id) { 
+			debug_event('Democratic','Removing Votes for ' . $oid . ' of type ' . $object_type,'5'); 
+			$this->delete_votes($row_id); 
+		} 
 		else { debug_event('Democratic','Unable to find Votes for ' . $oid . ' of type ' . $object_type,'3'); } 
 
 		return true; 
