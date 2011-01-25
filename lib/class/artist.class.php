@@ -32,6 +32,7 @@ class Artist extends database_object {
 	public $albums;
 	public $prefix;
 	public $mbid; // MusicBrainz ID
+	public $catalog_id;
 
 	// Constructed vars
 	public $_fake = false; // Set if construct_from_array() used
@@ -41,11 +42,12 @@ class Artist extends database_object {
 	 * Artist class, for modifing a artist
 	 * Takes the ID of the artist and pulls the info from the db
 	 */
-	public function __construct($id='') {
+	public function __construct($id='',$catalog_init=0) {
 
 		/* If they failed to pass in an id, just run for it */
 		if (!$id) { return false; }
 
+		$this->catalog_id = $catalog_init;
 		/* Get the information from the db */
 		$info = $this->get_info($id);
 
@@ -93,8 +95,9 @@ class Artist extends database_object {
 
 		// If we need to also pull the extra information, this is normally only used when we are doing the human display
 		if ($extra) {
-			$sql = "SELECT `song`.`artist`, COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " .
-			"WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
+			$sql = "SELECT `song`.`artist`, COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
+			
+			debug_event("Artist", "build_cache sql: " . $sql, "6");
 			$db_results = Dba::read($sql);
 
 			while ($row = Dba::fetch_assoc($db_results)) {
@@ -130,12 +133,19 @@ class Artist extends database_object {
 	 * gets the album ids that this artist is a part
 	 * of
 	 */
-	public function get_albums() {
+	public function get_albums($catalog) {
+
+		if($catalog) {
+			$catalog_join = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+			$catalog_where = "AND `catalog`.`id` = '$catalog'";
+		}
 
 		$results = array();
 
-		$sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` " .
-			"WHERE `song`.`artist`='$this->id' GROUP BY `album`.`id` ORDER BY `album`.`name`,`album`.`disk`,`album`.`year`";
+		$sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+			"WHERE `song`.`artist`='$this->id' $catalog_where GROUP BY `album`.`id` ORDER BY `album`.`name`,`album`.`disk`,`album`.`year`";
+
+		debug_event("Artist", "$sql", "6");
 		$db_results = Dba::read($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) {
@@ -186,16 +196,21 @@ class Artist extends database_object {
 	 * _get_extra info
 	 * This returns the extra information for the artist, this means totals etc
 	 */
-	private function _get_extra_info() {
+	private function _get_extra_info($catalog=FALSE) {
 
 		// Try to find it in the cache and save ourselves the trouble
-		if (parent::is_cached('artist_extra',$this->id)) {
+		if (parent::is_cached('artist_extra',$this->id) ) {
 			$row = parent::get_from_cache('artist_extra',$this->id);
 		}
 		else {
 			$uid = Dba::escape($this->id);
-			$sql = "SELECT `song`.`artist`,COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` " .
-				"WHERE `song`.`artist`='$uid' GROUP BY `song`.`artist`";
+			$sql = "SELECT `song`.`artist`,COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` WHERE `song`.`artist`='$uid' ";
+			if ($catalog) {
+				$sql .= "AND (`song`.`catalog` = '$catalog') ";
+			}
+
+			$sql .= "GROUP BY `song`.`artist`";
+				
 			$db_results = Dba::read($sql);
 			$row = Dba::fetch_assoc($db_results);
 			parent::add_to_cache('artist_extra',$row['artist'],$row);
@@ -227,11 +242,15 @@ class Artist extends database_object {
 		// If this is a fake object, we're done here
 		if ($this->_fake) { return true; }
 
-		$this->f_name_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
-		$this->f_link = Config::get('web_path') . '/artists.php?action=show&amp;artist=' . $this->id;
-
+		if ($this->catalog_id) {
+			$this->f_name_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;catalog=" . $this->catalog_id . "&amp;artist=" . $this->id . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
+			$this->f_link = Config::get('web_path') . '/artists.php?action=show&amp;catalog=' . $this->catalog_id . '&amp;artist=' . $this->id;
+		} else {
+			$this->f_name_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
+			$this->f_link = Config::get('web_path') . '/artists.php?action=show&amp;artist=' . $this->id;
+		}
 		// Get the counts
-		$extra_info = $this->_get_extra_info();
+		$extra_info = $this->_get_extra_info($this->catalog_id);
 
 		//Format the new time thingy that we just got
 		$min = sprintf("%02d",(floor($extra_info['time']/60)%60));

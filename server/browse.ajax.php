@@ -23,6 +23,9 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
+require_once("../lib/init.php");
+session_start();
+
 if (!defined('AJAX_INCLUDE')) { exit; }
 
 if (isset($_REQUEST['browse_id'])) {
@@ -43,19 +46,25 @@ switch ($_REQUEST['action']) {
 		if ($_REQUEST['key'] && (isset($_REQUEST['multi_alpha_filter']) OR isset($_REQUEST['value']))) {
 			// Set any new filters we've just added
 			$browse->set_filter($_REQUEST['key'],$_REQUEST['multi_alpha_filter']);
+			$browse->set_catalog($_SESSION['catalog']);
 		}
 
 		if ($_REQUEST['sort']) {
 			// Set the new sort value
 			$browse->set_sort($_REQUEST['sort']);
 		}
+		if ($_REQUEST['catalog_key'] || $SESSION['catalog'] != 0) {
+			$browse->set_filter('catalog',$_REQUEST['catalog_key']);
+			$_SESSION['catalog'] = $_REQUEST['catalog_key'];
+		}
 
 		ob_start();
                 $browse->show_objects();
                 $results['browse_content'] = ob_get_clean();
 	break;
+	
 	case 'set_sort':
-
+	
 		if ($_REQUEST['sort']) {
 			$browse->set_sort($_REQUEST['sort']);
 		}
@@ -67,10 +76,6 @@ switch ($_REQUEST['action']) {
 	case 'toggle_tag':
 		$type = $_SESSION['tagcloud_type'] ? $_SESSION['tagcloud_type'] : 'song';
 		$browse->set_type($type);
-
-
-
-
 	break;
 	case 'delete_object':
 		switch ($_REQUEST['type']) {

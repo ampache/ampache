@@ -26,6 +26,9 @@ show_header();
 
 $action = isset($_REQUEST['action']) ? scrub_in($_REQUEST['action']) : null;
 
+session_start();
+$_SESSION['catalog'] = 0;
+
 /**
  * Check for the refresh mojo, if it's there then require the
  * refresh_javascript include. Must be greater then 5, I'm not

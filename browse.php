@@ -32,6 +32,8 @@
 /* Base Require */
 require_once 'lib/init.php';
 
+session_start();
+
 // This page is a little wonky we don't want the sidebar until we know what
 // type we're dealing with so we've got a little switch here that creates the
 // type.. this feels hackish...
@@ -56,6 +58,7 @@ switch($_REQUEST['action']) {
 	case 'file':
 	break;
 	case 'album':
+		$browse->set_filter('catalog',$_SESSION['catalog']);
 		$browse->set_sort('name','ASC');
 		$browse->show_objects();
 	break;
@@ -73,10 +76,12 @@ switch($_REQUEST['action']) {
 		require_once Config::get('prefix') . '/templates/browse_content.inc.php';
 	break;
 	case 'artist':
+		$browse->set_filter('catalog',$_SESSION['catalog']);
 		$browse->set_sort('name','ASC');
 		$browse->show_objects();
 	break;
 	case 'song':
+		$browse->set_filter('catalog',$_SESSION['catalog']);
 		$browse->set_sort('title','ASC');
 		$browse->show_objects();
 	break;

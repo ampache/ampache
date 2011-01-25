@@ -25,9 +25,11 @@
  * This handles all of the sql/filtering for the ampache database
  * this was seperated out from browse to accomodate Dynamic Playlists
  */
+
 class Query {
 
 	public $id;
+	public $catalog;
 
 	protected $_state = array();
 	protected $_cache;
@@ -41,7 +43,7 @@ class Query {
 	 */
 	public function __construct($id = null) {
 		$sid = Dba::escape(session_id());
-
+	
 		if (is_null($id)) {
 			$this->reset();
 			$data = Dba::escape(serialize($this->_state));
@@ -50,6 +52,7 @@ class Query {
 				"VALUES('$sid', '$data')";
 			$db_results = Dba::write($sql);
 			$this->id = Dba::insert_id();
+			
 			return true;
 		}
 
@@ -88,7 +91,8 @@ class Query {
 				'show_art',
 				'starts_with',
 				'exact_match',
-				'alpha_match'
+				'alpha_match',
+				'catalog'
 			),
 			'artist' => array(
 				'add_lt',
@@ -98,7 +102,8 @@ class Query {
 				'exact_match',
 				'alpha_match',
 				'starts_with',
-				'tag'
+				'tag',
+				'catalog'
 			),
 			'song' => array(
 				'add_lt',
@@ -108,7 +113,8 @@ class Query {
 				'exact_match',
 				'alpha_match',
 				'starts_with',
-				'tag'
+				'tag',
+				'catalog'
 			),
 			'live_stream' => array(
 				'alpha_match',
@@ -223,6 +229,7 @@ class Query {
 				}
 			break;
 			case 'artist':
+			case 'catalog':
 			case 'album':
 				$this->_state['filter'][$key] = $value;
 			break;
@@ -509,6 +516,11 @@ class Query {
 
 	} // set_offset
 
+        public function set_catalog( $catalog_number ) {
+                $this->catalog = $catalog_number;
+		debug_event("Catalog", "set catalog id: " . $this->catalog, "5");
+        }
+
 	/**
 	 * set_select
 	 * This appends more information to the select part of the SQL 
@@ -684,7 +696,11 @@ class Query {
 				$sql = "SELECT %%SELECT%% FROM `album` ";
 			break;
 			case 'artist':
-				$this->set_select("DISTINCT(`artist`.`id`)");
+				$this->set_select("`artist`.`id`");
+				$sql = "SELECT %%SELECT%% FROM `artist` ";
+			break;
+			case 'catalog':
+				$this->set_select("`artist`.`name`");
 				$sql = "SELECT %%SELECT%% FROM `artist` ";
 			break;
 			case 'user':
@@ -761,11 +777,12 @@ class Query {
 		if (!is_array($this->_state['filter'])) {
 			return '';
 		}
-
+		
 		$sql = "WHERE 1=1 AND ";
 
 		foreach ($this->_state['filter'] 
 			as $key => $value) {
+
 			$sql .= $this->sql_filter($key, $value);
 		}
 
@@ -862,9 +879,13 @@ class Query {
 		$having_sql = $this->get_having_sql();
 		$order_sql = $this->get_sort_sql();
 		$limit_sql = $limit ? $this->get_limit_sql() : '';
-
-		$final_sql = $sql . $join_sql . $filter_sql . $having_sql . $order_sql . $limit_sql;
-
+		$final_sql = $sql . $join_sql . $filter_sql . $having_sql;
+	
+		if( $this->get_type() == 'artist' ) {
+			 $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name` ";
+		}
+		$final_sql .= $order_sql . $limit_sql;
+		debug_event("Catalog", "catalog sql: " . $final_sql, "6");
 		return $final_sql;
 
 	} // get_sql
@@ -912,6 +933,7 @@ class Query {
 		$filter_sql = '';
 
 		switch ($this->get_type()) {
+
 		case 'song':
 			switch($filter) {
 				case 'tag':
@@ -931,6 +953,9 @@ class Query {
 				break;
 				case 'starts_with':
 					$filter_sql = " `song`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
+					if( $this->catalog != 0 ) {
+						$filter_sql .= " `song`.`catalog` = '" . $this->catalog . "' AND ";
+					}
 				break;
 				case 'unplayed':
 					$filter_sql = " `song`.`played`='0' AND ";
@@ -954,9 +979,9 @@ class Query {
 					$filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND ";
 				break;
 				case 'catalog':
-					$catalogs = $GLOBALS['user']->get_catalogs();
-					if (!count($catalogs)) { break; }
-					$filter_sql .= " `song`.`catalog` IN (" . implode(',',$GLOBALS['user']->get_catalogs()) . ") AND ";
+					if($value != 0) {
+						$filter_sql = " `song`.`catalog` = '$value' AND ";
+					}
 				break;
 				default:
 					// Rien a faire
@@ -972,7 +997,11 @@ class Query {
 					$filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
 				break;
 				case 'starts_with':
+					$this->set_join('left', '`song`', '`album`.`id`', '`song`.`album`', 100);
 					$filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+					if( $this->catalog != 0 ) {
+						$filter_sql .= "`song`.`catalog` = '" . $this->catalog . "' AND ";
+					}
 				break;
 				case 'artist':
 					$filter_sql = " `artist`.`id` = '". Dba::escape($value) . "' AND ";
@@ -984,6 +1013,13 @@ class Query {
 				case 'add_gt':
 					$this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
 					$filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
+				break;
+				case 'catalog':
+					if($value != 0) {
+						$this->set_join('left','`song`','`album`.`id`','`song`.`album`', 100);
+						$this->set_join('left','`catalog`','`song`.`catalog`','`catalog`.`id`', 100);
+                                                $filter_sql = " (`song`.`catalog` = '$value') AND ";
+                                        }
 				break;
 				case 'update_lt':
 					$this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
@@ -1000,6 +1036,13 @@ class Query {
 		break;
 		case 'artist':
 			switch($filter) {
+				case 'catalog':
+				if($value != 0) {
+					$this->set_join('left','`song`','`artist`.`id`','`song`.`artist`', 100);
+					$this->set_join('left','`catalog`','`song`.`catalog`','`catalog`.`id`', 100);
+					$filter_sql = "  (`catalog`.`id` = '$value') AND ";
+				}
+				break;
 				case 'exact_match':
 					$filter_sql = " `artist`.`name` = '" . Dba::escape($value) . "' AND ";
 				break;
@@ -1007,7 +1050,11 @@ class Query {
 					$filter_sql = " `artist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
 				break;
 				case 'starts_with':
+					$this->set_join('left', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
 					$filter_sql = " `artist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+					if( $this->catalog != 0 ) {
+						$filter_sql .= "`song`.`catalog` = '" . $this->catalog . "' AND ";
+					}
 				break;
 				case 'add_lt':
 					$this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);

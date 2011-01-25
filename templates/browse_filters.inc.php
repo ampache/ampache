@@ -19,6 +19,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+session_start();
 $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
 ?>
 <?php $allowed_filters = Browse::get_allowed_filters($browse->get_type()); ?>
@@ -27,7 +28,7 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
 <?php if (in_array('starts_with',$allowed_filters)) { ?>
 	<form id="multi_alpha_filter_form" method="post" action="javascript:void(0);">
 		<label id="multi_alpha_filterLabel" for="multi_alpha_filter"><?php echo _('Starts With'); ?></label>
-		<input type="text" id="multi_alpha_filter" name="multi_alpha_filter" value="<?php echo scrub_out($browse->get_filter('starts_with')); ?>" onKeyUp="delayRun(this, '400', 'ajaxState', '<?php echo $ajax_info; ?>?page=browse&action=browse&browse_id=<?php echo $browse->id; ?>&key=starts_with', 'multi_alpha_filter');">
+		<input type="text" id="multi_alpha_filter" name="multi_alpha_filter" value="<?php $browse->set_catalog($_SESSION['catalog']); echo scrub_out($browse->get_filter('starts_with'));?>" onKeyUp="delayRun(this, '400', 'ajaxState', '<?php echo $ajax_info; ?>?page=browse&action=browse&browse_id=<?php echo $browse->id; ?>&key=starts_with', 'multi_alpha_filter');">
 </form>
 <?php } // end if alpha_match ?>
 <?php if (in_array('minimum_count',$allowed_filters)) { ?>
@@ -65,6 +66,32 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
 	<input id="typeArtistRadio" type="radio" name="object_type" value="1" />
 	<label id="typeArtistLabel" for="typeArtistRadio"><?php echo _('Artist'); ?></label><br />
 	<?php echo Ajax::observe('typeArtistRadio','click',Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=artist','')); ?>
+<?php } ?>
+
+<?php if(in_array('catalog',$allowed_filters)) { ?>
+<form method="post" id="catalog_choice" action="javascript.void(0);">
+	<label id="catalogLabel" for="catalog_select"><?php echo _('Catalog'); ?></label><br />
+	<select id="catalog_select" name="catalog_key">
+		<option value="0">All</option>
+		<?php
+			$sql = 'SELECT `id`,`name` FROM `catalog`';
+			$db_results = Dba::read($sql);
+			while( $data = Dba::fetch_assoc($db_results) ) {
+				$results[] = $data;
+			}
+		
+			foreach( $results as $entries ) {
+				echo '<option value="' . $entries['id'];
+				if( $_SESSION['catalog'] == $entries['id'] ) {
+					echo ' selected="selected" ';
+				}
+				echo '">' . $entries['name'] . '</options>';
+			}
+		?>
+				
+	</select>
+<?php echo Ajax::observe('catalog_select','click',Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id,'catalog_select','catalog_choice'),'1'); ?>
+</form>
 <?php } ?>
 </div>
 </li>

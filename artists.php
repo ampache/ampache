@@ -31,7 +31,7 @@ switch($_REQUEST['action']) {
 	case 'show':
 		$artist = new Artist($_REQUEST['artist']);
 		$artist->format();
-		$object_ids = $artist->get_albums();
+		$object_ids = $artist->get_albums($_REQUEST['catalog']);
 		$object_type = 'album';
 		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
 		if (Config::get('lastfm_api_key')) {

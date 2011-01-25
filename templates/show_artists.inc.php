@@ -18,6 +18,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+session_start();
 
 $web_path = Config::get('web_path');
 
@@ -49,7 +50,7 @@ if (Config::get('ratings')) { Rating::build_cache('artist',$object_ids); }
 
 /* Foreach through every artist that has been passed to us */
 foreach ($object_ids as $artist_id) {
-		$artist = new Artist($artist_id);
+		$artist = new Artist($artist_id, $_SESSION['catalog']);
 		$artist->format();
 ?>
 <tr id="artist_<?php echo $artist->id; ?>" class="<?php echo flip_class(); ?>">

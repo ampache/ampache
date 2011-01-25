@@ -534,18 +534,43 @@ class Art extends database_object {
 		$db_results = Dba::write($sql);
 	} // clean
 
+	public function checkOrderDB($method, $gatherAll) {
+
+		if( !($gatherAll) ) {
+			return true;
+		}
+
+		$config = Config::get('art_order');
+		$config = array($config);
+		$art_order = array();
+		
+
+		for( $i = 0; $i < sizeof($config[0]); $i++) {
+			$art_order[$config[0][$i]] = $i;
+		}
+
+		$sql = 'SELECT object_id FROM image WHERE object_id = ' . $this->uid;
+		debug_event('Art', $sql, 6);
+		$db_results = Dba::read($sql);
+
+		if( $art_order['db'] < $art_order[$method] && (Dba::num_rows($db_results) != 0)  ) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 	/**
 	 * gather
 	 * This tries to get the art in question
 	 */
-	public function gather($options = array(), $limit = false) {
+	public function gather($options = array(), $limit = false, $gatherAll = false) {
 
 		// Define vars
 		$results = array();
 
 		switch ($this->type) {
 			case 'album':
-				$allowed_methods = array('db','lastfm','folder','amazon','google','musicbrainz','tags');
+				$allowed_methods = array('lastfm','folder','amazon','google','musicbrainz','tag');
 			break;
 			case 'artist':
 				$allowed_methods = array();
@@ -561,38 +586,38 @@ class Art extends database_object {
 		/* If it's not set */
 		if (empty($config)) {
 			// They don't want art!
-			debug_event('Art', 'art_order is empty, skipping art gathering', 3);
 			return array();
 		}
 		elseif (!is_array($config)) {
 			$config = array($config);
 		}
 
-		debug_event('Art','Searching using:' . print_r($config, true), 3);
+		debug_event('Art','Searching using:' . print_r($config, true),3);
 
 		foreach ($config as $method) {
 
 			$data = array();
 
-			if (!in_array($method, $allowed_methods)) {
-				debug_event('Art', "$method not in allowed_methods, skipping", 3);
-				continue;
-			}
+			debug_event('Art',"method used " .$method_name,3);
 
 			$method_name = "gather_" . $method;
-
 			if (in_array($method_name, $methods)) {
-				debug_event('Art', "Method used: $method_name", 3);
 				// Some of these take options!
 				switch ($method_name) {
 					case 'gather_amazon':
-						$data = $this->{$method_name}($limit, $options['keyword']);
+						if($this->checkOrderDB($method,$gatherAll)) {
+							$data = $this->{$method_name}($limit, $options['keyword']);
+						}
 					break;
 					case 'gather_lastfm':
-						$data = $this->{$method_name}($limit, $options);
+						if($this->checkOrderDB($method,$gatherAll)) {
+							$data = $this->{$method_name}($limit, $options);
+						}
 					break;
 					default:
-						$data = $this->{$method_name}($limit);
+						if($this->checkOrderDB($method,$gatherAll)) { 
+							$data = $this->{$method_name}($limit);
+						}
 					break;
 				}
 
@@ -604,9 +629,6 @@ class Art extends database_object {
 				}
 
 			} // if the method exists
-			else {
-				debug_event("Art", "$method_name not defined", 1);
-			}
 
 		} // end foreach
 
@@ -618,17 +640,6 @@ class Art extends database_object {
 	///////////////////////////////////////////////////////////////////////
 	// Art Methods
 	///////////////////////////////////////////////////////////////////////
-
-	/**
-	 * gather_db
-	 * This function retrieves art that's already in the database
-	 */
-	public function gather_db($limit = null) {
-		if ($this->get_db()) {
-			return array('db' => true);
-		}
-		return array();
-	}
 
 	/**
 	 * gather_musicbrainz

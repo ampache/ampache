@@ -617,8 +617,3 @@ use_rss = true
 ; SMTP Password
 ; your mail auth password.
 ;mail_auth_pass = ""
-
-; Twitter
-twitter = true
-twitter_consumer_key = "tCCFlruiduHyUuC2vNQEyQ"
-twitter_consumer_secret = "omRMNdRNktRIqxJVm2uTDyN5iDTUF6Q8eBoinTNgI"

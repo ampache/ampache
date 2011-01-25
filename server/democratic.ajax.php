@@ -34,10 +34,7 @@ switch ($_REQUEST['action']) {
 		$show_browse = true;
 	break;
 	case 'add_vote':
-		// Only add the vote if they haven't already voted
-		if (!$democratic->has_vote($_GET['object_id'],$_GET['type'])) { 
-			$democratic->add_vote($_REQUEST['object_id'],$_REQUEST['type']);
-		} 
+		$democratic->add_vote($_REQUEST['object_id'],$_REQUEST['type']);
 		$show_browse = true;
 	break;
 	case 'delete':

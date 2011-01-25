@@ -93,7 +93,7 @@ class Ajax {
 		else {
 			$ajax_string = "ajaxPut('$url',$source_txt)";
 		}
-
+		
 		return $ajax_string;
 
 	} // action

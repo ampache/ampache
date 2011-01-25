@@ -110,6 +110,8 @@ class Browse extends Query {
 		}
 		elseif ($filter_value = $this->get_filter('starts_with')) {
 			$match = ' (' . $filter_value . ')';
+		} elseif ($filter_value = $this->get_filter('catalog')) {
+			$match = '(' . $filter_value . ')';
 		}
 
 		$type = $this->get_type();
