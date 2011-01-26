@@ -32,6 +32,7 @@ if (Config::get('ratings')) {
 </div>
 <?php } ?>
 <div id="information_actions">
+<h3><?php echo _('Actions'); ?>:</h3>
 <ul>
 <li>
 	<?php if ($object_type == 'album') { ?>
