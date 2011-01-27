@@ -745,6 +745,91 @@ td.lp_current a {
 }
 
 /************************************************/
+/*      Styles for Registration template        */
+/************************************************/
+/* taken direcly from install.css */
+
+#registerPage {
+    background: #FFFFFF url(../../../images/top_bg.jpg) repeat-x top left;
+}
+
+#registerPage #header {
+    width: 90%;
+    min-height: 85px;
+    height: 85px;
+    margin: 0 auto;
+    padding: 0;
+    text-align: left;
+    font-size: smaller;
+	display: block;
+}
+
+#registerPage #header h1 {
+    margin: 0;
+    padding-top: 16px;
+    color: #000;
+    font-weight: bold;
+    font-size: large;
+}
+#registerPage h3 {
+    margin-left: 50px;
+}
+
+#registerPage input, radio, select, textarea {
+	border: 1px solid #ddd;
+	background: #f2f2f2;
+	font: 11px verdana, sans-serif;
+	color: #443;
+	padding: 2px;
+	outline: none;
+}
+#registerPage input:hover,
+textarea:hover,
+input:focus,
+textarea:focus{ 
+	border: 1px solid #aaa; 
+}
+
+#registerPage .registerfield {
+    text-align:left;
+	margin: 1em 0;
+	margin-left: 50px;
+}
+
+#registerPage .registerfield.require .asterix {
+    color: red;
+    text-align: right;
+}
+
+#registerPage .registerfield .error {
+    font-size: 13px;
+    right: 0px;
+}
+
+#registerPage label {
+    font-weight:bold;
+	float: left;
+	width: 150px;
+	font-size: 13px;
+}
+
+#registerPage #registerbox {
+    width: 700px;
+}
+
+#registerPage .registerInformation {
+    font-size: 13px;
+    color: red;
+    margin-left: 200px;
+}
+
+#registerPage .registerButtons {
+    margin-top: 10px;
+    margin-left: 200px;
+}
+
+
+/************************************************/
 /*                Misc                          */
 /************************************************/
 .formValidation{
