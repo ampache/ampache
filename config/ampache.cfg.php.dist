@@ -551,6 +551,10 @@ use_rss = true
 ;proxy_user = ""
 ;proxy_pass = ""
 
+; If Ampache is behind an https reverse proxy, force use HTTPS protocol.
+;Default: false
+;force_ssl = true
+
 ;#############################
 ;   Mail Settings            #
 ;#############################

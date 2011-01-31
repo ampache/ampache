@@ -49,7 +49,7 @@ Config::set('prefix',$prefix);
 /*
  Check to see if this is http or https
 */
-if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || Config::get('force_ssl') == true) {
 	$http_type = "https://";
 }
 else {
