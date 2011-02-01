@@ -1,33 +1,69 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /*
+ *
+ * 
+ *
+ * Access Class
+ *
+ * PHP version 5
+ *
+ * LICENSE: 
+ * Copyright (c) Ampache.org All Rights Reserved
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License v2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @category	access
+ * @package	Access
+ * @author	Karl Vollmer <>
+ * @copyright	2011 Ampache.org
+ * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
+ * @version	
+ * @link	
+ * @since	File available since Release 1.0
+ */
 
- Copyright (c) Ampache.org
- All Rights Reserved
-
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License v2
- as published by the Free Software Foundation.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
-*/
 /**
  * Access Class
+ *
  * This class handles the access list mojo for Ampache, it is ment to restrict
  * access based on IP and maybe something else in the future
-*/
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright	2011 Ampache.org
+ * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
+ * @version	Release: 
+ * @link	
+ * @see	
+ * @since	Class available since Release 1.0
+ */
 class Access {
 
-	/* Variables from DB */
+	// Variables from DB
+
+	/**
+	 * User ID
+	 *
+	 * @var	integer
+	 */
 	public $id;
+
+	/**
+	 *
+	 */
 	public $name;
 	public $start;
 	public $end;
@@ -39,6 +75,9 @@ class Access {
 	/**
 	 * constructor
 	 * Takes an ID of the access_id dealie :)
+	 *
+	 * @param	integer	$access_id	ID of the access_id
+	 * @return	boolean
 	 */
 	public function __construct($access_id='') {
 
@@ -60,6 +99,8 @@ class Access {
 	 * _get_info
 	 * get's the vars for $this out of the database
 	 * Taken from the object
+	 *
+	 * @return	resource
 	 */
 	private function _get_info() {
 
@@ -76,6 +117,8 @@ class Access {
 	/**
 	 * format
 	 * This makes the Access object a nice fuzzy human readable object, spiffy ain't it.
+	 *
+	 * @return	void
 	 */
 	public function format() {
 
@@ -91,6 +134,9 @@ class Access {
 	/**
 	 * update
 	 * This function takes a named array as a datasource and updates the current access list entry
+	 *
+	 * @param	array	$data	xxx
+	 * @return	boolean
 	 */
 	public function update($data) {
 
