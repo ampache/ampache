@@ -43,7 +43,6 @@
  * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
  * @version	Release:
  * @link	http://www.ampache.org/
- * @see	xxx
  * @since	Class available since Release 1.0
  */
 class AmpacheMail {

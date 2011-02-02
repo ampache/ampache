@@ -44,7 +44,6 @@
  * @copyright	2001 - 2011 Ampache.org
  * @version	Release:
  * @link	http://www.ampache.org/
- * @see	xxx
  * @since	Class available since Release 1.0
  */
 class Ajax {
