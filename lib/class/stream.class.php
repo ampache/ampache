@@ -32,11 +32,21 @@
  */
 
 /**
- * Stream
+ * Stream Class
+ *
  * This class is used to generate the Playlists and pass them on
  * With Localplay this actually just sends the commands to the localplay
  * module in question. It has two sources for data
  * songs (array of ids) and urls (array of full urls)
+ *
+ * @category	Stream
+ * @package	Ampache
+ * @author	Karl Vollmer <vollmer@ampache.org>
+ * @copyright	2001 - 2011 Ampache.org
+ * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
+ * @version	Release: 3.6
+ * @link	http://www.ampache.org/
+ * @since	Class available since Release 1.0
  */
 class Stream {
 

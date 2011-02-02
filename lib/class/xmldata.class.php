@@ -1,7 +1,7 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /*
- * Access Class
+ * xmlData Class
  *
  * PHP version 5
  *
@@ -43,7 +43,7 @@
  * @author	Karl Vollmer <vollmer@ampache.org>
  * @copyright	2001 - 2011 Ampache.org
  * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @version	Release:
+ * @version	Release: 3.6
  * @link	http://www.ampache.org/
  * @since	Class available since Release 1.0
  */

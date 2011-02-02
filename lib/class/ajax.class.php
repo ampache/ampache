@@ -42,7 +42,7 @@
  * @package	Ampache
  * @author	Karl Vollmer <vollmer@ampache.org>
  * @copyright	2001 - 2011 Ampache.org
- * @version	Release:
+ * @version	Release: 3.6
  * @link	http://www.ampache.org/
  * @since	Class available since Release 1.0
  */
