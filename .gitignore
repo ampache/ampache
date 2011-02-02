@@ -1,1 +1,8 @@
 config/ampache.cfg.php
+# for phpdoc
+CHANGELOG
+GPL-LICENSE
+INSTALL
+MIGRATION
+PLUGINS
+README
