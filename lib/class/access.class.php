@@ -1,15 +1,12 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /*
- *
- * 
- *
  * Access Class
  *
  * PHP version 5
  *
- * LICENSE: 
- * Copyright (c) Ampache.org All Rights Reserved
+ * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * Copyright (c) 2001 - 2011 Ampache.org All Rights Reserved
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -24,13 +21,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @category	access
- * @package	Access
- * @author	Karl Vollmer <>
- * @copyright	2011 Ampache.org
+ * @category	Access
+ * @package	Ampache
+ * @author	Karl Vollmer <vollmer@ampache.org>
+ * @copyright	2001 - 2011 Ampache.org
  * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @version	
- * @link	
+ * @version	PHP 5.2
+ * @link	http://www.ampache.org/
  * @since	File available since Release 1.0
  */
 
@@ -40,14 +37,14 @@
  * This class handles the access list mojo for Ampache, it is ment to restrict
  * access based on IP and maybe something else in the future
  *
- * @category
- * @package
- * @author
- * @copyright	2011 Ampache.org
+ * @category	Access
+ * @package	Ampache
+ * @author	Karl Vollmer <vollmer@ampache.org>
+ * @copyright	2001 - 2011 Ampache.org
  * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
  * @version	Release: 
- * @link	
- * @see	
+ * @link	http://www.ampache.org/
+ * @see	xxx
  * @since	Class available since Release 1.0
  */
 class Access {
@@ -65,15 +62,40 @@ class Access {
 	 *
 	 */
 	public $name;
+
+	/**
+	 *
+	 */
 	public $start;
+
+	/**
+	 *
+	 */
 	public $end;
+
+	/**
+	 *
+	 */
 	public $level;
+
+	/**
+	 *
+	 */
 	public $user;
+
+	/**
+	 *
+	 */
 	public $type;
+
+	/**
+	 *
+	 */
 	public $enabled;
 
 	/**
 	 * constructor
+	 *
 	 * Takes an ID of the access_id dealie :)
 	 *
 	 * @param	integer	$access_id	ID of the access_id
@@ -97,6 +119,7 @@ class Access {
 
 	/**
 	 * _get_info
+	 *
 	 * get's the vars for $this out of the database
 	 * Taken from the object
 	 *
@@ -116,6 +139,7 @@ class Access {
 
 	/**
 	 * format
+	 *
 	 * This makes the Access object a nice fuzzy human readable object, spiffy ain't it.
 	 *
 	 * @return	void
@@ -133,6 +157,7 @@ class Access {
 
 	/**
 	 * update
+	 *
 	 * This function takes a named array as a datasource and updates the current access list entry
 	 *
 	 * @param	array	$data	xxx
@@ -178,8 +203,12 @@ class Access {
 
 	/**
 	 * create
+	 *
 	 * This takes a key'd array of data and trys to insert it as a
 	 * new ACL entry
+	 *
+	 * @param	array	$data	xxx
+	 * @return	boolean
 	 */
 	public static function create($data) {
 
@@ -227,7 +256,11 @@ class Access {
 
 	/**
 	 * exists
+	 *
 	 * this sees if the ACL that we've specified already exists, prevent duplicates. This ignores the name
+	 *
+	 * @param	array	$data	xxx
+	 * @return	boolean
 	 */
 	public static function exists($data) {
 
@@ -250,7 +283,11 @@ class Access {
 
 	/**
 	 * delete
+	 *
 	 * deletes the specified access_list entry
+	 *
+	 * @param	integer	$access_id	xxx
+	 * @return	void
 	 */
 	public static function delete($access_id) {
 
@@ -261,8 +298,12 @@ class Access {
 
 	/**
 	 * check_function
+	 *
 	 * This checks if a specific functionality is enabled
 	 * it takes a type only
+	 *
+	 * @param	string	$type	check type xxx
+	 * @return	mixed	boolean or config
 	 */
 	public static function check_function($type) {
 
@@ -288,9 +329,16 @@ class Access {
 
 	/**
 	 * check_network
+	 *
 	 * This takes a type, ip, user, level and key
 	 * and then returns true or false if they have access to this
 	 * the IP is passed as a dotted quad
+	 *
+	 * @param	string	$type	Check type.
+	 * @param	string	$user	User name.
+	 * @param	integer	$level	Access level.
+	 * @param	string	$ip	IP Address.
+	 * @return	boolean
 	 */
 	public static function check_network($type,$user,$level,$ip='') {
 
