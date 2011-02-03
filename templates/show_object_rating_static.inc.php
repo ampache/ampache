@@ -1,6 +1,6 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
-/*
+/**
  * Show Object Rating Static
  *
  * PHP version 5
