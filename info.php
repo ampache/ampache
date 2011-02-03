@@ -30,5 +30,12 @@
  * @since	File available since Release 1.0
  */
 
+require 'lib/init.php';
+
+if (!Access::check('interface','100')) {
+    access_denied();
+    exit();
+}
+
 phpinfo();
 ?>
