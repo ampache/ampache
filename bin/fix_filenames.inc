@@ -1,7 +1,7 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
-/*
- * Filename
+/**
+ * Fix Filenames
  *
  * PHP version 5
  *

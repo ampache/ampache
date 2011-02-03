@@ -1,6 +1,6 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
-/*
+/**
  * Preference Library
  *
  * PHP version 5
@@ -21,6 +21,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
+ * @category	Preference
+ * @package	Library
+ * @author	Karl Vollmer <vollmer@ampache.org>
+ * @copyright	2001 - 2011 Ampache.org
+ * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
+ * @version	PHP 5.2
+ * @link	http://www.ampache.org/
+ * @since	File available since Release 1.0
  */
 
 /*

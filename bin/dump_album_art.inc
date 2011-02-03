@@ -1,7 +1,7 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
-/*
- * Filename
+/**
+ * Dump Album Art
  *
  * PHP version 5
  *

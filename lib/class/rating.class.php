@@ -1,6 +1,6 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
-/*
+/**
  * Rating Class
  *
  * PHP version 5
