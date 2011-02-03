@@ -39,7 +39,7 @@
 </div> <!-- end id="maincontainer"-->
 <div id="footer">
 	<a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />
-	Copyright (c) 2001 - 2010 Ampache.org
+	Copyright (c) 2001 - 2011 Ampache.org
 	<?php echo _('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo _('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
 </div>
 </body>
