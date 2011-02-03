@@ -1,35 +1,57 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
-/*
+/**
+ * Dba Class
+ *
+ * PHP version 5
+ *
+ * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * Copyright (c) 2001 - 2011 Ampache.org All Rights Reserved
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License v2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @category	Dba
+ * @package	Ampache
+ * @author	Karl Vollmer <vollmer@ampache.org>
+ * @copyright	2001 - 2011 Ampache.org
+ * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
+ * @version	PHP 5.2
+ * @link	http://www.ampache.org/
+ * @since	File available since Release 1.0
+ */
 
-Copyright (c) Ampache.org
-All rights reserved.
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License v2
-as published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
-*/
 /* Make sure they aren't directly accessing it */
 if (INIT_LOADED != '1') { exit; }
 
 /**
- * Dba
+ * Dba Class
+ *
  * This is the database abstraction class
  * It duplicates the functionality of mysql_???
  * with a few exceptions, the row and assoc will always
  * return an array, simplifying checking on the far end
  * it will also auto-connect as needed, and has a default
  * database simplifying queries in most cases.
+ *
+ * @category	Dba
+ * @package	Ampache
+ * @author	Karl Vollmer <vollmer@ampache.org>
+ * @copyright	2001 - 2011 Ampache.org
+ * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
+ * @version	Release: 3.6
+ * @link	http://www.ampache.org/
+ * @since	Class available since Release 1.0
  */
 class Dba {
 
