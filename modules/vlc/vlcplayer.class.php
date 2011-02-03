@@ -1,6 +1,6 @@
 <?php 
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
-/*
+/**
  * VlcPlayer Class
  *
  * Written by snuffels and adjusted for vlc by dave
