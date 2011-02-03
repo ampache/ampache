@@ -95,11 +95,11 @@ switch ($_GET['type']) {
 		$data = explode("/",$mime);
 		$extension = $data['1'];
 
-                // Send the headers and output the image
-                header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
-                header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-                header("Cache-Control: no-store, no-cache, must-revalidate");
-                header("Pragma: no-cache");
+		// Send the headers and output the image
+		header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
+		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+		header("Cache-Control: no-store, no-cache, must-revalidate");
+		header("Pragma: no-cache");
 		header("Content-type: $mime");
 		header("Content-Disposition: filename=" . $key . "." . $extension);
 		echo $image;
@@ -124,10 +124,10 @@ switch ($_GET['type']) {
 		$extension = Art::extension($mime); 
 		
 		// Send the headers and output the image
-                header("Expires: Tue, 27 Mar 1984 05:00:00 GMT");
-                header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-                header("Cache-Control: no-store, no-cache, must-revalidate");
-                header("Pragma: no-cache");
+		header("Expires: Tue, 27 Mar 1984 05:00:00 GMT");
+		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+		header("Cache-Control: no-store, no-cache, must-revalidate");
+		header("Pragma: no-cache");
 		header("Content-type: $mime");
 		header("Content-Disposition: filename=" . scrub_out($media->name) . "." . $extension);
 		echo $source;

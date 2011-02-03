@@ -70,10 +70,10 @@ switch($_REQUEST['action']) {
 			exit;
 		}
 
-                if (!Core::form_verify('update_preference','post')) {
-                        access_denied();
-                        exit;
-                }
+		if (!Core::form_verify('update_preference','post')) {
+			access_denied();
+			exit;
+		}
 
 		update_preferences($_POST['user_id']);
 		header("Location: " . Config::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out($_POST['user_id']));
@@ -103,10 +103,10 @@ switch($_REQUEST['action']) {
 			exit;
 		}
 
-                if (!Core::form_verify('update_user','post')) {
-                        access_denied();
-                        exit;
-                }
+		if (!Core::form_verify('update_user','post')) {
+			access_denied();
+			exit;
+		}
 
 		// Remove the value
 		unset($_SESSION['forms']['account']);

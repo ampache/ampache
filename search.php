@@ -63,7 +63,7 @@ switch ($_REQUEST['action']) {
 	case 'save_as_track':
 		$playlist_id = save_search($_REQUEST);
 		$playlist = new Playlist($playlist_id);
-		show_confirmation("Search Saved","Your Search has been saved as a track in $playlist->name",conf('web_path') . "/search.php");
+		show_confirmation(_('Search Saved'),sprintf(_('Your Search has been saved as a track in %s'), $playlist->name),conf('web_path') . "/search.php");
 	break;
 	default:
 		require_once Config::get('prefix') . '/templates/show_search.inc.php';
