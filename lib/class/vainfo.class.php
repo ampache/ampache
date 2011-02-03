@@ -48,31 +48,117 @@
  */
 class vainfo {
 
-	/* Default Encoding */
+	// {{{ property
+
+	/**
+	 * Default encoding
+	 *
+	 * @var	string
+	 */
 	public $encoding	= '';
+
+	/**
+	 * Default id3v1 encoding
+	 *
+	 * @var	string
+	 */
 	public $encoding_id3v1	= 'ISO-8859-1';
 
 	/* Loaded Variables */
+	/**
+	 * Filename
+	 *
+	 * @var	string
+	 */
 	public $filename	= '';
+
+	/**
+	 * Media type
+	 *
+	 * @var	string
+	 */ 
 	public $type		= '';
+
+	/**
+	 * Media tags
+	 *
+	 * @var	array
+	 */
 	public $tags		= array();
 
 	/* Internal Information */
-	public $_raw 		= array();
-	public $_getID3 	= '';
-	public $_iconv		= false;
-	public $_file_encoding	= '';
-	public $_file_pattern	= '';
-	public $_dir_pattern	= '';
+	/**
+	 * GetID3 analyzed data.
+	 *
+	 * @var	array
+	 */
+	protected $_raw 		= array();
+
+	/**
+	 * GetID3 object
+	 *
+	 * @var	object
+	 */
+	protected $_getID3 	= '';
+
+	/**
+	 * Iconv use flag
+	 *
+	 * @var	boolean
+	 */
+	protected $_iconv		= false;
+
+	/**
+	 * File encoding charset
+	 *
+	 * @var	string
+	 */
+	protected $_file_encoding	= '';
+
+	/**
+	 * File pattern
+	 *
+	 * @var	string
+	 */
+	protected $_file_pattern	= '';
+
+	/**
+	 * Directory pattern
+	 *
+	 * @var	string
+	 */
+	protected $_dir_pattern	= '';
 
 	/* Internal Private */
+	/**
+	 * Pathinfo results array
+	 *
+	 * @var	array
+	 */
 	private $_pathinfo;
+
+	/**
+	 * Tag broken flag. If tag is broken, return true.
+	 *
+	 * @var	boolean
+	 */
 	private $_broken = false;
+
+	// }}}
 
 	/**
 	 * Constructor
+	 *
 	 * This function just sets up the class, it doesn't
 	 * actually pull the information
+	 *
+	 * @param	string	$file	filename
+	 * @param	string	$encoding	Default encode character set
+	 * @param	string	$encoding_id3v1	Default id3v1 encode character set
+	 * @param	string	$encoding_iv3v2	Default id3v2 encode character set
+	 * @param	string	$dir_pattern	Directory pattern
+	 * @param	string	$file_pattern	File pattern
+	 * @return	mixed	If can't analyze file, return false. default return: void
 	 */
 	public function __construct($file, $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern, $file_pattern) {
 
