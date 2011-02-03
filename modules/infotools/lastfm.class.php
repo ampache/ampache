@@ -45,6 +45,7 @@
  * @version	Release:
  * @link	http://www.ampache.org/
  * @since	Class available since Release 1.0
+ */
 class LastFMSearch {
 
 	protected $base_url = "http://ws.audioscrobbler.com/1.0/album";
