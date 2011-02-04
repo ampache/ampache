@@ -64,7 +64,7 @@ class Art extends database_object {
 	 * Art constructor, takes the UID of the object and the
 	 * object type.
 	 */
-	public function __construct($uid, $type) {
+	public function __construct($uid, $type = 'album') {
 
 		$this->type = Art::validate_type($type);
 		$this->uid = $uid;
