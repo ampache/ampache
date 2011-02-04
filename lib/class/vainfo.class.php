@@ -152,6 +152,8 @@ class vainfo {
 	 * This function just sets up the class, it doesn't
 	 * actually pull the information
 	 *
+	 * @todo	Multibyte encoding break again...
+	 *          need to use id3v2 and to convert encoding
 	 * @param	string	$file	filename
 	 * @param	string	$encoding	Default encode character set
 	 * @param	string	$encoding_id3v1	Default id3v1 encode character set
@@ -1038,9 +1040,13 @@ class vainfo {
 
 	/**
 	 * _parse_filename
+	 *
 	 * This function uses the passed file and dir patterns
 	 * To pull out extra tag information and populate it into
 	 * its own array
+	 *
+	 * @param	string	$filename	Filename that want to parse 
+	 * @return	array	Parsed results
 	 */
 	private function _parse_filename($filename) {
 
@@ -1083,8 +1089,12 @@ class vainfo {
 
 	/**
 	 * _id3v2_tag_to_frame
+	 *
 	 * This translates the tag name to a frame, if there a many it returns the first
 	 * one if finds that exists in the raw
+	 *
+	 * @param	string	$tag_name	Tag name
+	 * @return	mixed	If found id3v2 frame, return frame. If not found, return false.
 	 */
 	private function _id3v2_tag_to_frame($tag_name) {
 
@@ -1109,11 +1119,16 @@ class vainfo {
 
 	/**
 	 * _clean_tag
+	 *
 	 * This function cleans up the tag that it's passed using Iconv
 	 * if we've got it. It also takes an optional encoding param
 	 * for the cases where we know what the tags source encoding
 	 * is, and or if it's different then the encoding recorded
 	 * in the file
+	 *
+	 * @param	string	$tag	Encoding string
+	 * @param	string	$encoding	Encode charset
+	 * @return	string	Return encoded string
 	 */
 	private function _clean_tag($tag, $encoding = null) {
 
@@ -1140,7 +1155,10 @@ class vainfo {
 
 	/**
 	 * set_broken
+	 *
 	 * This fills all tag types with Unknown (Broken)
+	 *
+	 * @return	array	Return broken title, album, artist
 	 */
 	public function set_broken() {
 
