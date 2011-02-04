@@ -37,5 +37,9 @@ if (!Access::check('interface','100')) {
     exit();
 }
 
-phpinfo();
+require_once Config::get('prefix') . '/lib/debug.lib.php';
+require_once Config::get('prefix') . '/lib/security.lib.php';
+
+require_once Config::get('prefix') . '/templates/show_info.inc.php';
+
 ?>
