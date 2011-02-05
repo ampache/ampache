@@ -56,8 +56,9 @@ function check_ampache() {
 	$latest_ampache = $latest_ampache['ampache'];
 
 	if(version_compare($my_ampache, $latest_ampache, '>=')) {
-		$results = debug_result(_('Your Ampache is newest!!!'),1);
-	} else {
+		$results = debug_result(_('No problem found.'),1);
+	}
+	else {
 		$results = debug_result(sprintf(_('You are running old ampache: %s'), $my_ampache),0);
 	}
 
@@ -84,13 +85,15 @@ function check_php_security() {
 	}
 	elseif (preg_match('#^5\.2#', $my_php)) {
 		$latest_php = $latest_php['php5.2'];
-	} else {
+	}
+	else {
 		$results = debug_result(sprintf(_('Your PHP version may be too old: %s'), $my_php),0);
 		return $results;
 	}
 	if(version_compare($my_php, $latest_php, '>=')) {
 		$results = debug_result(_('No probrem found.'),1);
-	} else {
+	}
+	else {
 		$results = debug_result(sprintf(_('You are running old php: %s'), $my_php),0);
 	}
 
