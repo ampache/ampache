@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2011-02-03 14:13+0900\n"
+"POT-Creation-Date: 2011-02-05 10:48+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -153,7 +153,7 @@ msgid "Disable"
 msgstr ""
 
 #: ../../lib/preferences.php:189 ../../lib/preferences.php:231
-#: ../../lib/ui.lib.php:448 ../../templates/sidebar_localplay.inc.php:57
+#: ../../lib/ui.lib.php:455 ../../templates/sidebar_localplay.inc.php:57
 #: ../../templates/show_gather_art.inc.php:36
 #: ../../templates/show_adds_catalog.inc.php:38
 msgid "None"
@@ -292,68 +292,68 @@ msgstr ""
 msgid "Always"
 msgstr ""
 
-#: ../../lib/ui.lib.php:226 ../../templates/sidebar.inc.php:39
+#: ../../lib/ui.lib.php:233 ../../templates/sidebar.inc.php:39
 msgid "Home"
 msgstr ""
 
-#: ../../lib/ui.lib.php:229
+#: ../../lib/ui.lib.php:236
 msgid "Upload"
 msgstr ""
 
-#: ../../lib/ui.lib.php:232
+#: ../../lib/ui.lib.php:239
 msgid "Local Play"
 msgstr ""
 
-#: ../../lib/ui.lib.php:235
+#: ../../lib/ui.lib.php:242
 msgid "Random Play"
 msgstr ""
 
-#: ../../lib/ui.lib.php:238 ../../templates/sidebar_home.inc.php:57
+#: ../../lib/ui.lib.php:245 ../../templates/sidebar_home.inc.php:57
 #: ../../templates/sidebar_home.inc.php:79
 #: ../../templates/show_manage_democratic.inc.php:46
 msgid "Playlist"
 msgstr ""
 
-#: ../../lib/ui.lib.php:241 ../../templates/show_search.inc.php:162
+#: ../../lib/ui.lib.php:248 ../../templates/show_search.inc.php:162
 #: ../../templates/show_search_bar.inc.php:41
 msgid "Search"
 msgstr ""
 
-#: ../../lib/ui.lib.php:244 ../../templates/sidebar.inc.php:41
+#: ../../lib/ui.lib.php:251 ../../templates/sidebar.inc.php:41
 #: ../../templates/show_user_row.inc.php:52
 #: ../../templates/sidebar_preferences.inc.php:41
 msgid "Preferences"
 msgstr ""
 
-#: ../../lib/ui.lib.php:247 ../../lib/ui.lib.php:251
+#: ../../lib/ui.lib.php:254 ../../lib/ui.lib.php:258
 msgid "Admin-Catalog"
 msgstr ""
 
-#: ../../lib/ui.lib.php:255
+#: ../../lib/ui.lib.php:262
 msgid "Admin-User Management"
 msgstr ""
 
-#: ../../lib/ui.lib.php:259
+#: ../../lib/ui.lib.php:266
 msgid "Admin-Mail Users"
 msgstr ""
 
-#: ../../lib/ui.lib.php:263
+#: ../../lib/ui.lib.php:270
 msgid "Admin-Manage Access Lists"
 msgstr ""
 
-#: ../../lib/ui.lib.php:267
+#: ../../lib/ui.lib.php:274
 msgid "Admin-Site Preferences"
 msgstr ""
 
-#: ../../lib/ui.lib.php:271
+#: ../../lib/ui.lib.php:278
 msgid "Admin-Manage Modules"
 msgstr ""
 
-#: ../../lib/ui.lib.php:275
+#: ../../lib/ui.lib.php:282
 msgid "Browse Music"
 msgstr ""
 
-#: ../../lib/ui.lib.php:279 ../../lib/class/browse.class.php:153
+#: ../../lib/ui.lib.php:286 ../../lib/class/browse.class.php:153
 #: ../../templates/show_recommended_artists.inc.php:50
 #: ../../templates/show_recommended_artists.inc.php:78
 #: ../../templates/browse_filters.inc.php:75
@@ -364,22 +364,22 @@ msgstr ""
 msgid "Albums"
 msgstr ""
 
-#: ../../lib/ui.lib.php:283 ../../lib/class/browse.class.php:164
+#: ../../lib/ui.lib.php:290 ../../lib/class/browse.class.php:164
 #: ../../lib/class/album.class.php:272 ../../templates/show_stats.inc.php:44
 #: ../../templates/sidebar_home.inc.php:48
 msgid "Artists"
 msgstr ""
 
-#: ../../lib/ui.lib.php:287 ../../templates/show_stats.inc.php:37
+#: ../../lib/ui.lib.php:294 ../../templates/show_stats.inc.php:37
 #: ../../templates/sidebar_home.inc.php:85
 msgid "Statistics"
 msgstr ""
 
-#: ../../lib/ui.lib.php:341
+#: ../../lib/ui.lib.php:348
 msgid "Add New"
 msgstr ""
 
-#: ../../lib/ui.lib.php:421 ../../lib/class/access.class.php:501
+#: ../../lib/ui.lib.php:428 ../../lib/class/access.class.php:501
 #: ../../lib/class/access.class.php:521
 #: ../../templates/show_add_access_current.inc.php:54
 #: ../../templates/show_admin_tools.inc.php:63
@@ -395,11 +395,11 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: ../../lib/ui.lib.php:765
+#: ../../lib/ui.lib.php:772
 msgid "On"
 msgstr ""
 
-#: ../../lib/ui.lib.php:768
+#: ../../lib/ui.lib.php:775
 msgid "Off"
 msgstr ""
 
@@ -996,6 +996,29 @@ msgstr ""
 
 #: ../../lib/class/artist.class.php:401 ../../templates/show_lyrics.inc.php:53
 msgid "Sorry Lyrics Not Found."
+msgstr ""
+
+#: ../../lib/security.lib.php:59
+msgid "No problem found."
+msgstr ""
+
+#: ../../lib/security.lib.php:62
+#, php-format
+msgid "You are running old ampache: %s"
+msgstr ""
+
+#: ../../lib/security.lib.php:90
+#, php-format
+msgid "Your PHP version may be too old: %s"
+msgstr ""
+
+#: ../../lib/security.lib.php:94
+msgid "No probrem found."
+msgstr ""
+
+#: ../../lib/security.lib.php:97
+#, php-format
+msgid "You are running old php: %s"
 msgstr ""
 
 #: ../../register.php:85
@@ -1700,7 +1723,7 @@ msgstr ""
 
 #: ../../templates/show_install_check.inc.php:67
 #: ../../templates/show_install_check.inc.php:80
-#: ../../templates/show_test.inc.php:57
+#: ../../templates/show_test.inc.php:57 ../../templates/show_info.inc.php:64
 msgid "PHP Version"
 msgstr ""
 
@@ -2737,15 +2760,15 @@ msgid ""
 "Information below"
 msgstr ""
 
-#: ../../templates/show_test.inc.php:50
+#: ../../templates/show_test.inc.php:50 ../../templates/show_info.inc.php:50
 msgid "CHECK"
 msgstr ""
 
-#: ../../templates/show_test.inc.php:52
+#: ../../templates/show_test.inc.php:52 ../../templates/show_info.inc.php:52
 msgid "STATUS"
 msgstr ""
 
-#: ../../templates/show_test.inc.php:54
+#: ../../templates/show_test.inc.php:54 ../../templates/show_info.inc.php:54
 msgid "DESCRIPTION"
 msgstr ""
 
@@ -3321,6 +3344,36 @@ msgstr ""
 
 #: ../../templates/show_add_playlist.inc.php:35
 msgid "Create a new playlist"
+msgstr ""
+
+#: ../../templates/show_info.inc.php:44
+msgid "Ampache Security Information"
+msgstr ""
+
+#: ../../templates/show_info.inc.php:45
+msgid "This page shows security information and ampache update information."
+msgstr ""
+
+#: ../../templates/show_info.inc.php:57
+msgid "Ampache Version"
+msgstr ""
+
+#: ../../templates/show_info.inc.php:60
+msgid ""
+"Compare that you are running a version of Ampache and currently a version of "
+"Ampache."
+msgstr ""
+
+#: ../../templates/show_info.inc.php:67
+msgid "This test checks for vulnerable PHP whether to use version."
+msgstr ""
+
+#: ../../templates/show_info.inc.php:71
+msgid "PHP Info"
+msgstr ""
+
+#: ../../templates/show_info.inc.php:74
+msgid "This is the phpinfo() to display information."
 msgstr ""
 
 #: ../../templates/show_search_bar.inc.php:42
