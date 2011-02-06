@@ -37,14 +37,14 @@
  */
 
 /**
- * check_ampache
+ * check_ampache_version
  *
  * This function checks latest ampache stable from Ampache web site.
  * If new version found, return error message.
  *
  * @return	string
  */
-function check_ampache() {
+function check_ampache_version() {
 
 	$my_ampache = Config::get('version');
 	if(preg_match('#-#', $my_ampache)) {
@@ -64,10 +64,10 @@ function check_ampache() {
 
 	return $results;
 
-} // check_ampache
+} // check_ampache_version
 
 /**
- * check_php_security
+ * check_php_version
  *
  * This function checks latest PHP stable from php web site.
  * If new version found, return error message.
@@ -75,7 +75,7 @@ function check_ampache() {
  *
  * @return	string
  */
-function check_php_security() {
+function check_php_version() {
 
 	$my_php = PHP_VERSION;
 
@@ -99,7 +99,7 @@ function check_php_security() {
 
 	return $results;
 
-} // check_php_security
+} // check_php_version
 
 /**
  * get_latest
@@ -169,5 +169,16 @@ function get_latest($type = null) {
 
 	return $version;
 
-}
+} // get_latest
+
+/**
+ * check_security
+ *
+ * This function tests wheter vulnerable settings on your php.ini
+ * 
+ * @return	array	Show security messages, if found.
+ */
+function check_security() {
+
+} // check_security
 ?>

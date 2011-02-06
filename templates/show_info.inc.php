@@ -45,6 +45,7 @@
 <p><?php echo _('This page shows security information and ampache update information.'); ?></p>
 </div>
 <div>
+<button onclick="window.close()"><?php echo _('Close this window'); ?></button>
 <table align="center" cellpadding="3" cellspacing="0">
 <tr>
 	<td><font size="+1"><?php echo _('CHECK'); ?></font></td>
@@ -55,17 +56,23 @@
 </tr>
 <tr>
 	<td valign="top"><?php echo _('Ampache Version'); ?></td>
-	<td valign="top">[<?php echo check_ampache(); ?>]</td>
+	<td valign="top">[<?php echo check_ampache_version(); ?>]</td>
 	<td>
 	<?php echo _('Compare that you are running a version of Ampache and currently a version of Ampache.'); ?>
 	</td>
 </tr>
 <tr>
 	<td valign="top"><?php echo _('PHP Version'); ?></td>
-	<td valign="top">[<?php echo check_php_security(); ?>]</td>
+	<td valign="top">[<?php echo check_php_version(); ?>]</td>
 	<td>
 	<?php echo _('This test checks for vulnerable PHP whether to use version.'); ?>
 	</td>
+</tr>
+<tr>
+	<td valign="top"><?php echo _('PHP recommendation settings'); ?></td>
+	<td valign="top">[]</td>
+	<td>
+	<?php echo _('This test checks whether the recommended security settings.'); ?></td>
 </tr>
 <tr>
 	<td valign="top"><?php echo _('PHP Info'); ?></td>
@@ -82,6 +89,7 @@
 </table>
 </div>
 <div id="bottom">
+<button onclick="window.close()"><?php echo _('Close this window'); ?></button>
 <p><strong>Ampache Security Center.</strong><br />
 Pour l'Amour de la Musique.</p>
 </div>

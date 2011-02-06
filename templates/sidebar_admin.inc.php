@@ -55,6 +55,7 @@
   <li><h4><?php echo _('Other Tools'); ?></h4>
     <ul class="sb3" id="sb_admin_ot">
       <li id="sb_admin_ot_Debug"><a href="<?php echo $web_path; ?>/admin/system.php?action=show_debug"><?php echo _('Ampache Debug'); ?></a></li>
+      <li id="sb_admin_ot_Security"><a href="<?php echo $web_path; ?>/info.php" onclick="window.open(this.href, 'security', 'width=700, height=300, menubar=no, toolbar=no, scrollbars=yes'); return false;"><?php echo _("Security Check"); ?></a></li>
       <li id="sb_admin_ot_ClearNowPlaying"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo _('Clear Now Playing'); ?></a></li>
       <li id="sb_admin_ot_ExportCatalog"><a href="<?php echo $web_path; ?>/admin/export.php"><?php echo _('Export Catalog'); ?></a></li>
       <?php if (Config::get('shoutbox')) { ?>
