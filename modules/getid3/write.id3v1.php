@@ -1,118 +1,155 @@
 <?php
-/////////////////////////////////////////////////////////////////
-/// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-/////////////////////////////////////////////////////////////////
-// See readme.txt for more details                             //
-/////////////////////////////////////////////////////////////////
-//                                                             //
-// write.id3v1.php                                             //
-// module for writing ID3v1 tags                               //
-// dependencies: module.tag.id3v1.php                          //
-//                                                            ///
-/////////////////////////////////////////////////////////////////
+// +----------------------------------------------------------------------+
+// | PHP version 5                                                        |
+// +----------------------------------------------------------------------+
+// | Copyright (c) 2002-2009 James Heinrich, Allan Hansen                 |
+// +----------------------------------------------------------------------+
+// | This source file is subject to version 2 of the GPL license,         |
+// | that is bundled with this package in the file license.txt and is     |
+// | available through the world-wide-web at the following url:           |
+// | http://www.gnu.org/copyleft/gpl.html                                 |
+// +----------------------------------------------------------------------+
+// | getID3() - http://getid3.sourceforge.net or http://www.getid3.org    |
+// +----------------------------------------------------------------------+
+// | Authors: James Heinrich <infoØgetid3*org>                            |
+// |          Allan Hansen <ahØartemis*dk>                                |
+// +----------------------------------------------------------------------+
+// | write.id3v1.php                                                      |
+// | writing module for id3v1 tags                                        |
+// | dependencies: module.tag.id3v1.php.                                  |
+// +----------------------------------------------------------------------+
+//
+// $Id: write.id3v1.php,v 1.15 2006/11/20 16:09:33 ah Exp $
 
-getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.tag.id3v1.php', __FILE__, true);
 
-class getid3_write_id3v1
+
+class getid3_write_id3v1 extends getid3_handler_write
 {
-	var $filename;
-	var $tag_data;
-	var $warnings = array(); // any non-critical errors will be stored here
-	var $errors   = array(); // any critical errors will be stored here
+    public $title;
+    public $artist;
+    public $album;
+    public $year;
+    public $genre_id;
+    public $genre;
+    public $comment;
+    public $track;
 
-	function getid3_write_id3v1() {
-		return true;
-	}
 
-	function WriteID3v1() {
-		if ((filesize($this->filename) >= (pow(2, 31) - 128)) || (filesize($this->filename) < 0)) {
-			$this->errors[] = 'Unable to write ID3v1 because file is larger than 2GB';
-			return false;
-		}
+    public function read() {
 
-		// File MUST be writeable - CHMOD(646) at least
-		if (is_writeable($this->filename)) {
-			if ($fp_source = @fopen($this->filename, 'r+b')) {
+        $engine = new getid3;
+        $engine->filename = $this->filename;
+        $engine->fp = fopen($this->filename, 'rb');
+        $engine->include_module('tag.id3v1');
 
-				fseek($fp_source, -128, SEEK_END);
-				if (fread($fp_source, 3) == 'TAG') {
-					fseek($fp_source, -128, SEEK_END); // overwrite existing ID3v1 tag
-				} else {
-					fseek($fp_source, 0, SEEK_END);    // append new ID3v1 tag
-				}
-				$this->tag_data['track'] = (isset($this->tag_data['track']) ? $this->tag_data['track'] : (isset($this->tag_data['track_number']) ? $this->tag_data['track_number'] : (isset($this->tag_data['tracknumber']) ? $this->tag_data['tracknumber'] : '')));
+        $tag = new getid3_id3v1($engine);
+        $tag->Analyze();
 
-				$new_id3v1_tag_data = getid3_id3v1::GenerateID3v1Tag(
-														@$this->tag_data['title'],
-														@$this->tag_data['artist'],
-														@$this->tag_data['album'],
-														@$this->tag_data['year'],
-														@$this->tag_data['genreid'],
-														@$this->tag_data['comment'],
-														@$this->tag_data['track']);
-				fwrite($fp_source, $new_id3v1_tag_data, 128);
-				fclose($fp_source);
-				return true;
+        if (!isset($engine->info['id3v1'])) {
+            return;
+        }
 
-			} else {
-				$this->errors[] = 'Could not open '.$this->filename.' mode "r+b"';
-				return false;
-			}
-		}
-		$this->errors[] = 'File is not writeable: '.$this->filename;
-		return false;
-	}
+        $this->title    = $engine->info['id3v1']['title'];
+        $this->artist   = $engine->info['id3v1']['artist'];
+        $this->album    = $engine->info['id3v1']['album'];
+        $this->year     = $engine->info['id3v1']['year'];
+        $this->genre_id = $engine->info['id3v1']['genre_id'];
+        $this->genre    = $engine->info['id3v1']['genre'];
+        $this->comment  = $engine->info['id3v1']['comment'];
+        $this->track    = $engine->info['id3v1']['track'];
 
-	function FixID3v1Padding() {
-		// ID3v1 data is supposed to be padded with NULL characters, but some taggers incorrectly use spaces
-		// This function rewrites the ID3v1 tag with correct padding
+        return true;
+    }
 
-		// Initialize getID3 engine
-		$getID3 = new getID3;
-		$ThisFileInfo = $getID3->analyze($this->filename);
-		if ($ThisFileInfo['filesize'] >= (pow(2, 31) - 128)) {
-			// cannot write tags on files > 2GB
-			return false;
-		}
-		if (isset($ThisFileInfo['tags']['id3v1'])) {
-			foreach ($ThisFileInfo['tags']['id3v1'] as $key => $value) {
-				$id3v1data[$key] = implode(',', $value);
-			}
-			$this->tag_data = $id3v1data;
-			return $this->WriteID3v1();
-		}
-		return false;
-	}
 
-	function RemoveID3v1() {
-		if ($ThisFileInfo['filesize'] >= pow(2, 31)) {
-			$this->errors[] = 'Unable to write ID3v1 because file is larger than 2GB';
-			return false;
-		}
+    public function write() {
 
-		// File MUST be writeable - CHMOD(646) at least
-		if (is_writeable($this->filename)) {
-			if ($fp_source = @fopen($this->filename, 'r+b')) {
+        if (!$fp = @fopen($this->filename, 'r+b')) {
+            throw new getid3_exception('Could not open r+b: ' . $this->filename);
+        }
 
-				fseek($fp_source, -128, SEEK_END);
-				if (fread($fp_source, 3) == 'TAG') {
-					ftruncate($fp_source, filesize($this->filename) - 128);
-				} else {
-					// no ID3v1 tag to begin with - do nothing
-				}
-				fclose($fp_source);
-				return true;
+        // seek to end minus 128 bytes
+        fseek($fp, -128, SEEK_END);
 
-			} else {
-				$this->errors[] = 'Could not open '.$this->filename.' mode "r+b"';
-			}
-		} else {
-			$this->errors[] = $this->filename.' is not writeable';
-		}
-		return false;
-	}
+        // overwrite existing ID3v1 tag
+        if (fread($fp, 3) == 'TAG') {
+            fseek($fp, -128, SEEK_END);
+        }
+
+        // append new ID3v1 tag
+        else {
+            fseek($fp, 0, SEEK_END);
+        }
+
+        fwrite($fp, $this->generate_tag(), 128);
+
+        fclose($fp);
+        clearstatcache();
+
+        return true;
+    }
+
+
+    protected function generate_tag() {
+
+        $result  = 'TAG';
+        $result .= str_pad(trim(substr($this->title,  0, 30)), 30, "\x00", STR_PAD_RIGHT);
+        $result .= str_pad(trim(substr($this->artist, 0, 30)), 30, "\x00", STR_PAD_RIGHT);
+        $result .= str_pad(trim(substr($this->album,  0, 30)), 30, "\x00", STR_PAD_RIGHT);
+        $result .= str_pad(trim(substr($this->year,   0,  4)),  4, "\x00", STR_PAD_LEFT);
+
+        if (!empty($this->track) && ($this->track > 0) && ($this->track <= 255)) {
+
+            $result .= str_pad(trim(substr($this->comment, 0, 28)), 28, "\x00", STR_PAD_RIGHT);
+            $result .= "\x00";
+            $result .= chr($this->track);
+        }
+        else {
+            $result .= str_pad(trim(substr($comment, 0, 30)), 30, "\x00", STR_PAD_RIGHT);
+        }
+
+        // both genre and genre_id set
+        if ($this->genre && $this->genre_id) {
+            if ($this->genre != getid3_id3v1::LookupGenreName($this->genre_id)) {
+                throw new getid3_exception('Genre and genre_id does not match. Unset one and the other will be determined automatically.');
+            }
+        }
+
+        // only genre set
+        elseif ($this->genre) {
+            $this->genre_id = getid3_id3v1::LookupGenreID($this->genre);
+        }
+
+        // only genre_id set
+        else {
+            if ($this->genre_id < 0  ||  $this->genre_id > 147) {
+                $this->genre_id = 255; // 'unknown' genre
+            }
+            $this->genre = getid3_id3v1::LookupGenreName($this->genre_id);
+        }
+
+        $result .= chr(intval($this->genre_id));
+
+        return $result;
+    }
+
+
+    public function remove() {
+
+        if (!$fp = @fopen($this->filename, 'r+b')) {
+            throw new getid3_exception('Could not open r+b: ' . $filename);
+        }
+
+        fseek($fp, -128, SEEK_END);
+        if (fread($fp, 3) == 'TAG') {
+            ftruncate($fp, filesize($this->filename) - 128);
+            fclose($fp);
+            clearstatcache();
+        }
+
+        // success when removing non-existant tag
+        return true;
+    }
 
 }
 

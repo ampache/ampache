@@ -64,6 +64,13 @@ class vainfo {
 	 */
 	public $encoding_id3v1	= 'ISO-8859-1';
 
+	/**
+	 * Default id3v2 encoding
+	 *
+	 * @var	string
+	 */
+	public $encoding_id3v2 = 'ISO-8859-1';
+
 	/* Loaded Variables */
 	/**
 	 * Filename
@@ -165,7 +172,7 @@ class vainfo {
 	public function __construct($file, $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern, $file_pattern) {
 
 		/* Check for ICONV */
-		if (function_exists('iconv')) {
+		if (function_exists('iconv') && Config::get('use_iconv') == "1") {
 			$this->_iconv = true;
 		}
 
@@ -211,40 +218,77 @@ class vainfo {
 			return false;
 		}
 
-		if ($encoding_id3v1) {
+		/* Detect tag order */
+		$tag_order = (array)Config::get('getid3_tag_order');
+		$id3v1 = array_search('id3v1', $tag_order);
+		$id3v2 = array_search('id3v2', $tag_order);
+
+		if ($id3v1 < $id3v2) {
+			$id3v = $tag_order[$id3v1];
+		}
+		elseif ($id3v1 > $id3v2) {
+			$id3v = $tag_order[$id3v2];
+		}
+		else {
+			$id3v = 'id3v1';
+		}
+		debug_event('vainfo', "Tag order -> ".$id3v, 5);
+
+		if ($encoding_id3v1 && $encoding_id3v2) {
+			if ($id3v1 > $id3v2) {
+				$this->encoding_id3v1 = $encoding_id3v1;
+				$id3v = 'id3v1';
+			}
+			elseif ($id3v1 < $id3v2) {
+				$this->encoding_id3v2 = $encoding_id3v2;
+				$id3v = 'id3v2';
+			}
+			else {
+				$this->encoding_id3v1 = $encoding_id3v1;
+				$id3v = 'id3v1';
+			}
+		}
+		elseif (!$encoding_id3v1 && $encoding_id3v2) {
+			$this->encoding_id3v2 = $encoding_id3v2;
+			$id3v = 'id3v2';
+		}
+		elseif ($encoding_id3v1 && !$encoding_id3v2) {
 			$this->encoding_id3v1 = $encoding_id3v1;
+			$id3v = 'id3v1';
 		}
 		elseif (function_exists('mb_detect_encoding')) {
 			$encodings = array();
 			$tags = array('artist', 'album', 'genre', 'title');
 			foreach ($tags as $tag) {
-				if ($value = $this->_raw['id3v1'][$tag]) {
+				if ($value = $this->_raw[$id3v][$tag] || $value = $this->_raw[$id3v]['comments'][$tag]) {
 					$encodings[mb_detect_encoding($value, 'ASCII,UTF-8,EUC-JP,ISO-2022-JP,SJIS,JIS', true)]++;
 				}
 			}
 
-			debug_event('vainfo', 'encoding detection (id3v1): ' . print_r($encodings, true), 5);
+			debug_event('vainfo', 'encoding detection ('. $id3v .'): ' . print_r($encodings, true), 5);
 			$high = 0;
 			foreach ($encodings as $key => $value) {
 				if ($value > $high) {
-					$encoding_id3v1 = $key;
+					$encoding_{$$id3v} = $key;
 					$high = $value;
 				}
 			}
 
-			if($encoding_id3v1 != 'ASCII' && $encoding_id3v1 != '0') {
-				$this->encoding_id3v1 = $encoding_id3v1;
+			if($encoding_{$$id3v} != 'ASCII' && $encoding_{$$id3v} != '0') {
+				$this->encoding_{$$id3v} = $encoding_{$$id3v};
 			} else {
-				$this->encoding_id3v1 = 'ISO-8859-1';
+				$this->encoding_{$$id3v} = 'ISO-8859-1';
 			}
 
-			debug_event('vainfo', 'encoding detection (id3v1) selected ' .  $this->encoding_id3v1, 5);
+			debug_event('vainfo', 'encoding detection ('. $id3v .') selected ' .  $this->encoding_{$$id3v}, 5);
 		}
 		else {
-			$this->encoding_id3v1 = 'ISO-8859-1';
+			$this->encoding_{$$id3v} = 'ISO-8859-1';
 		}
 
+		//$this->_getID3->encoding_{$$id3v} = $this->encoding_{$$id3v};
 		$this->_getID3->encoding_id3v1 = $this->encoding_id3v1;
+		$this->_getID3->encoding_id3v2 = $this->encoding_id3v2;
 
 	} // vainfo
 
@@ -1147,6 +1191,13 @@ class vainfo {
 			if(strcmp($clean, '') == 0) {
 				$clean = iconv($encoding, $this->encoding, $tag);
 			}
+		}
+		elseif (function_exists('mb_convert_encoding')) {
+			if (!$encoding) {
+				$encoding = $this->_getID3->encoding;
+			}
+
+			$clean = mb_convert_encoding($tag, $encoding, $this->encoding);
 		}
 
 		return $clean;

@@ -1,9 +1,8 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 // +----------------------------------------------------------------------+
 // | PHP version 5                                                        |
 // +----------------------------------------------------------------------+
-// | Copyright (c) 2002-2006 James Heinrich, Allan Hansen                 |
+// | Copyright (c) 2002-2009 James Heinrich, Allan Hansen                 |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2 of the GPL license,         |
 // | that is bundled with this package in the file license.txt and is     |
@@ -429,7 +428,16 @@ class getid3_xiph extends getid3_handler
                 $comment_data .= $as_yet_unused_data;
 
                 //$comment_data .= fread($getid3->fp, $getid3->info['ogg']['pageheader'][$ogg_page_info['page_seqno']]['page_length']);
-                $comment_data .= fread($getid3->fp, getid3_xiph::OggPageSegmentLength($getid3->info['ogg']['pageheader'][$vorbis_comment_page], 1));
+				if (!isset($getid3->info['ogg']['pageheader'][$vorbis_comment_page])) {
+					$getid3->warning('undefined Vorbis Comment page "'.$vorbis_comment_page.'" at offset '.ftell($getid3->fp));
+					break;
+				}
+				$readlength = getid3_xiph::OggPageSegmentLength($getid3->info['ogg']['pageheader'][$vorbis_comment_page], 1);
+				if ($readlength <= 0) {
+					$getid3->warning('invalid length Vorbis Comment page "'.$VorbisCommentPage.'" at offset '.ftell($getid3->fp));
+					break;
+				}
+                $comment_data .= fread($getid3->fp, $readlength);
 
                 //$filebaseoffset += $ogg_page_info['header_end_offset'] - $ogg_page_info['page_start_offset'];
             }
@@ -607,6 +615,10 @@ class getid3_xiph extends getid3_handler
         if (isset($getid3->info['flac']['STREAMINFO'])) {
             $getid3->info['flac']['compressed_audio_bytes']   = $getid3->info['avdataend'] - $getid3->info['avdataoffset'];
             $getid3->info['flac']['uncompressed_audio_bytes'] = $getid3->info['flac']['STREAMINFO']['samples_stream'] * $getid3->info['flac']['STREAMINFO']['channels'] * ($getid3->info['flac']['STREAMINFO']['bits_per_sample'] / 8);
+            if ($getid3->info['flac']['uncompressed_audio_bytes'] <= 0) {
+            	$getid3->warning('Corrupt FLAC file: uncompressed_audio_bytes == zero');
+            	return false;
+            }
             $getid3->info['flac']['compression_ratio']        = $getid3->info['flac']['compressed_audio_bytes'] / $getid3->info['flac']['uncompressed_audio_bytes'];
         }
 
@@ -675,7 +687,9 @@ class getid3_xiph extends getid3_handler
             $getid3->info['audio']['channels']        = $getid3->info['flac']['STREAMINFO']['channels'];
             $getid3->info['audio']['bits_per_sample'] = $getid3->info['flac']['STREAMINFO']['bits_per_sample'];
             $getid3->info['playtime_seconds']         = $getid3->info['flac']['STREAMINFO']['samples_stream'] / $getid3->info['flac']['STREAMINFO']['sample_rate'];
-            $getid3->info['audio']['bitrate']         = (($getid3->info['avdataend'] - $getid3->info['avdataoffset']) * 8) / $getid3->info['playtime_seconds'];
+            if ($getid3->info['playtime_seconds'] > 0) {
+            	$getid3->info['audio']['bitrate']     = (($getid3->info['avdataend'] - $getid3->info['avdataoffset']) * 8) / $getid3->info['playtime_seconds'];
+            }
 
         } else {
 
@@ -797,7 +811,8 @@ class getid3_xiph extends getid3_handler
 
         $offset = 0;
 
-        $picture['type'] = $this->FLACpictureTypeLookup(getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 4)));
+        $picture['typeid'] = getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 4));
+        $picture['type'] = $this->FLACpictureTypeLookup($picture['typeid']);
         $offset += 4;
 
         $length = getid3_lib::BigEndian2Int(substr($meta_data_block_data, $offset, 4));
@@ -851,8 +866,6 @@ class getid3_xiph extends getid3_handler
 
     public static function OggPageSegmentLength($ogg_info_array, $segment_number=1) {
 
-	if (!is_array($ogg_info_array['segment_table'])) { $ogg_info_array['segment_table'] = array(); }
-
         for ($i = 0; $i < $segment_number; $i++) {
             $segment_length = 0;
             foreach ($ogg_info_array['segment_table'] as $key => $value) {
@@ -862,7 +875,6 @@ class getid3_xiph extends getid3_handler
                 }
             }
         }
-	$segment_length = !$segment_length ? '1' : $segment_length;
         return $segment_length;
     }
 

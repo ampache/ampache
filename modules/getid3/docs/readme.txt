@@ -66,8 +66,11 @@ Reads & parses (to varying degrees):
   * MP3/MP2/MP1
   * MPC / Musepack
   * Ogg (Vorbis, OggFLAC, Speex)
+  * AC3
+  * DTS
   * RealAudio
   * Speex
+  * DSS
   * VQF
 
  ¤ audio-lossless:
@@ -77,11 +80,14 @@ Reads & parses (to varying degrees):
   * CD-audio (*.cda)
   * FLAC
   * LA (Lossless Audio)
+  * LiteWave
   * LPAC
   * MIDI
   * Monkey's Audio
   * OptimFROG
   * RKAU
+  * Shorten
+  * TTA
   * VOC
   * WAV (RIFF)
   * WavPack
@@ -90,6 +96,7 @@ Reads & parses (to varying degrees):
   * ASF: ASF, Windows Media Audio (WMA), Windows Media Video (WMV)
   * AVI (RIFF)
   * Flash
+  * Matroska (MKV)
   * MPEG-1 / MPEG-2
   * NSV (Nullsoft Streaming Video)
   * Quicktime
@@ -100,11 +107,16 @@ Reads & parses (to varying degrees):
   * GIF
   * JPEG
   * PNG
+  * TIFF
+  * SWF (Flash)
+  * PhotoCD
 
  ¤ data:
   * ISO-9660 CD-ROM image (directory structure)
   * SZIP (limited support)
   * ZIP (directory structure)
+  * TAR
+  * CUE
 
 
 Writes:
@@ -191,7 +203,7 @@ the file itself.
 Notes
 ===========================================================================
 
-getID3() 1.7:
+getID3() 1.x:
 If the format parser encounters a critical problem, it will return
 something in $fileinfo['error'], describing the encountered error. If
 a less critical error or notice is generated it will appear in
@@ -205,7 +217,7 @@ other programs. Some warnings may indicate that the data that is
 returned is OK but that some data could not be extracted due to
 errors in the file.
 
-getID3() 2.0:
+getID3() 2.x:
 See above except errors are thrown (so you will only get one error).
 
 
@@ -261,8 +273,6 @@ Future Plans
 
 * Writing support for Real
 * Better support for MP4 container format
-* Support for Matroska (www.matroska.org)
-  http://corecodec.com/modules.php?op=modload&name=PNphpBB2&file=viewtopic&t=227
 * Scan for appended ID3v2 tag at end of file per ID3v2.4 specs (Section 5.0)
 * Support for JPEG-2000 (http://www.morgan-multimedia.com/jpeg2000_overview.htm)
 * Support for MOD (mod/stm/s3m/it/xm/mtm/ult/669)
@@ -535,3 +545,5 @@ Reference material:
 * http://tta.corecodec.org/?menu=format
 * http://www.scvi.net/nsvformat.htm
 * http://pda.etsi.org/pda/queryform.asp
+* http://wyday.com/cuesharp/specification.php
+* http://code.google.com/p/pyaudibletags/source/browse/tags/version1.0/pyaudibletags.py
