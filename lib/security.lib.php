@@ -179,6 +179,24 @@ function get_latest($type = null) {
  * @return	array	Show security messages, if found.
  */
 function check_security() {
-return true;
+
+	$warnings = array();
+
+	if(ini_get('display_errors') == '1') {
+		$warnings['display_errors'] = _('Provide useful information to attack the error information.');
+	}
+	if(ini_get('expose_php') == '1') {
+		$warnings['expose_php'] = _('Including the PHP version that is described in the HTTP header. It is "INI_SYSTEM" because it is set can be changed only in the server configuration.');
+	}
+	if(ini_get('session.use_only_cookies') == '0') {
+		$warnings['session.use_only_cookies'] = _('URL specified in session and the session ID is initialized using. (permissive session management. if you set 1 URL, POST in the session ID is ignored)');
+	}
+
+	if(count($warnings) == 0) {
+		$warnings['no_probrem'] = _('There is no probrem.');
+	}
+
+	return $warnings;
+
 } // check_security
 ?>

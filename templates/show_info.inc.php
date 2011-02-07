@@ -70,7 +70,11 @@
 </tr>
 <tr>
 	<td valign="top"><?php echo _('PHP recommendation settings'); ?></td>
-	<td valign="top">[]</td>
+	<td valign="top"><?php
+		foreach(check_security() as $warning=>$message) {
+			printf('<span title="%s">%s</span><br />', $message, $warning);
+		}
+	?></td>
 	<td>
 	<?php echo _('This test checks whether the recommended security settings.'); ?></td>
 </tr>
