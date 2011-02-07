@@ -1,24 +1,27 @@
 <?php
-/////////////////////////////////////////////////////////////////
-/// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-/////////////////////////////////////////////////////////////////
-// See readme.txt for more details                             //
-/////////////////////////////////////////////////////////////////
-//                                                             //
-// module.misc.cue.php                                         //
-// module for analyzing CUEsheet files                         //
-// dependencies: NONE                                          //
-//                                                             //
-/////////////////////////////////////////////////////////////////
-//                                                             //
-// Module originally written [2009-Mar-25] by                  //
-//      Nigel Barnes <ngbarnesØhotmail*com>                    //
-// Minor reformatting and similar small changes to integrate   //
-//   into getID3 by James Heinrich <info@getid3.org>           //
-//                                                            ///
-/////////////////////////////////////////////////////////////////
+// +----------------------------------------------------------------------+
+// | PHP version 5                                                        |
+// +----------------------------------------------------------------------+
+// | Copyright (c) 2002-2009 James Heinrich, Allan Hansen                 |
+// +----------------------------------------------------------------------+
+// | This source file is subject to version 2 of the GPL license,         |
+// | that is bundled with this package in the file license.txt and is     |
+// | available through the world-wide-web at the following url:           |
+// | http://www.gnu.org/copyleft/gpl.html                                 |
+// +----------------------------------------------------------------------+
+// | getID3() - http://getid3.sourceforge.net or http://www.getid3.org    |
+// +----------------------------------------------------------------------+
+// | Authors: Nigel Barnes <ngbarnesØhotmail*com>                         |
+// |          James Heinrich <infoØgetid3*org>                            |
+// +----------------------------------------------------------------------+
+// | module.misc.cue.php                                                  |
+// | module for analyzing CUEsheet files                                  |
+// | dependencies: NONE                                                   |
+// +----------------------------------------------------------------------+
+// | PHP Module originally written by Nigel Barnes <ngbarnesØhotmail*com> |
+// | * This is a PHP conversion of CueSharp v0.5 *                        |
+// | *  by Wyatt O'Day (wyday.com/cuesharp)      *                        |
+// +----------------------------------------------------------------------+
 
 /*
  * CueSheet parser by Nigel Barnes.
@@ -30,17 +33,21 @@
  * A CueSheet class used to open and parse cuesheets.
  *
  */
-class getid3_cue
+class getid3_cue extends getid3_handler
 {
 	var $cuesheet = array();
 
-	function getid3_cue(&$fd, &$ThisFileInfo) {
-		$ThisFileInfo['fileformat'] = 'cue';
-		$this->readCueSheetFilename($ThisFileInfo['filenamepath']);
-		$ThisFileInfo['cue'] = $this->cuesheet;
+	function Analyze() {
+        $info = &$this->getid3->info;
+        $info['fileformat'] = 'cue';
+
+        @fseek($this->getid3->fp, 0);
+        $buffer = @fread($this->getid3->fp, $info['filesize']);
+
+		$this->readCueSheet($buffer);
+		$info['cue'] = $this->cuesheet;
 		return true;
 	}
-
 
 
 	function readCueSheetFilename($filename)
@@ -302,4 +309,7 @@ class getid3_cue
 
 }
 
+/**************************************************************************************************
+ End of file
+ **************************************************************************************************/
 ?>

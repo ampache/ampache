@@ -1,227 +1,263 @@
 <?php
-/////////////////////////////////////////////////////////////////
-/// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-/////////////////////////////////////////////////////////////////
-// See readme.txt for more details                             //
-/////////////////////////////////////////////////////////////////
-//                                                             //
-// write.apetag.php                                            //
-// module for writing APE tags                                 //
-// dependencies: module.tag.apetag.php                         //
-//                                                            ///
-/////////////////////////////////////////////////////////////////
+// +----------------------------------------------------------------------+
+// | PHP version 5                                                        |
+// +----------------------------------------------------------------------+
+// | Copyright (c) 2002-2009 James Heinrich, Allan Hansen                 |
+// +----------------------------------------------------------------------+
+// | This source file is subject to version 2 of the GPL license,         |
+// | that is bundled with this package in the file license.txt and is     |
+// | available through the world-wide-web at the following url:           |
+// | http://www.gnu.org/copyleft/gpl.html                                 |
+// +----------------------------------------------------------------------+
+// | getID3() - http://getid3.sourceforge.net or http://www.getid3.org    |
+// +----------------------------------------------------------------------+
+// | Authors: James Heinrich <infoØgetid3*org>                            |
+// |          Allan Hansen <ahØartemis*dk>                                |
+// +----------------------------------------------------------------------+
+// | write.apetag.php                                                     |
+// | writing module for ape tags                                          |
+// | dependencies: module.tag.apetag.php                                  |
+// | dependencies: module.tag.id3v1.php                                   |
+// | dependencies: module.tag.lyrics3.php                                 |
+// +----------------------------------------------------------------------+
+//
+// $Id: write.apetag.php,v 1.9 2006/11/20 16:13:31 ah Exp $
 
 
-getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.tag.apetag.php', __FILE__, true);
-
-class getid3_write_apetag
+class getid3_write_apetag extends getid3_handler_write
 {
 
-	var $filename;
-	var $tag_data;
-	var $always_preserve_replaygain = true;  // ReplayGain / MP3gain tags will be copied from old tag even if not passed in data
-	var $warnings = array();                 // any non-critical errors will be stored here
-	var $errors   = array();                 // any critical errors will be stored here
-
-	function getid3_write_apetag() {
-		return true;
-	}
-
-	function WriteAPEtag() {
-		// NOTE: All data passed to this function must be UTF-8 format
-
-		$getID3 = new getID3;
-		$ThisFileInfo = $getID3->analyze($this->filename);
-
-		if (isset($ThisFileInfo['ape']['tag_offset_start']) && isset($ThisFileInfo['lyrics3']['tag_offset_end'])) {
-			if ($ThisFileInfo['ape']['tag_offset_start'] >= $ThisFileInfo['lyrics3']['tag_offset_end']) {
-				// Current APE tag between Lyrics3 and ID3v1/EOF
-				// This break Lyrics3 functionality
-				if (!$this->DeleteAPEtag()) {
-					return false;
-				}
-				$ThisFileInfo = $getID3->analyze($this->filename);
-			}
-		}
-
-		if ($this->always_preserve_replaygain) {
-			$ReplayGainTagsToPreserve = array('mp3gain_minmax', 'mp3gain_album_minmax', 'mp3gain_undo', 'replaygain_track_peak', 'replaygain_track_gain', 'replaygain_album_peak', 'replaygain_album_gain');
-			foreach ($ReplayGainTagsToPreserve as $rg_key) {
-				if (isset($ThisFileInfo['ape']['items'][strtolower($rg_key)]['data'][0]) && !isset($this->tag_data[strtoupper($rg_key)][0])) {
-					$this->tag_data[strtoupper($rg_key)][0] = $ThisFileInfo['ape']['items'][strtolower($rg_key)]['data'][0];
-				}
-			}
-		}
-
-		if ($APEtag = $this->GenerateAPEtag()) {
-			if ($fp = @fopen($this->filename, 'a+b')) {
-				$oldignoreuserabort = ignore_user_abort(true);
-				flock($fp, LOCK_EX);
-
-				$PostAPEdataOffset = $ThisFileInfo['avdataend'];
-				if (isset($ThisFileInfo['ape']['tag_offset_end'])) {
-					$PostAPEdataOffset = max($PostAPEdataOffset, $ThisFileInfo['ape']['tag_offset_end']);
-				}
-				if (isset($ThisFileInfo['lyrics3']['tag_offset_start'])) {
-					$PostAPEdataOffset = max($PostAPEdataOffset, $ThisFileInfo['lyrics3']['tag_offset_start']);
-				}
-				fseek($fp, $PostAPEdataOffset, SEEK_SET);
-				$PostAPEdata = '';
-				if ($ThisFileInfo['filesize'] > $PostAPEdataOffset) {
-					$PostAPEdata = fread($fp, $ThisFileInfo['filesize'] - $PostAPEdataOffset);
-				}
-
-				fseek($fp, $PostAPEdataOffset, SEEK_SET);
-				if (isset($ThisFileInfo['ape']['tag_offset_start'])) {
-					fseek($fp, $ThisFileInfo['ape']['tag_offset_start'], SEEK_SET);
-				}
-				ftruncate($fp, ftell($fp));
-				fwrite($fp, $APEtag, strlen($APEtag));
-				if (!empty($PostAPEdata)) {
-					fwrite($fp, $PostAPEdata, strlen($PostAPEdata));
-				}
-				flock($fp, LOCK_UN);
-				fclose($fp);
-				ignore_user_abort($oldignoreuserabort);
-				return true;
-
-			}
-			return false;
-		}
-		return false;
-	}
-
-	function DeleteAPEtag() {
-		$getID3 = new getID3;
-		$ThisFileInfo = $getID3->analyze($this->filename);
-		if (isset($ThisFileInfo['ape']['tag_offset_start']) && isset($ThisFileInfo['ape']['tag_offset_end'])) {
-			if ($fp = @fopen($this->filename, 'a+b')) {
-
-				flock($fp, LOCK_EX);
-				$oldignoreuserabort = ignore_user_abort(true);
-
-				fseek($fp, $ThisFileInfo['ape']['tag_offset_end'], SEEK_SET);
-				$DataAfterAPE = '';
-				if ($ThisFileInfo['filesize'] > $ThisFileInfo['ape']['tag_offset_end']) {
-					$DataAfterAPE = fread($fp, $ThisFileInfo['filesize'] - $ThisFileInfo['ape']['tag_offset_end']);
-				}
-
-				ftruncate($fp, $ThisFileInfo['ape']['tag_offset_start']);
-				fseek($fp, $ThisFileInfo['ape']['tag_offset_start'], SEEK_SET);
-
-				if (!empty($DataAfterAPE)) {
-					fwrite($fp, $DataAfterAPE, strlen($DataAfterAPE));
-				}
-
-				flock($fp, LOCK_UN);
-				fclose($fp);
-				ignore_user_abort($oldignoreuserabort);
-
-				return true;
-
-			}
-			return false;
-		}
-		return true;
-	}
+    public $comments;
 
 
-	function GenerateAPEtag() {
-		// NOTE: All data passed to this function must be UTF-8 format
+    public function read() {
 
-		$items = array();
-		if (!is_array($this->tag_data)) {
-			return false;
-		}
-		foreach ($this->tag_data as $key => $arrayofvalues) {
-			if (!is_array($arrayofvalues)) {
-				return false;
-			}
+        $engine = new getid3;
+        $engine->filename = $this->filename;
+        $engine->fp = fopen($this->filename, 'rb');
+        $engine->include_module('tag.apetag');
 
-			$valuestring = '';
-			foreach ($arrayofvalues as $value) {
-				$valuestring .= str_replace("\x00", '', $value)."\x00";
-			}
-			$valuestring = rtrim($valuestring, "\x00");
+        $tag = new getid3_apetag($engine);
+        $tag->Analyze();
 
-			// Length of the assigned value in bytes
-			$tagitem  = getid3_lib::LittleEndian2String(strlen($valuestring), 4);
+        if (!isset($engine->info['ape']['comments'])) {
+            return;
+        }
 
-			//$tagitem .= $this->GenerateAPEtagFlags(true, true, false, 0, false);
-			$tagitem .= "\x00\x00\x00\x00";
+        $this->comments = $engine->info['ape']['comments'];
 
-			$tagitem .= $this->CleanAPEtagItemKey($key)."\x00";
-			$tagitem .= $valuestring;
+        // convert single element arrays to string
+        foreach ($this->comments as $key => $value) {
+            if (sizeof($value) == 1) {
+                $this->comments[$key] = $value[0];
+            }
+        }
 
-			$items[] = $tagitem;
+        return true;
+    }
 
-		}
 
-		return $this->GenerateAPEtagHeaderFooter($items, true).implode('', $items).$this->GenerateAPEtagHeaderFooter($items, false);
-	}
+    public function write() {
 
-	function GenerateAPEtagHeaderFooter(&$items, $isheader=false) {
-		$tagdatalength = 0;
-		foreach ($items as $itemdata) {
-			$tagdatalength += strlen($itemdata);
-		}
+        // remove existing apetag
+        $this->remove();
 
-		$APEheader  = 'APETAGEX';
-		$APEheader .= getid3_lib::LittleEndian2String(2000, 4);
-		$APEheader .= getid3_lib::LittleEndian2String(32 + $tagdatalength, 4);
-		$APEheader .= getid3_lib::LittleEndian2String(count($items), 4);
-		$APEheader .= $this->GenerateAPEtagFlags(true, true, $isheader, 0, false);
-		$APEheader .= str_repeat("\x00", 8);
+        $engine = new getid3;
+        $engine->filename = $this->filename;
+        $engine->fp = fopen($this->filename, 'rb');
+        $engine->include_module('tag.id3v1');
+        $engine->include_module('tag.lyrics3');
 
-		return $APEheader;
-	}
+        $tag = new getid3_id3v1($engine);
+        $tag->Analyze();
 
-	function GenerateAPEtagFlags($header=true, $footer=true, $isheader=false, $encodingid=0, $readonly=false) {
-		$APEtagFlags = array_fill(0, 4, 0);
-		if ($header) {
-			$APEtagFlags[0] |= 0x80; // Tag contains a header
-		}
-		if (!$footer) {
-			$APEtagFlags[0] |= 0x40; // Tag contains no footer
-		}
-		if ($isheader) {
-			$APEtagFlags[0] |= 0x20; // This is the header, not the footer
-		}
+        $tag = new getid3_lyrics3($engine);
+        $tag->Analyze();
 
-		// 0: Item contains text information coded in UTF-8
-		// 1: Item contains binary information °)
-		// 2: Item is a locator of external stored information °°)
-		// 3: reserved
-		$APEtagFlags[3] |= ($encodingid << 1);
+        $apetag = $this->generate_tag();
 
-		if ($readonly) {
-			$APEtagFlags[3] |= 0x01; // Tag or Item is Read Only
-		}
+        if (!$fp = @fopen($this->filename, 'a+b')) {
+            throw new getid3_exception('Could not open a+b: ' . $this->filename);
+        }
 
-		return chr($APEtagFlags[3]).chr($APEtagFlags[2]).chr($APEtagFlags[1]).chr($APEtagFlags[0]);
-	}
+        // init: audio ends at eof
+        $post_audio_offset = filesize($this->filename);
 
-	function CleanAPEtagItemKey($itemkey) {
-		$itemkey = preg_replace("#[^\x20-\x7E]#i", '', $itemkey);
+        // lyrics3 tag present
+        if (@$engine->info['lyrics3']['tag_offset_start']) {
 
-		// http://www.personal.uni-jena.de/~pfk/mpp/sv8/apekey.html
-		switch (strtoupper($itemkey)) {
-			case 'EAN/UPC':
-			case 'ISBN':
-			case 'LC':
-			case 'ISRC':
-				$itemkey = strtoupper($itemkey);
-				break;
+            // audio ends before lyrics3 tag
+            $post_audio_offset = @$engine->info['lyrics3']['tag_offset_start'];
+        }
 
-			default:
-				$itemkey = ucwords($itemkey);
-				break;
-		}
-		return $itemkey;
+        // id3v1 tag present
+        elseif (@$engine->info['id3v1']['tag_offset_start']) {
 
-	}
+            // audio ends before id3v1 tag
+            $post_audio_offset = $engine->info['id3v1']['tag_offset_start'];
+        }
+
+        // seek to end of audio data
+        fseek($fp, $post_audio_offset, SEEK_SET);
+
+        // save data after audio data
+        $post_audio_data = '';
+        if (filesize($this->filename) > $post_audio_offset) {
+            $post_audio_data = fread($fp, filesize($this->filename) - $post_audio_offset);
+        }
+
+        // truncate file before start of new apetag
+        fseek($fp, $post_audio_offset, SEEK_SET);
+        ftruncate($fp, ftell($fp));
+
+        // write new apetag
+        fwrite($fp, $apetag, strlen($apetag));
+
+        // rewrite data after audio
+        if (!empty($post_audio_data)) {
+            fwrite($fp, $post_audio_data, strlen($post_audio_data));
+        }
+
+        fclose($fp);
+        clearstatcache();
+
+        return true;
+    }
+
+
+    public function remove() {
+
+        $engine = new getid3;
+        $engine->filename = $this->filename;
+        $engine->fp = fopen($this->filename, 'rb');
+        $engine->include_module('tag.apetag');
+
+        $tag = new getid3_apetag($engine);
+        $tag->Analyze();
+
+        if (isset($engine->info['ape']['tag_offset_start']) && isset($engine->info['ape']['tag_offset_end'])) {
+
+            if (!$fp = @fopen($this->filename, 'a+b')) {
+                throw new getid3_exception('Could not open a+b: ' . $this->filename);
+            }
+
+            // get data after apetag
+            if (filesize($this->filename) > $engine->info['ape']['tag_offset_end']) {
+                fseek($fp, $engine->info['ape']['tag_offset_end'], SEEK_SET);
+                $data_after_ape = fread($fp, filesize($this->filename) - $engine->info['ape']['tag_offset_end']);
+            }
+
+            // truncate file before start of apetag
+            ftruncate($fp, $engine->info['ape']['tag_offset_start']);
+
+            // rewrite data after apetag
+            if (isset($data_after_ape)) {
+                fseek($fp, $engine->info['ape']['tag_offset_start'], SEEK_SET);
+                fwrite($fp, $data_after_ape, strlen($data_after_ape));
+            }
+
+            fclose($fp);
+            clearstatcache();
+        }
+
+        // success when removing non-existant tag
+        return true;
+    }
+
+
+    protected function generate_tag() {
+
+        // NOTE: All data passed to this function must be UTF-8 format
+
+        $items = array();
+        if (!is_array($this->comments)) {
+            throw new getid3_exception('Cannot write empty tag, use remove() instead.');
+        }
+
+        foreach ($this->comments as $key => $values) {
+
+            // http://www.personal.uni-jena.de/~pfk/mpp/sv8/apekey.html
+            // A case-insensitive vobiscomment field name that may consist of ASCII 0x20 through 0x7E.
+            // ASCII 0x41 through 0x5A  inclusive (A-Z) is to be considered equivalent to ASCII 0x61 through 0x7A inclusive (a-z).
+            if (preg_match("/[^\x20-\x7E]/", $key)) {
+                throw new getid3_exception('Field name "' . $key . '" contains invalid character(s).');
+            }
+
+            $key = strtolower($key);
+
+            // convert single value comment to array
+            if (!is_array($values)) {
+                $values = array ($values);
+            }
+
+            $value_array = array ();
+            foreach ($values as $value) {
+                $value_array[] = str_replace("\x00", '', $value);
+            }
+            $value_string = implode("\x00", $value_array);
+
+            // length of the assigned value in bytes
+            $tag_item  = getid3_lib::LittleEndian2String(strlen($value_string), 4);
+
+            $tag_item .= "\x00\x00\x00\x00" . $key . "\x00" . $value_string;
+
+            $items[] = $tag_item;
+        }
+
+        return $this->generate_header_footer($items, true) . implode('', $items) . $this->generate_header_footer($items, false);
+    }
+
+
+    protected function generate_header_footer(&$items, $is_header=false) {
+
+        $comments_length = 0;
+        foreach ($items as $item_data) {
+            $comments_length += strlen($item_data);
+        }
+
+        $header  = 'APETAGEX';
+        $header .= getid3_lib::LittleEndian2String(2000, 4);
+        $header .= getid3_lib::LittleEndian2String(32 + $comments_length, 4);
+        $header .= getid3_lib::LittleEndian2String(count($items), 4);
+        $header .= $this->generate_flags(true, true, $is_header, 0, false);
+        $header .= str_repeat("\x00", 8);
+
+        return $header;
+    }
+
+
+    protected function generate_flags($header=true, $footer=true, $is_header=false, $encoding_id=0, $read_only=false) {
+
+        $flags = array_fill(0, 4, 0);
+
+        // Tag contains a header
+        if ($header) {
+            $flags[0] |= 0x80;
+        }
+
+        // Tag contains no footer
+        if (!$footer) {
+            $flags[0] |= 0x40;
+        }
+
+        // This is the header, not the footer
+        if ($is_header) {
+            $flags[0] |= 0x20;
+        }
+
+        // 0: Item contains text information coded in UTF-8
+        // 1: Item contains binary information °)
+        // 2: Item is a locator of external stored information °°)
+        // 3: reserved
+        $flags[3] |= ($encoding_id << 1);
+
+        // Tag or Item is Read Only
+        if ($read_only) {
+            $flags[3] |= 0x01;
+        }
+
+        return chr($flags[3]).chr($flags[2]).chr($flags[1]).chr($flags[0]);
+    }
 
 }
 

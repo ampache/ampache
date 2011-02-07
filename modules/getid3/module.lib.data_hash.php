@@ -1,9 +1,8 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 // +----------------------------------------------------------------------+
 // | PHP version 5                                                        |
 // +----------------------------------------------------------------------+
-// | Copyright (c) 2002-2006 James Heinrich, Allan Hansen                 |
+// | Copyright (c) 2002-2009 James Heinrich, Allan Hansen                 |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2 of the GPL license,         |
 // | that is bundled with this package in the file license.txt and is     |
@@ -63,7 +62,7 @@ class getid3_lib_data_hash
             // page sequence numbers likely happens for OggSpeex and OggFLAC as well, but
             // currently vorbiscomment only works on OggVorbis files.
 
-            if ((bool)ini_get('safe_mode')) {
+            if (preg_match('#(1|ON)#i', ini_get('safe_mode'))) {
                 throw new getid3_exception('PHP running in Safe Mode - cannot make system call to vorbiscomment[.exe]  needed for '.$algorithm.'_data.');
             }
 
@@ -75,11 +74,11 @@ class getid3_lib_data_hash
             $old_abort = ignore_user_abort(true);
 
             // Create empty file
-            $empty = tempnam('*', 'getID3');
+            $empty = tempnam((function_exists('sys_get_temp_dir') ? sys_get_temp_dir() : ini_get('upload_tmp_dir')), 'getID3');
             touch($empty);
 
             // Use vorbiscomment to make temp file without comments
-            $temp = tempnam('*', 'getID3');
+            $temp = tempnam((function_exists('sys_get_temp_dir') ? sys_get_temp_dir() : ini_get('upload_tmp_dir')), 'getID3');
 
             $command_line = 'vorbiscomment -w -c '.escapeshellarg($empty).' '.escapeshellarg(realpath($getid3->filename)).' '.escapeshellarg($temp).' 2>&1';
 
@@ -108,7 +107,7 @@ class getid3_lib_data_hash
         // Get hash from part of file
         if (@$getid3->info['avdataoffset'] || (@$getid3->info['avdataend']  &&  @$getid3->info['avdataend'] < $getid3->info['filesize'])) {
 
-            if ((bool)ini_get('safe_mode')) {
+            if (preg_match('#(1|ON)#i', ini_get('safe_mode'))) {
                 $getid3->warning('PHP running in Safe Mode - backtick operator not available, using slower non-system-call '.$algorithm.' algorithm.');
                 $hash_function = 'hash_file_partial_safe_mode';
             }
@@ -163,7 +162,7 @@ class getid3_lib_data_hash
     private function hash_file_partial_safe_mode($file, $offset, $end, $algorithm) {
 
         // Attempt to create a temporary file in the system temp directory - invalid dirname should force to system temp dir
-        if (($data_filename = tempnam('*', 'getID3')) === false) {
+        if (($data_filename = tempnam((function_exists('sys_get_temp_dir') ? sys_get_temp_dir() : ini_get('upload_tmp_dir')), 'getID3')) === false) {
             throw new getid3_exception('Unable to create temporary file.');
         }
 

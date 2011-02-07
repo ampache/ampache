@@ -1,9 +1,8 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 // +----------------------------------------------------------------------+
 // | PHP version 5                                                        |
 // +----------------------------------------------------------------------+
-// | Copyright (c) 2002-2006 James Heinrich, Allan Hansen                 |
+// | Copyright (c) 2002-2009 James Heinrich, Allan Hansen                 |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2 of the GPL license,         |
 // | that is bundled with this package in the file license.txt and is     |
@@ -31,7 +30,7 @@ class getid3_write_vorbis extends getid3_handler_write
 
     public function __construct($filename) {
 
-        if (ini_get('safe_mode')) {
+        if (preg_match('#(1|ON)#i', ini_get('safe_mode'))) {
             throw new getid3_exception('PHP running in Safe Mode (backtick operator not available). Cannot call vorbiscomment binary.');
         }
 
@@ -39,7 +38,7 @@ class getid3_write_vorbis extends getid3_handler_write
         if (!$initialized) {
 
             // check existance and version of vorbiscomment
-            if (!preg_match('/^Vorbiscomment ([0-9]+\.[0-9]+\.[0-9]+)/', `vorbiscomment --version 2>&1`, $r)) {
+            if (!preg_match('#^Vorbiscomment ([0-9]+\.[0-9]+\.[0-9]+)#', `vorbiscomment --version 2>&1`, $r)) {
                 throw new getid3_exception('Fatal: vorbiscomment binary not available.');
             }
             if (strnatcmp($r[1], '1.0.0') == -1) {
@@ -85,7 +84,7 @@ class getid3_write_vorbis extends getid3_handler_write
     public function write() {
 
         // create temp file with new comments
-        $temp_filename = tempnam('*', 'getID3');
+        $temp_filename = tempnam((function_exists('sys_get_temp_dir') ? sys_get_temp_dir() : ini_get('upload_tmp_dir')), 'getID3');
         if (!$fp = @fopen($temp_filename, 'wb')) {
             throw new getid3_exception('Could not write temporary file.');
         }
@@ -143,7 +142,7 @@ class getid3_write_vorbis extends getid3_handler_write
     public function remove() {
 
         // create temp file with new comments
-        $temp_filename = tempnam('*', 'getID3');
+        $temp_filename = tempnam((function_exists('sys_get_temp_dir') ? sys_get_temp_dir() : ini_get('upload_tmp_dir')), 'getID3');
         if (!$fp = @fopen($temp_filename, 'wb')) {
             throw new getid3_exception('Could not write temporary file.');
         }
