@@ -34,6 +34,8 @@
 /**
  * load_gettext
  * Sets up our local gettext settings.
+ *
+ * @return void
  */
 function load_gettext() {
 	/* If we have gettext */
@@ -65,6 +67,11 @@ function load_gettext() {
  * This function does the same as _ on the supplied
  * string, but also does a str_replace on the supplied
  * vars
+ *
+ * @param	string	$string
+ * @param	string	$subject
+ * @param	string	$replace
+ * @return	string
  */
 function __($string,$subject,$replace) {
 
@@ -74,6 +81,12 @@ function __($string,$subject,$replace) {
 
 } // __
 
+/**
+ * gettext_noop
+ *
+ * @param	string	$string
+ * @return	string
+ */
 function gettext_noop($string) {
 	return $string;
 }

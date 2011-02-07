@@ -36,7 +36,7 @@ require 'lib/init.php';
 
 /* Check Perms */
 if (!Config::get('use_rss') || Config::get('demo_mode')) {
-        access_denied();
+	access_denied();
 	exit;
 }
 

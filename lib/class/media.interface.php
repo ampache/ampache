@@ -53,12 +53,41 @@
  */
 interface media {
 
+	/**
+	 * format
+	 * 
+	 * @return
+	 */
 	public function format();
+
+	/**
+	 * native_stream
+	 *
+	 * @return	mixed
+	 */
 	public function native_stream();
+
+	/**
+	 * play_url
+	 *
+	 * @param	int $oid	ID
+	 * @return	mixed
+	 */
 	public static function play_url($oid);
+
+	/**
+	 * stream_cmd
+	 *
+	 * @return	mixed
+	 */
 	public function stream_cmd();
+
+	/**
+	 * has_flag
+	 *
+	 * @return	mixed
+	 */
 	public function has_flag();
 
 } // end interface
-
 ?>

@@ -4,17 +4,22 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
-        - Implemented ldap_require group (patch from eliasp)
+	- Add function that check ampache and php version from each website.
+	- Updated each ampache header comment based on phpdocumentor.
+	- Fixed only admin can browse phpinfo() for security reasons on /info.php
+	- Added a few translation words.
+	- Updated version 3.6 on docs/*
+	- Implemented ldap_require group (patch from eliasp)
 	- Fix \ in web path under Apache + Windows Bug #135
-        - Partial MusicBrainz metadata gathering via plugin
-        - Metadata code cleanup, support for plugins as metadata sources
-        - New plugin architecture
-        - Fixed display charset issue with catalog add/update
-        - Fixed handling of temporary playlists with >100 items
-        - Changed Browse from a singleton to multiple instances
-        - Fixed setting access levels for plugin passwords
-        - Fixed handling of unusual characters in passwords
-        - Fixed support for requesting different thumbnail sizes
+	- Partial MusicBrainz metadata gathering via plugin
+	- Metadata code cleanup, support for plugins as metadata sources
+	- New plugin architecture
+	- Fixed display charset issue with catalog add/update
+	- Fixed handling of temporary playlists with >100 items
+	- Changed Browse from a singleton to multiple instances
+	- Fixed setting access levels for plugin passwords
+	- Fixed handling of unusual characters in passwords
+	- Fixed support for requesting different thumbnail sizes
 	- Added ability to rate Albums of the Moment
 	- Added ability to edit/delete playlists while they are displayed
 	- Fix track numbers not being 0 padded when downloading or renaming.
@@ -32,10 +37,10 @@
 		%10 reduces cpu load due to javascript excution (Thx Dmole)
 	- Add bmp to the list of allowed / supported album art types
 	- Strip extranious whitespace from cmdline catalog update (Thx ascheel)
-        - Fix catalog size math for catalogs up to 4TB (Thx Joost.t.Hart@planet.nl) 
-        - Fix httpq not correctly skipping to new song 
-        - Fix refreshing of localplay playlist when an item is skipped to
-        - Fix missing Content-Disposition filename= on non-transcoded songs
+	- Fix catalog size math for catalogs up to 4TB (Thx Joost.t.Hart@planet.nl) 
+	- Fix httpq not correctly skipping to new song 
+	- Fix refreshing of localplay playlist when an item is skipped to
+	- Fix missing Content-Disposition filename= on non-transcoded songs
 	- Fix refresh of localplay playlist when you delete a track from it
 	- Added ability to add Ampache as a search descriptor (Thx Vlet)
 	- Correct issue with single song downloads
@@ -50,22 +55,22 @@
 	- Updated Amazon Album art search to current Amazone API specs 
 		(Thx Vlet)
 	- Fix typo that caused song count to not be set on tag xml response
-        - Fix tag methods so that alpha_match and exact_match work
-        - Fix limit and offset not working on search_songs API method
-        - Fix import m3u on catalog build so it does something
-        - Fix inconsistent view during catalog operations        
+	- Fix tag methods so that alpha_match and exact_match work
+	- Fix limit and offset not working on search_songs API method
+	- Fix import m3u on catalog build so it does something
+	- Fix inconsistent view during catalog operations        
 	- Sort malformed files into "Unknown (Broken)" rather then leaving
-                them in "Unknown (Orphaned)"
+	        them in "Unknown (Orphaned)"
 	- Fix API democratic voting methods (Thx kindachris)
 	- Add server version to API ping response
 	- Fix Localplay API methods (Thx thomasa) 
-        - Improve bin/catalog_update.inc to allow only verify, clean or add
-                (Thx ascheel)
+	- Improve bin/catalog_update.inc to allow only verify, clean or add
+	        (Thx ascheel)
 	- Fix issue with batch download and UNC paths (Thx greengeek) 
 	- Added config option to turn caching on/off, Default is off
-        - Fix issue where file tag pattern was ignore if files have no tag
-                structur
-        - Add TDRC to list of parsed id3v2 tags
+	- Fix issue where file tag pattern was ignore if files have no tag
+	        structur
+	- Add TDRC to list of parsed id3v2 tags
 	- Added the rating to a single song view
 	- Fix caching issue when updating ratings where they would not
 		display correctly until a page reload
@@ -80,8 +85,8 @@
 	- Fix PHP 5.3 errors (Thx momo-i)
 	- Fix random methods not working for localplay
 	- Fixed extra space on prefixed albums (Thx ibizaman)
-        - Add missing operator on tag and rating searches so they will
-                work with other methods (Thx kiehnet@netscape.net)
+	- Add missing operator on tag and rating searches so they will
+	        work with other methods (Thx kiehnet@netscape.net)
 	- Add MusicBrainz MBID support to uniqly identify albums and
 		also get more album art (Thx flowerysong)
 	- Fix the url to song function
@@ -257,11 +262,11 @@
 	- Fixed iconv() returns an empty strings (Thx abs0)
 	- Updated getid3 for multi-byte characters, but some wrong id3tags
 		have occurred exception error.
-        - Fixed use_auth = false not correctly re-creating the session if
-                you had just switched from use_auth = true
+	- Fixed use_auth = false not correctly re-creating the session if
+	        you had just switched from use_auth = true
 	- Add links to RSS feeds and set default to TRUE in config.dist
-        - Fixed Dynamic Random/Related URLs with players that always send
-                a byte offset (MPD)
+	- Fixed Dynamic Random/Related URLs with players that always send
+	        a byte offset (MPD)
 	- Added Checkbox to use existing Database
 	- Updated language code and Fixed catalan language code
 	- Added Emulate gettext() from upgradephp-15
@@ -298,7 +303,7 @@
 	- Fixed logic error with duplicate login setting which caused it
 		to only work if mysql auth was used
 	- Changed Passwords to SHA1 will prompt to reset password
-        - Corrected some translation strings and added jp_JP (Thx momo-i)
+	- Corrected some translation strings and added jp_JP (Thx momo-i)
 	- Ignore filenames that start with . (hidden) solves an issue
 		with mac filesystems
 	- Fix tracking of stats for downloaded songs 
@@ -310,8 +315,8 @@
 	- Fix an error if you try to add a shoutbox for an invalid object
 		(Thx atrophic)
 	- Fixed issue with art dump on jpeg files (Thx atrophic)
-        - Fixed issue with force http play and port not correctly specifying
-                non-standard http port (Thx Deathcrow)
+	- Fixed issue with force http play and port not correctly specifying
+	        non-standard http port (Thx Deathcrow)
 	- Remember Starts With value even if you switch tabs
 	- Fixed rating caching so it actually completely works now
 	- Removed redundent UPDATE on session table due to /util.php
@@ -967,7 +972,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha2 11/12/2006
-        - Added Export to Itunes DB function (Thx PB1DFT)
+	- Added Export to Itunes DB function (Thx PB1DFT)
 	- Fixed some Ajax Issues, added Now Playing to TV page
 	- Fixed album art search on every Catalog Add
 	- Added exception to MPD controller, forces HTTP play regardless
@@ -1013,7 +1018,7 @@
 
 --------------------------------------------------------------------------
   v.3.3.3-Alpha1 10/28/2006
-        - Added IP History to admin->users (Thx pb1dft)
+	- Added IP History to admin->users (Thx pb1dft)
 	- Added HTTP auth method, auto-creates a 'user' if the auth user
 		doesn't exist in the database. 
 	- Fixed Mail statistics. It broke down after earlier updates.
@@ -1553,10 +1558,10 @@
 		(Thx Andy Morgan)
   	- Fixed playback problem with Windows Media Player caused by a 
 		misplaced Partial-Content header entry. 
-        - Renamed ampache.cfg --> ampache.cfg.php and added <?php exit(); ?>
-                to prevent display of config file in web interface. this is
-                the first step towards moving away from the /docs style
-                (Thx s1amson)
+	- Renamed ampache.cfg --> ampache.cfg.php and added <?php exit(); ?>
+	        to prevent display of config file in web interface. this is
+	        the first step towards moving away from the /docs style
+	        (Thx s1amson)
 
 --------------------------------------------------------------------------
   v.3.3 04/17/2005:
@@ -1716,7 +1721,7 @@
 		true/false value of preference
 	- Added Patch from Shine with a _ton_ of gettext updates and an almost
 		complete German translation!
-        - Fixed automatic detection of server port (Thx Corsin)
+	- Fixed automatic detection of server port (Thx Corsin)
 	- Fixed missing prefix on Albums by Artist page (Thx ianneub)
 	- Removed a large chunk of unneeded code from Main page
 	- Fixed some preferences problems which were allowing users to define

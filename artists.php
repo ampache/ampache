@@ -55,14 +55,13 @@ switch($_REQUEST['action']) {
 		}
 		break;
 	case 'show_all_songs':
-	    	$artist = new Artist($_REQUEST['artist']);
+		$artist = new Artist($_REQUEST['artist']);
 		$artist->format();
 		$object_type = 'song';
 		$object_ids = $artist->get_songs();
 		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
         break;
 	case 'update_from_tags':
-
 		$type		= 'artist';
 		$object_id	= intval($_REQUEST['artist']);
 		$target_url	= Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
@@ -93,8 +92,8 @@ switch($_REQUEST['action']) {
 		}
 		if ($count > 0) {
 			show_confirmation (
-				"Renamed artist(s)",
-				"$count artists have been merged with " . $artist->name,
+				_('Renamed artist(s)'),
+				sprintf(_('%1$s artists have been merged with %2$s'), $count, $artist->name),
 				conf('web_path') . "/artists.php?action=show&artist=" . $artist->id
 			);
 		} else {
@@ -173,8 +172,8 @@ switch($_REQUEST['action']) {
 			// show something other than a blank screen after this
 			if ($ret) {
 				show_confirmation (
-					"Renamed artist",
-					$artist->name . " is now known as " . $newname,
+					_('Renamed artist'),
+					sprintf(_('%1$s is now known as %2$s'), $artist->name, $newname),
 					conf('web_path') . "/artists.php?action=show&artist=" . $newid
 				);
 			}

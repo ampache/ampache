@@ -48,31 +48,119 @@
  */
 class vainfo {
 
-	/* Default Encoding */
+	// {{{ property
+
+	/**
+	 * Default encoding
+	 *
+	 * @var	string
+	 */
 	public $encoding	= '';
+
+	/**
+	 * Default id3v1 encoding
+	 *
+	 * @var	string
+	 */
 	public $encoding_id3v1	= 'ISO-8859-1';
 
 	/* Loaded Variables */
+	/**
+	 * Filename
+	 *
+	 * @var	string
+	 */
 	public $filename	= '';
+
+	/**
+	 * Media type
+	 *
+	 * @var	string
+	 */ 
 	public $type		= '';
+
+	/**
+	 * Media tags
+	 *
+	 * @var	array
+	 */
 	public $tags		= array();
 
 	/* Internal Information */
-	public $_raw 		= array();
-	public $_getID3 	= '';
-	public $_iconv		= false;
-	public $_file_encoding	= '';
-	public $_file_pattern	= '';
-	public $_dir_pattern	= '';
+	/**
+	 * GetID3 analyzed data.
+	 *
+	 * @var	array
+	 */
+	protected $_raw 		= array();
+
+	/**
+	 * GetID3 object
+	 *
+	 * @var	object
+	 */
+	protected $_getID3 	= '';
+
+	/**
+	 * Iconv use flag
+	 *
+	 * @var	boolean
+	 */
+	protected $_iconv		= false;
+
+	/**
+	 * File encoding charset
+	 *
+	 * @var	string
+	 */
+	protected $_file_encoding	= '';
+
+	/**
+	 * File pattern
+	 *
+	 * @var	string
+	 */
+	protected $_file_pattern	= '';
+
+	/**
+	 * Directory pattern
+	 *
+	 * @var	string
+	 */
+	protected $_dir_pattern	= '';
 
 	/* Internal Private */
+	/**
+	 * Pathinfo results array
+	 *
+	 * @var	array
+	 */
 	private $_pathinfo;
+
+	/**
+	 * Tag broken flag. If tag is broken, return true.
+	 *
+	 * @var	boolean
+	 */
 	private $_broken = false;
+
+	// }}}
 
 	/**
 	 * Constructor
+	 *
 	 * This function just sets up the class, it doesn't
 	 * actually pull the information
+	 *
+	 * @todo	Multibyte encoding break again...
+	 *          need to use id3v2 and to convert encoding
+	 * @param	string	$file	filename
+	 * @param	string	$encoding	Default encode character set
+	 * @param	string	$encoding_id3v1	Default id3v1 encode character set
+	 * @param	string	$encoding_iv3v2	Default id3v2 encode character set
+	 * @param	string	$dir_pattern	Directory pattern
+	 * @param	string	$file_pattern	File pattern
+	 * @return	mixed	If can't analyze file, return false. default return: void
 	 */
 	public function __construct($file, $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern, $file_pattern) {
 
@@ -952,9 +1040,13 @@ class vainfo {
 
 	/**
 	 * _parse_filename
+	 *
 	 * This function uses the passed file and dir patterns
 	 * To pull out extra tag information and populate it into
 	 * its own array
+	 *
+	 * @param	string	$filename	Filename that want to parse 
+	 * @return	array	Parsed results
 	 */
 	private function _parse_filename($filename) {
 
@@ -997,8 +1089,12 @@ class vainfo {
 
 	/**
 	 * _id3v2_tag_to_frame
+	 *
 	 * This translates the tag name to a frame, if there a many it returns the first
 	 * one if finds that exists in the raw
+	 *
+	 * @param	string	$tag_name	Tag name
+	 * @return	mixed	If found id3v2 frame, return frame. If not found, return false.
 	 */
 	private function _id3v2_tag_to_frame($tag_name) {
 
@@ -1023,11 +1119,16 @@ class vainfo {
 
 	/**
 	 * _clean_tag
+	 *
 	 * This function cleans up the tag that it's passed using Iconv
 	 * if we've got it. It also takes an optional encoding param
 	 * for the cases where we know what the tags source encoding
 	 * is, and or if it's different then the encoding recorded
 	 * in the file
+	 *
+	 * @param	string	$tag	Encoding string
+	 * @param	string	$encoding	Encode charset
+	 * @return	string	Return encoded string
 	 */
 	private function _clean_tag($tag, $encoding = null) {
 
@@ -1054,7 +1155,10 @@ class vainfo {
 
 	/**
 	 * set_broken
+	 *
 	 * This fills all tag types with Unknown (Broken)
+	 *
+	 * @return	array	Return broken title, album, artist
 	 */
 	public function set_broken() {
 

@@ -36,11 +36,14 @@
 
 /**
  * show_confirmation
+ *
  * shows a confirmation of an action
- * $next_url	Where to go next
- * $title	The Title of the message
- * $text	The details of the message
- * $cancel	T/F show a cancel button that uses return_referrer()
+ *
+ * @param	string	$title	The Title of the message
+ * @param	string	$text	The details of the message
+ * @param	string	$next_url	Where to go next
+ * @param	integer	$cancel	T/F show a cancel button that uses return_referrer()
+ * @return	void
  */
 function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirmation') {
 
@@ -57,8 +60,12 @@ function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirma
 
 /**
  * flip_class
+ *
  * First called with an array of 2 class names.  Subsequent calls reverse the
  * array then return the first element.
+ *
+ * @param	array	$array
+ * @return	mixed	void or classname
  */
 function flip_class($array=0) {
 

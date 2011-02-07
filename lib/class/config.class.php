@@ -54,10 +54,18 @@
  */
 class Config {
 
-	// These are the settings for this specific class
+	/**
+	 * These are the settings for this specific class
+	 *
+	 * @var	array
+	 */
 	private $_local	= array();
 
-	// These are the global settings they go where it goes
+	/**
+	 * These are the global settings they go where it goes
+	 *
+	 * @var	array
+	 */
 	private static $_global = array();
 
 	/**
@@ -74,6 +82,9 @@ class Config {
 	 * get
 	 * This checks to see if this is an instance or procedure
 	 * call, procedure == global, instance == local
+	 *
+	 * @param	string	$name
+	 * @return	mixed	array or null
 	 */
 	public static function get($name) {
 
@@ -85,6 +96,8 @@ class Config {
 	/**
 	 * get_all
 	 * This returns all of the current config variables as an array
+	 *
+	 * @return	array
 	 */
 	public static function get_all() {
 
@@ -96,6 +109,11 @@ class Config {
 	 * set
 	 * This checks to see if this is an instance or procedure calls
 	 * and then sets the correct variable based on that
+	 *
+	 * @param	string	$name		Key name
+	 * @param	string	$value		Value name
+	 * @param	integer	$clobber	Clobber flag 0 or 1
+	 * @return	void
 	 */
 	public static function set($name, $value, $clobber = 0) {
 
@@ -112,6 +130,9 @@ class Config {
 	/**
 	 * set_by_array
 	 * This is the same as the set function except it takes an array as input
+	 *
+	 * @param	array	$array		Array
+	 * @param	integer	$clobber	Clobber flag 0 or 1
 	 */
 	public static function set_by_array($array, $clobber = 0) {
 

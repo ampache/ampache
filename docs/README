@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
----------                    README - Ampache v.3.5                 -----------
+---------                    README - Ampache v.3.6                 -----------
 -------------------------------------------------------------------------------
 
 Contents:
@@ -99,7 +99,7 @@ Contents:
 	- Japanese	(ja_JP) 
 	- Catalan	(ca_ES)
 	- Russian	(ru_RU)
-        - Czech         (cs_CZ)
+	- Czech	(cs_CZ)
 
   D) A Special Thanks:
      Thanks to those who've helped us make Ampache so useable:
@@ -151,7 +151,7 @@ Contents:
   Hate it?  Love it?  Let us know.  Let us know if you think of any
     more features, bugs, etc.
 
-  Public SVN: https://svn.ampache.org/
+  Public Source Repository: http://gitorious.org/ampache
   IRC: irc.ampache.org #ampache (Freenode)
   Forums: http://ampache.org/forums
   Bugs: http://ampache.org/bugs

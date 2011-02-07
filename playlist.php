@@ -74,7 +74,7 @@ switch ($_REQUEST['action']) {
 
 		$playlist->create($playlist_name,$playlist_type);
 		$_SESSION['data']['playlist_id']        = $playlist->id;
-		show_confirmation(_('Playlist Created'),$playlist_name . ' (' . $playlist_type . ') ' . _(' has been created'),'playlist.php');
+		show_confirmation(_('Playlist Created'), sprintf(_('%1$s (%2$s) has been created'), $playlist_name,  $playlist_type),'playlist.php');
 	break;
 	case 'delete_playlist':
 		// If we made it here, we didn't have sufficient rights.
