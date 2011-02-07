@@ -179,6 +179,6 @@ function get_latest($type = null) {
  * @return	array	Show security messages, if found.
  */
 function check_security() {
-
+return true;
 } // check_security
 ?>
