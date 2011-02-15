@@ -621,3 +621,19 @@ use_rss = true
 ; SMTP Password
 ; your mail auth password.
 ;mail_auth_pass = ""
+
+;#############################
+;   Multibyte Settings       #
+;#############################
+;Use Iconv or not
+;DEFAULT: false
+use_iconv = false
+
+;Override mb_detect_order in php.ini or not
+;DEFAULT: false
+mb_detect_override = true
+
+;Custom mb_detect_order
+;list comma separated
+;DEFAULT: auto
+mb_detect_order = "EUC-JP, SJIS, eucJP-win, SJIS-win, JIS, ISO-2022-JP, ASCII, UTF-8, UTF-7"
