@@ -635,5 +635,5 @@ use_rss = true
 
 ;Custom mb_detect_order
 ;list comma separated
-;DEFAULT: auto
+;DEFAULT: auto (use your php.ini setting)
 ;mb_detect_order = "EUC-JP, SJIS, eucJP-win, SJIS-win, JIS, ISO-2022-JP, ASCII, UTF-8, UTF-7"
