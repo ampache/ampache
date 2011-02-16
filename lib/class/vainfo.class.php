@@ -326,8 +326,8 @@ class vainfo {
 				}
 			}
 
-			debug_event('vainfo', 'encoding detection ('. $id3v .') selected ' .  $this->encoding_id3v1, 5);
-			debug_event('vainfo', 'encoding detection ('. $id3v .') selected ' .  $this->encoding_id3v2, 5);
+			debug_event('vainfo', 'encoding detection (id3v1) selected ' .  $this->encoding_id3v1, 5);
+			debug_event('vainfo', 'encoding detection (id3v2) selected ' .  $this->encoding_id3v2, 5);
 		}
 		else {
 			$this->encoding_id3v1 = 'ISO-8859-1';
