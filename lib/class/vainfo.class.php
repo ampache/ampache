@@ -159,8 +159,6 @@ class vainfo {
 	 * This function just sets up the class, it doesn't
 	 * actually pull the information
 	 *
-	 * @todo	Multibyte encoding break again...
-	 *          need to use id3v2 and to convert encoding
 	 * @param	string	$file	filename
 	 * @param	string	$encoding	Default encode character set
 	 * @param	string	$encoding_id3v1	Default id3v1 encode character set
