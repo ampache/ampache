@@ -294,33 +294,40 @@ class vainfo {
 			foreach ($encodings as $key => $value) {
 				if ($value > $high) {
 					if (strcmp($id3v, 'id3v1') == 0) {
+						debug_event('vainfo', "\$encoding_id3v1 Set to $key",5);
 						$encoding_id3v1 = $key;
 					}
 					else {
+						debug_event('vainfo', "\$encoding_id3v2 Set to $key",5);
 						$encoding_id3v2 = $key;
 					}
 					$high = $value;
 				}
 			}
 
-			if (strcmp($id3v1, 'id3v1') == 0) {
+			if (strcmp($id3v, 'id3v1') == 0) {
 				if ($encoding_id3v1 != 'ASCII' && $encoding_id3v1 != '0') {
+					debug_event('vainfo', "\$this->encoding_id3v1 Set to $encoding_id3v1",5);
 					$this->encoding_id3v1 = $encoding_id3v1;
 				}
 				else {
+					debug_event('vainfo', "\$this->encoding_id3v1 Set to ISO-8859-1",5);
 					$this->encoding_id3v1 = 'ISO-8859-1';
 				}
 			}
 			else {
 				if ($encoding_id3v2 != 'ASCII' && $encoding_id3v2 != '0') {
+					debug_event('vainfo', "\$this->encoding_id3v2 Set to $encoding_id3v2",5);
 					$this->encoding_id3v2 = $encoding_id3v2;
 				}
 				else {
+					debug_event('vainfo', "\$this->encoding_id3v2 Set to ISO-8859-1",5);
 					$this->encoding_id3v2 = 'ISO-8859-1';
 				}
 			}
 
-			debug_event('vainfo', 'encoding detection ('. $id3v .') selected ' .  $this->encoding_{$$id3v}, 5);
+			debug_event('vainfo', 'encoding detection ('. $id3v .') selected ' .  $this->encoding_id3v1, 5);
+			debug_event('vainfo', 'encoding detection ('. $id3v .') selected ' .  $this->encoding_id3v2, 5);
 		}
 		else {
 			$this->encoding_id3v1 = 'ISO-8859-1';
@@ -1216,16 +1223,17 @@ class vainfo {
 	 */
 	private function _clean_tag($tag, $encoding = null) {
 
+		// Default to getID3's native encoding
+		if (!$encoding) {
+			$encoding = $this->_getID3->encoding;
+		}
 		// If we've got iconv then go ahead and clear her up
-		if (strcmp($encoding, $this->encoding)) {
+		if (strcmp($encoding, $this->encoding) == 0) {
+			debug_event('vainfo', "\$encoding -> ${encoding}, \$this->encoding -> {$this->encoding}", 5);
 			return $tag;
 		}
 		if ($this->_iconv) {
 			debug_event('vainfo', 'Use iconv()',5);
-			// Default to getID3's native encoding
-			if (!$encoding) {
-				$encoding = $this->_getID3->encoding;
-			}
 
 			// Try GNU iconv //TRANSLIT extension first
 			$new_encoding = $this->encoding . '//TRANSLIT';
@@ -1238,9 +1246,7 @@ class vainfo {
 		}
 		elseif (function_exists('mb_convert_encoding')) {
 			debug_event('vainfo', 'Use mbstring',5);
-			if (!$encoding) {
-				$encoding = $this->_getID3->encoding;
-			}
+			debug_event('vainfo', "Try to convert from {$this->encoding} to $encoding", 5);
 			$clean = mb_convert_encoding($tag, $encoding, $this->encoding);
 		}
 		else {
