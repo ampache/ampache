@@ -159,6 +159,7 @@ class vainfo {
 	 * This function just sets up the class, it doesn't
 	 * actually pull the information
 	 *
+	 * @todo	Some mp3 is still broken...
 	 * @param	string	$file	filename
 	 * @param	string	$encoding	Default encode character set
 	 * @param	string	$encoding_id3v1	Default id3v1 encode character set
