@@ -56,6 +56,7 @@ class xmlData {
 
 	/**
 	 * constructor
+	 *
 	 * We don't use this, as its really a static class
 	 */
 	private function __construct() {
@@ -66,7 +67,11 @@ class xmlData {
 
 	/**
 	 * set_offset
+	 *
 	 * This takes an int and changes the offset
+	 *
+	 * @param	integer	$offset	(description here...)
+	 * @return	void
 	 */
 	public static function set_offset($offset) {
 
@@ -77,7 +82,11 @@ class xmlData {
 
 	/**
 	 * set_limit
+	 *
 	 * This sets the limit for any ampache transactions
+	 *
+	 * @param	integer	$limit	(description here...)
+	 * @return	void
 	 */
 	public static function set_limit($limit) {
 
@@ -90,7 +99,11 @@ class xmlData {
 
 	/**
 	 * set_type
+	 *
 	 * This sets the type of xmlData we are working on
+	 *
+	 * @param	string	$type	xmlData type
+	 * @return	void
 	 */
 	public static function set_type($type) {
 
@@ -102,8 +115,13 @@ class xmlData {
 
 	/**
 	 * error
+	 *
 	 * This generates a standard XML Error message
 	 * nothing fancy here...
+	 *
+	 * @param	integer	$code	Error code
+	 * @param	string	$string	Error message
+	 * @return	string	return error message xml
 	 */
 	public static function error($code,$string) {
 
@@ -114,7 +132,12 @@ class xmlData {
 
 	/**
 	 * single_string
+	 *
 	 * This takes two values, first the key second the string
+	 *
+	 * @param	string	$key	(description here...)
+	 * @param	string	$string	xml data
+	 * @return	string	return xml
 	 */
 	public static function single_string($key,$string) {
 
@@ -126,7 +149,11 @@ class xmlData {
 
 	/**
  	 * header
+	 *
 	 * This returns the header
+	 *
+	 * @see	_header()
+	 * @return	string	return xml
 	 */
 	public static function header() {
 
@@ -136,17 +163,27 @@ class xmlData {
 
 	/**
 	 * footer
+	 *
 	 * This returns the footer
+	 *
+	 * @see	_footer()
+	 * @return	string	return xml	
 	 */
 	public static function footer() {
 
 		return self::_footer();
 
-	} // header
+	} // footer
 
 	/**
 	 * tags_string
+	 *
 	 * This returns the formated 'tags' string for an xml document
+	 *
+	 * @param	array	$tags	(description here...)
+	 * @param	string	$type	(description here...)
+	 * @param	integer	$object_id	(description here...)
+	 * @return	string	return xml
 	 */
 	private static function tags_string($tags,$type,$object_id) {
 
@@ -164,7 +201,12 @@ class xmlData {
 
 	/**
 	 * keyed_array
+	 *
 	 * This will build an xml document from a key'd array,
+	 *
+	 * @param	array	$array	(description here...)
+	 * @param	boolean	$callback	(description here...)
+	 * @return	string	return xml
 	 */
 	public static function keyed_array($array,$callback='') {
 
@@ -200,7 +242,11 @@ class xmlData {
 
 	/**
 	 * tags
+	 *
 	 * This returns tags to the user, in a pretty xml document with the information
+	 *
+	 * @param	array	$tags	(description here...)
+	 * @return	string	return xml
 	 */
 	public static function tags($tags) {
 
@@ -232,8 +278,12 @@ class xmlData {
 
 	/**
 	 * artists
+	 *
 	 * This takes an array of artists and then returns a pretty xml document with the information
 	 * we want
+	 *
+	 * @param	array	$artists	(description here...)
+	 * @return	string	return xml
 	 */
 	public static function artists($artists) {
 
@@ -270,7 +320,11 @@ class xmlData {
 
 	/**
 	 * albums
+	 *
 	 * This echos out a standard albums XML document, it pays attention to the limit
+	 *
+	 * @param	array	$albums	(description here...)
+	 * @return	string	return xml
 	 */
 	public static function albums($albums) {
 
@@ -318,7 +372,11 @@ class xmlData {
 
 	/**
 	 * playlists
+	 *
 	 * This takes an array of playlist ids and then returns a nice pretty XML document
+	 *
+	 * @param	array	$playlists	(description here...)
+	 * @return	string	return xml
 	 */
 	public static function playlists($playlists) {
 
@@ -354,7 +412,11 @@ class xmlData {
 
 	/**
 	 * songs
+	 *
 	 * This returns an xml document from an array of song ids spiffy isn't it!
+	 *
+	 * @param	array	$songs	(description here...)
+	 * @return	string	return xml
 	 */
 	public static function songs($songs) {
 
@@ -411,7 +473,11 @@ class xmlData {
 
 	/**
 	 * videos
+	 *
 	 * This builds the xml document for displaying video objects
+	 *
+	 * @param	array	$videos	(description here...)
+	 * @return	string	return xml
 	 */
 	public static function videos($videos) {
 
@@ -440,13 +506,16 @@ class xmlData {
 
 		return $final;
 
-
 	} // videos
 
 	/**
 	 * democratic
+	 *
 	 * This handles creating an xml document for democratic items, this can be a little complicated
 	 * due to the votes and all of that
+	 *
+	 * @param	array	$object_ids	Object IDs
+	 * @return	string	return xml
 	 */
 	public static function democratic($object_ids=array()) {
 
@@ -500,6 +569,14 @@ class xmlData {
 
 	/**
 	 * rss_feed
+	 *
+	 * (description here...)
+	 *
+	 * @param	array	$data	(descriptiong here...)
+	 * @param	string	$title	RSS feed title
+	 * @param	string	$description	(not use yet?)
+	 * @param	string	$date	publish date
+	 * @return	string	RSS feed xml
 	 */
 	public static function rss_feed($data,$title,$description,$date) {
 
@@ -520,8 +597,11 @@ class xmlData {
 
 	/**
 	 * _header
+	 *
 	 * this returns a standard header, there are a few types
 	 * so we allow them to pass a type if they want to
+	 *
+	 * @return	string	Header xml tag.
 	 */
 	private static function _header() {
 
@@ -566,7 +646,10 @@ class xmlData {
 
 	/**
  	 * _footer
+	 *
  	 * this returns the footer for this document, these are pretty boring
+	 *
+	 * @return	string	Footer xml tag.
 	 */
 	private static function _footer() {
 
