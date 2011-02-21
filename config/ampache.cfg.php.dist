@@ -210,6 +210,11 @@ require_localnet_session = "true"
 ; DEFAULT: id3v2 id3v1 vorbiscomment quicktime ape asf avi mpeg riff
 getid3_tag_order = "id3v2,id3v1,vorbiscomment,quicktime,ape,asf,avi,mpeg,riff"
 
+; Determines whether we try to autodetect the encoding for id3v2 tags.
+; May break valid tags.
+; DEFAULT: false
+;getid3_detect_id3v2_encoding = "false"
+
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked)
 ; POSSIBLE VALUES (builtins): filename and getID3
@@ -625,16 +630,12 @@ use_rss = true
 ;#############################
 ;   Multibyte Settings       #
 ;#############################
-;Use Iconv or not
-;DEFAULT: false
+; Use Iconv or not
+; DEFAULT: false
 ;use_iconv = false
 
-;Override mb_detect_order in php.ini or not
-;DEFAULT: false
-;mb_detect_override = true
-
-;Custom mb_detect_order
-;list comma separated, available encodings are listed on php.net.
-;see http://php.net/manual/mbstring.supported-encodings.php
-;DEFAULT: auto (use your php.ini)
+; mb_detect_order
+; comma separated, available encodings are listed on php.net.
+; see http://php.net/manual/mbstring.supported-encodings.php
+; DEFAULT: auto
 ;mb_detect_order = "EUC-JP, SJIS, eucJP-win, SJIS-win, JIS, ISO-2022-JP, ASCII, UTF-8, UTF-7"

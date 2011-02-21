@@ -221,7 +221,7 @@ class vainfo {
 		}
 
 		/* Use default mb_detect_order in php.ini or not */
-		if (Config::get('mb_detect_override') == "1") {
+		if (Config::get('mb_detect_order')) {
 			$mb_order = Config::get('mb_detect_order');
 		}
 		elseif (function_exists('mb_detect_order')) {
@@ -231,45 +231,68 @@ class vainfo {
 			$mb_order = "auto";
 		}
 
+		$test_tags = array('artist', 'album', 'genre', 'title');
+
 		if ($encoding_id3v1) {
 			$this->encoding_id3v1 = $encoding_id3v1;
 		}
-		elseif (function_exists('mb_detect_encoding')) {
-			debug_event('vainfo', "id3v -> $id3v", 5);
-			$encodings = array();
-			$tags = array('artist', 'album', 'genre', 'title');
-			foreach ($tags as $tag) {
+		else {
+			foreach ($test_tags as $tag) {
 				if ($value = $this->_raw['id3v1'][$tag]) {
-					$encodings[mb_detect_encoding($value, $mb_order, true)]++;
+					$tags[$tag] = $value;
 				} 
 			}
 
-			debug_event('vainfo', 'encoding detection (id3v1): ' . print_r($encodings, true), 5);
-			$high = 0;
-			foreach ($encodings as $key => $value) {
-				if ($value > $high) {
-					debug_event('vainfo', '$encoding_id3v1 set to ' . $key, 5);
-					$encoding_id3v1 = $key;
-					$high = $value;
+			$this->encoding_id3v1 = self::_detect_encoding($tags, $mb_order);
+		}
+
+		if (Config::get('getid3_detect_id3v2_encoding')) {
+			foreach ($test_tags as $tag) {
+				if ($value = $this->_raw['id3v2']['comments'][$tag]) {
+					$tags[$tag] = $value;
 				}
 			}
 
-			if ($encoding_id3v1 != 'ASCII' && $encoding_id3v1 != '0') {
-				$this->encoding_id3v1 = $encoding_id3v1;
-			}
-			else {
-				$this->encoding_id3v1 = 'ISO-8859-1';
-			}
-
-			debug_event('vainfo', 'encoding detection (id3v1) selected ' .  $this->encoding_id3v1, 5);
-		}
-		else {
-			$this->encoding_id3v1 = 'ISO-8859-1';
+			$this->encoding_id3v2 = self::_detect_encoding($tags, $mb_order);
+			$this->_getID3->encoding_id3v2 = $this->encoding_id3v2;
 		}
 
 		$this->_getID3->encoding_id3v1 = $this->encoding_id3v1;
 
 	} // vainfo
+
+	/**
+	 * _detect_encoding
+	 * Takes an array of tags and attempts to automatically detect their
+	 * encoding.
+	 */
+	private static function _detect_encoding($tags, $mb_order) {
+		if (function_exists('mb_detect_encoding')) {
+			debug_event('vainfo', "id3v -> $id3v", 5);
+			$encodings = array();
+			$tags = array('artist', 'album', 'genre', 'title');
+			foreach ($tags as $tag) {
+				$encodings[mb_detect_encoding($tag, $mb_order, true)]++;
+			}
+
+			debug_event('vainfo', 'encoding detection: ' . print_r($encodings, true), 5);
+			$high = 0;
+			foreach ($encodings as $key => $value) {
+				if ($value > $high) {
+					$encoding = $key;
+					$high = $value;
+				}
+			}
+
+			if ($encoding != 'ASCII' && $encoding != '0') {
+				return $encoding;
+			}
+			else {
+				return 'ISO-8859-1';
+			}
+		}
+		return 'ISO-8859-1';
+	}
 
 
 	/**
