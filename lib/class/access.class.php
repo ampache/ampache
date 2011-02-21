@@ -189,7 +189,7 @@ class Access {
 		$end	= Dba::escape(inet_pton($data['end']));
 		$level	= Dba::escape($data['level']);
 		$user	= $data['user'] ? Dba::escape($data['user']) : '-1';
-		$enabled = make_bool($data['enabled']);
+		$enabled = make_bool($data['enabled']) ? 1 : 0;
 
 		$sql = "UPDATE `access_list` " .
 			"SET `start`='$start', `end`='$end', `level`='$level', `user`='$user', " .
@@ -243,7 +243,7 @@ class Access {
 		$user	= $data['user'] ? Dba::escape($data['user']) : '-1';
 		$level	= intval($data['level']);
 		$type	= self::validate_type($data['type']);
-		$enabled = make_bool($data['enabled']);
+		$enabled = make_bool($data['enabled']) ? 1 : 0;
 
 		$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`user`,`type`,`enabled`) " .
 			"VALUES ('$name','$level','$start','$end','$user','$type','$enabled')";

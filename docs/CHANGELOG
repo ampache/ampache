@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+        - Fixed issue with updating ACLs under Windows (reported by Citlali)
 	- Add function that check ampache and php version from each website.
 	- Updated each ampache header comment based on phpdocumentor.
 	- Fixed only admin can browse phpinfo() for security reasons on /info.php
