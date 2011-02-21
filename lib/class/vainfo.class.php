@@ -220,11 +220,6 @@ class vainfo {
 			return false;
 		}
 
-		/* Detect tag order */
-		$tag_order = (array)Config::get('getid3_tag_order');
-		$id3v1 = array_search('id3v1', $tag_order);
-		$id3v2 = array_search('id3v2', $tag_order);
-
 		/* Use default mb_detect_order in php.ini or not */
 		if (Config::get('mb_detect_override') == "1") {
 			$mb_order = Config::get('mb_detect_order');
@@ -236,107 +231,43 @@ class vainfo {
 			$mb_order = "auto";
 		}
 
-		if ($id3v1 < $id3v2) {
-			$id3v = $tag_order[$id3v1];
-		}
-		elseif ($id3v1 > $id3v2) {
-			$id3v = $tag_order[$id3v2];
-		}
-		else {
-			$id3v = 'id3v1';
-		}
-		debug_event('vainfo', "Tag order -> ".$id3v, 5);
-
-		if ($encoding_id3v1 && $encoding_id3v2) {
-			if ($id3v1 > $id3v2) {
-				$this->encoding_id3v1 = $encoding_id3v1;
-				$id3v = 'id3v1';
-			}
-			elseif ($id3v1 < $id3v2) {
-				$this->encoding_id3v2 = $encoding_id3v2;
-				$id3v = 'id3v2';
-			}
-			else {
-				$this->encoding_id3v1 = $encoding_id3v1;
-				$id3v = 'id3v1';
-			}
-		}
-		elseif (!$encoding_id3v1 && $encoding_id3v2) {
-			$this->encoding_id3v2 = $encoding_id3v2;
-			$id3v = 'id3v2';
-		}
-		elseif ($encoding_id3v1 && !$encoding_id3v2) {
+		if ($encoding_id3v1) {
 			$this->encoding_id3v1 = $encoding_id3v1;
-			$id3v = 'id3v1';
 		}
 		elseif (function_exists('mb_detect_encoding')) {
 			debug_event('vainfo', "id3v -> $id3v", 5);
 			$encodings = array();
 			$tags = array('artist', 'album', 'genre', 'title');
 			foreach ($tags as $tag) {
-				if (strcmp($id3v, 'id3v1') == 0) {
-					if ($value = $this->_raw[$id3v][$tag]) {
-						debug_event('vainfo', 'try to detect encoding id3v1', 5);
-						$encodings[mb_detect_encoding($value, $mb_order, true)]++;
-					} 
-				}
-				else {
-					debug_event('vainfo', 'try to detect encoding id3v2', 5);
-					if ($values = $this->_raw[$id3v]['comments'][$tag]) {
-						foreach ($this->_raw[$id3v]['comments'][$tag] as $value) {
-							$encodings[mb_detect_encoding($value, $mb_order, true)]++;
-						}
-					}
-				}
+				if ($value = $this->_raw['id3v1'][$tag]) {
+					$encodings[mb_detect_encoding($value, $mb_order, true)]++;
+				} 
 			}
 
-			debug_event('vainfo', 'encoding detection ('. $id3v .'): ' . print_r($encodings, true), 5);
+			debug_event('vainfo', 'encoding detection (id3v1): ' . print_r($encodings, true), 5);
 			$high = 0;
 			foreach ($encodings as $key => $value) {
 				if ($value > $high) {
-					if (strcmp($id3v, 'id3v1') == 0) {
-						debug_event('vainfo', "\$encoding_id3v1 Set to $key",5);
-						$encoding_id3v1 = $key;
-					}
-					else {
-						debug_event('vainfo', "\$encoding_id3v2 Set to $key",5);
-						$encoding_id3v2 = $key;
-					}
+					debug_event('vainfo', '$encoding_id3v1 set to ' . $key, 5);
+					$encoding_id3v1 = $key;
 					$high = $value;
 				}
 			}
 
-			if (strcmp($id3v, 'id3v1') == 0) {
-				if ($encoding_id3v1 != 'ASCII' && $encoding_id3v1 != '0') {
-					debug_event('vainfo', "\$this->encoding_id3v1 Set to $encoding_id3v1",5);
-					$this->encoding_id3v1 = $encoding_id3v1;
-				}
-				else {
-					debug_event('vainfo', "\$this->encoding_id3v1 Set to ISO-8859-1",5);
-					$this->encoding_id3v1 = 'ISO-8859-1';
-				}
+			if ($encoding_id3v1 != 'ASCII' && $encoding_id3v1 != '0') {
+				$this->encoding_id3v1 = $encoding_id3v1;
 			}
 			else {
-				if ($encoding_id3v2 != 'ASCII' && $encoding_id3v2 != '0') {
-					debug_event('vainfo', "\$this->encoding_id3v2 Set to $encoding_id3v2",5);
-					$this->encoding_id3v2 = $encoding_id3v2;
-				}
-				else {
-					debug_event('vainfo', "\$this->encoding_id3v2 Set to ISO-8859-1",5);
-					$this->encoding_id3v2 = 'ISO-8859-1';
-				}
+				$this->encoding_id3v1 = 'ISO-8859-1';
 			}
 
 			debug_event('vainfo', 'encoding detection (id3v1) selected ' .  $this->encoding_id3v1, 5);
-			debug_event('vainfo', 'encoding detection (id3v2) selected ' .  $this->encoding_id3v2, 5);
 		}
 		else {
 			$this->encoding_id3v1 = 'ISO-8859-1';
-			$this->encoding_id3v2 = 'ISO-8859-1';
 		}
 
 		$this->_getID3->encoding_id3v1 = $this->encoding_id3v1;
-		$this->_getID3->encoding_id3v2 = $this->encoding_id3v2;
 
 	} // vainfo
 
