@@ -562,7 +562,6 @@ class getid3_id3v2 extends getid3_handler
             $frame_id_string = substr($parsed_frame['data'], 0, $frame_terminator_pos);
             $parsed_frame['ownerid'] = $frame_id_string;
             $parsed_frame['data'] = substr($parsed_frame['data'], $frame_terminator_pos + strlen("\x00"));
-            unset($parsed_frame['data']);
             return true;
         }
 
