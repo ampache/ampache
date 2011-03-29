@@ -338,7 +338,7 @@ if (get_class($media) == 'Song') {
 	Stream::insert_now_playing($media->id,$uid,$media->time,$sid,get_class($media));
 }
 
-if ($start > 0) {
+if ($start > 0 || $end > 0 ) {
 
 	// Calculate stream size from byte range
 	if(isset($end)) {
