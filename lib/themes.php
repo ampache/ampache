@@ -40,28 +40,28 @@
 function get_themes() {
 
 	/* Open the themes dir and start reading it */
-	$handle = @opendir(Config::get('prefix') . '/themes');
+	$handle = opendir(Config::get('prefix') . '/themes');
 
 	if (!is_resource($handle)) {
-		 debug_event('theme',"Error unable to open Themes Directory",'2');
+		 debug_event('theme', 'Failed to open /themes directory', 2);
 		 return array();
 	}
 
 	$results = array();
+	$theme_cfg = '/theme.cfg.php';
 
-	while ($file = readdir($handle)) {
-
-		$full_file = Config::get('prefix') . '/themes/' . $file;
-		/* See if it's a directory */
-		if (is_dir($full_file) AND substr($file,0,1) != ".") {
-			$config_file = $full_file . '/theme.cfg.php';
-			/* Open the theme.cfg.php file */
-			$r = @parse_ini_file($config_file);
-			$r['path'] = $file;
-			$name = $r['name'];
-			$results[$name] = $r;
+	while (($f = readdir($handle)) !== false) {
+		debug_event('theme', "Checking $f", 5);
+		$file = Config::get('prefix') . '/themes/' . $f;
+		if (file_exists($file . $theme_cfg)) {
+			debug_event('theme', "Loading $theme_cfg from $f", 5);
+			$r = parse_ini_file($file . $theme_cfg);
+			$r['path'] = $f;
+			$results[$r['name']] = $r;
 		}
-
+		else {
+			debug_event('theme', "$theme_cfg not found in $f", 5);
+		}
 	} // end while directory
 
 	// Sort by the theme name
