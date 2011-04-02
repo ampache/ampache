@@ -2111,7 +2111,13 @@ class Catalog extends database_object {
 			/* Choose one */
 			if (isset($id_array)) {
 				if ($mbid == '') { // Prefer null entry, otherwise pick the first
-					$key = isset($id_array['null']) ? 'null' : array_shift(array_keys($id_array));
+					if (isset($id_array['null'])) {
+						$key = 'null';
+					}
+					else {
+						$keys = array_keys($id_array);
+						$key = array_shift($keys);
+					}
 					$artist_id = $id_array[$key];
 					$exists = true;
 				}
@@ -2203,7 +2209,7 @@ class Catalog extends database_object {
 
 			// If we don't have art put it in the 'needs me some 
 			// art' array
-			$art = new Art($r['id']);
+			$art = new Art($r['id'], 'album');
 			$art->get_db();
 			if (!$art->raw) {
 				$key = $r['id'];
