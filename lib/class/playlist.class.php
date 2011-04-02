@@ -46,13 +46,9 @@
  * @link	http://www.ampache.org/
  * @since	Class available since Release 1.0
  */
-class Playlist extends database_object {
+class Playlist extends playlist_object {
 
 	/* Variables from the database */
-	public $id;
-	public $name;
-	public $user;
-	public $type;
 	public $genre;
 	public $date;
 
@@ -94,43 +90,33 @@ class Playlist extends database_object {
 	} // build_cache
 
 	/**
+	 * get_playlists
+	 * Returns a list of playlists accessible by the current user.
+	 */
+	public static function get_playlists() {
+		$sql = "SELECT `id` from `playlist` WHERE `type`='public' OR " .
+			"`user`='" . $GLOBALS['user']->id . "' ORDER BY `name`";
+		$db_results = Dba::read($sql);
+
+		$results = array();
+
+		while ($row = Dba::fetch_assoc($db_results)) {
+			$results[] = $row['id'];
+		}
+
+		return $results;
+	} // get_playlists
+
+	/**
 	 * format
 	 * This takes the current playlist object and gussies it up a little
 	 * bit so it is presentable to the users
 	 */
 	public function format() {
-
-		$this->f_name =  truncate_with_ellipsis($this->name,Config::get('ellipse_threshold_title'));
+		parent::format();
 		$this->f_link = '<a href="' . Config::get('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id=' . $this->id . '">' . $this->f_name . '</a>';
 
-		$this->f_type = ($this->type == 'private') ? get_user_icon('lock',_('Private')) : '';
-
-		$client = new User($this->user);
-
-		$this->f_user = $client->fullname;
-
 	} // format
-
-	/**
- 	 * has_access
-	 * This function returns true or false if the current user
-	 * has access to this playlist
-	 */
-	public function has_access() {
-
-		if (!Access::check('interface','25')) {
-			return false;
-		}
-		if ($this->user == $GLOBALS['user']->id) {
-			return true;
-		}
-		else {
-			return Access::check('interface','100');
-		}
-
-		return false;
-
-	} // has_access
 
 	/**
 	 * get_track

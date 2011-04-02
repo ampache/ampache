@@ -134,7 +134,6 @@ $results['mysql_db']		= $results['database_name'];
 define('INIT_LOADED','1');
 
 // Library and module includes we can't do with the autoloader
-require_once $prefix . '/lib/search.php';
 require_once $prefix . '/lib/preferences.php';
 require_once $prefix . '/lib/log.lib.php';
 require_once $prefix . '/lib/ui.lib.php';
@@ -143,6 +142,7 @@ require_once $prefix . '/lib/batch.lib.php';
 require_once $prefix . '/lib/themes.php';
 require_once $prefix . '/lib/class/localplay.abstract.php';
 require_once $prefix . '/lib/class/database_object.abstract.php';
+require_once $prefix . '/lib/class/playlist_object.abstract.php';
 require_once $prefix . '/lib/class/media.interface.php';
 require_once $prefix . '/modules/getid3/getid3.php';
 require_once $prefix . '/modules/nusoap/nusoap.php';

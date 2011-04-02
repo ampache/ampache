@@ -39,24 +39,12 @@ show_header();
  * action switch
  */
 switch ($_REQUEST['action']) {
-	case 'quick_search':
-		/* This needs to be done because we don't know what thing
-		 * they used the quick search to search on until after they've
-		 * submited it
-		 */
-		$_REQUEST['s_all'] = $_REQUEST['search_string'];
-
-		if (strlen($_REQUEST['search_string']) < 1) {
-			Error::add('keyword',_('Error: No Keyword Entered'));
-			require_once Config::get('prefix') . '/templates/show_search.inc.php';
-			break;
-		}
 	case 'search':
 		$browse = new Browse();
 		require_once Config::get('prefix') . '/templates/show_search.inc.php';
 		require_once Config::get('prefix') . '/templates/show_search_options.inc.php';
-		$results = run_search($_REQUEST);
-		$browse->set_type('song');
+		$results = Search::run($_REQUEST);
+		$browse->set_type($_REQUEST['type']);
 		$browse->show_objects($results);
 		$browse->store();
 	break;
@@ -65,6 +53,10 @@ switch ($_REQUEST['action']) {
 		$playlist = new Playlist($playlist_id);
 		show_confirmation(_('Search Saved'),sprintf(_('Your Search has been saved as a track in %s'), $playlist->name),conf('web_path') . "/search.php");
 	break;
+	case 'save_as_smartplaylist':
+		$playlist = new Search();
+		$playlist->parse_rules(Search::clean_request($_REQUEST));
+		$playlist->save();
 	default:
 		require_once Config::get('prefix') . '/templates/show_search.inc.php';
 	break;

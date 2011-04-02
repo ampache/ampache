@@ -188,6 +188,11 @@ class Browse extends Query {
 				require_once Config::get('prefix') . '/templates/show_localplay_playlist.inc.php';
 				show_box_bottom();
 			break;
+			case 'smartplaylist':
+				show_box_top(_('Smart Playlists') . $match, $class);
+				require_once Config::get('prefix') . '/templates/show_smartplaylists.inc.php';
+				show_box_bottom();
+			break;
 			case 'catalog':
 				show_box_top(_('Catalogs'), $class);
 				require_once Config::get('prefix') . '/templates/show_catalogs.inc.php';

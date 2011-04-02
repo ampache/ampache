@@ -371,6 +371,9 @@ class Update {
 		$update_string = '- Modify tmp_browse to allow caching of multiple browses per session.<br />';
 		$version[] = array('version' => '360005','description' => $update_string);
 
+		$update_string = '- Add table for dynamic playlists.<br />';
+		$version[] = array('version' => '360006','description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -1978,6 +1981,25 @@ class Update {
 
 		self::set_version('db_version','360005');
 	} // update_360005
+
+	/**
+	 * update_360006
+	 * This adds the table for newsearch/dynamic playlists
+	 */
+	public static function update_360006() {
+		$sql = "CREATE TABLE `search` (
+		`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+		`user` int(11) NOT NULL,
+		`type` enum('private','public') CHARACTER SET utf8 DEFAULT NULL,
+		`rules` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+		`name` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+		`logic_operator` varchar(3) CHARACTER SET utf8 DEFAULT NULL,
+		PRIMARY KEY (`id`)
+		) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+		$db_results = Dba::write($sql);
+
+		self::set_version('db_version','360006');
+	}
 
 } // end update class
 ?>

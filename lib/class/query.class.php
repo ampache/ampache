@@ -144,6 +144,10 @@ class Query {
 				'alpha_match',
 				'starts_with'
 			),
+			'smartplaylist' => array(
+				'alpha_match',
+				'starts_with'
+			),
 			'tag' => array(
 				'tag',
 				'object_type',
@@ -191,6 +195,10 @@ class Query {
 				'artist'
 			),
 			'playlist' => array(
+				'name',
+				'user'
+			),
+			'smartplaylist' => array(
 				'name',
 				'user'
 			),
@@ -465,6 +473,7 @@ class Query {
 			case 'video':
 			case 'playlist':
 			case 'playlist_song':
+			case 'smartplaylist':
 			case 'song':
 			case 'flagged':
 			case 'catalog':
@@ -734,6 +743,10 @@ class Query {
 			case 'playlist':
 				$this->set_select("`playlist`.`id`");
 				$sql = "SELECT %%SELECT%% FROM `playlist` ";
+			break;
+			case 'smartplaylist':
+				self::set_select('`search`.`id`');
+				$sql = "SELECT %%SELECT%% FROM `search` ";
 			break;
 			case 'flagged':
 				$this->set_select("`flagged`.`id`");
@@ -1127,6 +1140,20 @@ class Query {
 				break;
 			} // end filter
 		break;
+		case 'smartplaylist':
+			switch ($filter) {
+				case 'alpha_match':
+					$filter_sql = " `search`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+				break;
+				case 'starts_with':
+					$filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+				break;
+				case 'playlist_type':
+					$user_id = intval($GLOBALS['user']->id);
+					$filter_sql = " (`search`.`type` = 'public' OR `search`.`user`='$user_id') AND ";
+				break;
+			} // end switch on $filter
+		break;
 		case 'tag':
 			switch ($filter) {
 				case 'alpha_match':
@@ -1250,6 +1277,19 @@ class Query {
 						$sql = "`playlist`.`user`";
 					break;
 				} // end switch
+			break;
+			case 'smartplaylist':
+				switch ($field) {
+					case 'type':
+						$sql = "`search`.`type`";
+					break;
+					case 'name':
+						$sql = "`search`.`name`";
+					break;
+					case 'user':
+						$sql = "`search`.`user`";
+					break;
+				} // end switch on $field
 			break;
 			case 'live_stream':
 				switch ($field) {

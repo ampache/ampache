@@ -55,6 +55,7 @@ switch ($_REQUEST['action']) {
 	case 'album':
 	case 'artist':
 	case 'playlist':
+	case 'smartplaylist':
 	case 'live_stream':
 	case 'video':
 	case 'song':
@@ -105,6 +106,11 @@ switch($_REQUEST['action']) {
 	break;
 	case 'playlist':
 		$browse->set_sort('type','ASC');
+		$browse->set_filter('playlist_type','1');
+		$browse->show_objects();
+	break;
+	case 'smartplaylist':
+		$browse->set_sort('type', 'ASC');
 		$browse->set_filter('playlist_type','1');
 		$browse->show_objects();
 	break;

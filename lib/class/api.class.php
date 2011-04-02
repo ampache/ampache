@@ -594,11 +594,13 @@ class Api {
 
 	/**
 	 * search_songs
-	 * This returns the songs and returns... songs
+	 * This searches the songs and returns... songs
 	 */
 	public static function search_songs($input) {
+			$array['rule_1'] = 'anywhere';
+			$array['rule_1_input'] = $input['filter'];
+			$array['rule_1_operator'] = 0;
 
-			$array['s_all'] = $input['filter'];
 			ob_end_clean();
 
 			xmlData::set_offset($input['offset']);
@@ -608,7 +610,7 @@ class Api {
 			//Run search references these variables, ooh the huge manatee
 			unset($input['limit'],$input['offset']);
 
-			$results = run_search($array);
+			$results = Search::run($array);
 
 			echo xmlData::songs($results);
 

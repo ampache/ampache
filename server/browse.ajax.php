@@ -99,6 +99,12 @@ switch ($_REQUEST['action']) {
 				$playlist->delete();
 				$key = 'playlist_row_' . $playlist->id;
 			break;
+			case 'smartplaylist':
+				$playlist = new Search('song', $_REQUEST['id']);
+				if (!$playlist->has_access()) { exit; }
+				$playlist->delete();
+				$key = 'playlist_row_' . $playlist->id;
+			break;
 			case 'live_stream':
 				if (!$GLOBALS['user']->has_access('75')) { exit; }
 				$radio = new Radio($_REQUEST['id']);

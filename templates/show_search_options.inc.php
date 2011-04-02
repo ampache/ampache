@@ -40,7 +40,7 @@
 </li>
 	<?php if (Access::check_function('batch_download')) { ?>
 <li>
-	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=browse&browse_id=<?php echo $browse->id; ?>"><?php echo get_user_icon('batch_download', _('Batch Download')); ?></a>
+	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=browse&amp;type=<?php echo scrub_out($_REQUEST['type']); ?>&amp;browse_id=<?php echo $browse->id; ?>"><?php echo get_user_icon('batch_download', _('Batch Download')); ?></a>
 	<?php echo _('Batch Download'); ?>
 </li>
 	<?php } ?>

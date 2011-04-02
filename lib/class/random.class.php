@@ -254,120 +254,60 @@ class Random implements media {
 	 * This processes the results of a post from a form and returns an
 	 * array of song items that were returned from said randomness
 	 */
-	public static function advanced($data) {
+	public static function advanced($type, $data) {
 
 		/* Figure out our object limit */
 		$limit = intval($data['random']);
 
 		// Generate our matchlist
-		if ($data['catalog'] != '-1') {
-			$matchlist['catalog'] = $data['catalog'];
-		}
-		if ($data['genre'][0] != '-1') {
-			$matchlist['genre'] = $data['genre'];
-		}
 
-		/* If they've passed -1 as limit then don't get everything */
+		/* If they've passed -1 as limit then get everything */
 		if ($data['random'] == "-1") { unset($data['random']); }
 		else { $limit_sql = "LIMIT " . Dba::escape($limit); }
 
-		$where = "1=1 ";
-		if (is_array($matchlist)) {
-			foreach ($matchlist as $type => $value) {
-				if (is_array($value)) {
-					foreach ($value as $v) {
-						if (!strlen($v)) { continue; }
-						$v = Dba::escape($v);
-						if ($v != $value[0]) { $where .= " OR $type='$v' "; }
-						else { $where .= " AND ( $type='$v'"; }
-					}
-					$where .= ")";
-				}
-				elseif (strlen($value)) {
-					$value = Dba::escape($value);
-					$where .= " AND $type='$value' ";
-				}
-			} // end foreach
-		} // end if matchlist
+		$search_data = Search::clean_request($data);
 
-		switch ($data['random_type']) {
-			case 'full_album':
-				$query = "SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `song`.`album`=`album`.`id` " .
-					"WHERE $where GROUP BY `song`.`album` ORDER BY RAND() $limit_sql";
-				$db_results = Dba::read($query);
-				while ($row = Dba::fetch_assoc($db_results)) {
-					$albums_where .= " OR `song`.`album`=" . $row['id'];
+		$search_info = false;
+
+		if (count($search_data) > 1) {
+			$search = new Search($type);
+			$search->parse_rules($search_data);
+			$search_info = $search->to_sql();
+		}
+
+		switch ($type) {
+			case 'song':
+				$sql = "SELECT `song`.`id`, `size`, `time` " .
+					"FROM `song` ";
+				if ($search_info) {
+					$sql .= $search_info['table_sql'];
+					$sql .= ' WHERE ' . $search_info['where_sql'];
 				}
-				$albums_where = ltrim($albums_where," OR");
-				$sql = "SELECT `song`.`id`,`song`.`size`,`song`.`time` FROM `song` WHERE $albums_where ORDER BY `song`.`album`,`song`.`track` ASC";
 			break;
-			case 'full_artist':
-				$query = "SELECT `artist`.`id` FROM `song` INNER JOIN `artist` ON `song`.`artist`=`artist`.`id` " .
-					"WHERE $where GROUP BY `song`.`artist` ORDER BY RAND()  $limit_sql";
-				$db_results = Dba::read($query);
-				while ($row = Dba::fetch_row($db_results)) {
-					$artists_where .= " OR song.artist=" . $row[0];
+			case 'album':
+				$sql = "SELECT `album`.`id`, SUM(`song`.`size`) AS `size`, SUM(`song`.`time`) AS `time` FROM `album` ";
+				if (! $search_info || ! $search_info['join']['song']) {
+					$sql .= "LEFT JOIN `song` ON `song`.`album`=`album`.`id` ";
 				}
-				$artists_where = ltrim($artists_where," OR");
-				$sql = "SELECT song.id,song.size,song.time FROM song WHERE $artists_where ORDER BY RAND()";
+				if ($search_info) {
+					$sql .= $search_info['table_sql'];
+					$sql .= ' WHERE ' . $search_info['where_sql'];
+				}
+				$sql .= ' GROUP BY `album`.`id`';
 			break;
-			case 'unplayed':
-				$uid = Dba::escape($GLOBALS['user']->id);
-				$sql = "SELECT object_id,COUNT(`id`) AS `total` FROM `object_count` WHERE `user`='$uid' GROUP BY `object_id`";
-				$db_results = Dba::read($sql);
-
-				$in_sql = "`id` IN (";
-
-				while ($row = Dba::fetch_assoc($db_results)) {
-					$row['object_id'] = Dba::escape($row['object_id']);
-					$in_sql .= "'" . $row['object_id'] . "',";
+			case 'artist':
+				$sql = "SELECT `artist`.`id`, SUM(`song`.`size`) AS `size`, SUM(`song`.`time`) AS `time` FROM `artist` ";
+				if (! $search_info || ! $search_info['join']['song']) {
+					$sql .= "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id` ";
 				}
-
-				$in_sql = rtrim($in_sql,',') . ')';
-
-				$sql = "SELECT song.id,song.size,song.time FROM song " .
-					"WHERE ($where) AND $in_sql ORDER BY RAND() $limit_sql";
+				if ($search_info) {
+					$sql .= $search_info['table_sql'];
+					$sql .= ' WHERE ' . $search_info['where_sql'];
+				}
+				$sql .= ' GROUP BY `artist`.`id`';
 			break;
-			case 'high_rating':
-				$sql = "SELECT `rating`.`object_id`,`rating`.`rating` FROM `rating` " .
-					"WHERE `rating`.`object_type`='song' ORDER BY `rating` DESC";
-				$db_results = Dba::read($sql);
-
-				// Get all of the ratings for songs
-				while ($row = Dba::fetch_assoc($db_results)) {
-					$results[$row['object_id']][] = $row['rating'];
-				}
-				// Calculate the averages
-				foreach ($results as $key=>$rating_array) {
-					$average = intval(array_sum($rating_array) / count($rating_array));
-					// We have to do this because array_slice doesn't maintain indexes
-					$new_key = $average . $key;
-					$ratings[$new_key] = $key;
-				}
-
-				// Sort it by the value and slice at $limit * 2 so we have a little bit of randomness
-				krsort($ratings);
-				$ratings = array_slice($ratings,0,$limit*2);
-
-				$in_sql = "`song`.`id` IN (";
-
-				// Build the IN query, cause if you're OUT it ain't cool
-				foreach ($ratings as $song_id) {
-					$key = Dba::escape($song_id);
-					$in_sql .= "'$key',";
-				}
-
-				$in_sql = rtrim($in_sql,',') . ')';
-
-				// Apply true limit and order by rand
-				$sql = "SELECT song.id,song.size,song.time FROM song " .
-					"WHERE ($where) AND $in_sql ORDER BY RAND() $limit_sql";
-			break;
-			default:
-				$sql = "SELECT `id`,`size`,`time` FROM `song` WHERE $where ORDER BY RAND() $limit_sql";
-
-			break;
-		} // end switch on type of random play
+		}
+		$sql .= " ORDER BY RAND() $limit_sql";
 
 		// Run the query generated above so we can while it
 		$db_results = Dba::read($sql);
@@ -380,17 +320,23 @@ class Random implements media {
 				// Convert
 				$new_size = ($row['size'] / 1024) / 1024;
 
-				// Only fuzzy 10 times
-				if ($fuzzy_size > 10) { return $results; }
+				// Only fuzzy 100 times
+				if ($fuzzy_size > 100) {
+					break;
+				}
 
-				// Add and check, skip if over don't return incase theres a smaller one commin round
-				if (($size_total + $new_size) > $data['size_limit']) { $fuzzy_size++; continue; }
+				// Add and check, skip if over size
+				if (($size_total + $new_size) > $data['size_limit']) {
+					$fuzzy_size++;
+					continue;
+				}
 
 				$size_total = $size_total + $new_size;
 				$results[] = $row['id'];
 
 				// If we are within 4mb of target then jump ship
-				if (($data['size_limit'] - floor($size_total)) < 4) { return $results; }
+				if (($data['size_limit'] - floor($size_total)) < 4) {
+					break; }
 			} // if size_limit
 
 			// If length really does matter
@@ -398,33 +344,60 @@ class Random implements media {
 				// base on min, seconds are for chumps and chumpettes
 				$new_time = floor($row['time'] / 60);
 
-				if ($fuzzy_time > 10) { return $results; }
+				if ($fuzzy_time > 100) {
+					break;;
+				}
 
-				// If the new one would go voer skip!
-				if (($time_total + $new_time) > $data['length']) { $fuzzy_time++; continue; }
+				// If the new one would go over skip!
+				if (($time_total + $new_time) > $data['length']) {
+					$fuzzy_time++;
+					continue;
+				}
 
 				$time_total = $time_total + $new_time;
 				$results[] = $row['id'];
 
 				// If there are less then 2 min of free space return
-				if (($data['length'] - $time_total) < 2) { return $results; }
-
+				if (($data['length'] - $time_total) < 2) {
+					return $results;
+				}
 			} // if length does matter
 
-			if (!$data['size_limit'] AND !$data['length']) {
+			if (!$data['size_limit'] && !$data['length']) {
 				$results[] = $row['id'];
 			}
 
 		} // end while results
 
-
-		return $results;
-
+		switch ($type) {
+			case 'song':
+				return $results;
+			break;
+			case 'album':
+				$songs = array();
+				foreach ($results as $result) {
+					$album = new Album($result);
+					$songs = array_merge($songs, $album->get_songs());
+				}
+				return $songs;
+			break;
+			case 'artist':
+				$songs = array();
+				foreach ($results as $result) {
+					$artist = new Artist($result);
+					$songs = array_merge($songs, $artist->get_songs());
+				}
+				return $songs;
+			break;
+			default:
+				return false;
+			break;
+		}
 	} // advanced
 
 	/**
 	 * get_type_name
-	 * This returns a 'purrty' name for the differnt random types
+	 * This returns a 'purrty' name for the different random types
 	 */
 	public static function get_type_name($type) {
 

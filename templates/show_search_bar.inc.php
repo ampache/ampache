@@ -33,13 +33,20 @@
 
 ?>
 <div id="sb_Subsearch">
-        <form name="search" method="post" action="<?php echo $web_path; ?>/search.php" enctype="multipart/form-data" style="Display:inline">
-        <input type="text" name="search_string" id="searchString"/>
-        <input type="hidden" name="action" value="quick_search" />
-        <input type="hidden" name="method" value="fuzzy" />
+        <form name="search" method="post" action="<?php echo $web_path; ?>/search.php?type=song" enctype="multipart/form-data" style="Display:inline">
+        <input type="text" name="rule_1_input" id="searchString"/>
+        <input type="hidden" name="action" value="search" />
+	<input type="hidden" name="rule_1_operator" value="0" />
         <input type="hidden" name="object_type" value="song" />
+	<select name="rule_1">
+		<option value="anywhere"><?php echo _('Anywhere')?></option>
+		<option value="title"><?php echo _('Title')?></option>
+		<option value="album"><?php echo _('Album')?></option>
+		<option value="artist"><?php echo _('Artist')?></option>
+		<option value="tag"><?php echo _('Tag')?></option>
+	</select>
         <input class="button" type="submit" value="<?php echo _('Search'); ?>" id="searchBtn" />
-      	<a href="<?php echo $web_path; ?>/search.php" class="button" id="advSearchBtn"><?php echo _('Advanced Search'); ?></a>
+      	<a href="<?php echo $web_path; ?>/search.php?type=song" class="button" id="advSearchBtn"><?php echo _('Advanced Search'); ?></a>
         </form>
 </div>
 

@@ -53,6 +53,18 @@ switch ($_REQUEST['action']) {
 		$media_ids = $playlist->get_songs();
 		$name = $playlist->name;
 	break;
+	case 'smartplaylist':
+		$search = new Search('song', $_REQUEST['id']);
+		$sql = $search->to_sql();
+		$sql = $sql['base'] . ' ' . $sql['table_sql'] . ' WHERE ' . 
+			$sql['where_sql'];
+		$db_results = Dba::read($sql);
+		$media_ids = array();
+		while ($row = Dba::fetch_assoc($db_results)) {
+			$media_ids[] = $row['id'];
+		}
+		$name = $search->name;
+	break;
 	case 'album':
 		$album = new Album($_REQUEST['id']);
 		$media_ids = $album->get_songs();
@@ -66,7 +78,22 @@ switch ($_REQUEST['action']) {
 	case 'browse':
 		$id = scrub_in($_REQUEST['browse_id']);
 		$browse = new Browse($id);
-		$media_ids = $browse->get_saved();
+		$browse_media_ids = $browse->get_saved();
+		$media_ids = array();
+		foreach ($browse_media_ids as $media_id) {
+			switch ($_REQUEST['type']) {
+				case 'album':
+					$album = new Album($media_id);
+					$media_ids = array_merge($media_ids, $album->get_songs());
+				break;
+				case 'song':
+					$media_ids[] = $media_id;
+				break;
+				case 'video':
+					$media_ids[] = array('Video', $media_id);
+				break;
+			} // switch on type
+		} // foreach media_id
 		$name = 'Batch-' . date("dmY",time());
 	default:
 		// Rien a faire

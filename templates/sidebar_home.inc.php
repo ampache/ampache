@@ -48,6 +48,7 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
       <li id="sb_browse_bb_Artist"><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo _('Artists'); ?></a></li>
       <li id="sb_browse_bb_Tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag"><?php echo _('Tag Cloud'); ?></a></li>
       <li id="sb_browse_bb_Playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo _('Playlists'); ?></a></li>
+      <li id="sb_browse_bb_SmartPlaylist"><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo _('Smart Playlists'); ?></a></li>
       <li id="sb_browse_bb_RadioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo _('Radio Stations'); ?></a></li>
       <li id="sb_browse_bb_Video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo _('Videos'); ?></a></li>
     </ul>
@@ -77,7 +78,7 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
       <li id="sb_home_random_album"><?php echo Ajax::text('?page=random&action=album',_('Album'),'home_random_album'); ?></li>
       <li id="sb_home_random_artist"><?php echo Ajax::text('?page=random&action=artist',_('Artist'),'home_random_artist'); ?></li>
       <li id="sb_home_random_playlist"><?php echo Ajax::text('?page=random&action=playlist',_('Playlist'),'home_random_playlist'); ?></li>
-      <li id="sb_home_random_advanced"><a href="<?php echo $web_path; ?>/random.php?action=advanced"><?php echo _('Advanced'); ?></a></li>
+      <li id="sb_home_random_advanced"><a href="<?php echo $web_path; ?>/random.php?action=advanced&type=song"><?php echo _('Advanced'); ?></a></li>
     </ul>
   </li>
   <li><h4><?php echo _('Information'); ?></h4>
