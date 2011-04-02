@@ -549,10 +549,6 @@ class Art extends database_object {
 				$type . "' AND `" . $type . "`.`id` IS NULL";
 			$db_results = Dba::write($sql);
 		} // foreach
-
-		// Optimize the table, large potential space savings
-		$sql = "OPTIMIZE TABLE `image`";
-		$db_results = Dba::write($sql);
 	} // clean
 
 	public function checkOrderDB($method, $gatherAll) {

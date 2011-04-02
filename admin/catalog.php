@@ -78,7 +78,7 @@ switch ($_REQUEST['action']) {
 		if (isset($_REQUEST['catalogs'])) {
 			foreach ($_REQUEST['catalogs'] as $catalog_id) {
 				$catalog = new Catalog($catalog_id);
-				$catalog->verify_catalog($catalog_id);
+				$catalog->verify_catalog();
 			}
 		}
 		$url	= Config::get('web_path') . '/admin/catalog.php';
@@ -100,12 +100,13 @@ switch ($_REQUEST['action']) {
 		/* This runs the clean/verify/add in that order */
 		foreach ($_REQUEST['catalogs'] as $catalog_id) {
 			$catalog = new Catalog($catalog_id);
-			$catalog->clean_catalog($catalog_id);
+			$catalog->clean_catalog();
 			$catalog->count = 0;
-			$catalog->verify_catalog($catalog_id);
+			$catalog->verify_catalog();
 			$catalog->count = 0;
-			$catalog->add_to_catalog($catalog_id);
+			$catalog->add_to_catalog();
 		}
+		Catalog::optimize_tables();
 		$url	= Config::get('web_path') . '/admin/catalog.php';
 		$title	= _('Catalog Updated');
 		$body	= '';
@@ -161,8 +162,9 @@ switch ($_REQUEST['action']) {
 		if (isset($_REQUEST['catalogs'])) {
 			foreach($_REQUEST['catalogs'] as $catalog_id) {
 				$catalog = new Catalog($catalog_id);
-				$catalog->clean_catalog(0,1);
+				$catalog->clean_catalog();
 			} // end foreach catalogs
+			Catalog::optimize_tables();
 		}
 
 		$url 	= Config::get('web_path') . '/admin/catalog.php';

@@ -1566,6 +1566,8 @@ class Catalog extends database_object {
 		$dead_video = array();
 		$dead_song = array();
 
+		debug_event('clean', 'Starting on ' . $this->name, 5, 'ampache-catalog');
+
 		require_once Config::get('prefix') . '/templates/show_clean_catalog.inc.php';
 		flush();
 
@@ -1573,7 +1575,7 @@ class Catalog extends database_object {
 		 * this will minimize the loss of catalog data if mount points fail
 		 */
 		if (!is_readable($this->path) AND $this->catalog_type == 'local') {
-			debug_event('catalog','Catalog path:' . $this->path . ' unreadable, clean failed','1');
+			debug_event('catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
 			Error::add('general',_('Catalog Root unreadable, stopping clean'));
 			Error::display('general');
 			return false;
@@ -1587,12 +1589,13 @@ class Catalog extends database_object {
 
 		// Set to 0 our starting point
 		$dead_files = 0;
+		$count = 0;
 
 		$ticker = time();
 
 		/* Recurse through files, put @ to prevent errors poping up */
 		while ($results = Dba::fetch_assoc($db_results)) {
-
+			debug_event('clean', 'Starting work on ' . $results['file'] . '(' . $results['id'] . ')', 5, 'ampache-catalog');
 			/* Stupid little cutesie thing */
 			$count++;
 			if (time() > $ticker+1) {
@@ -1609,7 +1612,7 @@ class Catalog extends database_object {
 
 				/* If it errors somethings splated, or the files empty */
 				if (!file_exists($results['file']) OR $file_info < 1) {
-
+					debug_event('clean', 'File not found or empty: ' . $results['file'], 5, 'ampache-catalog');
 					/* Add Error */
 					Error::add('general',_('Error File Not Found or 0 Bytes:') . $results['file']);
 
@@ -1623,7 +1626,7 @@ class Catalog extends database_object {
 
 				} //if error
 				else if (!is_readable($results['file'])) {
-					debug_event('Clean','Error ' . $results['file'] . ' is not readable, but does exist','1');
+					debug_event('clean', $results['file'] . ' is not readable, but does exist', 1, 'ampache-catalog');
 				}
 			} // if localtype
 			else {
@@ -1649,10 +1652,11 @@ class Catalog extends database_object {
 
 		} //while gettings songs
 
-		// Check and see if _everything_ has gone away, might indicate a dead mount
+		// Check and see if _everything_ has gone away, might indicate a
+		// dead mount.
 		// We call this the AlmightyOatmeal Sanity check
 		if ($dead_files == $count) {
-			debug_event('Clean','Error: All songs would be removed.  Doing nothing.','1');
+			debug_event('catalog', 'All songs would be removed. Doing nothing.', 1);
 			Error::add('general',_('Error All songs would be removed, doing nothing'));
 			return false;
 		}
@@ -1669,11 +1673,13 @@ class Catalog extends database_object {
 			}
 		}
 
+		debug_event('clean', "Finished, $dead_files removed from " . $this->name, 5, 'ampache-catalog');
+
 		/* Step two find orphaned Arists/Albums
 		 * This finds artists and albums that no
 		 * longer have any songs associated with them
 		 */
-		self::clean($catalog_id);
+		self::clean();
 
 		/* Return dead files, so they can be listed */
 		update_text('clean_count_' . $this->id, $count);
@@ -1681,8 +1687,6 @@ class Catalog extends database_object {
 		echo "<strong>";
 		printf (ngettext('Catalog Clean Done. %d file removed.','Catalog Clean Done. %d files removed.',$dead_files), $dead_files);
 		echo "</strong><br />\n";
-		echo "<strong>" . _('Optimizing Tables') . "...</strong><br />\n";
-		self::optimize_tables();
 		show_box_bottom();
 		flush();
 
@@ -1755,9 +1759,6 @@ class Catalog extends database_object {
 		$sql = "DELETE FROM album USING album LEFT JOIN song ON song.album = album.id WHERE song.id IS NULL";
 		$db_results = Dba::write($sql);
 
-		/* Now remove any album art that is now dead */
-		Art::clean();
-
 	} // clean_albums
 
 	/**
@@ -1781,9 +1782,6 @@ class Catalog extends database_object {
 		/* Do a complex delete to get artists where there are no songs */
 		$sql = "DELETE FROM artist USING artist LEFT JOIN song ON song.artist = artist.id WHERE song.id IS NULL";
 		$db_results = Dba::write($sql);
-
-		// Now remove any dead art
-		Art::clean();
 
 	} //clean_artists
 
@@ -1867,19 +1865,17 @@ class Catalog extends database_object {
 	 * verify_catalog
 	 * This function compares the DB's information with the ID3 tags
 	 */
-	public function verify_catalog($catalog_id) {
-
-		// Create the object so we have some information on it
-		$catalog = new Catalog($catalog_id);
+	public function verify_catalog() {
 
 		$cache = array();
 		$songs = array();
 
-		// Record that we're caching this stuff so it makes debugging easier
-		debug_event('Verify','Starting Verify of '. $catalog->name . ' caching data...','5');
+		// Record that we're caching this stuff to make debugging easier
+		debug_event('verify', 'Starting on ' . $this->name, 5, 'ampache-catalog');
+		debug_event('verify', 'Caching data...', 5, 'ampache-catalog');
 
 		/* First get the filenames for the catalog */
-		$sql = "SELECT `id`,`file`,`artist`,`album`,'song' AS `type` FROM `song` WHERE `song`.`catalog`='$catalog_id' ";
+		$sql = "SELECT `id`,`file`,`artist`,`album`,'song' AS `type` FROM `song` WHERE `song`.`catalog`='$this->id' ";
 		$db_results = Dba::read($sql);
 
 		while ($row = Dba::fetch_assoc($db_results)) {
@@ -1897,7 +1893,7 @@ class Catalog extends database_object {
 
 		$cache = array();
 		$videos = array();
-		$sql = "SELECT `id`,`file`,'video' AS `type` FROM `video` WHERE `video`.`catalog`='$catalog_id'";
+		$sql = "SELECT `id`,`file`,'video' AS `type` FROM `video` WHERE `video`.`catalog`='$this->id'";
 		$db_results = Dba::read($sql);
 
 		while ($row = Dba::fetch_assoc($db_results)) {
@@ -1928,17 +1924,19 @@ class Catalog extends database_object {
 		 */
 		foreach ($cached_results as $results) {
 
-			debug_event('verify',"Starting work on " . $results['file'],'5','ampache-catalog');
+			debug_event('verify', 'Starting work on ' . $results['file'], 5, 'ampache-catalog');
 			$type = ($results['type'] == 'video') ? 'video' : 'song';
 
 			if (is_readable($results['file'])) {
 
-				/* Create the object from the existing database information */
+				// Create the object from the existing database
+				// information
 				$media = new $type($results['id']);
 
 				unset($skip);
 
-				/* Make sure the song isn't flagged, we don't update flagged stuff */
+				// Make sure the song isn't flagged
+				// We don't update flagged stuff
 				if (Flag::has_flag($media->id,$type)) {
 					$skip = true;
 				}
@@ -1947,30 +1945,26 @@ class Catalog extends database_object {
 					$skip = true;
 				}
 
-				// if the file hasn't been modified since the last_update
-				if (!$skip) {
-
+				if ($skip) {
+					debug_event('skip',"$media->file has been skipped due to newer local update or file mod time",'5','ampache-catalog');
+				}
+				else {
 					$info = self::update_media_from_tags($media,$this->sort_pattern,$this->rename_pattern);
 					if ($info['change']) {
 						$total_updated++;
 					}
 					unset($info);
-
-				} // end skip
-
-				if ($skip) {
-					debug_event('skip',"$media->file has been skipped due to newer local update or file mod time",'5','ampache-catalog');
-				}
+				} // if skip
 
 				/* Stupid little cutesie thing */
 				$count++;
 				if (time() > $ticker+1) {
 					$file = str_replace(array('(',')','\''),'',$media->file);
-					update_text('verify_count_' . $catalog_id, $count);
-					update_text('verify_dir_' . $catalog_id, scrub_out($file));
+					update_text('verify_count_' . $this->id, $count);
+					update_text('verify_dir_' . $this->id, scrub_out($file));
 					flush();
 					$ticker = time();
-				} //echos song count
+				} //echoes song count
 
 			} // end if file exists
 
@@ -1985,8 +1979,11 @@ class Catalog extends database_object {
 
 		} //end foreach
 
-		/* After we have updated all the songs with the new information clear any empty albums/artists */
-		self::clean($catalog_id);
+		debug_event('verify', "Finished, $total_updated updated in " . $this->name, 5, 'ampache-catalog');
+
+		// After we have updated all the songs with the new information
+		// clear any empty albums/artists
+		self::clean();
 
 		// Update the last_update
 		$this->update_last_update();
@@ -2006,18 +2003,21 @@ class Catalog extends database_object {
 	/**
 	 * clean
 	 * This is a wrapper function for all of the different cleaning
-	 * functions, it runs them in the correct order and takes a catalog_id
+	 * functions, it runs them in the correct order
 	 */
 	public static function clean() {
 
+		debug_event('catalog', 'Database cleanup started', 5, 'ampache-catalog');
 		self::clean_albums();
 		self::clean_artists();
+		Art::clean();
 		self::clean_flagged();
 		self::clean_stats();
 		self::clean_ext_info();
 		self::clean_playlists();
 		self::clean_shoutbox();
 		self::clean_tags();
+		debug_event('catalog', 'Database cleanup ended', 5, 'ampache-catalog');
 
 	} // clean
 

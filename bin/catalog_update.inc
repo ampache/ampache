@@ -146,9 +146,12 @@ while ($row = Dba::fetch_row($db_results)) {
 		echo "\n"; 
 		$catalog->generate_thumbnails(); 
 		echo "----------------\n\n";
-	} 
+	}
 
 } // end foreach
+
+Catalog::optimize_tables();
+
 ob_end_flush(); 
 echo "\n"; 
 
