@@ -83,6 +83,9 @@ switch($_REQUEST['action']) {
 		$keys = array_keys($object_ids);
 		Tag::build_cache($keys);
 		show_box_top(_('Tag Cloud'),$class);
+		$browse2 = new Browse();
+		$browse2->set_type('song');
+		$browse2->store();
 		require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php';
 		show_box_bottom();
 		require_once Config::get('prefix') . '/templates/browse_content.inc.php';
