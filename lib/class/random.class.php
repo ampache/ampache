@@ -173,32 +173,6 @@ class Random implements media {
 	} // get_default
 
 	/**
-	 * get_genre
-	 * This looks at the last object played by the current user and
-	 * then picks a song of the same genre at random...
-	 */
-	public static function get_genre($limit) {
-
-		$results = array();
-
-		// Get the last genre played by us
-		$data = $GLOBALS['user']->get_recently_played('1','genre');
-		if ($data['0']) {
-			$where_sql = " WHERE `genre`='" . $data['0'] . "' ";
-		}
-
-		$sql = "SELECT `id` FROM `song` $where_sql ORDER BY RAND() LIMIT $limit";
-		$db_results = Dba::read($sql);
-
-		while ($row = Dba::fetch_assoc($db_results)) {
-	 		$results[] = $row['id'];
-		}
-
-		return $results;
-
-	} // get_genre
-
-	/**
 	 * get_album
 	 * This looks at the last album played by the current user and
 	 * picks something else in the same album
