@@ -3,7 +3,6 @@
 /**
  * jamendoSearch Class
  *
- * PHP version 5
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
  * Copyright (c) 2001 - 2006 Ampache.org All Rights Reserved
@@ -23,13 +22,10 @@
  *
  * @deprecated	(maybe) deprecated since 2006.
  * @category	jamendoSearch
- * @package	Modules
- * @author	Karl Vollmer <vollmer@ampache.org>
+ * @package	Ampache
  * @copyright	2001 - 2011 Ampache.org
  * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @version	PHP 5.2
  * @link	http://www.ampache.org/
- * @since	File available since Release 1.0
  */
 
 /**
@@ -40,13 +36,10 @@
  *
  * @deprecated	(maybe) deprecated since 2006.
  * @category	jamendoSearch
- * @package	Modules
- * @author	Karl Vollmer <vollmer@ampache.org>
+ * @package	Ampache
  * @copyright	2001 - 2011 Ampache.org
  * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @version	Release:
  * @link	http://www.ampache.org/
- * @since	Class available since Release 1.0
  */
 class jamendoSearch {
 

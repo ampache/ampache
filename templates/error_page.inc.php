@@ -3,7 +3,6 @@
 /**
  * Error Page
  *
- * PHP version 5
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
  * Copyright (c) 2001 - 2011 Ampache.org All Rights Reserved
@@ -21,14 +20,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @category	Template
- * @package	Template
- * @author	Karl Vollmer <vollmer@ampache.org>
+ * @package	Ampache
  * @copyright	2001 - 2011 Ampache.org
  * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @version	PHP 5.2
  * @link	http://www.ampache.org/
- * @since	File available since Release 1.0
  */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

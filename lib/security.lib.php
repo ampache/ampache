@@ -7,7 +7,6 @@
  * been lost, it contains functions for checking sql
  * connections, web paths etc..
  *
- * PHP version 5
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
  * Copyright (c) 2001 - 2011 Ampache.org All Rights Reserved
@@ -25,15 +24,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @category	Security
- * @package	Library
- * @author	Karl Vollmer <vollmer@ampache.org>
- * @author	momo-i <webmaster@momo-i.org>
+ * @package	Ampache
  * @copyright	2001 - 2011 Ampache.org
  * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @version	PHP 5.2
  * @link	http://www.ampache.org/
- * @since	File available since Release 3.6
  */
 
 /**

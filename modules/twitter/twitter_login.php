@@ -4,7 +4,6 @@
  *
  * Adapted for Ampache by Chris Slamar
  *
- * PHP version 5
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
  * Copyright (c) 2001 - 2011 Ampache.org All Rights Reserved
@@ -22,15 +21,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @category	Login
- * @package	Twitter
- * @author	Karl Vollmer <vollmer@ampache.org>
+ * @package     Ampache	
  * @author	Chris Slamar
  * @copyright	2001 - 2011 Ampache.org
  * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @version	PHP 5.2
  * @link	http://www.ampache.org/
- * @since	File available since Release 1.0
  */
 
 	require_once '../../lib/init.php';

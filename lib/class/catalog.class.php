@@ -3,7 +3,6 @@
 /**
  * Catalog Class
  *
- * PHP version 5
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
  * Copyright (c) 2001 - 2011 Ampache.org All Rights Reserved
@@ -21,14 +20,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @category	Catalog
  * @package	Ampache
- * @author	Karl Vollmer <vollmer@ampache.org>
  * @copyright	2001 - 2011 Ampache.org
  * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @version	PHP 5.2
  * @link	http://www.ampache.org/
- * @since	File available since Release 1.0
  */
 
 /**
@@ -37,14 +32,10 @@
  * This class handles all actual work in regards to the catalog,
  * it contains functions for creating/listing/updated the catalogs.
  *
- * @catagory Catalog
  * @package	Ampache
- * @author	Karl Vollmer <vollmer@ampache.org>
  * @copyright	2001 - 2011 Ampache.org
  * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @version	Release: 3.6
  * @link	http://www.ampache.org/
- * @since	Class available since Release 1.0
  */
 class Catalog extends database_object {
 
@@ -1011,7 +1002,6 @@ class Catalog extends database_object {
 	/**
 	 * update_last_add
 	 * updates the last_add of the catalog
-	 * @package Catalog
 	 */
 	public function update_last_add() {
 
@@ -1455,8 +1445,6 @@ class Catalog extends database_object {
 	/**
 	 * update_remote_catalog
 	 * actually updates from the remote data, takes an array of songs that are base64 encoded and parses them
-	 * @package XMLRPC
-	 * @catagory Client
 	 */
 	public function update_remote_catalog($data,$root_path) {
 
@@ -1492,8 +1480,6 @@ class Catalog extends database_object {
 	/*
 	 * update_remote_album_images
 	 * actually synchronize the album images
-	 * @package XMLRPC
-	 * @catagory Client
 	 */
 	public function update_remote_album_images($data, $remote_server, $auth, $path) {
 		$label = "catalog.class.php::update_remote_album_images";
