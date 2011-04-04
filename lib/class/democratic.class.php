@@ -189,9 +189,6 @@ class Democratic extends tmpPlaylist {
 	 */
 	public static function get_playlists() {
 
-		// Pull all tmp playlsits with a session of < 0 (as those are fake)
-		// This is kind of hackish, should really think about tweaking the db
-		// and doing this right.
 		$sql = "SELECT `id` FROM `democratic` ORDER BY `name`";
 		$db_results = Dba::read($sql);
 
