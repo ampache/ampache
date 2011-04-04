@@ -32,12 +32,11 @@
  */
 
 /**
- *
- * Browse By Page
+ * Browse Page
  * This page shows the browse menu, which allows you to browse by many different
- * fields including genre, artist, album, catalog, ???
- * This page also handles the actual browse action
+ * fields including artist, album, and catalog.
  *
+ * This page also handles the actual browse action
  */
 
 /* Base Require */
