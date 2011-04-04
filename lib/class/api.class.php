@@ -606,10 +606,6 @@ class Api {
 			xmlData::set_offset($input['offset']);
 			xmlData::set_limit($input['limit']);
 
-			//WARNING!!! This is a horrible hack that has to be here because
-			//Run search references these variables, ooh the huge manatee
-			unset($input['limit'],$input['offset']);
-
 			$results = Search::run($array);
 
 			echo xmlData::songs($results);
