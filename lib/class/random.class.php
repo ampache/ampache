@@ -469,7 +469,7 @@ class Random implements media {
 	} // get_id_name
 
 	/**
-	 * validiate_type
+	 * validate_type
 	 * this validates the random type
 	 */
 	public static function validate_type($type) {
@@ -482,12 +482,9 @@ class Random implements media {
 			case 'rated':
 				return $type;
 			break;
-			default:
-				return 'default';
-			break;
 		} // end switch
 
-		return $type;
+		return 'default';
 
 	} // validate_type
 
