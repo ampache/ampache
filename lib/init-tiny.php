@@ -39,9 +39,7 @@ $configfile = $prefix . '/config/ampache.cfg.php';
 require_once $prefix . '/lib/general.lib.php';
 require_once $prefix . '/lib/class/config.class.php';
 
-if (!function_exists('gettext')) {
-	require_once $prefix . '/modules/emulator/gettext.php';
-}
+require_once $prefix . '/modules/php-gettext/gettext.inc';
 
 // Define some base level config options
 Config::set('prefix', $prefix);
