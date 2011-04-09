@@ -602,14 +602,17 @@ class Stream {
 	} // create_ram
 
 	/**
-	 * start_downsample
-	 * This is a rather complext function that starts the downsampling of a song and returns the
-	 * opened file handled a reference to the song object is passed so that the changes we make
-	 * in here affect the external object, References++
+	 * start_transcode
+	 *
+	 * This is a rather complex function that starts the transcoding or
+	 * resampling of a song and returns the opened file handle. A reference
+	 * to the song object is passed so that the changes we make in here
+	 * affect the external object, References++
 	 */
-	public static function start_downsample(&$song,$now_playing_id=0,$song_name=0,$start=0) {
+	public static function start_transcode(&$song, $song_name = 0, $start = 0) {
 
-		/* Check to see if bitrates are set if so let's go ahead and optomize! */
+		// Check to see if bitrates are set.
+		// If so let's go ahead and optimize!
 		$max_bitrate = Config::get('max_bit_rate');
 		$min_bitrate = Config::get('min_bit_rate');
 		$time = time();
@@ -629,33 +632,33 @@ class Stream {
 			$db_results = Dba::read($sql);
 			$results = Dba::fetch_row($db_results);
 
-			// Current number of active streams (current is already in now playing, worst case make it 1)
+			// Current number of active streams (current is already
+			// in now playing, worst case make it 1)
 			$active_streams = intval($results[0]);
 			if (!$active_streams) { $active_streams = '1'; }
+			debug_event('transcode', "Active streams: $active_streams", 5);
 
-			/* If only one user, they'll get all available.  Otherwise split up equally. */
-			$sample_rate = floor($max_bitrate/$active_streams);
+			// If only one user, they'll get all available.
+			// Otherwise split up equally.
+			$sample_rate = floor($max_bitrate / $active_streams);
 
-			/* If min_bitrate is set, then we'll exit if the bandwidth would need to be split up smaller than the min. */
-			if ($min_bitrate > 1 AND ($max_bitrate/$active_streams) < $min_bitrate) {
-
-				/* Log the failure */
-				debug_event('downsample',"Error: Max bandwidith already allocated. $active_streams Active Streams",'2');
-				echo "Maximum bandwidth already allocated.  Try again later.";
+			// If min_bitrate is set, then we'll exit if the
+			// bandwidth would need to be lower.
+			if ($min_bitrate > 1 AND ($max_bitrate / $active_streams) < $min_bitrate) {
+				debug_event('transcode', "Max bandwidth already allocated. Active streams: $active_streams", 2);
+				header('HTTP/1.1 503 Service Temporarily Unavailable');
 				exit();
-
 			}
 			else {
-				$sample_rate = floor($max_bitrate/$active_streams);
+				$sample_rate = floor($max_bitrate / $active_streams);
 			} // end else
 
-			// Never go over the users sample rate
+			// Never go over the user's sample rate
 			if ($sample_rate > $user_sample_rate) { $sample_rate = $user_sample_rate; }
 
-			debug_event('downsample',"Downsampled: $active_streams current active streams, downsampling to $sample_rate",'2');
+			debug_event('transcode', "Downsampling to $sample_rate", 5);
 
 		} // end if we've got bitrates
-
 		else {
 			$sample_rate = $user_sample_rate;
 		}
@@ -663,57 +666,64 @@ class Stream {
 		/* Validate the bitrate */
 		$sample_rate = self::validate_bitrate($sample_rate);
 
-		/* Never Upsample a song */
-		if (($sample_rate*1000) > $song->bitrate) {
-			$sample_rate = self::validate_bitrate($song->bitrate/1000);
-			$sample_ratio = '1';
-		}
-		else {
-			/* Set the Sample Ratio */
-			$sample_ratio = $sample_rate/($song->bitrate/1000);
+		// Never upsample a song
+		if ($song->resampled && ($sample_rate * 1000) > $song->bitrate) {
+			$sample_rate = self::validate_bitrate($song->bitrate / 1000);
 		}
 
-		// Set the new size for the song
-		$song->size  = floor($sample_ratio*$song->size);
+		// Set the new size for the song (in bytes)
+		$song->size  = floor($sample_rate * $song->time * 125);
 
 		/* Get Offset */
-		$offset   = ( $start*$song->time )/( $song->size );
-		$offsetmm = floor($offset/60);
-		$offsetss = floor($offset-$offsetmm*60);
+		$offset   = ($start * $song->time) / $song->size;
+		$offsetmm = floor($offset / 60);
+		$offsetss = floor($offset - ($offsetmm * 60));
 		// If flac then format it slightly differently
-		if ($song->type == 'flac') { 
-			$offset = sprintf("%02d:%02d",$offsetmm,$offsetss);
+		// HACK
+		if ($song->transcoded_from == 'flac') { 
+			$offset = sprintf('%02d:%02d', $offsetmm, $offsetss);
 		} 
 		else { 
-			$offset   = sprintf("%02d.%02d",$offsetmm,$offsetss);
+			$offset = sprintf('%02d.%02d', $offsetmm, $offsetss);
 		} 
 
 		/* Get EOF */
-		$eofmm  = floor($song->time/60);
-		$eofss  = floor($song->time-$eofmm*60);
-		$eof    = sprintf("%02d.%02d",$eofmm,$eofss);
+		$eofmm  = floor($song->time / 60);
+		$eofss  = floor($song->time - ($eofmm * 60));
+		$eof    = sprintf('%02d.%02d', $eofmm, $eofss);
 
 		$song_file = escapeshellarg($song->file);
 
-		/* Replace Variables */
-		$downsample_command = Config::get($song->stream_cmd());
-		$downsample_command = str_replace("%FILE%",$song_file,$downsample_command,$file_exists);
-		$downsample_command = str_replace("%OFFSET%",$offset,$downsample_command,$offset_exists);
-		$downsample_command = str_replace("%EOF%",$eof,$downsample_command,$eof_exists);
-		$downsample_command = str_replace("%SAMPLE%",$sample_rate,$downsample_command,$sample_exists);
-
-		if (!$file_exists || !$offset_exists || !$eof_exists || !$sample_exists) {
-			debug_event('downsample', 'Warning: Downsample command missing a variable; values are File:' . $file_exists . ' Offset:' . $offset_exists . ' Eof:' . $eof_exists . ' Sample:' . $sample_exists, '1');
+		$transcode_command = $song->stream_cmd();
+		if ($transcode_command == null) {
+			debug_event('downsample', 'song->stream_cmd() returned null', 2);
+			return null;
 		}
 
-		// If we are debugging log this event
-		$message = "Start Downsample using CMD: $downsample_command";
-		debug_event('downsample',$message,'3');
+		$string_map = array(
+			'%FILE%'   => $song_file,
+			'%OFFSET%' => $offset,
+			'%OFFSET_MM%' => $offsetmm,
+			'%OFFSET_SS%' => $offsetss,
+			'%EOF%'    => $eof,
+			'%EOF_MM%' => $eofmm,
+			'%EOF_SS%' => $eofss,
+			'%SAMPLE%' => $sample_rate
+		);
 
-		$fp = popen($downsample_command, 'rb');
+		foreach ($string_map as $search => $replace) {
+			$transcode_command = str_replace($search, $replace, $transcode_command, $ret);
+			if (!$ret) {
+				debug_event('downsample', "$search not in downsample command", 5);
+			}
+		}
+
+		debug_event('downsample', "Downsample command: $transcode_command", 3);
+
+		$fp = popen($transcode_command, 'rb');
 
 		// Return our new handle
-		return ($fp);
+		return $fp;
 
 	} // start_downsample
 

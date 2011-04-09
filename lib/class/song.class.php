@@ -63,7 +63,10 @@ class Song extends database_object implements media {
 
 	/* Setting Variables */
 	public $_transcoded = false;
+	public $resampled = false;	
 	public $_fake = false; // If this is a 'construct_from_array' object
+	public $transcoded_from;
+	private $_transcode_cmd;
 
 	/**
 	 * Constructor
@@ -970,10 +973,20 @@ class Song extends database_object implements media {
 
 		$conf_var 	= 'transcode_' . $this->type;
 		$conf_type	= 'transcode_' . $this->type . '_target';
+		$conf_cmd	= 'transcode_cmd_' . $this->type;
 
 		if (Config::get($conf_var)) {
 			$this->_transcoded = true;
-			debug_event('auto_transcode','Transcoding to ' . $this->type,'5');
+			$this->_transcoded_from = $this->type;
+			$this->_transcode_cmd = Config::get($conf_cmd);
+
+			$this->format_type(Config::get($conf_type));
+			if ($this->type == $this->_transcoded_from) {
+				$this->_resampled = true;
+			}
+
+			debug_event('transcode', 'Transcoding from ' . 
+				$this->_transcoded_from . ' to ' . $this->type, 5);
 			return false;
 		}
 
@@ -983,26 +996,17 @@ class Song extends database_object implements media {
 
 	/**
 	 * stream_cmd
+	 *
 	 * test if the song type streams natively and
 	 * if not returns a transcoding command from the config
-	 * we can't use this->type because its been formated for the
-	 * downsampling
 	 */
 	public function stream_cmd() {
 
-		// Find the target for this transcode
-		$conf_type = 'transcode_' . $this->type . '_target';
-		$stream_cmd = 'transcode_cmd_' . $this->type;
-		$this->format_type(Config::get($conf_type));
-
-		if (Config::get($stream_cmd)) {
-			return $stream_cmd;
+		if ($this->native_stream()) {
+			return null;
 		}
-		else {
-			debug_event('Downsample','Error: Transcode ' . $stream_cmd . ' for ' . $this->type . ' not found, using downsample','2');
-		}
-
-		return false;
+		
+		return $this->_transcode_cmd;
 
 	} // end stream_cmd
 

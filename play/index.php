@@ -54,8 +54,8 @@ $n = sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d",$start,$end);
 
 /* First things first, if we don't have a uid/oid stop here */
 if (empty($oid) && empty($demo_id) && empty($random)) {
-	debug_event('Play',"Error: No Object UID Specified, nothing to play",'2');
-	echo "Error: No Object UID Specified, nothing to play";
+	debug_event('play', 'No object UID specified, nothing to play', 2);
+	header('HTTP/1.1 400 Nothing To Play');
 	exit;
 }
 
@@ -65,8 +65,8 @@ if (isset($xml_rpc) AND Config::get('xml_rpc') AND !isset($uid)) {
 }
 
 if (!isset($uid)) {
-	debug_event('Play','Error: No User specified','2');
-	echo "Error: No User Specified";
+	debug_event('play', 'No user specified', 2);
+	header('HTTP/1.1 400 No User Specified');
 	exit;
 }
 
@@ -76,20 +76,20 @@ Preference::init();
 
 /* If the user has been disabled (true value) */
 if (make_bool($GLOBALS['user']->disabled)) {
-	debug_event('user_disabled',"Error $user->username is currently disabled, stream access denied",'3');
-	echo "Error: User Disabled";
+	debug_event('access_denied', "$user->username is currently disabled, stream access denied",'3');
+	header('HTTP/1.1 403 User Disabled');
 	exit;
 }
 
 // If require session is set then we need to make sure we're legit
 if (Config::get('require_session')) {
 	if (!Config::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
-		// Localnet defined IP and require localnot session has been turned off we let this one through
-		debug_event('LocalNet','Streaming Access Granted to Localnet defined IP ' . $_SERVER['REMOTE_ADDR'],'5');
+		debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
 	}
 	elseif(!Stream::session_exists($sid)) {
-		debug_event('session_expired',"Streaming Access Denied: " . $GLOBALS['user']->username . "'s session has expired",'3');
-    		die(_("Session Expired: please log in again at") . " " . Config::get('web_path') . "/login.php");
+		debug_event('access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
+    		header('HTTP/1.1 403 Session Expired');
+		exit;
 	}
 
 	// Now that we've confirmed the session is valid
@@ -103,7 +103,7 @@ $GLOBALS['user']->update_last_seen();
 
 /* If we are in demo mode.. die here */
 if (Config::get('demo_mode') || (!Access::check('interface','25') AND !isset($xml_rpc))) {
-	debug_event('access_denied',"Streaming Access Denied:" .Config::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
+	debug_event('access_denied', "Streaming Access Denied:" .Config::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
 	access_denied();
 	exit;
 }
@@ -223,11 +223,12 @@ if (!$media->file OR !is_readable($media->file)) {
 	if (is_object($tmp_playlist)) {
 		$tmp_playlist->delete_track($oid);
 	}
-
-	debug_event('Play',"Error song $media->file ($media->title) does not have a valid filename specified",'2');
-	echo "Error: Invalid Song Specified, file not found or file unreadable";
+	// FIXME: why are these separate?
 	// Remove the song votes if this is a democratic song
 	if ($demo_id) { $democratic->delete_from_oid($oid,'song'); }
+
+	debug_event('play', "Song $media->file ($media->title) does not have a valid filename specified", 2);
+	header('HTTP/1.1 404 Invalid song, file not found or file unreadable');
 	exit;
 }
 
@@ -238,7 +239,7 @@ if(version_compare(PHP_VERSION, '5.3.0', '<=')) {
 }
 
 // don't abort the script if user skips this song because we need to update now_playing
-ignore_user_abort(TRUE);
+ignore_user_abort(true);
 
 // Format the song name
 $media_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
@@ -295,38 +296,38 @@ header("Accept-Ranges: bytes" );
 // Prevent the script from timing out
 set_time_limit(0);
 
-/* We're about to start record this persons IP */
+// We're about to start. Record this user's IP.
 if (Config::get('track_user_ip')) {
 	$GLOBALS['user']->insert_ip_history();
 }
 
-// If we've got downsample remote enabled
 if (Config::get('downsample_remote')) {
-	if (!Access::check_network('network',$GLOBALS['user']->id,'0')) {
-		debug_event('Downsample','Network Downsample ' . $_SERVER['REMOTE_ADDR'] . ' is not in Local definition','5');
-		$not_local = true;
+	if (!Access::check_network('network', $GLOBALS['user']->id,'0')) {
+		debug_event('downsample', 'Address ' . $_SERVER['REMOTE_ADDR'] . ' is not in a network defined as local', 5);
+		$remote = true;
 	}
-} // if downsample remote is enabled
+}
 
 // If they are downsampling, or if the song is not a native stream or it's non-local
-if (((Config::get('transcode') == 'always' AND  !$video) || !$media->native_stream() ||
-	isset($not_local)) && Config::get('transcode') != 'never') {
-        debug_event('Downsample','Starting Downsample {Transcode:' . Config::get('transcode') . '} {Native Stream:' . $media->native_stream() .'} {Not Local:' . $not_local . '}','5');
-	$fp = Stream::start_downsample($media,$lastid,$media_name,$start);
+if (((Config::get('transcode') == 'always' AND  !$video) ||
+	!$media->native_stream() ||
+	isset($remote)) && Config::get('transcode') != 'never') {
+        debug_event('downsample',
+		'Decided to transcode. Transcode:' . Config::get('transcode') . 
+		' Native Stream: ' . ($media->native_stream() ? 'true' : 'false') .
+		' Remote: ' . ($remote ? 'true' : 'false'), 5);
+	$fp = Stream::start_transcode($media, $media_name, $start);
 	$media_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
-	// Note that this is downsampling
-	$downsampled_song = true;
+	$transcoded = true;
 } // end if downsampling
 else {
-	// Send file, possible at a byte offset
 	$fp = fopen($media->file, 'rb');
+}
 
-	if (!is_resource($fp)) {
-		debug_event('Play',"Error: Unable to open $media->file for reading",'2');
-		if ($demo_id) { $democratic->delete_from_oid($oid,'song'); }
-		cleanup_and_exit($lastid);
-	}
-} // else not downsampling
+if (!is_resource($fp)) {
+	debug_event('play', "Failed to open $media->file for streaming", 2);
+	exit();
+}
 
 // Put this song in the now_playing table only if it's a song for now...
 if (get_class($media) == 'Song') {
@@ -334,7 +335,6 @@ if (get_class($media) == 'Song') {
 }
 
 if ($start > 0 || $end > 0 ) {
-
 	// Calculate stream size from byte range
 	if(isset($end)) {
 		$end = min($end,$media->size-1);
@@ -344,71 +344,63 @@ if ($start > 0 || $end > 0 ) {
 		$stream_size = $media->size - $start;
 	}
 
-	debug_event('Play','Content-Range header recieved, skipping ahead ' . $start . ' bytes out of ' . $media->size,'5');
+	debug_event('play', 'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size, 5);
 	$browser->downloadHeaders($media_name, $media->mime, false, $media->size);
-	if (!$downsampled_song) {
-		fseek( $fp, $start );
+	if (!$transcoded) {
+		fseek($fp, $start);
 	}
 	$range = $start ."-". $end . "/" . $media->size;
-	header("HTTP/1.1 206 Partial Content");
+	header('HTTP/1.1 206 Partial Content');
 	header("Content-Range: bytes $range");
-	header("Content-Length: ".($stream_size));
+	header("Content-Length: $stream_size");
 }
-
-/* Last but not least pump em out */
 else {
-	debug_event('Play','Starting stream of ' . $media->file . ' with size ' . $media->size,'5');
+	debug_event('play','Starting stream of ' . $media->file . ' with size ' . $media->size, 5);
 	header("Content-Length: $media->size");
 	$browser->downloadHeaders($media_name, $media->mime, false, $media->size);
 	$stream_size = $media->size;
 }
 
-/* Let's force them to actually play a portion of the song before
- * we count it in the statistics
- */
 $bytes_streamed = 0;
-$min_bytes_streamed = $media->size / 2;
 
 // Actually do the streaming
 do {
-	$read_size = min(2048,$stream_size-$bytes_streamed);
-	if ($read_size < 1) { break; }
-	$buf = fread($fp, $read_size);
+	$buf = fread($fp, 2048);
 	print($buf);
 	$bytes_streamed += strlen($buf);
-} while (!feof($fp) && (connection_status() == 0) AND $bytes_streamed < $stream_size);
+} while (!feof($fp) && (connection_status() == 0) && ($bytes_streamed < $stream_size));
 
-// Need to make sure enough bytes were sent. Some players (Windows Media Player) won't work if specified content length is not sent.
+// Need to make sure enough bytes were sent. Some players (Windows Media Player)
+// won't work if specified content length is not sent.
 if($bytes_streamed < $stream_size AND (connection_status() == 0)) {
 	print(str_repeat(' ',$stream_size - $bytes_streamed));
 }
 
 // Make sure that a good chunk of the song has been played
-if ($bytes_streamed > $min_bytes_streamed AND get_class($media) == 'Song') {
-	debug_event('Play','Registering stats for ' . $media->title,'5');
+if ($bytes_streamed > $media->size / 2) {
+	// This check looks suspicious
+	if (get_class($media) == 'Song') {
+		debug_event('play', 'Registering stats for ' . $media->title, 5);
+		$GLOBALS['user']->update_stats($media->id);
+		$media->set_played();
+	}
 
-        $GLOBALS['user']->update_stats($media->id);
-	/* Set the Song as Played if it isn't already */
-	$media->set_played();
-
-} // if enough bytes are streamed
+}
 else {
-	debug_event('Play',$bytes_streamed .' of ' . $media->size . ' streamed, less than ' . $min_bytes_streamed . ' not collecting stats','5');
+	debug_event('play', $bytes_streamed .' of ' . $media->size . ' streamed; not collecting stats', 5);
 }
 
-
-/* If this is a voting tmp playlist remove the entry, we do this regardless of play amount */
+// If this is a democratic playlist remove the entry.
+// We do this regardless of play amount.
 if ($demo_id) { $democratic->delete_from_oid($oid,'song'); }
 
-/* Clean up any open ends */
-if (Config::get('play_type') == 'downsample' || !$media->native_stream()) {
-	@pclose($fp);
+if ($transcoded) {
+	pclose($fp);
 }
 else {
-	@fclose($fp);
+	fclose($fp);
 }
 
-// Note that the stream has ended
-debug_event('Play','Stream Ended at ' . $bytes_streamed . ' bytes out of ' . $media->size,'5');
+debug_event('play', 'Stream ended at ' . $bytes_streamed . ' bytes out of ' . $media->size, 5);
 
 ?>

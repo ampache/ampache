@@ -103,10 +103,11 @@ if (!function_exists('ngettext')) {
  * access_denied
  * Throws an error if they try to do something that they aren't allowed to.
  */
-function access_denied() {
+function access_denied($error = "Access Denied") {
 
 	// Clear any crap we've got up top
 	ob_end_clean();
+	header("HTTP/1.1 403 $error");
 	require_once Config::get('prefix') . '/templates/show_denied.inc.php';
 	exit;
 
