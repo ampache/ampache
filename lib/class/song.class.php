@@ -977,16 +977,16 @@ class Song extends database_object implements media {
 
 		if (Config::get($conf_var)) {
 			$this->_transcoded = true;
-			$this->_transcoded_from = $this->type;
+			$this->transcoded_from = $this->type;
 			$this->_transcode_cmd = Config::get($conf_cmd);
 
 			$this->format_type(Config::get($conf_type));
-			if ($this->type == $this->_transcoded_from) {
+			if ($this->type == $this->transcoded_from) {
 				$this->_resampled = true;
 			}
 
 			debug_event('transcode', 'Transcoding from ' . 
-				$this->_transcoded_from . ' to ' . $this->type, 5);
+				$this->transcoded_from . ' to ' . $this->type, 5);
 			return false;
 		}
 
