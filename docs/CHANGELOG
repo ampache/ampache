@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1
+        - Fixed display during catalog updates (reported by Demonic)
         - Fixed duplicate searching (patch from Demonic)
         - byterange handling for ranges starting with 0 (patch from uberbrady)
         - Fixed issue with updating ACLs under Windows (reported by Citlali)

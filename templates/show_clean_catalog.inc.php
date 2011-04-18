@@ -28,9 +28,9 @@
 
 show_box_top();
 /* HINT: Catalog Name */
-printf(_('Cleaning the %s Catalog'), "<strong>[" . $this->name . "]</strong>");
+printf(_('Cleaning the %s Catalog'), "<strong>[ $this->name ]</strong>");
 echo "...<br />";
-echo _('Checking') . ": <span id=\"clean_count_" . $this->id . "\"></span>\n<br />";
-echo _('Reading') . ":<span id=\"clean_dir_" . $this->id . "\"></span><br />";
+echo _('Checking') . ': <span id="clean_count_' . $this->id . '"></span><br />';
+echo _('Reading') . ':<span id="clean_dir_' . $this->id . '"></span><br />';
 show_box_bottom();
 ?>

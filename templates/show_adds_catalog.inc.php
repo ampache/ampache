@@ -28,9 +28,9 @@
 
 show_box_top();
 /* HINT: Catalog Name */
-printf(_('Starting New Song Search on %s catalog'), "<strong>[$this->name]</strong>");
+printf(_('Starting New Song Search on %s catalog'), "<strong>[ $this->name ]</strong>");
 echo "<br />\n";
-echo _('Found') . ": <span id=\"add_count_" . $this->id ."\">" . _('None') . "</span><br />\n";
-echo _('Reading') . ":<span id=\"add_dir_" . $this->id . "\"></span><br />";
+echo _('Found') . ': <span id="add_count_' . $this->id . '">' . _('None') . '</span><br />';
+echo _('Reading') . ':<span id="add_dir_' . $this->id . '"></span><br />';
 show_box_bottom();
 ?>
