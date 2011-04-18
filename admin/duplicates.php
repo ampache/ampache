@@ -38,7 +38,8 @@ show_header();
 /* Switch on Action */
 switch ($_REQUEST['action']) {
 	case 'find_duplicates':
-		$duplicates = Catalog::get_duplicate_songs($_REQUEST['search_type']);
+		$search_type = Dba::escape($_REQUEST['search_type']);
+		$duplicates = Catalog::get_duplicate_songs($search_type);
 		require_once Config::get('prefix') . '/templates/show_duplicate.inc.php';
 		require_once Config::get('prefix') . '/templates/show_duplicates.inc.php';
 	break;
