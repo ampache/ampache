@@ -972,27 +972,38 @@ class Song extends database_object implements media {
 		if ($this->_transcoded) { return false; }
 
 		$conf_var 	= 'transcode_' . $this->type;
-		$conf_type	= 'transcode_' . $this->type . '_target';
-		$conf_cmd	= 'transcode_cmd_' . $this->type;
 
 		if (Config::get($conf_var)) {
-			$this->_transcoded = true;
-			$this->transcoded_from = $this->type;
-			$this->_transcode_cmd = Config::get($conf_cmd);
-
-			$this->format_type(Config::get($conf_type));
-			if ($this->type == $this->transcoded_from) {
-				$this->_resampled = true;
-			}
-
-			debug_event('transcode', 'Transcoding from ' . 
-				$this->transcoded_from . ' to ' . $this->type, 5);
+			$this->set_transcode();
 			return false;
 		}
 
 		return true;
 
 	} // end native_stream
+
+	/**
+	 * set_transcode
+	 *
+	 * We want to transcode, set up the variables correctly
+	 */
+	public function set_transcode() {
+		if ($this->_transcoded) { return; }
+
+		$conf_type      = 'transcode_' . $this->type . '_target';
+		$conf_cmd       = 'transcode_cmd_' . $this->type;
+
+		$this->_transcoded = true;
+		$this->transcoded_from = $this->type;
+		$this->_transcode_cmd = Config::get($conf_cmd);
+		$this->format_type(Config::get($conf_type));
+		if ($this->type == $this->transcoded_from) {
+			$this->_resampled = true;
+		}
+
+		debug_event('transcode', 'Transcoding from ' . 
+			$this->transcoded_from . ' to ' . $this->type, 5);
+	}
 
 	/**
 	 * stream_cmd

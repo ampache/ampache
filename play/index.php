@@ -316,6 +316,7 @@ if (((Config::get('transcode') == 'always' AND  !$video) ||
 		'Decided to transcode. Transcode:' . Config::get('transcode') . 
 		' Native Stream: ' . ($media->native_stream() ? 'true' : 'false') .
 		' Remote: ' . ($remote ? 'true' : 'false'), 5);
+	$media->set_transcode();
 	$fp = Stream::start_transcode($media, $media_name, $start);
 	$media_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
 	$transcoded = true;
