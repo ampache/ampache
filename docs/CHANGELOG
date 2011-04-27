@@ -3,9 +3,20 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
-  v.3.6-Alpha1
+  v.3.6-Alpha2
+        - Committed minor bugfixes for Penguin theme
+        - Added Fresh theme
+        - Fixed spurious API handshake failure output
+
+
+--------------------------------------------------------------------------
+  v.3.6-Alpha1 04/27/2011
+        - Fixed forced transcoding
         - Fixed display during catalog updates (reported by Demonic)
         - Fixed duplicate searching (patch from Demonic)
+        - Cleaned up transcoding assumptions
+        - Fixed tag browsing
+        - Added new search/advanced random/dynamic playlist interface
         - byterange handling for ranges starting with 0 (patch from uberbrady)
         - Fixed issue with updating ACLs under Windows (reported by Citlali)
 	- Add function that check ampache and php version from each website.
