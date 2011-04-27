@@ -662,6 +662,7 @@ right: expression(-this.parentNode.offsetWidth%2+"px");
 	font-family:Verdana, Geneva, sans-serif;
 	font-size:10px;
 	line-height: 20px;
+	float:right;
 }
 #information_actions h3 {
 	float:right;

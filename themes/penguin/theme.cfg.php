@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;
 ;<?php exit(); ?>;
 ;;;;;;;;;;;;;;;;;;
-; Copyright (c) 2001 - 2007 Ampache.org
+; Copyright (c) 2001 - 2011 Ampache.org
 ; All rights reserved.
 ;
 ; This program is free software; you can redistribute it and/or
@@ -32,6 +32,7 @@ name = "Penguin"
 ; person who actually created this theme
 ; DEFAULT: N/A
 author = "Jeroen Doppenberg"
+; Updated by harrysand
 
 ; Theme Maintainer
 ; This is just a way of listing who is responsible for

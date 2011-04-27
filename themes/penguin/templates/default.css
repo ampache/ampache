@@ -50,7 +50,7 @@ a img, :link img, :visited img {
 body {
 	background:#222 url(../images/background.gif) repeat;
 	font-family:Arial, Helvetica, Sans-Serif;
-	min-width:1250px;
+	min-width:900px;
 }
 p {
 	color: #fc0;
@@ -151,13 +151,13 @@ body {
 #headerbox {
 	position:absolute;
 	top:0px;
-	left:307px;
+	left:264px;
 	font-size: 10px;
 	padding-top: 5px;
 	padding-bottom: 5px;
-	background: #fff;
+	/*background: #fff;*/
 	height: 30px;
-	width: 450px;
+	width: 504px;
 }
 #headerlogo, #headerlogo a {
 	position: absolute;
@@ -197,7 +197,7 @@ body {
 	position:absolute;
 	top:5px;
 	left: 815px;
-	width:400px;
+	width:350px;
 	text-align:left;
 	z-index:250;
 	text-transform:uppercase;
@@ -591,6 +591,7 @@ a.button {
 	text-transform:uppercase;
 	padding-bottom: 10px;
 	color:#FFF;
+	width:500px;
 }
 .box-list {
 }
@@ -658,10 +659,10 @@ right: expression(-this.parentNode.offsetWidth%2+"px");
 	margin-right:10px;
 }
 #information_actions {
-	padding: 20px 0px 10px 0px;
+	padding: 0px 0px 10px 0px;
 	font-family:Verdana, Geneva, sans-serif;
 	font-size:10px;
-	line-height: 20px;
+	line-height: 15px;
 }
 #information_actions h3 {
 	float:none;
