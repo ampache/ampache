@@ -228,6 +228,7 @@ class Api {
 					'artists'=>$counts['artist'],
 					'playlists'=>$playlist['playlist'],
 					'videos'=>$vcounts['video']));
+				return true;
 			} // match
 
 		} // end while

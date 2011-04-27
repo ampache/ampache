@@ -205,7 +205,7 @@ class xmlData {
 
 		// Foreach it
 		foreach ($array as $key=>$value) {
-
+			$attribute = '';
 			// See if the key has attributes
 			if (is_array($value) AND isset($value['<attributes>'])) { 
 				$attribute = ' ' . $value['<attributes>']; 

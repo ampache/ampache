@@ -544,6 +544,15 @@ class vauth {
 				$hashed_password[] = hash('sha256', $password);
 				$hashed_password[] = hash('sha256', 
 					Dba::escape(scrub_in($password)));
+
+				// Automagically update the password if it's 
+				// old and busted.
+				if($row['password'] == $hashed_password[1] &&
+					$hashed_password[0] != $hashed_password[1]) {
+					$user = User::get_from_username($username);
+					$user->update_password($password);
+				}
+
 				if(in_array($row['password'], $hashed_password)) {
 					$results['success']	= true;
 					$results['type']	= 'mysql';
