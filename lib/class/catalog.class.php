@@ -833,34 +833,25 @@ class Catalog extends database_object {
 
 	/**
 	 * get_duplicate_songs
-	 * This function takes a search type and returns a list of all song_ids that
-	 * are likely to be duplicates based on teh search method selected.
+	 *
+	 * This function takes a search type and returns a list of likely
+	 * duplicates.
 	 */
-	public static function get_duplicate_songs($search_method) {
+	public static function get_duplicate_songs($search_type) {
+		$where_sql = $_REQUEST['search_disabled'] ? '' : "WHERE `enabled` != '0'";
+		$sql = 'SELECT `id`, `artist`, `album`, `title`, ' .
+			'COUNT(`title`) FROM `song` ' . $where_sql . 
+			' GROUP BY `title`';
 
-		$where_sql = '';
-
-		if (!$_REQUEST['search_disabled']) {
-			$where_sql = 'WHERE enabled!=\'0\'';
+		if ($search_type == 'artist_title' || 
+			$search_type == 'artist_album_title') {
+			$sql .= ',`artist`';
+		}
+		if ($search_type == 'artist_album_title') {
+			$sql .= ',`album`';
 		}
 
-		// Setup the base SQL
-		$sql = "SELECT song.id AS song,artist.id AS artist,album.id AS album,title,COUNT(title) AS ctitle".
-			" FROM `song` LEFT JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
-			" LEFT JOIN `album` ON `album`.`id`=`song`.`album` $where_sql GROUP BY `song`.`title`";
-
-		// Add any Additional constraints
-		if ($search_method == "artist_title" OR $search_method == "artist_album_title") {
-			$sql = $sql.",artist.name";
-		}
-
-		if ($search_method == "artist_album_title") {
-			$sql = $sql.",album.name";
-		}
-
-		// Final componets
-		$sql = $sql." HAVING COUNT(title) > 1";
-		$sql = $sql." ORDER BY `ctitle`";
+		$sql .= ' HAVING COUNT(`title`) > 1 ORDER BY `title`';
 
 		$db_results = Dba::read($sql);
 
@@ -876,25 +867,24 @@ class Catalog extends database_object {
 
 	/**
 	 * get_duplicate_info
-	 * This takes a song, search type and auto flag and returns the duplicate songs in the correct
-	 * order, it sorts them by longest, higest bitrate, largest filesize, checking
-	 * the last one as most likely bad
+	 *
+	 * This takes a song id and search type and returns the
+	 * duplicate songs in the correct order, sorted by length, bitrate,
+	 * and filesize.
 	 */
-	public static function get_duplicate_info($item,$search_type) {
-		// Build the SQL
-		$sql = "SELECT `song`.`id`" .
-			" FROM song,artist,album".
-			" WHERE song.artist=artist.id AND song.album=album.id".
-			" AND song.title= '".Dba::escape($item['title'])."'";
+	public static function get_duplicate_info($item, $search_type) {
+		$sql = 'SELECT `id` FROM `song` ' .
+			"WHERE `title`='" . Dba::escape($item['title']) . "' ";
 
-		if ($search_type == "artist_title" || $search_type == "artist_album_title") {
-			$sql .="  AND artist.id = '".Dba::escape($item['artist'])."'";
+		if ($search_type == 'artist_title' || 
+			$search_type == 'artist_album_title') {
+			$sql .= "AND `artist`='" . Dba::escape($item['artist']) . "' ";
 		}
-		if ($search_type == "artist_album_title" ) {
-			$sql .="  AND album.id = '".Dba::escape($item['album'])."'";
+		if ($search_type == 'artist_album_title') {
+			$sql .= "AND `album` = '" . Dba::escape($item['album']) . "' ";
 		}
 
-		$sql .= " ORDER BY `time`,`bitrate`,`size` LIMIT 2";
+		$sql .= 'ORDER BY `time`,`bitrate`,`size`';
 		$db_results = Dba::read($sql);
 
 		$results = array();

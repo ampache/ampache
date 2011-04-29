@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Fixed duplicate searching even more
         - Committed minor bugfixes for Penguin theme
         - Added Fresh theme
         - Fixed spurious API handshake failure output
