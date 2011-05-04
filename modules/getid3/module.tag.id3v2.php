@@ -560,7 +560,6 @@ class getid3_id3v2
 			$exploded = explode("\x00", $parsedFrame['data'], 2);
 			$parsedFrame['ownerid'] = (isset($exploded[0]) ? $exploded[0] : '');
 			$parsedFrame['data']    = (isset($exploded[1]) ? $exploded[1] : '');
-			unset($parsedFrame['data']);
 
 		} elseif ((($id3v2_majorversion >= 3) && ($parsedFrame['frame_name'] == 'TXXX')) || // 4.2.2 TXXX User defined text information frame
 				(($id3v2_majorversion == 2) && ($parsedFrame['frame_name'] == 'TXX'))) {    // 4.2.2 TXX  User defined text information frame
