@@ -2144,8 +2144,8 @@ class Catalog extends database_object {
 	 * check_album
 	 * Searches for album; if found returns id else inserts and returns id
 	 */
-	public static function check_album($album, $album_year = 0, $disk = 0, 
-		$mbid = '', $readonly = false) {
+	public static function check_album($album, $album_year = 0,
+		$album_disk = 0, $mbid = '', $readonly = false) {
 
 		/* Clean up the values */
 		$album = trim($album);
@@ -2153,12 +2153,12 @@ class Catalog extends database_object {
 		// Not even sure if these can be negative, but better safe than
 		// llama.
 		$album_year = abs(intval($album_year));
-		$album_disk = abs(intval($disk));
+		$album_disk = abs(intval($album_disk));
 
 		/* Ohh no the album has lost its mojo */
 		if (!$album) {
 			$album = _('Unknown (Orphaned)');
-			unset($album_year);
+			unset($album_year, $album_disk);
 		}
 
 		// Remove the prefix so we can sort it correctly
@@ -2167,8 +2167,8 @@ class Catalog extends database_object {
 		$prefix = $trimmed['prefix'];
 
 		// Check to see if we've seen this album before
-		if (isset(self::$albums[$album][$album_year][$disk][$mbid])) {
-			return self::$albums[$album][$album_year][$disk][$mbid];
+		if (isset(self::$albums[$album][$album_year][$album_disk][$mbid])) {
+			return self::$albums[$album][$album_year][$album_disk][$mbid];
 		}
 
 		/* Set up the Query */
@@ -2218,7 +2218,7 @@ class Catalog extends database_object {
 		}
 
 		// Save the cache
-		self::$albums[$album][$album_year][$disk][$mbid] = $album_id;
+		self::$albums[$album][$album_year][$album_disk][$mbid] = $album_id;
 
 		return $album_id;
 
