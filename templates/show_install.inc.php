@@ -64,11 +64,11 @@ require $prefix . '/templates/install_header.inc.php';
 </tr>
 <tr>
 	<td class="align"><?php echo _("Ampache Database Username"); ?></td>
-	<td><input type="text" id="db_username" name="db_username" value="ampache" disabled="disabled" /></td>
+	<td><input type="text" id="db_username" name="db_username" value="ampache" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _("Ampache Database User Password"); ?></td>
-	<td><input type="password" id="db_password" name="db_password" value="" disabled="disabled" /></td>
+	<td><input type="password" id="db_password" name="db_password" value="" /></td>
 </tr>
 <tr>
 	<td class="align"><?php echo _('Overwrite Existing'); ?></td>
@@ -84,6 +84,7 @@ require $prefix . '/templates/install_header.inc.php';
 </tr>
 </table>
 </form>
+<script type="text/javascript">flipField('db_username');flipField('db_password');</script>
 	</div>
 	<div id="bottom">
     	<p><strong>Ampache Installation.</strong><br />
