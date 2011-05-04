@@ -1,120 +1,179 @@
 <?php
-// +----------------------------------------------------------------------+
-// | PHP version 5                                                        |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2002-2009 James Heinrich, Allan Hansen                 |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2 of the GPL license,         |
-// | that is bundled with this package in the file license.txt and is     |
-// | available through the world-wide-web at the following url:           |
-// | http://www.gnu.org/copyleft/gpl.html                                 |
-// +----------------------------------------------------------------------+
-// | getID3() - http://getid3.sourceforge.net or http://www.getid3.org    |
-// +----------------------------------------------------------------------+
-// | Authors: James Heinrich <infoØgetid3*org>                            |
-// |          Allan Hansen <ahØartemis*dk>                                |
-// +----------------------------------------------------------------------+
-// | module.audio.shorten.php                                             |
-// | Module for analyzing Shorten Audio files                             |
-// | dependencies: module.audio-video.riff.php                            |
-// +----------------------------------------------------------------------+
-//
-// $Id: module.audio.shorten.php,v 1.5 2006/12/03 19:28:18 ah Exp $
+/////////////////////////////////////////////////////////////////
+/// getID3() by James Heinrich <info@getid3.org>               //
+//  available at http://getid3.sourceforge.net                 //
+//            or http://www.getid3.org                         //
+/////////////////////////////////////////////////////////////////
+// See readme.txt for more details                             //
+/////////////////////////////////////////////////////////////////
+//                                                             //
+// module.audio.shorten.php                                    //
+// module for analyzing Shorten Audio files                    //
+// dependencies: NONE                                          //
+//                                                            ///
+/////////////////////////////////////////////////////////////////
 
 
-
-class getid3_shorten extends getid3_handler
+class getid3_shorten
 {
 
-    public function __construct(getID3 $getid3) {
+	function getid3_shorten(&$fd, &$ThisFileInfo) {
 
-        parent::__construct($getid3);
+		fseek($fd, $ThisFileInfo['avdataoffset'], SEEK_SET);
 
-        if (preg_match('#(1|ON)#i', ini_get('safe_mode'))) {
-            throw new getid3_exception('PHP running in Safe Mode - backtick operator not available, cannot analyze Shorten files.');
-        }
+		$ShortenHeader = fread($fd, 8);
+		if (substr($ShortenHeader, 0, 4) != 'ajkg') {
+			$ThisFileInfo['error'][] = 'Expecting "ajkg" at offset '.$ThisFileInfo['avdataoffset'].', found "'.substr($ShortenHeader, 0, 4).'"';
+			return false;
+		}
+		$ThisFileInfo['fileformat']            = 'shn';
+		$ThisFileInfo['audio']['dataformat']   = 'shn';
+		$ThisFileInfo['audio']['lossless']     = true;
+		$ThisFileInfo['audio']['bitrate_mode'] = 'vbr';
 
-        if (!`head --version`) {
-            throw new getid3_exception('head[.exe] binary not found in path. UNIX: typically /usr/bin. Windows: typically c:\windows\system32.');
-        }
+		$ThisFileInfo['shn']['version'] = getid3_lib::LittleEndian2Int(substr($ShortenHeader, 4, 1));
 
-        if (!`shorten -l`) {
-            throw new getid3_exception('shorten[.exe] binary not found in path. UNIX: typically /usr/bin. Windows: typically c:\windows\system32.');
-        }
-    }
+		fseek($fd, $ThisFileInfo['avdataend'] - 12, SEEK_SET);
+		$SeekTableSignatureTest = fread($fd, 12);
+		$ThisFileInfo['shn']['seektable']['present'] = (bool) (substr($SeekTableSignatureTest, 4, 8) == 'SHNAMPSK');
+		if ($ThisFileInfo['shn']['seektable']['present']) {
+			$ThisFileInfo['shn']['seektable']['length'] = getid3_lib::LittleEndian2Int(substr($SeekTableSignatureTest, 0, 4));
+			$ThisFileInfo['shn']['seektable']['offset'] = $ThisFileInfo['avdataend'] - $ThisFileInfo['shn']['seektable']['length'];
+			fseek($fd, $ThisFileInfo['shn']['seektable']['offset'], SEEK_SET);
+			$SeekTableMagic = fread($fd, 4);
+			if ($SeekTableMagic != 'SEEK') {
 
+				$ThisFileInfo['error'][] = 'Expecting "SEEK" at offset '.$ThisFileInfo['shn']['seektable']['offset'].', found "'.$SeekTableMagic.'"';
+				return false;
 
-    public function Analyze() {
+			} else {
 
-        $getid3 = $this->getid3;
+				// typedef struct tag_TSeekEntry
+				// {
+				//   unsigned long SampleNumber;
+				//   unsigned long SHNFileByteOffset;
+				//   unsigned long SHNLastBufferReadPosition;
+				//   unsigned short SHNByteGet;
+				//   unsigned short SHNBufferOffset;
+				//   unsigned short SHNFileBitOffset;
+				//   unsigned long SHNGBuffer;
+				//   unsigned short SHNBitShift;
+				//   long CBuf0[3];
+				//   long CBuf1[3];
+				//   long Offset0[4];
+				//   long Offset1[4];
+				// }TSeekEntry;
 
-        $getid3->include_module('audio-video.riff');
+				$SeekTableData = fread($fd, $ThisFileInfo['shn']['seektable']['length'] - 16);
+				$ThisFileInfo['shn']['seektable']['entry_count'] = floor(strlen($SeekTableData) / 80);
+				//$ThisFileInfo['shn']['seektable']['entries'] = array();
+				//$SeekTableOffset = 0;
+				//for ($i = 0; $i < $ThisFileInfo['shn']['seektable']['entry_count']; $i++) {
+				//	$SeekTableEntry['sample_number'] = getid3_lib::LittleEndian2Int(substr($SeekTableData, $SeekTableOffset, 4));
+				//	$SeekTableOffset += 4;
+				//	$SeekTableEntry['shn_file_byte_offset'] = getid3_lib::LittleEndian2Int(substr($SeekTableData, $SeekTableOffset, 4));
+				//	$SeekTableOffset += 4;
+				//	$SeekTableEntry['shn_last_buffer_read_position'] = getid3_lib::LittleEndian2Int(substr($SeekTableData, $SeekTableOffset, 4));
+				//	$SeekTableOffset += 4;
+				//	$SeekTableEntry['shn_byte_get'] = getid3_lib::LittleEndian2Int(substr($SeekTableData, $SeekTableOffset, 2));
+				//	$SeekTableOffset += 2;
+				//	$SeekTableEntry['shn_buffer_offset'] = getid3_lib::LittleEndian2Int(substr($SeekTableData, $SeekTableOffset, 2));
+				//	$SeekTableOffset += 2;
+				//	$SeekTableEntry['shn_file_bit_offset'] = getid3_lib::LittleEndian2Int(substr($SeekTableData, $SeekTableOffset, 2));
+				//	$SeekTableOffset += 2;
+				//	$SeekTableEntry['shn_gbuffer'] = getid3_lib::LittleEndian2Int(substr($SeekTableData, $SeekTableOffset, 4));
+				//	$SeekTableOffset += 4;
+				//	$SeekTableEntry['shn_bit_shift'] = getid3_lib::LittleEndian2Int(substr($SeekTableData, $SeekTableOffset, 2));
+				//	$SeekTableOffset += 2;
+				//	for ($j = 0; $j < 3; $j++) {
+				//		$SeekTableEntry['cbuf0'][$j] = getid3_lib::LittleEndian2Int(substr($SeekTableData, $SeekTableOffset, 4));
+				//		$SeekTableOffset += 4;
+				//	}
+				//	for ($j = 0; $j < 3; $j++) {
+				//		$SeekTableEntry['cbuf1'][$j] = getid3_lib::LittleEndian2Int(substr($SeekTableData, $SeekTableOffset, 4));
+				//		$SeekTableOffset += 4;
+				//	}
+				//	for ($j = 0; $j < 4; $j++) {
+				//		$SeekTableEntry['offset0'][$j] = getid3_lib::LittleEndian2Int(substr($SeekTableData, $SeekTableOffset, 4));
+				//		$SeekTableOffset += 4;
+				//	}
+				//	for ($j = 0; $j < 4; $j++) {
+				//		$SeekTableEntry['offset1'][$j] = getid3_lib::LittleEndian2Int(substr($SeekTableData, $SeekTableOffset, 4));
+				//		$SeekTableOffset += 4;
+				//	}
+				//
+				//	$ThisFileInfo['shn']['seektable']['entries'][] = $SeekTableEntry;
+				//}
 
-        fseek($getid3->fp, $getid3->info['avdataoffset'], SEEK_SET);
+			}
 
-        $shn_header = fread($getid3->fp, 8);
+		}
 
-        // Magic bytes: "ajkg"
+		if (preg_match('#(1|ON)#i', ini_get('safe_mode'))) {
+			$ThisFileInfo['error'][] = 'PHP running in Safe Mode - backtick operator not available, cannot run shntool to analyze Shorten files';
+			return false;
+		}
 
-        $getid3->info['fileformat']            = 'shn';
-        $getid3->info['audio']['dataformat']   = 'shn';
-        $getid3->info['audio']['lossless']     = true;
-        $getid3->info['audio']['bitrate_mode'] = 'vbr';
+		if (GETID3_OS_ISWINDOWS) {
 
-        $getid3->info['shn']['version'] = getid3_lib::LittleEndian2Int($shn_header{4});
+			$RequiredFiles = array('shorten.exe', 'cygwin1.dll', 'head.exe');
+			foreach ($RequiredFiles as $required_file) {
+				if (!is_readable(GETID3_HELPERAPPSDIR.$required_file)) {
+					$ThisFileInfo['error'][] = GETID3_HELPERAPPSDIR.$required_file.' does not exist';
+					return false;
+				}
+			}
+			$commandline = GETID3_HELPERAPPSDIR.'shorten.exe -x "'.$ThisFileInfo['filenamepath'].'" - | '.GETID3_HELPERAPPSDIR.'head.exe -c 64';
+			$commandline = str_replace('/', '\\', $commandline);
 
-        fseek($getid3->fp, $getid3->info['avdataend'] - 12, SEEK_SET);
+		} else {
 
-        $seek_table_signature_test = fread($getid3->fp, 12);
+			static $shorten_present;
+			if (!isset($shorten_present)) {
+				$shorten_present = file_exists('/usr/local/bin/shorten') || `which shorten`;
+			}
+			if (!$shorten_present) {
+				$ThisFileInfo['error'][] = 'shorten binary was not found in path or /usr/local/bin';
+				return false;
+			}
+			$commandline = (file_exists('/usr/local/bin/shorten') ? '/usr/local/bin/' : '' ) . 'shorten -x '.escapeshellarg($ThisFileInfo['filenamepath']).' - | head -c 64';
 
-        $getid3->info['shn']['seektable']['present'] = (bool)(substr($seek_table_signature_test, 4, 8) == 'SHNAMPSK');
-        if ($getid3->info['shn']['seektable']['present']) {
+		}
 
-            $getid3->info['shn']['seektable']['length'] = getid3_lib::LittleEndian2Int(substr($seek_table_signature_test, 0, 4));
-            $getid3->info['shn']['seektable']['offset'] = $getid3->info['avdataend'] - $getid3->info['shn']['seektable']['length'];
-            fseek($getid3->fp, $getid3->info['shn']['seektable']['offset'], SEEK_SET);
-            $seek_table_magic = fread($getid3->fp, 4);
+		$output = `$commandline`;
 
-            if ($seek_table_magic != 'SEEK') {
+		if (!empty($output) && (substr($output, 12, 4) == 'fmt ')) {
 
-                throw new getid3_exception('Expecting "SEEK" at offset '.$getid3->info['shn']['seektable']['offset'].', found "'.$seek_table_magic.'"');
-            }
+			getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.audio-video.riff.php', __FILE__, true);
 
-            $seek_table_data = fread($getid3->fp, $getid3->info['shn']['seektable']['length'] - 16);
-            $getid3->info['shn']['seektable']['entry_count'] = floor(strlen($seek_table_data) / 80);
-        }
+			$fmt_size = getid3_lib::LittleEndian2Int(substr($output, 16, 4));
+			$DecodedWAVFORMATEX = getid3_riff::RIFFparseWAVEFORMATex(substr($output, 20, $fmt_size));
+			$ThisFileInfo['audio']['channels']        = $DecodedWAVFORMATEX['channels'];
+			$ThisFileInfo['audio']['bits_per_sample'] = $DecodedWAVFORMATEX['bits_per_sample'];
+			$ThisFileInfo['audio']['sample_rate']     = $DecodedWAVFORMATEX['sample_rate'];
 
-        $commandline = 'shorten -x '.escapeshellarg(realpath($getid3->filename)).' - | head -c 64';
-        $output = `$commandline`;
+			if (substr($output, 20 + $fmt_size, 4) == 'data') {
 
-        if (@$output && substr($output, 12, 4) == 'fmt ') {
+				$ThisFileInfo['playtime_seconds'] = getid3_lib::LittleEndian2Int(substr($output, 20 + 4 + $fmt_size, 4)) / $DecodedWAVFORMATEX['raw']['nAvgBytesPerSec'];
 
-            $fmt_size = getid3_lib::LittleEndian2Int(substr($output, 16, 4));
-            $decoded_wav_format_ex = getid3_riff::RIFFparseWAVEFORMATex(substr($output, 20, $fmt_size));
+			} else {
 
-            $getid3->info['audio']['channels']        = $decoded_wav_format_ex['channels'];
-            $getid3->info['audio']['bits_per_sample'] = $decoded_wav_format_ex['bits_per_sample'];
-            $getid3->info['audio']['sample_rate']     = $decoded_wav_format_ex['sample_rate'];
+				$ThisFileInfo['error'][] = 'shorten failed to decode DATA chunk to expected location, cannot determine playtime';
+				return false;
 
-            if (substr($output, 20 + $fmt_size, 4) == 'data') {
+			}
 
-                $getid3->info['playtime_seconds'] = getid3_lib::LittleEndian2Int(substr($output, 20 + 4 + $fmt_size, 4)) / $decoded_wav_format_ex['raw']['nAvgBytesPerSec'];
+			$ThisFileInfo['audio']['bitrate'] = (($ThisFileInfo['avdataend'] - $ThisFileInfo['avdataoffset']) / $ThisFileInfo['playtime_seconds']) * 8;
 
-            } else {
+		} else {
 
-                throw new getid3_exception('shorten failed to decode DATA chunk to expected location, cannot determine playtime');
-            }
+			$ThisFileInfo['error'][] = 'shorten failed to decode file to WAV for parsing';
+			return false;
 
-            $getid3->info['audio']['bitrate'] = (($getid3->info['avdataend'] - $getid3->info['avdataoffset']) / $getid3->info['playtime_seconds']) * 8;
+		}
 
-        } else {
-
-            throw new getid3_exception('shorten failed to decode file to WAV for parsing');
-            return false;
-        }
-
-        return true;
-    }
+		return true;
+	}
 
 }
 

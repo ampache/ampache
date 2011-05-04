@@ -1,27 +1,24 @@
 <?php
-// +----------------------------------------------------------------------+
-// | PHP version 5                                                        |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2002-2009 James Heinrich, Allan Hansen                 |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2 of the GPL license,         |
-// | that is bundled with this package in the file license.txt and is     |
-// | available through the world-wide-web at the following url:           |
-// | http://www.gnu.org/copyleft/gpl.html                                 |
-// +----------------------------------------------------------------------+
-// | getID3() - http://getid3.sourceforge.net or http://www.getid3.org    |
-// +----------------------------------------------------------------------+
-// | Authors: Nigel Barnes <ngbarnesØhotmail*com>                         |
-// |          James Heinrich <infoØgetid3*org>                            |
-// +----------------------------------------------------------------------+
-// | module.misc.cue.php                                                  |
-// | module for analyzing CUEsheet files                                  |
-// | dependencies: NONE                                                   |
-// +----------------------------------------------------------------------+
-// | PHP Module originally written by Nigel Barnes <ngbarnesØhotmail*com> |
-// | * This is a PHP conversion of CueSharp v0.5 *                        |
-// | *  by Wyatt O'Day (wyday.com/cuesharp)      *                        |
-// +----------------------------------------------------------------------+
+/////////////////////////////////////////////////////////////////
+/// getID3() by James Heinrich <info@getid3.org>               //
+//  available at http://getid3.sourceforge.net                 //
+//            or http://www.getid3.org                         //
+/////////////////////////////////////////////////////////////////
+// See readme.txt for more details                             //
+/////////////////////////////////////////////////////////////////
+//                                                             //
+// module.misc.cue.php                                         //
+// module for analyzing CUEsheet files                         //
+// dependencies: NONE                                          //
+//                                                             //
+/////////////////////////////////////////////////////////////////
+//                                                             //
+// Module originally written [2009-Mar-25] by                  //
+//      Nigel Barnes <ngbarnesØhotmail*com>                    //
+// Minor reformatting and similar small changes to integrate   //
+//   into getID3 by James Heinrich <info@getid3.org>           //
+//                                                            ///
+/////////////////////////////////////////////////////////////////
 
 /*
  * CueSheet parser by Nigel Barnes.
@@ -33,21 +30,17 @@
  * A CueSheet class used to open and parse cuesheets.
  *
  */
-class getid3_cue extends getid3_handler
+class getid3_cue
 {
 	var $cuesheet = array();
 
-	function Analyze() {
-        $info = &$this->getid3->info;
-        $info['fileformat'] = 'cue';
-
-        @fseek($this->getid3->fp, 0);
-        $buffer = @fread($this->getid3->fp, $info['filesize']);
-
-		$this->readCueSheet($buffer);
-		$info['cue'] = $this->cuesheet;
+	function getid3_cue(&$fd, &$ThisFileInfo) {
+		$ThisFileInfo['fileformat'] = 'cue';
+		$this->readCueSheetFilename($ThisFileInfo['filenamepath']);
+		$ThisFileInfo['cue'] = $this->cuesheet;
 		return true;
 	}
+
 
 
 	function readCueSheetFilename($filename)
@@ -136,11 +129,13 @@ class getid3_cue extends getid3_handler
 	*/
 	function parseComment($line, $track_on)
 	{
-		@list($comment_REM, $comment_type, $comment_data) = explode(' ', $line, 3);
-		if (($comment_REM == 'REM') && $comment_type)
-		{
+		$explodedline = explode(' ', $line, 3);
+		$comment_REM  = (isset($explodedline[0]) ? $explodedline[0] : '');
+		$comment_type = (isset($explodedline[1]) ? $explodedline[1] : '');
+		$comment_data = (isset($explodedline[2]) ? $explodedline[2] : '');
+		if (($comment_REM == 'REM') && $comment_type) {
 			$comment_type  = strtolower($comment_type);
-			$commment_data =       trim($comment_data, ' "');
+			$commment_data = trim($comment_data, ' "');
 			if ($track_on != -1) {
 				$this->cuesheet['tracks'][$track_on]['comments'][$comment_type][] = $comment_data;
 			} else {
@@ -247,7 +242,10 @@ class getid3_cue extends getid3_handler
 		}
 
 		//extract the minutes, seconds, and frames
-		@list($minutes, $seconds, $frames) = explode(':', $line);
+		$explodedline = explode(':', $line);
+		$minutes = (isset($explodedline[0]) ? $explodedline[0] : '');
+		$seconds = (isset($explodedline[1]) ? $explodedline[1] : '');
+		$frames  = (isset($explodedline[2]) ? $explodedline[2] : '');
 
 		switch ($type) {
 			case 'index':
@@ -309,7 +307,4 @@ class getid3_cue extends getid3_handler
 
 }
 
-/**************************************************************************************************
- End of file
- **************************************************************************************************/
 ?>
