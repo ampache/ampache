@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Updated getID3 to 1.8.5
         - Fixed duplicate searching even more
         - Committed minor bugfixes for Penguin theme
         - Added Fresh theme
