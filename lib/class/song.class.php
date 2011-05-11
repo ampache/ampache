@@ -835,53 +835,6 @@ class Song extends database_object implements media {
 
 	} // get_rel_path
 
-
-	/*!
-		@function fill_info
-		@discussion this takes the $results from getid3 and attempts to fill
-			as much information as possible from the file name using the
-			pattern set in the current catalog
-	*/
-	function fill_info($results,$pattern,$catalog_id,$key) {
-
-		$filename = $this->get_rel_path($results['file'],$catalog_id);
-
-		if (!strlen($results[$key]['title'])) {
-			$results[$key]['title']		= $this->get_info_from_filename($filename,$pattern,"%t");
-		}
-		if (!strlen($results[$key]['track'])) {
-			$results[$key]['track']		= $this->get_info_from_filename($filename,$pattern,"%T");
-		}
-		if (!strlen($results[$key]['year'])) {
-			$results[$key]['year']		= $this->get_info_from_filename($filename,$pattern,"%y");
-		}
-		if (!strlen($results[$key]['album'])) {
-			$results[$key]['album']		= $this->get_info_from_filename($filename,$pattern,"%A");
-		}
-		if (!strlen($results[$key]['artist'])) {
-			$results[$key]['artist']	= $this->get_info_from_filename($filename,$pattern,"%a");
-		}
-
-		return $results;
-
-	} // fill_info
-
-	/*!
-		@function get_info_from_filename
-		@discussion get information from a filename based on pattern
-	*/
-	function get_info_from_filename($file,$pattern,$tag) {
-
-		$preg_pattern = str_replace("$tag","(.+)",$pattern);
-		$preg_pattern = preg_replace("/\%\w/",".+",$preg_pattern);
-		$preg_pattern = "/" . str_replace("/","\/",$preg_pattern) . "\..+/";
-
-		preg_match($preg_pattern,$file,$matches);
-
-		return stripslashes($matches[1]);
-
-	} // get_info_from_filename
-
 	/**
 	 * play_url
 	 * This function takes all the song information and correctly formats a
