@@ -64,7 +64,7 @@ function focus(){ document.login.username.focus(); }
 
 			<div class="loginfield" id="usernamefield">
         <label for="username"><?php echo  _('Username'); ?>:</label>
-			  <input class="text_input" type="text" id="username" name="username" value="<?php echo  $_REQUEST['username']; ; ?>" />
+			  <input class="text_input" type="text" id="username" name="username" value="<?php echo scrub_out($_REQUEST['username']); ?>" />
       </div>
 			<div class="loginfield" id="passwordfield">
         <label for="password"><?php echo  _('Password'); ?>:</label>
