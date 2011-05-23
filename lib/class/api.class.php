@@ -155,7 +155,7 @@ class Api {
 
 		// Clean incomming variables
 		$user_id 	= Dba::escape($user_id);
-		$timestamp 	= intval($timestamp);
+		$timestamp 	= preg_replace('/[^0-9]/', '', $timestamp);
 		$ip 		= inet_pton($ip);
 
 		// Log this attempt
