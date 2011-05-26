@@ -51,11 +51,6 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
 	<input id="unplayedCB" type="checkbox" <?php echo $string = $browse->get_filter('unplayed') ? 'checked="checked"' : ''; ?>/>
 	<label id="unplayedLabel" for="unplayedCB"><?php echo _('Unplayed'); ?></label><br />
 <?php } ?>
-<?php if (in_array('show_art',$allowed_filters)) { ?>
-	<input id="show_artCB" type="checkbox" <?php echo $string = $browse->get_filter('show_art') ? 'checked="checked"' : ''; ?>/>
-	<label id="show_artLabel" for="show_artCB"><?php echo _('Show Art'); ?></label><br />
-	<?php echo Ajax::observe('show_artCB','click',Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id, '')); ?>
-<?php } // if show_art ?>
 <?php if (in_array('playlist_type',$allowed_filters)) { ?>
 	<input id="show_allplCB" type="checkbox" <?php echo $string = $browse->get_filter('playlist_type') ? 'checked="checked"' : ''; ?>/>
 	<label id="show_allplLabel" for="showallplCB"><?php echo _('All Playlists'); ?></label><br />
@@ -99,5 +94,9 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
 <?php echo Ajax::observe('catalog_select','click',Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id,'catalog_select','catalog_choice'),'1'); ?>
 </form>
 <?php } ?>
+<?php if (in_array('show_art',$allowed_filters)) { ?>
+	<input id="show_artCB" class="button" type="submit" value="<?php echo _('Toggle Artwork'); ?>" <?php echo $string = $browse->get_filter('show_art') ? 'selected="selected"' : ''; ?>/>
+	<?php echo Ajax::observe('show_artCB','click',Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id, '')); ?>
+<?php } // if show_art ?>
 </div>
 </li>

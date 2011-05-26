@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Toggle artwork with a button instead of a checkbox (patch from mywindow)
         - API handshake code cleanup, including a bugfix from postfuturist
         - Improved install process when JavaScript is disabled
         - Updated getID3 to 1.8.5
