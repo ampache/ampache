@@ -4,7 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
-        - Install improvement when JavaScript is disabled
+        - Improved install process when JavaScript is disabled
         - Updated getID3 to 1.8.5
         - Fixed duplicate searching even more
         - Committed minor bugfixes for Penguin theme
