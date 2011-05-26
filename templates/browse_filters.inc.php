@@ -91,7 +91,7 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
 		?>
 				
 	</select>
-<?php echo Ajax::observe('catalog_select','click',Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id,'catalog_select','catalog_choice'),'1'); ?>
+<?php echo Ajax::observe('catalog_select', 'change', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id,'catalog_select', 'catalog_choice'), true); ?>
 </form>
 <?php } ?>
 <?php if (in_array('show_art',$allowed_filters)) { ?>
