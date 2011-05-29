@@ -31,7 +31,7 @@
  * This is the template for the searches... amazing!
  */
 ?>
-<?php show_box_top(_('Search Ampache') . "..."); ?>
+<?php show_box_top(_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <form id="search" name="search" method="post" action="<?php echo Config::get('web_path'); ?>/search.php?type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata" cellpadding="3" cellspacing="0">
 	<tr>
