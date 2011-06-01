@@ -365,6 +365,9 @@ class Update {
 		$update_string = '- Add table for dynamic playlists.<br />';
 		$version[] = array('version' => '360006','description' => $update_string);
 
+		$update_string = '- Add local auth method to session.type.<br />';
+		$version[] = array('version' => '360007','description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -1990,6 +1993,16 @@ class Update {
 		$db_results = Dba::write($sql);
 
 		self::set_version('db_version','360006');
+	}
+
+	/**
+	 * update_360007
+	 * This fixes the session table
+	 */
+	public static function update_360007() {
+		$sql = "ALTER TABLE `session` MODIFY `type` ENUM ('mysql','ldap','http','api','xml-rpc','local') NOT NULL";
+		$db_results = Dba::write($sql);
+		self::set_version('db_version','360007');
 	}
 
 } // end update class

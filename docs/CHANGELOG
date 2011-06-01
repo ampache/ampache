@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Fixed require_session when auth_type is 'local'
         - Catalog filtering fix
         - Toggle artwork with a button instead of a checkbox (patch from mywindow)
         - API handshake code cleanup, including a bugfix from postfuturist
