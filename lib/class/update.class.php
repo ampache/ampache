@@ -497,7 +497,7 @@ class Update {
 
 		$user_array = array();
 
-		while ($r = mysql_fetch_assoc($db_results)) {
+		while ($r = Dba::fetch_assoc($db_results)) {
 			$username = $r['username'];
 			$user_array[$username] = Dba::escape($r['id']);
 		} // end while
