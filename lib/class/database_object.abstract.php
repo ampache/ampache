@@ -76,6 +76,13 @@ abstract class database_object {
 	} // get_info
 
 	/**
+	 * clear_cache
+	 */
+	public static function clear_cache() {
+		self::$object_cache = array();
+	}
+
+	/**
 	 * is_cached
 	 * this checks the cache to see if the specified object is there
 	 */
