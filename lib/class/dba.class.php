@@ -136,13 +136,18 @@ class Dba {
 	/**
 	 * fetch_assoc
 	 * This emulates the mysql_fetch_assoc and takes a resource result
-	 * we force it to always return an array, albit an empty one
+	 * we force it to always return an array, albeit an empty one
+	 * The optional finish parameter affects whether we automatically clean
+	 * up the result set after the last row is read.
 	 */
-	public static function fetch_assoc($resource) {
+	public static function fetch_assoc($resource, $finish = true) {
 
 		$result = mysql_fetch_assoc($resource);
 
 		if (!$result) {
+			if ($finish) {
+				self::finish($resource);
+			}
 			return array();
 		}
 
@@ -153,13 +158,18 @@ class Dba {
 	/**
 	 * fetch_row
 	 * This emulates the mysql_fetch_row and takes a resource result
-	 * we force it to always return an array, albit an empty one
+	 * we force it to always return an array, albeit an empty one
+	 * The optional finish parameter affects whether we automatically clean
+	 * up the result set after the last row is read.
 	 */
-	public static function fetch_row($resource) {
+	public static function fetch_row($resource, $finish = true) {
 
 		$result = mysql_fetch_row($resource);
 
 		if (!$result) {
+			if ($finish) {
+				self::finish($resource);
+			}
 			return array();
 		}
 
@@ -183,6 +193,14 @@ class Dba {
 
 		return $result;
 	} // num_rows
+
+	/**
+	 * seek
+	 * This resets the row pointer to the specified position
+	 */
+	public static function seek($resource, $row) {
+		return mysql_data_seek($resource, $row);
+	}
 
 	/**
 	 * finish
