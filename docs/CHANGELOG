@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Fixed search_songs API method to use Search::run properly
         - Fixed require_session when auth_type is 'local'
         - Catalog filtering fix
         - Toggle artwork with a button instead of a checkbox (patch from mywindow)

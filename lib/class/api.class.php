@@ -581,6 +581,7 @@ class Api {
 	 * This searches the songs and returns... songs
 	 */
 	public static function search_songs($input) {
+			$array['type'] = 'song';
 			$array['rule_1'] = 'anywhere';
 			$array['rule_1_input'] = $input['filter'];
 			$array['rule_1_operator'] = 0;
