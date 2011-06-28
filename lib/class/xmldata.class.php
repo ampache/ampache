@@ -446,6 +446,8 @@ class xmlData {
 					$tag_string .
 					"\t<track>$song->track</track>\n" .
 					"\t<time>$song->time</time>\n" .
+					"\t<year>$song->year</year>\n" .
+					"\t<bitrate>$song->bitrate</bitrate>\n".
 					"\t<mime>$song->mime</mime>\n" .
 					"\t<url><![CDATA[" . Song::play_url($song->id) . "]]></url>\n" .
 					"\t<size>$song->size</size>\n" .

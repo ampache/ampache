@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - API now returns year and bitrate for songs
         - Fixed search_songs API method to use Search::run properly
         - Fixed require_session when auth_type is 'local'
         - Catalog filtering fix
