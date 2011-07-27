@@ -195,5 +195,17 @@
 	}
 ?>
 </td>
+</tr><tr>
+<td><?php echo _('ampache.cfg.php is writable'); ?></td>
+<td>
+<?php
+	if (!check_config_writable()) {
+		echo debug_result('', false);
+	}
+	else {
+		echo debug_result('', true);
+	}
+?>
+</td>
 </tr>
 </table>

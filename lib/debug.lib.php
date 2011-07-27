@@ -311,6 +311,17 @@ function check_mbstring() {
 } // check_mbstring
 
 /**
+ * check_config_writable
+ * This checks whether we can write the config file
+ */
+function check_config_writable() {
+
+	// file eixsts && is writable, or dir is writable
+	return ((file_exists(Config::get('prefix') . '/config/ampache.cfg.php') && is_writable(Config::get('prefix') . '/config/ampache.cfg.php')) 
+		|| (!file_exists(Config::get('prefix') . '/config/ampache.cfg.php') && is_writeable(Config::get('prefix') . '/config/')));
+}
+
+/**
  * generate_config
  * This takes an array of results and re-generates the config file
  * this is used by the installer and by the admin/system page

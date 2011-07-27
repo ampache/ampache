@@ -116,8 +116,11 @@ switch ($_REQUEST['action']) {
 			Error::add('config',_('Error: Unable to make Database Connection') . mysql_error());
 		}
 
+		// Was download pressed?
+		$download = (!isset($_POST['write']));
+
 		if (!Error::occurred()) {
-			$created_config = install_create_config($web_path,$username,$password,$hostname,$database);
+			$created_config = install_create_config($web_path,$username,$password,$hostname,$database,$download);
 		}
 
 		require_once 'templates/show_install_config.inc.php';

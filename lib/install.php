@@ -234,11 +234,9 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 
 /**
  * install_create_config
- * attempts to write out the config file
- * if it can't write it out it will prompt the
- * user to download the config file.
+ * attempts to write out the config file or offer it as a download
  */
-function install_create_config($web_path,$username,$password,$hostname,$database) {
+function install_create_config($web_path,$username,$password,$hostname,$database,$download) {
 
 	$config_file = Config::get('prefix') . '/config/ampache.cfg.php';
 
@@ -262,7 +260,7 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 		Error::add('general',"Database Connection Failed Check Hostname, Username and Password");
 		return false;
 	}
-	if (!$db_selected = @mysql_select_db($database, $dbh)) {
+	if (!@mysql_select_db($database, $dbh)) {
 		Error::add('general',"Database Selection Failure Check Existance of $database");
 		return false;
 	}
@@ -270,22 +268,24 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 	$final = generate_config($data);
 
 	// Make sure the directory is writable OR the empty config file is
-	if (!is_writeable(Config::get('prefix') . '/config/') && !is_writeable($config_file)) {
-		// Fall back to the old method
-		$browser = new Browser();
-		$browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, filesize('config/ampache.cfg.php.dist'));
-		echo $final;
-		exit();
-	}
-	else {
-		// Open the file and try to write it
-		$fhandle = fopen($config_file,'w');
-		if (!fwrite($fhandle,$final)) {
-			Error::add('general',"Error Writing config file");
-			fclose ($fhandle);
+	if (!$download) {
+		if (!check_config_writable()) {
+			Error:add('general',"Config file is not writable");
 			return false;
 		}
-		fclose ($fhandle);
+		else {
+			// Given that $final is > 0, we can ignore lazy comparison problems
+			if (!file_put_contents($config_file,$final)) {
+				Error::add('general',"Error Writing config file");
+				return false;
+			}
+		}
+	}
+	else {
+		$browser = new Browser();
+		$browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, strlen($final));
+		echo $final;
+		exit();
 	}
 
 	return true;

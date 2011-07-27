@@ -66,7 +66,8 @@ require $prefix . '/templates/install_header.inc.php';
 <tr>
 	<td>&nbsp;</td>
 	<td>
-		<input type="submit" value="<?php echo _('Write Config'); ?>" />
+		<input type="submit" name="download" value="<?php echo _('Download'); ?>" />
+		<input type="submit" name="write" value="<?php echo _('Write'); ?>" <?php if (!check_config_writable()) { echo "disabled "; } ?>/>
 		<input type="hidden" name="htmllang" value="<?php echo $htmllang; ?>" />
 		<input type="hidden" name="charset" value="<?php echo $charset; ?>" />
 	</td>
