@@ -146,7 +146,7 @@ class Artist extends database_object {
 	 * gets the album ids that this artist is a part
 	 * of
 	 */
-	public function get_albums($catalog) {
+	public function get_albums($catalog = null) {
 
 		if($catalog) {
 			$catalog_join = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";

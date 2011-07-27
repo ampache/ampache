@@ -24,7 +24,7 @@
 <script type="text/javascript" src="<?php echo Config::get('web_path'); ?>/lib/javascript/search.js"></script>
 <script type="text/javascript" src="<?php echo Config::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>"></script>
 
-<?php show_box_top(_('Rules') . "..."); ?>
+<?php show_box_top(_('Rules') . "...", 'box box_rules'); ?>
 <table class="tabledata" cellpadding="3" cellspacing="0">
 <tbody id="searchtable">
 	<tr>

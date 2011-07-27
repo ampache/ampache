@@ -330,7 +330,7 @@ class Access {
 	 * @param	string	$ip	IP Address.
 	 * @return	boolean
 	 */
-	public static function check_network($type,$user,$level,$ip='') {
+	public static function check_network($type, $user, $level, $ip=null) {
 
 		if (!Config::get('access_control')) {
 			switch ($type) {
@@ -343,56 +343,49 @@ class Access {
 			} // end switch
 		} // end if access control is turned off
 
-		// Clean incomming variables
-		$ip 	= $ip ? Dba::escape(inet_pton($ip)) : Dba::escape(inet_pton($_SERVER['REMOTE_ADDR']));
+		// Clean incoming variables
+		$ip 	= $ip 
+			? Dba::escape(inet_pton($ip)) 
+			: Dba::escape(inet_pton($_SERVER['REMOTE_ADDR']));
 		$user 	= Dba::escape($user);
 		$level	= Dba::escape($level);
 
 		switch ($type) {
-			/* This is here because we want to at least check IP before even creating the xml-rpc server
-			 * however we don't have the key that was passed yet so we've got to do just ip
-			 */
-			case 'init-rpc':
-			case 'init-xml-rpc':
-				$sql = "SELECT `id` FROM `access_list`" .
-					" WHERE `start` <= '$ip' AND `end` >= '$ip' AND `type`='rpc' AND `level` >= '$level'";
-			break;
-			case 'rpc':
-			case 'xml-rpc':
-				$sql = "SELECT `id` FROM `access_list`" .
-					" WHERE `start` <= '$ip' AND `end` >= '$ip'" .
-					" AND `level` >= '$level' AND `type`='rpc'";
-			break;
 			case 'init-api':
-				$type = 'rpc';
 				if ($user) {
-					$client = User::get_from_username($user);
-					$user = $client->id;
+					$user = User::get_from_username($user);
+					$user = $user->id;
 				}
+			case 'api':
+				$type = 'rpc';
 			case 'network':
 			case 'interface':
 			case 'stream':
+			break;
 			default:
-				$sql = "SELECT `id` FROM `access_list`" .
-					" WHERE `start` <= '$ip' AND `end` >= '$ip'" .
-					" AND `level` >= '$level' AND `type` = '$type'";
-				if (strlen($user)) { $sql .= " AND (`user` = '$user' OR `user` = '-1')"; }
-				else { $sql .= " AND `user` = '-1'"; }
+				return false;
 			break;
 		} // end switch on type
 
+		$sql = 'SELECT `id` FROM `access_list` ' .
+			"WHERE `start` <= '$ip' AND `end` >= '$ip' " .
+			"AND `level` >= '$level' AND `type` = '$type'";
+
+		if (strlen($user) && $user != '-1') {
+			$sql .= " AND `user` IN('$user', '-1')";
+		}
+		else {
+			$sql .= " AND `user` = '-1'";
+		}
+
 		$db_results = Dba::read($sql);
 
-		// Yah they have access they can use the mojo
 		if (Dba::fetch_row($db_results)) {
+			// Yah they have access they can use the mojo
 			return true;
 		}
 
-		// No Access Sucks to be them.
-		else {
-			return false;
-		}
-
+		return false;
 	} // check_network
 
 	/**

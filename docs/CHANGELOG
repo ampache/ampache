@@ -4,7 +4,13 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
-        - Install improvement when JavaScript is disabled
+        - API now returns year and bitrate for songs
+        - Fixed search_songs API method to use Search::run properly
+        - Fixed require_session when auth_type is 'local'
+        - Catalog filtering fix
+        - Toggle artwork with a button instead of a checkbox (patch from mywindow)
+        - API handshake code cleanup, including a bugfix from postfuturist
+        - Improved install process when JavaScript is disabled
         - Updated getID3 to 1.8.5
         - Fixed duplicate searching even more
         - Committed minor bugfixes for Penguin theme

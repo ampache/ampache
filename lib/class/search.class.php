@@ -461,6 +461,19 @@ class Search extends playlist_object {
 				$request['operator'] = 'AND';
 			break;
 		} // end switcn on operator
+		
+		// Verify the type
+		switch($data['type']) {
+			case 'album':
+			case 'artist':
+			case 'video':
+			case 'song':
+				$request['type'] = $data['type'];
+			break;
+			default:
+				$request['type'] = 'song';
+			break;
+		}
 
 		return $request;
 	} // end clean_request
@@ -504,7 +517,7 @@ class Search extends playlist_object {
 		/* Create an array of the object we need to search on */
 		$data = Search::clean_request($data);
 
-		$search = new Search($_REQUEST['type']);
+		$search = new Search($data['type']);
 		$search->parse_rules($data);
 
 		/* Generate BASE SQL */

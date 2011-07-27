@@ -754,6 +754,8 @@ function update_text($field, $value) {
 	echo '<script type="text/javascript">';
 	echo "updateText('$field', '$value');";
 	echo "</script>\n";
+	ob_flush();
+	flush();
 }
 
 /**
