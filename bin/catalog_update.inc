@@ -26,6 +26,8 @@
  */
 
 define('NO_SESSION','1');
+define('CLI', 1);
+
 $path = dirname(__FILE__);
 $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
@@ -151,8 +153,9 @@ echo "\n";
 
 function ob_html_strip($string) {
 
-	$string = preg_replace("/update_txt\('.+'\);update_txt\('(.+)','.+'\);/","$1",$string);
-	$string = preg_replace("/update_.+/","",$string);
+	//$string = preg_replace("/update_txt\('.+'\);update_txt\('(.+)','.+'\);/","$1",$string);
+	//$string = preg_replace("/update_.+/","",$string);
+	$string = str_replace('<br />', "\n", $string);
 	$string = strip_tags($string);
 	$string = preg_replace("/[\r\n]+[\s\t]*[\r\n]+/","\n",$string);
 	$string = trim($string);

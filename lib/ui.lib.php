@@ -751,6 +751,10 @@ function toggle_visible($element) {
  * Convenience function
  */
 function update_text($field, $value) {
+	if(defined('CLI')) {
+		echo "$value\n";
+		return;
+	}
 	echo '<script type="text/javascript">';
 	echo "updateText('$field', '$value');";
 	echo "</script>\n";
