@@ -157,6 +157,7 @@ function ob_html_strip($string) {
 	//$string = preg_replace("/update_.+/","",$string);
 	$string = str_replace('<br />', "\n", $string);
 	$string = strip_tags($string);
+	$string = html_entity_decode($string);
 	$string = preg_replace("/[\r\n]+[\s\t]*[\r\n]+/","\n",$string);
 	$string = trim($string);
 	return $string;
