@@ -60,6 +60,7 @@ class Catalog extends database_object {
 	private static $artists	= array();
 	private static $tags	= array();
 	private static $_art_albums = array();
+	private static $_ticker;
 
 	/**
 	 * Constructor
@@ -81,6 +82,19 @@ class Catalog extends database_object {
 		}
 
 	} //constructor
+
+        /**
+	 * _check_ticker
+	 * Stupid little cutesie thing
+	 */
+        private static function _check_ticker() {
+		if (!isset(self::$_ticker) || (time() > self::$_ticker + 1)) {
+			self::$_ticker = time();
+			return true;
+		}
+
+		return false;
+	}
 
 	/**
 	 * _create_filecache
@@ -205,19 +219,19 @@ class Catalog extends database_object {
 	 * objects that are associated with this catalog. This is used
 	 * to build the stats box, it also calculates time
 	 */
-	public static function get_stats($catalog_id=0) {
+	public static function get_stats($catalog_id = null) {
 
-		$results 		= self::count_songs($catalog_id);
-		$results	 	= array_merge(self::count_users($catalog_id),$results);
-		$results['tags']	= self::count_tags();
-		$results 		= array_merge(self::count_video($catalog_id),$results);
+		$results = self::count_songs($catalog_id);
+		$results = array_merge(self::count_users($catalog_id), $results);
+		$results['tags'] = self::count_tags();
+		$results = array_merge(self::count_videos($catalog_id), $results);
 
-		$hours = floor($results['time']/3600);
+		$hours = floor($results['time'] / 3600);
 
 		$results['formatted_size'] = format_bytes($results['size']);
 
-		$days = floor($hours/24);
-		$hours = $hours%24;
+		$days = floor($hours / 24);
+		$hours = $hours % 24;
 
 		$time_text = "$days ";
 		$time_text .= ngettext('day','days',$days);
@@ -343,28 +357,32 @@ class Catalog extends database_object {
 	} // run_add
 
 	/**
-	 * count_video
+	 * count_videos
 	 * This returns the current # of video files we've got in the db
 	 */
-	public static function count_video($catalog_id=0) {
+	public static function count_videos($catalog_id = null) {
 
 		$catalog_search = $catalog_id ? "WHERE `catalog`='" . Dba::escape($catalog_id) . "'" : '';
 
-		$sql = "SELECT COUNT(`id`) AS `video` FROM `video` $catalog_search";
+		$sql = 'SELECT COUNT(`id`) AS `videos` FROM `video` ';
+		if ($catalog_id) {
+			$sql .= "WHERE `catalog`='" . Dba::escape($catalog_id) . "'";
+		}
 		$db_results = Dba::read($sql);
 
 		$row = Dba::fetch_assoc($db_results);
 
 		return $row;
 
-	} // count_video
+	} // count_videos
 
 	/**
 	 * count_tags
 	 * This returns the current # of unique tags that exist in the database
 	 */
-	public static function count_tags($catalog_id=0) {
+	public static function count_tags($catalog_id = null) {
 
+		// FIXME: Ignores catalog_id
 		$sql = "SELECT COUNT(`id`) FROM `tag`";
 		$db_results = Dba::read($sql);
 
@@ -376,26 +394,26 @@ class Catalog extends database_object {
 
 	/**
 	 * count_songs
-	 * This returns the current # of songs, albums, artists, genres
+	 * This returns the current # of songs, albums, artists
 	 * in this catalog
 	 */
-	public static function count_songs($catalog_id='') {
+	public static function count_songs($catalog_id = null) {
 
-		$catalog_search = $catalog_id ? "WHERE `catalog`='" . Dba::escape($catalog_id) . "'" : '';
+		$where_sql = $catalog_id ? "WHERE `catalog`='" . Dba::escape($catalog_id) . "'" : '';
 
-		$sql = "SELECT COUNT(`id`),SUM(`time`),SUM(`size`) FROM `song` $catalog_search";
+		$sql = "SELECT COUNT(`id`),SUM(`time`),SUM(`size`) FROM `song` $where_sql";
 		$db_results = Dba::read($sql);
 		$data = Dba::fetch_row($db_results);
 		$songs	= $data['0'];
 		$time	= $data['1'];
 		$size	= $data['2'];
 
-		$sql = "SELECT COUNT(DISTINCT(`album`)) FROM `song` $catalog_search";
+		$sql = "SELECT COUNT(DISTINCT(`album`)) FROM `song` $where_sql";
 		$db_results = Dba::read($sql);
 		$data = Dba::fetch_row($db_results);
 		$albums = $data['0'];
 
-		$sql = "SELECT COUNT(DISTINCT(`artist`)) FROM `song` $catalog_search";
+		$sql = "SELECT COUNT(DISTINCT(`artist`)) FROM `song` $where_sql";
 		$db_results = Dba::read($sql);
 		$data = Dba::fetch_row($db_results);
 		$artists = $data['0'];
@@ -414,10 +432,10 @@ class Catalog extends database_object {
 	 * count_users
 	 * This returns the total number of users in the ampache instance
 	 */
-	public static function count_users($catalog_id='') {
+	public static function count_users($catalog_id = null) {
 
 		// Count total users
-		$sql = "SELECT COUNT(id) FROM `user`";
+		$sql = "SELECT COUNT(`id`) FROM `user`";
 		$db_results = Dba::read($sql);
 		$data = Dba::fetch_row($db_results);
 		$results['users'] = $data['0'];
@@ -425,10 +443,11 @@ class Catalog extends database_object {
 		// Get the connected users
 		$time = time();
 		$last_seen_time = $time - 1200;
-		$sql =  "SELECT count(DISTINCT s.username) FROM session AS s " .
-			"INNER JOIN user AS u ON s.username = u.username " .
-			"WHERE s.expire > " . $time . " " .
-			"AND u.last_seen > " . $last_seen_time;
+		$sql =  'SELECT COUNT(DISTINCT `session`.`username`) ' .
+			'FROM `session` INNER JOIN `user` ' .
+			'ON `session`.`username` = `user`.`username` ' .
+			"WHERE `session`.`expire` > '$time' " .
+			"AND `user`.`last_seen` > '$last_seen_time'";
 		$db_results = Dba::read($sql);
 		$data = Dba::fetch_row($db_results);
 
@@ -440,7 +459,7 @@ class Catalog extends database_object {
 
 	/**
 	 * add_files
-	 * Recurses throught $this->path and pulls out all mp3s and returns the full
+	 * Recurses through $this->path and pulls out all mp3s and returns the full
 	 * path in an array. Passes gather_type to determin if we need to check id3
 	 * information against the db.
 	 */
@@ -456,7 +475,7 @@ class Catalog extends database_object {
 		}
 
 		// Correctly detect the slash we need to use here
-		if (strpos($path,"/") !== false) {
+		if (strpos($path, '/') !== false) {
 			$slash_type = '/';
 		}
 		else {
@@ -467,14 +486,14 @@ class Catalog extends database_object {
 		$handle = opendir($path);
 
 		if (!is_resource($handle)) {
-			debug_event('read',"Unable to Open $path",'5','ampache-catalog');
+			debug_event('read', "Unable to open $path", 5,'ampache-catalog');
 			Error::add('catalog_add',_('Error: Unable to open') . ' ' . $path);
 			return false;
 		}
 
 		/* Change the dir so is_dir works correctly */
 		if (!chdir($path)) {
-			debug_event('read',"Unable to chdir $path",'2','ampache-catalog');
+			debug_event('read', "Unable to chdir $path", 2,'ampache-catalog');
 			Error::add('catalog_add',_('Error: Unable to change to directory') . ' ' . $path);
 			return false;
 		}
@@ -483,9 +502,6 @@ class Catalog extends database_object {
 		$this->_create_filecache();
 
 		debug_event('Memory', format_bytes(memory_get_usage(true)), 5);
-
-		// Set the base "ticker" we will only update ever 5+ seconds
-		$ticker = time();
 
 		/* Recurse through this dir and create the files array */
 		while ( false !== ( $file = readdir($handle) ) ) {
@@ -591,12 +607,10 @@ class Catalog extends database_object {
 					else { $this->insert_local_video($full_file,$file_size); }
 
 					$this->count++;
-					if ( (time() > $ticker+1)) {
-						$file = str_replace(array('(',')','\''),'',$full_file);
+					$file = str_replace(array('(',')','\''),'',$full_file);
+					if(self::_check_ticker()) {
 						update_text('add_count_' . $this->id, $this->count);
 						update_text('add_dir_' . $this->id, scrub_out($file));
-						flush();
-						$ticker = time();
 					} // update our current state
 
 				} // if it's not an m3u
@@ -614,7 +628,6 @@ class Catalog extends database_object {
 		if ($path == $this->path) {
 			update_text('add_count_' . $this->id, $this->count);
 			update_text('add_dir_' . $this->id, scrub_out($file));
-			flush();
 		}
 
 
@@ -633,7 +646,7 @@ class Catalog extends database_object {
 		$id = Dba::escape($this->id);
 		$results = array();
 
-		$sql = "SELECT DISTINCT(song.album) FROM `song` WHERE `song`.`catalog`='$id'";
+		$sql = "SELECT DISTINCT(`song`.`album`) FROM `song` WHERE `song`.`catalog`='$id'";
 		$db_results = Dba::read($sql);
 
 		while ($r = Dba::fetch_assoc($db_results)) {
@@ -649,18 +662,19 @@ class Catalog extends database_object {
 	 * This runs through all of the needs art albums and trys
 	 * to find the art for them from the mp3s
 	 */
-	public function get_art($catalog_id=0,$all='') {
+	public function get_art($catalog_id = null, $all = false) {
 
 		// Make sure they've actually got methods
 		$art_order = Config::get('art_order');
 		if (!count($art_order)) {
+			debug_event('gather_art', 'art_order not set, Catalog::get_art aborting', 3);
 			return true;
 		}
 
 		// Prevent the script from timing out
 		set_time_limit(0);
 
-		// If not passed use this
+		// If not passed use $this
 		$catalog_id = $catalog_id ? $catalog_id : $this->id;
 
 		if ($all) {
@@ -670,19 +684,16 @@ class Catalog extends database_object {
 			$albums = array_keys(self::$_art_albums);
 		}
 
-		// Start the ticker
-		$ticker = time();
-
 		// Run through them an get the art!
 		foreach ($albums as $album_id) {
 
 			// Create the object
-			$art = new Art($album_id,'album');
+			$art = new Art($album_id, 'album');
 			$album = new Album($album_id); 
 			// We're going to need the name here
 			$album->format();
 
-			debug_event('gather_art','Gathering art for ' . $album->name,'5');
+			debug_event('gather_art', 'Gathering art for ' . $album->name, 5);
 
 			// Define the options we want to use for the find art function
 			$options = array(
@@ -692,13 +703,13 @@ class Catalog extends database_object {
 			);
 
 			// Return results
-			$results = $art->gather($options,1,true);
+			$results = $art->gather($options, 1, true);
 
 			if (count($results)) {
 				// Pull the string representation from the source
 				$image = $art->get_from_source($results['0']);
 				if (strlen($image) > '5') {
-					$art->insert($image,$results['0']['mime']);
+					$art->insert($image, $results['0']['mime']);
 					// If they've enabled resizing of images generate the thumbnail now
 					if (Config::get('resize_images')) { 
 						$thumb = $art->generate_thumb($image,array('width'=>275,'height'=>275),$results['0']['mime']); 
@@ -707,18 +718,16 @@ class Catalog extends database_object {
 				
 				}
 				else {
-					debug_event('album_art','Image less then 5 chars, not inserting','3');
+					debug_event('gather_art', 'Image less than 5 chars, not inserting', 3);
 				}
 				$art_found++;
 			}
 
 			/* Stupid little cutesie thing */
 			$search_count++;
-			if ( time() > $ticker+1) {
+			if (self::_check_ticker()) {
 				update_text('count_art_' . $this->id, $search_count);
 				update_text('read_art_' . $this->id, scrub_out($album->name));
-				flush();
-				$ticker = time();
 			} //echos song count
 
 			unset($found);
@@ -727,7 +736,6 @@ class Catalog extends database_object {
 		// One last time for good measure
 		update_text('count_art_' . $this->id, $search_count);
 		update_text('read_art_' . $this->id, scrub_out($album->name));
-		flush();
 
 		self::$_art_albums = array();
 
@@ -743,8 +751,6 @@ class Catalog extends database_object {
 		// Albums first
 		$albums = $this->get_album_ids(); 
 
-		// Start the ticker
-		$ticker = time(); 
 		$thumb_count = 0; 
 
 		foreach ($albums as $album) { 
@@ -753,16 +759,13 @@ class Catalog extends database_object {
 		
 			/* Stupid little cutesie thing */
 			$thumb_count++;
-			if ( time() > $ticker+1) {
+			if (self::_check_ticker()) {
 				update_text('count_thumb_' . $this->id, $search_count);
-				flush();
-				$ticker = time();
 			} //echos thumb count
 
 		} // end foreach albums
 
 		update_text('count_thumb_' . $this->id, $search_count);
-		flush();
 
 	} // generate_thumbnails
 
@@ -1531,74 +1534,100 @@ class Catalog extends database_object {
 
 	/**
 	 * clean_catalog
-	 * Cleans the Catalog of files that no longer exist grabs from $this->id or $id passed
-	 * Doesn't actually delete anything, disables errored files, and returns them in an array
+	 * Cleans the catalog of files that no longer exist.
 	 */
 	public function clean_catalog() {
 
-		// Added set time limit because this runs out of time for some people
+		// We don't want to run out of time
 		set_time_limit(0);
-
-		$dead_video = array();
-		$dead_song = array();
 
 		debug_event('clean', 'Starting on ' . $this->name, 5, 'ampache-catalog');
 
 		require_once Config::get('prefix') . '/templates/show_clean_catalog.inc.php';
+		ob_flush();
 		flush();
 
-		/* Do a quick check to make sure that the root of the catalog is readable, error if not
-		 * this will minimize the loss of catalog data if mount points fail
-		 */
-		if (!is_readable($this->path) AND $this->catalog_type == 'local') {
+		// Do a quick check to make sure that the root of the catalog is
+		// readable. This will minimize the loss of catalog data if
+		// mount points fail
+		if ($this->catalog_type == 'local' && !is_readable($this->path)) {
 			debug_event('catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
 			Error::add('general',_('Catalog Root unreadable, stopping clean'));
 			Error::display('general');
 			return false;
 		}
 
-		/* Get all songs in this catalog */
-		$sql = "SELECT `id`,`file`,'song' AS `type` FROM `song` WHERE `catalog`='$this->id' AND `enabled`='1' " .
-			"UNION ALL " .
-			"SELECT `id`,`file`,'video' AS `type` FROM `video` WHERE `catalog`='$this->id' AND `enabled`='1'";
+		$dead_total = 0;
+		$stats = self::get_stats($this->id);
+		foreach(array('video', 'song') as $media_type) {
+			$total = $stats[$media_type . 's']; // UGLY
+			if ($total == 0) {
+				continue;
+			}
+			$chunks = floor($total / 10000);
+			$dead = array();
+			foreach(range(0, $chunks) as $chunk) {
+				array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
+			}
+
+			$dead_count = count($dead);
+			// The AlmightyOatmeal sanity check
+			// Never remove everything; it might be a dead mount
+			if ($dead_count >= $total) {
+				debug_event('catalog', 'All files would be removed. Doing nothing.', 1);
+				Error::add('general', _('All files would be removed. Doing nothing'));
+				continue;
+			}
+			if ($dead_count) {
+				$dead_total += $dead_count;
+				$sql = "DELETE FROM `$media_type` WHERE `id` IN " . 
+					'(' . implode(',',$dead) . ')';
+				$db_results = Dba::write($sql);
+			}
+			debug_event('clean', "$media_type finished, $dead_count removed from " .
+				$this->name, 5, 'ampache-catalog');
+		}
+
+		// Remove any orphaned artists/albums/etc.
+		self::clean();
+
+		show_box_top();
+		echo "<strong>";
+		printf (ngettext('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total);
+		echo "</strong><br />\n";
+		show_box_bottom();
+		ob_flush();
+		flush();
+
+		$this->update_last_clean();
+	} // clean_catalog
+
+	private function _clean_chunk($media_type, $chunk, $chunk_size) {
+		debug_event('clean', "Starting chunk $chunk", 5, 'ampache-catalog');
+		$dead = array();
+		$count = $chunk * $chunk_size;
+
+		$sql = "SELECT `id`, `file` FROM `$media_type` " .
+			"WHERE `catalog`='$this->id' LIMIT $count,$chunk_size";
 		$db_results = Dba::read($sql);
 
-		// Set to 0 our starting point
-		$dead_files = 0;
-		$count = 0;
-
-		$ticker = time();
-
-		/* Recurse through files, put @ to prevent errors poping up */
 		while ($results = Dba::fetch_assoc($db_results)) {
 			debug_event('clean', 'Starting work on ' . $results['file'] . '(' . $results['id'] . ')', 5, 'ampache-catalog');
-			/* Stupid little cutesie thing */
 			$count++;
-			if (time() > $ticker+1) {
-				$file = str_replace(array('(',')','\''),'',$results['file']);
+			if (self::_check_ticker()) {
+				$file = str_replace(array('(',')', '\''), '', $results['file']);
 				update_text('clean_count_' . $this->id, $count);
 				update_text('clean_dir_' . $this->id, scrub_out($file));
-				flush();
-				$ticker = time();
-			} //echos song count
-
-			/* Also check the file information */
+			}
 			if($this->catalog_type == 'local') {
 				$file_info = filesize($results['file']);
-
-				/* If it errors somethings splated, or the files empty */
-				if (!file_exists($results['file']) OR $file_info < 1) {
+				if (!file_exists($results['file']) || $file_info < 1) {
 					debug_event('clean', 'File not found or empty: ' . $results['file'], 5, 'ampache-catalog');
-					/* Add Error */
 					Error::add('general',_('Error File Not Found or 0 Bytes:') . $results['file']);
 
-					$table = ($results['type'] == 'video') ? 'dead_video' : 'dead_song';
 
 					// Store it in an array we'll delete it later...
-					${$table}[] = $results['id'];
-
-					// Count em!
-					$dead_files++;
+					$dead[] = $results['id'];
 
 				} //if error
 				else if (!is_readable($results['file'])) {
@@ -1609,67 +1638,21 @@ class Catalog extends database_object {
 				//do remote url check
 				$file_info = $this->exists_remote_song($results['file']);
 
-				/* If it errors somethings splated, or the files empty */
 				if ($file_info == false) {
 					/* Add Error */
 					Error::add('general',_('Error Remote File Not Found or 0 Bytes:') . $results['file']);
 
 
-					$table = ($results['type'] == 'video') ? 'dead_video' : 'dead_song';
-
 					// Store it in an array we'll delete it later...
-					${$table}[] = $results['id'];
-
-					// Count em!
-					$dead_files++;
+					$dead[] = $results['id'];
 
 				} //if error
 			} // remote catalog
 
 		} //while gettings songs
+		return $dead;
 
-		// Check and see if _everything_ has gone away, might indicate a
-		// dead mount.
-		// We call this the AlmightyOatmeal Sanity check
-		if ($dead_files == $count) {
-			debug_event('catalog', 'All songs would be removed. Doing nothing.', 1);
-			Error::add('general',_('Error All songs would be removed, doing nothing'));
-			return false;
-		}
-		else {
-			if (count($dead_video)) {
-				$idlist = '(' . implode(',',$dead_video) . ')';
-				$sql = "DELETE FROM `video` WHERE `id` IN $idlist";
-				$db_results = Dba::write($sql);
-			}
-			if (count($dead_song)) {
-				$idlist = '(' . implode(',',$dead_song) . ')';
-				$sql = "DELETE FROM `song` WHERE `id` IN $idlist";
-				$db_results = Dba::write($sql);
-			}
-		}
-
-		debug_event('clean', "Finished, $dead_files removed from " . $this->name, 5, 'ampache-catalog');
-
-		/* Step two find orphaned Arists/Albums
-		 * This finds artists and albums that no
-		 * longer have any songs associated with them
-		 */
-		self::clean();
-
-		/* Return dead files, so they can be listed */
-		update_text('clean_count_' . $this->id, $count);
-		show_box_top();
-		echo "<strong>";
-		printf (ngettext('Catalog Clean Done. %d file removed.','Catalog Clean Done. %d files removed.',$dead_files), $dead_files);
-		echo "</strong><br />\n";
-		show_box_bottom();
-		flush();
-
-		// Set the last clean date
-		$this->update_last_clean();
-
-	} //clean_catalog
+	} //_clean_chunk
 
 	/**
 	 * clean_tags
@@ -1843,138 +1826,100 @@ class Catalog extends database_object {
 	 */
 	public function verify_catalog() {
 
-		$cache = array();
-		$songs = array();
-
-		// Record that we're caching this stuff to make debugging easier
 		debug_event('verify', 'Starting on ' . $this->name, 5, 'ampache-catalog');
-		debug_event('verify', 'Caching data...', 5, 'ampache-catalog');
-
-		/* First get the filenames for the catalog */
-		$sql = "SELECT `id`,`file`,`artist`,`album`,'song' AS `type` FROM `song` WHERE `song`.`catalog`='$this->id' ";
-		$db_results = Dba::read($sql);
-
-		while ($row = Dba::fetch_assoc($db_results)) {
-			$cache[] = $row['id'];
-			$artists[] = $row['artist'];
-			$albums[] = $row['album'];
-			$songs[] = $row;
-		}
-
-		Song::build_cache($cache);
-		Flag::build_map_cache($cache,'song');
-		Tag::build_map_cache('album',$albums);
-		Tag::build_map_cache('artist',$artists);
-		Tag::build_map_cache('song',$cache);
-
-		$cache = array();
-		$videos = array();
-		$sql = "SELECT `id`,`file`,'video' AS `type` FROM `video` WHERE `video`.`catalog`='$this->id'";
-		$db_results = Dba::read($sql);
-
-		while ($row = Dba::fetch_assoc($db_results)) {
-			$cache[] = $row['id'];
-			$videos[] = $row;
-		}
-		Video::build_cache($cache);
-		Flag::build_map_cache($cache,'video');
-
-		$cached_results = array_merge($songs,$videos);
-
-		$number = count($cached_results);
-		require_once Config::get('prefix') . '/templates/show_verify_catalog.inc.php';
-		flush();
-
-		/* Magical Fix so we don't run out of time */
 		set_time_limit(0);
 
-		// Caching array for album art, save us some time here
-		$album_art_check_cache = array();
+		$stats = self::get_stats($this->id);
+		$number = $stats['videos'] + $stats['songs'];
+		$total_updated = 0;
 
-		$ticker = time();
+		require_once Config::get('prefix') . '/templates/show_verify_catalog.inc.php';
 
-		/* Recurse through this catalogs files
-		 * and get the id3 tage information,
-		 * if it's not blank, and different in
-		 * in the file then update!
-		 */
-		foreach ($cached_results as $results) {
-
-			debug_event('verify', 'Starting work on ' . $results['file'], 5, 'ampache-catalog');
-			$type = ($results['type'] == 'video') ? 'video' : 'song';
-
-			if (is_readable($results['file'])) {
-
-				// Create the object from the existing database
-				// information
-				$media = new $type($results['id']);
-
-				unset($skip);
-
-				// Make sure the song isn't flagged
-				// We don't update flagged stuff
-				if (Flag::has_flag($media->id,$type)) {
-					$skip = true;
-				}
-
-				if (filemtime($results['file']) <= $media->update_time) {
-					$skip = true;
-				}
-
-				if ($skip) {
-					debug_event('skip',"$media->file has been skipped due to newer local update or file mod time",'5','ampache-catalog');
-				}
-				else {
-					$info = self::update_media_from_tags($media,$this->sort_pattern,$this->rename_pattern);
-					if ($info['change']) {
-						$total_updated++;
-					}
-					unset($info);
-				} // if skip
-
-				/* Stupid little cutesie thing */
-				$count++;
-				if (time() > $ticker+1) {
-					$file = str_replace(array('(',')','\''),'',$media->file);
-					update_text('verify_count_' . $this->id, $count);
-					update_text('verify_dir_' . $this->id, scrub_out($file));
-					flush();
-					$ticker = time();
-				} //echoes song count
-
-			} // end if file exists
-
-			else {
-				/* HINT: Mediafile */
-				Error::add('general',sprintf(_('%s does not exist or is not readable'),$media->file));
-				debug_event('read-error',"$media->file does not exist or is not readable, removing",'5','ampache-catalog');
-				// Let's go ahead and remove it!
-				$sql = "DELETE FROM `$type` WHERE `id`='" . Dba::escape($media->id) . "'";
-				$del_results = Dba::write($sql);
+		foreach(array('video', 'song') as $media_type) {
+			$total = $stats[$media_type . 's']; // UGLY
+			if ($total == 0) {
+				continue;
 			}
-
-		} //end foreach
+			$chunks = floor($total / 10000);
+			foreach(range(0, $chunks) as $chunk) {
+				// Try to be nice about memory usage
+				if ($chunk > 0) {
+					$media_type::clear_cache();
+				}
+				$total_updates += $this->_verify_chunk($media_type, $chunk, 10000);
+			}
+		}
 
 		debug_event('verify', "Finished, $total_updated updated in " . $this->name, 5, 'ampache-catalog');
 
-		// After we have updated all the songs with the new information
-		// clear any empty albums/artists
 		self::clean();
-
-		// Update the last_update
 		$this->update_last_update();
 
-		// One final time!
-		update_text('count_verify_' . $this->id, $this->count);
-		flush();
-
 		show_box_top();
-		echo '<strong>' . _('Update Finished') . '</strong><br />' . _('Checked') . ' ' .   intval($count) . '.<br />' . _('Updated') . ' ' . intval($total_updated) .  '<br /><br />';
+		echo '<strong>';
+		printf(_('Catalog Verify Done. %d of %d files updated.'), $total_updated, $number);
+		echo "</strong><br />\n";
 		show_box_bottom();
+		ob_flush();
+		flush();
 
 		return true;
 
 	} // verify_catalog
+
+	private function _verify_chunk($media_type, $chunk, $chunk_size) {
+		debug_event('verify', "Starting chunk $chunk", 5, 'ampache-catalog');
+		$count = $chunk * $chunk_size;
+		$changed = 0;
+
+		$sql = "SELECT `id`, `file` FROM `$media_type` " .
+			"WHERE `catalog`='$this->id' LIMIT $count,$chunk_size";
+		$db_results = Dba::read($sql);
+
+		if (Config::get('memory_cache')) {
+			while ($row = Dba::fetch_assoc($db_results, false)) {
+				$media_ids[] = $row['id'];
+			}
+			$media_type::build_cache($media_ids);
+			Dba::seek($db_results, 0);
+		}
+
+		while ($row = Dba::fetch_assoc($db_results)) {
+			$count++;
+			if (self::_check_ticker()) {
+				$file = str_replace(array('(',')','\''), '', $row['file']);
+				update_text('verify_count_' . $this->id, $count);
+				update_text('verify_dir_' . $this->id, scrub_out($file));
+			}
+
+			if (!is_readable($row['file'])) {
+				Error::add('general', sprintf(_('%s does not exist or is not readable'), $row['file']));
+				debug_event('read', $row['file'] . ' does not exist or is not readable', 5,'ampache-catalog');
+				continue;
+			}
+
+			$media = new $media_type($row['id']);
+
+			if (Flag::has_flag($media->id, $type)) {
+				debug_event('verify', "$media->file is flagged, skipping", 5, 'ampache-catalog');
+				continue;
+			}
+
+			if (filemtime($media->file) <= $media->update_time) {
+				debug_event('verify', "$media->file has a modification time older than the database record, skipping", 5, 'ampache-catalog');
+				continue;
+			}
+
+			$info = self::update_media_from_tags($media, $this->sort_pattern,$this->rename_pattern);
+			if ($info['change']) {
+				$changed++;
+			}
+			unset($info);
+		}
+
+		update_text('verify_count_' . $this->id, $count);
+		return $changed;
+	}
 
 	/**
 	 * clean

@@ -38,7 +38,7 @@ $catalogs = Catalog::get_catalogs();
         <th><?php echo _('Albums'); ?></th>
         <th><?php echo _('Artists'); ?></th>
         <th><?php echo _('Songs'); ?></th>
-	<th><?php echo _('Video'); ?></th>
+	<th><?php echo _('Videos'); ?></th>
         <th><?php echo _('Tags'); ?></th>
         <th><?php echo _('Catalog Size'); ?></th>
         <th><?php echo _('Catalog Time'); ?></th>
@@ -49,7 +49,7 @@ $catalogs = Catalog::get_catalogs();
         <td><?php echo $stats['albums']; ?></td>
         <td><?php echo $stats['artists']; ?></td>
         <td><?php echo $stats['songs']; ?></td>
-	<td><?php echo $stats['video']; ?></td>
+	<td><?php echo $stats['videos']; ?></td>
         <td><?php echo $stats['tags']; ?></td>
         <td><?php echo $stats['formatted_size']; ?></td>
         <td><?php echo $stats['time_text']; ?></td>
@@ -74,7 +74,7 @@ $catalogs = Catalog::get_catalogs();
         <th class="cel_lastadd"><?php echo _('Last Add'); ?></th>
         <th class="cel_lastclean"><?php echo _('Last Clean'); ?></th>
 	<th class="cel_songs"><?php echo _('Songs'); ?></th>
-	<th class="cel_video"><?php echo _('Video'); ?></th>
+	<th class="cel_video"><?php echo _('Videos'); ?></th>
 	<th class="cel_total"><?php echo _('Catalog Size'); ?></th>
 </tr>
 <?php foreach ($catalogs as $catalog_id) {
@@ -89,7 +89,7 @@ $catalogs = Catalog::get_catalogs();
 	<td class="cel_lastadd"><?php echo scrub_out($catalog->f_add); ?></td>
 	<td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>
 	<td class="cel_songs"><?php echo scrub_out($stats['songs']); ?></td>
-	<td class="cel_video"><?php echo scrub_out($stats['video']); ?></td>
+	<td class="cel_video"><?php echo scrub_out($stats['videos']); ?></td>
 	<td class="cel_total"><?php echo scrub_out($stats['formatted_size']); ?></td>
 </tr>
 <?php } ?>

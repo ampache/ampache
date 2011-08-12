@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Made catalog verify respect memory_cache
+        - Some catalog operations are now done in chunks, which works better on
+                large catalogs
         - API now returns year and bitrate for songs
         - Fixed search_songs API method to use Search::run properly
         - Fixed require_session when auth_type is 'local'
