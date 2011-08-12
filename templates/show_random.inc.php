@@ -41,7 +41,14 @@
 <tr>
         <td><?php echo _('Item count'); ?></td>
         <td>
-                <?php $name = 'random_' . scrub_in($_POST['random']); ${$name} = ' selected="selected"'; ?>
+                <?php	$name = 'random_';
+			if ($_POST['random'] == -1) {
+				$name .= 'all';
+			}
+			else {
+				$name .= scrub_in($_POST['random']);
+			}
+			${$name} = ' selected="selected"'; ?>
                 <select name="random">
                 <option value="1"<?php echo $random_1; ?>>1</option>
                 <option value="5"<?php echo $random_5; ?>>5</option>
@@ -52,7 +59,7 @@
                 <option value="100"<?php echo $random_100; ?>>100</option>
                 <option value="500"<?php echo $random_500; ?>>500</option>
                 <option value="1000"<?php echo $random_1000; ?>>1000</option>
-                <option value="-1" ><?php echo _('All'); ?></option>
+                <option value="-1" <?php echo $random_all; ?> ><?php echo _('All'); ?></option>
                 </select>
         </td>
 </tr>
