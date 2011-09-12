@@ -379,8 +379,11 @@ class vauth {
 				$key = Dba::escape($key);
 				$time = time();
 				// Build a list of enabled authentication types
-				$enabled_types = implode("','",
-					Config::get('auth_methods'));
+				$types = Config::get('auth_methods');
+				if (!Config::get('use_auth')) {
+					$types[] = '';
+				}
+				$enabled_types = implode("','", $types);
 				$sql = "SELECT * FROM `session` WHERE " .
 					"`id`='$key' AND `expire` > '$time' " .
 					"AND `type` IN('$enabled_types')"; 

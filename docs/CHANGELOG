@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Fixed session persistence with auth disabled (reported by Nathanael
+                Anderson)
         - Fixed item count retention for Advanced Random (reported by USAF_Pride) 
         - Made catalog verify respect memory_cache
         - Some catalog operations are now done in chunks, which works better on
