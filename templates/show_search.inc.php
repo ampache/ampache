@@ -34,16 +34,16 @@
 <?php show_box_top(_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <form id="search" name="search" method="post" action="<?php echo Config::get('web_path'); ?>/search.php?type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata" cellpadding="3" cellspacing="0">
-	<tr>
+	<tr id="search_location">
 		<td><?php if ($_REQUEST['type'] != 'song') { ?><a href="<?php echo Config::get('web_path'); ?>/search.php?type=song"><?php echo _('Songs'); ?></a><?php } else { echo _('Songs'); } ?></td>
 		<td><?php if ($_REQUEST['type'] != 'album') { ?><a href="<?php echo Config::get('web_path'); ?>/search.php?type=album"><?php echo _('Albums'); ?></a><?php } else { echo _('Albums'); } ?></td>
 		<td><?php if ($_REQUEST['type'] != 'artist') { ?><a href="<?php echo Config::get('web_path'); ?>/search.php?type=artist"><?php echo _('Artists'); ?></a><?php } else { echo _('Artists'); } ?></td>
 		<td><?php if ($_REQUEST['type'] != 'video') { ?><a href="<?php echo Config::get('web_path'); ?>/search.php?type=video"><?php echo _('Videos'); ?></a><?php } else { echo _('Videos'); } ?></td>
 	</tr>
-	<tr><td>&nbsp;</td></tr>
+	<tr id="search_blank_line"><td>&nbsp;</td></tr>
 </table>
 <table class="tabledata" cellpadding="3" cellspacing="0">
-	<tr>
+	<tr id="search_max_results">
 	<td><?php echo _('Maximum Results'); ?></td>
         <td>
                 <select name="limit">

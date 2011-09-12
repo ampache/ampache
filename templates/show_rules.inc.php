@@ -27,7 +27,7 @@
 <?php show_box_top(_('Rules') . "...", 'box box_rules'); ?>
 <table class="tabledata" cellpadding="3" cellspacing="0">
 <tbody id="searchtable">
-	<tr>
+	<tr id="rules_operator">
 	<td><?php echo _('Match'); ?></td>
         <td>
                 <select name="operator">
@@ -36,7 +36,7 @@
                 </select>
         </td>
         </tr>
-	<tr>
+	<tr id="rules_addrowbutton">
 	<td>
 		<a id="addrowbutton" href="javascript:void(0)">
 			<?php echo get_user_icon('add'); ?>

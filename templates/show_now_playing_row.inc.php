@@ -31,7 +31,7 @@ $title = scrub_out(truncate_with_ellipsis($media->title));
 $album = scrub_out(truncate_with_ellipsis($media->f_album_full));
 $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
 ?>
-<div class="np_group">
+<div class="np_group" id="np_group_1">
   <div class="np_cell cel_username">
     <label><?php echo _('Username'); ?></label>
   	<a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $np_user->id; ?>">
@@ -56,7 +56,7 @@ $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
   <?php } ?>
 </div>
 
-<div class="np_group">
+<div class="np_group" id="np_group_2">
   <div class="np_cell cel_song">
   	<label><?php echo _('Song'); ?></label>
   	<a title="<?php echo scrub_out($media->title); ?>" href="<?php echo $web_path; ?>/stream.php?action=single_song&amp;song_id=<?php echo $media->id; ?>">
@@ -80,7 +80,7 @@ $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
 </div>
 
 <?php if (Art::is_enabled()) { ?>
-<div class="np_group">
+<div class="np_group" id="np_group_3">
   <div class="np_cell cel_albumart">
       <a target="_blank" href="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup" onclick="popupWindow('<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;type=popup'); return false;">
         <img align="middle" src="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>" alt="<?php echo scrub_out($media->f_album_full); ?>" title="<?php echo scrub_out($media->f_album_full); ?>" height="80" width="80" />

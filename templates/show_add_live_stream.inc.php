@@ -27,7 +27,7 @@
  */
 
 ?>
-<?php show_box_top(_('Add Radio Station')); ?>
+<?php show_box_top(_('Add Radio Station'), 'box box_add_live_stream'); ?>
 <form name="radio" method="post" action="<?php echo Config::get('web_path'); ?>/radio.php?action=create">
 <table>
 <tr>

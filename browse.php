@@ -76,7 +76,7 @@ switch($_REQUEST['action']) {
 		$object_ids = $browse->get_saved();
 		$keys = array_keys($object_ids);
 		Tag::build_cache($keys);
-		show_box_top(_('Tag Cloud'),$class);
+		show_box_top(_('Tag Cloud'), 'box box_tag_cloud');
 		$browse2 = new Browse();
 		$browse2->set_type('song');
 		$browse2->store();

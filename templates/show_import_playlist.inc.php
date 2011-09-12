@@ -27,7 +27,7 @@
  */
 
 ?>
-<?php show_box_top(_('Importing a Playlist from a File')); ?>
+<?php show_box_top(_('Importing a Playlist from a File'), 'box box_import_playlist'); ?>
 <form method="post" name="import_playlist" action="<?php echo Config::get('web_path'); ?>/playlist.php" enctype="multipart/form-data">
 <table cellpadding="0" cellspacing="0">
 <tr>

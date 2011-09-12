@@ -37,7 +37,7 @@
  * @todo get lyrics from id3tag, if possible.
 */
 /* HINT: Song Title */
-show_box_top(sprintf(_('%s Lyrics'), $song->title));
+show_box_top(sprintf(_('%s Lyrics'), $song->title), 'box box_lyrics');
 ?>
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>

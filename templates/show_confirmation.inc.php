@@ -28,7 +28,7 @@
 
 $confirmation = Core::form_register($form_name);
 ?>
-<?php show_box_top(scrub_out($title)); ?>
+<?php show_box_top(scrub_out($title), 'box box_confirmation'); ?>
 <?php echo $text; ?>
 <br />
 	<form method="post" action="<?php echo $path; ?>" style="display:inline;">

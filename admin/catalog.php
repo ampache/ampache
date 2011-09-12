@@ -243,7 +243,7 @@ switch ($_REQUEST['action']) {
 			// Run our initial add
 			$catalog->run_add($_POST);
 
-			show_box_top();
+			show_box_top(_('Catalog Created'), 'box box_catalog_created');
 			echo "<h2>" .  _('Catalog Created') . "</h2>";
 			Error::display('general');
 			Error::display('catalog_add');

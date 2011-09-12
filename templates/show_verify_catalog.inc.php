@@ -26,7 +26,7 @@
  * @link	http://www.ampache.org/
  */
 
-show_box_top();
+show_box_top(_('Verify Catalog'), 'box box_verify_catalog');
 /* HINT: Catalog Name */
 printf(_('Updating the %s catalog'), "<strong>[ $this->name ]</strong>");
 echo "<br />\n";

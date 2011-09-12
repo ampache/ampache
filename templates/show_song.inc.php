@@ -29,7 +29,7 @@
 $icon = $song->enabled ? 'disable' : 'enable';
 $button_flip_state_id = 'button_flip_state_' . $song->id;
 ?>
-<?php show_box_top($song->title . ' ' . _('Details')); ?>
+<?php show_box_top($song->title . ' ' . _('Details'), 'box box_song_details'); ?>
 <dl class="song_details">
 <?php if (Config::get('ratings')) { ?>
 <dt class="<?php echo flip_class(); ?>"><?php echo _('Rating'); ?></dt>

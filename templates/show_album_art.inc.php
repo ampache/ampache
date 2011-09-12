@@ -31,7 +31,7 @@ $total_images = count($images);
 $rows = floor($total_images/4);
 $i = 0;
 ?>
-<?php show_box_top(); ?>
+<?php show_box_top(_('Select New Album Art'), 'box box_album_art'); ?>
 <table class="table-data">
 <tr>
 <?php

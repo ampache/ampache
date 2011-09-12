@@ -27,7 +27,7 @@
  */
 
 ?>
-<?php /* HINT: Catalog Name */ show_box_top(sprintf(_('Settings for %s') , $catalog->name . ' (' . $catalog->path . ')')); ?>
+<?php /* HINT: Catalog Name */ show_box_top(sprintf(_('Settings for %s') , $catalog->name . ' (' . $catalog->path . ')'), 'box box_edit_catalog'); ?>
 <form method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
 <table cellspacing="0" cellpadding="0">
 <tr>
@@ -72,7 +72,7 @@
 <div class="formValidation">
 	<input type="hidden" name="catalog_id" value="<?php echo scrub_out($catalog->id); ?>" />
 	<input type="hidden" name="action" value="update_catalog_settings" />
-	<input type="submit" value="<?php echo _('Save Catalog Settings'); ?>" />
+	<input class="button" type="submit" value="<?php echo _('Save Catalog Settings'); ?>" />
 </div>
 </form>
 <?php show_box_bottom(); ?>

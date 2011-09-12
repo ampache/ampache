@@ -31,7 +31,7 @@ ${$name} = ' selected="selected"';
 $name = 'catalog_' . $_REQUEST['export_catalog'];
 ${$name} = ' selected="selected"';
 
-show_box_top(_('Export Catalog')); ?>
+show_box_top(_('Export Catalog'), 'box box_export'); ?>
 <form name="duplicates" action="<?php echo Config::get('web_path'); ?>/admin/export.php?action=export" method="post" enctype="multipart/form-data" >
 <table class="tableform" cellspacing="0" cellpadding="3">
 <tr>

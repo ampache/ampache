@@ -27,7 +27,7 @@
  */
 
 ?>
-<?php show_box_top(_('Show Catalogs')) ?>
+<?php show_box_top(_('Show Catalogs'), 'box box_manage_catalogs') ?>
 <div id="information_actions">
 <table>
 <tr>

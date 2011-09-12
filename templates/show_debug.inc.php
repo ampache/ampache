@@ -27,7 +27,7 @@
  */
 
 ?>
-<?php show_box_top(_('Debug Tools')); ?>
+<?php show_box_top(_('Debug Tools'), 'box box_debug_tools'); ?>
 <div id="information_actions">
 <ul>
 <li>
@@ -41,7 +41,7 @@
 </ul>
 </div>
 <?php show_box_bottom(); ?>
-<?php show_box_top(_('PHP Settings')); ?>
+<?php show_box_top(_('PHP Settings'), 'box box_php_settings'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
 	<col id="col_php_setting">
@@ -90,7 +90,7 @@
 </table>
 <?php show_box_bottom(); ?>
 
-<?php show_box_top(_('Current Configuration')); ?>
+<?php show_box_top(_('Current Configuration'), 'box box_current_configuration'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
    <col id="col_configuration">

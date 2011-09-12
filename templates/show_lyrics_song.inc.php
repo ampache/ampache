@@ -26,7 +26,7 @@
  * @link	http://www.ampache.org/
  */
 
-show_box_top($song->title);
+show_box_top($song->title , 'box box_lyrics_song');
 
 /* Prepare the variables */
 $title = scrub_out(truncate_with_ellipsis($song->title));

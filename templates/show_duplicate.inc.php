@@ -27,7 +27,7 @@
  */
 
 ?>
-<?php show_box_top(_('Find Duplicates')); ?>
+<?php show_box_top(_('Find Duplicates'), 'box box_duplicate'); ?>
 <form name="duplicates" action="<?php echo Config::get('web_path'); ?>/admin/duplicates.php?action=find_duplicates" method="post" enctype="multipart/form-data" >
 <table cellspacing="0" cellpadding="3">
 <tr>

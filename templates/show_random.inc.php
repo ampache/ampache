@@ -27,18 +27,18 @@
  */
 
 ?>
-<?php show_box_top(_('Play Random Selection')); ?>
+<?php show_box_top(_('Play Random Selection'), 'box box_random'); ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>">
 <table class="tabledata" cellpadding="3" cellspacing="0">
-<tr>
+<tr id="search_location">
 	<td><?php if ($_REQUEST['type'] != 'song') { ?><a href="<?php echo Config::get('web_path'); ?>/random.php?action=advanced&type=song"><?php echo _('Songs'); ?></a><?php } else { echo _('Songs'); } ?></td>
 	<td><?php if ($_REQUEST['type'] != 'album') { ?><a href="<?php echo Config::get('web_path'); ?>/random.php?action=advanced&type=album"><?php echo _('Albums'); ?></a><?php } else { echo _('Albums'); } ?></td>
 	<td><?php if ($_REQUEST['type'] != 'artist') { ?><a href="<?php echo Config::get('web_path'); ?>/random.php?action=advanced&type=artist"><?php echo _('Artists'); ?></a><?php } else { echo _('Artists'); } ?></td>
 </tr>
-<tr><td>&nbsp;</td></tr>
+<tr id="search_blank_line"><td>&nbsp;</td></tr>
 </table>
 <table class="tabledata" cellpadding="0" cellspacing="0">
-<tr>
+<tr id="search_item_count">
         <td><?php echo _('Item count'); ?></td>
         <td>
                 <?php	$name = 'random_';
@@ -63,7 +63,7 @@
                 </select>
         </td>
 </tr>
-<tr>
+<tr id="search_length">
         <td><?php echo _('Length'); ?></td>
         <td>
                 <?php $name = 'length_' . intval($_POST['length']); ${$name} = ' selected="selected"'; ?>
@@ -79,7 +79,7 @@
                 </select>
         </td>
 </tr>
-<tr>
+<tr id="search_size_limit">
         <td><?php echo _('Size Limit'); ?></td>
         <td>
                 <?php $name = 'size_' . intval($_POST['size_limit']); ${$name} = ' selected="selected"'; ?>

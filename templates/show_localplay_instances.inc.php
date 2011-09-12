@@ -27,7 +27,7 @@
  */
 
 ?>
-<?php show_box_top(_('Show Localplay Instances')); ?>
+<?php show_box_top(_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
 <table cellpadding="3" cellspacing="0" class="tabledata">
 <tr>
 	<?php foreach ($fields as $key=>$field) { ?>

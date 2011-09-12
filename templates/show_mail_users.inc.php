@@ -28,7 +28,7 @@
 
 ?>
 
-<?php show_box_top(_('Send E-mail to Users')); ?>
+<?php show_box_top(_('Send E-mail to Users'), 'box box_mail_users'); ?>
 <form name="mail" method="post" action="<?php echo Config::get('web_path'); ?>/admin/mail.php?action=send_mail" enctype="multipart/form-data">
 <table>
   <tr>

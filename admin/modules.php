@@ -144,13 +144,13 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'show_plugins':
 		$plugins = Plugin::get_plugins();
-		show_box_top(_('Plugins'));
+		show_box_top(_('Plugins'), 'box box_localplay_plugins');
 		require_once Config::get('prefix') . '/templates/show_plugins.inc.php';
 		show_box_bottom();
 	break;
 	case 'show_localplay':
 		$controllers = Localplay::get_controllers();
-		show_box_top(_('Localplay Controllers'));
+		show_box_top(_('Localplay Controllers'), 'box box_localplay_controllers');
 		require_once Config::get('prefix') . '/templates/show_localplay_controllers.inc.php';
 		show_box_bottom();
 	break;

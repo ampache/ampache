@@ -26,7 +26,7 @@
  * @link	http://www.ampache.org/
  */
 
-show_box_top();
+show_box_top(_('Starting New Song Search'), 'box box_adds_catalog');
 /* HINT: Catalog Name */
 printf(_('Starting New Song Search on %s catalog'), "<strong>[ $this->name ]</strong>");
 echo "<br />\n";

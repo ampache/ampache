@@ -29,7 +29,7 @@
 $stats = Catalog::get_stats();
 $catalogs = Catalog::get_catalogs();
 ?>
-<?php show_box_top(_('Statistics')); ?>
+<?php show_box_top(_('Statistics'), 'box box_stats'); ?>
 <em><?php echo _('Catalogs'); ?></em>
 <table class="tabledata" cellpadding="3" cellspacing="1">
 <tr class="th-top">

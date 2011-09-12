@@ -27,7 +27,7 @@
  */
 
 ?>
-<?php show_box_top(_('Add Local Network Definition')); ?>
+<?php show_box_top(_('Add Local Network Definition'), 'box box_add_access_local'); ?>
 <?php Error::display('general'); ?>
 <form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host&method=local">
 <table class="tabledata" cellpadding="5" cellspacing="0">

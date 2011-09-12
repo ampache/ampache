@@ -26,7 +26,7 @@
  * @link	http://www.ampache.org/
  */
 
-show_box_top(_('Starting Update from Tags'));
+show_box_top(_('Starting Update from Tags'), 'box box_update_items');
 Catalog::update_single_item($type,$object_id);
 ?>
 <br />

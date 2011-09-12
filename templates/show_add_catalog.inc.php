@@ -29,7 +29,7 @@
 $default_rename = "%a - %T - %t";
 $default_sort = "%a/%A";
 ?>
-<?php show_box_top(_('Add a Catalog')); ?>
+<?php show_box_top(_('Add a Catalog'), 'box box_add_catalog'); ?>
 <p><?php echo _("In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)"); ?></p>
 <?php Error::display('general'); ?>
 <form name="update_catalog" method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
@@ -37,7 +37,7 @@ $default_sort = "%a/%A";
 <tr>
 	<td><?php echo _('Catalog Name'); ?>: </td>
 	<td><input size="60" type="text" name="name" value="<?php echo scrub_out($_POST['name']); ?>" /></td>
-	<td style="vertical-align:top; font-family: monospace;" rowspan="6">
+	<td style="vertical-align:top; font-family: monospace;" rowspan="6" id="patterns_example">
 		<strong><?php echo _('Auto-inserted Fields'); ?>:</strong><br />
 		%A = <?php echo _('album name'); ?><br />
 		%a = <?php echo _('artist name'); ?><br />
