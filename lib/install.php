@@ -270,7 +270,7 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 	// Make sure the directory is writable OR the empty config file is
 	if (!$download) {
 		if (!check_config_writable()) {
-			Error:add('general',"Config file is not writable");
+			Error::add('general',"Config file is not writable");
 			return false;
 		}
 		else {
