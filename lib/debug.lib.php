@@ -261,7 +261,7 @@ function check_override_memory() {
 	$new_limit = ($current_memory+16) . "M";
 
 	/* Bump it by 16 megs (for getid3)*/
-	if (!ini_set(memory_limit,$new_limit)) {
+	if (!ini_set('memory_limit',$new_limit)) {
 		return false;
 	}
 
@@ -357,10 +357,10 @@ function generate_config($current) {
 
 			/* Put in the current value */
 			if ($key == 'config_version') {
-				$line = $key . ' = ' . $value;
+				$line = $key . ' = ' . addslashes($value);
 			}
 			elseif (isset($current[$key])) {
-				$line = $key . ' = "' . $current[$key] . '"';
+				$line = $key . ' = "' . addslashes($current[$key]) . '"';
 				unset($current[$key]);
 			} // if set
 

@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Properly escape config values when writing ampache.cfg.php
         - Fixed session persistence with auth disabled (reported by Nathanael
                 Anderson)
         - Fixed item count retention for Advanced Random (reported by USAF_Pride) 
