@@ -95,7 +95,7 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
 </form>
 <?php } ?>
 <?php if (in_array('show_art',$allowed_filters)) { ?>
-	<input id="show_artCB" class="button" type="submit" value="<?php echo _('Toggle Artwork'); ?>" <?php echo $string = $browse->get_filter('show_art') ? 'selected="selected"' : ''; ?>/>
+	<?php echo _('Toggle Artwork'); ?>&nbsp;<input id="show_artCB" type="checkbox" <?php echo Art::is_enabled() ? 'checked="checked"' : ''; ?>/>
 	<?php echo Ajax::observe('show_artCB','click',Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id, '')); ?>
 <?php } // if show_art ?>
 </div>
