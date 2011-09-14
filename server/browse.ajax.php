@@ -59,9 +59,14 @@ switch ($_REQUEST['action']) {
 			// Set the new sort value
 			$browse->set_sort($_REQUEST['sort']);
 		}
+		
+		
 		if ($_REQUEST['catalog_key'] || $SESSION['catalog'] != 0) {
 			$browse->set_filter('catalog',$_REQUEST['catalog_key']);
 			$_SESSION['catalog'] = $_REQUEST['catalog_key'];
+		} elseif ($_REQUEST['catalog_key'] == 0) {
+			$browse->set_filter('catalog', null);
+		    unset($_SESSION['catalog']);
 		}
 
 		ob_start();

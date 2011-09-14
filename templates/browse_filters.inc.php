@@ -82,11 +82,11 @@ $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
 			}
 		
 			foreach( $results as $entries ) {
-				echo '<option value="' . $entries['id'];
+				echo '<option value="' . $entries['id'] . '" ';
 				if( $_SESSION['catalog'] == $entries['id'] ) {
 					echo ' selected="selected" ';
 				}
-				echo '">' . $entries['name'] . '</options>';
+				echo '>' . $entries['name'] . '</options>';
 			}
 		?>
 				
