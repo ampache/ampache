@@ -55,7 +55,9 @@ Config::set('prefix',$prefix);
 /*
  Check to see if this is http or https
 */
-if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || Config::get('force_ssl') == true) {
+if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' ) 
+    || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') 
+    || Config::get('force_ssl') == true) {
 	$http_type = "https://";
 }
 else {
@@ -98,7 +100,11 @@ $results['int_config_version']	= '11';
 
 $results['raw_web_path']	= $results['web_path'];
 $results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
-$results['http_port']		= $_SERVER['SERVER_PORT'];
+if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
+   $results['http_port']   = $_SERVER['HTTP_X_FORWARDED_PORT'];
+} else {
+   $results['http_port']   = $_SERVER['SERVER_PORT'];
+}
 if (!$results['http_port']) {
 	$results['http_port']	= '80';
 }
