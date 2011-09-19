@@ -132,19 +132,6 @@
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('PHP putenv Support'); ?>:</td>
-<td>
-<?php
-	if (!check_putenv()) {
-		echo debug_result('',false);
-		Error::add('install', _('PHP putenv Support'));
-	}
-	else {
-		echo debug_result('',true);
-	}
-?>
-</td>
-</tr><tr>
 <th colspan="2"><h4><?php echo _('Optional'); ?></h4></th>
 </tr><tr>
 <td><?php echo _('PHP gettext Support'); ?>:</td>
@@ -167,6 +154,17 @@
 	}
 	else {
 		echo debug_result('',true);
+	}
+?>
+</td>
+</tr><tr>
+<td><?php echo _('PHP Safe Mode'); ?>:</td>
+<?php
+	if (!check_safemode()) {
+		echo debug_result(_('Safe mode enabled'), false);
+	}
+	else {
+		echo debug_result(_('Safe mode not enabled'), true);
 	}
 ?>
 </td>

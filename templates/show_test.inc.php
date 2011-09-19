@@ -135,10 +135,10 @@
 	</td>
 </tr>
 <tr>
-	<td valign="top"><?php echo _('PHP PutENV Support'); ?></td>
+	<td valign="top"><?php echo _('PHP Safe Mode'); ?></td>
 	<td valign="top">[
 	<?php
-		if (!check_putenv()) {
+		if (!check_safemode()) {
 			echo debug_result('',false);
 		}
 		else {
@@ -147,9 +147,27 @@
 	?>]
 	</td>
 	<td>
-	<?php echo _('This test makes sure that PHP isn\'t running in SafeMode and that we are able to modify the memory limits. While not required, without these abilities some features of ampache may not work correctly'); ?>
+	<?php echo _("This test makes sure that PHP isn't running in safe mode.  Some features of Ampache may not work correctly in safe mode."); ?>
 	</td>
 </tr>
+<tr>
+	<td valign="top"><?php echo _('Override Memory Limit'); ?></td>
+	<td valign="top">[
+	<?php echo debug_result('', check_override_memory()); ?>]
+	</td>
+	<td>
+	<?php echo _('This tests whether Ampache can override the memory limit.  This is not strictly necessary, but may result in a better experience.'); ?>
+	</td>
+</tr>
+<tr>
+	<td valign="top"><?php echo _('Override Execution Limit'); ?></td>
+	<td valign="top">[
+	<?php echo debug_result('', check_override_exec_time()); ?>]
+	</td>
+	<td>
+	<?php echo _('This tests whether Ampache can override the limit on maximum execution time.  This is not strictly necessary, but may result in a better experience.'); ?>
+	</td>
+</tr>	
 <tr>
 	<td valign="top"><?php echo sprintf(_("%s is readable"),"ampache.cfg.php"); ?></td>
 	<td valign="top">[

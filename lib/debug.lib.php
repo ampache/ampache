@@ -240,13 +240,21 @@ function check_php_timelimit() {
 } // check_php_timelimit
 
 /**
- * check_putenv
- * This checks to see if we can manually set the
- * memory limit, and other putenvs we need for
- * ampache to work correctly
+ * check_safe_mode
+ * Checks to make sure we aren't in safe mode
  */
-function check_putenv() {
+function check_safemode() {
+	if (ini_get('safe_mode')) {
+		return false;
+	}
+	return true;
+}
 
+/**
+ * check_override_memory
+ * This checks to see if we can manually override the memory limit
+ */
+function check_override_memory() {
 	/* Check memory */
 	$current_memory = ini_get('memory_limit');
 	$current_memory = substr($current_memory,0,strlen($current_memory)-1);
@@ -264,12 +272,14 @@ function check_putenv() {
 		return false;
 	}
 
-	/* Check if safe mode is on */
-	if (ini_get('safe_mode')) {
-		return false;
-	}
+	return true;
+}
 
-	// See if we can override the set_time_limit();
+/**
+ * check_override_exec_time
+ * This checks to see if we can manually override the max execution time
+ */
+function check_override_exec_time() {
 	$current = ini_get('max_execution_time');
 	set_time_limit($current+60);
 
@@ -277,10 +287,8 @@ function check_putenv() {
 		return false;
 	}
 
-
 	return true;
-
-} // check_putenv
+}
 
 /**
  * check_gettext
