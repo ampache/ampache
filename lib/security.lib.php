@@ -85,7 +85,7 @@ function check_php_version() {
 		return $results;
 	}
 	if(version_compare($my_php, $latest_php, '>=')) {
-		$results = debug_result(_('No probrem found.'),1);
+		$results = debug_result(_('No problem found.'),1);
 	}
 	else {
 		$results = debug_result(sprintf(_('You are running old php: %s'), $my_php),0);
@@ -187,7 +187,7 @@ function check_security() {
 	}
 
 	if(count($warnings) == 0) {
-		$warnings['no_probrem'] = _('There is no probrem.');
+		$warnings['no_problem'] = _('There is no problem.');
 	}
 
 	return $warnings;
