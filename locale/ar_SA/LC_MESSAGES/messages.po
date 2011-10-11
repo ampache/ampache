@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2011-10-11 14:17+0900\n"
+"POT-Creation-Date: 2011-10-11 14:23+0900\n"
 "PO-Revision-Date: 2009-05-19 07:38+0900\n"
 "Last-Translator: momo-i <webmaster@momo-i.org>\n"
 "Language-Team: Arabic\n"
@@ -1261,7 +1261,7 @@ msgstr ""
 msgid "Sorry Lyrics Not Found."
 msgstr ""
 
-#: ../../lib/security.lib.php:53
+#: ../../lib/security.lib.php:53 ../../lib/security.lib.php:88
 msgid "No problem found."
 msgstr ""
 
@@ -1274,11 +1274,6 @@ msgstr ""
 #, php-format
 msgid "Your PHP version may be too old: %s"
 msgstr ""
-
-#: ../../lib/security.lib.php:88
-#, fuzzy
-msgid "No probrem found."
-msgstr "لا توجد سجلات"
 
 #: ../../lib/security.lib.php:91
 #, php-format
@@ -1304,7 +1299,7 @@ msgid ""
 msgstr ""
 
 #: ../../lib/security.lib.php:190
-msgid "There is no probrem."
+msgid "There is no problem."
 msgstr ""
 
 #: ../../register.php:80
@@ -4153,294 +4148,6 @@ msgstr ""
 msgid "Load Saved Rules"
 msgstr ""
 
-#: ../../sarg/trunk/sarg-php/sarg-block-it.php:35
-#: ../../sarg/tags/Z-SARG_2_0_8_merge_HEAD/sarg-php/sarg-block-it.php:35
-#: ../../sarg/tags/v2.3/sarg-php/sarg-block-it.php:35
-#: ../../sarg/tags/v2.3-pre5/sarg-php/sarg-block-it.php:35
-#: ../../sarg/tags/Z-SARG_2_0_9_merge_HEAD/sarg-php/sarg-block-it.php:35
-#: ../../sarg/tags/Z-SARG_WIN_merge-old_HEAD/sarg-php/sarg-block-it.php:35
-#: ../../sarg/tags/v2_2_7/sarg-php/sarg-block-it.php:35
-#: ../../sarg/tags/v2_2_6/sarg-php/sarg-block-it.php:35
-#: ../../sarg/tags/start/sarg-php/sarg-block-it.php:35
-#: ../../sarg/tags/v2.3.1/sarg-php/sarg-block-it.php:35
-#: ../../sarg/tags/Z-SARG_WIN_merge_HEAD/sarg-php/sarg-block-it.php:35
-#: ../../sarg/tags/v2.3-pre2/sarg-php/sarg-block-it.php:35
-#: ../../sarg/tags/Z-SARG_WIN_merge-new_HEAD/sarg-php/sarg-block-it.php:35
-#: ../../sarg/branches/SARG_WIN/sarg-php/sarg-block-it.php:35
-#: ../../sarg/branches/v2_2_6_1/sarg-php/sarg-block-it.php:35
-#: ../../sarg/branches/v2.3/sarg-php/sarg-block-it.php:35
-#: ../../sarg/branches/v2_2_7/sarg-php/sarg-block-it.php:35
-#: ../../sarg/branches/SARG_2_0_9/sarg-php/sarg-block-it.php:35
-#: ../../sarg/branches/serassio/sarg-php/sarg-block-it.php:35
-#: ../../sarg/branches/SARG_2_0_8/sarg-php/sarg-block-it.php:35
-msgid "Could not open the filename"
-msgstr ""
-
-#: ../../sarg/trunk/sarg-php/sarg-block-it.php:43
-#: ../../sarg/trunk/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/tags/Z-SARG_2_0_8_merge_HEAD/sarg-php/sarg-block-it.php:43
-#: ../../sarg/tags/Z-SARG_2_0_8_merge_HEAD/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/tags/v2.3/sarg-php/sarg-block-it.php:43
-#: ../../sarg/tags/v2.3/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/tags/v2.3-pre5/sarg-php/sarg-block-it.php:43
-#: ../../sarg/tags/v2.3-pre5/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/tags/Z-SARG_2_0_9_merge_HEAD/sarg-php/sarg-block-it.php:43
-#: ../../sarg/tags/Z-SARG_2_0_9_merge_HEAD/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/tags/Z-SARG_WIN_merge-old_HEAD/sarg-php/sarg-block-it.php:43
-#: ../../sarg/tags/Z-SARG_WIN_merge-old_HEAD/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/tags/v2_2_7/sarg-php/sarg-block-it.php:43
-#: ../../sarg/tags/v2_2_7/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/tags/v2_2_6/sarg-php/sarg-block-it.php:43
-#: ../../sarg/tags/v2_2_6/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/tags/start/sarg-php/sarg-block-it.php:43
-#: ../../sarg/tags/start/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/tags/v2.3.1/sarg-php/sarg-block-it.php:43
-#: ../../sarg/tags/v2.3.1/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/tags/Z-SARG_WIN_merge_HEAD/sarg-php/sarg-block-it.php:43
-#: ../../sarg/tags/Z-SARG_WIN_merge_HEAD/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/tags/v2.3-pre2/sarg-php/sarg-block-it.php:43
-#: ../../sarg/tags/v2.3-pre2/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/tags/Z-SARG_WIN_merge-new_HEAD/sarg-php/sarg-block-it.php:43
-#: ../../sarg/tags/Z-SARG_WIN_merge-new_HEAD/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/branches/SARG_WIN/sarg-php/sarg-block-it.php:43
-#: ../../sarg/branches/SARG_WIN/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/branches/v2_2_6_1/sarg-php/sarg-block-it.php:43
-#: ../../sarg/branches/v2_2_6_1/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/branches/v2.3/sarg-php/sarg-block-it.php:43
-#: ../../sarg/branches/v2.3/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/branches/v2_2_7/sarg-php/sarg-block-it.php:43
-#: ../../sarg/branches/v2_2_7/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/branches/SARG_2_0_9/sarg-php/sarg-block-it.php:43
-#: ../../sarg/branches/SARG_2_0_9/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/branches/serassio/sarg-php/sarg-block-it.php:43
-#: ../../sarg/branches/serassio/sarg-php/sarg-squidguard-block2.php:49
-#: ../../sarg/branches/SARG_2_0_8/sarg-php/sarg-block-it.php:43
-#: ../../sarg/branches/SARG_2_0_8/sarg-php/sarg-squidguard-block2.php:49
-#, fuzzy
-msgid "Write error"
-msgstr "الكتابة التهيئة"
-
-#: ../../sarg/trunk/sarg-php/sarg-block-it.php:46
-#: ../../sarg/trunk/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/tags/Z-SARG_2_0_8_merge_HEAD/sarg-php/sarg-block-it.php:46
-#: ../../sarg/tags/Z-SARG_2_0_8_merge_HEAD/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/tags/v2.3/sarg-php/sarg-block-it.php:46
-#: ../../sarg/tags/v2.3/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/tags/v2.3-pre5/sarg-php/sarg-block-it.php:46
-#: ../../sarg/tags/v2.3-pre5/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/tags/Z-SARG_2_0_9_merge_HEAD/sarg-php/sarg-block-it.php:46
-#: ../../sarg/tags/Z-SARG_2_0_9_merge_HEAD/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/tags/Z-SARG_WIN_merge-old_HEAD/sarg-php/sarg-block-it.php:46
-#: ../../sarg/tags/Z-SARG_WIN_merge-old_HEAD/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/tags/v2_2_7/sarg-php/sarg-block-it.php:46
-#: ../../sarg/tags/v2_2_7/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/tags/v2_2_6/sarg-php/sarg-block-it.php:46
-#: ../../sarg/tags/v2_2_6/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/tags/start/sarg-php/sarg-block-it.php:46
-#: ../../sarg/tags/start/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/tags/v2.3.1/sarg-php/sarg-block-it.php:46
-#: ../../sarg/tags/v2.3.1/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/tags/Z-SARG_WIN_merge_HEAD/sarg-php/sarg-block-it.php:46
-#: ../../sarg/tags/Z-SARG_WIN_merge_HEAD/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/tags/v2.3-pre2/sarg-php/sarg-block-it.php:46
-#: ../../sarg/tags/v2.3-pre2/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/tags/Z-SARG_WIN_merge-new_HEAD/sarg-php/sarg-block-it.php:46
-#: ../../sarg/tags/Z-SARG_WIN_merge-new_HEAD/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/branches/SARG_WIN/sarg-php/sarg-block-it.php:46
-#: ../../sarg/branches/SARG_WIN/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/branches/v2_2_6_1/sarg-php/sarg-block-it.php:46
-#: ../../sarg/branches/v2_2_6_1/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/branches/v2.3/sarg-php/sarg-block-it.php:46
-#: ../../sarg/branches/v2.3/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/branches/v2_2_7/sarg-php/sarg-block-it.php:46
-#: ../../sarg/branches/v2_2_7/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/branches/SARG_2_0_9/sarg-php/sarg-block-it.php:46
-#: ../../sarg/branches/SARG_2_0_9/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/branches/serassio/sarg-php/sarg-block-it.php:46
-#: ../../sarg/branches/serassio/sarg-php/sarg-squidguard-block2.php:52
-#: ../../sarg/branches/SARG_2_0_8/sarg-php/sarg-block-it.php:46
-#: ../../sarg/branches/SARG_2_0_8/sarg-php/sarg-squidguard-block2.php:52
-msgid "Done!"
-msgstr ""
-
-#: ../../sarg/trunk/sarg-php/sarg-block-it.php:49
-#: ../../sarg/trunk/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/tags/Z-SARG_2_0_8_merge_HEAD/sarg-php/sarg-block-it.php:49
-#: ../../sarg/tags/Z-SARG_2_0_8_merge_HEAD/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/tags/v2.3/sarg-php/sarg-block-it.php:49
-#: ../../sarg/tags/v2.3/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/tags/v2.3-pre5/sarg-php/sarg-block-it.php:49
-#: ../../sarg/tags/v2.3-pre5/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/tags/Z-SARG_2_0_9_merge_HEAD/sarg-php/sarg-block-it.php:49
-#: ../../sarg/tags/Z-SARG_2_0_9_merge_HEAD/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/tags/Z-SARG_WIN_merge-old_HEAD/sarg-php/sarg-block-it.php:49
-#: ../../sarg/tags/Z-SARG_WIN_merge-old_HEAD/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/tags/v2_2_7/sarg-php/sarg-block-it.php:49
-#: ../../sarg/tags/v2_2_7/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/tags/v2_2_6/sarg-php/sarg-block-it.php:49
-#: ../../sarg/tags/v2_2_6/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/tags/start/sarg-php/sarg-block-it.php:49
-#: ../../sarg/tags/start/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/tags/v2.3.1/sarg-php/sarg-block-it.php:49
-#: ../../sarg/tags/v2.3.1/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/tags/Z-SARG_WIN_merge_HEAD/sarg-php/sarg-block-it.php:49
-#: ../../sarg/tags/Z-SARG_WIN_merge_HEAD/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/tags/v2.3-pre2/sarg-php/sarg-block-it.php:49
-#: ../../sarg/tags/v2.3-pre2/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/tags/Z-SARG_WIN_merge-new_HEAD/sarg-php/sarg-block-it.php:49
-#: ../../sarg/tags/Z-SARG_WIN_merge-new_HEAD/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/branches/SARG_WIN/sarg-php/sarg-block-it.php:49
-#: ../../sarg/branches/SARG_WIN/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/branches/v2_2_6_1/sarg-php/sarg-block-it.php:49
-#: ../../sarg/branches/v2_2_6_1/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/branches/v2.3/sarg-php/sarg-block-it.php:49
-#: ../../sarg/branches/v2.3/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/branches/v2_2_7/sarg-php/sarg-block-it.php:49
-#: ../../sarg/branches/v2_2_7/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/branches/SARG_2_0_9/sarg-php/sarg-block-it.php:49
-#: ../../sarg/branches/SARG_2_0_9/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/branches/serassio/sarg-php/sarg-block-it.php:49
-#: ../../sarg/branches/serassio/sarg-php/sarg-squidguard-block2.php:55
-#: ../../sarg/branches/SARG_2_0_8/sarg-php/sarg-block-it.php:49
-#: ../../sarg/branches/SARG_2_0_8/sarg-php/sarg-squidguard-block2.php:55
-msgid "Return"
-msgstr ""
-
-#: ../../sarg/trunk/sarg-php/sarg-block-it.php:51
-#: ../../sarg/trunk/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/tags/Z-SARG_2_0_8_merge_HEAD/sarg-php/sarg-block-it.php:51
-#: ../../sarg/tags/Z-SARG_2_0_8_merge_HEAD/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/tags/v2.3/sarg-php/sarg-block-it.php:51
-#: ../../sarg/tags/v2.3/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/tags/v2.3-pre5/sarg-php/sarg-block-it.php:51
-#: ../../sarg/tags/v2.3-pre5/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/tags/Z-SARG_2_0_9_merge_HEAD/sarg-php/sarg-block-it.php:51
-#: ../../sarg/tags/Z-SARG_2_0_9_merge_HEAD/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/tags/Z-SARG_WIN_merge-old_HEAD/sarg-php/sarg-block-it.php:51
-#: ../../sarg/tags/Z-SARG_WIN_merge-old_HEAD/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/tags/v2_2_7/sarg-php/sarg-block-it.php:51
-#: ../../sarg/tags/v2_2_7/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/tags/v2_2_6/sarg-php/sarg-block-it.php:51
-#: ../../sarg/tags/v2_2_6/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/tags/start/sarg-php/sarg-block-it.php:51
-#: ../../sarg/tags/start/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/tags/v2.3.1/sarg-php/sarg-block-it.php:51
-#: ../../sarg/tags/v2.3.1/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/tags/Z-SARG_WIN_merge_HEAD/sarg-php/sarg-block-it.php:51
-#: ../../sarg/tags/Z-SARG_WIN_merge_HEAD/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/tags/v2.3-pre2/sarg-php/sarg-block-it.php:51
-#: ../../sarg/tags/v2.3-pre2/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/tags/Z-SARG_WIN_merge-new_HEAD/sarg-php/sarg-block-it.php:51
-#: ../../sarg/tags/Z-SARG_WIN_merge-new_HEAD/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/branches/SARG_WIN/sarg-php/sarg-block-it.php:51
-#: ../../sarg/branches/SARG_WIN/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/branches/v2_2_6_1/sarg-php/sarg-block-it.php:51
-#: ../../sarg/branches/v2_2_6_1/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/branches/v2.3/sarg-php/sarg-block-it.php:51
-#: ../../sarg/branches/v2.3/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/branches/v2_2_7/sarg-php/sarg-block-it.php:51
-#: ../../sarg/branches/v2_2_7/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/branches/SARG_2_0_9/sarg-php/sarg-block-it.php:51
-#: ../../sarg/branches/SARG_2_0_9/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/branches/serassio/sarg-php/sarg-block-it.php:51
-#: ../../sarg/branches/serassio/sarg-php/sarg-squidguard-block2.php:57
-#: ../../sarg/branches/SARG_2_0_8/sarg-php/sarg-block-it.php:51
-#: ../../sarg/branches/SARG_2_0_8/sarg-php/sarg-squidguard-block2.php:57
-msgid " to Sarg."
-msgstr ""
-
-#: ../../sarg/trunk/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/tags/Z-SARG_2_0_8_merge_HEAD/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/tags/v2.3/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/tags/v2.3-pre5/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/tags/Z-SARG_2_0_9_merge_HEAD/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/tags/Z-SARG_WIN_merge-old_HEAD/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/tags/v2_2_7/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/tags/v2_2_6/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/tags/start/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/tags/v2.3.1/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/tags/Z-SARG_WIN_merge_HEAD/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/tags/v2.3-pre2/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/tags/Z-SARG_WIN_merge-new_HEAD/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/branches/SARG_WIN/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/branches/v2_2_6_1/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/branches/v2.3/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/branches/v2_2_7/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/branches/SARG_2_0_9/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/branches/serassio/sarg-php/sarg-squidguard-block2.php:41
-#: ../../sarg/branches/SARG_2_0_8/sarg-php/sarg-squidguard-block2.php:41
-msgid "Could not open the file"
-msgstr ""
-
-#: ../../sarg/trunk/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/tags/Z-SARG_2_0_8_merge_HEAD/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/tags/v2.3/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/tags/v2.3-pre5/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/tags/Z-SARG_2_0_9_merge_HEAD/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/tags/Z-SARG_WIN_merge-old_HEAD/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/tags/v2_2_7/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/tags/v2_2_6/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/tags/start/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/tags/v2.3.1/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/tags/Z-SARG_WIN_merge_HEAD/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/tags/v2.3-pre2/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/tags/Z-SARG_WIN_merge-new_HEAD/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/branches/SARG_WIN/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/branches/v2_2_6_1/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/branches/v2.3/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/branches/v2_2_7/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/branches/SARG_2_0_9/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/branches/serassio/sarg-php/sarg-squidguard-block.php:54
-#: ../../sarg/branches/SARG_2_0_8/sarg-php/sarg-squidguard-block.php:54
-msgid "Sarg-SquidGuard - URL Blocking"
-msgstr ""
-
-#: ../../sarg/trunk/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/tags/Z-SARG_2_0_8_merge_HEAD/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/tags/v2.3/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/tags/v2.3-pre5/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/tags/Z-SARG_2_0_9_merge_HEAD/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/tags/Z-SARG_WIN_merge-old_HEAD/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/tags/v2_2_7/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/tags/v2_2_6/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/tags/start/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/tags/v2.3.1/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/tags/Z-SARG_WIN_merge_HEAD/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/tags/v2.3-pre2/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/tags/Z-SARG_WIN_merge-new_HEAD/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/branches/SARG_WIN/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/branches/v2_2_6_1/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/branches/v2.3/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/branches/v2_2_7/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/branches/SARG_2_0_9/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/branches/serassio/sarg-php/sarg-squidguard-block.php:57
-#: ../../sarg/branches/SARG_2_0_8/sarg-php/sarg-squidguard-block.php:57
-msgid "Choose the rule set where"
-msgstr ""
-
-#: ../../sarg/trunk/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/tags/Z-SARG_2_0_8_merge_HEAD/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/tags/v2.3/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/tags/v2.3-pre5/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/tags/Z-SARG_2_0_9_merge_HEAD/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/tags/Z-SARG_WIN_merge-old_HEAD/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/tags/v2_2_7/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/tags/v2_2_6/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/tags/start/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/tags/v2.3.1/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/tags/Z-SARG_WIN_merge_HEAD/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/tags/v2.3-pre2/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/tags/Z-SARG_WIN_merge-new_HEAD/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/branches/SARG_WIN/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/branches/v2_2_6_1/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/branches/v2.3/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/branches/v2_2_7/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/branches/SARG_2_0_9/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/branches/serassio/sarg-php/sarg-squidguard-block.php:59
-#: ../../sarg/branches/SARG_2_0_8/sarg-php/sarg-squidguard-block.php:59
-msgid "will by added"
-msgstr ""
-
 #: ../../search.php:49
 #, fuzzy
 msgid "Search Saved"
@@ -5326,6 +5033,14 @@ msgstr ""
 #: Database words
 msgid "System"
 msgstr ""
+
+#, fuzzy
+#~ msgid "No probrem found."
+#~ msgstr "لا توجد سجلات"
+
+#, fuzzy
+#~ msgid "Write error"
+#~ msgstr "الكتابة التهيئة"
 
 #, fuzzy
 #~ msgid "PHP putenv Support"
