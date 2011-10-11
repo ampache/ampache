@@ -290,7 +290,7 @@ class mpd {
                 return false;
             }
 
-            if ($arguments) {
+            if (isset($arguments)) {
                 if (is_array($arguments)) {
                     foreach ($arguments as $arg) {
                         $command .= ' "' . $arg . '"';
