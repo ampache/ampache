@@ -257,7 +257,6 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
 	$media->format_pattern();
 	$media_name = str_replace(array('?','/','\\'),"_",$media->f_file);
 
-	header("Content-Length: " . $media->size);
 	$browser->downloadHeaders($media_name,$media->mime,false,$media->size);
 	$fp = fopen($media->file,'rb');
 	$bytesStreamed = 0;
