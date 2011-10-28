@@ -617,7 +617,6 @@ class Stream {
 		$min_bitrate = Config::get('min_bit_rate');
 		$time = time();
 		$user_sample_rate = Config::get('sample_rate');
-		$browser = new Browser();
 
 		if (!$song_name) {
 			$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;

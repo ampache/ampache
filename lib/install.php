@@ -282,7 +282,7 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 		}
 	}
 	else {
-		$browser = new Browser();
+		$browser = new Horde_Browser();
 		$browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, strlen($final));
 		echo $final;
 		exit();

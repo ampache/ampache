@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
 		ob_end_clean();
 		$current = parse_ini_file(Config::get('prefix') . '/config/ampache.cfg.php');
 		$final = generate_config($current);
-		$browser = new Browser();
+		$browser = new Horde_Browser();
 		$browser->downloadHeaders('ampache.cfg.php','text/plain',false,filesize(Config::get('prefix') . '/config/ampache.cfg.php.dist'));
 		echo $final;
 		exit;

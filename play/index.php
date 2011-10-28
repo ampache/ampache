@@ -244,6 +244,10 @@ ignore_user_abort(true);
 // Format the song name
 $media_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
 
+
+// Generate browser class for sending headers
+$browser = new Horde_Browser();
+
 /* If they are just trying to download make sure they have rights
  * and then present them with the download file
  */
@@ -253,9 +257,7 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
 	$media->format_pattern();
 	$media_name = str_replace(array('?','/','\\'),"_",$media->f_file);
 
-	// Use Horde's Browser class to send the headers
 	header("Content-Length: " . $media->size);
-	$browser = new Browser();
 	$browser->downloadHeaders($media_name,$media->mime,false,$media->size);
 	$fp = fopen($media->file,'rb');
 	$bytesStreamed = 0;
@@ -289,8 +291,6 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
 
 } // if they are trying to download and they can
 
-// Generate browser class for sending headers
-$browser = new Browser();
 header("Accept-Ranges: bytes" );
 
 // Prevent the script from timing out
