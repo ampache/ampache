@@ -14,60 +14,62 @@
 /////////////////////////////////////////////////////////////////
 
 
-class getid3_rkau
+class getid3_rkau extends getid3_handler
 {
 
-	function getid3_rkau(&$fd, &$ThisFileInfo) {
+	function Analyze() {
+		$info = &$this->getid3->info;
 
-		fseek($fd, $ThisFileInfo['avdataoffset'], SEEK_SET);
-		$RKAUHeader = fread($fd, 20);
-		if (substr($RKAUHeader, 0, 3) != 'RKA') {
-			$ThisFileInfo['error'][] = 'Expecting "RKA" at offset '.$ThisFileInfo['avdataoffset'].', found "'.substr($RKAUHeader, 0, 3).'"';
+		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
+		$RKAUHeader = fread($this->getid3->fp, 20);
+		$magic = 'RKA';
+		if (substr($RKAUHeader, 0, 3) != $magic) {
+			$info['error'][] = 'Expecting "'.getid3_lib::PrintHexBytes($magic).'" at offset '.$info['avdataoffset'].', found "'.getid3_lib::PrintHexBytes(substr($RKAUHeader, 0, 3)).'"';
 			return false;
 		}
 
-		$ThisFileInfo['fileformat']            = 'rkau';
-		$ThisFileInfo['audio']['dataformat']   = 'rkau';
-		$ThisFileInfo['audio']['bitrate_mode'] = 'vbr';
+		$info['fileformat']            = 'rkau';
+		$info['audio']['dataformat']   = 'rkau';
+		$info['audio']['bitrate_mode'] = 'vbr';
 
-		$ThisFileInfo['rkau']['raw']['version']   = getid3_lib::LittleEndian2Int(substr($RKAUHeader, 3, 1));
-		$ThisFileInfo['rkau']['version']          = '1.'.str_pad($ThisFileInfo['rkau']['raw']['version'] & 0x0F, 2, '0', STR_PAD_LEFT);
-		if (($ThisFileInfo['rkau']['version'] > 1.07) || ($ThisFileInfo['rkau']['version'] < 1.06)) {
-			$ThisFileInfo['error'][] = 'This version of getID3() can only parse RKAU files v1.06 and 1.07 (this file is v'.$ThisFileInfo['rkau']['version'].')';
-			unset($ThisFileInfo['rkau']);
+		$info['rkau']['raw']['version']   = getid3_lib::LittleEndian2Int(substr($RKAUHeader, 3, 1));
+		$info['rkau']['version']          = '1.'.str_pad($info['rkau']['raw']['version'] & 0x0F, 2, '0', STR_PAD_LEFT);
+		if (($info['rkau']['version'] > 1.07) || ($info['rkau']['version'] < 1.06)) {
+			$info['error'][] = 'This version of getID3() ['.$this->getid3->version().'] can only parse RKAU files v1.06 and 1.07 (this file is v'.$info['rkau']['version'].')';
+			unset($info['rkau']);
 			return false;
 		}
 
-		$ThisFileInfo['rkau']['source_bytes']     = getid3_lib::LittleEndian2Int(substr($RKAUHeader,  4, 4));
-		$ThisFileInfo['rkau']['sample_rate']      = getid3_lib::LittleEndian2Int(substr($RKAUHeader,  8, 4));
-		$ThisFileInfo['rkau']['channels']         = getid3_lib::LittleEndian2Int(substr($RKAUHeader, 12, 1));
-		$ThisFileInfo['rkau']['bits_per_sample']  = getid3_lib::LittleEndian2Int(substr($RKAUHeader, 13, 1));
+		$info['rkau']['source_bytes']     = getid3_lib::LittleEndian2Int(substr($RKAUHeader,  4, 4));
+		$info['rkau']['sample_rate']      = getid3_lib::LittleEndian2Int(substr($RKAUHeader,  8, 4));
+		$info['rkau']['channels']         = getid3_lib::LittleEndian2Int(substr($RKAUHeader, 12, 1));
+		$info['rkau']['bits_per_sample']  = getid3_lib::LittleEndian2Int(substr($RKAUHeader, 13, 1));
 
-		$ThisFileInfo['rkau']['raw']['quality']   = getid3_lib::LittleEndian2Int(substr($RKAUHeader, 14, 1));
-		$this->RKAUqualityLookup($ThisFileInfo['rkau']);
+		$info['rkau']['raw']['quality']   = getid3_lib::LittleEndian2Int(substr($RKAUHeader, 14, 1));
+		$this->RKAUqualityLookup($info['rkau']);
 
-		$ThisFileInfo['rkau']['raw']['flags']            = getid3_lib::LittleEndian2Int(substr($RKAUHeader, 15, 1));
-		$ThisFileInfo['rkau']['flags']['joint_stereo']   = (bool) (!($ThisFileInfo['rkau']['raw']['flags'] & 0x01));
-		$ThisFileInfo['rkau']['flags']['streaming']      =  (bool)  ($ThisFileInfo['rkau']['raw']['flags'] & 0x02);
-		$ThisFileInfo['rkau']['flags']['vrq_lossy_mode'] =  (bool)  ($ThisFileInfo['rkau']['raw']['flags'] & 0x04);
+		$info['rkau']['raw']['flags']            = getid3_lib::LittleEndian2Int(substr($RKAUHeader, 15, 1));
+		$info['rkau']['flags']['joint_stereo']   = (bool) (!($info['rkau']['raw']['flags'] & 0x01));
+		$info['rkau']['flags']['streaming']      =  (bool)  ($info['rkau']['raw']['flags'] & 0x02);
+		$info['rkau']['flags']['vrq_lossy_mode'] =  (bool)  ($info['rkau']['raw']['flags'] & 0x04);
 
-		if ($ThisFileInfo['rkau']['flags']['streaming']) {
-			$ThisFileInfo['avdataoffset'] += 20;
-			$ThisFileInfo['rkau']['compressed_bytes']  = getid3_lib::LittleEndian2Int(substr($RKAUHeader, 16, 4));
+		if ($info['rkau']['flags']['streaming']) {
+			$info['avdataoffset'] += 20;
+			$info['rkau']['compressed_bytes']  = getid3_lib::LittleEndian2Int(substr($RKAUHeader, 16, 4));
 		} else {
-			$ThisFileInfo['avdataoffset'] += 16;
-			$ThisFileInfo['rkau']['compressed_bytes'] = $ThisFileInfo['avdataend'] - $ThisFileInfo['avdataoffset'] - 1;
+			$info['avdataoffset'] += 16;
+			$info['rkau']['compressed_bytes'] = $info['avdataend'] - $info['avdataoffset'] - 1;
 		}
 		// Note: compressed_bytes does not always equal what appears to be the actual number of compressed bytes,
 		// sometimes it's more, sometimes less. No idea why(?)
 
-		$ThisFileInfo['audio']['lossless']        = $ThisFileInfo['rkau']['lossless'];
-		$ThisFileInfo['audio']['channels']        = $ThisFileInfo['rkau']['channels'];
-		$ThisFileInfo['audio']['bits_per_sample'] = $ThisFileInfo['rkau']['bits_per_sample'];
-		$ThisFileInfo['audio']['sample_rate']     = $ThisFileInfo['rkau']['sample_rate'];
+		$info['audio']['lossless']        = $info['rkau']['lossless'];
+		$info['audio']['channels']        = $info['rkau']['channels'];
+		$info['audio']['bits_per_sample'] = $info['rkau']['bits_per_sample'];
+		$info['audio']['sample_rate']     = $info['rkau']['sample_rate'];
 
-		$ThisFileInfo['playtime_seconds']         = $ThisFileInfo['rkau']['source_bytes'] / ($ThisFileInfo['rkau']['sample_rate'] * $ThisFileInfo['rkau']['channels'] * ($ThisFileInfo['rkau']['bits_per_sample'] / 8));
-		$ThisFileInfo['audio']['bitrate']         = ($ThisFileInfo['rkau']['compressed_bytes'] * 8) / $ThisFileInfo['playtime_seconds'];
+		$info['playtime_seconds']         = $info['rkau']['source_bytes'] / ($info['rkau']['sample_rate'] * $info['rkau']['channels'] * ($info['rkau']['bits_per_sample'] / 8));
+		$info['audio']['bitrate']         = ($info['rkau']['compressed_bytes'] * 8) / $info['playtime_seconds'];
 
 		return true;
 

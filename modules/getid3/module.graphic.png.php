@@ -14,37 +14,38 @@
 /////////////////////////////////////////////////////////////////
 
 
-class getid3_png
+class getid3_png extends getid3_handler
 {
 
-	function getid3_png(&$fd, &$ThisFileInfo) {
+	function Analyze() {
+		$info = &$this->getid3->info;
 
 		// shortcut
-		$ThisFileInfo['png'] = array();
-		$thisfile_png = &$ThisFileInfo['png'];
+		$info['png'] = array();
+		$thisfile_png = &$info['png'];
 
-		$ThisFileInfo['fileformat']          = 'png';
-		$ThisFileInfo['video']['dataformat'] = 'png';
-		$ThisFileInfo['video']['lossless']   = false;
+		$info['fileformat']          = 'png';
+		$info['video']['dataformat'] = 'png';
+		$info['video']['lossless']   = false;
 
-		fseek($fd, $ThisFileInfo['avdataoffset'], SEEK_SET);
-		$PNGfiledata = fread($fd, GETID3_FREAD_BUFFER_SIZE);
+		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
+		$PNGfiledata = fread($this->getid3->fp, $this->getid3->fread_buffer_size());
 		$offset = 0;
 
 		$PNGidentifier = substr($PNGfiledata, $offset, 8); // $89 $50 $4E $47 $0D $0A $1A $0A
 		$offset += 8;
 
 		if ($PNGidentifier != "\x89\x50\x4E\x47\x0D\x0A\x1A\x0A") {
-			$ThisFileInfo['error'][] = 'First 8 bytes of file ('.getid3_lib::PrintHexBytes($PNGidentifier).') did not match expected PNG identifier';
-			unset($ThisFileInfo['fileformat']);
+			$info['error'][] = 'First 8 bytes of file ('.getid3_lib::PrintHexBytes($PNGidentifier).') did not match expected PNG identifier';
+			unset($info['fileformat']);
 			return false;
 		}
 
-		while (((ftell($fd) - (strlen($PNGfiledata) - $offset)) < $ThisFileInfo['filesize'])) {
+		while (((ftell($this->getid3->fp) - (strlen($PNGfiledata) - $offset)) < $info['filesize'])) {
 			$chunk['data_length'] = getid3_lib::BigEndian2Int(substr($PNGfiledata, $offset, 4));
 			$offset += 4;
-			while (((strlen($PNGfiledata) - $offset) < ($chunk['data_length'] + 4)) && (ftell($fd) < $ThisFileInfo['filesize'])) {
-				$PNGfiledata .= fread($fd, GETID3_FREAD_BUFFER_SIZE);
+			while (((strlen($PNGfiledata) - $offset) < ($chunk['data_length'] + 4)) && (ftell($this->getid3->fp) < $info['filesize'])) {
+				$PNGfiledata .= fread($this->getid3->fp, $this->getid3->fread_buffer_size());
 			}
 			$chunk['type_text']   =               substr($PNGfiledata, $offset, 4);
 			$offset += 4;
@@ -80,10 +81,10 @@ class getid3_png
 					$thisfile_png_chunk_type_text['color_type']['true_color']  = (bool) ($thisfile_png_chunk_type_text['raw']['color_type'] & 0x02);
 					$thisfile_png_chunk_type_text['color_type']['alpha']       = (bool) ($thisfile_png_chunk_type_text['raw']['color_type'] & 0x04);
 
-					$ThisFileInfo['video']['resolution_x']    = $thisfile_png_chunk_type_text['width'];
-					$ThisFileInfo['video']['resolution_y']    = $thisfile_png_chunk_type_text['height'];
+					$info['video']['resolution_x']    = $thisfile_png_chunk_type_text['width'];
+					$info['video']['resolution_y']    = $thisfile_png_chunk_type_text['height'];
 
-					$ThisFileInfo['video']['bits_per_sample'] = $this->IHDRcalculateBitsPerSample($thisfile_png_chunk_type_text['raw']['color_type'], $thisfile_png_chunk_type_text['raw']['bit_depth']);
+					$info['video']['bits_per_sample'] = $this->IHDRcalculateBitsPerSample($thisfile_png_chunk_type_text['raw']['color_type'], $thisfile_png_chunk_type_text['raw']['bit_depth']);
 					break;
 
 
@@ -123,10 +124,10 @@ class getid3_png
 
 						case 4:
 						case 6:
-							$ThisFileInfo['error'][] = 'Invalid color_type in tRNS chunk: '.$thisfile_png['IHDR']['raw']['color_type'];
+							$info['error'][] = 'Invalid color_type in tRNS chunk: '.$thisfile_png['IHDR']['raw']['color_type'];
 
 						default:
-							$ThisFileInfo['warning'][] = 'Unhandled color_type in tRNS chunk: '.$thisfile_png['IHDR']['raw']['color_type'];
+							$info['warning'][] = 'Unhandled color_type in tRNS chunk: '.$thisfile_png['IHDR']['raw']['color_type'];
 							break;
 					}
 					break;
@@ -429,7 +430,7 @@ class getid3_png
 				default:
 					//unset($chunk['data']);
 					$thisfile_png_chunk_type_text['header'] = $chunk;
-					$ThisFileInfo['warning'][] = 'Unhandled chunk type: '.$chunk['type_text'];
+					$info['warning'][] = 'Unhandled chunk type: '.$chunk['type_text'];
 					break;
 			}
 		}

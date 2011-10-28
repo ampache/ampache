@@ -14,58 +14,61 @@
 /////////////////////////////////////////////////////////////////
 
 
-class getid3_vqf
+class getid3_vqf extends getid3_handler
 {
-	function getid3_vqf(&$fd, &$ThisFileInfo) {
+	function Analyze() {
+		$info = &$this->getid3->info;
+
 		// based loosely on code from TTwinVQ by Jurgen Faul <jfaulØgmx*de>
 		// http://jfaul.de/atl  or  http://j-faul.virtualave.net/atl/atl.html
 
-		$ThisFileInfo['fileformat']            = 'vqf';
-		$ThisFileInfo['audio']['dataformat']   = 'vqf';
-		$ThisFileInfo['audio']['bitrate_mode'] = 'cbr';
-		$ThisFileInfo['audio']['lossless']     = false;
+		$info['fileformat']            = 'vqf';
+		$info['audio']['dataformat']   = 'vqf';
+		$info['audio']['bitrate_mode'] = 'cbr';
+		$info['audio']['lossless']     = false;
 
 		// shortcut
-		$ThisFileInfo['vqf']['raw'] = array();
-		$thisfile_vqf               = &$ThisFileInfo['vqf'];
+		$info['vqf']['raw'] = array();
+		$thisfile_vqf               = &$info['vqf'];
 		$thisfile_vqf_raw           = &$thisfile_vqf['raw'];
 
-		fseek($fd, $ThisFileInfo['avdataoffset'], SEEK_SET);
-		$VQFheaderData = fread($fd, 16);
+		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
+		$VQFheaderData = fread($this->getid3->fp, 16);
 
 		$offset = 0;
-		$thisfile_vqf_raw['header_tag']     =               substr($VQFheaderData, $offset, 4);
-		if ($thisfile_vqf_raw['header_tag'] != 'TWIN') {
-			$ThisFileInfo['error'][] = 'Expecting "TWIN" at offset '.$ThisFileInfo['avdataoffset'].', found "'.$thisfile_vqf_raw['header_tag'].'"';
-			unset($ThisFileInfo['vqf']);
-			unset($ThisFileInfo['fileformat']);
+		$thisfile_vqf_raw['header_tag'] = substr($VQFheaderData, $offset, 4);
+		$magic = 'TWIN';
+		if ($thisfile_vqf_raw['header_tag'] != $magic) {
+			$info['error'][] = 'Expecting "'.getid3_lib::PrintHexBytes($magic).'" at offset '.$info['avdataoffset'].', found "'.getid3_lib::PrintHexBytes($thisfile_vqf_raw['header_tag']).'"';
+			unset($info['vqf']);
+			unset($info['fileformat']);
 			return false;
 		}
 		$offset += 4;
-		$thisfile_vqf_raw['version']        =               substr($VQFheaderData, $offset, 8);
+		$thisfile_vqf_raw['version'] =                           substr($VQFheaderData, $offset, 8);
 		$offset += 8;
-		$thisfile_vqf_raw['size']           = getid3_lib::BigEndian2Int(substr($VQFheaderData, $offset, 4));
+		$thisfile_vqf_raw['size']    = getid3_lib::BigEndian2Int(substr($VQFheaderData, $offset, 4));
 		$offset += 4;
 
-		while (ftell($fd) < $ThisFileInfo['avdataend']) {
+		while (ftell($this->getid3->fp) < $info['avdataend']) {
 
-			$ChunkBaseOffset = ftell($fd);
+			$ChunkBaseOffset = ftell($this->getid3->fp);
 			$chunkoffset = 0;
-			$ChunkData = fread($fd, 8);
+			$ChunkData = fread($this->getid3->fp, 8);
 			$ChunkName = substr($ChunkData, $chunkoffset, 4);
 			if ($ChunkName == 'DATA') {
-				$ThisFileInfo['avdataoffset'] = $ChunkBaseOffset;
+				$info['avdataoffset'] = $ChunkBaseOffset;
 				break;
 			}
 			$chunkoffset += 4;
 			$ChunkSize = getid3_lib::BigEndian2Int(substr($ChunkData, $chunkoffset, 4));
 			$chunkoffset += 4;
-			if ($ChunkSize > ($ThisFileInfo['avdataend'] - ftell($fd))) {
-				$ThisFileInfo['error'][] = 'Invalid chunk size ('.$ChunkSize.') for chunk "'.$ChunkName.'" at offset '.$ChunkBaseOffset;
+			if ($ChunkSize > ($info['avdataend'] - ftell($this->getid3->fp))) {
+				$info['error'][] = 'Invalid chunk size ('.$ChunkSize.') for chunk "'.$ChunkName.'" at offset '.$ChunkBaseOffset;
 				break;
 			}
 			if ($ChunkSize > 0) {
-				$ChunkData .= fread($fd, $ChunkSize);
+				$ChunkData .= fread($this->getid3->fp, $ChunkSize);
 			}
 
 			switch ($ChunkName) {
@@ -83,13 +86,13 @@ class getid3_vqf
 					$thisfile_vqf_COMM['security_level'] = getid3_lib::BigEndian2Int(substr($ChunkData, $chunkoffset, 4));
 					$chunkoffset += 4;
 
-					$ThisFileInfo['audio']['channels']        = $thisfile_vqf_COMM['channel_mode'] + 1;
-					$ThisFileInfo['audio']['sample_rate']     = $this->VQFchannelFrequencyLookup($thisfile_vqf_COMM['sample_rate']);
-					$ThisFileInfo['audio']['bitrate']         = $thisfile_vqf_COMM['bitrate'] * 1000;
-					$ThisFileInfo['audio']['encoder_options'] = 'CBR' . ceil($ThisFileInfo['audio']['bitrate']/1000);
+					$info['audio']['channels']        = $thisfile_vqf_COMM['channel_mode'] + 1;
+					$info['audio']['sample_rate']     = $this->VQFchannelFrequencyLookup($thisfile_vqf_COMM['sample_rate']);
+					$info['audio']['bitrate']         = $thisfile_vqf_COMM['bitrate'] * 1000;
+					$info['audio']['encoder_options'] = 'CBR' . ceil($info['audio']['bitrate']/1000);
 
-					if ($ThisFileInfo['audio']['bitrate'] == 0) {
-						$ThisFileInfo['error'][] = 'Corrupt VQF file: bitrate_audio == zero';
+					if ($info['audio']['bitrate'] == 0) {
+						$info['error'][] = 'Corrupt VQF file: bitrate_audio == zero';
 						return false;
 					}
 					break;
@@ -108,23 +111,23 @@ class getid3_vqf
 					break;
 
 				default:
-					$ThisFileInfo['warning'][] = 'Unhandled chunk type "'.$ChunkName.'" at offset '.$ChunkBaseOffset;
+					$info['warning'][] = 'Unhandled chunk type "'.$ChunkName.'" at offset '.$ChunkBaseOffset;
 					break;
 			}
 		}
 
-		$ThisFileInfo['playtime_seconds'] = (($ThisFileInfo['avdataend'] - $ThisFileInfo['avdataoffset']) * 8) / $ThisFileInfo['audio']['bitrate'];
+		$info['playtime_seconds'] = (($info['avdataend'] - $info['avdataoffset']) * 8) / $info['audio']['bitrate'];
 
-		if (isset($thisfile_vqf['DSIZ']) && (($thisfile_vqf['DSIZ'] != ($ThisFileInfo['avdataend'] - $ThisFileInfo['avdataoffset'] - strlen('DATA'))))) {
+		if (isset($thisfile_vqf['DSIZ']) && (($thisfile_vqf['DSIZ'] != ($info['avdataend'] - $info['avdataoffset'] - strlen('DATA'))))) {
 			switch ($thisfile_vqf['DSIZ']) {
 				case 0:
 				case 1:
-					$ThisFileInfo['warning'][] = 'Invalid DSIZ value "'.$thisfile_vqf['DSIZ'].'". This is known to happen with VQF files encoded by Ahead Nero, and seems to be its way of saying this is TwinVQF v'.($thisfile_vqf['DSIZ'] + 1).'.0';
-					$ThisFileInfo['audio']['encoder'] = 'Ahead Nero';
+					$info['warning'][] = 'Invalid DSIZ value "'.$thisfile_vqf['DSIZ'].'". This is known to happen with VQF files encoded by Ahead Nero, and seems to be its way of saying this is TwinVQF v'.($thisfile_vqf['DSIZ'] + 1).'.0';
+					$info['audio']['encoder'] = 'Ahead Nero';
 					break;
 
 				default:
-					$ThisFileInfo['warning'][] = 'Probable corrupted file - should be '.$thisfile_vqf['DSIZ'].' bytes, actually '.($ThisFileInfo['avdataend'] - $ThisFileInfo['avdataoffset'] - strlen('DATA'));
+					$info['warning'][] = 'Probable corrupted file - should be '.$thisfile_vqf['DSIZ'].' bytes, actually '.($info['avdataend'] - $info['avdataoffset'] - strlen('DATA'));
 					break;
 			}
 		}

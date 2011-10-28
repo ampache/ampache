@@ -19,21 +19,21 @@
 /////////////////////////////////////////////////////////////////
 
 
-class getid3_tar {
+class getid3_tar extends getid3_handler
+{
 
-	function getid3_tar(&$fd, &$ThisFileInfo) {
-		$ThisFileInfo['fileformat'] = 'tar';
-		$ThisFileInfo['tar']['files'] = array();
+	function Analyze() {
+		$info = &$this->getid3->info;
+
+		$info['fileformat'] = 'tar';
+		$info['tar']['files'] = array();
 
 		$unpack_header = 'a100fname/a8mode/a8uid/a8gid/a12size/a12mtime/a8chksum/a1typflag/a100lnkname/a6magic/a2ver/a32uname/a32gname/a8devmaj/a8devmin/a155prefix';
 		$null_512k = str_repeat("\x00", 512); // end-of-file marker
 
-		ob_start();
-		fseek($fd, 0);
-		$errormessage = ob_get_contents();
-		ob_end_clean();
-		while (!feof($fd)) {
-			$buffer = fread($fd, 512);
+		fseek($this->getid3->fp, 0);
+		while (!feof($this->getid3->fp)) {
+			$buffer = fread($this->getid3->fp, 512);
 			if (strlen($buffer) < 512) {
 				break;
 			}
@@ -82,18 +82,18 @@ class getid3_tar {
 			}
 
 			// Read to the next chunk
-			fseek($fd, $size, SEEK_CUR);
+			fseek($this->getid3->fp, $size, SEEK_CUR);
 
 			$diff = $size % 512;
 			if ($diff != 0) {
 				// Padding, throw away
-				fseek($fd, (512 - $diff), SEEK_CUR);
+				fseek($this->getid3->fp, (512 - $diff), SEEK_CUR);
 			}
 			// Protect against tar-files with garbage at the end
 			if ($name == '') {
 				break;
 			}
-			$ThisFileInfo['tar']['file_details'][$name] = array (
+			$info['tar']['file_details'][$name] = array (
 				'name'     => $name,
 				'mode_raw' => $mode,
 				'mode'     => getid3_tar::display_perms($mode),
@@ -111,7 +111,7 @@ class getid3_tar {
 				'devmajor' => $devmaj,
 				'devminor' => $devmin
 			);
-			$ThisFileInfo['tar']['files'] = getid3_lib::array_merge_clobber($ThisFileInfo['tar']['files'], getid3_lib::CreateDeepArray($ThisFileInfo['tar']['file_details'][$name]['name'], '/', $size));
+			$info['tar']['files'] = getid3_lib::array_merge_clobber($info['tar']['files'], getid3_lib::CreateDeepArray($info['tar']['file_details'][$name]['name'], '/', $size));
 		}
 		return true;
 	}

@@ -17,6 +17,75 @@
 Version History
 ===============
 
+1.9.1: [2011-08-10] James Heinrich
+    ¤ ASF Extended Header Object data now (partially) parsed
+    * Default getID3 encoding now set to UTF-8 not ISO-8859-1
+    * Bugfix: (#1212) truncated Matroska files may result in
+        infinite loop and memory exhaustion
+    * Bugfix: (#1203) parse RIFF JUNK chunks for version strings
+    * Bugfix: (#1201) multi-byte characters strings incorrectly
+        displayed by table_var_dump() in demo.browse.php
+    * Bugfix: (#1199) prevent PHP warning on malformed ID3v2 APIC
+    * Bugfix: (#1196) typo in module.audio-video.quicktime.php
+    * Bugfix: (#1195) QuicktimeStoreFrontCodeLookup() broken
+    * Bugfix: (#1194) mp4 embedded images not handled correctly
+    * Bugfix: (#1193) [image_mime] key not set fo WM/picture data
+    * Bugfix: (#1193) ASF Extended Header Object Metadata Library
+        now parsed for embedded images and handled per usual style
+    * Bugfix: (#1190) demo.mimeonly.php was broken since v1.9.0
+    * Bugfix: ID3v2 comment is now called 'comment' not 'comments'
+    * Bugfix: AVI unknown codec fourcc would be reported as blank
+    * Bugfix: AVI zero-size JUNK chunk would give warning
+
+
+1.9.0: [2011-06-20] James Heinrich
+    » changed all module classes to have proper constructors
+      with the actual analysis code moved to function Analyze()
+    * removed unnecessary ob_* calls, replaced with appropriate
+      checks and judicious use of @ error suppression
+    ¤ GETID3_VERSION constant replaced with $getID3->version()
+    ¤ picture data is now returned only in the original source
+      location and [comments][picture], it is no longer replicated
+      in [comments_html], [tags] or [tags_html]
+    ¤ Matroska tags are now returned in [comments] as per normal
+    ¤ Matroska tags are better supported, including pictures
+    ¤ GPS data in MP4 files (e.g. iPhone) is now parsed (#1157)
+    ¤ Matroska audio/video tracks with a default flag, the default
+      stream flag is now copied to [audio|video][streams] (#1147)
+    ¤ Nikon-specific data (NCDT atom) in Quicktime videos now parsed
+    ¤ QuickTime atoms 'meta' and 'data' now (mostly) parsed
+    * Bugfix: remove false warning of junk data on WAV+ID3v1
+    * Bugfix: DolbyDigitalWAV files returned wrong audio bitrate
+    * Bugfix: large attachment data in Matroska tags were not
+      returned completely.
+    * Bugfix: wrong image_mime used for images in demo.browse.php
+    * Bugfix: broken preg_match in module.audio.dss.php
+    * Bugfix: Lyrics3 end offset was off by 1
+    * Bugfix: audio channelmode could be wrong for 2 channels
+      (e.g. joint stereo reported as stereo)
+    * Bugfix: MultiByteCharString2HTML() would return empty string
+      if passed float or int value, now casts to string first
+    * Bugfix: FLAC.picture was not returning under [data] +
+      [image_mime] per standardized format
+    * Bugfix: BigEndian2Int() could incorrectly return negative
+      signed synchsafe integer instead of casting to float
+    * Bugfix: (#1177) ID3v2.4 extended headers were broken
+    * Bugfix: (#1173) some MIDI files not completely parsed
+    * Bugfix: (#1171) change helperapps error to nonblocking warning
+    * Bugfix: (#1170) possible infinite loop in FLV module
+    * Bugfix: (#1169) $this reference in static function (ID3v2)
+    * Bugfix: (#1156) demo.mysql.php not working
+    * Bugfix: (#1153) badly-tagged files could produce invalid
+      argument errors in module.tag.xmp.php
+    * Bugfix: (#1152) add error-suppression to iconv() calls
+    * Bugfix: (#1151) AAC-ADTS files could sometimes not find sync
+    * Bugfix: (#1136) last character of unicode tags (e.g. ASF)
+      was being truncated
+    * Bugfix: (#1133) write.id3v2.php IsValidURL() was broken
+    * Bugfix: (#1126) ID3v2.POPM field was being clobbered
+    * Bugfix: (#999, #1154) ID3v2 UFID data was missing
+
+
 1.8.5: [2011-02-18] James Heinrich
     » support >2GB files on 64-bit PHP
       - note current unofficial 64-bit PHP builds for Windows

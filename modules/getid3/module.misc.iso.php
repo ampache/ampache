@@ -14,25 +14,27 @@
 /////////////////////////////////////////////////////////////////
 
 
-class getid3_iso
+class getid3_iso extends getid3_handler
 {
 
-	function getid3_iso($fd, &$ThisFileInfo) {
-		$ThisFileInfo['fileformat'] = 'iso';
+	function Analyze() {
+		$info = &$this->getid3->info;
+
+		$info['fileformat'] = 'iso';
 
 		for ($i = 16; $i <= 19; $i++) {
-			fseek($fd, 2048 * $i, SEEK_SET);
-			$ISOheader = fread($fd, 2048);
+			fseek($this->getid3->fp, 2048 * $i, SEEK_SET);
+			$ISOheader = fread($this->getid3->fp, 2048);
 			if (substr($ISOheader, 1, 5) == 'CD001') {
 				switch (ord($ISOheader{0})) {
 					case 1:
-						$ThisFileInfo['iso']['primary_volume_descriptor']['offset'] = 2048 * $i;
-						$this->ParsePrimaryVolumeDescriptor($ISOheader, $ThisFileInfo);
+						$info['iso']['primary_volume_descriptor']['offset'] = 2048 * $i;
+						$this->ParsePrimaryVolumeDescriptor($ISOheader);
 						break;
 
 					case 2:
-						$ThisFileInfo['iso']['supplementary_volume_descriptor']['offset'] = 2048 * $i;
-						$this->ParseSupplementaryVolumeDescriptor($ISOheader, $ThisFileInfo);
+						$info['iso']['supplementary_volume_descriptor']['offset'] = 2048 * $i;
+						$this->ParseSupplementaryVolumeDescriptor($ISOheader);
 						break;
 
 					default:
@@ -42,35 +44,33 @@ class getid3_iso
 			}
 		}
 
-		$this->ParsePathTable($fd, $ThisFileInfo);
+		$this->ParsePathTable();
 
-		$ThisFileInfo['iso']['files'] = array();
-		foreach ($ThisFileInfo['iso']['path_table']['directories'] as $directorynum => $directorydata) {
-
-			$ThisFileInfo['iso']['directories'][$directorynum] = $this->ParseDirectoryRecord($fd, $directorydata, $ThisFileInfo);
-
+		$info['iso']['files'] = array();
+		foreach ($info['iso']['path_table']['directories'] as $directorynum => $directorydata) {
+			$info['iso']['directories'][$directorynum] = $this->ParseDirectoryRecord($directorydata);
 		}
 
 		return true;
-
 	}
 
 
-	function ParsePrimaryVolumeDescriptor(&$ISOheader, &$ThisFileInfo) {
+	function ParsePrimaryVolumeDescriptor(&$ISOheader) {
 		// ISO integer values are stored *BOTH* Little-Endian AND Big-Endian format!!
 		// ie 12345 == 0x3039  is stored as $39 $30 $30 $39 in a 4-byte field
 
 		// shortcuts
-		$ThisFileInfo['iso']['primary_volume_descriptor']['raw'] = array();
-		$thisfile_iso_primaryVD     = &$ThisFileInfo['iso']['primary_volume_descriptor'];
+		$info = &$this->getid3->info;
+		$info['iso']['primary_volume_descriptor']['raw'] = array();
+		$thisfile_iso_primaryVD     = &$info['iso']['primary_volume_descriptor'];
 		$thisfile_iso_primaryVD_raw = &$thisfile_iso_primaryVD['raw'];
 
 		$thisfile_iso_primaryVD_raw['volume_descriptor_type']         = getid3_lib::LittleEndian2Int(substr($ISOheader,    0, 1));
 		$thisfile_iso_primaryVD_raw['standard_identifier']            =                  substr($ISOheader,    1, 5);
 		if ($thisfile_iso_primaryVD_raw['standard_identifier'] != 'CD001') {
-			$ThisFileInfo['error'][] = 'Expected "CD001" at offset ('.($thisfile_iso_primaryVD['offset'] + 1).'), found "'.$thisfile_iso_primaryVD_raw['standard_identifier'].'" instead';
-			unset($ThisFileInfo['fileformat']);
-			unset($ThisFileInfo['iso']);
+			$info['error'][] = 'Expected "CD001" at offset ('.($thisfile_iso_primaryVD['offset'] + 1).'), found "'.$thisfile_iso_primaryVD_raw['standard_identifier'].'" instead';
+			unset($info['fileformat']);
+			unset($info['iso']);
 			return false;
 		}
 
@@ -121,29 +121,30 @@ class getid3_iso
 		$thisfile_iso_primaryVD['volume_expiration_date_time']   = $this->ISOtimeText2UNIXtime($thisfile_iso_primaryVD_raw['volume_expiration_date_time']);
 		$thisfile_iso_primaryVD['volume_effective_date_time']    = $this->ISOtimeText2UNIXtime($thisfile_iso_primaryVD_raw['volume_effective_date_time']);
 
-		if (($thisfile_iso_primaryVD_raw['volume_space_size'] * 2048) > $ThisFileInfo['filesize']) {
-			$ThisFileInfo['error'][] = 'Volume Space Size ('.($thisfile_iso_primaryVD_raw['volume_space_size'] * 2048).' bytes) is larger than the file size ('.$ThisFileInfo['filesize'].' bytes) (truncated file?)';
+		if (($thisfile_iso_primaryVD_raw['volume_space_size'] * 2048) > $info['filesize']) {
+			$info['error'][] = 'Volume Space Size ('.($thisfile_iso_primaryVD_raw['volume_space_size'] * 2048).' bytes) is larger than the file size ('.$info['filesize'].' bytes) (truncated file?)';
 		}
 
 		return true;
 	}
 
 
-	function ParseSupplementaryVolumeDescriptor(&$ISOheader, &$ThisFileInfo) {
+	function ParseSupplementaryVolumeDescriptor(&$ISOheader) {
 		// ISO integer values are stored Both-Endian format!!
 		// ie 12345 == 0x3039  is stored as $39 $30 $30 $39 in a 4-byte field
 
 		// shortcuts
-		$ThisFileInfo['iso']['supplementary_volume_descriptor']['raw'] = array();
-		$thisfile_iso_supplementaryVD     = &$ThisFileInfo['iso']['supplementary_volume_descriptor'];
+		$info = &$this->getid3->info;
+		$info['iso']['supplementary_volume_descriptor']['raw'] = array();
+		$thisfile_iso_supplementaryVD     = &$info['iso']['supplementary_volume_descriptor'];
 		$thisfile_iso_supplementaryVD_raw = &$thisfile_iso_supplementaryVD['raw'];
 
 		$thisfile_iso_supplementaryVD_raw['volume_descriptor_type'] = getid3_lib::LittleEndian2Int(substr($ISOheader,    0, 1));
 		$thisfile_iso_supplementaryVD_raw['standard_identifier']    =                  substr($ISOheader,    1, 5);
 		if ($thisfile_iso_supplementaryVD_raw['standard_identifier'] != 'CD001') {
-			$ThisFileInfo['error'][] = 'Expected "CD001" at offset ('.($thisfile_iso_supplementaryVD['offset'] + 1).'), found "'.$thisfile_iso_supplementaryVD_raw['standard_identifier'].'" instead';
-			unset($ThisFileInfo['fileformat']);
-			unset($ThisFileInfo['iso']);
+			$info['error'][] = 'Expected "CD001" at offset ('.($thisfile_iso_supplementaryVD['offset'] + 1).'), found "'.$thisfile_iso_supplementaryVD_raw['standard_identifier'].'" instead';
+			unset($info['fileformat']);
+			unset($info['iso']);
 			return false;
 		}
 
@@ -199,62 +200,63 @@ class getid3_iso
 		$thisfile_iso_supplementaryVD['volume_expiration_date_time']    = $this->ISOtimeText2UNIXtime($thisfile_iso_supplementaryVD_raw['volume_expiration_date_time']);
 		$thisfile_iso_supplementaryVD['volume_effective_date_time']     = $this->ISOtimeText2UNIXtime($thisfile_iso_supplementaryVD_raw['volume_effective_date_time']);
 
-		if (($thisfile_iso_supplementaryVD_raw['volume_space_size'] * $thisfile_iso_supplementaryVD_raw['logical_block_size']) > $ThisFileInfo['filesize']) {
-			$ThisFileInfo['error'][] = 'Volume Space Size ('.($thisfile_iso_supplementaryVD_raw['volume_space_size'] * $thisfile_iso_supplementaryVD_raw['logical_block_size']).' bytes) is larger than the file size ('.$ThisFileInfo['filesize'].' bytes) (truncated file?)';
+		if (($thisfile_iso_supplementaryVD_raw['volume_space_size'] * $thisfile_iso_supplementaryVD_raw['logical_block_size']) > $info['filesize']) {
+			$info['error'][] = 'Volume Space Size ('.($thisfile_iso_supplementaryVD_raw['volume_space_size'] * $thisfile_iso_supplementaryVD_raw['logical_block_size']).' bytes) is larger than the file size ('.$info['filesize'].' bytes) (truncated file?)';
 		}
 
 		return true;
 	}
 
 
-	function ParsePathTable($fd, &$ThisFileInfo) {
-		if (!isset($ThisFileInfo['iso']['supplementary_volume_descriptor']['raw']['path_table_l_location']) && !isset($ThisFileInfo['iso']['primary_volume_descriptor']['raw']['path_table_l_location'])) {
+	function ParsePathTable() {
+		$info = &$this->getid3->info;
+		if (!isset($info['iso']['supplementary_volume_descriptor']['raw']['path_table_l_location']) && !isset($info['iso']['primary_volume_descriptor']['raw']['path_table_l_location'])) {
 			return false;
 		}
-		if (isset($ThisFileInfo['iso']['supplementary_volume_descriptor']['raw']['path_table_l_location'])) {
-			$PathTableLocation = $ThisFileInfo['iso']['supplementary_volume_descriptor']['raw']['path_table_l_location'];
-			$PathTableSize     = $ThisFileInfo['iso']['supplementary_volume_descriptor']['raw']['path_table_size'];
+		if (isset($info['iso']['supplementary_volume_descriptor']['raw']['path_table_l_location'])) {
+			$PathTableLocation = $info['iso']['supplementary_volume_descriptor']['raw']['path_table_l_location'];
+			$PathTableSize     = $info['iso']['supplementary_volume_descriptor']['raw']['path_table_size'];
 			$TextEncoding      = 'UTF-16BE'; // Big-Endian Unicode
 		} else {
-			$PathTableLocation = $ThisFileInfo['iso']['primary_volume_descriptor']['raw']['path_table_l_location'];
-			$PathTableSize     = $ThisFileInfo['iso']['primary_volume_descriptor']['raw']['path_table_size'];
+			$PathTableLocation = $info['iso']['primary_volume_descriptor']['raw']['path_table_l_location'];
+			$PathTableSize     = $info['iso']['primary_volume_descriptor']['raw']['path_table_size'];
 			$TextEncoding      = 'ISO-8859-1'; // Latin-1
 		}
 
-		if (($PathTableLocation * 2048) > $ThisFileInfo['filesize']) {
-			$ThisFileInfo['error'][] = 'Path Table Location specifies an offset ('.($PathTableLocation * 2048).') beyond the end-of-file ('.$ThisFileInfo['filesize'].')';
+		if (($PathTableLocation * 2048) > $info['filesize']) {
+			$info['error'][] = 'Path Table Location specifies an offset ('.($PathTableLocation * 2048).') beyond the end-of-file ('.$info['filesize'].')';
 			return false;
 		}
 
-		$ThisFileInfo['iso']['path_table']['offset'] = $PathTableLocation * 2048;
-		fseek($fd, $ThisFileInfo['iso']['path_table']['offset'], SEEK_SET);
-		$ThisFileInfo['iso']['path_table']['raw'] = fread($fd, $PathTableSize);
+		$info['iso']['path_table']['offset'] = $PathTableLocation * 2048;
+		fseek($this->getid3->fp, $info['iso']['path_table']['offset'], SEEK_SET);
+		$info['iso']['path_table']['raw'] = fread($this->getid3->fp, $PathTableSize);
 
 		$offset = 0;
 		$pathcounter = 1;
 		while ($offset < $PathTableSize) {
 			// shortcut
-			$ThisFileInfo['iso']['path_table']['directories'][$pathcounter] = array();
-			$thisfile_iso_pathtable_directories_current = &$ThisFileInfo['iso']['path_table']['directories'][$pathcounter];
+			$info['iso']['path_table']['directories'][$pathcounter] = array();
+			$thisfile_iso_pathtable_directories_current = &$info['iso']['path_table']['directories'][$pathcounter];
 
-			$thisfile_iso_pathtable_directories_current['length']           = getid3_lib::LittleEndian2Int(substr($ThisFileInfo['iso']['path_table']['raw'], $offset, 1));
+			$thisfile_iso_pathtable_directories_current['length']           = getid3_lib::LittleEndian2Int(substr($info['iso']['path_table']['raw'], $offset, 1));
 			$offset += 1;
-			$thisfile_iso_pathtable_directories_current['extended_length']  = getid3_lib::LittleEndian2Int(substr($ThisFileInfo['iso']['path_table']['raw'], $offset, 1));
+			$thisfile_iso_pathtable_directories_current['extended_length']  = getid3_lib::LittleEndian2Int(substr($info['iso']['path_table']['raw'], $offset, 1));
 			$offset += 1;
-			$thisfile_iso_pathtable_directories_current['location_logical'] = getid3_lib::LittleEndian2Int(substr($ThisFileInfo['iso']['path_table']['raw'], $offset, 4));
+			$thisfile_iso_pathtable_directories_current['location_logical'] = getid3_lib::LittleEndian2Int(substr($info['iso']['path_table']['raw'], $offset, 4));
 			$offset += 4;
-			$thisfile_iso_pathtable_directories_current['parent_directory'] = getid3_lib::LittleEndian2Int(substr($ThisFileInfo['iso']['path_table']['raw'], $offset, 2));
+			$thisfile_iso_pathtable_directories_current['parent_directory'] = getid3_lib::LittleEndian2Int(substr($info['iso']['path_table']['raw'], $offset, 2));
 			$offset += 2;
-			$thisfile_iso_pathtable_directories_current['name']             =                  substr($ThisFileInfo['iso']['path_table']['raw'], $offset, $thisfile_iso_pathtable_directories_current['length']);
+			$thisfile_iso_pathtable_directories_current['name']             =                  substr($info['iso']['path_table']['raw'], $offset, $thisfile_iso_pathtable_directories_current['length']);
 			$offset += $thisfile_iso_pathtable_directories_current['length'] + ($thisfile_iso_pathtable_directories_current['length'] % 2);
 
-			$thisfile_iso_pathtable_directories_current['name_ascii']       = getid3_lib::iconv_fallback($TextEncoding, $ThisFileInfo['encoding'], $thisfile_iso_pathtable_directories_current['name']);
+			$thisfile_iso_pathtable_directories_current['name_ascii']       = getid3_lib::iconv_fallback($TextEncoding, $info['encoding'], $thisfile_iso_pathtable_directories_current['name']);
 
 			$thisfile_iso_pathtable_directories_current['location_bytes'] = $thisfile_iso_pathtable_directories_current['location_logical'] * 2048;
 			if ($pathcounter == 1) {
 				$thisfile_iso_pathtable_directories_current['full_path'] = '/';
 			} else {
-				$thisfile_iso_pathtable_directories_current['full_path'] = $ThisFileInfo['iso']['path_table']['directories'][$thisfile_iso_pathtable_directories_current['parent_directory']]['full_path'].$thisfile_iso_pathtable_directories_current['name_ascii'].'/';
+				$thisfile_iso_pathtable_directories_current['full_path'] = $info['iso']['path_table']['directories'][$thisfile_iso_pathtable_directories_current['parent_directory']]['full_path'].$thisfile_iso_pathtable_directories_current['name_ascii'].'/';
 			}
 			$FullPathArray[] = $thisfile_iso_pathtable_directories_current['full_path'];
 
@@ -265,19 +267,20 @@ class getid3_iso
 	}
 
 
-	function ParseDirectoryRecord(&$fd, $directorydata, &$ThisFileInfo) {
-		if (isset($ThisFileInfo['iso']['supplementary_volume_descriptor'])) {
+	function ParseDirectoryRecord($directorydata) {
+		$info = &$this->getid3->info;
+		if (isset($info['iso']['supplementary_volume_descriptor'])) {
 			$TextEncoding = 'UTF-16BE';   // Big-Endian Unicode
 		} else {
 			$TextEncoding = 'ISO-8859-1'; // Latin-1
 		}
 
-		fseek($fd, $directorydata['location_bytes'], SEEK_SET);
-		$DirectoryRecordData = fread($fd, 1);
+		fseek($this->getid3->fp, $directorydata['location_bytes'], SEEK_SET);
+		$DirectoryRecordData = fread($this->getid3->fp, 1);
 
 		while (ord($DirectoryRecordData{0}) > 33) {
 
-			$DirectoryRecordData .= fread($fd, ord($DirectoryRecordData{0}) - 1);
+			$DirectoryRecordData .= fread($this->getid3->fp, ord($DirectoryRecordData{0}) - 1);
 
 			$ThisDirectoryRecord['raw']['length']                    = getid3_lib::LittleEndian2Int(substr($DirectoryRecordData,  0, 1));
 			$ThisDirectoryRecord['raw']['extended_attribute_length'] = getid3_lib::LittleEndian2Int(substr($DirectoryRecordData,  1, 1));
@@ -291,7 +294,7 @@ class getid3_iso
 			$ThisDirectoryRecord['raw']['file_identifier_length']    = getid3_lib::LittleEndian2Int(substr($DirectoryRecordData, 32, 1));
 			$ThisDirectoryRecord['raw']['file_identifier']           =                  substr($DirectoryRecordData, 33, $ThisDirectoryRecord['raw']['file_identifier_length']);
 
-			$ThisDirectoryRecord['file_identifier_ascii']            = getid3_lib::iconv_fallback($TextEncoding, $ThisFileInfo['encoding'], $ThisDirectoryRecord['raw']['file_identifier']);
+			$ThisDirectoryRecord['file_identifier_ascii']            = getid3_lib::iconv_fallback($TextEncoding, $info['encoding'], $ThisDirectoryRecord['raw']['file_identifier']);
 
 			$ThisDirectoryRecord['filesize']                  = $ThisDirectoryRecord['raw']['filesize'];
 			$ThisDirectoryRecord['offset_bytes']              = $ThisDirectoryRecord['raw']['offset_logical'] * 2048;
@@ -307,11 +310,11 @@ class getid3_iso
 				$ThisDirectoryRecord['filename'] = $directorydata['full_path'];
 			} else {
 				$ThisDirectoryRecord['filename'] = $directorydata['full_path'].$this->ISOstripFilenameVersion($ThisDirectoryRecord['file_identifier_ascii']);
-				$ThisFileInfo['iso']['files'] = getid3_lib::array_merge_clobber($ThisFileInfo['iso']['files'], getid3_lib::CreateDeepArray($ThisDirectoryRecord['filename'], '/', $ThisDirectoryRecord['filesize']));
+				$info['iso']['files'] = getid3_lib::array_merge_clobber($info['iso']['files'], getid3_lib::CreateDeepArray($ThisDirectoryRecord['filename'], '/', $ThisDirectoryRecord['filesize']));
 			}
 
 			$DirectoryRecord[] = $ThisDirectoryRecord;
-			$DirectoryRecordData = fread($fd, 1);
+			$DirectoryRecordData = fread($this->getid3->fp, 1);
 		}
 
 		return $DirectoryRecord;

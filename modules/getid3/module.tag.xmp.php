@@ -91,16 +91,9 @@ class Image_XMP
 		// Attempt to open the jpeg file - the at symbol supresses the error message about
 		// not being able to open files. The file_exists would have been used, but it
 		// does not work with files fetched over http or ftp.
-		ob_start();
-		$filehnd = fopen($filename, 'rb');
-		$errormessage = ob_get_contents();
-		ob_end_clean();
-
-		// Check if the file opened successfully
-		if (!$filehnd)
-		{
-			// Could't open the file - exit
-			echo '<p>Could not open file '.htmlentities($filename).'</p>'."\n";
+		if (is_readable($filename) && is_file($filename) && ($filehnd = fopen($filename, 'rb'))) {
+			// great
+		} else {
 			return false;
 		}
 
@@ -218,7 +211,7 @@ class Image_XMP
 					// Return the XMP text
 					$xmp_data = substr($jpeg_header_data[$i]['SegData'], 29);
 
-					return $xmp_data;
+					return trim($xmp_data); // trim() should not be neccesary, but some files found in the wild with null-terminated block (known samples from Apple Aperture) causes problems elsewhere (see http://www.getid3.org/phpBB3/viewtopic.php?f=4&t=1153)
 				}
 			}
 		}
@@ -333,14 +326,14 @@ class Image_XMP
 						if (array_key_exists('attributes', $xml_elem))
 						{
 							// If Lang Alt (language alternatives) then ensure we take the default language
-							if ($xml_elem['attributes']['xml:lang'] != 'x-default')
+							if (isset($xml_elem['attributes']['xml:lang']) && ($xml_elem['attributes']['xml:lang'] != 'x-default'))
 							{
 								break;
 							}
 						}
 						if ($current_property != '')
 						{
-							$xmp_array[$current_property][$container_index] = $xml_elem['value'];
+							$xmp_array[$current_property][$container_index] = (isset($xml_elem['value']) ? $xml_elem['value'] : '');
 							$container_index += 1;
 						}
 					//else unidentified attribute!!

@@ -14,14 +14,15 @@
 /////////////////////////////////////////////////////////////////
 
 
-class getid3_pdf
+class getid3_pdf extends getid3_handler
 {
 
-	function getid3_pdf(&$fd, &$ThisFileInfo) {
+	function Analyze() {
+		$info = &$this->getid3->info;
 
-		$ThisFileInfo['fileformat'] = 'pdf';
+		$info['fileformat'] = 'pdf';
 
-		$ThisFileInfo['error'][] = 'PDF parsing not enabled in this version of getID3()';
+		$info['error'][] = 'PDF parsing not enabled in this version of getID3() ['.$this->getid3->version().']';
 		return false;
 
 	}

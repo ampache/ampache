@@ -16,10 +16,11 @@
 class getid3_write_real
 {
 	var $filename;
-	var $tag_data     = array();
-	var $warnings     = array(); // any non-critical errors will be stored here
-	var $errors       = array(); // any critical errors will be stored here
-	var $paddedlength = 512;     // minimum length of CONT tag in bytes
+	var $tag_data          = array();
+	var $fread_buffer_size = 32768;   // read buffer size in bytes
+	var $warnings          = array(); // any non-critical errors will be stored here
+	var $errors            = array(); // any critical errors will be stored here
+	var $paddedlength      = 512;     // minimum length of CONT tag in bytes
 
 	function getid3_write_real() {
 		return true;
@@ -27,115 +28,101 @@ class getid3_write_real
 
 	function WriteReal() {
 		// File MUST be writeable - CHMOD(646) at least
-		if (is_writeable($this->filename)) {
-			ob_start();
-			if ($fp_source = fopen($this->filename, 'r+b')) {
+		if (is_writeable($this->filename) && is_file($this->filename) && ($fp_source = fopen($this->filename, 'r+b'))) {
 
-				ob_end_clean();
-				// Initialize getID3 engine
-				$getID3 = new getID3;
-				$OldThisFileInfo = $getID3->analyze($this->filename);
-				if (empty($OldThisFileInfo['real']['chunks']) && !empty($OldThisFileInfo['real']['old_ra_header'])) {
-					$this->errors[] = 'Cannot write Real tags on old-style file format';
-					fclose($fp_source);
-					return false;
-				}
-
-				if (empty($OldThisFileInfo['real']['chunks'])) {
-					$this->errors[] = 'Cannot write Real tags because cannot find DATA chunk in file';
-					fclose($fp_source);
-					return false;
-				}
-				foreach ($OldThisFileInfo['real']['chunks'] as $chunknumber => $chunkarray) {
-					$oldChunkInfo[$chunkarray['name']] = $chunkarray;
-				}
-				if (!empty($oldChunkInfo['CONT']['length'])) {
-					$this->paddedlength = max($oldChunkInfo['CONT']['length'], $this->paddedlength);
-				}
-
-				$new_CONT_tag_data = $this->GenerateCONTchunk();
-				$new_PROP_tag_data = $this->GeneratePROPchunk($OldThisFileInfo['real']['chunks'], $new_CONT_tag_data);
-				$new__RMF_tag_data = $this->GenerateRMFchunk($OldThisFileInfo['real']['chunks']);
-
-				if (isset($oldChunkInfo['.RMF']['length']) && ($oldChunkInfo['.RMF']['length'] == strlen($new__RMF_tag_data))) {
-					fseek($fp_source, $oldChunkInfo['.RMF']['offset'], SEEK_SET);
-					fwrite($fp_source, $new__RMF_tag_data);
-				} else {
-					$this->errors[] = 'new .RMF tag ('.strlen($new__RMF_tag_data).' bytes) different length than old .RMF tag ('.$oldChunkInfo['.RMF']['length'].' bytes)';
-					fclose($fp_source);
-					return false;
-				}
-
-				if (isset($oldChunkInfo['PROP']['length']) && ($oldChunkInfo['PROP']['length'] == strlen($new_PROP_tag_data))) {
-					fseek($fp_source, $oldChunkInfo['PROP']['offset'], SEEK_SET);
-					fwrite($fp_source, $new_PROP_tag_data);
-				} else {
-					$this->errors[] = 'new PROP tag ('.strlen($new_PROP_tag_data).' bytes) different length than old PROP tag ('.$oldChunkInfo['PROP']['length'].' bytes)';
-					fclose($fp_source);
-					return false;
-				}
-
-				if (isset($oldChunkInfo['CONT']['length']) && ($oldChunkInfo['CONT']['length'] == strlen($new_CONT_tag_data))) {
-
-					// new data length is same as old data length - just overwrite
-					fseek($fp_source, $oldChunkInfo['CONT']['offset'], SEEK_SET);
-					fwrite($fp_source, $new_CONT_tag_data);
-					fclose($fp_source);
-					return true;
-
-				} else {
-
-					if (empty($oldChunkInfo['CONT'])) {
-						// no existing CONT chunk
-						$BeforeOffset = $oldChunkInfo['DATA']['offset'];
-						$AfterOffset  = $oldChunkInfo['DATA']['offset'];
-					} else {
-						// new data is longer than old data
-						$BeforeOffset = $oldChunkInfo['CONT']['offset'];
-						$AfterOffset  = $oldChunkInfo['CONT']['offset'] + $oldChunkInfo['CONT']['length'];
-					}
-					if ($tempfilename = tempnam(GETID3_TEMP_DIR, 'getID3')) {
-						ob_start();
-						if ($fp_temp = fopen($tempfilename, 'wb')) {
-
-							rewind($fp_source);
-							fwrite($fp_temp, fread($fp_source, $BeforeOffset));
-							fwrite($fp_temp, $new_CONT_tag_data);
-							fseek($fp_source, $AfterOffset, SEEK_SET);
-							while ($buffer = fread($fp_source, GETID3_FREAD_BUFFER_SIZE)) {
-								fwrite($fp_temp, $buffer, strlen($buffer));
-							}
-							fclose($fp_temp);
-
-							if (copy($tempfilename, $this->filename)) {
-								unlink($tempfilename);
-								fclose($fp_source);
-								return true;
-							}
-							unlink($tempfilename);
-							$this->errors[] = 'FAILED: copy('.$tempfilename.', '.$this->filename.') - '.strip_tags(ob_get_contents());
-
-						} else {
-
-							$this->errors[] = 'Could not open '.$tempfilename.' mode "wb" - '.strip_tags(ob_get_contents());
-
-						}
-						ob_end_clean();
-					}
-					fclose($fp_source);
-					return false;
-
-				}
-
-
-			} else {
-				$errormessage = ob_get_contents();
-				ob_end_clean();
-				$this->errors[] = 'Could not open '.$this->filename.' mode "r+b"';
+			// Initialize getID3 engine
+			$getID3 = new getID3;
+			$OldThisFileInfo = $getID3->analyze($this->filename);
+			if (empty($OldThisFileInfo['real']['chunks']) && !empty($OldThisFileInfo['real']['old_ra_header'])) {
+				$this->errors[] = 'Cannot write Real tags on old-style file format';
+				fclose($fp_source);
 				return false;
 			}
+
+			if (empty($OldThisFileInfo['real']['chunks'])) {
+				$this->errors[] = 'Cannot write Real tags because cannot find DATA chunk in file';
+				fclose($fp_source);
+				return false;
+			}
+			foreach ($OldThisFileInfo['real']['chunks'] as $chunknumber => $chunkarray) {
+				$oldChunkInfo[$chunkarray['name']] = $chunkarray;
+			}
+			if (!empty($oldChunkInfo['CONT']['length'])) {
+				$this->paddedlength = max($oldChunkInfo['CONT']['length'], $this->paddedlength);
+			}
+
+			$new_CONT_tag_data = $this->GenerateCONTchunk();
+			$new_PROP_tag_data = $this->GeneratePROPchunk($OldThisFileInfo['real']['chunks'], $new_CONT_tag_data);
+			$new__RMF_tag_data = $this->GenerateRMFchunk($OldThisFileInfo['real']['chunks']);
+
+			if (isset($oldChunkInfo['.RMF']['length']) && ($oldChunkInfo['.RMF']['length'] == strlen($new__RMF_tag_data))) {
+				fseek($fp_source, $oldChunkInfo['.RMF']['offset'], SEEK_SET);
+				fwrite($fp_source, $new__RMF_tag_data);
+			} else {
+				$this->errors[] = 'new .RMF tag ('.strlen($new__RMF_tag_data).' bytes) different length than old .RMF tag ('.$oldChunkInfo['.RMF']['length'].' bytes)';
+				fclose($fp_source);
+				return false;
+			}
+
+			if (isset($oldChunkInfo['PROP']['length']) && ($oldChunkInfo['PROP']['length'] == strlen($new_PROP_tag_data))) {
+				fseek($fp_source, $oldChunkInfo['PROP']['offset'], SEEK_SET);
+				fwrite($fp_source, $new_PROP_tag_data);
+			} else {
+				$this->errors[] = 'new PROP tag ('.strlen($new_PROP_tag_data).' bytes) different length than old PROP tag ('.$oldChunkInfo['PROP']['length'].' bytes)';
+				fclose($fp_source);
+				return false;
+			}
+
+			if (isset($oldChunkInfo['CONT']['length']) && ($oldChunkInfo['CONT']['length'] == strlen($new_CONT_tag_data))) {
+
+				// new data length is same as old data length - just overwrite
+				fseek($fp_source, $oldChunkInfo['CONT']['offset'], SEEK_SET);
+				fwrite($fp_source, $new_CONT_tag_data);
+				fclose($fp_source);
+				return true;
+
+			} else {
+
+				if (empty($oldChunkInfo['CONT'])) {
+					// no existing CONT chunk
+					$BeforeOffset = $oldChunkInfo['DATA']['offset'];
+					$AfterOffset  = $oldChunkInfo['DATA']['offset'];
+				} else {
+					// new data is longer than old data
+					$BeforeOffset = $oldChunkInfo['CONT']['offset'];
+					$AfterOffset  = $oldChunkInfo['CONT']['offset'] + $oldChunkInfo['CONT']['length'];
+				}
+				if ($tempfilename = tempnam(GETID3_TEMP_DIR, 'getID3')) {
+					if (is_writable($tempfilename) && is_file($tempfilename) && ($fp_temp = fopen($tempfilename, 'wb'))) {
+
+						rewind($fp_source);
+						fwrite($fp_temp, fread($fp_source, $BeforeOffset));
+						fwrite($fp_temp, $new_CONT_tag_data);
+						fseek($fp_source, $AfterOffset, SEEK_SET);
+						while ($buffer = fread($fp_source, $this->fread_buffer_size)) {
+							fwrite($fp_temp, $buffer, strlen($buffer));
+						}
+						fclose($fp_temp);
+
+						if (copy($tempfilename, $this->filename)) {
+							unlink($tempfilename);
+							fclose($fp_source);
+							return true;
+						}
+						unlink($tempfilename);
+						$this->errors[] = 'FAILED: copy('.$tempfilename.', '.$this->filename.')';
+
+					} else {
+						$this->errors[] = 'Could not fopen("'.$tempfilename.'", "wb")';
+					}
+				}
+				fclose($fp_source);
+				return false;
+
+			}
+
 		}
-		$this->errors[] = 'File is not writeable: '.$this->filename;
+		$this->errors[] = 'Could not fopen("'.$this->filename.'", "r+b")';
 		return false;
 	}
 
@@ -225,76 +212,61 @@ class getid3_write_real
 
 	function RemoveReal() {
 		// File MUST be writeable - CHMOD(646) at least
-		if (is_writeable($this->filename)) {
-			ob_start();
-			if ($fp_source = fopen($this->filename, 'r+b')) {
+		if (is_writeable($this->filename) && is_file($this->filename) && ($fp_source = fopen($this->filename, 'r+b')) {
 
-				ob_end_clean();
-				// Initialize getID3 engine
-				$getID3 = new getID3;
-				$OldThisFileInfo = $getID3->analyze($this->filename);
-				if (empty($OldThisFileInfo['real']['chunks']) && !empty($OldThisFileInfo['real']['old_ra_header'])) {
-					$this->errors[] = 'Cannot remove Real tags from old-style file format';
-					fclose($fp_source);
-					return false;
-				}
-
-				if (empty($OldThisFileInfo['real']['chunks'])) {
-					$this->errors[] = 'Cannot remove Real tags because cannot find DATA chunk in file';
-					fclose($fp_source);
-					return false;
-				}
-				foreach ($OldThisFileInfo['real']['chunks'] as $chunknumber => $chunkarray) {
-					$oldChunkInfo[$chunkarray['name']] = $chunkarray;
-				}
-
-				if (empty($oldChunkInfo['CONT'])) {
-					// no existing CONT chunk
-					fclose($fp_source);
-					return true;
-				}
-
-				$BeforeOffset = $oldChunkInfo['CONT']['offset'];
-				$AfterOffset  = $oldChunkInfo['CONT']['offset'] + $oldChunkInfo['CONT']['length'];
-				if ($tempfilename = tempnam(GETID3_TEMP_DIR, 'getID3')) {
-					ob_start();
-					if ($fp_temp = fopen($tempfilename, 'wb')) {
-
-						rewind($fp_source);
-						fwrite($fp_temp, fread($fp_source, $BeforeOffset));
-						fseek($fp_source, $AfterOffset, SEEK_SET);
-						while ($buffer = fread($fp_source, GETID3_FREAD_BUFFER_SIZE)) {
-							fwrite($fp_temp, $buffer, strlen($buffer));
-						}
-						fclose($fp_temp);
-
-						if (copy($tempfilename, $this->filename)) {
-							unlink($tempfilename);
-							fclose($fp_source);
-							return true;
-						}
-						unlink($tempfilename);
-						$this->errors[] = 'FAILED: copy('.$tempfilename.', '.$this->filename.') - '.strip_tags(ob_get_contents());
-
-					} else {
-
-						$this->errors[] = 'Could not open '.$tempfilename.' mode "wb" - '.strip_tags(ob_get_contents());
-
-					}
-					ob_end_clean();
-				}
+			// Initialize getID3 engine
+			$getID3 = new getID3;
+			$OldThisFileInfo = $getID3->analyze($this->filename);
+			if (empty($OldThisFileInfo['real']['chunks']) && !empty($OldThisFileInfo['real']['old_ra_header'])) {
+				$this->errors[] = 'Cannot remove Real tags from old-style file format';
 				fclose($fp_source);
 				return false;
+			}
 
-
-			} else {
-				$errormessage = ob_get_contents();
-				ob_end_clean();
-				$this->errors[] = 'Could not open '.$this->filename.' mode "r+b"';
+			if (empty($OldThisFileInfo['real']['chunks'])) {
+				$this->errors[] = 'Cannot remove Real tags because cannot find DATA chunk in file';
+				fclose($fp_source);
 				return false;
 			}
+			foreach ($OldThisFileInfo['real']['chunks'] as $chunknumber => $chunkarray) {
+				$oldChunkInfo[$chunkarray['name']] = $chunkarray;
+			}
+
+			if (empty($oldChunkInfo['CONT'])) {
+				// no existing CONT chunk
+				fclose($fp_source);
+				return true;
+			}
+
+			$BeforeOffset = $oldChunkInfo['CONT']['offset'];
+			$AfterOffset  = $oldChunkInfo['CONT']['offset'] + $oldChunkInfo['CONT']['length'];
+			if ($tempfilename = tempnam(GETID3_TEMP_DIR, 'getID3')) {
+				if (is_writable($tempfilename) && is_file($tempfilename) && ($fp_temp = fopen($tempfilename, 'wb'))) {
+
+					rewind($fp_source);
+					fwrite($fp_temp, fread($fp_source, $BeforeOffset));
+					fseek($fp_source, $AfterOffset, SEEK_SET);
+					while ($buffer = fread($fp_source, $this->fread_buffer_size)) {
+						fwrite($fp_temp, $buffer, strlen($buffer));
+					}
+					fclose($fp_temp);
+
+					if (copy($tempfilename, $this->filename)) {
+						unlink($tempfilename);
+						fclose($fp_source);
+						return true;
+					}
+					unlink($tempfilename);
+					$this->errors[] = 'FAILED: copy('.$tempfilename.', '.$this->filename.')';
+
+				} else {
+					$this->errors[] = 'Could not fopen("'.$tempfilename.'", "wb")';
+				}
+			}
+			fclose($fp_source);
+			return false;
 		}
-		$this->errors[] = 'File is not writeable: '.$this->filename;
+		$this->errors[] = 'Could not fopen("'.$this->filename.'", "r+b")';
 		return false;
 	}
 

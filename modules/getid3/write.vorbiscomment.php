@@ -35,10 +35,8 @@ class getid3_write_vorbiscomment
 
 		// Create file with new comments
 		$tempcommentsfilename = tempnam(GETID3_TEMP_DIR, 'getID3');
-		ob_start();
-		if ($fpcomments = fopen($tempcommentsfilename, 'wb')) {
+		if (is_writable($tempcommentsfilename) && is_file($tempcommentsfilename) && ($fpcomments = fopen($tempcommentsfilename, 'wb'))) {
 
-			ob_end_clean();
 			foreach ($this->tag_data as $key => $value) {
 				foreach ($value as $commentdata) {
 					fwrite($fpcomments, $this->CleanVorbisCommentName($key).'='.$commentdata."\n");
@@ -47,12 +45,8 @@ class getid3_write_vorbiscomment
 			fclose($fpcomments);
 
 		} else {
-
-			$errormessage = ob_get_contents();
-			ob_end_clean();
 			$this->errors[] = 'failed to open temporary tags file "'.$tempcommentsfilename.'", tags not written';
 			return false;
-
 		}
 
 		$oldignoreuserabort = ignore_user_abort(true);

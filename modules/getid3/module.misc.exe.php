@@ -14,41 +14,43 @@
 /////////////////////////////////////////////////////////////////
 
 
-class getid3_exe
+class getid3_exe extends getid3_handler
 {
 
-	function getid3_exe(&$fd, &$ThisFileInfo) {
+	function Analyze() {
+		$info = &$this->getid3->info;
 
-		fseek($fd, $ThisFileInfo['avdataoffset'], SEEK_SET);
-		$EXEheader = fread($fd, 28);
+		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
+		$EXEheader = fread($this->getid3->fp, 28);
 
-		if (substr($EXEheader, 0, 2) != 'MZ') {
-			$ThisFileInfo['error'][] = 'Expecting "MZ" at offset '.$ThisFileInfo['avdataoffset'].', found "'.substr($EXEheader, 0, 2).'" instead.';
+		$magic = 'MZ';
+		if (substr($EXEheader, 0, 2) != $magic) {
+			$info['error'][] = 'Expecting "'.getid3_lib::PrintHexBytes($magic).'" at offset '.$info['avdataoffset'].', found "'.getid3_lib::PrintHexBytes(substr($EXEheader, 0, 2)).'"';
 			return false;
 		}
 
-		$ThisFileInfo['fileformat'] = 'exe';
-		$ThisFileInfo['exe']['mz']['magic'] = 'MZ';
+		$info['fileformat'] = 'exe';
+		$info['exe']['mz']['magic'] = 'MZ';
 
-		$ThisFileInfo['exe']['mz']['raw']['last_page_size']          = getid3_lib::LittleEndian2Int(substr($EXEheader,  2, 2));
-		$ThisFileInfo['exe']['mz']['raw']['page_count']              = getid3_lib::LittleEndian2Int(substr($EXEheader,  4, 2));
-		$ThisFileInfo['exe']['mz']['raw']['relocation_count']        = getid3_lib::LittleEndian2Int(substr($EXEheader,  6, 2));
-		$ThisFileInfo['exe']['mz']['raw']['header_paragraphs']       = getid3_lib::LittleEndian2Int(substr($EXEheader,  8, 2));
-		$ThisFileInfo['exe']['mz']['raw']['min_memory_paragraphs']   = getid3_lib::LittleEndian2Int(substr($EXEheader, 10, 2));
-		$ThisFileInfo['exe']['mz']['raw']['max_memory_paragraphs']   = getid3_lib::LittleEndian2Int(substr($EXEheader, 12, 2));
-		$ThisFileInfo['exe']['mz']['raw']['initial_ss']              = getid3_lib::LittleEndian2Int(substr($EXEheader, 14, 2));
-		$ThisFileInfo['exe']['mz']['raw']['initial_sp']              = getid3_lib::LittleEndian2Int(substr($EXEheader, 16, 2));
-		$ThisFileInfo['exe']['mz']['raw']['checksum']                = getid3_lib::LittleEndian2Int(substr($EXEheader, 18, 2));
-		$ThisFileInfo['exe']['mz']['raw']['cs_ip']                   = getid3_lib::LittleEndian2Int(substr($EXEheader, 20, 4));
-		$ThisFileInfo['exe']['mz']['raw']['relocation_table_offset'] = getid3_lib::LittleEndian2Int(substr($EXEheader, 24, 2));
-		$ThisFileInfo['exe']['mz']['raw']['overlay_number']          = getid3_lib::LittleEndian2Int(substr($EXEheader, 26, 2));
+		$info['exe']['mz']['raw']['last_page_size']          = getid3_lib::LittleEndian2Int(substr($EXEheader,  2, 2));
+		$info['exe']['mz']['raw']['page_count']              = getid3_lib::LittleEndian2Int(substr($EXEheader,  4, 2));
+		$info['exe']['mz']['raw']['relocation_count']        = getid3_lib::LittleEndian2Int(substr($EXEheader,  6, 2));
+		$info['exe']['mz']['raw']['header_paragraphs']       = getid3_lib::LittleEndian2Int(substr($EXEheader,  8, 2));
+		$info['exe']['mz']['raw']['min_memory_paragraphs']   = getid3_lib::LittleEndian2Int(substr($EXEheader, 10, 2));
+		$info['exe']['mz']['raw']['max_memory_paragraphs']   = getid3_lib::LittleEndian2Int(substr($EXEheader, 12, 2));
+		$info['exe']['mz']['raw']['initial_ss']              = getid3_lib::LittleEndian2Int(substr($EXEheader, 14, 2));
+		$info['exe']['mz']['raw']['initial_sp']              = getid3_lib::LittleEndian2Int(substr($EXEheader, 16, 2));
+		$info['exe']['mz']['raw']['checksum']                = getid3_lib::LittleEndian2Int(substr($EXEheader, 18, 2));
+		$info['exe']['mz']['raw']['cs_ip']                   = getid3_lib::LittleEndian2Int(substr($EXEheader, 20, 4));
+		$info['exe']['mz']['raw']['relocation_table_offset'] = getid3_lib::LittleEndian2Int(substr($EXEheader, 24, 2));
+		$info['exe']['mz']['raw']['overlay_number']          = getid3_lib::LittleEndian2Int(substr($EXEheader, 26, 2));
 
-		$ThisFileInfo['exe']['mz']['byte_size']          = (($ThisFileInfo['exe']['mz']['raw']['page_count'] - 1)) * 512 + $ThisFileInfo['exe']['mz']['raw']['last_page_size'];
-		$ThisFileInfo['exe']['mz']['header_size']        = $ThisFileInfo['exe']['mz']['raw']['header_paragraphs'] * 16;
-		$ThisFileInfo['exe']['mz']['memory_minimum']     = $ThisFileInfo['exe']['mz']['raw']['min_memory_paragraphs'] * 16;
-		$ThisFileInfo['exe']['mz']['memory_recommended'] = $ThisFileInfo['exe']['mz']['raw']['max_memory_paragraphs'] * 16;
+		$info['exe']['mz']['byte_size']          = (($info['exe']['mz']['raw']['page_count'] - 1)) * 512 + $info['exe']['mz']['raw']['last_page_size'];
+		$info['exe']['mz']['header_size']        = $info['exe']['mz']['raw']['header_paragraphs'] * 16;
+		$info['exe']['mz']['memory_minimum']     = $info['exe']['mz']['raw']['min_memory_paragraphs'] * 16;
+		$info['exe']['mz']['memory_recommended'] = $info['exe']['mz']['raw']['max_memory_paragraphs'] * 16;
 
-$ThisFileInfo['error'][] = 'EXE parsing not enabled in this version of getID3()';
+$info['error'][] = 'EXE parsing not enabled in this version of getID3() ['.$this->getid3->version().']';
 return false;
 
 	}

@@ -14,29 +14,32 @@
 /////////////////////////////////////////////////////////////////
 
 
-class getid3_monkey
+class getid3_monkey extends getid3_handler
 {
 
-	function getid3_monkey(&$fd, &$ThisFileInfo) {
+	function Analyze() {
+		$info = &$this->getid3->info;
+
 		// based loosely on code from TMonkey by Jurgen Faul <jfaulØgmx*de>
 		// http://jfaul.de/atl  or  http://j-faul.virtualave.net/atl/atl.html
 
-		$ThisFileInfo['fileformat']            = 'mac';
-		$ThisFileInfo['audio']['dataformat']   = 'mac';
-		$ThisFileInfo['audio']['bitrate_mode'] = 'vbr';
-		$ThisFileInfo['audio']['lossless']     = true;
+		$info['fileformat']            = 'mac';
+		$info['audio']['dataformat']   = 'mac';
+		$info['audio']['bitrate_mode'] = 'vbr';
+		$info['audio']['lossless']     = true;
 
-		$ThisFileInfo['monkeys_audio']['raw'] = array();
-		$thisfile_monkeysaudio                = &$ThisFileInfo['monkeys_audio'];
+		$info['monkeys_audio']['raw'] = array();
+		$thisfile_monkeysaudio                = &$info['monkeys_audio'];
 		$thisfile_monkeysaudio_raw            = &$thisfile_monkeysaudio['raw'];
 
-		fseek($fd, $ThisFileInfo['avdataoffset'], SEEK_SET);
-		$MACheaderData = fread($fd, 74);
+		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
+		$MACheaderData = fread($this->getid3->fp, 74);
 
 		$thisfile_monkeysaudio_raw['magic'] = substr($MACheaderData, 0, 4);
-		if ($thisfile_monkeysaudio_raw['magic'] != 'MAC ') {
-			$ThisFileInfo['error'][] = 'Expecting "MAC" at offset '.$ThisFileInfo['avdataoffset'].', found "'.$thisfile_monkeysaudio_raw['magic'].'"';
-			unset($ThisFileInfo['fileformat']);
+		$magic = 'MAC ';
+		if ($thisfile_monkeysaudio_raw['magic'] != $magic) {
+			$info['error'][] = 'Expecting "'.getid3_lib::PrintHexBytes($magic).'" at offset '.$info['avdataoffset'].', found "'.getid3_lib::PrintHexBytes($thisfile_monkeysaudio_raw['magic']).'"';
+			unset($info['fileformat']);
 			return false;
 		}
 		$thisfile_monkeysaudio_raw['nVersion']             = getid3_lib::LittleEndian2Int(substr($MACheaderData, 4, 2)); // appears to be uint32 in 3.98+
@@ -105,13 +108,13 @@ class getid3_monkey
 		}
 		$thisfile_monkeysaudio['bits_per_sample']        = ($thisfile_monkeysaudio['flags']['24-bit'] ? 24 : ($thisfile_monkeysaudio['flags']['8-bit'] ? 8 : 16));
 		$thisfile_monkeysaudio['channels']               = $thisfile_monkeysaudio_raw['nChannels'];
-		$ThisFileInfo['audio']['channels']               = $thisfile_monkeysaudio['channels'];
+		$info['audio']['channels']               = $thisfile_monkeysaudio['channels'];
 		$thisfile_monkeysaudio['sample_rate']            = $thisfile_monkeysaudio_raw['nSampleRate'];
 		if ($thisfile_monkeysaudio['sample_rate'] == 0) {
-			$ThisFileInfo['error'][] = 'Corrupt MAC file: frequency == zero';
+			$info['error'][] = 'Corrupt MAC file: frequency == zero';
 			return false;
 		}
-		$ThisFileInfo['audio']['sample_rate']            = $thisfile_monkeysaudio['sample_rate'];
+		$info['audio']['sample_rate']            = $thisfile_monkeysaudio['sample_rate'];
 		if ($thisfile_monkeysaudio['flags']['peak_level']) {
 			$thisfile_monkeysaudio['peak_level']         = $thisfile_monkeysaudio_raw['nPeakLevel'];
 			$thisfile_monkeysaudio['peak_ratio']         = $thisfile_monkeysaudio['peak_level'] / pow(2, $thisfile_monkeysaudio['bits_per_sample'] - 1);
@@ -123,52 +126,52 @@ class getid3_monkey
 		}
 		$thisfile_monkeysaudio['playtime']               = $thisfile_monkeysaudio['samples'] / $thisfile_monkeysaudio['sample_rate'];
 		if ($thisfile_monkeysaudio['playtime'] == 0) {
-			$ThisFileInfo['error'][] = 'Corrupt MAC file: playtime == zero';
+			$info['error'][] = 'Corrupt MAC file: playtime == zero';
 			return false;
 		}
-		$ThisFileInfo['playtime_seconds']                = $thisfile_monkeysaudio['playtime'];
-		$thisfile_monkeysaudio['compressed_size']        = $ThisFileInfo['avdataend'] - $ThisFileInfo['avdataoffset'];
+		$info['playtime_seconds']                = $thisfile_monkeysaudio['playtime'];
+		$thisfile_monkeysaudio['compressed_size']        = $info['avdataend'] - $info['avdataoffset'];
 		$thisfile_monkeysaudio['uncompressed_size']      = $thisfile_monkeysaudio['samples'] * $thisfile_monkeysaudio['channels'] * ($thisfile_monkeysaudio['bits_per_sample'] / 8);
 		if ($thisfile_monkeysaudio['uncompressed_size'] == 0) {
-			$ThisFileInfo['error'][] = 'Corrupt MAC file: uncompressed_size == zero';
+			$info['error'][] = 'Corrupt MAC file: uncompressed_size == zero';
 			return false;
 		}
 		$thisfile_monkeysaudio['compression_ratio']      = $thisfile_monkeysaudio['compressed_size'] / ($thisfile_monkeysaudio['uncompressed_size'] + $thisfile_monkeysaudio_raw['nHeaderDataBytes']);
 		$thisfile_monkeysaudio['bitrate']                = (($thisfile_monkeysaudio['samples'] * $thisfile_monkeysaudio['channels'] * $thisfile_monkeysaudio['bits_per_sample']) / $thisfile_monkeysaudio['playtime']) * $thisfile_monkeysaudio['compression_ratio'];
-		$ThisFileInfo['audio']['bitrate']                = $thisfile_monkeysaudio['bitrate'];
+		$info['audio']['bitrate']                = $thisfile_monkeysaudio['bitrate'];
 
 		// add size of MAC header to avdataoffset
 		if ($thisfile_monkeysaudio_raw['nVersion'] >= 3980) {
-			$ThisFileInfo['avdataoffset'] += $thisfile_monkeysaudio_raw['nDescriptorBytes'];
-			$ThisFileInfo['avdataoffset'] += $thisfile_monkeysaudio_raw['nHeaderBytes'];
-			$ThisFileInfo['avdataoffset'] += $thisfile_monkeysaudio_raw['nSeekTableBytes'];
-			$ThisFileInfo['avdataoffset'] += $thisfile_monkeysaudio_raw['nHeaderDataBytes'];
+			$info['avdataoffset'] += $thisfile_monkeysaudio_raw['nDescriptorBytes'];
+			$info['avdataoffset'] += $thisfile_monkeysaudio_raw['nHeaderBytes'];
+			$info['avdataoffset'] += $thisfile_monkeysaudio_raw['nSeekTableBytes'];
+			$info['avdataoffset'] += $thisfile_monkeysaudio_raw['nHeaderDataBytes'];
 
-			$ThisFileInfo['avdataend'] -= $thisfile_monkeysaudio_raw['nTerminatingDataBytes'];
+			$info['avdataend'] -= $thisfile_monkeysaudio_raw['nTerminatingDataBytes'];
 		} else {
-			$ThisFileInfo['avdataoffset'] += $offset;
+			$info['avdataoffset'] += $offset;
 		}
 
 		if ($thisfile_monkeysaudio_raw['nVersion'] >= 3980) {
 			if ($thisfile_monkeysaudio_raw['cFileMD5'] === str_repeat("\x00", 16)) {
-				//$ThisFileInfo['warning'][] = 'cFileMD5 is null';
+				//$info['warning'][] = 'cFileMD5 is null';
 			} else {
-				$ThisFileInfo['md5_data_source'] = '';
+				$info['md5_data_source'] = '';
 				$md5 = $thisfile_monkeysaudio_raw['cFileMD5'];
 				for ($i = 0; $i < strlen($md5); $i++) {
-					$ThisFileInfo['md5_data_source'] .= str_pad(dechex(ord($md5{$i})), 2, '00', STR_PAD_LEFT);
+					$info['md5_data_source'] .= str_pad(dechex(ord($md5{$i})), 2, '00', STR_PAD_LEFT);
 				}
-				if (!preg_match('/^[0-9a-f]{32}$/', $ThisFileInfo['md5_data_source'])) {
-					unset($ThisFileInfo['md5_data_source']);
+				if (!preg_match('/^[0-9a-f]{32}$/', $info['md5_data_source'])) {
+					unset($info['md5_data_source']);
 				}
 			}
 		}
 
 
 
-		$ThisFileInfo['audio']['bits_per_sample'] = $thisfile_monkeysaudio['bits_per_sample'];
-		$ThisFileInfo['audio']['encoder']         = 'MAC v'.number_format($thisfile_monkeysaudio['version'], 2);
-		$ThisFileInfo['audio']['encoder_options'] = ucfirst($thisfile_monkeysaudio['compression']).' compression';
+		$info['audio']['bits_per_sample'] = $thisfile_monkeysaudio['bits_per_sample'];
+		$info['audio']['encoder']         = 'MAC v'.number_format($thisfile_monkeysaudio['version'], 2);
+		$info['audio']['encoder_options'] = ucfirst($thisfile_monkeysaudio['compression']).' compression';
 
 		return true;
 	}

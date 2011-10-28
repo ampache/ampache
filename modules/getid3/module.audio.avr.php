@@ -14,10 +14,11 @@
 /////////////////////////////////////////////////////////////////
 
 
-class getid3_avr
+class getid3_avr extends getid3_handler
 {
 
-	function getid3_avr(&$fd, &$ThisFileInfo) {
+	function Analyze() {
+		$info = &$this->getid3->info;
 
 		// http://cui.unige.ch/OSG/info/AudioFormats/ap11.html
 		// http://www.btinternet.com/~AnthonyJ/Atari/programming/avr_format.html
@@ -59,61 +60,62 @@ class getid3_avr
 		// 8-bit data between signed/unsigned just add 127 to the sample values.
 		// Simularly for 16-bit data you should add 32769
 
-		$ThisFileInfo['fileformat'] = 'avr';
+		$info['fileformat'] = 'avr';
 
-		fseek($fd, $ThisFileInfo['avdataoffset'], SEEK_SET);
-		$AVRheader = fread($fd, 128);
+		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
+		$AVRheader = fread($this->getid3->fp, 128);
 
-		$ThisFileInfo['avr']['raw']['magic']    =               substr($AVRheader,  0,  4);
-		if ($ThisFileInfo['avr']['raw']['magic'] != '2BIT') {
-			$ThisFileInfo['error'][] = 'Expecting "2BIT" at offset '.$ThisFileInfo['avdataoffset'].', found "'.$ThisFileInfo['avr']['raw']['magic'].'"';
-			unset($ThisFileInfo['fileformat']);
-			unset($ThisFileInfo['avr']);
+		$info['avr']['raw']['magic'] = substr($AVRheader,  0,  4);
+		$magic = '2BIT';
+		if ($info['avr']['raw']['magic'] != $magic) {
+			$info['error'][] = 'Expecting "'.getid3_lib::PrintHexBytes($magic).'" at offset '.$info['avdataoffset'].', found "'.getid3_lib::PrintHexBytes($info['avr']['raw']['magic']).'"';
+			unset($info['fileformat']);
+			unset($info['avr']);
 			return false;
 		}
-		$ThisFileInfo['avdataoffset'] += 128;
+		$info['avdataoffset'] += 128;
 
-		$ThisFileInfo['avr']['sample_name']        =         rtrim(substr($AVRheader,  4,  8));
-		$ThisFileInfo['avr']['raw']['mono']        = getid3_lib::BigEndian2Int(substr($AVRheader, 12,  2));
-		$ThisFileInfo['avr']['bits_per_sample']    = getid3_lib::BigEndian2Int(substr($AVRheader, 14,  2));
-		$ThisFileInfo['avr']['raw']['signed']      = getid3_lib::BigEndian2Int(substr($AVRheader, 16,  2));
-		$ThisFileInfo['avr']['raw']['loop']        = getid3_lib::BigEndian2Int(substr($AVRheader, 18,  2));
-		$ThisFileInfo['avr']['raw']['midi']        = getid3_lib::BigEndian2Int(substr($AVRheader, 20,  2));
-		$ThisFileInfo['avr']['raw']['replay_freq'] = getid3_lib::BigEndian2Int(substr($AVRheader, 22,  1));
-		$ThisFileInfo['avr']['sample_rate']        = getid3_lib::BigEndian2Int(substr($AVRheader, 23,  3));
-		$ThisFileInfo['avr']['sample_length']      = getid3_lib::BigEndian2Int(substr($AVRheader, 26,  4));
-		$ThisFileInfo['avr']['loop_start']         = getid3_lib::BigEndian2Int(substr($AVRheader, 30,  4));
-		$ThisFileInfo['avr']['loop_end']           = getid3_lib::BigEndian2Int(substr($AVRheader, 34,  4));
-		$ThisFileInfo['avr']['midi_split']         = getid3_lib::BigEndian2Int(substr($AVRheader, 38,  2));
-		$ThisFileInfo['avr']['sample_compression'] = getid3_lib::BigEndian2Int(substr($AVRheader, 40,  2));
-		$ThisFileInfo['avr']['reserved']           = getid3_lib::BigEndian2Int(substr($AVRheader, 42,  2));
-		$ThisFileInfo['avr']['sample_name_extra']  =         rtrim(substr($AVRheader, 44, 20));
-		$ThisFileInfo['avr']['comment']            =         rtrim(substr($AVRheader, 64, 64));
+		$info['avr']['sample_name']        =         rtrim(substr($AVRheader,  4,  8));
+		$info['avr']['raw']['mono']        = getid3_lib::BigEndian2Int(substr($AVRheader, 12,  2));
+		$info['avr']['bits_per_sample']    = getid3_lib::BigEndian2Int(substr($AVRheader, 14,  2));
+		$info['avr']['raw']['signed']      = getid3_lib::BigEndian2Int(substr($AVRheader, 16,  2));
+		$info['avr']['raw']['loop']        = getid3_lib::BigEndian2Int(substr($AVRheader, 18,  2));
+		$info['avr']['raw']['midi']        = getid3_lib::BigEndian2Int(substr($AVRheader, 20,  2));
+		$info['avr']['raw']['replay_freq'] = getid3_lib::BigEndian2Int(substr($AVRheader, 22,  1));
+		$info['avr']['sample_rate']        = getid3_lib::BigEndian2Int(substr($AVRheader, 23,  3));
+		$info['avr']['sample_length']      = getid3_lib::BigEndian2Int(substr($AVRheader, 26,  4));
+		$info['avr']['loop_start']         = getid3_lib::BigEndian2Int(substr($AVRheader, 30,  4));
+		$info['avr']['loop_end']           = getid3_lib::BigEndian2Int(substr($AVRheader, 34,  4));
+		$info['avr']['midi_split']         = getid3_lib::BigEndian2Int(substr($AVRheader, 38,  2));
+		$info['avr']['sample_compression'] = getid3_lib::BigEndian2Int(substr($AVRheader, 40,  2));
+		$info['avr']['reserved']           = getid3_lib::BigEndian2Int(substr($AVRheader, 42,  2));
+		$info['avr']['sample_name_extra']  =         rtrim(substr($AVRheader, 44, 20));
+		$info['avr']['comment']            =         rtrim(substr($AVRheader, 64, 64));
 
-		$ThisFileInfo['avr']['flags']['stereo'] = (($ThisFileInfo['avr']['raw']['mono']   == 0) ? false : true);
-		$ThisFileInfo['avr']['flags']['signed'] = (($ThisFileInfo['avr']['raw']['signed'] == 0) ? false : true);
-		$ThisFileInfo['avr']['flags']['loop']   = (($ThisFileInfo['avr']['raw']['loop']   == 0) ? false : true);
+		$info['avr']['flags']['stereo'] = (($info['avr']['raw']['mono']   == 0) ? false : true);
+		$info['avr']['flags']['signed'] = (($info['avr']['raw']['signed'] == 0) ? false : true);
+		$info['avr']['flags']['loop']   = (($info['avr']['raw']['loop']   == 0) ? false : true);
 
-		$ThisFileInfo['avr']['midi_notes'] = array();
-		if (($ThisFileInfo['avr']['raw']['midi'] & 0xFF00) != 0xFF00) {
-			$ThisFileInfo['avr']['midi_notes'][] = ($ThisFileInfo['avr']['raw']['midi'] & 0xFF00) >> 8;
+		$info['avr']['midi_notes'] = array();
+		if (($info['avr']['raw']['midi'] & 0xFF00) != 0xFF00) {
+			$info['avr']['midi_notes'][] = ($info['avr']['raw']['midi'] & 0xFF00) >> 8;
 		}
-		if (($ThisFileInfo['avr']['raw']['midi'] & 0x00FF) != 0x00FF) {
-			$ThisFileInfo['avr']['midi_notes'][] = ($ThisFileInfo['avr']['raw']['midi'] & 0x00FF);
-		}
-
-		if (($ThisFileInfo['avdataend'] - $ThisFileInfo['avdataoffset']) != ($ThisFileInfo['avr']['sample_length'] * (($ThisFileInfo['avr']['bits_per_sample'] == 8) ? 1 : 2))) {
-			$ThisFileInfo['warning'][] = 'Probable truncated file: expecting '.($ThisFileInfo['avr']['sample_length'] * (($ThisFileInfo['avr']['bits_per_sample'] == 8) ? 1 : 2)).' bytes of audio data, found '.($ThisFileInfo['avdataend'] - $ThisFileInfo['avdataoffset']);
+		if (($info['avr']['raw']['midi'] & 0x00FF) != 0x00FF) {
+			$info['avr']['midi_notes'][] = ($info['avr']['raw']['midi'] & 0x00FF);
 		}
 
-		$ThisFileInfo['audio']['dataformat']      = 'avr';
-		$ThisFileInfo['audio']['lossless']        = true;
-		$ThisFileInfo['audio']['bitrate_mode']    = 'cbr';
-		$ThisFileInfo['audio']['bits_per_sample'] = $ThisFileInfo['avr']['bits_per_sample'];
-		$ThisFileInfo['audio']['sample_rate']     = $ThisFileInfo['avr']['sample_rate'];
-		$ThisFileInfo['audio']['channels']        = ($ThisFileInfo['avr']['flags']['stereo'] ? 2 : 1);
-		$ThisFileInfo['playtime_seconds']         = ($ThisFileInfo['avr']['sample_length'] / $ThisFileInfo['audio']['channels']) / $ThisFileInfo['avr']['sample_rate'];
-		$ThisFileInfo['audio']['bitrate']         = ($ThisFileInfo['avr']['sample_length'] * (($ThisFileInfo['avr']['bits_per_sample'] == 8) ? 8 : 16)) / $ThisFileInfo['playtime_seconds'];
+		if (($info['avdataend'] - $info['avdataoffset']) != ($info['avr']['sample_length'] * (($info['avr']['bits_per_sample'] == 8) ? 1 : 2))) {
+			$info['warning'][] = 'Probable truncated file: expecting '.($info['avr']['sample_length'] * (($info['avr']['bits_per_sample'] == 8) ? 1 : 2)).' bytes of audio data, found '.($info['avdataend'] - $info['avdataoffset']);
+		}
+
+		$info['audio']['dataformat']      = 'avr';
+		$info['audio']['lossless']        = true;
+		$info['audio']['bitrate_mode']    = 'cbr';
+		$info['audio']['bits_per_sample'] = $info['avr']['bits_per_sample'];
+		$info['audio']['sample_rate']     = $info['avr']['sample_rate'];
+		$info['audio']['channels']        = ($info['avr']['flags']['stereo'] ? 2 : 1);
+		$info['playtime_seconds']         = ($info['avr']['sample_length'] / $info['audio']['channels']) / $info['avr']['sample_rate'];
+		$info['audio']['bitrate']         = ($info['avr']['sample_length'] * (($info['avr']['bits_per_sample'] == 8) ? 8 : 16)) / $info['playtime_seconds'];
 
 
 		return true;

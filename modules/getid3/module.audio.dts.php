@@ -14,78 +14,81 @@
 /////////////////////////////////////////////////////////////////
 
 
-class getid3_dts
+class getid3_dts extends getid3_handler
 {
 
-	function getid3_dts(&$fd, &$ThisFileInfo) {
+	function Analyze() {
+		$info = &$this->getid3->info;
+
 		// Specs taken from "DTS Coherent Acoustics;Core and Extensions,  ETSI TS 102 114 V1.2.1 (2002-12)"
 		// (http://pda.etsi.org/pda/queryform.asp)
 		// With thanks to Gambit <macteam@users.sourceforge.net> http://mac.sourceforge.net/atl/
 
-		$ThisFileInfo['fileformat'] = 'dts';
+		$info['fileformat'] = 'dts';
 
-		fseek($fd, $ThisFileInfo['avdataoffset'], SEEK_SET);
-		$DTSheader = fread($fd, 16);
+		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
+		$DTSheader = fread($this->getid3->fp, 16);
 
-		$ThisFileInfo['dts']['raw']['magic'] = getid3_lib::BigEndian2Int(substr($DTSheader,  0,  4));
-		if ($ThisFileInfo['dts']['raw']['magic'] != 0x7FFE8001) {
-			$ThisFileInfo['error'][] = 'Expecting "0x7FFE8001" at offset '.$ThisFileInfo['avdataoffset'].', found "0x'.str_pad(strtoupper(dechex($ThisFileInfo['dts']['raw']['magic'])), 8, '0', STR_PAD_LEFT).'"';
-			unset($ThisFileInfo['fileformat']);
-			unset($ThisFileInfo['dts']);
+		$info['dts']['raw']['magic'] = substr($DTSheader, 0, 4);
+		$magic = "\x7F\xFE\x80\x01";
+		if ($info['dts']['raw']['magic'] != $magic) {
+			$info['error'][] = 'Expecting "'.getid3_lib::PrintHexBytes($magic).'" at offset '.$info['avdataoffset'].', found "'.getid3_lib::PrintHexBytes($info['dts']['raw']['magic']).'"';
+			unset($info['fileformat']);
+			unset($info['dts']);
 			return false;
 		}
 
 		$fhBS = getid3_lib::BigEndian2Bin(substr($DTSheader,  4,  12));
 		$bsOffset = 0;
-		$ThisFileInfo['dts']['raw']['frame_type']             =        bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
-		$ThisFileInfo['dts']['raw']['deficit_samples']        =        bindec(substr($fhBS, $bsOffset,  5)); $bsOffset +=  5;
-		$ThisFileInfo['dts']['flags']['crc_present']          = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
-		$ThisFileInfo['dts']['raw']['pcm_sample_blocks']      =        bindec(substr($fhBS, $bsOffset,  7)); $bsOffset +=  7;
-		$ThisFileInfo['dts']['raw']['frame_byte_size']        =        bindec(substr($fhBS, $bsOffset, 14)); $bsOffset += 14;
-		$ThisFileInfo['dts']['raw']['channel_arrangement']    =        bindec(substr($fhBS, $bsOffset,  6)); $bsOffset +=  6;
-		$ThisFileInfo['dts']['raw']['sample_frequency']       =        bindec(substr($fhBS, $bsOffset,  4)); $bsOffset +=  4;
-		$ThisFileInfo['dts']['raw']['bitrate']                =        bindec(substr($fhBS, $bsOffset,  5)); $bsOffset +=  5;
-		$ThisFileInfo['dts']['flags']['embedded_downmix']     = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
-		$ThisFileInfo['dts']['flags']['dynamicrange']         = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
-		$ThisFileInfo['dts']['flags']['timestamp']            = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
-		$ThisFileInfo['dts']['flags']['auxdata']              = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
-		$ThisFileInfo['dts']['flags']['hdcd']                 = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
-		$ThisFileInfo['dts']['raw']['extension_audio']        =        bindec(substr($fhBS, $bsOffset,  3)); $bsOffset +=  3;
-		$ThisFileInfo['dts']['flags']['extended_coding']      = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
-		$ThisFileInfo['dts']['flags']['audio_sync_insertion'] = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
-		$ThisFileInfo['dts']['raw']['lfe_effects']            =        bindec(substr($fhBS, $bsOffset,  2)); $bsOffset +=  2;
-		$ThisFileInfo['dts']['flags']['predictor_history']    = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
-		if ($ThisFileInfo['dts']['flags']['crc_present']) {
-			$ThisFileInfo['dts']['raw']['crc16']              =        bindec(substr($fhBS, $bsOffset, 16)); $bsOffset += 16;
+		$info['dts']['raw']['frame_type']             =        bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
+		$info['dts']['raw']['deficit_samples']        =        bindec(substr($fhBS, $bsOffset,  5)); $bsOffset +=  5;
+		$info['dts']['flags']['crc_present']          = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
+		$info['dts']['raw']['pcm_sample_blocks']      =        bindec(substr($fhBS, $bsOffset,  7)); $bsOffset +=  7;
+		$info['dts']['raw']['frame_byte_size']        =        bindec(substr($fhBS, $bsOffset, 14)); $bsOffset += 14;
+		$info['dts']['raw']['channel_arrangement']    =        bindec(substr($fhBS, $bsOffset,  6)); $bsOffset +=  6;
+		$info['dts']['raw']['sample_frequency']       =        bindec(substr($fhBS, $bsOffset,  4)); $bsOffset +=  4;
+		$info['dts']['raw']['bitrate']                =        bindec(substr($fhBS, $bsOffset,  5)); $bsOffset +=  5;
+		$info['dts']['flags']['embedded_downmix']     = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
+		$info['dts']['flags']['dynamicrange']         = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
+		$info['dts']['flags']['timestamp']            = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
+		$info['dts']['flags']['auxdata']              = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
+		$info['dts']['flags']['hdcd']                 = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
+		$info['dts']['raw']['extension_audio']        =        bindec(substr($fhBS, $bsOffset,  3)); $bsOffset +=  3;
+		$info['dts']['flags']['extended_coding']      = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
+		$info['dts']['flags']['audio_sync_insertion'] = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
+		$info['dts']['raw']['lfe_effects']            =        bindec(substr($fhBS, $bsOffset,  2)); $bsOffset +=  2;
+		$info['dts']['flags']['predictor_history']    = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
+		if ($info['dts']['flags']['crc_present']) {
+			$info['dts']['raw']['crc16']              =        bindec(substr($fhBS, $bsOffset, 16)); $bsOffset += 16;
 		}
-		$ThisFileInfo['dts']['flags']['mri_perfect_reconst']  = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
-		$ThisFileInfo['dts']['raw']['encoder_soft_version']   =        bindec(substr($fhBS, $bsOffset,  4)); $bsOffset +=  4;
-		$ThisFileInfo['dts']['raw']['copy_history']           =        bindec(substr($fhBS, $bsOffset,  2)); $bsOffset +=  2;
-		$ThisFileInfo['dts']['raw']['bits_per_sample']        =        bindec(substr($fhBS, $bsOffset,  2)); $bsOffset +=  2;
-		$ThisFileInfo['dts']['flags']['surround_es']          = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
-		$ThisFileInfo['dts']['flags']['front_sum_diff']       = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
-		$ThisFileInfo['dts']['flags']['surround_sum_diff']    = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
-		$ThisFileInfo['dts']['raw']['dialog_normalization']   =        bindec(substr($fhBS, $bsOffset,  4)); $bsOffset +=  4;
+		$info['dts']['flags']['mri_perfect_reconst']  = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
+		$info['dts']['raw']['encoder_soft_version']   =        bindec(substr($fhBS, $bsOffset,  4)); $bsOffset +=  4;
+		$info['dts']['raw']['copy_history']           =        bindec(substr($fhBS, $bsOffset,  2)); $bsOffset +=  2;
+		$info['dts']['raw']['bits_per_sample']        =        bindec(substr($fhBS, $bsOffset,  2)); $bsOffset +=  2;
+		$info['dts']['flags']['surround_es']          = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
+		$info['dts']['flags']['front_sum_diff']       = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
+		$info['dts']['flags']['surround_sum_diff']    = (bool) bindec(substr($fhBS, $bsOffset,  1)); $bsOffset +=  1;
+		$info['dts']['raw']['dialog_normalization']   =        bindec(substr($fhBS, $bsOffset,  4)); $bsOffset +=  4;
 
 
-		$ThisFileInfo['dts']['bitrate']              = $this->DTSbitrateLookup($ThisFileInfo['dts']['raw']['bitrate']);
-		$ThisFileInfo['dts']['bits_per_sample']      = $this->DTSbitPerSampleLookup($ThisFileInfo['dts']['raw']['bits_per_sample']);
-		$ThisFileInfo['dts']['sample_rate']          = $this->DTSsampleRateLookup($ThisFileInfo['dts']['raw']['sample_frequency']);
-		$ThisFileInfo['dts']['dialog_normalization'] = $this->DTSdialogNormalization($ThisFileInfo['dts']['raw']['dialog_normalization'], $ThisFileInfo['dts']['raw']['encoder_soft_version']);
-		$ThisFileInfo['dts']['flags']['lossless']    = (($ThisFileInfo['dts']['raw']['bitrate'] == 31) ? true  : false);
-		$ThisFileInfo['dts']['bitrate_mode']         = (($ThisFileInfo['dts']['raw']['bitrate'] == 30) ? 'vbr' : 'cbr');
-		$ThisFileInfo['dts']['channels']             = $this->DTSnumChannelsLookup($ThisFileInfo['dts']['raw']['channel_arrangement']);
-		$ThisFileInfo['dts']['channel_arrangement']  = $this->DTSchannelArrangementLookup($ThisFileInfo['dts']['raw']['channel_arrangement']);
+		$info['dts']['bitrate']              = $this->DTSbitrateLookup($info['dts']['raw']['bitrate']);
+		$info['dts']['bits_per_sample']      = $this->DTSbitPerSampleLookup($info['dts']['raw']['bits_per_sample']);
+		$info['dts']['sample_rate']          = $this->DTSsampleRateLookup($info['dts']['raw']['sample_frequency']);
+		$info['dts']['dialog_normalization'] = $this->DTSdialogNormalization($info['dts']['raw']['dialog_normalization'], $info['dts']['raw']['encoder_soft_version']);
+		$info['dts']['flags']['lossless']    = (($info['dts']['raw']['bitrate'] == 31) ? true  : false);
+		$info['dts']['bitrate_mode']         = (($info['dts']['raw']['bitrate'] == 30) ? 'vbr' : 'cbr');
+		$info['dts']['channels']             = $this->DTSnumChannelsLookup($info['dts']['raw']['channel_arrangement']);
+		$info['dts']['channel_arrangement']  = $this->DTSchannelArrangementLookup($info['dts']['raw']['channel_arrangement']);
 
-		$ThisFileInfo['audio']['dataformat']          = 'dts';
-		$ThisFileInfo['audio']['lossless']            = $ThisFileInfo['dts']['flags']['lossless'];
-		$ThisFileInfo['audio']['bitrate_mode']        = $ThisFileInfo['dts']['bitrate_mode'];
-		$ThisFileInfo['audio']['bits_per_sample']     = $ThisFileInfo['dts']['bits_per_sample'];
-		$ThisFileInfo['audio']['sample_rate']         = $ThisFileInfo['dts']['sample_rate'];
-		$ThisFileInfo['audio']['channels']            = $ThisFileInfo['dts']['channels'];
-		$ThisFileInfo['audio']['bitrate']             = $ThisFileInfo['dts']['bitrate'];
-		if (isset($ThisFileInfo['avdataend'])) {
-			$ThisFileInfo['playtime_seconds']         = ($ThisFileInfo['avdataend'] - $ThisFileInfo['avdataoffset']) / ($ThisFileInfo['dts']['bitrate'] / 8);
+		$info['audio']['dataformat']          = 'dts';
+		$info['audio']['lossless']            = $info['dts']['flags']['lossless'];
+		$info['audio']['bitrate_mode']        = $info['dts']['bitrate_mode'];
+		$info['audio']['bits_per_sample']     = $info['dts']['bits_per_sample'];
+		$info['audio']['sample_rate']         = $info['dts']['sample_rate'];
+		$info['audio']['channels']            = $info['dts']['channels'];
+		$info['audio']['bitrate']             = $info['dts']['bitrate'];
+		if (isset($info['avdataend'])) {
+			$info['playtime_seconds']         = ($info['avdataend'] - $info['avdataoffset']) / ($info['dts']['bitrate'] / 8);
 		}
 
 		return true;

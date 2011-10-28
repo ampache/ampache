@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Updated getID3 to 1.9.1
         - Updated PHPMailer to 5.2.0
         - Fixed bug in MPD module which affected toggling random or repeat 
                 (patch from jherold)

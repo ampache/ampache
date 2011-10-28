@@ -14,14 +14,15 @@
 /////////////////////////////////////////////////////////////////
 
 
-class getid3_par2
+class getid3_par2 extends getid3_handler
 {
 
-	function getid3_par2(&$fd, &$ThisFileInfo) {
+	function Analyze() {
+		$info = &$this->getid3->info;
 
-		$ThisFileInfo['fileformat'] = 'par2';
+		$info['fileformat'] = 'par2';
 
-		$ThisFileInfo['error'][] = 'PAR2 parsing not enabled in this version of getID3()';
+		$info['error'][] = 'PAR2 parsing not enabled in this version of getID3()';
 		return false;
 
 	}

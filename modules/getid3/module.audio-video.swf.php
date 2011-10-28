@@ -14,59 +14,51 @@
 /////////////////////////////////////////////////////////////////
 
 
-class getid3_swf
+class getid3_swf extends getid3_handler
 {
+	var $ReturnAllTagData = false;
 
-	function getid3_swf(&$fd, &$ThisFileInfo, $ReturnAllTagData=false) {
-//$start_time = microtime(true);
-		$ThisFileInfo['fileformat']          = 'swf';
-		$ThisFileInfo['video']['dataformat'] = 'swf';
+	function Analyze() {
+		$info = &$this->getid3->info;
+
+		$info['fileformat']          = 'swf';
+		$info['video']['dataformat'] = 'swf';
 
 		// http://www.openswf.org/spec/SWFfileformat.html
 
-		fseek($fd, $ThisFileInfo['avdataoffset'], SEEK_SET);
+		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
 
-		$SWFfileData = fread($fd, $ThisFileInfo['avdataend'] - $ThisFileInfo['avdataoffset']); // 8 + 2 + 2 + max(9) bytes NOT including Frame_Size RECT data
+		$SWFfileData = fread($this->getid3->fp, $info['avdataend'] - $info['avdataoffset']); // 8 + 2 + 2 + max(9) bytes NOT including Frame_Size RECT data
 
-		$ThisFileInfo['swf']['header']['signature']  = substr($SWFfileData, 0, 3);
-		switch ($ThisFileInfo['swf']['header']['signature']) {
+		$info['swf']['header']['signature']  = substr($SWFfileData, 0, 3);
+		switch ($info['swf']['header']['signature']) {
 			case 'FWS':
-				$ThisFileInfo['swf']['header']['compressed'] = false;
+				$info['swf']['header']['compressed'] = false;
 				break;
 
 			case 'CWS':
-				$ThisFileInfo['swf']['header']['compressed'] = true;
+				$info['swf']['header']['compressed'] = true;
 				break;
 
 			default:
-				$ThisFileInfo['error'][] = 'Expecting "FWS" or "CWS" at offset '.$ThisFileInfo['avdataoffset'].', found "'.$ThisFileInfo['swf']['header']['signature'].'"';
-				unset($ThisFileInfo['swf']);
-				unset($ThisFileInfo['fileformat']);
+				$info['error'][] = 'Expecting "FWS" or "CWS" at offset '.$info['avdataoffset'].', found "'.getid3_lib::PrintHexBytes($info['swf']['header']['signature']).'"';
+				unset($info['swf']);
+				unset($info['fileformat']);
 				return false;
 				break;
 		}
-		$ThisFileInfo['swf']['header']['version'] = getid3_lib::LittleEndian2Int(substr($SWFfileData, 3, 1));
-		$ThisFileInfo['swf']['header']['length']  = getid3_lib::LittleEndian2Int(substr($SWFfileData, 4, 4));
+		$info['swf']['header']['version'] = getid3_lib::LittleEndian2Int(substr($SWFfileData, 3, 1));
+		$info['swf']['header']['length']  = getid3_lib::LittleEndian2Int(substr($SWFfileData, 4, 4));
 
-		if ($ThisFileInfo['swf']['header']['compressed']) {
-
+		if ($info['swf']['header']['compressed']) {
 			$SWFHead     = substr($SWFfileData, 0, 8);
 			$SWFfileData = substr($SWFfileData, 8);
-			ob_start();
-			if ($decompressed = gzuncompress($SWFfileData)) {
-
-				ob_end_clean();
+			if ($decompressed = @gzuncompress($SWFfileData)) {
 				$SWFfileData = $SWFHead.$decompressed;
-
 			} else {
-
-				$errormessage = ob_get_contents();
-				ob_end_clean();
-				$ThisFileInfo['error'][] = 'Error decompressing compressed SWF data ('.strlen($SWFfileData).' bytes compressed, should be '.($ThisFileInfo['swf']['header']['length'] - 8).' bytes uncompressed)';
+				$info['error'][] = 'Error decompressing compressed SWF data ('.strlen($SWFfileData).' bytes compressed, should be '.($info['swf']['header']['length'] - 8).' bytes uncompressed)';
 				return false;
-
 			}
-
 		}
 
 		$FrameSizeBitsPerValue = (ord(substr($SWFfileData, 8, 1)) & 0xF8) >> 3;
@@ -76,8 +68,8 @@ class getid3_swf
 			$FrameSizeDataString .= str_pad(decbin(ord(substr($SWFfileData, 8 + $i, 1))), 8, '0', STR_PAD_LEFT);
 		}
 		list($X1, $X2, $Y1, $Y2) = explode("\n", wordwrap($FrameSizeDataString, $FrameSizeBitsPerValue, "\n", 1));
-		$ThisFileInfo['swf']['header']['frame_width']  = getid3_lib::Bin2Dec($X2);
-		$ThisFileInfo['swf']['header']['frame_height'] = getid3_lib::Bin2Dec($Y2);
+		$info['swf']['header']['frame_width']  = getid3_lib::Bin2Dec($X2);
+		$info['swf']['header']['frame_height'] = getid3_lib::Bin2Dec($Y2);
 
 		// http://www-lehre.informatik.uni-osnabrueck.de/~fbstark/diplom/docs/swf/Flash_Uncovered.htm
 		// Next in the header is the frame rate, which is kind of weird.
@@ -86,16 +78,16 @@ class getid3_swf
 		// Example: 0x000C  ->  0x0C  ->  12     So the frame rate is 12 fps.
 
 		// Byte at (8 + $FrameSizeDataLength) is always zero and ignored
-		$ThisFileInfo['swf']['header']['frame_rate']  = getid3_lib::LittleEndian2Int(substr($SWFfileData,  9 + $FrameSizeDataLength, 1));
-		$ThisFileInfo['swf']['header']['frame_count'] = getid3_lib::LittleEndian2Int(substr($SWFfileData, 10 + $FrameSizeDataLength, 2));
+		$info['swf']['header']['frame_rate']  = getid3_lib::LittleEndian2Int(substr($SWFfileData,  9 + $FrameSizeDataLength, 1));
+		$info['swf']['header']['frame_count'] = getid3_lib::LittleEndian2Int(substr($SWFfileData, 10 + $FrameSizeDataLength, 2));
 
-		$ThisFileInfo['video']['frame_rate']         = $ThisFileInfo['swf']['header']['frame_rate'];
-		$ThisFileInfo['video']['resolution_x']       = intval(round($ThisFileInfo['swf']['header']['frame_width']  / 20));
-		$ThisFileInfo['video']['resolution_y']       = intval(round($ThisFileInfo['swf']['header']['frame_height'] / 20));
-		$ThisFileInfo['video']['pixel_aspect_ratio'] = (float) 1;
+		$info['video']['frame_rate']         = $info['swf']['header']['frame_rate'];
+		$info['video']['resolution_x']       = intval(round($info['swf']['header']['frame_width']  / 20));
+		$info['video']['resolution_y']       = intval(round($info['swf']['header']['frame_height'] / 20));
+		$info['video']['pixel_aspect_ratio'] = (float) 1;
 
-		if (($ThisFileInfo['swf']['header']['frame_count'] > 0) && ($ThisFileInfo['swf']['header']['frame_rate'] > 0)) {
-			$ThisFileInfo['playtime_seconds'] = $ThisFileInfo['swf']['header']['frame_count'] / $ThisFileInfo['swf']['header']['frame_rate'];
+		if (($info['swf']['header']['frame_count'] > 0) && ($info['swf']['header']['frame_rate'] > 0)) {
+			$info['playtime_seconds'] = $info['swf']['header']['frame_count'] / $info['swf']['header']['frame_rate'];
 		}
 //echo __LINE__.'='.number_format(microtime(true) - $start_time, 3).'<br>';
 
@@ -127,13 +119,13 @@ class getid3_swf
 					break 2;
 
 				case 9: // Set background color
-					//$ThisFileInfo['swf']['tags'][] = $TagData;
-					$ThisFileInfo['swf']['bgcolor'] = strtoupper(str_pad(dechex(getid3_lib::BigEndian2Int($TagData['data'])), 6, '0', STR_PAD_LEFT));
+					//$info['swf']['tags'][] = $TagData;
+					$info['swf']['bgcolor'] = strtoupper(str_pad(dechex(getid3_lib::BigEndian2Int($TagData['data'])), 6, '0', STR_PAD_LEFT));
 					break;
 
 				default:
-					if ($ReturnAllTagData) {
-						$ThisFileInfo['swf']['tags'][] = $TagData;
+					if ($this->ReturnAllTagData) {
+						$info['swf']['tags'][] = $TagData;
 					}
 					break;
 			}

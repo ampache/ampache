@@ -14,24 +14,25 @@
 /////////////////////////////////////////////////////////////////
 
 
-class getid3_ac3
+class getid3_ac3 extends getid3_handler
 {
 
-	function getid3_ac3(&$fd, &$ThisFileInfo) {
+	function Analyze() {
+		$info = &$this->getid3->info;
 
 		///AH
-		$ThisFileInfo['ac3']['raw']['bsi'] = array();
-		$thisfile_ac3                      = &$ThisFileInfo['ac3'];
+		$info['ac3']['raw']['bsi'] = array();
+		$thisfile_ac3                      = &$info['ac3'];
 		$thisfile_ac3_raw                  = &$thisfile_ac3['raw'];
 		$thisfile_ac3_raw_bsi              = &$thisfile_ac3_raw['bsi'];
 
 
 		// http://www.atsc.org/standards/a_52a.pdf
 
-		$ThisFileInfo['fileformat']            = 'ac3';
-		$ThisFileInfo['audio']['dataformat']   = 'ac3';
-		$ThisFileInfo['audio']['bitrate_mode'] = 'cbr';
-		$ThisFileInfo['audio']['lossless']     = false;
+		$info['fileformat']            = 'ac3';
+		$info['audio']['dataformat']   = 'ac3';
+		$info['audio']['bitrate_mode'] = 'cbr';
+		$info['audio']['lossless']     = false;
 
 		// An AC-3 serial coded audio bit stream is made up of a sequence of synchronization frames
 		// Each synchronization frame contains 6 coded audio blocks (AB), each of which represent 256
@@ -44,13 +45,13 @@ class getid3_ac3
 		//
 		// syncinfo() | bsi() | AB0 | AB1 | AB2 | AB3 | AB4 | AB5 | Aux | CRC
 
-		fseek($fd, $ThisFileInfo['avdataoffset'], SEEK_SET);
-		$AC3header['syncinfo'] = fread($fd, 5);
+		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
+		$AC3header['syncinfo'] = fread($this->getid3->fp, 5);
 		$thisfile_ac3_raw['synchinfo']['synchword'] = substr($AC3header['syncinfo'], 0, 2);
 
 		if ($thisfile_ac3_raw['synchinfo']['synchword'] != "\x0B\x77") {
 
-			$ThisFileInfo['error'][] = 'Expecting "\x0B\x77" at offset '.$ThisFileInfo['avdataoffset'].', found \x'.strtoupper(dechex($AC3header['syncinfo']{0})).'\x'.strtoupper(dechex($AC3header['syncinfo']{1})).' instead';
+			$info['error'][] = 'Expecting "0B 77" at offset '.$info['avdataoffset'].', found '.getid3_lib::PrintHexBytes(substr($AC3header['syncinfo'], 0, 2)).' instead';
 			unset($thisfile_ac3);
 			return false;
 
@@ -70,14 +71,14 @@ class getid3_ac3
 
 			$thisfile_ac3['sample_rate'] = $this->AC3sampleRateCodeLookup($thisfile_ac3_raw['synchinfo']['fscod']);
 			if ($thisfile_ac3_raw['synchinfo']['fscod'] <= 3) {
-				$ThisFileInfo['audio']['sample_rate'] = $thisfile_ac3['sample_rate'];
+				$info['audio']['sample_rate'] = $thisfile_ac3['sample_rate'];
 			}
 
 			$thisfile_ac3['frame_length'] = $this->AC3frameSizeLookup($thisfile_ac3_raw['synchinfo']['frmsizecod'], $thisfile_ac3_raw['synchinfo']['fscod']);
 			$thisfile_ac3['bitrate']      = $this->AC3bitrateLookup($thisfile_ac3_raw['synchinfo']['frmsizecod']);
-			$ThisFileInfo['audio']['bitrate'] = $thisfile_ac3['bitrate'];
+			$info['audio']['bitrate'] = $thisfile_ac3['bitrate'];
 
-			$AC3header['bsi'] = getid3_lib::BigEndian2Bin(fread($fd, 15));
+			$AC3header['bsi'] = getid3_lib::BigEndian2Bin(fread($this->getid3->fp, 15));
 			$ac3_bsi_offset = 0;
 
 			$thisfile_ac3_raw_bsi['bsid'] = bindec(substr($AC3header['bsi'], $ac3_bsi_offset, 5));
@@ -86,7 +87,7 @@ class getid3_ac3
 				// Decoders which can decode version 8 will thus be able to decode version numbers less than 8.
 				// If this standard is extended by the addition of additional elements or features, a value of bsid greater than 8 will be used.
 				// Decoders built to this version of the standard will not be able to decode versions with bsid greater than 8.
-				$ThisFileInfo['error'][] = 'Bit stream identification is version '.$thisfile_ac3_raw_bsi['bsid'].', but getID3() only understands up to version 8';
+				$info['error'][] = 'Bit stream identification is version '.$thisfile_ac3_raw_bsi['bsid'].', but getID3() only understands up to version 8';
 				unset($thisfile_ac3);
 				return false;
 			}
@@ -104,17 +105,17 @@ class getid3_ac3
 			switch ($thisfile_ac3_raw_bsi['acmod']) {
 				case 0:
 				case 1:
-					$ThisFileInfo['audio']['channelmode'] = 'mono';
+					$info['audio']['channelmode'] = 'mono';
 					break;
 				case 3:
 				case 4:
-					$ThisFileInfo['audio']['channelmode'] = 'stereo';
+					$info['audio']['channelmode'] = 'stereo';
 					break;
 				default:
-					$ThisFileInfo['audio']['channelmode'] = 'surround';
+					$info['audio']['channelmode'] = 'surround';
 					break;
 			}
-			$ThisFileInfo['audio']['channels'] = $thisfile_ac3['num_channels'];
+			$info['audio']['channels'] = $thisfile_ac3['num_channels'];
 
 			if ($thisfile_ac3_raw_bsi['acmod'] & 0x01) {
 				// If the lsb of acmod is a 1, center channel is in use and cmixlev follows in the bit stream.
@@ -141,8 +142,8 @@ class getid3_ac3
 			$ac3_bsi_offset += 1;
 			$thisfile_ac3['lfe_enabled'] = $thisfile_ac3_raw_bsi['lfeon'];
 			if ($thisfile_ac3_raw_bsi['lfeon']) {
-				//$ThisFileInfo['audio']['channels']++;
-				$ThisFileInfo['audio']['channels'] .= '.1';
+				//$info['audio']['channels']++;
+				$info['audio']['channels'] .= '.1';
 			}
 
 			$thisfile_ac3['channels_enabled'] = $this->AC3channelsEnabledLookup($thisfile_ac3_raw_bsi['acmod'], $thisfile_ac3_raw_bsi['lfeon']);
@@ -247,7 +248,7 @@ class getid3_ac3
 				$thisfile_ac3_raw_bsi['addbsi_length'] = bindec(substr($AC3header['bsi'], $ac3_bsi_offset, 6));
 				$ac3_bsi_offset += 6;
 
-				$AC3header['bsi'] .= getid3_lib::BigEndian2Bin(fread($fd, $thisfile_ac3_raw_bsi['addbsi_length']));
+				$AC3header['bsi'] .= getid3_lib::BigEndian2Bin(fread($this->getid3->fp, $thisfile_ac3_raw_bsi['addbsi_length']));
 
 				$thisfile_ac3_raw_bsi['addbsi_data'] = substr($AC3header['bsi'], $ac3_bsi_offset, $thisfile_ac3_raw_bsi['addbsi_length'] * 8);
 				$ac3_bsi_offset += $thisfile_ac3_raw_bsi['addbsi_length'] * 8;

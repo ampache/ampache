@@ -29,16 +29,13 @@ class getid3_write_id3v1
 
 	function WriteID3v1() {
 		// File MUST be writeable - CHMOD(646) at least
-		if (!empty($this->filename) && is_writeable($this->filename)) {
+		if (!empty($this->filename) && is_readable($this->filename) && is_writable($this->filename) && is_file($this->filename)) {
 			$this->setRealFileSize();
 			if (($this->filesize <= 0) || !getid3_lib::intValueSupported($this->filesize)) {
 				$this->errors[] = 'Unable to WriteID3v1('.$this->filename.') because filesize ('.$this->filesize.') is larger than '.round(PHP_INT_MAX / 1073741824).'GB';
 				return false;
 			}
-			ob_start();
 			if ($fp_source = fopen($this->filename, 'r+b')) {
-
-				ob_end_clean();
 				fseek($fp_source, -128, SEEK_END);
 				if (fread($fp_source, 3) == 'TAG') {
 					fseek($fp_source, -128, SEEK_END); // overwrite existing ID3v1 tag
@@ -60,9 +57,7 @@ class getid3_write_id3v1
 				return true;
 
 			} else {
-				$errormessage = ob_get_contents();
-				ob_end_clean();
-				$this->errors[] = 'Could not open '.$this->filename.' mode "r+b"';
+				$this->errors[] = 'Could not fopen('.$this->filename.', "r+b")';
 				return false;
 			}
 		}
@@ -94,16 +89,14 @@ class getid3_write_id3v1
 
 	function RemoveID3v1() {
 		// File MUST be writeable - CHMOD(646) at least
-		if (!empty($this->filename) && is_writeable($this->filename)) {
+		if (!empty($this->filename) && is_readable($this->filename) && is_writable($this->filename) && is_file($this->filename)) {
 			$this->setRealFileSize();
 			if (($this->filesize <= 0) || !getid3_lib::intValueSupported($this->filesize)) {
 				$this->errors[] = 'Unable to RemoveID3v1('.$this->filename.') because filesize ('.$this->filesize.') is larger than '.round(PHP_INT_MAX / 1073741824).'GB';
 				return false;
 			}
-			ob_start();
 			if ($fp_source = fopen($this->filename, 'r+b')) {
 
-				ob_end_clean();
 				fseek($fp_source, -128, SEEK_END);
 				if (fread($fp_source, 3) == 'TAG') {
 					ftruncate($fp_source, $this->filesize - 128);
@@ -114,9 +107,7 @@ class getid3_write_id3v1
 				return true;
 
 			} else {
-				$errormessage = ob_get_contents();
-				ob_end_clean();
-				$this->errors[] = 'Could not open '.$this->filename.' mode "r+b"';
+				$this->errors[] = 'Could not fopen('.$this->filename.', "r+b")';
 			}
 		} else {
 			$this->errors[] = $this->filename.' is not writeable';

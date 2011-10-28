@@ -19,6 +19,7 @@ class getid3_write_id3v2
 {
 	var $filename;
 	var $tag_data;
+	var $fread_buffer_size           = 32768;    // read buffer size in bytes
 	var $paddedlength                = 4096;     // minimum length of ID3v2 tag in bytes
 	var $majorversion                = 3;        // ID3v2 major version (2, 3 (recommended), 4)
 	var $minorversion                = 0;        // ID3v2 minor version - always 0
@@ -60,36 +61,31 @@ class getid3_write_id3v2
 					// best and fastest method - insert-overwrite existing tag (padded to length of old tag if neccesary)
 					if (file_exists($this->filename)) {
 
-						ob_start();
-						if ($fp = fopen($this->filename, 'r+b')) {
+						if (is_readable($this->filename) && is_writable($this->filename) && is_file($this->filename) && ($fp = fopen($this->filename, 'r+b'))) {
 							rewind($fp);
 							fwrite($fp, $NewID3v2Tag, strlen($NewID3v2Tag));
 							fclose($fp);
 						} else {
-							$this->errors[] = 'Could not open '.$this->filename.' mode "r+b" - '.strip_tags(ob_get_contents());
+							$this->errors[] = 'Could not fopen("'.$this->filename.'", "r+b")';
 						}
-						ob_end_clean();
 
 					} else {
 
-						ob_start();
-						if ($fp = fopen($this->filename, 'wb')) {
+						if (is_writable($this->filename) && is_file($this->filename) && ($fp = fopen($this->filename, 'wb'))) {
 							rewind($fp);
 							fwrite($fp, $NewID3v2Tag, strlen($NewID3v2Tag));
 							fclose($fp);
 						} else {
-							$this->errors[] = 'Could not open '.$this->filename.' mode "wb" - '.strip_tags(ob_get_contents());
+							$this->errors[] = 'Could not fopen("'.$this->filename.'", "wb")';
 						}
-						ob_end_clean();
 
 					}
 
 				} else {
 
 					if ($tempfilename = tempnam(GETID3_TEMP_DIR, 'getID3')) {
-						ob_start();
-						if ($fp_source = fopen($this->filename, 'rb')) {
-							if ($fp_temp = fopen($tempfilename, 'wb')) {
+						if (is_readable($this->filename) && is_file($this->filename) && ($fp_source = fopen($this->filename, 'rb'))) {
+							if (is_writable($tempfilename) && is_file($tempfilename) && ($fp_temp = fopen($tempfilename, 'wb'))) {
 
 								fwrite($fp_temp, $NewID3v2Tag, strlen($NewID3v2Tag));
 
@@ -98,7 +94,7 @@ class getid3_write_id3v2
 									fseek($fp_source, $OldThisFileInfo['avdataoffset'], SEEK_SET);
 								}
 
-								while ($buffer = fread($fp_source, GETID3_FREAD_BUFFER_SIZE)) {
+								while ($buffer = fread($fp_source, $this->fread_buffer_size)) {
 									fwrite($fp_temp, $buffer, strlen($buffer));
 								}
 
@@ -106,22 +102,16 @@ class getid3_write_id3v2
 								fclose($fp_source);
 								copy($tempfilename, $this->filename);
 								unlink($tempfilename);
-								ob_end_clean();
 								return true;
 
 							} else {
-
-								$this->errors[] = 'Could not open '.$tempfilename.' mode "wb" - '.strip_tags(ob_get_contents());
-
+								$this->errors[] = 'Could not fopen("'.$tempfilename.'", "wb")';
 							}
 							fclose($fp_source);
 
 						} else {
-
-							$this->errors[] = 'Could not open '.$this->filename.' mode "rb" - '.strip_tags(ob_get_contents());
-
+							$this->errors[] = 'Could not fopen("'.$this->filename.'", "rb")';
 						}
-						ob_end_clean();
 					}
 					return false;
 
@@ -150,9 +140,8 @@ class getid3_write_id3v2
 
 			// preferred method - only one copying operation, minimal chance of corrupting
 			// original file if script is interrupted, but required directory to be writeable
-			ob_start();
-			if ($fp_source = fopen($this->filename, 'rb')) {
-				ob_end_clean();
+			if (is_readable($this->filename) && is_file($this->filename) && ($fp_source = fopen($this->filename, 'rb'))) {
+
 				// Initialize getID3 engine
 				$getID3 = new getID3;
 				$OldThisFileInfo = $getID3->analyze($this->filename);
@@ -165,23 +154,17 @@ class getid3_write_id3v2
 				if ($OldThisFileInfo['avdataoffset'] !== false) {
 					fseek($fp_source, $OldThisFileInfo['avdataoffset'], SEEK_SET);
 				}
-				ob_start();
-				if ($fp_temp = fopen($this->filename.'getid3tmp', 'w+b')) {
-					ob_end_clean();
-					while ($buffer = fread($fp_source, GETID3_FREAD_BUFFER_SIZE)) {
+				if (is_writable($this->filename) && is_file($this->filename) && ($fp_temp = fopen($this->filename.'getid3tmp', 'w+b'))) {
+					while ($buffer = fread($fp_source, $this->fread_buffer_size)) {
 						fwrite($fp_temp, $buffer, strlen($buffer));
 					}
 					fclose($fp_temp);
 				} else {
-					$errormessage = ob_get_contents();
-					ob_end_clean();
-					$this->errors[] = 'Could not open '.$this->filename.'getid3tmp mode "w+b"';
+					$this->errors[] = 'Could not fopen("'.$this->filename.'getid3tmp", "w+b")';
 				}
 				fclose($fp_source);
 			} else {
-				$errormessage = ob_get_contents();
-				ob_end_clean();
-				$this->errors[] = 'Could not open '.$this->filename.' mode "rb"';
+				$this->errors[] = 'Could not fopen("'.$this->filename.'", "rb")';
 			}
 			if (file_exists($this->filename)) {
 				unlink($this->filename);
@@ -192,9 +175,8 @@ class getid3_write_id3v2
 
 			// less desirable alternate method - double-copies the file, overwrites original file
 			// and could corrupt source file if the script is interrupted or an error occurs.
-			ob_start();
-			if ($fp_source = fopen($this->filename, 'rb')) {
-				ob_end_clean();
+			if (is_readable($this->filename) && is_file($this->filename) && ($fp_source = fopen($this->filename, 'rb'))) {
+
 				// Initialize getID3 engine
 				$getID3 = new getID3;
 				$OldThisFileInfo = $getID3->analyze($this->filename);
@@ -208,32 +190,26 @@ class getid3_write_id3v2
 					fseek($fp_source, $OldThisFileInfo['avdataoffset'], SEEK_SET);
 				}
 				if ($fp_temp = tmpfile()) {
-					while ($buffer = fread($fp_source, GETID3_FREAD_BUFFER_SIZE)) {
+					while ($buffer = fread($fp_source, $this->fread_buffer_size)) {
 						fwrite($fp_temp, $buffer, strlen($buffer));
 					}
 					fclose($fp_source);
-					ob_start();
-					if ($fp_source = fopen($this->filename, 'wb')) {
-						ob_end_clean();
+					if (is_writable($this->filename) && is_file($this->filename) && ($fp_source = fopen($this->filename, 'wb'))) {
 						rewind($fp_temp);
-						while ($buffer = fread($fp_temp, GETID3_FREAD_BUFFER_SIZE)) {
+						while ($buffer = fread($fp_temp, $this->fread_buffer_size)) {
 							fwrite($fp_source, $buffer, strlen($buffer));
 						}
 						fseek($fp_temp, -128, SEEK_END);
 						fclose($fp_source);
 					} else {
-						$errormessage = ob_get_contents();
-						ob_end_clean();
-						$this->errors[] = 'Could not open '.$this->filename.' mode "wb"';
+						$this->errors[] = 'Could not fopen("'.$this->filename.'", "wb")';
 					}
 					fclose($fp_temp);
 				} else {
 					$this->errors[] = 'Could not create tmpfile()';
 				}
 			} else {
-				$errormessage = ob_get_contents();
-				ob_end_clean();
-				$this->errors[] = 'Could not open '.$this->filename.' mode "rb"';
+				$this->errors[] = 'Could not fopen("'.$this->filename.'", "rb")';
 			}
 
 		} else {
@@ -1876,10 +1852,7 @@ class getid3_write_id3v2
 	}
 
 	function safe_parse_url($url) {
-		ob_start();
-		$parts = parse_url($url);
-		$errormessage = ob_get_contents();
-		ob_end_clean();
+		$parts = @parse_url($url);
 		$parts['scheme'] = (isset($parts['scheme']) ? $parts['scheme'] : '');
 		$parts['host']   = (isset($parts['host'])   ? $parts['host']   : '');
 		$parts['user']   = (isset($parts['user'])   ? $parts['user']   : '');
@@ -1903,7 +1876,7 @@ class getid3_write_id3v2
 		if ($parts = $this->safe_parse_url($url)) {
 			if (($parts['scheme'] != 'http') && ($parts['scheme'] != 'https') && ($parts['scheme'] != 'ftp') && ($parts['scheme'] != 'gopher')) {
 				return false;
-			} elseif (!preg_match("#^[[:alnum:]]([-.]?[0-9a-z])*\.[a-z]{2,3}#i$", $parts['host'], $regs) && !preg_match('#^[0-9]{1,3}(\.[0-9]{1,3}){3}$#', $parts['host'])) {
+			} elseif (!preg_match("#^[[:alnum:]]([-.]?[0-9a-z])*\.[a-z]{2,3}$#i", $parts['host'], $regs) && !preg_match('#^[0-9]{1,3}(\.[0-9]{1,3}){3}$#', $parts['host'])) {
 				return false;
 			} elseif (!preg_match("#^([[:alnum:]-]|[\_])*$#i", $parts['user'], $regs)) {
 				return false;
@@ -1911,7 +1884,7 @@ class getid3_write_id3v2
 				return false;
 			} elseif (!preg_match("#^[[:alnum:]/_\.@~-]*$#i", $parts['path'], $regs)) {
 				return false;
-			} elseif (!preg_match("#^[[:alnum:]?&=+:;_()%#/,\.-]*$#i", $parts['query'], $regs)) {
+			} elseif (!empty($parts['query']) && !preg_match("#^[[:alnum:]?&=+:;_()%#/,\.-]*$#i", $parts['query'], $regs)) {
 				return false;
 			} else {
 				return true;

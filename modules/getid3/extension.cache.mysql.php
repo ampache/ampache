@@ -101,10 +101,10 @@ class getID3_cached_mysql extends getID3
 
 		// Check version number and clear cache if changed
 		$version = '';
-		if ($this->cursor = mysql_query("SELECT `value` FROM `getid3_cache` WHERE (`filename` = '".mysql_real_escape_string(GETID3_VERSION)."') AND (`filesize` = '-1') AND (`filetime` = '-1') AND (`analyzetime` = '-1')", $this->connection)) {
+		if ($this->cursor = mysql_query("SELECT `value` FROM `getid3_cache` WHERE (`filename` = '".mysql_real_escape_string($this::VERSION)."') AND (`filesize` = '-1') AND (`filetime` = '-1') AND (`analyzetime` = '-1')", $this->connection)) {
 			list($version) = mysql_fetch_array($this->cursor);
 		}
-		if ($version != GETID3_VERSION) {
+		if ($version != $this::VERSION) {
 			$this->clear_cache();
 		}
 
@@ -117,7 +117,7 @@ class getID3_cached_mysql extends getID3
 	function clear_cache() {
 
 		$this->cursor = mysql_query("DELETE FROM `getid3_cache`", $this->connection);
-		$this->cursor = mysql_query("INSERT INTO `getid3_cache` VALUES ('".GETID3_VERSION."', -1, -1, -1, '".GETID3_VERSION."')", $this->connection);
+		$this->cursor = mysql_query("INSERT INTO `getid3_cache` VALUES ('".$this::VERSION."', -1, -1, -1, '".$this::VERSION."')", $this->connection);
 	}
 
 
