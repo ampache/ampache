@@ -1,5 +1,4 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /**
 * PHPMailer language file: refer to English translation for definitive list
 * Russian Version by Alexey Chumakov <alex@chumakov.ru>

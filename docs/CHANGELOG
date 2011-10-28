@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Updated PHPMailer to 5.2.0
         - Fixed bug in MPD module which affected toggling random or repeat 
                 (patch from jherold)
         - Properly escape config values when writing ampache.cfg.php
