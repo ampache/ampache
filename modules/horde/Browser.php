@@ -9,6 +9,7 @@
  * @TODO http://ajaxian.com/archives/parse-user-agent
  *
  * Copyright 1999-2011 Horde LLC (http://www.horde.org/)
+ * Copyright 2011 Paul MacIain (local changes for Ampache)
  *
  * See the enclosed file COPYING for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -290,20 +291,20 @@ class Horde_Browser
         } else {
             $this->_agent = $userAgent;
         }
-        $this->_lowerAgent = Horde_String::lower($this->_agent);
+        $this->_lowerAgent = strtolower($this->_agent);
 
         // Set our accept string.
         if (is_null($accept)) {
             if (isset($_SERVER['HTTP_ACCEPT'])) {
-                $this->_accept = Horde_String::lower(trim($_SERVER['HTTP_ACCEPT']));
+                $this->_accept = strtolower(trim($_SERVER['HTTP_ACCEPT']));
             }
         } else {
-            $this->_accept = Horde_String::lower($accept);
+            $this->_accept = strtolower($accept);
         }
 
         // Check for UTF support.
         if (isset($_SERVER['HTTP_ACCEPT_CHARSET'])) {
-            $this->setFeature('utf', strpos(Horde_String::lower($_SERVER['HTTP_ACCEPT_CHARSET']), 'utf') !== false);
+            $this->setFeature('utf', strpos(strtolower($_SERVER['HTTP_ACCEPT_CHARSET']), 'utf') !== false);
         }
 
         if (empty($this->_agent)) {
@@ -1142,7 +1143,7 @@ class Horde_Browser
      */
     public function isViewable($mimetype)
     {
-        $mimetype = Horde_String::lower($mimetype);
+        $mimetype = strtolower($mimetype);
         list($type, $subtype) = explode('/', $mimetype);
 
         if (!empty($this->_accept)) {
