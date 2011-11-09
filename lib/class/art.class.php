@@ -1153,7 +1153,7 @@ class Art extends database_object {
 			$proxyport = Config::get('proxy_port');
 			$proxyuser = Config::get('proxy_user');
 			$proxypass = Config::get('proxy_pass');
-			debug_event("lastfm", "set Proxy", "5");
+			debug_event('LastFM', 'proxy set', 5);
 			$lastfm->setProxy($proxyhost, $proxyport, $proxyuser, $proxypass);
 		}
 
@@ -1162,27 +1162,24 @@ class Art extends database_object {
 		if (!count($raw_data)) { return array(); }
 
 		$coverart = $raw_data['coverart'];
+		if (!is_array($coverart)) { return array(); }
 
-		if (is_array($coverart)) {
-			ksort($coverart);
-	        	foreach ($coverart as $key => $value) {
-				$i++;
-				$url = $coverart[$key];
-        
-				// We need to check the URL for the /noimage/ stuff
-				if (strpos($url, '/noimage/') !== false) {
-					debug_event('LastFM', 'Detected as noimage, skipped ' . $url, 3);
-					continue;
-				}
-        
-	        		$results = pathinfo($url);
-				$mime = 'image/' . $results['extension'];
-				$data[] = array('url' => $url, 'mime' => $mime);
-				if ($limit && count($data) >= $limit) {
-					return $data;
-				}
-			} // end foreach
-		}
+		ksort($coverart);
+		foreach ($coverart as $url) {
+			// We need to check the URL for the /noimage/ stuff
+			if (strpos($url, '/noimage/') !== false) {
+				debug_event('LastFM', 'Detected as noimage, skipped ' . $url, 3);
+				continue;
+			}
+			
+			// HACK: we shouldn't rely on the extension to determine file type
+	        	$results = pathinfo($url);
+			$mime = 'image/' . $results['extension'];
+			$data[] = array('url' => $url, 'mime' => $mime);
+			if ($limit && count($data) >= $limit) {
+				return $data;
+			}
+		} // end foreach
 
 		return $data;
 
