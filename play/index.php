@@ -365,15 +365,14 @@ $bytes_streamed = 0;
 
 // Actually do the streaming
 do {
-	$buf = fread($fp, 2048);
+	$buf = fread($fp, min(2048, $stream_size - $bytes_streamed));
 	print($buf);
 	$bytes_streamed += strlen($buf);
 } while (!feof($fp) && (connection_status() == 0) && ($bytes_streamed < $stream_size));
 
-// Need to make sure enough bytes were sent. Some players (Windows Media Player)
-// won't work if specified content length is not sent.
-if($bytes_streamed < $stream_size AND (connection_status() == 0)) {
-	print(str_repeat(' ',$stream_size - $bytes_streamed));
+// Need to make sure enough bytes were sent.
+if($bytes_streamed < $stream_size && (connection_status() == 0)) {
+	print(str_repeat(' ', $stream_size - $bytes_streamed));
 }
 
 // Make sure that a good chunk of the song has been played
