@@ -1156,29 +1156,32 @@ class Art extends database_object {
 			debug_event("lastfm", "set Proxy", "5");
 			$lastfm->setProxy($proxyhost, $proxyport, $proxyuser, $proxypass);
 		}
-		$raw_data = $lastfm->album_search($artist,$album);
+
+		$raw_data = $lastfm->album_search($artist, $album);
 
 		if (!count($raw_data)) { return array(); }
 
-		$coverart = ksort($raw_data['coverart']);
-		$i = 0;
+		$coverart = $raw_data['coverart'];
 
 		if (is_array($coverart)) {
-        	foreach ($coverart as $key => $value) {
-        		$i++;
-        		$url = $coverart[$key];
+			ksort($coverart);
+	        	foreach ($coverart as $key => $value) {
+				$i++;
+				$url = $coverart[$key];
         
-        		// We need to check the URL for the /noimage/ stuff
-        		if (strpos($url,"/noimage/") !== false) {
-        			debug_event('LastFM','Detected as noimage, skipped ' . $url,'3');
-        			continue;
-        		}
+				// We need to check the URL for the /noimage/ stuff
+				if (strpos($url, '/noimage/') !== false) {
+					debug_event('LastFM', 'Detected as noimage, skipped ' . $url, 3);
+					continue;
+				}
         
-        		$results = pathinfo($url);
-        		$mime = 'image/' . $results['extension'];
-        		$data[] = array('url'=>$url,'mime'=>$mime);
-        		if ($i >= $limit) { return $data; }
-        	} // end foreach
+	        		$results = pathinfo($url);
+				$mime = 'image/' . $results['extension'];
+				$data[] = array('url' => $url, 'mime' => $mime);
+				if ($limit && count($data) >= $limit) {
+					return $data;
+				}
+			} // end foreach
 		}
 
 		return $data;
