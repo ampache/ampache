@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Fixed session handling to actually use our custom handler
+                (reported by ss23)
         - Fixed Last.FM art method (reported by claudio)
         - Updated Captcha PHP to 2.3
         - Updated getID3 to 1.9.1
