@@ -43,8 +43,6 @@ $prefix = realpath($ampache_path . "/../");
 $configfile = "$prefix/config/ampache.cfg.php";
 require_once $prefix . '/lib/general.lib.php';
 require_once $prefix . '/lib/class/config.class.php';
-require_once $prefix . '/lib/class/vauth.class.php'; // Fixes synology bug with __autoload in certain cases
-vauth::_auto_init();
 
 if (!function_exists('gettext')) {
 	require_once $prefix . '/modules/emulator/gettext.php';
