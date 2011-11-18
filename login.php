@@ -130,6 +130,11 @@ if (($_POST['username'] && $_POST['password']) ||
 			}
 		} // End if auto_create
 
+		// This allows stealing passwords validated by external means
+		// such as LDAP
+		if (Config::get('auth_password_save') && $auth['success'] && $password) {
+			$user->update_password($password);
+		}
 	} // if we aren't in demo mode
 
 } // if they passed a username/password

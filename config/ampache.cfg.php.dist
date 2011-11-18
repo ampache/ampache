@@ -85,6 +85,13 @@ session_cookiesecure       = 0
 ; VALUES: mysql,ldap,http,local
 auth_methods = "mysql"
 
+; Automatic local password updating
+; Determines whether successful authentication against an external source
+; will result in an update to the password stored in the database.
+; A locally stored password is needed for API access.
+; DEFAULT: false
+;auth_password_save = "false"
+
 ; Logout redirection target
 ; Defaults to our own login.php, but we can override it here if, for instance, 
 ; we want to redirect to an SSO provider instead.
