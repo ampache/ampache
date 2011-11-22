@@ -37,20 +37,15 @@
 <body bgcolor="#f0f0f0">
 <div id="header">
 <h1>Ampache :: <?php echo _('Access Denied'); ?></h1>
-<p>This Event has been logged</p>
+<p><?php echo _('This event has been logged.'); ?></p>
 </div>
 <p class="error">
 <?php if (!Config::get('demo_mode')) { ?>
-<?php
-echo _("You've been redirected to this page because you do not have access to this function.");
-echo _("If you believe this is an error please contact an Ampache administrator.");
-echo _("This event has been logged");
-?>
+<?php echo _('You have been redirected to this page because you do not have access to this function.'); ?></p><p class="error">
+<?php echo _('If you believe this is an error please contact an Ampache administrator.'); ?></p><p class="error">
+<?php echo _('This event has been logged.'); ?>
 <?php } else { ?>
-<?php
-echo _("You've been redirected to this page because you've attempted to access a function that is disabled in the demo.");
-echo _("Functions are disabled in the demo because previous users of the demo have used the functionality to post inappropriate materials");
-?>
+<?php echo _("You have been redirected to this page because you attempted to access a function that is disabled in the demo."); ?>
 <?php } ?>
 </p>
 <div id="bottom">
