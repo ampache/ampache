@@ -25,14 +25,13 @@
  * @link	http://www.ampache.org/
  */
 
-require 'lib/init.php';
+require_once 'lib/init.php';
 
-if (!Access::check('interface','100')) {
+if (!Access::check('interface', 100)) {
     access_denied();
     exit();
 }
 
-require_once Config::get('prefix') . '/lib/debug.lib.php';
-require_once Config::get('prefix') . '/templates/show_info.inc.php';
+phpinfo();
 
 ?>
