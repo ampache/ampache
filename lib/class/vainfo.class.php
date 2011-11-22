@@ -27,122 +27,31 @@
  */
 
 /**
- * vainfo Class
  *
  * This class takes the information pulled from getID3 and returns it in a
  * Ampache friendly way.
  *
- * @package	Ampache
- * @copyright	2001 - 2011 Ampache.org
- * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @link	http://www.ampache.org/
  */
 class vainfo {
 
-	// {{{ property
+	public $encoding = '';
+	public $encoding_id3v1 = '';
+	public $encoding_id3v2 = '';
 
-	/**
-	 * Default encoding
-	 *
-	 * @var	string
-	 */
-	public $encoding	= '';
-
-	/**
-	 * Default id3v1 encoding
-	 *
-	 * @var	string
-	 */
-	public $encoding_id3v1	= 'ISO-8859-1';
-
-	/**
-	 * Default id3v2 encoding
-	 *
-	 * @var	string
-	 */
-	public $encoding_id3v2 = 'ISO-8859-1';
-
-	/* Loaded Variables */
-	/**
-	 * Filename
-	 *
-	 * @var	string
-	 */
 	public $filename	= '';
-
-	/**
-	 * Media type
-	 *
-	 * @var	string
-	 */ 
 	public $type		= '';
-
-	/**
-	 * Media tags
-	 *
-	 * @var	array
-	 */
 	public $tags		= array();
 
-	/* Internal Information */
-	/**
-	 * GetID3 analyzed data.
-	 *
-	 * @var	array
-	 */
 	protected $_raw 		= array();
-
-	/**
-	 * GetID3 object
-	 *
-	 * @var	object
-	 */
 	protected $_getID3 	= '';
-
-	/**
-	 * Iconv use flag
-	 *
-	 * @var	boolean
-	 */
 	protected $_iconv		= false;
 
-	/**
-	 * File encoding charset
-	 *
-	 * @var	string
-	 */
 	protected $_file_encoding	= '';
-
-	/**
-	 * File pattern
-	 *
-	 * @var	string
-	 */
 	protected $_file_pattern	= '';
-
-	/**
-	 * Directory pattern
-	 *
-	 * @var	string
-	 */
 	protected $_dir_pattern	= '';
 
-	/* Internal Private */
-	/**
-	 * Pathinfo results array
-	 *
-	 * @var	array
-	 */
 	private $_pathinfo;
-
-	/**
-	 * Tag broken flag. If tag is broken, return true.
-	 *
-	 * @var	boolean
-	 */
 	private $_broken = false;
-
-	// }}}
 
 	/**
 	 * Constructor
@@ -150,9 +59,8 @@ class vainfo {
 	 * This function just sets up the class, it doesn't
 	 * actually pull the information
 	 *
-	 * @todo	Some mp3 is still broken... I think this is related to mb_detect_order().
 	 * @param	string	$file	filename
-	 * @param	string	$encoding	Default encode character set
+	 * @param	string	$encoding	Target encode character set
 	 * @param	string	$encoding_id3v1	Default id3v1 encode character set
 	 * @param	string	$encoding_iv3v2	Default id3v2 encode character set
 	 * @param	string	$dir_pattern	Directory pattern
@@ -259,7 +167,6 @@ class vainfo {
 	 */
 	private static function _detect_encoding($tags, $mb_order) {
 		if (function_exists('mb_detect_encoding')) {
-			debug_event('vainfo', "id3v -> $id3v", 5);
 			$encodings = array();
 			$tags = array('artist', 'album', 'genre', 'title');
 			foreach ($tags as $tag) {
@@ -1174,7 +1081,7 @@ class vainfo {
 			$encoding = $this->_getID3->encoding;
 		}
 		// If we've got iconv then go ahead and clear her up
-		if (strcmp($encoding, $this->encoding) == 0) {
+		if ($encoding == $this->encoding) {
 			debug_event('vainfo', "\$encoding -> ${encoding}, \$this->encoding -> {$this->encoding}", 5);
 			return $tag;
 		}
