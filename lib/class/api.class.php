@@ -210,6 +210,10 @@ class Api {
 				$db_results = Dba::read($sql);
 				$playlist = Dba::fetch_assoc($db_results);
 
+				$sql = "SELECT COUNT(`id`) AS `catalog` FROM `catalog`"; 
+				$db_results = Dba::read($sql); 
+				$catalog = Dba::fetch_assoc($db_results); 
+
 				echo xmlData::keyed_array(array('auth'=>$token,
 					'api'=>self::$version,
 					'update'=>date("c",$row['update']),
@@ -219,7 +223,8 @@ class Api {
 					'albums'=>$counts['album'],
 					'artists'=>$counts['artist'],
 					'playlists'=>$playlist['playlist'],
-					'videos'=>$vcounts['video']));
+					'videos'=>$vcounts['video'],
+					'catalogs'=>$catalog['catalog'])); 
 				return true;
 			} // match
 
