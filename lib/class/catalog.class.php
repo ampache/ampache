@@ -1035,9 +1035,11 @@ class Catalog extends database_object {
 		$name	= Dba::escape($data['name']);
 		$rename	= Dba::escape($data['rename_pattern']);
 		$sort	= Dba::escape($data['sort_pattern']);
+		$remote_username = Dba::escape($data['remote_username']);
+		$remote_password = Dba::escape($data['remote_password']); 
 
 		$sql = "UPDATE `catalog` SET `name`='$name', `rename_pattern`='$rename', " .
-			"`sort_pattern`='$sort' WHERE `id` = '$id'";
+			"`sort_pattern`='$sort', `remote_username`='$remote_username', `remote_password`='$remote_password' WHERE `id` = '$id'";
 		$db_results = Dba::write($sql);
 
 		return true;

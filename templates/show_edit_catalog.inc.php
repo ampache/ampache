@@ -49,10 +49,12 @@
 	<td><?php echo scrub_out(ucfirst($catalog->catalog_type)); ?></td>
 </tr>
 <tr>
-	<td><?php echo _('XML-RPC Key'); ?>:</td>
-	<td>
-		<input size="30" type="text" name="key" value="<?php echo scrub_out($catalog->key); ?>" />*<span class="error"><?php echo _('Required for Remote Catalogs'); ?></span>
-	</td>
+        <td><?php echo _('Remote Catalog Username'); ?>: </td>
+        <td><input size="30" type="text" name="remote_username" value="<?php echo scrub_out($catalog->remote_username); ?>" /><span class="error">*<?php echo _('Required for Remote Catalogs'); ?></span></td>
+</tr>
+<tr>
+        <td><?php echo _('Remote Catalog Password'); ?>: </td>
+        <td><input size="30" type="password" name="remote_password" value="" /><span class="error">*<?php echo _('Required for Remote Catalogs'); ?></span></td>
 </tr>
 <tr>
 	<td><?php echo _('Filename pattern'); ?>:</td>

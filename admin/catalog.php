@@ -173,7 +173,7 @@ switch ($_REQUEST['action']) {
 		if (Config::get('demo_mode')) { break; }
 
 		/* Update the catalog */
-		Catalog::update_settings($_REQUEST);
+		Catalog::update_settings($_POST);
 
 		$url 	= Config::get('web_path') . '/admin/catalog.php';
 		$title 	= _('Catalog Updated');
