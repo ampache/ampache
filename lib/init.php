@@ -153,6 +153,7 @@ require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
 require_once $prefix . '/modules/infotools/lastfm.class.php';
 //require_once $prefix . '/modules/infotools/jamendoSearch.class.php';
 require_once $prefix . '/modules/php_musicbrainz/mbQuery.php';
+require_once $prefix . '/modules/ampacheapi/AmpacheApi.lib.php';
 
 /* Temp Fixes */
 $results = Preference::fix_preferences($results);
