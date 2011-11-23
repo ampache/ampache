@@ -64,7 +64,7 @@ $default_sort = "%a/%A";
 </tr>
 <tr>
 	<td><?php echo _('Remote Catalog Username'); ?>: </td>
-	<td><input size="30" type="text" name="remote_username" value="" /><span class="error">*<?php echo _('Required for Remote Catalogs'); ?></span></td>
+	<td><input size="30" type="text" name="remote_username" value="<?php echo scrub_out($_POST['remote_username']); ?>" /><span class="error">*<?php echo _('Required for Remote Catalogs'); ?></span></td>
 </tr>
 <tr>
 	<td><?php echo _('Remote Catalog Password'); ?>: </td>

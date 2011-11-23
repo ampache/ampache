@@ -294,10 +294,19 @@ class Catalog extends database_object {
 		$rename_pattern	= Dba::escape($data['rename_pattern']);
 		$sort_pattern	= Dba::escape($data['sort_pattern']);
 		$gather_types	= 'NULL';
+		$remote_username = 'NULL';
+		$remote_password = 'NULL'; 	
+
+		// Don't save these if it isn't a remote catalog
+		if ($catalog_type == 'remote') { 
+			$remote_username = "'" . Dba::escape($data['remote_username']) . "'";
+			$remote_password = "'" . Dba::escape($data['remote_password']) . "'"; 
+		} 
+
 
 		// Ok we're good to go ahead and insert this record
-		$sql = "INSERT INTO `catalog` (`name`,`path`,`catalog_type`,`rename_pattern`,`sort_pattern`,`gather_types`) " .
-			"VALUES ('$name','$path','$catalog_type','$rename_pattern','$sort_pattern',$gather_types)";
+		$sql = "INSERT INTO `catalog` (`name`,`path`,`catalog_type`,`remote_username`,`remote_password`,`rename_pattern`,`sort_pattern`,`gather_types`) " .
+			"VALUES ('$name','$path','$catalog_type',$remote_username,$remote_password,'$rename_pattern','$sort_pattern',$gather_types)";
 		$db_results = Dba::write($sql);
 
 		$insert_id = Dba::insert_id();
@@ -1275,15 +1284,17 @@ class Catalog extends database_object {
 	/**
 	 * get_remote_catalog
 	 * get a remote catalog and runs update if needed this requires
-	 * the XML RPC stuff and a key to be passed
+	 * this uses the AmpacheAPI library provided, replaces legacy XMLRPC 
 	 */
 	public function get_remote_catalog($type=0) {
 
-		if (!class_exists('XML_RPC_Client')) {
-			debug_event('xmlrpc',"Unable to load pear XMLRPC library",'1');
-			echo "<span class=\"error\"><b>" . _("Error") . "</b>: " . _('Unable to load pear XMLRPC library, make sure XML-RPC is enabled') . "</span><br />\n";
-			return false;
-		}
+		$remote_handle = new AmpacheApi(array('username'=>'','password'=>'','server'=>'')); 
+
+		if ($remote_handle->state() != 'READY') { 
+			debug_event('APICLIENT','Error Unable to make API client ready','1'); 
+			Error::add('general',_('Error Connecting to Remote Server'));
+			return false; 
+		} 
 
 		// Handshake and get our token for this little conversation
 		$token = xmlRpcClient::ampache_handshake($this->path,$this->key);

@@ -368,6 +368,9 @@ class Update {
 		$update_string = '- Add local auth method to session.type.<br />';
 		$version[] = array('version' => '360007','description' => $update_string);
 
+		$update_string = '- Verify remote_username and remote_password were added correctly to catalog table.<br />';
+		$version[] = array('version' => '360008','description' => $update_string); 
+
 		return $version;
 
 	} // populate_version
@@ -1854,7 +1857,7 @@ class Update {
 		$db_results = Dba::write($sql);
 
 		// Add in Username / Password for catalog - to be used for remote catalogs
-		$sql = "ALTER TABLE `catalog` ADD `remote_username` VARCHAR ( 255 ) AFTER `user`";
+		$sql = "ALTER TABLE `catalog` ADD `remote_username` VARCHAR ( 255 ) AFTER `catalog_type`";
 		$db_results = Dba::write($sql);
 
 		$sql = "ALTER TABLE `catalog` ADD `remote_password` VARCHAR ( 255 ) AFTER `remote_username`";
@@ -2004,6 +2007,41 @@ class Update {
 		$db_results = Dba::write($sql);
 		self::set_version('db_version','360007');
 	}
+
+	/**
+	 * update_360008
+	 * Fix bug that caused the remote_username/password fields to not be created
+	 */
+	public static function update_360008() { 
+
+		$remote_username = false; 
+		$remote_password = false; 
+
+		$sql = "DESCRIBE `catalog`"; 
+		$db_results = Dba::read($sql); 
+
+		while ($row = Dba::fetch_assoc($db_results)) { 
+			if ($row['Field'] == 'remote_username') { 
+				$remote_username = true; 
+			} 
+			if ($row['Field'] == 'remote_password') { 
+				$remote_password = true; 
+			} 
+		} // end while 
+
+		if (!$remote_username) { 
+	                // Add in Username / Password for catalog - to be used for remote catalogs
+	                $sql = "ALTER TABLE `catalog` ADD `remote_username` VARCHAR ( 255 ) AFTER `catalog_type`";
+	                $db_results = Dba::write($sql);
+		}
+		if (!$remote_password) { 
+	                $sql = "ALTER TABLE `catalog` ADD `remote_password` VARCHAR ( 255 ) AFTER `remote_username`";
+	                $db_results = Dba::write($sql);
+		} 
+
+		self::set_version('db_version','360008'); 
+
+	} // update_360008
 
 } // end update class
 ?>
