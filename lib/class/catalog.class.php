@@ -1298,47 +1298,10 @@ class Catalog extends database_object {
 			return false; 
 		} 
 
-		// Handshake and get our token for this little conversation
-		$token = xmlRpcClient::ampache_handshake($this->path,$this->key);
+		// Figure out how many songs, more information etc
+		$remote_catalog_info = $remote_handle->info(); 
 
-		if (!$token) {
-			debug_event('XMLCLIENT','Error No Token returned', 2);
-			Error::display('general');
-			return;
-		} else {
-			debug_event('xmlrpc',"token returned",'4');
-		}
-
-		// Figure out the host etc
-		preg_match("/http:\/\/([^\/\:]+):?(\d*)\/*(.*)/", $this->path, $match);
-		$server = $match['1'];
-		$port   = $match['2'] ? intval($match['2']) : '80';
-		$path   = $match['3'];
-
-		$full_url = "/" . ltrim($path . "/server/xmlrpc.server.php",'/');
-		if(Config::get('proxy_host') AND Config::get('proxy_port')) {
-			$proxy_host = Config::get('proxy_host');
-			$proxy_port = Config::get('proxy_port');
-			$proxy_user = Config::get('proxy_user');
-			$proxy_pass = Config::get('proxy_pass');
-		}
-		$client = new XML_RPC_Client($full_url,$server,$port,$proxy_host,$proxy_port,$proxy_user,$proxy_pass);
-
-		/* encode the variables we need to send over */
-		$encoded_key	= new XML_RPC_Value($token,'string');
-		$encoded_path	= new XML_RPC_Value(Config::get('web_path'),'string');
-
-		$xmlrpc_message = new XML_RPC_Message('xmlrpcserver.get_catalogs', array($encoded_key,$encoded_path));
-		$response = $client->send($xmlrpc_message,30);
-
-		if ($response->faultCode() ) {
-			$error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-			debug_event('XMLCLIENT(get_remote_catalog)',$error_msg,'1');
-			echo "<p class=\"error\">$error_msg</p>";
-			return;
-		}
-
-		$data = XML_RPC_Decode($response->value());
+		
 
 		// Print out the catalogs we are going to sync
 		foreach ($data as $vars) {

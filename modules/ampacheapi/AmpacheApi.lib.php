@@ -28,6 +28,10 @@ class AmpacheApi {
 	private $password; 
 	private $api_secure; 
 
+	// Handshake variables
+	private $handshake; 
+	private $handshake_time; // Used to figure out how stale our data is
+
 	// Response variables
 	private $api_session;  
 
@@ -93,6 +97,10 @@ class AmpacheApi {
 		$results = array_shift($this->get_response()); 
 
 		$this->api_auth = $results['auth']; 
+		// Define when we pulled this, it is not wine, it does
+		// not get better with age
+		$this->handshake_time = time(); 
+		$this->handshake = $results; 
 
 	} // connect
 
@@ -159,6 +167,22 @@ class AmpacheApi {
 		return $this->api_state; 
 
 	} // state
+
+	/**
+	 * info
+	 * Returns the information gathered by the handshake 
+	 * not raw so we can formated it if we wanted? 
+	 */
+	public function info() { 
+
+		if ($this->state() != 'READY') { 
+			trigger_error('AmpacheApi::info API in non-ready state, unable to return info'); 
+			return false; 
+		} 
+
+		return $this->handshake; 
+
+	} // info
 
 	/**
 	 * send_command
