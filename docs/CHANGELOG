@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+	- Fixed Database Upgrade issue that caused catalog user/pass for
+		remote catalogs to not be added correctly
         - Added the ability to locally cache passwords validated by external
                 means (e.g. to allow LDAP authenticated users to use the API)
         - Fixed session handling to actually use our custom handler
