@@ -213,7 +213,7 @@ switch ($_REQUEST['action']) {
 		if (substr($_POST['path'],0,7) != 'http://' && $_POST['type'] == 'remote') {
 			Error::add('general',_('Error: Remote selected, but path is not a URL'));
 		}
-		if ($POST['type'] == 'local' AND (!strlen($POST['remote_username']) OR !strlen($POST['remote_password']))) {
+		if ($POST['type'] == 'remote' AND (!strlen($POST['remote_username']) OR !strlen($POST['remote_password']))) {
 			Error::add('general',_('Error: Username and Password Required for Remote Catalogs'));
 		}
 
