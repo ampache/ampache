@@ -1301,27 +1301,20 @@ class Catalog extends database_object {
 		// Figure out how many songs, more information etc
 		$remote_catalog_info = $remote_handle->info(); 
 
-		
-
-		// Print out the catalogs we are going to sync
-		foreach ($data as $vars) {
-			$catalog_name 	= $vars['name'];
-			$count		= $vars['count'];
-			print("<b>Reading Remote Catalog: $catalog_name ($count Songs)</b> [$this->path]<br />\n");
-			$total += $count;
-		}
-
-		// Flush the output
-		flush();
+		// Tell em what we've found johnny!
+		printf(_('%u remote catalogs found (%u songs)'),$remote_catalog_info['catalogs'],$remote_catalog_info['songs']); 
+		flush(); 
 
 		// Hardcoded for now
 		$step = '500';
 		$current = '0';
+		$total = $remote_catalog_info['songs']; 
 
 		while ($total > $current) {
 			$start 	= $current;
 			$current += $step;
-			$this->get_remote_song($client,$token,$start,$step);
+			$remote_handle->parse_response($remote_handle->send_command('songs',array('offset'=>$start,'limit'=>$step)));
+			$songs = $remote_handle->get_response(); 
 		}
 
 		echo "<p>" . _('Completed updating remote catalog(s)') . ".</p><hr />\n";
