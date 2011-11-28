@@ -37,7 +37,7 @@ class AmpacheApi {
 
 	// Constructed variables
 	private $api_url; 
-	private $api_state; 
+	private $api_state='UNCONFIGURED'; 
 	private $api_auth; 
 
 	// XML Parser variables
@@ -50,11 +50,13 @@ class AmpacheApi {
 	protected $XML_skiptags = array('root'); 
 	protected $XML_parenttags = array('artist','album','song','tag','video','playlist','result',
 						'auth','version','update','add','clean','songs',
-						'artists','albums','tags','videos','api','playlists');
+						'artists','albums','tags','videos','api','playlists','catalogs');
 
 	// Library static version information
 	protected $LIB_version = '350001'; 
 	private $API_version = ''; 
+
+	private $DEBUG=false; 
 
 	/**
 	 * Constructor
@@ -63,6 +65,11 @@ class AmpacheApi {
 	 * object that can be later configured and then connected
 	 */
 	public function __construct($config=array()) { 
+
+		// See if we are setting debug first
+		if ($config['debug']) { 
+			$this->debug($config['debug']); 
+		} 
 
 		// If we got something, then configure!
 		if (is_array($config) AND count($config)) { 
@@ -82,21 +89,32 @@ class AmpacheApi {
 	 */
 	public function connect() { 
 
+		if ($this->debug) { echo "CONNECT:: Using $this->username / $this->password\n"; } 
+
 		// Setup the handshake
+		$results = array(); 
 		$timestamp = time(); 
 		$key = hash('sha256',$this->password); 
 		$passphrase = hash('sha256',$timestamp . $key); 
 
 		$options = array('timestamp'=>$timestamp,'auth'=>$passphrase,'version'=>$this->LIB_version,'user'=>$this->username); 
-	
+
 		$response = $this->send_command('handshake',$options); 
 
 		$this->parse_response($response); 
 		
 		// We want the first response
-		$results = array_shift($this->get_response()); 
+		$data = $this->get_response(); 
+		foreach ($data as $value) { 
+			$results = array_merge($results,$value); 
+		} 
 
-		$this->api_auth = $results['auth']; 
+		if (!$results['auth']) { 
+			$this->set_state('error'); 
+			return false; 
+		} 
+		$this->api_auth = $results['auth'];  
+		$this->set_state('connected'); 
 		// Define when we pulled this, it is not wine, it does
 		// not get better with age
 		$this->handshake_time = time(); 
@@ -111,6 +129,8 @@ class AmpacheApi {
 	 * from the constructor or directly, if we so desire. 
 	 */
 	public function configure($config=array()) { 
+
+		if ($this->debug) { echo "CONFIGURE :: Checking Passed config options\n"; } 
 
 		if (!is_array($config)) {
 			trigger_error('AmpacheApi::configure received a non-array value'); 
@@ -175,9 +195,8 @@ class AmpacheApi {
 	 */
 	public function info() { 
 
-		if ($this->state() != 'READY') { 
-			trigger_error('AmpacheApi::info API in non-ready state, unable to return info'); 
-			return false; 
+		if ($this->state() != 'CONNECTED') { 
+			throw new Exception('AmpacheApi::info API in non-ready state, unable to return info'); 
 		} 
 
 		return $this->handshake; 
@@ -190,24 +209,24 @@ class AmpacheApi {
 	 * host, and returns a nice clean keyed array 
 	 */
 	public function send_command($command,$options=array()) { 
+		
+		if ($this->debug) { echo "SEND COMMAND:: $command"; print_r($options,1); echo "\n"; } 
 
-		if ($this->state() != 'READY') { 
-			trigger_error('AmpacheApi::send_command API in non-ready state, unable to send');
-			return false; 
+		if ($this->state() != 'READY' AND $this->state() != 'CONNECTED') { 
+			throw new Exception('AmpacheApi::send_command API in non-ready state, unable to send');
 		} 
 		if (!trim($command)) { 
-			trigger_error('AmpacheApi::send_command no command specified'); 
-			return false; 
+			throw new Exception('AmpacheApi::send_command no command specified'); 
 		} 	
 		if (!$this->validate_command($command)) { 
-			trigger_error('AmpacheApi::send_command Invalid/Unknown command ' . $command . ' issued'); 
-			return false; 
+			throw new Exception('AmpacheApi::send_command Invalid/Unknown command ' . $command . ' issued'); 
 		} 
 
 		$url = $this->api_url . '?action=' . urlencode($command); 
 
 		foreach ($options as $key=>$value) { 
 			if (!trim($key)) { 
+				// Non fatal don't need to except it
 				trigger_error('AmpacheApi::send_command unable to append empty variable to command'); 
 				continue; 
 			} 
@@ -251,8 +270,7 @@ class AmpacheApi {
 		$this->XML_create_parser(); 
 
 		if (!xml_parse($this->XML_parser,$response)) { 
-			trigger_error('AmpacheApi::parse_response was unable to parse XML document'); 
-			return false; 
+			throw new Exception('AmpacheApi::parse_response was unable to parse XML document'); 
 		} 
 
 		xml_parser_free($this->XML_parser); 
@@ -269,6 +287,16 @@ class AmpacheApi {
 		return $this->XML_results; 
 
 	} // get_response
+
+	/**
+	 * debug
+	 * set debug to true?
+	 */
+	private function debug($value) { 
+
+		$this->debug = intval($value); 
+
+	} // debug
 
 	/////////////////////////// XML PARSER FUNCTIONS /////////////////////////////
 

@@ -1290,11 +1290,19 @@ class Catalog extends database_object {
 	 */
 	public function get_remote_catalog($type=0) {
 
-		$remote_handle = new AmpacheApi(array('username'=>'','password'=>'','server'=>'')); 
+		try { 
+			$remote_handle = new AmpacheApi(array('username'=>$this->remote_username,'password'=>$this->remote_password,'server'=>$this->path,'debug'=>true)); 
+		} catch (Exception $e) { 
+			Error::add('general',$e->getMessage()); 
+			Error::display('general'); 
+			flush(); 
+			return false; 
+		} 
 
-		if ($remote_handle->state() != 'READY') { 
+		if ($remote_handle->state() != 'CONNECTED') { 
 			debug_event('APICLIENT','Error Unable to make API client ready','1'); 
 			Error::add('general',_('Error Connecting to Remote Server'));
+			Error::display('general'); 
 			return false; 
 		} 
 
@@ -1302,7 +1310,7 @@ class Catalog extends database_object {
 		$remote_catalog_info = $remote_handle->info(); 
 
 		// Tell em what we've found johnny!
-		printf(_('%u remote catalogs found (%u songs)'),$remote_catalog_info['catalogs'],$remote_catalog_info['songs']); 
+		printf(_('%u remote catalog(s) found (%u songs)'),$remote_catalog_info['catalogs'],$remote_catalog_info['songs']); 
 		flush(); 
 
 		// Hardcoded for now
@@ -1313,9 +1321,16 @@ class Catalog extends database_object {
 		while ($total > $current) {
 			$start 	= $current;
 			$current += $step;
-			$remote_handle->parse_response($remote_handle->send_command('songs',array('offset'=>$start,'limit'=>$step)));
-			$songs = $remote_handle->get_response(); 
-		}
+			// It uses exceptions so lets try this
+			try { 
+				$remote_handle->parse_response($remote_handle->send_command('songs',array('offset'=>$start,'limit'=>$step)));
+				$songs = $remote_handle->get_response(); 
+			} catch (Exception $e) {
+				Error::add('general',$e->getMessage()); 
+				Error::display('general'); 
+				flush(); 
+			}			
+		} // end while
 
 		echo "<p>" . _('Completed updating remote catalog(s)') . ".</p><hr />\n";
 		flush();

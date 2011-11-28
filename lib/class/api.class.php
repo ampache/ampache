@@ -210,7 +210,7 @@ class Api {
 				$db_results = Dba::read($sql);
 				$playlist = Dba::fetch_assoc($db_results);
 
-				$sql = "SELECT COUNT(`id`) AS `catalog` FROM `catalog`"; 
+				$sql = "SELECT COUNT(`id`) AS `catalog` FROM `catalog` WHERE `catalog_type`='local'"; 
 				$db_results = Dba::read($sql); 
 				$catalog = Dba::fetch_assoc($db_results); 
 
