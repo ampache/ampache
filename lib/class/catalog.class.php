@@ -1330,15 +1330,18 @@ class Catalog extends database_object {
 				Error::display('general'); 
 				flush(); 
 			}			
+			// itterate the songs we retrieved and insert them
+			foreach ($songs as $data) { 
+				if (!$this->insert_remote_song($data['song'])) { 
+					debug_event('REMOTE_INSERT','Remote Insert failed, see previous log messages -' . $data['song']['self']['id'],'1'); 
+					Error::add('general',_('Unable to Insert Song - %s'),$data['song']['title']); 
+					Error::display('general'); 
+					flush(); 
+				} 
+			} // end foreach
 		} // end while
 
 		echo "<p>" . _('Completed updating remote catalog(s)') . ".</p><hr />\n";
-		flush();
-
-		// Try to sync the album images from the remote catalog
-		echo "<p>" . _('Starting synchronisation of album images') . ".</p><br />\n";
-		$this->get_remote_album_images($client, $token, $path);
-		echo "<p>" . _('Completed synchronisation of album images') . ".</p><hr />\n";
 		flush();
 
 		// Update the last update value
@@ -1387,39 +1390,6 @@ class Catalog extends database_object {
 	} // get_remote_song
 
 	/**
-	 * get_album_images
-	 * This function retrieves the album information from the remote server
-	 */
-	public function get_remote_album_images($client,$token,$path) {
-
-		$encoded_key	= new XML_RPC_Value($token,'string');
-		$query_array	= array($encoded_key);
-		$xmlrpc_message	= new XML_RPC_Message('xmlrpcserver.get_album_images',$query_array);
-
-		/* Depending upon the size of the target catalog this can be a very slow/long process */
-		set_time_limit(0);
-
-		// Sixty Second time out per chunk
-		$response = $client->send($xmlrpc_message,60);
-		$value = $response->value();
-
-		if ( !$response->faultCode() ) {
-			$data = XML_RPC_Decode($value);
-			$total = $this->update_remote_album_images($data, $client->server, $token, $path);
-			echo _('images synchronized: ') . ' ' . $total . "<br />";
-			flush();
-		}
-		else {
-			$error_msg = _('Error connecting to') . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-			debug_event('XMLCLIENT(get_remote_album_images)',$error_msg,'1');
-			echo "<p class=\"error\">$error_msg</p>";
-		}
-
-		return;
-
-	} // get_album_images
-
-	/**
 	 * update_remote_catalog
 	 * actually updates from the remote data, takes an array of songs that are base64 encoded and parses them
 	 */
@@ -1453,68 +1423,6 @@ class Catalog extends database_object {
 		self::clean($this->id);
 
 	} // update_remote_catalog
-
-	/*
-	 * update_remote_album_images
-	 * actually synchronize the album images
-	 */
-	public function update_remote_album_images($data, $remote_server, $auth, $path) {
-		$label = "catalog.class.php::update_remote_album_images";
-
-		$total_updated = 0;
-
-		/* If album images don't exist, return value will be 0. */
-		if(empty($data)) { return $total_updated; }
-
-		/*
-		 * We need to check the incomming albums to see which needs to receive an image
-		 */
-		foreach ($data as $serialized_album) {
-
-			// Prevent a timeout
-			set_time_limit(0);
-
-			// Load the remote album
-			$remote_album = new Album();
-			$remote_album = unserialize($serialized_album);
-			$remote_album->format(); //this will set the fullname
-
-			$debug_text = "remote_album id, name, year: ";
-			$debug_text.= $remote_album->id . ", " . $remote_album->name . ", " . $remote_album->year;
-			debug_event($label, $debug_text, '4');
-
-			// check the album if it exists by checking the name and the year of the album
-			$local_album_id = self::check_album($remote_album->name, $remote_album->year,"","", true);
-			debug_event($label, "local_album_id: " . $local_album_id, '4');
-
-			if ($local_album_id != 0) {
-				// Local album found lets add the cover
-				if(isset($path) AND !preg_match("/^\//", $path)) { $path = "/".$path; }
-				debug_event($label, "remote_server: " . $remote_server,'4');
-				$server_path = "http://" . ltrim($remote_server, "http://");
-				$server_path.= $path."/image.php?id=" . $remote_album->id;
-				$server_path.= "&auth=" . $auth;
-				debug_event($label, "image_url: " . $server_path,'4');
-				$data['url'] = $server_path;
-
-				$local_art = new Art($local_album_id, 'album');
-				$image_data = $local_art->get_from_source($data);
-
-				// If we got something back insert it
-				if ($image_data) {
-					// TODO: Null argument looks broken
-					$local_art->insert($image_data, "");
-					$total_updated++;
-					debug_event($label, "adding album image succes", '4');
-				} else {
-					debug_event($label, "adding album image failed ", '4');
-				}
-			}
-		}
-
-		return $total_updated;
-
-	} // update_remote_album_images
 
 	/**
 	 * clean_catalog
@@ -2267,20 +2175,47 @@ class Catalog extends database_object {
 	 */
 	public function insert_remote_song($song) {
 
-		$url 		= Dba::escape($song->file);
-		$title		= self::check_title($song->title);
-		$title		= Dba::escape($title);
-		$current_time	= time();
+		/* Limitations:
+		 * Missing Following Metadata
+		 * MBID,Disk,Rate,Mode
+		 */
 
-		$sql = "INSERT INTO song (file,catalog,album,artist,title,bitrate,rate,mode,size,time,track,addition_time,year)" .
-			" VALUES ('$url','$song->catalog','$song->album','$song->artist','$title','$song->bitrate','$song->rate','$song->mode','$song->size','$song->time','$song->track','$current_time','$song->year')";
+		// Strip the SSID off of the url, we will need to regenerate this every time 
+		$url		= preg_replace("/SSID=[\w\d]+/","",$song['url']); 
+		$title		= Dba::escape($song['title']); 
+		$album 		= self::check_album($song['album'],$song['year']); 
+		$artist		= self::check_artist($song['artist']); 
+		$bitrate 	= Dba::escape($song['bitrate']); 
+		$size	 	= Dba::escape($song['size']);
+		$song_time 	= Dba::escape($song['time']);
+		$track	 	= Dba::escape($song['track']);
+		$year		= Dba::escape($song['year']); 
+		$title		= Dba::escape($song['title']);
+		$current_time	= time();
+		$catalog_id	= Dba::escape($this->id);  
+
+		$sql = "INSERT INTO `song` (`file`,`catalog`,`album`,`artist`,`title`,`bitrate`,`rate`,`mode`,`size`,`time`,`track`,`addition_time`,`year`)" .
+			" VALUES ('$url','$$catalog_id','$album','$artist','$title','$bitrate','$rate','$mode','$size','$time','$track','$current_time','$year')";
 		$db_results = Dba::write($sql);
 
 		if (!$db_results) {
 			debug_event('insert',"Unable to Add Remote $url -- $sql",'5','ampache-catalog');
-			echo "<span style=\"color: #FOO;\">Error Adding Remote $url </span><br />$sql<br />\n";
-			flush();
+			return false; 
 		}
+
+		// Weird to do this here, but we have the information - see if the album has art, if it doesn't then use the remote
+		// art url 
+		$art = new Art($album, 'album');
+		// If it doesn't have art...
+		if (!$art->get()) { 
+			// Get the mime out
+			$get_vars = parse_url($song['art']); 
+			$extension = substr($get_vars['name'],strlen($get_vars['name'])-3,3);
+			// Pull the image
+			$raw = $art->get_from_source(array('url'=>$song['art']));
+			$art->insert_source($raw,'image/' . $extension); 
+		} 
+
 
 	} // insert_remote_song
 
