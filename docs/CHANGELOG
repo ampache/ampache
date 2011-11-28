@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Fixed video searches (reported by mchugh19)
 	- Fixed Database Upgrade issue that caused catalog user/pass for
 		remote catalogs to not be added correctly
         - Added the ability to locally cache passwords validated by external
