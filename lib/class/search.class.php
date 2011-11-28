@@ -1033,7 +1033,7 @@ class Search extends playlist_object {
 			} // switch on ruletype
 		} // foreach rule
 
-		$where_sql = explode(" $sql_logic_operator ", $where);
+		$where_sql = implode(" $sql_logic_operator ", $where);
 
 		return array(
 			'base' => 'SELECT DISTINCT(`video`.`id`) FROM `video`',
