@@ -89,11 +89,6 @@ function check_php_ver($level=0) {
 		return false;
 	}
 
-	// Poor windows users if only their OS wasn't behind the times
-	if (strtoupper(substr(PHP_OS,0,3)) == 'WIN' AND floatval(phpversion()) < 5.3) {
-		return false;
-	}
-
 	// Make sure that they have the sha256() algo installed
 	if (!function_exists('hash_algos')) { return false; }
 	$algos = hash_algos();
