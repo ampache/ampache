@@ -448,9 +448,13 @@ class xmlData {
 					"\t<time>$song->time</time>\n" .
 					"\t<year>$song->year</year>\n" .
 					"\t<bitrate>$song->bitrate</bitrate>\n".
+					"\t<mode>$song->mode</mode>\n".
 					"\t<mime>$song->mime</mime>\n" .
 					"\t<url><![CDATA[" . Song::play_url($song->id) . "]]></url>\n" .
-					"\t<size>$song->size</size>\n" .
+					"\t<size>$song->size</size>\n".
+					"\t<mbid>$song->mbid</mbid>\n".
+					"\t<album_mbid>$song->album_mbid</album_mbid>\n".
+					"\t<artist_mbid>$song->artist_mbid</artist_mbid>\n".
 					"\t<art><![CDATA[" . $art_url . "]]></art>\n" .
 					"\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
 					"\t<rating>" . $rating->rating . "</rating>\n" .
