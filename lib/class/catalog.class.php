@@ -2198,7 +2198,7 @@ class Catalog extends database_object {
 		$catalog_id	= Dba::escape($this->id);  
 
 		$sql = "INSERT INTO `song` (`file`,`catalog`,`album`,`artist`,`title`,`bitrate`,`rate`,`mode`,`size`,`time`,`track`,`addition_time`,`year`,`mbid`)" .
-			" VALUES ('$url','$$catalog_id','$album','$artist','$title','$bitrate','$rate','$mode','$size','$song_time','$track','$current_time','$year','$mbid')";
+			" VALUES ('$url','$catalog_id','$album','$artist','$title','$bitrate','$rate','$mode','$size','$song_time','$track','$current_time','$year','$mbid')";
 		$db_results = Dba::write($sql);
 
 		if (!$db_results) {
