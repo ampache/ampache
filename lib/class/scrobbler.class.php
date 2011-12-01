@@ -146,7 +146,7 @@ class scrobbler {
 				"\n---------\nExpeceted:" . print_r($response,1);
 			return false;
 		}
-
+debug_event('ZZZZZ',print_r($split_response,1),1); 
 		$data['challenge'] = $response[1];
 		return $data;
 
@@ -219,6 +219,10 @@ class scrobbler {
 			return false;
 		}
 
+		// Need to debug this
+		$string = "POST ".$this->submit_url." HTTP/1.0\r\n"."Host: ".$this->submit_host."\r\n"."Accept: */*\r\n"."User-Agent: Ampache/3.6\r\n".
+			"Content-type: application/x-www-form-urlencoded\r\n"."Content-length: ".strlen($query_str)."\r\n\r\n".$query_str."\r\n\r\n";
+		debug_event('SCROBBLER',$string,1); 
 		$action = "POST ".$this->submit_url." HTTP/1.0\r\n";
 		fwrite($as_socket, $action);
 		fwrite($as_socket, "Host: ".$this->submit_host."\r\n");

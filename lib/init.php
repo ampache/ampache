@@ -195,7 +195,7 @@ if (!defined('NO_SESSION') && Config::get('use_auth')) {
 	vauth::check_session();
 
 	/* Create the new user */
-	$GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+	$GLOBALS['user'] = new User($_SESSION['userdata']['uid']); 
 
 	/* If the user ID doesn't exist deny them */
 	if (!$GLOBALS['user']->id AND !Config::get('demo_mode')) { vauth::logout(session_id()); exit; }
@@ -243,7 +243,7 @@ else {
 		session_name(Config::get('session_name'));
 		session_id(scrub_in($_REQUEST['sid']));
 		session_start();
-		$GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+		$GLOBALS['user'] = new User($_SESSION['userdata']['uid']);
 	}
 	else {
 		$GLOBALS['user'] = new User();

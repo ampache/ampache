@@ -45,7 +45,7 @@ if (!vauth::session_exists('interface',$_COOKIE[Config::get('session_name')]) AN
 }
 
 // If we aren't resizing just trash thumb
-if (!Config::get('resize_images')) { unset($_GET['thumb']); } 
+if (!Config::get('resize_images')) { $_GET['thumb'] = null; } 
 
 // FIXME: Legacy stuff - should be removed after a version or so
 if (!isset($_GET['object_type'])) { 

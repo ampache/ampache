@@ -2182,7 +2182,7 @@ class Catalog extends database_object {
 		 */
 
 		// Strip the SSID off of the url, we will need to regenerate this every time 
-		$url		= preg_replace("/SSID=.*&/","",$song['url']); 
+		$url		= preg_replace("/ssid=.*&/","",$song['url']); 
 		$title		= Dba::escape($song['title']); 
 		$album 		= self::check_album($song['album'],$song['year'],null,$song['album_mbid']); 
 		$artist		= self::check_artist($song['artist'],$song['artist_mbid']); 

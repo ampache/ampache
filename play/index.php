@@ -322,6 +322,7 @@ if (((Config::get('transcode') == 'always' AND  !$video) ||
 } // end if downsampling
 else {
 	$fp = fopen($media->file, 'rb');
+	$transcoded = false; 
 }
 
 if (!is_resource($fp)) {
