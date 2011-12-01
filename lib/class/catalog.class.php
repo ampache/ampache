@@ -1448,6 +1448,7 @@ class Catalog extends database_object {
 			Error::display('general');
 			return false;
 		}
+			
 
 		$dead_total = 0;
 		$stats = self::get_stats($this->id);
@@ -2177,25 +2178,27 @@ class Catalog extends database_object {
 
 		/* Limitations:
 		 * Missing Following Metadata
-		 * MBID,Disk,Rate,Mode
+		 * Disk,Rate
 		 */
 
 		// Strip the SSID off of the url, we will need to regenerate this every time 
-		$url		= preg_replace("/SSID=[\w\d]+/","",$song['url']); 
+		$url		= preg_replace("/SSID=.*&/","",$song['url']); 
 		$title		= Dba::escape($song['title']); 
-		$album 		= self::check_album($song['album'],$song['year']); 
-		$artist		= self::check_artist($song['artist']); 
+		$album 		= self::check_album($song['album'],$song['year'],null,$song['album_mbid']); 
+		$artist		= self::check_artist($song['artist'],$song['artist_mbid']); 
 		$bitrate 	= Dba::escape($song['bitrate']); 
 		$size	 	= Dba::escape($song['size']);
 		$song_time 	= Dba::escape($song['time']);
 		$track	 	= Dba::escape($song['track']);
 		$year		= Dba::escape($song['year']); 
 		$title		= Dba::escape($song['title']);
+		$mbid		= Dba::escape($song['mbid']); 
+		$mode		= Dba::escape($song['mode']); 
 		$current_time	= time();
 		$catalog_id	= Dba::escape($this->id);  
 
-		$sql = "INSERT INTO `song` (`file`,`catalog`,`album`,`artist`,`title`,`bitrate`,`rate`,`mode`,`size`,`time`,`track`,`addition_time`,`year`)" .
-			" VALUES ('$url','$$catalog_id','$album','$artist','$title','$bitrate','$rate','$mode','$size','$time','$track','$current_time','$year')";
+		$sql = "INSERT INTO `song` (`file`,`catalog`,`album`,`artist`,`title`,`bitrate`,`rate`,`mode`,`size`,`time`,`track`,`addition_time`,`year`,`mbid`)" .
+			" VALUES ('$url','$$catalog_id','$album','$artist','$title','$bitrate','$rate','$mode','$size','$song_time','$track','$current_time','$year','$mbid')";
 		$db_results = Dba::write($sql);
 
 		if (!$db_results) {
@@ -2210,12 +2213,13 @@ class Catalog extends database_object {
 		if (!$art->get()) { 
 			// Get the mime out
 			$get_vars = parse_url($song['art']); 
-			$extension = substr($get_vars['name'],strlen($get_vars['name'])-3,3);
+			$extension = substr($get_vars['query'],strlen($get_vars['query'])-3,3);
 			// Pull the image
 			$raw = $art->get_from_source(array('url'=>$song['art']));
-			$art->insert_source($raw,'image/' . $extension); 
+			$inserted = $art->insert($raw,'image/' . $extension); 
 		} 
 
+		return true; 
 
 	} // insert_remote_song
 
@@ -2285,56 +2289,11 @@ class Catalog extends database_object {
 	 */
 	public function exists_remote_song($url) {
 
-		$url = parse_url(Dba::escape($url));
+		// For now just return false, need to think on how to do this without hammering 
+		// the remote server
+		return false; 
 
-		list($arg,$value) = explode('=', $url['query']);
-		$token = xmlRpcClient::ampache_handshake($this->path,$this->key);
-		if (!$token) {
-			debug_event('XMLCLIENT','Error No Token returned', 2);
-			Error::display('general');
-			return;
-		} else {
-			debug_event('xmlrpc',"token returned",'4');
-		}
-
-		preg_match("/http:\/\/([^\/\:]+):?(\d*)\/*(.*)/", $this->path, $match);
-		$server = $match['1'];
-		$port   = $match['2'] ? intval($match['2']) : '80';
-		$path   = $match['3'];
-
-		$full_url = "/" . ltrim($path . "/server/xmlrpc.server.php",'/');
-		if(Config::get('proxy_host') AND Config::get('proxy_port')) {
-			$proxy_host = Config::get('proxy_host');
-			$proxy_port = Config::get('proxy_port');
-			$proxy_user = Config::get('proxy_user');
-			$proxy_pass = Config::get('proxy_pass');
-		}
-
-		$client = new XML_RPC_Client($full_url,$server,$port,$proxy_host,$proxy_port,$proxy_user,$proxy_pass);
-
-		/* encode the variables we need to send over */
-		$encoded_key	= new XML_RPC_Value($token,'string');
-		$encoded_path	= new XML_RPC_Value(Config::get('web_path'),'string');
-		$song_id	= new XML_RPC_Value($value,'int');
-
-		$xmlrpc_message	= new XML_RPC_Message('xmlrpcserver.check_song', array($song_id,$encoded_key,$encoded_path));
-		$response	= $client->send($xmlrpc_message,30);
-
-		if ($response->faultCode() ) {
-			$error_msg = _("Error connecting to") . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-			debug_event('XMLCLIENT(exists_remote_song)',$error_msg,'1');
-			echo "<p class=\"error\">$error_msg</p>";
-			return;
-		}
-
-		$data = XML_RPC_Decode($response->value());
-
-		if($data == '0') {
-			return false;
-		} else {
-			return true;
-		}
-	}
+	} // exists_remote_song
 
 	/**
 	 * check_local_mp3
