@@ -119,6 +119,12 @@ class scrobbler {
 			return false;
 		}
 		$response = explode("\n", $split_response[1]);
+
+		// Handle the fact Libre.FM has extranious values at the start of it's handshake response
+		if(is_numeric(trim($response['0']))) { 
+			array_shift($response); 
+			debug_event('SCROBBLER','Junk in handshake, removing first line',1); 
+		} 
 		if(substr($response[0], 0, 6) == 'FAILED') {
 			$this->error_msg = substr($response[0], 7);
 			return false;
@@ -146,8 +152,9 @@ class scrobbler {
 				"\n---------\nExpeceted:" . print_r($response,1);
 			return false;
 		}
-debug_event('ZZZZZ',print_r($split_response,1),1); 
-		$data['challenge'] = $response[1];
+
+		// Remove any extra junk around the challenge
+		$data['challenge'] = trim($response[1]); 
 		return $data;
 
 	} // handshake
@@ -219,10 +226,6 @@ debug_event('ZZZZZ',print_r($split_response,1),1);
 			return false;
 		}
 
-		// Need to debug this
-		$string = "POST ".$this->submit_url." HTTP/1.0\r\n"."Host: ".$this->submit_host."\r\n"."Accept: */*\r\n"."User-Agent: Ampache/3.6\r\n".
-			"Content-type: application/x-www-form-urlencoded\r\n"."Content-length: ".strlen($query_str)."\r\n\r\n".$query_str."\r\n\r\n";
-		debug_event('SCROBBLER',$string,1); 
 		$action = "POST ".$this->submit_url." HTTP/1.0\r\n";
 		fwrite($as_socket, $action);
 		fwrite($as_socket, "Host: ".$this->submit_host."\r\n");
@@ -232,6 +235,8 @@ debug_event('ZZZZZ',print_r($split_response,1),1);
 		fwrite($as_socket, "Content-length: ".strlen($query_str)."\r\n\r\n");
 
 		fwrite($as_socket, $query_str."\r\n\r\n");
+		// Allow us to debug this
+		debug_event('SCROBBLER','Query String:' . $query_str,6); 
 
 		$buffer = '';
 		while(!feof($as_socket)) {
@@ -258,7 +263,7 @@ debug_event('ZZZZZ',print_r($split_response,1),1);
 			return false;
 		}
 		if(substr($response[0], 0, 7) == 'BADAUTH') {
-			$this->error_msg = 'Invalid username/password (' . $response[0] . ')';
+			$this->error_msg = 'Invalid username/password (' . trim($response[0]) . ')';
 			return false;
 		}
 		if (substr($response[0],0,10) == 'BADSESSION') {
