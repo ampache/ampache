@@ -161,6 +161,7 @@ class AmpacheLastfm {
 				$this->set_handshake($this->user_id);
 				// Try try again
 				if ($scrobbler->submit_tracks()) {
+					debug_event($this->name,'Submission Successful','5'); 
 					return true;
 				}
 			}

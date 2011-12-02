@@ -1352,75 +1352,15 @@ class Catalog extends database_object {
 	} // get_remote_catalog
 
 	/**
-	 * get_remote_song
-	 * This functions takes a start and end point for gathering songs from a remote server. It is broken up
-	 * in attempt to get around the problem of very large target catalogs
-	 */
-	public function get_remote_song($client,$token,$start,$end) {
-
-		$encoded_start 	= new XML_RPC_Value($start,'int');
-		$encoded_end	= new XML_RPC_Value($end,'int');
-		$encoded_key	= new XML_RPC_Value($token,'string');
-
-		$query_array = array($encoded_key,$encoded_start,$encoded_end);
-
-		$xmlrpc_message = new XML_RPC_Message('xmlrpcserver.get_songs',$query_array);
-		/* Depending upon the size of the target catalog this can be a very slow/long process */
-		set_time_limit(0);
-
-		// Sixty Second time out per chunk
-		$response = $client->send($xmlrpc_message,60);
-		$value = $response->value();
-
-		if ( !$response->faultCode() ) {
-			$data = XML_RPC_Decode($value);
-			$this->update_remote_catalog($data,$this->path);
-			$total = $start + $end;
-			echo _('Added') . " $total...<br />";
-			flush();
-		}
-		else {
-			$error_msg = _('Error connecting to') . " " . $server . " " . _("Code") . ": " . $response->faultCode() . " " . _("Reason") . ": " . $response->faultString();
-			debug_event('XMLCLIENT(get_remote_song)',$error_msg,'1');
-			echo "<p class=\"error\">$error_msg</p>";
-		}
-
-		return;
-
-	} // get_remote_song
-
-	/**
 	 * update_remote_catalog
 	 * actually updates from the remote data, takes an array of songs that are base64 encoded and parses them
 	 */
 	public function update_remote_catalog($data,$root_path) {
 
-		/*
-		 We need to check the incomming songs
-		 to see which ones need to be added
-		 */
-		foreach ($data as $serialized_song) {
+		// Going to leave this be for now
+		//FIXME: Implement
 
-			// Prevent a timeout
-			set_time_limit(0);
-
-			$song = unserialize($serialized_song);
-			$song->artist	= self::check_artist($song->artist);
-			$song->album	= self::check_album($song->album,$song->year);
-			$song->file	= $root_path . "/play/index.php?song=" . $song->id;
-			$song->catalog	= $this->id;
-
-			// Clear out the song id
-			unset($song->id);
-
-			if (!$this->check_remote_song($song->file)) {
-				$this->insert_remote_song($song);
-			}
-
-		} // foreach new Songs
-
-		// now delete invalid entries
-		self::clean($this->id);
+		return true; 
 
 	} // update_remote_catalog
 
@@ -1495,6 +1435,12 @@ class Catalog extends database_object {
 		$this->update_last_clean();
 	} // clean_catalog
 
+
+	/**
+	 * _clean_chunk
+	 * This is the clean function, its broken into 
+	 * said chunks to try to save a little memory
+	 */
 	private function _clean_chunk($media_type, $chunk, $chunk_size) {
 		debug_event('clean', "Starting chunk $chunk", 5, 'ampache-catalog');
 		$dead = array();
@@ -1529,7 +1475,7 @@ class Catalog extends database_object {
 			} // if localtype
 			else {
 				//do remote url check
-				$file_info = $this->exists_remote_song($results['file']);
+				$file_info = $this->check_remote_song($results['file']);
 
 				if ($file_info == false) {
 					/* Add Error */
@@ -1760,6 +1706,11 @@ class Catalog extends database_object {
 
 	} // verify_catalog
 
+	/**
+	 * _verify_chunk
+	 * This verifies a chunk of the catalog, done to save 
+	 * memory
+	 */
 	private function _verify_chunk($media_type, $chunk, $chunk_size) {
 		debug_event('verify', "Starting chunk $chunk", 5, 'ampache-catalog');
 		$count = $chunk * $chunk_size;
@@ -1812,7 +1763,8 @@ class Catalog extends database_object {
 
 		update_text('verify_count_' . $this->id, $count);
 		return $changed;
-	}
+
+	} // _verfiy_chunk
 
 	/**
 	 * clean
@@ -1873,7 +1825,8 @@ class Catalog extends database_object {
 		}
 
 		return array('string' => $string, 'prefix' => $prefix);
-	}
+	} // trim_prefix
+
 	/**
 	 * check_artist
 	 * $artist checks if there then return id else insert and return id
@@ -2274,26 +2227,13 @@ class Catalog extends database_object {
 		$sql = "SELECT `id` FROM `song` WHERE `file`='$url'";
 		$db_results = Dba::read($sql);
 
-		if (Dba::num_rows($db_results)) {
-			return true;
+		if ($results = Dba::fetch_assoc($db_results)) {
+			return $results['id']; 
 		}
 
 		return false;
 
 	} // check_remote_song
-
-	/**
-	 * exists_remote_song
-	 * checks to see if a remote song exists in the remote file or not
-	 * if it can't find a song it return the false
-	 */
-	public function exists_remote_song($url) {
-
-		// For now just return false, need to think on how to do this without hammering 
-		// the remote server
-		return false; 
-
-	} // exists_remote_song
 
 	/**
 	 * check_local_mp3
