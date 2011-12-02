@@ -1400,7 +1400,7 @@ class Catalog extends database_object {
 			$chunks = floor($total / 10000);
 			$dead = array();
 			foreach(range(0, $chunks) as $chunk) {
-				array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
+				$dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
 			}
 
 			$dead_count = count($dead);
