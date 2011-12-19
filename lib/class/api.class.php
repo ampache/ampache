@@ -216,6 +216,7 @@ class Api {
 
 				echo xmlData::keyed_array(array('auth'=>$token,
 					'api'=>self::$version,
+					'session_expire'=>date("c",time()+Config::get('session_length')-60),
 					'update'=>date("c",$row['update']),
 					'add'=>date("c",$row['add']),
 					'clean'=>date("c",$row['clean']),
@@ -247,7 +248,7 @@ class Api {
 		// Check and see if we should extend the api sessions (done if valid sess is passed)
 		if (vauth::session_exists('api', $input['auth'])) {
 			vauth::session_extend($input['auth']);
-			$xmldata = array_merge(array('session_expire'=>date("r",time()+Config::get('session_length')-60)),$xmldata);
+			$xmldata = array_merge(array('session_expire'=>date("c",time()+Config::get('session_length')-60)),$xmldata);
 		}
 
 		debug_event('API','Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $input['auth'],'5');
