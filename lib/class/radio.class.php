@@ -92,13 +92,11 @@ class Radio extends database_object implements media {
 
 		// Verify the incoming data
 		if (!$data['id']) {
-			// FIXME: Untranslated
-			Error::add('general','Missing ID');
+			Error::add('general', _('Missing ID'));
 		}
 
 		if (!$data['name']) {
-			// FIXME: Untranslated
-			Error::add('general','Name Required');
+			Error::add('general', _('Name Required'));
 		}
 
 		$allowed_array = array('https','http','mms','mmsh','mmsu','mmst','rtsp');
@@ -106,8 +104,7 @@ class Radio extends database_object implements media {
 		$elements = explode(":",$data['url']);
 
 		if (!in_array($elements['0'],$allowed_array)) {
-			// FIXME: Untranslated
-			Error::add('general','Invalid URL must be mms:// , https:// or http://');
+			Error::add('general', _('Invalid URL must be mms:// , https:// or http://'));
 		}
 
 		if (Error::occurred()) {
@@ -139,8 +136,7 @@ class Radio extends database_object implements media {
 
 		// Make sure we've got a name
 		if (!strlen($data['name'])) {
-			// FIXME: Untranslated
-			Error::add('name','Name Required');
+			Error::add('name', _('Name Required'));
 		}
 
 		$allowed_array = array('https','http','mms','mmsh','mmsu','mmst','rtsp');
@@ -154,8 +150,7 @@ class Radio extends database_object implements media {
 		// Make sure it's a real catalog
 		$catalog = new Catalog($data['catalog']);
 		if (!$catalog->name) {
-			// FIXME: Untranslated
-			Error::add('catalog','Invalid Catalog');
+			Error::add('catalog', _('Invalid Catalog'));
 		}
 
 		if (Error::occurred()) { return false; }
