@@ -75,15 +75,15 @@ switch($_REQUEST['action']) {
 						$that_artist->merge($artist->id);
 						$count++;
 					} else
-						$GLOBALS['error']->add_error('general',"Error: No such artist '$artist_id'");
+						$GLOBALS['error']->add_error('general', sprintf(_('Error: No such artist \'%s\''), $artist_id));
 				} else {
-					$GLOBALS['error']->add_error('general',"Error: '$artist_id' is not a valid ID");
+					$GLOBALS['error']->add_error('general', sprintf(_('Error: \'%s\' is not a valid ID'), $artist_id));
 				}
 			}
 			else
-				$GLOBALS['error']->add_error('general',"Error: No such artist '" . $_REQUEST['artist'] . "'");
+				$GLOBALS['error']->add_error('general', sprintf(_('Error: No such artist \'%s\''), $_REQUEST['artist']));
 		} else {
-			$GLOBALS['error']->add_error('general',"Error: Errenous request");
+			$GLOBALS['error']->add_error('general',_("Error: Errenous request"));
 		}
 		if ($count > 0) {
 			show_confirmation (
