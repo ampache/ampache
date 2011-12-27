@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2011-12-27 15:32+0900\n"
+"POT-Creation-Date: 2011-12-27 15:49+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4148,6 +4148,20 @@ msgstr ""
 
 #: ../../democratic.php:63
 msgid "The Requested Playlist has been deleted."
+msgstr ""
+
+#: ../../artists.php:78 ../../artists.php:84
+#, php-format
+msgid "Error: No such artist '%s'"
+msgstr ""
+
+#: ../../artists.php:80
+#, php-format
+msgid "Error: '%s' is not a valid ID"
+msgstr ""
+
+#: ../../artists.php:86
+msgid "Error: Errenous request"
 msgstr ""
 
 #: ../../artists.php:90
