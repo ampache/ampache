@@ -132,7 +132,7 @@ class Api {
 
 		if (intval($version) < self::$version) {
 			debug_event('API', 'Login Failed: version too old', 1);
-			Error::add('api', 'Login Failed: version too old');
+			Error::add('api', _('Login Failed: version too old'));
 			return false;
 		}
 
@@ -140,7 +140,7 @@ class Api {
 		if (($timestamp < (time() - 1800)) || 
 			($timestamp > (time() + 1800))) {
 			debug_event('API', 'Login Failed: timestamp out of range', 1);
-			Error::add('api', 'Login Failed: timestamp out of range');
+			Error::add('api', _('Login Failed: timestamp out of range'));
 			return false;
 		}
 
@@ -169,7 +169,7 @@ class Api {
 
 			if (!$row['password']) {
 				debug_event('API', 'Unable to find user with userid of ' . $user_id, 1);
-				Error::add('api','Invalid Username/Password');
+				Error::add('api', _('Invalid Username/Password'));
 				return false;
 			}
 

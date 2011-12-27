@@ -123,7 +123,7 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 	$is_valid = preg_match("/([^\d\w\_\-])/",$database,$matches);
 
 	if (count($matches)) {
-		Error::add('general','Error: Database name invalid must not be a reserved word, and must be Alphanumeric');
+		Error::add('general',_('Error: Database name invalid must not be a reserved word, and must be Alphanumeric'));
 		return false;
 	}
 
@@ -140,7 +140,7 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 	$dbh = Dba::dbh();
 
 	if (!is_resource($dbh)) {
-		Error::add('general',_('Error: Unable to make Database Connection') . "&nbsp;" . mysql_error());
+		Error::add('general', sprintf(_('Error: Unable to make Database Connection %s'), mysql_error()));
 		return false;
 	}
 
@@ -151,13 +151,13 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 		// Rien a faire, we've got the db just blow through
 	}
 	elseif ($db_selected && !$_POST['overwrite_db']) {
-		Error::add('general','Error: Database Already exists and Overwrite not checked');
+		Error::add('general',_('Error: Database Already exists and Overwrite not checked'));
 		return false;
 	}
 	elseif (!$db_selected) {
 		$sql = "CREATE DATABASE `" . Dba::escape($database) . "`";
 		if (!$db_results = @mysql_query($sql, $dbh)) {
-			Error::add('general',"Error: Unable to Create Database " . mysql_error());
+			Error::add('general',sprintf(_('Error: Unable to Create Database %s'), mysql_error()));
 			return false;
 		}
 		@mysql_select_db($database, $dbh);
@@ -167,7 +167,7 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 		$db_results = @mysql_query($sql,$dbh);
 		$sql = "CREATE DATABASE `" . Dba::escape($database) . "`";
                 if (!$db_results = @mysql_query($sql, $dbh)) {
-                        Error::add('general',"Error: Unable to Create Database " . mysql_error());
+                        Error::add('general', sprintf(_('Error: Unable to Create Database %s'), mysql_error()));
                         return false;
                 }
                 @mysql_select_db($database, $dbh);
@@ -180,7 +180,7 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 		$db_pass = $_POST['db_password'] ? scrub_in($_POST['db_password']) : $dbpass;
 
 		if (!strlen($db_user) || !strlen($db_pass)) {
-			Error::add('general','Error: Ampache SQL Username or Password missing');
+			Error::add('general',_('Error: Ampache SQL Username or Password missing'));
 			return false;
 		}
 
@@ -188,7 +188,8 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 			"'" . Dba::escape($db_user) . "'@'" . Dba::escape($hostname) . "' IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";
 
 		if (!$db_results = @mysql_query($sql, $dbh)) {
-			Error::add('general',"Error: Unable to Insert $db_user with permissions to $database on $hostname " . mysql_error());
+			// HINT: 1: db_user, 2: database, 3: hostname, 4: mysql_error()
+			Error::add('general', sprintf(_('Error: Unable to Insert %1$s with permissions to %2$s on %3$s %4$s'), $db_user, $database, $hostname, mysql_error()));
 			return false;
 		}
 	} // end if we are creating a user
@@ -257,11 +258,11 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 	*/
 	// Connect to the DB
 	if(!is_resource($dbh)) {
-		Error::add('general',"Database Connection Failed Check Hostname, Username and Password");
+		Error::add('general', _("Database Connection Failed Check Hostname, Username and Password"));
 		return false;
 	}
 	if (!@mysql_select_db($database, $dbh)) {
-		Error::add('general',"Database Selection Failure Check Existance of $database");
+		Error::add('general', sprintf(_('Database Selection Failure Check Existance of %s'), $database));
 		return false;
 	}
 
@@ -270,13 +271,13 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 	// Make sure the directory is writable OR the empty config file is
 	if (!$download) {
 		if (!check_config_writable()) {
-			Error::add('general',"Config file is not writable");
+			Error::add('general', _("Config file is not writable"));
 			return false;
 		}
 		else {
 			// Given that $final is > 0, we can ignore lazy comparison problems
 			if (!file_put_contents($config_file,$final)) {
-				Error::add('general',"Error Writing config file");
+				Error::add('general', _("Error Writing config file"));
 				return false;
 			}
 		}
@@ -311,14 +312,14 @@ function install_create_account($username,$password,$password2) {
 	$dbh = Dba::dbh();
 
 	if (!is_resource($dbh)) {
-		Error::add('general','Database Connection Failed:' . mysql_error());
+		Error::add('general', sprintf(_('Database Connection Failed: %s'), mysql_error()));
 		return false;
 	}
 
 	$db_select = @mysql_select_db(Config::get('database_name'),$dbh);
 
 	if (!$db_select) {
-		Error::add('general','Database Select Failed:' . mysql_error());
+		Error::add('general', sprintf(_('Database Select Failed: %s'), mysql_error()));
 		return false;
 	}
 
@@ -328,7 +329,7 @@ function install_create_account($username,$password,$password2) {
 	$insert_id = User::create($username,'Administrator','',$password,'100');
 
 	if (!$insert_id) {
-		Error::add('general',"Insert of Base User Failed " . mysql_error());
+		Error::add('general', sprintf(_('Insert of Base User Failed %s'), mysql_error()));
 		return false;
 	}
 

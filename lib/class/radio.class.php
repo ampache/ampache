@@ -144,7 +144,7 @@ class Radio extends database_object implements media {
 		$elements = explode(":",$data['url']);
 
 		if (!in_array($elements['0'],$allowed_array)) {
-			Error::add('url','Invalid URL must be http:// or https://');
+			Error::add('url', _('Invalid URL must be http:// or https://'));
 		}
 
 		// Make sure it's a real catalog

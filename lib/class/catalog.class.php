@@ -276,7 +276,7 @@ class Catalog extends database_object {
 
 		// Make sure the path is readable/exists
 		if (!is_readable($data['path']) AND $data['type'] == 'local') {
-			Error::add('general','Error: ' . scrub_out($data['path']) . ' is not readable or does not exist');
+			Error::add('general', sprintf(_('Error: %s is not readable or does not exist'), scrub_out($data['path'])));
 			return false;
 		}
 
@@ -285,7 +285,7 @@ class Catalog extends database_object {
 		$db_results = Dba::read($sql);
 
 		if (Dba::num_rows($db_results)) {
-			Error::add('general','Error: Catalog with ' . $path . ' already exists');
+			Error::add('general', sprintf(_('Error: Catalog with %s already exists'), $path));
 			return false;
 		}
 
@@ -312,7 +312,7 @@ class Catalog extends database_object {
 		$insert_id = Dba::insert_id();
 
 		if (!$insert_id) {
-			Error::add('general','Catalog Insert Failed check debug logs');
+			Error::add('general', _('Catalog Insert Failed check debug logs'));
 			debug_event('catalog','SQL Failed:' . $sql,'3');
 			return false;
 		}
@@ -496,14 +496,14 @@ class Catalog extends database_object {
 
 		if (!is_resource($handle)) {
 			debug_event('read', "Unable to open $path", 5,'ampache-catalog');
-			Error::add('catalog_add',_('Error: Unable to open') . ' ' . $path);
+			Error::add('catalog_add', sprintf(_('Error: Unable to open %s'), $path));
 			return false;
 		}
 
 		/* Change the dir so is_dir works correctly */
 		if (!chdir($path)) {
 			debug_event('read', "Unable to chdir $path", 2,'ampache-catalog');
-			Error::add('catalog_add',_('Error: Unable to change to directory') . ' ' . $path);
+			Error::add('catalog_add', sprintf(_('Error: Unable to change to directory %s'), $path));
 			return false;
 		}
 
@@ -549,7 +549,7 @@ class Catalog extends database_object {
 				/* Change the dir so is_dir works correctly */
 				if (!chdir($path)) {
 					debug_event('read',"Unable to chdir $path",'2','ampache-catalog');
-					Error::add('catalog_add',_('Error: Unable to change to directory') . ' ' . $path);
+					Error::add('catalog_add', sprintf(_('Error: Unable to change to directory %s'), $path));
 				}
 
 				/* Skip to the next file */
@@ -586,7 +586,7 @@ class Catalog extends database_object {
 				if (!$file_size) {
 					debug_event('read',"Unable to get filesize for $full_file",'2','ampache-catalog');
 					/* HINT: FullFile */
-					Error::add('catalog_add',sprintf(_('Error: Unable to get filesize for %s'), $full_file));
+					Error::add('catalog_add', sprintf(_('Error: Unable to get filesize for %s'), $full_file));
 				} // file_size check
 
 				if (!is_readable($full_file)) {
@@ -1462,7 +1462,7 @@ class Catalog extends database_object {
 				$file_info = filesize($results['file']);
 				if (!file_exists($results['file']) || $file_info < 1) {
 					debug_event('clean', 'File not found or empty: ' . $results['file'], 5, 'ampache-catalog');
-					Error::add('general',_('Error File Not Found or 0 Bytes:') . $results['file']);
+					Error::add('general', sprintf(_('Error File Not Found or 0 Bytes: %s'), $results['file']));
 
 
 					// Store it in an array we'll delete it later...
@@ -1479,7 +1479,7 @@ class Catalog extends database_object {
 
 				if ($file_info == false) {
 					/* Add Error */
-					Error::add('general',_('Error Remote File Not Found or 0 Bytes:') . $results['file']);
+					Error::add('general', sprintf(_('Error Remote File Not Found or 0 Bytes: %s'), $results['file']));
 
 
 					// Store it in an array we'll delete it later...
@@ -1895,7 +1895,7 @@ class Catalog extends database_object {
 						$sql = "UPDATE `artist` SET `mbid`='$mbid' WHERE `id`='$artist_id'";
 						$db_results = Dba::write($sql);
 						if (!$db_results) {
-							Error::add('general',"Updating Artist: $artist");
+							Error::add('general', sprintf(_('Updating Artist: %s'), $artist));
 						}
 					}
 			}
@@ -1916,7 +1916,7 @@ class Catalog extends database_object {
 			$artist_id = Dba::insert_id();
 
 			if (!$db_results) {
-				Error::add('general',"Inserting Artist:$artist");
+				Error::add('general', sprintf(_('Inserting Artist: %s'), $artist));
 			}
 
 		} // not found
@@ -2096,7 +2096,7 @@ class Catalog extends database_object {
 
 		if (!$db_results) {
 			debug_event('insert',"Unable to insert $file -- $sql" . Dba::error(),'5','ampache-catalog');
-			Error::add('catalog_add','SQL Error Adding ' . $file);
+			Error::add('catalog_add', sprintf(_('SQL Error Adding %s'), $file));
 		}
 
 		$song_id = Dba::insert_id();
