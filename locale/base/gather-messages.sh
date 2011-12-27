@@ -63,7 +63,7 @@ case $1 in
 		done
 		;;
 	"--get"|"-g"|"get")
-		xgettext --from-code=UTF-8 --msgid-bugs-address="$MAILADDR" -L php --keyword=gettext_noop -o $POTNAME `find ../../ -name \*.php -type f` `find ../../ -name \*.inc -type f`;
+		xgettext --from-code=UTF-8 --add-comment=HINT: --msgid-bugs-address="$MAILADDR" -L php --keyword=gettext_noop -o $POTNAME `find ../../ -name \*.php -type f` `find ../../ -name \*.inc -type f`;
 		if [ $? = 0 ]; then
 			echo "pot file creation was done.";
 		else
