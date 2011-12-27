@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN $Rev$\n"
 "Report-Msgid-Bugs-To: translations at ampache.org\n"
-"POT-Creation-Date: 2011-10-11 14:23+0900\n"
+"POT-Creation-Date: 2011-12-27 15:32+0900\n"
 "PO-Revision-Date: 2008-07-14 20:44+0900\n"
 "Last-Translator: momo-i <webmaster at momo-i.org>\n"
 "Language-Team: Japanese\n"
@@ -132,17 +132,78 @@ msgstr ""
 msgid "Existing Database detected, unable to continue installation"
 msgstr "既存のデータベースを検出しました。インストールを続行できません。"
 
-#: ../../lib/install.php:143 ../../install.php:116
-msgid "Error: Unable to make Database Connection"
+#: ../../lib/install.php:126
+msgid ""
+"Error: Database name invalid must not be a reserved word, and must be "
+"Alphanumeric"
+msgstr ""
+
+#: ../../lib/install.php:143
+#, fuzzy, php-format
+msgid "Error: Unable to make Database Connection %s"
 msgstr "エラー: データベース接続を確立できませんでした。"
 
-#: ../../lib/install.php:302
+#: ../../lib/install.php:154
+msgid "Error: Database Already exists and Overwrite not checked"
+msgstr ""
+
+#: ../../lib/install.php:160 ../../lib/install.php:170
+#, fuzzy, php-format
+msgid "Error: Unable to Create Database %s"
+msgstr "エラー: %sを削除できません"
+
+#: ../../lib/install.php:183
+#, fuzzy
+msgid "Error: Ampache SQL Username or Password missing"
+msgstr "エラー: ユーザ名かパスワードが間違っています。再試行して下さい"
+
+#. HINT: 1: db_user, 2: database, 3: hostname, 4: mysql_error()
+#: ../../lib/install.php:192
+#, php-format
+msgid "Error: Unable to Insert %1$s with permissions to %2$s on %3$s %4$s"
+msgstr ""
+
+#: ../../lib/install.php:261
+msgid "Database Connection Failed Check Hostname, Username and Password"
+msgstr ""
+
+#: ../../lib/install.php:265
+#, php-format
+msgid "Database Selection Failure Check Existance of %s"
+msgstr ""
+
+#: ../../lib/install.php:274
+#, fuzzy
+msgid "Config file is not writable"
+msgstr "エラー: ディレクトリ%sは書込み不可です"
+
+#: ../../lib/install.php:280
+#, fuzzy
+msgid "Error Writing config file"
+msgstr "古いコンフィグファイルを解析中。。。"
+
+#: ../../lib/install.php:303
 msgid "No Username/Password specified"
 msgstr "指定されたユーザ名/パスワードはありません"
 
-#: ../../lib/install.php:307
+#: ../../lib/install.php:308
 msgid "Passwords do not match"
 msgstr "パスワードが一致しません"
+
+#: ../../lib/install.php:315
+#, php-format
+msgid "Database Connection Failed: %s"
+msgstr ""
+
+#: ../../lib/install.php:322
+#, fuzzy, php-format
+msgid "Database Select Failed: %s"
+msgstr "データベースCharsetを更新しました"
+
+#: ../../lib/install.php:332
+#, php-format
+msgid "Insert of Base User Failed %s"
+msgstr ""
 
 #: ../../lib/javascript/search-data.php:48
 #: ../../templates/show_disabled_songs.inc.php:74
@@ -422,7 +483,12 @@ msgstr "オン"
 msgid "Off"
 msgstr "オフ"
 
-#: ../../lib/class/art.class.php:979 ../../lib/class/catalog.class.php:490
+#: ../../lib/class/config.class.php:112
+#, php-format
+msgid "Trying to clobber '%s' without setting clobber"
+msgstr ""
+
+#: ../../lib/class/art.class.php:968
 msgid "Error: Unable to open"
 msgstr "エラー: 開けませんでした"
 
@@ -511,20 +577,28 @@ msgstr "関連するアーティスト"
 msgid "Pure Random"
 msgstr "純粋なランダム"
 
-#: ../../lib/class/api.class.php:229
-msgid "Error Invalid Handshake - "
-msgstr "不正なハンドシェイクエラー - "
+#: ../../lib/class/api.class.php:135
+msgid "Login Failed: version too old"
+msgstr ""
 
-#: ../../lib/class/api.class.php:229
+#: ../../lib/class/api.class.php:143
+msgid "Login Failed: timestamp out of range"
+msgstr ""
+
+#: ../../lib/class/api.class.php:172 ../../lib/class/api.class.php:235
 msgid "Invalid Username/Password"
 msgstr "不正なユーザ名/パスワードです"
 
-#: ../../lib/class/api.class.php:656 ../../lib/class/api.class.php:712
+#: ../../lib/class/api.class.php:235
+msgid "Error Invalid Handshake - "
+msgstr "不正なハンドシェイクエラー - "
+
+#: ../../lib/class/api.class.php:662 ../../lib/class/api.class.php:718
 #: ../../server/xml.server.php:102
 msgid "Invalid Request"
 msgstr "不正なリクエスト"
 
-#: ../../lib/class/api.class.php:677 ../../lib/class/api.class.php:690
+#: ../../lib/class/api.class.php:683 ../../lib/class/api.class.php:696
 msgid "Media Object Invalid or Not Specified"
 msgstr "メディアオブジェクトは不正か指定されていません"
 
@@ -841,12 +915,12 @@ msgstr "ビットレート"
 msgid "Played"
 msgstr "再生済"
 
-#: ../../lib/class/search.class.php:309 ../../lib/class/catalog.class.php:1392
-#: ../../templates/show_song.inc.php:68 ../../admin/access.php:110
+#: ../../lib/class/search.class.php:309 ../../templates/show_song.inc.php:68
+#: ../../admin/access.php:110
 msgid "Added"
 msgstr "追加しました"
 
-#: ../../lib/class/search.class.php:316 ../../lib/class/catalog.class.php:1071
+#: ../../lib/class/search.class.php:316 ../../lib/class/catalog.class.php:1082
 #: ../../preferences.php:118 ../../admin/access.php:130
 msgid "Updated"
 msgstr "更新しました"
@@ -1118,158 +1192,166 @@ msgid "hour"
 msgid_plural "hours"
 msgstr[0] "時間"
 
-#: ../../lib/class/catalog.class.php:324
+#: ../../lib/class/catalog.class.php:279
+#, php-format
+msgid "Error: %s is not readable or does not exist"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:288
+#, fuzzy, php-format
+msgid "Error: Catalog with %s already exists"
+msgstr "エラー: %sはすでに存在します"
+
+#: ../../lib/class/catalog.class.php:315
+msgid "Catalog Insert Failed check debug logs"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:333
 msgid "Running Remote Sync"
 msgstr "リモート同期実行中"
 
-#: ../../lib/class/catalog.class.php:497 ../../lib/class/catalog.class.php:543
-msgid "Error: Unable to change to directory"
+#: ../../lib/class/catalog.class.php:499
+#, fuzzy, php-format
+msgid "Error: Unable to open %s"
+msgstr "エラー: 開けませんでした"
+
+#: ../../lib/class/catalog.class.php:506 ../../lib/class/catalog.class.php:552
+#, fuzzy, php-format
+msgid "Error: Unable to change to directory %s"
 msgstr "エラー: ディレクトリを変更できませんでした"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:580
+#: ../../lib/class/catalog.class.php:589
 #, php-format
 msgid "Error: Unable to get filesize for %s"
 msgstr "エラー: %sのファイルサイズの取得に失敗しました"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:587
+#: ../../lib/class/catalog.class.php:596
 #, php-format
 msgid "%s is not readable by ampache"
 msgstr "%sはAmpacheで読み込めません"
 
 #. HINT: FullFile
-#: ../../lib/class/catalog.class.php:596
+#: ../../lib/class/catalog.class.php:605
 #, php-format
 msgid "%s does not match site charset"
 msgstr "%sはサイトのCharsetと一致しません"
 
-#: ../../lib/class/catalog.class.php:1078
+#: ../../lib/class/catalog.class.php:1089
 msgid "No Update Needed"
 msgstr "必要な更新はありません"
 
-#: ../../lib/class/catalog.class.php:1213
+#: ../../lib/class/catalog.class.php:1224
 msgid "Running Remote Update"
 msgstr "リモート更新実行中"
 
-#: ../../lib/class/catalog.class.php:1240
+#: ../../lib/class/catalog.class.php:1251
 msgid "Added Playlist From"
 msgstr "次からプレイリストを追加:"
 
-#: ../../lib/class/catalog.class.php:1269
+#: ../../lib/class/catalog.class.php:1280
 msgid "Catalog Update Finished"
 msgstr "カタログ更新完了"
 
-#: ../../lib/class/catalog.class.php:1269
+#: ../../lib/class/catalog.class.php:1280
 msgid "Total Time"
 msgstr "合計時間"
 
-#: ../../lib/class/catalog.class.php:1270
+#: ../../lib/class/catalog.class.php:1281
 msgid "Total Songs"
 msgstr "合計曲"
 
-#: ../../lib/class/catalog.class.php:1270
+#: ../../lib/class/catalog.class.php:1281
 msgid "Songs Per Seconds"
 msgstr "1秒毎の曲"
 
-#: ../../lib/class/catalog.class.php:1284 ../../lib/class/artist.class.php:387
-#: ../../admin/users.php:150
-msgid "Error"
-msgstr "エラー"
-
-#: ../../lib/class/catalog.class.php:1284
-msgid "Unable to load pear XMLRPC library, make sure XML-RPC is enabled"
-msgstr ""
-"pear XMLRPCライブラリを読み込めませんでした。XML-RPCが有効になっているか確認"
-"してください。"
-
-#: ../../lib/class/catalog.class.php:1322
-#: ../../lib/class/catalog.class.php:1396
-#: ../../lib/class/catalog.class.php:1429
-#: ../../lib/class/catalog.class.php:2405
-msgid "Error connecting to"
+#: ../../lib/class/catalog.class.php:1304
+#, fuzzy
+msgid "Error Connecting to Remote Server"
 msgstr "接続中のエラー:"
 
-#: ../../lib/class/catalog.class.php:1322
-#: ../../lib/class/catalog.class.php:1396
-#: ../../lib/class/catalog.class.php:1429
-#: ../../lib/class/catalog.class.php:2405
-msgid "Code"
-msgstr "コード"
+#: ../../lib/class/catalog.class.php:1313
+#, php-format
+msgid "%u remote catalog(s) found (%u songs)"
+msgstr ""
 
-#: ../../lib/class/catalog.class.php:1322
-#: ../../lib/class/catalog.class.php:1396
-#: ../../lib/class/catalog.class.php:1429
-#: ../../lib/class/catalog.class.php:2405
-msgid "Reason"
-msgstr "理由"
+#: ../../lib/class/catalog.class.php:1337
+#, fuzzy, php-format
+msgid "Unable to Insert Song - %s"
+msgstr "プラグインをインストールできませんでした"
 
-#: ../../lib/class/catalog.class.php:1351
+#: ../../lib/class/catalog.class.php:1344
 msgid "Completed updating remote catalog(s)"
 msgstr "リモートカタログの更新完了"
 
-#: ../../lib/class/catalog.class.php:1355
-msgid "Starting synchronisation of album images"
-msgstr "アルバム画像の同期を開始しています"
-
-#: ../../lib/class/catalog.class.php:1357
-msgid "Completed synchronisation of album images"
-msgstr "アルバム画像の同期が完了しました"
-
-#: ../../lib/class/catalog.class.php:1425
-msgid "images synchronized: "
-msgstr "同期した画像: "
-
-#: ../../lib/class/catalog.class.php:1555
+#: ../../lib/class/catalog.class.php:1387
 msgid "Catalog Root unreadable, stopping clean"
 msgstr "カタログルートに到達できません。クリーンを停止します"
 
-#: ../../lib/class/catalog.class.php:1578
+#: ../../lib/class/catalog.class.php:1411
 msgid "All files would be removed. Doing nothing"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1596
+#: ../../lib/class/catalog.class.php:1429
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] "カタログのクリーン完了。%dファイルを削除しました。"
 
-#: ../../lib/class/catalog.class.php:1626
-msgid "Error File Not Found or 0 Bytes:"
+#: ../../lib/class/catalog.class.php:1465
+#, fuzzy, php-format
+msgid "Error File Not Found or 0 Bytes: %s"
 msgstr "エラー: ファイルが見つからないか0バイトです:"
 
-#: ../../lib/class/catalog.class.php:1643
-msgid "Error Remote File Not Found or 0 Bytes:"
+#: ../../lib/class/catalog.class.php:1482
+#, fuzzy, php-format
+msgid "Error Remote File Not Found or 0 Bytes: %s"
 msgstr "エラー: リモートファイルが見つからないか0バイトです:"
 
-#: ../../lib/class/catalog.class.php:1860
+#: ../../lib/class/catalog.class.php:1699
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr "カタログの検証完了。%d/%dファイルを更新しました。"
 
-#: ../../lib/class/catalog.class.php:1896
+#: ../../lib/class/catalog.class.php:1740
 #, php-format
 msgid "%s does not exist or is not readable"
 msgstr "%sは存在しないか読み込めません。"
 
-#: ../../lib/class/catalog.class.php:1997
-#: ../../lib/class/catalog.class.php:2105
+#: ../../lib/class/catalog.class.php:1843
+#: ../../lib/class/catalog.class.php:1951
 #: ../../templates/show_album.inc.php:42
 msgid "Unknown (Orphaned)"
 msgstr "不明(孤立)"
 
-#: ../../lib/class/catalog.class.php:2503
+#: ../../lib/class/catalog.class.php:1898
+#, fuzzy, php-format
+msgid "Updating Artist: %s"
+msgstr "アーティスト更新"
+
+#: ../../lib/class/catalog.class.php:1919
+#, php-format
+msgid "Inserting Artist: %s"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:2099
+#, php-format
+msgid "SQL Error Adding %s"
+msgstr ""
+
+#: ../../lib/class/catalog.class.php:2321
 msgid "Playlist creation error."
 msgstr "プレイリスト作成エラーです。"
 
-#: ../../lib/class/catalog.class.php:2510
+#: ../../lib/class/catalog.class.php:2328
 #, php-format
 msgid "Playlist Import and Recreate Successful. Total: %d Song"
 msgid_plural "Playlist Import and Recreate Successful. Total: %d Songs"
 msgstr[0] "プレイリストのインポートと再生成に成功しました。合計: %d曲"
 
 #. HINT: filename
-#: ../../lib/class/catalog.class.php:2516
+#: ../../lib/class/catalog.class.php:2334
 #, php-format
 msgid "Parsing %s - Not Found: %d Song. Please check your m3u file."
 msgid_plural "Parsing %s - Not Found: %d Songs. Please check your m3u file."
@@ -1280,50 +1362,35 @@ msgstr[0] ""
 msgid "Fault"
 msgstr "失敗"
 
+#: ../../lib/class/artist.class.php:387 ../../admin/users.php:150
+msgid "Error"
+msgstr "エラー"
+
 #: ../../lib/class/artist.class.php:392 ../../templates/show_lyrics.inc.php:47
 msgid "Sorry Lyrics Not Found."
 msgstr "すみません歌詞は見つかりませんでした。"
 
-#: ../../lib/security.lib.php:53 ../../lib/security.lib.php:88
-msgid "No problem found."
-msgstr "問題は見つかりませんでした。"
-
-#: ../../lib/security.lib.php:56
-#, php-format
-msgid "You are running old ampache: %s"
+#: ../../lib/class/radio.class.php:95
+msgid "Missing ID"
 msgstr ""
 
-#: ../../lib/security.lib.php:84
-#, php-format
-msgid "Your PHP version may be too old: %s"
+#: ../../lib/class/radio.class.php:99 ../../lib/class/radio.class.php:139
+#, fuzzy
+msgid "Name Required"
+msgstr "必要条件"
+
+#: ../../lib/class/radio.class.php:107
+msgid "Invalid URL must be mms:// , https:// or http://"
 msgstr ""
 
-#: ../../lib/security.lib.php:91
-#, php-format
-msgid "You are running old php: %s"
+#: ../../lib/class/radio.class.php:147
+msgid "Invalid URL must be http:// or https://"
 msgstr ""
 
-#: ../../lib/security.lib.php:180
-msgid "Provide useful information to attack the error information."
-msgstr ""
-
-#: ../../lib/security.lib.php:183
-msgid ""
-"Including the PHP version that is described in the HTTP header. It is "
-"\"INI_SYSTEM\" because it is set can be changed only in the server "
-"configuration."
-msgstr ""
-
-#: ../../lib/security.lib.php:186
-msgid ""
-"URL specified in session and the session ID is initialized using. "
-"(permissive session management. if you set 1 URL, POST in the session ID is "
-"ignored)"
-msgstr ""
-
-#: ../../lib/security.lib.php:190
-msgid "There is no problem."
-msgstr ""
+#: ../../lib/class/radio.class.php:153
+#, fuzzy
+msgid "Invalid Catalog"
+msgstr "カタログを追加"
 
 #: ../../register.php:80
 msgid "Error Captcha Required"
@@ -1364,6 +1431,10 @@ msgstr "エラー: ユーザ名はすでに存在します"
 #: ../../register.php:166 ../../admin/users.php:124
 msgid "Error: Insert Failed"
 msgstr "エラー: 挿入失敗"
+
+#: ../../install.php:116
+msgid "Error: Unable to make Database Connection"
+msgstr "エラー: データベース接続を確立できませんでした。"
 
 #: ../../install.php:204
 msgid "Error: Config file not found or Unreadable"
@@ -1864,30 +1935,37 @@ msgid "Catalog Type"
 msgstr "カタログタイプ"
 
 #: ../../templates/show_edit_catalog.inc.php:52
-msgid "XML-RPC Key"
-msgstr "XML-RPCキー"
+#: ../../templates/show_add_catalog.inc.php:66
+msgid "Remote Catalog Username"
+msgstr "リモートカタログのユーザ名"
 
-#: ../../templates/show_edit_catalog.inc.php:54
+#: ../../templates/show_edit_catalog.inc.php:53
+#: ../../templates/show_edit_catalog.inc.php:57
 #: ../../templates/show_add_catalog.inc.php:67
 #: ../../templates/show_add_catalog.inc.php:71
 msgid "Required for Remote Catalogs"
 msgstr "リモートカタログの必須項目"
 
-#: ../../templates/show_edit_catalog.inc.php:58
+#: ../../templates/show_edit_catalog.inc.php:56
+#: ../../templates/show_add_catalog.inc.php:70
+msgid "Remote Catalog Password"
+msgstr "リモートカタログのパスワード"
+
+#: ../../templates/show_edit_catalog.inc.php:60
 msgid "Filename pattern"
 msgstr "ファイル名パターン"
 
-#: ../../templates/show_edit_catalog.inc.php:65
+#: ../../templates/show_edit_catalog.inc.php:67
 #: ../../templates/show_add_catalog.inc.php:79
 msgid "Folder Pattern"
 msgstr "フォルダパターン"
 
-#: ../../templates/show_edit_catalog.inc.php:65
+#: ../../templates/show_edit_catalog.inc.php:67
 #: ../../templates/show_add_catalog.inc.php:79
 msgid "(no leading or ending '/')"
 msgstr "(先頭がない又は「/」で終わっている)"
 
-#: ../../templates/show_edit_catalog.inc.php:75
+#: ../../templates/show_edit_catalog.inc.php:77
 msgid "Save Catalog Settings"
 msgstr "カタログ設定の保存"
 
@@ -1906,7 +1984,7 @@ msgstr "%sは読み込み可"
 
 #: ../../templates/show_install_check.inc.php:62
 #: ../../templates/show_install_check.inc.php:75
-#: ../../templates/show_test.inc.php:52 ../../templates/show_info.inc.php:60
+#: ../../templates/show_test.inc.php:52
 msgid "PHP Version"
 msgstr "PHPバージョン"
 
@@ -2072,7 +2150,7 @@ msgid "Show Duplicate Songs"
 msgstr "重複している曲を表示"
 
 #: ../../templates/show_admin_tools.inc.php:98
-#: ../../templates/sidebar_admin.inc.php:54
+#: ../../templates/sidebar_admin.inc.php:53
 msgid "Clear Now Playing"
 msgstr "再生中の曲をクリア"
 
@@ -2445,14 +2523,6 @@ msgstr "ローカル"
 #: ../../templates/show_add_catalog.inc.php:61
 msgid "Remote"
 msgstr "リモート"
-
-#: ../../templates/show_add_catalog.inc.php:66
-msgid "Remote Catalog Username"
-msgstr "リモートカタログのユーザ名"
-
-#: ../../templates/show_add_catalog.inc.php:70
-msgid "Remote Catalog Password"
-msgstr "リモートカタログのパスワード"
 
 #: ../../templates/show_add_catalog.inc.php:74
 msgid "Filename Pattern"
@@ -2895,15 +2965,15 @@ msgid ""
 "Information below"
 msgstr "設定エラーが発生したためこのページを表示します。以下はデバッグ情報です"
 
-#: ../../templates/show_test.inc.php:45 ../../templates/show_info.inc.php:46
+#: ../../templates/show_test.inc.php:45
 msgid "CHECK"
 msgstr "チェック"
 
-#: ../../templates/show_test.inc.php:47 ../../templates/show_info.inc.php:48
+#: ../../templates/show_test.inc.php:47
 msgid "STATUS"
 msgstr "ステータス"
 
-#: ../../templates/show_test.inc.php:49 ../../templates/show_info.inc.php:50
+#: ../../templates/show_test.inc.php:49
 msgid "DESCRIPTION"
 msgstr "説明"
 
@@ -3531,54 +3601,6 @@ msgstr "%sから更新"
 msgid "Create a new playlist"
 msgstr "新規プレイリスト作成"
 
-#: ../../templates/show_info.inc.php:39
-#, fuzzy
-msgid "Ampache Security Information"
-msgstr "ユーザ情報"
-
-#: ../../templates/show_info.inc.php:40
-msgid "This page shows security information and ampache update information."
-msgstr ""
-
-#: ../../templates/show_info.inc.php:43 ../../templates/show_info.inc.php:91
-#, fuzzy
-msgid "Close this window"
-msgstr "ウィンドウを閉じる"
-
-#: ../../templates/show_info.inc.php:53
-#, fuzzy
-msgid "Ampache Version"
-msgstr "Ampache インストール"
-
-#: ../../templates/show_info.inc.php:56
-#, fuzzy
-msgid ""
-"Compare that you are running a version of Ampache and currently a version of "
-"Ampache."
-msgstr ""
-"これはAmpacheで働くと知られているPHPのバージョンを実行していることを確かめる"
-"ためにテストします。"
-
-#: ../../templates/show_info.inc.php:63
-msgid "This test checks for vulnerable PHP whether to use version."
-msgstr ""
-
-#: ../../templates/show_info.inc.php:67
-msgid "PHP recommendation settings"
-msgstr ""
-
-#: ../../templates/show_info.inc.php:74
-msgid "This test checks whether the recommended security settings."
-msgstr ""
-
-#: ../../templates/show_info.inc.php:77
-msgid "PHP Info"
-msgstr ""
-
-#: ../../templates/show_info.inc.php:80
-msgid "This is the phpinfo() to display information."
-msgstr ""
-
 #: ../../templates/show_search_bar.inc.php:37
 msgid "Anywhere"
 msgstr ""
@@ -3640,36 +3662,32 @@ msgstr "メール"
 msgid "Submit"
 msgstr "送信"
 
-#: ../../templates/show_denied.inc.php:45
+#: ../../templates/show_denied.inc.php:40
+#: ../../templates/show_denied.inc.php:46
+#, fuzzy
+msgid "This event has been logged."
+msgstr "このイベントは記録済みです"
+
+#: ../../templates/show_denied.inc.php:44
+#, fuzzy
 msgid ""
-"You've been redirected to this page because you do not have access to this "
+"You have been redirected to this page because you do not have access to this "
 "function."
 msgstr "この機能へアクセスできないため、このページを表示しています。"
 
-#: ../../templates/show_denied.inc.php:46
+#: ../../templates/show_denied.inc.php:45
 msgid ""
 "If you believe this is an error please contact an Ampache administrator."
 msgstr "これがエラーだと思われる場合、Ampache管理者へお問合せください。"
 
-#: ../../templates/show_denied.inc.php:47
-msgid "This event has been logged"
-msgstr "このイベントは記録済みです"
-
-#: ../../templates/show_denied.inc.php:51
+#: ../../templates/show_denied.inc.php:48
+#, fuzzy
 msgid ""
-"You've been redirected to this page because you've attempted to access a "
+"You have been redirected to this page because you attempted to access a "
 "function that is disabled in the demo."
 msgstr ""
 "デモで無効になっている機能にアクセスを試みたため、このページにリダイレクトさ"
 "れました。"
-
-#: ../../templates/show_denied.inc.php:52
-msgid ""
-"Functions are disabled in the demo because previous users of the demo have "
-"used the functionality to post inappropriate materials"
-msgstr ""
-"デモの前のユーザが不適切な素材を投稿する機能を使用したので、機能はデモでは無"
-"効にされます。"
 
 #: ../../templates/show_all_popular.inc.php:39
 msgid "Most Popular Genres"
@@ -3899,20 +3917,16 @@ msgstr "ACL追加"
 msgid "Show ACL(s)"
 msgstr "ACL表示"
 
-#: ../../templates/sidebar_admin.inc.php:53
-msgid "Security Check"
-msgstr ""
-
-#: ../../templates/sidebar_admin.inc.php:55
+#: ../../templates/sidebar_admin.inc.php:54
 #: ../../templates/show_export.inc.php:34
 msgid "Export Catalog"
 msgstr "カタログのエクスポート"
 
-#: ../../templates/sidebar_admin.inc.php:57
+#: ../../templates/sidebar_admin.inc.php:56
 msgid "Manage Shoutbox"
 msgstr "シャウトボックスの管理"
 
-#: ../../templates/sidebar_admin.inc.php:62
+#: ../../templates/sidebar_admin.inc.php:61
 msgid "Server Config"
 msgstr "サーバ設定"
 
@@ -4162,40 +4176,6 @@ msgstr ""
 #: ../../radio.php:62
 msgid "Radio Station Added"
 msgstr "ラジオステーションを追加しました"
-
-#: ../../modules/horde/Browser.php:868
-msgid "file"
-msgstr "ファイル"
-
-#: ../../modules/horde/Browser.php:872
-msgid "File uploads not supported."
-msgstr "ファイルアップロードはサポートしていません。"
-
-#: ../../modules/horde/Browser.php:890
-msgid "No file uploaded"
-msgstr "アップロードされたファイルはありません"
-
-#: ../../modules/horde/Browser.php:897
-#, php-format
-msgid "There was a problem with the file upload: No %s was uploaded."
-msgstr ""
-"ファイルアップロードで問題があります: %sはアップロードされませんでした。"
-
-#: ../../modules/horde/Browser.php:902
-#, php-format
-msgid ""
-"There was a problem with the file upload: The %s was larger than the maximum "
-"allowed size (%d bytes)."
-msgstr ""
-"ファイルアップロードで問題があります: %sは許可された最大サイズ(%dバイト)より"
-"大きいです。"
-
-#: ../../modules/horde/Browser.php:904
-#, php-format
-msgid ""
-"There was a problem with the file upload: The %s was only partially uploaded."
-msgstr ""
-"ファイルアップロードで問題があります: %sは部分的にアップロードされました。"
 
 #: ../../modules/localplay/httpq.controller.php:231
 #: ../../modules/localplay/shoutcast.controller.php:252
@@ -4461,43 +4441,44 @@ msgstr "エラー: 名前とパスが指定されていません"
 msgid "Error: Remote selected, but path is not a URL"
 msgstr "エラー: リモートを選択しましたが、パスがURLではありません"
 
-#: ../../admin/catalog.php:218
-msgid "Error: Remote Catalog specified, but no key provided"
-msgstr "エラー: リモートカタログを指定しましたが、キーが提供されていません"
+#: ../../admin/catalog.php:217
+#, fuzzy
+msgid "Error: Username and Password Required for Remote Catalogs"
+msgstr "リモートカタログの必須項目"
 
-#: ../../admin/catalog.php:228
+#: ../../admin/catalog.php:227
 msgid "Error: Defined Path is inside an existing catalog"
 msgstr "エラー: 定義されたパスは既存のカタログ内です"
 
-#: ../../admin/catalog.php:246 ../../admin/catalog.php:247
+#: ../../admin/catalog.php:245 ../../admin/catalog.php:246
 msgid "Catalog Created"
 msgstr "カタログを作成しました"
 
-#: ../../admin/catalog.php:264
+#: ../../admin/catalog.php:263
 msgid "Catalog statistics cleared"
 msgstr "カタログ統計を削除しました"
 
-#: ../../admin/catalog.php:278
+#: ../../admin/catalog.php:277
 msgid "Now Playing Cleared"
 msgstr "現在再生中のものをクリアしました"
 
-#: ../../admin/catalog.php:278
+#: ../../admin/catalog.php:277
 msgid "All now playing data has been cleared"
 msgstr "現在再生中のデータは全てクリアされました"
 
-#: ../../admin/catalog.php:289
+#: ../../admin/catalog.php:288
 msgid "No Disabled songs found"
 msgstr "無効にした曲は見つかりませんでした"
 
-#: ../../admin/catalog.php:298
+#: ../../admin/catalog.php:297
 msgid "Delete Catalog"
 msgstr "カタログの削除"
 
-#: ../../admin/catalog.php:298
+#: ../../admin/catalog.php:297
 msgid "Do you really want to delete this catalog?"
 msgstr "このカタログを削除してもよろしいですか？"
 
-#: ../../admin/catalog.php:318
+#: ../../admin/catalog.php:317
 msgid "Album Art Search Finished"
 msgstr "アルバムアート検索が完了しました"
 
@@ -5032,14 +5013,3 @@ msgstr "インタフェース"
 #: Database words
 msgid "System"
 msgstr "システム"
-
-#~ msgid "No probrem found."
-#~ msgstr "問題はありませんでした。"
-
-#, fuzzy
-#~ msgid "Could not open the filename"
-#~ msgstr "ユーザ名が入力されていません"
-
-#, fuzzy
-#~ msgid "Write error"
-#~ msgstr "コンフィグの書込み"
