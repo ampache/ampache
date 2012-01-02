@@ -177,7 +177,7 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 	if ($_POST['db_user'] == 'create_db_user' || (strlen($dbuser) AND strlen($dbpass))) {
 
 		$db_user = $_POST['db_username'] ? scrub_in($_POST['db_username']) : $dbuser;
-		$db_pass = $_POST['db_password'] ? scrub_in($_POST['db_password']) : $dbpass;
+		$db_pass = $_POST['db_password'] ? $_POST['db_password'] : $dbpass;
 
 		if (!strlen($db_user) || !strlen($db_pass)) {
 			Error::add('general',_('Error: Ampache SQL Username or Password missing'));
