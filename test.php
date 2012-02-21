@@ -48,15 +48,14 @@ Dba::_auto_init();
 
 switch ($_REQUEST['action']) {
 	case 'config':
+		// Check to see if the config file is working now, if so fall
+		// through to the default, else show the appropriate template
 		$configfile = "$prefix/config/ampache.cfg.php";
-
-		// On every load of the config file check and see if it's working now
-		if (count(parse_ini_file($configfile))) {
-			require_once $prefix . '/templates/show_test.inc.php';
+		
+		if (!count(parse_ini_file($configfile))) {
+			require_once $prefix . '/templates/show_test_config.inc.php';
 			break;
 		}
-		require_once $prefix . '/templates/show_test_config.inc.php';
-	break;
 	default:
 		require_once $prefix . '/templates/show_test.inc.php';
 	break;
