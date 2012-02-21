@@ -761,9 +761,6 @@ class vainfo {
 				case 'comments':
 					$array['comment'] = $this->_clean_tag($data['0']);
 				break;
-				case 'title':
-					$array['title'] = $this->_clean_tag($data['0']);
-				break;
 				default:
 					$array[$tag]	= $this->_clean_tag($data['0']);
 				break;
