@@ -124,7 +124,8 @@ switch ($_GET['type']) {
 		header("Cache-Control: no-store, no-cache, must-revalidate");
 		header("Pragma: no-cache");
 		header("Content-type: $mime");
-		header("Content-Disposition: filename=" . scrub_out($media->name) . "." . $extension);
+		header('Content-Disposition: filename="' . scrub_out($media->name) . '.' .
+			$extension . '"');
 		echo $source;
 
 	break;
