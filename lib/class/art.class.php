@@ -520,7 +520,7 @@ class Art extends database_object {
 		$extension = self::extension($mime);
 
 		$name = 'art.' . $extension;
-		$url = Config::get('web_path') . '/image.php?id=' . scrub_out($uid) . 'object_type=' . scrub_out($type) . '&auth=' . $sid . '&name=' . $name;
+		$url = Config::get('web_path') . '/image.php?id=' . scrub_out($uid) . '&object_type=' . scrub_out($type) . '&auth=' . $sid . '&name=' . $name;
 
 		return $url;
 
