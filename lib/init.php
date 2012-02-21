@@ -63,32 +63,32 @@ else {
 	$http_type = "http://";
 }
 
-/*
- Check to make sure the config file exists. If it doesn't then go ahead and send
- them over to the install script.
-*/
+// Set up for redirection on important error cases
+$path = preg_replace('#(.*)/(\w+\.php)$#', '$1', $_SERVER['PHP_SELF']);
+$path = $http_type . $_SERVER['HTTP_HOST'] . $path;
+
+// Check to make sure the config file exists. If it doesn't then go ahead and 
+// send them over to the install script.
 if (!file_exists($configfile)) {
-	$path = preg_replace("/(.*)\/(\w+\.php)$/","\${1}", $_SERVER['PHP_SELF']);
-	$link = $http_type . $_SERVER['HTTP_HOST'] . $path . "/install.php";
-	header ("Location: $link");
-	exit();
+	$link = $path . '/install.php';
+}
+else {
+	// Make sure the config file is set up and parsable
+	$results = @parse_ini_file($configfile);
+
+	if (!count($results)) {
+		$link = $path . '/test.php?action=config';
+	}
 }
 
-// Use the built in PHP function, suppress errors here so we can handle it
-// properly below
-$results = @parse_ini_file($configfile);
-
-if (!count($results)) {
-	$path = preg_replace("/(.*)\/(\w+\.php)$/","\${1}", $_SERVER['PHP_SELF']);
-	$link = $http_type . $_SERVER['HTTP_HOST'] . $path . "/test.php?action=config";
-	header ("Location: $link");
-	exit();
+// Verify that a few important but commonly disabled PHP functions exist and
+// that we're on a usable version
+if (!function_exists('hash') || !function_exists('inet_pton') || (floatval(phpversion()) < 5.3)) {
+	$link = $path . '/test.php';
 }
 
-/** Verify a few commonly disabled PHP functions exist and re-direct to /test if not **/
-if (!function_exists('hash') OR !function_exists('inet_pton') OR (floatval(phpversion()) < 5.3)) {
-	$path = preg_replace("/(.*)\/(\w+\.php)$/","\${1}", $_SERVER['PHP_SELF']);
-	$link = $http_type . $_SERVER['HTTP_HOST'] . $path . "/test.php";
+// Do the redirect if we can't continue
+if ($link) {
 	header ("Location: $link");
 	exit();
 }
