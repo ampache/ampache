@@ -331,6 +331,10 @@ class vainfo {
 						? $info['disk']
 						: intval($tags['disk']);
 
+			$info['totaldiscs']	= $info['totaldiscs']
+						? $info['totaldiscs']
+						: intval($tags['totaldiscs']);
+
 			$info['artist']		= $info['artist']
 						? $info['artist']
 						: trim($tags['artist']);
@@ -398,12 +402,10 @@ class vainfo {
 						: Dba::escape($tags['video_codec']);
 		}
 
-		// I really think this belongs somewhere else
-		$slash_point = strpos($info['disk'], '/');
-		if ($slash_point !== false) {
-			$info['disk'] = substr($info['disk'], 0, $slash_point);
+		if ($info['totaldiscs'] == 1 && $info['disk'] == 1) {
+			unset $info['disk'];
+			unset $info['totaldiscs'];
 		}
-			
 
 		return $info;
 
@@ -687,7 +689,8 @@ class vainfo {
 					$array['track']	= $this->_clean_tag($data['0']);
 				break;
 				case 'discnumber':
-					$array['disk'] 	= $this->_clean_tag($data['0']);
+					$el = explode('/', $data['0']);
+					$array['disk'] 	= $el[0];
 				break;
 				case 'date':
 					$array['year']	= $this->_clean_tag($data['0']);
@@ -754,6 +757,7 @@ class vainfo {
 				case 'pos':
 					$el = explode('/', $data['0']);
 					$array['disk'] = $el[0];
+					$array['totaldiscs'] = $el[1];
 				break;
 				case 'track_number':
 					$array['track'] = $this->_clean_tag($data['0']);
