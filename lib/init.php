@@ -86,7 +86,7 @@ if (!count($results)) {
 }
 
 /** Verify a few commonly disabled PHP functions exist and re-direct to /test if not **/
-if (!function_exists('hash') OR !function_exists('inet_pton') OR (strtoupper(substr(PHP_OS,0,3)) == 'WIN' AND floatval(phpversion()) < 5.3)) {
+if (!function_exists('hash') OR !function_exists('inet_pton') OR (floatval(phpversion()) < 5.3)) {
 	$path = preg_replace("/(.*)\/(\w+\.php)$/","\${1}", $_SERVER['PHP_SELF']);
 	$link = $http_type . $_SERVER['HTTP_HOST'] . $path . "/test.php";
 	header ("Location: $link");
