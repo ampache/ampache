@@ -225,12 +225,8 @@ function check_php_memory() {
  */
 function check_php_timelimit() {
 
-	$current = ini_get('max_execution_time');
-	if (intval($current) < 60) {
-		return false;
-	}
-
-	return true;
+	$current = intval(ini_get('max_execution_time'));
+	return ($current > 60 || $current == 0);
 
 } // check_php_timelimit
 
@@ -352,10 +348,10 @@ function generate_config($current) {
 
 			/* Put in the current value */
 			if ($key == 'config_version') {
-				$line = $key . ' = ' . addslashes($value);
+				$line = $key . ' = ' . escape_ini($value);
 			}
 			elseif (isset($current[$key])) {
-				$line = $key . ' = "' . addslashes($current[$key]) . '"';
+				$line = $key . ' = "' . escape_ini($current[$key]) . '"';
 				unset($current[$key]);
 			} // if set
 
@@ -368,6 +364,18 @@ function generate_config($current) {
 	return $final;
 
 } // generate_config
+
+/**
+ * escape_ini
+ * Escape a value used for inserting into an ini file. 
+ * Won't quote ', like addslashes does.
+ */
+function escape_ini($str) {
+
+	return str_replace('"', '\"', $str);
+
+}
+
 
 /**
  * debug_ok
