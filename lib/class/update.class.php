@@ -371,6 +371,9 @@ class Update {
 		$update_string = '- Verify remote_username and remote_password were added correctly to catalog table.<br />';
 		$version[] = array('version' => '360008','description' => $update_string); 
 
+		$update_string = '- Allow long sessionids in tmp_playlist table.<br />';
+		$version[] = array('version' => '360009', 'description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -2042,6 +2045,19 @@ class Update {
 		self::set_version('db_version','360008'); 
 
 	} // update_360008
+
+
+	/**
+	 * update_360009
+	 * The main session table was already updated to use varchar(64) for the ID,
+	 * tmp_playlist needs the same change
+	 */
+	public static function update_360009() {
+		$sql = "ALTER TABLE `tmp_playlist` CHANGE `session` `session` VARCHAR(64)";
+		$db_results = Dba::write($sql);
+
+		self::set_version('db_version','360009');
+	}
 
 } // end update class
 ?>
