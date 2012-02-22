@@ -403,8 +403,8 @@ class vainfo {
 		}
 
 		if ($info['totaldiscs'] == 1 && $info['disk'] == 1) {
-			unset $info['disk'];
-			unset $info['totaldiscs'];
+			unset($info['disk']);
+			unset($info['totaldiscs']);
 		}
 
 		return $info;
