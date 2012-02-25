@@ -40,7 +40,7 @@ switch($_REQUEST['action']) {
 		$object_ids = $artist->get_albums($_REQUEST['catalog']);
 		$object_type = 'album';
 		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
-		if (Config::get('lastfm_api_key')) {
+		if (Config::get('show_similar')) {
 			if ($object_ids = Recommendation::get_artists_like($artist->id)) {
 				// Ugly code to grab the relevant entries.
 				// Almost looks like Perl.
