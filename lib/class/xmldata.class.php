@@ -169,21 +169,21 @@ class xmlData {
 	/**
 	 * tags_string
 	 *
-	 * This returns the formated 'tags' string for an xml document
+	 * This returns the formatted 'tags' string for an xml document
 	 *
-	 * @param	array	$tags	(description here...)
-	 * @param	string	$type	(description here...)
-	 * @param	integer	$object_id	(description here...)
-	 * @return	string	return xml
 	 */
-	private static function tags_string($tags,$type,$object_id) {
+	private static function tags_string($tags) {
 
 		$string = '';
 
-		foreach ($tags as $tag_id=>$data) {
+		if (is_array($tags)) {
 
-			$tag = new Tag($tag_id);
-			$string .= "\t<tag id=\"" . $tag->id . "\" count=\"" . $data['count'] . "\"><![CDATA[$tag->name]]></tag>\n";
+			foreach ($tags as $tag_id => $data) {
+				$tag = new Tag($tag_id);
+				$string .= "\t<tag id=\"" . $tag->id . 
+					'" count="' . count($data['users']) . 
+					'"><![CDATA[' . $tag->name . "]]></tag>\n";
+			}
 		}
 
 		return $string;
@@ -291,7 +291,7 @@ class xmlData {
 			$artist->format();
 
 			$rating = new Rating($artist_id,'artist');
-			$tag_string = self::tags_string($artist->tags,'artist',$artist->id);
+			$tag_string = self::tags_string($artist->tags);
 
 			$string .= "<artist id=\"$artist->id\">\n" .
 					"\t<name><![CDATA[$artist->f_full_name]]></name>\n" .
@@ -348,7 +348,7 @@ class xmlData {
 			$string .= "\t<year>$album->year</year>\n" .
 					"\t<tracks>$album->song_count</tracks>\n" .
 					"\t<disk>$album->disk</disk>\n" .
-					self::tags_string($album->tags,'album',$album->id) .
+					self::tags_string($album->tags) .
 					"\t<art><![CDATA[$art_url]]></art>\n" .
 					"\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
 					"\t<rating>" . $rating->rating . "</rating>\n" .
@@ -432,7 +432,7 @@ class xmlData {
 			$song->genre = $tag->id;
 			$song->f_genre = $tag->name;
 
-			$tag_string = self::tags_string($song->tags,'song',$song->id);
+			$tag_string = self::tags_string($song->tags);
 
 			$rating = new Rating($song_id,'song');
 
@@ -493,7 +493,7 @@ class xmlData {
 					"\t<mime><![CDATA[$video->mime]]></mime>\n" .
 					"\t<resolution>$video->f_resolution</resolution>\n" .
 					"\t<size>$video->size</size>\n" .
-					self::tags_string($video->tags,'video',$video->id) .
+					self::tags_string($video->tags) .
 					"\t<url><![CDATA[" . Video::play_url($video->id) . "]]></url>\n" .
 					"</video>\n";
 
@@ -533,7 +533,7 @@ class xmlData {
 			$song->genre = $tag->id;
 			$song->f_genre = $tag->name;
 
-			$tag_string = self::tags_string($song->tags,'song',$song->id);
+			$tag_string = self::tags_string($song->tags);
 
 			$rating = new Rating($song_id,'song');
 
