@@ -335,7 +335,7 @@ class Tag extends database_object {
 	 * get_top_tags
 	 * This gets the top tags for the specified object using limit
 	 */
-	public static function get_top_tags($type,$object_id,$limit='10') {
+	public static function get_top_tags($type, $object_id, $limit = 10) {
 
 		if (!self::validate_type($type)) { return false; }
 
@@ -346,8 +346,8 @@ class Tag extends database_object {
 		$object_id = intval($object_id);
 		$limit = intval($limit);
 
-		$sql = "SELECT `tag_map`.`tag_id`,`tag_map`.`user` FROM `tag_map` " .
-			"WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$object_id' " .
+		$sql = "SELECT `tag_id`, `user` FROM `tag_map` " .
+			"WHERE `object_type`='$type' AND `object_id`='$object_id' " .
 			"LIMIT $limit";
 		$db_results = Dba::read($sql);
 
