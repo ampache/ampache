@@ -415,7 +415,7 @@ class xmlData {
 			$songs = array_slice($songs,self::$offset,self::$limit);
 		}
 
-		Rating::build_cache('song',$songs);
+		Song::build_cache($songs);
 		Stream::set_session($_REQUEST['auth']);
 
 		// Foreach the ids!
@@ -424,41 +424,35 @@ class xmlData {
 
 			// If the song id is invalid/null
 			if (!$song->id) { continue; }
-			$song->format();
 
-			$tag_string = '';
-
-			$tag = new Tag($song->tags['0']);
-			$song->genre = $tag->id;
-			$song->f_genre = $tag->name;
-
-			$tag_string = self::tags_string($song->tags);
-
-			$rating = new Rating($song_id,'song');
-
+			$tag_string = self::tags_string(Tag::get_top_tags('song', $song_id));
+			$rating = new Rating($song_id, 'song');
 			$art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
 
 			$string .= "<song id=\"$song->id\">\n" .
-					"\t<title><![CDATA[$song->title]]></title>\n" .
-					"\t<artist id=\"$song->artist\"><![CDATA[$song->f_artist_full]]></artist>\n" .
-					"\t<album id=\"$song->album\"><![CDATA[$song->f_album_full]]></album>\n" .
-					"\t<genre id=\"$song->genre\"><![CDATA[$song->f_genre]]></genre>\n" .
-					$tag_string .
-					"\t<track>$song->track</track>\n" .
-					"\t<time>$song->time</time>\n" .
-					"\t<year>$song->year</year>\n" .
-					"\t<bitrate>$song->bitrate</bitrate>\n".
-					"\t<mode>$song->mode</mode>\n".
-					"\t<mime>$song->mime</mime>\n" .
-					"\t<url><![CDATA[" . Song::play_url($song->id) . "]]></url>\n" .
-					"\t<size>$song->size</size>\n".
-					"\t<mbid>$song->mbid</mbid>\n".
-					"\t<album_mbid>$song->album_mbid</album_mbid>\n".
-					"\t<artist_mbid>$song->artist_mbid</artist_mbid>\n".
-					"\t<art><![CDATA[" . $art_url . "]]></art>\n" .
-					"\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
-					"\t<rating>" . $rating->rating . "</rating>\n" .
-					"</song>\n";
+				"\t<title><![CDATA[$song->title]]></title>\n" .
+				"\t<artist id=\"" . $song->artist . 
+					'"><![CDATA[' . $song->get_artist_name() .
+					"]]></artist>\n" .
+				"\t<album id=\"" . $song->album . 
+					'"><![CDATA[' . $song->get_album_name().
+					"]]></album>\n" .
+				$tag_string .
+				"\t<track>$song->track</track>\n" .
+				"\t<time>$song->time</time>\n" .
+				"\t<year>$song->year</year>\n" .
+				"\t<bitrate>$song->bitrate</bitrate>\n".
+				"\t<mode>$song->mode</mode>\n".
+				"\t<mime>$song->mime</mime>\n" .
+				"\t<url><![CDATA[" . Song::play_url($song->id) . "]]></url>\n" .
+				"\t<size>$song->size</size>\n".
+				"\t<mbid>$song->mbid</mbid>\n".
+				"\t<album_mbid>$song->album_mbid</album_mbid>\n".
+				"\t<artist_mbid>$song->artist_mbid</artist_mbid>\n".
+				"\t<art><![CDATA[" . $art_url . "]]></art>\n" .
+				"\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
+				"\t<rating>" . $rating->rating . "</rating>\n" .
+				"</song>\n";
 
 		} // end foreach
 
