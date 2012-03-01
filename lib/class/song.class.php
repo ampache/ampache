@@ -127,6 +127,7 @@ class Song extends database_object implements media {
 		Album::build_cache($albums);
 		Tag::build_cache($tags);
 		Tag::build_map_cache('song',$song_ids);
+		Art::build_cache($albums);
 
 		// If we're rating this then cache them as well
 		if (Config::get('ratings')) {
