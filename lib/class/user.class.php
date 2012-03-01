@@ -642,18 +642,22 @@ class User extends database_object {
 	 * create
 	 * inserts a new user into ampache
 	 */
-	public static function create($username, $fullname, $email, $password, $access) {
+	public static function create($username, $fullname, $email, $password, $access, $disabled = false) {
 
 		/* Lets clean up the fields... */
 		$username	= Dba::escape($username);
 		$fullname	= Dba::escape($fullname);
 		$email		= Dba::escape($email);
 		$access		= Dba::escape($access);
-		$password_hashed = hash('sha256', $password);
+		$password	= hash('sha256', $password);
+		$disabled	= $disabled ? 1 : 0;
 
 		/* Now Insert this new user */
-		$sql = "INSERT INTO `user` (`username`, `fullname`, `email`, `password`, `access`, `create_date`) VALUES" .
-			" ('$username','$fullname','$email','$password_hashed','$access','" . time() ."')";
+		$sql = "INSERT INTO `user` (`username`, `disabled`, " .
+			"`fullname`, `email`, `password`, `access`, " .
+			"`create_date`)" .
+			"VALUES('$username', '$disabled', '$fullname', " .
+			"'$email', '$password', '$access', '" . time() ."')";
 		$db_results = Dba::write($sql);
 
 		if (!$db_results) { return false; }

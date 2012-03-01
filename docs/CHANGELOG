@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Added admin_enable_required option to user registration
         - Fixed session issue preventing some users from streaming
                 (reported by miir01)
         - Quote Content-Disposition header for art, fixes Chrome issue

@@ -473,6 +473,12 @@ refresh_limit = "60"
 ; DEFAULT: false
 ;admin_notify_reg = "false"
 
+; This setting determines whether the user will be created as a disabled user.
+; If this is on, an administrator will need to manually enable the account
+; before it's usable.
+; DEFAULT: false
+;admin_enable_required = "false"
+
 ; This setting will allow all registrants/ldap/http users 
 ; to be auto-approved as a user. By default, they will be 
 ; added as a guest and must be promoted by the admin.

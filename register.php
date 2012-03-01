@@ -160,7 +160,8 @@ switch ($_REQUEST['action']) {
 		} // auto-user level
 
 
-		$new_user = User::create($username,$fullname,$email,$pass1,$access);
+		$new_user = User::create($username, $fullname, $email, $pass1,
+			$access, Config::get('admin_enable_required'));
 
 		if (!$new_user) {
 			Error::add('duplicate_user',_("Error: Insert Failed"));
