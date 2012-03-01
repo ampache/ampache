@@ -63,6 +63,28 @@ class Art extends database_object {
 	} // constructor
 
 	/**
+	 * build_cache
+	 * This attempts to reduce # of queries by asking for everything in the
+	 * browse all at once and storing it in the cache, this can help if the
+	 * db connection is the slow point
+	 */
+	public static function build_cache($object_ids) {
+
+		if (!is_array($object_ids) || !count($object_ids)) { return false; }
+		$uidlist = '(' . implode(',', $object_ids) . ')';
+		$sql = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_id` IN $uidlist";
+		$db_results = Dba::read($sql);
+
+		while ($row = Dba::fetch_assoc($db_results)) {
+			parent::add_to_cache('art', $row['object_type'] . 
+				$row['object_id'] . $row['size'], $row);
+		}
+
+		return true;
+	} // build_cache
+
+
+	/**
 	 * _auto_init
 	 * Called on creation of the class
 	 */
@@ -501,18 +523,31 @@ class Art extends database_object {
 		$sid = $sid ? scrub_out($sid) : scrub_out(session_id());
 		$type = self::validate_type($type);
 
-		$type = Dba::escape($type);
-		$uid = Dba::escape($uid);
+		$key = $type . $uid;
+		if (parent::is_cached('art', $key . '275x275') && Config::get('resize_images')) {
+			$row = parent::get_from_cache('art', $key . '275x275');
+			$mime = $row['mime'];
+		}
+		if (parent::is_cached('art', $key . 'original')) {
+			$row = parent::get_from_cache('art', $key . 'original');
+			$thumb_mime = $row['mime'];
+		}
+		if (!$mime && !$thumb_mime) {
 
-		$sql = "SELECT `mime`,`size` FROM `image` WHERE `object_type`='$type' AND `object_id`='$uid'";
-		$db_results = Dba::read($sql);
+			$type = Dba::escape($type);
+			$uid = Dba::escape($uid);
 
-		while ($row = Dba::fetch_assoc($db_results)) {
-			if ($row['size'] == 'original') {
-				$mime = $row['mime'];
-			}
-			else if ($row['size'] == '275x275' && Config::get('resize_images')) {
-				$thumb_mime = $row['mime'];
+			$sql = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type`='$type' AND `object_id`='$uid'";
+			$db_results = Dba::read($sql);
+
+			while ($row = Dba::fetch_assoc($db_results)) {
+				parent::add_to_cache('art', $key . $row['size'], $row);
+				if ($row['size'] == 'original') {
+					$mime = $row['mime'];
+				}
+				else if ($row['size'] == '275x275' && Config::get('resize_images')) {
+					$thumb_mime = $row['mime'];
+				}
 			}
 		}
 
