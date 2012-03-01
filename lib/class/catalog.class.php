@@ -2376,10 +2376,12 @@ class Catalog extends database_object {
 
 		// Select all songs in catalog
 		if($this->id) {
-			$sql = "SELECT id FROM song WHERE catalog = '$this->id' ORDER BY album,track";
+			$sql = 'SELECT `id` FROM `song` ' .
+				"WHERE `catalog`='$this->id' " . 
+				'ORDER BY `album`, `track`';
 		}
 		else {
-			$sql = "SELECT id FROM song ORDER BY album,track";
+			$sql = 'SELECT `id` FROM `song` ORDER BY `album`, `track`';
 		}
 		$db_results = Dba::read($sql);
 
@@ -2396,7 +2398,6 @@ class Catalog extends database_object {
 					$xml['dict']['Name'] = $song->title;
 					$xml['dict']['Artist'] = $song->f_artist_full;
 					$xml['dict']['Album'] = $song->f_album_full;
-					$xml['dict']['Genre'] = $song->f_genre; // FIXME
 					$xml['dict']['Total Time'] = intval($song->time) * 1000; // iTunes uses milliseconds
 					$xml['dict']['Track Number'] = intval($song->track);
 					$xml['dict']['Year'] = intval($song->year);
@@ -2406,21 +2407,28 @@ class Catalog extends database_object {
 					$xml['dict']['Play Count'] = intval($song->played);
 					$xml['dict']['Track Type'] = "URL";
 					$xml['dict']['Location'] = Song::play_url($song->id);
-					echo xml_from_array($xml,1,'itunes');
+					echo xml_from_array($xml, 1, 'itunes');
 					// flush output buffer
 				} // while result
 				echo xml_get_footer('itunes');
 
 				break;
 			case 'csv':
-				echo "ID,Title,Artist,Album,Genre,Length,Track,Year,Date Added,Bitrate,Played,File\n";
+				echo "ID,Title,Artist,Album,Length,Track,Year,Date Added,Bitrate,Played,File\n";
 				while ($results = Dba::fetch_assoc($db_results)) {
 					$song = new Song($results['id']);
 					$song->format();
-					echo '"' . $song->id . '","' . $song->title . '","' . $song->f_artist_full . '","' . $song->f_album_full .
-						'","' . $song->f_genre . '","' . $song->f_time . '","' . $song->f_track . '","' . $song->year .
-						'","' . date("Y-m-d\TH:i:s\Z",$song->addition_time) . '","' . $song->f_bitrate .
-						'","' . $song->played . '","' . $song->file . "\n";
+					echo '"' . $song->id . '","' . 
+						$song->title . '","' . 
+						$song->f_artist_full . '","' . 
+						$song->f_album_full .'","' . 
+						$song->f_time . '","' . 
+						$song->f_track . '","' . 
+						$song->year .'","' . 
+						date("Y-m-d\TH:i:s\Z", $song->addition_time) . '","' . 
+						$song->f_bitrate .'","' . 
+						$song->played . '","' . 
+						$song->file . "\n";
 				}
 				break;
 		} // end switch
