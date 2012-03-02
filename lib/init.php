@@ -44,6 +44,11 @@ $configfile = "$prefix/config/ampache.cfg.php";
 require_once $prefix . '/lib/general.lib.php';
 require_once $prefix . '/lib/class/config.class.php';
 
+// Explicitly load vauth and enable the custom session handler.
+// Relying on autoload may not always load it before sessiony things are done.
+require_once $prefix . '/lib/class/vauth.class.php';
+vauth::_auto_init();
+
 if (!function_exists('gettext')) {
 	require_once $prefix . '/modules/emulator/gettext.php';
 }
