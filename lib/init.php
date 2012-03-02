@@ -200,8 +200,6 @@ if (!defined('NO_SESSION') && Config::get('use_auth')) {
 	/* If the user ID doesn't exist deny them */
 	if (!$GLOBALS['user']->id AND !Config::get('demo_mode')) { vauth::logout(session_id()); exit; }
 
-	vauth::session_extend(session_id());
-
 	/* Load preferences and theme */
 	$GLOBALS['user']->update_last_seen();
 }
@@ -254,8 +252,9 @@ else {
 // Load the Preferences from the database
 Preference::init();
 
-// We need to create the tmp playlist for our user only if we have a session
 if (session_id()) {
+	vauth::session_extend(session_id());
+	// We only need to create the tmp playlist if we have a session
 	$GLOBALS['user']->load_playlist();
 }
 
