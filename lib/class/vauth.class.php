@@ -424,20 +424,18 @@ class vauth {
 	 * This takes a SID and extends its expiration.
 	 */
 	public static function session_extend($sid) {
-
+		$time = time();
 		$sid = Dba::escape($sid);
 		$expire = isset($_COOKIE[Config::get('session_name') . '_remember']) 
-			? time() + Config::get('remember_length') 
-			: time() + Config::get('session_length');
-		$len = $expire - time();
+			? $time + Config::get('remember_length') 
+			: $time + Config::get('session_length');
 
 		$sql = "UPDATE `session` SET `expire`='$expire' WHERE `id`='$sid'";
 		$db_results = Dba::write($sql);
 
-		debug_event('SESSION', 'Session:' . $sid . ' has been extended to ' . date("r",$expire) . ' extension length ' . $len, '6');
+		debug_event('SESSION', $sid . ' has been extended to ' . date('r', $expire) . ' extension length ' . ($expire - $time), 5);
 
 		return $db_results;
-
 	} // session_extend
 
 	/**
