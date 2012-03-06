@@ -281,67 +281,28 @@ class vainfo {
 		foreach ($keys as $key) {
 			$tags = $results[$key];
 
-			$info['file']		= $info['file']
-						? $info['file']
-						: $tags['file'];
-
-
-			$info['bitrate']	= $info['bitrate']
-						? $info['bitrate']
-						: intval($tags['bitrate']);
-
-			$info['rate']		= $info['rate']
-						? $info['rate']
-						: intval($tags['rate']);
-
-			$info['mode']		= $info['mode']
-						? $info['mode']
-						: $tags['mode'];
-
-			$info['size']		= $info['size']
-						? $info['size']
-						: $tags['size'];
-
-			$info['mime']		= $info['mime']
-						? $info['mime']
-						: $tags['mime'];
-
-			$info['encoding']       = $info['encoding']
-						? $info['encoding']
-						: $tags['encoding'];
-
-			$info['time']		= $info['time']
-						? $info['time']
-						: intval($tags['time']);
-
-			$info['channels']	= $info['channels']
-						? $info['channels']
-						: $tags['channels'];
+			$info['file'] = $info['file'] ?: $tags['file'];
+			$info['bitrate'] = $info['bitrate'] ?: intval($tags['bitrate']);
+			$info['rate'] = $info['rate'] ?: intval($tags['rate']);
+			$info['mode'] = $info['mode'] ?: $tags['mode'];
+			$info['size'] = $info['size'] ?: $tags['size'];
+			$info['mime'] = $info['mime'] ?: $tags['mime'];
+			$info['encoding'] = $info['encoding'] ?: $tags['encoding'];
+			$info['time'] = $info['time'] ?: intval($tags['time']);
+			$info['channels'] = $info['channels'] ?: $tags['channels'];
 
 			/* These are used to generate the correct IDs later */
-			$info['title']		= $info['title']
-						? $info['title']
-						: stripslashes(trim($tags['title']));
+			$info['title'] = $info['title'] ?: stripslashes(trim($tags['title']));
 
-			$info['year']		= $info['year']
-						? $info['year']
-						: intval($tags['year']);
+			$info['year'] = $info['year'] ?: intval($tags['year']);
 
-			$info['disk']		= $info['disk']
-						? $info['disk']
-						: intval($tags['disk']);
+			$info['disk'] = $info['disk'] ?: intval($tags['disk']);
 
-			$info['totaldiscs']	= $info['totaldiscs']
-						? $info['totaldiscs']
-						: intval($tags['totaldiscs']);
+			$info['totaldiscs'] = $info['totaldiscs'] ?: intval($tags['totaldiscs']);
 
-			$info['artist']		= $info['artist']
-						? $info['artist']
-						: trim($tags['artist']);
+			$info['artist']	= $info['artist'] ?: trim($tags['artist']);
 
-			$info['album']		= $info['album']
-						? $info['album']
-						: trim($tags['album']);
+			$info['album'] = $info['album'] ?: trim($tags['album']);
 
 			// multiple genre support
 			if ((!$info['genre']) && $tags['genre']) {
@@ -357,49 +318,24 @@ class vainfo {
 				}
 			}
 
-			$info['mb_trackid']	= $info['mb_trackid']
-						? $info['mb_trackid']
-						: trim($tags['mb_trackid']);
-
-			$info['mb_albumid']	= $info['mb_albumid']
-						? $info['mb_albumid']
-						: trim($tags['mb_albumid']);
-
-			$info['mb_artistid']	= $info['mb_artistid']
-						? $info['mb_artistid']
-						: trim($tags['mb_artistid']);
+			$info['mb_trackid'] = $info['mb_trackid'] ?: trim($tags['mb_trackid']);
+			$info['mb_albumid'] = $info['mb_albumid'] ?: trim($tags['mb_albumid']);
+			$info['mb_artistid'] = $info['mb_artistid'] ?: trim($tags['mb_artistid']);
 
 			/* @TODO language doesn't import from id3tag. @momo-i */
-			$info['language']	= $info['language']
-						? $info['language']
-						: Dba::escape($tags['language']);
+			$info['language'] = $info['language'] ?: Dba::escape($tags['language']);
 
-			$info['lyrics']		= $info['lyrics']
-						? $info['lyrics']
-						: str_replace(
-							array("\r\n","\r","\n"),
-							'<br />',
-							strip_tags($tags['lyrics']));
+			$info['lyrics']	= $info['lyrics']
+					?: str_replace(
+						array("\r\n","\r","\n"),
+						'<br />',
+						strip_tags($tags['lyrics']));
 
-			$info['track']		= $info['track']
-						? $info['track']
-						: intval($tags['track']);
-
-			$info['resolution_x']	= $info['resolution_x']
-						? $info['resolution_x']
-						: intval($tags['resolution_x']);
-
-			$info['resolution_y']	= $info['resolution_y']
-						? $info['resolution_y']
-						: intval($tags['resolution_y']);
-
-			$info['audio_codec']	= $info['audio_codec']
-						? $info['audio_codec']
-						: Dba::escape($tags['audio_codec']);
-
-			$info['video_codec']	= $info['video_codec']
-						? $info['video_codec']
-						: Dba::escape($tags['video_codec']);
+			$info['track'] = $info['track'] ?: intval($tags['track']);
+			$info['resolution_x'] = $info['resolution_x'] ?: intval($tags['resolution_x']);
+			$info['resolution_y'] = $info['resolution_y'] ?: intval($tags['resolution_y']);
+			$info['audio_codec'] = $info['audio_codec'] ?: Dba::escape($tags['audio_codec']);
+			$info['video_codec'] = $info['video_codec'] ?: Dba::escape($tags['video_codec']);
 		}
 
 		if ($info['totaldiscs'] == 1 && $info['disk'] == 1) {
