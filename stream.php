@@ -156,7 +156,7 @@ switch ($_REQUEST['method']) {
 			case 'democratic':
 				// Don't let them loop it
 				if (Config::get('play_type') == 'democratic') {
-					Config::set('play_type','stream','1');
+					Config::set('play_type', 'stream', true);
 				}
 			default:
 				if (Config::get('play_type') == 'stream') {

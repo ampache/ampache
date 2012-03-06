@@ -307,7 +307,7 @@ class Dba {
 
 		if (!is_resource(Config::get($handle))) {
 			$dbh = self::_connect($database);
-			Config::set($handle,$dbh,1);
+			Config::set($handle, $dbh, true);
 			return $dbh;
 		}
 		else {
@@ -331,7 +331,7 @@ class Dba {
 		mysql_close(Config::get($handle));
 
 		// Nuke it
-		Config::set($handle,false,1);
+		Config::set($handle, false, true);
 
 		return true;
 

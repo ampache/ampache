@@ -32,7 +32,7 @@ require_once $prefix . '/lib/init.php';
 require_once 'lib/install.php';
 require_once 'lib/debug.lib.php';
 
-Config::set('prefix',$prefix,'1');
+Config::set('prefix', $prefix, true);
 $configfile = "$prefix/config/ampache.cfg.php";
 
 

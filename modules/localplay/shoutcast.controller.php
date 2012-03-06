@@ -272,7 +272,7 @@ class AmpacheShoutCast extends localplay_controller {
 		$user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
 		Preference::update('shoutcast_active',$user_id,intval($uid));
-		Config::set('shoutcast_active',intval($uid),'1');
+		Config::set('shoutcast_active', intval($uid), true);
 
 		return true;
 

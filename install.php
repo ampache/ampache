@@ -47,7 +47,7 @@ if ($_SERVER['HTTPS'] == 'on') { $http_type = "https://"; }
 else { $http_type = "http://"; }
 
 $prefix = dirname(__FILE__);
-Config::set('prefix',$prefix,'1');
+Config::set('prefix', $prefix, true);
 $configfile = "$prefix/config/ampache.cfg.php";
 
 set_error_handler('ampache_error_handler');
@@ -92,8 +92,8 @@ switch ($_REQUEST['action']) {
 		$charset  = $_REQUEST['charset'];
 
 		// Set the lang in the conf array
-		Config::set('lang', $htmllang,'1');
-		Config::set('site_charset', $charset, '1');
+		Config::set('lang', $htmllang, true);
+		Config::set('site_charset', $charset, true);
 		load_gettext();
 
 		if (!install_insert_db($username,$password,$hostname,$database)) {
@@ -136,7 +136,7 @@ switch ($_REQUEST['action']) {
 		$charset  = $_REQUEST['charset'];
 
 		// Set the lang in the conf array
-		Config::set('lang',$htmllang,'1');
+		Config::set('lang', $htmllang, true);
 
 		// We need the charset for the different languages
 		$charsets = array(
@@ -155,7 +155,7 @@ switch ($_REQUEST['action']) {
 		$charset = $charsets[$_REQUEST['htmllang']];
 
 		// Set the site_charset in the conf array
-		Config::set('site_charset',$charsets[$_REQUEST['htmllang']],'1');
+		Config::set('site_charset', $charsets[$_REQUEST['htmllang']], true);
 
 		/* load_gettext mojo */
 		load_gettext();
@@ -166,15 +166,15 @@ switch ($_REQUEST['action']) {
 	case 'create_account':
 
 		$results = parse_ini_file($configfile);
-		Config::set_by_array($results,'1');
+		Config::set_by_array($results, true);
 
 		/* Get the variables for the language */
 		$htmllang = $_REQUEST['htmllang'];
 		$charset  = $_REQUEST['charset'];
 
 		// Set the lang in the conf array
-		Config::set('lang', $htmllang,'1');
-		Config::set('site_charset', $charset, '1');
+		Config::set('lang', $htmllang, true);
+		Config::set('site_charset', $charset, true);
 		load_gettext();
 
 		$password2 = scrub_in($_REQUEST['local_pass2']);
@@ -195,8 +195,8 @@ switch ($_REQUEST['action']) {
 		$charset  = $_REQUEST['charset'];
 
 		// Set the lang in the conf array
-		Config::set('lang', $htmllang,'1');
-		Config::set('site_charset', $charset, '1');
+		Config::set('lang', $htmllang, true);
+		Config::set('site_charset', $charset, true);
 		load_gettext();
 
 		/* Make sure we've got a valid config file */
@@ -211,7 +211,7 @@ switch ($_REQUEST['action']) {
 		$charset  = $_REQUEST['charset'];
 
 		// Set the lang in the conf array
-		Config::set('lang',$htmllang,'1');
+		Config::set('lang', $htmllang, true);
 
 		// We need the charset for the different languages
 		$charsets = array(
@@ -229,7 +229,7 @@ switch ($_REQUEST['action']) {
 		$charset = $charsets[$_REQUEST['htmllang']];
 
 		// Set the site_charset in the conf array
-		Config::set('site_charset',$charsets[$_REQUEST['htmllang']],'1');
+		Config::set('site_charset', $charsets[$_REQUEST['htmllang']], true);
 
 		/* load_gettext mojo */
 		load_gettext();
@@ -243,7 +243,7 @@ switch ($_REQUEST['action']) {
 		$htmllang = $_POST['htmllang'];
 
 		// Set the lang in the conf array
-		Config::set('lang',$htmllang,'1');
+		Config::set('lang', $htmllang, true);
 
 		// We need the charset for the different languages
 		$charsets = array(
@@ -262,7 +262,7 @@ switch ($_REQUEST['action']) {
 		$charset = $charsets[$_POST['htmllang']];
 
 		// Set the site_charset in the conf array
- 	        Config::set('site_charset',$charsets[$_POST['htmllang']],'1');
+ 	        Config::set('site_charset', $charsets[$_POST['htmllang']], true);
 
 		// Now we make voodoo with the Load gettext mojo
 		load_gettext();
@@ -285,8 +285,8 @@ switch ($_REQUEST['action']) {
 			$htmllang = $lang;
 			$charset = "UTF-8";
 		}
-		Config::set('lang',$htmllang,'1');
-		Config::set('site_charset', $charset, '1');
+		Config::set('lang', $htmllang, true);
+		Config::set('site_charset', $charset, true);
 		load_gettext();
 
 		/* Show the language options first */

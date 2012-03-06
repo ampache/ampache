@@ -259,7 +259,7 @@ class vauth {
 		$remember_length = Config::get('remember_length');
 		$session_name = Config::get('session_name');
 
-		Config::set('cookie_life',$remember_length,'1');
+		Config::set('cookie_life', $remember_length, true);
 		setcookie($session_name . '_remember',"Rappelez-vous, rappelez-vous le 27 mars", time() + $remember_length, '/');
 
 	} // create_remember_cookie

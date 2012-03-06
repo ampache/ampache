@@ -54,7 +54,7 @@ if (!function_exists('gettext')) {
 }
 
 // Define some base level config options
-Config::set('prefix',$prefix);
+Config::set('prefix', $prefix);
 
 /*
  Check to see if this is http or https
@@ -163,7 +163,7 @@ require_once $prefix . '/modules/ampacheapi/AmpacheApi.lib.php';
 /* Temp Fixes */
 $results = Preference::fix_preferences($results);
 
-Config::set_by_array($results,1);
+Config::set_by_array($results, true);
 
 // Modules (These are conditionally included depending upon config values)
 if (Config::get('ratings')) {
@@ -264,7 +264,7 @@ if (session_id()) {
 }
 
 /* Add in some variables for ajax done here because we need the user */
-Config::set('ajax_url',Config::get('web_path') . '/server/ajax.server.php',1);
+Config::set('ajax_url', Config::get('web_path') . '/server/ajax.server.php', true);
 
 // Load gettext mojo
 load_gettext();

@@ -132,7 +132,7 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 	$data['database_hostname'] = $hostname;
 	$data['database_name']	   = $database;
 
-	Config::set_by_array($data,'1');
+	Config::set_by_array($data, true);
 
 	unset($data);
 
@@ -247,7 +247,7 @@ function install_create_config($web_path,$username,$password,$hostname,$database
         $data['database_name']     = $database;
 	$data['web_path']	   = $web_path;
 
-        Config::set_by_array($data,'1');
+        Config::set_by_array($data, true);
 
         /* Attempt to make DB connection */
         $dbh = Dba::dbh();

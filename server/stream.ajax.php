@@ -64,7 +64,7 @@ switch ($_REQUEST['action']) {
 
 		// Go ahead and update their preference
 		if (Preference::update('play_type',$GLOBALS['user']->id,$new)) {
-			Config::set('play_type',$new,'1');
+			Config::set('play_type', $new, true);
 		}
 
 

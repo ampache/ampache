@@ -269,7 +269,7 @@ class AmpacheVlc extends localplay_controller {
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id; 
 
         Preference::update('vlc_active',$user_id,intval($uid)); 
-        Config::set('vlc_active',intval($uid),'1'); 
+        Config::set('vlc_active', intval($uid), true); 
 
         return true; 
 

@@ -363,7 +363,7 @@ class Preference {
 	public static function load_from_session($uid=-1) {
 
 		if (is_array($_SESSION['userdata']['preferences']) AND $_SESSION['userdata']['uid'] == $uid) {
-			Config::set_by_array($_SESSION['userdata']['preferences'],1);
+			Config::set_by_array($_SESSION['userdata']['preferences'], true);
 			return true;
 		}
 
@@ -449,7 +449,7 @@ class Preference {
 			$results['theme_path'] = '/themes/classic';
 		}
 
-		Config::set_by_array($results,1);
+		Config::set_by_array($results, true);
 		$_SESSION['userdata']['preferences'] = $results;
 		$_SESSION['userdata']['uid'] = $user_id;
 
