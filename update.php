@@ -27,7 +27,8 @@
  */
 
 // We need this stuff
-define('NO_SESSION','1');
+define('NO_SESSION', 1);
+define('OUTDATED_DATABASE_OK', 1);
 require 'lib/init.php';
 
 // Get the version and format it

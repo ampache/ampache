@@ -280,7 +280,7 @@ unset($results);
 flip_class(array('odd','even'));
 
 /* Check to see if we need to perform an update */
-if (!preg_match('/update\.php/', $_SERVER['PHP_SELF'])) {
+if (!defined('OUTDATED_DATABASE_OK')) {
 	if (Update::need_update()) {
 		header("Location: " . Config::get('web_path') . "/update.php");
 		exit();
