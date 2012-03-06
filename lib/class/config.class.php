@@ -98,34 +98,36 @@ class Config {
 
 	/**
 	 * set
-	 * This checks to see if this is an instance or procedure calls
-	 * and then sets the correct variable based on that
+	 *
+	 * This sets config values.
 	 *
 	 * @param	string	$name		Key name
 	 * @param	string	$value		Value name
-	 * @param	integer	$clobber	Clobber flag 0 or 1
+	 * @param	boolean	$clobber	Clobber flag true or false
 	 * @return	void
 	 */
-	public static function set($name, $value, $clobber = 0) {
+	public static function set($name, $value, $clobber = false) {
 
 		if (isset(self::$_global[$name]) && !$clobber) {
+			debug_event('Config', "Tried to overwrite existing key $name without setting clobber", 5);
 			Error::add('Config Global', sprintf(_('Trying to clobber \'%s\' without setting clobber'), $name));
-			return;
+			return false;
 		}
-		else {
-			self::$_global[$name] = $value;
-		}
+		
+		self::$_global[$name] = $value;
 
 	} // set
 
 	/**
 	 * set_by_array
-	 * This is the same as the set function except it takes an array as input
+	 *
+	 * This is the same as the set function except it takes an array as
+	 * input.
 	 *
 	 * @param	array	$array		Array
-	 * @param	integer	$clobber	Clobber flag 0 or 1
+	 * @param	boolean	$clobber	Clobber flag true or false
 	 */
-	public static function set_by_array($array, $clobber = 0) {
+	public static function set_by_array($array, $clobber = false) {
 
 		foreach ($array as $name => $value) {
 			self::set($name,$value,$clobber);
