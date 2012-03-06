@@ -390,22 +390,38 @@ class Update {
 		if (!is_array(self::$versions)) {
 			self::$versions = self::populate_version();
 		}
+		$update_needed = false;
 
-		echo "<ul>\n";
+		if (!defined('CLI')) { echo "<ul>\n"; }
 
-		foreach (self::$versions as $version) {
+		foreach (self::$versions as $update) {
 
-			if ($version['version'] > $current_version) {
-				$updated = true;
-				echo "<li><b>Version: " . self::format_version($version['version']) . "</b><br />";
-				echo $version['description'] . "<br /></li>\n";
+			if ($update['version'] > $current_version) {
+				$update_needed = true;
+				if (!defined('CLI')) { echo '<li><b>'; }
+				echo 'Version: ', self::format_version($update['version']);
+				if (defined('CLI')) {
+					echo "\n", str_replace('<br />', "\n", $update['description']), "\n";
+				}
+				else {
+					echo '</b><br />', $update['description'], "<br /></li>\n";
+				}
 			} // if newer
 
 		} // foreach versions
 
-		echo "</ul>\n";
+		if (!defined('CLI')) { echo "</ul>\n"; }
 
-		if (!isset($updated)) { echo "<p align=\"center\">No Updates Needed [<a href=\"" . Config::get('web_path') . "\">Return</a>]</p>"; }
+		if (!$update_needed) {
+			if (!defined('CLI')) { echo '<p align="center">'; }
+			echo _('No updates needed.');
+			if (!defined('CLI')) {
+				echo '[<a href="', Config::get('web_path'), '">Return</a>]</p>'; 
+			}
+			else {
+				echo "\n";
+			}
+		}
 	} // display_update
 
 	/**
