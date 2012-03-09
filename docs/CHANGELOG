@@ -6,6 +6,10 @@
   v.3.6-Alpha2
         - Fixed JSON escaping issue that broke search in some cases
                 (reported by XeeNiX)
+        - Overhauled CLI tools for installation and database management
+        - Fixed admin form issue (reported by the3rdbit)
+        - Improved efficiency of fetching song lists via the API
+                (reported by lotan_rm)
         - Added admin_enable_required option to user registration
         - Fixed session issue preventing some users from streaming
                 (reported by miir01)
