@@ -101,10 +101,6 @@ $results['cookie_path'] 	= $results['raw_web_path'];
 $results['cookie_domain']	= $_SERVER['SERVER_NAME'];
 $results['cookie_life']		= $results['session_cookielife'];
 $results['cookie_secure']	= $results['session_cookiesecure'];
-$results['mysql_password']	= $results['database_password'];
-$results['mysql_username']	= $results['database_username'];
-$results['mysql_hostname']	= $results['database_hostname'];
-$results['mysql_db']		= $results['database_name'];
 
 // Library and module includes we can't do with the autoloader
 require_once $prefix . '/modules/getid3/getid3.php';
