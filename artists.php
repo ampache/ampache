@@ -159,7 +159,7 @@ switch($_REQUEST['action']) {
 					$flag->add($song->id,"song","retag","Renamed artist, retag");
 					$flag_qstring = "REPLACE INTO flagged " .
 						"SET type = 'setid3', song = '" . $song->id . "', date = '" . time() . "', user = '" . $GLOBALS['user']->username . "'";
-	            			mysql_query($flag_qstring, dbh());
+	            			Dba::write($flag_qstring);
 	    			}
 
 			} // end if they wanted to update
