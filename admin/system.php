@@ -26,9 +26,7 @@
  * @link	http://www.ampache.org/
  */
 
-require '../lib/init.php';
-require_once Config::get('prefix') . '/lib/debug.lib.php';
-require_once Config::get('prefix') . '/modules/horde/Browser.php';
+require_once '../lib/init.php';
 
 if (!Access::check('interface',100) OR Config::get('demo_mode')) {
 	access_denied();

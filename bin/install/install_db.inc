@@ -29,29 +29,12 @@ if(php_sapi_name() != 'cli') {
         exit(1);
 }
 
-error_reporting(E_ERROR);
-
 define('NO_SESSION', 1);
 define('CLI', 1);
-define('INIT_LOADED', 1);
 
 $path = dirname(__FILE__);
 $prefix = realpath($path . '/../../');
-require_once $prefix . '/lib/install.php';
-require_once $prefix . '/lib/debug.lib.php';
-require_once $prefix . '/lib/general.lib.php';
-require_once $prefix . '/lib/class/config.class.php';
-require_once $prefix . '/lib/class/error.class.php';
-require_once $prefix . '/lib/class/vauth.class.php';
-require_once $prefix . '/lib/class/database_object.abstract.php';
-require_once $prefix . '/lib/class/preference.class.php';
-require_once $prefix . '/lib/class/access.class.php';
-require_once $prefix . '/lib/ui.lib.php';
-require_once $prefix . '/lib/log.lib.php';
-require_once $prefix . '/lib/gettext.php';
-
-Config::set('prefix', $prefix, true);
-$configfile = $prefix . '/config/ampache.cfg.php';
+require_once $prefix . '/lib/init-tiny.php';
 
 $options = getopt(
 	'h:d:f:p:P:u:U:w:',

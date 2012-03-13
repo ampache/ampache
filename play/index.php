@@ -35,7 +35,6 @@
 */
 define('NO_SESSION','1');
 require_once '../lib/init.php';
-require_once Config::get('prefix') . '/modules/horde/Browser.php';
 ob_end_clean();
 
 /* These parameters had better come in on the url. */

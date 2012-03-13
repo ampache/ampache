@@ -30,43 +30,14 @@
 // fixes some CSS issues
 ob_start();
 
-// Do a check for PHP5 because nothing will work without it
-if (floatval(phpversion()) < 5) {
-	echo "ERROR: Ampache requires PHP5";
-	exit;
-}
-
-error_reporting(E_ERROR); // Only show fatal errors in production
-
 $ampache_path = dirname(__FILE__);
 $prefix = realpath($ampache_path . "/../");
-$configfile = "$prefix/config/ampache.cfg.php";
-require_once $prefix . '/lib/general.lib.php';
-require_once $prefix . '/lib/class/config.class.php';
+require_once $prefix . '/lib/init-tiny.php';
 
 // Explicitly load vauth and enable the custom session handler.
 // Relying on autoload may not always load it before sessiony things are done.
 require_once $prefix . '/lib/class/vauth.class.php';
 vauth::_auto_init();
-
-if (!function_exists('gettext')) {
-	require_once $prefix . '/modules/emulator/gettext.php';
-}
-
-// Define some base level config options
-Config::set('prefix', $prefix);
-
-/*
- Check to see if this is http or https
-*/
-if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' ) 
-    || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') 
-    || Config::get('force_ssl') == true) {
-	$http_type = "https://";
-}
-else {
-	$http_type = "http://";
-}
 
 // Set up for redirection on important error cases
 $path = preg_replace('#(.*)/(\w+\.php)$#', '$1', $_SERVER['PHP_SELF']);
@@ -135,20 +106,7 @@ $results['mysql_username']	= $results['database_username'];
 $results['mysql_hostname']	= $results['database_hostname'];
 $results['mysql_db']		= $results['database_name'];
 
-// Define that we've loaded the INIT file
-define('INIT_LOADED','1');
-
 // Library and module includes we can't do with the autoloader
-require_once $prefix . '/lib/preferences.php';
-require_once $prefix . '/lib/log.lib.php';
-require_once $prefix . '/lib/ui.lib.php';
-require_once $prefix . '/lib/gettext.php';
-require_once $prefix . '/lib/batch.lib.php';
-require_once $prefix . '/lib/themes.php';
-require_once $prefix . '/lib/class/localplay.abstract.php';
-require_once $prefix . '/lib/class/database_object.abstract.php';
-require_once $prefix . '/lib/class/playlist_object.abstract.php';
-require_once $prefix . '/lib/class/media.interface.php';
 require_once $prefix . '/modules/getid3/getid3.php';
 require_once $prefix . '/modules/nusoap/nusoap.php';
 require_once $prefix . '/modules/phpmailer/class.phpmailer.php';
@@ -156,7 +114,6 @@ require_once $prefix . '/modules/phpmailer/class.smtp.php';
 require_once $prefix . '/modules/infotools/Snoopy.class.php';
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
 require_once $prefix . '/modules/infotools/lastfm.class.php';
-//require_once $prefix . '/modules/infotools/jamendoSearch.class.php';
 require_once $prefix . '/modules/php_musicbrainz/mbQuery.php';
 require_once $prefix . '/modules/ampacheapi/AmpacheApi.lib.php';
 
@@ -276,9 +233,6 @@ header ("Content-Type: text/html; charset=" . Config::get('site_charset'));
 unset($array);
 unset($results);
 
-/* Set up the flip class */
-flip_class(array('odd','even'));
-
 /* Check to see if we need to perform an update */
 if (!defined('OUTDATED_DATABASE_OK')) {
 	if (Update::need_update()) {
@@ -293,8 +247,4 @@ $GLOBALS['xmlrpc_internalencoding'] = Config::get('site_charset');
 if (Config::get('debug')) {
 	error_reporting(E_ALL);
 }
-
-// Merge GET then POST into REQUEST effectively stripping COOKIE without
-// depending on a PHP setting change for the effect
-$_REQUEST = array_merge($_GET,$_POST);
 ?>

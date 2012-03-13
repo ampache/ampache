@@ -5,7 +5,7 @@
  *
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright (c) 2001 - 2011 Ampache.org All Rights Reserved
+ * Copyright (c) 2001 - 2012 Ampache.org All Rights Reserved
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -21,34 +21,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @package	Ampache
- * @copyright	2001 - 2011 Ampache.org
+ * @copyright	2001 - 2012 Ampache.org
  * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
  * @link	http://www.ampache.org/
  */
 
-// Set the Error level manualy... I'm to lazy to fix notices
-error_reporting(E_ALL ^ E_NOTICE);
-
-require_once 'lib/general.lib.php';
-require_once 'lib/class/config.class.php';
-require_once 'lib/class/error.class.php';
-require_once 'lib/class/vauth.class.php';
-require_once 'lib/class/database_object.abstract.php';
-require_once 'lib/class/preference.class.php';
-require_once 'lib/class/access.class.php';
-require_once 'lib/ui.lib.php';
-require_once 'lib/log.lib.php';
-require_once 'modules/horde/Browser.php';
-require_once 'lib/install.php';
-require_once 'lib/debug.lib.php';
-require_once 'lib/gettext.php';
-
-if ($_SERVER['HTTPS'] == 'on') { $http_type = "https://"; }
-else { $http_type = "http://"; }
-
 $prefix = dirname(__FILE__);
-Config::set('prefix', $prefix, true);
-$configfile = "$prefix/config/ampache.cfg.php";
+require_once $prefix . '/lib/init-tiny.php';
 
 set_error_handler('ampache_error_handler');
 
@@ -62,19 +41,13 @@ if (!install_check_status($configfile)) {
 }
 
 define('INSTALL','1');
-/**
- * @ignore
- */
-define('INIT_LOADED','1');
 
-/* Clean up incomming variables */
+/* Clean up incoming variables */
 $web_path = scrub_in($_REQUEST['web_path']);
 $username = scrub_in($_REQUEST['local_username']);
 $password = $_REQUEST['local_pass'];
 $hostname = scrub_in($_REQUEST['local_host']);
 $database = scrub_in($_REQUEST['local_db']);
-if ($_SERVER['HTTPS'] == 'on') { $http_type = "https://"; }
-else { $http_type = "http://"; }
 
 // Correct potential \ or / in the dirname
 $safe_dirname = rtrim(dirname($_SERVER['PHP_SELF']),"/\\"); 
