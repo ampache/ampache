@@ -35,6 +35,7 @@ define('CLI', 1);
 $path = dirname(__FILE__);
 $prefix = realpath($path . '/../../');
 require_once $prefix . '/lib/init-tiny.php';
+require_once $prefix . '/lib/install.lib.php';
 
 $options = getopt(
 	'h:d:f:p:P:u:U:w:',
