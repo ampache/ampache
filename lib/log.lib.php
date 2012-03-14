@@ -110,7 +110,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
 	foreach($ignores as $ignore) {
 		if (strpos($errstr, $ignore) !== false) {
 			$error_name = 'Ignored ' . $error_name;
-			$level = 6;
+			$level = 7;
 		}
 	}
 
