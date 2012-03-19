@@ -608,7 +608,7 @@ class Search extends playlist_object {
 	public function parse_rules($data) {
 		$this->rules = array();
 		foreach ($data as $rule => $value) {
-			if (preg_match('/^rule_(\d)$/', $rule, $ruleID)) {
+			if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
 				$ruleID = $ruleID[1];
 				foreach (explode('|', $data['rule_' . $ruleID . '_input']) as $input) {
 					$this->rules[] = array(

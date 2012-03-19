@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Fixed newsearch issue preventing use of more than 9 rules 
+                (reported by Twister)
         - Fixed JSON escaping issue that broke search in some cases
                 (reported by XeeNiX)
         - Overhauled CLI tools for installation and database management
