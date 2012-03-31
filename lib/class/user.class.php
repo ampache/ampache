@@ -193,16 +193,14 @@ class User extends database_object {
 	 * []['prefs'] = array(array('name','display','value'));
 	 * []['admin'] = t/f value if this is an admin only section
 	 */
-	function get_preferences($user_id=0,$type=0) {
+	function get_preferences($type = 0, $system = false) {
 
 		// Fill out the user id
-		$user_id = $user_id ? Dba::escape($user_id) : Dba::escape($this->id);
+		$user_id = $system ? Dba::escape(-1) : Dba::escape($this->id);
 
-		if ($user_id != '-1') {
+		if (!$system) {
 			$user_limit = "AND preference.catagory != 'system'";
 		}
-
-		if (!Config::get('use_auth')) { $user_id = '-1'; }
 
 		if ($type != '0') {
 			$user_limit = "AND preference.catagory = '" . Dba::escape($type) . "'";

@@ -44,6 +44,7 @@ switch($_REQUEST['action']) {
 		/* Reset the Theme */
 		if ($_POST['method'] == 'admin') {
 			$user_id = '-1';
+			$system = true;
 			$fullname = _('Server');
 			$_REQUEST['action'] = 'admin';
 		}
@@ -56,7 +57,7 @@ switch($_REQUEST['action']) {
 		update_preferences($user_id);
 		Preference::init();
 
-		$preferences = $GLOBALS['user']->get_preferences($user_id,$_REQUEST['tab']);
+		$preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab'], $system);
 	break;
 	case 'admin_update_preferences':
 		// Make sure only admins here
@@ -80,7 +81,7 @@ switch($_REQUEST['action']) {
 			exit;
 		}
 		$fullname= _('Server');
-		$preferences = $GLOBALS['user']->get_preferences(-1,$_REQUEST['tab']);
+		$preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab'], true);
 	break;
 	case 'user':
 		if (!Access::check('interface','100')) {
@@ -89,7 +90,7 @@ switch($_REQUEST['action']) {
 		}
 		$client = new User($_REQUEST['user_id']);
 		$fullname = $client->fullname;
-		$preferences = $client->get_preferences(0,$_REQUEST['tab']);
+		$preferences = $client->get_preferences($_REQUEST['tab']);
 	break;
 	case 'update_user':
 		// Make sure we're a user and they came from the form
@@ -122,7 +123,7 @@ switch($_REQUEST['action']) {
 	break;
 	default:
 		$fullname = $GLOBALS['user']->fullname;
-		$preferences = $GLOBALS['user']->get_preferences(0,$_REQUEST['tab']);
+		$preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab']);
 	break;
 } // End Switch Action
 
