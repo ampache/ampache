@@ -57,6 +57,10 @@ switch($_REQUEST['action']) {
 		update_preferences($user_id);
 		Preference::init();
 
+		// Reset gettext so that it's clear whether the preference took
+		// FIXME: do we need to do any header fiddling?
+		load_gettext();
+
 		$preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab'], $system);
 	break;
 	case 'admin_update_preferences':
