@@ -20,7 +20,15 @@
 
 */
 ?>
-
+<?php
+if ($playlist) {
+	$logic_operator = $playlist->logic_operator;
+}
+else {
+	$logic_operator = $_REQUEST['operator'];
+}
+$logic_operator = strtolower($logic_operator);
+?>
 <script type="text/javascript" src="<?php echo Config::get('web_path'); ?>/lib/javascript/search.js"></script>
 <script type="text/javascript" src="<?php echo Config::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>"></script>
 
@@ -31,8 +39,8 @@
 	<td><?php echo _('Match'); ?></td>
         <td>
                 <select name="operator">
-                        <option value="and" <?php if($_REQUEST['operator']=="and") echo "selected=\"selected\""?>><?php echo _('all rules'); ?></option>
-                        <option value="or"  <?php if($_REQUEST['operator']=="or") echo "selected=\"selected\""?>><?php echo _('any rule'); ?></option>
+                        <option value="and" <?php if($logic_operator == 'and') echo 'selected="selected"'?>><?php echo _('all rules'); ?></option>
+                        <option value="or"  <?php if($logic_operator == 'or') echo 'selected="selected"'?>><?php echo _('any rule'); ?></option>
                 </select>
         </td>
         </tr>

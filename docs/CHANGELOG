@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Fixed display of logic operator in rules (reported by Twister)
         - Fixed newsearch issue preventing use of more than 9 rules 
                 (reported by Twister)
         - Fixed JSON escaping issue that broke search in some cases
