@@ -234,9 +234,9 @@ class Catalog extends database_object {
 		$hours = $hours % 24;
 
 		$time_text = "$days ";
-		$time_text .= ngettext('day','days',$days);
+		$time_text .= T_ngettext('day','days',$days);
 		$time_text .= ", $hours ";
-		$time_text .= ngettext('hour','hours',$hours);
+		$time_text .= T_ngettext('hour','hours',$hours);
 
 		$results['time_text'] = $time_text;
 
@@ -1426,7 +1426,7 @@ class Catalog extends database_object {
 
 		show_box_top();
 		echo "<strong>";
-		printf (ngettext('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total);
+		printf (T_ngettext('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total);
 		echo "</strong><br />\n";
 		show_box_bottom();
 		ob_flush();
@@ -2321,13 +2321,13 @@ class Catalog extends database_object {
 			/* Recreate the Playlist */
 			$playlist = new Playlist($playlist_id);
 			$playlist->add_songs($songs);
-			$reason = sprintf(ngettext('Playlist Import and Recreate Successful. Total: %d Song',
+			$reason = sprintf(T_ngettext('Playlist Import and Recreate Successful. Total: %d Song',
 			   'Playlist Import and Recreate Successful. Total: %d Songs',
 			   count($songs)), count($songs));
 			return true;
 		}
 		/* HINT: filename */
-		$reason = sprintf(ngettext('Parsing %s - Not Found: %d Song. Please check your m3u file.',
+		$reason = sprintf(T_ngettext('Parsing %s - Not Found: %d Song. Please check your m3u file.',
 		   'Parsing %s - Not Found: %d Songs. Please check your m3u file.',
 		   count($songs)), $filename, count($songs));
 		return false;

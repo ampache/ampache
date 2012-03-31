@@ -69,13 +69,13 @@
                 <?php $name = 'length_' . intval($_POST['length']); ${$name} = ' selected="selected"'; ?>
                 <select name="length">
                         <option value="0"<?php echo $length_0; ?>><?php echo T_('Unlimited'); ?></option>
-                        <option value="15"<?php echo $length_15; ?>><?php printf(ngettext('%d minute','%d minutes',15), "15"); ?></option>
-                        <option value="30"<?php echo $length_30; ?>><?php printf(ngettext('%d minute','%d minutes',30), "30"); ?></option>
-                        <option value="60"<?php echo $length_60; ?>><?php printf(ngettext('%d hour','%d hours',1), "1"); ?></option>
-                        <option value="120"<?php echo $length_120; ?>><?php printf(ngettext('%d hour','%d hours',2), "2"); ?></option>
-                        <option value="240"<?php echo $length_240; ?>><?php printf(ngettext('%d hour','%d hours',4), "4"); ?></option>
-                        <option value="480"<?php echo $length_480; ?>><?php printf(ngettext('%d hour','%d hours',8), "8"); ?></option>
-                        <option value="960"<?php echo $length_960; ?>><?php printf(ngettext('%d hour','%d hours',16), "16"); ?></option>
+                        <option value="15"<?php echo $length_15; ?>><?php printf(T_ngettext('%d minute','%d minutes',15), "15"); ?></option>
+                        <option value="30"<?php echo $length_30; ?>><?php printf(T_ngettext('%d minute','%d minutes',30), "30"); ?></option>
+                        <option value="60"<?php echo $length_60; ?>><?php printf(T_ngettext('%d hour','%d hours',1), "1"); ?></option>
+                        <option value="120"<?php echo $length_120; ?>><?php printf(T_ngettext('%d hour','%d hours',2), "2"); ?></option>
+                        <option value="240"<?php echo $length_240; ?>><?php printf(T_ngettext('%d hour','%d hours',4), "4"); ?></option>
+                        <option value="480"<?php echo $length_480; ?>><?php printf(T_ngettext('%d hour','%d hours',8), "8"); ?></option>
+                        <option value="960"<?php echo $length_960; ?>><?php printf(T_ngettext('%d hour','%d hours',16), "16"); ?></option>
                 </select>
         </td>
 </tr>
