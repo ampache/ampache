@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Added php-gettext for fallback emulation when a locale (or gettext)
+                isn't supported
         - Fixed pluralisation issue in Recently Played
         - Added support for extracting MBIDs from M4A files
         - Fixed parsing of some tag types (most notably M4A)
