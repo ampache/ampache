@@ -26,13 +26,13 @@
  * @link	http://www.ampache.org/
  */
 
-show_box_top(_('Verify Catalog'), 'box box_verify_catalog');
+show_box_top(T_('Verify Catalog'), 'box box_verify_catalog');
 /* HINT: Catalog Name */
-printf(_('Updating the %s catalog'), "<strong>[ $this->name ]</strong>");
+printf(T_('Updating the %s catalog'), "<strong>[ $this->name ]</strong>");
 echo "<br />\n";
 printf(ngettext('%d item found checking tag information', '%d items found checking tag information', $number), $number);
 echo "<br />\n\n";
-echo _('Verified') . ': <span id="verify_count_' . $this->id . '">' . $catalog_verify_found . '</span><br />';
-echo _('Reading') . ': <span id="verify_dir_' . $this->id . '">' . $catalog_verify_directory . '</span><br />';
+echo T_('Verified') . ': <span id="verify_count_' . $this->id . '">' . $catalog_verify_found . '</span><br />';
+echo T_('Reading') . ': <span id="verify_dir_' . $this->id . '">' . $catalog_verify_directory . '</span><br />';
 show_box_bottom();
 ?>

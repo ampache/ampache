@@ -47,7 +47,7 @@ switch ($_REQUEST['action']) {
 		//Return the new Ajax::button
 		$id = 'button_flip_state_' . $song->id;
 		$button = $song->enabled ? 'disable' : 'enable';
-		$results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$button,_(ucfirst($button)),'flip_state_' . $song->id);
+		$results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$button, T_(ucfirst($button)),'flip_state_' . $song->id);
 
 	break;
 	default:

@@ -27,7 +27,7 @@
  */
 
 ?>
-<?php show_box_top(_('Information')); ?>
+<?php show_box_top(T_('Information')); ?>
 <?php
 $object_ids = Stats::get_top('song');
 $browse = new Browse();

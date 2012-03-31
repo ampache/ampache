@@ -30,57 +30,57 @@ $prefix = realpath(dirname(__FILE__). "/../");
 require $prefix . '/templates/install_header.inc.php';
 ?>
 	<div class="content">
-		<strong><?php echo _('Step 1 - Create the Ampache database'); ?></strong><br />
+		<strong><?php echo T_('Step 1 - Create the Ampache database'); ?></strong><br />
 		<dl>
-			<dd><?php echo _('This step creates and inserts the Ampache database, so please provide a MySQL account with database creation rights. This step may take some time on slower computers.'); ?></dd>
+			<dd><?php echo T_('This step creates and inserts the Ampache database, so please provide a MySQL account with database creation rights. This step may take some time on slower computers.'); ?></dd>
 		</dl>
-		<?php echo _('Step 2 - Create ampache.cfg.php'); ?><br />
-		<?php echo _('Step 3 - Set up the initial account'); ?><br />
+		<?php echo T_('Step 2 - Create ampache.cfg.php'); ?><br />
+		<?php echo T_('Step 3 - Set up the initial account'); ?><br />
 		<br />
 		<?php Error::display('general'); ?>
 		<br />
-		<span class="header2"><?php echo _('Insert Ampache Database'); ?></span>
+		<span class="header2"><?php echo T_('Insert Ampache Database'); ?></span>
 		<form method="post" action="<?php echo WEB_PATH . "?action=create_db&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" >
 <table>
 <tr>
-	<td class="align"><?php echo _("Desired Database Name"); ?></td>
+	<td class="align"><?php echo T_("Desired Database Name"); ?></td>
 	<td><input type="text" name="local_db" value="ampache" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _("MySQL Hostname"); ?></td>
+	<td class="align"><?php echo T_("MySQL Hostname"); ?></td>
 	<td><input type="text" name="local_host" value="localhost" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _("MySQL Administrative Username"); ?></td>
+	<td class="align"><?php echo T_("MySQL Administrative Username"); ?></td>
 	<td><input type="text" name="local_username" value="root" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _("MySQL Administrative Password"); ?></td>
+	<td class="align"><?php echo T_("MySQL Administrative Password"); ?></td>
 	<td><input type="password" name="local_pass" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _("Create Database User for New Database"); ?>? </td>
+	<td class="align"><?php echo T_("Create Database User for New Database"); ?>? </td>
 	<td><input type="checkbox" value="create_db_user" name="db_user" onclick="flipField('db_username');flipField('db_password');" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _("Ampache Database Username"); ?></td>
+	<td class="align"><?php echo T_("Ampache Database Username"); ?></td>
 	<td><input type="text" id="db_username" name="db_username" value="ampache" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _("Ampache Database User Password"); ?></td>
+	<td class="align"><?php echo T_("Ampache Database User Password"); ?></td>
 	<td><input type="password" id="db_password" name="db_password" value="" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _('Overwrite Existing'); ?></td>
+	<td class="align"><?php echo T_('Overwrite Existing'); ?></td>
 	<td><input type="checkbox" name="overwrite_db" value="1" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _('Use Existing Database'); ?></td>
+	<td class="align"><?php echo T_('Use Existing Database'); ?></td>
 	<td><input type="checkbox" name="existing_db" value="1" /></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><input type="submit" value="<?php echo _("Insert Database"); ?>" /></td>
+	<td><input type="submit" value="<?php echo T_("Insert Database"); ?>" /></td>
 </tr>
 </table>
 </form>

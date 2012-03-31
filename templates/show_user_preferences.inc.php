@@ -32,7 +32,7 @@
  */
 
 ?>
-<?php /* HINT: Editing Username preferences */ show_box_top(sprintf(_('Editing %s preferences'), $client->fullname),'box box_preferences'); ?>
+<?php /* HINT: Editing Username preferences */ show_box_top(sprintf(T_('Editing %s preferences'), $client->fullname),'box box_preferences'); ?>
 <form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?>/preferences.php?action=admin_update_preferences" enctype="multipart/form-data">
 <table class="tabledata" cellspacing="0">
 <colgroup>
@@ -40,12 +40,12 @@
 	<col id="col_value" />
 </colgroup>
 <tr class="th-top">
-	<th class="col_preference"><?php echo _('Preference'); ?></th>
-	<th class="col_value"><?php echo _('Value'); ?></th>
+	<th class="col_preference"><?php echo T_('Preference'); ?></th>
+	<th class="col_value"><?php echo T_('Value'); ?></th>
 </tr>
 <?php foreach ($preferences as $pref) { ?>
         <tr class="<?php echo flip_class(); ?>">
-                <td class="cel_preference"><?php echo _($pref['description']); ?></td>
+                <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
                 <td class="cel_value">
                         <?php create_preference_input($pref['name'], $pref['value']); ?>
                 </td>
@@ -54,7 +54,7 @@
 <tr>
 	<td>
 	<div class="formValidation">
-	<input class="button" type="submit" value="<?php echo _('Update Preferences'); ?>" />
+	<input class="button" type="submit" value="<?php echo T_('Update Preferences'); ?>" />
 	<?php echo Core::form_register('update_preference'); ?>
 	<input type="hidden" name="user_id" value="<?php echo scrub_out($_REQUEST['user_id']); ?>" />
 	</div>

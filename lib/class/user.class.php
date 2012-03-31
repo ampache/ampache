@@ -408,11 +408,11 @@ class User extends database_object {
 	public function update($data) {
 
 		if (empty($data['username'])) {
-			Error::add('username',_('Error Username Required'));
+			Error::add('username', T_('Error Username Required'));
 		}
 
 		if ($data['password1'] != $data['password2'] AND !empty($data['password1'])) {
-			Error::add('password',_("Error Passwords don't match"));
+			Error::add('password', T_("Error Passwords don't match"));
 		}
 
 		if (Error::occurred()) {
@@ -696,11 +696,11 @@ class User extends database_object {
 	public function format() {
 
 		/* If they have a last seen date */
-		if (!$this->last_seen) { $this->f_last_seen = _('Never'); }
+		if (!$this->last_seen) { $this->f_last_seen = T_('Never'); }
 		else { $this->f_last_seen = date("m\/d\/Y - H:i",$this->last_seen); }
 
 		/* If they have a create date */
-		if (!$this->create_date) { $this->f_create_date = _('Unknown'); }
+		if (!$this->create_date) { $this->f_create_date = T_('Unknown'); }
 		else { $this->f_create_date = date("m\/d\/Y - H:i",$this->create_date); }
 
 		// Base link
@@ -722,7 +722,7 @@ class User extends database_object {
 			$this->ip_history = inet_ntop($data['0']['ip']);
 		}
 		else {
-			$this->ip_history = _('Not Enough Data');
+			$this->ip_history = T_('Not Enough Data');
 		}
 
 	} // format_user

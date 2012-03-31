@@ -55,26 +55,26 @@ function get_rating_name($score) {
 
 	switch ($score) {
 		case '0':
-			return _("Don't Play");
+			return T_("Don't Play");
 		break;
 		case '1':
-			return _("It's Pretty Bad");
+			return T_("It's Pretty Bad");
 		break;
 		case '2':
-			return _("It's Ok");
+			return T_("It's Ok");
 		break;
 		case '3':
-			return _("It's Pretty Good");
+			return T_("It's Pretty Good");
 		break;
 		case '4':
-			return _("I Love It!");
+			return T_("I Love It!");
 		break;
 		case '5':
-			return _("It's Insane");
+			return T_("It's Insane");
 		break;
 		// I'm fired
 		default:
-			return _("Off the Charts!");
+			return T_("Off the Charts!");
 		break;
 	} // end switch
 

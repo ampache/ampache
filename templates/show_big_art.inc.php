@@ -33,11 +33,11 @@ $htmllang = str_replace("_","-",Config::get('lang'));
 <head>
 <link rel="shortcut icon" href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
-<title><?php echo Config::get('site_title'); ?> - <?php echo _("Album Art"); ?></title>
+<title><?php echo Config::get('site_title'); ?> - <?php echo T_("Album Art"); ?></title>
 </head>
 <body onload="self.resizeTo(document.images[0].width+30, document.images[0].height+70)">
 <?php
-echo "<a href=\"javascript:window.close()\" title=\"" . _('Click to close window') . "\">";
+echo "<a href=\"javascript:window.close()\" title=\"" . T_('Click to close window') . "\">";
 echo "<img src=\"" . Config::get('web_path') . "/image.php?id=" . scrub_out($_GET['id']) . "&amp;sid=" . session_id() . "\" border=\"0\" alt=\"\" />";
 echo "</a>";
 ?>

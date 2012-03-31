@@ -132,7 +132,7 @@ class Api {
 
 		if (intval($version) < self::$version) {
 			debug_event('API', 'Login Failed: version too old', 1);
-			Error::add('api', _('Login Failed: version too old'));
+			Error::add('api', T_('Login Failed: version too old'));
 			return false;
 		}
 
@@ -140,7 +140,7 @@ class Api {
 		if (($timestamp < (time() - 1800)) || 
 			($timestamp > (time() + 1800))) {
 			debug_event('API', 'Login Failed: timestamp out of range', 1);
-			Error::add('api', _('Login Failed: timestamp out of range'));
+			Error::add('api', T_('Login Failed: timestamp out of range'));
 			return false;
 		}
 
@@ -169,7 +169,7 @@ class Api {
 
 			if (!$row['password']) {
 				debug_event('API', 'Unable to find user with userid of ' . $user_id, 1);
-				Error::add('api', _('Invalid Username/Password'));
+				Error::add('api', T_('Invalid Username/Password'));
 				return false;
 			}
 
@@ -232,7 +232,7 @@ class Api {
 		} // end while
 
 		debug_event('API','Login Failed, unable to match passphrase','1');
-		xmlData::error('401',_('Error Invalid Handshake - ') . _('Invalid Username/Password'));
+		xmlData::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
 	} // handshake
 
@@ -659,7 +659,7 @@ class Api {
 				break;
 				default:
 					// They are doing it wrong
-					echo xmlData::error('405',_('Invalid Request'));
+					echo xmlData::error('405', T_('Invalid Request'));
 				break;
 			} // end switch on command
 
@@ -680,7 +680,7 @@ class Api {
 					$type = 'song';
 					$media = new $type($input['oid']);
 					if (!$media->id) {
-						echo xmlData::error('400',_('Media Object Invalid or Not Specified'));
+						echo xmlData::error('400', T_('Media Object Invalid or Not Specified'));
 						break;
 					}
 					$democratic->vote(array(array('song',$media->id)));
@@ -693,7 +693,7 @@ class Api {
 					$type = 'song';
 					$media = new $type($input['oid']);
 					if (!$media->id) {
-						echo xmlData::error('400',_('Media Object Invalid or Not Specified'));
+						echo xmlData::error('400', T_('Media Object Invalid or Not Specified'));
 					}
 
 					$uid = $democratic->get_uid_from_object_id($media->id,$type);
@@ -715,7 +715,7 @@ class Api {
 					echo xmlData::keyed_array($xml_array);
 				break;
 				default:
-					echo xmlData::error('405',_('Invalid Request'));
+					echo xmlData::error('405', T_('Invalid Request'));
 			break;
 		} // switch on method
 

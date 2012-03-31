@@ -32,40 +32,40 @@
 
 */
 ?>
-<?php show_box_top(_('Access Control'), 'box box_access_control'); ?>
+<?php show_box_top(T_('Access Control'), 'box box_access_control'); ?>
 <div id="information_actions" class="left-column">
 <ul>
 	<li>
-		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_add_current"><?php echo get_user_icon('add_user',_('Add Current Host')); ?></a>
-		<?php echo _('Add Current Host'); ?>
+		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_add_current"><?php echo get_user_icon('add_user', T_('Add Current Host')); ?></a>
+		<?php echo T_('Add Current Host'); ?>
 	</li>
 	<li>
-		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_add_rpc"><?php echo get_user_icon('cog',_('Add API / RPC Host')); ?></a>
-		<?php echo _('Add API / RPC Host'); ?>
+		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_add_rpc"><?php echo get_user_icon('cog', T_('Add API / RPC Host')); ?></a>
+		<?php echo T_('Add API / RPC Host'); ?>
 	</li>
 	<li>
-		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_add_local"><?php echo get_user_icon('home',_('Add Local Network Definition')); ?></a>
-		<?php echo _('Add Local Network Definition'); ?>
+		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_add_local"><?php echo get_user_icon('home', T_('Add Local Network Definition')); ?></a>
+		<?php echo T_('Add Local Network Definition'); ?>
 	<li>
-		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_add_advanced"><?php echo get_user_icon('add_key',_('Advanced Add')); ?></a>
-		<?php echo _('Advanced Add'); ?>
+		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_add_advanced"><?php echo get_user_icon('add_key', T_('Advanced Add')); ?></a>
+		<?php echo T_('Advanced Add'); ?>
 	</li>
 
 </ul>
 </div>
 <?php show_box_bottom(); ?>
-<?php show_box_top(_('Access Control Entries'), 'box box_access_entries'); ?>
+<?php show_box_top(T_('Access Control Entries'), 'box box_access_entries'); ?>
 <?php Ajax::start_container('browse_content'); ?>
 <?php if (count($list)) { ?>
 <table cellspacing="1" cellpadding="3" class="tabledata">
 <tr class="table-data">
-	<th><?php echo _('Name'); ?></th>
-	<th><?php echo _('Start Address'); ?></th>
-	<th><?php echo _('End Address'); ?></th>
-	<th><?php echo _('Level'); ?></th>
-	<th><?php echo _('User'); ?></th>
-	<th><?php echo _('Type'); ?></th>
-	<th><?php echo _('Action'); ?></th>
+	<th><?php echo T_('Name'); ?></th>
+	<th><?php echo T_('Start Address'); ?></th>
+	<th><?php echo T_('End Address'); ?></th>
+	<th><?php echo T_('Level'); ?></th>
+	<th><?php echo T_('User'); ?></th>
+	<th><?php echo T_('Type'); ?></th>
+	<th><?php echo T_('Action'); ?></th>
 </tr>
 <?php
 	/* Start foreach List Item */
@@ -81,8 +81,8 @@
 	<td><?php echo $access->f_user; ?></td>
 	<td><?php echo $access->f_type; ?></td>
 	<td>
-		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_edit_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo get_user_icon('edit', _('Edit')); ?></a>
-		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_delete_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo get_user_icon('delete', _('Delete')); ?></a>
+		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_edit_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo get_user_icon('edit', T_('Edit')); ?></a>
+		<a href="<?php echo Config::get('web_path'); ?>/admin/access.php?action=show_delete_record&amp;access_id=<?php echo scrub_out($access->id); ?>"><?php echo get_user_icon('delete', T_('Delete')); ?></a>
 	</td>
 </tr>
 	<?php  } // end foreach ?>

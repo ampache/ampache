@@ -80,10 +80,10 @@ class AmpacheRSS {
 	 */
 	public function get_title() {
 
-		$titles = array('now_playing'=>_('Now Playing'),
-				'recently_played'=>_('Recently Played'),
-				'latest_album'=>_('Newest Albums'),
-				'latest_artist'=>_('Newest Artists'));
+		$titles = array('now_playing' => T_('Now Playing'),
+				'recently_played' => T_('Recently Played'),
+				'latest_album' => T_('Newest Albums'),
+				'latest_artist' => T_('Newest Artists'));
 
 		return scrub_out(Config::get('site_title')) . ' - ' . $titles[$this->type];
 
@@ -126,7 +126,7 @@ class AmpacheRSS {
 		// Default to now playing
 		$type = self::validate_type($type);
 
-		$string = '<a href="' . Config::get('web_path') . '/rss.php?type=' . $type . '">' . get_user_icon('feed',_('RSS Feed')) . '</a>';
+		$string = '<a href="' . Config::get('web_path') . '/rss.php?type=' . $type . '">' . get_user_icon('feed', T_('RSS Feed')) . '</a>';
 
 		return $string;
 
@@ -185,7 +185,7 @@ class AmpacheRSS {
 
 		//FIXME: The time stuff should be centralized, it's currently in two places, lame
 
-		$time_unit = array('',_('seconds ago'),_('minutes ago'),_('hours ago'),_('days ago'),_('weeks ago'),_('months ago'),_('years ago'));
+		$time_unit = array('', T_('seconds ago'), T_('minutes ago'), T_('hours ago'), T_('days ago'), T_('weeks ago'), T_('months ago'), T_('years ago'));
 		$data = Song::get_recently_played();
 
 		$results = array();

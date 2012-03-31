@@ -43,7 +43,7 @@
 <td>
 	<input type="hidden" name="id" value="<?php echo $song->id; ?>" />
 	<input type="hidden" name="type" value="song" />
-	<?php echo Ajax::button('?page=playlist&action=save_track&playlist_id=' . $playlist->id . '&track_id=' . $track['id'],'download',_('Save Changes'),'save_track_' . $track['id'],'edit_track_' . $track['id']); ?>
+	<?php echo Ajax::button('?page=playlist&action=save_track&playlist_id=' . $playlist->id . '&track_id=' . $track['id'],'download', T_('Save Changes'),'save_track_' . $track['id'],'edit_track_' . $track['id']); ?>
 </td>
 </tr>
 </table>

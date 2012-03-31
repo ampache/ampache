@@ -33,14 +33,14 @@ $web_path = Config::get('web_path');
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
-<title><?php echo Config::get('site_title'); ?> - <?php echo _('Registration'); ?></title>
+<title><?php echo Config::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
 <link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/install.css" type="text/css" media="screen" />
 <link rel="shortcut icon" href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
 </head>
 <body>
 <div id="header">
 <h1><?php echo Config::get('site_title'); ?></h1>
-<?php echo _('Registration'); ?>...
+<?php echo T_('Registration'); ?>...
 </div>
 
 <script src="<?php echo $web_path; ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
@@ -52,15 +52,15 @@ $web_path = Config::get('web_path');
     if ($validation == User::get_validation($username) AND strlen($validation)) {
 	User::activate_user($username);
 ?>
-<h3><?php echo _('User Activated'); ?></h3>
+<h3><?php echo T_('User Activated'); ?></h3>
 <p>
 	<?php
 	/* HINT: Start A tag, End A tag */
-	 printf(_('This User ID is activated and can be used %sLogin%s'), '<a href="' . Config::get('web_path'). '/login.php">', '</a>'); ?>
+	 printf(T_('This User ID is activated and can be used %sLogin%s'), '<a href="' . Config::get('web_path'). '/login.php">', '</a>'); ?>
 </p>
 <?php } else { ?>
-<h3><?php echo _('Validation Failed'); ?></h3>
-<p><?php echo _("The validation key used isn't correct"); ?></p>
+<h3><?php echo T_('Validation Failed'); ?></h3>
+<p><?php echo T_("The validation key used isn't correct"); ?></p>
 <?php } ?>
 </div><!--end <div>id="maincontainer-->
 <div id="bottom">

@@ -46,21 +46,21 @@ $artist = scrub_out(truncate_with_ellipsis($song->f_artist_full));
 
 <div class="np_group">
   <div class="np_cell cel_song">
-  	<label><?php echo _('Song'); ?></label>
+  	<label><?php echo T_('Song'); ?></label>
   	<a title="<?php echo scrub_out($song->title); ?>" href="<?php echo $web_path; ?>/stream.php?action=single_song&amp;song_id=<?php echo $song->id; ?>">
           <?php echo $title; ?>
   	</a>
   </div>
 
   <div class="np_cell cel_album">
-  	<label><?php echo _('Album'); ?></label>
+  	<label><?php echo T_('Album'); ?></label>
   	<a title="<?php echo scrub_out($song->f_album_full); ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $song->album; ?>">
           	<?php echo $album; ?>
   	</a>
   </div>
 
   <div class="np_cell cel_artist">
-  	<label><?php echo _('Artist'); ?></label>
+  	<label><?php echo T_('Artist'); ?></label>
   	<a title="<?php echo scrub_out($song->f_artist_full); ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $song->artist; ?>">
   	        <?php echo $artist; ?>
   	</a>

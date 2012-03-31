@@ -45,7 +45,7 @@ else {
 
 // Make sure the output dir is valid and writeable
 if (!is_writeable($dirname)) {
-	printf (_('Error: Directory %s not writeable'), $dirname);
+	printf (T_('Error: Directory %s not writeable'), $dirname);
 	echo "\n"; 
 }
 
@@ -66,11 +66,11 @@ switch ($type) {
 /* FUNCTIONS */
 function usage() {
 
-$desc1 = _("This will dump a collection of m3u playlists based on type");
-$desc2 = _("Types:");
-$desc3 = _("Dumps all Albums as individual playlists");
-$desc4 = _("Dumps all of your Playlists as m3u's");
-$desc5 = _("Dumps all Artists as individual playlists");
+$desc1 = T_("This will dump a collection of m3u playlists based on type");
+$desc2 = T_("Types:");
+$desc3 = T_("Dumps all Albums as individual playlists");
+$desc4 = T_("Dumps all of your Playlists as m3u's");
+$desc5 = T_("Dumps all Artists as individual playlists");
 
 $string = "write_playlists.php.inc [-h] <DIRNAME> <TYPE>
 

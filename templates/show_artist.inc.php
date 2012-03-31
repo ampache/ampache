@@ -39,43 +39,43 @@ if (Config::get('ratings')) {
 </div>
 <?php } ?>
 <div id="information_actions">
-<h3><?php echo _('Actions'); ?>:</h3>
+<h3><?php echo T_('Actions'); ?>:</h3>
 <ul>
 <li>
 	<?php if ($object_type == 'album') { ?>
 	<a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
-	<?php echo get_user_icon('view', _("Show All Songs By %s")); ?>
-	<?php printf(_("Show All Songs By %s"), $artist->f_name); ?></a>
+	<?php echo get_user_icon('view', T_("Show All Songs By %s")); ?>
+	<?php printf(T_("Show All Songs By %s"), $artist->f_name); ?></a>
 	<?php } else { ?>
 	<a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
-	<?php echo get_user_icon('view', _("Show Albums By %s")); ?>
-	<?php printf(_("Show Albums By %s"), $artist->f_name); ?></a>
+	<?php echo get_user_icon('view', T_("Show Albums By %s")); ?>
+	<?php printf(T_("Show Albums By %s"), $artist->f_name); ?></a>
 	<?php } ?>
 </li>
 <li>
 	<?php /* HINT: Artist Fullname */ ?>
-	<?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add',_('Add'),'add_' . $artist->id); ?>
-	<?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id,sprintf(_('Add All Songs By %s'), $artist->f_name),'add_text_' . $artist->id); ?>
+	<?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add', T_('Add'),'add_' . $artist->id); ?>
+	<?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id,sprintf(T_('Add All Songs By %s'), $artist->f_name),'add_text_' . $artist->id); ?>
 </li>
 <li>
 	<?php /* HINT: Artist Fullname */ ?>
-	<?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random',_('Random'),'random_' . $artist->id); ?>
-	<?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id, sprintf(_('Add Random Songs By %s'), $artist->f_name),'random_text_' . $artist->id); ?>
+	<?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random', T_('Random'),'random_' . $artist->id); ?>
+	<?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id, sprintf(T_('Add Random Songs By %s'), $artist->f_name),'random_text_' . $artist->id); ?>
 </li>
 <?php if (Access::check('interface','50')) { ?>
 <li>
-	<a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo get_user_icon('cog', _('Update from tags')); ?></a>
-	<a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo _('Update from tags'); ?></a>
+	<a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo get_user_icon('cog', T_('Update from tags')); ?></a>
+	<a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo T_('Update from tags'); ?></a>
 </li>
 <?php } ?>
 <?php if (Access::check_function('batch_download')) { ?>
 <li>
-	<a href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo get_user_icon('batch_download', _('Download')); ?></a>
-	<a href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo _('Download'); ?></a>
+	<a href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo get_user_icon('batch_download', T_('Download')); ?></a>
+	<a href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo T_('Download'); ?></a>
 </li>
 <?php } ?>
 <li>
-        <input type="checkbox" id="show_artist_artCB" <?php echo $string = Art::is_enabled() ? 'checked="checked"' : ''; ?>/> <?php echo _('Show Art'); ?>
+        <input type="checkbox" id="show_artist_artCB" <?php echo $string = Art::is_enabled() ? 'checked="checked"' : ''; ?>/> <?php echo T_('Show Art'); ?>
         <?php echo Ajax::observe('show_artist_artCB', 'click', Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id,'')); ?>
 </ul>
 </div>

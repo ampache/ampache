@@ -45,7 +45,7 @@ ob_end_clean();
 //$GLOBALS['i_am_crazy'] = true;
 
 if (!function_exists('iconv')) {
-	echo _("ERROR: Iconv required for this functionality, quiting");
+	echo T_("ERROR: Iconv required for this functionality, quiting");
 	echo "\n";
 	exit;
 }
@@ -54,19 +54,19 @@ if (!function_exists('iconv')) {
 $source_encoding = iconv_get_encoding('output_encoding');
 
 // Attempt a simple translation
-$string = sprintf(_('%s For the Love of Music'), iconv(Config::get('site_charset'),Config::get('site_charset')));
-echo _('Testing Basic Translation, the two strings below should look the same');
+$string = sprintf(T_('%s For the Love of Music'), iconv(Config::get('site_charset'),Config::get('site_charset')));
+echo T_('Testing Basic Translation, the two strings below should look the same');
 echo "\n";
-echo _('Original: For the Love of Music');
+echo T_('Original: For the Love of Music');
 echo "\n";
-printf (_('Translated: %s'), $string);
+printf (T_('Translated: %s'), $string);
 echo "\n";
 echo "---------------------------------------------------------------------\n";
-printf (_('Input Charset (%s):'), $source_encoding);
+printf (T_('Input Charset (%s):'), $source_encoding);
 $input = trim(fgets(STDIN));
 
 if (strlen($input) > 0) { $source_encoding = trim($input); }
-printf (_('Using %s as source character set'), $source_encoding);
+printf (T_('Using %s as source character set'), $source_encoding);
 echo "\n";
 
 $sql = "SELECT * FROM `catalog` WHERE `catalog_type`='local'";
@@ -74,13 +74,13 @@ $db_results = Dba::read($sql);
 
 while ($row = Dba::fetch_assoc($db_results)) {
 
-	printf(_('Checking %s (%s)'), $row['name'], $row['path']);
+	printf(T_('Checking %s (%s)'), $row['name'], $row['path']);
 	echo "\n";
 	charset_directory_correct($row['path']);
 
 } // end of the catalogs
 
-echo _('Finished checking filenames for valid chacters');
+echo T_('Finished checking filenames for valid chacters');
 echo "\n";
 
 /**************************************************
@@ -106,13 +106,13 @@ function charset_directory_correct($path) {
         $handle = opendir($path);
 
 	if (!is_resource($handle)) {
-		printf (_('ERROR: Unable to open %s'), $path);
+		printf (T_('ERROR: Unable to open %s'), $path);
 		echo "\n";
 		return false;
 	}
 
 	if (!chdir($path)) {
-		printf (_('ERROR: Unable to chdir to %s'), $path);
+		printf (T_('ERROR: Unable to chdir to %s'), $path);
 		echo "\n";
 		return false;
 	}
@@ -135,24 +135,24 @@ function charset_directory_correct($path) {
 
 			// Make sure the extension stayed the same
 			if (substr($translated_filename,strlen($translated_filename)-3,3) != substr($full_file,strlen($full_file)-3,3)) {
-				echo _("Translation failure, stripping non-valid characters");
+				echo T_("Translation failure, stripping non-valid characters");
 				echo "\n";
 				$translated_filename = iconv($source_encoding,Config::get('site_charset') . '//IGNORE',$full_file);
 			}
 
-			printf (_('Attempting to Transcode to %s'), Config::get('site_charset'));
+			printf (T_('Attempting to Transcode to %s'), Config::get('site_charset'));
 			echo "\n";
 			echo "--------------------------------------------------------------------------------------------\n";
-			printf (_('OLD: %s has invalid chars'), $full_file);
+			printf (T_('OLD: %s has invalid chars'), $full_file);
 			echo "\n";
-			printf (_('NEW: %s'), $translated_filename);
+			printf (T_('NEW: %s'), $translated_filename);
 			echo "\n";
 			echo "--------------------------------------------------------------------------------------------\n";
 			if (!$GLOBALS['i_am_crazy']) {
-				echo _("Rename File (Y/N):");
+				echo T_("Rename File (Y/N):");
 				$input = trim(fgets(STDIN));
 				if (strcasecmp($input,'Y') == 0) { charset_rename_file($full_file,$translated_filename); }
-				else { echo "\n\t"; echo _('Not Renaming...'); echo "\n\n"; }
+				else { echo "\n\t"; echo T_('Not Renaming...'); echo "\n\n"; }
 			}
 			else {
 				charset_rename_file($full_file,$translated_filename);
@@ -184,7 +184,7 @@ function charset_rename_file($full_file,$translated_filename) {
 			echo "\tMaking $path directory\n";
 			$results = mkdir($path);
 			if (!$results) {
-				printf (_('Error: Unable to create %s move failed, stopping'), $path);
+				printf (T_('Error: Unable to create %s move failed, stopping'), $path);
 				echo "\n";
 				return false;
 			}
@@ -196,7 +196,7 @@ function charset_rename_file($full_file,$translated_filename) {
 	$results = copy($full_file,$translated_filename);
 
 	if (!$results) {
-		echo _('Error: Copy Failed, not deleteing old file');
+		echo T_('Error: Copy Failed, not deleteing old file');
 		echo "\n";
 		return false;
 	}
@@ -205,16 +205,16 @@ function charset_rename_file($full_file,$translated_filename) {
 	$new_sum = filesize($translated_filename);
 
 	if ($old_sum != $new_sum OR !$new_sum) {
-		printf (_('Error: Size Inconsistency, not deleting %s'), $full_file);
+		printf (T_('Error: Size Inconsistency, not deleting %s'), $full_file);
 		echo "\n";
 		return false;
 	}
 
 	$results = unlink($full_file);
 
-	if (!$results) { printf (_('Error: Unable to delete %s'), $full_file); echo "\n"; return false; }
+	if (!$results) { printf (T_('Error: Unable to delete %s'), $full_file); echo "\n"; return false; }
 
-	echo _("File Moved...");
+	echo T_("File Moved...");
 	echo "\n\n";
 
 	return true;

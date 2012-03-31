@@ -32,12 +32,12 @@ require $prefix . '/templates/install_header.inc.php';
 <?php require_once 'templates/show_install_check.inc.php'; ?>
 <?php if (Error::occurred()) { ?>
 	<div class="content">
-	<span class="fatalerror"><?php echo _('Minimum requirements not met. Unable to install Ampache.'); ?></span>
+	<span class="fatalerror"><?php echo T_('Minimum requirements not met. Unable to install Ampache.'); ?></span>
 	</div>
 <?php } ?>
 
 <div class="content">
-	<strong><?php echo _('Choose Installation Language'); ?></strong>
+	<strong><?php echo T_('Choose Installation Language'); ?></strong>
 	<p>
 	<?php Error::display('general'); ?>
 	</p>
@@ -58,7 +58,7 @@ foreach ($languages as $lang=>$name) {
 echo "</select>\n";
 ?>
 
-<input type="submit" value="<?php echo _('Start configuration'); ?>" />
+<input type="submit" value="<?php echo T_('Start configuration'); ?>" />
 
 	</form>
  	</div>

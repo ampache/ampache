@@ -64,12 +64,12 @@ switch ($_REQUEST['action']) {
 		}
 
 		if($mailer->send_to_group($_REQUEST['to'])) {
-			$title  = _('E-mail Sent');
-			$body   = _('Your E-mail was successfully sent.');
+			$title  = T_('E-mail Sent');
+			$body   = T_('Your E-mail was successfully sent.');
 		}
 		else {
-			$title 	= _('E-mail Not Sent');
-			$body 	= _('Your E-mail was not sent.');
+			$title 	= T_('E-mail Not Sent');
+			$body 	= T_('Your E-mail was not sent.');
 		}
 		$url = Config::get('web_path') . '/admin/mail.php';
 		show_confirmation($title,$body,$url);

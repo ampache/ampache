@@ -53,28 +53,28 @@ $htmllang = str_replace("_","-",Config::get('lang'));
 <link rel="shortcut icon" href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo Config::get('web_path') . '/templates/install.css'; ?>" />
-<title><?php echo _('Ampache Update'); ?></title>
+<title><?php echo T_('Ampache Update'); ?></title>
 </head>
 <body>
 <div id="header">
-<h1><?php echo _('Ampache Update'); ?></h1>
+<h1><?php echo T_('Ampache Update'); ?></h1>
 <p>Pour l'Amour de la Musique.</p>
 </div>
 <div id="text-box">
 	<div class="notify">
-<?php printf(_('This page handles all database updates to Ampache starting with <strong>3.3.3.5</strong>. According to your database your current version is: <strong>%s</strong>.'), Update::format_version($version)); ?>
-<?php echo _('the following updates need to be performed'); ?><br /><br />
+<?php printf(T_('This page handles all database updates to Ampache starting with <strong>3.3.3.5</strong>. According to your database your current version is: <strong>%s</strong>.'), Update::format_version($version)); ?>
+<?php echo T_('the following updates need to be performed'); ?><br /><br />
 <div style="font-size:1.2em;font-weight:bold;text-align:center;"><?php Error::display('general'); ?></div>
 	</div>
 	<div class="content">
 <?php Update::display_update(); ?>
 
 <form method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/update.php?action=update">
-<?php if (Update::need_update()) { ?><input type="submit" value="<?php echo _('Update Now!'); ?>" /> <?php } ?>
+<?php if (Update::need_update()) { ?><input type="submit" value="<?php echo T_('Update Now!'); ?>" /> <?php } ?>
 </form>
 	</div>
 	<div id="bottom">
-    	<p><b><?php echo _('Ampache Installation.'); ?></b><br />
+    	<p><b><?php echo T_('Ampache Installation.'); ?></b><br />
     	Pour l'Amour de la Musique.</p>
    </div>
 </div>

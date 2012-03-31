@@ -38,12 +38,12 @@ $web_path = Config::get('web_path');
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
-	<th class="cel_object"><?php echo _('Object'); ?></th>
-	<th class="cel_username"><?php echo _('User'); ?></th>
-	<th class="cel_flag"><?php echo _('Flag'); ?></th>
-	<th class="cel_comment"><?php echo _('Comment'); ?></th>
-	<th class="cel_status"><?php echo _('Status'); ?></th>
-	<th class="cel_action"><?php echo _('Action'); ?></th>
+	<th class="cel_object"><?php echo T_('Object'); ?></th>
+	<th class="cel_username"><?php echo T_('User'); ?></th>
+	<th class="cel_flag"><?php echo T_('Flag'); ?></th>
+	<th class="cel_comment"><?php echo T_('Comment'); ?></th>
+	<th class="cel_status"><?php echo T_('Status'); ?></th>
+	<th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
 <?php
 foreach ($object_ids as $flag_id) {
@@ -53,15 +53,15 @@ foreach ($object_ids as $flag_id) {
 ?>
 <?php } if (!count($object_ids)) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="7" class="error"><?php echo _('No Records Found'); ?></td>
+	<td colspan="7" class="error"><?php echo T_('No Records Found'); ?></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
-	<th class="cel_object"><?php echo _('Object'); ?></th>
-	<th class="cel_username"><?php echo _('User'); ?></th>
-	<th class="cel_flag"><?php echo _('Flag'); ?></th>
-	<th class="cel_comment"><?php echo _('Comment'); ?></th>
-	<th class="cel_status"><?php echo _('Status'); ?></th>
-	<th class="cel_action"><?php echo _('Action'); ?></th>
+	<th class="cel_object"><?php echo T_('Object'); ?></th>
+	<th class="cel_username"><?php echo T_('User'); ?></th>
+	<th class="cel_flag"><?php echo T_('Flag'); ?></th>
+	<th class="cel_comment"><?php echo T_('Comment'); ?></th>
+	<th class="cel_status"><?php echo T_('Status'); ?></th>
+	<th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
 </table>

@@ -32,15 +32,15 @@ $logic_operator = strtolower($logic_operator);
 <script type="text/javascript" src="<?php echo Config::get('web_path'); ?>/lib/javascript/search.js"></script>
 <script type="text/javascript" src="<?php echo Config::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>"></script>
 
-<?php show_box_top(_('Rules') . "...", 'box box_rules'); ?>
+<?php show_box_top(T_('Rules') . "...", 'box box_rules'); ?>
 <table class="tabledata" cellpadding="3" cellspacing="0">
 <tbody id="searchtable">
 	<tr id="rules_operator">
-	<td><?php echo _('Match'); ?></td>
+	<td><?php echo T_('Match'); ?></td>
         <td>
                 <select name="operator">
-                        <option value="and" <?php if($logic_operator == 'and') echo 'selected="selected"'?>><?php echo _('all rules'); ?></option>
-                        <option value="or"  <?php if($logic_operator == 'or') echo 'selected="selected"'?>><?php echo _('any rule'); ?></option>
+                        <option value="and" <?php if($logic_operator == 'and') echo 'selected="selected"'?>><?php echo T_('all rules'); ?></option>
+                        <option value="or"  <?php if($logic_operator == 'or') echo 'selected="selected"'?>><?php echo T_('any rule'); ?></option>
                 </select>
         </td>
         </tr>
@@ -48,7 +48,7 @@ $logic_operator = strtolower($logic_operator);
 	<td>
 		<a id="addrowbutton" href="javascript:void(0)">
 			<?php echo get_user_icon('add'); ?>
-		<?php echo _('Add Another Rule'); ?>
+		<?php echo T_('Add Another Rule'); ?>
 		</a>
 		<script type="text/javascript">Event.observe('addrowbutton', 'click', SearchRow.add);</script>
 	</td>

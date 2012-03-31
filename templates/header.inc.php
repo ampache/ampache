@@ -47,8 +47,8 @@ if(!is_file($cssdir.'default-rtl.css')) {
 <link rel="search" type="application/opensearchdescription+xml" title="<?php echo scrub_out(Config::get('site_title')); ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor" />
 <?php
 if (Config::get('use_rss')) { ?>
-<link rel="alternate" type="application/rss+xml" title="<?php echo _('Now Playing'); ?>" href="<?php echo $web_path; ?>/rss.php" />
-<link rel="alternate" type="application/rss+xml" title="<?php echo _('Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recently_played" />
+<link rel="alternate" type="application/rss+xml" title="<?php echo T_('Now Playing'); ?>" href="<?php echo $web_path; ?>/rss.php" />
+<link rel="alternate" type="application/rss+xml" title="<?php echo T_('Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recently_played" />
 <?php } ?>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo Config::get('site_charset'); ?>" />
 <title><?php echo scrub_out(Config::get('site_title')); ?> - <?php echo $location['title']; ?></title>
@@ -73,7 +73,7 @@ if (Config::get('use_rss')) { ?>
 			<?php show_box_top('','box box_headerbox'); ?>
 			<?php require_once Config::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
 			<?php require_once Config::get('prefix') . '/templates/show_playtype_switch.inc.php'; ?>
-			<span id="loginInfo"><a href="<?php echo Config::get('web_path'); ?>/preferences.php?tab=account"><?php echo $GLOBALS['user']->fullname; ?></a> <a href="<?php echo Config::get('web_path'); ?>/logout.php">[<?php echo _('Log out'); ?>]</a></span>
+			<span id="loginInfo"><a href="<?php echo Config::get('web_path'); ?>/preferences.php?tab=account"><?php echo $GLOBALS['user']->fullname; ?></a> <a href="<?php echo Config::get('web_path'); ?>/logout.php">[<?php echo T_('Log out'); ?>]</a></span>
 			<?php show_box_bottom(); ?>
 		</div> <!-- End headerbox -->
 	</div><!-- End header -->
@@ -89,7 +89,7 @@ if (Config::get('use_rss')) { ?>
 <div id="content">
 <?php if (Config::get('int_config_version') != Config::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
 <div class="fatalerror">
-	<?php echo _('Error Config File Out of Date'); ?>
-	<a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo _('Generate New Config'); ?></a>
+	<?php echo T_('Error Config File Out of Date'); ?>
+	<a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config'); ?></a>
 </div>
 <?php } ?>

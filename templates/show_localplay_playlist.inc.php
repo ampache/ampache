@@ -38,9 +38,9 @@ $status = $localplay->status();
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
-	<th class="cel_track"><?php echo _('Track'); ?></th>
-	<th class="cel_name"><?php echo _('Name'); ?></th>
-	<th class="cel_action"><?php echo _('Action'); ?></th>
+	<th class="cel_track"><?php echo T_('Track'); ?></th>
+	<th class="cel_name"><?php echo T_('Name'); ?></th>
+	<th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
 <?php
 foreach ($object_ids as $object) {
@@ -55,18 +55,18 @@ foreach ($object_ids as $object) {
 		<?php echo $localplay->format_name($object['name'],$object['id']); ?>
 	</td>
 	<td class="cel_action">
-	<?php echo Ajax::button('?page=localplay&action=delete_track&id=' . intval($object['id']),'delete',_('Delete'),'localplay_delete_' . intval($object['id'])); ?>
+	<?php echo Ajax::button('?page=localplay&action=delete_track&id=' . intval($object['id']),'delete', T_('Delete'),'localplay_delete_' . intval($object['id'])); ?>
 	</td>
 </tr>
 <?php } if (!count($object_ids)) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="3"><span class="error"><?php echo _('No Records Found'); ?></span></td>
+	<td colspan="3"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
-	<th class="cel_track"><?php echo _('Track'); ?></th>
-	<th class="cel_name"><?php echo _('Name'); ?></th>
-	<th class="cel_action"><?php echo _('Action'); ?></th>
+	<th class="cel_track"><?php echo T_('Track'); ?></th>
+	<th class="cel_name"><?php echo T_('Name'); ?></th>
+	<th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
 </table>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>

@@ -40,7 +40,7 @@ $path = dirname(__FILE__);
 $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
-if ($debug) { echo _("DEBUG ENABLED WILL NOT DELETE FILES!"); echo "\n"; }
+if ($debug) { echo T_("DEBUG ENABLED WILL NOT DELETE FILES!"); echo "\n"; }
 
 /* Get a list of filenames */
 $sql = "SELECT `id`,`file` FROM song WHERE enabled='0'";
@@ -48,11 +48,11 @@ $db_results = Dba::read($sql);
 
 while ($row = Dba::fetch_assoc($db_results)) {
 	if ($debug) {
-		printf (_('Would Delete: %s'), $row['file']);
+		printf (T_('Would Delete: %s'), $row['file']);
 		echo "\n";
 	}
 	else {
-		printf (_('Deleting: %s'), $row['file']);
+		printf (T_('Deleting: %s'), $row['file']);
 		echo "\n";
 		unlink($row['file']);
 		$sql = "DELETE FROM `song` WHERE `id`='" . Dba::escape($row['id']) . "'";

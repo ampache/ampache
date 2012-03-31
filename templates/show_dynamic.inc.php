@@ -27,7 +27,7 @@
  */
 
 ?>
-<?php show_box_top(_('Advanced Random Rules')); ?>
+<?php show_box_top(T_('Advanced Random Rules')); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
 	<col id="col_field" />
@@ -36,10 +36,10 @@
 	<col id="col_method" />
 </colgroup>
 <tr class="th-top">
-	<th class="col_field"><?php echo _('Field'); ?></th>
-	<th class="col_operator"><?php echo _('Operator'); ?></th>
-	<th class="col_value"><?php echo _('Value'); ?></th>
-	<th class="col_method"><?php echo _('Method'); ?></th>
+	<th class="col_field"><?php echo T_('Field'); ?></th>
+	<th class="col_operator"><?php echo T_('Operator'); ?></th>
+	<th class="col_value"><?php echo T_('Value'); ?></th>
+	<th class="col_method"><?php echo T_('Method'); ?></th>
 </tr>
 <tr>
 	<td valign="top">
@@ -61,7 +61,7 @@
 			<option value="gte">&gt;=</option>
 			<option value="lt">&lt;</option>
 			<option value="lte">&lt;=</option>
-			<option value="like"><?php echo _('Like'); ?></option>
+			<option value="like"><?php echo T_('Like'); ?></option>
 		</select>
 	</td>
 	<td valign="top">
@@ -69,20 +69,20 @@
 	</td>
 	<td valign="top">
 		<select name="method">
-			<option value="OR"><?php echo _('OR'); ?></option>
-			<option value="AND"><?php echo _('AND'); ?></option>
+			<option value="OR"><?php echo T_('OR'); ?></option>
+			<option value="AND"><?php echo T_('AND'); ?></option>
 		</select>
 	</td>
 </tr>
 <tr>
 	<td>
-		<?php echo Ajax::button('?page=random&action=add_rule','add',_('Add Rule'),'add_random_rule'); ?><?php echo _('Add Rule'); ?>
+		<?php echo Ajax::button('?page=random&action=add_rule','add', T_('Add Rule'),'add_random_rule'); ?><?php echo T_('Add Rule'); ?>
 	</td>
 	<td>
-		<?php echo Ajax::button('?page=random&action=save_rules','download',_('Save Rules As'),'save_random_rules'); ?><?php echo _('Save Rules As'); ?>
+		<?php echo Ajax::button('?page=random&action=save_rules','download', T_('Save Rules As'),'save_random_rules'); ?><?php echo T_('Save Rules As'); ?>
 	</td>
 	<td colspan="2">
-		<?php echo Ajax::button('?page=random&action=load_rules','cog',_('Load Saved Rules'),'load_random_rules'); ?><?php echo _('Load Saved Rules'); ?>
+		<?php echo Ajax::button('?page=random&action=load_rules','cog', T_('Load Saved Rules'),'load_random_rules'); ?><?php echo T_('Load Saved Rules'); ?>
 	</td>
 
 </tr>

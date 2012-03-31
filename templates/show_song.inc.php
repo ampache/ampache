@@ -29,22 +29,22 @@
 $icon = $song->enabled ? 'disable' : 'enable';
 $button_flip_state_id = 'button_flip_state_' . $song->id;
 ?>
-<?php show_box_top($song->title . ' ' . _('Details'), 'box box_song_details'); ?>
+<?php show_box_top($song->title . ' ' . T_('Details'), 'box box_song_details'); ?>
 <dl class="song_details">
 <?php if (Config::get('ratings')) { ?>
-<dt class="<?php echo flip_class(); ?>"><?php echo _('Rating'); ?></dt>
+<dt class="<?php echo flip_class(); ?>"><?php echo T_('Rating'); ?></dt>
 <dd><div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></div></dd>
 <?php } ?>
-<dt class="<?php echo $rowparity; ?>"><?php echo _('Action'); ?></dt>
+<dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
 	<dd class="<?php echo flip_class(); ?>">
-		<?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add',_('Add'),'add_song_' . $song->id); ?>
+		<?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'add_song_' . $song->id); ?>
 		<?php if (Access::check_function('download')) { ?>
-			<a href="<?php echo Song::play_url($song->id); ?>"><?php echo get_user_icon('link',_('Link')); ?></a>
-			<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo get_user_icon('download',_('Download')); ?></a>
+			<a href="<?php echo Song::play_url($song->id); ?>"><?php echo get_user_icon('link', T_('Link')); ?></a>
+			<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo get_user_icon('download', T_('Download')); ?></a>
 		<?php } ?>
 		<?php if (Access::check('interface','75')) { ?>
 			<span id="<?php echo($button_flip_state_id); ?>">
-			<?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$icon,_(ucfirst($icon)),'flip_song_' . $song->id); ?>
+			<?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$icon, T_(ucfirst($icon)),'flip_song_' . $song->id); ?>
 			</span>
 		<?php } ?>
 	</dd>
@@ -72,7 +72,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     if(trim($value))
     {
       $rowparity = flip_class();
-      echo "<dt class=\"".$rowparity."\">" . _($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
+      echo "<dt class=\"".$rowparity."\">" . T_($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
     }
   }
 ?>

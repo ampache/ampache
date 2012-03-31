@@ -33,14 +33,14 @@ $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
 ?>
 <div class="np_group" id="np_group_1">
   <div class="np_cell cel_username">
-    <label><?php echo _('Username'); ?></label>
+    <label><?php echo T_('Username'); ?></label>
   	<a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $np_user->id; ?>">
       <?php echo scrub_out($np_user->fullname); ?>
     </a>
   </div>
 
   <div class="np_cell cel_rating">
-    <label><?php echo _('Rating'); ?></label>
+    <label><?php echo T_('Rating'); ?></label>
     <div id="rating_<?php echo $media->id; ?>_song">
       <?php Rating::show($media->id,'song'); ?>
     </div>
@@ -50,7 +50,7 @@ $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
   <div class="np_cell cel_lyrics">
   	<label>&nbsp;</label>
   	<a title="<?php echo scrub_out($media->title); ?>" href="<?php echo $web_path; ?>/song.php?action=show_lyrics&amp;song_id=<?php echo $media->id; ?>">
-      <?php echo _('Show Lyrics');?>
+      <?php echo T_('Show Lyrics');?>
   	</a>
   </div>
   <?php } ?>
@@ -58,21 +58,21 @@ $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
 
 <div class="np_group" id="np_group_2">
   <div class="np_cell cel_song">
-  	<label><?php echo _('Song'); ?></label>
+  	<label><?php echo T_('Song'); ?></label>
   	<a title="<?php echo scrub_out($media->title); ?>" href="<?php echo $web_path; ?>/stream.php?action=single_song&amp;song_id=<?php echo $media->id; ?>">
           <?php echo $title; ?>
   	</a>
   </div>
 
   <div class="np_cell cel_album">
-  	<label><?php echo _('Album'); ?></label>
+  	<label><?php echo T_('Album'); ?></label>
   	<a title="<?php echo scrub_out($media->f_album_full); ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $media->album; ?>">
           	<?php echo $album; ?>
   	</a>
   </div>
 
   <div class="np_cell cel_artist">
-  	<label><?php echo _('Artist'); ?></label>
+  	<label><?php echo T_('Artist'); ?></label>
   	<a title="<?php echo scrub_out($media->f_artist_full); ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $media->artist; ?>">
   	        <?php echo $artist; ?>
   	</a>
@@ -93,7 +93,7 @@ $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
 <div class="np_group">
 <?php if ($artists = Recommendation::get_artists_like($media->artist, 3, false)) { ?>
 	<div class="np_cel cel_similar">
-		<label><?php echo _('Similar Artists'); ?></label>
+		<label><?php echo T_('Similar Artists'); ?></label>
 		<?php	foreach ($artists as $a) { ?>
 			<div class="np_cel cel_similar_artist">
 			<?php
@@ -112,7 +112,7 @@ $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
 <?php } // end show similar artists ?>
 <?php if ($songs = Recommendation::get_songs_like($media->id, 3)) { ?>
 	<div class="np_cel cel_similar">
-		<label><?php echo _('Similar Songs'); ?></label>
+		<label><?php echo T_('Similar Songs'); ?></label>
 		<?php	foreach ($songs as $s) { ?>
 			<div class="np_cel cel_similar_song">
 			<?php

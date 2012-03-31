@@ -228,10 +228,10 @@ class AmpacheHttpq extends localplay_controller {
          */
         public function instance_fields() {
 
-                $fields['name']         = array('description'=>_('Instance Name'),'type'=>'textbox');
-                $fields['host']         = array('description'=>_('Hostname'),'type'=>'textbox');
-                $fields['port']         = array('description'=>_('Port'),'type'=>'textbox');
-                $fields['password']     = array('description'=>_('Password'),'type'=>'textbox');
+                $fields['name']         = array('description' => T_('Instance Name'),'type'=>'textbox');
+                $fields['host']         = array('description' => T_('Hostname'),'type'=>'textbox');
+                $fields['port']         = array('description' => T_('Port'),'type'=>'textbox');
+                $fields['password']     = array('description' => T_('Password'),'type'=>'textbox');
 
 		return $fields;
 
@@ -500,11 +500,11 @@ class AmpacheHttpq extends localplay_controller {
                                 break;
                                 case 'demo_id':
                                         $democratic = new Democratic($url_data['demo_id']);
-                                        $data['name'] = _('Democratic') . ' - ' . $democratic->name;
+                                        $data['name'] = T_('Democratic') . ' - ' . $democratic->name;
                                         $data['link']   = '';
                                 break;
 				case 'random':
-					$data['name'] = _('Random') . ' - ' . scrub_out(ucfirst($url_data['type']));
+					$data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst($url_data['type']));
 					$data['link'] = '';
 				break;
                                 default:

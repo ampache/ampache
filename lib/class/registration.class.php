@@ -59,9 +59,9 @@ class Registration {
 		// We are the system
 		$mailer->set_default_sender();
 
-		$mailer->subject = sprintf(_("New User Registration at %s"), Config::get('site_title'));
+		$mailer->subject = sprintf(T_("New User Registration at %s"), Config::get('site_title'));
 
-		$mailer->message = sprintf(_("Thank you for registering\n\n
+		$mailer->message = sprintf(T_("Thank you for registering\n\n
 Please keep this e-mail for your records. Your account information is as follows:
 ----------------------
 Username: %s
@@ -82,7 +82,7 @@ Thank you for registering
 
 		// Check to see if the admin should be notified
 		if (Config::get('admin_notify_reg')) {
-			$mailer->message = sprintf(_("A new user has registered
+			$mailer->message = sprintf(T_("A new user has registered
 The following values were entered.
 
 Username: %s

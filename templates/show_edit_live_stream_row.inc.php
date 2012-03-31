@@ -31,11 +31,11 @@
 <form method="post" id="edit_live_stream_<?php echo $radio->id; ?>">
 <table class="inline-edit" cellpadding="3" cellspacing="0">
 <tr>
-	<th><?php echo _('Name'); ?></th>
-	<th><?php echo _('Stream URL'); ?></th>
-	<th><?php echo _('Homepage'); ?></th>
-	<th><?php echo _('Callsign'); ?></th>
-	<th><?php echo _('Frequency'); ?></th>
+	<th><?php echo T_('Name'); ?></th>
+	<th><?php echo T_('Stream URL'); ?></th>
+	<th><?php echo T_('Homepage'); ?></th>
+	<th><?php echo T_('Callsign'); ?></th>
+	<th><?php echo T_('Frequency'); ?></th>
 	<th>&nbsp;</th>
 </tr>
 <tr>
@@ -57,7 +57,7 @@
 <td>
 	<input type="hidden" name="id" value="<?php echo $radio->id; ?>" />
 	<input type="hidden" name="type" value="live_stream_row" />
-	<?php echo Ajax::button('?action=edit_object&id=' . $radio->id . '&type=live_stream_row','download',_('Save Changes'),'save_live_stream_' . $radio->id,'edit_live_stream_' . $radio->id); ?>
+	<?php echo Ajax::button('?action=edit_object&id=' . $radio->id . '&type=live_stream_row','download', T_('Save Changes'),'save_live_stream_' . $radio->id,'edit_live_stream_' . $radio->id); ?>
 </td>
 </tr>
 </table>

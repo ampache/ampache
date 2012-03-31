@@ -51,7 +51,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'reset_db_charset':
 		Dba::reset_db_charset();
-		show_confirmation(_('Database Charset Updated'),_('Your Database and associated tables have been updated to match your currently configured charset'), Config::get('web_path').'/admin/system.php?action=show_debug');
+		show_confirmation(T_('Database Charset Updated'), T_('Your Database and associated tables have been updated to match your currently configured charset'), Config::get('web_path').'/admin/system.php?action=show_debug');
 	break;
 	case 'show_debug':
 		$configuration = Config::get_all();

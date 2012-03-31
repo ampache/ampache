@@ -45,17 +45,17 @@ $ajax_url = Config::get('ajax_url');
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
-	<th class="cel_add"><?php echo _('Add'); ?></th>
+	<th class="cel_add"><?php echo T_('Add'); ?></th>
 	<?php if (Art::is_enabled()) { ?>
-	<th class="cel_cover"><?php echo _('Cover'); ?></th>
+	<th class="cel_cover"><?php echo T_('Cover'); ?></th>
 	<?php } ?>
-	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name',_('Album'),'album_sort_name'); ?></th>
-	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist',_('Artist'),'album_sort_artist'); ?></th>
-	<th class="cel_songs"><?php echo _('Songs'); ?></th>
-	<th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year',_('Year'),'album_sort_year'); ?></th>
-	<th class="cel_tags"><?php echo _('Tags'); ?></th>
-	<th class="col_rating"><?php echo _('Rating'); ?></th>
-	<th class="cel_action"><?php echo _('Actions'); ?></th>
+	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'),'album_sort_name'); ?></th>
+	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist', T_('Artist'),'album_sort_artist'); ?></th>
+	<th class="cel_songs"><?php echo T_('Songs'); ?></th>
+	<th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'),'album_sort_year'); ?></th>
+	<th class="cel_tags"><?php echo T_('Tags'); ?></th>
+	<th class="col_rating"><?php echo T_('Rating'); ?></th>
+	<th class="cel_action"><?php echo T_('Actions'); ?></th>
 </tr>
 <?php
 	if (Config::get('ratings')) {
@@ -72,21 +72,21 @@ $ajax_url = Config::get('ajax_url');
 <?php } //end foreach ($albums as $album) ?>
 <?php if (!count($object_ids)) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="7"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
+	<td colspan="7"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
-	<th class="cel_add"><?php echo _('Add'); ?></th>
+	<th class="cel_add"><?php echo T_('Add'); ?></th>
 	<?php if (Art::is_enabled()) { ?>
-	<th class="cel_cover"><?php echo _('Cover'); ?></th>
+	<th class="cel_cover"><?php echo T_('Cover'); ?></th>
 	<?php } ?>
-	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name',_('Album'),'album_sort_name_bottom'); ?></th>
-	<th class="cel_artist"><?php echo _('Artist'); ?></th>
-	<th class="cel_songs"><?php echo _('Songs'); ?></th>
-	<th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year',_('Year'),'album_sort_year_bottom'); ?></th>
-	<th class="cel_tags"><?php echo _('Tags'); ?></th>
-	<th class="col_rating"><?php echo _('Rating'); ?></th>
-	<th class="cel_action"><?php echo _('Actions'); ?></th>
+	<th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'),'album_sort_name_bottom'); ?></th>
+	<th class="cel_artist"><?php echo T_('Artist'); ?></th>
+	<th class="cel_songs"><?php echo T_('Songs'); ?></th>
+	<th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'),'album_sort_year_bottom'); ?></th>
+	<th class="cel_tags"><?php echo T_('Tags'); ?></th>
+	<th class="col_rating"><?php echo T_('Rating'); ?></th>
+	<th class="cel_action"><?php echo T_('Actions'); ?></th>
 </tr>
 </table>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>

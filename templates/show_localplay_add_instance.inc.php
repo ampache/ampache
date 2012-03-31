@@ -27,7 +27,7 @@
  */
 
 ?>
-<?php show_box_top(_('Add Localplay Instance'), 'box box_localplay_add_instance'); ?>
+<?php show_box_top(T_('Add Localplay Instance'), 'box box_localplay_add_instance'); ?>
 <form method="post" action="<?php echo Config::get('web_path'); ?>/localplay.php?action=add_instance">
 <table cellpadding="3" cellspacing="0" class="tabledata">
 <?php foreach ($fields as $key=>$field) { ?>
@@ -38,7 +38,7 @@
 <?php } ?>
 </table>
 	<div class="formValidation">
-		<input type="submit" value="<?php echo _('Add Instance'); ?>" />
+		<input type="submit" value="<?php echo T_('Add Instance'); ?>" />
   </div>
 </form>
 <?php show_box_bottom(); ?>

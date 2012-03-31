@@ -39,17 +39,17 @@ $base_url = Config::get('ajax_url') . '?action=set_rating&amp;rating_type=' . $r
     if ($width < 0) $width = 0;
 
     //set the current rating background
-    echo "<li class=\"current-rating\" style=\"width:${width}%\" >" . _('Current rating: ');
+    echo "<li class=\"current-rating\" style=\"width:${width}%\" >" . T_('Current rating: ');
     if ($rating->rating <= 0) {
-        echo _('not rated yet') . "</li>\n";
+        echo T_('not rated yet') . "</li>\n";
     }
-    else printf(_('%s of 5') ,$rating->preciserating); echo "</li>\n";
+    else printf(T_('%s of 5') ,$rating->preciserating); echo "</li>\n";
 
     for ($i=1; $i<6; $i++)
     {
     ?>
       <li>
-        <span class="star<?php echo $i; ?>" title="<?php echo $i.' '._('out of'); ?> 5"><?php echo $i; ?></span>
+        <span class="star<?php echo $i; ?>" title="<?php echo $i.' ' . T_('out of'); ?> 5"><?php echo $i; ?></span>
       </li>
     <?php
     }

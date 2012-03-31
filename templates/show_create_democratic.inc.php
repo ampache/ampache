@@ -26,45 +26,45 @@
  * @link	http://www.ampache.org/
  */
 
-show_box_top(_('Configure Democratic Playlist')); ?>
+show_box_top(T_('Configure Democratic Playlist')); ?>
 <form method="post" action="<?php echo Config::get('web_path'); ?>/democratic.php?action=create" enctype="multipart/form-data">
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
-	<td><?php echo _('Name'); ?></td>
+	<td><?php echo T_('Name'); ?></td>
 	<td><input type="text" name="name" value="<?php echo scrub_out($democratic->name); ?>" /></td>
 </tr>
 <tr>
-	<td><?php echo _('Base Playlist'); ?></td>
+	<td><?php echo T_('Base Playlist'); ?></td>
 	<td><?php show_playlist_select('democratic',$democratic->base_playlist); ?></td>
 </tr>
 <tr>
-	<td><?php echo _('Cooldown Time'); ?></td>
-	<td><input type="text" size="4" maxlength="6" name="cooldown" value="<?php echo $democratic->cooldown; ?>" /><?php echo _('minutes'); ?></td>
+	<td><?php echo T_('Cooldown Time'); ?></td>
+	<td><input type="text" size="4" maxlength="6" name="cooldown" value="<?php echo $democratic->cooldown; ?>" /><?php echo T_('minutes'); ?></td>
 </tr>
 <!--
 <tr>
-	<td><?php echo _('Level'); ?></td>
+	<td><?php echo T_('Level'); ?></td>
 	<td>
 		<select name="level">
-                <option value="25"><?php echo _('User'); ?></option>
-                <option value="50"><?php echo _('Content Manager'); ?></option>
-                <option value="75"><?php echo _('Catalog Manager'); ?></option>
-                <option value="100"><?php echo _('Admin'); ?></option>
+                <option value="25"><?php echo T_('User'); ?></option>
+                <option value="50"><?php echo T_('Content Manager'); ?></option>
+                <option value="75"><?php echo T_('Catalog Manager'); ?></option>
+                <option value="100"><?php echo T_('Admin'); ?></option>
                 </select>
 
 <tr>
-	<td><?php echo _('Make Default'); ?></td>
+	<td><?php echo T_('Make Default'); ?></td>
 	<td><input type="checkbox" name="make_default" value="1" /></td>
 </tr>
 -->
 <tr>
-	<td><?php echo _('Force Democratic Play'); ?></td>
+	<td><?php echo T_('Force Democratic Play'); ?></td>
 	<td><input type="checkbox" value="1" name="force_democratic" /></td>
 </tr>
 </table>
 <div class="formValidation">
 		<?php echo Core::form_register('create_democratic'); ?>
-		<input type="submit" value="<?php echo _('Update'); ?>" />
+		<input type="submit" value="<?php echo T_('Update'); ?>" />
 </div>
 </form>
 <?php show_box_bottom(); ?>

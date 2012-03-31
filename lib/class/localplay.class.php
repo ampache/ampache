@@ -653,16 +653,16 @@ class Localplay {
 
 		switch ($state) {
 			case 'play':
-				return _('Now Playing');
+				return T_('Now Playing');
 			break;
 			case 'stop':
-				return _('Stopped');
+				return T_('Stopped');
 			break;
 			case 'pause':
-				return _('Paused');
+				return T_('Paused');
 			break;
 			default:
-				return _('Unknown');
+				return T_('Unknown');
 			break;
 		} // switch on state
 

@@ -30,32 +30,32 @@ $prefix = realpath(dirname(__FILE__). "/../");
 require $prefix . '/templates/install_header.inc.php';
 ?>
 	<div class="content">
-	<?php echo _('Step 1 - Create the Ampache database'); ?><br />
-	<?php echo _('Step 2 - Create ampache.cfg.php'); ?><br />
-	<strong><?php echo _('Step 3 - Set up the initial account'); ?></strong><br />
+	<?php echo T_('Step 1 - Create the Ampache database'); ?><br />
+	<?php echo T_('Step 2 - Create ampache.cfg.php'); ?><br />
+	<strong><?php echo T_('Step 3 - Set up the initial account'); ?></strong><br />
 	<dl>
-	<dd><?php echo _('This step creates your initial Ampache admin account. Once your admin account has been created you will be redirected to the login page.'); ?></dd>
+	<dd><?php echo T_('This step creates your initial Ampache admin account. Once your admin account has been created you will be redirected to the login page.'); ?></dd>
 	</dl>
 	<?php Error::display('general'); ?>
 	<br />
-	<span class="header2"><?php echo _('Create Admin Account'); ?></span>
+	<span class="header2"><?php echo T_('Create Admin Account'); ?></span>
 	<form method="post" action="<?php echo WEB_PATH . "?action=create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" >
 <table>
 <tr>
-	<td class="align"><?php echo _('Username'); ?></td>
+	<td class="align"><?php echo T_('Username'); ?></td>
 	<td><input type="text" name="local_username" value="admin" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _('Password'); ?></td>
+	<td class="align"><?php echo T_('Password'); ?></td>
 	<td><input type="password" name="local_pass" value="" /></td>
 </tr>
 <tr>
-	<td class="align"><?php echo _('Confirm Password'); ?></td>
+	<td class="align"><?php echo T_('Confirm Password'); ?></td>
 	<td><input type="password" name="local_pass2" value="" /></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><input type="submit" value="<?php echo _('Create Account'); ?>" /></td>
+	<td><input type="submit" value="<?php echo T_('Create Account'); ?>" /></td>
 </tr>
 	</table>
 	</form>

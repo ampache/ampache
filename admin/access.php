@@ -43,12 +43,12 @@ switch ($_REQUEST['action']) {
 		}
 		Access::delete($_REQUEST['access_id']);
 		$url = Config::get('web_path') . '/admin/access.php';
-		show_confirmation(_('Deleted'),_('Your Access List Entry has been removed'),$url);
+		show_confirmation(T_('Deleted'), T_('Your Access List Entry has been removed'),$url);
 	break;
 	case 'show_delete_record':
 		if (Config::get('demo_mode')) { break; }
 		$access = new Access($_GET['access_id']);
-		show_confirmation(_('Deletion Request'),_('Are you sure you want to permanently delete') . ' ' . $access->name,
+		show_confirmation(T_('Deletion Request'), T_('Are you sure you want to permanently delete') . ' ' . $access->name,
 				'admin/access.php?action=delete_record&amp;access_id=' . $access->id,1,'delete_access');
 	break;
 	case 'add_host':
@@ -107,7 +107,7 @@ switch ($_REQUEST['action']) {
 
 		if (!Error::occurred()) {
 			$url = Config::get('web_path') . '/admin/access.php';
-			show_confirmation(_('Added'),_('Your new Access Control List(s) have been created'),$url);
+			show_confirmation(T_('Added'), T_('Your new Access Control List(s) have been created'),$url);
 		}
 		else {
 			switch ($_GET['method']) {
@@ -127,7 +127,7 @@ switch ($_REQUEST['action']) {
 		$access = new Access($_REQUEST['access_id']);
 		$access->update($_POST);
 		if (!Error::occurred()) {
-			show_confirmation(_('Updated'),_('Access List Entry updated'), Config::get('web_path').'/admin/access.php');
+			show_confirmation(T_('Updated'), T_('Access List Entry updated'), Config::get('web_path').'/admin/access.php');
 		}
 		else {
 			$access->format();

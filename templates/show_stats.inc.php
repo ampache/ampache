@@ -29,19 +29,19 @@
 $stats = Catalog::get_stats();
 $catalogs = Catalog::get_catalogs();
 ?>
-<?php show_box_top(_('Statistics'), 'box box_stats'); ?>
-<em><?php echo _('Catalogs'); ?></em>
+<?php show_box_top(T_('Statistics'), 'box box_stats'); ?>
+<em><?php echo T_('Catalogs'); ?></em>
 <table class="tabledata" cellpadding="3" cellspacing="1">
 <tr class="th-top">
-        <th><?php echo _('Connected Users'); ?></th>
-        <th><?php echo _('Total Users'); ?></th>
-        <th><?php echo _('Albums'); ?></th>
-        <th><?php echo _('Artists'); ?></th>
-        <th><?php echo _('Songs'); ?></th>
-	<th><?php echo _('Videos'); ?></th>
-        <th><?php echo _('Tags'); ?></th>
-        <th><?php echo _('Catalog Size'); ?></th>
-        <th><?php echo _('Catalog Time'); ?></th>
+        <th><?php echo T_('Connected Users'); ?></th>
+        <th><?php echo T_('Total Users'); ?></th>
+        <th><?php echo T_('Albums'); ?></th>
+        <th><?php echo T_('Artists'); ?></th>
+        <th><?php echo T_('Songs'); ?></th>
+	<th><?php echo T_('Videos'); ?></th>
+        <th><?php echo T_('Tags'); ?></th>
+        <th><?php echo T_('Catalog Size'); ?></th>
+        <th><?php echo T_('Catalog Time'); ?></th>
 </tr>
 <tr>
         <td><?php echo $stats['connected']; ?></td>
@@ -68,14 +68,14 @@ $catalogs = Catalog::get_catalogs();
   <col id="col_total" />
 </colgroup>
 <tr class="th-top">
-        <th class="cel_catalog"><?php echo _('Name'); ?></th>
-        <th class="cel_path"><?php echo _('Path'); ?></th>
-        <th class="cel_lastverify"><?php echo _('Last Verify'); ?></th>
-        <th class="cel_lastadd"><?php echo _('Last Add'); ?></th>
-        <th class="cel_lastclean"><?php echo _('Last Clean'); ?></th>
-	<th class="cel_songs"><?php echo _('Songs'); ?></th>
-	<th class="cel_video"><?php echo _('Videos'); ?></th>
-	<th class="cel_total"><?php echo _('Catalog Size'); ?></th>
+        <th class="cel_catalog"><?php echo T_('Name'); ?></th>
+        <th class="cel_path"><?php echo T_('Path'); ?></th>
+        <th class="cel_lastverify"><?php echo T_('Last Verify'); ?></th>
+        <th class="cel_lastadd"><?php echo T_('Last Add'); ?></th>
+        <th class="cel_lastclean"><?php echo T_('Last Clean'); ?></th>
+	<th class="cel_songs"><?php echo T_('Songs'); ?></th>
+	<th class="cel_video"><?php echo T_('Videos'); ?></th>
+	<th class="cel_total"><?php echo T_('Catalog Size'); ?></th>
 </tr>
 <?php foreach ($catalogs as $catalog_id) {
 		$catalog = new Catalog($catalog_id);

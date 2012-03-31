@@ -27,18 +27,18 @@
  */
 
 ?>
-<?php show_box_top(_('Importing a Playlist from a File'), 'box box_import_playlist'); ?>
+<?php show_box_top(T_('Importing a Playlist from a File'), 'box box_import_playlist'); ?>
 <form method="post" name="import_playlist" action="<?php echo Config::get('web_path'); ?>/playlist.php" enctype="multipart/form-data">
 <table cellpadding="0" cellspacing="0">
 <tr>
         <td>
-		<?php echo _('Filename'); ?>:
+		<?php echo T_('Filename'); ?>:
 	</td>
 	<td><input type="file" name="filename" value="<?php echo scrub_out($_REQUEST['filename']); ?>" size="45" /></td>
 </tr>
 <tr>
 	<td>
-		<?php echo _('Playlist Type'); ?>
+		<?php echo T_('Playlist Type'); ?>
 	</td>
 	<td>
 		<select name="playlist_type">
@@ -50,7 +50,7 @@
 </table>
 <div class="formValidation">
 		<input type="hidden" name="action" value="import_playlist" />
-		<input type="submit" value="<?php echo _('Import Playlist'); ?>" />
+		<input type="submit" value="<?php echo T_('Import Playlist'); ?>" />
 </div>
 </form>
 <?php show_box_bottom(); ?>

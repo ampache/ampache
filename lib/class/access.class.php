@@ -160,17 +160,17 @@ class Access {
 		$end = @inet_pton($data['end']);
 
 		if (!$start AND $data['start'] != '0.0.0.0' AND $data['start'] != '::') {
-			Error::add('start',_('Invalid IPv4 / IPv6 Address Entered'));
+			Error::add('start', T_('Invalid IPv4 / IPv6 Address Entered'));
 			return false;
 		}
 		if (!$end) {
-			Error::add('end',_('Invalid IPv4 / IPv6 Address Entered'));
+			Error::add('end', T_('Invalid IPv4 / IPv6 Address Entered'));
 			return false;
 		}
 
 		if (strlen(bin2hex($start)) != strlen(bin2hex($end))) {
-			Error::add('start',_('IP Address Version Mismatch'));
-			Error::add('end',_('IP Address Version Mismatch'));
+			Error::add('start', T_('IP Address Version Mismatch'));
+			Error::add('end', T_('IP Address Version Mismatch'));
 			return false;
 		}
 
@@ -207,24 +207,24 @@ class Access {
 		$end = @inet_pton($data['end']);
 
 		if (!$start AND $data['start'] != '0.0.0.0' AND $data['start'] != '::') {
-			Error::add('start',_('Invalid IPv4 / IPv6 Address Entered'));
+			Error::add('start', T_('Invalid IPv4 / IPv6 Address Entered'));
 			return false;
 		}
 		if (!$end) {
-			Error::add('end',_('Invalid IPv4 / IPv6 Address Entered'));
+			Error::add('end', T_('Invalid IPv4 / IPv6 Address Entered'));
 			return false;
 		}
 
 		if (strlen(bin2hex($start)) != strlen(bin2hex($end))) {
-			Error::add('start',_('IP Address Version Mismatch'));
-			Error::add('end',_('IP Address Version Mismatch'));
+			Error::add('start', T_('IP Address Version Mismatch'));
+			Error::add('end', T_('IP Address Version Mismatch'));
 			return false;
 		}
 
 		// Check existing ACL's to make sure we're not duplicating values here
 		if (self::exists($data)) {
 			debug_event('ACL Create','Error: An ACL equal to the created one does already exist. Not adding another one: ' . $data['start'] . ' - ' . $data['end'],'1');
-			Error::add('general',_('Duplicate ACL defined'));
+			Error::add('general', T_('Duplicate ACL defined'));
 			return false;
 		}
 
@@ -482,16 +482,16 @@ class Access {
 	public function get_level_name() {
 
 		if ($this->level >= '75') {
-			return _('All');
+			return T_('All');
 		}
 		if ($this->level == '5') {
-			return _('View');
+			return T_('View');
 		}
 		if ($this->level == '25') {
-			return _('Read');
+			return T_('Read');
 		}
 		if ($this->level == '50') {
-			return _('Read/Write');
+			return T_('Read/Write');
 		}
 
 	} // get_level_name
@@ -502,7 +502,7 @@ class Access {
 	 */
 	public function get_user_name() {
 
-		if ($this->user == '-1') { return _('All'); }
+		if ($this->user == '-1') { return T_('All'); }
 
 		$user = new User($this->user);
 		return $user->fullname . " (" . $user->username . ")";
@@ -518,17 +518,17 @@ class Access {
 		switch ($this->type) {
 			case 'xml-rpc':
 			case 'rpc':
-				return _('API/RPC');
+				return T_('API/RPC');
 			break;
 			case 'network':
-				return _('Local Network Definition');
+				return T_('Local Network Definition');
 			break;
 			case 'interface':
-				return _('Web Interface');
+				return T_('Web Interface');
 			break;
 			case 'stream':
 			default:
-				return _('Stream Access');
+				return T_('Stream Access');
 			break;
 		} // end switch
 

@@ -37,14 +37,14 @@
  * @todo get lyrics from id3tag, if possible.
 */
 /* HINT: Song Title */
-show_box_top(sprintf(_('%s Lyrics'), $song->title), 'box box_lyrics');
+show_box_top(sprintf(T_('%s Lyrics'), $song->title), 'box box_lyrics');
 ?>
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
 	<td>
 		<?php
 		if($return == "Sorry Lyrics, Not found") {
-			echo _("Sorry Lyrics Not Found.");
+			echo T_("Sorry Lyrics Not Found.");
 		}
 		else {
 			echo $link;

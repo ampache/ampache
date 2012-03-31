@@ -64,7 +64,7 @@ while ($r = Dba::fetch_row($db_results)) {
 	$catalog = new Catalog($r['0']);
 	$songs = $catalog->get_catalog_files();
 
-	printf (_('Starting Catalog: %s'), stripslashes($catalog->name));
+	printf (T_('Starting Catalog: %s'), stripslashes($catalog->name));
 	echo "\n";
 
 	/* Foreach through each file and find it a home! */
@@ -79,11 +79,11 @@ while ($r = Dba::fetch_row($db_results)) {
 		/* Check for Demo Mode */
 		if ($test_mode) {
 			/* We're just talking here... no work */
-			echo _("Moving File...");
+			echo T_("Moving File...");
 			echo "\n\t";
-			printf (_('Source: %s'), $song->file);
+			printf (T_('Source: %s'), $song->file);
 			echo "\n\t";
-			printf (_('Dest: %s'), $fullpath);
+			printf (T_('Dest: %s'), $fullpath);
 			echo "\n";
 			flush();
 		}
@@ -233,14 +233,14 @@ function sort_move_file($song,$fullname) {
 		if (!is_dir($path)) {
 			if ($GLOBALS['test_mode']) {
 				echo "\t";
-				printf (_('Making %s Directory'), $path);
+				printf (T_('Making %s Directory'), $path);
 				echo "\n";
 			}
 			else {
 				debug_event('mkdir',"Creating $path directory",'5');
 				$results = mkdir($path);
 				if (!$results) {
-					printf (_('Error: Unable to create %s move failed'), $path);
+					printf (T_('Error: Unable to create %s move failed'), $path);
 					echo "\n";
 					return false;
 				}
@@ -253,7 +253,7 @@ function sort_move_file($song,$fullname) {
 	if ($GLOBALS['test_mode']) {
 		echo "\t";
 		// HINT: %1$s: file, %2$s: directory
-		printf (_('Copying %1$s to %2$s'), $file, $directory);
+		printf (T_('Copying %1$s to %2$s'), $file, $directory);
 		echo "\n";
 		$sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";
 		echo "\tSQL: $sql\n";
@@ -264,7 +264,7 @@ function sort_move_file($song,$fullname) {
 		/* Check for file existance */
 		if (file_exists($fullname)) {
 			debug_event('file exists','Error: $fullname already exists','1');
-			printf (_('Error: %s already exists'), $filename);
+			printf (T_('Error: %s already exists'), $filename);
 			echo "\n";
 			return false;
 		}
@@ -285,21 +285,21 @@ function sort_move_file($song,$fullname) {
 		debug_event('copy_art','Copied ' . $old_art . ' to ' . $folder_art,'5');
 		@copy($old_art,$folder_art);
 
-		if (!$results) { printf (_('Error: Unable to copy file to %s'), $fullname); echo "\n"; return false; }
+		if (!$results) { printf (T_('Error: Unable to copy file to %s'), $fullname); echo "\n"; return false; }
 
 		/* Check the filesize */
 		$new_sum = filesize($fullname);
 		$old_sum = filesize($song->file);
 
 		if ($new_sum != $old_sum OR !$new_sum) {
-			printf (_('Error: Size Inconsistency, not deleting %s'), $song->file);
+			printf (T_('Error: Size Inconsistency, not deleting %s'), $song->file);
 			echo "\n";
 			return false;
 		} // end if sum's don't match
 
 		/* If we've made it this far it should be safe */
 		$results = unlink($song->file);
-		if (!$results) { printf (_('Error: Unable to delete %s'), $song->file); echo "\n"; }
+		if (!$results) { printf (T_('Error: Unable to delete %s'), $song->file); echo "\n"; }
 
 		/* Update the catalog */
 		$sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";

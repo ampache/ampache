@@ -42,30 +42,30 @@ $thumbadd =0;
 $artadd = 0; 
 
 if (count($_SERVER['argv']) == 1) { 
-	$operations_string = "\n\t". _('- All Catalog Operations');
+	$operations_string = "\n\t". T_('- All Catalog Operations');
 } 
 
 if (count($_SERVER['argv']) > 1) {
 	for ($x = 1; $x < count($_SERVER['argv']); $x++) {
 
 		if ($_SERVER['argv'][$x] == "-c") {
-			$operations_string .= "\n\t"._('- Catalog Clean');
+			$operations_string .= "\n\t" . T_('- Catalog Clean');
 			$catclean = 1;
 		} 
 		elseif ($_SERVER['argv'][$x] == "-v") {
-			$operations_string .= "\n\t"._('- Catalog Verify');
+			$operations_string .= "\n\t" . T_('- Catalog Verify');
 			$catverify = 1;
 		} 
 		elseif ($_SERVER['argv'][$x] == "-a") {
-			$operations_string .= "\n\t"._('- Catalog Add');
+			$operations_string .= "\n\t" . T_('- Catalog Add');
 			$catadd = 1;
 		}
 		elseif ($_SERVER['argv'][$x] == "-g") { 
-			$operations_string .= "\n\t"._('- Catalog Art Gather');
+			$operations_string .= "\n\t" . T_('- Catalog Art Gather');
 			$artadd = 1; 
 		} 
 		elseif ($_SERVER['argv'][$x] == '-t') { 
-			$operations_string .= "\n\t"._('- Generate Thumbnails');
+			$operations_string .= "\n\t" . T_('- Generate Thumbnails');
 			$thumbadd = 1; 
 		} 
 		else {
@@ -88,7 +88,7 @@ if ($thumbadd == 0 && $artadd == 0 && $catclean == 0 && $catverify == 0 && $cata
 	$thumbadd = 1; 
 }
 
-echo _("Starting Catalog Operations...") . $operations_string . "\n"; 
+echo T_("Starting Catalog Operations...") . $operations_string . "\n"; 
 
 if ($where) $where = "($where) AND catalog_type='local'";
 else $where = "catalog_type='local'";
@@ -101,12 +101,12 @@ ob_start("ob_html_strip",'1024',true);
 while ($row = Dba::fetch_row($db_results)) {
 
 	$catalog = new Catalog($row['0']);
-	printf(_('Reading: %s'), $catalog->name);
+	printf(T_('Reading: %s'), $catalog->name);
 	ob_flush(); 
 	echo "\n"; 
 	if ($catclean == 1) {
 		// Clean out dead files
-		echo _("- Starting Clean - ");
+		echo T_("- Starting Clean - ");
 		echo "\n";
 		$catalog->clean_catalog();
 		echo "------------------\n\n";
@@ -114,7 +114,7 @@ while ($row = Dba::fetch_row($db_results)) {
 
 	if ($catverify == 1) {
 		// Verify Existing
-		echo _("- Starting Verify - ");
+		echo T_("- Starting Verify - ");
 		echo "\n";
 		$catalog->verify_catalog($row['0']);
 		echo "-------------------\n\n";
@@ -122,7 +122,7 @@ while ($row = Dba::fetch_row($db_results)) {
 
 	if ($catadd == 1) {
 		// Look for new files
-		echo _("- Starting Add - ");
+		echo T_("- Starting Add - ");
 		echo "\n";
 		$catalog->add_to_catalog();
 		echo "----------------\n\n";
@@ -130,7 +130,7 @@ while ($row = Dba::fetch_row($db_results)) {
 
 	if ($artadd == 1) { 
 		// Look for album art
-		echo _('Starting Album Art Search');
+		echo T_('Starting Album Art Search');
 		echo "\n"; 
 		$catalog->get_art('',1);
 		echo "----------------\n\n";
@@ -138,7 +138,7 @@ while ($row = Dba::fetch_row($db_results)) {
 
 	if ($thumbadd == 1) { 
 		// Generate the thumbnails
-		echo _('Generating Thumbnails'); 
+		echo T_('Generating Thumbnails'); 
 		echo "\n"; 
 		$catalog->generate_thumbnails(); 
 		echo "----------------\n\n";
@@ -165,21 +165,21 @@ function ob_html_strip($string) {
 } // ob_html_strip
 
 function usage() {
-	echo _("- Catalog Update -");
+	echo T_("- Catalog Update -");
 	echo "\n";
-	echo _("Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a|-g|-t]");
+	echo T_("Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a|-g|-t]");
 	echo "\n\t"; 
-	echo _("Default behavior is to do all");
+	echo T_("Default behavior is to do all");
 	echo "\n-c\t";
-	echo _('Clean Catalogs');
+	echo T_('Clean Catalogs');
 	echo "\n-v\t";
-	echo _('Verify Catalogs');
+	echo T_('Verify Catalogs');
 	echo "\n-a\t";
-	echo _('Add to Catalogs');
+	echo T_('Add to Catalogs');
 	echo "\n-g\t";
-	echo _('Gather Art');
+	echo T_('Gather Art');
 	echo "\n-t\t"; 
-	echo _('Generate Thumbnails');
+	echo T_('Generate Thumbnails');
 	echo "\n";
 	echo "----------------------------------------------------------";
 	echo "\n";

@@ -34,7 +34,7 @@
 <head>
 <meta http-equiv="refresh" content="10;URL=<?php echo($redirect_url);?>" />
 <link rel="shortcut icon" href="<?php echo $web_path; ?>/favicon.ico" />
-<title><?php echo( _("Ampache error page"));?></title>
+<title><?php echo( T_("Ampache error page"));?></title>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/base.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
 </head>
@@ -51,9 +51,9 @@
 	</div>
 	<div>&nbsp;</div>
 	<div id="errormsg">
-		<?php echo (_("The folowing error has occured, you will automaticly be redirected after 10 seconds.") ); ?>
+		<?php echo (T_("The folowing error has occured, you will automaticly be redirected after 10 seconds.") ); ?>
 		<br /><br />
-		<?php echo(_("Error messages"));?>:<br />
+		<?php echo(T_("Error messages"));?>:<br />
 		<?php Error::display('general'); ?>
 	</div>
 </div>

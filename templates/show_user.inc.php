@@ -26,27 +26,27 @@
  * @link	http://www.ampache.org/
  */
 
-$last_seen      = $client->last_seen ? date("m\/d\/y - H:i",$client->last_seen) : _('Never');
-$create_date    = $client->create_date ? date("m\/d\/y - H:i",$client->create_date) : _('Unknown');
+$last_seen      = $client->last_seen ? date("m\/d\/y - H:i",$client->last_seen) : T_('Never');
+$create_date    = $client->create_date ? date("m\/d\/y - H:i",$client->create_date) : T_('Unknown');
 $client->format();
 ?>
 <?php show_box_top($client->fullname); ?>
 <table cellspacing="0">
 <tr>
 	<td valign="top">
-		<strong><?php echo _('Full Name'); ?>:</strong> <?php echo $client->fullname; ?><br />
-		<strong><?php echo _('Create Date'); ?>:</strong> <?php echo $create_date; ?><br />
-		<strong><?php echo _('Last Seen'); ?>:</strong> <?php echo $last_seen; ?><br />
-		<strong><?php echo _('Activity'); ?>:</strong> <?php echo $client->f_useage; ?><br />
+		<strong><?php echo T_('Full Name'); ?>:</strong> <?php echo $client->fullname; ?><br />
+		<strong><?php echo T_('Create Date'); ?>:</strong> <?php echo $create_date; ?><br />
+		<strong><?php echo T_('Last Seen'); ?>:</strong> <?php echo $last_seen; ?><br />
+		<strong><?php echo T_('Activity'); ?>:</strong> <?php echo $client->f_useage; ?><br />
 		<?php if ($client->is_logged_in() AND $client->is_online()) { ?>
-			<i style="color:green;"><?php echo _('User is Online Now'); ?></i>
+			<i style="color:green;"><?php echo T_('User is Online Now'); ?></i>
 		<?php } else { ?>
-			<i style="color:red;"><?php echo _('User is Offline Now'); ?></i>
+			<i style="color:red;"><?php echo T_('User is Offline Now'); ?></i>
 		<?php } ?>
 
 	</td>
 	<td valign="top">
-		<h2><?php echo _('Active Playlist'); ?></h2>
+		<h2><?php echo T_('Active Playlist'); ?></h2>
 		<div style="padding-left:10px;">
 		<?php
 			$tmp_playlist = new tmpPlaylist(tmpPlaylist::get_from_userid($client->id));

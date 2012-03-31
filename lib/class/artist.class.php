@@ -376,7 +376,7 @@ class Artist extends database_object {
 			// check for fault
 			if ($client->fault) {
 				debug_event("lyrics", "Can't get lyrics", "1");
-				return $results = "<h2>" . _('Fault') . "</h2>" . print_r($result);
+				return $results = "<h2>" . T_('Fault') . "</h2>" . print_r($result);
 			}
 			else {
 				// check for errors
@@ -384,12 +384,12 @@ class Artist extends database_object {
 
 				if ($err) {
 					debug_event("lyrics", "Getting error: $err", "1");
-					return $results = "<h2>" . _('Error') . "</h2>" . $err;
+					return $results = "<h2>" . T_('Error') . "</h2>" . $err;
 				}
 				else {
 					// if returned "Not found" do not add
 					if($result['lyrics'] == "Not found") {
-						$sorry = _('Sorry Lyrics Not Found.');
+						$sorry = T_('Sorry Lyrics Not Found.');
 						return $sorry;
 					}
 					else {

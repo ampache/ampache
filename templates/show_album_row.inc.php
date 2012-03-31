@@ -28,8 +28,8 @@
 
 ?>
 <td class="cel_add">
-	<?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add',_('Add'),'add_album_' . $album->id); ?>
-	<?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random',_('Random'),'random_album_' . $album->id); ?>
+	<?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Add'),'add_album_' . $album->id); ?>
+	<?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random', T_('Random'),'random_album_' . $album->id); ?>
 </td>
 <?php
 if (Art::is_enabled()) {
@@ -50,15 +50,15 @@ if (Art::is_enabled()) {
 <td class="cel_action">
 	<?php if (Config::get('sociable')) { ?>
 	<a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=album&amp;id=<?php echo $album->id; ?>">
-		<?php echo get_user_icon('comment',_('Post Shout')); ?>
+		<?php echo get_user_icon('comment', T_('Post Shout')); ?>
 	</a>
 	<?php } ?>
 	<?php if (Access::check_function('batch_download')) { ?>
 		<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>">
-			<?php echo get_user_icon('batch_download',_('Batch Download')); ?>
+			<?php echo get_user_icon('batch_download', T_('Batch Download')); ?>
 		</a>
 	<?php } ?>
 	<?php if (Access::check('interface','50')) { ?>
-		<?php echo Ajax::button('?action=show_edit_object&type=album_row&id=' . $album->id,'edit',_('Edit'),'edit_album_' . $album->id); ?>
+		<?php echo Ajax::button('?action=show_edit_object&type=album_row&id=' . $album->id,'edit', T_('Edit'),'edit_album_' . $album->id); ?>
 	<?php } ?>
 </td>

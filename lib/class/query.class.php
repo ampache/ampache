@@ -79,7 +79,7 @@ class Query {
 			return true;
 		}
 
-		Error::add('browse', _('Browse not found or expired, try reloading the page'));
+		Error::add('browse', T_('Browse not found or expired, try reloading the page'));
 		return false;
 	}
 

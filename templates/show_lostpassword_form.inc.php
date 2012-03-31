@@ -70,16 +70,16 @@ function focus(){ document.login.username.focus(); }
 	<h2><?php echo scrub_out(Config::get('site_title')); ?></h2>
 	<form name="login" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/lostpassword.php">
 
-	<div class="loginfield" id="email"><label for="email"><?php echo  _('Email'); ?>:</label>
+	<div class="loginfield" id="email"><label for="email"><?php echo  T_('Email'); ?>:</label>
 	<input type="hidden" id="action" name="action" value="send" />
 	<input class="text_input" type="text" id="email" name="email" /></div>
 	<input class="button" id="lostpasswordbutton" type="submit"
-		value="<?php echo _('Submit'); ?>" /></form>
+		value="<?php echo T_('Submit'); ?>" /></form>
 	</div>
 </div>
 <div id="footer"><a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />
-Copyright (c) 2001 - 2009 Ampache.org <?php echo _('Queries:'); ?><?php echo Dba::$stats['query']; ?>
-<?php echo _('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
+Copyright (c) 2001 - 2009 Ampache.org <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?>
+<?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
 </div>
 </body>
 </html>

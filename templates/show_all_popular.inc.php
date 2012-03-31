@@ -30,25 +30,25 @@
 <table class="tabledata">
 <tr>
 	<td valign="top" >
-		<?php show_info_box(_('Most Popular Artists'), 'artist', $artists); ?>
+		<?php show_info_box(T_('Most Popular Artists'), 'artist', $artists); ?>
 	</td>
 	<td valign="top">
-		<?php show_info_box(_('Most Popular Albums'), '', $albums); ?>
+		<?php show_info_box(T_('Most Popular Albums'), '', $albums); ?>
 	</td>
 	<td valign="top">
-		<?php show_info_box(_('Most Popular Genres'), '', $genres); ?>
+		<?php show_info_box(T_('Most Popular Genres'), '', $genres); ?>
 	</td>
 </tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr>
 	<td valign="top">
-		<?php show_info_box(_('Most Popular Songs'), 'song', $songs); ?>
+		<?php show_info_box(T_('Most Popular Songs'), 'song', $songs); ?>
 	</td>
 	<td valign="top">
-		<?php show_info_box(_('Most Popular Live Streams'),'live_stream',$live_streams); ?>
+		<?php show_info_box(T_('Most Popular Live Streams'),'live_stream',$live_streams); ?>
 	</td>
 	<td valign="top">
-		<?php show_info_box(_('Most Popular Tags'),'tags',$tags); ?>
+		<?php show_info_box(T_('Most Popular Tags'),'tags',$tags); ?>
 	</td>
 </tr>
 <tr><td colspan="2">&nbsp;</td></tr>

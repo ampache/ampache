@@ -42,9 +42,9 @@ switch ($action) {
 			$result = send_newpassword($email, $current_ip);
 		}
 		if ($result) {
-			Error::add('general', _('Password has been sent'));
+			Error::add('general', T_('Password has been sent'));
 		} else {
-			Error::add('general', _('Password has not been sent'));
+			Error::add('general', T_('Password has not been sent'));
 		}
 
 		require Config::get('prefix') . '/templates/show_login_form.inc.php';
@@ -62,13 +62,13 @@ function send_newpassword($email,$current_ip){
 
 		$mailer = new AmpacheMail();
 		$mailer->set_default_sender();
-		$mailer->subject = _("Lost Password");
+		$mailer->subject = T_("Lost Password");
 		$mailer->recipient_name = $client->fullname;
 		$mailer->recipient = $client->email;
 
-		$message  = sprintf(_("A user from %s has requested a password reset for '%s'."), $current_ip, $client->username);
+		$message  = sprintf(T_("A user from %s has requested a password reset for '%s'."), $current_ip, $client->username);
 		$message .= "\n";
-		$message .= sprintf(_("The password has been set to: %s"), $newpassword);
+		$message .= sprintf(T_("The password has been set to: %s"), $newpassword);
 		$mailer->message = $message;
 
 		return $mailer->send();

@@ -35,11 +35,11 @@
 	if (count($favorite_artists)) {
 		$items = $working_user->format_favorites($favorite_artists);
 		$title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=artist">' .
-			get_user_icon('all', _('Favorite Artists')) . '</a>&nbsp;' .  _('Favorite Artists');
+			get_user_icon('all', T_('Favorite Artists')) . '</a>&nbsp;' .  T_('Favorite Artists');
 		show_info_box($title,'artist',$items);
 	}
 	else {
-		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
+		echo "<span class=\"error\">" . T_('Not Enough Data') . "</span>";
 	}
 	?>
 	</td>
@@ -48,11 +48,11 @@
 	if (count($favorite_albums)) {
 		$items = $working_user->format_favorites($favorite_albums);
                 $title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=album">' .
-                        get_user_icon('all', _('Favorite Albums')) . '</a>&nbsp;' .  _('Favorite Albums');
+                        get_user_icon('all', T_('Favorite Albums')) . '</a>&nbsp;' .  T_('Favorite Albums');
 		show_info_box($title,'album',$items);
 	}
 	else {
-		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
+		echo "<span class=\"error\">" . T_('Not Enough Data') . "</span>";
 	}
 	?>
 	</td>
@@ -61,11 +61,11 @@
 	if (count($favorite_songs)) {
 		$items = $working_user->format_favorites($favorite_songs);
                 $title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=song">' .
-                        get_user_icon('all', _('Favorite Songs')) . '</a>&nbsp;' .  _('Favorite Songs');
+                        get_user_icon('all', T_('Favorite Songs')) . '</a>&nbsp;' .  T_('Favorite Songs');
 		show_info_box($title,'your_song',$items);
 	}
 	else {
-		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
+		echo "<span class=\"error\">" . T_('Not Enough Data') . "</span>";
 	}
 	?>
 	</td>

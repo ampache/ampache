@@ -27,62 +27,62 @@
  */
 
 ?>
-<?php show_box_top(_('Add API / RPC Host'), 'box box_add_access_rpc'); ?>
+<?php show_box_top(T_('Add API / RPC Host'), 'box box_add_access_rpc'); ?>
 <?php Error::display('general'); ?>
 <form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host&method=rpc">
 <table class="tabledata" cellpadding="5" cellspacing="0">
 <tr>
-	<td><?php echo _('Name'); ?>:</td>
+	<td><?php echo T_('Name'); ?>:</td>
 	<td colspan="3">
 		<input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name']); ?>" size="20" />
 	</td>
 </tr>
 <tr>
-	<td><?php echo _('Level'); ?>:</td>
+	<td><?php echo T_('Level'); ?>:</td>
 	<td colspan="3">
-		<input name="level" type="radio" value="5" /> <?php echo _('View'); ?>
-		<input name="level" type="radio" value="25" /> <?php echo _('Read'); ?>
-		<input name="level" type="radio" checked="checked" value="50" /> <?php echo _('Read/Write'); ?>
-		<input name="level" type="radio" value="75" /> <?php echo _('All'); ?>
+		<input name="level" type="radio" value="5" /> <?php echo T_('View'); ?>
+		<input name="level" type="radio" value="25" /> <?php echo T_('Read'); ?>
+		<input name="level" type="radio" checked="checked" value="50" /> <?php echo T_('Read/Write'); ?>
+		<input name="level" type="radio" value="75" /> <?php echo T_('All'); ?>
 	</td>
 </tr>
 <tr>
-	<td><?php echo _('User'); ?>:</td>
+	<td><?php echo T_('User'); ?>:</td>
 	<td colspan="3">
 		<?php show_user_select('user'); ?>
 	</td>
 </tr>
 
 <tr>
-	<td valign="top"><?php echo _('Type'); ?>:</td>
+	<td valign="top"><?php echo T_('Type'); ?>:</td>
 	<td colspan="3">
-		<input type="radio" name="addtype" value="rpc" /><?php echo _('RPC'); ?><br />
-		<input type="radio" name="addtype" value="streamrpc" checked="checked" /><?php echo _('RPC'); ?> + <?php echo _('Stream Access'); ?><br />
-		<input type="radio" name="addtype" value="allrpc" /><?php echo _('RPC'); ?> + <?php echo _('All'); ?>
+		<input type="radio" name="addtype" value="rpc" /><?php echo T_('RPC'); ?><br />
+		<input type="radio" name="addtype" value="streamrpc" checked="checked" /><?php echo T_('RPC'); ?> + <?php echo T_('Stream Access'); ?><br />
+		<input type="radio" name="addtype" value="allrpc" /><?php echo T_('RPC'); ?> + <?php echo T_('All'); ?>
 	</td>
 </tr>
 <tr>
-	<td colspan="4"><h4><?php echo _('RPC Options'); ?></h4></td>
+	<td colspan="4"><h4><?php echo T_('RPC Options'); ?></h4></td>
 </tr>
 <tr>
-	<td><?php echo _('Remote Key'); ?>:</td>
+	<td><?php echo T_('Remote Key'); ?>:</td>
 	<td colspan="3">
 		<input type="text" name="key" value="<?php echo scrub_out($_REQUEST['key']); ?>" maxlength="32" />
 	</td>
 </tr>
 
 <tr>
-	<td colspan="4"><h3><?php echo _('IPv4 or IPv6 Addresses'); ?></h3>
+	<td colspan="4"><h3><?php echo T_('IPv4 or IPv6 Addresses'); ?></h3>
 		<span class="information">(255.255.255.255) / (ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff)</span>
 	</td>
 </tr>
 <tr>
-	<td><?php echo _('Start'); ?>:</td>
+	<td><?php echo T_('Start'); ?>:</td>
 	<td>
 		<?php Error::display('start'); ?>
 		<input type="text" name="start" value="<?php echo scrub_out($_REQUEST['start']); ?>" size="20" />
 	</td>
-	<td><?php echo _('End'); ?>:</td>
+	<td><?php echo T_('End'); ?>:</td>
 	<td>
 		<?php Error::display('end'); ?>
 		<input type="text" name="end" value="<?php echo scrub_out($_REQUEST['end']); ?>" size="20" />
@@ -91,7 +91,7 @@
 </table>
 <div class="formValidation">
 		<?php echo Core::form_register('add_acl'); ?>
-		<input class="button" type="submit" value="<?php echo _('Create ACL'); ?>" />
+		<input class="button" type="submit" value="<?php echo T_('Create ACL'); ?>" />
 </div>
 </form>
 <?php show_box_bottom(); ?>

@@ -39,11 +39,11 @@ $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . 
     if ($width < 0) $width = 0;
 
     //set the current rating background
-    echo "<li class=\"current-rating\" style=\"width:${width}%\" >" . _('Current rating: ');
+    echo "<li class=\"current-rating\" style=\"width:${width}%\" >" . T_('Current rating: ');
     if ($rating->rating <= 0) {
-    	echo _('not rated yet') . "</li>\n";
+    	echo T_('not rated yet') . "</li>\n";
     }
-    else printf(_('%s of 5'), $rating->preciserating); echo "</li>\n";
+    else printf(T_('%s of 5'), $rating->preciserating); echo "</li>\n";
 
     for ($i=1; $i<6; $i++)
     {

@@ -27,7 +27,7 @@
  */
 
 $link = Config::get('use_rss') ? ' ' . AmpacheRSS::get_display('recently_played') :  '';
-show_box_top(_('Recently Played') . $link, 'box box_recently_played');
+show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
@@ -39,12 +39,12 @@ show_box_top(_('Recently Played') . $link, 'box box_recently_played');
   <col id="col_lastplayed" />
 </colgroup>
 <tr class="th-top">
-	<th class="cel_add"><?php echo _('Add'); ?></th>
-	<th class="cel_song"><?php echo _('Song'); ?></th>
-	<th class="cel_album"><?php echo _('Album'); ?></th>
-	<th class="cel_artist"><?php echo _('Artist'); ?></th>
-	<th class="cel_username"><?php echo _('Username'); ?></th>
-	<th class="cel_lastplayed"><?php echo _('Last Played'); ?></th>
+	<th class="cel_add"><?php echo T_('Add'); ?></th>
+	<th class="cel_song"><?php echo T_('Song'); ?></th>
+	<th class="cel_album"><?php echo T_('Album'); ?></th>
+	<th class="cel_artist"><?php echo T_('Artist'); ?></th>
+	<th class="cel_username"><?php echo T_('Username'); ?></th>
+	<th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
 </tr>
 <?php foreach ($data as $row) {
 	$row_user = new User($row['user']);
@@ -84,13 +84,13 @@ show_box_top(_('Recently Played') . $link, 'box box_recently_played');
 	}
 
 	// I wonder how smart gettext is?
-	$time_string = sprintf(ngettext('%d ' . rtrim($unit, 's') . ' ago', '%d ' . $unit . ' ago', $interval), $interval);
+	$time_string = sprintf(T_ngettext('%d ' . rtrim($unit, 's') . ' ago', '%d ' . $unit . ' ago', $interval), $interval);
 
 	$song->format();
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td class="cel_add">
-        <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add',_('Add'),'add_' . $song->id); ?>
+        <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'add_' . $song->id); ?>
 	</td>
 	<td class="cel_song"><?php echo $song->f_link; ?></td>
 	<td class="cel_album"><?php echo $song->f_album_link; ?></td>
@@ -105,16 +105,16 @@ show_box_top(_('Recently Played') . $link, 'box box_recently_played');
 <?php } ?>
 <?php if (!count($data)) { ?>
 <tr>
-	<td colspan="6"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
+	<td colspan="6"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
-	<th class="cel_add"><?php echo _('Add'); ?></th>
-	<th class="cel_username"><?php echo _('Username'); ?></th>
-	<th class="cel_song"><?php echo _('Song'); ?></th>
-	<th class="cel_album"><?php echo _('Album'); ?></th>
-	<th class="cel_artist"><?php echo _('Artist'); ?></th>
-	<th class="cel_lastplayed"><?php echo _('Last Played'); ?></th>
+	<th class="cel_add"><?php echo T_('Add'); ?></th>
+	<th class="cel_username"><?php echo T_('Username'); ?></th>
+	<th class="cel_song"><?php echo T_('Song'); ?></th>
+	<th class="cel_album"><?php echo T_('Album'); ?></th>
+	<th class="cel_artist"><?php echo T_('Artist'); ?></th>
+	<th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
 </tr>
 </table>
 <?php show_box_bottom(); ?>

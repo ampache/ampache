@@ -77,30 +77,30 @@ switch ($_REQUEST['action']) {
 		if (Config::get('captcha_public_reg')) {
 		    	$captcha 		= captcha::solved();
 			if(!isset ($captcha)) {
-				Error::add('captcha',_('Error Captcha Required'));
+				Error::add('captcha', T_('Error Captcha Required'));
 			}
 			if (isset ($captcha)) {
 				if ($captcha) {
 					$msg="SUCCESS";
 				}
 		    		else {
-			    		Error::add('captcha',_('Error Captcha Failed'));
+			    		Error::add('captcha', T_('Error Captcha Failed'));
 		    		}
 			} // end if we've got captcha
 		} // end if it's enabled
 
 		if (Config::get('user_agreement')) {
 			if (!$_POST['accept_agreement']) {
-				Error::add('user_agreement',_("You <U>must</U> accept the user agreement"));
+				Error::add('user_agreement', T_("You <U>must</U> accept the user agreement"));
 			}
 		} // if they have to agree to something
 
 		if (!$_POST['username']) {
-			Error::add('username',_("You did not enter a username"));
+			Error::add('username', T_("You did not enter a username"));
 		}
 
 		if(!$fullname) {
-			Error::add('fullname',_("Please fill in your full name (Firstname Lastname)"));
+			Error::add('fullname', T_("Please fill in your full name (Firstname Lastname)"));
 		}
 
 		/* Check the mail for correct address formation. */
@@ -121,21 +121,21 @@ switch ($_REQUEST['action']) {
 			$mmsg = "MAILOK";
 		}
 	        else {
-	                Error::add('email',_("Error Email address not confirmed")
+	                Error::add('email', T_("Error Email address not confirmed")
 			   . "<br />$validate_results[1]");
 	        }
 		/* End of mailcheck */
 
 		if (!$pass1) {
-			Error::add('password',_("You must enter a password"));
+			Error::add('password', T_("You must enter a password"));
 		}
 
 		if ( $pass1 != $pass2 ) {
-			Error::add('password',_("Your passwords do not match"));
+			Error::add('password', T_("Your passwords do not match"));
 		}
 
 		if (!User::check_username($username)) {
-			Error::add('duplicate_user',_("Error Username already exists"));
+			Error::add('duplicate_user', T_("Error Username already exists"));
 		}
 
 		// If we've hit an error anywhere up there break!
@@ -164,7 +164,7 @@ switch ($_REQUEST['action']) {
 			$access, Config::get('admin_enable_required'));
 
 		if (!$new_user) {
-			Error::add('duplicate_user',_("Error: Insert Failed"));
+			Error::add('duplicate_user', T_("Error: Insert Failed"));
 			require_once Config::get('prefix') . '/templates/show_user_registration.inc.php';
 			break;
 		}

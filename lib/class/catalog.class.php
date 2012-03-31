@@ -170,9 +170,9 @@ class Catalog extends database_object {
 		$this->f_name		= truncate_with_ellipsis($this->name,Config::get('ellipse_threshold_title'));
 		$this->f_name_link	= '<a href="' . Config::get('web_path') . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id . '" title="' . scrub_out($this->name) . '">' . scrub_out($this->f_name) . '</a>';
 		$this->f_path		= truncate_with_ellipsis($this->path,Config::get('ellipse_threshold_title'));
-		$this->f_update		= $this->last_update ? date('d/m/Y h:i',$this->last_update) : _('Never');
-		$this->f_add		= $this->last_add ? date('d/m/Y h:i',$this->last_add) : _('Never');
-		$this->f_clean		= $this->last_clean ? date('d/m/Y h:i',$this->last_clean) : _('Never');
+		$this->f_update		= $this->last_update ? date('d/m/Y h:i',$this->last_update) : T_('Never');
+		$this->f_add		= $this->last_add ? date('d/m/Y h:i',$this->last_add) : T_('Never');
+		$this->f_clean		= $this->last_clean ? date('d/m/Y h:i',$this->last_clean) : T_('Never');
 
 	} // format
 
@@ -276,7 +276,7 @@ class Catalog extends database_object {
 
 		// Make sure the path is readable/exists
 		if (!is_readable($data['path']) AND $data['type'] == 'local') {
-			Error::add('general', sprintf(_('Error: %s is not readable or does not exist'), scrub_out($data['path'])));
+			Error::add('general', sprintf(T_('Error: %s is not readable or does not exist'), scrub_out($data['path'])));
 			return false;
 		}
 
@@ -285,7 +285,7 @@ class Catalog extends database_object {
 		$db_results = Dba::read($sql);
 
 		if (Dba::num_rows($db_results)) {
-			Error::add('general', sprintf(_('Error: Catalog with %s already exists'), $path));
+			Error::add('general', sprintf(T_('Error: Catalog with %s already exists'), $path));
 			return false;
 		}
 
@@ -312,7 +312,7 @@ class Catalog extends database_object {
 		$insert_id = Dba::insert_id();
 
 		if (!$insert_id) {
-			Error::add('general', _('Catalog Insert Failed check debug logs'));
+			Error::add('general', T_('Catalog Insert Failed check debug logs'));
 			debug_event('catalog','SQL Failed:' . $sql,'3');
 			return false;
 		}
@@ -330,7 +330,7 @@ class Catalog extends database_object {
 	public function run_add($options) {
 
 		if ($this->catalog_type == 'remote') {
-			show_box_top(_('Running Remote Sync') . '. . .');
+			show_box_top(T_('Running Remote Sync') . '. . .');
 			$this->get_remote_catalog($type=0);
 			show_box_bottom();
 			return true;
@@ -496,14 +496,14 @@ class Catalog extends database_object {
 
 		if (!is_resource($handle)) {
 			debug_event('read', "Unable to open $path", 5,'ampache-catalog');
-			Error::add('catalog_add', sprintf(_('Error: Unable to open %s'), $path));
+			Error::add('catalog_add', sprintf(T_('Error: Unable to open %s'), $path));
 			return false;
 		}
 
 		/* Change the dir so is_dir works correctly */
 		if (!chdir($path)) {
 			debug_event('read', "Unable to chdir $path", 2,'ampache-catalog');
-			Error::add('catalog_add', sprintf(_('Error: Unable to change to directory %s'), $path));
+			Error::add('catalog_add', sprintf(T_('Error: Unable to change to directory %s'), $path));
 			return false;
 		}
 
@@ -549,7 +549,7 @@ class Catalog extends database_object {
 				/* Change the dir so is_dir works correctly */
 				if (!chdir($path)) {
 					debug_event('read',"Unable to chdir $path",'2','ampache-catalog');
-					Error::add('catalog_add', sprintf(_('Error: Unable to change to directory %s'), $path));
+					Error::add('catalog_add', sprintf(T_('Error: Unable to change to directory %s'), $path));
 				}
 
 				/* Skip to the next file */
@@ -586,14 +586,14 @@ class Catalog extends database_object {
 				if (!$file_size) {
 					debug_event('read',"Unable to get filesize for $full_file",'2','ampache-catalog');
 					/* HINT: FullFile */
-					Error::add('catalog_add', sprintf(_('Error: Unable to get filesize for %s'), $full_file));
+					Error::add('catalog_add', sprintf(T_('Error: Unable to get filesize for %s'), $full_file));
 				} // file_size check
 
 				if (!is_readable($full_file)) {
 					// not readable, warn user
 					debug_event('read',"$full_file is not readable by ampache",'2','ampache-catalog');
 					/* HINT: FullFile */
-					Error::add('catalog_add', sprintf(_('%s is not readable by ampache'), $full_file));
+					Error::add('catalog_add', sprintf(T_('%s is not readable by ampache'), $full_file));
 					continue;
 				}
 
@@ -602,7 +602,7 @@ class Catalog extends database_object {
 					if (strcmp($full_file,iconv(Config::get('site_charset'),Config::get('site_charset'),$full_file)) != '0') {
 						debug_event('read',$full_file . ' has non-' . Config::get('site_charset') . ' characters and can not be indexed, converted filename:' . iconv(Config::get('site_charset'),Config::get('site_charset'),$full_file),'1');
 						/* HINT: FullFile */
-						Error::add('catalog_add', sprintf(_('%s does not match site charset'), $full_file));
+						Error::add('catalog_add', sprintf(T_('%s does not match site charset'), $full_file));
 						continue;
 					}
 				} // end if iconv
@@ -1079,14 +1079,14 @@ class Catalog extends database_object {
 			if ($info['change']) {
 				$file = scrub_out($song->file);
 				echo "<dl>\n\t<dd>";
-				echo "<strong>$file " . _('Updated') . "</strong>\n";
+				echo "<strong>$file " . T_('Updated') . "</strong>\n";
 				echo $info['text'];
 				echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
 				flush();
 			} // if change
 			else {
 				echo"<dl>\n\t<dd>";
-				echo "<strong>" . scrub_out($song->file) . "</strong><br />" . _('No Update Needed') . "\n";
+				echo "<strong>" . scrub_out($song->file) . "</strong><br />" . T_('No Update Needed') . "\n";
 				echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
 				flush();
 			}
@@ -1221,7 +1221,7 @@ class Catalog extends database_object {
 	public function add_to_catalog() {
 
 		if ($this->catalog_type == 'remote') {
-			show_box_top(_('Running Remote Update') . '. . .');
+			show_box_top(T_('Running Remote Update') . '. . .');
 			$this->get_remote_catalog($type=0);
 			show_box_bottom();
 			return true;
@@ -1248,7 +1248,7 @@ class Catalog extends database_object {
 			if ($this->import_m3u($full_file)) {
 				$file = basename($full_file);
 				if ($verbose) {
-					echo "&nbsp;&nbsp;&nbsp;" . _('Added Playlist From') . " $file . . . .<br />\n";
+					echo "&nbsp;&nbsp;&nbsp;" . T_('Added Playlist From') . " $file . . . .<br />\n";
 					flush();
 				}
 			} // end if import worked
@@ -1277,8 +1277,8 @@ class Catalog extends database_object {
 		}
 
 		show_box_top();
-		echo "\n<br />" . _('Catalog Update Finished') . "... " . _('Total Time') . " [" . date("i:s",$time_diff) . "] " .
-		_('Total Songs') . " [" . $this->count . "] " . _('Songs Per Seconds') . " [" . $song_per_sec . "]<br /><br />";
+		echo "\n<br />" . T_('Catalog Update Finished') . "... " . T_('Total Time') . " [" . date("i:s",$time_diff) . "] " .
+		T_('Total Songs') . " [" . $this->count . "] " . T_('Songs Per Seconds') . " [" . $song_per_sec . "]<br /><br />";
 		show_box_bottom();
 
 	} // add_to_catalog
@@ -1301,7 +1301,7 @@ class Catalog extends database_object {
 
 		if ($remote_handle->state() != 'CONNECTED') { 
 			debug_event('APICLIENT','Error Unable to make API client ready','1'); 
-			Error::add('general',_('Error Connecting to Remote Server'));
+			Error::add('general', T_('Error Connecting to Remote Server'));
 			Error::display('general'); 
 			return false; 
 		} 
@@ -1310,7 +1310,7 @@ class Catalog extends database_object {
 		$remote_catalog_info = $remote_handle->info(); 
 
 		// Tell em what we've found johnny!
-		printf(_('%u remote catalog(s) found (%u songs)'),$remote_catalog_info['catalogs'],$remote_catalog_info['songs']); 
+		printf(T_('%u remote catalog(s) found (%u songs)'),$remote_catalog_info['catalogs'],$remote_catalog_info['songs']); 
 		flush(); 
 
 		// Hardcoded for now
@@ -1334,14 +1334,14 @@ class Catalog extends database_object {
 			foreach ($songs as $data) { 
 				if (!$this->insert_remote_song($data['song'])) { 
 					debug_event('REMOTE_INSERT','Remote Insert failed, see previous log messages -' . $data['song']['self']['id'],'1'); 
-					Error::add('general',_('Unable to Insert Song - %s'),$data['song']['title']); 
+					Error::add('general', T_('Unable to Insert Song - %s'),$data['song']['title']); 
 					Error::display('general'); 
 					flush(); 
 				} 
 			} // end foreach
 		} // end while
 
-		echo "<p>" . _('Completed updating remote catalog(s)') . ".</p><hr />\n";
+		echo "<p>" . T_('Completed updating remote catalog(s)') . ".</p><hr />\n";
 		flush();
 
 		// Update the last update value
@@ -1384,7 +1384,7 @@ class Catalog extends database_object {
 		// mount points fail
 		if ($this->catalog_type == 'local' && !is_readable($this->path)) {
 			debug_event('catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
-			Error::add('general',_('Catalog Root unreadable, stopping clean'));
+			Error::add('general', T_('Catalog Root unreadable, stopping clean'));
 			Error::display('general');
 			return false;
 		}
@@ -1408,7 +1408,7 @@ class Catalog extends database_object {
 			// Never remove everything; it might be a dead mount
 			if ($dead_count >= $total) {
 				debug_event('catalog', 'All files would be removed. Doing nothing.', 1);
-				Error::add('general', _('All files would be removed. Doing nothing'));
+				Error::add('general', T_('All files would be removed. Doing nothing'));
 				continue;
 			}
 			if ($dead_count) {
@@ -1462,7 +1462,7 @@ class Catalog extends database_object {
 				$file_info = filesize($results['file']);
 				if (!file_exists($results['file']) || $file_info < 1) {
 					debug_event('clean', 'File not found or empty: ' . $results['file'], 5, 'ampache-catalog');
-					Error::add('general', sprintf(_('Error File Not Found or 0 Bytes: %s'), $results['file']));
+					Error::add('general', sprintf(T_('Error File Not Found or 0 Bytes: %s'), $results['file']));
 
 
 					// Store it in an array we'll delete it later...
@@ -1479,7 +1479,7 @@ class Catalog extends database_object {
 
 				if ($file_info == false) {
 					/* Add Error */
-					Error::add('general', sprintf(_('Error Remote File Not Found or 0 Bytes: %s'), $results['file']));
+					Error::add('general', sprintf(T_('Error Remote File Not Found or 0 Bytes: %s'), $results['file']));
 
 
 					// Store it in an array we'll delete it later...
@@ -1696,7 +1696,7 @@ class Catalog extends database_object {
 
 		show_box_top();
 		echo '<strong>';
-		printf(_('Catalog Verify Done. %d of %d files updated.'), $total_updated, $number);
+		printf(T_('Catalog Verify Done. %d of %d files updated.'), $total_updated, $number);
 		echo "</strong><br />\n";
 		show_box_bottom();
 		ob_flush();
@@ -1737,7 +1737,7 @@ class Catalog extends database_object {
 			}
 
 			if (!is_readable($row['file'])) {
-				Error::add('general', sprintf(_('%s does not exist or is not readable'), $row['file']));
+				Error::add('general', sprintf(T_('%s does not exist or is not readable'), $row['file']));
 				debug_event('read', $row['file'] . ' does not exist or is not readable', 5,'ampache-catalog');
 				continue;
 			}
@@ -1835,7 +1835,7 @@ class Catalog extends database_object {
 
 		/* Ohh no the artist has lost it's mojo! */
 		if (!$artist) {
-			$artist = _('Unknown (Orphaned)');
+			$artist = T_('Unknown (Orphaned)');
 		}
 
 		// Remove the prefix so we can sort it correctly
@@ -1890,7 +1890,7 @@ class Catalog extends database_object {
 						$sql = "UPDATE `artist` SET `mbid`='$mbid' WHERE `id`='$artist_id'";
 						$db_results = Dba::write($sql);
 						if (!$db_results) {
-							Error::add('general', sprintf(_('Updating Artist: %s'), $artist));
+							Error::add('general', sprintf(T_('Updating Artist: %s'), $artist));
 						}
 					}
 			}
@@ -1911,7 +1911,7 @@ class Catalog extends database_object {
 			$artist_id = Dba::insert_id();
 
 			if (!$db_results) {
-				Error::add('general', sprintf(_('Inserting Artist: %s'), $artist));
+				Error::add('general', sprintf(T_('Inserting Artist: %s'), $artist));
 			}
 
 		} // not found
@@ -1943,7 +1943,7 @@ class Catalog extends database_object {
 
 		/* Ohh no the album has lost its mojo */
 		if (!$album) {
-			$album = _('Unknown (Orphaned)');
+			$album = T_('Unknown (Orphaned)');
 			unset($album_year, $album_disk);
 		}
 
@@ -2091,7 +2091,7 @@ class Catalog extends database_object {
 
 		if (!$db_results) {
 			debug_event('insert',"Unable to insert $file -- $sql" . Dba::error(),'5','ampache-catalog');
-			Error::add('catalog_add', sprintf(_('SQL Error Adding %s'), $file));
+			Error::add('catalog_add', sprintf(T_('SQL Error Adding %s'), $file));
 		}
 
 		$song_id = Dba::insert_id();
@@ -2314,7 +2314,7 @@ class Catalog extends database_object {
 			$playlist_id = Playlist::create($name,'public');
 
 			if (!$playlist_id) {
-				$reason = _('Playlist creation error.');
+				$reason = T_('Playlist creation error.');
 				return false;
 			}
 

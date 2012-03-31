@@ -171,8 +171,8 @@ function create_preference_input($name,$value) {
 			if ($value == '1') { $is_true = "selected=\"selected\""; }
 			else { $is_false = "selected=\"selected\""; }
 			echo "<select name=\"$name\">\n";
-			echo "\t<option value=\"1\" $is_true>" . _("Enable") . "</option>\n";
-			echo "\t<option value=\"0\" $is_false>" . _("Disable") . "</option>\n";
+			echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";
+			echo "\t<option value=\"0\" $is_false>" . T_("Disable") . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'play_type':
@@ -181,29 +181,29 @@ function create_preference_input($name,$value) {
 			elseif ($value == 'xspf_player') { $is_xspf_player = 'selected="selected"'; }
 			else { $is_stream = "selected=\"selected\""; }
 			echo "<select name=\"$name\">\n";
-			echo "\t<option value=\"\">" . _('None') . "</option>\n";
+			echo "\t<option value=\"\">" . T_('None') . "</option>\n";
 			if (Config::get('allow_stream_playback')) {
-				echo "\t<option value=\"stream\" $is_stream>" . _('Stream') . "</option>\n";
+				echo "\t<option value=\"stream\" $is_stream>" . T_('Stream') . "</option>\n";
 			}
 			if (Config::get('allow_democratic_playback')) {
-				echo "\t<option value=\"democratic\" $is_vote>" . _('Democratic') . "</option>\n";
+				echo "\t<option value=\"democratic\" $is_vote>" . T_('Democratic') . "</option>\n";
 			}
 			if (Config::get('allow_localplay_playback')) {
-				echo "\t<option value=\"localplay\" $is_local>" . _('Localplay') . "</option>\n";
+				echo "\t<option value=\"localplay\" $is_local>" . T_('Localplay') . "</option>\n";
 			}
-			echo "\t<option value=\"xspf_player\" $is_xspf_player>" . _('Flash Player') . "</option>\n";
+			echo "\t<option value=\"xspf_player\" $is_xspf_player>" . T_('Flash Player') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'playlist_type':
 			$var_name = $value . "_type";
 			${$var_name} = "selected=\"selected\"";
 			echo "<select name=\"$name\">\n";
-			echo "\t<option value=\"m3u\" $m3u_type>" . _('M3U') . "</option>\n";
-			echo "\t<option value=\"simple_m3u\" $simple_m3u_type>" . _('Simple M3U') . "</option>\n";
-			echo "\t<option value=\"pls\" $pls_type>" . _('PLS') . "</option>\n";
-			echo "\t<option value=\"asx\" $asx_type>" . _('Asx') . "</option>\n";
-			echo "\t<option value=\"ram\" $ram_type>" . _('RAM') . "</option>\n";
-			echo "\t<option value=\"xspf\" $xspf_type>" . _('XSPF') . "</option>\n";
+			echo "\t<option value=\"m3u\" $m3u_type>" . T_('M3U') . "</option>\n";
+			echo "\t<option value=\"simple_m3u\" $simple_m3u_type>" . T_('Simple M3U') . "</option>\n";
+			echo "\t<option value=\"pls\" $pls_type>" . T_('PLS') . "</option>\n";
+			echo "\t<option value=\"asx\" $asx_type>" . T_('Asx') . "</option>\n";
+			echo "\t<option value=\"ram\" $ram_type>" . T_('RAM') . "</option>\n";
+			echo "\t<option value=\"xspf\" $xspf_type>" . T_('XSPF') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'lang':
@@ -219,7 +219,7 @@ function create_preference_input($name,$value) {
 		case 'localplay_controller':
 			$controllers = Localplay::get_controllers();
 			echo "<select name=\"$name\">\n";
-			echo "\t<option value=\"\">" . _('None') . "</option>\n";
+			echo "\t<option value=\"\">" . T_('None') . "</option>\n";
 			foreach ($controllers as $controller) {
 				if (!Localplay::is_enabled($controller)) { continue; }
 				$is_selected = '';
@@ -233,10 +233,10 @@ function create_preference_input($name,$value) {
 			elseif ($value == '100') { $is_admin = 'selected="selected"'; }
 			elseif ($value == '50') { $is_manager = 'selected="selected"'; }
 			echo "<select name=\"$name\">\n";
-			echo "<option value=\"0\">" . _('Disabled') . "</option>\n";
-			echo "<option value=\"25\" $is_user>" . _('User') . "</option>\n";
-			echo "<option value=\"50\" $is_manager>" . _('Manager') . "</option>\n";
-			echo "<option value=\"100\" $is_admin>" . _('Admin') . "</option>\n";
+			echo "<option value=\"0\">" . T_('Disabled') . "</option>\n";
+			echo "<option value=\"25\" $is_user>" . T_('User') . "</option>\n";
+			echo "<option value=\"50\" $is_manager>" . T_('Manager') . "</option>\n";
+			echo "<option value=\"100\" $is_admin>" . T_('Admin') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'theme_name':
@@ -252,42 +252,42 @@ function create_preference_input($name,$value) {
 		case 'playlist_method':
 			${$value} = ' selected="selected"';
 			echo "<select name=\"$name\">\n";
-			echo "\t<option value=\"send\"$send>" . _('Send on Add') . "</option>\n";
-			echo "\t<option value=\"send_clear\"$send_clear>" . _('Send and Clear on Add') . "</option>\n";
-			echo "\t<option value=\"clear\"$clear>" . _('Clear on Send') . "</option>\n";
-			echo "\t<option value=\"default\"$default>" . _('Default') . "</option>\n";
+			echo "\t<option value=\"send\"$send>" . T_('Send on Add') . "</option>\n";
+			echo "\t<option value=\"send_clear\"$send_clear>" . T_('Send and Clear on Add') . "</option>\n";
+			echo "\t<option value=\"clear\"$clear>" . T_('Clear on Send') . "</option>\n";
+			echo "\t<option value=\"default\"$default>" . T_('Default') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'bandwidth':
 			${"bandwidth_$value"} = ' selected="selected"';
 			echo "<select name=\"$name\">\n";
-			echo "\t<option value=\"25\"$bandwidth_25>" . _('Low') . "</option>\n";
-			echo "\t<option value=\"50\"$bandwidth_50>" . _('Medium') . "</option>\n";
-			echo "\t<option value=\"75\"$bandwidth_75>" . _('High') . "</option>\n";
+			echo "\t<option value=\"25\"$bandwidth_25>" . T_('Low') . "</option>\n";
+			echo "\t<option value=\"50\"$bandwidth_50>" . T_('Medium') . "</option>\n";
+			echo "\t<option value=\"75\"$bandwidth_75>" . T_('High') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'features':
 			${"features_$value"} = ' selected="selected"';
 			echo "<select name=\"$name\">\n";
-                        echo "\t<option value=\"25\"$features_25>" . _('Low') . "</option>\n";
-                        echo "\t<option value=\"50\"$features_50>" . _('Medium') . "</option>\n";
-                        echo "\t<option value=\"75\"$features_75>" . _('High') . "</option>\n";
+                        echo "\t<option value=\"25\"$features_25>" . T_('Low') . "</option>\n";
+                        echo "\t<option value=\"50\"$features_50>" . T_('Medium') . "</option>\n";
+                        echo "\t<option value=\"75\"$features_75>" . T_('High') . "</option>\n";
                         echo "</select>\n";
 		break;
 		case 'transcode':
 			${$value} = ' selected="selected"';
 			echo "<select name=\"$name\">\n";
-			echo "\t<option value=\"never\"$never>" . _('Never') . "</option>\n";
-			echo "\t<option value=\"default\"$default>" . _('Default') . "</option>\n";
-			echo "\t<option value=\"always\"$always>" . _('Always') . "</option>\n";
+			echo "\t<option value=\"never\"$never>" . T_('Never') . "</option>\n";
+			echo "\t<option value=\"default\"$default>" . T_('Default') . "</option>\n";
+			echo "\t<option value=\"always\"$always>" . T_('Always') . "</option>\n";
 			echo "</select>\n";
 		break;
 		case 'show_lyrics':
 			if ($value == '1') { $is_true = "selected=\"selected\""; }
 			else { $is_false = "selected=\"selected\""; }
 			echo "<select name=\"$name\">\n";
-			echo "\t<option value=\"1\" $is_true>" . _("Enable") . "</option>\n";
-			echo "\t<option value=\"0\" $is_false>" . _("Disable") . "</option>\n";
+			echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";
+			echo "\t<option value=\"0\" $is_false>" . T_("Disable") . "</option>\n";
 			echo "</select>\n";
 		break;
 		default:

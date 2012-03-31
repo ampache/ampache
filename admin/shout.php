@@ -40,7 +40,7 @@ switch ($_REQUEST['action']) {
 	case 'edit_shout':
 		$shout_id = $_POST['shout_id'];
 		$update = shoutBox::update($_POST);
-		show_confirmation(_('Shoutbox Post Updated'),'',Config::get('web_path').'/admin/shout.php');
+		show_confirmation(T_('Shoutbox Post Updated'),'',Config::get('web_path').'/admin/shout.php');
 	break;
 	case 'show_edit':
 		$shout = new shoutBox($_REQUEST['shout_id']);
@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
 		break;
 	case 'delete':
 		$shout_id = shoutBox::delete($_REQUEST['shout_id']);
-		show_confirmation(_('Shoutbox Post Deleted'),'',Config::get('web_path').'/admin/shout.php');
+		show_confirmation(T_('Shoutbox Post Deleted'),'',Config::get('web_path').'/admin/shout.php');
 	break;
 	default:
 		$browse = new Browse();

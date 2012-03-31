@@ -246,7 +246,7 @@ class Album extends database_object {
 		$this->f_name_link	= "<a href=\"$web_path/albums.php?action=show&amp;album=" . scrub_out($this->id) . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
 		// If we've got a disk append it
 		if ($this->disk) {
-			$this->f_name_link .= " <span class=\"discnb disc" .$this->disk. "\">[" . _('Disk') . " " . $this->disk . "]</span>";
+			$this->f_name_link .= " <span class=\"discnb disc" .$this->disk. "\">[" . T_('Disk') . " " . $this->disk . "]</span>";
 		}
 		$this->f_name_link .="</a>";
 
@@ -260,8 +260,8 @@ class Album extends database_object {
 			$this->f_artist = $artist;
 		}
 		else {
-			$this->f_artist_link = "<span title=\"$this->artist_count " . _('Artists') . "\">" . _('Various') . "</span>";
-			$this->f_artist = _('Various');
+			$this->f_artist_link = "<span title=\"$this->artist_count " . T_('Artists') . "\">" . T_('Various') . "</span>";
+			$this->f_artist = T_('Various');
 			$this->f_artist_name =  $this->f_artist;
 		}
 

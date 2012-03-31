@@ -28,15 +28,15 @@
 
 ?>
 <?php if (!defined('INSTALL')) { exit; } ?>
-<h4><?php echo _('Required'); ?></h4>
+<h4><?php echo T_('Required'); ?></h4>
 <table border="0" cellspacing="0" cellpadding="3">
 <tr>
-<td><?php echo sprintf(_("%s is readable"),"ampache.cfg.php.dist"); ?></td>
+<td><?php echo sprintf(T_("%s is readable"),"ampache.cfg.php.dist"); ?></td>
 <td>
 <?php
 	if (!is_readable($prefix . '/config/ampache.cfg.php.dist')) {
 		echo debug_result('',false);
-		Error::add('install',sprintf(_("%s is readable"),"ampache.cfg.php.dist"));
+		Error::add('install',sprintf(T_("%s is readable"),"ampache.cfg.php.dist"));
 	}
 	else {
 		echo debug_result('',true);
@@ -45,12 +45,12 @@
 </td>
 </tr>
 <tr>
-<td><?php echo sprintf(_('%s is readable'), 'ampache.sql'); ?></td>
+<td><?php echo sprintf(T_('%s is readable'), 'ampache.sql'); ?></td>
 <td>
 <?php
 	if (!is_readable($prefix . '/sql/ampache.sql')) {
 		echo debug_result('', false);
-		Error::add('install', sprintf(_('%s is readable'), 'ampache.sql'));
+		Error::add('install', sprintf(T_('%s is readable'), 'ampache.sql'));
 	}
 	else {
 		echo debug_result('', true);
@@ -59,7 +59,7 @@
 </td>
 </tr>
 <tr>
-<td><?php echo _('PHP Version'); ?>:</td>
+<td><?php echo T_('PHP Version'); ?>:</td>
 <td>
 <?php
 	if(!check_php_ver()) {
@@ -70,9 +70,9 @@
 		else {
 			$version_string = phpversion() . " ";
 		}
-		$string = $version_string . _('Hash Function Exists') . " " . print_bool(function_exists('hash_algos')) . " " . _('SHA256 Support') . " " . print_bool(in_array('sha256',$algos));
+		$string = $version_string . T_('Hash Function Exists') . " " . print_bool(function_exists('hash_algos')) . " " . T_('SHA256 Support') . " " . print_bool(in_array('sha256',$algos));
 		echo debug_result($string,false);
-		Error::add('install',_('PHP Version'));
+		Error::add('install', T_('PHP Version'));
 	}
 	else {
 		echo debug_result(phpversion(),true);
@@ -80,12 +80,12 @@
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('PHP MySQL Support'); ?>:</td>
+<td><?php echo T_('PHP MySQL Support'); ?>:</td>
 <td>
 <?php
 	if (!check_php_mysql()) {
 		echo debug_result('',false);
-		Error::add('install', _('PHP MySQL Support'));
+		Error::add('install', T_('PHP MySQL Support'));
 	}
 	else {
 		echo debug_result(mysql_get_client_info(),true);
@@ -93,12 +93,12 @@
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('PHP Session Support'); ?>:</td>
+<td><?php echo T_('PHP Session Support'); ?>:</td>
 <td>
 <?php
 	if (!check_php_session()) {
 		echo debug_result('',false);
-		Error::add('install',_('PHP Session Support'));
+		Error::add('install', T_('PHP Session Support'));
 	}
 	else {
 		echo debug_result('',true);
@@ -106,12 +106,12 @@
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('PHP iconv Support'); ?>:</td>
+<td><?php echo T_('PHP iconv Support'); ?>:</td>
 <td>
 <?php
 	if (!check_php_iconv()) {
 		echo debug_result('',false);
-		Error::add('install', _('PHP iconv Support'));
+		Error::add('install', T_('PHP iconv Support'));
 	}
 	else {
 		echo debug_result('',true);
@@ -119,12 +119,12 @@
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('PHP PCRE Support'); ?>:</td>
+<td><?php echo T_('PHP PCRE Support'); ?>:</td>
 <td>
 <?php
 	if (!check_php_pcre()) {
 		echo debug_result('',false);
-		Error::add('install',_('PHP PCRE Support'));
+		Error::add('install', T_('PHP PCRE Support'));
 	}
 	else {
 		echo debug_result('',true);
@@ -132,13 +132,13 @@
 ?>
 </td>
 </tr><tr>
-<th colspan="2"><h4><?php echo _('Optional'); ?></h4></th>
+<th colspan="2"><h4><?php echo T_('Optional'); ?></h4></th>
 </tr><tr>
-<td><?php echo _('PHP gettext Support'); ?>:</td>
+<td><?php echo T_('PHP gettext Support'); ?>:</td>
 <td>
 <?php
 	if (!check_gettext()) {
-		echo debug_result(_('gettext emulation will be used'), false);
+		echo debug_result(T_('gettext emulation will be used'), false);
 	}
 	else {
 		echo debug_result('',true);
@@ -146,11 +146,11 @@
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('PHP mbstring Support'); ?>:</td>
+<td><?php echo T_('PHP mbstring Support'); ?>:</td>
 <td>
 <?php
 	if (!check_mbstring()) {
-		echo debug_result(_('Multibyte character encodings may not be autodetected correctly'), false);
+		echo debug_result(T_('Multibyte character encodings may not be autodetected correctly'), false);
 	}
 	else {
 		echo debug_result('',true);
@@ -158,23 +158,23 @@
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('PHP Safe Mode'); ?>:</td>
+<td><?php echo T_('PHP Safe Mode'); ?>:</td>
 <td>
 <?php
 	if (!check_safemode()) {
-		echo debug_result(_('Safe mode enabled'), false);
+		echo debug_result(T_('Safe mode enabled'), false);
 	}
 	else {
-		echo debug_result(_('Safe mode not enabled'), true);
+		echo debug_result(T_('Safe mode not enabled'), true);
 	}
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('PHP Memory Limit'); ?>:</td>
+<td><?php echo T_('PHP Memory Limit'); ?>:</td>
 <td>
 <?php
 	if (!check_php_memory()) {
-		echo debug_result(_('Memory limit less than recommended size') . ' ' . ini_get('memory_limit'), false);
+		echo debug_result(T_('Memory limit less than recommended size') . ' ' . ini_get('memory_limit'), false);
 	}
 	else {
 		echo debug_result(ini_get('memory_limit'),true);
@@ -183,19 +183,19 @@
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('PHP Execution Time Limit'); ?>:</td>
+<td><?php echo T_('PHP Execution Time Limit'); ?>:</td>
 <td>
 <?php
 	if (!check_php_timelimit()) {
-		echo debug_result(sprintf(_('Execution time limit is %s seconds, which is less than recommended'), ini_get('max_execution_time')), false);
+		echo debug_result(sprintf(T_('Execution time limit is %s seconds, which is less than recommended'), ini_get('max_execution_time')), false);
 	}
 	else {
-		echo debug_result(ini_get('max_execution_time') . ' ' .  _('seconds'),true);
+		echo debug_result(ini_get('max_execution_time') . ' ' .  T_('seconds'),true);
 	}
 ?>
 </td>
 </tr><tr>
-<td><?php echo _('ampache.cfg.php is writable'); ?></td>
+<td><?php echo T_('ampache.cfg.php is writable'); ?></td>
 <td>
 <?php
 	if (!check_config_writable()) {

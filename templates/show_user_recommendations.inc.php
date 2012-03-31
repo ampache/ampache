@@ -34,10 +34,10 @@
 	<?php
 	if (count($recommended_artists)) {
 		$items = $working_user->format_recommendations($recommended_artists,'artist');
-		show_info_box(_('Recommended Artists'),'artist',$items);
+		show_info_box(T_('Recommended Artists'),'artist',$items);
 	}
 	else {
-		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
+		echo "<span class=\"error\">" . T_('Not Enough Data') . "</span>";
 	}
 	?>
 	</td>
@@ -45,10 +45,10 @@
 	<?php
 	if (count($recommended_albums)) {
 		$items = $working_user->format_recommendations($recommended_albums,'album');
-		show_info_box(_('Recommended Albums'),'album',$items);
+		show_info_box(T_('Recommended Albums'),'album',$items);
 	}
 	else {
-		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
+		echo "<span class=\"error\">" . T_('Not Enough Data') . "</span>";
 	}
 	?>
 	</td>
@@ -56,10 +56,10 @@
 	<?php
 	if (count($recommended_songs)) {
 		$items = $working_user->format_recommendations($recommended_songs,'song');
-		show_info_box(_('Recommended Songs'),'song',$items);
+		show_info_box(T_('Recommended Songs'),'song',$items);
 	}
 	else {
-		echo "<span class=\"error\">" . _('Not Enough Data') . "</span>";
+		echo "<span class=\"error\">" . T_('Not Enough Data') . "</span>";
 	}
 	?>
 	</td>

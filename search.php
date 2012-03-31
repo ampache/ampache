@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
 	case 'save_as_track':
 		$playlist_id = save_search($_REQUEST);
 		$playlist = new Playlist($playlist_id);
-		show_confirmation(_('Search Saved'),sprintf(_('Your Search has been saved as a track in %s'), $playlist->name),conf('web_path') . "/search.php");
+		show_confirmation(T_('Search Saved'),sprintf(T_('Your Search has been saved as a track in %s'), $playlist->name),conf('web_path') . "/search.php");
 	break;
 	case 'save_as_smartplaylist':
 		$playlist = new Search();

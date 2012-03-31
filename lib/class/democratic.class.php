@@ -150,24 +150,24 @@ class Democratic extends tmpPlaylist {
 	 */
 	public function format() {
 
-		$this->f_cooldown	= $this->cooldown . ' ' . _('minutes');
-		$this->f_primary	= $this->primary ? _('Primary') : '';
+		$this->f_cooldown	= $this->cooldown . ' ' . T_('minutes');
+		$this->f_primary	= $this->primary ? T_('Primary') : '';
 
 		switch ($this->level) {
 			case '5':
-				$this->f_level = _('Guest');
+				$this->f_level = T_('Guest');
 			break;
 			case '25':
-				$this->f_level = _('User');
+				$this->f_level = T_('User');
 			break;
 			case '50':
-				$this->f_level = _('Content Manager');
+				$this->f_level = T_('Content Manager');
 			break;
 			case '75':
-				$this->f_level = _('Catalog Manager');
+				$this->f_level = T_('Catalog Manager');
 			break;
 			case '100':
-				$this->f_level = _('Admin');
+				$this->f_level = T_('Admin');
 			break;
 		}
 

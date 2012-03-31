@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
 			$return = $lyric->get_song_lyrics($song->id, ucwords($song->f_artist), ucwords($song->title));
 			$link = '<a href="http://lyricwiki.org/' . rawurlencode(ucwords($song->f_artist)) . ':' . rawurlencode(ucwords($song->title)) . '" target="_blank">';
 			/* HINT: Artist, Song Title */
-			$link .= sprintf(_('%1$s - %2$s Lyrics Detail'), ucwords($song->f_artist), ucwords($song->title));
+			$link .= sprintf(T_('%1$s - %2$s Lyrics Detail'), ucwords($song->f_artist), ucwords($song->title));
 			$link .= "</a><br /><br />";
 			require_once Config::get('prefix') . '/templates/show_lyrics.inc.php';
 		}
@@ -64,7 +64,7 @@ switch ($_REQUEST['action']) {
 			$return = $lyric->get_song_lyrics($song->id, ucwords($song->f_artist), ucwords($song->title));
 			$link = '<a href="http://lyricwiki.org/' . rawurlencode(ucwords($song->f_artist)) . ':' . rawurlencode(ucwords($song->title)) . '" target="_blank">';
 			/* HINT: Artist, Song Title */
-			$link .= sprintf(_('%1$s - %2$s Lyrics Detail'), ucwords($song->f_artist), ucwords($song->title));
+			$link .= sprintf(T_('%1$s - %2$s Lyrics Detail'), ucwords($song->f_artist), ucwords($song->title));
 			$link .= "</a><br /><br />";
 			require_once Config::get('prefix') . '/templates/show_lyrics.inc.php';
 		}

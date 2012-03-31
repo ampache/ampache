@@ -28,8 +28,8 @@
 
 ?>
 <td class="cel_add">
-	<?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id,'add',_('Add'),'add_playlist_' . $playlist->id); ?>
-	<?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id,'random',_('Random'),'random_playlist_' . $playlist->id); ?>
+	<?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id,'add', T_('Add'),'add_playlist_' . $playlist->id); ?>
+	<?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id,'random', T_('Random'),'random_playlist_' . $playlist->id); ?>
 </td>
 <td class="cel_playlist"><?php echo $playlist->f_link; ?></td>
 <td class="cel_type"><?php echo $playlist->f_type; ?></td>
@@ -38,11 +38,11 @@
 <td class="cel_action">
         <?php if (Access::check_function('batch_download')) { ?>
                 <a href="<?php echo Config::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
-                        <?php echo get_user_icon('batch_download',_('Batch Download')); ?>
+                        <?php echo get_user_icon('batch_download', T_('Batch Download')); ?>
                 </a>
         <?php } ?>
 	<?php if ($playlist->has_access()) { ?>
-		<?php echo Ajax::button('?action=show_edit_object&type=playlist_row&id=' . $playlist->id,'edit',_('Edit'),'edit_playlist_' . $playlist->id); ?>
-		<?php echo Ajax::button('?page=browse&action=delete_object&type=playlist&id=' . $playlist->id,'delete',_('Delete'),'delete_playlist_' . $playlist->id); ?>
+		<?php echo Ajax::button('?action=show_edit_object&type=playlist_row&id=' . $playlist->id,'edit', T_('Edit'),'edit_playlist_' . $playlist->id); ?>
+		<?php echo Ajax::button('?page=browse&action=delete_object&type=playlist&id=' . $playlist->id,'delete', T_('Delete'),'delete_playlist_' . $playlist->id); ?>
 	<?php } ?>
 </td>

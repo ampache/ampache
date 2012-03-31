@@ -45,7 +45,7 @@ switch($_REQUEST['action']) {
 		if ($_POST['method'] == 'admin') {
 			$user_id = '-1';
 			$system = true;
-			$fullname = _('Server');
+			$fullname = T_('Server');
 			$_REQUEST['action'] = 'admin';
 		}
 		else {
@@ -80,7 +80,7 @@ switch($_REQUEST['action']) {
 			access_denied();
 			exit;
 		}
-		$fullname= _('Server');
+		$fullname= T_('Server');
 		$preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab'], true);
 	break;
 	case 'user':
@@ -112,12 +112,12 @@ switch($_REQUEST['action']) {
 		$_POST['username'] = $GLOBALS['user']->username;
 
 		if (!$GLOBALS['user']->update($_POST)) {
-			Error::add('general',_('Error Update Failed'));
+			Error::add('general', T_('Error Update Failed'));
 		}
 		else {
 			$_REQUEST['action'] = 'confirm';
-			$title = _('Updated');
-			$text = _('Your Account has been updated');
+			$title = T_('Updated');
+			$text = T_('Your Account has been updated');
 			$next_url = Config::get('web_path') . '/preferences.php?tab=account';
 		}
 	break;

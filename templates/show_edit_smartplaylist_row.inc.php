@@ -30,13 +30,13 @@
 	<td>
 		<?php $name = 'select_' . $playlist->type; ${$name} = ' selected="selected"'; ?>
 		<select name="pl_type">
-			<option value="public"<?php echo $select_public; ?>><?php echo _('Public'); ?></option>
-			<option value="private"<?php echo $select_private; ?>><?php echo _('Private'); ?></option>
+			<option value="public"<?php echo $select_public; ?>><?php echo T_('Public'); ?></option>
+			<option value="private"<?php echo $select_private; ?>><?php echo T_('Private'); ?></option>
 		</select>
 	<td>
 	<input type="hidden" name="id" value="<?php echo $playlist->id; ?>" />
 	<input type="hidden" name="type" value="smartplaylist_row" />
-	<?php echo Ajax::button('?action=edit_object&id=' . $playlist->id . '&type=smartplaylist_row','download',_('Save Changes'),'save_playlist_' . $playlist->id,'edit_playlist_' . $playlist->id); ?>
+	<?php echo Ajax::button('?action=edit_object&id=' . $playlist->id . '&type=smartplaylist_row','download', T_('Save Changes'),'save_playlist_' . $playlist->id,'edit_playlist_' . $playlist->id); ?>
 	</td>
 </tr>
 </table>

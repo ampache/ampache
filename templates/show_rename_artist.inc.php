@@ -33,15 +33,15 @@ function insert()
 	document.getElementById('artist_name').value = '<?php echo $artist->name; ?>';
 }
 </script>
-<?php /* HINT: Artist Name */ show_box_top(sprintf(_('Rename %s'), $artist->name)); ?>
+<?php /* HINT: Artist Name */ show_box_top(sprintf(T_('Rename %s'), $artist->name)); ?>
 <form name="rename_artist" method="post" action="<?php echo conf('web_path'); ?>/artists.php?action=rename&amp;artist=<?php echo $artist->id; ?>" style="Display:inline;">
         <?php show_artist_pulldown($artist->id, "artist_id", 4); ?>
 	<br />
-	<?php echo _('OR'); ?><br />
+	<?php echo T_('OR'); ?><br />
 	<input type="text" name="artist_name" size="30" value="<?php echo scrub_out($_REQUEST['artist_name']); ?>" id="artist_name" />
-	<a href="javascript:insert()">[<?php echo _('Insert current'); ?>]</a><br />
+	<a href="javascript:insert()">[<?php echo T_('Insert current'); ?>]</a><br />
 	<?php $GLOBALS['error']->print_error('artist_name'); ?>
-	<input type="checkbox" name="update_id3" value="yes" />&nbsp; <?php echo _('Update id3 tags') ?><br />
-	<input type="submit" value="<?php echo _('Rename'); ?>" /><br />
+	<input type="checkbox" name="update_id3" value="yes" />&nbsp; <?php echo T_('Update id3 tags') ?><br />
+	<input type="submit" value="<?php echo T_('Rename'); ?>" /><br />
 </form>
 <?php show_box_bottom(); ?>

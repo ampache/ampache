@@ -75,20 +75,20 @@ switch($_REQUEST['action']) {
 						$that_artist->merge($artist->id);
 						$count++;
 					} else
-						$GLOBALS['error']->add_error('general', sprintf(_('Error: No such artist \'%s\''), $artist_id));
+						$GLOBALS['error']->add_error('general', sprintf(T_('Error: No such artist \'%s\''), $artist_id));
 				} else {
-					$GLOBALS['error']->add_error('general', sprintf(_('Error: \'%s\' is not a valid ID'), $artist_id));
+					$GLOBALS['error']->add_error('general', sprintf(T_('Error: \'%s\' is not a valid ID'), $artist_id));
 				}
 			}
 			else
-				$GLOBALS['error']->add_error('general', sprintf(_('Error: No such artist \'%s\''), $_REQUEST['artist']));
+				$GLOBALS['error']->add_error('general', sprintf(T_('Error: No such artist \'%s\''), $_REQUEST['artist']));
 		} else {
-			$GLOBALS['error']->add_error('general',_("Error: Errenous request"));
+			$GLOBALS['error']->add_error('general', T_("Error: Errenous request"));
 		}
 		if ($count > 0) {
 			show_confirmation (
-				_('Renamed artist(s)'),
-				sprintf(_('%1$s artists have been merged with %2$s'), $count, $artist->name),
+				T_('Renamed artist(s)'),
+				sprintf(T_('%1$s artists have been merged with %2$s'), $count, $artist->name),
 				conf('web_path') . "/artists.php?action=show&artist=" . $artist->id
 			);
 		} else {
@@ -167,8 +167,8 @@ switch($_REQUEST['action']) {
 			// show something other than a blank screen after this
 			if ($ret) {
 				show_confirmation (
-					_('Renamed artist'),
-					sprintf(_('%1$s is now known as %2$s'), $artist->name, $newname),
+					T_('Renamed artist'),
+					sprintf(T_('%1$s is now known as %2$s'), $artist->name, $newname),
 					conf('web_path') . "/artists.php?action=show&artist=" . $newid
 				);
 			}
@@ -192,7 +192,7 @@ switch($_REQUEST['action']) {
 		/* Enclose this in the purty box! */
 		require (conf('prefix') . '/templates/show_box_top.inc.php');
 		show_alphabet_list('artists','artists.php',$match);
-		show_alphabet_form($chr,_('Show Artists starting with'),"artists.php?action=match");
+		show_alphabet_form($chr, T_('Show Artists starting with'),"artists.php?action=match");
 		require (conf('prefix') . '/templates/show_box_bottom.inc.php');
 
 		if ($match === "Browse") {

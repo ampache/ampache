@@ -32,13 +32,13 @@
  */
 
 ?>
-<?php /* HINT: Username */ show_box_top(sprintf(_('Editing %s preferences'), $fullname),'box box_preferences'); ?>
+<?php /* HINT: Username */ show_box_top(sprintf(T_('Editing %s preferences'), $fullname),'box box_preferences'); ?>
 <?php  if ($_REQUEST['tab'] != 'account' && $_REQUEST['tab'] != 'modules') { ?>
 
 <form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
 <?php show_preference_box($preferences[$_REQUEST['tab']]);  ?>
 <div class="formValidation">
-	<input class="button" type="submit" value="<?php echo _('Update Preferences'); ?>" />
+	<input class="button" type="submit" value="<?php echo T_('Update Preferences'); ?>" />
 	<?php echo Core::form_register('update_preference'); ?>
 	<input type="hidden" name="tab" value="<?php echo scrub_out($_REQUEST['tab']); ?>" />
 	<input type="hidden" name="method" value="<?php echo scrub_out($_REQUEST['action']); ?>" />

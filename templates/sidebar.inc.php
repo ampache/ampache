@@ -31,11 +31,11 @@ $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
 ${$class_name} = ' active';
 
 // List of buttons ( id, title, icon, access level)
-$sidebar_items[] = array('id'=>'home', 'title'=>_('Home'), 'icon'=>'home', 'access'=>5);
-$sidebar_items[] = array('id'=>'localplay', 'title'=>_('Localplay'), 'icon'=>'volumeup', 'access'=>5);
-$sidebar_items[] = array('id'=>'preferences', 'title'=>_('Preferences'), 'icon'=>'edit', 'access'=>5);
-$sidebar_items[] = array('id'=>'modules','title'=>_('Modules'),'icon'=>'plugin','access'=>100);
-$sidebar_items[] = array('id'=>'admin', 'title'=>_('Admin'), 'icon'=>'admin', 'access'=>100);
+$sidebar_items[] = array('id'=>'home', 'title' => T_('Home'), 'icon'=>'home', 'access'=>5);
+$sidebar_items[] = array('id'=>'localplay', 'title' => T_('Localplay'), 'icon'=>'volumeup', 'access'=>5);
+$sidebar_items[] = array('id'=>'preferences', 'title' => T_('Preferences'), 'icon'=>'edit', 'access'=>5);
+$sidebar_items[] = array('id'=>'modules','title' => T_('Modules'),'icon'=>'plugin','access'=>100);
+$sidebar_items[] = array('id'=>'admin', 'title' => T_('Admin'), 'icon'=>'admin', 'access'=>100);
 
 
 $web_path = Config::get('web_path');
@@ -65,7 +65,7 @@ $ajax_url = Config::get('ajax_url');
 ?>
 <li id="sb_tab_logout" class="sb1">
 	<a href="<?php echo Config::get('web_path'); ?>/logout.php" id="sidebar_logout" >
-	<?php echo get_user_icon('logout',_('Logout')); ?>
+	<?php echo get_user_icon('logout', T_('Logout')); ?>
 	</a>
 </li>
 </ul>

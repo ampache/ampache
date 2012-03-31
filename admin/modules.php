@@ -41,7 +41,7 @@ switch ($_REQUEST['action']) {
 	case 'install_localplay':
 		$localplay = new Localplay($_REQUEST['type']);
 		if (!$localplay->player_loaded()) {
-			Error::add('general',_('Install Failed, Controller Error'));
+			Error::add('general', T_('Install Failed, Controller Error'));
 			Error::display('general');
 			break;
 		}
@@ -59,7 +59,7 @@ switch ($_REQUEST['action']) {
 	case 'confirm_uninstall_localplay':
 		$type = scrub_in($_REQUEST['type']);
 		$url = Config::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type;
-		$title = _('Are you sure you want to remove this plugin?');
+		$title = T_('Are you sure you want to remove this plugin?');
 		$body = '';
 		show_confirmation($title,$body,$url,1);
 	break;
@@ -71,7 +71,7 @@ switch ($_REQUEST['action']) {
 
 		/* Show Confirmation */
 		$url	= Config::get('web_path') . '/admin/modules.php?action=show_localplay';
-		$title  = _('Plugin Deactivated');
+		$title  = T_('Plugin Deactivated');
 		$body   = '';
 		show_confirmation($title,$body,$url);
 	break;
@@ -86,7 +86,7 @@ switch ($_REQUEST['action']) {
 		if (!$plugin->install()) {
 			debug_event('plugins','Error: Plugin Install Failed, ' . $_REQUEST['plugin'],'1');
 			$url	= Config::get('web_path') . '/admin/modules.php?action=show_plugins';
-			$title = _('Unable to Install Plugin');
+			$title = T_('Unable to Install Plugin');
 			$body = '';
 			show_confirmation($title,$body,$url);
 			break;
@@ -97,14 +97,14 @@ switch ($_REQUEST['action']) {
 
 		/* Show Confirmation */
 		$url	= Config::get('web_path') . '/admin/modules.php?action=show_plugins';
-		$title	= _('Plugin Activated');
+		$title	= T_('Plugin Activated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;
 	case 'confirm_uninstall_plugin':
 		$plugin = scrub_in($_REQUEST['plugin']);
 		$url	= Config::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
-		$title	= _('Are you sure you want to remove this plugin?');
+		$title	= T_('Are you sure you want to remove this plugin?');
 		$body	= '';
 		show_confirmation($title,$body,$url,1);
 	break;
@@ -123,7 +123,7 @@ switch ($_REQUEST['action']) {
 
 		/* Show Confirmation */
 		$url	= Config::get('web_path') . '/admin/modules.php?action=show_plugins';
-		$title  = _('Plugin Deactivated');
+		$title  = T_('Plugin Deactivated');
 		$body   = '';
 		show_confirmation($title,$body,$url);
 	break;
@@ -138,19 +138,19 @@ switch ($_REQUEST['action']) {
 		$plugin->upgrade();
 		User::rebuild_all_preferences();
 		$url    = Config::get('web_path') . '/admin/modules.php?action=show_plugins';
-		$title  = _('Plugin Upgraded');
+		$title  = T_('Plugin Upgraded');
 		$body   = '';
 		show_confirmation($title, $body, $url);
 	break;
 	case 'show_plugins':
 		$plugins = Plugin::get_plugins();
-		show_box_top(_('Plugins'), 'box box_localplay_plugins');
+		show_box_top(T_('Plugins'), 'box box_localplay_plugins');
 		require_once Config::get('prefix') . '/templates/show_plugins.inc.php';
 		show_box_bottom();
 	break;
 	case 'show_localplay':
 		$controllers = Localplay::get_controllers();
-		show_box_top(_('Localplay Controllers'), 'box box_localplay_controllers');
+		show_box_top(T_('Localplay Controllers'), 'box box_localplay_controllers');
 		require_once Config::get('prefix') . '/templates/show_localplay_controllers.inc.php';
 		show_box_bottom();
 	break;

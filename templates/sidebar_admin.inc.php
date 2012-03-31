@@ -28,44 +28,44 @@
 
 ?>
 <ul class="sb2" id="sb_admin">
-  <li><h4><?php echo _('Catalogs'); ?></h4>
+  <li><h4><?php echo T_('Catalogs'); ?></h4>
    <ul class="sb3" id="sb_admin_catalogs">
-    <li id="sb_admin_catalogs_Add"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo _('Add a Catalog'); ?></a></li>
-    <li id="sb_admin_catalogs_Show"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_catalogs"><?php echo _('Show Catalogs'); ?></a></li>
+    <li id="sb_admin_catalogs_Add"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo T_('Add a Catalog'); ?></a></li>
+    <li id="sb_admin_catalogs_Show"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_catalogs"><?php echo T_('Show Catalogs'); ?></a></li>
    </ul>
   </li>
 
-  <li><h4><?php echo _('User Tools'); ?></h4>
+  <li><h4><?php echo T_('User Tools'); ?></h4>
     <ul class="sb3" id="sb_admin_ut">
-      <li id="sb_admin_ut_AddUser"><a href="<?php echo $web_path; ?>/admin/users.php?action=show_add_user"><?php echo _('Add User'); ?></a></li>
-      <li id="sb_admin_ut_BrowseUsers"><a href="<?php echo $web_path; ?>/admin/users.php"><?php echo _('Browse Users'); ?></a></li>
+      <li id="sb_admin_ut_AddUser"><a href="<?php echo $web_path; ?>/admin/users.php?action=show_add_user"><?php echo T_('Add User'); ?></a></li>
+      <li id="sb_admin_ut_BrowseUsers"><a href="<?php echo $web_path; ?>/admin/users.php"><?php echo T_('Browse Users'); ?></a></li>
     </ul>
   </li>
-  <li><h4><?php echo _('Access Control'); ?></h4>
+  <li><h4><?php echo T_('Access Control'); ?></h4>
     <ul class="sb3" id="sb_admin_acl">
-      <li id="sb_admin_acl_AddAccess"><a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo _('Add ACL'); ?></a></li>
-      <li id="sb_admin_acl_ShowAccess"><a href="<?php echo $web_path; ?>/admin/access.php"><?php echo _('Show ACL(s)'); ?></a></li>
+      <li id="sb_admin_acl_AddAccess"><a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo T_('Add ACL'); ?></a></li>
+      <li id="sb_admin_acl_ShowAccess"><a href="<?php echo $web_path; ?>/admin/access.php"><?php echo T_('Show ACL(s)'); ?></a></li>
     </ul>
   </li>
-  <li><h4><?php echo _('Other Tools'); ?></h4>
+  <li><h4><?php echo T_('Other Tools'); ?></h4>
     <ul class="sb3" id="sb_admin_ot">
-      <li id="sb_admin_ot_Debug"><a href="<?php echo $web_path; ?>/admin/system.php?action=show_debug"><?php echo _('Ampache Debug'); ?></a></li>
-      <li id="sb_admin_ot_ClearNowPlaying"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo _('Clear Now Playing'); ?></a></li>
-      <li id="sb_admin_ot_ExportCatalog"><a href="<?php echo $web_path; ?>/admin/export.php"><?php echo _('Export Catalog'); ?></a></li>
+      <li id="sb_admin_ot_Debug"><a href="<?php echo $web_path; ?>/admin/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>
+      <li id="sb_admin_ot_ClearNowPlaying"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo T_('Clear Now Playing'); ?></a></li>
+      <li id="sb_admin_ot_ExportCatalog"><a href="<?php echo $web_path; ?>/admin/export.php"><?php echo T_('Export Catalog'); ?></a></li>
       <?php if (Config::get('shoutbox')) { ?>
-      <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/admin/shout.php"><?php echo _('Manage Shoutbox'); ?></a></li>
+      <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/admin/shout.php"><?php echo T_('Manage Shoutbox'); ?></a></li>
       <?php } ?>
     </ul>
   </li>
 <?php if (Access::check('interface','100')) { ?>
-  <li><h4><?php echo _('Server Config'); ?></h4>
+  <li><h4><?php echo T_('Server Config'); ?></h4>
     <ul class="sb3" id="sb_preferences_sc">
 <?php
 	$catagories = Preference::get_catagories();
         foreach ($catagories as $name) {
                 $f_name = ucfirst($name);
 ?>
-      <li id="sb_preferences_sc_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=<?php echo $name; ?>"><?php echo _($f_name); ?></a></li>
+      <li id="sb_preferences_sc_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
 <?php } ?>
     </ul>
   </li>

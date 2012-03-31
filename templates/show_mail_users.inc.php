@@ -28,17 +28,17 @@
 
 ?>
 
-<?php show_box_top(_('Send E-mail to Users'), 'box box_mail_users'); ?>
+<?php show_box_top(T_('Send E-mail to Users'), 'box box_mail_users'); ?>
 <form name="mail" method="post" action="<?php echo Config::get('web_path'); ?>/admin/mail.php?action=send_mail" enctype="multipart/form-data">
 <table>
   <tr>
-    <td><?php echo _('Mail to'); ?>:</td>
+    <td><?php echo T_('Mail to'); ?>:</td>
     <td>
         <select name="to">
-                <option value="all" title="Mail Everyone"><?php echo _('All'); ?></option>
-                <option value="users" title="Mail Users"><?php echo _('User'); ?></option>
-                <option value="admins" title="Mail Admins"><?php echo _('Admin'); ?></option>
-		<option value="inactive" title="Mail Inactive Users"><?php echo _('Inactive Users'); ?>&nbsp;</option>
+                <option value="all" title="Mail Everyone"><?php echo T_('All'); ?></option>
+                <option value="users" title="Mail Users"><?php echo T_('User'); ?></option>
+                <option value="admins" title="Mail Admins"><?php echo T_('Admin'); ?></option>
+		<option value="inactive" title="Mail Inactive Users"><?php echo T_('Inactive Users'); ?>&nbsp;</option>
         </select>
     </td>
   </tr>
@@ -47,43 +47,43 @@
     <td colspan="2">
  	 <table>
  		 <tr>
-		    <td><?php echo _('Catalog Statistics'); ?>:</td>
+		    <td><?php echo T_('Catalog Statistics'); ?>:</td>
 		    <td>
 			<input type="checkbox" name="cat_stats" value="yes" />
 		    </td>
-		    <td><?php echo _('Most Popular Albums'); ?>:</td>
+		    <td><?php echo T_('Most Popular Albums'); ?>:</td>
 		    <td>
 		        <input type="checkbox" name="pop_albums" value="yes" />
 		    </td>
 		  </tr>
 
 		  <tr>
-		    <td><?php echo _('Latest Artist Additions'); ?>:</td>
+		    <td><?php echo T_('Latest Artist Additions'); ?>:</td>
 		    <td>
 		        <input type="checkbox" name="new_artists" value="yes" />
 		    </td>
-		    <td><?php echo _('Most Popular Artists'); ?>:</td>
+		    <td><?php echo T_('Most Popular Artists'); ?>:</td>
 		    <td>
 		        <input type="checkbox" name="pop_artists" value="yes" />
 		    </td>
 		  </tr>
 
 		  <tr>
-		    <td><?php echo _('Latest Album Additions'); ?>:</td>
+		    <td><?php echo T_('Latest Album Additions'); ?>:</td>
 		    <td>
 		        <input type="checkbox" name="new_albums" value="yes" />
 		    </td>
-		    <td><?php echo _('Most Popular Songs'); ?>:</td>
+		    <td><?php echo T_('Most Popular Songs'); ?>:</td>
 		    <td>
 		        <input type="checkbox" name="pop_songs" value="yes" />
 		    </td>
 		</tr>
 		  <tr>
-		    <td><?php echo _('Flagged Songs'); ?>:</td>
+		    <td><?php echo T_('Flagged Songs'); ?>:</td>
 		    <td>
 		        <input type="checkbox" name="flagged" value="yes" />
 		    </td>
-		    <td><?php echo _('Disabled Songs'); ?>:</td>
+		    <td><?php echo T_('Disabled Songs'); ?>:</td>
 		    <td>
 		        <input type="checkbox" name="disabled" value="yes" />
 		    </td>
@@ -91,7 +91,7 @@
 		</tr>
 
 		  <tr>
-		    <td colspan = "2"><?php echo _('Most Popular Threshold in days'); ?>:</td>
+		    <td colspan = "2"><?php echo T_('Most Popular Threshold in days'); ?>:</td>
 		    <td>
 		        <input type="text" name="threshold" size="3" value="<?php echo Config::get('popular_threshold'); ?>" />
 		    </td>
@@ -102,23 +102,23 @@
   </tr>
 -->
   <tr>
-    <td><?php echo _('From'); ?>:</td>
+    <td><?php echo T_('From'); ?>:</td>
     <td>
       <select name="from">
-        <option value="self" title="Self"><?php echo _('Yourself'); ?></option>
-	<option value="system" title="System"><?php echo _('Ampache'); ?></option>
+        <option value="self" title="Self"><?php echo T_('Yourself'); ?></option>
+	<option value="system" title="System"><?php echo T_('Ampache'); ?></option>
       </select>
     </td>
   </tr>
   <tr>
-    <td><?php echo _('Subject'); ?>:</td>
+    <td><?php echo T_('Subject'); ?>:</td>
     <td colspan="3">
         <input name="subject" value="<?php echo scrub_out($_POST['subject']); ?>" size="50"></input>
     </td>
   </tr>
 
   <tr>
-    <td valign="top"><?php echo _('Message'); ?>:</td>
+    <td valign="top"><?php echo T_('Message'); ?>:</td>
     <td>
         <textarea class="input" name="message" rows="10" cols="70"></textarea>
     </td>
@@ -126,7 +126,7 @@
 
 </table>
 <div class="formValidation">
-        <input class="button" type="submit" value="<?php echo _('Send Mail'); ?>" />
+        <input class="button" type="submit" value="<?php echo T_('Send Mail'); ?>" />
 </div>
 </form>
 <?php show_box_bottom(); ?>

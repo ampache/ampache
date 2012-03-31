@@ -28,9 +28,9 @@
 
 ?>
 <div id="localplay-control">
-<?php echo Ajax::button('?page=localplay&action=command&command=prev','prev',_('Previous'),'localplay_control_previous'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=stop','stop',_('Stop'),'localplay_control_stop'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=pause','pause',_('Pause'),'localplay_control_pause'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=play','play',_('Play'),'localplay_control_play'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=next','next',_('Next'),'localplay_control_next'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=prev','prev', T_('Previous'),'localplay_control_previous'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=stop','stop', T_('Stop'),'localplay_control_stop'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=pause','pause', T_('Pause'),'localplay_control_pause'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=play','play', T_('Play'),'localplay_control_play'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=next','next', T_('Next'),'localplay_control_next'); ?>
 </div>

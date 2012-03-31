@@ -28,5 +28,5 @@
 
 // Get the count of the number of items in their playlist
 ?>
-<?php echo _('Found'); ?>:<?php echo $catalog_add_found; ?><br />
-<?php echo _('Reading'); ?>:<?php echo $catalog_add_directory; ?><br />
+<?php echo T_('Found'); ?>:<?php echo $catalog_add_found; ?><br />
+<?php echo T_('Reading'); ?>:<?php echo $catalog_add_directory; ?><br />

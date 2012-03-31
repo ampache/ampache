@@ -137,84 +137,84 @@ class Browse extends Query {
 		// Switch on the type of browsing we're doing
 		switch ($type) {
 			case 'song':
-				show_box_top(_('Songs') . $match, $class);
+				show_box_top(T_('Songs') . $match, $class);
 				Song::build_cache($object_ids);
 				require_once Config::get('prefix') . '/templates/show_songs.inc.php';
 				show_box_bottom();
 			break;
 			case 'album':
-				show_box_top(_('Albums') . $match, $class);
+				show_box_top(T_('Albums') . $match, $class);
 				Album::build_cache($object_ids,'extra');
 				require_once Config::get('prefix') . '/templates/show_albums.inc.php';
 				show_box_bottom();
 			break;
 			case 'user':
-				show_box_top(_('Manage Users') . $match, $class);
+				show_box_top(T_('Manage Users') . $match, $class);
 				require_once Config::get('prefix') . '/templates/show_users.inc.php';
 				show_box_bottom();
 			break;
 			case 'artist':
-				show_box_top(_('Artists') . $match, $class);
+				show_box_top(T_('Artists') . $match, $class);
 				Artist::build_cache($object_ids,'extra');
 				require_once Config::get('prefix') . '/templates/show_artists.inc.php';
 				show_box_bottom();
 			break;
 			case 'live_stream':
 				require_once Config::get('prefix') . '/templates/show_live_stream.inc.php';
-				show_box_top(_('Radio Stations') . $match, $class);
+				show_box_top(T_('Radio Stations') . $match, $class);
 				require_once Config::get('prefix') . '/templates/show_live_streams.inc.php';
 				show_box_bottom();
 			break;
 			case 'playlist':
 				Playlist::build_cache($object_ids);
-				show_box_top(_('Playlists') . $match, $class);
+				show_box_top(T_('Playlists') . $match, $class);
 				require_once Config::get('prefix') . '/templates/show_playlists.inc.php';
 				show_box_bottom();
 			break;
 			case 'playlist_song':
-				show_box_top(_('Playlist Songs') . $match,$class);
+				show_box_top(T_('Playlist Songs') . $match,$class);
 				require_once Config::get('prefix') . '/templates/show_playlist_songs.inc.php';
 				show_box_bottom();
 			break;
 			case 'playlist_localplay':
-				show_box_top(_('Current Playlist'));
+				show_box_top(T_('Current Playlist'));
 				require_once Config::get('prefix') . '/templates/show_localplay_playlist.inc.php';
 				show_box_bottom();
 			break;
 			case 'smartplaylist':
-				show_box_top(_('Smart Playlists') . $match, $class);
+				show_box_top(T_('Smart Playlists') . $match, $class);
 				require_once Config::get('prefix') . '/templates/show_smartplaylists.inc.php';
 				show_box_bottom();
 			break;
 			case 'catalog':
-				show_box_top(_('Catalogs'), $class);
+				show_box_top(T_('Catalogs'), $class);
 				require_once Config::get('prefix') . '/templates/show_catalogs.inc.php';
 				show_box_bottom();
 			break;
 			case 'shoutbox':
-				show_box_top(_('Shoutbox Records'),$class);
+				show_box_top(T_('Shoutbox Records'),$class);
 				require_once Config::get('prefix') . '/templates/show_manage_shoutbox.inc.php';
 				show_box_bottom();
 			break;
 			case 'flagged':
-				show_box_top(_('Flagged Records'),$class);
+				show_box_top(T_('Flagged Records'),$class);
 				require_once Config::get('prefix') . '/templates/show_flagged.inc.php';
 				show_box_bottom();
 			break;
 			case 'tag':
 				Tag::build_cache($tags);
-				show_box_top(_('Tag Cloud'),$class);
+				show_box_top(T_('Tag Cloud'),$class);
 				require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php';
 				show_box_bottom();
 			break;
 			case 'video':
 				Video::build_cache($object_ids);
-				show_box_top(_('Videos'),$class);
+				show_box_top(T_('Videos'),$class);
 				require_once Config::get('prefix') . '/templates/show_videos.inc.php';
 				show_box_bottom();
 			break;
 			case 'democratic':
-				show_box_top(_('Democratic Playlist'),$class);
+				show_box_top(T_('Democratic Playlist'),$class);
 				require_once Config::get('prefix') . '/templates/show_democratic_playlist.inc.php';
 				show_box_bottom();
 			default:

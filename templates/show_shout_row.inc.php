@@ -36,11 +36,11 @@
 	<td class="cel_action">
 
                 <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&amp;shout_id=<?php echo $shout->id; ?>">
-                <?php echo get_user_icon('edit', _('Edit')); ?>
+                <?php echo get_user_icon('edit', T_('Edit')); ?>
                 </a>
 
                 <a href="<?php echo $web_path; ?>/admin/shout.php?action=delete&amp;shout_id=<?php echo $shout->id; ?>">
-                <?php echo get_user_icon('delete', _('Delete')); ?>
+                <?php echo get_user_icon('delete', T_('Delete')); ?>
                 </a>
 	</td>
 </tr>

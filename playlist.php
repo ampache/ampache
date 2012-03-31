@@ -69,7 +69,7 @@ switch ($_REQUEST['action']) {
 
 		$playlist->create($playlist_name,$playlist_type);
 		$_SESSION['data']['playlist_id']        = $playlist->id;
-		show_confirmation(_('Playlist Created'), sprintf(_('%1$s (%2$s) has been created'), $playlist_name,  $playlist_type),'playlist.php');
+		show_confirmation(T_('Playlist Created'), sprintf(T_('%1$s (%2$s) has been created'), $playlist_name,  $playlist_type),'playlist.php');
 	break;
 	case 'delete_playlist':
 		// If we made it here, we didn't have sufficient rights.
@@ -105,11 +105,11 @@ switch ($_REQUEST['action']) {
 
 		if($result == false) {
 			$url   = Config::get('web_path') . '/playlist.php?action=show_import_playlist';
-			$title = _('Playlist Not Imported');
+			$title = T_('Playlist Not Imported');
 			$body  = $reason;
 		} else {
 			$url   = Config::get('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id='.$playlist_id;
-			$title = _('Playlist Imported');
+			$title = T_('Playlist Imported');
 			$body  = basename($_FILES['filename']['name']);
 			$body .= "<br />";
 			$body .= $reason;
@@ -141,7 +141,7 @@ switch ($_REQUEST['action']) {
 
 		prune_empty_playlists();
 		$url = Config::get('web_path') . '/playlist.php';
-		$title = _('Empty Playlists Deleted');
+		$title = T_('Empty Playlists Deleted');
 		$body  = '';
 		show_confirmation($title,$body,$url);
 	break;

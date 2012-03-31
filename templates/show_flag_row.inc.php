@@ -35,9 +35,9 @@
 	<td class="cel_status"><?php $flag->print_status(); ?></td>
 	<td class="cel_action">
 	<?php if ($flag->approved) { ?>
-		<?php echo Ajax::button('?page=flag&action=reject&flag_id=' . $flag->id,'disable',_('Reject'),'reject_flag_' . $flag->id); ?>
+		<?php echo Ajax::button('?page=flag&action=reject&flag_id=' . $flag->id,'disable', T_('Reject'),'reject_flag_' . $flag->id); ?>
 	<?php } else { ?>
-		<?php echo Ajax::button('?page=flag&action=accept&flag_id=' . $flag->id,'enable',_('Enable'),'enable_flag_' . $flag->id); ?>
+		<?php echo Ajax::button('?page=flag&action=accept&flag_id=' . $flag->id,'enable', T_('Enable'),'enable_flag_' . $flag->id); ?>
 	<?php } ?>
 	</td>
 </tr>

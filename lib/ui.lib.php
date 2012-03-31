@@ -202,68 +202,68 @@ function get_location() {
 
 	switch ($location['page']) {
 		case 'index.php':
-			$location['title'] 	= _('Home');
+			$location['title'] 	= T_('Home');
 			break;
 		case 'upload.php':
-			$location['title'] 	= _('Upload');
+			$location['title'] 	= T_('Upload');
 			break;
 		case 'localplay.php':
-			$location['title'] 	= _('Local Play');
+			$location['title'] 	= T_('Local Play');
 			break;
 		case 'randomplay.php':
-			$location['title'] 	= _('Random Play');
+			$location['title'] 	= T_('Random Play');
 			break;
 		case 'playlist.php':
-			$location['title'] 	= _('Playlist');
+			$location['title'] 	= T_('Playlist');
 			break;
 		case 'search.php':
-			$location['title'] 	= _('Search');
+			$location['title'] 	= T_('Search');
 			break;
 		case 'preferences.php':
-			$location['title'] 	= _('Preferences');
+			$location['title'] 	= T_('Preferences');
 			break;
 		case 'admin/index.php':
-			$location['title'] 	= _('Admin-Catalog');
+			$location['title'] 	= T_('Admin-Catalog');
 			$location['section']	= 'admin';
 			break;
 		case 'admin/catalog.php':
-			$location['title'] 	= _('Admin-Catalog');
+			$location['title'] 	= T_('Admin-Catalog');
 			$location['section']	= 'admin';
 			break;
 		case 'admin/users.php':
-			$location['title']	= _('Admin-User Management');
+			$location['title']	= T_('Admin-User Management');
 			$location['section']	= 'admin';
 			break;
 		case 'admin/mail.php':
-			$location['title']	= _('Admin-Mail Users');
+			$location['title']	= T_('Admin-Mail Users');
 			$location['section']	= 'admin';
 			break;
 		case 'admin/access.php':
-			$location['title']	= _('Admin-Manage Access Lists');
+			$location['title']	= T_('Admin-Manage Access Lists');
 			$location['section']	= 'admin';
 			break;
 		case 'admin/preferences.php':
-			$location['title']	= _('Admin-Site Preferences');
+			$location['title']	= T_('Admin-Site Preferences');
 			$location['section']	= 'admin';
 			break;
 		case 'admin/modules.php':
-			$location['title']	= _('Admin-Manage Modules');
+			$location['title']	= T_('Admin-Manage Modules');
 			$location['section']	= 'admin';
 			break;
 		case 'browse.php':
-			$location['title']	= _('Browse Music');
+			$location['title']	= T_('Browse Music');
 			$location['section']	= 'browse';
 			break;
 		case 'albums.php':
-			$location['title']	= _('Albums');
+			$location['title']	= T_('Albums');
 			$location['section']	= 'browse';
 			break;
 		case 'artists.php':
-			$location['title']	= _('Artists');
+			$location['title']	= T_('Artists');
 			$location['section']	= 'browse';
 			break;
 		case 'stats.php':
-			$location['title']	= _('Statistics');
+			$location['title']	= T_('Statistics');
 			break;
 		default:
 			$location['title'] = '';
@@ -317,7 +317,7 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0) {
 
 	if ($allow_add) {
 		// Append additional option to the end with value=-1
-		echo "\t<option value=\"-1\">" . _('Add New') . "...</option>\n";
+		echo "\t<option value=\"-1\">" . T_('Add New') . "...</option>\n";
 	}
 
 	echo "</select>\n";
@@ -397,7 +397,7 @@ function show_catalog_select($name='catalog',$catalog_id=0,$style='') {
 function show_user_select($name,$selected='',$style='') {
 
 	echo "<select name=\"$name\" style=\"$style\">\n";
-	echo "\t<option value=\"\">" . _('All') . "</option>\n";
+	echo "\t<option value=\"\">" . T_('All') . "</option>\n";
 
 	$sql = "SELECT `id`,`username`,`fullname` FROM `user` ORDER BY `fullname`";
 	$db_results = Dba::read($sql);
@@ -424,7 +424,7 @@ function show_user_select($name,$selected='',$style='') {
 function show_playlist_select($name,$selected='',$style='') {
 
 	echo "<select name=\"$name\" style=\"$style\">\n";
-	echo "\t<option value=\"\">" . _('None') . "</option>\n";
+	echo "\t<option value=\"\">" . T_('None') . "</option>\n";
 
 	$sql = "SELECT `id`,`name` FROM `playlist` ORDER BY `name`";
 	$db_results = Dba::read($sql);
@@ -480,7 +480,7 @@ function get_user_icon($name,$title='',$id='') {
 		$name = $name['0'];
 	}
 
-	if (!$title) { $title = _(ucfirst($name)); }
+	if (!$title) { $title = T_(ucfirst($name)); }
 
 	if ($id) {
 		$id = ' id="' . $id . '" ';
@@ -747,10 +747,10 @@ function update_text($field, $value) {
 function print_bool($value) {
 
 	if ($value) {
-		$string = '<span class="item_on">' . _('On') . '</span>';
+		$string = '<span class="item_on">' . T_('On') . '</span>';
 	}
 	else {
-		$string = '<span class="item_off">' . _('Off') . '</span>';
+		$string = '<span class="item_off">' . T_('Off') . '</span>';
 	}
 
 	return $string;

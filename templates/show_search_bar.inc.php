@@ -34,14 +34,14 @@
 	<input type="hidden" name="rule_1_operator" value="0" />
         <input type="hidden" name="object_type" value="song" />
 	<select name="rule_1">
-		<option value="anywhere"><?php echo _('Anywhere')?></option>
-		<option value="title"><?php echo _('Title')?></option>
-		<option value="album"><?php echo _('Album')?></option>
-		<option value="artist"><?php echo _('Artist')?></option>
-		<option value="tag"><?php echo _('Tag')?></option>
+		<option value="anywhere"><?php echo T_('Anywhere')?></option>
+		<option value="title"><?php echo T_('Title')?></option>
+		<option value="album"><?php echo T_('Album')?></option>
+		<option value="artist"><?php echo T_('Artist')?></option>
+		<option value="tag"><?php echo T_('Tag')?></option>
 	</select>
-        <input class="button" type="submit" value="<?php echo _('Search'); ?>" id="searchBtn" />
-      	<a href="<?php echo $web_path; ?>/search.php?type=song" class="button" id="advSearchBtn"><?php echo _('Advanced Search'); ?></a>
+        <input class="button" type="submit" value="<?php echo T_('Search'); ?>" id="searchBtn" />
+      	<a href="<?php echo $web_path; ?>/search.php?type=song" class="button" id="advSearchBtn"><?php echo T_('Advanced Search'); ?></a>
         </form>
 </div>
 

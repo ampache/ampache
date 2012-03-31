@@ -26,10 +26,10 @@
  * @link	http://www.ampache.org/
  */
 
-show_box_top(_('Starting Update from Tags'), 'box box_update_items');
+show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
 Catalog::update_single_item($type,$object_id);
 ?>
 <br />
-<strong><?php echo _('Update from Tags Complete'); ?></strong>&nbsp;&nbsp;
-<a class="button" href="<?php echo $target_url; ?>"><?php echo _('Continue'); ?></a>
+<strong><?php echo T_('Update from Tags Complete'); ?></strong>&nbsp;&nbsp;
+<a class="button" href="<?php echo $target_url; ?>"><?php echo T_('Continue'); ?></a>
 <?php show_box_bottom(); ?>

@@ -63,28 +63,28 @@ function focus(){ document.login.username.focus(); }
 		<form name="login" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/login.php">
 
 			<div class="loginfield" id="usernamefield">
-        <label for="username"><?php echo  _('Username'); ?>:</label>
+        <label for="username"><?php echo  T_('Username'); ?>:</label>
 			  <input class="text_input" type="text" id="username" name="username" value="<?php echo scrub_out($_REQUEST['username']); ?>" />
       </div>
 			<div class="loginfield" id="passwordfield">
-        <label for="password"><?php echo  _('Password'); ?>:</label>
+        <label for="password"><?php echo  T_('Password'); ?>:</label>
   			<input class="text_input" type="password" id="password" name="password" value="" />
       </div>
 			<div class="loginfield" id="remembermefield"><label for="rememberme">
-        <?php echo _('Remember Me'); ?>&nbsp;</label><input type="checkbox" id="rememberme" name="rememberme" <?php echo $remember_disabled; ?> />
+        <?php echo T_('Remember Me'); ?>&nbsp;</label><input type="checkbox" id="rememberme" name="rememberme" <?php echo $remember_disabled; ?> />
       </div>
 
 			<?php echo Config::get('login_message'); ?>
 			<?php Error::display('general'); ?>
 
 	    <div class="formValidation">
-    		<a class="button" id="lostpasswordbutton" href="<?php echo Config::get('web_path'); ?>/lostpassword.php"><?php echo _('Lost password'); ?></a>
-    		<input class="button" id="loginbutton" type="submit" value="<?php echo _('Login'); ?>" />
+    		<a class="button" id="lostpasswordbutton" href="<?php echo Config::get('web_path'); ?>/lostpassword.php"><?php echo T_('Lost password'); ?></a>
+    		<input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
   			<input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
   			<input type="hidden" name="action" value="login" />
 
     		<?php if (Config::get('allow_public_registration')) { ?>
-    			<a class="button" id="registerbutton" href="<?php echo Config::get('web_path'); ?>/register.php"><?php echo _('Register'); ?></a>
+    			<a class="button" id="registerbutton" href="<?php echo Config::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
     		<?php } // end if (conf('allow_public_registration')) ?>
       </div>
 
@@ -96,7 +96,7 @@ if (@is_readable(Config::get('prefix') . '/config/motd.php')) {
 ?>
 	<div id="motd">
 	<?php
-        show_box_top(_('Message of the Day'));
+        show_box_top(T_('Message of the Day'));
         include Config::get('prefix') . '/config/motd.php';
         show_box_bottom();
 	?>
@@ -105,7 +105,7 @@ if (@is_readable(Config::get('prefix') . '/config/motd.php')) {
 <div id="footer">
     <a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />
     Copyright (c) 2001 - 2010 Ampache.org
-    <?php echo _('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo _('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
+    <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
 </div>
 </body>
 </html>

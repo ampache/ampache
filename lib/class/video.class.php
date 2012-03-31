@@ -91,7 +91,7 @@ class Video extends database_object implements media {
 		$this->f_codec = $this->video_codec . ' / ' . $this->audio_codec;
 		$this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
 		$this->f_tags = '';
-		$this->f_length = floor($this->time/60) . ' ' .  _('minutes');
+		$this->f_length = floor($this->time/60) . ' ' .  T_('minutes');
 
 	} // format
 

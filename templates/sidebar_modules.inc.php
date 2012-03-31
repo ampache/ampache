@@ -29,25 +29,25 @@
 $ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
 ?>
 <ul class="sb2" id="sb_modules">
-<li><h4><?php echo _('Modules'); ?></h4>
+<li><h4><?php echo T_('Modules'); ?></h4>
         <ul class="sb3" id="sb_Modules">
-        <li id="sb_preferences_mo_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo _('Localplay Modules'); ?></a></li>
-        <li id="sb_preferences_mo_plugins"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_plugins"><?php echo _('Available Plugins'); ?></a></li>
+        <li id="sb_preferences_mo_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo T_('Localplay Modules'); ?></a></li>
+        <li id="sb_preferences_mo_plugins"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_plugins"><?php echo T_('Available Plugins'); ?></a></li>
         </ul>
 </li>
-  <li><h4><?php echo _('Other Tools'); ?></h4>
+  <li><h4><?php echo T_('Other Tools'); ?></h4>
     <ul class="sb3" id="sb_admin_ot">
-      <li id="sb_admin_ot_Duplicates"><a href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo _('Find Duplicates'); ?></a></li>
-      <li id="sb_admin_ot_Mail"><a href="<?php echo $web_path; ?>/admin/mail.php"><?php echo _('Mail Users'); ?></a></li>
-      <li id="sb_admin_ot_ManageFlagged"><a href="<?php echo $web_path; ?>/admin/flag.php"><?php echo _('Manage Flagged'); ?></a></li>
-      <li id="sb_admin_ot_ShowDisabled"><a href="<?php echo $web_path; ?>/admin/flag.php?action=show_disabled"><?php echo _('Show Disabled'); ?></a></li>
+      <li id="sb_admin_ot_Duplicates"><a href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo T_('Find Duplicates'); ?></a></li>
+      <li id="sb_admin_ot_Mail"><a href="<?php echo $web_path; ?>/admin/mail.php"><?php echo T_('Mail Users'); ?></a></li>
+      <li id="sb_admin_ot_ManageFlagged"><a href="<?php echo $web_path; ?>/admin/flag.php"><?php echo T_('Manage Flagged'); ?></a></li>
+      <li id="sb_admin_ot_ShowDisabled"><a href="<?php echo $web_path; ?>/admin/flag.php?action=show_disabled"><?php echo T_('Show Disabled'); ?></a></li>
     </ul>
   </li>
 <!--
 <?php if (Config::get('allow_democratic_playback')) { ?>
-  <li><h4><?php echo _('Democratic'); ?></h4>
+  <li><h4><?php echo T_('Democratic'); ?></h4>
     <ul class="sb3" id="sb_home_democratic">
-      <li id="sb_home_democratic_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=manage_playlists"><?php echo _('Manage Playlist'); ?></a></li>
+      <li id="sb_home_democratic_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=manage_playlists"><?php echo T_('Manage Playlist'); ?></a></li>
     </ul>
   </li>
 <?php } ?>

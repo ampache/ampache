@@ -27,39 +27,39 @@
  */
 
 ?>
-<?php show_box_top(_('Add Current Host'), 'box box_add_access_current'); ?>
+<?php show_box_top(T_('Add Current Host'), 'box box_add_access_current'); ?>
 <?php Error::display('general'); ?>
 <form name="update_catalog" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host&method=current">
 <table class="tabledata" cellpadding="5" cellspacing="0">
 <tr>
-	<td><?php echo _('Name'); ?>:</td>
+	<td><?php echo T_('Name'); ?>:</td>
 	<td>
 		<input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name']); ?>" size="20" />
 	</td>
 </tr>
 <tr>
-	<td><?php echo _('IPv4 or IPv6 Addresses'); ?>:</td>
+	<td><?php echo T_('IPv4 or IPv6 Addresses'); ?>:</td>
 	<td><?php echo scrub_out($_SERVER['REMOTE_ADDR']); ?></td>
 <tr>
-	<td><?php echo _('Level'); ?>:</td>
+	<td><?php echo T_('Level'); ?>:</td>
 	<td>
-		<input name="level" type="radio" value="5" /> <?php echo _('View'); ?>
-		<input name="level" type="radio" value="25" /> <?php echo _('Read'); ?>
-		<input name="level" type="radio" checked="checked" value="50" /> <?php echo _('Read/Write'); ?>
-		<input name="level" type="radio" value="75" /> <?php echo _('All'); ?>
+		<input name="level" type="radio" value="5" /> <?php echo T_('View'); ?>
+		<input name="level" type="radio" value="25" /> <?php echo T_('Read'); ?>
+		<input name="level" type="radio" checked="checked" value="50" /> <?php echo T_('Read/Write'); ?>
+		<input name="level" type="radio" value="75" /> <?php echo T_('All'); ?>
 	</td>
 </tr>
 <tr>
-	<td><?php echo _('User'); ?>:</td>
+	<td><?php echo T_('User'); ?>:</td>
 	<td>
 		<?php show_user_select('user'); ?>
 	</td>
 </tr>
 <tr>
-	<td colspan="2"><h4><?php echo _('RPC Options'); ?></h4></td>
+	<td colspan="2"><h4><?php echo T_('RPC Options'); ?></h4></td>
 </tr>
 <tr>
-	<td><?php echo _('Remote Key'); ?>:</td>
+	<td><?php echo T_('Remote Key'); ?>:</td>
 	<td>
 		<input type="text" name="key" value="<?php echo scrub_out($_REQUEST['end']); ?>" maxlength="32" />
 	</td>
@@ -67,7 +67,7 @@
 </table>
 <div class="formValidation">
 		<?php echo Core::form_register('add_acl'); ?>
-		<input class="button" type="submit" value="<?php echo _('Create ACL'); ?>" />
+		<input class="button" type="submit" value="<?php echo T_('Create ACL'); ?>" />
 </div>
 </form>
 <?php show_box_bottom(); ?>

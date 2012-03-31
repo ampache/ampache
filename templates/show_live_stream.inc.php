@@ -27,11 +27,11 @@
  */
 
 ?>
-<?php show_box_top(_('Manage Radio Stations'),'info-box'); ?>
+<?php show_box_top(T_('Manage Radio Stations'),'info-box'); ?>
 <div id="information_actions">
 <ul>
 <li>
-	<a href="<?php echo Config::get('web_path'); ?>/radio.php?action=show_create"><?php echo get_user_icon('add',_('Add')); ?></a> <?php echo _('Add Radio Station'); ?>
+	<a href="<?php echo Config::get('web_path'); ?>/radio.php?action=show_create"><?php echo get_user_icon('add', T_('Add')); ?></a> <?php echo T_('Add Radio Station'); ?>
 </li>
 </ul>
 </div>

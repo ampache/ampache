@@ -27,6 +27,6 @@
  */
 
 ?>
-<?php show_box_top(_('Information')); ?>
+<?php show_box_top(T_('Information')); ?>
 <?php require_once Config::get('prefix') . '/templates/show_stats_newest.inc.php'; ?>
 <?php show_box_bottom(); ?>

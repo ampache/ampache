@@ -39,12 +39,12 @@
   <col id="col_additiontime" />
 </colgroup>
 <tr class="th-top">
-	<th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo _('Select'); ?></a></th>
-	<th class="cel_song"><?php echo _('Title'); ?></th>
-	<th class="cel_album"><?php echo _('Album'); ?></th>
-	<th class="cel_artist"><?php echo _('Artist'); ?></th>
-	<th class="cel_filename"><?php echo _('Filename'); ?></th>
-	<th class="cel_additiontime"><?php echo _('Addition Time'); ?></th>
+	<th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo T_('Select'); ?></a></th>
+	<th class="cel_song"><?php echo T_('Title'); ?></th>
+	<th class="cel_album"><?php echo T_('Album'); ?></th>
+	<th class="cel_artist"><?php echo T_('Artist'); ?></th>
+	<th class="cel_filename"><?php echo T_('Filename'); ?></th>
+	<th class="cel_additiontime"><?php echo T_('Addition Time'); ?></th>
 </tr>
 <?php foreach ($songs as $song) { ?>
 	<tr class="<?php echo flip_class(); ?>">
@@ -58,20 +58,20 @@
 	</tr>
 <?php } if (!count($songs)) { ?>
 	<tr class="<?php echo flip_class(); ?>">
-		<td colspan="7"><span class="error"><?php echo _('No Records Found'); ?></span></td>
+		<td colspan="7"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
 	</tr>
 <?php } ?>
 <tr class="th-bottom">
-	<th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo _('Select'); ?></a></th>
-	<th class="cel_song"><?php echo _('Title'); ?></th>
-	<th class="cel_album"><?php echo _('Album'); ?></th>
-	<th class="cel_artist"><?php echo _('Artist'); ?></th>
-	<th class="cel_filename"><?php echo _('Filename'); ?></th>
-	<th class="cel_additiontime"><?php echo _('Addition Time'); ?></th>
+	<th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo T_('Select'); ?></a></th>
+	<th class="cel_song"><?php echo T_('Title'); ?></th>
+	<th class="cel_album"><?php echo T_('Album'); ?></th>
+	<th class="cel_artist"><?php echo T_('Artist'); ?></th>
+	<th class="cel_filename"><?php echo T_('Filename'); ?></th>
+	<th class="cel_additiontime"><?php echo T_('Addition Time'); ?></th>
 </tr>
 </table>
 <div class="formValidation">
-		<input class="button" type="submit" value="<?php echo _('Remove'); ?>" />&nbsp;&nbsp;
+		<input class="button" type="submit" value="<?php echo T_('Remove'); ?>" />&nbsp;&nbsp;
 		<input type="hidden" name="action" value="remove_disabled" />
 </div>
 </form>

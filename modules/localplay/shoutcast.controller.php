@@ -249,10 +249,10 @@ class AmpacheShoutCast extends localplay_controller {
 	 */
 	public function instance_fields() {
 
-		$fields['name'] 	= array('description'=>_('Instance Name'),'type'=>'textbox');
-		$fields['pid'] 		= array('description'=>_('PID File'),'type'=>'textbox');
-		$fields['playlist']	= array('description'=>_('Playlist File'),'type'=>'textbox');
-		$fields['local_root']	= array('description'=>_('Local Path to Files'),'type'=>'textbox');
+		$fields['name'] 	= array('description' => T_('Instance Name'),'type'=>'textbox');
+		$fields['pid'] 		= array('description' => T_('PID File'),'type'=>'textbox');
+		$fields['playlist']	= array('description' => T_('Playlist File'),'type'=>'textbox');
+		$fields['local_root']	= array('description' => T_('Local Path to Files'),'type'=>'textbox');
 
 		return $fields;
 

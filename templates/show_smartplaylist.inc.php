@@ -31,24 +31,24 @@ show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
 <ul>
         <?php if (Access::check_function('batch_download')) { ?>
 	<li>
-		<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo get_user_icon('batch_download', _('Batch Download')); ?></a>
-		<?php echo _('Batch Download'); ?>
+		<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo get_user_icon('batch_download', T_('Batch Download')); ?></a>
+		<?php echo T_('Batch Download'); ?>
 	</li>
         <?php } ?>
 	<li>
-		<?php echo Ajax::button('?action=basket&type=smartplaylist&id=' . $playlist->id,'add',_('Add All'),'play_playlist'); ?>
-		<?php echo _('Add All'); ?>
+		<?php echo Ajax::button('?action=basket&type=smartplaylist&id=' . $playlist->id,'add', T_('Add All'),'play_playlist'); ?>
+		<?php echo T_('Add All'); ?>
 	</li>
 	<?php if ($playlist->has_access()) { ?>
 	<li>
-		<?php echo Ajax::button('?action=show_edit_object&type=smartplaylist_title&id=' . $playlist->id,'edit',_('Edit'),'edit_playlist_' . $playlist->id); ?>
-		<?php echo _('Edit'); ?>
+		<?php echo Ajax::button('?action=show_edit_object&type=smartplaylist_title&id=' . $playlist->id,'edit', T_('Edit'),'edit_playlist_' . $playlist->id); ?>
+		<?php echo T_('Edit'); ?>
 	</li>
 	<li>
 		<a href="<?php echo Config::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
 			<?php echo get_user_icon('delete'); ?>
 		</a>
-		<?php echo _('Delete'); ?>
+		<?php echo T_('Delete'); ?>
 	</li>
 	<?php } ?>
 </ul>
@@ -59,7 +59,7 @@ show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
 <?php require Config::get('prefix') . '/templates/show_rules.inc.php'; ?>
 
 <div class="formValidation">
-	<input class="button" type="submit" value="<?php echo _('Save Changes'); ?>" />
+	<input class="button" type="submit" value="<?php echo T_('Save Changes'); ?>" />
 </div>
 
 </form>

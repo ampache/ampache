@@ -84,7 +84,7 @@ switch ($_REQUEST['action']) {
 
 		if (isset($cleaned['artist']) || isset($cleaned['album'])) { $_SESSION['source'] = Config::get('web_path') . '/index.php'; }
 
-		show_confirmation(_('Song Updated'),_('The requested song has been updated'),$_SESSION['source']);
+		show_confirmation(T_('Song Updated'), T_('The requested song has been updated'),$_SESSION['source']);
 	break;
 	// Show the page for editing a full album
 	case 'show_edit_album':
@@ -126,7 +126,7 @@ switch ($_REQUEST['action']) {
 		// Clean out the old album
 		$catalog->clean_albums();
 
-		show_confirmation(_('Album Updated'),'',Config::get('web_path') . '/admin/index.php');
+		show_confirmation(T_('Album Updated'),'',Config::get('web_path') . '/admin/index.php');
 
 	break;
 	// Show the page for editing a full artist
@@ -168,7 +168,7 @@ switch ($_REQUEST['action']) {
 		// Clean out the old artist(s)
 		$catalog->clean_artists();
 
-		show_confirmation(_('Artist Updated'),'',Config::get('web_path') . '/admin/index.php');
+		show_confirmation(T_('Artist Updated'),'',Config::get('web_path') . '/admin/index.php');
 
 	break;
 	/* Done by 'Select' code passes array of song ids */
@@ -229,7 +229,7 @@ switch ($_REQUEST['action']) {
 		} // end foreach songs
 
 		// Show a confirmation that this worked
-		show_confirmation(_('Songs Updated'),'',return_referer());
+		show_confirmation(T_('Songs Updated'),'',return_referer());
 	break;
 	case 'reject_flag':
 		$flag_id = scrub_in($_REQUEST['flag_id']);
@@ -237,8 +237,8 @@ switch ($_REQUEST['action']) {
 		$flag->delete_flag();
 		$flag->format_name();
 		$url = return_referer();
-		$title = _('Flag Removed');
-		$body = _('Flag Removed from') . " " . $flag->name;
+		$title = T_('Flag Removed');
+		$body = T_('Flag Removed from') . " " . $flag->name;
 		show_confirmation($title,$body,$url);
 	break;
 	case 'reject_flags':
@@ -253,7 +253,7 @@ switch ($_REQUEST['action']) {
 				$flag->approve();
 			}
 		} // end foreach flags
-		$title = _('Flags Updated');
+		$title = T_('Flags Updated');
 		show_confirmation($title,'',return_referer());
 	break;
 	case 'show_edit_song':
@@ -272,7 +272,7 @@ switch ($_REQUEST['action']) {
 				$song_obj->update_enabled(0,$song_id);
 			} // end foreach
 		} // end else
-		show_confirmation(_('Songs Disabled'),_('The requested song(s) have been disabled'),return_referer());
+		show_confirmation(T_('Songs Disabled'), T_('The requested song(s) have been disabled'),return_referer());
 	break;
 	case 'enabled':
 		$song_obj = new Song();
@@ -283,7 +283,7 @@ switch ($_REQUEST['action']) {
 				$song_obj->update_enabled(1,$song_id);
 			} // end foreach
 		} // end else
-			show_confirmation(_('Songs Enabled'),_('The requested song(s) have been enabled'),return_referer());
+			show_confirmation(T_('Songs Enabled'), T_('The requested song(s) have been enabled'),return_referer());
 		break;
 	case 'show_disabled':
 		$disabled = Flag::get_disabled();

@@ -27,44 +27,44 @@
  */
 
 ?>
-<?php show_box_top(_('Debug Tools'), 'box box_debug_tools'); ?>
+<?php show_box_top(T_('Debug Tools'), 'box box_debug_tools'); ?>
 <div id="information_actions">
 <ul>
 <li>
-	<a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo get_user_icon('cog', _('Generate Configuration')); ?></a>
-	<?php echo _('Generate Configuration'); ?>
+	<a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo get_user_icon('cog', T_('Generate Configuration')); ?></a>
+	<?php echo T_('Generate Configuration'); ?>
 </li>
 <li>
-	<a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=reset_db_charset"><?php echo get_user_icon('server_lightning', _('Set Database Charset')); ?></a>
-	<?php echo _('Set Database Charset'); ?>
+	<a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=reset_db_charset"><?php echo get_user_icon('server_lightning', T_('Set Database Charset')); ?></a>
+	<?php echo T_('Set Database Charset'); ?>
 </li>
 </ul>
 </div>
 <?php show_box_bottom(); ?>
-<?php show_box_top(_('PHP Settings'), 'box box_php_settings'); ?>
+<?php show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
 	<col id="col_php_setting">
 	<col id="col_php_value">
 </colgroup>
 <tr class="th-top">
-	<th class="cel_php_setting"><?php echo _('Setting'); ?></th>
-	<th class="cel_php_value"><?php echo _('Value'); ?></th>
+	<th class="cel_php_setting"><?php echo T_('Setting'); ?></th>
+	<th class="cel_php_value"><?php echo T_('Value'); ?></th>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _('Memory Limit'); ?></td>
+	<td><?php echo T_('Memory Limit'); ?></td>
 	<td><?php echo ini_get('memory_limit'); ?></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _('Maximum Execution Time'); ?></td>
+	<td><?php echo T_('Maximum Execution Time'); ?></td>
 	<td><?php echo ini_get('max_execution_time'); ?></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _('Override Execution Time'); ?></td>
-	<td><?php set_time_limit(0); echo ini_get('max_execution_time') ? _('Failed') : _('Succeeded'); ?></td>
+	<td><?php echo T_('Override Execution Time'); ?></td>
+	<td><?php set_time_limit(0); echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _('Safe Mode'); ?></td>
+	<td><?php echo T_('Safe Mode'); ?></td>
 	<td><?php echo print_bool(ini_get('safe_mode')); ?></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
@@ -72,33 +72,33 @@
 	<td><?php echo ini_get('open_basedir'); ?></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _('Zlib Support'); ?></td>
+	<td><?php echo T_('Zlib Support'); ?></td>
 	<td><?php echo print_bool(function_exists('gzcompress')); ?></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _('GD Support'); ?></td>
+	<td><?php echo T_('GD Support'); ?></td>
 	<td><?php echo print_bool(function_exists('ImageCreateFromString')); ?></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _('Iconv Support'); ?></td>
+	<td><?php echo T_('Iconv Support'); ?></td>
 	<td><?php echo print_bool(function_exists('iconv')); ?></td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _('Gettext Support'); ?></td>
+	<td><?php echo T_('Gettext Support'); ?></td>
 	<td><?php echo print_bool(function_exists('bindtextdomain')); ?></td>
 </tr>
 </table>
 <?php show_box_bottom(); ?>
 
-<?php show_box_top(_('Current Configuration'), 'box box_current_configuration'); ?>
+<?php show_box_top(T_('Current Configuration'), 'box box_current_configuration'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
    <col id="col_configuration">
    <col id="col_value">
 </colgroup>
 <tr class="th-top">
-	<th class="cel_configuration"><?php echo _('Preference'); ?></th>
-	<th class="cel_value"><?php echo _('Value'); ?></th>
+	<th class="cel_configuration"><?php echo T_('Preference'); ?></th>
+	<th class="cel_value"><?php echo T_('Value'); ?></th>
 </tr>
 <?php foreach ($configuration as $key=>$value) {
 	if ($key == 'database_password' || $key == 'mysql_password') { $value = '*********'; }

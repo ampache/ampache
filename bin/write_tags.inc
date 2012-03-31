@@ -39,7 +39,7 @@ $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
 // This is all broken currently so just jump ship
-echo _("Writting of Tags to files is not currently supported by Getid3() use at your own risk.");
+echo T_("Writting of Tags to files is not currently supported by Getid3() use at your own risk.");
 echo "\n";
 flush();
 
@@ -51,7 +51,7 @@ $flag = new Flag();
 $flagged_ids = Flag::get_approved();
 
 if (!count($flagged_ids)) {
-	echo _("No Flagged Songs Found, exiting...");
+	echo T_("No Flagged Songs Found, exiting...");
 	echo "\n";
 	exit;
 }
@@ -79,7 +79,7 @@ foreach($flagged_ids as $flagged) {
 			Flag::fill_tags( &$tagWriter, &$song, 'comment' );
 			break;
 		default:
-			echo _('No Tag');
+			echo T_('No Tag');
 	} // end switch 
 	
 	if ( isset($tagWriter) ) {
@@ -88,7 +88,7 @@ foreach($flagged_ids as $flagged) {
 		try {
 			$tagWriter->write();
 			// HINT: %1$s: title, %2$s: artist_name
-			printf (_('Updated song %1$s by %2$s'), $song->title, $song->get_artist_name());
+			printf (T_('Updated song %1$s by %2$s'), $song->title, $song->get_artist_name());
 			echo "\n";
 			flush();
 			$flag->delete();

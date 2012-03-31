@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
 		$object = shoutBox::get_object($_REQUEST['type'],$_REQUEST['id']);
 
 		if (!$object->id) {
-			Error::add('general',_('Invalid Object Selected'));
+			Error::add('general', T_('Invalid Object Selected'));
 			Error::display('general');
 			break;
 		}

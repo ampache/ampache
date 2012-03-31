@@ -57,7 +57,7 @@ switch ($_REQUEST['action']) {
 			}
 		}
 		$url 	= Config::get('web_path') . '/admin/catalog.php';
-		$title 	= _('Catalog Updated');
+		$title 	= T_('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
 		toggle_visible('ajax-loading');
@@ -77,7 +77,7 @@ switch ($_REQUEST['action']) {
 			}
 		}
 		$url	= Config::get('web_path') . '/admin/catalog.php';
-		$title	= _('Catalog Updated');
+		$title	= T_('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
 		toggle_visible('ajax-loading');
@@ -103,7 +103,7 @@ switch ($_REQUEST['action']) {
 		}
 		Catalog::optimize_tables();
 		$url	= Config::get('web_path') . '/admin/catalog.php';
-		$title	= _('Catalog Updated');
+		$title	= T_('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
 		toggle_visible('ajax-loading');
@@ -120,13 +120,13 @@ switch ($_REQUEST['action']) {
 		/* Delete the sucker, we don't need to check perms as thats done above */
 		Catalog::delete($_GET['catalog_id']);
 		$next_url = Config::get('web_path') . '/admin/catalog.php';
-		show_confirmation(_('Catalog Deleted'),_('The Catalog and all associated records have been deleted'),$next_url);
+		show_confirmation(T_('Catalog Deleted'), T_('The Catalog and all associated records have been deleted'),$next_url);
 	break;
 	case 'show_delete_catalog':
 		$catalog_id = scrub_in($_GET['catalog_id']);
 
 		$next_url = Config::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalog_id=' . scrub_out($catalog_id);
-		show_confirmation(_('Catalog Delete'),_('Confirm Deletion Request'),$next_url,1,'delete_catalog');
+		show_confirmation(T_('Catalog Delete'), T_('Confirm Deletion Request'),$next_url,1,'delete_catalog');
 	break;
 	case 'remove_disabled':
 		if (conf('demo_mode')) { break; }
@@ -138,7 +138,7 @@ switch ($_REQUEST['action']) {
 			$body = ngettext('Song Removed', 'Songs Removed', count($song));
 		}
 		else {
-			$body = _('No Songs Removed');
+			$body = T_('No Songs Removed');
 		}
 		$url	= Config::get('web_path') . '/admin/catalog.php';
 		$title	= ngettext('Disabled Song Processed','Disabled Songs Processed',count($song));
@@ -163,7 +163,7 @@ switch ($_REQUEST['action']) {
 		}
 
 		$url 	= Config::get('web_path') . '/admin/catalog.php';
-		$title	= _('Catalog Cleaned');
+		$title	= T_('Catalog Cleaned');
 		$body	= '';
 		show_confirmation($title,$body,$url);
 		toggle_visible('ajax-loading');
@@ -176,7 +176,7 @@ switch ($_REQUEST['action']) {
 		Catalog::update_settings($_POST);
 
 		$url 	= Config::get('web_path') . '/admin/catalog.php';
-		$title 	= _('Catalog Updated');
+		$title 	= T_('Catalog Updated');
 		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;
@@ -207,14 +207,14 @@ switch ($_REQUEST['action']) {
 		ob_end_flush();
 
 		if (!strlen($_POST['path']) || !strlen($_POST['name'])) {
-			Error::add('general',_('Error: Name and path not specified'));
+			Error::add('general', T_('Error: Name and path not specified'));
 		}
 
 		if (substr($_POST['path'],0,7) != 'http://' && $_POST['type'] == 'remote') {
-			Error::add('general',_('Error: Remote selected, but path is not a URL'));
+			Error::add('general', T_('Error: Remote selected, but path is not a URL'));
 		}
 		if ($POST['type'] == 'remote' AND (!strlen($POST['remote_username']) OR !strlen($POST['remote_password']))) {
-			Error::add('general',_('Error: Username and Password Required for Remote Catalogs'));
+			Error::add('general', T_('Error: Username and Password Required for Remote Catalogs'));
 		}
 
 		if (!Core::form_verify('add_catalog','post')) {
@@ -224,7 +224,7 @@ switch ($_REQUEST['action']) {
 
 		// Make sure that there isn't a catalog with a directory above this one
 		if (Catalog::get_from_path($_POST['path'])) {
-			Error::add('general',_('Error: Defined Path is inside an existing catalog'));
+			Error::add('general', T_('Error: Defined Path is inside an existing catalog'));
 		}
 
 		// If an error hasn't occured
@@ -242,8 +242,8 @@ switch ($_REQUEST['action']) {
 			// Run our initial add
 			$catalog->run_add($_POST);
 
-			show_box_top(_('Catalog Created'), 'box box_catalog_created');
-			echo "<h2>" .  _('Catalog Created') . "</h2>";
+			show_box_top(T_('Catalog Created'), 'box box_catalog_created');
+			echo "<h2>" .  T_('Catalog Created') . "</h2>";
 			Error::display('general');
 			Error::display('catalog_add');
 			show_box_bottom();
@@ -260,7 +260,7 @@ switch ($_REQUEST['action']) {
 
 		Catalog::clear_stats();
 		$url	= Config::get('web_path') . '/admin/catalog.php';
-		$title	= _('Catalog statistics cleared');
+		$title	= T_('Catalog statistics cleared');
 		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;
@@ -274,7 +274,7 @@ switch ($_REQUEST['action']) {
 	case 'clear_now_playing':
 		if (Config::get('demo_mode')) { access_denied(); break; }
 		Stream::clear_now_playing();
-		show_confirmation(_('Now Playing Cleared'),_('All now playing data has been cleared'),Config::get('web_path') . '/admin/catalog.php');
+		show_confirmation(T_('Now Playing Cleared'), T_('All now playing data has been cleared'),Config::get('web_path') . '/admin/catalog.php');
 	break;
 	case 'show_disabled':
 		/* Stop the demo hippies */
@@ -285,7 +285,7 @@ switch ($_REQUEST['action']) {
 			require (conf('prefix') . '/templates/show_disabled_songs.inc.php');
 		}
 		else {
-			echo "<div class=\"error\" align=\"center\">" . _('No Disabled songs found') . "</div>";
+			echo "<div class=\"error\" align=\"center\">" . T_('No Disabled songs found') . "</div>";
 		}
 	break;
 	case 'show_delete_catalog':
@@ -294,7 +294,7 @@ switch ($_REQUEST['action']) {
 
 		$catalog = new Catalog($_REQUEST['catalog_id']);
 		$nexturl = Config::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
-		show_confirmation(_('Delete Catalog'),_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)",$nexturl,1);
+		show_confirmation(T_('Delete Catalog'), T_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)",$nexturl,1);
 	break;
 	case 'show_customize_catalog':
 		$catalog = new Catalog($_REQUEST['catalog_id']);
@@ -314,7 +314,7 @@ switch ($_REQUEST['action']) {
 			$catalog->get_art('',1);
 		}
 		$url 	= Config::get('web_path') . '/admin/catalog.php';
-		$title 	= _('Album Art Search Finished');
+		$title 	= T_('Album Art Search Finished');
 		$body	= '';
 		show_confirmation($title,$body,$url);
 	break;

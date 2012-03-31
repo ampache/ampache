@@ -30,28 +30,28 @@ $status = $localplay->status();
 $now_playing = $status['track_title'] ? $status['track_title'] . ' - ' . $status['track_album'] . ' - ' . $status['track_artist'] : '';
 ?>
 <?php Ajax::start_container('localplay_status'); ?>
-<?php show_box_top(_('Localplay Control') . ' - '. strtoupper($localplay->type), 'box box_localplay_status'); ?>
-<?php echo _('Now Playing'); ?>:<i><?php echo $now_playing; ?></i>
+<?php show_box_top(T_('Localplay Control') . ' - '. strtoupper($localplay->type), 'box box_localplay_status'); ?>
+<?php echo T_('Now Playing'); ?>:<i><?php echo $now_playing; ?></i>
 <div id="information_actions">
 <ul>
 <li>
-<?php echo Ajax::button('?page=localplay&action=command&command=volume_mute','volumemute',_('Mute'),'localplay_mute'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=volume_down','volumedn',_('Decrease Volume'),'localplay_volume_dn'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=volume_up','volumeup',_('Increase Volume'),'localplay_volume_up'); ?>
-<?php echo _('Volume'); ?>:<?php echo $status['volume']; ?>%
+<?php echo Ajax::button('?page=localplay&action=command&command=volume_mute','volumemute', T_('Mute'),'localplay_mute'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=volume_down','volumedn', T_('Decrease Volume'),'localplay_volume_dn'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=volume_up','volumeup', T_('Increase Volume'),'localplay_volume_up'); ?>
+<?php echo T_('Volume'); ?>:<?php echo $status['volume']; ?>%
 </li>
 <li>
 	<?php echo print_bool($status['repeat']); ?> |
 	<?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_bool($status['repeat']), print_bool(invert_bool($status['repeat'])), 'localplay_repeat'); ?>
-	<?php echo _('Repeat'); ?>
+	<?php echo T_('Repeat'); ?>
 </li>
 <li>
 	<?php echo print_bool($status['random']); ?> |
 	<?php echo Ajax::text('?page=localplay&action=random&value=' . invert_bool($status['random']), print_bool(invert_bool($status['random'])), 'localplay_random'); ?>
-	<?php echo _('Random'); ?>
+	<?php echo T_('Random'); ?>
 </li>
 <li>
-	<?php echo Ajax::button('?page=localplay&action=command&command=delete_all','delete',_('Clear Playlist'),'localplay_clear_all'); ?><?php echo _('Clear Playlist'); ?>
+	<?php echo Ajax::button('?page=localplay&action=command&command=delete_all','delete', T_('Clear Playlist'),'localplay_clear_all'); ?><?php echo T_('Clear Playlist'); ?>
 </li>
 </ul>
 </div>

@@ -1000,7 +1000,7 @@ class Art extends database_object {
 			$handle = opendir($dir);
 
 			if (!$handle) {
-				Error::add('general',_('Error: Unable to open') . ' ' . $dir);
+				Error::add('general', T_('Error: Unable to open') . ' ' . $dir);
 				debug_event('folder_art', "Error: Unable to open $dir for album art read", 2);
 				continue;
 			}

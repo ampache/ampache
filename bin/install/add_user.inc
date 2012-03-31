@@ -50,11 +50,11 @@ $email = isset($options['e']) ? $options['e'] : '';
 $name = isset($options['n']) ? $options['n'] : '';
 
 if (User::create($username, $name, $email, $password, $access)) {
-	printf(_('Created %s user %s with password %s'), _($access), $username, $password);
+	printf(T_('Created %s user %s with password %s'), T_($access), $username, $password);
 	echo "\n";
 }
 else {
-	echo _('User creation failed'), "\n";
+	echo T_('User creation failed'), "\n";
 	exit(1);
 }
 

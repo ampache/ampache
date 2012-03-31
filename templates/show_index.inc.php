@@ -36,7 +36,7 @@ if (Art::is_enabled()) {
 	echo Ajax::observe('window','load',Ajax::action('?page=index&action=random_albums','random_albums'));
 ?>
 <div id="random_selection">
-	<?php show_box_top(_('Albums of the Moment')); echo _('Loading...'); show_box_bottom(); ?>
+	<?php show_box_top(T_('Albums of the Moment')); echo T_('Loading...'); show_box_bottom(); ?>
 </div>
 <?php } ?>
 <!-- Recently Played -->

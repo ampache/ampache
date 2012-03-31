@@ -27,13 +27,13 @@
  */
 
 ?>
-<?php show_box_top(_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
+<?php show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
 <table cellpadding="3" cellspacing="0" class="tabledata">
 <tr>
 	<?php foreach ($fields as $key=>$field) { ?>
 		<th><?php echo $field['description']; ?></th>
 	<?php } ?>
-	<th><?php echo _('Action'); ?></th>
+	<th><?php echo T_('Action'); ?></th>
 </tr>
 <?php foreach ($instances as $uid=>$name) {
 	$instance = $localplay->get_instance($uid);
@@ -43,8 +43,8 @@
 	<td><?php echo $instance[$key]; ?></td>
 	<?php } ?>
 	<td>
-		<a href="<?php echo Config::get('web_path'); ?>/localplay.php?action=edit_instance&instance=<?php echo $uid; ?>"><?php echo get_user_icon('edit',_('Edit Instance')); ?></a>
-		<?php echo Ajax::button('?page=localplay&action=delete_instance&instance=' . $uid,'delete',_('Delete'),'delete_instance_' . $uid); ?>
+		<a href="<?php echo Config::get('web_path'); ?>/localplay.php?action=edit_instance&instance=<?php echo $uid; ?>"><?php echo get_user_icon('edit', T_('Edit Instance')); ?></a>
+		<?php echo Ajax::button('?page=localplay&action=delete_instance&instance=' . $uid,'delete', T_('Delete'),'delete_instance_' . $uid); ?>
 	</td>
 </tr>
 <?php } ?>

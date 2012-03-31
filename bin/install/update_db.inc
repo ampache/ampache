@@ -45,7 +45,7 @@ if (Update::need_update() && $run_update) {
 }
 
 if (Update::need_update()) {
-	echo _('The following updates need to be performed:'), "\n";
+	echo T_('The following updates need to be performed:'), "\n";
 }
 
 Update::display_update();

@@ -48,7 +48,7 @@
 <?php if (!count($objects)) { ?>
 <tr>
 	<td colspan="<?php echo count($headers); ?>">
-	<span class="error"><?php echo _('Not Enough Data'); ?></span>
+	<span class="error"><?php echo T_('Not Enough Data'); ?></span>
 	</td>
 </tr>
 <?php } ?>

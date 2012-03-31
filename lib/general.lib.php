@@ -238,7 +238,7 @@ function get_languages() {
 				case 'ar_SA'; $name = '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'; break; /* Arabic */
 				case 'he_IL'; $name = '&#1506;&#1489;&#1512;&#1497;&#1514;'; break; /* Hebrew */
 				case 'fa_IR'; $name = '&#1601;&#1575;&#1585;&#1587;&#1610;'; break; /* Farsi */
-				default: $name = _('Unknown'); break;
+				default: $name = T_('Unknown'); break;
 			} // end switch
 
 

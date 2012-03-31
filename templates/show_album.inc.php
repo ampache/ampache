@@ -32,14 +32,14 @@ $ajax_url = Config::get('ajax_url');
 // Title for this album
 $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')';
 if ($album->disk) {
-	$title .= "<span class=\"discnb disc" . $album->disk . "\">, " . _('Disk') . " " . $album->disk . "</span>";
+	$title .= "<span class=\"discnb disc" . $album->disk . "\">, " . T_('Disk') . " " . $album->disk . "</span>";
 }
 $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
 ?>
 <?php show_box_top($title,'info-box'); ?>
 <div class="album_art">
 	<?php
-	if ($album->name != _('Unknown (Orphaned)')) {
+	if ($album->name != T_('Unknown (Orphaned)')) {
         $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
 
 		    $aa_url = $web_path . "/image.php?id=" . $album->id . "&amp;type=popup&amp;sid=" . session_id();
@@ -53,36 +53,36 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
 <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
 		<?php Rating::show($album->id,'album'); ?>
 </div>
-<h3><?php echo _('Actions'); ?>:</h3>
+<h3><?php echo T_('Actions'); ?>:</h3>
 <ul>
 	<li>
-		<?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add',_('Add'),'play_full_' . $album->id); ?>
-		<?php echo Ajax::text('?action=basket&type=album&id=' . $album->id,_('Add Album'), 'play_full_text_' . $album->id); ?>
+		<?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Add'),'play_full_' . $album->id); ?>
+		<?php echo Ajax::text('?action=basket&type=album&id=' . $album->id, T_('Add Album'), 'play_full_text_' . $album->id); ?>
 	</li>
 	<li>
-		<?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random',_('Random'),'play_random_' . $album->id); ?>
-		<?php echo Ajax::text('?action=basket&type=album_random&id=' . $album->id,_('Add Random from Album'), 'play_random_text_' . $album->id); ?>
+		<?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random', T_('Random'),'play_random_' . $album->id); ?>
+		<?php echo Ajax::text('?action=basket&type=album_random&id=' . $album->id, T_('Add Random from Album'), 'play_random_text_' . $album->id); ?>
 	</li>
 	<?php if (Access::check('interface','75')) { ?>
 	<li>
-		<a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('delete',_('Reset Album Art')); ?></a>
-		<a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Reset Album Art'); ?></a>
+		<a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('delete', T_('Reset Album Art')); ?></a>
+		<a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo T_('Reset Album Art'); ?></a>
 	</li>
 	<?php } ?>
 	<li>
-		<a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('view',_('Find Album Art')); ?></a>
-		<a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Find Album Art'); ?></a>
+		<a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('view', T_('Find Album Art')); ?></a>
+		<a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo T_('Find Album Art'); ?></a>
 	</li>
 	<?php  if ((Access::check('interface','50'))) { ?>
 	<li>
-		<a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('cog', _('Update from tags')); ?></a>
-		<a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo _('Update from tags'); ?></a>
+		<a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo get_user_icon('cog', T_('Update from tags')); ?></a>
+		<a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo T_('Update from tags'); ?></a>
 	</li>
 	<?php  } ?>
 	<?php if (Access::check_function('batch_download')) { ?>
 	<li>
-		<a href="<?php echo $web_path; ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>"><?php echo get_user_icon('batch_download', _('Download')); ?></a>
-		<a href="<?php echo $web_path; ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>"><?php echo _('Download'); ?></a>
+		<a href="<?php echo $web_path; ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>"><?php echo get_user_icon('batch_download', T_('Download')); ?></a>
+		<a href="<?php echo $web_path; ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>"><?php echo T_('Download'); ?></a>
 	</li>
 	<?php } ?>
 </ul>

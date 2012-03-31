@@ -417,7 +417,7 @@ class Update {
 
 		if (!$update_needed) {
 			if (!defined('CLI')) { echo '<p align="center">'; }
-			echo _('No updates needed.');
+			echo T_('No updates needed.');
 			if (!defined('CLI')) {
 				echo '[<a href="', Config::get('web_path'), '">Return</a>]</p>'; 
 			}
@@ -446,7 +446,7 @@ class Update {
 		/* Verify that there are no plugins installed
 		//FIXME: provide a link to remove all plugins, otherwise this could turn into a catch 22
 		if (!$self::plugins_installed()) {
-			$GLOBALS['error']->add_error('general',_('Plugins detected, please remove all Plugins and try again'));
+			$GLOBALS['error']->add_error('general', T_('Plugins detected, please remove all Plugins and try again'));
 			return false;
 		} */
 

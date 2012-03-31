@@ -37,6 +37,6 @@ $web_path = Config::get('web_path');
 <?php echo Ajax::observe('click_' . intval($tag->id),'click',Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . intval($tag->id),'')); ?>
 <?php } ?>
 <?php if (!count($object_ids)) { ?>
-<span class="fatalerror"><?php echo _('Not Enough Data'); ?></span>
+<span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span>
 <?php } ?>
 <?php Ajax::end_container(); ?>

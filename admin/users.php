@@ -59,10 +59,10 @@ switch ($_REQUEST['action']) {
 
 		/* Verify Input */
 		if (empty($username)) {
-			Error::add('username',_("Error Username Required"));
+			Error::add('username', T_("Error Username Required"));
 		}
 		if ($pass1 !== $pass2 && !empty($pass1)) {
-			Error::add('password',_("Error Passwords don't match"));
+			Error::add('password', T_("Error Passwords don't match"));
 		}
 
 		/* If we've got an error then break! */
@@ -87,7 +87,7 @@ switch ($_REQUEST['action']) {
 			$client->update_password($pass1);
 		}
 
-		show_confirmation(_('User Updated'), $client->fullname . "(" . $client->username . ")" . _('updated'), Config::get('web_path'). '/admin/users.php');
+		show_confirmation(T_('User Updated'), $client->fullname . "(" . $client->username . ")" . T_('updated'), Config::get('web_path'). '/admin/users.php');
 	break;
 	case 'add_user':
 		if (Config::get('demo_mode')) { break; }
@@ -105,23 +105,23 @@ switch ($_REQUEST['action']) {
 		$pass2		= $_POST['password_2'];
 
 		if ($pass1 !== $pass2 || !strlen($pass1)) {
-			Error::add('password',_("Error Passwords don't match"));
+			Error::add('password', T_("Error Passwords don't match"));
 		}
 
 		if (empty($username)) {
-			Error::add('username',_('Error Username Required'));
+			Error::add('username', T_('Error Username Required'));
 		}
 
 		/* make sure the username doesn't already exist */
 		if (!User::check_username($username)) {
-			Error::add('username',_('Error Username already exists'));
+			Error::add('username', T_('Error Username already exists'));
 		}
 
 		if (!Error::occurred()) {
 			/* Attempt to create the user */
 			$user_id = User::create($username, $fullname, $email, $pass1, $access);
 			if (!$user_id) {
-				Error::add('general',_("Error: Insert Failed"));
+				Error::add('general', T_("Error: Insert Failed"));
 			}
 
 		} // if no errors
@@ -129,25 +129,25 @@ switch ($_REQUEST['action']) {
 			$_REQUEST['action'] = 'show_add_user';
 			break;
 		}
-		if ($access == 5){ $access = _('Guest');}
-		elseif ($access == 25){ $access = _('User');}
-		elseif ($access == 100){ $access = _('Admin');}
+		if ($access == 5){ $access = T_('Guest');}
+		elseif ($access == 25){ $access = T_('User');}
+		elseif ($access == 100){ $access = T_('Admin');}
 
 		/* HINT: %1 Username, %2 Access num */
-		show_confirmation(_('New User Added'),sprintf(_('%1$s has been created with an access level of %2$s'), $username, $access), Config::get('web_path').'/admin/users.php');
+		show_confirmation(T_('New User Added'),sprintf(T_('%1$s has been created with an access level of %2$s'), $username, $access), Config::get('web_path').'/admin/users.php');
 	break;
 	case 'enable':
 		$client = new User($_REQUEST['user_id']);
 		$client->enable();
-		show_confirmation(_('User Enabled'),$client->fullname . ' (' . $client->username . ')', Config::get('web_path'). '/admin/users.php');
+		show_confirmation(T_('User Enabled'),$client->fullname . ' (' . $client->username . ')', Config::get('web_path'). '/admin/users.php');
 	break;
 	case 'disable':
 		$client = new User($_REQUEST['user_id']);
 		if ($client->disable()) {
-			show_confirmation(_('User Disabled'),$client->fullname . ' (' . $client->username . ')', Config::get('web_path'). '/admin/users.php');
+			show_confirmation(T_('User Disabled'),$client->fullname . ' (' . $client->username . ')', Config::get('web_path'). '/admin/users.php');
 		}
 		else {
-			show_confirmation(_('Error'),_('Unable to Disabled last Administrator'), Config::get('web_path').'/admin/users.php');
+			show_confirmation(T_('Error'), T_('Unable to Disabled last Administrator'), Config::get('web_path').'/admin/users.php');
 		}
 	break;
 	case 'show_edit':
@@ -163,17 +163,17 @@ switch ($_REQUEST['action']) {
 		}
 		$client = new User($_REQUEST['user_id']);
 		if ($client->delete()) {
-			show_confirmation(_('User Deleted'), sprintf(_('%s has been Deleted'), $client->username), Config::get('web_path'). "/admin/users.php");
+			show_confirmation(T_('User Deleted'), sprintf(T_('%s has been Deleted'), $client->username), Config::get('web_path'). "/admin/users.php");
 		}
 		else {
-			show_confirmation(_('Delete Error'), _("Unable to delete last Admin User"), Config::get('web_path')."/admin/users.php");
+			show_confirmation(T_('Delete Error'), T_("Unable to delete last Admin User"), Config::get('web_path')."/admin/users.php");
 		}
 	break;
 	case 'delete':
 		if (Config::get('demo_mode')) { break; }
 		$client = new User($_REQUEST['user_id']);
-		show_confirmation(_('Deletion Request'),
-			sprintf(_('Are you sure you want to permanently delete %s?'), $client->fullname),
+		show_confirmation(T_('Deletion Request'),
+			sprintf(T_('Are you sure you want to permanently delete %s?'), $client->fullname),
 			Config::get('web_path')."/admin/users.php?action=confirm_delete&amp;user_id=" . $_REQUEST['user_id'],1,'delete_user');
 	break;
 	/* Show IP History for the Specified User */

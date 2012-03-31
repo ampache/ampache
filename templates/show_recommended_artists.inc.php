@@ -27,7 +27,7 @@
  */
 
 ?>
-<?php show_box_top(_('Similar Artists'), 'info-box'); ?>
+<?php show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
   <col id="col_add" />
@@ -39,14 +39,14 @@
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
-	<th class="cel_add"><?php echo _('Add'); ?></th>
-	<th class="cel_artist"><?php echo _('Artist'); ?></th>
-	<th class="cel_songs"><?php echo _('Songs');  ?></th>
-	<th class="cel_albums"><?php echo _('Albums'); ?></th>
-	<th class="cel_time"><?php echo _('Time'); ?></th>
-	<th class="cel_tags"><?php echo _('Tags'); ?></th>
-	<th class="cel_rating"> <?php echo _('Rating'); ?> </th>
-	<th class="cel_action"> <?php echo _('Action'); ?> </th>
+	<th class="cel_add"><?php echo T_('Add'); ?></th>
+	<th class="cel_artist"><?php echo T_('Artist'); ?></th>
+	<th class="cel_songs"><?php echo T_('Songs');  ?></th>
+	<th class="cel_albums"><?php echo T_('Albums'); ?></th>
+	<th class="cel_time"><?php echo T_('Time'); ?></th>
+	<th class="cel_tags"><?php echo T_('Tags'); ?></th>
+	<th class="cel_rating"> <?php echo T_('Rating'); ?> </th>
+	<th class="cel_action"> <?php echo T_('Action'); ?> </th>
 </tr>
 <?php
 // Cache the ratings we are going to use
@@ -63,17 +63,17 @@ foreach ($object_ids as $artist_id) {
 <?php } //end foreach ($artists as $artist) ?>
 <?php if (!count($object_ids)) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="5"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
+	<td colspan="5"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
-	<th class="cel_add"><?php echo _('Add'); ?></th>
-	<th class="cel_artist"><?php echo _('Artist'); ?></th>
-	<th class="cel_songs"> <?php echo _('Songs');  ?> </th>
-	<th class="cel_albums"> <?php echo _('Albums'); ?> </th>
-	<th class="cel_time"> <?php echo _('Time'); ?> </th>
-	<th class="cel_tags"><?php echo _('Tags'); ?></th>
-	<th class="cel_rating"> <?php echo _('Rating'); ?> </th>
-	<th class="cel_action"> <?php echo _('Action'); ?> </th>
+	<th class="cel_add"><?php echo T_('Add'); ?></th>
+	<th class="cel_artist"><?php echo T_('Artist'); ?></th>
+	<th class="cel_songs"> <?php echo T_('Songs');  ?> </th>
+	<th class="cel_albums"> <?php echo T_('Albums'); ?> </th>
+	<th class="cel_time"> <?php echo T_('Time'); ?> </th>
+	<th class="cel_tags"><?php echo T_('Tags'); ?></th>
+	<th class="cel_rating"> <?php echo T_('Rating'); ?> </th>
+	<th class="cel_action"> <?php echo T_('Action'); ?> </th>
 </tr>
 </table>

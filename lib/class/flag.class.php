@@ -322,8 +322,8 @@ class Flag extends database_object {
 	 */
 	public function print_status() {
 
-		if ($this->approved) { echo _('Approved'); }
-		else { echo _('Pending'); }
+		if ($this->approved) { echo T_('Approved'); }
+		else { echo T_('Pending'); }
 
 	} // print_status
 
@@ -335,19 +335,19 @@ class Flag extends database_object {
 
 		switch ($this->flag) {
 			case 'delete':
-				$name = _('Delete');
+				$name = T_('Delete');
 			break;
 			case 'retag':
-				$name = _('Re-Tag');
+				$name = T_('Re-Tag');
 			break;
 			case 'reencode':
-				$name = _('Re-encode');
+				$name = T_('Re-encode');
 			break;
 			case 'other':
-				$name = _('Other');
+				$name = T_('Other');
 			break;
 			default:
-				$name = _('Unknown');
+				$name = T_('Unknown');
 			break;
 		} // end switch
 

@@ -43,14 +43,14 @@ $web_path = Config::get('web_path');
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
-	<th class="cel_add"><?php echo _('Add'); ?></th>
-	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&type=artist&sort=name',_('Artist'),'artist_sort_name'); ?></th>
-	<th class="cel_songs"><?php echo _('Songs');  ?></th>
-	<th class="cel_albums"><?php echo _('Albums'); ?></th>
-	<th class="cel_time"><?php echo _('Time'); ?></th>
-	<th class="cel_tags"><?php echo _('Tags'); ?></th>
-	<th class="cel_rating"> <?php echo _('Rating'); ?> </th>
-	<th class="cel_action"> <?php echo _('Action'); ?> </th>
+	<th class="cel_add"><?php echo T_('Add'); ?></th>
+	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&type=artist&sort=name', T_('Artist'),'artist_sort_name'); ?></th>
+	<th class="cel_songs"><?php echo T_('Songs');  ?></th>
+	<th class="cel_albums"><?php echo T_('Albums'); ?></th>
+	<th class="cel_time"><?php echo T_('Time'); ?></th>
+	<th class="cel_tags"><?php echo T_('Tags'); ?></th>
+	<th class="cel_rating"> <?php echo T_('Rating'); ?> </th>
+	<th class="cel_action"> <?php echo T_('Action'); ?> </th>
 </tr>
 <?php
 // Cache the ratings we are going to use
@@ -67,18 +67,18 @@ foreach ($object_ids as $artist_id) {
 <?php } //end foreach ($artists as $artist) ?>
 <?php if (!count($object_ids)) { ?>
 <tr class="<?php echo flip_class(); ?>">
-	<td colspan="5"><span class="fatalerror"><?php echo _('Not Enough Data'); ?></span></td>
+	<td colspan="5"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
-	<th class="cel_add"><?php echo _('Add'); ?></th>
-	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&type=artist&sort=name',_('Artist'),'artist_sort_name_bottom'); ?></th>
-	<th class="cel_songs"> <?php echo _('Songs');  ?> </th>
-	<th class="cel_albums"> <?php echo _('Albums'); ?> </th>
-	<th class="cel_time"> <?php echo _('Time'); ?> </th>
-	<th class="cel_tags"><?php echo _('Tags'); ?></th>
-	<th class="cel_rating"> <?php echo _('Rating'); ?> </th>
-	<th class="cel_action"> <?php echo _('Action'); ?> </th>
+	<th class="cel_add"><?php echo T_('Add'); ?></th>
+	<th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&type=artist&sort=name', T_('Artist'),'artist_sort_name_bottom'); ?></th>
+	<th class="cel_songs"> <?php echo T_('Songs');  ?> </th>
+	<th class="cel_albums"> <?php echo T_('Albums'); ?> </th>
+	<th class="cel_time"> <?php echo T_('Time'); ?> </th>
+	<th class="cel_tags"><?php echo T_('Tags'); ?></th>
+	<th class="cel_rating"> <?php echo T_('Rating'); ?> </th>
+	<th class="cel_action"> <?php echo T_('Action'); ?> </th>
 </tr>
 </table>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>

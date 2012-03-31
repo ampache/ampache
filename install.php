@@ -87,7 +87,7 @@ switch ($_REQUEST['action']) {
 		$charset  = $_REQUEST['charset'];
 		// Test and make sure that the values they give us actually work
 		if (!check_database($hostname,$username,$password)) {
-			Error::add('config',_('Error: Unable to make Database Connection') . mysql_error());
+			Error::add('config', T_('Error: Unable to make Database Connection') . mysql_error());
 		}
 
 		// Was download pressed?
@@ -175,7 +175,7 @@ switch ($_REQUEST['action']) {
 
 		/* Make sure we've got a valid config file */
 		if (!check_config_values($results)) {
-			Error::add('general',_('Error: Config file not found or Unreadable'));
+			Error::add('general', T_('Error: Config file not found or Unreadable'));
 			require_once Config::get('prefix') . '/templates/show_install_config.inc.php';
 			break;
 		}

@@ -46,7 +46,7 @@ header("Content-Disposition: attachment; filename=information.xml");
 if (!Config::get('access_control')) {
 	ob_end_clean();
 	debug_event('Access Control','Error Attempted to use XML API with Access Control turned off','3');
-	echo xmlData::error('501',_('Access Control not Enabled'));
+	echo xmlData::error('501', T_('Access Control not Enabled'));
 	exit;
 }
 
@@ -57,7 +57,7 @@ if (!Config::get('access_control')) {
 if (!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
         debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','3');
         ob_end_clean();
-        echo xmlData::error('401',_('Session Expired'));
+        echo xmlData::error('401', T_('Session Expired'));
         exit();
 }
 
@@ -68,7 +68,7 @@ $username = ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping'
 if (!Access::check_network('init-api',$username,'5')) {
         debug_event('Access Denied','Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
         ob_end_clean();
-        echo xmlData::error('403',_('Unauthorized access attempt to API - ACL Error'));
+        echo xmlData::error('403', T_('Unauthorized access attempt to API - ACL Error'));
         exit();
 }
 
@@ -99,4 +99,4 @@ foreach ($methods as $method) {
 
 // If we manage to get here, we still need to hand out an XML document
 ob_end_clean();
-echo xmlData::error('405',_('Invalid Request'));
+echo xmlData::error('405', T_('Invalid Request'));

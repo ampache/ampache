@@ -36,26 +36,26 @@
 </head>
 <body bgcolor="#f0f0f0">
 <div id="header">
-<h1><?php echo _('Ampache Debug'); ?></h1>
-<p><?php echo _('You\'ve reached this page because a configuration error has occured. Debug Information below'); ?></p>
+<h1><?php echo T_('Ampache Debug'); ?></h1>
+<p><?php echo T_('You\'ve reached this page because a configuration error has occured. Debug Information below'); ?></p>
 </div>
 <div>
 <table align="center" cellpadding="3" cellspacing="0">
 <tr>
-	<td><font size="+1"><?php echo _('CHECK'); ?></font></td>
+	<td><font size="+1"><?php echo T_('CHECK'); ?></font></td>
 	<td>
-		<font size="+1"><?php echo _('STATUS'); ?></font>
+		<font size="+1"><?php echo T_('STATUS'); ?></font>
 	</td>
-	<td><font size="+1"><?php echo _('DESCRIPTION'); ?></font></td>
+	<td><font size="+1"><?php echo T_('DESCRIPTION'); ?></font></td>
 </tr>
 <tr>
-	<td valign="top"><?php echo _('PHP Version'); ?></td>
+	<td valign="top"><?php echo T_('PHP Version'); ?></td>
 	<td valign="top">[
 	<?php
 		if (!check_php_ver()) {
 			echo debug_result('',false);
 			if (function_exists('hash_algos')) { $algos = hash_algos(); }
-			$string = "<strong>" .  phpversion() . " " . _('Hash Function Exists') . " " . print_bool(function_exists('hash_algos')) . " " . _('SHA256 Support') . " " . print_bool(in_array('sha256',$algos)) . "</strong>";
+			$string = "<strong>" .  phpversion() . " " . T_('Hash Function Exists') . " " . print_bool(function_exists('hash_algos')) . " " . T_('SHA256 Support') . " " . print_bool(in_array('sha256',$algos)) . "</strong>";
 		}
 		else {
 			echo debug_result('',true);
@@ -64,12 +64,12 @@
 	]
 	</td>
 	<td>
-	<?php echo _('This tests to make sure that you are running a version of PHP that is known to work with Ampache.'); ?>
+	<?php echo T_('This tests to make sure that you are running a version of PHP that is known to work with Ampache.'); ?>
 	<?php echo $string; ?>
 	</td>
 </tr>
 <tr>
-        <td valign="top"><?php echo _('Mysql for PHP'); ?></td>
+        <td valign="top"><?php echo T_('Mysql for PHP'); ?></td>
         <td valign="top">[
         <?php
                 if (!check_php_mysql()) {
@@ -82,11 +82,11 @@
         ]
         </td>
         <td>
-	<?php echo _('This test checks to see if you have the mysql extensions loaded for PHP. These are required for Ampache to work.'); ?>
+	<?php echo T_('This test checks to see if you have the mysql extensions loaded for PHP. These are required for Ampache to work.'); ?>
         </td>
 </tr>
 <tr>
-	<td valign="top"><?php echo _('PHP Session Support'); ?></td>
+	<td valign="top"><?php echo T_('PHP Session Support'); ?></td>
 	<td valign="top">[
 	<?php
 		if (!check_php_session()) {
@@ -99,11 +99,11 @@
 	]
 	</td>
 	<td>
-	<?php echo _('This test checks to make sure that you have PHP session support enabled. Sessions are required for Ampache to work.'); ?>
+	<?php echo T_('This test checks to make sure that you have PHP session support enabled. Sessions are required for Ampache to work.'); ?>
 	</td>
 </tr>
 <tr>
-	<td valign="top"><?php echo _('PHP ICONV Support'); ?></td>
+	<td valign="top"><?php echo T_('PHP ICONV Support'); ?></td>
 	<td valign="top">[
 	<?php
 		if (!check_php_iconv()) {
@@ -115,11 +115,11 @@
 	?>]
 	</td>
 	<td>
-	<?php echo _('This test checks to make sure you have Iconv support installed. Iconv support is required for Ampache'); ?>
+	<?php echo T_('This test checks to make sure you have Iconv support installed. Iconv support is required for Ampache'); ?>
 	</td>
 </tr>
 <tr>
-	<td valign="top"><?php echo _('PHP PCRE Support'); ?></td>
+	<td valign="top"><?php echo T_('PHP PCRE Support'); ?></td>
 	<td valign="top">[
 	<?php
 		if (!check_php_pcre()) {
@@ -131,11 +131,11 @@
 	?>]
 	</td>
 	<td>
-	<?php echo _('This test makes sure you have PCRE support compiled into your version of PHP, this is required for Ampache.'); ?>
+	<?php echo T_('This test makes sure you have PCRE support compiled into your version of PHP, this is required for Ampache.'); ?>
 	</td>
 </tr>
 <tr>
-	<td valign="top"><?php echo _('PHP Safe Mode'); ?></td>
+	<td valign="top"><?php echo T_('PHP Safe Mode'); ?></td>
 	<td valign="top">[
 	<?php
 		if (!check_safemode()) {
@@ -147,29 +147,29 @@
 	?>]
 	</td>
 	<td>
-	<?php echo _("This test makes sure that PHP isn't running in safe mode.  Some features of Ampache may not work correctly in safe mode."); ?>
+	<?php echo T_("This test makes sure that PHP isn't running in safe mode.  Some features of Ampache may not work correctly in safe mode."); ?>
 	</td>
 </tr>
 <tr>
-	<td valign="top"><?php echo _('Override Memory Limit'); ?></td>
+	<td valign="top"><?php echo T_('Override Memory Limit'); ?></td>
 	<td valign="top">[
 	<?php echo debug_result('', check_override_memory()); ?>]
 	</td>
 	<td>
-	<?php echo _('This tests whether Ampache can override the memory limit.  This is not strictly necessary, but may result in a better experience.'); ?>
+	<?php echo T_('This tests whether Ampache can override the memory limit.  This is not strictly necessary, but may result in a better experience.'); ?>
 	</td>
 </tr>
 <tr>
-	<td valign="top"><?php echo _('Override Execution Limit'); ?></td>
+	<td valign="top"><?php echo T_('Override Execution Limit'); ?></td>
 	<td valign="top">[
 	<?php echo debug_result('', check_override_exec_time()); ?>]
 	</td>
 	<td>
-	<?php echo _('This tests whether Ampache can override the limit on maximum execution time.  This is not strictly necessary, but may result in a better experience.'); ?>
+	<?php echo T_('This tests whether Ampache can override the limit on maximum execution time.  This is not strictly necessary, but may result in a better experience.'); ?>
 	</td>
 </tr>	
 <tr>
-	<td valign="top"><?php echo sprintf(_("%s is readable"),"ampache.cfg.php"); ?></td>
+	<td valign="top"><?php echo sprintf(T_("%s is readable"),"ampache.cfg.php"); ?></td>
 	<td valign="top">[
 	<?php
 		if (!is_readable($configfile)) {
@@ -182,13 +182,13 @@
 	]
 	</td>
 	<td width="350px">
-	<?php echo _('This attempts to read /config/ampache.cfg.php If this fails either the ampache.cfg.php is not in the correct locations or
+	<?php echo T_('This attempts to read /config/ampache.cfg.php If this fails either the ampache.cfg.php is not in the correct locations or
 	it is not currently readable by your webserver.'); ?>
 	</td>
 </tr>
 <tr>
 	<td valign="top">
-		<?php echo _('Ampache.cfg.php Configured?'); ?>
+		<?php echo T_('Ampache.cfg.php Configured?'); ?>
 	</td>
 	<td valign="top">[
 	<?php
@@ -204,11 +204,11 @@
 	]
 	</td>
 	<td>
-	<?php echo _("This test makes sure that you have set all of the required configuration variables and that we are able to completely parse your config file"); ?>
+	<?php echo T_("This test makes sure that you have set all of the required configuration variables and that we are able to completely parse your config file"); ?>
 	</td>
 </tr>
 <tr>
-	<td valign="top"><?php echo _("DB Connection"); ?></td>
+	<td valign="top"><?php echo T_("DB Connection"); ?></td>
 	<td valign="top">[
 	<?php
 		$db = check_database($results['database_hostname'], $results['database_username'], $results['database_password'],$results['database_name']);
@@ -222,11 +222,11 @@
 	]
 	</td>
 	<td>
-	<?php echo _("This attempts to connect to your database using the values from your ampache.cfg.php"); ?>
+	<?php echo T_("This attempts to connect to your database using the values from your ampache.cfg.php"); ?>
 	</td>
 </tr>
 <tr>
-	<td valign="top"><?php echo _('DB Inserted'); ?></td>
+	<td valign="top"><?php echo T_('DB Inserted'); ?></td>
 	<td valign="top">[
 	<?php
 		$db_inserted = check_database_inserted($db,$results['local_db']);
@@ -240,12 +240,12 @@
 	]
 	</td>
 	<td>
-	<?php echo _('This checks a few key tables to make sure that you have successfully inserted the ampache database and that the user has access to the database'); ?>
+	<?php echo T_('This checks a few key tables to make sure that you have successfully inserted the ampache database and that the user has access to the database'); ?>
 	</td>
 </tr>
 <tr>
 
-	<td valign="top"><?php echo _('Web Path'); ?></td>
+	<td valign="top"><?php echo T_('Web Path'); ?></td>
 	<td valign="top">[
 	<?php
 		/*
@@ -269,7 +269,7 @@
 	]
 	</td>
 	<td>
-	<?php echo _('This test makes sure that your web_path variable is set correctly and that we are able to get to the index page. If you do not see a check mark here then your web_path is not set correctly.'); ?>
+	<?php echo T_('This test makes sure that your web_path variable is set correctly and that we are able to get to the index page. If you do not see a check mark here then your web_path is not set correctly.'); ?>
 	</td>
 </tr>
 </table>

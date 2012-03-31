@@ -28,8 +28,8 @@
 
 ?>
 <td class="cel_add">
-	<?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add',_('Add'),'add_artist_' . $artist->id); ?>
-	<?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random',_('Random'),'random_artist_' . $artist->id); ?>
+	<?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add', T_('Add'),'add_artist_' . $artist->id); ?>
+	<?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random', T_('Random'),'random_artist_' . $artist->id); ?>
 </td>
 <td class="cel_artist"><?php echo $artist->f_name_link; ?></td>
 <td class="cel_songs"><?php echo $artist->songs; ?></td>
@@ -40,10 +40,10 @@
 <td class="cel_action">
 <?php if (Access::check_function('batch_download')) { ?>
 	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=artist&amp;id=<?php echo $artist->id; ?>">
-        	<?php echo get_user_icon('batch_download','',_('Batch Download')); ?>
+        	<?php echo get_user_icon('batch_download','', T_('Batch Download')); ?>
         </a>
 <?php } ?>
 <?php if (Access::check('interface','50')) { ?>
-	<?php echo Ajax::button('?action=show_edit_object&type=artist_row&id=' . $artist->id,'edit',_('Edit'),'edit_artist_' . $artist->id); ?>
+	<?php echo Ajax::button('?action=show_edit_object&type=artist_row&id=' . $artist->id,'edit', T_('Edit'),'edit_artist_' . $artist->id); ?>
 <?php } ?>
 </td>

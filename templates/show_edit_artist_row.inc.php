@@ -37,7 +37,7 @@
 <td>
 	<input type="hidden" name="id" value="<?php echo $artist->id; ?>" />
 	<input type="hidden" name="type" value="artist_row" />
-	<?php echo Ajax::button('?action=edit_object&id=' . $artist->id . '&type=artist_row','download',_('Save Changes'),'save_artist_' . $artist->id,'edit_artist_' . $artist->id); ?>
+	<?php echo Ajax::button('?action=edit_object&id=' . $artist->id . '&type=artist_row','download', T_('Save Changes'),'save_artist_' . $artist->id,'edit_artist_' . $artist->id); ?>
 
 </tr>
 </table>

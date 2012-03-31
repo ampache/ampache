@@ -29,13 +29,13 @@
 ?>
 <ul id="rb_action">
 	<li>
-	<?php echo Ajax::button('?page=stream&action=basket','all',_('Play'),'rightbar_play'); ?>
+	<?php echo Ajax::button('?page=stream&action=basket','all', T_('Play'),'rightbar_play'); ?>
 	</li>
 	<li id="pl_add">
-		<?php echo get_user_icon('playlist_add',_('Add to Playlist')); ?>
+		<?php echo get_user_icon('playlist_add', T_('Add to Playlist')); ?>
 		<ul id="pl_action_additems" class="submenu">
 		  <li>
-		    <?php echo Ajax::text('?page=playlist&action=create',_('Add to New Playlist'),'rb_create_playlist'); ?>
+		    <?php echo Ajax::text('?page=playlist&action=create', T_('Add to New Playlist'),'rb_create_playlist'); ?>
 		  </li>
 		<?php
 			$playlists = Playlist::get_users($GLOBALS['user']->id);
@@ -53,27 +53,27 @@
 <?php if (Access::check_function('batch_download')) { ?>
 	<li>
 	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
-	        <?php echo get_user_icon('batch_download',_('Batch Download')); ?>
+	        <?php echo get_user_icon('batch_download', T_('Batch Download')); ?>
         </a>
 	</li>
 <?php } ?>
 	<li>
-	<?php echo Ajax::button('?action=basket&type=clear_all','delete',_('Clear Playlist'),'rb_clear_playlist'); ?>
+	<?php echo Ajax::button('?action=basket&type=clear_all','delete', T_('Clear Playlist'),'rb_clear_playlist'); ?>
 	</li>
 	<li id="rb_add">
-	  <?php echo get_user_icon('add',_('Add Dynamic Items')); ?>
+	  <?php echo get_user_icon('add', T_('Add Dynamic Items')); ?>
 	  <ul id="rb_action_additems" class="submenu">
 	   <li>
-	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=default',_('Pure Random'),'rb_add_pure_random'); ?>
+	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=default', T_('Pure Random'),'rb_add_pure_random'); ?>
 	   </li>
 	   <li>
-	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=artist',_('Related Artist'),'rb_add_related_artist'); ?>
+	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=artist', T_('Related Artist'),'rb_add_related_artist'); ?>
 	   </li>
 	   <li>
-	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=album',_('Related Album'),'rb_add_related_album'); ?>
+	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=album', T_('Related Album'),'rb_add_related_album'); ?>
 	   </li>
 	   <li>
-	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=tag',_('Related Tag'),'rb_add_related_tag'); ?>
+	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=tag', T_('Related Tag'),'rb_add_related_tag'); ?>
 	   </li>
 	  </ul>
 	</li>
@@ -109,14 +109,14 @@
 ?>
 <li class="<?php echo flip_class(); ?>" >
   <?php echo $object->f_link; ?>
-	<?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid,'delete',_('Delete'),'rightbar_delete_' . $uid,'','delitem'); ?>
+	<?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid,'delete', T_('Delete'),'rightbar_delete_' . $uid,'','delitem'); ?>
 </li>
 <?php } if (!count($objects)) { ?>
-	<li class="error"><?php echo _('Not Enough Data'); ?></li>
+	<li class="error"><?php echo T_('Not Enough Data'); ?></li>
 <?php } ?>
 <?php if (isset($truncated)) { ?>
 	<li class="<?php echo flip_class(); ?>">
-		<?php echo $truncated . ' ' . _('More'); ?>...
+		<?php echo $truncated . ' ' . T_('More'); ?>...
 	</li>
 <?php } ?>
 </ul>

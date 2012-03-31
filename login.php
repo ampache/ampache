@@ -90,14 +90,14 @@ if (($_POST['username'] && $_POST['password']) ||
 		}
 		else {
 			debug_event('Login', scrub_out($username) . ' attempted to login and failed', '1');
-			Error::add('general', _('Error Username or Password incorrect, please try again'));
+			Error::add('general', T_('Error Username or Password incorrect, please try again'));
 		}
 
 		$user = User::get_from_username($username);
 
 		if ($user->disabled) {
 			$auth['success'] = false;
-			Error::add('general', _('User Disabled please contact Admin'));
+			Error::add('general', T_('User Disabled please contact Admin'));
 			debug_event('Login', scrub_out($username) . ' is disabled and attempted to login', '1');
 		} // if user disabled
 		elseif (Config::get('prevent_multiple_logins')) {
@@ -105,7 +105,7 @@ if (($_POST['username'] && $_POST['password']) ||
 			$current_ip = inet_pton($_SERVER['REMOTE_ADDR']);
 			if ($current_ip && ($current_ip != $session_ip)) {
 				$auth['success'] = false;
-				Error::add('general',_('User Already Logged in'));
+				Error::add('general', T_('User Already Logged in'));
 				debug_event('Login', scrub_out($username) . ' is already logged in from ' . $session_ip . ' and attempted to login from ' . $current_ip, '1');
 			} // if logged in multiple times
 		} // if prevent multiple logins
@@ -126,7 +126,7 @@ if (($_POST['username'] && $_POST['password']) ||
 			}
 			else {
 				$auth['success'] = false;
-				Error::add('general', _('Unable to create local account'));
+				Error::add('general', T_('Unable to create local account'));
 			}
 		} // End if auto_create
 

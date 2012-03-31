@@ -38,12 +38,12 @@
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
-	<th class="cel_catalog"><?php echo _('Name'); ?></th>
-	<th class="cel_path"><?php echo _('Path'); ?></th>
-	<th class="cel_lastverify"><?php echo _('Last Verify'); ?></th>
-	<th class="cel_lastadd"><?php echo _('Last Add'); ?></th>
-	<th class="cel_lastclean"><?php echo _('Last Clean'); ?></th>
-	<th class="cel_action"><?php echo _('Actions'); ?></th>
+	<th class="cel_catalog"><?php echo T_('Name'); ?></th>
+	<th class="cel_path"><?php echo T_('Path'); ?></th>
+	<th class="cel_lastverify"><?php echo T_('Last Verify'); ?></th>
+	<th class="cel_lastadd"><?php echo T_('Last Add'); ?></th>
+	<th class="cel_lastclean"><?php echo T_('Last Clean'); ?></th>
+	<th class="cel_action"><?php echo T_('Actions'); ?></th>
 </tr>
 <?php
 	foreach ($object_ids as $catalog_id) {
@@ -57,17 +57,17 @@
 <tr class="<?php echo flip_class(); ?>">
 <td colspan="6">
 <?php if (!count($object_ids)) { ?>
-	<span class="fatalerror"><?php echo _('Not Enough Data'); ?></span>
+	<span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span>
 <?php } ?>
 </td>
 </tr>
 <tr class="th-bottom">
-	<th class="cel_catalog"><?php echo _('Name'); ?></th>
-	<th class="cel_path"><?php echo _('Path'); ?></th>
-	<th class="cel_lastverify"><?php echo _('Last Verify'); ?></th>
-	<th class="cel_lastadd"><?php echo _('Last Add'); ?></th>
-	<th class="cel_lastclean"><?php echo _('Last Clean'); ?></th>
-	<th class="cel_action"><?php echo _('Actions'); ?></th>
+	<th class="cel_catalog"><?php echo T_('Name'); ?></th>
+	<th class="cel_path"><?php echo T_('Path'); ?></th>
+	<th class="cel_lastverify"><?php echo T_('Last Verify'); ?></th>
+	<th class="cel_lastadd"><?php echo T_('Last Add'); ?></th>
+	<th class="cel_lastclean"><?php echo T_('Last Clean'); ?></th>
+	<th class="cel_action"><?php echo T_('Actions'); ?></th>
 </tr>
 </table>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>

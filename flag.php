@@ -48,7 +48,7 @@ switch ($action) {
 		$flag_type	= scrub_in($_REQUEST['flag_type']);
 		$comment	= scrub_in($_REQUEST['comment']);
 		$flag->add($id,$type,$flag_type,$comment);
-		show_confirmation(_('Item Flagged'),_('The specified item has been flagged'),$_SESSION['source_page']);
+		show_confirmation(T_('Item Flagged'), T_('The specified item has been flagged'),$_SESSION['source_page']);
 	break;
 	case 'show_flag':
 		/* Store where they came from */

@@ -28,17 +28,17 @@
 
 ?>
 
-<?php show_box_top(_('Edit Album')); ?>
+<?php show_box_top(T_('Edit Album')); ?>
 <form name="edit_album" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/admin/flag.php?action=edit_album">
 <table class="tabledata">
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _('Name'); ?></td>
+	<td><?php echo T_('Name'); ?></td>
 	<td>
 		<input type="text" name="name" value="<?php echo scrub_out($album->full_name); ?>">
 	</td>
 </tr>
 <tr class="<?php echo flip_class(); ?>">
-	<td><?php echo _('Year'); ?></td>
+	<td><?php echo T_('Year'); ?></td>
 	<td>
 		<input type="text" name="year" value="<?php echo scrub_out($album->year); ?>">
 	</td>
@@ -46,13 +46,13 @@
 <tr class="<?php echo flip_class(); ?>">
 	<td>&nbsp;</td>
 	<td>
-		<input type="checkbox" name="flag" value="1" checked="checked" /> <?php echo _('Flag for Retagging'); ?>
+		<input type="checkbox" name="flag" value="1" checked="checked" /> <?php echo T_('Flag for Retagging'); ?>
 	</td>
 </tr>
 </table>
 <div class="formValidation">
 		<input type="hidden" name="album_id" value="<?php echo $album->id; ?>" />
-		<input type="submit" value="<?php echo _('Update Album'); ?>" />
+		<input type="submit" value="<?php echo T_('Update Album'); ?>" />
 </div>
 </form>
 <?php show_box_bottom(); ?>

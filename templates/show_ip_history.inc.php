@@ -27,16 +27,16 @@
  */
 
 ?>
-<?php /* HINT: Username */ show_box_top(sprintf(_('%s IP History'), $working_user->fullname)); ?>
+<?php /* HINT: Username */ show_box_top(sprintf(T_('%s IP History'), $working_user->fullname)); ?>
 <div id="information_actions">
 <ul>
 <li>
 <?php if (isset($_REQUEST['all'])){ ?>
 	<a href="<?php echo Config::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>"><?php echo get_user_icon('disable'); ?></a>
-	<?php echo _('Show Unique'); ?>
+	<?php echo T_('Show Unique'); ?>
 <?php }else{ ?>
 	<a href="<?php echo Config::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all"><?php echo get_user_icon('add'); ?></a>
-	<?php echo _('Show All'); ?>
+	<?php echo T_('Show All'); ?>
 <?php }?>
 </li>
 </ul>
@@ -49,8 +49,8 @@
   <col id="col_ipaddress" />
 </colgroup>
 <tr class="th-top">
-  <th class="cel_date"><?php echo _('Date'); ?></th>
- 	<th class="cel_ipaddress"><?php echo _('IP Address'); ?></th>
+  <th class="cel_date"><?php echo T_('Date'); ?></th>
+ 	<th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
 </tr>
 <?php foreach ($history as $data) { ?>
 <tr class="<?php echo flip_class(); ?>">
@@ -63,8 +63,8 @@
 </tr>
 <?php } ?>
 <tr class="th-bottom">
-  <th class="cel_date"><?php echo _('Date'); ?></th>
- 	<th class="cel_ipaddress"><?php echo _('IP Address'); ?></th>
+  <th class="cel_date"><?php echo T_('Date'); ?></th>
+ 	<th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
 </tr>
 
 </table>

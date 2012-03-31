@@ -27,29 +27,29 @@
  */
 
 /* HINT: Democratic Name */
-$string = $democratic->is_enabled() ? sprintf(_('%s Playlist') ,$democratic->name) : _('Democratic Playlist');
+$string = $democratic->is_enabled() ? sprintf(T_('%s Playlist') ,$democratic->name) : T_('Democratic Playlist');
 show_box_top($string , 'info-box');
 ?>
 <div id="information_actions">
 <ul>
 <?php if ($democratic->is_enabled()) { ?>
 <li>
-	<?php echo _('Cooldown'); ?>:<?php echo $democratic->f_cooldown; ?>
+	<?php echo T_('Cooldown'); ?>:<?php echo $democratic->f_cooldown; ?>
 </li>
 <?php } ?>
 <?php if (Access::check('interface','75')) { ?>
 <li>
-	<a href="<?php echo Config::get('web_path'); ?>/democratic.php?action=manage"><?php echo get_user_icon('server_lightning',_('Configure Democratic Playlist')); ?></a>
-	<?php echo _('Configure Democratic Playlist'); ?>
+	<a href="<?php echo Config::get('web_path'); ?>/democratic.php?action=manage"><?php echo get_user_icon('server_lightning', T_('Configure Democratic Playlist')); ?></a>
+	<?php echo T_('Configure Democratic Playlist'); ?>
 </li>
 <?php if ($democratic->is_enabled()) { ?>
 <li>
-	<?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . scrub_out($democratic->id),'all',_('Play'),'play_democratic'); ?>
-	<?php echo _('Play Democratic Playlist'); ?>
+	<?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . scrub_out($democratic->id),'all', T_('Play'),'play_democratic'); ?>
+	<?php echo T_('Play Democratic Playlist'); ?>
 </li>
 <li>
-	<?php echo Ajax::button('?page=democratic&action=clear_playlist&democratic_id=' . scrub_out($democratic->id),'delete',_('Clear Playlist'),'clear_democratic'); ?>
-	<?php echo _('Clear Playlist'); ?>
+	<?php echo Ajax::button('?page=democratic&action=clear_playlist&democratic_id=' . scrub_out($democratic->id),'delete', T_('Clear Playlist'),'clear_democratic'); ?>
+	<?php echo T_('Clear Playlist'); ?>
 </li>
 <?php } ?>
 <?php } ?>

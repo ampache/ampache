@@ -33,7 +33,7 @@ $web_path = Config::get('web_path');
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
-<title><?php echo Config::get('site_title'); ?> - <?php echo _('Registration'); ?></title>
+<title><?php echo Config::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
 <link rel="stylesheet" href="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
 <link rel="shortcut icon" href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
 </head>
@@ -45,7 +45,7 @@ $web_path = Config::get('web_path');
 <div id="maincontainer">
 <div id="header">
 <h1><?php echo scrub_out(Config::get('site_title')); ?></h1>
-<span><?php echo _('Registration'); ?>...</span>
+<span><?php echo T_('Registration'); ?>...</span>
 </div>
 <?php
 
@@ -59,50 +59,50 @@ $email = scrub_in($_REQUEST['email']);
 <?php
 /*  If we should show the user agreement */
 if (Config::get('user_agreement')) { ?>
-<h3><?php echo _('User Agreement'); ?></h3>
+<h3><?php echo T_('User Agreement'); ?></h3>
 <div class="registrationAgreement">
     <div class="agreementContent">
 		<?php Registration::show_agreement(); ?>
     </div>
     
     <div class="agreementCheckbox">
-		<input type='checkbox' name='accept_agreement' /> <?php echo _('I Accept'); ?>
+		<input type='checkbox' name='accept_agreement' /> <?php echo T_('I Accept'); ?>
 		<?php Error::display('user_agreement'); ?>
 	</div>
 </div>
 <?php } // end if(conf('user_agreement')) ?>
-<h3><?php echo _('User Information'); ?></h3>
+<h3><?php echo T_('User Information'); ?></h3>
 <div class="registerfield require">
-    <label for="username"><?php echo _('Username'); ?>: <span class="asterix">*</span></label>
+    <label for="username"><?php echo T_('Username'); ?>: <span class="asterix">*</span></label>
     <input type='text' name='username' id='username' value='<?php echo scrub_out($username); ?>' />
 	<?php Error::display('username'); ?>
 	<?php Error::display('duplicate_user'); ?>
 </div>
 <div class="registerfield require">
-	<label for="fullname"><?php echo _('Full Name'); ?>: <span class="asterix">*</span></label>
+	<label for="fullname"><?php echo T_('Full Name'); ?>: <span class="asterix">*</span></label>
     <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out($fullname); ?>' />
 	<?php Error::display('fullname'); ?>
 </div>
 
 <div class="registerfield require">
-    <label for="email"><?php echo _('E-mail'); ?>: <span class="asterix">*</span></label>
+    <label for="email"><?php echo T_('E-mail'); ?>: <span class="asterix">*</span></label>
 	<input type='text' name='email' id='email' value='<?php echo scrub_out($email); ?>' />
 	<?php Error::display('email'); ?>
 </div>
 
 <div class="registerfield require">
-	<label for="password"><?php echo _('Password'); ?>: <span class="asterix">*</span></label>
+	<label for="password"><?php echo T_('Password'); ?>: <span class="asterix">*</span></label>
 	<input type='password' name='password_1' id='password_1' />
 	<?php Error::display('password'); ?>
 </div>
 
 <div class="registerfield require">
-	<label for="confirm_passord"><?php echo _('Confirm Password'); ?>: <span class="asterix">*</span></label>
+	<label for="confirm_passord"><?php echo T_('Confirm Password'); ?>: <span class="asterix">*</span></label>
 	<input type='password' name='password_2' id='password_2' />
 </div>
 
 <div class="registerInformation">
-    <span><?php echo _('* Required fields'); ?></span>
+    <span><?php echo T_('* Required fields'); ?></span>
 </div>
 
 <?php if (Config::get('captcha_public_reg')) { ?>
@@ -112,7 +112,7 @@ if (Config::get('user_agreement')) { ?>
 
 <div class="registerButtons">
 	<input type="hidden" name="action" value="add_user" />
-	<input type='submit' name='submit_registration' id='submit_registration' value='<?php echo _('Register User'); ?>' />
+	<input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register User'); ?>' />
 </div>
 </form>
 </div><!-- end <div id="registerbox-->
@@ -120,7 +120,7 @@ if (Config::get('user_agreement')) { ?>
 <div id="footer">
     <a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />
     Copyright (c) 2001 - 2010 Ampache.org
-    <?php echo _('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo _('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
+    <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
 </div>
 </body>
 </html>

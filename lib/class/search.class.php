@@ -53,55 +53,55 @@ class Search extends playlist_object {
 
 		$this->basetypes['numeric'][] = array(
 			'name'	=> 'gte',
-			'description' => _('is greater than or equal to'),
+			'description' => T_('is greater than or equal to'),
 			'sql'	 => '>='
 		);
 
 		$this->basetypes['numeric'][] = array(
 			'name'	=> 'lte',
-			'description' => _('is less than or equal to'),
+			'description' => T_('is less than or equal to'),
 			'sql'	 => '<='
 		);
 
 		$this->basetypes['numeric'][] = array(
 			'name'	=> 'equal',
-			'description' => _('is'),
+			'description' => T_('is'),
 			'sql'	 => '<=>'
 		);
 
 		$this->basetypes['numeric'][] = array(
 			'name'	=> 'ne',
-			'description' => _('is not'),
+			'description' => T_('is not'),
 			'sql'	 => '<>'
 		);
 
 		$this->basetypes['numeric'][] = array(
 			'name'	=> 'gt',
-			'description' => _('is greater than'),
+			'description' => T_('is greater than'),
 			'sql'	 => '>'
 		);
 
 		$this->basetypes['numeric'][] = array(
 			'name'	=> 'lt',
-			'description' => _('is less than'),
+			'description' => T_('is less than'),
 			'sql'	 => '<'
 		);
 
 
 		$this->basetypes['boolean'][] = array(
 			'name'	=> 'true',
-			'description' => _('is true')
+			'description' => T_('is true')
 		);
 
 		$this->basetypes['boolean'][] = array(
 			'name'	=> 'false',
-			'description' => _('is false')
+			'description' => T_('is false')
 		);
 
 
 		$this->basetypes['text'][] = array(
 			'name'	 => 'contain',
-			'description'  => _('contains'),
+			'description'  => T_('contains'),
 			'sql'	  => 'LIKE',
 			'preg_match'   => array('/^/','/$/'),
 			'preg_replace' => array('%', '%')
@@ -109,7 +109,7 @@ class Search extends playlist_object {
 
 		$this->basetypes['text'][] = array(
 			'name'	 => 'notcontain',
-			'description'  => _('does not contain'),
+			'description'  => T_('does not contain'),
 			'sql'	  => 'NOT LIKE',
 			'preg_match'   => array('/^/','/$/'),
 			'preg_replace' => array('%', '%')
@@ -117,7 +117,7 @@ class Search extends playlist_object {
 
 		$this->basetypes['text'][] = array(
 			'name'	 => 'start',
-			'description'  => _('starts with'),
+			'description'  => T_('starts with'),
 			'sql'	  => 'LIKE',
 			'preg_match'   => '/$/',
 			'preg_replace' => '%'
@@ -125,7 +125,7 @@ class Search extends playlist_object {
 
 		$this->basetypes['text'][] = array(
 			'name'	 => 'end',
-			'description'  => _('ends with'),
+			'description'  => T_('ends with'),
 			'sql'	  => 'LIKE',
 			'preg_match'   => '/^/',
 			'preg_replace' => '%'
@@ -133,58 +133,58 @@ class Search extends playlist_object {
 
 		$this->basetypes['text'][] = array(
 			'name'	=> 'equal',
-			'description' => _('is'),
+			'description' => T_('is'),
 			'sql'	 => '='
 		);
 
 		$this->basetypes['text'][] = array(
 			'name'	=> 'sounds',
-			'description' => _('sounds like'),
+			'description' => T_('sounds like'),
 			'sql'	 => 'SOUNDS LIKE'
 		);
 
 		$this->basetypes['text'][] = array(
 			'name'	=> 'notsounds',
-			'description' => _('does not sound like'),
+			'description' => T_('does not sound like'),
 			'sql'	 => 'NOT SOUNDS LIKE'
 		);
 		
 
 		$this->basetypes['boolean_numeric'][] = array(
 			'name'	=> 'equal',
-			'description' => _('is'),
+			'description' => T_('is'),
 			'sql'	 => '<=>'
 		);
 		
 		 $this->basetypes['boolean_numeric'][] = array(
 			'name'	=> 'ne',
-			'description' => _('is not'),
+			'description' => T_('is not'),
 			'sql'	 => '<>'
 		);
 
 
 		$this->basetypes['boolean_subsearch'][] = array(
 			'name'	=> 'equal',
-			'description' => _('is'),
+			'description' => T_('is'),
 			'sql'	 => ''
 		);
 		
 		$this->basetypes['boolean_subsearch'][] = array(
 			'name'	=> 'ne',
-			'description' => _('is not'),
+			'description' => T_('is not'),
 			'sql'	 => 'NOT'
 		);
 
 
 		$this->basetypes['date'][] = array(
 			'name'	=> 'lt',
-			'description' => _('before'),
+			'description' => T_('before'),
 			'sql'	 => '>'
 		);
 		
 		$this->basetypes['date'][] = array(
 			'name'	=> 'gt',
-			'description' => _('after'),
+			'description' => T_('after'),
 			'sql'	 => '>'
 		);
 
@@ -192,35 +192,35 @@ class Search extends playlist_object {
 		case 'song':
 			$this->types[] = array(
 				'name'   => 'anywhere',
-				'label'  =>  _('Any searchable text'),
+				'label'  =>  T_('Any searchable text'),
 				'type'   => 'text',
 				'widget' => array('input', 'text')
 			);
 
 			$this->types[] = array(
 				'name'   => 'title',
-				'label'  => _('Title'),
+				'label'  => T_('Title'),
 				'type'   => 'text',
 				'widget' => array('input', 'text')
 			);
 
 			$this->types[] = array(
 				'name'   => 'album',
-				'label'  => _('Album'),
+				'label'  => T_('Album'),
 				'type'   => 'text',
 				'widget' => array('input', 'text')
 			);
 
 			$this->types[] = array(
 				'name'   => 'artist',
-				'label'  => _('Artist'),
+				'label'  => T_('Artist'),
 				'type'   => 'text',
 				'widget' => array('input', 'text')
 			);
 
 			$this->types[] = array(
 				'name'   => 'comment',
-				'label'  =>  _('Comment'),
+				'label'  =>  T_('Comment'),
 				'type'   => 'text',
 				'widget' => array('input', 'text')
 			);
@@ -228,28 +228,28 @@ class Search extends playlist_object {
 			
 			$this->types[] = array(
 				'name'   => 'tag',
-				'label'  => _('Tag'),
+				'label'  => T_('Tag'),
 				'type'   => 'text',
 				'widget' => array('input', 'text')
 			);
 
 			$this->types[] = array(
 				'name'   => 'file',
-				'label'  => _('Filename'),
+				'label'  => T_('Filename'),
 				'type'   => 'text',
 				'widget' => array('input', 'text')
 			);
 
 			$this->types[] = array(
 				'name'   => 'year',
-				'label'  => _('Year'),
+				'label'  => T_('Year'),
 				'type'   => 'numeric',
 				'widget' => array('input', 'text')
 			);
 
 			$this->types[] = array(
 				'name'   => 'time', 
-				'label'  => _('Length (in minutes)'),
+				'label'  => T_('Length (in minutes)'),
 				'type'   => 'numeric',
 				'widget' => array('input', 'text')
 			);
@@ -257,7 +257,7 @@ class Search extends playlist_object {
 			if (Config::get('ratings')) {
 				$this->types[] = array(
 					'name'   => 'rating',
-					'label'  => _('Rating'),
+					'label'  => T_('Rating'),
 					'type'   => 'numeric',
 					'widget' => array(
 						'select',
@@ -274,7 +274,7 @@ class Search extends playlist_object {
 
 			$this->types[] = array(
 				'name'   => 'bitrate',
-				'label'  => _('Bitrate'),
+				'label'  => T_('Bitrate'),
 				'type'   => 'numeric',
 				'widget' => array(
 					'select',
@@ -299,21 +299,21 @@ class Search extends playlist_object {
 
 			$this->types[] = array(
 				'name'   => 'played',
-				'label'  => _('Played'),
+				'label'  => T_('Played'),
 				'type'   => 'boolean',
 				'widget' => array('input', 'hidden')
 			);
 
 			$this->types[] = array(
 				'name'   => 'added',
-				'label'  => _('Added'),
+				'label'  => T_('Added'),
 				'type'   => 'date',
 				'widget' => array('input', 'text')
 			);
 
 			$this->types[] = array(
 				'name'   => 'updated',
-				'label'  => _('Updated'),
+				'label'  => T_('Updated'),
 				'type'   => 'date',
 				'widget' => array('input', 'text')
 			);
@@ -326,7 +326,7 @@ class Search extends playlist_object {
 			}
 			$this->types[] = array(
 				'name'   => 'catalog',
-				'label'  => _('Catalog'),
+				'label'  => T_('Catalog'),
 				'type'   => 'boolean_numeric',
 				'widget' => array('select', $catalogs)
 			);
@@ -339,7 +339,7 @@ class Search extends playlist_object {
 			}
 			$this->types[] = array(
 				'name'   => 'playlist',
-				'label'  => _('Playlist'),
+				'label'  => T_('Playlist'),
 				'type'   => 'boolean_numeric',
 				'widget' => array('select', $playlists)
 			);
@@ -352,7 +352,7 @@ class Search extends playlist_object {
 			}
 			$this->types[] = array(
 				'name'   => 'smartplaylist',
-				'label'  => _('Smart Playlist'),
+				'label'  => T_('Smart Playlist'),
 				'type'   => 'boolean_subsearch',
 				'widget' => array('select', $playlists)
 			);
@@ -360,14 +360,14 @@ class Search extends playlist_object {
 		case 'album':
 			$this->types[] = array(
 				'name'   => 'title',
-				'label'  => _('Title'),
+				'label'  => T_('Title'),
 				'type'   => 'text',
 				'widget' => array('input', 'text')
 			);
 
 			$this->types[] = array(
 				'name'   => 'year',
-				'label'  => _('Year'),
+				'label'  => T_('Year'),
 				'type'   => 'numeric',
 				'widget' => array('input', 'text')
 			);
@@ -375,7 +375,7 @@ class Search extends playlist_object {
 			if (Config::get('ratings')) {
 				$this->types[] = array(
 					'name'   => 'rating',
-					'label'  => _('Rating'),
+					'label'  => T_('Rating'),
 					'type'   => 'numeric',
 					'widget' => array(
 						'select',
@@ -398,7 +398,7 @@ class Search extends playlist_object {
 			}
 			$this->types[] = array(
 				'name'   => 'catalog',
-				'label'  => _('Catalog'),
+				'label'  => T_('Catalog'),
 				'type'   => 'boolean_numeric',
 				'widget' => array('select', $catalogs)
 			);
@@ -406,7 +406,7 @@ class Search extends playlist_object {
 
 			$this->types[] = array(
 				'name'   => 'tag',
-				'label'  => _('Tag'),
+				'label'  => T_('Tag'),
 				'type'   => 'text',
 				'widget' => array('input', 'text')
 			);
@@ -414,7 +414,7 @@ class Search extends playlist_object {
 		case 'video':
 			$this->types[] = array(
 				'name'   => 'filename',
-				'label'  => _('Filename'),
+				'label'  => T_('Filename'),
 				'type'   => 'text',
 				'widget' => array('input', 'text')
 			);
@@ -422,13 +422,13 @@ class Search extends playlist_object {
 		case 'artist':
 			$this->types[] = array(
 				'name'   => 'name',
-				'label'  => _('Name'),
+				'label'  => T_('Name'),
 				'type'   => 'text',
 				'widget' => array('input', 'text')
 			);
 			$this->types[] = array(
 				'name'   => 'tag',
-				'label'  => _('Tag'),
+				'label'  => T_('Tag'),
 				'type'   => 'text',
 				'widget' => array('input', 'text')
 			);

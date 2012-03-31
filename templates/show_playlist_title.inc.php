@@ -28,4 +28,4 @@
 
 ?>
 
-<?php echo sprintf(_('%s %s (Playlist)'), $playlist->f_type, $playlist->name); ?>
+<?php echo sprintf(T_('%s %s (Playlist)'), $playlist->f_type, $playlist->name); ?>

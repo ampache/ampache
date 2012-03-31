@@ -50,7 +50,7 @@
 <td>
 	<input type="hidden" name="id" value="<?php echo $song->id; ?>" />
 	<input type="hidden" name="type" value="song_row" />
-	<?php echo Ajax::button('?action=edit_object&id=' . $song->id . '&type=song_row','download',_('Save Changes'),'save_song_' . $song->id,'edit_song_' . $song->id); ?>
+	<?php echo Ajax::button('?action=edit_object&id=' . $song->id . '&type=song_row','download', T_('Save Changes'),'save_song_' . $song->id,'edit_song_' . $song->id); ?>
 </td>
 </tr>
 </table>

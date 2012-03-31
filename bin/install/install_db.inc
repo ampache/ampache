@@ -67,26 +67,26 @@ if (!$db_user || !$db_pass || !$db_host || !$db_name || !$new_db_user || !$new_d
 
 // Now let's make sure its not already installed
 if (!install_check_status($configfile)) { 
-	echo "\n", _('Existing Ampache installation found.'), "\n";
+	echo "\n", T_('Existing Ampache installation found.'), "\n";
 	if ($force) {
-		echo _('Force specified, proceeding anyway.'), "\n";
+		echo T_('Force specified, proceeding anyway.'), "\n";
 	}
 	else {
-		echo _('Exiting.'), "\n"; 
+		echo T_('Exiting.'), "\n"; 
 		exit(1);
 	}
 } 
 
 // Install the database
 if (!install_insert_db($db_user, $db_pass, $db_host, $db_name, $new_db_user, $new_db_pass)) { 
-	echo _('Database creation failed'), "\n"; 
+	echo T_('Database creation failed'), "\n"; 
 	echo Error::get('general'), "\n\n"; 
 	exit(1); 
 } 
 
 // Write the config file
 if (!install_create_config($webpath, $new_db_user, $new_db_pass, $db_host, $db_name)) { 
-	echo _('Config file creation failed'), "\n"; 
+	echo T_('Config file creation failed'), "\n"; 
 	echo Error::get('general') . "\n\n"; 
 	exit(1); 
 } 

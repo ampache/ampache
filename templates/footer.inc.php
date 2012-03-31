@@ -28,14 +28,14 @@
 ?>
 <div style="clear:both;"></div>
 <?php if (isset($_SESSION['userdata']['password'])) {?>
-	<span class="fatalerror"><?php echo _('Using Old Password Encryption, Please Reset your Password'); ?></span>
+	<span class="fatalerror"><?php echo T_('Using Old Password Encryption, Please Reset your Password'); ?></span>
 <?php } ?>
 </div> <!-- end id="content"-->
 </div> <!-- end id="maincontainer"-->
 <div id="footer">
 	<a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />
 	Copyright (c) 2001 - 2011 Ampache.org
-	<?php echo _('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo _('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
+	<?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
 </div>
 </body>
 </html>

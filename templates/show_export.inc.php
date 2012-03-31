@@ -31,14 +31,14 @@ ${$name} = ' selected="selected"';
 $name = 'catalog_' . $_REQUEST['export_catalog'];
 ${$name} = ' selected="selected"';
 
-show_box_top(_('Export Catalog'), 'box box_export'); ?>
+show_box_top(T_('Export Catalog'), 'box box_export'); ?>
 <form name="duplicates" action="<?php echo Config::get('web_path'); ?>/admin/export.php?action=export" method="post" enctype="multipart/form-data" >
 <table class="tableform" cellspacing="0" cellpadding="3">
 <tr>
-	<td valign="top"><strong><?php echo _('Catalog'); ?>:</strong></td>
+	<td valign="top"><strong><?php echo T_('Catalog'); ?>:</strong></td>
 	<td>
 		<select id="export_catalog" name="export_catalog">
-			<option value=""><?php echo _('All'); ?></option>
+			<option value=""><?php echo T_('All'); ?></option>
 <?php
 		$catalog_ids = Catalog::get_catalogs();
 		foreach ($catalog_ids as $catalog_id) {
@@ -54,7 +54,7 @@ show_box_top(_('Export Catalog'), 'box box_export'); ?>
 	</td>
 </tr>
 <tr>
-	<td valign="top"><strong><?php echo _('Format'); ?>:</strong></td>
+	<td valign="top"><strong><?php echo T_('Format'); ?>:</strong></td>
 	<td>
 		<select id="export_format" name="export_format">
 			<option value="csv" <?php echo $export_csv; ?>>CSV</option>
@@ -64,7 +64,7 @@ show_box_top(_('Export Catalog'), 'box box_export'); ?>
 </tr>
 </table>
 <div class="formValidation">
-      <input type="submit" value="<?php echo _('Export'); ?>" />
+      <input type="submit" value="<?php echo T_('Export'); ?>" />
 </div>
 </form>
 <?php show_box_bottom(); ?>

@@ -368,16 +368,16 @@ class Random implements media {
 
 		switch ($type) {
 			case 'album':
-				return _('Related Album');
+				return T_('Related Album');
 			break;
 			case 'genre':
-				return _('Related Genre');
+				return T_('Related Genre');
 			break;
 			case 'artist':
-				return _('Related Artist');
+				return T_('Related Artist');
 			break;
 			default:
-				return _('Pure Random');
+				return T_('Pure Random');
 			break;
 		} // end switch
 
