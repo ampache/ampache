@@ -33,28 +33,16 @@
  * @return void
  */
 function load_gettext() {
-	/* If we have gettext */
-	if (function_exists('bindtextdomain')) {
-		$lang = Config::get('lang');
-		putenv("LANG=" . $lang);
-		putenv("LANGUAGE=" . $lang);
-		/* Try lang, lang + charset and lang + utf-8 */
-		setlocale(LC_ALL,
-				$lang,
-				$lang . '.UTF-8', //. Config::get('site_charset'),
-				$lang . '.UTF-8',
-				$lang . '.UTF-8',
-				$lang . '.UTF-8'); // . Config::get('lc_charset'));
-
-		/* Bind the Text Domain */
-		bindtextdomain('messages', Config::get('prefix') . "/locale/");
-		textdomain('messages');
-		if (function_exists('bind_textdomain_codeset')) {
-			bind_textdomain_codeset('messages',Config::get('site_charset'));
-		} // if we can codeset the textdomain
-
-	} // If bindtext domain exists
-
+	$lang = Config::get('lang');
+	$charset = Config::get('site_charset') ?: 'UTF=8';
+	$locale = $lang . '.' . $charset;
+	debug_event('i18n', 'Setting locale to ' . $locale, 5);
+	T_setlocale(LC_MESSAGES, $locale);
+	/* Bind the Text Domain */
+	T_bindtextdomain('messages', Config::get('prefix') . "/locale/");
+	T_bind_textdomain_codeset('messages', $charset);
+	T_textdomain('messages');
+	debug_event('i18n', 'gettext is ' . (locale_emulation() ? 'emulated' : 'native'), 5);
 } // load_gettext
 
 /**

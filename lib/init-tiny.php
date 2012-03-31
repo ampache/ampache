@@ -64,7 +64,7 @@ require_once $prefix . '/lib/preferences.php';
 require_once $prefix . '/lib/debug.lib.php';
 require_once $prefix . '/lib/log.lib.php';
 require_once $prefix . '/lib/ui.lib.php';
-require_once $prefix . '/lib/gettext.php';
+require_once $prefix . '/lib/i18n.php';
 require_once $prefix . '/lib/batch.lib.php';
 require_once $prefix . '/lib/themes.php';
 require_once $prefix . '/lib/class/localplay.abstract.php';
