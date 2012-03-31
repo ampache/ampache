@@ -208,15 +208,11 @@ function create_preference_input($name,$value) {
 		break;
 		case 'lang':
 			$languages = get_languages();
-			$var_name = $value . "_lang";
-			${$var_name} = "selected=\"selected\"";
-
-			echo "<select name=\"$name\">\n";
-
+			echo '<select name="' . $name . '">' . "\n";
 			foreach ($languages as $lang=>$name) {
-				$var_name = $lang . "_lang";
+				$selected = ($lang == $value) ? 'selected="selected"' : '';
 
-				echo "\t<option value=\"$lang\" " . ${$var_name} . ">$name</option>\n";
+				echo "\t<option value=\"$lang\" " . $selected . ">$name</option>\n";
 			} // end foreach
 			echo "</select>\n";
 		break;
