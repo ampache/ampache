@@ -77,29 +77,6 @@ function flip_class($array=0) {
 } // flip_class
 
 /**
- * _
- * Check to see if the gettext alias _ is defined. If it isn't we define it as
- * a noop.
- */
-if (!function_exists('_')) {
-
-	function _($string) {
-		return $string;
-	} // _
-
-} // if _ isn't defined
-
-/**
- * ngettext
- * checks for ngettext and defines it if it doesn't exist
- */
-if (!function_exists('ngettext')) {
-	function ngettext($string) {
-		return $string;
-	}
-} // if no ngettext
-
-/**
  * access_denied
  * Throws an error if they try to do something that they aren't allowed to.
  */
