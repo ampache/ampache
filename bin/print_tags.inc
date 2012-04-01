@@ -57,9 +57,12 @@ $results = Dba::fetch_assoc($db_results);
 
 $catalog = new Catalog($results['id']);
 
-$info = new vainfo($filename,'','','',$catalog->sort_pattern,$catalog->rename_pattern);
-if(isset($catalog->sort_pattern) AND isset($catalog->rename_pattern)) {
-	printf(_('Using: %s AND %s for file pattern matching'), $catalog->sort_pattern, $catalog->rename_pattern);
+$dir_pattern = $catalog->sort_pattern;
+$file_pattern = $catalog->rename_pattern;
+
+$info = new vainfo($filename, '', '', '', $dir_pattern, $file_pattern);
+if(isset($dir_pattern) || isset($file_pattern)) {
+	printf(_('Using: %s AND %s for file pattern matching'), $dir_pattern, $file_pattern);
 	print "\n";
 }
 $info->get_info();
@@ -75,13 +78,13 @@ if ($send_mail) {
 	mail('tags@ampache.org',$subject,$body);
 }
 
-
-echo _("Results Seen by GetID3()");
 echo "\n";
+echo _('Raw results:');
+echo "\n\n";
 print_r($info);
 echo "\n------------------------------------------------------------------\n";
-printf(_('Results Seen by Ampache using %s'), implode(' + ', $keys));
-echo "\n";
+printf(_('Final results seen by Ampache using %s:'), implode(' + ', $keys));
+echo "\n\n";
 print_r($ampache_results);
 
 function usage() {
