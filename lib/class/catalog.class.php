@@ -1685,7 +1685,7 @@ class Catalog extends database_object {
 				if ($chunk > 0) {
 					$media_type::clear_cache();
 				}
-				$total_updates += $this->_verify_chunk($media_type, $chunk, 10000);
+				$total_updated += $this->_verify_chunk($media_type, $chunk, 10000);
 			}
 		}
 
