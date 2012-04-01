@@ -941,26 +941,33 @@ class vainfo {
 			$slash_type = '\\';
 		}
 
+		// Combine the patterns
 		$pattern = preg_quote($this->_dir_pattern) . $slash_type . preg_quote($this->_file_pattern);
-		preg_match_all("/\%\w/",$pattern,$elements);
+		
+		// Pull out the pattern codes into an array
+		preg_match_all('/\%\w/', $pattern, $elements);
 
-		$preg_pattern = preg_quote($pattern);
-		$preg_pattern = preg_replace("/\%[Ty]/","([0-9]+?)",$preg_pattern);
-		$preg_pattern = preg_replace("/\%\w/","(.+?)",$preg_pattern);
-		$preg_pattern = str_replace("/","\/",$preg_pattern);
-		$preg_pattern = str_replace(" ","\s",$preg_pattern);
-		$preg_pattern = "/" . $preg_pattern . "\..+$/";
-		preg_match($preg_pattern,$filename,$matches);
-		/* Cut out the Full line, we don't need that */
-		array_shift($matches);
+		// Mangle the pattern by turning the codes into regex captures
+		$pattern = preg_replace('/\%[Ty]/', '([0-9]+?)', $pattern);
+		$pattern = preg_replace('/\%\w/', '(.+?)', $pattern);
+		$pattern = str_replace('/', '\/', $pattern);
+		$pattern = str_replace(' ', '\s', $pattern);
+		$pattern = '/' . $pattern . '\..+$/';
 
-		/* Foreach through what we've found */
-		foreach ($matches as $key=>$value) {
+		// Pull out our actual matches
+		preg_match($pattern, $filename, $matches);
+
+		// The first element is the full match text
+		$matched = array_shift($matches);
+		debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filename, 5);
+
+		// Iterate over what we found
+		foreach ($matches as $key => $value) {
 			$new_key = translate_pattern_code($elements['0'][$key]);
 			if ($new_key) {
 				$results[$new_key] = $value;
 			}
-		} // end foreach matches
+		}
 
 		$results['size'] = filesize($filename);
 

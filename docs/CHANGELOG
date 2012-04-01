@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Fixed an issue with filename pattern matching when patterns contained
+                characters that are part of regex syntax (such as -)
         - Fixed display of logic operator in rules (reported by Twister)
         - Fixed newsearch issue preventing use of more than 9 rules 
                 (reported by Twister)
