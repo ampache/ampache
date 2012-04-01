@@ -1855,7 +1855,7 @@ class Catalog extends database_object {
 
 		$exists = false;
 
-		$sql = "SELECT `id` FROM `artist` WHERE `mbid` LIKE '$mbid'";
+		$sql = "SELECT `id` FROM `artist` WHERE `mbid`='$mbid'";
 		$db_results = Dba::read($sql);
 
 		// Check for results
