@@ -1749,11 +1749,6 @@ class Catalog extends database_object {
 				continue;
 			}
 
-			if (filemtime($media->file) <= $media->update_time) {
-				debug_event('verify', "$media->file has a modification time older than the database record, skipping", 5, 'ampache-catalog');
-				continue;
-			}
-
 			$info = self::update_media_from_tags($media, $this->sort_pattern,$this->rename_pattern);
 			if ($info['change']) {
 				$changed++;
