@@ -374,6 +374,9 @@ class Update {
 		$update_string = '- Allow long sessionids in tmp_playlist table.<br />';
 		$version[] = array('version' => '360009', 'description' => $update_string);
 
+		$update_string = '- Allow compound MBIDs in the artist table.<br />';
+		$version[] = array('version' => '360010', 'description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -2073,6 +2076,18 @@ class Update {
 		$db_results = Dba::write($sql);
 
 		self::set_version('db_version','360009');
+	}
+
+	/**
+	* update_360010
+	* MBz NGS means collaborations have more than one MBID (the ones 
+	* belonging to the underlying artists).  We need a bigger column.
+	*/
+	public static function update_360010() {
+		$sql = 'ALTER TABLE `artist` CHANGE `mbid` `mbid` VARCHAR(1369)';
+		$db_results = Dba::write($sql);
+
+		self::set_version('db_version', '360010');
 	}
 
 } // end update class
