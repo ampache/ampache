@@ -453,7 +453,7 @@ class Art extends database_object {
 	 * ['file']     = FILENAME *** OPTIONAL ***
 	 * ['raw']      = Actual Image data, already captured
 	 */
-	public function get_from_source($data) {
+	public static function get_from_source($data, $type = 'album') {
 
 		// Already have the data, this often comes from id3tags
 		if (isset($data['raw'])) {
@@ -464,7 +464,7 @@ class Art extends database_object {
 		if (isset($data['db'])) {
 			// Repull it
 			$uid = Dba::escape($data['db']);
-			$type = Dba::escape($this->type);
+			$type = Dba::escape($type);
 
 			$sql = "SELECT * FROM `image` WHERE `object_type`='$type' AND `object_id`='$uid' AND `size`='original'";
 			$db_results = Dba::read($sql);

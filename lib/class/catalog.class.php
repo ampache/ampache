@@ -716,7 +716,7 @@ class Catalog extends database_object {
 
 			if (count($results)) {
 				// Pull the string representation from the source
-				$image = $art->get_from_source($results['0']);
+				$image = Art::get_from_source($results['0'], 'album');
 				if (strlen($image) > '5') {
 					$art->insert($image, $results['0']['mime']);
 					// If they've enabled resizing of images generate the thumbnail now
@@ -2163,7 +2163,8 @@ class Catalog extends database_object {
 			$get_vars = parse_url($song['art']); 
 			$extension = substr($get_vars['query'],strlen($get_vars['query'])-3,3);
 			// Pull the image
-			$raw = $art->get_from_source(array('url'=>$song['art']));
+			$raw = Art::get_from_source(
+					array('url' => $song['art']), 'album');
 			$inserted = $art->insert($raw,'image/' . $extension); 
 		} 
 
