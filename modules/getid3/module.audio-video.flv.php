@@ -69,6 +69,8 @@ define('H264_PROFILE_HIGH444_PREDICTIVE', 244);
 
 class getid3_flv extends getid3_handler
 {
+	var $max_frames = 100000; // break out of the loop if too many frames have been scanned; only scan this many if meta frame does not contain useful duration
+
 	function Analyze() {
 		$info = &$this->getid3->info;
 
@@ -80,7 +82,7 @@ class getid3_flv extends getid3_handler
 		$info['fileformat'] = 'flv';
 		$info['flv']['header']['signature'] =                           substr($FLVheader, 0, 3);
 		$info['flv']['header']['version']   = getid3_lib::BigEndian2Int(substr($FLVheader, 3, 1));
-		$TypeFlags                                  = getid3_lib::BigEndian2Int(substr($FLVheader, 4, 1));
+		$TypeFlags                          = getid3_lib::BigEndian2Int(substr($FLVheader, 4, 1));
 
 		$magic = 'FLV';
 		if ($info['flv']['header']['signature'] != $magic) {
@@ -102,8 +104,11 @@ class getid3_flv extends getid3_handler
 		$found_video = false;
 		$found_audio = false;
 		$found_meta  = false;
-		$tagParsed = 0;
-		while (((ftell($this->getid3->fp) + 16) < $info['avdataend']) && ($tagParsed <= 20 || !$found_meta))  {
+		$found_valid_meta_playtime = false;
+		$tagParseCount = 0;
+		$info['flv']['framecount'] = array('total'=>0, 'audio'=>0, 'video'=>0);
+		$flv_framecount = &$info['flv']['framecount'];
+		while (((ftell($this->getid3->fp) + 16) < $info['avdataend']) && (($tagParseCount++ <= $this->max_frames) || !$found_valid_meta_playtime))  {
 			$ThisTagHeader = fread($this->getid3->fp, 16);
 
 			$PreviousTagLength = getid3_lib::BigEndian2Int(substr($ThisTagHeader,  0, 4));
@@ -116,8 +121,10 @@ class getid3_flv extends getid3_handler
 				$Duration = $Timestamp;
 			}
 
+			$flv_framecount['total']++;
 			switch ($TagType) {
 				case GETID3_FLV_TAG_AUDIO:
+					$flv_framecount['audio']++;
 					if (!$found_audio) {
 						$found_audio = true;
 						$info['flv']['audio']['audioFormat']     = ($LastHeaderByte >> 4) & 0x0F;
@@ -128,6 +135,7 @@ class getid3_flv extends getid3_handler
 					break;
 
 				case GETID3_FLV_TAG_VIDEO:
+					$flv_framecount['video']++;
 					if (!$found_video) {
 						$found_video = true;
 						$info['flv']['video']['videoCodec'] = $LastHeaderByte & 0x07;
@@ -251,7 +259,7 @@ class getid3_flv extends getid3_handler
 										$info['video'][$destkey] = intval(round($info['flv']['meta']['onMetaData'][$sourcekey]));
 										break;
 									case 'audiodatarate':
-										$info['audio'][$destkey] = $info['flv']['meta']['onMetaData'][$sourcekey];
+										$info['audio'][$destkey] = getid3_lib::CastAsInt(round($info['flv']['meta']['onMetaData'][$sourcekey] * 1000));
 										break;
 									case 'videodatarate':
 									case 'frame_rate':
@@ -261,6 +269,9 @@ class getid3_flv extends getid3_handler
 								}
 							}
 						}
+						if (!empty($info['flv']['meta']['onMetaData']['duration'])) {
+							$found_valid_meta_playtime = true;
+						}
 					}
 					break;
 
@@ -268,11 +279,7 @@ class getid3_flv extends getid3_handler
 					// noop
 					break;
 			}
-
 			fseek($this->getid3->fp, $NextOffset, SEEK_SET);
-
-			// Increase parsed tag count: break out of loop if more than 20 tags parsed
-			$tagParsed++;
 		}
 
 		$info['playtime_seconds'] = $Duration / 1000;
@@ -296,7 +303,7 @@ class getid3_flv extends getid3_handler
 		}
 
 		// Set information from meta
-		if (isset($info['flv']['meta']['onMetaData']['duration'])) {
+		if (!empty($info['flv']['meta']['onMetaData']['duration'])) {
 			$info['playtime_seconds'] = $info['flv']['meta']['onMetaData']['duration'];
 			$info['bitrate'] = (($info['avdataend'] - $info['avdataoffset']) * 8) / $info['playtime_seconds'];
 		}

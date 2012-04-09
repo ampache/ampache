@@ -148,7 +148,6 @@ class getid3_ogg extends getid3_handler
 				$info['ogg']['pageheader'][$oggpageinfo['page_seqno'].'.'.$counter++] = $oggpageinfo;
 				$filedata = fread($this->getid3->fp, $oggpageinfo['page_length']);
 				fseek($this->getid3->fp, $oggpageinfo['page_end_offset'], SEEK_SET);
-//echo substr($filedata, 0, 8).'<br>';
 
 				if (substr($filedata, 0, 8) == "fisbone\x00") {
 
@@ -357,7 +356,6 @@ $info['error'][] = 'Ogg Skeleton not correctly handled in this version of getID3
 	function ParseOggPageHeader() {
 		// http://xiph.org/ogg/vorbis/doc/framing.html
 		$oggheader['page_start_offset'] = ftell($this->getid3->fp); // where we started from in the file
-//echo $oggheader['page_start_offset'].'<br>';
 
 		$filedata = fread($this->getid3->fp, $this->getid3->fread_buffer_size());
 		$filedataoffset = 0;
@@ -369,7 +367,6 @@ $info['error'][] = 'Ogg Skeleton not correctly handled in this version of getID3
 			if ((($filedataoffset + 28) > strlen($filedata)) || (strlen($filedata) < 28)) {
 				if (feof($this->getid3->fp) || (($filedata .= fread($this->getid3->fp, $this->getid3->fread_buffer_size())) === false)) {
 					// get some more data, unless eof, in which case fail
-echo __LINE__.'<br>';
 					return false;
 				}
 			}
@@ -457,7 +454,6 @@ echo __LINE__.'<br>';
 		$ThisFileInfo_ogg_comments_raw = &$info['ogg']['comments_raw'];
 		for ($i = 0; $i < $CommentsCount; $i++) {
 
-//echo $i.' :: '.$CommentStartOffset.' + '.$commentdataoffset.' = '.($CommentStartOffset + $commentdataoffset).'<br>';
 			$ThisFileInfo_ogg_comments_raw[$i]['dataoffset'] = $CommentStartOffset + $commentdataoffset;
 
 			if (ftell($this->getid3->fp) < ($ThisFileInfo_ogg_comments_raw[$i]['dataoffset'] + 4)) {

@@ -100,6 +100,9 @@ class getID3
 	public $option_sha1_data         = false; // Get SHA1 sum of data part - slow
 	public $option_max_2gb_check     = null;  // Check whether file is larger than 2GB and thus not supported by 32-bit PHP (null: auto-detect based on PHP_INT_MAX)
 
+	// public: Read buffer size in bytes
+	public $option_fread_buffer_size = 32768;
+
 	// Public variables
 	public $filename;                         // Filename of file being analysed.
 	public $fp;                               // Filepointer to file being analysed.
@@ -110,20 +113,19 @@ class getID3
 	protected $startup_warning = '';
 	protected $memory_limit    = 0;
 
-	const VERSION           = '1.9.1-20110810';
-	const FREAD_BUFFER_SIZE = 32768;            // Read buffer size in bytes.
+	const VERSION           = '1.9.3-20111213';
+	const FREAD_BUFFER_SIZE = 32768;
 	var $tempdir            = GETID3_TEMP_DIR;
 
 	const ATTACHMENTS_NONE   = false;
 	const ATTACHMENTS_INLINE = true;
 
 	// public: constructor
-	function getID3() {
+	public function __construct() {
 
 		// Check for PHP version
 		$required_php_version = '5.0.5';
-		if (!function_exists('version_compare') || version_compare(PHP_VERSION, $required_php_version, '<')) {
-			// version_compare not available before PHP v4.1.0, so don't use for first version checking
+		if (version_compare(PHP_VERSION, $required_php_version, '<')) {
 			$this->startup_error .= 'getID3() requires PHP v'.$required_php_version.' or higher - you are running v'.PHP_VERSION;
 			return false;
 		}
@@ -153,19 +155,6 @@ class getID3
 		if (intval(ini_get('mbstring.func_overload')) > 0) {
 			$this->warning('WARNING: php.ini contains "mbstring.func_overload = '.ini_get('mbstring.func_overload').'", this may break things.');
 		}
-
-		/*
-		// Check timezone config setting
-		// this is needed to prevent E_STRICT warnings with any time/date functions
-		if (!ini_get('date.timezone')) {
-			if (function_exists('date_default_timezone_set')) { // exists since PHP v5.1.0
-				$this->warning('php.ini should have "date.timezone" set, but it does not. Setting timezone to "'.date_default_timezone_get().'"');
-				date_default_timezone_set(date_default_timezone_get());
-			} else {
-				$this->warning('php.ini should have "date.timezone" set, but it does not.');
-			}
-		}
-		*/
 
 		// Check for magic_quotes_runtime
 		if (function_exists('get_magic_quotes_runtime')) {
@@ -235,25 +224,12 @@ class getID3
 		return true;
 	}
 
-	function version() {
-		$version = getID3::VERSION;
-		if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
-			// can't use this syntax, even conditionally, since it registers as a parse error before PHP v5.3.0
-			// wrapping the new syntax in an eval call should work without causing parse errors in old PHP
-			// return $this::VERSION;
-			eval('$version = $this::VERSION;');
-		}
-		return $version;
+	public function version() {
+		return self::VERSION;
 	}
-	function fread_buffer_size() {
-		$fread_buffer_size = getID3::FREAD_BUFFER_SIZE;
-		if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
-			// can't use this syntax, even conditionally, since it registers as a parse error before PHP v5.3.0
-			// wrapping the new syntax in an eval call should work without causing parse errors in old PHP
-			// return $this::VERSION;
-			eval('$fread_buffer_size = $this::FREAD_BUFFER_SIZE;');
-		}
-		return $fread_buffer_size;
+
+	public function fread_buffer_size() {
+		return $this->option_fread_buffer_size;
 	}
 
 
@@ -272,10 +248,10 @@ class getID3
 	}
 
 
-	function openfile($filename) {
+	public function openfile($filename) {
 		try {
 			if (!empty($this->startup_error)) {
-				return $this->error($this->startup_error);
+				throw new getid3_exception($this->startup_error);
 			}
 			if (!empty($this->startup_warning)) {
 				$this->warning($this->startup_warning);
@@ -284,12 +260,12 @@ class getID3
 			// init result array and set parameters
 			$this->filename = $filename;
 			$this->info = array();
-			$this->info['GETID3_VERSION'] = $this->version();
+			$this->info['GETID3_VERSION']   = $this->version();
 			$this->info['php_memory_limit'] = $this->memory_limit;
 
 			// remote files not supported
 			if (preg_match('/^(ht|f)tp:\/\//', $filename)) {
-				return $this->error('Remote files are not supported - please copy the file locally first');
+				throw new getid3_exception('Remote files are not supported - please copy the file locally first');
 			}
 
 			$filename = str_replace('/', DIRECTORY_SEPARATOR, $filename);
@@ -299,14 +275,14 @@ class getID3
 			if (is_readable($filename) && is_file($filename) && ($this->fp = fopen($filename, 'rb'))) {
 				// great
 			} else {
-				return $this->error('Could not open "'.$filename.'" (does not exist, or is not a file)');
+				throw new getid3_exception('Could not open "'.$filename.'" (does not exist, or is not a file)');
 			}
 
 			$this->info['filesize'] = filesize($filename);
 			// set redundant parameters - might be needed in some include file
-			$this->info['filename']            = basename($filename);
-			$this->info['filepath']            = str_replace('\\', '/', realpath(dirname($filename)));
-			$this->info['filenamepath']        = $this->info['filepath'].'/'.$this->info['filename'];
+			$this->info['filename']     = basename($filename);
+			$this->info['filepath']     = str_replace('\\', '/', realpath(dirname($filename)));
+			$this->info['filenamepath'] = $this->info['filepath'].'/'.$this->info['filename'];
 
 
 			// option_max_2gb_check
@@ -335,11 +311,11 @@ class getID3
 						if ($real_filesize === false) {
 							unset($this->info['filesize']);
 							fclose($this->fp);
-							return $this->error('Unable to determine actual filesize. File is most likely larger than '.round(PHP_INT_MAX / 1073741824).'GB and is not supported by PHP.');
+							throw new getid3_exception('Unable to determine actual filesize. File is most likely larger than '.round(PHP_INT_MAX / 1073741824).'GB and is not supported by PHP.');
 						} elseif (getid3_lib::intValueSupported($real_filesize)) {
 							unset($this->info['filesize']);
 							fclose($this->fp);
-							return $this->error('PHP seems to think the file is larger than '.round(PHP_INT_MAX / 1073741824).'GB, but filesystem reports it as '.number_format($real_filesize, 3).'GB, please report to info@getid3.org');
+							throw new getid3_exception('PHP seems to think the file is larger than '.round(PHP_INT_MAX / 1073741824).'GB, but filesystem reports it as '.number_format($real_filesize, 3).'GB, please report to info@getid3.org');
 						}
 						$this->info['filesize'] = $real_filesize;
 						$this->error('File is larger than '.round(PHP_INT_MAX / 1073741824).'GB (filesystem reports it as '.number_format($real_filesize, 3).'GB) and is not properly supported by PHP.');
@@ -358,19 +334,20 @@ class getID3
 			$this->info['comments']            = array();           // filled in later, unset if not used
 			$this->info['encoding']            = $this->encoding;   // required by id3v2 and iso modules - can be unset at the end if desired
 
+			return true;
+
 		} catch (Exception $e) {
-			if (isset($this->info['error'])) {
-				$this->info['error'][] = 'Caught exception: '.$e->getMessage();
-			} else {
-				$this->info['error'] = array('Caught exception: '.$e->getMessage());
-			}
+			$this->error($e->getMessage());
 		}
+		return false;
 	}
 
 	// public: analyze file
 	function analyze($filename) {
 		try {
-			$this->openfile($filename);
+			if (!$this->openfile($filename)) {
+				return $this->info;
+			}
 
 			// Handle tags
 			foreach (array('id3v2'=>'id3v2', 'id3v1'=>'id3v1', 'apetag'=>'ape', 'lyrics3'=>'lyrics3') as $tag_name => $tag_key) {
@@ -427,7 +404,7 @@ class getID3
 					fclose($this->fp);
 					return $this->error('ID3 tags not allowed on this file type.');
 				} elseif ($determined_format['fail_id3'] === 'WARNING') {
-					$this->info['warning'][] = 'ID3 tags not allowed on this file type.';
+					$this->warning('ID3 tags not allowed on this file type.');
 				}
 			}
 
@@ -437,7 +414,7 @@ class getID3
 					fclose($this->fp);
 					return $this->error('APE tags not allowed on this file type.');
 				} elseif ($determined_format['fail_ape'] === 'WARNING') {
-					$this->info['warning'][] = 'APE tags not allowed on this file type.';
+					$this->warning('APE tags not allowed on this file type.');
 				}
 			}
 
@@ -518,11 +495,7 @@ class getID3
 			$this->CleanUp();
 
 		} catch (Exception $e) {
-			if (isset($this->info['error'])) {
-				$this->info['error'][] = 'Caught exception: '.$e->getMessage();
-			} else {
-				$this->info['error'] = array('Caught exception: '.$e->getMessage());
-			}
+			$this->error('Caught exception: '.$e->getMessage());
 		}
 
 		// return info array
@@ -533,7 +506,9 @@ class getID3
 	// private: error handling
 	function error($message) {
 		$this->CleanUp();
-
+		if (!isset($this->info['error'])) {
+			$this->info['error'] = array();
+		}
 		$this->info['error'][] = $message;
 		return $this->info;
 	}
@@ -1342,8 +1317,8 @@ class getID3
 
 			if (preg_match('#(1|ON)#i', ini_get('safe_mode'))) {
 
-				$this->info['warning'][] = 'Failed making system call to vorbiscomment.exe - '.$algorithm.'_data is incorrect - error returned: PHP running in Safe Mode (backtick operator not available)';
-				$this->info[$algorithm.'_data']  = false;
+				$this->warning('Failed making system call to vorbiscomment.exe - '.$algorithm.'_data is incorrect - error returned: PHP running in Safe Mode (backtick operator not available)');
+				$this->info[$algorithm.'_data'] = false;
 
 			} else {
 
@@ -1608,56 +1583,57 @@ class getID3
 			if (!getid3_lib::intValueSupported($offset + $length)) {
 				throw new Exception('cannot extract attachment, it extends beyond the '.round(PHP_INT_MAX / 1073741824).'GB limit');
 			}
-			switch ($this->option_save_attachments) {
-				case getID3::ATTACHMENTS_NONE: // do not extract attachments data
-					unset($ThisFileInfoIndex); // do not set any
-					break;
 
-				case getID3::ATTACHMENTS_INLINE: // extract to return array
-					// get whole data in one pass, till it is anyway stored in memory
-					$ThisFileInfoIndex = file_get_contents($this->info['filenamepath'], false, null, $offset, $length);
-					if (($ThisFileInfoIndex === false) || (strlen($ThisFileInfoIndex) != $length)) { // verify
+			// do not extract at all
+			if ($this->option_save_attachments === getID3::ATTACHMENTS_NONE) {
+
+				unset($ThisFileInfoIndex); // do not set any
+
+			// extract to return array
+			} elseif ($this->option_save_attachments === getID3::ATTACHMENTS_INLINE) {
+
+				// get whole data in one pass, till it is anyway stored in memory
+				$ThisFileInfoIndex = file_get_contents($this->info['filenamepath'], false, null, $offset, $length);
+				if (($ThisFileInfoIndex === false) || (strlen($ThisFileInfoIndex) != $length)) { // verify
+					throw new Exception('failed to read attachment data');
+				}
+
+			// assume directory path is given
+			} else {
+
+				$dir = rtrim(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $this->option_save_attachments), DIRECTORY_SEPARATOR);
+				// check supplied directory
+				if (!is_dir($dir) || !is_writable($dir)) {
+					throw new Exception('getID3::saveAttachment() -- supplied path ('.$dir.') does not exist, or is not writable');
+				}
+
+				// set up destination path
+				$dest = $dir.DIRECTORY_SEPARATOR.$filename;
+
+				// optimize speed if read buffer size is configured to be large enough
+				// here stream_copy_to_stream() may also be used. need to do speed-compare tests
+				if ($length <= $this->fread_buffer_size()) {
+					$data = file_get_contents($this->info['filenamepath'], false, null, $offset, $length);
+					if (($data === false) || (strlen($data) != $length)) { // verify
 						throw new Exception('failed to read attachment data');
 					}
-					break;
-
-				default: // assume directory path is given
-					$dir = rtrim(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $this->option_save_attachments), DIRECTORY_SEPARATOR);
-					// check supplied directory
-					if (!is_dir($dir) || !is_writable($dir)) {
-						throw new Exception('getID3::saveAttachment() -- supplied path ('.$dir.') does not exist, or is not writable');
+					if (!file_put_contents($dest, $data)) {
+						throw new Exception('failed to create file '.$dest);
 					}
-
-					// set up destination path
-					$dest = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $dir).DIRECTORY_SEPARATOR.$filename;
-
-					// optimize speed if read buffer size is configured to be large enough
-					// here stream_copy_to_stream() may also be used. need to do speed-compare tests
-					if ($length <= $this->option_read_buffer_size) {
-						$data = file_get_contents($this->info['filenamepath'], false, null, $offset, $length);
-						if (($data === false) || (strlen($data) != $length)) { // verify
-							throw new Exception('failed to read attachment data');
-						}
-						if (!file_put_contents($dest, $data)) {
-							throw new Exception('failed to create file '.$dest);
-						}
-					} else {
-						// optimization not available - copy data in loop
-						// here stream_copy_to_stream() shouldn't be used because it's internal read buffer may be larger than ours!
-
-						try {
-							getid3_lib::CopyFileParts($this->info['filenamepath'], $filename, $offset, $length);
-						} catch (Exception $e) {
-							throw $e;
-						}
-					}
-					$ThisFileInfoIndex = $dest;
-					break;
+				} else {
+					// optimization not available - copy data in loop
+					// here stream_copy_to_stream() shouldn't be used because it's internal read buffer may be larger than ours!
+					getid3_lib::CopyFileParts($this->info['filenamepath'], $dest, $offset, $length);
+				}
+				$ThisFileInfoIndex = $dest;
 			}
+
 		} catch (Exception $e) {
+
 			unset($ThisFileInfoIndex); // do not set any is case of error
 			$this->warning('Failed to extract attachment '.$filename.': '.$e->getMessage());
 			return false;
+
 		}
 		return true;
 	}

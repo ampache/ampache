@@ -461,6 +461,30 @@ class getid3_id3v2 extends getid3_handler
 		}
 
 
+		if (!empty($thisfile_id3v2['TXXX'])) {
+			// MediaMonkey does this, maybe others: write a blank RGAD frame, but put replay-gain adjustment values in TXXX frames
+			foreach ($thisfile_id3v2['TXXX'] as $txxx_array) {
+				switch ($txxx_array['description']) {
+					case 'replaygain_track_gain':
+						if (empty($info['replay_gain']['track']['adjustment']) && !empty($txxx_array['data'])) {
+							$info['replay_gain']['track']['adjustment'] = floatval(trim(str_replace('dB', '', $txxx_array['data'])));
+						}
+						break;
+					case 'replaygain_track_peak':
+						if (empty($info['replay_gain']['track']['peak']) && !empty($txxx_array['data'])) {
+							$info['replay_gain']['track']['peak'] = floatval($txxx_array['data']);
+						}
+						break;
+					case 'replaygain_album_gain':
+						if (empty($info['replay_gain']['album']['adjustment']) && !empty($txxx_array['data'])) {
+							$info['replay_gain']['album']['adjustment'] = floatval(trim(str_replace('dB', '', $txxx_array['data'])));
+						}
+						break;
+				}
+			}
+		}
+
+
 		// Set avdataoffset
 		$info['avdataoffset'] = $thisfile_id3v2['headerlength'];
 		if (isset($thisfile_id3v2['footer'])) {
@@ -621,7 +645,7 @@ class getid3_id3v2 extends getid3_handler
 			if (!empty($parsedFrame['framenameshort']) && !empty($parsedFrame['data'])) {
 				$info['id3v2']['comments'][$parsedFrame['framenameshort']][] = trim(getid3_lib::iconv_fallback($parsedFrame['encoding'], $info['id3v2']['encoding'], $parsedFrame['data']));
 			}
-			unset($parsedFrame['data']);
+			//unset($parsedFrame['data']); do not unset, may be needed elsewhere, e.g. for replaygain
 
 
 		} elseif ($parsedFrame['frame_name']{0} == 'T') { // 4.2. T??[?] Text information frame

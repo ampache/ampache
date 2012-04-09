@@ -26,9 +26,9 @@ class getid3_lib
 				$returnstring .= ' ';
 			}
 		}
-		if (!empty($htmlsafe)) {
+		if (!empty($htmlencoding)) {
 			if ($htmlencoding === true) {
-				$htmlencoding = 'UTF-8';
+				$htmlencoding = 'UTF-8'; // prior to getID3 v1.9.0 the function's 4th parameter was boolean
 			}
 			$returnstring = htmlentities($returnstring, ENT_QUOTES, $htmlencoding);
 		}
@@ -441,16 +441,13 @@ class getid3_lib
 	}
 
 
-	static function PlaytimeString($playtimeseconds) {
-		$sign = (($playtimeseconds < 0) ? '-' : '');
-		$playtimeseconds = abs($playtimeseconds);
-		$contentseconds = round((($playtimeseconds / 60) - floor($playtimeseconds / 60)) * 60);
-		$contentminutes = floor($playtimeseconds / 60);
-		if ($contentseconds >= 60) {
-			$contentseconds -= 60;
-			$contentminutes++;
-		}
-		return $sign.intval($contentminutes).':'.str_pad($contentseconds, 2, 0, STR_PAD_LEFT);
+	static function PlaytimeString($seconds) {
+		$sign = (($seconds < 0) ? '-' : '');
+		$seconds = abs($seconds);
+		$H = floor( $seconds                            / 3600);
+		$M = floor(($seconds - (3600 * $H)            ) /   60);
+		$S = round( $seconds - (3600 * $H) - (60 * $M)        );
+		return $sign.($H ? $H.':' : '').($H ? str_pad($M, 2, '0', STR_PAD_LEFT) : intval($M)).':'.str_pad($S, 2, 0, STR_PAD_LEFT);
 	}
 
 
@@ -521,6 +518,27 @@ class getid3_lib
 			}
 		}
 		return ($returnkey ? $minkey : $minvalue);
+	}
+
+	static function XML2array($XMLstring) {
+		if (function_exists('simplexml_load_string')) {
+			if (function_exists('get_object_vars')) {
+				$XMLobject = simplexml_load_string($XMLstring);
+				return self::SimpleXMLelement2array($XMLobject);
+			}
+		}
+		return false;
+	}
+
+	static function SimpleXMLelement2array($XMLobject) {
+		if (!is_object($XMLobject) && !is_array($XMLobject)) {
+			return $XMLobject;
+		}
+		$XMLarray = (is_object($XMLobject) ? get_object_vars($XMLobject) : $XMLobject);
+		foreach ($XMLarray as $key => $value) {
+			$XMLarray[$key] = self::SimpleXMLelement2array($value);
+		}
+		return $XMLarray;
 	}
 
 
@@ -617,24 +635,24 @@ class getid3_lib
 			throw new Exception('cannot copy file portion, it extends beyond the '.round(PHP_INT_MAX / 1073741824).'GB limit');
 		}
 		if (is_readable($filename_source) && is_file($filename_source) && ($fp_src = fopen($filename_source, 'rb'))) {
-			if (is_writable($filename_dest) && is_file($filename_dest) && ($fp_dest = fopen($filename_dest, 'wb'))) {
+			if (($fp_dest = fopen($filename_dest, 'wb'))) {
 				if (fseek($fp_src, $offset, SEEK_SET) == 0) {
 					$byteslefttowrite = $length;
-					while (($byteslefttowrite > 0) && ($buffer = fread($fp_src, min($byteslefttowrite, $this->getid3->fread_buffer_size())))) {
+					while (($byteslefttowrite > 0) && ($buffer = fread($fp_src, min($byteslefttowrite, getID3::FREAD_BUFFER_SIZE)))) {
 						$byteswritten = fwrite($fp_dest, $buffer, $byteslefttowrite);
 						$byteslefttowrite -= $byteswritten;
 					}
 					return true;
 				} else {
-					throw new Exception('failed to seek to offset '.$offset.' in '.$this->info['filenamepath']);
+					throw new Exception('failed to seek to offset '.$offset.' in '.$filename_source);
 				}
 				fclose($fp_dest);
 			} else {
-				throw new Exception('failed to open file for reading '.$this->info['filenamepath']);
+				throw new Exception('failed to create file for writing '.$filename_dest);
 			}
 			fclose($fp_src);
 		} else {
-			throw new Exception('failed to create file for writing '.$dest);
+			throw new Exception('failed to open file for reading '.$filename_source);
 		}
 		return false;
 	}
@@ -1288,6 +1306,10 @@ class getid3_lib
 			$GETID3_ERRORARRAY[] = $diemessage;
 		}
 		return false;
+	}
+
+	public static function trimNullByte($string) {
+		return trim($string, "\x00");
 	}
 
 }

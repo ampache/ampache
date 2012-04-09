@@ -120,7 +120,7 @@ class getID3_cached_dbm extends getID3
 			}
 
 			// Insert getID3 version number
-			dba_insert($this::VERSION, $this::VERSION, $this->dba);
+			dba_insert(getID3::VERSION, getID3::VERSION, $this->dba);
 		}
 
 		// Init misc values
@@ -131,7 +131,7 @@ class getID3_cached_dbm extends getID3
 		register_shutdown_function(array($this, '__destruct'));
 
 		// Check version number and clear cache if changed
-		if (dba_fetch($this::VERSION, $this->dba) != $this::VERSION) {
+		if (dba_fetch(getID3::VERSION, $this->dba) != getID3::VERSION) {
 			$this->clear_cache();
 		}
 
@@ -169,7 +169,7 @@ class getID3_cached_dbm extends getID3
 		}
 
 		// Insert getID3 version number
-		dba_insert($this::VERSION, $this::VERSION, $this->dba);
+		dba_insert(getID3::VERSION, getID3::VERSION, $this->dba);
 
 		// Re-register shutdown function
 		register_shutdown_function(array($this, '__destruct'));

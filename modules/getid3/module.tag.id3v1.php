@@ -252,7 +252,7 @@ class getid3_id3v1 extends getid3_handler
 			141  => 'Christian Rock',
 			142  => 'Merengue',
 			143  => 'Salsa',
-			144  => 'Trash Metal',
+			144  => 'Thrash Metal',
 			145  => 'Anime',
 			146  => 'JPop',
 			147  => 'Synthpop',

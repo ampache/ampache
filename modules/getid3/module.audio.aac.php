@@ -229,10 +229,10 @@ class getid3_aac extends getid3_handler
 				$bitoffset += 8 * $info['aac']['program_configs'][$i]['comment_field_bytes'];
 
 
-				$info['aac']['header']['profile']                           = $this->AACprofileLookup($info['aac']['program_configs'][$i]['object_type'], $info['aac']['header']['mpeg_version']);
-				$info['aac']['program_configs'][$i]['sampling_frequency']   = $this->AACsampleRateLookup($info['aac']['program_configs'][$i]['sampling_frequency_index']);
+				$info['aac']['header']['profile']                           = self::AACprofileLookup($info['aac']['program_configs'][$i]['object_type'], $info['aac']['header']['mpeg_version']);
+				$info['aac']['program_configs'][$i]['sampling_frequency']   = self::AACsampleRateLookup($info['aac']['program_configs'][$i]['sampling_frequency_index']);
 				$info['audio']['sample_rate']                               = $info['aac']['program_configs'][$i]['sampling_frequency'];
-				$info['audio']['channels']                                  = $this->AACchannelCountCalculate($info['aac']['program_configs'][$i]);
+				$info['audio']['channels']                                  = self::AACchannelCountCalculate($info['aac']['program_configs'][$i]);
 				if ($info['aac']['program_configs'][$i]['comment_field']) {
 					$info['aac']['comments'][]                          = $info['aac']['program_configs'][$i]['comment_field'];
 				}
@@ -290,7 +290,7 @@ class getid3_aac extends getid3_handler
 		// * ADTS Error check
 		// crc_check                                      16    only if protection_absent == 0
 
-		$byteoffset  = 0;
+		$byteoffset  = $info['avdataoffset'];
 		$framenumber = 0;
 
 		// Init bit pattern array
@@ -330,9 +330,10 @@ class getid3_aac extends getid3_handler
 			$info['aac']['header']['raw']['syncword']          = ($header1 & 0xFFF0) >> 4;
 			if ($info['aac']['header']['raw']['syncword'] != 0x0FFF) {
 				$info['error'][] = 'Synch pattern (0x0FFF) not found at offset '.(ftell($this->getid3->fp) - $substringlength).' (found 0x0'.strtoupper(dechex($info['aac']['header']['raw']['syncword'])).' instead)';
-				if ($info['fileformat'] == 'aac') {
-					return true;
-				}
+				//if ($info['fileformat'] == 'aac') {
+				//	return true;
+				//}
+				unset($info['aac']);
 				return false;
 			}
 
@@ -358,8 +359,8 @@ class getid3_aac extends getid3_handler
 
 				$info['aac']['header']['mpeg_version']     = ($info['aac']['header']['raw']['mpeg_version']      ? 2    : 4);
 				$info['aac']['header']['crc_present']      = ($info['aac']['header']['raw']['protection_absent'] ? false: true);
-				$info['aac']['header']['profile']          = $this->AACprofileLookup($info['aac']['header']['raw']['profile_code'], $info['aac']['header']['mpeg_version']);
-				$info['aac']['header']['sample_frequency'] = $this->AACsampleRateLookup($info['aac']['header']['raw']['sample_rate_code']);
+				$info['aac']['header']['profile']          = self::AACprofileLookup($info['aac']['header']['raw']['profile_code'], $info['aac']['header']['mpeg_version']);
+				$info['aac']['header']['sample_frequency'] = self::AACsampleRateLookup($info['aac']['header']['raw']['sample_rate_code']);
 				$info['aac']['header']['private']          = (bool) $info['aac']['header']['raw']['private_stream'];
 				$info['aac']['header']['original']         = (bool) $info['aac']['header']['raw']['original'];
 				$info['aac']['header']['home']             = (bool) $info['aac']['header']['raw']['home'];
@@ -441,7 +442,7 @@ class getid3_aac extends getid3_handler
 		// should never get here.
 	}
 
-	static function AACsampleRateLookup($samplerateid) {
+	public static function AACsampleRateLookup($samplerateid) {
 		static $AACsampleRateLookup = array();
 		if (empty($AACsampleRateLookup)) {
 			$AACsampleRateLookup[0]  = 96000;
@@ -464,7 +465,7 @@ class getid3_aac extends getid3_handler
 		return (isset($AACsampleRateLookup[$samplerateid]) ? $AACsampleRateLookup[$samplerateid] : 'invalid');
 	}
 
-	static function AACprofileLookup($profileid, $mpegversion) {
+	public static function AACprofileLookup($profileid, $mpegversion) {
 		static $AACprofileLookup = array();
 		if (empty($AACprofileLookup)) {
 			$AACprofileLookup[2][0]  = 'Main profile';
@@ -479,7 +480,7 @@ class getid3_aac extends getid3_handler
 		return (isset($AACprofileLookup[$mpegversion][$profileid]) ? $AACprofileLookup[$mpegversion][$profileid] : 'invalid');
 	}
 
-	static function AACchannelCountCalculate($program_configs) {
+	public static function AACchannelCountCalculate($program_configs) {
 		$channels = 0;
 		for ($i = 0; $i < $program_configs['num_front_channel_elements']; $i++) {
 			$channels++;

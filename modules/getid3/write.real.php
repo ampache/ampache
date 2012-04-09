@@ -212,7 +212,7 @@ class getid3_write_real
 
 	function RemoveReal() {
 		// File MUST be writeable - CHMOD(646) at least
-		if (is_writeable($this->filename) && is_file($this->filename) && ($fp_source = fopen($this->filename, 'r+b')) {
+		if (is_writeable($this->filename) && is_file($this->filename) && ($fp_source = fopen($this->filename, 'r+b'))) {
 
 			// Initialize getID3 engine
 			$getID3 = new getID3;

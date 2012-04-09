@@ -17,6 +17,43 @@
 Version History
 ===============
 
+1.9.3: [2012-12-13] Dmitry Arkhipov, James Heinrich
+    * Matroska module improved:
+      1. Added support for A_MS/ACM audio codec
+      2. Fixed issues in tags, cues, chapters and clusters parsing
+      3. Fixed almost all errors with track_data_offset, errors
+         still may occur with Xiph data lacing
+      4. Optimized audio/video streams population with usage of the
+         official default values for missing elements
+      5. Audio/video keys are now populated with data from the
+         default stream, not from the first one as before
+      6. Full WebM support
+    * Bugfix: demo.browse would not pop up warnings when clicked
+      if warning contains apostrophe/single-quote character
+    * Bugfix: (#1269) ID3v1 genre typo "Trash"->"Thrash" Metal
+
+
+1.9.2: [2011-12-08] James Heinrich, Dmitry Arkhipov
+	» significant rewrite to module.audio-video.matroska.php
+    ¤ (#1256) ID3 tags in AIFF 'ID3 ' chunks now parsed
+    ¤ (#1039) iXML data in WAV files now returned and parsed into
+        [riff][WAVE][iXML][0][data] and [riff][WAVE][iXML][0][parsed]
+    ¤ [playtime_string] now returns M:SS if less than 1 hour, and
+        H:MM:SS if 1 hour or longer
+    * Bugfix: (#1266) variable tablename: extension.cache.mysql.php
+    * Bugfix: (#1265) unescaped # in regex in write.id3v2.php
+    * Bugfix: (#1252) MediaMonkey writes blank ID3v2 RGAD frames
+      and puts replay-gain values in TXXX frames
+    * Bugfix: (#1251) FLV playtime could be inaccurate for longer
+        files where meta frame is present but meta-playtime is zero
+    * Bugfix: (#1216) show hex values of unknown atom names
+    * Bugfix: (#1215) undefined variable in PrintHexBytes()
+    * Bugfix: FLV audio bitrate was returning kbps not bps
+    * Bugfix: missing ) in write.real.php::RemoveReal()
+    * Bugfix: replace $this::VERSION with getID3::VERSION in
+        extension.cache.*.php
+
+
 1.9.1: [2011-08-10] James Heinrich
     ¤ ASF Extended Header Object data now (partially) parsed
     * Default getID3 encoding now set to UTF-8 not ISO-8859-1

@@ -279,6 +279,7 @@ could essentially write it today with a one-line function:
 
 Future Plans
 ===========================================================================
+http://www.getid3.org/phpBB3/viewforum.php?f=7
 
 * Better support for MP4 container format
 * Scan for appended ID3v2 tag at end of file per ID3v2.4 specs (Section 5.0)
@@ -360,6 +361,7 @@ Future Plans
 
 Known Bugs/Issues in getID3() that may be fixed eventually
 ===========================================================================
+http://www.getid3.org/phpBB3/viewtopic.php?t=25
 
 * Cannot determine bitrate for MPEG video with VBR video data
   (need documentation)
@@ -385,13 +387,16 @@ Known Bugs/Issues in getID3() that may be fixed eventually
 
 Known Bugs/Issues in getID3() that cannot be fixed
 --------------------------------------------------
+http://www.getid3.org/phpBB3/viewtopic.php?t=25
 
-* Files larger than 2GB cannot always be parsed fully by getID3()
-  due to limitations in the PHP filesystem functions.
+* 32-bit PHP installations only:
+  Files larger than 2GB cannot always be parsed fully by getID3()
+  due to limitations in the 32-bit PHP filesystem functions.
   NOTE: Since v1.7.8b3 there is partial support for larger-than-
   2GB files, most of which will parse OK, as long as no critical
   data is located beyond the 2GB offset.
   Known will-work:
+  * all file formats on 64-bit PHP
   * ZIP  (format doesn't support files >2GB)
   * FLAC (current encoders don't support files >2GB)
   Known will-not-work:
@@ -412,6 +417,7 @@ Known Bugs/Issues in getID3() that cannot be fixed
 
 Known Bugs/Issues in other programs
 -----------------------------------
+http://www.getid3.org/phpBB3/viewtopic.php?t=25
 
 * Windows Media Player (up to v11) and iTunes (up to v10+) do
     not correctly handle ID3v2.3 tags with UTF-16BE+BOM
@@ -481,6 +487,9 @@ Known Bugs/Issues in other programs
 * iTunes has been known to append a new ID3v1 tag on the end of an
   existing ID3v1 tag when ID3v2 tag is also present
   (detected by getID3())
+* MediaMonkey may write a blank RGAD ID3v2 frame but put actual
+  replay gain adjustments in a series of user-defined TXXX frames
+  (detected and handled by getID3() since v1.9.2)
 
 
 

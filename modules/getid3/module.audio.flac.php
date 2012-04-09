@@ -25,8 +25,8 @@ class getid3_flac extends getid3_handler
 
 		// http://flac.sourceforge.net/format.html
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$StreamMarker = fread($this->getid3->fp, 4);
+		$this->fseek($info['avdataoffset'], SEEK_SET);
+		$StreamMarker = $this->fread(4);
 		$magic = 'fLaC';
 		if ($StreamMarker != $magic) {
 			$info['error'][] = 'Expecting "'.getid3_lib::PrintHexBytes($magic).'" at offset '.$info['avdataoffset'].', found "'.getid3_lib::PrintHexBytes($StreamMarker).'"';
@@ -44,8 +44,8 @@ class getid3_flac extends getid3_handler
 	function FLACparseMETAdata() {
 		$info = &$this->getid3->info;
 		do {
-			$METAdataBlockOffset          = ftell($this->getid3->fp);
-			$METAdataBlockHeader          = fread($this->getid3->fp, 4);
+			$METAdataBlockOffset          = $this->ftell();
+			$METAdataBlockHeader          = $this->fread(4);
 			$METAdataLastBlockFlag        = (bool) (getid3_lib::BigEndian2Int(substr($METAdataBlockHeader, 0, 1)) & 0x80);
 			$METAdataBlockType            = getid3_lib::BigEndian2Int(substr($METAdataBlockHeader, 0, 1)) & 0x7F;
 			$METAdataBlockLength          = getid3_lib::BigEndian2Int(substr($METAdataBlockHeader, 1, 3));
@@ -64,7 +64,7 @@ class getid3_flac extends getid3_handler
 			$ThisFileInfo_flac_METAdataBlockTypeText_raw['block_type']      = $METAdataBlockType;
 			$ThisFileInfo_flac_METAdataBlockTypeText_raw['block_type_text'] = $METAdataBlockTypeText;
 			$ThisFileInfo_flac_METAdataBlockTypeText_raw['block_length']    = $METAdataBlockLength;
-			if (($METAdataBlockOffset + 4 + $METAdataBlockLength) > $info['filesize']) {
+			if (($METAdataBlockOffset + 4 + $METAdataBlockLength) > $info['avdataend']) {
 				$info['error'][] = 'METADATA_BLOCK_HEADER.BLOCK_TYPE ('.$METAdataBlockType.') at offset '.$METAdataBlockOffset.' extends beyond end of file';
 				break;
 			}
@@ -72,8 +72,8 @@ class getid3_flac extends getid3_handler
 				$info['error'][] = 'METADATA_BLOCK_HEADER.BLOCK_LENGTH ('.$METAdataBlockLength.') at offset '.$METAdataBlockOffset.' is invalid';
 				break;
 			}
-			$ThisFileInfo_flac_METAdataBlockTypeText_raw['block_data'] = fread($this->getid3->fp, $METAdataBlockLength);
-			$info['avdataoffset'] = ftell($this->getid3->fp);
+			$ThisFileInfo_flac_METAdataBlockTypeText_raw['block_data'] = $this->fread($METAdataBlockLength);
+			$info['avdataoffset'] = $this->ftell();
 
 			switch ($METAdataBlockTypeText) {
 				case 'STREAMINFO':     // 0x00
@@ -101,7 +101,7 @@ class getid3_flac extends getid3_handler
 				case 'VORBIS_COMMENT': // 0x04
 					$getid3_temp = new getID3();
 					$getid3_temp->openfile($this->getid3->filename);
-					$getid3_temp->info['avdataoffset'] = ftell($this->getid3->fp) - $METAdataBlockLength;
+					$getid3_temp->info['avdataoffset'] = $this->ftell() - $METAdataBlockLength;
 					$getid3_temp->info['audio']['dataformat'] = 'flac';
 					$getid3_temp->info['flac'] = $info['flac'];
 					$getid3_ogg = new getid3_ogg($getid3_temp);

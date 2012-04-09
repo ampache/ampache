@@ -1876,15 +1876,15 @@ class getid3_write_id3v2
 		if ($parts = $this->safe_parse_url($url)) {
 			if (($parts['scheme'] != 'http') && ($parts['scheme'] != 'https') && ($parts['scheme'] != 'ftp') && ($parts['scheme'] != 'gopher')) {
 				return false;
-			} elseif (!preg_match("#^[[:alnum:]]([-.]?[0-9a-z])*\.[a-z]{2,3}$#i", $parts['host'], $regs) && !preg_match('#^[0-9]{1,3}(\.[0-9]{1,3}){3}$#', $parts['host'])) {
+			} elseif (!preg_match('#^[[:alnum:]]([-.]?[0-9a-z])*\\.[a-z]{2,3}$#i', $parts['host'], $regs) && !preg_match('#^[0-9]{1,3}(\\.[0-9]{1,3}){3}$#', $parts['host'])) {
 				return false;
-			} elseif (!preg_match("#^([[:alnum:]-]|[\_])*$#i", $parts['user'], $regs)) {
+			} elseif (!preg_match('#^([[:alnum:]-]|[\\_])*$#i', $parts['user'], $regs)) {
 				return false;
-			} elseif (!preg_match("#^([[:alnum:]-]|[\_])*$#i", $parts['pass'], $regs)) {
+			} elseif (!preg_match('#^([[:alnum:]-]|[\\_])*$#i', $parts['pass'], $regs)) {
 				return false;
-			} elseif (!preg_match("#^[[:alnum:]/_\.@~-]*$#i", $parts['path'], $regs)) {
+			} elseif (!preg_match('#^[[:alnum:]/_\\.@~-]*$#i', $parts['path'], $regs)) {
 				return false;
-			} elseif (!empty($parts['query']) && !preg_match("#^[[:alnum:]?&=+:;_()%#/,\.-]*$#i", $parts['query'], $regs)) {
+			} elseif (!empty($parts['query']) && !preg_match('#^[[:alnum:]?&=+:;_()%\\#/,\\.-]*$#i', $parts['query'], $regs)) {
 				return false;
 			} else {
 				return true;
