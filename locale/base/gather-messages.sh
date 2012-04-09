@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Copyright (c) Ampache.org
 # All rights reserved.
@@ -20,71 +20,80 @@
 PATH=$PATH:/bin:/usr/bin:/usr/local/bin
 
 # gettext package test
-if [ ! -x `which xgettext` ]
-then
-	echo "xgettext was not found. please install gettext packages."
-	exit 0;
+if ! which xgettext &>/dev/null ; then
+    echo "xgettext not found. Do you need to install gettext?"
+    exit 1;
 fi
 
-SCRIPTS=$0
-MAILADDR="translations at ampache.org"
-OLANG=`echo $LANG | sed 's/\..*//;'`
-POTNAME="messages.pot"
-PODIR="../$OLANG/LC_MESSAGES"
-PONAME="messages.po"
-MONAME="messages.mo"
+[[ $OLANG ]] || OLANG=$(echo $LANG | sed 's/\..*//;')
+POTNAME='messages.pot'
 
-if [ ! -d $PODIR ]
-then
-	mkdir -p $PODIR
-	echo "$PODIR has created."
-fi
+usage() {
+    echo "usage: $0 [--help|--get|--init|--merge|--format|--all]"
+    echo
+    echo 'See also: http://ampache.org/wiki/dev:translation'
+    exit 1
+}
 
-if [ $# = 0 ]; then
-	echo "usage: $SCRIPTS [--help|--get|--init|--merge|--format|--all]"
-	exit
+generate_pot() {
+    xgettext    --from-code=UTF-8 \
+                --add-comment=HINT: \
+                --msgid-bugs-address="translations@ampache.org" \
+                -L php \
+                --keyword=gettext_noop --keyword=T_ --keyword=T_gettext \
+                -o $POTNAME \
+                $(find ../../ -type f -name \*.php -o -name \*.inc | sort)
+    if [[ $? -eq 0 ]]; then
+        echo "pot file creation succeeded"
+        echo "Adding database words to pot file..."
+        cat translation-words.txt >> messages.pot
+    else
+        echo "pot file creation failed"
+    fi
+}
+
+do_msgmerge() {
+    source=$POTNAME
+    target="../$1/LC_MESSAGES/messages.po"
+    echo "Merging $source into $target"
+    msgmerge --update --backup=off $target $source
+    echo "Obsolete messages in $target: " $(grep '^#~' $target | wc -l)
+}
+
+do_msgfmt() {
+    source="../$1/LC_MESSAGES/messages.po"
+    target="../$1/LC_MESSAGES/messages.mo"
+    echo "Creating $target from $source"
+    msgfmt --verbose --check $source -o $target
+}
+
+if [[ $# -eq 0 ]]; then
+    usage
 fi
 
 case $1 in
-	"--all"|"-a"|"all")
-		xgettext --from-code=UTF-8 --add-comment=HINT: --msgid-bugs-address="$MAILADDR" -L php --keyword=gettext_noop -o $POTNAME `find ../../ -name \*.php -type f` `find ../../ -name \*.inc -type f`
-		OLANG=`ls ../ | grep -v base`
-		echo "add database words add to pot file..."
-		cat translation-words.txt >> messages.pot
-		for i in $OLANG
-		do
-			echo "$i PO file merging..."
-			msgmerge --update ../$i/LC_MESSAGES/messages.po messages.pot
-			echo "$i MO file creating..."
-			msgfmt -v -c ../$i/LC_MESSAGES/messages.po -o ../$i/LC_MESSAGES/messages.mo
-			rm -f ../$i/LC_MESSAGES/messages.po~
-			obs=`cat ../$i/LC_MESSAGES/messages.po | grep '^#~' | wc -l`
-			echo "Obsolete: $obs"
-		done
-		;;
-	"--get"|"-g"|"get")
-		xgettext --from-code=UTF-8 --add-comment=HINT: --msgid-bugs-address="$MAILADDR" -L php --keyword=gettext_noop -o $POTNAME `find ../../ -name \*.php -type f` `find ../../ -name \*.inc -type f`;
-		if [ $? = 0 ]; then
-			echo "pot file creation was done.";
-		else
-			echo "pot file creation wasn't done.";
-		fi
-		echo "add database words to pot file..."
-		cat translation-words.txt >> messages.pot
-		;;
-	"--init"|"-i"|"init")
-		msginit -l $LANG -i $POTNAME -o $PODIR/$PONAME;
-		;;
-	"--format"|"-f"|"format")
-		msgfmt -v --check $PODIR/$PONAME -o $PODIR/$MONAME;
-		;;
-	"--merge"|"-m"|"merge")
-		msgmerge --update $PODIR/$PONAME $POTNAME;
-		rm -f $PODIR/messages.po~
-		;;
-	"--help"|"-h"|"help"|"*")
-		echo "usage: $SCRIPTS [--help|--get|--init|--merge|--format|--all]";
-		echo "";
-		echo "Please read for translation: http://ampache.org/wiki/dev:translation";
-		;;
+    '--all'|'-a'|'all')
+        generate_pot
+	for i in $(ls ../ | grep -v base); do
+	    do_msgmerge $i
+	    do_msgfmt $i
+	done
+    ;;
+    '--get'|'-g'|'get')
+        generate_pot
+    ;;
+    '--init'|'-i'|'init')
+        outdir="../$OLANG/LC_MESSAGES"
+        [[ -d $outdir ]] || mkdir -p $outdir
+	msginit -l $LANG -i $POTNAME -o $outdir/messages.po
+    ;;
+    '--format'|'-f'|'format')
+        do_msgfmt $OLANG
+    ;;
+    '--merge'|'-m'|'merge')
+        do_msgmerge $OLANG
+    ;;
+    '--help'|'-h'|'help'|'*')
+        usage
+    ;;
 esac
