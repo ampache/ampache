@@ -159,6 +159,7 @@
 </td>
 </tr><tr>
 <td><?php echo _('PHP Safe Mode'); ?>:</td>
+<td>
 <?php
 	if (!check_safemode()) {
 		echo debug_result(_('Safe mode enabled'), false);
