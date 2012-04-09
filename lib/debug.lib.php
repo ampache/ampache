@@ -221,7 +221,7 @@ function check_php_memory() {
 /**
  * check_php_timelimit
  * This checks to make sure that the php timelimit is set to some
- * semi-sane limit, IE greater then 30 seconds
+ * semi-sane limit, IE greater then 60 seconds
  */
 function check_php_timelimit() {
 

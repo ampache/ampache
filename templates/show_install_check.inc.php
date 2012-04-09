@@ -186,7 +186,7 @@
 <td>
 <?php
 	if (!check_php_timelimit()) {
-		echo debug_result(_('Execution time limit less than recommended') . ' ' . ini_get('max_execution_time'), false);
+		echo debug_result(sprintf(_('Execution time limit is %s seconds, which is less than recommended'), ini_get('max_execution_time')), false);
 	}
 	else {
 		echo debug_result(ini_get('max_execution_time') . ' ' .  _('seconds'),true);
