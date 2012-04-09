@@ -33,7 +33,7 @@ require $prefix . '/templates/install_header.inc.php';
 		<?php echo _('Step 1 - Create the Ampache database'); ?><br />
 		<strong><?php echo _('Step 2 - Create ampache.cfg.php'); ?></strong><br />
 		<dl>
-		<dd><?php printf(_('This step takes the basic config values and generates the config file. It will prompt you to download the config file. Please put the downloaded config file in %s'),$prefix.'/config'); ?></dd>
+		<dd><?php printf(_('This step takes the basic config values and generates the config file. If your config/ directory is writable, you can select "write" to have Ampache write the config file directly to the correct location. If you select "download" it will prompt you to download the config file, and you can then manually place the config file in %s'), $prefix . '/config'); ?></dd>
 		</dl>
 		<?php echo _('Step 3 - Set up the initial account'); ?><br />
 		<?php Error::display('general'); ?>
