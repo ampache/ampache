@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Corrected PLS output to work with more players (reported by bhassel)
         - Fixed an issue with compound artists in media with MusicBrainz tags
                 (reported by greengeek)
         - Fixed an issue with filename pattern matching when patterns contained

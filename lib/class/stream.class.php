@@ -321,7 +321,7 @@ class Stream {
 		header("Cache-control: public");
 		header("Content-Disposition: filename=ampache_playlist.pls");
 		header("Content-Type: audio/x-scpls;");
-		echo "[Playlist]\n";
+		echo "[playlist]\n";
 		echo "NumberOfEntries=$total_entries\n";
 		foreach ($this->media as $element) {
 			$i++;
