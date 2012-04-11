@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Added support for extracting MBIDs from M4A files
+        - Fixed parsing of some tag types (most notably M4A)
         - Corrected PLS output to work with more players (reported by bhassel)
         - Fixed an issue with compound artists in media with MusicBrainz tags
                 (reported by greengeek)

@@ -788,6 +788,15 @@ class vainfo {
 					}
 					$array['year']  = $this->_clean_tag($data['0']);
 				break;
+				case 'MusicBrainz Track Id':
+					$array['mb_trackid'] = $this->_clean_tag($data['0']);
+				break;
+				case 'MusicBrainz Album Id':
+					$array['mb_albumid'] = $this->_clean_tag($data['0']);
+				break;
+				case 'MusicBrainz Artist Id':
+					$array['mb_artistid'] = $this->_clean_tag($data['0']);
+				break;
 			} // end switch
 
 			$array[$tag] = $this->_clean_tag($data['0']);
