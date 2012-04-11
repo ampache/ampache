@@ -360,25 +360,6 @@ class vainfo {
 		 * type
 		 */
 		if ($type = $this->_raw['video']['dataformat']) {
-			// Manually set the tag information
-			if ($type == 'flv') {
-				$this->_raw['tags']['flv'] = array();
-			}
-			if ($type == 'quicktime') {
-				$this->_raw['tags']['quicktime'] = array();
-			}
-			if($type == 'mpeg' OR $type == 'mpg') {
-				$this->_raw['tags']['mpeg'] = array();
-			}
-			if($type == 'asf') {
-				$this->_raw['tags']['asf'] = array();
-			}
-			if($type == 'wmv') {
-				$this->_raw['tags']['wmv'] = array();
-			}
-			else {
-				$this->_raw['tags']['avi'] = array();
-			}
 			$type = $this->_clean_type($type);
 			return $type;
 		}
