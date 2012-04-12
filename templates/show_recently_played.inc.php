@@ -59,7 +59,7 @@ show_box_top(_('Recently Played') . $link, 'box box_recently_played');
 		$unit = 'minutes';
 	}
 	else if ($interval < 86400) {
-		$interval = floor($interval / 60);
+		$interval = floor($interval / 3600);
 		$unit = 'hours';
 	}
 	else if ($interval < 604800) {
