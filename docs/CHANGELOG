@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Fixed pluralisation issue in Recently Played
         - Added support for extracting MBIDs from M4A files
         - Fixed parsing of some tag types (most notably M4A)
         - Corrected PLS output to work with more players (reported by bhassel)
