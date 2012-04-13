@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Updated getID3 to 1.9.3
         - Added php-gettext for fallback emulation when a locale (or gettext)
                 isn't supported
         - Fixed pluralisation issue in Recently Played
@@ -38,7 +39,6 @@
                 (reported by ss23)
         - Fixed Last.FM art method (reported by claudio)
         - Updated Captcha PHP to 2.3
-        - Updated getID3 to 1.9.1
         - Updated PHPMailer to 5.2.0
         - Fixed bug in MPD module which affected toggling random or repeat 
                 (patch from jherold)
@@ -56,7 +56,6 @@
         - Toggle artwork with a button instead of a checkbox (patch from mywindow)
         - API handshake code cleanup, including a bugfix from postfuturist
         - Improved install process when JavaScript is disabled
-        - Updated getID3 to 1.8.5
         - Fixed duplicate searching even more
         - Committed minor bugfixes for Penguin theme
         - Added Fresh theme
