@@ -288,6 +288,7 @@ class vainfo {
 			$info['size'] = $info['size'] ?: $tags['size'];
 			$info['mime'] = $info['mime'] ?: $tags['mime'];
 			$info['encoding'] = $info['encoding'] ?: $tags['encoding'];
+			$info['rating'] = $info['rating'] ?: $tags['rating'];
 			$info['time'] = $info['time'] ?: intval($tags['time']);
 			$info['channels'] = $info['channels'] ?: $tags['channels'];
 
@@ -692,18 +693,31 @@ class vainfo {
 		$id3v2 = $this->_raw['id3v2'];
 
 		if(!empty($id3v2['UFID'])) {
+			// Find the MBID for the track
 			foreach ($id3v2['UFID'] as $ufid) {
 				if ($ufid['ownerid'] == 'http://musicbrainz.org') {
 					$array['mb_trackid'] = $this->_clean_tag($ufid['data']);
 				}
 			}
 
+			// Find the MBIDs for the album and artist
 			for ($i = 0, $size = sizeof($id3v2['comments']['text']) ; $i < $size ; $i++) {
 				if ($id3v2['TXXX'][$i]['description'] == 'MusicBrainz Album Id') {
 					$array['mb_albumid'] = $this->_clean_tag($id3v2['comments']['text'][$i]);
 				}
 				elseif ($id3v2['TXXX'][$i]['description'] == 'MusicBrainz Artist Id') {
 					$array['mb_artistid'] = $this->_clean_tag($id3v2['comments']['text'][$i]);
+				}
+			}
+		}
+
+		// Find the rating
+		if (is_array($id3v2['POPM'])) {
+			foreach ($id3v2['POPM'] as $popm) {
+				if (array_key_exists('email', $popm) &&
+					$user = User::get_from_email($popm['email'])) {
+					// Ratings are out of 255; scale it
+					$array['rating'][$user->id] = $popm['rating'] / 255 * 5;
 				}
 			}
 		}
