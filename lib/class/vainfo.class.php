@@ -701,12 +701,14 @@ class vainfo {
 			}
 
 			// Find the MBIDs for the album and artist
-			for ($i = 0, $size = sizeof($id3v2['comments']['text']) ; $i < $size ; $i++) {
-				if ($id3v2['TXXX'][$i]['description'] == 'MusicBrainz Album Id') {
-					$array['mb_albumid'] = $this->_clean_tag($id3v2['comments']['text'][$i]);
-				}
-				elseif ($id3v2['TXXX'][$i]['description'] == 'MusicBrainz Artist Id') {
-					$array['mb_artistid'] = $this->_clean_tag($id3v2['comments']['text'][$i]);
+			foreach ($id3v2['TXXX'] as $txxx) {
+				switch ($txxx['description']) {
+					case 'MusicBrainz Album Id':
+						$array['mb_albumid'] = $this->_clean_tag($txxx['data']);
+					break;
+					case 'MusicBrainz Artist Id':
+						$array['mb_artistid'] = $this->_clean_tag($txxx['data']);
+					break;
 				}
 			}
 		}
