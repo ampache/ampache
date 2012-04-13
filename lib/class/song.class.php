@@ -701,6 +701,7 @@ class Song extends database_object implements media {
 		$this->f_artist = truncate_with_ellipsis($this->f_artist_full,Config::get('ellipse_threshold_artist'));
 
 		// Format the title
+		$this->f_title_full = $this->title;
 		$this->f_title = truncate_with_ellipsis($this->title,Config::get('ellipse_threshold_title'));
 
 		// Create Links for the different objects

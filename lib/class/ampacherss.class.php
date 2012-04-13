@@ -144,15 +144,29 @@ class AmpacheRSS {
 		$data = Stream::get_now_playing();
 
 		$results = array();
-
+		$format = Config::get('rss_format') ?: '%t - %a - %A';
+		$string_map = array(
+			'%t' => 'title',
+			'%a' => 'artist',
+			'%A' => 'album'
+		);
 		foreach ($data as $element) {
 			$song = $element['media'];
 			$client = $element['user'];
-			$xml_array = array('title'=>$song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
-					'link'=>$song->link,
-					'description'=>$song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full,
-					'comments'=>$client->fullname . ' - ' . $element['agent'],
-					'pubDate'=>date("r",$element['expire'])
+			$title = $format;
+			$description = $format;
+			foreach($string_map as $search => $replace) {
+				$trep = 'f_' . $replace;
+				$drep = 'f_' . $replace . '_full';
+				$title = str_replace($search, $song->$trep, $title);
+				$description = str_replace($search, $song->$drep, $description);
+			}
+			$xml_array = array(
+					'title' => $title,
+					'link' => $song->link,
+					'description' => $description,
+					'comments' => $client->fullname . ' - ' . $element['agent'],
+					'pubDate' => date('r', $element['expire'])
 					);
 			$results[] = $xml_array;
 		} // end foreach
