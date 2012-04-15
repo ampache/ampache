@@ -672,7 +672,7 @@ class vainfo {
 						$array['genre'][] = $this->_clean_tag($genre);
 					}
 				break;
-				case 'pos':
+				case 'part_of_a_set':
 					$el = explode('/', $data['0']);
 					$array['disk'] = $el[0];
 					$array['totaldiscs'] = $el[1];
