@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Fixed XML cleanup to work with newer versions of libpcre
+                (patch by Natureshadow)
         - Fixed ID3v2 disk number parsing
         - Updated getID3 to 1.9.3
         - Added php-gettext for fallback emulation when a locale (or gettext)
