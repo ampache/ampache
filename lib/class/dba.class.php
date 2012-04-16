@@ -184,14 +184,14 @@ class Dba {
 	 * doesn't work for updates or inserts
 	 */
 	public static function num_rows($resource) {
-
-		$result = mysql_num_rows($resource);
-
-		if (!$result) {
-			return '0';
+		if ($resource) {
+			$result = mysql_num_rows($resource);
+			if ($result) {
+				return $result;
+			}
 		}
 
-		return $result;
+		return 0;
 	} // num_rows
 
 	/**
