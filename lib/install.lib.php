@@ -194,13 +194,7 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 		}
 	} // end if we are creating a user
 
-	// Figure out which version of MySQL we're running, if possible we want to use the UTF-8 dump
-	$sql = "SELECT VERSION()";
-	$db_results = mysql_query($sql,$dbh);
-
-	$data = mysql_fetch_row($db_results);
-	$mysql_version = substr(preg_replace("/(\d+)\.(\d+)\.(\d+).*/","$1$2$3",$data[0]),0,3);
-	$sql_file =  ($mysql_version < '500') ? 'sql/ampache40.sql' : 'sql/ampache.sql';
+	$sql_file = 'sql/ampache.sql';
 
 	/* Attempt to insert database */
          $query = fread(fopen($sql_file, "r"), filesize($sql_file));
@@ -216,10 +210,8 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
                  } // end if
          } // end for
 
-	if ($mysql_version >= '500') {
-		$sql = "ALTER DATABASE `" . Dba::escape($database) . "` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
-		$db_results = Dba::write($sql);
-	}
+	$sql = "ALTER DATABASE `" . Dba::escape($database) . "` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+	$db_results = Dba::write($sql);
 
 	// If they've picked something other then English update default preferences
 	if (Config::get('lang') != 'en_US') {
