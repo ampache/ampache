@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-Alpha2
+        - Fixed CLI database load to work regardless of whether it's run from
+                the top-level directory (reported by porthose)
         - Fixed XML cleanup to work with newer versions of libpcre
                 (patch by Natureshadow)
         - Fixed ID3v2 disk number parsing

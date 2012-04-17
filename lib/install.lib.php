@@ -194,7 +194,7 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 		}
 	} // end if we are creating a user
 
-	$sql_file = 'sql/ampache.sql';
+	$sql_file = Config::get('prefix') . '/sql/ampache.sql';
 
 	/* Attempt to insert database */
          $query = fread(fopen($sql_file, "r"), filesize($sql_file));
