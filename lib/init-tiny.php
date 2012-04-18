@@ -38,11 +38,14 @@ $prefix = realpath($ampache_path . "/../");
 $configfile = $prefix . '/config/ampache.cfg.php';
 require_once $prefix . '/lib/general.lib.php';
 require_once $prefix . '/lib/class/config.class.php';
-
+require_once $prefix . '/lib/class/core.class.php';
 require_once $prefix . '/modules/php-gettext/gettext.inc';
 
 // Define some base level config options
 Config::set('prefix', $prefix);
+
+// Register the autoloader
+spl_autoload_register(array('Core', 'autoload'), true, true);
 
 /*
  Check to see if this is http or https

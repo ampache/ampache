@@ -284,29 +284,4 @@ function translate_pattern_code($code) {
 
 } // translate_pattern_code
 
-/**
- * __autoload
- * This function automatically loads any missing classes as they are needed so 
- * that we don't use a million include statements which load more than we need.
- */
-function __autoload($class) {
-	// Lowercase the class
-	$class = strtolower($class);
-
-	$file = Config::get('prefix') . "/lib/class/$class.class.php";
-
-	// See if it exists
-	if (is_readable($file)) {
-		require_once $file;
-		if (is_callable($class . '::_auto_init')) {
-			call_user_func(array($class, '_auto_init'));
-		}
-	}
-	// Else log this as a fatal error
-	else {
-		debug_event('__autoload', "'$class' not found!",'1');
-	}
-
-} // __autoload
-
 ?>
