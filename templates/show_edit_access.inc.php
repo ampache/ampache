@@ -19,13 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * @package	Ampache
- * @copyright	2001 - 2011 Ampache.org
- * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @link	http://www.ampache.org/
  */
-
 ?>
 <?php show_box_top(T_('Edit Access Control List')); ?>
 <form name="edit_access" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=update_record&access_id=<?php echo intval($access->id); ?>">
@@ -42,7 +36,7 @@
                         <option value="stream"<?php echo $sl_stream; ?>><?php echo T_('Stream Access'); ?></option>
                         <option value="interface"<?php echo $sl_interface; ?>><?php echo T_('Web Interface'); ?></option>
                         <option value="network"<?php echo $sl_network; ?>><?php echo T_('Local Network Definition'); ?></option>
-                        <option value="rpc"<?php echo $sl_rpc; ?>><?php echo T_('RPC'); ?></option>
+                        <option value="rpc"<?php echo $sl_rpc; ?>><?php echo T_('API/RPC'); ?></option>
                 </select>
         </td>
 
@@ -68,12 +62,6 @@
 	<td><?php echo T_('User'); ?>:</td>
 	<td colspan="3">
 		<?php show_user_select('user',$access->user); ?>
-	</td>
-</tr>
-<tr>
-	<td><?php echo T_('Remote Key'); ?></td>
-	<td colspan="3">
-		<input type="text" name="key" value="<?php echo scrub_out($access->key); ?>" size="32" maxlength="32" />
 	</td>
 </tr>
 <tr>

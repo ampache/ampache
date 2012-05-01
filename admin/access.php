@@ -59,64 +59,27 @@ switch ($_REQUEST['action']) {
 			exit;
 		}
 
-		// We need to pre-process this a little bit as stuff is coming in from all over
-		switch ($_GET['method']) {
-			case 'advanced':
-				Access::create($_POST);
-			break;
-			case 'local':
-				$_POST['type'] = 'network';
-				Access::create($_POST);
+		Access::create($_POST);
 
-				// Create Additional stuff based on the type
-				if ($_POST['addtype'] == 'streamnetwork' OR $_POST['addtype'] == 'allnetwork') {
-					$_POST['type'] = 'stream';
-					Access::create($_POST);
-				}
-				if ($_POST['addtype'] == 'allnetwork') {
-					$_POST['type'] = 'interface';
-					Access::create($_POST);
-				}
-			break;
-			case 'current':
-				$_POST['start'] = $_SERVER['REMOTE_ADDR'];
-				$_POST['end'] = $_SERVER['REMOTE_ADDR'];
-				$_POST['type'] = 'interface';
-				Access::create($_POST);
-				$_POST['type'] = 'stream';
-				Access::create($_POST);
-			break;
-			case 'rpc':
-				$_POST['type'] = 'rpc';
-				Access::create($_POST);
-
-				// Create Additional stuff based on the type
-				if ($_POST['addtype'] == 'streamrpc' OR $_POST['addtype'] == 'allrpc') {
-					$_POST['type'] = 'stream';
-					Access::create($_POST);
-				}
-				if ($_POST['addtype'] == 'allrpc') {
-					$_POST['type'] = 'interface';
-					Access::create($_POST);
-				}
-			break;
-			default:
-				// Do nothing they f'ed something up
-			break;
-		} // end switch on method
+		// Create Additional stuff based on the type
+		if ($_POST['addtype'] == 'stream' || 
+			$_POST['addtype'] == 'all'
+		) {
+			$_POST['type'] = 'stream';
+			Access::create($_POST);
+		}
+		if ($_POST['addtype'] == 'all') {
+			$_POST['type'] = 'interface';
+			Access::create($_POST);
+		}
 
 		if (!Error::occurred()) {
 			$url = Config::get('web_path') . '/admin/access.php';
 			show_confirmation(T_('Added'), T_('Your new Access Control List(s) have been created'),$url);
 		}
 		else {
-			switch ($_GET['method']) {
-				case 'rpc': require_once Config::get('prefix') . '/templates/show_add_access_rpc.inc.php'; break;
-				case 'local': require_once Config::get('prefix') . '/templates/show_add_access_local.inc.php'; break;
-				case 'current': require_once Config::get('prefix') . '/templates/show_add_access_current.inc.php'; break;
-				case 'advanced': require_once Config::get('prefix') . '/templates/show_add_access.inc.php'; break;
-				default: require_once Config::get('prefix') . '/templates/show_access_list.inc.php'; break;
-			}
+			$action = 'show_add_' . $_POST['type'];
+			require_once Config::get('prefix') . '/templates/show_add_access.inc.php';
 		}
 	break;
 	case 'update_record':
@@ -135,15 +98,10 @@ switch ($_REQUEST['action']) {
 		}
 	break;
 	case 'show_add_current':
-		require_once Config::get('prefix') . '/templates/show_add_access_current.inc.php';
-	break;
 	case 'show_add_rpc':
-		require_once Config::get('prefix') . '/templates/show_add_access_rpc.inc.php';
-	break;
 	case 'show_add_local':
-		require_once Config::get('prefix') . '/templates/show_add_access_local.inc.php';
-	break;
 	case 'show_add_advanced':
+		$action = $_REQUEST['action'];
 		require_once Config::get('prefix') . '/templates/show_add_access.inc.php';
 	break;
 	case 'show_edit_record':
