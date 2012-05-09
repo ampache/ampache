@@ -34,7 +34,7 @@
  */
 function load_gettext() {
 	$lang = Config::get('lang');
-	$charset = Config::get('site_charset') ?: 'UTF=8';
+	$charset = Config::get('site_charset') ?: 'UTF-8';
 	$locale = $lang . '.' . $charset;
 	debug_event('i18n', 'Setting locale to ' . $locale, 5);
 	T_setlocale(LC_MESSAGES, $locale);
