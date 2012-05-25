@@ -117,6 +117,20 @@ function unhtmlentities($string) {
 } //unhtmlentities
 
 /**
+ * scrub_arg
+ *
+ * This function behaves like escapeshellarg, but isn't broken
+ */
+function scrub_arg($arg)
+{
+	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		return '"' . str_replace(array('"', '%'), array('', ''), $arg) . '"';
+	} else {
+		return "'" . str_replace("'", "'\\''", $arg) . "'";
+	}
+}
+
+/**
  * format_bytes
  * Turns a size in bytes into a human-readable value
  */

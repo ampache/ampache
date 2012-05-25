@@ -691,7 +691,7 @@ class Stream {
 		$eofss  = floor($song->time - ($eofmm * 60));
 		$eof    = sprintf('%02d.%02d', $eofmm, $eofss);
 
-		$song_file = escapeshellarg($song->file);
+		$song_file = scrub_arg($song->file);
 
 		$transcode_command = $song->stream_cmd();
 		if ($transcode_command == null) {
