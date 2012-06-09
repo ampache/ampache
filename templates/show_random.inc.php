@@ -41,26 +41,20 @@
 <tr id="search_item_count">
         <td><?php echo T_('Item count'); ?></td>
         <td>
-                <?php	$name = 'random_';
-			if ($_POST['random'] == -1) {
-				$name .= 'all';
-			}
-			else {
-				$name .= scrub_in($_POST['random']);
-			}
-			${$name} = ' selected="selected"'; ?>
-                <select name="random">
-                <option value="1"<?php echo $random_1; ?>>1</option>
-                <option value="5"<?php echo $random_5; ?>>5</option>
-                <option value="10"<?php echo $random_10; ?>>10</option>
-                <option value="20"<?php echo $random_20; ?>>20</option>
-                <option value="30"<?php echo $random_30; ?>>30</option>
-                <option value="50"<?php echo $random_50; ?>>50</option>
-                <option value="100"<?php echo $random_100; ?>>100</option>
-                <option value="500"<?php echo $random_500; ?>>500</option>
-                <option value="1000"<?php echo $random_1000; ?>>1000</option>
-                <option value="-1" <?php echo $random_all; ?> ><?php echo T_('All'); ?></option>
-                </select>
+		<select name="random">
+<?php
+		foreach(array(1, 5, 10, 20, 30, 50, 100, 500, 1000) as $i) {
+			echo "\t\t\t" . '<option value="' . $i . '" ' . 
+				($_POST['random'] == $i 
+					? 'selected="selected"' : '') . '>' .
+				$i . "</option>\n";
+		}
+			echo "\t\t\t" . '<option value="-1" ' .
+				($_POST['random'] == '-1' 
+					? 'selected="selected"' : '') . '>' .
+				T_('All') . "</option>\n";
+?>
+		</select>
         </td>
 </tr>
 <tr id="search_length">
@@ -68,28 +62,43 @@
         <td>
                 <?php $name = 'length_' . intval($_POST['length']); ${$name} = ' selected="selected"'; ?>
                 <select name="length">
-                        <option value="0"<?php echo $length_0; ?>><?php echo T_('Unlimited'); ?></option>
-                        <option value="15"<?php echo $length_15; ?>><?php printf(T_ngettext('%d minute','%d minutes',15), "15"); ?></option>
-                        <option value="30"<?php echo $length_30; ?>><?php printf(T_ngettext('%d minute','%d minutes',30), "30"); ?></option>
-                        <option value="60"<?php echo $length_60; ?>><?php printf(T_ngettext('%d hour','%d hours',1), "1"); ?></option>
-                        <option value="120"<?php echo $length_120; ?>><?php printf(T_ngettext('%d hour','%d hours',2), "2"); ?></option>
-                        <option value="240"<?php echo $length_240; ?>><?php printf(T_ngettext('%d hour','%d hours',4), "4"); ?></option>
-                        <option value="480"<?php echo $length_480; ?>><?php printf(T_ngettext('%d hour','%d hours',8), "8"); ?></option>
-                        <option value="960"<?php echo $length_960; ?>><?php printf(T_ngettext('%d hour','%d hours',16), "16"); ?></option>
+<?php
+			echo "\t\t\t" . '<option value="0" ' .
+				($_POST['length'] == 0 
+					? 'selected="selected"' : '') . '>' .
+				T_('Unlimited') . "</option>\n";
+		foreach(array(15, 30, 60, 120, 240, 480, 960) as $i) {
+			echo "\t\t\t" . '<option value="' . $i . '" ' . 
+				($_POST['length'] == $i 
+					? 'selected="selected"' : '') . '>';
+			if ($i < 60) {
+				printf(T_ngettext('%d minute', '%d minutes', $i), $i);
+			}
+			else {
+				printf(T_ngettext('%d hour', '%d hours', $i / 60), $i / 60);
+			}
+			echo "</option>\n";
+		}
+?>
                 </select>
         </td>
 </tr>
 <tr id="search_size_limit">
         <td><?php echo T_('Size Limit'); ?></td>
         <td>
-                <?php $name = 'size_' . intval($_POST['size_limit']); ${$name} = ' selected="selected"'; ?>
                 <select name="size_limit">
-                        <option value="0"<?php echo $size_0; ?>><?php echo T_('Unlimited'); ?></option>
-                        <option value="64"<?php echo $size_64; ?>>64MB</option>
-                        <option value="128"<?php echo $size_128; ?>>128MB</option>
-                        <option value="256"<?php echo $size_256; ?>>256MB</option>
-                        <option value="512"<?php echo $size_512; ?>>512MB</option>
-                        <option value="1024"<?php echo $size_1024; ?>>1024MB</option>
+<?php
+			echo "\t\t\t" . '<option value="0" ' .
+				($_POST['size_limit'] == 0
+					? 'selected="selected"' : '') . '>' .
+				T_('Unlimited') . "</option>\n";
+		foreach(array(64, 128, 256, 512, 1024) as $i) {
+			echo "\t\t\t" . '<option value="' . $i . '"' .
+				($_POST['size_limit'] == $i
+					? 'selected="selected"' : '') . '>' .
+				format_bytes($i * 1048576) . "</option>\n";
+		}
+?>
                 </select>
         </td>
 </tr>
