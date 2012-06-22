@@ -59,11 +59,11 @@ if (empty($oid) && empty($demo_id) && empty($random)) {
 }
 
 // If we're XML-RPC and it's enabled, use system user
-if (isset($xml_rpc) AND Config::get('xml_rpc') AND !isset($uid)) {
+if ($xml_rpc == 1 && Config::get('xml_rpc') && empty($uid)) {
 	$uid = '-1';
 }
 
-if (!isset($uid)) {
+if (empty($uid)) {
 	debug_event('play', 'No user specified', 2);
 	header('HTTP/1.1 400 No User Specified');
 	exit;
@@ -101,7 +101,7 @@ if (Config::get('require_session')) {
 $GLOBALS['user']->update_last_seen();
 
 /* If we are in demo mode.. die here */
-if (Config::get('demo_mode') || (!Access::check('interface','25') AND !isset($xml_rpc))) {
+if (Config::get('demo_mode') || (!Access::check('interface','25') )) {
 	debug_event('access_denied', "Streaming Access Denied:" .Config::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
 	access_denied();
 	exit;
@@ -299,21 +299,22 @@ if (Config::get('track_user_ip')) {
 	$GLOBALS['user']->insert_ip_history();
 }
 
+$downsample_remote = false;
 if (Config::get('downsample_remote')) {
 	if (!Access::check_network('network', $GLOBALS['user']->id,'0')) {
 		debug_event('downsample', 'Address ' . $_SERVER['REMOTE_ADDR'] . ' is not in a network defined as local', 5);
-		$remote = true;
+		$downsample_remote = true;
 	}
 }
 
 // If they are downsampling, or if the song is not a native stream or it's non-local
-if (((Config::get('transcode') == 'always' AND  !$video) ||
+if (((Config::get('transcode') == 'always' && !$video) ||
 	!$media->native_stream() ||
-	isset($remote)) && Config::get('transcode') != 'never') {
+	$downsample_remote) && Config::get('transcode') != 'never') {
         debug_event('downsample',
 		'Decided to transcode. Transcode:' . Config::get('transcode') . 
 		' Native Stream: ' . ($media->native_stream() ? 'true' : 'false') .
-		' Remote: ' . ($remote ? 'true' : 'false'), 5);
+		' Remote: ' . ($downsample_remote ? 'true' : 'false'), 5);
 	$media->set_transcode();
 	$fp = Stream::start_transcode($media, $media_name, $start);
 	$media_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
