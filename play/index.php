@@ -231,12 +231,6 @@ if (!$media->file OR !is_readable($media->file)) {
 	exit;
 }
 
-// make fread binary safe
-// This feature has been DEPRECATED as of PHP 5.3.0
-if(version_compare(PHP_VERSION, '5.3.0', '<=')) {
-	set_magic_quotes_runtime(0);
-}
-
 // don't abort the script if user skips this song because we need to update now_playing
 ignore_user_abort(true);
 
