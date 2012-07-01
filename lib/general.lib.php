@@ -33,12 +33,11 @@
  */
 function set_memory_limit($new_limit) {
 
-	$current_memory = ini_get('memory_limit');
-	$current_memory = substr($current_memory,0,strlen($current_memory)-1);
-	if ($current_memory < $new_limit) {
-		$php_memory = $new_limit . "M";
-		ini_set (memory_limit, "$php_memory");
-		unset($php_memory);
+	$current_limit = unformat_bytes(ini_get('memory_limit'));
+	$new_limit = unformat_bytes($new_limit);
+
+	if ($current_limit < $new_limit) {
+		ini_set (memory_limit, $new_limit);
 	}
 
 } // set_memory_limit
@@ -148,9 +147,34 @@ function format_bytes($value, $precision = 2) {
 		case 4: $unit = 'TB'; break;
 		case 5: $unit = 'PB'; break;
 		default: $unit = 'B'; break;
-        } // end switch
+	} // end switch
 
 	return round($value, $precision) . ' ' . $unit;
+}
+
+function unformat_bytes($value) {
+	if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', $value, $matches)) {
+		$value = $matches[1];
+		$unit = strtolower(substr($matches[2], 0, 1));
+	}
+	else {
+		return $value;
+	}
+       
+	switch($unit) {
+		case 'p':
+			$value *= 1024;
+		case 't':
+			$value *= 1024;
+		case 'g':
+			$value *= 1024;
+		case 'm':
+			$value *= 1024;
+		case 'k':
+			$value *= 1024;
+	}
+
+	return $value;
 }
 
 /**
