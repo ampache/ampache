@@ -94,14 +94,7 @@ function scrub_in($input) {
  */
 function scrub_out($string) {
 
-	//This feature has been DEPRECATED as of PHP 5.3.0
-	if(version_compare(PHP_VERSION, '5.3.0', '<=') AND ini_get('magic_quotes_gpc') != 'Off') {
-		$string = stripslashes($string);
-	}
-
-	$string = htmlentities($string, ENT_QUOTES, Config::get('site_charset'));
-
-	return $string;
+	return htmlentities($string, ENT_QUOTES, Config::get('site_charset'));
 
 } // scrub_out
 
