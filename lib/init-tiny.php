@@ -47,16 +47,23 @@ Config::set('prefix', $prefix);
 // Register the autoloader
 spl_autoload_register(array('Core', 'autoload'), true, true);
 
-/*
- Check to see if this is http or https
-*/
+// Check to see if this is http or https
 if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' ) 
-    || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') 
-    || Config::get('force_ssl')) {
-	$http_type = "https://";
+    || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')) {
+	$http_type = 'https://';
 }
 else {
-	$http_type = "http://";
+	$http_type = 'http://';
+}
+
+if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
+	$http_port = $_SERVER['HTTP_X_FORWARDED_PORT'];
+}
+else if (isset($_SERVER['SERVER_PORT'])) {
+	$http_port = $_SERVER['SERVER_PORT'];
+}
+if (!isset($http_port) || !$http_port) {
+	$http_port = 80;
 }
 
 // Define that we've loaded the INIT file

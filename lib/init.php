@@ -73,25 +73,17 @@ if ($link) {
 $results['version']		= '3.6-Alpha1-DEV';
 $results['int_config_version']	= '11';
 
-$results['raw_web_path']	= $results['web_path'];
-$results['web_path']		= $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
-if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
-   $results['http_port']   = $_SERVER['HTTP_X_FORWARDED_PORT'];
-} else {
-   $results['http_port']   = $_SERVER['SERVER_PORT'];
+if ($results['force_ssl']) {
+	$http_type = 'https://';
 }
-if (!$results['http_port']) {
-	$results['http_port']	= '80';
-}
-if (!$results['site_charset']) {
-	$results['site_charset'] = "UTF-8";
-}
-if (!$results['raw_web_path']) {
-	$results['raw_web_path'] = '/';
-}
-if (!$_SERVER['SERVER_NAME']) {
-	$_SERVER['SERVER_NAME'] = '';
-}
+
+$results['raw_web_path'] = $results['web_path'];
+$results['web_path'] = $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
+$results['http_port'] = $results['http_port'] ?: $http_port;
+$results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
+$results['raw_web_path'] = $results['raw_web_path'] ?: '/';
+$_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
+
 if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {
 	$results['user_ip_cardinality'] = 42;
 }
