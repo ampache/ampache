@@ -83,7 +83,7 @@ class vauth {
 		$results = self::get_session_data($key);
 
 		if (!is_array($results)) {
-			debug_event('SESSION', 'Error unable to read session from key ' . $key . ' no data found', '1');
+			debug_event('SESSION', 'Unable to read session from key ' . $key . ' no data found', 5);
 			return '';
 		}
 
