@@ -176,7 +176,7 @@ class shoutBox {
 		$user 		= Dba::escape($GLOBALS['user']->id);
 		$text 		= Dba::escape(strip_tags($data['comment']));
 		$date 		= time();
-		$sticky 	= make_bool($data['sticky']);
+		$sticky 	= isset($data['sticky']) ? 1 : 0;
 		$object_id 	= Dba::escape($data['object_id']);
 		$object_type	= Dba::escape($data['object_type']);
 
