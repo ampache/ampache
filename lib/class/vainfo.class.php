@@ -900,6 +900,10 @@ class vainfo {
 			break;
 		}
 
+		foreach($tags['tags']['asf'] as $tag => $data) {
+			$array[$tag] = $this->_clean_tag($data['0']);
+		}
+
 		return $array;
 
 	} // _parse_wmv
