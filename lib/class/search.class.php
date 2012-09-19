@@ -731,7 +731,7 @@ class Search extends playlist_object {
 		$where = array();
 		$table = array();
 		$join = array();
-		$join['tag'] = 0;
+		$join['tag'] = array();
 
 		foreach ($this->rules as $rule) {
 			$type = $this->name_to_basetype($rule[0]);
@@ -759,8 +759,9 @@ class Search extends playlist_object {
 					$join['song'] = true;
 				break;
 				case 'tag':
-					$where[] = "`realtag$join[tag]`.`name` $sql_match_operator '$input'";
-					$join['tag']++;
+					$key = md5($input . $sql_match_operator);
+					$where[] = "`realtag_$key`.`match` > 0";
+					$join['tag'][$key] = "$sql_match_operator '$input'";
 				break;
 				default:
 					// Nae laird!
@@ -770,12 +771,16 @@ class Search extends playlist_object {
 
 		$where_sql = implode(" $sql_logic_operator ", $where);
 
-		for ($i = 0 ; $i < $join['tag'] ; $i++) {
-			$table['tag' . $i] = 
-				"LEFT JOIN (SELECT `object_id`, `name` FROM `tag` " .
-				"LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " .
-				"WHERE `tag_map`.`object_type`='album') AS realtag$i " .
-				"ON `album`.`id`=`realtag$i`.`object_id`";
+		foreach ($join['tag'] as $key => $value) {
+			$table['tag_' . $key] =
+				"LEFT JOIN (" .
+				"SELECT `object_id`, COUNT(`name`) AS `match` ".
+				"FROM `tag` LEFT JOIN `tag_map` " .
+				"ON `tag`.`id`=`tag_map`.`tag_id` " .
+				"WHERE `tag_map`.`object_type`='album' " .
+				"AND `tag`.`name` $value GROUP BY `object_id`" .
+				") AS realtag_$key " .
+				"ON `album`.`id`=`realtag_$key`.`object_id`";
 		}
 		if ($join['song']) {
 			$table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";
@@ -815,7 +820,7 @@ class Search extends playlist_object {
 		$where = array();
 		$table = array();
 		$join = array();
-		$join['tag'] = 0;
+		$join['tag'] = array();
 
 		foreach ($this->rules as $rule) {
 			$type = $this->name_to_basetype($rule[0]);
@@ -832,8 +837,9 @@ class Search extends playlist_object {
 					$where[] = "`artist`.`name` $sql_match_operator '$input'";
 				break;
 				case 'tag':
-					$where[] = " realtag$join[tag]`.`name` $sql_match_operator '$input'";
-					$join['tag']++;
+					$key = md5($input . $sql_match_operator);
+					$where[] = "`realtag_$key`.`match` > 0";
+					$join['tag'][$key] = "$sql_match_operator '$input'";
 				break;
 				default:
 					// Nihil
@@ -843,11 +849,16 @@ class Search extends playlist_object {
 
 		$where_sql = implode(" $sql_logic_operator ", $where);
 
-		for ($i = 0 ; $i < $join['tag'] ; $i++) {
-			$table['tag' . $i] = "LEFT JOIN (SELECT `object_id`, `name` FROM `tag` " .
-				"LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " .
-				"WHERE `tag_map`.`object_type`='artist') AS realtag$i " .
-				"ON `artist`.`id`=`realtag$i`.`object_id`";
+		foreach ($join['tag'] as $key => $value) {
+			$table['tag_' . $key] =
+				"LEFT JOIN (" .
+				"SELECT `object_id`, COUNT(`name`) AS `match` ".
+				"FROM `tag` LEFT JOIN `tag_map` " .
+				"ON `tag`.`id`=`tag_map`.`tag_id` " .
+				"WHERE `tag_map`.`object_type`='artist' " .
+				"AND `tag`.`name` $value  GROUP BY `object_id`".
+				") AS realtag_$key " .
+				"ON `artist`.`id`=`realtag_$key`.`object_id`";
 		}
 
 		$table_sql = implode(' ', $table);
@@ -872,7 +883,7 @@ class Search extends playlist_object {
 		$where = array();
 		$table = array();
 		$join = array();
-		$join['tag'] = 0;
+		$join['tag'] = array();
 
 		foreach ($this->rules as $rule) {
 			$type = $this->name_to_basetype($rule[0]);
@@ -892,8 +903,9 @@ class Search extends playlist_object {
 					$join['song_data'] = true;
 				break;
 				case 'tag':
-					$where[] = "`realtag$join[tag]`.`name` $sql_match_operator '$input'";
-					$join['tag']++;
+					$key = md5($input . $sql_match_operator);
+					$where[] = "`realtag_$key`.`match` > 0";
+					$join['tag'][$key] = "$sql_match_operator '$input'";
 				break;
 				case 'title':
 					$where[] = "`song`.`title` $sql_match_operator '$input'";
@@ -942,7 +954,13 @@ class Search extends playlist_object {
 					$subsearch = new Search('song', $input);
 					$subsql = $subsearch->to_sql();
 					$where[] = "$sql_match_operator (" . $subsql['where_sql'] . ")";
+					// HACK: array_merge would potentially
+					// lose tags, since it overwrites.
+					// Save our merged tag joins in a temp
+					// variable, even though that's ugly.
+					$tagjoin = array_merge($subsql['join']['tag'], $join['tag']);
 					$join = array_merge($subsql['join'], $join);
+					$join['tag'] = $tagjoin;
 				break;
 				case 'added':
 					$input = strtotime($input);
@@ -969,11 +987,16 @@ class Search extends playlist_object {
 		if ($join['song_data']) {
 			$table['song_data'] = "LEFT JOIN `song_data` ON `song`.`id`=`song_data`.`song_id`";
 		}
-		for ($i = 0 ; $i < $join['tag'] ; $i++) {
-			$table['tag' . $i] = "LEFT JOIN (SELECT `object_id`, `name` FROM `tag` " . 
-				"LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " .
-				"WHERE `tag_map`.`object_type`='song') AS realtag$i " .
-				"ON `song`.`id`=`realtag$i`.`object_id`";
+		foreach ($join['tag'] as $key => $value) {
+			$table['tag_' . $key] =
+				"LEFT JOIN (" .
+				"SELECT `object_id`, COUNT(`name`) AS `match` ".
+				"FROM `tag` LEFT JOIN `tag_map` " .
+				"ON `tag`.`id`=`tag_map`.`tag_id` " .
+				"WHERE `tag_map`.`object_type`='song' " .
+				"AND `tag`.`name` $value GROUP BY `object_id`" .
+				") AS realtag_$key " .
+				"ON `song`.`id`=`realtag_$key`.`object_id`";
 		}
 		if ($join['rating']) {
 			// We do a join on ratings from the table with a 

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-future
+        - Fixed a search issue which prevented the use of multiple tag rules
+                (reported by Istarion)
         - Fixed ASF tag parsing regression (reported by cygn)
 
   v.3.6-Alpha2 2012-08-15
