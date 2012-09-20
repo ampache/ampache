@@ -404,15 +404,13 @@ class xmlData {
 	/**
 	 * songs
 	 *
-	 * This returns an xml document from an array of song ids spiffy isn't it!
-	 *
-	 * @param	array	$songs	(description here...)
-	 * @return	string	return xml
+	 * This returns an xml document from an array of song ids.
+	 * (Spiffy isn't it!)
 	 */
 	public static function songs($songs) {
 
 		if (count($songs) > self::$limit OR self::$offset > 0) {
-			$songs = array_slice($songs,self::$offset,self::$limit);
+			$songs = array_slice($songs, self::$offset, self::$limit);
 		}
 
 		Song::build_cache($songs);
@@ -456,9 +454,7 @@ class xmlData {
 
 		} // end foreach
 
-		$final = self::_header() . $string . self::_footer();
-
-		return $final;
+		return self::_header() . $string . self::_footer();
 
 	} // songs
 
