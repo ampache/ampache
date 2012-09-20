@@ -84,51 +84,46 @@ switch ($_GET['type']) {
 	// If we need to pull the data out of the session
 	case 'session':
 		vauth::check_session();
-		$key = scrub_in($_REQUEST['image_index']);
-		$image = Art::get_from_source($_SESSION['form']['images'][$key], 'album');
-		$mime = $_SESSION['form']['images'][$key]['mime'];
-		$data = explode("/",$mime);
-		$extension = $data['1'];
-
-		// Send the headers and output the image
-		header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
-		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-		header("Cache-Control: no-store, no-cache, must-revalidate");
-		header("Pragma: no-cache");
-		header("Content-type: $mime");
-		header("Content-Disposition: filename=" . $key . "." . $extension);
-		echo $image;
+		$filename = scrub_in($_REQUEST['image_index']);
+		$image = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
+		$mime = $_SESSION['form']['images'][$filename]['mime'];
 	break;
 	default:
-		$media = new $type($_GET['id']); 
+		$media = new $type($_GET['id']);
+		$filename = $media->name;
+
 		$art = new Art($media->id,$type); 
 		$art->get_db();  
-		
-		if (!$art->raw_mime) { 
-			header('Content-type: image/jpeg');
-			readfile(Config::get('prefix') . Config::get('theme_path') . '/images/blankalbum.jpg');
-			break;
-		} // else no image
-		
-		if ($_GET['thumb']) {
-			$thumb_data = $art->get_thumb($size);
-		}
-				
-		$mime = $thumb_data ? $thumb_data['thumb_mime'] : $art->raw_mime; 	
-		$source = $thumb_data ? $thumb_data['thumb'] : $art->raw; 
-		$extension = Art::extension($mime); 
-		
-		// Send the headers and output the image
-		header("Expires: Tue, 27 Mar 1984 05:00:00 GMT");
-		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-		header("Cache-Control: no-store, no-cache, must-revalidate");
-		header("Pragma: no-cache");
-		header("Content-type: $mime");
-		header('Content-Disposition: filename="' . scrub_out($media->name) . '.' .
-			$extension . '"');
-		echo $source;
 
+		if (!$art->raw_mime) {
+			$mime = 'image/jpeg';
+			$image = file_get_contents(Config::get('prefix') . 
+				Config::get('theme_path') .
+				'/images/blankalbum.jpg');
+		}
+		else {
+			if ($_GET['thumb']) {
+				$thumb_data = $art->get_thumb($size);
+			}
+				
+			$mime = $thumb_data 
+				? $thumb_data['thumb_mime']
+				: $art->raw_mime; 	
+			$image = $thumb_data
+				? $thumb_data['thumb']
+				: $art->raw;
+		}
 	break;
 } // end switch type
+
+if ($image) {
+	$extension = Art::extension($mime); 
+	$filename = scrub_out($filename . '.' . $extension);
+
+	// Send the headers and output the image
+	$browser = new Horde_Browser();
+	$browser->downloadHeaders($filename, $mime, true);
+	echo $image;
+}
 
 ?>
