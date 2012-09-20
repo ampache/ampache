@@ -27,9 +27,6 @@
  */
 
 /* Prepare the variables */
-$title = scrub_out(truncate_with_ellipsis($media->title));
-$album = scrub_out(truncate_with_ellipsis($media->f_album_full));
-$artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
 ?>
 <div class="np_group" id="np_group_1">
   <div class="np_cell cel_username">
@@ -59,23 +56,17 @@ $artist = scrub_out(truncate_with_ellipsis($media->f_artist_full));
 <div class="np_group" id="np_group_2">
   <div class="np_cell cel_song">
   	<label><?php echo T_('Song'); ?></label>
-  	<a title="<?php echo scrub_out($media->title); ?>" href="<?php echo $web_path; ?>/stream.php?action=single_song&amp;song_id=<?php echo $media->id; ?>">
-          <?php echo $title; ?>
-  	</a>
+	<?php echo $media->f_link; ?>
   </div>
 
   <div class="np_cell cel_album">
   	<label><?php echo T_('Album'); ?></label>
-  	<a title="<?php echo scrub_out($media->f_album_full); ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $media->album; ?>">
-          	<?php echo $album; ?>
-  	</a>
+	<?php echo $media->f_album_link; ?>
   </div>
 
   <div class="np_cell cel_artist">
   	<label><?php echo T_('Artist'); ?></label>
-  	<a title="<?php echo scrub_out($media->f_artist_full); ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $media->artist; ?>">
-  	        <?php echo $artist; ?>
-  	</a>
+	<?php echo $media->f_artist_link; ?>
   </div>
 </div>
 
