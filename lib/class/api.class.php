@@ -514,10 +514,8 @@ class Api {
 	 */
 	public static function url_to_song($input) {
 
-			// Don't scrub in we need to give her raw and juicy to the function
-			$url = $input['url'];
-
-			$song_id = Song::parse_song_url($url);
+			// Don't scrub, the function needs her raw and juicy
+			$song_id = Song::parse_song_url($input['url']);
 
 			ob_end_clean();
 			echo xmlData::songs(array($song_id));
