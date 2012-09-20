@@ -106,6 +106,9 @@ class Song extends database_object implements media {
 
 		$idlist = '(' . implode(',', $song_ids) . ')';
 
+		// Callers might have passed array(false) because they are dumb
+		if ($idlist == '()') { return false; }
+
 		// Song data cache
 		$sql = 'SELECT `song`.`id`, `file`, `catalog`, `album`, ' .
 			'`year`, `artist`, `title`, `bitrate`, `rate`, ' .
