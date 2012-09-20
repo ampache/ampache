@@ -575,14 +575,6 @@ class User extends database_object {
 
 		if (!strlen($song_info->file)) { return false; }
 
-		// Make sure we've played a significant chunk of the song
-		$data = Stats::get_last_song($user);
-		$last_song = new Song($data['object_id']);
-		if ($data['date'] + ($song_info->time / 2) >= time()) {
-			debug_event('Stats','Not collecting stats less than 50% of song has elapsed','3');
-			return false;
-		}
-
 		$this->set_preferences();
 
 		foreach (Plugin::get_plugins('save_songplay') as $plugin_name) {
