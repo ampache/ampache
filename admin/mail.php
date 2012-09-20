@@ -52,8 +52,8 @@ switch ($_REQUEST['action']) {
 		$mailer = new AmpacheMail();
 
 		// Set the vars on the object
-		$mailer->subject = scrub_in($_REQUEST['subject']);
-		$mailer->message = scrub_in($_REQUEST['message']);
+		$mailer->subject = $_REQUEST['subject'];
+		$mailer->message = $_REQUEST['message'];
 
 		if ($_REQUEST['from'] == 'system') {
 			$mailer->set_default_sender();

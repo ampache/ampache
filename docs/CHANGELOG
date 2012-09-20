@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-future
+        - Removed HTML entity encoding of plaintext email (reported by USMC Guy)
         - Fixed a search issue which prevented the use of multiple tag rules
                 (reported by Istarion)
         - Fixed ASF tag parsing regression (reported by cygn)
