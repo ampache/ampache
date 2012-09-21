@@ -2320,7 +2320,7 @@ class Catalog extends database_object {
 
 			/* Recreate the Playlist */
 			$playlist = new Playlist($playlist_id);
-			$playlist->add_songs($songs);
+			$playlist->add_songs($songs, true);
 			$reason = sprintf(T_ngettext('Playlist Import and Recreate Successful. Total: %d Song',
 			   'Playlist Import and Recreate Successful. Total: %d Songs',
 			   count($songs)), count($songs));

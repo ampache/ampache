@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-future
+        - Playlists imported from M3U now retain their ordering
+            (patch by Florent Fourcot)
         - Removed HTML entity encoding of plaintext email (reported by USMC Guy)
         - Fixed a search issue which prevented the use of multiple tag rules
                 (reported by Istarion)
