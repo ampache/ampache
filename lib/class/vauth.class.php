@@ -515,10 +515,8 @@ class vauth {
 
 	/**
 	 * mysql_auth
-	 * This is the core function of our built-in authentication. It checks 
-	 * their current password and then tries to figure out if it can use the
-	 * new SHA password hash or if it needs to fall back on the old mysql 
-	 * method.
+	 *
+	 * This is the core function of our built-in authentication.
 	 */
 	private static function mysql_auth($username, $password) {
 
@@ -529,13 +527,6 @@ class vauth {
 				"`username`='$username'";
 			$db_results = Dba::read($sql);
 			if ($row = Dba::fetch_assoc($db_results)) {
-
-				// If it's using the old method 
-				if (substr($row['password'], 0, 1) == '*' || 
-					strlen($row['password']) < 32) {
-					$password = Dba::escape(scrub_in($password));
-					return self::vieux_mysql_auth($username, $password);
-				}
 
 				// Use SHA2 now... cooking with fire.
 				// For backwards compatibility, we hash a couple
@@ -569,50 +560,6 @@ class vauth {
 		return $results;
 
 	} // mysql_auth
-
-	/**
- 	 * vieux_mysql_auth
-	 * This is a private function, it should only be called by authenticate
-	 */
-	private static function vieux_mysql_auth($username, $password) {
-
-		$password_check_sql = "PASSWORD('$password')";
-
-		// This has to still be here because lots of people use 
-		// old_password in their config file
-		$sql = "SELECT `password` FROM `user` WHERE `username`='$username'";
-		$db_results = Dba::read($sql);
-		$row = Dba::fetch_assoc($db_results);
-
-		$sql = 'SELECT version()';
-		$db_results = Dba::read($sql);
-		$version = Dba::fetch_row($db_results);
-		$mysql_version = substr(
-			preg_replace("/(\d+)\.(\d+)\.(\d+).*/", "$1$2$3", 
-				$version[0]),
-			0, 3);
-
-		if ($mysql_version > '409' &&
-			substr($row['password'], 0, 1) !== "*") {
-			$password_check_sql = "OLD_PASSWORD('$password')";
-		}
-
-		$sql = "SELECT `username`,`id` FROM `user` WHERE `username`='$username' AND `password`=$password_check_sql";
-		$db_results = Dba::read($sql);
-
-		if (Dba::fetch_assoc($db_results)) {
-			$results['type']	= 'mysql';
-			$results['password']	= 'old';
-			$results['success']	= true;
-		}
-		else {
-			$results['success']	= false;
-			$results['error']	= 'Old MySQL login attempt failed';
-		}
-
-		return $results;
-
-	} // vieux_mysql_auth
 
 	/**
 	 * local_auth

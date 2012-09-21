@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-future
+        - Removed support for extremely old passwords
         - Playlists imported from M3U now retain their ordering
             (patch by Florent Fourcot)
         - Removed HTML entity encoding of plaintext email (reported by USMC Guy)
@@ -11,6 +12,7 @@
                 (reported by Istarion)
         - Fixed ASF tag parsing regression (reported by cygn)
 
+--------------------------------------------------------------------------
   v.3.6-Alpha2 2012-08-15
         - Fixed CLI database load to work regardless of whether it's run from
                 the top-level directory (reported by porthose)
@@ -73,7 +75,6 @@
         - Committed minor bugfixes for Penguin theme
         - Added Fresh theme
         - Fixed spurious API handshake failure output
-
 
 --------------------------------------------------------------------------
   v.3.6-Alpha1 04/27/2011
