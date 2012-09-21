@@ -103,18 +103,24 @@ switch ($_REQUEST['action']) {
 		$catalog = new Catalog();
 		$result = $catalog->import_m3u($filename);
 
-		if($result == false) {
-			$url   = Config::get('web_path') . '/playlist.php?action=show_import_playlist';
-			$title = T_('Playlist Not Imported');
-			$body  = $reason;
-		} else {
-			$url   = Config::get('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id='.$playlist_id;
+		if($result['success']) {
+			$url = 'show_playlist&amp;playlist_id=' . $result['id'];
 			$title = T_('Playlist Imported');
 			$body  = basename($_FILES['filename']['name']);
-			$body .= "<br />";
-			$body .= $reason;
+			$body .= '<br />' .
+				sprintf(
+				T_ngettext(
+				'Successfully imported playlist with %d song.',
+				'Successfully imported playlist with %d songs.',
+				$result['count']),
+				$result['count']);
 		}
-		show_confirmation($title,$body,$url);
+		else {
+			$url = 'show_import_playlist';
+			$title = T_('Playlist Not Imported');
+			$body = T_($result['error']);
+		}
+		show_confirmation($title, $body, Config::get('web_path') . '/playlist.php?action=' . $url);
 	break;
 	case 'set_track_numbers':
 		/* Make sure they have permission */

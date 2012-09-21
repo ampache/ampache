@@ -1245,7 +1245,8 @@ class Catalog extends database_object {
 
 		// Foreach Playlists we found
 		foreach ($this->_playlists as $full_file) {
-			if ($this->import_m3u($full_file)) {
+			$result = $this->import_m3u($full_file);
+			if ($result['success']) {
 				$file = basename($full_file);
 				if ($verbose) {
 					echo "&nbsp;&nbsp;&nbsp;" . T_('Added Playlist From') . " $file . . . .<br />\n";
@@ -2263,7 +2264,6 @@ class Catalog extends database_object {
 	 * listed in the m3u
 	 */
 	public function import_m3u($filename) {
-		global $reason, $playlist_id;
 
 		$m3u_handle = fopen($filename,'r');
 
@@ -2307,30 +2307,34 @@ class Catalog extends database_object {
 
 		} // end foreach line
 
-		debug_event('m3u_parse',"Parsing $filename - Found: " . count($songs) . " Songs",'5');
+		debug_event('m3u_parse', "Parsed $filename, found " . count($songs) . " songs", 5);
 
 		if (count($songs)) {
 			$name = "M3U - " . basename($filename,'.m3u');
 			$playlist_id = Playlist::create($name,'public');
 
 			if (!$playlist_id) {
-				$reason = T_('Playlist creation error.');
-				return false;
+				return array(
+					'success' => false,
+					'error' => 'Failed to create playlist.',
+				);
 			}
 
 			/* Recreate the Playlist */
 			$playlist = new Playlist($playlist_id);
 			$playlist->add_songs($songs, true);
-			$reason = sprintf(T_ngettext('Playlist Import and Recreate Successful. Total: %d Song',
-			   'Playlist Import and Recreate Successful. Total: %d Songs',
-			   count($songs)), count($songs));
-			return true;
+
+			return array(
+				'success' => true,
+				'id' => $playlist_id,
+				'count' => count($songs)
+			);
 		}
-		/* HINT: filename */
-		$reason = sprintf(T_ngettext('Parsing %s - Not Found: %d Song. Please check your m3u file.',
-		   'Parsing %s - Not Found: %d Songs. Please check your m3u file.',
-		   count($songs)), $filename, count($songs));
-		return false;
+
+		return array(
+			'success' => false,
+			'error' => 'No valid songs found in M3U.'
+		);
 
 	} // import_m3u
 
