@@ -172,10 +172,7 @@ class tmpPlaylist extends database_object {
 
 	/**
 	 * get_next_object
-	 * This returns the next object in the tmp_playlist.  Most of the time
-	 * this will just be the top entry, but if there is a base_playlist and
-	 * no items in the playlist then it returns a random entry from the
-	 * base_playlist
+	 * This returns the next object in the tmp_playlist.
 	 */
 	public function get_next_object() {
 
