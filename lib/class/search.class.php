@@ -586,6 +586,34 @@ class Search extends playlist_object {
 		return $results;
 	} // end get_items
 
+	/**
+	 * get_random_items
+	 * return a randomly sorted array (with an optional limit) of the items
+	 * output by our search (part of the playlist interface)
+	 */
+	
+	public function get_random_items($limit = null) {
+		$results = array();
+
+		$sql = $this->to_sql();
+		$sql = $sql['base'] . ' ' . $sql['table_sql'] . ' WHERE ' .
+			$sql['where_sql'];
+
+		$sql .= ' ORDER BY RAND()';
+		$sql .= $limit ? ' LIMIT ' . intval($limit) : '';
+
+		$db_results = Dba::read($sql);
+
+		while ($row = Dba::fetch_assoc($db_results)) {
+			$results[] = array(
+				'object_id' => $row['id'],
+				'type' => $this->searchtype
+			);
+		}
+
+		return $results;
+	}
+
 	/** 
 	 * name_to_basetype
 	 * Iterates over our array of types to find out the basetype for
