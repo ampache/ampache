@@ -47,28 +47,28 @@ if (!include_once(GETID3_INCLUDEPATH.'getid3.lib.php')) {
 class getid3_writetags
 {
 	// public
-	var $filename;                            // absolute filename of file to write tags to
-	var $tagformats         = array();        // array of tag formats to write ('id3v1', 'id3v2.2', 'id2v2.3', 'id3v2.4', 'ape', 'vorbiscomment', 'metaflac', 'real')
-	var $tag_data           = array(array()); // 2-dimensional array of tag data (ex: $data['ARTIST'][0] = 'Elvis')
-	var $tag_encoding       = 'ISO-8859-1';   // text encoding used for tag data ('ISO-8859-1', 'UTF-8', 'UTF-16', 'UTF-16LE', 'UTF-16BE', )
-	var $overwrite_tags     = true;          // if true will erase existing tag data and write only passed data; if false will merge passed data with existing tag data
-	var $remove_other_tags  = false;          // if true will erase remove all existing tags and only write those passed in $tagformats; if false will ignore any tags not mentioned in $tagformats
+	public $filename;                            // absolute filename of file to write tags to
+	public $tagformats         = array();        // array of tag formats to write ('id3v1', 'id3v2.2', 'id2v2.3', 'id3v2.4', 'ape', 'vorbiscomment', 'metaflac', 'real')
+	public $tag_data           = array(array()); // 2-dimensional array of tag data (ex: $data['ARTIST'][0] = 'Elvis')
+	public $tag_encoding       = 'ISO-8859-1';   // text encoding used for tag data ('ISO-8859-1', 'UTF-8', 'UTF-16', 'UTF-16LE', 'UTF-16BE', )
+	public $overwrite_tags     = true;          // if true will erase existing tag data and write only passed data; if false will merge passed data with existing tag data
+	public $remove_other_tags  = false;          // if true will erase remove all existing tags and only write those passed in $tagformats; if false will ignore any tags not mentioned in $tagformats
 
-	var $id3v2_tag_language = 'eng';          // ISO-639-2 3-character language code needed for some ID3v2 frames (http://www.id3.org/iso639-2.html)
-	var $id3v2_paddedlength = 4096;           // minimum length of ID3v2 tags (will be padded to this length if tag data is shorter)
+	public $id3v2_tag_language = 'eng';          // ISO-639-2 3-character language code needed for some ID3v2 frames (http://www.id3.org/iso639-2.html)
+	public $id3v2_paddedlength = 4096;           // minimum length of ID3v2 tags (will be padded to this length if tag data is shorter)
 
-	var $warnings           = array();        // any non-critical errors will be stored here
-	var $errors             = array();        // any critical errors will be stored here
+	public $warnings           = array();        // any non-critical errors will be stored here
+	public $errors             = array();        // any critical errors will be stored here
 
 	// private
-	var $ThisFileInfo; // analysis of file before writing
+	private $ThisFileInfo; // analysis of file before writing
 
-	function getid3_writetags() {
+	public function getid3_writetags() {
 		return true;
 	}
 
 
-	function WriteTags() {
+	public function WriteTags() {
 
 		if (empty($this->filename)) {
 			$this->errors[] = 'filename is undefined in getid3_writetags';
@@ -341,7 +341,7 @@ class getid3_writetags
 	}
 
 
-	function DeleteTags($TagFormatsToDelete) {
+	public function DeleteTags($TagFormatsToDelete) {
 		foreach ($TagFormatsToDelete as $DeleteTagFormat) {
 			$success = false; // overridden if tag deletion is successful
 			switch ($DeleteTagFormat) {
@@ -414,7 +414,7 @@ class getid3_writetags
 	}
 
 
-	function MergeExistingTagData($TagFormat, &$tag_data) {
+	public function MergeExistingTagData($TagFormat, &$tag_data) {
 		// Merge supplied data with existing data, if requested
 		if ($this->overwrite_tags) {
 			// do nothing - ignore previous data
@@ -428,7 +428,7 @@ throw new Exception('$this->overwrite_tags=false is known to be buggy in this ve
 		return true;
 	}
 
-	function FormatDataForAPE() {
+	public function FormatDataForAPE() {
 		$ape_tag_data = array();
 		foreach ($this->tag_data as $tag_key => $valuearray) {
 			switch ($tag_key) {
@@ -455,7 +455,7 @@ throw new Exception('$this->overwrite_tags=false is known to be buggy in this ve
 	}
 
 
-	function FormatDataForID3v1() {
+	public function FormatDataForID3v1() {
 		$tag_data_id3v1['genreid'] = 255;
 		if (!empty($this->tag_data['GENRE'])) {
 			foreach ($this->tag_data['GENRE'] as $key => $value) {
@@ -479,7 +479,7 @@ throw new Exception('$this->overwrite_tags=false is known to be buggy in this ve
 		return $tag_data_id3v1;
 	}
 
-	function FormatDataForID3v2($id3v2_majorversion) {
+	public function FormatDataForID3v2($id3v2_majorversion) {
 		$tag_data_id3v2 = array();
 
 		$ID3v2_text_encoding_lookup[2] = array('ISO-8859-1'=>0, 'UTF-16'=>1);
@@ -565,7 +565,7 @@ throw new Exception('$this->overwrite_tags=false is known to be buggy in this ve
 		return $tag_data_id3v2;
 	}
 
-	function FormatDataForVorbisComment() {
+	public function FormatDataForVorbisComment() {
 		$tag_data_vorbiscomment = $this->tag_data;
 
 		// check for multi-line comment values - split out to multiple comments if neccesary
@@ -594,13 +594,13 @@ throw new Exception('$this->overwrite_tags=false is known to be buggy in this ve
 		return $tag_data_vorbiscomment;
 	}
 
-	function FormatDataForMetaFLAC() {
+	public function FormatDataForMetaFLAC() {
 		// FLAC & OggFLAC use VorbisComments same as OggVorbis
 		// but require metaflac to do the writing rather than vorbiscomment
 		return $this->FormatDataForVorbisComment();
 	}
 
-	function FormatDataForReal() {
+	public function FormatDataForReal() {
 		$tag_data_real['title']     = getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['TITLE']    ) ? $this->tag_data['TITLE']     : array())));
 		$tag_data_real['artist']    = getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['ARTIST']   ) ? $this->tag_data['ARTIST']    : array())));
 		$tag_data_real['copyright'] = getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['COPYRIGHT']) ? $this->tag_data['COPYRIGHT'] : array())));
@@ -611,5 +611,3 @@ throw new Exception('$this->overwrite_tags=false is known to be buggy in this ve
 	}
 
 }
-
-?>

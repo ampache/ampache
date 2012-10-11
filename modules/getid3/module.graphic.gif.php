@@ -17,7 +17,7 @@
 class getid3_gif extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		$info['fileformat']                  = 'gif';
@@ -167,7 +167,7 @@ class getid3_gif extends getid3_handler
 	}
 
 
-	function GetLSBits($bits) {
+	public function GetLSBits($bits) {
 		static $bitbuffer = '';
 		while (strlen($bitbuffer) < $bits) {
 			$bitbuffer = str_pad(decbin(ord(fread($this->getid3->fp, 1))), 8, '0', STR_PAD_LEFT).$bitbuffer;
@@ -179,6 +179,3 @@ class getid3_gif extends getid3_handler
 	}
 
 }
-
-
-?>

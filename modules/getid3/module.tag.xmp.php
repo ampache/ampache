@@ -37,21 +37,21 @@ class Image_XMP
 	* The name of the image file that contains the XMP fields to extract and modify.
 	* @see Image_XMP()
 	*/
-	var $_sFilename = null;
+	public $_sFilename = null;
 
 	/**
 	* @var array
 	* The XMP fields that were extracted from the image or updated by this class.
 	* @see getAllTags()
 	*/
-	var $_aXMP = array();
+	public $_aXMP = array();
 
 	/**
 	* @var boolean
 	* True if an APP1 segment was found to contain XMP metadata.
 	* @see isValid()
 	*/
-	var $_bXMPParse = false;
+	public $_bXMPParse = false;
 
 	/**
 	* Returns the status of XMP parsing during instantiation
@@ -61,7 +61,7 @@ class Image_XMP
 	* @return boolean
 	* Returns true if an APP1 segment was found to contain XMP metadata.
 	*/
-	function isValid()
+	public function isValid()
 	{
 		return $this->_bXMPParse;
 	}
@@ -71,7 +71,7 @@ class Image_XMP
 	*
 	* @return array - An array of XMP fields as it extracted by the XMPparse() function
 	*/
-	function getAllTags()
+	public function getAllTags()
 	{
 		return $this->_aXMP;
 	}
@@ -83,7 +83,7 @@ class Image_XMP
 	* @return array $headerdata - Array of JPEG header segments
 	* @return boolean FALSE - if headers could not be read
 	*/
-	function _get_jpeg_header_data($filename)
+	public function _get_jpeg_header_data($filename)
 	{
 		// prevent refresh from aborting file operations and hosing file
 		ignore_user_abort(true);
@@ -193,7 +193,7 @@ class Image_XMP
 	* @return string $xmp_data - the string of raw XML text
 	* @return boolean FALSE - if an APP 1 XMP segment could not be found, or if an error occured
 	*/
-	function _get_XMP_text($filename)
+	public function _get_XMP_text($filename)
 	{
 		//Get JPEG header data
 		$jpeg_header_data = $this->_get_jpeg_header_data($filename);
@@ -226,7 +226,7 @@ class Image_XMP
 	* @return array $xmp_array - an array containing all xmp details retrieved.
 	* @return boolean FALSE - couldn't parse the XMP data
 	*/
-	function read_XMP_array_from_text($xmltext)
+	public function read_XMP_array_from_text($xmltext)
 	{
 		// Check if there actually is any text to parse
 		if (trim($xmltext) == '')
@@ -302,7 +302,8 @@ class Image_XMP
 								foreach (array_keys($xml_elem['attributes']) as $key)
 								{
 									// Check whether we want this details from this attribute
-									if (in_array($key, $GLOBALS['XMP_tag_captions']))
+//									if (in_array($key, $GLOBALS['XMP_tag_captions']))
+									if (true)
 									{
 										// Attribute wanted
 										$xmp_array[$key] = $xml_elem['attributes'][$key];
@@ -359,7 +360,8 @@ class Image_XMP
 
 				default:
 					// Check whether we want the details from this attribute
-					if (in_array($xml_elem['tag'], $GLOBALS['XMP_tag_captions']))
+//					if (in_array($xml_elem['tag'], $GLOBALS['XMP_tag_captions']))
+					if (true)
 					{
 						switch ($xml_elem['type'])
 						{
@@ -375,7 +377,7 @@ class Image_XMP
 
 							case 'complete':
 								// store attribute value
-								$xmp_array[$xml_elem['tag']] = (isset($xml_elem['value']) ? $xml_elem['value'] : '');
+								$xmp_array[$xml_elem['tag']] = (isset($xml_elem['attributes']) ? $xml_elem['attributes'] : (isset($xml_elem['value']) ? $xml_elem['value'] : ''));
 								break;
 
 							case 'cdata':
@@ -396,7 +398,7 @@ class Image_XMP
 	*
 	* @param string - Name of the image file to access and extract XMP information from.
 	*/
-	function Image_XMP($sFilename)
+	public function Image_XMP($sFilename)
 	{
 		$this->_sFilename = $sFilename;
 
@@ -420,6 +422,7 @@ class Image_XMP
 * The Property names of all known XMP fields.
 * Note: this is a full list with unrequired properties commented out.
 */
+/*
 $GLOBALS['XMP_tag_captions'] = array(
 // IPTC Core
 	'Iptc4xmpCore:CiAdrCity',
@@ -688,7 +691,7 @@ $GLOBALS['XMP_tag_captions'] = array(
 	'exif:Rows',
 	'exif:Settings',
 );
-
+*/
 
 /**
 * Global Variable: JPEG_Segment_Names
@@ -762,5 +765,3 @@ $GLOBALS['JPEG_Segment_Names'] = array(
 	0xFD => 'JPG13',
 	0xFE => 'COM',
 );
-
-?>

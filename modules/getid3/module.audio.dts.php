@@ -16,6 +16,7 @@
 
 class getid3_dts extends getid3_handler
 {
+    const syncword = "\x7F\xFE\x80\x01";
 
 	public function Analyze() {
 		$info = &$this->getid3->info;
@@ -26,18 +27,21 @@ class getid3_dts extends getid3_handler
 
 		$info['fileformat'] = 'dts';
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$DTSheader = fread($this->getid3->fp, 16);
-		$info['dts']['raw']['magic'] = substr($DTSheader, 0, 4);
+		$this->fseek($info['avdataoffset']);
+		$DTSheader = $this->fread(16);
 
-		$magic = "\x7F\xFE\x80\x01";
-		if ($info['dts']['raw']['magic'] != $magic) {
-			$info['error'][] = 'Expecting "'.getid3_lib::PrintHexBytes($magic).'" at offset '.$info['avdataoffset'].', found "'.getid3_lib::PrintHexBytes($info['dts']['raw']['magic']).'"';
-			unset($info['fileformat'], $info['dts']);
-			return false;
+		if (strpos($DTSheader, self::syncword) === 0) {
+			$info['dts']['raw']['magic'] = self::syncword;
+			$offset = 4;
+		} else {
+			if (!$this->isDependencyFor('matroska')) {
+				unset($info['fileformat']);
+				return $this->error('Expecting "'.getid3_lib::PrintHexBytes(self::syncword).'" at offset '.$info['avdataoffset'].', found "'.getid3_lib::PrintHexBytes(substr($DTSheader, 0, 4)).'"');
+			}
+			$offset = 0;
 		}
 
-		$fhBS = getid3_lib::BigEndian2Bin(substr($DTSheader,  4,  12));
+		$fhBS = getid3_lib::BigEndian2Bin(substr($DTSheader, $offset,  12));
 		$bsOffset = 0;
 		$info['dts']['raw']['frame_type']             =        $this->readBinData($fhBS, $bsOffset,  1);
 		$info['dts']['raw']['deficit_samples']        =        $this->readBinData($fhBS, $bsOffset,  5);
@@ -70,14 +74,14 @@ class getid3_dts extends getid3_handler
 		$info['dts']['raw']['dialog_normalization']   =        $this->readBinData($fhBS, $bsOffset,  4);
 
 
-		$info['dts']['bitrate']              = self::DTSbitrateLookup($info['dts']['raw']['bitrate']);
-		$info['dts']['bits_per_sample']      = self::DTSbitPerSampleLookup($info['dts']['raw']['bits_per_sample']);
-		$info['dts']['sample_rate']          = self::DTSsampleRateLookup($info['dts']['raw']['sample_frequency']);
-		$info['dts']['dialog_normalization'] = self::DTSdialogNormalization($info['dts']['raw']['dialog_normalization'], $info['dts']['raw']['encoder_soft_version']);
+		$info['dts']['bitrate']              = self::bitrateLookup($info['dts']['raw']['bitrate']);
+		$info['dts']['bits_per_sample']      = self::bitPerSampleLookup($info['dts']['raw']['bits_per_sample']);
+		$info['dts']['sample_rate']          = self::sampleRateLookup($info['dts']['raw']['sample_frequency']);
+		$info['dts']['dialog_normalization'] = self::dialogNormalization($info['dts']['raw']['dialog_normalization'], $info['dts']['raw']['encoder_soft_version']);
 		$info['dts']['flags']['lossless']    = (($info['dts']['raw']['bitrate'] == 31) ? true  : false);
 		$info['dts']['bitrate_mode']         = (($info['dts']['raw']['bitrate'] == 30) ? 'vbr' : 'cbr');
-		$info['dts']['channels']             = self::DTSnumChannelsLookup($info['dts']['raw']['channel_arrangement']);
-		$info['dts']['channel_arrangement']  = self::DTSchannelArrangementLookup($info['dts']['raw']['channel_arrangement']);
+		$info['dts']['channels']             = self::numChannelsLookup($info['dts']['raw']['channel_arrangement']);
+		$info['dts']['channel_arrangement']  = self::channelArrangementLookup($info['dts']['raw']['channel_arrangement']);
 
 		$info['audio']['dataformat']          = 'dts';
 		$info['audio']['lossless']            = $info['dts']['flags']['lossless'];
@@ -99,8 +103,8 @@ class getid3_dts extends getid3_handler
 		return bindec($data);
 	}
 
-	private static function DTSbitrateLookup($index) {
-		$DTSbitrateLookup = array(
+	public static function bitrateLookup($index) {
+		static $lookup = array(
 			0  => 32000,
 			1  => 56000,
 			2  => 64000,
@@ -132,13 +136,13 @@ class getid3_dts extends getid3_handler
 			28 => 3840000,
 			29 => 'open',
 			30 => 'variable',
-			31 => 'lossless'
+			31 => 'lossless',
 		);
-		return (isset($DTSbitrateLookup[$index]) ? $DTSbitrateLookup[$index] : false);
+		return (isset($lookup[$index]) ? $lookup[$index] : false);
 	}
 
-	private static function DTSsampleRateLookup($index) {
-		$DTSsampleRateLookup = array(
+	public static function sampleRateLookup($index) {
+		static $lookup = array(
 			0  => 'invalid',
 			1  => 8000,
 			2  => 16000,
@@ -154,22 +158,22 @@ class getid3_dts extends getid3_handler
 			12 => 24000,
 			13 => 48000,
 			14 => 'invalid',
-			15 => 'invalid'
+			15 => 'invalid',
 		);
-		return (isset($DTSsampleRateLookup[$index]) ? $DTSsampleRateLookup[$index] : false);
+		return (isset($lookup[$index]) ? $lookup[$index] : false);
 	}
 
-	private static function DTSbitPerSampleLookup($index) {
-		$DTSbitPerSampleLookup = array(
+	public static function bitPerSampleLookup($index) {
+		static $lookup = array(
 			0  => 16,
 			1  => 20,
 			2  => 24,
 			3  => 24,
 		);
-		return (isset($DTSbitPerSampleLookup[$index]) ? $DTSbitPerSampleLookup[$index] : false);
+		return (isset($lookup[$index]) ? $lookup[$index] : false);
 	}
 
-	private static function DTSnumChannelsLookup($index) {
+	public static function numChannelsLookup($index) {
 		switch ($index) {
 			case 0:
 				return 1;
@@ -207,8 +211,8 @@ class getid3_dts extends getid3_handler
 		return false;
 	}
 
-	private static function DTSchannelArrangementLookup($index) {
-		$DTSchannelArrangementLookup = array(
+	public static function channelArrangementLookup($index) {
+		static $lookup = array(
 			0  => 'A',
 			1  => 'A + B (dual mono)',
 			2  => 'L + R (stereo)',
@@ -226,10 +230,10 @@ class getid3_dts extends getid3_handler
 			14 => 'CL + CR + L + R + SL1 + SL2 + SR1 + SR2',
 			15 => 'CL + C+ CR + L + R + SL + S + SR',
 		);
-		return (isset($DTSchannelArrangementLookup[$index]) ? $DTSchannelArrangementLookup[$index] : 'user-defined');
+		return (isset($lookup[$index]) ? $lookup[$index] : 'user-defined');
 	}
 
-	private static function DTSdialogNormalization($index, $version) {
+	public static function dialogNormalization($index, $version) {
 		switch ($version) {
 			case 7:
 				return 0 - $index;
@@ -242,5 +246,3 @@ class getid3_dts extends getid3_handler
 	}
 
 }
-
-?>

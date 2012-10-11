@@ -17,16 +17,16 @@
 class getid3_write_vorbiscomment
 {
 
-	var $filename;
-	var $tag_data;
-	var $warnings = array(); // any non-critical errors will be stored here
-	var $errors   = array(); // any critical errors will be stored here
+	public $filename;
+	public $tag_data;
+	public $warnings = array(); // any non-critical errors will be stored here
+	public $errors   = array(); // any critical errors will be stored here
 
-	function getid3_write_vorbiscomment() {
+	public function getid3_write_vorbiscomment() {
 		return true;
 	}
 
-	function WriteVorbisComment() {
+	public function WriteVorbisComment() {
 
 		if (preg_match('#(1|ON)#i', ini_get('safe_mode'))) {
 			$this->errors[] = 'PHP running in Safe Mode (backtick operator not available) - cannot call vorbiscomment, tags not written';
@@ -99,12 +99,12 @@ class getid3_write_vorbiscomment
 		return true;
 	}
 
-	function DeleteVorbisComment() {
+	public function DeleteVorbisComment() {
 		$this->tag_data = array(array());
 		return $this->WriteVorbisComment();
 	}
 
-	function CleanVorbisCommentName($originalcommentname) {
+	public function CleanVorbisCommentName($originalcommentname) {
 		// A case-insensitive field name that may consist of ASCII 0x20 through 0x7D, 0x3D ('=') excluded.
 		// ASCII 0x41 through 0x5A inclusive (A-Z) is to be considered equivalent to ASCII 0x61 through
 		// 0x7A inclusive (a-z).
@@ -117,5 +117,3 @@ class getid3_write_vorbiscomment
 	}
 
 }
-
-?>

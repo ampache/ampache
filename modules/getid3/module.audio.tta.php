@@ -17,7 +17,7 @@
 class getid3_tta extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		$info['fileformat']            = 'tta';
@@ -77,7 +77,7 @@ class getid3_tta extends getid3_handler
 				$info['tta']['major_version'] = 3;
 				$info['avdataoffset'] += 26;
 
-				$info['tta']['audio_format']        = getid3_lib::LittleEndian2Int(substr($ttaheader,  4,  2)); // getid3_riff::RIFFwFormatTagLookup()
+				$info['tta']['audio_format']        = getid3_lib::LittleEndian2Int(substr($ttaheader,  4,  2)); // getid3_riff::wFormatTagLookup()
 				$info['tta']['channels']            = getid3_lib::LittleEndian2Int(substr($ttaheader,  6,  2));
 				$info['tta']['bits_per_sample']     = getid3_lib::LittleEndian2Int(substr($ttaheader,  8,  2));
 				$info['tta']['sample_rate']         = getid3_lib::LittleEndian2Int(substr($ttaheader, 10,  4));
@@ -104,6 +104,3 @@ class getid3_tta extends getid3_handler
 	}
 
 }
-
-
-?>

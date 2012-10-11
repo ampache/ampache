@@ -17,7 +17,7 @@
 class getid3_tiff extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
@@ -182,7 +182,7 @@ class getid3_tiff extends getid3_handler
 	}
 
 
-	function TIFFendian2Int($bytestring, $byteorder) {
+	public function TIFFendian2Int($bytestring, $byteorder) {
 		if ($byteorder == 'Intel') {
 			return getid3_lib::LittleEndian2Int($bytestring);
 		} elseif ($byteorder == 'Motorola') {
@@ -191,7 +191,7 @@ class getid3_tiff extends getid3_handler
 		return false;
 	}
 
-	function TIFFcompressionMethod($id) {
+	public function TIFFcompressionMethod($id) {
 		static $TIFFcompressionMethod = array();
 		if (empty($TIFFcompressionMethod)) {
 			$TIFFcompressionMethod = array(
@@ -205,7 +205,7 @@ class getid3_tiff extends getid3_handler
 		return (isset($TIFFcompressionMethod[$id]) ? $TIFFcompressionMethod[$id] : 'unknown/invalid ('.$id.')');
 	}
 
-	function TIFFcommentName($id) {
+	public function TIFFcommentName($id) {
 		static $TIFFcommentName = array();
 		if (empty($TIFFcommentName)) {
 			$TIFFcommentName = array(
@@ -222,6 +222,3 @@ class getid3_tiff extends getid3_handler
 	}
 
 }
-
-
-?>

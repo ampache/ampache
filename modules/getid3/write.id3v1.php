@@ -17,17 +17,17 @@ getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.tag.id3v1.php', __FILE_
 
 class getid3_write_id3v1
 {
-	var $filename;
-	var $filesize;
-	var $tag_data;
-	var $warnings = array(); // any non-critical errors will be stored here
-	var $errors   = array(); // any critical errors will be stored here
+	public $filename;
+	public $filesize;
+	public $tag_data;
+	public $warnings = array(); // any non-critical errors will be stored here
+	public $errors   = array(); // any critical errors will be stored here
 
-	function getid3_write_id3v1() {
+	public function getid3_write_id3v1() {
 		return true;
 	}
 
-	function WriteID3v1() {
+	public function WriteID3v1() {
 		// File MUST be writeable - CHMOD(646) at least
 		if (!empty($this->filename) && is_readable($this->filename) && is_writable($this->filename) && is_file($this->filename)) {
 			$this->setRealFileSize();
@@ -65,7 +65,7 @@ class getid3_write_id3v1
 		return false;
 	}
 
-	function FixID3v1Padding() {
+	public function FixID3v1Padding() {
 		// ID3v1 data is supposed to be padded with NULL characters, but some taggers incorrectly use spaces
 		// This function rewrites the ID3v1 tag with correct padding
 
@@ -87,7 +87,7 @@ class getid3_write_id3v1
 		return false;
 	}
 
-	function RemoveID3v1() {
+	public function RemoveID3v1() {
 		// File MUST be writeable - CHMOD(646) at least
 		if (!empty($this->filename) && is_readable($this->filename) && is_writable($this->filename) && is_file($this->filename)) {
 			$this->setRealFileSize();
@@ -115,7 +115,7 @@ class getid3_write_id3v1
 		return false;
 	}
 
-	function setRealFileSize() {
+	public function setRealFileSize() {
 		if (PHP_INT_MAX > 2147483647) {
 			$this->filesize = filesize($this->filename);
 			return true;
@@ -134,5 +134,3 @@ class getid3_write_id3v1
 	}
 
 }
-
-?>

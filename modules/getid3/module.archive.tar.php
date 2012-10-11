@@ -22,7 +22,7 @@
 class getid3_tar extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		$info['fileformat'] = 'tar';
@@ -96,13 +96,13 @@ class getid3_tar extends getid3_handler
 			$info['tar']['file_details'][$name] = array (
 				'name'     => $name,
 				'mode_raw' => $mode,
-				'mode'     => getid3_tar::display_perms($mode),
+				'mode'     => self::display_perms($mode),
 				'uid'      => $uid,
 				'gid'      => $gid,
 				'size'     => $size,
 				'mtime'    => $mtime,
 				'chksum'   => $chksum,
-				'typeflag' => getid3_tar::get_flag_type($typflag),
+				'typeflag' => self::get_flag_type($typflag),
 				'linkname' => $lnkname,
 				'magic'    => $magic,
 				'version'  => $ver,
@@ -117,7 +117,7 @@ class getid3_tar extends getid3_handler
 	}
 
 	// Parses the file mode to file permissions
-	function display_perms($mode) {
+	public function display_perms($mode) {
 		// Determine Type
 		if     ($mode & 0x1000) $type='p'; // FIFO pipe
 		elseif ($mode & 0x2000) $type='c'; // Character special
@@ -152,7 +152,7 @@ class getid3_tar extends getid3_handler
 	}
 
 	// Converts the file type
-	function get_flag_type($typflag) {
+	public function get_flag_type($typflag) {
 		static $flag_types = array(
 			'0' => 'LF_NORMAL',
 			'1' => 'LF_LINK',
@@ -174,5 +174,3 @@ class getid3_tar extends getid3_handler
 	}
 
 }
-
-?>

@@ -73,7 +73,7 @@ class getID3_cached_dbm extends getID3
 {
 
 	// public: constructor - see top of this file for cache type and cache_options
-	function getID3_cached_dbm($cache_type, $dbm_filename, $lock_filename) {
+	public function getID3_cached_dbm($cache_type, $dbm_filename, $lock_filename) {
 
 		// Check for dba extension
 		if (!extension_loaded('dba')) {
@@ -140,8 +140,8 @@ class getID3_cached_dbm extends getID3
 
 
 
-	// public: destuctor
-	function __destruct() {
+	// public: destructor
+	public function __destruct() {
 
 		// Close dbm file
 		dba_close($this->dba);
@@ -156,7 +156,7 @@ class getID3_cached_dbm extends getID3
 
 
 	// public: clear cache
-	function clear_cache() {
+	public function clear_cache() {
 
 		// Close dbm file
 		dba_close($this->dba);
@@ -178,7 +178,7 @@ class getID3_cached_dbm extends getID3
 
 
 	// public: analyze file
-	function analyze($filename) {
+	public function analyze($filename) {
 
 		if (file_exists($filename)) {
 
@@ -206,6 +206,3 @@ class getID3_cached_dbm extends getID3
 	}
 
 }
-
-
-?>

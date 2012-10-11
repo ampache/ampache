@@ -17,7 +17,7 @@
 class getid3_lyrics3 extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		// http://www.volweb.cz/str/tags.htm
@@ -122,7 +122,7 @@ class getid3_lyrics3 extends getid3_handler
 		return true;
 	}
 
-	function getLyrics3Data($endoffset, $version, $length) {
+	public function getLyrics3Data($endoffset, $version, $length) {
 		// http://www.volweb.cz/str/tags.htm
 
 		$info = &$this->getid3->info;
@@ -246,14 +246,14 @@ class getid3_lyrics3 extends getid3_handler
 		return true;
 	}
 
-	function Lyrics3Timestamp2Seconds($rawtimestamp) {
+	public function Lyrics3Timestamp2Seconds($rawtimestamp) {
 		if (preg_match('#^\\[([0-9]{2}):([0-9]{2})\\]$#', $rawtimestamp, $regs)) {
 			return (int) (($regs[1] * 60) + $regs[2]);
 		}
 		return false;
 	}
 
-	function Lyrics3LyricsTimestampParse(&$Lyrics3data) {
+	public function Lyrics3LyricsTimestampParse(&$Lyrics3data) {
 		$lyricsarray = explode("\r\n", $Lyrics3data['raw']['LYR']);
 		foreach ($lyricsarray as $key => $lyricline) {
 			$regs = array();
@@ -283,7 +283,7 @@ class getid3_lyrics3 extends getid3_handler
 		return true;
 	}
 
-	function IntString2Bool($char) {
+	public function IntString2Bool($char) {
 		if ($char == '1') {
 			return true;
 		} elseif ($char == '0') {
@@ -292,6 +292,3 @@ class getid3_lyrics3 extends getid3_handler
 		return null;
 	}
 }
-
-
-?>

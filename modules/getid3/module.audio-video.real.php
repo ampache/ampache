@@ -18,7 +18,7 @@ getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.audio-video.riff.php', 
 class getid3_real extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		$info['fileformat']       = 'real';
@@ -202,7 +202,7 @@ class getid3_real extends getid3_handler
 								//$thisfile_real_chunks_currentchunk_videoinfo['unknown8']          = getid3_lib::BigEndian2Int(substr($thisfile_real_chunks_currentchunk_typespecificdata, 34, 2));
 								//$thisfile_real_chunks_currentchunk_videoinfo['unknown9']          = getid3_lib::BigEndian2Int(substr($thisfile_real_chunks_currentchunk_typespecificdata, 36, 2));
 
-								$thisfile_real_chunks_currentchunk_videoinfo['codec'] = getid3_riff::RIFFfourccLookup($thisfile_real_chunks_currentchunk_videoinfo['fourcc2']);
+								$thisfile_real_chunks_currentchunk_videoinfo['codec'] = getid3_riff::fourccLookup($thisfile_real_chunks_currentchunk_videoinfo['fourcc2']);
 
 								$info['video']['resolution_x']    =         $thisfile_real_chunks_currentchunk_videoinfo['width'];
 								$info['video']['resolution_y']    =         $thisfile_real_chunks_currentchunk_videoinfo['height'];
@@ -370,7 +370,7 @@ class getid3_real extends getid3_handler
 	}
 
 
-	function ParseOldRAheader($OldRAheaderData, &$ParsedArray) {
+	public function ParseOldRAheader($OldRAheaderData, &$ParsedArray) {
 		// http://www.freelists.org/archives/matroska-devel/07-2003/msg00010.html
 
 		$ParsedArray = array();
@@ -484,7 +484,7 @@ class getid3_real extends getid3_handler
 		return true;
 	}
 
-	function RealAudioCodecFourCClookup($fourcc, $bitrate) {
+	public function RealAudioCodecFourCClookup($fourcc, $bitrate) {
 		static $RealAudioCodecFourCClookup = array();
 		if (empty($RealAudioCodecFourCClookup)) {
 			// http://www.its.msstate.edu/net/real/reports/config/tags.stats
@@ -525,6 +525,3 @@ class getid3_real extends getid3_handler
 	}
 
 }
-
-
-?>

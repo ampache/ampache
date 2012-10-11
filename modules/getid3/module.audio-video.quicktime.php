@@ -18,10 +18,10 @@ getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.audio.mp3.php', __FILE_
 class getid3_quicktime extends getid3_handler
 {
 
-	var $ReturnAtomData        = true;
-	var $ParseAllPossibleAtoms = false;
+	public $ReturnAtomData        = true;
+	public $ParseAllPossibleAtoms = false;
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		$info['fileformat'] = 'quicktime';
@@ -165,7 +165,7 @@ class getid3_quicktime extends getid3_handler
 		return true;
 	}
 
-	function QuicktimeParseAtom($atomname, $atomsize, $atom_data, $baseoffset, &$atomHierarchy, $ParseAllPossibleAtoms) {
+	public function QuicktimeParseAtom($atomname, $atomsize, $atom_data, $baseoffset, &$atomHierarchy, $ParseAllPossibleAtoms) {
 		// http://developer.apple.com/techpubs/quicktime/qtdevdocs/APIREF/INDEX/atomalphaindex.htm
 
 		$info = &$this->getid3->info;
@@ -382,6 +382,13 @@ class getid3_quicktime extends getid3_handler
 							$boxsize = getid3_lib::BigEndian2Int(substr($atom_data, $atomoffset, 4));
 							$boxtype =                           substr($atom_data, $atomoffset + 4, 4);
 							$boxdata =                           substr($atom_data, $atomoffset + 8, $boxsize - 8);
+							if ($boxsize <= 1) {
+								$info['warning'][] = 'Invalid QuickTime atom box size "'.$boxsize.'" in atom "'.$atomname.'" at offset: '.($atom_structure['offset'] + $atomoffset);
+								$atom_structure['data'] = null;
+								$atomoffset = strlen($atom_data);
+								break;
+							}
+							$atomoffset += $boxsize;
 
 							switch ($boxtype) {
 								case 'mean':
@@ -458,7 +465,6 @@ class getid3_quicktime extends getid3_handler
 									$atom_structure['data'] = $atom_data;
 
 							}
-							$atomoffset += $boxsize;
 						}
 					}
 				}
@@ -1144,9 +1150,10 @@ class getid3_quicktime extends getid3_handler
 					$info['quicktime']['video']['resolution_x'] = $info['video']['resolution_x'];
 					$info['quicktime']['video']['resolution_y'] = $info['video']['resolution_y'];
 				} else {
-					if (isset($info['video']['resolution_x'])) { unset($info['video']['resolution_x']); }
-					if (isset($info['video']['resolution_y'])) { unset($info['video']['resolution_y']); }
-					if (isset($info['quicktime']['video']))    { unset($info['quicktime']['video']);    }
+					// see: http://www.getid3.org/phpBB3/viewtopic.php?t=1295
+					//if (isset($info['video']['resolution_x'])) { unset($info['video']['resolution_x']); }
+					//if (isset($info['video']['resolution_y'])) { unset($info['video']['resolution_y']); }
+					//if (isset($info['quicktime']['video']))    { unset($info['quicktime']['video']);    }
 				}
 				break;
 
@@ -1328,7 +1335,7 @@ class getid3_quicktime extends getid3_handler
 				break;
 
 			default:
-				$info['warning'][] = 'Unknown QuickTime atom type: "'.getid3_lib::PrintHexBytes($atomname).'" at offset '.$baseoffset;
+				$info['warning'][] = 'Unknown QuickTime atom type: "'.$atomname.'" ('.trim(getid3_lib::PrintHexBytes($atomname)).') at offset '.$baseoffset;
 				$atom_structure['data'] = $atom_data;
 				break;
 		}
@@ -1336,7 +1343,7 @@ class getid3_quicktime extends getid3_handler
 		return $atom_structure;
 	}
 
-	function QuicktimeParseContainerAtom($atom_data, $baseoffset, &$atomHierarchy, $ParseAllPossibleAtoms) {
+	public function QuicktimeParseContainerAtom($atom_data, $baseoffset, &$atomHierarchy, $ParseAllPossibleAtoms) {
 //echo 'QuicktimeParseContainerAtom('.substr($atom_data, 4, 4).') @ '.$baseoffset.'<br><br>';
 		$atom_structure  = false;
 		$subatomoffset  = 0;
@@ -1364,7 +1371,7 @@ class getid3_quicktime extends getid3_handler
 	}
 
 
-	function quicktime_read_mp4_descr_length($data, &$offset) {
+	public function quicktime_read_mp4_descr_length($data, &$offset) {
 		// http://libquicktime.sourcearchive.com/documentation/2:1.0.2plus-pdebian-2build1/esds_8c-source.html
 		$num_bytes = 0;
 		$length    = 0;
@@ -1376,7 +1383,7 @@ class getid3_quicktime extends getid3_handler
 	}
 
 
-	function QuicktimeLanguageLookup($languageid) {
+	public function QuicktimeLanguageLookup($languageid) {
 		static $QuicktimeLanguageLookup = array();
 		if (empty($QuicktimeLanguageLookup)) {
 			$QuicktimeLanguageLookup[0]   = 'English';
@@ -1493,7 +1500,7 @@ class getid3_quicktime extends getid3_handler
 		return (isset($QuicktimeLanguageLookup[$languageid]) ? $QuicktimeLanguageLookup[$languageid] : 'invalid');
 	}
 
-	function QuicktimeVideoCodecLookup($codecid) {
+	public function QuicktimeVideoCodecLookup($codecid) {
 		static $QuicktimeVideoCodecLookup = array();
 		if (empty($QuicktimeVideoCodecLookup)) {
 			$QuicktimeVideoCodecLookup['.SGI'] = 'SGI';
@@ -1552,7 +1559,7 @@ class getid3_quicktime extends getid3_handler
 		return (isset($QuicktimeVideoCodecLookup[$codecid]) ? $QuicktimeVideoCodecLookup[$codecid] : '');
 	}
 
-	function QuicktimeAudioCodecLookup($codecid) {
+	public function QuicktimeAudioCodecLookup($codecid) {
 		static $QuicktimeAudioCodecLookup = array();
 		if (empty($QuicktimeAudioCodecLookup)) {
 			$QuicktimeAudioCodecLookup['.mp3']          = 'Fraunhofer MPEG Layer-III alias';
@@ -1597,7 +1604,7 @@ class getid3_quicktime extends getid3_handler
 		return (isset($QuicktimeAudioCodecLookup[$codecid]) ? $QuicktimeAudioCodecLookup[$codecid] : '');
 	}
 
-	function QuicktimeDCOMLookup($compressionid) {
+	public function QuicktimeDCOMLookup($compressionid) {
 		static $QuicktimeDCOMLookup = array();
 		if (empty($QuicktimeDCOMLookup)) {
 			$QuicktimeDCOMLookup['zlib'] = 'ZLib Deflate';
@@ -1606,7 +1613,7 @@ class getid3_quicktime extends getid3_handler
 		return (isset($QuicktimeDCOMLookup[$compressionid]) ? $QuicktimeDCOMLookup[$compressionid] : '');
 	}
 
-	function QuicktimeColorNameLookup($colordepthid) {
+	public function QuicktimeColorNameLookup($colordepthid) {
 		static $QuicktimeColorNameLookup = array();
 		if (empty($QuicktimeColorNameLookup)) {
 			$QuicktimeColorNameLookup[1]  = '2-color (monochrome)';
@@ -1624,7 +1631,7 @@ class getid3_quicktime extends getid3_handler
 		return (isset($QuicktimeColorNameLookup[$colordepthid]) ? $QuicktimeColorNameLookup[$colordepthid] : 'invalid');
 	}
 
-	function QuicktimeSTIKLookup($stik) {
+	public function QuicktimeSTIKLookup($stik) {
 		static $QuicktimeSTIKLookup = array();
 		if (empty($QuicktimeSTIKLookup)) {
 			$QuicktimeSTIKLookup[0]  = 'Movie';
@@ -1641,7 +1648,7 @@ class getid3_quicktime extends getid3_handler
 		return (isset($QuicktimeSTIKLookup[$stik]) ? $QuicktimeSTIKLookup[$stik] : 'invalid');
 	}
 
-	function QuicktimeIODSaudioProfileName($audio_profile_id) {
+	public function QuicktimeIODSaudioProfileName($audio_profile_id) {
 		static $QuicktimeIODSaudioProfileNameLookup = array();
 		if (empty($QuicktimeIODSaudioProfileNameLookup)) {
 			$QuicktimeIODSaudioProfileNameLookup = array(
@@ -1701,7 +1708,7 @@ class getid3_quicktime extends getid3_handler
 	}
 
 
-	function QuicktimeIODSvideoProfileName($video_profile_id) {
+	public function QuicktimeIODSvideoProfileName($video_profile_id) {
 		static $QuicktimeIODSvideoProfileNameLookup = array();
 		if (empty($QuicktimeIODSvideoProfileNameLookup)) {
 			$QuicktimeIODSvideoProfileNameLookup = array(
@@ -1773,7 +1780,7 @@ class getid3_quicktime extends getid3_handler
 	}
 
 
-	function QuicktimeContentRatingLookup($rtng) {
+	public function QuicktimeContentRatingLookup($rtng) {
 		static $QuicktimeContentRatingLookup = array();
 		if (empty($QuicktimeContentRatingLookup)) {
 			$QuicktimeContentRatingLookup[0]  = 'None';
@@ -1783,7 +1790,7 @@ class getid3_quicktime extends getid3_handler
 		return (isset($QuicktimeContentRatingLookup[$rtng]) ? $QuicktimeContentRatingLookup[$rtng] : 'invalid');
 	}
 
-	function QuicktimeStoreAccountTypeLookup($akid) {
+	public function QuicktimeStoreAccountTypeLookup($akid) {
 		static $QuicktimeStoreAccountTypeLookup = array();
 		if (empty($QuicktimeStoreAccountTypeLookup)) {
 			$QuicktimeStoreAccountTypeLookup[0] = 'iTunes';
@@ -1792,7 +1799,7 @@ class getid3_quicktime extends getid3_handler
 		return (isset($QuicktimeStoreAccountTypeLookup[$akid]) ? $QuicktimeStoreAccountTypeLookup[$akid] : 'invalid');
 	}
 
-	function QuicktimeStoreFrontCodeLookup($sfid) {
+	public function QuicktimeStoreFrontCodeLookup($sfid) {
 		static $QuicktimeStoreFrontCodeLookup = array();
 		if (empty($QuicktimeStoreFrontCodeLookup)) {
 			$QuicktimeStoreFrontCodeLookup[143460] = 'Australia';
@@ -1821,7 +1828,7 @@ class getid3_quicktime extends getid3_handler
 		return (isset($QuicktimeStoreFrontCodeLookup[$sfid]) ? $QuicktimeStoreFrontCodeLookup[$sfid] : 'invalid');
 	}
 
-	function QuicktimeParseNikonNCTG($atom_data) {
+	public function QuicktimeParseNikonNCTG($atom_data) {
 		// http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Nikon.html#NCTG
 		// Nikon-specific QuickTime tags found in the NCDT atom of MOV videos from some Nikon cameras such as the Coolpix S8000 and D5100
 		// Data is stored as records of:
@@ -2000,7 +2007,7 @@ echo 'QuicktimeParseNikonNCTG()::unknown $data_size_type: '.$data_size_type.'<br
 	}
 
 
-	function CopyToAppropriateCommentsSection($keyname, $data, $boxname='') {
+	public function CopyToAppropriateCommentsSection($keyname, $data, $boxname='') {
 		static $handyatomtranslatorarray = array();
 		if (empty($handyatomtranslatorarray)) {
 			$handyatomtranslatorarray['©cpy'] = 'copyright';
@@ -2075,6 +2082,7 @@ echo 'QuicktimeParseNikonNCTG()::unknown $data_size_type: '.$data_size_type.'<br
 
 
 			// boxnames:
+			/*
 			$handyatomtranslatorarray['iTunSMPB']                    = 'iTunSMPB';
 			$handyatomtranslatorarray['iTunNORM']                    = 'iTunNORM';
 			$handyatomtranslatorarray['Encoding Params']             = 'Encoding Params';
@@ -2087,11 +2095,16 @@ echo 'QuicktimeParseNikonNCTG()::unknown $data_size_type: '.$data_size_type.'<br
 			$handyatomtranslatorarray['MusicBrainz Album Artist Id'] = 'MusicBrainz Album Artist Id';
 			$handyatomtranslatorarray['MusicBrainz Track Id']        = 'MusicBrainz Track Id';
 			$handyatomtranslatorarray['MusicBrainz Disc Id']         = 'MusicBrainz Disc Id';
+
+			// http://age.hobba.nl/audio/tag_frame_reference.html
+			$handyatomtranslatorarray['PLAY_COUNTER']                = 'play_counter'; // Foobar2000 - http://www.getid3.org/phpBB3/viewtopic.php?t=1355
+			$handyatomtranslatorarray['MEDIATYPE']                   = 'mediatype';    // Foobar2000 - http://www.getid3.org/phpBB3/viewtopic.php?t=1355
+			*/
 		}
 		$info = &$this->getid3->info;
 		$comment_key = '';
-		if ($boxname && ($boxname != $keyname) && isset($handyatomtranslatorarray[$boxname])) {
-			$comment_key = $handyatomtranslatorarray[$boxname];
+		if ($boxname && ($boxname != $keyname)) {
+			$comment_key = (isset($handyatomtranslatorarray[$boxname]) ? $handyatomtranslatorarray[$boxname] : $boxname);
 		} elseif (isset($handyatomtranslatorarray[$keyname])) {
 			$comment_key = $handyatomtranslatorarray[$keyname];
 		}
@@ -2116,7 +2129,7 @@ echo 'QuicktimeParseNikonNCTG()::unknown $data_size_type: '.$data_size_type.'<br
 		return true;
 	}
 
-	function NoNullString($nullterminatedstring) {
+	public function NoNullString($nullterminatedstring) {
 		// remove the single null terminator on null terminated strings
 		if (substr($nullterminatedstring, strlen($nullterminatedstring) - 1, 1) === "\x00") {
 			return substr($nullterminatedstring, 0, strlen($nullterminatedstring) - 1);
@@ -2124,11 +2137,9 @@ echo 'QuicktimeParseNikonNCTG()::unknown $data_size_type: '.$data_size_type.'<br
 		return $nullterminatedstring;
 	}
 
-	function Pascal2String($pascalstring) {
+	public function Pascal2String($pascalstring) {
 		// Pascal strings have 1 unsigned byte at the beginning saying how many chars (1-255) are in the string
 		return substr($pascalstring, 1);
 	}
 
 }
-
-?>

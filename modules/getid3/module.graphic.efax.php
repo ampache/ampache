@@ -17,7 +17,7 @@
 class getid3_efax extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
@@ -48,6 +48,3 @@ return false;
 	}
 
 }
-
-
-?>

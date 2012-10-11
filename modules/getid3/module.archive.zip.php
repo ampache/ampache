@@ -17,7 +17,7 @@
 class getid3_zip extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		$info['fileformat']      = 'zip';
@@ -107,7 +107,7 @@ class getid3_zip extends getid3_handler
 	}
 
 
-	function getZIPHeaderFilepointerTopDown() {
+	public function getZIPHeaderFilepointerTopDown() {
 		$info = &$this->getid3->info;
 
 		$info['fileformat'] = 'zip';
@@ -153,7 +153,7 @@ class getid3_zip extends getid3_handler
 	}
 
 
-	function getZIPentriesFilepointer() {
+	public function getZIPentriesFilepointer() {
 		$info = &$this->getid3->info;
 
 		$info['zip']['compressed_size']   = 0;
@@ -176,7 +176,7 @@ class getid3_zip extends getid3_handler
 	}
 
 
-	function ZIPparseLocalFileHeader() {
+	public function ZIPparseLocalFileHeader() {
 		$LocalFileHeader['offset'] = ftell($this->getid3->fp);
 
 		$ZIPlocalFileHeader = fread($this->getid3->fp, 30);
@@ -233,7 +233,7 @@ class getid3_zip extends getid3_handler
 	}
 
 
-	function ZIPparseCentralDirectory() {
+	public function ZIPparseCentralDirectory() {
 		$CentralDirectory['offset'] = ftell($this->getid3->fp);
 
 		$ZIPcentralDirectory = fread($this->getid3->fp, 46);
@@ -289,7 +289,7 @@ class getid3_zip extends getid3_handler
 		return $CentralDirectory;
 	}
 
-	function ZIPparseEndOfCentralDirectory() {
+	public function ZIPparseEndOfCentralDirectory() {
 		$EndOfCentralDirectory['offset'] = ftell($this->getid3->fp);
 
 		$ZIPendOfCentralDirectory = fread($this->getid3->fp, 22);
@@ -316,7 +316,7 @@ class getid3_zip extends getid3_handler
 	}
 
 
-	static function ZIPparseGeneralPurposeFlags($flagbytes, $compressionmethod) {
+	public static function ZIPparseGeneralPurposeFlags($flagbytes, $compressionmethod) {
 		$ParsedFlags['encrypted'] = (bool) ($flagbytes & 0x0001);
 
 		switch ($compressionmethod) {
@@ -349,7 +349,7 @@ class getid3_zip extends getid3_handler
 	}
 
 
-	static function ZIPversionOSLookup($index) {
+	public static function ZIPversionOSLookup($index) {
 		static $ZIPversionOSLookup = array(
 			0  => 'MS-DOS and OS/2 (FAT / VFAT / FAT32 file systems)',
 			1  => 'Amiga',
@@ -374,7 +374,7 @@ class getid3_zip extends getid3_handler
 		return (isset($ZIPversionOSLookup[$index]) ? $ZIPversionOSLookup[$index] : '[unknown]');
 	}
 
-	static function ZIPcompressionMethodLookup($index) {
+	public static function ZIPcompressionMethodLookup($index) {
 		static $ZIPcompressionMethodLookup = array(
 			0  => 'store',
 			1  => 'shrink',
@@ -392,7 +392,7 @@ class getid3_zip extends getid3_handler
 		return (isset($ZIPcompressionMethodLookup[$index]) ? $ZIPcompressionMethodLookup[$index] : '[unknown]');
 	}
 
-	static function DOStime2UNIXtime($DOSdate, $DOStime) {
+	public static function DOStime2UNIXtime($DOSdate, $DOStime) {
 		// wFatDate
 		// Specifies the MS-DOS date. The date is a packed 16-bit value with the following format:
 		// Bits      Contents
@@ -419,6 +419,3 @@ class getid3_zip extends getid3_handler
 	}
 
 }
-
-
-?>

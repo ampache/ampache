@@ -18,9 +18,9 @@ define('GETID3_MIDI_MAGIC_MTRK', 'MTrk'); // MIDI track header magic
 
 class getid3_midi extends getid3_handler
 {
-	var $scanwholefile = true;
+	public $scanwholefile = true;
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		// shortcut
@@ -322,7 +322,7 @@ class getid3_midi extends getid3_handler
 		return true;
 	}
 
-	function GeneralMIDIinstrumentLookup($instrumentid) {
+	public function GeneralMIDIinstrumentLookup($instrumentid) {
 
 		$begin = __LINE__;
 
@@ -462,7 +462,7 @@ class getid3_midi extends getid3_handler
 		return getid3_lib::EmbeddedLookup($instrumentid, $begin, __LINE__, __FILE__, 'GeneralMIDIinstrument');
 	}
 
-	function GeneralMIDIpercussionLookup($instrumentid) {
+	public function GeneralMIDIpercussionLookup($instrumentid) {
 
 		$begin = __LINE__;
 
@@ -521,6 +521,3 @@ class getid3_midi extends getid3_handler
 	}
 
 }
-
-
-?>

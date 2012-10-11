@@ -16,9 +16,9 @@
 
 class getid3_pcd extends getid3_handler
 {
-	var $ExtractData = 0;
+	public $ExtractData = 0;
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		$info['fileformat']          = 'pcd';
@@ -98,7 +98,7 @@ class getid3_pcd extends getid3_handler
 
 	}
 
-	function YCbCr2RGB($Y, $Cb, $Cr) {
+	public function YCbCr2RGB($Y, $Cb, $Cr) {
 		static $YCbCr_constants = array();
 		if (empty($YCbCr_constants)) {
 			$YCbCr_constants['red']['Y']    =  0.0054980 * 256;
@@ -130,5 +130,3 @@ class getid3_pcd extends getid3_handler
 	}
 
 }
-
-?>

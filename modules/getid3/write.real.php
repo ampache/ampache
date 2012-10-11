@@ -15,18 +15,18 @@
 
 class getid3_write_real
 {
-	var $filename;
-	var $tag_data          = array();
-	var $fread_buffer_size = 32768;   // read buffer size in bytes
-	var $warnings          = array(); // any non-critical errors will be stored here
-	var $errors            = array(); // any critical errors will be stored here
-	var $paddedlength      = 512;     // minimum length of CONT tag in bytes
+	public $filename;
+	public $tag_data          = array();
+	public $fread_buffer_size = 32768;   // read buffer size in bytes
+	public $warnings          = array(); // any non-critical errors will be stored here
+	public $errors            = array(); // any critical errors will be stored here
+	public $paddedlength      = 512;     // minimum length of CONT tag in bytes
 
-	function getid3_write_real() {
+	public function getid3_write_real() {
 		return true;
 	}
 
-	function WriteReal() {
+	public function WriteReal() {
 		// File MUST be writeable - CHMOD(646) at least
 		if (is_writeable($this->filename) && is_file($this->filename) && ($fp_source = fopen($this->filename, 'r+b'))) {
 
@@ -126,7 +126,7 @@ class getid3_write_real
 		return false;
 	}
 
-	function GenerateRMFchunk(&$chunks) {
+	public function GenerateRMFchunk(&$chunks) {
 		$oldCONTexists = false;
 		foreach ($chunks as $key => $chunk) {
 			$chunkNameKeys[$chunk['name']] = $key;
@@ -144,7 +144,7 @@ class getid3_write_real
 		return $RMFchunk;
 	}
 
-	function GeneratePROPchunk(&$chunks, &$new_CONT_tag_data) {
+	public function GeneratePROPchunk(&$chunks, &$new_CONT_tag_data) {
 		$old_CONT_length = 0;
 		$old_DATA_offset = 0;
 		$old_INDX_offset = 0;
@@ -181,7 +181,7 @@ class getid3_write_real
 		return $PROPchunk;
 	}
 
-	function GenerateCONTchunk() {
+	public function GenerateCONTchunk() {
 		foreach ($this->tag_data as $key => $value) {
 			// limit each value to 0xFFFF bytes
 			$this->tag_data[$key] = substr($value, 0, 65535);
@@ -210,7 +210,7 @@ class getid3_write_real
 		return $CONTchunk;
 	}
 
-	function RemoveReal() {
+	public function RemoveReal() {
 		// File MUST be writeable - CHMOD(646) at least
 		if (is_writeable($this->filename) && is_file($this->filename) && ($fp_source = fopen($this->filename, 'r+b'))) {
 
@@ -271,5 +271,3 @@ class getid3_write_real
 	}
 
 }
-
-?>

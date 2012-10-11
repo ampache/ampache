@@ -17,7 +17,7 @@
 class getid3_dss extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
@@ -58,7 +58,7 @@ class getid3_dss extends getid3_handler
 		return true;
 	}
 
-	function DSSdateStringToUnixDate($datestring) {
+	public function DSSdateStringToUnixDate($datestring) {
 		$y = substr($datestring,  0, 2);
 		$m = substr($datestring,  2, 2);
 		$d = substr($datestring,  4, 2);
@@ -70,6 +70,3 @@ class getid3_dss extends getid3_handler
 	}
 
 }
-
-
-?>

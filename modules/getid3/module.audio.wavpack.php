@@ -17,7 +17,7 @@
 class getid3_wavpack extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
@@ -247,7 +247,7 @@ class getid3_wavpack extends getid3_handler
 							$metablock['riff'] = $getid3_riff->ParseRIFF($startoffset, $startoffset + $metablock['size']);
 
 							if (!empty($metablock['riff']['INFO'])) {
-								$getid3_riff->RIFFcommentsParse($metablock['riff']['INFO'], $metablock['comments']);
+								getid3_riff::parseComments($metablock['riff']['INFO'], $metablock['comments']);
 								$info['tags']['riff'] = $metablock['comments'];
 							}
 							unset($getid3_temp, $getid3_riff);
@@ -368,7 +368,7 @@ class getid3_wavpack extends getid3_handler
 	}
 
 
-	function WavPackMetablockNameLookup(&$id) {
+	public function WavPackMetablockNameLookup(&$id) {
 		static $WavPackMetablockNameLookup = array(
 			0x00 => 'Dummy',
 			0x01 => 'Encoder Info',
@@ -395,6 +395,3 @@ class getid3_wavpack extends getid3_handler
 	}
 
 }
-
-
-?>

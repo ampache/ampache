@@ -28,7 +28,7 @@ define('GETID3_MPEG_AUDIO_START',           "\x00\x00\x01\xC0");
 class getid3_mpeg extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		if ($info['avdataend'] <= $info['avdataoffset']) {
@@ -226,7 +226,7 @@ class getid3_mpeg extends getid3_handler
 	}
 
 
-	function MPEGsystemNonOverheadPercentage($VideoBitrate, $AudioBitrate) {
+	public function MPEGsystemNonOverheadPercentage($VideoBitrate, $AudioBitrate) {
 		$OverheadPercentage = 0;
 
 		$AudioBitrate = max(min($AudioBitrate / 1000,   384), 32); // limit to range of 32kbps - 384kbps (should be only legal bitrates, but maybe VBR?)
@@ -278,22 +278,19 @@ class getid3_mpeg extends getid3_handler
 	}
 
 
-	function MPEGvideoFramerateLookup($rawframerate) {
+	public function MPEGvideoFramerateLookup($rawframerate) {
 		$MPEGvideoFramerateLookup = array(0, 23.976, 24, 25, 29.97, 30, 50, 59.94, 60);
 		return (isset($MPEGvideoFramerateLookup[$rawframerate]) ? (float) $MPEGvideoFramerateLookup[$rawframerate] : (float) 0);
 	}
 
-	function MPEGvideoAspectRatioLookup($rawaspectratio) {
+	public function MPEGvideoAspectRatioLookup($rawaspectratio) {
 		$MPEGvideoAspectRatioLookup = array(0, 1, 0.6735, 0.7031, 0.7615, 0.8055, 0.8437, 0.8935, 0.9157, 0.9815, 1.0255, 1.0695, 1.0950, 1.1575, 1.2015, 0);
 		return (isset($MPEGvideoAspectRatioLookup[$rawaspectratio]) ? (float) $MPEGvideoAspectRatioLookup[$rawaspectratio] : (float) 0);
 	}
 
-	function MPEGvideoAspectRatioTextLookup($rawaspectratio) {
+	public function MPEGvideoAspectRatioTextLookup($rawaspectratio) {
 		$MPEGvideoAspectRatioTextLookup = array('forbidden', 'square pixels', '0.6735', '16:9, 625 line, PAL', '0.7615', '0.8055', '16:9, 525 line, NTSC', '0.8935', '4:3, 625 line, PAL, CCIR601', '0.9815', '1.0255', '1.0695', '4:3, 525 line, NTSC, CCIR601', '1.1575', '1.2015', 'reserved');
 		return (isset($MPEGvideoAspectRatioTextLookup[$rawaspectratio]) ? $MPEGvideoAspectRatioTextLookup[$rawaspectratio] : '');
 	}
 
 }
-
-
-?>

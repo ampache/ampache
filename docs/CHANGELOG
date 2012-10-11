@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-future
+        - Updated getID3 to 1.9.4b1
         - Removed support for extremely old passwords
         - Playlists imported from M3U now retain their ordering
             (patch by Florent Fourcot)

@@ -16,7 +16,7 @@
 
 class getid3_vqf extends getid3_handler
 {
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		// based loosely on code from TTwinVQ by Jurgen Faul <jfaulØgmx*de>
@@ -135,7 +135,7 @@ class getid3_vqf extends getid3_handler
 		return true;
 	}
 
-	function VQFchannelFrequencyLookup($frequencyid) {
+	public function VQFchannelFrequencyLookup($frequencyid) {
 		static $VQFchannelFrequencyLookup = array(
 			11 => 11025,
 			22 => 22050,
@@ -144,7 +144,7 @@ class getid3_vqf extends getid3_handler
 		return (isset($VQFchannelFrequencyLookup[$frequencyid]) ? $VQFchannelFrequencyLookup[$frequencyid] : $frequencyid * 1000);
 	}
 
-	function VQFcommentNiceNameLookup($shortname) {
+	public function VQFcommentNiceNameLookup($shortname) {
 		static $VQFcommentNiceNameLookup = array(
 			'NAME' => 'title',
 			'AUTH' => 'artist',
@@ -157,6 +157,3 @@ class getid3_vqf extends getid3_handler
 	}
 
 }
-
-
-?>

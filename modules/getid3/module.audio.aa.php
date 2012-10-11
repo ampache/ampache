@@ -17,7 +17,7 @@
 class getid3_aa extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
@@ -35,6 +35,8 @@ class getid3_aa extends getid3_handler
 
 		$info['fileformat']            = 'aa';
 		$info['audio']['dataformat']   = 'aa';
+$info['error'][] = 'Audible Audiobook (.aa) parsing not enabled in this version of getID3() ['.$this->getid3->version().']';
+return false;
 		$info['audio']['bitrate_mode'] = 'cbr'; // is it?
 		$thisfile_au['encoding']       = 'ISO-8859-1';
 
@@ -54,6 +56,3 @@ class getid3_aa extends getid3_handler
 	}
 
 }
-
-
-?>

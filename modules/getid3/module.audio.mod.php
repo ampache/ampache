@@ -17,7 +17,7 @@
 class getid3_mod extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
 		$fileheader = fread($this->getid3->fp, 1088);
@@ -35,7 +35,7 @@ class getid3_mod extends getid3_handler
 	}
 
 
-	function getMODheaderFilepointer() {
+	public function getMODheaderFilepointer() {
 		$info = &$this->getid3->info;
 		fseek($this->getid3->fp, $info['avdataoffset'] + 1080);
 		$FormatID = fread($this->getid3->fp, 4);
@@ -50,7 +50,7 @@ class getid3_mod extends getid3_handler
 		return false;
 	}
 
-	function getXMheaderFilepointer() {
+	public function getXMheaderFilepointer() {
 		$info = &$this->getid3->info;
 		fseek($this->getid3->fp, $info['avdataoffset']);
 		$FormatID = fread($this->getid3->fp, 15);
@@ -65,7 +65,7 @@ class getid3_mod extends getid3_handler
 		return false;
 	}
 
-	function getS3MheaderFilepointer() {
+	public function getS3MheaderFilepointer() {
 		$info = &$this->getid3->info;
 		fseek($this->getid3->fp, $info['avdataoffset'] + 44);
 		$FormatID = fread($this->getid3->fp, 4);
@@ -80,7 +80,7 @@ class getid3_mod extends getid3_handler
 		return false;
 	}
 
-	function getITheaderFilepointer() {
+	public function getITheaderFilepointer() {
 		$info = &$this->getid3->info;
 		fseek($this->getid3->fp, $info['avdataoffset']);
 		$FormatID = fread($this->getid3->fp, 4);
@@ -96,6 +96,3 @@ class getid3_mod extends getid3_handler
 	}
 
 }
-
-
-?>

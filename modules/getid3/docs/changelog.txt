@@ -17,7 +17,38 @@
 Version History
 ===============
 
-1.9.3: [2012-12-13] Dmitry Arkhipov, James Heinrich
+1.9.4b1: [2012-10-05] James Heinrich, Dmitry Arkhipov, Karl G. Holz
+    » New module: extension.cache.sqlite3.php (by Karl G. Holz)
+    » New demo: demos/getid3.demo.dirscan.php (by Karl G. Holz)
+    » PHP5 standards improvements (thanks phansysØgmail*com)
+    » more reliable >4GB file size parsing using COM (if available)
+      Scripting.FileSystemObject rather than parsing `dir` output
+    * added support for FLAC inside Matroska (audio bitrate cannot
+        be determined in this case)
+    * XMP module now returns all tags, not just whitelisted ones
+    * (#1297) Added detection of MPEG Transport Stream files.
+      Stub module.audio-video.ts.php incomplete
+    * (#1383) removed unneeded ?> tags (thanks daveØholyfield*info)
+    * Bugfix: XMP returns attributes array not just value strings
+    * Bugfix: (#1369) ID3v2 IPLS contents not parsed
+    * Bugfix: (#1357) demo.mysql.php mysql_table_exists() failed
+    * Bugfix: (#1355) copy Foobar2000 QuickTime tags to [comments]
+    * Bugfix: (#1351) QuickTime files with zero-sized atom boxes
+      could cause infinite loop
+    * Bugfix: (#1343) FLAC attached pictures Ogg not handled
+    * Bugfix: (#1343) ID3v2 inside WAV "id3 " chunk not handled
+    * Bugfix: (#1315) BMP detection was broken
+    * Bugfix: (#1309) ID3v2.2 content_group_description (TT2) did
+      not copy to same place as ID3v2.3/ID3v2.4 (TIT2)
+    * Bugfix: (#1308) [playtime_string] could show hh:mm:60
+    * Bugfix: (#1306) extension.cache.mysql.php keyword TYPE->ENGINE
+    * Bugfix: (#1295) missing video information if QuickTime file has
+      disabled tracks
+    * Bugfix: (#1275) MD5/SHA1 data hashes not working properly
+      under Windows
+
+
+1.9.3: [2011-12-13] Dmitry Arkhipov, James Heinrich
     * Matroska module improved:
       1. Added support for A_MS/ACM audio codec
       2. Fixed issues in tags, cues, chapters and clusters parsing

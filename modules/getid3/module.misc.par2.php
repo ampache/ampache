@@ -17,7 +17,7 @@
 class getid3_par2 extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		$info['fileformat'] = 'par2';
@@ -28,6 +28,3 @@ class getid3_par2 extends getid3_handler
 	}
 
 }
-
-
-?>

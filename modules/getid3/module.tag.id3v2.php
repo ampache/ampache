@@ -17,10 +17,9 @@ getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.tag.id3v1.php', __FILE_
 
 class getid3_id3v2 extends getid3_handler
 {
-	var $inline_attachments = true; // true: return full data for all attachments; false: return no data for all attachments; integer: return data for attachments <= than this; string: save as file to this directory
-	var $StartingOffset = 0;
+	public $StartingOffset = 0;
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		//    Overall tag structure:
@@ -495,7 +494,7 @@ class getid3_id3v2 extends getid3_handler
 	}
 
 
-	function ParseID3v2GenreString($genrestring) {
+	public function ParseID3v2GenreString($genrestring) {
 		// Parse genres into arrays of genreName and genreID
 		// ID3v2.2.x, ID3v2.3.x: '(21)' or '(4)Eurodisco' or '(51)(39)' or '(55)((I think...)'
 		// ID3v2.4.x: '21' $00 'Eurodisco' $00
@@ -518,7 +517,7 @@ class getid3_id3v2 extends getid3_handler
 	}
 
 
-	function ParseID3v2Frame(&$parsedFrame) {
+	public function ParseID3v2Frame(&$parsedFrame) {
 
 		// shortcuts
 		$info = &$this->getid3->info;
@@ -738,6 +737,7 @@ class getid3_id3v2 extends getid3_handler
 
 		} elseif ((($id3v2_majorversion == 3) && ($parsedFrame['frame_name'] == 'IPLS')) || // 4.4  IPLS Involved people list (ID3v2.3 only)
 				(($id3v2_majorversion == 2) && ($parsedFrame['frame_name'] == 'IPL'))) {     // 4.4  IPL  Involved people list (ID3v2.2 only)
+			// http://id3.org/id3v2.3.0#sec4.4
 			//   There may only be one 'IPL' frame in each tag
 			// <Header for 'User defined URL link frame', ID: 'IPL'>
 			// Text encoding     $xx
@@ -750,10 +750,68 @@ class getid3_id3v2 extends getid3_handler
 			}
 			$parsedFrame['encodingid'] = $frame_textencoding;
 			$parsedFrame['encoding']   = $this->TextEncodingNameLookup($parsedFrame['encodingid']);
+			$parsedFrame['data_raw']   = (string) substr($parsedFrame['data'], $frame_offset);
 
-			$parsedFrame['data']       = (string) substr($parsedFrame['data'], $frame_offset);
+			// http://www.getid3.org/phpBB3/viewtopic.php?t=1369
+			// "this tag typically contains null terminated strings, which are associated in pairs"
+			// "there are users that use the tag incorrectly"
+			$IPLS_parts = array();
+			if (strpos($parsedFrame['data_raw'], "\x00") !== false) {
+				$IPLS_parts_unsorted = array();
+				if (((strlen($parsedFrame['data_raw']) % 2) == 0) && ((substr($parsedFrame['data_raw'], 0, 2) == "\xFF\xFE") || (substr($parsedFrame['data_raw'], 0, 2) == "\xFE\xFF"))) {
+					// UTF-16, be careful looking for null bytes since most 2-byte characters may contain one; you need to find twin null bytes, and on even padding
+					$thisILPS  = '';
+					for ($i = 0; $i < strlen($parsedFrame['data_raw']); $i += 2) {
+						$twobytes = substr($parsedFrame['data_raw'], $i, 2);
+						if ($twobytes === "\x00\x00") {
+							$IPLS_parts_unsorted[] = getid3_lib::iconv_fallback($parsedFrame['encoding'], $info['id3v2']['encoding'], $thisILPS);
+							$thisILPS  = '';
+						} else {
+							$thisILPS .= $twobytes;
+						}
+					}
+					if (strlen($thisILPS) > 2) { // 2-byte BOM
+						$IPLS_parts_unsorted[] = getid3_lib::iconv_fallback($parsedFrame['encoding'], $info['id3v2']['encoding'], $thisILPS);
+					}
+				} else {
+					// ISO-8859-1 or UTF-8 or other single-byte-null character set
+					$IPLS_parts_unsorted = explode("\x00", $parsedFrame['data_raw']);
+				}
+				if (count($IPLS_parts_unsorted) == 1) {
+					// just a list of names, e.g. "Dino Baptiste, Jimmy Copley, John Gordon, Bernie Marsden, Sharon Watson"
+					foreach ($IPLS_parts_unsorted as $key => $value) {
+						$IPLS_parts_sorted = preg_split('#[;,\\r\\n\\t]#', $value);
+						$position = '';
+						foreach ($IPLS_parts_sorted as $person) {
+							$IPLS_parts[] = array('position'=>$position, 'person'=>$person);
+						}
+					}
+				} elseif ((count($IPLS_parts_unsorted) % 2) == 0) {
+					$position = '';
+					$person   = '';
+					foreach ($IPLS_parts_unsorted as $key => $value) {
+						if (($key % 2) == 0) {
+							$position = $value;
+						} else {
+							$person   = $value;
+							$IPLS_parts[] = array('position'=>$position, 'person'=>$person);
+							$position = '';
+							$person   = '';
+						}
+					}
+				} else {
+					foreach ($IPLS_parts_unsorted as $key => $value) {
+						$IPLS_parts[] = array($value);
+					}
+				}
+
+			} else {
+				$IPLS_parts = preg_split('#[;,\\r\\n\\t]#', $parsedFrame['data_raw']);
+			}
+			$parsedFrame['data'] = $IPLS_parts;
+
 			if (!empty($parsedFrame['framenameshort']) && !empty($parsedFrame['data'])) {
-				$info['id3v2']['comments'][$parsedFrame['framenameshort']][] = getid3_lib::iconv_fallback($parsedFrame['encoding'], $info['id3v2']['encoding'], $parsedFrame['data']);
+				$info['id3v2']['comments'][$parsedFrame['framenameshort']][] = $parsedFrame['data'];
 			}
 
 
@@ -1306,32 +1364,34 @@ class getid3_id3v2 extends getid3_handler
 				}
 
 				do {
-					if ($this->inline_attachments === false) {
+					if ($this->getid3->option_save_attachments === false) {
 						// skip entirely
 						unset($parsedFrame['data']);
 						break;
 					}
-					if ($this->inline_attachments === true) {
+					if ($this->getid3->option_save_attachments === true) {
 						// great
-					} elseif (is_int($this->inline_attachments)) {
-						if ($this->inline_attachments < $parsedFrame['data_length']) {
+/*
+					} elseif (is_int($this->getid3->option_save_attachments)) {
+						if ($this->getid3->option_save_attachments < $parsedFrame['data_length']) {
 							// too big, skip
 							$info['warning'][] = 'attachment at '.$frame_offset.' is too large to process inline ('.number_format($parsedFrame['data_length']).' bytes)';
 							unset($parsedFrame['data']);
 							break;
 						}
-					} elseif (is_string($this->inline_attachments)) {
-						$this->inline_attachments = rtrim(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $this->inline_attachments), DIRECTORY_SEPARATOR);
-						if (!is_dir($this->inline_attachments) || !is_writable($this->inline_attachments)) {
+*/
+					} elseif (is_string($this->getid3->option_save_attachments)) {
+						$dir = rtrim(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $this->getid3->option_save_attachments), DIRECTORY_SEPARATOR);
+						if (!is_dir($dir) || !is_writable($dir)) {
 							// cannot write, skip
-							$info['warning'][] = 'attachment at '.$frame_offset.' cannot be saved to "'.$this->inline_attachments.'" (not writable)';
+							$info['warning'][] = 'attachment at '.$frame_offset.' cannot be saved to "'.$dir.'" (not writable)';
 							unset($parsedFrame['data']);
 							break;
 						}
 					}
 					// if we get this far, must be OK
-					if (is_string($this->inline_attachments)) {
-						$destination_filename = $this->inline_attachments.DIRECTORY_SEPARATOR.md5($info['filenamepath']).'_'.$frame_offset;
+					if (is_string($this->getid3->option_save_attachments)) {
+						$destination_filename = $dir.DIRECTORY_SEPARATOR.md5($info['filenamepath']).'_'.$frame_offset;
 						if (!file_exists($destination_filename) || is_writable($destination_filename)) {
 							file_put_contents($destination_filename, $parsedFrame['data']);
 						} else {
@@ -1851,11 +1911,11 @@ class getid3_id3v2 extends getid3_handler
 	}
 
 
-	function DeUnsynchronise($data) {
+	public function DeUnsynchronise($data) {
 		return str_replace("\xFF\x00", "\xFF", $data);
 	}
 
-	function LookupExtendedHeaderRestrictionsTagSizeLimits($index) {
+	public function LookupExtendedHeaderRestrictionsTagSizeLimits($index) {
 		static $LookupExtendedHeaderRestrictionsTagSizeLimits = array(
 			0x00 => 'No more than 128 frames and 1 MB total tag size',
 			0x01 => 'No more than 64 frames and 128 KB total tag size',
@@ -1865,7 +1925,7 @@ class getid3_id3v2 extends getid3_handler
 		return (isset($LookupExtendedHeaderRestrictionsTagSizeLimits[$index]) ? $LookupExtendedHeaderRestrictionsTagSizeLimits[$index] : '');
 	}
 
-	function LookupExtendedHeaderRestrictionsTextEncodings($index) {
+	public function LookupExtendedHeaderRestrictionsTextEncodings($index) {
 		static $LookupExtendedHeaderRestrictionsTextEncodings = array(
 			0x00 => 'No restrictions',
 			0x01 => 'Strings are only encoded with ISO-8859-1 or UTF-8',
@@ -1873,7 +1933,7 @@ class getid3_id3v2 extends getid3_handler
 		return (isset($LookupExtendedHeaderRestrictionsTextEncodings[$index]) ? $LookupExtendedHeaderRestrictionsTextEncodings[$index] : '');
 	}
 
-	function LookupExtendedHeaderRestrictionsTextFieldSize($index) {
+	public function LookupExtendedHeaderRestrictionsTextFieldSize($index) {
 		static $LookupExtendedHeaderRestrictionsTextFieldSize = array(
 			0x00 => 'No restrictions',
 			0x01 => 'No string is longer than 1024 characters',
@@ -1883,7 +1943,7 @@ class getid3_id3v2 extends getid3_handler
 		return (isset($LookupExtendedHeaderRestrictionsTextFieldSize[$index]) ? $LookupExtendedHeaderRestrictionsTextFieldSize[$index] : '');
 	}
 
-	function LookupExtendedHeaderRestrictionsImageEncoding($index) {
+	public function LookupExtendedHeaderRestrictionsImageEncoding($index) {
 		static $LookupExtendedHeaderRestrictionsImageEncoding = array(
 			0x00 => 'No restrictions',
 			0x01 => 'Images are encoded only with PNG or JPEG',
@@ -1891,7 +1951,7 @@ class getid3_id3v2 extends getid3_handler
 		return (isset($LookupExtendedHeaderRestrictionsImageEncoding[$index]) ? $LookupExtendedHeaderRestrictionsImageEncoding[$index] : '');
 	}
 
-	function LookupExtendedHeaderRestrictionsImageSizeSize($index) {
+	public function LookupExtendedHeaderRestrictionsImageSizeSize($index) {
 		static $LookupExtendedHeaderRestrictionsImageSizeSize = array(
 			0x00 => 'No restrictions',
 			0x01 => 'All images are 256x256 pixels or smaller',
@@ -1901,7 +1961,7 @@ class getid3_id3v2 extends getid3_handler
 		return (isset($LookupExtendedHeaderRestrictionsImageSizeSize[$index]) ? $LookupExtendedHeaderRestrictionsImageSizeSize[$index] : '');
 	}
 
-	function LookupCurrencyUnits($currencyid) {
+	public function LookupCurrencyUnits($currencyid) {
 
 		$begin = __LINE__;
 
@@ -2098,7 +2158,7 @@ class getid3_id3v2 extends getid3_handler
 	}
 
 
-	function LookupCurrencyCountry($currencyid) {
+	public function LookupCurrencyCountry($currencyid) {
 
 		$begin = __LINE__;
 
@@ -2295,7 +2355,7 @@ class getid3_id3v2 extends getid3_handler
 
 
 
-	static function LanguageLookup($languagecode, $casesensitive=false) {
+	public static function LanguageLookup($languagecode, $casesensitive=false) {
 
 		if (!$casesensitive) {
 			$languagecode = strtolower($languagecode);
@@ -2751,7 +2811,7 @@ class getid3_id3v2 extends getid3_handler
 	}
 
 
-	static function ETCOEventLookup($index) {
+	public static function ETCOEventLookup($index) {
 		if (($index >= 0x17) && ($index <= 0xDF)) {
 			return 'reserved for future use';
 		}
@@ -2794,7 +2854,7 @@ class getid3_id3v2 extends getid3_handler
 		return (isset($EventLookup[$index]) ? $EventLookup[$index] : '');
 	}
 
-	static function SYTLContentTypeLookup($index) {
+	public static function SYTLContentTypeLookup($index) {
 		static $SYTLContentTypeLookup = array(
 			0x00 => 'other',
 			0x01 => 'lyrics',
@@ -2810,7 +2870,7 @@ class getid3_id3v2 extends getid3_handler
 		return (isset($SYTLContentTypeLookup[$index]) ? $SYTLContentTypeLookup[$index] : '');
 	}
 
-	static function APICPictureTypeLookup($index, $returnarray=false) {
+	public static function APICPictureTypeLookup($index, $returnarray=false) {
 		static $APICPictureTypeLookup = array(
 			0x00 => 'Other',
 			0x01 => '32x32 pixels \'file icon\' (PNG only)',
@@ -2840,7 +2900,7 @@ class getid3_id3v2 extends getid3_handler
 		return (isset($APICPictureTypeLookup[$index]) ? $APICPictureTypeLookup[$index] : '');
 	}
 
-	static function COMRReceivedAsLookup($index) {
+	public static function COMRReceivedAsLookup($index) {
 		static $COMRReceivedAsLookup = array(
 			0x00 => 'Other',
 			0x01 => 'Standard CD album with other songs',
@@ -2856,7 +2916,7 @@ class getid3_id3v2 extends getid3_handler
 		return (isset($COMRReceivedAsLookup[$index]) ? $COMRReceivedAsLookup[$index] : '');
 	}
 
-	static function RVA2ChannelTypeLookup($index) {
+	public static function RVA2ChannelTypeLookup($index) {
 		static $RVA2ChannelTypeLookup = array(
 			0x00 => 'Other',
 			0x01 => 'Master volume',
@@ -2872,7 +2932,7 @@ class getid3_id3v2 extends getid3_handler
 		return (isset($RVA2ChannelTypeLookup[$index]) ? $RVA2ChannelTypeLookup[$index] : '');
 	}
 
-	static function FrameNameLongLookup($framename) {
+	public static function FrameNameLongLookup($framename) {
 
 		$begin = __LINE__;
 
@@ -3056,7 +3116,7 @@ class getid3_id3v2 extends getid3_handler
 	}
 
 
-	static function FrameNameShortLookup($framename) {
+	public static function FrameNameShortLookup($framename) {
 
 		$begin = __LINE__;
 
@@ -3197,7 +3257,7 @@ class getid3_id3v2 extends getid3_handler
 			TSSE	encoder_settings
 			TSST	set_subtitle
 			TST	title_sort_order
-			TT1	description
+			TT1	content_group_description
 			TT2	title
 			TT3	subtitle
 			TXT	lyricist
@@ -3235,7 +3295,7 @@ class getid3_id3v2 extends getid3_handler
 		return getid3_lib::EmbeddedLookup($framename, $begin, __LINE__, __FILE__, 'id3v2-framename_short');
 	}
 
-	static function TextEncodingTerminatorLookup($encoding) {
+	public static function TextEncodingTerminatorLookup($encoding) {
 		// http://www.id3.org/id3v2.4.0-structure.txt
 		// Frames that allow different types of text encoding contains a text encoding description byte. Possible encodings:
 		static $TextEncodingTerminatorLookup = array(
@@ -3248,7 +3308,7 @@ class getid3_id3v2 extends getid3_handler
 		return (isset($TextEncodingTerminatorLookup[$encoding]) ? $TextEncodingTerminatorLookup[$encoding] : '');
 	}
 
-	static function TextEncodingNameLookup($encoding) {
+	public static function TextEncodingNameLookup($encoding) {
 		// http://www.id3.org/id3v2.4.0-structure.txt
 		// Frames that allow different types of text encoding contains a text encoding description byte. Possible encodings:
 		static $TextEncodingNameLookup = array(
@@ -3261,7 +3321,7 @@ class getid3_id3v2 extends getid3_handler
 		return (isset($TextEncodingNameLookup[$encoding]) ? $TextEncodingNameLookup[$encoding] : 'ISO-8859-1');
 	}
 
-	static function IsValidID3v2FrameName($framename, $id3v2majorversion) {
+	public static function IsValidID3v2FrameName($framename, $id3v2majorversion) {
 		switch ($id3v2majorversion) {
 			case 2:
 				return preg_match('#[A-Z][A-Z0-9]{2}#', $framename);
@@ -3275,7 +3335,7 @@ class getid3_id3v2 extends getid3_handler
 		return false;
 	}
 
-	static function IsANumber($numberstring, $allowdecimal=false, $allownegative=false) {
+	public static function IsANumber($numberstring, $allowdecimal=false, $allownegative=false) {
 		for ($i = 0; $i < strlen($numberstring); $i++) {
 			if ((chr($numberstring{$i}) < chr('0')) || (chr($numberstring{$i}) > chr('9'))) {
 				if (($numberstring{$i} == '.') && $allowdecimal) {
@@ -3290,7 +3350,7 @@ class getid3_id3v2 extends getid3_handler
 		return true;
 	}
 
-	static function IsValidDateStampString($datestamp) {
+	public static function IsValidDateStampString($datestamp) {
 		if (strlen($datestamp) != 8) {
 			return false;
 		}
@@ -3318,10 +3378,9 @@ class getid3_id3v2 extends getid3_handler
 		return true;
 	}
 
-	static function ID3v2HeaderLength($majorversion) {
+	public static function ID3v2HeaderLength($majorversion) {
 		return (($majorversion == 2) ? 6 : 10);
 	}
 
 }
 
-?>

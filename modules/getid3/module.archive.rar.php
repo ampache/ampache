@@ -17,9 +17,9 @@
 class getid3_rar extends getid3_handler
 {
 
-	var $option_use_rar_extension = false;
+	public $option_use_rar_extension = false;
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		$info['fileformat'] = 'rar';
@@ -48,6 +48,3 @@ class getid3_rar extends getid3_handler
 	}
 
 }
-
-
-?>

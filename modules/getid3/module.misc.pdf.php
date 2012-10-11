@@ -17,7 +17,7 @@
 class getid3_pdf extends getid3_handler
 {
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		$info['fileformat'] = 'pdf';
@@ -28,6 +28,3 @@ class getid3_pdf extends getid3_handler
 	}
 
 }
-
-
-?>

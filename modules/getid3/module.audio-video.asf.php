@@ -18,7 +18,7 @@ getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.audio-video.riff.php', 
 class getid3_asf extends getid3_handler
 {
 
-	function __construct(getID3 $getid3) {
+	public function __construct(getID3 $getid3) {
 		parent::__construct($getid3);  // extends getid3_handler::__construct()
 
 		// initialize all GUID constants
@@ -30,7 +30,7 @@ class getid3_asf extends getid3_handler
 		}
 	}
 
-	function Analyze() {
+	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		// Shortcuts
@@ -226,7 +226,7 @@ class getid3_asf extends getid3_handler
 							$thisfile_audio['dataformat']   = (!empty($thisfile_audio['dataformat'])   ? $thisfile_audio['dataformat']   : 'asf');
 							$thisfile_audio['bitrate_mode'] = (!empty($thisfile_audio['bitrate_mode']) ? $thisfile_audio['bitrate_mode'] : 'cbr');
 
-							$audiodata = getid3_riff::RIFFparseWAVEFORMATex(substr($StreamPropertiesObjectData['type_specific_data'], 0, 16));
+							$audiodata = getid3_riff::parseWAVEFORMATex(substr($StreamPropertiesObjectData['type_specific_data'], 0, 16));
 							unset($audiodata['raw']);
 							$thisfile_audio = getid3_lib::array_merge_noclobber($audiodata, $thisfile_audio);
 							break;
@@ -1033,7 +1033,7 @@ class getid3_asf extends getid3_handler
 
 						$audiomediaoffset = 0;
 
-						$thisfile_asf_audiomedia_currentstream = getid3_riff::RIFFparseWAVEFORMATex(substr($streamdata['type_specific_data'], $audiomediaoffset, 16));
+						$thisfile_asf_audiomedia_currentstream = getid3_riff::parseWAVEFORMATex(substr($streamdata['type_specific_data'], $audiomediaoffset, 16));
 						$audiomediaoffset += 16;
 
 						$thisfile_audio['lossless'] = false;
@@ -1141,7 +1141,7 @@ class getid3_asf extends getid3_handler
 							}
 						}
 
-						$thisfile_asf_videomedia_currentstream['format_data']['codec'] = getid3_riff::RIFFfourccLookup($thisfile_asf_videomedia_currentstream['format_data']['codec_fourcc']);
+						$thisfile_asf_videomedia_currentstream['format_data']['codec'] = getid3_riff::fourccLookup($thisfile_asf_videomedia_currentstream['format_data']['codec_fourcc']);
 
 						$thisfile_video['streams'][$streamnumber]['fourcc']          = $thisfile_asf_videomedia_currentstream['format_data']['codec_fourcc'];
 						$thisfile_video['streams'][$streamnumber]['codec']           = $thisfile_asf_videomedia_currentstream['format_data']['codec'];
@@ -1451,7 +1451,7 @@ class getid3_asf extends getid3_handler
 		return true;
 	}
 
-	static function ASFCodecListObjectTypeLookup($CodecListType) {
+	public static function ASFCodecListObjectTypeLookup($CodecListType) {
 		static $ASFCodecListObjectTypeLookup = array();
 		if (empty($ASFCodecListObjectTypeLookup)) {
 			$ASFCodecListObjectTypeLookup[0x0001] = 'Video Codec';
@@ -1462,7 +1462,7 @@ class getid3_asf extends getid3_handler
 		return (isset($ASFCodecListObjectTypeLookup[$CodecListType]) ? $ASFCodecListObjectTypeLookup[$CodecListType] : 'Invalid Codec Type');
 	}
 
-	static function KnownGUIDs() {
+	public static function KnownGUIDs() {
 		static $GUIDarray = array(
 			'GETID3_ASF_Extended_Stream_Properties_Object'   => '14E6A5CB-C672-4332-8399-A96952065B5A',
 			'GETID3_ASF_Padding_Object'                      => '1806D474-CADF-4509-A4BA-9AABCB96AAE8',
@@ -1576,15 +1576,15 @@ class getid3_asf extends getid3_handler
 		return $GUIDarray;
 	}
 
-	static function GUIDname($GUIDstring) {
+	public static function GUIDname($GUIDstring) {
 		static $GUIDarray = array();
 		if (empty($GUIDarray)) {
-			$GUIDarray = getid3_asf::KnownGUIDs();
+			$GUIDarray = self::KnownGUIDs();
 		}
 		return array_search($GUIDstring, $GUIDarray);
 	}
 
-	static function ASFIndexObjectIndexTypeLookup($id) {
+	public static function ASFIndexObjectIndexTypeLookup($id) {
 		static $ASFIndexObjectIndexTypeLookup = array();
 		if (empty($ASFIndexObjectIndexTypeLookup)) {
 			$ASFIndexObjectIndexTypeLookup[1] = 'Nearest Past Data Packet';
@@ -1594,7 +1594,7 @@ class getid3_asf extends getid3_handler
 		return (isset($ASFIndexObjectIndexTypeLookup[$id]) ? $ASFIndexObjectIndexTypeLookup[$id] : 'invalid');
 	}
 
-	static function GUIDtoBytestring($GUIDstring) {
+	public static function GUIDtoBytestring($GUIDstring) {
 		// Microsoft defines these 16-byte (128-bit) GUIDs in the strangest way:
 		// first 4 bytes are in little-endian order
 		// next 2 bytes are appended in little-endian order
@@ -1629,7 +1629,7 @@ class getid3_asf extends getid3_handler
 		return $hexbytecharstring;
 	}
 
-	static function BytestringToGUID($Bytestring) {
+	public static function BytestringToGUID($Bytestring) {
 		$GUIDstring  = str_pad(dechex(ord($Bytestring{3})),  2, '0', STR_PAD_LEFT);
 		$GUIDstring .= str_pad(dechex(ord($Bytestring{2})),  2, '0', STR_PAD_LEFT);
 		$GUIDstring .= str_pad(dechex(ord($Bytestring{1})),  2, '0', STR_PAD_LEFT);
@@ -1654,7 +1654,7 @@ class getid3_asf extends getid3_handler
 		return strtoupper($GUIDstring);
 	}
 
-	static function FILETIMEtoUNIXtime($FILETIME, $round=true) {
+	public static function FILETIMEtoUNIXtime($FILETIME, $round=true) {
 		// FILETIME is a 64-bit unsigned integer representing
 		// the number of 100-nanosecond intervals since January 1, 1601
 		// UNIX timestamp is number of seconds since January 1, 1970
@@ -1665,7 +1665,7 @@ class getid3_asf extends getid3_handler
 		return ($FILETIME - 116444736000000000) / 10000000;
 	}
 
-	static function WMpictureTypeLookup($WMpictureType) {
+	public static function WMpictureTypeLookup($WMpictureType) {
 		static $WMpictureTypeLookup = array();
 		if (empty($WMpictureTypeLookup)) {
 			$WMpictureTypeLookup[0x03] = getid3_lib::iconv_fallback('ISO-8859-1', 'UTF-16LE', 'Front Cover');
@@ -1690,7 +1690,7 @@ class getid3_asf extends getid3_handler
 		return (isset($WMpictureTypeLookup[$WMpictureType]) ? $WMpictureTypeLookup[$WMpictureType] : '');
 	}
 
-	function ASF_HeaderExtensionObjectDataParse(&$asf_header_extension_object_data, &$unhandled_sections) {
+	public function ASF_HeaderExtensionObjectDataParse(&$asf_header_extension_object_data, &$unhandled_sections) {
 		// http://msdn.microsoft.com/en-us/library/bb643323.aspx
 
 		$offset = 0;
@@ -1937,7 +1937,7 @@ class getid3_asf extends getid3_handler
 	}
 
 
-	static function ASFmetadataLibraryObjectDataTypeLookup($id) {
+	public static function ASFmetadataLibraryObjectDataTypeLookup($id) {
 		static $ASFmetadataLibraryObjectDataTypeLookup = array(
 			0x0000 => 'Unicode string', // The data consists of a sequence of Unicode characters
 			0x0001 => 'BYTE array',     // The type of the data is implementation-specific
@@ -1950,7 +1950,7 @@ class getid3_asf extends getid3_handler
 		return (isset($ASFmetadataLibraryObjectDataTypeLookup[$id]) ? $ASFmetadataLibraryObjectDataTypeLookup[$id] : 'invalid');
 	}
 
-	function ASF_WMpicture(&$data) {
+	public function ASF_WMpicture(&$data) {
 		//typedef struct _WMPicture{
 		//  LPWSTR  pwszMIMEType;
 		//  BYTE  bPictureType;
@@ -2002,13 +2002,13 @@ class getid3_asf extends getid3_handler
 
 
 	// Remove terminator 00 00 and convert UTF-16LE to Latin-1
-	static function TrimConvert($string) {
-		return trim(getid3_lib::iconv_fallback('UTF-16LE', 'ISO-8859-1', getid3_asf::TrimTerm($string)), ' ');
+	public static function TrimConvert($string) {
+		return trim(getid3_lib::iconv_fallback('UTF-16LE', 'ISO-8859-1', self::TrimTerm($string)), ' ');
 	}
 
 
 	// Remove terminator 00 00
-	static function TrimTerm($string) {
+	public static function TrimTerm($string) {
 		// remove terminator, only if present (it should be, but...)
 		if (substr($string, -2) === "\x00\x00") {
 			$string = substr($string, 0, -2);
@@ -2017,5 +2017,3 @@ class getid3_asf extends getid3_handler
 	}
 
 }
-
-?>
