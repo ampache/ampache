@@ -556,9 +556,9 @@ class Stream {
 	 */
 	public function create_democratic() {
 
-		$democratic	= Democratic::get_current_playlist();
+		$democratic = Democratic::get_current_playlist();
 		$democratic->set_parent();
-		$democratic->vote($this->media);
+		$democratic->add_vote($this->media);
 
 	} // create_democratic
 

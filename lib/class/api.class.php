@@ -681,7 +681,12 @@ class Api {
 						echo xmlData::error('400', T_('Media Object Invalid or Not Specified'));
 						break;
 					}
-					$democratic->vote(array(array('song',$media->id)));
+					$democratic->add_vote(array(
+						array(
+							'object_type' => 'song',
+							'object_id' => $media->id
+						)
+					));
 
 					// If everything was ok
 					$xml_array = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);

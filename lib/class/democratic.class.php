@@ -74,15 +74,18 @@ class Democratic extends tmpPlaylist {
 	 */
 	public static function build_vote_cache($ids) {
 
-		if (!is_array($ids) OR !count($ids)) { return false; }
+		if (!is_array($ids) || !count($ids)) { return false; }
 
-		$idlist = '(' . implode(',',$ids) . ')';
+		$idlist = '(' . implode(',', $ids) . ')';
 
-		$sql = "SELECT `object_id`,COUNT(`user`) AS `count` FROM user_vote WHERE `object_id` IN $idlist GROUP BY `object_id`";
+		$sql = 'SELECT `object_id`, COUNT(`user`) AS `count` ' .
+			'FROM `user_vote` ' .
+			"WHERE `object_id` IN $idlist GROUP BY `object_id`";
+
 		$db_results = Dba::read($sql);
 
 		while ($row = Dba::fetch_assoc($db_results)) {
-			parent::add_to_cache('democratic_vote',$row['object_id'],$row['count']);
+			parent::add_to_cache('democratic_vote', $row['object_id'], $row['count']);
 		}
 
 		return true;
@@ -91,8 +94,8 @@ class Democratic extends tmpPlaylist {
 
 	/**
 	 * is_enabled
-	 * This function just returns true / false if the current democraitc playlist
-	 * is currently enabled / configured
+	 * This function just returns true / false if the current democratic
+	 * playlist is currently enabled / configured
 	 */
 	public function is_enabled() {
 
@@ -122,11 +125,12 @@ class Democratic extends tmpPlaylist {
 
 	/**
 	 * set_user_preferences
-	 * This sets up a (or all) user(s) to use democratic play. This sets their play method
-	 * and playlist method (clear on send) If no user is passed it does it for everyone and
-	 * also locks down the ability to change to admins only
+	 * This sets up a (or all) user(s) to use democratic play. This sets
+	 * their play method and playlist method (clear on send) If no user is
+	 * passed it does it for everyone and also locks down the ability to
+	 * change to admins only
 	 */
-	public static function set_user_preferences($user=NULL) {
+	public static function set_user_preferences($user = null) {
 
 		//FIXME: Code in single user stuff
 
@@ -146,7 +150,7 @@ class Democratic extends tmpPlaylist {
 
 	/**
 	 * format
-	 * This makes the objects variables all purrty so that they can be displayed
+	 * This makes the variables all purrty so that they can be displayed
 	 */
 	public function format() {
 
@@ -219,75 +223,38 @@ class Democratic extends tmpPlaylist {
 
 	/**
 	 * get_items
-	 * This returns an array of all object_ids currently in this tmpPlaylist. This
-	 * has gotten a little more complicated because of type, the values are an array
-	 * 0 being ID 1 being TYPE
-	 * FIXME: This is too complex, it makes my brain hurt
-	 * [VOTE COUNT]
-	 * 	[DATE OF NEWEST VOTE]
-	 *		[ROW ID]
-	 * 			[OBJECT_ID]
-	 *			[OBJECT_TYPE]
+	 * This returns a sorted array of all object_ids in this tmpPlaylist.
+	 * The array is multidimensional; the inner array needs to contain the
+	 * keys 'id', 'object_type' and 'object_id'.
 	 *
-	 * Sorting does the following
-	 * sort largest VOTE COUNT to top
-	 * sort smallest DATE OF NEWEST VOTE]
+	 * Sorting is highest to lowest vote count, then by oldest to newest 
+	 * vote activity.
 	 */
-	public function get_items() {
-
-		$order	  = "ORDER BY `user_vote`.`date` ASC, `tmp_playlist_data`.`track` ASC";
-		$vote_join 	= "INNER JOIN `user_vote` ON `user_vote`.`object_id`=`tmp_playlist_data`.`id`";
-
-		/* Select all objects from this playlist */
-		$sql = "SELECT `user_vote`.`object_id` AS `vote_id`,`user_vote`.`user`,`tmp_playlist_data`.`id`,`tmp_playlist_data`.`object_type`, `user_vote`.`date`, `tmp_playlist_data`.`object_id` " .
-			"FROM `tmp_playlist_data` $vote_join " .
-			"WHERE `tmp_playlist_data`.`tmp_playlist`='" . Dba::escape($this->tmp_playlist) . "' $order";
-		$db_results = Dba::read($sql);
-
-		/* Define the array */
-		$items = array();
-		$votes = array();
-		$object_ids = array();
-
-		// Itterate and build the sortable array
-		while ($results = Dba::fetch_assoc($db_results)) {
-
-			// Extra set of data for caching!
-			$this->object_ids[] = $results['object_id'];
-			$this->vote_ids[] = $results['vote_id'];
-
-			// First build a variable that holds the number of votes for an object
-			$name		= 'vc_' . $results['object_id'];
-
-			// Check if the vote is older then our current vote for this object
-			if ($votes[$results['object_id']] < $results['date'] OR !isset($votes[$results['object_id']])) {
-				$votes[$results['object_id']] = $results['date'];
-			}
-
-
-			// Append one to the vote
-			${$name}++;
-			$primary_key 	= ${$name};
-			$secondary_key	= $votes[$results['object_id']];
-			$items[$primary_key][$secondary_key][$results['id']] = array('object_id'=>$results['object_id'],'object_type'=>$results['object_type'],'id'=>$results['id']);
-		} // gather data
-
-		// Sort highest voted stuff to the top
-		krsort($items);
-
-		$sorted_items = array();
-
-		// re-collapse the array
-		foreach ($items as $vote_count=>$date_array) {
-			ksort($date_array);
-			foreach ($date_array as $object_array) {
-				foreach ($object_array as $key=>$sorted_array) {
-					$sorted_items[$key] = $sorted_array;
-				}
-			}
+	public function get_items($limit = null) {
+		
+		$sql = 'SELECT `tmp_playlist_data`.`object_type`, ' .
+			'`tmp_playlist_data`.`object_id`, ' .
+			'`tmp_playlist_data`.`id` ' .
+			'FROM `tmp_playlist_data` INNER JOIN `user_vote` ' .
+			'ON `user_vote`.`object_id` = `tmp_playlist_data`.`id` ' .
+			"WHERE `tmp_playlist_data`.`tmp_playlist` = '" .
+			Dba::escape($this->tmp_playlist) . "' " .
+			'GROUP BY 1, 2 ' .
+			'ORDER BY COUNT(*) DESC, MAX(`user_vote`.`date`) '; 
+		
+		if ($limit) {
+			$sql .= 'LIMIT ' . intval($limit);
 		}
 
-		return $sorted_items;
+		$db_results = Dba::read($sql);
+
+		$results = array();
+
+		while ($results[] = Dba::fetch_assoc($db_results)) {
+			// Nada
+		}
+
+		return $results;
 
 	} // get_items
 
@@ -305,41 +272,39 @@ class Democratic extends tmpPlaylist {
 
 	/**
 	 * get_next_object
-	 * This returns the next object in the tmp_playlist most of the time this
-	 * will just be the top entry, but if there is a base_playlist and no
-	 * items in the playlist then it returns a random entry from the base_playlist
+	 * This returns the next object in the tmp_playlist.
+	 * Most of the time this will just be the top entry, but if there is a
+	 * base_playlist and no items in the playlist then it returns a random
+	 * entry from the base_playlist
 	 */
-	public function get_next_object($offset='') {
+	public function get_next_object($offset = 0) {
 
-		$offset = $offset ? intval($offset) : '0';
+		// FIXME: Shouldn't this return object_type?
 
-		// We have to get all because of the pysco sorting
-		$items = self::get_items();
+		$offset = intval($offset);
+
+		$items = $this->get_items($offset + 1);
 
 		if (count($items) > $offset) {
-			$array = array_slice($items,$offset,1);
-			$item = array_shift($array);
-			$results['object_id'] = $item['object_id'];
+			return $items[$offset]['object_id'];
 		}
 
-		/* If nothing was found and this is a voting playlist then get from base_playlist */
-		if (!$results['object_id']) {
 
-			/* Check for a playlist */
-			if ($this->base_playlist) {
-				/* We need to pull a random one from the base_playlist */
-				$base_playlist = new Playlist($this->base_playlist);
-				$data = $base_playlist->get_random_items(1);
-				$results['object_id'] = $data['0']['object_id'];
-			}
-			else {
-				$sql = "SELECT `id` as `object_id` FROM `song` WHERE `enabled`='1' ORDER BY RAND() LIMIT 1";
-				$db_results = Dba::read($sql);
-				$results = Dba::fetch_assoc($db_results);
-			}
+		// If nothing was found and this is a voting playlist then get
+		// from base_playlist
+		if ($this->base_playlist) {
+			$base_playlist = new Playlist($this->base_playlist);
+			$data = $base_playlist->get_random_items(1);
+			return $data[0]['object_id'];
+		}
+		else {
+			$sql = "SELECT `id` FROM `song` WHERE `enabled`='1' ORDER BY RAND() LIMIT 1";
+			$db_results = Dba::read($sql);
+			$results = Dba::fetch_assoc($db_results);
+			return $results['id'];
 		}
 
-		return $results['object_id'];
+		return null;
 
 	} // get_next_object
 
@@ -347,13 +312,14 @@ class Democratic extends tmpPlaylist {
 	 * get_uid_from_object_id
 	 * This takes an object_id and an object type and returns the ID for the row
 	 */
-	public function get_uid_from_object_id($object_id,$object_type='') {
+	public function get_uid_from_object_id($object_id, $object_type = 'song') {
 
 		$object_id	= Dba::escape($object_id);
-		$object_type	= $object_type ? Dba::escape($object_type) : 'song';
+		$object_type	= Dba::escape($object_type);
 		$tmp_id		= Dba::escape($this->tmp_playlist);
 
-		$sql = "SELECT `tmp_playlist_data`.`id` FROM `tmp_playlist_data` WHERE `object_type`='$object_type' AND " .
+		$sql = 'SELECT `id` FROM `tmp_playlist_data` ' .
+			"WHERE `object_type`='$object_type' AND " .
 			"`tmp_playlist`='$tmp_id' AND `object_id`='$object_id'";
 		$db_results = Dba::read($sql);
 
@@ -365,15 +331,15 @@ class Democratic extends tmpPlaylist {
 
 	/**
 	 * get_cool_songs
-	 * This returns all of the song_ids for songs that have happened within the last 'cooldown'
-	 * for this user.
+	 * This returns all of the song_ids for songs that have happened within
+	 * the last 'cooldown' for this user.
 	 */
 	public function get_cool_songs() {
 
 		// Convert cooldown time to a timestamp in the past
 		$cool_time = time() - ($this->cooldown * 60);
 
-		$song_ids = Stats::get_object_history($GLOBALS['user']->id,$cool_time);
+		$song_ids = Stats::get_object_history($GLOBALS['user']->id, $cool_time);
 
 		return $song_ids;
 
@@ -386,14 +352,14 @@ class Democratic extends tmpPlaylist {
 	 * by this user, naturally it checks to make sure that the user hasn't
 	 * already voted on any of these objects
 	 */
-	public function vote($items) {
+	public function add_vote($items) {
 
 		/* Itterate through the objects if no vote, add to playlist and vote */
 		foreach ($items as $element) {
 			$type = array_shift($element);
 			$object_id = array_shift($element);
-			if (!$this->has_vote($object_id,$type)) {
-				$this->add_vote($object_id,$type);
+			if (!$this->has_vote($object_id, $type)) {
+				$this->_add_vote($object_id, $type);
 			}
 		} // end foreach
 
@@ -403,19 +369,21 @@ class Democratic extends tmpPlaylist {
 	 * has_vote
 	 * This checks to see if the current user has already voted on this object
 	 */
-	public function has_vote($object_id,$type='') {
+	public function has_vote($object_id, $type = 'song') {
 
 		$tmp_id		= Dba::escape($this->tmp_playlist);
 		$object_id 	= Dba::escape($object_id);
-		$type		= $type ? Dba::escape($type) : 'song';
+		$type		= Dba::escape($type);
 		$user_id	= Dba::escape($GLOBALS['user']->id);
 
 		/* Query vote table */
-		$sql = "SELECT tmp_playlist_data.object_id FROM `user_vote` " .
-			"INNER JOIN tmp_playlist_data ON tmp_playlist_data.id=user_vote.object_id " .
-			"WHERE user_vote.user='$user_id' AND tmp_playlist_data.object_type='$type' " .
-			"AND tmp_playlist_data.object_id='$object_id' " .
-			"AND tmp_playlist_data.tmp_playlist='$tmp_id'";
+		$sql = 'SELECT `tmp_playlist_data`.`object_id` ' .
+			'FROM `user_vote` INNER JOIN `tmp_playlist_data` ' .
+			'ON `tmp_playlist_data`.`id`=`user_vote`.`object_id` ' .
+			"WHERE `user_vote`.`user`='$user_id' " .
+			"AND `tmp_playlist_data`.`object_type`='$type' " .
+			"AND `tmp_playlist_data`.`object_id`='$object_id' " .
+			"AND `tmp_playlist_data`.`tmp_playlist`='$tmp_id'";
 		$db_results = Dba::read($sql);
 
 		/* If we find  row, they've voted!! */
@@ -428,14 +396,14 @@ class Democratic extends tmpPlaylist {
 	} // has_vote
 
 	/**
-	 * add_vote
+	 * _add_vote
 	 * This takes a object id and user and actually inserts the row
 	 */
-	public function add_vote($object_id,$object_type='') {
+	private function _add_vote($object_id, $object_type = 'song') {
 
 		$object_id	= Dba::escape($object_id);
 		$tmp_playlist	= Dba::escape($this->tmp_playlist);
-		$object_type	= $object_type ? Dba::escape($object_type) : 'song';
+		$object_type	= Dba::escape($object_type);
 		$media = new $object_type($object_id);
 		$track = isset($media->track) ? "'" . intval($media->track) . "'" : "NULL";
 
@@ -647,22 +615,20 @@ class Democratic extends tmpPlaylist {
 
 	/**
 	 * get_vote
-	 * This returns the current count for a specific song on this tmp_playlist
+	 * This returns the current count for a specific song
 	 */
-	public function get_vote($object_id) {
+	public function get_vote($id) {
 
-		if (parent::is_cached('democratic_vote',$object_id)) {
-			return parent::get_from_cache('democratic_vote',$object_id);
+		if (parent::is_cached('democratic_vote', $id)) {
+			return parent::get_from_cache('democratic_vote', $id);
 		}
 
-		$object_id = Dba::escape($object_id);
-
-		$sql = "SELECT COUNT(`user`) AS `count` FROM user_vote " .
-			"WHERE `object_id`='$object_id'";
+		$sql = 'SELECT COUNT(`user`) AS `count` FROM `user_vote` ' .
+			"WHERE `object_id`='" . Dba::escape($id) . "'";
 		$db_results = Dba::read($sql);
 
 		$results = Dba::fetch_assoc($db_results);
-
+		parent::add_to_cache('democratic_vote', $id, $results['count']);
 		return $results['count'];
 
 	} // get_vote

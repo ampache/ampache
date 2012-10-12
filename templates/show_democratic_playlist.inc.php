@@ -72,26 +72,26 @@ else {
 <?php
 $democratic = Democratic::get_current_playlist();
 $democratic->set_parent();
-foreach($object_ids as $row_id=>$data) {
-	$media = new $data['object_type']($data['object_id']);
+foreach($object_ids as $item) {
+	$media = new $item['object_type']($item['object_id']);
 	$media->format();
 ?>
 <tr class="<?php echo flip_class(); ?>">
 	<td class="cel_action">
-	<?php if ($democratic->has_vote($media->id)) { ?>
-	<?php echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $row_id,'delete', T_('Remove Vote'),'remove_vote_' . $row_id); ?>
+	<?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) { ?>
+	<?php echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'],'delete', T_('Remove Vote'),'remove_vote_' . $item['id']); ?>
 	<?php } else { ?>
-	<?php echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&type=' . scrub_out($data['object_type']),'tick', T_('Add Vote'),'remove_vote_' . $row_id); ?>
+	<?php echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&type=' . scrub_out($item['object_type']),'tick', T_('Add Vote'),'remove_vote_' . $item['id']); ?>
 	<?php } ?>
 	</td>
-	<td class="cel_votes" ><?php echo scrub_out($democratic->get_vote($row_id)); ?></td>
+	<td class="cel_votes" ><?php echo scrub_out($democratic->get_vote($item['id'])); ?></td>
 	<td class="cel_title"><?php echo $media->f_link; ?></td>
 	<td class="cel_album"><?php echo $media->f_album_link; ?></td>
 	<td class="cel_artist"><?php echo $media->f_artist_link; ?></td>
 	<td class="cel_time"><?php echo $media->f_time; ?></td>
 	<?php if (Access::check('interface','100')) { ?>
 	<td class="cel_admin">
-	<?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $row_id,'disable', T_('Delete'),'delete_row_' . $row_id); ?>
+	<?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['id'],'disable', T_('Delete'),'delete_row_' . $item['id']); ?>
 	</td>
 	<?php } ?>
 </tr>
