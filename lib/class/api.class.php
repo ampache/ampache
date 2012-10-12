@@ -568,7 +568,7 @@ class Api {
 			$items = $playlist->get_items();
 
 			foreach ($items as $object) {
-				if ($object['type'] == 'song') {
+				if ($object['object_type'] == 'song') {
 					$songs[] = $object['object_id'];
 				}
 			} // end foreach

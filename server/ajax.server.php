@@ -297,21 +297,21 @@ switch ($_REQUEST['action']) {
 				$playlist = new Playlist($_REQUEST['id']);
 				$items = $playlist->get_items();
 				foreach ($items as $item) {
-					$GLOBALS['user']->playlist->add_object($item['object_id'],$item['type']);
+					$GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
 				}
 			break;
 			case 'playlist_random':
 				$playlist = new Playlist($_REQUEST['id']);
 				$items = $playlist->get_random_items();
 				foreach ($items as $item) {
-					$GLOBALS['user']->playlist->add_object($item['object_id'],$item['type']);
+					$GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
 				}
 			break;
 			case 'smartplaylist':
 				$playlist = new Search('song', $_REQUEST['id']);
 				$items = $playlist->get_items();
 				foreach ($items as $item) {
-					$GLOBALS['user']->playlist->add_object($item['object_id'],$item['type']);
+					$GLOBALS['user']->playlist->add_object($item['object_id'],$item['object_type']);
 				}
 			break;
 			case 'clear_all':

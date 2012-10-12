@@ -162,8 +162,10 @@ class tmpPlaylist extends database_object {
 
 		while ($results = Dba::fetch_assoc($db_results)) {
 			$key		= $results['id'];
-			$items[$key] 	= array($results['object_type'],
-				$results['object_id']);
+			$items[$key] 	= array(
+				'object_type' => $results['object_type'],
+				'object_id' => $results['object_id']
+			);
 		}
 
 		return $items;

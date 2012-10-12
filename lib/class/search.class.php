@@ -579,7 +579,7 @@ class Search extends playlist_object {
 		while ($row = Dba::fetch_assoc($db_results)) {
 			$results[] = array(
 				'object_id' => $row['id'],
-				'type' => $this->searchtype
+				'object_type' => $this->searchtype
 			);
 		}
 
@@ -607,7 +607,7 @@ class Search extends playlist_object {
 		while ($row = Dba::fetch_assoc($db_results)) {
 			$results[] = array(
 				'object_id' => $row['id'],
-				'type' => $this->searchtype
+				'object_type' => $this->searchtype
 			);
 		}
 
