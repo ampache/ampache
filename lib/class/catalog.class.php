@@ -1266,20 +1266,14 @@ class Catalog extends database_object {
 		/* Update the Catalog last_update */
 		$this->update_last_add();
 
-		$time_diff = $current_time - $start_time;
-		if ($time_diff) {
-			$song_per_sec = intval($this->count/$time_diff);
-		}
-		if (!$song_per_sec) {
-			$song_per_sec = "N/A";
-		}
-		if (!$this->count) {
-			$this->count = 0;
-		}
+		$time_diff = ($current_time - $start_time) ?: 0;
+		$rate = intval($this->count / $time_diff) ?: T_('N/A');
 
 		show_box_top();
-		echo "\n<br />" . T_('Catalog Update Finished') . "... " . T_('Total Time') . " [" . date("i:s",$time_diff) . "] " .
-		T_('Total Songs') . " [" . $this->count . "] " . T_('Songs Per Seconds') . " [" . $song_per_sec . "]<br /><br />";
+		echo "\n<br />" . 
+		printf(T_('Catalog Update Finished.  Total Time: [%s] Total Songs: [%s] Songs Per Second: [%s]'),
+			date('i:s', $time_diff), $this->count, $rate);
+		echo '<br /><br />';
 		show_box_bottom();
 
 	} // add_to_catalog
