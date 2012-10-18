@@ -230,7 +230,7 @@ switch ($_REQUEST['action']) {
 		// If an error hasn't occured
 		if (!Error::occurred()) {
 
-			$catalog_id = Catalog::Create($_POST);
+			$catalog_id = Catalog::create($_POST);
 
 			if (!$catalog_id) {
 				require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
