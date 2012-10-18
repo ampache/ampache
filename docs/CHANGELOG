@@ -3,6 +3,11 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.6-future
+        - Fixed an issue with adding catalogs on Windows caused by inconsistent 
+                behaviour of is_readable() (reported by Lockzi)
+
+--------------------------------------------------------------------------
   v.3.6-Alpha3 2012-10-15
         - Updated getID3 to 1.9.4b1
         - Removed support for extremely old passwords

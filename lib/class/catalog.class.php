@@ -275,9 +275,13 @@ class Catalog extends database_object {
 		$path = Dba::escape($data['path']);
 
 		// Make sure the path is readable/exists
-		if (!is_readable($data['path']) AND $data['type'] == 'local') {
-			Error::add('general', sprintf(T_('Error: %s is not readable or does not exist'), scrub_out($data['path'])));
-			return false;
+		if ($data['type'] == 'local') {
+			$handle = opendir($path);
+			if ($handle === false) {
+				Error::add('general', sprintf(T_('Error: %s is not readable or does not exist'), scrub_out($data['path'])));
+				return false;
+			}
+			closedir($handle);
 		}
 
 		// Make sure this path isn't already in use by an existing catalog
