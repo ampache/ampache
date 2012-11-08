@@ -92,7 +92,7 @@ switch ($_REQUEST['action']) {
 			'database_hostname' => $hostname
 			), true
 		);
-		if (!check_database()) {
+		if (!Dba::check_database()) {
 			Error::add('config', T_('Error: Unable to make Database Connection: ') . Dba::error());
 		}
 
