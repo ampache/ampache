@@ -135,43 +135,38 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 
 	unset($data);
 
-	/* Attempt to make DB connection */
-	$dbh = Dba::dbh();
-
-	if (!is_resource($dbh)) {
+	if (!Dba::check_database()) {
 		Error::add('general', sprintf(T_('Error: Unable to make Database Connection %s'), Dba::error()));
 		return false;
 	}
 
-	/* Check/Create Database as needed */
-	$db_selected = @mysql_select_db($database, $dbh);
+	$db_exists = Dba::check_database_exists();
 
-	if ($db_selected && $_POST['existing_db']) {
+	if ($db_exists && $_POST['existing_db']) {
 		// Rien a faire, we've got the db just blow through
 	}
-	elseif ($db_selected && !$_POST['overwrite_db']) {
+	elseif ($db_exists && !$_POST['overwrite_db']) {
 		Error::add('general', T_('Error: Database Already exists and Overwrite not checked'));
 		return false;
 	}
-	elseif (!$db_selected) {
+	elseif (!$db_exists) {
 		$sql = "CREATE DATABASE `" . Dba::escape($database) . "`";
-		if (!$db_results = @mysql_query($sql, $dbh)) {
+		if (!Dba::write($sql)) {
 			Error::add('general',sprintf(T_('Error: Unable to Create Database %s'), Dba::error()));
 			return false;
 		}
-		@mysql_select_db($database, $dbh);
 	} // if db can't be selected
 	else {
 		$sql = "DROP DATABASE `" . Dba::escape($database) . "`";
-		$db_results = @mysql_query($sql,$dbh);
+		Dba::write($sql);
 		$sql = "CREATE DATABASE `" . Dba::escape($database) . "`";
-                if (!$db_results = @mysql_query($sql, $dbh)) {
+                if (!Dba::write($sql)) {
                         Error::add('general', sprintf(T_('Error: Unable to Create Database %s'), Dba::error()));
                         return false;
                 }
-                @mysql_select_db($database, $dbh);
 	} // end if selected and overwrite
 
+	Dba::disconnect();
 	/* Check and see if we should create a user here */
 	if ($_POST['db_user'] == 'create_db_user' || (strlen($dbuser) AND strlen($dbpass))) {
 
@@ -186,7 +181,7 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 		$sql = "GRANT ALL PRIVILEGES ON " . Dba::escape($database) . ".* TO " .
 			"'" . Dba::escape($db_user) . "'@'" . Dba::escape($hostname) . "' IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";
 
-		if (!$db_results = @mysql_query($sql, $dbh)) {
+		if (!Dba::write($sql)) {
 			Error::add('general', sprintf(T_('Error: Unable to Insert %1$s with permissions to %2$s on %3$s %4$s'), $db_user, $database, $hostname, Dba::error()));
 			return false;
 		}
@@ -247,12 +242,12 @@ function install_create_config($web_path,$username,$password,$hostname,$database
 	  sure that they actually work!
 	*/
 	// Connect to the DB
-	if(!is_resource($dbh)) {
+	if(!Dba::check_database()) {
 		Error::add('general', T_("Database Connection Failed Check Hostname, Username and Password"));
 		return false;
 	}
-	if (!@mysql_select_db($database, $dbh)) {
-		Error::add('general', sprintf(T_('Database Selection Failure Check Existance of %s'), $database));
+	if (!Dba::check_database_exists()) {
+		Error::add('general', sprintf(T_('Database selection failed. Check existence of %s'), $database));
 		return false;
 	}
 
@@ -299,16 +294,12 @@ function install_create_account($username,$password,$password2) {
 		return false;
 	}
 
-	$dbh = Dba::dbh();
-
-	if (!is_resource($dbh)) {
+	if (!Dba::check_database()) {
 		Error::add('general', sprintf(T_('Database Connection Failed: %s'), Dba::error()));
 		return false;
 	}
 
-	$db_select = @mysql_select_db(Config::get('database_name'),$dbh);
-
-	if (!$db_select) {
+	if (!Dba::check_database_inserted()) {
 		Error::add('general', sprintf(T_('Database Select Failed: %s'), Dba::error()));
 		return false;
 	}

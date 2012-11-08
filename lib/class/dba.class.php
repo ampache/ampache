@@ -48,7 +48,6 @@ class Dba {
 
 	public static $stats = array('query'=>0);
 
-	private static $_default_db;
 	private static $_sql;
 	private static $config;
 
@@ -295,6 +294,13 @@ class Dba {
 
 	} // check_database
 
+	public static function check_database_exists() {
+		$dbh = self::_connect();
+		$select = mysql_select_db(Config::get('database_name'), $dbh);
+		mysql_close($dbh);
+		return $select;
+	}
+
 	/**
 	 * check_database_inserted
 	 * checks to make sure that you have inserted the database
@@ -318,6 +324,9 @@ class Dba {
 
 	} // check_database_inserted
 
+	public static function get_client_info() {
+		return mysql_get_client_info();
+	}
 
 	/**
 	 * show_profile
@@ -343,7 +352,9 @@ class Dba {
 	 */
 	public static function dbh($database='') {
 
-		if (!$database) { $database = self::$_default_db; }
+		if (!$database) {
+			$database = Config::get('database_name');
+		}
 
 		// Assign the Handle name that we are going to store
 		$handle = 'dbh_' . $database;
@@ -367,7 +378,9 @@ class Dba {
 	 */
 	public static function disconnect($database='') {
 
-		if (!$database) { $database = self::$_default_db; }
+		if (!$database) {
+			$database = Config::get('database_name'); 
+		}
 
 		$handle = 'dbh_' . $database;
 
@@ -402,19 +415,6 @@ class Dba {
 		return mysql_error();
 
 	} // error
-
-	/**
-	 * auto_init
-	 * This is the auto init function it sets up the config class
-	 * and also sets the default database
-	 */
-	public static function _auto_init() {
-
-		self::$_default_db = Config::get('database_name');
-
-		return true;
-
-	} // auto_init
 
 	/**
 	 * translate_to_mysqlcharset

@@ -88,7 +88,7 @@
 		Error::add('install', T_('PHP MySQL Support'));
 	}
 	else {
-		echo debug_result(mysql_get_client_info(),true);
+		echo debug_result(Dba::get_client_info(), true);
 	}
 ?>
 </td>
