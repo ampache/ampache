@@ -86,8 +86,14 @@ switch ($_REQUEST['action']) {
 		$htmllang = $_REQUEST['htmllang'];
 		$charset  = $_REQUEST['charset'];
 		// Test and make sure that the values they give us actually work
-		if (!check_database($hostname,$username,$password)) {
-			Error::add('config', T_('Error: Unable to make Database Connection') . Dba::error());
+		Config::set_by_array(array(
+			'database_username' => $username,
+			'database_password' => $password,
+			'database_hostname' => $hostname
+			), true
+		);
+		if (!check_database()) {
+			Error::add('config', T_('Error: Unable to make Database Connection: ') . Dba::error());
 		}
 
 		// Was download pressed?

@@ -83,23 +83,22 @@ function install_check_status($configfile) {
 	  if they don't then they're cool
 	*/
 	$results = parse_ini_file($configfile);
-	$dbh = Dba::check_database($results['database_hostname'],$results['database_username'],$results['database_password']);
+	Config::set_by_array($results, true);
 
-	if (!is_resource($dbh)) {
+	if (!Dba::check_database()) {
 		Error::add('general', T_('Unable to connect to database, check your ampache config'));
 		return false;
 	}
 
-	$select_db = mysql_select_db($results['database_name'],$dbh);
+	$sql = 'SELECT * FROM `user`';
+	$db_results = Dba::read($sql);
 
-	if (!$select_db) {
-		Error::add('general', T_('Unable to select database, check your ampache config'));
+	if (!$db_results) {
+		Error::add('general', T_('Unable to query database, check your ampache config'));
 		return false;
 	}
 
-	$sql = "SELECT * FROM `user`";
-	$db_results = mysql_query($sql, $dbh);
-	if (!mysql_num_rows($db_results)) {
+	if (!Dba::num_rows($db_results)) {
 		return true;
 	}
 	else {

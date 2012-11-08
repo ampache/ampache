@@ -233,66 +233,65 @@ class Dba {
 	 * _connect
 	 * This connects to the database, used by the DBH function
 	 */
-	private static function _connect($db_name) {
+	private static function _connect() {
 
-		if (self::$_default_db == $db_name) {
-			$username = Config::get('database_username');
-			$hostname = Config::get('database_hostname');
-			$password = Config::get('database_password');
-			$database = Config::get('database_name');
+		$username = Config::get('database_username');
+		$hostname = Config::get('database_hostname');
+		$password = Config::get('database_password');
+
+		$dbh = mysql_connect($hostname, $username, $password);
+		if (!$dbh) {
+			debug_event('Database', 'Unable to connect to database: ' . mysql_error(), 1);
+			return null;
 		}
-		else {
-			// Do this later
-		}
 
+		return $dbh;
+	} // _connect
 
-		$dbh = mysql_connect($hostname,$username,$password);
-		if (!$dbh) { debug_event('Database','Error unable to connect to database' . mysql_error(),'1'); }
-
+	private static function _setup_dbh($dbh, $database) {
 		$data = self::translate_to_mysqlcharset(Config::get('site_charset'));
 
 		if (function_exists('mysql_set_charset')) {
-			if (!$charset = mysql_set_charset($data['charset'],$dbh)) {
-				debug_event('Database','Error unable to set MySQL Connection charset to ' . $data['charset'] . ' this may cause issues...','1');
+			if (!$charset = mysql_set_charset($data['charset'], $dbh)) {
+				debug_event('Database', 'Unable to set MySQL connection charset to ' . $data['charset'] . ', this may cause issues...', 1);
 			}
 		}
 		else {
 			$sql = "SET NAMES " . mysql_real_escape_string($data['charset']);
 			$charset = mysql_query($sql,$dbh);
-			if (mysql_error($dbh)) { debug_event('Database','Error unable to set MySQL Connection charset to ' . $data['charset'] . ' using SET NAMES, you may have issues','1'); }
+			if ($error = mysql_error($dbh)) {
+				debug_event('Database', 'Unable to set MySQL connection charset to ' . $data['charset'] . ' using SET NAMES, this may cause issues: ' . $error, 1);
+			}
 
 		}
-		if (!$charset) { debug_event('Database','Error unable to set connection charset, function missing or set failed','1'); }
 
-		$select_db = mysql_select_db($database,$dbh);
-		if (!$select_db) { debug_event('Database','Error unable to select ' . $database . ' error ' . mysql_error(),'1'); }
+		$select_db = mysql_select_db($database, $dbh);
+		if (!$select_db) {
+			debug_event('Database', 'Unable to select database ' . $database . ': ' . mysql_error(), 1);
+		}
 
 		if (Config::get('sql_profiling')) {
 			mysql_query('set profiling=1', $dbh);
 			mysql_query('set profiling_history_size=50', $dbh);
 			mysql_query('set query_cache_type=0', $dbh);
 		}
-		return $dbh;
-
-	} // _connect
+	} // _select_db
 
 	/**
 	 * check_database
 	 *
 	 * Make sure that we can connect to the database
 	 */
-	public static function check_database($host,$username,$pass) {
+	public static function check_database() {
 
-		$dbh = @mysql_connect($host, $username, $pass);
+		$dbh = self::_connect();
 
 		if (!is_resource($dbh)) {
 			return false;
 		}
-		if (!$host || !$username) {
-			return false;
-		}
 
-		return $dbh;
+		mysql_close($dbh);
+		return true;
 
 	} // check_database
 
@@ -350,7 +349,8 @@ class Dba {
 		$handle = 'dbh_' . $database;
 
 		if (!is_resource(Config::get($handle))) {
-			$dbh = self::_connect($database);
+			$dbh = self::_connect();
+			self::_setup_dbh($dbh, $database);
 			Config::set($handle, $dbh, true);
 			return $dbh;
 		}
