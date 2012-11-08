@@ -283,16 +283,16 @@ class Dba {
 	 */
 	public static function check_database($host,$username,$pass) {
 
-        	$dbh = @mysql_connect($host, $username, $pass);
+		$dbh = @mysql_connect($host, $username, $pass);
 
-        	if (!is_resource($dbh)) {
-                	return false;
-        	}
-        	if (!$host || !$username) {
-                	return false;
-        	}
+		if (!is_resource($dbh)) {
+			return false;
+		}
+		if (!$host || !$username) {
+			return false;
+		}
 
-        	return $dbh;
+		return $dbh;
 
 	} // check_database
 
@@ -303,15 +303,15 @@ class Dba {
 	 */
 	public static function check_database_inserted() {
 
-	        $sql = "DESCRIBE session";
+		$sql = "DESCRIBE session";
 		$db_results = Dba::read($sql);
 
-	        if (!$db_results) {
-		        return false;
-	        }
+		if (!$db_results) {
+			return false;
+		}
 
 		// Make sure the whole table is there
-	        if (Dba::num_rows($db_results) != '7') {
+		if (Dba::num_rows($db_results) != '7') {
 			return false;
 		}
 
