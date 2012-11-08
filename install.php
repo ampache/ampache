@@ -87,7 +87,7 @@ switch ($_REQUEST['action']) {
 		$charset  = $_REQUEST['charset'];
 		// Test and make sure that the values they give us actually work
 		if (!check_database($hostname,$username,$password)) {
-			Error::add('config', T_('Error: Unable to make Database Connection') . mysql_error());
+			Error::add('config', T_('Error: Unable to make Database Connection') . Dba::error());
 		}
 
 		// Was download pressed?

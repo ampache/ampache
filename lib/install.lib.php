@@ -140,7 +140,7 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 	$dbh = Dba::dbh();
 
 	if (!is_resource($dbh)) {
-		Error::add('general', sprintf(T_('Error: Unable to make Database Connection %s'), mysql_error()));
+		Error::add('general', sprintf(T_('Error: Unable to make Database Connection %s'), Dba::error()));
 		return false;
 	}
 
@@ -157,7 +157,7 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 	elseif (!$db_selected) {
 		$sql = "CREATE DATABASE `" . Dba::escape($database) . "`";
 		if (!$db_results = @mysql_query($sql, $dbh)) {
-			Error::add('general',sprintf(T_('Error: Unable to Create Database %s'), mysql_error()));
+			Error::add('general',sprintf(T_('Error: Unable to Create Database %s'), Dba::error()));
 			return false;
 		}
 		@mysql_select_db($database, $dbh);
@@ -167,7 +167,7 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 		$db_results = @mysql_query($sql,$dbh);
 		$sql = "CREATE DATABASE `" . Dba::escape($database) . "`";
                 if (!$db_results = @mysql_query($sql, $dbh)) {
-                        Error::add('general', sprintf(T_('Error: Unable to Create Database %s'), mysql_error()));
+                        Error::add('general', sprintf(T_('Error: Unable to Create Database %s'), Dba::error()));
                         return false;
                 }
                 @mysql_select_db($database, $dbh);
@@ -188,8 +188,7 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 			"'" . Dba::escape($db_user) . "'@'" . Dba::escape($hostname) . "' IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";
 
 		if (!$db_results = @mysql_query($sql, $dbh)) {
-			// HINT: 1: db_user, 2: database, 3: hostname, 4: mysql_error()
-			Error::add('general', sprintf(T_('Error: Unable to Insert %1$s with permissions to %2$s on %3$s %4$s'), $db_user, $database, $hostname, mysql_error()));
+			Error::add('general', sprintf(T_('Error: Unable to Insert %1$s with permissions to %2$s on %3$s %4$s'), $db_user, $database, $hostname, Dba::error()));
 			return false;
 		}
 	} // end if we are creating a user
@@ -205,7 +204,7 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
 			   //FIXME: This is for a DB prefix when we get around to it
 //                         $pieces[$i] = str_replace( "#__", $DBPrefix, $pieces[$i]);
                          if (!$result = Dba::write($pieces[$i])) {
-                                 $errors[] = array ( mysql_error(), $pieces[$i] );
+                                 $errors[] = array ( Dba::error(), $pieces[$i] );
                          } // end if
                  } // end if
          } // end for
@@ -304,14 +303,14 @@ function install_create_account($username,$password,$password2) {
 	$dbh = Dba::dbh();
 
 	if (!is_resource($dbh)) {
-		Error::add('general', sprintf(T_('Database Connection Failed: %s'), mysql_error()));
+		Error::add('general', sprintf(T_('Database Connection Failed: %s'), Dba::error()));
 		return false;
 	}
 
 	$db_select = @mysql_select_db(Config::get('database_name'),$dbh);
 
 	if (!$db_select) {
-		Error::add('general', sprintf(T_('Database Select Failed: %s'), mysql_error()));
+		Error::add('general', sprintf(T_('Database Select Failed: %s'), Dba::error()));
 		return false;
 	}
 
@@ -321,7 +320,7 @@ function install_create_account($username,$password,$password2) {
 	$insert_id = User::create($username,'Administrator','',$password,'100');
 
 	if (!$insert_id) {
-		Error::add('general', sprintf(T_('Insert of Base User Failed %s'), mysql_error()));
+		Error::add('general', sprintf(T_('Insert of Base User Failed %s'), Dba::error()));
 		return false;
 	}
 
