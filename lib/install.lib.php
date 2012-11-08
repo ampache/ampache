@@ -83,7 +83,7 @@ function install_check_status($configfile) {
 	  if they don't then they're cool
 	*/
 	$results = parse_ini_file($configfile);
-	$dbh = check_database($results['database_hostname'],$results['database_username'],$results['database_password']);
+	$dbh = Dba::check_database($results['database_hostname'],$results['database_username'],$results['database_password']);
 
 	if (!is_resource($dbh)) {
 		Error::add('general', T_('Unable to connect to database, check your ampache config'));

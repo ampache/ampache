@@ -194,7 +194,7 @@
 	<td valign="top"><?php echo T_("Database connection"); ?></td>
 	<td valign="top">[
 	<?php
-		$db = check_database($results['database_hostname'], $results['database_username'], $results['database_password'],$results['database_name']);
+		$db = Dba::check_database($results['database_hostname'], $results['database_username'], $results['database_password'],$results['database_name']);
 		if (!$db) {
 			echo debug_result('',false);
 		}

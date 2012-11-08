@@ -277,6 +277,26 @@ class Dba {
 	} // _connect
 
 	/**
+	 * check_database
+	 *
+	 * Make sure that we can connect to the database
+	 */
+	public static function check_database($host,$username,$pass) {
+
+        	$dbh = @mysql_connect($host, $username, $pass);
+
+        	if (!is_resource($dbh)) {
+                	return false;
+        	}
+        	if (!$host || !$username) {
+                	return false;
+        	}
+
+        	return $dbh;
+
+	} // check_database
+
+	/**
 	 * show_profile
 	 * This function is used for debug, helps with profiling
 	 */

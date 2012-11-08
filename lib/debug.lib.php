@@ -31,31 +31,6 @@
  */
 
 /**
- * check_database
- *
- * checks the local mysql db and make sure life is good
- *
- * @param	string	$host	Hostname
- * @param	string	$username	Username
- * @param	string	$pass	Password
- * @return	mixed	false or Database resource
- */
-function check_database($host,$username,$pass) {
-
-	$dbh = @mysql_connect($host, $username, $pass);
-
-	if (!is_resource($dbh)) {
-		return false;
-	}
-	if (!$host || !$username) {
-		return false;
-	}
-
-	return $dbh;
-
-} // check_database
-
-/**
  * check_database_inserted
  * checks to make sure that you have inserted the database
  * and that the user you are using has access to it
