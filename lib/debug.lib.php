@@ -31,29 +31,6 @@
  */
 
 /**
- * check_database_inserted
- * checks to make sure that you have inserted the database
- * and that the user you are using has access to it
- */
-function check_database_inserted($dbh,$db_name) {
-
-	$sql = "DESCRIBE session";
-	$db_results = Dba::read($sql);
-
-	if (!$db_results) {
-		return false;
-	}
-
-	// Make sure the whole table is there
-	if (Dba::num_rows($db_results) != '7') {
-		return false;
-	}
-
-	return true;
-
-} // check_database_inserted
-
-/**
  * check_php_ver
  * checks the php version and makes
  * sure that it's good enough

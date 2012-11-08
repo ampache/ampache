@@ -297,6 +297,30 @@ class Dba {
 	} // check_database
 
 	/**
+	 * check_database_inserted
+	 * checks to make sure that you have inserted the database
+	 * and that the user you are using has access to it
+	 */
+	public static function check_database_inserted() {
+
+	        $sql = "DESCRIBE session";
+		$db_results = Dba::read($sql);
+
+	        if (!$db_results) {
+		        return false;
+	        }
+
+		// Make sure the whole table is there
+	        if (Dba::num_rows($db_results) != '7') {
+			return false;
+		}
+
+		return true;
+
+	} // check_database_inserted
+
+
+	/**
 	 * show_profile
 	 * This function is used for debug, helps with profiling
 	 */

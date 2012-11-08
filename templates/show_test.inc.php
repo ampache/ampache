@@ -212,7 +212,7 @@
 	<td valign="top"><?php echo T_('Database tables'); ?></td>
 	<td valign="top">[
 	<?php
-		$db_inserted = check_database_inserted($db,$results['local_db']);
+		$db_inserted = Dba::check_database_inserted();
 		if (!$db_inserted) {
 			echo debug_result('',false);
 		}
