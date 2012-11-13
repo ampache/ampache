@@ -149,7 +149,7 @@ class scrobbler {
 			$data['submit_url'] = '/' . $matches[2];
 		} else {
 			$this->error_msg = "Invalid POST URL returned, unable to continue. Sent:\n$get_string\n----\nReceived:\n" . $buffer .
-				"\n---------\nExpeceted:" . print_r($response,1);
+				"\n---------\nExpected:" . print_r($response, true);
 			return false;
 		}
 
