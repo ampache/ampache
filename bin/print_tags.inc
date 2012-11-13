@@ -32,12 +32,11 @@ $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 $version = "1.0";
 
-if (count($GLOBALS['argv']) == '1') {
+if (count($GLOBALS['argv']) != 2) {
 	usage();
 	exit;
 } else {
-	$filename = $GLOBALS['argv']['1'];
-	$send_mail = $GLOBALS['argv']['2'];
+	$filename = $GLOBALS['argv'][1];
 }
 
 if(!file_exists($filename)) {
@@ -69,14 +68,6 @@ $info->get_info();
 $results = $info->tags;
 $keys = vainfo::get_tag_type($results);
 $ampache_results = vainfo::clean_tag_info($results, $keys, $filename);
-
-if ($send_mail) {
-	$getid3_results = print_r($info,1);
-	$amp_results = print_r($ampache_results,1);
-	$body = $getid3_results . "\n-----\n\n" . $amp_results;
-	$subject = "[Ampache] Print Tags - $filename";
-	mail('tags@ampache.org',$subject,$body);
-}
 
 echo "\n";
 echo T_('Raw results:');
