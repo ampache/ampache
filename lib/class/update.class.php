@@ -1630,7 +1630,6 @@ class Update {
 		} // Adding default information
 
 		foreach ($acl_information as $row) {
-			debug_event('Crap',print_r($row,1),1);
 			$row['start'] = Dba::escape(inet_pton($row['start']));
 			$row['end'] = Dba::escape(inet_pton($row['end']));
 			$row['key'] = Dba::escape($row['key']);

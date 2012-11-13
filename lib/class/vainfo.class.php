@@ -173,7 +173,7 @@ class vainfo {
 				$encodings[mb_detect_encoding($tag, $mb_order, true)]++;
 			}
 
-			debug_event('vainfo', 'encoding detection: ' . print_r($encodings, true), 5);
+			debug_event('vainfo', 'encoding detection: ' . json_encode($encodings), 5);
 			$high = 0;
 			foreach ($encodings as $key => $value) {
 				if ($value > $high) {

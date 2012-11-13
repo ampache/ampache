@@ -169,7 +169,8 @@ switch ($_REQUEST['method']) {
 		}
 
 		/* Start the Stream */
-		debug_event('stream.php' , 'Stream Type: '.$stream_type.' Media IDs: '. print_r($media_ids, true), '5');
+		debug_event('stream.php' , 'Stream Type: ' . $stream_type .
+			' Media IDs: '. json_encode($media_ids), 5);
 		$stream = new Stream($stream_type,$media_ids);
 		if (isset($urls)) {
 			$stream->add_urls($urls);

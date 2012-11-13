@@ -380,7 +380,7 @@ class Song extends database_object implements media {
 		} // end foreach
 
 		if ($array['change']) {
-			debug_event('song-diff',print_r($array['element'],1),'5','ampache-catalog');
+			debug_event('song-diff', json_encode($array['element']), 5, 'ampache-catalog');
 		}
 
 		return $array;

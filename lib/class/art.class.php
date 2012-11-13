@@ -611,7 +611,7 @@ class Art extends database_object {
 			$config = array($config);
 		}
 
-		debug_event('Art','Searching using:' . print_r($config, true), 3);
+		debug_event('Art','Searching using:' . json_encode($config), 3);
 
 		foreach ($config as $method) {
 
@@ -1062,7 +1062,7 @@ class Art extends database_object {
 			$results = $preferred;
 		}
 
-		debug_event('folder_art', 'Results: ' . print_r($results, true), 5);
+		debug_event('folder_art', 'Results: ' . json_encode($results), 5);
 		if ($limit && count($results) > $limit) {
 			$results = array_slice($results, 0, $limit);
 		}
