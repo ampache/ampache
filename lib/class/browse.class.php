@@ -221,7 +221,9 @@ class Browse extends Query {
 				// Rien a faire
 			break;
 		} // end switch on type
-		echo '<script type="text/javascript">ajaxPut("' . Config::get('ajax_url') . '?page=browse&action=get_filters&browse_id=' . $this->id . '","");</script>';
+		echo '<script type="text/javascript">';
+		echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id, '');
+		echo ';</script>';
 
 		Ajax::end_container();
 
