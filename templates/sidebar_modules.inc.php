@@ -26,7 +26,6 @@
  * @link	http://www.ampache.org/
  */
 
-$ajax_info = Config::get('ajax_url'); $web_path = Config::get('web_path');
 ?>
 <ul class="sb2" id="sb_modules">
 <li><h4><?php echo T_('Modules'); ?></h4>

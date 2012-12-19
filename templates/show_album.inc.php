@@ -27,7 +27,6 @@
  */
 
 $web_path = Config::get('web_path');
-$ajax_url = Config::get('ajax_url');
 
 // Title for this album
 $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')';

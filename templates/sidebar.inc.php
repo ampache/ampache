@@ -39,7 +39,6 @@ $sidebar_items[] = array('id'=>'admin', 'title' => T_('Admin'), 'icon'=>'admin',
 
 
 $web_path = Config::get('web_path');
-$ajax_url = Config::get('ajax_url');
 
 ?>
 <ul id="sidebar-tabs">

@@ -28,7 +28,6 @@
 
 // First let's setup some vars we're going to use a lot
 $web_path = Config::get('web_path');
-$ajax_url = Config::get('ajax_url');
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
