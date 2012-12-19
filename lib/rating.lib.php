@@ -38,15 +38,6 @@ function show_rating($object_id,$type) {
 
 } // show_rating
 
-//  andy90s rating patch added
-function show_rating_static($object_id,$type) {
-
-    $rating = new Rating($object_id,$type);
-
-    require Config::get('prefix') . '/templates/show_object_rating_static.inc.php';
-
-} // show_rating_static
-
 /**
  * get_rating_name
  * This takes a score and returns the name that we should use
