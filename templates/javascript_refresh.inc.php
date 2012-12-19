@@ -34,7 +34,7 @@ var refreshInterval=<?php echo $refresh_limit ?>;
 
 function refresh()
 {
-    ajaxPut('<?php echo $ajax_url; ?>');
+    <?php echo Ajax::action($ajax_url, ''); ?>;
 }
 
 new PeriodicalExecuter(refresh, refreshInterval);
