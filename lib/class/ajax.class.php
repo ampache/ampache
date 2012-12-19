@@ -81,13 +81,21 @@ class Ajax {
 	} // observe
 
 	/**
+	 * url
+	 * This takes a string and makes an URL
+	 */
+	public static function url($action) {
+		return Config::get('ajax_url') . $action;
+	}
+
+	/**
 	 * action
 	 * This takes the action, the source and the post (if passed) and
 	 * generates the full ajax link
 	 */
 	public static function action($action,$source,$post='') {
 
-		$url = Config::get('ajax_url') . $action;
+		$url = self::url($action);
 
 		$non_quoted = array('document','window');
 
