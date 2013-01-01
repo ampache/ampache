@@ -142,7 +142,12 @@ function create_preference_input($name,$value) {
 			echo "Disabled";
 		}
 		else {
-			echo $value;
+			if (preg_match('/_pass$/', $name)) {
+				echo "******";
+			}
+			else {
+				echo $value;
+			}
 		}
 		return;
 	} // if we don't have access to it
