@@ -42,7 +42,6 @@ class Localplay {
 	public $type;
 
 	/* Built Variables */
-	private $_function_map = array();
 	private $_template;
 	private $_preferences = array();
 	private $_player;
@@ -117,7 +116,7 @@ class Localplay {
 		if (!$this->type) { return false; }
 
 		$filename = Config::get('prefix') . '/modules/localplay/' . $this->type . '.controller.php';
-		$include = require_once ($filename);
+		$include = require_once($filename);
 
 		if (!$include) {
 			/* Throw Error Here */
@@ -287,7 +286,7 @@ class Localplay {
 	public function add($object) {
 
 		if (!$this->_player->add($object)) {
-			debug_event('localplay','Error Unable to add songs, check ' . $this->type . ' controller','1');
+			debug_event('localplay', 'Failed to add songs, check ' . $this->type . ' controller', 1);
 			return false;
 		}
 
@@ -297,18 +296,14 @@ class Localplay {
 
 	/**
 	 * add_url
-	 * This directly adds an array of URLs to the localplay module. This is really how I should
-	 * have done add, will migrate to this eventually
+	 * This directly adds an URL to the localplay module.  Is more betterer.
 	 */
-	public function add_url($urls) {
+	public function add_url($url) {
 
-		$function = $this->_function_map['add_url'];
-
-		if (!$this->_player->$function($urls)) {
-			debug_event('localplay','Error Unable to add urls, check ' . $this->type . ' controller','1');
+		if (!$this->_player->add_url($url)) {
+			debug_event('localplay', 'Unable to add url ' . $url . ', check ' . $this->type . ' controller', 1);
 			return false;
 		}
-
 
 		return true;
 
