@@ -144,8 +144,6 @@ class tmpPlaylist extends database_object {
 	/**
 	 * get_items
 	 * Returns an array of all object_ids currently in this tmpPlaylist.
-	 * This has gotten a little more complicated because of type, the values
-	 * are an array (0 being ID, 1 being TYPE).
 	 */
 	public function get_items() {
 
