@@ -77,7 +77,7 @@ require_once $prefix . '/lib/ui.lib.php';
 require_once $prefix . '/lib/i18n.php';
 require_once $prefix . '/lib/batch.lib.php';
 require_once $prefix . '/lib/themes.php';
-require_once $prefix . '/lib/class/localplay.abstract.php';
+require_once $prefix . '/lib/class/localplay_controller.abstract.php';
 require_once $prefix . '/lib/class/database_object.abstract.php';
 require_once $prefix . '/lib/class/playlist_object.abstract.php';
 require_once $prefix . '/lib/class/media.interface.php';
