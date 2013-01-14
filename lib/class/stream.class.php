@@ -43,10 +43,8 @@ class Stream {
 
 	/* Variables from DB */
 	public $type;
-	public $web_path;
 	public $media = array();
 	public $urls  = array();
-	public $sess;
 	public $user_id;
 
 	// Generate once an object is constructed
