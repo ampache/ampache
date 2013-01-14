@@ -75,13 +75,10 @@ switch ($_REQUEST['action']) {
 		} // end switch on type
 	break;
 	case 'single_song':
-		$media_ids[] = array('song',scrub_in($_REQUEST['song_id']));
-	break;
-	case 'your_popular_songs':
-		$media_ids = get_popular_songs($_REQUEST['limit'], 'your', $GLOBALS['user']->id);
-	break;
-	case 'popular_songs':
-		$media_ids = get_popular_songs($_REQUEST['limit'], 'global');
+		$media_ids[] = array(
+			'object_type' => 'song',
+			'object_id' => scrub_in($_REQUEST['song_id'])
+		);
 	break;
 	case 'artist':
 		$artist = new Artist($_REQUEST['artist_id']);
@@ -124,7 +121,10 @@ switch ($_REQUEST['action']) {
 		$urls = array($democratic->play_url());
 	break;
 	case 'download':
-		$media_ids[] = array('song',scrub_in($_REQUEST['song_id']));
+		$media_ids[] = array(
+			'object_type' => 'song',
+			'object_id' => scrub_in($_REQUEST['song_id'])
+		);
 	default:
 	break;
 } // end action switch
