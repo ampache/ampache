@@ -129,53 +129,33 @@ switch ($_REQUEST['action']) {
 	break;
 } // end action switch
 
-
-/* Now that we've gathered the song information we decide what
- * we should do with it, this is a sensitive time for the song id's
- * they don't know where they want to go.. let's help them out
- */
-switch ($_REQUEST['method']) {
+// See if we need a special streamtype
+switch ($_REQUEST['action']) {
 	case 'download':
-		// Run the access check and exit if they are not allowed to download
-		if (!Access::check_function('batch_download')) { access_denied(); exit; }
-
-
-		// Format the zip file
-		$name = "AmpacheZip-" . date("m-d-Y",time());
-		$song_files = get_song_files($media_ids);
-		set_memory_limit($song_files[1]+32);
-		send_zip($name,$song_files[0]);
+		$stream_type = 'download';
 	break;
-	case 'stream':
+	case 'democratic':
+		// Don't let them loop it
+		if (Config::get('play_type') == 'democratic') {
+			Config::set('play_type', 'stream', true);
+		}
 	default:
-		// See if we need a special streamtype
-		switch ($_REQUEST['action']) {
-			case 'download':
-				$stream_type = 'download';
-			break;
-			case 'democratic':
-				// Don't let them loop it
-				if (Config::get('play_type') == 'democratic') {
-					Config::set('play_type', 'stream', true);
-				}
-			default:
-				if (Config::get('play_type') == 'stream') {
-					$stream_type = Config::get('playlist_type');
-				}
-				else {
-					$stream_type = Config::get('play_type');
-				}
-			break;
+		if (Config::get('play_type') == 'stream') {
+			$stream_type = Config::get('playlist_type');
 		}
+		else {
+			$stream_type = Config::get('play_type');
+		}
+	break;
+}
 
-		/* Start the Stream */
-		debug_event('stream.php' , 'Stream Type: ' . $stream_type .
-			' Media IDs: '. json_encode($media_ids), 5);
-		$stream = new Stream($stream_type,$media_ids);
-		if (isset($urls)) {
-			$stream->add_urls($urls);
-		}
-		$stream->start();
+/* Start the Stream */
+debug_event('stream.php' , 'Stream Type: ' . $stream_type . ' Media IDs: '. json_encode($media_ids), 5);
+$stream = new Stream($stream_type, $media_ids);
+if (isset($urls)) {
+	$stream->add_urls($urls);
+}
+$stream->start();
 
 } // end method switch
 ?>
