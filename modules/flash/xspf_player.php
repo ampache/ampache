@@ -35,8 +35,9 @@ switch ($_REQUEST['action']) {
 		// Set for hackage!
 		$_REQUEST['flash_hack'] = 1;
 		$objects = $GLOBALS['user']->playlist->get_items();
-		$stream = new Stream('xspf',$objects);
-		$stream->start();
+		$stream = new Stream_Playlist();
+		$stream->add($objects);
+		$stream->generate_playlist('xspf', false);
 	break;
 	case 'show':
 		$play_url = Config::get('web_path') . '/modules/flash/xspf_player.php';

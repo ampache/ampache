@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-FUTURE
+        - Fixed streaming on Android devices and anything else that expects to
+            be able to pass a playlist URL to an application and have it work
         - Removed the SHOUTcast localplay controller
 
 --------------------------------------------------------------------------

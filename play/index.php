@@ -39,10 +39,19 @@ ob_end_clean();
 
 /* These parameters had better come in on the url. */
 $uid 		= scrub_in($_REQUEST['uid']);
-$oid	 	= $_REQUEST['song'] ? scrub_in($_REQUEST['song']) : scrub_in($_REQUEST['oid']);
+$oid	 	= $_REQUEST['oid']
+			// FIXME: Any place that doesn't use oid should be fixed
+			? scrub_in($_REQUEST['oid'])
+			: scrub_in($_REQUEST['song']);
 $sid 		= scrub_in($_REQUEST['ssid']);
 $xml_rpc	= scrub_in($_REQUEST['xml_rpc']);
 $video		= make_bool($_REQUEST['video']);
+$type		= scrub_in($_REQUEST['type']);
+
+if ($type == 'playlist') {
+	$playlist_type = scrub_in($_REQUEST['playlist_type']);
+	$oid = $sid;
+}
 
 /* This is specifically for tmp playlist requests */
 $demo_id	= scrub_in($_REQUEST['demo_id']);
@@ -119,6 +128,18 @@ if (Config::get('access_control')) {
 		exit;
 	}
 } // access_control is enabled
+
+// Handle playlist downloads
+if ($type == 'playlist') {
+	$playlist = new Stream_Playlist($oid);
+	// Some rudimentary security
+	if ($uid != $playlist->user) {
+		access_denied();
+		exit;
+	}
+	$playlist->generate_playlist($playlist_type, false);
+	exit;
+}
 
 /**
  * If we've got a tmp playlist then get the

@@ -377,6 +377,9 @@ class Update {
 		$update_string = '- Allow compound MBIDs in the artist table.<br />';
 		$version[] = array('version' => '360010', 'description' => $update_string);
 
+		$update_string = '- Add table to store stream session playlist.<br />';
+		$version[] = array('version' => '360011', 'description' => $update_string);
+
 		return $version;
 
 	} // populate_version
@@ -2087,6 +2090,28 @@ class Update {
 		$db_results = Dba::write($sql);
 
 		self::set_version('db_version', '360010');
+	}
+
+	/**
+	 * update_380011
+	 * We need a place to store actual playlist data for downloadable
+	 * playlist files.
+	 */
+	public static function update_360011() {
+		$sql = 'CREATE TABLE `stream_playlist` (' .
+			'`id` int(11) unsigned NOT NULL AUTO_INCREMENT,' .
+			'`sid` varchar(64) COLLATE utf8_unicode_ci NOT NULL,' .
+			'`url` text COLLATE utf8_unicode_ci NOT NULL,' .
+			'`info_url` text COLLATE utf8_unicode_ci DEFAULT NULL,' .
+			'`image_url` text COLLATE utf8_unicode_ci DEFAULT NULL,' .
+			'`title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,' .
+			'`author` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,' .
+			'`album` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,' .
+			'`type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,' .
+			'`time` smallint(5) DEFAULT NULL,' .
+			'PRIMARY KEY (`id`), KEY `sid` (`sid`))';
+		$db_results = Dba::write($sql);
+		self::set_version('db_version', '360011');
 	}
 
 } // end update class

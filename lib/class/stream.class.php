@@ -1,8 +1,6 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /**
- * Stream Class
- *
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
  * Copyright (c) 2001 - 2011 Ampache.org All Rights Reserved
@@ -20,97 +18,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @package	Ampache
- * @copyright	2001 - 2011 Ampache.org
- * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @link	http://www.ampache.org/
  */
 
-/**
- * Stream Class
- *
- * This class is used to generate the Playlists and pass them on
- * With Localplay this actually just sends the commands to the localplay
- * module in question. It has two sources for data
- * songs (array of ids) and urls (array of full urls)
- *
- * @package	Ampache
- * @copyright	2001 - 2011 Ampache.org
- * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @link	http://www.ampache.org/
- */
+
 class Stream {
 
-	/* Variables from DB */
-	public $type;
-	public $media = array();
-	public $urls  = array();
-	public $user_id;
-
-	// Generate once an object is constructed
 	public static $session;
-
-	// Let's us tell if the session has been activated
 	private static $session_inserted;
 
-	/**
-	 * Constructor for the stream class takes a type and an array
-	 * of song ids
-	 */
-	public function __construct($type='m3u', $media_ids) {
-
-		$this->type = $type;
-		$this->media = $media_ids;
-		$this->user_id = $GLOBALS['user']->id;
-
-		if (!is_array($this->media)) { settype($this->media,'array'); }
-
-	} // Constructor
-
-	/**
-	 * start
-	 *runs this and depending on the type passed it will
-	 *call the correct function
-	 */
-	public function start() {
-
-		if (!count($this->media) AND !count($this->urls)) {
-			debug_event('stream','Error: No Songs Passed on ' . $this->type . ' stream','2');
-			return false;
-		}
-
-		// We're starting insert the session into session_stream
-		if (!self::get_session()) {
-			debug_event('stream','Session Insertion failure, aborting','3');
-			return false;
-		}
-
-		$methods = get_class_methods('Stream');
-		$create_function = "create_" . $this->type;
-
-		// If in the class, call it
-		if (in_array($create_function,$methods)) {
-			$this->{$create_function}();
-		}
-		// Assume M3u incase they've pooched the type
-		else {
-			$this->create_m3u();
-		}
-
-	} // start
-
-	/**
-	 * add_urls
-	 * Add an array of urls, it may be a single one who knows, this
-	 * is used for things that aren't coming from media objects
-	 */
-	public function add_urls($urls=array()) {
-
-		if (!is_array($urls)) { return false; }
-
-		$this->urls = array_merge($urls,$this->urls);
-
-	} // manual_url_add
+	private function __construct() {
+		// Static class, do nothing.
+	} 
 
 	/**
 	 * get_session
@@ -184,8 +102,10 @@ class Stream {
 
 	/**
 	 * gc_session
-	 * This function performes the garbage collection stuff, run on extend and on now playing refresh
-	 * There is an array of agents that we will never GC because of their nature, MPD being the best example
+	 * This function performes the garbage collection stuff, run on extend
+	 * and on now playing refresh.
+	 * There is an array of agents that we will never GC because of their
+	 * nature, MPD being the best example.
 	 */
 	public static function gc_session($ip='',$agent='',$uid='',$sid='') {
 
@@ -194,6 +114,8 @@ class Stream {
 		$time = time();
 		$sql = "DELETE FROM `session_stream` WHERE `expire` < '$time'";
 		$db_results = Dba::write($sql);
+
+		Stream_Playlist::clean();
 
 		foreach ($append_array as $append_agent) {
 			if (strpos(strtoupper($agent), $append_agent) !== false) {
@@ -232,372 +154,6 @@ class Stream {
 		return true;
 
 	} // extend_session
-
-	/**
-	 * create_simplem3u
-	 * this creates a simple m3u without any of the extended information
-	 */
-	public function create_simple_m3u() {
-
-		header("Cache-control: public");
-		header("Content-Disposition: filename=ampache_playlist.m3u");
-		header("Content-Type: audio/x-mpegurl;");
-
-		// Flip for the poping!
-		asort($this->urls);
-
-		/* Foreach songs */
-		foreach ($this->media as $element) {
-			$type = array_shift($element);
-			echo call_user_func(array($type,'play_url'),array_shift($element)) . "\n";
-		} // end foreach
-
-		/* Foreach the additional URLs */
-		foreach ($this->urls as $url) {
-			echo "$url\n";
-		}
-
-	} // simple_m3u
-
-	/**
-	 * create_m3u
-	 * creates an m3u file, this includes the EXTINFO and as such can be
-	 * large with very long playlsits
-	 */
-	public function create_m3u() {
-
-		// Send the client an m3u playlist
-		header("Cache-control: public");
-		header("Content-Disposition: filename=ampache_playlist.m3u");
-		header("Content-Type: audio/x-mpegurl;");
-		echo "#EXTM3U\n";
-
-		// Foreach the songs in this stream object
-		foreach ($this->media as $element) {
-			$type = array_shift($element);
-			$media = new $type(array_shift($element));
-			$media->format();
-			switch ($type) {
-				case 'song':
-					echo "#EXTINF:$media->time," . $media->f_artist_full . " - " . $media->title . "\n";
-				break;
-				case 'video':
-					echo "#EXTINF: Video - $media->title\n";
-				break;
-				case 'radio':
-					echo "#EXTINF: Radio - $media->name [$media->frequency] ($media->site_url)\n";
-				break;
-				case 'random':
-					echo "#EXTINF:Random URL\n";
-				break;
-				default:
-					echo "#EXTINF:URL-Add\n";
-				break;
-			}
-			echo call_user_func(array($type,'play_url'),$media->id) . "\n";
-		} // end foreach
-
-		/* Foreach URLS */
-		foreach ($this->urls as $url) {
-			echo "#EXTINF: URL-Add\n";
-			echo $url . "\n";
-		}
-
-	} // create_m3u
-
-	/**
- 	 * create_pls
-	 * This creates a new pls file from an array of songs and
-	 * urls, exciting I know
-	 */
-	public function create_pls() {
-
-		/* Count entries */
-		$total_entries = count($this->media) + count($this->urls);
-
-		// Send the client a pls playlist
-		header("Cache-control: public");
-		header("Content-Disposition: filename=ampache_playlist.pls");
-		header("Content-Type: audio/x-scpls;");
-		echo "[playlist]\n";
-		echo "NumberOfEntries=$total_entries\n";
-		foreach ($this->media as $element) {
-			$i++;
-			$type = array_shift($element);
-			$media = new $type(array_shift($element));
-			$media->format();
-			switch ($type) {
-				case 'song':
-					$name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
-					$length = $media->time;
-				break;
-				default:
-					$name = 'URL-Add';
-					$length='-1';
-				break;
-			}
-
-			$url = call_user_func(array($type,'play_url'),$media->id);
-			echo "File" . $i . "=$url\n";
-			echo "Title" . $i . "=$name\n";
-			echo "Length" . $i . "=$length\n";
-		} // end foreach songs
-
-		/* Foreach Additional URLs */
-		foreach ($this->urls as $url) {
-			$i++;
-			echo "File" . $i ."=$url\n";
-			echo "Title". $i . "=AddedURL\n";
-			echo "Length" . $i . "=-1\n";
-		} // end foreach urls
-
-		echo "Version=2\n";
-
-	} // create_pls
-
-	/**
-	 * create_asx
-	 * creates an ASX playlist (Thx Samir Kuthiala) This should really only be used
-	 * if all of the content is ASF files.
-	 */
-	public function create_asx() {
-
-		header("Cache-control: public");
-		header("Content-Disposition: filename=ampache_playlist.asx");
-		header("Content-Type: video/x-ms-wmv;");
-
-		echo "<ASX version = \"3.0\" BANNERBAR=\"AUTO\">\n";
-		echo "<TITLE>Ampache ASX Playlist</TITLE>";
-
-		foreach ($this->media as $element) {
-			$type = array_shift($element);
-			$media = new $type(array_shift($element));
-			$media->format();
-			switch ($type) {
-				case 'song':
-					$name = $media->f_album_full . " - " . $media->title . "." . $media->type;
-					$author = $media->f_artist_full;
-				break;
-				default:
-					$author = 'Ampache';
-					$name = 'URL-Add';
-				break;
-			} // end switch
-			$url = call_user_func(array($type,'play_url'),$media->id);
-
-			echo "<ENTRY>\n";
-			echo "<TITLE>$name</TITLE>\n";
-			echo "<AUTHOR>$author</AUTHOR>\n";
-			echo "\t\t<COPYRIGHT>".$media->year."</COPYRIGHT>\n";
-			echo "\t\t<DURATION VALUE=\"00:00:".$media->time."\" />\n";
-			echo "\t\t<PARAM NAME=\"Album\" Value=\"".$media->f_album_full."\" />\n";
-			echo "\t\t<PARAM NAME=\"Genre\" Value=\"".$media->get_genre_name()."\" />\n";
-			echo "\t\t<PARAM NAME=\"Composer\" Value=\"".$media->f_artist_full."\" />\n";
-			echo "\t\t<PARAM NAME=\"Prebuffer\" Value=\"false\" />\n";
-			echo "<REF HREF = \"". $url . "\" />\n";
-			echo "</ENTRY>\n";
-
-		} // end foreach
-
-		/* Foreach urls */
-		foreach ($this->urls as $url) {
-			echo "<ENTRY>\n";
-			echo "<TITLE>AddURL</TITLE>\n";
-			echo "<AUTHOR>AddURL</AUTHOR>\n";
-			echo "<REF HREF=\"$url\" />\n";
-			echo "</ENTRY>\n";
-		} // end foreach
-
-		echo "</ASX>\n";
-
-	} // create_asx
-
-	/**
-	 * create_xspf
-	 * creates an XSPF playlist (Thx PB1DFT)
-	 */
-	public function create_xspf() {
-
-		// Itterate through the songs
-		foreach ($this->media as $element) {
-			$type = array_shift($element);
-			$media = new $type(array_shift($element));
-			$media->format();
-
-			$xml = array();
-
-			switch ($type) {
-				default:
-				case 'song':
-					$xml['track']['title'] = $media->title;
-					$xml['track']['creator'] = $media->f_artist_full;
-					$xml['track']['info'] = Config::get('web_path') . "/albums.php?action=show&album=" . $media->album;
-					$xml['track']['image'] = Config::get('web_path') . "/image.php?id=" . $media->album . "&thumb=3";
-					$xml['track']['album'] = $media->f_album_full;
-					$length = $media->time;
-				break;
-				case 'video': 
-					$xml['track']['title'] = $media->title; 
-					$xml['track']['creator'] = $media->f_artist_full; 
-					$xml['track']['info'] = Config::get('web_path') . '/browse.php?action=video'; 
-					$xml['track']['image'] = Config::get('web_path') . '/image.php?id=' . $media->id . '&type=video&thumb=3&sid=' . session_id(); 
-					$xml['track']['meta'] = array('attribute'=>'rel="provider"','value'=>'video'); 
-				break; 
-			} // type
-
-			$xml['track']['location'] = call_user_func(array($type,'play_url'),$media->id);
-			$xml['track']['identifier'] = $xml['track']['location'];
-			$xml['track']['duration'] = $length * 1000;
-
-			$result .= xmlData::keyed_array($xml,1);
-
-		} // end foreach
-
-		xmlData::set_type('xspf');
-
-		header("Cache-control: public");
-		header("Content-Disposition: filename=ampache_playlist.xspf");
-		header("Content-Type: application/xspf+xml; charset=utf-8");
-		echo xmlData::header();
-		echo $result;
-		echo xmlData::footer();
-
-	} // create_xspf
-
-	/**
-	 * create_xspf_player
-	 * due to the fact that this is an integrated player (flash) we actually
-	 * have to do a little 'cheating' to make this work, we are going to take
-	 * advantage of tmp_playlists to do all of this hotness
-	 */
-	public function create_xspf_player() {
-
-		/* Build the extra info we need to have it pass */
-		$play_info = "?action=show&tmpplaylist_id=" . $GLOBALS['user']->playlist->id;
-
-		// start ugly evil javascript code
-		//FIXME: This needs to go in a template, here for now though
-		//FIXME: This preference doesn't even exists, we'll eventually
-		//FIXME: just make it the default
-		if (Config::get('embed_xspf') == 1 ){
-			header("Location: ".Config::get('web_path')."/index.php?xspf&play_info=".$GLOBALS['user']->playlist->id);
-		}
-		else {
-			echo "<html><head>\n";
-			echo "<title>" . Config::get('site_title') . "</title>\n";
-			echo "<script language=\"javascript\" type=\"text/javascript\">\n";
-			echo "<!-- begin\n";
-			echo "function PlayerPopUp(URL) {\n";
-			// We do a little check here to see if it's a Wii!
-			if (false !== stristr($_SERVER['HTTP_USER_AGENT'], 'Nintendo Wii')) {
-				echo "window.location=URL;\n";
-			}
-			// Else go ahead and do the normal stuff
-			else {
-				echo "window.open(URL, 'XSPF_player', 'width=400,height=170,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');\n";
-				echo "window.location = '" .  return_referer() . "';\n";
-				echo "return false;\n";
-			}
-			echo "}\n";
-			echo "// end -->\n";
-			echo "</script>\n";
-			echo "</head>\n";
-
-			echo "<body onLoad=\"javascript:PlayerPopUp('" . Config::get('web_path') . "/modules/flash/xspf_player.php" . $play_info . "')\">\n";
-			echo "</body>\n";
-			echo "</html>\n";
-		}
-	} // create_xspf_player
-
-	/**
-	 * create_localplay
-	 * This calls the Localplay API and attempts to
-	 * add, and then start playback
-	 */
-	public function create_localplay() {
-
-		// First figure out what their current one is and create the object
-		$localplay = new Localplay(Config::get('localplay_controller'));
-		$localplay->connect();
-		foreach ($this->media as $element) {
-			$type = array_shift($element);
-			switch ($type) {
-				case 'video':
-					// Add check for video support
-				case 'song':
-				case 'radio':
-				case 'random':
-					$media = new $type(array_shift($element));
-				break;
-				default:
-					$media = array_shift($element);
-				break;
-			} // switch on types
-			$localplay->add($media);
-		} // foreach object
-
-		/**
- 		 * Add urls after the fact
-	 	 */
-		foreach ($this->urls as $url) {
-			$localplay->add($url);
-		}
-
-		$localplay->play();
-
-	} // create_localplay
-
-	/**
- 	 * create_democratic
-	 * This 'votes' on the songs it inserts them into
-	 * a tmp_playlist with user of -1 (System)
-	 */
-	public function create_democratic() {
-
-		$democratic = Democratic::get_current_playlist();
-		$democratic->set_parent();
-		$democratic->add_vote($this->media);
-
-	} // create_democratic
-
-	/**
-	 * create_download
-	 * This prompts for a download of the song, only a single
-	 * element can by in song_ids
-	 */
-	private function create_download() {
-
-		// There should only be one here...
-		foreach ($this->media as $element) {
-			$type = array_shift($element);
-			$media = new $type(array_shift($element));
-			$url = call_user_func(array($type,'play_url'),$media->id);
-
-			// Append the fact we are downloading
-			$url .= '&action=download';
-
-			// Header redirect baby!
-			header("Location: $url");
-			exit;
-		}
-
-	} //create_download
-
-	/**
-	 * create_ram
-	 *this functions creates a RAM file for use by Real Player
-	 */
-	public function create_ram() {
-
-		header("Cache-control: public");
-		header("Content-Disposition: filename=ampache_playlist.ram");
-		header("Content-Type: audio/x-pn-realaudio ram;");
-		foreach ($this->media as $element) {
-			$type = array_shift($element);
-			echo $url = call_user_func(array($type,'play_url'),array_shift($element)) . "\n";
-		} // foreach songs
-
-	} // create_ram
 
 	/**
 	 * start_transcode

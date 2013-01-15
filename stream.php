@@ -136,26 +136,26 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'democratic':
 		// Don't let them loop it
+		// FIXME: This looks hacky
 		if (Config::get('play_type') == 'democratic') {
 			Config::set('play_type', 'stream', true);
 		}
 	default:
-		if (Config::get('play_type') == 'stream') {
+		$stream_type = Config::get('play_type');
+		if ($stream_type == 'stream') {
 			$stream_type = Config::get('playlist_type');
-		}
-		else {
-			$stream_type = Config::get('play_type');
 		}
 	break;
 }
 
-/* Start the Stream */
 debug_event('stream.php' , 'Stream Type: ' . $stream_type . ' Media IDs: '. json_encode($media_ids), 5);
-$stream = new Stream($stream_type, $media_ids);
+$playlist = new Stream_Playlist();
+$playlist->add($media_ids);
 if (isset($urls)) {
-	$stream->add_urls($urls);
+	$playlist->add_urls($urls);
 }
-$stream->start();
+// Depending on the stream type, will either generate a redirect or actually do
+// the streaming.
+$playlist->generate_playlist($stream_type, true);
 
-} // end method switch
 ?>
