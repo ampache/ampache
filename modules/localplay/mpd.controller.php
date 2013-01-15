@@ -42,7 +42,7 @@
 class AmpacheMpd extends localplay_controller {
 
 	/* Variables */
-	private $version 	= '000002';
+	private $version 	= '000003';
 	private $description	= 'Controls an instance of MPD';
 	
 	private $_add_count = 0;
@@ -286,36 +286,31 @@ class AmpacheMpd extends localplay_controller {
 	} // get_active_instance
 
 	/**
-	 * add
-	 * This takes a single object and adds it in, it uses the built in
-	 * functions to generate the URL it needs
+	 * add_url
+	 * This is the new hotness
 	 */
-	public function add($object) {
-
-		// If we haven't added anything then check to see if we should clear
+	public function add_url(Stream_URL $url) {
+		// If we haven't added anything then maybe we should clear the
+		// playlist.
 		if ($this->_add_count < 1) {
-			if (!$this->_mpd->ClearPLIfStopped()) {
-		                debug_event('mpd_add', 'Error: Unable to clear the MPD playlist ' . $this->_mpd->err_str,'1');
-	         	}
-		} // end if no add count
+			$this->_mpd->RefreshInfo();
+			if ($this->_mpd->status['state'] == mpd::STATE_STOPPED) {
+				$this->clear_playlist();
+			}
+		}
 
-		$url = $this->get_url($object);
-
-		if (!$this->_mpd->PlAdd($url)) {
-			debug_event('mpd_add',"Error: Unable to add $url to MPD " . $this->_mpd->err_str,'1');
+		if (!$this->_mpd->PlAdd($url->url)) {
+			debug_event('mpd', 'add_url failed to add: ' . json_encode($url), 1);
 			return false;
 		}
-		else {
-			$this->_add_count++;
-		}
 
+		$this->_add_count++;
 		return true;
-
-	} // add_songs
+	}
 
 	/**
 	 * delete_track
-	 * This must take a single ID (as passed by get function) from Ampache
+	 * This must take a single ID (as returned by the get function)
 	 * and delete it from the current playlist
 	 */
 	public function delete_track($object_id) {
