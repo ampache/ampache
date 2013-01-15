@@ -317,12 +317,17 @@ class Stream_Playlist {
 			$xml['track'] = array(
 				'title' => $url->title,
 				'creator' => $url->author,
-				// FIXME: regression
-				// video: ['meta'] = array('attribute'=>'rel="provider"','value'=>'video')
 				'duration' => $url->time * 1000,
 				'location' => $url->url,
 				'identifier' => $url->url
 			);
+			if ($url->type == 'video') {
+				$xml['track']['meta'] = 
+					array(
+						'attribute' => 'rel="provider"',
+						'value' => 'video'
+					);
+			}
 			if ($url->info_url) {
 				$xml['track']['info'] = $url->info_url;
 			}
