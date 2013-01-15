@@ -22,25 +22,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @category	HttpQPlayer
- * @package	Ampache
- * @copyright	2001 - 2011 Ampache.org
- * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @link	http://www.ampache.org/
  */
 
 /**
  * HttpQPlayer Class
  *
- * This player controls an instance of HttpQ 
- * which in turn controls WinAmp all functions 
- * return null on failure
+ * This player controls an instance of httpQ which in turn controls WinAmp
  *
- * @category	HttpQPlayer
- * @package	Ampache
- * @copyright	2001 - 2011 Ampache.org
- * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @link	http://www.ampache.org/
  */
 class HttpQPlayer {
 
