@@ -40,7 +40,7 @@
 abstract class localplay_controller {
 
 	// Required Functions
-	abstract public function add($objects); // Takes an array of song_ids
+	abstract public function add_url(Stream_URL $url); // Takes an array of song_ids
 	abstract public function delete_track($object_id); // Takes a single object_id and removes it from the playlist
 	abstract public function play();
 	abstract public function stop();

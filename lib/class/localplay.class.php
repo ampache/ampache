@@ -280,17 +280,11 @@ class Localplay {
 
 	/**
 	 * add
-	 * This function takes a single object and then passes it to
-	 * to the player, this is a required function.
 	 */
 	public function add($object) {
 
-		if (!$this->_player->add($object)) {
-			debug_event('localplay', 'Failed to add songs, check ' . $this->type . ' controller', 1);
-			return false;
-		}
-
-		return true;
+		debug_event('localplay', 'Deprecated add method called: ' . json_encode($object), 5);
+		return false;
 
 	} // add
 
@@ -298,7 +292,7 @@ class Localplay {
 	 * add_url
 	 * This directly adds an URL to the localplay module.  Is more betterer.
 	 */
-	public function add_url($url) {
+	public function add_url(Stream_URL $url) {
 
 		if (!$this->_player->add_url($url)) {
 			debug_event('localplay', 'Unable to add url ' . $url . ', check ' . $this->type . ' controller', 1);
