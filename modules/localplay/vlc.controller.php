@@ -285,27 +285,14 @@ class AmpacheVlc extends localplay_controller {
 
         } // get_active_instance
 
-    /**
-     * add
-     * This must take an array of URL's from Ampache
-     * and then add them to Vlc webinterface
-     */
-    public function add($object) { 
+    public function add_url(Stream_URL $url) {
+	if (is_null($this->_vlc->add($url->title, $url->url))) {
+		debug_event('vlc', 'add_url failed to add: ' . json_encode($url), 1);
+		return false;
+	}
 
-        $url = $this->get_url($object);         
-
-        // Try to pass a title (if we can)
-        if (is_object($object)) { 
-            $title = $object->title; 
-        } 
-
-        if (is_null($this->_vlc->add($title,$url))) { 
-            debug_event('vlc_add',"Error: Unable to add $url to Vlc",'1');
-        }
-
-        return true;
-
-    } // add
+	return true;
+    }
 
     /**
      * delete_track
