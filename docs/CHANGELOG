@@ -3,6 +3,10 @@
 --------------------------------------------------------------------------
 
 --------------------------------------------------------------------------
+  v.3.6-FUTURE
+        - Removed the SHOUTcast localplay controller
+
+--------------------------------------------------------------------------
   v.3.6-Alpha4 2012-11-27
         - Removed lyric support, which was broken and ugly
         - Removed tight coupling to the PHP mysql extension
