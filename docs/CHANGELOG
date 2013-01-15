@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-FUTURE
+    - Updated Prototype to git HEAD (4ce0b0f)
     - Fixed bug that disclosed passwords for plugins to users that didn't
         have access to update the password (patch by Fred Thomsen)
     - Fixed streaming on Android devices and anything else that expects to
