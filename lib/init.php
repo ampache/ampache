@@ -96,7 +96,6 @@ $results['cookie_secure']	= $results['session_cookiesecure'];
 
 // Library and module includes we can't do with the autoloader
 require_once $prefix . '/modules/getid3/getid3.php';
-require_once $prefix . '/modules/nusoap/nusoap.php';
 require_once $prefix . '/modules/phpmailer/class.phpmailer.php';
 require_once $prefix . '/modules/phpmailer/class.smtp.php';
 require_once $prefix . '/modules/infotools/Snoopy.class.php';
