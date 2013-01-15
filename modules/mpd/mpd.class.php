@@ -585,26 +585,6 @@ class mpd {
         return $response;
     }
 
-    /* ClearPLIfStopped()
-     *
-     * This function clears the mpd playlist ONLY IF the mpd state is
-     * self::STATE_STOPPED
-     */
-    public function ClearPLIfStopped() {
-
-        $this->_debug('ClearPLIfStopped', 'start', 5);
-
-        $this->RefreshInfo();
-
-        if ($this->status['state'] == self::STATE_STOPPED) {
-            $this->PLClear();
-            return true;
-        }
-
-        return false;
-
-    } // ClearPLIfStopped
-
     /* PLRemove
      *
      * Removes track <id> from the playlist.

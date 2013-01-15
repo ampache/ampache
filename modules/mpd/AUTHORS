@@ -4,9 +4,6 @@ Benjamin Carlisle (bcarlisle@24oz.com)
 Karl Vollmer (vollmer@ampache.org)
     * Connection Timeout
 
-Henrik Probell (henrik.probell@gmail.com)
-    * ClearPLIfStopped
-
 Paul Arthur (flowerysong00@yahoo.com)
     * Rewritten for PHP5
     * Generic error handling/debugging with optional callback
