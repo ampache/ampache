@@ -1,8 +1,6 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /**
- * AmpacheHttpq Class
- *
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
  * Copyright (c) 2001 - 2011 Ampache.org All Rights Reserved
@@ -20,31 +18,21 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @category	AmpacheHttpq
- * @package	Ampache
- * @copyright	2001 - 2011 Ampache.org
- * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @link	http://www.ampache.org/
  */
 
 /**
  * AmpacheHttpq Class
  *
- * This is the class for the HttpQ localplay method to remote control
+ * This is the class for the httpQ localplay method to remotely control
  * a WinAmp Instance
  *
- * @category	AmpacheHttpq
- * @package	Ampache
- * @copyright	2001 - 2011 Ampache.org
- * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @link	http://www.ampache.org/
  */
+
 class AmpacheHttpq extends localplay_controller {
 
 	/* Variables */
-	private $version	= '000001';
-	private $description	= 'Controls a Httpq instance, requires Ampaches Httpq version';
-
+	private $version	= '000002';
+	private $description	= "Controls an httpQ instance, requires Ampache's httpQ version";
 
 	/* Constructed variables */
 	private $_httpq;
@@ -83,7 +71,7 @@ class AmpacheHttpq extends localplay_controller {
 
         /**
          * is_installed
-         * This returns true or false if MPD controller is installed
+         * This returns true or false if this controller is installed
          */
         public function is_installed() {
 
@@ -97,7 +85,7 @@ class AmpacheHttpq extends localplay_controller {
 
         /**
          * install
-         * This function installs the MPD localplay controller
+         * This function installs the controller
          */
         public function install() {
 
@@ -137,25 +125,14 @@ class AmpacheHttpq extends localplay_controller {
 
         /**
          * add_instance
-         * This takes key'd data and inserts a new Httpq instance
+         * This takes keyed data and inserts a new httpQ instance
          */
         public function add_instance($data) {
 
-		// Foreach and clean up what we need
-		foreach ($data as $key=>$value) {
-			switch ($key) {
-				case 'name':
-				case 'host':
-				case 'port':
-				case 'password':
-					${$key} = Dba::escape($value);
-				break;
-				default:
-					// Rien a faire
-				break;
-			} // end switch on key
-		} // end foreach
-
+		$name = Dba::escape($data['name']);
+		$host = Dba::escape($data['host']);
+		$port = Dba::escape($data['port']);
+		$password = Dba::escape($data['password']);
 		$user_id = Dba::escape($GLOBALS['user']->id);
 
 		$sql = "INSERT INTO `localplay_httpq` (`name`,`host`,`port`,`password`,`owner`) " .
@@ -184,7 +161,7 @@ class AmpacheHttpq extends localplay_controller {
 
         /**
          * get_instances
-         * This returns a key'd array of the instance information with
+         * This returns a keyed array of the instance information with
          * [UID]=>[NAME]
          */
         public function get_instances() {
@@ -206,7 +183,7 @@ class AmpacheHttpq extends localplay_controller {
          * update_instance
          * This takes an ID and an array of data and updates the instance specified
          */
-        public function update_instance($uid,$data) {
+        public function update_instance($uid, $data) {
 
 		$uid	= Dba::escape($uid);
 		$port	= Dba::escape($data['port']);
@@ -223,7 +200,7 @@ class AmpacheHttpq extends localplay_controller {
 
         /**
          * instance_fields
-         * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
+         * This returns a keyed array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
          * fields so that we can on-the-fly generate a form
          */
         public function instance_fields() {
@@ -239,7 +216,7 @@ class AmpacheHttpq extends localplay_controller {
 
 	/**
 	 * get_instance
-	 * This returns a single instance and all it's variables
+	 * This returns a single instance and all its variables
 	 */
 	public function get_instance($instance='') {
 
@@ -286,36 +263,27 @@ class AmpacheHttpq extends localplay_controller {
         } // get_active_instance
 
 	/**
-	 * add
-	 * This must take an array of URL's from Ampache
-	 * and then add them to HttpQ
+	 * add_url
+	 * This is the new hotness
 	 */
-	public function add($object) {
-
-		$url = $this->get_url($object);
-
-		// Try to pass a title (if we can)
-		if (is_object($object)) {
-			$title = $object->title;
+	public function add_url(Stream_URL $url) {
+		if (is_null($this->_httpq->add($url->title, $url->url))) {
+			debug_event('httpq', 'add_url failed to add ' . $url, 1);
+			return false;
 		}
-
-		if (is_null($this->_httpq->add($title,$url))) {
-			debug_event('httpq_add',"Error: Unable to add $url to Httpq",'1');
-		}
-
+		
 		return true;
-
-	} // add
+	}
 
 	/**
 	 * delete_track
-	 * This must take an array of ID's (as passed by get function) from Ampache
-	 * and delete them from Httpq
+	 * This must take an ID (as returned by our get function)
+	 * and delete it from httpQ
 	 */
 	public function delete_track($object_id) {
 
 		if (is_null($this->_httpq->delete_pos($object_id))) {
-			debug_event('httpq_del','ERROR Unable to delete ' . $object_id . ' from Httpq','1');
+			debug_event('httpq', 'Unable to delete ' . $object_id . ' from httpQ', 1);
 			return false;
 		}
 
@@ -325,7 +293,6 @@ class AmpacheHttpq extends localplay_controller {
 
 	/**
 	 * clear_playlist
-	 * This deletes the entire Httpq playlist... nuff said
 	 */
 	public function clear_playlist() {
 
@@ -340,25 +307,23 @@ class AmpacheHttpq extends localplay_controller {
 
 	/**
 	 * play
-	 * This just tells HttpQ to start playing, it does not
+	 * This just tells httpQ to start playing, it does not
 	 * take any arguments
 	 */
 	public function play() {
-		/* A play when it's already playing causes a track restart
-		 * which we don't want to doublecheck its state
-		 */
+		// A play when it's already playing causes a track restart,
+		// so doublecheck its state
 		if ($this->_httpq->state() == 'play') {
 			return true;
 		}
 
 		if (is_null($this->_httpq->play())) { return false; }
 		return true;
-
 	} // play
 
 	/**
 	 * stop
-	 * This just tells HttpQ to stop playing, it does not take
+	 * This just tells httpQ to stop playing, it does not take
 	 * any arguments
 	 */
 	public function stop() {
@@ -370,7 +335,7 @@ class AmpacheHttpq extends localplay_controller {
 
 	/**
 	 * skip
-	 * This tells HttpQ to skip to the specified song
+	 * This tells httpQ to skip to the specified song
 	 */
 	public function skip($song) {
 
@@ -390,7 +355,7 @@ class AmpacheHttpq extends localplay_controller {
 	} // volume_up
 
 	/**
-	 * This tells HttpQ to decrease the volume by Winamps default amount
+	 * This tells httpQ to decrease the volume by Winamp's default amount
 	 */
 	public function volume_down() {
 
@@ -401,7 +366,7 @@ class AmpacheHttpq extends localplay_controller {
 
 	/**
 	 * next
-	 * This just tells HttpQ to skip to the next song
+	 * This just tells httpQ to skip to the next song
 	 */
 	public function next() {
 
@@ -413,7 +378,7 @@ class AmpacheHttpq extends localplay_controller {
 
 	/**
 	 * prev
-	 * This just tells HttpQ to skip to the prev song
+	 * This just tells httpQ to skip to the prev song
 	 */
 	public function prev() {
 
@@ -425,7 +390,7 @@ class AmpacheHttpq extends localplay_controller {
 
 	/**
 	 * pause
-	 * This tells HttpQ to pause the current song
+	 * This tells httpQ to pause the current song
 	 */
 	public function pause() {
 
@@ -436,7 +401,7 @@ class AmpacheHttpq extends localplay_controller {
 
         /**
         * volume
-        * This tells HttpQ to set the volume to the specified amount this
+        * This tells httpQ to set the volume to the specified amount this
 	* is 0-100
         */
        public function volume($volume) {
@@ -448,7 +413,8 @@ class AmpacheHttpq extends localplay_controller {
 
        /**
         * repeat
-        * This tells HttpQ to set the repeating the playlist (i.e. loop) to either on or off
+        * This tells httpQ to set the repeating the playlist (i.e. loop) to
+	* either on or off
         */
        public function repeat($state) {
 
@@ -459,7 +425,8 @@ class AmpacheHttpq extends localplay_controller {
 
        /**
         * random
-        * This tells HttpQ to turn on or off the playing of songs from the playlist in random order
+        * This tells httpQ to turn on or off the playing of songs from the
+	* playlist in random order
         */
        public function random($onoff) {
 
@@ -471,7 +438,7 @@ class AmpacheHttpq extends localplay_controller {
 	/**
 	 * get
 	 * This functions returns an array containing information about
-	 * The songs that HttpQ currently has in it's playlist. This must be
+	 * The songs that httpQ currently has in its playlist. This must be
 	 * done in a standardized fashion
 	 */
 	public function get() {
@@ -580,7 +547,7 @@ class AmpacheHttpq extends localplay_controller {
 
 	/**
 	 * connect
-	 * This functions creates the connection to HttpQ and returns
+	 * This functions creates the connection to httpQ and returns
 	 * a boolean value for the status, to save time this handle
 	 * is stored in this class
 	 */
