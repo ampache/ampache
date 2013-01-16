@@ -89,24 +89,17 @@ function focus(){ document.login.username.focus(); }
       </div>
 
 		</form>
-	</div>
-</div>
 <?php
 if (@is_readable(Config::get('prefix') . '/config/motd.php')) {
 ?>
+	</div>
 	<div id="motd">
 	<?php
         show_box_top(T_('Message of the Day'));
         include Config::get('prefix') . '/config/motd.php';
         show_box_bottom();
 	?>
-	</div>
-<?php } ?>
-<div id="footer">
-    <a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />
-    Copyright (c) 2001 - 2010 Ampache.org
-    <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
-</div>
-</body>
-</html>
-
+<?php
+}
+show_footer();
+?>
