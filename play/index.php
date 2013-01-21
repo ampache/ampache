@@ -57,9 +57,6 @@ if ($type == 'playlist') {
 $demo_id	= scrub_in($_REQUEST['demo_id']);
 $random		= scrub_in($_REQUEST['random']);
 
-// Parse byte range request
-$n = sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d",$start,$end);
-
 /* First things first, if we don't have a uid/oid stop here */
 if (empty($oid) && empty($demo_id) && empty($random)) {
 	debug_event('play', 'No object UID specified, nothing to play', 2);
@@ -226,7 +223,7 @@ if ($catalog->catalog_type == 'remote') {
 	$sid   = xmlRpcClient::ampache_create_stream_session($match['1'],$token);
 
 	$extra_info = "&xml_rpc=1&sid=$sid";
-	header("Location: " . $media->file . $extra_info);
+	header('Location: ' . $media->file . $extra_info);
 	debug_event('xmlrpc-stream',"Start XML-RPC Stream - " . $media->file . $extra_info,'5');
 
 	/* If this is a voting tmp playlist remove the entry, we do this regardless of play amount */
@@ -304,8 +301,6 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
 
 } // if they are trying to download and they can
 
-header("Accept-Ranges: bytes" );
-
 // Prevent the script from timing out
 set_time_limit(0);
 
@@ -330,12 +325,14 @@ if (((Config::get('transcode') == 'always' && !$video) ||
 		'Decided to transcode. Transcode:' . Config::get('transcode') . 
 		' Native Stream: ' . ($media->native_stream() ? 'true' : 'false') .
 		' Remote: ' . ($downsample_remote ? 'true' : 'false'), 5);
+	header('Accept-Ranges: none');
 	$media->set_transcode();
 	$fp = Stream::start_transcode($media, $media_name, $start);
 	$media_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
 	$transcoded = true;
 } // end if downsampling
 else {
+	header('Accept-Ranges: bytes');
 	$fp = fopen($media->file, 'rb');
 	$transcoded = false; 
 }
@@ -350,59 +347,92 @@ if (get_class($media) == 'Song') {
 	Stream::insert_now_playing($media->id,$uid,$media->time,$sid,get_class($media));
 }
 
+if ($transcoded) {
+	$stream_size = null;
+}
+else {
+	$stream_size = $media->size;
+}
+
+// Handle Content-Range
+
+sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d", $start, $end);
+
 if ($start > 0 || $end > 0 ) {
 	// Calculate stream size from byte range
-	if(isset($end)) {
-		$end = min($end,$media->size-1);
-		$stream_size = ($end-$start)+1;
+	if (isset($end)) {
+		$end = min($end, $media->size - 1);
+		$stream_size = ($end - $start) + 1;
 	}
 	else {
 		$stream_size = $media->size - $start;
 	}
 
-	debug_event('play', 'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size, 5);
-	$browser->downloadHeaders($media_name, $media->mime, false, $media->size);
-	if (!$transcoded) {
-		fseek($fp, $start);
+	if ($transcoded) {
+		debug_event('play', 'Bad client behaviour. Content-Range header received, which we cannot fulfill due to transcoding', 1);
+		$stream_size = null;
 	}
-	$range = $start ."-". $end . "/" . $media->size;
-	header('HTTP/1.1 206 Partial Content');
-	header("Content-Range: bytes $range");
-	header("Content-Length: $stream_size");
+	else {
+		debug_event('play', 'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size, 5);
+		fseek($fp, $start);
+
+		$range = $start . '-' . $end . '/' . $media->size;
+		header('HTTP/1.1 206 Partial Content');
+		header('Content-Range: bytes ' . $range);
+	}
 }
 else {
 	debug_event('play','Starting stream of ' . $media->file . ' with size ' . $media->size, 5);
-	header("Content-Length: $media->size");
-	$browser->downloadHeaders($media_name, $media->mime, false, $media->size);
-	$stream_size = $media->size;
 }
+
+$browser->downloadHeaders($media_name, $media->mime, false, $stream_size);
 
 $bytes_streamed = 0;
 
 // Actually do the streaming
 do {
-	$buf = fread($fp, min(2048, $stream_size - $bytes_streamed));
+	$read_size = $transcoded 
+		? 2048
+		: min(2048, $stream_size - $bytes_streamed);
+	$buf = fread($fp, $read_size);
 	print($buf);
 	$bytes_streamed += strlen($buf);
-} while (!feof($fp) && (connection_status() == 0) && ($bytes_streamed < $stream_size));
+} while (!feof($fp) && (connection_status() == 0) && ($transcoded || $bytes_streamed < $stream_size));
 
+$real_bytes_streamed = $bytes_streamed;
 // Need to make sure enough bytes were sent.
 if($bytes_streamed < $stream_size && (connection_status() == 0)) {
 	print(str_repeat(' ', $stream_size - $bytes_streamed));
+	$bytes_streamed = $stream_size;
 }
 
 // Make sure that a good chunk of the song has been played
-if ($bytes_streamed > $media->size / 2) {
-	// This check looks suspicious
+$target = 131072;
+if ($stream_size) {
+	if ($stream_size > 1048576) {
+		$target = 262144;
+	}
+	else if ($stream_size < 360448) {
+		$target = $stream_size / 1.1;
+	}
+	else {
+		$target = $stream_size / 4;
+	}
+}
+
+if ($start > $target) {
+	debug_event('play', 'Content-Range was more than ' . $target . ' into the file, not collecting stats', 5);
+}
+else if ($bytes_streamed > $target) {
+	// FIXME: This check looks suspicious
 	if (get_class($media) == 'Song') {
 		debug_event('play', 'Registering stats for ' . $media->title, 5);
 		$GLOBALS['user']->update_stats($media->id);
 		$media->set_played();
 	}
-
 }
 else {
-	debug_event('play', $bytes_streamed .' of ' . $media->size . ' streamed; not collecting stats', 5);
+	debug_event('play', $bytes_streamed .' of ' . $stream_size . ' streamed; not collecting stats', 5);
 }
 
 // If this is a democratic playlist remove the entry.
@@ -416,6 +446,6 @@ else {
 	fclose($fp);
 }
 
-debug_event('play', 'Stream ended at ' . $bytes_streamed . ' bytes out of ' . $media->size, 5);
+debug_event('play', 'Stream ended at ' . $bytes_streamed . ' (' . $real_bytes_streamed . ') bytes out of ' . $stream_size, 5);
 
 ?>
