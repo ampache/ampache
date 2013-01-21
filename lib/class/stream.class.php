@@ -156,57 +156,65 @@ class Stream {
 		// FIXME: This should be configurable for each output type
 		$user_sample_rate = Config::get('sample_rate');
 
+		// If the user's crazy, that's no skin off our back
+		if ($user_sample_rate < $min_bitrate) {
+			$min_bitrate = $user_sample_rate;
+		}
+
 		if (!$song_name) {
 			$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 		}
 
-		if ($max_bitrate > 1 AND $min_bitrate < $max_bitrate AND $min_bitrate > 0) {
-			$last_seen_time = $time - 1200; //20 min.
+		// Are there site-wide constraints? (Dynamic downsampling.)
+		if ($max_bitrate > 1 ) {
+			$sql = 'SELECT COUNT(*) FROM `now_playing` ' .
+				'WHERE `user` IN ' .
+				'(SELECT DISTINCT `user_preference`.`user` ' .
+				'FROM `preference` JOIN `user_preference` ' .
+				'ON `preference`.`id` = ' .
+				'`user_preferece`.`preference` ' .
+				"WHERE `preference`.`name` = 'play_type' " .
+				"AND `user_preference`.`value` = 'downsample')";
 
-			$sql = "SELECT COUNT(*) FROM now_playing, user_preference, preference " .
-				"WHERE preference.name = 'play_type' AND user_preference.preference = preference.id " .
-				"AND now_playing.user = user_preference.user AND user_preference.value='downsample'";
 			$db_results = Dba::read($sql);
 			$results = Dba::fetch_row($db_results);
 
-			// Current number of active streams (current is already
-			// in now playing, worst case make it 1)
-			$active_streams = intval($results[0]);
-			if (!$active_streams) { $active_streams = '1'; }
-			debug_event('transcode', "Active streams: $active_streams", 5);
+			$active_streams = intval($results[0]) ?: 0;
+			debug_event('transcode', 'Active streams: ' . $active_streams, 5);
 
-			// If only one user, they'll get all available.
-			// Otherwise split up equally.
+			// We count as one for the algorithm
+			$active_streams++;
 			$sample_rate = floor($max_bitrate / $active_streams);
 
-			// If min_bitrate is set, then we'll exit if the
-			// bandwidth would need to be lower.
-			if ($min_bitrate > 1 AND ($max_bitrate / $active_streams) < $min_bitrate) {
-				debug_event('transcode', "Max bandwidth already allocated. Active streams: $active_streams", 2);
+			// Exit if this would be insane
+			if ($sample_rate < ($min_bitrate ?: 8)) {
+				debug_event('transcode', 'Max bandwidth already allocated. Active streams: ' . $active_streams, 2);
 				header('HTTP/1.1 503 Service Temporarily Unavailable');
 				exit();
 			}
-			else {
-				$sample_rate = floor($max_bitrate / $active_streams);
-			} // end else
 
 			// Never go over the user's sample rate
-			if ($sample_rate > $user_sample_rate) { $sample_rate = $user_sample_rate; }
-
-			debug_event('transcode', "Downsampling to $sample_rate", 5);
+			if ($sample_rate > $user_sample_rate) {
+				$sample_rate = $user_sample_rate;
+			}
 
 		} // end if we've got bitrates
 		else {
 			$sample_rate = $user_sample_rate;
 		}
 
+		debug_event('transcode', 'Configured bitrate is ' . $sample_rate, 5);
+
 		/* Validate the bitrate */
 		$sample_rate = self::validate_bitrate($sample_rate);
 
 		// Never upsample a song
 		if ($song->resampled && ($sample_rate * 1000) > $song->bitrate) {
+			debug_event('transcode', 'Clamping bitrate to avoid upsampling to ' . $sample_rate, 5);
 			$sample_rate = self::validate_bitrate($song->bitrate / 1000);
 		}
+
+		debug_event('transcode', 'Final bitrate is ' . $sample_rate, 5);
 
 		$song_file = scrub_arg($song->file);
 

@@ -493,24 +493,22 @@ refresh_limit = "60"
 ;user_agreement = "false"
 
 ;########################################################
-; These options control the dynamic down-sampling based #
+; These options control the dynamic downsampling based  #
 ; on current usage                                      #
-; *Note* Down-sampling must be enabled and working      #
+; *Note* Transcoding must be enabled and working        #
 ;########################################################
 
-; Attempt to optimize bandwidth by dynamically down-sampling
-; all connections from users to fit within a maximum bandwidth.   
-; The benefit is that it won't downsample more than it needs to.  As it only 
-; adjusts the sample rate at the beginning of a song, it may take a few 
-; minutes to reset all connections to a lower rate. This won't never go higher
-; than a user's sample rate and only applies to users who are set to 
-; the Downsample playback method
-; DEFAULT: 576
+; Attempt to optimize bandwidth by dynamically lowering the bit rate of new
+; streams. Since the bit rate is only adjusted at the beginning of a song, the
+; actual cumulative bitrate for concurrent streams can be up to around
+; double the configured value. It also only applies to streams that are
+; transcoded.
+; DEFAULT: none
 ;max_bit_rate = 576
 
-; If min_bit_rate is set then new streams will be denied if it would
-; cause all streams to be down-sampled below this rate.
-; DEFAULT: 48
+; New dynamically downsampled streams will be denied if they are forced below
+; this value.
+; DEFAULT: 8
 ;min_bit_rate = 48
 
 ;######################################################
