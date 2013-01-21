@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.6-FUTURE
+    - Made transcoded streams more standards compliant by not sending a random
+        value as the Content-Length or claiming that ranged requests are
+        supported
     - Changed rating semantics to distinguish between user ratings and the
         global average and add the ability to search for unrated items
         (< 1 star)

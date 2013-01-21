@@ -146,13 +146,14 @@ class Stream {
 	 * to the song object is passed so that the changes we make in here
 	 * affect the external object, References++
 	 */
-	public static function start_transcode(&$song, $song_name = 0, $start = 0) {
+	public static function start_transcode(&$song, $song_name = 0) {
 
 		// Check to see if bitrates are set.
 		// If so let's go ahead and optimize!
 		$max_bitrate = Config::get('max_bit_rate');
 		$min_bitrate = Config::get('min_bit_rate');
 		$time = time();
+		// FIXME: This should be configurable for each output type
 		$user_sample_rate = Config::get('sample_rate');
 
 		if (!$song_name) {
@@ -207,27 +208,6 @@ class Stream {
 			$sample_rate = self::validate_bitrate($song->bitrate / 1000);
 		}
 
-		// Set the new size for the song (in bytes)
-		$song->size  = floor($sample_rate * $song->time * 125);
-
-		/* Get Offset */
-		$offset   = ($start * $song->time) / $song->size;
-		$offsetmm = floor($offset / 60);
-		$offsetss = floor($offset - ($offsetmm * 60));
-		// If flac then format it slightly differently
-		// HACK
-		if ($song->transcoded_from == 'flac') { 
-			$offset = sprintf('%02d:%02d', $offsetmm, $offsetss);
-		} 
-		else { 
-			$offset = sprintf('%02d.%02d', $offsetmm, $offsetss);
-		} 
-
-		/* Get EOF */
-		$eofmm  = floor($song->time / 60);
-		$eofss  = floor($song->time - ($eofmm * 60));
-		$eof    = sprintf('%02d.%02d', $eofmm, $eofss);
-
 		$song_file = scrub_arg($song->file);
 
 		$transcode_command = $song->stream_cmd();
@@ -238,12 +218,6 @@ class Stream {
 
 		$string_map = array(
 			'%FILE%'   => $song_file,
-			'%OFFSET%' => $offset,
-			'%OFFSET_MM%' => $offsetmm,
-			'%OFFSET_SS%' => $offsetss,
-			'%EOF%'    => $eof,
-			'%EOF_MM%' => $eofmm,
-			'%EOF_SS%' => $eofss,
 			'%SAMPLE%' => $sample_rate
 		);
 
