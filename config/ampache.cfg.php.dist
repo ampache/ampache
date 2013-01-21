@@ -7,7 +7,7 @@
 ; if this config file is up to date 
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 11
+config_version = 12
 
 ;###################
 ; Path Vars        #
@@ -515,43 +515,58 @@ refresh_limit = "60"
 ; These are commands used to transcode non-streaming
 ; formats to the target file type for streaming. 
 ; This can be useful in re-encoding file types that don't stream
-; very well, or if your player doesn't support some file types. 
-; This is also the string used when 'downsampling' is selected
-; as some people have complained its not bloody obvious, any programs
-; referenced in the downsample commands must be installed manually and in
-; the web server path, and executable by the web server
-; REQUIRED variables
-; transcode_TYPE	= true/false ## True to force transcode regardless of prefs
-; transcode_TYPE_target	= TARGET_FILE_TYPE
-; transcode_cmd_TYPE	= TRANSCODE_COMMAND
-; %FILE%	= filename
-; %OFFSET%	= offset
-; %SAMPLE%	= sample rate
-; %EOF%		= end of file in min.sec
+; very well, or if your player doesn't support some file types.
+;
+; 'Downsampling' will also use these commands.
+;
+; To state the bleeding obvious, any programs referenced in the downsample
+; commands must be installed, in the web server's search path (or referenced
+; by their full path), and executable by the web server.
 
-; List of filetypes to transcode
-transcode_m4a 		= true
-transcode_m4a_target 	= mp3 
-;transcode_flac 	= true
-transcode_flac_target	= mp3
-;transcode_mp3  	= false
-transcode_mp3_target	= mp3
-;transcode_ogg 		= false
-transcode_ogg_target	= mp3
+; Input type selection
+; TYPE is the extension. 'allowed' certifies that transcoding works properly for
+; this input format. 'required' further forbids the direct streaming of a format
+; (e.g. if you store everything in FLAC, but don't want to ever stream that.)
+; transcode_TYPE         = {allowed|required|false}
+; DEFAULT: false
+;transcode_m4a      = allowed
+;transcode_flac     = required
+;transcode_mp3      = allowed
 
-; These are the commands that will be run to transcode the file
-transcode_cmd_flac 	= "flac -dc %FILE% | lame -b %SAMPLE% -S - - "
-transcode_cmd_m4a 	= "faad -f 2 -w %FILE% | lame -r -b %SAMPLE% -S - -"
-transcode_cmd_mp3	= "mp3splt -qnf %FILE% %OFFSET% %EOF% -o - | lame --mp3input -q 3 -b %SAMPLE% -S - -"
-transcode_cmd_ogg   	= "oggsplt -qn %FILE% %OFFSET% %EOF% -o - | oggdec -Q -o - - | lame -S -q 3 -b %SAMPLE% -S - -"
+; Default output format
+; DEFAULT: none
+;encode_target = mp3
 
-; Alternative command works better for some people
-;transcode_cmd_m4a       =  "alac %FILE% | lame -h -b %SAMPLE% -S - -"
-;transcode_cmd_ogg   	= "mp3splt -qn %FILE% %OFFSET% %EOF% -o - | oggdec -Q -o - - | lame -S -q 3 -b %SAMPLE% -S - -"
-;transcode_cmd_flac	= "flac -dc %FILE% | lame -rb %SAMPLE% -S - -"
+; Override the default output format on a per-type basis
+; encode_target_TYPE = TYPE
+; DEFAULT: none
+;encode_target_flac = ogg
 
-; This line seems to work better for windows, switch if needed
-;transcode_cmd_mp3	= "lame -q 3 -b %SAMPLE% -S %FILE% - -" 
+; Command configuration. Substitutions will be made as follows:
+; %FILE% => filename
+; %SAMPLE% => target sample rate
+; You can do fancy things like VBR, but consider whether the consequences are
+; acceptable in your environment.
+
+; Master transcode command
+; transcode_cmd should be a single command that supports multiple file types,
+; such as ffmpeg or avconv. It's still possible to make a configuration that's
+; equivalent to the old default, but if you find that necessary you should be
+; clever enough to figure out how on your own.
+; DEFAULT: none
+;transcode_cmd = "ffmpeg -i %FILE"
+
+; Specific transcode commands
+; It shouldn't be necessary in most cases, but you can override the transcode
+; command for specific source formats.  It still needs to accept the 
+; encoding arguments, so the easiest approach is to use your normal command as
+; a clearing-house.
+; transcode_cmd_TYPE = TRANSCODE_CMD
+;transcode_cmd_mid = "timidity -Or -o – %FILE% | ffmpeg -i pipe:0"
+
+; encode_args_TYPE = TRANSCODE_CMD_ARGS
+;encode_args_mp3 = "-vn -b:a %SAMPLE%K -c:a mp3 -f mp3 pipe:1"
+;encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a vorbis -f ogg pipe:1"
 
 ;######################################################
 ; these options allow you to configure your rss-feed

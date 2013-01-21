@@ -62,11 +62,7 @@ class Song extends database_object implements media {
 	public $mbid; // MusicBrainz ID
 
 	/* Setting Variables */
-	public $_transcoded = false;
-	public $resampled = false;	
 	public $_fake = false; // If this is a 'construct_from_array' object
-	public $transcoded_from;
-	private $_transcode_cmd;
 
 	/**
 	 * Constructor
@@ -85,8 +81,9 @@ class Song extends database_object implements media {
 			foreach ($info as $key=>$value) {
 				$this->$key = $value;
 			}
-			// Format the Type of the song
-			$this->format_type();
+			$data = pathinfo($this->file);
+			$this->type = strtolower($data['extension']);
+			$this->mime = self::type_to_mime($this->type);
 		}
 
 		return true;
@@ -222,61 +219,53 @@ class Song extends database_object implements media {
 	} // fill_ext_info
 
 	/**
-	 * format_type
-	 * gets the type of song we are trying to
-	 * play, used to set mime headers and to trick
-	 * players into playing them correctly
+	 * type_to_mime
+	 *
+	 * Returns the mime type for the specified file extension/type
 	 */
-	public function format_type($override='') {
-
-		// If we pass an override for downsampling or whatever then use it
-		if (!empty($override)) {
-			$this->type = $override;
-		}
-		else {
-			$data = pathinfo($this->file);
-			$this->type = strtolower($data['extension']);
-		}
-
-		switch ($this->type) {
+	public static function type_to_mime($type) {
+		// FIXME: This should really be done the other way around.
+		// Store the mime type in the database, and provide a function
+		// to make it a human-friendly type.
+		switch ($type) {
 			case 'spx':
 			case 'ogg':
-				$this->mime = "application/ogg";
+				return 'application/ogg';
 			break;
 			case 'wma':
 			case 'asf':
-				$this->mime = "audio/x-ms-wma";
+				return 'audio/x-ms-wma';
 			break;
 			case 'mp3':
 			case 'mpeg3':
-				$this->mime = "audio/mpeg";
+				return 'audio/mpeg';
 			break;
 			case 'rm':
 			case 'ra':
-				$this->mime = "audio/x-realaudio";
+				return 'audio/x-realaudio';
 			break;
 			case 'flac';
-				$this->mime = "audio/x-flac";
+				return 'audio/x-flac';
 			break;
 			case 'wv':
-				$this->mime = 'audio/x-wavpack';
+				return 'audio/x-wavpack';
 			break;
 			case 'aac':
 			case 'mp4':
 			case 'm4a':
-				$this->mime = "audio/mp4";
+				return 'audio/mp4';
 			break;
 			case 'mpc':
-				$this->mime = "audio/x-musepack";
+				return 'audio/x-musepack';
 			break;
 			default:
-				$this->mime = "audio/mpeg";
+				return 'audio/mpeg';
 			break;
 		}
 
 		return true;
 
-	} // format_type
+	}
 
 	/**
 	 * get_album_name
@@ -923,63 +912,51 @@ class Song extends database_object implements media {
 
 	} // get_recently_played
 
-	/**
-	 * native_stream
-	 * This returns true/false if this can be natively streamed
-	 */
-	public function native_stream() {
+	public function get_stream_types() {
+		$types = array();
+		$transcode = Config::get('transcode_' . $this->type);
 
-		if ($this->_transcoded) { return false; }
+		if ($transcode != 'required') {
+			$types[] = 'native';
+		}
+		if (make_bool($transcode)) {
+			$types[] = 'transcode';
+		}
 
-		$conf_var 	= 'transcode_' . $this->type;
+		return $types;
+	} // end stream_types 
 
-		if (Config::get($conf_var)) {
-			$this->set_transcode();
+	public function get_transcode_settings($target = null) {
+		$source = $this->type;
+
+		if ($target) {
+			debug_event('transcode', 'Explicit format request', 5);
+		}
+		else if ($target = Config::get('encode_target_' . $source)) {
+			debug_event('transcode', 'Defaulting to configured target format for ' . $source, 5);
+		}
+		else if ($target = Config::get('encode_target')) {
+			debug_event('transcode', 'Using default target format', 5);
+		}
+		else {
+			$target = $source;
+			debug_event('transcode', 'No default target for ' . $source . ', choosing to resample', 5);
+		}
+
+		debug_event('transcode', 'Transcoding from ' . $source . ' to ' . $target, 5);
+
+		$cmd = Config::get('transcode_cmd_' . $source) ?: Config::get('transcode_cmd');
+		$args = Config::get('encode_args_' . $target);
+
+		if (!$args) {
+			debug_event('transcode', 'Target format ' . $target . ' is not properly configured', 2);
 			return false;
 		}
 
-		return true;
-
-	} // end native_stream
-
-	/**
-	 * set_transcode
-	 *
-	 * We want to transcode, set up the variables correctly
-	 */
-	public function set_transcode() {
-		if ($this->_transcoded) { return; }
-
-		$conf_type      = 'transcode_' . $this->type . '_target';
-		$conf_cmd       = 'transcode_cmd_' . $this->type;
-
-		$this->_transcoded = true;
-		$this->transcoded_from = $this->type;
-		$this->_transcode_cmd = Config::get($conf_cmd);
-		$this->format_type(Config::get($conf_type));
-		if ($this->type == $this->transcoded_from) {
-			$this->_resampled = true;
-		}
-
-		debug_event('transcode', 'Transcoding from ' . 
-			$this->transcoded_from . ' to ' . $this->type, 5);
+		debug_event('transcode', 'Command: ' . $cmd . ' Arguments: ' . $args, 5);
+		return array('format' => $target,
+			'command' => $cmd . ' ' . $args);
 	}
-
-	/**
-	 * stream_cmd
-	 *
-	 * test if the song type streams natively and
-	 * if not returns a transcoding command from the config
-	 */
-	public function stream_cmd() {
-
-		if ($this->native_stream()) {
-			return null;
-		}
-		
-		return $this->_transcode_cmd;
-
-	} // end stream_cmd
 
 } // end of song class
 ?>

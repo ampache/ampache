@@ -188,13 +188,11 @@ class Radio extends database_object implements media {
 	} // delete
 
 	/**
-	 * native_stream
+	 * get_stream_types
 	 * This is needed by the media interface
 	 */
-	public function native_stream() {
-
-
-
+	public function get_stream_types() {
+		return array('foreign');
 	} // native_stream
 
 	/**
@@ -220,13 +218,13 @@ class Radio extends database_object implements media {
 	} // has_flag
 
 	/**
-	 * stream_cmd
-	 * Needed by the media interface
+	 * get_transcode_settings
+	 * 
+	 * This will probably never be implemented
 	 */
-	public function stream_cmd() {
-
-
-	} // stream_cmd
+	public function get_transcode_settings() {
+		return false;
+	}
 
 } //end of radio class
 

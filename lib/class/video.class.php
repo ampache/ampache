@@ -95,13 +95,9 @@ class Video extends database_object implements media {
 
 	} // format
 
-	/**
-	 * native_stream
-	 * This returns true or false on the downsampling mojo
-	 */
-	public function native_stream() {
+	public function get_stream_types() {
 
-		return true;
+		return array('native');
 
 	} // native_stream
 
@@ -126,16 +122,13 @@ class Video extends database_object implements media {
 	} // play_url
 
 	/**
-	 * stream_cmd
-	 * test and see if the video needs to be natively streamed
-	 * if not it returns the transocding command from the config file
-	 * we can't use this->type because its been formated for the downsampling
+	 * get_transcode_settings
+	 *
+	 * FIXME: Video transcoding is not implemented
 	 */
-	public function stream_cmd() {
-
-
-
-	} // stream_cmd
+	public function get_transcode_settings($target = null) {
+		return false;
+	}
 
 	/**
 	 * has_flag

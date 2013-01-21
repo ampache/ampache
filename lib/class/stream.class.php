@@ -142,27 +142,24 @@ class Stream {
 	 * start_transcode
 	 *
 	 * This is a rather complex function that starts the transcoding or
-	 * resampling of a song and returns the opened file handle. A reference
-	 * to the song object is passed so that the changes we make in here
-	 * affect the external object, References++
+	 * resampling of a song and returns the opened file handle.
 	 */
-	public static function start_transcode(&$song, $song_name = 0) {
+	public static function start_transcode($song) {
+		$transcode_settings = $song->get_transcode_settings();
+		// Bail out early if we're unutterably broken
+		if ($transcode_settings == false) {
+			debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);
+			return false;
+		}
 
-		// Check to see if bitrates are set.
-		// If so let's go ahead and optimize!
 		$max_bitrate = Config::get('max_bit_rate');
 		$min_bitrate = Config::get('min_bit_rate');
-		$time = time();
 		// FIXME: This should be configurable for each output type
 		$user_sample_rate = Config::get('sample_rate');
 
 		// If the user's crazy, that's no skin off our back
 		if ($user_sample_rate < $min_bitrate) {
 			$min_bitrate = $user_sample_rate;
-		}
-
-		if (!$song_name) {
-			$song_name = $song->f_artist_full . " - " . $song->title . "." . $song->type;
 		}
 
 		// Are there site-wide constraints? (Dynamic downsampling.)
@@ -180,15 +177,16 @@ class Stream {
 			$results = Dba::fetch_row($db_results);
 
 			$active_streams = intval($results[0]) ?: 0;
-			debug_event('transcode', 'Active streams: ' . $active_streams, 5);
+			debug_event('stream', 'Active transcoding streams: ' . $active_streams, 5);
 
 			// We count as one for the algorithm
+			// FIXME: Should this reflect the actual bit rates?
 			$active_streams++;
 			$sample_rate = floor($max_bitrate / $active_streams);
 
 			// Exit if this would be insane
 			if ($sample_rate < ($min_bitrate ?: 8)) {
-				debug_event('transcode', 'Max bandwidth already allocated. Active streams: ' . $active_streams, 2);
+				debug_event('stream', 'Max transcode bandwidth already allocated. Active streams: ' . $active_streams, 2);
 				header('HTTP/1.1 503 Service Temporarily Unavailable');
 				exit();
 			}
@@ -203,26 +201,23 @@ class Stream {
 			$sample_rate = $user_sample_rate;
 		}
 
-		debug_event('transcode', 'Configured bitrate is ' . $sample_rate, 5);
+		debug_event('stream', 'Configured bitrate is ' . $sample_rate, 5);
 
-		/* Validate the bitrate */
+		// Validate the bitrate
 		$sample_rate = self::validate_bitrate($sample_rate);
 
 		// Never upsample a song
-		if ($song->resampled && ($sample_rate * 1000) > $song->bitrate) {
-			debug_event('transcode', 'Clamping bitrate to avoid upsampling to ' . $sample_rate, 5);
+		if ($song->type == $transcode_settings['format'] && ($sample_rate * 1000) > $song->bitrate) {
+			debug_event('stream', 'Clamping bitrate to avoid upsampling to ' . $sample_rate, 5);
 			$sample_rate = self::validate_bitrate($song->bitrate / 1000);
 		}
 
-		debug_event('transcode', 'Final bitrate is ' . $sample_rate, 5);
+		debug_event('stream', 'Final transcode bitrate is ' . $sample_rate, 5);
 
 		$song_file = scrub_arg($song->file);
 
-		$transcode_command = $song->stream_cmd();
-		if ($transcode_command == null) {
-			debug_event('downsample', 'song->stream_cmd() returned null', 2);
-			return null;
-		}
+		// Finalise the command line
+		$command = $transcode_settings['command'];
 
 		$string_map = array(
 			'%FILE%'   => $song_file,
@@ -230,20 +225,20 @@ class Stream {
 		);
 
 		foreach ($string_map as $search => $replace) {
-			$transcode_command = str_replace($search, $replace, $transcode_command, $ret);
+			$command = str_replace($search, $replace, $command, $ret);
 			if (!$ret) {
 				debug_event('downsample', "$search not in downsample command", 5);
 			}
 		}
 
-		debug_event('downsample', "Downsample command: $transcode_command", 3);
+		debug_event('downsample', "Downsample command: $command", 3);
 
-		$fp = popen($transcode_command, 'rb');
+		return array(
+			'handle' => popen($command, 'rb'),
+			'format' => $transcode_settings['format']
+		);
 
-		// Return our new handle
-		return $fp;
-
-	} // start_downsample
+	}
 
 	/**
 	 * validate_bitrate

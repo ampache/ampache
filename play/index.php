@@ -309,32 +309,49 @@ if (Config::get('track_user_ip')) {
 	$GLOBALS['user']->insert_ip_history();
 }
 
-$downsample_remote = false;
+$force_downsample = false;
 if (Config::get('downsample_remote')) {
 	if (!Access::check_network('network', $GLOBALS['user']->id,'0')) {
-		debug_event('downsample', 'Address ' . $_SERVER['REMOTE_ADDR'] . ' is not in a network defined as local', 5);
-		$downsample_remote = true;
+		debug_event('play', 'Downsampling enabled for non-local address ' . $_SERVER['REMOTE_ADDR'], 5);
+		$force_downsample = true;
 	}
 }
 
-// If they are downsampling, or if the song is not a native stream or it's non-local
-if (((Config::get('transcode') == 'always' && !$video) ||
-	!$media->native_stream() ||
-	$downsample_remote) && Config::get('transcode') != 'never') {
-        debug_event('downsample',
-		'Decided to transcode. Transcode:' . Config::get('transcode') . 
-		' Native Stream: ' . ($media->native_stream() ? 'true' : 'false') .
-		' Remote: ' . ($downsample_remote ? 'true' : 'false'), 5);
+// Determine whether to transcode
+$transcode = false;
+$transcode_cfg = Config::get('transcode');
+$valid_types = $media->get_stream_types();
+if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
+	if ($transcode_cfg == 'always') {
+		$transcode = true;
+		debug_event('play', 'Transcoding due to always', 5);
+	}
+	else if ($force_downsample) {
+		$transcode = true;
+		debug_event('play', 'Transcoding due to downsample_remote', 5);
+	}
+	else if (!in_array('native', $valid_types)) {
+		$transcode = true;
+		debug_event('play', 'Transcoding because native streaming is unavailable', 5);
+	}
+	else {
+		debug_event('play', 'Decided not to transcode', 5);
+	}
+}
+
+if ($transcode) {
 	header('Accept-Ranges: none');
-	$media->set_transcode();
-	$fp = Stream::start_transcode($media, $media_name, $start);
-	$media_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
-	$transcoded = true;
-} // end if downsampling
+	$transcoder = Stream::start_transcode($media);
+	$fp = $transcoder['handle'];
+	$media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
+}
+else if (!in_array('native', $valid_types)) {
+	debug_event('play', 'Not transcoding and native streaming is not supported, aborting', 2);
+	exit();
+}
 else {
 	header('Accept-Ranges: bytes');
 	$fp = fopen($media->file, 'rb');
-	$transcoded = false; 
 }
 
 if (!is_resource($fp)) {
@@ -347,7 +364,7 @@ if (get_class($media) == 'Song') {
 	Stream::insert_now_playing($media->id,$uid,$media->time,$sid,get_class($media));
 }
 
-if ($transcoded) {
+if ($transcode) {
 	$stream_size = null;
 }
 else {
@@ -368,8 +385,8 @@ if ($start > 0 || $end > 0 ) {
 		$stream_size = $media->size - $start;
 	}
 
-	if ($transcoded) {
-		debug_event('play', 'Bad client behaviour. Content-Range header received, which we cannot fulfill due to transcoding', 1);
+	if ($transcode) {
+		debug_event('play', 'Bad client behaviour. Content-Range header received, which we cannot fulfill due to transcoding', 2);
 		$stream_size = null;
 	}
 	else {
@@ -385,19 +402,23 @@ else {
 	debug_event('play','Starting stream of ' . $media->file . ' with size ' . $media->size, 5);
 }
 
-$browser->downloadHeaders($media_name, $media->mime, false, $stream_size);
+$mime = $transcode 
+	? $media->type_to_mime($transcoder['format'])
+	: $media->mime;
+
+$browser->downloadHeaders($media_name, $mime, false, $stream_size);
 
 $bytes_streamed = 0;
 
 // Actually do the streaming
 do {
-	$read_size = $transcoded 
+	$read_size = $transcode
 		? 2048
 		: min(2048, $stream_size - $bytes_streamed);
 	$buf = fread($fp, $read_size);
 	print($buf);
 	$bytes_streamed += strlen($buf);
-} while (!feof($fp) && (connection_status() == 0) && ($transcoded || $bytes_streamed < $stream_size));
+} while (!feof($fp) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
 
 $real_bytes_streamed = $bytes_streamed;
 // Need to make sure enough bytes were sent.
@@ -439,7 +460,7 @@ else {
 // We do this regardless of play amount.
 if ($demo_id) { $democratic->delete_from_oid($oid,'song'); }
 
-if ($transcoded) {
+if ($transcode) {
 	pclose($fp);
 }
 else {
