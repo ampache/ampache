@@ -4,6 +4,9 @@
 
 --------------------------------------------------------------------------
   v.3.6-FUTURE
+    - Changed rating semantics to distinguish between user ratings and the
+        global average and add the ability to search for unrated items
+        (< 1 star)
     - Updated Prototype to git HEAD (4ce0b0f)
     - Fixed bug that disclosed passwords for plugins to users that didn't
         have access to update the password (patch by Fred Thomsen)

@@ -779,7 +779,7 @@ class Search extends playlist_object {
 					$where[] = "`album`.`year` $sql_match_operator '$input'";
 				break;
 				case 'rating':
-					$where[] = " `realrating`.`rating` $sql_match_operator '$input'";
+					$where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
 					$join['rating'] = true;
 				break;
 				case 'catalog':
@@ -815,16 +815,10 @@ class Search extends playlist_object {
 		}
 		if ($join['rating']) {
 			$userid = $GLOBALS['user']->id;
-			$table['rating'] = "LEFT JOIN " .
-				"(SELECT `object_id`, `rating` FROM `rating` " .
-					"WHERE `object_type`='album' AND `user`='$userid' " .
-				"UNION " .
-				"SELECT `object_id`, FLOOR(AVG(`rating`)) AS 'rating' FROM `rating` " .
-					"WHERE `object_type`='album' AND " .
-					"`object_id` NOT IN (SELECT `object_id` FROM `rating` " .
-						"WHERE `object_type`='album' AND `user`='$userid') " .
-					"GROUP BY `object_id` " .
-				") AS realrating ON `album`.`id` = `realrating`.`object_id`";
+			$table['rating'] = "LEFT JOIN `rating` ON " .
+				"`rating`.`object_type`='album' " .
+				"AND `rating`.`user`='$userid' " .
+				"AND `rating`.`object_id`=`album`.`id`";
 		}
 
 		$table_sql = implode(' ', $table);
@@ -968,7 +962,7 @@ class Search extends playlist_object {
 					$where[] = "`song`.`bitrate` $sql_match_operator '$input'";
 				break;
 				case 'rating':
-					$where[] = "`realrating`.`rating` $sql_match_operator '$input'";
+					$where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
 					$join['rating'] = true;
 				break;
 				case 'catalog':
@@ -1027,21 +1021,11 @@ class Search extends playlist_object {
 				"ON `song`.`id`=`realtag_$key`.`object_id`";
 		}
 		if ($join['rating']) {
-			// We do a join on ratings from the table with a 
-			// preference for our own and fall back to the FLOORed 
-			// average of everyone's rating if it's a song we 
-			// haven't rated.
 			$userid = $GLOBALS['user']->id;
-			$table['rating'] = "LEFT JOIN " .
-				"(SELECT `object_id`, `rating` FROM `rating` " .
-					"WHERE `object_type`='song' AND `user`='$userid' " .
-				"UNION " .
-				"SELECT `object_id`, FLOOR(AVG(`rating`)) AS 'rating' FROM `rating` " .
-					"WHERE `object_type`='song' AND " .
-					"`object_id` NOT IN (SELECT `object_id` FROM `rating` " .
-						"WHERE `object_type`='song' AND `user`='$userid') " .
-					"GROUP BY `object_id` " .
-				") AS realrating ON `song`.`id`=`realrating`.`object_id`";
+			$table['rating'] = "LEFT JOIN `rating` ON " .
+				"`rating`.`object_type`='song' AND " .
+				"`rating`.`user`='$userid' AND " .
+				"`rating`.`object_id`=`song`.`id`";
 		}
 		if ($join['playlist_data']) {
 			$table['playlist_data'] = "LEFT JOIN `playlist_data` ON `song`.`id`=`playlist_data`.`object_id` AND `playlist_data`.`object_type`='song'";
