@@ -1033,3 +1033,6 @@ td.lp_current a {
 	text-transform:uppercase;
 	color: #FC0;
 }
+.format-specifier {
+    text-transform: none;
+}

@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-FUTURE
+    - Fixed a display problem with the Penguin theme by adding a new CSS class 
+        (patch by Fred Thomsen)
     - Made transcoding and its configuration more flexible
     - Made transcoded streams more standards compliant by not sending a random
         value as the Content-Length or claiming that ranged requests are
