@@ -41,8 +41,6 @@ class Rating extends database_object {
 	// Public variables
 	public $id;		// The ID of the object rated
 	public $type;		// The type of object we want
-	public $rating;		// Integer rating
-	public $preciserating;  // Decimal rating
 
 	/**
 	 * Constructor
@@ -55,13 +53,6 @@ class Rating extends database_object {
 
 		$this->id = $id;
 		$this->type = $type;
-
-		if (! $rating = $this->get_user_rating()) {
-			$rating = $this->get_average_rating();
-		}
-
-		$this->rating = floor($rating);
-		$this->preciserating = $rating;
 
 		return true;
 

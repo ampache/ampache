@@ -298,8 +298,9 @@ class xmlData {
 					$tag_string .
 					"\t<albums>$artist->albums</albums>\n" .
 					"\t<songs>$artist->songs</songs>\n" .
-					"\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
-					"\t<rating>" . $rating->rating . "</rating>\n" .
+					"\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
+					"\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
+					"\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
 					"</artist>\n";
 		} // end foreach artists
 
@@ -350,8 +351,9 @@ class xmlData {
 					"\t<disk>$album->disk</disk>\n" .
 					self::tags_string($album->tags) .
 					"\t<art><![CDATA[$art_url]]></art>\n" .
-					"\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
-					"\t<rating>" . $rating->rating . "</rating>\n" .
+					"\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
+					"\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
+					"\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
 					"</album>\n";
 		} // end foreach
 
@@ -448,8 +450,9 @@ class xmlData {
 				"\t<album_mbid>$song->album_mbid</album_mbid>\n".
 				"\t<artist_mbid>$song->artist_mbid</artist_mbid>\n".
 				"\t<art><![CDATA[" . $art_url . "]]></art>\n" .
-				"\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
-				"\t<rating>" . $rating->rating . "</rating>\n" .
+				"\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
+				"\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
+				"\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
 				"</song>\n";
 
 		} // end foreach
@@ -541,8 +544,9 @@ class xmlData {
 					"\t<url><![CDATA[" . Song::play_url($song->id) . "]]></url>\n" .
 					"\t<size>$song->size</size>\n" .
 					"\t<art><![CDATA[" . $art_url . "]]></art>\n" .
-					"\t<preciserating>" . $rating->preciserating . "</preciserating>\n" .
-					"\t<rating>" . $rating->rating . "</rating>\n" .
+					"\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
+					"\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
+					"\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
 					"\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n" .
 					"</song>\n";
 
