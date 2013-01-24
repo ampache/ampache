@@ -160,6 +160,7 @@ class Stream_Playlist {
             case 'democratic':
             case 'localplay':
             case 'xspf_player':
+            case 'html5_player':
                 // These are valid, but witchy
                 $redirect = false;
                 unset($ext);
@@ -396,6 +397,15 @@ class Stream_Playlist {
     } // create_xspf_player
 
     /**
+     * create_html5_player
+     *
+     * Creates an html5 player.
+     */
+    public function create_html5_player() {
+        require Config::get('prefix') . '/templates/create_html5_player.inc.php';       
+    }
+
+    /**
      * create_localplay
      * This calls the Localplay API to add the URLs and then start playback
      */
@@ -450,7 +460,5 @@ class Stream_Playlist {
             echo $url->url . "\n";
         }
     } // create_ram
-
 }
-
 ?>

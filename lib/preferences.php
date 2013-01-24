@@ -178,6 +178,7 @@ function create_preference_input($name,$value) {
             if ($value == 'localplay') { $is_local = 'selected="selected"'; }
             elseif ($value == 'democratic') { $is_vote = 'selected="selected"'; }
             elseif ($value == 'xspf_player') { $is_xspf_player = 'selected="selected"'; }
+            elseif ($value == 'html5_player') { $is_html5_player = 'selected="selected"'; }
             else { $is_stream = "selected=\"selected\""; }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"\">" . T_('None') . "</option>\n";
@@ -191,6 +192,7 @@ function create_preference_input($name,$value) {
                 echo "\t<option value=\"localplay\" $is_local>" . T_('Localplay') . "</option>\n";
             }
             echo "\t<option value=\"xspf_player\" $is_xspf_player>" . T_('Flash Player') . "</option>\n";
+            echo "\t<option value=\"html5_player\" $is_html5_player>" . _('HTML5 Player') . "</option>\n";
             echo "</select>\n";
         break;
         case 'playlist_type':
@@ -210,7 +212,6 @@ function create_preference_input($name,$value) {
             echo '<select name="' . $name . '">' . "\n";
             foreach ($languages as $lang=>$name) {
                 $selected = ($lang == $value) ? 'selected="selected"' : '';
-
                 echo "\t<option value=\"$lang\" " . $selected . ">$name</option>\n";
             } // end foreach
             echo "</select>\n";

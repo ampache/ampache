@@ -144,8 +144,8 @@ class Stream {
      * This is a rather complex function that starts the transcoding or
      * resampling of a song and returns the opened file handle.
      */
-    public static function start_transcode($song) {
-        $transcode_settings = $song->get_transcode_settings();
+    public static function start_transcode($song, $type = null) {
+        $transcode_settings = $song->get_transcode_settings($type);
         // Bail out early if we're unutterably broken
         if ($transcode_settings == false) {
             debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);

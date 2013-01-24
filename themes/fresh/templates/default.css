@@ -993,7 +993,71 @@ table.tabledata .cel_php_setting, table.tabledata .cel_configuration, .cel_prefe
     width: 200px;
 }
 
-
+/************************************************/
+/*             HTML5 Player                     */
+/************************************************/
+#html5_player #albumart img
+{
+  width: 200px;
+  float: left;
+  margin: 5px;
+}
+#html5_player #title
+{
+  padding-top: 5px;
+}
+#html5_player #artist, #html5_player #album
+{
+  display: inline;
+}
+#html5_player #artist:before
+{
+  content: ' by ';
+}
+#html5_player #progress_text
+{
+  margin: 10px 0px 10px 0px;
+}
+#html5_player #stop, #html5_player #play,#html5_player #pause,#html5_player #next,#html5_player #previous,#html5_player #clear_search
+{
+  display: inline;
+  border: thin solid black;
+  cursor: pointer;
+  padding: 2px;
+  margin-right: 5px;
+}
+#html5_player #playlist
+{
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: absolute;
+  top: 85px;
+  left: 210px;
+  right: 5px;
+  bottom: 5px;
+}
+#html5_player #playlist li
+{
+  cursor: pointer;
+}
+#html5_player #playlist li.playing
+{
+  font-weight: bold;
+}
+#html5_player #stop.inactive, #html5_player #pause.inactive, #html5_player #play.inactive
+{
+  display: none;
+}
+#html5_player #search
+{
+  top: 56px;
+  right: 5px;
+  position: absolute;
+}
+#html5_player #search input
+{
+  background: transparent;
+}
 /***********************************************
         Other                                
 ***********************************************/

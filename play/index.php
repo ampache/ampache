@@ -41,6 +41,7 @@ $sid         = scrub_in($_REQUEST['ssid']);
 $xml_rpc    = scrub_in($_REQUEST['xml_rpc']);
 $video        = make_bool($_REQUEST['video']);
 $type        = scrub_in($_REQUEST['type']);
+$transcode_to	= scrub_in($_REQUEST['transcode_to']);
 
 if ($type == 'playlist') {
     $playlist_type = scrub_in($_REQUEST['playlist_type']);
@@ -314,9 +315,15 @@ if (Config::get('downsample_remote')) {
 // Determine whether to transcode
 $transcode = false;
 $transcode_cfg = Config::get('transcode');
+// transcode_to should only have an effect if the song is the wrong format
+$transcode_to = $transcode_to == $media->type ? null : $transcode_to;
 $valid_types = $media->get_stream_types();
 if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
-    if ($transcode_cfg == 'always') {
+    if ($transcode_to) {
+        $transcode = true;
+        debug_event('play', 'Transcoding due to explicit request for ' . $transcode_to, 5);
+    }
+    else if ($transcode_cfg == 'always') {
         $transcode = true;
         debug_event('play', 'Transcoding due to always', 5);
     }
@@ -335,7 +342,7 @@ if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
 
 if ($transcode) {
     header('Accept-Ranges: none');
-    $transcoder = Stream::start_transcode($media);
+    $transcoder = Stream::start_transcode($media, $transcode_to);
     $fp = $transcoder['handle'];
     $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
 }

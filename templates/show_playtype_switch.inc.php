@@ -37,6 +37,7 @@ if (Preference::has_access('play_type')) {
         <option value="democratic" <?php echo $is_democratic; ?>><?php echo T_('Democratic'); ?></option>
     <?php } ?>
     <option value="xspf_player" <?php echo $is_xspf_player; ?>><?php echo T_('Flash Player'); ?></option>
+    <option value="html5_player" <?php echo $is_html5_player; ?>><?php echo _('HTML5 Player'); ?></option>
 </select>
 <?php echo Ajax::observe('play_type_select','change',Ajax::action('?page=stream&action=set_play_type','play_type_select','play_type_form'),'1'); ?>
 </form>
