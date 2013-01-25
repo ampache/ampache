@@ -82,11 +82,11 @@ input{ padding:0 2px; }
 input:focus, select:focus { border-style: dotted; }
 textarea { background-color: #111; color: #e9ad51; }
 
-/************************************************/
-/*             IE6 behaviors                    */
-/* - csshover2: :hover support on any element   */
-/************************************************/
-body { behavior:url("templates/csshover2.htc"); }
+/***************************************************/
+/*             IE6 behaviors                       */
+/* - Whatever:hover: :hover support on any element */
+/***************************************************/
+body { behavior:url("modules/whatever_hover/csshover3.htc"); }
 
 /************************************************/
 /*         Float Clearer                        */

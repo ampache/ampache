@@ -101,12 +101,12 @@ select {
 input[type=checkbox] {
 	border:0
 }
-/************************************************/
-/*             IE6 behaviors                    */
-/* - csshover2: :hover support on any element   */
-/************************************************/
+/***************************************************/
+/*             IE6 behaviors                       */
+/* - Whatever:hover: :hover support on any element */
+/***************************************************/
 body {
-	behavior:url("templates/csshover2.htc");
+	behavior:url("modules/whatever_hover/csshover3.htc");
 }
 /************************************************/
 /*         Float Clearer                        */

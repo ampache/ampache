@@ -66,11 +66,11 @@ input {
 	font-weight: bold;
 }
 
-/************************************************/
-/*             IE6 behaviors                    */
-/* - csshover2: :hover support on any element   */
-/************************************************/
-body { behavior:url("templates/csshover2.htc"); }
+/***************************************************/
+/*             IE6 behaviors                       */
+/* - Whatever:hover: :hover support on any element */
+/***************************************************/
+body { behavior:url("modules/whatever_hover/csshover3.htc"); }
 
 /************************************************/
 /*         Float Clearer                        */
