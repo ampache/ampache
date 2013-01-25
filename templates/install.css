@@ -1,23 +1,23 @@
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /**
-  *
-  *  Copyright (c) Ampache.org
-  *  All rights reserved.
-  *
-  *  This program is free software; you can redistribute it and/or
-  *  modify it under the terms of the GNU General Public License v2
-  *  as published by the Free Software Foundation.
-  *
-  *  This program is distributed in the hope that it will be useful,
-  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  *  GNU General Public License for more details.
-  *
-  *  You should have received a copy of the GNU General Public License
-  *  along with this program; if not, write to the Free Software
-  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-  *
-  **/
-
+ *
+ * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * Copyright 2001 - 2013 Ampache.org
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License v2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
 
 body {
 	font-family:Arial, Helvetica, sans-serif;
@@ -37,63 +37,63 @@ h3 {
 
 /* Header */
 #header {
-    width: 90%;
-    min-height: 85px;
-    height: 85px;
-    margin: 0 auto;
-    padding: 0;
-    text-align: left;
-    font-size: smaller;
+	width: 90%;
+	min-height: 85px;
+	height: 85px;
+	margin: 0 auto;
+	padding: 0;
+	text-align: left;
+	font-size: smaller;
 	display: block;
 }
 
 #header h1 {
-    margin: 0;
-    padding-top: 16px;
-    color: #000;
-    font-weight: bold;
-    font-size: large;
+	margin: 0;
+	padding-top: 16px;
+	color: #000;
+	font-weight: bold;
+	font-size: large;
 }
 
 #header p {
-    font-size: smaller;
-    color: #000;
-    margin: 0px;
+	font-size: smaller;
+	color: #000;
+	margin: 0px;
 }
 
 /* Content */
 #text-box {
-    width: 90%;
-    min-height: 85px;
-    height: 85px;
-    display: block;
-    margin: 0 auto;
-    padding: 0;
-    text-align: left;
-    font-size: smaller;
+	width: 90%;
+	min-height: 85px;
+	height: 85px;
+	display: block;
+	margin: 0 auto;
+	padding: 0;
+	text-align: left;
+	font-size: smaller;
 }
 .error { 
 	color: #ff0033; 
 	font-weight: bold; 
 } 
 .notify {
-    border: 1px solid #cccccc;
+	border: 1px solid #cccccc;
 	background-color: #f4f4f4;
-    padding: 5px;
-    margin-top: 3px;
+	padding: 5px;
+	margin-top: 3px;
 }
 
 .content {
-    border: 1px solid #cccccc;
-    padding: 5px;
-    margin-top: 3px;
+	border: 1px solid #cccccc;
+	padding: 5px;
+	margin-top: 3px;
 }
 
 /* Table style */
 td{
 	padding:5px;
 	/*background-color: #D9E0E8;*/
-    font-size: smaller;
+	font-size: smaller;
 }
 
 .align{
@@ -131,7 +131,7 @@ textarea:focus{
 
 /* Bottom */
 #bottom {
-	 border-top: 1px dotted #cccccc;
+	border-top: 1px dotted #cccccc;
 	margin-top: 10px;
 	margin-bottom: 10px;
 	padding:5px;

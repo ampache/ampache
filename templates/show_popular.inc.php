@@ -1,11 +1,9 @@
 <?php
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /**
- * Show Popular
- *
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright (c) 2001 - 2011 Ampache.org All Rights Reserved
+ * Copyright 2001 - 2013 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -20,33 +18,27 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @package	Ampache
- * @copyright	2001 - 2011 Ampache.org
- * @license	http://opensource.org/licenses/gpl-2.0 GPLv2
- * @link	http://www.ampache.org/
  */
 
-?>
-<?php show_box_top(T_('Information')); ?>
-<?php
+show_box_top(T_('Information'));
+
 $object_ids = Stats::get_top('song');
 $browse = new Browse();
 $browse->set_type('song');
 $browse->show_objects($object_ids);
 $browse->store();
-?>
-<?php 
+ 
 $object_ids = Stats::get_top('album');
 $browse = new Browse();
 $browse->set_type('album');
 $browse->show_objects($object_ids);
 $browse->store();
-?>
-<?php
+
 $object_ids = Stats::get_top('artist');
 $browse = new Browse();
 $browse->set_type('artist');
 $browse->show_objects($object_ids);
 $browse->store();
+
+show_box_bottom();
 ?>
-<?php show_box_bottom(); ?>
