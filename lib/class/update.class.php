@@ -1489,7 +1489,7 @@ class Update {
 	 */
 	public static function update_350002() {
 
-		$sql = "CREATE TABLE `tmp_browse` (`sid` varchar(128) collate utf8_unicode_ci NOT NULL,`data` longtext collate utf8_unicode_ci NOT NULL," .
+		$sql = "CREATE TABLE `tmp_browse` (`sid` varchar(128) NOT NULL,`data` longtext NOT NULL," .
 			" UNIQUE KEY `sid` (`sid`)) ENGINE=MyISAM";
 		$db_results = Dba::write($sql);
 
@@ -1939,9 +1939,9 @@ class Update {
 		$sql = "CREATE TABLE `image` (" .
 			"`id` int(11) unsigned NOT NULL auto_increment," .
 			"`image` mediumblob NOT NULL," .
-			"`mime` varchar(64) collate utf8_unicode_ci NOT NULL," .
-			"`size` varchar(64) collate utf8_unicode_ci NOT NULL," .
-			"`object_type` varchar(64) collate utf8_unicode_ci NOT NULL," .
+			"`mime` varchar(64) NOT NULL," .
+			"`size` varchar(64) NOT NULL," .
+			"`object_type` varchar(64) NOT NULL," .
 			"`object_id` int(11) unsigned NOT NULL," .
 			"PRIMARY KEY  (`id`)," .
 			"KEY `object_type` (`object_type`)," .
@@ -1994,10 +1994,10 @@ class Update {
 		$sql = "CREATE TABLE `tmp_browse` (" .
 		"`id` int(13) NOT NULL auto_increment," .
 		"`sid` varchar(128) character set utf8 NOT NULL default ''," .
-		"`data` longtext collate utf8_unicode_ci NOT NULL," .
-		"`object_data` longtext collate utf8_unicode_ci," .
+		"`data` longtext NOT NULL," .
+		"`object_data` longtext," .
 		"PRIMARY KEY  (`sid`,`id`)" .
-		") ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+		") ENGINE=MyISAM DEFAULT CHARSET=utf8";
 		$db_results = Dba::write($sql);
 
 		self::set_version('db_version','360005');
@@ -2012,11 +2012,11 @@ class Update {
 		`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 		`user` int(11) NOT NULL,
 		`type` enum('private','public') CHARACTER SET utf8 DEFAULT NULL,
-		`rules` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+		`rules` mediumtext NOT NULL,
 		`name` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
 		`logic_operator` varchar(3) CHARACTER SET utf8 DEFAULT NULL,
 		PRIMARY KEY (`id`)
-		) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+		) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8";
 		$db_results = Dba::write($sql);
 
 		self::set_version('db_version','360006');
@@ -2100,14 +2100,14 @@ class Update {
 	public static function update_360011() {
 		$sql = 'CREATE TABLE `stream_playlist` (' .
 			'`id` int(11) unsigned NOT NULL AUTO_INCREMENT,' .
-			'`sid` varchar(64) COLLATE utf8_unicode_ci NOT NULL,' .
-			'`url` text COLLATE utf8_unicode_ci NOT NULL,' .
-			'`info_url` text COLLATE utf8_unicode_ci DEFAULT NULL,' .
-			'`image_url` text COLLATE utf8_unicode_ci DEFAULT NULL,' .
-			'`title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,' .
-			'`author` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,' .
-			'`album` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,' .
-			'`type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,' .
+			'`sid` varchar(64) NOT NULL,' .
+			'`url` text NOT NULL,' .
+			'`info_url` text DEFAULT NULL,' .
+			'`image_url` text DEFAULT NULL,' .
+			'`title` varchar(255) DEFAULT NULL,' .
+			'`author` varchar(255) DEFAULT NULL,' .
+			'`album` varchar(255) DEFAULT NULL,' .
+			'`type` varchar(255) DEFAULT NULL,' .
 			'`time` smallint(5) DEFAULT NULL,' .
 			'PRIMARY KEY (`id`), KEY `sid` (`sid`))';
 		$db_results = Dba::write($sql);
