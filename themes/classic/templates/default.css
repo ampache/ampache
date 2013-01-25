@@ -1,23 +1,23 @@
-/*
-
- Copyright (c) Ampache.org
- All rights reserved.
-
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License v2
- as published by the Free Software Foundation
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
-*/
-
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/**
+ *
+ * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * Copyright 2001 - 2013 Ampache.org
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License v2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
 
 /************************************************/
 /*    Unify default browsers style rules        */
@@ -54,8 +54,8 @@ td {
 th {
 	padding-right: 10px;
 	font-family: Verdana, Helvetica, sans-serif;
-  font-size:13px; 
-  font-weight:bold;
+	font-size: 13px; 
+	font-weight: bold;
 }
 input, select, textarea{
 	font: 12px Verdana, Helvetica, sans-serif; 
@@ -86,8 +86,8 @@ body { behavior:url("modules/whatever_hover/csshover3.htc"); }
 /*                XSPF Player                   */
 /************************************************/
 .xspf_player {
-    right: 20px;
-    position: absolute;
+	right: 20px;
+	position: absolute;
 }
 
 /************************************************/
@@ -128,7 +128,7 @@ body { behavior:url("modules/whatever_hover/csshover3.htc"); }
 /*                Footer                        */
 /************************************************/
 #footer {
-  clear:both;
+	clear:both;
 	text-align:center;
 	font-size:10px;
 	padding:3px;
@@ -138,13 +138,13 @@ body { behavior:url("modules/whatever_hover/csshover3.htc"); }
 /*                  Buttons                     */
 /************************************************/
 .button, input[type=button], input[type=submit] {
-  border: 1px solid #f0f0f0;
-  border-color: #f0f0f0 #a0a0a0 #a0a0a0 #f0f0f0;
-  background: #d0d0d0;
+	border: 1px solid #f0f0f0;
+	border-color: #f0f0f0 #a0a0a0 #a0a0a0 #f0f0f0;
+	background: #d0d0d0;
 	padding: 0 1px;
 	font-size: 11px;
-  font-weight:bold;
-  text-decoration:none;
+	font-weight:bold;
+	text-decoration:none;
 	cursor: pointer;
 }
 a.button{padding:1px 3px;}
@@ -153,10 +153,10 @@ a.button{padding:1px 3px;}
 /*                  Sidebar                     */
 /************************************************/
 #sidebar{
-  position:absolute;
-  top:100px;
-  left:0;
-  width:120px;
+	position:absolute;
+	top:100px;
+	left:0;
+	width:120px;
 	padding-top:28px;
 	background:#c0c0c0 url(../images/sidebar_top.jpg) no-repeat;
 	font-size:0.9em;
@@ -175,9 +175,9 @@ a.button{padding:1px 3px;}
 }
 
 #sidebar-tabs li.sb1 {
-  float: left;
+	float: left;
 	padding:2px;
-  background: #c0c0c0 ; 
+	background: #c0c0c0 ; 
 }
 #sidebar-tabs li.active { 
 	background: #fff url(../images/top.gif) repeat-x 0 0; 
@@ -190,57 +190,57 @@ a.button{padding:1px 3px;}
 /* Tabs content */
 /****************/
 #sidebar-page {
-  position:absolute;
-  left:0;
-  top:52px;
+	position:absolute;
+	left:0;
+	top:52px;
 	background: #fff url(../images/bottom.gif) 0 100% repeat-x;
 	padding-bottom:0.5em;
 	border-right:2px solid #c0c0c0;
 	font-size: 0.8em;
-  width:118px;
+	width:118px;
 } 
 #sidebar-page ul.sb2 {
-  padding:2px 4px;
+	padding:2px 4px;
 }
 #sidebar-page ul.sb2 li{
-  font-weight:bold;
-  margin:1em auto;
-  padding-bottom: 0.5em;
-  border-bottom: 1px solid #666;
+	font-weight:bold;
+	margin:1em auto;
+	padding-bottom: 0.5em;
+	border-bottom: 1px solid #666;
 }
 #sidebar-page ul.sb2 h4{ padding-bottom: 0.5em; }
 
 #sidebar-page ul.sb3, #sidebar-page div.sb3 {
-  font-size:0.9em;
-  margin-left:2px;
-  font-weight:normal;
-  color:#5b5b5b;
+	font-size:0.9em;
+	margin-left:2px;
+	font-weight:normal;
+	color:#5b5b5b;
 }
 #sidebar-page div.sb3 input[type=radio] { 
 	margin-left:2px; 
 } 
 
 #sidebar-page ul.sb3 li{
-  margin:0;
-  padding:0;
-  border:none;
-  font-weight:normal;
+	margin:0;
+	padding:0;
+	border:none;
+	font-weight:normal;
 }
 * html #sidebar-page ul.sb3 li{display:inline;} /* fix ie6 */
 
 #sidebar-page .sb3 a{
- padding:0.1em;
- border-bottom:1px dotted #c0c0c0;
- color:#5b5b5b;
+	padding:0.1em;
+	border-bottom:1px dotted #c0c0c0;
+	color:#5b5b5b;
 }
 
 
 #sidebar-page a{
-  display:block;
+	display:block;
 }
 #sidebar-page a:hover{
-  background:#99ccff;
-  color:#fff;
+	background:#99ccff;
+	color:#fff;
 }
 
 /* SIDEBAR : Home */
@@ -249,8 +249,8 @@ a.button{padding:1px 3px;}
 /* SIDEBAR : Browse */
 /********************/
 .alphabet { 
-  background:transparent; /* fix ie bug */
-  font-size:0.95em;
+	background:transparent; /* fix ie bug */
+	font-size:0.95em;
 	font-weight:normal;
 	margin: 0.3em auto;
 	color:#5b5b5b;
@@ -285,9 +285,9 @@ a.button{padding:1px 3px;}
 /*******************/
 #sb_admin_catalogs li.sb_admin_catalogs_ctrls img {margin:0;}
 #sb_admin_catalogs li.sb_admin_catalogs_ctrls a{
-  display:inline; 
-  padding:0; 
-  border:none; 
+	display:inline; 
+	padding:0; 
+	border:none; 
 }
 
 
@@ -319,8 +319,8 @@ a.button{padding:1px 3px;}
 
 /* Rightbar Menu */
 #rightbar #rb_action {	
-  border-top:1px solid #8b8b8b; 
-  padding:4px;
+	border-top:1px solid #8b8b8b; 
+	padding:4px;
 }
 #rightbar #rb_action li         {	display:inline; }
 
@@ -329,8 +329,8 @@ a.button{padding:1px 3px;}
 /* Rightbar AddItems SubMenu */
 #rightbar li:hover .submenu {	display:block; } 
 #rightbar .submenu  { 
-  display:none; 	
-  position:absolute;
+	display:none; 	
+	position:absolute;
 	right:0px;
 	top:18px;
 	background:#fff;
@@ -342,12 +342,12 @@ a.button{padding:1px 3px;}
 * html #rightbar .submenu {right:100px;} /* IE6 fix */
 
 #rightbar .submenu a {
- display:block;
- padding:0.1em;
- border-bottom:1px dotted #c0c0c0;
- color:#5b5b5b;
- text-decoration:none;
- text-align:right;
+	display:block;
+	padding:0.1em;
+	border-bottom:1px dotted #c0c0c0;
+	color:#5b5b5b;
+	text-decoration:none;
+	text-align:right;
 }
 
 #rightbar .submenu a:hover,
@@ -355,10 +355,10 @@ a.button{padding:1px 3px;}
 
 /* Rightbar playlist */
 #rightbar #rb_current_playlist    {
-  background: #fff url(../images/bottom.gif) 0 100% repeat-x;
-  padding-bottom:0.5em; 
- 	border-left:2px solid #c0c0c0;
- 	border-right:2px solid #c0c0c0;
+	background: #fff url(../images/bottom.gif) 0 100% repeat-x;
+	padding-bottom:0.5em; 
+	border-left:2px solid #c0c0c0;
+	border-right:2px solid #c0c0c0;
 }
 #rightbar #rb_current_playlist li   { position:relative; font-size:0.6em;line-height:14px; color:#5b5b5b; padding-right:20px;}
 #rightbar #rb_current_playlist li a { display:block; padding:0.2em;}
@@ -377,40 +377,40 @@ a.button{padding:1px 3px;}
 /*        Styles for the star ratings           */
 /************************************************/
 .star-rating {
-  position:relative;
+	position:relative;
 }
 .dynamic-star-rating{
-  width:95px;
+	width:95px;
 }
 .star-rating ul,
 .star-rating a:hover,
 .star-rating .current-rating{
-  background: url(../../../images/ratings/star_rating.gif) left -1000px repeat-x;
+	background: url(../../../images/ratings/star_rating.gif) left -1000px repeat-x;
 }
 .star-rating ul{
-  position:relative;
-  width:80px;
-  height:15px;
-  overflow:hidden;
-  list-style:none;
-  margin:0;
-  padding:0;
-  background-position: left top;
+	position:relative;
+	width:80px;
+	height:15px;
+	overflow:hidden;
+	list-style:none;
+	margin:0;
+	padding:0;
+	background-position: left top;
 }
 .star-rating li{
-  display: inline;
+	display: inline;
 }
 .star-rating a, .star-rating span,  
 .star-rating .current-rating{
-  position:absolute;
-  top:0;
-  left:0;
-  text-indent:-1000em;
-  height:15px;
-  line-height:15px;
-  outline:none;
-  overflow:hidden;
-  border:none;
+	position:absolute;
+	top:0;
+	left:0;
+	text-indent:-1000em;
+	height:15px;
+	line-height:15px;
+	outline:none;
+	overflow:hidden;
+	border:none;
 }
 .star-rating .star1 { width:20%; z-index:6; }
 .star-rating .star2 { width:40%; z-index:5; }
@@ -420,26 +420,26 @@ a.button{padding:1px 3px;}
 .star-rating .current-rating { z-index:1; background-position: left bottom; }
 
 .star-rating a.star0 {
-  left:0px;
-  width:16px;
-  background: url(../../../images/ratings/x_off.gif) left top;
+	left:0px;
+	width:16px;
+	background: url(../../../images/ratings/x_off.gif) left top;
 }
 
 /* hovering effect only for dynamic star rating */
 .dynamic-star-rating a:hover{
-  background-position: left center;
+	background-position: left center;
 }
 .dynamic-star-rating a:hover.star0 {
-  background: url(../../../images/ratings/x.gif) left top;
+	background: url(../../../images/ratings/x.gif) left top;
 }
 .dynamic-star-rating ul {
-  left:16px;
+	left:16px;
 }
 
 /************************************************/
 /*              Box Related Styles              */
 /************************************************/
- 
+
 .box-title { 
 	border-bottom: solid 1px #000;
 	font-size: 1.05em;
@@ -455,7 +455,7 @@ a.button{padding:1px 3px;}
 .box, .info-box { 
 	background: #f7f7f7 url(../images/left.gif) top left repeat-y;
 	float:left;
-  clear:left;
+	clear:left;
 	height:1%; /* IE6 : Holly Hack comes to rescue once again */
 }
 .box-inside { 
@@ -570,18 +570,18 @@ td.cel_cover{padding:6px;}
 /************************************************/
 dl.song_details{font-size:0.8em;}
 .song_details dt {
-   float:left;
-   clear:both;
-   width:20%;
-   min-width:20%; /*Ie bugfix*/
-   font-weight:bold;
+	float:left;
+	clear:both;
+	width:20%;
+	min-width:20%; /*Ie bugfix*/
+	font-weight:bold;
 }
 .song_details dd {
-   float:left;
-   width:79%;
-   min-width:79%; /*Ie bugfix*/
-   margin:0 0 0.2em .3em;
-   padding-left:.2em;
+	float:left;
+	width:79%;
+	min-width:79%; /*Ie bugfix*/
+	margin:0 0 0.2em .3em;
+	padding-left:.2em;
 }
 dt + dd {border-bottom:1px dotted #c0c0c0;}
 dt:hover, dt:hover + dd {background:#9cf;}
@@ -590,14 +590,14 @@ dt:hover, dt:hover + dd {background:#9cf;}
 /*          Albums of the moment                */
 /************************************************/
 .random_album{
-  position:relative;
-  float:left;
-  padding:8px;
-  width:80px;
+	position:relative;
+	float:left;
+	padding:8px;
+	width:80px;
 }
 
 .random_album .play_album{
-  display:none;
+	display:none;
 }
 
 /************************************************/
@@ -614,23 +614,23 @@ dt:hover, dt:hover + dd {background:#9cf;}
 	
 }
 .np_cell {
-  padding-left:5px;
-  margin-left:5px;
+	padding-left:5px;
+	margin-left:5px;
 }
 
 .np_row label {
-  display:block;
-  font-weight:bold;
-  margin:2px 0 0 -5px;
+	display:block;
+	font-weight:bold;
+	margin:2px 0 0 -5px;
 }
 
 .np_group {
-  float:left;
-  padding-right:15px;
+	float:left;
+	padding-right:15px;
 }
 
 .np_row a {
-  font-size:0.8em;
+	font-size:0.8em;
 }
 
 /************************************************/
@@ -642,9 +642,9 @@ dt:hover, dt:hover + dd {background:#9cf;}
 } 
 
 #shoutbox div.shout {
-  padding-top:0.5em; 
+	padding-top:0.5em; 
 	margin:10px 5px 0 0;
-  border-top:1px dotted #c0c0c0;
+	border-top:1px dotted #c0c0c0;
 } 
 #shoutbox div.shout:hover{border-top:1px solid #9cf;}
 
@@ -705,7 +705,7 @@ td.lp_current a {
 	text-align:center;
 }
 #loginPage #header{
-  padding:0;
+	padding:0;
 }
 
 #loginPage #loginbox{
@@ -713,9 +713,9 @@ td.lp_current a {
 	height:292px;
 }
 #loginPage h2{
-  color:#333;
-  padding-top:60px;
-  font-weight: normal;
+	color:#333;
+	padding-top:60px;
+	font-weight: normal;
 }
 .loginfield{
 	text-align:right;
@@ -723,15 +723,15 @@ td.lp_current a {
 	margin: 1em 0;
 }
 .loginfield input.text_input{
-  width:12em;
-  border:1px solid #999;
+	width:12em;
+	border:1px solid #999;
 }
 .loginfield label{
 	font-weight:bold;
 }
 .loginfield #rememberme{
-  margin-right:5em;
-  background:none;
+	margin-right:5em;
+	background:none;
 } 
 
 #loginPage div.fatalerror {
@@ -740,7 +740,7 @@ td.lp_current a {
 }
 
 #motd { 
-        margin:0 auto 0 auto;
+	margin:0 auto 0 auto;
 	width: 437px;
 }
 
@@ -750,29 +750,29 @@ td.lp_current a {
 /* taken direcly from install.css */
 
 #registerPage {
-    background: #FFFFFF url(../../../images/top_bg.jpg) repeat-x top left;
+	background: #FFFFFF url(../../../images/top_bg.jpg) repeat-x top left;
 }
 
 #registerPage #header {
-    width: 90%;
-    min-height: 85px;
-    height: 85px;
-    margin: 0 auto;
-    padding: 0;
-    text-align: left;
-    font-size: smaller;
+	width: 90%;
+	min-height: 85px;
+	height: 85px;
+	margin: 0 auto;
+	padding: 0;
+	text-align: left;
+	font-size: smaller;
 	display: block;
 }
 
 #registerPage #header h1 {
-    margin: 0;
-    padding-top: 16px;
-    color: #000;
-    font-weight: bold;
-    font-size: large;
+	margin: 0;
+	padding-top: 16px;
+	color: #000;
+	font-weight: bold;
+	font-size: large;
 }
 #registerPage h3 {
-    margin-left: 50px;
+	margin-left: 50px;
 }
 
 #registerPage input, radio, select, textarea {
@@ -791,41 +791,41 @@ textarea:focus{
 }
 
 #registerPage .registerfield {
-    text-align:left;
+	text-align:left;
 	margin: 1em 0;
 	margin-left: 50px;
 }
 
 #registerPage .registerfield.require .asterix {
-    color: red;
-    text-align: right;
+	color: red;
+	text-align: right;
 }
 
 #registerPage .registerfield .error {
-    font-size: 13px;
-    right: 0px;
+	font-size: 13px;
+	right: 0px;
 }
 
 #registerPage label {
-    font-weight:bold;
+	font-weight:bold;
 	float: left;
 	width: 150px;
 	font-size: 13px;
 }
 
 #registerPage #registerbox {
-    width: 700px;
+	width: 700px;
 }
 
 #registerPage .registerInformation {
-    font-size: 13px;
-    color: red;
-    margin-left: 200px;
+	font-size: 13px;
+	color: red;
+	margin-left: 200px;
 }
 
 #registerPage .registerButtons {
-    margin-top: 10px;
-    margin-left: 200px;
+	margin-top: 10px;
+	margin-left: 200px;
 }
 
 
@@ -833,8 +833,8 @@ textarea:focus{
 /*                Misc                          */
 /************************************************/
 .formValidation{
-  margin-top:1em;
-  text-align:center;
+	margin-top:1em;
+	text-align:center;
 }
 
 .text-box, .confirmation-box {
@@ -847,12 +847,12 @@ textarea:focus{
 
 #ajax-loading { 
 	position: absolute;  
-  top:42px;
-  left:345px; 
-  width:43px;
-  height:11px;
+	top:42px;
+	left:345px; 
+	width:43px;
+	height:11px;
 	z-index:100;
-  background: url(../images/ajax-loader.gif) no-repeat;
+	background: url(../images/ajax-loader.gif) no-repeat;
 	display: none;
 	text-indent:-9999em;
 } 

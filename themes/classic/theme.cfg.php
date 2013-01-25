@@ -1,8 +1,7 @@
 ;;;;;;;;;;;;;;;;;;
 ;<?php exit(); ?>;
 ;;;;;;;;;;;;;;;;;;
-; Copyright (c) 2001 - 2007 Ampache.org
-; All rights reserved.
+; Copyright (c) 2001 - 2013 Ampache.org
 ;
 ; This program is free software; you can redistribute it and/or
 ; modify it under the terms of the GNU General Public License v2
