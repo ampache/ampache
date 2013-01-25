@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-FUTURE
+    - Changed the way themes handle RTL languages
     - Fixed a display problem with the Penguin theme by adding a new CSS class 
         (patch by Fred Thomsen)
     - Made transcoding and its configuration more flexible
