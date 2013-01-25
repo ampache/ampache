@@ -562,11 +562,11 @@ refresh_limit = "60"
 ; encoding arguments, so the easiest approach is to use your normal command as
 ; a clearing-house.
 ; transcode_cmd_TYPE = TRANSCODE_CMD
-;transcode_cmd_mid = "timidity -Or -o – %FILE% | ffmpeg -i pipe:0"
+;transcode_cmd_mid = "timidity -Or -o – %FILE% | ffmpeg -f s16le -i pipe:0"
 
 ; encode_args_TYPE = TRANSCODE_CMD_ARGS
-;encode_args_mp3 = "-vn -b:a %SAMPLE%K -c:a mp3 -f mp3 pipe:1"
-;encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a vorbis -f ogg pipe:1"
+;encode_args_mp3 = "-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1"
+;encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
 
 ;######################################################
 ; these options allow you to configure your rss-feed
