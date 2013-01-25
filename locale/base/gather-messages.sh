@@ -1,7 +1,8 @@
 #!/bin/bash
 #
-# Copyright (c) Ampache.org
-# All rights reserved.
+# vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab:
+#
+# Copyright 2001 - 2013 Ampache.org
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License v2
