@@ -23,9 +23,9 @@
 show_box_top($song->title , 'box box_lyrics_song');
 
 /* Prepare the variables */
-$title = scrub_out(truncate_with_ellipsis($song->title));
-$album = scrub_out(truncate_with_ellipsis($song->f_album_full));
-$artist = scrub_out(truncate_with_ellipsis($song->f_artist_full));
+$title = scrub_out(UI::truncate($song->title));
+$album = scrub_out(UI::truncate($song->f_album_full));
+$artist = scrub_out(UI::truncate($song->f_artist_full));
 ?>
 <div class="np_group">
   <?php if (Config::get('show_album_art')) { ?>

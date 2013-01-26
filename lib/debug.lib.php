@@ -73,20 +73,6 @@ function check_php_session() {
 } // check_php_session
 
 /**
- * check_php_iconv
- * checks to see if you have iconv installed
- */
-function check_php_iconv() {
-
-	if (!function_exists('iconv')) {
-		return false;
-	}
-
-	return true;
-
-} // check_php_iconv
-
-/**
  * check_php_pcre
  * This makes sure they have pcre (preg_???) support
  * compiled into PHP this is required!

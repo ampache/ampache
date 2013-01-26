@@ -241,7 +241,7 @@ class Artist extends database_object {
 	public function format() {
 
 		/* Combine prefix and name, trim then add ... if needed */
-		$name = truncate_with_ellipsis(trim($this->prefix . " " . $this->name),Config::get('ellipse_threshold_artist'));
+		$name = UI::truncate(trim($this->prefix . " " . $this->name),Config::get('ellipse_threshold_artist'));
 		$this->f_name = $name;
 		$this->f_full_name = trim(trim($this->prefix) . ' ' . trim($this->name));
 

@@ -81,7 +81,7 @@
 			<div class="np_cel cel_similar_artist">
 			<?php
 			if (is_null($a['id'])) {
-				echo scrub_out(truncate_with_ellipsis($a['name']), Config::get('ellipse_threshold_artist'));
+				echo scrub_out(UI::truncate($a['name']), Config::get('ellipse_threshold_artist'));
 			}
 			else {
 				$artist = new Artist($a['id']);

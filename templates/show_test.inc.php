@@ -99,7 +99,7 @@
 	<td valign="top"><?php echo T_('PHP iconv extension'); ?></td>
 	<td valign="top">[
 	<?php
-		if (!check_php_iconv()) {
+		if (!UI::check_iconv()) {
 			echo debug_result('',false);
 		}
 		else {

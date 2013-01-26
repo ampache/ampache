@@ -75,40 +75,6 @@ function return_referer() {
 } // return_referer
 
 /**
- * truncate_with_ellipsis
- * Function that truncates text to a specific length and appends an ellipsis to
- * the end.
- */
-function truncate_with_ellipsis($text, $max='') {
-
-	$max = $max ? $max : '27';
-
-	/* If they want it to be shorter than three, just throw it back */
-	if ($max <= 3) {
-		return $text;
-	}
-
-	/* Make sure the functions exist before doing the iconv mojo */
-	if (function_exists('iconv') &&
-		function_exists('iconv_substr') &&
-		function_exists('iconv_strlen')) {
-		$charset = Config::get('site_charset');
-		if (iconv_strlen($text, $charset) > $max) {
-			$text = iconv_substr($text, 0, $max-3, $charset);
-			$text .= iconv("ISO-8859-1", $charset, "...");
-		}
-	}
-	else { // Use normal substr if we don't have iconv
-		if (strlen($text) > $max) {
-			$text = substr($text,0,$max-3)."...";
-		}
-	} // else no iconv
-
-	return $text;
-
-} // truncate_with_ellipsis
-
-/**
  * show_header
  * This shows the header.inc.php, it may do something
  * more in the future

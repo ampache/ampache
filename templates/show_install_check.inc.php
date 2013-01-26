@@ -102,7 +102,7 @@
 <td><?php echo T_('PHP iconv Support'); ?>:</td>
 <td>
 <?php
-	if (!check_php_iconv()) {
+	if (!UI::check_iconv()) {
 		echo debug_result('',false);
 		Error::add('install', T_('PHP iconv Support'));
 	}

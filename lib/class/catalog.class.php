@@ -144,9 +144,9 @@ class Catalog extends database_object {
 	 */
 	public function format() {
 
-		$this->f_name		= truncate_with_ellipsis($this->name,Config::get('ellipse_threshold_title'));
+		$this->f_name		= UI::truncate($this->name,Config::get('ellipse_threshold_title'));
 		$this->f_name_link	= '<a href="' . Config::get('web_path') . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id . '" title="' . scrub_out($this->name) . '">' . scrub_out($this->f_name) . '</a>';
-		$this->f_path		= truncate_with_ellipsis($this->path,Config::get('ellipse_threshold_title'));
+		$this->f_path		= UI::truncate($this->path,Config::get('ellipse_threshold_title'));
 		$this->f_update		= $this->last_update ? date('d/m/Y h:i',$this->last_update) : T_('Never');
 		$this->f_add		= $this->last_add ? date('d/m/Y h:i',$this->last_add) : T_('Never');
 		$this->f_clean		= $this->last_clean ? date('d/m/Y h:i',$this->last_clean) : T_('Never');
