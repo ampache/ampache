@@ -174,23 +174,6 @@ class Catalog extends database_object {
 	} // get_catalogs
 
 	/**
-	 * get_catalog_ids
-	 * This returns an array of all catalog ids
-	 */
-	public static function get_catalog_ids() {
-
-		$sql = "SELECT `id` FROM `catalog`";
-		$db_results = Dba::read($sql);
-
-		while ($r = Dba::fetch_assoc($db_results)) {
-			$results[] = $r['id'];
-		}
-
-		return $results;
-
-	} // get_catalog_ids
-
-	/**
 	 * get_stats
 	 * This returns an hash with the #'s for the different
 	 * objects that are associated with this catalog. This is used
