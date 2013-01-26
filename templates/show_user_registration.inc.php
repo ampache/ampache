@@ -64,7 +64,7 @@ if (Config::get('user_agreement')) { ?>
 		<?php Error::display('user_agreement'); ?>
 	</div>
 </div>
-<?php } // end if(conf('user_agreement')) ?>
+<?php } // end if user_agreement ?>
 <h3><?php echo T_('User Information'); ?></h3>
 <div class="registerfield require">
     <label for="username"><?php echo T_('Username'); ?>: <span class="asterix">*</span></label>

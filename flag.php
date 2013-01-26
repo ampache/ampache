@@ -47,7 +47,7 @@ switch ($action) {
 	case 'show_flag':
 		/* Store where they came from */
 		$_SESSION['source_page'] = return_referer();
-		include(conf('prefix') . '/templates/show_flag.inc.php');
+		require Config::get('prefix') . '/templates/show_flag.inc.php';
 	break;
 	case 'show_remove_flag':
 

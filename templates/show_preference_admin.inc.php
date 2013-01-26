@@ -22,7 +22,7 @@
 
 show_box_top(T_('Preference Administration'));
 ?>
-<form method="post" action="<?php echo conf('web_path'); ?>/admin/preferences.php" enctype="multipart/form-data">
+<form method="post" action="<?php echo Config::get('web_path'); ?>/admin/preferences.php" enctype="multipart/form-data">
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
   <col id="col_preference" />

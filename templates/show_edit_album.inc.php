@@ -22,7 +22,7 @@
 ?>
 
 <?php show_box_top(T_('Edit Album')); ?>
-<form name="edit_album" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/admin/flag.php?action=edit_album">
+<form name="edit_album" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/flag.php?action=edit_album">
 <table class="tabledata">
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo T_('Name'); ?></td>

@@ -79,7 +79,7 @@ function focus(){ document.login.username.focus(); }
 
     		<?php if (Config::get('allow_public_registration')) { ?>
     			<a class="button" id="registerbutton" href="<?php echo Config::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
-    		<?php } // end if (conf('allow_public_registration')) ?>
+    		<?php } // end if allow_public_registration ?>
       </div>
 
 		</form>

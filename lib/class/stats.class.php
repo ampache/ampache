@@ -122,7 +122,7 @@ class Stats {
 	/**
  	 * get_top
 	 * This returns the top X for type Y from the
-	 * last conf('stats_threshold') days
+	 * last stats_threshold days
 	 */
 	public static function get_top($type,$count='',$threshold = '') {
 

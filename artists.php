@@ -83,7 +83,7 @@ switch($_REQUEST['action']) {
 			show_confirmation (
 				T_('Renamed artist(s)'),
 				sprintf(T_('%1$s artists have been merged with %2$s'), $count, $artist->name),
-				conf('web_path') . "/artists.php?action=show&artist=" . $artist->id
+				Config::get('web_path') . '/artists.php?action=show&artist=' . $artist->id
 			);
 		} else {
 			$GLOBALS['error']->print_error('general');
@@ -163,7 +163,7 @@ switch($_REQUEST['action']) {
 				show_confirmation (
 					T_('Renamed artist'),
 					sprintf(T_('%1$s is now known as %2$s'), $artist->name, $newname),
-					conf('web_path') . "/artists.php?action=show&artist=" . $newid
+					Config::get('web_path') . "/artists.php?action=show&artist=" . $newid
 				);
 			}
 

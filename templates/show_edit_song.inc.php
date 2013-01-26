@@ -22,7 +22,7 @@
 ?>
 
 <?php show_box_top(T_('Edit Song')); ?>
-<form name="edit_song" method="post" enctype="multipart/form-data" action="<?php echo conf('web_path'); ?>/admin/flag.php">
+<form name="edit_song" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/flag.php">
 <table>
 <tr class="<?php echo flip_class(); ?>">
 	<td><?php echo T_('File'); ?>:</td>

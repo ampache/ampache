@@ -82,7 +82,7 @@ function get_theme($name) {
 */
 function get_theme_author($theme_name) {
 
-	$theme_path = conf('prefix') . "/themes/" . conf('theme_name') . "/theme.cfg.php";
+	$theme_path = Config::get('prefix') . '/themes/' . Config::get('theme_name') . '/theme.cfg.php';
 	$results = read_config($theme_path);
 
 	return $results['author'];
@@ -95,7 +95,7 @@ function get_theme_author($theme_name) {
 */
 function theme_exists($theme_name) {
 
-	$theme_path = conf('prefix') . "/themes/" . $theme_name . "/theme.cfg.php";
+	$theme_path = Config::get('prefix') . '/themes/' . $theme_name . '/theme.cfg.php';
 
 	if (!file_exists($theme_path)) {
 		return false;

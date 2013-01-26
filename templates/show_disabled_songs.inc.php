@@ -21,7 +21,7 @@
  */
 ?>
 <br />
-<form name="songs" method="post" action="<?php echo conf('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data" style="Display:inline">
+<form name="songs" method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
   <col id="col_select" />
