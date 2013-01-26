@@ -143,7 +143,7 @@ class vauth {
 
 		// Also clean up things that use sessions as keys
 		Query::clean();
-		tmpPlaylist::gc();
+		Tmp_Playlist::gc();
 
 		return true;
 

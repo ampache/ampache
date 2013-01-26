@@ -47,7 +47,7 @@ switch ($_REQUEST['action']) {
 	break;
 	/* This is run if we need to gather info based on a tmp playlist */
 	case 'tmp_playlist':
-		$tmp_playlist = new tmpPlaylist($_REQUEST['tmpplaylist_id']);
+		$tmp_playlist = new Tmp_Playlist($_REQUEST['tmpplaylist_id']);
 		$media_ids = $tmp_playlist->get_items();
 	break;
 	case 'play_favorite':

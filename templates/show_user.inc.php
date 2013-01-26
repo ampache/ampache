@@ -43,7 +43,7 @@ $client->format();
 		<h2><?php echo T_('Active Playlist'); ?></h2>
 		<div style="padding-left:10px;">
 		<?php
-			$tmp_playlist = new tmpPlaylist(tmpPlaylist::get_from_userid($client->id));
+			$tmp_playlist = new Tmp_Playlist(Tmp_Playlist::get_from_userid($client->id));
 			$object_ids = $tmp_playlist->get_items();
 			foreach ($object_ids as $object_data) {
 				$type = array_shift($object_data);

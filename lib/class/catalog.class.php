@@ -1517,7 +1517,7 @@ class Catalog extends database_object {
 		Stats::gc();
 		Rating::gc();
 		Playlist::gc();
-		tmpPlaylist::gc();
+		Tmp_Playlist::gc();
 		shoutBox::gc();
 		Tag::gc();
 		debug_event('catalog', 'Database cleanup ended', 5, 'ampache-catalog');

@@ -109,7 +109,7 @@ class User extends database_object {
 
 		$session_id = session_id();
 
-		$this->playlist = tmpPlaylist::get_from_session($session_id);
+		$this->playlist = Tmp_Playlist::get_from_session($session_id);
 
 	} // load_playlist
 

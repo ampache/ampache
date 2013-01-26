@@ -27,7 +27,7 @@
  * name for voting based playback.
  *
  */
-class Democratic extends tmpPlaylist {
+class Democratic extends Tmp_Playlist {
 
 	public $name;
 	public $cooldown;
@@ -97,7 +97,7 @@ class Democratic extends tmpPlaylist {
 
 	/**
 	 * set_parent
-	 * This returns the tmpPlaylist for this democratic play instance
+	 * This returns the Tmp_Playlist for this democratic play instance
 	 */
 	public function set_parent() {
 
@@ -213,7 +213,7 @@ class Democratic extends tmpPlaylist {
 
 	/**
 	 * get_items
-	 * This returns a sorted array of all object_ids in this tmpPlaylist.
+	 * This returns a sorted array of all object_ids in this Tmp_Playlist.
 	 * The array is multidimensional; the inner array needs to contain the
 	 * keys 'id', 'object_type' and 'object_id'.
 	 *

@@ -28,7 +28,7 @@
  * visit user_vote from time to time.
  *
  */
-class tmpPlaylist extends database_object {
+class Tmp_Playlist extends database_object {
 
 	/* Variables from the Datbase */
 	public $id;
@@ -92,14 +92,14 @@ class tmpPlaylist extends database_object {
 		$results = Dba::fetch_row($db_results);
 
 		if (!$results['0']) {
-			$results['0'] = tmpPlaylist::create(array(
+			$results['0'] = Tmp_Playlist::create(array(
 				'session_id'  => $session_id,
 				'type'        => 'user',
 				'object_type' => 'song'
 			));
 		}
 
-		$playlist = new tmpPlaylist($results['0']);
+		$playlist = new Tmp_Playlist($results['0']);
 
 		return $playlist;
 
@@ -133,7 +133,7 @@ class tmpPlaylist extends database_object {
 
 	/**
 	 * get_items
-	 * Returns an array of all object_ids currently in this tmpPlaylist.
+	 * Returns an array of all object_ids currently in this Tmp_Playlist.
 	 */
 	public function get_items() {
 
@@ -215,7 +215,7 @@ class tmpPlaylist extends database_object {
 
 	/**
 	 * create
-	 * This function initializes a new tmpPlaylist. It is associated with
+	 * This function initializes a new Tmp_Playlist. It is associated with
 	 * the current session rather than a user, as you could have the same 
 	 * user logged in from multiple locations.
 	 */
@@ -371,4 +371,4 @@ class tmpPlaylist extends database_object {
 
 	} // delete_track
 
-} // class tmpPlaylist
+} // class Tmp_Playlist
