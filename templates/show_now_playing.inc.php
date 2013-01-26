@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -33,13 +33,13 @@ $link = Config::get('use_rss') ? ' ' . Ampache_RSS::get_display('nowplaying') : 
 <?php UI::show_box_top(T_('Now Playing') . $link); ?>
 <?php
 foreach ($results as $item) {
-	$media = $item['media'];
-	$np_user = $item['client'];
-	$agent = $item['agent'];
+    $media = $item['media'];
+    $np_user = $item['client'];
+    $agent = $item['agent'];
 
-	/* If we've gotten a non-song object just skip this row */
-	if (!is_object($media)) { continue; }
-	if (!$np_user->fullname) { $np_user->fullname = "Ampache User"; }
+    /* If we've gotten a non-song object just skip this row */
+    if (!is_object($media)) { continue; }
+    if (!$np_user->fullname) { $np_user->fullname = "Ampache User"; }
 ?>
 <div class="np_row">
 <?php require Config::get('prefix') . '/templates/show_now_playing_row.inc.php'; ?>

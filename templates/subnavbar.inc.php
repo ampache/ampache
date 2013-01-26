@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -28,12 +28,12 @@
 ?>
 <ul class="subnavside">
 <?php
-	foreach ($items as $item) {
-		if ($item['url'] == $item['active']) {
-			$li_class = "class=\"activesubmenu\"";
-		}
-		$li_id = "id=\"" . $item['cssclass'] . "\"";
-		?>
-		<li <?php echo $li_class; echo $li_id; ?>><a href="<?php echo Config::get('web_path') . "/" .  $item['url']; ?>"><?php echo $item['title']; ?></a></li>
-	<?php unset($li_id); } // END foreach ($items as $item) ?>
+    foreach ($items as $item) {
+        if ($item['url'] == $item['active']) {
+            $li_class = "class=\"activesubmenu\"";
+        }
+        $li_id = "id=\"" . $item['cssclass'] . "\"";
+        ?>
+        <li <?php echo $li_class; echo $li_id; ?>><a href="<?php echo Config::get('web_path') . "/" .  $item['url']; ?>"><?php echo $item['title']; ?></a></li>
+    <?php unset($li_id); } // END foreach ($items as $item) ?>
 </ul>

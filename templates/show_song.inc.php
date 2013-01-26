@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -30,18 +30,18 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 <dd><div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></div></dd>
 <?php } ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
-	<dd class="<?php echo UI::flip_class(); ?>">
-		<?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'add_song_' . $song->id); ?>
-		<?php if (Access::check_function('download')) { ?>
-			<a href="<?php echo Song::play_url($song->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
-			<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
-		<?php } ?>
-		<?php if (Access::check('interface','75')) { ?>
-			<span id="<?php echo($button_flip_state_id); ?>">
-			<?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$icon, T_(ucfirst($icon)),'flip_song_' . $song->id); ?>
-			</span>
-		<?php } ?>
-	</dd>
+    <dd class="<?php echo UI::flip_class(); ?>">
+        <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'add_song_' . $song->id); ?>
+        <?php if (Access::check_function('download')) { ?>
+            <a href="<?php echo Song::play_url($song->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
+            <a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+        <?php } ?>
+        <?php if (Access::check('interface','75')) { ?>
+            <span id="<?php echo($button_flip_state_id); ?>">
+            <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$icon, T_(ucfirst($icon)),'flip_song_' . $song->id); ?>
+            </span>
+        <?php } ?>
+    </dd>
 <?php
   $songprops[gettext_noop('Title')]   = scrub_out($song->title);
   $songprops[gettext_noop('Artist')]  = $song->f_artist_link;

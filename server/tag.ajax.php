@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -26,34 +26,34 @@
 if (!defined('AJAX_INCLUDE')) { exit; }
 
 switch ($_REQUEST['action']) {
-	case 'show_add_tag':
+    case 'show_add_tag':
 
-	break;
-	case 'add_tag':
-		Tag::add_tag_map($_GET['type'],$_GET['object_id'],$_GET['tag_id']);
-	break;
-	case 'remove_tag':
-		$tag = new Tag($_GET['tag_id']);
-		$tag->remove_map($_GET['type'],$_GET['object_id']);
-	break;
-	case 'browse_type':
-		$browse = new Browse($_GET['browse_id']);
-		$browse->set_filter('object_type', $_GET['type']);
-		$browse->store();
-	break;
-	case 'add_filter':
-		$browse = new Browse($_GET['browse_id']);
-		$browse->set_filter('tag', $_GET['tag_id']);
-		$object_ids = $browse->get_objects();
-		ob_start();
-		$browse->show_objects($object_ids);
-		$results['browse_content'] = ob_get_clean();
-		$browse->store();
-		// Retrieve current objects of type based on combined filters
-	break;
-	default:
-		$results['rfc3514'] = '0x1';
-	break;
+    break;
+    case 'add_tag':
+        Tag::add_tag_map($_GET['type'],$_GET['object_id'],$_GET['tag_id']);
+    break;
+    case 'remove_tag':
+        $tag = new Tag($_GET['tag_id']);
+        $tag->remove_map($_GET['type'],$_GET['object_id']);
+    break;
+    case 'browse_type':
+        $browse = new Browse($_GET['browse_id']);
+        $browse->set_filter('object_type', $_GET['type']);
+        $browse->store();
+    break;
+    case 'add_filter':
+        $browse = new Browse($_GET['browse_id']);
+        $browse->set_filter('tag', $_GET['tag_id']);
+        $object_ids = $browse->get_objects();
+        ob_start();
+        $browse->show_objects($object_ids);
+        $results['browse_content'] = ob_get_clean();
+        $browse->store();
+        // Retrieve current objects of type based on combined filters
+    break;
+    default:
+        $results['rfc3514'] = '0x1';
+    break;
 } // switch on action;
 
 

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -30,12 +30,12 @@
 <form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?>/preferences.php?action=admin_update_preferences" enctype="multipart/form-data">
 <table class="tabledata" cellspacing="0">
 <colgroup>
-	<col id="col_preference" />
-	<col id="col_value" />
+    <col id="col_preference" />
+    <col id="col_value" />
 </colgroup>
 <tr class="th-top">
-	<th class="col_preference"><?php echo T_('Preference'); ?></th>
-	<th class="col_value"><?php echo T_('Value'); ?></th>
+    <th class="col_preference"><?php echo T_('Preference'); ?></th>
+    <th class="col_value"><?php echo T_('Value'); ?></th>
 </tr>
 <?php foreach ($preferences as $pref) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
@@ -46,14 +46,14 @@
         </tr>
 <?php } // End foreach ($preferences['prefs'] as $pref) ?>
 <tr>
-	<td>
-	<div class="formValidation">
-	<input class="button" type="submit" value="<?php echo T_('Update Preferences'); ?>" />
-	<?php echo Core::form_register('update_preference'); ?>
-	<input type="hidden" name="user_id" value="<?php echo scrub_out($_REQUEST['user_id']); ?>" />
-	</div>
-	</td>
-	<td>&nbsp;</td>
+    <td>
+    <div class="formValidation">
+    <input class="button" type="submit" value="<?php echo T_('Update Preferences'); ?>" />
+    <?php echo Core::form_register('update_preference'); ?>
+    <input type="hidden" name="user_id" value="<?php echo scrub_out($_REQUEST['user_id']); ?>" />
+    </div>
+    </td>
+    <td>&nbsp;</td>
 </tr>
 </table>
 </form>

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,28 +25,28 @@
 <table class="inline-edit" cellpadding="3" cellspacing="0">
 <tr>
 <td>
-	<input type="text" name="name" value="<?php echo scrub_out($album->full_name); ?>" />
+    <input type="text" name="name" value="<?php echo scrub_out($album->full_name); ?>" />
 </td>
 <td>
-	<?php
-	if ($album->artist_count == '1') {
-		show_artist_select('artist',$album->artist_id);
-	}
-	else {
-		echo T_('Various');
-	}
-	?>
+    <?php
+    if ($album->artist_count == '1') {
+        show_artist_select('artist',$album->artist_id);
+    }
+    else {
+        echo T_('Various');
+    }
+    ?>
 </td>
 <td>
-	<input type="text" name="year" value="<?php echo scrub_out($album->year); ?>" />
+    <input type="text" name="year" value="<?php echo scrub_out($album->year); ?>" />
 </td>
 <td>
-	<input type="text" name="disk" value="<?php echo scrub_out($album->disk); ?>" />
+    <input type="text" name="disk" value="<?php echo scrub_out($album->disk); ?>" />
 </td>
 <td>
-	<input type="hidden" name="id" value="<?php echo $album->id; ?>" />
-	<input type="hidden" name="type" value="album_row" />
-	<?php echo Ajax::button('?action=edit_object&id=' . $album->id . '&type=album_row','download', T_('Save Changes'),'save_album_' . $album->id,'edit_album_' . $album->id); ?>
+    <input type="hidden" name="id" value="<?php echo $album->id; ?>" />
+    <input type="hidden" name="type" value="album_row" />
+    <?php echo Ajax::button('?action=edit_object&id=' . $album->id . '&type=album_row','download', T_('Save Changes'),'save_album_' . $album->id,'edit_album_' . $album->id); ?>
 </td>
 </tr>
 </table>

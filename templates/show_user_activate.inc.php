@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -44,13 +44,13 @@ $web_path = Config::get('web_path');
 <div id="maincontainer">
 <?php
     if ($validation == User::get_validation($username) AND strlen($validation)) {
-	User::activate_user($username);
+    User::activate_user($username);
 ?>
 <h3><?php echo T_('User Activated'); ?></h3>
 <p>
-	<?php
-	/* HINT: Start A tag, End A tag */
-	 printf(T_('This User ID is activated and can be used %sLogin%s'), '<a href="' . Config::get('web_path'). '/login.php">', '</a>'); ?>
+    <?php
+    /* HINT: Start A tag, End A tag */
+     printf(T_('This User ID is activated and can be used %sLogin%s'), '<a href="' . Config::get('web_path'). '/login.php">', '</a>'); ?>
 </p>
 <?php } else { ?>
 <h3><?php echo T_('Validation Failed'); ?></h3>

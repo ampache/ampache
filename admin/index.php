@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -23,23 +23,23 @@
 require_once '../lib/init.php';
 
 if (!Access::check('interface',100)) {
-	UI::access_denied();
-	exit();
+    UI::access_denied();
+    exit();
 }
 
 UI::show_header();
 
 switch ($_REQUEST['action']) {
-	default:
-		// Show Catalogs
-		$catalog_ids = Catalog::get_catalogs();
-		$browse = new Browse();
-		$browse->set_type('catalog');
-		$browse->set_static_content(true);
-		$browse->save_objects($catalog_ids);
-		$browse->show_objects($catalog_ids);
-		$browse->store();
-	break;
+    default:
+        // Show Catalogs
+        $catalog_ids = Catalog::get_catalogs();
+        $browse = new Browse();
+        $browse->set_type('catalog');
+        $browse->set_static_content(true);
+        $browse->save_objects($catalog_ids);
+        $browse->show_objects($catalog_ids);
+        $browse->store();
+    break;
 }
 
 UI::show_footer();

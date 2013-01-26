@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -35,17 +35,17 @@ $now_playing = $status['track_title'] ? $status['track_title'] . ' - ' . $status
 <?php echo T_('Volume'); ?>:<?php echo $status['volume']; ?>%
 </li>
 <li>
-	<?php echo print_bool($status['repeat']); ?> |
-	<?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_bool($status['repeat']), print_bool(invert_bool($status['repeat'])), 'localplay_repeat'); ?>
-	<?php echo T_('Repeat'); ?>
+    <?php echo print_bool($status['repeat']); ?> |
+    <?php echo Ajax::text('?page=localplay&action=repeat&value=' . invert_bool($status['repeat']), print_bool(invert_bool($status['repeat'])), 'localplay_repeat'); ?>
+    <?php echo T_('Repeat'); ?>
 </li>
 <li>
-	<?php echo print_bool($status['random']); ?> |
-	<?php echo Ajax::text('?page=localplay&action=random&value=' . invert_bool($status['random']), print_bool(invert_bool($status['random'])), 'localplay_random'); ?>
-	<?php echo T_('Random'); ?>
+    <?php echo print_bool($status['random']); ?> |
+    <?php echo Ajax::text('?page=localplay&action=random&value=' . invert_bool($status['random']), print_bool(invert_bool($status['random'])), 'localplay_random'); ?>
+    <?php echo T_('Random'); ?>
 </li>
 <li>
-	<?php echo Ajax::button('?page=localplay&action=command&command=delete_all','delete', T_('Clear Playlist'),'localplay_clear_all'); ?><?php echo T_('Clear Playlist'); ?>
+    <?php echo Ajax::button('?page=localplay&action=command&command=delete_all','delete', T_('Clear Playlist'),'localplay_clear_all'); ?><?php echo T_('Clear Playlist'); ?>
 </li>
 </ul>
 </div>

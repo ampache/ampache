@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -58,17 +58,17 @@ if (file_exists(Config::get('prefix')."/modules/flash/xspf_jukebox.swf")) {
     $player_url = sprintf("%s/modules/flash/xspf_jukebox.swf?autoplay=true&repeat_playlist=true&crossFade=false&shuffle=false&skin_url=%s/modules/flash/Original/&playlist_url=%s",Config::get('web_path'),Config::get('web_path'),$play_url);
 ?>
 <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="400" height="170" id="xspf_player" align="middle">
-	<param name="pluginspage" value="http://www.macromedia.com/go/getflashplayer" />
-	<param name="allowScriptAccess" value="sameDomain" />
-	<param name="movie" value="<?php echo $player_url; ?>" />
-	<param name="quality" value="high" />
-	<param name="bgcolor" value="#ffffff" />
-	<param name="type"    value="application/x-shockwave-flash" />
-	<param name="width"   value="400" />
-	<param name="height"  value="170" />
-	<param name="name"    value="xspf_player" />
-	<param name="align"   value="middle" />
-	<embed src="<?php echo $player_url; ?>" quality="high" bgcolor="#ffffff" width="400" height="170" name="xspf_player" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+    <param name="pluginspage" value="http://www.macromedia.com/go/getflashplayer" />
+    <param name="allowScriptAccess" value="sameDomain" />
+    <param name="movie" value="<?php echo $player_url; ?>" />
+    <param name="quality" value="high" />
+    <param name="bgcolor" value="#ffffff" />
+    <param name="type"    value="application/x-shockwave-flash" />
+    <param name="width"   value="400" />
+    <param name="height"  value="170" />
+    <param name="name"    value="xspf_player" />
+    <param name="align"   value="middle" />
+    <embed src="<?php echo $player_url; ?>" quality="high" bgcolor="#ffffff" width="400" height="170" name="xspf_player" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
 </object>
 <?php } else { ?>
 <p style="color:#ffffff;">Debian Policy requires the removal of the XSPF Flash Player, please see /usr/share/doc/ampache/README.Debian.gz for details and a work around.</p>

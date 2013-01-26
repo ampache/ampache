@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -34,34 +34,34 @@ $web_path = Config::get('web_path');
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
-	<th class="cel_add"><?php echo T_('Add'); ?></th>
-	<th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
-	<th class="cel_callsign"><?php echo Ajax::text('?page=browse&action=set_sort&sort=call_sign', T_('Callsign'),'live_stream_call_sign');  ?></th>
-	<th class="cel_frequency"><?php echo Ajax::text('?page=browse&action=set_sort&sort=frequency', T_('Frequency'),'live_stream_frequency'); ?></th>
-	<th class="cel_genre"><?php echo T_('Tag'); ?></th>
-	<th class="cel_action"><?php echo T_('Action'); ?> </th>
+    <th class="cel_add"><?php echo T_('Add'); ?></th>
+    <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
+    <th class="cel_callsign"><?php echo Ajax::text('?page=browse&action=set_sort&sort=call_sign', T_('Callsign'),'live_stream_call_sign');  ?></th>
+    <th class="cel_frequency"><?php echo Ajax::text('?page=browse&action=set_sort&sort=frequency', T_('Frequency'),'live_stream_frequency'); ?></th>
+    <th class="cel_genre"><?php echo T_('Tag'); ?></th>
+    <th class="cel_action"><?php echo T_('Action'); ?> </th>
 </tr>
 <?php
 foreach ($object_ids as $radio_id) {
-	$radio = new Radio($radio_id);
-	$radio->format();
+    $radio = new Radio($radio_id);
+    $radio->format();
 ?>
 <tr id="live_stream_<?php echo $radio->id; ?>" class="<?php echo UI::flip_class(); ?>">
-	<?php require Config::get('prefix') . '/templates/show_live_stream_row.inc.php'; ?>
+    <?php require Config::get('prefix') . '/templates/show_live_stream_row.inc.php'; ?>
 </tr>
 <?php } //end foreach ($artists as $artist) ?>
 <?php if (!count($object_ids)) { ?>
 <tr>
-	<td colspan="6"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
+    <td colspan="6"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
-	<th class="cel_add"><?php echo T_('Add'); ?></th>
-	<th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name', T_('Name'),'live_stream_sort_name_bottom'); ?></th>
-	<th class="cel_callsign"><?php echo Ajax::text('?page=browse&action=set_sort&sort=call_sign', T_('Callsign'),'live_stream_call_sign_bottom');  ?></th>
-	<th class="cel_frequency"><?php echo Ajax::text('?page=browse&action=set_sort&sort=frequency', T_('Frequency'),'live_stream_frequency_bottom'); ?></th>
-	<th class="cel_genre"><?php echo T_('Tag'); ?></th>
-	<th class="cel_action"><?php echo T_('Action'); ?> </th>
+    <th class="cel_add"><?php echo T_('Add'); ?></th>
+    <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name', T_('Name'),'live_stream_sort_name_bottom'); ?></th>
+    <th class="cel_callsign"><?php echo Ajax::text('?page=browse&action=set_sort&sort=call_sign', T_('Callsign'),'live_stream_call_sign_bottom');  ?></th>
+    <th class="cel_frequency"><?php echo Ajax::text('?page=browse&action=set_sort&sort=frequency', T_('Frequency'),'live_stream_frequency_bottom'); ?></th>
+    <th class="cel_genre"><?php echo T_('Tag'); ?></th>
+    <th class="cel_action"><?php echo T_('Action'); ?> </th>
 </tr>
 </table>
 <?php require Config::Get('prefix') . '/templates/list_header.inc.php'; ?>

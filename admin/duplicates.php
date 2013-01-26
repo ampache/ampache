@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -23,23 +23,23 @@
 require_once '../lib/init.php';
 
 if (!Access::check('interface','100')) {
-	UI::access_denied();
-	exit;
+    UI::access_denied();
+    exit;
 }
 
 UI::show_header();
 
 /* Switch on Action */
 switch ($_REQUEST['action']) {
-	case 'find_duplicates':
-		$search_type = Dba::escape($_REQUEST['search_type']);
-		$duplicates = Song::find_duplicates($search_type);
-		require_once Config::get('prefix') . '/templates/show_duplicate.inc.php';
-		require_once Config::get('prefix') . '/templates/show_duplicates.inc.php';
-	break;
-	default:
-		require_once Config::get('prefix') . '/templates/show_duplicate.inc.php';
-	break;
+    case 'find_duplicates':
+        $search_type = Dba::escape($_REQUEST['search_type']);
+        $duplicates = Song::find_duplicates($search_type);
+        require_once Config::get('prefix') . '/templates/show_duplicate.inc.php';
+        require_once Config::get('prefix') . '/templates/show_duplicates.inc.php';
+    break;
+    default:
+        require_once Config::get('prefix') . '/templates/show_duplicate.inc.php';
+    break;
 } // end switch on action
 
 UI::show_footer();

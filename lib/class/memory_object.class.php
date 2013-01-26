@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,31 +25,31 @@
 
 class memory_object {
 
-	private $_data = array();
-	public $properties;
+    private $_data = array();
+    public $properties;
 
-	public function __construct($data) {
+    public function __construct($data) {
 
-		foreach ($data as $key => $value) {
-			if (in_array($key, $this->properties)) {
-				$this->_data[$key] = $value;
-			}
-		}
+        foreach ($data as $key => $value) {
+            if (in_array($key, $this->properties)) {
+                $this->_data[$key] = $value;
+            }
+        }
 
-	}
+    }
 
-	public function __set($name, $value) {
-		if (!in_array($name, $this->properties)) {
-			return false;
-		}
-		$this->_data[$name] = $value;
-	}
+    public function __set($name, $value) {
+        if (!in_array($name, $this->properties)) {
+            return false;
+        }
+        $this->_data[$name] = $value;
+    }
 
-	public function __get($name) {
-		if (!in_array($name, $this->properties)) {
-			return false;
-		}
+    public function __get($name) {
+        if (!in_array($name, $this->properties)) {
+            return false;
+        }
 
-		return isset($this->_data[$name]) ? $this->_data[$name] : null;
-	}
+        return isset($this->_data[$name]) ? $this->_data[$name] : null;
+    }
 }

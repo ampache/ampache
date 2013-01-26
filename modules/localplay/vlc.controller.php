@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -274,12 +274,12 @@ class AmpacheVlc extends localplay_controller {
         } // get_active_instance
 
     public function add_url(Stream_URL $url) {
-	if (is_null($this->_vlc->add($url->title, $url->url))) {
-		debug_event('vlc', 'add_url failed to add: ' . json_encode($url), 1);
-		return false;
-	}
+    if (is_null($this->_vlc->add($url->title, $url->url))) {
+        debug_event('vlc', 'add_url failed to add: ' . json_encode($url), 1);
+        return false;
+    }
 
-	return true;
+    return true;
     }
 
     /**

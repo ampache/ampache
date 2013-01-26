@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,12 +25,12 @@ $button = Ajax::button('?page=index&action=random_albums','random', T_('Refresh'
 ?>
 <?php UI::show_box_top(T_('Albums of the Moment') . ' ' . $button, 'box box_random_albums'); ?>
 
-	<?php
-	if ($albums) {
-		foreach ($albums as $album_id) {
-			$album = new Album($album_id);
-			$album->format();
-			$name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
+    <?php
+    if ($albums) {
+        foreach ($albums as $album_id) {
+            $album = new Album($album_id);
+            $album->format();
+            $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
         ?>
         <div class="random_album">
                 <a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $album_id; ?>">
@@ -47,10 +47,10 @@ $button = Ajax::button('?page=index&action=random_albums','random', T_('Refresh'
                         echo "</div>";
                 }
                 ?>
-              	<span class="play_album"><?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Play Album'),'play_full_' . $album->id); ?></span>
+                  <span class="play_album"><?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Play Album'),'play_full_' . $album->id); ?></span>
         </div>
 
-        	<?php } // end foreach ?>
-	<?php } // end if albums ?>
+            <?php } // end foreach ?>
+    <?php } // end if albums ?>
 
 <?php UI::show_box_bottom(); ?>

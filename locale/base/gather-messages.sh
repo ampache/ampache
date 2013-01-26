@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab:
+# vim:set softtabstop=4 shiftwidth=4 expandtab:
 #
 # Copyright 2001 - 2013 Ampache.org
 #

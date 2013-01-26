@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -29,32 +29,32 @@ UI::show_box_top(T_('Preference Administration'));
   <col id="col_level" />
 </colgroup>
 <tr class="th-top">
-	<th class="cel_preference"><?php echo T_('Preference'); ?></th>
-	<th class="cel_level"><?php echo T_('Level'); ?></th>
+    <th class="cel_preference"><?php echo T_('Preference'); ?></th>
+    <th class="cel_level"><?php echo T_('Level'); ?></th>
 </tr>
 <?php foreach ($preferences as $preference) {
-	unset($is_25,$is_5,$is_100);
+    unset($is_25,$is_5,$is_100);
 ?>
 <tr class="<?php echo UI::flip_class(); ?>">
-	<td class="cel_preference"><?php echo scrub_out(T_($preference['description'])); ?></td>
-	<td class="cel_level">
-		<?php $level_name = "is_" . $preference['level']; ${$level_name} = 'selected="selected"'; ?>
-		<select name="prefs[<?php echo scrub_out($preference['name']); ?>]">
-			<option value="5" <?php echo $is_5; ?>><?php echo T_('Guest'); ?></option>
-			<option value="25" <?php echo $is_25; ?>><?php echo T_('User'); ?></option>
-			<option value="100" <?php echo $is_100; ?>><?php echo T_('Admin'); ?></option>
-		</select>
-	</td>
+    <td class="cel_preference"><?php echo scrub_out(T_($preference['description'])); ?></td>
+    <td class="cel_level">
+        <?php $level_name = "is_" . $preference['level']; ${$level_name} = 'selected="selected"'; ?>
+        <select name="prefs[<?php echo scrub_out($preference['name']); ?>]">
+            <option value="5" <?php echo $is_5; ?>><?php echo T_('Guest'); ?></option>
+            <option value="25" <?php echo $is_25; ?>><?php echo T_('User'); ?></option>
+            <option value="100" <?php echo $is_100; ?>><?php echo T_('Admin'); ?></option>
+        </select>
+    </td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
-	<th class="cel_preference"><?php echo T_('Preference'); ?></th>
-	<th class="cel_level"><?php echo T_('Level'); ?></th>
+    <th class="cel_preference"><?php echo T_('Preference'); ?></th>
+    <th class="cel_level"><?php echo T_('Level'); ?></th>
 </tr>
 </table>
 <div class="formValidation">
-		<input type="hidden" name="action" value="set_preferences" />
-		<input type="submit" value="<?php echo T_('Update'); ?>" />
+        <input type="hidden" name="action" value="set_preferences" />
+        <input type="submit" value="<?php echo T_('Update'); ?>" />
 </div>
 </form>
 <?php UI::show_box_bottom(); ?>

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -27,5 +27,5 @@
 
 ?>
 <?php foreach ($headers as $key=>$header) { ?>
-	<td><?php echo $object->$key; ?></td>
+    <td><?php echo $object->$key; ?></td>
 <?php } ?>

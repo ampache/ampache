@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -23,39 +23,39 @@
 require_once '../lib/init.php';
 
 if (!Access::check('interface','100')) {
-	UI::access_denied();
-	exit;
+    UI::access_denied();
+    exit;
 }
 
 UI::show_header();
 
 // Switch on the incomming action
 switch ($_REQUEST['action']) {
-	case 'edit_shout':
-		$shout_id = $_POST['shout_id'];
-		$update = Shoutbox::update($_POST);
-		show_confirmation(T_('Shoutbox Post Updated'),'',Config::get('web_path').'/admin/shout.php');
-	break;
-	case 'show_edit':
-		$shout = new Shoutbox($_REQUEST['shout_id']);
-		$object = Shoutbox::get_object($shout->object_type,$shout->object_id);
-		$object->format();
-		$client = new User($shout->user);
-		$client->format();
-		require_once Config::get('prefix') . '/templates/show_edit_shout.inc.php';
-		break;
-	case 'delete':
-		$shout_id = Shoutbox::delete($_REQUEST['shout_id']);
-		show_confirmation(T_('Shoutbox Post Deleted'),'',Config::get('web_path').'/admin/shout.php');
-	break;
-	default:
-		$browse = new Browse();
-		$browse->set_type('shoutbox');
-		$browse->set_simple_browse(true);
-		$shoutbox_ids = $browse->get_objects();
-		$browse->show_objects($shoutbox_ids);
-		$browse->store();
-	break;
+    case 'edit_shout':
+        $shout_id = $_POST['shout_id'];
+        $update = Shoutbox::update($_POST);
+        show_confirmation(T_('Shoutbox Post Updated'),'',Config::get('web_path').'/admin/shout.php');
+    break;
+    case 'show_edit':
+        $shout = new Shoutbox($_REQUEST['shout_id']);
+        $object = Shoutbox::get_object($shout->object_type,$shout->object_id);
+        $object->format();
+        $client = new User($shout->user);
+        $client->format();
+        require_once Config::get('prefix') . '/templates/show_edit_shout.inc.php';
+        break;
+    case 'delete':
+        $shout_id = Shoutbox::delete($_REQUEST['shout_id']);
+        show_confirmation(T_('Shoutbox Post Deleted'),'',Config::get('web_path').'/admin/shout.php');
+    break;
+    default:
+        $browse = new Browse();
+        $browse->set_type('shoutbox');
+        $browse->set_simple_browse(true);
+        $shoutbox_ids = $browse->get_objects();
+        $browse->show_objects($shoutbox_ids);
+        $browse->store();
+    break;
 } // end switch on action
 
 UI::show_footer();

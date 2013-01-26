@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -41,17 +41,17 @@ $sql = "SELECT `id`,`file` FROM song WHERE enabled='0'";
 $db_results = Dba::read($sql);
 
 while ($row = Dba::fetch_assoc($db_results)) {
-	if ($debug) {
-		printf (T_('Would Delete: %s'), $row['file']);
-		echo "\n";
-	}
-	else {
-		printf (T_('Deleting: %s'), $row['file']);
-		echo "\n";
-		unlink($row['file']);
-		$sql = "DELETE FROM `song` WHERE `id`='" . Dba::escape($row['id']) . "'";
-		$del_results = Dba::write($sql);
-	}
+    if ($debug) {
+        printf (T_('Would Delete: %s'), $row['file']);
+        echo "\n";
+    }
+    else {
+        printf (T_('Deleting: %s'), $row['file']);
+        echo "\n";
+        unlink($row['file']);
+        $sql = "DELETE FROM `song` WHERE `id`='" . Dba::escape($row['id']) . "'";
+        $del_results = Dba::write($sql);
+    }
 } // end while
 
 ?>

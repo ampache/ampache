@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -35,9 +35,9 @@ $_SESSION['catalog'] = 0;
  * going to let them break their servers
  */
 if (Config::get('refresh_limit') > 5) {
-	$refresh_limit = Config::get('refresh_limit');
-	$ajax_url = '?page=index&action=reloadnp';
-	require_once Config::get('prefix') . '/templates/javascript_refresh.inc.php';
+    $refresh_limit = Config::get('refresh_limit');
+    $ajax_url = '?page=index&action=reloadnp';
+    require_once Config::get('prefix') . '/templates/javascript_refresh.inc.php';
 }
 
 require_once Config::get('prefix') . '/templates/show_index.inc.php';

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -54,7 +54,7 @@
   <li><h4><?php echo T_('Server Config'); ?></h4>
     <ul class="sb3" id="sb_preferences_sc">
 <?php
-	$catagories = Preference::get_catagories();
+    $catagories = Preference::get_catagories();
         foreach ($catagories as $name) {
                 $f_name = ucfirst($name);
 ?>

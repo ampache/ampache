@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -26,48 +26,48 @@
  */
 abstract class playlist_object extends database_object {
 
-	// Database variables
-	public $id;
-	public $name;
-	public $user;
-	public $type;
+    // Database variables
+    public $id;
+    public $name;
+    public $user;
+    public $type;
 
-	/**
-	 * format
-	 * This takes the current playlist object and gussies it up a little
-	 * bit so it is presentable to the users
-	 */
-	public function format() {
+    /**
+     * format
+     * This takes the current playlist object and gussies it up a little
+     * bit so it is presentable to the users
+     */
+    public function format() {
 
-		$this->f_name =  UI::truncate($this->name,Config::get('ellipse_threshold_title'));
-		$this->f_type = ($this->type == 'private') ? UI::get_icon('lock', T_('Private')) : '';
+        $this->f_name =  UI::truncate($this->name,Config::get('ellipse_threshold_title'));
+        $this->f_type = ($this->type == 'private') ? UI::get_icon('lock', T_('Private')) : '';
 
-		$client = new User($this->user);
+        $client = new User($this->user);
 
-		$this->f_user = $client->fullname;
+        $this->f_user = $client->fullname;
 
-	} // format
+    } // format
 
-	/**
-	 * has_access
-	 * This function returns true or false if the current user
-	 * has access to this playlist
-	 */
-	public function has_access() {
+    /**
+     * has_access
+     * This function returns true or false if the current user
+     * has access to this playlist
+     */
+    public function has_access() {
 
-		if (!Access::check('interface','25')) {
-			return false;
-		}
-		if ($this->user == $GLOBALS['user']->id) {
-			return true;
-		}
-		else {
-			return Access::check('interface','100');
-		}
+        if (!Access::check('interface','25')) {
+            return false;
+        }
+        if ($this->user == $GLOBALS['user']->id) {
+            return true;
+        }
+        else {
+            return Access::check('interface','100');
+        }
 
-		return false;
+        return false;
 
-	} // has_access
+    } // has_access
 
 
 } // end playlist_object

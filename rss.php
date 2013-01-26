@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,8 +25,8 @@ require_once 'lib/init.php';
 
 /* Check Perms */
 if (!Config::get('use_rss') || Config::get('demo_mode')) {
-	UI::access_denied();
-	exit;
+    UI::access_denied();
+    exit;
 }
 
 // Add in our base hearder defining the content type

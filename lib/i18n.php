@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -27,26 +27,26 @@
  * @return void
  */
 function load_gettext() {
-	$lang = Config::get('lang');
-	$charset = Config::get('site_charset') ?: 'UTF-8';
-	$locale = $lang . '.' . $charset;
-	debug_event('i18n', 'Setting locale to ' . $locale, 5);
-	T_setlocale(LC_MESSAGES, $locale);
-	/* Bind the Text Domain */
-	T_bindtextdomain('messages', Config::get('prefix') . "/locale/");
-	T_bind_textdomain_codeset('messages', $charset);
-	T_textdomain('messages');
-	debug_event('i18n', 'gettext is ' . (locale_emulation() ? 'emulated' : 'native'), 5);
+    $lang = Config::get('lang');
+    $charset = Config::get('site_charset') ?: 'UTF-8';
+    $locale = $lang . '.' . $charset;
+    debug_event('i18n', 'Setting locale to ' . $locale, 5);
+    T_setlocale(LC_MESSAGES, $locale);
+    /* Bind the Text Domain */
+    T_bindtextdomain('messages', Config::get('prefix') . "/locale/");
+    T_bind_textdomain_codeset('messages', $charset);
+    T_textdomain('messages');
+    debug_event('i18n', 'gettext is ' . (locale_emulation() ? 'emulated' : 'native'), 5);
 } // load_gettext
 
 /**
  * gettext_noop
  *
- * @param	string	$string
- * @return	string
+ * @param    string    $string
+ * @return    string
  */
 function gettext_noop($string) {
-	return $string;
+    return $string;
 }
 
 ?>

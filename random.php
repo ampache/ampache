@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,17 +25,17 @@ require_once 'lib/init.php';
 UI::show_header();
 
 switch ($_REQUEST['action']) {
-	case 'get_advanced':
-		$object_ids = Random::advanced($_REQUEST['type'], $_POST);
+    case 'get_advanced':
+        $object_ids = Random::advanced($_REQUEST['type'], $_POST);
 
-		// We need to add them to the active playlist
-		foreach ($object_ids as $object_id) {
-			$GLOBALS['user']->playlist->add_object($object_id, 'song');
-		}
-	case 'advanced':
-	default:
-		require_once Config::get('prefix') . '/templates/show_random.inc.php';
-	break;
+        // We need to add them to the active playlist
+        foreach ($object_ids as $object_id) {
+            $GLOBALS['user']->playlist->add_object($object_id, 'song');
+        }
+    case 'advanced':
+    default:
+        require_once Config::get('prefix') . '/templates/show_random.inc.php';
+    break;
 } // end switch
 
 UI::show_footer();

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -26,46 +26,46 @@
 if (!defined('AJAX_INCLUDE')) { exit; }
 
 switch ($_REQUEST['action']) {
-	case 'reject':
-		if (!Access::check('interface','75')) {
-			$results['rfc3514'] = '0x1';
-			break;
-		}
+    case 'reject':
+        if (!Access::check('interface','75')) {
+            $results['rfc3514'] = '0x1';
+            break;
+        }
 
-		// Remove the flag from the table
-		$flag = new Flag($_REQUEST['flag_id']);
-		$flag->delete();
+        // Remove the flag from the table
+        $flag = new Flag($_REQUEST['flag_id']);
+        $flag->delete();
 
-		$flagged = Flag::get_all();
-		ob_start();
-		$browse = new Browse();
-		$browse->set_type('flagged');
-		$browse->set_static_content(true);
-		$browse->save_objects($flagged);
-		$browse->show_objects($flagged);
-		$browse->store();
-		$results['browse_content'] = ob_get_contents();
-		ob_end_clean();
+        $flagged = Flag::get_all();
+        ob_start();
+        $browse = new Browse();
+        $browse->set_type('flagged');
+        $browse->set_static_content(true);
+        $browse->save_objects($flagged);
+        $browse->show_objects($flagged);
+        $browse->store();
+        $results['browse_content'] = ob_get_contents();
+        ob_end_clean();
 
-	break;
-	case 'accept':
-		if (!Access::check('interface','75')) {
-			$results['rfc3514'] = '0x1';
-			break;
-		}
+    break;
+    case 'accept':
+        if (!Access::check('interface','75')) {
+            $results['rfc3514'] = '0x1';
+            break;
+        }
 
-		$flag = new Flag($_REQUEST['flag_id']);
-		$flag->approve();
-		$flag->format();
-		ob_start();
-		require_once Config::get('prefix') . '/templates/show_flag_row.inc.php';
-		$results['flagged_' . $flag->id] = ob_get_contents();
-		ob_end_clean();
+        $flag = new Flag($_REQUEST['flag_id']);
+        $flag->approve();
+        $flag->format();
+        ob_start();
+        require_once Config::get('prefix') . '/templates/show_flag_row.inc.php';
+        $results['flagged_' . $flag->id] = ob_get_contents();
+        ob_end_clean();
 
-	break;
-	default:
-		$results['rfc3514'] = '0x1';
-	break;
+    break;
+    default:
+        $results['rfc3514'] = '0x1';
+    break;
 } // switch on action;
 
 // We always do this

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,14 +25,14 @@ $confirmation = Core::form_register($form_name);
 <?php UI::show_box_top(scrub_out($title), 'box box_confirmation'); ?>
 <?php echo $text; ?>
 <br />
-	<form method="post" action="<?php echo $path; ?>" style="display:inline;">
-	<input type="submit" value="<?php echo T_('Continue'); ?>" />
-	<?php echo $confirmation; ?>
-	</form>
+    <form method="post" action="<?php echo $path; ?>" style="display:inline;">
+    <input type="submit" value="<?php echo T_('Continue'); ?>" />
+    <?php echo $confirmation; ?>
+    </form>
 <?php if ($cancel) { ?>
-	<form method="post" action="<?php echo Config::get('web_path') . '/' . return_referer(); ?>" style="display:inline;">
-	<input type="submit" value="<?php echo T_('Cancel'); ?>" />
-	<?php echo $confirmation; ?>
-	</form>
+    <form method="post" action="<?php echo Config::get('web_path') . '/' . return_referer(); ?>" style="display:inline;">
+    <input type="submit" value="<?php echo T_('Cancel'); ?>" />
+    <?php echo $confirmation; ?>
+    </form>
 <?php } ?>
 <?php UI::show_box_bottom(); ?>

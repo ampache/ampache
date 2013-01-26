@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -23,37 +23,37 @@
 require_once '../lib/init.php';
 
 if (!Access::check('interface',100) OR Config::get('demo_mode')) {
-	UI::access_denied();
-	exit();
+    UI::access_denied();
+    exit();
 }
 
 UI::show_header();
 
 /* Switch on action boys */
 switch ($_REQUEST['action']) {
-	/* This re-generates the config file comparing
-	 * /config/ampache.cfg to .cfg.dist
-	 */
-	case 'generate_config':
-		ob_end_clean();
-		$current = parse_ini_file(Config::get('prefix') . '/config/ampache.cfg.php');
-		$final = generate_config($current);
-		$browser = new Horde_Browser();
-		$browser->downloadHeaders('ampache.cfg.php','text/plain',false,filesize(Config::get('prefix') . '/config/ampache.cfg.php.dist'));
-		echo $final;
-		exit;
-	break;
-	case 'reset_db_charset':
-		Dba::reset_db_charset();
-		show_confirmation(T_('Database Charset Updated'), T_('Your Database and associated tables have been updated to match your currently configured charset'), Config::get('web_path').'/admin/system.php?action=show_debug');
-	break;
-	case 'show_debug':
-		$configuration = Config::get_all();
-		require_once Config::get('prefix') . '/templates/show_debug.inc.php';
-	break;
-	default:
-		// Rien a faire
-	break;
+    /* This re-generates the config file comparing
+     * /config/ampache.cfg to .cfg.dist
+     */
+    case 'generate_config':
+        ob_end_clean();
+        $current = parse_ini_file(Config::get('prefix') . '/config/ampache.cfg.php');
+        $final = generate_config($current);
+        $browser = new Horde_Browser();
+        $browser->downloadHeaders('ampache.cfg.php','text/plain',false,filesize(Config::get('prefix') . '/config/ampache.cfg.php.dist'));
+        echo $final;
+        exit;
+    break;
+    case 'reset_db_charset':
+        Dba::reset_db_charset();
+        show_confirmation(T_('Database Charset Updated'), T_('Your Database and associated tables have been updated to match your currently configured charset'), Config::get('web_path').'/admin/system.php?action=show_debug');
+    break;
+    case 'show_debug':
+        $configuration = Config::get_all();
+        require_once Config::get('prefix') . '/templates/show_debug.inc.php';
+    break;
+    default:
+        // Rien a faire
+    break;
 } // end switch
 
 UI::show_footer();

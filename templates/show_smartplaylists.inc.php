@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -32,31 +32,31 @@
 </colgroup>
 <tr class="th-top">
   <th class="cel_add"><?php echo T_('Add'); ?></th>
-	<th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&type=smartplaylist&sort=name', T_('Playlist Name'),'playlist_sort_name'); ?></th>
-	<th class="cel_type">&nbsp;</th>
-	<th class="cel_owner"><?php echo Ajax::text('?page=browse&action=set_sort&type=smartplaylist&sort=user', T_('Owner'),'playlist_sort_owner'); ?></th>
-	<th class="cel_action"><?php echo T_('Actions'); ?></th>
+    <th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&type=smartplaylist&sort=name', T_('Playlist Name'),'playlist_sort_name'); ?></th>
+    <th class="cel_type">&nbsp;</th>
+    <th class="cel_owner"><?php echo Ajax::text('?page=browse&action=set_sort&type=smartplaylist&sort=user', T_('Owner'),'playlist_sort_owner'); ?></th>
+    <th class="cel_action"><?php echo T_('Actions'); ?></th>
 </tr>
 <?php
 foreach ($object_ids as $playlist_id) {
-	$playlist = new Search('song', $playlist_id);
-	$playlist->format();
+    $playlist = new Search('song', $playlist_id);
+    $playlist->format();
 ?>
 <tr class="<?php echo UI::flip_class(); ?>" id="playlist_row_<?php echo $playlist->id; ?>">
-	<?php require Config::get('prefix') . '/templates/show_smartplaylist_row.inc.php'; ?>
+    <?php require Config::get('prefix') . '/templates/show_smartplaylist_row.inc.php'; ?>
 </tr>
 <?php } // end foreach ($playlists as $playlist) ?>
 <?php if (!count($object_ids)) { ?>
 <tr class="<?php echo UI::flip_class(); ?>">
-	<td colspan="6"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
+    <td colspan="6"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
   <th class="cel_add"><?php echo T_('Add'); ?></th>
-	<th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&type=playlist&sort=name', T_('Playlist Name'),'playlist_sort_name_bottom'); ?></th>
-	<th class="cel_type">&nbsp;</th>
-	<th class="cel_owner"><?php echo Ajax::text('?page=browse&action=set_sort&type=playlist&sort=user', T_('Owner'),'playlist_sort_owner_bottom'); ?></th>
-	<th class="cel_action"><?php echo T_('Actions'); ?></th>
+    <th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&type=playlist&sort=name', T_('Playlist Name'),'playlist_sort_name_bottom'); ?></th>
+    <th class="cel_type">&nbsp;</th>
+    <th class="cel_owner"><?php echo Ajax::text('?page=browse&action=set_sort&type=playlist&sort=user', T_('Owner'),'playlist_sort_owner_bottom'); ?></th>
+    <th class="cel_action"><?php echo T_('Actions'); ?></th>
 </tr>
 </table>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>

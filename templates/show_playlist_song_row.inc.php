@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -32,13 +32,13 @@
 <td class="cel_rating" id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></td>
 <?php } ?>
 <td class="cel_action">
-	<?php if (Config::get('download')) { ?>
-	<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>">
-		<?php echo UI::get_icon('download', T_('Download')); ?>
-	</a>
-	<?php } ?>
-	<?php if ($playlist->has_access()) { ?>
-		<?php echo Ajax::button('?page=playlist&action=edit_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'],'edit', T_('Edit'),'track_edit_' . $object['track_id']); ?>
-		<?php echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'],'delete', T_('Delete'),'track_del_' . $object['track_id']); ?>
-	<?php } ?>
+    <?php if (Config::get('download')) { ?>
+    <a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>">
+        <?php echo UI::get_icon('download', T_('Download')); ?>
+    </a>
+    <?php } ?>
+    <?php if ($playlist->has_access()) { ?>
+        <?php echo Ajax::button('?page=playlist&action=edit_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'],'edit', T_('Edit'),'track_edit_' . $object['track_id']); ?>
+        <?php echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'],'delete', T_('Delete'),'track_del_' . $object['track_id']); ?>
+    <?php } ?>
 </td>

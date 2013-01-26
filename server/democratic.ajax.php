@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -29,64 +29,64 @@ $democratic = Democratic::get_current_playlist();
 $democratic->set_parent();
 
 switch ($_REQUEST['action']) {
-	case 'delete_vote':
-		$democratic->remove_vote($_REQUEST['row_id']);
-		$show_browse = true;
-	break;
-	case 'add_vote':
-		$democratic->add_vote(array(
-			array(
-				'object_type' => $_REQUEST['type'],
-				'object_id' => $_REQUEST['object_id']
-			)
-		));
-		$show_browse = true;
-	break;
-	case 'delete':
-		if (!$GLOBALS['user']->has_access('75')) {
-			echo xml_from_array(array('rfc3514' => '0x1'));
-			exit;
-		}
+    case 'delete_vote':
+        $democratic->remove_vote($_REQUEST['row_id']);
+        $show_browse = true;
+    break;
+    case 'add_vote':
+        $democratic->add_vote(array(
+            array(
+                'object_type' => $_REQUEST['type'],
+                'object_id' => $_REQUEST['object_id']
+            )
+        ));
+        $show_browse = true;
+    break;
+    case 'delete':
+        if (!$GLOBALS['user']->has_access('75')) {
+            echo xml_from_array(array('rfc3514' => '0x1'));
+            exit;
+        }
 
-		$democratic->delete_votes($_REQUEST['row_id']);
-		$show_browse = true;
-	break;
-	case 'send_playlist':
-		if (!Access::check('interface','75')) {
-			echo xml_from_array(array('rfc3514' => '0x1'));
-			exit;
-		}
+        $democratic->delete_votes($_REQUEST['row_id']);
+        $show_browse = true;
+    break;
+    case 'send_playlist':
+        if (!Access::check('interface','75')) {
+            echo xml_from_array(array('rfc3514' => '0x1'));
+            exit;
+        }
 
-		$_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
-		$results['rfc3514'] = '<script type="text/javascript">reloadUtil("'.$_SESSION['iframe']['target'].'")</script>';
-	break;
-	case 'clear_playlist':
-		if (!Access::check('interface','100')) {
-			echo xml_from_array(array('rfc3514' => '0x1'));
-			exit;
-		}
+        $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
+        $results['rfc3514'] = '<script type="text/javascript">reloadUtil("'.$_SESSION['iframe']['target'].'")</script>';
+    break;
+    case 'clear_playlist':
+        if (!Access::check('interface','100')) {
+            echo xml_from_array(array('rfc3514' => '0x1'));
+            exit;
+        }
 
-		$democratic = new Democratic($_REQUEST['democratic_id']);
-		$democratic->set_parent();
-		$democratic->clear();
+        $democratic = new Democratic($_REQUEST['democratic_id']);
+        $democratic->set_parent();
+        $democratic->clear();
 
-		$show_browse = true;
-	break;
-	default:
-		$results['rfc3514'] = '0x1';
-	break;
+        $show_browse = true;
+    break;
+    default:
+        $results['rfc3514'] = '0x1';
+    break;
 } // switch on action;
 
 if ($show_browse) {
-	ob_start();
-	$object_ids = $democratic->get_items();
-	$browse = new Browse();
-	$browse->set_type('democratic');
-	$browse->set_static_content(true);
-	$browse->show_objects($object_ids);
-	$browse->store();
-	$results['browse_content'] = ob_get_contents();
-	ob_end_clean();
+    ob_start();
+    $object_ids = $democratic->get_items();
+    $browse = new Browse();
+    $browse->set_type('democratic');
+    $browse->set_static_content(true);
+    $browse->show_objects($object_ids);
+    $browse->store();
+    $results['browse_content'] = ob_get_contents();
+    ob_end_clean();
 }
 
 // We always do this

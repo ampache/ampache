@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -26,13 +26,13 @@ UI::show_header();
 
 // Switch on Action
 switch ($_REQUEST['action']) {
-	default:
-	case 'show_song':
-		$song = new Song($_REQUEST['song_id']);
-		$song->format();
-		$song->fill_ext_info();
-		require_once Config::get('prefix') . '/templates/show_song.inc.php';
-	break;
+    default:
+    case 'show_song':
+        $song = new Song($_REQUEST['song_id']);
+        $song->format();
+        $song->fill_ext_info();
+        require_once Config::get('prefix') . '/templates/show_song.inc.php';
+    break;
 } // end data collection
 
 UI::show_footer();

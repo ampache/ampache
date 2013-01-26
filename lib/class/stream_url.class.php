@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,6 +25,6 @@
 
 class Stream_URL extends memory_object {
 
-	public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type');
+    public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type');
 
 }

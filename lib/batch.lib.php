@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,24 +25,24 @@
  *
  * Takes an array of song ids and returns an array of the actual filenames
  *
- * @param	array	$media_ids	Media IDs.
+ * @param    array    $media_ids    Media IDs.
  */
 function get_song_files($media_ids) {
 
-	$media_files = array();
+    $media_files = array();
 
-	foreach ($media_ids as $element) {
-		if (is_array($element)) {
-			$type = array_shift($element);
-			$media = new $type(array_shift($element));
-		}
-		else {
-			$media = new Song($element);
-		}
-		if ($media->enabled) {
-	                $total_size += sprintf("%.2f",($media->size/1048576));
-	                array_push($media_files, $media->file);
-		}
+    foreach ($media_ids as $element) {
+        if (is_array($element)) {
+            $type = array_shift($element);
+            $media = new $type(array_shift($element));
+        }
+        else {
+            $media = new Song($element);
+        }
+        if ($media->enabled) {
+                    $total_size += sprintf("%.2f",($media->size/1048576));
+                    array_push($media_files, $media->file);
+        }
         }
 
         return array($media_files,$total_size);
@@ -54,51 +54,51 @@ function get_song_files($media_ids) {
  * takes array of full paths to songs
  * zips them and sends them
  *
- * @param	string	$name	name of the zip file to be created
- * @param	string	$song_files	array of full paths to songs to zip create w/ call to get_song_files
+ * @param    string    $name    name of the zip file to be created
+ * @param    string    $song_files    array of full paths to songs to zip create w/ call to get_song_files
  */
 function send_zip( $name, $song_files ) {
 
-	// Check if they want to save it to a file, if so then make sure they've
-	// got a defined path as well and that it's writable.
-	if (Config::get('file_zip_download') && Config::get('file_zip_path')) {
-		// Check writeable
-		if (!is_writable(Config::get('file_zip_path'))) {
-			$in_memory = '1';
-			debug_event('Error','File Zip Path:' . Config::get('file_zip_path') . ' is not writable','1');
-		}
-		else {
-			$in_memory = '0';
-			$basedir = Config::get('file_zip_path');
-		}
+    // Check if they want to save it to a file, if so then make sure they've
+    // got a defined path as well and that it's writable.
+    if (Config::get('file_zip_download') && Config::get('file_zip_path')) {
+        // Check writeable
+        if (!is_writable(Config::get('file_zip_path'))) {
+            $in_memory = '1';
+            debug_event('Error','File Zip Path:' . Config::get('file_zip_path') . ' is not writable','1');
+        }
+        else {
+            $in_memory = '0';
+            $basedir = Config::get('file_zip_path');
+        }
 
-	} else {
-		$in_memory = '1';
-	} // if file downloads
+    } else {
+        $in_memory = '1';
+    } // if file downloads
 
-	/* Require needed library */
+    /* Require needed library */
         require_once Config::get('prefix') . '/modules/archive/archive.lib.php';
         $arc = new zip_file( $name . ".zip" );
         $options = array(
                 'inmemory'      => $in_memory,   // create archive in memory
-		'basedir'	=> $basedir,
+        'basedir'    => $basedir,
                 'storepaths'    => 0,   // only store file name, not full path
                 'level'         => 0,    // no compression
-		'comment'	=> Config::get('file_zip_comment')
+        'comment'    => Config::get('file_zip_comment')
         );
 
         $arc->set_options( $options );
         $arc->add_files( $song_files );
 
-	if (count($arc->error)) {
-		debug_event('archive',"Error: unable to add songs",'3');
-		return false;
-	} // if failed to add songs
+    if (count($arc->error)) {
+        debug_event('archive',"Error: unable to add songs",'3');
+        return false;
+    } // if failed to add songs
 
         if (!$arc->create_archive()) {
-		debug_event('archive',"Error: unable to create archive",'3');
-		return false;
-	} // if failed to create archive
+        debug_event('archive',"Error: unable to create archive",'3');
+        return false;
+    } // if failed to create archive
 
         $arc->download_file();
 

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -29,14 +29,14 @@ if (Preference::has_access('play_type')) {
 ?>
 <form method="post" id="play_type_form" action="javascript.void(0);">
 <select id="play_type_select" name="type">
-	<?php if (Config::get('allow_stream_playback')) { ?>
-		<option value="stream" <?php echo $is_stream; ?>><?php echo T_('Stream'); ?></option>
-	<?php } if (Config::get('allow_localplay_playback')) { ?>
-		<option value="localplay" <?php echo $is_localplay; ?>><?php echo T_('Localplay'); ?></option>
-	<?php } if (Config::get('allow_democratic_playback')) { ?>
-		<option value="democratic" <?php echo $is_democratic; ?>><?php echo T_('Democratic'); ?></option>
-	<?php } ?>
-	<option value="xspf_player" <?php echo $is_xspf_player; ?>><?php echo T_('Flash Player'); ?></option>
+    <?php if (Config::get('allow_stream_playback')) { ?>
+        <option value="stream" <?php echo $is_stream; ?>><?php echo T_('Stream'); ?></option>
+    <?php } if (Config::get('allow_localplay_playback')) { ?>
+        <option value="localplay" <?php echo $is_localplay; ?>><?php echo T_('Localplay'); ?></option>
+    <?php } if (Config::get('allow_democratic_playback')) { ?>
+        <option value="democratic" <?php echo $is_democratic; ?>><?php echo T_('Democratic'); ?></option>
+    <?php } ?>
+    <option value="xspf_player" <?php echo $is_xspf_player; ?>><?php echo T_('Flash Player'); ?></option>
 </select>
 <?php echo Ajax::observe('play_type_select','change',Ajax::action('?page=stream&action=set_play_type','play_type_select','play_type_form'),'1'); ?>
 </form>

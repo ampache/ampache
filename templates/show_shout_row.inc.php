@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -21,12 +21,12 @@
  */
 ?>
 <tr id="flagged_<?php echo $shout->id; ?>" class="<?php echo UI::flip_class(); ?>">
-	<td class="cel_object"><?php echo $object->f_link; ?></td>
-	<td class="cel_username"><?php echo $client->f_link; ?></td>
-	<td class="cel_sticky"><?php echo $shout->sticky; ?></td>
-	<td class="cel_comment"><?php echo scrub_out($shout->text); ?></td>
-	<td class="cel_date"><?php echo $shout->date; ?></td>
-	<td class="cel_action">
+    <td class="cel_object"><?php echo $object->f_link; ?></td>
+    <td class="cel_username"><?php echo $client->f_link; ?></td>
+    <td class="cel_sticky"><?php echo $shout->sticky; ?></td>
+    <td class="cel_comment"><?php echo scrub_out($shout->text); ?></td>
+    <td class="cel_date"><?php echo $shout->date; ?></td>
+    <td class="cel_action">
 
                 <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&amp;shout_id=<?php echo $shout->id; ?>">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
@@ -35,5 +35,5 @@
                 <a href="<?php echo $web_path; ?>/admin/shout.php?action=delete&amp;shout_id=<?php echo $shout->id; ?>">
                 <?php echo UI::get_icon('delete', T_('Delete')); ?>
                 </a>
-	</td>
+    </td>
 </tr>

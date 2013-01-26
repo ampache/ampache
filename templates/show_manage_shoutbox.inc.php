@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -32,35 +32,35 @@ $web_path = Config::get('web_path');
   <col id="col_action" />
 </colgroup>
 <tr class="th-top">
-	<th class="cel_object"><?php echo T_('Object'); ?></th>
-	<th class="cel_username"><?php echo T_('User'); ?></th>
-	<th class="cel_flag"><?php echo T_('Sticky'); ?></th>
-	<th class="cel_comment"><?php echo T_('Comment'); ?></th>
-	<th class="cel_date"><?php echo T_('Date Added'); ?></th>
-	<th class="cel_action"><?php echo T_('Action'); ?></th>
+    <th class="cel_object"><?php echo T_('Object'); ?></th>
+    <th class="cel_username"><?php echo T_('User'); ?></th>
+    <th class="cel_flag"><?php echo T_('Sticky'); ?></th>
+    <th class="cel_comment"><?php echo T_('Comment'); ?></th>
+    <th class="cel_date"><?php echo T_('Date Added'); ?></th>
+    <th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
 <?php
 foreach ($object_ids as $shout_id) {
-	$shout = new Shoutbox($shout_id);
-	$shout->format();
+    $shout = new Shoutbox($shout_id);
+    $shout->format();
         $object = Shoutbox::get_object($shout->object_type,$shout->object_id);
         $object->format();
         $client = new User($shout->user);
         $client->format();
 
-	require Config::get('prefix') . '/templates/show_shout_row.inc.php';
+    require Config::get('prefix') . '/templates/show_shout_row.inc.php';
 ?>
 <?php } if (!count($object_ids)) { ?>
 <tr class="<?php echo UI::flip_class(); ?>">
-	<td colspan="7" class="error"><?php echo T_('No Records Found'); ?></td>
+    <td colspan="7" class="error"><?php echo T_('No Records Found'); ?></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
-	<th class="cel_object"><?php echo T_('Object'); ?></th>
-	<th class="cel_username"><?php echo T_('User'); ?></th>
-	<th class="cel_sticky"><?php echo T_('Sticky'); ?></th>
-	<th class="cel_comment"><?php echo T_('Comment'); ?></th>
-	<th class="cel_date"><?php echo T_('Date Added'); ?></th>
-	<th class="cel_action"><?php echo T_('Action'); ?></th>
+    <th class="cel_object"><?php echo T_('Object'); ?></th>
+    <th class="cel_username"><?php echo T_('User'); ?></th>
+    <th class="cel_sticky"><?php echo T_('Sticky'); ?></th>
+    <th class="cel_comment"><?php echo T_('Comment'); ?></th>
+    <th class="cel_date"><?php echo T_('Date Added'); ?></th>
+    <th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
 </table>

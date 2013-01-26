@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -27,22 +27,22 @@ UI::show_box_top($string , 'info-box');
 <ul>
 <?php if ($democratic->is_enabled()) { ?>
 <li>
-	<?php echo T_('Cooldown'); ?>:<?php echo $democratic->f_cooldown; ?>
+    <?php echo T_('Cooldown'); ?>:<?php echo $democratic->f_cooldown; ?>
 </li>
 <?php } ?>
 <?php if (Access::check('interface','75')) { ?>
 <li>
-	<a href="<?php echo Config::get('web_path'); ?>/democratic.php?action=manage"><?php echo UI::get_icon('server_lightning', T_('Configure Democratic Playlist')); ?></a>
-	<?php echo T_('Configure Democratic Playlist'); ?>
+    <a href="<?php echo Config::get('web_path'); ?>/democratic.php?action=manage"><?php echo UI::get_icon('server_lightning', T_('Configure Democratic Playlist')); ?></a>
+    <?php echo T_('Configure Democratic Playlist'); ?>
 </li>
 <?php if ($democratic->is_enabled()) { ?>
 <li>
-	<?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . scrub_out($democratic->id),'all', T_('Play'),'play_democratic'); ?>
-	<?php echo T_('Play Democratic Playlist'); ?>
+    <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . scrub_out($democratic->id),'all', T_('Play'),'play_democratic'); ?>
+    <?php echo T_('Play Democratic Playlist'); ?>
 </li>
 <li>
-	<?php echo Ajax::button('?page=democratic&action=clear_playlist&democratic_id=' . scrub_out($democratic->id),'delete', T_('Clear Playlist'),'clear_democratic'); ?>
-	<?php echo T_('Clear Playlist'); ?>
+    <?php echo Ajax::button('?page=democratic&action=clear_playlist&democratic_id=' . scrub_out($democratic->id),'delete', T_('Clear Playlist'),'clear_democratic'); ?>
+    <?php echo T_('Clear Playlist'); ?>
 </li>
 <?php } ?>
 <?php } ?>

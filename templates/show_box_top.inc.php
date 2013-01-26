@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -30,7 +30,7 @@ $class = $class ? $class : 'box';
       <div class="box-right-top"></div>
     </div>
     <?php if ($title) { ?>
-	   <h3 class="box-title"><?php echo $title; ?></h3>
-	  <?php } ?>
+       <h3 class="box-title"><?php echo $title; ?></h3>
+      <?php } ?>
     <div class="box-content clearfix">
 

@@ -1,5 +1,5 @@
 <?php 
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -28,410 +28,410 @@
  */
 class HttpQPlayer {
 
-  	public $host;
-  	public $port;
-	public $password;
-
-	/**
-	 * HttpQPlayer
-	 * This is the constructor, it defaults to localhost
-	 * with port 4800
-	 */	
-	public function HttpQPlayer($h = "localhost", $pw = "", $p = 4800) {
-
-		$this->host = $h;
-		$this->port = $p;
-		$this->password = $pw;
-
-	} // HttpQPlayer
-  	
-	/**
-	 * add
-	 * append a song to the playlist
-	 * $name	Name to be shown in the playlist
-	 * $url		URL of the song
-	 */  	
-  	public function add($name, $url) {
-
-  	  	$args['name'] = urlencode($name);
-  	  	$args['url'] = urlencode($url);
-		
-		$results = $this->sendCommand('playurl', $args);
-		
-		if ($results == '0') { $results = null; } 
-
-		return $results;
-
-	} // add
-
-	/**
-	 * version
-	 * This gets the version of winamp currently
-	 * running, use this to test for a valid connection
-	 */
-	public function version() { 
-
-		$args = array(); 
-		$results = $this->sendCommand('getversion',$args); 
-		
-		// a return of 0 is a bad value
-		if ($results == '0') { $results = null; } 
-
-
-		return $results; 
-
-	} // version
-
-	/**
-	 * clear
-	 * clear the playlist
-	 */  	
-	public function clear() {
-		$args = array();
-		$results = $this->sendCommand("delete", $args);
-
-		if ($results == '0') { $results = null; } 
+      public $host;
+      public $port;
+    public $password;
+
+    /**
+     * HttpQPlayer
+     * This is the constructor, it defaults to localhost
+     * with port 4800
+     */    
+    public function HttpQPlayer($h = "localhost", $pw = "", $p = 4800) {
+
+        $this->host = $h;
+        $this->port = $p;
+        $this->password = $pw;
+
+    } // HttpQPlayer
+      
+    /**
+     * add
+     * append a song to the playlist
+     * $name    Name to be shown in the playlist
+     * $url        URL of the song
+     */      
+      public function add($name, $url) {
+
+            $args['name'] = urlencode($name);
+            $args['url'] = urlencode($url);
+        
+        $results = $this->sendCommand('playurl', $args);
+        
+        if ($results == '0') { $results = null; } 
+
+        return $results;
+
+    } // add
+
+    /**
+     * version
+     * This gets the version of winamp currently
+     * running, use this to test for a valid connection
+     */
+    public function version() { 
+
+        $args = array(); 
+        $results = $this->sendCommand('getversion',$args); 
+        
+        // a return of 0 is a bad value
+        if ($results == '0') { $results = null; } 
+
+
+        return $results; 
+
+    } // version
+
+    /**
+     * clear
+     * clear the playlist
+     */      
+    public function clear() {
+        $args = array();
+        $results = $this->sendCommand("delete", $args);
+
+        if ($results == '0') { $results = null; } 
 
-		return $results; 
-	
-	} // clear
-	
-	/**
-	 * next
-	 * go to next song
-	 */  	
-	public function next() {
-
-		$args = array();
-		$results = $this->sendCommand("next", $args);
-
-		if ($results == '0') { return null; } 
-
-		return true; 
-
-	} // next		
-
-	/**
-	 * prev
-	 * go to previous song
-	 */  	
-	public function prev() {
+        return $results; 
+    
+    } // clear
+    
+    /**
+     * next
+     * go to next song
+     */      
+    public function next() {
+
+        $args = array();
+        $results = $this->sendCommand("next", $args);
+
+        if ($results == '0') { return null; } 
+
+        return true; 
+
+    } // next        
+
+    /**
+     * prev
+     * go to previous song
+     */      
+    public function prev() {
 
-		$args = array();
-		$results = $this->sendCommand("prev", $args);
+        $args = array();
+        $results = $this->sendCommand("prev", $args);
 
-		if ($results == '0') { return null; } 
-	
-		return true;
+        if ($results == '0') { return null; } 
+    
+        return true;
 
-	} // prev	
-
-	/**
-	 * skip
-	 * This skips to POS in the playlist
-	 */
-	public function skip($pos) { 
+    } // prev    
+
+    /**
+     * skip
+     * This skips to POS in the playlist
+     */
+    public function skip($pos) { 
 
-		$args = array('index'=>$pos); 
-		$results = $this->sendCommand('setplaylistpos',$args); 
+        $args = array('index'=>$pos); 
+        $results = $this->sendCommand('setplaylistpos',$args); 
 
-		if ($results == '0') { return null; } 
+        if ($results == '0') { return null; } 
 
-		// Now stop start
-		$this->stop(); 
-		$this->play(); 
+        // Now stop start
+        $this->stop(); 
+        $this->play(); 
 
-		return true; 
+        return true; 
 
-	} // skip
-	
-	/** 
-	 * play
-	 * play the current song
-	 */  	
-	public function play() {
+    } // skip
+    
+    /** 
+     * play
+     * play the current song
+     */      
+    public function play() {
 
-		$args = array();
-		$results = $this->sendCommand("play", $args);
+        $args = array();
+        $results = $this->sendCommand("play", $args);
 
-		if ($results == '0') { $results = null; } 
+        if ($results == '0') { $results = null; } 
 
-		return $results; 
+        return $results; 
 
-	} // play	
-		
-	/** 
-	 * pause
-	 * toggle pause mode on current song
-	 */  	
-	public function pause() {
+    } // play    
+        
+    /** 
+     * pause
+     * toggle pause mode on current song
+     */      
+    public function pause() {
 
-		$args = array();
-		$results = $this->sendCommand("pause", $args);
+        $args = array();
+        $results = $this->sendCommand("pause", $args);
 
-		if ($results == '0') { $results = null; } 
+        if ($results == '0') { $results = null; } 
 
-		return $results; 
+        return $results; 
 
-	} // pause
-	
-	/** 
-	 * stop
-	 * stops the current song amazing!
-	 */  	
-	public function stop() {
+    } // pause
+    
+    /** 
+     * stop
+     * stops the current song amazing!
+     */      
+    public function stop() {
 
-		$args = array();
-		$results = $this->sendCommand('stop', $args);
+        $args = array();
+        $results = $this->sendCommand('stop', $args);
 
-		if ($results == '0') { $results = null; } 
+        if ($results == '0') { $results = null; } 
 
-		return $results; 
+        return $results; 
 
-	} // stop			
+    } // stop            
 
-	/** 
- 	 * repeat
-	 * This toggles the repeat state of HttpQ
-	 */
-	public function repeat($value) { 
-		
-		$args = array('enable'=>$value); 
-		$results = $this->sendCommand('repeat',$args); 
-		
-		if ($results == '0') { $results = null; } 
+    /** 
+      * repeat
+     * This toggles the repeat state of HttpQ
+     */
+    public function repeat($value) { 
+        
+        $args = array('enable'=>$value); 
+        $results = $this->sendCommand('repeat',$args); 
+        
+        if ($results == '0') { $results = null; } 
 
-		return $results;  
+        return $results;  
 
-	} // repeat
+    } // repeat
 
-	/** 
-	 * random
-	 * this toggles the random state of HttpQ
-	 */
-	public function random($value) { 
+    /** 
+     * random
+     * this toggles the random state of HttpQ
+     */
+    public function random($value) { 
 
-		$args = array('enable'=>$value); 
-		$results = $this->sendCommand('shuffle',$args); 
+        $args = array('enable'=>$value); 
+        $results = $this->sendCommand('shuffle',$args); 
 
-		if ($results == '0') { $results = null; } 
+        if ($results == '0') { $results = null; } 
 
-		return $results; 
+        return $results; 
 
-	} // random
+    } // random
 
-	/**
-	 * delete_pos
-	 * This deletes a specific track
-	 */
-	public function delete_pos($track) { 
-	
-		$args = array('index'=>$track); 
-		$results = $this->sendCommand('deletepos',$args); 
-		
-		if ($results == '0') { $results = null; } 
+    /**
+     * delete_pos
+     * This deletes a specific track
+     */
+    public function delete_pos($track) { 
+    
+        $args = array('index'=>$track); 
+        $results = $this->sendCommand('deletepos',$args); 
+        
+        if ($results == '0') { $results = null; } 
 
-		return $results; 
+        return $results; 
 
-	} // delete_pos
+    } // delete_pos
 
-	/**
-	 * state
-	 * This returns the current state of the httpQ player
-	 */
-	public function state() { 
+    /**
+     * state
+     * This returns the current state of the httpQ player
+     */
+    public function state() { 
 
-		$args = array(); 
-		$results = $this->sendCommand('isplaying',$args);
+        $args = array(); 
+        $results = $this->sendCommand('isplaying',$args);
 
-		if ($results == '1') { $state = 'play'; } 
-		if ($results == '0') { $state = 'stop'; } 
-		if ($results == '3') { $state = 'pause'; } 
-		
-		return $state; 
+        if ($results == '1') { $state = 'play'; } 
+        if ($results == '0') { $state = 'stop'; } 
+        if ($results == '3') { $state = 'pause'; } 
+        
+        return $state; 
 
-	} // state
+    } // state
 
-	/**
-	 * get_volume
-	 * This returns the current volume 
-	 */
-	public function get_volume() { 
+    /**
+     * get_volume
+     * This returns the current volume 
+     */
+    public function get_volume() { 
 
-		$args = array(); 
-		$results = $this->sendCommand('getvolume',$args); 
+        $args = array(); 
+        $results = $this->sendCommand('getvolume',$args); 
 
-		if ($results == '0') { $results = null; } 
-		else { 
-			/* Need to make this out of 100 */ 
-			$results = round((($results / 255) * 100),2);
-		}
+        if ($results == '0') { $results = null; } 
+        else { 
+            /* Need to make this out of 100 */ 
+            $results = round((($results / 255) * 100),2);
+        }
 
-		return $results; 
+        return $results; 
 
-	} // get_volume
+    } // get_volume
 
-	/**
-	 * volume_up
-	 * This increases the volume by Wimamp's defined amount
-	 */
-	public function volume_up() { 
+    /**
+     * volume_up
+     * This increases the volume by Wimamp's defined amount
+     */
+    public function volume_up() { 
 
-		$args = array(); 
-		$results = $this->sendCommand('volumeup',$args); 
-		
-		if ($results == '0') { return null; } 
+        $args = array(); 
+        $results = $this->sendCommand('volumeup',$args); 
+        
+        if ($results == '0') { return null; } 
 
-		return true; 
+        return true; 
 
-	} // volume_up
+    } // volume_up
 
-	/**
-	 * volume_down
-	 * This decreases the volume by Winamp's defined amount
-	 */
-	public function volume_down() { 
+    /**
+     * volume_down
+     * This decreases the volume by Winamp's defined amount
+     */
+    public function volume_down() { 
 
-		$args = array(); 
-		$results = $this->sendCommand('volumedown',$args); 
-		
-		if ($results == '0') { return null; } 
+        $args = array(); 
+        $results = $this->sendCommand('volumedown',$args); 
+        
+        if ($results == '0') { return null; } 
 
-		return true; 
+        return true; 
 
-	} // volume_down
+    } // volume_down
 
-	/**
-	 * set_volume
-	 * This sets the volume as best it can, we go from a resolution
-	 * of 100 --> 255 so it's a little fuzzy
-	 */
-	public function set_volume($value) { 
+    /**
+     * set_volume
+     * This sets the volume as best it can, we go from a resolution
+     * of 100 --> 255 so it's a little fuzzy
+     */
+    public function set_volume($value) { 
 
-		// Convert it to base 255
-		$value = $value*2.55; 
-		$args = array('level'=>$value); 
-		$results = $this->sendCommand('setvolume',$args); 
+        // Convert it to base 255
+        $value = $value*2.55; 
+        $args = array('level'=>$value); 
+        $results = $this->sendCommand('setvolume',$args); 
 
-		if ($results == '0') { return null; } 
+        if ($results == '0') { return null; } 
 
-		return true; 
+        return true; 
 
-	} // set_volume
+    } // set_volume
 
-	/**
-	 * clear_playlist
-	 * this flushes the playlist cache (I hope this means clear)
-	 */
-	public function clear_playlist() { 
+    /**
+     * clear_playlist
+     * this flushes the playlist cache (I hope this means clear)
+     */
+    public function clear_playlist() { 
 
-		$args = array(); 
-		$results = $this->sendcommand('flushplaylist',$args); 
-		
-		if ($results == '0') { return null; } 
+        $args = array(); 
+        $results = $this->sendcommand('flushplaylist',$args); 
+        
+        if ($results == '0') { return null; } 
 
-		return true; 
+        return true; 
 
-	} // clear_playlist
+    } // clear_playlist
 
-	/** 
-	 * get_repeat
-	 * This returns the current state of the repeat 
-	 */
-	public function get_repeat() { 
+    /** 
+     * get_repeat
+     * This returns the current state of the repeat 
+     */
+    public function get_repeat() { 
 
-		$args = array(); 
-		$results = $this->sendCommand('repeat_status',$args); 
+        $args = array(); 
+        $results = $this->sendCommand('repeat_status',$args); 
 
-		return $results; 		
+        return $results;         
 
-	} // get_repeat
+    } // get_repeat
 
-	/**
-	 * get_random
-	 * This returns the current state of shuffle
-	 */
-	public function get_random() { 
+    /**
+     * get_random
+     * This returns the current state of shuffle
+     */
+    public function get_random() { 
 
-		$args = array(); 
-		$results = $this->sendCommand('shuffle_status',$args); 
-		
-		return $results; 
+        $args = array(); 
+        $results = $this->sendCommand('shuffle_status',$args); 
+        
+        return $results; 
 
-	} // get_random
+    } // get_random
 
-	/**
-	 * get_now_playing
-	 * This returns the file information for the currently
-	 * playing song
-	 */
-	public function get_now_playing()  { 
+    /**
+     * get_now_playing
+     * This returns the file information for the currently
+     * playing song
+     */
+    public function get_now_playing()  { 
 
-		// First get the current POS
-		$pos = $this->sendCommand('getlistpos',array()); 
-		
-		// Now get the filename
-		$file = $this->sendCommand('getplaylistfile',array('index'=>$pos)); 
+        // First get the current POS
+        $pos = $this->sendCommand('getlistpos',array()); 
+        
+        // Now get the filename
+        $file = $this->sendCommand('getplaylistfile',array('index'=>$pos)); 
 
-		return $file; 
+        return $file; 
 
-	} // get_now_playing
+    } // get_now_playing
 
-	/**
-	 * get_tracks
-	 * This returns a delimiated string of all of the filenames
-	 * current in your playlist
-	 */
-	public function get_tracks() { 
+    /**
+     * get_tracks
+     * This returns a delimiated string of all of the filenames
+     * current in your playlist
+     */
+    public function get_tracks() { 
 
-		// Pull a delimited list of all tracks
-		$results = $this->sendCommand('getplaylistfile',array('delim'=>'::'));
-		
-		if ($results == '0') { $results = null; } 
-	
-		return $results; 
+        // Pull a delimited list of all tracks
+        $results = $this->sendCommand('getplaylistfile',array('delim'=>'::'));
+        
+        if ($results == '0') { $results = null; } 
+    
+        return $results; 
 
-	} // get_tracks
+    } // get_tracks
 
-	/** 
- 	 * sendCommand
-	 * This is the core of this library it takes care of sending the HTTP
-	 * request to the HttpQ server and getting the response 
-	 */	
-	private function sendCommand($cmd, $args) {
+    /** 
+      * sendCommand
+     * This is the core of this library it takes care of sending the HTTP
+     * request to the HttpQ server and getting the response 
+     */    
+    private function sendCommand($cmd, $args) {
 
-  		$fp = fsockopen($this->host, $this->port, $errno, $errstr); 
+          $fp = fsockopen($this->host, $this->port, $errno, $errstr); 
 
-  		if(!$fp) {
-    			debug_event('httpq',"HttpQPlayer: $errstr ($errno)",'1');
-			return null; 
-  		} 
+          if(!$fp) {
+                debug_event('httpq',"HttpQPlayer: $errstr ($errno)",'1');
+            return null; 
+          } 
 
-		// Define the base message  
-		$msg = "GET /$cmd?p=$this->password";  			
+        // Define the base message  
+        $msg = "GET /$cmd?p=$this->password";              
 
-		// Foreach our arguments 
-		foreach ($args AS $key => $val) {
-			$msg = $msg . "&$key=$val";					
-		}
+        // Foreach our arguments 
+        foreach ($args AS $key => $val) {
+            $msg = $msg . "&$key=$val";                    
+        }
 
-      		$msg = $msg . " HTTP/1.0\r\n\r\n";      		
-    		fputs($fp, $msg);
-		$data = '';
+              $msg = $msg . " HTTP/1.0\r\n\r\n";              
+            fputs($fp, $msg);
+        $data = '';
 
-    		while(!feof($fp)) {
-			$data .= fgets($fp);      			
-		}
-  		fclose($fp);
+            while(!feof($fp)) {
+            $data .= fgets($fp);                  
+        }
+          fclose($fp);
 
-		// Explode the results by line break and take 4th line (results)
-		$data = explode("\n",$data); 
-		
-		$result = $data['4'];
-		
-		return $result; 
+        // Explode the results by line break and take 4th line (results)
+        $data = explode("\n",$data); 
+        
+        $result = $data['4'];
+        
+        return $result; 
 
-	} // sendCommand
+    } // sendCommand
 
 } // End HttpQPlayer Class
 ?>

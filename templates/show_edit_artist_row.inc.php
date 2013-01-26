@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,12 +25,12 @@
 <table class="inline-edit" cellpadding="3" cellspacing="0">
 <tr>
 <td>
-	<input type="text" name="name" value="<?php echo scrub_out($artist->f_full_name); ?>" />
+    <input type="text" name="name" value="<?php echo scrub_out($artist->f_full_name); ?>" />
 </td>
 <td>
-	<input type="hidden" name="id" value="<?php echo $artist->id; ?>" />
-	<input type="hidden" name="type" value="artist_row" />
-	<?php echo Ajax::button('?action=edit_object&id=' . $artist->id . '&type=artist_row','download', T_('Save Changes'),'save_artist_' . $artist->id,'edit_artist_' . $artist->id); ?>
+    <input type="hidden" name="id" value="<?php echo $artist->id; ?>" />
+    <input type="hidden" name="type" value="artist_row" />
+    <?php echo Ajax::button('?action=edit_object&id=' . $artist->id . '&type=artist_row','download', T_('Save Changes'),'save_artist_' . $artist->id,'edit_artist_' . $artist->id); ?>
 
 </tr>
 </table>

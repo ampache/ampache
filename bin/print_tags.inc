@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -27,17 +27,17 @@ require_once $prefix . '/lib/init.php';
 $version = "1.0";
 
 if (count($GLOBALS['argv']) != 2) {
-	usage();
-	exit;
+    usage();
+    exit;
 } else {
-	$filename = $GLOBALS['argv'][1];
+    $filename = $GLOBALS['argv'][1];
 }
 
 if(!file_exists($filename)) {
-	print T_("File not found.");
-	print "\n";
-	usage();
-	exit;
+    print T_("File not found.");
+    print "\n";
+    usage();
+    exit;
 }
 
 printf(T_('Reading: %s'), $filename);
@@ -55,8 +55,8 @@ $file_pattern = $catalog->rename_pattern;
 
 $info = new vainfo($filename, '', '', '', $dir_pattern, $file_pattern);
 if(isset($dir_pattern) || isset($file_pattern)) {
-	printf(T_('Using: %s AND %s for file pattern matching'), $dir_pattern, $file_pattern);
-	print "\n";
+    printf(T_('Using: %s AND %s for file pattern matching'), $dir_pattern, $file_pattern);
+    print "\n";
 }
 $info->get_info();
 $results = $info->tags;
@@ -73,16 +73,16 @@ echo "\n\n";
 print_r($ampache_results);
 
 function usage() {
-	global $version;
+    global $version;
 
-	$text  = sprintf(T_('%s Version %s'), 'print_tags.inc', $version);
-	$text .= "\n\n";
-	$text .= T_('Usage:');
-	$text .= "\n";
-	$text .= T_('php print_tags.inc <Filename>');
-	$text .= "\n\n";
+    $text  = sprintf(T_('%s Version %s'), 'print_tags.inc', $version);
+    $text .= "\n\n";
+    $text .= T_('Usage:');
+    $text .= "\n";
+    $text .= T_('php print_tags.inc <Filename>');
+    $text .= "\n\n";
 
-	return print $text;
+    return print $text;
 
 }// usage()
 

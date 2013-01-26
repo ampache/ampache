@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -28,22 +28,22 @@
 <table class="tabledata" cellspacing="0">
 <tr>
 <?php foreach ($headers as $header) { ?>
-	<th class="th-top"><?php echo $header; ?></th>
+    <th class="th-top"><?php echo $header; ?></th>
 <?php } ?>
 </tr>
 <?php
-	foreach ($objects as $object) {
-		$object->format();
+    foreach ($objects as $object) {
+        $object->format();
 ?>
 <tr id="object_row_<?php echo $object->id; ?>" class="<?php echo UI::flip_class(); ?>">
-	<?php require Config::get('prefix') . '/templates/show_object_row.inc.php'; ?>
+    <?php require Config::get('prefix') . '/templates/show_object_row.inc.php'; ?>
 </tr>
 <?php } ?>
 <?php if (!count($objects)) { ?>
 <tr>
-	<td colspan="<?php echo count($headers); ?>">
-	<span class="error"><?php echo T_('Not Enough Data'); ?></span>
-	</td>
+    <td colspan="<?php echo count($headers); ?>">
+    <span class="error"><?php echo T_('Not Enough Data'); ?></span>
+    </td>
 </tr>
 <?php } ?>
 </table>

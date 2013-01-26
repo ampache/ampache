@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -23,18 +23,18 @@
 <script type='text/javascript'>
 function insert()
 {
-	document.getElementById('artist_name').value = '<?php echo $artist->name; ?>';
+    document.getElementById('artist_name').value = '<?php echo $artist->name; ?>';
 }
 </script>
 <?php /* HINT: Artist Name */ UI::show_box_top(sprintf(T_('Rename %s'), $artist->name)); ?>
 <form name="rename_artist" method="post" action="<?php echo Config::get('web_path'); ?>/artists.php?action=rename&amp;artist=<?php echo $artist->id; ?>" style="Display:inline;">
         <?php show_artist_pulldown($artist->id, "artist_id", 4); ?>
-	<br />
-	<?php echo T_('OR'); ?><br />
-	<input type="text" name="artist_name" size="30" value="<?php echo scrub_out($_REQUEST['artist_name']); ?>" id="artist_name" />
-	<a href="javascript:insert()">[<?php echo T_('Insert current'); ?>]</a><br />
-	<?php $GLOBALS['error']->print_error('artist_name'); ?>
-	<input type="checkbox" name="update_id3" value="yes" />&nbsp; <?php echo T_('Update id3 tags') ?><br />
-	<input type="submit" value="<?php echo T_('Rename'); ?>" /><br />
+    <br />
+    <?php echo T_('OR'); ?><br />
+    <input type="text" name="artist_name" size="30" value="<?php echo scrub_out($_REQUEST['artist_name']); ?>" id="artist_name" />
+    <a href="javascript:insert()">[<?php echo T_('Insert current'); ?>]</a><br />
+    <?php $GLOBALS['error']->print_error('artist_name'); ?>
+    <input type="checkbox" name="update_id3" value="yes" />&nbsp; <?php echo T_('Update id3 tags') ?><br />
+    <input type="submit" value="<?php echo T_('Rename'); ?>" /><br />
 </form>
 <?php UI::show_box_bottom(); ?>

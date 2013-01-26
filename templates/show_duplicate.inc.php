@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -24,18 +24,18 @@
 <form name="duplicates" action="<?php echo Config::get('web_path'); ?>/admin/duplicates.php?action=find_duplicates" method="post" enctype="multipart/form-data" >
 <table cellspacing="0" cellpadding="3">
 <tr>
-	<td valign="top"><strong><?php echo T_('Search Type'); ?>:</strong></td>
+    <td valign="top"><strong><?php echo T_('Search Type'); ?>:</strong></td>
         <td>
-	<?php
-		$name = 'check_' . scrub_in($_REQUEST['search_type']);
-		${$name} = ' checked="checked" ';
-	?>
-	<input type="radio" name="search_type" value="title"<?php echo $check_title; ?>/><?php echo T_('Title'); ?><br />
+    <?php
+        $name = 'check_' . scrub_in($_REQUEST['search_type']);
+        ${$name} = ' checked="checked" ';
+    ?>
+    <input type="radio" name="search_type" value="title"<?php echo $check_title; ?>/><?php echo T_('Title'); ?><br />
         <input type="radio" name="search_type" value="artist_title"<?php echo $check_artist_title; ?>/><?php echo T_('Artist and Title'); ?><br />
         <input type="radio" name="search_type" value="artist_album_title"<?php echo $check_artist_album_title; ?>/><?php echo T_('Artist, Album and Title'); ?><br />
         <?php if ($_REQUEST['search_disabled']) { $disabled_check = ' checked="checked"'; } ?>
         <input type="checkbox" name="search_disabled" value="1" <?php echo $disabled_check; ?>/><?php echo T_('Search Disabled Songs'); ?><br />
-	</td>
+    </td>
 </tr>
 </table>
 <div class="formValidation">

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -21,7 +21,7 @@
  */
 ?>
 <form style="display:inline;" name="f" method="get" action="<?php echo Config::get('web_path') . "/$action"; ?>" enctype="multipart/form-data">
-	<label for="match" accesskey="S"><?php echo $text; ?></label>
-	<input type="text" size="5" id="match" name="match" value="<?php echo $match; ?>" />
-	<input type="hidden" name="action" value="<?php echo scrub_out($_REQUEST['action']); ?>">
+    <label for="match" accesskey="S"><?php echo $text; ?></label>
+    <input type="text" size="5" id="match" name="match" value="<?php echo $match; ?>" />
+    <input type="hidden" name="action" value="<?php echo scrub_out($_REQUEST['action']); ?>">
 </form>

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -23,7 +23,7 @@
 <div class="np_group" id="np_group_1">
   <div class="np_cell cel_username">
     <label><?php echo T_('Username'); ?></label>
-  	<a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $np_user->id; ?>">
+      <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $np_user->id; ?>">
       <?php echo scrub_out($np_user->fullname); ?>
     </a>
   </div>
@@ -37,28 +37,28 @@
 
   <?php if (Config::get('show_lyrics')) {?>
   <div class="np_cell cel_lyrics">
-  	<label>&nbsp;</label>
-  	<a title="<?php echo scrub_out($media->title); ?>" href="<?php echo $web_path; ?>/song.php?action=show_lyrics&amp;song_id=<?php echo $media->id; ?>">
+      <label>&nbsp;</label>
+      <a title="<?php echo scrub_out($media->title); ?>" href="<?php echo $web_path; ?>/song.php?action=show_lyrics&amp;song_id=<?php echo $media->id; ?>">
       <?php echo T_('Show Lyrics');?>
-  	</a>
+      </a>
   </div>
   <?php } ?>
 </div>
 
 <div class="np_group" id="np_group_2">
   <div class="np_cell cel_song">
-  	<label><?php echo T_('Song'); ?></label>
-	<?php echo $media->f_link; ?>
+      <label><?php echo T_('Song'); ?></label>
+    <?php echo $media->f_link; ?>
   </div>
 
   <div class="np_cell cel_album">
-  	<label><?php echo T_('Album'); ?></label>
-	<?php echo $media->f_album_link; ?>
+      <label><?php echo T_('Album'); ?></label>
+    <?php echo $media->f_album_link; ?>
   </div>
 
   <div class="np_cell cel_artist">
-  	<label><?php echo T_('Artist'); ?></label>
-	<?php echo $media->f_artist_link; ?>
+      <label><?php echo T_('Artist'); ?></label>
+    <?php echo $media->f_artist_link; ?>
   </div>
 </div>
 
@@ -75,37 +75,37 @@
 <?php if (Config::get('show_similar')) { ?>
 <div class="np_group">
 <?php if ($artists = Recommendation::get_artists_like($media->artist, 3, false)) { ?>
-	<div class="np_cel cel_similar">
-		<label><?php echo T_('Similar Artists'); ?></label>
-		<?php	foreach ($artists as $a) { ?>
-			<div class="np_cel cel_similar_artist">
-			<?php
-			if (is_null($a['id'])) {
-				echo scrub_out(UI::truncate($a['name']), Config::get('ellipse_threshold_artist'));
-			}
-			else {
-				$artist = new Artist($a['id']);
-				$artist->format();
-				echo $artist->f_name_link;
-			}
-			?>
-			</div>
-		<?php } // end foreach ?> 
-	</div>
+    <div class="np_cel cel_similar">
+        <label><?php echo T_('Similar Artists'); ?></label>
+        <?php    foreach ($artists as $a) { ?>
+            <div class="np_cel cel_similar_artist">
+            <?php
+            if (is_null($a['id'])) {
+                echo scrub_out(UI::truncate($a['name']), Config::get('ellipse_threshold_artist'));
+            }
+            else {
+                $artist = new Artist($a['id']);
+                $artist->format();
+                echo $artist->f_name_link;
+            }
+            ?>
+            </div>
+        <?php } // end foreach ?> 
+    </div>
 <?php } // end show similar artists ?>
 <?php if ($songs = Recommendation::get_songs_like($media->id, 3)) { ?>
-	<div class="np_cel cel_similar">
-		<label><?php echo T_('Similar Songs'); ?></label>
-		<?php	foreach ($songs as $s) { ?>
-			<div class="np_cel cel_similar_song">
-			<?php
-			$song = new Song($s['id']);
-			$song->format();
-			echo $song->f_link;
-			?>
-			</div>
-		<?php } // end foreach ?>
-	</div>
+    <div class="np_cel cel_similar">
+        <label><?php echo T_('Similar Songs'); ?></label>
+        <?php    foreach ($songs as $s) { ?>
+            <div class="np_cel cel_similar_song">
+            <?php
+            $song = new Song($s['id']);
+            $song->format();
+            echo $song->f_link;
+            ?>
+            </div>
+        <?php } // end foreach ?>
+    </div>
 <?php } // end show similar songs ?>
 </div>
 <?php } // end show similar things ?>

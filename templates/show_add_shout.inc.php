@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -24,23 +24,23 @@
 <form method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/shout.php?action=add_shout">
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <tr>
-	<td><strong><?php echo T_('Comment:'); ?></strong>
+    <td><strong><?php echo T_('Comment:'); ?></strong>
 </tr>
 <tr>
-	<td><textarea rows="5" cols="70" name="comment"></textarea></td>
+    <td><textarea rows="5" cols="70" name="comment"></textarea></td>
 </tr>
 <?php if (Access::check('interface','50')) { ?>
 <tr>
-	<td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Make Sticky'); ?></strong></td>
+    <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Make Sticky'); ?></strong></td>
 </tr>
 <?php } ?>
 <tr>
-	<td>
-		<?php echo Core::form_register('add_shout'); ?>
-		<input type="hidden" name="object_id" value="<?php echo $object->id; ?>" />
-		<input type="hidden" name="object_type" value="<?php echo strtolower(get_class($object)); ?>" />
-		<input type="submit" value="<?php echo T_('Create'); ?>" />
-	</td>
+    <td>
+        <?php echo Core::form_register('add_shout'); ?>
+        <input type="hidden" name="object_id" value="<?php echo $object->id; ?>" />
+        <input type="hidden" name="object_type" value="<?php echo strtolower(get_class($object)); ?>" />
+        <input type="submit" value="<?php echo T_('Create'); ?>" />
+    </td>
 </tr>
 </table>
 </form>

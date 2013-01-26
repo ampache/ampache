@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -31,12 +31,12 @@ header("Pragma: no-cache");
 // content of $_SESSION['iframe']['target'] and does a header
 // redirect to that spot!
 if (isset($_SESSION['iframe']['target'])) {
-	$target = $_SESSION['iframe']['target'];
-	unset($_SESSION['iframe']['target']);
-	header("Location: " . $target);
+    $target = $_SESSION['iframe']['target'];
+    unset($_SESSION['iframe']['target']);
+    header("Location: " . $target);
 }
 else {
-	// Prevent the update query as it's pointless
-	define('NO_SESSION_UPDATE','1');
+    // Prevent the update query as it's pointless
+    define('NO_SESSION_UPDATE','1');
 }
 ?>

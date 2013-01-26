@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -24,7 +24,7 @@
  * if so disable the checkbox
  */
 if (Config::get('session_length') >= Config::get('remember_length')) {
-	$remember_disabled = 'disabled="disabled"';
+    $remember_disabled = 'disabled="disabled"';
 }
 $htmllang = str_replace("_","-",Config::get('lang'));
 is_rtl(Config::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
@@ -32,19 +32,19 @@ is_rtl(Config::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>"
-	dir="<?php echo $dir; ?>">
+    xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>"
+    dir="<?php echo $dir; ?>">
 <head>
 <meta http-equiv="Content-Type"
-	content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
+    content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
 <link rel="shortcut icon"
-	href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
+    href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
 <link rel="stylesheet"
-	href="<?php echo Config::get('web_path'); ?>/templates/print.css"
-	type="text/css" media="print" />
+    href="<?php echo Config::get('web_path'); ?>/templates/print.css"
+    type="text/css" media="print" />
 <link rel="stylesheet"
-	href="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/templates/default.css"
-	type="text/css" media="screen" />
+    href="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/templates/default.css"
+    type="text/css" media="screen" />
 <title><?php echo scrub_out(Config::get('site_title')); ?></title>
 <script type="text/javascript" language="javascript">
 function focus(){ document.login.username.focus(); }
@@ -53,23 +53,23 @@ function focus(){ document.login.username.focus(); }
 
 <body id="loginPage" onload="focus();">
 <div id="maincontainer">
-	<div id="header"><!-- This is the header -->
-	<h1 id="headerlogo"><a
-		href="<?php echo Config::get('web_path'); ?>/login.php"> <img
-		src="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/images/ampache.png"
-		title="<?php echo Config::get('site_title'); ?>"
-		alt="<?php echo Config::get('site_title'); ?>" /> </a></h1>
-	</div>
-	<div id="loginbox">
-	<h2><?php echo scrub_out(Config::get('site_title')); ?></h2>
-	<form name="login" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/lostpassword.php">
+    <div id="header"><!-- This is the header -->
+    <h1 id="headerlogo"><a
+        href="<?php echo Config::get('web_path'); ?>/login.php"> <img
+        src="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/images/ampache.png"
+        title="<?php echo Config::get('site_title'); ?>"
+        alt="<?php echo Config::get('site_title'); ?>" /> </a></h1>
+    </div>
+    <div id="loginbox">
+    <h2><?php echo scrub_out(Config::get('site_title')); ?></h2>
+    <form name="login" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/lostpassword.php">
 
-	<div class="loginfield" id="email"><label for="email"><?php echo  T_('Email'); ?>:</label>
-	<input type="hidden" id="action" name="action" value="send" />
-	<input class="text_input" type="text" id="email" name="email" /></div>
-	<input class="button" id="lostpasswordbutton" type="submit"
-		value="<?php echo T_('Submit'); ?>" /></form>
-	</div>
+    <div class="loginfield" id="email"><label for="email"><?php echo  T_('Email'); ?>:</label>
+    <input type="hidden" id="action" name="action" value="send" />
+    <input class="text_input" type="text" id="email" name="email" /></div>
+    <input class="button" id="lostpasswordbutton" type="submit"
+        value="<?php echo T_('Submit'); ?>" /></form>
+    </div>
 </div>
 <div id="footer"><a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />
 Copyright (c) 2001 - 2009 Ampache.org <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?>

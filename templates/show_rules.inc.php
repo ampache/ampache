@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -21,10 +21,10 @@
  */
 
 if ($playlist) {
-	$logic_operator = $playlist->logic_operator;
+    $logic_operator = $playlist->logic_operator;
 }
 else {
-	$logic_operator = $_REQUEST['operator'];
+    $logic_operator = $_REQUEST['operator'];
 }
 $logic_operator = strtolower($logic_operator);
 ?>
@@ -34,8 +34,8 @@ $logic_operator = strtolower($logic_operator);
 <?php UI::show_box_top(T_('Rules') . "...", 'box box_rules'); ?>
 <table class="tabledata" cellpadding="3" cellspacing="0">
 <tbody id="searchtable">
-	<tr id="rules_operator">
-	<td><?php echo T_('Match'); ?></td>
+    <tr id="rules_operator">
+    <td><?php echo T_('Match'); ?></td>
         <td>
                 <select name="operator">
                         <option value="and" <?php if($logic_operator == 'and') echo 'selected="selected"'?>><?php echo T_('all rules'); ?></option>
@@ -43,32 +43,32 @@ $logic_operator = strtolower($logic_operator);
                 </select>
         </td>
         </tr>
-	<tr id="rules_addrowbutton">
-	<td>
-		<a id="addrowbutton" href="javascript:void(0)">
-			<?php echo UI::get_icon('add'); ?>
-		<?php echo T_('Add Another Rule'); ?>
-		</a>
-		<script type="text/javascript">Event.observe('addrowbutton', 'click', SearchRow.add);</script>
-	</td>
-	</tr>
+    <tr id="rules_addrowbutton">
+    <td>
+        <a id="addrowbutton" href="javascript:void(0)">
+            <?php echo UI::get_icon('add'); ?>
+        <?php echo T_('Add Another Rule'); ?>
+        </a>
+        <script type="text/javascript">Event.observe('addrowbutton', 'click', SearchRow.add);</script>
+    </td>
+    </tr>
 </tbody>
 </table>
 <?php UI::show_box_bottom(); ?>
 
 <?php
 if ($playlist) {
-	$out = $playlist->to_js();
+    $out = $playlist->to_js();
 }
 else {
-	$mysearch = new Search($_REQUEST['type']);
-	$mysearch->parse_rules(Search::clean_request($_REQUEST));
-	$out = $mysearch->to_js();
+    $mysearch = new Search($_REQUEST['type']);
+    $mysearch->parse_rules(Search::clean_request($_REQUEST));
+    $out = $mysearch->to_js();
 }
 if ($out) {
-	echo $out;
+    echo $out;
 }
 else {
-	echo '<script type="text/javascript">SearchRow.add();</script>';
+    echo '<script type="text/javascript">SearchRow.add();</script>';
 }
 ?>

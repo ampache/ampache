@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -38,80 +38,80 @@ session_start();
 // type.. this feels hackish...
 $browse = new Browse();
 switch ($_REQUEST['action']) {
-	case 'tag':
-	case 'file':
-	case 'album':
-	case 'artist':
-	case 'playlist':
-	case 'smartplaylist':
-	case 'live_stream':
-	case 'video':
-	case 'song':
-		$browse->set_type($_REQUEST['action']);
-		$browse->set_simple_browse(true);
-	break;
+    case 'tag':
+    case 'file':
+    case 'album':
+    case 'artist':
+    case 'playlist':
+    case 'smartplaylist':
+    case 'live_stream':
+    case 'video':
+    case 'song':
+        $browse->set_type($_REQUEST['action']);
+        $browse->set_simple_browse(true);
+    break;
 } // end switch
 
 UI::show_header();
 
 switch($_REQUEST['action']) {
-	case 'file':
-	break;
-	case 'album':
-		$browse->set_filter('catalog',$_SESSION['catalog']);
-		$browse->set_sort('name','ASC');
-		$browse->show_objects();
-	break;
-	case 'tag':
-		$browse->set_sort('count','ASC');
-		// This one's a doozy
-		$browse->set_simple_browse(false);
-		$browse->save_objects(Tag::get_tags(Config::get('offset_limit'),array()));
-		$object_ids = $browse->get_saved();
-		$keys = array_keys($object_ids);
-		Tag::build_cache($keys);
-		UI::show_box_top(T_('Tag Cloud'), 'box box_tag_cloud');
-		$browse2 = new Browse();
-		$browse2->set_type('song');
-		$browse2->store();
-		require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php';
-		UI::show_box_bottom();
-		require_once Config::get('prefix') . '/templates/browse_content.inc.php';
-	break;
-	case 'artist':
-		$browse->set_filter('catalog',$_SESSION['catalog']);
-		$browse->set_sort('name','ASC');
-		$browse->show_objects();
-	break;
-	case 'song':
-		$browse->set_filter('catalog',$_SESSION['catalog']);
-		$browse->set_sort('title','ASC');
-		$browse->show_objects();
-	break;
-	case 'live_stream':
-		$browse->set_sort('name','ASC');
-		$browse->show_objects();
-	break;
-	case 'catalog':
+    case 'file':
+    break;
+    case 'album':
+        $browse->set_filter('catalog',$_SESSION['catalog']);
+        $browse->set_sort('name','ASC');
+        $browse->show_objects();
+    break;
+    case 'tag':
+        $browse->set_sort('count','ASC');
+        // This one's a doozy
+        $browse->set_simple_browse(false);
+        $browse->save_objects(Tag::get_tags(Config::get('offset_limit'),array()));
+        $object_ids = $browse->get_saved();
+        $keys = array_keys($object_ids);
+        Tag::build_cache($keys);
+        UI::show_box_top(T_('Tag Cloud'), 'box box_tag_cloud');
+        $browse2 = new Browse();
+        $browse2->set_type('song');
+        $browse2->store();
+        require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php';
+        UI::show_box_bottom();
+        require_once Config::get('prefix') . '/templates/browse_content.inc.php';
+    break;
+    case 'artist':
+        $browse->set_filter('catalog',$_SESSION['catalog']);
+        $browse->set_sort('name','ASC');
+        $browse->show_objects();
+    break;
+    case 'song':
+        $browse->set_filter('catalog',$_SESSION['catalog']);
+        $browse->set_sort('title','ASC');
+        $browse->show_objects();
+    break;
+    case 'live_stream':
+        $browse->set_sort('name','ASC');
+        $browse->show_objects();
+    break;
+    case 'catalog':
 
-	break;
-	case 'playlist':
-		$browse->set_sort('type','ASC');
-		$browse->set_filter('playlist_type','1');
-		$browse->show_objects();
-	break;
-	case 'smartplaylist':
-		$browse->set_sort('type', 'ASC');
-		$browse->set_filter('playlist_type','1');
-		$browse->show_objects();
-	break;
-	case 'video':
-		$browse->set_sort('title','ASC');
-		$browse->show_objects();
-	break;
-	default:
+    break;
+    case 'playlist':
+        $browse->set_sort('type','ASC');
+        $browse->set_filter('playlist_type','1');
+        $browse->show_objects();
+    break;
+    case 'smartplaylist':
+        $browse->set_sort('type', 'ASC');
+        $browse->set_filter('playlist_type','1');
+        $browse->show_objects();
+    break;
+    case 'video':
+        $browse->set_sort('title','ASC');
+        $browse->show_objects();
+    break;
+    default:
 
-	break;
+    break;
 } // end Switch $action
 
 $browse->store();

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -24,8 +24,8 @@ $web_path = Config::get('web_path');
 ?>
 <?php Ajax::start_container('tag_filter'); ?>
 <?php foreach ($object_ids as $data) {
-	$tag = new Tag($data['id']);
-	$tag->format();
+    $tag = new Tag($data['id']);
+    $tag->format();
 ?>
 <span id="click_<?php echo intval($tag->id); ?>" class="<?php echo $tag->f_class; ?>"><?php echo $tag->name; ?></span>
 <?php echo Ajax::observe('click_' . intval($tag->id),'click',Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . intval($tag->id),'')); ?>

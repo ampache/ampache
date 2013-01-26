@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -29,7 +29,7 @@ require_once '../lib/init.php';
 
 // If it's not a handshake then we can allow it to take up lots of time
 if ($_REQUEST['action'] != 'handshake') {
-	set_time_limit(0);
+    set_time_limit(0);
 }
 
 /* Set the correct headers */
@@ -38,10 +38,10 @@ header("Content-Disposition: attachment; filename=information.xml");
 
 // If we don't even have access control on then we can't use this!
 if (!Config::get('access_control')) {
-	ob_end_clean();
-	debug_event('Access Control','Error Attempted to use XML API with Access Control turned off','3');
-	echo XML_Data::error('501', T_('Access Control not Enabled'));
-	exit;
+    ob_end_clean();
+    debug_event('Access Control','Error Attempted to use XML API with Access Control turned off','3');
+    echo XML_Data::error('501', T_('Access Control not Enabled'));
+    exit;
 }
 
 /**
@@ -79,15 +79,15 @@ $internal_functions = array('set_filter');
 
 // Recurse through them and see if we're calling one of them
 foreach ($methods as $method) {
-	if (in_array($method,$internal_functions)) { continue; }
+    if (in_array($method,$internal_functions)) { continue; }
 
-	// If the method is the same as the action being called
-	// Then let's call this function!
-	if ($_GET['action'] == $method) {
-		call_user_func(array('api',$method),$_GET);
-		// We only allow a single function to be called, and we assume it's cleaned up!
-		exit;
-	}
+    // If the method is the same as the action being called
+    // Then let's call this function!
+    if ($_GET['action'] == $method) {
+        call_user_func(array('api',$method),$_GET);
+        // We only allow a single function to be called, and we assume it's cleaned up!
+        exit;
+    }
 
 } // end foreach methods in API
 

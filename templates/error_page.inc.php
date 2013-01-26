@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -22,8 +22,8 @@
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>"
-	dir="<?php echo $dir;?>">
+    xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>"
+    dir="<?php echo $dir;?>">
 
 <head>
 <meta http-equiv="refresh" content="10;URL=<?php echo($redirect_url);?>" />
@@ -36,20 +36,20 @@
 <!-- rfc3514 implementation -->
 <div id="rfc3514" style="display: none;">0x0</div>
 <div id="maincontainer">
-	<div id="header">
-		<div id="headerlogo">
-			<img src="<?php echo $web_path; echo Config::get('theme_path'); ?>/images/ampache.png"
-				 title="<?php echo Config::get('site_title'); ?>"
-				 alt="<?php echo Config::get('site_title'); ?>" />
-		</div>
-	</div>
-	<div>&nbsp;</div>
-	<div id="errormsg">
-		<?php echo (T_("The folowing error has occured, you will automaticly be redirected after 10 seconds.") ); ?>
-		<br /><br />
-		<?php echo(T_("Error messages"));?>:<br />
-		<?php Error::display('general'); ?>
-	</div>
+    <div id="header">
+        <div id="headerlogo">
+            <img src="<?php echo $web_path; echo Config::get('theme_path'); ?>/images/ampache.png"
+                 title="<?php echo Config::get('site_title'); ?>"
+                 alt="<?php echo Config::get('site_title'); ?>" />
+        </div>
+    </div>
+    <div>&nbsp;</div>
+    <div id="errormsg">
+        <?php echo (T_("The folowing error has occured, you will automaticly be redirected after 10 seconds.") ); ?>
+        <br /><br />
+        <?php echo(T_("Error messages"));?>:<br />
+        <?php Error::display('general'); ?>
+    </div>
 </div>
 </body>
 </html>

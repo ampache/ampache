@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -26,9 +26,9 @@
 if (!defined('AJAX_INCLUDE')) { exit; }
 
 switch ($_REQUEST['action']) {
-	default:
-		$results['rfc3514'] = '0x1';
-	break;
+    default:
+        $results['rfc3514'] = '0x1';
+    break;
 } // switch on action;
 
 // We always do this

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,25 +25,25 @@
 <table cellpadding="0" cellspacing="0">
 <tr>
         <td>
-		<?php echo T_('Filename'); ?>:
-	</td>
-	<td><input type="file" name="filename" value="<?php echo scrub_out($_REQUEST['filename']); ?>" size="45" /></td>
+        <?php echo T_('Filename'); ?>:
+    </td>
+    <td><input type="file" name="filename" value="<?php echo scrub_out($_REQUEST['filename']); ?>" size="45" /></td>
 </tr>
 <tr>
-	<td>
-		<?php echo T_('Playlist Type'); ?>
-	</td>
-	<td>
-		<select name="playlist_type">
-			<option value="m3u">M3U</option>
-<!--			<option name="pls">PLS</option> -->
-		</select>
-	</td>
+    <td>
+        <?php echo T_('Playlist Type'); ?>
+    </td>
+    <td>
+        <select name="playlist_type">
+            <option value="m3u">M3U</option>
+<!--            <option name="pls">PLS</option> -->
+        </select>
+    </td>
 </tr>
 </table>
 <div class="formValidation">
-		<input type="hidden" name="action" value="import_playlist" />
-		<input type="submit" value="<?php echo T_('Import Playlist'); ?>" />
+        <input type="hidden" name="action" value="import_playlist" />
+        <input type="submit" value="<?php echo T_('Import Playlist'); ?>" />
 </div>
 </form>
 <?php UI::show_box_bottom(); ?>

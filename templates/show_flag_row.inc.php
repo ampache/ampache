@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -21,16 +21,16 @@
  */
 ?>
 <tr id="flagged_<?php echo $flag->id; ?>" class="<?php echo UI::flip_class(); ?>">
-	<td class="cel_object"><?php echo $flag->f_name; ?></td>
-	<td class="cel_username"><?php echo $flag->f_user; ?></td>
-	<td class="cel_flag"><?php $flag->print_flag(); ?></td>
-	<td class="cel_comment"><?php echo scrub_out($flag->comment); ?></td>
-	<td class="cel_status"><?php $flag->print_status(); ?></td>
-	<td class="cel_action">
-	<?php if ($flag->approved) { ?>
-		<?php echo Ajax::button('?page=flag&action=reject&flag_id=' . $flag->id,'disable', T_('Reject'),'reject_flag_' . $flag->id); ?>
-	<?php } else { ?>
-		<?php echo Ajax::button('?page=flag&action=accept&flag_id=' . $flag->id,'enable', T_('Enable'),'enable_flag_' . $flag->id); ?>
-	<?php } ?>
-	</td>
+    <td class="cel_object"><?php echo $flag->f_name; ?></td>
+    <td class="cel_username"><?php echo $flag->f_user; ?></td>
+    <td class="cel_flag"><?php $flag->print_flag(); ?></td>
+    <td class="cel_comment"><?php echo scrub_out($flag->comment); ?></td>
+    <td class="cel_status"><?php $flag->print_status(); ?></td>
+    <td class="cel_action">
+    <?php if ($flag->approved) { ?>
+        <?php echo Ajax::button('?page=flag&action=reject&flag_id=' . $flag->id,'disable', T_('Reject'),'reject_flag_' . $flag->id); ?>
+    <?php } else { ?>
+        <?php echo Ajax::button('?page=flag&action=accept&flag_id=' . $flag->id,'enable', T_('Enable'),'enable_flag_' . $flag->id); ?>
+    <?php } ?>
+    </td>
 </tr>

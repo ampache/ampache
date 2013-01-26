@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,25 +25,25 @@
 <table class="inline-edit" cellpadding="3" cellspacing="0">
 <tr>
 <td>
-	<input type="text" name="title" value="<?php echo scrub_out($song->title); ?>" />
+    <input type="text" name="title" value="<?php echo scrub_out($song->title); ?>" />
 </td>
 <td>
-	<?php show_artist_select('artist',$song->artist,true,$song->id); ?>
-	<div id="artist_select_song_<?php echo $song->id ?>"></div>
+    <?php show_artist_select('artist',$song->artist,true,$song->id); ?>
+    <div id="artist_select_song_<?php echo $song->id ?>"></div>
 <?php echo Ajax::observe('artist_select_'.$song->id,'change','check_inline_song_edit("artist", '.$song->id.')'); ?>
 </td>
 <td>
-	<?php show_album_select('album',$song->album,true,$song->id); ?>
-	<div id="album_select_song_<?php echo $song->id ?>"></div>
+    <?php show_album_select('album',$song->album,true,$song->id); ?>
+    <div id="album_select_song_<?php echo $song->id ?>"></div>
 <?php echo Ajax::observe('album_select_'.$song->id,'change','check_inline_song_edit("album", '.$song->id.')'); ?>
 </td>
 <td>
-	<input type="text" name="track" size="3" value="<?php echo scrub_out($song->track); ?>" />
+    <input type="text" name="track" size="3" value="<?php echo scrub_out($song->track); ?>" />
 </td>
 <td>
-	<input type="hidden" name="id" value="<?php echo $song->id; ?>" />
-	<input type="hidden" name="type" value="song_row" />
-	<?php echo Ajax::button('?action=edit_object&id=' . $song->id . '&type=song_row','download', T_('Save Changes'),'save_song_' . $song->id,'edit_song_' . $song->id); ?>
+    <input type="hidden" name="id" value="<?php echo $song->id; ?>" />
+    <input type="hidden" name="type" value="song_row" />
+    <?php echo Ajax::button('?action=edit_object&id=' . $song->id . '&type=song_row','download', T_('Save Changes'),'save_song_' . $song->id,'edit_song_' . $song->id); ?>
 </td>
 </tr>
 </table>

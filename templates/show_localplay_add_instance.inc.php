@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,13 +25,13 @@
 <table cellpadding="3" cellspacing="0" class="tabledata">
 <?php foreach ($fields as $key=>$field) { ?>
 <tr>
-	<td><?php echo $field['description']; ?></td>
-	<td><input type="text" name="<?php echo $key; ?>" /></td>
+    <td><?php echo $field['description']; ?></td>
+    <td><input type="text" name="<?php echo $key; ?>" /></td>
 </tr>
 <?php } ?>
 </table>
-	<div class="formValidation">
-		<input type="submit" value="<?php echo T_('Add Instance'); ?>" />
+    <div class="formValidation">
+        <input type="submit" value="<?php echo T_('Add Instance'); ?>" />
   </div>
 </form>
 <?php UI::show_box_bottom(); ?>

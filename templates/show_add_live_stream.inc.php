@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -24,48 +24,48 @@
 <form name="radio" method="post" action="<?php echo Config::get('web_path'); ?>/radio.php?action=create">
 <table>
 <tr>
-	<td><?php echo T_('Name'); ?></td>
-	<td>
-		<input type="text" name="name" size="20" value="<?php echo scrub_out($_REQUEST['name']); ?>" />
-		<?php Error::display('name'); ?>
-	</td>
+    <td><?php echo T_('Name'); ?></td>
+    <td>
+        <input type="text" name="name" size="20" value="<?php echo scrub_out($_REQUEST['name']); ?>" />
+        <?php Error::display('name'); ?>
+    </td>
 </tr>
 <tr>
-	<td><?php echo T_('Homepage'); ?></td>
-	<td>
-		<input type="text" name="site_url" value="<?php echo scrub_out($_REQUEST['site_url']); ?>" />
-		<?php Error::display('site_url'); ?>
-	</td>
+    <td><?php echo T_('Homepage'); ?></td>
+    <td>
+        <input type="text" name="site_url" value="<?php echo scrub_out($_REQUEST['site_url']); ?>" />
+        <?php Error::display('site_url'); ?>
+    </td>
 </tr>
 <tr>
-	<td><?php echo T_('Stream URL'); ?></td>
-	<td>
-		<input type="text" name="url" value="<?php echo scrub_out($_REQUEST['url']); ?>" />
-		<?php Error::display('url'); ?>
-	</td>
+    <td><?php echo T_('Stream URL'); ?></td>
+    <td>
+        <input type="text" name="url" value="<?php echo scrub_out($_REQUEST['url']); ?>" />
+        <?php Error::display('url'); ?>
+    </td>
 </tr>
 <tr>
-	<td><?php echo T_('Frequency'); ?></td>
-	<td>
-		<input type="text" name="frequency" value="<?php echo scrub_out($_REQUEST['frequency']); ?>" />
-	</td>
+    <td><?php echo T_('Frequency'); ?></td>
+    <td>
+        <input type="text" name="frequency" value="<?php echo scrub_out($_REQUEST['frequency']); ?>" />
+    </td>
 </tr>
 <tr>
-	<td><?php echo T_('Callsign'); ?></td>
-	<td>
-		<input type="text" name="call_sign" value="<?php echo scrub_out($_REQUEST['call_sign']); ?>" />
-	</td>
+    <td><?php echo T_('Callsign'); ?></td>
+    <td>
+        <input type="text" name="call_sign" value="<?php echo scrub_out($_REQUEST['call_sign']); ?>" />
+    </td>
 </tr>
 <tr>
-	<td><?php echo T_('Catalog'); ?></td>
-	<td>
-		<?php echo show_catalog_select('catalog',intval($_REQUEST['catalog'])); ?>
-	</td>
+    <td><?php echo T_('Catalog'); ?></td>
+    <td>
+        <?php echo show_catalog_select('catalog',intval($_REQUEST['catalog'])); ?>
+    </td>
 </tr>
 </table>
 <div class="formValidation">
-	<?php echo Core::form_register('add_radio'); ?>
-	<input class="button" type="submit" value="<?php echo T_('Add'); ?>" />
+    <?php echo Core::form_register('add_radio'); ?>
+    <input class="button" type="submit" value="<?php echo T_('Add'); ?>" />
 </div>
 </form>
 <?php UI::show_box_bottom(); ?>

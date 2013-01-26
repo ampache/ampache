@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -56,43 +56,43 @@ if (Config::get('user_agreement')) { ?>
 <h3><?php echo T_('User Agreement'); ?></h3>
 <div class="registrationAgreement">
     <div class="agreementContent">
-		<?php Registration::show_agreement(); ?>
+        <?php Registration::show_agreement(); ?>
     </div>
     
     <div class="agreementCheckbox">
-		<input type='checkbox' name='accept_agreement' /> <?php echo T_('I Accept'); ?>
-		<?php Error::display('user_agreement'); ?>
-	</div>
+        <input type='checkbox' name='accept_agreement' /> <?php echo T_('I Accept'); ?>
+        <?php Error::display('user_agreement'); ?>
+    </div>
 </div>
 <?php } // end if user_agreement ?>
 <h3><?php echo T_('User Information'); ?></h3>
 <div class="registerfield require">
     <label for="username"><?php echo T_('Username'); ?>: <span class="asterix">*</span></label>
     <input type='text' name='username' id='username' value='<?php echo scrub_out($username); ?>' />
-	<?php Error::display('username'); ?>
-	<?php Error::display('duplicate_user'); ?>
+    <?php Error::display('username'); ?>
+    <?php Error::display('duplicate_user'); ?>
 </div>
 <div class="registerfield require">
-	<label for="fullname"><?php echo T_('Full Name'); ?>: <span class="asterix">*</span></label>
+    <label for="fullname"><?php echo T_('Full Name'); ?>: <span class="asterix">*</span></label>
     <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out($fullname); ?>' />
-	<?php Error::display('fullname'); ?>
+    <?php Error::display('fullname'); ?>
 </div>
 
 <div class="registerfield require">
     <label for="email"><?php echo T_('E-mail'); ?>: <span class="asterix">*</span></label>
-	<input type='text' name='email' id='email' value='<?php echo scrub_out($email); ?>' />
-	<?php Error::display('email'); ?>
+    <input type='text' name='email' id='email' value='<?php echo scrub_out($email); ?>' />
+    <?php Error::display('email'); ?>
 </div>
 
 <div class="registerfield require">
-	<label for="password"><?php echo T_('Password'); ?>: <span class="asterix">*</span></label>
-	<input type='password' name='password_1' id='password_1' />
-	<?php Error::display('password'); ?>
+    <label for="password"><?php echo T_('Password'); ?>: <span class="asterix">*</span></label>
+    <input type='password' name='password_1' id='password_1' />
+    <?php Error::display('password'); ?>
 </div>
 
 <div class="registerfield require">
-	<label for="confirm_passord"><?php echo T_('Confirm Password'); ?>: <span class="asterix">*</span></label>
-	<input type='password' name='password_2' id='password_2' />
+    <label for="confirm_passord"><?php echo T_('Confirm Password'); ?>: <span class="asterix">*</span></label>
+    <input type='password' name='password_2' id='password_2' />
 </div>
 
 <div class="registerInformation">
@@ -100,13 +100,13 @@ if (Config::get('user_agreement')) { ?>
 </div>
 
 <?php if (Config::get('captcha_public_reg')) { ?>
-			<?php  echo captcha::form("&rarr;&nbsp;"); ?>
-			<?php Error::display('captcha'); ?>
+            <?php  echo captcha::form("&rarr;&nbsp;"); ?>
+            <?php Error::display('captcha'); ?>
 <?php } ?>
 
 <div class="registerButtons">
-	<input type="hidden" name="action" value="add_user" />
-	<input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register User'); ?>' />
+    <input type="hidden" name="action" value="add_user" />
+    <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register User'); ?>' />
 </div>
 </form>
 <?php

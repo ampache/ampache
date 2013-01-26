@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -28,80 +28,80 @@
  */
 function get_themes() {
 
-	/* Open the themes dir and start reading it */
-	$handle = opendir(Config::get('prefix') . '/themes');
+    /* Open the themes dir and start reading it */
+    $handle = opendir(Config::get('prefix') . '/themes');
 
-	if (!is_resource($handle)) {
-		 debug_event('theme', 'Failed to open /themes directory', 2);
-		 return array();
-	}
+    if (!is_resource($handle)) {
+         debug_event('theme', 'Failed to open /themes directory', 2);
+         return array();
+    }
 
-	$results = array();
-	$theme_cfg = '/theme.cfg.php';
+    $results = array();
+    $theme_cfg = '/theme.cfg.php';
 
-	while (($f = readdir($handle)) !== false) {
-		debug_event('theme', "Checking $f", 5);
-		$file = Config::get('prefix') . '/themes/' . $f;
-		if (file_exists($file . $theme_cfg)) {
-			debug_event('theme', "Loading $theme_cfg from $f", 5);
-			$r = parse_ini_file($file . $theme_cfg);
-			$r['path'] = $f;
-			$results[$r['name']] = $r;
-		}
-		else {
-			debug_event('theme', "$theme_cfg not found in $f", 5);
-		}
-	} // end while directory
+    while (($f = readdir($handle)) !== false) {
+        debug_event('theme', "Checking $f", 5);
+        $file = Config::get('prefix') . '/themes/' . $f;
+        if (file_exists($file . $theme_cfg)) {
+            debug_event('theme', "Loading $theme_cfg from $f", 5);
+            $r = parse_ini_file($file . $theme_cfg);
+            $r['path'] = $f;
+            $results[$r['name']] = $r;
+        }
+        else {
+            debug_event('theme', "$theme_cfg not found in $f", 5);
+        }
+    } // end while directory
 
-	// Sort by the theme name
-	ksort($results);
+    // Sort by the theme name
+    ksort($results);
 
-	return $results;
+    return $results;
 
 } // get_themes
 
 /*!
-	@function get_theme
-	@discussion get a single theme and read the config file
-		then return the results
+    @function get_theme
+    @discussion get a single theme and read the config file
+        then return the results
 */
 function get_theme($name) {
 
-	if (strlen($name) < 1) { return false; }
+    if (strlen($name) < 1) { return false; }
 
-	$config_file = Config::get('prefix') . "/themes/" . $name . "/theme.cfg.php";
-	$results = parse_ini_file($config_file);
-	$results['path'] = $name;
-	return $results;
+    $config_file = Config::get('prefix') . "/themes/" . $name . "/theme.cfg.php";
+    $results = parse_ini_file($config_file);
+    $results['path'] = $name;
+    return $results;
 
 } // get_theme
 
 /*!
-	@function get_theme_author
-	@discussion returns the author of this theme
+    @function get_theme_author
+    @discussion returns the author of this theme
 */
 function get_theme_author($theme_name) {
 
-	$theme_path = Config::get('prefix') . '/themes/' . Config::get('theme_name') . '/theme.cfg.php';
-	$results = read_config($theme_path);
+    $theme_path = Config::get('prefix') . '/themes/' . Config::get('theme_name') . '/theme.cfg.php';
+    $results = read_config($theme_path);
 
-	return $results['author'];
+    return $results['author'];
 
 } // get_theme_author
 
 /*!
-	@function theme_exists
-	@discussion this function checks to make sure that a theme actually exists
+    @function theme_exists
+    @discussion this function checks to make sure that a theme actually exists
 */
 function theme_exists($theme_name) {
 
-	$theme_path = Config::get('prefix') . '/themes/' . $theme_name . '/theme.cfg.php';
+    $theme_path = Config::get('prefix') . '/themes/' . $theme_name . '/theme.cfg.php';
 
-	if (!file_exists($theme_path)) {
-		return false;
-	}
+    if (!file_exists($theme_path)) {
+        return false;
+    }
 
-	return true;
+    return true;
 
 } // theme_exists
 

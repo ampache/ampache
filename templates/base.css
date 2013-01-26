@@ -1,4 +1,4 @@
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -27,16 +27,16 @@
  *****************/
 
 .tag_size1 { 
-	font-size:.6em;
+    font-size:.6em;
 } 
 .tag_size2 { 
-	font-size:.8em; 
+    font-size:.8em; 
 } 
 .tag_size3 { 
-	font-size:1em; 
+    font-size:1em; 
 } 
 .tag_size4 { 
-	font-size:1.2em; 
+    font-size:1.2em; 
 } 
 
 a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; } 
@@ -48,8 +48,8 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
  * Generic / Misc 
  *****************/
 .item_on { 
-	color: #347C17;
+    color: #347C17;
 }
 .item_off { 
-	color: #FF0000; 
+    color: #FF0000; 
 } 

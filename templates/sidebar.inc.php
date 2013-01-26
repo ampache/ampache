@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -37,29 +37,29 @@ $web_path = Config::get('web_path');
 ?>
 <ul id="sidebar-tabs">
 <?php
-	foreach ($sidebar_items as $item) {
-		if (Access::check('interface',$item['access'])) {
-			$li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . ${'sidebar_'.$item['id'] } . "'";
-		?><li <?php echo $li_params; ?>>
-      	<?php
+    foreach ($sidebar_items as $item) {
+        if (Access::check('interface',$item['access'])) {
+            $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . ${'sidebar_'.$item['id'] } . "'";
+        ?><li <?php echo $li_params; ?>>
+          <?php
         // Button
         echo Ajax::button("?page=index&action=sidebar&button=".$item['id'],$item['icon'],$item['title'],'sidebar_'.$item['id']);
 
-      	// Include subnav if it's the selected one
-      	// so that it's generated inside its parent li
-	if ($item['id']==$_SESSION['state']['sidebar_tab']) {
-      	  ?><div id="sidebar-page"><?php
-      	  require_once Config::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php';
-      	  ?></div><?php
+          // Include subnav if it's the selected one
+          // so that it's generated inside its parent li
+    if ($item['id']==$_SESSION['state']['sidebar_tab']) {
+            ?><div id="sidebar-page"><?php
+            require_once Config::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php';
+            ?></div><?php
         }
        ?></li><?php
      }
-	}
+    }
 ?>
 <li id="sb_tab_logout" class="sb1">
-	<a href="<?php echo Config::get('web_path'); ?>/logout.php" id="sidebar_logout" >
-	<?php echo UI::get_icon('logout', T_('Logout')); ?>
-	</a>
+    <a href="<?php echo Config::get('web_path'); ?>/logout.php" id="sidebar_logout" >
+    <?php echo UI::get_icon('logout', T_('Logout')); ?>
+    </a>
 </li>
 </ul>
 

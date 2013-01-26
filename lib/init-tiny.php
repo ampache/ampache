@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -24,8 +24,8 @@
 
 // Do a check for PHP5 because nothing will work without it
 if (floatval(phpversion()) < 5) {
-	echo "ERROR: Ampache requires PHP5";
-	exit;
+    echo "ERROR: Ampache requires PHP5";
+    exit;
 }
 
 error_reporting(E_ERROR); // Only show fatal errors in production
@@ -47,20 +47,20 @@ spl_autoload_register(array('Core', 'autoload'), true, true);
 // Check to see if this is http or https
 if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' ) 
     || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')) {
-	$http_type = 'https://';
+    $http_type = 'https://';
 }
 else {
-	$http_type = 'http://';
+    $http_type = 'http://';
 }
 
 if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
-	$http_port = $_SERVER['HTTP_X_FORWARDED_PORT'];
+    $http_port = $_SERVER['HTTP_X_FORWARDED_PORT'];
 }
 else if (isset($_SERVER['SERVER_PORT'])) {
-	$http_port = $_SERVER['SERVER_PORT'];
+    $http_port = $_SERVER['SERVER_PORT'];
 }
 if (!isset($http_port) || !$http_port) {
-	$http_port = 80;
+    $http_port = 80;
 }
 
 // Define that we've loaded the INIT file

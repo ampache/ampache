@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -29,540 +29,540 @@
  */
 class Access {
 
-	// Variables from DB
-
-	/**
-	 * User ID
-	 *
-	 * @var	integer
-	 */
-	public $id;
-
-	/**
-	 *
-	 */
-	public $name;
-
-	/**
-	 *
-	 */
-	public $start;
-
-	/**
-	 *
-	 */
-	public $end;
-
-	/**
-	 *
-	 */
-	public $level;
-
-	/**
-	 *
-	 */
-	public $user;
-
-	/**
-	 *
-	 */
-	public $type;
-
-	/**
-	 *
-	 */
-	public $enabled;
-
-	/**
-	 * constructor
-	 *
-	 * Takes an ID of the access_id dealie :)
-	 *
-	 * @param	integer	$access_id	ID of the access_id
-	 * @return	boolean
-	 */
-	public function __construct($access_id='') {
-
-		if (!$access_id) { return false; }
-
-		/* Assign id for use in get_info() */
-		$this->id = intval($access_id);
-
-		$info = $this->_get_info();
-		foreach ($info as $key=>$value) {
-			$this->$key = $value;
-		}
-
-		return true;
-
-	} // Constructor
-
-	/**
-	 * _get_info
-	 *
-	 * get's the vars for $this out of the database
-	 * Taken from the object
-	 *
-	 * @return	resource
-	 */
-	private function _get_info() {
-
-		/* Grab the basic information from the catalog and return it */
-		$sql = "SELECT * FROM `access_list` WHERE `id`='" . Dba::escape($this->id) . "'";
-		$db_results = Dba::read($sql);
-
-		$results = Dba::fetch_assoc($db_results);
-
-		return $results;
-
-	} // _get_info
-
-	/**
-	 * format
-	 *
-	 * This makes the Access object a nice fuzzy human readable object, spiffy ain't it.
-	 *
-	 * @return	void
-	 */
-	public function format() {
-
-		$this->f_start = inet_ntop($this->start);
-		$this->f_end = inet_ntop($this->end);
-
-		$this->f_user = $this->get_user_name();
-		$this->f_level = $this->get_level_name();
-		$this->f_type = $this->get_type_name();
-
-	} // format
-
-	/**
-	 * update
-	 *
-	 * This function takes a named array as a datasource and updates the current access list entry
-	 *
-	 * @param	array	$data	xxx
-	 * @return	boolean
-	 */
-	public function update($data) {
-
-		/* We need to verify the incomming data a littlebit */
-		$start = @inet_pton($data['start']);
-		$end = @inet_pton($data['end']);
-
-		if (!$start AND $data['start'] != '0.0.0.0' AND $data['start'] != '::') {
-			Error::add('start', T_('Invalid IPv4 / IPv6 Address Entered'));
-			return false;
-		}
-		if (!$end) {
-			Error::add('end', T_('Invalid IPv4 / IPv6 Address Entered'));
-			return false;
-		}
-
-		if (strlen(bin2hex($start)) != strlen(bin2hex($end))) {
-			Error::add('start', T_('IP Address Version Mismatch'));
-			Error::add('end', T_('IP Address Version Mismatch'));
-			return false;
-		}
-
-		$name	= Dba::escape($data['name']);
-		$type	= self::validate_type($data['type']);
-		$start 	= Dba::escape(inet_pton($data['start']));
-		$end	= Dba::escape(inet_pton($data['end']));
-		$level	= Dba::escape($data['level']);
-		$user	= $data['user'] ? Dba::escape($data['user']) : '-1';
-		$enabled = make_bool($data['enabled']) ? 1 : 0;
-
-		$sql = "UPDATE `access_list` " .
-			"SET `start`='$start', `end`='$end', `level`='$level', `user`='$user', " .
-			"`name`='$name', `type`='$type',`enabled`='$enabled' WHERE `id`='" . Dba::escape($this->id) . "'";
-		$db_results = Dba::write($sql);
-
-		return true;
-
-	} // update
-
-	/**
-	 * create
-	 *
-	 * This takes a key'd array of data and trys to insert it as a
-	 * new ACL entry
-	 *
-	 * @param	array	$data	xxx
-	 * @return	boolean
-	 */
-	public static function create($data) {
-
-		/* We need to verify the incomming data a littlebit */
-		$start = @inet_pton($data['start']);
-		$end = @inet_pton($data['end']);
-
-		if (!$start AND $data['start'] != '0.0.0.0' AND $data['start'] != '::') {
-			Error::add('start', T_('Invalid IPv4 / IPv6 Address Entered'));
-			return false;
-		}
-		if (!$end) {
-			Error::add('end', T_('Invalid IPv4 / IPv6 Address Entered'));
-			return false;
-		}
-
-		if (strlen(bin2hex($start)) != strlen(bin2hex($end))) {
-			Error::add('start', T_('IP Address Version Mismatch'));
-			Error::add('end', T_('IP Address Version Mismatch'));
-			return false;
-		}
-
-		// Check existing ACL's to make sure we're not duplicating values here
-		if (self::exists($data)) {
-			debug_event('ACL Create','Error: An ACL equal to the created one does already exist. Not adding another one: ' . $data['start'] . ' - ' . $data['end'],'1');
-			Error::add('general', T_('Duplicate ACL defined'));
-			return false;
-		}
-
-		$start 	= Dba::escape($start);
-		$end 	= Dba::escape($end);
-		$name	= Dba::escape($data['name']);
-		$user	= $data['user'] ? Dba::escape($data['user']) : '-1';
-		$level	= intval($data['level']);
-		$type	= self::validate_type($data['type']);
-		$enabled = make_bool($data['enabled']) ? 1 : 0;
-
-		$sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`user`,`type`,`enabled`) " .
-			"VALUES ('$name','$level','$start','$end','$user','$type','$enabled')";
-		$db_results = Dba::write($sql);
-
-		return true;
-
-	} // create
-
-	/**
-	 * exists
-	 *
-	 * this sees if the ACL that we've specified already exists, prevent duplicates. This ignores the name
-	 *
-	 * @param	array	$data	xxx
-	 * @return	boolean
-	 */
-	public static function exists($data) {
-
-		$start = Dba::escape(inet_pton($data['start']));
-		$end = Dba::escape(inet_pton($data['end']));
-		$type = self::validate_type($data['type']);
-		$user = $data['user'] ? Dba::escape($data['user']) : '-1';
-
-		$sql = "SELECT * FROM `access_list` WHERE `start`='$start' AND `end` = '$end' " .
-			"AND `type`='$type' AND `user`='$user'";
-		$db_results = Dba::read($sql);
-
-		if (Dba::fetch_assoc($db_results)) {
-			return true;
-		}
-
-		return false;
-
-	} // exists
-
-	/**
-	 * delete
-	 *
-	 * deletes the specified access_list entry
-	 *
-	 * @param	integer	$access_id	xxx
-	 * @return	void
-	 */
-	public static function delete($access_id) {
-
-		$sql = "DELETE FROM `access_list` WHERE `id`='" . Dba::escape($access_id) . "'";
-		$db_results = Dba::write($sql);
-
-	} // delete
-
-	/**
-	 * check_function
-	 *
-	 * This checks if a specific functionality is enabled
-	 * it takes a type only
-	 *
-	 * @param	string	$type	check type xxx
-	 * @return	mixed	boolean or config
-	 */
-	public static function check_function($type) {
-
-		switch ($type) {
-			case 'download':
-				return Config::get('download');
-			break ;
-			case 'batch_download':
-				if (!function_exists('gzcompress')) {
-					debug_event('gzcompress','ZLIB Extensions not loaded, batch download disabled','3');
-					return false;
-				}
-				if (Config::get('allow_zip_download') AND $GLOBALS['user']->has_access('25')) {
-					return Config::get('download');
-				}
-			break;
-			default:
-				return false;
-			break;
-		} // end switch
-
-	} // check_function
-
-	/**
-	 * check_network
-	 *
-	 * This takes a type, ip, user, level and key
-	 * and then returns true or false if they have access to this
-	 * the IP is passed as a dotted quad
-	 *
-	 * @param	string	$type	Check type.
-	 * @param	string	$user	User name.
-	 * @param	integer	$level	Access level.
-	 * @param	string	$ip	IP Address.
-	 * @return	boolean
-	 */
-	public static function check_network($type, $user, $level, $ip=null) {
-
-		if (!Config::get('access_control')) {
-			switch ($type) {
-				case 'interface':
-				case 'stream':
-					return true;
-				break;
-				default:
-					return false;
-			} // end switch
-		} // end if access control is turned off
-
-		// Clean incoming variables
-		$ip 	= $ip 
-			? Dba::escape(inet_pton($ip)) 
-			: Dba::escape(inet_pton($_SERVER['REMOTE_ADDR']));
-		$user 	= Dba::escape($user);
-		$level	= Dba::escape($level);
-
-		switch ($type) {
-			case 'init-api':
-				if ($user) {
-					$user = User::get_from_username($user);
-					$user = $user->id;
-				}
-			case 'api':
-				$type = 'rpc';
-			case 'network':
-			case 'interface':
-			case 'stream':
-			break;
-			default:
-				return false;
-			break;
-		} // end switch on type
-
-		$sql = 'SELECT `id` FROM `access_list` ' .
-			"WHERE `start` <= '$ip' AND `end` >= '$ip' " .
-			"AND `level` >= '$level' AND `type` = '$type'";
-
-		if (strlen($user) && $user != '-1') {
-			$sql .= " AND `user` IN('$user', '-1')";
-		}
-		else {
-			$sql .= " AND `user` = '-1'";
-		}
-
-		$db_results = Dba::read($sql);
-
-		if (Dba::fetch_row($db_results)) {
-			// Yah they have access they can use the mojo
-			return true;
-		}
-
-		return false;
-	} // check_network
-
-	/**
-	 * check_access
-	 * This is the global 'has_access' function it can check for any 'type'
-	 * of object.
-	 * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
-	 * always used.
-	 */
-	public static function check($type,$level) {
-
-		if (Config::get('demo_mode')) { return true; }
-		if (defined('INSTALL')) { return true; }
-
-		$level = intval($level);
-
-		// Switch on the type
-		switch ($type) {
-			case 'localplay':
-				// Check their localplay_level
-				if (Config::get('localplay_level') >= $level OR $GLOBALS['user']->access >= '100') {
-					return true;
-				}
-				else {
-					return false;
-				}
-			break;
-			case 'interface':
-				// Check their standard user level
-				if ($GLOBALS['user']->access >= $level) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			break;
-			default:
-				return false;
-			break;
-		} // end switch on type
-
-		// Default false
-		return false;
-
-	} // check
-
-	/**
-	 * validate_type
-	 * This cleans up and validates the specified type
-	 */
-	public static function validate_type($type) {
-
-		switch($type) {
-			case 'rpc':
-			case 'interface':
-			case 'network':
-				return $type;
-			break;
-			case 'xml-rpc':
-				return 'rpc';
-			break;
-			default:
-				return 'stream';
-			break;
-		} // end switch
-
-	} // validate_type
-
-	/**
-	 * get_access_lists
-	 * returns a full listing of all access rules on this server
-	 */
-	public static function get_access_lists() {
-
-		$sql = "SELECT `id` FROM `access_list`";
-		$db_results = Dba::read($sql);
-
-		$results = array();
-
-		// Man this is the wrong way to do it...
-		while ($row = Dba::fetch_assoc($db_results)) {
-			$results[] = $row['id'];
-		} // end while access list mojo
-
-		return $results;
-
-	} // get_access_lists
-
-
-	/**
-	 * get_level_name
-	 * take the int level and return a named level
-	 */
-	public function get_level_name() {
-
-		if ($this->level >= '75') {
-			return T_('All');
-		}
-		if ($this->level == '5') {
-			return T_('View');
-		}
-		if ($this->level == '25') {
-			return T_('Read');
-		}
-		if ($this->level == '50') {
-			return T_('Read/Write');
-		}
-
-	} // get_level_name
-
-	/**
- 	 * get_user_name
-	 * Take a user and return their full name
-	 */
-	public function get_user_name() {
-
-		if ($this->user == '-1') { return T_('All'); }
-
-		$user = new User($this->user);
-		return $user->fullname . " (" . $user->username . ")";
-
-	} // get_user_name
-
-	/**
-	 * get_type_name
-	 * This function returns the pretty name for our current type
-	 */
-	public function get_type_name() {
-
-		switch ($this->type) {
-			case 'xml-rpc':
-			case 'rpc':
-				return T_('API/RPC');
-			break;
-			case 'network':
-				return T_('Local Network Definition');
-			break;
-			case 'interface':
-				return T_('Web Interface');
-			break;
-			case 'stream':
-			default:
-				return T_('Stream Access');
-			break;
-		} // end switch
-
-	} // get_type_name
-
-	/**
-	 * session_exists
-	 * This checks to see if the specified session of the specified type
-	 * exists, it also provides an array of key'd data that may be required
-	 * based on the type
-	 */
-	public static function session_exists($data,$key,$type) {
-
-		// Switch on the type they pass
-		switch ($type) {
-			case 'api':
-				$key = Dba::escape($key);
-				$time = time();
-				$sql = "SELECT * FROM `session_api` WHERE `id`='$key' AND `expire` > '$time'";
-				$db_results = Dba::read($sql);
-
-				if (Dba::num_rows($db_results)) {
-					$time = $time + 3600;
-					$sql = "UPDATE `session_api` WHERE `id`='$key' SET `expire`='$time'";
-					$db_results = Dba::write($sql);
-					return true;
-				}
-
-				return false;
-
-			break;
-			case 'stream':
-
-			break;
-			case 'interface':
-
-			break;
-			default:
-				return false;
-			break;
-		} // type
-
-
-	} // session_exists
+    // Variables from DB
+
+    /**
+     * User ID
+     *
+     * @var    integer
+     */
+    public $id;
+
+    /**
+     *
+     */
+    public $name;
+
+    /**
+     *
+     */
+    public $start;
+
+    /**
+     *
+     */
+    public $end;
+
+    /**
+     *
+     */
+    public $level;
+
+    /**
+     *
+     */
+    public $user;
+
+    /**
+     *
+     */
+    public $type;
+
+    /**
+     *
+     */
+    public $enabled;
+
+    /**
+     * constructor
+     *
+     * Takes an ID of the access_id dealie :)
+     *
+     * @param    integer    $access_id    ID of the access_id
+     * @return    boolean
+     */
+    public function __construct($access_id='') {
+
+        if (!$access_id) { return false; }
+
+        /* Assign id for use in get_info() */
+        $this->id = intval($access_id);
+
+        $info = $this->_get_info();
+        foreach ($info as $key=>$value) {
+            $this->$key = $value;
+        }
+
+        return true;
+
+    } // Constructor
+
+    /**
+     * _get_info
+     *
+     * get's the vars for $this out of the database
+     * Taken from the object
+     *
+     * @return    resource
+     */
+    private function _get_info() {
+
+        /* Grab the basic information from the catalog and return it */
+        $sql = "SELECT * FROM `access_list` WHERE `id`='" . Dba::escape($this->id) . "'";
+        $db_results = Dba::read($sql);
+
+        $results = Dba::fetch_assoc($db_results);
+
+        return $results;
+
+    } // _get_info
+
+    /**
+     * format
+     *
+     * This makes the Access object a nice fuzzy human readable object, spiffy ain't it.
+     *
+     * @return    void
+     */
+    public function format() {
+
+        $this->f_start = inet_ntop($this->start);
+        $this->f_end = inet_ntop($this->end);
+
+        $this->f_user = $this->get_user_name();
+        $this->f_level = $this->get_level_name();
+        $this->f_type = $this->get_type_name();
+
+    } // format
+
+    /**
+     * update
+     *
+     * This function takes a named array as a datasource and updates the current access list entry
+     *
+     * @param    array    $data    xxx
+     * @return    boolean
+     */
+    public function update($data) {
+
+        /* We need to verify the incomming data a littlebit */
+        $start = @inet_pton($data['start']);
+        $end = @inet_pton($data['end']);
+
+        if (!$start AND $data['start'] != '0.0.0.0' AND $data['start'] != '::') {
+            Error::add('start', T_('Invalid IPv4 / IPv6 Address Entered'));
+            return false;
+        }
+        if (!$end) {
+            Error::add('end', T_('Invalid IPv4 / IPv6 Address Entered'));
+            return false;
+        }
+
+        if (strlen(bin2hex($start)) != strlen(bin2hex($end))) {
+            Error::add('start', T_('IP Address Version Mismatch'));
+            Error::add('end', T_('IP Address Version Mismatch'));
+            return false;
+        }
+
+        $name    = Dba::escape($data['name']);
+        $type    = self::validate_type($data['type']);
+        $start     = Dba::escape(inet_pton($data['start']));
+        $end    = Dba::escape(inet_pton($data['end']));
+        $level    = Dba::escape($data['level']);
+        $user    = $data['user'] ? Dba::escape($data['user']) : '-1';
+        $enabled = make_bool($data['enabled']) ? 1 : 0;
+
+        $sql = "UPDATE `access_list` " .
+            "SET `start`='$start', `end`='$end', `level`='$level', `user`='$user', " .
+            "`name`='$name', `type`='$type',`enabled`='$enabled' WHERE `id`='" . Dba::escape($this->id) . "'";
+        $db_results = Dba::write($sql);
+
+        return true;
+
+    } // update
+
+    /**
+     * create
+     *
+     * This takes a key'd array of data and trys to insert it as a
+     * new ACL entry
+     *
+     * @param    array    $data    xxx
+     * @return    boolean
+     */
+    public static function create($data) {
+
+        /* We need to verify the incomming data a littlebit */
+        $start = @inet_pton($data['start']);
+        $end = @inet_pton($data['end']);
+
+        if (!$start AND $data['start'] != '0.0.0.0' AND $data['start'] != '::') {
+            Error::add('start', T_('Invalid IPv4 / IPv6 Address Entered'));
+            return false;
+        }
+        if (!$end) {
+            Error::add('end', T_('Invalid IPv4 / IPv6 Address Entered'));
+            return false;
+        }
+
+        if (strlen(bin2hex($start)) != strlen(bin2hex($end))) {
+            Error::add('start', T_('IP Address Version Mismatch'));
+            Error::add('end', T_('IP Address Version Mismatch'));
+            return false;
+        }
+
+        // Check existing ACL's to make sure we're not duplicating values here
+        if (self::exists($data)) {
+            debug_event('ACL Create','Error: An ACL equal to the created one does already exist. Not adding another one: ' . $data['start'] . ' - ' . $data['end'],'1');
+            Error::add('general', T_('Duplicate ACL defined'));
+            return false;
+        }
+
+        $start     = Dba::escape($start);
+        $end     = Dba::escape($end);
+        $name    = Dba::escape($data['name']);
+        $user    = $data['user'] ? Dba::escape($data['user']) : '-1';
+        $level    = intval($data['level']);
+        $type    = self::validate_type($data['type']);
+        $enabled = make_bool($data['enabled']) ? 1 : 0;
+
+        $sql = "INSERT INTO `access_list` (`name`,`level`,`start`,`end`,`user`,`type`,`enabled`) " .
+            "VALUES ('$name','$level','$start','$end','$user','$type','$enabled')";
+        $db_results = Dba::write($sql);
+
+        return true;
+
+    } // create
+
+    /**
+     * exists
+     *
+     * this sees if the ACL that we've specified already exists, prevent duplicates. This ignores the name
+     *
+     * @param    array    $data    xxx
+     * @return    boolean
+     */
+    public static function exists($data) {
+
+        $start = Dba::escape(inet_pton($data['start']));
+        $end = Dba::escape(inet_pton($data['end']));
+        $type = self::validate_type($data['type']);
+        $user = $data['user'] ? Dba::escape($data['user']) : '-1';
+
+        $sql = "SELECT * FROM `access_list` WHERE `start`='$start' AND `end` = '$end' " .
+            "AND `type`='$type' AND `user`='$user'";
+        $db_results = Dba::read($sql);
+
+        if (Dba::fetch_assoc($db_results)) {
+            return true;
+        }
+
+        return false;
+
+    } // exists
+
+    /**
+     * delete
+     *
+     * deletes the specified access_list entry
+     *
+     * @param    integer    $access_id    xxx
+     * @return    void
+     */
+    public static function delete($access_id) {
+
+        $sql = "DELETE FROM `access_list` WHERE `id`='" . Dba::escape($access_id) . "'";
+        $db_results = Dba::write($sql);
+
+    } // delete
+
+    /**
+     * check_function
+     *
+     * This checks if a specific functionality is enabled
+     * it takes a type only
+     *
+     * @param    string    $type    check type xxx
+     * @return    mixed    boolean or config
+     */
+    public static function check_function($type) {
+
+        switch ($type) {
+            case 'download':
+                return Config::get('download');
+            break ;
+            case 'batch_download':
+                if (!function_exists('gzcompress')) {
+                    debug_event('gzcompress','ZLIB Extensions not loaded, batch download disabled','3');
+                    return false;
+                }
+                if (Config::get('allow_zip_download') AND $GLOBALS['user']->has_access('25')) {
+                    return Config::get('download');
+                }
+            break;
+            default:
+                return false;
+            break;
+        } // end switch
+
+    } // check_function
+
+    /**
+     * check_network
+     *
+     * This takes a type, ip, user, level and key
+     * and then returns true or false if they have access to this
+     * the IP is passed as a dotted quad
+     *
+     * @param    string    $type    Check type.
+     * @param    string    $user    User name.
+     * @param    integer    $level    Access level.
+     * @param    string    $ip    IP Address.
+     * @return    boolean
+     */
+    public static function check_network($type, $user, $level, $ip=null) {
+
+        if (!Config::get('access_control')) {
+            switch ($type) {
+                case 'interface':
+                case 'stream':
+                    return true;
+                break;
+                default:
+                    return false;
+            } // end switch
+        } // end if access control is turned off
+
+        // Clean incoming variables
+        $ip     = $ip 
+            ? Dba::escape(inet_pton($ip)) 
+            : Dba::escape(inet_pton($_SERVER['REMOTE_ADDR']));
+        $user     = Dba::escape($user);
+        $level    = Dba::escape($level);
+
+        switch ($type) {
+            case 'init-api':
+                if ($user) {
+                    $user = User::get_from_username($user);
+                    $user = $user->id;
+                }
+            case 'api':
+                $type = 'rpc';
+            case 'network':
+            case 'interface':
+            case 'stream':
+            break;
+            default:
+                return false;
+            break;
+        } // end switch on type
+
+        $sql = 'SELECT `id` FROM `access_list` ' .
+            "WHERE `start` <= '$ip' AND `end` >= '$ip' " .
+            "AND `level` >= '$level' AND `type` = '$type'";
+
+        if (strlen($user) && $user != '-1') {
+            $sql .= " AND `user` IN('$user', '-1')";
+        }
+        else {
+            $sql .= " AND `user` = '-1'";
+        }
+
+        $db_results = Dba::read($sql);
+
+        if (Dba::fetch_row($db_results)) {
+            // Yah they have access they can use the mojo
+            return true;
+        }
+
+        return false;
+    } // check_network
+
+    /**
+     * check_access
+     * This is the global 'has_access' function it can check for any 'type'
+     * of object.
+     * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
+     * always used.
+     */
+    public static function check($type,$level) {
+
+        if (Config::get('demo_mode')) { return true; }
+        if (defined('INSTALL')) { return true; }
+
+        $level = intval($level);
+
+        // Switch on the type
+        switch ($type) {
+            case 'localplay':
+                // Check their localplay_level
+                if (Config::get('localplay_level') >= $level OR $GLOBALS['user']->access >= '100') {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            break;
+            case 'interface':
+                // Check their standard user level
+                if ($GLOBALS['user']->access >= $level) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            break;
+            default:
+                return false;
+            break;
+        } // end switch on type
+
+        // Default false
+        return false;
+
+    } // check
+
+    /**
+     * validate_type
+     * This cleans up and validates the specified type
+     */
+    public static function validate_type($type) {
+
+        switch($type) {
+            case 'rpc':
+            case 'interface':
+            case 'network':
+                return $type;
+            break;
+            case 'xml-rpc':
+                return 'rpc';
+            break;
+            default:
+                return 'stream';
+            break;
+        } // end switch
+
+    } // validate_type
+
+    /**
+     * get_access_lists
+     * returns a full listing of all access rules on this server
+     */
+    public static function get_access_lists() {
+
+        $sql = "SELECT `id` FROM `access_list`";
+        $db_results = Dba::read($sql);
+
+        $results = array();
+
+        // Man this is the wrong way to do it...
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        } // end while access list mojo
+
+        return $results;
+
+    } // get_access_lists
+
+
+    /**
+     * get_level_name
+     * take the int level and return a named level
+     */
+    public function get_level_name() {
+
+        if ($this->level >= '75') {
+            return T_('All');
+        }
+        if ($this->level == '5') {
+            return T_('View');
+        }
+        if ($this->level == '25') {
+            return T_('Read');
+        }
+        if ($this->level == '50') {
+            return T_('Read/Write');
+        }
+
+    } // get_level_name
+
+    /**
+      * get_user_name
+     * Take a user and return their full name
+     */
+    public function get_user_name() {
+
+        if ($this->user == '-1') { return T_('All'); }
+
+        $user = new User($this->user);
+        return $user->fullname . " (" . $user->username . ")";
+
+    } // get_user_name
+
+    /**
+     * get_type_name
+     * This function returns the pretty name for our current type
+     */
+    public function get_type_name() {
+
+        switch ($this->type) {
+            case 'xml-rpc':
+            case 'rpc':
+                return T_('API/RPC');
+            break;
+            case 'network':
+                return T_('Local Network Definition');
+            break;
+            case 'interface':
+                return T_('Web Interface');
+            break;
+            case 'stream':
+            default:
+                return T_('Stream Access');
+            break;
+        } // end switch
+
+    } // get_type_name
+
+    /**
+     * session_exists
+     * This checks to see if the specified session of the specified type
+     * exists, it also provides an array of key'd data that may be required
+     * based on the type
+     */
+    public static function session_exists($data,$key,$type) {
+
+        // Switch on the type they pass
+        switch ($type) {
+            case 'api':
+                $key = Dba::escape($key);
+                $time = time();
+                $sql = "SELECT * FROM `session_api` WHERE `id`='$key' AND `expire` > '$time'";
+                $db_results = Dba::read($sql);
+
+                if (Dba::num_rows($db_results)) {
+                    $time = $time + 3600;
+                    $sql = "UPDATE `session_api` WHERE `id`='$key' SET `expire`='$time'";
+                    $db_results = Dba::write($sql);
+                    return true;
+                }
+
+                return false;
+
+            break;
+            case 'stream':
+
+            break;
+            case 'interface':
+
+            break;
+            default:
+                return false;
+            break;
+        } // type
+
+
+    } // session_exists
 
 } //end of access class
 

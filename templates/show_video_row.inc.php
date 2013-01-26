@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -21,7 +21,7 @@
  */
 ?>
 <td class="cel_add">
-	<?php echo Ajax::button('?action=basket&type=video&id=' . $video->id,'add', T_('Add'),'add_video_' . $video->id); ?>
+    <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id,'add', T_('Add'),'add_video_' . $video->id); ?>
 </td>
 <td class="cel_title"><?php echo $video->f_title; ?></td>
 <td class="cel_codec"><?php echo $video->f_codec; ?></td>
@@ -30,6 +30,6 @@
 <td class="cel_tags"><?php $video->f_tags; ?></td>
 <td class="cel_action">
 <?php if (Access::check_function('download')) { ?>
-	<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&type=video&oid=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+    <a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&type=video&oid=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
 <?php } ?>
 </td>

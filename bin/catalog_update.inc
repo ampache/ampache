@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -30,57 +30,57 @@ require_once $prefix . '/lib/init.php';
 
 ob_end_flush();
 
-$catclean = 0;		//All off by default
+$catclean = 0;        //All off by default
 $catverify = 0;
 $catadd = 0;
 $thumbadd =0; 
 $artadd = 0; 
 
 if (count($_SERVER['argv']) == 1) { 
-	$operations_string = "\n\t". T_('- All Catalog Operations');
+    $operations_string = "\n\t". T_('- All Catalog Operations');
 } 
 
 if (count($_SERVER['argv']) > 1) {
-	for ($x = 1; $x < count($_SERVER['argv']); $x++) {
+    for ($x = 1; $x < count($_SERVER['argv']); $x++) {
 
-		if ($_SERVER['argv'][$x] == "-c") {
-			$operations_string .= "\n\t" . T_('- Catalog Clean');
-			$catclean = 1;
-		} 
-		elseif ($_SERVER['argv'][$x] == "-v") {
-			$operations_string .= "\n\t" . T_('- Catalog Verify');
-			$catverify = 1;
-		} 
-		elseif ($_SERVER['argv'][$x] == "-a") {
-			$operations_string .= "\n\t" . T_('- Catalog Add');
-			$catadd = 1;
-		}
-		elseif ($_SERVER['argv'][$x] == "-g") { 
-			$operations_string .= "\n\t" . T_('- Catalog Art Gather');
-			$artadd = 1; 
-		} 
-		elseif ($_SERVER['argv'][$x] == '-t') { 
-			$operations_string .= "\n\t" . T_('- Generate Thumbnails');
-			$thumbadd = 1; 
-		} 
-		else {
-			if ($where) $where .= " OR ";
-			$where .= "name LIKE '%" . Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $_SERVER['argv'][$x])) . "%'";
-		}
-	}
+        if ($_SERVER['argv'][$x] == "-c") {
+            $operations_string .= "\n\t" . T_('- Catalog Clean');
+            $catclean = 1;
+        } 
+        elseif ($_SERVER['argv'][$x] == "-v") {
+            $operations_string .= "\n\t" . T_('- Catalog Verify');
+            $catverify = 1;
+        } 
+        elseif ($_SERVER['argv'][$x] == "-a") {
+            $operations_string .= "\n\t" . T_('- Catalog Add');
+            $catadd = 1;
+        }
+        elseif ($_SERVER['argv'][$x] == "-g") { 
+            $operations_string .= "\n\t" . T_('- Catalog Art Gather');
+            $artadd = 1; 
+        } 
+        elseif ($_SERVER['argv'][$x] == '-t') { 
+            $operations_string .= "\n\t" . T_('- Generate Thumbnails');
+            $thumbadd = 1; 
+        } 
+        else {
+            if ($where) $where .= " OR ";
+            $where .= "name LIKE '%" . Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $_SERVER['argv'][$x])) . "%'";
+        }
+    }
 }
 
 if (count($_SERVER['argv']) != 1 AND $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1 && $thumbadd != 1) {
         usage();
-	exit; 
+    exit; 
 }
 
-if ($thumbadd == 0 && $artadd == 0 && $catclean == 0 && $catverify == 0 && $catadd == 0) {	//didn't pass any clean/verify/add arguments
-	$catclean = 1;						//set them all to on
-	$catverify = 1;
-	$catadd = 1;
-	$artadd = 1; 
-	$thumbadd = 1; 
+if ($thumbadd == 0 && $artadd == 0 && $catclean == 0 && $catverify == 0 && $catadd == 0) {    //didn't pass any clean/verify/add arguments
+    $catclean = 1;                        //set them all to on
+    $catverify = 1;
+    $catadd = 1;
+    $artadd = 1; 
+    $thumbadd = 1; 
 }
 
 echo T_("Starting Catalog Operations...") . $operations_string . "\n"; 
@@ -95,49 +95,49 @@ ob_start("ob_html_strip",'1024',true);
 
 while ($row = Dba::fetch_row($db_results)) {
 
-	$catalog = new Catalog($row['0']);
-	printf(T_('Reading: %s'), $catalog->name);
-	ob_flush(); 
-	echo "\n"; 
-	if ($catclean == 1) {
-		// Clean out dead files
-		echo T_("- Starting Clean - ");
-		echo "\n";
-		$catalog->clean_catalog();
-		echo "------------------\n\n";
-	}
+    $catalog = new Catalog($row['0']);
+    printf(T_('Reading: %s'), $catalog->name);
+    ob_flush(); 
+    echo "\n"; 
+    if ($catclean == 1) {
+        // Clean out dead files
+        echo T_("- Starting Clean - ");
+        echo "\n";
+        $catalog->clean_catalog();
+        echo "------------------\n\n";
+    }
 
-	if ($catverify == 1) {
-		// Verify Existing
-		echo T_("- Starting Verify - ");
-		echo "\n";
-		$catalog->verify_catalog($row['0']);
-		echo "-------------------\n\n";
-	}
+    if ($catverify == 1) {
+        // Verify Existing
+        echo T_("- Starting Verify - ");
+        echo "\n";
+        $catalog->verify_catalog($row['0']);
+        echo "-------------------\n\n";
+    }
 
-	if ($catadd == 1) {
-		// Look for new files
-		echo T_("- Starting Add - ");
-		echo "\n";
-		$catalog->add_to_catalog();
-		echo "----------------\n\n";
-	}
+    if ($catadd == 1) {
+        // Look for new files
+        echo T_("- Starting Add - ");
+        echo "\n";
+        $catalog->add_to_catalog();
+        echo "----------------\n\n";
+    }
 
-	if ($artadd == 1) { 
-		// Look for album art
-		echo T_('Starting Album Art Search');
-		echo "\n"; 
-		$catalog->get_art('',1);
-		echo "----------------\n\n";
-	} 
+    if ($artadd == 1) { 
+        // Look for album art
+        echo T_('Starting Album Art Search');
+        echo "\n"; 
+        $catalog->get_art('',1);
+        echo "----------------\n\n";
+    } 
 
-	if ($thumbadd == 1) { 
-		// Generate the thumbnails
-		echo T_('Generating Thumbnails'); 
-		echo "\n"; 
-		$catalog->generate_thumbnails(); 
-		echo "----------------\n\n";
-	}
+    if ($thumbadd == 1) { 
+        // Generate the thumbnails
+        echo T_('Generating Thumbnails'); 
+        echo "\n"; 
+        $catalog->generate_thumbnails(); 
+        echo "----------------\n\n";
+    }
 
 } // end foreach
 
@@ -148,36 +148,36 @@ echo "\n";
 
 function ob_html_strip($string) {
 
-	//$string = preg_replace("/update_txt\('.+'\);update_txt\('(.+)','.+'\);/","$1",$string);
-	//$string = preg_replace("/update_.+/","",$string);
-	$string = str_replace('<br />', "\n", $string);
-	$string = strip_tags($string);
-	$string = html_entity_decode($string);
-	$string = preg_replace("/[\r\n]+[\s\t]*[\r\n]+/","\n",$string);
-	$string = trim($string);
-	return $string;
+    //$string = preg_replace("/update_txt\('.+'\);update_txt\('(.+)','.+'\);/","$1",$string);
+    //$string = preg_replace("/update_.+/","",$string);
+    $string = str_replace('<br />', "\n", $string);
+    $string = strip_tags($string);
+    $string = html_entity_decode($string);
+    $string = preg_replace("/[\r\n]+[\s\t]*[\r\n]+/","\n",$string);
+    $string = trim($string);
+    return $string;
 
 } // ob_html_strip
 
 function usage() {
-	echo T_("- Catalog Update -");
-	echo "\n";
-	echo T_("Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a|-g|-t]");
-	echo "\n\t"; 
-	echo T_("Default behavior is to do all");
-	echo "\n-c\t";
-	echo T_('Clean Catalogs');
-	echo "\n-v\t";
-	echo T_('Verify Catalogs');
-	echo "\n-a\t";
-	echo T_('Add to Catalogs');
-	echo "\n-g\t";
-	echo T_('Gather Art');
-	echo "\n-t\t"; 
-	echo T_('Generate Thumbnails');
-	echo "\n";
-	echo "----------------------------------------------------------";
-	echo "\n";
+    echo T_("- Catalog Update -");
+    echo "\n";
+    echo T_("Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a|-g|-t]");
+    echo "\n\t"; 
+    echo T_("Default behavior is to do all");
+    echo "\n-c\t";
+    echo T_('Clean Catalogs');
+    echo "\n-v\t";
+    echo T_('Verify Catalogs');
+    echo "\n-a\t";
+    echo T_('Add to Catalogs');
+    echo "\n-g\t";
+    echo T_('Gather Art');
+    echo "\n-t\t"; 
+    echo T_('Generate Thumbnails');
+    echo "\n";
+    echo "----------------------------------------------------------";
+    echo "\n";
 }
 
 ?>

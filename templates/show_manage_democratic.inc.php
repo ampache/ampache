@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -23,45 +23,45 @@
 UI::show_box_top(T_('Manage Democratic Playlists'));  ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
-	<col id="col_number" />
-	<col id="col_base_playlist" />
-	<col id="col_vote_count" />
-	<col id="col_cooldown" />
-	<col id="col_level" />
-	<col id="col_default" />
-	<col id="col_action" />
+    <col id="col_number" />
+    <col id="col_base_playlist" />
+    <col id="col_vote_count" />
+    <col id="col_cooldown" />
+    <col id="col_level" />
+    <col id="col_default" />
+    <col id="col_action" />
 </colgroup>
 <tr class="th-top">
-	<th class="cel_number"><?php echo T_('Playlist'); ?></th>
-	<th class="cel_base_playlist"><?php echo T_('Base Playlist'); ?></th>
-	<th class="cel_cooldown"><?php echo T_('Cooldown'); ?></th>
-	<th class="cel_level"><?php echo T_('Level'); ?></th>
-	<th class="cel_default"><?php echo T_('Default'); ?></th>
-	<th class="cel_vote_count"><?php echo T_('Songs'); ?></th>
-	<th class="cel_action"><?php echo T_('Action'); ?></th>
+    <th class="cel_number"><?php echo T_('Playlist'); ?></th>
+    <th class="cel_base_playlist"><?php echo T_('Base Playlist'); ?></th>
+    <th class="cel_cooldown"><?php echo T_('Cooldown'); ?></th>
+    <th class="cel_level"><?php echo T_('Level'); ?></th>
+    <th class="cel_default"><?php echo T_('Default'); ?></th>
+    <th class="cel_vote_count"><?php echo T_('Songs'); ?></th>
+    <th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
 <?php
-	foreach ($playlists as $democratic_id) {
-		$democratic = new Democratic($democratic_id);
-		$democratic->format();
-		$playlist = new Playlist($democratic->base_playlist);
-		$playlist->format();
+    foreach ($playlists as $democratic_id) {
+        $democratic = new Democratic($democratic_id);
+        $democratic->format();
+        $playlist = new Playlist($democratic->base_playlist);
+        $playlist->format();
 ?>
 <tr class="<?php echo UI::flip_class(); ?>">
-	<td><?php echo scrub_out($democratic->name); ?></td>
-	<td><?php echo $playlist->f_link; ?></td>
-	<td><?php echo $democratic->f_cooldown; ?></td>
-	<td><?php echo $democratic->f_level; ?></td>
-	<td><?php echo $democratic->f_primary; ?></td>
-	<td><?php echo $democratic->count_items(); ?></td>
-	<td>
-	<?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id,'all', T_('Play'),'play_democratic'); ?>
-	<a href="<?php echo Config::get('web_path'); ?>/democratic.php?action=delete&amp;democratic_id=<?php echo scrub_out($democratic->id); ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
-	</td>
+    <td><?php echo scrub_out($democratic->name); ?></td>
+    <td><?php echo $playlist->f_link; ?></td>
+    <td><?php echo $democratic->f_cooldown; ?></td>
+    <td><?php echo $democratic->f_level; ?></td>
+    <td><?php echo $democratic->f_primary; ?></td>
+    <td><?php echo $democratic->count_items(); ?></td>
+    <td>
+    <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id,'all', T_('Play'),'play_democratic'); ?>
+    <a href="<?php echo Config::get('web_path'); ?>/democratic.php?action=delete&amp;democratic_id=<?php echo scrub_out($democratic->id); ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
+    </td>
 </tr>
 <?php } if (!count($playlists)) { ?>
 <tr>
-	<td colspan="7"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
+    <td colspan="7"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>
 </table>

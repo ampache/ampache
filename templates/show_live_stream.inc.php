@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -24,7 +24,7 @@
 <div id="information_actions">
 <ul>
 <li>
-	<a href="<?php echo Config::get('web_path'); ?>/radio.php?action=show_create"><?php echo UI::get_icon('add', T_('Add')); ?></a> <?php echo T_('Add Radio Station'); ?>
+    <a href="<?php echo Config::get('web_path'); ?>/radio.php?action=show_create"><?php echo UI::get_icon('add', T_('Add')); ?></a> <?php echo T_('Add Radio Station'); ?>
 </li>
 </ul>
 </div>

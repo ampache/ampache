@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -26,28 +26,28 @@
 <!-- Randomly selected albums of the moment -->
 <?php
 if (Art::is_enabled()) {
-	echo Ajax::observe('window','load',Ajax::action('?page=index&action=random_albums','random_albums'));
+    echo Ajax::observe('window','load',Ajax::action('?page=index&action=random_albums','random_albums'));
 ?>
 <div id="random_selection">
-	<?php UI::show_box_top(T_('Albums of the Moment')); echo T_('Loading...'); UI::show_box_bottom(); ?>
+    <?php UI::show_box_top(T_('Albums of the Moment')); echo T_('Loading...'); UI::show_box_bottom(); ?>
 </div>
 <?php } ?>
 <!-- Recently Played -->
 <div id="recently_played">
         <?php
                 $data = Song::get_recently_played();
-		Song::build_cache(array_keys($data));
+        Song::build_cache(array_keys($data));
                 require_once Config::get('prefix') . '/templates/show_recently_played.inc.php';
         ?>
 </div>
 <!-- Shoutbox Objects, if shoutbox is enabled -->
 <?php if (Config::get('sociable')) { ?>
 <div id="shout_objects">
-	<?php
-		$shouts = Shoutbox::get_top('5');
-		if (count($shouts)) {
-			require_once Config::get('prefix') . '/templates/show_shoutbox.inc.php';
-		}
-	?>
+    <?php
+        $shouts = Shoutbox::get_top('5');
+        if (count($shouts)) {
+            require_once Config::get('prefix') . '/templates/show_shoutbox.inc.php';
+        }
+    ?>
 </div>
 <?php } ?>

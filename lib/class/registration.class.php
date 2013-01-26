@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -28,29 +28,29 @@
  */
 class Registration {
 
-	/**
-	 * constructor
-	 * This is what is called when the class is loaded
-	 */
-	public function __construct() {
+    /**
+     * constructor
+     * This is what is called when the class is loaded
+     */
+    public function __construct() {
 
-		// Rien a faire
+        // Rien a faire
 
-	} // constructor
+    } // constructor
 
-	/**
- 	 * send_confirmation
-	 * This sends the confirmation e-mail for the specified user
-	 */
-	public static function send_confirmation($username, $fullname, $email, $password, $validation) {
-		$mailer = new Ampache_Mail();
+    /**
+      * send_confirmation
+     * This sends the confirmation e-mail for the specified user
+     */
+    public static function send_confirmation($username, $fullname, $email, $password, $validation) {
+        $mailer = new Ampache_Mail();
 
-		// We are the system
-		$mailer->set_default_sender();
+        // We are the system
+        $mailer->set_default_sender();
 
-		$mailer->subject = sprintf(T_("New User Registration at %s"), Config::get('site_title'));
+        $mailer->subject = sprintf(T_("New User Registration at %s"), Config::get('site_title'));
 
-		$mailer->message = sprintf(T_("Thank you for registering\n\n
+        $mailer->message = sprintf(T_("Thank you for registering\n\n
 Please keep this e-mail for your records. Your account information is as follows:
 ----------------------
 Username: %s
@@ -64,14 +64,14 @@ Your account is currently inactive. You cannot use it until you've visited the f
 Thank you for registering
 "), $username, $password, Config::get('web_path') . "/register.php?action=validate&username=$username&auth=$validation");
 
-		$mailer->recipient = $email;
-		$mailer->recipient_name = $fullname;
+        $mailer->recipient = $email;
+        $mailer->recipient_name = $fullname;
 
-		$mailer->send();
+        $mailer->send();
 
-		// Check to see if the admin should be notified
-		if (Config::get('admin_notify_reg')) {
-			$mailer->message = sprintf(T_("A new user has registered
+        // Check to see if the admin should be notified
+        if (Config::get('admin_notify_reg')) {
+            $mailer->message = sprintf(T_("A new user has registered
 The following values were entered.
 
 Username: %s
@@ -80,34 +80,34 @@ E-mail: %s
 
 "), $username, $fullname, $email);
 
-			$mailer->send_to_group('admins');
-		}
-		
-		return true;
+            $mailer->send_to_group('admins');
+        }
+        
+        return true;
 
-	} // send_confirmation
+    } // send_confirmation
 
-	/**
- 	 * show_agreement
-	 * This shows the registration agreement, /config/registration_agreement.php
-	 */
-	public static function show_agreement() {
+    /**
+      * show_agreement
+     * This shows the registration agreement, /config/registration_agreement.php
+     */
+    public static function show_agreement() {
 
-		$filename = Config::get('prefix') . '/config/registration_agreement.php';
+        $filename = Config::get('prefix') . '/config/registration_agreement.php';
 
-		if (!file_exists($filename)) { return false; }
+        if (!file_exists($filename)) { return false; }
 
-		/* Check for existance */
-		$fp = fopen($filename,'r');
+        /* Check for existance */
+        $fp = fopen($filename,'r');
 
-		if (!$fp) { return false; }
+        if (!$fp) { return false; }
 
-		$data = fread($fp,filesize($filename));
+        $data = fread($fp,filesize($filename));
 
-		/* Scrub and show */
-		echo $data;
+        /* Scrub and show */
+        echo $data;
 
-	} // show_agreement
+    } // show_agreement
 
 } // end registration class
 ?>

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -29,111 +29,111 @@
  */
 class Error {
 
-	private static $state = false; // set to one when an error occurs
-	private static $errors = array(); // Errors array key'd array with errors that have occured
+    private static $state = false; // set to one when an error occurs
+    private static $errors = array(); // Errors array key'd array with errors that have occured
 
-	/**
-	 * __constructor
-	 * This does nothing... amazing isn't it!
-	 */
-	private function __construct() {
+    /**
+     * __constructor
+     * This does nothing... amazing isn't it!
+     */
+    private function __construct() {
 
-		// Rien a faire
+        // Rien a faire
 
-	} // __construct
+    } // __construct
 
-	/**
-	 * __destruct
-	 * This saves all of the errors that are left into the session
-	 */
-	public function __destruct() {
+    /**
+     * __destruct
+     * This saves all of the errors that are left into the session
+     */
+    public function __destruct() {
 
 
-		foreach (self::$errors as $key=>$error) {
-			$_SESSION['errors'][$key] = $error;
-		}
+        foreach (self::$errors as $key=>$error) {
+            $_SESSION['errors'][$key] = $error;
+        }
 
-	} // __destruct
+    } // __destruct
 
-	/**
-	 * add
-	 * This is a public static function it adds a new error message to the array
-	 * It can optionally clobber rather then adding to the error message
-	 */
-	public static function add($name,$message,$clobber=0) {
+    /**
+     * add
+     * This is a public static function it adds a new error message to the array
+     * It can optionally clobber rather then adding to the error message
+     */
+    public static function add($name,$message,$clobber=0) {
 
-		// Make sure its set first
-		if (!isset(Error::$errors[$name])) {
-			Error::$errors[$name] = $message;
-			Error::$state = 1;
-			$_SESSION['errors'][$name] = $message;
-		}
-		// They want us to clobber it
-		elseif ($clobber) {
-			Error::$state = 1;
-			Error::$errors[$name] = $message;
-			$_SESSION['errors'][$name] = $message;
-		}
-		// They want us to append the error, add a BR\n and then the message
-		else {
-			Error::$state = 1;
-			Error::$errors[$name] .= "<br />\n" . $message;
-			$_SESSION['errors'][$name] .=  "<br />\n" . $message;
-		}
+        // Make sure its set first
+        if (!isset(Error::$errors[$name])) {
+            Error::$errors[$name] = $message;
+            Error::$state = 1;
+            $_SESSION['errors'][$name] = $message;
+        }
+        // They want us to clobber it
+        elseif ($clobber) {
+            Error::$state = 1;
+            Error::$errors[$name] = $message;
+            $_SESSION['errors'][$name] = $message;
+        }
+        // They want us to append the error, add a BR\n and then the message
+        else {
+            Error::$state = 1;
+            Error::$errors[$name] .= "<br />\n" . $message;
+            $_SESSION['errors'][$name] .=  "<br />\n" . $message;
+        }
 
-	} // add
+    } // add
 
-	/**
-	 * occurred
-	 * This returns true / false if an error has occured anywhere
-	 */
-	public static function occurred() {
+    /**
+     * occurred
+     * This returns true / false if an error has occured anywhere
+     */
+    public static function occurred() {
 
-		if (self::$state == '1') { return true; }
+        if (self::$state == '1') { return true; }
 
-		return false;
+        return false;
 
-	} // occurred
+    } // occurred
 
-	/**
-	 * get
-	 * This returns an error by name
-	 */
-	public static function get($name) {
+    /**
+     * get
+     * This returns an error by name
+     */
+    public static function get($name) {
 
-		if (!isset(Error::$errors[$name])) { return ''; }
+        if (!isset(Error::$errors[$name])) { return ''; }
 
-		return Error::$errors[$name];
+        return Error::$errors[$name];
 
-	} // get
+    } // get
 
-	/**
-	 * display
-	 * This prints the error out with a standard Error class span
-	 * Ben Goska: Renamed from print to display, print is reserved
-	 */
-	public static function display($name) {
+    /**
+     * display
+     * This prints the error out with a standard Error class span
+     * Ben Goska: Renamed from print to display, print is reserved
+     */
+    public static function display($name) {
 
-		// Be smart about this, if no error don't print
-		if (!isset(Error::$errors[$name])) { return ''; }
+        // Be smart about this, if no error don't print
+        if (!isset(Error::$errors[$name])) { return ''; }
 
-		echo '<span class="error">' . Error::$errors[$name] . '</span>';
+        echo '<span class="error">' . Error::$errors[$name] . '</span>';
 
-	} // display
+    } // display
 
-	/**
- 	 * auto_init
-	 * This loads the errors from the session back into Ampache
-	 */
-	public static function auto_init() {
+    /**
+      * auto_init
+     * This loads the errors from the session back into Ampache
+     */
+    public static function auto_init() {
 
-		if (!is_array($_SESSION['errors'])) { return false; }
+        if (!is_array($_SESSION['errors'])) { return false; }
 
-		// Re-insert them
-		foreach ($_SESSION['errors'] as $key=>$error) {
-			self::add($key,$error);
-		}
+        // Re-insert them
+        foreach ($_SESSION['errors'] as $key=>$error) {
+            self::add($key,$error);
+        }
 
-	} // auto_init
+    } // auto_init
 
 } // Error

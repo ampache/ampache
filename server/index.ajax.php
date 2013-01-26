@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -26,30 +26,30 @@
 if (!defined('AJAX_INCLUDE')) { exit; }
 
 switch ($_REQUEST['action']) {
-	case 'random_albums':
-		$albums = Album::get_random_albums('6');
-		if (count($albums) AND is_array($albums)) {
-			ob_start();
-			require_once Config::get('prefix') . '/templates/show_random_albums.inc.php';
-			$results['random_selection'] = ob_get_clean();
-		}
-		else {
-			$results['random_selection'] = '<!-- None found -->';
-		}
-	break;
-	case 'reloadnp':
-		ob_start();
-		show_now_playing();
-		$results['now_playing'] = ob_get_clean();
-		ob_start();
-		$data = Song::get_recently_played();
-		Song::build_cache(array_keys($data));
-		if (count($data)) {
+    case 'random_albums':
+        $albums = Album::get_random_albums('6');
+        if (count($albums) AND is_array($albums)) {
+            ob_start();
+            require_once Config::get('prefix') . '/templates/show_random_albums.inc.php';
+            $results['random_selection'] = ob_get_clean();
+        }
+        else {
+            $results['random_selection'] = '<!-- None found -->';
+        }
+    break;
+    case 'reloadnp':
+        ob_start();
+        show_now_playing();
+        $results['now_playing'] = ob_get_clean();
+        ob_start();
+        $data = Song::get_recently_played();
+        Song::build_cache(array_keys($data));
+        if (count($data)) {
                         require_once Config::get('prefix') . '/templates/show_recently_played.inc.php';
-		}
-		$results['recently_played'] = ob_get_clean();
-	break;
-	case 'sidebar':
+        }
+        $results['recently_played'] = ob_get_clean();
+    break;
+    case 'sidebar':
                 switch ($_REQUEST['button']) {
                         case 'home':
                         case 'modules':
@@ -72,9 +72,9 @@ switch ($_REQUEST['action']) {
                 require_once Config::get('prefix') . '/templates/sidebar.inc.php';
                 $results['sidebar'] = ob_get_contents();
                 ob_end_clean();
-	default:
-		$results['rfc3514'] = '0x1';
-	break;
+    default:
+        $results['rfc3514'] = '0x1';
+    break;
 } // switch on action;
 
 // We always do this

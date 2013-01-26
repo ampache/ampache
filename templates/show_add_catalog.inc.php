@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -29,58 +29,58 @@ $default_sort = "%a/%A";
 <form name="update_catalog" method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <tr>
-	<td><?php echo T_('Catalog Name'); ?>: </td>
-	<td><input size="60" type="text" name="name" value="<?php echo scrub_out($_POST['name']); ?>" /></td>
-	<td style="vertical-align:top; font-family: monospace;" rowspan="6" id="patterns_example">
-		<strong><?php echo T_('Auto-inserted Fields'); ?>:</strong><br />
-		<span class="format-specifier">%A</span> = <?php echo T_('album name'); ?><br />
-		<span class="format-specifier">%a</span> = <?php echo T_('artist name'); ?><br />
-		<span class="format-specifier">%c</span> = <?php echo T_('id3 comment'); ?><br />
-		<span class="format-specifier">%T</span> = <?php echo T_('track number (padded with leading 0)'); ?><br />
-		<span class="format-specifier">%t</span> = <?php echo T_('song title'); ?><br />
-		<span class="format-specifier">%y</span> = <?php echo T_('year'); ?><br />
-		<span class="format-specifier">%o</span> = <?php echo T_('other'); ?><br />
-	</td>
+    <td><?php echo T_('Catalog Name'); ?>: </td>
+    <td><input size="60" type="text" name="name" value="<?php echo scrub_out($_POST['name']); ?>" /></td>
+    <td style="vertical-align:top; font-family: monospace;" rowspan="6" id="patterns_example">
+        <strong><?php echo T_('Auto-inserted Fields'); ?>:</strong><br />
+        <span class="format-specifier">%A</span> = <?php echo T_('album name'); ?><br />
+        <span class="format-specifier">%a</span> = <?php echo T_('artist name'); ?><br />
+        <span class="format-specifier">%c</span> = <?php echo T_('id3 comment'); ?><br />
+        <span class="format-specifier">%T</span> = <?php echo T_('track number (padded with leading 0)'); ?><br />
+        <span class="format-specifier">%t</span> = <?php echo T_('song title'); ?><br />
+        <span class="format-specifier">%y</span> = <?php echo T_('year'); ?><br />
+        <span class="format-specifier">%o</span> = <?php echo T_('other'); ?><br />
+    </td>
 </tr>
 
 <tr>
-	<td><?php echo T_('Path'); ?>: </td>
-	<td><input size="60" type="text" name="path" value="<?php echo scrub_out($_POST['path']); ?>" /></td>
+    <td><?php echo T_('Path'); ?>: </td>
+    <td><input size="60" type="text" name="path" value="<?php echo scrub_out($_POST['path']); ?>" /></td>
 </tr>
 <tr>
-	<td><?php echo T_('Catalog Type'); ?>: </td>
-	<td>
-		<select name="type">
-			<option value="local"><?php echo T_('Local'); ?></option>
-			<option value="remote"><?php echo T_('Remote'); ?></option>
-		</select>
-	</td>
+    <td><?php echo T_('Catalog Type'); ?>: </td>
+    <td>
+        <select name="type">
+            <option value="local"><?php echo T_('Local'); ?></option>
+            <option value="remote"><?php echo T_('Remote'); ?></option>
+        </select>
+    </td>
 </tr>
 <tr>
-	<td><?php echo T_('Remote Catalog Username'); ?>: </td>
-	<td><input size="30" type="text" name="remote_username" value="<?php echo scrub_out($_POST['remote_username']); ?>" /><span class="error">*<?php echo T_('Required for Remote Catalogs'); ?></span></td>
+    <td><?php echo T_('Remote Catalog Username'); ?>: </td>
+    <td><input size="30" type="text" name="remote_username" value="<?php echo scrub_out($_POST['remote_username']); ?>" /><span class="error">*<?php echo T_('Required for Remote Catalogs'); ?></span></td>
 </tr>
 <tr>
-	<td><?php echo T_('Remote Catalog Password'); ?>: </td>
-	<td><input size="30" type="password" name="remote_password" value="" /><span class="error">*<?php echo T_('Required for Remote Catalogs'); ?></span></td>
+    <td><?php echo T_('Remote Catalog Password'); ?>: </td>
+    <td><input size="30" type="password" name="remote_password" value="" /><span class="error">*<?php echo T_('Required for Remote Catalogs'); ?></span></td>
 </tr>
 <tr>
-	<td><?php echo T_('Filename Pattern'); ?>: </td>
-	<td><input size="60" type="text" name="rename_pattern" value="<?php echo $default_rename; ?>" /></td>
-</tr>
-
-<tr>
-	<td><?php echo T_('Folder Pattern'); ?>:<br /><?php echo T_("(no leading or ending '/')"); ?></td>
-	<td valign="top"><input size="60" type="text" name="sort_pattern" value="<?php echo $default_sort; ?>" /></td>
+    <td><?php echo T_('Filename Pattern'); ?>: </td>
+    <td><input size="60" type="text" name="rename_pattern" value="<?php echo $default_rename; ?>" /></td>
 </tr>
 
 <tr>
-	<td valign="top"><?php echo T_('Gather Album Art'); ?>:</td>
-	<td><input type="checkbox" name="gather_art" value="1" /></td>
+    <td><?php echo T_('Folder Pattern'); ?>:<br /><?php echo T_("(no leading or ending '/')"); ?></td>
+    <td valign="top"><input size="60" type="text" name="sort_pattern" value="<?php echo $default_sort; ?>" /></td>
+</tr>
+
+<tr>
+    <td valign="top"><?php echo T_('Gather Album Art'); ?>:</td>
+    <td><input type="checkbox" name="gather_art" value="1" /></td>
 </tr>
 <tr>
-	<td valign="top"><?php echo T_('Build Playlists from m3u Files'); ?>:</td>
-	<td><input type="checkbox" name="parse_m3u" value="1" /></td>
+    <td valign="top"><?php echo T_('Build Playlists from m3u Files'); ?>:</td>
+    <td><input type="checkbox" name="parse_m3u" value="1" /></td>
 </tr>
 </table>
 <div class="formValidation">

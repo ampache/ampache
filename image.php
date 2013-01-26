@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -34,8 +34,8 @@ require_once 'lib/init.php';
 
 // Check to see if they've got an interface session or a valid API session, if not GTFO
 if (!vauth::session_exists('interface',$_COOKIE[Config::get('session_name')]) AND !vauth::session_exists('api',$_REQUEST['auth']) AND !vauth::session_exists('xml-rpc',$_REQUEST['auth'])) {
-	debug_event('DENIED','Image Access, Checked Cookie Session:' . $_COOKIE[Config::get('session_name')] . ' and Auth:' . $_REQUEST['auth'],'1');
-	exit;
+    debug_event('DENIED','Image Access, Checked Cookie Session:' . $_COOKIE[Config::get('session_name')] . ' and Auth:' . $_REQUEST['auth'],'1');
+    exit;
 }
 
 // If we aren't resizing just trash thumb
@@ -43,81 +43,81 @@ if (!Config::get('resize_images')) { $_GET['thumb'] = null; }
 
 // FIXME: Legacy stuff - should be removed after a version or so
 if (!isset($_GET['object_type'])) { 
-	$_GET['object_type'] = 'album'; 
+    $_GET['object_type'] = 'album'; 
 } 
 
 $type = Art::validate_type($_GET['object_type']); 
 
 /* Decide what size this image is */
 switch ($_GET['thumb']) {
-	case '1':
-		/* This is used by the now_playing stuff */
-		$size['height'] = '75';
-		$size['width']	= '75';
-	break;
-	case '2':
-		$size['height']	= '128';
-		$size['width']	= '128';
-	break;
-	case '3':
-		/* This is used by the flash player */
-		$size['height']	= '80';
-		$size['width']	= '80';
-	break;
-	default:
-		$size['height'] = '275';
-		$size['width']	= '275';
-		if (!isset($_GET['thumb'])) { $return_raw = true; }
-	break;
+    case '1':
+        /* This is used by the now_playing stuff */
+        $size['height'] = '75';
+        $size['width']    = '75';
+    break;
+    case '2':
+        $size['height']    = '128';
+        $size['width']    = '128';
+    break;
+    case '3':
+        /* This is used by the flash player */
+        $size['height']    = '80';
+        $size['width']    = '80';
+    break;
+    default:
+        $size['height'] = '275';
+        $size['width']    = '275';
+        if (!isset($_GET['thumb'])) { $return_raw = true; }
+    break;
 } // define size based on thumbnail
 
 switch ($_GET['type']) {
-	case 'popup':
-		require_once Config::get('prefix') . '/templates/show_big_art.inc.php';
-	break;
-	// If we need to pull the data out of the session
-	case 'session':
-		vauth::check_session();
-		$filename = scrub_in($_REQUEST['image_index']);
-		$image = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
-		$mime = $_SESSION['form']['images'][$filename]['mime'];
-	break;
-	default:
-		$media = new $type($_GET['id']);
-		$filename = $media->name;
+    case 'popup':
+        require_once Config::get('prefix') . '/templates/show_big_art.inc.php';
+    break;
+    // If we need to pull the data out of the session
+    case 'session':
+        vauth::check_session();
+        $filename = scrub_in($_REQUEST['image_index']);
+        $image = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
+        $mime = $_SESSION['form']['images'][$filename]['mime'];
+    break;
+    default:
+        $media = new $type($_GET['id']);
+        $filename = $media->name;
 
-		$art = new Art($media->id,$type); 
-		$art->get_db();  
+        $art = new Art($media->id,$type); 
+        $art->get_db();  
 
-		if (!$art->raw_mime) {
-			$mime = 'image/jpeg';
-			$image = file_get_contents(Config::get('prefix') . 
-				Config::get('theme_path') .
-				'/images/blankalbum.jpg');
-		}
-		else {
-			if ($_GET['thumb']) {
-				$thumb_data = $art->get_thumb($size);
-			}
-				
-			$mime = $thumb_data 
-				? $thumb_data['thumb_mime']
-				: $art->raw_mime; 	
-			$image = $thumb_data
-				? $thumb_data['thumb']
-				: $art->raw;
-		}
-	break;
+        if (!$art->raw_mime) {
+            $mime = 'image/jpeg';
+            $image = file_get_contents(Config::get('prefix') . 
+                Config::get('theme_path') .
+                '/images/blankalbum.jpg');
+        }
+        else {
+            if ($_GET['thumb']) {
+                $thumb_data = $art->get_thumb($size);
+            }
+                
+            $mime = $thumb_data 
+                ? $thumb_data['thumb_mime']
+                : $art->raw_mime;     
+            $image = $thumb_data
+                ? $thumb_data['thumb']
+                : $art->raw;
+        }
+    break;
 } // end switch type
 
 if ($image) {
-	$extension = Art::extension($mime); 
-	$filename = scrub_out($filename . '.' . $extension);
+    $extension = Art::extension($mime); 
+    $filename = scrub_out($filename . '.' . $extension);
 
-	// Send the headers and output the image
-	$browser = new Horde_Browser();
-	$browser->downloadHeaders($filename, $mime, true);
-	echo $image;
+    // Send the headers and output the image
+    $browser = new Horde_Browser();
+    $browser->downloadHeaders($filename, $mime, true);
+    echo $image;
 }
 
 ?>

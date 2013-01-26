@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -24,47 +24,47 @@
 <ul class="sb2" id="sb_localplay">
 <?php if ($server_allow = Config::get('allow_localplay_playback') AND $controller = Config::get('localplay_controller') AND $access_check = Access::check('localplay','5')) { ?>
 <?php
-	// Little bit of work to be done here
-	$localplay = new Localplay(Config::get('localplay_controller'));
-	$current_instance = $localplay->current_instance();
-	$class = $current_instance ? '' : ' class="active_instance"';
+    // Little bit of work to be done here
+    $localplay = new Localplay(Config::get('localplay_controller'));
+    $current_instance = $localplay->current_instance();
+    $class = $current_instance ? '' : ' class="active_instance"';
 ?>
 <?php if (Access::check('localplay','25')) { ?>
   <li><h4><?php echo T_('Localplay'); ?></h4>
     <ul class="sb3" id="sb_localplay_info">
 <?php if (Access::check('localplay','75')) { ?>
-	<li id="sb_localplay_info_add_instance"><a href="<?php echo $web_path; ?>/localplay.php?action=show_add_instance"><?php echo T_('Add Instance'); ?></a></li>
-	<li id="sb_localplay_info_show_instances"><a href="<?php echo $web_path; ?>/localplay.php?action=show_instances"><?php echo T_('Show instances'); ?></a></li>
+    <li id="sb_localplay_info_add_instance"><a href="<?php echo $web_path; ?>/localplay.php?action=show_add_instance"><?php echo T_('Add Instance'); ?></a></li>
+    <li id="sb_localplay_info_show_instances"><a href="<?php echo $web_path; ?>/localplay.php?action=show_instances"><?php echo T_('Show instances'); ?></a></li>
 <?php } ?>
-	<li id="sb_localplay_info_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo T_('Show Playlist'); ?></a></li>
+    <li id="sb_localplay_info_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo T_('Show Playlist'); ?></a></li>
     </ul>
   </li>
 <?php } ?>
   <li><h4><?php echo T_('Active Instance'); ?></h4>
     <ul class="sb3" id="sb_localplay_instances">
-	<li id="sb_localplay_instances_none"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=0', T_('None'),'localplay_instance_none');  ?></li>
-	<?php
-		// Requires a little work.. :(
-		$instances = $localplay->get_instances();
-		foreach ($instances as $uid=>$name) {
-			$name = scrub_out($name);
-			$class = '';
-			if ($uid == $current_instance) {
-				$class = ' class="active_instance"';
-			}
-	?>
-	<li id="sb_localplay_instances_<?php echo $uid; ?>"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=' . $uid,$name,'localplay_instance_' . $uid); ?></li>
-	<?php } ?>
+    <li id="sb_localplay_instances_none"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=0', T_('None'),'localplay_instance_none');  ?></li>
+    <?php
+        // Requires a little work.. :(
+        $instances = $localplay->get_instances();
+        foreach ($instances as $uid=>$name) {
+            $name = scrub_out($name);
+            $class = '';
+            if ($uid == $current_instance) {
+                $class = ' class="active_instance"';
+            }
+    ?>
+    <li id="sb_localplay_instances_<?php echo $uid; ?>"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=' . $uid,$name,'localplay_instance_' . $uid); ?></li>
+    <?php } ?>
     </ul>
   </li>
 <?php } else { ?>
   <li><h4><?php echo T_('Localplay Disabled'); ?></h4></li>
   <?php if (!$server_allow) { ?>
-	<li><?php echo T_('Allow Localplay set to False'); ?></li>
+    <li><?php echo T_('Allow Localplay set to False'); ?></li>
   <?php } elseif (!$controller) { ?>
-	<li><?php echo T_('Localplay Controller Not Defined'); ?></li>
+    <li><?php echo T_('Localplay Controller Not Defined'); ?></li>
   <?php } elseif (!$access_check) { ?>
-	<li><?php echo T_('Access Denied'); ?></li>
+    <li><?php echo T_('Access Denied'); ?></li>
   <?php } ?>
 <?php } ?>
 </ul>

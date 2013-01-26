@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -26,9 +26,9 @@
  */
 function show_rating($object_id,$type) {
 
-	$rating = new Rating($object_id,$type);
+    $rating = new Rating($object_id,$type);
 
-	require Config::get('prefix') . '/templates/show_object_rating.inc.php';
+    require Config::get('prefix') . '/templates/show_object_rating.inc.php';
 
 } // show_rating
 
@@ -38,32 +38,32 @@ function show_rating($object_id,$type) {
  */
 function get_rating_name($score) {
 
-	switch ($score) {
-		case '0':
-			return T_("Don't Play");
-		break;
-		case '1':
-			return T_("It's Pretty Bad");
-		break;
-		case '2':
-			return T_("It's Ok");
-		break;
-		case '3':
-			return T_("It's Pretty Good");
-		break;
-		case '4':
-			return T_("I Love It!");
-		break;
-		case '5':
-			return T_("It's Insane");
-		break;
-		// I'm fired
-		default:
-			return T_("Off the Charts!");
-		break;
-	} // end switch
+    switch ($score) {
+        case '0':
+            return T_("Don't Play");
+        break;
+        case '1':
+            return T_("It's Pretty Bad");
+        break;
+        case '2':
+            return T_("It's Ok");
+        break;
+        case '3':
+            return T_("It's Pretty Good");
+        break;
+        case '4':
+            return T_("I Love It!");
+        break;
+        case '5':
+            return T_("It's Insane");
+        break;
+        // I'm fired
+        default:
+            return T_("Off the Charts!");
+        break;
+    } // end switch
 
-	return true;
+    return true;
 
 } // get_rating_name
 

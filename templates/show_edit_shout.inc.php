@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,21 +25,21 @@
 <input type="hidden" name="shout_id" value="<?php echo $shout->id; ?>" />
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <tr>
-	<td><strong><?php /* HINT: Client link, Object link */ printf(T_('Created by: %s for %s'), $client->f_link, $object->f_link); ?></strong>
+    <td><strong><?php /* HINT: Client link, Object link */ printf(T_('Created by: %s for %s'), $client->f_link, $object->f_link); ?></strong>
 <tr>
 <tr>
-	<td><strong><?php echo T_('Comment:'); ?></strong>
+    <td><strong><?php echo T_('Comment:'); ?></strong>
 </tr>
 <tr>
-	<td><textarea rows="5" cols="70" name="comment"><?php echo $shout->text; ?></textarea></td>
+    <td><textarea rows="5" cols="70" name="comment"><?php echo $shout->text; ?></textarea></td>
 </tr>
 <tr>
-	<td><input type="checkbox" name="sticky" <?php if ($shout->sticky == "1") { echo "checked"; } ?>/> <strong><?php echo T_('Make Sticky'); ?></strong></td>
+    <td><input type="checkbox" name="sticky" <?php if ($shout->sticky == "1") { echo "checked"; } ?>/> <strong><?php echo T_('Make Sticky'); ?></strong></td>
 </tr>
 <tr>
-	<td>
-		<input type="submit" value="<?php echo T_('Update'); ?>" />
-	</td>
+    <td>
+        <input type="submit" value="<?php echo T_('Update'); ?>" />
+    </td>
 </tr>
 </table>
 </form>

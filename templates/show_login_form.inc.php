@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -24,7 +24,7 @@
  * if so disable the checkbox
  */
 if (Config::get('session_length') >= Config::get('remember_length')) {
-	$remember_disabled = 'disabled="disabled"';
+    $remember_disabled = 'disabled="disabled"';
 }
 $htmllang = str_replace("_","-",Config::get('lang'));
 is_rtl(Config::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
@@ -45,54 +45,54 @@ function focus(){ document.login.username.focus(); }
 
 <body id="loginPage" onload="focus();">
 <div id="maincontainer">
-	<div id="header"><!-- This is the header -->
-		<h1 id="headerlogo">
-		  <a href="<?php echo Config::get('web_path'); ?>">
-		    <img src="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="<?php echo Config::get('site_title'); ?>" alt="<?php echo Config::get('site_title'); ?>" />
-		  </a>
+    <div id="header"><!-- This is the header -->
+        <h1 id="headerlogo">
+          <a href="<?php echo Config::get('web_path'); ?>">
+            <img src="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="<?php echo Config::get('site_title'); ?>" alt="<?php echo Config::get('site_title'); ?>" />
+          </a>
     </h1>
   </div>
-	<div id="loginbox">
-		<h2><?php echo scrub_out(Config::get('site_title')); ?></h2>
-		<form name="login" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/login.php">
+    <div id="loginbox">
+        <h2><?php echo scrub_out(Config::get('site_title')); ?></h2>
+        <form name="login" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/login.php">
 
-			<div class="loginfield" id="usernamefield">
+            <div class="loginfield" id="usernamefield">
         <label for="username"><?php echo  T_('Username'); ?>:</label>
-			  <input class="text_input" type="text" id="username" name="username" value="<?php echo scrub_out($_REQUEST['username']); ?>" />
+              <input class="text_input" type="text" id="username" name="username" value="<?php echo scrub_out($_REQUEST['username']); ?>" />
       </div>
-			<div class="loginfield" id="passwordfield">
+            <div class="loginfield" id="passwordfield">
         <label for="password"><?php echo  T_('Password'); ?>:</label>
-  			<input class="text_input" type="password" id="password" name="password" value="" />
+              <input class="text_input" type="password" id="password" name="password" value="" />
       </div>
-			<div class="loginfield" id="remembermefield"><label for="rememberme">
+            <div class="loginfield" id="remembermefield"><label for="rememberme">
         <?php echo T_('Remember Me'); ?>&nbsp;</label><input type="checkbox" id="rememberme" name="rememberme" <?php echo $remember_disabled; ?> />
       </div>
 
-			<?php echo Config::get('login_message'); ?>
-			<?php Error::display('general'); ?>
+            <?php echo Config::get('login_message'); ?>
+            <?php Error::display('general'); ?>
 
-	    <div class="formValidation">
-    		<a class="button" id="lostpasswordbutton" href="<?php echo Config::get('web_path'); ?>/lostpassword.php"><?php echo T_('Lost password'); ?></a>
-    		<input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
-  			<input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
-  			<input type="hidden" name="action" value="login" />
+        <div class="formValidation">
+            <a class="button" id="lostpasswordbutton" href="<?php echo Config::get('web_path'); ?>/lostpassword.php"><?php echo T_('Lost password'); ?></a>
+            <input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
+              <input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
+              <input type="hidden" name="action" value="login" />
 
-    		<?php if (Config::get('allow_public_registration')) { ?>
-    			<a class="button" id="registerbutton" href="<?php echo Config::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
-    		<?php } // end if allow_public_registration ?>
+            <?php if (Config::get('allow_public_registration')) { ?>
+                <a class="button" id="registerbutton" href="<?php echo Config::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
+            <?php } // end if allow_public_registration ?>
       </div>
 
-		</form>
+        </form>
 <?php
 if (@is_readable(Config::get('prefix') . '/config/motd.php')) {
 ?>
-	</div>
-	<div id="motd">
-	<?php
+    </div>
+    <div id="motd">
+    <?php
         UI::show_box_top(T_('Message of the Day'));
         require_once Config::get('prefix') . '/config/motd.php';
         UI::show_box_bottom();
-	?>
+    ?>
 <?php
 }
 UI::show_footer();

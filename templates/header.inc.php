@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -44,7 +44,7 @@ if (Config::get('use_rss')) { ?>
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/default.css" type="text/css" media="screen" />
 <?php
 if (is_rtl(Config::get('lang')) 
-	&& is_file(Config::get('theme_path') . '/templates/rtl.css')) {
+    && is_file(Config::get('theme_path') . '/templates/rtl.css')) {
 ?>
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css type="text/css" media="screen" />
 <?php
@@ -59,33 +59,33 @@ if (is_rtl(Config::get('lang'))
 <!-- rfc3514 implementation -->
 <div id="rfc3514" style="display:none;">0x0</div>
 <div id="maincontainer">
-	<div id="header"><!-- This is the header -->
-		<h1 id="headerlogo">
-		  <a href="<?php echo Config::get('web_path'); ?>">
-		    <img src="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="<?php echo Config::get('site_title'); ?>" alt="<?php echo Config::get('site_title'); ?>" />
-		  </a>
-		</h1>
-		<div id="headerbox">
-			<?php UI::show_box_top('','box box_headerbox'); ?>
-			<?php require_once Config::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
-			<?php require_once Config::get('prefix') . '/templates/show_playtype_switch.inc.php'; ?>
-			<span id="loginInfo"><a href="<?php echo Config::get('web_path'); ?>/preferences.php?tab=account"><?php echo $GLOBALS['user']->fullname; ?></a> <a href="<?php echo Config::get('web_path'); ?>/logout.php">[<?php echo T_('Log out'); ?>]</a></span>
-			<?php UI::show_box_bottom(); ?>
-		</div> <!-- End headerbox -->
-	</div><!-- End header -->
-	<div id="sidebar"><!-- This is the sidebar -->
-		<?php require_once Config::get('prefix') . '/templates/sidebar.inc.php'; ?>
-	</div><!-- End sidebar -->
-	<div id="rightbar"><!-- This is the rightbar -->
-		<?php require_once Config::get('prefix') . '/templates/rightbar.inc.php'; ?>
-	</div><!-- End rightbar -->
+    <div id="header"><!-- This is the header -->
+        <h1 id="headerlogo">
+          <a href="<?php echo Config::get('web_path'); ?>">
+            <img src="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="<?php echo Config::get('site_title'); ?>" alt="<?php echo Config::get('site_title'); ?>" />
+          </a>
+        </h1>
+        <div id="headerbox">
+            <?php UI::show_box_top('','box box_headerbox'); ?>
+            <?php require_once Config::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
+            <?php require_once Config::get('prefix') . '/templates/show_playtype_switch.inc.php'; ?>
+            <span id="loginInfo"><a href="<?php echo Config::get('web_path'); ?>/preferences.php?tab=account"><?php echo $GLOBALS['user']->fullname; ?></a> <a href="<?php echo Config::get('web_path'); ?>/logout.php">[<?php echo T_('Log out'); ?>]</a></span>
+            <?php UI::show_box_bottom(); ?>
+        </div> <!-- End headerbox -->
+    </div><!-- End header -->
+    <div id="sidebar"><!-- This is the sidebar -->
+        <?php require_once Config::get('prefix') . '/templates/sidebar.inc.php'; ?>
+    </div><!-- End sidebar -->
+    <div id="rightbar"><!-- This is the rightbar -->
+        <?php require_once Config::get('prefix') . '/templates/rightbar.inc.php'; ?>
+    </div><!-- End rightbar -->
 <!-- Tiny little iframe, used to cheat the system -->
 <div id="ajax-loading">Loading . . .</div>
 <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo Config::get('web_path'); ?>/util.php"></iframe>
 <div id="content">
 <?php if (Config::get('int_config_version') != Config::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
 <div class="fatalerror">
-	<?php echo T_('Error Config File Out of Date'); ?>
-	<a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config'); ?></a>
+    <?php echo T_('Error Config File Out of Date'); ?>
+    <a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config'); ?></a>
 </div>
 <?php } ?>

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -29,28 +29,28 @@ require_once '../lib/init.php';
 
 if (!$GLOBALS['argv']['1'] || $GLOBALS['argv']['1'] == '-h') { usage(); }
 else {
-	$dirname	= $GLOBALS['argv']['1'];
-	$type		= $GLOBALS['argv']['2'];
+    $dirname    = $GLOBALS['argv']['1'];
+    $type        = $GLOBALS['argv']['2'];
 }
 
 // Make sure the output dir is valid and writeable
 if (!is_writeable($dirname)) {
-	printf (T_('Error: Directory %s not writeable'), $dirname);
-	echo "\n"; 
+    printf (T_('Error: Directory %s not writeable'), $dirname);
+    echo "\n"; 
 }
 
 // Switch on the type of playlist dump we want to do 
 // here
 switch ($type) {
-	case 'playlists':
+    case 'playlists':
 
-	break;
-	case 'artist':
+    break;
+    case 'artist':
 
-	break;
-	default:
+    break;
+    default:
 
-	break;
+    break;
 } // end type switch
 
 /* FUNCTIONS */
@@ -64,13 +64,13 @@ $desc5 = T_("Dumps all Artists as individual playlists");
 
 $string = "write_playlists.php.inc [-h] <DIRNAME> <TYPE>
 
-	$desc1
-	$desc2
-		default		$desc3
-		playlists	$desc4
-		artist		$desc5\n\n";
+    $desc1
+    $desc2
+        default        $desc3
+        playlists    $desc4
+        artist        $desc5\n\n";
 
-	exit($string); 
+    exit($string); 
 
 } // useage
 ?>

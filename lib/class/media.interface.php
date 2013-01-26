@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -28,44 +28,44 @@
  */
 interface media {
 
-	/**
-	 * format
-	 * 
-	 * Creates the gussied-up member variables for output 
-	 */
-	public function format();
+    /**
+     * format
+     * 
+     * Creates the gussied-up member variables for output 
+     */
+    public function format();
 
-	/**
-	 * get_stream_types
-	 *
-	 * Returns an array of strings; current types are 'native'
-	 * and 'transcode'
-	 */
-	public function get_stream_types();
+    /**
+     * get_stream_types
+     *
+     * Returns an array of strings; current types are 'native'
+     * and 'transcode'
+     */
+    public function get_stream_types();
 
-	/**
-	 * play_url
-	 *
-	 * Returns the url to stream the specified object
-	 * 
-	 */
-	public static function play_url($oid);
+    /**
+     * play_url
+     *
+     * Returns the url to stream the specified object
+     * 
+     */
+    public static function play_url($oid);
 
-	/**
-	 * get_transcode_settings
-	 *
-	 * Should only be called if 'transcode' was returned by get_stream_types
-	 * Returns a raw transcode command for this item; the optional target
-	 * parameter can be used to request a specific format instead of the
-	 * default from the configuration file.
-	 */
-	public function get_transcode_settings($target = null);
+    /**
+     * get_transcode_settings
+     *
+     * Should only be called if 'transcode' was returned by get_stream_types
+     * Returns a raw transcode command for this item; the optional target
+     * parameter can be used to request a specific format instead of the
+     * default from the configuration file.
+     */
+    public function get_transcode_settings($target = null);
 
-	/**
-	 * has_flag
-	 *
-	 */
-	public function has_flag();
+    /**
+     * has_flag
+     *
+     */
+    public function has_flag();
 
 } // end interface
 ?>

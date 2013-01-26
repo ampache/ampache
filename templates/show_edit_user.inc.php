@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,53 +25,53 @@
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo Config::get('web_path') . "/admin/users.php"; ?>">
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
-	<th colspan="2"><?php echo T_('User Properties'); ?></th>
+    <th colspan="2"><?php echo T_('User Properties'); ?></th>
 </tr>
 <tr>
-	<td>
-		<?php echo T_('Username'); ?>:
-	</td>
-	<td>
-		<input type="text" name="username" size="30" maxlength="128" value="<?php echo scrub_out($client->username); ?>" />
-		<?php Error::display('username'); ?>
-	</td>
+    <td>
+        <?php echo T_('Username'); ?>:
+    </td>
+    <td>
+        <input type="text" name="username" size="30" maxlength="128" value="<?php echo scrub_out($client->username); ?>" />
+        <?php Error::display('username'); ?>
+    </td>
 </tr>
 <tr>
-	<td><?php echo T_('Full Name'); ?>:</td>
-	<td>
-		<input type="text" name="fullname" size="30" value="<?php echo scrub_out($client->fullname); ?>" />
-	</td>
+    <td><?php echo T_('Full Name'); ?>:</td>
+    <td>
+        <input type="text" name="fullname" size="30" value="<?php echo scrub_out($client->fullname); ?>" />
+    </td>
 </tr>
 <tr>
-	<td>
-		<?php echo T_('E-mail'); ?>:
-	</td>
-	<td>
-		<input type="text" name="email" size="30" value="<?php echo scrub_out($client->email); ?>" />
-	</td>
+    <td>
+        <?php echo T_('E-mail'); ?>:
+    </td>
+    <td>
+        <input type="text" name="email" size="30" value="<?php echo scrub_out($client->email); ?>" />
+    </td>
 </tr>
 <tr>
-	<td>
-		<?php echo T_('Password'); ?> :
-	</td>
-	<td>
-		<input type="password" name="password_1" size="30" value="" />
-		<?php Error::display('password'); ?>
-	</td>
+    <td>
+        <?php echo T_('Password'); ?> :
+    </td>
+    <td>
+        <input type="password" name="password_1" size="30" value="" />
+        <?php Error::display('password'); ?>
+    </td>
 </tr>
 <tr>
-	<td>
-		<?php echo T_('Confirm Password'); ?>:
-	</td>
-	<td>
-		<input type="password" name="password_2" size="30" value="" />
-	</td>
+    <td>
+        <?php echo T_('Confirm Password'); ?>:
+    </td>
+    <td>
+        <input type="password" name="password_2" size="30" value="" />
+    </td>
 </tr>
 <tr>
-	<td>
-		<?php echo  T_('User Access Level'); ?>:
-	</td>
-	<td>
+    <td>
+        <?php echo  T_('User Access Level'); ?>:
+    </td>
+    <td>
                 <?php $var_name = "on_" . $client->access; ${$var_name} = 'selected="selected"'; ?>
                 <select name="access">
                 <option value="5" <?php echo $on_5; ?>><?php echo T_('Guest'); ?></option>
@@ -80,41 +80,41 @@
                 <option value="75" <?php echo $on_75; ?>><?php echo T_('Catalog Manager'); ?></option>
                 <option value="100" <?php echo $on_100; ?>><?php echo T_('Admin'); ?></option>
                 </select>
-	</td>
+    </td>
 </tr>
 <tr>
-	<th colspan="2"><?php echo T_('Other Options'); ?></th>
+    <th colspan="2"><?php echo T_('Other Options'); ?></th>
 </tr>
 <tr>
-	<td><?php echo T_('Config Preset'); ?></td>
-	<td>
-		<select name="preset">
-			<option value=""></option>
-			<option value="democratic"><?php echo T_('Democratic'); ?></option>
-			<option value="localplay"><?php echo T_('Localplay'); ?></option>
-			<option value="flash"><?php echo T_('Flash'); ?></option>
-			<option value="stream"><?php echo T_('Stream'); ?></option>
-		</select>
-	</td>
+    <td><?php echo T_('Config Preset'); ?></td>
+    <td>
+        <select name="preset">
+            <option value=""></option>
+            <option value="democratic"><?php echo T_('Democratic'); ?></option>
+            <option value="localplay"><?php echo T_('Localplay'); ?></option>
+            <option value="flash"><?php echo T_('Flash'); ?></option>
+            <option value="stream"><?php echo T_('Stream'); ?></option>
+        </select>
+    </td>
 </tr>
 <tr>
-	<td><?php echo T_('Prevent Preset Override'); ?></td>
-	<td>
-		<input type="checkbox" value="1" name="prevent_override" /><span class="information"> <?php echo T_('This Affects all non-Admin accounts'); ?></span>
-	</td>
+    <td><?php echo T_('Prevent Preset Override'); ?></td>
+    <td>
+        <input type="checkbox" value="1" name="prevent_override" /><span class="information"> <?php echo T_('This Affects all non-Admin accounts'); ?></span>
+    </td>
 </tr>
 <tr>
-	<td><?php echo T_('Clear Stats'); ?></td>
-	<td>
-		<input type="checkbox" value="1" name="reset_stats" />
-	</td>
+    <td><?php echo T_('Clear Stats'); ?></td>
+    <td>
+        <input type="checkbox" value="1" name="reset_stats" />
+    </td>
 </tr>
 </table>
 <div class="formValidation">
-		<input type="hidden" name="action" value="update_user" />
-		<input type="submit" value="<?php echo T_('Update User'); ?>" />
-		<?php echo Core::form_register('edit_user'); ?>
-		<input type="hidden" name="user_id" value="<?php echo $client->id; ?>" />
+        <input type="hidden" name="action" value="update_user" />
+        <input type="submit" value="<?php echo T_('Update User'); ?>" />
+        <?php echo Core::form_register('edit_user'); ?>
+        <input type="hidden" name="user_id" value="<?php echo $client->id; ?>" />
 </div>
 </form>
 <?php UI::show_box_bottom(); ?>

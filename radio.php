@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -26,38 +26,38 @@ UI::show_header();
 
 // Switch on Action
 switch ($_REQUEST['action']) {
-	case 'show_create':
-		if (!Access::check('interface','25')) {
-			UI::access_denied();
-			exit;
-		}
+    case 'show_create':
+        if (!Access::check('interface','25')) {
+            UI::access_denied();
+            exit;
+        }
 
-		require_once Config::get('prefix') . '/templates/show_add_live_stream.inc.php';
+        require_once Config::get('prefix') . '/templates/show_add_live_stream.inc.php';
 
-	break;
-	case 'create':
-		if (!Access::check('interface','25') || Config::get('demo_mode')) {
-			UI::access_denied();
-			exit;
-		}
+    break;
+    case 'create':
+        if (!Access::check('interface','25') || Config::get('demo_mode')) {
+            UI::access_denied();
+            exit;
+        }
 
-		if (!Core::form_verify('add_radio','post')) {
-			UI::access_denied();
-			exit;
-		}
+        if (!Core::form_verify('add_radio','post')) {
+            UI::access_denied();
+            exit;
+        }
 
-		// Try to create the sucker
-		$results = Radio::create($_POST);
+        // Try to create the sucker
+        $results = Radio::create($_POST);
 
-		if (!$results) {
-			require_once Config::get('prefix') . '/templates/show_add_live_stream.inc.php';
-		}
-		else {
-			$body = T_('Radio Station Added');
-			$title = '';
-			show_confirmation($title,$body,Config::get('web_path') . '/index.php');
-		}
-	break;
+        if (!$results) {
+            require_once Config::get('prefix') . '/templates/show_add_live_stream.inc.php';
+        }
+        else {
+            $body = T_('Radio Station Added');
+            $title = '';
+            show_confirmation($title,$body,Config::get('web_path') . '/index.php');
+        }
+    break;
 } // end data collection
 
 UI::show_footer();

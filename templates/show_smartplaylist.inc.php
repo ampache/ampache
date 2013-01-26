@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -31,27 +31,27 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
 <div id="information_actions">
 <ul>
         <?php if (Access::check_function('batch_download')) { ?>
-	<li>
-		<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
-		<?php echo T_('Batch Download'); ?>
-	</li>
+    <li>
+        <a href="<?php echo Config::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
+        <?php echo T_('Batch Download'); ?>
+    </li>
         <?php } ?>
-	<li>
-		<?php echo Ajax::button('?action=basket&type=smartplaylist&id=' . $playlist->id,'add', T_('Add All'),'play_playlist'); ?>
-		<?php echo T_('Add All'); ?>
-	</li>
-	<?php if ($playlist->has_access()) { ?>
-	<li>
-		<?php echo Ajax::button('?action=show_edit_object&type=smartplaylist_title&id=' . $playlist->id,'edit', T_('Edit'),'edit_playlist_' . $playlist->id); ?>
-		<?php echo T_('Edit'); ?>
-	</li>
-	<li>
-		<a href="<?php echo Config::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
-			<?php echo UI::get_icon('delete'); ?>
-		</a>
-		<?php echo T_('Delete'); ?>
-	</li>
-	<?php } ?>
+    <li>
+        <?php echo Ajax::button('?action=basket&type=smartplaylist&id=' . $playlist->id,'add', T_('Add All'),'play_playlist'); ?>
+        <?php echo T_('Add All'); ?>
+    </li>
+    <?php if ($playlist->has_access()) { ?>
+    <li>
+        <?php echo Ajax::button('?action=show_edit_object&type=smartplaylist_title&id=' . $playlist->id,'edit', T_('Edit'),'edit_playlist_' . $playlist->id); ?>
+        <?php echo T_('Edit'); ?>
+    </li>
+    <li>
+        <a href="<?php echo Config::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
+            <?php echo UI::get_icon('delete'); ?>
+        </a>
+        <?php echo T_('Delete'); ?>
+    </li>
+    <?php } ?>
 </ul>
 </div>
 
@@ -60,7 +60,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
 <?php require Config::get('prefix') . '/templates/show_rules.inc.php'; ?>
 
 <div class="formValidation">
-	<input class="button" type="submit" value="<?php echo T_('Save Changes'); ?>" />
+    <input class="button" type="submit" value="<?php echo T_('Save Changes'); ?>" />
 </div>
 
 </form>

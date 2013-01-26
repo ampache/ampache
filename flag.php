@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -34,27 +34,27 @@ $flag = new Flag($_REQUEST['flag_id']);
 
 /* Switch on the action */
 switch ($action) {
-	case 'remove_flag':
-	break;
-	case 'flag':
-		$id 		= scrub_in($_REQUEST['id']);
-		$type		= scrub_in($_REQUEST['type']);
-		$flag_type	= scrub_in($_REQUEST['flag_type']);
-		$comment	= scrub_in($_REQUEST['comment']);
-		$flag->add($id,$type,$flag_type,$comment);
-		show_confirmation(T_('Item Flagged'), T_('The specified item has been flagged'),$_SESSION['source_page']);
-	break;
-	case 'show_flag':
-		/* Store where they came from */
-		$_SESSION['source_page'] = return_referer();
-		require Config::get('prefix') . '/templates/show_flag.inc.php';
-	break;
-	case 'show_remove_flag':
+    case 'remove_flag':
+    break;
+    case 'flag':
+        $id         = scrub_in($_REQUEST['id']);
+        $type        = scrub_in($_REQUEST['type']);
+        $flag_type    = scrub_in($_REQUEST['flag_type']);
+        $comment    = scrub_in($_REQUEST['comment']);
+        $flag->add($id,$type,$flag_type,$comment);
+        show_confirmation(T_('Item Flagged'), T_('The specified item has been flagged'),$_SESSION['source_page']);
+    break;
+    case 'show_flag':
+        /* Store where they came from */
+        $_SESSION['source_page'] = return_referer();
+        require Config::get('prefix') . '/templates/show_flag.inc.php';
+    break;
+    case 'show_remove_flag':
 
-	break;
-	default:
+    break;
+    default:
 
-	break;
+    break;
 } // end action switch
 
 UI::show_footer();

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -21,7 +21,7 @@
  */
 
 if(php_sapi_name() != 'cli') {
-	exit(1);
+    exit(1);
 }
 
 define('NO_SESSION', 1);
@@ -37,11 +37,11 @@ $options = getopt('u', array('update'));
 $run_update = (isset($options['u']) || isset($options['update']));
 
 if (Update::need_update() && $run_update) {
-	Update::run_update();
+    Update::run_update();
 }
 
 if (Update::need_update()) {
-	echo T_('The following updates need to be performed:'), "\n";
+    echo T_('The following updates need to be performed:'), "\n";
 }
 
 Update::display_update();

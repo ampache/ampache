@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -33,16 +33,16 @@ require_once $prefix . '/lib/init-tiny.php';
 require_once $prefix . '/lib/install.lib.php';
 
 $options = getopt(
-	'h:d:f:p:P:u:U:w:',
-	array(	'database-user:',
-		'database-password:',
-		'database-host:',
-		'database-name:',
-		'ampache-database-user:',
-		'ampache-database-password:',
-		'webpath:',
-		'force'
-	)
+    'h:d:f:p:P:u:U:w:',
+    array(    'database-user:',
+        'database-password:',
+        'database-host:',
+        'database-name:',
+        'ampache-database-user:',
+        'ampache-database-password:',
+        'webpath:',
+        'force'
+    )
 );
 
 $force = ($options['f'] || $options['force']);
@@ -57,33 +57,33 @@ $webpath = $options['w'] ?: $options ['webpath'];
 
 // Make sure we have all the required information
 if (!$db_user || !$db_pass || !$db_host || !$db_name || !$new_db_user || !$new_db_pass) {
-	usage();
+    usage();
 }
 
 // Now let's make sure its not already installed
 if (!install_check_status($configfile)) { 
-	echo "\n", T_('Existing Ampache installation found.'), "\n";
-	if ($force) {
-		echo T_('Force specified, proceeding anyway.'), "\n";
-	}
-	else {
-		echo T_('Exiting.'), "\n"; 
-		exit(1);
-	}
+    echo "\n", T_('Existing Ampache installation found.'), "\n";
+    if ($force) {
+        echo T_('Force specified, proceeding anyway.'), "\n";
+    }
+    else {
+        echo T_('Exiting.'), "\n"; 
+        exit(1);
+    }
 } 
 
 // Install the database
 if (!install_insert_db($db_user, $db_pass, $db_host, $db_name, $new_db_user, $new_db_pass)) { 
-	echo T_('Database creation failed'), "\n"; 
-	echo Error::get('general'), "\n\n"; 
-	exit(1); 
+    echo T_('Database creation failed'), "\n"; 
+    echo Error::get('general'), "\n\n"; 
+    exit(1); 
 } 
 
 // Write the config file
 if (!install_create_config($webpath, $new_db_user, $new_db_pass, $db_host, $db_name)) { 
-	echo T_('Config file creation failed'), "\n"; 
-	echo Error::get('general') . "\n\n"; 
-	exit(1); 
+    echo T_('Config file creation failed'), "\n"; 
+    echo Error::get('general') . "\n\n"; 
+    exit(1); 
 } 
 
 /**
@@ -91,25 +91,25 @@ if (!install_create_config($webpath, $new_db_user, $new_db_pass, $db_host, $db_n
  * This just prints out the required params for this script
  **/
 function usage() {
-	echo "Usage: install_db.inc [options]";
-	echo "\n\t-U, --database-user\t\t\t";
-	echo 'MySQL Admin User';
-	echo "\n\t-P, --database-password\t\t\t";
-	echo 'MySQL Admin Password';
-	echo "\n\t-h, --database-host\t\t\t";
-	echo 'MySQL Hostname';
-	echo "\n\t-d, --database-name\t\t\t"; 
-	echo "MySQL Database Name"; 
-	echo "\n\t-u, --ampache-database-user\t";
-	echo 'MySQL Application Username';
-	echo "\n\t-p, --ampache-database-pass\t"; 
-	echo 'MySQL Application Password'; 
-	echo "\n\t-w, --webpath\t\t\t\t"; 
-	echo 'Web path';
-	echo "\n\t-f, --force\t\t\t\t";
-	echo 'Force installation', "\n";
+    echo "Usage: install_db.inc [options]";
+    echo "\n\t-U, --database-user\t\t\t";
+    echo 'MySQL Admin User';
+    echo "\n\t-P, --database-password\t\t\t";
+    echo 'MySQL Admin Password';
+    echo "\n\t-h, --database-host\t\t\t";
+    echo 'MySQL Hostname';
+    echo "\n\t-d, --database-name\t\t\t"; 
+    echo "MySQL Database Name"; 
+    echo "\n\t-u, --ampache-database-user\t";
+    echo 'MySQL Application Username';
+    echo "\n\t-p, --ampache-database-pass\t"; 
+    echo 'MySQL Application Password'; 
+    echo "\n\t-w, --webpath\t\t\t\t"; 
+    echo 'Web path';
+    echo "\n\t-f, --force\t\t\t\t";
+    echo 'Force installation', "\n";
 
-	exit(1);
+    exit(1);
 }
 
 ?>

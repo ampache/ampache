@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -32,20 +32,20 @@
 <form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
 <?php show_preference_box($preferences[$_REQUEST['tab']]);  ?>
 <div class="formValidation">
-	<input class="button" type="submit" value="<?php echo T_('Update Preferences'); ?>" />
-	<?php echo Core::form_register('update_preference'); ?>
-	<input type="hidden" name="tab" value="<?php echo scrub_out($_REQUEST['tab']); ?>" />
-	<input type="hidden" name="method" value="<?php echo scrub_out($_REQUEST['action']); ?>" />
-	<?php if (Access::check('interface','100')) { ?>
-		<input type="hidden" name="user_id" value="<?php echo scrub_out($_REQUEST['user_id']); ?>" />
-	<?php } ?>
+    <input class="button" type="submit" value="<?php echo T_('Update Preferences'); ?>" />
+    <?php echo Core::form_register('update_preference'); ?>
+    <input type="hidden" name="tab" value="<?php echo scrub_out($_REQUEST['tab']); ?>" />
+    <input type="hidden" name="method" value="<?php echo scrub_out($_REQUEST['action']); ?>" />
+    <?php if (Access::check('interface','100')) { ?>
+        <input type="hidden" name="user_id" value="<?php echo scrub_out($_REQUEST['user_id']); ?>" />
+    <?php } ?>
 </div>
 <?php
 }  // end if not account
 if ($_REQUEST['tab'] == 'account') {
-		$client = $GLOBALS['user'];
-		require Config::get('prefix') . '/templates/show_account.inc.php';
-	}
+        $client = $GLOBALS['user'];
+        require Config::get('prefix') . '/templates/show_account.inc.php';
+    }
 ?>
 </form>
 

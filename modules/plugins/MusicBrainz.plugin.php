@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -22,77 +22,77 @@
 
 class AmpacheMusicBrainz {
 
-	public $name		='MusicBrainz';
-	public $description	='MusicBrainz metadata integration';
-	public $version		='000001';
-	public $min_ampache	='360003';
-	public $max_ampache	='999999';
+    public $name        ='MusicBrainz';
+    public $description    ='MusicBrainz metadata integration';
+    public $version        ='000001';
+    public $min_ampache    ='360003';
+    public $max_ampache    ='999999';
 
-	/**
-	 * Constructor
-	 * This function does nothing
-	 */
-	public function __construct() {
-		return true;
-	}
+    /**
+     * Constructor
+     * This function does nothing
+     */
+    public function __construct() {
+        return true;
+    }
 
-	/**
-	 * install
-	 * This is a required plugin function
-	 */
-	public function install() {
-		return true;
-	} // install
+    /**
+     * install
+     * This is a required plugin function
+     */
+    public function install() {
+        return true;
+    } // install
 
-	/**
-	 * uninstall
-	 * This is a required plugin function
-	 */
-	public function uninstall() {
-		return true;
-	} // uninstall
+    /**
+     * uninstall
+     * This is a required plugin function
+     */
+    public function uninstall() {
+        return true;
+    } // uninstall
 
-	/**
-	 * load
-	 * This is a required plugin function; here it populates the prefs we 
-	 * need for this object.
-	 */
-	public function load() {
-		return true;
-	} // load
+    /**
+     * load
+     * This is a required plugin function; here it populates the prefs we 
+     * need for this object.
+     */
+    public function load() {
+        return true;
+    } // load
 
-	/**
-	 * get_metadata
-	 * Returns song metadata for what we're passed in.
-	 */
-	public function get_metadata($song_info) {
-		if (!$mbid = $song_info['mb_trackid']) {
-			return null;
-		}
+    /**
+     * get_metadata
+     * Returns song metadata for what we're passed in.
+     */
+    public function get_metadata($song_info) {
+        if (!$mbid = $song_info['mb_trackid']) {
+            return null;
+        }
 
-		$mbquery = new MusicBrainzQuery();
-		$includes = new mbTrackIncludes();
-		$includes = $includes->artist()->releases();
-		try {
-			$track = $mbquery->getTrackById($mbid, $includes);
-		}
-		catch (Exception $e) {
-			return null;
-		}
+        $mbquery = new MusicBrainzQuery();
+        $includes = new mbTrackIncludes();
+        $includes = $includes->artist()->releases();
+        try {
+            $track = $mbquery->getTrackById($mbid, $includes);
+        }
+        catch (Exception $e) {
+            return null;
+        }
 
-		$results = array();
+        $results = array();
 
-		$results['mb_artistid'] = $track->getArtist()->getId();
-		$results['artist'] = $track->getArtist()->getName();
-		$results['title'] = $track->getTitle();
-		if ($track->getNumReleases() == 1) {
-			$release = $track->getReleases();
-			$release = $release[0];
-			$results['album'] = $release->getTitle();
-		}
+        $results['mb_artistid'] = $track->getArtist()->getId();
+        $results['artist'] = $track->getArtist()->getName();
+        $results['title'] = $track->getTitle();
+        if ($track->getNumReleases() == 1) {
+            $release = $track->getReleases();
+            $release = $release[0];
+            $results['album'] = $release->getTitle();
+        }
 
-		return $results;
-	} // get_metadata
+        return $results;
+    } // get_metadata
 
 } // end AmpacheMusicBrainz
 ?>

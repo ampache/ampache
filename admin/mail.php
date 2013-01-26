@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -23,55 +23,55 @@
 require_once '../lib/init.php';
 
 if (!Access::check('interface','75')) {
-	UI::access_denied();
-	exit();
+    UI::access_denied();
+    exit();
 }
 
 UI::show_header();
 
 // Action switch
 switch ($_REQUEST['action']) {
-	case 'send_mail':
-		if (Config::get('demo_mode')) {
-			UI::access_denied();
-			exit;
-		}
+    case 'send_mail':
+        if (Config::get('demo_mode')) {
+            UI::access_denied();
+            exit;
+        }
 
-		// Multi-byte Character Mail
-		if(function_exists('mb_language')) {
-			ini_set("mbstring.internal_encoding","UTF-8");
-			mb_language("uni");
-		}
+        // Multi-byte Character Mail
+        if(function_exists('mb_language')) {
+            ini_set("mbstring.internal_encoding","UTF-8");
+            mb_language("uni");
+        }
 
-		$mailer = new Ampache_Mail();
+        $mailer = new Ampache_Mail();
 
-		// Set the vars on the object
-		$mailer->subject = $_REQUEST['subject'];
-		$mailer->message = $_REQUEST['message'];
+        // Set the vars on the object
+        $mailer->subject = $_REQUEST['subject'];
+        $mailer->message = $_REQUEST['message'];
 
-		if ($_REQUEST['from'] == 'system') {
-			$mailer->set_default_sender();
-		}
-		else {
-			$mailer->sender = $GLOBALS['user']->email;
-			$mailer->sender_name = $GLOBALS['user']->fullname;
-		}
+        if ($_REQUEST['from'] == 'system') {
+            $mailer->set_default_sender();
+        }
+        else {
+            $mailer->sender = $GLOBALS['user']->email;
+            $mailer->sender_name = $GLOBALS['user']->fullname;
+        }
 
-		if($mailer->send_to_group($_REQUEST['to'])) {
-			$title  = T_('E-mail Sent');
-			$body   = T_('Your E-mail was successfully sent.');
-		}
-		else {
-			$title 	= T_('E-mail Not Sent');
-			$body 	= T_('Your E-mail was not sent.');
-		}
-		$url = Config::get('web_path') . '/admin/mail.php';
-		show_confirmation($title,$body,$url);
+        if($mailer->send_to_group($_REQUEST['to'])) {
+            $title  = T_('E-mail Sent');
+            $body   = T_('Your E-mail was successfully sent.');
+        }
+        else {
+            $title     = T_('E-mail Not Sent');
+            $body     = T_('Your E-mail was not sent.');
+        }
+        $url = Config::get('web_path') . '/admin/mail.php';
+        show_confirmation($title,$body,$url);
 
-	break;
-	default:
-		require_once Config::get('prefix') . '/templates/show_mail_users.inc.php';
-	break;
+    break;
+    default:
+        require_once Config::get('prefix') . '/templates/show_mail_users.inc.php';
+    break;
 } // end switch
 
 UI::show_footer();

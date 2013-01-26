@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -24,9 +24,9 @@
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>">
 <table class="tabledata" cellpadding="3" cellspacing="0">
 <tr id="search_location">
-	<td><?php if ($_REQUEST['type'] != 'song') { ?><a href="<?php echo Config::get('web_path'); ?>/random.php?action=advanced&type=song"><?php echo T_('Songs'); ?></a><?php } else { echo T_('Songs'); } ?></td>
-	<td><?php if ($_REQUEST['type'] != 'album') { ?><a href="<?php echo Config::get('web_path'); ?>/random.php?action=advanced&type=album"><?php echo T_('Albums'); ?></a><?php } else { echo T_('Albums'); } ?></td>
-	<td><?php if ($_REQUEST['type'] != 'artist') { ?><a href="<?php echo Config::get('web_path'); ?>/random.php?action=advanced&type=artist"><?php echo T_('Artists'); ?></a><?php } else { echo T_('Artists'); } ?></td>
+    <td><?php if ($_REQUEST['type'] != 'song') { ?><a href="<?php echo Config::get('web_path'); ?>/random.php?action=advanced&type=song"><?php echo T_('Songs'); ?></a><?php } else { echo T_('Songs'); } ?></td>
+    <td><?php if ($_REQUEST['type'] != 'album') { ?><a href="<?php echo Config::get('web_path'); ?>/random.php?action=advanced&type=album"><?php echo T_('Albums'); ?></a><?php } else { echo T_('Albums'); } ?></td>
+    <td><?php if ($_REQUEST['type'] != 'artist') { ?><a href="<?php echo Config::get('web_path'); ?>/random.php?action=advanced&type=artist"><?php echo T_('Artists'); ?></a><?php } else { echo T_('Artists'); } ?></td>
 </tr>
 <tr id="search_blank_line"><td>&nbsp;</td></tr>
 </table>
@@ -34,20 +34,20 @@
 <tr id="search_item_count">
         <td><?php echo T_('Item count'); ?></td>
         <td>
-		<select name="random">
+        <select name="random">
 <?php
-		foreach(array(1, 5, 10, 20, 30, 50, 100, 500, 1000) as $i) {
-			echo "\t\t\t" . '<option value="' . $i . '" ' . 
-				($_POST['random'] == $i 
-					? 'selected="selected"' : '') . '>' .
-				$i . "</option>\n";
-		}
-			echo "\t\t\t" . '<option value="-1" ' .
-				($_POST['random'] == '-1' 
-					? 'selected="selected"' : '') . '>' .
-				T_('All') . "</option>\n";
+        foreach(array(1, 5, 10, 20, 30, 50, 100, 500, 1000) as $i) {
+            echo "\t\t\t" . '<option value="' . $i . '" ' . 
+                ($_POST['random'] == $i 
+                    ? 'selected="selected"' : '') . '>' .
+                $i . "</option>\n";
+        }
+            echo "\t\t\t" . '<option value="-1" ' .
+                ($_POST['random'] == '-1' 
+                    ? 'selected="selected"' : '') . '>' .
+                T_('All') . "</option>\n";
 ?>
-		</select>
+        </select>
         </td>
 </tr>
 <tr id="search_length">
@@ -56,22 +56,22 @@
                 <?php $name = 'length_' . intval($_POST['length']); ${$name} = ' selected="selected"'; ?>
                 <select name="length">
 <?php
-			echo "\t\t\t" . '<option value="0" ' .
-				($_POST['length'] == 0 
-					? 'selected="selected"' : '') . '>' .
-				T_('Unlimited') . "</option>\n";
-		foreach(array(15, 30, 60, 120, 240, 480, 960) as $i) {
-			echo "\t\t\t" . '<option value="' . $i . '" ' . 
-				($_POST['length'] == $i 
-					? 'selected="selected"' : '') . '>';
-			if ($i < 60) {
-				printf(T_ngettext('%d minute', '%d minutes', $i), $i);
-			}
-			else {
-				printf(T_ngettext('%d hour', '%d hours', $i / 60), $i / 60);
-			}
-			echo "</option>\n";
-		}
+            echo "\t\t\t" . '<option value="0" ' .
+                ($_POST['length'] == 0 
+                    ? 'selected="selected"' : '') . '>' .
+                T_('Unlimited') . "</option>\n";
+        foreach(array(15, 30, 60, 120, 240, 480, 960) as $i) {
+            echo "\t\t\t" . '<option value="' . $i . '" ' . 
+                ($_POST['length'] == $i 
+                    ? 'selected="selected"' : '') . '>';
+            if ($i < 60) {
+                printf(T_ngettext('%d minute', '%d minutes', $i), $i);
+            }
+            else {
+                printf(T_ngettext('%d hour', '%d hours', $i / 60), $i / 60);
+            }
+            echo "</option>\n";
+        }
 ?>
                 </select>
         </td>
@@ -81,16 +81,16 @@
         <td>
                 <select name="size_limit">
 <?php
-			echo "\t\t\t" . '<option value="0" ' .
-				($_POST['size_limit'] == 0
-					? 'selected="selected"' : '') . '>' .
-				T_('Unlimited') . "</option>\n";
-		foreach(array(64, 128, 256, 512, 1024) as $i) {
-			echo "\t\t\t" . '<option value="' . $i . '"' .
-				($_POST['size_limit'] == $i
-					? 'selected="selected"' : '') . '>' .
-				UI::format_bytes($i * 1048576) . "</option>\n";
-		}
+            echo "\t\t\t" . '<option value="0" ' .
+                ($_POST['size_limit'] == 0
+                    ? 'selected="selected"' : '') . '>' .
+                T_('Unlimited') . "</option>\n";
+        foreach(array(64, 128, 256, 512, 1024) as $i) {
+            echo "\t\t\t" . '<option value="' . $i . '"' .
+                ($_POST['size_limit'] == $i
+                    ? 'selected="selected"' : '') . '>' .
+                UI::format_bytes($i * 1048576) . "</option>\n";
+        }
 ?>
                 </select>
         </td>
@@ -106,13 +106,13 @@
 <?php UI::show_box_bottom(); ?>
 <div id="browse">
 <?php
-	if (is_array($object_ids)) {
-		$browse = new Browse();
-		$browse->set_type('song');
-		$browse->save_objects($object_ids);
-		$browse->show_objects();
-		$browse->store();
-		echo Ajax::observe('window','load',Ajax::action('?action=refresh_rightbar','playlist_refresh_load'));
-	}
+    if (is_array($object_ids)) {
+        $browse = new Browse();
+        $browse->set_type('song');
+        $browse->save_objects($object_ids);
+        $browse->show_objects();
+        $browse->store();
+        echo Ajax::observe('window','load',Ajax::action('?action=refresh_rightbar','playlist_refresh_load'));
+    }
 ?>
 </div>

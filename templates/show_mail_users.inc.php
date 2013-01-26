@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -31,66 +31,66 @@
                 <option value="all" title="Mail Everyone"><?php echo T_('All'); ?></option>
                 <option value="users" title="Mail Users"><?php echo T_('User'); ?></option>
                 <option value="admins" title="Mail Admins"><?php echo T_('Admin'); ?></option>
-		<option value="inactive" title="Mail Inactive Users"><?php echo T_('Inactive Users'); ?>&nbsp;</option>
+        <option value="inactive" title="Mail Inactive Users"><?php echo T_('Inactive Users'); ?>&nbsp;</option>
         </select>
     </td>
   </tr>
 <!--
   <tr>
     <td colspan="2">
- 	 <table>
- 		 <tr>
-		    <td><?php echo T_('Catalog Statistics'); ?>:</td>
-		    <td>
-			<input type="checkbox" name="cat_stats" value="yes" />
-		    </td>
-		    <td><?php echo T_('Most Popular Albums'); ?>:</td>
-		    <td>
-		        <input type="checkbox" name="pop_albums" value="yes" />
-		    </td>
-		  </tr>
+      <table>
+          <tr>
+            <td><?php echo T_('Catalog Statistics'); ?>:</td>
+            <td>
+            <input type="checkbox" name="cat_stats" value="yes" />
+            </td>
+            <td><?php echo T_('Most Popular Albums'); ?>:</td>
+            <td>
+                <input type="checkbox" name="pop_albums" value="yes" />
+            </td>
+          </tr>
 
-		  <tr>
-		    <td><?php echo T_('Latest Artist Additions'); ?>:</td>
-		    <td>
-		        <input type="checkbox" name="new_artists" value="yes" />
-		    </td>
-		    <td><?php echo T_('Most Popular Artists'); ?>:</td>
-		    <td>
-		        <input type="checkbox" name="pop_artists" value="yes" />
-		    </td>
-		  </tr>
+          <tr>
+            <td><?php echo T_('Latest Artist Additions'); ?>:</td>
+            <td>
+                <input type="checkbox" name="new_artists" value="yes" />
+            </td>
+            <td><?php echo T_('Most Popular Artists'); ?>:</td>
+            <td>
+                <input type="checkbox" name="pop_artists" value="yes" />
+            </td>
+          </tr>
 
-		  <tr>
-		    <td><?php echo T_('Latest Album Additions'); ?>:</td>
-		    <td>
-		        <input type="checkbox" name="new_albums" value="yes" />
-		    </td>
-		    <td><?php echo T_('Most Popular Songs'); ?>:</td>
-		    <td>
-		        <input type="checkbox" name="pop_songs" value="yes" />
-		    </td>
-		</tr>
-		  <tr>
-		    <td><?php echo T_('Flagged Songs'); ?>:</td>
-		    <td>
-		        <input type="checkbox" name="flagged" value="yes" />
-		    </td>
-		    <td><?php echo T_('Disabled Songs'); ?>:</td>
-		    <td>
-		        <input type="checkbox" name="disabled" value="yes" />
-		    </td>
+          <tr>
+            <td><?php echo T_('Latest Album Additions'); ?>:</td>
+            <td>
+                <input type="checkbox" name="new_albums" value="yes" />
+            </td>
+            <td><?php echo T_('Most Popular Songs'); ?>:</td>
+            <td>
+                <input type="checkbox" name="pop_songs" value="yes" />
+            </td>
+        </tr>
+          <tr>
+            <td><?php echo T_('Flagged Songs'); ?>:</td>
+            <td>
+                <input type="checkbox" name="flagged" value="yes" />
+            </td>
+            <td><?php echo T_('Disabled Songs'); ?>:</td>
+            <td>
+                <input type="checkbox" name="disabled" value="yes" />
+            </td>
 
-		</tr>
+        </tr>
 
-		  <tr>
-		    <td colspan = "2"><?php echo T_('Most Popular Threshold in days'); ?>:</td>
-		    <td>
-		        <input type="text" name="threshold" size="3" value="<?php echo Config::get('popular_threshold'); ?>" />
-		    </td>
-		</tr>
+          <tr>
+            <td colspan = "2"><?php echo T_('Most Popular Threshold in days'); ?>:</td>
+            <td>
+                <input type="text" name="threshold" size="3" value="<?php echo Config::get('popular_threshold'); ?>" />
+            </td>
+        </tr>
 
-	</table>
+    </table>
     </td>
   </tr>
 -->
@@ -99,7 +99,7 @@
     <td>
       <select name="from">
         <option value="self" title="Self"><?php echo T_('Yourself'); ?></option>
-	<option value="system" title="System"><?php echo T_('Ampache'); ?></option>
+    <option value="system" title="System"><?php echo T_('Ampache'); ?></option>
       </select>
     </td>
   </tr>

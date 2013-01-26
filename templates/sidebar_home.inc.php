@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -23,11 +23,11 @@
 <ul class="sb2" id="sb_home">
   <li><h4><?php echo T_('Browse'); ?></h4>
   <?php
-	// Build the selected dealie
-	if (isset($_REQUEST['action'])) {
-		$text = scrub_in($_REQUEST['action']) . '_ac';
-		${$text} = ' selected="selected"';
-	}
+    // Build the selected dealie
+    if (isset($_REQUEST['action'])) {
+        $text = scrub_in($_REQUEST['action']) . '_ac';
+        ${$text} = ' selected="selected"';
+    }
   ?>
     <ul class="sb3" id="sb_browse_bb">
       <li id="sb_browse_bb_SongTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo T_('Song Titles'); ?></a></li>

@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,11 +25,11 @@
 <ul>
 <li>
 <?php if (isset($_REQUEST['all'])){ ?>
-	<a href="<?php echo Config::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>"><?php echo UI::get_icon('disable'); ?></a>
-	<?php echo T_('Show Unique'); ?>
+    <a href="<?php echo Config::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>"><?php echo UI::get_icon('disable'); ?></a>
+    <?php echo T_('Show Unique'); ?>
 <?php }else{ ?>
-	<a href="<?php echo Config::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all"><?php echo UI::get_icon('add'); ?></a>
-	<?php echo T_('Show All'); ?>
+    <a href="<?php echo Config::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all"><?php echo UI::get_icon('add'); ?></a>
+    <?php echo T_('Show All'); ?>
 <?php }?>
 </li>
 </ul>
@@ -43,21 +43,21 @@
 </colgroup>
 <tr class="th-top">
   <th class="cel_date"><?php echo T_('Date'); ?></th>
- 	<th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
+     <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
 </tr>
 <?php foreach ($history as $data) { ?>
 <tr class="<?php echo UI::flip_class(); ?>">
-	<td class="cel_date">
-		<?php echo date("d/m/Y H\hi",$data['date']); ?>
-	</td>
-	<td class="cel_ipaddress">
-		<?php echo inet_ntop($data['ip']); ?>
-	</td>
+    <td class="cel_date">
+        <?php echo date("d/m/Y H\hi",$data['date']); ?>
+    </td>
+    <td class="cel_ipaddress">
+        <?php echo inet_ntop($data['ip']); ?>
+    </td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
   <th class="cel_date"><?php echo T_('Date'); ?></th>
- 	<th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
+     <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
 </tr>
 
 </table>

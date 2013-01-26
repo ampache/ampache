@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,21 +25,21 @@
 <form name="edit_artist" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/flag.php?action=edit_artist">
 <table class="tabledata">
 <tr class="<?php echo UI::flip_class(); ?>">
-	<td><?php echo T_('Name'); ?></td>
-	<td>
-		<input type="text" name="name" value="<?php echo scrub_out($artist->name); ?>">
-	</td>
+    <td><?php echo T_('Name'); ?></td>
+    <td>
+        <input type="text" name="name" value="<?php echo scrub_out($artist->name); ?>">
+    </td>
 </tr>
 <tr class="<?php echo UI::flip_class(); ?>">
-	<td>&nbsp;</td>
-	<td>
-		<input type="checkbox" name="flag" value="1" checked="checked" /> <?php echo T_('Flag for Retagging'); ?>
-	</td>
+    <td>&nbsp;</td>
+    <td>
+        <input type="checkbox" name="flag" value="1" checked="checked" /> <?php echo T_('Flag for Retagging'); ?>
+    </td>
 </tr>
 </table>
 <div class="formValidation">
-		<input type="hidden" name="artist_id" value="<?php echo $artist->id; ?>" />
-		<input type="submit" value="<?php echo T_('Update Artist'); ?>" />
+        <input type="hidden" name="artist_id" value="<?php echo $artist->id; ?>" />
+        <input type="submit" value="<?php echo T_('Update Artist'); ?>" />
 </div>
 </form>
 <?php UI::show_box_bottom(); ?>

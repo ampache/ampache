@@ -1,5 +1,5 @@
 <?php 
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -30,8 +30,8 @@
  */
 class VlcPlayer {
 
-      public $host;
-      public $port;
+    public $host;
+    public $port;
     public $password;
 
     /**
@@ -54,19 +54,16 @@ class VlcPlayer {
      * $name    Name to be shown in the playlist
      * $url        URL of the song
      */      
-      public function add($name, $url) {
-
-      
-                   $aurl = urlencode($url); 
-                   $aurl .= "&";
-                   $aurl .= urlencode($name);
+    public function add($name, $url) {
+        $aurl = urlencode($url); 
+        $aurl .= "&";
+        $aurl .= urlencode($name);
                    
         $args = array('command'=>'in_enqueue','&input'=>$aurl);
         $results = $this->sendCommand('status.xml?', $args);
         if (is_null($results)) { return null; }
 
         return true;
-
     } // add
 
     /**

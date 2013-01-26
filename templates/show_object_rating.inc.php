@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -26,8 +26,8 @@ $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . 
 $othering = false;
 $rate = $rating->get_user_rating();
 if (!$rate) {
-	$rate = $rating->get_average_rating();
-	$othering = true;
+    $rate = $rating->get_average_rating();
+    $othering = true;
 }
 ?>
 
@@ -42,7 +42,7 @@ if (!$rate) {
     echo '<li class="current-rating" style="width:' . $width . '%" >';
     echo T_('Current rating: ');
     if ($rate <= 0) {
-    	echo T_('not rated yet') . "</li>\n";
+        echo T_('not rated yet') . "</li>\n";
     }
     else printf(T_('%s of 5'), $rate); echo "</li>\n";
 
@@ -50,11 +50,11 @@ if (!$rate) {
     {
     ?>
       <li>
-      	<?php echo Ajax::text($base_url . '&rating=' . $i, '', 'rating' . $i . '_' . $rating->id, '', 'star' . $i); ?>
+          <?php echo Ajax::text($base_url . '&rating=' . $i, '', 'rating' . $i . '_' . $rating->id, '', 'star' . $i); ?>
       </li>
     <?php
     }
     ?>
   </ul>
-   	<?php echo Ajax::text($base_url . '&rating=-1', '', 'rating0_' . $rating->id, '', 'star0'); ?>
+       <?php echo Ajax::text($base_url . '&rating=-1', '', 'rating0_' . $rating->id, '', 'star0'); ?>
 </div>

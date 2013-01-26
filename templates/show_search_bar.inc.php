@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -24,17 +24,17 @@
         <form name="search" method="post" action="<?php echo $web_path; ?>/search.php?type=song" enctype="multipart/form-data" style="Display:inline">
         <input type="text" name="rule_1_input" id="searchString"/>
         <input type="hidden" name="action" value="search" />
-	<input type="hidden" name="rule_1_operator" value="0" />
+    <input type="hidden" name="rule_1_operator" value="0" />
         <input type="hidden" name="object_type" value="song" />
-	<select name="rule_1">
-		<option value="anywhere"><?php echo T_('Anywhere')?></option>
-		<option value="title"><?php echo T_('Title')?></option>
-		<option value="album"><?php echo T_('Album')?></option>
-		<option value="artist"><?php echo T_('Artist')?></option>
-		<option value="tag"><?php echo T_('Tag')?></option>
-	</select>
+    <select name="rule_1">
+        <option value="anywhere"><?php echo T_('Anywhere')?></option>
+        <option value="title"><?php echo T_('Title')?></option>
+        <option value="album"><?php echo T_('Album')?></option>
+        <option value="artist"><?php echo T_('Artist')?></option>
+        <option value="tag"><?php echo T_('Tag')?></option>
+    </select>
         <input class="button" type="submit" value="<?php echo T_('Search'); ?>" id="searchBtn" />
-      	<a href="<?php echo $web_path; ?>/search.php?type=song" class="button" id="advSearchBtn"><?php echo T_('Advanced Search'); ?></a>
+          <a href="<?php echo $web_path; ?>/search.php?type=song" class="button" id="advSearchBtn"><?php echo T_('Advanced Search'); ?></a>
         </form>
 </div>
 

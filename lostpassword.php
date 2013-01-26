@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -26,47 +26,47 @@ require_once 'lib/init.php';
 $action = (isset($_POST['action'])) ? $_POST['action'] : "";
 
 switch ($action) {
-	case 'send':
-		/* Check for posted email */
-		$result = false;
-		if (isset($_POST['email']) && $_POST['email']) {
-			/* Get the email address and the current ip*/
-			$email = scrub_in($_POST['email']);
-			$current_ip =(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['HTTP_X_FORWARDED_FOR'] :$_SERVER['REMOTE_ADDR'];
-			$result = send_newpassword($email, $current_ip);
-		}
-		if ($result) {
-			Error::add('general', T_('Password has been sent'));
-		} else {
-			Error::add('general', T_('Password has not been sent'));
-		}
+    case 'send':
+        /* Check for posted email */
+        $result = false;
+        if (isset($_POST['email']) && $_POST['email']) {
+            /* Get the email address and the current ip*/
+            $email = scrub_in($_POST['email']);
+            $current_ip =(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['HTTP_X_FORWARDED_FOR'] :$_SERVER['REMOTE_ADDR'];
+            $result = send_newpassword($email, $current_ip);
+        }
+        if ($result) {
+            Error::add('general', T_('Password has been sent'));
+        } else {
+            Error::add('general', T_('Password has not been sent'));
+        }
 
-		require Config::get('prefix') . '/templates/show_login_form.inc.php';
-		break;
-	default:
-		require Config::get('prefix') . '/templates/show_lostpassword_form.inc.php';
+        require Config::get('prefix') . '/templates/show_login_form.inc.php';
+        break;
+    default:
+        require Config::get('prefix') . '/templates/show_lostpassword_form.inc.php';
 }
 
 function send_newpassword($email,$current_ip){
-	/* get the Client and set the new password */
-	$client = User::get_from_email($email);
-	if ($client->email == $email) {
-		$newpassword = generate_password(6);
-		$client->update_password($newpassword);
+    /* get the Client and set the new password */
+    $client = User::get_from_email($email);
+    if ($client->email == $email) {
+        $newpassword = generate_password(6);
+        $client->update_password($newpassword);
 
-		$mailer = new Ampache_Mail();
-		$mailer->set_default_sender();
-		$mailer->subject = T_("Lost Password");
-		$mailer->recipient_name = $client->fullname;
-		$mailer->recipient = $client->email;
+        $mailer = new Ampache_Mail();
+        $mailer->set_default_sender();
+        $mailer->subject = T_("Lost Password");
+        $mailer->recipient_name = $client->fullname;
+        $mailer->recipient = $client->email;
 
-		$message  = sprintf(T_("A user from %s has requested a password reset for '%s'."), $current_ip, $client->username);
-		$message .= "\n";
-		$message .= sprintf(T_("The password has been set to: %s"), $newpassword);
-		$mailer->message = $message;
+        $message  = sprintf(T_("A user from %s has requested a password reset for '%s'."), $current_ip, $client->username);
+        $message .= "\n";
+        $message .= sprintf(T_("The password has been set to: %s"), $newpassword);
+        $mailer->message = $message;
 
-		return $mailer->send();
-	}
-	return false;
+        return $mailer->send();
+    }
+    return false;
 }
 ?>

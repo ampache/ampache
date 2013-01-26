@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -23,21 +23,21 @@
 require_once '../init.php';
 
 function arrayToJSON($array) {
-	$json = '{ ';
-	foreach ($array as $key => $value) {
-		$json .= '"' . $key . '" : ';
-		if (is_array($value)) {
-			$json .= arrayToJSON($value);
-		}
-		else {
-			// Make sure to strip backslashes and convert things to
-			// entities in our output
-			$json .= '"' . scrub_out(str_replace('\\', '', $value)) . '"';
-		}
-		$json .= ' , ';
-	}
-	$json = rtrim($json, ', ');
-	return $json . ' }';
+    $json = '{ ';
+    foreach ($array as $key => $value) {
+        $json .= '"' . $key . '" : ';
+        if (is_array($value)) {
+            $json .= arrayToJSON($value);
+        }
+        else {
+            // Make sure to strip backslashes and convert things to
+            // entities in our output
+            $json .= '"' . scrub_out(str_replace('\\', '', $value)) . '"';
+        }
+        $json .= ' , ';
+    }
+    $json = rtrim($json, ', ');
+    return $json . ' }';
 }
 
 Header('content-type: application/x-javascript');

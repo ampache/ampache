@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -32,13 +32,13 @@ $meta = 'linux';
 
 // Take input from the command line, two options linux or windows
 if (count($_SERVER['argv']) > 1) { 
-	$meta = ($_SERVER['argv']['1'] == 'windows') ? 'windows' : 'linux';  
+    $meta = ($_SERVER['argv']['1'] == 'windows') ? 'windows' : 'linux';  
 }
 
 $catalogs = Catalog::get_catalogs();
 
 foreach ($catalogs as $catalog_id) { 
-	Catalog::dump_album_art($catalog_id,array('metadata'=>$meta));
+    Catalog::dump_album_art($catalog_id,array('metadata'=>$meta));
 }
 
 

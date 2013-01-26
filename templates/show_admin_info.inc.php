@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -23,20 +23,20 @@
 $web_path = Config::get('web_path');
 
 /* Flagged Information Gathering */
-$flagged	= Flag::get_recent(10);
+$flagged    = Flag::get_recent(10);
 
 /* Disabled Information Gathering */
 $songs = Song::get_disabled(10);
 ?>
 
 <?php UI::show_box_top(T_('Last Ten Flagged Records')); ?>
-	<?php require Config::get('prefix') . '/templates/show_flagged.inc.php'; ?>
+    <?php require Config::get('prefix') . '/templates/show_flagged.inc.php'; ?>
 <?php UI::show_box_bottom(); ?>
 
 <?php UI::show_box_top(T_('Disabled Songs')); ?>
-	<!-- Show Last 10 Disabled Songs -->&nbsp;
-	<?php require Config::get('prefix') . '/templates/show_disabled_songs.inc.php'; ?>
-	<div>
-	<a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=show_disabled"><?php echo T_('Show All'); ?>...</a>
-	</div>
+    <!-- Show Last 10 Disabled Songs -->&nbsp;
+    <?php require Config::get('prefix') . '/templates/show_disabled_songs.inc.php'; ?>
+    <div>
+    <a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=show_disabled"><?php echo T_('Show All'); ?>...</a>
+    </div>
 <?php UI::show_box_bottom(); ?>
