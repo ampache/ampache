@@ -100,7 +100,7 @@ class Localplay {
 		if (!$this->type) { return false; }
 
 		$filename = Config::get('prefix') . '/modules/localplay/' . $this->type . '.controller.php';
-		$include = require_once($filename);
+		$include = require_once $filename;
 
 		if (!$include) {
 			/* Throw Error Here */

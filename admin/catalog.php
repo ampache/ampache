@@ -35,7 +35,7 @@ switch ($_REQUEST['action']) {
 		/* Does this use now? */
 		delete_flagged($flag);
 		$type = 'show_flagged_songs';
-		include(conf('prefix') . '/templates/flag.inc');
+		require Config::get('prefix') . '/templates/flag.inc';
 	break;
 	case 'add_to_all_catalogs':
 		$catalog = new Catalog();
@@ -123,7 +123,7 @@ switch ($_REQUEST['action']) {
 		show_confirmation(T_('Catalog Delete'), T_('Confirm Deletion Request'),$next_url,1,'delete_catalog');
 	break;
 	case 'remove_disabled':
-		if (conf('demo_mode')) { break; }
+		if (Config::get('demo_mode')) { break; }
 
 		$song = $_REQUEST['song'];
 
@@ -272,11 +272,11 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'show_disabled':
 		/* Stop the demo hippies */
-		if (conf('demo_mode')) { break; }
+		if (Config::get('demo_mode')) { break; }
 
 		$songs = $catalog->get_disabled();
 		if (count($songs)) {
-			require (conf('prefix') . '/templates/show_disabled_songs.inc.php');
+			require Config::get('prefix') . '/templates/show_disabled_songs.inc.php';
 		}
 		else {
 			echo "<div class=\"error\" align=\"center\">" . T_('No Disabled songs found') . "</div>";

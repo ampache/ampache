@@ -25,7 +25,7 @@
  * This is called for all of our flagging needs
  */
 
-require_once('lib/init.php');
+require_once 'lib/init.php';
 
 show_template('header');
 

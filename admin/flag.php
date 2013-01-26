@@ -85,7 +85,7 @@ switch ($_REQUEST['action']) {
 
 		$album = new Album($_REQUEST['album_id']);
 
-		require_once(conf('prefix') . '/templates/show_edit_album.inc.php');
+		require_once Config::get('prefix') . '/templates/show_edit_album.inc.php';
 
 	break;
 	// Update all songs from this album
@@ -128,7 +128,7 @@ switch ($_REQUEST['action']) {
 
 		$artist = new Artist($_REQUEST['artist_id']);
 
-		require_once(conf('prefix') . '/templates/show_edit_artist.inc.php');
+		require_once Config::get('prefix') . '/templates/show_edit_artist.inc.php';
 
 	break;
 	// Update all songs by this artist
@@ -255,7 +255,7 @@ switch ($_REQUEST['action']) {
 		$song = new Song($_REQUEST['song']);
 		$song->fill_ext_info();
 		$song->format_song();
-		require_once (conf('prefix') . '/templates/show_edit_song.inc.php');
+		require_once Config::get('prefix') . '/templates/show_edit_song.inc.php';
 		break;
 	case 'disable':
 		$song_obj = new Song();

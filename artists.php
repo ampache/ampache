@@ -171,12 +171,12 @@ switch($_REQUEST['action']) {
 
 		/* Else we've got an error! But be lenient, and just show the form again */
 		else {
-			require (conf('prefix') . '/templates/show_rename_artist.inc.php');
+			require Config::get('prefix') . '/templates/show_rename_artist.inc.php';
 		}
     	break;
 	case 'show_rename':
 		$artist = new Artist($_REQUEST['artist']);
-		require (conf('prefix') . '/templates/show_rename_artist.inc.php');
+		require Config::get('prefix') . '/templates/show_rename_artist.inc.php';
 	break;
 	case 'match':
 	case 'Match':
@@ -184,10 +184,10 @@ switch($_REQUEST['action']) {
 		if ($match == "Browse" || $match == "Show_all") { $chr = ""; }
 		else { $chr = $match; }
 		/* Enclose this in the purty box! */
-		require (conf('prefix') . '/templates/show_box_top.inc.php');
+		require Config::get('prefix') . '/templates/show_box_top.inc.php';
 		show_alphabet_list('artists','artists.php',$match);
 		show_alphabet_form($chr, T_('Show Artists starting with'),"artists.php?action=match");
-		require (conf('prefix') . '/templates/show_box_bottom.inc.php');
+		require Config::get('prefix') . '/templates/show_box_bottom.inc.php';
 
 		if ($match === "Browse") {
 			show_artists();

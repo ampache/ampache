@@ -23,7 +23,7 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-require_once("../lib/init.php");
+require_once '../lib/init.php';
 session_start();
 
 if (!defined('AJAX_INCLUDE')) { exit; }
