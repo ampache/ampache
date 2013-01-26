@@ -40,7 +40,7 @@ require_once Config::get('prefix') . '/modules/validatemail/validateEmail.php';
 /* Don't even include it if we aren't going to use it */
 if (Config::get('captcha_public_reg')) {
 	define ("CAPTCHA_INVERSE", 1);
-	include Config::get('prefix') . '/modules/captcha/captcha.php';
+	require_once Config::get('prefix') . '/modules/captcha/captcha.php';
 }
 
 
