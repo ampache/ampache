@@ -109,12 +109,6 @@ if (Config::get('user_agreement')) { ?>
 	<input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register User'); ?>' />
 </div>
 </form>
-</div><!-- end <div id="registerbox-->
-</div><!--end <div>id="maincontainer-->
-<div id="footer">
-    <a href="http://www.ampache.org/index.php">Ampache v.<?php echo Config::get('version'); ?></a><br />
-    Copyright (c) 2001 - 2010 Ampache.org
-    <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
-</div>
-</body>
-</html>
+<?php
+show_footer();
+?>
