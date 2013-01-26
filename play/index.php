@@ -462,7 +462,11 @@ else {
 if ($demo_id) { $democratic->delete_from_oid($oid,'song'); }
 
 if ($transcode) {
-    pclose($fp);
+    $stderr = fread($transcoder['stderr'], 8192);
+    fclose($transcoder['stderr']);
+    fclose($fp);
+    proc_close($transcoder['process']);
+    debug_event('transcode_cmd', $stderr, 5);
 }
 else {
     fclose($fp);

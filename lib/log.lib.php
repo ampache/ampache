@@ -134,7 +134,10 @@ function debug_event($type, $message, $level, $file = '', $username = '') {
         $username = $GLOBALS['user']->username;
     }
 
-    log_event($username, $type, $message, $file);
+    // If the message is multiple lines, make multiple log lines
+    foreach (explode("\n", $message) as $line) {
+        log_event($username, $type, $line, $file);
+    }
 
 } // debug_event
 

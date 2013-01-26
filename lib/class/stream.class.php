@@ -135,8 +135,18 @@ class Stream {
 
         debug_event('downsample', "Downsample command: $command", 3);
 
+        $process = proc_open(
+            $command,
+            array(
+                1 => array('pipe', 'w'),
+                2 => array('pipe', 'w')
+            ),
+            $pipes
+        );
         return array(
-            'handle' => popen($command, 'rb'),
+            'process' => $process,
+            'handle' => $pipes[1],
+            'stderr' => $pipes[2],
             'format' => $transcode_settings['format']
         );
 

@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-FUTURE
+    - stderr from the transcode command is now logged for debugging
     - Made database updates more robust and verified that a fresh 3.3.3.5 import
         will run through the updates without errors
     - Added support for external authenticators like pwauth (based on a patch by
