@@ -50,7 +50,6 @@ class Catalog extends database_object {
 	private static $artists	= array();
 	private static $tags	= array();
 	private static $_art_albums = array();
-	private static $_ticker;
 
 	/**
 	 * Constructor
@@ -72,19 +71,6 @@ class Catalog extends database_object {
 		}
 
 	} //constructor
-
-        /**
-	 * _check_ticker
-	 * Stupid little cutesie thing
-	 */
-        private static function _check_ticker() {
-		if (!isset(self::$_ticker) || (time() > self::$_ticker + 1)) {
-			self::$_ticker = time();
-			return true;
-		}
-
-		return false;
-	}
 
 	/**
 	 * _create_filecache
@@ -594,7 +580,7 @@ class Catalog extends database_object {
 
 					$this->count++;
 					$file = str_replace(array('(',')','\''),'',$full_file);
-					if(self::_check_ticker()) {
+					if(UI::check_ticker()) {
 						update_text('add_count_' . $this->id, $this->count);
 						update_text('add_dir_' . $this->id, scrub_out($file));
 					} // update our current state
@@ -711,7 +697,7 @@ class Catalog extends database_object {
 
 			/* Stupid little cutesie thing */
 			$search_count++;
-			if (self::_check_ticker()) {
+			if (UI::check_ticker()) {
 				update_text('count_art_' . $this->id, $search_count);
 				update_text('read_art_' . $this->id, scrub_out($album->name));
 			} //echos song count
@@ -745,7 +731,7 @@ class Catalog extends database_object {
 		
 			/* Stupid little cutesie thing */
 			$thumb_count++;
-			if (self::_check_ticker()) {
+			if (UI::check_ticker()) {
 				update_text('count_thumb_' . $this->id, $search_count);
 			} //echos thumb count
 
@@ -1359,7 +1345,7 @@ class Catalog extends database_object {
 		while ($results = Dba::fetch_assoc($db_results)) {
 			debug_event('clean', 'Starting work on ' . $results['file'] . '(' . $results['id'] . ')', 5, 'ampache-catalog');
 			$count++;
-			if (self::_check_ticker()) {
+			if (UI::check_ticker()) {
 				$file = str_replace(array('(',')', '\''), '', $results['file']);
 				update_text('clean_count_' . $this->id, $count);
 				update_text('clean_dir_' . $this->id, scrub_out($file));
@@ -1470,7 +1456,7 @@ class Catalog extends database_object {
 
 		while ($row = Dba::fetch_assoc($db_results)) {
 			$count++;
-			if (self::_check_ticker()) {
+			if (UI::check_ticker()) {
 				$file = str_replace(array('(',')','\''), '', $row['file']);
 				update_text('verify_count_' . $this->id, $count);
 				update_text('verify_dir_' . $this->id, scrub_out($file));
