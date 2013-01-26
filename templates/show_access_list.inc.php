@@ -61,7 +61,7 @@
 		$access = new Access($access_id);
 		$access->format();
 ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo scrub_out($access->name); ?></td>
 	<td><?php echo $access->f_start; ?></td>
 	<td><?php echo $access->f_end; ?></td>

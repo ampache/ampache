@@ -55,7 +55,7 @@ foreach ($plugins as $plugin_name) {
 		}
         }
 ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td class="cel_name"><?php echo scrub_out($plugin->_plugin->name); ?></td>
 	<td class="cel_description"><?php echo scrub_out($plugin->_plugin->description); ?></td>
 	<td class="cel_version"><?php echo scrub_out($plugin->_plugin->version); ?></td>
@@ -63,7 +63,7 @@ foreach ($plugins as $plugin_name) {
 	<td class="cel_action"><?php echo $action; ?></td>
 </tr>
 <?php } if (!count($plugins)) { ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td colspan="4"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
 </tr>
 <?php } ?>

@@ -54,12 +54,12 @@ $web_path = Config::get('web_path');
 		$song = new Song($song_id);
 		$song->format();
 ?>
-<tr class="<?php echo flip_class(); ?>" id="song_<?php echo $song->id; ?>">
+<tr class="<?php echo UI::flip_class(); ?>" id="song_<?php echo $song->id; ?>">
 	<?php require Config::get('prefix') . '/templates/show_song_row.inc.php'; ?>
 </tr>
 <?php } ?>
 <?php if (!count($object_ids)) { ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td colspan="9"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>

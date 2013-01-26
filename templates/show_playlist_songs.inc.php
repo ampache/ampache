@@ -58,7 +58,7 @@ $web_path = Config::get('web_path');
 		$song->format();
 		$playlist_track = $object['track'];
 ?>
-<tr class="<?php echo flip_class(); ?>" id="track_<?php echo $object['track_id']; ?>">
+<tr class="<?php echo UI::flip_class(); ?>" id="track_<?php echo $object['track_id']; ?>">
 	<?php require Config::get('prefix') . '/templates/show_playlist_song_row.inc.php'; ?>
 </tr>
 <?php } ?>

@@ -38,7 +38,7 @@
 	<th class="col_value"><?php echo T_('Value'); ?></th>
 </tr>
 <?php foreach ($preferences as $pref) { ?>
-        <tr class="<?php echo flip_class(); ?>">
+        <tr class="<?php echo UI::flip_class(); ?>">
                 <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
                 <td class="cel_value">
                         <?php create_preference_input($pref['name'], $pref['value']); ?>

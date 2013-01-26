@@ -46,7 +46,7 @@ if ((Access::check('interface','100') OR !Config::get('use_auth')) AND $_REQUEST
 	<?php } ?>
 </tr>
 <?php foreach ($preferences['prefs'] as $pref) { ?>
-	<tr class="<?php echo flip_class(); ?>">
+	<tr class="<?php echo UI::flip_class(); ?>">
 		<td class="cel_preference"><?php echo T_($pref['description']); ?></td>
 		<td class="cel_value">
 			<?php create_preference_input($pref['name'], $pref['value']); ?>

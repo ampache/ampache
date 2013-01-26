@@ -59,12 +59,12 @@ $web_path = Config::get('web_path');
 		$album = new Album($album_id);
 		$album->format();
 ?>
-<tr id="album_<?php echo $album->id; ?>" class="<?php echo flip_class(); ?>">
+<tr id="album_<?php echo $album->id; ?>" class="<?php echo UI::flip_class(); ?>">
 	<?php require Config::get('prefix') . '/templates/show_album_row.inc.php'; ?>
 </tr>
 <?php } //end foreach ($albums as $album) ?>
 <?php if (!count($object_ids)) { ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td colspan="7"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>

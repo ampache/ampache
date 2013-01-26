@@ -54,7 +54,7 @@ foreach ($object_ids as $user_id) {
         $last_seen 	= $client->last_seen ? date("m\/d\/Y - H:i",$client->last_seen) : T_('Never');
         $create_date	= $client->create_date ? date("m\/d\/Y - H:i",$client->create_date) : T_('Unknown');
 ?>
-<tr class="<?php echo flip_class(); ?>" align="center" id="admin_user_<?php echo $client->id; ?>">
+<tr class="<?php echo UI::flip_class(); ?>" align="center" id="admin_user_<?php echo $client->id; ?>">
 	<?php require Config::get('prefix') . '/templates/show_user_row.inc.php'; ?>
 </tr>
 <?php } //end foreach users ?>

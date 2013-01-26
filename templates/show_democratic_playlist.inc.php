@@ -70,7 +70,7 @@ foreach($object_ids as $item) {
 	$media = new $item['object_type']($item['object_id']);
 	$media->format();
 ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td class="cel_action">
 	<?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) { ?>
 	<?php echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'],'delete', T_('Remove Vote'),'remove_vote_' . $item['id']); ?>

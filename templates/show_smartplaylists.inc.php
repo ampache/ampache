@@ -42,12 +42,12 @@ foreach ($object_ids as $playlist_id) {
 	$playlist = new Search('song', $playlist_id);
 	$playlist->format();
 ?>
-<tr class="<?php echo flip_class(); ?>" id="playlist_row_<?php echo $playlist->id; ?>">
+<tr class="<?php echo UI::flip_class(); ?>" id="playlist_row_<?php echo $playlist->id; ?>">
 	<?php require Config::get('prefix') . '/templates/show_smartplaylist_row.inc.php'; ?>
 </tr>
 <?php } // end foreach ($playlists as $playlist) ?>
 <?php if (!count($object_ids)) { ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td colspan="6"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>

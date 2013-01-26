@@ -24,17 +24,17 @@
 <?php show_box_top(T_('Edit Song')); ?>
 <form name="edit_song" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/flag.php">
 <table>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('File'); ?>:</td>
 	<td><?php echo scrub_out($song->file); ?></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('Title'); ?></td>
 	<td>
 		<input type="text" name="title" value="<?php echo scrub_out($song->title); ?>" size="45" />
 	</td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('Album'); ?></td>
 	<td>
 		<?php show_album_select('album',$song->album); ?>
@@ -42,7 +42,7 @@
 		<input type="text" name="album_string" value="<?php echo scrub_out($song->get_album_name()); ?>" />
 	</td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('Artist'); ?></td>
 	<td>
 		<?php show_artist_select('artist',$song->artist); ?>
@@ -50,25 +50,25 @@
 		<input type="text" name="artist_string" value="<?php echo scrub_out($song->get_artist_name()); ?>" />
 	</td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('Track'); ?></td>
 	<td>
 		<input type="text" name="track" value="<?php echo scrub_out($song->track); ?>" size="3" />
 	</td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('Year'); ?></td>
 	<td>
 		<input type="text" name="year" value="<?php echo scrub_out($song->year); ?>" size="5" />
 	</td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('Comment'); ?></td>
 	<td>
 		<input type="text" name="comment" value="<?php echo scrub_out($song->comment); ?>" size="45" />
 	</td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td>&nbsp;</td>
 	<td>
 		<input type="checkbox" name="flag" value="1" checked="checked" /> <?php echo T_('Flag for Retagging'); ?>

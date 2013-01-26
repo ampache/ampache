@@ -43,11 +43,11 @@
 		$catalog = new Catalog($catalog_id);
 		$catalog->format();
 ?>
-<tr class="<?php echo flip_class(); ?>" id="catalog_<?php echo $catalog->id; ?>">
+<tr class="<?php echo UI::flip_class(); ?>" id="catalog_<?php echo $catalog->id; ?>">
 	<?php require Config::get('prefix') . '/templates/show_catalog_row.inc.php'; ?>
 </tr>
 <?php } ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 <td colspan="6">
 <?php if (!count($object_ids)) { ?>
 	<span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span>

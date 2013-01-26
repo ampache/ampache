@@ -24,13 +24,13 @@
 <?php show_box_top(T_('Edit Artist')); ?>
 <form name="edit_artist" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/flag.php?action=edit_artist">
 <table class="tabledata">
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('Name'); ?></td>
 	<td>
 		<input type="text" name="name" value="<?php echo scrub_out($artist->name); ?>">
 	</td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td>&nbsp;</td>
 	<td>
 		<input type="checkbox" name="flag" value="1" checked="checked" /> <?php echo T_('Flag for Retagging'); ?>

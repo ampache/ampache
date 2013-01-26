@@ -20,7 +20,7 @@
  *
  */
 ?>
-<tr id="flagged_<?php echo $shout->id; ?>" class="<?php echo flip_class(); ?>">
+<tr id="flagged_<?php echo $shout->id; ?>" class="<?php echo UI::flip_class(); ?>">
 	<td class="cel_object"><?php echo $object->f_link; ?></td>
 	<td class="cel_username"><?php echo $client->f_link; ?></td>
 	<td class="cel_sticky"><?php echo $shout->sticky; ?></td>

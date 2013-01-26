@@ -47,7 +47,7 @@ show_box_top(T_('Manage Democratic Playlists'));  ?>
 		$playlist = new Playlist($democratic->base_playlist);
 		$playlist->format();
 ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo scrub_out($democratic->name); ?></td>
 	<td><?php echo $playlist->f_link; ?></td>
 	<td><?php echo $democratic->f_cooldown; ?></td>

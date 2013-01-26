@@ -35,7 +35,7 @@ $catalogs 	= Catalog::get_catalogs();
 	<th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
 <?php foreach ($catalogs as $catalog) { ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td class="cel_name">
 		<a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_customize_catalog&amp;catalog_id=<?php echo $catalog->id; ?>">
 		<?php echo scrub_out($catalog->name); ?></a>
@@ -55,7 +55,7 @@ $catalogs 	= Catalog::get_catalogs();
 	</td>
 </tr>
 <!--
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td colspan="2">
 		<?php echo T_('Fast'); ?><input type="checkbox" name="fast" value="1" />
 		<?php echo T_('Gather Art'); ?><input type="checkbox" name="gather_art" value="1" />

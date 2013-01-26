@@ -41,7 +41,7 @@ foreach ($object_ids as $object) {
 	$class = ' class="cel_name"';
 	if ($status['track'] == $object['track']) { $class=' class="cel_name lp_current"'; }
 ?>
-<tr class="<?php echo flip_class(); ?>" id="localplay_playlist_<?php echo $object['id']; ?>">
+<tr class="<?php echo UI::flip_class(); ?>" id="localplay_playlist_<?php echo $object['id']; ?>">
 	<td class="cel_track">
 		<?php echo scrub_out($object['track']); ?>
 	</td>
@@ -53,7 +53,7 @@ foreach ($object_ids as $object) {
 	</td>
 </tr>
 <?php } if (!count($object_ids)) { ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td colspan="3"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
 </tr>
 <?php } ?>

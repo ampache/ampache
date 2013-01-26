@@ -100,7 +100,7 @@
 			$object->f_link = Random::get_type_name($type);
 		}
 ?>
-<li class="<?php echo flip_class(); ?>" >
+<li class="<?php echo UI::flip_class(); ?>" >
   <?php echo $object->f_link; ?>
 	<?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid,'delete', T_('Delete'),'rightbar_delete_' . $uid,'','delitem'); ?>
 </li>
@@ -108,7 +108,7 @@
 	<li class="error"><?php echo T_('Not Enough Data'); ?></li>
 <?php } ?>
 <?php if (isset($truncated)) { ?>
-	<li class="<?php echo flip_class(); ?>">
+	<li class="<?php echo UI::flip_class(); ?>">
 		<?php echo $truncated . ' ' . T_('More'); ?>...
 	</li>
 <?php } ?>

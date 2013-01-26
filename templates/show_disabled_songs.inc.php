@@ -40,7 +40,7 @@
 	<th class="cel_additiontime"><?php echo T_('Addition Time'); ?></th>
 </tr>
 <?php foreach ($songs as $song) { ?>
-	<tr class="<?php echo flip_class(); ?>">
+	<tr class="<?php echo UI::flip_class(); ?>">
 		<td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" /></td>
 		<td class="cel_song"><?php echo $song->title; ?></td>
 		<td class="cel_album"><?php echo $song->get_album_name($song->album); ?></td>
@@ -50,7 +50,7 @@
 
 	</tr>
 <?php } if (!count($songs)) { ?>
-	<tr class="<?php echo flip_class(); ?>">
+	<tr class="<?php echo UI::flip_class(); ?>">
 		<td colspan="7"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
 	</tr>
 <?php } ?>

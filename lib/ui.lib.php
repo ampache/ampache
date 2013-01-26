@@ -49,29 +49,6 @@ function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirma
 } // show_confirmation
 
 /**
- * flip_class
- *
- * First called with an array of 2 class names.  Subsequent calls reverse the
- * array then return the first element.
- *
- * @param	array	$array
- * @return	mixed	void or classname
- */
-function flip_class($array=0) {
-
-	static $classes = array();
-
-	if ($array) {
-		$classes = $array;
-	}
-	else {
-		$classes = array_reverse($classes);
-		return $classes[0];
-	}
-
-} // flip_class
-
-/**
  * access_denied
  * Throws an error if they try to do something that they aren't allowed to.
  */

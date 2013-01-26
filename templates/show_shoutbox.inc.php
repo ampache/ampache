@@ -30,7 +30,7 @@
 	$client = new User($shout->user);
 	$client->format();
 ?>
-<div class="shout <?php echo flip_class(); ?>">
+<div class="shout <?php echo UI::flip_class(); ?>">
 	<?php echo $shout->get_image(); ?>
 	<?php echo Ajax::button('?action=basket&type=' . $shout->object_type .'&id=' . $shout->object_id,'add', T_('Add'),'add_' . $shout->object_type . '_' . $shout->object_id); ?>
 	<?php echo $object->f_link; ?>

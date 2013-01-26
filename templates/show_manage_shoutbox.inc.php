@@ -51,7 +51,7 @@ foreach ($object_ids as $shout_id) {
 	require Config::get('prefix') . '/templates/show_shout_row.inc.php';
 ?>
 <?php } if (!count($object_ids)) { ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td colspan="7" class="error"><?php echo T_('No Records Found'); ?></td>
 </tr>
 <?php } ?>

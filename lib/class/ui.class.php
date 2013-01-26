@@ -25,6 +25,7 @@
 
 class UI {
 
+	private static $_classes;
 	private static $_ticker;
 
 	public function __construct($data) {
@@ -44,5 +45,21 @@ class UI {
 		}
 
 		return false;
+	}
+
+	/**
+	 * flip_class
+	 *
+	 * First initialised with an array of two class names. Subsequent calls
+	 * reverse the array then return the first element.
+	 */
+	public static function flip_class($classes = null) {
+		if (is_array($classes)) {
+			self::$_classes = $array;
+		}
+		else {
+			self::$_classes = array_reverse(self::$_classes);
+		}
+		return self::$_classes[0];
 	}
 }

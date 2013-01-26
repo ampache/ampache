@@ -35,7 +35,7 @@
 	foreach ($objects as $object) {
 		$object->format();
 ?>
-<tr id="object_row_<?php echo $object->id; ?>" class="<?php echo flip_class(); ?>">
+<tr id="object_row_<?php echo $object->id; ?>" class="<?php echo UI::flip_class(); ?>">
 	<?php require Config::get('prefix') . '/templates/show_object_row.inc.php'; ?>
 </tr>
 <?php } ?>

@@ -20,7 +20,7 @@
  *
  */
 ?>
-<tr id="flagged_<?php echo $flag->id; ?>" class="<?php echo flip_class(); ?>">
+<tr id="flagged_<?php echo $flag->id; ?>" class="<?php echo UI::flip_class(); ?>">
 	<td class="cel_object"><?php echo $flag->f_name; ?></td>
 	<td class="cel_username"><?php echo $flag->f_user; ?></td>
 	<td class="cel_flag"><?php $flag->print_flag(); ?></td>

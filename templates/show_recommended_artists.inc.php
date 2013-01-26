@@ -50,12 +50,12 @@ foreach ($object_ids as $artist_id) {
 		$artist = new Artist($artist_id);
 		$artist->format();
 ?>
-<tr id="artist_<?php echo $artist->id; ?>" class="<?php echo flip_class(); ?>">
+<tr id="artist_<?php echo $artist->id; ?>" class="<?php echo UI::flip_class(); ?>">
 	<?php require Config::get('prefix') . '/templates/show_artist_row.inc.php'; ?>
 </tr>
 <?php } //end foreach ($artists as $artist) ?>
 <?php if (!count($object_ids)) { ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td colspan="5"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>

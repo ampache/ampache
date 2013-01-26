@@ -44,39 +44,39 @@
 	<th class="cel_php_setting"><?php echo T_('Setting'); ?></th>
 	<th class="cel_php_value"><?php echo T_('Value'); ?></th>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('Memory Limit'); ?></td>
 	<td><?php echo ini_get('memory_limit'); ?></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('Maximum Execution Time'); ?></td>
 	<td><?php echo ini_get('max_execution_time'); ?></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('Override Execution Time'); ?></td>
 	<td><?php set_time_limit(0); echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('Safe Mode'); ?></td>
 	<td><?php echo print_bool(ini_get('safe_mode')); ?></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td>Open Basedir</td>
 	<td><?php echo ini_get('open_basedir'); ?></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('Zlib Support'); ?></td>
 	<td><?php echo print_bool(function_exists('gzcompress')); ?></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('GD Support'); ?></td>
 	<td><?php echo print_bool(function_exists('ImageCreateFromString')); ?></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('Iconv Support'); ?></td>
 	<td><?php echo print_bool(function_exists('iconv')); ?></td>
 </tr>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td><?php echo T_('Gettext Support'); ?></td>
 	<td><?php echo print_bool(function_exists('bindtextdomain')); ?></td>
 </tr>
@@ -106,7 +106,7 @@
 		$value = print_bool($value);
 	}
 ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td valign="top"><strong><?php echo $key; ?></strong></td>
 	<td><?php echo $value; ?></td>
 </tr>

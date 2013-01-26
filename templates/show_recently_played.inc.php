@@ -82,7 +82,7 @@ show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 
 	$song->format();
 ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td class="cel_add">
         <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'add_' . $song->id); ?>
 	</td>

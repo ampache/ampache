@@ -81,7 +81,7 @@ require_once $prefix . '/lib/class/media.interface.php';
 require_once $prefix . '/modules/horde/Browser.php';
 
 /* Set up the flip class */
-flip_class(array('odd','even'));
+UI::flip_class(array('odd', 'even'));
 
 // Merge GET then POST into REQUEST effectively stripping COOKIE without
 // depending on a PHP setting change for the effect

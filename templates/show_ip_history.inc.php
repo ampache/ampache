@@ -46,7 +46,7 @@
  	<th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
 </tr>
 <?php foreach ($history as $data) { ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td class="cel_date">
 		<?php echo date("d/m/Y H\hi",$data['date']); ?>
 	</td>

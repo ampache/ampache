@@ -31,7 +31,7 @@
 <?php foreach ($instances as $uid=>$name) {
 	$instance = $localplay->get_instance($uid);
 ?>
-<tr class="<?php echo flip_class(); ?>" id="localplay_instance_<?php echo $uid; ?>">
+<tr class="<?php echo UI::flip_class(); ?>" id="localplay_instance_<?php echo $uid; ?>">
 	<?php foreach ($fields as $key=>$field) { ?>
 	<td><?php echo $instance[$key]; ?></td>
 	<?php } ?>

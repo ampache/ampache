@@ -48,12 +48,12 @@ foreach ($object_ids as $video_id) {
 		$video = new Video($video_id);
 		$video->format();
 ?>
-<tr id="video_<?php echo $video->id; ?>" class="<?php echo flip_class(); ?>">
+<tr id="video_<?php echo $video->id; ?>" class="<?php echo UI::flip_class(); ?>">
 	<?php require Config::get('prefix') . '/templates/show_video_row.inc.php'; ?>
 </tr>
 <?php } //end foreach  ?>
 <?php if (!count($object_ids)) { ?>
-<tr class="<?php echo flip_class(); ?>">
+<tr class="<?php echo UI::flip_class(); ?>">
 	<td colspan="7"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
 </tr>
 <?php } ?>
