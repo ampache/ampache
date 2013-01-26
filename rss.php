@@ -21,7 +21,7 @@
  */
 
 define('NO_SESSION','1');
-require 'lib/init.php';
+require_once 'lib/init.php';
 
 /* Check Perms */
 if (!Config::get('use_rss') || Config::get('demo_mode')) {

@@ -23,7 +23,7 @@
 // We need this stuff
 define('NO_SESSION', 1);
 define('OUTDATED_DATABASE_OK', 1);
-require 'lib/init.php';
+require_once 'lib/init.php';
 
 // Get the version and format it
 $version = Update::get_version();

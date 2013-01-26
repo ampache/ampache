@@ -20,7 +20,7 @@
  *
  */
 
-require 'lib/init.php';
+require_once 'lib/init.php';
 
 show_header();
 

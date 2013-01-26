@@ -25,8 +25,7 @@
  */
 
 define('NO_SESSION','1');
-require ("../lib/init.php");
-
+require_once '../lib/init.php';
 
 if (!$GLOBALS['argv']['1'] || $GLOBALS['argv']['1'] == '-h') { usage(); }
 else {

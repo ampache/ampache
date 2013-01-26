@@ -20,7 +20,7 @@
  *
  */
 
-require 'lib/init.php';
+require_once 'lib/init.php';
 
 // Switch on the action
 switch($_REQUEST['action']) {
