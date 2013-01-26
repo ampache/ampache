@@ -142,7 +142,7 @@ class vauth {
 		$db_results = Dba::write($sql);
 
 		// Also clean up things that use sessions as keys
-		Query::clean();
+		Query::gc();
 		Tmp_Playlist::gc();
 
 		return true;

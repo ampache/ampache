@@ -210,10 +210,10 @@ class Query {
 	}
 
 	/**
-	 * clean
+	 * gc 
 	 * This cleans old data out of the table
 	 */
-	public static function clean() {
+	public static function gc() {
 		$sql = "DELETE FROM `tmp_browse` USING `tmp_browse` LEFT JOIN ".
 			"`session` ON `session`.`id`=`tmp_browse`.`sid` " .
 		        "WHERE `session`.`id` IS NULL";
