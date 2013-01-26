@@ -20,7 +20,7 @@
  *
  */
 
-$link = Config::get('use_rss') ? ' ' . AmpacheRSS::get_display('recently_played') :  '';
+$link = Config::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played') :  '';
 show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">

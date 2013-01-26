@@ -204,7 +204,7 @@ class Api {
 				$db_results = Dba::read($sql); 
 				$catalog = Dba::fetch_assoc($db_results); 
 
-				echo xmlData::keyed_array(array('auth'=>$token,
+				echo XML_Data::keyed_array(array('auth'=>$token,
 					'api'=>self::$version,
 					'session_expire'=>date("c",time()+Config::get('session_length')-60),
 					'update'=>date("c",$row['update']),
@@ -222,7 +222,7 @@ class Api {
 		} // end while
 
 		debug_event('API','Login Failed, unable to match passphrase','1');
-		xmlData::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+		XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
 	} // handshake
 
@@ -244,7 +244,7 @@ class Api {
 		debug_event('API','Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $input['auth'],'5');
 
 		ob_end_clean();
-		echo xmlData::keyed_array($xmldata);
+		echo XML_Data::keyed_array($xmldata);
 
 	} // ping
 
@@ -266,13 +266,13 @@ class Api {
 		Api::set_filter('update',$input['update']);
 
 		// Set the offset
-		xmlData::set_offset($input['offset']);
-		xmlData::set_limit($input['limit']);
+		XML_Data::set_offset($input['offset']);
+		XML_Data::set_limit($input['limit']);
 
 		$artists = self::$browse->get_objects();
 		// echo out the resulting xml document
 		ob_end_clean();
-		echo xmlData::artists($artists);
+		echo XML_Data::artists($artists);
 
 	} // artists
 
@@ -284,7 +284,7 @@ class Api {
 	public static function artist($input) {
 
 		$uid = scrub_in($input['filter']);
-		echo xmlData::artists(array($uid));
+		echo XML_Data::artists(array($uid));
 
 	} // artist
 
@@ -299,10 +299,10 @@ class Api {
 		$albums = $artist->get_albums();
 
 		// Set the offset
-		xmlData::set_offset($input['offset']);
-		xmlData::set_limit($input['limit']);
+		XML_Data::set_offset($input['offset']);
+		XML_Data::set_limit($input['limit']);
 		ob_end_clean();
-		echo xmlData::albums($albums);
+		echo XML_Data::albums($albums);
 
 	} // artist_albums
 
@@ -316,10 +316,10 @@ class Api {
 		$songs = $artist->get_songs();
 
 		// Set the offset
-		xmlData::set_offset($input['offset']);
-		xmlData::set_limit($input['limit']);
+		XML_Data::set_offset($input['offset']);
+		XML_Data::set_limit($input['limit']);
 		ob_end_clean();
-		echo xmlData::songs($songs);
+		echo XML_Data::songs($songs);
 
 	} // artist_songs
 
@@ -340,10 +340,10 @@ class Api {
 		$albums = self::$browse->get_objects();
 
 		// Set the offset
-		xmlData::set_offset($input['offset']);
-		xmlData::set_limit($input['limit']);
+		XML_Data::set_offset($input['offset']);
+		XML_Data::set_limit($input['limit']);
 		ob_end_clean();
-		echo xmlData::albums($albums);
+		echo XML_Data::albums($albums);
 
 	} // albums
 
@@ -354,7 +354,7 @@ class Api {
 	public static function album($input) {
 
 		$uid = scrub_in($input['filter']);
-		echo xmlData::albums(array($uid));
+		echo XML_Data::albums(array($uid));
 
 	} // album
 
@@ -368,11 +368,11 @@ class Api {
 			$songs = $album->get_songs();
 
 			// Set the offset
-			xmlData::set_offset($input['offset']);
-			xmlData::set_limit($input['limit']);
+			XML_Data::set_offset($input['offset']);
+			XML_Data::set_limit($input['limit']);
 
 			ob_end_clean();
-			echo xmlData::songs($songs);
+			echo XML_Data::songs($songs);
 
 	} // album_songs
 
@@ -391,11 +391,11 @@ class Api {
 			$tags = self::$browse->get_objects();
 
 			// Set the offset
-			xmlData::set_offset($input['offset']);
-			xmlData::set_limit($input['limit']);
+			XML_Data::set_offset($input['offset']);
+			XML_Data::set_limit($input['limit']);
 
 			ob_end_clean();
-			echo xmlData::tags($tags);
+			echo XML_Data::tags($tags);
 
 	} // tags
 
@@ -407,7 +407,7 @@ class Api {
 
 			$uid = scrub_in($input['filter']);
 			ob_end_clean();
-			echo xmlData::tags(array($uid));
+			echo XML_Data::tags(array($uid));
 
 	} // tag
 
@@ -419,11 +419,11 @@ class Api {
 
 			$artists = Tag::get_tag_objects('artist',$input['filter']);
 
-			xmlData::set_offset($input['offset']);
-			xmlData::set_limit($input['limit']);
+			XML_Data::set_offset($input['offset']);
+			XML_Data::set_limit($input['limit']);
 
 			ob_end_clean();
-			echo xmlData::artists($artists);
+			echo XML_Data::artists($artists);
 
 	} // tag_artists
 
@@ -435,11 +435,11 @@ class Api {
 
 			$albums = Tag::get_tag_objects('album',$input['filter']);
 
-			xmlData::set_offset($input['offset']);
-			xmlData::set_limit($input['limit']);
+			XML_Data::set_offset($input['offset']);
+			XML_Data::set_limit($input['limit']);
 
 			ob_end_clean();
-			echo xmlData::albums($albums);
+			echo XML_Data::albums($albums);
 
 	} // tag_albums
 
@@ -451,11 +451,11 @@ class Api {
 
 			$songs = Tag::get_tag_objects('song',$input['filter']);
 
-			xmlData::set_offset($input['offset']);
-			xmlData::set_limit($input['limit']);
+			XML_Data::set_offset($input['offset']);
+			XML_Data::set_limit($input['limit']);
 
 			ob_end_clean();
-			echo xmlData::songs($songs);
+			echo XML_Data::songs($songs);
 
 	} // tag_songs
 
@@ -477,11 +477,11 @@ class Api {
 			$songs = self::$browse->get_objects();
 
 			// Set the offset
-			xmlData::set_offset($input['offset']);
-			xmlData::set_limit($input['limit']);
+			XML_Data::set_offset($input['offset']);
+			XML_Data::set_limit($input['limit']);
 
 			ob_end_clean();
-			echo xmlData::songs($songs);
+			echo XML_Data::songs($songs);
 
 	} // songs
 
@@ -494,7 +494,7 @@ class Api {
 			$uid = scrub_in($input['filter']);
 
 			ob_end_clean();
-			echo xmlData::songs(array($uid));
+			echo XML_Data::songs(array($uid));
 
 	} // song
 
@@ -508,7 +508,7 @@ class Api {
 			$song_id = Song::parse_song_url($input['url']);
 
 			ob_end_clean();
-			echo xmlData::songs(array($song_id));
+			echo XML_Data::songs(array($song_id));
 
 	} // url_to_song
 
@@ -527,11 +527,11 @@ class Api {
 
 			$playlist_ids = self::$browse->get_objects();
 
-			xmlData::set_offset($input['offset']);
-			xmlData::set_limit($input['limit']);
+			XML_Data::set_offset($input['offset']);
+			XML_Data::set_limit($input['limit']);
 
 			ob_end_clean();
-			echo xmlData::playlists($playlist_ids);
+			echo XML_Data::playlists($playlist_ids);
 
 	} // playlists
 
@@ -544,7 +544,7 @@ class Api {
 			$uid = scrub_in($input['filter']);
 
 			ob_end_clean();
-			echo xmlData::playlists(array($uid));
+			echo XML_Data::playlists(array($uid));
 
 	} // playlist
 
@@ -563,10 +563,10 @@ class Api {
 				}
 			} // end foreach
 
-			xmlData::set_offset($input['offset']);
-			xmlData::set_limit($input['limit']);
+			XML_Data::set_offset($input['offset']);
+			XML_Data::set_limit($input['limit']);
 			ob_end_clean();
-			echo xmlData::songs($songs);
+			echo XML_Data::songs($songs);
 
 	} // playlist_songs
 
@@ -582,12 +582,12 @@ class Api {
 
 			ob_end_clean();
 
-			xmlData::set_offset($input['offset']);
-			xmlData::set_limit($input['limit']);
+			XML_Data::set_offset($input['offset']);
+			XML_Data::set_limit($input['limit']);
 
 			$results = Search::run($array);
 
-			echo xmlData::songs($results);
+			echo XML_Data::songs($results);
 
 	} // search_songs
 
@@ -606,10 +606,10 @@ class Api {
 
 			$video_ids = self::$browse->get_objects();
 
-			xmlData::set_offset($input['offset']);
-			xmlData::set_limit($input['limit']);
+			XML_Data::set_offset($input['offset']);
+			XML_Data::set_limit($input['limit']);
 
-			echo xmlData::videos($video_ids);
+			echo XML_Data::videos($video_ids);
 
 	} // videos
 
@@ -621,7 +621,7 @@ class Api {
 
 			$video_id = scrub_in($input['filter']);
 
-			echo xmlData::videos(array($video_id));
+			echo XML_Data::videos(array($video_id));
 
 
 	} // video
@@ -643,11 +643,11 @@ class Api {
 				case 'stop':
 					$result_status = $localplay->$input['command']();
 					$xml_array = array('localplay'=>array('command'=>array($input['command']=>make_bool($result_status))));
-					echo xmlData::keyed_array($xml_array);
+					echo XML_Data::keyed_array($xml_array);
 				break;
 				default:
 					// They are doing it wrong
-					echo xmlData::error('405', T_('Invalid Request'));
+					echo XML_Data::error('405', T_('Invalid Request'));
 				break;
 			} // end switch on command
 
@@ -668,7 +668,7 @@ class Api {
 					$type = 'song';
 					$media = new $type($input['oid']);
 					if (!$media->id) {
-						echo xmlData::error('400', T_('Media Object Invalid or Not Specified'));
+						echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
 						break;
 					}
 					$democratic->add_vote(array(
@@ -680,13 +680,13 @@ class Api {
 
 					// If everything was ok
 					$xml_array = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
-					echo xmlData::keyed_array($xml_array);
+					echo XML_Data::keyed_array($xml_array);
 				break;
 				case 'devote':
 					$type = 'song';
 					$media = new $type($input['oid']);
 					if (!$media->id) {
-						echo xmlData::error('400', T_('Media Object Invalid or Not Specified'));
+						echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
 					}
 
 					$uid = $democratic->get_uid_from_object_id($media->id,$type);
@@ -694,21 +694,21 @@ class Api {
 
 					// Everything was ok
 					$xml_array = array('action'=>$input['action'],'method'=>$input['method'],'result'=>true);
-					echo xmlData::keyed_array($xml_array);
+					echo XML_Data::keyed_array($xml_array);
 				break;
 				case 'playlist':
 					$objects = $democratic->get_items();
 					Song::build_cache($democratic->object_ids);
 					Democratic::build_vote_cache($democratic->vote_ids);
-					xmlData::democratic($objects);
+					XML_Data::democratic($objects);
 				break;
 				case 'play':
 					$url = $democratic->play_url();
 					$xml_array = array('url'=>$url);
-					echo xmlData::keyed_array($xml_array);
+					echo XML_Data::keyed_array($xml_array);
 				break;
 				default:
-					echo xmlData::error('405', T_('Invalid Request'));
+					echo XML_Data::error('405', T_('Invalid Request'));
 			break;
 		} // switch on method
 

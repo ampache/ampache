@@ -338,14 +338,14 @@ class Stream_Playlist {
 				$xml['track']['album'] = $url->album;
 			}
 
-			$result .= xmlData::keyed_array($xml, true);
+			$result .= XML_Data::keyed_array($xml, true);
 
 		} // end foreach
 
-		xmlData::set_type('xspf');
-		echo xmlData::header();
+		XML_Data::set_type('xspf');
+		echo XML_Data::header();
 		echo $result;
-		echo xmlData::footer();
+		echo XML_Data::footer();
 
 	} // create_xspf
 

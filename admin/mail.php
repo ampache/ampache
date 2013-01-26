@@ -43,7 +43,7 @@ switch ($_REQUEST['action']) {
 			mb_language("uni");
 		}
 
-		$mailer = new AmpacheMail();
+		$mailer = new Ampache_Mail();
 
 		// Set the vars on the object
 		$mailer->subject = $_REQUEST['subject'];

@@ -21,12 +21,12 @@
  */
 
 /**
- * AmpacheMail Class
+ * Ampache_Mail Class
  *
  * This class handles the Mail
  *
  */
-class AmpacheMail {
+class Ampache_Mail {
 
 	// The message, recipient and from
 	public $message;
@@ -210,5 +210,5 @@ class AmpacheMail {
 		return $this->send($mail);
 	}
 
-} // AmpacheMail class
+} // Ampache_Mail class
 ?>

@@ -28,7 +28,7 @@
  */
 
 if (count($results)) {
-$link = Config::get('use_rss') ? ' ' . AmpacheRSS::get_display('nowplaying') : '';
+$link = Config::get('use_rss') ? ' ' . Ampache_RSS::get_display('nowplaying') : '';
 ?>
 <?php show_box_top(T_('Now Playing') . $link); ?>
 <?php

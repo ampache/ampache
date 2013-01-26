@@ -22,13 +22,13 @@
  */
 
 /**
- * xmlData Class
+ * XML_Data Class
  *
  * This class takes care of all of the xml document stuff in Ampache these
  * are all static calls
  *
  */
-class xmlData {
+class XML_Data {
 
 	// This is added so that we don't pop any webservers
 	private static $limit = '5000';
@@ -81,9 +81,9 @@ class xmlData {
 	/**
 	 * set_type
 	 *
-	 * This sets the type of xmlData we are working on
+	 * This sets the type of XML_Data we are working on
 	 *
-	 * @param	string	$type	xmlData type
+	 * @param	string	$type	XML_Data type
 	 * @return	void
 	 */
 	public static function set_type($type) {
@@ -654,6 +654,6 @@ class xmlData {
 
 	} // _footer
 
-} // xmlData
+} // XML_Data
 
 ?>

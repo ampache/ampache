@@ -32,7 +32,7 @@ if (!Config::get('use_rss') || Config::get('demo_mode')) {
 // Add in our base hearder defining the content type
 header("Content-Type: application/xml; charset=" . Config::get('site_charset'));
 
-$rss = new AmpacheRSS($_REQUEST['type']);
+$rss = new Ampache_RSS($_REQUEST['type']);
 echo $rss->get_xml();
 
 ?>

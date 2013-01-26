@@ -22,10 +22,10 @@
  */
 
 /**
- * AmpacheRSS Class
+ * Ampache_RSS Class
  *
  */
-class AmpacheRSS {
+class Ampache_RSS {
 
 	private $type;
 	public $data;
@@ -51,11 +51,11 @@ class AmpacheRSS {
 		$data_function = 'load_' . $this->type;
 		$pub_date_function = 'pubdate_' . $this->type;
 
-		$data = call_user_func(array('AmpacheRSS',$data_function));
-		$pub_date = call_user_func(array('AmpacheRSS',$pub_date_function));
+		$data = call_user_func(array('Ampache_RSS',$data_function));
+		$pub_date = call_user_func(array('Ampache_RSS',$pub_date_function));
 
-		xmlData::set_type('rss');
-		$xml_document = xmlData::rss_feed($data,$this->get_title(),$this->get_description(),$pub_date);
+		XML_Data::set_type('rss');
+		$xml_document = XML_Data::rss_feed($data,$this->get_title(),$this->get_description(),$pub_date);
 
 		return $xml_document;
 
@@ -250,4 +250,4 @@ class AmpacheRSS {
 
 	} // pubdate_recently_played
 
-} // end AmpacheRSS class
+} // end Ampache_RSS class
