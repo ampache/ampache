@@ -49,6 +49,17 @@ class Rating extends database_object {
 	} // Constructor
 
 	/**
+	 * gc
+	 *
+	 * Remove ratings for items that no longer exist.
+	 */
+	public static function gc() {
+		foreach(array('song', 'album', 'artist', 'video') as $object_type) {
+			Dba::write("DELETE FROM `rating` USING `rating` LEFT JOIN `$object_type` ON `$object_type`.`id` = `rating`.`object_type` WHERE `object_type` = '$object_type` AND `$object_type`.`id` IS NULL");
+		}
+	}
+
+	/**
  	 * build_cache
 	 * This attempts to get everything we'll need for this page load in a 
 	 * single query, saving on connection overhead

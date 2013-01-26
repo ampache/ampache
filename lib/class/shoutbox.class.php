@@ -60,6 +60,17 @@ class shoutBox {
 	} // _get_info
 
 	/**
+	 * gc
+	 *
+	 * Cleans out orphaned shoutbox items
+	 */
+	public static function gc() {
+		foreach(array('song', 'album', 'artist') as $object_type) {
+			Dba::write("DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `$object_type` ON `$object_type`.`id` = `user_shout`.`object_id` WHERE `$object_type`.`id` IS NULL AND `user_shout`.`object_type` = '$object_type'");
+		}
+	}
+
+	/**
 	 * get_top
 	 * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
 	 * number of objects shown

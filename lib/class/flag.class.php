@@ -59,6 +59,15 @@ class Flag extends database_object {
 	} // Constructor
 
 	/**
+	 * gc
+	 *
+	 * This cleans out unused flagged items
+	 */
+	public static function gc() {
+		Dba::write("DELETE FROM `flagged` USING `flagged` LEFT JOIN `song` ON `song`.`id` = `flagged`.`object_id` WHERE `song`.`id` IS NULL AND `object_type` = 'song'");
+	}
+
+	/**
 	 * build_cache
 	 * This takes an array of ids and builds up a nice little cache
 	 * for us

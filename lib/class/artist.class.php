@@ -76,6 +76,15 @@ class Artist extends database_object {
 	} // construct_from_array
 
 	/**
+	 * gc
+	 *
+	 * This cleans out unused artists
+	 */
+	public static function gc() {
+		Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `song`.`id` IS NULL');
+	}
+
+	/**
 	 * this attempts to build a cache of the data from the passed albums all in one query
 	 */
 	public static function build_cache($ids,$extra=false) {
@@ -285,7 +294,7 @@ class Artist extends database_object {
 			}
 			$updated = 1;
 			$current_id = $artist_id;
-			Catalog::clean_artists();
+			self::gc();
 		} // end if it changed
 
 		if ($updated) {
@@ -293,7 +302,8 @@ class Artist extends database_object {
 				Flag::add($song_id,'song','retag','Interface Artist Update');
 				Song::update_utime($song_id);
 			}
-			Catalog::clean_stats();
+			Stats::gc();
+			Rating::gc();
 		} // if updated
 
 		return $current_id;

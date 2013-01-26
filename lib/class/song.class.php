@@ -75,6 +75,15 @@ class Song extends database_object implements media {
 	} // constructor
 
 	/**
+	 * gc
+	 *
+	 * Cleans up the song_data table
+	 */
+	public static function gc() {
+		Dba::write('DELETE FROM `song_data` USING `song_data` LEFT JOIN `song` ON `song`.`id` = `song_data`.`song_id` WHERE `song`.`id` IS NULL');
+	}
+
+	/**
 	 * build_cache
 	 *
 	 * This attempts to reduce queries by asking for everything in the

@@ -270,6 +270,35 @@ class Tag extends database_object {
 	} // add_tag_map
 
 	/**
+	 * gc
+	 *
+	 * This cleans out tag_maps that are obsolete and then removes tags that
+	 * have no maps.
+	 */
+	public static function gc() {
+		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` " .
+			"WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL";
+		$db_results = Dba::write($sql);  
+
+		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` " .
+			"WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL";
+		$db_results = Dba::write($sql);  
+
+		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` " .
+			"WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
+		$db_results = Dba::write($sql);
+
+		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `video` ON `video`.`id`=`tag_map`.`object_id` " .
+			"WHERE `tag_map`.`object_type`='video' AND `video`.`id` IS NULL";
+		$db_results = Dba::write($sql);
+
+		// Now nuke the tags themselves
+		$sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " .
+			"WHERE `tag_map`.`id` IS NULL";
+		$db_results = Dba::write($sql);
+	}
+
+	/**
 	 * tag_exists
 	 * This checks to see if a tag exists, this has nothing to do with objects or maps
 	 */

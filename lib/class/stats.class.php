@@ -55,7 +55,18 @@ class Stats {
 	 */
 	public static function clear() {
 		Dba::write('TRUNCATE `object_count`');
-		Dba::write('UPDATE `song` SET `played` = 0';
+		Dba::write('UPDATE `song` SET `played` = 0');
+	}
+
+	/**
+	 * gc
+	 *
+	 * This removes stats for things that no longer exist.
+	 */
+	public static function gc() {
+		foreach(array('song', 'album', 'artist', 'live_stream', 'video') as $object_type) {
+			Dba::write("DELETE FROM `object_count` USING `object_count` LEFT JOIN `$object_type` ON `$object_type`.`id` = `object_count`.`object_id` WHERE `object_type` = '$object_type' AND `$object_type`.`id` IS NULL");
+		}
 	}
 
 	/**

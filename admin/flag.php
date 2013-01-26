@@ -118,7 +118,7 @@ switch ($_REQUEST['action']) {
 		} // end foreach songs
 
 		// Clean out the old album
-		$catalog->clean_albums();
+		Album::gc();
 
 		show_confirmation(T_('Album Updated'),'',Config::get('web_path') . '/admin/index.php');
 
@@ -160,7 +160,7 @@ switch ($_REQUEST['action']) {
 		} // end foreach songs
 
 		// Clean out the old artist(s)
-		$catalog->clean_artists();
+		Artist::gc();
 
 		show_confirmation(T_('Artist Updated'),'',Config::get('web_path') . '/admin/index.php');
 

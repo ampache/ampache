@@ -1400,172 +1400,6 @@ class Catalog extends database_object {
 	} //_clean_chunk
 
 	/**
-	 * clean_tags
-	 * This cleans out tag_maps that are not associated with a 'living' object
-	 * and then cleans the tags that have no maps
-	 */
-	public static function clean_tags() {
-
-		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` " .
-			"WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL";
-		$db_results = Dba::write($sql);
-
-		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` " .
-			"WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL";
-		$db_results = Dba::write($sql);
-
-		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` " .
-			"WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
-		$db_results = Dba::write($sql);
-
-		$sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `video` ON `video`.`id`=`tag_map`.`object_id` " .
-			"WHERE `tag_map`.`object_type`='video' AND `video`.`id` IS NULL";
-		$db_results = Dba::write($sql);
-
-		// Now nuke the tags themselves
-		$sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " .
-			"WHERE `tag_map`.`id` IS NULL";
-		$db_results = Dba::write($sql);
-
-	} // clean_tags
-
-	/**
-	 * clean_shoutbox
-	 * This cleans out any shoutbox items that are now orphaned
-	 */
-	public static function clean_shoutbox() {
-
-		// Clean songs
-		$sql = "DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `song` ON `song`.`id`=`user_shout`.`object_id` " .
-			"WHERE `song`.`id` IS NULL AND `user_shout`.`object_type`='song'";
-		$db_results = Dba::write($sql);
-
-		// Clean albums
-		$sql = "DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `album` ON `album`.`id`=`user_shout`.`object_id` " .
-			"WHERE `album`.`id` IS NULL AND `user_shout`.`object_type`='album'";
-		$db_results = Dba::write($sql);
-
-		// Clean artists
-		$sql = "DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `artist` ON `artist`.`id`=`user_shout`.`object_id` " .
-			"WHERE `artist`.`id` IS NULL AND `user_shout`.`object_type`='artist'";
-		$db_results = Dba::write($sql);
-
-
-	} // clean_shoutbox
-
-	/**
-	 * clean_albums
-	 *This function cleans out unused albums
-	 */
-	public static function clean_albums() {
-
-		/* Do a complex delete to get albums where there are no songs */
-		$sql = "DELETE FROM album USING album LEFT JOIN song ON song.album = album.id WHERE song.id IS NULL";
-		$db_results = Dba::write($sql);
-
-	} // clean_albums
-
-	/**
-	 * clean_flagged
-	 * This functions cleans ou unused flagged items
-	 */
-	public static function clean_flagged() {
-
-		/* Do a complex delete to get flagged items where the songs are now gone */
-		$sql = "DELETE FROM flagged USING flagged LEFT JOIN song ON song.id = flagged.object_id WHERE song.id IS NULL AND object_type='song'";
-		$db_results = Dba::write($sql);
-
-	} // clean_flagged
-
-	/**
-	 * clean_artists
-	 * This function cleans out unused artists
-	 */
-	public static function clean_artists() {
-
-		/* Do a complex delete to get artists where there are no songs */
-		$sql = "DELETE FROM artist USING artist LEFT JOIN song ON song.artist = artist.id WHERE song.id IS NULL";
-		$db_results = Dba::write($sql);
-
-	} //clean_artists
-
-	/**
-	 * clean_playlists
-	 * cleans out dead files from playlists
-	 */
-	public static function clean_playlists() {
-
-		/* Do a complex delete to get playlist songs where there are no songs */
-		$sql = "DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` " .
-			"WHERE `song`.`file` IS NULL AND `playlist_data`.`object_type`='song'";
-		$db_results = Dba::write($sql);
-
-		// Clear TMP Playlist information as well
-		$sql = "DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `song` ON `tmp_playlist_data`.`object_id` = `song`.`id` " .
-			"WHERE `song`.`id` IS NULL";
-		$db_results = Dba::write($sql);
-
-	} // clean_playlists
-
-	/**
-	 * clean_ext_info
-	 * This function clears any ext_info that no longer has a parent
-	 */
-	public static function clean_ext_info() {
-
-		$sql = "DELETE FROM `song_data` USING `song_data` LEFT JOIN `song` ON `song`.`id` = `song_data`.`song_id` " .
-			"WHERE `song`.`id` IS NULL";
-		$db_results = Dba::write($sql);
-
-	} // clean_ext_info
-
-	/**
-	 * clean_stats
-	 * This functions removes stats for songs/albums that no longer exist
-	 */
-	public static function clean_stats() {
-
-		// Crazy SQL Mojo to remove stats where there are no songs
-		$sql = "DELETE FROM object_count USING object_count LEFT JOIN song ON song.id=object_count.object_id WHERE object_type='song' AND song.id IS NULL";
-		$db_results = Dba::write($sql);
-
-		// Crazy SQL Mojo to remove stats where there are no albums
-		$sql = "DELETE FROM object_count USING object_count LEFT JOIN album ON album.id=object_count.object_id WHERE object_type='album' AND album.id IS NULL";
-		$db_results = Dba::write($sql);
-
-		// Crazy SQL Mojo to remove stats where ther are no artists
-		$sql = "DELETE FROM object_count USING object_count LEFT JOIN artist ON artist.id=object_count.object_id WHERE object_type='artist' AND artist.id IS NULL";
-		$db_results = Dba::write($sql);
-
-		// Delete the live_stream stat information
-		$sql = "DELETE FROM object_count USING object_count LEFT JOIN live_stream ON live_stream.id=object_count.object_id WHERE object_type='live_stream' AND live_stream.id IS NULL";
-		$db_results = Dba::write($sql);
-
-		// Clean the stats
-		$sql = "DELETE FROM `object_count` USING `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` " .
-			"WHERE `object_count`.`object_type`='video' AND `video`.`id` IS NULL";
-		$db_results = Dba::write($sql);
-
-		// Delete Song Ratings information
-		$sql = "DELETE FROM rating USING rating LEFT JOIN song ON song.id=rating.object_id WHERE object_type='song' AND song.id IS NULL";
-		$db_results = Dba::write($sql);
-
-		// Delete Album Rating Information
-		$sql = "DELETE FROM rating USING rating LEFT JOIN album ON album.id=rating.object_id WHERE object_type='album' AND album.id IS NULL";
-		$db_results = Dba::write($sql);
-
-		// Delete Artist Rating Information
-		$sql = "DELETE FROM rating USING rating LEFT JOIN artist ON artist.id=rating.object_id WHERE object_type='artist' AND artist.id IS NULL";
-		$db_results = Dba::write($sql);
-
-		// Delete the Video Rating Informations
-		$sql = "DELETE FROM `rating` USING `rating` LEFT JOIN `video` ON `video`.`id`=`rating`.`object_id` " .
-			"WHERE `rating`.`object_type`='video' AND `video`.`id` IS NULL";
-		$db_results = Dba::write($sql);
-
-	} // clean_stats
-
-	/**
 	 * verify_catalog
 	 * This function compares the DB's information with the ID3 tags
 	 */
@@ -1675,15 +1509,17 @@ class Catalog extends database_object {
 	public static function clean() {
 
 		debug_event('catalog', 'Database cleanup started', 5, 'ampache-catalog');
-		self::clean_albums();
-		self::clean_artists();
-		Art::clean();
-		self::clean_flagged();
-		self::clean_stats();
-		self::clean_ext_info();
-		self::clean_playlists();
-		self::clean_shoutbox();
-		self::clean_tags();
+		Song::gc();
+		Album::gc();
+		Artist::gc();
+		Art::gc();
+		Flag::gc();
+		Stats::gc();
+		Rating::gc();
+		Playlist::gc();
+		tmpPlaylist::gc();
+		shoutBox::gc();
+		Tag::gc();
 		debug_event('catalog', 'Database cleanup ended', 5, 'ampache-catalog');
 
 	} // clean

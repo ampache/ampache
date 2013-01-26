@@ -101,19 +101,19 @@ class Stream {
 	} // session_exists
 
 	/**
-	 * gc_session
+	 * gc
 	 * This function performes the garbage collection stuff, run on extend
 	 * and on now playing refresh.
 	 */
-	public static function gc_session() {
+	public static function gc() {
 
 		$time = time();
 		$sql = "DELETE FROM `session_stream` WHERE `expire` < '$time'";
 		$db_results = Dba::write($sql);
 
-		Stream_Playlist::clean();
+		Stream_Playlist::gc();
 
-	} // gc_session
+	}
 
 	/**
 	 * extend_session
@@ -132,7 +132,7 @@ class Stream {
 			"WHERE `id`='$sid'";
 		$db_results = Dba::write($sql);
 
-		self::gc_session();
+		self::gc();
 
 		return true;
 

@@ -52,6 +52,15 @@ class Playlist extends playlist_object {
 	} // Playlist
 
 	/**
+	 * gc
+	 *
+	 * Clean dead items out of playlists
+	 */
+	public static function gc() {
+		Dba::write("DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` WHERE `song`.`file` IS NULL AND `playlist_data`.`object_type`='song'"); 
+	}
+
+	/**
 	 * build_cache
 	 * This is what builds the cache from the objects
 	 */

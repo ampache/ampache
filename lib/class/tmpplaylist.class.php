@@ -278,12 +278,13 @@ class tmpPlaylist extends database_object {
 	} // session_clean
 
 	/**
-	 * clean
+	 * gc
 	 * This cleans up old data
 	 */
-	public static function clean() {
+	public static function gc() {
 		self::prune_playlists();
 		self::prune_tracks();
+		Dba::write("DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `song` ON `tmp_playlist_data`.`object_id` = `song`.`id` WHERE `song`.`id` IS NULL");
 	}
 
 	/**

@@ -552,10 +552,10 @@ class Art extends database_object {
 
 
 	/**
-	 * clean
+	 * gc
 	 * This cleans up art that no longer has a corresponding object
 	 */
-	public static function clean() {
+	public static function gc() {
 		// iterate over our types and delete the images
 		foreach (array('album', 'artist') as $type) {
 			$sql = "DELETE FROM `image` USING `image` LEFT JOIN `" .
@@ -564,7 +564,7 @@ class Art extends database_object {
 				$type . "' AND `" . $type . "`.`id` IS NULL";
 			$db_results = Dba::write($sql);
 		} // foreach
-	} // clean
+	}
 
 	/**
 	 * gather
