@@ -122,7 +122,7 @@ switch ($_REQUEST['action']) {
 
 		$localplay->delete_track($id);
 
-		// Wait incase we just deleted what we were playing
+		// Wait in case we just deleted what we were playing
 		sleep(3);
 		$objects = $localplay->get();
 		$status = $localplay->status();

@@ -164,7 +164,7 @@ function charset_directory_correct($path) {
 function charset_rename_file($full_file,$translated_filename) {
 
 	// First break out the base directory name and make sure it exists
-	// incase our crap char is in the directory
+	// in case our crap char is in the directory
 	$directory = dirname($translated_filename);
 	$data = preg_split("/[\/\\\]/",$directory);
 	$path = '';

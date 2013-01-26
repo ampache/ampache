@@ -492,7 +492,7 @@ class Art extends database_object {
 				return $id3['asf']['extended_content_description_object']['content_descriptors']['13']['data'];
 			}
 			elseif (isset($id3['id3v2']['APIC'])) {
-				// Foreach incase they have more then one
+				// Foreach in case they have more then one
 				foreach ($id3['id3v2']['APIC'] as $image) {
 					return $image['data'];
 				}
@@ -1093,7 +1093,7 @@ class Art extends database_object {
 			}
 
 			if (isset($id3['id3v2']['APIC'])) {
-				// Foreach incase they have more then one
+				// Foreach in case they have more then one
 				foreach ($id3['id3v2']['APIC'] as $image) {
 					$data[] = array(
 						'song' => $song->file,

@@ -165,7 +165,7 @@ if ($demo_id) {
 if ($random) {
 	if ($start < 1) {
 		$oid = Random::get_single_song($_REQUEST['type']);
-		// Save this one incase we do a seek
+		// Save this one in case we do a seek
 		$_SESSION['random']['last'] = $oid;
 	}
 	else {

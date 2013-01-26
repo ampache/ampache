@@ -247,7 +247,7 @@
     - Fix incorrect debug_event() on login due to typo
     - Remove manage democratic playlist as it has no meaning in the 
         current version
-    - Run Dba::reset_db_charset() after upgrade incase people are playing
+    - Run Dba::reset_db_charset() after upgrade in case people are playing
         hot potato with their charsets. 
     - Move Server Preferences to Admin menu (Thx geekdawg)
     - Fixed missing web_path reference on radio creation link

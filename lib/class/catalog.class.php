@@ -259,7 +259,7 @@ class Catalog extends database_object {
 	 */
 	public static function create($data) {
 
-		// Clean up the path just incase
+		// Clean up the path just in case
 		$data['path'] = rtrim(rtrim(trim($data['path']),'/'),'\\');
 
 		$path = Dba::escape($data['path']);

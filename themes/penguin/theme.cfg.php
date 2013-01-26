@@ -35,7 +35,7 @@ author = "Jeroen Doppenberg"
 
 ; Theme Maintainer
 ; This is just a way of listing who is responsible for
-; maintaining this theme incase it's not working right
+; maintaining this theme in case it's not working right
 ; please include an e-mail address so you can be contacted
 ; DEFAULT: N/A
 maintainer = "info@dopdop.nl"
