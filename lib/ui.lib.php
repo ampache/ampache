@@ -49,20 +49,6 @@ function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirma
 } // show_confirmation
 
 /**
- * access_denied
- * Throws an error if they try to do something that they aren't allowed to.
- */
-function access_denied($error = "Access Denied") {
-
-	// Clear any crap we've got up top
-	ob_end_clean();
-	header("HTTP/1.1 403 $error");
-	require_once Config::get('prefix') . '/templates/show_denied.inc.php';
-	exit;
-
-} // access_denied
-
-/**
  * return_referer
  * returns the script part of the referer address passed by the web browser
  * this is not %100 accurate. Also because this is not passed by us we need

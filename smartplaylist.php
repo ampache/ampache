@@ -40,7 +40,7 @@ switch ($_REQUEST['action']) {
 	case 'create_playlist':
 		/* Check rights */
 		if (!Access::check('interface','25')) {
-			access_denied();
+			UI::access_denied();
 			break;
 		}
 
@@ -73,7 +73,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'delete_playlist':
 		// If we made it here, we didn't have sufficient rights.
-		access_denied();
+		UI::access_denied();
 	break;
 	case 'show_playlist':
 		$playlist = new Search('song', $_REQUEST['playlist_id']);
@@ -88,7 +88,7 @@ switch ($_REQUEST['action']) {
 			$playlist->format();
 		}
 		else {
-			access_denied();
+			UI::access_denied();
 			break;
 		}
 		require_once Config::get('prefix') . '/templates/show_smartplaylist.inc.php';

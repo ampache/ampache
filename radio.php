@@ -28,7 +28,7 @@ show_header();
 switch ($_REQUEST['action']) {
 	case 'show_create':
 		if (!Access::check('interface','25')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
@@ -37,12 +37,12 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'create':
 		if (!Access::check('interface','25') || Config::get('demo_mode')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
 		if (!Core::form_verify('add_radio','post')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 

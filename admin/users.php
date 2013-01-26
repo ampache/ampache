@@ -23,7 +23,7 @@
 require_once '../lib/init.php';
 
 if (!Access::check('interface','100')) {
-	access_denied();
+	UI::access_denied();
 	exit();
 }
 
@@ -35,7 +35,7 @@ switch ($_REQUEST['action']) {
 		if (Config::get('demo_mode')) { break; }
 
 		if (!Core::form_verify('edit_user','post')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
@@ -87,7 +87,7 @@ switch ($_REQUEST['action']) {
 		if (Config::get('demo_mode')) { break; }
 
 		if (!Core::form_verify('add_user','post')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
@@ -152,7 +152,7 @@ switch ($_REQUEST['action']) {
 	case 'confirm_delete':
 		if (Config::get('demo_mode')) { break; }
 		if (!Core::form_verify('delete_user')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 		$client = new User($_REQUEST['user_id']);

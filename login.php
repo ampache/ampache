@@ -36,8 +36,8 @@ Preference::init();
  */
 if (Config::get('access_control')) {
 	if (!Access::check_network('interface', '', '5')) {
-		debug_event('access_denied', 'Access Denied:' . $_SERVER['REMOTE_ADDR'] . ' is not in the Interface Access list', '3');
-		access_denied();
+		debug_event('UI::access_denied', 'Access Denied:' . $_SERVER['REMOTE_ADDR'] . ' is not in the Interface Access list', '3');
+		UI::access_denied();
 		exit();
 	}
 } // access_control is enabled

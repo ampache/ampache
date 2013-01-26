@@ -23,7 +23,7 @@
 require_once '../lib/init.php';
 
 if (!$GLOBALS['user']->has_access(100)) {
-	access_denied();
+	UI::access_denied();
 	exit();
 }
 

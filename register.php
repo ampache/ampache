@@ -26,7 +26,7 @@ require_once 'lib/init.php';
 /* Check Perms */
 if (!Config::get('allow_public_registration') || Config::get('demo_mode')) {
 	debug_event('DENIED','Error Attempted registration','1');
-	access_denied();
+	UI::access_denied();
 	exit();
 }
 

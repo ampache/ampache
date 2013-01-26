@@ -25,7 +25,7 @@ ob_end_clean();
 
 //test that batch download is permitted
 if (!Access::check_function('batch_download')) {
-	access_denied();
+	UI::access_denied();
 	exit;
 }
 

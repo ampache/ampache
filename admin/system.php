@@ -23,7 +23,7 @@
 require_once '../lib/init.php';
 
 if (!Access::check('interface',100) OR Config::get('demo_mode')) {
-	access_denied();
+	UI::access_denied();
 	exit();
 }
 

@@ -43,7 +43,7 @@ switch ($_REQUEST['action']) {
 	case 'add_dyn_song':
 		/* Check Rights */
 		if (!$playlist->has_access()) {
-			access_denied();
+			UI::access_denied();
 			break;
 		}
 
@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
 	case 'create_playlist':
 		/* Check rights */
 		if (!Access::check('interface','25')) {
-			access_denied();
+			UI::access_denied();
 			break;
 		}
 
@@ -67,12 +67,12 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'delete_playlist':
 		// If we made it here, we didn't have sufficient rights.
-		access_denied();
+		UI::access_denied();
 	break;
 	case 'remove_song':
 		/* Check em for rights */
 		if (!$playlist->has_access()) {
-			access_denied();
+			UI::access_denied();
 			break;
 		}
 		$playlist->remove_songs($_REQUEST['song']);
@@ -119,7 +119,7 @@ switch ($_REQUEST['action']) {
 	case 'set_track_numbers':
 		/* Make sure they have permission */
 		if (!$playlist->has_access()) {
-			access_denied();
+			UI::access_denied();
 			break;
 		}
                 $song_ids = scrub_in($_REQUEST['song']);
@@ -135,7 +135,7 @@ switch ($_REQUEST['action']) {
 	case 'prune_empty':
 		/* Make sure they have permission */
 		if (!$GLOBALS['user']->has_access(100)) {
-			access_denied();
+			UI::access_denied();
 			break;
 		}
 
@@ -150,7 +150,7 @@ switch ($_REQUEST['action']) {
 
 		/* Make sure they have permission */
 		if (!$playlist->has_access()) {
-			access_denied();
+			UI::access_denied();
 			break;
 		}
 

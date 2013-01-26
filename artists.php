@@ -57,7 +57,7 @@ switch($_REQUEST['action']) {
 		require_once Config::get('prefix') . '/templates/show_update_items.inc.php';
 	break;
 	case 'rename_similar':
-		if (!$user->has_access('100')) { access_denied(); }
+		if (!$user->has_access('100')) { UI::access_denied(); }
 		$count = 0;
 		if (isset($_REQUEST['artist']) && is_numeric($_REQUEST['artist']) && isset($_REQUEST['artists']) && is_array($_REQUEST['artists'])) {
 			$artist = new Artist($_REQUEST['artist']);
@@ -92,7 +92,7 @@ switch($_REQUEST['action']) {
 	break;
 	case 'show_similar':
 		if (!$GLOBALS['user']->has_access('75')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
@@ -114,7 +114,7 @@ switch($_REQUEST['action']) {
 	break;
 	case 'rename':
 		//die if not enough permissions
-		if (!$user->has_access('100')) { access_denied(); }
+		if (!$user->has_access('100')) { UI::access_denied(); }
 
 		/* Get the artist */
 		$artist = new Artist($_REQUEST['artist']);

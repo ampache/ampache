@@ -29,12 +29,12 @@ switch ($_REQUEST['action']) {
 	case 'add_shout':
 		// Must be at least a user to do this
 		if (!Access::check('interface','25')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
 		if (!Core::form_verify('add_shout','post')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 

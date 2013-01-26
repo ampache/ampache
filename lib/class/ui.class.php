@@ -33,6 +33,19 @@ class UI {
 	}
 
 	/**
+	 * access_denied
+	 *
+	 * Throw an error when they try to do something naughty.
+	 */
+	public static function access_denied($error = 'Access Denied') {
+		// Clear any buffered crap
+		ob_end_clean();
+		header("HTTP/1.1 403 $error");
+		require_once Config::get('prefix') . '/templates/show_denied.inc.php';
+		exit;
+	}
+
+	/**
 	 * check_ticker
 	 *
 	 * Stupid little cutesie thing to ratelimit output of long-running

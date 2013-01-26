@@ -24,7 +24,7 @@ require_once 'lib/init.php';
 
 /* Make sure they have access to this */
 if (!Config::get('allow_democratic_playback')) {
-	access_denied();
+	UI::access_denied();
 	exit;
 }
 
@@ -38,7 +38,7 @@ switch ($_REQUEST['action']) {
                 $democratic->format();
 	case 'show_create':
 		if (!Access::check('interface','75')) {
-			access_denied();
+			UI::access_denied();
 			break;
 		}
 
@@ -47,7 +47,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'delete':
 		if (!Access::check('interface','75')) {
-			access_denied();
+			UI::access_denied();
 			break;
 		}
 
@@ -61,12 +61,12 @@ switch ($_REQUEST['action']) {
 	case 'create':
 		// Only power users here
 		if (!Access::check('interface','75')) {
-			access_denied();
+			UI::access_denied();
 			break;
 		}
 
 		if (!Core::form_verify('create_democratic')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
@@ -91,7 +91,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'manage_playlists':
 		if (!Access::check('interface','75')) {
-			access_denied();
+			UI::access_denied();
 			break;
 		}
 		// Get all of the non-user playlists

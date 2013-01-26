@@ -23,7 +23,7 @@
 require_once '../lib/init.php';
 
 if (!Access::check('interface','100')) {
-	access_denied();
+	UI::access_denied();
 	exit();
 }
 
@@ -32,7 +32,7 @@ show_header();
 switch ($_REQUEST['action']) {
 	case 'delete_record':
 		if (!Core::form_verify('delete_access')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 		Access::delete($_REQUEST['access_id']);
@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
 
 		// Make sure we've got a valid form submission
 		if (!Core::form_verify('add_acl','post')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
@@ -78,7 +78,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'update_record':
 		if (!Core::form_verify('edit_acl')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 		$access = new Access($_REQUEST['access_id']);

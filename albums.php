@@ -27,7 +27,7 @@ require_once Config::get('prefix') . '/templates/header.inc.php';
 /* Switch on Action */
 switch ($_REQUEST['action']) {
 	case 'clear_art':
-		if (!$GLOBALS['user']->has_access('75')) { access_denied(); }
+		if (!$GLOBALS['user']->has_access('75')) { UI::access_denied(); }
 		$art = new Art($_GET['album_id'],'album'); 
 		$art->reset();
 		show_confirmation(T_('Album Art Cleared'), T_('Album Art information has been removed from the database'),"/albums.php?action=show&amp;album=" . $art->uid);
@@ -60,7 +60,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'find_art':
 		// If not a user then kick em out
-		if (!Access::check('interface','25')) { access_denied(); exit; }
+		if (!Access::check('interface','25')) { UI::access_denied(); exit; }
 
 		// get the Album information
 	        $album = new Album($_GET['album_id']);
@@ -157,7 +157,7 @@ switch ($_REQUEST['action']) {
 	case 'update_from_tags':
 		// Make sure they are a 'power' user at least
 		if (!Access::check('interface','75')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 

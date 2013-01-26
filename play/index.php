@@ -75,7 +75,7 @@ Preference::init();
 
 /* If the user has been disabled (true value) */
 if (make_bool($GLOBALS['user']->disabled)) {
-	debug_event('access_denied', "$user->username is currently disabled, stream access denied",'3');
+	debug_event('UI::access_denied', "$user->username is currently disabled, stream access denied",'3');
 	header('HTTP/1.1 403 User Disabled');
 	exit;
 }
@@ -86,7 +86,7 @@ if (Config::get('require_session')) {
 		debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
 	}
 	elseif(!Stream::session_exists($sid)) {
-		debug_event('access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
+		debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
     		header('HTTP/1.1 403 Session Expired');
 		exit;
 	}
@@ -102,8 +102,8 @@ $GLOBALS['user']->update_last_seen();
 
 /* If we are in demo mode.. die here */
 if (Config::get('demo_mode') || (!Access::check('interface','25') )) {
-	debug_event('access_denied', "Streaming Access Denied:" .Config::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
-	access_denied();
+	debug_event('UI::access_denied', "Streaming Access Denied:" .Config::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
+	UI::access_denied();
 	exit;
 }
 
@@ -114,8 +114,8 @@ if (Config::get('demo_mode') || (!Access::check('interface','25') )) {
 if (Config::get('access_control')) {
 	if (!Access::check_network('stream',$GLOBALS['user']->id,'25') AND
 		!Access::check_network('network',$GLOBALS['user']->id,'25')) {
-		debug_event('access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
-		access_denied();
+		debug_event('UI::access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
+		UI::access_denied();
 		exit;
 	}
 } // access_control is enabled
@@ -125,7 +125,7 @@ if ($type == 'playlist') {
 	$playlist = new Stream_Playlist($oid);
 	// Some rudimentary security
 	if ($uid != $playlist->user) {
-		access_denied();
+		UI::access_denied();
 		exit;
 	}
 	$playlist->generate_playlist($playlist_type, false);

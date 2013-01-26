@@ -23,7 +23,7 @@
 require_once '../lib/init.php';
 
 if (!Access::check('interface','100')) {
-	access_denied();
+	UI::access_denied();
 	exit;
 }
 
@@ -80,7 +80,7 @@ switch ($_REQUEST['action']) {
 		toggle_visible('ajax-loading');
 		ob_end_flush();
 		/* Make sure they aren't in demo mode */
-		if (Config::get('demo_mode')) { access_denied(); break; }
+		if (Config::get('demo_mode')) { UI::access_denied(); break; }
 
 		if (!$_REQUEST['catalogs']) {
 			$_REQUEST['catalogs'] = Catalog::get_catalog_ids();
@@ -107,7 +107,7 @@ switch ($_REQUEST['action']) {
 			if (Config::get('demo_mode')) { break; }
 
 		if (!Core::form_verify('delete_catalog')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
@@ -212,7 +212,7 @@ switch ($_REQUEST['action']) {
 		}
 
 		if (!Core::form_verify('add_catalog','post')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
@@ -250,7 +250,7 @@ switch ($_REQUEST['action']) {
 		}
 	break;
 	case 'clear_stats':
-		if (Config::get('demo_mode')) { access_denied(); break; }
+		if (Config::get('demo_mode')) { UI::access_denied(); break; }
 		Stats::clear();
 		$url	= Config::get('web_path') . '/admin/catalog.php';
 		$title	= T_('Catalog statistics cleared');
@@ -265,7 +265,7 @@ switch ($_REQUEST['action']) {
 		require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
 	break;
 	case 'clear_now_playing':
-		if (Config::get('demo_mode')) { access_denied(); break; }
+		if (Config::get('demo_mode')) { UI::access_denied(); break; }
 		Stream::clear_now_playing();
 		show_confirmation(T_('Now Playing Cleared'), T_('All now playing data has been cleared'),Config::get('web_path') . '/admin/catalog.php');
 	break;
@@ -283,7 +283,7 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'show_delete_catalog':
 		/* Stop the demo hippies */
-		if (Config::get('demo_mode')) { access_denied(); break; }
+		if (Config::get('demo_mode')) { UI::access_denied(); break; }
 
 		$catalog = new Catalog($_REQUEST['catalog_id']);
 		$nexturl = Config::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);

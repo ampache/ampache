@@ -26,12 +26,12 @@ require_once 'lib/init.php';
 switch($_REQUEST['action']) {
 	case 'update_preferences':
 		if ($_POST['method'] == 'admin' && !Access::check('interface','100')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
 		if (!Core::form_verify('update_preference','post')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
@@ -60,12 +60,12 @@ switch($_REQUEST['action']) {
 	case 'admin_update_preferences':
 		// Make sure only admins here
 		if (!Access::check('interface','100')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
 		if (!Core::form_verify('update_preference','post')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
@@ -75,7 +75,7 @@ switch($_REQUEST['action']) {
 	case 'admin':
 		// Make sure only admins here
 		if (!Access::check('interface','100')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 		$fullname= T_('Server');
@@ -83,7 +83,7 @@ switch($_REQUEST['action']) {
 	break;
 	case 'user':
 		if (!Access::check('interface','100')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 		$client = new User($_REQUEST['user_id']);
@@ -93,12 +93,12 @@ switch($_REQUEST['action']) {
 	case 'update_user':
 		// Make sure we're a user and they came from the form
 		if (!Access::check('interface','25') OR !Config::get('use_auth')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 
 		if (!Core::form_verify('update_user','post')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 

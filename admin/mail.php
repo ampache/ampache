@@ -23,7 +23,7 @@
 require_once '../lib/init.php';
 
 if (!Access::check('interface','75')) {
-	access_denied();
+	UI::access_denied();
 	exit();
 }
 
@@ -33,7 +33,7 @@ show_header();
 switch ($_REQUEST['action']) {
 	case 'send_mail':
 		if (Config::get('demo_mode')) {
-			access_denied();
+			UI::access_denied();
 			exit;
 		}
 

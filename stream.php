@@ -24,7 +24,7 @@ require_once 'lib/init.php';
 
 /* If we are running a demo, quick while you still can! */
 if (Config::get('demo_mode') || !Access::check('interface','25')) {
-	access_denied();
+	UI::access_denied();
 	exit;
 }
 
