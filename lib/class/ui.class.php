@@ -46,6 +46,21 @@ class UI {
 	}
 
 	/**
+	 * ajax_include
+	 *
+	 * Does some trickery with the output buffer to return the output of a
+	 * template.
+	 */
+	public static function ajax_include($template) {
+		ob_start();
+		require Config::get('prefix') . '/templates/' . $template;
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		return $output;
+	}
+
+	/**
 	 * check_iconv
 	 *
 	 * Checks to see whether iconv is available;

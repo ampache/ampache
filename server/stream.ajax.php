@@ -63,7 +63,7 @@ switch ($_REQUEST['action']) {
 
 
 		if (($new == 'localplay' AND $current != 'localplay') OR ($current == 'localplay' AND $new != 'localplay')) {
-			$results['rightbar'] = ajax_include('rightbar.inc.php');
+			$results['rightbar'] = UI::ajax_include('rightbar.inc.php');
 		}
 
 		$results['rfc3514'] = '0x0';

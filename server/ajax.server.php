@@ -91,7 +91,7 @@ switch ($page) {
 
 switch ($_REQUEST['action']) {
 	case 'refresh_rightbar':
-		$results['rightbar'] = ajax_include('rightbar.inc.php');
+		$results['rightbar'] = UI::ajax_include('rightbar.inc.php');
 	break;
 	/* Controls the editing of objects */
 	case 'show_edit_object':
@@ -255,7 +255,7 @@ switch ($_REQUEST['action']) {
 			break;
 		} // end switch
 
-		$results['rightbar'] = ajax_include('rightbar.inc.php');
+		$results['rightbar'] = UI::ajax_include('rightbar.inc.php');
 	break;
 	// Handle the users basketcases...
 	case 'basket':
@@ -331,7 +331,7 @@ switch ($_REQUEST['action']) {
 			break;
 		} // end switch
 
-		$results['rightbar'] = ajax_include('rightbar.inc.php');
+		$results['rightbar'] = UI::ajax_include('rightbar.inc.php');
 	break;
 	/* Setting ratings */
 	case 'set_rating':

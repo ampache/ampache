@@ -573,23 +573,6 @@ function xml_get_footer($type){
 } // xml_get_footer
 
 /**
- * ajax_include
- * This does an ob_start, getcontents, clean
- * on the specified require, only works if you
- * don't need to pass data in
- */
-function ajax_include($include) {
-
-	ob_start();
-	require_once Config::get('prefix') . '/templates/' . $include;
-	$results = ob_get_contents();
-	ob_end_clean();
-
-	return $results;
-
-} // ajax_include
-
-/**
  * toggle_visible
  * This is identical to the javascript command that it actually calls
  */

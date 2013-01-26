@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
                 foreach ($songs as $song_id) {
                         $GLOBALS['user']->playlist->add_object($song_id,'song');
                 }
-		$results['rightbar'] = ajax_include('rightbar.inc.php');
+		$results['rightbar'] = UI::ajax_include('rightbar.inc.php');
         break;
         case 'artist':
                 $artist_id = Random::artist();
@@ -50,7 +50,7 @@ switch ($_REQUEST['action']) {
                 foreach ($songs as $song_id) {
                         $GLOBALS['user']->playlist->add_object($song_id,'song');
                 }
-		$results['rightbar'] = ajax_include('rightbar.inc.php');
+		$results['rightbar'] = UI::ajax_include('rightbar.inc.php');
         break;
         case 'playlist':
                 $playlist_id = Random::playlist();
@@ -63,7 +63,7 @@ switch ($_REQUEST['action']) {
                 foreach ($items as $item) {
                         $GLOBALS['user']->playlist->add_object($item['object_id'],$item['type']);
                 }
-		$results['rightbar'] = ajax_include('rightbar.inc.php');
+		$results['rightbar'] = UI::ajax_include('rightbar.inc.php');
         break;
 	case 'advanced_random':
 		$object_ids = Random::advanced($_POST);
@@ -72,7 +72,7 @@ switch ($_REQUEST['action']) {
 		foreach ($object_ids as $object_id) {
 			$GLOBALS['user']->playlist->add_object($object_id,'song');
 		}
-		$results['rightbar'] = ajax_include('rightbar.inc.php');
+		$results['rightbar'] = UI::ajax_include('rightbar.inc.php');
 
 		// Now setup the browse and show them below!
 		$browse = new Browse();
