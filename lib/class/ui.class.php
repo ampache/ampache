@@ -170,4 +170,23 @@ class UI {
 
 		return $text;
 	}
+
+	/**
+	 * update_text
+	 *
+	 * Convenience function that, if the output is going to a browser,
+	 * blarfs JS to do a fancy update.  Otherwise it just outputs the text.
+	 */
+	public static function update_text($field, $value) {
+		if (defined('CLI')) {
+			echo $value . "\n";
+			return;
+		}
+
+		echo '<script type="text/javascript">';
+		echo "updateText('$field', '$value');";
+		echo "</script>\n";
+		ob_flush();
+		flush();
+	}
 }

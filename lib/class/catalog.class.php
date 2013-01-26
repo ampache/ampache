@@ -564,8 +564,8 @@ class Catalog extends database_object {
 					$this->count++;
 					$file = str_replace(array('(',')','\''),'',$full_file);
 					if(UI::check_ticker()) {
-						update_text('add_count_' . $this->id, $this->count);
-						update_text('add_dir_' . $this->id, scrub_out($file));
+						UI::update_text('add_count_' . $this->id, $this->count);
+						UI::update_text('add_dir_' . $this->id, scrub_out($file));
 					} // update our current state
 
 				} // if it's not an m3u
@@ -581,8 +581,8 @@ class Catalog extends database_object {
 
 		// This should only happen on the last run
 		if ($path == $this->path) {
-			update_text('add_count_' . $this->id, $this->count);
-			update_text('add_dir_' . $this->id, scrub_out($file));
+			UI::update_text('add_count_' . $this->id, $this->count);
+			UI::update_text('add_dir_' . $this->id, scrub_out($file));
 		}
 
 
@@ -681,16 +681,16 @@ class Catalog extends database_object {
 			/* Stupid little cutesie thing */
 			$search_count++;
 			if (UI::check_ticker()) {
-				update_text('count_art_' . $this->id, $search_count);
-				update_text('read_art_' . $this->id, scrub_out($album->name));
+				UI::update_text('count_art_' . $this->id, $search_count);
+				UI::update_text('read_art_' . $this->id, scrub_out($album->name));
 			} //echos song count
 
 			unset($found);
 		} // foreach albums
 
 		// One last time for good measure
-		update_text('count_art_' . $this->id, $search_count);
-		update_text('read_art_' . $this->id, scrub_out($album->name));
+		UI::update_text('count_art_' . $this->id, $search_count);
+		UI::update_text('read_art_' . $this->id, scrub_out($album->name));
 
 		self::$_art_albums = array();
 
@@ -715,12 +715,12 @@ class Catalog extends database_object {
 			/* Stupid little cutesie thing */
 			$thumb_count++;
 			if (UI::check_ticker()) {
-				update_text('count_thumb_' . $this->id, $search_count);
+				UI::update_text('count_thumb_' . $this->id, $search_count);
 			} //echos thumb count
 
 		} // end foreach albums
 
-		update_text('count_thumb_' . $this->id, $search_count);
+		UI::update_text('count_thumb_' . $this->id, $search_count);
 
 	} // generate_thumbnails
 
@@ -1308,8 +1308,8 @@ class Catalog extends database_object {
 			$count++;
 			if (UI::check_ticker()) {
 				$file = str_replace(array('(',')', '\''), '', $results['file']);
-				update_text('clean_count_' . $this->id, $count);
-				update_text('clean_dir_' . $this->id, scrub_out($file));
+				UI::update_text('clean_count_' . $this->id, $count);
+				UI::update_text('clean_dir_' . $this->id, scrub_out($file));
 			}
 			if($this->catalog_type == 'local') {
 				$file_info = filesize($results['file']);
@@ -1419,8 +1419,8 @@ class Catalog extends database_object {
 			$count++;
 			if (UI::check_ticker()) {
 				$file = str_replace(array('(',')','\''), '', $row['file']);
-				update_text('verify_count_' . $this->id, $count);
-				update_text('verify_dir_' . $this->id, scrub_out($file));
+				UI::update_text('verify_count_' . $this->id, $count);
+				UI::update_text('verify_dir_' . $this->id, scrub_out($file));
 			}
 
 			if (!is_readable($row['file'])) {
@@ -1443,7 +1443,7 @@ class Catalog extends database_object {
 			unset($info);
 		}
 
-		update_text('verify_count_' . $this->id, $count);
+		UI::update_text('verify_count_' . $this->id, $count);
 		return $changed;
 
 	} // _verfiy_chunk

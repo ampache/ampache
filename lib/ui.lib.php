@@ -585,22 +585,6 @@ function toggle_visible($element) {
 } // toggle_visible
 
 /**
- * update_text
- * Convenience function
- */
-function update_text($field, $value) {
-	if(defined('CLI')) {
-		echo "$value\n";
-		return;
-	}
-	echo '<script type="text/javascript">';
-	echo "updateText('$field', '$value');";
-	echo "</script>\n";
-	ob_flush();
-	flush();
-}
-
-/**
  * print_bool
  * This function takes a boolean value and then prints out a friendly text
  * message.
