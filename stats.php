@@ -22,7 +22,7 @@
 
 require_once 'lib/init.php';
 
-show_header();
+UI::show_header();
 
 /* Switch on the action to be performed */
 switch ($_REQUEST['action']) {
@@ -56,6 +56,6 @@ switch ($_REQUEST['action']) {
 	break;
 } // end switch on action
 
-show_footer();
+UI::show_footer();
 
 ?>

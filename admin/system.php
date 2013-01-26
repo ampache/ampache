@@ -27,7 +27,7 @@ if (!Access::check('interface',100) OR Config::get('demo_mode')) {
 	exit();
 }
 
-show_header();
+UI::show_header();
 
 /* Switch on action boys */
 switch ($_REQUEST['action']) {
@@ -56,6 +56,6 @@ switch ($_REQUEST['action']) {
 	break;
 } // end switch
 
-show_footer();
+UI::show_footer();
 
 ?>

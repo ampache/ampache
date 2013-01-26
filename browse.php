@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
 	break;
 } // end switch
 
-show_header();
+UI::show_header();
 
 switch($_REQUEST['action']) {
 	case 'file':
@@ -117,5 +117,5 @@ switch($_REQUEST['action']) {
 $browse->store();
 
 /* Show the Footer */
-show_footer();
+UI::show_footer();
 ?>

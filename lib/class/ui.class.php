@@ -89,6 +89,27 @@ class UI {
 	}
 
 	/**
+	 * show_header
+	 *
+	 * For now this just shows the header template
+	 */
+	public static function show_header() {
+		require_once Config::get('prefix') . '/templates/header.inc.php';
+	}
+
+	/**
+	 * show_footer
+	 *
+	 * Shows the footer template and possibly profiling info.
+	 */
+	public static function show_footer() {
+		require_once Config::get('prefix') . '/templates/footer.inc.php';
+		if (isset($_REQUEST['profiling'])) {
+			Dba::show_profile();
+		}
+	}
+
+	/**
 	 * truncate
 	 *
 	 * Limit text to a certain length; adds an ellipsis if truncation was

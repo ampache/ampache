@@ -27,7 +27,7 @@ if (!Access::check('interface','100')) {
 	exit();
 }
 
-show_header();
+UI::show_header();
 
 switch ($_REQUEST['action']) {
 	case 'delete_record':
@@ -109,5 +109,5 @@ switch ($_REQUEST['action']) {
 		require_once Config::get('prefix') .'/templates/show_access_list.inc.php';
 	break;
 } // end switch on action
-show_footer();
+UI::show_footer();
 ?>

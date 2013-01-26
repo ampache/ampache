@@ -125,7 +125,7 @@ switch($_REQUEST['action']) {
 	break;
 } // End Switch Action
 
-show_header();
+UI::show_header();
 
 /**
  * switch on the view
@@ -140,5 +140,5 @@ switch ($_REQUEST['action']) {
 	break;
 } // end switch on action
 
-show_footer();
+UI::show_footer();
 ?>

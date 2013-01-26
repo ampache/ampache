@@ -33,7 +33,7 @@ if ($_REQUEST['action'] == 'delete_playlist') {
 	}
 }
 
-show_header();
+UI::show_header();
 
 /* Switch on the action passed in */
 switch ($_REQUEST['action']) {
@@ -98,5 +98,5 @@ switch ($_REQUEST['action']) {
 	break;
 } // switch on the action
 
-show_footer();
+UI::show_footer();
 ?>

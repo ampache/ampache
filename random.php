@@ -22,7 +22,7 @@
 
 require_once 'lib/init.php';
 
-show_header();
+UI::show_header();
 
 switch ($_REQUEST['action']) {
 	case 'get_advanced':
@@ -38,5 +38,5 @@ switch ($_REQUEST['action']) {
 	break;
 } // end switch
 
-show_footer();
+UI::show_footer();
 ?>

@@ -27,7 +27,7 @@ if (!Access::check('interface','100')) {
 	exit();
 }
 
-show_header();
+UI::show_header();
 
 switch ($_REQUEST['action']) {
 	case 'edit_song':
@@ -301,5 +301,5 @@ switch ($_REQUEST['action']) {
 	break;
 } // end switch
 
-show_footer();
+UI::show_footer();
 ?>

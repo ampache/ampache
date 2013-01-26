@@ -22,7 +22,7 @@
 
 require_once 'lib/init.php';
 
-show_header();
+UI::show_header();
 
 // Switch on Action
 switch ($_REQUEST['action']) {
@@ -60,6 +60,6 @@ switch ($_REQUEST['action']) {
 	break;
 } // end data collection
 
-show_footer();
+UI::show_footer();
 
 ?>

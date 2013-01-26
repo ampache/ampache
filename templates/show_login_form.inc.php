@@ -95,5 +95,5 @@ if (@is_readable(Config::get('prefix') . '/config/motd.php')) {
 	?>
 <?php
 }
-show_footer();
+UI::show_footer();
 ?>

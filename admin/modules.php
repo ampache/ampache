@@ -29,7 +29,7 @@ if (!$GLOBALS['user']->has_access(100)) {
 
 
 /* Always show the header */
-show_header();
+UI::show_header();
 
 switch ($_REQUEST['action']) {
 	case 'install_localplay':
@@ -153,6 +153,6 @@ switch ($_REQUEST['action']) {
 	break;
 } // end switch
 
-show_footer();
+UI::show_footer();
 
 ?>

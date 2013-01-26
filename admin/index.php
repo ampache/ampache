@@ -27,7 +27,7 @@ if (!Access::check('interface',100)) {
 	exit();
 }
 
-show_header();
+UI::show_header();
 
 switch ($_REQUEST['action']) {
 	default:
@@ -42,5 +42,5 @@ switch ($_REQUEST['action']) {
 	break;
 }
 
-show_footer();
+UI::show_footer();
 ?>

@@ -176,5 +176,5 @@ switch ($_REQUEST['action']) {
 	break;
 } // switch on view
 
-show_footer();
+UI::show_footer();
 ?>

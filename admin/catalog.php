@@ -27,7 +27,7 @@ if (!Access::check('interface','100')) {
 	exit;
 }
 
-show_header();
+UI::show_header();
 
 /* Big switch statement to handle various actions */
 switch ($_REQUEST['action']) {
@@ -314,6 +314,6 @@ switch ($_REQUEST['action']) {
 } // end switch
 
 /* Show the Footer */
-show_footer();
+UI::show_footer();
 
 ?>

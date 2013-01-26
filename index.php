@@ -22,7 +22,7 @@
 
 require_once 'lib/init.php';
 
-show_header();
+UI::show_header();
 
 $action = isset($_REQUEST['action']) ? scrub_in($_REQUEST['action']) : null;
 
@@ -42,6 +42,6 @@ if (Config::get('refresh_limit') > 5) {
 
 require_once Config::get('prefix') . '/templates/show_index.inc.php';
 
-show_footer();
+UI::show_footer();
 
 ?>

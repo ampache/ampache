@@ -75,30 +75,6 @@ function return_referer() {
 } // return_referer
 
 /**
- * show_header
- * This shows the header.inc.php, it may do something
- * more in the future
- */
-function show_header() {
-
-	require_once Config::get('prefix') . '/templates/header.inc.php';
-
-} // show_header
-
-/**
- * show_footer
- * shows the footer of the page
- */
-function show_footer() {
-
-	require_once Config::get('prefix') . '/templates/footer.inc.php';
-	if (isset($_REQUEST['profiling'])) {
-	  Dba::show_profile();
-	}
-
-} // show_footer
-
-/**
  * get_location
  * This function gets the information about a person's current location.
  * This is used for A) sidebar highlighting & submenu showing and B) titlebar

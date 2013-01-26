@@ -27,7 +27,7 @@ if (!Access::check('interface','100')) {
 	exit;
 }
 
-show_header();
+UI::show_header();
 
 /* Switch on Action */
 switch ($_REQUEST['action']) {
@@ -73,5 +73,5 @@ switch ($_REQUEST['action']) {
 	break;
 } // end switch on action
 
-show_footer();
+UI::show_footer();
 ?>

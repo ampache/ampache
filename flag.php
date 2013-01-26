@@ -57,5 +57,5 @@ switch ($action) {
 	break;
 } // end action switch
 
-show_footer();
+UI::show_footer();
 ?>

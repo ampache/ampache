@@ -28,7 +28,7 @@ if (!Config::get('allow_democratic_playback')) {
 	exit;
 }
 
-show_header();
+UI::show_header();
 
 // Switch on their action
 switch ($_REQUEST['action']) {
@@ -122,6 +122,6 @@ switch ($_REQUEST['action']) {
 	break;
 } // end switch on action
 
-show_footer();
+UI::show_footer();
 
 ?>

@@ -22,7 +22,7 @@
 
 require_once 'lib/init.php';
 
-show_header();
+UI::show_header();
 
 // Check to see if we've got the rights to be here
 if (!Config::get('allow_localplay_playback') || !Access::check('interface','25')) {
@@ -90,5 +90,5 @@ switch ($_REQUEST['action']) {
 	break;
 } // end switch action
 
-show_footer();
+UI::show_footer();
 ?>
