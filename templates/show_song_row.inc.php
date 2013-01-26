@@ -33,15 +33,15 @@
 <td class="cel_rating" id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></td>
 <?php } ?>
 <td class="cel_action">
-	<a href="<?php echo $song->link; ?>"><?php echo get_user_icon('preferences', T_('Song Information')); ?></a>
+	<a href="<?php echo $song->link; ?>"><?php echo UI::get_icon('preferences', T_('Song Information')); ?></a>
 	<?php if (Config::get('shoutbox')) { ?>
                 <a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=song&amp;id=<?php echo $song->id; ?>">
-                <?php echo get_user_icon('comment', T_('Post Shout')); ?>
+                <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
                 </a>
 	<?php } ?>
 	<?php if (Access::check_function('download')) { ?>
 	<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>">
-		<?php echo get_user_icon('download', T_('Download')); ?>
+		<?php echo UI::get_icon('download', T_('Download')); ?>
 	</a>
 	<?php } ?>
 	<?php if (Access::check('interface','75')) { ?>

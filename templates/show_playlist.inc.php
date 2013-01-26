@@ -37,12 +37,12 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
 <div id="information_actions">
 <ul>
 	<li>
-		<a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo get_user_icon('statistics', T_('Normalize Tracks')); ?></a>
+		<a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('statistics', T_('Normalize Tracks')); ?></a>
 		<?php echo T_('Normalize Tracks'); ?>
 	</li>
         <?php if (Access::check_function('batch_download')) { ?>
 	<li>
-		<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>"><?php echo get_user_icon('batch_download', T_('Batch Download')); ?></a>
+		<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
 		<?php echo T_('Batch Download'); ?>
 	</li>
         <?php } ?>
@@ -61,7 +61,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
 	</li>
 	<li>
 		<a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
-			<?php echo get_user_icon('delete'); ?>
+			<?php echo UI::get_icon('delete'); ?>
 		</a>
 		<?php echo T_('Delete'); ?>
 	</li>

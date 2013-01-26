@@ -48,5 +48,5 @@ echo 'var types = $H(\'';
 echo arrayToJSON($search->types) . "'.evalJSON());\n";
 echo 'var basetypes = $H(\'';
 echo arrayToJSON($search->basetypes) . "'.evalJSON());\n";
-echo 'removeIcon = \'<a href="javascript: void(0)">' . get_user_icon('disable', T_('Remove')) . '</a>\';';
+echo 'removeIcon = \'<a href="javascript: void(0)">' . UI::get_icon('disable', T_('Remove')) . '</a>\';';
 ?>

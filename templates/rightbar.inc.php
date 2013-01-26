@@ -25,7 +25,7 @@
 	<?php echo Ajax::button('?page=stream&action=basket','all', T_('Play'),'rightbar_play'); ?>
 	</li>
 	<li id="pl_add">
-		<?php echo get_user_icon('playlist_add', T_('Add to Playlist')); ?>
+		<?php echo UI::get_icon('playlist_add', T_('Add to Playlist')); ?>
 		<ul id="pl_action_additems" class="submenu">
 		  <li>
 		    <?php echo Ajax::text('?page=playlist&action=create', T_('Add to New Playlist'),'rb_create_playlist'); ?>
@@ -46,7 +46,7 @@
 <?php if (Access::check_function('batch_download')) { ?>
 	<li>
 	<a href="<?php echo Config::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
-	        <?php echo get_user_icon('batch_download', T_('Batch Download')); ?>
+	        <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
 	</li>
 <?php } ?>
@@ -54,7 +54,7 @@
 	<?php echo Ajax::button('?action=basket&type=clear_all','delete', T_('Clear Playlist'),'rb_clear_playlist'); ?>
 	</li>
 	<li id="rb_add">
-	  <?php echo get_user_icon('add', T_('Add Dynamic Items')); ?>
+	  <?php echo UI::get_icon('add', T_('Add Dynamic Items')); ?>
 	  <ul id="rb_action_additems" class="submenu">
 	   <li>
 	    <?php echo Ajax::text('?action=basket&type=dynamic&random_type=default', T_('Pure Random'),'rb_add_pure_random'); ?>

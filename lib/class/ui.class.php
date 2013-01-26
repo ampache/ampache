@@ -27,6 +27,7 @@ class UI {
 
 	private static $_classes;
 	private static $_ticker;
+	private static $_icon_cache;
 
 	public function __construct($data) {
 		return false;
@@ -102,6 +103,64 @@ class UI {
 		}
 		return self::$_classes[0];
 	}
+
+	/**
+	 * get_icon
+	 *
+	 * Returns an <img> tag for the specified icon
+	 */
+	public static function get_icon($name, $title = null, $id = null) {
+		if (is_array($name)) {
+			$hover_name = $name[1];
+			$name = $name[0];
+		}
+
+		$title = $title ?: T_(ucfirst($name));
+
+		$icon_url = self::_find_icon($name);
+		if ($hover_name) {
+			$hover_url = self::_find_icon($hover_text);
+		}
+
+		$tag = '<img src="' . $icon_url . '" ';
+
+		if ($id) {
+			$tag .= 'id="' . $id . '" ';
+		}
+
+		$tag .= 'alt="' . $title . '" ';
+		$tag .= 'title="' . $title . '" ';
+
+		if ($hover_name) {
+			$tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
+			$tag .= 'onmouseout="this.src=\'' . $icon_url . '\'; return true;" ';
+		}
+
+		$tag .= '/>';
+		return $tag;
+	}
+
+	/**
+	 * _find_icon
+	 *
+	 * Does the finding icon thing
+	 */
+	private static function _find_icon($name) {
+		if ($url = self::$_icon_cache[$name]) {
+			return $url;
+		}
+
+		$filename = 'icon_' . $name . '.png';
+		$path = Config::get('theme_path') . '/images/icons/';
+		if (!file_exists(Config::get('prefix') . $path . $filename)) {
+			$path = '/images/';
+		}
+		$url = Config::get('web_path') . $path . $filename;
+		self::$_icon_cache[$name] = $url;
+		
+		return $url;
+	}
+
 
 	/**
 	 * show_header

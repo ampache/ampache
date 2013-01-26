@@ -36,18 +36,18 @@
 		</td>
 	<?php } ?>
 	<td class="cel_action">
-		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&amp;user_id=<?php echo $client->id; ?>"><?php echo get_user_icon('edit', T_('Edit')); ?></a>
-		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&amp;user_id=<?php echo $client->id; ?>"><?php echo get_user_icon('preferences', T_('Preferences')); ?></a>
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&amp;user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('edit', T_('Edit')); ?></a>
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&amp;user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('preferences', T_('Preferences')); ?></a>
 	<?php
 	//FIXME: Fix this for the extra permission levels
 	if ($client->disabled == '1') {
-		echo "<a href=\"".$web_path."/admin/users.php?action=enable&amp;user_id=$client->id\">" . get_user_icon('enable', T_('Enable')) . "</a>";
+		echo "<a href=\"".$web_path."/admin/users.php?action=enable&amp;user_id=$client->id\">" . UI::get_icon('enable', T_('Enable')) . "</a>";
 	}
 	else {
-		echo "<a href=\"".$web_path."/admin/users.php?action=disable&amp;user_id=$client->id\">" . get_user_icon('disable', T_('Disable')) ."</a>";
+		echo "<a href=\"".$web_path."/admin/users.php?action=disable&amp;user_id=$client->id\">" . UI::get_icon('disable', T_('Disable')) ."</a>";
 	}
 	?>
-		<a href="<?php echo $web_path; ?>/admin/users.php?action=delete&amp;user_id=<?php echo $client->id; ?>"><?php echo get_user_icon('delete', T_('Delete')); ?></a>
+		<a href="<?php echo $web_path; ?>/admin/users.php?action=delete&amp;user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
 	</td>
        <?php
 	if (($client->is_logged_in()) AND ($client->is_online())) {

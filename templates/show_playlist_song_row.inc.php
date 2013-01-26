@@ -34,7 +34,7 @@
 <td class="cel_action">
 	<?php if (Config::get('download')) { ?>
 	<a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>">
-		<?php echo get_user_icon('download', T_('Download')); ?>
+		<?php echo UI::get_icon('download', T_('Download')); ?>
 	</a>
 	<?php } ?>
 	<?php if ($playlist->has_access()) { ?>

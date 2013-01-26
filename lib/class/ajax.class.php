@@ -123,7 +123,7 @@ class Ajax {
 			$class = ' class="' . $class . '"';
 		}
 
-		$string = get_user_icon($icon,$alt);
+		$string = UI::get_icon($icon,$alt);
 
 		// Generate an <a> so that it's more compliant with older
 		// browsers (ie :hover actions) and also to unify linkbuttons

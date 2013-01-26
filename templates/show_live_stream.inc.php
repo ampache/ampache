@@ -24,7 +24,7 @@
 <div id="information_actions">
 <ul>
 <li>
-	<a href="<?php echo Config::get('web_path'); ?>/radio.php?action=show_create"><?php echo get_user_icon('add', T_('Add')); ?></a> <?php echo T_('Add Radio Station'); ?>
+	<a href="<?php echo Config::get('web_path'); ?>/radio.php?action=show_create"><?php echo UI::get_icon('add', T_('Add')); ?></a> <?php echo T_('Add Radio Station'); ?>
 </li>
 </ul>
 </div>

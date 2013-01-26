@@ -342,78 +342,7 @@ function show_playlist_select($name,$selected='',$style='') {
 
 } // show_playlist_select
 
-/**
- * get_user_icon
- * this function takes a name and a returns either a text representation
- * or an <img /> tag
- */
-function get_user_icon($name,$title='',$id='') {
-
-	/* Because we do a lot of calls cache the URLs */
-	static $url_cache = array();
-
-	// If our name is an array
-	if (is_array($name)) {
-		$hover_name = $name['1'];
-		$name = $name['0'];
-	}
-
-	if (!$title) { $title = T_(ucfirst($name)); }
-
-	if ($id) {
-		$id = ' id="' . $id . '" ';
-	}
-
-	if (isset($url_cache[$name])) {
-		$img_url = $url_cache[$name];
-		$cache_url = true;
-	}
-
-	if (empty($hover_name)) {
-		$cache_hover = true;
-		$hov_txt = '';
-	}
-	elseif (isset($url_cache[$hover_name])) {
-		$hover_url = $url_cache[$hover_name];
-		$cache_hover = true;
-	}
-
-	if (!isset($cache_url) OR !isset($cache_hover)) {
-
-		$icon_name = 'icon_' . $name . '.png';
-
-		/* Build the image url */
-		if (file_exists(Config::get('prefix') . Config::get('theme_path') . '/images/icons/' . $icon_name)) {
-			$img_url = Config::get('web_path') . Config::get('theme_path') . '/images/icons/' . $icon_name;
-		}
-		else {
-			$img_url = Config::get('web_path') . '/images/' . $icon_name;
-		}
-
-		$url_cache[$name] = $img_url;
-
-		/* If Hover, then build its url */
-		if (!empty($hover_name)) {
-			$hover_icon = 'icon_' . $hover_name . '.png';
-			if (file_exists(Config::get('prefix') . Config::get('theme_path') . '/images/icons/' . $icon_name)) {
-				$hov_url = Config::get('web_path') . Config::get('theme_path') . '/images/icons/' . $hover_icon;
-			}
-			else {
-				$hov_url = Config::get('web_path') . '/images/' . $hover_icon;
-			}
-
-			$hov_txt = " onmouseover=\"this.src='$hov_url'; return true;\" onmouseout=\"this.src='$img_url'; return true;\" ";
-			$url_cache[$hover_name] = $hov_txt;
-		} // end hover
-
-	} // end if not cached
-
-	$string = '<img src="' . $img_url . '"' . $id . 'alt="' . $title . '" title="' . $title . '"' . $hov_txt . '/>';
-
-	return $string;
-
-} // get_user_icon
-
+// FIXME: This should probably go in XML_Data
 /**
  * xml_from_array
  * This takes a one dimensional array and creates a XML document from it. For

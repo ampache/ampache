@@ -38,11 +38,11 @@ if (Config::get('ratings')) {
 <li>
 	<?php if ($object_type == 'album') { ?>
 	<a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
-	<?php echo get_user_icon('view', T_("Show All Songs By %s")); ?>
+	<?php echo UI::get_icon('view', T_("Show All Songs By %s")); ?>
 	<?php printf(T_("Show All Songs By %s"), $artist->f_name); ?></a>
 	<?php } else { ?>
 	<a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
-	<?php echo get_user_icon('view', T_("Show Albums By %s")); ?>
+	<?php echo UI::get_icon('view', T_("Show Albums By %s")); ?>
 	<?php printf(T_("Show Albums By %s"), $artist->f_name); ?></a>
 	<?php } ?>
 </li>
@@ -58,13 +58,13 @@ if (Config::get('ratings')) {
 </li>
 <?php if (Access::check('interface','50')) { ?>
 <li>
-	<a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo get_user_icon('cog', T_('Update from tags')); ?></a>
+	<a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo UI::get_icon('cog', T_('Update from tags')); ?></a>
 	<a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo T_('Update from tags'); ?></a>
 </li>
 <?php } ?>
 <?php if (Access::check_function('batch_download')) { ?>
 <li>
-	<a href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo get_user_icon('batch_download', T_('Download')); ?></a>
+	<a href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
 	<a href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo T_('Download'); ?></a>
 </li>
 <?php } ?>
