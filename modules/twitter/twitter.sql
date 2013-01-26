@@ -1,5 +1,4 @@
--- Copyright (c) Ampache.org
--- All rights reserved.
+-- Copyright 2010 - 2013 Ampache.org 
 --
 -- This program is free software; you can redistribute it and/or
 -- modify it under the terms of the GNU General Public License v2
