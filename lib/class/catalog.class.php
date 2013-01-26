@@ -768,28 +768,6 @@ class Catalog extends database_object {
 	} //get_catalog_files
 
 	/**
-	 * get_disabled
-	 * Gets an array of the disabled songs for all catalogs
-	 * and returns full song objects with them
-	 */
-	public static function get_disabled($count=0) {
-
-		$results = array();
-
-		if ($count) { $limit_clause = " LIMIT $count"; }
-
-		$sql = "SELECT `id` FROM `song` WHERE `enabled`='0' $limit_clause";
-		$db_results = Dba::read($sql);
-
-		while ($r = Dba::fetch_assoc($db_results)) {
-			$results[] = new Song($r['id']);
-		}
-
-		return $results;
-
-	} // get_disabled
-
-	/**
 	 * dump_album_art
 	 * This runs through all of the albums and tries to dump the
 	 * art for them into the 'folder.jpg' file in the appropriate dir

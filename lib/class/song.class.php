@@ -261,6 +261,27 @@ class Song extends database_object implements media {
 	}
 
 	/**
+	 * get_disabled
+	 *
+	 * Gets a list of the disabled songs for and returns an array of Songs
+	 */
+	public static function get_disabled($count = 0) {
+
+		$results = array();
+
+		$sql = "SELECT `id` FROM `song` WHERE `enabled`='0'";
+		if ($count) { $sql .= " LIMIT $count"; }
+		$db_results = Dba::read($sql);
+
+		while ($r = Dba::fetch_assoc($db_results)) {
+			$results[] = new Song($r['id']);
+		}
+
+		return $results;
+
+	}
+
+	/**
 	 * find_duplicates
 	 *
 	 * This function takes a search type and returns a list of probable

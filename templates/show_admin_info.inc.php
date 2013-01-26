@@ -26,7 +26,7 @@ $web_path = Config::get('web_path');
 $flagged	= Flag::get_recent(10);
 
 /* Disabled Information Gathering */
-$songs = Catalog::get_disabled(10);
+$songs = Song::get_disabled(10);
 ?>
 
 <?php show_box_top(T_('Last Ten Flagged Records')); ?>

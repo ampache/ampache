@@ -273,7 +273,7 @@ switch ($_REQUEST['action']) {
 		/* Stop the demo hippies */
 		if (Config::get('demo_mode')) { break; }
 
-		$songs = $catalog->get_disabled();
+		$songs = Song::get_disabled();
 		if (count($songs)) {
 			require Config::get('prefix') . '/templates/show_disabled_songs.inc.php';
 		}
