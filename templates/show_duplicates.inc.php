@@ -46,9 +46,9 @@
 <?php
 	foreach ($duplicates as $item) {
 		// Gather the duplicates
-		$songs = Catalog::get_duplicate_info($item,$search_type);
+		$songs = Song::get_duplicate_info($item, $search_type);
 
-		foreach ($songs as $key=>$song_id) {
+		foreach ($songs as $key => $song_id) {
 			$song = new Song($song_id);
 			$song->format();
 			$row_key = 'duplicate_' . $song_id;

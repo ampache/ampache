@@ -446,11 +446,11 @@ class Catalog extends database_object {
 
 	/**
 	 * add_files
-	 * Recurses through $this->path and pulls out all mp3s and returns the full
-	 * path in an array. Passes gather_type to determin if we need to check id3
-	 * information against the db.
+	 * Recurses through $this->path and pulls out all mp3s and returns the
+	 * full path in an array. Passes gather_type to determine if we need to
+	 * check id3 information against the db.
 	 */
-	public function add_files($path,$options) {
+	public function add_files($path, $options) {
 
 		// Profile the memory a bit
 		debug_event('Memory', format_bytes(memory_get_usage(true)), 5);
@@ -819,72 +819,6 @@ class Catalog extends database_object {
 		return $results;
 
 	} // get_disabled
-
-	/**
-	 * get_duplicate_songs
-	 *
-	 * This function takes a search type and returns a list of likely
-	 * duplicates.
-	 */
-	public static function get_duplicate_songs($search_type) {
-		$where_sql = $_REQUEST['search_disabled'] ? '' : "WHERE `enabled` != '0'";
-		$sql = 'SELECT `id`, `artist`, `album`, `title`, ' .
-			'COUNT(`title`) FROM `song` ' . $where_sql . 
-			' GROUP BY `title`';
-
-		if ($search_type == 'artist_title' || 
-			$search_type == 'artist_album_title') {
-			$sql .= ',`artist`';
-		}
-		if ($search_type == 'artist_album_title') {
-			$sql .= ',`album`';
-		}
-
-		$sql .= ' HAVING COUNT(`title`) > 1 ORDER BY `title`';
-
-		$db_results = Dba::read($sql);
-
-		$results = array();
-
-		while ($item = Dba::fetch_assoc($db_results)) {
-			$results[] = $item;
-		} // end while
-
-		return $results;
-
-	} // get_duplicate_songs
-
-	/**
-	 * get_duplicate_info
-	 *
-	 * This takes a song id and search type and returns the
-	 * duplicate songs in the correct order, sorted by length, bitrate,
-	 * and filesize.
-	 */
-	public static function get_duplicate_info($item, $search_type) {
-		$sql = 'SELECT `id` FROM `song` ' .
-			"WHERE `title`='" . Dba::escape($item['title']) . "' ";
-
-		if ($search_type == 'artist_title' || 
-			$search_type == 'artist_album_title') {
-			$sql .= "AND `artist`='" . Dba::escape($item['artist']) . "' ";
-		}
-		if ($search_type == 'artist_album_title') {
-			$sql .= "AND `album` = '" . Dba::escape($item['album']) . "' ";
-		}
-
-		$sql .= 'ORDER BY `time`,`bitrate`,`size`';
-		$db_results = Dba::read($sql);
-
-		$results = array();
-
-		while ($item = Dba::fetch_assoc($db_results)) {
-			$results[] = $item['id'];
-		} // end while
-
-		return $results;
-
-	} // get_duplicate_info
 
 	/**
 	 * dump_album_art
