@@ -1003,7 +1003,7 @@ class Catalog extends database_object {
 			}
 		} // foreach songs
 
-		self::clean();
+		self::gc();
 
 	} // update_single_item
 
@@ -1328,7 +1328,7 @@ class Catalog extends database_object {
 		}
 
 		// Remove any orphaned artists/albums/etc.
-		self::clean();
+		self::gc();
 
 		show_box_top();
 		echo "<strong>";
@@ -1431,7 +1431,7 @@ class Catalog extends database_object {
 
 		debug_event('verify', "Finished, $total_updated updated in " . $this->name, 5, 'ampache-catalog');
 
-		self::clean();
+		self::gc();
 		$this->update_last_update();
 
 		show_box_top();
@@ -1502,11 +1502,12 @@ class Catalog extends database_object {
 	} // _verfiy_chunk
 
 	/**
-	 * clean
+	 * gc
+	 *
 	 * This is a wrapper function for all of the different cleaning
-	 * functions, it runs them in the correct order
+	 * functions, it runs them in an order that resembles correct
 	 */
-	public static function clean() {
+	public static function gc() {
 
 		debug_event('catalog', 'Database cleanup started', 5, 'ampache-catalog');
 		Song::gc();
@@ -1522,7 +1523,7 @@ class Catalog extends database_object {
 		Tag::gc();
 		debug_event('catalog', 'Database cleanup ended', 5, 'ampache-catalog');
 
-	} // clean
+	}
 
 	/**
 	 * optimize_tables
@@ -2104,8 +2105,8 @@ class Catalog extends database_object {
 		$sql = "DELETE FROM `catalog` WHERE `id` = '$catalog_id'";
 		$db_results = Dba::write($sql);
 
-		// Run the Aritst/Album Cleaners...
-		self::clean($catalog_id);
+		// Run the cleaners...
+		self::gc();
 
 	} // delete
 
