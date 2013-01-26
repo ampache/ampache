@@ -346,8 +346,8 @@ class Search extends playlist_object {
 
             $playlists = array();
             foreach (Search::get_searches() as $playlistid) {
-            // Slightly different from the above so we don't 
-            // instigate a vicious loop.
+            // Slightly different from the above so we don't instigate
+            // a vicious loop.
                 $playlists[$playlistid] = Search::get_name_byid($playlistid);
             }
             $this->types[] = array(
@@ -439,6 +439,7 @@ class Search extends playlist_object {
 
     /**
      * clean_request
+     *
      * Sanitizes raw search data
      */
     public static function clean_request($data) {
@@ -449,10 +450,9 @@ class Search extends playlist_object {
             if ($prefix == 'rule' && strlen($value)) {
                 $request[$key] = Dba::escape($value);
             }
-        } // end foreach $data
+        }
 
-        // Figure out if they want an AND based search or an OR based 
-        // search
+        // Figure out if they want an AND based search or an OR based search
         switch($data['operator']) {
             case 'or':
                 $request['operator'] = 'OR';
@@ -460,7 +460,7 @@ class Search extends playlist_object {
             default:
                 $request['operator'] = 'AND';
             break;
-        } // end switcn on operator
+        }
         
         // Verify the type
         switch($data['type']) {
@@ -480,17 +480,19 @@ class Search extends playlist_object {
 
     /** 
      * get_name_byid
+     *
      * Returns the name of the saved search corresponding to the given ID
      */
     public static function get_name_byid($id) {
-        $sql = "SELECT `name` FROM `search` WHERE `id`='$id'";
+        $sql = "SELECT `name` FROM `search` WHERE `id` = '$id'";
         $db_results = Dba::read($sql);
         $r = Dba::fetch_assoc($db_results);
         return $r['name'];
-     } // end get_name_byid
+     }
 
     /**
      * get_searches
+     *
      * Return the IDs of all saved searches accessible by the current user.
      */
     public static function get_searches() {
@@ -505,25 +507,25 @@ class Search extends playlist_object {
         }
 
         return $results;
-    } // end get_searches
+    }
 
     /**
      * run
-     * This function actually runs the search, and returns an array of the
+     *
+     * This function actually runs the search and returns an array of the
      * results.
      */
     public static function run($data) {
         $limit = intval($data['limit']);
-        /* Create an array of the object we need to search on */
         $data = Search::clean_request($data);
 
         $search = new Search($data['type']);
         $search->parse_rules($data);
 
-        /* Generate BASE SQL */
+        // Generate BASE SQL
 
         if ($limit > 0) {
-            $limit_sql = " LIMIT " . $limit;
+            $limit_sql = ' LIMIT ' . $limit;
         }
 
         $search_info = $search->to_sql();
@@ -539,10 +541,11 @@ class Search extends playlist_object {
         }
 
         return $results;
-    } // run
+    }
 
     /**
      * delete
+     *
      * Does what it says on the tin.
      */
     public function delete() {
@@ -551,7 +554,7 @@ class Search extends playlist_object {
         $db_results = Dba::write($sql);
 
         return true;
-    } // end delete
+    }
 
     /**
      * format
@@ -559,12 +562,15 @@ class Search extends playlist_object {
      */
     public function format() {
         parent::format();
-        $this->f_link = '<a href="' . Config::get('web_path') . '/smartplaylist.php?action=show_playlist&amp;playlist_id=' . $this->id . '">' . $this->f_name . '</a>';
-    } // end format
+        $this->f_link = '<a href="' . Config::get('web_path') .
+            '/smartplaylist.php?action=show_playlist&amp;playlist_id=' .
+            $this->id . '">' . $this->f_name . '</a>';
+    }
 
     /**
      * get_items
-     * return an array of the items output by our search (part of the
+     *
+     * Return an array of the items output by our search (part of the
      * playlist interface).
      */
     public function get_items() {
@@ -584,20 +590,20 @@ class Search extends playlist_object {
         }
 
         return $results;
-    } // end get_items
+    }
 
     /**
      * get_random_items
-     * return a randomly sorted array (with an optional limit) of the items
+     *
+     * Returns a randomly sorted array (with an optional limit) of the items
      * output by our search (part of the playlist interface)
      */
-    
     public function get_random_items($limit = null) {
         $results = array();
 
         $sql = $this->to_sql();
-        $sql = $sql['base'] . ' ' . $sql['table_sql'] . ' WHERE ' .
-            $sql['where_sql'];
+        $sql = $sql['base'] . ' ' . $sql['table_sql'] .
+            ' WHERE ' . $sql['where_sql'];
 
         $sql .= ' ORDER BY RAND()';
         $sql .= $limit ? ' LIMIT ' . intval($limit) : '';
@@ -616,6 +622,7 @@ class Search extends playlist_object {
 
     /** 
      * name_to_basetype
+     *
      * Iterates over our array of types to find out the basetype for
      * the passed string.
      */
@@ -626,10 +633,11 @@ class Search extends playlist_object {
             }
         }
         return false;
-    } // end name_to_basetype
+    }
 
     /** 
      * parse_rules
+     *
      * Takes an array of sanitized search data from the form and generates 
      * our real array from it.
      */
@@ -648,16 +656,17 @@ class Search extends playlist_object {
             }
         }
         $this->logic_operator = $data['operator'];
-    } // end parse_rules
+    }
 
     /**
      * save
+     *
      * Save this search to the database for use as a smart playlist
      */
     public function save() {
         // Make sure we have a unique name
         if (! $this->name) {
-            $this->name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s",time());
+            $this->name = $GLOBALS['user']->username . ' - ' . date('Y-m-d H:i:s', time());
         }
         $sql = "SELECT `id` FROM `search` WHERE `name`='$this->name'";
         $db_results = Dba::read($sql);
@@ -677,13 +686,13 @@ class Search extends playlist_object {
         $insert_id = Dba::insert_id();
         $this->id = $insert_id;
         return $insert_id;
-    } // end save
+    }
 
 
     /**
      * to_js
-     * Outputs the javascript necessary to re-show the current set of 
-     * rules.
+     *
+     * Outputs the javascript necessary to re-show the current set of rules. 
      */
     public function to_js() {
         foreach ($this->rules as $rule) {
@@ -692,20 +701,21 @@ class Search extends playlist_object {
                 $rule[1] . '","' . $rule[2] . '"); </script>';
         }
         return $js;
-    } // end to_js
+    }
 
     /**
      * to_sql
-     * Call the appropriate real function
+     *
+     * Call the appropriate real function.
      */
     public function to_sql() {
-        return call_user_func(
-            array($this, $this->searchtype . "_to_sql"));
-    } // end to_sql
+        return call_user_func(array($this, $this->searchtype . "_to_sql"));
+    }
 
     /**
      * update
-     * This function updates the saved version with the current settings 
+     *
+     * This function updates the saved version with the current settings. 
      */
     public function update() {
         if (!$this->id) {
@@ -721,15 +731,16 @@ class Search extends playlist_object {
         $sql = "UPDATE `search` SET `name`='$name', `type`='$type', `rules`='$rules', `logic_operator`='$logic_operator' WHERE `id`='" . Dba::escape($this->id) . "'";
         $db_results = Dba::write($sql);
         return $db_results;
-    } // end update
+    }
 
     /**
-     * mangle_data
+     * _mangle_data
+     *
      * Private convenience function.  Mangles the input according to a set 
      * of predefined rules so that we don't have to include this logic in 
      * foo_to_sql.
      */
-    private function mangle_data($data, $type, $operator) {
+    private function _mangle_data($data, $type, $operator) {
         if ($operator['preg_match']) {
             $data = preg_replace(
                 $operator['preg_match'],
@@ -747,10 +758,11 @@ class Search extends playlist_object {
         }
 
         return $data;
-    } // end mangle_data
+    }
 
     /**
      * album_to_sql
+     *
      * Handles the generation of the SQL for album searches.
      */
     private function album_to_sql() {
@@ -768,7 +780,7 @@ class Search extends playlist_object {
                     break;
                 }
             }
-            $input = $this->mangle_data($rule[2], $type, $operator);
+            $input = $this->_mangle_data($rule[2], $type, $operator);
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
@@ -831,10 +843,11 @@ class Search extends playlist_object {
             'table' => $table,
             'table_sql' => $table_sql
         );
-    } // album_to_sql
+    }
 
     /**
      * artist_to_sql
+     *
      * Handles the generation of the SQL for artist searches.
      */
     private function artist_to_sql() {
@@ -851,7 +864,7 @@ class Search extends playlist_object {
                     break;
                 }
             }
-            $input = $this->mangle_data($rule[2], $type, $operator);
+            $input = $this->_mangle_data($rule[2], $type, $operator);
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
@@ -878,7 +891,7 @@ class Search extends playlist_object {
                 "FROM `tag` LEFT JOIN `tag_map` " .
                 "ON `tag`.`id`=`tag_map`.`tag_id` " .
                 "WHERE `tag_map`.`object_type`='artist' " .
-                "AND `tag`.`name` $value  GROUP BY `object_id`".
+                "AND `tag`.`name` $value  GROUP BY `object_id`" .
                 ") AS realtag_$key " .
                 "ON `artist`.`id`=`realtag_$key`.`object_id`";
         }
@@ -893,7 +906,7 @@ class Search extends playlist_object {
             'table' => $table,
             'table_sql' => $table_sql
         );
-    } // artist_to_sql
+    }
 
     /**
      * song_to_sql
@@ -914,7 +927,7 @@ class Search extends playlist_object {
                     break;
                 }
             }
-            $input = $this->mangle_data($rule[2], $type, $operator);
+            $input = $this->_mangle_data($rule[2], $type, $operator);
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
@@ -976,10 +989,9 @@ class Search extends playlist_object {
                     $subsearch = new Search('song', $input);
                     $subsql = $subsearch->to_sql();
                     $where[] = "$sql_match_operator (" . $subsql['where_sql'] . ")";
-                    // HACK: array_merge would potentially
-                    // lose tags, since it overwrites.
-                    // Save our merged tag joins in a temp
-                    // variable, even though that's ugly.
+                    // HACK: array_merge would potentially lose tags, since it
+                    // overwrites. Save our merged tag joins in a temp variable,
+                    // even though that's ugly.
                     $tagjoin = array_merge($subsql['join']['tag'], $join['tag']);
                     $join = array_merge($subsql['join'], $join);
                     $join['tag'] = $tagjoin;
@@ -994,8 +1006,8 @@ class Search extends playlist_object {
                 default:
                     // NOSSINK!
                 break;
-            } // end switch on type
-        } // end foreach over rules
+            } // switch on type
+        } // foreach over rules
         
         $where_sql = implode(" $sql_logic_operator ", $where);
 
@@ -1041,17 +1053,17 @@ class Search extends playlist_object {
             'table' => $table,
             'table_sql' => $table_sql
         );
-    } // end song_to_sql
+    }
 
     /**
      * video_to_sql
+     *
      * Handles the generation of the SQL for video searches.
      */
     private function video_to_sql() {
         $sql_logic_operator = $this->logic_operator;
 
         $where = array();
-        
 
         foreach ($this->rules as $rule) {
             $type = $this->name_to_basetype($rule[0]);
@@ -1060,7 +1072,7 @@ class Search extends playlist_object {
                     break;
                 }
             }
-            $input = $this->mangle_data($rule[2], $type, $operator);
+            $input = $this->_mangle_data($rule[2], $type, $operator);
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
@@ -1079,7 +1091,7 @@ class Search extends playlist_object {
             'where' => $where,
             'where_sql' => $where_sql
         );
-    } // end video_to_sql
+    }
 
-} // end of Search class
+}
 ?>
