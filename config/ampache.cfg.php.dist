@@ -554,7 +554,7 @@ refresh_limit = "60"
 ; equivalent to the old default, but if you find that necessary you should be
 ; clever enough to figure out how on your own.
 ; DEFAULT: none
-;transcode_cmd = "ffmpeg -i %FILE"
+;transcode_cmd = "ffmpeg -i %FILE%"
 
 ; Specific transcode commands
 ; It shouldn't be necessary in most cases, but you can override the transcode
