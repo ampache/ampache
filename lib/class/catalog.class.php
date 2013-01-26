@@ -552,8 +552,7 @@ class Catalog extends database_object {
 
 			/* If it's not a dir let's roll with it
 			 * next we need to build the pattern that we will use
-			 * to detect if it's a audio file for now the source for
-			 * this is in the /modules/init.php file
+			 * to detect if it's an audio file
 			 */
 			$pattern = "/\.(" . Config::get('catalog_file_pattern');
 			if ($options['parse_m3u']) {
