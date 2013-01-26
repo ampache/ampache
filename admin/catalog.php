@@ -95,7 +95,7 @@ switch ($_REQUEST['action']) {
 			$catalog->count = 0;
 			$catalog->add_to_catalog();
 		}
-		Catalog::optimize_tables();
+		Dba::optimize_tables();
 		$url	= Config::get('web_path') . '/admin/catalog.php';
 		$title	= T_('Catalog Updated');
 		$body	= '';
@@ -153,7 +153,7 @@ switch ($_REQUEST['action']) {
 				$catalog = new Catalog($catalog_id);
 				$catalog->clean_catalog();
 			} // end foreach catalogs
-			Catalog::optimize_tables();
+			Dba::optimize_tables();
 		}
 
 		$url 	= Config::get('web_path') . '/admin/catalog.php';

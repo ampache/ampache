@@ -141,7 +141,7 @@ while ($row = Dba::fetch_row($db_results)) {
 
 } // end foreach
 
-Catalog::optimize_tables();
+Dba::optimize_tables();
 
 ob_end_flush(); 
 echo "\n"; 

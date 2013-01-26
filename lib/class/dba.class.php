@@ -506,6 +506,28 @@ class Dba {
 
 	} // reset_db_charset
 
+	/**
+	 * optimize_tables
+	 *
+	 * This runs an optimize on the tables and updates the stats to improve
+	 * join speed.
+	 * This can be slow, but is a good idea to do from time to time. We do 
+	 * it in case the dba isn't doing it... which we're going to assume they
+	 * aren't.
+	 */
+	public static function optimize_tables() {
+		$sql = "SHOW TABLES";
+		$db_results = Dba::read($sql);
+
+		while($row = Dba::fetch_row($db_results)) {
+			$sql = "OPTIMIZE TABLE `" . $row[0] . "`";
+			$db_results_inner = Dba::write($sql);
+
+			$sql = "ANALYZE TABLE `" . $row[0] . "`";
+			$db_results_inner = Dba::write($sql);
+		}
+	}
+
 } // dba class
 
 ?>
