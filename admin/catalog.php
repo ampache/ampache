@@ -250,13 +250,12 @@ switch ($_REQUEST['action']) {
 		}
 	break;
 	case 'clear_stats':
-			if (Config::get('demo_mode')) { access_denied(); break; }
-
-		Catalog::clear_stats();
+		if (Config::get('demo_mode')) { access_denied(); break; }
+		Stats::clear();
 		$url	= Config::get('web_path') . '/admin/catalog.php';
 		$title	= T_('Catalog statistics cleared');
 		$body	= '';
-		show_confirmation($title,$body,$url);
+		show_confirmation($title, $body, $url);
 	break;
 	default:
 	case 'show_catalogs':

@@ -49,6 +49,16 @@ class Stats {
 	} // Constructor
 
 	/**
+	 * clear
+	 *
+	 * This clears all stats for _everything_.
+	 */
+	public static function clear() {
+		Dba::write('TRUNCATE `object_count`');
+		Dba::write('UPDATE `song` SET `played` = 0';
+	}
+
+	/**
  	 * insert
 	 * This inserts a new record for the specified object
 	 * with the specified information, amazing!

@@ -119,7 +119,8 @@ class Catalog extends database_object {
 	/**
  	 * get_from_path
 	 * Try to figure out which catalog path most closely resembles this one
-	 * This is useful when creating a new catalog to make sure we're not doubling up here
+	 * This is useful when creating a new catalog to make sure we're not
+	 * doubling up here.
 	 */
 	public static function get_from_path($path) {
 
@@ -207,7 +208,7 @@ class Catalog extends database_object {
 	 * get_stats
 	 * This returns an hash with the #'s for the different
 	 * objects that are associated with this catalog. This is used
-	 * to build the stats box, it also calculates time
+	 * to build the stats box, it also calculates time.
 	 */
 	public static function get_stats($catalog_id = null) {
 
@@ -233,23 +234,6 @@ class Catalog extends database_object {
 		return $results;
 
 	} // get_stats
-
-	/**
-	 * clear_stats
-	 * This clears all stats for _everything_
-	 */
-	public static function clear_stats() {
-
-		/* Whip out everything */
-		$sql = "TRUNCATE `object_count`";
-		$db_results = Dba::write($sql);
-
-		$sql = "UDPATE `song` SET `played`='0'";
-		$db_results = Dba::write($sql);
-
-		return true;
-
-	} // clear_stats
 
 	/**
 	 * create
