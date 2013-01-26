@@ -89,7 +89,7 @@
 			echo "\t\t\t" . '<option value="' . $i . '"' .
 				($_POST['size_limit'] == $i
 					? 'selected="selected"' : '') . '>' .
-				format_bytes($i * 1048576) . "</option>\n";
+				UI::format_bytes($i * 1048576) . "</option>\n";
 		}
 ?>
                 </select>

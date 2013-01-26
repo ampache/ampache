@@ -105,6 +105,60 @@ class UI {
 	}
 
 	/**
+	 * format_bytes
+	 *
+	 * Turns a size in bytes into the best human-readable value
+	 */
+	public static function format_bytes($value, $precision = 2) {
+		$pass = 0;
+		while (strlen(floor($value)) > 3) {
+			$value /= 1024;
+			$pass++;
+		}
+
+		switch ($pass) {
+			case 1: $unit = 'kB'; break;
+			case 2: $unit = 'MB'; break;
+			case 3: $unit = 'GB'; break;
+			case 4: $unit = 'TB'; break;
+			case 5: $unit = 'PB'; break;
+			default: $unit = 'B'; break;
+		}
+
+		return round($value, $precision) . ' ' . $unit;
+	}
+
+	/**
+	 * unformat_bytes
+	 *
+	 * Parses a human-readable size
+	 */
+	public static function unformat_bytes($value) {
+		if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', $value, $matches)) {
+			$value = $matches[1];
+			$unit = strtolower(substr($matches[2], 0, 1));
+		}
+		else {
+			return $value;
+		}
+
+		switch($unit) {
+			case 'p':
+				$value *= 1024;
+			case 't':
+				$value *= 1024;
+			case 'g':
+				$value *= 1024;
+			case 'm':
+				$value *= 1024;
+			case 'k':
+				$value *= 1024;
+		}
+
+		return $value;
+	}
+
+	/**
 	 * get_icon
 	 *
 	 * Returns an <img> tag for the specified icon

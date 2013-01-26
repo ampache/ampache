@@ -795,7 +795,7 @@ class Song extends database_object implements media {
 		$this->f_tags = Tag::get_display($tags,$this->id,'song');
 
 		// Format the size
-		$this->f_size = format_bytes($this->size);
+		$this->f_size = UI::format_bytes($this->size);
 
 		return true;
 

@@ -697,7 +697,7 @@ class User extends database_object {
 			$total = $total + $r['size'];
 		}
 
-		$this->f_useage = format_bytes($total);
+		$this->f_useage = UI::format_bytes($total);
 
 		/* Get Users Last ip */
 		if (count($data = $this->get_ip_history(1))) {

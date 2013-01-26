@@ -27,8 +27,8 @@
  */
 function set_memory_limit($new_limit) {
 
-	$current_limit = unformat_bytes(ini_get('memory_limit'));
-	$new_limit = unformat_bytes($new_limit);
+	$current_limit = unUI::format_bytes(ini_get('memory_limit'));
+	$new_limit = unUI::format_bytes($new_limit);
 
 	if ($current_limit < $new_limit) {
 		ini_set (memory_limit, $new_limit);
@@ -114,54 +114,6 @@ function scrub_arg($arg)
 	} else {
 		return "'" . str_replace("'", "'\\''", $arg) . "'";
 	}
-}
-
-/**
- * format_bytes
- * Turns a size in bytes into a human-readable value
- */
-function format_bytes($value, $precision = 2) {
-	$divided = 0;
-	while (strlen(floor($value)) > 3) {
-		$value = ($value / 1024);
-		$divided++;
-	}
-
-	switch ($divided) {
-		case 1: $unit = 'kB'; break;
-		case 2: $unit = 'MB'; break;
-		case 3: $unit = 'GB'; break;
-		case 4: $unit = 'TB'; break;
-		case 5: $unit = 'PB'; break;
-		default: $unit = 'B'; break;
-	} // end switch
-
-	return round($value, $precision) . ' ' . $unit;
-}
-
-function unformat_bytes($value) {
-	if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', $value, $matches)) {
-		$value = $matches[1];
-		$unit = strtolower(substr($matches[2], 0, 1));
-	}
-	else {
-		return $value;
-	}
-       
-	switch($unit) {
-		case 'p':
-			$value *= 1024;
-		case 't':
-			$value *= 1024;
-		case 'g':
-			$value *= 1024;
-		case 'm':
-			$value *= 1024;
-		case 'k':
-			$value *= 1024;
-	}
-
-	return $value;
 }
 
 /**

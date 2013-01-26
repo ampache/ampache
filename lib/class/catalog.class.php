@@ -188,7 +188,7 @@ class Catalog extends database_object {
 
 		$hours = floor($results['time'] / 3600);
 
-		$results['formatted_size'] = format_bytes($results['size']);
+		$results['formatted_size'] = UI::format_bytes($results['size']);
 
 		$days = floor($hours / 24);
 		$hours = $hours % 24;
@@ -422,7 +422,7 @@ class Catalog extends database_object {
 	public function add_files($path, $options) {
 
 		// Profile the memory a bit
-		debug_event('Memory', format_bytes(memory_get_usage(true)), 5);
+		debug_event('Memory', UI::format_bytes(memory_get_usage(true)), 5);
 
 		// See if we want a non-root path for the add
 		if (isset($options['subdirectory'])) {
@@ -457,7 +457,7 @@ class Catalog extends database_object {
 		// Ensure that we've got our cache
 		$this->_create_filecache();
 
-		debug_event('Memory', format_bytes(memory_get_usage(true)), 5);
+		debug_event('Memory', UI::format_bytes(memory_get_usage(true)), 5);
 
 		/* Recurse through this dir and create the files array */
 		while ( false !== ( $file = readdir($handle) ) ) {
@@ -466,7 +466,7 @@ class Catalog extends database_object {
 			if (substr($file,0,1) == '.') { continue; }
 
 			debug_event('read',"Starting work on $file inside $path",'5','ampache-catalog');
-			debug_event('Memory', format_bytes(memory_get_usage(true)), 5);
+			debug_event('Memory', UI::format_bytes(memory_get_usage(true)), 5);
 
 			/* Create the new path */
 			$full_file = $path.$slash_type.$file;
