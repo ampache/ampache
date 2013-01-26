@@ -24,8 +24,8 @@
 <div id="shoutbox">
 <?php
   foreach ($shouts as $shout_id) {
-	$shout = new shoutBox($shout_id);
-	$object = shoutBox::get_object($shout->object_type,$shout->object_id);
+	$shout = new Shoutbox($shout_id);
+	$object = Shoutbox::get_object($shout->object_type,$shout->object_id);
 	$object->format();
 	$client = new User($shout->user);
 	$client->format();

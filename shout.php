@@ -38,12 +38,12 @@ switch ($_REQUEST['action']) {
 			exit;
 		}
 
-		$shout_id = shoutBox::create($_POST);
+		$shout_id = Shoutbox::create($_POST);
 		header("Location:" . Config::get('web_path'));
 	break;
 	case 'show_add_shout':
 		// Get our object first
-		$object = shoutBox::get_object($_REQUEST['type'],$_REQUEST['id']);
+		$object = Shoutbox::get_object($_REQUEST['type'],$_REQUEST['id']);
 
 		if (!$object->id) {
 			Error::add('general', T_('Invalid Object Selected'));

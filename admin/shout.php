@@ -33,19 +33,19 @@ show_header();
 switch ($_REQUEST['action']) {
 	case 'edit_shout':
 		$shout_id = $_POST['shout_id'];
-		$update = shoutBox::update($_POST);
+		$update = Shoutbox::update($_POST);
 		show_confirmation(T_('Shoutbox Post Updated'),'',Config::get('web_path').'/admin/shout.php');
 	break;
 	case 'show_edit':
-		$shout = new shoutBox($_REQUEST['shout_id']);
-		$object = shoutBox::get_object($shout->object_type,$shout->object_id);
+		$shout = new Shoutbox($_REQUEST['shout_id']);
+		$object = Shoutbox::get_object($shout->object_type,$shout->object_id);
 		$object->format();
 		$client = new User($shout->user);
 		$client->format();
 		require_once Config::get('prefix') . '/templates/show_edit_shout.inc.php';
 		break;
 	case 'delete':
-		$shout_id = shoutBox::delete($_REQUEST['shout_id']);
+		$shout_id = Shoutbox::delete($_REQUEST['shout_id']);
 		show_confirmation(T_('Shoutbox Post Deleted'),'',Config::get('web_path').'/admin/shout.php');
 	break;
 	default:

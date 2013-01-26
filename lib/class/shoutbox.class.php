@@ -20,7 +20,7 @@
  *
  */
 
-class shoutBox {
+class Shoutbox {
 
 	public $id;
 
@@ -228,5 +228,5 @@ class shoutBox {
 
 	} // delete
 
-} // shoutBox class
+} // Shoutbox class
 ?>

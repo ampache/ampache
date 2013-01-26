@@ -44,7 +44,7 @@ if (Art::is_enabled()) {
 <?php if (Config::get('sociable')) { ?>
 <div id="shout_objects">
 	<?php
-		$shouts = shoutBox::get_top('5');
+		$shouts = Shoutbox::get_top('5');
 		if (count($shouts)) {
 			require_once Config::get('prefix') . '/templates/show_shoutbox.inc.php';
 		}
