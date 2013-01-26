@@ -26,7 +26,7 @@
  */
 
 ?>
-<?php /* HINT: Editing Username preferences */ show_box_top(sprintf(T_('Editing %s preferences'), $client->fullname),'box box_preferences'); ?>
+<?php /* HINT: Editing Username preferences */ UI::show_box_top(sprintf(T_('Editing %s preferences'), $client->fullname),'box box_preferences'); ?>
 <form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?>/preferences.php?action=admin_update_preferences" enctype="multipart/form-data">
 <table class="tabledata" cellspacing="0">
 <colgroup>
@@ -58,4 +58,4 @@
 </table>
 </form>
 
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

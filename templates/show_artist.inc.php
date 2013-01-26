@@ -25,7 +25,7 @@ $web_path = Config::get('web_path');
 <?php
 $browse = new Browse();
 $browse->set_type($object_type);
-show_box_top($artist->f_name, 'info-box');
+UI::show_box_top($artist->f_name, 'info-box');
 if (Config::get('ratings')) {
 ?>
 <div id="rating_<?php echo intval($artist->id); ?>_artist" style="display:inline;">
@@ -73,7 +73,7 @@ if (Config::get('ratings')) {
         <?php echo Ajax::observe('show_artist_artCB', 'click', Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id,'')); ?>
 </ul>
 </div>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>
 <?php
 	$browse->show_objects($object_ids);
 	$browse->store();

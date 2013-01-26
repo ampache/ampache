@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Shoutbox')); ?>
+<?php UI::show_box_top(T_('Shoutbox')); ?>
 <div id="shoutbox">
 <?php
   foreach ($shouts as $shout_id) {
@@ -39,4 +39,4 @@
 </div>
 <?php } ?>
 </div>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

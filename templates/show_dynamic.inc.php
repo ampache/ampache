@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Advanced Random Rules')); ?>
+<?php UI::show_box_top(T_('Advanced Random Rules')); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
 	<col id="col_field" />
@@ -85,4 +85,4 @@
 	</td>
 </tr>
 </table>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

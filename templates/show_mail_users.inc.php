@@ -21,7 +21,7 @@
  */
 ?>
 
-<?php show_box_top(T_('Send E-mail to Users'), 'box box_mail_users'); ?>
+<?php UI::show_box_top(T_('Send E-mail to Users'), 'box box_mail_users'); ?>
 <form name="mail" method="post" action="<?php echo Config::get('web_path'); ?>/admin/mail.php?action=send_mail" enctype="multipart/form-data">
 <table>
   <tr>
@@ -122,5 +122,5 @@
         <input class="button" type="submit" value="<?php echo T_('Send Mail'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>
 

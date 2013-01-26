@@ -25,7 +25,7 @@ $total_images = count($images);
 $rows = floor($total_images/4);
 $i = 0;
 ?>
-<?php show_box_top(T_('Select New Album Art'), 'box box_album_art'); ?>
+<?php UI::show_box_top(T_('Select New Album Art'), 'box box_album_art'); ?>
 <table class="table-data">
 <tr>
 <?php
@@ -60,4 +60,4 @@ while ($i <= $rows) {
 } // end while
 ?>
 </table>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

@@ -21,7 +21,7 @@
  */
 ?>
 
-<?php show_box_top(T_('Edit Album')); ?>
+<?php UI::show_box_top(T_('Edit Album')); ?>
 <form name="edit_album" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/flag.php?action=edit_album">
 <table class="tabledata">
 <tr class="<?php echo UI::flip_class(); ?>">
@@ -48,4 +48,4 @@
 		<input type="submit" value="<?php echo T_('Update Album'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

@@ -20,7 +20,7 @@
  *
  */
 
-show_box_top(sprintf(T_('Settings for %s') , $catalog->name . ' (' . $catalog->path . ')'), 'box box_edit_catalog');
+UI::show_box_top(sprintf(T_('Settings for %s') , $catalog->name . ' (' . $catalog->path . ')'), 'box box_edit_catalog');
 ?>
 <form method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
 <table cellspacing="0" cellpadding="0">
@@ -71,4 +71,4 @@ show_box_top(sprintf(T_('Settings for %s') , $catalog->name . ' (' . $catalog->p
 	<input class="button" type="submit" value="<?php echo T_('Save Catalog Settings'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

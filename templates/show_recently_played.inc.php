@@ -21,7 +21,7 @@
  */
 
 $link = Config::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played') :  '';
-show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
+UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
@@ -111,4 +111,4 @@ show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 	<th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
 </tr>
 </table>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

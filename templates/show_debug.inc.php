@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Debug Tools'), 'box box_debug_tools'); ?>
+<?php UI::show_box_top(T_('Debug Tools'), 'box box_debug_tools'); ?>
 <div id="information_actions">
 <ul>
 <li>
@@ -33,8 +33,8 @@
 </li>
 </ul>
 </div>
-<?php show_box_bottom(); ?>
-<?php show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
+<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
 	<col id="col_php_setting">
@@ -81,9 +81,9 @@
 	<td><?php echo print_bool(function_exists('bindtextdomain')); ?></td>
 </tr>
 </table>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>
 
-<?php show_box_top(T_('Current Configuration'), 'box box_current_configuration'); ?>
+<?php UI::show_box_top(T_('Current Configuration'), 'box box_current_configuration'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
    <col id="col_configuration">
@@ -112,4 +112,4 @@
 </tr>
 <?php } ?>
 </table>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

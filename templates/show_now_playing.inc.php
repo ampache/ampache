@@ -30,7 +30,7 @@
 if (count($results)) {
 $link = Config::get('use_rss') ? ' ' . Ampache_RSS::get_display('nowplaying') : '';
 ?>
-<?php show_box_top(T_('Now Playing') . $link); ?>
+<?php UI::show_box_top(T_('Now Playing') . $link); ?>
 <?php
 foreach ($results as $item) {
 	$media = $item['media'];
@@ -47,5 +47,5 @@ foreach ($results as $item) {
 <?php
 } // end foreach
 ?>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>
 <?php } // end if count results ?>

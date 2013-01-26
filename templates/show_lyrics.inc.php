@@ -31,7 +31,7 @@
  * @todo get lyrics from id3tag, if possible.
 */
 /* HINT: Song Title */
-show_box_top(sprintf(T_('%s Lyrics'), $song->title), 'box box_lyrics');
+UI::show_box_top(sprintf(T_('%s Lyrics'), $song->title), 'box box_lyrics');
 ?>
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
@@ -48,4 +48,4 @@ show_box_top(sprintf(T_('%s Lyrics'), $song->title), 'box box_lyrics');
 	</td>
 </tr>
 </table>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

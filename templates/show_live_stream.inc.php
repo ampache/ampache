@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Manage Radio Stations'),'info-box'); ?>
+<?php UI::show_box_top(T_('Manage Radio Stations'),'info-box'); ?>
 <div id="information_actions">
 <ul>
 <li>
@@ -28,4 +28,4 @@
 </li>
 </ul>
 </div>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

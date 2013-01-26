@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php /* HINT: Username */ show_box_top(sprintf(T_('%s IP History'), $working_user->fullname)); ?>
+<?php /* HINT: Username */ UI::show_box_top(sprintf(T_('%s IP History'), $working_user->fullname)); ?>
 <div id="information_actions">
 <ul>
 <li>
@@ -61,4 +61,4 @@
 </tr>
 
 </table>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

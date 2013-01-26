@@ -29,14 +29,14 @@ $flagged	= Flag::get_recent(10);
 $songs = Song::get_disabled(10);
 ?>
 
-<?php show_box_top(T_('Last Ten Flagged Records')); ?>
+<?php UI::show_box_top(T_('Last Ten Flagged Records')); ?>
 	<?php require Config::get('prefix') . '/templates/show_flagged.inc.php'; ?>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>
 
-<?php show_box_top(T_('Disabled Songs')); ?>
+<?php UI::show_box_top(T_('Disabled Songs')); ?>
 	<!-- Show Last 10 Disabled Songs -->&nbsp;
 	<?php require Config::get('prefix') . '/templates/show_disabled_songs.inc.php'; ?>
 	<div>
 	<a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=show_disabled"><?php echo T_('Show All'); ?>...</a>
 	</div>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

@@ -20,7 +20,7 @@
  *
  */
 
-show_box_top(T_('Manage Democratic Playlists'));  ?>
+UI::show_box_top(T_('Manage Democratic Playlists'));  ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
 	<col id="col_number" />
@@ -69,4 +69,4 @@ show_box_top(T_('Manage Democratic Playlists'));  ?>
 <div>
 <a class="button" href="<?php echo Config::get('web_path'); ?>/democratic.php?action=show_create"><?php echo T_('Create New Playlist'); ?></a>
 </div>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

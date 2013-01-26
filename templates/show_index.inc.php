@@ -29,7 +29,7 @@ if (Art::is_enabled()) {
 	echo Ajax::observe('window','load',Ajax::action('?page=index&action=random_albums','random_albums'));
 ?>
 <div id="random_selection">
-	<?php show_box_top(T_('Albums of the Moment')); echo T_('Loading...'); show_box_bottom(); ?>
+	<?php UI::show_box_top(T_('Albums of the Moment')); echo T_('Loading...'); UI::show_box_bottom(); ?>
 </div>
 <?php } ?>
 <!-- Recently Played -->

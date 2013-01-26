@@ -23,7 +23,7 @@
 $stats = Catalog::get_stats();
 $catalogs = Catalog::get_catalogs();
 ?>
-<?php show_box_top(T_('Statistics'), 'box box_stats'); ?>
+<?php UI::show_box_top(T_('Statistics'), 'box box_stats'); ?>
 <em><?php echo T_('Catalogs'); ?></em>
 <table class="tabledata" cellpadding="3" cellspacing="1">
 <tr class="th-top">
@@ -89,4 +89,4 @@ $catalogs = Catalog::get_catalogs();
 <?php } ?>
 
 </table>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

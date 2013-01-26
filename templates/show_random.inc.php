@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
+<?php UI::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>">
 <table class="tabledata" cellpadding="3" cellspacing="0">
 <tr id="search_location">
@@ -103,7 +103,7 @@
         <input type="submit" value="<?php echo T_('Enqueue'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>
 <div id="browse">
 <?php
 	if (is_array($object_ids)) {

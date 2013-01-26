@@ -25,7 +25,7 @@ ${$name} = ' selected="selected"';
 $name = 'catalog_' . $_REQUEST['export_catalog'];
 ${$name} = ' selected="selected"';
 
-show_box_top(T_('Export Catalog'), 'box box_export'); ?>
+UI::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
 <form name="duplicates" action="<?php echo Config::get('web_path'); ?>/admin/export.php?action=export" method="post" enctype="multipart/form-data" >
 <table class="tableform" cellspacing="0" cellpadding="3">
 <tr>
@@ -61,4 +61,4 @@ show_box_top(T_('Export Catalog'), 'box box_export'); ?>
       <input type="submit" value="<?php echo T_('Export'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

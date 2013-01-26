@@ -26,7 +26,7 @@
  */
 
 ?>
-<?php /* HINT: Username */ show_box_top(sprintf(T_('Editing %s preferences'), $fullname),'box box_preferences'); ?>
+<?php /* HINT: Username */ UI::show_box_top(sprintf(T_('Editing %s preferences'), $fullname),'box box_preferences'); ?>
 <?php  if ($_REQUEST['tab'] != 'account' && $_REQUEST['tab'] != 'modules') { ?>
 
 <form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
@@ -49,4 +49,4 @@ if ($_REQUEST['tab'] == 'account') {
 ?>
 </form>
 
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

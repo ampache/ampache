@@ -23,7 +23,7 @@
 $default_rename = "%a - %T - %t";
 $default_sort = "%a/%A";
 ?>
-<?php show_box_top(T_('Add a Catalog'), 'box box_add_catalog'); ?>
+<?php UI::show_box_top(T_('Add a Catalog'), 'box box_add_catalog'); ?>
 <p><?php echo T_("In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)"); ?></p>
 <?php Error::display('general'); ?>
 <form name="update_catalog" method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
@@ -89,4 +89,4 @@ $default_sort = "%a/%A";
   <input class="button" type="submit" value="<?php echo T_('Add Catalog'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

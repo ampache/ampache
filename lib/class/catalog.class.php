@@ -277,9 +277,9 @@ class Catalog extends database_object {
 	public function run_add($options) {
 
 		if ($this->catalog_type == 'remote') {
-			show_box_top(T_('Running Remote Sync') . '. . .');
+			UI::show_box_top(T_('Running Remote Sync') . '. . .');
 			$this->get_remote_catalog($type=0);
-			show_box_bottom();
+			UI::show_box_bottom();
 			return true;
 		}
 
@@ -1079,9 +1079,9 @@ class Catalog extends database_object {
 	public function add_to_catalog() {
 
 		if ($this->catalog_type == 'remote') {
-			show_box_top(T_('Running Remote Update') . '. . .');
+			UI::show_box_top(T_('Running Remote Update') . '. . .');
 			$this->get_remote_catalog($type=0);
-			show_box_bottom();
+			UI::show_box_bottom();
 			return true;
 		}
 
@@ -1127,12 +1127,12 @@ class Catalog extends database_object {
 		$time_diff = ($current_time - $start_time) ?: 0;
 		$rate = intval($this->count / $time_diff) ?: T_('N/A');
 
-		show_box_top();
+		UI::show_box_top();
 		echo "\n<br />" . 
 		printf(T_('Catalog Update Finished.  Total Time: [%s] Total Songs: [%s] Songs Per Second: [%s]'),
 			date('i:s', $time_diff), $this->count, $rate);
 		echo '<br /><br />';
-		show_box_bottom();
+		UI::show_box_bottom();
 
 	} // add_to_catalog
 
@@ -1277,11 +1277,11 @@ class Catalog extends database_object {
 		// Remove any orphaned artists/albums/etc.
 		self::gc();
 
-		show_box_top();
+		UI::show_box_top();
 		echo "<strong>";
 		printf (T_ngettext('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total);
 		echo "</strong><br />\n";
-		show_box_bottom();
+		UI::show_box_bottom();
 		ob_flush();
 		flush();
 
@@ -1381,11 +1381,11 @@ class Catalog extends database_object {
 		self::gc();
 		$this->update_last_update();
 
-		show_box_top();
+		UI::show_box_top();
 		echo '<strong>';
 		printf(T_('Catalog Verify Done. %d of %d files updated.'), $total_updated, $number);
 		echo "</strong><br />\n";
-		show_box_bottom();
+		UI::show_box_bottom();
 		ob_flush();
 		flush();
 

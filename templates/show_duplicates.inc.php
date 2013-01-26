@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Duplicate Songs')); ?>
+<?php UI::show_box_top(T_('Duplicate Songs')); ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/admin/flag.php?action=disable">
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
@@ -84,4 +84,4 @@
 </tr>
 </table>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

@@ -138,15 +138,15 @@ switch ($_REQUEST['action']) {
 	break;
 	case 'show_plugins':
 		$plugins = Plugin::get_plugins();
-		show_box_top(T_('Plugins'), 'box box_localplay_plugins');
+		UI::show_box_top(T_('Plugins'), 'box box_localplay_plugins');
 		require_once Config::get('prefix') . '/templates/show_plugins.inc.php';
-		show_box_bottom();
+		UI::show_box_bottom();
 	break;
 	case 'show_localplay':
 		$controllers = Localplay::get_controllers();
-		show_box_top(T_('Localplay Controllers'), 'box box_localplay_controllers');
+		UI::show_box_top(T_('Localplay Controllers'), 'box box_localplay_controllers');
 		require_once Config::get('prefix') . '/templates/show_localplay_controllers.inc.php';
-		show_box_bottom();
+		UI::show_box_bottom();
 	break;
 	default:
 		// Rien a faire

@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Customize Search'), 'box box_get_albumart'); ?>
+<?php UI::show_box_top(T_('Customize Search'), 'box box_get_albumart'); ?>
 <form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo Config::get('web_path'); ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>&amp;artist_name=<?php echo urlencode($_REQUEST['artist_name']);?>&amp;album_name=<?php echo urlencode($_REQUEST['album_name']); ?>&amp;cover=<?php echo urlencode($_REQUEST['cover']); ?>" style="Display:inline;">
 <table>
 <tr>
@@ -63,4 +63,4 @@
 		<input type="submit" value="<?php echo T_('Get Art'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

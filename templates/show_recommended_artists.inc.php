@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Similar Artists'), 'info-box'); ?>
+<?php UI::show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
   <col id="col_add" />

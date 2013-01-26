@@ -20,7 +20,7 @@
  *
  */
 
-show_box_top($song->title , 'box box_lyrics_song');
+UI::show_box_top($song->title , 'box box_lyrics_song');
 
 /* Prepare the variables */
 $title = scrub_out(UI::truncate($song->title));
@@ -63,4 +63,4 @@ $artist = scrub_out(UI::truncate($song->f_artist_full));
 </div>
 
 
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

@@ -21,7 +21,7 @@
  */
 ?>
 
-<?php show_box_top(T_('Edit Song')); ?>
+<?php UI::show_box_top(T_('Edit Song')); ?>
 <form name="edit_song" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/flag.php">
 <table>
 <tr class="<?php echo UI::flip_class(); ?>">
@@ -81,4 +81,4 @@
 		<input type="submit" value="<?php echo T_('Update Song'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

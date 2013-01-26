@@ -236,11 +236,11 @@ switch ($_REQUEST['action']) {
 			// Run our initial add
 			$catalog->run_add($_POST);
 
-			show_box_top(T_('Catalog Created'), 'box box_catalog_created');
+			UI::show_box_top(T_('Catalog Created'), 'box box_catalog_created');
 			echo "<h2>" .  T_('Catalog Created') . "</h2>";
 			Error::display('general');
 			Error::display('catalog_add');
-			show_box_bottom();
+			UI::show_box_bottom();
 
 			show_confirmation('','', Config::get('web_path').'/admin/catalog.php');
 

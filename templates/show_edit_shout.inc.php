@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Edit existing Shoutbox Post')); ?>
+<?php UI::show_box_top(T_('Edit existing Shoutbox Post')); ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/shout.php?action=edit_shout">
 <input type="hidden" name="shout_id" value="<?php echo $shout->id; ?>" />
 <table class="tabledata" cellpadding="0" cellspacing="0">
@@ -43,4 +43,4 @@
 </tr>
 </table>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

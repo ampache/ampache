@@ -20,7 +20,7 @@
  *
  */
 
-show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
+UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
 ?>
 <form id="search" name="search" method="post" action="<?php echo Config::get('web_path'); ?>/search.php?type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata" cellpadding="3" cellspacing="0">
@@ -57,4 +57,4 @@ show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
 	        <input type="hidden" id="hiddenaction" name="action" value="search" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

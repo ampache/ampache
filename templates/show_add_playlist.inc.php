@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Create a new playlist')); ?>
+<?php UI::show_box_top(T_('Create a new playlist')); ?>
 <form name="songs" method="post" action="<?php echo Config::get('web_path'); ?>/playlist.php">
 <table>
 <tr>
@@ -42,4 +42,4 @@
 	<input type="hidden" name="action" value="Create" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

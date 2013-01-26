@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Add Radio Station'), 'box box_add_live_stream'); ?>
+<?php UI::show_box_top(T_('Add Radio Station'), 'box box_add_live_stream'); ?>
 <form name="radio" method="post" action="<?php echo Config::get('web_path'); ?>/radio.php?action=create">
 <table>
 <tr>
@@ -68,4 +68,4 @@
 	<input class="button" type="submit" value="<?php echo T_('Add'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

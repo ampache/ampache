@@ -20,7 +20,7 @@
  *
  */
 
-show_box_top(T_('Preference Administration'));
+UI::show_box_top(T_('Preference Administration'));
 ?>
 <form method="post" action="<?php echo Config::get('web_path'); ?>/admin/preferences.php" enctype="multipart/form-data">
 <table class="tabledata" cellpadding="0" cellspacing="0">
@@ -57,4 +57,4 @@ show_box_top(T_('Preference Administration'));
 		<input type="submit" value="<?php echo T_('Update'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

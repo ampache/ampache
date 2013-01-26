@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Editing existing User')); ?>
+<?php UI::show_box_top(T_('Editing existing User')); ?>
 <?php Error::display('general'); ?>
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo Config::get('web_path') . "/admin/users.php"; ?>">
 <table class="tabledata" cellspacing="0" cellpadding="0">
@@ -117,4 +117,4 @@
 		<input type="hidden" name="user_id" value="<?php echo $client->id; ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

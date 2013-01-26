@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(sprintf('%s Favorites'), $working_user->fullname); ?>
+<?php UI::show_box_top(sprintf('%s Favorites'), $working_user->fullname); ?>
 <table class="tabledata">
 <tr>
 	<td valign="top">
@@ -64,4 +64,4 @@
 	</td>
 </tr>
 </table>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

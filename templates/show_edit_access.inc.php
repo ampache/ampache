@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Edit Access Control List')); ?>
+<?php UI::show_box_top(T_('Edit Access Control List')); ?>
 <form name="edit_access" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=update_record&access_id=<?php echo intval($access->id); ?>">
 <table class="table-data">
 <tr>
@@ -79,4 +79,4 @@
 	<input type="submit" value="<?php echo T_('Update'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

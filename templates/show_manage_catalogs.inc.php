@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Show Catalogs'), 'box box_manage_catalogs') ?>
+<?php UI::show_box_top(T_('Show Catalogs'), 'box box_manage_catalogs') ?>
 <div id="information_actions">
 <table>
 <tr>
@@ -46,7 +46,7 @@
 </tr>
 </table>
 </div>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>
 <?php
 		$catalog_ids = Catalog::get_catalogs();
 		$browse = new Browse();

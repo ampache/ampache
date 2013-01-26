@@ -31,7 +31,7 @@ ob_start();
 require Config::get('prefix') . '/templates/show_playlist_title.inc.php';
 $title = ob_get_contents();
 ob_end_clean();
-show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . 
+UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . 
 	'</div>', 'info-box');
 ?>
 <div id="information_actions">
@@ -68,7 +68,7 @@ show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
 	<?php } ?>
 </ul>
 </div>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>
 <?php
 	$browse = new Browse();
 	$browse->set_type('playlist_song');

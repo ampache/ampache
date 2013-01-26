@@ -29,7 +29,7 @@ if ($album->disk) {
 }
 $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
 ?>
-<?php show_box_top($title,'info-box'); ?>
+<?php UI::show_box_top($title,'info-box'); ?>
 <div class="album_art">
 	<?php
 	if ($album->name != T_('Unknown (Orphaned)')) {
@@ -80,7 +80,7 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
 	<?php } ?>
 </ul>
 </div>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>
 <div id="additional_information">
 &nbsp;
 </div>

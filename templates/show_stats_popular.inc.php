@@ -24,15 +24,15 @@
 <?php
                 $objects = Stats::get_top('album');
                 $headers = array('f_link' => T_('Most Popular Albums'));
-                show_box_top('','info-box box_popular_albums');
+                UI::show_box_top('','info-box box_popular_albums');
                 require Config::get('prefix') . '/templates/show_objects.inc.php';
-                show_box_bottom();
+                UI::show_box_bottom();
 
                 $objects = Stats::get_top('artist');
                 $headers = array('f_name_link' => T_('Most Popular Artists'));
-                show_box_top('','info-box box_popular_artists');
+                UI::show_box_top('','info-box box_popular_artists');
                 require Config::get('prefix') . '/templates/show_objects.inc.php';
-                show_box_bottom();
+                UI::show_box_bottom();
 
 ?>
 </div>

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 ?>
-<?php show_box_top(T_('Add Access Control List'), 'box box_add_access'); ?>
+<?php UI::show_box_top(T_('Add Access Control List'), 'box box_add_access'); ?>
 <?php Error::display('general'); ?>
 <form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host">
 <table class="tabledata" cellpadding="5" cellspacing="0">
@@ -105,4 +105,4 @@
 		<input class="button" type="submit" value="<?php echo T_('Create ACL'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

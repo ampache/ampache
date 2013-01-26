@@ -70,12 +70,12 @@ switch($_REQUEST['action']) {
 		$object_ids = $browse->get_saved();
 		$keys = array_keys($object_ids);
 		Tag::build_cache($keys);
-		show_box_top(T_('Tag Cloud'), 'box box_tag_cloud');
+		UI::show_box_top(T_('Tag Cloud'), 'box box_tag_cloud');
 		$browse2 = new Browse();
 		$browse2->set_type('song');
 		$browse2->store();
 		require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php';
-		show_box_bottom();
+		UI::show_box_bottom();
 		require_once Config::get('prefix') . '/templates/browse_content.inc.php';
 	break;
 	case 'artist':

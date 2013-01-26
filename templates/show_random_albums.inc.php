@@ -23,7 +23,7 @@
 $web_path = Config::get('web_path');
 $button = Ajax::button('?page=index&action=random_albums','random', T_('Refresh'),'random_refresh');
 ?>
-<?php show_box_top(T_('Albums of the Moment') . ' ' . $button, 'box box_random_albums'); ?>
+<?php UI::show_box_top(T_('Albums of the Moment') . ' ' . $button, 'box box_random_albums'); ?>
 
 	<?php
 	if ($albums) {
@@ -53,4 +53,4 @@ $button = Ajax::button('?page=index&action=random_albums','random', T_('Refresh'
         	<?php } // end foreach ?>
 	<?php } // end if albums ?>
 
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

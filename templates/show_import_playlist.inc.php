@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Importing a Playlist from a File'), 'box box_import_playlist'); ?>
+<?php UI::show_box_top(T_('Importing a Playlist from a File'), 'box box_import_playlist'); ?>
 <form method="post" name="import_playlist" action="<?php echo Config::get('web_path'); ?>/playlist.php" enctype="multipart/form-data">
 <table cellpadding="0" cellspacing="0">
 <tr>
@@ -46,5 +46,5 @@
 		<input type="submit" value="<?php echo T_('Import Playlist'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>
 

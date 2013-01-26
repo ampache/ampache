@@ -26,7 +26,7 @@ function insert()
 	document.getElementById('artist_name').value = '<?php echo $artist->name; ?>';
 }
 </script>
-<?php /* HINT: Artist Name */ show_box_top(sprintf(T_('Rename %s'), $artist->name)); ?>
+<?php /* HINT: Artist Name */ UI::show_box_top(sprintf(T_('Rename %s'), $artist->name)); ?>
 <form name="rename_artist" method="post" action="<?php echo Config::get('web_path'); ?>/artists.php?action=rename&amp;artist=<?php echo $artist->id; ?>" style="Display:inline;">
         <?php show_artist_pulldown($artist->id, "artist_id", 4); ?>
 	<br />
@@ -37,4 +37,4 @@ function insert()
 	<input type="checkbox" name="update_id3" value="yes" />&nbsp; <?php echo T_('Update id3 tags') ?><br />
 	<input type="submit" value="<?php echo T_('Rename'); ?>" /><br />
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

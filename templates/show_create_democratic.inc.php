@@ -20,7 +20,7 @@
  *
  */
 
-show_box_top(T_('Configure Democratic Playlist')); ?>
+UI::show_box_top(T_('Configure Democratic Playlist')); ?>
 <form method="post" action="<?php echo Config::get('web_path'); ?>/democratic.php?action=create" enctype="multipart/form-data">
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
@@ -61,4 +61,4 @@ show_box_top(T_('Configure Democratic Playlist')); ?>
 		<input type="submit" value="<?php echo T_('Update'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

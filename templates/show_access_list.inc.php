@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Access Control'), 'box box_access_control'); ?>
+<?php UI::show_box_top(T_('Access Control'), 'box box_access_control'); ?>
 <div id="information_actions" class="left-column">
 <ul>
 	<li>
@@ -41,8 +41,8 @@
 
 </ul>
 </div>
-<?php show_box_bottom(); ?>
-<?php show_box_top(T_('Access Control Entries'), 'box box_access_entries'); ?>
+<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_top(T_('Access Control Entries'), 'box box_access_entries'); ?>
 <?php Ajax::start_container('browse_content'); ?>
 <?php if (count($list)) { ?>
 <table cellspacing="1" cellpadding="3" class="tabledata">
@@ -77,4 +77,4 @@
 </table>
 <?php  } // end if count ?>
 <?php Ajax::end_container(); ?>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

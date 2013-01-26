@@ -110,6 +110,24 @@ class UI {
 	}
 
 	/**
+	 * show_box_top
+	 *
+	 * This shows the top of the box.
+	 */
+	public static function show_box_top($title = '', $class = '') {
+		require Config::get('prefix') . '/templates/show_box_top.inc.php';
+	}
+
+	/**
+	 * show_box_bottom
+	 *
+	 * This shows the bottom of the box
+	 */
+	public static function show_box_bottom() {
+		require Config::get('prefix') . '/templates/show_box_bottom.inc.php';
+	}
+
+	/**
 	 * truncate
 	 *
 	 * Limit text to a certain length; adds an ellipsis if truncation was

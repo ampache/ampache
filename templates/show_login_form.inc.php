@@ -89,9 +89,9 @@ if (@is_readable(Config::get('prefix') . '/config/motd.php')) {
 	</div>
 	<div id="motd">
 	<?php
-        show_box_top(T_('Message of the Day'));
+        UI::show_box_top(T_('Message of the Day'));
         require_once Config::get('prefix') . '/config/motd.php';
-        show_box_bottom();
+        UI::show_box_bottom();
 	?>
 <?php
 }

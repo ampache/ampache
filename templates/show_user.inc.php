@@ -24,7 +24,7 @@ $last_seen      = $client->last_seen ? date("m\/d\/y - H:i",$client->last_seen) 
 $create_date    = $client->create_date ? date("m\/d\/y - H:i",$client->create_date) : T_('Unknown');
 $client->format();
 ?>
-<?php show_box_top($client->fullname); ?>
+<?php UI::show_box_top($client->fullname); ?>
 <table cellspacing="0">
 <tr>
 	<td valign="top">
@@ -56,7 +56,7 @@ $client->format();
 	</td>
 </tr>
 </table>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>
 <?php
 	$data = Song::get_recently_played($client->id);
 	require Config::get('prefix') . '/templates/show_recently_played.inc.php';

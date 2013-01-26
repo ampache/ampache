@@ -20,7 +20,7 @@
  *
  */
 
-show_box_top(T_('Information'));
+UI::show_box_top(T_('Information'));
 
 $object_ids = Stats::get_top('song');
 $browse = new Browse();
@@ -40,5 +40,5 @@ $browse->set_type('artist');
 $browse->show_objects($object_ids);
 $browse->store();
 
-show_box_bottom();
+UI::show_box_bottom();
 ?>

@@ -24,7 +24,7 @@ $web_path 	= Config::get('web_path');
 $catalogs 	= Catalog::get_catalogs();
 
 ?>
-<?php show_box_top(T_('Catalogs')); ?>
+<?php UI::show_box_top(T_('Catalogs')); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
   <col id="col_name" />
@@ -84,9 +84,9 @@ $catalogs 	= Catalog::get_catalogs();
 <a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=show_clear_stats"><?php echo T_('Clear Catalog Stats'); ?></a>
 <a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art"><?php echo T_('Gather Album Art'); ?></a>
 </div>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>
 
-<?php show_box_top(T_('Other Tools')); ?>
+<?php UI::show_box_top(T_('Other Tools')); ?>
 <div>
 	<a class="button" href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo T_('Show Duplicate Songs'); ?></a>
 	<a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo T_('Clear Now Playing'); ?></a>
@@ -96,4 +96,4 @@ $catalogs 	= Catalog::get_catalogs();
 	<a class="button" href="<?php echo $web_path; ?>/admin/users.php?action=show_inactive&amp;days=30"><?php echo T_('Show Inactive Users'); ?></a>
 <!--	<a class="button" href="<?php echo $web_path; ?>/admin/system.php?action=check_version"><?php echo T_('Check for New Version'); ?></a>-->
 </div>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

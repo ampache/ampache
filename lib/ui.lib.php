@@ -343,28 +343,6 @@ function show_playlist_select($name,$selected='',$style='') {
 } // show_playlist_select
 
 /**
- * show_box_top
- * This function requires the top part of the box
- * it takes title as an optional argument
- */
-function show_box_top($title='',$class='') {
-
-	require Config::get('prefix') . '/templates/show_box_top.inc.php';
-
-} // show_box_top
-
-/**
- * show_box_bottom
- * This function requires the bottom part of the box
- * it does not take any arguments
- */
-function show_box_bottom() {
-
-	require Config::get('prefix') . '/templates/show_box_bottom.inc.php';
-
-} // show_box_bottom
-
-/**
  * get_user_icon
  * this function takes a name and a returns either a text representation
  * or an <img /> tag

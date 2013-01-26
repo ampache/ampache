@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Options'),'info-box'); ?>
+<?php UI::show_box_top(T_('Options'),'info-box'); ?>
 <div id="information_actions">
 <ul>
 <li>
@@ -35,4 +35,4 @@
 	<?php } ?>
 </ul>
 </div>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

@@ -21,7 +21,7 @@
  */
 
 $string = $democratic->is_enabled() ? sprintf(T_('%s Playlist') ,$democratic->name) : T_('Democratic Playlist');
-show_box_top($string , 'info-box');
+UI::show_box_top($string , 'info-box');
 ?>
 <div id="information_actions">
 <ul>
@@ -49,4 +49,4 @@ show_box_top($string , 'info-box');
 </ul>
 
 </div>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>

@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php show_box_top(T_('Find Duplicates'), 'box box_duplicate'); ?>
+<?php UI::show_box_top(T_('Find Duplicates'), 'box box_duplicate'); ?>
 <form name="duplicates" action="<?php echo Config::get('web_path'); ?>/admin/duplicates.php?action=find_duplicates" method="post" enctype="multipart/form-data" >
 <table cellspacing="0" cellpadding="3">
 <tr>
@@ -42,4 +42,4 @@
       <input type="submit" value="<?php echo T_('Find Duplicates'); ?>" />
 </div>
 </form>
-<?php show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>
