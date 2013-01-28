@@ -40,14 +40,14 @@ class Stream_Playlist {
      */
     public function __construct($id = null) {
 
-        if($id) {
+        if ($id) {
             Stream::set_session($id);
         }
 
-        $this->id = Dba::escape(Stream::get_session());
+        $this->id = Dba::escape(Stream::$session);
 
-        if (!Stream::session_exists($this->id)) {
-            debug_event('stream_playlist', 'Stream::session_exists failed', 2);
+        if (!Session::exists('stream', $this->id)) {
+            debug_event('stream_playlist', 'Session::exists failed', 2);
             return false;
         }
 
@@ -87,9 +87,9 @@ class Stream_Playlist {
 
     public static function gc() {
         $sql = 'DELETE FROM `stream_playlist` ' .
-            'USING `stream_playlist` LEFT JOIN `session_stream` ' .
-            'ON `session_stream`.`id`=`stream_playlist`.`sid` ' .
-            'WHERE `session_stream`.`id` IS NULL';
+            'USING `stream_playlist` LEFT JOIN `session` ' .
+            'ON `session`.`id`=`stream_playlist`.`sid` ' .
+            'WHERE `session`.`id` IS NULL';
         return Dba::write($sql);
     }
 

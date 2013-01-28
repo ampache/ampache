@@ -86,7 +86,7 @@ if (Config::get('require_session')) {
     if (!Config::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
         debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
     }
-    elseif(!Stream::session_exists($sid)) {
+    else if(!Session::exists('stream', $sid)) {
         debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
             header('HTTP/1.1 403 Session Expired');
         exit;
@@ -94,7 +94,7 @@ if (Config::get('require_session')) {
 
     // Now that we've confirmed the session is valid
     // extend it
-    Stream::extend_session($sid,$uid);
+    Session::extend($sid, 'stream');
 }
 
 

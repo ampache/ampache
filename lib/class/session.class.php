@@ -113,13 +113,13 @@ class Session {
      * This function is randomly called and it cleans up the spoo
      */
     public static function gc($maxlifetime) {
-
         $sql = "DELETE FROM `session` WHERE `expire` < '" . time() . "'";
         $db_results = Dba::write($sql);
 
         // Also clean up things that use sessions as keys
         Query::gc();
         Tmp_Playlist::gc();
+        Stream_Playlist::gc();
 
         return true;
     }
@@ -173,7 +173,10 @@ class Session {
         // Regenerate the session ID to prevent fixation
         switch ($data['type']) {
             case 'api':
-                $key = md5(uniqid(rand(), true));
+            case 'stream':
+                $key = isset($data['sid']) 
+                    ? $data['sid']
+                    : md5(uniqid(rand(), true));
             break;
             case 'mysql':
             default:
@@ -192,7 +195,13 @@ class Session {
         $type = Dba::escape($data['type']);
         $value = Dba::escape($data['value']);
         $agent = Dba::escape(substr($_SERVER['HTTP_USER_AGENT'], 0, 254));
-        $expire = Dba::escape(time() + Config::get('session_length'));
+
+        if ($type == 'stream') {
+            $expire = time() + Config::get('stream_length');
+        }
+        else {
+            $expire = time() + Config::get('session_length');
+        }
 
         if (!strlen($value)) { $value = ' '; }
 
@@ -258,11 +267,11 @@ class Session {
         // Switch on the type they pass
         switch ($type) {
             case 'api':
+            case 'stream':
                 $key = Dba::escape($key);
                 $time = time();
-                $sql = "SELECT * FROM `session` WHERE " .
-                    "`id`='$key' AND `expire` > '$time' " .
-                    "AND `type`='$type'";
+                $sql = "SELECT * FROM `session` WHERE `id`='$key' AND " .
+                    "`expire` > '$time' AND `type` IN ('api', 'stream')";
                 $db_results = Dba::read($sql);
 
                 if (Dba::num_rows($db_results)) {
@@ -287,20 +296,6 @@ class Session {
                     return true;
                 }
             break;
-            case 'stream':
-                $key    = Dba::escape($key);
-                $ip    = Dba::escape(inet_pton($data['ip']));
-                $agent    = Dba::escape($data['agent']);
-                $sql = "SELECT * FROM `session_stream` WHERE " .
-                    "`id`='$key' AND `expire` > '$time' " .
-                    "AND `ip`='$ip' AND `agent`='$agent'";
-                $db_results = Dba::read($sql);
-
-                if (Dba::num_rows($db_results)) {
-                    return true;
-                }
-
-            break;
             default:
                 return false;
             break;
@@ -316,12 +311,16 @@ class Session {
      *
      * This takes a SID and extends its expiration.
      */
-    public static function extend($sid) {
+    public static function extend($sid, $type = null) {
         $time = time();
         $sid = Dba::escape($sid);
         $expire = isset($_COOKIE[Config::get('session_name') . '_remember']) 
             ? $time + Config::get('remember_length') 
             : $time + Config::get('session_length');
+
+        if ($type == 'stream') {
+            $expire = $time + Config::get('stream_length');
+        }
 
         $sql = "UPDATE `session` SET `expire`='$expire' WHERE `id`='$sid'";
         if ($db_results = Dba::write($sql)) {

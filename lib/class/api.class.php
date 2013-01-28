@@ -173,8 +173,6 @@ class Api {
                 $data['value']        = $timestamp;
                 $token = Session::create($data);
 
-                // Insert the token into the streamer
-                Stream::insert_session($token,$client->id);
                 debug_event('API', 'Login Success, passphrase matched', 1);
 
                 // We need to also get the 'last update' of the

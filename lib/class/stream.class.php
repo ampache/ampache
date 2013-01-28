@@ -24,119 +24,21 @@
 class Stream {
 
     public static $session;
-    private static $session_inserted;
 
     private function __construct() {
         // Static class, do nothing.
     } 
 
     /**
-     * get_session
-     * This returns the current stream session
-     */
-    public static function get_session() {
-
-        if (!self::$session_inserted) {
-            self::insert_session(self::$session);
-        }
-
-        return self::$session;
-
-    } // get_session
-
-    /**
      * set_session
+     *
      * This overrides the normal session value, without adding
      * an additional session into the database, should be called
      * with care
      */
     public static function set_session($sid) {
-
-        self::$session_inserted = true;
         self::$session=$sid;
-
     } // set_session
-
-    /**
-     * insert_session
-     * This inserts a row into the session_stream table
-     */
-    public static function insert_session($sid='',$uid='') {
-
-        $sid = $sid ? Dba::escape($sid) : Dba::escape(self::$session);
-        $uid = $uid ? Dba::escape($uid) : Dba::escape($GLOBALS['user']->id);
-
-        $expire = time() + Config::get('stream_length');
-
-        $sql = "INSERT INTO `session_stream` (`id`,`expire`,`user`) " .
-            "VALUES('$sid','$expire','$uid')";
-        $db_results = Dba::write($sql);
-
-        if (!$db_results) { return false; }
-
-        self::$session_inserted = true;
-
-        return true;
-
-    } // insert_session
-
-    /**
-     * session_exists
-     * This checks to see if the passed stream session exists and is valid
-     */
-    public static function session_exists($sid) {
-
-        $sid     = Dba::escape($sid);
-        $time    = time();
-
-        $sql = "SELECT * FROM `session_stream` WHERE `id`='$sid' AND `expire` > '$time'";
-        $db_results = Dba::write($sql);
-
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return true;
-        }
-
-        return false;
-
-    } // session_exists
-
-    /**
-     * gc
-     * This function performes the garbage collection stuff, run on extend
-     * and on now playing refresh.
-     */
-    public static function gc() {
-
-        $time = time();
-        $sql = "DELETE FROM `session_stream` WHERE `expire` < '$time'";
-        $db_results = Dba::write($sql);
-
-        Stream_Playlist::gc();
-
-    }
-
-    /**
-     * extend_session
-     * This takes the passed sid and does a replace into also setting the user
-     * agent and IP also do a little GC in this function
-     */
-    public static function extend_session($sid,$uid) {
-
-        $expire = time() + Config::get('stream_length');
-        $sid     = Dba::escape($sid);
-        $agent    = Dba::escape($_SERVER['HTTP_USER_AGENT']);
-        $ip    = Dba::escape(inet_pton($_SERVER['REMOTE_ADDR']));
-        $uid    = Dba::escape($uid);
-
-        $sql = "UPDATE `session_stream` SET `expire`='$expire', `agent`='$agent', `ip`='$ip' " .
-            "WHERE `id`='$sid'";
-        $db_results = Dba::write($sql);
-
-        self::gc();
-
-        return true;
-
-    } // extend_session
 
     /**
      * start_transcode
@@ -261,10 +163,10 @@ class Stream {
      */
     public static function gc_now_playing() {
 
-        // Remove any now playing entries for session_streams that have been GC'd
+        // Remove any now playing entries for sessions that have been GC'd
         $sql = "DELETE FROM `now_playing` USING `now_playing` " .
-            "LEFT JOIN `session_stream` ON `session_stream`.`id`=`now_playing`.`id` " .
-            "WHERE `session_stream`.`id` IS NULL OR `now_playing`.`expire` < '" . time() . "'";
+            "LEFT JOIN `session` ON `session`.`id`=`now_playing`.`id` " .
+            "WHERE `session`.`id` IS NULL OR `now_playing`.`expire` < '" . time() . "'";
         $db_results = Dba::write($sql);
 
     } // gc_now_playing
@@ -308,9 +210,9 @@ class Stream {
      */
     public static function get_now_playing($filter=NULL) {
 
-        $sql = "SELECT `session_stream`.`agent`,`now_playing`.* " .
+        $sql = "SELECT `session`.`agent`,`now_playing`.* " .
             "FROM `now_playing` " .
-            "LEFT JOIN `session_stream` ON `session_stream`.`id`=`now_playing`.`id` " .
+            "LEFT JOIN `session` ON `session`.`id`=`now_playing`.`id` " .
             "ORDER BY `now_playing`.`expire` DESC";
         $db_results = Dba::read($sql);
 
@@ -355,11 +257,9 @@ class Stream {
      * This is called on class load it sets the session
      */
     public static function _auto_init() {
-
         // Generate the session ID
-        self::$session = md5(uniqid(rand(), true));
-
-    } // auto_init
+        self::$session = Session::create(array('type' => 'stream'));
+    }
 
     /**
      * run_playlist_method
@@ -401,7 +301,7 @@ class Stream {
     public static function get_base_url() {
 
         if (Config::get('require_session')) {
-            $session_string = 'ssid=' . Stream::get_session() . '&';
+            $session_string = 'ssid=' . self::$session . '&';
         }
 
         $web_path = Config::get('web_path');
