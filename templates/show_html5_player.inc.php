@@ -29,7 +29,7 @@ header('Expires: ' . gmdate(DATE_RFC1123, time()-1));
 <head>
 <title><?php echo Config::get('site_title'); ?></title>
 <link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/html5_player.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo Config::get('web_path').Config::get('theme_path').'/templates/'.'default.css'; ?>" type="text/css" media="screen" />
+<?php require_once Config::get('prefix') . '/templates/stylesheets.inc.php'; ?>
 <script src="<?php echo Config::get('web_path'); ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
 <script type="text/javascript">
 var playlist_items={
