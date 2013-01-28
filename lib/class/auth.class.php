@@ -184,7 +184,60 @@ class Auth {
         }
 
         return $results;
-    } // local_auth
+    }
+
+    /**
+     * external_auth
+     *
+     * Calls an external program compatible with mod_authnz_external
+     * such as pwauth.
+     */
+    private static function external_auth($username, $password) {
+        $authenticator = Config::get('external_authenticator');
+        if (!$authenticator) {
+            return array(
+                'success' => false,
+                'error' => 'No external authenticator configured'
+            );
+        }
+
+        //FIXME: should we do input sanitization?
+        $proc = proc_open($authenticator,
+            array(
+                0 => array('pipe', 'r'),
+                1 => array('pipe', 'w'),
+                2 => array('pipe', 'w')
+            ), $pipes);
+
+        if (is_resource($proc)) {
+            fwrite($pipes[0], $username."\n".$password."\n");
+            fclose($pipes[0]);
+            fclose($pipes[1]);
+            if ($stderr = fread($pipes[2], 8192)) {
+                debug_event('external_auth', $stderr, 5);
+            }
+            fclose($pipes[2]);
+        }
+        else {
+            return array(
+                'success' => false,
+                'error' => 'Failed to run external authenticator'
+            );
+        }
+
+        if (proc_close($proc) == 0) {
+            return array(
+                'success' => true,
+                'type' => 'external',
+                'username' => $username
+            );
+        }
+
+        return array(
+            'success' => false,
+            'error' => 'The external authenticator did not accept the login'
+        );
+    }
 
     /**
      * ldap_auth

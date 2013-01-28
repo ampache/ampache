@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-FUTURE
+    - Added support for external authenticators like pwauth (based on a patch by
+        sjlu)
     - Renamed the local auth method to pam, which is less confusing
     - Removed the Flash player
     - Added an HTML5 player (patch by Holger Brunn)

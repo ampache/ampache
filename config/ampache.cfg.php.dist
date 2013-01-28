@@ -81,8 +81,14 @@ session_cookiesecure       = 0
 ; This defines which auth methods Auth will attempt to use and in which order.
 ; If auto_create isn't enabled the user must exist locally.
 ; DEFAULT: mysql
-; VALUES: mysql,ldap,http,pam
+; VALUES: mysql,ldap,http,pam,external
 auth_methods = "mysql"
+
+; External authentication
+; This sets the helper used for external authentication.  It should conform to
+; the interface used by mod_authnz_external
+; DEFAULT: none
+;external_authenticator = "/usr/sbin/pwauth"
 
 ; Automatic local password updating
 ; Determines whether successful authentication against an external source
