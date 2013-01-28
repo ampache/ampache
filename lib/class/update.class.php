@@ -370,6 +370,8 @@ class Update {
         $update_string = '- Add table to store stream session playlist.<br />';
         $version[] = array('version' => '360011', 'description' => $update_string);
 
+        $update_string = '- Drop enum for the type field in session.<br />';
+        $version[] = array('version' => '360012', 'description' => $update_string);
         return $version;
 
     } // populate_version
@@ -2083,7 +2085,7 @@ class Update {
     }
 
     /**
-     * update_380011
+     * update_360011
      * We need a place to store actual playlist data for downloadable
      * playlist files.
      */
@@ -2104,5 +2106,15 @@ class Update {
         self::set_version('db_version', '360011');
     }
 
-} // end update class
+    /**
+     * update_360012()
+     *
+     * Drop the enum on session.type
+     */
+    public static function update_360012() {
+        Dba::write('ALTER TABLE `session` CHANGE `type` `type` VARCHAR(16) DEFAULT NULL');
+        self::set_version('db_version', '360012');
+    }
+
+}
 ?>

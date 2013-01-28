@@ -160,11 +160,11 @@ class Auth {
     }
 
     /**
-     * local_auth
+     * pam_auth
      * Check to make sure the pam_auth function is implemented (module is 
      * installed), then check the credentials.
      */
-    private static function local_auth($username, $password) {
+    private static function pam_auth($username, $password) {
         if (!function_exists('pam_auth')) {
             $results['success']    = false;
             $results['error']    = 'The PAM PHP module is not installed';
@@ -175,7 +175,7 @@ class Auth {
 
         if (pam_auth($username, $password)) {
             $results['success']    = true;
-            $results['type']    = 'local';
+            $results['type']    = 'pam';
             $results['username']    = $username;
         }
         else {

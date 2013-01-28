@@ -4,6 +4,7 @@
 
 --------------------------------------------------------------------------
   v.3.6-FUTURE
+    - Renamed the local auth method to pam, which is less confusing
     - Removed the Flash player
     - Added an HTML5 player (patch by Holger Brunn)
     - Changed the way themes handle RTL languages
