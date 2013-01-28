@@ -172,7 +172,6 @@ class Session {
 
         // Regenerate the session ID to prevent fixation
         switch ($data['type']) {
-            case 'xml-rpc':
             case 'api':
                 $key = md5(uniqid(rand(), true));
             break;
@@ -258,7 +257,6 @@ class Session {
     public static function exists($type, $key, $data=array()) {
         // Switch on the type they pass
         switch ($type) {
-            case 'xml-rpc':
             case 'api':
                 $key = Dba::escape($key);
                 $time = time();

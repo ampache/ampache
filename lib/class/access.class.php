@@ -434,9 +434,6 @@ class Access {
             case 'network':
                 return $type;
             break;
-            case 'xml-rpc':
-                return 'rpc';
-            break;
             default:
                 return 'stream';
             break;
@@ -506,7 +503,6 @@ class Access {
     public function get_type_name() {
 
         switch ($this->type) {
-            case 'xml-rpc':
             case 'rpc':
                 return T_('API/RPC');
             break;
