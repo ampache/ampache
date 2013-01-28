@@ -75,6 +75,68 @@ class Song extends database_object implements media {
     } // constructor
 
     /**
+     * insert
+     *
+     * This inserts the song described by the passed array
+     */
+    public static function insert($results) {
+        $catalog = $results['catalog'];
+        $file = $results['file'];
+        $title = trim($results['title']) ?: $file;
+        $artist = $results['artist'];
+        $album = $results['album'];
+        $bitrate = $results['bitrate'];
+        $rate = $results['rate'] ?: 0;
+        $mode = $results['mode'];
+        $size = $results['size'] ?: 0;
+        $time = $results['time'] ?: 0;
+        $track = $results['track'];
+        $track_mbid = $results['mb_trackid'];
+        $album_mbid = $results['mb_albumid'];
+        $artist_mbid = $results['mb_artistid'];
+        $disk = $results['disk'] ?: 0;
+        $year = $results['year'] ?: 0;
+        $comment = $results['comment'];
+        $tags = $results['genre']; // multiple genre support makes this an array
+        $lyrics = $results['lyrics'];
+
+        $artist_id = Artist::check($artist, $artist_mbid);
+        $album_id = Album::check($album, $year, $disk, $album_mbid);
+
+        $sql = 'INSERT INTO `song` (`file`, `catalog`, `album`, `artist`, ' .
+            '`title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, ' .
+            '`addition_time`, `year`, `mbid`) ' .
+            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+
+        $db_results = Dba::write($sql, array(
+            $file, $catalog, $album_id, $artist_id,
+            $title, $bitrate, $rate, $mode, $size, $time, $track,
+            time(), $year, $track_mbid));
+
+        if (!$db_results) {
+            debug_event('song', 'Unable to insert' . $file, 2);
+            return false;
+        }
+
+        $song_id = Dba::insert_id();
+
+        if (is_array($tags)) {
+            foreach ($tags as $tag) {
+                $tag = trim($tag);
+                Tag::add('song', $song_id, $tag, false);
+                Tag::add('album', $album_id, $tag, false);
+                Tag::add('artist', $artist_id, $tag, false);
+            }
+        }
+
+        $sql = 'INSERT INTO `song_data` (`song_id`, `comment`, `lyrics`) ' .
+            'VALUES(?, ?, ?)';
+        Dba::write($sql, array($song_id, $comment, $lyrics));
+
+        return true;
+    }
+
+    /**
      * gc
      *
      * Cleans up the song_data table

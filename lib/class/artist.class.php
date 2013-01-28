@@ -33,6 +33,7 @@ class Artist extends database_object {
 
     // Constructed vars
     public $_fake = false; // Set if construct_from_array() used
+    private static $_mapcache = array();
 
     /**
      * Artist
@@ -275,6 +276,85 @@ class Artist extends database_object {
     } // format
 
     /**
+     * check
+     *
+     * Checks for an existing artist; if none exists, insert one.
+     */
+    public static function check($name, $mbid = null, $readonly = false) {
+        $trimmed = Catalog::trim_prefix(trim($name));
+        $name = $trimmed['string'];
+        $prefix = $trimmed['prefix'];
+        
+        if (!$name) {
+            $name = T_('Unknown (Orphaned)');
+            $prefix = null;
+        }
+
+        if (isset(self::$_mapcache[$name][$mbid])) {
+            return self::$_mapcache[$name][$mbid];
+        }
+
+        $exists = false;
+
+        $sql = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
+        $db_results = Dba::read($sql, array($mbid));
+
+        if ($row = Dba::fetch_assoc($db_results)) {
+            $id = $row['id'];
+            $exists = true;
+        }
+        else {
+            $sql = 'SELECT `id`, `mbid` FROM `artist` WHERE `name` LIKE ?';
+            $db_results = Dba::read($sql, array($name));
+
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $key = $row['mbid'] ?: 'null';
+                $id_array[$key] = $row['id'];
+            }
+
+            if (isset($id_array)) {
+                if ($mbid) {
+                    if (isset($id_array['null']) && !$readonly) {
+                        $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
+                        Dba::write($sql, array($mbid, $id_array['null']));
+                    }
+                    if (isset($id_array['null'])) {
+                        $id = $id_array['null'];
+                        $exists = true;
+                    }
+                }
+                else {
+                    // Pick one at random
+                    $id = array_shift($id_array);
+                    $exists = true;
+                }
+            }
+        }
+
+        if ($exists) {
+            self::$_mapcache[$name][$mbid] = $id;
+            return $id;
+        }
+
+        if ($readonly) {
+            return null;
+        }
+
+        $sql = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`) ' .
+            'VALUES(?, ?, ?)';
+
+        $db_results = Dba::write($sql, array($name, $prefix, $mbid));
+        if (!$db_results) {
+            return null;
+        }
+        $id = Dba::insert_id();
+
+        self::$_mapcache[$name][$mbid] = $id;
+        return $id;
+
+    }
+
+    /**
      * update
      * This takes a key'd array of data and updates the current artist
      * it will flag songs as neeed
@@ -284,7 +364,7 @@ class Artist extends database_object {
         // Save our current ID
         $current_id = $this->id;
 
-        $artist_id = Catalog::check_artist($data['name'], $this->mbid);
+        $artist_id = self::check($data['name'], $this->mbid);
 
         // If it's changed we need to update
         if ($artist_id != $this->id) {

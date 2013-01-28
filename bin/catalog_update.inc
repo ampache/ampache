@@ -27,13 +27,11 @@ $path = dirname(__FILE__);
 $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
-
 ob_end_flush();
 
 $catclean = 0;        //All off by default
 $catverify = 0;
 $catadd = 0;
-$thumbadd =0; 
 $artadd = 0; 
 
 if (count($_SERVER['argv']) == 1) { 
@@ -59,10 +57,6 @@ if (count($_SERVER['argv']) > 1) {
             $operations_string .= "\n\t" . T_('- Catalog Art Gather');
             $artadd = 1; 
         } 
-        elseif ($_SERVER['argv'][$x] == '-t') { 
-            $operations_string .= "\n\t" . T_('- Generate Thumbnails');
-            $thumbadd = 1; 
-        } 
         else {
             if ($where) $where .= " OR ";
             $where .= "name LIKE '%" . Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $_SERVER['argv'][$x])) . "%'";
@@ -70,17 +64,16 @@ if (count($_SERVER['argv']) > 1) {
     }
 }
 
-if (count($_SERVER['argv']) != 1 AND $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1 && $thumbadd != 1) {
+if (count($_SERVER['argv']) != 1 AND $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1) {
         usage();
     exit; 
 }
 
-if ($thumbadd == 0 && $artadd == 0 && $catclean == 0 && $catverify == 0 && $catadd == 0) {    //didn't pass any clean/verify/add arguments
+if ($artadd == 0 && $catclean == 0 && $catverify == 0 && $catadd == 0) {    //didn't pass any clean/verify/add arguments
     $catclean = 1;                        //set them all to on
     $catverify = 1;
     $catadd = 1;
     $artadd = 1; 
-    $thumbadd = 1; 
 }
 
 echo T_("Starting Catalog Operations...") . $operations_string . "\n"; 
@@ -127,19 +120,10 @@ while ($row = Dba::fetch_row($db_results)) {
         // Look for album art
         echo T_('Starting Album Art Search');
         echo "\n"; 
-        $catalog->get_art('',1);
+        $catalog->gather_art();
         echo "----------------\n\n";
     } 
-
-    if ($thumbadd == 1) { 
-        // Generate the thumbnails
-        echo T_('Generating Thumbnails'); 
-        echo "\n"; 
-        $catalog->generate_thumbnails(); 
-        echo "----------------\n\n";
-    }
-
-} // end foreach
+}
 
 Dba::optimize_tables();
 
@@ -173,8 +157,6 @@ function usage() {
     echo T_('Add to Catalogs');
     echo "\n-g\t";
     echo T_('Gather Art');
-    echo "\n-t\t"; 
-    echo T_('Generate Thumbnails');
     echo "\n";
     echo "----------------------------------------------------------";
     echo "\n";

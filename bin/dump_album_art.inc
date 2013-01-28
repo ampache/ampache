@@ -37,8 +37,9 @@ if (count($_SERVER['argv']) > 1) {
 
 $catalogs = Catalog::get_catalogs();
 
-foreach ($catalogs as $catalog_id) { 
-    Catalog::dump_album_art($catalog_id,array('metadata'=>$meta));
+foreach ($catalogs as $catalog_id) {
+    $catalog = new Catalog($catalog_id);
+    $catalog->dump_album_art(array('metadata' => $meta));
 }
 
 

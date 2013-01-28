@@ -34,6 +34,7 @@ class AmpacheApi {
 
     // Response variables
     private $api_session;
+    private $raw_response;
 
     // Constructed variables
     private $api_url;
@@ -61,12 +62,12 @@ class AmpacheApi {
 
     /**
      * Constructor
-     * This takes an array of input, if enough information is provided then it will
-     * attempt to connect to the API right away, otherwise it will simply return an
-     * object that can be later configured and then connected
+     *
+     * If enough information is provided then we will attempt to connect right
+     * away, otherwise we will simply return an object that can be reconfigured
+     * and manually connected.
      */
-    public function __construct($config=array()) {
-
+    public function __construct($config = array()) {
         // See if we are setting debug first
         if (isset($config['debug'])) {
             $this->_debug_output = $config['debug'];
@@ -77,7 +78,7 @@ class AmpacheApi {
         }
 
         // If we got something, then configure!
-        if (is_array($config) AND count($config)) {
+        if (is_array($config) && count($config)) {
             $this->configure($config);
         }
 
@@ -85,8 +86,7 @@ class AmpacheApi {
         if ($this->state() == 'READY') {
             $this->connect();
         }
-
-    } // constructor
+    }
 
     /**
      * _debug
@@ -104,29 +104,30 @@ class AmpacheApi {
     }
 
     /**
-      * connect
-     * This attempts to connect to the ampache instance, for now we assume the newer version
+     * connect
+     *
+     * This attempts to connect to the Ampache instance.
      */
     public function connect() {
-
         $this->_debug('CONNECT', "Using $this->username / $this->password");
 
         // Set up the handshake
         $results = array();
         $timestamp = time();
-        $key = hash('sha256',$this->password);
-        $passphrase = hash('sha256',$timestamp . $key);
+        $key = hash('sha256', $this->password);
+        $passphrase = hash('sha256', $timestamp . $key);
 
-        $options = array('timestamp'=>$timestamp,'auth'=>$passphrase,'version'=>$this->LIB_version,'user'=>$this->username);
+        $options = array(
+            'timestamp' => $timestamp,
+            'auth' => $passphrase,
+            'version' => self::$LIB_version,
+            'user' => $this->username
+        );
 
-        $response = $this->send_command('handshake',$options);
+        $data = $this->send_command('handshake', $options);
 
-        $this->parse_response($response);
-
-        // We want the first response
-        $data = $this->get_response();
         foreach ($data as $value) {
-            $results = array_merge($results,$value);
+            $results = array_merge($results, $value);
         }
 
         if (!$results['auth']) {
@@ -139,17 +140,16 @@ class AmpacheApi {
         // not get better with age
         $this->handshake_time = time();
         $this->handshake = $results;
-
-    } // connect
+    }
 
     /**
      * configure
-     * This function takes an array of elements and configures the AmpaceApi object
-     * it doesn't really do much more, it is it's own function so we can call it
-     * from the constructor or directly, if we so desire.
+     *
+     * This function takes an array of elements and configures the AmpacheApi
+     * object. It doesn't really do anything fancy, but it's a separate function
+     * so it can be called both from the constructor and directly.
      */
-    public function configure($config=array()) {
-
+    public function configure($config = array()) {
         $this->_debug('CONFIGURE', 'Checking passed config options');
 
         if (!is_array($config)) {
@@ -157,23 +157,24 @@ class AmpacheApi {
             return false;
         }
 
+        // FIXME: Is the scrubbing of these variables actually sane?  I'm pretty
+        // sure password at least shouldn't be messed with like that.
         if (isset($config['username'])) {
-            $this->username = htmlentities($config['username'],ENT_QUOTES,'UTF-8');
+            $this->username = htmlentities($config['username'], ENT_QUOTES, 'UTF-8');
         }
         if (isset($config['password'])) {
-            $this->password = htmlentities($config['password'],ENT_QUOTES,'UTF-8');
+            $this->password = htmlentities($config['password'], ENT_QUOTES, 'UTF-8');
         }
         if (isset($config['server'])) {
             // Replace any http:// in the URL with ''
             $config['server'] = str_replace('http://','',$config['server']);
-            $this->server = htmlentities($config['server'],ENT_QUOTES,'UTF-8');
+            $this->server = htmlentities($config['server'], ENT_QUOTES, 'UTF-8');
         }
         if (isset($config['api_secure'])) {
             // This should be a boolean response
             $this->api_secure = $config['api_secure'] ? true : false;
         }
 
-        // Once we've loaded the config variables we can build some of the final values
         $this->api_url = ($this->api_secure ? 'https://' : 'http://') . $this->server . '/server/xml.server.php';
 
         // See if we have enough to authenticate, if so change the state
@@ -182,60 +183,57 @@ class AmpacheApi {
         }
 
         return true;
-
-    } // configure
+    }
 
     /**
      * set_state
+     *
      * This sets the current state of the API, it is used mostly internally but
      * the state can be accessed externally so it could be used to check and see
      * where the API is at, at this moment
      */
     public function set_state($state) {
-
         // Very simple for now, maybe we'll do something more with this later
         $this->api_state = strtoupper($state);
-
-    } // set_state
+    }
 
     /**
      * state
-     * This returns the state of the API
+     *
+     * This returns the state of the API.
      */
     public function state() {
-
         return $this->api_state;
-
-    } // state
+    }
 
     /**
      * info
-     * Returns the information gathered by the handshake
-     * not raw so we can formated it if we wanted?
+     *
+     * Returns the information gathered by the handshake.
+     * Not raw so we can format it if we want?
      */
     public function info() {
-
         if ($this->state() != 'CONNECTED') {
             throw new Exception('AmpacheApi::info API in non-ready state, unable to return info');
         }
 
         return $this->handshake;
-
-    } // info
+    }
 
     /**
      * send_command
-     * This sends an API command, with options to the currently connected
-     * host, and returns a nice clean keyed array
+     *
+     * This sends an API command with options to the currently connected
+     * host.
      */
-    public function send_command($command,$options=array()) {
-
+    public function send_command($command, $options = array()) {
         $this->_debug('SEND COMMAND', $command . ' ' . json_encode($options));
 
         if ($this->state() != 'READY' AND $this->state() != 'CONNECTED') {
             throw new Exception('AmpacheApi::send_command API in non-ready state, unable to send');
         }
-        if (!trim($command)) {
+        $command = trim($command);
+        if (!$command) {
             throw new Exception('AmpacheApi::send_command no command specified');
         }
         if (!$this->validate_command($command)) {
@@ -244,72 +242,73 @@ class AmpacheApi {
 
         $url = $this->api_url . '?action=' . urlencode($command);
 
-        foreach ($options as $key=>$value) {
-            if (!trim($key)) {
-                // Non fatal don't need to except it
+        foreach ($options as $key => $value) {
+            $key = trim($key);
+            if (!$key) {
+                // Nonfatal, don't need to throw an exception
                 trigger_error('AmpacheApi::send_command unable to append empty variable to command');
                 continue;
             }
             $url .= '&' . urlencode($key) . '=' . urlencode($value);
         }
 
-        // IF Auth is set then we append it so you don't have to think about it, also do username
+        // If auth is set then we append it so callers don't have to.
         if ($this->api_auth) {
             $url .= '&auth=' . urlencode($this->api_auth) . '&username=' . urlencode($this->username);
         }
 
         $data = file_get_contents($url);
-        return $data;
-
-    } // send_command
+        $this->raw_response = $data;
+        $this->parse_response($data);
+        return $this->get_response();
+    }
 
     /**
      * validate_command
-     * This takes the specified command, and checks it against the known
+     *
+     * This takes the specified command and checks it against the known
      * commands for the current version of Ampache. If no version is known yet
-     * This it will return FALSE for everything except ping and handshake.
+     * it should return FALSE for everything except ping and handshake.
      */
     public function validate_command($command) {
-
+        // FIXME: actually do something
         return true;
-
-    } // validate_command
+    }
 
     /**
      * parse_response
-     * This takes an XML document and dumps it into $this->results but before
+     *
+     * This takes an XML document and dumps it into $this->results. Before
      * it does that it will clean up anything that was there before, so I hope
-     * you've saved!
+     * you didn't want any of that.
      */
     public function parse_response($response) {
-
         // Reset the results
         $this->XML_results = array();
         $this->XML_position = 0;
 
         $this->XML_create_parser();
 
-        if (!xml_parse($this->XML_parser,$response)) {
+        if (!xml_parse($this->XML_parser, $response)) {
             throw new Exception('AmpacheApi::parse_response was unable to parse XML document');
         }
 
         xml_parser_free($this->XML_parser);
+        $this->_debug('PARSE RESPONSE', json_encode($this->XML_results));
         return true;
-
-    } // parse_response
+    }
 
     /**
      * get_response
-     * This returns the raw response from the last parsed response
+     *
+     * This returns the last data we parsed.
      */
     public function get_response() {
-
         return $this->XML_results;
+    }
 
-    } // get_response
 
-
-    /////////////////////////// XML PARSER FUNCTIONS /////////////////////////////
+    ////////////////////////// XML PARSER FUNCTIONS ////////////////////////////
 
     /**
      * XML_create_parser
@@ -380,6 +379,5 @@ class AmpacheApi {
 
 
     } // end_element
-
-} // end AmpacheApi class
+}
 ?>

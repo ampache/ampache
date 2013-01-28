@@ -56,7 +56,7 @@ $catalogs = array();
 while ($r = Dba::fetch_row($db_results)) {
 
     $catalog = new Catalog($r['0']);
-    $songs = $catalog->get_catalog_files();
+    $songs = $catalog->get_songs();
 
     printf (T_('Starting Catalog: %s'), stripslashes($catalog->name));
     echo "\n";

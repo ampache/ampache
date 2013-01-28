@@ -41,7 +41,8 @@ class Album extends database_object {
     public $full_name; // Prefix + Name, generated
 
     // cached information
-    public $_songs=array();
+    public $_songs = array();
+    private static $_mapcache = array();
 
     /**
      * __construct
@@ -177,6 +178,78 @@ class Album extends database_object {
         return $results;
 
     } // _get_extra_info
+
+    /**
+     * check
+     *
+     * Searches for an album; if none is found, insert a new one.
+     */
+    public static function check($name, $year = 0, $disk = 0, $mbid = null,
+        $readonly = false) {
+        
+        $trimmed = Catalog::trim_prefix(trim($name));
+        $name = $trimmed['string'];
+        $prefix = $trimmed['prefix'];
+
+        // Not even sure if these can be negative, but better safe than llama.
+        $year = abs(intval($year));
+        $disk = abs(intval($disk));
+
+        if (!$name) {
+            $name = T_('Unknown (Orphaned)');
+            $year = 0;
+            $disk = 0;
+        }
+
+        if (isset(self::$_mapcache[$name][$year][$disk][$mbid])) {
+            return self::$_mapcache[$name][$year][$disk][$mbid];
+        }
+
+        $sql = 'SELECT `id` FROM `album` WHERE `name` = ? AND `disk` = ? AND ' .
+            '`year` = ? AND `mbid` ';
+        $params = array($name, $disk, $year);
+
+        if ($mbid) {
+            $sql .= '= ? ';
+            $params[] = $mbid;
+        }
+        else {
+            $sql .= 'IS NULL ';
+        }
+
+        $sql .= 'AND `prefix` ';
+        if ($prefix) {
+            $sql .= '= ?';
+            $params[] = $prefix;
+        }
+        else {
+            $sql .= 'IS NULL';
+        }
+
+        $db_results = Dba::read($sql, $params);
+
+        if ($row = Dba::fetch_assoc($db_results)) {
+            $id = $row['id'];
+            self::$_mapcache[$name][$year][$disk][$mbid] = $id;
+            return $id;
+        }
+
+        if ($readonly) {
+            return null;
+        }
+
+        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`) '.
+            'VALUES (?, ?, ?, ?, ?)';
+
+        $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid));
+        if (!$db_results) {
+            return null;
+        }
+
+        $id = Dba::insert_id();
+        self::$_mapcache[$name][$year][$disk][$mbid] = $id;
+        return $id;
+    }
 
     /**
      * get_songs
@@ -317,7 +390,7 @@ class Album extends database_object {
             Artist::gc();
         }
 
-        $album_id = Catalog::check_album($name,$year,$disk,$mbid);
+        $album_id = self::check($name, $year, $disk, $mbid);
         if ($album_id != $this->id) {
             if (!is_array($songs)) { $songs = $this->get_songs(); }
             foreach ($songs as $song_id) {
