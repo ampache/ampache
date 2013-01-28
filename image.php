@@ -33,8 +33,8 @@ define('NO_SESSION','1');
 require_once 'lib/init.php';
 
 // Check to see if they've got an interface session or a valid API session, if not GTFO
-if (!vauth::session_exists('interface',$_COOKIE[Config::get('session_name')]) AND !vauth::session_exists('api',$_REQUEST['auth']) AND !vauth::session_exists('xml-rpc',$_REQUEST['auth'])) {
-    debug_event('DENIED','Image Access, Checked Cookie Session:' . $_COOKIE[Config::get('session_name')] . ' and Auth:' . $_REQUEST['auth'],'1');
+if (!Session::exists('interface', $_COOKIE[Config::get('session_name')]) AND !Session::exists('api', $_REQUEST['auth']) AND !Session::exists('xml-rpc', $_REQUEST['auth'])) {
+    debug_event('image','Access denied, checked cookie session:' . $_COOKIE[Config::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 1);
     exit;
 }
 
@@ -77,7 +77,7 @@ switch ($_GET['type']) {
     break;
     // If we need to pull the data out of the session
     case 'session':
-        vauth::check_session();
+        Session::check();
         $filename = scrub_in($_REQUEST['image_index']);
         $image = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
         $mime = $_SESSION['form']['images'][$filename]['mime'];

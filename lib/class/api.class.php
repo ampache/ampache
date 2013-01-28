@@ -171,7 +171,7 @@ class Api {
                 $data['username']    = $client->username;
                 $data['type']        = 'api';
                 $data['value']        = $timestamp;
-                $token = vauth::session_create($data);
+                $token = Session::create($data);
 
                 // Insert the token into the streamer
                 Stream::insert_session($token,$client->id);
@@ -236,8 +236,8 @@ class Api {
         $xmldata = array('server'=>Config::get('version'),'version'=>Api::$version,'compatible'=>'350001');
 
         // Check and see if we should extend the api sessions (done if valid sess is passed)
-        if (vauth::session_exists('api', $input['auth'])) {
-            vauth::session_extend($input['auth']);
+        if (Session::exists('api', $input['auth'])) {
+            Session::extend($input['auth']);
             $xmldata = array_merge(array('session_expire'=>date("c",time()+Config::get('session_length')-60)),$xmldata);
         }
 

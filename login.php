@@ -26,7 +26,7 @@ require_once 'lib/init.php';
 /* We have to create a cookie here because IIS
  * can't handle Cookie + Redirect
  */
-vauth::create_cookie();
+Session::create_cookie();
 Preference::init();
 
 /**
@@ -52,7 +52,7 @@ if (($_POST['username'] && $_POST['password']) ||
     ($_SERVER['REMOTE_USER'] || $_SERVER['HTTP_REMOTE_USER']))) {
 
     if ($_POST['rememberme']) {
-        vauth::create_remember_cookie();
+        Session::create_remember_cookie();
     }
 
     /* If we are in demo mode let's force auth success */
@@ -137,7 +137,7 @@ if (($_POST['username'] && $_POST['password']) ||
 if ($auth['success']) {
     // $auth->info are the fields specified in the config file
     //   to retrieve for each user
-    vauth::session_create($auth);
+    Session::create($auth);
 
     // Not sure if it was me or php tripping out,
     //   but naming this 'user' didn't work at all

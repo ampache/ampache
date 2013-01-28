@@ -48,7 +48,7 @@ if (!Config::get('access_control')) {
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if (!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
+if (!Session::exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
         debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','3');
         ob_end_clean();
         echo XML_Data::error('401', T_('Session Expired'));
@@ -56,10 +56,12 @@ if (!vauth::session_exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 
 }
 
 // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-$session = vauth::get_session_data($_REQUEST['auth']);
-$username = ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping') ? $_REQUEST['user'] : $session['username'];
+$username = 
+    ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping')
+    ? $_REQUEST['user']
+    : Session::user($_REQUEST['auth']);
 
-if (!Access::check_network('init-api',$username,'5')) {
+if (!Access::check_network('init-api', $username, 5)) {
         debug_event('Access Denied','Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
         ob_end_clean();
         echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
@@ -67,7 +69,7 @@ if (!Access::check_network('init-api',$username,'5')) {
 }
 
 if ($_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
-        vauth::session_extend($_REQUEST['auth']);
+        Session::extend($_REQUEST['auth']);
         $GLOBALS['user'] = User::get_from_username($session['username']);
 }
 

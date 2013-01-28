@@ -28,10 +28,10 @@ $ampache_path = dirname(__FILE__);
 $prefix = realpath($ampache_path . "/../");
 require_once $prefix . '/lib/init-tiny.php';
 
-// Explicitly load vauth and enable the custom session handler.
+// Explicitly load and enable the custom session handler.
 // Relying on autoload may not always load it before sessiony things are done.
-require_once $prefix . '/lib/class/vauth.class.php';
-vauth::_auto_init();
+require_once $prefix . '/lib/class/session.class.php';
+Session::_auto_init();
 
 // Set up for redirection on important error cases
 $path = preg_replace('#(.*)/(\w+\.php)$#', '$1', $_SERVER['PHP_SELF']);
@@ -132,16 +132,22 @@ set_memory_limit($results['memory_limit']);
 // If we want a session
 if (!defined('NO_SESSION') && Config::get('use_auth')) {
     /* Verify their session */
-    if (!vauth::session_exists('interface',$_COOKIE[Config::get('session_name')])) { vauth::logout($_COOKIE[Config::get('session_name')]); exit; }
+    if (!Session::exists('interface', $_COOKIE[Config::get('session_name')])) {
+        vauth::logout($_COOKIE[Config::get('session_name')]);
+        exit;
+    }
 
     // This actually is starting the session
-    vauth::check_session();
+    Session::check();
 
     /* Create the new user */
     $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
 
     /* If the user ID doesn't exist deny them */
-    if (!$GLOBALS['user']->id AND !Config::get('demo_mode')) { vauth::logout(session_id()); exit; }
+    if (!$GLOBALS['user']->id && !Config::get('demo_mode')) {
+        vauth::logout(session_id());
+        exit;
+    }
 
     /* Load preferences and theme */
     $GLOBALS['user']->update_last_seen();
@@ -153,17 +159,17 @@ elseif (!Config::get('use_auth')) {
     $auth['id'] = -1;
     $auth['offset_limit'] = 50;
     $auth['access'] = Config::get('default_auth_level') ? User::access_name_to_level(Config::get('default_auth_level')) : '100';
-    if (!vauth::session_exists('interface',$_COOKIE[Config::get('session_name')])) {
-        vauth::create_cookie();
-        vauth::session_create($auth);
-        vauth::check_session();
+    if (!Session::exists('interface', $_COOKIE[Config::get('session_name')])) {
+        Session::create_cookie();
+        Session::create($auth);
+        Session::check();
         $GLOBALS['user'] = new User($auth['username']);
         $GLOBALS['user']->username = $auth['username'];
         $GLOBALS['user']->fullname = $auth['fullname'];
         $GLOBALS['user']->access = $auth['access'];
     }
     else {
-        vauth::check_session();
+        Session::check();
         if ($_SESSION['userdata']['username']) {
             $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
         }
@@ -174,7 +180,9 @@ elseif (!Config::get('use_auth')) {
             $GLOBALS['user']->fullname = $auth['fullname'];
             $GLOBALS['user']->access = $auth['access'];
         }
-        if (!$GLOBALS['user']->id AND !Config::get('demo_mode')) { vauth::logout(session_id()); exit; }
+        if (!$GLOBALS['user']->id AND !Config::get('demo_mode')) {
+            vauth::logout(session_id()); exit;
+        }
         $GLOBALS['user']->update_last_seen();
     }
 }
@@ -196,7 +204,7 @@ else {
 Preference::init();
 
 if (session_id()) {
-    vauth::session_extend(session_id());
+    Session::extend(session_id());
     // We only need to create the tmp playlist if we have a session
     $GLOBALS['user']->load_playlist();
 }
