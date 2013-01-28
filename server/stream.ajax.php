@@ -44,7 +44,6 @@ switch ($_REQUEST['action']) {
                 }
                 $new = $_POST['type'];
             break;
-            case 'xspf_player':
             case 'html5_player':
                 $new = $_POST['type'];
                 // Rien a faire
@@ -71,17 +70,14 @@ switch ($_REQUEST['action']) {
 
     break;
     case 'basket':
-
-        // Go ahead and see if we should clear the playlist here or not, we might not actually clear it in the session
-        // we'll just have to feed it bad data.
-        // FIXME: This is sad, will be fixed when I switch how streaming works.
-                // Check to see if 'clear' was passed if it was then we need to reset the basket
-                if ( ($_REQUEST['playlist_method'] == 'clear' || Config::get('playlist_method') == 'clear') AND Config::get('play_type') != 'xspf_player') {
+        // Go ahead and see if we should clear the playlist here or not,
+        // we might not actually clear it in the session.
+        if ( ($_REQUEST['playlist_method'] == 'clear' || Config::get('playlist_method') == 'clear')) {
             define('NO_SONGS','1');
             ob_start();
             require_once Config::get('prefix') . '/templates/rightbar.inc.php';
             $results['rightbar'] = ob_get_clean();
-                }
+        }
 
         // We need to set the basket up!
         $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method']);

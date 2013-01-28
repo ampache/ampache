@@ -40,7 +40,7 @@ switch ($_REQUEST['action']) {
         $media_ids = $GLOBALS['user']->playlist->get_items();
 
         // Check to see if 'clear' was passed if it was then we need to reset the basket
-        if ( ($_REQUEST['playlist_method'] == 'clear' || Config::get('playlist_method') == 'clear') AND Config::get('play_type') != 'xspf_player') {
+        if ( ($_REQUEST['playlist_method'] == 'clear' || Config::get('playlist_method') == 'clear')) {
             $GLOBALS['user']->playlist->clear();
         }
 

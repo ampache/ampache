@@ -165,7 +165,6 @@ function create_preference_input($name,$value) {
         case 'condPL':
         case 'rio_track_stats':
         case 'rio_global_stats':
-        case 'embed_xspf':
         case 'direct_link':
             if ($value == '1') { $is_true = "selected=\"selected\""; }
             else { $is_false = "selected=\"selected\""; }
@@ -177,7 +176,6 @@ function create_preference_input($name,$value) {
         case 'play_type':
             if ($value == 'localplay') { $is_local = 'selected="selected"'; }
             elseif ($value == 'democratic') { $is_vote = 'selected="selected"'; }
-            elseif ($value == 'xspf_player') { $is_xspf_player = 'selected="selected"'; }
             elseif ($value == 'html5_player') { $is_html5_player = 'selected="selected"'; }
             else { $is_stream = "selected=\"selected\""; }
             echo "<select name=\"$name\">\n";
@@ -191,7 +189,6 @@ function create_preference_input($name,$value) {
             if (Config::get('allow_localplay_playback')) {
                 echo "\t<option value=\"localplay\" $is_local>" . T_('Localplay') . "</option>\n";
             }
-            echo "\t<option value=\"xspf_player\" $is_xspf_player>" . T_('Flash Player') . "</option>\n";
             echo "\t<option value=\"html5_player\" $is_html5_player>" . _('HTML5 Player') . "</option>\n";
             echo "</select>\n";
         break;

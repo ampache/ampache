@@ -373,9 +373,6 @@ class Stream {
         // If this wasn't ajax included run away
         if (!defined('AJAX_INCLUDE')) { return false; }
 
-        // If we're doin the flash magic then run away as well
-        if (Config::get('play_type') == 'xspf_player') { return false; }
-
         switch (Config::get('playlist_method')) {
             default:
             case 'clear':

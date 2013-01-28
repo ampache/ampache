@@ -159,7 +159,6 @@ class Stream_Playlist {
         switch($type) {
             case 'democratic':
             case 'localplay':
-            case 'xspf_player':
             case 'html5_player':
                 // These are valid, but witchy
                 $redirect = false;
@@ -349,52 +348,6 @@ class Stream_Playlist {
         echo XML_Data::footer();
 
     } // create_xspf
-
-    /**
-     * create_xspf_player
-     * Due to the fact that this is an integrated player (flash) we actually
-     * have to do a little 'cheating' to make this work.
-     * We are going to take advantage of tmp_playlists to do all of this
-     * hotness
-     */
-    public function create_xspf_player() {
-        debug_event('stream_playlist', 'Creating XSPF player', 5);
-        /* Build the extra info we need to have it pass */
-        $play_info = "?action=show&tmpplaylist_id=" . $GLOBALS['user']->playlist->id;
-
-        // start ugly evil javascript code
-        //FIXME: This needs to go in a template, here for now though
-        //FIXME: This preference doesn't even exists, we'll eventually
-        //FIXME: just make it the default
-        if (Config::get('embed_xspf') == 1 ){
-            header("Location: ".Config::get('web_path')."/index.php?xspf&play_info=".$GLOBALS['user']->playlist->id);
-        }
-        else {
-            echo "<html><head>\n";
-            echo "<title>" . Config::get('site_title') . "</title>\n";
-            echo "<script language=\"javascript\" type=\"text/javascript\">\n";
-            echo "<!-- begin\n";
-            echo "function PlayerPopUp(URL) {\n";
-            // We do a little check here to see if it's a Wii!
-            if (false !== stristr($_SERVER['HTTP_USER_AGENT'], 'Nintendo Wii')) {
-                echo "window.location=URL;\n";
-            }
-            // Else go ahead and do the normal stuff
-            else {
-                echo "window.open(URL, 'XSPF_player', 'width=400,height=170,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');\n";
-                echo "window.location = '" .  return_referer() . "';\n";
-                echo "return false;\n";
-            }
-            echo "}\n";
-            echo "// end -->\n";
-            echo "</script>\n";
-            echo "</head>\n";
-
-            echo "<body onLoad=\"javascript:PlayerPopUp('" . Config::get('web_path') . "/modules/flash/xspf_player.php" . $play_info . "')\">\n";
-            echo "</body>\n";
-            echo "</html>\n";
-        }
-    } // create_xspf_player
 
     /**
      * create_html5_player
