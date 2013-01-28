@@ -54,7 +54,7 @@ new config file.</p>
 values from the ampache.cfg.php.dist file will be used.</p>
 
 <strong>auth_methods</strong> (<i>mysql</i>)<br />
-This defines which auth methods vauth will attempt to use and in which order, if auto_create isn't enabled.
+This defines which auth methods Auth will attempt to use and in which order, if auto_create isn't enabled.
 The user must exist locally as well<br />
 <br />
 <strong>tag_order</strong> (<i>id3v2,id3v1,vorbiscomment,quicktime,ape,asf</i>)<br />

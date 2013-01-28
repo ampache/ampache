@@ -78,11 +78,10 @@ session_cookielife = 0
 session_cookiesecure       = 0
 
 ; Auth Methods 
-; This defines which auth methods vauth will attempt
-; to use and in which order, if auto_create isn't enabled
-; The user must exist locally. Local method uses PHP's PAM Auth module
+; This defines which auth methods Auth will attempt to use and in which order.
+; If auto_create isn't enabled the user must exist locally.
 ; DEFAULT: mysql
-; VALUES: mysql,ldap,http,local
+; VALUES: mysql,ldap,http,pam
 auth_methods = "mysql"
 
 ; Automatic local password updating

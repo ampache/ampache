@@ -82,7 +82,7 @@ if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) 
     $results['user_ip_cardinality'] = 42;
 }
 
-/* Variables needed for vauth class */
+/* Variables needed for Auth class */
 $results['cookie_path']     = $results['raw_web_path'];
 $results['cookie_domain']    = $_SERVER['SERVER_NAME'];
 $results['cookie_life']        = $results['session_cookielife'];
@@ -133,7 +133,7 @@ set_memory_limit($results['memory_limit']);
 if (!defined('NO_SESSION') && Config::get('use_auth')) {
     /* Verify their session */
     if (!Session::exists('interface', $_COOKIE[Config::get('session_name')])) {
-        vauth::logout($_COOKIE[Config::get('session_name')]);
+        Auth::logout($_COOKIE[Config::get('session_name')]);
         exit;
     }
 
@@ -145,7 +145,7 @@ if (!defined('NO_SESSION') && Config::get('use_auth')) {
 
     /* If the user ID doesn't exist deny them */
     if (!$GLOBALS['user']->id && !Config::get('demo_mode')) {
-        vauth::logout(session_id());
+        Auth::logout(session_id());
         exit;
     }
 
@@ -181,7 +181,7 @@ elseif (!Config::get('use_auth')) {
             $GLOBALS['user']->access = $auth['access'];
         }
         if (!$GLOBALS['user']->id AND !Config::get('demo_mode')) {
-            vauth::logout(session_id()); exit;
+            Auth::logout(session_id()); exit;
         }
         $GLOBALS['user']->update_last_seen();
     }

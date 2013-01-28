@@ -77,7 +77,7 @@ if (($_POST['username'] && $_POST['password']) ||
             $password = '';
         }
 
-        $auth = vauth::authenticate($username, $password);
+        $auth = Auth::login($username, $password);
         
         if ($auth['success']) {
             $username = $auth['username'];

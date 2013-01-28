@@ -21,14 +21,12 @@
  */
 
 /**
- * vauth Class
  *
  * This class handles all of the session related stuff in Ampache
  * it takes over for the vauth libs, and takes some stuff out of other
- * classes where it didn't belong
- *
+ * classes where it didn't belong.
  */
-class vauth {
+class Auth {
 
     /**
      * Constructor
@@ -85,11 +83,12 @@ class vauth {
     } // logout
 
     /**
-      * authenticate
+     * login
+     *
      * This takes a username and password and then returns the results
      * based on what happens when we try to do the auth.
      */
-    public static function authenticate($username, $password) {
+    public static function login($username, $password) {
 
         // Foreach the auth methods
         foreach (Config::get('auth_methods') as $method) {
@@ -97,7 +96,7 @@ class vauth {
             // Build the function name and call it
             $function_name = $method . '_auth';
 
-            if (!method_exists('vauth', $function_name)) { 
+            if (!method_exists('Auth', $function_name)) { 
                 continue;
             }
 
@@ -110,7 +109,7 @@ class vauth {
 
         return $results;
 
-    } // authenticate
+    }
 
     /**
      * mysql_auth
@@ -158,7 +157,7 @@ class vauth {
         $results['error']    = 'MySQL login attempt failed';
         return $results;
 
-    } // mysql_auth
+    }
 
     /**
      * local_auth
@@ -325,6 +324,5 @@ class vauth {
         return $results;
     } // http_auth
 
-} // end of vauth class
-
+}
 ?>
