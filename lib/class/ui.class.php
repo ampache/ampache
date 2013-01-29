@@ -96,7 +96,7 @@ class UI {
      */
     public static function flip_class($classes = null) {
         if (is_array($classes)) {
-            self::$_classes = $array;
+            self::$_classes = $classes;
         }
         else {
             self::$_classes = array_reverse(self::$_classes);
