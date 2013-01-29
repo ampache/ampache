@@ -538,7 +538,7 @@ function print_bool($value) {
  */
 function show_now_playing() {
 
-    Session::gc();
+    Session::gc(null);
     Stream::gc_now_playing();
 
     $web_path = Config::get('web_path');
