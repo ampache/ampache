@@ -619,9 +619,6 @@ class Update {
       */
     public static function update_340005() {
         $retval = true;
-        // Turn user_rating into a tinyint and call it score
-        $sql = "ALTER TABLE `rating` CHANGE `user_rating` `score` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'";
-        $retval = Dba::write($sql) ? $retval : false;
 
         $sql = "UPDATE `preference` SET `catagory`='playlist' WHERE `name`='random_method'";
         $retval = Dba::write($sql) ? $retval : false;
@@ -892,7 +889,7 @@ class Update {
      * done this in the previous one but I screwed up... sigh.
      */
     public static function update_340016() {
-        $sql = "ALTER TABLE `democratic` ADD `base_playlist` INT ( 11 ) UNSIGNED NOT NULL";
+        $sql = "ALTER TABLE `democratic` ADD `base_playlist` INT ( 11 ) UNSIGNED NOT NULL AFTER `name`";
         return Dba::write($sql);
     }
 
@@ -904,8 +901,6 @@ class Update {
      */
     public static function update_340017() {
         $retval = true;
-        $sql = "ALTER TABLE `democratic` ADD `base_playlist` INT( 11 ) UNSIGNED NOT NULL AFTER `name`";
-        $retval = Dba::write($sql) ? $retval : false;
 
         $sql = "ALTER TABLE `tmp_playlist` DROP `base_playlist`";
         $retval = Dba::write($sql) ? $retval : false;
@@ -982,9 +977,6 @@ class Update {
         $retval = true;
 
         $sql = "ALTER TABLE `tag` DROP `order`";
-        $retval = Dba::write($sql) ? $retval : false;
-
-        $sql = "ALTER TABLE `tag` DROP INDEX `order`";
         $retval = Dba::write($sql) ? $retval : false;
 
         $sql = "ALTER TABLE `tag` ADD UNIQUE ( `name` )";
