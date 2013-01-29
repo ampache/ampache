@@ -107,7 +107,7 @@ class Flag extends database_object {
             $results[$row['object_id']] = $row;
         }
 
-        // Itterate through the passed ids as we need to cache 'nulls'
+        // Iterate through the passed ids as we need to cache 'nulls'
         foreach ($ids as $id) {
             parent::add_to_cache('flagged_' . $type,$id,$results[$id]);
         }

@@ -299,7 +299,7 @@ switch ($_REQUEST['action']) {
 
         $catalogs = $_REQUEST['catalogs'] ? $_REQUEST['catalogs'] : Catalog::get_catalogs();
 
-        // Itterate throught the catalogs and gather as needed
+        // Iterate throught the catalogs and gather as needed
         foreach ($catalogs as $catalog_id) {
             $catalog = new Catalog($catalog_id);
             require Config::get('prefix') . '/templates/show_gather_art.inc.php';

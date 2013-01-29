@@ -474,7 +474,7 @@ class Tag extends database_object {
 
         $results = '';
 
-        // Itterate through the tags, format them according to type and element id
+        // Iterate through the tags, format them according to type and element id
         foreach ($tags as $tag_id=>$value) {
             $tag = new Tag($tag_id);
             $tag->format($type,$element_id);

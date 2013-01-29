@@ -91,7 +91,7 @@ switch ($_REQUEST['action']) {
         if (!$playlist_id) { break; }
         $playlist = new Playlist($playlist_id);
 
-        // Itterate through and add them to our new playlist
+        // Iterate through and add them to our new playlist
         foreach ($objects as $object_data) {
             // For now only allow songs on here, we'll change this later
             $type = array_shift($object_data);
@@ -122,7 +122,7 @@ switch ($_REQUEST['action']) {
 
         $songs = array();
 
-        // Itterate through and add them to our new playlist
+        // Iterate through and add them to our new playlist
         foreach ($objects as $element) {
             $type = array_shift($element);
             switch ($type) {

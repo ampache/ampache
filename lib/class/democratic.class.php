@@ -344,7 +344,7 @@ class Democratic extends Tmp_Playlist {
      */
     public function add_vote($items) {
 
-        /* Itterate through the objects if no vote, add to playlist and vote */
+        /* Iterate through the objects if no vote, add to playlist and vote */
         foreach ($items as $element) {
             $type = array_shift($element);
             $object_id = array_shift($element);

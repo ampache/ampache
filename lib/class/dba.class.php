@@ -487,7 +487,7 @@ class Dba {
             $sql = "ALTER TABLE `" . $row['0'] . "`  DEFAULT CHARACTER SET $target_charset COLLATE $target_collation";
             $alter_table = Dba::write($sql);
 
-            // Itterate through the columns of the table
+            // Iterate through the columns of the table
             while ($table = Dba::fetch_assoc($describe_results)) {
                 if (
                 (strpos($table['Type'], 'varchar') !== false) ||

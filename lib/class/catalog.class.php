@@ -1183,7 +1183,7 @@ class Catalog extends database_object {
                 Error::display('general'); 
                 flush(); 
             }            
-            // itterate the songs we retrieved and insert them
+            // iterate the songs we retrieved and insert them
             foreach ($songs as $data) { 
                 if (!$this->insert_remote_song($data['song'])) { 
                     debug_event('REMOTE_INSERT','Remote Insert failed, see previous log messages -' . $data['song']['self']['id'],'1'); 
