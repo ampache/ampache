@@ -55,7 +55,9 @@ class Dba {
      * query
      */
     public static function query($sql, $params) {
-        debug_event('Query', $sql . ' ' . json_encode($params), 6);
+        // json_encode throws errors about UTF-8 cleanliness, which we don't
+        // care about here.
+        debug_event('Query', $sql . ' ' . @json_encode($params), 6);
 
         // Run the query
         if ($params) {
