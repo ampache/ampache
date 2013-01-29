@@ -44,7 +44,7 @@ class Stream_Playlist {
             Stream::set_session($id);
         }
 
-        $this->id = Dba::escape(Stream::$session);
+        $this->id = Stream::$session;
 
         if (!Session::exists('stream', $this->id)) {
             debug_event('stream_playlist', 'Session::exists failed', 2);
@@ -53,11 +53,9 @@ class Stream_Playlist {
 
         $this->user = intval($GLOBALS['user']->id);
 
-        $sql = "SELECT * FROM `stream_playlist` WHERE `sid`='" .
-            $this->id . "' ORDER BY `id`";
+        $sql = 'SELECT * FROM `stream_playlist` WHERE `sid` = ? ORDER BY `id`';
+        $db_results = Dba::read($sql, array($this->id));
 
-        $db_results = Dba::read($sql);
-        
         while ($row = Dba::fetch_assoc($db_results)) {
             $this->urls[] = new Stream_URL($row);
         }
@@ -71,24 +69,25 @@ class Stream_Playlist {
         $sql = 'INSERT INTO `stream_playlist` ';
 
         $fields[] = '`sid`';
-        $values[] = Dba::escape($this->id);
+        $values[] = $this->id;
+        $holders[] = '?';
 
         foreach ($url->properties as $field) {
             if ($url->$field) {
                 $fields[] = '`' . $field . '`';
-                $values[] = Dba::escape($url->$field);
+                $holders[] = '?';
+                $values[] = $url->$field;
             }
         }
         $sql .= '(' . implode(', ', $fields) . ') ';
-        $sql .= "VALUES('" . implode("', '", $values) . "')";
+        $sql .= 'VALUES(' . implode(', ', $holders) . ')';
 
-        return Dba::write($sql);
+        return Dba::write($sql, $values);
     }
 
     public static function gc() {
-        $sql = 'DELETE FROM `stream_playlist` ' .
-            'USING `stream_playlist` LEFT JOIN `session` ' .
-            'ON `session`.`id`=`stream_playlist`.`sid` ' .
+        $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` ' .
+            'LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` ' .
             'WHERE `session`.`id` IS NULL';
         return Dba::write($sql);
     }
