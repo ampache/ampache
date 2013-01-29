@@ -186,11 +186,9 @@ class Update {
                 '- Added Random Method and Object Count Preferences.<br />' .
                 '- Removed some unused tables/fields.<br />' .
                 '- Added Label, Catalog # and Language to Extended Song Data Table.';
-
         $version[] = array('version' => '340001','description' => $update_string);
 
         $update_string = '- Added Offset Limit to Preferences and removed from user table.';
-
         $version[] = array('version' => '340002','description' => $update_string);
 
         $update_string = '- Moved Art from the Album table into album_data to improve performance.<br />' .
@@ -199,43 +197,35 @@ class Update {
                 '- Added Playlist Method and Rate Limit Preferences.<br />' .
                 '- Renamed preferences and ratings to preference and rating to fit table pattern.<br />' .
                 '- Fixed rating table, renamed user_rating to rating and switched 00 for -1.<br />';
-
         $version[] = array('version' => '340003','description' => $update_string);
 
         $update_string = '- Alter the Session.id to be VARCHAR(64) to account for all potential configs.<br />' .
                 '- Added new user_shout table for Sticky objects / shoutbox.<br />' .
                 '- Added new playlist preferences, and new preference catagory of playlist.<br />' .
                 '- Tweaked Now Playing Table.<br />';
-
         $version[] = array('version' => '340004','description' => $update_string);
 
         $update_string = '- Altered Ratings table so the fields make more sense.<br />' .
                 '- Moved Random Method to Playlist catagory.<br />' .
                 '- Added Transcode Method to Streaming.<br />';
-
         $version[] = array('version' => '340005','description' => $update_string);
 
         $update_string = '- Remove Random Method config option, ended up being useless.<br />' .
                 '- Check and change album_data.art to a MEDIUMBLOB if needed.<br />';
-
         $version[] = array('version' => '340006','description' => $update_string);
 
-        $update_string = '- Added new session_stream table for sessions tied directly to stream instances.<br />' .
-                '- Altered the session table, making value a LONGTEXT.<br />';
-
+        $update_string = '- Altered the session table, making value a LONGTEXT.<br />';
         $version[] = array('version' => '340007','description' => $update_string);
 
         $update_string = '- Modified Playlist_Data table to account for multiple object types.<br />' .
                 '- Verified previous updates, adjusting as needed.<br />' .
                 '- Dropped Allow Downsampling pref, configured in cfg file.<br />' .
                 '- Renamed Downsample Rate --> Transcode Rate to reflect new terminiology.<br />';
-
         $version[] = array('version' => '340008','description' => $update_string);
 
         $update_string = '- Added disk to Album table.<br />' .
                 '- Added artist_data for artist images and bios.<br />' .
                 '- Added DNS to access list to allow for dns based ACLs.<br />';
-
         $version[] = array('version' => '340009','description' => $update_string);
 
         $update_string = '- Removed Playlist Add preference.<br />' .
@@ -244,73 +234,53 @@ class Update {
                 '- Change wording on Localplay preferences.<br />';
         $version[] = array('version' => '340010','description'=>$update_string);
 
-        $update_string =  '- Added api session table, will eventually recombine with others.<br />';
-
-        $version[] = array('version' => '340011','description'=>$update_string);
-
         $update_string = '- Added Democratic Table for new democratic play features.<br />' .
                 '- Added Add Path to Catalog to improve add speeds on large catalogs.<br />';
-
         $version[] = array('version' => '340012','description'=>$update_string);
 
         $update_string = '- Removed Unused Preferences.<br />' .
                 '- Changed Localplay Config to Localplay Access.<br />' .
                 '- Changed all XML-RPC acls to RPC to reflect inclusion of new API.<br />';
-
         $version[] = array('version' => '340013','description'=>$update_string);
 
         $update_string = '- Removed API Session table, been a nice run....<br />' .
                 '- Alterted Session table to handle API sessions correctly.<br />';
-
         $version[] = array('version' => '340014','description'=>$update_string);
 
         $update_string = '- Alter Playlist Date Field to fix issues with some MySQL configurations.<br />' .
                 '- Alter Rating type to correct AVG issue on searching.<br />';
-
         $version[] = array('version' => '340015','description'=>$update_string);
 
         $update_string = '- Alter the Democratic Playlist table, adding base_playlist.<br />' .
                 '- Alter tmp_playlist to account for Democratic changes.<br />' .
                 '- Cleared Existing Democratic playlists due to changes.<br />';
-
         $version[] = array('version' => '340016','description'=>$update_string);
 
         $update_string = '- Fix Tables for new Democratic Play methodology.<br />';
-
         $version[] = array('version' => '340017','description'=>$update_string);
-
-        $update_string = '- Attempt to detect and correct charset issues between filesystem and database.<br />';
-
-        $version[] = array('version' => '340018','description'=>$update_string);
 
         $update_string = '- Modify the Tag tables so that they actually work.<br />' .
                 '- Alter the Prefix fields to allow for more prefixs.<br />';
-
         $version[] = array('version' => '350001','description'=>$update_string);
 
         $update_string = '- Remove Genre Field from song table.<br />' .
                 '- Add user_catalog table for tracking user<-->catalog mappings.<br />' .
                 '- Add tmp_browse to handle caching rather then session table.<br />';
-
         $version[] = array('version' => '350002','description'=>$update_string);
 
         $update_string = '- Modify Tag tables.<br />' .
                 '- Remove useless config preferences.<br />';
-
         $version[] = array('version'=> '350003','description'=>$update_string);
 
         $update_string = '- Modify ACL table to enable IPv6 ACL support<br />' .
                 '- Modify Session Tables to store IPv6 addresses if provided<br />' .
                 '- Modify IP History table to store IPv6 addresses and User Agent<br />';
-
         $version[] = array('version'=>'350004','description'=>$update_string);
 
         $update_string = "- Add table for Video files<br />";
-
         $version[] = array('version'=>'350005','description'=>$update_string);
 
         $update_string = "- Add data for Lyrics<br />";
-
         $version[] = array('version'=>'350006','description'=>$update_string);
 
         $update_string = '- Remove unused fields from catalog, playlist, playlist_data<br />' .
@@ -318,7 +288,6 @@ class Update {
                 '- Add last_clean to catalog table<br />' .
                 '- Add track to tmp_playlist_data<br />' .
                 '- Increase Thumbnail blob size<br />';
-
         $version[] = array('version'=>'350007','description'=>$update_string);
 
         $update_string = '- Modify Now Playing table to handle Videos<br />' .
@@ -326,12 +295,10 @@ class Update {
                 '- Add missing indexes to the _data tables<br />' .
                 '- Drop unused song.hash<br />' .
                 '- Add addition_time and update_time to video table<br />';
-
         $version[] = array('version'=>'350008','description'=>$update_string);
 
         $update_string = '- Add MBID (MusicBrainz ID) fields<br />' .
                 '- Remove useless preferences<br />';
-
         $version[] = array('version'=>'360001','description'=>$update_string);
 
         $update_string = '- Add Bandwidth and Feature preferences to simplify how interface is presented<br />' .
@@ -339,7 +306,6 @@ class Update {
                 '- Increase Filename lengths to 4096<br />' .
                 '- Remove useless "KEY" reference from ACL and Catalog tables<br />' .
                 '- Add new Remote User / Remote Password fields to Catalog<br />';
-
         $version[] = array('version'=>'360002','description'=>$update_string);
 
         $update_string = '- Add image table to store images.<br />' .
@@ -354,9 +320,6 @@ class Update {
 
         $update_string = '- Add table for dynamic playlists.<br />';
         $version[] = array('version' => '360006','description' => $update_string);
-
-        $update_string = '- Add local auth method to session.type.<br />';
-        $version[] = array('version' => '360007','description' => $update_string);
 
         $update_string = '- Verify remote_username and remote_password were added correctly to catalog table.<br />';
         $version[] = array('version' => '360008','description' => $update_string); 
@@ -374,7 +337,7 @@ class Update {
         $version[] = array('version' => '360012', 'description' => $update_string);
         return $version;
 
-    } // populate_version
+    }
 
     /**
      * display_update
@@ -669,8 +632,8 @@ class Update {
         $sql = "ALTER TABLE `user_vote` ADD INDEX(`date`)";
         $retval = Dba::write($sql) ? $retval : false;
 
-        // Add the thumb fields to album
-        $sql = "ALTER TABLE `album` ADD `thumb` TINYBLOB NULL ,ADD `thumb_mime` VARCHAR( 128 ) NULL";
+        $sql = "ALTER TABLE `album` ADD `thumb` TINYBLOB NULL ,ADD `thumb_mime` 
+        VARCHAR( 128 ) NULL";
         $db_results = Dba::write($sql);
 
         // Now add in the min_object_count preference and the random_method
@@ -768,10 +731,8 @@ class Update {
             $id = $data['id'];
             $art = Dba::escape($data['art']);
             $art_mime = Dba::escape($data['art_mime']);
-            $thumb = Dba::escape($data['thumb']);
-            $thumb_mime = Dba::escape($data['thumb_mime']);
-            $sql = "INSERT INTO `album_data` (`album_id`,`art`,`art_mime`,`thumb`,`thumb_mime`)" .
-                " VALUES ('$id','$art','$art_mime','$thumb','$thumb_mime')";
+            $sql = "INSERT INTO `album_data` (`album_id`,`art`,`art_mime`)" .
+                " VALUES ('$id','$art','$art_mime')";
             $retval = Dba::write($sql) ? $retval : false;
         } // end while
 
@@ -909,25 +870,9 @@ class Update {
      * and removes the random_method config option
      */
     public static function update_340006() {
-        $retval = true;
-        $sql = "DESCRIBE `album_data`";
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            if ($row['Field'] == 'art' AND $row['Type'] == 'blob') {
-                $blob_needed = true;
-            }
-        } // end while
-        if ($blob_needed) {
-            $sql = "ALTER TABLE `album_data` CHANGE `art` `art` MEDIUMBLOB NULL DEFAULT NULL";
-            $retval = Dba::write($sql) ? $retval : false;
-        }
-
         // No matter what remove that random method preference
-        $sql = "DELETE FROM `preference` WHERE `name`='random_method'";
-        $retval = Dba::write($sql) ? $retval : false;
-
-        return $retval;
+        Dba::write("DELETE FROM `preference` WHERE `name`='random_method'");
+        return true;
     }
 
     /**
@@ -941,18 +886,6 @@ class Update {
         $sql = "ALTER TABLE `session` CHANGE `value` `value` LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL";
         $retval = Dba::write($sql) ? $retval : false;
 
-        // Create the new stream table where we will store stream SIDs
-        $sql = "CREATE TABLE `session_stream` ( " .
-            "`id` VARCHAR( 64 ) NOT NULL , " .
-            "`user` INT( 11 ) UNSIGNED NOT NULL , " .
-            "`agent` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL , " .
-            "`expire` INT( 11 ) UNSIGNED NOT NULL , " .
-            "`ip` INT( 11 ) UNSIGNED NULL , " .
-            "PRIMARY KEY ( `id` ) " .
-            ") ENGINE = MYISAM";
-        $retval = Dba::write($sql) ? $retval : false;
-
-        // Change the now playing to use stream session ids for its ID
         $sql = "ALTER TABLE `now_playing` CHANGE `id` `id` VARCHAR( 64 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL";
         $retval = Dba::write($sql) ? $retval : false;
 
@@ -988,8 +921,8 @@ class Update {
         $sql = "UPDATE `preference` SET `description`='Transcode Bitrate' WHERE `name`='sample_rate'";
         $retval = Dba::write($sql) ? $retval : false;
 
-        // Check for old tables and drop if found, seems like there was a glitch that caused them
-        // not to get droped.. *shrug*
+        // Check for old tables and drop if found, seems like there was a glitch
+        // that caused them not to get dropped.. *shrug*
         $sql = "DROP TABLE IF EXISTS `preferences`";
         $retval = Dba::write($sql) ? $retval : false;
 
@@ -1055,26 +988,6 @@ class Update {
     }
 
     /**
-     * update_340011
-     * This updates the democratic play stuff so that can handle a little more complext mojo
-     * It also adds yet another table to the db to handle the sessions for API access. Eventually
-     * should combine all of the session tables, but I'll do that later
-     */
-    public static function update_340011() {
-        // First add the new table for the new session stuff
-        $sql = "CREATE TABLE `session_api` ( " .
-            "`id` VARCHAR( 64 ) NOT NULL , " .
-            "`user` INT( 11 ) UNSIGNED NOT NULL , " .
-            "`agent` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL , " .
-            "`level` INT( 11 ) UNSIGNED NOT NULL DEFAULT '0', " .
-            "`expire` INT( 11 ) UNSIGNED NOT NULL , " .
-            "`ip` INT( 11 ) UNSIGNED NULL , " .
-            "PRIMARY KEY ( `id` ) " .
-            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-        return Dba::write($sql);
-    }
-
-    /**
      * update_340012
      * This update adds in the democratic stuff, checks for some potentially screwed up indexes
      * and removes the timestamp from the playlist, and adds the field to the catalog for the upload dir
@@ -1133,7 +1046,7 @@ class Update {
      */
     public static function update_340014() {
         $retval = true;
-        $sql = "DROP TABLE `session_api`";
+        $sql = "DROP TABLE IF EXISTS `session_api`";
         $retval = Dba::write($sql) ? $retval : false;
 
         $sql = "ALTER TABLE `session` CHANGE `type` `type` ENUM ('mysql','ldap','http','api','xml-rpc') NOT NULL";
@@ -1224,16 +1137,6 @@ class Update {
     }
 
     /**
-     * update_340018
-     *
-     * This attempts to correct the charset on your database.
-     */
-    public static function update_340018() {
-        // FIXME: when we're cleaning up the updates, drop this one.
-        return true;
-    }
-
-    /**
      * update_350001
      *
      * This updates modifies the tag tables per codeunde1load's specs from his
@@ -1271,12 +1174,6 @@ class Update {
      */
     public static function update_350002() {
         $retval = true;
-        $sql = "CREATE TABLE `tmp_browse` (`sid` varchar(128) NOT NULL,`data` longtext NOT NULL," .
-            " UNIQUE KEY `sid` (`sid`)) ENGINE=MyISAM";
-        $retval = Dba::write($sql) ? $retval : false;
-
-        $sql = "ALTER TABLE `tmp_browse` ADD INDEX ( `type` )";
-        $retval = Dba::write($sql) ? $retval : false;
 
         $sql = "ALTER TABLE `song` DROP `genre`";
         $retval = Dba::write($sql) ? $retval : false;
@@ -1330,9 +1227,6 @@ class Update {
         $retval = true;
 
         $sql = "ALTER TABLE `session` CHANGE `ip` `ip` VARBINARY( 255 ) NULL";
-        $retval = Dba::write($sql) ? $retval : false;
-
-        $sql = "ALTER TABLE `session_stream` CHANGE `ip` `ip` VARBINARY( 255 ) NULL";
         $retval = Dba::write($sql) ? $retval : false;
 
         // Pull all of the IP history, this could take a while
@@ -1497,13 +1391,6 @@ class Update {
         $sql = "UPDATE `artist_data` SET `thumb`=NULL,`thumb_mime`=NULL";
         Dba::write($sql);
 
-        // Change the db thumb sizes
-        $sql = "ALTER TABLE `album_data` CHANGE `thumb` `thumb` MEDIUMBLOB NULL";
-        $retval = Dba::write($sql) ? $retval : false;
-
-        $sql = "ALTER TABLE `artist_data` CHANGE `thumb` `thumb` MEDIUMBLOB NULL";
-        $retval = Dba::write($sql) ? $retval : false;
-
         // Remove dead column
         $sql = "ALTER TABLE `playlist_data` DROP `dynamic_song`";
         $retval = Dba::write($sql) ? $retval : false;
@@ -1575,18 +1462,6 @@ class Update {
         $retval = Dba::write($sql) ? $retval : false;
 
         $sql = "ALTER TABLE `video` ADD INDEX (`update_time`)";
-        $retval = Dba::write($sql) ? $retval : false;
-
-        $sql = "ALTER TABLE `artist_data` ADD INDEX ( `art_mime` )";
-        $retval = Dba::write($sql) ? $retval : false;
-
-        $sql = "ALTER TABLE `album_data` ADD INDEX ( `art_mime` )";
-        $retval = Dba::write($sql) ? $retval : false;
-
-        $sql = "ALTER TABLE `tmp_browse` ADD `type` VARCHAR ( 255 ) NOT NULL AFTER `sid`";
-        $retval = Dba::write($sql) ? $retval : false;
-
-        $sql = "ALTER TABLE `tmp_browse` ADD INDEX (`type)";
         $retval = Dba::write($sql) ? $retval : false;
 
         $sql = "ALTER TABLE `song` DROP `hash`";
@@ -1738,7 +1613,7 @@ class Update {
     public static function update_360005() {
         $retval = true;
 
-        $sql = "DROP TABLE `tmp_browse`";
+        $sql = "DROP TABLE IF EXISTS `tmp_browse`";
         $retval = Dba::write($sql) ? $retval : false;
 
         $sql = "CREATE TABLE `tmp_browse` (" .
@@ -1768,17 +1643,6 @@ class Update {
         `logic_operator` varchar(3) CHARACTER SET utf8 DEFAULT NULL,
         PRIMARY KEY (`id`)
         ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8";
-        return Dba::write($sql);
-    }
-
-    /**
-     * update_360007
-     *
-     * This fixes the session table
-     */
-    public static function update_360007() {
-        // FIXME: Drop this
-        $sql = "ALTER TABLE `session` MODIFY `type` ENUM ('mysql','ldap','http','api','xml-rpc','local') NOT NULL";
         return Dba::write($sql);
     }
 
