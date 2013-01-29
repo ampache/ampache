@@ -54,7 +54,7 @@ function send_newpassword($email,$current_ip){
         $newpassword = generate_password(6);
         $client->update_password($newpassword);
 
-        $mailer = new Ampache_Mail();
+        $mailer = new Mailer();
         $mailer->set_default_sender();
         $mailer->subject = T_("Lost Password");
         $mailer->recipient_name = $client->fullname;

@@ -43,7 +43,7 @@ class Registration {
      * This sends the confirmation e-mail for the specified user
      */
     public static function send_confirmation($username, $fullname, $email, $password, $validation) {
-        $mailer = new Ampache_Mail();
+        $mailer = new Mailer();
 
         // We are the system
         $mailer->set_default_sender();
