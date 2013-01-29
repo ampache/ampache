@@ -92,12 +92,12 @@ class Ampache_Mail {
                 $sql = "SELECT * FROM `user` WHERE `access`='100' AND `email` IS NOT NULL";
             break ;
             case 'inactive':
-                $inactive = time() - (30*86400);
-                $sql = "SELECT * FROM `user` WHERE `last_seen` <= '$inactive' AND `email` IS NOT NULL";
+                $inactive = time() - (30 * 86400);
+                $sql = 'SELECT * FROM `user` WHERE `last_seen` <= ? AND `email` IS NOT NULL';
             break;
         } // end filter switch
 
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, isset($inactive) ? array($inactive) : null);
 
         $results = array();
 
