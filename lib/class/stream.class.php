@@ -163,67 +163,64 @@ class Stream {
 
         return $sample_rate;
 
-    } // validate_bitrate
+    }
 
 
     /**
-      * gc_now_playing
+     * gc_now_playing
+     *
      * This will garbage collect the now playing data,
-     * this is done on every play start
+     * this is done on every play start.
      */
     public static function gc_now_playing() {
 
         // Remove any now playing entries for sessions that have been GC'd
         $sql = "DELETE FROM `now_playing` USING `now_playing` " .
-            "LEFT JOIN `session` ON `session`.`id`=`now_playing`.`id` " .
+            "LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` " .
             "WHERE `session`.`id` IS NULL OR `now_playing`.`expire` < '" . time() . "'";
         $db_results = Dba::write($sql);
 
-    } // gc_now_playing
+    }
 
     /**
-      * insert_now_playing
-     * This will insert the now playing data
-     * This fucntion is used by the /play/index.php song
-     * primarily, but could be used by other people
+     * insert_now_playing
+     *
+     * This will insert the now playing data.
      */
-    public static function insert_now_playing($oid,$uid,$length,$sid,$type) {
+    public static function insert_now_playing($oid, $uid, $length, $sid, $type) {
+        $time = intval(time() + $length);
+        $type = strtolower($type);
 
-        $time = intval(time()+$length);
-        $session_id = Dba::escape($sid);
-        $object_type = Dba::escape(strtolower($type));
-
-        // Do a replace into ensuring that this client always only has a single row
-        $sql = "REPLACE INTO `now_playing` (`id`,`object_id`,`object_type`, `user`, `expire`)" .
-            " VALUES ('$session_id','$oid','$object_type', '$uid', '$time')";
-        $db_result = Dba::write($sql);
-
-    } // insert_now_playing
+        // Ensure that this client only has a single row
+        $sql = 'REPLACE INTO `now_playing` ' .
+            '(`id`,`object_id`,`object_type`, `user`, `expire`) ' .
+            'VALUES (?, ?, ?, ?, ?)';
+        $db_result = Dba::write($sql, array($sid, $oid, $type, $uid, $time));
+    }
 
      /**
       * clear_now_playing
-      * There really isn't anywhere else for this function, shouldn't have deleted it in the first
-      * place
+      *
+      * There really isn't anywhere else for this function, shouldn't have
+      * deleted it in the first place.
       */
     public static function clear_now_playing() {
-
-        $sql = "TRUNCATE `now_playing`";
+        $sql = 'TRUNCATE `now_playing`';
         $db_results = Dba::write($sql);
 
         return true;
-
-    } // clear_now_playing
+    }
 
     /**
      * get_now_playing
+     *
      * This returns the now playing information
      */
     public static function get_now_playing($filter=NULL) {
 
-        $sql = "SELECT `session`.`agent`,`now_playing`.* " .
-            "FROM `now_playing` " .
-            "LEFT JOIN `session` ON `session`.`id`=`now_playing`.`id` " .
-            "ORDER BY `now_playing`.`expire` DESC";
+        $sql = 'SELECT `session`.`agent`, `now_playing`.* FROM `now_playing` ' .
+            'LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` ' .
+            'ORDER BY `now_playing`.`expire` DESC';
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -233,7 +230,12 @@ class Stream {
             $media = new $type($row['object_id']);
             $media->format();
             $client = new User($row['user']);
-            $results[] = array('media'=>$media,'client'=>$client,'agent'=>$row['agent'],'expire'=>$row['expire']);
+            $results[] = array(
+                'media' => $media,
+                'client' => $client,
+                'agent' => $row['agent'],
+                'expire' => $row['expire']
+            );
         } // end while
 
         return $results;
@@ -241,38 +243,35 @@ class Stream {
     } // get_now_playing
 
     /**
-      * check_lock_media
-     * This checks to see if the media is already being played, if it is then it returns false
-     * else return true
+     * check_lock_media
+     *
+     * This checks to see if the media is already being played.
      */
-    public static function check_lock_media($media_id,$type) {
-
-        $media_id = Dba::escape($media_id);
-        $type = Dba::escape($type);
-
-        $sql = "SELECT `object_id` FROM `now_playing` WHERE `object_id`='$media_id' AND `object_type`='$type'";
-        $db_results = Dba::read($sql);
+    public static function check_lock_media($media_id, $type) {
+        $sql = 'SELECT `object_id` FROM `now_playing` WHERE ' .
+            '`object_id` = ? AND `object_type` = ?';
+        $db_results = Dba::read($sql, array($media_id, $type));
 
         if (Dba::num_rows($db_results)) {
-            debug_event('Stream','Unable to play media currently locked by another user','3');
+            debug_event('Stream', 'Unable to play media currently locked by another user', 3);
             return false;
         }
 
         return true;
-
-    } // check_lock_media
+    }
 
     /**
      * auto_init
      * This is called on class load it sets the session
      */
     public static function _auto_init() {
-        // Generate the session ID
+        // Generate the session ID.  This is slightly wasteful.
         self::$session = Session::create(array('type' => 'stream'));
     }
 
     /**
      * run_playlist_method
+     *
      * This takes care of the different types of 'playlist methods'. The
      * reason this is here is because it deals with streaming rather than
      * playlist mojo. If something needs to happen this will echo the
