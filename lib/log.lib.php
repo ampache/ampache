@@ -49,12 +49,11 @@ function log_event($username, $event_name, $event_description, $log_name) {
 
 /*
  * ampache_error_handler
+ *
  * An error handler for ampache that traps as many errors as it can and logs
  * them.
-*/
+ */
 function ampache_error_handler($errno, $errstr, $errfile, $errline) {
-
-    /* Default level of 1 */
     $level = 1;
 
     switch ($errno) {
@@ -108,15 +107,19 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
         }
     }
 
-    if (strpos($errstr,"date.timezone") !== false) {
+    if (error_reporting() == 0) {
+        // Ignored, probably via @. But not really, so use the super-sekrit level
+        $level = 7;
+    }
+
+    if (strpos($errstr, 'date.timezone') !== false) {
         $error_name = 'Warning';
         $errstr = 'You have not set a valid timezone (date.timezone) in your php.ini file. This may cause display issues with dates. This warning is non-critical and not caused by Ampache.';
     }
 
     $log_line = "[$error_name] $errstr in file $errfile($errline)";
     debug_event('PHP', $log_line, $level, '', 'ampache');
-
-} // ampache_error_handler
+}
 
 /**
  * debug_event
