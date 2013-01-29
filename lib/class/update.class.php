@@ -84,7 +84,9 @@ class Update {
         /* Make sure that update_info exits */
         $sql = "SHOW TABLES LIKE 'update_info'";
         $db_results = Dba::read($sql);
-        if (!is_resource(Dba::dbh())) { header("Location: test.php"); }
+        if (!Dba::dbh()) {
+            header("Location: test.php");
+        }
 
         // If no table
         if (!Dba::num_rows($db_results)) {

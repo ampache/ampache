@@ -42,7 +42,7 @@ class Session {
      * have a database connection, nothing more is needed.
      */
     public static function open($save_path, $session_name) {
-        if (!is_resource(Dba::dbh())) {
+        if (!Dba::dbh()) {
             debug_event('session', 'Error: no database connection session failed', 1);
             return false;
         }
@@ -82,7 +82,7 @@ class Session {
 
         debug_event('session', 'Writing to ' . $key . ' with expire ' . $expire . ' ' . Dba::error(), 6);
 
-        return $db_results;
+        return true;
     }
 
     /**
