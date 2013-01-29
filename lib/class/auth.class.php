@@ -30,26 +30,28 @@ class Auth {
 
     /**
      * Constructor
+     *
      * This should never be called
      */
     private function __construct() {
         // Rien a faire
-    } // __construct
+    }
 
     /**
      * logout
-     * This is called when you want to log out and nuke your session
+     *
+     * This is called when you want to log out and nuke your session.
      * This is the function used for the Ajax logouts, if no id is passed
-     * it tries to find one from the session
+     * it tries to find one from the session,
      */
-    public static function logout($key='', $relogin=true) {
+    public static function logout($key='', $relogin = true) {
 
         // If no key is passed try to find the session id
         $key = $key ? $key : session_id();
 
         // Nuke the cookie before all else
         Session::destroy($key);
-        if ((! $relogin) && Config::get('logout_redirect')) {
+        if ((!$relogin) && Config::get('logout_redirect')) {
             $target = Config::get('logout_redirect');
         }
         else {
@@ -79,8 +81,7 @@ class Auth {
         }
 
         exit;
-
-    } // logout
+    }
 
     /**
      * login
@@ -89,11 +90,7 @@ class Auth {
      * based on what happens when we try to do the auth.
      */
     public static function login($username, $password) {
-
-        // Foreach the auth methods
         foreach (Config::get('auth_methods') as $method) {
-
-            // Build the function name and call it
             $function_name = $method . '_auth';
 
             if (!method_exists('Auth', $function_name)) { 
@@ -101,14 +98,10 @@ class Auth {
             }
 
             $results = self::$function_name($username, $password);
-
-            // If we achieve victory return
             if ($results['success']) { break; }
-
-        } // end foreach
+        }
 
         return $results;
-
     }
 
     /**
@@ -118,49 +111,45 @@ class Auth {
      */
     private static function mysql_auth($username, $password) {
 
-        $username = Dba::escape($username);
-
         if (strlen($password) && strlen($username)) {
-            $sql = "SELECT `password` FROM `user` WHERE " .
-                "`username`='$username'";
-            $db_results = Dba::read($sql);
+            $sql = 'SELECT `password` FROM `user` WHERE `username` = ?';
+            $db_results = Dba::read($sql, array($username));
+
             if ($row = Dba::fetch_assoc($db_results)) {
-
                 // Use SHA2 now... cooking with fire.
-                // For backwards compatibility, we hash a couple
-                // of different variations of the password.  
-                // Increases collision chances, but doesn't
-                // break things.
+                // For backwards compatibility we hash a couple of different
+                // variations of the password. Increases collision chances, but
+                // doesn't break things.
+                // FIXME: Break things in the future.
                 $hashed_password[] = hash('sha256', $password);
-                $hashed_password[] = hash('sha256', 
-                    Dba::escape(scrub_in($password)));
+                $hashed_password[] = hash('sha256', Dba::escape(scrub_in($password)));
 
-                // Automagically update the password if it's 
-                // old and busted.
-                if($row['password'] == $hashed_password[1] &&
+                // Automagically update the password if it's old and busted.
+                if ($row['password'] == $hashed_password[1] &&
                     $hashed_password[0] != $hashed_password[1]) {
                     $user = User::get_from_username($username);
                     $user->update_password($password);
                 }
 
-                if(in_array($row['password'], $hashed_password)) {
-                    $results['success']    = true;
-                    $results['type']    = 'mysql';
-                    $results['username']    = $username;
-                    return $results;
+                if (in_array($row['password'], $hashed_password)) {
+                    return array(
+                        'success' => true,
+                        'type' => 'mysql',
+                        'username' => $username
+                    );
                 }
             }
         }
 
-        // Default to failure
-        $results['success']    = false;
-        $results['error']    = 'MySQL login attempt failed';
-        return $results;
-
+        return array(
+            'success' => false,
+            'error' => 'MySQL login attempt failed'
+        );
     }
 
     /**
      * pam_auth
+     *
      * Check to make sure the pam_auth function is implemented (module is 
      * installed), then check the credentials.
      */
