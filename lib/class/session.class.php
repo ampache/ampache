@@ -380,27 +380,21 @@ class Session {
      * ungimp_ie
      *
      * This function sets the cache limiting to public if you are running
-     * some flavor of IE. The detection used here is very conservative so
-     * feel free to fix it. This only has to be done if we're rolling HTTPS.
+     * some flavor of IE and not using HTTPS.
      */
     public static function ungimp_ie() {
-
         // If no https, no ungimpage required
         if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'on') {
             return true;
         }
 
-        // Try to detect IE
-        $agent = trim($_SERVER['HTTP_USER_AGENT']);
-
-        if ((strpos($agent, 'MSIE') !== false) ||
-            (strpos($agent,'Internet Explorer/') !== false)) {
+        $browser = new Horde_Browser();
+        if ($browser->isBrowser('msie')) {
             session_cache_limiter('public');
         }
 
         return true;
-
-    } // ungimp_ie
+    }
 
 } 
 ?>
