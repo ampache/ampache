@@ -55,6 +55,8 @@ class Dba {
      * query
      */
     public static function query($sql, $params) {
+        debug_event('Query', $sql . ' ' . json_encode($params), 6);
+
         // Run the query
         if ($params) {
             $stmt = self::dbh()->prepare($sql);
@@ -63,8 +65,6 @@ class Dba {
         else {
             $stmt = self::dbh()->query($sql);
         }
-
-        debug_event('Query', $sql . ' ' . json_encode($params), 6);
 
         // Save the query, to make debug easier
         self::$_sql = $sql;

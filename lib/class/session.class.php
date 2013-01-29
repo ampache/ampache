@@ -43,7 +43,7 @@ class Session {
      */
     public static function open($save_path, $session_name) {
         if (!Dba::dbh()) {
-            debug_event('session', 'Error: no database connection session failed', 1);
+            debug_event('session', 'Could not start session, no database connection', 1);
             return false;
         }
 
@@ -65,22 +65,22 @@ class Session {
      * This saves the session information into the database.
      */
     public static function write($key, $value) {
-        if (defined('NO_SESSION_UPDATE')) { return true; }
+        if (defined('NO_SESSION_UPDATE')) {
+            return true;
+        }
 
         $length = Config::get('session_length');
-        $value = Dba::escape($value);
-        $key = Dba::escape($key);
+
         // Check to see if remember me cookie is set, if so use remember
         // length, otherwise use the session length
         $expire = isset($_COOKIE[Config::get('session_name') . '_remember']) 
             ? time() + Config::get('remember_length') 
             : time() + Config::get('session_length');
 
-        $sql = "UPDATE `session` SET `value`='$value', " .
-            "`expire`='$expire' WHERE `id`='$key'";
-        $db_results = Dba::read($sql);
+        $sql = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
+        $db_results = Dba::read($sql, array($value, $expire, $key));
 
-        debug_event('session', 'Writing to ' . $key . ' with expire ' . $expire . ' ' . Dba::error(), 6);
+        debug_event('session', 'Writing to ' . $key . ' with expire ' . $expire . ' [' . Dba::error() . ']', 6);
 
         return true;
     }
@@ -91,15 +91,14 @@ class Session {
      * This removes the specified session from the database.
      */
     public static function destroy($key) {
-        $key = Dba::escape($key);
 
         if (!strlen($key)) { return false; }
 
         // Remove anything and EVERYTHING
-        $sql = "DELETE FROM `session` WHERE `id`='$key'";
-        $db_results = Dba::write($sql);
+        $sql = 'DELETE FROM `session` WHERE `id` = ?';
+        $db_results = Dba::write($sql, array($key));
 
-        debug_event('SESSION', 'Deleting Session with key:' . $key, '6');
+        debug_event('SESSION', 'Deleting Session with key:' . $key, 6);
 
         // Destroy our cookie!
         setcookie(Config::get('session_name'), '', time() - 86400);
@@ -113,8 +112,8 @@ class Session {
      * This function is randomly called and it cleans up the spoo
      */
     public static function gc($maxlifetime) {
-        $sql = "DELETE FROM `session` WHERE `expire` < '" . time() . "'";
-        $db_results = Dba::write($sql);
+        $sql = 'DELETE FROM `session` WHERE `expire` < ?';
+        $db_results = Dba::write($sql, array(time()));
 
         // Also clean up things that use sessions as keys
         Query::gc();
@@ -139,10 +138,8 @@ class Session {
      * This returns the specified column from the session row.
      */
     private static function _read($key, $column) {
-        $key = Dba::escape($key);
-
-        $sql = "SELECT * FROM `session` WHERE `id`='$key' AND `expire` > '" . time() . "'";
-        $db_results = Dba::read($sql);
+        $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?';
+        $db_results = Dba::read($sql, array($key, time()));
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return $results[$column];
@@ -188,13 +185,11 @@ class Session {
             break;
         } // end switch on data type
 
-        $username = Dba::escape($data['username']);
-        $ip = $_SERVER['REMOTE_ADDR'] 
-            ? Dba::escape(inet_pton($_SERVER['REMOTE_ADDR'])) 
-            : '0';
-        $type = Dba::escape($data['type']);
-        $value = Dba::escape($data['value']);
-        $agent = Dba::escape(substr($_SERVER['HTTP_USER_AGENT'], 0, 254));
+        $username = $data['username'];
+        $ip = $_SERVER['REMOTE_ADDR'] ? inet_pton($_SERVER['REMOTE_ADDR']) : '0';
+        $type = $data['type'];
+        $value = $data['value'];
+        $agent = substr($_SERVER['HTTP_USER_AGENT'], 0, 254);
 
         if ($type == 'stream') {
             $expire = time() + Config::get('stream_length');
@@ -206,9 +201,9 @@ class Session {
         if (!strlen($value)) { $value = ' '; }
 
         /* Insert the row */
-        $sql = "INSERT INTO `session` (`id`,`username`,`ip`,`type`,`agent`,`value`,`expire`) " .
-            " VALUES ('$key','$username','$ip','$type','$agent','$value','$expire')";
-        $db_results = Dba::write($sql);
+        $sql = 'INSERT INTO `session` (`id`,`username`,`ip`,`type`,`agent`,`value`,`expire`) ' .
+            'VALUES (?, ?, ?, ?, ?, ?, ?)';
+        $db_results = Dba::write($sql, array($key, $username, $ip, $type, $agent, $value, $expire));
 
         if (!$db_results) {
             debug_event('session', 'Session creation failed', 1);
@@ -268,29 +263,24 @@ class Session {
         switch ($type) {
             case 'api':
             case 'stream':
-                $key = Dba::escape($key);
-                $time = time();
-                $sql = "SELECT * FROM `session` WHERE `id`='$key' AND " .
-                    "`expire` > '$time' AND `type` IN ('api', 'stream')";
-                $db_results = Dba::read($sql);
+                $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' .
+                    "AND `type` IN ('api', 'stream')";
+                $db_results = Dba::read($sql, array($key, time()));
 
                 if (Dba::num_rows($db_results)) {
                     return true;
                 }
             break;
             case 'interface':
-                $key = Dba::escape($key);
-                $time = time();
                 // Build a list of enabled authentication types
                 $types = Config::get('auth_methods');
                 if (!Config::get('use_auth')) {
                     $types[] = '';
                 }
                 $enabled_types = implode("','", $types);
-                $sql = "SELECT * FROM `session` WHERE " .
-                    "`id`='$key' AND `expire` > '$time' " .
-                    "AND `type` IN('$enabled_types')"; 
-                $db_results = Dba::read($sql);
+                $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' .
+                    "AND `type` IN('$enabled_types')";
+                $db_results = Dba::read($sql, array($key, time()));
 
                 if (Dba::num_rows($db_results)) {
                     return true;
@@ -299,11 +289,10 @@ class Session {
             default:
                 return false;
             break;
-        } // type
+        }
 
         // Default to false
         return false;
-
     }
 
     /**
@@ -313,7 +302,6 @@ class Session {
      */
     public static function extend($sid, $type = null) {
         $time = time();
-        $sid = Dba::escape($sid);
         $expire = isset($_COOKIE[Config::get('session_name') . '_remember']) 
             ? $time + Config::get('remember_length') 
             : $time + Config::get('session_length');
@@ -322,8 +310,8 @@ class Session {
             $expire = $time + Config::get('stream_length');
         }
 
-        $sql = "UPDATE `session` SET `expire`='$expire' WHERE `id`='$sid'";
-        if ($db_results = Dba::write($sql)) {
+        $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
+        if ($db_results = Dba::write($sql, array($expire, $sid))) {
             debug_event('session', $sid . ' has been extended to ' . date('r', $expire) . ' extension length ' . ($expire - $time), 5);
         }
 
@@ -332,11 +320,11 @@ class Session {
 
     /**
      * _auto_init
+     *
      * This function is called when the object is included, this sets up the
      * session_save_handler
      */
     public static function _auto_init() {
-
         if (!function_exists('session_start')) {
             header("Location:" . Config::get('web_path') . "/test.php");
             exit;
@@ -349,7 +337,6 @@ class Session {
             array('Session', 'write'),
             array('Session', 'destroy'),
             array('Session', 'gc'));
-
     }
 
     /**
@@ -358,16 +345,16 @@ class Session {
      * This is separated into its own function because of some flaws in
      * specific webservers *cough* IIS *cough* which prevent us from setting
      * a cookie at the same time as a header redirect. As such on view of a
-     * login a cookie is set with the proper name
+     * login a cookie is set with the proper name.
      */
     public static function create_cookie() {
         // Set up the cookie prefs before we throw down, this is very important
-        $cookie_life    = Config::get('cookie_life');
-        $cookie_path    = Config::get('cookie_path');
-        $cookie_domain    = false;
-        $cookie_secure    = Config::get('cookie_secure');
+        $cookie_life = Config::get('cookie_life');
+        $cookie_path = Config::get('cookie_path');
+        $cookie_domain = false;
+        $cookie_secure = Config::get('cookie_secure');
 
-        session_set_cookie_params($cookie_life,$cookie_path,$cookie_domain,$cookie_secure);
+        session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
 
         session_name(Config::get('session_name'));
 
@@ -379,20 +366,19 @@ class Session {
     /**
      * create_remember_cookie
      *
-     * This function just creates the remember me cookie, nothing special
+     * This function just creates the remember me cookie, nothing special.
      */
     public static function create_remember_cookie() {
-
         $remember_length = Config::get('remember_length');
         $session_name = Config::get('session_name');
 
         Config::set('cookie_life', $remember_length, true);
-        setcookie($session_name . '_remember',"Rappelez-vous, rappelez-vous le 27 mars", time() + $remember_length, '/');  
-
+        setcookie($session_name . '_remember', "Rappelez-vous, rappelez-vous le 27 mars", time() + $remember_length, '/');  
     }
 
     /**
      * ungimp_ie
+     *
      * This function sets the cache limiting to public if you are running
      * some flavor of IE. The detection used here is very conservative so
      * feel free to fix it. This only has to be done if we're rolling HTTPS.
