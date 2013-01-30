@@ -73,19 +73,6 @@
 ?>
 </td>
 </tr><tr>
-<td><?php echo T_('PHP MySQL Support'); ?>:</td>
-<td>
-<?php
-    if (!check_php_mysql()) {
-        echo debug_result('',false);
-        Error::add('install', T_('PHP MySQL Support'));
-    }
-    else {
-        echo debug_result(Dba::get_client_info(), true);
-    }
-?>
-</td>
-</tr><tr>
 <td><?php echo T_('PHP Session Support'); ?>:</td>
 <td>
 <?php

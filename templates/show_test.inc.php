@@ -62,23 +62,6 @@
     </td>
 </tr>
 <tr>
-        <td valign="top"><?php echo T_('PHP MySQL extension'); ?></td>
-        <td valign="top">[
-        <?php
-                if (!check_php_mysql()) {
-            echo debug_result('',false);
-                }
-                else {
-            echo debug_result('',true);
-                }
-        ?>
-        ]
-        </td>
-        <td>
-    <?php echo T_('This tests whether you have the mysql extension enabled. This extension is required by Ampache.'); ?>
-        </td>
-</tr>
-<tr>
     <td valign="top"><?php echo T_('PHP session extension'); ?></td>
     <td valign="top">[
     <?php

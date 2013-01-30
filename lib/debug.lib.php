@@ -44,20 +44,6 @@ function check_php_ver($level=0) {
 } // check_php_ver
 
 /**
- * check_php_mysql
- * checks for mysql support by looking for the mysql_query function
- */
-function check_php_mysql() {
-
-    if (!function_exists('mysql_query')) {
-        return false;
-    }
-
-    return true;
-
-} // check_php_mysql
-
-/**
  * check_php_session
  * checks to make sure the needed functions
  * for sessions exist
