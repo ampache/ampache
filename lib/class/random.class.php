@@ -442,8 +442,8 @@ class Random implements media {
 
     } // validate_type
 
-    public function native_stream() { }
-    public function stream_cmd() { }
+    public function get_stream_types() { }
+    public function get_transcode_settings() { }
     public function has_flag() { }
     public function format() { }
 
