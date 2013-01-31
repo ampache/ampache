@@ -443,7 +443,7 @@ class Random implements media {
     } // validate_type
 
     public function get_stream_types() { }
-    public function get_transcode_settings() { }
+    public function get_transcode_settings($target) { }
     public function has_flag() { }
     public function format() { }
 
