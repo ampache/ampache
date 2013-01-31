@@ -272,14 +272,13 @@ class Session {
                 }
             break;
             case 'interface':
-                // Build a list of enabled authentication types
-                $types = Config::get('auth_methods');
-                if (!Config::get('use_auth')) {
-                    $types[] = '';
+                $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?';
+                if (Config::get('use_auth')) {
+                    // Build a list of enabled authentication types
+                    $types = Config::get('auth_methods');
+                    $enabled_types = implode("','", $types);
+                    $sql .= " AND `type` IN('$enabled_types')";
                 }
-                $enabled_types = implode("','", $types);
-                $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' .
-                    "AND `type` IN('$enabled_types')";
                 $db_results = Dba::read($sql, array($key, time()));
 
                 if (Dba::num_rows($db_results)) {
