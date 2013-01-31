@@ -212,7 +212,7 @@ class Radio extends database_object implements media {
      * 
      * This will probably never be implemented
      */
-    public function get_transcode_settings() {
+    public function get_transcode_settings($target = null) {
         return false;
     }
 

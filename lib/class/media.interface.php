@@ -59,7 +59,7 @@ interface media {
      * parameter can be used to request a specific format instead of the
      * default from the configuration file.
      */
-    public function get_transcode_settings();
+    public function get_transcode_settings($target = null);
 
     /**
      * has_flag
