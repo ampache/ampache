@@ -56,18 +56,18 @@ foreach($playlist->urls as $item)
     <div id="player">
         <div id="albumart"></div>
         <div id="search">
-            <input id="input_search" type="text" value="<?php echo T_('search') ?>"/>
-            <div id="clear_search"><?php echo T_('clear') ?></div>
+            <input id="input_search" type="text" value="<?php echo T_('search') ?>" accesskey="<?php echo T_dgettext('html5_player_accesskey', 's') ?>"/>
+            <button id="clear_search"><?php echo T_('clear') ?></button>
         </div>
         <div id="title"><?php echo T_('Loading...') ?></div>
         <div id="album"><?php echo T_('Loading...') ?></div>
         <div id="artist"><?php echo T_('Loading...') ?></div>
         <div id="progress_text"><?php echo T_('Loading...') ?></div>
-        <div id="stop"><?php echo T_('Stop') ?></div>
-        <div id="play"><?php echo T_('Play') ?></div>
-        <div id="pause"><?php echo T_('Pause') ?></div>
-        <div id="previous"><?php echo T_('Previous') ?></div>
-        <div id="next"><?php echo T_('Next') ?></div>
+        <button id="stop" accesskey="<?php echo T_dgettext('html5_player_accesskey', 'o') ?>"><?php echo T_('Stop') ?></button>
+        <button id="play" accesskey="<?php echo T_dgettext('html5_player_accesskey', 'p') ?>"><?php echo T_('Play') ?></button>
+        <button id="pause" accesskey="<?php echo T_dgettext('html5_player_accesskey', 'p') ?>"><?php echo T_('Pause') ?></button>
+        <button id="previous" accesskey="<?php echo T_dgettext('html5_player_accesskey', ',') ?>"><?php echo T_('Previous') ?></button>
+        <button id="next" accesskey="<?php echo T_dgettext('html5_player_accesskey', '.') ?>"><?php echo T_('Next') ?></button>
     </div>
     <div>
         <ul id="playlist">
