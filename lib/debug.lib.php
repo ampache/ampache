@@ -26,22 +26,11 @@
  * sure that it's good enough
  */
 function check_php_ver($level=0) {
-
     if (floatval(phpversion()) < 5.3) {
         return false;
     }
-
-    // Make sure that they have the sha256() algo installed
-    if (!function_exists('hash_algos')) { return false; }
-    $algos = hash_algos();
-
-    if (!in_array('sha256',$algos)) {
-        return false;
-    }
-
     return true;
-
-} // check_php_ver
+}
 
 /**
  * check_php_session
@@ -57,21 +46,6 @@ function check_php_session() {
     return true;
 
 } // check_php_session
-
-/**
- * check_php_pcre
- * This makes sure they have pcre (preg_???) support
- * compiled into PHP this is required!
- */
-function check_php_pcre() {
-
-    if (!function_exists('preg_match')) {
-        return false;
-    }
-
-    return true;
-
-} // check_php_pcre
 
 /**
  * check_pdo
