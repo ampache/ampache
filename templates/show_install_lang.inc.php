@@ -23,12 +23,7 @@
 $prefix = realpath(dirname(__FILE__). "/../");
 require $prefix . '/templates/install_header.inc.php';
 ?>
-<?php require_once 'templates/show_install_check.inc.php'; ?>
-<?php if (Error::occurred()) { ?>
-    <div class="content">
-    <span class="fatalerror"><?php echo T_('Minimum requirements not met. Unable to install Ampache.'); ?></span>
-    </div>
-<?php } ?>
+<?php require_once $prefix . '/templates/show_install_check.inc.php'; ?>
 
 <div class="content">
     <strong><?php echo T_('Choose Installation Language'); ?></strong>
