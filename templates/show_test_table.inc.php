@@ -149,7 +149,7 @@ if (!defined('INSTALL')) {
 <tr>
     <td valign="top"><?php echo T_("Database connection"); ?></td>
     <td valign="top">
-    <?php echo debug_result(check_pdo() && Dba::check_database()); ?>
+    <?php echo debug_result(check_php_pdo() && Dba::check_database()); ?>
     </td>
     <td>
     <?php echo T_('This attempts to connect to your database using the values read from your configuration file.'); ?>
@@ -158,7 +158,7 @@ if (!defined('INSTALL')) {
 <tr>
     <td valign="top"><?php echo T_('Database tables'); ?></td>
     <td valign="top">
-    <?php echo debug_result(check_pdo() && Dba::check_database_inserted()); ?>
+    <?php echo debug_result(check_php_pdo() && Dba::check_database_inserted()); ?>
     </td>
     <td>
     <?php echo T_('This checks a few key tables to make sure that you have successfully inserted the Ampache database and that the user has access to the database'); ?>
