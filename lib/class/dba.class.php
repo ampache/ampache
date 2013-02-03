@@ -123,6 +123,9 @@ class Dba {
      * up the result set after the last row is read.
      */
     public static function fetch_assoc($resource, $finish = true) {
+        if (!$resource) {
+            return array();
+        }
 
         $result = $resource->fetch(PDO::FETCH_ASSOC);
 
@@ -145,6 +148,9 @@ class Dba {
      * up the result set after the last row is read.
      */
     public static function fetch_row($resource, $finish = true) {
+        if (!$resource) {
+            return array();
+        }
 
         $result = $resource->fetch(PDO::FETCH_NUM);;
 
@@ -182,7 +188,9 @@ class Dba {
      * This closes a result handle and clears the memory associated with it
      */
     public static function finish($resource) {
-        $resource->closeCursor();
+        if ($resource) {
+            $resource->closeCursor();
+        }
     }
 
     /**
@@ -191,13 +199,14 @@ class Dba {
      * This emulates the mysql_affected_rows function
      */
     public static function affected_rows($resource) {
-        $result = $resource->rowCount();
-
-        if (!$result) {
-            return 0;
+        if ($resource) {
+            $result = $resource->rowCount();
+            if ($result) {
+                return $result;
+            }
         }
 
-        return $result;
+        return 0;
     }
 
     /**
@@ -206,7 +215,6 @@ class Dba {
      * This connects to the database, used by the DBH function
      */
     private static function _connect() {
-
         $username = Config::get('database_username');
         $hostname = Config::get('database_hostname');
         $password = Config::get('database_password');
@@ -223,6 +231,10 @@ class Dba {
     }
 
     private static function _setup_dbh($dbh, $database) {
+        if (!$dbh) {
+            return false;
+        }
+
         $charset = self::translate_to_mysqlcharset(Config::get('site_charset'));
         $charset = $charset['charset'];
         if ($dbh->exec('SET NAMES ' . $charset) === false) {
@@ -248,7 +260,7 @@ class Dba {
     public static function check_database() {
         $dbh = self::_connect();
 
-        if ($dbh->errorCode()) {
+        if (!$dbh || $dbh->errorCode()) {
             return false;
         }
 
@@ -257,7 +269,10 @@ class Dba {
 
     public static function check_database_exists() {
         $dbh = self::_connect();
-        return $dbh->exec('USE `' . Config::get('database_name') . '`');
+        if ($dbh) {
+            return $dbh->exec('USE `' . Config::get('database_name') . '`');
+        }
+        return false;
     }
 
     /**
@@ -284,10 +299,10 @@ class Dba {
 
     /**
      * show_profile
+     *
      * This function is used for debug, helps with profiling
      */
     public static function show_profile() {
-
         if (Config::get('sql_profiling')) {
             print '<br/>Profiling data: <br/>';
             $res = Dba::read('SHOW PROFILES');
@@ -297,15 +312,15 @@ class Dba {
             }
             print '</table>';
         }
-    } // show_profile
+    }
 
     /**
      * dbh
+     *
      * This is called by the class to return the database handle
      * for the specified database, if none is found it connects
      */
     public static function dbh($database='') {
-
         if (!$database) {
             $database = Config::get('database_name');
         }
@@ -329,7 +344,7 @@ class Dba {
      *
      * This nukes the dbh connection, this isn't used very often...
      */
-    public static function disconnect($database='') {
+    public static function disconnect($database = '') {
         if (!$database) {
             $database = Config::get('database_name'); 
         }
@@ -346,7 +361,11 @@ class Dba {
      * insert_id
      */
     public static function insert_id() {
-        return self::dbh()->lastInsertId();
+        $dbh = self::dbh();
+        if ($dbh) {
+            return $dbh->lastInsertId();
+        }
+        return null;
     }
 
     /**
@@ -354,7 +373,11 @@ class Dba {
      * this returns the error of the db
      */
     public static function error() {
-        return self::dbh()->errorCode();
+        $dbh = self::dbh();
+        if ($dbh) {
+            return $dbh->errorCode();
+        }
+        return false;
     }
 
     /**
@@ -404,8 +427,10 @@ class Dba {
                 break;
         }
 
-        return array('charset'=>$target_charset,'collation'=>$target_collation);
-
+        return array(
+            'charset' => $target_charset,
+            'collation' => $target_collation
+        );
     }
 
     /**
