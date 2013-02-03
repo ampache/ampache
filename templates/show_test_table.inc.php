@@ -23,7 +23,7 @@
 <tr>
     <td valign="top"><?php echo T_('PHP version'); ?></td>
     <td valign="top">
-    <?php echo debug_result(check_php_ver()); ?>
+    <?php echo debug_result(check_php_version()); ?>
     </td>
     <td>
     <?php echo T_('This tests whether you are running at least the minimum version of PHP required by Ampache.'); ?>
@@ -32,7 +32,7 @@
 <tr>
     <td valign="top"><?php echo T_('Hash extension'); ?></td>
     <td valign="top">
-    <?php echo debug_result(function_exists('hash_algos')); ?>
+    <?php echo debug_result(check_php_hash()); ?>
     </td>
     <td>
     <?php echo T_('This tests whether you have the hash extension enabled. This extension is required by Ampache.'); ?>
@@ -41,7 +41,7 @@
 <tr>
     <td valign="top"><?php echo T_('SHA256 Hash'); ?></td>
     <td valign="top">
-    <?php echo debug_result(function_exists('hash_algos') ? in_array('sha256', hash_algos()) : false); ?>
+    <?php echo debug_result(check_php_hash_algo()); ?>
     </td>
     <td>
     <?php echo T_('This tests whether the hash extension supports SHA256. This algorithm is required by Ampache.'); ?>
@@ -50,7 +50,7 @@
 <tr>
     <td valign="top"><?php echo T_('PHP PDO'); ?></td>
     <td valign="top">
-    <?php echo debug_result(check_pdo()); ?>
+    <?php echo debug_result(check_php_pdo()); ?>
     </td>
     <td>
     <?php echo T_('This tests whether the PDO extension and the MySQL driver for PDO are installed. These are required by Ampache.'); ?>
@@ -77,7 +77,7 @@
 <tr>
     <td valign="top"><?php echo T_('JSON extension'); ?></td>
     <td valign="top">
-    <?php echo debug_result(function_exists('json_encode')); ?>
+    <?php echo debug_result(check_php_json()); ?>
     </td>
     <td>
     <?php echo T_('This tests whether you have the JSON extension enabled. This extension is required by Ampache.'); ?>
@@ -86,7 +86,7 @@
 <tr>
     <td valign="top"><?php echo T_('PHP safe mode disabled'); ?></td>
     <td valign="top">
-    <?php echo debug_result(check_safemode()); ?>
+    <?php echo debug_result(check_php_safemode()); ?>
     </td>
     <td>
     <?php echo T_('This test makes sure that PHP is not running in safe mode.  Some features of Ampache will not work correctly in safe mode.'); ?>

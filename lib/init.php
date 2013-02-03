@@ -53,10 +53,7 @@ else {
 
 // Verify that a few important but commonly disabled PHP functions exist and
 // that we're on a usable version
-if (!function_exists('json_encode') ||
-    !function_exists('hash') ||
-    (floatval(phpversion()) < 5.3) ||
-    !class_exists('PDO')) {
+if (!check_php()) {
     $link = $path . '/test.php';
 }
 
