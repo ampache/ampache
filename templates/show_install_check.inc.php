@@ -32,48 +32,24 @@
 </tr>
 <?php require $prefix . '/templates/show_test_table.inc.php'; ?>
 <tr>
-<td><?php echo sprintf(T_('%s is readable'), 'ampache.cfg.php.dist'); ?></td>
-<td>[
-<?php
-    if (!is_readable($prefix . '/config/ampache.cfg.php.dist')) {
-        echo debug_result('', false);
-    }
-    else {
-        echo debug_result('', true);
-    }
-?>
-]
-</td>
-<td><?php echo T_('This tests whether the configuration template can be read.'); ?></td>
+    <td><?php echo sprintf(T_('%s is readable'), 'ampache.cfg.php.dist'); ?></td>
+    <td>
+    <?php echo debug_result(is_readable($prefix . '/config/ampache.cfg.php.dist')); ?>
+    </td>
+    <td><?php echo T_('This tests whether the configuration template can be read.'); ?></td>
 </tr>
 <tr>
-<td><?php echo sprintf(T_('%s is readable'), 'ampache.sql'); ?></td>
-<td>[
-<?php
-    if (!is_readable($prefix . '/sql/ampache.sql')) {
-        echo debug_result('', false);
-    }
-    else {
-        echo debug_result('', true);
-    }
-?>
-]
-</td>
-<td><?php echo T_('This tests whether the file needed to initialise the database structure is available.'); ?></td>
+    <td><?php echo sprintf(T_('%s is readable'), 'ampache.sql'); ?></td>
+    <td>
+    <?php echo debug_result(is_readable($prefix . '/sql/ampache.sql')); ?>
+    </td>
+    <td><?php echo T_('This tests whether the file needed to initialise the database structure is available.'); ?></td>
 </tr>
 <tr>
-<td><?php echo T_('ampache.cfg.php is writable'); ?></td>
-<td>[
-<?php
-    if (!check_config_writable()) {
-        echo debug_result('', false);
-    }
-    else {
-        echo debug_result('', true);
-    }
-?>
-]
-</td>
-<td><?php echo T_('This tests whether PHP can write to config/. This is not strictly necessary, but will help streamline the installation process.'); ?></td>
+    <td><?php echo T_('ampache.cfg.php is writable'); ?></td>
+    <td>
+    <?php echo debug_result(check_config_writable()); ?>
+    </td>
+    <td><?php echo T_('This tests whether PHP can write to config/. This is not strictly necessary, but will help streamline the installation process.'); ?></td>
 </tr>
 </table>

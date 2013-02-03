@@ -72,33 +72,19 @@ require $prefix . '/templates/install_header.inc.php';
         <table>
 <tr>
         <td class="align"><?php echo T_('ampache.cfg.php exists?'); ?></td>
-        <td>[
-        <?php
-                if (!is_readable($configfile)) {
-            echo debug_result('',false);
-                }
-                else {
-            echo debug_result('',true);
-                }
-        ?>
-        ]
+        <td>
+        <?php echo debug_result(is_readable($configfile)); ?>
         </td>
 </tr>
 <tr>
         <td class="align">
                 <?php echo T_('ampache.cfg.php configured?'); ?>
         </td>
-        <td>[
+        <td>
         <?php
                 $results = @parse_ini_file($configfile);
-                if (!check_config_values($results)) {
-            echo debug_result('',false);
-                }
-                else {
-            echo debug_result('',true);
-                }
+                echo debug_result(check_config_values($results));
         ?>
-        ]
         </td>
 </tr>
 <tr>

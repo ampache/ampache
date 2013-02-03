@@ -22,9 +22,8 @@
 ?>
 <tr>
     <td valign="top"><?php echo T_('PHP version'); ?></td>
-    <td valign="top">[
-    <?php echo debug_result('', check_php_ver()); ?>
-    ]
+    <td valign="top">
+    <?php echo debug_result(check_php_ver()); ?>
     </td>
     <td>
     <?php echo T_('This tests whether you are running at least the minimum version of PHP required by Ampache.'); ?>
@@ -32,9 +31,8 @@
 </tr>
 <tr>
     <td valign="top"><?php echo T_('Hash extension'); ?></td>
-    <td valign="top">[
-    <?php echo debug_result('', function_exists('hash_algos')); ?>
-    ]
+    <td valign="top">
+    <?php echo debug_result(function_exists('hash_algos')); ?>
     </td>
     <td>
     <?php echo T_('This tests whether you have the hash extension enabled. This extension is required by Ampache.'); ?>
@@ -42,9 +40,8 @@
 </tr>
 <tr>
     <td valign="top"><?php echo T_('SHA256 Hash'); ?></td>
-    <td valign="top">[
-    <?php echo debug_result('', function_exists('hash_algos') ? in_array('sha256', hash_algos()) : false); ?>
-    ]
+    <td valign="top">
+    <?php echo debug_result(function_exists('hash_algos') ? in_array('sha256', hash_algos()) : false); ?>
     </td>
     <td>
     <?php echo T_('This tests whether the hash extension supports SHA256. This algorithm is required by Ampache.'); ?>
@@ -52,9 +49,8 @@
 </tr>
 <tr>
     <td valign="top"><?php echo T_('PHP PDO'); ?></td>
-    <td valign="top">[
-    <?php echo debug_result('', check_pdo()); ?>
-    ]
+    <td valign="top">
+    <?php echo debug_result(check_pdo()); ?>
     </td>
     <td>
     <?php echo T_('This tests whether the PDO extension and the MySQL driver for PDO are installed. These are required by Ampache.'); ?>
@@ -62,9 +58,8 @@
 </tr>
 <tr>
     <td valign="top"><?php echo T_('PHP session extension'); ?></td>
-    <td valign="top">[
-    <?php echo debug_result('', check_php_session()); ?>
-    ]
+    <td valign="top">
+    <?php echo debug_result(check_php_session()); ?>
     </td>
     <td>
     <?php echo T_('This tests whether you have the session extension enabled. This extension is required by Ampache.'); ?>
@@ -72,15 +67,8 @@
 </tr>
 <tr>
     <td valign="top"><?php echo T_('PHP iconv extension'); ?></td>
-    <td valign="top">[
-    <?php
-        if (!UI::check_iconv()) {
-            echo debug_result('',false);
-        }
-        else {
-            echo debug_result('',true);
-        }
-    ?>]
+    <td valign="top">
+    <?php echo debug_result(UI::check_iconv()); ?>
     </td>
     <td>
     <?php echo T_('This tests whether you have the iconv extension enabled. This extension is required by Ampache.'); ?>
@@ -88,9 +76,8 @@
 </tr>
 <tr>
     <td valign="top"><?php echo T_('JSON extension'); ?></td>
-    <td valign="top">[
-    <?php echo debug_result('', function_exists('json_encode')); ?>
-    ]
+    <td valign="top">
+    <?php echo debug_result(function_exists('json_encode')); ?>
     </td>
     <td>
     <?php echo T_('This tests whether you have the JSON extension enabled. This extension is required by Ampache.'); ?>
@@ -98,15 +85,8 @@
 </tr>
 <tr>
     <td valign="top"><?php echo T_('PHP safe mode disabled'); ?></td>
-    <td valign="top">[
-    <?php
-        if (!check_safemode()) {
-            echo debug_result('',false);
-        }
-        else {
-            echo debug_result('',true);
-        }
-    ?>]
+    <td valign="top">
+    <?php echo debug_result(check_safemode()); ?>
     </td>
     <td>
     <?php echo T_('This test makes sure that PHP is not running in safe mode.  Some features of Ampache will not work correctly in safe mode.'); ?>
@@ -114,8 +94,8 @@
 </tr>
 <tr>
     <td valign="top"><?php echo T_('PHP memory limit override'); ?></td>
-    <td valign="top">[
-    <?php echo debug_result('', check_override_memory()); ?>]
+    <td valign="top">
+    <?php echo debug_result(check_override_memory()); ?>
     </td>
     <td>
     <?php echo T_('This tests whether Ampache can override the memory limit.  This is not strictly necessary, but may result in a better experience.'); ?>
@@ -123,8 +103,8 @@
 </tr>
 <tr>
     <td valign="top"><?php echo T_('PHP execution time override'); ?></td>
-    <td valign="top">[
-    <?php echo debug_result('', check_override_exec_time()); ?>]
+    <td valign="top">
+    <?php echo debug_result(check_override_exec_time()); ?>
     </td>
     <td>
     <?php echo T_('This tests whether Ampache can override the limit on maximum execution time.  This is not strictly necessary, but may result in a better experience.'); ?>
@@ -135,16 +115,8 @@ if (!defined('INSTALL')) {
 ?>
 <tr>
     <td valign="top"><?php echo T_('Configuration file readability'); ?></td>
-    <td valign="top">[
-    <?php
-        if (!is_readable($configfile)) {
-            echo debug_result('',false);
-        }
-        else {
-            echo debug_result('',true);
-        }
-    ?>
-    ]
+    <td valign="top">
+    <?php echo debug_result(is_readable($configfile)); ?>
     </td>
     <td width="350px">
     <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file either is not in the correct location or is not currently readable.'); ?>
@@ -154,18 +126,12 @@ if (!defined('INSTALL')) {
     <td valign="top">
         <?php echo T_('Configuration file validity'); ?>
     </td>
-    <td valign="top">[
+    <td valign="top">
     <?php
         $results = @parse_ini_file($configfile);
         Config::set_by_array($results);
-        if (!check_config_values($results)) {
-            echo debug_result('',false);
-        }
-        else {
-            echo debug_result('',true);
-        }
+        echo debug_result(check_config_values($results));
     ?>
-    ]
     </td>
     <td>
     <?php echo T_("This test makes sure that you have set all of the required configuration variables and that we are able to completely parse your config file."); ?>
@@ -173,16 +139,8 @@ if (!defined('INSTALL')) {
 </tr>
 <tr>
     <td valign="top"><?php echo T_("Database connection"); ?></td>
-    <td valign="top">[
-    <?php
-        if (!check_pdo() || !Dba::check_database()) {
-            echo debug_result('',false);
-        }
-        else {
-            echo debug_result('',true);
-        }
-    ?>
-    ]
+    <td valign="top">
+    <?php echo debug_result(check_pdo() && Dba::check_database()); ?>
     </td>
     <td>
     <?php echo T_('This attempts to connect to your database using the values read from your configuration file.'); ?>
@@ -190,17 +148,8 @@ if (!defined('INSTALL')) {
 </tr>
 <tr>
     <td valign="top"><?php echo T_('Database tables'); ?></td>
-    <td valign="top">[
-    <?php
-        $db_inserted = check_pdo() ? Dba::check_database_inserted() : false;
-        if (!$db_inserted) {
-            echo debug_result('',false);
-        }
-        else {
-            echo debug_result('',true);
-        }
-    ?>
-    ]
+    <td valign="top">
+    <?php echo debug_result(check_pdo() && Dba::check_database_inserted()); ?>
     </td>
     <td>
     <?php echo T_('This checks a few key tables to make sure that you have successfully inserted the Ampache database and that the user has access to the database'); ?>
@@ -209,7 +158,7 @@ if (!defined('INSTALL')) {
 <tr>
 
     <td valign="top"><?php echo T_('Web path'); ?></td>
-    <td valign="top">[
+    <td valign="top">
     <?php
         if ($results['force_ssl']) {
             $http_type = 'https://';
@@ -220,11 +169,10 @@ if (!defined('INSTALL')) {
             echo "&nbsp;&nbsp;&nbsp;<img src=\"" . $results['web_path'] ."/images/icon_enable.png\" />&nbsp;&nbsp;&nbsp;";
         }
         else {
-            echo debug_result('',false);
+            echo debug_result(false);
         }
 
     ?>
-    ]
     </td>
     <td>
     <?php echo T_('This test makes sure that your web_path variable is set correctly and that we are able to get to the index page. If you do not see a check mark here then your web_path is not set correctly.'); ?>

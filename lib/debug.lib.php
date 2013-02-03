@@ -279,19 +279,18 @@ function escape_ini($str) {
 
 
 /**
- * debug_ok
- * Return an "OK" with the specified string
+ * debug_result
+ *
+ * Convenience function to format the output.
  */
-function debug_result($comment,$status=false,$value=false) {
-
+function debug_result($status = false, $value = null, $comment = '') {
     $class = $status ? 'ok' : 'notok';
+
     if (!$value) {
         $value = $status ? 'OK' : 'ERROR';
     }
 
-    $final = '<span class="' . $class . '">' . scrub_out($value) . '</span> <em>' . $comment . '</em>';
-
-    return $final;
-
-} // debug_ok
+    return '[ <span class="' . $class . '">' . scrub_out($value) .
+        '</span> <em>' . $comment . '</em> ]';
+}
 ?>
