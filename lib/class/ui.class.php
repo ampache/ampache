@@ -191,7 +191,7 @@ class UI {
         $title = $title ?: T_(ucfirst($name));
 
         $icon_url = self::_find_icon($name);
-        if ($hover_name) {
+        if (isset($hover_name)) {
             $hover_url = self::_find_icon($hover_text);
         }
 
@@ -204,7 +204,7 @@ class UI {
         $tag .= 'alt="' . $title . '" ';
         $tag .= 'title="' . $title . '" ';
 
-        if ($hover_name) {
+        if (isset($hover_name)) {
             $tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
             $tag .= 'onmouseout="this.src=\'' . $icon_url . '\'; return true;" ';
         }
