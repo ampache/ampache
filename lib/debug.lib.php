@@ -74,6 +74,19 @@ function check_php_pcre() {
 } // check_php_pcre
 
 /**
+ * check_pdo
+ *
+ * Checks to make sure that PDO is available.
+ */
+function check_pdo() {
+    if (class_exists('PDO') && in_array('mysql', PDO::getAvailableDrivers())) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * check_config_values
  * checks to make sure that they have at least set the needed variables
  */

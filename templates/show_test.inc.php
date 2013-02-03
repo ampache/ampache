@@ -62,6 +62,16 @@
     </td>
 </tr>
 <tr>
+    <td valign="top"><?php echo T_('PHP PDO'); ?></td>
+    <td valign="top">[
+    <?php   echo debug_result('', check_pdo()); ?>
+    ]
+    </td>
+    <td>
+    <?php echo T_('This tests whether the PDO extension and the MySQL driver for PDO are installed. These are required by Ampache.'); ?>
+    </td>
+</tr>
+<tr>
     <td valign="top"><?php echo T_('PHP session extension'); ?></td>
     <td valign="top">[
     <?php
@@ -170,7 +180,7 @@
     <td valign="top"><?php echo T_("Database connection"); ?></td>
     <td valign="top">[
     <?php
-        if (!Dba::check_database()) {
+        if (!check_pdo() || !Dba::check_database()) {
             echo debug_result('',false);
         }
         else {
@@ -187,7 +197,7 @@
     <td valign="top"><?php echo T_('Database tables'); ?></td>
     <td valign="top">[
     <?php
-        $db_inserted = Dba::check_database_inserted();
+        $db_inserted = check_pdo() ? Dba::check_database_inserted() : false;
         if (!$db_inserted) {
             echo debug_result('',false);
         }
