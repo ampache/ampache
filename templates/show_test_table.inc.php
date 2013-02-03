@@ -30,7 +30,7 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('Hash extension'); ?></td>
+    <td valign="top"><?php echo T_('PHP hash extension'); ?></td>
     <td valign="top">
     <?php echo debug_result(check_php_hash()); ?>
     </td>
@@ -39,7 +39,7 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('SHA256 Hash'); ?></td>
+    <td valign="top"><?php echo T_('SHA256'); ?></td>
     <td valign="top">
     <?php echo debug_result(check_php_hash_algo()); ?>
     </td>
@@ -48,12 +48,21 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP PDO'); ?></td>
+    <td valign="top"><?php echo T_('PHP PDO extension'); ?></td>
     <td valign="top">
     <?php echo debug_result(check_php_pdo()); ?>
     </td>
     <td>
-    <?php echo T_('This tests whether the PDO extension and the MySQL driver for PDO are installed. These are required by Ampache.'); ?>
+    <?php echo T_('This tests whether you have the PDO extension enabled. This extension is required by Ampache.'); ?>
+    </td>
+</tr>
+<tr>
+    <td valign="top"><?php echo T_('MySQL'); ?></td>
+    <td valign="top">
+    <?php echo debug_result(check_php_pdo_mysql()); ?>
+    </td>
+    <td>
+    <?php echo T_('This tests whether the MySQL driver for PDO is enabled. This driver is required by Ampache.'); ?>
     </td>
 </tr>
 <tr>
@@ -75,7 +84,7 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('JSON extension'); ?></td>
+    <td valign="top"><?php echo T_('PHP JSON extension'); ?></td>
     <td valign="top">
     <?php echo debug_result(check_php_json()); ?>
     </td>

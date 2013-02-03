@@ -26,6 +26,7 @@ function check_php() {
         check_php_hash() &&
         check_php_hash_algo() &&
         check_php_pdo() &&
+        check_php_pdo_mysql() &&
         check_php_session() &&
         check_php_json() &&
         check_php_safemode()
@@ -60,10 +61,11 @@ function check_php_session() {
 }
 
 function check_php_pdo() {
-    if (class_exists('PDO') && in_array('mysql', PDO::getAvailableDrivers())) {
-        return true;
-    }
-    return false;
+    return class_exists('PDO');
+}
+
+function check_php_pdo_mysql() {
+    return class_exists('PDO') ? in_array('mysql', PDO::getAvailableDrivers()) : false;
 }
 
 /**
