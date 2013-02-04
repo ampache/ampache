@@ -32,7 +32,7 @@ UI::show_header();
 /* Switch on Action */
 switch ($_REQUEST['action']) {
     case 'find_duplicates':
-        $search_type = Dba::escape($_REQUEST['search_type']);
+        $search_type = $_REQUEST['search_type'];
         $duplicates = Song::find_duplicates($search_type);
         require_once Config::get('prefix') . '/templates/show_duplicate.inc.php';
         require_once Config::get('prefix') . '/templates/show_duplicates.inc.php';
