@@ -143,7 +143,6 @@ class Api {
             $client = User::get_from_username($username);
             $user_id = $client->id;
         }
-        $user_id = Dba::escape($user_id);
 
         // Log this attempt
         debug_event('API', "Login Attempt, IP:$ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
@@ -152,8 +151,8 @@ class Api {
             // Now we're sure that there is an ACL line that matches
             // this user or ALL USERS, pull the user's password and
             // then see what we come out with
-            $sql = "SELECT * FROM `user` WHERE `id`='$user_id'";
-            $db_results = Dba::read($sql);
+            $sql = 'SELECT * FROM `user` WHERE `id`=?';
+            $db_results = Dba::read($sql, array($user_id));
 
             $row = Dba::fetch_assoc($db_results);
 
@@ -167,17 +166,16 @@ class Api {
 
             if ($sha1pass === $passphrase) {
                 // Create the session
-                // FIXME: needs to be moved to the correct class
-                $data['username']    = $client->username;
-                $data['type']        = 'api';
-                $data['value']        = $timestamp;
+                $data['username'] = $client->username;
+                $data['type'] = 'api';
+                $data['value'] = $timestamp;
                 $token = Session::create($data);
 
                 debug_event('API', 'Login Success, passphrase matched', 1);
 
                 // We need to also get the 'last update' of the
                 // catalog information in an RFC 2822 Format
-                $sql = "SELECT MAX(`last_update`) AS `update`,MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`";
+                $sql = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
                 $db_results = Dba::read($sql);
                 $row = Dba::fetch_assoc($db_results);
 
