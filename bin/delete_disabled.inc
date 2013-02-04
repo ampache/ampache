@@ -29,15 +29,15 @@
 /* will not delete anything if debug is true */
 $debug = true;
 
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 $path = dirname(__FILE__);
 $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
-if ($debug) { echo T_("DEBUG ENABLED WILL NOT DELETE FILES!"); echo "\n"; }
+if ($debug) { echo T_('DEBUG ENABLED WILL NOT DELETE FILES!'); echo "\n"; }
 
 /* Get a list of filenames */
-$sql = "SELECT `id`,`file` FROM song WHERE enabled='0'";
+$sql = "SELECT `id`, `file` FROM song WHERE enabled='0'";
 $db_results = Dba::read($sql);
 
 while ($row = Dba::fetch_assoc($db_results)) {
@@ -49,9 +49,8 @@ while ($row = Dba::fetch_assoc($db_results)) {
         printf (T_('Deleting: %s'), $row['file']);
         echo "\n";
         unlink($row['file']);
-        $sql = "DELETE FROM `song` WHERE `id`='" . Dba::escape($row['id']) . "'";
-        $del_results = Dba::write($sql);
+        $sql = 'DELETE FROM `song` WHERE `id` = ?';
+        $del_results = Dba::write($sql, array($row['id']));
     }
-} // end while
-
+}
 ?>
