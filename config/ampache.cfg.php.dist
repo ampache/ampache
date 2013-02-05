@@ -215,12 +215,11 @@ require_localnet_session = "true"
 
 ; This determines the tag order for all cataloged
 ; music. If none of the listed tags are found then
-; ampache will default to the first tag format
-; that was found. 
-; POSSIBLE VALUES: ape asf avi id3v1 id3v2 lyrics3 mpeg quicktime riff
+; ampache will randomly use whatever was found.
+; POSSIBLE VALUES: ape asf avi id3v1 id3v2 lyrics3 matroska mpeg quicktime riff
 ;     vorbiscomment
-; DEFAULT: id3v2 id3v1 vorbiscomment quicktime ape asf avi mpeg riff
-getid3_tag_order = "id3v2,id3v1,vorbiscomment,quicktime,ape,asf,avi,mpeg,riff"
+; DEFAULT: id3v2 id3v1 vorbiscomment quicktime matroska ape asf avi mpeg riff
+getid3_tag_order = "id3v2,id3v1,vorbiscomment,quicktime,matroska,ape,asf,avi,mpeg,riff"
 
 ; Determines whether we try to autodetect the encoding for id3v2 tags.
 ; May break valid tags.
@@ -667,12 +666,8 @@ use_rss = true
 ;#############################
 ;   Multibyte Settings       #
 ;#############################
-; Use Iconv or not
-; DEFAULT: false
-;use_iconv = false
-
-; mb_detect_order
-; comma separated, available encodings are listed on php.net.
-; see http://php.net/manual/mbstring.supported-encodings.php
+; See http://php.net/manual/mbstring.supported-encodings.php
+; If you want ID3v1 encoding detection to work, you should uncomment this line
+; so that the ordering is sane.
 ; DEFAULT: auto
-;mb_detect_order = "EUC-JP, SJIS, eucJP-win, SJIS-win, JIS, ISO-2022-JP, ASCII, UTF-8, UTF-7"
+;mb_detect_order = "ASCII,UTF-8,EUC-JP,ISO-2022-JP,SJIS,JIS"

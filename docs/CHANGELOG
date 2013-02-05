@@ -4,6 +4,10 @@
 
 --------------------------------------------------------------------------
   v.3.6-FUTURE
+    - Fixed character set detection for ID3v1 tags
+    - Added matroska to the list of known tag types
+    - Made the getID3 metadata source work better with tag types that Ampache
+        doesn't recognise
     - Switched from the deprecated mysql extension to PDO
     - stderr from the transcode command is now logged for debugging
     - Made database updates more robust and verified that a fresh 3.3.3.5 import
