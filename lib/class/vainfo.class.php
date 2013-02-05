@@ -973,11 +973,11 @@ class vainfo {
             }
         }
 
+        $results['title'] = $results['title'] ?: basename($filename);
         $results['size'] = filesize($filename);
 
         return $results;
-
-    } // _parse_filename
+    }
 
     /**
      * _id3v2_tag_to_frame
