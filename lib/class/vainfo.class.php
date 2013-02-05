@@ -291,7 +291,7 @@ class vainfo {
             $info['mb_albumid'] = $info['mb_albumid'] ?: trim($tags['mb_albumid']);
             $info['mb_artistid'] = $info['mb_artistid'] ?: trim($tags['mb_artistid']);
 
-            $info['language'] = $info['language'] ?: Dba::escape($tags['language']);
+            $info['language'] = $info['language'] ?: trim($tags['language']);
 
             $info['lyrics']    = $info['lyrics']
                     ?: str_replace(
@@ -302,8 +302,8 @@ class vainfo {
             $info['track'] = $info['track'] ?: intval($tags['track']);
             $info['resolution_x'] = $info['resolution_x'] ?: intval($tags['resolution_x']);
             $info['resolution_y'] = $info['resolution_y'] ?: intval($tags['resolution_y']);
-            $info['audio_codec'] = $info['audio_codec'] ?: Dba::escape($tags['audio_codec']);
-            $info['video_codec'] = $info['video_codec'] ?: Dba::escape($tags['video_codec']);
+            $info['audio_codec'] = $info['audio_codec'] ?: trim($tags['audio_codec']);
+            $info['video_codec'] = $info['video_codec'] ?: trim($tags['video_codec']);
         }
 
         // Some things set the disk number even though there aren't multiple
