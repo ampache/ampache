@@ -374,17 +374,16 @@ class Stream_Playlist {
     } // create_localplay
 
     /**
-      * create_democratic
+     * create_democratic
+     *
      * This 'votes' on the songs it inserts them into
      * a tmp_playlist with user of -1 (System)
      */
     public function create_democratic() {
-
         $democratic = Democratic::get_current_playlist();
         $democratic->set_parent();
-        $democratic->add_vote($this->media);
-
-    } // create_democratic
+        $democratic->add_vote($this->urls);
+    }
 
     /**
      * create_download

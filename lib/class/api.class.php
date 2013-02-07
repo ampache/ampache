@@ -496,17 +496,15 @@ class Api {
 
     /**
      * url_to_song
+     *
      * This takes a url and returns the song object in question
      */
     public static function url_to_song($input) {
-
             // Don't scrub, the function needs her raw and juicy
-            $song_id = Song::parse_song_url($input['url']);
-
+            $data = Stream_URL::parse($input['url']);
             ob_end_clean();
-            echo XML_Data::songs(array($song_id));
-
-    } // url_to_song
+            echo XML_Data::songs(array($data['id']));
+    }
 
     /**
       * playlists

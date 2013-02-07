@@ -1961,11 +1961,10 @@ class Catalog extends database_object {
 
             } // if it's a file
             // Check to see if it's a url from this ampache instance
-            elseif (substr($value,0,strlen(Config::get('web_path'))) == Config::get('web_path')) {
-                $song_id = intval(Song::parse_song_url($value));
-
-                $sql = "SELECT COUNT(*) FROM `song` WHERE `id`='$song_id'";
-                $db_results = Dba::read($sql);
+            elseif (substr($value, 0, strlen(Config::get('web_path'))) == Config::get('web_path')) {
+                $data = Stream_URL::parse($value);
+                $sql = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
+                $db_results = Dba::read($sql, array($data['id']));
 
                 if (Dba::num_rows($db_results)) {
                     $songs[] = $song_id;

@@ -27,4 +27,33 @@ class Stream_URL extends memory_object {
 
     public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type');
 
+    /**
+     * parse
+     *
+     * Takes an url and parses out all the chewy goodness.
+     */
+    public static function parse($url) {
+        $query = parse_url($url, PHP_URL_QUERY);
+        $elements = explode('&', $query);
+        $results = array();
+
+        foreach ($elements as $element) {
+            list($key, $value) = explode('=', $items, 1);
+            switch ($key) {
+                case 'oid':
+                    $key = 'id';
+                break;
+                case 'video':
+                    if (make_bool($value)) {
+                        $results['type'] = 'video';
+                    }
+                default:
+                    // Nothing
+                break;
+            }
+            $results[$key] = $value;
+        }
+
+        return $results;
+    }
 }

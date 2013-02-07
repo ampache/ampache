@@ -37,11 +37,22 @@ $oid         = $_REQUEST['oid']
             // FIXME: Any place that doesn't use oid should be fixed
             ? scrub_in($_REQUEST['oid'])
             : scrub_in($_REQUEST['song']);
+$otype = scrub_in($_REQUEST['otype']);
 $sid         = scrub_in($_REQUEST['ssid']);
 $xml_rpc    = scrub_in($_REQUEST['xml_rpc']);
 $video        = make_bool($_REQUEST['video']);
 $type        = scrub_in($_REQUEST['type']);
 $transcode_to	= scrub_in($_REQUEST['transcode_to']);
+
+if ($video) {
+    // FIXME: Compatibility hack, should eventually be removed
+    $type = 'video';
+}
+
+if (!$type) {
+    // FIXME: Compatibility hack, should eventually be removed
+    $type = 'song';
+}
 
 if ($type == 'playlist') {
     $playlist_type = scrub_in($_REQUEST['playlist_type']);
@@ -174,7 +185,7 @@ if ($random) {
     }
 } // if random
 
-if (!$video) {
+if ($type == 'song') {
     /* Base Checks passed create the song object */
     $media = new Song($oid);
     $media->format();

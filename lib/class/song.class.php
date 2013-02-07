@@ -923,35 +923,11 @@ class Song extends database_object implements media {
 
         $song_name = rawurlencode($song->get_artist_name() . " - " . $song->title . "." . $type);
 
-        $url = Stream::get_base_url() . "oid=$song->id&uid=$user_id&name=/$song_name";
+        $url = Stream::get_base_url() . "type=song&oid=$song->id&uid=$user_id&name=/$song_name";
 
         return $url;
 
     } // play_url
-
-    /**
-     * parse_song_url
-     * Takes a URL from this ampache install and returns the song that the url represents
-     * used by the API, and used to parse out stream urls for localplay
-     * right now just gets song id might do more later, hence the complexity
-     */
-    public static function parse_song_url($url) {
-
-        // We only care about the question mark stuff
-        $query = parse_url($url,PHP_URL_QUERY);
-
-        $elements = explode("&",$query);
-
-        foreach ($elements as $items) {
-            list($key,$value) = explode("=",$items);
-            if ($key == 'oid') {
-                return $value;
-            }
-        } // end foreach
-
-        return false;
-
-    } // parse_song_url
 
     /**
      * get_recently_played

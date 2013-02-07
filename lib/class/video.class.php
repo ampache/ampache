@@ -99,7 +99,7 @@ class Video extends database_object implements media {
         $uid = intval($GLOBALS['user']->id);
         $oid = intval($video->id);
 
-        $url = Stream::get_base_url() . "video=true&uid=$uid&oid=$oid";
+        $url = Stream::get_base_url() . "type=video&uid=$uid&oid=$oid";
 
         return $url;
 
