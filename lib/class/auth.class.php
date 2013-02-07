@@ -122,7 +122,8 @@ class Auth {
                 // doesn't break things.
                 // FIXME: Break things in the future.
                 $hashed_password[] = hash('sha256', $password);
-                $hashed_password[] = hash('sha256', Dba::escape(scrub_in($password)));
+                $hashed_password[] = hash('sha256', 
+                    Dba::escape(stripslashes(htmlspecialchars(strip_tags($password)))));
 
                 // Automagically update the password if it's old and busted.
                 if ($row['password'] == $hashed_password[1] &&

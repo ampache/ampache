@@ -70,7 +70,7 @@ function generate_password($length) {
 function scrub_in($input) {
 
     if (!is_array($input)) {
-        return stripslashes(htmlspecialchars(strip_tags($input)));
+        return stripslashes(htmlspecialchars(strip_tags($input), ENT_QUOTES, Config::get('site_charset')));
     }
     else {
         $results = array();
