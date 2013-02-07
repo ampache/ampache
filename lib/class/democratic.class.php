@@ -343,7 +343,6 @@ class Democratic extends Tmp_Playlist {
      * already voted on any of these objects
      */
     public function add_vote($items) {
-
         /* Iterate through the objects if no vote, add to playlist and vote */
         foreach ($items as $element) {
             $type = array_shift($element);
@@ -417,8 +416,7 @@ class Democratic extends Tmp_Playlist {
         $db_results = Dba::write($sql);
 
         return true;
-
-    } // add_vote
+    }
 
     /**
      * remove_vote
