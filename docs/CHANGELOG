@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-FUTURE
+    - Fixed persistent XSS vulnerabilities in AJAX object editing (reported by
+        Jean-Lou Hau)
     - Fixed character set detection for ID3v1 tags
     - Added matroska to the list of known tag types
     - Made the getID3 metadata source work better with tag types that Ampache
