@@ -4,6 +4,8 @@
 
 --------------------------------------------------------------------------
   v.3.6-FUTURE
+    - Fixed persistent XSS vulnerability in user self-editing (reported by
+        Jean-Lou Hau)
     - Fixed persistent XSS vulnerabilities in AJAX object editing (reported by
         Jean-Lou Hau)
     - Fixed character set detection for ID3v1 tags

@@ -396,7 +396,6 @@ class User extends database_object {
      * good stuff
      */
     public function update($data) {
-
         if (empty($data['username'])) {
             Error::add('username', T_('Error Username Required'));
         }
@@ -409,14 +408,20 @@ class User extends database_object {
             return false;
         }
 
-        foreach ($data as $name=>$value) {
+        foreach ($data as $name => $value) {
+            if ($name == 'password1') {
+                $name = 'password';
+            }
+            else {
+                $value = scrub_in($value);
+            }
+
             switch ($name) {
-                case 'password1';
-                    $name = 'password';
+                case 'password';
                 case 'access':
                 case 'email':
                 case 'username':
-                case 'fullname';
+                case 'fullname':
                     if ($this->$name != $value) {
                         $function = 'update_' . $name;
                         $this->$function($value);
@@ -425,13 +430,11 @@ class User extends database_object {
                 default:
                     // Rien a faire
                 break;
-            } // end switch on field
-
-        } // end foreach
+            }
+        }
 
         return true;
-
-    } // update
+    }
 
     /**
      * update_username
