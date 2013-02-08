@@ -382,11 +382,14 @@ class Stream_Playlist {
     public function create_democratic() {
         $democratic = Democratic::get_current_playlist();
         $democratic->set_parent();
+        $items = array();
 
         foreach ($this->urls as $url) {
             $data = Stream_URL::parse($url->url);
-            $democratic->add_vote(array($data['type'], $data['id']));
+            $items[] = array($data['type'], $data['id']);
         }
+
+        $democratic->add_vote($items);
     }
 
     /**
