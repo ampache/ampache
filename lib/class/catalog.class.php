@@ -1412,7 +1412,7 @@ class Catalog extends database_object {
                 $media_ids[] = $row['id'];
             }
             $media_type::build_cache($media_ids);
-            Dba::seek($db_results, 0);
+            $db_results = Dba::read($sql);
         }
 
         while ($row = Dba::fetch_assoc($db_results)) {
