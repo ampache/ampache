@@ -59,6 +59,16 @@ class Dba {
         // care about here.
         debug_event('Query', $sql . ' ' . @json_encode($params), 6);
 
+        // Be aggressive, be strong, be dumb
+        $tries = 0;
+        do {
+            $stmt = self::_query($sql, $params);
+        } while (!$stmt && $tries < 3);
+
+        return $stmt;
+    }
+
+    private static function _query($sql, $params) {
         $dbh = self::dbh();
         if (!$dbh) {
             debug_event('Dba', 'Error: failed to get database handle', 1);
@@ -80,9 +90,11 @@ class Dba {
 
         if (!$stmt) {
             debug_event('Dba', 'Error: ' . json_encode($dbh->errorInfo()), 1);
+            self::disconnect();
         }
         else if ($stmt->errorCode() && $stmt->errorCode() != '00000') {
             debug_event('Dba', 'Error: ' . json_encode($stmt->errorInfo()), 1);
+            self::disconnect();
             return false;
         }
 
