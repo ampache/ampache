@@ -666,10 +666,38 @@ class getid3_id3v2 extends getid3_handler
 			$parsedFrame['encoding']   = $this->TextEncodingNameLookup($frame_textencoding);
 
 			if (!empty($parsedFrame['framenameshort']) && !empty($parsedFrame['data'])) {
-				$string = getid3_lib::iconv_fallback($parsedFrame['encoding'], $info['id3v2']['encoding'], $parsedFrame['data']);
-				$string = rtrim($string, "\x00"); // remove possible terminating null (put by encoding id or software bug)
-				$info['id3v2']['comments'][$parsedFrame['framenameshort']][] = $string;
-				unset($string);
+				// ID3v2.3 specs say that TPE1 (and others) can contain multiple artist values separated with /
+				// This of course breaks when an aritst name contains slash character, e.g. "AC/DC"
+				// MP3tag (maybe others) implement alternative system where multiple artists are null-separated, which makes more sense
+				// getID3 will split null-separated artists into multiple artists and leave slash-separated ones to the user
+				switch ($parsedFrame['encoding']) {
+					case 'UTF-16':
+					case 'UTF-16BE':
+					case 'UTF-16LE':
+						$wordsize = 2;
+						break;
+					case 'ISO-8859-1':
+					case 'UTF-8':
+					default:
+						$wordsize = 1;
+						break;
+				}
+				$Txxx_elements = array();
+				$Txxx_elements_start_offset = 0;
+				for ($i = 0; $i < strlen($parsedFrame['data']); $i += $wordsize) {
+					if (substr($parsedFrame['data'], $i, $wordsize) == str_repeat("\x00", $wordsize)) {
+						$Txxx_elements[] = substr($parsedFrame['data'], $Txxx_elements_start_offset, $i - $Txxx_elements_start_offset);
+						$Txxx_elements_start_offset = $i + $wordsize;
+					}
+				}
+				$Txxx_elements[] = substr($parsedFrame['data'], $Txxx_elements_start_offset, $i - $Txxx_elements_start_offset);
+				foreach ($Txxx_elements as $Txxx_element) {
+					$string = getid3_lib::iconv_fallback($parsedFrame['encoding'], $info['id3v2']['encoding'], $Txxx_element);
+					if (!empty($string)) {
+						$info['id3v2']['comments'][$parsedFrame['framenameshort']][] = $string;
+					}
+				}
+				unset($string, $wordsize, $i, $Txxx_elements, $Txxx_element, $Txxx_elements_start_offset);
 			}
 
 		} elseif ((($id3v2_majorversion >= 3) && ($parsedFrame['frame_name'] == 'WXXX')) || // 4.3.2 WXXX User defined URL link frame
