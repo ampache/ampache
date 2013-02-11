@@ -156,7 +156,7 @@ class Session {
      * This returns the username associated with a session ID, if any
      */
     public static function username($key) {
-        return self::_read($key, 'user');
+        return self::_read($key, 'username');
     }
 
     /**

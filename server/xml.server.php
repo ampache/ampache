@@ -59,7 +59,7 @@ if (!Session::exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'hands
 $username = 
     ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping')
     ? $_REQUEST['user']
-    : Session::user($_REQUEST['auth']);
+    : Session::username($_REQUEST['auth']);
 
 if (!Access::check_network('init-api', $username, 5)) {
         debug_event('Access Denied','Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
