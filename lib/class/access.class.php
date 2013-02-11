@@ -93,7 +93,7 @@ class Access {
      *
      * This outputs an error if the IP range is bad.
      */
-    private function _verify_range($startp, $endp) {
+    private static function _verify_range($startp, $endp) {
         $startn = @inet_pton($startp);
         $endn = @inet_pton($endp);
 
@@ -121,7 +121,7 @@ class Access {
      * access list entry.
      */
     public function update($data) {
-        if (!$this->_verify_range($data['start'], $data['end'])) {
+        if (!self::_verify_range($data['start'], $data['end'])) {
             return false;
         }
 
@@ -148,7 +148,7 @@ class Access {
      * new ACL entry
      */
     public static function create($data) {
-        if (!$this->_verify_range($data['start'], $data['end'])) {
+        if (!self::_verify_range($data['start'], $data['end'])) {
             return false;
         }
 
