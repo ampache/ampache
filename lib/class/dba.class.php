@@ -83,6 +83,7 @@ class Dba {
         }
         else if ($stmt->errorCode() && $stmt->errorCode() != '00000') {
             debug_event('Dba', 'Error: ' . json_encode($stmt->errorInfo()), 1);
+            return false;
         }
 
         return $stmt;
