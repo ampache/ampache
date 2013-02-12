@@ -241,7 +241,7 @@ class Catalog extends database_object {
         $rename_pattern = $data['rename_pattern'];
         $sort_pattern = $data['sort_pattern'];
         $remote_username = $type == 'remote' ? $data['remote_username'] : '';
-        $remote_password = $type == 'remote' ? $data['remote_password'] : '';
+        $remote_password = $type == 'remote' ? hash('sha256', $data['remote_password']) : '';
 
         $sql = 'INSERT INTO `catalog` (`name`, `path`, `catalog_type`, ' .
             '`rename_pattern`, `sort_pattern`, `remote_username`, ' .

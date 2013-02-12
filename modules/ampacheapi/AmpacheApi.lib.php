@@ -114,8 +114,7 @@ class AmpacheApi {
         // Set up the handshake
         $results = array();
         $timestamp = time();
-        $key = hash('sha256', $this->password);
-        $passphrase = hash('sha256', $timestamp . $key);
+        $passphrase = hash('sha256', $timestamp . $this->password);
 
         $options = array(
             'timestamp' => $timestamp,
