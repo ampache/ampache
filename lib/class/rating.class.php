@@ -55,7 +55,7 @@ class Rating extends database_object {
      */
     public static function gc() {
         foreach(array('song', 'album', 'artist', 'video') as $object_type) {
-            Dba::write("DELETE FROM `rating` USING `rating` LEFT JOIN `$object_type` ON `$object_type`.`id` = `rating`.`object_type` WHERE `object_type` = '$object_type` AND `$object_type`.`id` IS NULL");
+            Dba::write("DELETE FROM `rating` USING `rating` LEFT JOIN `$object_type` ON `$object_type`.`id` = `rating`.`object_type` WHERE `object_type` = '$object_type' AND `$object_type`.`id` IS NULL");
         }
     }
 
