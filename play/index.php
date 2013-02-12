@@ -37,9 +37,7 @@ $oid         = $_REQUEST['oid']
             // FIXME: Any place that doesn't use oid should be fixed
             ? scrub_in($_REQUEST['oid'])
             : scrub_in($_REQUEST['song']);
-$otype = scrub_in($_REQUEST['otype']);
 $sid         = scrub_in($_REQUEST['ssid']);
-$xml_rpc    = scrub_in($_REQUEST['xml_rpc']);
 $video        = make_bool($_REQUEST['video']);
 $type        = scrub_in($_REQUEST['type']);
 $transcode_to	= scrub_in($_REQUEST['transcode_to']);
@@ -68,11 +66,6 @@ if (empty($oid) && empty($demo_id) && empty($random)) {
     debug_event('play', 'No object UID specified, nothing to play', 2);
     header('HTTP/1.1 400 Nothing To Play');
     exit;
-}
-
-// If we're XML-RPC and it's enabled, use system user
-if ($xml_rpc == 1 && Config::get('xml_rpc') && empty($uid)) {
-    $uid = '-1';
 }
 
 if (empty($uid)) {
@@ -213,30 +206,28 @@ if (Config::get('lock_songs')) {
     }
 }
 
-/* Check to see if this is a 'remote' catalog */
 if ($catalog->catalog_type == 'remote') {
-
-    preg_match("/(.+)\/play\/index.+/",$media->file,$match);
-
-    $token = xmlRpcClient::ampache_handshake($match['1'],$catalog->key);
+    $remote_handle = $catalog->connect();
 
     // If we don't get anything back we failed and should bail now
-    if (!$token) {
-        debug_event('xmlrpc-stream','Error Unable to get Token from ' . $match['1'] . ' check target servers logs','1');
+    if (!$remote_handle) {
+        debug_event('play', 'Connection to remote server failed', 1);
         exit;
     }
 
-    $sid   = xmlRpcClient::ampache_create_stream_session($match['1'],$token);
+    $handshake = $remote_handle->info();
+    $url = $media->file . '&ssid=' . $handshake['auth'];
 
-    $extra_info = "&xml_rpc=1&sid=$sid";
-    header('Location: ' . $media->file . $extra_info);
-    debug_event('xmlrpc-stream',"Start XML-RPC Stream - " . $media->file . $extra_info,'5');
+    header('Location: ' . $url);
+    debug_event('play', 'Started remote stream - ' . $url, 5);
 
-    /* If this is a voting tmp playlist remove the entry, we do this regardless of play amount */
-    if ($demo_id) { $democratic->delete_from_oid($oid,'song'); } // if democratic
+    // Handle democratic removal 
+    if ($demo_id) {
+        $democratic->delete_from_oid($oid, 'song');
+    }
 
     exit;
-} // end if remote catalog
+}
 
 /* If we don't have a file, or the file is not readable */
 if (!$media->file OR !is_readable($media->file)) {

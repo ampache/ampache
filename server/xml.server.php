@@ -70,7 +70,7 @@ if (!Access::check_network('init-api', $username, 5)) {
 
 if ($_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
         Session::extend($_REQUEST['auth']);
-        $GLOBALS['user'] = User::get_from_username($session['username']);
+        $GLOBALS['user'] = User::get_from_username($username);
 }
 
 // Get the list of possible methods for the Ampache API

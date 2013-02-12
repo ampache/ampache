@@ -1038,11 +1038,11 @@ class Catalog extends database_object {
     } // add_to_catalog
 
     /**
-     * _connect_remote
+     * connect
      *
      * Connects to the remote catalog that we are.
      */
-    private function _connect_remote() {
+    public function connect() {
         try {
             $remote_handle = new AmpacheApi(array(
                 'username' => $this->remote_username,
@@ -1074,7 +1074,7 @@ class Catalog extends database_object {
      * database.
      */
     public function update_remote_catalog($type = 0) {
-        $remote_handle = $this->_connect_remote();
+        $remote_handle = $this->connect();
         if (!$remote_handle) {
             return false;
         }
@@ -1110,7 +1110,7 @@ class Catalog extends database_object {
                 }
                 else {
                     $data['song']['catalog'] = $this->id;
-                    $data['song']['file'] = preg_replace('/ssid=.*&/', '', $data['song']['url']);
+                    $data['song']['file'] = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
                     if (!Song::insert($data['song'])) {
                         debug_event('remote_catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
                         Error::add('general', T_('Unable to Insert Song - %s'), $data['song']['title']);
@@ -1138,7 +1138,7 @@ class Catalog extends database_object {
      */
     public function clean_remote_catalog() {
         //FIXME: Implement
-        $remote_handle = $this->_connect_remote();
+        $remote_handle = $this->connect();
         if (!$remote_handle) {
             return false;
         }
