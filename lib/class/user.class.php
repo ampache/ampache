@@ -73,7 +73,7 @@ class User extends database_object {
      *
      * This returns the number of user accounts that exist.
      */
-    public function count() {
+    public static function count() {
         $sql = 'SELECT COUNT(`id`) FROM `user`';
         $db_results = Dba::read($sql);
         $data = Dba::fetch_row($db_results);
@@ -81,12 +81,13 @@ class User extends database_object {
 
         $time = time();
         $last_seen = $time - 1200;
-        $sql = 'SELECT COUNT(DISTINCT `session`.`username) FROM `session` ' .
+        $sql = 'SELECT COUNT(DISTINCT `session`.`username`) FROM `session` ' .
             'INNER JOIN `user` ON `session`.`username` = `user`.`username` ' .
             'WHERE `session`.`expire` > ? and `user`.`last_seen` > ?';
         $db_results = Dba::read($sql, array($time, $last_seen));
         $data = Dba::fetch_row($db_results);
         $results['connected'] = $data[0];
+        return $results;
     }
 
     /**
