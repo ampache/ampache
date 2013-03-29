@@ -281,8 +281,8 @@ CHANGELOG
   some DLNA devices
 - Fixed typo that caused the height of album art not to display
 - Modified database and added GC for tmp_browse table
-- Added get lyrics and album art using http proxy server #313 
-  + username, password patch
+- Added get lyrics and album art using http proxy server #313 + username,
+  password patch
 - Added lyricswiki link Ticket #70
 - Updated README language
 - Updated getid3 library 2.0.0b4 to 2.0.0b5
