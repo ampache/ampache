@@ -15,6 +15,67 @@ presents an already organised collection in a useful way. It assumes
 that you know best how to manage your files and are capable of
 choosing a suitable method for doing so.
 
+Recommended Version
+-------------------
+
+Currently, the recommended version is [3.6alpha4](https://github.com/ampache/ampache/archive/3.6-alpha4.tar.gz).
+This was tagged before the switch to PDO and is less likely than HEAD to have
+weird regressions.
+
+Requirements
+------------
+
+* A web server. All of the following have been used, though Apache
+receives the most testing:
+    * Apache
+    * lighttpd
+    * nginx
+    * IIS
+
+* PHP 5.3 or greater.
+
+* PHP modules:
+    * PDO
+    * PDO_MYSQL
+    * hash
+    * session
+    * json
+
+* MySQL 5.x
+
+Installation
+------------
+
+Please see docs/INSTALL
+
+Upgrading
+---------
+
+If you are upgrading from an older version of Ampache we recommend
+moving the old directory out of the way, extracting the new copy in
+its place and then copying the old config file into config/. All
+database updates will be handled by Ampache.
+
+License
+-------
+
+Ampache is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License v2
+as published by the Free Software Foundation.
+
+Ampache includes some external modules that carry their own licensing.
+
+* [getID3()](http://getid3.sourceforge.net/): GPL v2
+* [Horde_Browser](http://www.horde.org/): LGPL v2.1
+* [PHP-gettext](https://launchpad.net/php-gettext): GPL v2
+* php_musicbrainz: LGPL v2.1
+* PHP MPD interface: GPL v2
+* [PHPMailer](http://phpmailer.codeworxtech.com/): LGPL v2.1
+* [Prototype](http://www.prototypejs.org/): MIT
+* [Snoopy](http://snoopy.sourceforge.net/): LGPL v2.1
+* validateEmail.php: "free for any use"
+* [Whatever:hover](http://www.xs4all.nl/~peterned): LGPL v2.1
+
 Translations
 ------------
 
@@ -56,61 +117,6 @@ Thanks to all those who have helped make Ampache awesome:
 * Kevin Purdy (purdyk)
 * Charlie Smotherman (porthose)
 
-Requirements
-------------
-
-A web server. All of the following have been used, though Apache
-receives the most testing:
-
-* Apache
-* lighttpd
-* nginx
-* IIS
-
-PHP 5.3 or greater.
-
-Required PHP modules:
-
-* PDO
-* PDO_MYSQL
-* hash
-* session
-* json
-
-MySQL 5.x
-
-Installation
-------------
-
-Please see docs/INSTALL
-
-Upgrading
----------
-
-If you are upgrading from an older version of Ampache we recommend
-moving the old directory out of the way, extracting the new copy in
-its place and then copying the old config file into config/. All
-database updates will be handled by Ampache.
-
-License
--------
-
-Ampache is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License v2
-as published by the Free Software Foundation.
-
-Ampache includes some external modules that carry their own licensing.
-
-* [getID3()](http://getid3.sourceforge.net/): GPL v2
-* [Horde_Browser](http://www.horde.org/): LGPL v2.1
-* [PHP-gettext](https://launchpad.net/php-gettext): GPL v2
-* php_musicbrainz: LGPL v2.1
-* PHP MPD interface: GPL v2
-* [PHPMailer](http://phpmailer.codeworxtech.com/): LGPL v2.1
-* [Prototype](http://www.prototypejs.org/): MIT
-* [Snoopy](http://snoopy.sourceforge.net/): LGPL v2.1
-* validateEmail.php: "free for any use"
-* [Whatever:hover](http://www.xs4all.nl/~peterned): LGPL v2.1
 
 Contact Us
 ----------
