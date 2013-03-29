@@ -1,0 +1,14 @@
+Q:	Why can't I fetch https pages?
+A:	Using Snoopy to fetch an https page requires curl. Check if curl is installed on your host. If curl is installed, it may be located in a different place than the default. By default Snoopy looks for curl in /usr/local/bin/curl. Run 'which curl' and find out your location. If it differs from the default, then you'll need to set the $snoopy->curl_path variable to the location of your curl installation. Here's an example of the code :
+		include "Snoopy.class.php";
+		$snoopy = new Snoopy;
+		$snoopy->curl_path="/usr/bin/curl";
+
+Q:	where does the function preg_match_all come from?
+A:	PCRE functions in PHP 3.0.9 and later
+
+Q:	I get the error: Warning: Wrong parameter count for fsockopen()
+A:	Upgrade your verion of PHP to 3.0.9 or later
+
+Q:	Snoopy cuts of my results every time. What's wrong?
+A:	Upgrade your verion of PHP to 3.0.9 or later

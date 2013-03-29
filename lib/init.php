@@ -92,7 +92,7 @@ $results['cookie_secure']    = $results['session_cookiesecure'];
 require_once $prefix . '/modules/getid3/getid3.php';
 require_once $prefix . '/modules/phpmailer/class.phpmailer.php';
 require_once $prefix . '/modules/phpmailer/class.smtp.php';
-require_once $prefix . '/modules/infotools/Snoopy.class.php';
+require_once $prefix . '/modules/snoopy/Snoopy.class.php';
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
 require_once $prefix . '/modules/infotools/lastfm.class.php';
 require_once $prefix . '/modules/php_musicbrainz/mbQuery.php';

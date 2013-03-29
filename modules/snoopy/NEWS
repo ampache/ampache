@@ -1,0 +1,61 @@
+RELEASE NOTE: v1.2.4
+October 22, 2008
+
+https fetches were not properly escaping shell args for curl binary execution. This is fixed.
+
+RELEASE NOTE: v1.2.3
+November 7, 2005
+
+A typo was introduced in 1.2.2 which broke the whole release. This has been fixed.
+A couple small fixes have been implemented also.
+
+RELEASE NOTE: v1.2.2
+October 30, 2005
+
+Fixed a bug with the bugfix for the security hole.
+
+RELEASE NOTE: v1.2.1
+October 24, 2005
+
+Fixed a few outstanding bugs and a potential security hole.
+
+RELEASE NOTE: v1.2
+November 17, 2004
+
+Fixed a number of outstanding bugs.
+
+RELEASE NOTE: v1.01
+
+PHP fixed a bug with fread() which consequently broke the way Snoopy called it. This has been fixed.
+Renamed Snoopy.class.inc to Snoopy.class.php for proper file extention.
+
+RELEASE NOTE: v1.0
+
+Added fetchform() function for fetching form elements from an html page.
+For SSL support, you must have cURL installed. see http://curl.haxx.se
+for details. Snoopy does not use the cURL library fuctions within PHP,
+as these are not stable as of this Snoopy release.
+Fixed bug with posting arrays of data.
+Added status variable to track http status.
+Several other bug fixes, see Changelog.
+RELEASE NOTE: v0.93
+
+A bug was fixed with redirection headers not containing the hostname, doubling up the redirection location URL.
+
+There is also a new variable, $lastredirectaddr that contains the last redirection URL.
+
+RELEASE NOTE: v0.92
+March 9, 2000
+
+A bug was fixed with redirection on MS web servers. Also, cookies are now passed through redirects.
+
+This release also adds the ability to traverse html framed pages. Just set $maxframes to the recursion depth you want to allow, and results are returned in $this->results as an array. See the README for an example.
+
+-Monte
+
+RELEASE NOTE: v0.91
+February 22, 2000
+
+In previous versions of Snoopy, $this->header was an array containing key/value pairs of headers returned from fetched content, not including HTTP and GET headers. If a key value was the same, the old value was overwritten (Two Set-Cookie: headers for example). This was overcome by making $this->header a simple array containing every header returned. Therefore, it will now be up to the programmer to split these headers into key/value pairs if so desired.
+
+-Monte

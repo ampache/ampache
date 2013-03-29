@@ -1,0 +1,105 @@
+Version 1.2.4
+-------------
+
+    - fix command line escapement vulnerability with execution of curl binary on https fetches (mohrt)
+
+Version 1.2.3
+-----------
+    - updated the version variable in the code to reflect the new version number
+    - fixed a typo that I introduced in 1.2.2 (the first character of the file is a "z" (gene_wood, Marc Desrousseaux, Jan Pedersen)
+    - fixed BUG # 1328793 : fetch is case sensetive when it comes to the scheme (http / https) (gene_wood)
+
+Version 1.2.2
+-----------
+    - incorporated PATCH # 985470 : pass port information in http 1.1 Host header ( http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.23 ) (gene_wood)
+    - fixed BUG # 1110049 : redirect is case sensitive
+    - fixed bug in security bugfix from 1.2.1 (gene_wood, kellan, zaruba)
+
+Version 1.2.1
+-----------
+    - fixed potential security issue with unchecked variables being passed to exec (for https with curl) (gene_wood)
+    - fixed BUG # 1086830 : submitlinks,fetchlinks and submittext expandlinks with the URI of the original page not the refreshed page (gene_wood)
+    - fixed BUG # 1077870 : Snoopy can't deal with multiple spaces in a refresh tag (gene_wood)
+    - fixed BUG # 864047 : Root relative links are treated as relative (gene_wood)
+    - fixed BUG # 1097134 : Undefined URI_PARTS["path"] generates Notice (gene_wood)
+
+Version 1.2
+-----------
+    - fixed BUG # 1014823 : Meta redirect regex inaccurate (gene_wood)
+    - fixed BUG # 999079 : Trailing slashes not removed in uri passed to fetchlinks (gene_wood)
+    - fixed BUG # 642958 and 912060 : $URI_PARTS["query"] causing undefined variable notices (gene_wood)
+    - fixed BUG # 626849 : cURL security risk (Tajh Leitso, gene_wood)
+    - fixed BUG # 626849 : Corrects the redirect function under the submit functions (Tajh Leitso, gene_wood)
+    - fixed BUG # 912060 : Undefined variable: postdata (gene_wood)
+    - fixed BUG # 858526 : win32 tmp/$headerfile create error (gene_wood)
+    - fixed BUG # 929682 : Called undefined function is_executable() on line 194. (gene_wood)
+    - fixed BUG # 859711 : typo: http://snoopy.sourceforge.com (gene_wood)
+    - fixed BUG # 852993 : double urlencoding breaks redirect (gene_wood)
+    - added proxy user/pass support (Robert Zwink, Monte)
+	- fixed post data array problem (stefan, Monte)
+
+Version 1.01
+-----------
+	- fixed problem with PHP 4.3.2 and fread() (Monte)
+
+Version 1.0
+-----------
+	- added textarea to stripform functionality (Monte)
+    - fixed multiple cookie setting problem (Monte)
+    - fixed problem where extra text inside <frame src (Monte)
+    - fixed problem where extra text inside <a href (Monte)
+    - removed http request header from curl fetched
+      documents, not needed (Monte)
+    - added carriage return to newlines on headers (Monte)
+    - fixed bug with curl, removed single quotes
+	- fixed bug with curl and "&" in the URL
+	- added ability to post files. (Andrei)
+
+Version 0.94
+------------
+    - Added fetchform() function
+    - Fixed misc issues with frames
+    - Added SSL support via cURL
+    - fixed bug with posting arrays of data
+    - added status variable for http status
+
+Version 0.93
+------------
+    - fixed bug with hostname match in a redirect location header
+    - added $lastredirectaddr variable
+
+Version 0.92
+------------
+    - fixed redirect bug with MS web server
+    - added ability to pass set cookies through redirects
+    - added ability to traverse html frames
+
+Version 0.91
+------------
+    - fixed bug with return headers being overwritten.
+      Please read the NEWS file for important notes. (Monte)
+
+Version 0.9
+-----------
+    - added support for read timeouts (Andrei)
+    - standardized distribution (Andrei)
+
+Version 0.1e
+------------
+    - fixed bug in fetchlinks logic (Monte)
+
+Version 0.1d
+------------
+    - fixed redirect bug without fully qualified url (Monte)
+
+Version 0.1c
+------------
+    - fixed bug on submitting formvars after a redirect (Monte)
+
+Version 0.1b
+------------
+    - fixed bug to allow empty post vars on a submit (Monte)
+
+Version 0.1
+------------
+    - initial release (Monte)
