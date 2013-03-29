@@ -134,7 +134,8 @@ function install_insert_db($username,$password,$hostname,$database,$dbuser=false
         return false;
     }
 
-    $db_exists = Dba::check_database_exists();
+    // FIXME
+    $db_exists = false;
 
     if ($db_exists && $_POST['existing_db']) {
         // Rien a faire, we've got the db just blow through
@@ -238,10 +239,6 @@ function install_create_config($web_path,$username,$password,$hostname,$database
     // Connect to the DB
     if(!Dba::check_database()) {
         Error::add('general', T_("Database Connection Failed Check Hostname, Username and Password"));
-        return false;
-    }
-    if (!Dba::check_database_exists()) {
-        Error::add('general', sprintf(T_('Database selection failed. Check existence of %s'), $database));
         return false;
     }
 

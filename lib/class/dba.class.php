@@ -280,14 +280,6 @@ class Dba {
         return true;
     }
 
-    public static function check_database_exists() {
-        $dbh = self::_connect();
-        if ($dbh) {
-            return $dbh->exec('USE `' . Config::get('database_name') . '`');
-        }
-        return false;
-    }
-
     /**
      * check_database_inserted
      *
