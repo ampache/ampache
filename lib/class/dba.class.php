@@ -63,7 +63,7 @@ class Dba {
         $tries = 0;
         do {
             $stmt = self::_query($sql, $params);
-        } while (!$stmt && $tries < 3);
+        } while (!$stmt && $tries++ < 3);
 
         return $stmt;
     }
