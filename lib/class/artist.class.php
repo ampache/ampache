@@ -296,14 +296,17 @@ class Artist extends database_object {
 
         $exists = false;
 
-        $sql = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
-        $db_results = Dba::read($sql, array($mbid));
+        if ($mbid) {
+            $sql = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
+            $db_results = Dba::read($sql, array($mbid));
 
-        if ($row = Dba::fetch_assoc($db_results)) {
-            $id = $row['id'];
-            $exists = true;
+            if ($row = Dba::fetch_assoc($db_results)) {
+                $id = $row['id'];
+                $exists = true;
+            }
         }
-        else {
+
+        if (!$exists) {
             $sql = 'SELECT `id`, `mbid` FROM `artist` WHERE `name` LIKE ?';
             $db_results = Dba::read($sql, array($name));
 
