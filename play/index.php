@@ -341,6 +341,9 @@ if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
         debug_event('play', 'Decided not to transcode', 5);
     }
 }
+else if ($transcode_to) {
+    debug_event('play', 'Transcoding is impossible but we received an explicit request for ' . $transcode_to, 2);
+}
 
 if ($transcode) {
     header('Accept-Ranges: none');
