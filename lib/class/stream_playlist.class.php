@@ -156,6 +156,7 @@ class Stream_Playlist {
 
         $ext = $type;
         switch($type) {
+            case 'download':
             case 'democratic':
             case 'localplay':
             case 'html5_player':
