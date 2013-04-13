@@ -38,7 +38,7 @@ class Stream_URL extends memory_object {
         $results = array();
 
         foreach ($elements as $element) {
-            list($key, $value) = explode('=', $items, 1);
+            list($key, $value) = explode('=', $element);
             switch ($key) {
                 case 'oid':
                     $key = 'id';
