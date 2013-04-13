@@ -18,9 +18,7 @@ choosing a suitable method for doing so.
 Recommended Version
 -------------------
 
-Currently, the recommended version is [3.6alpha4](https://github.com/ampache/ampache/archive/3.6-alpha4.tar.gz).
-This was tagged before the switch to PDO and is less likely than HEAD to have
-weird regressions.
+Currently, the recommended version is [git HEAD](https://github.com/ampache/ampache/archive/master.tar.gz).
 
 Requirements
 ------------
