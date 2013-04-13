@@ -240,8 +240,10 @@ class Democratic extends Tmp_Playlist {
 
         $results = array();
 
-        while ($results[] = Dba::fetch_assoc($db_results)) {
-            // Nada
+        while ($row = Dba::fetch_assoc($db_results)) {
+            if ($row['id']) {
+                $results[] = $row;
+            }
         }
 
         return $results;
