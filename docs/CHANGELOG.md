@@ -119,7 +119,7 @@ CHANGELOG
 - Added Fresh theme
 - Fixed spurious API handshake failure output
 
-3.6-Alpha1 *04/27/2011*
+3.6-Alpha1 *2011-04-27*
 -----------------------
 - Fixed forced transcoding
 - Fixed display during catalog updates (reported by Demonic)
