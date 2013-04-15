@@ -64,7 +64,7 @@ if ($link) {
 }
 
 /** This is the version.... fluf nothing more... **/
-$results['version']        = '3.6-Alpha4-DEV';
+$results['version']        = '3.6-alpha5-DEV';
 $results['int_config_version']    = '12';
 
 if ($results['force_ssl']) {
