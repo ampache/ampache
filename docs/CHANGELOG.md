@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+3.6-FUTURE
+----------
+
 3.6-alpha5 *2013-04-15*
 ----------------------
 - Fixed persistent XSS vulnerability in user self-editing (reported by

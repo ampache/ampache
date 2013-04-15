@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -22,12 +22,6 @@
 
 require_once 'lib/init.php';
 
-// Switch on actions
-switch ($_REQUEST['action']) {
-	default:
-		require_once Config::get('prefix') . '/templates/show_html5_player.inc.php';
-	break;
-} // end switch
-
+require_once Config::get('prefix') . '/templates/show_html5_player.inc.php';
 
 ?>
