@@ -3,6 +3,8 @@ CHANGELOG
 
 3.6-FUTURE
 ----------
+- Fixed "Pure Random" / Random URLs (reported by mafe)
+
 
 3.6-alpha5 *2013-04-15*
 ----------------------
