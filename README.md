@@ -44,7 +44,7 @@ receives the most testing:
 Installation
 ------------
 
-Please see docs/INSTALL
+Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
 
 Upgrading
 ---------
