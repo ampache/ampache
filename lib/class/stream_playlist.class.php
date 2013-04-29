@@ -99,7 +99,7 @@ class Stream_Playlist {
     private static function _media_to_urlarray($media) {
         $urls = array();
         foreach($media as $medium) {
-            debug_event('stream_playlist', 'Adding ' . json_encode($media), 5);
+            debug_event('stream_playlist', 'Adding ' . json_encode($medium), 5);
             $url = array();
 
             $type = $medium['object_type'];
