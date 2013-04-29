@@ -337,6 +337,10 @@ class Update {
 
         $update_string = '- Drop enum for the type field in session.<br />';
         $version[] = array('version' => '360012', 'description' => $update_string);
+
+        $update_string = '- Update stream_playlist table to address performance issues.<br />';
+        $version[] = array('version' => '360013', 'description' => $update_string);
+
         return $version;
 
     }
@@ -1505,12 +1509,21 @@ class Update {
     }
 
     /**
-     * update_360012()
+     * update_360012
      *
      * Drop the enum on session.type
      */
     public static function update_360012() {
         return Dba::write('ALTER TABLE `session` CHANGE `type` `type` VARCHAR(16) DEFAULT NULL');
+    }
+
+    /**
+     * update_360013
+     *
+     * MyISAM works better out of the box for the stream_playlist table
+     */
+    public static function update_360013() {
+        return Dba::write('ALTER TABLE `stream_playlist` ENGINE=MyISAM');
     }
 }
 ?>

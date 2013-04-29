@@ -3,6 +3,7 @@ CHANGELOG
 
 3.6-FUTURE
 ----------
+- Improved the performance of stream playlist creation (reported by AkbarSerad)
 - Fixed "Pure Random" / Random URLs (reported by mafe)
 
 
