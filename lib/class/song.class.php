@@ -50,24 +50,26 @@ class Song extends database_object implements media {
 
     /**
      * Constructor
+     *
      * Song class, for modifing a song.
      */
-    public function __construct($id='') {
+    public function __construct($id = null) {
 
         if (!$id) { return false; }
 
-        /* Assign id for use in get_info() */
         $this->id = intval($id);
 
-        /* Get the information from the db */
         if ($info = $this->_get_info()) {
-
-            foreach ($info as $key=>$value) {
+            foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
             $data = pathinfo($this->file);
             $this->type = strtolower($data['extension']);
             $this->mime = self::type_to_mime($this->type);
+        }
+        else {
+            $this->id = null;
+            return false;
         }
 
         return true;
@@ -207,31 +209,29 @@ class Song extends database_object implements media {
 
     /**
      * _get_info
-     * get's the vars for $this out of the database
-     * Taken from the object
      */
     private function _get_info() {
 
-        $id = intval($this->id);
+        $id = $this->id;
 
-        if (parent::is_cached('song',$id)) {
-            return parent::get_from_cache('song',$id);
+        if (parent::is_cached('song', $id)) {
+            return parent::get_from_cache('song', $id);
         }
 
-        /* Grab the basic information from the catalog and return it */
-        $sql = "SELECT song.id,file,catalog,album,year,artist,".
-            "title,bitrate,rate,mode,size,time,track,played,song.enabled,update_time,".
-            "mbid,".
-            "addition_time FROM `song` WHERE `song`.`id` = '$id'";
-        $db_results = Dba::read($sql);
+        $sql = 'SELECT `id`, `file`, `catalog`, `album`, `year`, `artist`,' .
+            '`title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, ' .
+            '`played`, `enabled`, `update_time`, `mbid`, `addition_time` ' .
+            'FROM `song` WHERE `id` = ?';
+        $db_results = Dba::read($sql, array($id));
 
         $results = Dba::fetch_assoc($db_results);
+        if (isset($results['id'])) {
+            parent::add_to_cache('song', $id, $results);
+            return $results;
+        }
 
-        parent::add_to_cache('song',$id,$results);
-
-        return $results;
-
-    } // _get_info
+        return false;
+    }
 
     /**
       * _get_ext_info
