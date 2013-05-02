@@ -1136,53 +1136,53 @@ class Catalog extends database_object {
      * 
      * Removes remote songs that no longer exist.
      */
-    public function clean_remote_catalog() {
-        //FIXME: Implement
+    private function clean_remote_catalog() {
         $remote_handle = $this->connect();
         if (!$remote_handle) {
+            debug_event('remote-clean', 'Remote login failed', 1, 'ampache-catalog');
             return false;
         }
 
-        $sql = 'SELECT `id`, `url` FROM `song` WHERE `catalog` = ?';
+        $dead = 0;
+
+        $sql = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
+            debug_event('remote-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
             try {
-                $song = $remote_handle->send_command('url_to_song', array('url' => $row['url']));
+                $song = $remote_handle->send_command('url_to_song', array('url' => $row['file']));
             }
             catch (Exception $e) {
                 // FIXME: What to do, what to do
             }
-
-            debug_event('catalog', json_encode($song), 5);
+           
+            if (count($song) == 1) {
+                debug_event('remote-clean', 'keeping song', 5, 'ampache-catalog');
+            }
+            else {
+                debug_event('remote-clean', 'removing song', 5, 'ampache-catalog');
+                $dead++;
+                Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
+            }
         }
-        return true;
+
+        return $dead;
     }
 
     /**
-     * clean_catalog
-     * Cleans the catalog of files that no longer exist.
+     * clean_local_catalog
+     *
+     * Removes local songs that no longer exist.
      */
-    public function clean_catalog() {
-
-        // We don't want to run out of time
-        set_time_limit(0);
-
-        debug_event('clean', 'Starting on ' . $this->name, 5);
-
-        require_once Config::get('prefix') . '/templates/show_clean_catalog.inc.php';
-        ob_flush();
-        flush();
-
-        // Do a quick check to make sure that the root of the catalog is
-        // readable. This will minimize the loss of catalog data if
-        // mount points fail
-        if ($this->catalog_type == 'local' && !is_readable($this->path)) {
+     private function clean_local_catalog() {
+        if (!is_readable($this->path)) {
+            // First sanity check; no point in proceeding with an unreadable
+            // catalog root.
             debug_event('catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
             Error::add('general', T_('Catalog Root unreadable, stopping clean'));
             Error::display('general');
-            return false;
+            return 0;
         }
-
 
         $dead_total = 0;
         $stats = self::get_stats($this->id);
@@ -1211,9 +1211,35 @@ class Catalog extends database_object {
                     '(' . implode(',',$dead) . ')';
                 $db_results = Dba::write($sql);
             }
-            debug_event('clean', "$media_type finished, $dead_count removed from " .
-                $this->name, 5);
         }
+        return $dead_total;
+    }
+
+    /**
+     * clean_catalog
+     *
+     * Cleans the catalog of files that no longer exist.
+     */
+    public function clean_catalog() {
+
+        // We don't want to run out of time
+        set_time_limit(0);
+
+        debug_event('clean', 'Starting on ' . $this->name, 5);
+
+        require_once Config::get('prefix') . '/templates/show_clean_catalog.inc.php';
+        ob_flush();
+        flush();
+
+        if ($this->catalog_type == 'remote') {
+            $dead_total = $this->clean_remote_catalog();
+        }
+        else {
+            $dead_total = $this->clean_local_catalog();
+        }
+
+        debug_event('clean', 'clean finished, ' . $dead_count .
+            ' removed from '. $this->name, 5);
 
         // Remove any orphaned artists/albums/etc.
         self::gc();
