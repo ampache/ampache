@@ -71,7 +71,7 @@ class Stream {
                 '(SELECT DISTINCT `user_preference`.`user` ' .
                 'FROM `preference` JOIN `user_preference` ' .
                 'ON `preference`.`id` = ' .
-                '`user_preferece`.`preference` ' .
+                '`user_preference`.`preference` ' .
                 "WHERE `preference`.`name` = 'play_type' " .
                 "AND `user_preference`.`value` = 'downsample')";
 
