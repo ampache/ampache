@@ -272,20 +272,17 @@ class getid3_ac3 extends getid3_handler
 	}
 
 	public static function audioCodingModeLookup($acmod) {
-		static $audioCodingModeLookup = array();
-		if (empty($audioCodingModeLookup)) {
-			// array(channel configuration, # channels (not incl LFE), channel order)
-			$audioCodingModeLookup = array (
-				0 => array('channel_config'=>'1+1', 'num_channels'=>2, 'channel_order'=>'Ch1,Ch2'),
-				1 => array('channel_config'=>'1/0', 'num_channels'=>1, 'channel_order'=>'C'),
-				2 => array('channel_config'=>'2/0', 'num_channels'=>2, 'channel_order'=>'L,R'),
-				3 => array('channel_config'=>'3/0', 'num_channels'=>3, 'channel_order'=>'L,C,R'),
-				4 => array('channel_config'=>'2/1', 'num_channels'=>3, 'channel_order'=>'L,R,S'),
-				5 => array('channel_config'=>'3/1', 'num_channels'=>4, 'channel_order'=>'L,C,R,S'),
-				6 => array('channel_config'=>'2/2', 'num_channels'=>4, 'channel_order'=>'L,R,SL,SR'),
-				7 => array('channel_config'=>'3/2', 'num_channels'=>5, 'channel_order'=>'L,C,R,SL,SR')
-			);
-		}
+		// array(channel configuration, # channels (not incl LFE), channel order)
+		static $audioCodingModeLookup = array (
+			0 => array('channel_config'=>'1+1', 'num_channels'=>2, 'channel_order'=>'Ch1,Ch2'),
+			1 => array('channel_config'=>'1/0', 'num_channels'=>1, 'channel_order'=>'C'),
+			2 => array('channel_config'=>'2/0', 'num_channels'=>2, 'channel_order'=>'L,R'),
+			3 => array('channel_config'=>'3/0', 'num_channels'=>3, 'channel_order'=>'L,C,R'),
+			4 => array('channel_config'=>'2/1', 'num_channels'=>3, 'channel_order'=>'L,R,S'),
+			5 => array('channel_config'=>'3/1', 'num_channels'=>4, 'channel_order'=>'L,C,R,S'),
+			6 => array('channel_config'=>'2/2', 'num_channels'=>4, 'channel_order'=>'L,R,SL,SR'),
+			7 => array('channel_config'=>'3/2', 'num_channels'=>5, 'channel_order'=>'L,C,R,SL,SR'),
+		);
 		return (isset($audioCodingModeLookup[$acmod]) ? $audioCodingModeLookup[$acmod] : false);
 	}
 
@@ -326,7 +323,7 @@ class getid3_ac3 extends getid3_handler
 	}
 
 	public static function channelsEnabledLookup($acmod, $lfeon) {
-		$channelsEnabledLookup = array(
+		$lookup = array(
 			'ch1'=>(bool) ($acmod == 0),
 			'ch2'=>(bool) ($acmod == 0),
 			'left'=>(bool) ($acmod > 1),
@@ -339,15 +336,15 @@ class getid3_ac3 extends getid3_handler
 		switch ($acmod) {
 			case 4:
 			case 5:
-				$channelsEnabledLookup['surround_mono']  = true;
+				$lookup['surround_mono']  = true;
 				break;
 			case 6:
 			case 7:
-				$channelsEnabledLookup['surround_left']  = true;
-				$channelsEnabledLookup['surround_right'] = true;
+				$lookup['surround_left']  = true;
+				$lookup['surround_right'] = true;
 				break;
 		}
-		return $channelsEnabledLookup;
+		return $lookup;
 	}
 
 	public static function heavyCompression($compre) {

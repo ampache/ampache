@@ -16,14 +16,15 @@
 
 getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.audio.ogg.php', __FILE__, true);
 
+/**
+* @tutorial http://flac.sourceforge.net/format.html
+*/
 class getid3_flac extends getid3_handler
 {
 	const syncword = 'fLaC';
 
 	public function Analyze() {
 		$info = &$this->getid3->info;
-
-		// http://flac.sourceforge.net/format.html
 
 		$this->fseek($info['avdataoffset']);
 		$StreamMarker = $this->fread(4);
@@ -146,7 +147,7 @@ class getid3_flac extends getid3_handler
 			if ($info['flac']['uncompressed_audio_bytes'] == 0) {
 				return $this->error('Corrupt FLAC file: uncompressed_audio_bytes == zero');
 			}
-			if (!$this->isDependencyFor('matroska')) {
+			if (!empty($info['flac']['compressed_audio_bytes'])) {
 				$info['flac']['compression_ratio'] = $info['flac']['compressed_audio_bytes'] / $info['flac']['uncompressed_audio_bytes'];
 			}
 		}
@@ -357,7 +358,7 @@ class getid3_flac extends getid3_handler
 			$picture['data'] = $this->fread($data_length);
 		} else {
 			$picture['data'] = $this->saveAttachment(
-				$picture['type'].'_'.$this->ftell(),
+				str_replace('/', '_', $picture['type']).'_'.$this->ftell(),
 				$this->ftell(),
 				$data_length,
 				$picture['image_mime']);

@@ -481,9 +481,7 @@ class getid3_lib
 		//   $foo = array('path'=>array('to'=>'array('my'=>array('file.txt'))));
 		// or
 		//   $foo['path']['to']['my'] = 'file.txt';
-		while ($ArrayPath && ($ArrayPath{0} == $Separator)) {
-			$ArrayPath = substr($ArrayPath, 1);
-		}
+		$ArrayPath = ltrim($ArrayPath, $Separator);
 		if (($pos = strpos($ArrayPath, $Separator)) !== false) {
 			$ReturnedArray[substr($ArrayPath, 0, $pos)] = self::CreateDeepArray(substr($ArrayPath, $pos + 1), $Separator, $Value);
 		} else {
@@ -1150,7 +1148,7 @@ class getid3_lib
 			if (is_writable($tempfilename) && is_file($tempfilename) && ($tmp = fopen($tempfilename, 'wb'))) {
 				fwrite($tmp, $imgData);
 				fclose($tmp);
-				$GetDataImageSize = @GetImageSize($tempfilename, $imageinfo);
+				$GetDataImageSize = @getimagesize($tempfilename, $imageinfo);
 			}
 			unlink($tempfilename);
 		}
@@ -1315,6 +1313,30 @@ class getid3_lib
 
 	public static function trimNullByte($string) {
 		return trim($string, "\x00");
+	}
+
+	public static function getFileSizeSyscall($path) {
+		$filesize = false;
+
+		if (GETID3_OS_ISWINDOWS) {
+			if (class_exists('COM')) { // From PHP 5.3.15 and 5.4.5, COM and DOTNET is no longer built into the php core.you have to add COM support in php.ini:
+				$filesystem = new COM('Scripting.FileSystemObject');
+				$file = $filesystem->GetFile($path);
+				$filesize = $file->Size();
+				unset($filesystem, $file);
+			} else {
+				$commandline = 'for %I in ('.escapeshellarg($path).') do @echo %~zI';
+			}
+		} else {
+			$commandline = 'ls -l '.escapeshellarg($path).' | awk \'{print $5}\'';
+		}
+		if (isset($commandline)) {
+			$output = trim(`$commandline`);
+			if (ctype_digit($output)) {
+				$filesize = (float) $output;
+			}
+		}
+		return $filesize;
 	}
 
 }

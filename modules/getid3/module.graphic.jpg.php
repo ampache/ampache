@@ -31,7 +31,8 @@ class getid3_jpg extends getid3_handler
 		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
 
 		$imageinfo = array();
-		list($width, $height, $type) = getid3_lib::GetDataImageSize(fread($this->getid3->fp, $info['filesize']), $imageinfo);
+		//list($width, $height, $type) = getid3_lib::GetDataImageSize(fread($this->getid3->fp, $info['filesize']), $imageinfo);
+		list($width, $height, $type) = getimagesize($info['filenamepath'], $imageinfo); // http://www.getid3.org/phpBB3/viewtopic.php?t=1474
 
 
 		if (isset($imageinfo['APP13'])) {
