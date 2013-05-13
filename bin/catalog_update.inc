@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
+@ini_set("memory_limit",'32M');
 define('NO_SESSION','1');
 define('CLI', 1);
 
