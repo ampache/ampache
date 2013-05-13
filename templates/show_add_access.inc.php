@@ -85,7 +85,7 @@
         }
         else {
             echo scrub_out($_REQUEST['start']);
-        } ?>" size="20" maxlength="15" />
+        } ?>" size="20" />
     </td>
     <td><?php echo T_('End'); ?>:</td>
     <td>
@@ -96,7 +96,7 @@
         }
         else {
             echo scrub_out($_REQUEST['end']);
-        } ?>" size="20" maxlength="15" />
+        } ?>" size="20" />
     </td>
 </tr>
 </table>

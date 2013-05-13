@@ -3,6 +3,8 @@ CHANGELOG
 
 3.6-FUTURE
 ----------
+- Fixed ACL text field length to allow entry of IPv6 addresses (reported
+  by Baggypants)
 - Fixed regression preventing the use of an existing database during
   installation (reported by cjsmo)
 - Fixed operating on all catalogs via the web interface
