@@ -125,8 +125,7 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false)
         return false;
     }
 
-    // FIXME
-    $db_exists = false;
+    $db_exists = Dba::read('SHOW TABLES');
 
     if ($db_exists && $_POST['existing_db']) {
         // Rien a faire, we've got the db just blow through
