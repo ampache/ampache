@@ -36,31 +36,35 @@ require $prefix . '/templates/install_header.inc.php';
         <form method="post" action="<?php echo $web_path . "/install.php?action=create_db&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" >
 <table>
 <tr>
-    <td class="align"><?php echo T_("Desired Database Name"); ?></td>
+    <td class="align"><?php echo T_('Desired Database Name'); ?></td>
     <td><input type="text" name="local_db" value="ampache" /></td>
 </tr>
 <tr>
-    <td class="align"><?php echo T_("MySQL Hostname"); ?></td>
+    <td class="align"><?php echo T_('MySQL Hostname'); ?></td>
     <td><input type="text" name="local_host" value="localhost" /></td>
 </tr>
 <tr>
-    <td class="align"><?php echo T_("MySQL Administrative Username"); ?></td>
+    <td class="align"><?php echo T_('MySQL port (optional)'); ?></td>
+    <td><input type="text" name="local_port" /></td>
+</tr>
+<tr>
+    <td class="align"><?php echo T_('MySQL Administrative Username'); ?></td>
     <td><input type="text" name="local_username" value="root" /></td>
 </tr>
 <tr>
-    <td class="align"><?php echo T_("MySQL Administrative Password"); ?></td>
+    <td class="align"><?php echo T_('MySQL Administrative Password'); ?></td>
     <td><input type="password" name="local_pass" /></td>
 </tr>
 <tr>
-    <td class="align"><?php echo T_("Create Database User for New Database"); ?>? </td>
+    <td class="align"><?php echo T_('Create Database User for New Database?'); ?></td>
     <td><input type="checkbox" value="create_db_user" name="db_user" onclick="flipField('db_username');flipField('db_password');" /></td>
 </tr>
 <tr>
-    <td class="align"><?php echo T_("Ampache Database Username"); ?></td>
+    <td class="align"><?php echo T_('Ampache Database Username'); ?></td>
     <td><input type="text" id="db_username" name="db_username" value="ampache" /></td>
 </tr>
 <tr>
-    <td class="align"><?php echo T_("Ampache Database User Password"); ?></td>
+    <td class="align"><?php echo T_('Ampache Database User Password'); ?></td>
     <td><input type="password" id="db_password" name="db_password" value="" /></td>
 </tr>
 <tr>
@@ -73,7 +77,7 @@ require $prefix . '/templates/install_header.inc.php';
 </tr>
 <tr>
     <td>&nbsp;</td>
-    <td><input type="submit" value="<?php echo T_("Insert Database"); ?>" /></td>
+    <td><input type="submit" value="<?php echo T_('Insert Database'); ?>" /></td>
 </tr>
 </table>
 </form>

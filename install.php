@@ -41,6 +41,16 @@ $username = scrub_in($_REQUEST['local_username']);
 $password = $_REQUEST['local_pass'];
 $hostname = scrub_in($_REQUEST['local_host']);
 $database = scrub_in($_REQUEST['local_db']);
+$port = scrub_in($_REQUEST['local_port']);
+
+Config::set_by_array(array(
+    'web_path' => $web_path,
+    'database_name' => $database,
+    'database_username' => $username,
+    'database_password' => $password,
+    'database_hostname' => $hostname,
+    'database_port' => $port
+), true);
 
 // Charset and gettext setup
 $htmllang = $_REQUEST['htmllang'];
@@ -76,7 +86,17 @@ unset($safe_dirname);
 
 switch ($_REQUEST['action']) {
     case 'create_db':
-        if (!install_insert_db($username,$password,$hostname,$database)) {
+        if ($_POST['db_user'] == 'create_db_user') {
+            $new_user = scrub_in($_POST['db_username']);
+            $new_pass = $_POST['db_password'];
+        }
+        if (!strlen($new_user) || !strlen($new_pass)) {
+            Error::add('general', T_('Error: Ampache SQL Username or Password missing'));
+            require_once 'templates/show_install.inc.php';
+            break;
+        }
+
+        if (!install_insert_db($new_user, $new_pass, $_POST['overwrite_db'])) {
             require_once 'templates/show_install.inc.php';
             break;
         }
@@ -84,27 +104,11 @@ switch ($_REQUEST['action']) {
         // Now that it's inserted save the lang preference
         Preference::update('lang', '-1', Config::get('lang'));
 
-        header ('Location: ' . $web_path . "/install.php?action=show_create_config&local_db=$database&local_host=$hostname&htmllang=$htmllang&charset=$charset");
+        header ('Location: ' . $web_path . "/install.php?action=show_create_config&local_db=$database&local_host=$hostname&local_port=$port&htmllang=$htmllang&charset=$charset");
     break;
     case 'create_config':
-        // Test and make sure that the values they give us actually work
-        Config::set_by_array(array(
-            'database_username' => $username,
-            'database_password' => $password,
-            'database_hostname' => $hostname
-            ), true
-        );
-        if (!Dba::check_database()) {
-            Error::add('config', T_('Error: Unable to make Database Connection: ') . Dba::error());
-        }
-
-        // Was download pressed?
         $download = (!isset($_POST['write']));
-
-        if (!Error::occurred()) {
-            $created_config = install_create_config($web_path,$username,$password,$hostname,$database,$download);
-        }
-
+        $created_config = install_create_config($download);
         require_once 'templates/show_install_config.inc.php';
     break;
     case 'show_create_config':

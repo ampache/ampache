@@ -52,6 +52,10 @@ require $prefix . '/templates/install_header.inc.php';
     <td class="align"><input type="text" name="local_host" value="<?php echo scrub_out($_REQUEST['local_host']); ?>" /></td>
 </tr>
 <tr>
+    <td class="align"><?php echo T_('MySQL port (optional)'); ?></td>
+    <td><input type="text" name="local_port" value="<?php echo scrub_out($_REQUEST['local_port']);?>" /></td>
+</tr>
+<tr>
     <td class="align"><?php echo T_('MySQL Username'); ?></td>
     <td class="align"><input type="text" name="local_username" value="<?php echo scrub_out($_REQUEST['local_username']); ?>" /></td>
 </tr>

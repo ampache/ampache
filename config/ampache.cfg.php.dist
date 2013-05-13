@@ -32,7 +32,7 @@ database_hostname = localhost
 
 ; Port to use when connecting to your database
 ; DEFAULT: none
-; database_port = 3306
+;database_port = 3306
 
 ; Name of your ampache database
 ; DEFAULT: ampache
