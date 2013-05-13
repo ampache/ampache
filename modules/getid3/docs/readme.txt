@@ -66,6 +66,7 @@ Reads & parses (to varying degrees):
   * MP3/MP2/MP1
   * MPC / Musepack
   * Ogg (Vorbis, OggFLAC, Speex)
+  * AAC / MP4
   * AC3
   * DTS
   * RealAudio
@@ -99,7 +100,7 @@ Reads & parses (to varying degrees):
   * Matroska (MKV)
   * MPEG-1 / MPEG-2
   * NSV (Nullsoft Streaming Video)
-  * Quicktime
+  * Quicktime (including MP4)
   * RealVideo
 
  ¤ still image:

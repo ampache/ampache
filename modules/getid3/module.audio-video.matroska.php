@@ -14,7 +14,6 @@
 /////////////////////////////////////////////////////////////////
 
 
-// from: http://www.matroska.org/technical/specs/index.html
 define('EBML_ID_CHAPTERS',                  0x0043A770); // [10][43][A7][70] -- A system to define basic menus and partition data. For more detailed information, look at the Chapters Explanation.
 define('EBML_ID_SEEKHEAD',                  0x014D9B74); // [11][4D][9B][74] -- Contains the position of other level 1 elements.
 define('EBML_ID_TAGS',                      0x0254C367); // [12][54][C3][67] -- Element containing elements specific to Tracks/Chapters. A list of valid tags can be found <http://www.matroska.org/technical/specs/tagging/index.html>.
@@ -207,11 +206,17 @@ define('EBML_ID_CLUSTERREFERENCEBLOCK',           0x7B); //             [FB] -- 
 define('EBML_ID_CLUSTERREFERENCEVIRTUAL',         0x7D); //             [FD] -- Relative position of the data that should be in position of the virtual block.
 
 
+/**
+* @tutorial http://www.matroska.org/technical/specs/index.html
+*
+* @todo Rewrite EBML parser to reduce it's size and honor default element values
+* @todo After rewrite implement stream size calculation, that will provide additional useful info and enable AAC/FLAC audio bitrate detection
+*/
 class getid3_matroska extends getid3_handler
 {
 	// public options
-	public static $hide_clusters      = true;  // if true, do not return information about CLUSTER chunks, since there's a lot of them and they're not usually useful [default: TRUE]
-    public static $parse_whole_file   = false; // true to parse the whole file, not only header [default: FALSE]
+	public static $hide_clusters    = true;  // if true, do not return information about CLUSTER chunks, since there's a lot of them and they're not usually useful [default: TRUE]
+    public static $parse_whole_file = false; // true to parse the whole file, not only header [default: FALSE]
 
     // private parser settings/placeholders
     private $EBMLbuffer        = '';
@@ -263,10 +268,16 @@ class getid3_matroska extends getid3_handler
 					case 1: // Video
 						$track_info['resolution_x'] = $trackarray['PixelWidth'];
 						$track_info['resolution_y'] = $trackarray['PixelHeight'];
-						if (isset($trackarray['DisplayWidth']))    { $track_info['display_x']  = $trackarray['DisplayWidth']; }
-						if (isset($trackarray['DisplayHeight']))   { $track_info['display_y']  = $trackarray['DisplayHeight']; }
-						if (isset($trackarray['DefaultDuration'])) { $track_info['frame_rate'] = round(1000000000 / $trackarray['DefaultDuration'], 3); }
-						if (isset($trackarray['CodecName']))       { $track_info['codec']      = $trackarray['CodecName']; }
+						$track_info['display_unit'] = self::displayUnit(isset($trackarray['DisplayUnit']) ? $trackarray['DisplayUnit'] : 0);
+						$track_info['display_x']    = (isset($trackarray['DisplayWidth']) ? $trackarray['DisplayWidth'] : $trackarray['PixelWidth']);
+						$track_info['display_y']    = (isset($trackarray['DisplayHeight']) ? $trackarray['DisplayHeight'] : $trackarray['PixelHeight']);
+
+						if (isset($trackarray['PixelCropBottom'])) { $track_info['crop_bottom'] = $trackarray['PixelCropBottom']; }
+						if (isset($trackarray['PixelCropTop']))    { $track_info['crop_top']    = $trackarray['PixelCropTop']; }
+						if (isset($trackarray['PixelCropLeft']))   { $track_info['crop_left']   = $trackarray['PixelCropLeft']; }
+						if (isset($trackarray['PixelCropRight']))  { $track_info['crop_right']  = $trackarray['PixelCropRight']; }
+						if (isset($trackarray['DefaultDuration'])) { $track_info['frame_rate']  = round(1000000000 / $trackarray['DefaultDuration'], 3); }
+						if (isset($trackarray['CodecName']))       { $track_info['codec']       = $trackarray['CodecName']; }
 
 						switch ($trackarray['CodecID']) {
 							case 'V_MS/VFW/FOURCC':
@@ -996,19 +1007,7 @@ class getid3_matroska extends getid3_handler
 														$this->unhandledElement('attachments.attachedfile', __LINE__, $sub_subelement);
 												}
 											}
-											//if (!empty($attachedfile_entry['FileData']) && !empty($attachedfile_entry['FileMimeType']) && preg_match('#^image/#i', $attachedfile_entry['FileMimeType'])) {
-											//	if ($this->getid3->option_save_attachments === getID3::ATTACHMENTS_INLINE) {
-											//		$attachedfile_entry['data']       = $attachedfile_entry['FileData'];
-											//		$attachedfile_entry['image_mime'] = $attachedfile_entry['FileMimeType'];
-											//		$info['matroska']['comments']['picture'][] = array('data' => $attachedfile_entry['data'], 'image_mime' => $attachedfile_entry['image_mime'], 'filename' => $attachedfile_entry['FileName']);
-											//		unset($attachedfile_entry['FileData'], $attachedfile_entry['FileMimeType']);
-											//	}
-											//}
-											//if (!empty($attachedfile_entry['image_mime']) && preg_match('#^image/#i', $attachedfile_entry['image_mime'])) {
-											//	// don't add a second copy of attached images, which are grouped under the standard location [comments][picture]
-											//} else {
-												$info['matroska']['attachments'][] = $attachedfile_entry;
-											//}
+											$info['matroska']['attachments'][] = $attachedfile_entry;
 											break;
 
 										default:
@@ -1735,6 +1734,17 @@ class getid3_matroska extends getid3_handler
 		}
 
 		return (isset($EBMLidList[$value]) ? $EBMLidList[$value] : dechex($value));
+	}
+
+	public static function displayUnit($value) {
+		// http://www.matroska.org/technical/specs/index.html#DisplayUnit
+		static $units = array(
+			0 => 'pixels',
+			1 => 'centimeters',
+			2 => 'inches',
+			3 => 'Display Aspect Ratio');
+
+		return (isset($units[$value]) ? $units[$value] : 'unknown');
 	}
 
 	private static function getDefaultStreamInfo($streams)

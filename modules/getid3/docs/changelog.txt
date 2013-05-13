@@ -17,6 +17,36 @@
 Version History
 ===============
 
+1.9.5: [2013-02-20] James Heinrich, Dmitry Arkhipov
+    ª DTS-in-WAV now properly supported
+    § DSS files return additional data in new keys, and some existing
+      keys have been renamed
+    * Bugfix: open_basedir not parsed correctly under Windows
+      (thanks yannick*jamontÿgmail*com)
+    * Bugfix: [demo/demo.browse] might not display file or directory name
+      on PHP >=5.4.0 if filename not UTF-8 friendly
+    * Bugfix: [demo/demo.zip] could read more uncompressed data than
+      required; fail to read file if local data descriptor not set;
+      some wrong include files were listed; improved error message display
+    * Bugfix: [module.audio-video.riff] INFO comment chunks with null name
+      chunk not parsed correctly
+    * Bugfix: [module.archive.gz] gzip files with filename stored may have
+      filename reduplicated in [gzip][files] output
+    * Bugfix: [module.archive.zip] data_descriptor not parsed correctly
+    * Bugfix: [module.archive.zip] some newer compression methods unknown
+    * Bugfix: [module.archive.zip] not all flags parsed
+    * Bugfix: [module.archive.zip] local file header not parsed correctly
+      if file has zero values for compressed_size in Local File Header
+    * Bugfix: (#1493) better support for >2GB filesize on 32-bit Linux
+    * Bugfix: (#1474) unneccesary call to GetDataImageSize in JPEG module
+    * Bugfix: (#1470) GIF files falsely detected as TS format
+    * Bugfix: (#1431) Matroska did not parse PixelCrop* / DisplayUnit
+      (thanks jgerberÿwikimedia*org)
+    * Bugfix: (#1430) split ID3v2 text values on null separator
+    * Bugfix: (#1426) MS Office 2007 file format now recognized as zip.msoffice
+    * Bugfix: (#1423) optimized CreateDeepArray function
+    * Bugfix: (#1415) add support for DS2 variant of DSS
+
 1.9.4b1: [2012-10-05] James Heinrich, Dmitry Arkhipov, Karl G. Holz
     ª New module: extension.cache.sqlite3.php (by Karl G. Holz)
     ª New demo: demos/getid3.demo.dirscan.php (by Karl G. Holz)

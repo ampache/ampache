@@ -9,6 +9,15 @@
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 
+// define a constant rather than looking up every time it is needed
+if (!defined('GETID3_OS_ISWINDOWS')) {
+	define('GETID3_OS_ISWINDOWS', (stripos(PHP_OS, 'WIN') === 0));
+}
+// Get base path of getID3() - ONCE
+if (!defined('GETID3_INCLUDEPATH')) {
+	define('GETID3_INCLUDEPATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
+}
+
 // attempt to define temp dir as something flexible but reliable
 $temp_dir = ini_get('upload_tmp_dir');
 if ($temp_dir && (!is_dir($temp_dir) || !is_readable($temp_dir))) {
@@ -29,7 +38,7 @@ if ($open_basedir) {
 		$temp_dir .= DIRECTORY_SEPARATOR;
 	}
 	$found_valid_tempdir = false;
-	$open_basedirs = explode(':', $open_basedir);
+	$open_basedirs = explode(PATH_SEPARATOR, $open_basedir);
 	foreach ($open_basedirs as $basedir) {
 		if (substr($basedir, -1, 1) != DIRECTORY_SEPARATOR) {
 			$basedir .= DIRECTORY_SEPARATOR;
@@ -50,17 +59,6 @@ if (!$temp_dir) {
 // $temp_dir = '/something/else/';  // feel free to override temp dir here if it works better for your system
 define('GETID3_TEMP_DIR', $temp_dir);
 unset($open_basedir, $temp_dir);
-
-
-// define a constant rather than looking up every time it is needed
-if (!defined('GETID3_OS_ISWINDOWS')) {
-	define('GETID3_OS_ISWINDOWS', (stripos(PHP_OS, 'WIN') === 0));
-}
-
-// Get base path of getID3() - ONCE
-if (!defined('GETID3_INCLUDEPATH')) {
-	define('GETID3_INCLUDEPATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
-}
 
 // End: Defines
 
@@ -105,7 +103,7 @@ class getID3
 	protected $startup_warning = '';
 	protected $memory_limit    = 0;
 
-	const VERSION           = '1.9.4b1-20121005';
+	const VERSION           = '1.9.5-20130220';
 	const FREAD_BUFFER_SIZE = 32768;
 
 	const ATTACHMENTS_NONE   = false;
@@ -285,30 +283,8 @@ class getID3
 				if (($fseek < 0) || (($this->info['filesize'] != 0) && (ftell($this->fp) == 0)) ||
 					($this->info['filesize'] < 0) ||
 					(ftell($this->fp) < 0)) {
-						$real_filesize = false;
-						if (GETID3_OS_ISWINDOWS) {
-							if (class_exists('COM')) {
-								$filesystem = new COM('Scripting.FileSystemObject');
-								$file = $filesystem->GetFile($this->info['filenamepath']);
-								$real_filesize = $file->Size();
-								unset($filesystem, $file);
-							} else {
-								// From PHP 5.4.5, COM and DOTNET is no longer built into the php core.you have to add COM support in php.ini:
-								$this->warning('COM class not available.'.(version_compare(PHP_VERSION, '5.4.5', '>=') ? ' COM and DOTNET support are no longer built into PHP since v5.4.5, please enable in php.ini' : ''));
+						$real_filesize = getid3_lib::getFileSizeSyscall($this->info['filenamepath']);
 
-								$commandline = 'dir /-C "'.str_replace('/', DIRECTORY_SEPARATOR, $filename).'"';
-								$dir_output = `$commandline`;
-								if (preg_match('#1 File\(s\)[ ]+([0-9]+) bytes#i', $dir_output, $matches)) {
-									$real_filesize = (float) $matches[1];
-								}
-							}
-						} else {
-							$commandline = 'ls -o -g -G --time-style=long-iso '.escapeshellarg($this->info['filenamepath']);
-							$dir_output = `$commandline`;
-							if (preg_match('#([0-9]+) ([0-9]{4}-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}) '.str_replace('#', '\\#', preg_quote($filename)).'$#', $dir_output, $matches)) {
-								$real_filesize = (float) $matches[1];
-							}
-						}
 						if ($real_filesize === false) {
 							unset($this->info['filesize']);
 							fclose($this->fp);
@@ -449,9 +425,6 @@ class getID3
 				return $this->error('Format not supported, module "'.$determined_format['include'].'" is corrupt.');
 			}
 			$class = new $class_name($this);
-			//if (!empty($determined_format['set_inline_attachments'])) {
-			//	$class->inline_attachments = $this->option_save_attachments;
-			//}
 			$class->Analyze();
 			unset($class);
 
@@ -497,7 +470,7 @@ class getID3
 	}
 
 
-	// public: error handling
+	// private: error handling
 	public function error($message) {
 		$this->CleanUp();
 		if (!isset($this->info['error'])) {
@@ -508,7 +481,7 @@ class getID3
 	}
 
 
-	// public: warning handling
+	// private: warning handling
 	public function warning($message) {
 		$this->info['warning'][] = $message;
 		return true;
@@ -633,7 +606,7 @@ class getID3
 
 				// DSS  - audio       - Digital Speech Standard
 				'dss'  => array(
-							'pattern'   => '^[\x02-\x03]dss',
+							'pattern'   => '^[\x02-\x03]ds[s2]',
 							'group'     => 'audio',
 							'module'    => 'dss',
 							'mime_type' => 'application/octet-stream',
@@ -653,7 +626,6 @@ class getID3
 							'group'     => 'audio',
 							'module'    => 'flac',
 							'mime_type' => 'audio/x-flac',
-							//'set_inline_attachments' => true,
 						),
 
 				// LA   - audio       - Lossless Audio (LA)
@@ -833,7 +805,6 @@ class getID3
 							'group'     => 'audio-video',
 							'module'    => 'matroska',
 							'mime_type' => 'video/x-matroska', // may also be audio/x-matroska
-							//'set_inline_attachments' => true,
 						),
 
 				// MPEG - audio/video - MPEG (Moving Pictures Experts Group)
@@ -860,7 +831,6 @@ class getID3
 							'mime_type' => 'application/ogg',
 							'fail_id3'  => 'WARNING',
 							'fail_ape'  => 'WARNING',
-							//'set_inline_attachments' => true,
 						),
 
 				// QT   - audio/video - Quicktime
@@ -898,7 +868,7 @@ class getID3
 
 				// TS - audio/video - MPEG-2 Transport Stream
 				'ts' => array(
-							'pattern'   => '^\x47',
+							'pattern'   => '^(\x47.{187}){10,}', // packets are 188 bytes long and start with 0x47 "G".  Check for at least 10 packets matching this pattern
 							'group'     => 'audio-video',
 							'module'    => 'ts',
 							'mime_type' => 'video/MP2T',
@@ -1528,7 +1498,7 @@ class getID3
 
 
 	public function CalculateCompressionRatioAudio() {
-		if (empty($this->info['audio']['bitrate']) || empty($this->info['audio']['channels']) || empty($this->info['audio']['sample_rate'])) {
+		if (empty($this->info['audio']['bitrate']) || empty($this->info['audio']['channels']) || empty($this->info['audio']['sample_rate']) || !is_numeric($this->info['audio']['sample_rate'])) {
 			return false;
 		}
 		$this->info['audio']['compression_ratio'] = $this->info['audio']['bitrate'] / ($this->info['audio']['channels'] * $this->info['audio']['sample_rate'] * (!empty($this->info['audio']['bits_per_sample']) ? $this->info['audio']['bits_per_sample'] : 16));
@@ -1671,7 +1641,7 @@ abstract class getid3_handler
 		return fread($this->getid3->fp, $bytes);
 	}
 
-	protected function fseek($bytes, $whence = SEEK_SET) {
+	protected function fseek($bytes, $whence=SEEK_SET) {
 		if ($this->data_string_flag) {
 			switch ($whence) {
 				case SEEK_SET:
@@ -1766,7 +1736,7 @@ abstract class getid3_handler
 				$buffersize = ($this->data_string_flag ? $length : $this->getid3->fread_buffer_size());
 				$bytesleft = $length;
 				while ($bytesleft > 0) {
-					if (($buffer = $this->fread(min($buffersize, $bytesleft))) === false || ($byteswritten = fwrite($fp_dest, $buffer)) === false) {
+					if (($buffer = $this->fread(min($buffersize, $bytesleft))) === false || ($byteswritten = fwrite($fp_dest, $buffer)) === false || ($byteswritten === 0)) {
 						throw new Exception($buffer === false ? 'not enough data to read' : 'failed to write to destination file, may be not enough disk space');
 					}
 					$bytesleft -= $byteswritten;
@@ -1777,17 +1747,23 @@ abstract class getid3_handler
 
 			}
 
-		} catch(Exception $e) {
+		} catch (Exception $e) {
 
-			if (isset($fp_dest) && is_resource($fp_dest)) { // close and remove dest file if created
+			// close and remove dest file if created
+			if (isset($fp_dest) && is_resource($fp_dest)) {
 				fclose($fp_dest);
 				unlink($dest);
 			}
-			$attachment = null; // do not set any is case of error
+
+			// do not set any is case of error
+			$attachment = null;
 			$this->warning('Failed to extract attachment '.$name.': '.$e->getMessage());
-			return false;
 
 		}
+
+		// seek to the end of attachment
+		$this->fseek($offset + $length);
+
 		return $attachment;
 	}
 
