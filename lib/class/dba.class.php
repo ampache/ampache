@@ -231,9 +231,16 @@ class Dba {
         $username = Config::get('database_username');
         $hostname = Config::get('database_hostname');
         $password = Config::get('database_password');
+        $port = Config::get('database_port');
+
+        // Build the data source name
+        $dsn = 'mysql:host=' . $hostname ?: 'localhost';
+        if ($port) {
+            $dsn .= ';port=' . intval($port);
+        }
 
         try {
-            $dbh = new PDO('mysql:host=' . $hostname, $username, $password);
+            $dbh = new PDO($dsn, $username, $password);
         }
         catch (PDOException $e) {
             debug_event('Dba', 'Connection failed: ' . $e->getMessage(), 1);

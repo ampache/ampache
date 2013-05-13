@@ -26,9 +26,13 @@ config_version = 12
 ; Session and Login Variables #
 ;##############################
 
-; Hostname of your Database
+; Hostname of your database
 ; DEFAULT: localhost
 database_hostname = localhost
+
+; Port to use when connecting to your database
+; DEFAULT: none
+; database_port = 3306
 
 ; Name of your ampache database
 ; DEFAULT: ampache

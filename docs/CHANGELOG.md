@@ -3,6 +3,7 @@ CHANGELOG
 
 3.6-FUTURE
 ----------
+- Added support for nonstandard database ports
 - Updated getID3 to 1.9.5
 - Improved the performance of stream playlist creation (reported by AkbarSerad)
 - Fixed "Pure Random" / Random URLs (reported by mafe)
