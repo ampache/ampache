@@ -20,7 +20,9 @@
  *
  */
 
-$prefix = realpath(dirname(__FILE__). "/../");
+// Try to guess the web path
+$web_path_guess = rtrim(dirname($_SERVER['PHP_SELF']), '\/');
+
 require $prefix . '/templates/install_header.inc.php';
 ?>
     <div class="content">
@@ -35,11 +37,11 @@ require $prefix . '/templates/install_header.inc.php';
 
 <span class="header2"><?php echo T_('Generate Config File'); ?></span>
 <?php Error::display('config'); ?>
-<form method="post" action="<?php echo WEB_PATH . "?action=create_config"; ?>" enctype="multipart/form-data" >
+<form method="post" action="<?php echo $web_path . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" >
 <table>
 <tr>
     <td class="align"><?php echo T_('Web Path'); ?></td>
-    <td class="align"><input type="text" name="web_path" value="<?php echo $web_path; ?>" /></td>
+    <td class="align"><input type="text" name="web_path" value="<?php echo scrub_out($web_path_guess); ?>" /></td>
 </tr>
 <tr>
     <td class="align"><?php echo T_('Database Name'); ?></td>
@@ -90,13 +92,13 @@ require $prefix . '/templates/install_header.inc.php';
 <tr>
     <td>&nbsp;</td>
     <td>
-    <?php $check_url = WEB_PATH . "?action=show_create_config&amp;htmllang=$htmllang&amp;charset=$charset&amp;local_db=" . $_REQUEST['local_db'] . "&amp;local_host=" . $_REQUEST['local_host']; ?>
+    <?php $check_url = $web_path . "/install.php?action=show_create_config&amp;htmllang=$htmllang&amp;charset=$charset&amp;local_db=" . $_REQUEST['local_db'] . "&amp;local_host=" . $_REQUEST['local_host']; ?>
     <a href="<?php echo $check_url; ?>">[<?php echo T_('Recheck Config'); ?>]</a>
     </td>
         </tr>
         </table>
         <br />
-        <form method="post" action="<?php echo WEB_PATH . "?action=show_create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data">
+        <form method="post" action="<?php echo $web_path . "/install.php?action=show_create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data">
         <input type="submit" value="<?php echo T_('Continue to Step 3'); ?>" />
         </form>
     </div>

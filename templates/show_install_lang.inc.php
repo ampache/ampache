@@ -20,7 +20,6 @@
  *
  */
 
-$prefix = realpath(dirname(__FILE__). "/../");
 require $prefix . '/templates/install_header.inc.php';
 ?>
 <?php require_once $prefix . '/templates/show_install_check.inc.php'; ?>
@@ -30,7 +29,7 @@ require $prefix . '/templates/install_header.inc.php';
     <p>
     <?php Error::display('general'); ?>
     </p>
-<form method="post" action="<?php echo WEB_PATH . "?action=init"; ?>" enctype="multipart/form-data" >
+<form method="post" action="<?php echo $web_path . "/install.php?action=init"; ?>" enctype="multipart/form-data" >
 
 <?php
 $languages = get_languages();

@@ -20,7 +20,6 @@
  *
  */
 
-$prefix = realpath(dirname(__FILE__). "/../");
 ?>
 <?php if (!defined('INSTALL')) { exit; } ?>
 <?php $results = 0; ?>

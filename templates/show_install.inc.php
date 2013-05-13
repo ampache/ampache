@@ -20,7 +20,6 @@
  *
  */
 
-$prefix = realpath(dirname(__FILE__). "/../");
 require $prefix . '/templates/install_header.inc.php';
 ?>
     <div class="content">
@@ -34,7 +33,7 @@ require $prefix . '/templates/install_header.inc.php';
         <?php Error::display('general'); ?>
         <br />
         <span class="header2"><?php echo T_('Insert Ampache Database'); ?></span>
-        <form method="post" action="<?php echo WEB_PATH . "?action=create_db&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" >
+        <form method="post" action="<?php echo $web_path . "/install.php?action=create_db&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" >
 <table>
 <tr>
     <td class="align"><?php echo T_("Desired Database Name"); ?></td>
