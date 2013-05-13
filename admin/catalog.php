@@ -38,26 +38,25 @@ switch ($_REQUEST['action']) {
         require Config::get('prefix') . '/templates/flag.inc';
     break;
     case 'add_to_all_catalogs':
-        $catalog = new Catalog();
-        $_REQUEST['catalogs'] = $catalog->get_catalog_ids();
+        $_REQUEST['catalogs'] = Catalog::get_catalogs();
     case 'add_to_catalog':
         toggle_visible('ajax-loading');
         ob_end_flush();
-            if (Config::get('demo_mode')) { break; }
+        if (Config::get('demo_mode')) { break; }
         if ($_REQUEST['catalogs'] ) {
             foreach ($_REQUEST['catalogs'] as $catalog_id) {
                 $catalog = new Catalog($catalog_id);
                 $catalog->add_to_catalog();
             }
         }
-        $url     = Config::get('web_path') . '/admin/catalog.php';
-        $title     = T_('Catalog Updated');
-        $body    = '';
-        show_confirmation($title,$body,$url);
+        $url = Config::get('web_path') . '/admin/catalog.php';
+        $title = T_('Catalog Updated');
+        $body = '';
+        show_confirmation($title, $body, $url);
         toggle_visible('ajax-loading');
     break;
     case 'update_all_catalogs':
-        $_REQUEST['catalogs'] = Catalog::get_catalog_ids();
+        $_REQUEST['catalogs'] = Catalog::get_catalogs();
     case 'update_catalog':
         toggle_visible('ajax-loading');
         ob_end_flush();
@@ -83,7 +82,7 @@ switch ($_REQUEST['action']) {
         if (Config::get('demo_mode')) { UI::access_denied(); break; }
 
         if (!$_REQUEST['catalogs']) {
-            $_REQUEST['catalogs'] = Catalog::get_catalog_ids();
+            $_REQUEST['catalogs'] = Catalog::get_catalogs();
         }
 
         /* This runs the clean/verify/add in that order */
@@ -140,7 +139,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'clean_all_catalogs':
         $catalog = new Catalog();
-        $_REQUEST['catalogs'] = Catalog::get_catalog_ids();
+        $_REQUEST['catalogs'] = Catalog::get_catalogs();
     case 'clean_catalog':
         toggle_visible('ajax-loading');
         ob_end_flush();

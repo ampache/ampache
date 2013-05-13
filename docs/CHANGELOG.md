@@ -3,6 +3,8 @@ CHANGELOG
 
 3.6-FUTURE
 ----------
+- Fixed operating on all catalogs via the web interface
+  (reported by orbisvicis)
 - Added support for nonstandard database ports
 - Updated getID3 to 1.9.5
 - Improved the performance of stream playlist creation (reported by AkbarSerad)
