@@ -3,6 +3,8 @@ CHANGELOG
 
 3.6-FUTURE
 ----------
+- Fixed issue that sometimes removed ratings after catalog operations (reported
+  by stebe)
 - Fixed catalog song stats (reported by stebe)
 - Fixed ACL text field length to allow entry of IPv6 addresses (reported
   by Baggypants)
