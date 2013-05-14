@@ -347,7 +347,7 @@ class Catalog extends database_object {
      * in this catalog.
      */
     public static function count_songs($id = null) {
-        $where_sql = $catalog_id ? 'WHERE `catalog` = ?' : '';
+        $where_sql = $id ? 'WHERE `catalog` = ?' : '';
         $params = $id ? array($id) : null;
 
         $sql = 'SELECT COUNT(`id`), SUM(`time`), SUM(`size`) FROM `song` ' .

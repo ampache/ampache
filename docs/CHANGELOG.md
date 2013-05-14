@@ -3,6 +3,7 @@ CHANGELOG
 
 3.6-FUTURE
 ----------
+- Fixed catalog song stats (reported by stebe)
 - Fixed ACL text field length to allow entry of IPv6 addresses (reported
   by Baggypants)
 - Fixed regression preventing the use of an existing database during
