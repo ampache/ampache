@@ -3,6 +3,7 @@ CHANGELOG
 
 3.6-FUTURE
 ----------
+- Fixed some issues with the logic around memory_limit (reported by CableNinja)
 - Fixed issue that sometimes removed ratings after catalog operations (reported
   by stebe)
 - Fixed catalog song stats (reported by stebe)
