@@ -27,7 +27,12 @@
  */
 function set_memory_limit($new_limit) {
 
-    $current_limit = UI::unformat_bytes(ini_get('memory_limit'));
+    $current_limit = ini_get('memory_limit');
+    if ($current_limit == -1) {
+        return;
+    }
+
+    $current_limit = UI::unformat_bytes($current_limit);
     $new_limit = UI::unformat_bytes($new_limit);
 
     if ($current_limit < $new_limit) {
