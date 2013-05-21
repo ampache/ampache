@@ -234,7 +234,12 @@ class Dba {
         $port = Config::get('database_port');
 
         // Build the data source name
-        $dsn = 'mysql:host=' . $hostname ?: 'localhost';
+        if (strpos($hostname, '/') === 0) {
+            $dsn = 'mysql:unix_socket=' . $hostname;
+        }
+        else {
+            $dsn = 'mysql:host=' . $hostname ?: 'localhost';
+        }
         if ($port) {
             $dsn .= ';port=' . intval($port);
         }
