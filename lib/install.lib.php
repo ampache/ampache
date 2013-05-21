@@ -155,9 +155,15 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false)
 
     // Check to see if we should create a user here
     if (strlen($db_user) && strlen($db_pass)) {
-        $sql = 'GRANT ALL PRIVILEGES ON `' . Dba::escape($database) . '`.* TO ' .
-            "'" . Dba::escape($db_user) . "'@'" . Dba::escape(Config::get('database_hostname')) . "' IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";
-
+		$checkhost = Config::get('database_hostname');
+		if (strpos($checkhost, '/') === 0) {
+			$sql = 'GRANT ALL PRIVILEGES ON `' . Dba::escape($database) . '`.* TO ' .		
+				"'" . Dba::escape($db_user) . "'@'" . localhost . "' IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";		
+		}
+        else {
+			$sql = 'GRANT ALL PRIVILEGES ON `' . Dba::escape($database) . '`.* TO ' .
+				"'" . Dba::escape($db_user) . "'@'" . Dba::escape(Config::get('database_hostname')) . "' IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";
+		}
         if (!Dba::write($sql)) {
             Error::add('general', sprintf(T_('Error: Unable to Insert %1$s with permissions to %2$s on %3$s %4$s'), $db_user, $database, $hostname, Dba::error()));
             return false;
