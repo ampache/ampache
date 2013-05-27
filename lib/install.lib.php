@@ -155,9 +155,9 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false)
 
     // Check to see if we should create a user here
     if (strlen($db_user) && strlen($db_pass)) {
-	$db_host = Config::get('database_hostname');
-	$sql = 'GRANT ALL PRIVILEGES ON `' . Dba::escape($database) . '`.* TO ' .
-	    "'" . Dba::escape($db_user) . "'";
+        $db_host = Config::get('database_hostname');
+        $sql = 'GRANT ALL PRIVILEGES ON `' . Dba::escape($database) . '`.* TO ' .
+            "'" . Dba::escape($db_user) . "'";
         if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
             $sql .= "@'localhost'";
         }
