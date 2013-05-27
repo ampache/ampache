@@ -408,14 +408,14 @@ class Catalog extends database_object {
         $handle = opendir($path);
 
         if (!is_resource($handle)) {
-            debug_event('read', "Unable to open $path", 5,'ampache-catalog');
+            debug_event('read', "Unable to open $path", 5);
             Error::add('catalog_add', sprintf(T_('Error: Unable to open %s'), $path));
             return false;
         }
 
         /* Change the dir so is_dir works correctly */
         if (!chdir($path)) {
-            debug_event('read', "Unable to chdir $path", 2,'ampache-catalog');
+            debug_event('read', "Unable to chdir to $path", 2);
             Error::add('catalog_add', sprintf(T_('Error: Unable to change to directory %s'), $path));
             return false;
         }
@@ -431,7 +431,7 @@ class Catalog extends database_object {
             /* Skip to next if we've got . or .. */
             if (substr($file,0,1) == '.') { continue; }
 
-            debug_event('read',"Starting work on $file inside $path",'5','ampache-catalog');
+            debug_event('read', "Starting work on $file inside $path", 5);
             debug_event('Memory', UI::format_bytes(memory_get_usage(true)), 5);
 
             /* Create the new path */
@@ -450,7 +450,7 @@ class Catalog extends database_object {
 
             if (Config::get('no_symlinks')) {
                 if (is_link($full_file)) {
-                    debug_event('read',"Skipping Symbolic Link $path",'5','ampache-catalog');
+                    debug_event('read', "Skipping symbolic link $path", 5);
                     continue;
                 }
             }
@@ -461,7 +461,7 @@ class Catalog extends database_object {
 
                 /* Change the dir so is_dir works correctly */
                 if (!chdir($path)) {
-                    debug_event('read',"Unable to chdir $path",'2','ampache-catalog');
+                    debug_event('read', "Unable to chdir to $path", 2);
                     Error::add('catalog_add', sprintf(T_('Error: Unable to change to directory %s'), $path));
                 }
 
@@ -496,14 +496,14 @@ class Catalog extends database_object {
                 $file_size = filesize($full_file);
 
                 if (!$file_size) {
-                    debug_event('read',"Unable to get filesize for $full_file",'2','ampache-catalog');
+                    debug_event('read', "Unable to get filesize for $full_file", 2);
                     /* HINT: FullFile */
                     Error::add('catalog_add', sprintf(T_('Error: Unable to get filesize for %s'), $full_file));
                 } // file_size check
 
                 if (!is_readable($full_file)) {
                     // not readable, warn user
-                    debug_event('read',"$full_file is not readable by ampache",'2','ampache-catalog');
+                    debug_event('read', "$full_file is not readable by ampache", 2);
                     /* HINT: FullFile */
                     Error::add('catalog_add', sprintf(T_('%s is not readable by ampache'), $full_file));
                     continue;
@@ -540,12 +540,12 @@ class Catalog extends database_object {
 
             } //if it matches the pattern
             else {
-                debug_event('read',"$full_file ignored, non audio file or 0 bytes",'5','ampache-catalog');
+                debug_event('read', "$full_file ignored, non-audio file or 0 bytes", 5);
             } // else not an audio file
 
         } // end while reading directory
 
-        debug_event('closedir',"Finished reading $path closing handle",'5','ampache-catalog');
+        debug_event('closedir', "Finished reading $path , closing handle", 5);
 
         // This should only happen on the last run
         if ($path == $this->path) {
@@ -869,7 +869,7 @@ class Catalog extends database_object {
             $rename_pattern = $catalog->rename_pattern;
         }
 
-        debug_event('tag-read','Reading tags from ' . $media->file,'5','ampache-catalog');
+        debug_event('tag-read', 'Reading tags from ' . $media->file, 5);
 
         $vainfo = new vainfo($media->file,'','','',$sort_pattern,$rename_pattern);
         $vainfo->get_info();
@@ -959,13 +959,13 @@ class Catalog extends database_object {
         $info = Song::compare_song_information($song,$new_song);
 
         if ($info['change']) {
-            debug_event('update',"$song->file difference found, updating database",'5','ampache-catalog');
+            debug_event('update', "$song->file : differences found, updating database", 5);
             $song->update_song($song->id,$new_song);
             // Refine our reference
             $song = $new_song;
         }
         else {
-            debug_event('update',"$song->file no difference found returning",'5','ampache-catalog');
+            debug_event('update', "$song->file : no differences found", 5);
         }
 
         return $info;
@@ -1167,7 +1167,7 @@ class Catalog extends database_object {
         // We don't want to run out of time
         set_time_limit(0);
 
-        debug_event('clean', 'Starting on ' . $this->name, 5, 'ampache-catalog');
+        debug_event('clean', 'Starting on ' . $this->name, 5);
 
         require_once Config::get('prefix') . '/templates/show_clean_catalog.inc.php';
         ob_flush();
@@ -1212,7 +1212,7 @@ class Catalog extends database_object {
                 $db_results = Dba::write($sql);
             }
             debug_event('clean', "$media_type finished, $dead_count removed from " .
-                $this->name, 5, 'ampache-catalog');
+                $this->name, 5);
         }
 
         // Remove any orphaned artists/albums/etc.
@@ -1236,7 +1236,7 @@ class Catalog extends database_object {
      * said chunks to try to save a little memory
      */
     private function _clean_chunk($media_type, $chunk, $chunk_size) {
-        debug_event('clean', "Starting chunk $chunk", 5, 'ampache-catalog');
+        debug_event('clean', "Starting chunk $chunk", 5);
         $dead = array();
         $count = $chunk * $chunk_size;
 
@@ -1245,7 +1245,7 @@ class Catalog extends database_object {
         $db_results = Dba::read($sql);
 
         while ($results = Dba::fetch_assoc($db_results)) {
-            debug_event('clean', 'Starting work on ' . $results['file'] . '(' . $results['id'] . ')', 5, 'ampache-catalog');
+            debug_event('clean', 'Starting work on ' . $results['file'] . '(' . $results['id'] . ')', 5);
             $count++;
             if (UI::check_ticker()) {
                 $file = str_replace(array('(',')', '\''), '', $results['file']);
@@ -1254,7 +1254,7 @@ class Catalog extends database_object {
             }
             $file_info = filesize($results['file']);
             if (!file_exists($results['file']) || $file_info < 1) {
-                debug_event('clean', 'File not found or empty: ' . $results['file'], 5, 'ampache-catalog');
+                debug_event('clean', 'File not found or empty: ' . $results['file'], 5);
                 Error::add('general', sprintf(T_('Error File Not Found or 0 Bytes: %s'), $results['file']));
 
 
@@ -1263,7 +1263,7 @@ class Catalog extends database_object {
 
             } //if error
             else if (!is_readable($results['file'])) {
-                debug_event('clean', $results['file'] . ' is not readable, but does exist', 1, 'ampache-catalog');
+                debug_event('clean', $results['file'] . ' is not readable, but does exist', 1);
             }
         }
         return $dead;
@@ -1276,7 +1276,7 @@ class Catalog extends database_object {
      */
     public function verify_catalog() {
 
-        debug_event('verify', 'Starting on ' . $this->name, 5, 'ampache-catalog');
+        debug_event('verify', 'Starting on ' . $this->name, 5);
         set_time_limit(0);
 
         $stats = self::get_stats($this->id);
@@ -1300,7 +1300,7 @@ class Catalog extends database_object {
             }
         }
 
-        debug_event('verify', "Finished, $total_updated updated in " . $this->name, 5, 'ampache-catalog');
+        debug_event('verify', "Finished, $total_updated updated in " . $this->name, 5);
 
         self::gc();
         $this->update_last_update();
@@ -1323,7 +1323,7 @@ class Catalog extends database_object {
      * memory
      */
     private function _verify_chunk($media_type, $chunk, $chunk_size) {
-        debug_event('verify', "Starting chunk $chunk", 5, 'ampache-catalog');
+        debug_event('verify', "Starting chunk $chunk", 5);
         $count = $chunk * $chunk_size;
         $changed = 0;
 
@@ -1349,14 +1349,14 @@ class Catalog extends database_object {
 
             if (!is_readable($row['file'])) {
                 Error::add('general', sprintf(T_('%s does not exist or is not readable'), $row['file']));
-                debug_event('read', $row['file'] . ' does not exist or is not readable', 5,'ampache-catalog');
+                debug_event('read', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
             }
 
             $media = new $media_type($row['id']);
 
             if (Flag::has_flag($media->id, $type)) {
-                debug_event('verify', "$media->file is flagged, skipping", 5, 'ampache-catalog');
+                debug_event('verify', "$media->file is flagged, skipping", 5);
                 continue;
             }
 
@@ -1380,7 +1380,7 @@ class Catalog extends database_object {
      */
     public static function gc() {
 
-        debug_event('catalog', 'Database cleanup started', 5, 'ampache-catalog');
+        debug_event('catalog', 'Database cleanup started', 5);
         Song::gc();
         Album::gc();
         Artist::gc();
@@ -1392,7 +1392,7 @@ class Catalog extends database_object {
         Tmp_Playlist::gc();
         Shoutbox::gc();
         Tag::gc();
-        debug_event('catalog', 'Database cleanup ended', 5, 'ampache-catalog');
+        debug_event('catalog', 'Database cleanup ended', 5);
 
     }
 
