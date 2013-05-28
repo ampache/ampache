@@ -126,30 +126,27 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false)
     }
 
     $db_exists = Dba::read('SHOW TABLES');
+    $create_db = true;
 
-    if ($db_exists && $_POST['existing_db']) {
-        // Rien a faire, we've got the db just blow through
-    }
-    elseif ($db_exists && !$overwrite) {
-        Error::add('general', T_('Error: Database Already exists and Overwrite not checked'));
-        return false;
-    }
-    elseif (!$db_exists) {
-        $sql = 'CREATE DATABASE `' . $database . '`';
-        if (!Dba::write($sql)) {
-            Error::add('general',sprintf(T_('Error: Unable to create database: %s'), Dba::error()));
+    if ($db_exists) {
+        if ($_POST['existing_db']) {
+            $create_db = false;
+        }
+        else if ($overwrite) {
+            Dba::write('DROP DATABASE `' . $database . '`');
+        }
+        else {
+            Error::add('general', T_('Error: Database already exists and overwrite not checked'));
             return false;
         }
-    } // if db can't be selected
-    else {
-        $sql = 'DROP DATABASE `' . $database . '`';
-        Dba::write($sql);
-        $sql = 'CREATE DATABASE `' . $database . '`';
-        if (!Dba::write($sql)) {
+    }
+
+    if ($create_db) {
+        if (!Dba::write('CREATE DATABASE `' . $database . '`')) {
             Error::add('general', sprintf(T_('Error: Unable to create database: %s'), Dba::error()));
             return false;
         }
-    } // end if selected and overwrite
+    }
 
     Dba::disconnect();
 
