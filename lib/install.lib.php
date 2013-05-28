@@ -121,7 +121,7 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false)
     }
 
     if (!Dba::check_database()) {
-        Error::add('general', sprintf(T_('Error: Unable to make Database Connection %s'), Dba::error()));
+        Error::add('general', sprintf(T_('Error: Unable to make database connection: %s'), Dba::error()));
         return false;
     }
 
@@ -137,7 +137,7 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false)
     elseif (!$db_exists) {
         $sql = 'CREATE DATABASE `' . $database . '`';
         if (!Dba::write($sql)) {
-            Error::add('general',sprintf(T_('Error: Unable to Create Database %s'), Dba::error()));
+            Error::add('general',sprintf(T_('Error: Unable to create database: %s'), Dba::error()));
             return false;
         }
     } // if db can't be selected
@@ -146,7 +146,7 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false)
         Dba::write($sql);
         $sql = 'CREATE DATABASE `' . $database . '`';
         if (!Dba::write($sql)) {
-            Error::add('general', sprintf(T_('Error: Unable to Create Database %s'), Dba::error()));
+            Error::add('general', sprintf(T_('Error: Unable to create database: %s'), Dba::error()));
             return false;
         }
     } // end if selected and overwrite
@@ -163,7 +163,7 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false)
         }
         $sql .= "IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";
         if (!Dba::write($sql)) {
-            Error::add('general', sprintf(T_('Error: Unable to Insert %1$s with permissions to %2$s on %3$s %4$s'), $db_user, $database, $hostname, Dba::error()));
+            Error::add('general', sprintf(T_('Error: Unable to create user %1$s with permissions to %2$s on %3$s: %4$s'), $db_user, $database, $db_host, Dba::error()));
             return false;
         }
     } // end if we are creating a user
@@ -257,12 +257,12 @@ function install_create_account($username, $password, $password2) {
     }
 
     if (!Dba::check_database()) {
-        Error::add('general', sprintf(T_('Database Connection Failed: %s'), Dba::error()));
+        Error::add('general', sprintf(T_('Database connection failed: %s'), Dba::error()));
         return false;
     }
 
     if (!Dba::check_database_inserted()) {
-        Error::add('general', sprintf(T_('Database Select Failed: %s'), Dba::error()));
+        Error::add('general', sprintf(T_('Database select failed: %s'), Dba::error()));
         return false;
     }
 
@@ -272,7 +272,7 @@ function install_create_account($username, $password, $password2) {
     $insert_id = User::create($username,'Administrator','',$password,'100');
 
     if (!$insert_id) {
-        Error::add('general', sprintf(T_('Insert of Base User Failed %s'), Dba::error()));
+        Error::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));
         return false;
     }
 

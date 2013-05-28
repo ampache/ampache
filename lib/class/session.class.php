@@ -80,7 +80,7 @@ class Session {
         $sql = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         $db_results = Dba::read($sql, array($value, $expire, $key));
 
-        debug_event('session', 'Writing to ' . $key . ' with expire ' . $expire . ' [' . Dba::error() . ']', 6);
+        debug_event('session', 'Writing to ' . $key . ' with expiration ' . $expire, 6);
 
         return true;
     }

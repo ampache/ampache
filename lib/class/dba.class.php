@@ -39,6 +39,7 @@ class Dba {
     public static $stats = array('query'=>0);
 
     private static $_sql;
+    private static $_error;
     private static $config;
 
     /**
@@ -89,10 +90,12 @@ class Dba {
         self::$stats['query']++;
 
         if (!$stmt) {
+            self::$_error = json_encode($dbh->errorInfo());
             debug_event('Dba', 'Error: ' . json_encode($dbh->errorInfo()), 1);
             self::disconnect();
         }
         else if ($stmt->errorCode() && $stmt->errorCode() != '00000') {
+            self::$_error = json_encode($stmt->errorInfo());
             debug_event('Dba', 'Error: ' . json_encode($stmt->errorInfo()), 1);
             self::disconnect();
             return false;
@@ -248,6 +251,7 @@ class Dba {
             $dbh = new PDO($dsn, $username, $password);
         }
         catch (PDOException $e) {
+            self::$_error = $e->getMessage();
             debug_event('Dba', 'Connection failed: ' . $e->getMessage(), 1);
             return null;
         }
@@ -267,6 +271,7 @@ class Dba {
         }
 
         if ($dbh->exec('USE `' . $database . '`') === false) {
+            self::$_error = json_encode($dbh->errorInfo());
             debug_event('Dba', 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
         }
 
@@ -286,6 +291,7 @@ class Dba {
         $dbh = self::_connect();
 
         if (!$dbh || $dbh->errorCode()) {
+            self::$_error = json_encode($dbh->errorInfo());
             return false;
         }
 
@@ -390,11 +396,7 @@ class Dba {
      * this returns the error of the db
      */
     public static function error() {
-        $dbh = self::dbh();
-        if ($dbh) {
-            return $dbh->errorCode();
-        }
-        return false;
+        return self::$_error;
     }
 
     /**
