@@ -59,7 +59,7 @@ $new_db_pass = $options['p'] ?: $options['ampache-database-password'];
 $web_path = $options['w'] ?: $options ['webpath'];
 
 // Make sure we have all the required information
-if (!$db_user || !$db_pass || !$db_host || !$db_name || !$new_db_user || !$new_db_pass) {
+if (!$db_user || !$db_pass || !$db_host || !$db_name) {
     usage();
 }
 
