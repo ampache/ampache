@@ -527,7 +527,7 @@ refresh_limit = "60"
 ;
 ; 'Downsampling' will also use these commands.
 ;
-; To state the bleeding obvious, any programs referenced in the downsample
+; To state the bleeding obvious, any programs referenced in the transcode
 ; commands must be installed, in the web server's search path (or referenced
 ; by their full path), and executable by the web server.
 
@@ -563,6 +563,8 @@ refresh_limit = "60"
 ; clever enough to figure out how on your own.
 ; DEFAULT: none
 ;transcode_cmd = "ffmpeg -i %FILE%"
+;transcode_cmd = "avconv -i %FILE%"
+;transocde_cmd = "/usr/bin/neatokeen %FILE%"
 
 ; Specific transcode commands
 ; It shouldn't be necessary in most cases, but you can override the transcode
