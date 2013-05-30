@@ -1,8 +1,8 @@
 CHANGELOG
 =========
 
-3.6-FUTURE
-----------
+3.6-alpha6 *2013-05-30*
+-----------------------
 - Fixed date searches using 'before' to use the correct comparison
   (patch by thinca)
 - Fixed long-standing issue affecting Synology users (patch by NigridsVa)
@@ -21,7 +21,6 @@ CHANGELOG
 - Updated getID3 to 1.9.5
 - Improved the performance of stream playlist creation (reported by AkbarSerad)
 - Fixed "Pure Random" / Random URLs (reported by mafe)
-
 
 3.6-alpha5 *2013-04-15*
 ----------------------
