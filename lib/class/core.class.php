@@ -41,28 +41,28 @@ class Core {
 
     /**
      * autoload
+     *
      * This function automatically loads any missing classes as they are
      * needed so that we don't use a million include statements which load
-     *  more than we need.
+     * more than we need.
      */
     public static function autoload($class) {
-        // Lowercase the class
-        $class = strtolower($class);
+        $file = Config::get('prefix') . '/lib/class/' .
+            strtolower($class) . '.class.php';
 
-        $file = Config::get('prefix') . "/lib/class/$class.class.php";
-
-        // See if it exists
         if (Core::is_readable($file)) {
-            require $file;
-            if (is_callable($class . '::_auto_init')) {
-                $class::_auto_init();
+            require_once $file;
+
+            // Call _auto_init if it exists
+            $autocall = array($class, '_auto_init');
+            if (is_callable($autocall)) {
+                call_user_func($autocall);
             }
         }
-        // Else log this as a fatal error
         else {
             debug_event('autoload', "'$class' not found!", 1);
         }
-    } // autoload
+    }
 
     /**
      * form_register
