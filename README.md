@@ -71,7 +71,6 @@ Ampache includes some external modules that carry their own licensing.
 * [PHPMailer](https://github.com/PHPMailer/PHPMailer): LGPL v2.1
 * [Prototype](http://www.prototypejs.org/): MIT
 * [Snoopy](http://snoopy.sourceforge.net/): LGPL v2.1
-* validateEmail.php: "free for any use"
 * [Whatever:hover](http://www.xs4all.nl/~peterned): LGPL v2.1
 
 Translations

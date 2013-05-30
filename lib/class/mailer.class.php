@@ -48,6 +48,15 @@ class Mailer {
     } // Constructor
 
     /**
+     * validate_address
+     *
+     * Checks whether what we have looks like a valid address.
+     */
+    public static function validate_address($address) {
+        return PHPMailer::ValidateAddress($address);
+    }
+
+    /**
      * set_default_sender
      *
      * Does the config magic to figure out the "system" email sender and

@@ -3,6 +3,7 @@ CHANGELOG
 
 3.6-FUTURE
 ----------
+- Removed external module 'validateEmail'
 - Updated PHPMailer to 5.2.6
 
 3.6-alpha6 *2013-05-30*

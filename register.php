@@ -30,13 +30,6 @@ if (!Config::get('allow_public_registration') || Config::get('demo_mode')) {
     exit();
 }
 
-/**
- * These are only needed for this page so they aren't included in init.php
- * this is for email validation and the cool little graphic
-*/
-require_once Config::get('prefix') . '/modules/validatemail/validateEmailFormat.php';
-require_once Config::get('prefix') . '/modules/validatemail/validateEmail.php';
-
 /* Don't even include it if we aren't going to use it */
 if (Config::get('captcha_public_reg')) {
     define ("CAPTCHA_INVERSE", 1);
@@ -97,28 +90,10 @@ switch ($_REQUEST['action']) {
             Error::add('fullname', T_("Please fill in your full name (Firstname Lastname)"));
         }
 
-        /* Check the mail for correct address formation. */
-        $attempt = 0;
-        $max_attempts = 3;
-        $response_code = "";
-
-        while ( $response_code == "" || strstr( $response_code, "fsockopen error" )) {
-            $validate_results = validateEmail( $email );
-            $response_code = $validate_results[1];
-            if($attempt == $max_attempts) {
-                break;
-            }
-            $attempt++;
+        // Check the mail for correct address formation.
+        if (!Mailer::validate_address($email)) { 
+            Error::add('email', T_('Invalid email address')
         }
-
-        if ($validate_results[0] OR strstr($validate_results[1],"greylist")) {
-            $mmsg = "MAILOK";
-        }
-            else {
-                    Error::add('email', T_("Error Email address not confirmed")
-               . "<br />$validate_results[1]");
-            }
-        /* End of mailcheck */
 
         if (!$pass1) {
             Error::add('password', T_("You must enter a password"));
