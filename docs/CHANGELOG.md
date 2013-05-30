@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+3.6-FUTURE
+----------
+
 3.6-alpha6 *2013-05-30*
 -----------------------
 - Fixed date searches using 'before' to use the correct comparison
