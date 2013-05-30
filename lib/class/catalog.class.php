@@ -217,13 +217,11 @@ class Catalog extends database_object {
 
         // Make sure the path is readable/exists
         if ($data['type'] == 'local') {
-            $handle = opendir($path);
-            if ($handle === false) {
+            if (!Core::is_readable($path)) {
                 debug_event('catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
                 Error::add('general', sprintf(T_('Error: %s is not readable or does not exist'), scrub_out($data['path'])));
                 return false;
             }
-            closedir($handle);
         }
 
         // Make sure this path isn't already in use by an existing catalog
@@ -501,7 +499,7 @@ class Catalog extends database_object {
                     Error::add('catalog_add', sprintf(T_('Error: Unable to get filesize for %s'), $full_file));
                 } // file_size check
 
-                if (!is_readable($full_file)) {
+                if (!Core::is_readable($full_file)) {
                     // not readable, warn user
                     debug_event('read', "$full_file is not readable by ampache", 2);
                     /* HINT: FullFile */
@@ -1175,7 +1173,7 @@ class Catalog extends database_object {
      * Removes local songs that no longer exist.
      */
      private function clean_local_catalog() {
-        if (!is_readable($this->path)) {
+        if (!Core::is_readable($this->path)) {
             // First sanity check; no point in proceeding with an unreadable
             // catalog root.
             debug_event('catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
@@ -1288,7 +1286,7 @@ class Catalog extends database_object {
                 $dead[] = $results['id'];
 
             } //if error
-            else if (!is_readable($results['file'])) {
+            else if (!Core::is_readable($results['file'])) {
                 debug_event('clean', $results['file'] . ' is not readable, but does exist', 1);
             }
         }
@@ -1373,7 +1371,7 @@ class Catalog extends database_object {
                 UI::update_text('verify_dir_' . $this->id, scrub_out($file));
             }
 
-            if (!is_readable($row['file'])) {
+            if (!Core::is_readable($row['file'])) {
                 Error::add('general', sprintf(T_('%s does not exist or is not readable'), $row['file']));
                 debug_event('read', $row['file'] . ' does not exist or is not readable', 5);
                 continue;

@@ -230,10 +230,10 @@ if ($catalog->catalog_type == 'remote') {
 }
 
 /* If we don't have a file, or the file is not readable */
-if (!$media->file OR !is_readable($media->file)) {
+if (!$media->file || !Core::is_readable($media->file)) {
 
-    // We need to make sure this isn't democratic play, if it is then remove the song
-    // from the vote list
+    // We need to make sure this isn't democratic play, if it is then remove
+    // the song from the vote list
     if (is_object($tmp_playlist)) {
         $tmp_playlist->delete_track($oid);
     }
