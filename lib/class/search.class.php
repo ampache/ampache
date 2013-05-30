@@ -179,7 +179,7 @@ class Search extends playlist_object {
         $this->basetypes['date'][] = array(
             'name'    => 'lt',
             'description' => T_('before'),
-            'sql'     => '>'
+            'sql'     => '<'
         );
         
         $this->basetypes['date'][] = array(

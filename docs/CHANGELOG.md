@@ -3,6 +3,8 @@ CHANGELOG
 
 3.6-FUTURE
 ----------
+- Fixed date searches using 'before' to use the correct comparison
+  (patch by thinca)
 - Fixed long-standing issue affecting Synology users (patch by NigridsVa)
 - Added support for MySQL sockets (based on patches by randomessence)
 - Fixed some issues with the logic around memory_limit (reported by CableNinja)
