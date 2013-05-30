@@ -7,8 +7,7 @@ include("class.smtp.php"); // note, this is optional - gets called from main cla
 
 $mail             = new PHPMailer();
 
-$body             = $mail->getFile('contents.html');
-$body             = eregi_replace("[\]",'',$body);
+$body             = file_get_contents('contents.html');
 
 $mail->IsSMTP();
 $mail->SMTPAuth   = true;                  // enable SMTP authentication

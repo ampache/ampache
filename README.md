@@ -68,7 +68,7 @@ Ampache includes some external modules that carry their own licensing.
 * [PHP-gettext](https://launchpad.net/php-gettext): GPL v2
 * php_musicbrainz: LGPL v2.1
 * PHP MPD interface: GPL v2
-* [PHPMailer](http://phpmailer.codeworxtech.com/): LGPL v2.1
+* [PHPMailer](https://github.com/PHPMailer/PHPMailer): LGPL v2.1
 * [Prototype](http://www.prototypejs.org/): MIT
 * [Snoopy](http://snoopy.sourceforge.net/): LGPL v2.1
 * validateEmail.php: "free for any use"
