@@ -26,8 +26,8 @@ $theme_path = Config::get('theme_path') . '/templates';
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/base.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/default.css" type="text/css" media="screen" />
 <?php
-if (is_rtl(Config::get('lang')) 
-    && is_file($theme_path . '/templates/rtl.css')) {
+if (is_rtl(Config::get('lang'))
+    && is_file(Config::get('prefix') . '/themes' . $theme_path . '/rtl.css')) {
 ?>
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css type="text/css" media="screen" />
 <?php
