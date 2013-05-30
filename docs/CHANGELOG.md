@@ -3,6 +3,7 @@ CHANGELOG
 
 3.6-FUTURE
 ----------
+- Fixed long-standing issue affecting Synology users (patch by NigridsVa)
 - Added support for MySQL sockets (based on patches by randomessence)
 - Fixed some issues with the logic around memory_limit (reported by CableNinja)
 - Fixed issue that sometimes removed ratings after catalog operations (reported

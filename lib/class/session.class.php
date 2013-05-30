@@ -336,6 +336,10 @@ class Session {
             array('Session', 'write'),
             array('Session', 'destroy'),
             array('Session', 'gc'));
+
+        // Make sure session_write_close is called during the early part of
+        // shutdown, to avoid issues with object destruction.
+        register_shutdown_function('session_write_close');
     }
 
     /**
