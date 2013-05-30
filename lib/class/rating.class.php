@@ -89,7 +89,7 @@ class Rating extends database_object {
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $ratings[$row['object_id']] = $row['rating'];
-          }
+        }
 
         foreach ($ids as $id) {
             // First store the user-specific rating
@@ -106,7 +106,7 @@ class Rating extends database_object {
                 $rating = 0;
             }
             else {
-                $rating = round($ratings[$id]['rating'], 1);
+                $rating = round($ratings[$id], 1);
             }
             parent::add_to_cache('rating_' . $type . '_all', $id, $rating);
         }
