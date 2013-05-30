@@ -106,7 +106,7 @@ class Rating extends database_object {
                 $rating = 0;
             }
             else {
-                $rating = round($ratings[$id]['rating'], 1);
+                $rating = round($ratings[$id], 1);
             }
             parent::add_to_cache('rating_' . $type . '_all', $id, $rating);
         }
