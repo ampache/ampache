@@ -8,7 +8,8 @@
 # S. Roy <sroy@j2n.net>, 2006.
 # François Jan <contribos@gmail.com>, 2007, 2008.
 # Erwan Velu <erwan.velu@free.fr>, 2008, 2009.
-# Roman Sanchez <publicite34@free.fr>, 2009
+# Roman Sanchez <publicite34@free.fr>, 2009.
+# Arnaud Bey <arnaud.bey@gmail.com>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
@@ -85,7 +86,7 @@ msgstr "Demande de suppression"
 
 #: ../../admin/catalog.php:141
 msgid "No Songs Removed"
-msgstr "Aucune chanson n'a été supprimée"
+msgstr "Aucune piste n'a été supprimée"
 
 #: ../../admin/catalog.php:166
 msgid "Catalog Cleaned"
@@ -102,7 +103,7 @@ msgstr ""
 #: ../../admin/catalog.php:217
 #, fuzzy
 msgid "Error: Username and Password Required for Remote Catalogs"
-msgstr "Obligatoire pour un catalogue distant"
+msgstr "Erreur: Nom d'utilisateur et et mot de passe requis pour un catalogue distant"
 
 #: ../../admin/catalog.php:227
 #, fuzzy
@@ -149,19 +150,19 @@ msgstr "Morceaux mis à jour"
 #: ../../admin/flag.php:87
 #, fuzzy
 msgid "The requested song has been updated"
-msgstr "Le(s) morceau(x) demandé(s) ont(a) été dé sactivé(s)"
+msgstr "La piste demandée a été mise à jour"
 
 #: ../../admin/flag.php:129
 msgid "Album Updated"
-msgstr "l'album a été mis à jour"
+msgstr "Album mis à jour"
 
 #: ../../admin/flag.php:171
 msgid "Artist Updated"
-msgstr "Artist mise à jour"
+msgstr "Artiste mis à jour"
 
 #: ../../admin/flag.php:232
 msgid "Songs Updated"
-msgstr "Morceaux mis à jour"
+msgstr "Pistes mises à jour"
 
 #: ../../admin/flag.php:240
 msgid "Flag Removed"
@@ -169,15 +170,15 @@ msgstr "marquée enlevés"
 
 #: ../../admin/flag.php:241
 msgid "Flag Removed from"
-msgstr "Marqueur effacée pour"
+msgstr "Marqueur effacé"
 
 #: ../../admin/flag.php:256
 msgid "Flags Updated"
-msgstr "Marqueurs ajoutés"
+msgstr "Marqueurs mis à jour"
 
 #: ../../admin/flag.php:275
 msgid "Songs Disabled"
-msgstr "Morceaux désactivés"
+msgstr "Pistes désactivées"
 
 #: ../../admin/flag.php:275
 msgid "The requested song(s) have been disabled"
@@ -185,7 +186,7 @@ msgstr "Le(s) morceau(x) demandé(s) ont(a) été désactivé(s)"
 
 #: ../../admin/flag.php:286
 msgid "Songs Enabled"
-msgstr "Morceaux activés"
+msgstr "Pistes activées"
 
 #: ../../admin/flag.php:286
 msgid "The requested song(s) have been enabled"
@@ -207,7 +208,7 @@ msgstr "Email envoyé"
 #: ../../admin/mail.php:72
 #, fuzzy
 msgid "Your E-mail was not sent."
-msgstr "Email envoyé"
+msgstr "Votre email n'a pas été envoyé"
 
 #: ../../admin/modules.php:44
 msgid "Install Failed, Controller Error"
@@ -232,7 +233,7 @@ msgstr "Greffon activé"
 #: ../../admin/modules.php:141
 #, fuzzy
 msgid "Plugin Upgraded"
-msgstr "Greffon activé"
+msgstr "Greffon mis à jour"
 
 #: ../../admin/modules.php:147
 msgid "Plugins"
@@ -377,16 +378,16 @@ msgstr "étes-vous sûr de vouloir supprimer définitivement"
 
 #: ../../albums.php:39
 msgid "Album Art Cleared"
-msgstr "Jaquette d'album supprimée"
+msgstr "Jaquette supprimée"
 
 #: ../../albums.php:39
 msgid "Album Art information has been removed from the database"
 msgstr ""
-"Les informations de jaquette d'albums ont été supprimées de la base de données"
+"Les informations de la jaquette ont été supprimées de la base de données"
 
 #: ../../albums.php:46 ../../albums.php:63 ../../albums.php:136
 msgid "Album Art Not Located"
-msgstr "Jaquette d'album non trouvée"
+msgstr "Jaquette non trouvée"
 
 #: ../../albums.php:46 ../../albums.php:63 ../../albums.php:136
 #, fuzzy
@@ -394,7 +395,7 @@ msgid ""
 "Album Art could not be located at this time. This may be due to write access "
 "error, or the file is not received correctly."
 msgstr ""
-"Pas de jaquette d'album trouvée. Cela peut etre dû à une surcharge "
+"Pas de jaquette trouvée. Cela peut etre dû à une surcharge "
 "temporaire d'Amazon ou un album inconnu de leur catalogue"
 
 #: ../../albums.php:59 ../../albums.php:87
@@ -413,12 +414,12 @@ msgstr ""
 
 #: ../../artists.php:86
 msgid "Error: Errenous request"
-msgstr ""
+msgstr "Erreur: requête erronée"
 
 #: ../../artists.php:90
 #, fuzzy
 msgid "Renamed artist(s)"
-msgstr "Artiste associé "
+msgstr "Artiste(s) renommé(s)"
 
 #: ../../artists.php:91
 #, php-format
@@ -447,17 +448,17 @@ msgstr "Sauver les paramètres du catalogue"
 #: ../../bin/catalog_update.inc:52
 #, fuzzy
 msgid "- Catalog Clean"
-msgstr "Catalogue nettoyé"
+msgstr "- Nettoyage de catalogue"
 
 #: ../../bin/catalog_update.inc:56
 #, fuzzy
 msgid "- Catalog Verify"
-msgstr "Nom du catalogue"
+msgstr "- Vérification du catalogue"
 
 #: ../../bin/catalog_update.inc:60
 #, fuzzy
 msgid "- Catalog Add"
-msgstr "Catalogue mis à jour"
+msgstr "- Ajout de catalogue"
 
 #: ../../bin/catalog_update.inc:64
 #, fuzzy
@@ -466,7 +467,7 @@ msgstr "catalogue créé"
 
 #: ../../bin/catalog_update.inc:68
 msgid "- Generate Thumbnails"
-msgstr ""
+msgstr "- Générer les miniatures"
 
 #: ../../bin/catalog_update.inc:91
 #, fuzzy
@@ -497,7 +498,7 @@ msgstr "Démarrage de la recherche de jaquette d'album"
 
 #: ../../bin/catalog_update.inc:141
 msgid "Generating Thumbnails"
-msgstr ""
+msgstr "Génération des miniatures"
 
 #: ../../bin/catalog_update.inc:168
 #, fuzzy
@@ -596,16 +597,16 @@ msgstr ""
 #: ../../bin/fix_filenames.inc:109
 #, fuzzy, php-format
 msgid "ERROR: Unable to open %s"
-msgstr "Erreur: Impossible d'ouvrir"
+msgstr "Erreur: Impossible d'ouvrir %s"
 
 #: ../../bin/fix_filenames.inc:115
 #, fuzzy, php-format
 msgid "ERROR: Unable to chdir to %s"
-msgstr "Erreur: Impossible de changer de répertoire"
+msgstr "Erreur: Impossible de changer de répertoire pour %s"
 
 #: ../../bin/fix_filenames.inc:138
 msgid "Translation failure, stripping non-valid characters"
-msgstr ""
+msgstr "Echec de traduction"
 
 #: ../../bin/fix_filenames.inc:143
 #, php-format
@@ -624,7 +625,7 @@ msgstr ""
 
 #: ../../bin/fix_filenames.inc:152
 msgid "Rename File (Y/N):"
-msgstr ""
+msgstr "Renommer le fichier (Y/N):"
 
 #: ../../bin/fix_filenames.inc:155
 #, fuzzy
@@ -662,7 +663,7 @@ msgstr "Créé par : %s pour %s"
 #: ../../bin/install/add_user.inc:57
 #, fuzzy
 msgid "User creation failed"
-msgstr "Utilisateur activé"
+msgstr "Echec de la création de l'utilisateur"
 
 #: ../../bin/install/install_db.inc:70
 #, fuzzy
@@ -675,16 +676,16 @@ msgstr ""
 
 #: ../../bin/install/install_db.inc:75
 msgid "Exiting."
-msgstr ""
+msgstr "Fermeture."
 
 #: ../../bin/install/install_db.inc:82
 #, fuzzy
 msgid "Database creation failed"
-msgstr "Encodage de la base de données mis à jour"
+msgstr "Échec de la création de la base de données"
 
 #: ../../bin/install/install_db.inc:89
 msgid "Config file creation failed"
-msgstr ""
+msgstr "Échec de la création du fichier de configuration"
 
 #: ../../bin/install/update_db.inc:48
 #, fuzzy
@@ -693,23 +694,23 @@ msgstr "les mises à jour suivantes doivent être installées"
 
 #: ../../bin/migrate_config.inc:56
 msgid "Parsing old config file..."
-msgstr ""
+msgstr "Traitement de l'ancien fichier de configuration..."
 
 #: ../../bin/migrate_config.inc:86
 msgid "Parse complete, writing"
-msgstr ""
+msgstr "Traitement terminé, écriture"
 
 #: ../../bin/migrate_config.inc:94
 msgid "Write success, config migrated"
-msgstr ""
+msgstr "Succès de l'écriture, configuration migrée"
 
 #: ../../bin/migrate_config.inc:98
 msgid "Access Denied, config migration failed"
-msgstr ""
+msgstr "Accès refusé, échec de la migration de la configuration"
 
 #: ../../bin/print_tags.inc:44
 msgid "File not found."
-msgstr ""
+msgstr "Fichier non trouvé."
 
 #: ../../bin/print_tags.inc:65
 #, php-format
@@ -733,7 +734,7 @@ msgstr "Version de PHP"
 #: ../../bin/print_tags.inc:95
 #, fuzzy
 msgid "Usage:"
-msgstr "Message"
+msgstr "Utilisation"
 
 #: ../../bin/print_tags.inc:97
 msgid "php print_tags.inc <Filename>"
