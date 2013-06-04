@@ -288,7 +288,8 @@ class Stream_Playlist {
     public function create_asx() {
 
         echo '<ASX version = "3.0" BANNERBAR="AUTO">' . "\n";
-        echo "<TITLE>Ampache ASX Playlist</TITLE>";
+        echo "<TITLE>Ampache ASX Playlist</TITLE>\n";
+        echo '<PARAM NAME="Encoding" VALUE="utf-8" />' . "\n";
 
         foreach ($this->urls as $url) {
             echo "<ENTRY>\n";
