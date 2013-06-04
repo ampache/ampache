@@ -287,8 +287,8 @@ class Stream_Playlist {
      */
     public function create_asx() {
 
-        echo '<ASX version = "3.0" BANNERBAR="AUTO">' . "\n";
-        echo "<TITLE>Ampache ASX Playlist</TITLE>";
+        echo '<ASX VERSION="3.0" BANNERBAR="auto">' . "\n";
+        echo "<TITLE>Ampache ASX Playlist</TITLE>\n";
 
         foreach ($this->urls as $url) {
             echo "<ENTRY>\n";
@@ -299,7 +299,7 @@ class Stream_Playlist {
             echo "\t\t" . '<PARAM NAME="Album" Value="' . scrub_out($url->album) . '" />' . "\n";
             echo "\t\t" . '<PARAM NAME="Composer" Value="' . scrub_out($url->author) . '" />' . "\n";
             echo "\t\t" . '<PARAM NAME="Prebuffer" Value="false" />' . "\n";
-            echo '<REF HREF = "' . $url->url . '" />' . "\n";
+            echo '<REF HREF="' . $url->url . '" />' . "\n";
             echo "</ENTRY>\n";
         }
 
