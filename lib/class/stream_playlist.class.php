@@ -292,11 +292,11 @@ class Stream_Playlist {
 
         foreach ($this->urls as $url) {
             echo "<ENTRY>\n";
-            echo '<TITLE>' . $url->title . "</TITLE>\n";
-            echo '<AUTHOR>' . $url->author . "</AUTHOR>\n";
+            echo '<TITLE>' . htmlspecialchars($url->title) . "</TITLE>\n";
+            echo '<AUTHOR>' . htmlspecialchars($url->author) . "</AUTHOR>\n";
             echo "\t\t" . '<DURATION VALUE="00:00:' . $url->time . '" />' . "\n";
-            echo "\t\t" . '<PARAM NAME="Album" Value="' . $url->album . '" />' . "\n";
-            echo "\t\t" . '<PARAM NAME="Composer" Value="' . $url->author . '" />' . "\n";
+            echo "\t\t" . '<PARAM NAME="Album" Value="' . htmlspecialchars($url->album) . '" />' . "\n";
+            echo "\t\t" . '<PARAM NAME="Composer" Value="' . htmlspecialchars($url->author) . '" />' . "\n";
             echo "\t\t" . '<PARAM NAME="Prebuffer" Value="false" />' . "\n";
             echo '<REF HREF = "' . $url->url . '" />' . "\n";
             echo "</ENTRY>\n";
