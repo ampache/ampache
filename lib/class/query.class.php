@@ -225,6 +225,14 @@ class Query {
         $db_results = Dba::write($sql);
     }
 
+    private static function _serialize($data) {
+        return serialize($data);
+    }
+
+    private static function _unserialize($data) {
+        return unserialize($data);
+    }
+
     /**
      * set_filter
      * This saves the filter data we pass it.
@@ -651,7 +659,7 @@ class Query {
 
             $row = Dba::fetch_assoc($db_results);
 
-            $this->_cache = unserialize($row['object_data']);
+            $this->_cache = self::_unserialize($row['object_data']);
             return $this->_cache;
         }
         else {
@@ -1433,7 +1441,7 @@ class Query {
             $this->set_total(count($object_ids));
             $id = $this->id;
             if ($id != 'nocache') {
-                $data = serialize($this->_cache);
+                $data = self::_serialize($this->_cache);
 
                 $sql = 'UPDATE `tmp_browse` SET `object_data` = ? ' .
                     'WHERE `sid` = ? AND `id` = ?';
