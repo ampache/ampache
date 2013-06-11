@@ -63,6 +63,7 @@ switch($_REQUEST['action']) {
         $browse->show_objects();
     break;
     case 'tag':
+        //FIXME: This whole thing is ugly, even though it works.
         $browse->set_sort('count','ASC');
         // This one's a doozy
         $browse->set_simple_browse(false);

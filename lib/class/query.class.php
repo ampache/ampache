@@ -225,12 +225,65 @@ class Query {
         $db_results = Dba::write($sql);
     }
 
+    /**
+     * _serialize
+     *
+     * Attempts to produce a more compact representation for large result
+     * sets by collapsing ranges.
+     */
     private static function _serialize($data) {
-        return serialize($data);
+        if (count($data) > 1000) {
+            sort($data);
+            $last = -17;
+            $in_range = false;
+            $idx = -1;
+            $cooked = array();
+            foreach ($data as $id) {
+                if ($id == ($last + 1)) {
+                    if ($in_range) {
+                        $cooked[$idx][1] = $id;
+                    }
+                    else {
+                        $in_range = true;
+                        $cooked[$idx] = array($last, $id);
+                    }
+                }
+                else {
+                    $in_range = false;
+                    $idx++;
+                    $cooked[$idx] = $id;
+                }
+                $last = $id;
+            }
+            $data = json_encode($cooked);
+            debug_event('Query', 'cooked serialize length: ' . strlen($data), 5);
+        }
+        else {
+            $data = json_encode($data);
+        }
+        
+        return $data;
     }
 
+    /*
+     * _unserialize
+     *
+     * Reverses serialization.
+     */
     private static function _unserialize($data) {
-        return unserialize($data);
+        $raw = array();
+        $cooked = json_decode($data);
+        foreach ($cooked as $grain) {
+            if (is_array($grain)) {
+                foreach(range($grain[0], $grain[1]) as $id) {
+                    $raw[] = $id;
+                }
+            }
+            else {
+                $raw[] = $grain;
+            }
+        }
+        return $raw;
     }
 
     /**

@@ -3,6 +3,7 @@ CHANGELOG
 
 3.6-FUTURE
 ----------
+- Improved storage efficiency for large browse results
 - Fixed unnecessary growth of the tmp_browse table from API usage (reported
   by Ondalf)
 - Removed external module 'validateEmail'
