@@ -3,6 +3,8 @@ CHANGELOG
 
 3.6-FUTURE
 ----------
+- Fixed unnecessary growth of the tmp_browse table from API usage (reported
+  by Ondalf)
 - Removed external module 'validateEmail'
 - Updated PHPMailer to 5.2.6
 
