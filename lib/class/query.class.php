@@ -44,16 +44,16 @@ class Query {
      * This should be called
      */
     public function __construct($id = null, $cached = true) {
-        $sid = Dba::escape(session_id());
+        $sid = session_id();
         
         if (is_null($id)) {
             $this->reset();
             if ($cached) {
-                $data = Dba::escape(serialize($this->_state));
+                $data = serialize($this->_state);
 
-                $sql = "INSERT INTO `tmp_browse` (`sid`, `data`) " .
-                    "VALUES('$sid', '$data')";
-                $db_results = Dba::write($sql);
+                $sql = 'INSERT INTO `tmp_browse` (`sid`, `data`) ' .
+                    'VALUES(?, ?)';
+                $db_results = Dba::write($sql, array($sid, $data));
                 $this->id = Dba::insert_id();
             
             }
@@ -65,10 +65,10 @@ class Query {
 
         $this->id = $id;
 
-        $sql = "SELECT `data` FROM `tmp_browse` " .
-            "WHERE `id`='$id' AND `sid`='$sid'";
+        $sql = 'SELECT `data` FROM `tmp_browse` ' .
+            'WHERE `id` = ? AND `sid` = ?';
 
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, array($id, $sid));
 
         if ($results = Dba::fetch_assoc($db_results)) {
             $this->_state = unserialize($results['data']);
@@ -219,9 +219,9 @@ class Query {
      * This cleans old data out of the table
      */
     public static function gc() {
-        $sql = "DELETE FROM `tmp_browse` USING `tmp_browse` LEFT JOIN ".
-            "`session` ON `session`.`id`=`tmp_browse`.`sid` " .
-                "WHERE `session`.`id` IS NULL";
+        $sql = 'DELETE FROM `tmp_browse` USING `tmp_browse` LEFT JOIN ' .
+            '`session` ON `session`.`id` = `tmp_browse`.`sid` ' .
+            'WHERE `session`.`id` IS NULL';
         $db_results = Dba::write($sql);
     }
 
@@ -645,10 +645,9 @@ class Query {
         }
 
         if (!$this->is_simple()) {
-            $sid = Dba::escape(session_id());
-            $id = Dba::escape($this->id);
-            $sql = "SELECT `object_data` FROM `tmp_browse` WHERE `sid`='$sid' AND `id`='$id'";
-            $db_results = Dba::read($sql);
+            $sql = 'SELECT `object_data` FROM `tmp_browse` ' .
+                'WHERE `sid` = ? AND `id` = ?';
+            $db_results = Dba::read($sql, array(session_id(), $this->id));
 
             $row = Dba::fetch_assoc($db_results);
 
@@ -1356,6 +1355,7 @@ class Query {
             $sql = $this->get_sql(true);
         }
         else {
+            // FIXME: this is fragile for large browses
             // First pull the objects
             $objects = $this->get_saved();
 
@@ -1405,14 +1405,14 @@ class Query {
      * This saves the current state to the database
      */
     public function store() {
-        $sid = Dba::escape(session_id());
-        $id = Dba::escape($this->id);
+        $id = $this->id;
         if ($id != 'nocache') {
-            $data = Dba::escape(serialize($this->_state));
+            $data = serialize($this->_state);
 
-            $sql = "UPDATE `tmp_browse` SET `data`='$data' " .
-                "WHERE `sid`='$sid' AND `id`='$id'";
-            $db_results = Dba::write($sql);
+            $sql = 'UPDATE `tmp_browse` SET `data` = ? ' .
+                'WHERE `sid` = ? AND `id` = ?';
+            $db_results = Dba::write($sql,
+                array($data, session_id(), $id));
         }
     }
 
@@ -1431,16 +1431,16 @@ class Query {
         if (!$this->is_simple()) { 
             $this->_cache = $object_ids;
             $this->set_total(count($object_ids));
-            $sid = Dba::escape(session_id());
-            $id = Dba::escape($this->id);
+            $id = $this->id;
             if ($id != 'nocache') {
-                $data = Dba::escape(serialize($this->_cache));
+                $data = serialize($this->_cache);
 
-                $sql = "UPDATE `tmp_browse` SET `object_data`='$data' " .
-                    "WHERE `sid`='$sid' AND `id`='$id'";
-                $db_results = Dba::write($sql);
+                $sql = 'UPDATE `tmp_browse` SET `object_data` = ? ' .
+                    'WHERE `sid` = ? AND `id` = ?';
+                $db_results = Dba::write($sql,
+                    array($data, session_id(), $id));
             }
-        } // save it
+        }
 
         return true;
 
