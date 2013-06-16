@@ -233,7 +233,6 @@ class Query {
      */
     private static function _serialize($data) {
         if (count($data) > 1000) {
-            sort($data);
             $last = -17;
             $in_range = false;
             $idx = -1;
