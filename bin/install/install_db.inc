@@ -121,7 +121,7 @@ function usage() {
     echo "MySQL Database Name"; 
     echo "\n\t-u, --ampache-database-user\t";
     echo 'MySQL Application Username';
-    echo "\n\t-p, --ampache-database-pass\t"; 
+    echo "\n\t-p, --ampache-database-password\t"; 
     echo 'MySQL Application Password'; 
     echo "\n\t-w, --webpath\t\t\t\t"; 
     echo 'Web path';
