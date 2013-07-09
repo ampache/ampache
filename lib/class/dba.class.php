@@ -291,7 +291,9 @@ class Dba {
         $dbh = self::_connect();
 
         if (!$dbh || $dbh->errorCode()) {
-            self::$_error = json_encode($dbh->errorInfo());
+            if ($dbh) {
+                self::$_error = json_encode($dbh->errorInfo());
+            }
             return false;
         }
 
