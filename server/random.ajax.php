@@ -32,7 +32,7 @@ switch ($_REQUEST['action']) {
         // If we don't get anything stop
         if (!$album_id) { $results['rfc3514'] = '0x1'; break; }
 
-                $album = new Album($album_id);
+                $album = new Album($album_id[0]);
                 $songs = $album->get_songs();
                 foreach ($songs as $song_id) {
                         $GLOBALS['user']->playlist->add_object($song_id,'song');
