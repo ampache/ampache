@@ -45,21 +45,6 @@ class Random implements media {
     } // constructor
 
     /**
-     * album
-     * This returns the ID of a random album, nothing special
-     */
-    public static function album() {
-
-        $sql = "SELECT `id` FROM `album` ORDER BY RAND() LIMIT 1";
-        $db_results = Dba::read($sql);
-
-        $results = Dba::fetch_assoc($db_results);
-
-        return $results['id'];
-
-    } // album
-
-    /**
      * artist
      * This returns the ID of a random artist, nothing special here for now
      */

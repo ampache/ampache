@@ -418,30 +418,32 @@ class Album extends database_object {
     } // update
 
     /**
-     * get_random_albums
-     * This returns a random number of albums from the catalogs
-     * this is used by the index to return some 'potential' albums to play
+     * get_random
+     *
+     * This returns a number of random albums.
      */
-    public static function get_random_albums($count=6) {
+    public static function get_random($count = 1, $with_art = false) {
+        $results = false;
 
-        $sql = 'SELECT `id` FROM `album` ORDER BY RAND() LIMIT ' . ($count*2);
+        if ($with_art) {
+            $sql = 'SELECT `album`.`id` FROM `album` LEFT JOIN `image` ' .
+                "ON (`image`.`object_type` = 'album' AND " .
+                '`image`.`object_id` = `album`.`id`) ' .
+                'WHERE `image`.`id` IS NOT NULL ';
+        }
+        else {
+            $sql = 'SELECT `id` FROM `album` ';
+        }
+        
+        $sql .= 'ORDER BY RAND() LIMIT ' . intval($count);
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $art = new Art($row['id'], 'album');
-            $art->get_db();
-            if ($art->raw) {
-                $results[] = $row['id'];
-            }
+            $results[] = $row['id'];
         }
 
-        if (count($results) < $count) { return false; }
-
-        $results = array_slice($results, 0, $count);
-
         return $results;
-
-    } // get_random_albums
+    }
 
 } //end of album class
 

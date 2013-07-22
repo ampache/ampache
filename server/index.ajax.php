@@ -27,7 +27,7 @@ if (!defined('AJAX_INCLUDE')) { exit; }
 
 switch ($_REQUEST['action']) {
     case 'random_albums':
-        $albums = Album::get_random_albums('6');
+        $albums = Album::get_random(6, true);
         if (count($albums) AND is_array($albums)) {
             ob_start();
             require_once Config::get('prefix') . '/templates/show_random_albums.inc.php';
