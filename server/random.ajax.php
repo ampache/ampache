@@ -27,12 +27,12 @@ if (!defined('AJAX_INCLUDE')) { exit; }
 
 switch ($_REQUEST['action']) {
         case 'album':
-                $album_id = Random::album();
+                $album_id = Album::get_random();
 
         // If we don't get anything stop
         if (!$album_id) { $results['rfc3514'] = '0x1'; break; }
 
-                $album = new Album($album_id);
+                $album = new Album($album_id[0]);
                 $songs = $album->get_songs();
                 foreach ($songs as $song_id) {
                         $GLOBALS['user']->playlist->add_object($song_id,'song');

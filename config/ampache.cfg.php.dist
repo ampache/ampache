@@ -564,7 +564,7 @@ refresh_limit = "60"
 ; DEFAULT: none
 ;transcode_cmd = "ffmpeg -i %FILE%"
 ;transcode_cmd = "avconv -i %FILE%"
-;transocde_cmd = "/usr/bin/neatokeen %FILE%"
+;transcode_cmd = "/usr/bin/neatokeen %FILE%"
 
 ; Specific transcode commands
 ; It shouldn't be necessary in most cases, but you can override the transcode
@@ -574,6 +574,9 @@ refresh_limit = "60"
 ; transcode_cmd_TYPE = TRANSCODE_CMD
 ;transcode_cmd_mid = "timidity -Or -o – %FILE% | ffmpeg -f s16le -i pipe:0"
 
+; Encoding arguments
+; For each output format, you should provide the necessary arguments for
+; your transcode_cmd. 
 ; encode_args_TYPE = TRANSCODE_CMD_ARGS
 ;encode_args_mp3 = "-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1"
 ;encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
