@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Name>Amapche</Name>
+    <Name>Ampache</Name>
     <ProjectGuid>{584d0195-0c30-4fb0-8d6b-7b9664100233}</ProjectGuid>
     <RootNamespace>Amapche</RootNamespace>
     <OutputType>Library</OutputType>
