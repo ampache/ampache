@@ -32,6 +32,10 @@ switch ($_REQUEST['action']) {
     case 'add_tag':
         Tag::add_tag_map($_GET['type'],$_GET['object_id'],$_GET['tag_id']);
     break;
+    case 'add_tag_by_name':    
+        $tag = Tag::construct_from_name($_GET['tag_name']);
+        Tag::add($_GET['type'],$_GET['object_id'],$tag, false);
+    break;
     case 'remove_tag':
         $tag = new Tag($_GET['tag_id']);
         $tag->remove_map($_GET['type'],$_GET['object_id']);
