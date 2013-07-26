@@ -60,7 +60,13 @@
       <label><?php echo T_('Artist'); ?></label>
     <?php echo $media->f_artist_link; ?>
   </div>
+  
+  <div class="np_cell cel_artist">
+      <label><?php echo T_('Tags'); ?></label>
+      <a href="#" id="tag_song_<?php echo $media->id?>" onclick="showAddTagDialog(<?php echo $media->id?>, 'song', '<?php echo Config::get('web_path'); ?>')"><?php echo UI::get_icon('add', T_('Add')); ?></a><?php echo $media->f_tags; ?>
+  </div>
 </div>
+
 
 <?php if (Art::is_enabled()) { ?>
 <div class="np_group" id="np_group_3">

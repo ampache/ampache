@@ -27,10 +27,7 @@
 <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
 <td class="cel_album"><?php echo $song->f_album_link; ?></td>
 <td class="cel_tags">
-  <a href="#" id="tag_song_<?php echo $song->id?>" onclick="showAddTagDialog<?php echo $song->id?>, 'song', <?php echo Config::get('web_path'); ?>)">
-    <?php echo UI::get_icon('add', T_('Add')); ?>
-  </a>
-  <?php echo $song->f_tags; ?>
+  <a href="#" id="tag_song_<?php echo $song->id?>" onclick="showAddTagDialog(<?php echo $song->id?>, 'song', '<?php echo Config::get('web_path'); ?>')"><?php echo UI::get_icon('add', T_('Add')); ?></a><?php echo $song->f_tags; ?>
 </td>
 <td class="cel_track"><?php echo $song->f_track; ?></td>
 <td class="cel_time"><?php echo $song->f_time; ?></td>
