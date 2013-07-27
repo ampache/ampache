@@ -31,6 +31,6 @@ function refresh()
     <?php echo Ajax::action($ajax_url, ''); ?>;
 }
 $(document).ready(function() {
-window.setInterval(refresh(), refreshInterval);
+window.setInterval(function(){refresh();}, refreshInterval * 1000);
 });
 </script>

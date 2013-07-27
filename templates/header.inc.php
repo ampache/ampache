@@ -40,6 +40,7 @@ if (Config::get('use_rss')) { ?>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo Config::get('site_charset'); ?>" />
 <title><?php echo scrub_out(Config::get('site_title')); ?> - <?php echo $location['title']; ?></title>
 <?php require_once Config::get('prefix') . '/templates/stylesheets.inc.php'; ?>
+<link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery/jquery-ui-1.10.3.min.css" type="text/css" media="screen" />
 </head>
 <body>
 <script src="<?php echo $web_path; ?>/modules/jquery/jquery-1.9.1.js" language="javascript" type="text/javascript"></script>
@@ -48,6 +49,7 @@ if (Config::get('use_rss')) { ?>
 <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <!-- rfc3514 implementation -->
 <div id="rfc3514" style="display:none;">0x0</div>
+<div id="dialog_tag_item" class="default_hidden"><span><?php echo T_('Enter tag:')?></span><br /><input type="text" id="dialog_tag_item_tag_name"/></div>
 <div id="maincontainer">
     <div id="header"><!-- This is the header -->
         <h1 id="headerlogo">
