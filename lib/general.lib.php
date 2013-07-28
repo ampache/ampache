@@ -74,7 +74,7 @@ function generate_password($length) {
  */
 function scrub_in($input) {
 
-    if (!is_array($input)) {
+    if (!is_array($input)) { // this doesn't make any sense, why are we encoding input?
         return stripslashes(htmlspecialchars(strip_tags($input), ENT_QUOTES, Config::get('site_charset')));
     }
     else {
@@ -90,10 +90,11 @@ function scrub_in($input) {
  * scrub_out
  * This function is used to escape user data that is getting redisplayed
  * onto the page, it htmlentities the mojo
+ * This is the inverse of the scrub_in function
  */
 function scrub_out($string) {
 
-    return htmlentities($string, ENT_QUOTES, Config::get('site_charset'));
+    return html_entity_decode($string, ENT_QUOTES, Config::get('site_charset'));
 
 } // scrub_out
 
