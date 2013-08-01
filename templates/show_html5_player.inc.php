@@ -63,11 +63,11 @@ foreach($playlist->urls as $item)
         <div id="album"><?php echo T_('Loading...') ?></div>
         <div id="artist"><?php echo T_('Loading...') ?></div>
         <div id="progress_text"><?php echo T_('Loading...') ?></div>
-        <button id="stop" accesskey="<?php echo T_dgettext('html5_player_accesskey', 'o') ?>"><?php echo T_('Stop') ?></button>
         <button id="play" accesskey="<?php echo T_dgettext('html5_player_accesskey', 'p') ?>"><?php echo T_('Play') ?></button>
         <button id="pause" accesskey="<?php echo T_dgettext('html5_player_accesskey', 'p') ?>"><?php echo T_('Pause') ?></button>
         <button id="previous" accesskey="<?php echo T_dgettext('html5_player_accesskey', ',') ?>"><?php echo T_('Previous') ?></button>
         <button id="next" accesskey="<?php echo T_dgettext('html5_player_accesskey', '.') ?>"><?php echo T_('Next') ?></button>
+        <button id="stop" accesskey="<?php echo T_dgettext('html5_player_accesskey', 'o') ?>"><?php echo T_('Stop') ?></button>
     </div>
     <div>
         <ul id="playlist">

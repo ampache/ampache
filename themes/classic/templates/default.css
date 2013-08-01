@@ -36,7 +36,6 @@ a img, :link img, :visited img { border: 0; } /* no blue linked image borders */
 body { 
 	background:#d3d3d3;
 	font-family:Arial, Helvetica, Sans-Serif;
-	min-width:1000px;
 }
 p { 
 	color: #000;
