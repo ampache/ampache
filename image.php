@@ -64,6 +64,11 @@ switch ($_GET['thumb']) {
         $size['height']    = '80';
         $size['width']    = '80';
     break;
+    case '4':
+        /* HTML5 Player size */
+        $size['height'] = 200;
+        $size['width'] = 200; // 200px width, set via CSS
+    break;
     default:
         $size['height'] = '275';
         $size['width']    = '275';
