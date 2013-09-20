@@ -55,16 +55,11 @@ class Ajax {
             $source_txt = $source;
         }
         else {
-            $source_txt = "'$source'";
-        }
-
-        // If it's a post then we need to stop events
-        if ($post) {
-            $action  = 'Event.stop(e); ' . $action;
+            $source_txt = "'#$source'";
         }
 
         $observe    = "<script type=\"text/javascript\">";
-        $observe    .= "Event.observe($source_txt,'$method',function(e){" . $action . ";});";
+        $observe    .= "$($source_txt).$method(function(e){" . $action . ";});";
         $observe    .= "</script>";
 
         return $observe;

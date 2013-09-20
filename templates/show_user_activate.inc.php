@@ -37,7 +37,7 @@ $web_path = Config::get('web_path');
 <?php echo T_('Registration'); ?>...
 </div>
 
-<script src="<?php echo $web_path; ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/jquery/jquery-1.9.1.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 

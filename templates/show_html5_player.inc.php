@@ -30,7 +30,7 @@ header('Expires: ' . gmdate(DATE_RFC1123, time()-1));
 <title><?php echo Config::get('site_title'); ?></title>
 <link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/html5_player.css" type="text/css" media="screen" />
 <?php require_once Config::get('prefix') . '/templates/stylesheets.inc.php'; ?>
-<script src="<?php echo Config::get('web_path'); ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/jquery/jquery-1.9.1.js" language="javascript" type="text/javascript"></script>
 <script type="text/javascript">
 var playlist_items={
 <?php
@@ -63,11 +63,11 @@ foreach($playlist->urls as $item)
         <div id="album"><?php echo T_('Loading...') ?></div>
         <div id="artist"><?php echo T_('Loading...') ?></div>
         <div id="progress_text"><?php echo T_('Loading...') ?></div>
-        <button id="stop" accesskey="<?php echo T_dgettext('html5_player_accesskey', 'o') ?>"><?php echo T_('Stop') ?></button>
         <button id="play" accesskey="<?php echo T_dgettext('html5_player_accesskey', 'p') ?>"><?php echo T_('Play') ?></button>
         <button id="pause" accesskey="<?php echo T_dgettext('html5_player_accesskey', 'p') ?>"><?php echo T_('Pause') ?></button>
         <button id="previous" accesskey="<?php echo T_dgettext('html5_player_accesskey', ',') ?>"><?php echo T_('Previous') ?></button>
         <button id="next" accesskey="<?php echo T_dgettext('html5_player_accesskey', '.') ?>"><?php echo T_('Next') ?></button>
+        <button id="stop" accesskey="<?php echo T_dgettext('html5_player_accesskey', 'o') ?>"><?php echo T_('Stop') ?></button>
     </div>
     <div>
         <ul id="playlist">
