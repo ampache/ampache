@@ -310,6 +310,9 @@ class Song extends database_object implements media {
             case 'm4a':
                 return 'audio/mp4';
             break;
+            case 'aacp':
+                return 'audio/aacp';
+            break;
             case 'mpc':
                 return 'audio/x-musepack';
             break;
