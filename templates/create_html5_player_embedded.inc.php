@@ -25,15 +25,20 @@
 <head>
 <title><?php echo Config::get('site_title'); ?></title>
 <script language="javascript" type="text/javascript">
-<!-- begin
-function PlayerPopUp(URL) {
-	window.open(URL, 'HTML5_player', 'width=730,height=285,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');
-	window.location = '<?php echo return_referer() ?>';
-	return false;
+function PlayerFrame(URL) {
+    var ff = parent.parent.document.getElementById('frame_footer');
+    var maindiv = parent.parent.document.getElementById('maindiv');
+    if (ff.getAttribute('className') != 'frame_footer_visible') {
+        ff.setAttribute('className', 'frame_footer_visible');
+        ff.setAttribute('class', 'frame_footer_visible');
+        
+        maindiv.style.height = (parent.parent.innerHeight - 105) + "px";
+    }
+    ff.setAttribute('src', URL);
+    return false;
 }
-// end -->
 </script>
 </head>
-<body onLoad="javascript:PlayerPopUp('<?php echo Config::get('web_path')?>/html5_player.php<?php echo '?playlist_id=' . $this->id ?>')">
+<body onLoad="javascript:PlayerFrame('<?php echo Config::get('web_path')?>/html5_player_embedded.php<?php echo '?playlist_id=' . $this->id ?>');">
 </body>
 </html>

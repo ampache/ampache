@@ -286,6 +286,9 @@ class Update {
 
         $update_string = '- Increase the length of sessionids again.<br />';
         $version[] = array('version' => '360014', 'description' => $update_string);
+        
+        $update_string = '- Add iframes parameter to preferences.<br />';
+        $version[] = array('version' => '360015', 'description' => $update_string);
 
         return $version;
 
@@ -1478,6 +1481,24 @@ class Update {
         $retval = Dba::write('ALTER TABLE `session` CHANGE `id` `id` VARCHAR(256) NOT NULL') ? $retval : false;
 
         return $retval;
+    }
+    
+    /**
+     * update_360015
+     *
+     * This update inserts the Iframes preference...
+     */
+    public static function update_360015() {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('iframes','0','Iframes',25,'boolean','interface')";
+        Dba::write($sql);
+        
+        $id = Dba::insert_id();
+
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        return true;
     }
 
 }

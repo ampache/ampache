@@ -37,6 +37,13 @@ if (Preference::has_access('play_type')) {
         <option value="democratic" <?php echo $is_democratic; ?>><?php echo T_('Democratic'); ?></option>
     <?php } ?>
     <option value="html5_player" <?php echo $is_html5_player; ?>><?php echo T_('HTML5 Player'); ?></option>
+<?php
+if (Config::get("iframes")) {
+?>
+    <option value="html5_player_embedded" <?php echo $is_html5_player_embedded; ?>><?php echo T_('Framed Player'); ?></option>
+<?php
+}
+?>
 </select>
 <?php echo Ajax::observe('play_type_select','change',Ajax::action('?page=stream&action=set_play_type','play_type_select','play_type_form'),'1'); ?>
 </form>

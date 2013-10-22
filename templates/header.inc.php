@@ -51,7 +51,7 @@ if (Config::get('use_rss')) { ?>
 <div id="maincontainer">
     <div id="header"><!-- This is the header -->
         <h1 id="headerlogo">
-          <a href="<?php echo Config::get('web_path'); ?>">
+          <a href="<?php echo Config::get('web_path') . ((Config::get('iframes')) ? '/?framed=1' : ''); ?>">
             <img src="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="<?php echo Config::get('site_title'); ?>" alt="<?php echo Config::get('site_title'); ?>" />
           </a>
         </h1>

@@ -73,6 +73,7 @@ Ampache includes some external modules that carry their own licensing.
 * [Snoopy](http://snoopy.sourceforge.net/): LGPL v2.1
 * [Whatever:hover](http://www.xs4all.nl/~peterned): LGPL v2.1
 * [xbmc-php-rpc](https://github.com/karlrixon/xbmc-php-rpc): GPL v3
+* [JPlayer](http://jplayer.org/): MIT
 
 Translations
 ------------
