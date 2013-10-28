@@ -35,9 +35,9 @@ $web_path = Config::get('web_path');
 </colgroup>
 <tr class="th-top">
     <th class="cel_add"><?php echo T_('Add'); ?></th>
-    <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
-    <th class="cel_callsign"><?php echo Ajax::text('?page=browse&action=set_sort&sort=call_sign', T_('Callsign'),'live_stream_call_sign');  ?></th>
-    <th class="cel_frequency"><?php echo Ajax::text('?page=browse&action=set_sort&sort=frequency', T_('Frequency'),'live_stream_frequency'); ?></th>
+    <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
+    <th class="cel_callsign"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=call_sign', T_('Callsign'),'live_stream_call_sign');  ?></th>
+    <th class="cel_frequency"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=frequency', T_('Frequency'),'live_stream_frequency'); ?></th>
     <th class="cel_genre"><?php echo T_('Tag'); ?></th>
     <th class="cel_action"><?php echo T_('Action'); ?> </th>
 </tr>
@@ -57,9 +57,9 @@ foreach ($object_ids as $radio_id) {
 <?php } ?>
 <tr class="th-bottom">
     <th class="cel_add"><?php echo T_('Add'); ?></th>
-    <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&sort=name', T_('Name'),'live_stream_sort_name_bottom'); ?></th>
-    <th class="cel_callsign"><?php echo Ajax::text('?page=browse&action=set_sort&sort=call_sign', T_('Callsign'),'live_stream_call_sign_bottom');  ?></th>
-    <th class="cel_frequency"><?php echo Ajax::text('?page=browse&action=set_sort&sort=frequency', T_('Frequency'),'live_stream_frequency_bottom'); ?></th>
+    <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name_bottom'); ?></th>
+    <th class="cel_callsign"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=call_sign', T_('Callsign'),'live_stream_call_sign_bottom');  ?></th>
+    <th class="cel_frequency"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=frequency', T_('Frequency'),'live_stream_frequency_bottom'); ?></th>
     <th class="cel_genre"><?php echo T_('Tag'); ?></th>
     <th class="cel_action"><?php echo T_('Action'); ?> </th>
 </tr>
