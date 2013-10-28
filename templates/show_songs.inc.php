@@ -65,12 +65,12 @@ $web_path = Config::get('web_path');
 <?php } ?>
 <tr class="th-bottom">
     <th class="cel_add"><?php echo T_('Add'); ?></th>
-    <th class="cel_song"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=title', T_('Song Title'),'sort_song_title_bottom'); ?></th>
-    <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=artist', T_('Artist'),'sort_song_artist_bottom'); ?></th>
-    <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=album', T_('Album'),'sort_song_album_bottom'); ?></th>
+    <th class="cel_song"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=song&sort=title', T_('Song Title'),'sort_song_title_bottom'); ?></th>
+    <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=song&sort=artist', T_('Artist'),'sort_song_artist_bottom'); ?></th>
+    <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=song&sort=album', T_('Album'),'sort_song_album_bottom'); ?></th>
     <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-    <th class="cel_track"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=track', T_('Track'),'sort_song_track_bottom'); ?></th>
-    <th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&type=song&sort=time', T_('Time'),'sort_song_time_bottom'); ?></th>
+    <th class="cel_track"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=song&sort=track', T_('Track'),'sort_song_track_bottom'); ?></th>
+    <th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=song&sort=time', T_('Time'),'sort_song_time_bottom'); ?></th>
 <?php if (Config::get('ratings')) { ?>
     <th class="cel_rating"><?php echo T_('Rating'); ?></th>
 <?php } ?>
