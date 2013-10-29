@@ -30,7 +30,7 @@ $artist = scrub_out(UI::truncate($song->f_artist_full));
 <div class="np_group">
   <?php if (Config::get('show_album_art')) { ?>
   <div class="np_cell cel_albumart">
-    <a target="_blank" href="<?php echo $web_path; ?>/image.php?id=<?php echo $song->album; ?>&amp;type=popup&amp;sid=<?php echo session_id(); ?>" onclick="popupWindow('<?php echo $web_path; ?>/image.php?id=<?php echo $song->album; ?>&amp;type=popup&amp;sid=<?php echo session_id(); ?>'); return false;">
+    <a href="<?php echo $web_path; ?>/image.php?id=<?php echo $song->album; ?>&amp;sid=<?php echo session_id(); ?>" onclick="TINY.box.show({image:'<?php echo $web_path; ?>/image.php?id=<?php echo $song->album; ?>&amp;sid=<?php echo session_id(); ?>',boxid:'frameless',animate:true}); return false;">
       <img align="middle" src="<?php echo $web_path; ?>/image.php?id=<?php echo $song->album; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>" alt="<?php echo scrub_out($song->f_album_full); ?>" title="<?php echo scrub_out($song->f_album_full); ?>" height="75" width="75" />
     </a>
   </div>

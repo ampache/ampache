@@ -43,6 +43,7 @@ if (Config::get('use_rss')) { ?>
 </head>
 <body>
 <script src="<?php echo $web_path; ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/tinybox/tinybox.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <!-- rfc3514 implementation -->
