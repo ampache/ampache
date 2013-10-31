@@ -77,13 +77,10 @@ class Stats {
     public static function insert($type,$oid,$user) {
 
         $type     = self::validate_type($type);
-        $oid    = Dba::escape($oid);
-        $user    = Dba::escape($user);
-        $date    = time();
 
         $sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`date`,`user`) " .
-            " VALUES ('$type','$oid','$date','$user')";
-        $db_results = Dba::write($sql);
+            " VALUES (?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($type, $oid, time(), $user));
 
         if (!$db_results) {
             debug_event('statistics','Unabled to insert statistics:' . $sql,'3');
@@ -102,10 +99,8 @@ class Stats {
 
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
-        $user_id = Dba::escape($user_id);
-
-        $sql = "SELECT * FROM `object_count` WHERE `user`='$user_id' AND `object_type`='song' ORDER BY `date` DESC LIMIT 1";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT * FROM `object_count` WHERE `user` = ? AND `object_type`='song' ORDER BY `date` DESC LIMIT 1";
+        $db_results = Dba::read($sql, array($user_id));
 
         $results = Dba::fetch_assoc($db_results);
 
@@ -122,13 +117,9 @@ class Stats {
 
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
-        $user_id = Dba::escape($user_id);
-
-        $time = Dba::escape($time);
-
-        $sql = "SELECT * FROM `object_count` WHERE `user`='$user_id' AND `object_type`='song' AND `date`>='$time' " .
+        $sql = "SELECT * FROM `object_count` WHERE `user` = ? AND `object_type`='song' AND `date` >= ? " .
             "ORDER BY `date` DESC";
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, array($user_id, $time));
 
         $results = array();
 
@@ -145,7 +136,7 @@ class Stats {
      * This returns the top X for type Y from the
      * last stats_threshold days
      */
-    public static function get_top($type,$count='',$threshold = '') {
+    public static function get_top($type,$count='',$threshold = '',$offset='') {
 
         /* If they don't pass one, then use the preference */
         if (!$threshold) {
@@ -159,12 +150,17 @@ class Stats {
         $count    = intval($count);
         $type    = self::validate_type($type);
         $date    = time() - (86400*$threshold);
+        if (!$offset) {
+            $limit = $count;
+        } else {
+            $limit = intval($offset) . "," . $count;
+        }
 
         /* Select Top objects counting by # of rows */
         $sql = "SELECT object_id,COUNT(id) AS `count` FROM object_count" .
-            " WHERE object_type='$type' AND date >= '$date'" .
-            " GROUP BY object_id ORDER BY `count` DESC LIMIT $count";
-        $db_results = Dba::read($sql);
+            " WHERE object_type = ? AND date >= ?" .
+            " GROUP BY object_id ORDER BY `count` DESC LIMIT $limit";
+        $db_results = Dba::read($sql, array($type, $date));
 
         $results = array();
 
@@ -175,6 +171,45 @@ class Stats {
         return $results;
 
     } // get_top
+    
+    /**
+     * get_recent
+     * This returns the recent X for type Y from the
+     * last stats_threshold days
+    */
+    public static function get_recent($type,$count='',$threshold = '',$offset='') {
+
+        /* If they don't pass one, then use the preference */
+        if (!$threshold) {
+            $threshold = Config::get('stats_threshold');
+        }
+
+        if (!$count) {
+            $count = Config::get('popular_threshold');
+        }
+
+        $count = intval($count);
+        $type = self::validate_type($type);
+        if (!$offset) {
+            $limit = $count;
+        } else {
+            $limit = intval($offset) . "," . $count;
+        }
+
+        /* Select Top objects counting by # of rows */
+        $sql = "SELECT DISTINCT(object_id) FROM object_count" .
+            " WHERE object_type = ?" .
+            " GROUP BY object_id ORDER BY `date` DESC LIMIT $limit";
+        $db_results = Dba::read($sql, array($type));
+
+        $results = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['object_id'];
+        }
+
+        return $results;
+
+    } // get_recent
 
     /**
       * get_user
@@ -185,7 +220,6 @@ class Stats {
 
         $count     = intval($count);
         $type    = self::validate_type($type);
-        $user    = Dba::escape($user);
 
         /* If full then don't limit on date */
         if ($full) {
@@ -198,9 +232,9 @@ class Stats {
         /* Select Objects based on user */
         //FIXME:: Requires table scan, look at improving
         $sql = "SELECT object_id,COUNT(id) AS `count` FROM object_count" .
-            " WHERE object_type='$type' AND date >= '$date' AND user = '$user'" .
+            " WHERE object_type = ? AND date >= ? AND user = ?" .
             " GROUP BY object_id ORDER BY `count` DESC LIMIT $count";
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, array($type, $date, $user));
 
         $results = array();
 
@@ -238,15 +272,19 @@ class Stats {
      * This returns an array of the newest artists/albums/whatever
      * in this ampache instance
      */
-    public static function get_newest($type,$limit='') {
+    public static function get_newest($type,$limit='',$offset='') {
 
-        if (!$limit) { $limit = Config::get('popular_threshold'); }
+        if (!$count) { $count = Config::get('popular_threshold'); }
+        if (!$offset) {
+            $limit = $count;
+        } else {
+            $limit = $offset . ',' . $count;
+        }
 
         $type = self::validate_type($type);
         $object_name = ucfirst($type);
 
-        $sql = "SELECT DISTINCT(`$type`), MIN(`addition_time`) AS `real_atime` FROM `song` GROUP BY `$type` ORDER BY `real_atime` DESC " .
-            "LIMIT $limit";
+        $sql = "SELECT DISTINCT(`$type`), MIN(`addition_time`) AS `real_atime` FROM `song` GROUP BY `$type` ORDER BY `real_atime` DESC LIMIT $limit";
         $db_results = Dba::read($sql);
 
         $items = array();
