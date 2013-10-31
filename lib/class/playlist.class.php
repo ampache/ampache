@@ -115,11 +115,8 @@ class Playlist extends playlist_object {
      */
     public function get_track($track_id) {
 
-        $track_id = Dba::escape($track_id);
-        $playlist_id = Dba::escape($this->id);
-
-        $sql = "SELECT * FROM `playlist_data` WHERE `id`='$track_id' AND `playlist`='$playlist_id'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT * FROM `playlist_data` WHERE `id` = ? AND `playlist` = ?";
+        $db_results = Dba::read($sql, array($track_id, $playlist_id));
 
         $row = Dba::fetch_assoc($db_results);
 
@@ -137,8 +134,8 @@ class Playlist extends playlist_object {
 
         $results = array();
 
-        $sql = "SELECT `id`,`object_id`,`object_type`,`track` FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track`";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `id`,`object_id`,`object_type`,`track` FROM `playlist_data` WHERE `playlist`= ? ORDER BY `track`";
+        $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = array(
@@ -164,8 +161,8 @@ class Playlist extends playlist_object {
         $limit_sql = $limit ? 'LIMIT ' . intval($limit) : '';
 
         $sql = "SELECT `object_id`,`object_type` FROM `playlist_data` " .
-            "WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY RAND() $limit_sql";
-        $db_results = Dba::read($sql);
+            "WHERE `playlist` = ? ORDER BY RAND() $limit_sql";
+        $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
 
@@ -188,8 +185,8 @@ class Playlist extends playlist_object {
 
         $results = array();
 
-        $sql = "SELECT * FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track`";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT * FROM `playlist_data` WHERE `playlist` = ? ORDER BY `track`";
+        $db_results = Dba::read($sql, array($this->id));
 
         while ($r = Dba::fetch_assoc($db_results)) {
             if ($r['dyn_song']) {
@@ -213,14 +210,32 @@ class Playlist extends playlist_object {
      */
     public function get_song_count() {
 
-        $sql = "SELECT COUNT(`id`) FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT COUNT(`id`) FROM `playlist_data` WHERE `playlist` = ?";
+        $db_results = Dba::read($sql, array($this->id));
 
         $results = Dba::fetch_row($db_results);
 
         return $results['0'];
 
     } // get_song_count
+    
+    /**
+    * get_total_duration
+    * Get the total duration of all songs.
+    */
+    public function get_total_duration() {
+
+        $songs = self::get_songs();
+        $idlist = '(' . implode(',', $songs) . ')';
+
+        $sql = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
+        $db_results = Dba::read($sql);
+
+        $results = Dba::fetch_row($db_results);
+
+        return $results['0'];
+
+    } // get_total_duration
 
     /**
      * get_users
@@ -229,11 +244,10 @@ class Playlist extends playlist_object {
      */
     public static function get_users($user_id) {
 
-        $user_id = Dba::escape($user_id);
         $results = array();
 
-        $sql = "SELECT `id` FROM `playlist` WHERE `user`='$user_id' ORDER BY `name`";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `id` FROM `playlist` WHERE `user` = ? ORDER BY `name`";
+        $db_results = Dba::read($sql, array($user_id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
@@ -292,10 +306,8 @@ class Playlist extends playlist_object {
             return false;
         }
 
-        $value = Dba::escape($value);
-
-        $sql = "UPDATE `playlist` SET $field='$value' WHERE `id`='" . Dba::escape($this->id) . "'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `playlist` SET `$field` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($value, $this->id));
 
         return $db_results;
 
@@ -307,12 +319,8 @@ class Playlist extends playlist_object {
      */
     public function update_track_number($track_id,$track) {
 
-        $playlist_id    = Dba::escape($this->id);
-        $track_id    = Dba::escape($track_id);
-        $track        = Dba::escape($track);
-
-        $sql = "UPDATE `playlist_data` SET `track`='$track' WHERE `id`='$track_id' AND `playlist`='$playlist_id'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ? AND `playlist` = ?";
+        $db_results = Dba::write($sql, array($track, $track_id, $this->id));
 
     } // update_track_number
 
@@ -328,8 +336,8 @@ class Playlist extends playlist_object {
          * append, rather then integrate take end track # and add it to
          * $song->track add one to make sure it really is 'next'
          */
-        $sql = "SELECT `track` FROM `playlist_data` WHERE `playlist`='" . $this->id . "' ORDER BY `track` DESC LIMIT 1";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `track` FROM `playlist_data` WHERE `playlist` = ? ORDER BY `track` DESC LIMIT 1";
+        $db_results = Dba::read($sql, array($this->id));
         $data = Dba::fetch_assoc($db_results);
         $base_track = $data['track'];
         debug_event('add_songs', 'Track number: '.$base_track, '5');
@@ -340,20 +348,18 @@ class Playlist extends playlist_object {
 
             // Based on the ordered prop we use track + base or just $i++
             if (!$ordered) {
-                $track    = Dba::escape($song->track+$base_track);
+                $track    = $song->track + $base_track;
             }
             else {
                 $i++;
-                $track = Dba::escape($base_track+$i);
+                $track = $base_track + $i;
             }
-            $id    = Dba::escape($song->id);
-            $pl_id    = Dba::escape($this->id);
 
             /* Don't insert dead songs */
             if ($id) {
                 $sql = "INSERT INTO `playlist_data` (`playlist`,`object_id`,`object_type`,`track`) " .
-                    " VALUES ('$pl_id','$id','song','$track')";
-                $db_results = Dba::write($sql);
+                    " VALUES (?, ?, 'song', ?)";
+                $db_results = Dba::write($sql, array($this->id, $song->id, $track));
             } // if valid id
 
         } // end foreach songs
@@ -367,14 +373,8 @@ class Playlist extends playlist_object {
      */
     public static function create($name,$type) {
 
-        $name = Dba::escape($name);
-        $type = Dba::escape($type);
-        $user = Dba::escape($GLOBALS['user']->id);
-        $date = time();
-
-        $sql = "INSERT INTO `playlist` (`name`,`user`,`type`,`date`) " .
-            " VALUES ('$name','$user','$type','$date')";
-        $db_results = Dba::write($sql);
+        $sql = "INSERT INTO `playlist` (`name`,`user`,`type`,`date`) VALUES (?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($name, $GLOBALS['user']->id, $type, time()));
 
         $insert_id = Dba::insert_id();
 
@@ -384,7 +384,7 @@ class Playlist extends playlist_object {
 
     /**
      * set_items
-     * This calles the get_items function and sets it to $this->items which is an array in this object
+     * This calls the get_items function and sets it to $this->items which is an array in this object
      */
     function set_items() {
 
@@ -396,13 +396,13 @@ class Playlist extends playlist_object {
      * normalize_tracks
      * this takes the crazy out of order tracks
      * and numbers them in a liner fashion, not allowing for
-     * the same track # twice, this is an optional funcition
+     * the same track # twice, this is an optional function
      */
     public function normalize_tracks() {
 
         /* First get all of the songs in order of their tracks */
-        $sql = "SELECT `id` FROM `playlist_data` WHERE `playlist`='" . Dba::escape($this->id) . "' ORDER BY `track` ASC";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `id` FROM `playlist_data` WHERE `playlist` = ? ORDER BY `track` ASC";
+        $db_results = Dba::read($sql, array($this->id));
 
         $i = 1;
         $results = array();
@@ -416,9 +416,8 @@ class Playlist extends playlist_object {
         } // end while results
 
         foreach($results as $data) {
-            $sql = "UPDATE `playlist_data` SET `track`='" . $data['track'] . "' WHERE" .
-                    " `id`='" . $data['id'] . "'";
-            $db_results = Dba::write($sql);
+            $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
+            $db_results = Dba::write($sql, array($data['track'], $data['id']));
         } // foreach re-ordered results
 
         return true;
@@ -431,15 +430,25 @@ class Playlist extends playlist_object {
      */
     public function delete_track($id) {
 
-        $this_id = Dba::escape($this->id);
-        $id = Dba::escape($id);
-
-        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist`='$this_id' AND `playlist_data`.`id`='$id' LIMIT 1";
-        $db_results = Dba::write($sql);
+        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`id` = ? LIMIT 1";
+        $db_results = Dba::write($sql, array($this->id, $id));
 
         return true;
 
     } // delete_track
+    
+    /**
+    * delete_track_number
+    * this deletes a single track by it's track #, you specify the playlist_data.track here
+    */
+    public function delete_track_number($track) {
+
+        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
+        $db_results = Dba::write($sql, array($this->id, $track));
+
+        return true;
+
+    } // delete_track_number
 
     /**
      * delete
@@ -447,16 +456,14 @@ class Playlist extends playlist_object {
      */
     public function delete() {
 
-        $id = Dba::escape($this->id);
+        $sql = "DELETE FROM `playlist_data` WHERE `playlist` = ?";
+        $db_results = Dba::write($sql, array($id));
 
-        $sql = "DELETE FROM `playlist_data` WHERE `playlist` = '$id'";
-        $db_results = Dba::write($sql);
+        $sql = "DELETE FROM `playlist` WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($id));
 
-        $sql = "DELETE FROM `playlist` WHERE `id`='$id'";
-        $db_results = Dba::write($sql);
-
-        $sql = "DELETE FROM `object_count` WHERE `object_type`='playlist' AND `object_id`='$id'";
-        $db_results = Dba::write($sql);
+        $sql = "DELETE FROM `object_count` WHERE `object_type`='playlist' AND `object_id` = ?";
+        $db_results = Dba::write($sql, array($id));
 
         return true;
 
