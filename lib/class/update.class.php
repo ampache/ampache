@@ -284,6 +284,9 @@ class Update {
         $update_string = '- Update stream_playlist table to address performance issues.<br />';
         $version[] = array('version' => '360013', 'description' => $update_string);
 
+        $update_string = '- Increase the length of sessionids again.<br />';
+        $version[] = array('version' => '360014', 'description' => $update_string);
+
         return $version;
 
     }
@@ -1461,5 +1464,21 @@ class Update {
     public static function update_360013() {
         return Dba::write('ALTER TABLE `stream_playlist` ENGINE=MyISAM');
     }
+
+    /**
+     * update_360014
+     *
+     * PHP session IDs are an ever-growing beast.
+     */
+    public static function update_360014() {
+        $retval = true;
+
+        $retval = Dba::write('ALTER TABLE `stream_playlist` CHANGE `sid` `sid` VARCHAR(256)') ? $retval : false;
+        $retval = Dba::write('ALTER TABLE `tmp_playlist` CHANGE `session` `session` VARCHAR(256)') ? $retval : false;
+        $retval = Dba::write('ALTER TABLE `session` CHANGE `id` `id` VARCHAR(256) NOT NULL') ? $retval : false;
+
+        return $retval;
+    }
+
 }
 ?>
