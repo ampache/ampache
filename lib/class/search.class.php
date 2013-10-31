@@ -526,6 +526,10 @@ class Search extends playlist_object {
 
         if ($limit > 0) {
             $limit_sql = ' LIMIT ' . $limit;
+            $offset = intval($data['offset']);
+            $limit_sql = ' LIMIT ';
+            if ($offset) $limit_sql .= $offset . ",";
+            $limit_sql .= $limit;
         }
 
         $search_info = $search->to_sql();
@@ -550,8 +554,8 @@ class Search extends playlist_object {
      */
     public function delete() {
         $id = Dba::escape($this->id);
-        $sql = "DELETE FROM `search` WHERE `id`='$id'";
-        $db_results = Dba::write($sql);
+        $sql = "DELETE FROM `search` WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($id));
 
         return true;
     }
@@ -674,15 +678,8 @@ class Search extends playlist_object {
             $this->name .= uniqid('', true);
         }
 
-        // clean up variables for insert
-        $name = Dba::escape($this->name);
-        $user = Dba::escape($GLOBALS['user']->id);
-        $type = Dba::escape($this->type);
-        $rules = serialize($this->rules);
-        $logic_operator = $this->logic_operator;
-
-        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `rules`, `logic_operator`) VALUES ('$name', '$type', '$user', '$rules', '$logic_operator')";
-        $db_results = Dba::write($sql);
+        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `rules`, `logic_operator`) VALUES (?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($this->name, $this->type, $GLOBALS['user']->id, serialize($this->rules), $this->logic_operator));
         $insert_id = Dba::insert_id();
         $this->id = $insert_id;
         return $insert_id;
@@ -722,14 +719,8 @@ class Search extends playlist_object {
             return false;
         }
 
-        $name = Dba::escape($this->name);
-        $user = Dba::escape($GLOBALS['user']->id);
-        $type = Dba::escape($this->type);
-        $rules = serialize($this->rules);
-        $logic_operator = $this->logic_operator;
-
-        $sql = "UPDATE `search` SET `name`='$name', `type`='$type', `rules`='$rules', `logic_operator`='$logic_operator' WHERE `id`='" . Dba::escape($this->id) . "'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `rules` = ?, `logic_operator` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($this->name, $this->type, serialize($this->rules), $this->logic_operator, $this->id));
         return $db_results;
     }
 
@@ -826,7 +817,7 @@ class Search extends playlist_object {
             $table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";
         }
         if ($join['rating']) {
-            $userid = $GLOBALS['user']->id;
+            $userid = intval($GLOBALS['user']->id);
             $table['rating'] = "LEFT JOIN `rating` ON " .
                 "`rating`.`object_type`='album' " .
                 "AND `rating`.`user`='$userid' " .
