@@ -38,10 +38,8 @@ class Rating extends database_object {
      * the id and type of object that we need to pull the rating for
      */
     public function __construct($id, $type) {
-        $id = intval($id);
-        $type = Dba::escape($type);
 
-        $this->id = $id;
+        $this->id = intval($id);
         $this->type = $type;
 
         return true;
@@ -68,15 +66,14 @@ class Rating extends database_object {
 
         if (!is_array($ids) OR !count($ids)) { return false; }
 
-        $user_id = intval($GLOBALS['user']->id);
         $ratings = array();
         $user_ratings = array();
 
         $idlist = '(' . implode(',', $ids) . ')';
         $sql = "SELECT `rating`, `object_id` FROM `rating` " .
-            "WHERE `user`='$user_id' AND `object_id` IN $idlist " .
-            "AND `object_type`='$type'";
-        $db_results = Dba::read($sql);
+            "WHERE `user` = ? AND `object_id` IN $idlist " .
+            "AND `object_type` = ?";
+        $db_results = Dba::read($sql, array($GLOBALS['user']->id, $type));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $user_ratings[$row['object_id']] = $row['rating'];
@@ -84,8 +81,8 @@ class Rating extends database_object {
 
         $sql = "SELECT AVG(`rating`) as `rating`, `object_id` FROM " .
             "`rating` WHERE `object_id` IN $idlist AND " .
-            "`object_type`='$type' GROUP BY `object_id`";
-        $db_results = Dba::read($sql);
+            "`object_type` = ? GROUP BY `object_id`";
+        $db_results = Dba::read($sql, array($type));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $ratings[$row['object_id']] = $row['rating'];
@@ -122,21 +119,18 @@ class Rating extends database_object {
      */
      public function get_user_rating($user_id = null) {
 
-        $id = intval($this->id);
-        $type = Dba::escape($this->type);
         if (is_null($user_id)) {
             $user_id = $GLOBALS['user']->id;
         }
-        $user_id = intval($user_id);
         
         $key = 'rating_' . $type . '_user' . $user_id;
-        if (parent::is_cached($key, $id)) {
-            return parent::get_from_cache($key, $id);
+        if (parent::is_cached($key, $this->id)) {
+            return parent::get_from_cache($key, $this->id);
         }
 
-        $sql = "SELECT `rating` FROM `rating` WHERE `user`='$user_id' ".
-            "AND `object_id`='$id' AND `object_type`='$type'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `rating` FROM `rating` WHERE `user` = ? ".
+            "AND `object_id` = ? AND `object_type` = ?";
+        $db_results = Dba::read($sql, array($user_id, $this->id, $type));
 
         $rating = 0;
 
@@ -144,7 +138,7 @@ class Rating extends database_object {
             $rating = $results['rating'];
         }
 
-        parent::add_to_cache($key, $id, $rating);
+        parent::add_to_cache($key, $this->id, $rating);
         return $rating;
 
     } // get_user_rating
@@ -156,16 +150,13 @@ class Rating extends database_object {
      */
     public function get_average_rating() {
 
-        $id = intval($this->id);
-        $type = Dba::escape($this->type);
-
         if (parent::is_cached('rating_' . $type . '_all', $id)) {
             return parent::get_from_cache('rating_' . $type . '_user', $id);
         }
 
         $sql = "SELECT AVG(`rating`) as `rating` FROM `rating` WHERE " .
-            "`object_id`='$id' AND `object_type`='$type'";
-        $db_results = Dba::read($sql);
+            "`object_id` = ? AND `object_type` = ?";
+        $db_results = Dba::read($sql, array($this->id, $this->type));
 
         $results = Dba::fetch_assoc($db_results);
         
@@ -173,6 +164,38 @@ class Rating extends database_object {
         return $results['rating'];
 
     } // get_average_rating
+    
+    /**
+     * get_highest
+     * Get objects with the highest average rating.
+     */
+    public static function get_highest($type, $count='', $offset='') {
+    
+        if (!$count) {
+            $count = Config::get('popular_threshold');
+        }
+        $count = intval($count);
+        if (!$offset) {
+            $limit = $count;
+        } else {
+            $limit = intval($offset) . "," . $count;
+        }
+
+        /* Select Top objects counting by # of rows */
+        $sql = "SELECT `object_id`,AVG(`rating`) AS `rating` FROM rating" .
+                " WHERE object_type = ?" .
+                " GROUP BY object_id ORDER BY `rating` DESC LIMIT $limit";
+        $db_results = Dba::read($sql, array($type));
+
+        $results = array();
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['object_id'];
+        }
+
+        return $results;
+        
+    }
 
     /**
      * set_rating
@@ -180,9 +203,7 @@ class Rating extends database_object {
      * If no userid is passed in, we use the currently logged in user.
      */
     public function set_rating($rating, $user_id = null) {
-        $id = intval($this->id);
-        $type = Dba::escape($this->type);
-        $rating = intval($rating);
+
         if (is_null($user_id)) {
             $user_id = $GLOBALS['user']->id;
         }
@@ -193,16 +214,18 @@ class Rating extends database_object {
         // If score is -1, then remove rating
         if ($rating == '-1') {
             $sql = "DELETE FROM `rating` WHERE " .
-                "`object_id`='$this->id' AND " .
-                "`object_type`='$this->type' AND " .
-                "`user`='$user_id'";
+                "`object_id` = ? AND " .
+                "`object_type` = ? AND " .
+                "`user` = ?";
+            $params = array($this->id, $this->type, $user_id);
         }
         else {
             $sql = "REPLACE INTO `rating` " .
             "(`object_id`, `object_type`, `rating`, `user`) " .
-            "VALUES ('$id', '$type', '$rating', '$user_id')";
+            "VALUES (?, ?, ?, ?)";
+            $params = array($this->id, $this->type, $rating, $user_id);
         }
-        $db_results = Dba::write($sql);
+        $db_results = Dba::write($sql, $params);
 
         parent::add_to_cache('rating_' . $type . '_user' . $user_id, $id, $rating);
 
