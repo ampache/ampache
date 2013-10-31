@@ -3,6 +3,12 @@ CHANGELOG
 
 3.6-FUTURE
 ----------
+- Fixed issue with long session IDs that affected OS X Mavericks and possibly
+  other newer PHP installations (reported by yebo29)
+- Fixed some sort issues (patch by Afterster) 
+- Fixed Fresh theme display on large screens (patch by Afterster)
+- Fixed bug that allowed guests to add radio stations
+- Added support for aacp transcoding
 - Improved storage efficiency for large browse results
 - Fixed unnecessary growth of the tmp_browse table from API usage (reported
   by Ondalf)
