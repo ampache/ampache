@@ -50,6 +50,9 @@ switch ($_REQUEST['action']) {
     case 'popular':
         require_once Config::get('prefix') . '/templates/show_popular.inc.php';
     break;
+    case 'highest':
+        require_once Config::get('prefix') . '/templates/show_highest.inc.php';
+    break;
     case 'show':
     default:
         require_once Config::get('prefix') . '/templates/show_stats.inc.php';
