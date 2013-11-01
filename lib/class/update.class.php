@@ -286,6 +286,9 @@ class Update {
 
         $update_string = '- Increase the length of sessionids again.<br />';
         $version[] = array('version' => '360014', 'description' => $update_string);
+        
+        $update_string = '- Optionally filter Now Playing to return only the last song per user.<br />';
+        $version[] = array('version' => '360016', 'description' => $update_string);
 
         return $version;
 
@@ -1478,6 +1481,24 @@ class Update {
         $retval = Dba::write('ALTER TABLE `session` CHANGE `id` `id` VARCHAR(256) NOT NULL') ? $retval : false;
 
         return $retval;
+    }
+    
+    /**
+     * update_360016
+     *
+     * Add Now Playing filtered per user preference option
+     */
+    public static function update_360016() {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('now_playing_per_user','0','Now playing filtered per user',50,'boolean','interface')";
+        Dba::write($sql);
+        
+        $id = Dba::insert_id();
+
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        return true;
     }
 
 }
