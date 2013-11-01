@@ -29,6 +29,10 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 <dt class="<?php echo UI::flip_class(); ?>"><?php echo T_('Rating'); ?></dt>
 <dd><div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></div></dd>
 <?php } ?>
+<?php if (Config::get('userflags')) { ?>
+<dt class="<?php echo UI::flip_class(); ?>"><?php echo T_('Flag'); ?></dt>
+<dd><div id="userflag_<?php echo $song->id; ?>_song"><?php Userflag::show($song->id,'song'); ?></div></dd>
+<?php } ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo UI::flip_class(); ?>">
         <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'add_song_' . $song->id); ?>

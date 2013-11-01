@@ -38,12 +38,19 @@
     <th class="cel_albums"><?php echo T_('Albums'); ?></th>
     <th class="cel_time"><?php echo T_('Time'); ?></th>
     <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-    <th class="cel_rating"> <?php echo T_('Rating'); ?> </th>
+<?php if (Config::get('ratings')) { ?>
+    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+<?php } ?>
+<?php if (Config::get('userflags')) { ?>
+    <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
+<?php } ?>
     <th class="cel_action"> <?php echo T_('Action'); ?> </th>
 </tr>
 <?php
 // Cache the ratings we are going to use
 if (Config::get('ratings')) { Rating::build_cache('artist',$object_ids); }
+// Cache the userflags we are going to use
+if (Config::get('userflags')) { Userflag::build_cache('artist',$object_ids); }
 
 /* Foreach through every artist that has been passed to us */
 foreach ($object_ids as $artist_id) {
@@ -66,7 +73,12 @@ foreach ($object_ids as $artist_id) {
     <th class="cel_albums"> <?php echo T_('Albums'); ?> </th>
     <th class="cel_time"> <?php echo T_('Time'); ?> </th>
     <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-    <th class="cel_rating"> <?php echo T_('Rating'); ?> </th>
+<?php if (Config::get('ratings')) { ?>
+    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+<?php } ?>
+<?php if (Config::get('userflags')) { ?>
+    <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
+<?php } ?>
     <th class="cel_action"> <?php echo T_('Action'); ?> </th>
 </tr>
 </table>

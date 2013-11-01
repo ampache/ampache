@@ -50,6 +50,11 @@ $web_path = Config::get('web_path');
 ?>
         <th class="cel_rating"><?php echo T_('Rating'); ?></th>
 <?php } ?>
+<?php if (Config::get('userflags')) {
+        Userflag::build_cache('song', array_map(create_function('$i', 'return $i[\'object_id\'];'), $object_ids));
+?>
+        <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
+<?php } ?>
     <th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
 <?php
@@ -73,6 +78,9 @@ $web_path = Config::get('web_path');
     <th class="cel_time"><?php echo T_('Time'); ?></th>
 <?php if (Config::get('ratings')) { ?>
         <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+<?php } ?>
+<?php if (Config::get('userflags')) { ?>
+        <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
 <?php } ?>
     <th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>

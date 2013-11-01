@@ -28,12 +28,23 @@
     </a>
   </div>
 
+<?php if (Config::get('ratings')) { ?>
   <div class="np_cell cel_rating">
     <label><?php echo T_('Rating'); ?></label>
     <div id="rating_<?php echo $media->id; ?>_song">
       <?php Rating::show($media->id,'song'); ?>
     </div>
   </div>
+<?php } ?>
+  
+<?php if (Config::get('userflags')) { ?>
+  <div class="np_cell cel_userflag">
+    <label><?php echo T_('Flag'); ?></label>
+    <div id="userflag_<?php echo $media->id; ?>_song">
+      <?php Userflag::show($media->id,'song'); ?>
+    </div>
+  </div>
+<?php } ?>
 
   <?php if (Config::get('show_lyrics')) {?>
   <div class="np_cell cel_lyrics">

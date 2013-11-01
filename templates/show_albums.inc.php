@@ -47,17 +47,22 @@ $web_path = Config::get('web_path');
     <th class="cel_songs"><?php echo T_('Songs'); ?></th>
     <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'),'album_sort_year'); ?></th>
     <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-    <th class="col_rating"><?php echo T_('Rating'); ?></th>
+<?php if (Config::get('ratings')) { ?>
+    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+<?php } ?>
+<?php if (Config::get('userflags')) { ?>
+    <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
+<?php } ?>
     <th class="cel_action"><?php echo T_('Actions'); ?></th>
 </tr>
 <?php
-    if (Config::get('ratings')) {
-        Rating::build_cache('album',$object_ids);
-    }
-    /* Foreach through the albums */
-    foreach ($object_ids as $album_id) {
-        $album = new Album($album_id);
-        $album->format();
+if (Config::get('ratings')) { Rating::build_cache('album',$object_ids); }
+if (Config::get('userflags')) { Userflag::build_cache('album',$object_ids); }
+
+/* Foreach through the albums */
+foreach ($object_ids as $album_id) {
+    $album = new Album($album_id);
+    $album->format();
 ?>
 <tr id="album_<?php echo $album->id; ?>" class="<?php echo UI::flip_class(); ?>">
     <?php require Config::get('prefix') . '/templates/show_album_row.inc.php'; ?>
@@ -78,7 +83,12 @@ $web_path = Config::get('web_path');
     <th class="cel_songs"><?php echo T_('Songs'); ?></th>
     <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'),'album_sort_year_bottom'); ?></th>
     <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-    <th class="col_rating"><?php echo T_('Rating'); ?></th>
+<?php if (Config::get('ratings')) { ?>
+    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+<?php } ?>
+<?php if (Config::get('userflags')) { ?>
+    <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
+<?php } ?>
     <th class="cel_action"><?php echo T_('Actions'); ?></th>
 </tr>
 </table>

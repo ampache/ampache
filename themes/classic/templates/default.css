@@ -437,6 +437,45 @@ a.button{padding:1px 3px;}
 }
 
 /************************************************/
+/*        Styles for user flags                 */
+/************************************************/
+.userflag
+{
+    position: relative;
+    width:16px;
+    height:16px;
+}
+
+.userflag a {
+    position:absolute;
+    display: inline;
+}
+
+.userflag a.userflag_true
+{
+    width:16px;
+    height: 16px;
+    background: url(../../../images/icon_flag.png) left top;
+}
+
+.userflag a:hover.userflag_true
+{
+    background: url(../../../images/icon_flag_off.png) left top;
+}
+
+.userflag a.userflag_false
+{
+    width:16px;
+    height:16px;
+    background: url(../../../images/icon_flag_off.png) left top;
+}
+
+.userflag a:hover.userflag_false
+{
+    background: url(../../../images/icon_flag.png) left top;
+}
+
+/************************************************/
 /*              Box Related Styles              */
 /************************************************/
 

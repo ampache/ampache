@@ -194,6 +194,9 @@ class Song extends database_object implements media {
         if (Config::get('ratings')) {
             Rating::build_cache('song', $song_ids);
         }
+        if (Config::get('userflags')) {
+            Userflag::build_cache('song', $song_ids);
+        }
 
         // Build a cache for the song's extended table
         $sql = "SELECT * FROM `song_data` WHERE `song_id` IN $idlist";

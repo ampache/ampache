@@ -31,6 +31,9 @@
 <?php if (Config::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></td>
 <?php } ?>
+<?php if (Config::get('userflags')) { ?>
+<td class="cel_userflag" id="userflag_<?php echo $song->id; ?>_song"><?php Userflag::show($song->id,'song'); ?></td>
+<?php } ?>
 <td class="cel_action">
     <?php if (Config::get('download')) { ?>
     <a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>">

@@ -50,11 +50,11 @@ if (!$rate) {
     {
     ?>
       <li>
-          <?php echo Ajax::text($base_url . '&rating=' . $i, '', 'rating' . $i . '_' . $rating->id, '', 'star' . $i); ?>
+          <?php echo Ajax::text($base_url . '&rating=' . $i, '', 'rating' . $i . '_' . $rating->id . '_' . $rating->type, '', 'star' . $i); ?>
       </li>
     <?php
     }
     ?>
   </ul>
-       <?php echo Ajax::text($base_url . '&rating=-1', '', 'rating0_' . $rating->id, '', 'star0'); ?>
+       <?php echo Ajax::text($base_url . '&rating=-1', '', 'rating0_' . $rating->id . '_' . $rating->type, '', 'star0'); ?>
 </div>
