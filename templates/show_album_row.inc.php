@@ -39,7 +39,12 @@ if (Art::is_enabled()) {
 <td class="cel_songs"><?php echo $album->song_count; ?></td>
 <td class="cel_year"><?php echo $album->year; ?></td>
 <td class="cel_tags"><?php echo $album->f_tags; ?></td>
+<?php if (Config::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $album->id; ?>_album"><?php Rating::show($album->id,'album'); ?></td>
+<?php } ?>
+<?php if (Config::get('userflags')) { ?>
+<td class="cel_userflag" id="userflag_<?php echo $album->id; ?>_album"><?php Userflag::show($album->id,'album'); ?></td>
+<?php } ?>
 <td class="cel_action">
     <?php if (Config::get('sociable')) { ?>
     <a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=album&amp;id=<?php echo $album->id; ?>">

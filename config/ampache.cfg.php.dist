@@ -264,6 +264,12 @@ default_auth_level = "admin"
 ; DEFAULT: true
 ratings = "true"
 
+; User flags
+; This allows user flags for almost any object in ampache
+; POSSIBLE VALUES: false true
+; DEFAULT: false
+;userflags = "false"
+
 ; Sociable
 ; This turns on / off all of the "social" features of ampache
 ; default is on, but if you don't care and just want music

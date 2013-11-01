@@ -290,6 +290,9 @@ class Update {
         $update_string = '- Add iframes parameter to preferences.<br />';
         $version[] = array('version' => '360015', 'description' => $update_string);
 
+        $update_string = '- Add user flags on objects.<br />';
+        $version[] = array('version' => '360017', 'description' => $update_string);
+
         return $version;
 
     }
@@ -1499,6 +1502,24 @@ class Update {
         Dba::write($sql, array($id));
 
         return true;
+    }
+
+    /**
+     * update_360017
+     *
+     * New table to store user flags.
+     */
+    public static function update_360017() {
+        $sql = "CREATE TABLE `user_flag` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`user` int(11) NOT NULL," .
+            "`object_id` int(11) unsigned NOT NULL," .
+            "`object_type` varchar(32) CHARACTER SET utf8 DEFAULT NULL," .
+            "`date` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "PRIMARY KEY (`id`)," .
+            "UNIQUE KEY `unique_userflag` (`user`,`object_type`,`object_id`)," .
+            "KEY `object_id` (`object_id`))";
+        return Dba::write($sql);
     }
 
 }

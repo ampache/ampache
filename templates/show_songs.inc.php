@@ -47,6 +47,11 @@ $web_path = Config::get('web_path');
 ?>
     <th class="cel_rating"><?php echo T_('Rating'); ?></th>
 <?php } ?>
+<?php if (Config::get('userflags')) {
+    Userflag::build_cache('song', $object_ids);
+?>
+    <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
+<?php } ?>
     <th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
 <?php
@@ -73,6 +78,9 @@ $web_path = Config::get('web_path');
     <th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=song&sort=time', T_('Time'),'sort_song_time_bottom'); ?></th>
 <?php if (Config::get('ratings')) { ?>
     <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+<?php } ?>
+<?php if (Config::get('userflags')) { ?>
+    <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
 <?php } ?>
     <th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>

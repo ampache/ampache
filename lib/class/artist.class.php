@@ -387,6 +387,7 @@ class Artist extends database_object {
             }
             Stats::gc();
             Rating::gc();
+            Userflag::gc();
         } // if updated
 
         return $current_id;

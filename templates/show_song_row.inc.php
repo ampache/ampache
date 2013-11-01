@@ -32,6 +32,9 @@
 <?php if (Config::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></td>
 <?php } ?>
+<?php if (Config::get('userflags')) { ?>
+<td class="cel_userflag" id="userflag_<?php echo $song->id; ?>_song"><?php Userflag::show($song->id,'song'); ?></td>
+<?php } ?>
 <td class="cel_action">
     <a href="<?php echo $song->link; ?>"><?php echo UI::get_icon('preferences', T_('Song Information')); ?></a>
     <?php if (Config::get('shoutbox')) { ?>

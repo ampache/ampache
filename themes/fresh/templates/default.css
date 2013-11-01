@@ -635,6 +635,10 @@ table.tabledata tbody .cel_cover img
     display: none;
 }
 
+#now_playing .cel_userflag label {
+    display: none;
+}
+
 #now_playing .np_group label {
     font-weight: bold;
 }
@@ -830,6 +834,45 @@ span.fatalerror {
 .dynamic-star-rating ul
 {
     left:16px;
+}
+
+/************************************************/
+/*        Styles for user flags                 */
+/************************************************/
+.userflag
+{
+    position: relative;
+    width:16px;
+    height:16px;
+}
+
+.userflag a {
+    position:absolute;
+    display: inline;
+}
+
+.userflag a.userflag_true
+{
+    width:16px;
+    height: 16px;
+    background: url(../../../images/icon_flag.png) left top;
+}
+
+.userflag a:hover.userflag_true
+{
+    background: url(../../../images/icon_flag_off.png) left top;
+}
+
+.userflag a.userflag_false
+{
+    width:16px;
+    height:16px;
+    background: url(../../../images/icon_flag_off.png) left top;
+}
+
+.userflag a:hover.userflag_false
+{
+    background: url(../../../images/icon_flag.png) left top;
 }
 
 /***********************************************
