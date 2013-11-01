@@ -167,6 +167,7 @@ function create_preference_input($name,$value) {
         case 'rio_global_stats':
         case 'direct_link':
         case 'iframes':
+        case 'now_playing_per_user':
             if ($value == '1') { $is_true = "selected=\"selected\""; }
             else { $is_false = "selected=\"selected\""; }
             echo "<select name=\"$name\">\n";
