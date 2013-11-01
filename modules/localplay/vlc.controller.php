@@ -129,27 +129,8 @@ class AmpacheVlc extends localplay_controller {
          */
         public function add_instance($data) {
 
-            // Foreach and clean up what we need
-            foreach ($data as $key=>$value) { 
-                switch ($key) { 
-                    case 'name': 
-                    case 'host': 
-                    case 'port': 
-                    case 'password': 
-                        ${$key} = Dba::escape($value); 
-                    break;
-                    default: 
-                        // Rien a faire
-                    break; 
-                } // end switch on key
-            } // end foreach 
-
-            $user_id = Dba::escape($GLOBALS['user']->id); 
-
-            $sql = "INSERT INTO `localplay_vlc` (`name`,`host`,`port`,`password`,`owner`) " . 
-                "VALUES ('$name','$host','$port','$password','$user_id')"; 
-            $db_results = Dba::query($sql); 
-
+            $sql = "INSERT INTO `localplay_vlc` (`name`,`host`,`port`,`password`,`owner`) VALUES (?, ?, ?, ?, ?)"; 
+            $db_results = Dba::query($sql, array($data['name'], $data['host'], $data['port'], $data['password'], $GLOBALS['user']->id)); 
 
             return $db_results; 
     
@@ -160,11 +141,9 @@ class AmpacheVlc extends localplay_controller {
          * This takes a UID and deletes the instance in question
          */
         public function delete_instance($uid) {
-
-            $uid = Dba::escape($uid); 
     
-            $sql = "DELETE FROM `localplay_vlc` WHERE `id`='$uid'"; 
-            $db_results = Dba::query($sql); 
+            $sql = "DELETE FROM `localplay_vlc` WHERE `id` = ?"; 
+            $db_results = Dba::query($sql, array($uid)); 
     
             return true; 
 
@@ -195,15 +174,9 @@ class AmpacheVlc extends localplay_controller {
          * This takes an ID and an array of data and updates the instance specified
          */
         public function update_instance($uid,$data) { 
-
-            $uid    = Dba::escape($uid); 
-            $port    = Dba::escape($data['port']);
-            $host    = Dba::escape($data['host']); 
-            $name    = Dba::escape($data['name']); 
-            $pass    = Dba::escape($data['password']); 
         
-            $sql = "UPDATE `localplay_vlc` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'"; 
-            $db_results = Dba::query($sql); 
+            $sql = "UPDATE `localplay_vlc` SET `host` = ?, `port` = ?, `name` = ?, `password` = ? WHERE `id` = ?"; 
+            $db_results = Dba::query($sql, array($data['host'], $data['port'], $data['name'], $data['password'], $uid)); 
 
             return true; 
 
@@ -232,22 +205,21 @@ class AmpacheVlc extends localplay_controller {
     public function get_instance($instance='') { 
 
         $instance = $instance ? $instance : Config::get('vlc_active'); 
-        $instance = Dba::escape($instance); 
     
-            $sql = "SELECT * FROM `localplay_vlc` WHERE `id`='$instance'"; 
-            $db_results = Dba::query($sql); 
+        $sql = "SELECT * FROM `localplay_vlc` WHERE `id` = ?"; 
+        $db_results = Dba::query($sql, array($instance)); 
 
-            $row = Dba::fetch_assoc($db_results); 
-    
-            return $row; 
+        $row = Dba::fetch_assoc($db_results); 
+
+        return $row; 
 
     } // get_instance
 
-        /**
-         * set_active_instance
-         * This sets the specified instance as the 'active' one
-         */
-        public function set_active_instance($uid,$user_id='') {
+    /**
+     * set_active_instance
+     * This sets the specified instance as the 'active' one
+     */
+    public function set_active_instance($uid,$user_id='') {
 
         // Not an admin? bubkiss!
         if (!$GLOBALS['user']->has_access('100')) { 
@@ -261,17 +233,17 @@ class AmpacheVlc extends localplay_controller {
 
         return true; 
 
-        } // set_active_instance        
+    } // set_active_instance        
 
-        /**
-         * get_active_instance
-         * This returns the UID of the current active instance
-         * false if none are active
-         */
-        public function get_active_instance() {
+    /**
+     * get_active_instance
+     * This returns the UID of the current active instance
+     * false if none are active
+     */
+    public function get_active_instance() {
 
 
-        } // get_active_instance
+    } // get_active_instance
 
     public function add_url(Stream_URL $url) {
     if (is_null($this->_vlc->add($url->title, $url->url))) {
@@ -322,7 +294,7 @@ class AmpacheVlc extends localplay_controller {
         /* A play when it's already playing causes a track restart
          * which we don't want to doublecheck its state
          */
-        if ($this->_vlc->state() == 'play') { 
+        if ($this->_vlc->state() == 'play') {
             return true; 
         } 
 
@@ -579,11 +551,9 @@ class AmpacheVlc extends localplay_controller {
         } 
         // if not a known format
         else {
-              
-              $array['track_title'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
-              $array['track_artist'] =  htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
-          
-              }
+            $array['track_title'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
+            $array['track_artist'] =  htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
+        }
         return $array;
 
     } // status
