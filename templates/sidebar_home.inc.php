@@ -73,6 +73,7 @@
       <li id="sb_home_info_Statistics"><a href="<?php echo $web_path; ?>/stats.php?action=show"><?php echo T_('Statistics'); ?></a></li>
       <li id="sb_home_info_Newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo T_('Newest'); ?></a></li>
       <li id="sb_home_info_Popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo T_('Popular'); ?></a></li>
+      <li id="sb_home_info_Highest"><a href="<?php echo $web_path; ?>/stats.php?action=highest"><?php echo T_('Top Rated'); ?></a></li>
     </ul>
   </li>
   <li><h4><?php echo T_('Search'); ?></h4>
