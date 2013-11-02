@@ -399,8 +399,23 @@ class Subsonic_XML_Data {
         }
     }
     
-    public static function addStarred($xml, $elementName="starred") {
+    public static function addStarred($xml, $artists, $albums, $songs, $elementName="starred") {
         $xstarred = $xml->addChild($elementName);
+        
+        foreach ($artists as $id) {
+            $artist = new Artist($id);
+            self::addArtist($xstarred, $artist);
+        }
+        
+        foreach ($albums as $id) {
+            $album = new Album($id);
+            self::addAlbum($xstarred, $album);
+        }
+        
+        foreach ($songs as $id) {
+            $song = new Song($id);
+            self::addSong($xstarred, $song);
+        }
     }
 }
 

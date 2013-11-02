@@ -268,7 +268,7 @@ class Subsonic_Api {
         } else if ($type == "newest") {
             $albums = Stats::get_newest("album", $size, $offset);    
         } else if ($type == "highest") {
-            $albums = Rating::get_highest("album", $size, $offset);    
+            $albums = Rating::get_highest("album", $size, $offset);
         } else if ($type == "frequent") {
             $albums = Stats::get_top("album", $size, '', $offset);
         } else if ($type == "recent") {
@@ -347,7 +347,11 @@ class Subsonic_Api {
             $search['rule_'.$i.''] = $ftype;
             ++$i;
         }
-        $songs = Random::advanced("song", $search);
+        if ($i > 0) {
+            $songs = Random::advanced("song", $search);
+        } else {
+            $songs = Random::get_default($size);
+        }
 
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addRandomSongs($r, $songs);
@@ -526,10 +530,16 @@ class Subsonic_Api {
         $newdata['pl_type'] = ($public) ? "public" : "private";
         $playlist->update($newdata);
         
-        if (is_array($songsIdToAdd) && count($songsIdToAdd) > 0) {
+        if (!is_array($songsIdToAdd)) {
+            $songsIdToAdd = array($songsIdToAdd);
+        }
+        if (count($songsIdToAdd) > 0) {
             $playlist->add_songs(Subsonic_XML_Data::getAmpacheIds($songsIdToAdd));
         }
         
+        if (!is_array($songIndexToRemove)) {
+            $songIndexToRemove = array($songIndexToRemove);
+        }
         if (is_array($songIndexToRemove) && count($songIndexToRemove) > 0) {
             $tracks = Subsonic_XML_Data::getAmpacheIds($songIndexToRemove);
             foreach ($tracks as $track) {
@@ -708,7 +718,104 @@ class Subsonic_Api {
         echo $r->asXml();
     }
     
+    /**
+     * getStarred
+     * Get starred songs, albums and artists.
+     * Takes no parameter.
+     * Not supported.
+     */
+    public static function getstarred($input, $elementName="starred") {
+        self::check_version($input, "1.8.0");
+        
+        $r = Subsonic_XML_Data::createSuccessResponse();
+        Subsonic_XML_Data::addStarred($r, Userflag::get_latest('artist'), Userflag::get_latest('album'), Userflag::get_latest('song'), $elementName);
+        echo $r->asXml();
+    }
+     
+     
+    /**
+     * getStarred2
+     * See getStarred.
+     */
+    public static function getstarred2($input) {
+        self::getStarred($input, "starred2");
+    }
     
+    /**
+     * star
+     * Attaches a star to a song, album or artist.
+     * Takes the optional file id, album id or artist id in parameters.
+     * Not supported.
+     */
+    public static function star($input) {
+        self::check_version($input, "1.8.0");
+                
+        self::_setStar($input, true);
+    }
+     
+    /**
+     * unstar
+     * Removes the star from a song, album or artist.
+     * Takes the optional file id, album id or artist id in parameters.
+     * Not supported.
+     */
+    public static function unstar($input) {
+        self::check_version($input, "1.8.0");
+        
+        self::_setStar($input, false);
+    }
+    
+    private static function _setStar($input, $star) {
+    
+        $id = $input['id'];
+        $albumId = $input['albumId'];
+        $artistId = $input['artistId'];
+        
+        // Normalize all in one array
+        $ids = array();
+        
+        $r = Subsonic_XML_Data::createSuccessResponse();
+        if ($id) {
+            if (!is_array($id)) {
+                $id = array($id);
+            }
+            foreach($id as $i) {
+                $aid = Subsonic_XML_Data::getAmpacheId($i);
+                if (Subsonic_XML_Data::isArtist($i)) {
+                    $type = 'artist';
+                } else if (Subsonic_XML_Data::isAlbum($i)) {
+                    $type = 'album';
+                } else if (Subsonic_XML_Data::isSong($i)) {
+                    $type = 'song';
+                }
+                $ids[] = array('id' => $aid, 'type' => $type);
+            }
+        } else if ($albumId) {
+            if (!is_array($albumId)) {
+                $albumId = array($albumId);
+            }
+            foreach($albumId as $i) {
+                $aid = Subsonic_XML_Data::getAmpacheId($i);
+                $ids[] = array('id' => $aid, 'album');
+            }
+        } else if ($artistId) {
+            if (!is_array($artistId)) {
+                $artistId = array($artistId);
+            }
+            foreach($artistId as $i) {
+                $aid = Subsonic_XML_Data::getAmpacheId($i);
+                $ids[] = array('id' => $aid, 'artist');
+            }
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
+        }
+
+       foreach ($ids as $i) {
+            $flag = new Userflag($i['id'], $i['type']);
+            $flag->set_flag($star);
+        }
+        echo $r->asXml();
+    }
 
     /****   CURRENT UNSUPPORTED FUNCTIONS   ****/
      
@@ -721,57 +828,6 @@ class Subsonic_Api {
         self::check_version($input, "1.2.0");
 
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
-    }
-    
-    /**
-     * getStarred
-     * Get starred songs, albums and artists.
-     * Takes no parameter.
-     * Not supported.
-     */
-    public static function getstarred($input, $elementName="starred") {
-        self::check_version($input, "1.8.0");
-        
-        $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addStarred($r, $elementName);
-        echo $r->asXml();
-    }
-     
-     
-    /**
-     * getStarred2
-     * See getStarred.
-     */
-    public static function getStarred2($input) {
-        self::getStarred($input, "starred2");
-    }
-    
-    /**
-     * star
-     * Attaches a star to a song, album or artist.
-     * Takes the optional file id, album id or artist id in parameters.
-     * Not supported.
-     */
-    public static function star($input) {
-        self::check_version($input, "1.8.0");
-
-        // Ignore error
-        $r = Subsonic_XML_Data::createSuccessResponse();
-        echo $r->asXml();
-    }
-     
-    /**
-     * unstar
-     * Removes the star from a song, album or artist.
-     * Takes the optional file id, album id or artist id in parameters.
-     * Not supported.
-     */
-    public static function unstar($input) {
-        self::check_version($input, "1.8.0");
-        
-        // Ignore error
-        $r = Subsonic_XML_Data::createSuccessResponse();
         echo $r->asXml();
     }
     

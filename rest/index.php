@@ -93,7 +93,7 @@ if (version_compare(Subsonic_XML_Data::API_VERSION, $version) < 0) {
 $methods = get_class_methods('subsonic_api');
 
 // Define list of internal functions that should be skipped
-$internal_functions = array('check_version', 'check_parameter', 'follow_stream', '_updatePlaylist');
+$internal_functions = array('check_version', 'check_parameter', 'follow_stream', '_updatePlaylist', '_setStar');
 
 // We do not use $_GET because of multiple parameters with the same name
 $query_string = $_SERVER['QUERY_STRING'];
