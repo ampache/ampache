@@ -562,6 +562,11 @@ table.tabledata tbody .cel_cover img
 	padding:5px;
 }
 
+span.page-nb {
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
 /***********************************************
            Content (info-box)                 
 ***********************************************/
