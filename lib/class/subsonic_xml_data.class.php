@@ -223,9 +223,9 @@ class Subsonic_XML_Data {
     public static function addAlbum($xml, $album, $songs=false, $elementName="album") {
         $xalbum = $xml->addChild($elementName);
         $xalbum->addAttribute('id', self::getAlbumId($album->id));
-        $xalbum->addAttribute('name', $album->name);
         $xalbum->addAttribute('album', $album->name);
         $xalbum->addAttribute('title', self::formatAlbum($album));
+        $xalbum->addAttribute('name', $album->name);
         $xalbum->addAttribute('isDir', 'true');
         $album->format();
         if ($album->has_art) $xalbum->addAttribute('coverArt', self::getAlbumId($album->id));
