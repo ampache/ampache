@@ -218,8 +218,11 @@ class Stream {
     public static function get_now_playing($filter=NULL) {
 
         $sql = 'SELECT `session`.`agent`, `now_playing`.* FROM `now_playing` ' .
-            'LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` ' .
-            'ORDER BY `now_playing`.`expire` DESC';
+            'LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` ';
+        if (Config::get('now_playing_per_user')) {
+            $sql .= 'GROUP BY `now_playing`.`user` ';
+        }
+        $sql .= 'ORDER BY `now_playing`.`expire` DESC';
         $db_results = Dba::read($sql);
 
         $results = array();
