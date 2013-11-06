@@ -135,14 +135,13 @@ class Stream {
 
         debug_event('downsample', "Downsample command: $command", 3);
 
-        $process = proc_open(
-            $command,
-            array(
-                1 => array('pipe', 'w'),
-                2 => array('pipe', 'w')
-            ),
-            $pipes
-        );
+        $descriptors = array(1 => array('pipe', 'w'));
+        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+            // Windows doesn't like to provide stderr as a pipe
+            $descriptors[2] = array('pipe', 'w');
+        }
+
+        $process = proc_open($command, $descriptors, $pipes);
         return array(
             'process' => $process,
             'handle' => $pipes[1],
