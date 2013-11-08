@@ -160,7 +160,6 @@ class Stream_Playlist {
             case 'democratic':
             case 'localplay':
             case 'html5_player':
-			case 'html5_player_embedded':
                 // These are valid, but witchy
                 $redirect = false;
                 unset($ext);
@@ -358,17 +357,14 @@ class Stream_Playlist {
      * Creates an html5 player.
      */
     public function create_html5_player() {
-        require Config::get('prefix') . '/templates/create_html5_player.inc.php';       
-    }
-	
-	/**
-     * create_html5_player_embedded
-     *
-     * Creates an html5 player embedded.
-     */
-    public function create_html5_player_embedded() {
-        require Config::get('prefix') . '/templates/create_html5_player_embedded.inc.php';       
-    }
+    
+        if (Config::get("iframes")) {
+            require Config::get('prefix') . '/templates/create_html5_player_embedded.inc.php';  
+        } else {
+            require Config::get('prefix') . '/templates/create_html5_player.inc.php';
+        }
+        
+    }  // create_html5_player
 
     /**
      * create_localplay
