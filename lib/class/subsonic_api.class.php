@@ -373,7 +373,7 @@ class Subsonic_Api {
      * Not supported yet.
      */
     public static function getvideos($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addVideos($r);
@@ -423,7 +423,7 @@ class Subsonic_Api {
      * See getAlbumList.
      */
     public static function getalbumlist2($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         self::getAlbumList($input, "albumList2");
     }
     
@@ -497,7 +497,7 @@ class Subsonic_Api {
      * Takes the song id in parameter.
      */
     public static function getsong($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         
         $songid = self::check_parameter($input, 'id');
         $r = Subsonic_XML_Data::createSuccessResponse();
@@ -595,7 +595,7 @@ class Subsonic_Api {
      * See search2.
      */
     public static function search3($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         self::search2($input, "searchResult3");
     }
     
@@ -699,7 +699,7 @@ class Subsonic_Api {
      * Takes playlist id in parameter with optional name, comment, public level and a list of song id to add/remove.
      */
     public static function updateplaylist($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
 
         $playlistId = self::check_parameter($input, 'playlistId');
         
@@ -772,7 +772,7 @@ class Subsonic_Api {
      * Takes the file id in parameter with optional max bit rate.
      */
     public static function hls($input) {
-        self::check_version($input, "1.8.0", true);
+        self::check_version($input, "1.7.0", true);
 
         $fileid = self::check_parameter($input, 'id', true);
         
@@ -863,7 +863,7 @@ class Subsonic_Api {
      * Not supported.
      */
     public static function getstarred($input, $elementName="starred") {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addStarred($r, Userflag::get_latest('artist'), Userflag::get_latest('album'), Userflag::get_latest('song'), $elementName);
@@ -886,7 +886,7 @@ class Subsonic_Api {
      * Not supported.
      */
     public static function star($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
                 
         self::_setStar($input, true);
     }
@@ -898,7 +898,7 @@ class Subsonic_Api {
      * Not supported.
      */
     public static function unstar($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         
         self::_setStar($input, false);
     }
@@ -1185,7 +1185,7 @@ class Subsonic_Api {
      * Not supported.
      */
     public static function getusers($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $r);
