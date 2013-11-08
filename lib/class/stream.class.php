@@ -39,21 +39,9 @@ class Stream {
     public static function set_session($sid) {
         self::$session=$sid;
     } // set_session
-
-    /**
-     * start_transcode
-     *
-     * This is a rather complex function that starts the transcoding or
-     * resampling of a song and returns the opened file handle.
-     */
-    public static function start_transcode($song, $type = null) {
-        $transcode_settings = $song->get_transcode_settings($type);
-        // Bail out early if we're unutterably broken
-        if ($transcode_settings == false) {
-            debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);
-            return false;
-        }
-
+    
+    public static function get_allowed_bitrate($song) {
+    
         $max_bitrate = Config::get('max_bit_rate');
         $min_bitrate = Config::get('min_bit_rate');
         // FIXME: This should be configurable for each output type
@@ -63,7 +51,7 @@ class Stream {
         if ($user_sample_rate < $min_bitrate) {
             $min_bitrate = $user_sample_rate;
         }
-
+        
         // Are there site-wide constraints? (Dynamic downsampling.)
         if ($max_bitrate > 1 ) {
             $sql = 'SELECT COUNT(*) FROM `now_playing` ' .
@@ -102,6 +90,25 @@ class Stream {
         else {
             $sample_rate = $user_sample_rate;
         }
+        
+        return $sample_rate;
+    }
+
+    /**
+     * start_transcode
+     *
+     * This is a rather complex function that starts the transcoding or
+     * resampling of a song and returns the opened file handle.
+     */
+    public static function start_transcode($song, $type = null) {
+        $transcode_settings = $song->get_transcode_settings($type);
+        // Bail out early if we're unutterably broken
+        if ($transcode_settings == false) {
+            debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);
+            return false;
+        }
+
+        $sample_rate = self::get_allowed_bitrate($song);
 
         debug_event('stream', 'Configured bitrate is ' . $sample_rate, 5);
 
