@@ -317,7 +317,7 @@ class Subsonic_Api {
      * Takes no parameter.
      */
     public static function getartists($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
     
         $r = Subsonic_XML_Data::createSuccessResponse();
         $artists = Catalog::get_artists(Catalog::get_catalogs());
@@ -331,7 +331,7 @@ class Subsonic_Api {
      * Takes the artist id in parameter.
      */
     public static function getartist($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         
         $artistid = self::check_parameter($input, 'id');
         
@@ -351,7 +351,7 @@ class Subsonic_Api {
      * Takes the album id in parameter.
      */
     public static function getalbum($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         
         $albumid = self::check_parameter($input, 'id');
         
