@@ -23,6 +23,29 @@
 header('Cache-Control: no-cache');
 header('Pragma: no-cache');
 header('Expires: ' . gmdate(DATE_RFC1123, time()-1));
+
+function browser_info($agent=null) {
+
+    // Declare known browsers to look for
+    $known = array('msie', 'trident', 'firefox', 'safari', 'webkit', 'opera', 'netscape', 'konqueror', 'gecko');
+
+    // Clean up agent and build regex that matches phrases for known browsers
+    // (e.g. "Firefox/2.0" or "MSIE 6.0" (This only matches the major and minor
+    // version numbers.  E.g. "2.0.0.6" is parsed as simply "2.0"
+    $agent = strtolower($agent ? $agent : $_SERVER['HTTP_USER_AGENT']);
+    $pattern = '#(?<browser>' . join('|', $known) . ')[/ ]+(?<version>[0-9]+(?:\.[0-9]+)?)#';
+
+    // Find all phrases (or return empty array if none found)
+    if (!preg_match_all($pattern, $agent, $matches)) return array();
+
+    // Since some UAs have more than one phrase (e.g Firefox has a Gecko phrase,
+    // Opera 7,8 have a MSIE phrase), use the last one found (the right-most one
+    // in the UA).  That's usually the most correct.
+    $i = count($matches['browser'])-1;
+    return array($matches['browser'][$i] => $matches['version'][$i]);
+
+}
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
@@ -52,7 +75,7 @@ if ($iframed) {
 <?php
 $i = 0;
 $playlist = new Stream_Playlist(scrub_in($_REQUEST['playlist_id']));
-$types = array();
+$jtypes = array();
 foreach($playlist->urls as $item)
 {
     echo ($i++ > 0 ? ',' : '') . '{' . "\n";
@@ -66,14 +89,23 @@ foreach($playlist->urls as $item)
         echo $kmember . ': "' . addslashes($item->$member) . '",' . "\n";
     }
 
-    $type = strtolower(pathinfo($item->url, PATHINFO_EXTENSION));
-    if ($type == "ogg")
-        $type = "oga";
-        
-    if (!in_array($type, $types)) {
-        $types[] = $type;
+    $url = $item->url;
+    $browsers = array_keys(browser_info());
+    if (count($browsers) > 0 ) {
+        $browser = $browsers[0];
     }
-    echo $type.': "' . $item->url . '",' . "\n";
+    if ($browser == "msie" || $browser == "trident" || $browser == "webkit" || $browser == "safari") {
+        $type = "mp3";
+        $jtype = "mp3";
+    } else {
+        $type = "ogg";
+        $jtype = "oga";
+    }
+        
+    if (!in_array($jtype, $types)) {
+        $jtypes[] = $jtype;
+    }
+    echo $jtype.': "' . $url . '&transcode_to=' . $type . '",' . "\n";
     echo 'poster: "' . $item->image_url . (!$iframed ? '&thumb=4' : '') . '" }' . "\n";
 }
 ?>
@@ -89,7 +121,7 @@ foreach($playlist->urls as $item)
                 shuffleTime: 'slow'
             },
             swfPath: "<?php echo Config::get('web_path'); ?>/modules/jplayer/",
-            supplied: "<?php echo join(",", $types); ?>",
+            supplied: "<?php echo join(",", $jtypes); ?>",
             audioFullScreen: true,
             size: {
 <?php
