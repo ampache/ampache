@@ -39,12 +39,13 @@ class Subsonic_Api {
     }
     
     public static function check_version($input, $version = "1.0.0", $addheader = false) {
-        if (version_compare($input['v'], $version) < 0) {
+        // We cannot check client version unfortunately. Most Subsonic client sent a dummy client version...
+        /*if (version_compare($input['v'], $version) < 0) {
             ob_end_clean();
             if ($addheader) self::setHeader($input['f']);
             self::apiOutput($input, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_APIVERSION_CLIENT));
             exit;
-        }
+        }*/
     }
     
     public static function check_parameter($input, $parameter, $addheader = false) {
