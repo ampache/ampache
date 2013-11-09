@@ -21,25 +21,27 @@
  */
 ?>
 <td colspan="6">
-<form method="post" id="edit_playlist_<?php echo $playlist->id; ?>" action="javascript:void(0);">
-<table cellpadding="0" cellspacing="0">
-<tr>
-    <td>
-        <input type="text" name="name" size="25" value="<?php echo scrub_out($playlist->name); ?>" />
-    </td>
-    <td>
-        <?php $name = 'select_' . $playlist->type; ${$name} = ' selected="selected"'; ?>
-        <select name="pl_type">
-            <option value="public"<?php echo $select_public; ?>><?php echo T_('Public'); ?></option>
-            <option value="private"<?php echo $select_private; ?>><?php echo T_('Private'); ?></option>
-        </select>
-    <td>
-    <input type="hidden" name="id" value="<?php echo $playlist->id; ?>" />
-    <input type="hidden" name="type" value="smartplaylist_row" />
-    <?php echo Ajax::button('?action=edit_object&id=' . $playlist->id . '&type=smartplaylist_row','download', T_('Save Changes'),'save_playlist_' . $playlist->id,'edit_playlist_' . $playlist->id); ?>
-    </td>
-</tr>
-</table>
-</form>
+    <form method="post" id="edit_playlist_<?php echo $playlist->id; ?>" action="javascript:void(0);">
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <td>
+                    <input type="text" name="name" size="25" value="<?php echo scrub_out($playlist->name); ?>" />
+                </td>
+                <td>
+                    <?php $name = 'select_' . $playlist->type; ${$name} = ' selected="selected"'; ?>
+                    <select name="pl_type">
+                        <option value="public"<?php echo $select_public; ?>><?php echo T_('Public'); ?></option>
+                        <option value="private"<?php echo $select_private; ?>><?php echo T_('Private'); ?></option>
+                    </select>
+                </td>
+                <td>
+                    <input type="hidden" name="id" value="<?php echo $playlist->id; ?>" />
+                    <input type="hidden" name="type" value="smartplaylist_row" />
+                    <?php echo Ajax::button('?action=edit_object&id=' . $playlist->id . '&type=smartplaylist_row','download', T_('Save Changes'),'save_playlist_' . $playlist->id,'edit_playlist_' . $playlist->id); ?>
+                    <?php echo Ajax::button('?action=cancel_edit_object&id=' . $playlist->id . '&type=smartplaylist_row','cancel', T_('Cancel Changes'),'cancel_playlist_' . $playlist->id,'edit_playlist_' . $playlist->id); ?>
+                </td>
+            </tr>
+        </table>
+    </form>
 </td>
 

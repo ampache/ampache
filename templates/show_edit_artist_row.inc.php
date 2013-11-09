@@ -21,18 +21,19 @@
  */
 ?>
 <td colspan="5">
-<form method="post" id="edit_artist_<?php echo $artist->id; ?>">
-<table class="inline-edit" cellpadding="3" cellspacing="0">
-<tr>
-<td>
-    <input type="text" name="name" value="<?php echo scrub_out($artist->f_full_name); ?>" />
-</td>
-<td>
-    <input type="hidden" name="id" value="<?php echo $artist->id; ?>" />
-    <input type="hidden" name="type" value="artist_row" />
-    <?php echo Ajax::button('?action=edit_object&id=' . $artist->id . '&type=artist_row','download', T_('Save Changes'),'save_artist_' . $artist->id,'edit_artist_' . $artist->id); ?>
-
-</tr>
-</table>
-</form>
+    <form method="post" id="edit_artist_<?php echo $artist->id; ?>">
+        <table class="inline-edit" cellpadding="3" cellspacing="0">
+            <tr>
+                <td>
+                    <input type="text" name="name" value="<?php echo scrub_out($artist->f_full_name); ?>" />
+                </td>
+                <td>
+                    <input type="hidden" name="id" value="<?php echo $artist->id; ?>" />
+                    <input type="hidden" name="type" value="artist_row" />
+                    <?php echo Ajax::button('?action=edit_object&id=' . $artist->id . '&type=artist_row','download', T_('Save Changes'),'save_artist_' . $artist->id,'edit_artist_' . $artist->id); ?>
+                    <?php echo Ajax::button('?action=cancel_edit_object&id=' . $artist->id . '&type=artist_row','cancel', T_('Cancel Changes'),'cancel_artist_' . $artist->id,'edit_artist_' . $artist->id); ?>
+                </td>
+            </tr>
+        </table>
+    </form>
 </td>
