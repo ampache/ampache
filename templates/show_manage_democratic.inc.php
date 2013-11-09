@@ -61,7 +61,7 @@ UI::show_box_top(T_('Manage Democratic Playlists'));  ?>
 </tr>
 <?php } if (!count($playlists)) { ?>
 <tr>
-    <td colspan="7"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
+    <td colspan="7"><span class="nodata"><?php echo T_('No democratic found'); ?></span></td>
 </tr>
 <?php } ?>
 </table>

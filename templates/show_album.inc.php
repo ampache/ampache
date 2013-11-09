@@ -55,6 +55,12 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
 <?php } ?>
 <h3><?php echo T_('Actions'); ?>:</h3>
 <ul>
+    <?php if (Config::get('directplay')) { ?>
+    <li>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id,'play', T_('Play album'),'directplay_full_' . $album->id); ?>
+        <?php echo Ajax::text('?page=stream&action=directplay&playtype=album&album_id=' . $album->id, T_('Play Album'),'directplay_full_text_' . $album->id); ?>
+    </li>
+    <?php } ?>
     <li>
         <?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Add'),'play_full_' . $album->id); ?>
         <?php echo Ajax::text('?action=basket&type=album&id=' . $album->id, T_('Add Album'), 'play_full_text_' . $album->id); ?>
@@ -65,8 +71,8 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
     </li>
     <?php if (Access::check('interface','75')) { ?>
     <li>
-        <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo UI::get_icon('delete', T_('Reset Album Art')); ?></a>
-        <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo T_('Reset Album Art'); ?></a>
+        <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to reset album art?'); ?>');"><?php echo UI::get_icon('delete', T_('Reset Album Art')); ?></a>
+        <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to reset album art?'); ?>');"><?php echo T_('Reset Album Art'); ?></a>
     </li>
     <?php } ?>
     <li>
@@ -75,8 +81,8 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
     </li>
     <?php  if ((Access::check('interface','50'))) { ?>
     <li>
-        <a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo UI::get_icon('cog', T_('Update from tags')); ?></a>
-        <a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo T_('Update from tags'); ?></a>
+        <a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('cog', T_('Update from tags')); ?></a>
+        <a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo T_('Update from tags'); ?></a>
     </li>
     <?php  } ?>
     <?php if (Access::check_function('batch_download')) { ?>

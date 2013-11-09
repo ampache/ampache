@@ -270,6 +270,12 @@ ratings = "true"
 ; DEFAULT: false
 ;userflags = "false"
 
+; Direct play
+; This allows user to play directly a song or album
+; POSSIBLE VALUES: false true
+; DEFAULT: false
+;directplay = "false"
+
 ; Sociable
 ; This turns on / off all of the "social" features of ampache
 ; default is on, but if you don't care and just want music

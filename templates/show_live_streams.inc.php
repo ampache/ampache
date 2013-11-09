@@ -26,12 +26,12 @@ $web_path = Config::get('web_path');
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
-  <col id="col_add" />
-  <col id="col_streamname" />
-  <col id="col_callsign" />
-  <col id="col_frequency" />
-  <col id="col_tag" />
-  <col id="col_action" />
+    <col id="col_add" />
+    <col id="col_streamname" />
+    <col id="col_callsign" />
+    <col id="col_frequency" />
+    <col id="col_tag" />
+    <col id="col_action" />
 </colgroup>
 <tr class="th-top">
     <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -52,7 +52,7 @@ foreach ($object_ids as $radio_id) {
 <?php } //end foreach ($artists as $artist) ?>
 <?php if (!count($object_ids)) { ?>
 <tr>
-    <td colspan="6"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
+    <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">

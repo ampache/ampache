@@ -20,6 +20,11 @@
  *
  */
 ?>
+<?php if (Config::get('directplay')) { ?>
+<td class="cel_directplay">
+    <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id,'play', T_('Play artist'),'play_artist_' . $artist->id); ?>
+</td>
+<?php } ?>
 <td class="cel_add">
     <?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add', T_('Add'),'add_artist_' . $artist->id); ?>
     <?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random', T_('Random'),'random_artist_' . $artist->id); ?>

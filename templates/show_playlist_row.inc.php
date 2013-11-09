@@ -20,6 +20,11 @@
  *
  */
 ?>
+<?php if (Config::get('directplay')) { ?>
+<td class="cel_directplay">
+    <?php echo Ajax::button('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id,'play', T_('Play playlist'),'play_playlist_' . $playlist->id); ?>
+</td>
+<?php } ?>
 <td class="cel_add">
     <?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id,'add', T_('Add'),'add_playlist_' . $playlist->id); ?>
     <?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id,'random', T_('Random'),'random_playlist_' . $playlist->id); ?>

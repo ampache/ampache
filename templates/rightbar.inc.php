@@ -105,7 +105,7 @@
     <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid,'delete', T_('Delete'),'rightbar_delete_' . $uid,'','delitem'); ?>
 </li>
 <?php } if (!count($objects)) { ?>
-    <li class="error"><?php echo T_('Not Enough Data'); ?></li>
+    <li><span class="nodata"><?php echo T_('No items'); ?></span></li>
 <?php } ?>
 <?php if (isset($truncated)) { ?>
     <li class="<?php echo UI::flip_class(); ?>">

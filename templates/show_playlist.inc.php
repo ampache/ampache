@@ -40,32 +40,39 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
         <a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('statistics', T_('Normalize Tracks')); ?></a>
         <?php echo T_('Normalize Tracks'); ?>
     </li>
-        <?php if (Access::check_function('batch_download')) { ?>
+<?php if (Access::check_function('batch_download')) { ?>
     <li>
         <a href="<?php echo Config::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
         <?php echo T_('Batch Download'); ?>
     </li>
-        <?php } ?>
+<?php } ?>
+<?php if (Config::get('directplay')) { ?>
+    <li>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id,'play', T_('Play All'),'directplay_full_' . $playlist->id); ?>
+        <?php echo Ajax::text('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id, T_('Play All'),'directplay_full_text_' . $playlist->id); ?>
+    </li>
+<?php } ?>
     <li>
         <?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id,'add', T_('Add All'),'play_playlist'); ?>
-        <?php echo T_('Add All'); ?>
+        <?php echo Ajax::text('?action=basket&type=playlist&id=' . $playlist->id, T_('Add All'),'play_playlist_text'); ?>
     </li>
     <li>
         <?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id,'random', T_('Add Random'),'play_playlist_random'); ?>
-        <?php echo T_('Add Random'); ?>
+        <?php echo Ajax::text('?action=basket&type=playlist_random&id=' . $playlist->id, T_('Add Random'),'play_playlist_random_text'); ?>
     </li>
-    <?php if ($playlist->has_access()) { ?>
+<?php if ($playlist->has_access()) { ?>
     <li>
         <?php echo Ajax::button('?action=show_edit_object&type=playlist_title&id=' . $playlist->id,'edit', T_('Edit'),'edit_playlist_' . $playlist->id); ?>
-        <?php echo T_('Edit'); ?>
+        <?php echo Ajax::text('?action=show_edit_object&type=playlist_title&id=' . $playlist->id, T_('Edit'),'edit_playlist_text_' . $playlist->id); ?>
     </li>
     <li>
-        <a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
+        <a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>"  onclick="return confirm('<?php echo T_('Do you really want to delete the playlist?'); ?>');">
             <?php echo UI::get_icon('delete'); ?>
+            <?php echo T_('Delete'); ?>
         </a>
-        <?php echo T_('Delete'); ?>
+        
     </li>
-    <?php } ?>
+<?php } ?>
 </ul>
 </div>
 <?php UI::show_box_bottom(); ?>

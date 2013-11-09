@@ -48,7 +48,7 @@ foreach ($object_ids as $playlist_id) {
 <?php } // end foreach ($playlists as $playlist) ?>
 <?php if (!count($object_ids)) { ?>
 <tr class="<?php echo UI::flip_class(); ?>">
-    <td colspan="6"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
+    <td colspan="6"><span class="nodata"><?php echo T_('No smart playlist found'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
