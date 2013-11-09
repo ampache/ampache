@@ -23,7 +23,6 @@
 // This is playlist.php, it does playlist things.
 
 require_once 'lib/init.php';
-
 // We special-case this so we can send a 302 if the delete succeeded
 if ($_REQUEST['action'] == 'delete_playlist') {
     // Check rights
@@ -32,6 +31,7 @@ if ($_REQUEST['action'] == 'delete_playlist') {
         $playlist->delete();
         // Go elsewhere
         header('Location: ' . Config::get('web_path') . '/browse.php?action=playlist');
+        exit;
     }
 }
 
