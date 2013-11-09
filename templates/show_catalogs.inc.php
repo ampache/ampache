@@ -50,7 +50,7 @@
 <tr class="<?php echo UI::flip_class(); ?>">
 <td colspan="6">
 <?php if (!count($object_ids)) { ?>
-    <span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span>
+    <span class="nodata"><?php echo T_('No catalog found'); ?></span>
 <?php } ?>
 </td>
 </tr>

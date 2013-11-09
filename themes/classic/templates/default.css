@@ -713,14 +713,13 @@ img.shoutboximage {	margin:0 3px;}
 	color:#903; 
 }
 
-.fatalerror {
+.fatalerror .nodata {
 	display:table-cell;
 	padding:3px;
 	color:#903; 
 	font-weight:bold;
 	font-size:1.2em;
 }
-
 
 /************************************************/
 /*             LocalPlay                        */

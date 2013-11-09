@@ -758,14 +758,13 @@ div.shout:hover img.shoutboximage{width:75px;height:75px;position:absolute;top:5
 	color: #990033; 
 }
 
-.fatalerror {
+.fatalerror .nodata {
 	padding: 3px;
 	display: table-cell;
 	color: #990033;
 	font-weight:bold;
  	border:2px solid #990033;		
 }
-
 
 /************************************************/
 /*             LocalPlay                        */

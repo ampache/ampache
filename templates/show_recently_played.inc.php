@@ -25,14 +25,18 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
-  <col id="col_add" />
-  <col id="col_username" />
-  <col id="col_song" />
-  <col id="col_album" />
-  <col id="col_artist" />
-  <col id="col_lastplayed" />
+    <col id="col_directplay" />
+    <col id="col_add" />
+    <col id="col_username" />
+    <col id="col_song" />
+    <col id="col_album" />
+    <col id="col_artist" />
+    <col id="col_lastplayed" />
 </colgroup>
 <tr class="th-top">
+<?php if (Config::get('directplay')) { ?>
+    <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+<?php } ?>
     <th class="cel_add"><?php echo T_('Add'); ?></th>
     <th class="cel_song"><?php echo T_('Song'); ?></th>
     <th class="cel_album"><?php echo T_('Album'); ?></th>
@@ -83,6 +87,11 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
     $song->format();
 ?>
 <tr class="<?php echo UI::flip_class(); ?>">
+    <?php if (Config::get('directplay')) { ?>
+    <td class="cel_directplay">
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play song'),'play_song_' . $song->id); ?>
+    </td>
+    <?php } ?>
     <td class="cel_add">
         <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'add_' . $song->id); ?>
     </td>
@@ -99,10 +108,13 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 <?php } ?>
 <?php if (!count($data)) { ?>
 <tr>
-    <td colspan="6"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
+    <td colspan="6"><span class="nodata"><?php echo T_('No recently item found'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
+<?php if (Config::get('directplay')) { ?>
+    <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+<?php } ?>
     <th class="cel_add"><?php echo T_('Add'); ?></th>
     <th class="cel_username"><?php echo T_('Username'); ?></th>
     <th class="cel_song"><?php echo T_('Song'); ?></th>
