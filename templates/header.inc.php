@@ -40,8 +40,22 @@ if (Config::get('use_rss')) { ?>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo Config::get('site_charset'); ?>" />
 <title><?php echo scrub_out(Config::get('site_title')); ?> - <?php echo $location['title']; ?></title>
 <?php require_once Config::get('prefix') . '/templates/stylesheets.inc.php'; ?>
+<?php
+// If iframes, we check in javascript that parent container exist, otherwise we redirect to index. Otherwise HTML5 iframed Player will look broken.
+if (Config::get('iframes')) {
+?>
+<script language="javascript" type="text/javascript">
+function forceIframe() {
+    if (self == top) {
+        document.location = '<?php echo $web_path; ?>';
+    }
+}
+</script>
+<?php
+}
+?>
 </head>
-<body>
+<body <?php echo (Config::get('iframes')) ? "onLoad='forceIframe();'" : ""; ?>>
 <script src="<?php echo $web_path; ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/tinybox/tinybox.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
