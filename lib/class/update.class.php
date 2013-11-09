@@ -289,6 +289,9 @@ class Update {
         
         $update_string = '- Add iframes parameter to preferences.<br />';
         $version[] = array('version' => '360015', 'description' => $update_string);
+        
+        $update_string = '- Optionally filter Now Playing to return only the last song per user.<br />';
+        $version[] = array('version' => '360016', 'description' => $update_string);
 
         $update_string = '- Add user flags on objects.<br />';
         $version[] = array('version' => '360017', 'description' => $update_string);
@@ -1494,6 +1497,24 @@ class Update {
     public static function update_360015() {
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('iframes','0','Iframes',25,'boolean','interface')";
+        Dba::write($sql);
+        
+        $id = Dba::insert_id();
+
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        return true;
+    }
+
+    /*
+     * update_360016
+     *
+     * Add Now Playing filtered per user preference option
+     */
+    public static function update_360016() {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('now_playing_per_user','0','Now playing filtered per user',50,'boolean','interface')";
         Dba::write($sql);
         
         $id = Dba::insert_id();
