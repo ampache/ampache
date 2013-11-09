@@ -19,35 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-require_once 'lib/init.php';
-
-if (Config::get('iframes')) {
-    if (!isset($_GET['framed'])) {
-        UI::show_mainframes();
-        exit;
-    }
-}
-UI::show_header();
-
-$action = isset($_REQUEST['action']) ? scrub_in($_REQUEST['action']) : null;
-
-session_start();
-$_SESSION['catalog'] = 0;
-
-/**
- * Check for the refresh mojo, if it's there then require the
- * refresh_javascript include. Must be greater then 5, I'm not
- * going to let them break their servers
- */
-if (Config::get('refresh_limit') > 5) {
-    $refresh_limit = Config::get('refresh_limit');
-    $ajax_url = '?page=index&action=reloadnp';
-    require_once Config::get('prefix') . '/templates/javascript_refresh.inc.php';
-}
-
-require_once Config::get('prefix') . '/templates/show_index.inc.php';
-
-UI::show_footer();
-
 ?>
+<?php UI::show_box_top(T_('Information')); ?>
+<?php require_once Config::get('prefix') . '/templates/show_stats_userflag.inc.php'; ?>
+<?php UI::show_box_bottom(); ?>

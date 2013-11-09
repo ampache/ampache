@@ -43,9 +43,16 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
     ?>
 </div>
 <div id="information_actions">
+<?php if (Config::get('ratings')) { ?>
 <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
         <?php Rating::show($album->id,'album'); ?>
 </div>
+<?php } ?>
+<?php if (Config::get('userflags')) { ?>
+<div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
+        <?php Userflag::show($album->id,'album'); ?>
+</div>
+<?php } ?>
 <h3><?php echo T_('Actions'); ?>:</h3>
 <ul>
     <li>

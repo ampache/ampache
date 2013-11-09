@@ -347,6 +347,16 @@ switch ($_REQUEST['action']) {
         $results[$key] = ob_get_contents();
         ob_end_clean();
     break;
+    /* Setting userflags */
+    case 'set_userflag':
+        ob_start();
+        $userflag = new Userflag($_GET['object_id'], $_GET['userflag_type']);
+        $userflag->set_flag($_GET['userflag']);
+        Userflag::show($_GET['object_id'], $_GET['userflag_type']);
+        $key = "userflag_" . $_GET['object_id'] . "_" . $_GET['userflag_type'];
+        $results[$key] = ob_get_contents();
+        ob_end_clean();
+    break;
     default:
         $results['rfc3514'] = '0x1';
     break;

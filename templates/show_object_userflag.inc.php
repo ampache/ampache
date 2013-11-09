@@ -20,34 +20,19 @@
  *
  */
 
-require_once 'lib/init.php';
-
-if (Config::get('iframes')) {
-    if (!isset($_GET['framed'])) {
-        UI::show_mainframes();
-        exit;
-    }
-}
-UI::show_header();
-
-$action = isset($_REQUEST['action']) ? scrub_in($_REQUEST['action']) : null;
-
-session_start();
-$_SESSION['catalog'] = 0;
-
-/**
- * Check for the refresh mojo, if it's there then require the
- * refresh_javascript include. Must be greater then 5, I'm not
- * going to let them break their servers
- */
-if (Config::get('refresh_limit') > 5) {
-    $refresh_limit = Config::get('refresh_limit');
-    $ajax_url = '?page=index&action=reloadnp';
-    require_once Config::get('prefix') . '/templates/javascript_refresh.inc.php';
-}
-
-require_once Config::get('prefix') . '/templates/show_index.inc.php';
-
-UI::show_footer();
-
+/* Create some variables we are going to need */
+$web_path = Config::get('web_path');
+$base_url = '?action=set_userflag&userflag_type=' . $userflag->type . '&object_id=' . $userflag->id;
+$othering = false;
+$flagged = $userflag->get_flag();
 ?>
+
+<div class="userflag">
+<?php
+    if ($flagged) {
+        echo Ajax::text($base_url . '&userflag=0', '', 'userflag_i_' . $userflag->id . '_' . $userflag->type, '', 'userflag_true');
+    } else {
+        echo Ajax::text($base_url . '&userflag=1', '', 'userflag_i_' . $userflag->id . '_' . $userflag->type, '', 'userflag_false');
+    }
+?>
+</div>

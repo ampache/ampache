@@ -22,32 +22,7 @@
 
 require_once 'lib/init.php';
 
-if (Config::get('iframes')) {
-    if (!isset($_GET['framed'])) {
-        UI::show_mainframes();
-        exit;
-    }
-}
-UI::show_header();
-
-$action = isset($_REQUEST['action']) ? scrub_in($_REQUEST['action']) : null;
-
-session_start();
-$_SESSION['catalog'] = 0;
-
-/**
- * Check for the refresh mojo, if it's there then require the
- * refresh_javascript include. Must be greater then 5, I'm not
- * going to let them break their servers
- */
-if (Config::get('refresh_limit') > 5) {
-    $refresh_limit = Config::get('refresh_limit');
-    $ajax_url = '?page=index&action=reloadnp';
-    require_once Config::get('prefix') . '/templates/javascript_refresh.inc.php';
-}
-
-require_once Config::get('prefix') . '/templates/show_index.inc.php';
-
-UI::show_footer();
+$iframed = true;
+require_once Config::get('prefix') . '/templates/show_html5_player.inc.php';
 
 ?>

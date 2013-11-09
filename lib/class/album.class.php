@@ -410,6 +410,7 @@ class Album extends database_object {
             } // foreach song of album
             Stats::gc();
             Rating::gc();
+            Userflag::gc();
         } // if updated
 
 

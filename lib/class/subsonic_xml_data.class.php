@@ -30,7 +30,7 @@
  */
 class Subsonic_XML_Data {
 
-    const API_VERSION = "1.10.0";
+    const API_VERSION = "1.10.1";
 
     const SSERROR_GENERIC = 0;
     const SSERROR_MISSINGPARAM = 10;
@@ -223,9 +223,9 @@ class Subsonic_XML_Data {
     public static function addAlbum($xml, $album, $songs=false, $elementName="album") {
         $xalbum = $xml->addChild($elementName);
         $xalbum->addAttribute('id', self::getAlbumId($album->id));
-        $xalbum->addAttribute('name', $album->name);
         $xalbum->addAttribute('album', $album->name);
         $xalbum->addAttribute('title', self::formatAlbum($album));
+        $xalbum->addAttribute('name', $album->name);
         $xalbum->addAttribute('isDir', 'true');
         $album->format();
         if ($album->has_art) $xalbum->addAttribute('coverArt', self::getAlbumId($album->id));
@@ -399,8 +399,23 @@ class Subsonic_XML_Data {
         }
     }
     
-    public static function addStarred($xml, $elementName="starred") {
+    public static function addStarred($xml, $artists, $albums, $songs, $elementName="starred") {
         $xstarred = $xml->addChild($elementName);
+        
+        foreach ($artists as $id) {
+            $artist = new Artist($id);
+            self::addArtist($xstarred, $artist);
+        }
+        
+        foreach ($albums as $id) {
+            $album = new Album($id);
+            self::addAlbum($xstarred, $album);
+        }
+        
+        foreach ($songs as $id) {
+            $song = new Song($id);
+            self::addSong($xstarred, $song);
+        }
     }
 }
 
