@@ -362,7 +362,7 @@ if ($transcode) {
     // Content-length guessing if required by the player.
     // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
     // Should also support video, but video implementation as to be reviewed first!
-    if (get_class($media) == 'Song' && $_REQUEST['content_length' == 'required') {
+    if (get_class($media) == 'Song' && $_REQUEST['content_length'] == 'required') {
         $max_bitrate = Stream::get_allowed_bitrate($media);
         if ($media->time > 0 && $max_bitrate > 0) {
             $stream_size = $media->time * $max_bitrate * 1000 / 8;

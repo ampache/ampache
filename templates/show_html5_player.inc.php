@@ -151,9 +151,32 @@ if ($iframed) {
         });
     });
 });
-  </script>
+</script>
+<script language="javascript" type="text/javascript">
+function ExitPlayer() {
+    var ff = parent.parent.document.getElementById('frame_footer');
+    var maindiv = parent.parent.document.getElementById('maindiv');
+    if (ff.getAttribute('className') == 'frame_footer_visible') {
+        ff.setAttribute('className', 'frame_footer_hide');
+        ff.setAttribute('class', 'frame_footer_hide');
+        
+        maindiv.style.height = parent.parent.innerHeight + "px";
+    }
+    ff.setAttribute('src', '');
+    return false;
+}
+</script>
 </head>
 <body>
+<?php
+if ($iframed) {
+?>
+  <div class="jp-close">
+    <a href="javascript:ExitPlayer();" title="Close Player"><img src="images/close.png" border="0" /></a>
+  </div>
+<?php
+}
+?>
 <div class="playing_info">
 	<div class="playing_artist"></div>
 	<div class="playing_title"></div>

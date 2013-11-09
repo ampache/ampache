@@ -448,7 +448,7 @@ div.jp-title {
 
 div.playing_info {
 	position: absolute;
-	left: 100px;
+	left: 110px;
 	top: 10px;
 	font-size: 1.5em;
 	font-family: 'Verdana',Arial,sans-serif;
@@ -605,7 +605,7 @@ div.jp-jplayer {
 	background-color: #000000;
     position: absolute;
     top: 10px;
-    left: 10px;
+    left: 20px;
 }
 
 
@@ -733,6 +733,18 @@ a.jp-shuffle-off:hover {
 	display: block;
 	text-align: center;
 	font-weight: bold;
+}
+
+.jp-close {
+    font-size: 0.67em;
+    text-align: left;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.jp-close a{
+    color: #CCC;
 }
 
 /* @end */
