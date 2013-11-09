@@ -132,7 +132,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 
 ; Use Access List 
 ; Toggle this on if you want ampache to pay attention to the access list
-; and only allow streaming/downloading/xml-rpc from known hosts xml-rpc 
+; and only allow streaming/downloading/api-rpc from known hosts api-rpc 
 ; will not work without this on.
 ; NOTE: Default Behavior is DENY FROM ALL 
 ; DEFAULT: true
@@ -273,8 +273,8 @@ ratings = "true"
 ; Direct play
 ; This allows user to play directly a song or album
 ; POSSIBLE VALUES: false true
-; DEFAULT: false
-;directplay = "false"
+; DEFAULT: true
+directplay = "true"
 
 ; Sociable
 ; This turns on / off all of the "social" features of ampache

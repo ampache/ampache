@@ -95,10 +95,9 @@ switch ($_REQUEST['action']) {
     break;
     /* Controls the editing of objects */
     case 'show_edit_object':
-
         // Set the default required level
         $level = '50';
-
+        
         switch ($_GET['type']) {
             case 'album_row':
                 $key = 'album_' . $_GET['id'];
@@ -246,6 +245,65 @@ switch ($_REQUEST['action']) {
                 exit;
             break;
         } // end switch on type
+
+        ob_start();
+        require Config::get('prefix') . '/templates/show_' . $_POST['type'] . '.inc.php';
+        $results[$key] = ob_get_contents();
+        ob_end_clean();
+    break;
+    case 'cancel_edit_object':
+        $level = '50';
+        switch ($_GET['type']) {
+            case 'album_row':
+                $key = 'album_' . $_GET['id'];
+                $album = new Album($_GET['id']);
+                $album->format();
+            break;
+            case 'artist_row':
+                $key = 'artist_' . $_GET['id'];
+                $artist = new Artist($_GET['id']);
+                $artist->format();
+            break;
+            case 'song_row':
+                $key = 'song_' . $_GET['id'];
+                $song = new Song($_GET['id']);
+                $song->format();
+            break;
+            case 'live_stream_row':
+                $key = 'live_stream_' . $_GET['id'];
+                $radio = new Radio($_GET['id']);
+                $radio->format();
+            break;
+            case 'playlist_row':
+            case 'playlist_title':
+                $key = 'playlist_row_' . $_GET['id'];
+                $playlist = new Playlist($_GET['id']);
+                $playlist->format();
+                // If the current user is the owner, only user is required
+                if ($playlist->user == $GLOBALS['user']->id) {
+                    $level = '25';
+                }
+            break;
+            case 'smartplaylist_row':
+            case 'smartplaylist_title':
+                $key = 'playlist_row_' . $_GET['id'];
+                $playlist = new Search('song', $_GET['id']);
+                $playlist->format();
+                if ($playlist->user == $GLOBALS['user']->id) {
+                    $level = '25';
+                }
+            break;
+            default:
+                $key = 'rfc3514';
+                echo xml_from_array(array($key=>'0x1'));
+                exit;
+            break;
+        }
+        
+        if (!Access::check('interface',$level)) {
+            $results['rfc3514'] = '0x1';
+            break;
+        }
 
         ob_start();
         require Config::get('prefix') . '/templates/show_' . $_POST['type'] . '.inc.php';
