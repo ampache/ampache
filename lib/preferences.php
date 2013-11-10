@@ -289,6 +289,21 @@ function create_preference_input($name,$value) {
             echo "\t<option value=\"0\" $is_false>" . T_("Disable") . "</option>\n";
             echo "</select>\n";
         break;
+        case 'album_sort':
+            if ($value == 'year_asc') { $is_sort_year_asc = 'selected="selected"'; }
+            elseif ($value == 'year_desc') { $is_sort_year_desc = 'selected="selected"'; }
+            elseif ($value == 'name_asc') { $is_sort_name_asc = 'selected="selected"'; }
+            elseif ($value == 'name_desc') { $is_sort_name_desc = 'selected="selected"'; }
+            else { $is_sort_default = 'selected="selected"'; }
+            
+            echo "<select name=\"$name\">\n";
+            echo "\t<option value=\"default\" $is_sort_default>" . T_('Default') . "</option>\n";
+            echo "\t<option value=\"year_asc\" $is_sort_year_asc>" . T_('Year ascending') . "</option>\n";
+            echo "\t<option value=\"year_desc\" $is_sort_year_desc>" . T_('Year descending') . "</option>\n";
+            echo "\t<option value=\"name_asc\" $is_sort_name_asc>" . T_('Name ascending') . "</option>\n";
+            echo "\t<option value=\"name_desc\" $is_sort_name_desc>" . T_('Name descending') . "</option>\n";
+            echo "</select>\n";
+        break;
         default:
             if (preg_match('/_pass$/', $name)) {
                 echo '<input type="password" size="16" name="' . $name . '" value="******" />';
