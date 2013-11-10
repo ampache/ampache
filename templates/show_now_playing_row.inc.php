@@ -84,12 +84,12 @@
 <?php } // end play album art ?>
 
 <?php if (Config::get('show_similar')) { ?>
-<div class="np_group">
+<div class="np_group similars">
 <?php if ($artists = Recommendation::get_artists_like($media->artist, 3, false)) { ?>
-    <div class="np_cel cel_similar">
+    <div class="np_cell cel_similar">
         <label><?php echo T_('Similar Artists'); ?></label>
         <?php    foreach ($artists as $a) { ?>
-            <div class="np_cel cel_similar_artist">
+            <div class="np_cell cel_similar_artist">
             <?php
             if (is_null($a['id'])) {
                 echo scrub_out(UI::truncate($a['name']), Config::get('ellipse_threshold_artist'));
@@ -105,10 +105,10 @@
     </div>
 <?php } // end show similar artists ?>
 <?php if ($songs = Recommendation::get_songs_like($media->id, 3)) { ?>
-    <div class="np_cel cel_similar">
+    <div class="np_cell cel_similar">
         <label><?php echo T_('Similar Songs'); ?></label>
         <?php    foreach ($songs as $s) { ?>
-            <div class="np_cel cel_similar_song">
+            <div class="np_cell cel_similar_song">
             <?php
             $song = new Song($s['id']);
             $song->format();
