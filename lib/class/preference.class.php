@@ -434,7 +434,7 @@ class Preference {
         // preferenecs because we're going to want at least something otherwise
         // the page is going to be really ugly
         else {
-            $results['theme_path'] = '/themes/classic';
+            $results['theme_path'] = '/themes/fresh';
         }
 
         Config::set_by_array($results, true);
