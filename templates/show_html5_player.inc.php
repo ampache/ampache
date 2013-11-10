@@ -96,16 +96,39 @@ foreach($playlist->urls as $item)
     }
     if ($browser == "msie" || $browser == "trident" || $browser == "webkit" || $browser == "safari") {
         $type = "mp3";
-        $jtype = "mp3";
     } else {
         $type = "ogg";
-        $jtype = "oga";
     }
-        
+    
+    $ftype = "mp3";
+    $urlinfo = Stream_URL::parse($url);
+    if ($urlinfo['id']) {
+        $song = new Song($urlinfo['id']);
+        $ftype = $song->type;
+    }
+    
+    // Check transcode is required
+    $transcode = false;
+    if ($type != $ftype) {
+        $transcode_cfg = Config::get('transcode');
+        $valid_types = Song::get_stream_types_for_type($ftype);
+        if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
+            $transcode = true;
+            $url .= '&transcode_to=' . $type; // &content_length=required
+        }
+    }
+    if (!$transcode) {
+        // Transcode not available for this type, keep real type and hope for flash fallback
+        $type = $ftype;
+    }
+    
+    $jtype = ($type == "ogg") ? "oga" : $type;
+    
     if (!in_array($jtype, $jtypes)) {
         $jtypes[] = $jtype;
     }
-    echo $jtype.': "' . $url . '&transcode_to=' . $type . '",' . "\n"; // &content_length=required
+    echo $jtype.': "' . $url;
+    echo '",' . "\n";
     echo 'poster: "' . $item->image_url . (!$iframed ? '&thumb=4' : '') . '" }' . "\n";
 }
 ?>
