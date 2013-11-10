@@ -146,11 +146,19 @@ class Artist extends database_object {
             $catalog_join = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
             $catalog_where = "AND `catalog`.`id` = '$catalog'";
         }
-
+        
         $results = array();
 
+        $sql_sort = 'ORDER BY `album`.`name`,`album`.`disk`,`album`.`year`';
+        
+        $sort_type = Config::get('album_sort');
+        if ($sort_type == 'year_asc') { $sql_sort = 'ORDER BY `album`.`year` ASC'; }
+        elseif ($sort_type == 'year_desc') { $sql_sort = 'ORDER BY `album`.`year` DESC'; }
+        elseif ($sort_type == 'name_asc') { $sql_sort = 'ORDER BY `album`.`name` ASC'; }
+        elseif ($sort_type == 'name_desc') { $sql_sort = 'ORDER BY `album`.`name` DESC'; }
+        
         $sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-            "WHERE `song`.`artist`='$this->id' $catalog_where GROUP BY `album`.`id` ORDER BY `album`.`name`,`album`.`disk`,`album`.`year`";
+            "WHERE `song`.`artist`='$this->id' $catalog_where GROUP BY `album`.`id` $sql_sort";
 
         debug_event("Artist", "$sql", "6");
         $db_results = Dba::read($sql);

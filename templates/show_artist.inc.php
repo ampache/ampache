@@ -25,6 +25,7 @@ $web_path = Config::get('web_path');
 <?php
 $browse = new Browse();
 $browse->set_type($object_type);
+
 UI::show_box_top($artist->f_name, 'info-box');
 if (Config::get('ratings')) {
 ?>

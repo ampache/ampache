@@ -295,6 +295,9 @@ class Update {
 
         $update_string = '- Add user flags on objects.<br />';
         $version[] = array('version' => '360017', 'description' => $update_string);
+        
+        $update_string = '- Add album default sort value to preferences.<br />';
+        $version[] = array('version' => '360018', 'description' => $update_string);
 
         return $version;
 
@@ -1411,7 +1414,6 @@ class Update {
         return $retval;
     }
 
-
     /**
      * update_360009
      *
@@ -1492,7 +1494,7 @@ class Update {
     /**
      * update_360015
      *
-     * This update inserts the Iframes preference...
+     * This inserts the Iframes preference...
      */
     public static function update_360015() {
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
@@ -1543,5 +1545,22 @@ class Update {
         return Dba::write($sql);
     }
 
+    /**
+     * update_360018
+     *
+     * This inserts the Album default sort preference...
+     */
+    public static function update_360018() {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('album_sort','0','Album Default Sort',25,'string','interface')";
+        Dba::write($sql);
+        
+        $id = Dba::insert_id();
+
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        return true;
+    }
 }
 ?>
