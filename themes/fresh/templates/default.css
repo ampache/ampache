@@ -157,7 +157,7 @@ hr {
 
 #header .box-inside
 {
-	width:550px;
+	width:auto;
 	text-align:right;
 	float:right;
 }
@@ -193,6 +193,7 @@ hr {
 
 #header #loginInfo
 {
+    display: block;
 	color:#eee;
 }
 
