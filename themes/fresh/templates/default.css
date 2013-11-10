@@ -123,8 +123,13 @@ hr {
 	width:180px;
 	margin-top:32px;
 	right:10px;
+    
     /* Set position to fixed to 'pin' the playlist */
-	/*position:fixed;*/
+	/*position:fixed;
+    max-height: 85%;
+    overflow-x: hidden;
+	overflow-y: scroll;*/
+    
     position: absolute;
 	clear:both;
 }
