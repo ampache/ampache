@@ -287,13 +287,11 @@ class Update {
         $update_string = '- Increase the length of sessionids again.<br />';
         $version[] = array('version' => '360014', 'description' => $update_string);
         
-<<<<<<< HEAD
         $update_string = '- Add iframes parameter to preferences.<br />';
         $version[] = array('version' => '360015', 'description' => $update_string);
-=======
+
         $update_string = '- Optionally filter Now Playing to return only the last song per user.<br />';
         $version[] = array('version' => '360016', 'description' => $update_string);
->>>>>>> Optional Now Playing filtered by user option
 
         $update_string = '- Add user flags on objects.<br />';
         $version[] = array('version' => '360017', 'description' => $update_string);
