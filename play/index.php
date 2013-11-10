@@ -365,7 +365,7 @@ if ($transcode) {
     if (get_class($media) == 'Song' && $_REQUEST['content_length'] == 'required') {
         $max_bitrate = Stream::get_allowed_bitrate($media);
         if ($media->time > 0 && $max_bitrate > 0) {
-            $stream_size = $media->time * $max_bitrate * 1000 / 8;
+            $stream_size = $media->time * $max_bitrate * 1000;
         } else {
             debug_event('play', 'Bad media duration / Max bitrate. Content-length calculation skipped.', 5);
             $stream_size = null;
@@ -408,6 +408,7 @@ if ($start > 0 || $end > 0 ) {
     else {
         if($transcoding) {
             debug_event('play', 'We should transcode only for a calculated frame range, but not yet supported here.', 2);
+				$stream_size = null;
         } else {
             debug_event('play', 'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size, 5);
             fseek($fp, $start);
@@ -422,7 +423,7 @@ else {
     debug_event('play','Starting stream of ' . $media->file . ' with size ' . $media->size, 5);
 }
 
-if ($stream_size == null) {
+if ($transcode) {
     header('Accept-Ranges: none');
 } else {
     header('Accept-Ranges: bytes');

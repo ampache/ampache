@@ -105,7 +105,7 @@ foreach($playlist->urls as $item)
     if (!in_array($jtype, $jtypes)) {
         $jtypes[] = $jtype;
     }
-    echo $jtype.': "' . $url . '&transcode_to=' . $type . '&content_length=required",' . "\n";
+    echo $jtype.': "' . $url . '&transcode_to=' . $type . '",' . "\n"; // &content_length=required
     echo 'poster: "' . $item->image_url . (!$iframed ? '&thumb=4' : '') . '" }' . "\n";
 }
 ?>
