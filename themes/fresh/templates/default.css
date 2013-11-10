@@ -631,11 +631,11 @@ span.page-nb {
 ***********************************************/
 #now_playing {
     margin-bottom: 20px;
-    width: 550px;
+    width: auto;
 }
 
 #now_playing .np_group {
-    float: right;
+    float: left;
 }
 
 #now_playing .np_cell {
