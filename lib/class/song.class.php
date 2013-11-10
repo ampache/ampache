@@ -526,11 +526,11 @@ class Song extends database_object implements media {
                 case 'artist':
                     // Don't do anything if we've negative one'd this baby
                     if ($value == '-1') {
-                        $value = Catalog::check_artist($data['artist_name'], $data['mb_artistid']);
+                        $value = Artist::check_artist($data['artist_name'], $data['mb_artistid']);
                     }
                 case 'album':
                     if ($value == '-1') {
-                        $value = Catalog::check_album($data['album_name'], $data['year'], $data['disk'], $data['mb_albumid']);
+                        $value = Album::check_album($data['album_name'], $data['year'], $data['disk'], $data['mb_albumid']);
                     }
                 case 'title':
                 case 'track':
