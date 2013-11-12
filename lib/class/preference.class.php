@@ -430,8 +430,8 @@ class Preference {
         if (strlen($results['theme_name']) > 0) {
             $results['theme_path'] = '/themes/' . $results['theme_name'];
         }
-        // Default to the classic theme if we don't get anything from their
-        // preferenecs because we're going to want at least something otherwise
+        // Default to the fresh theme if we don't get anything from their
+        // preferences because we're going to want at least something otherwise
         // the page is going to be really ugly
         else {
             $results['theme_path'] = '/themes/fresh';
