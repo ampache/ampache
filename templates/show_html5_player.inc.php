@@ -122,7 +122,7 @@ foreach($playlist->urls as $item)
         $type = $ftype;
     }
     
-    $jtype = ($type == "ogg") ? "oga" : $type;
+    $jtype = ($type == "ogg" || $type == "flac") ? "oga" : $type;
     
     if (!in_array($jtype, $jtypes)) {
         $jtypes[] = $jtype;
