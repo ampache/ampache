@@ -191,11 +191,32 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     position: relative;
     z-index: 1;
     padding-bottom: 40px;
+    overflow-y: auto;
 }
 
 #sidebar {
     float: left;
-	width:140px;
+	width: 160px;
+    z-index: 2;
+    margin: 20px auto auto 5px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #222;
+    background-color: rgba(0,0,0,0.15);
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    border-color: #1d1d1d;
+    border: 2px solid rgba(0,0,0,0.15);
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #fff;
 }
 
 #content {
@@ -206,8 +227,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -ms-transition: top .5s;
     -o-transition: top .5s;
     transition: top .5s;
-    margin: 15px 270px 0px 170px;
-	width:auto;
+    margin: 15px 250px 0px 180px;
+	width: auto;
 }
 
 #rightbar {
@@ -218,19 +239,37 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 	margin: 20px 20px auto auto;
     max-height: 85%;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #222;
+    background-color: rgba(0,0,0,0.15);
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    border-color: #1d1d1d;
+    border: 2px solid rgba(0,0,0,0.15);
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #fff;
+    z-index: 3;
 }
 
 #footer {
 	width: auto;
-	 margin: 15px 270px 0px 0px;
+	margin: 15px 270px 0px 0px;
+    z-index: 4;
 }
 
 /***********************************************
            Header                             
 ***********************************************/
 #header {
-    z-index: 3;
+    z-index: 5;
     height: 64px;
     padding: 0 32px;
     background-color: #000;
@@ -427,8 +466,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     margin-right: 20px;
 }
 
-#loginPage span.error
-{
+#loginPage span.error {
     display: block;
     clear: left;
     padding: 10px;
@@ -440,116 +478,34 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     margin-bottom: 10px;
 }
 
-#loginPage #footer 
-{
+#loginPage #footer {
     width: 940px;
     margin: 10px auto;
     color: #888;
 }
 
-#loginPage #footer a 
-{
+#loginPage #footer a {
     color: #555;
 }
 
 /***********************************************
            Sidebar                            
 ***********************************************/
-#sidebar-page
-{
-	position:absolute;
-	padding-bottom:0.5em;
-	width:140px;
-	left:7px;
+#sidebar {
+    font-size: 14px;
+    background-color: #1a1a1a;
+    border-right: 2px solid #000;
+    overflow-y: auto;
+    height: auto;
 }
 
-#sidebar-tabs
-{
-	width:140px;
-	float:left;
-	padding:7px;
-	margin-left: 8px;
-}
-
-#sidebar-tabs li.sb1
-{
-	float:left;
-	margin-right:5px;
-}
-
-#sidebar-tabs .sb2 li
-{
-	background:#fff;
-	border-radius:4px;
-	margin-top:7px;
-	padding:7px;
-}
-
-#sidebar-tabs .sb2 li h4
-{
-	font-weight:700;
-	display:block;
-	border-radius:3px;
-	background:#ddd;
-	color:#222;
-	padding:5px;
-}
-
-#sidebar-tabs .sb2 li ul li
-{
-	background:#fff;
-	border-radius:0;
-	margin-top:0;
-	padding:0;
-}
-
-#sidebar-tabs .sb2 li ul li a
-{
-	font-weight:700;
-	display:block;
-	border-radius:3px;
-	padding:5px;
-}
-
-#sidebar-tabs .sb2 li ul li a:hover
-{
-	background:#d2e6f9;
-}
-
-#sidebar-tabs .sb2 #browse_filters li
-{
-	background:#f9f9f9;
-}
-
-#sidebar-tabs .sb2 #browse_filters #multi_alpha_filterLabel
-{
-	margin:5px 3px 0;
-	display: block;
-}
-
-#sidebar-tabs .sb2 #browse_filters #multi_alpha_filter
-{
-	border:1px solid #bbb;
-	border-radius:2px;
-	padding:4px;
-	width: 115px;
-}
-
-#sidebar-tabs #catalog_select
-{
-    width:130px;
-}
-
-/* Localplay */
-.active_instance {
-    border: 1px inset #99ccff;
-}
-
-/***********************************************
-                  Rightbar                    
-***********************************************/
-#rightbar {
-    padding: 10px;
+#sidebar-page {
+	position: absolute;
+	left: 0px;
+	width: 160px;
+    margin: 8px auto auto 5px;
+    overflow-x: hidden;
+    overflow-y: auto;
     background-color: #222;
     background-color: rgba(0,0,0,0.15);
     -webkit-border-radius: 2px;
@@ -567,57 +523,103 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #fff;
 }
 
+#sidebar-tabs {
+    list-style-type: none;
+	padding: 2px;
+}
+
+#sidebar-tabs li.sb1 {
+    float: left;
+}
+
+#sidebar-tabs .sb2 li {
+	/*background: #fff;*/
+}
+
+#sidebar-tabs .sb2 li h4 {
+    position: relative;
+    height: 28px;
+    margin: 20px 0 10px;
+    padding: 0 10px 0 20px;
+    line-height: 32px;
+    text-transform: uppercase;
+    background-color: #262626;
+    border-bottom: 1px solid #0f0f0f;
+    -webkit-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+    -moz-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+    box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+}
+
+#sidebar-tabs .sb2 li ul li {
+	/*background: #fff;
+	border-radius: 0;
+	margin-top: 0;
+	padding: 0;*/
+}
+
+#sidebar-tabs .sb2 li ul li a {
+	/*font-weight: 700;
+	display: block;
+	border-radius: 3px;
+	padding: 5px;*/
+    border-radius: 4px;
+	margin-top: 7px;
+	padding: 7px;
+    color: #999;
+    background: none!important;
+    -webkit-transition: color .1s;
+    -moz-transition: color .1s;
+    -ms-transition: color .1s;
+    -o-transition: color .1s;
+    transition: color .1s;
+}
+
+#sidebar-tabs .sb2 li ul li a:hover {
+	/*background: #d2e6f9;*/
+    color: #fff;
+}
+
+#sidebar-tabs .sb2 #browse_filters li {
+	/*background: #f9f9f9;*/
+}
+
+#sidebar-tabs .sb2 #browse_filters #multi_alpha_filterLabel {
+	margin: 5px 3px 0;
+	display: block;
+}
+
+#sidebar-tabs .sb2 #browse_filters #multi_alpha_filter {
+	border: 1px solid #bbb;
+	border-radius: 2px;
+	padding: 4px;
+	width: 115px;
+}
+
+#sidebar-tabs #catalog_select {
+    width: 130px;
+}
+
+/* Localplay */
+.active_instance {
+    border: 1px inset #99ccff;
+}
+
+/***********************************************
+                  Rightbar                    
+***********************************************/
+
 #rightbar #rb_action {
-    list-style-type:none;
-	padding:4px;
+    list-style-type: none;
+	padding: 4px;
 }
 
 #rightbar #rb_action li {
     margin-right: 5px;
-    display:inline;
+    display: inline;
 }
 
 #rightbar li #rb_add, #rightbar li #pl_add {
-	position:relative;
-	z-index:10;
-}
-
-#rightbar li:hover .submenu {
-	display:block;
-}
-
-#rightbar .submenu {
-	display:none;
-	position:absolute;
-	left:-50px;
-	top:14px;
-	background:#fff;
-	border:2px solid silver;
-	width:120px;
-	padding:0.6em;
-}
-
-#rightbar #rb_action .submenu li {
-    margin: 0;
-}
-
-* html #rightbar .submenu {
-	right:100px;
-}
-
-/* IE6 fix */
-#rightbar .submenu a {
-	display:block;
-	border-bottom:1px dotted #ddd;
-	color:#5b5b5b;
-	text-decoration:none;
-	text-align:left;
-	padding:0.4em;
-    width: 100%;
-}
-
-#rightbar .submenu a:hover {
-	color:#333;
+	position: relative;
 }
 
 #rightbar #rb_current_playlist li {
@@ -625,12 +627,14 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     font-size: 14px;
     color: #fff;
     width: 100%;
+    display: table;
 }
 
 #rightbar #rb_current_playlist li a {
-    padding:5px 8px 4px;
-    color:#eee;
     width: 100%;
+    padding: 4px 7px 3px;
+    color:#eee;
+    display: table-cell;
 }
 
 #rightbar #rb_current_playlist li a:hover, #rightbar #rb_current_playlist li a:focus {
@@ -643,15 +647,51 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     background-image:-webkit-linear-gradient(top,#cc6200,#c24d00);
     background-image:-o-linear-gradient(top,#cc6200,#c24d00);
     background-image:linear-gradient(top,#cc6200,#c24d00);
-    background-repeat:repeat-x
+    background-repeat:repeat-x;
 }
 
 #rightbar #rb_current_playlist li.odd {
     background-color: rgba(255,255,255,0.1);
 }
 
-#rightbar #rb_current_playlist .delitem {
+#rightbar li:hover .submenu {
+	display:block;
+}
+
+#rightbar .submenu {
 	display: none;
+	position: absolute;
+	left: -30px;
+	top: 35px;
+	background: #fff;
+	border: 2px solid silver;
+	width: 120px;
+	padding: 0.6em;
+    font-size: 12px;
+    z-index: 9999999;
+}
+
+#rightbar #rb_action .submenu li {
+    margin: 0;
+}
+
+* html #rightbar .submenu {
+	right:100px;
+    z-index: 9999999;
+}
+
+#rightbar .submenu a {
+	display: block;
+	border-bottom:1px dotted #ddd;
+	color:#5b5b5b;
+	text-decoration:none;
+	text-align:left;
+	padding:0.4em;
+    width: 100%;
+}
+
+#rightbar .submenu a:hover {
+	color:#333;
 }
 
 /* Rightbar Localplay Controls */
