@@ -33,6 +33,19 @@ if (Config::get('ratings')) {
     <?php show_rating($artist->id, 'artist'); ?>
 </div>
 <?php } ?>
+<?php if (Config::get('userflags')) { ?>
+<div style="display:table-cell;" id="userflag_<?php echo $artist->id; ?>_artist">
+        <?php Userflag::show($artist->id,'artist'); ?>
+</div>
+<?php } ?>
+<?php
+if (Config::get('show_played_times')) {
+?>
+<br />
+<div style="display:inline;"><?php echo T_('Played') . ' ' . $artist->object_cnt . ' ' . T_('times'); ?></div>
+<?php
+}
+?>
 <div id="information_actions">
 <h3><?php echo T_('Actions'); ?>:</h3>
 <ul>

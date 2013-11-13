@@ -67,6 +67,9 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     $songprops[gettext_noop('Last Updated')]   = date("d/m/Y H:i",$song->update_time);
   }
   $songprops[gettext_noop('Added')]   = date("d/m/Y H:i",$song->addition_time);
+  if (Config::get('show_played_times')) {
+    $songprops[gettext_noop('# Played')]   = scrub_out($song->object_cnt);
+  }
 
   foreach ($songprops as $key => $value)
   {

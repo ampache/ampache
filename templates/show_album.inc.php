@@ -53,6 +53,14 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
         <?php Userflag::show($album->id,'album'); ?>
 </div>
 <?php } ?>
+<?php
+if (Config::get('show_played_times')) {
+?>
+<br />
+<div style="display:inline;"><?php echo T_('Played') . ' ' . $album->object_cnt . ' ' . T_('times'); ?></div>
+<?php
+}
+?>
 <h3><?php echo T_('Actions'); ?>:</h3>
 <ul>
     <?php if (Config::get('directplay')) { ?>

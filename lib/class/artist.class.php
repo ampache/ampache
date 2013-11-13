@@ -108,6 +108,9 @@ class Artist extends database_object {
             $db_results = Dba::read($sql);
 
             while ($row = Dba::fetch_assoc($db_results)) {
+                if (Config::get('show_played_times')) {
+                    $row['object_cnt'] = Stats::get_object_count('artist', $row['artist']);
+                }
                 parent::add_to_cache('artist_extra',$row['artist'],$row);
             }
 
@@ -228,6 +231,9 @@ class Artist extends database_object {
                 
             $db_results = Dba::read($sql);
             $row = Dba::fetch_assoc($db_results);
+            if (Config::get('show_played_times')) {
+                $row['object_cnt'] = Stats::get_object_count('artist', $row['artist']);
+            }
             parent::add_to_cache('artist_extra',$row['artist'],$row);
         }
 
@@ -278,6 +284,7 @@ class Artist extends database_object {
         $this->tags = Tag::get_top_tags('artist',$this->id);
 
         $this->f_tags = Tag::get_display($this->tags,$this->id,'artist');
+        $this->object_cnt = $extra_info['object_cnt'];
 
         return true;
 

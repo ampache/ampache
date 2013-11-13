@@ -87,6 +87,20 @@ class Stats {
         }
 
     } // insert
+    
+    /**
+      * get_object_count
+     * Get count for an object
+     */
+    public static function get_object_count($object_type, $object_id) {
+        
+        $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ?";
+        $db_results = Dba::read($sql, array($object_type, $object_id));
+
+        $results = Dba::fetch_assoc($db_results);
+        
+        return $results['object_cnt'];
+    } // get_object_count
 
     /**
      * get_last_song

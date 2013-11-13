@@ -168,6 +168,7 @@ function create_preference_input($name,$value) {
         case 'direct_link':
         case 'iframes':
         case 'now_playing_per_user':
+        case 'show_played_times':
             if ($value == '1') { $is_true = "selected=\"selected\""; }
             else { $is_false = "selected=\"selected\""; }
             echo "<select name=\"$name\">\n";

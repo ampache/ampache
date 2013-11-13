@@ -298,6 +298,9 @@ class Update {
         
         $update_string = '- Add album default sort value to preferences.<br />';
         $version[] = array('version' => '360018', 'description' => $update_string);
+        
+        $update_string = '- Add option to show number of times a song was played.<br />';
+        $version[] = array('version' => '360019', 'description' => $update_string);
 
         return $version;
 
@@ -1553,6 +1556,24 @@ class Update {
     public static function update_360018() {
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('album_sort','0','Album Default Sort',25,'string','interface')";
+        Dba::write($sql);
+        
+        $id = Dba::insert_id();
+
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        return true;
+    }
+    
+    /**
+     * update_360019
+     *
+     * Add Show number of times a song was played preference
+     */
+    public static function update_360019() {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('show_played_times','0','Show # played',25,'string','interface')";
         Dba::write($sql);
         
         $id = Dba::insert_id();
