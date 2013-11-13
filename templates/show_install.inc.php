@@ -76,7 +76,7 @@ require $prefix . '/templates/install_header.inc.php';
     <td><input type="checkbox" name="existing_db" value="1" /></td>
 </tr>
 <tr>
-    <td>&nbsp;</td>
+    <td><input type="submit" name="skip_admin" value="<?php echo T_('Skip'); ?>" /></td>
     <td><input type="submit" value="<?php echo T_('Insert Database'); ?>" /></td>
 </tr>
 </table>
