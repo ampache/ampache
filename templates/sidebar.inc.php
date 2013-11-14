@@ -57,7 +57,7 @@ $web_path = Config::get('web_path');
     }
 ?>
 <li id="sb_tab_logout" class="sb1">
-    <a href="<?php echo Config::get('web_path'); ?>/logout.php" id="sidebar_logout" >
+    <a target="_top" href="<?php echo Config::get('web_path'); ?>/logout.php" id="sidebar_logout" >
     <?php echo UI::get_icon('logout', T_('Logout')); ?>
     </a>
 </li>

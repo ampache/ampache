@@ -346,7 +346,6 @@ else if ($transcode_to) {
 }
 
 if ($transcode) {
-    header('Accept-Ranges: none');
     $transcoder = Stream::start_transcode($media, $transcode_to);
     $fp = $transcoder['handle'];
     $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
@@ -356,8 +355,27 @@ else if (!in_array('native', $valid_types)) {
     exit();
 }
 else {
-    header('Accept-Ranges: bytes');
     $fp = fopen($media->file, 'rb');
+}
+
+if ($transcode) {
+    // Content-length guessing if required by the player.
+    // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
+    // Should also support video, but video implementation as to be reviewed first!
+    if (get_class($media) == 'Song' && $_REQUEST['content_length'] == 'required') {
+        $max_bitrate = Stream::get_allowed_bitrate($media);
+        if ($media->time > 0 && $max_bitrate > 0) {
+            $stream_size = $media->time * $max_bitrate * 1000;
+        } else {
+            debug_event('play', 'Bad media duration / Max bitrate. Content-length calculation skipped.', 5);
+            $stream_size = null;
+        }
+    } else {
+        $stream_size = null;
+    }
+}
+else {
+    $stream_size = $media->size;
 }
 
 if (!is_resource($fp)) {
@@ -368,13 +386,6 @@ if (!is_resource($fp)) {
 // Put this song in the now_playing table only if it's a song for now...
 if (get_class($media) == 'Song') {
     Stream::insert_now_playing($media->id,$uid,$media->time,$sid,get_class($media));
-}
-
-if ($transcode) {
-    $stream_size = null;
-}
-else {
-    $stream_size = $media->size;
 }
 
 // Handle Content-Range
@@ -391,21 +402,31 @@ if ($start > 0 || $end > 0 ) {
         $stream_size = $media->size - $start;
     }
 
-    if ($transcode) {
-        debug_event('play', 'Bad client behaviour. Content-Range header received, which we cannot fulfill due to transcoding', 2);
-        $stream_size = null;
+    if ($stream_size == null) {
+        debug_event('play', 'Content-Range header received, which we cannot fulfill due to unknown final length (transcoding?)', 2);
     }
     else {
-        debug_event('play', 'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size, 5);
-        fseek($fp, $start);
+        if($transcoding) {
+            debug_event('play', 'We should transcode only for a calculated frame range, but not yet supported here.', 2);
+				$stream_size = null;
+        } else {
+            debug_event('play', 'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size, 5);
+            fseek($fp, $start);
 
-        $range = $start . '-' . $end . '/' . $media->size;
-        header('HTTP/1.1 206 Partial Content');
-        header('Content-Range: bytes ' . $range);
+            $range = $start . '-' . $end . '/' . $media->size;
+            header('HTTP/1.1 206 Partial Content');
+            header('Content-Range: bytes ' . $range);
+        }
     }
 }
 else {
     debug_event('play','Starting stream of ' . $media->file . ' with size ' . $media->size, 5);
+}
+
+if ($transcode) {
+    header('Accept-Ranges: none');
+} else {
+    header('Accept-Ranges: bytes');
 }
 
 $mime = $transcode 

@@ -357,8 +357,14 @@ class Stream_Playlist {
      * Creates an html5 player.
      */
     public function create_html5_player() {
-        require Config::get('prefix') . '/templates/create_html5_player.inc.php';       
-    }
+    
+        if (Config::get("iframes")) {
+            require Config::get('prefix') . '/templates/create_html5_player_embedded.inc.php';  
+        } else {
+            require Config::get('prefix') . '/templates/create_html5_player.inc.php';
+        }
+        
+    }  // create_html5_player
 
     /**
      * create_localplay
