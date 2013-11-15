@@ -337,46 +337,50 @@ class VlcPlayer {
      */    
     private function sendCommand($cmd, $args) {
 
-          $fp = fsockopen($this->host, $this->port, $errno, $errstr); 
+        $fp = fsockopen($this->host, $this->port, $errno, $errstr); 
 
-          if(!$fp) {
-                debug_event('vlc',"VlcPlayer: $errstr ($errno)",'1');
+        if(!$fp) {
+            debug_event('vlc',"VlcPlayer: $errstr ($errno)",'1');
             return null; 
-          } 
+        } 
 
         // Define the base message  
         $msg = "GET /requests/$cmd";              
 
         // Foreach our arguments 
         foreach ($args AS $key => $val) {
-            $msg = $msg . "$key=$val";                    
+            $msg .= "$key=$val";                    
         }
 
-              $msg = $msg . " HTTP/1.0\r\n\r\n";  
+        $msg .= " HTTP/1.0\r\n";
+        
+        // Basic authentication
+        if (!empty($this->password)) {
+            $b64pwd = base64_encode(':' . $this->password);
+            $msg .= "Authorization: Basic " . $b64pwd . "\r\n";
+        }
+        
+        $msg .= "\r\n";
                        
-            fputs($fp, $msg);
+        fputs($fp, $msg);
         $data = '';
         $header = "";
-             // here the header is split from the xml to avoid problems
-            do // loop until the end of the header
-               {
-                $header .= fgets ( $fp );
-
-               } while ( strpos ( $header, "\r\n\r\n" ) === false );
+        // here the header is split from the xml to avoid problems
+        do // loop until the end of the header
+        {
+            $header .= fgets ( $fp );
+        } while ( strpos ( $header, "\r\n\r\n" ) === false );
 
         // now put the body in variable $data
-
-             while ( ! feof ( $fp ) )
-                {
-                  $data .= fgets ( $fp );
-                }
+        while ( ! feof ( $fp ) )
+        {
+            $data .= fgets ( $fp );
+        }
         
-          fclose($fp);
+        fclose($fp);
 
         // send to xml parser and make an array
-        
         $result = $this->xmltoarray($data);
-        
         
         return $result; 
 

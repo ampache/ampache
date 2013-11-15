@@ -44,7 +44,7 @@
 <?php Ajax::end_container(); ?>
   <li><h4><?php echo T_('Playlist'); ?></h4>
     <ul class="sb3" id="sb_home_info">
-      <li id="sb_home_info_CurrentlyPlaying"><a href="<?php echo $web_path; ?>/index.php"><?php echo T_('Currently Playing'); ?></a></li>
+      <li id="sb_home_info_CurrentlyPlaying"><a href="<?php echo Config::get('web_path') . ((Config::get('iframes')) ? '/?framed=1' : ''); ?>"><?php echo T_('Currently Playing'); ?></a></li>
 <?php if (Config::get('allow_democratic_playback')) { ?>
       <li id="sb_home_democratic_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo T_('Democratic'); ?></a></li>
 <?php } ?>

@@ -97,7 +97,7 @@ hr {
 ***********************************************/
 #maincontainer
 {
-	width:1315px;
+	width:100%;
 }
 
 #sidebar
@@ -109,7 +109,8 @@ hr {
 {
 	margin-top:32px;
 	margin-left:160px;
-	width:945px;
+	margin-right:230px;
+	width:auto;
 }
 
 .box
@@ -121,16 +122,19 @@ hr {
 {
 	width:180px;
 	margin-top:32px;
-	margin-left:1120px;
-	position:absolute;
+	right:10px;
+    /* Set position to fixed to 'pin' the playlist */
+	/*position:fixed;*/
+    position: absolute;
 	clear:both;
 }
 
 #footer
 {
-	width: 1100px;
+	width: auto;
 	margin-top: 20px;
 	margin-bottom: 120px;
+	margin-right: 230px;
 }
 
 /***********************************************
@@ -141,7 +145,14 @@ hr {
 	background:#222;
 	line-height:30px;
 	height:50px;
-	padding:7px;
+	padding-top:7px;
+	padding-bottom:7px;
+	width: 100%;
+}
+
+#headerbox
+{
+	margin-right: 7px;
 }
 
 #header .box-inside
@@ -272,6 +283,16 @@ hr {
 	border-radius:2px;
 	padding:4px;
 	width: 115px;
+}
+
+#sidebar-tabs #catalog_select
+{
+    width:130px;
+}
+
+/* Localplay */
+.active_instance {
+    border: 1px inset #99ccff;
 }
 
 /***********************************************
@@ -1027,6 +1048,7 @@ ins,#rightbar a
 #header #headerlogo
 {
 	float:left;
+	margin-left: 7px;
 }
 
 #header .box-inside div,#header .box-inside form,#rightbar #rb_action li,.star-rating li

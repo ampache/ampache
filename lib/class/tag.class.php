@@ -412,15 +412,19 @@ class Tag extends database_object {
      * get_tag_objects
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
      */
-    public static function get_tag_objects($type,$tag_id) {
+    public static function get_tag_objects($type,$tag_id,$count='',$offset='') {
 
         if (!self::validate_type($type)) { return array(); }
-
-        $tag_id = Dba::escape($tag_id);
+        
+        if ($count) {
+            $limit_sql = "LIMIT ";
+            if ($offset) $limit_sql .= intval($offset) . ',';
+            $limit_sql .= intval($count);
+        }
 
         $sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` " .
-            "WHERE `tag_map`.`tag_id`='$tag_id' AND `tag_map`.`object_type`='$type'";
-        $db_results = Dba::read($sql);
+            "WHERE `tag_map`.`tag_id` = ? AND `tag_map`.`object_type` = ? $limit_sql";
+        $db_results = Dba::read($sql, array($tag_id, $type));
 
         $results = array();
 
@@ -438,13 +442,15 @@ class Tag extends database_object {
      * This is a non-object non type depedent function that just returns tags
      * we've got, it can take filters (this is used by the tag cloud)
      */
-    public static function get_tags($limit,$filters=array()) {
+    public static function get_tags($limit = 0,$filters=array()) {
 
         $sql = "SELECT `tag_map`.`tag_id`,COUNT(`tag_map`.`object_id`) AS `count` " .
             "FROM `tag_map` " .
             "LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " .
-            "GROUP BY `tag`.`name` ORDER BY `count` DESC " .
-            "LIMIT $limit";
+            "GROUP BY `tag`.`name` ORDER BY `count` DESC ";
+        if ($limit >0) {
+            $sql .= " LIMIT $limit";
+        }
         $db_results = Dba::read($sql);
 
         $results = array();

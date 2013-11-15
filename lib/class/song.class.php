@@ -310,6 +310,9 @@ class Song extends database_object implements media {
             case 'm4a':
                 return 'audio/mp4';
             break;
+            case 'aacp':
+                return 'audio/aacp';
+            break;
             case 'mpc':
                 return 'audio/x-musepack';
             break;
@@ -1022,8 +1025,12 @@ class Song extends database_object implements media {
     } // get_recently_played
 
     public function get_stream_types() {
+        return Song::get_stream_types_for_type($this->type);
+    } // end stream_types 
+    
+    public static function get_stream_types_for_type($type) {
         $types = array();
-        $transcode = Config::get('transcode_' . $this->type);
+        $transcode = Config::get('transcode_' . $type);
 
         if ($transcode != 'required') {
             $types[] = 'native';

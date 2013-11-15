@@ -27,7 +27,7 @@ UI::show_header();
 // Switch on Action
 switch ($_REQUEST['action']) {
     case 'show_create':
-        if (!Access::check('interface','25')) {
+        if (!Access::check('interface', 75)) {
             UI::access_denied();
             exit;
         }
@@ -36,7 +36,7 @@ switch ($_REQUEST['action']) {
 
     break;
     case 'create':
-        if (!Access::check('interface','25') || Config::get('demo_mode')) {
+        if (!Access::check('interface', 75) || Config::get('demo_mode')) {
             UI::access_denied();
             exit;
         }

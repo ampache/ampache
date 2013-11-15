@@ -35,10 +35,10 @@ $web_path = Config::get('web_path');
 </colgroup>
 <tr class="th-top">
     <th class="cel_add"><?php echo T_('Add'); ?></th>
-    <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&type=video&sort=title', T_('Title'),'sort_video_title'); ?></th>
-    <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&type=video&sort=codec', T_('Codec'),'sort_video_codec'); ?></th>
-    <th class="cel_resolution"><?php echo Ajax::text('?page=browse&action=set_sort&type=video&sort=resolution', T_('Resolution'),'sort_video_rez'); ?></th>
-    <th class="cel_length"><?php echo Ajax::text('?page=browse&action=set_sort&type=video&sort=length', T_('Time'),'sort_video_length'); ?></th>
+    <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'),'sort_video_title'); ?></th>
+    <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'),'sort_video_codec'); ?></th>
+    <th class="cel_resolution"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'),'sort_video_rez'); ?></th>
+    <th class="cel_length"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=length', T_('Time'),'sort_video_length'); ?></th>
     <th class="cel_tags"><?php echo T_('Tags'); ?></th>
     <th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
@@ -59,10 +59,10 @@ foreach ($object_ids as $video_id) {
 <?php } ?>
 <tr class="th-bottom">
     <th class="cel_add"><?php echo T_('Add'); ?></th>
-        <th class="cel_title"><?php echo T_('Title'); ?></th>
-    <th class="cel_codec"><?php echo T_('Codec'); ?></th>
-    <th class="cel_resolution"><?php echo T_('Resolution'); ?></th>
-    <th class="cel_length"><?php echo Ajax::text('?page=browse&action=set_sort&type=video&sort=length', T_('Time'),'sort_video_length_bottom'); ?></th>
+    <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'),'sort_video_title'); ?></th>
+    <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'),'sort_video_codec'); ?></th>
+    <th class="cel_resolution"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'),'sort_video_rez'); ?></th>
+    <th class="cel_length"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=length', T_('Time'),'sort_video_length'); ?></th>
     <th class="cel_tags"><?php echo T_('Tags'); ?></th>
     <th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>

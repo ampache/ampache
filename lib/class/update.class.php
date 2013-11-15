@@ -23,61 +23,34 @@
 /**
  * Update Class
  *
- * this class handles updating from one version of
- * ampache to the next. Versions are a 6 digit number
- * <pre>
- *  220000
- *  ^
- *  Major Revision
- *
- *  220000
- *   ^
- *  Minor Revision
- * </pre>
- *
- * The last 4 digits are a build number...
- * If Minor can't go over 9 Major can go as high as we want
- *
+ * This class mainly handles schema updates for the database.
+ * Versions are a monotonically increasing integer: First column(s) are the
+ * major version, followed by a single column for the minor version and four
+ * columns for the build number. 3.6 build 1 is 360000; 10.9 build 17 is
+ * 1090017.
  */
+
 class Update {
 
     public $key;
     public $value;
     public static $versions; // array containing version information
 
-    /**
-     * Update
-     * Constructor, pulls out information about the desired key
+    /*
+     * Constructor
+     *
+     * This should never be called
      */
-    function Update ( $key=0 ) {
-
-        if (!$key) { return false; }
-
-        $this->key = intval($key);
-        $info = $this->_get_info();
-        $this->value = $info['value'];
-        $this->versions = $this->populate_version();
-
-    } // constructor
-
-    /**
-     * _get_info
-     * gets the information for the zone
-     */
-    private function _get_info() {
-
-        $sql = "SELECT * FROM `update_info` WHERE `key`='$this->key'";
-        $db_results = Dba::read($sql);
-
-        return Dba::fetch_assoc($db_results);
-
-    } // _get_info
+    private function __construct() {
+        // static class 
+    }
 
     /**
      * get_version
-     * this checks to see what version you are currently running
-     * because we may not have the update_info table we have to check
-     * for it's existance first.
+     *
+     * This checks to see what version you are currently running.
+     * Because we may not have the update_info table we have to check
+     * for its existence first.
      */
     public static function get_version() {
 
@@ -109,69 +82,39 @@ class Update {
 
     /**
      * format_version
-     * make the version number pretty
+     *
+     * Make the version number pretty.
      */
     public static function format_version($data) {
-
-        $new_version = substr($data,0,strlen($data) - 5) . "." . substr($data,strlen($data)-5,1) . " Build:" .
-                substr($data,strlen($data)-4,strlen($data));
+        $new_version =
+            substr($data, 0, strlen($data) - 5) . '.' .
+            substr($data, strlen($data) - 5, 1) . ' Build:' .
+            substr($data, strlen($data) - 4, strlen($data));
 
         return $new_version;
-
-    } // format_version
+    }
 
     /**
      * need_update
-     * checks to see if we need to update
-     * ampache at all
+     *
+     * Checks to see if we need to update ampache at all.
      */
     public static function need_update() {
-
         $current_version = self::get_version();
 
         if (!is_array(self::$versions)) {
             self::$versions = self::populate_version();
         }
 
-        /*
-           Go through the versions we have and see if
-           we need to apply any updates
-        */
+        // Iterate through the versions and see if we need to apply any updates
         foreach (self::$versions as $update) {
             if ($update['version'] > $current_version) {
                 return true;
             }
-
-        } // end foreach version
+        }
 
         return false;
-
-    } // need_update
-
-    /**
-     * plugins_installed
-     * This function checks to make sure that there are no plugins
-     * installed before allowing you to run the update. this is
-     * to protect the integrity of the database
-     */
-    public static function plugins_installed() {
-
-        /* Pull all version info */
-        $sql = "SELECT * FROM `update_info`";
-        $db_results = Dba::read($sql);
-
-        while ($results = Dba::fetch_assoc($db_results)) {
-
-            /* We have only one allowed string */
-            if ($results['key'] != 'db_version') {
-                return false;
-            }
-
-        } // while update_info results
-
-        return true;
-
-    } // plugins_installed
+    } 
 
     /**
      * populate_version
@@ -341,6 +284,12 @@ class Update {
         $update_string = '- Update stream_playlist table to address performance issues.<br />';
         $version[] = array('version' => '360013', 'description' => $update_string);
 
+        $update_string = '- Increase the length of sessionids again.<br />';
+        $version[] = array('version' => '360014', 'description' => $update_string);
+        
+        $update_string = '- Add iframes parameter to preferences.<br />';
+        $version[] = array('version' => '360015', 'description' => $update_string);
+
         return $version;
 
     }
@@ -406,13 +355,6 @@ class Update {
 
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
-
-        /* Verify that there are no plugins installed
-        //FIXME: provide a link to remove all plugins, otherwise this could turn into a catch 22
-        if (!$self::plugins_installed()) {
-            $GLOBALS['error']->add_error('general', T_('Plugins detected, please remove all Plugins and try again'));
-            return false;
-        } */
 
         $methods = array();
 
@@ -1525,5 +1467,39 @@ class Update {
     public static function update_360013() {
         return Dba::write('ALTER TABLE `stream_playlist` ENGINE=MyISAM');
     }
+
+    /**
+     * update_360014
+     *
+     * PHP session IDs are an ever-growing beast.
+     */
+    public static function update_360014() {
+        $retval = true;
+
+        $retval = Dba::write('ALTER TABLE `stream_playlist` CHANGE `sid` `sid` VARCHAR(256)') ? $retval : false;
+        $retval = Dba::write('ALTER TABLE `tmp_playlist` CHANGE `session` `session` VARCHAR(256)') ? $retval : false;
+        $retval = Dba::write('ALTER TABLE `session` CHANGE `id` `id` VARCHAR(256) NOT NULL') ? $retval : false;
+
+        return $retval;
+    }
+    
+    /**
+     * update_360015
+     *
+     * This update inserts the Iframes preference...
+     */
+    public static function update_360015() {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('iframes','0','Iframes',25,'boolean','interface')";
+        Dba::write($sql);
+        
+        $id = Dba::insert_id();
+
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        return true;
+    }
+
 }
 ?>

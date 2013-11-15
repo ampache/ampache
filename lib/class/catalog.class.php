@@ -75,7 +75,6 @@ class Catalog extends database_object {
      */
     private function _create_filecache() {
         if (count($this->_filecache) == 0) {
-            $catalog_id = Dba::escape($this->id);
             // Get _EVERYTHING_
             $sql = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
@@ -575,6 +574,29 @@ class Catalog extends database_object {
 
         return $results;
     }
+    
+    /**
+    * get_artist
+    *
+    * This returns an array of ids of artists that have songs in the catalogs parameter
+    */
+    public static function get_artists($catalogs = null) {
+        if(is_array($catalogs) && count($catalogs)) {
+            $catlist = '(' . implode(',', $catalogs) . ')';
+            $sql_where = "WHERE `song`.`catalog` IN $catlist";
+        }
+        
+        $sql = "SELECT `artist`.id, `artist`.`name` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.artist ORDER BY `artist`.`name`";
+        
+        $results = array();
+        $db_results = Dba::read($sql);
+
+        while ($r = Dba::fetch_assoc($db_results)) {
+            $results[] = Artist::construct_from_array($r);
+        }
+        
+        return $results;
+    }
 
     /**
      * gather_art
@@ -753,8 +775,8 @@ class Catalog extends database_object {
     private function update_last_update() {
 
         $date = time();
-        $sql = "UPDATE `catalog` SET `last_update`='$date' WHERE `id`='$this->id'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `catalog` SET `last_update` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($date, $this->id));
 
     } // update_last_update
 
@@ -765,8 +787,8 @@ class Catalog extends database_object {
     public function update_last_add() {
 
         $date = time();
-        $sql = "UPDATE `catalog` SET `last_add`='$date' WHERE `id`='$this->id'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `catalog` SET `last_add` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($date, $this->id));
 
     } // update_last_add
 
@@ -777,8 +799,8 @@ class Catalog extends database_object {
     public function update_last_clean() {
 
         $date = time();
-        $sql = "UPDATE `catalog` SET `last_clean`='$date' WHERE `id`='$this->id'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `catalog` SET `last_clean` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($date, $this->id));
 
     } // update_last_clean
 
@@ -788,16 +810,10 @@ class Catalog extends database_object {
      */
     public static function update_settings($data) {
 
-        $id    = Dba::escape($data['catalog_id']);
-        $name    = Dba::escape($data['name']);
-        $rename    = Dba::escape($data['rename_pattern']);
-        $sort    = Dba::escape($data['sort_pattern']);
-        $remote_username = Dba::escape($data['remote_username']);
-        $remote_password = Dba::escape($data['remote_password']);
-
-        $sql = "UPDATE `catalog` SET `name`='$name', `rename_pattern`='$rename', " .
-            "`sort_pattern`='$sort', `remote_username`='$remote_username', `remote_password`='$remote_password' WHERE `id` = '$id'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `catalog` SET `name` = ?, `rename_pattern` = ?, " .
+            "`sort_pattern` = ?, `remote_username` = ?, `remote_password` = ? WHERE `id` = ?";
+        $params = array($data['name'], $data['rename_pattern'], $data['sort_pattern'], $data['remote_username'], $data['remote_password'], $data['catalog_id']);
+        $db_results = Dba::write($sql, $params);
 
         return true;
 
@@ -1486,25 +1502,17 @@ class Catalog extends database_object {
         $tag_name = vainfo::get_tag_type($vainfo->tags);
         $results = vainfo::clean_tag_info($vainfo->tags,$tag_name,$file);
 
-
-        $file         = Dba::escape($file);
-        $catalog_id     = Dba::escape($this->id);
-        $title         = Dba::escape($results['title']);
-        $vcodec     = $results['video_codec'];
-        $acodec     = $results['audio_codec'];
         $rezx         = intval($results['resolution_x']);
         $rezy         = intval($results['resolution_y']);
-        $filesize     = Dba::escape($filesize);
-        $time         = Dba::escape($results['time']);
-        $mime        = Dba::escape($results['mime']);
         // UNUSED CURRENTLY
-        $comment    = Dba::escape($results['comment']);
-        $year        = Dba::escape($results['year']);
-        $disk        = Dba::escape($results['disk']);
+        $comment    = $results['comment'];
+        $year        = $results['year'];
+        $disk        = $results['disk'];
 
         $sql = "INSERT INTO `video` (`file`,`catalog`,`title`,`video_codec`,`audio_codec`,`resolution_x`,`resolution_y`,`size`,`time`,`mime`) " .
-            " VALUES ('$file','$catalog_id','$title','$vcodec','$acodec','$rezx','$rezy','$filesize','$time','$mime')";
-        $db_results = Dba::write($sql);
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $params = array($file, $this->id, $results['title'], $results['video_codec'], $results['audio_codec'], $rezx, $rezy, $filesize, $results['time'], $results['mime']);
+        $db_results = Dba::write($sql, $params);
 
         return true;
 
@@ -1541,10 +1549,8 @@ class Catalog extends database_object {
             return true;
         }
 
-        $full_file = Dba::escape($full_file);
-
-        $sql = "SELECT `id` FROM `song` WHERE `file` = '$full_file'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `id` FROM `song` WHERE `file` = ?";
+        $db_results = Dba::read($sql, array($full_file));
 
         //If it's found then return true
         if (Dba::fetch_row($db_results)) {
@@ -1641,23 +1647,21 @@ class Catalog extends database_object {
      */
     public static function delete($catalog_id) {
 
-        $catalog_id = Dba::escape($catalog_id);
-
         // First remove the songs in this catalog
-        $sql = "DELETE FROM `song` WHERE `catalog` = '$catalog_id'";
-        $db_results = Dba::write($sql);
+        $sql = "DELETE FROM `song` WHERE `catalog` = ?";
+        $db_results = Dba::write($sql, array($catalog_id));
 
         // Only if the previous one works do we go on
         if (!$db_results) { return false; }
 
-        $sql = "DELETE FROM `video` WHERE `catalog` = '$catalog_id'";
-        $db_results = Dba::write($sql);
+        $sql = "DELETE FROM `video` WHERE `catalog` = ?";
+        $db_results = Dba::write($sql, array($catalog_id));
 
         if (!$db_results) { return false; }
 
         // Next Remove the Catalog Entry it's self
-        $sql = "DELETE FROM `catalog` WHERE `id` = '$catalog_id'";
-        $db_results = Dba::write($sql);
+        $sql = "DELETE FROM `catalog` WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($catalog_id));
 
         // Run the cleaners...
         self::gc();
@@ -1671,15 +1675,17 @@ class Catalog extends database_object {
     public function export($type) {
 
         // Select all songs in catalog
+        $params = array();
         if($this->id) {
             $sql = 'SELECT `id` FROM `song` ' .
-                "WHERE `catalog`='$this->id' " .
+                "WHERE `catalog`= ? " .
                 'ORDER BY `album`, `track`';
+            $params[] = $this->id;
         }
         else {
             $sql = 'SELECT `id` FROM `song` ORDER BY `album`, `track`';
         }
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, $params);
 
         switch ($type) {
             case 'itunes':
