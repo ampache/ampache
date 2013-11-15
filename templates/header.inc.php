@@ -40,13 +40,11 @@ if (Config::get('use_rss')) { ?>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo Config::get('site_charset'); ?>" />
 <title><?php echo scrub_out(Config::get('site_title')); ?> - <?php echo $location['title']; ?></title>
 <?php require_once Config::get('prefix') . '/templates/stylesheets.inc.php'; ?>
-<<<<<<< HEAD
 <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery/jquery-ui-1.10.3.min.css" type="text/css" media="screen" />
 </head>
 <body>
 <script src="<?php echo $web_path; ?>/modules/jquery/jquery-1.9.1.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/jquery/jquery-ui-1.10.3.min.js" language="javascript" type="text/javascript"></script>
-=======
 <?php
 // If iframes, we check in javascript that parent container exist, otherwise we redirect to index. Otherwise HTML5 iframed Player will look broken.
 if (Config::get('iframes')) {
@@ -63,9 +61,9 @@ function forceIframe() {
 ?>
 </head>
 <body <?php echo (Config::get('iframes')) ? "onLoad='forceIframe();'" : ""; ?>>
-<script src="<?php echo $web_path; ?>/modules/prototype/prototype.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/jquery/jquery-1.9.1.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/jquery/jquery-ui-1.10.3.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/tinybox/tinybox.js" language="javascript" type="text/javascript"></script>
->>>>>>> 346b25516d711de989bc3877c6c372439dfa58d3
 <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <!-- rfc3514 implementation -->

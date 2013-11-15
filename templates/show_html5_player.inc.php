@@ -60,16 +60,12 @@ if ($iframed) {
 ?>
 <link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/jplayer.midnight.black.css" type="text/css" />
 <?php require_once Config::get('prefix') . '/templates/stylesheets.inc.php'; ?>
-<<<<<<< HEAD
-<script src="<?php echo $web_path; ?>/modules/jquery/jquery-1.9.1.js" language="javascript" type="text/javascript"></script>
-=======
 <?php
 }
 ?>
 <script src="<?php echo Config::get('web_path'); ?>/modules/jplayer/jquery.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo Config::get('web_path'); ?>/modules/jplayer/jquery.jplayer.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo Config::get('web_path'); ?>/modules/jplayer/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
->>>>>>> 346b25516d711de989bc3877c6c372439dfa58d3
 <script type="text/javascript">
     $(document).ready(function(){
         var myPlaylist = new jPlayerPlaylist({
@@ -228,20 +224,6 @@ if ($iframed) {
             <div class="jp-play-bar"></div>
           </div>
         </div>
-<<<<<<< HEAD
-        <div id="title"><?php echo T_('Loading...') ?></div>
-        <div id="album"><?php echo T_('Loading...') ?></div>
-        <div id="artist"><?php echo T_('Loading...') ?></div>
-        <div id="progress_text"><?php echo T_('Loading...') ?></div>
-        <button id="play" accesskey="<?php echo T_dgettext('html5_player_accesskey', 'p') ?>"><?php echo T_('Play') ?></button>
-        <button id="pause" accesskey="<?php echo T_dgettext('html5_player_accesskey', 'p') ?>"><?php echo T_('Pause') ?></button>
-        <button id="previous" accesskey="<?php echo T_dgettext('html5_player_accesskey', ',') ?>"><?php echo T_('Previous') ?></button>
-        <button id="next" accesskey="<?php echo T_dgettext('html5_player_accesskey', '.') ?>"><?php echo T_('Next') ?></button>
-        <button id="stop" accesskey="<?php echo T_dgettext('html5_player_accesskey', 'o') ?>"><?php echo T_('Stop') ?></button>
-    </div>
-    <div>
-        <ul id="playlist">
-=======
         <div class="jp-volume-bar">
           <div class="jp-volume-bar-value"></div>
         </div>
@@ -252,7 +234,6 @@ if ($iframed) {
             <li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="shuffle off">shuffle off</a></li>
             <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
             <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
->>>>>>> 346b25516d711de989bc3877c6c372439dfa58d3
         </ul>
       </div>
       <div class="jp-playlist">
