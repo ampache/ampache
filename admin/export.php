@@ -36,7 +36,7 @@ switch ($_REQUEST['action']) {
         // This may take a while
         set_time_limit(0);
 
-        $catalog = new Catalog($_REQUEST['export_catalog']);
+        $catalog = Catalog::create_from_id($_REQUEST['export_catalog']);
 
         // Clear everything we've done so far
         ob_end_clean();

@@ -301,6 +301,9 @@ class Update {
         
         $update_string = '- Add option to show number of times a song was played.<br />';
         $version[] = array('version' => '360019', 'description' => $update_string);
+        
+        $update_string = '- Catalog types are plugins now.<br />';
+        $version[] = array('version' => '360020', 'description' => $update_string);
 
         return $version;
 
@@ -1580,6 +1583,48 @@ class Update {
 
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         Dba::write($sql, array($id));
+
+        return true;
+    }
+    
+    /**
+     * update_360020
+     *
+     * Catalog types are plugins now
+     */
+    public static function update_360020() {
+        $sql = "SELECT `id`, `catalog_type`, `path`, `remote_username`, `remote_password` FROM `catalog`";
+        $db_results = Dba::read($sql);
+
+        $c = Catalog::create_catalog_type('local');
+        $c->install();
+        $c = Catalog::create_catalog_type('remote');
+        $c->install();
+        
+        while ($results = Dba::fetch_assoc($db_results)) {
+            if ($results['catalog_type'] == 'local') {
+                $sql = "INSERT INTO `catalog_local` (`path`, `catalog_id`) VALUES (?, ?)";
+                Dba::write($sql, array($results['path'], $results['id']));
+            } elseif ($results['catalog_type'] == 'remote') {
+                $sql = "INSERT INTO `catalog_remote` (`uri`, `username`, `password`, `catalog_id`) VALUES (?, ?, ?, ?)";
+                Dba::write($sql, array($results['path'], $results['remote_username'], $results['remote_password'], $results['id']));
+            }
+        }
+        
+        $sql = "ALTER TABLE `catalog` DROP `path`, DROP `remote_username`, DROP `remote_password`";
+        $retval = Dba::write($sql);
+        
+        $sql = "ALTER TABLE `catalog` MODIFY COLUMN `catalog_type` varchar(128)";
+        $retval = Dba::write($sql);
+        
+        $sql = "UPDATE `artist` SET `mbid` = null WHERE `mbid` = ''";
+        Dba::write($sql);
+        
+        $sql = "UPDATE `album` SET `mbid` = null WHERE `mbid` = ''";
+        Dba::write($sql);
+        
+        $sql = "UPDATE `song` SET `mbid` = null WHERE `mbid` = ''";
+        Dba::write($sql);
 
         return true;
     }

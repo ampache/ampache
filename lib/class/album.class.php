@@ -196,6 +196,8 @@ class Album extends database_object {
     public static function check($name, $year = 0, $disk = 0, $mbid = null,
         $readonly = false) {
         
+        if ($mbid == '') $mbid = null;
+        
         $trimmed = Catalog::trim_prefix(trim($name));
         $name = $trimmed['string'];
         $prefix = $trimmed['prefix'];
@@ -272,7 +274,7 @@ class Album extends database_object {
 
         $sql = "SELECT `id` FROM `song` WHERE `album` = ? ";
         $params = array($this->id);
-        if ($artist) {
+        if (strlen($artist)) {
             $sql .= "AND `artist` = ?";
             $params[] = $artist;
         }

@@ -118,7 +118,6 @@ switch($_REQUEST['action']) {
 
         /* Get the artist */
         $artist = new Artist($_REQUEST['artist']);
-        $catalog = new Catalog();
 
         //check if we've been given a target
         if ((isset($_POST['artist_id']) && $_POST['artist_id'] != $artist->id ) || (isset($_POST['artist_name']) &&  $_POST['artist_name'] != "")) {

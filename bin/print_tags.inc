@@ -48,7 +48,7 @@ $sql = "SELECT `catalog`.`id` FROM `song` INNER JOIN `catalog` ON `song`.`catalo
 $db_results = Dba::read($sql);
 $results = Dba::fetch_assoc($db_results);
 
-$catalog = new Catalog($results['id']);
+$catalog = Catalog::create_from_id($results['id']);
 
 $dir_pattern = $catalog->sort_pattern;
 $file_pattern = $catalog->rename_pattern;

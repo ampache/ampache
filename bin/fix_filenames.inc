@@ -63,14 +63,15 @@ if (strlen($input) > 0) { $source_encoding = trim($input); }
 printf (T_('Using %s as source character set'), $source_encoding);
 echo "\n";
 
-$sql = "SELECT * FROM `catalog` WHERE `catalog_type`='local'";
+$sql = "SELECT id FROM `catalog` WHERE `catalog_type`='local'";
 $db_results = Dba::read($sql);
 
 while ($row = Dba::fetch_assoc($db_results)) {
 
-    printf(T_('Checking %s (%s)'), $row['name'], $row['path']);
+    $catalog = Catalog::create_from_id($row['0']);
+    printf(T_('Checking %s (%s)'), $catalog->name, $catalog->path);
     echo "\n";
-    charset_directory_correct($row['path']);
+    charset_directory_correct($catalog->path);
 
 } // end of the catalogs
 

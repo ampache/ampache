@@ -300,6 +300,8 @@ class Artist extends database_object {
         $name = $trimmed['string'];
         $prefix = $trimmed['prefix'];
         
+        if ($mbid == '') $mbid = null;
+        
         if (!$name) {
             $name = T_('Unknown (Orphaned)');
             $prefix = null;

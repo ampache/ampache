@@ -27,7 +27,7 @@
  * it contains functions for creating/listing/updated the catalogs.
  *
  */
-class Catalog extends database_object {
+abstract class Catalog extends database_object {
 
     public $name;
     public $last_update;
@@ -37,7 +37,6 @@ class Catalog extends database_object {
     public $rename_pattern;
     public $sort_pattern;
     public $catalog_type;
-    public $path;
 
     /* This is a private var that's used during catalog builds */
     private $_playlists = array();
@@ -49,23 +48,141 @@ class Catalog extends database_object {
     private static $albums    = array();
     private static $artists    = array();
     private static $tags    = array();
-
+    
+    abstract public function get_type();
+    abstract public function get_description();
+    abstract public function get_version();
+    abstract public function is_installed();
+    abstract public function install();
+    abstract public function uninstall();
+    abstract public function run_add($options);
+    abstract public function add_to_catalog();
+    abstract public function clean_catalog_proc();
+    abstract public function catalog_fields();
+    abstract public function get_rel_path($file_path);
+    abstract public function prepare_media($media);
+    
+    public static function create_from_id($id) {
+        
+        $sql = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?';
+        $db_results = Dba::read($sql, array($id));
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return self::create_catalog_type($results['catalog_type'], $id);
+        }
+        
+        return null;
+    }
+    
     /**
-     * Constructor
-     *
-     * Catalog class constructor, pulls catalog information
+     * create_catalog_type
+     * This function attempts to create a catalog type
+     * all Catalog modules should be located in /modules/catalog/<name>.class.php
      */
-    public function __construct($catalog_id = null) {
-        if (!$catalog_id) {
+    public static function create_catalog_type($type, $id=0) {
+
+        if (!$type) { return false; }
+
+        $filename = Config::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
+        $include = require_once $filename;
+
+        if (!$include) {
+            /* Throw Error Here */
+            debug_event('catalog', 'Unable to load ' . $type . ' catalog type', '2');
             return false;
+        } // include
+        else {
+            $class_name = "Catalog_" . $type;
+            if ($id > 0) {
+                $catalog = new $class_name($id);
+            } else {
+                $catalog = new $class_name();
+            }
+            if (!($catalog instanceof Catalog)) {
+                debug_event('catalog', $type . ' not an instance of Catalog abstract, unable to load', '1');
+                return false;
+            }
+            return $catalog;
         }
 
-        $this->id = intval($catalog_id);
-        $info = $this->get_info($catalog_id);
+    } // create_catalog_type
+    
+    public static function show_catalog_types($divback = 'catalog_type_fields') {
 
-        foreach ($info as $key=>$value) {
-            $this->$key = $value;
+        echo "<script language=\"javascript\" type=\"text/javascript\">" .
+            "var type_fields = new Array();" .
+            "type_fields['none'] = '';";
+        $seltypes = '<option value="none">[Select]</option>';
+        $types = self::get_catalog_types();
+        foreach ($types as $type) {
+            $seltypes .= '<option value="' . $type . '">' . $type . '</option>';
+            echo "type_fields['" . $type . "'] = \"";
+            $catalog = self::create_catalog_type($type);
+            $fields = $catalog->catalog_fields();
+            foreach ($fields as $key=>$field) {
+                echo "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td><input type='text' size='60' name='" . $key . "' /></td></tr>";
+            }
+            echo "\";";
         }
+
+        echo "function catalogTypeChanged() {" .
+            "var sel = document.getElementById('catalog_type');" .
+            "var seltype = sel.options[sel.selectedIndex].value;" .
+            "var ftbl = document.getElementById('" . $divback . "');" .
+            "ftbl.innerHTML = '<table class=\"tabledata\" cellpadding=\"0\" cellspacing=\"0\">' + type_fields[seltype] + '</table>';" .
+            "} </script>" .
+            "<select name=\"type\" id=\"catalog_type\" onChange=\"catalogTypeChanged();\">" . $seltypes . "</select>";
+    }
+    
+    /**
+     * get_catalog_types
+     * This returns the catalog types that are available
+     */
+    public static function get_catalog_types() {
+
+        /* First open the dir */
+        $handle = opendir(Config::get('prefix') . '/modules/catalog');
+
+        if (!is_resource($handle)) {
+            debug_event('catalog', 'Error: Unable to read catalog types directory', '1');
+            return array();
+        }
+
+        $results = array();
+
+        while ($file = readdir($handle)) {
+
+            if (substr($file, -11, 11) != 'catalog.php') { continue; }
+
+            /* Make sure it isn't a dir */
+            if (!is_dir($file)) {
+                /* Get the basename and then everything before catalog */
+                $filename = basename($file, '.catalog.php');
+                $results[] = $filename;
+            }
+        } // end while
+
+        return $results;
+
+    } // get_catalog_types
+    
+    public function get_info($id, $table = 'catalog') {
+        $info = parent::get_info($id, $table);
+
+        $table = 'catalog_' . $this->get_type();
+        $sql = "SELECT `id` FROM $table WHERE `catalog_id` = ?";
+        $db_results = Dba::read($sql, array($id));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+
+            $info_type = parent::get_info($results['id'], $table);
+            foreach ($info_type as $key => $value) {
+                if (!$info[$key]) {
+                    $info[$key] = $value;
+                }
+            }
+        }
+        
+        return $info;
     }
 
     /**
@@ -73,7 +190,7 @@ class Catalog extends database_object {
      *
      * This populates an array which is used to speed up the add process.
      */
-    private function _create_filecache() {
+    protected function _create_filecache() {
         if (count($this->_filecache) == 0) {
             // Get _EVERYTHING_
             $sql = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
@@ -96,40 +213,6 @@ class Catalog extends database_object {
     }
 
     /**
-     * get_from_path
-     *
-     * Try to figure out which catalog path most closely resembles this one.
-     * This is useful when creating a new catalog to make sure we're not
-     * doubling up here.
-     */
-    public static function get_from_path($path) {
-        // First pull a list of all of the paths for the different catalogs
-        $sql = "SELECT `id`,`path` FROM `catalog` WHERE `catalog_type`='local'";
-        $db_results = Dba::read($sql);
-
-        $catalog_paths = array();
-        $component_path = $path;
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $catalog_paths[$row['path']] = $row['id'];
-        }
-
-        // Break it down into its component parts and start looking for a catalog
-        do {
-            if ($catalog_paths[$component_path]) {
-                return $catalog_paths[$component_path];
-            }
-
-            // Keep going until the path stops changing
-            $old_path = $component_path;
-            $component_path = realpath($component_path . '/../');
-
-        } while (strcmp($component_path,$old_path) != 0);
-
-        return false;
-    }
-
-    /**
      * format
      *
      * This makes the object human-readable.
@@ -141,8 +224,6 @@ class Catalog extends database_object {
             '/admin/catalog.php?action=show_customize_catalog&catalog_id=' .
             $this->id . '" title="' . scrub_out($this->name) . '">' . 
             scrub_out($this->f_name) . '</a>';
-        $this->f_path = UI::truncate($this->path, 
-            Config::get('ellipse_threshold_title'));
         $this->f_update = $this->last_update 
             ? date('d/m/Y h:i', $this->last_update)
             : T_('Never');
@@ -206,105 +287,45 @@ class Catalog extends database_object {
     /**
      * create
      *
-     * This creates a new catalog entry and then returns the insert id.
-     * It checks to make sure this path is not already used before creating
-     * the catalog.
+     * This creates a new catalog entry and associate it to current instance
      */
     public static function create($data) {
-        // Clean up the path just in case
-        $path = rtrim(rtrim(trim($data['path']),'/'),'\\');
-
-        // Make sure the path is readable/exists
-        if ($data['type'] == 'local') {
-            if (!Core::is_readable($path)) {
-                debug_event('catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
-                Error::add('general', sprintf(T_('Error: %s is not readable or does not exist'), scrub_out($data['path'])));
-                return false;
-            }
-        }
-
-        // Make sure this path isn't already in use by an existing catalog
-        $sql = 'SELECT `id` FROM `catalog` WHERE `path` = ?';
-        $db_results = Dba::read($sql, array($path));
-
-        if (Dba::num_rows($db_results)) {
-            debug_event('catalog', 'Cannot add catalog with duplicate path ' . $path, 1);
-            Error::add('general', sprintf(T_('Error: Catalog with %s already exists'), $path));
-            return false;
-        }
 
         $name = $data['name'];
         $type = $data['type'];
         $rename_pattern = $data['rename_pattern'];
         $sort_pattern = $data['sort_pattern'];
-        $remote_username = $type == 'remote' ? $data['remote_username'] : '';
-        $remote_password = $type == 'remote' ? hash('sha256', $data['remote_password']) : '';
 
-        $sql = 'INSERT INTO `catalog` (`name`, `path`, `catalog_type`, ' .
-            '`rename_pattern`, `sort_pattern`, `remote_username`, ' .
-            '`remote_password`) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        $db_results = Dba::write($sql, array(
-            $name,
-            $path,
-            $type,
-            $rename_pattern,
-            $sort_pattern,
-            $remote_username,
-            $remote_password
-        ));
+        $filename = Config::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
+        $include = require_once $filename;
 
-        $insert_id = Dba::insert_id();
+        if ($include) {
+            $sql = 'INSERT INTO `catalog` (`name`, `catalog_type`, ' .
+                '`rename_pattern`, `sort_pattern`) VALUES (?, ?, ?, ?)';
+            $db_results = Dba::write($sql, array(
+                $name,
+                $type,
+                $rename_pattern,
+                $sort_pattern
+            ));
 
-        if (!$insert_id) {
-            Error::add('general', T_('Catalog Insert Failed check debug logs'));
-            debug_event('catalog', 'Insert failed: ' . json_encode($data), 2);
-            return false;
-        }
+            $insert_id = Dba::insert_id();
 
-        return $insert_id;
-    }
-
-    /**
-     * run_add
-     *
-     * This runs the add to catalog function
-     * it includes the javascript refresh stuff and then starts rolling
-     * throught the path for this catalog
-     */
-    public function run_add($options) {
-        // Prevent the script from timing out
-        set_time_limit(0);
-
-        if ($this->catalog_type == 'remote') {
-            UI::show_box_top(T_('Running Remote Sync') . '. . .');
-            $this->update_remote_catalog();
-            UI::show_box_bottom();
-            return true;
-        }
-
-        $start_time = time();
-
-        require Config::get('prefix') . '/templates/show_adds_catalog.inc.php';
-        flush();
-
-        $this->add_files($this->path, $options);
-
-        // If they have checked the box then go ahead and gather the art
-        if ($options['gather_art']) {
-            $catalog_id = $this->id;
-            require Config::get('prefix') . '/templates/show_gather_art.inc.php';
-            flush();
-            $this->gather_art();
-        }
-
-        // Handle m3u-ness
-        if ($options['parse_m3u'] AND count($this->_playlists)) {
-            foreach ($this->_playlists as $playlist_file) {
-                $result = $this->import_m3u($playlist_file);
+            if (!$insert_id) {
+                Error::add('general', T_('Catalog Insert Failed check debug logs'));
+                debug_event('catalog', 'Insert failed: ' . json_encode($data), 2);
+                return false;
+            }
+            
+            $classname = 'Catalog_' . $type;
+            if (!$classname::create_type($insert_id, $data)) {
+                $sql = 'DELETE FROM `catalog` WHERE `id` = ?';
+                Dba::write($sql, array($insert_id));
+                $insert_id = 0;
             }
         }
 
-        return true;
+        return $insert_id;
     }
 
     /**
@@ -374,187 +395,6 @@ class Catalog extends database_object {
 
         return $results;
     }
-
-    /**
-     * add_files
-     *
-     * Recurses through $this->path and pulls out all mp3s and returns the
-     * full path in an array. Passes gather_type to determine if we need to
-     * check id3 information against the db.
-     */
-    public function add_files($path, $options) {
-
-        // Profile the memory a bit
-        debug_event('Memory', UI::format_bytes(memory_get_usage(true)), 5);
-
-        // See if we want a non-root path for the add
-        if (isset($options['subdirectory'])) {
-            $path = $options['subdirectory'];
-            unset($options['subdirectory']);
-        }
-
-        // Correctly detect the slash we need to use here
-        if (strpos($path, '/') !== false) {
-            $slash_type = '/';
-        }
-        else {
-            $slash_type = '\\';
-        }
-
-        /* Open up the directory */
-        $handle = opendir($path);
-
-        if (!is_resource($handle)) {
-            debug_event('read', "Unable to open $path", 5);
-            Error::add('catalog_add', sprintf(T_('Error: Unable to open %s'), $path));
-            return false;
-        }
-
-        /* Change the dir so is_dir works correctly */
-        if (!chdir($path)) {
-            debug_event('read', "Unable to chdir to $path", 2);
-            Error::add('catalog_add', sprintf(T_('Error: Unable to change to directory %s'), $path));
-            return false;
-        }
-
-        // Ensure that we've got our cache
-        $this->_create_filecache();
-
-        debug_event('Memory', UI::format_bytes(memory_get_usage(true)), 5);
-
-        /* Recurse through this dir and create the files array */
-        while ( false !== ( $file = readdir($handle) ) ) {
-
-            /* Skip to next if we've got . or .. */
-            if (substr($file,0,1) == '.') { continue; }
-
-            debug_event('read', "Starting work on $file inside $path", 5);
-            debug_event('Memory', UI::format_bytes(memory_get_usage(true)), 5);
-
-            /* Create the new path */
-            $full_file = $path.$slash_type.$file;
-
-            /* First thing first, check if file is already in catalog.
-             * This check is very quick, so it should be performed before any other checks to save time
-             */
-            if (isset($this->_filecache[strtolower($full_file)])) {
-                continue;
-            }
-
-            // Incase this is the second time through clear this variable
-            // if it was set the day before
-            unset($failed_check);
-
-            if (Config::get('no_symlinks')) {
-                if (is_link($full_file)) {
-                    debug_event('read', "Skipping symbolic link $path", 5);
-                    continue;
-                }
-            }
-
-            /* If it's a dir run this function again! */
-            if (is_dir($full_file)) {
-                $this->add_files($full_file,$options);
-
-                /* Change the dir so is_dir works correctly */
-                if (!chdir($path)) {
-                    debug_event('read', "Unable to chdir to $path", 2);
-                    Error::add('catalog_add', sprintf(T_('Error: Unable to change to directory %s'), $path));
-                }
-
-                /* Skip to the next file */
-                continue;
-            } //it's a directory
-
-            /* If it's not a dir let's roll with it
-             * next we need to build the pattern that we will use
-             * to detect if it's an audio file
-             */
-            $pattern = "/\.(" . Config::get('catalog_file_pattern');
-            if ($options['parse_m3u']) {
-                $pattern .= "|m3u)$/i";
-            }
-            else {
-                $pattern .= ")$/i";
-            }
-
-            $is_audio_file = preg_match($pattern,$file);
-
-            // Define the Video file pattern
-            if (!$is_audio_file AND Config::get('catalog_video_pattern')) {
-                $video_pattern = "/\.(" . Config::get('catalog_video_pattern') . ")$/i";
-                $is_video_file = preg_match($video_pattern,$file);
-            }
-
-            /* see if this is a valid audio file or playlist file */
-            if ($is_audio_file OR $is_video_file) {
-
-                /* Now that we're sure its a file get filesize  */
-                $file_size = filesize($full_file);
-
-                if (!$file_size) {
-                    debug_event('read', "Unable to get filesize for $full_file", 2);
-                    /* HINT: FullFile */
-                    Error::add('catalog_add', sprintf(T_('Error: Unable to get filesize for %s'), $full_file));
-                } // file_size check
-
-                if (!Core::is_readable($full_file)) {
-                    // not readable, warn user
-                    debug_event('read', "$full_file is not readable by ampache", 2);
-                    /* HINT: FullFile */
-                    Error::add('catalog_add', sprintf(T_('%s is not readable by ampache'), $full_file));
-                    continue;
-                }
-
-                // Check to make sure the filename is of the expected charset
-                if (function_exists('iconv')) {
-                    if (strcmp($full_file,iconv(Config::get('site_charset'),Config::get('site_charset'),$full_file)) != '0') {
-                        debug_event('read',$full_file . ' has non-' . Config::get('site_charset') . ' characters and can not be indexed, converted filename:' . iconv(Config::get('site_charset'),Config::get('site_charset'),$full_file),'1');
-                        /* HINT: FullFile */
-                        Error::add('catalog_add', sprintf(T_('%s does not match site charset'), $full_file));
-                        continue;
-                    }
-                } // end if iconv
-
-                if ($options['parse_m3u'] AND substr($file,-3,3) == 'm3u') {
-                    $this->_playlists[] = $full_file;
-                } // if it's an m3u
-
-                else {
-                    if ($is_audio_file) {
-                        $this->_insert_local_song($full_file,$file_size);
-                    }
-                    else { $this->insert_local_video($full_file,$file_size); }
-
-                    $this->count++;
-                    $file = str_replace(array('(',')','\''),'',$full_file);
-                    if(UI::check_ticker()) {
-                        UI::update_text('add_count_' . $this->id, $this->count);
-                        UI::update_text('add_dir_' . $this->id, scrub_out($file));
-                    } // update our current state
-
-                } // if it's not an m3u
-
-            } //if it matches the pattern
-            else {
-                debug_event('read', "$full_file ignored, non-audio file or 0 bytes", 5);
-            } // else not an audio file
-
-        } // end while reading directory
-
-        debug_event('closedir', "Finished reading $path , closing handle", 5);
-
-        // This should only happen on the last run
-        if ($path == $this->path) {
-            UI::update_text('add_count_' . $this->id, $this->count);
-            UI::update_text('add_dir_' . $this->id, scrub_out($file));
-        }
-
-
-        /* Close the dir handle */
-        @closedir($handle);
-
-    } // add_files
 
     /**
      * get_album_ids
@@ -810,9 +650,8 @@ class Catalog extends database_object {
      */
     public static function update_settings($data) {
 
-        $sql = "UPDATE `catalog` SET `name` = ?, `rename_pattern` = ?, " .
-            "`sort_pattern` = ?, `remote_username` = ?, `remote_password` = ? WHERE `id` = ?";
-        $params = array($data['name'], $data['rename_pattern'], $data['sort_pattern'], $data['remote_username'], $data['remote_password'], $data['catalog_id']);
+        $sql = "UPDATE `catalog` SET `name` = ?, `rename_pattern` = ?, `sort_pattern` = ? WHERE `id` = ?";
+        $params = array($data['name'], $data['rename_pattern'], $data['sort_pattern'], $data['catalog_id']);
         $db_results = Dba::write($sql, $params);
 
         return true;
@@ -878,7 +717,7 @@ class Catalog extends database_object {
 
         // Check for patterns
         if (!$sort_pattern OR !$rename_pattern) {
-            $catalog = new Catalog($media->catalog);
+            $catalog = Catalog::create_from_id($media->catalog);
             $sort_pattern = $catalog->sort_pattern;
             $rename_pattern = $catalog->rename_pattern;
         }
@@ -987,249 +826,6 @@ class Catalog extends database_object {
     } // update_song_from_tags
 
     /**
-     * add_to_catalog
-     * this function adds new files to an
-     * existing catalog
-     */
-    public function add_to_catalog() {
-
-        if ($this->catalog_type == 'remote') {
-            UI::show_box_top(T_('Running Remote Update') . '. . .');
-            $this->update_remote_catalog();
-            UI::show_box_bottom();
-            return true;
-        }
-
-        require Config::get('prefix') . '/templates/show_adds_catalog.inc.php';
-        flush();
-
-        /* Set the Start time */
-        $start_time = time();
-
-        // Make sure the path doesn't end in a / or \
-        $this->path = rtrim($this->path,'/');
-        $this->path = rtrim($this->path,'\\');
-
-        // Prevent the script from timing out and flush what we've got
-        set_time_limit(0);
-
-        /* Get the songs and then insert them into the db */
-        $this->add_files($this->path,$type,0,$verbose);
-
-        // Foreach Playlists we found
-        foreach ($this->_playlists as $full_file) {
-            $result = $this->import_m3u($full_file);
-            if ($result['success']) {
-                $file = basename($full_file);
-                if ($verbose) {
-                    echo "&nbsp;&nbsp;&nbsp;" . T_('Added Playlist From') . " $file . . . .<br />\n";
-                    flush();
-                }
-            } // end if import worked
-        } // end foreach playlist files
-
-        /* Do a little stats mojo here */
-        $current_time = time();
-
-        $catalog_id = $this->id;
-        require Config::get('prefix') . '/templates/show_gather_art.inc.php';
-        flush();
-        $this->gather_art();
-
-        /* Update the Catalog last_update */
-        $this->update_last_add();
-
-        $time_diff = ($current_time - $start_time) ?: 0;
-        $rate = intval($this->count / $time_diff) ?: T_('N/A');
-
-        UI::show_box_top();
-        echo "\n<br />" .
-        printf(T_('Catalog Update Finished.  Total Time: [%s] Total Songs: [%s] Songs Per Second: [%s]'),
-            date('i:s', $time_diff), $this->count, $rate);
-        echo '<br /><br />';
-        UI::show_box_bottom();
-
-    } // add_to_catalog
-
-    /**
-     * connect
-     *
-     * Connects to the remote catalog that we are.
-     */
-    public function connect() {
-        try {
-            $remote_handle = new AmpacheApi(array(
-                'username' => $this->remote_username,
-                'password' => $this->remote_password,
-                'server' => $this->path,
-                'debug_callback' => 'debug_event'
-            ));
-        } catch (Exception $e) {
-            Error::add('general', $e->getMessage());
-            Error::display('general');
-            flush();
-            return false;
-        }
-
-        if ($remote_handle->state() != 'CONNECTED') {
-            debug_event('catalog', 'API client failed to connect', 1);
-            Error::add('general', T_('Error connecting to remote server'));
-            Error::display('general');
-            return false;
-        }
-
-        return $remote_handle; 
-    }
-
-    /**
-     * update_remote_catalog
-     *
-     * Pulls the data from a remote catalog and adds any missing songs to the
-     * database.
-     */
-    public function update_remote_catalog($type = 0) {
-        $remote_handle = $this->connect();
-        if (!$remote_handle) {
-            return false;
-        }
-
-        // Get the song count, etc.
-        $remote_catalog_info = $remote_handle->info();
-
-        // Tell 'em what we've found, Johnny!
-        printf(T_('%u remote catalog(s) found (%u songs)'), $remote_catalog_info['catalogs'], $remote_catalog_info['songs']);
-        flush();
-
-        // Hardcoded for now
-        $step = 500;
-        $current = 0;
-        $total = $remote_catalog_info['songs'];
-
-        while ($total > $current) {
-            $start = $current;
-            $current += $step;
-            try {
-                $songs = $remote_handle->send_command('songs', array('offset' => $start, 'limit' => $step));
-            }
-            catch (Exception $e) {
-                Error::add('general',$e->getMessage());
-                Error::display('general');
-                flush();
-            }
-
-            // Iterate over the songs we retrieved and insert them
-            foreach ($songs as $data) {
-                if ($this->check_remote_song($data['song'])) {
-                    debug_event('remote_catalog', 'Skipping existing song ' . $data['song']['url'], 5);
-                }
-                else {
-                    $data['song']['catalog'] = $this->id;
-                    $data['song']['file'] = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
-                    if (!Song::insert($data['song'])) {
-                        debug_event('remote_catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
-                        Error::add('general', T_('Unable to Insert Song - %s'), $data['song']['title']);
-                        Error::display('general');
-                        flush();
-                    }
-                }
-            }
-        } // end while
-
-        echo "<p>" . T_('Completed updating remote catalog(s).') . "</p><hr />\n";
-        flush();
-
-        // Update the last update value
-        $this->update_last_update();
-
-        return true;
-
-    }
-
-    /**
-     * clean_remote_catalog
-     * 
-     * Removes remote songs that no longer exist.
-     */
-    private function clean_remote_catalog() {
-        $remote_handle = $this->connect();
-        if (!$remote_handle) {
-            debug_event('remote-clean', 'Remote login failed', 1, 'ampache-catalog');
-            return false;
-        }
-
-        $dead = 0;
-
-        $sql = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-        $db_results = Dba::read($sql, array($this->id));
-        while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('remote-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
-            try {
-                $song = $remote_handle->send_command('url_to_song', array('url' => $row['file']));
-            }
-            catch (Exception $e) {
-                // FIXME: What to do, what to do
-            }
-           
-            if (count($song) == 1) {
-                debug_event('remote-clean', 'keeping song', 5, 'ampache-catalog');
-            }
-            else {
-                debug_event('remote-clean', 'removing song', 5, 'ampache-catalog');
-                $dead++;
-                Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
-            }
-        }
-
-        return $dead;
-    }
-
-    /**
-     * clean_local_catalog
-     *
-     * Removes local songs that no longer exist.
-     */
-     private function clean_local_catalog() {
-        if (!Core::is_readable($this->path)) {
-            // First sanity check; no point in proceeding with an unreadable
-            // catalog root.
-            debug_event('catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
-            Error::add('general', T_('Catalog Root unreadable, stopping clean'));
-            Error::display('general');
-            return 0;
-        }
-
-        $dead_total = 0;
-        $stats = self::get_stats($this->id);
-        foreach(array('video', 'song') as $media_type) {
-            $total = $stats[$media_type . 's']; // UGLY
-            if ($total == 0) {
-                continue;
-            }
-            $chunks = floor($total / 10000);
-            $dead = array();
-            foreach(range(0, $chunks) as $chunk) {
-                $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
-            }
-
-            $dead_count = count($dead);
-            // The AlmightyOatmeal sanity check
-            // Never remove everything; it might be a dead mount
-            if ($dead_count >= $total) {
-                debug_event('catalog', 'All files would be removed. Doing nothing.', 1);
-                Error::add('general', T_('All files would be removed. Doing nothing'));
-                continue;
-            }
-            if ($dead_count) {
-                $dead_total += $dead_count;
-                $sql = "DELETE FROM `$media_type` WHERE `id` IN " .
-                    '(' . implode(',',$dead) . ')';
-                $db_results = Dba::write($sql);
-            }
-        }
-        return $dead_total;
-    }
-
-    /**
      * clean_catalog
      *
      * Cleans the catalog of files that no longer exist.
@@ -1245,12 +841,7 @@ class Catalog extends database_object {
         ob_flush();
         flush();
 
-        if ($this->catalog_type == 'remote') {
-            $dead_total = $this->clean_remote_catalog();
-        }
-        else {
-            $dead_total = $this->clean_local_catalog();
-        }
+        $dead_total = $this->clean_catalog_proc();
 
         debug_event('clean', 'clean finished, ' . $dead_count .
             ' removed from '. $this->name, 5);
@@ -1268,47 +859,6 @@ class Catalog extends database_object {
 
         $this->update_last_clean();
     } // clean_catalog
-
-
-    /**
-     * _clean_chunk
-     * This is the clean function, its broken into
-     * said chunks to try to save a little memory
-     */
-    private function _clean_chunk($media_type, $chunk, $chunk_size) {
-        debug_event('clean', "Starting chunk $chunk", 5);
-        $dead = array();
-        $count = $chunk * $chunk_size;
-
-        $sql = "SELECT `id`, `file` FROM `$media_type` " .
-            "WHERE `catalog`='$this->id' LIMIT $count,$chunk_size";
-        $db_results = Dba::read($sql);
-
-        while ($results = Dba::fetch_assoc($db_results)) {
-            debug_event('clean', 'Starting work on ' . $results['file'] . '(' . $results['id'] . ')', 5);
-            $count++;
-            if (UI::check_ticker()) {
-                $file = str_replace(array('(',')', '\''), '', $results['file']);
-                UI::update_text('clean_count_' . $this->id, $count);
-                UI::update_text('clean_dir_' . $this->id, scrub_out($file));
-            }
-            $file_info = filesize($results['file']);
-            if (!file_exists($results['file']) || $file_info < 1) {
-                debug_event('clean', 'File not found or empty: ' . $results['file'], 5);
-                Error::add('general', sprintf(T_('Error File Not Found or 0 Bytes: %s'), $results['file']));
-
-
-                // Store it in an array we'll delete it later...
-                $dead[] = $results['id'];
-
-            } //if error
-            else if (!Core::is_readable($results['file'])) {
-                debug_event('clean', $results['file'] . ' is not readable, but does exist', 1);
-            }
-        }
-        return $dead;
-
-    } //_clean_chunk
 
     /**
      * verify_catalog
@@ -1473,101 +1023,11 @@ class Catalog extends database_object {
     } // check_title
 
     /**
-     * _insert_local_song
-     *
-     * Insert a song that isn't already in the database.
-     */
-    private function _insert_local_song($file, $file_info) {
-        $vainfo = new vainfo($file, '', '', '', $this->sort_pattern, $this->rename_pattern);
-        $vainfo->get_info();
-
-        $key = vainfo::get_tag_type($vainfo->tags);
-        $results = vainfo::clean_tag_info($vainfo->tags, $key, $file);
-
-        $results['catalog'] = $this->id;
-        return Song::insert($results);
-    }
-
-    /**
-     * insert_local_video
-     * This inserts a video file into the video file table the tag
-     * information we can get is super sketchy so it's kind of a crap shoot
-     * here
-     */
-    public function insert_local_video($file,$filesize) {
-
-        /* Create the vainfo object and get info */
-        $vainfo     = new vainfo($file,'','','',$this->sort_pattern,$this->rename_pattern);
-        $vainfo->get_info();
-
-        $tag_name = vainfo::get_tag_type($vainfo->tags);
-        $results = vainfo::clean_tag_info($vainfo->tags,$tag_name,$file);
-
-        $rezx         = intval($results['resolution_x']);
-        $rezy         = intval($results['resolution_y']);
-        // UNUSED CURRENTLY
-        $comment    = $results['comment'];
-        $year        = $results['year'];
-        $disk        = $results['disk'];
-
-        $sql = "INSERT INTO `video` (`file`,`catalog`,`title`,`video_codec`,`audio_codec`,`resolution_x`,`resolution_y`,`size`,`time`,`mime`) " .
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $params = array($file, $this->id, $results['title'], $results['video_codec'], $results['audio_codec'], $rezx, $rezy, $filesize, $results['time'], $results['mime']);
-        $db_results = Dba::write($sql, $params);
-
-        return true;
-
-    } // insert_local_video
-
-    /**
-     * check_remote_song
-     *
-     * checks to see if a remote song exists in the database or not
-     * if it find a song it returns the UID
-     */
-    public function check_remote_song($song) {
-        $url = preg_replace('/ssid=.*&/', '', $song['url']);
-
-        $sql = 'SELECT `id` FROM `song` WHERE `file` = ?';
-        $db_results = Dba::read($sql, array($url));
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return $results['id'];
-        }
-
-        return false;
-    }
-
-    /**
-     * check_local_mp3
-     * Checks the song to see if it's there already returns true if found, false if not
-     */
-    public function check_local_mp3($full_file, $gather_type='') {
-
-        $file_date = filemtime($full_file);
-        if ($file_date < $this->last_add) {
-            debug_event('Check','Skipping ' . $full_file . ' File modify time before last add run','3');
-            return true;
-        }
-
-        $sql = "SELECT `id` FROM `song` WHERE `file` = ?";
-        $db_results = Dba::read($sql, array($full_file));
-
-        //If it's found then return true
-        if (Dba::fetch_row($db_results)) {
-            return true;
-        }
-
-        return false;
-
-    } //check_local_mp3
-
-    /**
      * import_m3u
      * this takes m3u filename and then attempts to create a Public Playlist based on the filenames
      * listed in the m3u
      */
-    public function import_m3u($filename) {
+    public static function import_m3u($filename) {
 
         $m3u_handle = fopen($filename,'r');
 
@@ -1648,6 +1108,9 @@ class Catalog extends database_object {
      */
     public static function delete($catalog_id) {
 
+        // Large catalog deletion can take time
+        set_time_limit(0);
+        
         // First remove the songs in this catalog
         $sql = "DELETE FROM `song` WHERE `catalog` = ?";
         $db_results = Dba::write($sql, array($catalog_id));
@@ -1658,6 +1121,13 @@ class Catalog extends database_object {
         $sql = "DELETE FROM `video` WHERE `catalog` = ?";
         $db_results = Dba::write($sql, array($catalog_id));
 
+        if (!$db_results) { return false; }
+        
+        $catalog = self::create_from_id($catalog_id);
+        
+        $sql = 'DELETE FROM `catalog_' . $catalog->get_type() . '` WHERE catalog_id = ?';
+        $db_results = Dba::write($sql, array($catalog_id));
+        
         if (!$db_results) { return false; }
 
         // Next Remove the Catalog Entry it's self

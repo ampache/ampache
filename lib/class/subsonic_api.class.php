@@ -258,7 +258,7 @@ class Subsonic_Api {
         
         foreach($catalogs as $id) {
             $clastmodified = 0;
-            $catalog = new Catalog($id);
+            $catalog = Catalog::create_from_id($id);
             
             if ($catalog->last_update > $clastmodified) $clastmodified = $catalog->last_update;
             if ($catalog->last_add > $clastmodified) $clastmodified = $catalog->last_add;

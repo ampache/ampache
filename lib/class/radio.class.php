@@ -138,7 +138,7 @@ class Radio extends database_object implements media {
         }
 
         // Make sure it's a real catalog
-        $catalog = new Catalog($data['catalog']);
+        $catalog = Catalog::create_from_id($data['catalog']);
         if (!$catalog->name) {
             Error::add('catalog', T_('Invalid Catalog'));
         }

@@ -189,7 +189,7 @@ else {
 }
 
 // Build up the catalog for our current object
-$catalog = new Catalog($media->catalog);
+$catalog = Catalog::create_from_id($media->catalog);
 
 /* If the song is disabled */
 if (!make_bool($media->enabled)) {
@@ -206,26 +206,12 @@ if (Config::get('lock_songs')) {
     }
 }
 
-if ($catalog->catalog_type == 'remote') {
-    $remote_handle = $catalog->connect();
-
-    // If we don't get anything back we failed and should bail now
-    if (!$remote_handle) {
-        debug_event('play', 'Connection to remote server failed', 1);
-        exit;
-    }
-
-    $handshake = $remote_handle->info();
-    $url = $media->file . '&ssid=' . $handshake['auth'];
-
-    header('Location: ' . $url);
-    debug_event('play', 'Started remote stream - ' . $url, 5);
-
+$media = $catalog->prepare_media($media);
+if ($media == null) {
     // Handle democratic removal 
     if ($demo_id) {
         $democratic->delete_from_oid($oid, 'song');
     }
-
     exit;
 }
 

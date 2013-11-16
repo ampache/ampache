@@ -320,7 +320,7 @@ class Search extends playlist_object {
 
             $catalogs = array();
             foreach (Catalog::get_catalogs() as $catid) {
-                $catalog = new Catalog($catid);
+                $catalog = Catalog::create_from_id($catid);
                 $catalog->format();
                 $catalogs[$catid] = $catalog->f_name;
             }
@@ -392,7 +392,7 @@ class Search extends playlist_object {
 
             $catalogs = array();
             foreach (Catalog::get_catalogs() as $catid) {
-                $catalog = new Catalog($catid);
+                $catalog = Catalog::create_from_id($catid);
                 $catalog->format();
                 $catalogs[$catid] = $catalog->f_name;
             }

@@ -1,0 +1,441 @@
+<?php
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+/**
+ *
+ * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * Copyright 2001 - 2013 Ampache.org
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License v2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+
+/**
+ * Remote Catalog Class
+ *
+ * This class handles all actual work in regards to remote catalogs.
+ *
+ */
+class Catalog_remote extends Catalog {
+
+    private $version        = '000001';
+    private $type           = 'remote';
+    private $description    = 'Remote catalog';
+    
+    /**
+     * get_description
+     * This returns the description of this catalog
+     */
+    public function get_description() { 
+
+        return $this->description;  
+    
+    } // get_description
+
+    /**
+     * get_version
+     * This returns the current version
+     */
+    public function get_version() { 
+
+        return $this->version;  
+
+    } // get_version
+    
+    /**
+     * get_type
+     * This returns the current catalog type
+     */
+    public function get_type() { 
+
+        return $this->type;  
+
+    } // get_type
+
+    /**
+     * is_installed
+     * This returns true or false if remote catalog is installed
+     */
+    public function is_installed() {
+
+        $sql = "DESCRIBE `catalog_remote`"; 
+        $db_results = Dba::query($sql); 
+
+        return Dba::num_rows($db_results); 
+
+
+    } // is_installed
+
+    /**
+     * install
+     * This function installs the remote catalog
+     */
+    public function install() {
+
+        $sql = "CREATE TABLE `catalog_remote` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ". 
+            "`uri` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
+            "`username` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
+            "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
+            "`catalog_id` INT( 11 ) NOT NULL" .
+            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"; 
+        $db_results = Dba::query($sql); 
+
+        // Add an internal preference
+        Preference::insert('catalog_remote_active','Active Remote Catalog','0','25','integer','internal'); 
+        User::rebuild_all_preferences(); 
+
+        return true; 
+
+    } // install
+
+    /**
+     * uninstall
+     * This removes the remote catalog 
+     */
+    public function uninstall() {
+
+        $sql = "DROP TABLE `catalog_remote`"; 
+        $db_results = Dba::query($sql); 
+
+        // Remove the pref we added for this        
+        Preference::delete('catalog_remote_active'); 
+
+        return true; 
+
+    } // uninstall
+    
+    public function catalog_fields() {
+
+        $fields['uri']      = array('description' => T_('Uri'),'type'=>'textbox');
+        $fields['username']      = array('description' => T_('Username'),'type'=>'textbox');
+        $fields['password']      = array('description' => T_('Password'),'type'=>'textbox');
+
+        return $fields; 
+
+    } 
+    
+    public $uri;
+    public $username;
+    public $password;
+
+    /**
+     * Constructor
+     *
+     * Catalog class constructor, pulls catalog information
+     */
+    public function __construct($catalog_id = null) {
+        if ($catalog_id) {
+            $this->id = intval($catalog_id);
+            $info = $this->get_info($catalog_id);
+
+            foreach ($info as $key=>$value) {
+                $this->$key = $value;
+            }
+        }
+    }
+
+    /**
+     * get_from_uri
+     *
+     * Try to figure out which catalog uri most closely resembles this one.
+     * This is useful when creating a new catalog to make sure we're not
+     * doubling up here.
+     */
+    public static function get_from_uri($path) {
+        // First pull a list of all of the uri for the different catalogs
+        $sql = "SELECT `catalog_id`,`uri` FROM `catalog_remote`";
+        $db_results = Dba::read($sql);
+
+        $catalog_paths = array();
+        $component_path = $path;
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $catalog_paths[$row['uri']] = $row['catalog_id'];
+        }
+
+        // Break it down into its component parts and start looking for a catalog
+        do {
+            if ($catalog_paths[$component_path]) {
+                return $catalog_paths[$component_path];
+            }
+
+            // Keep going until the path stops changing
+            $old_path = $component_path;
+            $component_path = realpath($component_path . '/../');
+
+        } while (strcmp($component_path,$old_path) != 0);
+
+        return false;
+    }
+
+    /**
+     * create
+     *
+     * This creates a new catalog entry and then returns the insert id.
+     * It checks to make sure this path is not already used before creating
+     * the catalog.
+     */
+    public static function create_type($catalog_id, $data) {
+        
+        $uri = $data['uri'];
+        $username = $data['username'];
+        $password = $data['password'];
+        
+        if (substr($uri,0,7) != 'http://' && substr($uri,0,8) != 'https://') {
+            Error::add('general', T_('Error: Remote selected, but path is not a URL'));
+            return false;
+        }
+        
+        if (!strlen($username) OR !strlen($password)) {
+            Error::add('general', T_('Error: Username and Password Required for Remote Catalogs'));
+            return false;
+        }
+        $password = hash('sha256', $password);
+        
+        // Make sure this uri isn't already in use by an existing catalog
+        $sql = 'SELECT `id` FROM `catalog_remote` WHERE `uri` = ?';
+        $db_results = Dba::read($sql, array($uri));
+
+        if (Dba::num_rows($db_results)) {
+            debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
+            Error::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
+            return false;
+        }
+
+        $sql = 'INSERT INTO `catalog_remote` (`uri`, `username`, `password`, `catalog_id`) VALUES (?, ?, ?, ?)';
+        Dba::write($sql, array($uri, $username, $password, $catalog_id));
+        return true;
+    }
+
+    /**
+     * run_add
+     *
+     * This runs the add to catalog function
+     * it includes the javascript refresh stuff and then starts rolling
+     * throught the path for this catalog
+     */
+    public function run_add($options) {
+        // Prevent the script from timing out
+        set_time_limit(0);
+
+        UI::show_box_top(T_('Running Remote Sync') . '. . .');
+        $this->update_remote_catalog();
+        UI::show_box_bottom();
+        
+        return true;
+    }
+
+    /**
+     * add_to_catalog
+     * this function adds new files to an
+     * existing catalog
+     */
+    public function add_to_catalog() {
+
+        UI::show_box_top(T_('Running Remote Update') . '. . .');
+        $this->update_remote_catalog();
+        UI::show_box_bottom();
+        
+        return true;
+    } // add_to_catalog
+
+    /**
+     * connect
+     *
+     * Connects to the remote catalog that we are.
+     */
+    public function connect() {
+        try {
+            $remote_handle = new AmpacheApi(array(
+                'username' => $this->username,
+                'password' => $this->password,
+                'server' => $this->uri,
+                'debug_callback' => 'debug_event',
+                'api_secure' => (substr($this->uri, 0, 8) == 'https://')
+            ));
+        } catch (Exception $e) {
+            Error::add('general', $e->getMessage());
+            Error::display('general');
+            flush();
+            return false;
+        }
+
+        if ($remote_handle->state() != 'CONNECTED') {
+            debug_event('catalog', 'API client failed to connect', 1);
+            Error::add('general', T_('Error connecting to remote server'));
+            Error::display('general');
+            return false;
+        }
+
+        return $remote_handle; 
+    }
+
+    /**
+     * update_remote_catalog
+     *
+     * Pulls the data from a remote catalog and adds any missing songs to the
+     * database.
+     */
+    public function update_remote_catalog($type = 0) {
+        $remote_handle = $this->connect();
+        if (!$remote_handle) {
+            return false;
+        }
+
+        // Get the song count, etc.
+        $remote_catalog_info = $remote_handle->info();
+
+        // Tell 'em what we've found, Johnny!
+        printf(T_('%u remote catalog(s) found (%u songs)'), $remote_catalog_info['catalogs'], $remote_catalog_info['songs']);
+        flush();
+
+        // Hardcoded for now
+        $step = 500;
+        $current = 0;
+        $total = $remote_catalog_info['songs'];
+
+        while ($total > $current) {
+            $start = $current;
+            $current += $step;
+            try {
+                $songs = $remote_handle->send_command('songs', array('offset' => $start, 'limit' => $step));
+            }
+            catch (Exception $e) {
+                Error::add('general',$e->getMessage());
+                Error::display('general');
+                flush();
+            }
+
+            // Iterate over the songs we retrieved and insert them
+            foreach ($songs as $data) {
+                if ($this->check_remote_song($data['song'])) {
+                    debug_event('remote_catalog', 'Skipping existing song ' . $data['song']['url'], 5);
+                }
+                else {
+                    $data['song']['catalog'] = $this->id;
+                    $data['song']['file'] = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
+                    if (!Song::insert($data['song'])) {
+                        debug_event('remote_catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
+                        Error::add('general', T_('Unable to Insert Song - %s'), $data['song']['title']);
+                        Error::display('general');
+                        flush();
+                    }
+                }
+            }
+        } // end while
+
+        echo "<p>" . T_('Completed updating remote catalog(s).') . "</p><hr />\n";
+        flush();
+
+        // Update the last update value
+        $this->update_last_update();
+
+        return true;
+
+    }
+
+    /**
+     * clean_catalog_proc
+     * 
+     * Removes remote songs that no longer exist.
+     */
+    public function clean_catalog_proc() {
+        $remote_handle = $this->connect();
+        if (!$remote_handle) {
+            debug_event('remote-clean', 'Remote login failed', 1, 'ampache-catalog');
+            return false;
+        }
+
+        $dead = 0;
+
+        $sql = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
+        $db_results = Dba::read($sql, array($this->id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            debug_event('remote-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
+            try {
+                $song = $remote_handle->send_command('url_to_song', array('url' => $row['file']));
+            }
+            catch (Exception $e) {
+                // FIXME: What to do, what to do
+            }
+           
+            if (count($song) == 1) {
+                debug_event('remote-clean', 'keeping song', 5, 'ampache-catalog');
+            }
+            else {
+                debug_event('remote-clean', 'removing song', 5, 'ampache-catalog');
+                $dead++;
+                Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
+            }
+        }
+
+        return $dead;
+    }
+
+    /**
+     * check_remote_song
+     *
+     * checks to see if a remote song exists in the database or not
+     * if it find a song it returns the UID
+     */
+    public function check_remote_song($song) {
+        $url = preg_replace('/ssid=.*&/', '', $song['url']);
+
+        $sql = 'SELECT `id` FROM `song` WHERE `file` = ?';
+        $db_results = Dba::read($sql, array($url));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return $results['id'];
+        }
+
+        return false;
+    }
+    
+    public function get_rel_path($file_path) {
+        $info = $this->_get_info();
+        $catalog_path = rtrim($info->uri, "/");
+        return( str_replace( $catalog_path . "/", "", $file_path ) );
+    }
+    
+    /**
+     * format
+     *
+     * This makes the object human-readable.
+     */
+    public function format() {
+        parent::format();
+        $this->f_info = UI::truncate($this->uri, Config::get('ellipse_threshold_title'));
+    }
+    
+    public function prepare_media($media) {
+        
+        $remote_handle = $this->connect();
+
+        // If we don't get anything back we failed and should bail now
+        if (!$remote_handle) {
+            debug_event('play', 'Connection to remote server failed', 1);
+            exit;
+        }
+
+        $handshake = $remote_handle->info();
+        $url = $media->file . '&ssid=' . $handshake['auth'];
+
+        header('Location: ' . $url);
+        debug_event('play', 'Started remote stream - ' . $url, 5);       
+        
+        return null;
+    }
+
+} // end of catalog class
+
+?>

@@ -157,7 +157,7 @@ class Subsonic_XML_Data {
     public static function addMusicFolders($xml, $catalogs) {
         $xfolders = $xml->addChild('musicFolders');
         foreach($catalogs as $id) {
-            $catalog = new Catalog($id);
+            $catalog = Catalog::create_from_id($id);
             $xfolder = $xfolders->addChild('musicFolder');
             $xfolder->addAttribute('id', $id);
             $xfolder->addAttribute('name', $catalog->name);

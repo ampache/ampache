@@ -164,17 +164,20 @@ class AmpacheApi {
         if (isset($config['password'])) {
             $this->password = htmlentities($config['password'], ENT_QUOTES, 'UTF-8');
         }
-        if (isset($config['server'])) {
-            // Replace any http:// in the URL with ''
-            $config['server'] = str_replace('http://','',$config['server']);
-            $this->server = htmlentities($config['server'], ENT_QUOTES, 'UTF-8');
-        }
+        
         if (isset($config['api_secure'])) {
             // This should be a boolean response
             $this->api_secure = $config['api_secure'] ? true : false;
         }
+        $protocol = $this->api_secure ? 'https://' : 'http://';
+        
+        if (isset($config['server'])) {
+            // Replace any http:// in the URL with ''
+            $config['server'] = str_replace($protocol, '', $config['server']);
+            $this->server = htmlentities($config['server'], ENT_QUOTES, 'UTF-8');
+        }
 
-        $this->api_url = ($this->api_secure ? 'https://' : 'http://') . $this->server . '/server/xml.server.php';
+        $this->api_url = $protocol . $this->server . '/server/xml.server.php';
 
         // See if we have enough to authenticate, if so change the state
         if ($this->username AND $this->password AND $this->server) {
@@ -255,6 +258,8 @@ class AmpacheApi {
         if ($this->api_auth) {
             $url .= '&auth=' . urlencode($this->api_auth) . '&username=' . urlencode($this->username);
         }
+        
+        $this->_debug('COMMAND URL', $url);
 
         $data = file_get_contents($url);
         $this->raw_response = $data;

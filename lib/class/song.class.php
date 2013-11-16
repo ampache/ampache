@@ -87,13 +87,14 @@ class Song extends database_object implements media {
         $title = trim($results['title']) ?: $file;
         $artist = $results['artist'];
         $album = $results['album'];
-        $bitrate = $results['bitrate'];
+        $bitrate = $results['bitrate'] ?: 0;
         $rate = $results['rate'] ?: 0;
         $mode = $results['mode'];
         $size = $results['size'] ?: 0;
         $time = $results['time'] ?: 0;
         $track = $results['track'];
-        $track_mbid = $results['mb_trackid'];
+        $track_mbid = $results['mb_trackid'] ?: $results['mbid'];
+        if ($track_mbid == '') $track_mbid = null;
         $album_mbid = $results['mb_albumid'];
         $artist_mbid = $results['mb_artistid'];
         $disk = $results['disk'] ?: 0;
@@ -116,7 +117,7 @@ class Song extends database_object implements media {
             time(), $year, $track_mbid));
 
         if (!$db_results) {
-            debug_event('song', 'Unable to insert' . $file, 2);
+            debug_event('song', 'Unable to insert ' . $file, 2);
             return false;
         }
 
@@ -235,6 +236,19 @@ class Song extends database_object implements media {
             if (Config::get('show_played_times')) {
                 $results['object_cnt'] = Stats::get_object_count('song', $results['id']);
             }
+            
+            $sql = 'SELECT `mbid` FROM `album` WHERE `id` = ?';
+            $db_results = Dba::read($sql, array($results['album']));
+            if ($album_res = Dba::fetch_assoc($db_results)) {
+                $results['album_mbid'] = $album_res['mbid'];
+            }
+            
+            $sql = 'SELECT `mbid` FROM `artist` WHERE `id` = ?';
+            $db_results = Dba::read($sql, array($results['artist']));
+            if ($artist_res = Dba::fetch_assoc($db_results)) {
+                $results['artist_mbid'] = $artist_res['mbid'];
+            }
+            
             parent::add_to_cache('song', $id, $results);
             return $results;
         }
@@ -884,7 +898,7 @@ class Song extends database_object implements media {
 
         $extension = ltrim(substr($this->file,strlen($this->file)-4,4),".");
 
-        $catalog = new Catalog($this->catalog);
+        $catalog = Catalog::create_from_id($this->catalog);
 
         // If we don't have a rename pattern then just return it
         if (!trim($catalog->rename_pattern)) {
@@ -970,11 +984,8 @@ class Song extends database_object implements media {
         if (!$catalog_id) {
             $catalog_id = $info->catalog;
         }
-        $catalog = new Catalog( $catalog_id );
-        $info = $catalog->_get_info();
-        $catalog_path = $info->path;
-        $catalog_path = rtrim($catalog_path, "/");
-        return( str_replace( $catalog_path . "/", "", $file_path ) );
+        $catalog = Catalog::create_from_id( $catalog_id );
+        return $catalog->get_rel_path($file_path);
 
     } // get_rel_path
 

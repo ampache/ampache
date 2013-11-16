@@ -26,10 +26,11 @@ $default_sort = "%a/%A";
 <?php UI::show_box_top(T_('Add a Catalog'), 'box box_add_catalog'); ?>
 <p><?php echo T_("In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)"); ?></p>
 <?php Error::display('general'); ?>
+
 <form name="update_catalog" method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <tr>
-    <td><?php echo T_('Catalog Name'); ?>: </td>
+    <td style="width: 25%;"><?php echo T_('Catalog Name'); ?>: </td>
     <td><input size="60" type="text" name="name" value="<?php echo scrub_out($_POST['name']); ?>" /></td>
     <td style="vertical-align:top; font-family: monospace;" rowspan="6" id="patterns_example">
         <strong><?php echo T_('Auto-inserted Fields'); ?>:</strong><br />
@@ -44,25 +45,10 @@ $default_sort = "%a/%A";
 </tr>
 
 <tr>
-    <td><?php echo T_('Path'); ?>: </td>
-    <td><input size="60" type="text" name="path" value="<?php echo scrub_out($_POST['path']); ?>" /></td>
-</tr>
-<tr>
     <td><?php echo T_('Catalog Type'); ?>: </td>
     <td>
-        <select name="type">
-            <option value="local"><?php echo T_('Local'); ?></option>
-            <option value="remote"><?php echo T_('Remote'); ?></option>
-        </select>
+        <?php Catalog::show_catalog_types(); ?>
     </td>
-</tr>
-<tr>
-    <td><?php echo T_('Remote Catalog Username'); ?>: </td>
-    <td><input size="30" type="text" name="remote_username" value="<?php echo scrub_out($_POST['remote_username']); ?>" /><span class="error">*<?php echo T_('Required for Remote Catalogs'); ?></span></td>
-</tr>
-<tr>
-    <td><?php echo T_('Remote Catalog Password'); ?>: </td>
-    <td><input size="30" type="password" name="remote_password" value="" /><span class="error">*<?php echo T_('Required for Remote Catalogs'); ?></span></td>
 </tr>
 <tr>
     <td><?php echo T_('Filename Pattern'); ?>: </td>
@@ -83,6 +69,8 @@ $default_sort = "%a/%A";
     <td><input type="checkbox" name="parse_m3u" value="1" /></td>
 </tr>
 </table>
+<div id="catalog_type_fields">
+</div>
 <div class="formValidation">
   <input type="hidden" name="action" value="add_catalog" />
   <?php echo Core::form_register('add_catalog'); ?>

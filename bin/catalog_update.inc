@@ -88,7 +88,7 @@ ob_start("ob_html_strip",'1024',true);
 
 while ($row = Dba::fetch_row($db_results)) {
 
-    $catalog = new Catalog($row['0']);
+    $catalog = Catalog::create_from_id($row['0']);
     printf(T_('Reading: %s'), $catalog->name);
     ob_flush(); 
     echo "\n"; 

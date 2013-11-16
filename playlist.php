@@ -94,8 +94,7 @@ switch ($_REQUEST['action']) {
         $filename = $dir . basename($_FILES['filename']['name']);
         move_uploaded_file($_FILES['filename']['tmp_name'], $filename );
 
-        $catalog = new Catalog();
-        $result = $catalog->import_m3u($filename);
+        $result = Catalog::import_m3u($filename);
 
         if($result['success']) {
             $url = 'show_playlist&amp;playlist_id=' . $result['id'];

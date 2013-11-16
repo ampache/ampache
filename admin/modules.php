@@ -50,9 +50,33 @@ switch ($_REQUEST['action']) {
 
         header("Location:" . Config::get('web_path') . '/admin/modules.php?action=show_localplay');
     break;
+    case 'install_localplay':
+        $type = scrub_in($_REQUEST['type']);
+        $catalog = Catalog::create_catalog_type($type);
+        if ($catalog == null) {
+            Error::add('general', T_('Install Failed, Catalog Error'));
+            Error::display('general');
+            break;
+        }
+
+        $catalog->install();
+        
+        /* Show Confirmation */
+        $url    = Config::get('web_path') . '/admin/modules.php?action=show_catalog_types';
+        $title  = T_('Plugin Installed');
+        $body   = '';
+        show_confirmation($title ,$body, $url);
+    break;
     case 'confirm_uninstall_localplay':
         $type = scrub_in($_REQUEST['type']);
         $url = Config::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type;
+        $title = T_('Are you sure you want to remove this plugin?');
+        $body = '';
+        show_confirmation($title,$body,$url,1);
+    break;
+    case 'confirm_uninstall_catalog_type':
+        $type = scrub_in($_REQUEST['type']);
+        $url = Config::get('web_path') . '/admin/modules.php?action=uninstall_catalog_type&amp;type=' . $type;
         $title = T_('Are you sure you want to remove this plugin?');
         $body = '';
         show_confirmation($title,$body,$url,1);
@@ -68,6 +92,23 @@ switch ($_REQUEST['action']) {
         $title  = T_('Plugin Deactivated');
         $body   = '';
         show_confirmation($title,$body,$url);
+    break;
+    case 'uninstall_catalog_type':
+        $type = scrub_in($_REQUEST['type']);
+
+        $catalog = Catalog::create_catalog_type($type);
+        if ($catalog == null) {
+            Error::add('general', T_('Uninstall Failed, Catalog Error'));
+            Error::display('general');
+            break;
+        }
+        $catalog->uninstall();
+
+        /* Show Confirmation */
+        $url    = Config::get('web_path') . '/admin/modules.php?action=show_catalog_types';
+        $title  = T_('Plugin Deactivated');
+        $body   = '';
+        show_confirmation($title, $body, $url);
     break;
     case 'install_plugin':
         /* Verify that this plugin exists */
@@ -146,6 +187,12 @@ switch ($_REQUEST['action']) {
         $controllers = Localplay::get_controllers();
         UI::show_box_top(T_('Localplay Controllers'), 'box box_localplay_controllers');
         require_once Config::get('prefix') . '/templates/show_localplay_controllers.inc.php';
+        UI::show_box_bottom();
+    break;
+    case 'show_catalog_types':
+        $catalogs = Catalog::get_catalog_types();
+        UI::show_box_top(T_('Catalog Types'), 'box box_catalog_types');
+        require_once Config::get('prefix') . '/templates/show_catalog_types.inc.php';
         UI::show_box_bottom();
     break;
     default:
