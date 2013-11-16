@@ -141,8 +141,10 @@ class vainfo {
     private static function _detect_encoding($tags, $mb_order) {
         if (function_exists('mb_detect_encoding')) {
             $encodings = array();
-            foreach ($tags as $tag) {
-                $encodings[mb_detect_encoding($tag, $mb_order, true)]++;
+            if (is_array($tags)) {
+                foreach ($tags as $tag) {
+                    $encodings[mb_detect_encoding($tag, $mb_order, true)]++;
+                }
             }
 
             debug_event('vainfo', 'encoding detection: ' . json_encode($encodings), 5);
@@ -227,8 +229,10 @@ class vainfo {
         }
 
         // Unless they explicitly set it, add bitrate/mode/mime/etc.
-        if (!in_array('general', $returned_keys)) {
-            $returned_keys[] = 'general';
+        if (is_array($returned_keys)) {
+            if (!in_array('general', $returned_keys)) {
+                $returned_keys[] = 'general';
+            }
         }
 
         return $returned_keys;
@@ -353,58 +357,60 @@ class vainfo {
         // The tags can come in many different shapes and colors
         // depending on the encoding time of day and phase of the moon.
 
-        foreach ($this->_raw['tags'] as $key => $tag_array) {
-            switch ($key) {
-                case 'ape':
-                case 'avi':
-                case 'flv':
-                case 'matroska':
-                    debug_event('vainfo', 'Cleaning ' . $key, 5);
-                    $parsed = $this->_cleanup_generic($tag_array);
-                break;
-                case 'vorbiscomment':
-                    debug_event('vainfo', 'Cleaning vorbis', 5);
-                    $parsed = $this->_cleanup_vorbiscomment($tag_array);
-                break;
-                case 'id3v1':
-                    debug_event('vainfo', 'Cleaning id3v1', 5);
-                    $parsed = $this->_cleanup_id3v1($tag_array);
-                break;
-                case 'id3v2':
-                    debug_event('vainfo', 'Cleaning id3v2', 5);
-                    $parsed = $this->_cleanup_id3v2($tag_array);
-                break;
-                case 'quicktime':
-                    debug_event('vainfo', 'Cleaning quicktime', 5);
-                    $parsed = $this->_cleanup_quicktime($tag_array);
-                break;
-                case 'riff':
-                    debug_event('vainfo', 'Cleaning riff', 5);
-                    $parsed = $this->_cleanup_riff($tag_array);
-                break;
-                case 'mpg':
-                case 'mpeg':
-                    $key = 'mpeg';
-                    debug_event('vainfo', 'Cleaning MPEG', 5);
-                    $parsed = $this->_cleanup_generic($tag_array);
-                break;
-                case 'asf':
-                case 'wmv':
-                    $key = 'asf';
-                    debug_event('vainfo', 'Cleaning WMV/WMA/ASF', 5);
-                    $parsed = $this->_cleanup_generic($tag_array);
-                break;
-                case 'lyrics3':
-                    debug_event('vainfo', 'Cleaning lyrics3', 5);
-                    $parsed = $this->_cleanup_lyrics($tag_array);
-                break;
-                default:
-                    debug_event('vainfo', 'Cleaning unrecognised tag type ' . $key . ' for file ' . $this->filename, 5);
-                    $parsed = $this->_cleanup_generic($tag_array);
-                break;
-            }
+        if (is_array($this->_raw['tags'])) {
+            foreach ($this->_raw['tags'] as $key => $tag_array) {
+                switch ($key) {
+                    case 'ape':
+                    case 'avi':
+                    case 'flv':
+                    case 'matroska':
+                        debug_event('vainfo', 'Cleaning ' . $key, 5);
+                        $parsed = $this->_cleanup_generic($tag_array);
+                    break;
+                    case 'vorbiscomment':
+                        debug_event('vainfo', 'Cleaning vorbis', 5);
+                        $parsed = $this->_cleanup_vorbiscomment($tag_array);
+                    break;
+                    case 'id3v1':
+                        debug_event('vainfo', 'Cleaning id3v1', 5);
+                        $parsed = $this->_cleanup_id3v1($tag_array);
+                    break;
+                    case 'id3v2':
+                        debug_event('vainfo', 'Cleaning id3v2', 5);
+                        $parsed = $this->_cleanup_id3v2($tag_array);
+                    break;
+                    case 'quicktime':
+                        debug_event('vainfo', 'Cleaning quicktime', 5);
+                        $parsed = $this->_cleanup_quicktime($tag_array);
+                    break;
+                    case 'riff':
+                        debug_event('vainfo', 'Cleaning riff', 5);
+                        $parsed = $this->_cleanup_riff($tag_array);
+                    break;
+                    case 'mpg':
+                    case 'mpeg':
+                        $key = 'mpeg';
+                        debug_event('vainfo', 'Cleaning MPEG', 5);
+                        $parsed = $this->_cleanup_generic($tag_array);
+                    break;
+                    case 'asf':
+                    case 'wmv':
+                        $key = 'asf';
+                        debug_event('vainfo', 'Cleaning WMV/WMA/ASF', 5);
+                        $parsed = $this->_cleanup_generic($tag_array);
+                    break;
+                    case 'lyrics3':
+                        debug_event('vainfo', 'Cleaning lyrics3', 5);
+                        $parsed = $this->_cleanup_lyrics($tag_array);
+                    break;
+                    default:
+                        debug_event('vainfo', 'Cleaning unrecognised tag type ' . $key . ' for file ' . $this->filename, 5);
+                        $parsed = $this->_cleanup_generic($tag_array);
+                    break;
+                }
 
-            $results[$key] = $parsed;
+                $results[$key] = $parsed;
+            }
         }
 
         $results['general'] = $this->_parse_general($this->_raw);

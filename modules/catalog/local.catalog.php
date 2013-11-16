@@ -166,10 +166,10 @@ class Catalog_local extends Catalog {
     }
 
     /**
-     * create
+     * create_type
      *
-     * This creates a new catalog entry and then returns the insert id.
-     * It checks to make sure this path is not already used before creating
+     * This creates a new catalog type entry for a catalog
+     * It checks to make sure its parameters is not already used before creating
      * the catalog.
      */
     public static function create_type($catalog_id, $data) {
@@ -483,6 +483,100 @@ class Catalog_local extends Catalog {
         UI::show_box_bottom();
 
     } // add_to_catalog
+    
+    /**
+     * verify_catalog_proc
+     * This function compares the DB's information with the ID3 tags
+     */
+    public function verify_catalog_proc() {
+
+        debug_event('verify', 'Starting on ' . $this->name, 5);
+        set_time_limit(0);
+
+        $stats = self::get_stats($this->id);
+        $number = $stats['videos'] + $stats['songs'];
+        $total_updated = 0;
+
+        require_once Config::get('prefix') . '/templates/show_verify_catalog.inc.php';
+
+        foreach(array('video', 'song') as $media_type) {
+            $total = $stats[$media_type . 's']; // UGLY
+            if ($total == 0) {
+                continue;
+            }
+            $chunks = floor($total / 10000);
+            foreach(range(0, $chunks) as $chunk) {
+                // Try to be nice about memory usage
+                if ($chunk > 0) {
+                    $media_type::clear_cache();
+                }
+                $total_updated += $this->_verify_chunk($media_type, $chunk, 10000);
+            }
+        }
+
+        debug_event('verify', "Finished, $total_updated updated in " . $this->name, 5);
+
+        self::gc();
+        $this->update_last_update();
+        
+        return array('total' => $number, 'updated' => $total_updated);
+
+    } // verify_catalog_proc
+
+    /**
+     * _verify_chunk
+     * This verifies a chunk of the catalog, done to save
+     * memory
+     */
+    private function _verify_chunk($media_type, $chunk, $chunk_size) {
+        debug_event('verify', "Starting chunk $chunk", 5);
+        $count = $chunk * $chunk_size;
+        $changed = 0;
+
+        $sql = "SELECT `id`, `file` FROM `$media_type` " .
+            "WHERE `catalog`='$this->id' LIMIT $count,$chunk_size";
+        $db_results = Dba::read($sql);
+
+        if (Config::get('memory_cache')) {
+            while ($row = Dba::fetch_assoc($db_results, false)) {
+                $media_ids[] = $row['id'];
+            }
+            $media_type::build_cache($media_ids);
+            $db_results = Dba::read($sql);
+        }
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $count++;
+            if (UI::check_ticker()) {
+                $file = str_replace(array('(',')','\''), '', $row['file']);
+                UI::update_text('verify_count_' . $this->id, $count);
+                UI::update_text('verify_dir_' . $this->id, scrub_out($file));
+            }
+
+            if (!Core::is_readable($row['file'])) {
+                Error::add('general', sprintf(T_('%s does not exist or is not readable'), $row['file']));
+                debug_event('read', $row['file'] . ' does not exist or is not readable', 5);
+                continue;
+            }
+
+            $media = new $media_type($row['id']);
+
+            if (Flag::has_flag($media->id, $type)) {
+                debug_event('verify', "$media->file is flagged, skipping", 5);
+                continue;
+            }
+
+            $info = self::update_media_from_tags($media, $this->sort_pattern,$this->rename_pattern);
+            if ($info['change']) {
+                $changed++;
+            }
+            unset($info);
+        }
+
+        UI::update_text('verify_count_' . $this->id, $count);
+        return $changed;
+
+    } // _verify_chunk
 
     /**
      * clean catalog procedure

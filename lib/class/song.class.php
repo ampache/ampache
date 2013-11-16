@@ -126,9 +126,11 @@ class Song extends database_object implements media {
         if (is_array($tags)) {
             foreach ($tags as $tag) {
                 $tag = trim($tag);
-                Tag::add('song', $song_id, $tag, false);
-                Tag::add('album', $album_id, $tag, false);
-                Tag::add('artist', $artist_id, $tag, false);
+                if (!empty($tag)) {
+                    Tag::add('song', $song_id, $tag, false);
+                    Tag::add('album', $album_id, $tag, false);
+                    Tag::add('artist', $artist_id, $tag, false);
+                }
             }
         }
 

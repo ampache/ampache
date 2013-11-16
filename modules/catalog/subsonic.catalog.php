@@ -21,16 +21,16 @@
  */
 
 /**
- * Remote Catalog Class
+ * Subsonic Catalog Class
  *
- * This class handles all actual work in regards to remote catalogs.
+ * This class handles all actual work in regards to remote Subsonic catalogs.
  *
  */
-class Catalog_remote extends Catalog {
+class Catalog_subsonic extends Catalog {
 
     private $version        = '000001';
-    private $type           = 'remote';
-    private $description    = 'Remote catalog';
+    private $type           = 'subsonic';
+    private $description    = 'Subsonic catalog';
     
     /**
      * get_description
@@ -68,7 +68,7 @@ class Catalog_remote extends Catalog {
      */
     public function is_installed() {
 
-        $sql = "DESCRIBE `catalog_remote`"; 
+        $sql = "DESCRIBE `catalog_subsonic`"; 
         $db_results = Dba::query($sql); 
 
         return Dba::num_rows($db_results); 
@@ -82,7 +82,7 @@ class Catalog_remote extends Catalog {
      */
     public function install() {
 
-        $sql = "CREATE TABLE `catalog_remote` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ". 
+        $sql = "CREATE TABLE `catalog_subsonic` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ". 
             "`uri` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
             "`username` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
             "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
@@ -100,7 +100,7 @@ class Catalog_remote extends Catalog {
      */
     public function uninstall() {
 
-        $sql = "DROP TABLE `catalog_remote`"; 
+        $sql = "DROP TABLE `catalog_subsonic`"; 
         $db_results = Dba::query($sql); 
 
         return true; 
@@ -135,6 +135,8 @@ class Catalog_remote extends Catalog {
                 $this->$key = $value;
             }
         }
+        
+        require_once Config::get('prefix') . '/modules/subsonic/subsonic.client.php';
     }
 
     /**
@@ -151,18 +153,17 @@ class Catalog_remote extends Catalog {
         $password = $data['password'];
         
         if (substr($uri,0,7) != 'http://' && substr($uri,0,8) != 'https://') {
-            Error::add('general', T_('Error: Remote selected, but path is not a URL'));
+            Error::add('general', T_('Error: Subsonic selected, but path is not a URL'));
             return false;
         }
         
         if (!strlen($username) OR !strlen($password)) {
-            Error::add('general', T_('Error: Username and Password Required for Remote Catalogs'));
+            Error::add('general', T_('Error: Username and Password Required for Subsonic Catalogs'));
             return false;
         }
-        $password = hash('sha256', $password);
         
         // Make sure this uri isn't already in use by an existing catalog
-        $sql = 'SELECT `id` FROM `catalog_remote` WHERE `uri` = ?';
+        $sql = 'SELECT `id` FROM `catalog_subsonic` WHERE `uri` = ?';
         $db_results = Dba::read($sql, array($uri));
 
         if (Dba::num_rows($db_results)) {
@@ -171,7 +172,7 @@ class Catalog_remote extends Catalog {
             return false;
         }
 
-        $sql = 'INSERT INTO `catalog_remote` (`uri`, `username`, `password`, `catalog_id`) VALUES (?, ?, ?, ?)';
+        $sql = 'INSERT INTO `catalog_subsonic` (`uri`, `username`, `password`, `catalog_id`) VALUES (?, ?, ?, ?)';
         Dba::write($sql, array($uri, $username, $password, $catalog_id));
         return true;
     }
@@ -187,7 +188,7 @@ class Catalog_remote extends Catalog {
         // Prevent the script from timing out
         set_time_limit(0);
 
-        UI::show_box_top(T_('Running Remote Sync') . '. . .');
+        UI::show_box_top(T_('Running Subsonic Remote Sync') . '. . .');
         $this->update_remote_catalog();
         UI::show_box_bottom();
         
@@ -201,42 +202,15 @@ class Catalog_remote extends Catalog {
      */
     public function add_to_catalog() {
 
-        UI::show_box_top(T_('Running Remote Update') . '. . .');
+        UI::show_box_top(T_('Running Subsonic Remote Update') . '. . .');
         $this->update_remote_catalog();
         UI::show_box_bottom();
         
         return true;
     } // add_to_catalog
-
-    /**
-     * connect
-     *
-     * Connects to the remote catalog that we are.
-     */
-    public function connect() {
-        try {
-            $remote_handle = new AmpacheApi(array(
-                'username' => $this->username,
-                'password' => $this->password,
-                'server' => $this->uri,
-                'debug_callback' => 'debug_event',
-                'api_secure' => (substr($this->uri, 0, 8) == 'https://')
-            ));
-        } catch (Exception $e) {
-            Error::add('general', $e->getMessage());
-            Error::display('general');
-            flush();
-            return false;
-        }
-
-        if ($remote_handle->state() != 'CONNECTED') {
-            debug_event('catalog', 'API client failed to connect', 1);
-            Error::add('general', T_('Error connecting to remote server'));
-            Error::display('general');
-            return false;
-        }
-
-        return $remote_handle; 
+    
+    public function createClient() {
+        return (new SubsonicClient($this->username, $this->password, $this->uri, null));
     }
 
     /**
@@ -245,59 +219,76 @@ class Catalog_remote extends Catalog {
      * Pulls the data from a remote catalog and adds any missing songs to the
      * database.
      */
-    public function update_remote_catalog($type = 0) {
-        $remote_handle = $this->connect();
-        if (!$remote_handle) {
-            return false;
-        }
+    public function update_remote_catalog() {
+        $subsonic = $this->createClient();
 
-        // Get the song count, etc.
-        $remote_catalog_info = $remote_handle->info();
-
-        // Tell 'em what we've found, Johnny!
-        printf(T_('%u remote catalog(s) found (%u songs)'), $remote_catalog_info['catalogs'], $remote_catalog_info['songs']);
-        flush();
-
-        // Hardcoded for now
-        $step = 500;
-        $current = 0;
-        $total = $remote_catalog_info['songs'];
-
-        while ($total > $current) {
-            $start = $current;
-            $current += $step;
-            try {
-                $songs = $remote_handle->send_command('songs', array('offset' => $start, 'limit' => $step));
-            }
-            catch (Exception $e) {
-                Error::add('general',$e->getMessage());
-                Error::display('general');
-                flush();
-            }
-
-            // Iterate over the songs we retrieved and insert them
-            foreach ($songs as $data) {
-                if ($this->check_remote_song($data['song'])) {
-                    debug_event('remote_catalog', 'Skipping existing song ' . $data['song']['url'], 5);
-                }
-                else {
-                    $data['song']['catalog'] = $this->id;
-                    $data['song']['file'] = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
-                    if (!Song::insert($data['song'])) {
-                        debug_event('remote_catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
-                        Error::add('general', T_('Unable to Insert Song - %s'), $data['song']['title']);
-                        Error::display('general');
+        $songsadded = 0;
+        // Get all artists
+        $artists = $subsonic->getIndexes();
+        if ($artists['success']) {
+            foreach ($artists['data']['indexes']['index'] as $index) {
+                foreach ($index['artist'] as $artist) {
+                    // Get albums for artist
+                    $albums = $subsonic->getMusicDirectory(array('id' => $artist['id']));
+                    
+                    if ($albums['success']) {
+                        foreach ($albums['data']['directory']['child'] as $album) {
+                            if (is_array($album)) {
+                                $songs = $subsonic->getMusicDirectory(array('id' => $album['id']));
+                                if ($songs['success']) {
+                                    foreach ($songs['data']['directory']['child'] as $song) {
+                                        if (is_array($song)) {
+                                            $data = Array();
+                                            $data['artist'] = html_entity_decode($song['artist']);
+                                            $data['album'] = html_entity_decode($song['album']);
+                                            $data['title'] = html_entity_decode($song['title']);
+                                            $data['bitrate'] = $song['bitRate'] * 1000;
+                                            $data['size'] = $song['size'];
+                                            $data['time'] = $song['duration'];
+                                            $data['track'] = $song['track'];
+                                            $data['disk'] = $song['discNumber'];
+                                            $data['mode'] = 'vbr';
+                                            $data['genre'] = explode(' ', html_entity_decode($song['genre']));
+                                            $data['file'] = $this->uri . '/rest/stream.view?id=' . $song['id'] . '&filename=' . urlencode($song['path']);
+                                            if ($this->check_remote_song($data)) {
+                                                debug_event('subsonic_catalog', 'Skipping existing song ' . $data['path'], 5);
+                                            }
+                                            else {
+                                                $data['catalog'] = $this->id;
+                                                debug_event('subsonic_catalog', 'Adding song ' . $song['path'], 5, 'ampache-catalog');
+                                                if (!Song::insert($data)) {
+                                                    debug_event('subsonic_catalog', 'Insert failed for ' . $song['path'], 1);
+                                                    Error::add('general', T_('Unable to Insert Song - %s'), $song['path']);
+                                                    Error::display('general');
+                                                    flush();
+                                                } else {
+                                                    $songsadded++;
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    echo "<p>" . T_('Song Error.') . ": " . $songs['error'] . "</p><hr />\n";
+                                    flush();
+                                }
+                            }
+                        }
+                    } else {
+                        echo "<p>" . T_('Album Error.') . ": " . $albums['error'] . "</p><hr />\n";
                         flush();
                     }
                 }
             }
-        } // end while
 
-        echo "<p>" . T_('Completed updating remote catalog(s).') . "</p><hr />\n";
-        flush();
+            echo "<p>" . T_('Completed updating Subsonic catalog(s).') . " " . $songsadded . " " . T_('Songs added.') . "</p><hr />\n";
+            flush();
 
-        // Update the last update value
-        $this->update_last_update();
+            // Update the last update value
+            $this->update_last_update();
+        } else {
+            echo "<p>" . T_('Artist Error.') . ": " . $artists['error'] . "</p><hr />\n";
+            flush();
+        }
 
         return true;
 
@@ -310,33 +301,34 @@ class Catalog_remote extends Catalog {
     /**
      * clean_catalog_proc
      * 
-     * Removes remote songs that no longer exist.
+     * Removes subsonic songs that no longer exist.
      */
     public function clean_catalog_proc() {
-        $remote_handle = $this->connect();
-        if (!$remote_handle) {
-            debug_event('remote-clean', 'Remote login failed', 1, 'ampache-catalog');
-            return false;
-        }
+        $subsonic = $this->createClient();
 
         $dead = 0;
 
         $sql = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('remote-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
+            debug_event('subsonic-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
+            $remove = false;
             try {
-                $song = $remote_handle->send_command('url_to_song', array('url' => $row['file']));
+                $songid = $this->url_to_songid($row['file']);
+                $song = $subsonic->getSong(array('id' => $songid));
+                if (!$song['success']) {
+                    $remove = true;
+                }
             }
             catch (Exception $e) {
-                // FIXME: What to do, what to do
+                debug_event('subsonic-clean', 'Clean error: ' . $e->getMessage(), 5, 'ampache-catalog');
             }
            
-            if (count($song) == 1) {
-                debug_event('remote-clean', 'keeping song', 5, 'ampache-catalog');
+            if (!$remove) {
+                debug_event('subsonic-clean', 'keeping song', 5, 'ampache-catalog');
             }
             else {
-                debug_event('remote-clean', 'removing song', 5, 'ampache-catalog');
+                debug_event('subsonic-clean', 'removing song', 5, 'ampache-catalog');
                 $dead++;
                 Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
             }
@@ -352,7 +344,7 @@ class Catalog_remote extends Catalog {
      * if it find a song it returns the UID
      */
     public function check_remote_song($song) {
-        $url = preg_replace('/ssid=.*&/', '', $song['url']);
+        $url = $song['file'];
 
         $sql = 'SELECT `id` FROM `song` WHERE `file` = ?';
         $db_results = Dba::read($sql, array($url));
@@ -370,6 +362,15 @@ class Catalog_remote extends Catalog {
         return( str_replace( $catalog_path . "/", "", $file_path ) );
     }
     
+    public function url_to_songid($url) {
+        $id = 0;
+        preg_match('/\?id=([0-9]*)&/', $url, $matches);
+        if (count($matches)) {
+            $id = $matches[1];
+        }
+        return $id;
+    }
+    
     /**
      * format
      *
@@ -382,16 +383,8 @@ class Catalog_remote extends Catalog {
     
     public function prepare_media($media) {
         
-        $remote_handle = $this->connect();
-
-        // If we don't get anything back we failed and should bail now
-        if (!$remote_handle) {
-            debug_event('play', 'Connection to remote server failed', 1);
-            exit;
-        }
-
-        $handshake = $remote_handle->info();
-        $url = $media->file . '&ssid=' . $handshake['auth'];
+        $subsonic = $this->createClient();
+        $url = $subsonic->parameterize($media->file . '&');
 
         header('Location: ' . $url);
         debug_event('play', 'Started remote stream - ' . $url, 5);       

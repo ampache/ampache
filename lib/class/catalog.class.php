@@ -57,6 +57,7 @@ abstract class Catalog extends database_object {
     abstract public function uninstall();
     abstract public function run_add($options);
     abstract public function add_to_catalog();
+    abstract public function verify_catalog_proc();
     abstract public function clean_catalog_proc();
     abstract public function catalog_fields();
     abstract public function get_rel_path($file_path);
@@ -614,7 +615,7 @@ abstract class Catalog extends database_object {
      * update_last_update
      * updates the last_update of the catalog
      */
-    private function update_last_update() {
+    protected function update_last_update() {
 
         $date = time();
         $sql = "UPDATE `catalog` SET `last_update` = ? WHERE `id` = ?";
@@ -801,11 +802,13 @@ abstract class Catalog extends database_object {
 
         // Nothing to assign here this is a multi-value doodly
         // multiple genre support
-        foreach ($tags as $tag) {
-            $tag = trim($tag);
-            //self::check_tag($tag,$song->id);
-            //self::check_tag($tag,$new_song->album,'album');
-            //self::check_tag($tag,$new_song->artist,'artist');
+        if (is_array($tags)) {
+            foreach ($tags as $tag) {
+                $tag = trim($tag);
+                //self::check_tag($tag,$song->id);
+                //self::check_tag($tag,$new_song->album,'album');
+                //self::check_tag($tag,$new_song->artist,'artist');
+            }
         }
 
         /* Since we're doing a full compare make sure we fill the extended information */
@@ -864,105 +867,22 @@ abstract class Catalog extends database_object {
 
     /**
      * verify_catalog
-     * This function compares the DB's information with the ID3 tags
+     * This function verify the catalog
      */
     public function verify_catalog() {
-
-        debug_event('verify', 'Starting on ' . $this->name, 5);
-        set_time_limit(0);
-
-        $stats = self::get_stats($this->id);
-        $number = $stats['videos'] + $stats['songs'];
-        $total_updated = 0;
-
-        require_once Config::get('prefix') . '/templates/show_verify_catalog.inc.php';
-
-        foreach(array('video', 'song') as $media_type) {
-            $total = $stats[$media_type . 's']; // UGLY
-            if ($total == 0) {
-                continue;
-            }
-            $chunks = floor($total / 10000);
-            foreach(range(0, $chunks) as $chunk) {
-                // Try to be nice about memory usage
-                if ($chunk > 0) {
-                    $media_type::clear_cache();
-                }
-                $total_updated += $this->_verify_chunk($media_type, $chunk, 10000);
-            }
-        }
-
-        debug_event('verify', "Finished, $total_updated updated in " . $this->name, 5);
-
-        self::gc();
-        $this->update_last_update();
-
+        
+        $verified = $this->verify_catalog_proc();+
+        
         UI::show_box_top();
         echo '<strong>';
-        printf(T_('Catalog Verify Done. %d of %d files updated.'), $total_updated, $number);
+        printf(T_('Catalog Verify Done. %d of %d files updated.'), $verified['updated'], $verified['total']);
         echo "</strong><br />\n";
         UI::show_box_bottom();
         ob_flush();
         flush();
 
         return true;
-
     } // verify_catalog
-
-    /**
-     * _verify_chunk
-     * This verifies a chunk of the catalog, done to save
-     * memory
-     */
-    private function _verify_chunk($media_type, $chunk, $chunk_size) {
-        debug_event('verify', "Starting chunk $chunk", 5);
-        $count = $chunk * $chunk_size;
-        $changed = 0;
-
-        $sql = "SELECT `id`, `file` FROM `$media_type` " .
-            "WHERE `catalog`='$this->id' LIMIT $count,$chunk_size";
-        $db_results = Dba::read($sql);
-
-        if (Config::get('memory_cache')) {
-            while ($row = Dba::fetch_assoc($db_results, false)) {
-                $media_ids[] = $row['id'];
-            }
-            $media_type::build_cache($media_ids);
-            $db_results = Dba::read($sql);
-        }
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $count++;
-            if (UI::check_ticker()) {
-                $file = str_replace(array('(',')','\''), '', $row['file']);
-                UI::update_text('verify_count_' . $this->id, $count);
-                UI::update_text('verify_dir_' . $this->id, scrub_out($file));
-            }
-
-            if (!Core::is_readable($row['file'])) {
-                Error::add('general', sprintf(T_('%s does not exist or is not readable'), $row['file']));
-                debug_event('read', $row['file'] . ' does not exist or is not readable', 5);
-                continue;
-            }
-
-            $media = new $media_type($row['id']);
-
-            if (Flag::has_flag($media->id, $type)) {
-                debug_event('verify', "$media->file is flagged, skipping", 5);
-                continue;
-            }
-
-            $info = self::update_media_from_tags($media, $this->sort_pattern,$this->rename_pattern);
-            if ($info['change']) {
-                $changed++;
-            }
-            unset($info);
-        }
-
-        UI::update_text('verify_count_' . $this->id, $count);
-        return $changed;
-
-    } // _verfiy_chunk
 
     /**
      * gc
