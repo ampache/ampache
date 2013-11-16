@@ -43,7 +43,6 @@ switch ($_REQUEST['action']) {
         if ( ($_REQUEST['playlist_method'] == 'clear' || Config::get('playlist_method') == 'clear')) {
             $GLOBALS['user']->playlist->clear();
         }
-
     break;
     /* This is run if we need to gather info based on a tmp playlist */
     case 'tmp_playlist':
@@ -76,7 +75,12 @@ switch ($_REQUEST['action']) {
     break;
     case 'artist':
         $artist = new Artist($_REQUEST['artist_id']);
-        $media_ids = $artist->get_songs();
+        $songs = $artist->get_songs();
+        foreach($songs as $song) {
+            $media_ids[] = array(
+                'object_type' => 'song',
+                'object_id' => $song);
+        }
     break;
     case 'artist_random':
         $artist = new Artist($_REQUEST['artist_id']);
@@ -89,15 +93,20 @@ switch ($_REQUEST['action']) {
     break;
     case 'album':
         $album = new Album($_REQUEST['album_id']);
-        $media_ids = $album->get_songs();
+        $songs = $album->get_songs();
+        foreach($songs as $song) {
+            $media_ids[] = array(
+                'object_type' => 'song',
+                'object_id' => $song);
+        }
     break;
     case 'playlist':
-        $playlist    = new Playlist($_REQUEST['playlist_id']);
-        $media_ids    = $playlist->get_songs($_REQUEST['song']);
+        $playlist = new Playlist($_REQUEST['playlist_id']);
+        $media_ids = $playlist->get_songs($_REQUEST['song']);
     break;
     case 'playlist_random':
-        $playlist    = new Playlist($_REQUEST['playlist_id']);
-        $media_ids    = $playlist->get_random_songs();
+        $playlist = new Playlist($_REQUEST['playlist_id']);
+        $media_ids = $playlist->get_random_songs();
     break;
     case 'random':
         if($_REQUEST['genre'][0] != '-1') {

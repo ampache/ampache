@@ -20,6 +20,7 @@
  *
  */
 
+
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
@@ -61,13 +62,28 @@ switch ($_REQUEST['action']) {
             Config::set('play_type', $new, true);
         }
 
-
         if (($new == 'localplay' AND $current != 'localplay') OR ($current == 'localplay' AND $new != 'localplay')) {
             $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
         }
 
         $results['rfc3514'] = '0x0';
-
+    break;
+    case 'directplay':
+        switch ($_REQUEST['playtype']) {
+            case 'album':
+                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=album&album_id='.$_REQUEST['album_id'];
+            break;
+            case 'artist':
+                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=artist&artist_id='.$_REQUEST['artist_id'];
+            break;
+            case 'song':
+                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=single_song&song_id='.$_REQUEST['song_id'];
+            break;
+            case 'playlist':
+                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=playlist&playlist_id='.$_REQUEST['album_id'];
+            break;
+        }
+        $results['rfc3514'] = '<script type="text/javascript">reloadUtil(\''.$_SESSION['iframe']['target'] . '\');</script>';
     break;
     case 'basket':
         // Go ahead and see if we should clear the playlist here or not,

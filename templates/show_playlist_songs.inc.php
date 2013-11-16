@@ -25,19 +25,24 @@ $web_path = Config::get('web_path');
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
-  <col id="col_add" />
-  <col id="col_track" />
-  <col id="col_song" />
-  <col id="col_artist" />
-  <col id="col_album" />
-  <col id="col_genre" />
-  <col id="col_track" />
-  <col id="col_time" />
-  <col id="col_rating" />
-  <col id="col_action" />
+    <col id="col_directplay" />
+    <col id="col_add" />
+    <col id="col_track" />
+    <col id="col_song" />
+    <col id="col_artist" />
+    <col id="col_album" />
+    <col id="col_genre" />
+    <col id="col_track" />
+    <col id="col_time" />
+    <col id="col_rating" />
+    <col id="col_userflag" />
+    <col id="col_action" />
 </colgroup>
 <tr class="th-top">
-    <th class="cel_add">&nbsp;</th>
+<?php if (Config::get('directplay')) { ?>
+    <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+<?php } ?>
+    <th class="cel_add"><?php echo T_('Add'); ?></th>
     <th class="cel_track"><?php echo T_('Track'); ?></th>
     <th class="cel_song"><?php echo T_('Song Title'); ?></th>
     <th class="cel_artist"><?php echo T_('Artist'); ?></th>
@@ -49,6 +54,11 @@ $web_path = Config::get('web_path');
         Rating::build_cache('song', array_map(create_function('$i', 'return $i[\'object_id\'];'), $object_ids));
 ?>
         <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+<?php } ?>
+<?php if (Config::get('userflags')) {
+        Userflag::build_cache('song', array_map(create_function('$i', 'return $i[\'object_id\'];'), $object_ids));
+?>
+        <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
 <?php } ?>
     <th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
@@ -63,7 +73,10 @@ $web_path = Config::get('web_path');
 </tr>
 <?php } ?>
 <tr class="th-bottom">
-    <th class="cel_add">&nbsp;</th>
+<?php if (Config::get('directplay')) { ?>
+    <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+<?php } ?>
+    <th class="cel_add"><?php echo T_('Add'); ?></th>
     <th class="cel_track"><?php echo T_('Track'); ?></th>
     <th class="cel_song"><?php echo T_('Song Title'); ?></th>
     <th class="cel_artist"><?php echo T_('Artist'); ?></th>
@@ -73,6 +86,9 @@ $web_path = Config::get('web_path');
     <th class="cel_time"><?php echo T_('Time'); ?></th>
 <?php if (Config::get('ratings')) { ?>
         <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+<?php } ?>
+<?php if (Config::get('userflags')) { ?>
+        <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
 <?php } ?>
     <th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>

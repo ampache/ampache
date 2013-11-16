@@ -123,8 +123,13 @@ hr {
 	width:180px;
 	margin-top:32px;
 	right:10px;
+    
     /* Set position to fixed to 'pin' the playlist */
-	/*position:fixed;*/
+	/*position:fixed;
+    max-height: 85%;
+    overflow-x: hidden;
+	overflow-y: scroll;*/
+    
     position: absolute;
 	clear:both;
 }
@@ -157,7 +162,7 @@ hr {
 
 #header .box-inside
 {
-	width:550px;
+	width:auto;
 	text-align:right;
 	float:right;
 }
@@ -193,6 +198,7 @@ hr {
 
 #header #loginInfo
 {
+    display: block;
 	color:#eee;
 }
 
@@ -520,6 +526,12 @@ table.tabledata tbody .odd
 	background:#eee;
 }
 
+table.tabledata tbody .cel_directplay
+{
+	width:14px;
+	text-align: center;
+}
+
 table.tabledata tbody .cel_add
 {
 	width:14px;
@@ -560,6 +572,11 @@ table.tabledata tbody .cel_cover img
 	font-weight:400;
 	border:1px solid #333;
 	padding:5px;
+}
+
+span.page-nb {
+    font-weight: bold;
+    font-size: 1.3em;
 }
 
 /***********************************************
@@ -620,11 +637,11 @@ table.tabledata tbody .cel_cover img
 ***********************************************/
 #now_playing {
     margin-bottom: 20px;
-    width: 430px;
+    width: auto;
 }
 
 #now_playing .np_group {
-    float: right;
+    float: left;
 }
 
 #now_playing .np_cell {
@@ -632,6 +649,10 @@ table.tabledata tbody .cel_cover img
 }
 
 #now_playing .cel_rating label {
+    display: none;
+}
+
+#now_playing .cel_userflag label {
     display: none;
 }
 
@@ -665,6 +686,15 @@ table.tabledata tbody .cel_cover img
     color: #0099CC;
 }
 
+#now_playing .similars {
+    border-right: 1px solid;
+    border-left: 1px solid;
+    margin-right: 10px;
+    padding-right: 5px;
+    margin-left: 10px;
+    padding-left: 5px;
+}
+
 /***********************************************
     Content (Tag cloud)                
 ***********************************************/
@@ -685,6 +715,12 @@ span.fatalerror {
     color: #c60;
     padding: 5px;
     display: block;
+}
+
+span.nodata {
+    padding: 5px;
+    display: block;
+    font-style: italic;
 }
 
 .box-content #tag_filter span
@@ -830,6 +866,45 @@ span.fatalerror {
 .dynamic-star-rating ul
 {
     left:16px;
+}
+
+/************************************************/
+/*        Styles for user flags                 */
+/************************************************/
+.userflag
+{
+    position: relative;
+    width:16px;
+    height:16px;
+}
+
+.userflag a {
+    position:absolute;
+    display: inline;
+}
+
+.userflag a.userflag_true
+{
+    width:16px;
+    height: 16px;
+    background: url(../../../images/icon_flag.png) left top;
+}
+
+.userflag a:hover.userflag_true
+{
+    background: url(../../../images/icon_flag_off.png) left top;
+}
+
+.userflag a.userflag_false
+{
+    width:16px;
+    height:16px;
+    background: url(../../../images/icon_flag_off.png) left top;
+}
+
+.userflag a:hover.userflag_false
+{
+    background: url(../../../images/icon_flag.png) left top;
 }
 
 /***********************************************

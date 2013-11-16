@@ -176,6 +176,9 @@ class Song extends database_object implements media {
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
+            if (Config::get('show_played_times')) {
+                $row['object_cnt'] = Stats::get_object_count('song', $row['id']);
+            }
             parent::add_to_cache('song', $row['id'], $row);
             $artists[$row['artist']] = $row['artist'];
             $albums[$row['album']] = $row['album'];
@@ -193,6 +196,9 @@ class Song extends database_object implements media {
         // If we're rating this then cache them as well
         if (Config::get('ratings')) {
             Rating::build_cache('song', $song_ids);
+        }
+        if (Config::get('userflags')) {
+            Userflag::build_cache('song', $song_ids);
         }
 
         // Build a cache for the song's extended table
@@ -226,6 +232,9 @@ class Song extends database_object implements media {
 
         $results = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
+            if (Config::get('show_played_times')) {
+                $results['object_cnt'] = Stats::get_object_count('song', $results['id']);
+            }
             parent::add_to_cache('song', $id, $results);
             return $results;
         }

@@ -29,8 +29,15 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 <dt class="<?php echo UI::flip_class(); ?>"><?php echo T_('Rating'); ?></dt>
 <dd><div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></div></dd>
 <?php } ?>
+<?php if (Config::get('userflags')) { ?>
+<dt class="<?php echo UI::flip_class(); ?>"><?php echo T_('Flag'); ?></dt>
+<dd><div id="userflag_<?php echo $song->id; ?>_song"><?php Userflag::show($song->id,'song'); ?></div></dd>
+<?php } ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo UI::flip_class(); ?>">
+        <?php if (Config::get('directplay')) { ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id, 'play', T_('Play song'),'play_song_' . $song->id); ?>
+        <?php } ?>
         <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'add_song_' . $song->id); ?>
         <?php if (Access::check_function('download')) { ?>
             <a href="<?php echo Song::play_url($song->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
@@ -60,6 +67,9 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     $songprops[gettext_noop('Last Updated')]   = date("d/m/Y H:i",$song->update_time);
   }
   $songprops[gettext_noop('Added')]   = date("d/m/Y H:i",$song->addition_time);
+  if (Config::get('show_played_times')) {
+    $songprops[gettext_noop('# Played')]   = scrub_out($song->object_cnt);
+  }
 
   foreach ($songprops as $key => $value)
   {

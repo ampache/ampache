@@ -6,6 +6,13 @@ TINY.box=function(){
 		show:function(o){
 			v={opacity:70,close:1,animate:1,fixed:1,mask:1,maskid:'',boxid:'',topsplit:2,url:0,post:0,height:0,width:0,html:0,iframe:0};
 			for(s in o){v[s]=o[s]}
+			
+			popup_innerWidth =  Math.round(90/100 * self.innerWidth);
+			popup_innerHeight =  Math.round(90/100 * self.innerHeight);
+			
+			v.width = popup_innerWidth;
+			v.height = popup_innerHeight;
+			
 			if(!p){
 				j=document.createElement('div'); j.className='tbox';
 				p=document.createElement('div'); p.className='tinner';
@@ -19,8 +26,10 @@ TINY.box=function(){
 			}
 			p.id=v.boxid; m.id=v.maskid; j.style.position=v.fixed?'fixed':'absolute';
 			if(v.html&&!v.animate){
-				p.style.backgroundImage='none'; b.innerHTML=v.html; b.style.display='';
-				p.style.width=v.width?v.width+'px':'auto'; p.style.height=v.height?v.height+'px':'auto'
+				p.style.backgroundImage='none';
+				b.innerHTML=v.html; b.style.display='';
+				p.style.width=v.width?v.width+'px':'auto';
+				p.style.height=v.height?v.height+'px':'auto'
 			}else{
 				b.style.display='none'; 
 				if(!v.animate&&v.width&&v.height){
@@ -29,13 +38,22 @@ TINY.box=function(){
 					p.style.width=p.style.height='100px'
 				}
 			}
+			
 			if(v.mask){this.mask(); this.alpha(m,1,v.opacity)}else{this.alpha(j,1,100)}
 			if(v.autohide){p.ah=setTimeout(TINY.box.hide,1000*v.autohide)}else{document.onkeyup=TINY.box.esc}
 		},
 		fill:function(c,u,k,a,w,h){
 			if(u){
 				if(v.image){
-					var i=new Image(); i.onload=function(){w=w||i.width; h=h||i.height; TINY.box.psh(i,a,w,h)}; i.src=v.image
+					var i=new Image();
+					i.onload=function(){
+						w = i.width > w ? w : i.width;
+						h = i.height > h ? h : i.height;
+						i.width = w;
+						i.height = h;
+						TINY.box.psh(i,a,w,h)
+					};
+					i.src = v.image;		
 				}else if(v.iframe){
 					this.psh('<iframe src="'+v.iframe+'" width="'+v.width+'" frameborder="0" height="'+v.height+'"></iframe>',a,w,h)
 				}else{
@@ -123,8 +141,12 @@ TINY.box=function(){
 			}
 		},
 		top:function(){return document.documentElement.scrollTop||document.body.scrollTop},
-		width:function(){return self.innerWidth||document.documentElement.clientWidth||document.body.clientWidth},
-		height:function(){return self.innerHeight||document.documentElement.clientHeight||document.body.clientHeight},
+		width:function() {
+			return self.innerWidth||document.documentElement.clientWidth||document.body.clientWidth
+		},
+		height:function() {
+			return self.innerHeight||document.documentElement.clientHeight||document.body.clientHeight
+		},
 		total:function(d){
 			var b=document.body, e=document.documentElement;
 			return d?Math.max(Math.max(b.scrollHeight,e.scrollHeight),Math.max(b.clientHeight,e.clientHeight)):

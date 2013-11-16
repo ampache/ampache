@@ -136,6 +136,9 @@ class Album extends database_object {
                 $art->get_db();
                 $row['has_art'] = make_bool($art->raw);
                 $row['has_thumb'] = make_bool($art->thumb);
+                if (Config::get('show_played_times')) {
+                    $row['object_cnt'] = Stats::get_object_count('album', $row['album']);
+                }
                 parent::add_to_cache('album_extra',$row['album'],$row);
             } // while rows
         } // if extra
@@ -174,6 +177,10 @@ class Album extends database_object {
         $art->get_db();
         $results['has_art'] = make_bool($art->raw);
         $results['has_thumb'] = make_bool($art->thumb);
+        
+        if (Config::get('show_played_times')) {
+            $results['object_cnt'] = Stats::get_object_count('album', $this->id);
+        }
 
         parent::add_to_cache('album_extra',$this->id,$results);
 
@@ -410,6 +417,7 @@ class Album extends database_object {
             } // foreach song of album
             Stats::gc();
             Rating::gc();
+            Userflag::gc();
         } // if updated
 
 

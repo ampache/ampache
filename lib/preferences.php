@@ -167,6 +167,8 @@ function create_preference_input($name,$value) {
         case 'rio_global_stats':
         case 'direct_link':
         case 'iframes':
+        case 'now_playing_per_user':
+        case 'show_played_times':
             if ($value == '1') { $is_true = "selected=\"selected\""; }
             else { $is_false = "selected=\"selected\""; }
             echo "<select name=\"$name\">\n";
@@ -286,6 +288,21 @@ function create_preference_input($name,$value) {
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";
             echo "\t<option value=\"0\" $is_false>" . T_("Disable") . "</option>\n";
+            echo "</select>\n";
+        break;
+        case 'album_sort':
+            if ($value == 'year_asc') { $is_sort_year_asc = 'selected="selected"'; }
+            elseif ($value == 'year_desc') { $is_sort_year_desc = 'selected="selected"'; }
+            elseif ($value == 'name_asc') { $is_sort_name_asc = 'selected="selected"'; }
+            elseif ($value == 'name_desc') { $is_sort_name_desc = 'selected="selected"'; }
+            else { $is_sort_default = 'selected="selected"'; }
+            
+            echo "<select name=\"$name\">\n";
+            echo "\t<option value=\"default\" $is_sort_default>" . T_('Default') . "</option>\n";
+            echo "\t<option value=\"year_asc\" $is_sort_year_asc>" . T_('Year ascending') . "</option>\n";
+            echo "\t<option value=\"year_desc\" $is_sort_year_desc>" . T_('Year descending') . "</option>\n";
+            echo "\t<option value=\"name_asc\" $is_sort_name_asc>" . T_('Name ascending') . "</option>\n";
+            echo "\t<option value=\"name_desc\" $is_sort_name_desc>" . T_('Name descending') . "</option>\n";
             echo "</select>\n";
         break;
         default:

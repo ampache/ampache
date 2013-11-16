@@ -459,6 +459,12 @@ table.tabledata tbody .odd
 	background:#eee;
 }
 
+table.tabledata tbody .cel_directplay
+{
+	width:14px;
+	text-align: center;
+}
+
 table.tabledata tbody .cel_add
 {
 	width:14px;
@@ -573,6 +579,12 @@ span.fatalerror {
     color: #c60;
     padding: 5px;
     display: block;
+}
+
+span.nodata {
+    padding: 5px;
+    display: block;
+    font-style: italic;
 }
 
 .box-content #tag_filter span

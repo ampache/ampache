@@ -1428,6 +1428,7 @@ class Catalog extends database_object {
         Flag::gc();
         Stats::gc();
         Rating::gc();
+        Userflag::gc();
         Playlist::gc();
         Tmp_Playlist::gc();
         Shoutbox::gc();

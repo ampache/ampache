@@ -20,6 +20,11 @@
  *
  */
 ?>
+<?php if (Config::get('directplay')) { ?>
+<td class="cel_directplay">
+    <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id,'play', T_('Play album'),'play_album_' . $album->id); ?>
+</td>
+<?php } ?>
 <td class="cel_add">
     <?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Add'),'add_album_' . $album->id); ?>
     <?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random', T_('Random'),'random_album_' . $album->id); ?>
@@ -39,7 +44,12 @@ if (Art::is_enabled()) {
 <td class="cel_songs"><?php echo $album->song_count; ?></td>
 <td class="cel_year"><?php echo $album->year; ?></td>
 <td class="cel_tags"><?php echo $album->f_tags; ?></td>
+<?php if (Config::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $album->id; ?>_album"><?php Rating::show($album->id,'album'); ?></td>
+<?php } ?>
+<?php if (Config::get('userflags')) { ?>
+<td class="cel_userflag" id="userflag_<?php echo $album->id; ?>_album"><?php Userflag::show($album->id,'album'); ?></td>
+<?php } ?>
 <td class="cel_action">
     <?php if (Config::get('sociable')) { ?>
     <a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=album&amp;id=<?php echo $album->id; ?>">

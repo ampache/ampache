@@ -110,7 +110,7 @@ function install_check_status($configfile) {
  *
  * Inserts the database using the values from Config.
  */
-function install_insert_db($db_user = null, $db_pass = null, $overwrite = false) {
+function install_insert_db($db_user = null, $db_pass = null, $overwrite = false, $use_existing_db = false) {
     $database = Config::get('database_name');
     // Make sure that the database name is valid
     $is_valid = preg_match('/([^\d\w\_\-])/', $database, $matches);
@@ -129,7 +129,7 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false)
     $create_db = true;
 
     if ($db_exists) {
-        if ($_POST['existing_db']) {
+        if ($use_existing_db) {
             $create_db = false;
         }
         else if ($overwrite) {

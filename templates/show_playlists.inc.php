@@ -23,15 +23,19 @@
 <?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
-  <col id="col_add" />
-  <col id="col_playlist" />
-  <col id="col_type" />
-  <col id="col_songs" />
-  <col id="col_owner" />
-  <col id="col_action" />
+    <col id="col_directplay" />
+    <col id="col_add" />
+    <col id="col_playlist" />
+    <col id="col_type" />
+    <col id="col_songs" />
+    <col id="col_owner" />
+    <col id="col_action" />
 </colgroup>
 <tr class="th-top">
-  <th class="cel_add"><?php echo T_('Add'); ?></th>
+<?php if (Config::get('directplay')) { ?>
+    <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+<?php } ?>
+    <th class="cel_add"><?php echo T_('Add'); ?></th>
     <th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'),'playlist_sort_name'); ?></th>
     <th class="cel_type">&nbsp;</th>
     <th class="cel_songs"><?php echo T_('# Songs'); ?></th>
@@ -50,11 +54,14 @@ foreach ($object_ids as $playlist_id) {
 <?php } // end foreach ($playlists as $playlist) ?>
 <?php if (!count($object_ids)) { ?>
 <tr class="<?php echo UI::flip_class(); ?>">
-    <td colspan="6"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
+    <td colspan="6"><span class="nodata"><?php echo T_('No playlist found'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
-  <th class="cel_add"><?php echo T_('Add'); ?></th>
+<?php if (Config::get('directplay')) { ?>
+    <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+<?php } ?>
+    <th class="cel_add"><?php echo T_('Add'); ?></th>
     <th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'),'playlist_sort_name_bottom'); ?></th>
     <th class="cel_type">&nbsp;</th>
     <th class="cel_songs"><?php echo T_('# Songs'); ?></th>

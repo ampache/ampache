@@ -108,6 +108,9 @@ class Artist extends database_object {
             $db_results = Dba::read($sql);
 
             while ($row = Dba::fetch_assoc($db_results)) {
+                if (Config::get('show_played_times')) {
+                    $row['object_cnt'] = Stats::get_object_count('artist', $row['artist']);
+                }
                 parent::add_to_cache('artist_extra',$row['artist'],$row);
             }
 
@@ -146,11 +149,19 @@ class Artist extends database_object {
             $catalog_join = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
             $catalog_where = "AND `catalog`.`id` = '$catalog'";
         }
-
+        
         $results = array();
 
+        $sql_sort = 'ORDER BY `album`.`name`,`album`.`disk`,`album`.`year`';
+        
+        $sort_type = Config::get('album_sort');
+        if ($sort_type == 'year_asc') { $sql_sort = 'ORDER BY `album`.`year` ASC'; }
+        elseif ($sort_type == 'year_desc') { $sql_sort = 'ORDER BY `album`.`year` DESC'; }
+        elseif ($sort_type == 'name_asc') { $sql_sort = 'ORDER BY `album`.`name` ASC'; }
+        elseif ($sort_type == 'name_desc') { $sql_sort = 'ORDER BY `album`.`name` DESC'; }
+        
         $sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-            "WHERE `song`.`artist`='$this->id' $catalog_where GROUP BY `album`.`id` ORDER BY `album`.`name`,`album`.`disk`,`album`.`year`";
+            "WHERE `song`.`artist`='$this->id' $catalog_where GROUP BY `album`.`id` $sql_sort";
 
         debug_event("Artist", "$sql", "6");
         $db_results = Dba::read($sql);
@@ -220,6 +231,9 @@ class Artist extends database_object {
                 
             $db_results = Dba::read($sql);
             $row = Dba::fetch_assoc($db_results);
+            if (Config::get('show_played_times')) {
+                $row['object_cnt'] = Stats::get_object_count('artist', $row['artist']);
+            }
             parent::add_to_cache('artist_extra',$row['artist'],$row);
         }
 
@@ -270,6 +284,7 @@ class Artist extends database_object {
         $this->tags = Tag::get_top_tags('artist',$this->id);
 
         $this->f_tags = Tag::get_display($this->tags,$this->id,'artist');
+        $this->object_cnt = $extra_info['object_cnt'];
 
         return true;
 
@@ -387,6 +402,7 @@ class Artist extends database_object {
             }
             Stats::gc();
             Rating::gc();
+            Userflag::gc();
         } // if updated
 
         return $current_id;

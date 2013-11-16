@@ -73,6 +73,12 @@
       <li id="sb_home_info_Statistics"><a href="<?php echo $web_path; ?>/stats.php?action=show"><?php echo T_('Statistics'); ?></a></li>
       <li id="sb_home_info_Newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo T_('Newest'); ?></a></li>
       <li id="sb_home_info_Popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo T_('Popular'); ?></a></li>
+<?php if (Config::get('ratings')) { ?>
+      <li id="sb_home_info_Highest"><a href="<?php echo $web_path; ?>/stats.php?action=highest"><?php echo T_('Top Rated'); ?></a></li>
+<?php } ?>
+<?php if (Config::get('userflags')) { ?>
+      <li id="sb_home_info_UserFlag"><a href="<?php echo $web_path; ?>/stats.php?action=userflag"><?php echo T_('My Flags'); ?></a></li>
+<?php } ?>
     </ul>
   </li>
   <li><h4><?php echo T_('Search'); ?></h4>

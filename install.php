@@ -42,15 +42,20 @@ $password = $_REQUEST['local_pass'];
 $hostname = scrub_in($_REQUEST['local_host']);
 $database = scrub_in($_REQUEST['local_db']);
 $port = scrub_in($_REQUEST['local_port']);
+$skip_admin = $_REQUEST['skip_admin'];
 
 Config::set_by_array(array(
     'web_path' => $web_path,
     'database_name' => $database,
-    'database_username' => $username,
-    'database_password' => $password,
     'database_hostname' => $hostname,
     'database_port' => $port
 ), true);
+if (!$skip_admin) {
+    Config::set_by_array(array(
+        'database_username' => $username,
+        'database_password' => $password
+    ), true);
+}
 
 // Charset and gettext setup
 $htmllang = $_REQUEST['htmllang'];
@@ -89,16 +94,19 @@ switch ($_REQUEST['action']) {
         if ($_POST['db_user'] == 'create_db_user') {
             $new_user = scrub_in($_POST['db_username']);
             $new_pass = $_POST['db_password'];
-        }
-        if (!strlen($new_user) || !strlen($new_pass)) {
-            Error::add('general', T_('Error: Ampache SQL Username or Password missing'));
-            require_once 'templates/show_install.inc.php';
-            break;
+        
+            if (!strlen($new_user) || !strlen($new_pass)) {
+                Error::add('general', T_('Error: Ampache SQL Username or Password missing'));
+                require_once 'templates/show_install.inc.php';
+                break;
+            }
         }
 
-        if (!install_insert_db($new_user, $new_pass, $_POST['overwrite_db'])) {
-            require_once 'templates/show_install.inc.php';
-            break;
+        if (!$skip_admin) {
+            if (!install_insert_db($new_user, $new_pass, $_POST['overwrite_db'], $_REQUEST['existing_db'])) {
+                require_once 'templates/show_install.inc.php';
+                break;
+            }
         }
 
         // Now that it's inserted save the lang preference

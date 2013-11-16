@@ -25,6 +25,7 @@ $web_path = Config::get('web_path');
 <?php
 $browse = new Browse();
 $browse->set_type($object_type);
+
 UI::show_box_top($artist->f_name, 'info-box');
 if (Config::get('ratings')) {
 ?>
@@ -32,6 +33,19 @@ if (Config::get('ratings')) {
     <?php show_rating($artist->id, 'artist'); ?>
 </div>
 <?php } ?>
+<?php if (Config::get('userflags')) { ?>
+<div style="display:table-cell;" id="userflag_<?php echo $artist->id; ?>_artist">
+        <?php Userflag::show($artist->id,'artist'); ?>
+</div>
+<?php } ?>
+<?php
+if (Config::get('show_played_times')) {
+?>
+<br />
+<div style="display:inline;"><?php echo T_('Played') . ' ' . $artist->object_cnt . ' ' . T_('times'); ?></div>
+<?php
+}
+?>
 <div id="information_actions">
 <h3><?php echo T_('Actions'); ?>:</h3>
 <ul>
@@ -46,10 +60,16 @@ if (Config::get('ratings')) {
     <?php printf(T_("Show Albums By %s"), $artist->f_name); ?></a>
     <?php } ?>
 </li>
+<?php if (Config::get('directplay')) { ?>
+<li>
+    <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id,'play', T_('Play artist'),'directplay_full_' . $artist->id); ?>
+    <?php echo Ajax::text('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id, sprintf(T_('Play All Songs By %s'), $artist->f_name),'directplay_full_text_' . $artist->id); ?>
+</li>
+<?php } ?>
 <li>
     <?php /* HINT: Artist Fullname */ ?>
     <?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add', T_('Add'),'add_' . $artist->id); ?>
-    <?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id,sprintf(T_('Add All Songs By %s'), $artist->f_name),'add_text_' . $artist->id); ?>
+    <?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id, sprintf(T_('Add All Songs By %s'), $artist->f_name),'add_text_' . $artist->id); ?>
 </li>
 <li>
     <?php /* HINT: Artist Fullname */ ?>
@@ -58,8 +78,8 @@ if (Config::get('ratings')) {
 </li>
 <?php if (Access::check('interface','50')) { ?>
 <li>
-    <a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo UI::get_icon('cog', T_('Update from tags')); ?></a>
-    <a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>"><?php echo T_('Update from tags'); ?></a>
+    <a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('cog', T_('Update from tags')); ?></a>
+    <a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo T_('Update from tags'); ?></a>
 </li>
 <?php } ?>
 <?php if (Access::check_function('batch_download')) { ?>

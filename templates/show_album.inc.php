@@ -43,11 +43,32 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
     ?>
 </div>
 <div id="information_actions">
+<?php if (Config::get('ratings')) { ?>
 <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
         <?php Rating::show($album->id,'album'); ?>
 </div>
+<?php } ?>
+<?php if (Config::get('userflags')) { ?>
+<div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
+        <?php Userflag::show($album->id,'album'); ?>
+</div>
+<?php } ?>
+<?php
+if (Config::get('show_played_times')) {
+?>
+<br />
+<div style="display:inline;"><?php echo T_('Played') . ' ' . $album->object_cnt . ' ' . T_('times'); ?></div>
+<?php
+}
+?>
 <h3><?php echo T_('Actions'); ?>:</h3>
 <ul>
+    <?php if (Config::get('directplay')) { ?>
+    <li>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id,'play', T_('Play album'),'directplay_full_' . $album->id); ?>
+        <?php echo Ajax::text('?page=stream&action=directplay&playtype=album&album_id=' . $album->id, T_('Play Album'),'directplay_full_text_' . $album->id); ?>
+    </li>
+    <?php } ?>
     <li>
         <?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Add'),'play_full_' . $album->id); ?>
         <?php echo Ajax::text('?action=basket&type=album&id=' . $album->id, T_('Add Album'), 'play_full_text_' . $album->id); ?>
@@ -58,8 +79,8 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
     </li>
     <?php if (Access::check('interface','75')) { ?>
     <li>
-        <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo UI::get_icon('delete', T_('Reset Album Art')); ?></a>
-        <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>"><?php echo T_('Reset Album Art'); ?></a>
+        <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to reset album art?'); ?>');"><?php echo UI::get_icon('delete', T_('Reset Album Art')); ?></a>
+        <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to reset album art?'); ?>');"><?php echo T_('Reset Album Art'); ?></a>
     </li>
     <?php } ?>
     <li>
@@ -68,8 +89,8 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
     </li>
     <?php  if ((Access::check('interface','50'))) { ?>
     <li>
-        <a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo UI::get_icon('cog', T_('Update from tags')); ?></a>
-        <a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>"><?php echo T_('Update from tags'); ?></a>
+        <a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('cog', T_('Update from tags')); ?></a>
+        <a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo T_('Update from tags'); ?></a>
     </li>
     <?php  } ?>
     <?php if (Access::check_function('batch_download')) { ?>
@@ -90,7 +111,7 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
     $browse->set_simple_browse(true);
     $browse->set_filter('album', $album->id);
     $browse->set_sort('track', 'ASC');
-     $browse->get_objects();
+    $browse->get_objects();
     $browse->show_objects();
     $browse->store();
 ?>

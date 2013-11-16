@@ -54,7 +54,7 @@ foreach ($object_ids as $video_id) {
 <?php } //end foreach  ?>
 <?php if (!count($object_ids)) { ?>
 <tr class="<?php echo UI::flip_class(); ?>">
-    <td colspan="7"><span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span></td>
+    <td colspan="7"><span class="nodata"><?php echo T_('No video found'); ?></span></td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">

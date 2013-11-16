@@ -39,26 +39,162 @@ class Subsonic_Api {
     }
     
     public static function check_version($input, $version = "1.0.0", $addheader = false) {
-        if (version_compare($input['v'], $version) < 0) {
+        // We cannot check client version unfortunately. Most Subsonic client sent a dummy client version...
+        /*if (version_compare($input['v'], $version) < 0) {
             ob_end_clean();
-            if ($addheader) header("Content-type: text/xml; charset=" . Config::get('site_charset'));
-            echo Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_APIVERSION_CLIENT)->asXml();
+            if ($addheader) self::setHeader($input['f']);
+            self::apiOutput($input, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_APIVERSION_CLIENT));
             exit;
-        }
+        }*/
     }
     
-    public static function check_parameter($parameter, $addheader = false) {
-        if (empty($parameter)) {
+    public static function check_parameter($input, $parameter, $addheader = false) {
+        if (empty($input[$parameter])) {
             ob_end_clean();
-            if ($addheader) header("Content-type: text/xml; charset=" . Config::get('site_charset'));
-            echo Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM)->asXml();
+            if ($addheader) self::setHeader($input['f']);
+            self::apiOutput($input, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM));
             exit;
         }
+        
+        return $input[$parameter];
     }
     
     public static function follow_stream($url) {
-        // Stream media, easier to redirect to the dedicated page
-        header("Location: " . $url);
+        
+        if (function_exists('curl_version')) {
+            // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
+            $ch = curl_init($url);
+            curl_setopt_array($ch, array(
+                CURLOPT_HEADER => true,
+                CURLOPT_RETURNTRANSFER => false,
+                // Ignore invalid certificate
+                // Default trusted chain is crap anyway and currently no custom CA option
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => false
+            ));
+            curl_exec($ch);
+            curl_close($ch);
+        } else {
+            // Stream media using http redirect if no curl support
+            header("Location: " . $url);
+        }
+    }
+    
+    public static function setHeader($f) {
+        if (strtolower($f) == "json") {
+            header("Content-type: application/json; charset=" . Config::get('site_charset'));
+        } else if (strtolower($f) == "jsonp") {
+            header("Content-type: text/javascript; charset=" . Config::get('site_charset'));
+        } else {
+            header("Content-type: text/xml; charset=" . Config::get('site_charset'));
+        }
+    }
+    
+    public static function apiOutput($input, $xml) {
+    
+        $f = $input['f'];
+        self::apiOutput2(strtolower($f), $xml);
+    }
+    
+    public static function apiOutput2($f, $xml) {
+    
+        if ($f == "json") {
+            echo json_encode(self::xml2json($xml), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+        } else if ($f == "jsonp") {
+            $callback = $input['callback'];
+            echo $callback . '(' . json_encode(self::xml2json($xml), JSON_PRETTY_PRINT) . ')';
+        } else {
+            echo $xml->asXml();
+        }
+        
+    }
+    
+    /**
+     * xml2json based from http://outlandish.com/blog/xml-to-json/
+     * Because we cannot use only json_encode to respect JSON Subsonic API
+     */
+    private static function xml2json($xml, $options = array()) {
+        $defaults = array(
+            'namespaceSeparator' => ':',//you may want this to be something other than a colon
+            'attributePrefix' => '',   //to distinguish between attributes and nodes with the same name
+            'alwaysArray' => array(),   //array of xml tag names which should always become arrays
+            'autoArray' => true,        //only create arrays for tags which appear more than once
+            'textContent' => '$',       //key used for the text content of elements
+            'autoText' => true,         //skip textContent key if node has no attributes or child nodes
+            'keySearch' => false,       //optional search and replace on tag and attribute names
+            'keyReplace' => false,      //replace values for above search values (as passed to str_replace())
+            'boolean' => true           //replace true and false string with boolean values
+        );
+        $options = array_merge($defaults, $options);
+        $namespaces = $xml->getDocNamespaces();
+        $namespaces[''] = null; //add base (empty) namespace
+     
+        //get attributes from all namespaces
+        $attributesArray = array();
+        foreach ($namespaces as $prefix => $namespace) {
+            foreach ($xml->attributes($namespace) as $attributeName => $attribute) {
+                //replace characters in attribute name
+                if ($options['keySearch']) $attributeName =
+                        str_replace($options['keySearch'], $options['keyReplace'], $attributeName);
+                $attributeKey = $options['attributePrefix']
+                        . ($prefix ? $prefix . $options['namespaceSeparator'] : '')
+                        . $attributeName;
+                $strattr = (string)$attribute;
+                if ($options['boolean'] && ($strattr == "true" || $strattr == "false")) {
+                    $vattr = ($strattr == "true");
+                } else {
+                    $vattr = $strattr;
+                }
+                $attributesArray[$attributeKey] = $vattr;
+            }
+        }
+     
+        //get child nodes from all namespaces
+        $tagsArray = array();
+        foreach ($namespaces as $prefix => $namespace) {
+            foreach ($xml->children($namespace) as $childXml) {
+                //recurse into child nodes
+                $childArray = self::xml2json($childXml, $options);
+                list($childTagName, $childProperties) = each($childArray);
+     
+                //replace characters in tag name
+                if ($options['keySearch']) $childTagName =
+                        str_replace($options['keySearch'], $options['keyReplace'], $childTagName);
+                //add namespace prefix, if any
+                if ($prefix) $childTagName = $prefix . $options['namespaceSeparator'] . $childTagName;
+     
+                if (!isset($tagsArray[$childTagName])) {
+                    //only entry with this key
+                    //test if tags of this type should always be arrays, no matter the element count
+                    $tagsArray[$childTagName] =
+                            in_array($childTagName, $options['alwaysArray']) || !$options['autoArray']
+                            ? array($childProperties) : $childProperties;
+                } elseif (
+                    is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName])
+                    === range(0, count($tagsArray[$childTagName]) - 1)
+                ) {
+                    //key already exists and is integer indexed array
+                    $tagsArray[$childTagName][] = $childProperties;
+                } else {
+                    //key exists so convert to integer indexed array with previous value in position 0
+                    $tagsArray[$childTagName] = array($tagsArray[$childTagName], $childProperties);
+                }
+            }
+        }
+     
+        //get text content of node
+        $textContentArray = array();
+        $plainText = trim((string)$xml);
+        if ($plainText !== '') $textContentArray[$options['textContent']] = $plainText;
+     
+        //stick it all together
+        $propertiesArray = !$options['autoText'] || $attributesArray || $tagsArray || ($plainText === '')
+                ? array_merge($attributesArray, $tagsArray, $textContentArray) : $plainText;
+     
+        //return node as array
+        return array(
+            $xml->getName() => $propertiesArray
+        );
     }
     
 
@@ -68,9 +204,9 @@ class Subsonic_Api {
      * Takes no parameter.
      */
     public static function ping($input) {
-        self::check_version($input);
+        // Don't check client API version here. Some client give version 0.0.0 for ping command
         
-        echo Subsonic_XML_Data::createSuccessResponse()->asXml();
+        self::apiOutput($input, Subsonic_XML_Data::createSuccessResponse());
     }
     
     /**
@@ -83,7 +219,7 @@ class Subsonic_Api {
         
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addLicense($r);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -96,7 +232,7 @@ class Subsonic_Api {
                
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addMusicFolders($r, Catalog::get_catalogs());
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -138,7 +274,7 @@ class Subsonic_Api {
             $artists = Catalog::get_artists($fcatalogs);
             Subsonic_XML_Data::addArtistsIndexes($r, $artists, $lastmodified);
         }
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -149,8 +285,7 @@ class Subsonic_Api {
      public static function getmusicdirectory($input) {
         self::check_version($input);
         
-        $id = $input['id'];
-        self::check_parameter($id);
+        $id = self::check_parameter($input, 'id');
         
         $r = Subsonic_XML_Data::createSuccessResponse();
         if (Subsonic_XML_Data::isArtist($id)) {
@@ -161,7 +296,7 @@ class Subsonic_Api {
             $album = new Album(Subsonic_XML_Data::getAmpacheId($id));
             Subsonic_XML_Data::addAlbumDirectory($r, $album);
         }
-        echo $r->asXml();
+        self::apiOutput($input, $r);
      }
      
     /**
@@ -174,7 +309,7 @@ class Subsonic_Api {
         
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addGenres($r, Tag::get_tags());
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -183,12 +318,12 @@ class Subsonic_Api {
      * Takes no parameter.
      */
     public static function getartists($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
     
         $r = Subsonic_XML_Data::createSuccessResponse();
         $artists = Catalog::get_artists(Catalog::get_catalogs());
         Subsonic_XML_Data::addArtistsRoot($r, $artists);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -197,10 +332,9 @@ class Subsonic_Api {
      * Takes the artist id in parameter.
      */
     public static function getartist($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         
-        $artistid = $input['id'];
-        self::check_parameter($artistid);
+        $artistid = self::check_parameter($input, 'id');
         
         $artist = new Artist(Subsonic_XML_Data::getAmpacheId($artistid));
         if (empty($artist->name)) {
@@ -209,7 +343,7 @@ class Subsonic_Api {
             $r = Subsonic_XML_Data::createSuccessResponse();
             Subsonic_XML_Data::addArtist($r, $artist, true, true);
         }
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -218,10 +352,9 @@ class Subsonic_Api {
      * Takes the album id in parameter.
      */
     public static function getalbum($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         
-        $albumid = $input['id'];
-        self::check_parameter($albumid);
+        $albumid = self::check_parameter($input, 'id');
         
         $album = new Album(Subsonic_XML_Data::getAmpacheId($albumid));
         if (empty($album->name)) {
@@ -231,7 +364,7 @@ class Subsonic_Api {
             Subsonic_XML_Data::addAlbum($r, $album, true);
         }
         
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -241,11 +374,11 @@ class Subsonic_Api {
      * Not supported yet.
      */
     public static function getvideos($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addVideos($r);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -256,8 +389,7 @@ class Subsonic_Api {
     public static function getalbumlist($input, $elementName="albumList") {
         self::check_version($input, "1.2.0");
 
-        $type = $input['type'];
-        self::check_parameter($type);
+        $type = self::check_parameter($input, 'type');
 
         $size = $input['size'];
         $offset = $input['offset'];
@@ -268,11 +400,13 @@ class Subsonic_Api {
         } else if ($type == "newest") {
             $albums = Stats::get_newest("album", $size, $offset);    
         } else if ($type == "highest") {
-            $albums = Rating::get_highest("album", $size, $offset);    
+            $albums = Rating::get_highest("album", $size, $offset);
         } else if ($type == "frequent") {
             $albums = Stats::get_top("album", $size, '', $offset);
         } else if ($type == "recent") {
             $albums = Stats::get_recent("album", $size, $offset);
+        } else if ($type == "starred") {
+            $albums = Userflag::get_latest('album');
         }
 
         if (count($albums)) {
@@ -282,7 +416,7 @@ class Subsonic_Api {
             $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         }
 
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -290,7 +424,7 @@ class Subsonic_Api {
      * See getAlbumList.
      */
     public static function getalbumlist2($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         self::getAlbumList($input, "albumList2");
     }
     
@@ -347,11 +481,30 @@ class Subsonic_Api {
             $search['rule_'.$i.''] = $ftype;
             ++$i;
         }
-        $songs = Random::advanced("song", $search);
+        if ($i > 0) {
+            $songs = Random::advanced("song", $search);
+        } else {
+            $songs = Random::get_default($size);
+        }
 
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addRandomSongs($r, $songs);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
+    }
+    
+    /**
+     * getSong
+     * Get details for a song
+     * Takes the song id in parameter.
+     */
+    public static function getsong($input) {
+        self::check_version($input, "1.7.0");
+        
+        $songid = self::check_parameter($input, 'id');
+        $r = Subsonic_XML_Data::createSuccessResponse();
+        $song = new Song(Subsonic_XML_Data::getAmpacheId($songid));
+        Subsonic_XML_Data::addSong($r, $song);
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -362,8 +515,7 @@ class Subsonic_Api {
     public static function getsongsbygenre($input) {
         self::check_version($input, "1.9.0");
 
-        $genre = $input['genre'];
-        self::check_parameter($genre);
+        $genre = self::check_parameter($input, 'genre');
         $count = $input['count'];
         $offset = $input['offset'];
         
@@ -373,7 +525,7 @@ class Subsonic_Api {
         }
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addSongsByGenre($r, $songs);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -387,7 +539,7 @@ class Subsonic_Api {
         $data = Stream::get_now_playing();
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addNowPlaying($r, $data);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }    
     
     /**
@@ -398,8 +550,7 @@ class Subsonic_Api {
     public static function search2($input, $elementName="searchResult2") {
         self::check_version($input, "1.2.0");
         
-        $query = $input['query'];
-        self::check_parameter($query);
+        $query = self::check_parameter($input, 'query');
         
         $artistCount = $input['artistCount'];
         $artistOffset = $input['artistOffset'];
@@ -437,7 +588,7 @@ class Subsonic_Api {
         
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addSearchResult($r, $artists, $albums, $songs, $elementName);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -445,7 +596,7 @@ class Subsonic_Api {
      * See search2.
      */
     public static function search3($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         self::search2($input, "searchResult3");
     }
     
@@ -471,7 +622,7 @@ class Subsonic_Api {
                 Subsonic_XML_Data::addPlaylists($r, array());
             }
         }
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -482,13 +633,12 @@ class Subsonic_Api {
     public static function getplaylist($input) {
         self::check_version($input);
         
-        $playlistid = $input['id'];
-        self::check_parameter($playlistid);
+        $playlistid = self::check_parameter($input, 'id');
         
         $playlist = new Playlist($playlistid);
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addPlaylist($r, $playlist, true);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -515,7 +665,7 @@ class Subsonic_Api {
         } else {
             $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
         }
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     private static function _updatePlaylist($id, $name, $songsIdToAdd = array(), $songIndexToRemove = array(), $public = true) {
@@ -526,10 +676,16 @@ class Subsonic_Api {
         $newdata['pl_type'] = ($public) ? "public" : "private";
         $playlist->update($newdata);
         
-        if (is_array($songsIdToAdd) && count($songsIdToAdd) > 0) {
+        if (!is_array($songsIdToAdd)) {
+            $songsIdToAdd = array($songsIdToAdd);
+        }
+        if (count($songsIdToAdd) > 0) {
             $playlist->add_songs(Subsonic_XML_Data::getAmpacheIds($songsIdToAdd));
         }
         
+        if (!is_array($songIndexToRemove)) {
+            $songIndexToRemove = array($songIndexToRemove);
+        }
         if (is_array($songIndexToRemove) && count($songIndexToRemove) > 0) {
             $tracks = Subsonic_XML_Data::getAmpacheIds($songIndexToRemove);
             foreach ($tracks as $track) {
@@ -544,10 +700,9 @@ class Subsonic_Api {
      * Takes playlist id in parameter with optional name, comment, public level and a list of song id to add/remove.
      */
     public static function updateplaylist($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
 
-        $playlistId = $input['playlistId'];
-        self::check_parameter($playlistId);
+        $playlistId = self::check_parameter($input, 'playlistId');
         
         $name = $input['name'];
         $comment = $input['comment'];   // Not supported.
@@ -557,7 +712,7 @@ class Subsonic_Api {
         $songIndexToRemove = $input['songIndexToRemove'];
         
         $r = Subsonic_XML_Data::createSuccessResponse();
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
      
     /**
@@ -568,14 +723,13 @@ class Subsonic_Api {
     public static function deleteplaylist($input) {
         self::check_version($input, "1.2.0");
 
-        $playlistId = $input['playlistId'];
-        self::check_parameter($playlistId);
+        $playlistId = self::check_parameter($input, 'playlistId');
         
         $playlist = new Playlist($playlistId);
         $playlist->delete();
         
         $r = Subsonic_XML_Data::createSuccessResponse();
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -586,8 +740,7 @@ class Subsonic_Api {
     public static function stream($input) {
         self::check_version($input, "1.0.0", true);
 
-        $fileid = $input['id'];
-        self::check_parameter($fileid, true);
+        $fileid = self::check_parameter($input, 'id', true);
 
         $maxBitRate = $input['maxBitRate']; // Not supported.
         $format = $input['format']; // mp3, flv or raw. Not supported.
@@ -608,8 +761,7 @@ class Subsonic_Api {
     public static function download($input) {
         self::check_version($input, "1.0.0", true);
         
-        $fileid = $input['id'];
-        self::check_parameter($fileid, true);
+        $fileid = self::check_parameter($input, 'id', true);
         
         $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid)) . '&action=download';
         self::follow_stream($url);
@@ -621,10 +773,9 @@ class Subsonic_Api {
      * Takes the file id in parameter with optional max bit rate.
      */
     public static function hls($input) {
-        self::check_version($input, "1.8.0", true);
+        self::check_version($input, "1.7.0", true);
 
-        $fileid = $input['id'];
-        self::check_parameter($fileid, true);
+        $fileid = self::check_parameter($input, 'id', true);
         
         $bitRate = $input['bitRate']; // Not supported.
         
@@ -649,8 +800,7 @@ class Subsonic_Api {
     public static function getcoverart($input) {
         self::check_version($input, "1.0.0", true);
         
-        $id = $input['id'];
-        self::check_parameter($id, true);
+        $id = self::check_parameter($input, 'id', true);
         $size = $input['size'];
         
         $art = null;
@@ -684,8 +834,7 @@ class Subsonic_Api {
     public static function setrating($input) {
         self::check_version($input, "1.6.0");
         
-        $id = $input['id'];
-        self::check_parameter($id);
+        $id = self::check_parameter($input, 'id');
         $rating = $input['rating'];
 
         $robj = null;
@@ -705,10 +854,107 @@ class Subsonic_Api {
             $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found."); 
         }
 
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
+    /**
+     * getStarred
+     * Get starred songs, albums and artists.
+     * Takes no parameter.
+     * Not supported.
+     */
+    public static function getstarred($input, $elementName="starred") {
+        self::check_version($input, "1.7.0");
+        
+        $r = Subsonic_XML_Data::createSuccessResponse();
+        Subsonic_XML_Data::addStarred($r, Userflag::get_latest('artist'), Userflag::get_latest('album'), Userflag::get_latest('song'), $elementName);
+        self::apiOutput($input, $r);
+    }
+     
+     
+    /**
+     * getStarred2
+     * See getStarred.
+     */
+    public static function getstarred2($input) {
+        self::getStarred($input, "starred2");
+    }
     
+    /**
+     * star
+     * Attaches a star to a song, album or artist.
+     * Takes the optional file id, album id or artist id in parameters.
+     * Not supported.
+     */
+    public static function star($input) {
+        self::check_version($input, "1.7.0");
+                
+        self::_setStar($input, true);
+    }
+     
+    /**
+     * unstar
+     * Removes the star from a song, album or artist.
+     * Takes the optional file id, album id or artist id in parameters.
+     * Not supported.
+     */
+    public static function unstar($input) {
+        self::check_version($input, "1.7.0");
+        
+        self::_setStar($input, false);
+    }
+    
+    private static function _setStar($input, $star) {
+    
+        $id = $input['id'];
+        $albumId = $input['albumId'];
+        $artistId = $input['artistId'];
+        
+        // Normalize all in one array
+        $ids = array();
+        
+        $r = Subsonic_XML_Data::createSuccessResponse();
+        if ($id) {
+            if (!is_array($id)) {
+                $id = array($id);
+            }
+            foreach($id as $i) {
+                $aid = Subsonic_XML_Data::getAmpacheId($i);
+                if (Subsonic_XML_Data::isArtist($i)) {
+                    $type = 'artist';
+                } else if (Subsonic_XML_Data::isAlbum($i)) {
+                    $type = 'album';
+                } else if (Subsonic_XML_Data::isSong($i)) {
+                    $type = 'song';
+                }
+                $ids[] = array('id' => $aid, 'type' => $type);
+            }
+        } else if ($albumId) {
+            if (!is_array($albumId)) {
+                $albumId = array($albumId);
+            }
+            foreach($albumId as $i) {
+                $aid = Subsonic_XML_Data::getAmpacheId($i);
+                $ids[] = array('id' => $aid, 'album');
+            }
+        } else if ($artistId) {
+            if (!is_array($artistId)) {
+                $artistId = array($artistId);
+            }
+            foreach($artistId as $i) {
+                $aid = Subsonic_XML_Data::getAmpacheId($i);
+                $ids[] = array('id' => $aid, 'artist');
+            }
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
+        }
+
+       foreach ($ids as $i) {
+            $flag = new Userflag($i['id'], $i['type']);
+            $flag->set_flag($star);
+        }
+        self::apiOutput($input, $r);
+    }
 
     /****   CURRENT UNSUPPORTED FUNCTIONS   ****/
      
@@ -721,58 +967,7 @@ class Subsonic_Api {
         self::check_version($input, "1.2.0");
 
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
-    }
-    
-    /**
-     * getStarred
-     * Get starred songs, albums and artists.
-     * Takes no parameter.
-     * Not supported.
-     */
-    public static function getstarred($input, $elementName="starred") {
-        self::check_version($input, "1.8.0");
-        
-        $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addStarred($r, $elementName);
-        echo $r->asXml();
-    }
-     
-     
-    /**
-     * getStarred2
-     * See getStarred.
-     */
-    public static function getStarred2($input) {
-        self::getStarred($input, "starred2");
-    }
-    
-    /**
-     * star
-     * Attaches a star to a song, album or artist.
-     * Takes the optional file id, album id or artist id in parameters.
-     * Not supported.
-     */
-    public static function star($input) {
-        self::check_version($input, "1.8.0");
-
-        // Ignore error
-        $r = Subsonic_XML_Data::createSuccessResponse();
-        echo $r->asXml();
-    }
-     
-    /**
-     * unstar
-     * Removes the star from a song, album or artist.
-     * Takes the optional file id, album id or artist id in parameters.
-     * Not supported.
-     */
-    public static function unstar($input) {
-        self::check_version($input, "1.8.0");
-        
-        // Ignore error
-        $r = Subsonic_XML_Data::createSuccessResponse();
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -784,8 +979,9 @@ class Subsonic_Api {
     public static function scrobble($input) {
         self::check_version($input, "1.5.0");
         
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        // Ignore error to not break clients
+        $r = Subsonic_XML_Data::createSuccessResponse();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -798,7 +994,7 @@ class Subsonic_Api {
         self::check_version($input, "1.6.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -811,7 +1007,7 @@ class Subsonic_Api {
         self::check_version($input, "1.6.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -824,7 +1020,7 @@ class Subsonic_Api {
         self::check_version($input, "1.6.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -837,7 +1033,7 @@ class Subsonic_Api {
         self::check_version($input, "1.6.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -850,7 +1046,7 @@ class Subsonic_Api {
         self::check_version($input, "1.6.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -863,7 +1059,7 @@ class Subsonic_Api {
         self::check_version($input, "1.9.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -876,7 +1072,7 @@ class Subsonic_Api {
         self::check_version($input, "1.9.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -889,7 +1085,7 @@ class Subsonic_Api {
         self::check_version($input, "1.9.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -902,7 +1098,7 @@ class Subsonic_Api {
         self::check_version($input, "1.9.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -915,7 +1111,7 @@ class Subsonic_Api {
         self::check_version($input, "1.9.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -928,7 +1124,7 @@ class Subsonic_Api {
         self::check_version($input, "1.2.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -941,7 +1137,7 @@ class Subsonic_Api {
         self::check_version($input, "1.9.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -954,7 +1150,7 @@ class Subsonic_Api {
         self::check_version($input, "1.2.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -967,7 +1163,7 @@ class Subsonic_Api {
         self::check_version($input, "1.2.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -980,7 +1176,7 @@ class Subsonic_Api {
         self::check_version($input, "1.3.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -990,10 +1186,10 @@ class Subsonic_Api {
      * Not supported.
      */
     public static function getusers($input) {
-        self::check_version($input, "1.8.0");
+        self::check_version($input, "1.7.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -1006,7 +1202,7 @@ class Subsonic_Api {
         self::check_version($input, "1.1.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -1019,7 +1215,7 @@ class Subsonic_Api {
         self::check_version($input, "1.3.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -1032,7 +1228,7 @@ class Subsonic_Api {
         self::check_version($input, "1.1.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -1045,7 +1241,7 @@ class Subsonic_Api {
         self::check_version($input, "1.9.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -1058,7 +1254,7 @@ class Subsonic_Api {
         self::check_version($input, "1.9.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
     
     /**
@@ -1071,7 +1267,7 @@ class Subsonic_Api {
         self::check_version($input, "1.9.0");
         
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        echo $r->asXml();
+        self::apiOutput($input, $r);
     }
 }
 ?>
