@@ -41,10 +41,11 @@ if (Config::get('use_rss')) { ?>
 <title><?php echo scrub_out(Config::get('site_title')); ?> - <?php echo $location['title']; ?></title>
 <?php require_once Config::get('prefix') . '/templates/stylesheets.inc.php'; ?>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery/jquery-ui-1.10.3.min.css" type="text/css" media="screen" />
-</head>
-<body>
 <script src="<?php echo $web_path; ?>/modules/jquery/jquery-1.9.1.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/jquery/jquery-ui-1.10.3.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/tinybox/tinybox.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <?php
 // If iframes, we check in javascript that parent container exist, otherwise we redirect to index. Otherwise HTML5 iframed Player will look broken.
 if (Config::get('iframes')) {
@@ -61,14 +62,9 @@ function forceIframe() {
 ?>
 </head>
 <body <?php echo (Config::get('iframes')) ? "onLoad='forceIframe();'" : ""; ?>>
-<script src="<?php echo $web_path; ?>/modules/jquery/jquery-1.9.1.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo $web_path; ?>/modules/jquery/jquery-ui-1.10.3.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo $web_path; ?>/modules/tinybox/tinybox.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <!-- rfc3514 implementation -->
 <div id="rfc3514" style="display:none;">0x0</div>
-<div id="dialog_tag_item" class="default_hidden"><span><?php echo T_('Enter tag:')?></span><br /><input type="text" id="dialog_tag_item_tag_name"/></div>
+<div id="dialog_tag_item" style="display:none;" class="default_hidden"><span><?php echo T_('Enter tag:')?></span><br /><input type="text" id="dialog_tag_item_tag_name"/></div>
 <div id="maincontainer">
     <div id="header"><!-- This is the header -->
         <h1 id="headerlogo">

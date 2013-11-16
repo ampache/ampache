@@ -69,7 +69,7 @@ Ampache includes some external modules that carry their own licensing.
 * php_musicbrainz: LGPL v2.1
 * PHP MPD interface: GPL v2
 * [PHPMailer](https://github.com/PHPMailer/PHPMailer): LGPL v2.1
-* [Prototype](http://www.prototypejs.org/): MIT
+* [jQuery](http://jquery.org/): MIT
 * [Snoopy](http://snoopy.sourceforge.net/): LGPL v2.1
 * [Whatever:hover](http://www.xs4all.nl/~peterned): LGPL v2.1
 * [xbmc-php-rpc](https://github.com/karlrixon/xbmc-php-rpc): GPL v3
