@@ -90,10 +90,6 @@ class Catalog_remote extends Catalog {
             ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"; 
         $db_results = Dba::query($sql); 
 
-        // Add an internal preference
-        Preference::insert('catalog_remote_active','Active Remote Catalog','0','25','integer','internal'); 
-        User::rebuild_all_preferences(); 
-
         return true; 
 
     } // install
@@ -106,9 +102,6 @@ class Catalog_remote extends Catalog {
 
         $sql = "DROP TABLE `catalog_remote`"; 
         $db_results = Dba::query($sql); 
-
-        // Remove the pref we added for this        
-        Preference::delete('catalog_remote_active'); 
 
         return true; 
 

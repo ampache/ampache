@@ -86,11 +86,7 @@ class Catalog_local extends Catalog {
             "`path` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
             "`catalog_id` INT( 11 ) NOT NULL" .
             ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"; 
-        $db_results = Dba::query($sql); 
-
-        // Add an internal preference
-        Preference::insert('catalog_local_active','Active Local Catalog','0','25','integer','internal'); 
-        User::rebuild_all_preferences(); 
+        $db_results = Dba::query($sql);
 
         return true; 
 
@@ -104,9 +100,6 @@ class Catalog_local extends Catalog {
 
         $sql = "DROP TABLE `catalog_local`"; 
         $db_results = Dba::query($sql); 
-
-        // Remove the pref we added for this        
-        Preference::delete('catalog_local_active'); 
 
         return true; 
 

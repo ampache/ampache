@@ -50,7 +50,7 @@ switch ($_REQUEST['action']) {
 
         header("Location:" . Config::get('web_path') . '/admin/modules.php?action=show_localplay');
     break;
-    case 'install_localplay':
+    case 'install_catalog_type':
         $type = scrub_in($_REQUEST['type']);
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {

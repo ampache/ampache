@@ -114,14 +114,16 @@ abstract class Catalog extends database_object {
         $seltypes = '<option value="none">[Select]</option>';
         $types = self::get_catalog_types();
         foreach ($types as $type) {
-            $seltypes .= '<option value="' . $type . '">' . $type . '</option>';
-            echo "type_fields['" . $type . "'] = \"";
             $catalog = self::create_catalog_type($type);
-            $fields = $catalog->catalog_fields();
-            foreach ($fields as $key=>$field) {
-                echo "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td><input type='text' size='60' name='" . $key . "' /></td></tr>";
+            if ($catalog->is_installed()) {
+                $seltypes .= '<option value="' . $type . '">' . $type . '</option>';
+                echo "type_fields['" . $type . "'] = \"";
+                $fields = $catalog->catalog_fields();
+                foreach ($fields as $key=>$field) {
+                    echo "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td><input type='text' size='60' name='" . $key . "' /></td></tr>";
+                }
+                echo "\";";
             }
-            echo "\";";
         }
 
         echo "function catalogTypeChanged() {" .
