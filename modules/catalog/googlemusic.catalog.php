@@ -108,7 +108,8 @@ class Catalog_googlemusic extends Catalog {
 
         $fields['email']      = array('description' => T_('Email'),'type'=>'textbox');
         $fields['password']      = array('description' => T_('Password'),'type'=>'password');
-        $fields['deviceid']      = array('description' => T_('Device ID'),'type'=>'textbox');
+        // Device ID not required for streaming access
+        //$fields['deviceid']      = array('description' => T_('Device ID'),'type'=>'textbox');
 
         return $fields; 
 
@@ -187,7 +188,7 @@ class Catalog_googlemusic extends Catalog {
         $api = new GMApi();
         $api->setDebug(Config::get('debug'));
         $api->enableRestore(false);
-        $api->enableMACAddressCheck(true);
+        $api->enableMACAddressCheck(false);
         $api->enableSessionFile(false);
         
         if(!$api->login($this->email, $this->password, $this->deviceid)) {
