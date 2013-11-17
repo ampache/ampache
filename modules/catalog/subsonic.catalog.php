@@ -30,7 +30,7 @@ class Catalog_subsonic extends Catalog {
 
     private $version        = '000001';
     private $type           = 'subsonic';
-    private $description    = 'Subsonic catalog';
+    private $description    = 'Remote Subsonic Catalog';
     
     /**
      * get_description
@@ -111,7 +111,7 @@ class Catalog_subsonic extends Catalog {
 
         $fields['uri']      = array('description' => T_('Uri'),'type'=>'textbox');
         $fields['username']      = array('description' => T_('Username'),'type'=>'textbox');
-        $fields['password']      = array('description' => T_('Password'),'type'=>'textbox');
+        $fields['password']      = array('description' => T_('Password'),'type'=>'password');
 
         return $fields; 
 

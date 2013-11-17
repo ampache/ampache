@@ -121,7 +121,9 @@ abstract class Catalog extends database_object {
                 echo "type_fields['" . $type . "'] = \"";
                 $fields = $catalog->catalog_fields();
                 foreach ($fields as $key=>$field) {
-                    echo "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td><input type='text' size='60' name='" . $key . "' /></td></tr>";
+                    echo "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td><input type='";
+                    echo ($field['type'] == 'password') ? 'password' : 'text';
+                    echo "' size='60' name='" . $key . "' /></td></tr>";
                 }
                 echo "\";";
             }

@@ -30,7 +30,7 @@ class Catalog_local extends Catalog {
 
     private $version        = '000001'; 
     private $type           = 'local';
-    private $description    = 'Local catalog';
+    private $description    = 'Local Catalog';
     
     /**
      * get_description

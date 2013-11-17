@@ -74,6 +74,7 @@ Ampache includes some external modules that carry their own licensing.
 * [Whatever:hover](http://www.xs4all.nl/~peterned): LGPL v2.1
 * [xbmc-php-rpc](https://github.com/karlrixon/xbmc-php-rpc): GPL v3
 * [JPlayer](http://jplayer.org/): MIT
+* [unofficial-google-music-api-php](http://code.google.com/p/unofficial-google-music-api-php/): GPL v3
 
 Translations
 ------------
