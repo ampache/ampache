@@ -92,7 +92,7 @@ switch ($_REQUEST['action']) {
 
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) { 
-            Error::add('email', T_('Invalid email address')
+            Error::add('email', T_('Invalid email address'));
         }
 
         if (!$pass1) {

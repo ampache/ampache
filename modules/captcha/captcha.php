@@ -432,7 +432,7 @@ class easy_captcha_fuzzy extends easy_captcha {
    var $fuzzy = CAPTCHA_FUZZY;
 
    #-- compare
-   function solved($in) {
+   function solved($in = null) {
       if ($in) {
          $pw = strtolower($this->solution);
          $in = strtolower($in);
@@ -886,7 +886,7 @@ class easy_captcha_text_math_formula extends easy_captcha {
    }
 
    #-- simple IS-EQUAL check
-   function solved($result) {
+   function solved($result = null) {
       return (int)$this->solution == (int)$result;
    }
 
@@ -930,7 +930,7 @@ class easy_captcha_text_math_formula extends easy_captcha {
 #-- to disable textual captcha part
 class easy_captcha_text_disable extends easy_captcha {
    var $question = "";
-   function solved($in) {
+   function solved($in = null) {
       return false;
    }
 }
