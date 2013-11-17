@@ -23,13 +23,14 @@
 
 // A collection of methods related to the user interface
 
-class UI {
-
+class UI
+{
     private static $_classes;
     private static $_ticker;
     private static $_icon_cache;
 
-    public function __construct($data) {
+    public function __construct($data)
+    {
         return false;
     }
 
@@ -38,7 +39,8 @@ class UI {
      *
      * Throw an error when they try to do something naughty.
      */
-    public static function access_denied($error = 'Access Denied') {
+    public static function access_denied($error = 'Access Denied')
+    {
         // Clear any buffered crap
         ob_end_clean();
         header("HTTP/1.1 403 $error");
@@ -52,7 +54,8 @@ class UI {
      * Does some trickery with the output buffer to return the output of a
      * template.
      */
-    public static function ajax_include($template) {
+    public static function ajax_include($template)
+    {
         ob_start();
         require Config::get('prefix') . '/templates/' . $template;
         $output = ob_get_contents();
@@ -66,7 +69,8 @@ class UI {
      *
      * Checks to see whether iconv is available;
      */
-    public static function check_iconv() {
+    public static function check_iconv()
+    {
         if (function_exists('iconv') && function_exists('iconv_substr')) {
             return true;
         }
@@ -79,7 +83,8 @@ class UI {
      * Stupid little cutesie thing to ratelimit output of long-running
      * operations.
      */
-    public static function check_ticker() {
+    public static function check_ticker()
+    {
         if (!isset(self::$_ticker) || (time() > self::$_ticker + 1)) {
             self::$_ticker = time();
             return true;
@@ -95,10 +100,11 @@ class UI {
      * UTF-8, but close enough for our purposes.)
      * See http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
      */
-    public static function clean_utf8($string) {
+    public static function clean_utf8($string)
+    {
         if ($string) {
             $clean = preg_replace('/[^\x{9}\x{a}\x{d}\x{20}-\x{d7ff}\x{e000}-\x{fffd}\x{10000}-\x{10ffff}]|[\x{7f}-\x{84}\x{86}-\x{9f}\x{fdd0}-\x{fddf}\x{1fffe}-\x{1ffff}\x{2fffe}-\x{2ffff}\x{3fffe}-\x{3ffff}\x{4fffe}-\x{4ffff}\x{5fffe}-\x{5ffff}\x{6fffe}-\x{6ffff}\x{7fffe}-\x{7ffff}\x{8fffe}-\x{8ffff}\x{9fffe}-\x{9ffff}\x{afffe}-\x{affff}\x{bfffe}-\x{bffff}\x{cfffe}-\x{cffff}\x{dfffe}-\x{dffff}\x{efffe}-\x{effff}\x{ffffe}-\x{fffff}\x{10fffe}-\x{10ffff}]/u', '', $string);
-            
+
             if ($clean) {
                 return $clean;
             }
@@ -113,11 +119,11 @@ class UI {
      * First initialised with an array of two class names. Subsequent calls
      * reverse the array then return the first element.
      */
-    public static function flip_class($classes = null) {
+    public static function flip_class($classes = null)
+    {
         if (is_array($classes)) {
             self::$_classes = $classes;
-        }
-        else {
+        } else {
             self::$_classes = array_reverse(self::$_classes);
         }
         return self::$_classes[0];
@@ -128,7 +134,8 @@ class UI {
      *
      * Turns a size in bytes into the best human-readable value
      */
-    public static function format_bytes($value, $precision = 2) {
+    public static function format_bytes($value, $precision = 2)
+    {
         $pass = 0;
         while (strlen(floor($value)) > 3) {
             $value /= 1024;
@@ -152,16 +159,16 @@ class UI {
      *
      * Parses a human-readable size
      */
-    public static function unformat_bytes($value) {
+    public static function unformat_bytes($value)
+    {
         if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', $value, $matches)) {
             $value = $matches[1];
             $unit = strtolower(substr($matches[2], 0, 1));
-        }
-        else {
+        } else {
             return $value;
         }
 
-        switch($unit) {
+        switch ($unit) {
             case 'p':
                 $value *= 1024;
             case 't':
@@ -182,7 +189,8 @@ class UI {
      *
      * Returns an <img> tag for the specified icon
      */
-    public static function get_icon($name, $title = null, $id = null) {
+    public static function get_icon($name, $title = null, $id = null)
+    {
         if (is_array($name)) {
             $hover_name = $name[1];
             $name = $name[0];
@@ -218,7 +226,8 @@ class UI {
      *
      * Does the finding icon thing
      */
-    private static function _find_icon($name) {
+    private static function _find_icon($name)
+    {
         if ($url = self::$_icon_cache[$name]) {
             return $url;
         }
@@ -230,7 +239,7 @@ class UI {
         }
         $url = Config::get('web_path') . $path . $filename;
         self::$_icon_cache[$name] = $url;
-        
+
         return $url;
     }
 
@@ -240,7 +249,8 @@ class UI {
      *
      * For now this just shows the header template
      */
-    public static function show_header() {
+    public static function show_header()
+    {
         require_once Config::get('prefix') . '/templates/header.inc.php';
     }
 
@@ -249,7 +259,8 @@ class UI {
      *
      * For now this just shows the mainframes template
      */
-    public static function show_mainframes() {
+    public static function show_mainframes()
+    {
         require_once Config::get('prefix') . '/templates/mainframes.inc.php';
     }
 
@@ -258,7 +269,8 @@ class UI {
      *
      * Shows the footer template and possibly profiling info.
      */
-    public static function show_footer() {
+    public static function show_footer()
+    {
         require_once Config::get('prefix') . '/templates/footer.inc.php';
         if (isset($_REQUEST['profiling'])) {
             Dba::show_profile();
@@ -270,7 +282,8 @@ class UI {
      *
      * This shows the top of the box.
      */
-    public static function show_box_top($title = '', $class = '') {
+    public static function show_box_top($title = '', $class = '')
+    {
         require Config::get('prefix') . '/templates/show_box_top.inc.php';
     }
 
@@ -279,7 +292,8 @@ class UI {
      *
      * This shows the bottom of the box
      */
-    public static function show_box_bottom() {
+    public static function show_box_bottom()
+    {
         require Config::get('prefix') . '/templates/show_box_bottom.inc.php';
     }
 
@@ -289,7 +303,8 @@ class UI {
      * Limit text to a certain length; adds an ellipsis if truncation was
      * required.
      */
-    public static function truncate($text, $max = 27) {
+    public static function truncate($text, $max = 27)
+    {
         // If they want <3, we're having none of that
         if ($max <= 3) {
             debug_event('UI', "truncate called with $max, refusing to do stupid things to $text", 2);
@@ -302,8 +317,7 @@ class UI {
                 $text = iconv_substr($text, 0, $max - 3, $charset);
                 $text .= iconv('ISO-8859-1', $charset, '...');
             }
-        }
-        else {
+        } else {
             if (strlen($text) > $max) {
                 $text = substr($text, 0, $max - 3) . '...';
             }
@@ -318,7 +332,8 @@ class UI {
      * Convenience function that, if the output is going to a browser,
      * blarfs JS to do a fancy update.  Otherwise it just outputs the text.
      */
-    public static function update_text($field, $value) {
+    public static function update_text($field, $value)
+    {
         if (defined('CLI')) {
             echo $value . "\n";
             return;

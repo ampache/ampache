@@ -37,10 +37,9 @@ UI::show_box_top(sprintf(T_('%s Lyrics'), $song->title), 'box box_lyrics');
 <tr>
     <td>
         <?php
-        if($return == "Sorry Lyrics, Not found") {
+        if ($return == "Sorry Lyrics, Not found") {
             echo T_("Sorry Lyrics Not Found.");
-        }
-        else {
+        } else {
             echo $link;
             echo "<pre>" . $return . "</pre>";
         }
@@ -48,4 +47,4 @@ UI::show_box_top(sprintf(T_('%s Lyrics'), $song->title), 'box box_lyrics');
     </td>
 </tr>
 </table>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom();

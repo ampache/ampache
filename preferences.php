@@ -23,7 +23,7 @@
 require_once 'lib/init.php';
 
 // Switch on the action
-switch($_REQUEST['action']) {
+switch ($_REQUEST['action']) {
     case 'update_preferences':
         if ($_POST['method'] == 'admin' && !Access::check('interface','100')) {
             UI::access_denied();
@@ -41,8 +41,7 @@ switch($_REQUEST['action']) {
             $system = true;
             $fullname = T_('Server');
             $_REQUEST['action'] = 'admin';
-        }
-        else {
+        } else {
             $user_id = $GLOBALS['user']->id;
             $fullname = $GLOBALS['user']->fullname;
         }
@@ -111,8 +110,7 @@ switch($_REQUEST['action']) {
 
         if (!$GLOBALS['user']->update($_POST)) {
             Error::add('general', T_('Error Update Failed'));
-        }
-        else {
+        } else {
             $_REQUEST['action'] = 'confirm';
             $title = T_('Updated');
             $text = T_('Your Account has been updated');
@@ -141,4 +139,3 @@ switch ($_REQUEST['action']) {
 } // end switch on action
 
 UI::show_footer();
-?>

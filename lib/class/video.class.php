@@ -20,8 +20,8 @@
  *
  */
 
-class Video extends database_object implements media {
-
+class Video extends database_object implements media
+{
     public $id;
     public $title;
     public $enabled;
@@ -33,8 +33,8 @@ class Video extends database_object implements media {
      * This pulls the shoutbox information from the database and returns
      * a constructed object, uses user_shout table
      */
-    public function __construct($id) {
-
+    public function __construct($id)
+    {
         // Load the data from the database
         $info = $this->get_info($id);
         foreach ($info as $key=>$value) {
@@ -49,8 +49,8 @@ class Video extends database_object implements media {
      * build_cache
      * Build a cache based on the array of ids passed, saves lots of little queries
      */
-    public static function build_cache($ids=array()) {
-
+    public static function build_cache($ids=array())
+    {
         if (!is_array($ids) OR !count($ids)) { return false; }
 
         $idlist = '(' . implode(',',$ids) . ')';
@@ -68,8 +68,8 @@ class Video extends database_object implements media {
      * format
      * This formats a video object so that it is human readable
      */
-    public function format() {
-
+    public function format()
+    {
         $this->f_title = scrub_out($this->title);
         $this->f_link = scrub_out($this->title);
         $this->f_codec = $this->video_codec . ' / ' . $this->audio_codec;
@@ -79,8 +79,8 @@ class Video extends database_object implements media {
 
     } // format
 
-    public function get_stream_types() {
-
+    public function get_stream_types()
+    {
         return array('native');
 
     } // native_stream
@@ -90,8 +90,8 @@ class Video extends database_object implements media {
      * This returns a "PLAY" url for the video in question here, this currently feels a little
      * like a hack, might need to adjust it in the future
      */
-    public static function play_url($oid,$sid='',$force_http='') {
-
+    public static function play_url($oid,$sid='',$force_http='')
+    {
         $video = new Video($oid);
 
         if (!$video->id) { return false; }
@@ -110,7 +110,8 @@ class Video extends database_object implements media {
      *
      * FIXME: Video transcoding is not implemented
      */
-    public function get_transcode_settings($target = null) {
+    public function get_transcode_settings($target = null)
+    {
         return false;
     }
 
@@ -119,10 +120,8 @@ class Video extends database_object implements media {
      * returns true if the video has been flagged and we shouldn't try to re-read
      * the meta data
      */
-    public function has_flag() {
-
-
-
+    public function has_flag()
+    {
     } // has_flag
 
 } // end Video class

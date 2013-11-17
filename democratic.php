@@ -77,8 +77,7 @@ switch ($_REQUEST['action']) {
             // Create the playlist
             Democratic::create($_POST);
             $democratic = Democratic::get_current_playlist();
-        }
-        else {
+        } else {
             $democratic->update($_POST);
         }
 
@@ -123,5 +122,3 @@ switch ($_REQUEST['action']) {
 } // end switch on action
 
 UI::show_footer();
-
-?>

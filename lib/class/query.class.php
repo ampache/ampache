@@ -28,8 +28,8 @@
  * for newsearch, and they should be merged if possible.
  *
  */
-class Query {
-
+class Query
+{
     public $id;
     public $catalog;
 
@@ -43,9 +43,10 @@ class Query {
      * constructor
      * This should be called
      */
-    public function __construct($id = null, $cached = true) {
+    public function __construct($id = null, $cached = true)
+    {
         $sid = session_id();
-        
+
         if (is_null($id)) {
             $this->reset();
             if ($cached) {
@@ -55,9 +56,8 @@ class Query {
                     'VALUES(?, ?)';
                 $db_results = Dba::write($sql, array($sid, $data));
                 $this->id = Dba::insert_id();
-            
-            }
-            else {
+
+            } else {
                 $this->id = 'nocache';
             }
             return true;
@@ -84,7 +84,8 @@ class Query {
      * Automatically called when the class is loaded.
      * Populate static arrays if necessary
      */
-    public static function _auto_init() {
+    public static function _auto_init()
+    {
         if (is_array(self::$allowed_filters)) {
             return true;
         }
@@ -215,10 +216,11 @@ class Query {
     }
 
     /**
-     * gc 
+     * gc
      * This cleans old data out of the table
      */
-    public static function gc() {
+    public static function gc()
+    {
         $sql = 'DELETE FROM `tmp_browse` USING `tmp_browse` LEFT JOIN ' .
             '`session` ON `session`.`id` = `tmp_browse`.`sid` ' .
             'WHERE `session`.`id` IS NULL';
@@ -231,7 +233,8 @@ class Query {
      * Attempts to produce a more compact representation for large result
      * sets by collapsing ranges.
      */
-    private static function _serialize($data) {
+    private static function _serialize($data)
+    {
         if (count($data) > 1000) {
             $last = -17;
             $in_range = false;
@@ -241,13 +244,11 @@ class Query {
                 if ($id == ($last + 1)) {
                     if ($in_range) {
                         $cooked[$idx][1] = $id;
-                    }
-                    else {
+                    } else {
                         $in_range = true;
                         $cooked[$idx] = array($last, $id);
                     }
-                }
-                else {
+                } else {
                     $in_range = false;
                     $idx++;
                     $cooked[$idx] = $id;
@@ -256,11 +257,10 @@ class Query {
             }
             $data = json_encode($cooked);
             debug_event('Query', 'cooked serialize length: ' . strlen($data), 5);
-        }
-        else {
+        } else {
             $data = json_encode($data);
         }
-        
+
         return $data;
     }
 
@@ -269,16 +269,16 @@ class Query {
      *
      * Reverses serialization.
      */
-    private static function _unserialize($data) {
+    private static function _unserialize($data)
+    {
         $raw = array();
         $cooked = json_decode($data);
         foreach ($cooked as $grain) {
             if (is_array($grain)) {
-                foreach(range($grain[0], $grain[1]) as $id) {
+                foreach (range($grain[0], $grain[1]) as $id) {
                     $raw[] = $id;
                 }
-            }
-            else {
+            } else {
                 $raw[] = $grain;
             }
         }
@@ -289,17 +289,15 @@ class Query {
      * set_filter
      * This saves the filter data we pass it.
      */
-    public function set_filter($key, $value) {
-
+    public function set_filter($key, $value)
+    {
         switch ($key) {
             case 'tag':
                 if (is_array($value)) {
                     $this->_state['filter'][$key] = $value;
-                }
-                elseif (is_numeric($value)) {
+                } elseif (is_numeric($value)) {
                     $this->_state['filter'][$key] = array($value);
-                }
-                else {
+                } else {
                     $this->_state['filter'][$key] = array();
                 }
             break;
@@ -327,8 +325,7 @@ class Query {
             break;
             case 'playlist_type':
                 // Must be a content manager to turn this off
-                if ($this->_state['filter'][$key] AND Access::check('interface','50')) { unset($this->_state['filter'][$key]); }
-                else { $this->_state['filter'][$key] = '1'; }
+                if ($this->_state['filter'][$key] AND Access::check('interface','50')) { unset($this->_state['filter'][$key]); } else { $this->_state['filter'][$key] = '1'; }
             break;
             default:
                 // Rien a faire
@@ -349,8 +346,8 @@ class Query {
      * Reset everything, this should only be called when we are starting
      * fresh
      */
-    public function reset() {
-
+    public function reset()
+    {
         $this->reset_base();
         $this->reset_filters();
         $this->reset_total();
@@ -368,8 +365,8 @@ class Query {
      * reset_base
      * this resets the base string
      */
-    public function reset_base() {
-
+    public function reset_base()
+    {
         $this->_state['base'] = NULL;
 
     } // reset_base
@@ -378,8 +375,8 @@ class Query {
      * reset_select
      * This resets the select fields that we've added so far
      */
-    public function reset_select() {
-
+    public function reset_select()
+    {
         $this->_state['select'] = array();
 
     } // reset_select
@@ -388,8 +385,8 @@ class Query {
      * reset_having
      * Null out the having clause
      */
-    public function reset_having() {
-
+    public function reset_having()
+    {
         unset($this->_state['having']);
 
     } // reset_having
@@ -398,8 +395,8 @@ class Query {
      * reset_join
      * clears the joins if there are any
      */
-    public function reset_join() {
-
+    public function reset_join()
+    {
         unset($this->_state['join']);
 
     } // reset_join
@@ -408,8 +405,8 @@ class Query {
      * reset_filter
      * This is a wrapper function that resets the filters
      */
-    public function reset_filters() {
-
+    public function reset_filters()
+    {
         $this->_state['filter'] = array();
 
     } // reset_filters
@@ -418,8 +415,8 @@ class Query {
      * reset_total
      * This resets the total for the browse type
      */
-    public function reset_total() {
-
+    public function reset_total()
+    {
         unset($this->_state['total']);
 
     } // reset_total
@@ -428,11 +425,11 @@ class Query {
      * get_filter
      * returns the specified filter value
      */
-    public function get_filter($key) {
-
+    public function get_filter($key)
+    {
         // Simple enough, but if we ever move this crap
         // If we ever move this crap what?
-        return isset($this->_state['filter'][$key]) 
+        return isset($this->_state['filter'][$key])
             ? $this->_state['filter'][$key]
             : false;
 
@@ -442,8 +439,8 @@ class Query {
      * get_start
      * This returns the current value of the start
      */
-    public function get_start() {
-
+    public function get_start()
+    {
         return $this->_state['start'];
 
     } // get_start
@@ -452,7 +449,8 @@ class Query {
      * get_offset
      * This returns the current offset
      */
-    public function get_offset() {
+    public function get_offset()
+    {
         if ($this->is_static_content()) {
             return $this->get_total();
         }
@@ -464,7 +462,8 @@ class Query {
      * set_total
      * This sets the total number of objects
      */
-    public function set_total($total) {
+    public function set_total($total)
+    {
         $this->_state['total'] = $total;
     }
 
@@ -474,8 +473,8 @@ class Query {
      * If it's already cached used it. if they pass us an array then use
      * that.
      */
-    public function get_total($objects = null) {
-
+    public function get_total($objects = null)
+    {
         // If they pass something then just return that
         if (is_array($objects) and !$this->is_simple()) {
             return count($objects);
@@ -497,11 +496,12 @@ class Query {
 
     /**
      * get_allowed_filters
-     * This returns an array of the allowed filters based on the type of 
-     * object we are working with, this is used to display the 'filter' 
+     * This returns an array of the allowed filters based on the type of
+     * object we are working with, this is used to display the 'filter'
      * sidebar stuff.
      */
-    public static function get_allowed_filters($type) {
+    public static function get_allowed_filters($type)
+    {
         return isset(self::$allowed_filters[$type])
             ? self::$allowed_filters[$type]
             : array();
@@ -513,9 +513,9 @@ class Query {
      * we do this here so we only have to maintain a single whitelist
      * and if I want to change the location I only have to do it here
      */
-    public function set_type($type) {
-
-        switch($type) {
+    public function set_type($type)
+    {
+        switch ($type) {
             case 'user':
             case 'video':
             case 'playlist':
@@ -545,8 +545,8 @@ class Query {
      * get_type
      * This returns the type of the browse we currently are using
      */
-    public function get_type() {
-
+    public function get_type()
+    {
         return $this->_state['type'];
 
     } // get_type
@@ -555,8 +555,8 @@ class Query {
      * set_sort
      * This sets the current sort(s)
      */
-    public function set_sort($sort,$order='') {
-
+    public function set_sort($sort,$order='')
+    {
         // If it's not in our list, smeg off!
         if (!in_array($sort, self::$allowed_sorts[$this->get_type()])) {
             return false;
@@ -566,13 +566,11 @@ class Query {
             $order = ($order == 'DESC') ? 'DESC' : 'ASC';
             $this->_state['sort'] = array();
             $this->_state['sort'][$sort] = $order;
-        }
-        elseif ($this->_state['sort'][$sort] == 'DESC') {
+        } elseif ($this->_state['sort'][$sort] == 'DESC') {
             // Reset it till I can figure out how to interface the hotness
             $this->_state['sort'] = array();
             $this->_state['sort'][$sort] = 'ASC';
-        }
-        else {
+        } else {
             // Reset it till I can figure out how to interface the hotness
             $this->_state['sort'] = array();
             $this->_state['sort'][$sort] = 'DESC';
@@ -586,25 +584,26 @@ class Query {
      * set_offset
      * This sets the current offset of this query
      */
-    public function set_offset($offset) {
-
+    public function set_offset($offset)
+    {
         $this->_state['offset'] = abs($offset);
 
     } // set_offset
 
-        public function set_catalog( $catalog_number ) {
+        public function set_catalog( $catalog_number )
+        {
                 $this->catalog = $catalog_number;
         debug_event("Catalog", "set catalog id: " . $this->catalog, "5");
         }
 
     /**
      * set_select
-     * This appends more information to the select part of the SQL 
+     * This appends more information to the select part of the SQL
      * statement, we're going to move to the %%SELECT%% style queries, as I
      * think it's the only way to do this...
      */
-    public function set_select($field) {
-
+    public function set_select($field)
+    {
         $this->_state['select'][] = $field;
 
     } // set_select
@@ -613,8 +612,8 @@ class Query {
      * set_join
      * This sets the joins for the current browse object
      */
-    public function set_join($type, $table, $source, $dest, $priority) {
-
+    public function set_join($type, $table, $source, $dest, $priority)
+    {
         $this->_state['join'][$priority][$table] = strtoupper($type) . ' JOIN ' . $table . ' ON ' . $source . '=' . $dest;
 
     } // set_join
@@ -624,8 +623,8 @@ class Query {
      * This sets the "HAVING" part of the query, we can only have one..
      * god this is ugly
      */
-    public function set_having($condition) {
-
+    public function set_having($condition)
+    {
         $this->_state['having'] = $condition;
 
     } // set_having
@@ -636,9 +635,8 @@ class Query {
      * We need to store this in the session so that it can be pulled
      * back, if they hit the back button
      */
-    public function set_start($start) {
-
-
+    public function set_start($start)
+    {
         $start = intval($start);
 
         if (!$this->is_static_content()) {
@@ -652,8 +650,8 @@ class Query {
      * This sets the current browse object to a 'simple' browse method
      * which means use the base query provided and expand from there
      */
-    public function set_is_simple($value) {
-
+    public function set_is_simple($value)
+    {
         $value = make_bool($value);
         $this->_state['simple'] = $value;
 
@@ -665,8 +663,8 @@ class Query {
      * should be static, if they are then content filtering/altering
      * methods will be skipped
      */
-    public function set_static_content($value) {
-
+    public function set_static_content($value)
+    {
         $value = make_bool($value);
 
         // We want to start at 0 if it's static
@@ -678,7 +676,8 @@ class Query {
 
     } // set_static_content
 
-    public function is_static_content() {
+    public function is_static_content()
+    {
         return $this->_state['static'];
     }
 
@@ -686,19 +685,19 @@ class Query {
      * is_simple
      * This returns whether or not the current browse type is set to static.
      */
-    public function is_simple() {
-
+    public function is_simple()
+    {
         return $this->_state['simple'];
 
     } // is_simple
 
     /**
      * get_saved
-     * This looks in the session for the saved stuff and returns what it 
+     * This looks in the session for the saved stuff and returns what it
      * finds.
      */
-    public function get_saved() {
-
+    public function get_saved()
+    {
         // See if we have it in the local cache first
         if (is_array($this->_cache)) {
             return $this->_cache;
@@ -713,8 +712,7 @@ class Query {
 
             $this->_cache = self::_unserialize($row['object_data']);
             return $this->_cache;
-        }
-        else {
+        } else {
             $objects = $this->get_objects();
         }
 
@@ -728,8 +726,8 @@ class Query {
      * currently browsing by it applies the sql and logic based
      * filters
      */
-    public function get_objects() {
-
+    public function get_objects()
+    {
         // First we need to get the SQL statement we are going to run
         // This has to run against any possible filters (dependent on type)
         $sql = $this->get_sql(true);
@@ -760,8 +758,8 @@ class Query {
      * set_base_sql
      * This saves the base sql statement we are going to use.
      */
-    private function set_base_sql($force = false) {
-        
+    private function set_base_sql($force = false)
+    {
         // Only allow it to be set once
         if (strlen($this->_state['base']) && !$force) { return true; }
 
@@ -828,8 +826,8 @@ class Query {
      * This returns the selects in a format that is friendly for a sql
      * statement.
      */
-    private function get_select() {
-
+    private function get_select()
+    {
         $select_string = implode($this->_state['select'], ", ");
         return $select_string;
 
@@ -840,8 +838,8 @@ class Query {
      * This returns the base sql statement all parsed up, this should be
      * called after all set operations.
      */
-    private function get_base_sql() {
-
+    private function get_base_sql()
+    {
         $sql = str_replace("%%SELECT%%", $this->get_select(), $this->_state['base']);
         return $sql;
 
@@ -851,15 +849,15 @@ class Query {
      * get_filter_sql
      * This returns the filter part of the sql statement
      */
-    private function get_filter_sql() {
-
+    private function get_filter_sql()
+    {
         if (!is_array($this->_state['filter'])) {
             return '';
         }
-        
+
         $sql = "WHERE 1=1 AND ";
 
-        foreach ($this->_state['filter'] 
+        foreach ($this->_state['filter']
             as $key => $value) {
 
             $sql .= $this->sql_filter($key, $value);
@@ -875,8 +873,8 @@ class Query {
      * get_sort_sql
      * Returns the sort sql part
      */
-    private function get_sort_sql() {
-
+    private function get_sort_sql()
+    {
         if (!is_array($this->_state['sort'])) {
             return '';
         }
@@ -899,8 +897,8 @@ class Query {
      * get_limit_sql
      * This returns the limit part of the sql statement
      */
-    private function get_limit_sql() {
-
+    private function get_limit_sql()
+    {
         if (!$this->is_simple()) { return ''; }
 
         $sql = ' LIMIT ' . intval($this->get_start()) . ',' . intval($this->get_offset());
@@ -913,8 +911,8 @@ class Query {
      * get_join_sql
      * This returns the joins that this browse may need to work correctly
      */
-    private function get_join_sql() {
-
+    private function get_join_sql()
+    {
         if (!is_array($this->_state['join'])) {
             return '';
         }
@@ -935,8 +933,8 @@ class Query {
      * get_having_sql
      * this returns the having sql stuff, if we've got anything
      */
-    public function get_having_sql() {
-
+    public function get_having_sql()
+    {
         $sql = $this->_state['having'];
 
         return $sql;
@@ -949,8 +947,8 @@ class Query {
      * every time we get the objects because it depends on the filters and
      * the type of object we are currently browsing.
      */
-    public function get_sql($limit = true) {
-
+    public function get_sql($limit = true)
+    {
         $sql = $this->get_base_sql();
 
         $filter_sql = $this->get_filter_sql();
@@ -959,8 +957,8 @@ class Query {
         $order_sql = $this->get_sort_sql();
         $limit_sql = $limit ? $this->get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
-    
-        if( $this->get_type() == 'artist' ) {
+
+        if ( $this->get_type() == 'artist' ) {
              $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name` ";
         }
         $final_sql .= $order_sql . $limit_sql;
@@ -974,8 +972,8 @@ class Query {
      * This does some additional work on the results that we've received
      * before returning them.
      */
-    private function post_process($data) {
-
+    private function post_process($data)
+    {
         $tags = $this->_state['filter']['tag'];
 
         if (!is_array($tags) || sizeof($tags) < 2) {
@@ -985,13 +983,13 @@ class Query {
         $tag_count = sizeof($tags);
         $count = array();
 
-        foreach($data as $row) {
+        foreach ($data as $row) {
             $count[$row['id']]++;
         }
 
         $results = array();
 
-        foreach($count as $key => $value) {
+        foreach ($count as $key => $value) {
             if ($value >= $tag_count) {
                 $results[] = array('id' => $key);
             }
@@ -1007,14 +1005,14 @@ class Query {
      * to filter by this name on this type returns the appropriate sql
      * if not returns nothing
      */
-    private function sql_filter($filter, $value) {
-
+    private function sql_filter($filter, $value)
+    {
         $filter_sql = '';
 
         switch ($this->get_type()) {
 
         case 'song':
-            switch($filter) {
+            switch ($filter) {
                 case 'tag':
                     $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`song`.`id`', 100);
                     $filter_sql = " `tag_map`.`object_type`='song' AND (";
@@ -1032,7 +1030,7 @@ class Query {
                 break;
                 case 'starts_with':
                     $filter_sql = " `song`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
-                    if( $this->catalog != 0 ) {
+                    if ($this->catalog != 0) {
                         $filter_sql .= " `song`.`catalog` = '" . $this->catalog . "' AND ";
                     }
                 break;
@@ -1058,7 +1056,7 @@ class Query {
                     $filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'catalog':
-                    if($value != 0) {
+                    if ($value != 0) {
                         $filter_sql = " `song`.`catalog` = '$value' AND ";
                     }
                 break;
@@ -1068,7 +1066,7 @@ class Query {
             } // end list of sqlable filters
         break;
         case 'album':
-            switch($filter) {
+            switch ($filter) {
                 case 'exact_match':
                     $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";
                 break;
@@ -1078,7 +1076,7 @@ class Query {
                 case 'starts_with':
                     $this->set_join('left', '`song`', '`album`.`id`', '`song`.`album`', 100);
                     $filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                    if( $this->catalog != 0 ) {
+                    if ($this->catalog != 0) {
                         $filter_sql .= "`song`.`catalog` = '" . $this->catalog . "' AND ";
                     }
                 break;
@@ -1094,7 +1092,7 @@ class Query {
                     $filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'catalog':
-                    if($value != 0) {
+                    if ($value != 0) {
                         $this->set_join('left','`song`','`album`.`id`','`song`.`album`', 100);
                         $this->set_join('left','`catalog`','`song`.`catalog`','`catalog`.`id`', 100);
                                                 $filter_sql = " (`song`.`catalog` = '$value') AND ";
@@ -1114,9 +1112,9 @@ class Query {
             }
         break;
         case 'artist':
-            switch($filter) {
+            switch ($filter) {
                 case 'catalog':
-                if($value != 0) {
+                if ($value != 0) {
                     $this->set_join('left','`song`','`artist`.`id`','`song`.`artist`', 100);
                     $this->set_join('left','`catalog`','`song`.`catalog`','`catalog`.`id`', 100);
                     $filter_sql = "  (`catalog`.`id` = '$value') AND ";
@@ -1131,7 +1129,7 @@ class Query {
                 case 'starts_with':
                     $this->set_join('left', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
                     $filter_sql = " `artist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                    if( $this->catalog != 0 ) {
+                    if ($this->catalog != 0) {
                         $filter_sql .= "`song`.`catalog` = '" . $this->catalog . "' AND ";
                     }
                 break;
@@ -1242,8 +1240,8 @@ class Query {
      * these should be limited as they are often intensive and
      * require additional queries per object... :(
      */
-    private function logic_filter($object_id) {
-
+    private function logic_filter($object_id)
+    {
         return true;
 
     } // logic_filter
@@ -1255,15 +1253,15 @@ class Query {
      * a logic based sort that will come later as that's
      * a lot more complicated
      */
-    private function sql_sort($field, $order) {
-
+    private function sql_sort($field, $order)
+    {
         if ($order != 'DESC') { $order == 'ASC'; }
 
         // Depending on the type of browsing we are doing we can apply
         // different filters that apply to different fields
         switch ($this->get_type()) {
             case 'song':
-                switch($field) {
+                switch ($field) {
                     case 'title';
                         $sql = "`song`.`title`";
                     break;
@@ -1290,7 +1288,7 @@ class Query {
                 } // end switch
             break;
             case 'album':
-                switch($field) {
+                switch ($field) {
                     case 'name':
                         $sql = "`album`.`name` $order, `album`.`disk`";
                     break;
@@ -1406,15 +1404,14 @@ class Query {
      * sort method and then re-sorts them This is internally
      * called by the set_sort() function
      */
-    private function resort_objects() {
-
+    private function resort_objects()
+    {
         // There are two ways to do this.. the easy way...
         // and the vollmer way, hopefully we don't have to
         // do it the vollmer way
         if ($this->is_simple()) {
             $sql = $this->get_sql(true);
-        }
-        else {
+        } else {
             // FIXME: this is fragile for large browses
             // First pull the objects
             $objects = $this->get_saved();
@@ -1464,7 +1461,8 @@ class Query {
      * store
      * This saves the current state to the database
      */
-    public function store() {
+    public function store()
+    {
         $id = $this->id;
         if ($id != 'nocache') {
             $data = serialize($this->_state);
@@ -1478,17 +1476,17 @@ class Query {
 
     /**
      * save_objects
-     * This takes the full array of object ids, often passed into show and 
+     * This takes the full array of object ids, often passed into show and
      * if necessary it saves them
      */
-    public function save_objects($object_ids) {
-
+    public function save_objects($object_ids)
+    {
         // Saving these objects has two operations, one holds it in
-        // a local variable and then second holds it in a row in the 
+        // a local variable and then second holds it in a row in the
         // tmp_browse table
 
         // Only do this if it's not a simple browse
-        if (!$this->is_simple()) { 
+        if (!$this->is_simple()) {
             $this->_cache = $object_ids;
             $this->set_total(count($object_ids));
             $id = $this->id;
@@ -1510,8 +1508,8 @@ class Query {
      * get_state
      * This is a debug only function
      */
-    public function get_state() {
-
+    public function get_state()
+    {
         return $this->_state;
 
     } // get_state

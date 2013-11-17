@@ -33,4 +33,4 @@ $web_path = Config::get('web_path');
 <?php if (!count($object_ids)) { ?>
 <span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span>
 <?php } ?>
-<?php Ajax::end_container(); ?>
+<?php Ajax::end_container();

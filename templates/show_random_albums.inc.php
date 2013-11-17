@@ -41,7 +41,7 @@ $button = Ajax::button('?page=index&action=random_albums','random', T_('Refresh'
                 <?php } ?>
                 </a>
                 <?php
-                if(Config::get('ratings')){
+                if (Config::get('ratings')) {
                         echo "<div id=\"rating_" . $album->id . "_album\">";
                         show_rating($album->id, 'album');
                         echo "</div>";
@@ -53,4 +53,4 @@ $button = Ajax::button('?page=index&action=random_albums','random', T_('Refresh'
             <?php } // end foreach ?>
     <?php } // end if albums ?>
 
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom();

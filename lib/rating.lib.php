@@ -24,8 +24,8 @@
  * show_rating
  * This takes an artist id and includes the right file
  */
-function show_rating($object_id,$type) {
-
+function show_rating($object_id,$type)
+{
     $rating = new Rating($object_id,$type);
 
     require Config::get('prefix') . '/templates/show_object_rating.inc.php';
@@ -36,8 +36,8 @@ function show_rating($object_id,$type) {
  * get_rating_name
  * This takes a score and returns the name that we should use
  */
-function get_rating_name($score) {
-
+function get_rating_name($score)
+{
     switch ($score) {
         case '0':
             return T_("Don't Play");
@@ -66,5 +66,3 @@ function get_rating_name($score) {
     return true;
 
 } // get_rating_name
-
-?>

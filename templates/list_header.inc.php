@@ -48,8 +48,7 @@ if ($prev_offset < 0) { $prev_offset = '0'; }
 /* Calculate how many pages total exist */
 if ($limit > 0 && $total > $limit) {
     $pages = ceil($total / $limit);
-}
-else {
+} else {
     $pages = 0;
 }
 
@@ -62,8 +61,7 @@ if ($pages > 1) {
     // Can't divide by 0
     if ($start > 0) {
         $current_page = floor($start / $limit);
-    }
-    else {
+    } else {
         $current_page = 0;
     }
 
@@ -105,8 +103,7 @@ if ($pages > 1) {
     <?php
         /* Echo everything below us */
         foreach ($page_data['down'] as $page => $offset) {
-            if ($offset === '...') { echo '...&nbsp;'; }
-            else {
+            if ($offset === '...') { echo '...&nbsp;'; } else {
             // Hack Alert
             $page++;
                 echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb');
@@ -121,8 +118,7 @@ if ($pages > 1) {
 
         /* Echo everything above us */
         foreach ($page_data['up'] as $page=>$offset) {
-            if ($offset === '...') { echo '...&nbsp;'; }
-            else {
+            if ($offset === '...') { echo '...&nbsp;'; } else {
                 echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb');
             } // end else
         } // end foreach up
@@ -130,4 +126,3 @@ if ($pages > 1) {
 </div>
 <?php
 } // if stuff
-?>

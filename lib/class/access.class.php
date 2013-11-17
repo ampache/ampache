@@ -27,8 +27,8 @@
  * access based on IP and maybe something else in the future.
  *
  */
-class Access {
-
+class Access
+{
     // Variables from DB
     public $id;
     public $name;
@@ -44,8 +44,8 @@ class Access {
      *
      * Takes an ID of the access_id dealie :)
      */
-    public function __construct($access_id = '') {
-
+    public function __construct($access_id = '')
+    {
         if (!$access_id) { return false; }
 
         /* Assign id for use in get_info() */
@@ -64,7 +64,8 @@ class Access {
      *
      * Gets the vars for $this out of the database.
      */
-    private function _get_info() {
+    private function _get_info()
+    {
         $sql = 'SELECT * FROM `access_list` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($this->id));
 
@@ -79,7 +80,8 @@ class Access {
      * This makes the Access object a nice fuzzy human readable object, spiffy
      * ain't it.
      */
-    public function format() {
+    public function format()
+    {
         $this->f_start = inet_ntop($this->start);
         $this->f_end = inet_ntop($this->end);
 
@@ -93,7 +95,8 @@ class Access {
      *
      * This outputs an error if the IP range is bad.
      */
-    private static function _verify_range($startp, $endp) {
+    private static function _verify_range($startp, $endp)
+    {
         $startn = @inet_pton($startp);
         $endn = @inet_pton($endp);
 
@@ -120,7 +123,8 @@ class Access {
      * This function takes a named array as a datasource and updates the current
      * access list entry.
      */
-    public function update($data) {
+    public function update($data)
+    {
         if (!self::_verify_range($data['start'], $data['end'])) {
             return false;
         }
@@ -135,7 +139,7 @@ class Access {
 
         $sql = 'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, ' .
             '`user` = ?, `name` = ?, `type` = ?, `enabled` = ? WHERE `id` = ?';
-        $db_results = Dba::write($sql, 
+        $db_results = Dba::write($sql,
             array($start, $end, $level, $user, $name, $type, $enabled, $this->id));
 
         return true;
@@ -147,7 +151,8 @@ class Access {
      * This takes a keyed array of data and trys to insert it as a
      * new ACL entry
      */
-    public static function create($data) {
+    public static function create($data)
+    {
         if (!self::_verify_range($data['start'], $data['end'])) {
             return false;
         }
@@ -181,7 +186,8 @@ class Access {
      * This sees if the ACL that we've specified already exists in order to
      * prevent duplicates. The name is ignored.
      */
-    public static function exists($data) {
+    public static function exists($data)
+    {
         $start = inet_pton($data['start']);
         $end = inet_pton($data['end']);
         $type = self::validate_type($data['type']);
@@ -203,7 +209,8 @@ class Access {
      *
      * deletes the specified access_list entry
      */
-    public static function delete($id) {
+    public static function delete($id)
+    {
         Dba::write('DELETE FROM `access_list` WHERE `id` = ?', array($id));
     }
 
@@ -212,7 +219,8 @@ class Access {
      *
      * This checks if specific functionality is enabled.
      */
-    public static function check_function($type) {
+    public static function check_function($type)
+    {
         switch ($type) {
             case 'download':
                 return Config::get('download');
@@ -238,8 +246,8 @@ class Access {
      * This takes a type, ip, user, level and key and then returns whether they
      * are allowed. The IP is passed as a dotted quad.
      */
-    public static function check_network($type, $user, $level, $ip=null) {
-
+    public static function check_network($type, $user, $level, $ip=null)
+    {
         if (!Config::get('access_control')) {
             switch ($type) {
                 case 'interface':
@@ -281,8 +289,7 @@ class Access {
         if (strlen($user) && $user != '-1') {
             $sql .= " AND `user` IN(?, '-1')";
             $params[] = $user;
-        }
-        else {
+        } else {
             $sql .= " AND `user` = '-1'";
         }
 
@@ -305,8 +312,8 @@ class Access {
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
      * always used.
      */
-    public static function check($type, $level) {
-
+    public static function check($type, $level)
+    {
         if (Config::get('demo_mode')) {
             return true;
         }
@@ -323,8 +330,7 @@ class Access {
                 if (Config::get('localplay_level') >= $level
                     || $GLOBALS['user']->access >= 100) {
                     return true;
-                }
-                else {
+                } else {
                     return false;
                 }
             break;
@@ -332,8 +338,7 @@ class Access {
                 // Check their standard user level
                 if ($GLOBALS['user']->access >= $level) {
                     return true;
-                }
-                else {
+                } else {
                     return false;
                 }
             break;
@@ -351,8 +356,9 @@ class Access {
      * This validates the specified type; it will always return a valid type,
      * even if you pass in an invalid one.
      */
-    public static function validate_type($type) {
-        switch($type) {
+    public static function validate_type($type)
+    {
+        switch ($type) {
             case 'rpc':
             case 'interface':
             case 'network':
@@ -368,7 +374,8 @@ class Access {
      * get_access_lists
      * returns a full listing of all access rules on this server
      */
-    public static function get_access_lists() {
+    public static function get_access_lists()
+    {
         $sql = 'SELECT `id` FROM `access_list`';
         $db_results = Dba::read($sql);
 
@@ -387,7 +394,8 @@ class Access {
      *
      * take the int level and return a named level
      */
-    public function get_level_name() {
+    public function get_level_name()
+    {
         if ($this->level >= '75') {
             return T_('All');
         }
@@ -407,7 +415,8 @@ class Access {
      *
      * Return a name for the users covered by this ACL.
      */
-    public function get_user_name() {
+    public function get_user_name()
+    {
         if ($this->user == '-1') { return T_('All'); }
 
         $user = new User($this->user);
@@ -419,7 +428,8 @@ class Access {
      *
      * This function returns the pretty name for our current type.
      */
-    public function get_type_name() {
+    public function get_type_name()
+    {
         switch ($this->type) {
             case 'rpc':
                 return T_('API/RPC');
@@ -437,4 +447,3 @@ class Access {
         }
     }
 }
-?>

@@ -26,7 +26,8 @@
  *
  * @return void
  */
-function load_gettext() {
+function load_gettext()
+{
     $lang = Config::get('lang');
     $charset = Config::get('site_charset') ?: 'UTF-8';
     $locale = $lang . '.' . $charset;
@@ -45,8 +46,7 @@ function load_gettext() {
  * @param    string    $string
  * @return    string
  */
-function gettext_noop($string) {
+function gettext_noop($string)
+{
     return $string;
 }
-
-?>

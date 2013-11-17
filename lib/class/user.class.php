@@ -28,8 +28,8 @@
  * with a user_id from user.id
  *
  */
-class User extends database_object {
-
+class User extends database_object
+{
     //Basic Componets
     public $id;
     public $username;
@@ -49,8 +49,8 @@ class User extends database_object {
      * This function is the constructor object for the user
      * class, it currently takes a username
      */
-    public function __construct($user_id=0) {
-
+    public function __construct($user_id=0)
+    {
         if (!$user_id) { return false; }
 
         $this->id = intval($user_id);
@@ -73,7 +73,8 @@ class User extends database_object {
      *
      * This returns the number of user accounts that exist.
      */
-    public static function count() {
+    public static function count()
+    {
         $sql = 'SELECT COUNT(`id`) FROM `user`';
         $db_results = Dba::read($sql);
         $data = Dba::fetch_row($db_results);
@@ -94,8 +95,8 @@ class User extends database_object {
      * _get_info
      * This function returns the information for this object
      */
-    private function _get_info() {
-
+    private function _get_info()
+    {
         $id = intval($this->id);
 
         if (parent::is_cached('user',$id)) {
@@ -127,8 +128,8 @@ class User extends database_object {
      * has a tmp_playlist, creating it if it doesn't, then sets $this->playlist
      * as a tmp_playlist object that can be fiddled with later on
      */
-    public function load_playlist() {
-
+    public function load_playlist()
+    {
         $session_id = session_id();
 
         $this->playlist = Tmp_Playlist::get_from_session($session_id);
@@ -140,8 +141,8 @@ class User extends database_object {
      * This returns a built user from a username. This is a
      * static function so it doesn't require an instance
      */
-    public static function get_from_username($username) {
-
+    public static function get_from_username($username)
+    {
         $username = Dba::escape($username);
 
         $sql = "SELECT `id` FROM `user` WHERE `username`='$username'";
@@ -159,8 +160,8 @@ class User extends database_object {
      * This returns a built user from a email. This is a
      * static function so it doesn't require an instance
      */
-    public static function get_from_email($email) {
-
+    public static function get_from_email($email)
+    {
         $email = Dba::escape($email);
 
         $sql = "SELECT `id` FROM `user` WHERE `email`='$email'";
@@ -177,8 +178,8 @@ class User extends database_object {
      * get_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
      */
-    public function get_catalogs() {
-
+    public function get_catalogs()
+    {
         if (parent::is_cached('user_catalog',$this->id)) {
             return parent::get_from_cache('user_catalog',$this->id);
         }
@@ -205,8 +206,8 @@ class User extends database_object {
      * []['prefs'] = array(array('name','display','value'));
      * []['admin'] = t/f value if this is an admin only section
      */
-    function get_preferences($type = 0, $system = false) {
-
+    public function get_preferences($type = 0, $system = false)
+    {
         // Fill out the user id
         $user_id = $system ? Dba::escape(-1) : Dba::escape($this->id);
 
@@ -243,8 +244,8 @@ class User extends database_object {
      * set_preferences
      * sets the prefs for this specific user
      */
-    public function set_preferences() {
-
+    public function set_preferences()
+    {
         $user_id = Dba::escape($this->id);
 
         $sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='$user_id' " .
@@ -261,8 +262,8 @@ class User extends database_object {
      * get_favorites
      * returns an array of your $type favorites
      */
-    function get_favorites($type) {
-
+    public function get_favorites($type)
+    {
         $web_path = Config::get('web_path');
 
         $results = Stats::get_user(Config::get('popular_threshold'),$type,$this->id,1);
@@ -313,8 +314,8 @@ class User extends database_object {
      * This returns recommended objects of $type. The recommendations
      * are based on voodoo economics,the phase of the moon and my current BAL.
      */
-    function get_recommendations($type) {
-
+    public function get_recommendations($type)
+    {
         /* First pull all of your ratings of this type */
         $sql = "SELECT object_id,user_rating FROM ratings " .
             "WHERE object_type='" . Dba::escape($type) . "' AND user='" . Dba::escape($this->id) . "'";
@@ -379,8 +380,8 @@ class User extends database_object {
      * checks to see if $this user is logged in returns their current IP if they
      * are logged in
      */
-    public function is_logged_in() {
-
+    public function is_logged_in()
+    {
         $username = Dba::escape($this->username);
 
         $sql = "SELECT `id`,`ip` FROM `session` WHERE `username`='$username'" .
@@ -401,8 +402,8 @@ class User extends database_object {
      * this function checkes to see if this user has access
      * to the passed action (pass a level requirement)
      */
-    function has_access($needed_level) {
-
+    public function has_access($needed_level)
+    {
         if (!Config::get('use_auth') || Config::get('demo_mode')) { return true; }
 
         if ($this->access >= $needed_level) { return true; }
@@ -417,7 +418,8 @@ class User extends database_object {
      * calls the mini ones does all the error checking and all that
      * good stuff
      */
-    public function update($data) {
+    public function update($data)
+    {
         if (empty($data['username'])) {
             Error::add('username', T_('Error Username Required'));
         }
@@ -433,8 +435,7 @@ class User extends database_object {
         foreach ($data as $name => $value) {
             if ($name == 'password1') {
                 $name = 'password';
-            }
-            else {
+            } else {
                 $value = scrub_in($value);
             }
 
@@ -462,8 +463,8 @@ class User extends database_object {
      * update_username
      * updates their username
      */
-    public function update_username($new_username) {
-
+    public function update_username($new_username)
+    {
         $new_username = Dba::escape($new_username);
         $sql = "UPDATE `user` SET `username`='$new_username' WHERE `id`='$this->id'";
         $this->username = $new_username;
@@ -477,8 +478,8 @@ class User extends database_object {
      * Use this function to update the validation key
      * NOTE: crap this doesn't have update_item the humanity of it all
      */
-    public function update_validation($new_validation) {
-
+    public function update_validation($new_validation)
+    {
         $new_validation = Dba::escape($new_validation);
         $sql = "UPDATE `user` SET `validation`='$new_validation', `disabled`='1' WHERE `id`='" . Dba::escape($this->id) . "'";
         $db_results = Dba::write($sql);
@@ -492,8 +493,8 @@ class User extends database_object {
      * update_fullname
      * updates their fullname
      */
-    public function update_fullname($new_fullname) {
-
+    public function update_fullname($new_fullname)
+    {
         $new_fullname = Dba::escape($new_fullname);
         $sql = "UPDATE `user` SET `fullname`='$new_fullname' WHERE `id`='$this->id'";
         $db_results = Dba::write($sql);
@@ -504,8 +505,8 @@ class User extends database_object {
      * update_email
      * updates their email address
      */
-    public function update_email($new_email) {
-
+    public function update_email($new_email)
+    {
         $new_email = Dba::escape($new_email);
         $sql = "UPDATE `user` SET `email`='$new_email' WHERE `id`='$this->id'";
         $db_results = Dba::write($sql);
@@ -516,8 +517,8 @@ class User extends database_object {
      * disable
      * This disables the current user
      */
-    public function disable() {
-
+    public function disable()
+    {
         // Make sure we aren't disabling the last admin
         $sql = "SELECT `id` FROM `user` WHERE `disabled` = '0' AND `id` != '" . $this->id . "' AND `access`='100'";
         $db_results = Dba::read($sql);
@@ -539,8 +540,8 @@ class User extends database_object {
       * enable
      * this enables the current user
      */
-    public function enable() {
-
+    public function enable()
+    {
         $sql = "UPDATE `user` SET `disabled`='0' WHERE id='" . $this->id . "'";
         $db_results = Dba::write($sql);
 
@@ -552,8 +553,8 @@ class User extends database_object {
      * update_access
      * updates their access level
      */
-    public function update_access($new_access) {
-
+    public function update_access($new_access)
+    {
         /* Prevent Only User accounts */
         if ($new_access < '100') {
             $sql = "SELECT `id` FROM user WHERE `access`='100' AND `id` != '$this->id'";
@@ -571,8 +572,8 @@ class User extends database_object {
         @function update_last_seen
         @discussion updates the last seen data for this user
     */
-    function update_last_seen() {
-
+    public function update_last_seen()
+    {
         $sql = "UPDATE user SET last_seen='" . time() . "' WHERE `id`='$this->id'";
         $db_results = Dba::write($sql);
 
@@ -582,8 +583,8 @@ class User extends database_object {
      * update_user_stats
      * updates the playcount mojo for this specific user
      */
-    public function update_stats($song_id) {
-
+    public function update_stats($song_id)
+    {
         $song_info = new Song($song_id);
         $song_info->format();
         $user = $this->id;
@@ -604,7 +605,7 @@ class User extends database_object {
         Stats::insert('album',$song_info->album,$user);
         Stats::insert('artist',$song_info->artist,$user);
 
-        return true; 
+        return true;
 
     } // update_stats
 
@@ -613,13 +614,12 @@ class User extends database_object {
      * This inserts a row into the IP History recording this user at this
      * address at this time in this place, doing this thing.. you get the point
      */
-    public function insert_ip_history() {
-
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+    public function insert_ip_history()
+    {
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $sip = $_SERVER['HTTP_X_FORWARDED_FOR'];
             debug_event('User Ip', 'Login from ip adress: ' . $sip,'3');
-        }
-        else {
+        } else {
             $sip = $_SERVER['REMOTE_ADDR'];
             debug_event('User Ip', 'Login from ip adress: ' . $sip,'3');
         }
@@ -647,8 +647,8 @@ class User extends database_object {
      * create
      * inserts a new user into ampache
      */
-    public static function create($username, $fullname, $email, $password, $access, $disabled = false) {
-
+    public static function create($username, $fullname, $email, $password, $access, $disabled = false)
+    {
         /* Lets clean up the fields... */
         $username    = Dba::escape($username);
         $fullname    = Dba::escape($fullname);
@@ -681,8 +681,8 @@ class User extends database_object {
      * update_password
      * updates a users password
      */
-    public function update_password($new_password) {
-
+    public function update_password($new_password)
+    {
         $new_password = hash('sha256',$new_password);
 
         $new_password = Dba::escape($new_password);
@@ -700,15 +700,13 @@ class User extends database_object {
      * user for an admin, these should not be normally called when creating a
      * user object
      */
-    public function format() {
-
+    public function format()
+    {
         /* If they have a last seen date */
-        if (!$this->last_seen) { $this->f_last_seen = T_('Never'); }
-        else { $this->f_last_seen = date("m\/d\/Y - H:i",$this->last_seen); }
+        if (!$this->last_seen) { $this->f_last_seen = T_('Never'); } else { $this->f_last_seen = date("m\/d\/Y - H:i",$this->last_seen); }
 
         /* If they have a create date */
-        if (!$this->create_date) { $this->f_create_date = T_('Unknown'); }
-        else { $this->f_create_date = date("m\/d\/Y - H:i",$this->create_date); }
+        if (!$this->create_date) { $this->f_create_date = T_('Unknown'); } else { $this->f_create_date = date("m\/d\/Y - H:i",$this->create_date); }
 
         // Base link
         $this->f_link = '<a href="' . Config::get('web_path') . '/stats.php?action=show_user&user_id=' . $this->id . '">' . $this->fullname . '</a>';
@@ -727,8 +725,7 @@ class User extends database_object {
         /* Get Users Last ip */
         if (count($data = $this->get_ip_history(1))) {
             $this->ip_history = inet_ntop($data['0']['ip']);
-        }
-        else {
+        } else {
             $this->ip_history = T_('Not Enough Data');
         }
 
@@ -739,8 +736,8 @@ class User extends database_object {
      * takes an array of objects and formats them corrrectly
      * and returns a simply array with just <a href values
      */
-    public function format_favorites($items) {
-
+    public function format_favorites($items)
+    {
         // The length of the longest item
         $maxlen = strlen($items[0]->count);
 
@@ -767,8 +764,8 @@ class User extends database_object {
      * This takes an array of [object_id] = ratings
      * and displays them in a semi-pretty format
      */
-     function format_recommendations($items,$type) {
-
+     function format_recommendations($items,$type)
+     {
         foreach ($items as $object_id=>$rating) {
 
             switch ($type) {
@@ -801,8 +798,8 @@ class User extends database_object {
      * access_name_to_level
      * This takes the access name for the user and returns the level
      */
-    public static function access_name_to_level($level) {
-
+    public static function access_name_to_level($level)
+    {
         switch ($level) {
             case 'admin':
                 return '100';
@@ -832,8 +829,8 @@ class User extends database_object {
      * If -1 is passed it also removes duplicates from the `preferences`
      * table.
      */
-    public static function fix_preferences($user_id) {
-
+    public static function fix_preferences($user_id)
+    {
         $user_id = Dba::escape($user_id);
 
         /* Get All Preferences for the current user */
@@ -916,8 +913,8 @@ class User extends database_object {
      * deletes this user and everything associated with it. This will affect
      * ratings and tottal stats
      */
-    public function delete() {
-
+    public function delete()
+    {
         /*
           Before we do anything make sure that they aren't the last
           admin
@@ -993,8 +990,8 @@ class User extends database_object {
      * calcs difference between now and last_seen
      * if less than delay, we consider them still online
      */
-    public function is_online( $delay = 1200 ) {
-
+    public function is_online( $delay = 1200 )
+    {
         return time() - $this->last_seen <= $delay;
 
     } // is_online
@@ -1003,8 +1000,8 @@ class User extends database_object {
      * get_user_validation
      *if user exists before activation can be done.
      */
-    public static function get_validation($username) {
-
+    public static function get_validation($username)
+    {
         $usename = Dba::escape($username);
 
         $sql = "SELECT `validation` FROM `user` WHERE `username`='$username'";
@@ -1021,8 +1018,8 @@ class User extends database_object {
      * This gets the recently played items for this user respecting
      * the limit passed
      */
-    public function get_recently_played($limit,$type='') {
-
+    public function get_recently_played($limit,$type='')
+    {
         if (!$type) { $type = 'song'; }
 
         $sql = "SELECT * FROM `object_count` WHERE `object_type`='$type' AND `user`='$this->id' " .
@@ -1042,8 +1039,8 @@ class User extends database_object {
      * This returns the ip_history from the
      * last Config::get('user_ip_cardinality') days
      */
-    public function get_ip_history($count='',$distinct='') {
-
+    public function get_ip_history($count='',$distinct='')
+    {
         $username     = Dba::escape($this->id);
         $count        = $count ? intval($count) : intval(Config::get('user_ip_cardinality'));
 
@@ -1073,8 +1070,8 @@ class User extends database_object {
      * activate_user
      * the user from public_registration
      */
-    public function activate_user($username) {
-
+    public function activate_user($username)
+    {
         $username = Dba::escape($username);
 
         $sql = "UPDATE `user` SET `disabled`='0' WHERE `username`='$username'";
@@ -1086,8 +1083,8 @@ class User extends database_object {
      * is_xmlrpc
      * checks to see if this is a valid xmlrpc user
      */
-    public function is_xmlrpc() {
-
+    public function is_xmlrpc()
+    {
         /* If we aren't using XML-RPC return true */
         if (!Config::get('xml_rpc')) {
             return false;
@@ -1105,8 +1102,8 @@ class User extends database_object {
      * This checks to make sure the username passed doesn't already
      * exist in this instance of ampache
      */
-    public static function check_username($username) {
-
+    public static function check_username($username)
+    {
         $username = Dba::escape($username);
 
         $sql = "SELECT `id` FROM `user` WHERE `username`='$username'";
@@ -1124,8 +1121,8 @@ class User extends database_object {
      * rebuild_all_preferences
      * This rebuilds the user preferences for all installed users, called by the plugin functions
      */
-    public static function rebuild_all_preferences() {
-
+    public static function rebuild_all_preferences()
+    {
         $sql = "SELECT * FROM `user`";
         $db_results = Dba::read($sql);
 
@@ -1140,4 +1137,3 @@ class User extends database_object {
     } // rebuild_all_preferences
 
 } //end user class
-?>

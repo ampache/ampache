@@ -29,15 +29,15 @@
  * calling the correct template for the object we are displaying
  *
  */
-class Browse extends Query {
-
+class Browse extends Query
+{
     /**
      * set_simple_browse
      * This sets the current browse object to a 'simple' browse method
      * which means use the base query provided and expand from there
      */
-    public function set_simple_browse($value) {
-
+    public function set_simple_browse($value)
+    {
         $this->set_is_simple($value);
 
     } // set_simple_browse
@@ -46,8 +46,8 @@ class Browse extends Query {
      * add_supplemental_object
      * Legacy function, need to find a better way to do that
      */
-    public function add_supplemental_object($class, $uid) {
-
+    public function add_supplemental_object($class, $uid)
+    {
         $_SESSION['browse']['supplemental'][$this->id][$class] = intval($uid);
 
         return true;
@@ -59,8 +59,8 @@ class Browse extends Query {
      * This returns an array of 'class','id' for additional objects that
      * need to be created before we start this whole browsing thing.
      */
-    public function get_supplemental_objects() {
-
+    public function get_supplemental_objects()
+    {
         $objects = $_SESSION['browse']['supplemental'][$this->id];
 
         if (!is_array($objects)) { $objects = array(); }
@@ -75,24 +75,23 @@ class Browse extends Query {
      * and requires the correct template based on the
      * type that we are currently browsing
      */
-    public function show_objects($object_ids = null) {
-
+    public function show_objects($object_ids = null)
+    {
         if ($this->is_simple() || ! is_array($object_ids)) {
             $object_ids = $this->get_saved();
-        }
-        else {
+        } else {
             $this->save_objects($object_ids);
         }
 
-        // Limit is based on the user's preferences if this is not a 
+        // Limit is based on the user's preferences if this is not a
         // simple browse because we've got too much here
-        if ((count($object_ids) > $this->get_start()) && 
+        if ((count($object_ids) > $this->get_start()) &&
             ! $this->is_simple() &&
             ! $this->is_static_content()) {
             $object_ids = array_slice(
                 $object_ids,
                 $this->get_start(),
-                $this->get_offset(), 
+                $this->get_offset(),
                 true
             );
         }
@@ -109,8 +108,7 @@ class Browse extends Query {
         // Format any matches we have so we can show them to the masses
         if ($filter_value = $this->get_filter('alpha_match')) {
             $match = ' (' . $filter_value . ')';
-        }
-        elseif ($filter_value = $this->get_filter('starts_with')) {
+        } elseif ($filter_value = $this->get_filter('starts_with')) {
             $match = ' (' . $filter_value . ')';
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
@@ -223,12 +221,13 @@ class Browse extends Query {
       * set_filter_from_request
      * //FIXME
      */
-    public function set_filter_from_request($request) {
-        foreach($request as $key => $value) {
+    public function set_filter_from_request($request)
+    {
+        foreach ($request as $key => $value) {
             //reinterpret v as a list of int
             $list = explode(',', $value);
             $ok = true;
-            foreach($list as $item) {
+            foreach ($list as $item) {
                 if (!is_numeric($item)) {
                     $ok = false;
                     break;
@@ -238,8 +237,7 @@ class Browse extends Query {
                 if (sizeof($list) == 1) {
                     $this->set_filter($key, $list[0]);
                 }
-            }
-            else {
+            } else {
                 $this->set_filter($key, $list);
             }
         }

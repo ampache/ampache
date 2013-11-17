@@ -27,14 +27,14 @@
  * This handles all of the preference stuff for Ampache
  *
  */
-class Preference {
-
+class Preference
+{
     /**
      * __constructor
      * This does nothing... amazing isn't it!
      */
-    private function __construct() {
-
+    private function __construct()
+    {
         // Rien a faire
 
     } // __construct
@@ -43,21 +43,19 @@ class Preference {
      * update
      * This updates a single preference from the given name or id
      */
-    public static function update($preference,$user_id,$value,$applytoall='') {
-
+    public static function update($preference,$user_id,$value,$applytoall='')
+    {
         // First prepare
         if (!is_numeric($preference)) {
             $id = self::id_from_name($preference);
             $name = $preference;
-        }
-        else {
+        } else {
             $name = self::name_from_id($preference);
             $id = $preference;
         }
         if ($applytoall AND Access::check('interface','100')) {
             $user_check = "";
-        }
-        else {
+        } else {
             $user_check = " AND `user`='$user_id'";
         }
 
@@ -70,8 +68,7 @@ class Preference {
             $db_results = Dba::write($sql);
             Preference::clear_from_session();
             return true;
-        }
-        else {
+        } else {
             debug_event('denied',$GLOBALS['user']->username . ' attempted to update ' . $name . ' but does not have sufficient permissions','3');
         }
 
@@ -82,13 +79,12 @@ class Preference {
      * update_level
      * This takes a preference ID and updates the level required to update it (performed by an admin)
      */
-    public static function update_level($preference,$level) {
-
+    public static function update_level($preference,$level)
+    {
         // First prepare
         if (!is_numeric($preference)) {
             $preference_id = self::id_from_name($preference);
-        }
-        else {
+        } else {
             $preference_id = $preference;
         }
 
@@ -106,8 +102,8 @@ class Preference {
      * update_all
      * This takes a preference id and a value and updates all users with the new info
      */
-    public static function update_all($preference_id,$value) {
-
+    public static function update_all($preference_id,$value)
+    {
         $preference_id    = Dba::escape($preference_id);
         $value        = Dba::escape($value);
 
@@ -122,8 +118,8 @@ class Preference {
      * exists
      * This just checks to see if a preference currently exists
      */
-    public static function exists($preference) {
-
+    public static function exists($preference)
+    {
         // We assume it's the name
         $name = Dba::escape($preference);
         $sql = "SELECT * FROM `preference` WHERE `name`='$name'";
@@ -138,8 +134,8 @@ class Preference {
      * This checks to see if the current user has access to modify this preference
      * as defined by the preference name
      */
-    public static function has_access($preference) {
-
+    public static function has_access($preference)
+    {
         // Nothing for those demo thugs
         if (Config::get('demo_mode')) { return false; }
 
@@ -161,8 +157,8 @@ class Preference {
      * id_from_name
      * This takes a name and returns the id
      */
-    public static function id_from_name($name) {
-
+    public static function id_from_name($name)
+    {
         $name = Dba::escape($name);
 
         $sql = "SELECT `id` FROM `preference` WHERE `name`='$name'";
@@ -179,8 +175,8 @@ class Preference {
      * This returns the name from an id, it's the exact opposite
      * of the function above it, amazing!
      */
-    public static function name_from_id($id) {
-
+    public static function name_from_id($id)
+    {
         $id = Dba::escape($id);
 
         $sql = "SELECT `name` FROM `preference` WHERE `id`='$id'";
@@ -197,8 +193,8 @@ class Preference {
      * This returns an array of the names of the different possible sections
      * it ignores the 'internal' catagory
      */
-    public static function get_catagories() {
-
+    public static function get_catagories()
+    {
         $sql = "SELECT `preference`.`catagory` FROM `preference` GROUP BY `catagory` ORDER BY `catagory`";
         $db_results = Dba::read($sql);
 
@@ -218,8 +214,8 @@ class Preference {
      * get_all
      * This returns a nice flat array of all of the possible preferences for the specified user
      */
-    public static function get_all($user_id) {
-
+    public static function get_all($user_id)
+    {
         $user_id = Dba::escape($user_id);
 
         if ($user_id != '-1') {
@@ -247,8 +243,8 @@ class Preference {
      * This inserts a new preference into the preference table
      * it does NOT sync up the users, that should be done independtly
      */
-    public static function insert($name,$description,$default,$level,$type,$catagory) {
-
+    public static function insert($name,$description,$default,$level,$type,$catagory)
+    {
         // Clean em up
         $name        = Dba::escape($name);
         $description    = Dba::escape($description);
@@ -271,14 +267,13 @@ class Preference {
      * delete
      * This deletes the specified preference, a name or a ID can be passed
      */
-    public static function delete($preference) {
-
+    public static function delete($preference)
+    {
         // First prepare
         if (!is_numeric($preference)) {
             $name = Dba::escape($preference);
             $sql = "DELETE FROM `preference` WHERE `name`='$name'";
-        }
-        else {
+        } else {
             $id = Dba::escape($preference);
             $sql = "DELETE FROM `preference` WHERE `id`='$id'";
         }
@@ -293,7 +288,8 @@ class Preference {
      * rename
      * This renames a preference in the database
      */
-    public static function rename($old, $new) {
+    public static function rename($old, $new)
+    {
         $old = Dba::escape($old);
         $new = Dba::escape($new);
 
@@ -305,8 +301,8 @@ class Preference {
      * rebuild_preferences
      * This removes any garbage and then adds back in anything missing preferences wise
      */
-    public static function rebuild_preferences() {
-
+    public static function rebuild_preferences()
+    {
         // First remove garbage
         $sql = "DELETE FROM `user_preference` USING `user_preference` LEFT JOIN `preference` ON `preference`.`id`=`user_preference`.`preference` " .
             "WHERE `preference`.`id` IS NULL";
@@ -323,13 +319,14 @@ class Preference {
      * This takes the preferences, explodes what needs to
      * become an array and boolean everythings
      */
-    public static function fix_preferences($results) {
+    public static function fix_preferences($results)
+    {
         $arrays = array('auth_methods', 'getid3_tag_order',
             'metadata_order', 'art_order', 'amazon_base_urls');
 
         foreach ($arrays as $item) {
-            $results[$item] = trim($results[$item]) 
-                ? explode(',', $results[$item]) 
+            $results[$item] = trim($results[$item])
+                ? explode(',', $results[$item])
                 : array();
         }
 
@@ -348,8 +345,8 @@ class Preference {
      * load_from_session
      * This loads the preferences from the session rather then creating a connection to the database
      */
-    public static function load_from_session($uid=-1) {
-
+    public static function load_from_session($uid=-1)
+    {
         if (is_array($_SESSION['userdata']['preferences']) AND $_SESSION['userdata']['uid'] == $uid) {
             Config::set_by_array($_SESSION['userdata']['preferences'], true);
             return true;
@@ -364,8 +361,8 @@ class Preference {
      * This clears the users preferences, this is done whenever modifications are made to the preferences
      * or the admin resets something
      */
-    public static function clear_from_session() {
-
+    public static function clear_from_session()
+    {
         unset($_SESSION['userdata']['preferences']);
 
     } // clear_from_session
@@ -376,8 +373,8 @@ class Preference {
      * This is currently only used by the debug view, could be used other places.. wouldn't be a half
      * bad idea
      */
-    public static function is_boolean($key) {
-
+    public static function is_boolean($key)
+    {
         $boolean_array = array('session_cookiesecure','require_session',
                     'access_control','require_localnet_session',
                     'downsample_remote','track_user_ip',
@@ -405,8 +402,8 @@ class Preference {
      * This grabs the preferences and then loads them into conf it should be run on page load
      * to initialize the needed variables
      */
-    public static function init() {
-
+    public static function init()
+    {
         $user_id = $GLOBALS['user']->id ? Dba::escape($GLOBALS['user']->id) : '-1';
 
         // First go ahead and try to load it from the preferences

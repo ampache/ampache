@@ -49,4 +49,4 @@ UI::show_box_top($string , 'info-box');
 </ul>
 
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom();

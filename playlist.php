@@ -96,7 +96,7 @@ switch ($_REQUEST['action']) {
 
         $result = Catalog::import_m3u($filename);
 
-        if($result['success']) {
+        if ($result['success']) {
             $url = 'show_playlist&amp;playlist_id=' . $result['id'];
             $title = T_('Playlist Imported');
             $body  = basename($_FILES['filename']['name']);
@@ -107,8 +107,7 @@ switch ($_REQUEST['action']) {
                 'Successfully imported playlist with %d songs.',
                 $result['count']),
                 $result['count']);
-        }
-        else {
+        } else {
             $url = 'show_import_playlist';
             $title = T_('Playlist Not Imported');
             $body = T_($result['error']);
@@ -162,4 +161,3 @@ switch ($_REQUEST['action']) {
 } // switch on the action
 
 UI::show_footer();
-?>

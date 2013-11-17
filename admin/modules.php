@@ -60,7 +60,7 @@ switch ($_REQUEST['action']) {
         }
 
         $catalog->install();
-        
+
         /* Show Confirmation */
         $url    = Config::get('web_path') . '/admin/modules.php?action=show_catalog_types';
         $title  = T_('Plugin Installed');
@@ -201,5 +201,3 @@ switch ($_REQUEST['action']) {
 } // end switch
 
 UI::show_footer();
-
-?>

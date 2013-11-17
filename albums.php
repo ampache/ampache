@@ -28,7 +28,7 @@ require_once Config::get('prefix') . '/templates/header.inc.php';
 switch ($_REQUEST['action']) {
     case 'clear_art':
         if (!$GLOBALS['user']->has_access('75')) { UI::access_denied(); }
-        $art = new Art($_GET['album_id'],'album'); 
+        $art = new Art($_GET['album_id'],'album');
         $art->reset();
         show_confirmation(T_('Album Art Cleared'), T_('Album Art information has been removed from the database'),"/albums.php?action=show&amp;album=" . $art->uid);
     break;
@@ -48,7 +48,7 @@ switch ($_REQUEST['action']) {
 
         // If we got something back insert it
         if ($image_data) {
-            $art = new Art($album->id,'album'); 
+            $art = new Art($album->id,'album');
             $art->insert($image_data,$_FILES['file']['type']);
             show_confirmation(T_('Album Art Inserted'),'',"/albums.php?action=show&amp;album=" . $album->id);
         }
@@ -65,7 +65,7 @@ switch ($_REQUEST['action']) {
         // get the Album information
             $album = new Album($_GET['album_id']);
         $album->format();
-        $art = new Art($album->id,'album'); 
+        $art = new Art($album->id,'album');
         $images = array();
         $cover_url = array();
 
@@ -88,14 +88,12 @@ switch ($_REQUEST['action']) {
         // Build the options for our search
         if (isset($_REQUEST['artist_name'])) {
             $artist = scrub_in($_REQUEST['artist_name']);
-        }
-        elseif ($album->artist_count == '1') {
+        } elseif ($album->artist_count == '1') {
             $artist = $album->f_artist_name;
         }
         if (isset($_REQUEST['album_name'])) {
             $album_name = scrub_in($_REQUEST['album_name']);
-        }
-        else {
+        } else {
             $album_name = $album->full_name;
         }
 
@@ -145,7 +143,7 @@ switch ($_REQUEST['action']) {
         /* Check to see if we have the image url still */
         $image_id = $_REQUEST['image'];
         $album_id = $_REQUEST['album_id'];
-        $art = new Art($album_id,'album'); 
+        $art = new Art($album_id,'album');
 
         $image     = Art::get_from_source($_SESSION['form']['images'][$image_id], 'album');
         $mime    = $_SESSION['form']['images'][$image_id]['mime'];
@@ -177,4 +175,3 @@ switch ($_REQUEST['action']) {
 } // switch on view
 
 UI::show_footer();
-?>

@@ -35,12 +35,11 @@
  * @param    integer    $cancel    T/F show a cancel button that uses return_referrer()
  * @return    void
  */
-function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirmation') {
-
+function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirmation')
+{
     if (substr_count($next_url,Config::get('web_path'))) {
         $path = $next_url;
-    }
-    else {
+    } else {
         $path = Config::get('web_path') . "/$next_url";
     }
 
@@ -54,13 +53,12 @@ function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirma
  * this is not %100 accurate. Also because this is not passed by us we need
  * to clean it up, take the filename then check for a /admin/ and dump the rest
  */
-function return_referer() {
-
+function return_referer()
+{
     $referer = $_SERVER['HTTP_REFERER'];
-    if (substr($referer, -1)=='/'){
+    if (substr($referer, -1)=='/') {
         $file = 'index.php';
-    }
-    else {
+    } else {
         $file = basename($referer);
         /* Strip off the filename */
         $referer = substr($referer,0,strlen($referer)-strlen($file));
@@ -85,14 +83,13 @@ function return_referer() {
  * ['page']    actual page name
  * ['section']    name of the section we are in, admin, browse etc (submenu)
  */
-function get_location() {
-
+function get_location()
+{
     $location = array();
 
     if (strlen($_SERVER['PHP_SELF'])) {
         $source = $_SERVER['PHP_SELF'];
-    }
-    else {
+    } else {
         $source = $_SERVER['REQUEST_URI'];
     }
 
@@ -178,8 +175,8 @@ function get_location() {
  * show_preference_box
  * This shows the preference box for the preferences pages.
  */
-function show_preference_box($preferences) {
-
+function show_preference_box($preferences)
+{
     require Config::get('prefix') . '/templates/show_preference_box.inc.php';
 
 } // show_preference_box
@@ -189,9 +186,10 @@ function show_preference_box($preferences) {
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
  */
-function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0) {
+function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
+{
     // Generate key to use for HTML element ID
-    static $id_cnt;
+    public static $id_cnt;
     if ($song_id) {
         $key = "album_select_$song_id";
     } else {
@@ -229,9 +227,10 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0) {
  * This is the same as show_album_select except it's *gasp* for artists! How
  * inventive!
  */
-function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id=0) {
+function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id=0)
+{
     // Generate key to use for HTML element ID
-    static $id_cnt;
+    public static $id_cnt;
     if ($song_id) {
         $key = "artist_select_$song_id";
     } else {
@@ -268,8 +267,8 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id
  * Yet another one of these buggers. this shows a drop down of all of your
  * catalogs.
  */
-function show_catalog_select($name='catalog',$catalog_id=0,$style='') {
-
+function show_catalog_select($name='catalog',$catalog_id=0,$style='')
+{
     echo "<select name=\"$name\" style=\"$style\">\n";
 
     $sql = "SELECT `id`, `name` FROM `catalog` ORDER BY `name`";
@@ -294,8 +293,8 @@ function show_catalog_select($name='catalog',$catalog_id=0,$style='') {
  * This one is for users! shows a select/option statement so you can pick a user
  * to blame
  */
-function show_user_select($name,$selected='',$style='') {
-
+function show_user_select($name,$selected='',$style='')
+{
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"\">" . T_('All') . "</option>\n";
 
@@ -321,8 +320,8 @@ function show_user_select($name,$selected='',$style='') {
  * show_playlist_select
  * This one is for playlists!
  */
-function show_playlist_select($name,$selected='',$style='') {
-
+function show_playlist_select($name,$selected='',$style='')
+{
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"\">" . T_('None') . "</option>\n";
 
@@ -348,8 +347,8 @@ function show_playlist_select($name,$selected='',$style='') {
  * This takes a one dimensional array and creates a XML document from it. For
  * use primarily by the ajax mojo.
  */
-function xml_from_array($array, $callback = false, $type = '') {
-
+function xml_from_array($array, $callback = false, $type = '')
+{
     $string = '';
 
     // If we weren't passed an array then return
@@ -362,9 +361,8 @@ function xml_from_array($array, $callback = false, $type = '') {
             if (is_array($value)) {
                 $value = xml_from_array($value,1,$type);
                 $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-            }
-            else {
-                if ($key == "key"){
+            } else {
+                if ($key == "key") {
                 $string .= "\t\t<$key>$value</$key>\n";
                 } elseif (is_int($value)) {
                 $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
@@ -385,9 +383,8 @@ function xml_from_array($array, $callback = false, $type = '') {
             if (is_array($value)) {
                 $value = xml_from_array($value,1,$type);
                 $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-            }
-            else {
-                if ($key == "key"){
+            } else {
+                if ($key == "key") {
                 $string .= "\t\t<$key>$value</$key>\n";
                 } elseif (is_numeric($value)) {
                 $string .= "\t\t\t<$key>$value</$key>\n";
@@ -412,8 +409,7 @@ function xml_from_array($array, $callback = false, $type = '') {
                 // Call ourself
                 $value = xml_from_array($value, true);
                 $string .= "\t<content div=\"$key\">$value</content>\n";
-            }
-            else {
+            } else {
                 /* We need to escape the value */
                 $string .= "\t<content div=\"$key\"><![CDATA[$value]]></content>\n";
             }
@@ -433,8 +429,9 @@ function xml_from_array($array, $callback = false, $type = '') {
  * xml_get_header
  * This takes the type and returns the correct xml header
  */
-function xml_get_header($type){
-    switch ($type){
+function xml_get_header($type)
+{
+    switch ($type) {
     case 'itunes':
         $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
         "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
@@ -472,8 +469,9 @@ function xml_get_header($type){
  * xml_get_footer
  * This takes the type and returns the correct xml footer
  */
-function xml_get_footer($type){
-    switch ($type){
+function xml_get_footer($type)
+{
+    switch ($type) {
     case 'itunes':
         $footer = "      </dict>\n" .
         "</dict>\n" .
@@ -495,8 +493,8 @@ function xml_get_footer($type){
  * toggle_visible
  * This is identical to the javascript command that it actually calls
  */
-function toggle_visible($element) {
-
+function toggle_visible($element)
+{
     echo '<script type="text/javascript">';
     echo "toggleVisible('$element');";
     echo "</script>\n";
@@ -508,12 +506,11 @@ function toggle_visible($element) {
  * This function takes a boolean value and then prints out a friendly text
  * message.
  */
-function print_bool($value) {
-
+function print_bool($value)
+{
     if ($value) {
         $string = '<span class="item_on">' . T_('On') . '</span>';
-    }
-    else {
+    } else {
         $string = '<span class="item_off">' . T_('Off') . '</span>';
     }
 
@@ -526,8 +523,8 @@ function print_bool($value) {
  * This shows the now playing templates and does some garbage collecion
  * this should really be somewhere else
  */
-function show_now_playing() {
-
+function show_now_playing()
+{
     Session::gc(null);
     Stream::gc_now_playing();
 
@@ -536,6 +533,3 @@ function show_now_playing() {
     require_once Config::get('prefix') . '/templates/show_now_playing.inc.php';
 
 } // show_now_playing
-
-
-?>

@@ -36,7 +36,7 @@
     </div>
   </div>
 <?php } ?>
-  
+
 <?php if (Config::get('userflags')) { ?>
   <div class="np_cell cel_userflag">
     <label><?php echo T_('Flag'); ?></label>
@@ -93,15 +93,14 @@
             <?php
             if (is_null($a['id'])) {
                 echo scrub_out(UI::truncate($a['name']), Config::get('ellipse_threshold_artist'));
-            }
-            else {
+            } else {
                 $artist = new Artist($a['id']);
                 $artist->format();
                 echo $artist->f_name_link;
             }
             ?>
             </div>
-        <?php } // end foreach ?> 
+        <?php } // end foreach ?>
     </div>
 <?php } // end show similar artists ?>
 <?php if ($songs = Recommendation::get_songs_like($media->id, 3)) { ?>
@@ -119,4 +118,4 @@
     </div>
 <?php } // end show similar songs ?>
 </div>
-<?php } // end show similar things ?>
+<?php } // end show similar things

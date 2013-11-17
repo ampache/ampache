@@ -23,13 +23,13 @@
 
 // A magical class filled with ponies
 
-class memory_object {
-
+class memory_object
+{
     private $_data = array();
     public $properties;
 
-    public function __construct($data) {
-
+    public function __construct($data)
+    {
         foreach ($data as $key => $value) {
             if (in_array($key, $this->properties)) {
                 $this->_data[$key] = $value;
@@ -38,14 +38,16 @@ class memory_object {
 
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if (!in_array($name, $this->properties)) {
             return false;
         }
         $this->_data[$name] = $value;
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if (!in_array($name, $this->properties)) {
             return false;
         }

@@ -33,12 +33,13 @@
  * The class should be a static var in the other classes
  *
  */
-class Config {
-
+class Config
+{
     private $_local    = array();
     private static $_global = array();
 
-    public function __construct() {
+    public function __construct()
+    {
         // Rien a faire
     }
 
@@ -47,11 +48,12 @@ class Config {
      *
      * This returns a config value.
      */
-    public static function get($name) {
+    public static function get($name)
+    {
         if (isset(self::$_global[$name])) {
             return self::$_global[$name];
         }
-        
+
         return null;
     }
 
@@ -60,7 +62,8 @@ class Config {
      *
      * This returns all of the current config variables as an array.
      */
-    public static function get_all() {
+    public static function get_all()
+    {
         return self::$_global;
     }
 
@@ -69,13 +72,14 @@ class Config {
      *
      * This sets config values.
      */
-    public static function set($name, $value, $clobber = false) {
+    public static function set($name, $value, $clobber = false)
+    {
         if (isset(self::$_global[$name]) && !$clobber) {
             debug_event('Config', "Tried to overwrite existing key $name without setting clobber", 5);
             Error::add('Config Global', sprintf(T_('Trying to clobber \'%s\' without setting clobber'), $name));
             return false;
         }
-        
+
         self::$_global[$name] = $value;
     }
 
@@ -85,10 +89,10 @@ class Config {
      * This is the same as the set function except it takes an array as
      * input.
      */
-    public static function set_by_array($array, $clobber = false) {
+    public static function set_by_array($array, $clobber = false)
+    {
         foreach ($array as $name => $value) {
             self::set($name, $value, $clobber);
         }
     }
 }
-?>

@@ -33,4 +33,3 @@ $class = $class ? $class : 'box';
        <h3 class="box-title"><?php echo $title; ?></h3>
       <?php } ?>
     <div class="box-content clearfix">
-

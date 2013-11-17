@@ -25,8 +25,8 @@
  * Ampache_RSS Class
  *
  */
-class Ampache_RSS {
-
+class Ampache_RSS
+{
     private $type;
     public $data;
 
@@ -34,8 +34,8 @@ class Ampache_RSS {
      * Constructor
      * This takes a flagged.id and then pulls in the information for said flag entry
      */
-    public function __construct($type) {
-
+    public function __construct($type)
+    {
         $this->type = self::validate_type($type);
 
     } // constructor
@@ -45,8 +45,8 @@ class Ampache_RSS {
      * This returns the xmldocument for the current rss type, it calls a sub function that gathers the data
      * and then uses the xmlDATA class to build the document
      */
-    public function get_xml() {
-
+    public function get_xml()
+    {
         // Function call name
         $data_function = 'load_' . $this->type;
         $pub_date_function = 'pubdate_' . $this->type;
@@ -65,8 +65,8 @@ class Ampache_RSS {
      * get_title
      * This returns the standardized title for the rss feed based on this->type
      */
-    public function get_title() {
-
+    public function get_title()
+    {
         $titles = array('now_playing' => T_('Now Playing'),
                 'recently_played' => T_('Recently Played'),
                 'latest_album' => T_('Newest Albums'),
@@ -80,8 +80,8 @@ class Ampache_RSS {
      * get_description
      * This returns the standardized description for the rss feed based on this->type
      */
-    public function get_description() {
-
+    public function get_description()
+    {
         //FIXME: For now don't do any kind of translating
         return 'Ampache RSS Feeds';
 
@@ -91,8 +91,8 @@ class Ampache_RSS {
      * validate_type
      * this returns a valid type for an rss feed, if the specified type is invalid it returns a default value
      */
-    public static function validate_type($type) {
-
+    public static function validate_type($type)
+    {
         $valid_types = array('now_playing','recently_played','latest_album','latest_artist','latest_song',
                 'popular_song','popular_album','popular_artist');
 
@@ -108,8 +108,8 @@ class Ampache_RSS {
       * get_display
      * This dumps out some html and an icon for the type of rss that we specify
      */
-    public static function get_display($type='now_playing') {
-
+    public static function get_display($type='now_playing')
+    {
         // Default to now playing
         $type = self::validate_type($type);
 
@@ -126,8 +126,8 @@ class Ampache_RSS {
      * This loads in the now playing information. This is just the raw data with key=>value pairs that could be turned
      * into an xml document if we so wished
      */
-    public static function load_now_playing() {
-
+    public static function load_now_playing()
+    {
         $data = Stream::get_now_playing();
 
         $results = array();
@@ -142,7 +142,7 @@ class Ampache_RSS {
             $client = $element['user'];
             $title = $format;
             $description = $format;
-            foreach($string_map as $search => $replace) {
+            foreach ($string_map as $search => $replace) {
                 $trep = 'f_' . $replace;
                 $drep = 'f_' . $replace . '_full';
                 $title = str_replace($search, $song->$trep, $title);
@@ -167,8 +167,8 @@ class Ampache_RSS {
      * this is the pub date we should use for the now playing information,
      * this is a little specific as it uses the 'newest' expire we can find
      */
-    public static function pubdate_now_playing() {
-
+    public static function pubdate_now_playing()
+    {
         // Little redundent, should be fixed by an improvement in the get_now_playing stuff
         $data = Stream::get_now_playing();
 
@@ -182,8 +182,8 @@ class Ampache_RSS {
      * load_recently_played
      * This loads in the recently played information and formats it up real nice like
      */
-    public static function load_recently_played() {
-
+    public static function load_recently_played()
+    {
         //FIXME: The time stuff should be centralized, it's currently in two places, lame
 
         $time_unit = array('', T_('seconds ago'), T_('minutes ago'), T_('hours ago'), T_('days ago'), T_('weeks ago'), T_('months ago'), T_('years ago'));
@@ -240,8 +240,8 @@ class Ampache_RSS {
      * pubdate_recently_played
      * This just returns the 'newest' recently played entry
      */
-    public static function pubdate_recently_played() {
-
+    public static function pubdate_recently_played()
+    {
         $data = Song::get_recently_played();
 
         $element = array_shift($data);

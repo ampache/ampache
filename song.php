@@ -36,5 +36,3 @@ switch ($_REQUEST['action']) {
 } // end data collection
 
 UI::show_footer();
-
-?>

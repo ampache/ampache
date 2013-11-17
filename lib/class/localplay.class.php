@@ -20,8 +20,8 @@
  *
  */
 
-class Localplay {
-
+class Localplay
+{
     /* Base Variables */
     public $type;
 
@@ -36,8 +36,8 @@ class Localplay {
      * file for the specified type and attempts to load in the function
      * map, the preferences and the template
      */
-    public function __construct($type) {
-
+    public function __construct($type)
+    {
         $this->type = $type;
 
         $this->_get_info();
@@ -51,8 +51,8 @@ class Localplay {
      * any failures, fatal errors will actually return something to the
      * gui
      */
-    private function _get_info() {
-
+    private function _get_info()
+    {
         $this->_load_player();
 
     } // _get_info
@@ -62,12 +62,11 @@ class Localplay {
      * This returns true / false if the player load
      * failed / worked
      */
-    public function player_loaded() {
-
+    public function player_loaded()
+    {
         if (is_object($this->_player)) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
 
@@ -78,8 +77,8 @@ class Localplay {
      * This makes the localplay/plugin information
      * human readable
      */
-    public function format() {
-
+    public function format()
+    {
         if (!is_object($this->_player)) { return false; }
 
         $this->f_name         = ucfirst($this->type);
@@ -95,8 +94,8 @@ class Localplay {
      * Will interface with in order to make all this magical stuf work
      * all LocalPlay modules should be located in /modules/<name>/<name>.class.php
      */
-    private function _load_player() {
-
+    private function _load_player()
+    {
         if (!$this->type) { return false; }
 
         $filename = Config::get('prefix') . '/modules/localplay/' . $this->type . '.controller.php';
@@ -125,8 +124,8 @@ class Localplay {
      * is supported in the current player, if so it returns a 'skip to'
      * link, otherwise it returns just the text
      */
-    public function format_name($name,$id) {
-
+    public function format_name($name,$id)
+    {
         $name = scrub_out($name);
         $name = Ajax::text('?page=localplay&action=command&command=skip&id=' . $id,$name,'localplay_skip_' . $id);
         return $name;
@@ -137,8 +136,8 @@ class Localplay {
      * get_controllers
      * This returns the controllers that are currently loaded into this instance
      */
-    public static function get_controllers() {
-
+    public static function get_controllers()
+    {
         /* First open the dir */
         $handle = opendir(Config::get('prefix') . '/modules/localplay');
 
@@ -170,8 +169,8 @@ class Localplay {
      * This returns true or false depending on if the specified controller
      * is currently enabled
      */
-    public static function is_enabled($controller) {
-
+    public static function is_enabled($controller)
+    {
         // Load the controller and then check for its preferences
         $localplay = new Localplay($controller);
         // If we can't even load it no sense in going on
@@ -186,8 +185,8 @@ class Localplay {
      * This runs the install for the localplay controller we've
      * currently got pimped out
      */
-    public function install() {
-
+    public function install()
+    {
         // Run the player's installer
         $installed = $this->_player->install();
 
@@ -200,8 +199,8 @@ class Localplay {
      * This runs the uninstall for the localplay controller we've
      * currently pimped out
      */
-    public function uninstall() {
-
+    public function uninstall()
+    {
         // Run the players uninstaller
         $this->_player->uninstall();
 
@@ -219,8 +218,8 @@ class Localplay {
      * This function attempts to connect to the localplay
      * player that we are using
      */
-    public function connect() {
-
+    public function connect()
+    {
         if (!$this->_player->connect()) {
             debug_event('localplay','Error Unable to connect, check ' . $this->type . ' controller','1');
             return false;
@@ -235,8 +234,8 @@ class Localplay {
      * This function passes NULL and calls the play function of the player
      * object
      */
-    public function play() {
-
+    public function play()
+    {
         if (!$this->_player->play()) {
             debug_event('localplay','Error Unable to start playback, check ' . $this->type . ' controller','1');
             return false;
@@ -251,8 +250,8 @@ class Localplay {
      * This functions passes NULl and calls the stop function of the player
      * object, it should recieve a true/false boolean value
      */
-    public function stop() {
-
+    public function stop()
+    {
         if (!$this->_player->stop()) {
             debug_event('localplay','Error Unable to stop playback, check ' . $this->type . ' controller','1');
             return false;
@@ -265,8 +264,8 @@ class Localplay {
     /**
      * add
      */
-    public function add($object) {
-
+    public function add($object)
+    {
         debug_event('localplay', 'Deprecated add method called: ' . json_encode($object), 5);
         return false;
 
@@ -276,8 +275,8 @@ class Localplay {
      * add_url
      * This directly adds an URL to the localplay module.  Is more betterer.
      */
-    public function add_url(Stream_URL $url) {
-
+    public function add_url(Stream_URL $url)
+    {
         if (!$this->_player->add_url($url)) {
             debug_event('localplay', 'Unable to add url ' . $url . ', check ' . $this->type . ' controller', 1);
             return false;
@@ -292,8 +291,8 @@ class Localplay {
      * This turns the repeat feature of a localplay method on or
      * off, takes a 0/1 value
      */
-    public function repeat($state) {
-
+    public function repeat($state)
+    {
         $data = $this->_player->repeat($state);
 
         if (!$data) {
@@ -309,8 +308,8 @@ class Localplay {
      * This turns on the random feature of a localplay method
      * It takes a 0/1 value
      */
-    public function random($state) {
-
+    public function random($state)
+    {
         $data = $this->_player->random($state);
 
         if (!$data) {
@@ -326,8 +325,8 @@ class Localplay {
      * This returns current information about the state of the player
      * There is an expected array format
      */
-    public function status() {
-
+    public function status()
+    {
         $data = $this->_player->status();
 
         if (!count($data)) {
@@ -345,8 +344,8 @@ class Localplay {
      * the array of current songs for display or whatever
      * an empty array is passed on failure
      */
-    public function get() {
-
+    public function get()
+    {
         $data = $this->_player->get();
 
         if (!count($data) OR !is_array($data)) {
@@ -364,8 +363,8 @@ class Localplay {
      * as passed in the variable it is a 0 - 100 scale the controller is
      * responsible for adjusting the scale if nessecary
      */
-    public function volume_set($value) {
-
+    public function volume_set($value)
+    {
         /* Make sure it's int and 0 - 100 */
         $value = int($value);
 
@@ -386,8 +385,8 @@ class Localplay {
      * This function isn't required. It tells the daemon to increase the volume
      * by a pre-defined amount controlled by the controller
      */
-    public function volume_up() {
-
+    public function volume_up()
+    {
         if (!$this->_player->volume_up()) {
             debug_event('localplay','Error: Unable to increase volume, check ' . $this->type . ' controller','1');
             return false;
@@ -402,8 +401,8 @@ class Localplay {
      * This function isn't required. It tells the daemon to decrese the volume
      * by a pre-defined amount controlled by the controller.
      */
-    public function volume_down() {
-
+    public function volume_down()
+    {
         if (!$this->_player->volume_down()) {
             debug_event('localplay','Error: Unable to decrese volume, check ' . $this->type . ' controller','1');
             return false;
@@ -418,9 +417,9 @@ class Localplay {
      * This function isn't required, It tells the daemon to mute all output
      * It's up to the controller to decide what that actually entails
      */
-    public function volume_mute() {
-
-        if (!$this->_player->volume(0)){
+    public function volume_mute()
+    {
+        if (!$this->_player->volume(0)) {
             debug_event('localplay','Error: Unable to mute volume, check ' . $this->type . ' controller','1');
             return false;
         }
@@ -433,8 +432,8 @@ class Localplay {
      * skip
      * This isn't a required function, it tells the daemon to skip to the specified song
      */
-    public function skip($track_id) {
-
+    public function skip($track_id)
+    {
         if (!$this->_player->skip($track_id)) {
             debug_event('localplay','Error: Unable to skip to next song, check ' . $this->type . ' controller','1');
             return false;
@@ -449,8 +448,8 @@ class Localplay {
      * This isn't a required function, it tells the daemon to go to the next
      * song
      */
-    public function next() {
-
+    public function next()
+    {
         if (!$this->_player->next()) {
             debug_event('localplay','Error: Unable to skip to next song, check ' . $this->type . ' controller','1');
             return false;
@@ -465,9 +464,8 @@ class Localplay {
      * This isn't a required function, it tells the daemon to go the the previous
      * song
      */
-    public function prev() {
-
-
+    public function prev()
+    {
         if (!$this->_player->prev()) {
             debug_event('localplay','Error: Unable to skip to previous song, check ' . $this->type . ' controller','1');
             return false;
@@ -482,8 +480,8 @@ class Localplay {
      * This isn't a required function, it tells the daemon to pause the
      * song
      */
-    public function pause() {
-
+    public function pause()
+    {
         if (!$this->_player->pause()) {
             debug_event('localplay','Error: Unable to pause song, check ' . $this->type . ' controller','1');
             return false;
@@ -497,8 +495,8 @@ class Localplay {
      * get_instances
      * This returns the instances of the current type
      */
-    public function get_instances() {
-
+    public function get_instances()
+    {
         $instances = $this->_player->get_instances();
 
         return $instances;
@@ -509,8 +507,8 @@ class Localplay {
      * current_instance
      * This returns the UID of the current Instance
      */
-    public function current_instance() {
-
+    public function current_instance()
+    {
         $data = $this->_player->get_instance();
 
         return $data['id'];
@@ -521,8 +519,8 @@ class Localplay {
      * get_instance
      * This returns the specified instance
      */
-    public function get_instance($uid) {
-
+    public function get_instance($uid)
+    {
         $data = $this->_player->get_instance($uid);
 
         return $data;
@@ -533,8 +531,8 @@ class Localplay {
      * update_instance
      * This updates the specified instance with a named array of data (_POST most likely)
      */
-    public function update_instance($uid,$data) {
-
+    public function update_instance($uid,$data)
+    {
         $data = $this->_player->update_instance($uid,$data);
 
         return $data;
@@ -545,8 +543,8 @@ class Localplay {
      * add_instance
      * This adds a new instance for the current controller type
      */
-    public function add_instance($data) {
-
+    public function add_instance($data)
+    {
         $this->_player->add_instance($data);
 
     } // add_instance
@@ -555,8 +553,8 @@ class Localplay {
      * delete_instance
      * This removes an instance (it actually calls the players function)
      */
-    public function delete_instance($instance_uid) {
-
+    public function delete_instance($instance_uid)
+    {
         $this->_player->delete_instance($instance_uid);
 
     } // delete_instance
@@ -565,8 +563,8 @@ class Localplay {
      * set_active_instance
      * This sets the active instance of the localplay controller
      */
-    public function set_active_instance($instance) {
-
+    public function set_active_instance($instance)
+    {
         $this->_player->set_active_instance($instance);
 
     } // set_active_instance
@@ -576,8 +574,8 @@ class Localplay {
      * This removes songs from the players playlist it takes a single ID as provided
      * by the get command
      */
-    public function delete_track($object_id) {
-
+    public function delete_track($object_id)
+    {
         if (!$this->_player->delete_track($object_id)) {
             debug_event('localplay','Error: Unable to remove songs, check ' . $this->type . ' controller','1');
             return false;
@@ -593,8 +591,8 @@ class Localplay {
      * This removes every song from the players playlist as defined by the delete_all function
      * map
      */
-    public function delete_all() {
-
+    public function delete_all()
+    {
         if (!$this->_player->clear_playlist()) {
             debug_event('localplay','Error: Unable to delete entire playlist, check ' . $this->type . ' controller','1');
             return false;
@@ -609,8 +607,8 @@ class Localplay {
      * This loads the fields from the localplay
      * player and returns them
      */
-    public function get_instance_fields() {
-
+    public function get_instance_fields()
+    {
         $fields = $this->_player->instance_fields();
 
         return $fields;
@@ -622,8 +620,8 @@ class Localplay {
      * This function returns a user friendly version
      * of the current player state
      */
-    public function get_user_state($state) {
-
+    public function get_user_state($state)
+    {
         switch ($state) {
             case 'play':
                 return T_('Now Playing');
@@ -646,8 +644,8 @@ class Localplay {
      * This attempts to return a nice user friendly
      * currently playing string
      */
-    public function get_user_playing() {
-
+    public function get_user_playing()
+    {
         $status = $this->status();
 
         /* Format the track name */
@@ -666,4 +664,3 @@ class Localplay {
 
 
 } // end localplay class
-?>

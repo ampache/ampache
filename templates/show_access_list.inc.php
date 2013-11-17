@@ -77,4 +77,4 @@
 </table>
 <?php  } // end if count ?>
 <?php Ajax::end_container(); ?>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom();

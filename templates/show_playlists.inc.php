@@ -69,4 +69,4 @@ foreach ($object_ids as $playlist_id) {
     <th class="cel_action"><?php echo T_('Actions'); ?></th>
 </tr>
 </table>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>
+<?php require Config::get('prefix') . '/templates/list_header.inc.php'

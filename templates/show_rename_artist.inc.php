@@ -37,4 +37,4 @@ function insert()
     <input type="checkbox" name="update_id3" value="yes" />&nbsp; <?php echo T_('Update id3 tags') ?><br />
     <input type="submit" value="<?php echo T_('Rename'); ?>" /><br />
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom();

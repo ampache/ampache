@@ -44,8 +44,7 @@ foreach ($catalogs as $type) {
     if ($catalog->is_installed()) {
         $action     = 'confirm_uninstall_catalog_type';
         $action_txt    = T_('Disable');
-    }
-    else {
+    } else {
         $action = 'install_catalog_type';
         $action_txt    = T_('Activate');
     }
@@ -69,4 +68,3 @@ foreach ($catalogs as $type) {
 </tr>
 </table>
 <br />
-

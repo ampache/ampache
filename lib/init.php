@@ -37,12 +37,11 @@ Session::_auto_init();
 $path = preg_replace('#(.*)/(\w+\.php)$#', '$1', $_SERVER['PHP_SELF']);
 $path = $http_type . $_SERVER['HTTP_HOST'] . $path;
 
-// Check to make sure the config file exists. If it doesn't then go ahead and 
+// Check to make sure the config file exists. If it doesn't then go ahead and
 // send them over to the install script.
 if (!file_exists($configfile)) {
     $link = $path . '/install.php';
-}
-else {
+} else {
     // Make sure the config file is set up and parsable
     $results = @parse_ini_file($configfile);
 
@@ -121,7 +120,7 @@ if (substr($post_size,strlen($post_size)-1,strlen($post_size)) != 'M') {
 // In case the local setting is 0
 ini_set('session.gc_probability','5');
 
-if (!isset($results['memory_limit']) || 
+if (!isset($results['memory_limit']) ||
     (UI::unformat_bytes($results['memory_limit']) < UI::unformat_bytes('32M'))
 ) {
     $results['memory_limit'] = '32M';
@@ -153,8 +152,7 @@ if (!defined('NO_SESSION') && Config::get('use_auth')) {
 
     /* Load preferences and theme */
     $GLOBALS['user']->update_last_seen();
-}
-elseif (!Config::get('use_auth')) {
+} elseif (!Config::get('use_auth')) {
     $auth['success'] = 1;
     $auth['username'] = '-1';
     $auth['fullname'] = "Ampache User";
@@ -169,13 +167,11 @@ elseif (!Config::get('use_auth')) {
         $GLOBALS['user']->username = $auth['username'];
         $GLOBALS['user']->fullname = $auth['fullname'];
         $GLOBALS['user']->access = $auth['access'];
-    }
-    else {
+    } else {
         Session::check();
         if ($_SESSION['userdata']['username']) {
             $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
-        }
-        else {
+        } else {
             $GLOBALS['user'] = new User($auth['username']);
             $GLOBALS['user']->id = '-1';
             $GLOBALS['user']->username = $auth['username'];
@@ -195,8 +191,7 @@ else {
         session_id(scrub_in($_REQUEST['sid']));
         session_start();
         $GLOBALS['user'] = new User($_SESSION['userdata']['uid']);
-    }
-    else {
+    } else {
         $GLOBALS['user'] = new User();
     }
 
@@ -238,4 +233,3 @@ $GLOBALS['xmlrpc_internalencoding'] = Config::get('site_charset');
 if (Config::get('debug')) {
     error_reporting(E_ALL);
 }
-?>

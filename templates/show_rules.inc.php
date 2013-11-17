@@ -22,8 +22,7 @@
 
 if ($playlist) {
     $logic_operator = $playlist->logic_operator;
-}
-else {
+} else {
     $logic_operator = $_REQUEST['operator'];
 }
 $logic_operator = strtolower($logic_operator);
@@ -59,16 +58,13 @@ $logic_operator = strtolower($logic_operator);
 <?php
 if ($playlist) {
     $out = $playlist->to_js();
-}
-else {
+} else {
     $mysearch = new Search($_REQUEST['type']);
     $mysearch->parse_rules(Search::clean_request($_REQUEST));
     $out = $mysearch->to_js();
 }
 if ($out) {
     echo $out;
-}
-else {
+} else {
     echo '<script type="text/javascript">SearchRow.add();</script>';
 }
-?>

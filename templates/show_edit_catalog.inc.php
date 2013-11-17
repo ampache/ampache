@@ -63,4 +63,4 @@ UI::show_box_top(sprintf(T_('Settings for %s') , $catalog->name . ' (' . $catalo
     <input class="button" type="submit" value="<?php echo T_('Save Catalog Settings'); ?>" />
 </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom();

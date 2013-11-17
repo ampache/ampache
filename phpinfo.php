@@ -28,5 +28,3 @@ if (!Access::check('interface', 100)) {
 }
 
 phpinfo();
-
-?>

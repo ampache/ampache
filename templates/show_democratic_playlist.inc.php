@@ -66,7 +66,7 @@ else {
 <?php
 $democratic = Democratic::get_current_playlist();
 $democratic->set_parent();
-foreach($object_ids as $item) {
+foreach ($object_ids as $item) {
     $media = new $item['object_type']($item['object_id']);
     $media->format();
 ?>
@@ -107,4 +107,4 @@ foreach($object_ids as $item) {
 } // end else
 ?>
 </table>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php require Config::get('prefix') . '/templates/list_header.inc.php';

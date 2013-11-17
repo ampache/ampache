@@ -27,16 +27,15 @@
  *
  * @param    array    $media_ids    Media IDs.
  */
-function get_song_files($media_ids) {
-
+function get_song_files($media_ids)
+{
     $media_files = array();
 
     foreach ($media_ids as $element) {
         if (is_array($element)) {
             $type = array_shift($element);
             $media = new $type(array_shift($element));
-        }
-        else {
+        } else {
             $media = new Song($element);
         }
         if ($media->enabled) {
@@ -57,8 +56,8 @@ function get_song_files($media_ids) {
  * @param    string    $name    name of the zip file to be created
  * @param    string    $song_files    array of full paths to songs to zip create w/ call to get_song_files
  */
-function send_zip( $name, $song_files ) {
-
+function send_zip( $name, $song_files )
+{
     // Check if they want to save it to a file, if so then make sure they've
     // got a defined path as well and that it's writable.
     if (Config::get('file_zip_download') && Config::get('file_zip_path')) {
@@ -66,8 +65,7 @@ function send_zip( $name, $song_files ) {
         if (!is_writable(Config::get('file_zip_path'))) {
             $in_memory = '1';
             debug_event('Error','File Zip Path:' . Config::get('file_zip_path') . ' is not writable','1');
-        }
-        else {
+        } else {
             $in_memory = '0';
             $basedir = Config::get('file_zip_path');
         }
@@ -103,4 +101,3 @@ function send_zip( $name, $song_files ) {
         $arc->download_file();
 
 } // send_zip
-?>

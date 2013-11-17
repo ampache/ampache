@@ -56,7 +56,7 @@ switch ($_REQUEST['action']) {
         Access::create($_POST);
 
         // Create Additional stuff based on the type
-        if ($_POST['addtype'] == 'stream' || 
+        if ($_POST['addtype'] == 'stream' ||
             $_POST['addtype'] == 'all'
         ) {
             $_POST['type'] = 'stream';
@@ -70,8 +70,7 @@ switch ($_REQUEST['action']) {
         if (!Error::occurred()) {
             $url = Config::get('web_path') . '/admin/access.php';
             show_confirmation(T_('Added'), T_('Your new Access Control List(s) have been created'),$url);
-        }
-        else {
+        } else {
             $action = 'show_add_' . $_POST['type'];
             require_once Config::get('prefix') . '/templates/show_add_access.inc.php';
         }
@@ -85,8 +84,7 @@ switch ($_REQUEST['action']) {
         $access->update($_POST);
         if (!Error::occurred()) {
             show_confirmation(T_('Updated'), T_('Access List Entry updated'), Config::get('web_path').'/admin/access.php');
-        }
-        else {
+        } else {
             $access->format();
             require_once Config::get('prefix') . '/templates/show_edit_access.inc.php';
         }
@@ -110,4 +108,3 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch on action
 UI::show_footer();
-?>

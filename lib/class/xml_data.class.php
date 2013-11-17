@@ -28,8 +28,8 @@
  * are all static calls
  *
  */
-class XML_Data {
-
+class XML_Data
+{
     // This is added so that we don't pop any webservers
     private static $limit = '5000';
     private static $offset = '0';
@@ -40,8 +40,8 @@ class XML_Data {
      *
      * We don't use this, as its really a static class
      */
-    private function __construct() {
-
+    private function __construct()
+    {
         // Rien a faire
 
     } // constructor
@@ -54,8 +54,8 @@ class XML_Data {
      * @param    integer    $offset    (description here...)
      * @return    void
      */
-    public static function set_offset($offset) {
-
+    public static function set_offset($offset)
+    {
         $offset = intval($offset);
         self::$offset = $offset;
 
@@ -69,8 +69,8 @@ class XML_Data {
      * @param    integer    $limit    (description here...)
      * @return    void
      */
-    public static function set_limit($limit) {
-
+    public static function set_limit($limit)
+    {
         if (!$limit) { return false; }
 
         $limit = intval($limit);
@@ -86,8 +86,8 @@ class XML_Data {
      * @param    string    $type    XML_Data type
      * @return    void
      */
-    public static function set_type($type) {
-
+    public static function set_type($type)
+    {
         if (!in_array($type,array('rss','xspf','itunes'))) { return false; }
 
         self::$type = $type;
@@ -104,8 +104,8 @@ class XML_Data {
      * @param    string    $string    Error message
      * @return    string    return error message xml
      */
-    public static function error($code,$string) {
-
+    public static function error($code,$string)
+    {
         $string = self::_header() . "\t<error code=\"$code\"><![CDATA[$string]]></error>" . self::_footer();
         return $string;
 
@@ -120,8 +120,8 @@ class XML_Data {
      * @param    string    $string    xml data
      * @return    string    return xml
      */
-    public static function single_string($key,$string) {
-
+    public static function single_string($key,$string)
+    {
         $final = self::_header() . "\t<$key><![CDATA[$string]]></$key>" . self::_footer();
 
         return $final;
@@ -136,8 +136,8 @@ class XML_Data {
      * @see    _header()
      * @return    string    return xml
      */
-    public static function header() {
-
+    public static function header()
+    {
         return self::_header();
 
     } // header
@@ -148,10 +148,10 @@ class XML_Data {
      * This returns the footer
      *
      * @see    _footer()
-     * @return    string    return xml    
+     * @return    string    return xml
      */
-    public static function footer() {
-
+    public static function footer()
+    {
         return self::_footer();
 
     } // footer
@@ -162,16 +162,16 @@ class XML_Data {
      * This returns the formatted 'tags' string for an xml document
      *
      */
-    private static function tags_string($tags) {
-
+    private static function tags_string($tags)
+    {
         $string = '';
 
         if (is_array($tags)) {
 
             foreach ($tags as $tag_id => $data) {
                 $tag = new Tag($tag_id);
-                $string .= "\t<tag id=\"" . $tag->id . 
-                    '" count="' . count($data['users']) . 
+                $string .= "\t<tag id=\"" . $tag->id .
+                    '" count="' . count($data['users']) .
                     '"><![CDATA[' . $tag->name . "]]></tag>\n";
             }
         }
@@ -189,25 +189,24 @@ class XML_Data {
      * @param    boolean    $callback    (description here...)
      * @return    string    return xml
      */
-    public static function keyed_array($array,$callback='') {
-
+    public static function keyed_array($array,$callback='')
+    {
         $string = '';
 
         // Foreach it
         foreach ($array as $key=>$value) {
             $attribute = '';
             // See if the key has attributes
-            if (is_array($value) AND isset($value['<attributes>'])) { 
-                $attribute = ' ' . $value['<attributes>']; 
-                $key = $value['value']; 
-            } 
+            if (is_array($value) AND isset($value['<attributes>'])) {
+                $attribute = ' ' . $value['<attributes>'];
+                $key = $value['value'];
+            }
 
             // If it's an array, run again
             if (is_array($value)) {
                 $value = self::keyed_array($value,1);
                 $string .= "<$key$attribute>\n$value\n</$key>\n";
-            }
-            else {
+            } else {
                 $string .= "\t<$key$attribute><![CDATA[$value]]></$key>\n";
             }
 
@@ -229,8 +228,8 @@ class XML_Data {
      * @param    array    $tags    (description here...)
      * @return    string    return xml
      */
-    public static function tags($tags) {
-
+    public static function tags($tags)
+    {
         if (count($tags) > self::$limit OR self::$offset > 0) {
             $tags = array_splice($tags,self::$offset,self::$limit);
         }
@@ -266,8 +265,8 @@ class XML_Data {
      * @param    array    $artists    (description here...)
      * @return    string    return xml
      */
-    public static function artists($artists) {
-
+    public static function artists($artists)
+    {
         if (count($artists) > self::$limit OR self::$offset > 0) {
             $artists = array_splice($artists,self::$offset,self::$limit);
         }
@@ -308,8 +307,8 @@ class XML_Data {
      * @param    array    $albums    (description here...)
      * @return    string    return xml
      */
-    public static function albums($albums) {
-
+    public static function albums($albums)
+    {
         if (count($albums) > self::$limit OR self::$offset > 0) {
             $albums = array_splice($albums,self::$offset,self::$limit);
         }
@@ -331,8 +330,7 @@ class XML_Data {
             // Do a little check for artist stuff
             if ($album->artist_count != 1) {
                 $string .= "\t<artist id=\"0\"><![CDATA[Various]]></artist>\n";
-            }
-            else {
+            } else {
                 $string .= "\t<artist id=\"$album->artist_id\"><![CDATA[$album->artist_name]]></artist>\n";
             }
 
@@ -361,8 +359,8 @@ class XML_Data {
      * @param    array    $playlists    (description here...)
      * @return    string    return xml
      */
-    public static function playlists($playlists) {
-
+    public static function playlists($playlists)
+    {
         if (count($playlists) > self::$limit OR self::$offset > 0) {
             $playlists = array_slice($playlists,self::$offset,self::$limit);
         }
@@ -399,8 +397,8 @@ class XML_Data {
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
      */
-    public static function songs($songs) {
-
+    public static function songs($songs)
+    {
         if (count($songs) > self::$limit OR self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
         }
@@ -421,10 +419,10 @@ class XML_Data {
 
             $string .= "<song id=\"$song->id\">\n" .
                 "\t<title><![CDATA[$song->title]]></title>\n" .
-                "\t<artist id=\"" . $song->artist . 
+                "\t<artist id=\"" . $song->artist .
                     '"><![CDATA[' . $song->get_artist_name() .
                     "]]></artist>\n" .
-                "\t<album id=\"" . $song->album . 
+                "\t<album id=\"" . $song->album .
                     '"><![CDATA[' . $song->get_album_name().
                     "]]></album>\n" .
                 $tag_string .
@@ -459,8 +457,8 @@ class XML_Data {
      * @param    array    $videos    (description here...)
      * @return    string    return xml
      */
-    public static function videos($videos) {
-
+    public static function videos($videos)
+    {
         if (count($videos) > self::$limit OR self::$offset > 0) {
             $videos = array_slice($videos,self::$offset,self::$limit);
         }
@@ -497,8 +495,8 @@ class XML_Data {
      * @param    array    $object_ids    Object IDs
      * @return    string    return xml
      */
-    public static function democratic($object_ids=array()) {
-
+    public static function democratic($object_ids=array())
+    {
         if (!is_array($object_ids)) { $object_ids = array(); }
 
         $democratic = Democratic::get_current_playlist();
@@ -559,8 +557,8 @@ class XML_Data {
      * @param    string    $date    publish date
      * @return    string    RSS feed xml
      */
-    public static function rss_feed($data,$title,$description,$date) {
-
+    public static function rss_feed($data,$title,$description,$date)
+    {
         $string = "\t<title>$title</title>\n\t<link>" . Config::get('web_path') . "</link>\n\t" .
             "<pubDate>" . date("r",$date) . "</pubDate>\n";
 
@@ -584,8 +582,8 @@ class XML_Data {
      *
      * @return    string    Header xml tag.
      */
-    private static function _header() {
-
+    private static function _header()
+    {
         switch (self::$type) {
             case 'xspf':
                 $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
@@ -632,8 +630,8 @@ class XML_Data {
      *
      * @return    string    Footer xml tag.
      */
-    private static function _footer() {
-
+    private static function _footer()
+    {
         switch (self::$type) {
             case 'itunes':
                 $footer = "\t\t</dict>\t\n</dict>\n</plist>\n";
@@ -655,5 +653,3 @@ class XML_Data {
     } // _footer
 
 } // XML_Data
-
-?>

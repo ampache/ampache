@@ -61,4 +61,4 @@ UI::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
       <input type="submit" value="<?php echo T_('Export'); ?>" />
 </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom();

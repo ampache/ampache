@@ -61,4 +61,3 @@ require $prefix . '/templates/install_header.inc.php';
 </div>
 </body>
 </html>
-

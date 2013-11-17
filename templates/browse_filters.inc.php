@@ -62,7 +62,7 @@ session_start();
     <?php echo Ajax::observe('typeArtistRadio','click',Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=artist','')); ?>
 <?php } ?>
 
-<?php if(in_array('catalog',$allowed_filters)) { ?>
+<?php if (in_array('catalog',$allowed_filters)) { ?>
 <form method="post" id="catalog_choice" action="javascript.void(0);">
     <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
     <select id="catalog_select" name="catalog_key">
@@ -70,19 +70,19 @@ session_start();
         <?php
             $sql = 'SELECT `id`,`name` FROM `catalog`';
             $db_results = Dba::read($sql);
-            while( $data = Dba::fetch_assoc($db_results) ) {
+            while ( $data = Dba::fetch_assoc($db_results) ) {
                 $results[] = $data;
             }
-        
-            foreach( $results as $entries ) {
+
+            foreach ($results as $entries) {
                 echo '<option value="' . $entries['id'] . '" ';
-                if( $_SESSION['catalog'] == $entries['id'] ) {
+                if ($_SESSION['catalog'] == $entries['id']) {
                     echo ' selected="selected" ';
                 }
                 echo '>' . $entries['name'] . '</options>';
             }
         ?>
-                
+
     </select>
 <?php echo Ajax::observe('catalog_select', 'change', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id,'catalog_select', 'catalog_choice'), true); ?>
 </form>

@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
 
 UI::show_header();
 
-switch($_REQUEST['action']) {
+switch ($_REQUEST['action']) {
     case 'file':
     break;
     case 'album':
@@ -119,4 +119,3 @@ $browse->store();
 
 /* Show the Footer */
 UI::show_footer();
-?>

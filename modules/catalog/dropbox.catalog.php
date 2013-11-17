@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- 
+
  require_once Config::get('prefix') . '/modules/Dropbox/autoload.php';
 
 /**
@@ -28,48 +28,48 @@
  * This class handles all actual work in regards to remote Dropbox catalogs.
  *
  */
-class Catalog_dropbox extends Catalog {
-
+class Catalog_dropbox extends Catalog
+{
     private $version        = '000001';
     private $type           = 'dropbox';
     private $description    = 'Remote Dropbox Catalog';
-    
+
     /**
      * get_description
      * This returns the description of this catalog
      */
-    public function get_description() { 
+    public function get_description()
+    {
+        return $this->description;
 
-        return $this->description;  
-    
     } // get_description
 
     /**
      * get_version
      * This returns the current version
      */
-    public function get_version() { 
-
-        return $this->version;  
+    public function get_version()
+    {
+        return $this->version;
 
     } // get_version
-    
+
     /**
      * get_type
      * This returns the current catalog type
      */
-    public function get_type() { 
-
-        return $this->type;  
+    public function get_type()
+    {
+        return $this->type;
 
     } // get_type
-    
+
     /**
      * get_create_help
      * This returns hints on catalog creation
      */
-    public function get_create_help() { 
-    
+    public function get_create_help()
+    {
         $help = "<ul><li>Go to https://www.dropbox.com/developers/apps/create</li>" .
             "<li>Select 'Dropbox API app'</li>" .
             "<li>Select 'Files and datastores'</li>" .
@@ -80,19 +80,19 @@ class Catalog_dropbox extends Catalog {
             //"<li>Add the following OAuth redirect URIs: <i>" . Config::get('web_path') . "/admin/catalog.php</i></li>" .
             "<li>Copy your App key and App secret here</li></ul>";
         return $help;
-        
+
     } // get_create_help
 
     /**
      * is_installed
      * This returns true or false if remote catalog is installed
      */
-    public function is_installed() {
+    public function is_installed()
+    {
+        $sql = "DESCRIBE `catalog_dropbox`";
+        $db_results = Dba::query($sql);
 
-        $sql = "DESCRIBE `catalog_dropbox`"; 
-        $db_results = Dba::query($sql); 
-
-        return Dba::num_rows($db_results); 
+        return Dba::num_rows($db_results);
 
 
     } // is_installed
@@ -101,33 +101,33 @@ class Catalog_dropbox extends Catalog {
      * install
      * This function installs the remote catalog
      */
-    public function install() {
-
-        $sql = "CREATE TABLE `catalog_dropbox` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ". 
-            "`apikey` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
+    public function install()
+    {
+        $sql = "CREATE TABLE `catalog_dropbox` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ".
+            "`apikey` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`secret` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-            "`path` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
-            "`authtoken` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
-            "`getchunk` TINYINT(1) NOT NULL, " . 
-            "`catalog_id` INT( 11 ) NOT NULL" . 
-            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"; 
-        $db_results = Dba::query($sql); 
+            "`path` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+            "`authtoken` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+            "`getchunk` TINYINT(1) NOT NULL, " .
+            "`catalog_id` INT( 11 ) NOT NULL" .
+            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+        $db_results = Dba::query($sql);
 
-        return true; 
+        return true;
 
     } // install
-    
-    public function catalog_fields() {
 
+    public function catalog_fields()
+    {
         $fields['apikey']      = array('description' => T_('API Key'), 'type'=>'textbox');
         $fields['secret']      = array('description' => T_('Secret'), 'type'=>'password');
         $fields['path']      = array('description' => T_('Path'), 'type'=>'textbox', 'value' => '/');
         $fields['getchunk']      = array('description' => T_('Get chunked files on analyze'), 'type'=>'checkbox', 'value' => true);
 
-        return $fields; 
+        return $fields;
 
-    } 
-    
+    }
+
     public $apikey;
     public $secret;
     public $path;
@@ -139,7 +139,8 @@ class Catalog_dropbox extends Catalog {
      *
      * Catalog class constructor, pulls catalog information
      */
-    public function __construct($catalog_id = null) {
+    public function __construct($catalog_id = null)
+    {
         if ($catalog_id) {
             $this->id = intval($catalog_id);
             $info = $this->get_info($catalog_id);
@@ -157,24 +158,24 @@ class Catalog_dropbox extends Catalog {
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
      */
-    public static function create_type($catalog_id, $data) {
-        
+    public static function create_type($catalog_id, $data)
+    {
         $apikey = $data['apikey'];
         $secret = $data['secret'];
         $path = $data['path'];
         $getchunk = $data['getchunk'];
-                
+
         if (!strlen($apikey) OR !strlen($secret)) {
             Error::add('general', T_('Error: API Key and Secret Required for Dropbox Catalogs'));
             return false;
         }
-        
+
         $pathError = Dropbox\Path::findError($path);
         if ($pathError !== null) {
             Error::add('general', T_('Invalid <dropbox-path>: ' . $pathError));
             return false;
         }
-        
+
         // Make sure this app isn't already in use by an existing catalog
         $sql = 'SELECT `id` FROM `catalog_dropbox` WHERE `apikey` = ?';
         $db_results = Dba::read($sql, array($apikey));
@@ -189,15 +190,17 @@ class Catalog_dropbox extends Catalog {
         Dba::write($sql, array($apikey, $secret, $path, ($getchunk ? 1 : 0), $catalog_id));
         return true;
     }
-    
-    protected function getWebAuth() {
+
+    protected function getWebAuth()
+    {
         $appInfo = new Dropbox\AppInfo($this->apikey, $this->secret);
         $webAuth = new Dropbox\WebAuthNoRedirect($appInfo, "ampache", "en");
-        
+
         return $webAuth;
     }
-    
-    protected function showAuthToken() {
+
+    protected function showAuthToken()
+    {
         $webAuth = $this->getWebAuth();
         $authurl = $webAuth->start();
         echo "<br />Go to <strong><a href='" . $authurl . "' target='_blank'>" . $authurl . "</a></strong> to generate the authorization code, then enter it bellow.<br />";
@@ -211,13 +214,14 @@ class Catalog_dropbox extends Catalog {
         echo "</form>";
         echo "<br />";
     }
-    
-     protected function completeAuthToken() {
+
+     protected function completeAuthToken()
+     {
         $webAuth = $this->getWebAuth();
         list($accessToken, $userId) = $webAuth->finish($this->authcode);
         debug_event('dropbox_catalog', 'Dropbox authentication token generated for user ' . $userId . '.', 1);
         $this->authtoken = $accessToken;
-        
+
         $sql = 'UPDATE `catalog_dropbox` SET `authtoken` = ? WHERE `catalog_id` = ?';
         Dba::write($sql, array($this->authtoken, $this->catalog_id));
      }
@@ -227,22 +231,24 @@ class Catalog_dropbox extends Catalog {
      * this function adds new files to an
      * existing catalog
      */
-    public function add_to_catalog($options = null) {
+    public function add_to_catalog($options = null)
+    {
         // Prevent the script from timing out
         set_time_limit(0);
-        
+
         if ($options != null) {
             $this->authcode = $options['authcode'];
         }
-        
+
         UI::show_box_top(T_('Running Dropbox Remote Update') . '. . .');
         $this->update_remote_catalog();
         UI::show_box_bottom();
-        
+
         return true;
     } // add_to_catalog
-    
-    public function createClient() {
+
+    public function createClient()
+    {
         if ($this->authcode) {
             $this->completeAuthToken();
         }
@@ -250,7 +256,7 @@ class Catalog_dropbox extends Catalog {
             $this->showAuthToken();
             return null;
         }
-        
+
         try {
             return new Dropbox\Client($this->authtoken, "ampache", "en");
         } catch (Dropbox\Exception $e) {
@@ -266,12 +272,13 @@ class Catalog_dropbox extends Catalog {
      * Pulls the data from a remote catalog and adds any missing songs to the
      * database.
      */
-    public function update_remote_catalog() {
+    public function update_remote_catalog()
+    {
         $client = $this->createClient();
         if ($client != null) {
             $this->count = 0;
             $this->add_files($client, $this->path);
-            
+
             echo "\n<br />" .
             printf(T_('Catalog Update Finished.  Total Songs: [%s]'), $this->count);
             echo '<br />';
@@ -279,7 +286,7 @@ class Catalog_dropbox extends Catalog {
                 echo T_('No songs updated, do you respect the patterns?') . '<br />';
             }
             echo '<br />';
-        }else {
+        } else {
             echo "<p>" . T_('API Error: cannot connect to Dropbox.') . "</p><hr />\n";
             flush();
         }
@@ -287,13 +294,14 @@ class Catalog_dropbox extends Catalog {
         return true;
 
     }
-    
+
     /**
      * add_files
      *
      * Recurses through directories and pulls out all media files
      */
-    public function add_files($client, $path) {
+    public function add_files($client, $path)
+    {
         $metadata = $client->getMetadataWithChildren($path);
         if ($metadata != null) {
             // If it's a folder, remove the 'contents' list from $metadata; print that stuff out after.
@@ -317,30 +325,31 @@ class Catalog_dropbox extends Catalog {
             flush();
         }
     }
-    
-    public function add_file($client, $data) {
+
+    public function add_file($client, $data)
+    {
         $file = $data['path'];
         $filesize = $data['bytes'];
         if ($filesize > 0) {
             $is_audio_file = Catalog::is_audio_file($file);
-            
+
             if ($is_audio_file) {
                 $this->insert_song($client, $file, $filesize);
-            }else {
+            } else {
                 debug_event('read', $data['path'] . " ignored, unknown media file type", 5);
             }
         } else {
             debug_event('read', $data['path'] . " ignored, 0 bytes", 5);
         }
     }
-    
+
     /**
      * _insert_local_song
      *
      * Insert a song that isn't already in the database.
      */
-    private function insert_song($client, $file, $filesize) {
-    
+    private function insert_song($client, $file, $filesize)
+    {
         if ($this->check_remote_song($this->get_virtual_path($file))) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $file, 5);
         } else {
@@ -364,7 +373,7 @@ class Catalog_dropbox extends Catalog {
 
             $key = vainfo::get_tag_type($vainfo->tags);
             $results = vainfo::clean_tag_info($vainfo->tags, $key, $file);
-            
+
             // Remove temp file
             if ($fpchunk) {
                 fclose($fpchunk);
@@ -373,10 +382,10 @@ class Catalog_dropbox extends Catalog {
             // Set the remote path
             $results['file'] = $origin;
             $results['catalog'] = $this->id;
-            
+
             if (!empty($results['artist']) && !empty($results['album'])) {
                 $results['file'] = $this->get_virtual_path($results['file']);
-                
+
                 Song::insert($results);
                 $this->count++;
             } else {
@@ -384,17 +393,19 @@ class Catalog_dropbox extends Catalog {
             }
         }
     }
-    
-    public function verify_catalog_proc() {
+
+    public function verify_catalog_proc()
+    {
         return array('total' => 0, 'updated' => 0);
     }
 
     /**
      * clean_catalog_proc
-     * 
+     *
      * Removes songs that no longer exist.
      */
-    public function clean_catalog_proc() {
+    public function clean_catalog_proc()
+    {
         $dead = 0;
 
         $client = $this->createClient();
@@ -407,8 +418,7 @@ class Catalog_dropbox extends Catalog {
                 $metadata = $client->getMetadata($file);
                 if ($metadata) {
                     debug_event('dropbox-clean', 'keeping song', 5, 'ampache-catalog');
-                }
-                else {
+                } else {
                     debug_event('dropbox-clean', 'removing song', 5, 'ampache-catalog');
                     $dead++;
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
@@ -418,7 +428,7 @@ class Catalog_dropbox extends Catalog {
             echo "<p>" . T_('API Error: cannot connect to Dropbox.') . "</p><hr />\n";
             flush();
         }
-        
+
         return $dead;
     }
 
@@ -428,8 +438,8 @@ class Catalog_dropbox extends Catalog {
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      */
-    public function check_remote_song($file) {
-
+    public function check_remote_song($file)
+    {
         $sql = 'SELECT `id` FROM `song` WHERE `file` = ?';
         $db_results = Dba::read($sql, array($file));
 
@@ -439,53 +449,54 @@ class Catalog_dropbox extends Catalog {
 
         return false;
     }
-    
-    public function get_virtual_path($file) {
+
+    public function get_virtual_path($file)
+    {
         return $this->apikey . '|' . $file;
     }
-    
-    public function get_rel_path($file_path) {
+
+    public function get_rel_path($file_path)
+    {
         $p = strpos($file_path, "|");
         if ($p !== false) {
             $p++;
         }
         return substr($file_path, $p);
     }
-    
+
     /**
      * format
      *
      * This makes the object human-readable.
      */
-    public function format() {
+    public function format()
+    {
         parent::format();
         $this->f_info = UI::truncate($this->apikey, Config::get('ellipse_threshold_title'));
     }
-    
-    public function prepare_media($media) {
-        
+
+    public function prepare_media($media)
+    {
         $client = $this->createClient();
         if ($client != null) {
-            
+
             set_time_limit(0);
-            
+
             // Generate browser class for sending headers
             $browser = new Horde_Browser();
             $media_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
             $browser->downloadHeaders($media_name, $media->mime, false, $media->size);
             $file = $this->get_rel_path($media->file);
-        
+
             $output = fopen('php://output', 'w');
             $metadata = $client->getFile($file, $output);
             if ($metadata == null) {
                 debug_event('play', 'File not found on Dropbox: ' . $file, 5);
             }
             fclose($output);
-        }        
-        
+        }
+
         return null;
     }
 
 } // end of catalog class
-
-?>

@@ -44,12 +44,11 @@ foreach ($plugins as $plugin_name) {
         if (! $installed_version) {
                 $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                         T_('Activate') . "</a>";
-        }
-        else {
+        } else {
                 $action = "<a href=\"" . $web_path . "/admin/modules.php?action=confirm_uninstall_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                         T_('Deactivate') . "</a>";
         if ($installed_version < $plugin->_plugin->version) {
-            $action .= '&nbsp;&nbsp;<a href="' . $web_path . 
+            $action .= '&nbsp;&nbsp;<a href="' . $web_path .
             '/admin/modules.php?action=upgrade_plugin&amp;plugin=' .
             scrub_out($plugin_name) . '">' . T_('Upgrade') . '</a>';
         }
@@ -75,4 +74,3 @@ foreach ($plugins as $plugin_name) {
 </tr>
 </table>
 <br />
-

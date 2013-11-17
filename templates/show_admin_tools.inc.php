@@ -96,4 +96,4 @@ $catalogs     = Catalog::get_catalogs();
     <a class="button" href="<?php echo $web_path; ?>/admin/users.php?action=show_inactive&amp;days=30"><?php echo T_('Show Inactive Users'); ?></a>
 <!--    <a class="button" href="<?php echo $web_path; ?>/admin/system.php?action=check_version"><?php echo T_('Check for New Version'); ?></a>-->
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom();

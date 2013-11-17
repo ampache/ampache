@@ -117,4 +117,4 @@
         <input type="hidden" name="user_id" value="<?php echo $client->id; ?>" />
 </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom();

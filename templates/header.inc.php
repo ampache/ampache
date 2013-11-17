@@ -45,7 +45,8 @@ if (Config::get('use_rss')) { ?>
 if (Config::get('iframes')) {
 ?>
 <script language="javascript" type="text/javascript">
-function forceIframe() {
+function forceIframe()
+{
     if (self == top) {
         document.location = '<?php echo $web_path; ?>';
     }
@@ -92,4 +93,4 @@ function forceIframe() {
     <?php echo T_('Error Config File Out of Date'); ?>
     <a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config'); ?></a>
 </div>
-<?php } ?>
+<?php }

@@ -45,7 +45,7 @@ switch ($_REQUEST['action']) {
     case 'smartplaylist':
         $search = new Search('song', $_REQUEST['id']);
         $sql = $search->to_sql();
-        $sql = $sql['base'] . ' ' . $sql['table_sql'] . ' WHERE ' . 
+        $sql = $sql['base'] . ' ' . $sql['table_sql'] . ' WHERE ' .
             $sql['where_sql'];
         $db_results = Dba::read($sql);
         $media_ids = array();
@@ -94,4 +94,3 @@ $song_files = get_song_files($media_ids);
 set_memory_limit($song_files['1']+32);
 send_zip($name,$song_files['0']);
 exit;
-?>

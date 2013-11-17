@@ -43,15 +43,13 @@ switch ($_REQUEST['action']) {
         /* If no change in string take Drop down */
         if (strcasecmp(stripslashes($_REQUEST['album_string']),$song->get_album_name()) == 0) {
             $album = $song->get_album_name($_REQUEST['album']);
-        }
-        else {
+        } else {
             $album = scrub_in($_REQUEST['album_string']);
         }
 
         if (strcasecmp(stripslashes($_REQUEST['artist_string']),$song->get_artist_name()) == 0) {
             $artist = $song->get_artist_name($_REQUEST['artist']);
-        }
-        else {
+        } else {
             $artist = scrub_in($_REQUEST['artist_string']);
         }
 
@@ -235,8 +233,7 @@ switch ($_REQUEST['action']) {
             $flag = new Flag($flag_id);
             if ($_REQUEST['update_action'] == 'reject') {
                 $flag->delete_flag();
-            }
-            else {
+            } else {
                 $flag->approve();
             }
         } // end foreach flags
@@ -253,8 +250,7 @@ switch ($_REQUEST['action']) {
     case 'disable':
         $song_obj = new Song();
         // If we pass just one, make it still work
-        if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(0,$_REQUEST['song_ids']); }
-        else {
+        if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(0,$_REQUEST['song_ids']); } else {
             foreach ($_REQUEST['song_ids'] as $song_id) {
                 $song_obj->update_enabled(0,$song_id);
             } // end foreach
@@ -264,8 +260,7 @@ switch ($_REQUEST['action']) {
     case 'enabled':
         $song_obj = new Song();
         // If we pass just one, make it still work
-        if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(1,$_REQUEST['song_ids']); }
-        else {
+        if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(1,$_REQUEST['song_ids']); } else {
             foreach ($_REQUEST['song_ids'] as $song_id) {
                 $song_obj->update_enabled(1,$song_id);
             } // end foreach
@@ -295,4 +290,3 @@ switch ($_REQUEST['action']) {
 } // end switch
 
 UI::show_footer();
-?>

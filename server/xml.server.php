@@ -56,7 +56,7 @@ if (!Session::exists('api', $_REQUEST['auth']) AND $_REQUEST['action'] != 'hands
 }
 
 // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-$username = 
+$username =
     ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping')
     ? $_REQUEST['user']
     : Session::username($_REQUEST['auth']);

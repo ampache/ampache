@@ -27,8 +27,8 @@
  * This handles flagging of songs, albums and artists
  *
  */
-class Flag extends database_object {
-
+class Flag extends database_object
+{
     public $id;
     public $user;
     public $object_id;
@@ -46,8 +46,8 @@ class Flag extends database_object {
      * Constructor
      * This takes a flagged.id and then pulls in the information for said flag entry
      */
-    public function __construct($flag_id) {
-
+    public function __construct($flag_id)
+    {
         $info = $this->get_info($flag_id,'flagged');
 
         foreach ($info as $key=>$value) {
@@ -63,7 +63,8 @@ class Flag extends database_object {
      *
      * This cleans out unused flagged items
      */
-    public static function gc() {
+    public static function gc()
+    {
         Dba::write("DELETE FROM `flagged` USING `flagged` LEFT JOIN `song` ON `song`.`id` = `flagged`.`object_id` WHERE `song`.`id` IS NULL AND `object_type` = 'song'");
     }
 
@@ -72,8 +73,8 @@ class Flag extends database_object {
      * This takes an array of ids and builds up a nice little cache
      * for us
      */
-    public static function build_cache($ids) {
-
+    public static function build_cache($ids)
+    {
         if (!is_array($ids) OR !count($ids)) { return false; }
 
         $idlist = '(' . implode(',',$ids) . ')';
@@ -92,8 +93,8 @@ class Flag extends database_object {
      * This takes an array of ids and builds a map cache to avoid some of the object_type calls
      * we would normally have to make
      */
-    public static function build_map_cache($ids,$type) {
-
+    public static function build_map_cache($ids,$type)
+    {
         if (!is_array($ids) OR !count($ids)) { return false; }
 
         $idlist = '(' . implode(',',$ids) . ')';
@@ -120,8 +121,8 @@ class Flag extends database_object {
      * has_flag
      * Static function, tries to check the cache, but falls back on a query
      */
-    public static function has_flag($id,$type) {
-
+    public static function has_flag($id,$type)
+    {
         if (parent::is_cached('flagged_' . $type,$id)) {
             $data = parent::get_from_cache('flagged_' . $type,$id);
             return $data['date'];
@@ -145,8 +146,8 @@ class Flag extends database_object {
      * This returns the id's of the most recently flagged songs, it takes an int
      * as an argument which is the count of the object you want to return
      */
-    public static function get_recent($count=0) {
-
+    public static function get_recent($count=0)
+    {
         if ($count) { $limit = " LIMIT " . intval($count);  }
 
         $results = array();
@@ -167,8 +168,8 @@ class Flag extends database_object {
      * This returns all of the songs that have been disabled, this is
      * a form of being flagged
      */
-    public static function get_disabled() {
-
+    public static function get_disabled()
+    {
         $sql = "SELECT `id` FROM `song` WHERE `enabled`='0'";
         $db_results = Dba::read($sql);
 
@@ -187,8 +188,8 @@ class Flag extends database_object {
      * This returns an array of ids of flagged songs if no limit is passed
      * it gets everything
      */
-    public static function get_all($count=0) {
-
+    public static function get_all($count=0)
+    {
         if ($count) { $limit_clause = "LIMIT " . intval($count); }
 
         $sql = "SELECT `id` FROM `flagged` $limit_clause";
@@ -210,8 +211,8 @@ class Flag extends database_object {
      * get_approved
      * This returns an array of approved flagged songs
      */
-    public static function get_approved() {
-
+    public static function get_approved()
+    {
         $sql = "SELECT `id` FROM `flagged` WHERE `approved`='1'";
         $db_results = Dba::read($sql);
 
@@ -233,8 +234,8 @@ class Flag extends database_object {
      * This adds a flag entry for an item, it takes an id, a type, the flag type
      * and a comment and then inserts the mofo
      */
-    public static function add($id,$type,$flag,$comment) {
-
+    public static function add($id,$type,$flag,$comment)
+    {
         $id         = Dba::escape($id);
         $type        = Dba::escape($type);
         $flag        = self::validate_flag($flag);
@@ -260,8 +261,8 @@ class Flag extends database_object {
      * state, in a perfect world, I could just roll the changes back... not until 3.4
      * or.. haha 3.5!
      */
-    public function delete() {
-
+    public function delete()
+    {
         // Re-scan the file
         $song = new Song($this->object_id);
         $info = Catalog::update_media_from_tags($song);
@@ -282,8 +283,8 @@ class Flag extends database_object {
      * This approves the current flag object ($this->id) by setting approved to
      * 1
      */
-     public function approve() {
-
+     public function approve()
+     {
         $sql = "UPDATE `flagged` SET `approved`='1' WHERE `id`='$this->id'";
         $db_results = Dba::write($sql);
 
@@ -298,8 +299,8 @@ class Flag extends database_object {
      * This function figures out what kind of object we've got and sets up all the
      * vars all nice and fuzzy like
      */
-    public function format() {
-
+    public function format()
+    {
         switch ($this->object_type) {
             case 'song':
                 $song = new Song($this->object_id);
@@ -319,10 +320,9 @@ class Flag extends database_object {
      * This prints out a userfriendly version of the current status for this flagged
      * object
      */
-    public function print_status() {
-
-        if ($this->approved) { echo T_('Approved'); }
-        else { echo T_('Pending'); }
+    public function print_status()
+    {
+        if ($this->approved) { echo T_('Approved'); } else { echo T_('Pending'); }
 
     } // print_status
 
@@ -330,8 +330,8 @@ class Flag extends database_object {
      * print_flag
      * This prints out a userfriendly version of the current flag type
      */
-    public function print_flag() {
-
+    public function print_flag()
+    {
         switch ($this->flag) {
             case 'delete':
                 $name = T_('Delete');
@@ -359,8 +359,8 @@ class Flag extends database_object {
      * This takes a flag input and makes sure it's one of the reigstered
      * and valid 'flag' values
      */
-    public static function validate_flag($flag) {
-
+    public static function validate_flag($flag)
+    {
         switch ($flag) {
             case 'delete':
             case 'retag':
@@ -379,8 +379,8 @@ class Flag extends database_object {
      * fill_tags
      * This is used by the write_tags script.
      */
-    public static function fill_tags( $tagWriter, $song, $type = 'comment' ) {
-
+    public static function fill_tags( $tagWriter, $song, $type = 'comment' )
+    {
         // Set all of the attributes for the tag to be written(All pulled from the song object)
         // Use a function since ID3v1, ID3v2, and vorbis/flac/ape are different
         switch ($type) {
@@ -422,5 +422,3 @@ class Flag extends database_object {
 
 
 } //end of flag class
-
-?>

@@ -60,5 +60,3 @@ $client->format();
 <?php
     $data = Song::get_recently_played($client->id);
     require Config::get('prefix') . '/templates/show_recently_played.inc.php';
-?>
-

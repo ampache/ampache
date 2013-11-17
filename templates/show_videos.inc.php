@@ -67,4 +67,4 @@ foreach ($object_ids as $video_id) {
     <th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
 </table>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php require Config::get('prefix') . '/templates/list_header.inc.php';

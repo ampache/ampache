@@ -24,8 +24,8 @@ header('Cache-Control: no-cache');
 header('Pragma: no-cache');
 header('Expires: ' . gmdate(DATE_RFC1123, time()-1));
 
-function browser_info($agent=null) {
-
+function browser_info($agent=null)
+{
     // Declare known browsers to look for
     $known = array('msie', 'trident', 'firefox', 'safari', 'webkit', 'opera', 'netscape', 'konqueror', 'gecko');
 
@@ -76,11 +76,9 @@ if ($iframed) {
 $i = 0;
 $playlist = new Stream_Playlist(scrub_in($_REQUEST['playlist_id']));
 $jtypes = array();
-foreach($playlist->urls as $item)
-{
+foreach ($playlist->urls as $item) {
     echo ($i++ > 0 ? ',' : '') . '{' . "\n";
-    foreach(array('title', 'author') as $member)
-    {
+    foreach (array('title', 'author') as $member) {
         if ($member == "author")
             $kmember = "artist";
         else
@@ -99,14 +97,14 @@ foreach($playlist->urls as $item)
     } else {
         $type = "ogg";
     }
-    
+
     $ftype = "mp3";
     $urlinfo = Stream_URL::parse($url);
     if ($urlinfo['id']) {
         $song = new Song($urlinfo['id']);
         $ftype = $song->type;
     }
-    
+
     // Check transcode is required
     $transcode = false;
     if ($type != $ftype) {
@@ -121,9 +119,9 @@ foreach($playlist->urls as $item)
         // Transcode not available for this type, keep real type and hope for flash fallback
         $type = $ftype;
     }
-    
+
     $jtype = ($type == "ogg" || $type == "flac") ? "oga" : $type;
-    
+
     if (!in_array($jtype, $jtypes)) {
         $jtypes[] = $jtype;
     }
@@ -163,7 +161,7 @@ if ($iframed) {
             }
         });
 
-	$("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
+    $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
         var current = myPlaylist.current,
             playlist = myPlaylist.playlist;
         $.each(playlist, function (index, obj) {
@@ -176,13 +174,14 @@ if ($iframed) {
 });
 </script>
 <script language="javascript" type="text/javascript">
-function ExitPlayer() {
+function ExitPlayer()
+{
     var ff = parent.parent.document.getElementById('frame_footer');
     var maindiv = parent.parent.document.getElementById('maindiv');
     if (ff.getAttribute('className') == 'frame_footer_visible') {
         ff.setAttribute('className', 'frame_footer_hide');
         ff.setAttribute('class', 'frame_footer_hide');
-        
+
         maindiv.style.height = parent.parent.innerHeight + "px";
     }
     ff.setAttribute('src', '');
@@ -201,8 +200,8 @@ if ($iframed) {
 }
 ?>
 <div class="playing_info">
-	<div class="playing_artist"></div>
-	<div class="playing_title"></div>
+    <div class="playing_artist"></div>
+    <div class="playing_title"></div>
 </div>
 <div class="jp-area">
   <div id="jquery_jplayer_1" class="jp-jplayer"></div>

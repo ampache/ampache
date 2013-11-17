@@ -44,7 +44,7 @@ switch ($_REQUEST['action']) {
         toggle_visible('ajax-loading');
         ob_end_flush();
         if (Config::get('demo_mode')) { break; }
-        if ($_REQUEST['catalogs'] ) {
+        if ($_REQUEST['catalogs']) {
             foreach ($_REQUEST['catalogs'] as $catalog_id) {
                 $catalog = Catalog::create_from_id($catalog_id);
                 $catalog->add_to_catalog($_POST);
@@ -130,8 +130,7 @@ switch ($_REQUEST['action']) {
         if (count($song)) {
             $catalog->remove_songs($song);
             $body = T_ngettext('Song Removed', 'Songs Removed', count($song));
-        }
-        else {
+        } else {
             $body = T_('No Songs Removed');
         }
         $url    = Config::get('web_path') . '/admin/catalog.php';
@@ -148,7 +147,7 @@ switch ($_REQUEST['action']) {
 
         // Make sure they checked something
         if (isset($_REQUEST['catalogs'])) {
-            foreach($_REQUEST['catalogs'] as $catalog_id) {
+            foreach ($_REQUEST['catalogs'] as $catalog_id) {
                 $catalog = Catalog::create_from_id($catalog_id);
                 $catalog->clean_catalog();
             } // end foreach catalogs
@@ -199,7 +198,7 @@ switch ($_REQUEST['action']) {
         if (Config::get('demo_mode')) { break; }
 
         ob_end_flush();
-        
+
         if (!strlen($_POST['type']) || $_POST['type'] == 'none') {
             Error::add('general', T_('Error: Please select a catalog type'));
         }
@@ -236,8 +235,7 @@ switch ($_REQUEST['action']) {
 
             show_confirmation('','', Config::get('web_path').'/admin/catalog.php');
 
-        }
-        else {
+        } else {
             require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
         }
     break;
@@ -268,8 +266,7 @@ switch ($_REQUEST['action']) {
         $songs = Song::get_disabled();
         if (count($songs)) {
             require Config::get('prefix') . '/templates/show_disabled_songs.inc.php';
-        }
-        else {
+        } else {
             echo "<div class=\"error\" align=\"center\">" . T_('No Disabled songs found') . "</div>";
         }
     break;
@@ -308,5 +305,3 @@ switch ($_REQUEST['action']) {
 
 /* Show the Footer */
 UI::show_footer();
-
-?>

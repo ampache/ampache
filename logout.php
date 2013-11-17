@@ -28,4 +28,3 @@ require_once 'lib/init.php';
 
 // To end a legitimate session, just call logout.
 Auth::logout('',false);
-?>

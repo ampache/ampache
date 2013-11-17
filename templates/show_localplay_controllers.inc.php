@@ -44,8 +44,7 @@ foreach ($controllers as $controller) {
     if (Localplay::is_enabled($controller)) {
         $action     = 'confirm_uninstall_localplay';
         $action_txt    = T_('Disable');
-    }
-    else {
+    } else {
         $action = 'install_localplay';
         $action_txt    = T_('Activate');
     }
@@ -69,4 +68,3 @@ foreach ($controllers as $controller) {
 </tr>
 </table>
 <br />
-

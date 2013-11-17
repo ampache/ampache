@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- 
+
 $object_ids = Userflag::get_latest('song');
 $browse = new Browse();
 $browse->set_type('song');
@@ -37,4 +37,3 @@ $browse = new Browse();
 $browse->set_type('artist');
 $browse->show_objects($object_ids);
 $browse->store();
-?>

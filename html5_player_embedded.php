@@ -24,5 +24,3 @@ require_once 'lib/init.php';
 
 $iframed = true;
 require_once Config::get('prefix') . '/templates/show_html5_player.inc.php';
-
-?>

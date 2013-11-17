@@ -63,14 +63,13 @@ switch ($_REQUEST['action']) {
         /* If we're using the captcha stuff */
         if (Config::get('captcha_public_reg')) {
                 $captcha         = captcha::solved();
-            if(!isset ($captcha)) {
+            if (!isset ($captcha)) {
                 Error::add('captcha', T_('Error Captcha Required'));
             }
             if (isset ($captcha)) {
                 if ($captcha) {
                     $msg="SUCCESS";
-                }
-                    else {
+                } else {
                         Error::add('captcha', T_('Error Captcha Failed'));
                     }
             } // end if we've got captcha
@@ -86,12 +85,12 @@ switch ($_REQUEST['action']) {
             Error::add('username', T_("You did not enter a username"));
         }
 
-        if(!$fullname) {
+        if (!$fullname) {
             Error::add('fullname', T_("Please fill in your full name (Firstname Lastname)"));
         }
 
         // Check the mail for correct address formation.
-        if (!Mailer::validate_address($email)) { 
+        if (!Mailer::validate_address($email)) {
             Error::add('email', T_('Invalid email address'));
         }
 
@@ -99,7 +98,7 @@ switch ($_REQUEST['action']) {
             Error::add('password', T_("You must enter a password"));
         }
 
-        if ( $pass1 != $pass2 ) {
+        if ($pass1 != $pass2) {
             Error::add('password', T_("Your passwords do not match"));
         }
 
@@ -150,4 +149,3 @@ switch ($_REQUEST['action']) {
         require_once Config::get('prefix') . '/templates/show_user_registration.inc.php';
     break;
 } // end switch on action
-?>

@@ -123,4 +123,3 @@
 if (count($objects)) {
     Stream::run_playlist_method();
 }
-?>

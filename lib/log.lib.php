@@ -24,7 +24,8 @@
  * log_event
  * Logs an event to a defined log file based on config options
  */
-function log_event($username, $event_name, $event_description, $log_name) {
+function log_event($username, $event_name, $event_description, $log_name)
+{
     /* Set it up here to make sure it's _always_ the same */
     $time        = time();
     // Turn time into strings
@@ -53,7 +54,8 @@ function log_event($username, $event_name, $event_description, $log_name) {
  * An error handler for ampache that traps as many errors as it can and logs
  * them.
  */
-function ampache_error_handler($errno, $errstr, $errfile, $errline) {
+function ampache_error_handler($errno, $errstr, $errfile, $errline)
+{
     $level = 1;
 
     switch ($errno) {
@@ -100,7 +102,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
         'used as offset, casting to integer'
     );
 
-    foreach($ignores as $ignore) {
+    foreach ($ignores as $ignore) {
         if (strpos($errstr, $ignore) !== false) {
             $error_name = 'Ignored ' . $error_name;
             $level = 7;
@@ -127,8 +129,8 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline) {
  * log_event. It checks config for debug and debug_level and only
  * calls log event if both requirements are met.
  */
-function debug_event($type, $message, $level, $file = '', $username = '') {
-
+function debug_event($type, $message, $level, $file = '', $username = '')
+{
     if (!Config::get('debug') || $level > Config::get('debug_level')) {
         return false;
     }
@@ -143,5 +145,3 @@ function debug_event($type, $message, $level, $file = '', $username = '') {
     }
 
 } // debug_event
-
-?>

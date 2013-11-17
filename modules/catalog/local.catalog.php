@@ -26,48 +26,48 @@
  * This class handles all actual work in regards to local catalogs.
  *
  */
-class Catalog_local extends Catalog {
-
-    private $version        = '000001'; 
+class Catalog_local extends Catalog
+{
+    private $version        = '000001';
     private $type           = 'local';
     private $description    = 'Local Catalog';
-    
+
     /**
      * get_description
      * This returns the description of this catalog
      */
-    public function get_description() { 
+    public function get_description()
+    {
+        return $this->description;
 
-        return $this->description;  
-    
     } // get_description
 
     /**
      * get_version
      * This returns the current version
      */
-    public function get_version() { 
-
-        return $this->version;  
+    public function get_version()
+    {
+        return $this->version;
 
     } // get_version
-    
+
     /**
      * get_type
      * This returns the current catalog type
      */
-    public function get_type() { 
-
-        return $this->type;  
+    public function get_type()
+    {
+        return $this->type;
 
     } // get_type
-    
+
     /**
      * get_create_help
      * This returns hints on catalog creation
      */
-    public function get_create_help() { 
-
+    public function get_create_help()
+    {
         return "";
 
     } // get_create_help
@@ -76,12 +76,12 @@ class Catalog_local extends Catalog {
      * is_installed
      * This returns true or false if local catalog is installed
      */
-    public function is_installed() {
+    public function is_installed()
+    {
+        $sql = "DESCRIBE `catalog_local`";
+        $db_results = Dba::query($sql);
 
-        $sql = "DESCRIBE `catalog_local`"; 
-        $db_results = Dba::query($sql); 
-
-        return Dba::num_rows($db_results); 
+        return Dba::num_rows($db_results);
 
 
     } // is_installed
@@ -90,26 +90,26 @@ class Catalog_local extends Catalog {
      * install
      * This function installs the local catalog
      */
-    public function install() {
-
-        $sql = "CREATE TABLE `catalog_local` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ". 
-            "`path` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " . 
+    public function install()
+    {
+        $sql = "CREATE TABLE `catalog_local` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , ".
+            "`path` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`catalog_id` INT( 11 ) NOT NULL" .
-            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"; 
+            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
         $db_results = Dba::query($sql);
 
-        return true; 
+        return true;
 
     } // install
-    
-    public function catalog_fields() {
 
+    public function catalog_fields()
+    {
         $fields['path']      = array('description' => T_('Path'),'type'=>'textbox');
 
-        return $fields; 
+        return $fields;
 
-    } 
-    
+    }
+
     public $path;
 
     /**
@@ -117,7 +117,8 @@ class Catalog_local extends Catalog {
      *
      * Catalog class constructor, pulls catalog information
      */
-    public function __construct($catalog_id = null) {
+    public function __construct($catalog_id = null)
+    {
         if ($catalog_id) {
             $this->id = intval($catalog_id);
             $info = $this->get_info($catalog_id);
@@ -135,7 +136,8 @@ class Catalog_local extends Catalog {
      * This is useful when creating a new catalog to make sure we're not
      * doubling up here.
      */
-    public static function get_from_path($path) {
+    public static function get_from_path($path)
+    {
         // First pull a list of all of the paths for the different catalogs
         $sql = "SELECT `catalog_id`,`path` FROM `catalog_local`";
         $db_results = Dba::read($sql);
@@ -169,15 +171,16 @@ class Catalog_local extends Catalog {
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
      */
-    public static function create_type($catalog_id, $data) {
+    public static function create_type($catalog_id, $data)
+    {
         // Clean up the path just in case
         $path = rtrim(rtrim(trim($data['path']),'/'),'\\');
-        
+
         if (!strlen($path)) {
             Error::add('general', T_('Error: Path not specified'));
             return false;
         }
-        
+
         // Make sure that there isn't a catalog with a directory above this one
         if (self::get_from_path($path)) {
             Error::add('general', T_('Error: Defined Path is inside an existing catalog'));
@@ -213,8 +216,8 @@ class Catalog_local extends Catalog {
      * full path in an array. Passes gather_type to determine if we need to
      * check id3 information against the db.
      */
-    public function add_files($path, $options) {
-
+    public function add_files($path, $options)
+    {
         // Profile the memory a bit
         debug_event('Memory', UI::format_bytes(memory_get_usage(true)), 5);
 
@@ -227,8 +230,7 @@ class Catalog_local extends Catalog {
         // Correctly detect the slash we need to use here
         if (strpos($path, '/') !== false) {
             $slash_type = '/';
-        }
-        else {
+        } else {
             $slash_type = '\\';
         }
 
@@ -339,12 +341,11 @@ class Catalog_local extends Catalog {
                 else {
                     if ($is_audio_file) {
                         $this->_insert_local_song($full_file,$file_size);
-                    }
-                    else { $this->insert_local_video($full_file,$file_size); }
+                    } else { $this->insert_local_video($full_file,$file_size); }
 
                     $this->count++;
                     $file = str_replace(array('(',')','\''),'',$full_file);
-                    if(UI::check_ticker()) {
+                    if (UI::check_ticker()) {
                         UI::update_text('add_count_' . $this->id, $this->count);
                         UI::update_text('add_dir_' . $this->id, scrub_out($file));
                     } // update our current state
@@ -371,21 +372,21 @@ class Catalog_local extends Catalog {
         @closedir($handle);
 
     } // add_files
-    
+
     /**
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
      */
-    public function add_to_catalog($options = null) {
-
+    public function add_to_catalog($options = null)
+    {
         if ($options == null) {
             $options = array(
                 'gather_art' => true,
                 'parse_m3u' => true
             );
         }
-    
+
         require Config::get('prefix') . '/templates/show_adds_catalog.inc.php';
         flush();
 
@@ -436,13 +437,13 @@ class Catalog_local extends Catalog {
         UI::show_box_bottom();
 
     } // add_to_catalog
-    
+
     /**
      * verify_catalog_proc
      * This function compares the DB's information with the ID3 tags
      */
-    public function verify_catalog_proc() {
-
+    public function verify_catalog_proc()
+    {
         debug_event('verify', 'Starting on ' . $this->name, 5);
         set_time_limit(0);
 
@@ -452,13 +453,13 @@ class Catalog_local extends Catalog {
 
         require_once Config::get('prefix') . '/templates/show_verify_catalog.inc.php';
 
-        foreach(array('video', 'song') as $media_type) {
+        foreach (array('video', 'song') as $media_type) {
             $total = $stats[$media_type . 's']; // UGLY
             if ($total == 0) {
                 continue;
             }
             $chunks = floor($total / 10000);
-            foreach(range(0, $chunks) as $chunk) {
+            foreach (range(0, $chunks) as $chunk) {
                 // Try to be nice about memory usage
                 if ($chunk > 0) {
                     $media_type::clear_cache();
@@ -471,7 +472,7 @@ class Catalog_local extends Catalog {
 
         self::gc();
         $this->update_last_update();
-        
+
         return array('total' => $number, 'updated' => $total_updated);
 
     } // verify_catalog_proc
@@ -481,7 +482,8 @@ class Catalog_local extends Catalog {
      * This verifies a chunk of the catalog, done to save
      * memory
      */
-    private function _verify_chunk($media_type, $chunk, $chunk_size) {
+    private function _verify_chunk($media_type, $chunk, $chunk_size)
+    {
         debug_event('verify', "Starting chunk $chunk", 5);
         $count = $chunk * $chunk_size;
         $changed = 0;
@@ -496,9 +498,7 @@ class Catalog_local extends Catalog {
             }
             $media_type::build_cache($media_ids);
             $db_results = Dba::read($sql);
-        }
-
-        while ($row = Dba::fetch_assoc($db_results)) {
+        } while ($row = Dba::fetch_assoc($db_results)) {
             $count++;
             if (UI::check_ticker()) {
                 $file = str_replace(array('(',')','\''), '', $row['file']);
@@ -536,7 +536,8 @@ class Catalog_local extends Catalog {
      *
      * Removes local songs that no longer exist.
      */
-     public function clean_catalog_proc() {
+     public function clean_catalog_proc()
+     {
         if (!Core::is_readable($this->path)) {
             // First sanity check; no point in proceeding with an unreadable
             // catalog root.
@@ -548,14 +549,14 @@ class Catalog_local extends Catalog {
 
         $dead_total = 0;
         $stats = self::get_stats($this->id);
-        foreach(array('video', 'song') as $media_type) {
+        foreach (array('video', 'song') as $media_type) {
             $total = $stats[$media_type . 's']; // UGLY
             if ($total == 0) {
                 continue;
             }
             $chunks = floor($total / 10000);
             $dead = array();
-            foreach(range(0, $chunks) as $chunk) {
+            foreach (range(0, $chunks) as $chunk) {
                 $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
             }
 
@@ -576,13 +577,14 @@ class Catalog_local extends Catalog {
         }
         return $dead_total;
     }
-    
+
     /**
      * _clean_chunk
      * This is the clean function, its broken into
      * said chunks to try to save a little memory
      */
-    private function _clean_chunk($media_type, $chunk, $chunk_size) {
+    private function _clean_chunk($media_type, $chunk, $chunk_size)
+    {
         debug_event('clean', "Starting chunk $chunk", 5);
         $dead = array();
         $count = $chunk * $chunk_size;
@@ -622,7 +624,8 @@ class Catalog_local extends Catalog {
      *
      * Insert a song that isn't already in the database.
      */
-    private function _insert_local_song($file, $file_info) {
+    private function _insert_local_song($file, $file_info)
+    {
         $vainfo = new vainfo($file, '', '', '', $this->sort_pattern, $this->rename_pattern);
         $vainfo->get_info();
 
@@ -639,8 +642,8 @@ class Catalog_local extends Catalog {
      * information we can get is super sketchy so it's kind of a crap shoot
      * here
      */
-    public function insert_local_video($file,$filesize) {
-
+    public function insert_local_video($file,$filesize)
+    {
         /* Create the vainfo object and get info */
         $vainfo     = new vainfo($file,'','','',$this->sort_pattern,$this->rename_pattern);
         $vainfo->get_info();
@@ -668,8 +671,8 @@ class Catalog_local extends Catalog {
      * check_local_mp3
      * Checks the song to see if it's there already returns true if found, false if not
      */
-    public function check_local_mp3($full_file, $gather_type='') {
-
+    public function check_local_mp3($full_file, $gather_type='')
+    {
         $file_date = filemtime($full_file);
         if ($file_date < $this->last_add) {
             debug_event('Check','Skipping ' . $full_file . ' File modify time before last add run','3');
@@ -687,28 +690,29 @@ class Catalog_local extends Catalog {
         return false;
 
     } //check_local_mp3
-    
-    public function get_rel_path($file_path) {
+
+    public function get_rel_path($file_path)
+    {
         $info = $this->_get_info();
         $catalog_path = rtrim($info->path, "/");
         return( str_replace( $catalog_path . "/", "", $file_path ) );
     }
-    
+
     /**
      * format
      *
      * This makes the object human-readable.
      */
-    public function format() {
+    public function format()
+    {
         parent::format();
         $this->f_info = UI::truncate($this->path, Config::get('ellipse_threshold_title'));
     }
-    
-    public function prepare_media($media) {
+
+    public function prepare_media($media)
+    {
         // Do nothing, it's just file...
         return $media;
     }
 
 } // end of local catalog class
-
-?>

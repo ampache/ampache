@@ -49,5 +49,3 @@ if (Config::get('refresh_limit') > 5) {
 require_once Config::get('prefix') . '/templates/show_index.inc.php';
 
 UI::show_footer();
-
-?>

@@ -74,5 +74,3 @@ $htmllang = str_replace("_","-",Config::get('lang'));
 </div>
 </body>
 </html>
-
-

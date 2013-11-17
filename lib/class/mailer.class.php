@@ -26,8 +26,8 @@
  * This class handles the Mail
  *
  */
-class Mailer {
-
+class Mailer
+{
     // The message, recipient and from
     public $message;
     public $subject;
@@ -41,8 +41,8 @@ class Mailer {
      *
      * This does nothing. Much like goggles.
      */
-    public function __construct() {
-
+    public function __construct()
+    {
         // Eh bien.
 
     } // Constructor
@@ -52,7 +52,8 @@ class Mailer {
      *
      * Checks whether what we have looks like a valid address.
      */
-    public static function validate_address($address) {
+    public static function validate_address($address)
+    {
         return PHPMailer::ValidateAddress($address);
     }
 
@@ -62,7 +63,8 @@ class Mailer {
      * Does the config magic to figure out the "system" email sender and
      * sets it as the sender.
      */
-    public function set_default_sender() {
+    public function set_default_sender()
+    {
         $user = Config::get('mail_user');
         if (!$user) {
             $user = 'info';
@@ -72,7 +74,7 @@ class Mailer {
         if (!$domain) {
             $domain = 'example.com';
         }
-        
+
         $fromname = Config::get('mail_name');
         if (!$fromname) {
             $fromname = 'Ampache';
@@ -87,8 +89,8 @@ class Mailer {
      * This returns an array of userids for people who have e-mail
      * addresses based on the passed filter
      */
-    public static function get_users($filter) {
-
+    public static function get_users($filter)
+    {
         switch ($filter) {
             default:
             case 'all':
@@ -123,30 +125,27 @@ class Mailer {
      * This should be run if we want to add some statistics to this e-mail,
      * appends to self::$message
      */
-    public function add_statistics($methods) {
-
-
-
+    public function add_statistics($methods)
+    {
     } // add_statistics
 
     /**
      * send
      * This actually sends the mail, how amazing
      */
-    public function send($phpmailer = null) {
-
+    public function send($phpmailer = null)
+    {
         $mailtype = Config::get('mail_type');
-        
+
         if ($phpmailer == null) {
             $mail = new PHPMailer();
 
             $recipient_name = $this->recipient_name;
-            if(function_exists('mb_encode_mimeheader')) {
+            if (function_exists('mb_encode_mimeheader')) {
                 $recipient_name = mb_encode_mimeheader($recipient_name);
             }
             $mail->AddAddress($this->recipient, $recipient_name);
-        }
-        else {
+        } else {
             $mail = $phpmailer;
         }
 
@@ -157,7 +156,7 @@ class Mailer {
         $mail->FromName    = $this->sender_name;
         $mail->Subject    = $this->subject;
 
-        if(function_exists('mb_eregi_replace')) {
+        if (function_exists('mb_eregi_replace')) {
             $this->message = mb_eregi_replace("\r\n", "\n", $this->message);
         }
         $mail->Body    = $this->message;
@@ -174,12 +173,12 @@ class Mailer {
         $mailpass       = Config::get('mail_auth_pass');
         $mailpass    = $mailpass ? $mailpass : '';
 
-        switch($mailtype) {
+        switch ($mailtype) {
             case 'smtp':
                 $mail->IsSMTP();
                 $mail->Host = $mailhost;
                 $mail->Port = $mailport;
-                if($mailauth == true) {
+                if ($mailauth == true) {
                     $mail->SMTPAuth = true;
                     $mail->Username = $mailuser;
                     $mail->Password = $mailpass;
@@ -199,18 +198,19 @@ class Mailer {
         }
 
         $retval = $mail->send();
-        if( $retval == true ) {
+        if ($retval == true) {
             return true;
         } else {
             return false;
         }
     } // send
 
-    public function send_to_group($group_name) {
+    public function send_to_group($group_name)
+    {
         $mail = new PHPMailer();
 
-        foreach(self::get_users($group_name) as $member) {
-            if(function_exists('mb_encode_mimeheader')) {
+        foreach (self::get_users($group_name) as $member) {
+            if (function_exists('mb_encode_mimeheader')) {
                 $member['fullname'] = mb_encode_mimeheader($member['fullname']);
             }
             $mail->AddBCC($member['email'], $member['fullname']);
@@ -220,4 +220,3 @@ class Mailer {
     }
 
 } // Mailer class
-?>

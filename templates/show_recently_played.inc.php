@@ -51,32 +51,25 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 
     if ($interval < 60) {
         $unit = 'seconds';
-    }
-    else if ($interval < 3600) {
+    } else if ($interval < 3600) {
         $interval = floor($interval / 60);
         $unit = 'minutes';
-    }
-    else if ($interval < 86400) {
+    } else if ($interval < 86400) {
         $interval = floor($interval / 3600);
         $unit = 'hours';
-    }
-    else if ($interval < 604800) {
+    } else if ($interval < 604800) {
         $interval = floor($interval / 86400);
         $unit = 'days';
-    }
-    else if ($interval < 2592000) {
+    } else if ($interval < 2592000) {
         $interval = floor($interval / 604800);
         $unit = 'weeks';
-    }
-    else if ($interval < 31556926) {
+    } else if ($interval < 31556926) {
         $interval = floor($interval / 2592000);
         $unit = 'months';
-    }
-    else if ($interval < 631138519) {
-        $interval = floor($interval / 31556926); 
+    } else if ($interval < 631138519) {
+        $interval = floor($interval / 31556926);
         $unit = 'years';
-    }
-    else {
+    } else {
         $interval = floor($interval / 315569260);
         $unit = 'decades';
     }
@@ -123,4 +116,4 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
     <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
 </tr>
 </table>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom();

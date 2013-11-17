@@ -36,14 +36,14 @@
         <td>
         <select name="random">
 <?php
-        foreach(array(1, 5, 10, 20, 30, 50, 100, 500, 1000) as $i) {
-            echo "\t\t\t" . '<option value="' . $i . '" ' . 
-                ($_POST['random'] == $i 
+        foreach (array(1, 5, 10, 20, 30, 50, 100, 500, 1000) as $i) {
+            echo "\t\t\t" . '<option value="' . $i . '" ' .
+                ($_POST['random'] == $i
                     ? 'selected="selected"' : '') . '>' .
                 $i . "</option>\n";
         }
             echo "\t\t\t" . '<option value="-1" ' .
-                ($_POST['random'] == '-1' 
+                ($_POST['random'] == '-1'
                     ? 'selected="selected"' : '') . '>' .
                 T_('All') . "</option>\n";
 ?>
@@ -57,17 +57,16 @@
                 <select name="length">
 <?php
             echo "\t\t\t" . '<option value="0" ' .
-                ($_POST['length'] == 0 
+                ($_POST['length'] == 0
                     ? 'selected="selected"' : '') . '>' .
                 T_('Unlimited') . "</option>\n";
-        foreach(array(15, 30, 60, 120, 240, 480, 960) as $i) {
-            echo "\t\t\t" . '<option value="' . $i . '" ' . 
-                ($_POST['length'] == $i 
+        foreach (array(15, 30, 60, 120, 240, 480, 960) as $i) {
+            echo "\t\t\t" . '<option value="' . $i . '" ' .
+                ($_POST['length'] == $i
                     ? 'selected="selected"' : '') . '>';
             if ($i < 60) {
                 printf(T_ngettext('%d minute', '%d minutes', $i), $i);
-            }
-            else {
+            } else {
                 printf(T_ngettext('%d hour', '%d hours', $i / 60), $i / 60);
             }
             echo "</option>\n";
@@ -85,7 +84,7 @@
                 ($_POST['size_limit'] == 0
                     ? 'selected="selected"' : '') . '>' .
                 T_('Unlimited') . "</option>\n";
-        foreach(array(64, 128, 256, 512, 1024) as $i) {
+        foreach (array(64, 128, 256, 512, 1024) as $i) {
             echo "\t\t\t" . '<option value="' . $i . '"' .
                 ($_POST['size_limit'] == $i
                     ? 'selected="selected"' : '') . '>' .

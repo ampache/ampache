@@ -28,8 +28,8 @@
  * this can include podcasts or what-have-you
  *
  */
-class Radio extends database_object implements media {
-
+class Radio extends database_object implements media
+{
     /* DB based variables */
     public $id;
     public $name;
@@ -43,8 +43,8 @@ class Radio extends database_object implements media {
      * Constructor
      * This takes a flagged.id and then pulls in the information for said flag entry
      */
-    public function __construct($id) {
-
+    public function __construct($id)
+    {
         $info = $this->get_info($id,'live_stream');
 
         // Set the vars
@@ -59,8 +59,8 @@ class Radio extends database_object implements media {
      * This takes the normal data from the database and makes it pretty
      * for the users, the new variables are put in f_??? and f_???_link
      */
-    public function format() {
-
+    public function format()
+    {
         // Default link used on the rightbar
         $this->f_link        = "<a href=\"$this->url\">$this->name</a>";
 
@@ -78,8 +78,8 @@ class Radio extends database_object implements media {
      * it depends on a ID element to determine which radio element it
      * should be updating
      */
-    public static function update($data) {
-
+    public static function update($data)
+    {
         // Verify the incoming data
         if (!$data['id']) {
             Error::add('general', T_('Missing ID'));
@@ -122,8 +122,8 @@ class Radio extends database_object implements media {
      * This is a static function that takes a key'd array for input
      * and if everything is good creates the object.
      */
-    public static function create($data) {
-
+    public static function create($data)
+    {
         // Make sure we've got a name
         if (!strlen($data['name'])) {
             Error::add('name', T_('Name Required'));
@@ -166,8 +166,8 @@ class Radio extends database_object implements media {
      * delete
      * This deletes the current object from the database
      */
-    public function delete() {
-
+    public function delete()
+    {
         $id = Dba::escape($this->id);
 
         $sql = "DELETE FROM `live_stream` WHERE `id`='$id'";
@@ -181,7 +181,8 @@ class Radio extends database_object implements media {
      * get_stream_types
      * This is needed by the media interface
      */
-    public function get_stream_types() {
+    public function get_stream_types()
+    {
         return array('foreign');
     } // native_stream
 
@@ -189,8 +190,8 @@ class Radio extends database_object implements media {
      * play_url
      * This is needed by the media interface
      */
-    public static function play_url($oid,$sid='',$force_http='') {
-
+    public static function play_url($oid,$sid='',$force_http='')
+    {
         $radio = new Radio($oid);
 
         return $radio->url;
@@ -201,21 +202,18 @@ class Radio extends database_object implements media {
      * has_flag
      * This is needed by the media interface
      */
-    public function has_flag() {
-
-
-
+    public function has_flag()
+    {
     } // has_flag
 
     /**
      * get_transcode_settings
-     * 
+     *
      * This will probably never be implemented
      */
-    public function get_transcode_settings($target = null) {
+    public function get_transcode_settings($target = null)
+    {
         return false;
     }
 
 } //end of radio class
-
-?>

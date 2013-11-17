@@ -27,8 +27,8 @@
  * it contains functions for creating/listing/updated the catalogs.
  *
  */
-abstract class Catalog extends database_object {
-
+abstract class Catalog extends database_object
+{
     public $name;
     public $last_update;
     public $last_add;
@@ -48,7 +48,7 @@ abstract class Catalog extends database_object {
     private static $albums    = array();
     private static $artists    = array();
     private static $tags    = array();
-    
+
     abstract public function get_type();
     abstract public function get_description();
     abstract public function get_version();
@@ -61,41 +61,41 @@ abstract class Catalog extends database_object {
     abstract public function catalog_fields();
     abstract public function get_rel_path($file_path);
     abstract public function prepare_media($media);
-    
+
         /**
      * uninstall
-     * This removes the remote catalog 
+     * This removes the remote catalog
      */
-    public function uninstall() {
+    public function uninstall()
+    {
+        $sql = "DELETE FROM `catalog` WHERE `catalog_type` = ?";
+        $db_results = Dba::query($sql, array($this->get_type()));
 
-        $sql = "DELETE FROM `catalog` WHERE `catalog_type` = ?"; 
-        $db_results = Dba::query($sql, array($this->get_type())); 
-        
-        $sql = "DROP TABLE `catalog_" . $this->get_type() ."`"; 
-        $db_results = Dba::query($sql); 
+        $sql = "DROP TABLE `catalog_" . $this->get_type() ."`";
+        $db_results = Dba::query($sql);
 
         return true;
 
     } // uninstall
-    
-    public static function create_from_id($id) {
-        
+
+    public static function create_from_id($id)
+    {
         $sql = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($id));
         if ($results = Dba::fetch_assoc($db_results)) {
             return self::create_catalog_type($results['catalog_type'], $id);
         }
-        
+
         return null;
     }
-    
+
     /**
      * create_catalog_type
      * This function attempts to create a catalog type
      * all Catalog modules should be located in /modules/catalog/<name>.class.php
      */
-    public static function create_catalog_type($type, $id=0) {
-
+    public static function create_catalog_type($type, $id=0)
+    {
         if (!$type) { return false; }
 
         $filename = Config::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
@@ -121,9 +121,9 @@ abstract class Catalog extends database_object {
         }
 
     } // create_catalog_type
-    
-    public static function show_catalog_types($divback = 'catalog_type_fields') {
 
+    public static function show_catalog_types($divback = 'catalog_type_fields')
+    {
         echo "<script language=\"javascript\" type=\"text/javascript\">" .
             "var type_fields = new Array();" .
             "type_fields['none'] = '';";
@@ -141,7 +141,7 @@ abstract class Catalog extends database_object {
                 }
                 foreach ($fields as $key=>$field) {
                     echo "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td>";
-                    
+
                     switch ($field['type']) {
                         case 'checkbox':
                             echo "<input type='checkbox' size='10' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') . "/>";
@@ -167,13 +167,13 @@ abstract class Catalog extends database_object {
             "} </script>" .
             "<select name=\"type\" id=\"catalog_type\" onChange=\"catalogTypeChanged();\">" . $seltypes . "</select>";
     }
-    
+
     /**
      * get_catalog_types
      * This returns the catalog types that are available
      */
-    public static function get_catalog_types() {
-
+    public static function get_catalog_types()
+    {
         /* First open the dir */
         $handle = opendir(Config::get('prefix') . '/modules/catalog');
 
@@ -199,24 +199,26 @@ abstract class Catalog extends database_object {
         return $results;
 
     } // get_catalog_types
-    
-    public static function is_audio_file($file) {
+
+    public static function is_audio_file($file)
+    {
         $pattern = "/\.(" . Config::get('catalog_file_pattern');
         if ($options['parse_m3u']) {
             $pattern .= "|m3u)$/i";
-        }
-        else {
+        } else {
             $pattern .= ")$/i";
         }
         return preg_match($pattern, $file);
     }
-    
-    public static function is_video_file($file) {
+
+    public static function is_video_file($file)
+    {
         $video_pattern = "/\.(" . Config::get('catalog_video_pattern') . ")$/i";
         return preg_match($video_pattern, $file);
     }
-    
-    public function get_info($id, $table = 'catalog') {
+
+    public function get_info($id, $table = 'catalog')
+    {
         $info = parent::get_info($id, $table);
 
         $table = 'catalog_' . $this->get_type();
@@ -232,7 +234,7 @@ abstract class Catalog extends database_object {
                 }
             }
         }
-        
+
         return $info;
     }
 
@@ -241,7 +243,8 @@ abstract class Catalog extends database_object {
      *
      * This populates an array which is used to speed up the add process.
      */
-    protected function _create_filecache() {
+    protected function _create_filecache()
+    {
         if (count($this->_filecache) == 0) {
             // Get _EVERYTHING_
             $sql = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
@@ -268,20 +271,21 @@ abstract class Catalog extends database_object {
      *
      * This makes the object human-readable.
      */
-    public function format() {
+    public function format()
+    {
         $this->f_name = UI::truncate($this->name,
             Config::get('ellipse_threshold_title'));
         $this->f_name_link = '<a href="' . Config::get('web_path') .
             '/admin/catalog.php?action=show_customize_catalog&catalog_id=' .
-            $this->id . '" title="' . scrub_out($this->name) . '">' . 
+            $this->id . '" title="' . scrub_out($this->name) . '">' .
             scrub_out($this->f_name) . '</a>';
-        $this->f_update = $this->last_update 
+        $this->f_update = $this->last_update
             ? date('d/m/Y h:i', $this->last_update)
             : T_('Never');
-        $this->f_add = $this->last_add 
+        $this->f_add = $this->last_add
             ? date('d/m/Y h:i', $this->last_add)
             : T_('Never');
-        $this->f_clean = $this->last_clean 
+        $this->f_clean = $this->last_clean
             ? date('d/m/Y h:i', $this->last_clean)
             : T_('Never');
     }
@@ -292,7 +296,8 @@ abstract class Catalog extends database_object {
      * Pull all the current catalogs and return an array of ids
      * of what you find
      */
-    public static function get_catalogs() {
+    public static function get_catalogs()
+    {
         $sql = "SELECT `id` FROM `catalog` ORDER BY `name`";
         $db_results = Dba::read($sql);
 
@@ -312,7 +317,8 @@ abstract class Catalog extends database_object {
      * objects that are associated with this catalog. This is used
      * to build the stats box, it also calculates time.
      */
-    public static function get_stats($catalog_id = null) {
+    public static function get_stats($catalog_id = null)
+    {
         $results = self::count_songs($catalog_id);
         $results = array_merge(User::count(), $results);
         $results['tags'] = self::count_tags();
@@ -340,8 +346,8 @@ abstract class Catalog extends database_object {
      *
      * This creates a new catalog entry and associate it to current instance
      */
-    public static function create($data) {
-
+    public static function create($data)
+    {
         $name = $data['name'];
         $type = $data['type'];
         $rename_pattern = $data['rename_pattern'];
@@ -367,7 +373,7 @@ abstract class Catalog extends database_object {
                 debug_event('catalog', 'Insert failed: ' . json_encode($data), 2);
                 return false;
             }
-            
+
             $classname = 'Catalog_' . $type;
             if (!$classname::create_type($insert_id, $data)) {
                 $sql = 'DELETE FROM `catalog` WHERE `id` = ?';
@@ -384,7 +390,8 @@ abstract class Catalog extends database_object {
      *
      * This returns the current number of video files in the database.
      */
-    public static function count_videos($id = null) {
+    public static function count_videos($id = null)
+    {
         $sql = 'SELECT COUNT(`id`) FROM `video` ';
         if ($id) {
             $sql .= 'WHERE `catalog` = ?';
@@ -400,7 +407,8 @@ abstract class Catalog extends database_object {
      *
      * This returns the current number of unique tags in the database.
      */
-    public static function count_tags($id = null) {
+    public static function count_tags($id = null)
+    {
         // FIXME: Ignores catalog_id
         $sql = "SELECT COUNT(`id`) FROM `tag`";
         $db_results = Dba::read($sql);
@@ -415,7 +423,8 @@ abstract class Catalog extends database_object {
      * This returns the current number of songs, albums, and artists
      * in this catalog.
      */
-    public static function count_songs($id = null) {
+    public static function count_songs($id = null)
+    {
         $where_sql = $id ? 'WHERE `catalog` = ?' : '';
         $params = $id ? array($id) : null;
 
@@ -453,7 +462,8 @@ abstract class Catalog extends database_object {
      * This returns an array of ids of albums that have songs in this
      * catalog
      */
-    public function get_album_ids() {
+    public function get_album_ids()
+    {
         $results = array();
 
         $sql = 'SELECT DISTINCT(`song`.`album`) FROM `song` WHERE `song`.`catalog` = ?';
@@ -465,27 +475,28 @@ abstract class Catalog extends database_object {
 
         return $results;
     }
-    
+
     /**
     * get_artist
     *
     * This returns an array of ids of artists that have songs in the catalogs parameter
     */
-    public static function get_artists($catalogs = null) {
-        if(is_array($catalogs) && count($catalogs)) {
+    public static function get_artists($catalogs = null)
+    {
+        if (is_array($catalogs) && count($catalogs)) {
             $catlist = '(' . implode(',', $catalogs) . ')';
             $sql_where = "WHERE `song`.`catalog` IN $catlist";
         }
-        
+
         $sql = "SELECT `artist`.id, `artist`.`name` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.artist ORDER BY `artist`.`name`";
-        
+
         $results = array();
         $db_results = Dba::read($sql);
 
         while ($r = Dba::fetch_assoc($db_results)) {
             $results[] = Artist::construct_from_array($r);
         }
-        
+
         return $results;
     }
 
@@ -496,7 +507,8 @@ abstract class Catalog extends database_object {
      * This runs through all of the needs art albums and trys
      * to find the art for them from the mp3s
      */
-    public function gather_art() {
+    public function gather_art()
+    {
         // Make sure they've actually got methods
         $art_order = Config::get('art_order');
         if (!count($art_order)) {
@@ -542,8 +554,7 @@ abstract class Catalog extends database_object {
                         }
                     }
 
-                }
-                else {
+                } else {
                     debug_event('gather_art', 'Image less than 5 chars, not inserting', 3);
                 }
                 $art_found++;
@@ -569,7 +580,8 @@ abstract class Catalog extends database_object {
      *
      * Returns an array of song objects.
      */
-    public function get_songs() {
+    public function get_songs()
+    {
         $results = array();
 
         $sql = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled`='1'";
@@ -588,7 +600,8 @@ abstract class Catalog extends database_object {
      * This runs through all of the albums and tries to dump the
      * art for them into the 'folder.jpg' file in the appropriate dir.
      */
-    public function dump_album_art($methods = array()) {
+    public function dump_album_art($methods = array())
+    {
         // Get all of the albums in this catalog
         $albums = $this->get_album_ids();
 
@@ -647,8 +660,7 @@ abstract class Catalog extends database_object {
                         echo "Written: $i. . .\n";
                         debug_event('art_write',"$album->name Art written to $file",'5');
                     }
-                }
-                else {
+                } else {
                     debug_event('art_write',"Unable to open $file for writing", 5);
                     echo "Error: unable to open file for writing [$file]\n";
                 }
@@ -663,8 +675,8 @@ abstract class Catalog extends database_object {
      * update_last_update
      * updates the last_update of the catalog
      */
-    protected function update_last_update() {
-
+    protected function update_last_update()
+    {
         $date = time();
         $sql = "UPDATE `catalog` SET `last_update` = ? WHERE `id` = ?";
         $db_results = Dba::write($sql, array($date, $this->id));
@@ -675,8 +687,8 @@ abstract class Catalog extends database_object {
      * update_last_add
      * updates the last_add of the catalog
      */
-    public function update_last_add() {
-
+    public function update_last_add()
+    {
         $date = time();
         $sql = "UPDATE `catalog` SET `last_add` = ? WHERE `id` = ?";
         $db_results = Dba::write($sql, array($date, $this->id));
@@ -687,8 +699,8 @@ abstract class Catalog extends database_object {
      * update_last_clean
      * This updates the last clean information
      */
-    public function update_last_clean() {
-
+    public function update_last_clean()
+    {
         $date = time();
         $sql = "UPDATE `catalog` SET `last_clean` = ? WHERE `id` = ?";
         $db_results = Dba::write($sql, array($date, $this->id));
@@ -699,8 +711,8 @@ abstract class Catalog extends database_object {
      * update_settings
      * This function updates the basic setting of the catalog
      */
-    public static function update_settings($data) {
-
+    public static function update_settings($data)
+    {
         $sql = "UPDATE `catalog` SET `name` = ?, `rename_pattern` = ?, `sort_pattern` = ? WHERE `id` = ?";
         $params = array($data['name'], $data['rename_pattern'], $data['sort_pattern'], $data['catalog_id']);
         $db_results = Dba::write($sql, $params);
@@ -714,8 +726,8 @@ abstract class Catalog extends database_object {
      * updates a single album,artist,song from the tag data
      * this can be done by 75+
      */
-    public static function update_single_item($type,$id) {
-
+    public static function update_single_item($type,$id)
+    {
         // Because single items are large numbers of things too
         set_time_limit(0);
 
@@ -735,7 +747,7 @@ abstract class Catalog extends database_object {
                 break;
         } // end switch type
 
-        foreach($songs as $song_id) {
+        foreach ($songs as $song_id) {
             $song = new Song($song_id);
             $info = self::update_media_from_tags($song,'','');
 
@@ -764,8 +776,8 @@ abstract class Catalog extends database_object {
      * This is a 'wrapper' function calls the update function for the media
      * type in question
      */
-    public static function update_media_from_tags($media, $sort_pattern='', $rename_pattern='') {
-
+    public static function update_media_from_tags($media, $sort_pattern='', $rename_pattern='')
+    {
         // Check for patterns
         if (!$sort_pattern OR !$rename_pattern) {
             $catalog = Catalog::create_from_id($media->catalog);
@@ -798,8 +810,8 @@ abstract class Catalog extends database_object {
      * update_video_from_tags
      * Updates the video info based on tags
      */
-    public static function update_video_from_tags($results,$video) {
-
+    public static function update_video_from_tags($results,$video)
+    {
         // Pretty sweet function here
         return $results;
 
@@ -813,8 +825,8 @@ abstract class Catalog extends database_object {
      * FIXME: This is an ugly mess, this really needs to be consolidated and
      * cleaned up.
      */
-    public static function update_song_from_tags($results,$song) {
-
+    public static function update_song_from_tags($results,$song)
+    {
         /* Setup the vars */
         $new_song         = new Song();
         $new_song->file        = $results['file'];
@@ -869,8 +881,7 @@ abstract class Catalog extends database_object {
             $song->update_song($song->id,$new_song);
             // Refine our reference
             $song = $new_song;
-        }
-        else {
+        } else {
             debug_event('update', "$song->file : no differences found", 5);
         }
 
@@ -883,8 +894,8 @@ abstract class Catalog extends database_object {
      *
      * Cleans the catalog of files that no longer exist.
      */
-    public function clean_catalog() {
-
+    public function clean_catalog()
+    {
         // We don't want to run out of time
         set_time_limit(0);
 
@@ -917,10 +928,10 @@ abstract class Catalog extends database_object {
      * verify_catalog
      * This function verify the catalog
      */
-    public function verify_catalog() {
-        
+    public function verify_catalog()
+    {
         $verified = $this->verify_catalog_proc();+
-        
+
         UI::show_box_top();
         echo '<strong>';
         printf(T_('Catalog Verify Done. %d of %d files updated.'), $verified['updated'], $verified['total']);
@@ -938,8 +949,8 @@ abstract class Catalog extends database_object {
      * This is a wrapper function for all of the different cleaning
      * functions, it runs them in an order that resembles correctness.
      */
-    public static function gc() {
-
+    public static function gc()
+    {
         debug_event('catalog', 'Database cleanup started', 5);
         Song::gc();
         Album::gc();
@@ -961,15 +972,15 @@ abstract class Catalog extends database_object {
      * trim_prefix
      * Splits the prefix from the string
      */
-    public static function trim_prefix($string) {
+    public static function trim_prefix($string)
+    {
         $prefix_pattern = '/^(' . implode('\\s|',explode('|',Config::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
         preg_match($prefix_pattern, $string, $matches);
 
         if (count($matches)) {
             $string = trim($matches[2]);
             $prefix = trim($matches[1]);
-        }
-        else {
+        } else {
             $prefix = null;
         }
 
@@ -982,8 +993,8 @@ abstract class Catalog extends database_object {
      * set on the title, if it isn't it looks at the
      * filename and trys to set the title based on that
      */
-    public static function check_title($title,$file=0) {
-
+    public static function check_title($title,$file=0)
+    {
         if (strlen(trim($title)) < 1) {
             $title = Dba::escape($file);
         }
@@ -997,8 +1008,8 @@ abstract class Catalog extends database_object {
      * this takes m3u filename and then attempts to create a Public Playlist based on the filenames
      * listed in the m3u
      */
-    public static function import_m3u($filename) {
-
+    public static function import_m3u($filename)
+    {
         $m3u_handle = fopen($filename,'r');
 
         $data = fread($m3u_handle,filesize($filename));
@@ -1076,11 +1087,11 @@ abstract class Catalog extends database_object {
      * Deletes the catalog and everything associated with it
      * it takes the catalog id
      */
-    public static function delete($catalog_id) {
-
+    public static function delete($catalog_id)
+    {
         // Large catalog deletion can take time
         set_time_limit(0);
-        
+
         // First remove the songs in this catalog
         $sql = "DELETE FROM `song` WHERE `catalog` = ?";
         $db_results = Dba::write($sql, array($catalog_id));
@@ -1092,12 +1103,12 @@ abstract class Catalog extends database_object {
         $db_results = Dba::write($sql, array($catalog_id));
 
         if (!$db_results) { return false; }
-        
+
         $catalog = self::create_from_id($catalog_id);
-        
+
         $sql = 'DELETE FROM `catalog_' . $catalog->get_type() . '` WHERE catalog_id = ?';
         $db_results = Dba::write($sql, array($catalog_id));
-        
+
         if (!$db_results) { return false; }
 
         // Next Remove the Catalog Entry it's self
@@ -1113,17 +1124,16 @@ abstract class Catalog extends database_object {
      * exports the catalog
      * it exports all songs in the database to the given export type.
      */
-    public function export($type) {
-
+    public function export($type)
+    {
         // Select all songs in catalog
         $params = array();
-        if($this->id) {
+        if ($this->id) {
             $sql = 'SELECT `id` FROM `song` ' .
                 "WHERE `catalog`= ? " .
                 'ORDER BY `album`, `track`';
             $params[] = $this->id;
-        }
-        else {
+        } else {
             $sql = 'SELECT `id` FROM `song` ORDER BY `album`, `track`';
         }
         $db_results = Dba::read($sql, $params);
@@ -1179,5 +1189,3 @@ abstract class Catalog extends database_object {
     } // export
 
 } // end of catalog class
-
-?>

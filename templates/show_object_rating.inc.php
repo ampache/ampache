@@ -43,11 +43,9 @@ if (!$rate) {
     echo T_('Current rating: ');
     if ($rate <= 0) {
         echo T_('not rated yet') . "</li>\n";
-    }
-    else printf(T_('%s of 5'), $rate); echo "</li>\n";
+    } else printf(T_('%s of 5'), $rate); echo "</li>\n";
 
-    for ($i = 1; $i < 6; $i++)
-    {
+    for ($i = 1; $i < 6; $i++) {
     ?>
       <li>
           <?php echo Ajax::text($base_url . '&rating=' . $i, '', 'rating' . $i . '_' . $rating->id . '_' . $rating->type, '', 'star' . $i); ?>

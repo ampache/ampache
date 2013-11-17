@@ -26,12 +26,12 @@
  * work, this lists all required functions and the expected
  * input
  */
-interface media {
-
+interface media
+{
     /**
      * format
-     * 
-     * Creates the gussied-up member variables for output 
+     *
+     * Creates the gussied-up member variables for output
      */
     public function format();
 
@@ -47,7 +47,7 @@ interface media {
      * play_url
      *
      * Returns the url to stream the specified object
-     * 
+     *
      */
     public static function play_url($oid);
 
@@ -68,4 +68,3 @@ interface media {
     public function has_flag();
 
 } // end interface
-?>

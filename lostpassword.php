@@ -47,7 +47,8 @@ switch ($action) {
         require Config::get('prefix') . '/templates/show_lostpassword_form.inc.php';
 }
 
-function send_newpassword($email,$current_ip){
+function send_newpassword($email,$current_ip)
+{
     /* get the Client and set the new password */
     $client = User::get_from_email($email);
     if ($client->email == $email) {
@@ -69,4 +70,3 @@ function send_newpassword($email,$current_ip){
     }
     return false;
 }
-?>

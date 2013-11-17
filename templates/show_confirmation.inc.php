@@ -35,4 +35,4 @@ $confirmation = Core::form_register($form_name);
     <?php echo $confirmation; ?>
     </form>
 <?php } ?>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom();

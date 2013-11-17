@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php 
+<?php
 ob_start();
 require Config::get('prefix') . '/templates/show_smartplaylist_title.inc.php';
 $title = ob_get_contents();
@@ -65,4 +65,4 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
 
 </form>
 
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom();

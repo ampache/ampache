@@ -27,7 +27,7 @@ UI::show_header();
 /**
  * Display Switch
  */
-switch($_REQUEST['action']) {
+switch ($_REQUEST['action']) {
     case 'show':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
@@ -73,8 +73,7 @@ switch($_REQUEST['action']) {
                 } else {
                     $GLOBALS['error']->add_error('general', sprintf(T_('Error: \'%s\' is not a valid ID'), $artist_id));
                 }
-            }
-            else
+            } else
                 $GLOBALS['error']->add_error('general', sprintf(T_('Error: No such artist \'%s\''), $_REQUEST['artist']));
         } else {
             $GLOBALS['error']->add_error('general', T_("Error: Errenous request"));
@@ -180,8 +179,7 @@ switch($_REQUEST['action']) {
     case 'match':
     case 'Match':
         $match = scrub_in($_REQUEST['match']);
-        if ($match == "Browse" || $match == "Show_all") { $chr = ""; }
-        else { $chr = $match; }
+        if ($match == "Browse" || $match == "Show_all") { $chr = ""; } else { $chr = $match; }
         /* Enclose this in the purty box! */
         require Config::get('prefix') . '/templates/show_box_top.inc.php';
         show_alphabet_list('artists','artists.php',$match);
@@ -190,16 +188,13 @@ switch($_REQUEST['action']) {
 
         if ($match === "Browse") {
             show_artists();
-        }
-        elseif ($match === "Show_all") {
+        } elseif ($match === "Show_all") {
             $offset_limit = 999999;
             show_artists();
-        }
-            else {
+        } else {
             if ($chr == '') {
                 show_artists('A');
-            }
-            else {
+            } else {
                 show_artists($chr);
             }
         }
@@ -207,4 +202,3 @@ switch($_REQUEST['action']) {
 } // end switch
 
 UI::show_footer();
-?>

@@ -28,8 +28,8 @@
  * it is related to the album table in the database.
  *
  */
-class Album extends database_object {
-
+class Album extends database_object
+{
     /* Variables from DB */
     public $id;
     public $name;
@@ -51,8 +51,8 @@ class Album extends database_object {
      * pull the album or thumb art by default or
      * get any of the counts.
      */
-    public function __construct($id='') {
-
+    public function __construct($id='')
+    {
         if (!$id) { return false; }
 
         /* Get the information from the db */
@@ -75,8 +75,8 @@ class Album extends database_object {
      * This is often used by the metadata class, it fills out an album object from a
      * named array, _fake is set to true
      */
-    public static function construct_from_array($data) {
-
+    public static function construct_from_array($data)
+    {
         $album = new Album(0);
         foreach ($data as $key=>$value) {
             $album->$key = $value;
@@ -90,11 +90,12 @@ class Album extends database_object {
     } // construct_from_array
 
     /**
-     * gc 
+     * gc
      *
      * Cleans out unused albums
      */
-    public static function gc() {
+    public static function gc()
+    {
         Dba::write('DELETE FROM `album` USING `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `song`.`id` IS NULL');
     }
 
@@ -103,8 +104,8 @@ class Album extends database_object {
      * This takes an array of object ids and caches all of their information
      * with a single query
      */
-    public static function build_cache($ids,$extra=false) {
-
+    public static function build_cache($ids,$extra=false)
+    {
         // Nothing to do if they pass us nothing
         if (!is_array($ids) OR !count($ids)) { return false; }
 
@@ -152,8 +153,8 @@ class Album extends database_object {
      * This pulls the extra information from our tables, this is a 3 table join, which is why we don't normally
      * do it
      */
-    private function _get_extra_info() {
-
+    private function _get_extra_info()
+    {
         if (parent::is_cached('album_extra',$this->id)) {
             return parent::get_from_cache('album_extra',$this->id);
         }
@@ -165,7 +166,7 @@ class Album extends database_object {
             "`artist`.`name` AS `artist_name`, " .
             "`artist`.`prefix` AS `artist_prefix`, " .
             "`artist`.`id` AS `artist_id` " .
-            "FROM `song` INNER JOIN `artist` " . 
+            "FROM `song` INNER JOIN `artist` " .
             "ON `artist`.`id`=`song`.`artist` " .
             "WHERE `song`.`album` = ? " .
             "GROUP BY `song`.`album`";
@@ -177,7 +178,7 @@ class Album extends database_object {
         $art->get_db();
         $results['has_art'] = make_bool($art->raw);
         $results['has_thumb'] = make_bool($art->thumb);
-        
+
         if (Config::get('show_played_times')) {
             $results['object_cnt'] = Stats::get_object_count('album', $this->id);
         }
@@ -195,9 +196,9 @@ class Album extends database_object {
      */
     public static function check($name, $year = 0, $disk = 0, $mbid = null,
         $readonly = false) {
-        
+
         if ($mbid == '') $mbid = null;
-        
+
         $trimmed = Catalog::trim_prefix(trim($name));
         $name = $trimmed['string'];
         $prefix = $trimmed['prefix'];
@@ -223,8 +224,7 @@ class Album extends database_object {
         if ($mbid) {
             $sql .= '= ? ';
             $params[] = $mbid;
-        }
-        else {
+        } else {
             $sql .= 'IS NULL ';
         }
 
@@ -232,8 +232,7 @@ class Album extends database_object {
         if ($prefix) {
             $sql .= '= ?';
             $params[] = $prefix;
-        }
-        else {
+        } else {
             $sql .= 'IS NULL';
         }
 
@@ -268,8 +267,8 @@ class Album extends database_object {
      * and an optional artist, if artist is passed it only gets
      * songs with this album + specified artist
      */
-    public function get_songs($limit = 0,$artist='') {
-
+    public function get_songs($limit = 0,$artist='')
+    {
         $results = array();
 
         $sql = "SELECT `id` FROM `song` WHERE `album` = ? ";
@@ -296,8 +295,8 @@ class Album extends database_object {
      * has_track
      * This checks to see if this album has a track of the specified title
      */
-    public function has_track($title) {
-
+    public function has_track($title)
+    {
         $sql = "SELECT `id` FROM `song` WHERE `album` = ? AND `title` = ?";
         $db_results = Dba::read($sql, array($this->id, $title));
 
@@ -313,8 +312,8 @@ class Album extends database_object {
      * album information with the base required
      * f_link, f_name
      */
-    public function format() {
-
+    public function format()
+    {
         $web_path = Config::get('web_path');
 
         /* Pull the advanced information */
@@ -339,8 +338,7 @@ class Album extends database_object {
             $artist = scrub_out(UI::truncate($artist), Config::get('ellipse_threshold_artist'));
             $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
             $this->f_artist = $artist;
-        }
-        else {
+        } else {
             $this->f_artist_link = "<span title=\"$this->artist_count " . T_('Artists') . "\">" . T_('Various') . "</span>";
             $this->f_artist = T_('Various');
             $this->f_artist_name =  $this->f_artist;
@@ -361,8 +359,8 @@ class Album extends database_object {
      * get_random_songs
      * gets a random number, and a random assortment of songs from this album
      */
-    function get_random_songs() {
-
+    public function get_random_songs()
+    {
         $sql = "SELECT `id` FROM `song` WHERE `album` = ? ORDER BY RAND()";
         $db_results = Dba::read($sql, array($this->id));
 
@@ -379,8 +377,8 @@ class Album extends database_object {
      * This function takes a key'd array of data and updates this object
      * as needed, and then throws down with a flag
      */
-    public function update($data) {
-
+    public function update($data)
+    {
         $year         = $data['year'];
         $artist        = $data['artist'];
         $name        = $data['name'];
@@ -432,7 +430,8 @@ class Album extends database_object {
      *
      * This returns a number of random albums.
      */
-    public static function get_random($count = 1, $with_art = false) {
+    public static function get_random($count = 1, $with_art = false)
+    {
         $results = false;
 
         if ($with_art) {
@@ -440,11 +439,10 @@ class Album extends database_object {
                 "ON (`image`.`object_type` = 'album' AND " .
                 '`image`.`object_id` = `album`.`id`) ' .
                 'WHERE `image`.`id` IS NOT NULL ';
-        }
-        else {
+        } else {
             $sql = 'SELECT `id` FROM `album` ';
         }
-        
+
         $sql .= 'ORDER BY RAND() LIMIT ' . intval($count);
         $db_results = Dba::read($sql);
 
@@ -456,5 +454,3 @@ class Album extends database_object {
     }
 
 } //end of album class
-
-?>

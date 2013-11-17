@@ -35,8 +35,7 @@ while ($i <= $rows) {
         $key = $i*4+$j;
         $image_url = Config::get('web_path') . '/image.php?type=session&amp;image_index=' . $key;
         $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], 'album'));
-        if (!isset($images[$key])) { echo "<td>&nbsp;</td>\n"; }
-        else {
+        if (!isset($images[$key])) { echo "<td>&nbsp;</td>\n"; } else {
 ?>
             <td align="center">
                 <a href="<?php echo $image_url; ?>" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Album Art'); ?>" border="0" height="175" width="175" /></a>
@@ -54,10 +53,9 @@ while ($i <= $rows) {
         } // end else
         $j++;
     } // end while cells
-    if($i < $rows) { echo "</tr>\n<tr>"; }
-        else { echo "</tr>"; }
+    if ($i < $rows) { echo "</tr>\n<tr>"; } else { echo "</tr>"; }
     $i++;
 } // end while
 ?>
 </table>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom();

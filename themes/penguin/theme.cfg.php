@@ -17,7 +17,7 @@
 ; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Penguin Ampache Theme 
+; Penguin Ampache Theme
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Theme Name
@@ -27,7 +27,7 @@
 name = "Penguin"
 
 ; Theme Author
-; This is just a way of giving credit to the 
+; This is just a way of giving credit to the
 ; person who actually created this theme
 ; DEFAULT: N/A
 author = "Jeroen Doppenberg"

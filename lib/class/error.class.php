@@ -27,8 +27,8 @@
  * hello static functions and variables
  *
  */
-class Error {
-
+class Error
+{
     private static $state = false; // set to one when an error occurs
     private static $errors = array(); // Errors array key'd array with errors that have occured
 
@@ -36,8 +36,8 @@ class Error {
      * __constructor
      * This does nothing... amazing isn't it!
      */
-    private function __construct() {
-
+    private function __construct()
+    {
         // Rien a faire
 
     } // __construct
@@ -46,9 +46,8 @@ class Error {
      * __destruct
      * This saves all of the errors that are left into the session
      */
-    public function __destruct() {
-
-
+    public function __destruct()
+    {
         foreach (self::$errors as $key=>$error) {
             $_SESSION['errors'][$key] = $error;
         }
@@ -60,8 +59,8 @@ class Error {
      * This is a public static function it adds a new error message to the array
      * It can optionally clobber rather then adding to the error message
      */
-    public static function add($name,$message,$clobber=0) {
-
+    public static function add($name,$message,$clobber=0)
+    {
         // Make sure its set first
         if (!isset(Error::$errors[$name])) {
             Error::$errors[$name] = $message;
@@ -87,8 +86,8 @@ class Error {
      * occurred
      * This returns true / false if an error has occured anywhere
      */
-    public static function occurred() {
-
+    public static function occurred()
+    {
         if (self::$state == '1') { return true; }
 
         return false;
@@ -99,8 +98,8 @@ class Error {
      * get
      * This returns an error by name
      */
-    public static function get($name) {
-
+    public static function get($name)
+    {
         if (!isset(Error::$errors[$name])) { return ''; }
 
         return Error::$errors[$name];
@@ -112,8 +111,8 @@ class Error {
      * This prints the error out with a standard Error class span
      * Ben Goska: Renamed from print to display, print is reserved
      */
-    public static function display($name) {
-
+    public static function display($name)
+    {
         // Be smart about this, if no error don't print
         if (!isset(Error::$errors[$name])) { return ''; }
 
@@ -125,8 +124,8 @@ class Error {
       * auto_init
      * This loads the errors from the session back into Ampache
      */
-    public static function auto_init() {
-
+    public static function auto_init()
+    {
         if (!is_array($_SESSION['errors'])) { return false; }
 
         // Re-insert them

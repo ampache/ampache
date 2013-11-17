@@ -24,30 +24,30 @@
  * split_sql
  * splits up a standard SQL dump file into distinct sql queries
  */
-function split_sql($sql) {
+function split_sql($sql)
+{
         $sql = trim($sql);
         $sql = preg_replace("/\n#[^\n]*\n/", "\n", $sql);
         $buffer = array();
         $ret = array();
         $in_string = false;
-        for($i=0; $i<strlen($sql)-1; $i++) {
-                if($sql[$i] == ";" && !$in_string) {
+        for ($i=0; $i<strlen($sql)-1; $i++) {
+                if ($sql[$i] == ";" && !$in_string) {
                         $ret[] = substr($sql, 0, $i);
                         $sql = substr($sql, $i + 1);
                         $i = 0;
                 }
-                if($in_string && ($sql[$i] == $in_string) && $buffer[1] != "\\") {
+                if ($in_string && ($sql[$i] == $in_string) && $buffer[1] != "\\") {
                         $in_string = false;
-                }
-                elseif(!$in_string && ($sql[$i] == '"' || $sql[$i] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
+                } elseif (!$in_string && ($sql[$i] == '"' || $sql[$i] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
                         $in_string = $sql[$i];
                 }
-                if(isset($buffer[1])) {
+                if (isset($buffer[1])) {
                         $buffer[0] = $buffer[1];
                 }
                 $buffer[1] = $sql[$i];
         }
-        if(!empty($sql)) {
+        if (!empty($sql)) {
                 $ret[] = $sql;
         }
         return($ret);
@@ -59,8 +59,8 @@ function split_sql($sql) {
  * still need to install ampache. This function is
  * very important, we don't want to reinstall over top of an existing install
  */
-function install_check_status($configfile) {
-
+function install_check_status($configfile)
+{
     /*
       Check and see if the config file exists
       if it does they can't use the web interface
@@ -94,8 +94,7 @@ function install_check_status($configfile) {
 
     if (!Dba::num_rows($db_results)) {
         return true;
-    }
-    else {
+    } else {
         Error::add('general', T_('Existing Database detected, unable to continue installation'));
         return false;
     }
@@ -110,7 +109,8 @@ function install_check_status($configfile) {
  *
  * Inserts the database using the values from Config.
  */
-function install_insert_db($db_user = null, $db_pass = null, $overwrite = false, $use_existing_db = false) {
+function install_insert_db($db_user = null, $db_pass = null, $overwrite = false, $use_existing_db = false)
+{
     $database = Config::get('database_name');
     // Make sure that the database name is valid
     $is_valid = preg_match('/([^\d\w\_\-])/', $database, $matches);
@@ -131,11 +131,9 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false,
     if ($db_exists) {
         if ($use_existing_db) {
             $create_db = false;
-        }
-        else if ($overwrite) {
+        } else if ($overwrite) {
             Dba::write('DROP DATABASE `' . $database . '`');
-        }
-        else {
+        } else {
             Error::add('general', T_('Error: Database already exists and overwrite not checked'));
             return false;
         }
@@ -171,7 +169,7 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false,
     $pieces  = split_sql($query);
     for ($i=0; $i<count($pieces); $i++) {
         $pieces[$i] = trim($pieces[$i]);
-        if(!empty($pieces[$i]) && $pieces[$i] != '#') {
+        if (!empty($pieces[$i]) && $pieces[$i] != '#') {
             if (!$result = Dba::write($pieces[$i])) {
                 $errors[] = array ( Dba::error(), $pieces[$i] );
             }
@@ -198,15 +196,15 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false,
  *
  * Attempts to write out the config file or offer it as a download.
  */
-function install_create_config($download = false) {
-
+function install_create_config($download = false)
+{
     $config_file = Config::get('prefix') . '/config/ampache.cfg.php';
 
     /* Attempt to make DB connection */
     $dbh = Dba::dbh();
 
     // Connect to the DB
-    if(!Dba::check_database()) {
+    if (!Dba::check_database()) {
         Error::add('general', T_("Database Connection Failed Check Hostname, Username and Password"));
         return false;
     }
@@ -218,16 +216,14 @@ function install_create_config($download = false) {
         if (!check_config_writable()) {
             Error::add('general', T_('Config file is not writable'));
             return false;
-        }
-        else {
+        } else {
             // Given that $final is > 0, we can ignore lazy comparison problems
             if (!file_put_contents($config_file, $final)) {
                 Error::add('general', T_('Error writing config file'));
                 return false;
             }
         }
-    }
-    else {
+    } else {
         $browser = new Horde_Browser();
         $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, strlen($final));
         echo $final;
@@ -241,8 +237,8 @@ function install_create_config($download = false) {
  * install_create_account
  * this creates your initial account and sets up the preferences for the -1 user and you
  */
-function install_create_account($username, $password, $password2) {
-
+function install_create_account($username, $password, $password2)
+{
     if (!strlen($username) OR !strlen($password)) {
         Error::add('general', T_('No Username/Password specified'));
         return false;
@@ -279,5 +275,3 @@ function install_create_account($username, $password, $password2) {
     return true;
 
 } // install_create_account
-
-?>
