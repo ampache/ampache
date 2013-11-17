@@ -181,6 +181,8 @@ function show_preference_box($preferences)
 
 } // show_preference_box
 
+private static $album_id_cnt = 0;
+
 /**
  * show_album_select
  * This displays a select of every album that we've got in Ampache (which can be
@@ -189,11 +191,10 @@ function show_preference_box($preferences)
 function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
 {
     // Generate key to use for HTML element ID
-    static $id_cnt;
     if ($song_id) {
         $key = "album_select_$song_id";
     } else {
-        $key = "album_select_c" . ++$id_cnt;
+        $key = "album_select_c" . ++$album_id_cnt;
     }
 
     // Added ID field so we can easily observe this element
@@ -222,6 +223,8 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
 
 } // show_album_select
 
+private static $artist_id_cnt = 0;
+
 /**
  * show_artist_select
  * This is the same as show_album_select except it's *gasp* for artists! How
@@ -230,11 +233,10 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
 function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id=0)
 {
     // Generate key to use for HTML element ID
-    static $id_cnt;
     if ($song_id) {
         $key = "artist_select_$song_id";
     } else {
-        $key = "artist_select_c" . ++$id_cnt;
+        $key = "artist_select_c" . ++$artist_id_cnt;
     }
 
     echo "<select name=\"$name\" id=\"$key\">\n";
