@@ -97,3 +97,4 @@ if (Config::get('show_played_times')) {
 <?php
     $browse->show_objects($object_ids);
     $browse->store();
+?>

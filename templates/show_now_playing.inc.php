@@ -48,4 +48,4 @@ foreach ($results as $item) {
 } // end foreach
 ?>
 <?php UI::show_box_bottom(); ?>
-<?php } // end if count results
+<?php } // end if count results ?>

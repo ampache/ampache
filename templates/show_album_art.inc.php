@@ -58,4 +58,4 @@ while ($i <= $rows) {
 } // end while
 ?>
 </table>
-<?php UI::show_box_bottom();
+<?php UI::show_box_bottom(); ?>

@@ -188,3 +188,4 @@ if (!defined('INSTALL')) {
 </tr>
 <?php
 }
+?>

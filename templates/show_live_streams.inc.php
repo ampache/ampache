@@ -64,4 +64,4 @@ foreach ($object_ids as $radio_id) {
     <th class="cel_action"><?php echo T_('Action'); ?> </th>
 </tr>
 </table>
-<?php require Config::Get('prefix') . '/templates/list_header.inc.php';
+<?php require Config::Get('prefix') . '/templates/list_header.inc.php'; ?>

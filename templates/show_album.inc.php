@@ -114,3 +114,4 @@ if (Config::get('show_played_times')) {
     $browse->get_objects();
     $browse->show_objects();
     $browse->store();
+?>

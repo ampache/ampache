@@ -93,4 +93,4 @@ $web_path = Config::get('web_path');
     <th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
 </table>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php';
+<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>

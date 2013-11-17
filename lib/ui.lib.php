@@ -181,7 +181,7 @@ function show_preference_box($preferences)
 
 } // show_preference_box
 
-private static $album_id_cnt = 0;
+static $album_id_cnt = 0;
 
 /**
  * show_album_select
@@ -223,7 +223,7 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
 
 } // show_album_select
 
-private static $artist_id_cnt = 0;
+static $artist_id_cnt = 0;
 
 /**
  * show_artist_select

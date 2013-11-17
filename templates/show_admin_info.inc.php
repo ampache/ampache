@@ -39,4 +39,4 @@ $songs = Song::get_disabled(10);
     <div>
     <a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=show_disabled"><?php echo T_('Show All'); ?>...</a>
     </div>
-<?php UI::show_box_bottom();
+<?php UI::show_box_bottom(); ?>

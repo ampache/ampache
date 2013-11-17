@@ -50,4 +50,4 @@ if (Art::is_enabled()) {
         }
     ?>
 </div>
-<?php }
+<?php } ?>

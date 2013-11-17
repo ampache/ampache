@@ -68,3 +68,4 @@ if ($out) {
 } else {
     echo '<script type="text/javascript">SearchRow.add();</script>';
 }
+?>

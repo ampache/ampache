@@ -63,4 +63,4 @@ $artist = scrub_out(UI::truncate($song->f_artist_full));
 </div>
 
 
-<?php UI::show_box_bottom();
+<?php UI::show_box_bottom(); ?>

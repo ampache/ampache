@@ -50,4 +50,4 @@ $now_playing = $status['track_title'] ? $status['track_title'] . ' - ' . $status
 </ul>
 </div>
 <?php UI::show_box_bottom(); ?>
-<?php Ajax::end_container();
+<?php Ajax::end_container(); ?>

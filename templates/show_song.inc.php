@@ -79,4 +79,4 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
   }
 ?>
 </dl>
-<?php UI::show_box_bottom();
+<?php UI::show_box_bottom(); ?>

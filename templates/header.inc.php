@@ -93,4 +93,4 @@ function forceIframe()
     <?php echo T_('Error Config File Out of Date'); ?>
     <a href="<?php echo Config::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config'); ?></a>
 </div>
-<?php }
+<?php } ?>

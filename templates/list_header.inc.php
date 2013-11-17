@@ -126,3 +126,4 @@ if ($pages > 1) {
 </div>
 <?php
 } // if stuff
+?>

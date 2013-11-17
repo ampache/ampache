@@ -116,4 +116,4 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
     <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
 </tr>
 </table>
-<?php UI::show_box_bottom();
+<?php UI::show_box_bottom(); ?>

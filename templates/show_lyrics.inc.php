@@ -47,4 +47,4 @@ UI::show_box_top(sprintf(T_('%s Lyrics'), $song->title), 'box box_lyrics');
     </td>
 </tr>
 </table>
-<?php UI::show_box_bottom();
+<?php UI::show_box_bottom(); ?>

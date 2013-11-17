@@ -118,4 +118,4 @@
     </div>
 <?php } // end show similar songs ?>
 </div>
-<?php } // end show similar things
+<?php } // end show similar things ?>

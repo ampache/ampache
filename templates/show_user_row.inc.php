@@ -56,3 +56,4 @@
     } else {
         echo "<td class=\"cel_online user_offline\"> &nbsp; </td>";
     }
+?>

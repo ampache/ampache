@@ -83,3 +83,4 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
     $browse->set_static_content(true);
     $browse->show_objects($object_ids);
     $browse->store();
+?>

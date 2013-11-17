@@ -24,4 +24,4 @@
 ?>
 <?php Ajax::start_container('browse_content'); ?>
 
-<?php Ajax::end_container();
+<?php Ajax::end_container(); ?>

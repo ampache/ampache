@@ -53,4 +53,4 @@ $button = Ajax::button('?page=index&action=random_albums','random', T_('Refresh'
             <?php } // end foreach ?>
     <?php } // end if albums ?>
 
-<?php UI::show_box_bottom();
+<?php UI::show_box_bottom(); ?>

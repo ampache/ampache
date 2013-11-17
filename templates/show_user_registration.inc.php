@@ -111,3 +111,4 @@ if (Config::get('user_agreement')) { ?>
 </form>
 <?php
 UI::show_footer();
+?>

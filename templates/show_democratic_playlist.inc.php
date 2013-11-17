@@ -107,4 +107,4 @@ foreach ($object_ids as $item) {
 } // end else
 ?>
 </table>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php';
+<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
