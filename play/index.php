@@ -437,7 +437,7 @@ if ($stream_size) {
 }
 
 if ($start > $target) {
-    debug_event('play', 'Content-Range was more than ' . $target . ' into the file, not collecting stats', 5);
+    debug_event('play', 'Content-Range was more than ' . $target . ' into the file ' . $media->file . ', not collecting stats', 5);
 } else if ($bytes_streamed > $target) {
     // FIXME: This check looks suspicious
     if (get_class($media) == 'Song') {
