@@ -52,16 +52,31 @@ abstract class Catalog extends database_object {
     abstract public function get_type();
     abstract public function get_description();
     abstract public function get_version();
+    abstract public function get_create_help();
     abstract public function is_installed();
     abstract public function install();
-    abstract public function uninstall();
-    abstract public function run_add($options);
-    abstract public function add_to_catalog();
+    abstract public function add_to_catalog($options = null);
     abstract public function verify_catalog_proc();
     abstract public function clean_catalog_proc();
     abstract public function catalog_fields();
     abstract public function get_rel_path($file_path);
     abstract public function prepare_media($media);
+    
+        /**
+     * uninstall
+     * This removes the remote catalog 
+     */
+    public function uninstall() {
+
+        $sql = "DELETE FROM `catalog` WHERE `catalog_type` = ?"; 
+        $db_results = Dba::query($sql, array($this->get_type())); 
+        
+        $sql = "DROP TABLE `catalog_" . $this->get_type() ."`"; 
+        $db_results = Dba::query($sql); 
+
+        return true;
+
+    } // uninstall
     
     public static function create_from_id($id) {
         
@@ -120,10 +135,25 @@ abstract class Catalog extends database_object {
                 $seltypes .= '<option value="' . $type . '">' . $type . '</option>';
                 echo "type_fields['" . $type . "'] = \"";
                 $fields = $catalog->catalog_fields();
+                $help = $catalog->get_create_help();
+                if (!empty($help)) {
+                    echo "<tr><td></td><td>" . $help . "</td></tr>";
+                }
                 foreach ($fields as $key=>$field) {
-                    echo "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td><input type='";
-                    echo ($field['type'] == 'password') ? 'password' : 'text';
-                    echo "' size='60' name='" . $key . "' /></td></tr>";
+                    echo "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td>";
+                    
+                    switch ($field['type']) {
+                        case 'checkbox':
+                            echo "<input type='checkbox' size='10' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') . "/>";
+                            break;
+                        case 'password':
+                            echo "<input type='password' size='60' name='" . $key . "' value='" . $field['value'] . "' />";
+                            break;
+                        default:
+                            echo "<input type='text' size='60' name='" . $key . "' value='" . $field['value'] . "' />";
+                            break;
+                    }
+                    echo "</td></tr>";
                 }
                 echo "\";";
             }
@@ -169,6 +199,22 @@ abstract class Catalog extends database_object {
         return $results;
 
     } // get_catalog_types
+    
+    public static function is_audio_file($file) {
+        $pattern = "/\.(" . Config::get('catalog_file_pattern');
+        if ($options['parse_m3u']) {
+            $pattern .= "|m3u)$/i";
+        }
+        else {
+            $pattern .= ")$/i";
+        }
+        return preg_match($pattern, $file);
+    }
+    
+    public static function is_video_file($file) {
+        $video_pattern = "/\.(" . Config::get('catalog_video_pattern') . ")$/i";
+        return preg_match($video_pattern, $file);
+    }
     
     public function get_info($id, $table = 'catalog') {
         $info = parent::get_info($id, $table);

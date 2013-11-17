@@ -61,6 +61,16 @@ class Catalog_subsonic extends Catalog {
         return $this->type;  
 
     } // get_type
+    
+    /**
+     * get_create_help
+     * This returns hints on catalog creation
+     */
+    public function get_create_help() { 
+
+        return "";
+
+    } // get_create_help
 
     /**
      * is_installed
@@ -93,19 +103,6 @@ class Catalog_subsonic extends Catalog {
         return true; 
 
     } // install
-
-    /**
-     * uninstall
-     * This removes the remote catalog 
-     */
-    public function uninstall() {
-
-        $sql = "DROP TABLE `catalog_subsonic`"; 
-        $db_results = Dba::query($sql); 
-
-        return true; 
-
-    } // uninstall
     
     public function catalog_fields() {
 
@@ -178,30 +175,14 @@ class Catalog_subsonic extends Catalog {
     }
 
     /**
-     * run_add
-     *
-     * This runs the add to catalog function
-     * it includes the javascript refresh stuff and then starts rolling
-     * throught the path for this catalog
-     */
-    public function run_add($options) {
-        // Prevent the script from timing out
-        set_time_limit(0);
-
-        UI::show_box_top(T_('Running Subsonic Remote Sync') . '. . .');
-        $this->update_remote_catalog();
-        UI::show_box_bottom();
-        
-        return true;
-    }
-
-    /**
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
      */
-    public function add_to_catalog() {
-
+    public function add_to_catalog($options = null) {
+        // Prevent the script from timing out
+        set_time_limit(0);
+        
         UI::show_box_top(T_('Running Subsonic Remote Update') . '. . .');
         $this->update_remote_catalog();
         UI::show_box_bottom();

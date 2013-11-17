@@ -61,6 +61,16 @@ class Catalog_googlemusic extends Catalog {
         return $this->type;  
 
     } // get_type
+    
+    /**
+     * get_create_help
+     * This returns hints on catalog creation
+     */
+    public function get_create_help() { 
+
+        return "";
+
+    } // get_create_help
 
     /**
      * is_installed
@@ -93,26 +103,12 @@ class Catalog_googlemusic extends Catalog {
         return true; 
 
     } // install
-
-    /**
-     * uninstall
-     * This removes the remote catalog 
-     */
-    public function uninstall() {
-
-        $sql = "DROP TABLE `catalog_googlemusic`"; 
-        $db_results = Dba::query($sql); 
-
-        return true; 
-
-    } // uninstall
     
     public function catalog_fields() {
 
         $fields['email']      = array('description' => T_('Email'),'type'=>'textbox');
         $fields['password']      = array('description' => T_('Password'),'type'=>'password');
-        // devicdeid not required for streaming
-        //$fields['deviceid']      = array('description' => T_('Device ID'),'type'=>'textbox');
+        $fields['deviceid']      = array('description' => T_('Device ID'),'type'=>'textbox');
 
         return $fields; 
 
@@ -174,29 +170,11 @@ class Catalog_googlemusic extends Catalog {
     }
 
     /**
-     * run_add
-     *
-     * This runs the add to catalog function
-     * it includes the javascript refresh stuff and then starts rolling
-     * throught the path for this catalog
-     */
-    public function run_add($options) {
-        // Prevent the script from timing out
-        set_time_limit(0);
-
-        UI::show_box_top(T_('Running Google Music Remote Sync') . '. . .');
-        $this->update_remote_catalog();
-        UI::show_box_bottom();
-        
-        return true;
-    }
-
-    /**
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
      */
-    public function add_to_catalog() {
+    public function add_to_catalog($options = null) {
 
         UI::show_box_top(T_('Running Google Music Remote Update') . '. . .');
         $this->update_remote_catalog();
@@ -209,7 +187,7 @@ class Catalog_googlemusic extends Catalog {
         $api = new GMApi();
         $api->setDebug(Config::get('debug'));
         $api->enableRestore(false);
-        $api->enableMACAddressCheck(false);
+        $api->enableMACAddressCheck(true);
         $api->enableSessionFile(false);
         
         if(!$api->login($this->email, $this->password, $this->deviceid)) {
@@ -290,7 +268,7 @@ class Catalog_googlemusic extends Catalog {
     /**
      * clean_catalog_proc
      * 
-     * Removes subsonic songs that no longer exist.
+     * Removes songs that no longer exist.
      */
     public function clean_catalog_proc() {
         $api = $this->createClient();
@@ -343,7 +321,7 @@ class Catalog_googlemusic extends Catalog {
     
     public function get_rel_path($file_path) {
         $info = $this->_get_info();
-        $catalog_path = rtrim($info->uri, "/");
+        $catalog_path = rtrim($info->email, "/");
         return( str_replace( $catalog_path . "/", "", $file_path ) );
     }
     
@@ -371,10 +349,11 @@ class Catalog_googlemusic extends Catalog {
         $api = $this->createClient();
         if ($api != null) {
             $songid = $this->url_to_songid($media->file);
+            
             $song = $api->get_stream_url($songid);
             if ($song) {
-                header('Location: ' . $url['url']);
-                debug_event('play', 'Started remote stream - ' . $url['url'], 5); 
+                header('Location: ' . $song);
+                debug_event('play', 'Started remote stream - ' . $song, 5); 
             } else {
                 debug_event('play', 'Cannot get remote stream for song ' . $media->file, 5); 
             }

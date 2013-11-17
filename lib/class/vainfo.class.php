@@ -38,6 +38,7 @@ class vainfo {
 
     protected $_raw = array();
     protected $_getID3 = '';
+    protected $_forcedSize = 0;
 
     protected $_file_encoding = '';
     protected $_file_pattern = '';
@@ -52,8 +53,9 @@ class vainfo {
      * This function just sets up the class, it doesn't pull the information.
      *
      */
-    public function __construct($file, $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern, $file_pattern) {
+    public function __construct($file, $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern = '', $file_pattern ='', $islocal = true) {
 
+        $this->islocal = $islocal;
         $this->filename = $file;
         $this->encoding = $encoding ?: Config::get('site_charset');
 
@@ -71,65 +73,71 @@ class vainfo {
         }
         $this->_pathinfo['extension'] = strtolower($this->_pathinfo['extension']);
 
-        // Initialize getID3 engine
-        $this->_getID3 = new getID3();
+        if ($this->islocal) {
+            // Initialize getID3 engine
+            $this->_getID3 = new getID3();
 
-        $this->_getID3->option_md5_data = false;
-        $this->_getID3->option_md5_data_source = false;
-        $this->_getID3->option_tags_html = false;
-        $this->_getID3->option_extra_info = true;
-        $this->_getID3->option_tag_lyrics3 = true;
-        $this->_getID3->option_tags_process = true;
-        $this->_getID3->encoding = $this->encoding;
+            $this->_getID3->option_md5_data = false;
+            $this->_getID3->option_md5_data_source = false;
+            $this->_getID3->option_tags_html = false;
+            $this->_getID3->option_extra_info = true;
+            $this->_getID3->option_tag_lyrics3 = true;
+            $this->_getID3->option_tags_process = true;
+            $this->_getID3->encoding = $this->encoding;
 
-        // get id3tag encoding (try to work around off-spec id3v1 tags)
-        try {
-            $this->_raw = $this->_getID3->analyze($file);
-        }
-        catch (Exception $error) {
-            debug_event('getID3', "Broken file detected: $file: " . $error->message, 1);
-            $this->_broken = true;
-            return false;
-        }
-
-        if (Config::get('mb_detect_order')) {
-            $mb_order = Config::get('mb_detect_order');
-        }
-        elseif (function_exists('mb_detect_order')) {
-            $mb_order = implode(", ", mb_detect_order());
-        }
-        else {
-            $mb_order = "auto";
-        }
-
-        $test_tags = array('artist', 'album', 'genre', 'title');
-
-        if ($encoding_id3v1) {
-            $this->encoding_id3v1 = $encoding_id3v1;
-        }
-        else {
-            foreach ($test_tags as $tag) {
-                if ($value = $this->_raw['id3v1'][$tag]) {
-                    $tags[$tag] = $value;
-                } 
+            // get id3tag encoding (try to work around off-spec id3v1 tags)
+            try {
+                $this->_raw = $this->_getID3->analyze($file);
+            }
+            catch (Exception $error) {
+                debug_event('getID3', "Broken file detected: $file: " . $error->message, 1);
+                $this->_broken = true;
+                return false;
             }
 
-            $this->encoding_id3v1 = self::_detect_encoding($tags, $mb_order);
-        }
+            if (Config::get('mb_detect_order')) {
+                $mb_order = Config::get('mb_detect_order');
+            }
+            elseif (function_exists('mb_detect_order')) {
+                $mb_order = implode(", ", mb_detect_order());
+            }
+            else {
+                $mb_order = "auto";
+            }
 
-        if (Config::get('getid3_detect_id3v2_encoding')) {
-            // The user has told us to be moronic, so let's do that thing
-            foreach ($test_tags as $tag) {
-                if ($value = $this->_raw['id3v2']['comments'][$tag]) {
-                    $tags[$tag] = $value;
+            $test_tags = array('artist', 'album', 'genre', 'title');
+
+            if ($encoding_id3v1) {
+                $this->encoding_id3v1 = $encoding_id3v1;
+            }
+            else {
+                foreach ($test_tags as $tag) {
+                    if ($value = $this->_raw['id3v1'][$tag]) {
+                        $tags[$tag] = $value;
+                    } 
                 }
+
+                $this->encoding_id3v1 = self::_detect_encoding($tags, $mb_order);
             }
 
-            $this->encoding_id3v2 = self::_detect_encoding($tags, $mb_order);
-            $this->_getID3->encoding_id3v2 = $this->encoding_id3v2;
-        }
+            if (Config::get('getid3_detect_id3v2_encoding')) {
+                // The user has told us to be moronic, so let's do that thing
+                foreach ($test_tags as $tag) {
+                    if ($value = $this->_raw['id3v2']['comments'][$tag]) {
+                        $tags[$tag] = $value;
+                    }
+                }
 
-        $this->_getID3->encoding_id3v1 = $this->encoding_id3v1;
+                $this->encoding_id3v2 = self::_detect_encoding($tags, $mb_order);
+                $this->_getID3->encoding_id3v2 = $this->encoding_id3v2;
+            }
+
+            $this->_getID3->encoding_id3v1 = $this->encoding_id3v1;
+        }
+    }
+    
+    public function forceSize($size) {
+        $this->_forcedSize = $size;
     }
 
     /**
@@ -180,11 +188,13 @@ class vainfo {
             return true;
         }
 
-        try {
-            $this->_raw = $this->_getID3->analyze($this->filename);
-        }
-        catch (Exception $error) {
-            debug_event('getID2', 'Unable to catalog file: ' . $error->message, 1);
+        if ($this->islocal) {
+            try {
+                $this->_raw = $this->_getID3->analyze($this->filename);
+            }
+            catch (Exception $error) {
+                debug_event('getID2', 'Unable to catalog file: ' . $error->message, 1);
+            }
         }
 
         /* Figure out what type of file we are dealing with */
@@ -196,7 +206,7 @@ class vainfo {
             $this->tags['filename'] = $this->_parse_filename($this->filename);
         }
 
-        if (in_array('getID3', $enabled_sources)) {
+        if (in_array('getID3', $enabled_sources) && $this->islocal) {
             $this->tags['getID3'] = $this->_get_tags();
         }
 
@@ -460,10 +470,10 @@ class vainfo {
         $parsed['bitrate'] = $tags['audio']['bitrate'];
         $parsed['channels'] = intval($tags['audio']['channels']);
         $parsed['rate'] = intval($tags['audio']['sample_rate']);
-        $parsed['size'] = intval($tags['filesize']);
+        $parsed['size'] = $this->_forcedSize ?: intval($tags['filesize']);
         $parsed['encoding'] = $tags['encoding'];
         $parsed['mime'] = $tags['mime_type'];
-        $parsed['time'] = $tags['playtime_seconds'];
+        $parsed['time'] = ($this->_forcedSize ? ((($this->_forcedSize - $tags['avdataoffset']) * 8) / $tags['bitrate']) : $tags['playtime_seconds']);
         $parsed['video_codec'] = $tags['video']['fourcc'];
         $parsed['audio_codec'] = $tags['audio']['dataformat'];
         $parsed['resolution_x'] = $tags['video']['resolution_x'];
@@ -725,6 +735,7 @@ class vainfo {
      */
     private function _parse_filename($filename) {
 
+        $origin = $filename;
         $results = array();
 
         // Correctly detect the slash we need to use here
@@ -738,6 +749,13 @@ class vainfo {
         // Combine the patterns
         $pattern = preg_quote($this->_dir_pattern) . $slash_type . preg_quote($this->_file_pattern);
         
+        // Remove first left directories from filename to match pattern
+        $cntslash = substr_count($pattern, $slash_type) + 1;
+        $filepart = explode($slash_type, $filename);
+        if (count($filepart) > $cntslash) {
+            $filename = implode($slash_type, array_slice($filepart, count($filepart) - $cntslash));
+        }
+
         // Pull out the pattern codes into an array
         preg_match_all('/\%\w/', $pattern, $elements);
 
@@ -764,7 +782,9 @@ class vainfo {
         }
 
         $results['title'] = $results['title'] ?: basename($filename);
-        $results['size'] = filesize($filename);
+        if ($this->islocal) {
+            $results['size'] = filesize($origin);
+        }
 
         return $results;
     }

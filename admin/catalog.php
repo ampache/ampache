@@ -47,7 +47,7 @@ switch ($_REQUEST['action']) {
         if ($_REQUEST['catalogs'] ) {
             foreach ($_REQUEST['catalogs'] as $catalog_id) {
                 $catalog = Catalog::create_from_id($catalog_id);
-                $catalog->add_to_catalog();
+                $catalog->add_to_catalog($_POST);
             }
         }
         $url = Config::get('web_path') . '/admin/catalog.php';
@@ -180,7 +180,7 @@ switch ($_REQUEST['action']) {
         if ($_POST['add_path'] != '/' AND strlen($_POST['add_path'])) {
             if ($catalog_id = Catalog_local::get_from_path($_POST['add_path'])) {
                 $catalog = Catalog::create_from_id($catalog_id);
-                $catalog->run_add(array('subdirectory'=>$_POST['add_path']));
+                $catalog->add_to_catalog(array('subdirectory'=>$_POST['add_path']));
             }
         } // end if add
 
@@ -226,7 +226,7 @@ switch ($_REQUEST['action']) {
             $catalog = Catalog::create_from_id($catalog_id);
 
             // Run our initial add
-            $catalog->run_add($_POST);
+            $catalog->add_to_catalog($_POST);
 
             UI::show_box_top(T_('Catalog Created'), 'box box_catalog_created');
             echo "<h2>" .  T_('Catalog Created') . "</h2>";

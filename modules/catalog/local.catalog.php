@@ -61,6 +61,16 @@ class Catalog_local extends Catalog {
         return $this->type;  
 
     } // get_type
+    
+    /**
+     * get_create_help
+     * This returns hints on catalog creation
+     */
+    public function get_create_help() { 
+
+        return "";
+
+    } // get_create_help
 
     /**
      * is_installed
@@ -91,19 +101,6 @@ class Catalog_local extends Catalog {
         return true; 
 
     } // install
-
-    /**
-     * uninstall
-     * This removes the local catalog 
-     */
-    public function uninstall() {
-
-        $sql = "DROP TABLE `catalog_local`"; 
-        $db_results = Dba::query($sql); 
-
-        return true; 
-
-    } // uninstall
     
     public function catalog_fields() {
 
@@ -210,42 +207,6 @@ class Catalog_local extends Catalog {
     }
 
     /**
-     * run_add
-     *
-     * This runs the add to catalog function
-     * it includes the javascript refresh stuff and then starts rolling
-     * throught the path for this catalog
-     */
-    public function run_add($options) {
-        // Prevent the script from timing out
-        set_time_limit(0);
-
-        $start_time = time();
-
-        require Config::get('prefix') . '/templates/show_adds_catalog.inc.php';
-        flush();
-
-        $this->add_files($this->path, $options);
-
-        // If they have checked the box then go ahead and gather the art
-        if ($options['gather_art']) {
-            $catalog_id = $this->id;
-            require Config::get('prefix') . '/templates/show_gather_art.inc.php';
-            flush();
-            $this->gather_art();
-        }
-
-        // Handle m3u-ness
-        if ($options['parse_m3u'] AND count($this->_playlists)) {
-            foreach ($this->_playlists as $playlist_file) {
-                $result = $this->import_m3u($playlist_file);
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * add_files
      *
      * Recurses through $this->path and pulls out all mp3s and returns the
@@ -336,24 +297,9 @@ class Catalog_local extends Catalog {
                 continue;
             } //it's a directory
 
-            /* If it's not a dir let's roll with it
-             * next we need to build the pattern that we will use
-             * to detect if it's an audio file
-             */
-            $pattern = "/\.(" . Config::get('catalog_file_pattern');
-            if ($options['parse_m3u']) {
-                $pattern .= "|m3u)$/i";
-            }
-            else {
-                $pattern .= ")$/i";
-            }
-
-            $is_audio_file = preg_match($pattern,$file);
-
-            // Define the Video file pattern
+            $is_audio_file = Catalog::is_audio_file($file);
             if (!$is_audio_file AND Config::get('catalog_video_pattern')) {
-                $video_pattern = "/\.(" . Config::get('catalog_video_pattern') . ")$/i";
-                $is_video_file = preg_match($video_pattern,$file);
+                $is_video_file = Catalog::is_video_file($file);
             }
 
             /* see if this is a valid audio file or playlist file */
@@ -431,8 +377,15 @@ class Catalog_local extends Catalog {
      * this function adds new files to an
      * existing catalog
      */
-    public function add_to_catalog() {
+    public function add_to_catalog($options = null) {
 
+        if ($options == null) {
+            $options = array(
+                'gather_art' => true,
+                'parse_m3u' => true
+            );
+        }
+    
         require Config::get('prefix') . '/templates/show_adds_catalog.inc.php';
         flush();
 
@@ -447,27 +400,27 @@ class Catalog_local extends Catalog {
         set_time_limit(0);
 
         /* Get the songs and then insert them into the db */
-        $this->add_files($this->path,$type,0,$verbose);
+        $this->add_files($this->path, $options);
 
-        // Foreach Playlists we found
-        foreach ($this->_playlists as $full_file) {
-            $result = $this->import_m3u($full_file);
-            if ($result['success']) {
-                $file = basename($full_file);
-                if ($verbose) {
-                    echo "&nbsp;&nbsp;&nbsp;" . T_('Added Playlist From') . " $file . . . .<br />\n";
-                    flush();
-                }
-            } // end if import worked
-        } // end foreach playlist files
+        if ($options['parse_m3u'] && count($this->_playlists)) {
+            // Foreach Playlists we found
+            foreach ($this->_playlists as $full_file) {
+                $result = $this->import_m3u($full_file);
+                if ($result['success']) {
+                    $file = basename($full_file);
+                } // end if import worked
+            } // end foreach playlist files
+        }
 
         /* Do a little stats mojo here */
         $current_time = time();
 
-        $catalog_id = $this->id;
-        require Config::get('prefix') . '/templates/show_gather_art.inc.php';
-        flush();
-        $this->gather_art();
+        if ($options['gather_art']) {
+            $catalog_id = $this->id;
+            require Config::get('prefix') . '/templates/show_gather_art.inc.php';
+            flush();
+            $this->gather_art();
+        }
 
         /* Update the Catalog last_update */
         $this->update_last_add();

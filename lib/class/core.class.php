@@ -47,20 +47,23 @@ class Core {
      * more than we need.
      */
     public static function autoload($class) {
-        $file = Config::get('prefix') . '/lib/class/' .
-            strtolower($class) . '.class.php';
+        // Ignore class with namespace, not used by Ampache
+        if (strpos($class, '\\') === false) {
+            $file = Config::get('prefix') . '/lib/class/' .
+                strtolower($class) . '.class.php';
 
-        if (Core::is_readable($file)) {
-            require_once $file;
+            if (Core::is_readable($file)) {
+                require_once $file;
 
-            // Call _auto_init if it exists
-            $autocall = array($class, '_auto_init');
-            if (is_callable($autocall)) {
-                call_user_func($autocall);
+                // Call _auto_init if it exists
+                $autocall = array($class, '_auto_init');
+                if (is_callable($autocall)) {
+                    call_user_func($autocall);
+                }
             }
-        }
-        else {
-            debug_event('autoload', "'$class' not found!", 1);
+            else {
+                debug_event('autoload', "'$class' not found!", 1);
+            }
         }
     }
 
