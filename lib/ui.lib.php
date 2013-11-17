@@ -189,7 +189,7 @@ function show_preference_box($preferences)
 function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
 {
     // Generate key to use for HTML element ID
-    public static $id_cnt;
+    static $id_cnt;
     if ($song_id) {
         $key = "album_select_$song_id";
     } else {
@@ -230,7 +230,7 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
 function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id=0)
 {
     // Generate key to use for HTML element ID
-    public static $id_cnt;
+    static $id_cnt;
     if ($song_id) {
         $key = "artist_select_$song_id";
     } else {

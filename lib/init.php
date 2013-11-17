@@ -57,7 +57,7 @@ if (!check_php()) {
 }
 
 // Do the redirect if we can't continue
-if ($link) {
+if (!empty($link)) {
     header ("Location: $link");
     exit();
 }
@@ -66,13 +66,13 @@ if ($link) {
 $results['version']        = '3.6-alpha6+FUTURE';
 $results['int_config_version']    = '12';
 
-if ($results['force_ssl']) {
+if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
 }
 
 $results['raw_web_path'] = $results['web_path'];
 $results['web_path'] = $http_type . $_SERVER['HTTP_HOST'] . $results['web_path'];
-$results['http_port'] = $results['http_port'] ?: $http_port;
+$results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
 $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
 $results['raw_web_path'] = $results['raw_web_path'] ?: '/';
 $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
