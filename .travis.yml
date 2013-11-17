@@ -8,6 +8,10 @@ php:
 before_install:
  - wget http://cs.sensiolabs.org/get/php-cs-fixer.phar
 
+before_script:
+ - chmod +x scripts/tests/syntax.sh
+ - chmod +x scripts/tests/codestyle.sh
+ 
 script:
  - scripts/tests/syntax.sh
  - scripts/tests/codestyle.sh
