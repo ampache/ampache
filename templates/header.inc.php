@@ -64,7 +64,7 @@ function forceIframe() {
 <body <?php echo (Config::get('iframes')) ? "onLoad='forceIframe();'" : ""; ?>>
 <!-- rfc3514 implementation -->
 <div id="rfc3514" style="display:none;">0x0</div>
-<div id="dialog_tag_item" class="default_hidden"><span><?php echo T_('Enter tag:')?></span><br /><input type="text" id="dialog_tag_item_tag_name"/></div>
+<div id="dialog_tag_item" style="display:none;" class="default_hidden"><span><?php echo T_('Enter tag:')?></span><br /><input type="text" id="dialog_tag_item_tag_name"/></div>
 <div id="maincontainer">
     <div id="header"><!-- This is the header -->
         <h1 id="headerlogo">
