@@ -363,7 +363,8 @@ class Catalog_dropbox extends Catalog
                 if ($metadata == null) {
                     debug_event('dropbox_catalog', 'Cannot get Dropbox file: ' . $file, 5);
                 }
-                $file = stream_get_meta_data($fpchunk)['uri'];
+                $streammeta = stream_get_meta_data($fpchunk);
+                $file = $streammeta['uri'];
                 $islocal = true;
             }
 

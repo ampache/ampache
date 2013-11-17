@@ -18,7 +18,8 @@ choosing a suitable method for doing so.
 Recommended Version
 -------------------
 
-Currently, the recommended version is [git HEAD](https://github.com/ampache/ampache/archive/master.tar.gz).
+Currently, the recommended version is [git HEAD](https://github.com/ampache-doped/ampache/archive/master.tar.gz).
+[![Build Status](https://api.travis-ci.org/ampache-doped/ampache.png?branch=master)](https://travis-ci.org/ampache-doped/ampache)
 
 Requirements
 ------------
@@ -44,7 +45,7 @@ receives the most testing:
 Installation
 ------------
 
-Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
+Please see [the wiki](https://github.com/ampache-doped/ampache/wiki/Installation)
 
 Upgrading
 ---------
@@ -124,8 +125,8 @@ Contact Us
 Hate it? Love it? Let us know. Also let us know if you think of any
 more features, encounter bugs, etc.
 
-* [Public Repository](http://github.com/ampache)
+* [Public Repository](http://github.com/ampache-doped)
 * IRC: chat.freenode.net #ampache
-* [Issue Tracker](https://github.com/ampache/ampache/issues)
-* [Documentation](https://github.com/ampache/ampache/wiki)
+* [Issue Tracker](https://github.com/ampache-doped/ampache/issues)
+* [Documentation](https://github.com/ampache-doped/ampache/wiki)
 
