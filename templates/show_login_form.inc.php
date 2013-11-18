@@ -41,9 +41,24 @@ is_rtl(Config::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
 <script type="text/javascript" language="javascript">
 function focus(){ document.login.username.focus(); }
 </script>
+<?php
+// If iframes, we check in javascript that parent container doesn't exist, otherwise we redirect to the page without frame.
+if (Config::get('iframes')) {
+?>
+<script language="javascript" type="text/javascript">
+function forceNoframe()
+{
+    if (self != top) {
+        parent.location = document.location;
+    }
+}
+</script>
+<?php
+}
+?>
 </head>
 
-<body id="loginPage" onload="focus();">
+<body id="loginPage" onload="focus();<?php echo (Config::get('iframes')) ? "forceNoframe();" : ""; ?>">
 <div id="maincontainer">
     <div id="header"><!-- This is the header -->
         <h1 id="headerlogo">
