@@ -203,9 +203,9 @@ class Stream
 
         // Ensure that this client only has a single row
         $sql = 'REPLACE INTO `now_playing` ' .
-            '(`id`,`object_id`,`object_type`, `user`, `expire`) ' .
-            'VALUES (?, ?, ?, ?, ?)';
-        $db_result = Dba::write($sql, array($sid, $oid, $type, $uid, $time));
+            '(`id`,`object_id`,`object_type`, `user`, `expire`, `insertion`) ' .
+            'VALUES (?, ?, ?, ?, ?, ?)';
+        $db_result = Dba::write($sql, array($sid, $oid, $type, $uid, $time, time()));
     }
 
      /**
@@ -233,8 +233,10 @@ class Stream
             'LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` ';
         if (Config::get('now_playing_per_user')) {
             $sql .= 'GROUP BY `now_playing`.`user` ';
+            $sql .= 'ORDER BY `now_playing`.`insertion` DESC';            
+        } else {
+            $sql .= 'ORDER BY `now_playing`.`expire` DESC';
         }
-        $sql .= 'ORDER BY `now_playing`.`expire` DESC';
         $db_results = Dba::read($sql);
 
         $results = array();

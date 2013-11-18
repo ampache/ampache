@@ -165,6 +165,7 @@ function create_preference_input($name,$value)
         case 'iframes':
         case 'now_playing_per_user':
         case 'show_played_times':
+        case 'song_page_title':
             if ($value == '1') { $is_true = "selected=\"selected\""; } else { $is_false = "selected=\"selected\""; }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";

@@ -168,6 +168,16 @@ if ($iframed) {
             if (index == current) {
                 $('.playing_title').text(obj.title);
                 $('.playing_artist').text(obj.artist);
+<?php
+if (Config::get('song_page_title')) {
+    if ($iframed) {
+        echo "window.parent.document";
+    } else {
+        echo "document";
+    }
+    echo ".title = obj.title + ' - ' + obj.artist + ' | " . addslashes(Config::get('site_title')) . "';";
+}
+?>                
             }
         });
     });
