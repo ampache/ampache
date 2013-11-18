@@ -386,7 +386,7 @@ class Catalog_local extends Catalog
                 'parse_m3u' => true
             );
         }
-        
+
         $this->count = 0;
 
         require Config::get('prefix') . '/templates/show_adds_catalog.inc.php';
