@@ -177,7 +177,7 @@ if (Config::get('song_page_title')) {
     }
     echo ".title = obj.title + ' - ' + obj.artist + ' | " . addslashes(Config::get('site_title')) . "';";
 }
-?>                
+?>
             }
         });
     });
