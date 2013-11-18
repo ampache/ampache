@@ -49,7 +49,13 @@ if (Config::get('use_rss')) { ?>
 <body style="height: 100%;">
 <div id="wrap">
     <div id="maindiv" style="width:100%; height: 100%;">
-        <iframe id="frame_main" class="frame_main_full" src="<?php echo $web_path; ?>/index.php?framed=1"></iframe>
+        <iframe id="frame_main" class="frame_main_full" src="<?php
+if (isset($_GET['target_link'])) {
+    echo $_GET['target_link'];
+} else {
+    echo $web_path . "/index.php?framed=1";
+}
+?>"></iframe>
     </div>
     <iframe id="frame_footer" class="frame_footer_hide" src="" sandbox="allow-top-navigation allow-scripts allow-same-origin"></iframe>
 </div>
