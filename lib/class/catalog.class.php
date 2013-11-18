@@ -39,15 +39,15 @@ abstract class Catalog extends database_object
     public $catalog_type;
 
     /* This is a private var that's used during catalog builds */
-    private $_playlists = array();
+    protected $_playlists = array();
 
     // Cache all files in catalog for quick lookup during add
-    private $_filecache = array();
+    protected $_filecache = array();
 
     // Used in functions
-    private static $albums    = array();
-    private static $artists    = array();
-    private static $tags    = array();
+    protected static $albums    = array();
+    protected static $artists    = array();
+    protected static $tags    = array();
 
     abstract public function get_type();
     abstract public function get_description();
