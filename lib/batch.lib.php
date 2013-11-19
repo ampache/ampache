@@ -39,12 +39,17 @@ function get_song_files($media_ids)
             $media = new Song($element);
         }
         if ($media->enabled) {
-                    $total_size += sprintf("%.2f",($media->size/1048576));
-                    array_push($media_files, $media->file);
+            $total_size += sprintf("%.2f",($media->size/1048576));
+            $media->format();
+            $dirname = $media->f_album_full;
+            if (!array_key_exists($dirname, $media_files)) {
+                $media_files[$dirname] = array();
+            }
+            array_push($media_files[$dirname], $media->file);
         }
-        }
+    }
 
-        return array($media_files,$total_size);
+    return array($media_files, $total_size);
 } //get_song_files
 
 /**
@@ -86,7 +91,9 @@ function send_zip( $name, $song_files )
         );
 
         $arc->set_options( $options );
-        $arc->add_files( $song_files );
+        foreach ($song_files as $dir => $files) {
+            $arc->add_files( $files, $dir );
+        }
 
     if (count($arc->error)) {
         debug_event('archive',"Error: unable to add songs",'3');
