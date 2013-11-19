@@ -103,20 +103,34 @@ foreach ($playlist->urls as $item) {
     if ($urlinfo['id']) {
         $song = new Song($urlinfo['id']);
         $ftype = $song->type;
-    }
 
-    // Check transcode is required
-    $transcode = false;
-    if ($type != $ftype) {
-        $transcode_cfg = Config::get('transcode');
-        $valid_types = Song::get_stream_types_for_type($ftype);
-        if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
-            $transcode = true;
-            $url .= '&transcode_to=' . $type; // &content_length=required
+        // Check transcode is required
+        $transcode = false;
+        if ($type != $ftype) {
+            $transcode_cfg = Config::get('transcode');
+            $valid_types = Song::get_stream_types_for_type($ftype);
+            if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
+                // Transcode only if excepted type available
+                $transcode_settings = $song->get_transcode_settings($type);
+                if ($transcode_settings) {
+                    $transcode = true;
+                } else {
+                    if (!in_array('native', $valid_types)) {
+                        $transcode_settings = $song->get_transcode_settings(null);
+                        if ($transcode_settings) {
+                            $type = $transcode_settings['format'];
+                            $transcode = true;
+                        }
+                    }
+                }
+                if ($transcode) {
+                    $url .= '&content_length=required&transcode_to=' . $type; // &content_length=required
+                }
+            }
         }
     }
     if (!$transcode) {
-        // Transcode not available for this type, keep real type and hope for flash fallback
+        // Transcode not available for this song, keep real type and hope for flash fallback
         $type = $ftype;
     }
 

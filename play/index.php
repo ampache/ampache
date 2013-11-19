@@ -339,7 +339,7 @@ if ($transcode) {
     if (get_class($media) == 'Song' && $_REQUEST['content_length'] == 'required') {
         $max_bitrate = Stream::get_allowed_bitrate($media);
         if ($media->time > 0 && $max_bitrate > 0) {
-            $stream_size = $media->time * $max_bitrate * 1000;
+            $stream_size = ($media->time * $max_bitrate * 1000) / 8;
         } else {
             debug_event('play', 'Bad media duration / Max bitrate. Content-length calculation skipped.', 5);
             $stream_size = null;
