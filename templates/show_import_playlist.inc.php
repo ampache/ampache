@@ -24,14 +24,14 @@
 <form method="post" name="import_playlist" action="<?php echo Config::get('web_path'); ?>/playlist.php" enctype="multipart/form-data">
 <table cellpadding="0" cellspacing="0">
 <tr>
-        <td>
+    <td>
         <?php echo T_('Filename'); ?>:
     </td>
     <td><input type="file" name="filename" value="<?php echo scrub_out($_REQUEST['filename']); ?>" size="45" /></td>
 </tr>
 <tr>
     <td>
-        <?php echo T_('Playlist Type'); ?>
+        <?php echo T_('Playlist Type'); ?>:
     </td>
     <td>
         <select name="playlist_type">

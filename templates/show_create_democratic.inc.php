@@ -33,7 +33,7 @@ UI::show_box_top(T_('Configure Democratic Playlist')); ?>
 </tr>
 <tr>
     <td><?php echo T_('Cooldown Time'); ?></td>
-    <td><input type="text" size="4" maxlength="6" name="cooldown" value="<?php echo $democratic->cooldown; ?>" /><?php echo T_('minutes'); ?></td>
+    <td><input type="text" size="4" maxlength="6" name="cooldown" value="<?php echo $democratic->cooldown; ?>" />&nbsp;(<?php echo T_('minutes'); ?>)</td>
 </tr>
 <!--
 <tr>
