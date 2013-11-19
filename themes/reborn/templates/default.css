@@ -190,7 +190,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 /***********************************************
-           Wrappers                           
+           Main                         
 ***********************************************/
 #maincontainer {
 	width:100%;
@@ -203,6 +203,18 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 	width: auto;
     z-index: 5;
 	margin: 15px 270px 0px 0px;
+}
+
+#ajax-loading {
+	position: fixed;
+    top: 63px;
+    left: 6px;
+    font-size: 12px;
+	text-align: center;
+	width: 120px;
+	color: #ff9d00;
+	background: url(../images/ajax-loader.gif) no-repeat 2px;
+	display: none;
 }
 
 /***********************************************
@@ -330,9 +342,10 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #headerlogo {
-    width: 254px;
-    height: 254px;
-    background-image: url('../images/login-logo.png');
+    width: 256px;
+    height: 256px;
+    background: url('../images/login-logo.png') no-repeat center;
+    background-size: contain;
     margin: auto;
 }
 
@@ -436,7 +449,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #sidebar {
     float: left;
 	width: 150px;
-    z-index: 8;
+    /*z-index: 8;*/
     margin: 20px auto auto 5px;
     padding: 10px;
     -webkit-border-radius: 2px;
@@ -559,8 +572,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 	width: 200px;
 	margin: 20px 20px auto auto;
     max-height: 85%;
-    overflow-x: hidden;
-    overflow-y: auto;
     padding: 10px;
     background-color: rgba(0,0,0,0.15);
     -webkit-border-radius: 2px;
@@ -576,7 +587,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -ms-box-sizing: border-box;
     box-sizing: border-box;
     color: #fff;
-    z-index: 3;
+    z-index: 0;
+    overflow-y: auto;
 }
 
 #rightbar #rb_action {
@@ -631,43 +643,39 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #rightbar .submenu {
 	display: none;
-	position: absolute;
-	left: -30px;
-	top: 35px;
-	background: #fff;
+	position: fixed;
+    top: 120px;
+    right: 70px;
+	background-color: #222;
 	border: 2px solid silver;
 	width: 120px;
 	padding: 0.6em;
     font-size: 12px;
-    z-index: 9999999;
+    z-index: 99;
+    overflow: hidden;
 }
 
 #rightbar #rb_action .submenu li {
     margin: 0;
 }
 
-* html #rightbar .submenu {
-	right:100px;
-    z-index: 9999999;
-}
-
 #rightbar .submenu a {
 	display: block;
-	border-bottom:1px dotted #ddd;
-	color:#5b5b5b;
-	text-decoration:none;
-	text-align:left;
-	padding:0.4em;
+	border-bottom: 1px dotted #ddd;
+	color: #eee;
+	text-decoration: none;
+	text-align: left;
+	padding: 0.4em;
     width: 100%;
 }
 
 #rightbar .submenu a:hover {
-	color:#333;
+	color: #ff9d00;
+    cursor: pointer;
 }
 
-/* Rightbar Localplay Controls */
 #rightbar #localplay-control {
-	padding-left:5px;
+	padding-left: 5px;
 }
 
 #rightbar #localplay-control {
@@ -686,7 +694,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Content                            
 ***********************************************/
 #content {
-    z-index: 0;
+    z-index: 3;
     -webkit-transition: top .5s;
     -moz-transition: top .5s;
     -ms-transition: top .5s;
@@ -710,28 +718,11 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -ms-box-sizing: border-box;
     box-sizing: border-box;
     color: #fff;
-    z-index: 3;
     padding: 20px;
 }
 
 #browse_content {
     margin-bottom: 20px;
-}
-
-#ajax-loading {
-	position:absolute;
-	background:#444;
-	text-align:center;
-	width:90px;
-	top:0;
-	color:#bbb;
-	margin:0 auto;
-	padding: 3px 1px 3px 10px;
-	border: 2px solid #333;
-	border-top: 0px;
-	border-left: 0px;
-	background: #444 url(../images/ajax-loader.gif) no-repeat 2px;
-	display: none;
 }
 
 .list-header, .list-header a {
@@ -822,7 +813,8 @@ table.tabledata tbody .odd {
 }
 
 table.tabledata tbody .cel_add {
-    min-width: 20px;
+    min-width: 40px;
+    width: 40px !important;
 }
 
 table.tabledata tbody .cel_artist {
@@ -1183,7 +1175,7 @@ span.fatalerror {
     left:0;
     text-indent:-1000em;
     height:15px;
-    line-height:15px;
+    line-height:15px;  
     outline:none;
     overflow:hidden;
     border:none;
@@ -1246,30 +1238,10 @@ dl.song_details dd {
 }
 
 /***********************************************
-        Server settings                                
-***********************************************/
-table.tabledata .cel_php_setting, table.tabledata .cel_configuration, .cel_preference {
-    width: 200px;
-}
-
-/***********************************************
         Import playlist                               
 ***********************************************/
-
 div.box-content  td {
     width: 200px;
-}
-
-/************************************************/
-/*             HTML5 Player                     */
-/************************************************/
-#html5_player #playlist {
-	overflow-x: hidden;
-	overflow-y: scroll;
-	top: 85px;
-	left: 210px;
-	right: 5px;
-	bottom: 5px;
 }
 
 /***********************************************
