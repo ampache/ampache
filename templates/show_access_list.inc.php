@@ -46,7 +46,7 @@
 <?php Ajax::start_container('browse_content'); ?>
 <?php if (count($list)) { ?>
 <table cellspacing="1" cellpadding="3" class="tabledata">
-<tr class="table-data">
+<tr class="th-top">
     <th><?php echo T_('Name'); ?></th>
     <th><?php echo T_('Start Address'); ?></th>
     <th><?php echo T_('End Address'); ?></th>

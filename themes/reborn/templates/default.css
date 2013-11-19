@@ -87,7 +87,7 @@ table {
 a {
 	color: #ff9d00;
     text-decoration: none;
-    cursor: auto;
+    cursor: pointer;
 }
 
 a:hover {
@@ -113,8 +113,8 @@ input, button, textarea {
 }
 
 input[type=password], input[type=text] {
-    height: 32px;
     line-height: normal;
+    height: 23px;
 }
 
 input[type=password], input[type=text], textarea {
@@ -366,6 +366,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -ms-box-sizing: border-box;
     box-sizing: border-box;
     border-radius: 7px;
+    height: 32px;
 }
 
 #loginPage #loginbox #usernamefield input:focus , #loginPage #loginbox #passwordfield input:focus {
@@ -537,7 +538,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 	border-radius: 2px;
 	padding: 4px;
 	width: 130px;
-    height: 23px;
 }
 
 #sidebar-tabs #catalog_select {
@@ -714,6 +714,10 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     padding: 20px;
 }
 
+#browse_content {
+    margin-bottom: 20px;
+}
+
 #ajax-loading {
 	position:absolute;
 	background:#444;
@@ -751,6 +755,7 @@ table.tabledata {
 	/*border:1px solid #bbb;*/
     font-size: 14px;
     color: #eee;
+    margin-bottom: 20px;
 }
 
 table.tabledata a {
@@ -817,7 +822,7 @@ table.tabledata tbody .odd {
 }
 
 table.tabledata tbody .cel_add {
-    width: 20px;
+    min-width: 20px;
 }
 
 table.tabledata tbody .cel_artist {
@@ -852,25 +857,23 @@ table.tabledata tbody .cel_cover img:hover {
 
 .box_preferences h4 {
 	font-size: 15px;
-	background: #555;
-	color: #eee;
-	font-weight: 400;
-	border: 1px solid #333;
-	padding: 5px;
+    margin-bottom: 10px;
+}
+
+div.box.box_current_configuration {
+    margin-top: 20px;
 }
 
 /***********************************************
            Content (info-box)                 
 ***********************************************/
-#content .info-box h3
-{
+#content .info-box h3 {
 	margin-top:10px;
 }
 
-#content .info-box .box-content div.star-rating
-{
-	width:150px;
-	max-width:150px;
+#content .info-box .box-content div.star-rating {
+	width: 150px;
+	max-width: 150px;
 }
 
 /* Random album (homepage) */
@@ -879,8 +882,8 @@ table.tabledata tbody .cel_cover img:hover {
 }
 
 #random_selection .random_album {
-	float:left;
-	width:125px;
+	float: left;
+	width: 125px;
     margin-bottom: 10px;
     text-align: center;
 }
@@ -905,25 +908,32 @@ table.tabledata tbody .cel_cover img:hover {
     margin: 0px;
 }
 
-#random_selection .random_album .star-rating
-{
+#random_selection .random_album .star-rating {
     float: left;
 }
 
-#random_selection .random_album .play_album
-{
+#random_selection .random_album .play_album {
     float: left;
     margin-left: 7px;
 }
 
-#random_selection .random_album .play_album a img
-{
+#random_selection .random_album .play_album a img {
     border: 0px;
 }
 
-#random_selection .box-bottom
-{
+#random_selection .box-bottom {
 	clear:left;
+}
+
+tr#search_item_count td, tr#search_length td, tr#search_size_limit td, tr#search_max_results td {
+    width: 150px;
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap
+}
+
+div.box.box_rules {
+    margin: 30px 0 30px 0;
 }
 
 /***********************************************
@@ -1064,20 +1074,17 @@ span.fatalerror {
     max-width: 200px;
 }
 
-.inline-edit  input {
-    height: 23px;
-}
-
 /***********************************************
     Content (information-actions)      
 ***********************************************/
 #information_actions {
-	margin-top:10px;
-	width:300px;
+	margin: 20px 0 10px 0;
+    width: 300px;
+    font-size: 12px;
 }
 
-#information_actions h3 {
-     /* only showing up in album view, so strange..bug*/
+#content .info-box {
+    margin-bottom: 30px;
 }
 
 #content .info-box .box-content .album_art {
@@ -1101,13 +1108,36 @@ span.fatalerror {
     margin: 0px;
 }
 
-#information_actions ul li {
-	border-bottom:1px solid #ccc;
-	padding:3px 0;
+#information_actions ul li{
+	/*border-bottom:1px solid #ccc;*/
+    color: #999;
+    border-radius: 4px;
+    -webkit-transition: color .1s;
+    -moz-transition: color .1s;
+    -ms-transition: color .1s;
+    -o-transition: color .1s;
+    transition: color .1s;
+}
+
+#information_actions h3 {
+    font-size: 13px;
+}
+
+#information_actions a {
+    margin-right: 5px;
+    color: #999;
+}
+
+#information_actions input {
+    margin: 0px 5px 0 2px;
+}
+
+#information_actions a:hover, #information_actions li:hover {
+    color: #fff;/*#ffc466;*/
 }
 
 #information_actions .star-rating li {
-	padding:0;
+	padding: 0;
 }
 
 #information_actions li img {
@@ -1186,13 +1216,8 @@ span.fatalerror {
 /***********************************************
         Content (Track view)                                
 ***********************************************/
-dl.song_details {
-    padding: 0.5em;
-}
-
-dl.song_details dd {
-    margin: 0 0 0 95px;
-    padding: 0 0 0.5em 0;
+.song_details {
+    margin-top: 20px;
 }
 
 dl.song_details dt {
@@ -1200,13 +1225,16 @@ dl.song_details dt {
     clear: left;
     width: 200px;
     text-align: right;
-    font-weight: bold;
     color: #c60;
-    margin-right: 20px;
+}
+
+dl.song_details dd {
+    margin: 10px 0 10px 250px;
+    height: 24px;
 }
 
 /***********************************************
-        Footer                                
+        Footer                                 
 ***********************************************/
 #footer {
 	text-align:right;
@@ -1221,6 +1249,14 @@ dl.song_details dt {
         Server settings                                
 ***********************************************/
 table.tabledata .cel_php_setting, table.tabledata .cel_configuration, .cel_preference {
+    width: 200px;
+}
+
+/***********************************************
+        Import playlist                               
+***********************************************/
+
+div.box-content  td {
     width: 200px;
 }
 
@@ -1239,6 +1275,6 @@ table.tabledata .cel_php_setting, table.tabledata .cel_configuration, .cel_prefe
 /***********************************************
         Other                                
 ***********************************************/
-ol,ul,#rightbar ul {
+ol, ul, #rightbar ul {
 	list-style:none;
 }

@@ -38,11 +38,13 @@ if (Config::get('ratings')) {
 <li>
     <?php if ($object_type == 'album') { ?>
     <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
-    <?php echo UI::get_icon('view', T_("Show All Songs By %s")); ?>
+    <?php echo UI::get_icon('view', T_("Show All Songs By %s")); ?></a>
+    <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
     <?php printf(T_("Show All Songs By %s"), $artist->f_name); ?></a>
     <?php } else { ?>
     <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
-    <?php echo UI::get_icon('view', T_("Show Albums By %s")); ?>
+    <?php echo UI::get_icon('view', T_("Show Albums By %s")); ?></a>
+    <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
     <?php printf(T_("Show Albums By %s"), $artist->f_name); ?></a>
     <?php } ?>
 </li>

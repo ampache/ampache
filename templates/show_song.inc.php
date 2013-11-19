@@ -25,12 +25,19 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 ?>
 <?php UI::show_box_top($song->title . ' ' . T_('Details'), 'box box_song_details'); ?>
 <dl class="song_details">
+
 <?php if (Config::get('ratings')) { ?>
-<dt class="<?php echo UI::flip_class(); ?>"><?php echo T_('Rating'); ?></dt>
-<dd><div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></div></dd>
+    <?php $rowparity = UI::flip_class(); ?>
+    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
+    <dd class="<?php echo $rowparity; ?>">
+        <div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?>
+        </div>
+    </dd>
 <?php } ?>
+
+<?php $rowparity = UI::flip_class(); ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
-    <dd class="<?php echo UI::flip_class(); ?>">
+    <dd class="<?php echo $rowparity; ?>">
         <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'add_song_' . $song->id); ?>
         <?php if (Access::check_function('download')) { ?>
             <a href="<?php echo Song::play_url($song->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
