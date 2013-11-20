@@ -63,7 +63,7 @@ function forceIframe()
 ?>
 <script type="text/javascript" charset="utf-8">
   $(document).ready(function(){
-    $("a[rel^='prettyPhoto']").prettyPhoto();
+    $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
   });
 </script>
 </head>
