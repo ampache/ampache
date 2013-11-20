@@ -939,11 +939,11 @@ div.box.box_rules {
 ***********************************************/
 #now_playing {
     margin-bottom: 20px;
-    width: 430px;
+    width: auto;
 }
 
 #now_playing .np_group {
-    float: right;
+    float: left;
 }
 
 #now_playing .np_cell {
@@ -999,6 +999,15 @@ div.box.box_rules {
 
 #now_playing .cel_lyrics a:hover {
     color: #0099CC;
+}
+
+#now_playing .similars {
+    border-right: 1px solid;
+    border-left: 1px solid;
+    margin-right: 10px;
+    padding-right: 5px;
+    margin-left: 10px;
+    padding-left: 5px;
 }
 
 /***********************************************
