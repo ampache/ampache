@@ -58,7 +58,7 @@ class Ajax
         }
 
         $observe    = "<script type=\"text/javascript\">";
-        $observe    .= "$($source_txt).$method(function(e){" . $action . ";});";
+        $observe    .= "$($source_txt).on('$method', function(){" . $action . ";});";
         $observe    .= "</script>";
 
         return $observe;

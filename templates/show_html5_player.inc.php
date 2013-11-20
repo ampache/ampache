@@ -164,7 +164,7 @@ foreach ($playlist->urls as $item) {
             swfPath: "<?php echo Config::get('web_path'); ?>/modules/jplayer/",
             supplied: "<?php echo join(",", $jtypes); ?>",
             audioFullScreen: true,
-            solution: "html5, flash",
+            solution: "html, flash",
             size: {
 <?php
 if ($iframed) {
