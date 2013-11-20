@@ -74,7 +74,7 @@
   
   <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_artist">
       <label><?php echo T_('Tags'); ?></label>
-      <a href="#" id="tag_song_<?php echo $media->id?>" onclick="showAddTagSlideout('#dialog_tag_item_<?php echo $media->id?>')"><?php echo UI::get_icon('add', T_('Add')); ?></a>
+      <a href="#" id="tag_song_<?php echo $media->id?>" onclick="showAddTagSlideout('#dialog_tag_item_<?php echo $media->id?>')"><?php echo UI::get_icon('add_tag', T_('Add')); ?></a>
       <?php echo $media->f_tags; ?>
   </div>
   <div id="dialog_tag_item_<?php echo $media->id?>" style="display:none;" class="np_cell cel_artist">

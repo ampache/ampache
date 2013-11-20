@@ -32,7 +32,7 @@
 <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
 <td class="cel_album"><?php echo $song->f_album_link; ?></td>
 <td class="cel_tags">
-  <span id="tag_song_<?php echo $song->id?>" onclick="showAddTagSlideout('#dialog_tag_item_<?php echo $song->id?>')"><?php echo UI::get_icon('add', T_('Add')); ?></span><?php echo $song->f_tags; ?>
+  <span id="tag_song_<?php echo $song->id?>" onclick="showAddTagSlideout('#dialog_tag_item_<?php echo $song->id?>')"><?php echo UI::get_icon('add_tag', T_('Add')); ?></span><?php echo $song->f_tags; ?>
   <div id="dialog_tag_item_<?php echo $song->id?>" style="display:none;" class="np_cell cel_artist">
       <div><?php echo T_('Enter tag:')?></div>
       <div><input type="text" id="dialog_tag_item_tag_name_<?php echo $song->id?>"/></div>
