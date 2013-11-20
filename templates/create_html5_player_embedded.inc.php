@@ -25,13 +25,14 @@
 <head>
 <title><?php echo Config::get('site_title'); ?></title>
 <script language="javascript" type="text/javascript">
-function PlayerFrame(URL) {
+function PlayerFrame(URL)
+{
     var ff = parent.parent.document.getElementById('frame_footer');
     var maindiv = parent.parent.document.getElementById('maindiv');
     if (ff.getAttribute('className') != 'frame_footer_visible') {
         ff.setAttribute('className', 'frame_footer_visible');
         ff.setAttribute('class', 'frame_footer_visible');
-        
+
         maindiv.style.height = (parent.parent.innerHeight - 105) + "px";
     }
     ff.setAttribute('src', URL);

@@ -97,7 +97,7 @@ switch ($_REQUEST['action']) {
     case 'show_edit_object':
         // Set the default required level
         $level = '50';
-        
+
         switch ($_GET['type']) {
             case 'album_row':
                 $key = 'album_' . $_GET['id'];
@@ -170,7 +170,7 @@ switch ($_REQUEST['action']) {
                 $level = '25';
             }
         }
-        if ($_POST['type'] == 'smartplaylist_row' || 
+        if ($_POST['type'] == 'smartplaylist_row' ||
             $_POST['type'] == 'smartplaylist_title') {
             $playlist = new Search('song', $_POST['id']);
             if ($GLOBALS['user']->id == $playlist->user) {
@@ -299,7 +299,7 @@ switch ($_REQUEST['action']) {
                 exit;
             break;
         }
-        
+
         if (!Access::check('interface',$level)) {
             $results['rfc3514'] = '0x1';
             break;
@@ -422,5 +422,3 @@ switch ($_REQUEST['action']) {
 
 // Go ahead and do the echo
 echo xml_from_array($results);
-
-?>

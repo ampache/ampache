@@ -30,8 +30,8 @@
  * 1090017.
  */
 
-class Update {
-
+class Update
+{
     public $key;
     public $value;
     public static $versions; // array containing version information
@@ -41,8 +41,9 @@ class Update {
      *
      * This should never be called
      */
-    private function __construct() {
-        // static class 
+    private function __construct()
+    {
+        // static class
     }
 
     /**
@@ -52,8 +53,8 @@ class Update {
      * Because we may not have the update_info table we have to check
      * for its existence first.
      */
-    public static function get_version() {
-
+    public static function get_version()
+    {
         /* Make sure that update_info exits */
         $sql = "SHOW TABLES LIKE 'update_info'";
         $db_results = Dba::read($sql);
@@ -85,7 +86,8 @@ class Update {
      *
      * Make the version number pretty.
      */
-    public static function format_version($data) {
+    public static function format_version($data)
+    {
         $new_version =
             substr($data, 0, strlen($data) - 5) . '.' .
             substr($data, strlen($data) - 5, 1) . ' Build:' .
@@ -99,7 +101,8 @@ class Update {
      *
      * Checks to see if we need to update ampache at all.
      */
-    public static function need_update() {
+    public static function need_update()
+    {
         $current_version = self::get_version();
 
         if (!is_array(self::$versions)) {
@@ -114,15 +117,15 @@ class Update {
         }
 
         return false;
-    } 
+    }
 
     /**
      * populate_version
      * just sets an array the current differences
      * that require an update
      */
-    public static function populate_version() {
-
+    public static function populate_version()
+    {
         /* Define the array */
         $version = array();
 
@@ -267,7 +270,7 @@ class Update {
         $version[] = array('version' => '360006','description' => $update_string);
 
         $update_string = '- Verify remote_username and remote_password were added correctly to catalog table.<br />';
-        $version[] = array('version' => '360008','description' => $update_string); 
+        $version[] = array('version' => '360008','description' => $update_string);
 
         $update_string = '- Allow long sessionids in tmp_playlist table.<br />';
         $version[] = array('version' => '360009', 'description' => $update_string);
@@ -286,21 +289,27 @@ class Update {
 
         $update_string = '- Increase the length of sessionids again.<br />';
         $version[] = array('version' => '360014', 'description' => $update_string);
-        
+
         $update_string = '- Add iframes parameter to preferences.<br />';
         $version[] = array('version' => '360015', 'description' => $update_string);
-        
+
         $update_string = '- Optionally filter Now Playing to return only the last song per user.<br />';
         $version[] = array('version' => '360016', 'description' => $update_string);
 
         $update_string = '- Add user flags on objects.<br />';
         $version[] = array('version' => '360017', 'description' => $update_string);
-        
+
         $update_string = '- Add album default sort value to preferences.<br />';
         $version[] = array('version' => '360018', 'description' => $update_string);
-        
+
         $update_string = '- Add option to show number of times a song was played.<br />';
         $version[] = array('version' => '360019', 'description' => $update_string);
+
+        $update_string = '- Catalog types are plugins now.<br />';
+        $version[] = array('version' => '360020', 'description' => $update_string);
+
+        $update_string = '- Add insertion date on Now Playing and option to show the current song in page title for HTML5 player.<br />';
+        $version[] = array('version' => '360021', 'description' => $update_string);
 
         return $version;
 
@@ -312,8 +321,8 @@ class Update {
      * updates to the database. This will actually
      * echo out the list...
      */
-    public static function display_update() {
-
+    public static function display_update()
+    {
         $current_version = self::get_version();
         if (!is_array(self::$versions)) {
             self::$versions = self::populate_version();
@@ -330,8 +339,7 @@ class Update {
                 echo 'Version: ', self::format_version($update['version']);
                 if (defined('CLI')) {
                     echo "\n", str_replace('<br />', "\n", $update['description']), "\n";
-                }
-                else {
+                } else {
                     echo '</b><br />', $update['description'], "<br /></li>\n";
                 }
             } // if newer
@@ -344,9 +352,8 @@ class Update {
             if (!defined('CLI')) { echo '<p align="center">'; }
             echo T_('No updates needed.');
             if (!defined('CLI')) {
-                echo '[<a href="', Config::get('web_path'), '">Return</a>]</p>'; 
-            }
-            else {
+                echo '[<a href="', Config::get('web_path'), '">Return</a>]</p>';
+            } else {
                 echo "\n";
             }
         }
@@ -359,8 +366,8 @@ class Update {
      * that need to be run. Checking to make sure
      * the function exists first.
      */
-    public static function run_update() {
-
+    public static function run_update()
+    {
         /* Nuke All Active session before we start the mojo */
         $sql = "TRUNCATE session";
         $db_results = Dba::write($sql);
@@ -398,8 +405,7 @@ class Update {
                     // If the update fails drop out
                     if ($success) {
                         self::set_version('db_version', $version['version']);
-                    }
-                    else {
+                    } else {
                         Error::display('update');
                         return false;
                     }
@@ -424,7 +430,8 @@ class Update {
      * This updates the 'update_info' which is used by the updater
      * and plugins
      */
-    private static function set_version($key, $value) {
+    private static function set_version($key, $value)
+    {
         $sql = "UPDATE update_info SET value='$value' WHERE `key`='$key'";
         Dba::write($sql);
     }
@@ -436,7 +443,8 @@ class Update {
      * minor changes to the song table in an attempt to reduce
      * the size of each row
      */
-    public static function update_340003() {
+    public static function update_340003()
+    {
         $retval = true;
         $sql = "ALTER TABLE `song` CHANGE `mode` `mode` ENUM( 'abr', 'vbr', 'cbr' ) NULL DEFAULT 'cbr'";
         $retval = Dba::write($sql) ? $retval : false;
@@ -524,7 +532,8 @@ class Update {
      * Update the session.id to varchar(64) to handle
      * newer configs
      */
-    public static function update_340004() {
+    public static function update_340004()
+    {
         $retval = true;
         /* Alter the session.id so that it's 64 */
         $sql = "ALTER TABLE `session` CHANGE `id` `id` VARCHAR( 64 ) NOT NULL";
@@ -577,7 +586,8 @@ class Update {
      * update_340005
      * This update fixes the preferences types
       */
-    public static function update_340005() {
+    public static function update_340005()
+    {
         $retval = true;
 
         $sql = "UPDATE `preference` SET `catagory`='playlist' WHERE `name`='random_method'";
@@ -601,7 +611,7 @@ class Update {
         $sql = "ALTER TABLE `tmp_playlist_data` ADD `object_type` VARCHAR( 32 ) NULL AFTER `tmp_playlist`";
         $retval = Dba::write($sql) ? $retval : false;
 
-        return $retval; 
+        return $retval;
     } // update_340005
 
     /**
@@ -609,7 +619,8 @@ class Update {
      * This just updates the size of the album_data table
      * and removes the random_method config option
      */
-    public static function update_340006() {
+    public static function update_340006()
+    {
         // No matter what remove that random method preference
         Dba::write("DELETE FROM `preference` WHERE `name`='random_method'");
         return true;
@@ -620,7 +631,8 @@ class Update {
      * This update converts the session.value to a longtext
      * and adds a session_stream table
      */
-    public static function update_340007() {
+    public static function update_340007()
+    {
         $retval = true;
         // Tweak the session table to handle larger session vars for my page-a-nation hotness
         $sql = "ALTER TABLE `session` CHANGE `value` `value` LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL";
@@ -641,7 +653,8 @@ class Update {
      * This modifies the playlist table to handle the different types of objects that it needs to be able to
      * store, and tweaks how dynamic playlist stuff works
      */
-    public static function update_340008() {
+    public static function update_340008()
+    {
         $retval = true;
         $sql = "ALTER TABLE `playlist_data` CHANGE `song` `object_id` INT( 11 ) UNSIGNED NULL DEFAULT NULL";
         $retval = Dba::write($sql) ? $retval : false;
@@ -679,7 +692,8 @@ class Update {
      * update_340009
      * This modifies the song table to handle pos fields
      */
-    public static function update_340009() {
+    public static function update_340009()
+    {
         $retval = true;
         $sql = "ALTER TABLE `album` ADD `disk` smallint(5) UNSIGNED DEFAULT NULL";
         $retval = Dba::write($sql) ? $retval : false;
@@ -707,7 +721,8 @@ class Update {
      * update_340010
      * Bunch of minor tweaks to the preference table
      */
-    public static function update_340010() {
+    public static function update_340010()
+    {
         $retval = true;
         $sql = "UPDATE `preference` SET `catagory`='options' WHERE `name` LIKE 'localplay_%'";
         $retval = Dba::write($sql) ? $retval : false;
@@ -732,7 +747,8 @@ class Update {
      * This update adds in the democratic stuff, checks for some potentially screwed up indexes
      * and removes the timestamp from the playlist, and adds the field to the catalog for the upload dir
      */
-    public static function update_340012() {
+    public static function update_340012()
+    {
         $retval = true;
         $sql = "ALTER TABLE `catalog` ADD `add_path` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER `path`";
         $retval = Dba::write($sql) ? $retval : false;
@@ -761,7 +777,8 @@ class Update {
      * This update removes a whole bunch of preferences that are no longer
      * being used in any way, and changes the ACL XML-RPC to just RPC
      */
-    public static function update_340013() {
+    public static function update_340013()
+    {
         $sql = "DELETE FROM `preference` WHERE `name`='localplay_mpd_hostname' OR `name`='localplay_mpd_port' " .
             "OR `name`='direct_link' OR `name`='localplay_mpd_password' OR `name`='catalog_echo_count'";
         $db_results = Dba::write($sql);
@@ -784,7 +801,8 @@ class Update {
      * at the same time it updates the core session table to handle the
      * additional stuff we're going to ask it to do.
      */
-    public static function update_340014() {
+    public static function update_340014()
+    {
         $retval = true;
         $sql = "DROP TABLE IF EXISTS `session_api`";
         $retval = Dba::write($sql) ? $retval : false;
@@ -808,7 +826,8 @@ class Update {
      * who say it doesn't work, unreproduceable. This also adds an index to the
      * album art table to try to make the random album art faster
      */
-    public static function update_340015() {
+    public static function update_340015()
+    {
         $retval = true;
         $sql = "ALTER TABLE `playlist` DROP `date`";
         $retval = Dba::write($sql) ? $retval : false;
@@ -848,7 +867,8 @@ class Update {
      * This adds in the base_playlist to the democratic table... should have
      * done this in the previous one but I screwed up... sigh.
      */
-    public static function update_340016() {
+    public static function update_340016()
+    {
         $sql = "ALTER TABLE `democratic` ADD `base_playlist` INT ( 11 ) UNSIGNED NOT NULL AFTER `name`";
         return Dba::write($sql);
     }
@@ -859,7 +879,8 @@ class Update {
      * This finalizes the democratic table.
      * And fixes the charset crap.
      */
-    public static function update_340017() {
+    public static function update_340017()
+    {
         $retval = true;
 
         $sql = "ALTER TABLE `tmp_playlist` DROP `base_playlist`";
@@ -882,7 +903,8 @@ class Update {
      *
      * It also adjusts the prefix fields so that we can use more prefixes,
      */
-    public static function update_350001() {
+    public static function update_350001()
+    {
         $retval = true;
         $sql = "ALTER TABLE `tag_map` ADD `tag_id` INT ( 11 ) UNSIGNED NOT NULL AFTER `id`";
         $retval = Dba::write($sql) ? $retval : false;
@@ -910,7 +932,8 @@ class Update {
      * we split them out into one serialized array per row, per person. A little
      * slow this way when browsing, but faster and more flexible when not.
      */
-    public static function update_350002() {
+    public static function update_350002()
+    {
         $retval = true;
 
         $sql = "ALTER TABLE `song` DROP `genre`";
@@ -933,7 +956,8 @@ class Update {
      * simplify things for the first little bit and then  if it all works out
      * we will worry about making it complex again. One thing at a time people...
      */
-    public static function update_350003() {
+    public static function update_350003()
+    {
         $retval = true;
 
         $sql = "ALTER TABLE `tag` DROP `order`";
@@ -958,7 +982,8 @@ class Update {
      * This update makes some changes to the ACL table so that it can support
      * IPv6 entries as well as some other feature enhancements.
      */
-    public static function update_350004() {
+    public static function update_350004()
+    {
         $retval = true;
 
         $sql = "ALTER TABLE `session` CHANGE `ip` `ip` VARBINARY( 255 ) NULL";
@@ -1061,7 +1086,8 @@ class Update {
      *
      * This update adds the video table... *gasp* no you didn't <head shake>
      */
-    public static function update_350005() {
+    public static function update_350005()
+    {
         $retval = true;
 
         $sql = " CREATE TABLE `video` (" .
@@ -1100,7 +1126,8 @@ class Update {
      *
      * This update inserts the Lyrics pref table...
      */
-    public static function update_350006() {
+    public static function update_350006()
+    {
         $sql = "INSERT INTO `preference` VALUES (69,'show_lyrics','0','Show Lyrics',0,'boolean','interface')";
         Dba::write($sql);
 
@@ -1116,7 +1143,8 @@ class Update {
      * This update adds in the random rules tables. Also increase the size of the
      * blobs on the album and artist data and add track to tmp_playlist_data
      */
-    public static function update_350007() {
+    public static function update_350007()
+    {
         $retval = true;
 
         // We need to clear the thumbs as they will need to be re-generated
@@ -1176,7 +1204,8 @@ class Update {
      * Add type to the now playing table so that we can handle different playing
      * information.
      */
-    public static function update_350008() {
+    public static function update_350008()
+    {
         $retval = true;
         $sql = "ALTER TABLE `now_playing` CHANGE `song_id` `object_id` INT( 11 ) UNSIGNED NOT NULL";
         $retval = Dba::write($sql) ? $retval : false;
@@ -1203,7 +1232,7 @@ class Update {
         $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;
-    } 
+    }
 
     /**
      * update_360001
@@ -1211,7 +1240,8 @@ class Update {
      * This adds the MB UUIDs to the different tables as well as some additional
      * cleanup.
      */
-    public static function update_360001() {
+    public static function update_360001()
+    {
         $retval = true;
 
         $sql = "ALTER TABLE `album` ADD `mbid` CHAR ( 36 ) AFTER `prefix`";
@@ -1239,7 +1269,8 @@ class Update {
      * This update makes changes to the cataloging to accomodate the new method
      * for syncing between Ampache instances.
      */
-    public static function update_360002() {
+    public static function update_360002()
+    {
         $retval = true;
         // Drop the key from catalog and ACL
         $sql = "ALTER TABLE `catalog` DROP `key`";
@@ -1294,7 +1325,8 @@ class Update {
      *
      * This update moves the image data to its own table.
      */
-    public static function update_360003() {
+    public static function update_360003()
+    {
         $sql = "CREATE TABLE `image` (" .
             "`id` int(11) unsigned NOT NULL auto_increment," .
             "`image` mediumblob NOT NULL," .
@@ -1314,12 +1346,12 @@ class Update {
                 "_data` WHERE `art` IS NOT NULL";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
-                $sql = "INSERT INTO `image` " . 
+                $sql = "INSERT INTO `image` " .
                     "(`image`, `mime`, `size`, " .
                     "`object_type`, `object_id`) " .
                     "VALUES('" . Dba::escape($row['art']) .
-                    "', '" . $row['art_mime'] . 
-                    "', 'original', '" . $type . "', '" . 
+                    "', '" . $row['art_mime'] .
+                    "', 'original', '" . $type . "', '" .
                     $row['object_id'] . "')";
                 $db_other_results = Dba::write($sql);
             }
@@ -1335,7 +1367,8 @@ class Update {
      *
      * This update creates an index on the rating table.
      */
-    public static function update_360004() {
+    public static function update_360004()
+    {
         $sql = "CREATE UNIQUE INDEX `unique_rating` ON `rating` (`user`, `object_type`, `object_id`)";
         return Dba::write($sql);
     }
@@ -1345,7 +1378,8 @@ class Update {
      *
      * This changes the tmp_browse table around.
      */
-    public static function update_360005() {
+    public static function update_360005()
+    {
         $retval = true;
 
         $sql = "DROP TABLE IF EXISTS `tmp_browse`";
@@ -1368,7 +1402,8 @@ class Update {
      *
      * This adds the table for newsearch/dynamic playlists
      */
-    public static function update_360006() {
+    public static function update_360006()
+    {
         $sql = "CREATE TABLE `search` (
         `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
         `user` int(11) NOT NULL,
@@ -1387,32 +1422,33 @@ class Update {
      * Fix bug that caused the remote_username/password fields to not be created.
      * FIXME: Huh?
      */
-    public static function update_360008() { 
+    public static function update_360008()
+    {
         $retval = true;
-        $remote_username = false; 
-        $remote_password = false; 
+        $remote_username = false;
+        $remote_password = false;
 
-        $sql = "DESCRIBE `catalog`"; 
-        $db_results = Dba::read($sql); 
+        $sql = "DESCRIBE `catalog`";
+        $db_results = Dba::read($sql);
 
-        while ($row = Dba::fetch_assoc($db_results)) { 
-            if ($row['Field'] == 'remote_username') { 
-                $remote_username = true; 
-            } 
-            if ($row['Field'] == 'remote_password') { 
-                $remote_password = true; 
-            } 
-        } // end while 
+        while ($row = Dba::fetch_assoc($db_results)) {
+            if ($row['Field'] == 'remote_username') {
+                $remote_username = true;
+            }
+            if ($row['Field'] == 'remote_password') {
+                $remote_password = true;
+            }
+        } // end while
 
-        if (!$remote_username) { 
+        if (!$remote_username) {
             // Add in Username / Password for catalog - to be used for remote catalogs
             $sql = "ALTER TABLE `catalog` ADD `remote_username` VARCHAR ( 255 ) AFTER `catalog_type`";
             $retval = Dba::write($sql) ? $retval : false;
         }
-        if (!$remote_password) { 
+        if (!$remote_password) {
             $sql = "ALTER TABLE `catalog` ADD `remote_password` VARCHAR ( 255 ) AFTER `remote_username`";
             $retval = Dba::write($sql) ? $retval : false;
-        } 
+        }
 
         return $retval;
     }
@@ -1423,7 +1459,8 @@ class Update {
      * The main session table was already updated to use varchar(64) for the ID,
      * tmp_playlist needs the same change
      */
-    public static function update_360009() {
+    public static function update_360009()
+    {
         $sql = "ALTER TABLE `tmp_playlist` CHANGE `session` `session` VARCHAR(64)";
         return Dba::write($sql);
     }
@@ -1431,10 +1468,11 @@ class Update {
     /**
      * update_360010
      *
-     * MBz NGS means collaborations have more than one MBID (the ones 
+     * MBz NGS means collaborations have more than one MBID (the ones
      * belonging to the underlying artists).  We need a bigger column.
      */
-    public static function update_360010() {
+    public static function update_360010()
+    {
         $sql = 'ALTER TABLE `artist` CHANGE `mbid` `mbid` VARCHAR(1369)';
         return Dba::write($sql);
     }
@@ -1445,7 +1483,8 @@ class Update {
      * We need a place to store actual playlist data for downloadable
      * playlist files.
      */
-    public static function update_360011() {
+    public static function update_360011()
+    {
         $sql = 'CREATE TABLE `stream_playlist` (' .
             '`id` int(11) unsigned NOT NULL AUTO_INCREMENT,' .
             '`sid` varchar(64) NOT NULL,' .
@@ -1466,7 +1505,8 @@ class Update {
      *
      * Drop the enum on session.type
      */
-    public static function update_360012() {
+    public static function update_360012()
+    {
         return Dba::write('ALTER TABLE `session` CHANGE `type` `type` VARCHAR(16) DEFAULT NULL');
     }
 
@@ -1475,7 +1515,8 @@ class Update {
      *
      * MyISAM works better out of the box for the stream_playlist table
      */
-    public static function update_360013() {
+    public static function update_360013()
+    {
         return Dba::write('ALTER TABLE `stream_playlist` ENGINE=MyISAM');
     }
 
@@ -1484,7 +1525,8 @@ class Update {
      *
      * PHP session IDs are an ever-growing beast.
      */
-    public static function update_360014() {
+    public static function update_360014()
+    {
         $retval = true;
 
         $retval = Dba::write('ALTER TABLE `stream_playlist` CHANGE `sid` `sid` VARCHAR(256)') ? $retval : false;
@@ -1493,17 +1535,18 @@ class Update {
 
         return $retval;
     }
-    
+
     /**
      * update_360015
      *
      * This inserts the Iframes preference...
      */
-    public static function update_360015() {
+    public static function update_360015()
+    {
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('iframes','0','Iframes',25,'boolean','interface')";
         Dba::write($sql);
-        
+
         $id = Dba::insert_id();
 
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
@@ -1517,11 +1560,12 @@ class Update {
      *
      * Add Now Playing filtered per user preference option
      */
-    public static function update_360016() {
+    public static function update_360016()
+    {
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('now_playing_per_user','0','Now playing filtered per user',50,'boolean','interface')";
         Dba::write($sql);
-        
+
         $id = Dba::insert_id();
 
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
@@ -1535,7 +1579,8 @@ class Update {
      *
      * New table to store user flags.
      */
-    public static function update_360017() {
+    public static function update_360017()
+    {
         $sql = "CREATE TABLE `user_flag` (" .
             "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
             "`user` int(11) NOT NULL," .
@@ -1553,11 +1598,12 @@ class Update {
      *
      * This inserts the Album default sort preference...
      */
-    public static function update_360018() {
+    public static function update_360018()
+    {
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('album_sort','0','Album Default Sort',25,'string','interface')";
         Dba::write($sql);
-        
+
         $id = Dba::insert_id();
 
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
@@ -1565,17 +1611,18 @@ class Update {
 
         return true;
     }
-    
+
     /**
      * update_360019
      *
      * Add Show number of times a song was played preference
      */
-    public static function update_360019() {
+    public static function update_360019()
+    {
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('show_played_times','0','Show # played',25,'string','interface')";
         Dba::write($sql);
-        
+
         $id = Dba::insert_id();
 
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
@@ -1583,5 +1630,69 @@ class Update {
 
         return true;
     }
+
+    /**
+     * update_360020
+     *
+     * Catalog types are plugins now
+     */
+    public static function update_360020()
+    {
+        $sql = "SELECT `id`, `catalog_type`, `path`, `remote_username`, `remote_password` FROM `catalog`";
+        $db_results = Dba::read($sql);
+
+        $c = Catalog::create_catalog_type('local');
+        $c->install();
+        $c = Catalog::create_catalog_type('remote');
+        $c->install();
+
+        while ($results = Dba::fetch_assoc($db_results)) {
+            if ($results['catalog_type'] == 'local') {
+                $sql = "INSERT INTO `catalog_local` (`path`, `catalog_id`) VALUES (?, ?)";
+                Dba::write($sql, array($results['path'], $results['id']));
+            } elseif ($results['catalog_type'] == 'remote') {
+                $sql = "INSERT INTO `catalog_remote` (`uri`, `username`, `password`, `catalog_id`) VALUES (?, ?, ?, ?)";
+                Dba::write($sql, array($results['path'], $results['remote_username'], $results['remote_password'], $results['id']));
+            }
+        }
+
+        $sql = "ALTER TABLE `catalog` DROP `path`, DROP `remote_username`, DROP `remote_password`";
+        $retval = Dba::write($sql);
+
+        $sql = "ALTER TABLE `catalog` MODIFY COLUMN `catalog_type` varchar(128)";
+        $retval = Dba::write($sql);
+
+        $sql = "UPDATE `artist` SET `mbid` = null WHERE `mbid` = ''";
+        Dba::write($sql);
+
+        $sql = "UPDATE `album` SET `mbid` = null WHERE `mbid` = ''";
+        Dba::write($sql);
+
+        $sql = "UPDATE `song` SET `mbid` = null WHERE `mbid` = ''";
+        Dba::write($sql);
+
+        return true;
+    }
+
+    /**
+     * update_360021
+     *
+     * Add insertion date on Now Playing and option to show the current song in page title for HTML5 player
+     */
+    public static function update_360021()
+    {
+        $sql = "ALTER TABLE `now_playing` ADD `insertion` INT (11) AFTER `expire`";
+        Dba::write($sql);
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('song_page_title','0','Show current song in HTML5 player page title',25,'string','interface')";
+        $retval = Dba::write($sql);
+
+        $id = Dba::insert_id();
+
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $retval = Dba::write($sql, array($id));
+
+        return $retval;
+    }
 }
-?>

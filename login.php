@@ -61,28 +61,24 @@ if (($_POST['username'] && $_POST['password']) ||
         $auth['info']['username']    = 'Admin - DEMO';
         $auth['info']['fullname']    = 'Administrative User';
         $auth['info']['offset_limit']    = 25;
-    }
-    else {
+    } else {
         if ($_POST['username'] && $_POST['password']) {
             $username = scrub_in($_POST['username']);
             $password = $_POST['password'];
-        }
-        else {
+        } else {
             if ($_SERVER['REMOTE_USER']) {
                 $username = $_SERVER['REMOTE_USER'];
-            }
-            elseif ($_SERVER['HTTP_REMOTE_USER']) {
+            } elseif ($_SERVER['HTTP_REMOTE_USER']) {
                 $username = $_SERVER['HTTP_REMOTE_USER'];
             }
             $password = '';
         }
 
         $auth = Auth::login($username, $password);
-        
+
         if ($auth['success']) {
             $username = $auth['username'];
-        }
-        else {
+        } else {
             debug_event('Login', scrub_out($username) . ' attempted to login and failed', '1');
             Error::add('general', T_('Error Username or Password incorrect, please try again'));
         }
@@ -107,18 +103,17 @@ if (($_POST['username'] && $_POST['password']) ||
             ! $user->username) {
             /* This is run if we want to autocreate users who don't
             exist (useful for non-mysql auth) */
-            $access    = Config::get('auto_user') 
-                ? User::access_name_to_level(Config::get('auto_user')) 
+            $access    = Config::get('auto_user')
+                ? User::access_name_to_level(Config::get('auto_user'))
                 : '5';
             $name    = $auth['name'];
             $email    = $auth['email'];
 
             /* Attempt to create the user */
-            if (User::create($username, $name, $email, 
+            if (User::create($username, $name, $email,
                 hash('sha256', mt_rand()), $access)) {
                 $user = User::get_from_username($username);
-            }
-            else {
+            } else {
                 $auth['success'] = false;
                 Error::add('general', T_('Unable to create local account'));
             }
@@ -148,7 +143,7 @@ if ($auth['success']) {
         $user->insert_ip_history();
     }
 
-    /* Make sure they are actually trying to get to this site and don't try 
+    /* Make sure they are actually trying to get to this site and don't try
      * to redirect them back into an admin section
      */
     $web_path = Config::get('web_path');
@@ -168,5 +163,3 @@ if ($auth['success']) {
 } // auth success
 
 require Config::get('prefix') . '/templates/show_login_form.inc.php';
-
-?>

@@ -48,12 +48,13 @@ if (Config::get('use_rss')) { ?>
 <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <?php
 // If iframes, we check in javascript that parent container exist, otherwise we redirect to index. Otherwise HTML5 iframed Player will look broken.
-if (Config::get('iframes')) {
+if (Config::get('iframes') && $_SERVER['REQUEST_METHOD'] != 'POST') {
 ?>
 <script language="javascript" type="text/javascript">
-function forceIframe() {
+function forceIframe()
+{
     if (self == top) {
-        document.location = '<?php echo $web_path; ?>';
+        document.location = '<?php echo $web_path; ?>?target_link=' + encodeURIComponent(document.location);
     }
 }
 </script>
@@ -64,7 +65,6 @@ function forceIframe() {
 <body <?php echo (Config::get('iframes')) ? "onLoad='forceIframe();'" : ""; ?>>
 <!-- rfc3514 implementation -->
 <div id="rfc3514" style="display:none;">0x0</div>
-<div id="dialog_tag_item" style="display:none;" class="default_hidden"><span><?php echo T_('Enter tag:')?></span><br /><input type="text" id="dialog_tag_item_tag_name"/></div>
 <div id="maincontainer">
     <div id="header"><!-- This is the header -->
         <h1 id="headerlogo">

@@ -62,4 +62,3 @@ $web_path = Config::get('web_path');
     </a>
 </li>
 </ul>
-

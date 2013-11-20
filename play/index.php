@@ -89,8 +89,7 @@ if (make_bool($GLOBALS['user']->disabled)) {
 if (Config::get('require_session')) {
     if (!Config::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
         debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
-    }
-    else if(!Session::exists('stream', $sid)) {
+    } else if (!Session::exists('stream', $sid)) {
         debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
             header('HTTP/1.1 403 Session Expired');
         exit;
@@ -150,8 +149,7 @@ if ($demo_id) {
     if (!$democratic->cooldown) {
         /* This takes into account votes etc and removes the */
         $oid = $democratic->get_next_object();
-    }
-    else {
+    } else {
         // Pull history
         $oid = $democratic->get_next_object($song_cool_check);
         $oids = $democratic->get_cool_songs();
@@ -172,8 +170,7 @@ if ($random) {
         $oid = Random::get_single_song($_REQUEST['random_type']);
         // Save this one in case we do a seek
         $_SESSION['random']['last'] = $oid;
-    }
-    else {
+    } else {
         $oid = $_SESSION['random']['last'];
     }
 } // if random
@@ -182,14 +179,13 @@ if ($type == 'song') {
     /* Base Checks passed create the song object */
     $media = new Song($oid);
     $media->format();
-}
-else {
+} else {
     $media = new Video($oid);
     $media->format();
 }
 
 // Build up the catalog for our current object
-$catalog = new Catalog($media->catalog);
+$catalog = Catalog::create_from_id($media->catalog);
 
 /* If the song is disabled */
 if (!make_bool($media->enabled)) {
@@ -206,26 +202,12 @@ if (Config::get('lock_songs')) {
     }
 }
 
-if ($catalog->catalog_type == 'remote') {
-    $remote_handle = $catalog->connect();
-
-    // If we don't get anything back we failed and should bail now
-    if (!$remote_handle) {
-        debug_event('play', 'Connection to remote server failed', 1);
-        exit;
-    }
-
-    $handshake = $remote_handle->info();
-    $url = $media->file . '&ssid=' . $handshake['auth'];
-
-    header('Location: ' . $url);
-    debug_event('play', 'Started remote stream - ' . $url, 5);
-
-    // Handle democratic removal 
+$media = $catalog->prepare_media($media);
+if ($media == null) {
+    // Handle democratic removal
     if ($demo_id) {
         $democratic->delete_from_oid($oid, 'song');
     }
-
     exit;
 }
 
@@ -282,8 +264,7 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
             flush();
             sleep(1);
         }
-    }
-    else {
+    } else {
         fpassthru($fp);
     }
 
@@ -324,24 +305,19 @@ if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
     if ($transcode_to) {
         $transcode = true;
         debug_event('play', 'Transcoding due to explicit request for ' . $transcode_to, 5);
-    }
-    else if ($transcode_cfg == 'always') {
+    } else if ($transcode_cfg == 'always') {
         $transcode = true;
         debug_event('play', 'Transcoding due to always', 5);
-    }
-    else if ($force_downsample) {
+    } else if ($force_downsample) {
         $transcode = true;
         debug_event('play', 'Transcoding due to downsample_remote', 5);
-    }
-    else if (!in_array('native', $valid_types)) {
+    } else if (!in_array('native', $valid_types)) {
         $transcode = true;
         debug_event('play', 'Transcoding because native streaming is unavailable', 5);
-    }
-    else {
+    } else {
         debug_event('play', 'Decided not to transcode', 5);
     }
-}
-else if ($transcode_to) {
+} else if ($transcode_to) {
     debug_event('play', 'Transcoding is impossible but we received an explicit request for ' . $transcode_to, 2);
 }
 
@@ -349,12 +325,10 @@ if ($transcode) {
     $transcoder = Stream::start_transcode($media, $transcode_to);
     $fp = $transcoder['handle'];
     $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
-}
-else if (!in_array('native', $valid_types)) {
+} else if (!in_array('native', $valid_types)) {
     debug_event('play', 'Not transcoding and native streaming is not supported, aborting', 2);
     exit();
-}
-else {
+} else {
     $fp = fopen($media->file, 'rb');
 }
 
@@ -365,7 +339,7 @@ if ($transcode) {
     if (get_class($media) == 'Song' && $_REQUEST['content_length'] == 'required') {
         $max_bitrate = Stream::get_allowed_bitrate($media);
         if ($media->time > 0 && $max_bitrate > 0) {
-            $stream_size = $media->time * $max_bitrate * 1000;
+            $stream_size = ($media->time * $max_bitrate * 1000) / 8;
         } else {
             debug_event('play', 'Bad media duration / Max bitrate. Content-length calculation skipped.', 5);
             $stream_size = null;
@@ -373,8 +347,7 @@ if ($transcode) {
     } else {
         $stream_size = null;
     }
-}
-else {
+} else {
     $stream_size = $media->size;
 }
 
@@ -392,23 +365,21 @@ if (get_class($media) == 'Song') {
 
 sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d", $start, $end);
 
-if ($start > 0 || $end > 0 ) {
+if ($start > 0 || $end > 0) {
     // Calculate stream size from byte range
     if (isset($end)) {
         $end = min($end, $media->size - 1);
         $stream_size = ($end - $start) + 1;
-    }
-    else {
+    } else {
         $stream_size = $media->size - $start;
     }
 
     if ($stream_size == null) {
         debug_event('play', 'Content-Range header received, which we cannot fulfill due to unknown final length (transcoding?)', 2);
-    }
-    else {
-        if($transcoding) {
+    } else {
+        if ($transcoding) {
             debug_event('play', 'We should transcode only for a calculated frame range, but not yet supported here.', 2);
-				$stream_size = null;
+                $stream_size = null;
         } else {
             debug_event('play', 'Content-Range header received, skipping ' . $start . ' bytes out of ' . $media->size, 5);
             fseek($fp, $start);
@@ -418,8 +389,7 @@ if ($start > 0 || $end > 0 ) {
             header('Content-Range: bytes ' . $range);
         }
     }
-}
-else {
+} else {
     debug_event('play','Starting stream of ' . $media->file . ' with size ' . $media->size, 5);
 }
 
@@ -429,7 +399,7 @@ if ($transcode) {
     header('Accept-Ranges: bytes');
 }
 
-$mime = $transcode 
+$mime = $transcode
     ? $media->type_to_mime($transcoder['format'])
     : $media->mime;
 
@@ -449,7 +419,7 @@ do {
 
 $real_bytes_streamed = $bytes_streamed;
 // Need to make sure enough bytes were sent.
-if($bytes_streamed < $stream_size && (connection_status() == 0)) {
+if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
     print(str_repeat(' ', $stream_size - $bytes_streamed));
     $bytes_streamed = $stream_size;
 }
@@ -459,27 +429,23 @@ $target = 131072;
 if ($stream_size) {
     if ($stream_size > 1048576) {
         $target = 262144;
-    }
-    else if ($stream_size < 360448) {
+    } else if ($stream_size < 360448) {
         $target = $stream_size / 1.1;
-    }
-    else {
+    } else {
         $target = $stream_size / 4;
     }
 }
 
 if ($start > $target) {
-    debug_event('play', 'Content-Range was more than ' . $target . ' into the file, not collecting stats', 5);
-}
-else if ($bytes_streamed > $target) {
+    debug_event('play', 'Content-Range was more than ' . $target . ' into the file ' . $media->file . ', not collecting stats', 5);
+} else if ($bytes_streamed > $target) {
     // FIXME: This check looks suspicious
     if (get_class($media) == 'Song') {
         debug_event('play', 'Registering stats for ' . $media->title, 5);
         $GLOBALS['user']->update_stats($media->id);
         $media->set_played();
     }
-}
-else {
+} else {
     debug_event('play', $bytes_streamed .' of ' . $stream_size . ' streamed; not collecting stats', 5);
 }
 
@@ -495,11 +461,8 @@ if ($transcode) {
     fclose($fp);
     proc_close($transcoder['process']);
     debug_event('transcode_cmd', $stderr, 5);
-}
-else {
+} else {
     fclose($fp);
 }
 
 debug_event('play', 'Stream ended at ' . $bytes_streamed . ' (' . $real_bytes_streamed . ') bytes out of ' . $stream_size, 5);
-
-?>

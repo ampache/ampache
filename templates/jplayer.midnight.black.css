@@ -92,7 +92,8 @@ div.jp-video-full div.jp-interface {
 
 div.jp-interface {
 	position: relative;
-	background: #191919 url("../modules/jplayer/jplayer.midnight.black.interface.png") repeat-x;
+	/*background: #191919 url("../modules/jplayer/jplayer.midnight.black.interface.png") repeat-x;*/
+    background-color: rgb(25, 25, 25);
 	width: 100%;
 }
 

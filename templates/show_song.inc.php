@@ -25,16 +25,27 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 ?>
 <?php UI::show_box_top($song->title . ' ' . T_('Details'), 'box box_song_details'); ?>
 <dl class="song_details">
+
 <?php if (Config::get('ratings')) { ?>
-<dt class="<?php echo UI::flip_class(); ?>"><?php echo T_('Rating'); ?></dt>
-<dd><div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></div></dd>
+    <?php $rowparity = UI::flip_class(); ?>
+    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
+    <dd class="<?php echo $rowparity; ?>">
+        <div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?>
+        </div>
+    </dd>
 <?php } ?>
+
 <?php if (Config::get('userflags')) { ?>
-<dt class="<?php echo UI::flip_class(); ?>"><?php echo T_('Flag'); ?></dt>
-<dd><div id="userflag_<?php echo $song->id; ?>_song"><?php Userflag::show($song->id,'song'); ?></div></dd>
+	<?php $rowparity = UI::flip_class(); ?>
+	<dt class="<?php echo $rowparity; ?>"><?php echo T_('Flag'); ?></dt>
+	<dd class="<?php echo $rowparity; ?>">
+		<div id="userflag_<?php echo $song->id; ?>_song"><?php Userflag::show($song->id,'song'); ?>
+		</div>
+	</dd>
 <?php } ?>
+<?php $rowparity = UI::flip_class(); ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
-    <dd class="<?php echo UI::flip_class(); ?>">
+    <dd class="<?php echo $rowparity; ?>">
         <?php if (Config::get('directplay')) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id, 'play', T_('Play song'),'play_song_' . $song->id); ?>
         <?php } ?>
@@ -71,14 +82,12 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     $songprops[gettext_noop('# Played')]   = scrub_out($song->object_cnt);
   }
 
-  foreach ($songprops as $key => $value)
-  {
-    if(trim($value))
-    {
-      $rowparity = UI::flip_class();
-      echo "<dt class=\"".$rowparity."\">" . T_($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
-    }
-  }
+	foreach ($songprops as $key => $value) {
+    	if (trim($value)) {
+      		$rowparity = UI::flip_class();
+      		echo "<dt class=\"".$rowparity."\">" . T_($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
+    	}
+  	}
 ?>
 </dl>
 <?php UI::show_box_bottom(); ?>

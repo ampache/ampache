@@ -123,4 +123,3 @@
 </div>
 </form>
 <?php UI::show_box_bottom(); ?>
-

@@ -64,16 +64,14 @@ $charset  = $_REQUEST['charset'];
 if (!$htmllang) {
     if ($_ENV['LANG']) {
         $lang = $_ENV['LANG'];
-    }
-    else {
+    } else {
         $lang = 'en_US';
     }
-    if(strpos($lang, '.')) {
+    if (strpos($lang, '.')) {
         $langtmp = explode('.', $lang);
         $htmllang = $langtmp[0];
         $charset = $langtmp[1];
-    }
-    else {
+    } else {
         $htmllang = $lang;
     }
 }
@@ -83,18 +81,18 @@ load_gettext();
 header ('Content-Type: text/html; charset=' . Config::get('site_charset'));
 
 // Correct potential \ or / in the dirname
-$safe_dirname = rtrim(dirname($_SERVER['PHP_SELF']),"/\\"); 
+$safe_dirname = rtrim(dirname($_SERVER['PHP_SELF']),"/\\");
 
 $web_path = $http_type . $_SERVER['HTTP_HOST'] . $safe_dirname;
 
-unset($safe_dirname); 
+unset($safe_dirname);
 
 switch ($_REQUEST['action']) {
     case 'create_db':
         if ($_POST['db_user'] == 'create_db_user') {
             $new_user = scrub_in($_POST['db_username']);
             $new_pass = $_POST['db_password'];
-        
+
             if (!strlen($new_user) || !strlen($new_pass)) {
                 Error::add('general', T_('Error: Ampache SQL Username or Password missing'));
                 require_once 'templates/show_install.inc.php';
@@ -155,5 +153,3 @@ switch ($_REQUEST['action']) {
         require_once 'templates/show_install_lang.inc.php';
     break;
 } // end action switch
-
-?>

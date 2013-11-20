@@ -123,9 +123,7 @@ switch ($_REQUEST['action']) {
             $_REQUEST['action'] = 'show_add_user';
             break;
         }
-        if ($access == 5){ $access = T_('Guest');}
-        elseif ($access == 25){ $access = T_('User');}
-        elseif ($access == 100){ $access = T_('Admin');}
+        if ($access == 5) { $access = T_('Guest');} elseif ($access == 25) { $access = T_('User');} elseif ($access == 100) { $access = T_('Admin');}
 
         /* HINT: %1 Username, %2 Access num */
         show_confirmation(T_('New User Added'),sprintf(T_('%1$s has been created with an access level of %2$s'), $username, $access), Config::get('web_path').'/admin/users.php');
@@ -139,8 +137,7 @@ switch ($_REQUEST['action']) {
         $client = new User($_REQUEST['user_id']);
         if ($client->disable()) {
             show_confirmation(T_('User Disabled'),$client->fullname . ' (' . $client->username . ')', Config::get('web_path'). '/admin/users.php');
-        }
-        else {
+        } else {
             show_confirmation(T_('Error'), T_('Unable to Disabled last Administrator'), Config::get('web_path').'/admin/users.php');
         }
     break;
@@ -158,8 +155,7 @@ switch ($_REQUEST['action']) {
         $client = new User($_REQUEST['user_id']);
         if ($client->delete()) {
             show_confirmation(T_('User Deleted'), sprintf(T_('%s has been Deleted'), $client->username), Config::get('web_path'). "/admin/users.php");
-        }
-        else {
+        } else {
             show_confirmation(T_('Delete Error'), T_("Unable to delete last Admin User"), Config::get('web_path')."/admin/users.php");
         }
     break;
@@ -175,10 +171,9 @@ switch ($_REQUEST['action']) {
         /* get the user and their history */
         $working_user    = new User($_REQUEST['user_id']);
 
-        if (!isset($_REQUEST['all'])){
+        if (!isset($_REQUEST['all'])) {
             $history    = $working_user->get_ip_history(0,1);
-        }
-        else {
+        } else {
             $history    = $working_user->get_ip_history();
         }
         require Config::get('prefix') . '/templates/show_ip_history.inc.php';
@@ -206,5 +201,3 @@ switch ($_REQUEST['action']) {
 
 /* Show the footer */
 UI::show_footer();
-
-?>

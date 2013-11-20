@@ -91,4 +91,3 @@ switch ($_REQUEST['action']) {
 } // end switch action
 
 UI::show_footer();
-?>

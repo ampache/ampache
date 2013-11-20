@@ -36,7 +36,7 @@ switch ($_REQUEST['action']) {
         // This may take a while
         set_time_limit(0);
 
-        $catalog = new Catalog($_REQUEST['export_catalog']);
+        $catalog = Catalog::create_from_id($_REQUEST['export_catalog']);
 
         // Clear everything we've done so far
         ob_end_clean();
@@ -51,7 +51,7 @@ switch ($_REQUEST['action']) {
 
         $date = date("d/m/Y",time());
 
-        switch($_REQUEST['export_format']) {
+        switch ($_REQUEST['export_format']) {
             case 'itunes':
                 header("Content-Type: application/itunes+xml; charset=utf-8");
                 header("Content-Disposition: attachment; filename=\"ampache-itunes-$date.xml\"");
@@ -74,4 +74,3 @@ switch ($_REQUEST['action']) {
 } // end switch on action
 
 UI::show_footer();
-?>

@@ -170,11 +170,21 @@ class archive {
 		unset ($this->exclude, $this->storeonly);
 	}
 
-	function add_files($list)
+	function add_files($list, $prepend = '')
 	{
+        // Change the preprend directory temporary
+        if (!empty($prepend)) {
+            $oldprepend = $this->options['prepend'];
+            $this->set_options(array('prepend' => $prepend));
+        }
 		$temp = $this->list_files($list);
 		foreach ($temp as $current)
 			$this->files[] = $current;
+        
+        // Restore previous prepend directory
+        if (isset($oldprepend)) {
+            $this->set_options(array('prepend' => $oldprepend));
+        }
 	}
 
 	function exclude_files($list)

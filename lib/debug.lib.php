@@ -20,7 +20,8 @@
  *
  */
 
-function check_php() {
+function check_php()
+{
     if (
         check_php_version() &&
         check_php_hash() &&
@@ -37,34 +38,41 @@ function check_php() {
     return false;
 }
 
-function check_php_version() {
+function check_php_version()
+{
     if (floatval(phpversion()) < 5.3) {
         return false;
     }
     return true;
 }
 
-function check_php_hash() {
+function check_php_hash()
+{
     return function_exists('hash_algos');
 }
 
-function check_php_hash_algo() {
+function check_php_hash_algo()
+{
     return function_exists('hash_algos') ? in_array('sha256', hash_algos()) : false;
 }
 
-function check_php_json() {
+function check_php_json()
+{
     return function_exists('json_encode');
 }
 
-function check_php_session() {
+function check_php_session()
+{
     return function_exists('session_set_save_handler');
 }
 
-function check_php_pdo() {
+function check_php_pdo()
+{
     return class_exists('PDO');
 }
 
-function check_php_pdo_mysql() {
+function check_php_pdo_mysql()
+{
     return class_exists('PDO') ? in_array('mysql', PDO::getAvailableDrivers()) : false;
 }
 
@@ -72,8 +80,8 @@ function check_php_pdo_mysql() {
  * check_config_values
  * checks to make sure that they have at least set the needed variables
  */
-function check_config_values($conf) {
-
+function check_config_values($conf)
+{
     if (!$conf['database_hostname']) {
         return false;
     }
@@ -114,8 +122,8 @@ function check_config_values($conf) {
  * recommended range, this doesn't take into account the size of your
  * catalog.
  */
-function check_php_memory() {
-
+function check_php_memory()
+{
     $current_memory = ini_get('memory_limit');
     $current_memory = substr($current_memory,0,strlen($current_memory)-1);
 
@@ -132,8 +140,8 @@ function check_php_memory() {
  * This checks to make sure that the php timelimit is set to some
  * semi-sane limit, IE greater then 60 seconds
  */
-function check_php_timelimit() {
-
+function check_php_timelimit()
+{
     $current = intval(ini_get('max_execution_time'));
     return ($current >= 60 || $current == 0);
 
@@ -143,7 +151,8 @@ function check_php_timelimit() {
  * check_safe_mode
  * Checks to make sure we aren't in safe mode
  */
-function check_php_safemode() {
+function check_php_safemode()
+{
     if (ini_get('safe_mode')) {
         return false;
     }
@@ -154,7 +163,8 @@ function check_php_safemode() {
  * check_override_memory
  * This checks to see if we can manually override the memory limit
  */
-function check_override_memory() {
+function check_override_memory()
+{
     /* Check memory */
     $current_memory = ini_get('memory_limit');
     $current_memory = substr($current_memory,0,strlen($current_memory)-1);
@@ -179,7 +189,8 @@ function check_override_memory() {
  * check_override_exec_time
  * This checks to see if we can manually override the max execution time
  */
-function check_override_exec_time() {
+function check_override_exec_time()
+{
     $current = ini_get('max_execution_time');
     set_time_limit($current+60);
 
@@ -194,10 +205,10 @@ function check_override_exec_time() {
  * check_config_writable
  * This checks whether we can write the config file
  */
-function check_config_writable() {
-
+function check_config_writable()
+{
     // file eixsts && is writable, or dir is writable
-    return ((file_exists(Config::get('prefix') . '/config/ampache.cfg.php') && is_writable(Config::get('prefix') . '/config/ampache.cfg.php')) 
+    return ((file_exists(Config::get('prefix') . '/config/ampache.cfg.php') && is_writable(Config::get('prefix') . '/config/ampache.cfg.php'))
         || (!file_exists(Config::get('prefix') . '/config/ampache.cfg.php') && is_writeable(Config::get('prefix') . '/config/')));
 }
 
@@ -206,7 +217,8 @@ function check_config_writable() {
  *
  * Convenience function to format the output.
  */
-function debug_result($status = false, $value = null, $comment = '') {
+function debug_result($status = false, $value = null, $comment = '')
+{
     $class = $status ? 'ok' : 'notok';
 
     if (!$value) {
@@ -216,4 +228,3 @@ function debug_result($status = false, $value = null, $comment = '') {
     return '[ <span class="' . $class . '">' . scrub_out($value) .
         '</span> <em>' . $comment . '</em> ]';
 }
-?>

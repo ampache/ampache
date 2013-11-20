@@ -45,18 +45,16 @@ Config::set('prefix', $prefix);
 spl_autoload_register(array('Core', 'autoload'), true, true);
 
 // Check to see if this is http or https
-if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' ) 
+if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' )
     || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')) {
     $http_type = 'https://';
-}
-else {
+} else {
     $http_type = 'http://';
 }
 
 if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
     $http_port = $_SERVER['HTTP_X_FORWARDED_PORT'];
-}
-else if (isset($_SERVER['SERVER_PORT'])) {
+} else if (isset($_SERVER['SERVER_PORT'])) {
     $http_port = $_SERVER['SERVER_PORT'];
 }
 if (!isset($http_port) || !$http_port) {
@@ -86,4 +84,3 @@ UI::flip_class(array('odd', 'even'));
 // Merge GET then POST into REQUEST effectively stripping COOKIE without
 // depending on a PHP setting change for the effect
 $_REQUEST = array_merge($_GET, $_POST);
-?>

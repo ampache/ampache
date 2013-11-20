@@ -77,4 +77,3 @@ Copyright (c) 2001 - 2009 Ampache.org <?php echo T_('Queries:'); ?><?php echo Db
 </div>
 </body>
 </html>
-

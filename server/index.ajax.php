@@ -32,8 +32,7 @@ switch ($_REQUEST['action']) {
             ob_start();
             require_once Config::get('prefix') . '/templates/show_random_albums.inc.php';
             $results['random_selection'] = ob_get_clean();
-        }
-        else {
+        } else {
             $results['random_selection'] = '<!-- None found -->';
         }
     break;
@@ -59,8 +58,7 @@ switch ($_REQUEST['action']) {
                                 $button = $_REQUEST['button'];
                         break;
                         case 'admin':
-                                if (Access::check('interface','100')) { $button = $_REQUEST['button']; }
-                                else { exit; }
+                                if (Access::check('interface','100')) { $button = $_REQUEST['button']; } else { exit; }
                         break;
                         default:
                                 exit;
@@ -79,4 +77,3 @@ switch ($_REQUEST['action']) {
 
 // We always do this
 echo xml_from_array($results);
-?>

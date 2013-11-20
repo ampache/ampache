@@ -34,9 +34,7 @@ if (isset($_SESSION['iframe']['target'])) {
     $target = $_SESSION['iframe']['target'];
     unset($_SESSION['iframe']['target']);
     header("Location: " . $target);
-}
-else {
+} else {
     // Prevent the update query as it's pointless
     define('NO_SESSION_UPDATE','1');
 }
-?>

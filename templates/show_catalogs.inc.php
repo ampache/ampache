@@ -24,7 +24,7 @@
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
   <col id="col_catalog" />
-  <col id="col_path" />
+  <col id="col_info" />
   <col id="col_lastverify" />
   <col id="col_lastadd" />
   <col id="col_lastclean" />
@@ -32,7 +32,7 @@
 </colgroup>
 <tr class="th-top">
     <th class="cel_catalog"><?php echo T_('Name'); ?></th>
-    <th class="cel_path"><?php echo T_('Path'); ?></th>
+    <th class="cel_info"><?php echo T_('Info'); ?></th>
     <th class="cel_lastverify"><?php echo T_('Last Verify'); ?></th>
     <th class="cel_lastadd"><?php echo T_('Last Add'); ?></th>
     <th class="cel_lastclean"><?php echo T_('Last Clean'); ?></th>
@@ -40,7 +40,7 @@
 </tr>
 <?php
     foreach ($object_ids as $catalog_id) {
-        $catalog = new Catalog($catalog_id);
+        $catalog = Catalog::create_from_id($catalog_id);
         $catalog->format();
 ?>
 <tr class="<?php echo UI::flip_class(); ?>" id="catalog_<?php echo $catalog->id; ?>">
@@ -56,7 +56,7 @@
 </tr>
 <tr class="th-bottom">
     <th class="cel_catalog"><?php echo T_('Name'); ?></th>
-    <th class="cel_path"><?php echo T_('Path'); ?></th>
+    <th class="cel_info"><?php echo T_('Info'); ?></th>
     <th class="cel_lastverify"><?php echo T_('Last Verify'); ?></th>
     <th class="cel_lastadd"><?php echo T_('Last Add'); ?></th>
     <th class="cel_lastclean"><?php echo T_('Last Clean'); ?></th>

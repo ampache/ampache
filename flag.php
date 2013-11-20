@@ -58,4 +58,3 @@ switch ($action) {
 } // end action switch
 
 UI::show_footer();
-?>

@@ -26,14 +26,15 @@
  * it takes over for the vauth libs, and takes some stuff out of other
  * classes where it didn't belong.
  */
-class Auth {
-
+class Auth
+{
     /**
      * Constructor
      *
      * This should never be called
      */
-    private function __construct() {
+    private function __construct()
+    {
         // Rien a faire
     }
 
@@ -44,8 +45,8 @@ class Auth {
      * This is the function used for the Ajax logouts, if no id is passed
      * it tries to find one from the session,
      */
-    public static function logout($key='', $relogin = true) {
-
+    public static function logout($key='', $relogin = true)
+    {
         // If no key is passed try to find the session id
         $key = $key ? $key : session_id();
 
@@ -53,8 +54,7 @@ class Auth {
         Session::destroy($key);
         if ((!$relogin) && Config::get('logout_redirect')) {
             $target = Config::get('logout_redirect');
-        }
-        else {
+        } else {
             $target = Config::get('web_path') . '/login.php';
         }
 
@@ -74,8 +74,7 @@ class Auth {
 
             $results['rfc3514'] = '<script type="text/javascript">reloadRedirect("' . $target . '")</script>';
             echo xml_from_array($results);
-        }
-        else {
+        } else {
             /* Redirect them to the login page */
             header('Location: ' . $target);
         }
@@ -89,11 +88,12 @@ class Auth {
      * This takes a username and password and then returns the results
      * based on what happens when we try to do the auth.
      */
-    public static function login($username, $password) {
+    public static function login($username, $password)
+    {
         foreach (Config::get('auth_methods') as $method) {
             $function_name = $method . '_auth';
 
-            if (!method_exists('Auth', $function_name)) { 
+            if (!method_exists('Auth', $function_name)) {
                 continue;
             }
 
@@ -109,8 +109,8 @@ class Auth {
      *
      * This is the core function of our built-in authentication.
      */
-    private static function mysql_auth($username, $password) {
-
+    private static function mysql_auth($username, $password)
+    {
         if (strlen($password) && strlen($username)) {
             $sql = 'SELECT `password` FROM `user` WHERE `username` = ?';
             $db_results = Dba::read($sql, array($username));
@@ -122,7 +122,7 @@ class Auth {
                 // doesn't break things.
                 // FIXME: Break things in the future.
                 $hashed_password[] = hash('sha256', $password);
-                $hashed_password[] = hash('sha256', 
+                $hashed_password[] = hash('sha256',
                     Dba::escape(stripslashes(htmlspecialchars(strip_tags($password)))));
 
                 // Automagically update the password if it's old and busted.
@@ -151,10 +151,11 @@ class Auth {
     /**
      * pam_auth
      *
-     * Check to make sure the pam_auth function is implemented (module is 
+     * Check to make sure the pam_auth function is implemented (module is
      * installed), then check the credentials.
      */
-    private static function pam_auth($username, $password) {
+    private static function pam_auth($username, $password)
+    {
         if (!function_exists('pam_auth')) {
             $results['success']    = false;
             $results['error']    = 'The PAM PHP module is not installed';
@@ -167,8 +168,7 @@ class Auth {
             $results['success']    = true;
             $results['type']    = 'pam';
             $results['username']    = $username;
-        }
-        else {
+        } else {
             $results['success']    = false;
             $results['error']    = 'PAM login attempt failed';
         }
@@ -182,7 +182,8 @@ class Auth {
      * Calls an external program compatible with mod_authnz_external
      * such as pwauth.
      */
-    private static function external_auth($username, $password) {
+    private static function external_auth($username, $password)
+    {
         $authenticator = Config::get('external_authenticator');
         if (!$authenticator) {
             return array(
@@ -207,8 +208,7 @@ class Auth {
                 debug_event('external_auth', $stderr, 5);
             }
             fclose($pipes[2]);
-        }
-        else {
+        } else {
             return array(
                 'success' => false,
                 'error' => 'Failed to run external authenticator'
@@ -237,13 +237,13 @@ class Auth {
      * provided.
      * Step three, figure out if they are authorized to use ampache:
      * TODO: in config but unimplemented:
-     *      * require-dn "Grant access if the DN in the directive matches 
+     *      * require-dn "Grant access if the DN in the directive matches
      *        the DN fetched from the LDAP directory"
-     *      * require-attribute "an attribute fetched from the LDAP 
+     *      * require-attribute "an attribute fetched from the LDAP
      *        directory matches the given value"
      */
-    private static function ldap_auth($username, $password) {
-
+    private static function ldap_auth($username, $password)
+    {
         $ldap_username    = Config::get('ldap_username');
         $ldap_password    = Config::get('ldap_password');
 
@@ -296,7 +296,7 @@ class Auth {
                 if ($retval) {
                     // When the current user needs to be in
                     // a specific group to access Ampache,
-                    // check whether the 'member' list of 
+                    // check whether the 'member' list of
                     // the group contains the DN
                     if ($require_group) {
                         $group_result = ldap_read($ldap_link, $require_group, 'objectclass=*', array('member'));
@@ -351,7 +351,8 @@ class Auth {
      * http_auth
      * This auth method relies on HTTP auth from the webserver
      */
-    private static function http_auth($username, $password) {
+    private static function http_auth($username, $password)
+    {
         if (($_SERVER['REMOTE_USER'] == $username) ||
             ($_SERVER['HTTP_REMOTE_USER'] == $username)) {
             $results['success']    = true;
@@ -359,8 +360,7 @@ class Auth {
             $results['username']    = $username;
             $results['name']    = $username;
             $results['email']    = '';
-        }
-        else {
+        } else {
             $results['success'] = false;
             $results['error']   = 'HTTP auth login attempt failed';
         }
@@ -368,4 +368,3 @@ class Auth {
     } // http_auth
 
 }
-?>

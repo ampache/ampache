@@ -28,8 +28,8 @@
  * caching for all of the objects to cut down on the database calls
  *
  */
-abstract class database_object {
-
+abstract class database_object
+{
     private static $object_cache = array();
 
     // Statistics for debugging
@@ -40,8 +40,8 @@ abstract class database_object {
      * get_info
      * retrieves the info from the database and puts it in the cache
      */
-    public function get_info($id,$table_name='') {
-
+    public function get_info($id,$table_name='')
+    {
         $table_name = $table_name ? Dba::escape($table_name) : Dba::escape(strtolower(get_class($this)));
 
         // Make sure we've got a real id
@@ -67,7 +67,8 @@ abstract class database_object {
     /**
      * clear_cache
      */
-    public static function clear_cache() {
+    public static function clear_cache()
+    {
         self::$object_cache = array();
     }
 
@@ -75,8 +76,8 @@ abstract class database_object {
      * is_cached
      * this checks the cache to see if the specified object is there
      */
-    public static function is_cached($index,$id) {
-
+    public static function is_cached($index,$id)
+    {
         // Make sure we've got some parents here before we dive below
         if (!isset(self::$object_cache[$index])) { return false; }
 
@@ -88,8 +89,8 @@ abstract class database_object {
      * get_from_cache
      * This attempts to retrive the specified object from the cache we've got here
      */
-    public static function get_from_cache($index,$id) {
-
+    public static function get_from_cache($index,$id)
+    {
         // Check if the object is set
         if (isset(self::$object_cache[$index])
             && isset(self::$object_cache[$index][$id])
@@ -107,8 +108,8 @@ abstract class database_object {
      * add_to_cache
      * This adds the specified object to the specified index in the cache
      */
-    public static function add_to_cache($index,$id,$data) {
-
+    public static function add_to_cache($index,$id,$data)
+    {
         if (!self::$_enabled) { return false; }
 
         $value = is_null($data) ? false : $data;
@@ -121,8 +122,8 @@ abstract class database_object {
      * This function clears something from the cache, there are a few places we need to do this
      * in order to have things display correctly
      */
-    public static function remove_from_cache($index,$id) {
-
+    public static function remove_from_cache($index,$id)
+    {
         if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$id])) {
             unset(self::$object_cache[$index][$id]);
         }
@@ -133,8 +134,8 @@ abstract class database_object {
      * _auto_init
      * Load in the cache settings once so we can avoid function calls
      */
-    public static function _auto_init() {
-
+    public static function _auto_init()
+    {
         self::$_enabled = Config::get('memory_cache');
 
     } // _auto_init

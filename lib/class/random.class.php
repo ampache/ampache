@@ -28,8 +28,8 @@
  * by this class. There isn't a table for this class so most of its functions
  * are static.
  */
-class Random implements media {
-
+class Random implements media
+{
     public $type;
     public $id;
 
@@ -37,8 +37,8 @@ class Random implements media {
      * Constructor
      * nothing to see here, move along
      */
-    public function __construct($id) {
-
+    public function __construct($id)
+    {
         $this->type = Random::get_id_type($id);
         $this->id = intval($id);
 
@@ -48,8 +48,8 @@ class Random implements media {
      * artist
      * This returns the ID of a random artist, nothing special here for now
      */
-    public static function artist() {
-
+    public static function artist()
+    {
         $sql = "SELECT `id` FROM `artist` ORDER BY RAND() LIMIT 1";
         $db_results = Dba::read($sql);
 
@@ -64,8 +64,8 @@ class Random implements media {
      * This returns a random Playlist with songs little bit of extra
      * logic require
      */
-    public static function playlist() {
-
+    public static function playlist()
+    {
         $sql = "SELECT `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` " .
             " ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist_data`.`object_id` IS NOT NULL " .
             " ORDER BY RAND()";
@@ -83,7 +83,8 @@ class Random implements media {
      * This generates a random play url based on the passed type
      * and returns it
      */
-    public static function play_url($id) {
+    public static function play_url($id)
+    {
         if (!$type = self::get_id_type($id)) {
             return false;
         }
@@ -100,8 +101,8 @@ class Random implements media {
      * get_single_song
      * This returns a single song pulled based on the passed random method
      */
-    public static function get_single_song($type) {
-
+    public static function get_single_song($type)
+    {
         if (!$type = self::validate_type($type)) {
             return false;
         }
@@ -122,8 +123,8 @@ class Random implements media {
      * This just randomly picks a song at whim from all catalogs
      * nothing special here...
      */
-    public static function get_default($limit) {
-
+    public static function get_default($limit)
+    {
         $results = array();
 
         $sql = "SELECT `id` FROM `song` ORDER BY RAND() LIMIT $limit";
@@ -142,8 +143,8 @@ class Random implements media {
      * This looks at the last album played by the current user and
      * picks something else in the same album
      */
-    public static function get_album($limit) {
-
+    public static function get_album($limit)
+    {
         $results = array();
 
         // Get the last album playbed by us
@@ -168,8 +169,8 @@ class Random implements media {
      * This looks at the last artist played and then randomly picks a song from the
      * same artist
      */
-    public static function get_artist($limit) {
-
+    public static function get_artist($limit)
+    {
         $results = array();
 
         $data = $GLOBALS['user']->get_recently_played('1','artist');
@@ -193,16 +194,15 @@ class Random implements media {
      * This processes the results of a post from a form and returns an
      * array of song items that were returned from said randomness
      */
-    public static function advanced($type, $data) {
-
+    public static function advanced($type, $data)
+    {
         /* Figure out our object limit */
         $limit = intval($data['random']);
 
         // Generate our matchlist
 
         /* If they've passed -1 as limit then get everything */
-        if ($data['random'] == "-1") { unset($data['random']); }
-        else { $limit_sql = "LIMIT " . Dba::escape($limit); }
+        if ($data['random'] == "-1") { unset($data['random']); } else { $limit_sql = "LIMIT " . Dba::escape($limit); }
 
         $search_data = Search::clean_request($data);
 
@@ -338,8 +338,8 @@ class Random implements media {
      * get_type_name
      * This returns a 'purrty' name for the different random types
      */
-    public static function get_type_name($type) {
-
+    public static function get_type_name($type)
+    {
         switch ($type) {
             case 'album':
                 return T_('Related Album');
@@ -363,8 +363,8 @@ class Random implements media {
      * MOTHER OF PEARL THIS MAKES BABY JESUS CRY
      * HACK HACK HACK HACK HACK HACK HACK HACK
      */
-    public static function get_type_id($type) {
-
+    public static function get_type_id($type)
+    {
         switch ($type) {
             case 'album':
                 return '1';
@@ -388,8 +388,8 @@ class Random implements media {
      * HACK HACK HACK HACK HACK HACK HACK
      * Can you tell I don't like this code?
      */
-    public static function get_id_type($id) {
-
+    public static function get_id_type($id)
+    {
         switch ($id) {
             case '1':
                 return 'album';
@@ -411,8 +411,8 @@ class Random implements media {
      * validate_type
      * this validates the random type
      */
-    public static function validate_type($type) {
-
+    public static function validate_type($type)
+    {
         switch ($type) {
             case 'default':
             case 'genre':
@@ -433,5 +433,3 @@ class Random implements media {
     public function format() { }
 
 } //end of random class
-
-?>

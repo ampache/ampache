@@ -26,8 +26,8 @@
  * This is the abstract class for any localplay controller
  *
  */
-abstract class localplay_controller {
-
+abstract class localplay_controller
+{
     // Required Functions
     abstract public function add_url(Stream_URL $url); // Takes an array of song_ids
     abstract public function delete_track($object_id); // Takes a single object_id and removes it from the playlist
@@ -55,8 +55,8 @@ abstract class localplay_controller {
      * get_url
      * This returns the URL for the passed object
      */
-    public function get_url($object) {
-
+    public function get_url($object)
+    {
         // This might not be an object!
         if (!is_object($object)) {
             // Stupiidly we'll just blindly add it for now
@@ -76,9 +76,8 @@ abstract class localplay_controller {
      * This returns the Filename for the passed object, not
      * always possible
      */
-    public function get_file($object) {
-
-
+    public function get_file($object)
+    {
     } // get_file
 
     /**
@@ -86,8 +85,8 @@ abstract class localplay_controller {
      * This takes an Ampache URL and then returns the 'primary' part of it
      * So that it's easier for localplay modules to return valid song information
      */
-    public function parse_url($url) {
-
+    public function parse_url($url)
+    {
         // Define possible 'primary' keys
         $primary_array = array('oid','demo_id','random');
         $data = array();

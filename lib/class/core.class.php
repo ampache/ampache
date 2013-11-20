@@ -27,14 +27,14 @@
  * would be replaced by a namespace library once that exists in php
  *
  */
-class Core {
-
+class Core
+{
     /**
      * constructor
      * This doesn't do anything
      */
-    private function __construct() {
-
+    private function __construct()
+    {
         return false;
 
     } // construction
@@ -46,21 +46,24 @@ class Core {
      * needed so that we don't use a million include statements which load
      * more than we need.
      */
-    public static function autoload($class) {
-        $file = Config::get('prefix') . '/lib/class/' .
-            strtolower($class) . '.class.php';
+    public static function autoload($class)
+    {
+        // Ignore class with namespace, not used by Ampache
+        if (strpos($class, '\\') === false) {
+            $file = Config::get('prefix') . '/lib/class/' .
+                strtolower($class) . '.class.php';
 
-        if (Core::is_readable($file)) {
-            require_once $file;
+            if (Core::is_readable($file)) {
+                require_once $file;
 
-            // Call _auto_init if it exists
-            $autocall = array($class, '_auto_init');
-            if (is_callable($autocall)) {
-                call_user_func($autocall);
+                // Call _auto_init if it exists
+                $autocall = array($class, '_auto_init');
+                if (is_callable($autocall)) {
+                    call_user_func($autocall);
+                }
+            } else {
+                debug_event('autoload', "'$class' not found!", 1);
             }
-        }
-        else {
-            debug_event('autoload', "'$class' not found!", 1);
         }
     }
 
@@ -69,8 +72,8 @@ class Core {
      * This registers a form with a SID, inserts it into the session
      * variables and then returns a string for use in the HTML form
      */
-    public static function form_register($name, $type = 'post') {
-
+    public static function form_register($name, $type = 'post')
+    {
         // Make ourselves a nice little sid
         $sid =  md5(uniqid(rand(), true));
         $window = Config::get('session_length');
@@ -101,7 +104,8 @@ class Core {
      * they don't match then it returns false and doesn't let the person
      * continue
      */
-    public static function form_verify($name, $type = 'post') {
+    public static function form_verify($name, $type = 'post')
+    {
         switch ($type) {
             case 'post':
                 $sid = $_POST['form_validation'];
@@ -121,7 +125,7 @@ class Core {
             debug_event('Core', "Form $sid not found in session, rejecting request", 2);
             return false;
         }
-        
+
         $form = $_SESSION['forms'][$sid];
         unset($_SESSION['forms'][$sid]);
 
@@ -147,8 +151,8 @@ class Core {
     * returns an empty array if PHP-GD is not currently installed, returns
     * false on error
     */
-    public static function image_dimensions($image_data) {
-
+    public static function image_dimensions($image_data)
+    {
         if (!function_exists('ImageCreateFromString')) { return false; }
 
         $image = ImageCreateFromString($image_data);
@@ -170,7 +174,8 @@ class Core {
      * Replacement function because PHP's is_readable is buggy:
      * https://bugs.php.net/bug.php?id=49620
      */
-    public static function is_readable($path) {
+    public static function is_readable($path)
+    {
         if (is_dir($path)) {
             $handle = opendir($path);
             if ($handle === false) {
@@ -189,4 +194,3 @@ class Core {
     }
 
 } // Core
-?>

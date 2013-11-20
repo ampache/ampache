@@ -176,8 +176,7 @@ if (!defined('INSTALL')) {
         $results['web_path'] = $http_type . $_SERVER['HTTP_HOST'] . Config::get('web_path');
         if (check_config_values($results)) {
             echo "&nbsp;&nbsp;&nbsp;<img src=\"" . $results['web_path'] ."/images/icon_enable.png\" />&nbsp;&nbsp;&nbsp;";
-        }
-        else {
+        } else {
             echo debug_result(false);
         }
 

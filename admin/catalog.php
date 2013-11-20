@@ -21,6 +21,7 @@
  */
 
 require_once '../lib/init.php';
+require_once Config::get('prefix') . '/modules/catalog/local.catalog.php';
 
 if (!Access::check('interface','100')) {
     UI::access_denied();
@@ -43,10 +44,10 @@ switch ($_REQUEST['action']) {
         toggle_visible('ajax-loading');
         ob_end_flush();
         if (Config::get('demo_mode')) { break; }
-        if ($_REQUEST['catalogs'] ) {
+        if ($_REQUEST['catalogs']) {
             foreach ($_REQUEST['catalogs'] as $catalog_id) {
-                $catalog = new Catalog($catalog_id);
-                $catalog->add_to_catalog();
+                $catalog = Catalog::create_from_id($catalog_id);
+                $catalog->add_to_catalog($_POST);
             }
         }
         $url = Config::get('web_path') . '/admin/catalog.php';
@@ -65,7 +66,7 @@ switch ($_REQUEST['action']) {
 
         if (isset($_REQUEST['catalogs'])) {
             foreach ($_REQUEST['catalogs'] as $catalog_id) {
-                $catalog = new Catalog($catalog_id);
+                $catalog = Catalog::create_from_id($catalog_id);
                 $catalog->verify_catalog();
             }
         }
@@ -87,7 +88,7 @@ switch ($_REQUEST['action']) {
 
         /* This runs the clean/verify/add in that order */
         foreach ($_REQUEST['catalogs'] as $catalog_id) {
-            $catalog = new Catalog($catalog_id);
+            $catalog = Catalog::create_from_id($catalog_id);
             $catalog->clean_catalog();
             $catalog->count = 0;
             $catalog->verify_catalog();
@@ -129,8 +130,7 @@ switch ($_REQUEST['action']) {
         if (count($song)) {
             $catalog->remove_songs($song);
             $body = T_ngettext('Song Removed', 'Songs Removed', count($song));
-        }
-        else {
+        } else {
             $body = T_('No Songs Removed');
         }
         $url    = Config::get('web_path') . '/admin/catalog.php';
@@ -138,7 +138,6 @@ switch ($_REQUEST['action']) {
         show_confirmation($title,$body,$url);
     break;
     case 'clean_all_catalogs':
-        $catalog = new Catalog();
         $_REQUEST['catalogs'] = Catalog::get_catalogs();
     case 'clean_catalog':
         toggle_visible('ajax-loading');
@@ -148,8 +147,8 @@ switch ($_REQUEST['action']) {
 
         // Make sure they checked something
         if (isset($_REQUEST['catalogs'])) {
-            foreach($_REQUEST['catalogs'] as $catalog_id) {
-                $catalog = new Catalog($catalog_id);
+            foreach ($_REQUEST['catalogs'] as $catalog_id) {
+                $catalog = Catalog::create_from_id($catalog_id);
                 $catalog->clean_catalog();
             } // end foreach catalogs
             Dba::optimize_tables();
@@ -178,20 +177,21 @@ switch ($_REQUEST['action']) {
 
         // First see if we need to do an add
         if ($_POST['add_path'] != '/' AND strlen($_POST['add_path'])) {
-            if ($catalog_id = Catalog::get_from_path($_POST['add_path'])) {
-                $catalog = new Catalog($catalog_id);
-                $catalog->run_add(array('subdirectory'=>$_POST['add_path']));
+            if ($catalog_id = Catalog_local::get_from_path($_POST['add_path'])) {
+                $catalog = Catalog::create_from_id($catalog_id);
+                $catalog->add_to_catalog(array('subdirectory'=>$_POST['add_path']));
             }
         } // end if add
 
         // Now check for an update
         if ($_POST['update_path'] != '/' AND strlen($_POST['update_path'])) {
-            if ($catalog_id = Catalog::get_from_path($_POST['update_path'])) {
+            if ($catalog_id = Catalog_local::get_from_path($_POST['update_path'])) {
                 $songs = Song::get_from_path($_POST['update_path']);
                 foreach ($songs as $song_id) { Catalog::update_single_item('song',$song_id); }
             }
         } // end if update
 
+        echo T_("Done.");
     break;
     case 'add_catalog':
         /* Wah Demo! */
@@ -199,25 +199,17 @@ switch ($_REQUEST['action']) {
 
         ob_end_flush();
 
-        if (!strlen($_POST['path']) || !strlen($_POST['name'])) {
-            Error::add('general', T_('Error: Name and path not specified'));
+        if (!strlen($_POST['type']) || $_POST['type'] == 'none') {
+            Error::add('general', T_('Error: Please select a catalog type'));
         }
 
-        if (substr($_POST['path'],0,7) != 'http://' && $_POST['type'] == 'remote') {
-            Error::add('general', T_('Error: Remote selected, but path is not a URL'));
-        }
-        if ($POST['type'] == 'remote' AND (!strlen($POST['remote_username']) OR !strlen($POST['remote_password']))) {
-            Error::add('general', T_('Error: Username and Password Required for Remote Catalogs'));
+        if (!strlen($_POST['name'])) {
+            Error::add('general', T_('Error: Name not specified'));
         }
 
         if (!Core::form_verify('add_catalog','post')) {
             UI::access_denied();
             exit;
-        }
-
-        // Make sure that there isn't a catalog with a directory above this one
-        if (Catalog::get_from_path($_POST['path'])) {
-            Error::add('general', T_('Error: Defined Path is inside an existing catalog'));
         }
 
         // If an error hasn't occured
@@ -230,10 +222,10 @@ switch ($_REQUEST['action']) {
                 break;
             }
 
-            $catalog = new Catalog($catalog_id);
+            $catalog = Catalog::create_from_id($catalog_id);
 
             // Run our initial add
-            $catalog->run_add($_POST);
+            $catalog->add_to_catalog($_POST);
 
             UI::show_box_top(T_('Catalog Created'), 'box box_catalog_created');
             echo "<h2>" .  T_('Catalog Created') . "</h2>";
@@ -243,8 +235,7 @@ switch ($_REQUEST['action']) {
 
             show_confirmation('','', Config::get('web_path').'/admin/catalog.php');
 
-        }
-        else {
+        } else {
             require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
         }
     break;
@@ -275,8 +266,7 @@ switch ($_REQUEST['action']) {
         $songs = Song::get_disabled();
         if (count($songs)) {
             require Config::get('prefix') . '/templates/show_disabled_songs.inc.php';
-        }
-        else {
+        } else {
             echo "<div class=\"error\" align=\"center\">" . T_('No Disabled songs found') . "</div>";
         }
     break;
@@ -284,12 +274,13 @@ switch ($_REQUEST['action']) {
         /* Stop the demo hippies */
         if (Config::get('demo_mode')) { UI::access_denied(); break; }
 
-        $catalog = new Catalog($_REQUEST['catalog_id']);
+        $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
         $nexturl = Config::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
         show_confirmation(T_('Delete Catalog'), T_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)",$nexturl,1);
     break;
     case 'show_customize_catalog':
-        $catalog = new Catalog($_REQUEST['catalog_id']);
+        $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
+        $catalog->format();
         require_once Config::get('prefix') . '/templates/show_edit_catalog.inc.php';
     break;
     case 'gather_album_art':
@@ -300,7 +291,7 @@ switch ($_REQUEST['action']) {
 
         // Iterate throught the catalogs and gather as needed
         foreach ($catalogs as $catalog_id) {
-            $catalog = new Catalog($catalog_id);
+            $catalog = Catalog::create_from_id($catalog_id);
             require Config::get('prefix') . '/templates/show_gather_art.inc.php';
             flush();
             $catalog->gather_art();
@@ -314,5 +305,3 @@ switch ($_REQUEST['action']) {
 
 /* Show the Footer */
 UI::show_footer();
-
-?>

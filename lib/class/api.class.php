@@ -28,8 +28,8 @@
  * integrate with Ampache.
  *
  */
-class Api {
-
+class Api
+{
     public static $version = '350001';
 
     private static $browse = null;
@@ -38,8 +38,8 @@ class Api {
       * constructor
      * This really isn't anything to do here, so it's private
      */
-    private function __construct() {
-
+    private function __construct()
+    {
         // Rien a faire
 
     } // constructor
@@ -48,7 +48,8 @@ class Api {
      * _auto_init
      * Automatically called when this class is loaded.
      */
-    public static function _auto_init() {
+    public static function _auto_init()
+    {
         if (is_null(self::$browse)) {
             self::$browse = new Browse(null, false);
         }
@@ -57,12 +58,12 @@ class Api {
     /**
      * set_filter
      * This is a play on the browse function, it's different as we expose
-     * the filters in a slightly different and vastly simpler way to the 
-     * end users--so we have to do a little extra work to make them work 
+     * the filters in a slightly different and vastly simpler way to the
+     * end users--so we have to do a little extra work to make them work
      * internally.
      */
-    public static function set_filter($filter,$value) {
-
+    public static function set_filter($filter,$value)
+    {
         if (!strlen($value)) { return false; }
 
         switch ($filter) {
@@ -72,8 +73,7 @@ class Api {
                     $elements = explode('/',$value);
                     self::$browse->set_filter('add_lt',strtotime($elements['1']));
                     self::$browse->set_filter('add_gt',strtotime($elements['0']));
-                }
-                else {
+                } else {
                     self::$browse->set_filter('add_gt',strtotime($value));
                 }
             break;
@@ -83,8 +83,7 @@ class Api {
                     $elements = explode('/',$value);
                     self::$browse->set_filter('update_lt',strtotime($elements['1']));
                     self::$browse->set_filter('update_gt',strtotime($elements['0']));
-                }
-                else {
+                } else {
                     self::$browse->set_filter('update_gt',strtotime($value));
                 }
             break;
@@ -109,8 +108,8 @@ class Api {
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
      */
-    public static function handshake($input) {
-
+    public static function handshake($input)
+    {
         $timestamp = preg_replace('/[^0-9]/', '', $input['timestamp']);
         $passphrase = $input['auth'];
         $ip = $_SERVER['REMOTE_ADDR'];
@@ -127,7 +126,7 @@ class Api {
         }
 
         // If the timestamp isn't within 30 minutes sucks to be them
-        if (($timestamp < (time() - 1800)) || 
+        if (($timestamp < (time() - 1800)) ||
             ($timestamp > (time() + 1800))) {
             debug_event('API', 'Login Failed: timestamp out of range', 1);
             Error::add('api', T_('Login Failed: timestamp out of range'));
@@ -138,8 +137,7 @@ class Api {
         // FIXME: Does this if/else make sense with the new ACLs?
         if (!trim($username)) {
             $user_id = '-1';
-        }
-        else {
+        } else {
             $client = User::get_from_username($username);
             $user_id = $client->id;
         }
@@ -196,9 +194,9 @@ class Api {
                 $db_results = Dba::read($sql);
                 $playlist = Dba::fetch_assoc($db_results);
 
-                $sql = "SELECT COUNT(`id`) AS `catalog` FROM `catalog` WHERE `catalog_type`='local'"; 
-                $db_results = Dba::read($sql); 
-                $catalog = Dba::fetch_assoc($db_results); 
+                $sql = "SELECT COUNT(`id`) AS `catalog` FROM `catalog` WHERE `catalog_type`='local'";
+                $db_results = Dba::read($sql);
+                $catalog = Dba::fetch_assoc($db_results);
 
                 echo XML_Data::keyed_array(array('auth'=>$token,
                     'api'=>self::$version,
@@ -211,7 +209,7 @@ class Api {
                     'artists'=>$counts['artist'],
                     'playlists'=>$playlist['playlist'],
                     'videos'=>$vcounts['video'],
-                    'catalogs'=>$catalog['catalog'])); 
+                    'catalogs'=>$catalog['catalog']));
                 return true;
             } // match
 
@@ -227,8 +225,8 @@ class Api {
      * This can be called without being authenticated, it is useful for determining if what the status
      * of the server is, and what version it is running/compatible with
      */
-    public static function ping($input) {
-
+    public static function ping($input)
+    {
         $xmldata = array('server'=>Config::get('version'),'version'=>Api::$version,'compatible'=>'350001');
 
         // Check and see if we should extend the api sessions (done if valid sess is passed)
@@ -250,8 +248,8 @@ class Api {
      * artist objects. This function is deprecated!
      * //DEPRECATED
      */
-    public static function artists($input) {
-
+    public static function artists($input)
+    {
         self::$browse->reset_filters();
         self::$browse->set_type('artist');
         self::$browse->set_sort('name','ASC');
@@ -277,8 +275,8 @@ class Api {
      * This returns a single artist based on the UID of said artist
      * //DEPRECATED
      */
-    public static function artist($input) {
-
+    public static function artist($input)
+    {
         $uid = scrub_in($input['filter']);
         echo XML_Data::artists(array($uid));
 
@@ -288,8 +286,8 @@ class Api {
      * artist_albums
      * This returns the albums of an artist
      */
-    public static function artist_albums($input) {
-
+    public static function artist_albums($input)
+    {
         $artist = new Artist($input['filter']);
 
         $albums = $artist->get_albums();
@@ -306,8 +304,8 @@ class Api {
      * artist_songs
      * This returns the songs of the specified artist
      */
-    public static function artist_songs($input) {
-
+    public static function artist_songs($input)
+    {
         $artist = new Artist($input['filter']);
         $songs = $artist->get_songs();
 
@@ -323,8 +321,8 @@ class Api {
       * albums
      * This returns albums based on the provided search filters
      */
-    public static function albums($input) {
-
+    public static function albums($input)
+    {
         self::$browse->reset_filters();
         self::$browse->set_type('album');
         self::$browse->set_sort('name','ASC');
@@ -347,8 +345,8 @@ class Api {
      * album
      * This returns a single album based on the UID provided
      */
-    public static function album($input) {
-
+    public static function album($input)
+    {
         $uid = scrub_in($input['filter']);
         echo XML_Data::albums(array($uid));
 
@@ -358,8 +356,8 @@ class Api {
      * album_songs
      * This returns the songs of a specified album
      */
-    public static function album_songs($input) {
-
+    public static function album_songs($input)
+    {
             $album = new Album($input['filter']);
             $songs = $album->get_songs();
 
@@ -376,8 +374,8 @@ class Api {
      * tags
      * This returns the tags based on the specified filter
      */
-    public static function tags($input) {
-
+    public static function tags($input)
+    {
             self::$browse->reset_filters();
             self::$browse->set_type('tag');
             self::$browse->set_sort('name','ASC');
@@ -399,8 +397,8 @@ class Api {
      * tag
      * This returns a single tag based on UID
      */
-    public static function tag($input) {
-
+    public static function tag($input)
+    {
             $uid = scrub_in($input['filter']);
             ob_end_clean();
             echo XML_Data::tags(array($uid));
@@ -411,8 +409,8 @@ class Api {
      * tag_artists
      * This returns the artists associated with the tag in question as defined by the UID
      */
-    public static function tag_artists($input) {
-
+    public static function tag_artists($input)
+    {
             $artists = Tag::get_tag_objects('artist',$input['filter']);
 
             XML_Data::set_offset($input['offset']);
@@ -427,8 +425,8 @@ class Api {
      * tag_albums
      * This returns the albums associated with the tag in question
      */
-    public static function tag_albums($input) {
-
+    public static function tag_albums($input)
+    {
             $albums = Tag::get_tag_objects('album',$input['filter']);
 
             XML_Data::set_offset($input['offset']);
@@ -443,8 +441,8 @@ class Api {
      * tag_songs
      * returns the songs for this tag
      */
-    public static function tag_songs($input) {
-
+    public static function tag_songs($input)
+    {
             $songs = Tag::get_tag_objects('song',$input['filter']);
 
             XML_Data::set_offset($input['offset']);
@@ -459,8 +457,8 @@ class Api {
      * songs
      * Returns songs based on the specified filter
      */
-    public static function songs($input) {
-
+    public static function songs($input)
+    {
             self::$browse->reset_filters();
             self::$browse->set_type('song');
             self::$browse->set_sort('title','ASC');
@@ -485,8 +483,8 @@ class Api {
      * song
      * returns a single song
      */
-    public static function song($input) {
-
+    public static function song($input)
+    {
             $uid = scrub_in($input['filter']);
 
             ob_end_clean();
@@ -499,7 +497,8 @@ class Api {
      *
      * This takes a url and returns the song object in question
      */
-    public static function url_to_song($input) {
+    public static function url_to_song($input)
+    {
             // Don't scrub, the function needs her raw and juicy
             $data = Stream_URL::parse($input['url']);
             ob_end_clean();
@@ -510,8 +509,8 @@ class Api {
       * playlists
      * This returns playlists based on the specified filter
      */
-    public static function playlists($input) {
-
+    public static function playlists($input)
+    {
             self::$browse->reset_filters();
             self::$browse->set_type('playlist');
             self::$browse->set_sort('name','ASC');
@@ -533,8 +532,8 @@ class Api {
      * playlist
      * This returns a single playlist
      */
-    public static function playlist($input) {
-
+    public static function playlist($input)
+    {
             $uid = scrub_in($input['filter']);
 
             ob_end_clean();
@@ -546,8 +545,8 @@ class Api {
      * playlist_songs
      * This returns the songs for a playlist
      */
-    public static function playlist_songs($input) {
-
+    public static function playlist_songs($input)
+    {
             $playlist = new Playlist($input['filter']);
             $items = $playlist->get_items();
 
@@ -568,7 +567,8 @@ class Api {
      * search_songs
      * This searches the songs and returns... songs
      */
-    public static function search_songs($input) {
+    public static function search_songs($input)
+    {
             $array['type'] = 'song';
             $array['rule_1'] = 'anywhere';
             $array['rule_1_input'] = $input['filter'];
@@ -589,8 +589,8 @@ class Api {
      * videos
      * This returns video objects!
      */
-    public static function videos($input) {
-
+    public static function videos($input)
+    {
             self::$browse->reset_filters();
             self::$browse->set_type('video');
             self::$browse->set_sort('title','ASC');
@@ -611,8 +611,8 @@ class Api {
      * video
      * This returns a single video
      */
-    public static function video($input) {
-
+    public static function video($input)
+    {
             $video_id = scrub_in($input['filter']);
 
             echo XML_Data::videos(array($video_id));
@@ -624,8 +624,8 @@ class Api {
      * localplay
      * This is for controling localplay
      */
-    public static function localplay($input) {
-
+    public static function localplay($input)
+    {
             // Load their localplay instance
             $localplay = new Localplay(Config::get('localplay_controller'));
             $localplay->connect();
@@ -651,8 +651,8 @@ class Api {
      * democratic
      * This is for controlling democratic play
      */
-    public static function democratic($input) {
-
+    public static function democratic($input)
+    {
             // Load up democratic information
             $democratic = Democratic::get_current_playlist();
             $democratic->set_parent();
@@ -709,4 +709,3 @@ class Api {
     } // democratic
 
 } // API class
-?>

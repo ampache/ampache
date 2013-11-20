@@ -31,4 +31,3 @@ $browse = new Browse();
 $browse->set_type('artist');
 $browse->show_objects($object_ids);
 $browse->store();
-?>

@@ -37,4 +37,3 @@
           <a href="<?php echo $web_path; ?>/search.php?type=song" class="button" id="advSearchBtn"><?php echo T_('Advanced Search'); ?></a>
         </form>
 </div>
-

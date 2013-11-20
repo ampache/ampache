@@ -25,13 +25,14 @@
  * This class handles all of the session related stuff in Ampache
  *
  */
-class Session {
-
+class Session
+{
     /**
      * Constructor
      * This should never be called
      */
-    private function __construct() {
+    private function __construct()
+    {
         // Rien a faire
     } // __construct
 
@@ -41,7 +42,8 @@ class Session {
      * This function is for opening a new session so we just verify that we
      * have a database connection, nothing more is needed.
      */
-    public static function open($save_path, $session_name) {
+    public static function open($save_path, $session_name)
+    {
         if (!Dba::dbh()) {
             debug_event('session', 'Could not start session, no database connection', 1);
             return false;
@@ -55,7 +57,8 @@ class Session {
      *
      * This is run on the end of a session, nothing to do here for now.
      */
-    public static function close() {
+    public static function close()
+    {
         return true;
     }
 
@@ -64,7 +67,8 @@ class Session {
      *
      * This saves the session information into the database.
      */
-    public static function write($key, $value) {
+    public static function write($key, $value)
+    {
         if (defined('NO_SESSION_UPDATE')) {
             return true;
         }
@@ -73,8 +77,8 @@ class Session {
 
         // Check to see if remember me cookie is set, if so use remember
         // length, otherwise use the session length
-        $expire = isset($_COOKIE[Config::get('session_name') . '_remember']) 
-            ? time() + Config::get('remember_length') 
+        $expire = isset($_COOKIE[Config::get('session_name') . '_remember'])
+            ? time() + Config::get('remember_length')
             : time() + Config::get('session_length');
 
         $sql = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
@@ -90,8 +94,8 @@ class Session {
      *
      * This removes the specified session from the database.
      */
-    public static function destroy($key) {
-
+    public static function destroy($key)
+    {
         if (!strlen($key)) { return false; }
 
         // Remove anything and EVERYTHING
@@ -111,7 +115,8 @@ class Session {
      *
      * This function is randomly called and it cleans up the spoo
      */
-    public static function gc($maxlifetime) {
+    public static function gc($maxlifetime)
+    {
         $sql = 'DELETE FROM `session` WHERE `expire` < ?';
         $db_results = Dba::write($sql, array(time()));
 
@@ -128,7 +133,8 @@ class Session {
      *
      * This takes a key and returns the data from the database.
      */
-    public static function read($key) {
+    public static function read($key)
+    {
         return self::_read($key, 'value');
     }
 
@@ -137,14 +143,15 @@ class Session {
      *
      * This returns the specified column from the session row.
      */
-    private static function _read($key, $column) {
+    private static function _read($key, $column)
+    {
         $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?';
         $db_results = Dba::read($sql, array($key, time()));
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return $results[$column];
         }
-        
+
         debug_event('session', 'Unable to read session from key ' . $key . ' no data found', 5);
 
         return '';
@@ -155,7 +162,8 @@ class Session {
      *
      * This returns the username associated with a session ID, if any
      */
-    public static function username($key) {
+    public static function username($key)
+    {
         return self::_read($key, 'username');
     }
 
@@ -165,13 +173,13 @@ class Session {
      * it takes care of setting the initial cookie, and inserting the first
      * chunk of data, nifty ain't it!
      */
-    public static function create($data) {
-
+    public static function create($data)
+    {
         // Regenerate the session ID to prevent fixation
         switch ($data['type']) {
             case 'api':
             case 'stream':
-                $key = isset($data['sid']) 
+                $key = isset($data['sid'])
                     ? $data['sid']
                     : md5(uniqid(rand(), true));
             break;
@@ -193,8 +201,7 @@ class Session {
 
         if ($type == 'stream') {
             $expire = time() + Config::get('stream_length');
-        }
-        else {
+        } else {
             $expire = time() + Config::get('session_length');
         }
 
@@ -221,8 +228,8 @@ class Session {
      * This checks for an existing session. If it's still valid we go ahead
      * and start it and return true.
      */
-    public static function check() {
-
+    public static function check()
+    {
         $session_name = Config::get('session_name');
 
         // No cookie no go!
@@ -258,7 +265,8 @@ class Session {
      * exists, it also provides an array of keyed data that may be required
      * based on the type.
      */
-    public static function exists($type, $key, $data=array()) {
+    public static function exists($type, $key, $data=array())
+    {
         // Switch on the type they pass
         switch ($type) {
             case 'api':
@@ -299,10 +307,11 @@ class Session {
      *
      * This takes a SID and extends its expiration.
      */
-    public static function extend($sid, $type = null) {
+    public static function extend($sid, $type = null)
+    {
         $time = time();
-        $expire = isset($_COOKIE[Config::get('session_name') . '_remember']) 
-            ? $time + Config::get('remember_length') 
+        $expire = isset($_COOKIE[Config::get('session_name') . '_remember'])
+            ? $time + Config::get('remember_length')
             : $time + Config::get('session_length');
 
         if ($type == 'stream') {
@@ -323,7 +332,8 @@ class Session {
      * This function is called when the object is included, this sets up the
      * session_save_handler
      */
-    public static function _auto_init() {
+    public static function _auto_init()
+    {
         if (!function_exists('session_start')) {
             header("Location:" . Config::get('web_path') . "/test.php");
             exit;
@@ -350,7 +360,8 @@ class Session {
      * a cookie at the same time as a header redirect. As such on view of a
      * login a cookie is set with the proper name.
      */
-    public static function create_cookie() {
+    public static function create_cookie()
+    {
         // Set up the cookie prefs before we throw down, this is very important
         $cookie_life = Config::get('cookie_life');
         $cookie_path = Config::get('cookie_path');
@@ -371,12 +382,13 @@ class Session {
      *
      * This function just creates the remember me cookie, nothing special.
      */
-    public static function create_remember_cookie() {
+    public static function create_remember_cookie()
+    {
         $remember_length = Config::get('remember_length');
         $session_name = Config::get('session_name');
 
         Config::set('cookie_life', $remember_length, true);
-        setcookie($session_name . '_remember', "Rappelez-vous, rappelez-vous le 27 mars", time() + $remember_length, '/');  
+        setcookie($session_name . '_remember', "Rappelez-vous, rappelez-vous le 27 mars", time() + $remember_length, '/');
     }
 
     /**
@@ -385,7 +397,8 @@ class Session {
      * This function sets the cache limiting to public if you are running
      * some flavor of IE and not using HTTPS.
      */
-    public static function ungimp_ie() {
+    public static function ungimp_ie()
+    {
         // If no https, no ungimpage required
         if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'on') {
             return true;
@@ -399,5 +412,4 @@ class Session {
         return true;
     }
 
-} 
-?>
+}

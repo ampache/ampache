@@ -53,7 +53,7 @@ switch ($_REQUEST['action']) {
             }
         }
 
-        switch($_REQUEST['operator']) {
+        switch ($_REQUEST['operator']) {
             case 'or':
                 $operator = 'OR';
             break;
@@ -69,7 +69,7 @@ switch ($_REQUEST['action']) {
         $playlist->logic_operator = $operator;
         $playlist->name = $playlist_name;
         $playlist->save();
-        
+
     break;
     case 'delete_playlist':
         // If we made it here, we didn't have sufficient rights.
@@ -86,8 +86,7 @@ switch ($_REQUEST['action']) {
             $playlist->parse_rules(Search::clean_request($_REQUEST));
             $playlist->update();
             $playlist->format();
-        }
-        else {
+        } else {
             UI::access_denied();
             break;
         }
@@ -99,4 +98,3 @@ switch ($_REQUEST['action']) {
 } // switch on the action
 
 UI::show_footer();
-?>

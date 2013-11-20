@@ -28,18 +28,18 @@
  * module in question.
  */
 
-class Stream_Playlist {
-
-    public $id; 
+class Stream_Playlist
+{
+    public $id;
     public $urls  = array();
     public $user;
 
     /**
      * Stream_Playlist constructor
-     * If an ID is passed, it should be a stream session ID. 
+     * If an ID is passed, it should be a stream session ID.
      */
-    public function __construct($id = null) {
-
+    public function __construct($id = null)
+    {
         if ($id) {
             Stream::set_session($id);
         }
@@ -63,7 +63,8 @@ class Stream_Playlist {
         return true;
     }
 
-    private function _add_url($url) {
+    private function _add_url($url)
+    {
         $this->urls[] = $url;
 
         $sql = 'INSERT INTO `stream_playlist` ';
@@ -85,7 +86,8 @@ class Stream_Playlist {
         return Dba::write($sql, $values);
     }
 
-    public static function gc() {
+    public static function gc()
+    {
         $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` ' .
             'LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` ' .
             'WHERE `session`.`id` IS NULL';
@@ -96,9 +98,10 @@ class Stream_Playlist {
      * _media_to_urlarray
      * Formats the URL and media information and adds it to the object
      */
-    private static function _media_to_urlarray($media) {
+    private static function _media_to_urlarray($media)
+    {
         $urls = array();
-        foreach($media as $medium) {
+        foreach ($media as $medium) {
             debug_event('stream_playlist', 'Adding ' . json_encode($medium), 5);
             $url = array();
 
@@ -113,7 +116,7 @@ class Stream_Playlist {
             // Set a default which can be overridden
             $url['author'] = 'Ampache';
             $url['time'] = $object->time;
-            switch($type) {
+            switch ($type) {
                 case 'song':
                     $url['title'] = $object->title;
                     $url['author'] = $object->f_artist_full;
@@ -145,8 +148,8 @@ class Stream_Playlist {
         return $urls;
     }
 
-    public function generate_playlist($type, $redirect = false) {
-
+    public function generate_playlist($type, $redirect = false)
+    {
         if (!count($this->urls)) {
             debug_event('stream_playlist', 'Error: Empty URL array for ' . $this->id, 2);
             return false;
@@ -155,7 +158,7 @@ class Stream_Playlist {
         debug_event('stream_playlist', 'generating a ' . $type, 5);
 
         $ext = $type;
-        switch($type) {
+        switch ($type) {
             case 'download':
             case 'democratic':
             case 'localplay':
@@ -208,7 +211,8 @@ class Stream_Playlist {
      * add
      * Adds an array of media
      */
-    public function add($media = array()) {
+    public function add($media = array())
+    {
         $urls = $this->_media_to_urlarray($media);
         foreach ($urls as $url) {
             $this->_add_url($url);
@@ -220,8 +224,8 @@ class Stream_Playlist {
      * Add an array of urls. This is used for things that aren't coming
      * from media objects
      */
-    public function add_urls($urls = array()) {
-
+    public function add_urls($urls = array())
+    {
         if (!is_array($urls)) { return false; }
 
         foreach ($urls as $url) {
@@ -238,8 +242,8 @@ class Stream_Playlist {
      * create_simplem3u
      * this creates a simple m3u without any of the extended information
      */
-    public function create_simple_m3u() {
-
+    public function create_simple_m3u()
+    {
         foreach ($this->urls as $url) {
             echo $url->url . "\n";
         }
@@ -251,8 +255,8 @@ class Stream_Playlist {
      * creates an m3u file, this includes the EXTINFO and as such can be
      * large with very long playlsits
      */
-    public function create_m3u() {
-
+    public function create_m3u()
+    {
         echo "#EXTM3U\n";
 
         foreach ($this->urls as $url) {
@@ -266,8 +270,8 @@ class Stream_Playlist {
     /**
       * create_pls
      */
-    public function create_pls() {
-
+    public function create_pls()
+    {
         echo "[playlist]\n";
         echo 'NumberOfEntries=' . count($this->urls) . "\n";
         foreach ($this->urls as $url) {
@@ -285,8 +289,8 @@ class Stream_Playlist {
      * create_asx
      * This should really only be used if all of the content is ASF files.
      */
-    public function create_asx() {
-
+    public function create_asx()
+    {
         echo '<ASX VERSION="3.0" BANNERBAR="auto">' . "\n";
         echo "<TITLE>Ampache ASX Playlist</TITLE>\n";
         echo '<PARAM NAME="Encoding" VALUE="utf-8" />' . "\n";
@@ -311,8 +315,8 @@ class Stream_Playlist {
     /**
      * create_xspf
      */
-    public function create_xspf() {
-
+    public function create_xspf()
+    {
         foreach ($this->urls as $url) {
             $xml = array();
 
@@ -324,7 +328,7 @@ class Stream_Playlist {
                 'identifier' => $url->url
             );
             if ($url->type == 'video') {
-                $xml['track']['meta'] = 
+                $xml['track']['meta'] =
                     array(
                         'attribute' => 'rel="provider"',
                         'value' => 'video'
@@ -356,22 +360,22 @@ class Stream_Playlist {
      *
      * Creates an html5 player.
      */
-    public function create_html5_player() {
-    
+    public function create_html5_player()
+    {
         if (Config::get("iframes")) {
-            require Config::get('prefix') . '/templates/create_html5_player_embedded.inc.php';  
+            require Config::get('prefix') . '/templates/create_html5_player_embedded.inc.php';
         } else {
             require Config::get('prefix') . '/templates/create_html5_player.inc.php';
         }
-        
+
     }  // create_html5_player
 
     /**
      * create_localplay
      * This calls the Localplay API to add the URLs and then start playback
      */
-    public function create_localplay() {
-
+    public function create_localplay()
+    {
         $localplay = new Localplay(Config::get('localplay_controller'));
         $localplay->connect();
         foreach ($this->urls as $url) {
@@ -388,7 +392,8 @@ class Stream_Playlist {
      * This 'votes' on the songs; it inserts them into a tmp_playlist with user
      * set to -1.
      */
-    public function create_democratic() {
+    public function create_democratic()
+    {
         $democratic = Democratic::get_current_playlist();
         $democratic->set_parent();
         $items = array();
@@ -405,8 +410,8 @@ class Stream_Playlist {
      * create_download
      * This prompts for a download of the song
      */
-    private function create_download() {
-
+    private function create_download()
+    {
         // There should only be one here...
         if (count($this->urls) != 1) {
             debug_event('stream_playlist', 'Download called, but $urls contains ' . json_encode($this->urls), 2);
@@ -422,10 +427,10 @@ class Stream_Playlist {
      * create_ram
      *this functions creates a RAM file for use by Real Player
      */
-    public function create_ram() {
+    public function create_ram()
+    {
         foreach ($this->urls as $url) {
             echo $url->url . "\n";
         }
     } // create_ram
 }
-?>

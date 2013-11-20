@@ -26,10 +26,11 @@
 <title><?php echo Config::get('site_title'); ?></title>
 <script language="javascript" type="text/javascript">
 <!-- begin
-function PlayerPopUp(URL) {
-	window.open(URL, 'HTML5_player', 'width=730,height=285,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');
-	window.location = '<?php echo return_referer() ?>';
-	return false;
+function PlayerPopUp(URL)
+{
+    window.open(URL, 'HTML5_player', 'width=730,height=285,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');
+    window.location = '<?php echo return_referer() ?>';
+    return false;
 }
 // end -->
 </script>

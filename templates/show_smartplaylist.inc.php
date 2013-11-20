@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php 
+<?php
 ob_start();
 require Config::get('prefix') . '/templates/show_smartplaylist_title.inc.php';
 $title = ob_get_contents();

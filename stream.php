@@ -76,7 +76,7 @@ switch ($_REQUEST['action']) {
     case 'artist':
         $artist = new Artist($_REQUEST['artist_id']);
         $songs = $artist->get_songs();
-        foreach($songs as $song) {
+        foreach ($songs as $song) {
             $media_ids[] = array(
                 'object_type' => 'song',
                 'object_id' => $song);
@@ -94,7 +94,7 @@ switch ($_REQUEST['action']) {
     case 'album':
         $album = new Album($_REQUEST['album_id']);
         $songs = $album->get_songs();
-        foreach($songs as $song) {
+        foreach ($songs as $song) {
             $media_ids[] = array(
                 'object_type' => 'song',
                 'object_id' => $song);
@@ -109,10 +109,10 @@ switch ($_REQUEST['action']) {
         $media_ids = $playlist->get_random_songs();
     break;
     case 'random':
-        if($_REQUEST['genre'][0] != '-1') {
+        if ($_REQUEST['genre'][0] != '-1') {
             $matchlist['genre'] = $_REQUEST['genre'];
         }
-        if($_REQUEST['catalog'] != '-1') {
+        if ($_REQUEST['catalog'] != '-1') {
             $matchlist['catalog'] = $_REQUEST['catalog'];
         }
         /* Setup the options array */
@@ -160,5 +160,3 @@ if (isset($urls)) {
 // Depending on the stream type, will either generate a redirect or actually do
 // the streaming.
 $playlist->generate_playlist($stream_type, true);
-
-?>

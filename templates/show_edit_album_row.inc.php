@@ -31,8 +31,7 @@
                     <?php
                     if ($album->artist_count == '1') {
                         show_artist_select('artist',$album->artist_id);
-                    }
-                    else {
+                    } else {
                         echo T_('Various');
                     }
                     ?>

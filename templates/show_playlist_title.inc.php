@@ -21,4 +21,3 @@
  */
 
 echo sprintf(T_('%s %s (Playlist)'), $playlist->f_type, $playlist->name);
-?>

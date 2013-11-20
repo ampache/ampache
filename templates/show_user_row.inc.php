@@ -42,8 +42,7 @@
     //FIXME: Fix this for the extra permission levels
     if ($client->disabled == '1') {
         echo "<a href=\"".$web_path."/admin/users.php?action=enable&amp;user_id=$client->id\">" . UI::get_icon('enable', T_('Enable')) . "</a>";
-    }
-    else {
+    } else {
         echo "<a href=\"".$web_path."/admin/users.php?action=disable&amp;user_id=$client->id\">" . UI::get_icon('disable', T_('Disable')) ."</a>";
     }
     ?>

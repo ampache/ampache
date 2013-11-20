@@ -39,14 +39,14 @@ if (!Session::exists('interface', $_COOKIE[Config::get('session_name')]) && !Ses
 }
 
 // If we aren't resizing just trash thumb
-if (!Config::get('resize_images')) { $_GET['thumb'] = null; } 
+if (!Config::get('resize_images')) { $_GET['thumb'] = null; }
 
 // FIXME: Legacy stuff - should be removed after a version or so
-if (!isset($_GET['object_type'])) { 
-    $_GET['object_type'] = 'album'; 
-} 
+if (!isset($_GET['object_type'])) {
+    $_GET['object_type'] = 'album';
+}
 
-$type = Art::validate_type($_GET['object_type']); 
+$type = Art::validate_type($_GET['object_type']);
 
 /* Decide what size this image is */
 switch ($_GET['thumb']) {
@@ -91,23 +91,22 @@ switch ($_GET['type']) {
         $media = new $type($_GET['id']);
         $filename = $media->name;
 
-        $art = new Art($media->id,$type); 
-        $art->get_db();  
+        $art = new Art($media->id,$type);
+        $art->get_db();
 
         if (!$art->raw_mime) {
             $mime = 'image/jpeg';
-            $image = file_get_contents(Config::get('prefix') . 
+            $image = file_get_contents(Config::get('prefix') .
                 Config::get('theme_path') .
                 '/images/blankalbum.jpg');
-        }
-        else {
+        } else {
             if ($_GET['thumb']) {
                 $thumb_data = $art->get_thumb($size);
             }
-                
-            $mime = $thumb_data 
+
+            $mime = $thumb_data
                 ? $thumb_data['thumb_mime']
-                : $art->raw_mime;     
+                : $art->raw_mime;
             $image = $thumb_data
                 ? $thumb_data['thumb']
                 : $art->raw;
@@ -116,7 +115,7 @@ switch ($_GET['type']) {
 } // end switch type
 
 if ($image) {
-    $extension = Art::extension($mime); 
+    $extension = Art::extension($mime);
     $filename = scrub_out($filename . '.' . $extension);
 
     // Send the headers and output the image
@@ -124,5 +123,3 @@ if ($image) {
     $browser->downloadHeaders($filename, $mime, true);
     echo $image;
 }
-
-?>

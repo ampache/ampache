@@ -20,7 +20,7 @@
  *
  */
 
-UI::show_box_top(sprintf(T_('Settings for %s') , $catalog->name . ' (' . $catalog->path . ')'), 'box box_edit_catalog');
+UI::show_box_top(sprintf(T_('Settings for %s') , $catalog->name . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog');
 ?>
 <form method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
 <table cellspacing="0" cellpadding="0">
@@ -41,14 +41,6 @@ UI::show_box_top(sprintf(T_('Settings for %s') , $catalog->name . ' (' . $catalo
 <tr>
     <td><?php echo T_('Catalog Type'); ?></td>
     <td><?php echo scrub_out(ucfirst($catalog->catalog_type)); ?></td>
-</tr>
-<tr>
-        <td><?php echo T_('Remote Catalog Username'); ?>: </td>
-        <td><input size="30" type="text" name="remote_username" value="<?php echo scrub_out($catalog->remote_username); ?>" /><span class="error">*<?php echo T_('Required for Remote Catalogs'); ?></span></td>
-</tr>
-<tr>
-        <td><?php echo T_('Remote Catalog Password'); ?>: </td>
-        <td><input size="30" type="password" name="remote_password" value="" /><span class="error">*<?php echo T_('Required for Remote Catalogs'); ?></span></td>
 </tr>
 <tr>
     <td><?php echo T_('Filename pattern'); ?>:</td>

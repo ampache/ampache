@@ -23,8 +23,8 @@
 
 // A class for passing around an URL and associated data
 
-class Stream_URL extends memory_object {
-
+class Stream_URL extends memory_object
+{
     public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type');
 
     /**
@@ -32,7 +32,8 @@ class Stream_URL extends memory_object {
      *
      * Takes an url and parses out all the chewy goodness.
      */
-    public static function parse($url) {
+    public static function parse($url)
+    {
         $query = parse_url($url, PHP_URL_QUERY);
         $elements = explode('&', $query);
         $results = array();

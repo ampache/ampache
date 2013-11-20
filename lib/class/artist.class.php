@@ -20,8 +20,8 @@
  *
  */
 
-class Artist extends database_object {
-
+class Artist extends database_object
+{
     /* Variables from DB */
     public $id;
     public $name;
@@ -40,8 +40,8 @@ class Artist extends database_object {
      * Artist class, for modifing a artist
      * Takes the ID of the artist and pulls the info from the db
      */
-    public function __construct($id='',$catalog_init=0) {
-
+    public function __construct($id='',$catalog_init=0)
+    {
         /* If they failed to pass in an id, just run for it */
         if (!$id) { return false; }
 
@@ -62,8 +62,8 @@ class Artist extends database_object {
      * This is used by the metadata class specifically but fills out a Artist object
      * based on a key'd array, it sets $_fake to true
      */
-    public static function construct_from_array($data) {
-
+    public static function construct_from_array($data)
+    {
         $artist = new Artist(0);
         foreach ($data as $key=>$value) {
             $artist->$key = $value;
@@ -81,15 +81,17 @@ class Artist extends database_object {
      *
      * This cleans out unused artists
      */
-    public static function gc() {
+    public static function gc()
+    {
         Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `song`.`id` IS NULL');
     }
 
     /**
      * this attempts to build a cache of the data from the passed albums all in one query
      */
-    public static function build_cache($ids,$extra=false) {
-        if(!is_array($ids) OR !count($ids)) { return false; }
+    public static function build_cache($ids,$extra=false)
+    {
+        if (!is_array($ids) OR !count($ids)) { return false; }
 
         $idlist = '(' . implode(',', $ids) . ')';
 
@@ -103,7 +105,7 @@ class Artist extends database_object {
         // If we need to also pull the extra information, this is normally only used when we are doing the human display
         if ($extra) {
             $sql = "SELECT `song`.`artist`, COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
-            
+
             debug_event("Artist", "build_cache sql: " . $sql, "6");
             $db_results = Dba::read($sql);
 
@@ -124,8 +126,8 @@ class Artist extends database_object {
      * get_from_name
      * This gets an artist object based on the artist name
      */
-    public static function get_from_name($name) {
-
+    public static function get_from_name($name)
+    {
         $name = Dba::escape($name);
         $sql = "SELECT `id` FROM `artist` WHERE `name`='$name'";
         $db_results = Dba::write($sql);
@@ -143,23 +145,20 @@ class Artist extends database_object {
      * gets the album ids that this artist is a part
      * of
      */
-    public function get_albums($catalog = null) {
-
-        if($catalog) {
+    public function get_albums($catalog = null)
+    {
+        if ($catalog) {
             $catalog_join = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
             $catalog_where = "AND `catalog`.`id` = '$catalog'";
         }
-        
+
         $results = array();
 
         $sql_sort = 'ORDER BY `album`.`name`,`album`.`disk`,`album`.`year`';
-        
+
         $sort_type = Config::get('album_sort');
-        if ($sort_type == 'year_asc') { $sql_sort = 'ORDER BY `album`.`year` ASC'; }
-        elseif ($sort_type == 'year_desc') { $sql_sort = 'ORDER BY `album`.`year` DESC'; }
-        elseif ($sort_type == 'name_asc') { $sql_sort = 'ORDER BY `album`.`name` ASC'; }
-        elseif ($sort_type == 'name_desc') { $sql_sort = 'ORDER BY `album`.`name` DESC'; }
-        
+        if ($sort_type == 'year_asc') { $sql_sort = 'ORDER BY `album`.`year` ASC'; } elseif ($sort_type == 'year_desc') { $sql_sort = 'ORDER BY `album`.`year` DESC'; } elseif ($sort_type == 'name_asc') { $sql_sort = 'ORDER BY `album`.`name` ASC'; } elseif ($sort_type == 'name_desc') { $sql_sort = 'ORDER BY `album`.`name` DESC'; }
+
         $sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
             "WHERE `song`.`artist`='$this->id' $catalog_where GROUP BY `album`.`id` $sql_sort";
 
@@ -178,8 +177,8 @@ class Artist extends database_object {
      * get_songs
      * gets the songs for this artist
      */
-    public function get_songs() {
-
+    public function get_songs()
+    {
         $sql = "SELECT `song`.`id` FROM `song` WHERE `song`.`artist`='" . Dba::escape($this->id) . "' ORDER BY album, track";
         $db_results = Dba::read($sql);
 
@@ -195,8 +194,8 @@ class Artist extends database_object {
      * get_random_songs
      * Gets the songs from this artist in a random order
      */
-    public function get_random_songs() {
-
+    public function get_random_songs()
+    {
         $results = array();
 
         $sql = "SELECT `id` FROM `song` WHERE `artist`='$this->id' ORDER BY RAND()";
@@ -214,13 +213,12 @@ class Artist extends database_object {
      * _get_extra info
      * This returns the extra information for the artist, this means totals etc
      */
-    private function _get_extra_info($catalog=FALSE) {
-
+    private function _get_extra_info($catalog=FALSE)
+    {
         // Try to find it in the cache and save ourselves the trouble
         if (parent::is_cached('artist_extra',$this->id) ) {
             $row = parent::get_from_cache('artist_extra',$this->id);
-        }
-        else {
+        } else {
             $uid = Dba::escape($this->id);
             $sql = "SELECT `song`.`artist`,COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` WHERE `song`.`artist`='$uid' ";
             if ($catalog) {
@@ -228,7 +226,7 @@ class Artist extends database_object {
             }
 
             $sql .= "GROUP BY `song`.`artist`";
-                
+
             $db_results = Dba::read($sql);
             $row = Dba::fetch_assoc($db_results);
             if (Config::get('show_played_times')) {
@@ -253,8 +251,8 @@ class Artist extends database_object {
      * so they can be displayed in a table for example
      * it changes the title into a full link.
       */
-    public function format() {
-
+    public function format()
+    {
         /* Combine prefix and name, trim then add ... if needed */
         $name = UI::truncate(trim($this->prefix . " " . $this->name),Config::get('ellipse_threshold_artist'));
         $this->f_name = $name;
@@ -295,11 +293,14 @@ class Artist extends database_object {
      *
      * Checks for an existing artist; if none exists, insert one.
      */
-    public static function check($name, $mbid = null, $readonly = false) {
+    public static function check($name, $mbid = null, $readonly = false)
+    {
         $trimmed = Catalog::trim_prefix(trim($name));
         $name = $trimmed['string'];
         $prefix = $trimmed['prefix'];
-        
+
+        if ($mbid == '') $mbid = null;
+
         if (!$name) {
             $name = T_('Unknown (Orphaned)');
             $prefix = null;
@@ -340,8 +341,7 @@ class Artist extends database_object {
                         $id = $id_array['null'];
                         $exists = true;
                     }
-                }
-                else {
+                } else {
                     // Pick one at random
                     $id = array_shift($id_array);
                     $exists = true;
@@ -377,8 +377,8 @@ class Artist extends database_object {
      * This takes a key'd array of data and updates the current artist
      * it will flag songs as neeed
      */
-    public function update($data) {
-
+    public function update($data)
+    {
         // Save our current ID
         $current_id = $this->id;
 
@@ -410,4 +410,3 @@ class Artist extends database_object {
     } // update
 
 } // end of artist class
-?>

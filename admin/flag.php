@@ -31,7 +31,6 @@ UI::show_header();
 
 switch ($_REQUEST['action']) {
     case 'edit_song':
-        $catalog = new Catalog();
         $song = new Song($_REQUEST['song_id']);
         $new_song = new Song();
 
@@ -44,21 +43,19 @@ switch ($_REQUEST['action']) {
         /* If no change in string take Drop down */
         if (strcasecmp(stripslashes($_REQUEST['album_string']),$song->get_album_name()) == 0) {
             $album = $song->get_album_name($_REQUEST['album']);
-        }
-        else {
+        } else {
             $album = scrub_in($_REQUEST['album_string']);
         }
 
         if (strcasecmp(stripslashes($_REQUEST['artist_string']),$song->get_artist_name()) == 0) {
             $artist = $song->get_artist_name($_REQUEST['artist']);
-        }
-        else {
+        } else {
             $artist = scrub_in($_REQUEST['artist_string']);
         }
 
         /* Use the check functions to get / create ids for this info */
-        $new_song->album = $catalog->check_album(unhtmlentities($album));
-        $new_song->artist = $catalog->check_artist(unhtmlentities($artist));
+        $new_song->album = Album::check_album(unhtmlentities($album));
+        $new_song->artist = Artist::check_artist(unhtmlentities($artist));
 
         /* Update this mofo, store an old copy for cleaning */
         $old_song         = new Song();
@@ -67,8 +64,7 @@ switch ($_REQUEST['action']) {
         $song->update_song($song->id,$new_song);
 
         /* Now that it's been updated clean old junk entries */
-        $catalog = new Catalog();
-        $cleaned = $catalog->clean_single_song($old_song);
+        $cleaned = Catalog::clean_single_song($old_song);
 
         /* Add a tagging record of this so we can fix the file */
         if ($_REQUEST['flag']) {
@@ -94,13 +90,10 @@ switch ($_REQUEST['action']) {
         // Build the needed album
         $album = new Album($_REQUEST['album_id']);
 
-        // Create the needed catalog object cause we can't do
-        // static class methods :(
-        $catalog = new Catalog();
         $flag = new Flag();
 
         /* Check the new Name */
-        $album_id = $catalog->check_album($_REQUEST['name'],$_REQUEST['year']);
+        $album_id = Album::check_album($_REQUEST['name'],$_REQUEST['year']);
 
         $songs = $album->get_songs();
 
@@ -138,11 +131,10 @@ switch ($_REQUEST['action']) {
         $artist = new Artist($_REQUEST['artist_id']);
 
         // Create the needed objects, a pox on PHP4
-        $catalog = new Catalog();
         $flag = new Flag();
 
         /* Check the new Name */
-        $artist_id = $catalog->check_artist($_REQUEST['name']);
+        $artist_id = Artist::check_artist($_REQUEST['name']);
 
         $songs = $artist->get_songs();
 
@@ -168,7 +160,6 @@ switch ($_REQUEST['action']) {
     /* Done by 'Select' code passes array of song ids */
     case 'mass_update':
         $songs = $_REQUEST['song'];
-        $catalog = new Catalog();
         $object = $_REQUEST['update_field'];
         $flag = new Flag();
 
@@ -199,10 +190,10 @@ switch ($_REQUEST['action']) {
             /* Restrict which fields can be updated */
             switch ($object) {
                 case 'album':
-                    $new_song->album = $catalog->check_album(unhtmlentities($_REQUEST['update_value']));
+                    $new_song->album = Album::check_album(unhtmlentities($_REQUEST['update_value']));
                 break;
                 case 'artist':
-                    $new_song->artist = $catalog->check_artist(unhtmlentities($_REQUEST['update_value']));
+                    $new_song->artist = Artist::check_artist(unhtmlentities($_REQUEST['update_value']));
                 break;
                 case 'year':
                     $new_song->year    = intval($_REQUEST['update_value']);
@@ -242,8 +233,7 @@ switch ($_REQUEST['action']) {
             $flag = new Flag($flag_id);
             if ($_REQUEST['update_action'] == 'reject') {
                 $flag->delete_flag();
-            }
-            else {
+            } else {
                 $flag->approve();
             }
         } // end foreach flags
@@ -260,8 +250,7 @@ switch ($_REQUEST['action']) {
     case 'disable':
         $song_obj = new Song();
         // If we pass just one, make it still work
-        if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(0,$_REQUEST['song_ids']); }
-        else {
+        if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(0,$_REQUEST['song_ids']); } else {
             foreach ($_REQUEST['song_ids'] as $song_id) {
                 $song_obj->update_enabled(0,$song_id);
             } // end foreach
@@ -271,8 +260,7 @@ switch ($_REQUEST['action']) {
     case 'enabled':
         $song_obj = new Song();
         // If we pass just one, make it still work
-        if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(1,$_REQUEST['song_ids']); }
-        else {
+        if (!is_array($_REQUEST['song_ids'])) { $song_obj->update_enabled(1,$_REQUEST['song_ids']); } else {
             foreach ($_REQUEST['song_ids'] as $song_id) {
                 $song_obj->update_enabled(1,$song_id);
             } // end foreach
@@ -302,4 +290,3 @@ switch ($_REQUEST['action']) {
 } // end switch
 
 UI::show_footer();
-?>

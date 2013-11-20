@@ -11,7 +11,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -25,8 +25,8 @@
  * Search-related voodoo.  Beware tentacles.
  */
 
-class Search extends playlist_object {
-
+class Search extends playlist_object
+{
     public $searchtype;
     public $rules;
     public $logic_operator = 'AND';
@@ -38,7 +38,8 @@ class Search extends playlist_object {
     /**
      * constructor
      */
-    public function __construct($searchtype = 'song', $id = '') {
+    public function __construct($searchtype = 'song', $id = '')
+    {
         $this->searchtype = $searchtype;
         if ($id) {
             $info = $this->get_info($id);
@@ -148,14 +149,14 @@ class Search extends playlist_object {
             'description' => T_('does not sound like'),
             'sql'     => 'NOT SOUNDS LIKE'
         );
-        
+
 
         $this->basetypes['boolean_numeric'][] = array(
             'name'    => 'equal',
             'description' => T_('is'),
             'sql'     => '<=>'
         );
-        
+
          $this->basetypes['boolean_numeric'][] = array(
             'name'    => 'ne',
             'description' => T_('is not'),
@@ -168,7 +169,7 @@ class Search extends playlist_object {
             'description' => T_('is'),
             'sql'     => ''
         );
-        
+
         $this->basetypes['boolean_subsearch'][] = array(
             'name'    => 'ne',
             'description' => T_('is not'),
@@ -181,7 +182,7 @@ class Search extends playlist_object {
             'description' => T_('before'),
             'sql'     => '<'
         );
-        
+
         $this->basetypes['date'][] = array(
             'name'    => 'gt',
             'description' => T_('after'),
@@ -225,7 +226,7 @@ class Search extends playlist_object {
                 'widget' => array('input', 'text')
             );
 
-            
+
             $this->types[] = array(
                 'name'   => 'tag',
                 'label'  => T_('Tag'),
@@ -248,7 +249,7 @@ class Search extends playlist_object {
             );
 
             $this->types[] = array(
-                'name'   => 'time', 
+                'name'   => 'time',
                 'label'  => T_('Length (in minutes)'),
                 'type'   => 'numeric',
                 'widget' => array('input', 'text')
@@ -264,7 +265,7 @@ class Search extends playlist_object {
                         array(
                             '1 Star',
                             '2 Stars',
-                            '3 Stars', 
+                            '3 Stars',
                             '4 Stars',
                             '5 Stars'
                         )
@@ -320,7 +321,7 @@ class Search extends playlist_object {
 
             $catalogs = array();
             foreach (Catalog::get_catalogs() as $catid) {
-                $catalog = new Catalog($catid);
+                $catalog = Catalog::create_from_id($catid);
                 $catalog->format();
                 $catalogs[$catid] = $catalog->f_name;
             }
@@ -392,7 +393,7 @@ class Search extends playlist_object {
 
             $catalogs = array();
             foreach (Catalog::get_catalogs() as $catid) {
-                $catalog = new Catalog($catid);
+                $catalog = Catalog::create_from_id($catid);
                 $catalog->format();
                 $catalogs[$catid] = $catalog->f_name;
             }
@@ -402,7 +403,7 @@ class Search extends playlist_object {
                 'type'   => 'boolean_numeric',
                 'widget' => array('select', $catalogs)
             );
-                
+
 
             $this->types[] = array(
                 'name'   => 'tag',
@@ -442,7 +443,8 @@ class Search extends playlist_object {
      *
      * Sanitizes raw search data
      */
-    public static function clean_request($data) {
+    public static function clean_request($data)
+    {
         foreach ($data as $key => $value) {
             $prefix = substr($key, 0, 4);
             $value = trim($value);
@@ -453,7 +455,7 @@ class Search extends playlist_object {
         }
 
         // Figure out if they want an AND based search or an OR based search
-        switch($data['operator']) {
+        switch ($data['operator']) {
             case 'or':
                 $request['operator'] = 'OR';
             break;
@@ -461,9 +463,9 @@ class Search extends playlist_object {
                 $request['operator'] = 'AND';
             break;
         }
-        
+
         // Verify the type
-        switch($data['type']) {
+        switch ($data['type']) {
             case 'album':
             case 'artist':
             case 'video':
@@ -478,12 +480,13 @@ class Search extends playlist_object {
         return $request;
     } // end clean_request
 
-    /** 
+    /**
      * get_name_byid
      *
      * Returns the name of the saved search corresponding to the given ID
      */
-    public static function get_name_byid($id) {
+    public static function get_name_byid($id)
+    {
         $sql = "SELECT `name` FROM `search` WHERE `id` = '$id'";
         $db_results = Dba::read($sql);
         $r = Dba::fetch_assoc($db_results);
@@ -495,7 +498,8 @@ class Search extends playlist_object {
      *
      * Return the IDs of all saved searches accessible by the current user.
      */
-    public static function get_searches() {
+    public static function get_searches()
+    {
         $sql = "SELECT `id` from `search` WHERE `type`='public' OR " .
             "`user`='" . $GLOBALS['user']->id . "' ORDER BY `name`";
         $db_results = Dba::read($sql);
@@ -515,7 +519,8 @@ class Search extends playlist_object {
      * This function actually runs the search and returns an array of the
      * results.
      */
-    public static function run($data) {
+    public static function run($data)
+    {
         $limit = intval($data['limit']);
         $data = Search::clean_request($data);
 
@@ -552,7 +557,8 @@ class Search extends playlist_object {
      *
      * Does what it says on the tin.
      */
-    public function delete() {
+    public function delete()
+    {
         $id = Dba::escape($this->id);
         $sql = "DELETE FROM `search` WHERE `id` = ?";
         $db_results = Dba::write($sql, array($id));
@@ -564,7 +570,8 @@ class Search extends playlist_object {
      * format
      * Gussy up the data
      */
-    public function format() {
+    public function format()
+    {
         parent::format();
         $this->f_link = '<a href="' . Config::get('web_path') .
             '/smartplaylist.php?action=show_playlist&amp;playlist_id=' .
@@ -577,7 +584,8 @@ class Search extends playlist_object {
      * Return an array of the items output by our search (part of the
      * playlist interface).
      */
-    public function get_items() {
+    public function get_items()
+    {
         $results = array();
 
         $sql = $this->to_sql();
@@ -602,7 +610,8 @@ class Search extends playlist_object {
      * Returns a randomly sorted array (with an optional limit) of the items
      * output by our search (part of the playlist interface)
      */
-    public function get_random_items($limit = null) {
+    public function get_random_items($limit = null)
+    {
         $results = array();
 
         $sql = $this->to_sql();
@@ -624,13 +633,14 @@ class Search extends playlist_object {
         return $results;
     }
 
-    /** 
+    /**
      * name_to_basetype
      *
      * Iterates over our array of types to find out the basetype for
      * the passed string.
      */
-    public function name_to_basetype($name) {
+    public function name_to_basetype($name)
+    {
         foreach ($this->types as $type) {
             if ($type['name'] == $name) {
                 return $type['type'];
@@ -639,13 +649,14 @@ class Search extends playlist_object {
         return false;
     }
 
-    /** 
+    /**
      * parse_rules
      *
-     * Takes an array of sanitized search data from the form and generates 
+     * Takes an array of sanitized search data from the form and generates
      * our real array from it.
      */
-    public function parse_rules($data) {
+    public function parse_rules($data)
+    {
         $this->rules = array();
         foreach ($data as $rule => $value) {
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
@@ -667,7 +678,8 @@ class Search extends playlist_object {
      *
      * Save this search to the database for use as a smart playlist
      */
-    public function save() {
+    public function save()
+    {
         // Make sure we have a unique name
         if (! $this->name) {
             $this->name = $GLOBALS['user']->username . ' - ' . date('Y-m-d H:i:s', time());
@@ -689,9 +701,10 @@ class Search extends playlist_object {
     /**
      * to_js
      *
-     * Outputs the javascript necessary to re-show the current set of rules. 
+     * Outputs the javascript necessary to re-show the current set of rules.
      */
-    public function to_js() {
+    public function to_js()
+    {
         foreach ($this->rules as $rule) {
             $js .= '<script type="text/javascript">' .
                 'SearchRow.add("' . $rule[0] . '","' .
@@ -705,16 +718,18 @@ class Search extends playlist_object {
      *
      * Call the appropriate real function.
      */
-    public function to_sql() {
+    public function to_sql()
+    {
         return call_user_func(array($this, $this->searchtype . "_to_sql"));
     }
 
     /**
      * update
      *
-     * This function updates the saved version with the current settings. 
+     * This function updates the saved version with the current settings.
      */
-    public function update() {
+    public function update()
+    {
         if (!$this->id) {
             return false;
         }
@@ -727,11 +742,12 @@ class Search extends playlist_object {
     /**
      * _mangle_data
      *
-     * Private convenience function.  Mangles the input according to a set 
-     * of predefined rules so that we don't have to include this logic in 
+     * Private convenience function.  Mangles the input according to a set
+     * of predefined rules so that we don't have to include this logic in
      * foo_to_sql.
      */
-    private function _mangle_data($data, $type, $operator) {
+    private function _mangle_data($data, $type, $operator)
+    {
         if ($operator['preg_match']) {
             $data = preg_replace(
                 $operator['preg_match'],
@@ -756,7 +772,8 @@ class Search extends playlist_object {
      *
      * Handles the generation of the SQL for album searches.
      */
-    private function album_to_sql() {
+    private function album_to_sql()
+    {
         $sql_logic_operator = $this->logic_operator;
 
         $where = array();
@@ -841,7 +858,8 @@ class Search extends playlist_object {
      *
      * Handles the generation of the SQL for artist searches.
      */
-    private function artist_to_sql() {
+    private function artist_to_sql()
+    {
         $sql_logic_operator = $this->logic_operator;
         $where = array();
         $table = array();
@@ -903,7 +921,8 @@ class Search extends playlist_object {
      * song_to_sql
      * Handles the generation of the SQL for song searches.
      */
-    private function song_to_sql() {
+    private function song_to_sql()
+    {
         $sql_logic_operator = $this->logic_operator;
 
         $where = array();
@@ -999,7 +1018,7 @@ class Search extends playlist_object {
                 break;
             } // switch on type
         } // foreach over rules
-        
+
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         // now that we know which things we want to JOIN...
@@ -1051,7 +1070,8 @@ class Search extends playlist_object {
      *
      * Handles the generation of the SQL for video searches.
      */
-    private function video_to_sql() {
+    private function video_to_sql()
+    {
         $sql_logic_operator = $this->logic_operator;
 
         $where = array();
@@ -1085,4 +1105,3 @@ class Search extends playlist_object {
     }
 
 }
-?>

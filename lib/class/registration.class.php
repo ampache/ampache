@@ -26,14 +26,14 @@
  * This class handles all the doodlys for the registration
  * stuff in Ampache
  */
-class Registration {
-
+class Registration
+{
     /**
      * constructor
      * This is what is called when the class is loaded
      */
-    public function __construct() {
-
+    public function __construct()
+    {
         // Rien a faire
 
     } // constructor
@@ -42,7 +42,8 @@ class Registration {
       * send_confirmation
      * This sends the confirmation e-mail for the specified user
      */
-    public static function send_confirmation($username, $fullname, $email, $password, $validation) {
+    public static function send_confirmation($username, $fullname, $email, $password, $validation)
+    {
         $mailer = new Mailer();
 
         // We are the system
@@ -82,7 +83,7 @@ E-mail: %s
 
             $mailer->send_to_group('admins');
         }
-        
+
         return true;
 
     } // send_confirmation
@@ -91,8 +92,8 @@ E-mail: %s
       * show_agreement
      * This shows the registration agreement, /config/registration_agreement.php
      */
-    public static function show_agreement() {
-
+    public static function show_agreement()
+    {
         $filename = Config::get('prefix') . '/config/registration_agreement.php';
 
         if (!file_exists($filename)) { return false; }
@@ -110,4 +111,3 @@ E-mail: %s
     } // show_agreement
 
 } // end registration class
-?>

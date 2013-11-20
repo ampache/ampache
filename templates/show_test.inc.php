@@ -41,7 +41,7 @@
     </td>
     <td><font size="+1"><?php echo T_('DESCRIPTION'); ?></font></td>
 </tr>
-<?php require $prefix . '/templates/show_test_table.inc.php'; ?> 
+<?php require $prefix . '/templates/show_test_table.inc.php'; ?>
 </table>
 </div>
 <div id="bottom">

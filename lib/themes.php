@@ -26,8 +26,8 @@
  * theme.cfg.php files it can find and returns an
  * array of the results
  */
-function get_themes() {
-
+function get_themes()
+{
     /* Open the themes dir and start reading it */
     $handle = opendir(Config::get('prefix') . '/themes');
 
@@ -47,8 +47,7 @@ function get_themes() {
             $r = parse_ini_file($file . $theme_cfg);
             $r['path'] = $f;
             $results[$r['name']] = $r;
-        }
-        else {
+        } else {
             debug_event('theme', "$theme_cfg not found in $f", 5);
         }
     } // end while directory
@@ -65,8 +64,8 @@ function get_themes() {
     @discussion get a single theme and read the config file
         then return the results
 */
-function get_theme($name) {
-
+function get_theme($name)
+{
     if (strlen($name) < 1) { return false; }
 
     $config_file = Config::get('prefix') . "/themes/" . $name . "/theme.cfg.php";
@@ -80,8 +79,8 @@ function get_theme($name) {
     @function get_theme_author
     @discussion returns the author of this theme
 */
-function get_theme_author($theme_name) {
-
+function get_theme_author($theme_name)
+{
     $theme_path = Config::get('prefix') . '/themes/' . Config::get('theme_name') . '/theme.cfg.php';
     $results = read_config($theme_path);
 
@@ -93,8 +92,8 @@ function get_theme_author($theme_name) {
     @function theme_exists
     @discussion this function checks to make sure that a theme actually exists
 */
-function theme_exists($theme_name) {
-
+function theme_exists($theme_name)
+{
     $theme_path = Config::get('prefix') . '/themes/' . $theme_name . '/theme.cfg.php';
 
     if (!file_exists($theme_path)) {
@@ -104,5 +103,3 @@ function theme_exists($theme_name) {
     return true;
 
 } // theme_exists
-
-?>

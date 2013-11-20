@@ -20,8 +20,8 @@
  *
  */
 
-class Shoutbox {
-
+class Shoutbox
+{
     public $id;
 
     /**
@@ -29,8 +29,8 @@ class Shoutbox {
      * This pulls the shoutbox information from the database and returns
      * a constructed object, uses user_shout table
      */
-    public function __construct($shout_id) {
-
+    public function __construct($shout_id)
+    {
         // Load the data from the database
         $this->_get_info($shout_id);
 
@@ -42,8 +42,8 @@ class Shoutbox {
      * _get_info
      * does the db call, reads from the user_shout table
      */
-    private function _get_info($shout_id) {
-
+    private function _get_info($shout_id)
+    {
         $sticky_id = Dba::escape($shout_id);
 
         $sql = "SELECT * FROM `user_shout` WHERE `id`='$shout_id'";
@@ -64,8 +64,9 @@ class Shoutbox {
      *
      * Cleans out orphaned shoutbox items
      */
-    public static function gc() {
-        foreach(array('song', 'album', 'artist') as $object_type) {
+    public static function gc()
+    {
+        foreach (array('song', 'album', 'artist') as $object_type) {
             Dba::write("DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `$object_type` ON `$object_type`.`id` = `user_shout`.`object_id` WHERE `$object_type`.`id` IS NULL AND `user_shout`.`object_type` = '$object_type'");
         }
     }
@@ -75,8 +76,8 @@ class Shoutbox {
      * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
      * number of objects shown
      */
-    public static function get_top($limit) {
-
+    public static function get_top($limit)
+    {
         $shouts = self::get_sticky();
 
         // If we've already got too many stop here
@@ -102,8 +103,8 @@ class Shoutbox {
      * get_sticky
      * This returns all current sticky shoutbox items
      */
-    public static function get_sticky() {
-
+    public static function get_sticky()
+    {
         $sql = "SELECT * FROM `user_shout` WHERE `sticky`='1' ORDER BY `date` DESC";
         $db_results = Dba::read($sql);
 
@@ -121,8 +122,8 @@ class Shoutbox {
      * get_object
      * This takes a type and an ID and returns a created object
      */
-    public static function get_object($type,$object_id) {
-
+    public static function get_object($type,$object_id)
+    {
         $allowed_objects = array('song','genre','album','artist','radio');
 
         if (!in_array($type,$allowed_objects)) {
@@ -140,8 +141,8 @@ class Shoutbox {
      * This returns an image tag if the type of object we're currently rolling with
      * has an image associated with it
      */
-    public function get_image() {
-
+    public function get_image()
+    {
         switch ($this->object_type) {
             case 'album':
                 $image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . Config::get('web_path') . "/image.php?id=" . $this->object_id . "&amp;thumb=1\" />";
@@ -166,8 +167,8 @@ class Shoutbox {
      * create
      * This takes a key'd array of data as input and inserts a new shoutbox entry, it returns the auto_inc id
      */
-    public static function create($data) {
-
+    public static function create($data)
+    {
         $user         = Dba::escape($GLOBALS['user']->id);
         $text         = Dba::escape(strip_tags($data['comment']));
         $date         = time();
@@ -189,8 +190,8 @@ class Shoutbox {
      * update
      * This takes a key'd array of data as input and updates a shoutbox entry
      */
-    public static function update($data) {
-
+    public static function update($data)
+    {
         $id        = Dba::escape($data['shout_id']);
         $text         = Dba::escape(strip_tags($data['comment']));
         $sticky     = make_bool($data['sticky']);
@@ -207,7 +208,8 @@ class Shoutbox {
      * this function takes the object and reformats some values
      */
 
-    public function format() {
+    public function format()
+    {
         $this->sticky = ($this->sticky == "0") ? 'No' : 'Yes';
         $this->date = date("m\/d\/Y - H:i", $this->date);
         return true;
@@ -219,8 +221,8 @@ class Shoutbox {
      * this function deletes a specific shoutbox entry
      */
 
-    public function delete($shout_id) {
-
+    public function delete($shout_id)
+    {
         // Delete the shoutbox post
         $shout_id = Dba::escape($shout_id);
         $sql = "DELETE FROM `user_shout` WHERE `id`='$shout_id'";
@@ -229,4 +231,3 @@ class Shoutbox {
     } // delete
 
 } // Shoutbox class
-?>

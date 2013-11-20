@@ -30,8 +30,7 @@
         $title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=artist">' .
             UI::get_icon('all', T_('Favorite Artists')) . '</a>&nbsp;' .  T_('Favorite Artists');
         show_info_box($title,'artist',$items);
-    }
-    else {
+    } else {
         echo "<span class=\"error\">" . T_('Not Enough Data') . "</span>";
     }
     ?>
@@ -43,8 +42,7 @@
                 $title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=album">' .
                         UI::get_icon('all', T_('Favorite Albums')) . '</a>&nbsp;' .  T_('Favorite Albums');
         show_info_box($title,'album',$items);
-    }
-    else {
+    } else {
         echo "<span class=\"error\">" . T_('Not Enough Data') . "</span>";
     }
     ?>
@@ -56,8 +54,7 @@
                 $title = '<a href="' . Config::get('web_path') . '/stream.php?action=play_favorite&amp;type=song">' .
                         UI::get_icon('all', T_('Favorite Songs')) . '</a>&nbsp;' .  T_('Favorite Songs');
         show_info_box($title,'your_song',$items);
-    }
-    else {
+    } else {
         echo "<span class=\"error\">" . T_('Not Enough Data') . "</span>";
     }
     ?>

@@ -27,8 +27,8 @@
  * This was initially in the album class, but was pulled out
  * to be more general and potentially apply to albums, artists, movies etc
  */
-class Art extends database_object {
-
+class Art extends database_object
+{
     public $type;
     public $uid; // UID of the object not ID because it's not the ART.ID
     public $raw; // Raw art data
@@ -44,8 +44,8 @@ class Art extends database_object {
      * Art constructor, takes the UID of the object and the
      * object type.
      */
-    public function __construct($uid, $type = 'album') {
-
+    public function __construct($uid, $type = 'album')
+    {
         $this->type = Art::validate_type($type);
         $this->uid = $uid;
 
@@ -57,15 +57,15 @@ class Art extends database_object {
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point
      */
-    public static function build_cache($object_ids) {
-
+    public static function build_cache($object_ids)
+    {
         if (!is_array($object_ids) || !count($object_ids)) { return false; }
         $uidlist = '(' . implode(',', $object_ids) . ')';
         $sql = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_id` IN $uidlist";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('art', $row['object_type'] . 
+            parent::add_to_cache('art', $row['object_type'] .
                 $row['object_id'] . $row['size'], $row);
         }
 
@@ -77,7 +77,8 @@ class Art extends database_object {
      * _auto_init
      * Called on creation of the class
      */
-    public static function _auto_init() {
+    public static function _auto_init()
+    {
         if (!isset($_SESSION['art_enabled'])) {
             $_SESSION['art_enabled'] = (Config::get('bandwidth') > 25);
         }
@@ -88,7 +89,8 @@ class Art extends database_object {
      * is_enabled
      * Checks whether the user currently wants art
      */
-    public static function is_enabled() {
+    public static function is_enabled()
+    {
         if (self::$enabled) {
             return true;
         }
@@ -100,11 +102,11 @@ class Art extends database_object {
      * set_enabled
      * Changes the value of enabled
      */
-    public static function set_enabled($value = null) {
+    public static function set_enabled($value = null)
+    {
         if (is_null($value)) {
             self::$enabled = self::$enabled ? false : true;
-        }
-        else {
+        } else {
             self::$enabled = make_bool($value);
         }
 
@@ -115,8 +117,8 @@ class Art extends database_object {
      * validate_type
      * This validates the type
      */
-    public static function validate_type($type) {
-
+    public static function validate_type($type)
+    {
         switch ($type) {
             case 'album':
             case 'artist':
@@ -134,8 +136,8 @@ class Art extends database_object {
      * extension
      * This returns the file extension for the currently loaded art
      */
-    public static function extension($mime) {
-
+    public static function extension($mime)
+    {
         $data = explode("/", $mime);
         $extension = $data['1'];
 
@@ -149,7 +151,8 @@ class Art extends database_object {
      * test_image
      * Runs some sanity checks on the putative image
      */
-    public static function test_image($source) {
+    public static function test_image($source)
+    {
         if (strlen($source) < 10) {
             debug_event('Art', 'Invalid image passed', 1);
             return false;
@@ -175,8 +178,8 @@ class Art extends database_object {
      * exists, if it doesn't depending on settings it will try
      * to create it.
      */
-    public function get($raw=false) {
-
+    public function get($raw=false)
+    {
         // Get the data either way
         if (!$this->get_db()) {
             return false;
@@ -184,8 +187,7 @@ class Art extends database_object {
 
         if ($raw || !$this->thumb) {
             return $this->raw;
-        }
-        else {
+        } else {
             return $this->thumb;
         }
 
@@ -198,8 +200,8 @@ class Art extends database_object {
      * on if we want to resize and if there is not a thumbnail go
      * ahead and try to resize
      */
-    public function get_db() {
-
+    public function get_db()
+    {
         $type = Dba::escape($this->type);
         $id = Dba::escape($this->uid);
 
@@ -210,8 +212,7 @@ class Art extends database_object {
             if ($results['size'] == 'original') {
                 $this->raw = $results['image'];
                 $this->raw_mime = $results['mime'];
-            }
-            else if (Config::get('resize_images') &&
+            } else if (Config::get('resize_images') &&
                     $results['size'] == '275x275') {
                 $this->thumb = $results['image'];
                 $this->raw_mime = $results['mime'];
@@ -228,8 +229,7 @@ class Art extends database_object {
                 $this->save_thumb($data['thumb'], $data['thumb_mime'], '275x275');
                 $this->thumb = $data['thumb'];
                 $this->thumb_mime = $data['thumb_mime'];
-            }
-            else {
+            } else {
                 debug_event('Art','Unable to retrieve or generate thumbnail for ' . $type . '::' . $id,1);
             }
         } // if no thumb, but art and we want to resize
@@ -243,8 +243,8 @@ class Art extends database_object {
      * This takes the string representation of an image and inserts it into
      * the database. You must also pass the mime type.
      */
-    public function insert($source, $mime) {
-
+    public function insert($source, $mime)
+    {
         // Disabled in demo mode cause people suck and upload porn
         if (Config::get('demo_mode')) { return false; }
 
@@ -277,8 +277,8 @@ class Art extends database_object {
      * reset
      * This resets the art in the database
      */
-    public function reset() {
-
+    public function reset()
+    {
         $type = Dba::escape($this->type);
         $uid = Dba::escape($this->uid);
 
@@ -291,8 +291,8 @@ class Art extends database_object {
      * save_thumb
      * This saves the thumbnail that we're passed
      */
-    public function save_thumb($source, $mime, $size) {
-
+    public function save_thumb($source, $mime, $size)
+    {
         // Quick sanity check
         if (!self::test_image($source)) {
             debug_event('Art', 'Not inserting thumbnail, invalid data passed', 1);
@@ -318,7 +318,8 @@ class Art extends database_object {
      * Returns the specified resized image.  If the requested size doesn't
      * already exist, create and cache it.
      */
-    public function get_thumb($size) {
+    public function get_thumb($size)
+    {
         $sizetext = $size['width'] . 'x' . $size['height'];
         $sizetext = Dba::escape($sizetext);
         $type = Dba::escape($this->type);
@@ -348,8 +349,8 @@ class Art extends database_object {
      * Only works on gif/jpg/png/bmp. Fails if PHP-GD isn't available
      * or lacks support for the requested image type.
      */
-    public function generate_thumb($image,$size,$mime) {
-
+    public function generate_thumb($image,$size,$mime)
+    {
         $data = explode("/",$mime);
         $type = strtolower($data['1']);
 
@@ -442,8 +443,8 @@ class Art extends database_object {
      * ['file']     = FILENAME *** OPTIONAL ***
      * ['raw']      = Actual Image data, already captured
      */
-    public static function get_from_source($data, $type = 'album') {
-
+    public static function get_from_source($data, $type = 'album')
+    {
         // Already have the data, this often comes from id3tags
         if (isset($data['raw'])) {
             return $data['raw'];
@@ -464,7 +465,7 @@ class Art extends database_object {
         // Check to see if it's a URL
         if (isset($data['url'])) {
             $snoopy = new Snoopy();
-                    if(Config::get('proxy_host') AND Config::get('proxy_port')) {
+                    if (Config::get('proxy_host') AND Config::get('proxy_port')) {
                         $snoopy->proxy_user = Config::get('proxy_host');
                         $snoopy->proxy_port = Config::get('proxy_port');
                         $snoopy->proxy_user = Config::get('proxy_user');
@@ -490,8 +491,7 @@ class Art extends database_object {
 
             if ($id3['format_name'] == "WMA") {
                 return $id3['asf']['extended_content_description_object']['content_descriptors']['13']['data'];
-            }
-            elseif (isset($id3['id3v2']['APIC'])) {
+            } elseif (isset($id3['id3v2']['APIC'])) {
                 // Foreach in case they have more then one
                 foreach ($id3['id3v2']['APIC'] as $image) {
                     return $image['data'];
@@ -507,8 +507,8 @@ class Art extends database_object {
      * url
      * This returns the constructed URL for the art in question
      */
-    public static function url($uid,$type,$sid=false) {
-
+    public static function url($uid,$type,$sid=false)
+    {
         $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
         $type = self::validate_type($type);
 
@@ -533,8 +533,7 @@ class Art extends database_object {
                 parent::add_to_cache('art', $key . $row['size'], $row);
                 if ($row['size'] == 'original') {
                     $mime = $row['mime'];
-                }
-                else if ($row['size'] == '275x275' && Config::get('resize_images')) {
+                } else if ($row['size'] == '275x275' && Config::get('resize_images')) {
                     $thumb_mime = $row['mime'];
                 }
             }
@@ -555,7 +554,8 @@ class Art extends database_object {
      * gc
      * This cleans up art that no longer has a corresponding object
      */
-    public static function gc() {
+    public static function gc()
+    {
         // iterate over our types and delete the images
         foreach (array('album', 'artist') as $type) {
             $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" .
@@ -570,8 +570,8 @@ class Art extends database_object {
      * gather
      * This tries to get the art in question
      */
-    public function gather($options = array(), $limit = false) {
-
+    public function gather($options = array(), $limit = false)
+    {
         // Define vars
         $results = array();
 
@@ -595,8 +595,7 @@ class Art extends database_object {
             // They don't want art!
             debug_event('Art', 'art_order is empty, skipping art gathering', 3);
             return array();
-        }
-        elseif (!is_array($config)) {
+        } elseif (!is_array($config)) {
             $config = array($config);
         }
 
@@ -629,7 +628,7 @@ class Art extends database_object {
                 }
 
                 // Add the results we got to the current set
-                $results = array_merge($results, (array)$data);
+                $results = array_merge($results, (array) $data);
 
                 if ($limit && count($results) >= $limit) {
                     return array_slice($results, 0, $limit);
@@ -655,7 +654,8 @@ class Art extends database_object {
      * gather_db
      * This function retrieves art that's already in the database
      */
-    public function gather_db($limit = null) {
+    public function gather_db($limit = null)
+    {
         if ($this->get_db()) {
             return array('db' => true);
         }
@@ -667,21 +667,20 @@ class Art extends database_object {
      * This function retrieves art based on MusicBrainz' Advanced
      * Relationships
      */
-    public function gather_musicbrainz($limit = 5) {
+    public function gather_musicbrainz($limit = 5)
+    {
         $images    = array();
         $num_found = 0;
 
         if ($this->type == 'album') {
             $album = new Album($this->uid);
-        }
-        else {
+        } else {
             return $images;
         }
 
         if ($album->mbid) {
             debug_event('mbz-gatherart', "Album MBID: " . $album->mbid, '5');
-        }
-        else {
+        } else {
             return $images;
         }
 
@@ -709,7 +708,7 @@ class Art extends database_object {
                 $url = 'http://' . $base_url . '/images/P/' . $asin . '.' . $server_num . '.LZZZZZZZ.jpg';
                 debug_event('mbz-gatherart', "Evaluating Amazon URL: " . $url, '5');
                 $snoopy = new Snoopy();
-                if(Config::get('proxy_host') AND Config::get('proxy_port')) {
+                if (Config::get('proxy_host') AND Config::get('proxy_port')) {
                     $snoopy->proxy_user = Config::get('proxy_host');
                     $snoopy->proxy_port = Config::get('proxy_port');
                     $snoopy->proxy_user = Config::get('proxy_user');
@@ -819,8 +818,8 @@ class Art extends database_object {
      * This takes keywords and performs a search of the Amazon website
      * for the art. It returns an array of found objects with mime/url keys
      */
-    public function gather_amazon($limit = 5, $keywords = '') {
-
+    public function gather_amazon($limit = 5, $keywords = '')
+    {
         $images     = array();
         $final_results  = array();
         $possible_keys = array(
@@ -851,7 +850,7 @@ class Art extends database_object {
 
             // Create the Search Object
             $amazon = new AmazonSearch(Config::get('amazon_developer_public_key'), Config::get('amazon_developer_private_key'), $amazon_base);
-                if(Config::get('proxy_host') AND Config::get('proxy_port')) {
+                if (Config::get('proxy_host') AND Config::get('proxy_port')) {
                     $proxyhost = Config::get('proxy_host');
                     $proxyport = Config::get('proxy_port');
                     $proxyuser = Config::get('proxy_user');
@@ -917,14 +916,11 @@ class Art extends database_object {
             // Rudimentary image type detection, only JPG and GIF allowed.
             if (substr($result[$key], -4 == '.jpg')) {
                 $mime = "image/jpeg";
-            }
-            elseif (substr($result[$key], -4 == '.gif')) {
+            } elseif (substr($result[$key], -4 == '.gif')) {
                 $mime = "image/gif";
-            }
-            elseif (substr($result[$key], -4 == '.png')) {
+            } elseif (substr($result[$key], -4 == '.png')) {
                 $mime = "image/png";
-            }
-            else {
+            } else {
                 /* Just go to the next result */
                 continue;
             }
@@ -952,8 +948,8 @@ class Art extends database_object {
      * If a limit is passed or the preferred filename is found the current
      * results set is returned
      */
-    public function gather_folder($limit = 5) {
-
+    public function gather_folder($limit = 5)
+    {
         $media = new Album($this->uid);
         $songs = $media->get_songs();
         $results = array();
@@ -1031,7 +1027,7 @@ class Art extends database_object {
                         'file' => $full_filename,
                         'mime' => 'image/' . $extension
                     );
-                    break;    
+                    break;
                 }
 
                 debug_event('folder_art', "Found image file: $file", 5);
@@ -1065,8 +1061,8 @@ class Art extends database_object {
      * This looks for the art in the meta-tags of the file
      * itself
      */
-    public function gather_tags($limit = 5) {
-
+    public function gather_tags($limit = 5)
+    {
         // We need the filenames
         $album = new Album($this->uid);
 
@@ -1079,8 +1075,7 @@ class Art extends database_object {
             $song = new Song($song_id);
             // If we find a good one, stop looking
             $getID3 = new getID3();
-            try { $id3 = $getID3->analyze($song->file); }
-            catch (Exception $error) {
+            try { $id3 = $getID3->analyze($song->file); } catch (Exception $error) {
                 debug_event('getid3', $error->message, 1);
             }
 
@@ -1116,8 +1111,8 @@ class Art extends database_object {
      * gather_google
      * Raw google search to retrieve the art, not very reliable
      */
-    public function gather_google($limit = 5) {
-
+    public function gather_google($limit = 5)
+    {
         $images = array();
         $media = new $this->type($this->uid);
         $media->format();
@@ -1152,8 +1147,8 @@ class Art extends database_object {
      * This returns the art from lastfm. It doesn't currently require an
      * account but may in the future.
      */
-    public function gather_lastfm($limit, $options = false) {
-
+    public function gather_lastfm($limit, $options = false)
+    {
         // Create the parser object
         $lastfm = new LastFMSearch();
 
@@ -1162,8 +1157,7 @@ class Art extends database_object {
                 if (is_array($options)) {
                     $artist = $options['artist'];
                     $album  = $options['album_name'];
-                }
-                else {
+                } else {
                     $media = new Album($this->uid);
                     $media->format();
                     $artist = $media->artist_name;
@@ -1172,7 +1166,7 @@ class Art extends database_object {
             break;
         }
 
-        if(Config::get('proxy_host') AND Config::get('proxy_port')) {
+        if (Config::get('proxy_host') AND Config::get('proxy_port')) {
             $proxyhost = Config::get('proxy_host');
             $proxyport = Config::get('proxy_port');
             $proxyuser = Config::get('proxy_user');
@@ -1195,7 +1189,7 @@ class Art extends database_object {
                 debug_event('LastFM', 'Detected as noimage, skipped ' . $url, 3);
                 continue;
             }
-            
+
             // HACK: we shouldn't rely on the extension to determine file type
                 $results = pathinfo($url);
             $mime = 'image/' . $results['extension'];

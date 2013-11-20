@@ -66,7 +66,7 @@ else {
 <?php
 $democratic = Democratic::get_current_playlist();
 $democratic->set_parent();
-foreach($object_ids as $item) {
+foreach ($object_ids as $item) {
     $media = new $item['object_type']($item['object_id']);
     $media->format();
 ?>

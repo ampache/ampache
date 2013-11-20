@@ -55,7 +55,7 @@ $catalogs = array();
 
 while ($r = Dba::fetch_row($db_results)) {
 
-    $catalog = new Catalog($r['0']);
+    $catalog = Catalog::create_from_id($r['0']);
     $songs = $catalog->get_songs();
 
     printf (T_('Starting Catalog: %s'), stripslashes($catalog->name));

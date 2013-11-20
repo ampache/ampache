@@ -27,7 +27,7 @@ $browse = new Browse();
 $browse->set_type('song');
 $browse->show_objects($object_ids);
 $browse->store();
- 
+
 $object_ids = Stats::get_top('album');
 $browse = new Browse();
 $browse->set_type('album');
@@ -41,4 +41,3 @@ $browse->show_objects($object_ids);
 $browse->store();
 
 UI::show_box_bottom();
-?>

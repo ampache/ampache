@@ -26,12 +26,12 @@
  * It changes depending on where it is
  */
 ?>
-<?php 
+<?php
 ob_start();
 require Config::get('prefix') . '/templates/show_playlist_title.inc.php';
 $title = ob_get_contents();
 ob_end_clean();
-UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . 
+UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
     '</div>', 'info-box');
 ?>
 <div id="information_actions">
@@ -70,7 +70,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
             <?php echo UI::get_icon('delete'); ?>
             <?php echo T_('Delete'); ?>
         </a>
-        
+
     </li>
 <?php } ?>
 </ul>

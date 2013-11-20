@@ -11,7 +11,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -22,14 +22,14 @@
 
 require_once '../init.php';
 
-function arrayToJSON($array) {
+function arrayToJSON($array)
+{
     $json = '{ ';
     foreach ($array as $key => $value) {
         $json .= '"' . $key . '" : ';
         if (is_array($value)) {
             $json .= arrayToJSON($value);
-        }
-        else {
+        } else {
             // Make sure to strip backslashes and convert things to
             // entities in our output
             $json .= '"' . scrub_out(str_replace('\\', '', $value)) . '"';
@@ -49,4 +49,3 @@ echo arrayToJSON($search->types) . "'.evalJSON());\n";
 echo 'var basetypes = $H(\'';
 echo arrayToJSON($search->basetypes) . "'.evalJSON());\n";
 echo 'removeIcon = \'<a href="javascript: void(0)">' . UI::get_icon('disable', T_('Remove')) . '</a>\';';
-?>

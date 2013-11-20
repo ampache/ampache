@@ -18,7 +18,7 @@
 ; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Alternate Ampache Theme 
+; Alternate Ampache Theme
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Theme Name
@@ -28,7 +28,7 @@
 name = "Greysme"
 
 ; Theme Author
-; This is just a way of giving credit to the 
+; This is just a way of giving credit to the
 ; person who actually created this theme
 ; DEFAULT: N/A
 author = "Mickael Despesse (Spocky)"

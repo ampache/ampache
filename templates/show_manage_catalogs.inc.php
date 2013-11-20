@@ -56,4 +56,3 @@
         $browse->show_objects($catalog_ids);
         $browse->store();
 ?>
-

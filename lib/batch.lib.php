@@ -27,25 +27,29 @@
  *
  * @param    array    $media_ids    Media IDs.
  */
-function get_song_files($media_ids) {
-
+function get_song_files($media_ids)
+{
     $media_files = array();
 
     foreach ($media_ids as $element) {
         if (is_array($element)) {
             $type = array_shift($element);
             $media = new $type(array_shift($element));
-        }
-        else {
+        } else {
             $media = new Song($element);
         }
         if ($media->enabled) {
-                    $total_size += sprintf("%.2f",($media->size/1048576));
-                    array_push($media_files, $media->file);
+            $total_size += sprintf("%.2f",($media->size/1048576));
+            $media->format();
+            $dirname = $media->f_album_full;
+            if (!array_key_exists($dirname, $media_files)) {
+                $media_files[$dirname] = array();
+            }
+            array_push($media_files[$dirname], $media->file);
         }
-        }
+    }
 
-        return array($media_files,$total_size);
+    return array($media_files, $total_size);
 } //get_song_files
 
 /**
@@ -57,8 +61,8 @@ function get_song_files($media_ids) {
  * @param    string    $name    name of the zip file to be created
  * @param    string    $song_files    array of full paths to songs to zip create w/ call to get_song_files
  */
-function send_zip( $name, $song_files ) {
-
+function send_zip( $name, $song_files )
+{
     // Check if they want to save it to a file, if so then make sure they've
     // got a defined path as well and that it's writable.
     if (Config::get('file_zip_download') && Config::get('file_zip_path')) {
@@ -66,8 +70,7 @@ function send_zip( $name, $song_files ) {
         if (!is_writable(Config::get('file_zip_path'))) {
             $in_memory = '1';
             debug_event('Error','File Zip Path:' . Config::get('file_zip_path') . ' is not writable','1');
-        }
-        else {
+        } else {
             $in_memory = '0';
             $basedir = Config::get('file_zip_path');
         }
@@ -88,7 +91,9 @@ function send_zip( $name, $song_files ) {
         );
 
         $arc->set_options( $options );
-        $arc->add_files( $song_files );
+        foreach ($song_files as $dir => $files) {
+            $arc->add_files( $files, $dir );
+        }
 
     if (count($arc->error)) {
         debug_event('archive',"Error: unable to add songs",'3');
@@ -103,4 +108,3 @@ function send_zip( $name, $song_files ) {
         $arc->download_file();
 
 } // send_zip
-?>

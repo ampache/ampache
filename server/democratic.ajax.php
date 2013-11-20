@@ -91,4 +91,3 @@ if ($show_browse) {
 
 // We always do this
 echo xml_from_array($results);
-?>

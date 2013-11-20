@@ -114,4 +114,3 @@ require $prefix . '/templates/install_header.inc.php';
 
 </body>
 </html>
-

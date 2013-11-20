@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- 
+
 define('NO_SESSION','1');
 require_once '../lib/init.php';
 
@@ -101,7 +101,7 @@ $query_string = $_SERVER['QUERY_STRING'];
 // Trick to avoid $HTTP_RAW_POST_DATA
 $postdata = file_get_contents("php://input");
 if (!empty($postdata)) {
-	$query_string .= '&' . $postdata;
+    $query_string .= '&' . $postdata;
 }
 $query  = explode('&', $query_string);
 $params = array();
@@ -139,4 +139,3 @@ foreach ($methods as $method) {
 // If we manage to get here, we still need to hand out an XML document
 ob_end_clean();
 echo Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND)->asXml();
-?>

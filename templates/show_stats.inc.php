@@ -72,7 +72,7 @@ $catalogs = Catalog::get_catalogs();
     <th class="cel_total"><?php echo T_('Catalog Size'); ?></th>
 </tr>
 <?php foreach ($catalogs as $catalog_id) {
-        $catalog = new Catalog($catalog_id);
+        $catalog = Catalog::create_from_id($catalog_id);
         $catalog->format();
         $stats = Catalog::get_stats($catalog_id);
 ?>

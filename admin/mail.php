@@ -38,7 +38,7 @@ switch ($_REQUEST['action']) {
         }
 
         // Multi-byte Character Mail
-        if(function_exists('mb_language')) {
+        if (function_exists('mb_language')) {
             ini_set("mbstring.internal_encoding","UTF-8");
             mb_language("uni");
         }
@@ -51,17 +51,15 @@ switch ($_REQUEST['action']) {
 
         if ($_REQUEST['from'] == 'system') {
             $mailer->set_default_sender();
-        }
-        else {
+        } else {
             $mailer->sender = $GLOBALS['user']->email;
             $mailer->sender_name = $GLOBALS['user']->fullname;
         }
 
-        if($mailer->send_to_group($_REQUEST['to'])) {
+        if ($mailer->send_to_group($_REQUEST['to'])) {
             $title  = T_('E-mail Sent');
             $body   = T_('Your E-mail was successfully sent.');
-        }
-        else {
+        } else {
             $title     = T_('E-mail Not Sent');
             $body     = T_('Your E-mail was not sent.');
         }
@@ -75,6 +73,3 @@ switch ($_REQUEST['action']) {
 } // end switch
 
 UI::show_footer();
-
-
-?>

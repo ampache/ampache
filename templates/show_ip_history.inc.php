@@ -24,10 +24,10 @@
 <div id="information_actions">
 <ul>
 <li>
-<?php if (isset($_REQUEST['all'])){ ?>
+<?php if (isset($_REQUEST['all'])) { ?>
     <a href="<?php echo Config::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>"><?php echo UI::get_icon('disable'); ?></a>
     <?php echo T_('Show Unique'); ?>
-<?php }else{ ?>
+<?php } else { ?>
     <a href="<?php echo Config::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all"><?php echo UI::get_icon('add'); ?></a>
     <?php echo T_('Show All'); ?>
 <?php }?>

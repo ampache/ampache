@@ -44,7 +44,7 @@
         <?php show_user_select('user'); ?>
     </td>
 </tr>
-<tr>   
+<tr>
         <td valign="top"><?php echo T_('ACL Type'); ?>:</td>
         <td colspan="3">
 <?php if ($action == 'show_add_rpc') { ?>
@@ -79,22 +79,20 @@
     <td><?php echo T_('Start'); ?>:</td>
     <td>
         <?php Error::display('start'); ?>
-        <input type="text" name="start" value="<?php 
-        if($action == 'show_add_current') {
+        <input type="text" name="start" value="<?php
+        if ($action == 'show_add_current') {
             echo scrub_out($_SERVER['REMOTE_ADDR']);
-        }
-        else {
+        } else {
             echo scrub_out($_REQUEST['start']);
         } ?>" size="20" />
     </td>
     <td><?php echo T_('End'); ?>:</td>
     <td>
         <?php Error::display('end'); ?>
-        <input type="text" name="end" value="<?php 
-        if($action == 'show_add_current') {
+        <input type="text" name="end" value="<?php
+        if ($action == 'show_add_current') {
             echo scrub_out($_SERVER['REMOTE_ADDR']);
-        }
-        else {
+        } else {
             echo scrub_out($_REQUEST['end']);
         } ?>" size="20" />
     </td>

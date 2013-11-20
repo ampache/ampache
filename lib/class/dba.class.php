@@ -34,8 +34,8 @@ if (!defined('INIT_LOADED') || INIT_LOADED != '1') { exit; }
  * database simplifying queries in most cases.
  *
  */
-class Dba {
-
+class Dba
+{
     public static $stats = array('query'=>0);
 
     private static $_sql;
@@ -46,8 +46,8 @@ class Dba {
      * constructor
      * This does nothing with the DBA class
      */
-    private function __construct() {
-
+    private function __construct()
+    {
         // Rien a faire
 
     } // construct
@@ -55,7 +55,8 @@ class Dba {
     /**
      * query
      */
-    public static function query($sql, $params) {
+    public static function query($sql, $params = array())
+    {
         // json_encode throws errors about UTF-8 cleanliness, which we don't
         // care about here.
         debug_event('Query', $sql . ' ' . @json_encode($params), 6);
@@ -69,7 +70,8 @@ class Dba {
         return $stmt;
     }
 
-    private static function _query($sql, $params) {
+    private static function _query($sql, $params)
+    {
         $dbh = self::dbh();
         if (!$dbh) {
             debug_event('Dba', 'Error: failed to get database handle', 1);
@@ -80,8 +82,7 @@ class Dba {
         if ($params) {
             $stmt = $dbh->prepare($sql);
             $stmt->execute($params);
-        }
-        else {
+        } else {
             $stmt = $dbh->query($sql);
         }
 
@@ -93,8 +94,7 @@ class Dba {
             self::$_error = json_encode($dbh->errorInfo());
             debug_event('Dba', 'Error: ' . json_encode($dbh->errorInfo()), 1);
             self::disconnect();
-        }
-        else if ($stmt->errorCode() && $stmt->errorCode() != '00000') {
+        } else if ($stmt->errorCode() && $stmt->errorCode() != '00000') {
             self::$_error = json_encode($stmt->errorInfo());
             debug_event('Dba', 'Error: ' . json_encode($stmt->errorInfo()), 1);
             self::disconnect();
@@ -107,14 +107,16 @@ class Dba {
     /**
      * read
      */
-    public static function read($sql, $params = null) {
+    public static function read($sql, $params = null)
+    {
         return self::query($sql, $params);
     }
 
     /**
      * write
      */
-    public static function write($sql, $params = null) {
+    public static function write($sql, $params = null)
+    {
         return self::query($sql, $params);
     }
 
@@ -124,7 +126,8 @@ class Dba {
      * This runs a escape on a variable so that it can be safely inserted
      * into the sql
      */
-    public static function escape($var) {
+    public static function escape($var)
+    {
         $var = self::dbh()->quote($var);
         // This is slightly less ugly than it was, but still ugly
         return substr($var, 1, -1);
@@ -138,7 +141,8 @@ class Dba {
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
      */
-    public static function fetch_assoc($resource, $finish = true) {
+    public static function fetch_assoc($resource, $finish = true)
+    {
         if (!$resource) {
             return array();
         }
@@ -163,7 +167,8 @@ class Dba {
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
      */
-    public static function fetch_row($resource, $finish = true) {
+    public static function fetch_row($resource, $finish = true)
+    {
         if (!$resource) {
             return array();
         }
@@ -187,7 +192,8 @@ class Dba {
      * just a count of rows returned by our select statement, this
      * doesn't work for updates or inserts.
      */
-    public static function num_rows($resource) {
+    public static function num_rows($resource)
+    {
         if ($resource) {
             $result = $resource->rowCount();
             if ($result) {
@@ -203,7 +209,8 @@ class Dba {
      *
      * This closes a result handle and clears the memory associated with it
      */
-    public static function finish($resource) {
+    public static function finish($resource)
+    {
         if ($resource) {
             $resource->closeCursor();
         }
@@ -214,7 +221,8 @@ class Dba {
      *
      * This emulates the mysql_affected_rows function
      */
-    public static function affected_rows($resource) {
+    public static function affected_rows($resource)
+    {
         if ($resource) {
             $result = $resource->rowCount();
             if ($result) {
@@ -230,7 +238,8 @@ class Dba {
      *
      * This connects to the database, used by the DBH function
      */
-    private static function _connect() {
+    private static function _connect()
+    {
         $username = Config::get('database_username');
         $hostname = Config::get('database_hostname');
         $password = Config::get('database_password');
@@ -239,8 +248,7 @@ class Dba {
         // Build the data source name
         if (strpos($hostname, '/') === 0) {
             $dsn = 'mysql:unix_socket=' . $hostname;
-        }
-        else {
+        } else {
             $dsn = 'mysql:host=' . $hostname ?: 'localhost';
         }
         if ($port) {
@@ -249,8 +257,7 @@ class Dba {
 
         try {
             $dbh = new PDO($dsn, $username, $password);
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             self::$_error = $e->getMessage();
             debug_event('Dba', 'Connection failed: ' . $e->getMessage(), 1);
             return null;
@@ -259,7 +266,8 @@ class Dba {
         return $dbh;
     }
 
-    private static function _setup_dbh($dbh, $database) {
+    private static function _setup_dbh($dbh, $database)
+    {
         if (!$dbh) {
             return false;
         }
@@ -287,7 +295,8 @@ class Dba {
      *
      * Make sure that we can connect to the database
      */
-    public static function check_database() {
+    public static function check_database()
+    {
         $dbh = self::_connect();
 
         if (!$dbh || $dbh->errorCode()) {
@@ -306,7 +315,8 @@ class Dba {
      * Checks to make sure that you have inserted the database
      * and that the user you are using has access to it.
      */
-    public static function check_database_inserted() {
+    public static function check_database_inserted()
+    {
         $sql = "DESCRIBE session";
         $db_results = Dba::read($sql);
 
@@ -327,7 +337,8 @@ class Dba {
      *
      * This function is used for debug, helps with profiling
      */
-    public static function show_profile() {
+    public static function show_profile()
+    {
         if (Config::get('sql_profiling')) {
             print '<br/>Profiling data: <br/>';
             $res = Dba::read('SHOW PROFILES');
@@ -345,7 +356,8 @@ class Dba {
      * This is called by the class to return the database handle
      * for the specified database, if none is found it connects
      */
-    public static function dbh($database='') {
+    public static function dbh($database='')
+    {
         if (!$database) {
             $database = Config::get('database_name');
         }
@@ -358,8 +370,7 @@ class Dba {
             self::_setup_dbh($dbh, $database);
             Config::set($handle, $dbh, true);
             return $dbh;
-        }
-        else {
+        } else {
             return Config::get($handle);
         }
     }
@@ -369,9 +380,10 @@ class Dba {
      *
      * This nukes the dbh connection, this isn't used very often...
      */
-    public static function disconnect($database = '') {
+    public static function disconnect($database = '')
+    {
         if (!$database) {
-            $database = Config::get('database_name'); 
+            $database = Config::get('database_name');
         }
 
         $handle = 'dbh_' . $database;
@@ -385,7 +397,8 @@ class Dba {
     /**
      * insert_id
      */
-    public static function insert_id() {
+    public static function insert_id()
+    {
         $dbh = self::dbh();
         if ($dbh) {
             return $dbh->lastInsertId();
@@ -397,7 +410,8 @@ class Dba {
      * error
      * this returns the error of the db
      */
-    public static function error() {
+    public static function error()
+    {
         return self::$_error;
     }
 
@@ -406,7 +420,8 @@ class Dba {
      *
      * This translates the specified charset to a mysql charset.
      */
-    public static function translate_to_mysqlcharset($charset) {
+    public static function translate_to_mysqlcharset($charset)
+    {
         // Translate real charset names into fancy MySQL land names
         switch (strtoupper($charset)) {
             case 'CP1250':
@@ -462,7 +477,8 @@ class Dba {
      * administrator only. This can mess up data if you switch between charsets
      * that are not overlapping.
      */
-    public static function reset_db_charset() {
+    public static function reset_db_charset()
+    {
         $translated_charset = self::translate_to_mysqlcharset(Config::get('site_charset'));
         $target_charset = $translated_charset['charset'];
         $target_collation = $translated_charset['collation'];
@@ -496,7 +512,7 @@ class Dba {
                     } // if it fails
                 }
             }
-        } 
+        }
     }
 
     /**
@@ -504,15 +520,16 @@ class Dba {
      *
      * This runs an optimize on the tables and updates the stats to improve
      * join speed.
-     * This can be slow, but is a good idea to do from time to time. We do 
+     * This can be slow, but is a good idea to do from time to time. We do
      * it in case the dba isn't doing it... which we're going to assume they
      * aren't.
      */
-    public static function optimize_tables() {
+    public static function optimize_tables()
+    {
         $sql = "SHOW TABLES";
         $db_results = Dba::read($sql);
 
-        while($row = Dba::fetch_row($db_results)) {
+        while ($row = Dba::fetch_row($db_results)) {
             $sql = "OPTIMIZE TABLE `" . $row[0] . "`";
             $db_results_inner = Dba::write($sql);
 
@@ -521,4 +538,3 @@ class Dba {
         }
     }
 }
-?>

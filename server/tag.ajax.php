@@ -62,4 +62,3 @@ switch ($_REQUEST['action']) {
 
 // We always do this
 echo xml_from_array($results);
-?>

@@ -28,7 +28,7 @@ switch ($_REQUEST['action']) {
         // Check to see if the config file is working now, if so fall
         // through to the default, else show the appropriate template
         $configfile = "$prefix/config/ampache.cfg.php";
-        
+
         if (!count(parse_ini_file($configfile))) {
             require_once $prefix . '/templates/show_test_config.inc.php';
             break;
@@ -37,5 +37,3 @@ switch ($_REQUEST['action']) {
         require_once $prefix . '/templates/show_test.inc.php';
     break;
 } // end switch on action
-
-?>

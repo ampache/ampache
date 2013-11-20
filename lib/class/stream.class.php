@@ -21,13 +21,14 @@
  */
 
 
-class Stream {
-
+class Stream
+{
     public static $session;
 
-    private function __construct() {
+    private function __construct()
+    {
         // Static class, do nothing.
-    } 
+    }
 
     /**
      * set_session
@@ -36,12 +37,13 @@ class Stream {
      * an additional session into the database, should be called
      * with care
      */
-    public static function set_session($sid) {
+    public static function set_session($sid)
+    {
         self::$session=$sid;
     } // set_session
-    
-    public static function get_allowed_bitrate($song) {
-    
+
+    public static function get_allowed_bitrate($song)
+    {
         $max_bitrate = Config::get('max_bit_rate');
         $min_bitrate = Config::get('min_bit_rate');
         // FIXME: This should be configurable for each output type
@@ -51,9 +53,9 @@ class Stream {
         if ($user_sample_rate < $min_bitrate) {
             $min_bitrate = $user_sample_rate;
         }
-        
+
         // Are there site-wide constraints? (Dynamic downsampling.)
-        if ($max_bitrate > 1 ) {
+        if ($max_bitrate > 1) {
             $sql = 'SELECT COUNT(*) FROM `now_playing` ' .
                 'WHERE `user` IN ' .
                 '(SELECT DISTINCT `user_preference`.`user` ' .
@@ -90,7 +92,7 @@ class Stream {
         else {
             $sample_rate = $user_sample_rate;
         }
-        
+
         return $sample_rate;
     }
 
@@ -100,7 +102,8 @@ class Stream {
      * This is a rather complex function that starts the transcoding or
      * resampling of a song and returns the opened file handle.
      */
-    public static function start_transcode($song, $type = null) {
+    public static function start_transcode($song, $type = null)
+    {
         $transcode_settings = $song->get_transcode_settings($type);
         // Bail out early if we're unutterably broken
         if ($transcode_settings == false) {
@@ -162,8 +165,8 @@ class Stream {
      * validate_bitrate
      * this function takes a bitrate and returns a valid one
      */
-    public static function validate_bitrate($bitrate) {
-
+    public static function validate_bitrate($bitrate)
+    {
         /* Round to standard bitrates */
         $sample_rate = 16*(floor($bitrate/16));
 
@@ -178,8 +181,8 @@ class Stream {
      * This will garbage collect the now playing data,
      * this is done on every play start.
      */
-    public static function gc_now_playing() {
-
+    public static function gc_now_playing()
+    {
         // Remove any now playing entries for sessions that have been GC'd
         $sql = "DELETE FROM `now_playing` USING `now_playing` " .
             "LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` " .
@@ -193,15 +196,16 @@ class Stream {
      *
      * This will insert the now playing data.
      */
-    public static function insert_now_playing($oid, $uid, $length, $sid, $type) {
+    public static function insert_now_playing($oid, $uid, $length, $sid, $type)
+    {
         $time = intval(time() + $length);
         $type = strtolower($type);
 
         // Ensure that this client only has a single row
         $sql = 'REPLACE INTO `now_playing` ' .
-            '(`id`,`object_id`,`object_type`, `user`, `expire`) ' .
-            'VALUES (?, ?, ?, ?, ?)';
-        $db_result = Dba::write($sql, array($sid, $oid, $type, $uid, $time));
+            '(`id`,`object_id`,`object_type`, `user`, `expire`, `insertion`) ' .
+            'VALUES (?, ?, ?, ?, ?, ?)';
+        $db_result = Dba::write($sql, array($sid, $oid, $type, $uid, $time, time()));
     }
 
      /**
@@ -210,7 +214,8 @@ class Stream {
       * There really isn't anywhere else for this function, shouldn't have
       * deleted it in the first place.
       */
-    public static function clear_now_playing() {
+    public static function clear_now_playing()
+    {
         $sql = 'TRUNCATE `now_playing`';
         $db_results = Dba::write($sql);
 
@@ -222,14 +227,16 @@ class Stream {
      *
      * This returns the now playing information
      */
-    public static function get_now_playing($filter=NULL) {
-
+    public static function get_now_playing($filter=NULL)
+    {
         $sql = 'SELECT `session`.`agent`, `now_playing`.* FROM `now_playing` ' .
             'LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` ';
         if (Config::get('now_playing_per_user')) {
             $sql .= 'GROUP BY `now_playing`.`user` ';
+            $sql .= 'ORDER BY `now_playing`.`insertion` DESC';
+        } else {
+            $sql .= 'ORDER BY `now_playing`.`expire` DESC';
         }
-        $sql .= 'ORDER BY `now_playing`.`expire` DESC';
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -256,7 +263,8 @@ class Stream {
      *
      * This checks to see if the media is already being played.
      */
-    public static function check_lock_media($media_id, $type) {
+    public static function check_lock_media($media_id, $type)
+    {
         $sql = 'SELECT `object_id` FROM `now_playing` WHERE ' .
             '`object_id` = ? AND `object_type` = ?';
         $db_results = Dba::read($sql, array($media_id, $type));
@@ -273,7 +281,8 @@ class Stream {
      * auto_init
      * This is called on class load it sets the session
      */
-    public static function _auto_init() {
+    public static function _auto_init()
+    {
         // Generate the session ID.  This is slightly wasteful.
         self::$session = Session::create(array('type' => 'stream'));
     }
@@ -286,8 +295,8 @@ class Stream {
      * playlist mojo. If something needs to happen this will echo the
      * javascript required to cause a reload of the iframe.
      */
-    public static function run_playlist_method() {
-
+    public static function run_playlist_method()
+    {
         // If this wasn't ajax included run away
         if (!defined('AJAX_INCLUDE')) { return false; }
 
@@ -316,8 +325,8 @@ class Stream {
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
      */
-    public static function get_base_url() {
-
+    public static function get_base_url()
+    {
         if (Config::get('require_session')) {
             $session_string = 'ssid=' . self::$session . '&';
         }
@@ -330,8 +339,7 @@ class Stream {
         if (Config::get('http_port') != '80') {
             if (preg_match("/:(\d+)/",$web_path,$matches)) {
                 $web_path = str_replace(':' . $matches['1'],':' . Config::get('http_port'),$web_path);
-            }
-            else {
+            } else {
                 $web_path = str_replace($_SERVER['HTTP_HOST'],$_SERVER['HTTP_HOST'] . ':' . Config::get('http_port'),$web_path);
             }
         }
@@ -343,5 +351,3 @@ class Stream {
     } // get_base_url
 
 } //end of stream class
-
-?>

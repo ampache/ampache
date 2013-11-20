@@ -26,8 +26,8 @@
  * and then runs throught $_REQUEST looking for those
  * values and updates them for this user
  */
-function update_preferences($pref_id=0) {
-
+function update_preferences($pref_id=0)
+{
     $pref_user = new User($pref_id);
 
     /* Get current keys */
@@ -63,8 +63,7 @@ function update_preferences($pref_id=0) {
         }
 
         if (preg_match('/_pass$/', $name)) {
-            if ($value == '******') { unset($_REQUEST[$name]); }
-            else if (preg_match('/md5_pass$/', $name)) {
+            if ($value == '******') { unset($_REQUEST[$name]); } else if (preg_match('/md5_pass$/', $name)) {
                 $value = md5($value);
             }
         }
@@ -89,8 +88,8 @@ function update_preferences($pref_id=0) {
  * update_preference
  * This function updates a single preference and is called by the update_preferences function
  */
-function update_preference($user_id,$name,$pref_id,$value) {
-
+function update_preference($user_id,$name,$pref_id,$value)
+{
     $apply_check = "check_" . $name;
     $level_check = "level_" . $name;
 
@@ -120,8 +119,8 @@ function update_preference($user_id,$name,$pref_id,$value) {
  * create_preference_input
  * takes the key and then creates the correct type of input for updating it
  */
-function create_preference_input($name,$value) {
-
+function create_preference_input($name,$value)
+{
     // Escape it for output
     $value = scrub_out($value);
 
@@ -131,22 +130,19 @@ function create_preference_input($name,$value) {
     if (!Preference::has_access($name)) {
         if ($value == '1') {
             echo "Enabled";
-        }
-        elseif ($value == '0') {
+        } elseif ($value == '0') {
             echo "Disabled";
-        }
-        else {
+        } else {
             if (preg_match('/_pass$/', $name)) {
                 echo "******";
-            }
-            else {
+            } else {
                 echo $value;
             }
         }
         return;
     } // if we don't have access to it
 
-    switch($name) {
+    switch ($name) {
         case 'display_menu':
         case 'download':
         case 'quarantine':
@@ -169,18 +165,15 @@ function create_preference_input($name,$value) {
         case 'iframes':
         case 'now_playing_per_user':
         case 'show_played_times':
-            if ($value == '1') { $is_true = "selected=\"selected\""; }
-            else { $is_false = "selected=\"selected\""; }
+        case 'song_page_title':
+            if ($value == '1') { $is_true = "selected=\"selected\""; } else { $is_false = "selected=\"selected\""; }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";
             echo "\t<option value=\"0\" $is_false>" . T_("Disable") . "</option>\n";
             echo "</select>\n";
         break;
         case 'play_type':
-            if ($value == 'localplay') { $is_local = 'selected="selected"'; }
-            elseif ($value == 'democratic') { $is_vote = 'selected="selected"'; }
-            elseif ($value == 'html5_player') { $is_html5_player = 'selected="selected"'; }
-            else { $is_stream = "selected=\"selected\""; }
+            if ($value == 'localplay') { $is_local = 'selected="selected"'; } elseif ($value == 'democratic') { $is_vote = 'selected="selected"'; } elseif ($value == 'html5_player') { $is_html5_player = 'selected="selected"'; } else { $is_stream = "selected=\"selected\""; }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"\">" . T_('None') . "</option>\n";
             if (Config::get('allow_stream_playback')) {
@@ -229,9 +222,7 @@ function create_preference_input($name,$value) {
             echo "</select>\n";
         break;
         case 'localplay_level':
-            if ($value == '25') { $is_user = 'selected="selected"'; }
-            elseif ($value == '100') { $is_admin = 'selected="selected"'; }
-            elseif ($value == '50') { $is_manager = 'selected="selected"'; }
+            if ($value == '25') { $is_user = 'selected="selected"'; } elseif ($value == '100') { $is_admin = 'selected="selected"'; } elseif ($value == '50') { $is_manager = 'selected="selected"'; }
             echo "<select name=\"$name\">\n";
             echo "<option value=\"0\">" . T_('Disabled') . "</option>\n";
             echo "<option value=\"25\" $is_user>" . T_('User') . "</option>\n";
@@ -283,20 +274,15 @@ function create_preference_input($name,$value) {
             echo "</select>\n";
         break;
         case 'show_lyrics':
-            if ($value == '1') { $is_true = "selected=\"selected\""; }
-            else { $is_false = "selected=\"selected\""; }
+            if ($value == '1') { $is_true = "selected=\"selected\""; } else { $is_false = "selected=\"selected\""; }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";
             echo "\t<option value=\"0\" $is_false>" . T_("Disable") . "</option>\n";
             echo "</select>\n";
         break;
         case 'album_sort':
-            if ($value == 'year_asc') { $is_sort_year_asc = 'selected="selected"'; }
-            elseif ($value == 'year_desc') { $is_sort_year_desc = 'selected="selected"'; }
-            elseif ($value == 'name_asc') { $is_sort_name_asc = 'selected="selected"'; }
-            elseif ($value == 'name_desc') { $is_sort_name_desc = 'selected="selected"'; }
-            else { $is_sort_default = 'selected="selected"'; }
-            
+            if ($value == 'year_asc') { $is_sort_year_asc = 'selected="selected"'; } elseif ($value == 'year_desc') { $is_sort_year_desc = 'selected="selected"'; } elseif ($value == 'name_asc') { $is_sort_name_asc = 'selected="selected"'; } elseif ($value == 'name_desc') { $is_sort_name_desc = 'selected="selected"'; } else { $is_sort_default = 'selected="selected"'; }
+
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"default\" $is_sort_default>" . T_('Default') . "</option>\n";
             echo "\t<option value=\"year_asc\" $is_sort_year_asc>" . T_('Year ascending') . "</option>\n";
@@ -308,8 +294,7 @@ function create_preference_input($name,$value) {
         default:
             if (preg_match('/_pass$/', $name)) {
                 echo '<input type="password" size="16" name="' . $name . '" value="******" />';
-            }
-            else {
+            } else {
                 echo '<input type="text" size="' . $len . '" name="' . $name . '" value="' . $value .'" />';
             }
         break;
@@ -317,5 +302,3 @@ function create_preference_input($name,$value) {
     }
 
 } // create_preference_input
-
-?>

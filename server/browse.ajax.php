@@ -30,8 +30,7 @@ if (!defined('AJAX_INCLUDE')) { exit; }
 
 if (isset($_REQUEST['browse_id'])) {
     $browse_id = $_REQUEST['browse_id'];
-}
-else {
+} else {
     $browse_id = null;
 }
 
@@ -53,8 +52,8 @@ switch ($_REQUEST['action']) {
             // Set the new sort value
             $browse->set_sort($_REQUEST['sort']);
         }
-        
-        
+
+
         if ($_REQUEST['catalog_key'] || $SESSION['catalog'] != 0) {
             $browse->set_filter('catalog',$_REQUEST['catalog_key']);
             $_SESSION['catalog'] = $_REQUEST['catalog_key'];
@@ -67,9 +66,9 @@ switch ($_REQUEST['action']) {
                 $browse->show_objects();
                 $results['browse_content'] = ob_get_clean();
     break;
-    
+
     case 'set_sort':
-    
+
         if ($_REQUEST['sort']) {
             $browse->set_sort($_REQUEST['sort']);
         }
@@ -140,4 +139,3 @@ $browse->store();
 
 // We always do this
 echo xml_from_array($results);
-?>

@@ -36,7 +36,7 @@
     </div>
   </div>
 <?php } ?>
-  
+
 <?php if (Config::get('userflags')) { ?>
   <div class="np_cell cel_userflag">
     <label><?php echo T_('Flag'); ?></label>
@@ -74,7 +74,13 @@
   
   <div class="np_cell cel_artist">
       <label><?php echo T_('Tags'); ?></label>
-      <a href="#" id="tag_song_<?php echo $media->id?>" onclick="showAddTagDialog(<?php echo $media->id?>, 'song', '<?php echo Config::get('web_path'); ?>')"><?php echo UI::get_icon('add', T_('Add')); ?></a><?php echo $media->f_tags; ?>
+      
+      <a href="#" id="tag_song_<?php echo $media->id?>" onclick="showAddTagSlideout('#dialog_tag_item_<?php echo $media->id?>')"><?php echo UI::get_icon('add', T_('Add')); ?></a><?php echo $media->f_tags; ?>
+  </div>
+  <div id="dialog_tag_item_<?php echo $media->id?>" style="display:none;" class="np_cell cel_artist">
+      <span><?php echo T_('Enter tag:')?></span>
+      <input type="text" id="dialog_tag_item_tag_name_<?php echo $media->id?>"/>
+      <input type="button" value="<?php echo _T('Save')?>" onclick="saveTag(<?php echo $media->id?>, 'song', '<?php echo Config::get('web_path'); ?>')" /> 
   </div>
 </div>
 
@@ -99,15 +105,14 @@
             <?php
             if (is_null($a['id'])) {
                 echo scrub_out(UI::truncate($a['name']), Config::get('ellipse_threshold_artist'));
-            }
-            else {
+            } else {
                 $artist = new Artist($a['id']);
                 $artist->format();
                 echo $artist->f_name_link;
             }
             ?>
             </div>
-        <?php } // end foreach ?> 
+        <?php } // end foreach ?>
     </div>
 <?php } // end show similar artists ?>
 <?php if ($songs = Recommendation::get_songs_like($media->id, 3)) { ?>

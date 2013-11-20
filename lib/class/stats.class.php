@@ -28,22 +28,22 @@
  * but that's not good, all done through here.
  *
  */
-class Stats {
-
+class Stats
+{
     /* Base vars */
-    var $id;
-    var $object_type;
-    var $object_id;
-    var $date;
-    var $user;
+    public $id;
+    public $object_type;
+    public $object_id;
+    public $date;
+    public $user;
 
 
     /**
       * Constructor
      * This doesn't do anything currently
      */
-    public function __construct() {
-
+    public function __construct()
+    {
         return true;
 
     } // Constructor
@@ -53,7 +53,8 @@ class Stats {
      *
      * This clears all stats for _everything_.
      */
-    public static function clear() {
+    public static function clear()
+    {
         Dba::write('TRUNCATE `object_count`');
         Dba::write('UPDATE `song` SET `played` = 0');
     }
@@ -63,8 +64,9 @@ class Stats {
      *
      * This removes stats for things that no longer exist.
      */
-    public static function gc() {
-        foreach(array('song', 'album', 'artist', 'live_stream', 'video') as $object_type) {
+    public static function gc()
+    {
+        foreach (array('song', 'album', 'artist', 'live_stream', 'video') as $object_type) {
             Dba::write("DELETE FROM `object_count` USING `object_count` LEFT JOIN `$object_type` ON `$object_type`.`id` = `object_count`.`object_id` WHERE `object_type` = '$object_type' AND `$object_type`.`id` IS NULL");
         }
     }
@@ -74,8 +76,8 @@ class Stats {
      * This inserts a new record for the specified object
      * with the specified information, amazing!
      */
-    public static function insert($type,$oid,$user) {
-
+    public static function insert($type,$oid,$user)
+    {
         $type     = self::validate_type($type);
 
         $sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`date`,`user`) " .
@@ -87,18 +89,18 @@ class Stats {
         }
 
     } // insert
-    
+
     /**
       * get_object_count
      * Get count for an object
      */
-    public static function get_object_count($object_type, $object_id) {
-        
+    public static function get_object_count($object_type, $object_id)
+    {
         $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ?";
         $db_results = Dba::read($sql, array($object_type, $object_id));
 
         $results = Dba::fetch_assoc($db_results);
-        
+
         return $results['object_cnt'];
     } // get_object_count
 
@@ -109,8 +111,8 @@ class Stats {
      * if we should re-submit or if this is a duplicate / if it's too soon. This takes an
      * optional user_id because when streaming we don't have $GLOBALS()
      */
-    public static function get_last_song($user_id='') {
-
+    public static function get_last_song($user_id='')
+    {
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
         $sql = "SELECT * FROM `object_count` WHERE `user` = ? AND `object_type`='song' ORDER BY `date` DESC LIMIT 1";
@@ -127,8 +129,8 @@ class Stats {
      * This returns the objects that have happened for $user_id sometime after $time
      * used primarly by the democratic cooldown code
      */
-    public static function get_object_history($user_id='',$time) {
-
+    public static function get_object_history($user_id='',$time)
+    {
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
         $sql = "SELECT * FROM `object_count` WHERE `user` = ? AND `object_type`='song' AND `date` >= ? " .
@@ -150,8 +152,8 @@ class Stats {
      * This returns the top X for type Y from the
      * last stats_threshold days
      */
-    public static function get_top($type,$count='',$threshold = '',$offset='') {
-
+    public static function get_top($type,$count='',$threshold = '',$offset='')
+    {
         /* If they don't pass one, then use the preference */
         if (!$threshold) {
             $threshold = Config::get('stats_threshold');
@@ -185,14 +187,14 @@ class Stats {
         return $results;
 
     } // get_top
-    
+
     /**
      * get_recent
      * This returns the recent X for type Y from the
      * last stats_threshold days
     */
-    public static function get_recent($type,$count='',$threshold = '',$offset='') {
-
+    public static function get_recent($type,$count='',$threshold = '',$offset='')
+    {
         /* If they don't pass one, then use the preference */
         if (!$threshold) {
             $threshold = Config::get('stats_threshold');
@@ -230,16 +232,15 @@ class Stats {
      * This gets all stats for atype based on user with thresholds and all
      * If full is passed, doesn't limit based on date
      */
-    public static function get_user($count,$type,$user,$full='') {
-
+    public static function get_user($count,$type,$user,$full='')
+    {
         $count     = intval($count);
         $type    = self::validate_type($type);
 
         /* If full then don't limit on date */
         if ($full) {
             $date = '0';
-        }
-        else {
+        } else {
             $date = time() - (86400*Config::get('stats_threshold'));
         }
 
@@ -265,8 +266,8 @@ class Stats {
      * This function takes a type and returns only those
      * which are allowed, ensures good data gets put into the db
      */
-    public static function validate_type($type) {
-
+    public static function validate_type($type)
+    {
         switch ($type) {
             case 'artist':
             case 'album':
@@ -286,8 +287,8 @@ class Stats {
      * This returns an array of the newest artists/albums/whatever
      * in this ampache instance
      */
-    public static function get_newest($type,$limit='',$offset='') {
-
+    public static function get_newest($type,$limit='',$offset='')
+    {
         if (!$count) { $count = Config::get('popular_threshold'); }
         if (!$offset) {
             $limit = $count;
@@ -312,4 +313,3 @@ class Stats {
     } // get_newest
 
 } // Stats class
-?>

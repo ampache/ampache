@@ -25,8 +25,8 @@
  * This function attempts to change the php memory limit using init_set.
  * Will never reduce it below the current setting.
  */
-function set_memory_limit($new_limit) {
-
+function set_memory_limit($new_limit)
+{
     $current_limit = ini_get('memory_limit');
     if ($current_limit == -1) {
         return;
@@ -45,8 +45,8 @@ function set_memory_limit($new_limit) {
  * generate_password
  * This generates a random password of the specified length
  */
-function generate_password($length) {
-
+function generate_password($length)
+{
     $vowels = 'aAeEuUyY12345';
     $consonants = 'bBdDgGhHjJmMnNpPqQrRsStTvVwWxXzZ6789';
     $password = '';
@@ -57,8 +57,7 @@ function generate_password($length) {
         if ($alt == 1) {
             $password .= $consonants[(rand(0,strlen($consonants)-1))];
         $alt = 0;
-        }
-        else {
+        } else {
             $password .= $vowels[(rand(0,strlen($vowels)-1))];
             $alt = 1;
         }
@@ -72,14 +71,13 @@ function generate_password($length) {
  * scrub_in
  * Run on inputs, stuff that might get stuck in our db
  */
-function scrub_in($input) {
-
-    if (!is_array($input)) { // this doesn't make any sense, why are we encoding input?
+function scrub_in($input)
+{
+    if (!is_array($input)) {
         return stripslashes(htmlspecialchars(strip_tags($input), ENT_QUOTES, Config::get('site_charset')));
-    }
-    else {
+    } else {
         $results = array();
-        foreach($input as $item) {
+        foreach ($input as $item) {
             $results[] = scrub_in($item);
         }
         return $results;
@@ -94,7 +92,7 @@ function scrub_in($input) {
  */
 function scrub_out($string) {
 
-    return html_entity_decode($string, ENT_QUOTES, Config::get('site_charset'));
+    return htmlentities($string, ENT_QUOTES, Config::get('site_charset'));
 
 } // scrub_out
 
@@ -102,8 +100,8 @@ function scrub_out($string) {
  * unhtmlentities
  * Undoes htmlentities()
  */
-function unhtmlentities($string) {
-
+function unhtmlentities($string)
+{
     return html_entity_decode($string, ENT_QUOTES, Config::get('site_charset'));
 
 } //unhtmlentities
@@ -127,13 +125,13 @@ function scrub_arg($arg)
  * This takes a value and returns what we consider to be the correct boolean
  * value. We need a special function because PHP considers "false" to be true.
  */
-function make_bool($string) {
-
+function make_bool($string)
+{
     if (strcasecmp($string,'false') == 0) {
         return false;
     }
 
-    return (bool)$string;
+    return (bool) $string;
 
 } // make_bool
 
@@ -141,8 +139,8 @@ function make_bool($string) {
  * invert_bool
  * This returns the opposite of what you've got
  */
-function invert_bool($value) {
-
+function invert_bool($value)
+{
     return make_bool($value) ? false : true;
 
 } // invert_bool
@@ -154,8 +152,8 @@ function invert_bool($value) {
  * is drop one in and it will show up on the context menu. It returns
  * in the form of an array of names
  */
-function get_languages() {
-
+function get_languages()
+{
     /* Open the locale directory */
     $handle    = @opendir(Config::get('prefix') . '/locale');
 
@@ -175,7 +173,7 @@ function get_languages() {
         /* Check to see if it's a directory */
         if (is_dir($full_file) AND substr($file,0,1) != '.' AND $file != 'base') {
 
-            switch($file) {
+            switch ($file) {
                 case 'af_ZA'; $name = 'Afrikaans'; break; /* Afrikaans */
                 case 'ca_ES'; $name = 'Catal&#224;'; break; /* Catalan */
                 case 'cs_CZ'; $name = '&#x010c;esky'; break; /* Czech */
@@ -238,7 +236,8 @@ function get_languages() {
  * is_rtl
  * This checks whether to be a rtl language.
  */
-function is_rtl($locale) {
+function is_rtl($locale)
+{
     return in_array($locale, array("he_IL", "fa_IR", "ar_SA"));
 }
 
@@ -248,8 +247,8 @@ function is_rtl($locale) {
  * 'tag' name that said pattern code corrasponds to. It returns false if nothing
  * is found.
  */
-function translate_pattern_code($code) {
-
+function translate_pattern_code($code)
+{
     $code_array = array('%A'=>'album',
             '%a'=>'artist',
             '%c'=>'comment',
@@ -273,7 +272,8 @@ function translate_pattern_code($code) {
  * This takes an array of results and re-generates the config file
  * this is used by the installer and by the admin/system page
  */
-function generate_config($current) {
+function generate_config($current)
+{
     // Start building the new config file
     $distfile = Config::get('prefix') . '/config/ampache.cfg.php.dist';
     $handle = fopen($distfile,'r');
@@ -293,8 +293,7 @@ function generate_config($current) {
             // Put in the current value
             if ($key == 'config_version') {
                 $line = $key . ' = ' . escape_ini($value);
-            }
-            elseif (isset($current[$key])) {
+            } elseif (isset($current[$key])) {
                 $line = $key . ' = "' . escape_ini($current[$key]) . '"';
                 unset($current[$key]);
             } 
@@ -312,8 +311,7 @@ function generate_config($current) {
  * Escape a value used for inserting into an ini file. 
  * Won't quote ', like addslashes does.
  */
-function escape_ini($str) {
+function escape_ini($str)
+{
     return str_replace('"', '\"', $str);
 }
-
-?>

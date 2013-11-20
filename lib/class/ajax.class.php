@@ -28,16 +28,16 @@
  * raz-a-ma-taz.
  *
  */
-class Ajax {
-
+class Ajax
+{
     private static $include_override;
 
     /**
      * constructor
      * This is what is called when the class is loaded
      */
-    public function __construct() {
-
+    public function __construct()
+    {
         // Rien a faire
 
     } // constructor
@@ -47,14 +47,13 @@ class Ajax {
      * This returns a string with the correct and full ajax 'observe' stuff
      * from prototype
      */
-    public static function observe($source,$method,$action,$post='') {
-
+    public static function observe($source,$method,$action,$post='')
+    {
         $non_quoted = array('document','window');
 
         if (in_array($source,$non_quoted)) {
             $source_txt = $source;
-        }
-        else {
+        } else {
             $source_txt = "'#$source'";
         }
 
@@ -70,7 +69,8 @@ class Ajax {
      * url
      * This takes a string and makes an URL
      */
-    public static function url($action) {
+    public static function url($action)
+    {
         return Config::get('ajax_url') . $action;
     }
 
@@ -79,23 +79,21 @@ class Ajax {
      * This takes the action, the source and the post (if passed) and
      * generates the full ajax link
      */
-    public static function action($action,$source,$post='') {
-
+    public static function action($action,$source,$post='')
+    {
         $url = self::url($action);
 
         $non_quoted = array('document','window');
 
         if (in_array($source,$non_quoted)) {
             $source_txt = $source;
-        }
-        else {
+        } else {
             $source_txt = "'$source'";
         }
 
         if ($post) {
             $ajax_string = "ajaxPost('$url','$post',$source_txt)";
-        }
-        else {
+        } else {
             $ajax_string = "ajaxPut('$url',$source_txt)";
         }
         
@@ -108,8 +106,8 @@ class Ajax {
      * This prints out an img of the specified icon with the specified alt
      * text and then sets up the required ajax for it.
      */
-    public static function button($action,$icon,$alt,$source='',$post='',$class='') {
-
+    public static function button($action,$icon,$alt,$source='',$post='',$class='')
+    {
         // Get the correct action
         $ajax_string = self::action($action,$source,$post);
 
@@ -136,8 +134,8 @@ class Ajax {
      * This prints out the specified text as a link and sets up the required
      * ajax for the link so it works correctly
      */
-    public static function text($action,$text,$source,$post='',$class='') {
-
+    public static function text($action,$text,$source,$post='',$class='')
+    {
         // Format the string we wanna use
         $ajax_string = self::action($action,$source,$post);
 
@@ -159,8 +157,8 @@ class Ajax {
      * run
      * This runs the specified action no questions asked
      */
-    public static function run($action) {
-
+    public static function run($action)
+    {
         echo "<script type=\"text/javascript\"><!--\n";
         echo "$action";
         echo "\n--></script>";
@@ -172,8 +170,8 @@ class Ajax {
      * This sets the including div override, used only one place. Kind of a
      * hack.
      */
-    public static function set_include_override($value) {
-
+    public static function set_include_override($value)
+    {
         self::$include_override = make_bool($value);
 
     } // set_include_override
@@ -183,8 +181,8 @@ class Ajax {
      * This checks to see if we're AJAXin'. If we aren't then it echoes out
      * the html needed to start a container that can be replaced by Ajax.
      */
-    public static function start_container($name) {
-
+    public static function start_container($name)
+    {
         if (defined('AJAX_INCLUDE') && !self::$include_override) { return true; }
 
         echo '<div id="' . scrub_out($name) . '">';
@@ -195,8 +193,8 @@ class Ajax {
      * end_container
      * This ends the container if we're not doing the AJAX thing
      */
-    public static function end_container() {
-
+    public static function end_container()
+    {
         if (defined('AJAX_INCLUDE') && !self::$include_override) { return true; }
 
         echo "</div>";
@@ -206,4 +204,3 @@ class Ajax {
     } // end_container
 
 } // end Ajax class
-?>

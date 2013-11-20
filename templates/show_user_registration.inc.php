@@ -58,7 +58,7 @@ if (Config::get('user_agreement')) { ?>
     <div class="agreementContent">
         <?php Registration::show_agreement(); ?>
     </div>
-    
+
     <div class="agreementCheckbox">
         <input type='checkbox' name='accept_agreement' /> <?php echo T_('I Accept'); ?>
         <?php Error::display('user_agreement'); ?>

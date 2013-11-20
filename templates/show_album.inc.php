@@ -42,7 +42,6 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
     }
     ?>
 </div>
-<div id="information_actions">
 <?php if (Config::get('ratings')) { ?>
 <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
         <?php Rating::show($album->id,'album'); ?>
@@ -61,6 +60,7 @@ if (Config::get('show_played_times')) {
 <?php
 }
 ?>
+<div id="information_actions">
 <h3><?php echo T_('Actions'); ?>:</h3>
 <ul>
     <?php if (Config::get('directplay')) { ?>

@@ -27,4 +27,3 @@ echo "<br />\n";
 echo T_('Found') . ': <span id="add_count_' . $this->id . '">' . T_('None') . '</span><br />';
 echo T_('Reading') . ':<span id="add_dir_' . $this->id . '"></span><br />';
 UI::show_box_bottom();
-?>

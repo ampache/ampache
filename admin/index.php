@@ -43,4 +43,3 @@ switch ($_REQUEST['action']) {
 }
 
 UI::show_footer();
-?>
