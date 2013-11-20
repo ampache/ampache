@@ -24,7 +24,7 @@
  * Ajax class
  *
  * This class is specifically for setting up/printing out ajax related
- * elements onto a page. It takes care of the observing and all that
+ * elements onto a page. It takes care of the observing and all that 
  * raz-a-ma-taz.
  *
  */
@@ -54,16 +54,11 @@ class Ajax
         if (in_array($source,$non_quoted)) {
             $source_txt = $source;
         } else {
-            $source_txt = "'$source'";
-        }
-
-        // If it's a post then we need to stop events
-        if ($post) {
-            $action  = 'Event.stop(e); ' . $action;
+            $source_txt = "'#$source'";
         }
 
         $observe    = "<script type=\"text/javascript\">";
-        $observe    .= "Event.observe($source_txt,'$method',function(e){" . $action . ";});";
+        $observe    .= "$($source_txt).$method(function(e){" . $action . ";});";
         $observe    .= "</script>";
 
         return $observe;
@@ -101,7 +96,7 @@ class Ajax
         } else {
             $ajax_string = "ajaxPut('$url',$source_txt)";
         }
-
+        
         return $ajax_string;
 
     } // action

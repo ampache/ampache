@@ -120,6 +120,7 @@ if ($image) {
 
     // Send the headers and output the image
     $browser = new Horde_Browser();
+    header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 604800));
     $browser->downloadHeaders($filename, $mime, true);
     echo $image;
 }

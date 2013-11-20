@@ -31,7 +31,15 @@
 <td class="cel_song"><?php echo $song->f_link; ?></a></td>
 <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
 <td class="cel_album"><?php echo $song->f_album_link; ?></td>
-<td class="cel_tags"><?php echo $song->f_tags; ?></td>
+<td class="cel_tags">
+  <span id="tag_song_<?php echo $song->id?>" onclick="showAddTagSlideout('#dialog_tag_item_<?php echo $song->id?>')"><?php echo UI::get_icon('add_tag', T_('Add')); ?></span><?php echo $song->f_tags; ?>
+  <div id="dialog_tag_item_<?php echo $song->id?>" style="display:none;" class="np_cell cel_artist">
+      <div><?php echo T_('Enter tag:')?></div>
+      <div><input type="text" id="dialog_tag_item_tag_name_<?php echo $song->id?>"/></div>
+      <div><input type="button" value="<?php echo T_('Save')?>" onclick="saveTag(<?php echo $song->id?>, 'song', '<?php echo Config::get('web_path'); ?>')" /></div>
+      <div><input type="button" value="<?php echo T_('Close')?>" onclick="closeAddTagSlideout('#dialog_tag_item_<?php echo $song->id?>')" /> </div>
+  </div>
+</td>
 <td class="cel_track"><?php echo $song->f_track; ?></td>
 <td class="cel_time"><?php echo $song->f_time; ?></td>
 <?php if (Config::get('ratings')) { ?>
@@ -48,10 +56,7 @@
                 </a>
     <?php } ?>
     <?php if (Access::check_function('download')) { ?>
-    <a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>">
-        <?php echo UI::get_icon('download', T_('Download')); ?>
-    </a>
-    <?php } ?>
+    <a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a><?php } ?>
     <?php if (Access::check('interface','75')) { ?>
         <?php echo Ajax::button('?action=show_edit_object&type=song_row&id=' . $song->id,'edit', T_('Edit'),'edit_song_' . $song->id); ?>
         <?php $icon = $song->enabled ? 'disable' : 'enable'; ?>

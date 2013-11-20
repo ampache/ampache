@@ -88,9 +88,10 @@ function scrub_in($input)
  * scrub_out
  * This function is used to escape user data that is getting redisplayed
  * onto the page, it htmlentities the mojo
+ * This is the inverse of the scrub_in function
  */
-function scrub_out($string)
-{
+function scrub_out($string) {
+
     return htmlentities($string, ENT_QUOTES, Config::get('site_charset'));
 
 } // scrub_out
@@ -281,9 +282,9 @@ function generate_config($current)
 
     $data = explode("\n",$dist);
 
-    foreach ($data as $line) {
-        if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$line,$matches)
-            || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
+    foreach ($data as $line) {  
+        if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$line,$matches)            
+            || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)       
             || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/",$line,$matches)) {
 
             $key    = $matches[1];
@@ -295,19 +296,19 @@ function generate_config($current)
             } elseif (isset($current[$key])) {
                 $line = $key . ' = "' . escape_ini($current[$key]) . '"';
                 unset($current[$key]);
-            }
+            } 
         }
 
         $final .= $line . "\n";
     }
-
+    
     return $final;
 }
 
 /**
  * escape_ini
  *
- * Escape a value used for inserting into an ini file.
+ * Escape a value used for inserting into an ini file. 
  * Won't quote ', like addslashes does.
  */
 function escape_ini($str)

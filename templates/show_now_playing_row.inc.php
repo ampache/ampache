@@ -71,13 +71,28 @@
       <label><?php echo T_('Artist'); ?></label>
     <?php echo $media->f_artist_link; ?>
   </div>
+  
+  <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_artist">
+      <label><?php echo T_('Tags'); ?></label>
+      <a href="#" id="tag_song_<?php echo $media->id?>" onclick="showAddTagSlideout('#dialog_tag_item_<?php echo $media->id?>')"><?php echo UI::get_icon('add_tag', T_('Add')); ?></a>
+      <?php echo $media->f_tags; ?>
+  </div>
+  <div id="dialog_tag_item_<?php echo $media->id?>" style="display:none;" class="np_cell cel_artist">
+      <span><?php echo T_('Enter tag:')?></span>
+      <input type="text" id="dialog_tag_item_tag_name_<?php echo $media->id?>"/>
+      <span>
+          <input type="button" value="<?php echo T_('Save')?>" onclick="saveTag(<?php echo $media->id?>, 'song', '<?php echo Config::get('web_path'); ?>')" /> 
+          <input type="button" value="<?php echo T_('Close')?>" onclick="closeAddTagSlideout('#dialog_tag_item_<?php echo $media->id?>')" /> 
+      </span>
+  </div>
 </div>
+
 
 <?php if (Art::is_enabled()) { ?>
 <div class="np_group" id="np_group_3">
   <div class="np_cell cel_albumart">
       <a href="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>" onclick="TINY.box.show({image:'<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>',boxid:'frameless',animate:true}); return false;">
-        <img align="middle" src="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;thumb=1&amp;sid=<?php echo session_id(); ?>" alt="<?php echo scrub_out($media->f_album_full); ?>" title="<?php echo scrub_out($media->f_album_full); ?>" height="80" width="80" />
+        <img align="middle" src="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;thumb=1" alt="<?php echo scrub_out($media->f_album_full); ?>" title="<?php echo scrub_out($media->f_album_full); ?>" height="80" width="80" />
       </a>
   </div>
 </div>

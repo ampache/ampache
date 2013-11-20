@@ -30,6 +30,7 @@ function refresh()
 {
     <?php echo Ajax::action($ajax_url, ''); ?>;
 }
-
-new PeriodicalExecuter(refresh, refreshInterval);
+$(document).ready(function() {
+window.setInterval(function(){refresh();}, refreshInterval * 1000);
+});
 </script>

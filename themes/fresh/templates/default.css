@@ -556,7 +556,7 @@ table.tabledata tbody td.cel_rating
 
 table.tabledata tbody .cel_tags
 {
-	max-width:80px;
+	max-width:250px;
 }
 
 table.tabledata tbody .cel_cover img
