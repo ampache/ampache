@@ -100,7 +100,7 @@ foreach ($playlist->urls as $item) {
 
     $ftype = "mp3";
     $urlinfo = Stream_URL::parse($url);
-	$transcode = false;
+    $transcode = false;
     if ($urlinfo['id']) {
         $song = new Song($urlinfo['id']);
         $ftype = $song->type;
@@ -131,13 +131,13 @@ foreach ($playlist->urls as $item) {
     }
     if (!$transcode) {
         // Transcode not available for this song, keep real type and hope for flash fallback
-		$ext = pathinfo($url, PATHINFO_EXTENSION);
-		if ($ext) {
-			$type = $ext;
-		} else {
-			// Cannot found stream type, use the default one
-			$type = $ftype;
-		}
+        $ext = pathinfo($url, PATHINFO_EXTENSION);
+        if ($ext) {
+            $type = $ext;
+        } else {
+            // Cannot found stream type, use the default one
+            $type = $ftype;
+        }
     }
 
     $jtype = ($type == "ogg" || $type == "flac") ? "oga" : $type;
