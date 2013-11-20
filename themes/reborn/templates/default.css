@@ -812,6 +812,12 @@ table.tabledata tbody .odd {
 	background-color: rgba(255,255,255,0.1);
 }
 
+table.tabledata tbody .cel_directplay
+{
+	min-width: 40px;
+    width: 40px !important;
+}
+
 table.tabledata tbody .cel_add {
     min-width: 40px;
     width: 40px !important;
@@ -946,6 +952,10 @@ div.box.box_rules {
 }
 
 #now_playing .cel_rating label {
+    display: none;
+}
+
+#now_playing .cel_userflag label {
     display: none;
 }
 
@@ -1203,6 +1213,45 @@ span.fatalerror {
 }
 .dynamic-star-rating ul {
     left:16px;
+}
+
+/************************************************/
+/*        Styles for user flags                 */
+/************************************************/
+.userflag
+{
+    position: relative;
+    width:16px;
+    height:16px;
+}
+
+.userflag a {
+    position:absolute;
+    display: inline;
+}
+
+.userflag a.userflag_true
+{
+    width:16px;
+    height: 16px;
+    background: url(../../../images/icon_flag.png) left top;
+}
+
+.userflag a:hover.userflag_true
+{
+    background: url(../../../images/icon_flag_off.png) left top;
+}
+
+.userflag a.userflag_false
+{
+    width:16px;
+    height:16px;
+    background: url(../../../images/icon_flag_off.png) left top;
+}
+
+.userflag a:hover.userflag_false
+{
+    background: url(../../../images/icon_flag.png) left top;
 }
 
 /***********************************************
