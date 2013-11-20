@@ -213,6 +213,11 @@ function ExitPlayer()
         ff.setAttribute('class', 'frame_footer_hide');
 
         maindiv.style.height = parent.parent.innerHeight + "px";
+<?php
+if (Config::get('song_page_title') && $iframed) {
+    echo "window.parent.document.title = '" . addslashes(Config::get('site_title')) . "';";
+}
+?>        
     }
     ff.setAttribute('src', '');
     return false;
