@@ -217,7 +217,7 @@ function ExitPlayer()
 if (Config::get('song_page_title') && $iframed) {
     echo "window.parent.document.title = '" . addslashes(Config::get('site_title')) . "';";
 }
-?>        
+?>
     }
     ff.setAttribute('src', '');
     return false;
