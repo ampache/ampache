@@ -24,7 +24,7 @@
  * Ajax class
  *
  * This class is specifically for setting up/printing out ajax related
- * elements onto a page. It takes care of the observing and all that 
+ * elements onto a page. It takes care of the observing and all that
  * raz-a-ma-taz.
  *
  */
@@ -45,7 +45,7 @@ class Ajax
     /**
      * observe
      * This returns a string with the correct and full ajax 'observe' stuff
-     * from prototype
+     * from jQuery
      */
     public static function observe($source,$method,$action,$post='')
     {
@@ -96,7 +96,7 @@ class Ajax
         } else {
             $ajax_string = "ajaxPut('$url',$source_txt)";
         }
-        
+
         return $ajax_string;
 
     } // action

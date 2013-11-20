@@ -31,7 +31,7 @@
 <meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>" />
 </head>
 <body>
-<script src="<?php echo $web_path; ?>/modules/jquery/jquery-1.9.1.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
 <script src="lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <div id="header">
 <h1><?php echo T_('Ampache Installation'); ?></h1>

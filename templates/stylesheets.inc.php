@@ -33,5 +33,5 @@ if (is_rtl(Config::get('lang'))
 <?php
 }
 ?>
-<link rel="stylesheet" href="<?php echo $web_path; ?>/modules/tinybox/tinybox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path; ?>/modules/prettyPhoto/css/prettyPhoto.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/print.css" type="text/css" media="print" />

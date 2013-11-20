@@ -36,8 +36,8 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
         $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
 
             $aa_url = $web_path . "/image.php?id=" . $album->id . "&amp;sid=" . session_id();
-            echo "<a href=\"$aa_url\" onClick=\"TINY.box.show({image:'$aa_url',boxid:'frameless',animate:true}); return false;\">";
-            echo "<img src=\"" . $web_path . "/image.php?id=" . $album->id . "&amp;thumb=2\" alt=\"".$name."\" title=\"".$name."\" height=\"128\" width=\"128\" />";
+            echo "<a href=\"$aa_url\" rel=\"prettyPhoto\">";
+            echo "<img src=\"" . $web_path . "/image.php?id=" . $album->id . "&amp;thumb=2\" alt=\"".$name."\" alt=\"".$name."\" height=\"128\" width=\"128\" />";
             echo "</a>\n";
     }
     ?>

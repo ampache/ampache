@@ -40,10 +40,10 @@ if (Config::get('use_rss')) { ?>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo Config::get('site_charset'); ?>" />
 <title><?php echo scrub_out(Config::get('site_title')); ?> - <?php echo $location['title']; ?></title>
 <?php require_once Config::get('prefix') . '/templates/stylesheets.inc.php'; ?>
-<link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery/jquery-ui-1.10.3.min.css" type="text/css" media="screen" />
-<script src="<?php echo $web_path; ?>/modules/jquery/jquery-1.9.1.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo $web_path; ?>/modules/jquery/jquery-ui-1.10.3.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo $web_path; ?>/modules/tinybox/tinybox.js" language="javascript" type="text/javascript"></script>
+<link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery/jquery-ui.min.css" type="text/css" media="screen" />
+<script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/jquery/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/prettyPhoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <?php
@@ -61,6 +61,11 @@ function forceIframe()
 <?php
 }
 ?>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function(){
+    $("a[rel^='prettyPhoto']").prettyPhoto();
+  });
+</script>
 </head>
 <body <?php echo (Config::get('iframes')) ? "onLoad='forceIframe();'" : ""; ?>>
 <!-- rfc3514 implementation -->

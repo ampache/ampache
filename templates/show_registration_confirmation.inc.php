@@ -36,7 +36,7 @@ $web_path = Config::get('web_path');
 <h1><?php echo scrub_out(Config::get('site_title')); ?></h1>
 <?php echo T_('Registration Complete'); ?>...
 </div>
-<script src="<?php echo $web_path; ?>/modules/jquery/jquery-1.9.1.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <div id="maincontainer">

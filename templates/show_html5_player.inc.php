@@ -63,7 +63,7 @@ if ($iframed) {
 <?php
 }
 ?>
-<script src="<?php echo Config::get('web_path'); ?>/modules/jplayer/jquery.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo Config::get('web_path'); ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo Config::get('web_path'); ?>/modules/jplayer/jquery.jplayer.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo Config::get('web_path'); ?>/modules/jplayer/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
 <script type="text/javascript">
