@@ -568,7 +568,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #rightbar {
     position: fixed;
     right: 10px;
-    top : 66px;
+    top: 66px;
 	width: 200px;
 	margin: 20px 20px auto auto;
     max-height: 85%;
@@ -590,6 +590,20 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     z-index: 0;
     overflow-y: auto;
 }
+
+/* For jQuery scrolling feature */
+.fixedrightbar {
+    position: fixed !important;
+    top: -20px !important;
+    right: 10px !important;
+}
+
+.fixedrightbarsubmenu {
+    position: fixed !important;
+    top: 33px !important;
+    right: 70px !important;
+}
+/******************************/
 
 #rightbar #rb_action {
     list-style-type: none;
@@ -742,6 +756,7 @@ span.page-nb {
 
 table.tabledata {
 	width:100%;
+    table-layout: fixed;
 	text-align:left;
 	/*border:1px solid #bbb;*/
     font-size: 14px;

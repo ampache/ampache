@@ -477,6 +477,7 @@ hr {
 table.tabledata
 {
 	width:100%;
+    table-layout: fixed;
 	text-align:left;
 	border:1px solid #bbb;
 }
