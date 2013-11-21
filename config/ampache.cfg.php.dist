@@ -592,6 +592,7 @@ refresh_limit = "60"
 ; encode_args_TYPE = TRANSCODE_CMD_ARGS
 ;encode_args_mp3 = "-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1"
 ;encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
+;encode_args_m4a = "-vn -b:a %SAMPLE%K -c:a libfdk_aac -f adts pipe:1"
 
 ;######################################################
 ; these options allow you to configure your rss-feed
