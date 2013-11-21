@@ -36,6 +36,7 @@ function PlayerFrame(URL)
         maindiv.style.height = (parent.parent.innerHeight - 105) + "px";
     }
     ff.setAttribute('src', URL);
+    window.location = '<?php echo return_referer() ?>';
     return false;
 }
 </script>

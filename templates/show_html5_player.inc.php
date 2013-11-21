@@ -105,11 +105,11 @@ foreach ($playlist->urls as $item) {
         $song = new Song($urlinfo['id']);
         $ftype = $song->type;
 
+        $transcode_cfg = Config::get('transcode');
         // Check transcode is required
-        if ($type != $ftype) {
-            $transcode_cfg = Config::get('transcode');
+        if ($transcode_cfg == 'always' || $type != $ftype) {
             $valid_types = Song::get_stream_types_for_type($ftype);
-            if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
+            if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                 // Transcode only if excepted type available
                 $transcode_settings = $song->get_transcode_settings($type);
                 if ($transcode_settings) {
@@ -123,22 +123,20 @@ foreach ($playlist->urls as $item) {
                         }
                     }
                 }
-                if ($transcode) {
-                    $url .= '&content_length=required&transcode_to=' . $type; // &content_length=required
-                }
+
             }
         }
-    }
-    if (!$transcode) {
-        // Transcode not available for this song, keep real type and hope for flash fallback
-        $ext = pathinfo($url, PATHINFO_EXTENSION);
-        if ($ext) {
-            $type = $ext;
+
+        if ($transcode) {
+            $url .= '&transcode_to=' . $type;
         } else {
-            // Cannot found stream type, use the default one
             $type = $ftype;
         }
+    } else {
+        $ext = pathinfo($url, PATHINFO_EXTENSION);
+        $type = $ext ?: $ftype;
     }
+    $url .= "&content_length=required";
 
     $jtype = ($type == "ogg" || $type == "flac") ? "oga" : $type;
 
@@ -183,9 +181,10 @@ if ($iframed) {
         });
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
-        $(".jp-playlist").scrollTop($(".jp-playlist-current").position().top);
         var current = myPlaylist.current,
             playlist = myPlaylist.playlist;
+        var pos = $(".jp-playlist-current").position().top + $(".jp-playlist").scrollTop();
+        $(".jp-playlist").scrollTop(pos);
         $.each(playlist, function (index, obj) {
             if (index == current) {
                 $('.playing_title').text(obj.title);
