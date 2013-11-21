@@ -135,7 +135,7 @@ foreach ($playlist->urls as $item) {
     } else {
         $ext = pathinfo($url, PATHINFO_EXTENSION);
         $type = $ext ?: $ftype;
-        
+
         // Radio streams
         /*if ($item->type == "radio") {
             $radiojs .= ((!empty($radiojs)) ? ", " : "") . "'" . $item->url . "'";
