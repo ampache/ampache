@@ -183,6 +183,7 @@ if ($iframed) {
         });
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
+		$(".jp-playlist").scrollTop($(".jp-playlist-current").position().top);
         var current = myPlaylist.current,
             playlist = myPlaylist.playlist;
         $.each(playlist, function (index, obj) {
