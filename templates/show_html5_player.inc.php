@@ -68,23 +68,22 @@ if ($iframed) {
 <script src="<?php echo Config::get('web_path'); ?>/modules/jplayer/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function(){
-        var myPlaylist = new jPlayerPlaylist({
-            jPlayer: "#jquery_jplayer_1",
-            cssSelectorAncestor: "#jp_container_1"
-        }, [
 <?php
-$i = 0;
 $playlist = new Stream_Playlist(scrub_in($_REQUEST['playlist_id']));
+$i = 0;
 $jtypes = array();
+$radiojs = "";
+$playlistjs = "";
+
 foreach ($playlist->urls as $item) {
-    echo ($i++ > 0 ? ',' : '') . '{' . "\n";
+    $playlistjs .= ($i++ > 0 ? ',' : '') . '{' . "\n";
     foreach (array('title', 'author') as $member) {
         if ($member == "author")
             $kmember = "artist";
         else
             $kmember = $member;
 
-        echo $kmember . ': "' . addslashes($item->$member) . '",' . "\n";
+        $playlistjs .= $kmember . ': "' . addslashes($item->$member) . '",' . "\n";
     }
 
     $url = $item->url;
@@ -132,23 +131,35 @@ foreach ($playlist->urls as $item) {
         } else {
             $type = $ftype;
         }
+        $url .= "&content_length=required";
     } else {
         $ext = pathinfo($url, PATHINFO_EXTENSION);
         $type = $ext ?: $ftype;
+        
+        // Radio streams
+        /*if ($item->type == "radio") {
+            $radiojs .= ((!empty($radiojs)) ? ", " : "") . "'" . $item->url . "'";
+        }*/
     }
-    $url .= "&content_length=required";
 
     $jtype = ($type == "ogg" || $type == "flac") ? "oga" : $type;
 
     if (!in_array($jtype, $jtypes)) {
         $jtypes[] = $jtype;
     }
-    echo $jtype.': "' . $url;
-    echo '",' . "\n";
-    echo 'poster: "' . $item->image_url . (!$iframed ? '&thumb=4' : '') . '" }' . "\n";
+    $playlistjs .= $jtype.': "' . $url;
+    $playlistjs .= '",' . "\n";
+    $playlistjs .= 'poster: "' . $item->image_url . (!$iframed ? '&thumb=4' : '') . '" }' . "\n";
 }
+
+if ($i == 1 && !empty($radiojs)) {
+    // Special stuff for web radio
+} else {
 ?>
-        ], {
+        var myPlaylist = new jPlayerPlaylist({
+            jPlayer: "#jquery_jplayer_1",
+            cssSelectorAncestor: "#jp_container_1"
+        }, [<?php echo $playlistjs; ?>], {
             playlistOptions: {
                 autoPlay: true,
                 loopOnPrevious: false,
@@ -163,6 +174,8 @@ foreach ($playlist->urls as $item) {
             supplied: "<?php echo join(",", $jtypes); ?>",
             audioFullScreen: true,
             solution: "html, flash",
+            nativeSupport:true,
+            oggSupport: false,
             size: {
 <?php
 if ($iframed) {
@@ -179,6 +192,9 @@ if ($iframed) {
 ?>
             }
         });
+<?php
+}
+?>
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
         var current = myPlaylist.current,

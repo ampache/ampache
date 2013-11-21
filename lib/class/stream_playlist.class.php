@@ -106,7 +106,7 @@ class Stream_Playlist
             $url = array();
 
             $type = $medium['object_type'];
-            $array['type'] = $type;
+            $url['type'] = $type;
 
             $object = new $type($medium['object_id']);
             $object->format();
