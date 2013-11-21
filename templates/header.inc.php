@@ -45,6 +45,7 @@ if (Config::get('use_rss')) { ?>
 <script src="<?php echo $web_path; ?>/modules/jquery/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/prettyPhoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/lib/javascript/edit-dialog.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <?php
 // If iframes, we check in javascript that parent container exist, otherwise we redirect to index. Otherwise HTML5 iframed Player will look broken.

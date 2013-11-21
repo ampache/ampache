@@ -20,33 +20,27 @@
  *
  */
 ?>
-<td colspan="8">
-    <form method="post" id="edit_song_<?php echo $song->id; ?>">
-        <table class="inline-edit" cellpadding="3" cellspacing="0">
+<div>
+    <form method="post" id="edit_song_<?php echo $song->id; ?>" class="edit_dialog_content">
+        <table>
             <tr>
-                <td>
-                    <input type="text" name="title" value="<?php echo scrub_out($song->title); ?>" />
-                </td>
-                <td>
-                    <?php show_artist_select('artist',$song->artist,true,$song->id); ?>
-                    <div id="artist_select_song_<?php echo $song->id ?>"></div>
-                    <?php echo Ajax::observe('artist_select_'.$song->id,'change','check_inline_song_edit("artist", '.$song->id.')'); ?>
-                </td>
-                <td>
-                    <?php show_album_select('album',$song->album,true,$song->id); ?>
-                    <div id="album_select_song_<?php echo $song->id ?>"></div>
-                    <?php echo Ajax::observe('album_select_'.$song->id,'change','check_inline_song_edit("album", '.$song->id.')'); ?>
-                </td>
-                <td>
-                    <input type="text" name="track" size="3" value="<?php echo scrub_out($song->track); ?>" />
-                </td>
-                <td>
-                    <input type="hidden" name="id" value="<?php echo $song->id; ?>" />
-                    <input type="hidden" name="type" value="song_row" />
-                    <?php echo Ajax::button('?action=edit_object&id=' . $song->id . '&type=song_row','download', T_('Save Changes'),'save_song_' . $song->id,'edit_song_' . $song->id); ?>
-                    <?php echo Ajax::button('?action=cancel_edit_object&id=' . $song->id . '&type=song_row','cancel', T_('Cancel Changes'),'cancel_song_' . $song->id,'edit_song_' . $song->id); ?>
-                </td>
+                <td class="edit_dialog_content_header"><?php echo T_('Title') ?></td>
+                <td><input type="text" name="title" value="<?php echo scrub_out($song->title); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
+                <td><?php show_artist_select('artist', $song->artist, true, $song->id); ?></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
+                <td><?php show_album_select('album',$song->album,true,$song->id); ?></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Track') ?></td>
+                <td><input type="text" name="track" size="3" value="<?php echo scrub_out($song->track); ?>" /></td>
             </tr>
         </table>
+        <input type="hidden" name="id" value="<?php echo $song->id; ?>" />
+        <input type="hidden" name="type" value="song_row" />
     </form>
-</td>
+</div>
