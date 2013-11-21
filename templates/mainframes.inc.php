@@ -57,7 +57,7 @@ if (isset($_GET['target_link'])) {
 }
 ?>"></iframe>
     </div>
-    <iframe id="frame_footer" class="frame_footer_hide" src="" sandbox="allow-top-navigation allow-scripts allow-same-origin"></iframe>
+    <iframe id="frame_footer" class="frame_footer_hide" src=""></iframe>
 </div>
 </body>
 </html>
