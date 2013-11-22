@@ -128,7 +128,10 @@ class Album extends database_object
                 "`artist`.`id` AS `artist_id`, `song`.`album`" .
                 "FROM `song` " .
                 "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
-                "WHERE `song`.`album` IN $idlist GROUP BY `song`.`album`";
+				"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+                "WHERE `song`.`album` IN $idlist " . 
+				"AND `catalog`.`enabled` = '1' " .
+				"GROUP BY `song`.`album`";
 
             $db_results = Dba::read($sql);
 
@@ -168,7 +171,9 @@ class Album extends database_object
             "`artist`.`id` AS `artist_id` " .
             "FROM `song` INNER JOIN `artist` " .
             "ON `artist`.`id`=`song`.`artist` " .
+			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
             "WHERE `song`.`album` = ? " .
+			"AND `catalog`.`enabled` = '1' " . 
             "GROUP BY `song`.`album`";
         $db_results = Dba::read($sql, array($this->id));
 
@@ -271,12 +276,15 @@ class Album extends database_object
     {
         $results = array();
 
-        $sql = "SELECT `id` FROM `song` WHERE `album` = ? ";
+        $sql = "SELECT `id` FROM `song` ";
+		$sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+		$sql .= "WHERE `album` = ? ";
         $params = array($this->id);
         if (strlen($artist)) {
-            $sql .= "AND `artist` = ?";
+            $sql .= "AND `artist` = ? ";
             $params[] = $artist;
         }
+		$sql .= "AND `catalog`.`enabled` = '1' ";
         $sql .= "ORDER BY `track`, `title`";
         if ($limit) {
             $sql .= " LIMIT " . intval($limit);
@@ -351,7 +359,7 @@ class Album extends database_object
         $tags = Tag::get_top_tags('album',$this->id);
         $this->tags = $tags;
 
-        $this->f_tags = Tag::get_display($tags,$this->id,'album');
+        $this->f_tags = Tag::get_display($tags, $this->id, 'album');
 
     } // format
 
@@ -361,7 +369,7 @@ class Album extends database_object
      */
     public function get_random_songs()
     {
-        $sql = "SELECT `id` FROM `song` WHERE `album` = ? ORDER BY RAND()";
+        $sql = "SELECT `id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `album` = ? AND `catalog`.`enabled` = '1' ORDER BY RAND()";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($r = Dba::fetch_row($db_results)) {
@@ -379,8 +387,8 @@ class Album extends database_object
      */
     public function update($data)
     {
-        $year         = $data['year'];
-        $artist        = $data['artist'];
+        $year        = $data['year'];
+        $artist      = $data['artist'];
         $name        = $data['name'];
         $disk        = $data['disk'];
         $mbid        = $data['mbid'];
@@ -420,7 +428,8 @@ class Album extends database_object
             Userflag::gc();
         } // if updated
 
-
+        Tag::update_tag_list($data['edit_tags'], 'album', $current_id);
+        
         return $current_id;
 
     } // update
@@ -434,16 +443,18 @@ class Album extends database_object
     {
         $results = false;
 
+		$sql = "SELECT `album`.`id` FROM `album` " .
+			"LEFT JOIN `song` ON `song`.`album` = `album`.`id` " .
+			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+		$where = "WHERE `catalog`.`enabled` = '1' ";
         if ($with_art) {
-            $sql = 'SELECT `album`.`id` FROM `album` LEFT JOIN `image` ' .
-                "ON (`image`.`object_type` = 'album' AND " .
-                '`image`.`object_id` = `album`.`id`) ' .
-                'WHERE `image`.`id` IS NOT NULL ';
-        } else {
-            $sql = 'SELECT `id` FROM `album` ';
+            $sql .= "LEFT JOIN `image` ON (`image`.`object_type` = 'album' AND `image`.`object_id` = `album`.`id`) ";
+			$where .="AND `image`.`id` IS NOT NULL ";
         }
+		$where .= "AND COUNT(`song`.`id`) > 0 ";
 
-        $sql .= 'ORDER BY RAND() LIMIT ' . intval($count);
+		$sql .= $where;
+        $sql .= "ORDER BY RAND() LIMIT " . intval($count);
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {

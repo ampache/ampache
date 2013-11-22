@@ -100,7 +100,8 @@ class Query
                 'starts_with',
                 'exact_match',
                 'alpha_match',
-                'catalog'
+                'catalog',
+				'catalog_enabled'
             ),
             'artist' => array(
                 'add_lt',
@@ -111,7 +112,8 @@ class Query
                 'alpha_match',
                 'starts_with',
                 'tag',
-                'catalog'
+                'catalog',
+				'catalog_enabled'
             ),
             'song' => array(
                 'add_lt',
@@ -122,11 +124,13 @@ class Query
                 'alpha_match',
                 'starts_with',
                 'tag',
-                'catalog'
+                'catalog',
+				'catalog_enabled'
             ),
             'live_stream' => array(
                 'alpha_match',
-                'starts_with'
+                'starts_with',
+				'catalog_enabled'
             ),
             'playlist' => array(
                 'alpha_match',
@@ -315,6 +319,7 @@ class Query
             case 'add_gt':
             case 'update_lt':
             case 'update_gt':
+			case 'catalog_enabled':
                 $this->_state['filter'][$key] = intval($value);
             break;
             case 'exact_match':
@@ -1008,7 +1013,6 @@ class Query
     private function sql_filter($filter, $value)
     {
         $filter_sql = '';
-
         switch ($this->get_type()) {
 
         case 'song':
@@ -1060,6 +1064,10 @@ class Query
                         $filter_sql = " `song`.`catalog` = '$value' AND ";
                     }
                 break;
+				case 'catalog_enabled':
+					$this->set_join('left', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
+					$filter_sql = " `catalog`.`enabled` = '1' AND ";
+					break;
                 default:
                     // Rien a faire
                 break;
@@ -1095,8 +1103,8 @@ class Query
                     if ($value != 0) {
                         $this->set_join('left','`song`','`album`.`id`','`song`.`album`', 100);
                         $this->set_join('left','`catalog`','`song`.`catalog`','`catalog`.`id`', 100);
-                                                $filter_sql = " (`song`.`catalog` = '$value') AND ";
-                                        }
+                        $filter_sql = " (`song`.`catalog` = '$value') AND ";
+					}
                 break;
                 case 'update_lt':
                     $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
@@ -1106,6 +1114,11 @@ class Query
                     $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
                     $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
                 break;
+				case 'catalog_enabled':
+					$this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
+					$this->set_join('left', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
+					$filter_sql = " `catalog`.`enabled` = '1' AND ";
+					break;
                 default:
                     // Rien a faire
                 break;
@@ -1149,6 +1162,11 @@ class Query
                     $this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
                     $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
                 break;
+				case 'catalog_enabled':
+					$this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
+					$this->set_join('left', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
+					$filter_sql = " `catalog`.`enabled` = '1' AND ";
+					break;
                 default:
                     // Rien a faire
                 break;
@@ -1162,6 +1180,10 @@ class Query
                 case 'starts_with':
                     $filter_sql = " `live_stream`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
+				case 'catalog_enabled':
+					$this->set_join('left', '`catalog`', '`catalog`.`id`', '`live_stream`.`catalog`', 100);
+					$filter_sql = " `catalog`.`enabled` = '1' AND ";
+					break;
                 default:
                     // Rien a faire
                 break;

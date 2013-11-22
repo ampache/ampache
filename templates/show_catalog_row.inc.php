@@ -21,6 +21,9 @@
  */
 
 $web_path = Config::get('web_path');
+
+$icon = $catalog->enabled ? 'disable' : 'enable';
+$button_flip_state_id = 'button_flip_state_' . $catalog->id;
 ?>
 <td class="cel_catalog"><?php echo $catalog->f_name_link; ?></td>
 <td class="cel_info"><?php echo scrub_out($catalog->f_info); ?></td>
@@ -34,4 +37,7 @@ $web_path = Config::get('web_path');
     | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Update'); ?></a>
     | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Gather Art'); ?></a>
     | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_delete_catalog&amp;catalog_id=<?php echo $catalog->id; ?>"><?php echo T_('Delete'); ?></a>
+	| <span id="<?php echo($button_flip_state_id); ?>">
+		<?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $icon, T_(ucfirst($icon)),'flip_state_' . $catalog->id); ?>
+	  </span>
 </td>

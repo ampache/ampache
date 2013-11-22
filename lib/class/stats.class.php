@@ -115,7 +115,12 @@ class Stats
     {
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
-        $sql = "SELECT * FROM `object_count` WHERE `user` = ? AND `object_type`='song' ORDER BY `date` DESC LIMIT 1";
+        $sql = "SELECT * FROM `object_count` " .
+			"LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` " .
+			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+			"WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' " .
+			"AND `catalog`.`enabled` = '1' " .
+			"ORDER BY `object_count`.`date` DESC LIMIT 1";
         $db_results = Dba::read($sql, array($user_id));
 
         $results = Dba::fetch_assoc($db_results);
@@ -133,8 +138,12 @@ class Stats
     {
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
-        $sql = "SELECT * FROM `object_count` WHERE `user` = ? AND `object_type`='song' AND `date` >= ? " .
-            "ORDER BY `date` DESC";
+        $sql = "SELECT * FROM `object_count` " .
+			"LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` " .
+			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+			"WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? " .
+			"AND `catalog`.`enabled` = '1' " .
+            "ORDER BY `object_count`.`date` DESC";
         $db_results = Dba::read($sql, array($user_id, $time));
 
         $results = array();

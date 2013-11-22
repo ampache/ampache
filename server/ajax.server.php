@@ -83,6 +83,9 @@ switch ($page) {
     case 'index':
         require_once Config::get('prefix') . '/server/index.ajax.php';
         exit;
+	case 'catalog':
+        require_once Config::get('prefix') . '/server/catalog.ajax.php';
+        exit;
     break;
     default:
         // A taste of compatibility
@@ -160,8 +163,9 @@ switch ($_REQUEST['action']) {
         // Scrub the data
         foreach ($_POST as $key => $data) {
             $_POST[$key] = scrub_in($data);
+            debug_event('ajax_server', $key.'='.$_POST[$key], '5');
         }
-
+        
         $level = '50';
 
         if ($_POST['type'] == 'playlist_row' || $_POST['type'] == 'playlist_title') {

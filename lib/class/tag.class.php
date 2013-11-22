@@ -473,7 +473,7 @@ class Tag extends database_object
      * it also takes a type so that it knows how to return it, this is used
      * by the formating functions of the different objects
      */
-    public static function get_display($tags,$element_id,$type='song')
+    public static function get_display($tags)
     {
         if (!is_array($tags)) { return ''; }
 
@@ -482,8 +482,7 @@ class Tag extends database_object
         // Iterate through the tags, format them according to type and element id
         foreach ($tags as $tag_id=>$value) {
             $tag = new Tag($tag_id);
-            $tag->format($type,$element_id);
-            $results .= $tag->f_name . ', ';
+            $results .= $tag->name . ', ';
         }
 
         $results = rtrim($results,', ');
@@ -491,7 +490,41 @@ class Tag extends database_object
         return $results;
 
     } // get_display
-
+    
+    /**
+     * update_tag_list
+     * Update the tags list based on commated list (ex. tag1,tag2,tag3,..)
+     */
+    public static function update_tag_list($tags_comma, $type, $object_id)
+    {
+        debug_event('tag.class', 'Updating tags for values {'.$tags_comma.'} type {'.$type.'} object_id {'.$object_id.'}', '5');
+        
+        $ctags = Tag::get_top_tags($type, $object_id);
+        $editedTags = explode(",", $tags_comma);
+        
+        foreach ($ctags as $ctid => $ctv) {
+            $ctag = new Tag($ctid);
+            foreach ($editedTags as  $tk => $tv) {
+                if ($ctag->name == $tv) {
+                    debug_event('tag.class', 'Tag {'.$ctag->name.'} already found. Do nothing.', '5');
+                    // Removing the tag from the new tags array
+                    unset($editedTags[$tk]);
+                    break;
+                } else {
+                    debug_event('tag.class', 'Tag {'.$ctag->name.'} not found in the new list. Delete it.', '5');
+                    $ctag->remove_map($type, $object_id);
+                    break;
+                }
+            }
+        }
+        
+        // Look if we need to add some new tags
+        foreach ($editedTags as  $tk => $tv) {
+            debug_event('tag.class', 'Adding new tag {'.$tv.'}', '5');
+            Tag::add($type, $object_id, $tv, false);
+        }
+    } // update_tag_list
+    
     /**
      * count
      * This returns the count for the all objects associated with this tag

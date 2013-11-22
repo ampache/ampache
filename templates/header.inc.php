@@ -41,11 +41,14 @@ if (Config::get('use_rss')) { ?>
 <title><?php echo scrub_out(Config::get('site_title')); ?> - <?php echo $location['title']; ?></title>
 <?php require_once Config::get('prefix') . '/templates/stylesheets.inc.php'; ?>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery/jquery-ui.min.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path; ?>/modules/tag-it/jquery.tagit.css" type="text/css" media="screen" />
 <script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/jquery/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/prettyPhoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/tag-it/tag-it.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/lib/javascript/edit-dialog.js" language="javascript" type="text/javascript"></script>
 <?php
 // If iframes, we check in javascript that parent container exist, otherwise we redirect to index. Otherwise HTML5 iframed Player will look broken.
 if (Config::get('iframes') && $_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -57,6 +60,10 @@ function forceIframe()
         document.location = '<?php echo $web_path; ?>?target_link=' + encodeURIComponent(document.location);
     }
 }
+
+// Using the following work-around to set ajex.server.php path available from any javascript script.
+var jsAjaxUrl = "<?php echo Config::get('ajax_url') ?>";
+
 </script>
 <?php
 }

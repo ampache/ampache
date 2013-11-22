@@ -176,7 +176,9 @@ class Song extends database_object implements media
             'FROM `song` LEFT JOIN `tag_map` ' .
             'ON `tag_map`.`object_id`=`song`.`id` ' .
             "AND `tag_map`.`object_type`='song' " .
-            "WHERE `song`.`id` IN $idlist";
+			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+            "WHERE `song`.`id` IN $idlist " .
+			"AND `catalog`.`enabled` = '1' ";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -556,11 +558,11 @@ class Song extends database_object implements media
                 case 'artist':
                     // Don't do anything if we've negative one'd this baby
                     if ($value == '-1') {
-                        $value = Catalog::check_artist($data['artist_name'], $data['mb_artistid']);
+                        $value = Artist::check_artist($data['artist_name'], $data['mb_artistid']);
                     }
                 case 'album':
                     if ($value == '-1') {
-                        $value = Catalog::check_album($data['album_name'], $data['year'], $data['disk'], $data['mb_albumid']);
+                        $value = Album::check_album($data['album_name'], $data['year'], $data['disk'], $data['mb_albumid']);
                     }
                 case 'title':
                 case 'track':
@@ -572,6 +574,9 @@ class Song extends database_object implements media
                         $updated = 1;
                     }
                 break;
+                case 'edit_tags':
+                    Tag::update_tag_list($value, 'song', $this->id);
+                break;
                 default:
                     // Rien a faire
                 break;
@@ -580,7 +585,7 @@ class Song extends database_object implements media
 
         // If a field was changed then we need to flag this mofo
         if ($updated) {
-            Flag::add($this->id,'song','retag','Interface Update');
+            Flag::add($this->id, 'song', 'retag', 'Interface Update');
         }
 
         return true;

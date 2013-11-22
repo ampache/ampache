@@ -289,7 +289,6 @@ class Auth
             if ($info["count"] == 1) {
                 $user_entry = ldap_first_entry($ldap_link, $sr);
                 $user_dn    = ldap_get_dn($ldap_link, $user_entry);
-                $password   = scrub_in($password);
                 // bind using the user..
                 $retval = ldap_bind($ldap_link, $user_dn, $password);
 
