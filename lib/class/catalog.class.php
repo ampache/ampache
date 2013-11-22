@@ -265,6 +265,40 @@ abstract class Catalog extends database_object
 
         return true;
     }
+	
+	/**
+     * update_enabled
+     * sets the enabled flag
+     */
+    public static function update_enabled($new_enabled, $catalog_id)
+    {
+        self::_update_item('enabled', $new_enabled, $catalog_id, '75');
+
+    } // update_enabled
+
+    /**
+     * _update_item
+     * This is a private function that should only be called from within the catalog class.
+     * It takes a field, value, catalog id and level. first and foremost it checks the level
+     * against $GLOBALS['user'] to make sure they are allowed to update this record
+     * it then updates it and sets $this->{$field} to the new value
+     */
+    private static function _update_item($field, $value, $catalog_id, $level)
+    {
+        /* Check them Rights! */
+        if (!Access::check('interface', $level)) { return false; }
+
+        /* Can't update to blank */
+        if (!strlen(trim($value))) { return false; }
+
+        $value = Dba::escape($value);
+
+        $sql = "UPDATE `catalog` SET `$field`='$value' WHERE `id`='$catalog_id'";
+        $db_results = Dba::write($sql);
+
+        return true;
+
+    } // _update_item
 
     /**
      * format

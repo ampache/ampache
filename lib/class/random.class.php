@@ -50,7 +50,12 @@ class Random implements media
      */
     public static function artist()
     {
-        $sql = "SELECT `id` FROM `artist` ORDER BY RAND() LIMIT 1";
+        $sql = "SELECT `artist`.`id` FROM `artist` " .
+			"LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` " .
+			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+			"WHERE `catalog`.`enabled` = '1' " .
+			"GROUP BY `artist`.`id` " .
+			"ORDER BY RAND() LIMIT 1";
         $db_results = Dba::read($sql);
 
         $results = Dba::fetch_assoc($db_results);
@@ -127,7 +132,10 @@ class Random implements media
     {
         $results = array();
 
-        $sql = "SELECT `id` FROM `song` ORDER BY RAND() LIMIT $limit";
+        $sql = "SELECT `song`.`id` FROM `song` " .
+			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+			"WHERE `catalog`.`enabled` = '1' " .
+			"ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -150,10 +158,13 @@ class Random implements media
         // Get the last album playbed by us
         $data = $GLOBALS['user']->get_recently_played('1','album');
         if ($data['0']) {
-            $where_sql = " WHERE `album`='" . $data['0'] . "' ";
+            $where_sql = " AND `song`.`album`='" . $data['0'] . "' ";
         }
 
-        $sql = "SELECT `id` FROM `song` $where_sql ORDER BY RAND() LIMIT $limit";
+        $sql = "SELECT `song`.`id` FROM `song` " .
+			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+			"WHERE `catalog`.`enabled` = '1' " .
+			"$where_sql ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -175,10 +186,13 @@ class Random implements media
 
         $data = $GLOBALS['user']->get_recently_played('1','artist');
         if ($data['0']) {
-            $where_sql = " WHERE `artist`='" . $data['0'] . "' ";
+            $where_sql = " AND `song`.`artist`='" . $data['0'] . "' ";
         }
 
-        $sql = "SELECT `id` FROM `song` $where_sql ORDER BY RAND() LIMIT $limit";
+        $sql = "SELECT `song`.`id` FROM `song` " .
+			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+			"WHERE `catalog`.`enabled` = '1' " .
+			"$where_sql ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -220,7 +234,11 @@ class Random implements media
                     "FROM `song` ";
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
-                    $sql .= ' WHERE ' . $search_info['where_sql'];
+				}
+				$sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+				$sql .= " WHERE `catalog`.`enabled` = '1'";
+				if ($search_info) {
+                    $sql .= ' AND ' . $search_info['where_sql'];
                 }
             break;
             case 'album':
@@ -230,7 +248,11 @@ class Random implements media
                 }
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
-                    $sql .= ' WHERE ' . $search_info['where_sql'];
+				}
+				$sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+				$sql .= " WHERE `catalog`.`enabled` = '1'";
+				if ($search_info) {
+                    $sql .= ' AND ' . $search_info['where_sql'];
                 }
                 $sql .= ' GROUP BY `album`.`id`';
             break;
@@ -241,7 +263,11 @@ class Random implements media
                 }
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
-                    $sql .= ' WHERE ' . $search_info['where_sql'];
+				}
+				$sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+				$sql .= " WHERE `catalog`.`enabled` = '1'";
+				if ($search_info) {
+                    $sql .= ' AND ' . $search_info['where_sql'];
                 }
                 $sql .= ' GROUP BY `artist`.`id`';
             break;

@@ -59,6 +59,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'album':
         $browse->set_filter('catalog',$_SESSION['catalog']);
+		$browse->set_filter('catalog_enabled', '1');
         $browse->set_sort('name','ASC');
         $browse->show_objects();
     break;
@@ -81,15 +82,19 @@ switch ($_REQUEST['action']) {
     break;
     case 'artist':
         $browse->set_filter('catalog',$_SESSION['catalog']);
+		$browse->set_filter('catalog_enabled', '1');
         $browse->set_sort('name','ASC');
         $browse->show_objects();
     break;
     case 'song':
         $browse->set_filter('catalog',$_SESSION['catalog']);
+		$browse->set_filter('catalog_enabled', '1');
+		$browse->set_filter('catalog_enabled', '1');
         $browse->set_sort('title','ASC');
         $browse->show_objects();
     break;
     case 'live_stream':
+		$browse->set_filter('catalog_enabled', '1');
         $browse->set_sort('name','ASC');
         $browse->show_objects();
     break;
@@ -107,6 +112,7 @@ switch ($_REQUEST['action']) {
         $browse->show_objects();
     break;
     case 'video':
+		$browse->set_filter('catalog_enabled', '1');
         $browse->set_sort('title','ASC');
         $browse->show_objects();
     break;
