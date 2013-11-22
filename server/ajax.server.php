@@ -162,7 +162,7 @@ switch ($_REQUEST['action']) {
     case 'edit_object':
         // Scrub the data
         foreach ($_POST as $key => $data) {
-            $_POST[$key] = scrub_in($data);
+            $_POST[$key] = unhtmlentities(scrub_in($data));
             debug_event('ajax_server', $key.'='.$_POST[$key], '5');
         }
         

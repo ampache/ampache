@@ -796,7 +796,7 @@ class Song extends database_object implements media
      * update_enabled
      * sets the enabled flag
      */
-    public static function update_enabled($new_enabled,$song_id)
+    public static function update_enabled($new_enabled, $song_id)
     {
         self::_update_item('enabled',$new_enabled,$song_id,'75');
 
@@ -809,7 +809,7 @@ class Song extends database_object implements media
      * against $GLOBALS['user'] to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      */
-    private static function _update_item($field,$value,$song_id,$level)
+    private static function _update_item($field, $value, $song_id, $level)
     {
         /* Check them Rights! */
         if (!Access::check('interface',$level)) { return false; }
@@ -817,10 +817,8 @@ class Song extends database_object implements media
         /* Can't update to blank */
         if (!strlen(trim($value)) && $field != 'comment') { return false; }
 
-        $value = Dba::escape($value);
-
-        $sql = "UPDATE `song` SET `$field`='$value' WHERE `id`='$song_id'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `song` SET `$field` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($value, $song_id));
 
         return true;
 
@@ -831,15 +829,13 @@ class Song extends database_object implements media
      * This updates a song record that is housed in the song_ext_info table
      * These are items that aren't used normally, and often large/informational only
      */
-    private static function _update_ext_item($field,$value,$song_id,$level)
+    private static function _update_ext_item($field, $value, $song_id, $level)
     {
         /* Check them rights boy! */
         if (!Access::check('interface',$level)) { return false; }
 
-        $value = Dba::escape($value);
-
-        $sql = "UPDATE `song_data` SET `$field`='$value' WHERE `song_id`='$song_id'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `song_data` SET `$field` = ? WHERE `song_id` = ?";
+        $db_results = Dba::write($sql, array($value, $song_id));
 
         return true;
 
