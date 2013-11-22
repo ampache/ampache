@@ -176,7 +176,9 @@ class Song extends database_object implements media
             'FROM `song` LEFT JOIN `tag_map` ' .
             'ON `tag_map`.`object_id`=`song`.`id` ' .
             "AND `tag_map`.`object_type`='song' " .
-            "WHERE `song`.`id` IN $idlist";
+			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+            "WHERE `song`.`id` IN $idlist " .
+			"AND `catalog`.`enabled` = '1' ";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
