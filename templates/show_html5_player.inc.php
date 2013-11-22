@@ -131,7 +131,7 @@ foreach ($playlist->urls as $item) {
         } else {
             $type = $ftype;
         }
-        $url .= "&content_length=required";
+        //$url .= "&content_length=required";
     } else {
         $ext = pathinfo($url, PATHINFO_EXTENSION);
         $type = $ext ?: $ftype;

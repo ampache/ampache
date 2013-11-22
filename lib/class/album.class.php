@@ -451,7 +451,6 @@ class Album extends database_object
             $sql .= "LEFT JOIN `image` ON (`image`.`object_type` = 'album' AND `image`.`object_id` = `album`.`id`) ";
 			$where .="AND `image`.`id` IS NOT NULL ";
         }
-		$where .= "AND COUNT(`song`.`id`) > 0 ";
 
 		$sql .= $where;
         $sql .= "ORDER BY RAND() LIMIT " . intval($count);
