@@ -68,23 +68,22 @@ if ($iframed) {
 <script src="<?php echo Config::get('web_path'); ?>/modules/jplayer/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function(){
-        var myPlaylist = new jPlayerPlaylist({
-            jPlayer: "#jquery_jplayer_1",
-            cssSelectorAncestor: "#jp_container_1"
-        }, [
 <?php
-$i = 0;
 $playlist = new Stream_Playlist(scrub_in($_REQUEST['playlist_id']));
+$i = 0;
 $jtypes = array();
+$radiojs = "";
+$playlistjs = "";
+
 foreach ($playlist->urls as $item) {
-    echo ($i++ > 0 ? ',' : '') . '{' . "\n";
+    $playlistjs .= ($i++ > 0 ? ',' : '') . '{' . "\n";
     foreach (array('title', 'author') as $member) {
         if ($member == "author")
             $kmember = "artist";
         else
             $kmember = $member;
 
-        echo $kmember . ': "' . addslashes($item->$member) . '",' . "\n";
+        $playlistjs .= $kmember . ': "' . addslashes($item->$member) . '",' . "\n";
     }
 
     $url = $item->url;
@@ -105,11 +104,11 @@ foreach ($playlist->urls as $item) {
         $song = new Song($urlinfo['id']);
         $ftype = $song->type;
 
+        $transcode_cfg = Config::get('transcode');
         // Check transcode is required
-        if ($type != $ftype) {
-            $transcode_cfg = Config::get('transcode');
+        if ($transcode_cfg == 'always' || $type != $ftype) {
             $valid_types = Song::get_stream_types_for_type($ftype);
-            if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
+            if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                 // Transcode only if excepted type available
                 $transcode_settings = $song->get_transcode_settings($type);
                 if ($transcode_settings) {
@@ -123,21 +122,24 @@ foreach ($playlist->urls as $item) {
                         }
                     }
                 }
-                if ($transcode) {
-                    $url .= '&content_length=required&transcode_to=' . $type; // &content_length=required
-                }
+
             }
         }
-    }
-    if (!$transcode) {
-        // Transcode not available for this song, keep real type and hope for flash fallback
-        $ext = pathinfo($url, PATHINFO_EXTENSION);
-        if ($ext) {
-            $type = $ext;
+
+        if ($transcode) {
+            $url .= '&transcode_to=' . $type;
         } else {
-            // Cannot found stream type, use the default one
             $type = $ftype;
         }
+        $url .= "&content_length=required";
+    } else {
+        $ext = pathinfo($url, PATHINFO_EXTENSION);
+        $type = $ext ?: $ftype;
+
+        // Radio streams
+        /*if ($item->type == "radio") {
+            $radiojs .= ((!empty($radiojs)) ? ", " : "") . "'" . $item->url . "'";
+        }*/
     }
 
     $jtype = ($type == "ogg" || $type == "flac") ? "oga" : $type;
@@ -145,12 +147,19 @@ foreach ($playlist->urls as $item) {
     if (!in_array($jtype, $jtypes)) {
         $jtypes[] = $jtype;
     }
-    echo $jtype.': "' . $url;
-    echo '",' . "\n";
-    echo 'poster: "' . $item->image_url . (!$iframed ? '&thumb=4' : '') . '" }' . "\n";
+    $playlistjs .= $jtype.': "' . $url;
+    $playlistjs .= '",' . "\n";
+    $playlistjs .= 'poster: "' . $item->image_url . (!$iframed ? '&thumb=4' : '') . '" }' . "\n";
 }
+
+if ($i == 1 && !empty($radiojs)) {
+    // Special stuff for web radio
+} else {
 ?>
-        ], {
+        var myPlaylist = new jPlayerPlaylist({
+            jPlayer: "#jquery_jplayer_1",
+            cssSelectorAncestor: "#jp_container_1"
+        }, [<?php echo $playlistjs; ?>], {
             playlistOptions: {
                 autoPlay: true,
                 loopOnPrevious: false,
@@ -165,6 +174,8 @@ foreach ($playlist->urls as $item) {
             supplied: "<?php echo join(",", $jtypes); ?>",
             audioFullScreen: true,
             solution: "html, flash",
+            nativeSupport:true,
+            oggSupport: false,
             size: {
 <?php
 if ($iframed) {
@@ -181,11 +192,15 @@ if ($iframed) {
 ?>
             }
         });
+<?php
+}
+?>
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
-		$(".jp-playlist").scrollTop($(".jp-playlist-current").position().top);
         var current = myPlaylist.current,
             playlist = myPlaylist.playlist;
+        var pos = $(".jp-playlist-current").position().top + $(".jp-playlist").scrollTop();
+        $(".jp-playlist").scrollTop(pos);
         $.each(playlist, function (index, obj) {
             if (index == current) {
                 $('.playing_title').text(obj.title);
