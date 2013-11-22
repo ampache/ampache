@@ -60,10 +60,6 @@ function forceIframe()
         document.location = '<?php echo $web_path; ?>?target_link=' + encodeURIComponent(document.location);
     }
 }
-
-// Using the following work-around to set ajex.server.php path available from any javascript script.
-var jsAjaxUrl = "<?php echo Config::get('ajax_url') ?>";
-
 </script>
 <?php
 }
@@ -72,6 +68,9 @@ var jsAjaxUrl = "<?php echo Config::get('ajax_url') ?>";
   $(document).ready(function(){
     $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
   });
+  
+  // Using the following work-around to set ajex.server.php path available from any javascript script.
+  var jsAjaxUrl = "<?php echo Config::get('ajax_url') ?>";
 </script>
 </head>
 <body <?php echo (Config::get('iframes')) ? "onLoad='forceIframe();'" : ""; ?>>
