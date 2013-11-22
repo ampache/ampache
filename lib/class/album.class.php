@@ -351,7 +351,7 @@ class Album extends database_object
         $tags = Tag::get_top_tags('album',$this->id);
         $this->tags = $tags;
 
-        $this->f_tags = Tag::get_display($tags,$this->id,'album');
+        $this->f_tags = Tag::get_display($tags, $this->id, 'album');
 
     } // format
 
@@ -379,8 +379,8 @@ class Album extends database_object
      */
     public function update($data)
     {
-        $year         = $data['year'];
-        $artist        = $data['artist'];
+        $year        = $data['year'];
+        $artist      = $data['artist'];
         $name        = $data['name'];
         $disk        = $data['disk'];
         $mbid        = $data['mbid'];
@@ -420,7 +420,8 @@ class Album extends database_object
             Userflag::gc();
         } // if updated
 
-
+        Tag::update_tag_list($data['edit_tags'], 'album', $current_id);
+        
         return $current_id;
 
     } // update

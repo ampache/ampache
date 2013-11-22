@@ -47,6 +47,8 @@
         </a>
 <?php } ?>
 <?php if (Access::check('interface','50')) { ?>
-    <?php echo Ajax::button('?action=show_edit_object&type=artist_row&id=' . $artist->id,'edit', T_('Edit'),'edit_artist_' . $artist->id); ?>
+    <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '<?php echo T_('Save') ?>', '<?php echo T_('Cancel') ?>')">
+        <?php echo UI::get_icon('edit', T_('Edit')); ?>
+    </a>
 <?php } ?>
 </td>

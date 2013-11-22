@@ -200,12 +200,15 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
     // Added ID field so we can easily observe this element
     echo "<select name=\"$name\" id=\"$key\">\n";
 
-    $sql = "SELECT `id`, `name`, `prefix` FROM `album` ORDER BY `name`";
+    $sql = "SELECT `id`, `name`, `prefix`, `disk` FROM `album` ORDER BY `name`";
     $db_results = Dba::read($sql);
 
     while ($r = Dba::fetch_assoc($db_results)) {
         $selected = '';
         $album_name = trim($r['prefix'] . " " . $r['name']);
+        if ($r['disk'] >= 1) {
+            $album_name .= ' [Disk ' . $r['disk'] . ']';
+        }
         if ($r['id'] == $album_id) {
             $selected = "selected=\"selected\"";
         }

@@ -29,15 +29,31 @@
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
-                <td><?php show_artist_select('artist', $song->artist, true, $song->id); ?></td>
+                <td>
+                    <?php show_artist_select('artist', $song->artist, true, $song->id); ?>
+                    <div id="artist_select_song_<?php echo $song->id ?>">
+                        <?php echo Ajax::observe('artist_select_'.$song->id, 'change', 'check_inline_song_edit("artist", '.$song->id.')'); ?>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
-                <td><?php show_album_select('album',$song->album,true,$song->id); ?></td>
+                <td>
+                    <?php show_album_select('album', $song->album, true, $song->id); ?>
+                    <div id="album_select_song_<?php echo $song->id ?>">
+                        <?php echo Ajax::observe('album_select_'.$song->id, 'change', 'check_inline_song_edit("album", '.$song->id.')'); ?>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Track') ?></td>
                 <td><input type="text" name="track" size="3" value="<?php echo scrub_out($song->track); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>
+                <td>
+                    <input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($song->tags); ?>" />
+                </td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $song->id; ?>" />

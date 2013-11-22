@@ -404,6 +404,8 @@ class Artist extends database_object
             Rating::gc();
             Userflag::gc();
         } // if updated
+        
+        Tag::update_tag_list($data['edit_tags'], 'artist', $current_id);
 
         return $current_id;
 

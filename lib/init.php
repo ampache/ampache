@@ -208,14 +208,7 @@ if (session_id()) {
 
 /* Add in some variables for ajax done here because we need the user */
 Config::set('ajax_url', Config::get('web_path') . '/server/ajax.server.php', true);
-?>
 
-<script type="text/javascript">
-    // Using the following work-around to set ajex.server.php path available from any javascript script.
-    var jsAjaxUrl = "<?php echo Config::get('ajax_url') ?>";
-</script>
-
-<?php
 // Load gettext mojo
 load_gettext();
 
