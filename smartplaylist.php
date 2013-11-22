@@ -30,6 +30,7 @@ if ($_REQUEST['action'] == 'delete_playlist') {
         $playlist->delete();
         // Go elsewhere
         header('Location: ' . Config::get('web_path') . '/browse.php?action=smartplaylist');
+        exit;
     }
 }
 
