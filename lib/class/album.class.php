@@ -276,16 +276,16 @@ class Album extends database_object
     {
         $results = array();
 
-        $sql = "SELECT `id` FROM `song` ";
+        $sql = "SELECT `song`.`id` FROM `song` ";
 		$sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-		$sql .= "WHERE `album` = ? ";
+		$sql .= "WHERE `song`.`album` = ? ";
         $params = array($this->id);
         if (strlen($artist)) {
             $sql .= "AND `artist` = ? ";
             $params[] = $artist;
         }
 		$sql .= "AND `catalog`.`enabled` = '1' ";
-        $sql .= "ORDER BY `track`, `title`";
+        $sql .= "ORDER BY `song`.`track`, `song`.`title`";
         if ($limit) {
             $sql .= " LIMIT " . intval($limit);
         }
@@ -369,7 +369,7 @@ class Album extends database_object
      */
     public function get_random_songs()
     {
-        $sql = "SELECT `id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `album` = ? AND `catalog`.`enabled` = '1' ORDER BY RAND()";
+        $sql = "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' ORDER BY RAND()";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($r = Dba::fetch_row($db_results)) {

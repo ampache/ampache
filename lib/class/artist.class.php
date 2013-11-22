@@ -128,9 +128,8 @@ class Artist extends database_object
      */
     public static function get_from_name($name)
     {
-        $name = Dba::escape($name);
-        $sql = "SELECT `id` FROM `artist` WHERE `name`='$name'";
-        $db_results = Dba::write($sql);
+        $sql = "SELECT `id` FROM `artist` WHERE `name` = ?'";
+        $db_results = Dba::write($sql, array($name));
 
         $row = Dba::fetch_assoc($db_results);
 
@@ -201,8 +200,8 @@ class Artist extends database_object
     {
         $results = array();
 
-        $sql = "SELECT `id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " . 
-			"WHERE `artist`='$this->id' AND `catalog`.`enabled` = '1' ORDER BY RAND()";
+        $sql = "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " . 
+			"WHERE `song`.`artist`='$this->id' AND `catalog`.`enabled` = '1' ORDER BY RAND()";
         $db_results = Dba::read($sql);
 
         while ($r = Dba::fetch_assoc($db_results)) {
