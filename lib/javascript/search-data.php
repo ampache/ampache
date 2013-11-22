@@ -44,8 +44,8 @@ Header('content-type: application/x-javascript');
 
 $search = new Search($_REQUEST['type']);
 
-echo 'var types = $H(\'';
-echo arrayToJSON($search->types) . "'.evalJSON());\n";
-echo 'var basetypes = $H(\'';
-echo arrayToJSON($search->basetypes) . "'.evalJSON());\n";
+echo 'var types = ';
+echo arrayToJSON($search->types) . ";\n";
+echo 'var basetypes = ';
+echo arrayToJSON($search->basetypes) . ";\n";
 echo 'removeIcon = \'<a href="javascript: void(0)">' . UI::get_icon('disable', T_('Remove')) . '</a>\';';

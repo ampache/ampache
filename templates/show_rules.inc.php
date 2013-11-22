@@ -48,7 +48,7 @@ $logic_operator = strtolower($logic_operator);
             <?php echo UI::get_icon('add'); ?>
         <?php echo T_('Add Another Rule'); ?>
         </a>
-        <script type="text/javascript">$('addrowbutton').click(SearchRow.add);</script>
+        <script type="text/javascript">$('#addrowbutton').on('click', SearchRow.add);</script>
     </td>
     </tr>
 </tbody>

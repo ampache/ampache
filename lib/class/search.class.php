@@ -272,6 +272,15 @@ class Search extends playlist_object
                     )
                 );
             }
+            
+            if (Config::get('show_played_times')) {
+                $this->types[] = array(
+                    'name'   => 'played_times',
+                    'label'  => T_('# Played'),
+                    'type'   => 'numeric',
+                    'widget' => array('input', 'text')
+                );
+            }
 
             $this->types[] = array(
                 'name'   => 'bitrate',
@@ -987,6 +996,11 @@ class Search extends playlist_object
                 case 'rating':
                     $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['rating'] = true;
+                case 'played_times':
+                    $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = 'song'" .
+                        "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                    break;
                 break;
                 case 'catalog':
                     $where[] = "`song`.`catalog` $sql_match_operator '$input'";
@@ -1019,7 +1033,7 @@ class Search extends playlist_object
             } // switch on type
         } // foreach over rules
 
-        $where_sql = implode(" $sql_logic_operator ", $where);
+        $where_sql = implode(" $sql_logic_operator ", $where) . $group;
 
         // now that we know which things we want to JOIN...
         if ($join['artist']) {
