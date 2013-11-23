@@ -277,13 +277,15 @@ class Query
     {
         $raw = array();
         $cooked = json_decode($data);
-        foreach ($cooked as $grain) {
-            if (is_array($grain)) {
-                foreach (range($grain[0], $grain[1]) as $id) {
-                    $raw[] = $id;
+        if ($cooked) {
+            foreach ($cooked as $grain) {
+                if (is_array($grain)) {
+                    foreach (range($grain[0], $grain[1]) as $id) {
+                        $raw[] = $id;
+                    }
+                } else {
+                    $raw[] = $grain;
                 }
-            } else {
-                $raw[] = $grain;
             }
         }
         return $raw;
@@ -518,7 +520,7 @@ class Query
      * we do this here so we only have to maintain a single whitelist
      * and if I want to change the location I only have to do it here
      */
-    public function set_type($type)
+    public function set_type($type, $custom_base = '')
     {
         switch ($type) {
             case 'user':
@@ -538,7 +540,7 @@ class Query
             case 'democratic':
                 // Set it
                 $this->_state['type'] = $type;
-                $this->set_base_sql(true);
+                $this->set_base_sql(true, $custom_base);
             break;
             default:
                 // Rien a faire
@@ -697,7 +699,7 @@ class Query
     } // is_simple
 
     /**
-     * get_saved
+     * get_savedget_saved
      * This looks in the session for the saved stuff and returns what it
      * finds.
      */
@@ -763,67 +765,72 @@ class Query
      * set_base_sql
      * This saves the base sql statement we are going to use.
      */
-    private function set_base_sql($force = false)
+    private function set_base_sql($force = false, $custom_base = '')
     {
         // Only allow it to be set once
         if (strlen($this->_state['base']) && !$force) { return true; }
-
-        switch ($this->get_type()) {
-            case 'album':
-                $this->set_select("DISTINCT(`album`.`id`)");
-                $sql = "SELECT %%SELECT%% FROM `album` ";
-            break;
-            case 'artist':
-                $this->set_select("`artist`.`id`");
-                $sql = "SELECT %%SELECT%% FROM `artist` ";
-            break;
-            case 'catalog':
-                $this->set_select("`artist`.`name`");
-                $sql = "SELECT %%SELECT%% FROM `artist` ";
-            break;
-            case 'user':
-                $this->set_select("`user`.`id`");
-                $sql = "SELECT %%SELECT%% FROM `user` ";
-            break;
-            case 'live_stream':
-                $this->set_select("`live_stream`.`id`");
-                $sql = "SELECT %%SELECT%% FROM `live_stream` ";
-            break;
-            case 'playlist':
-                $this->set_select("`playlist`.`id`");
-                $sql = "SELECT %%SELECT%% FROM `playlist` ";
-            break;
-            case 'smartplaylist':
-                self::set_select('`search`.`id`');
-                $sql = "SELECT %%SELECT%% FROM `search` ";
-            break;
-            case 'flagged':
-                $this->set_select("`flagged`.`id`");
-                $sql = "SELECT %%SELECT%% FROM `flagged` ";
-            break;
-            case 'shoutbox':
-                $this->set_select("`user_shout`.`id`");
-                $sql = "SELECT %%SELECT%% FROM `user_shout` ";
-            break;
-            case 'video':
-                $this->set_select("`video`.`id`");
-                $sql = "SELECT %%SELECT%% FROM `video` ";
-            break;
-            case 'tag':
-                $this->set_select("DISTINCT(`tag`.`id`)");
-                $this->set_join('left', 'tag_map', '`tag_map`.`tag_id`', '`tag`.`id`', 1);
-                $sql = "SELECT %%SELECT%% FROM `tag` ";
-            break;
-            case 'playlist_song':
-            case 'song':
-            default:
-                $this->set_select("DISTINCT(`song`.`id`)");
-                $sql = "SELECT %%SELECT%% FROM `song` ";
-            break;
-        } // end base sql
+        
+        // Custom sql base
+        if ($force && !empty($custom_base)) {
+            $this->_state['custom'] = true;
+            $sql = $custom_base;
+        } else {
+            switch ($this->get_type()) {
+                case 'album':
+                    $this->set_select("DISTINCT(`album`.`id`)");
+                    $sql = "SELECT %%SELECT%% FROM `album` ";
+                break;
+                case 'artist':
+                    $this->set_select("`artist`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `artist` ";
+                break;
+                case 'catalog':
+                    $this->set_select("`artist`.`name`");
+                    $sql = "SELECT %%SELECT%% FROM `artist` ";
+                break;
+                case 'user':
+                    $this->set_select("`user`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `user` ";
+                break;
+                case 'live_stream':
+                    $this->set_select("`live_stream`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `live_stream` ";
+                break;
+                case 'playlist':
+                    $this->set_select("`playlist`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `playlist` ";
+                break;
+                case 'smartplaylist':
+                    self::set_select('`search`.`id`');
+                    $sql = "SELECT %%SELECT%% FROM `search` ";
+                break;
+                case 'flagged':
+                    $this->set_select("`flagged`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `flagged` ";
+                break;
+                case 'shoutbox':
+                    $this->set_select("`user_shout`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `user_shout` ";
+                break;
+                case 'video':
+                    $this->set_select("`video`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `video` ";
+                break;
+                case 'tag':
+                    $this->set_select("DISTINCT(`tag`.`id`)");
+                    $this->set_join('left', 'tag_map', '`tag_map`.`tag_id`', '`tag`.`id`', 1);
+                    $sql = "SELECT %%SELECT%% FROM `tag` ";
+                break;
+                case 'playlist_song':
+                case 'song':
+                default:
+                    $this->set_select("DISTINCT(`song`.`id`)");
+                    $sql = "SELECT %%SELECT%% FROM `song` ";
+                break;
+            } // end base sql
+        }
 
         $this->_state['base'] = $sql;
-
     } // set_base_sql
 
     /**
@@ -956,18 +963,21 @@ class Query
     {
         $sql = $this->get_base_sql();
 
-        $filter_sql = $this->get_filter_sql();
-        $join_sql = $this->get_join_sql();
-        $having_sql = $this->get_having_sql();
-        $order_sql = $this->get_sort_sql();
+        if (!$this->_state['custom']) {
+            $filter_sql = $this->get_filter_sql();
+            $join_sql = $this->get_join_sql();
+            $having_sql = $this->get_having_sql();
+            $order_sql = $this->get_sort_sql();
+        }
         $limit_sql = $limit ? $this->get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
-        if ( $this->get_type() == 'artist' ) {
+        if ( $this->get_type() == 'artist' && !$this->_state['custom'] ) {
              $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name` ";
         }
         $final_sql .= $order_sql . $limit_sql;
         debug_event("Catalog", "catalog sql: " . $final_sql, "6");
+        
         return $final_sql;
 
     } // get_sql

@@ -155,6 +155,25 @@ class Stats
         return $results;
 
     } // get_object_history
+    
+    /**
+     * get_top_sql
+     * This returns the get_top sql
+     */
+    public static function get_top_sql($type, $threshold = '') {
+        $type = self::validate_type($type);
+        /* If they don't pass one, then use the preference */
+        if (!$threshold) {
+            $threshold = Config::get('stats_threshold');
+        }
+        $date    = time() - (86400*$threshold);
+
+        /* Select Top objects counting by # of rows */
+        $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count" .
+            " WHERE object_type = '" . $type ."' AND date >= '" . $date . "'" .
+            " GROUP BY object_id ORDER BY `count` ";
+        return $sql;
+    }
 
     /**
       * get_top
@@ -163,36 +182,26 @@ class Stats
      */
     public static function get_top($type,$count='',$threshold = '',$offset='')
     {
-        /* If they don't pass one, then use the preference */
-        if (!$threshold) {
-            $threshold = Config::get('stats_threshold');
-        }
-
         if (!$count) {
             $count = Config::get('popular_threshold');
         }
 
         $count    = intval($count);
-        $type    = self::validate_type($type);
-        $date    = time() - (86400*$threshold);
         if (!$offset) {
             $limit = $count;
         } else {
             $limit = intval($offset) . "," . $count;
         }
 
-        /* Select Top objects counting by # of rows */
-        $sql = "SELECT object_id,COUNT(id) AS `count` FROM object_count" .
-            " WHERE object_type = ? AND date >= ?" .
-            " GROUP BY object_id ORDER BY `count` DESC LIMIT $limit";
-        $db_results = Dba::read($sql, array($type, $date));
+        $sql = self::get_top_sql($type, $threshold);
+        $sql .= "DESC LIMIT $limit";
+        $db_results = Dba::read($sql);
 
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = $row['id'];
         }
-
         return $results;
 
     } // get_top
@@ -290,13 +299,24 @@ class Stats
         } // end switch
 
     } // validate_type
+    
+    /**
+     * get_newest_sql
+     * This returns the get_newest sql
+     */
+    public static function get_newest_sql($type) {
+        $type = self::validate_type($type);
+
+        $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `song` GROUP BY `$type` ORDER BY `real_atime` ";
+        return $sql;
+    }
 
     /**
      * get_newest
      * This returns an array of the newest artists/albums/whatever
      * in this ampache instance
      */
-    public static function get_newest($type,$limit='',$offset='')
+    public static function get_newest($type, $limit='', $offset='')
     {
         if (!$count) { $count = Config::get('popular_threshold'); }
         if (!$offset) {
@@ -305,16 +325,14 @@ class Stats
             $limit = $offset . ',' . $count;
         }
 
-        $type = self::validate_type($type);
-        $object_name = ucfirst($type);
-
-        $sql = "SELECT DISTINCT(`$type`), MIN(`addition_time`) AS `real_atime` FROM `song` GROUP BY `$type` ORDER BY `real_atime` DESC LIMIT $limit";
+        $sql = self::get_newest_sql($type);
+        $sql .= "DESC LIMIT $limit";
         $db_results = Dba::read($sql);
 
         $items = array();
 
         while ($row = Dba::fetch_row($db_results)) {
-            $items[] = $row['0'];
+            $items[] = $row['id'];
         } // end while results
 
         return $items;

@@ -372,7 +372,7 @@ hr {
 	display: none;
 }
 
-.box-content h3.box-title,#browse_content .box h3.box-title
+.box-content h3.box-title,.browse_content .box h3.box-title
 {
 	display:block;
 	background:#888;
@@ -384,17 +384,17 @@ hr {
 	padding:7px;
 }
 
-#browse_content .box.browse_song h3.box-title
+.browse_content .box.browse_song h3.box-title
 {
 	background:#66B717;
 }
 
-#browse_content .box.browse_album h3.box-title
+.browse_content .box.browse_album h3.box-title
 {
 	background:#09c;
 }
 
-#browse_content .box.browse_artist h3.box-title
+.browse_content .box.browse_artist h3.box-title
 {
 	background:#c60;
 }
@@ -426,7 +426,7 @@ table.tabledata th
 	padding:7px 10px;
 }
 
-#browse_content table.tabledata th, #browse_content table.tabledata
+.browse_content table.tabledata th, .browse_content table.tabledata
 {
     border-top: 0px;
 }
@@ -449,7 +449,7 @@ table.tabledata tbody td
 	padding:4px 10px;
 }
 
-#browse_content table.tabledata tbody tr:hover
+.browse_content table.tabledata tbody tr:hover
 {
 	background:#b3d6f7;
 }

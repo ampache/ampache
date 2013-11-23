@@ -22,22 +22,25 @@
 
 UI::show_box_top(T_('Information'));
 
-$object_ids = Stats::get_top('song');
+$sql = Stats::get_top_sql('song');
 $browse = new Browse();
-$browse->set_type('song');
-$browse->show_objects($object_ids);
+$browse->set_type('song', $sql);
+$browse->set_simple_browse(true);
+$browse->show_objects();
 $browse->store();
 
-$object_ids = Stats::get_top('album');
+$sql = Stats::get_top_sql('album');
 $browse = new Browse();
-$browse->set_type('album');
-$browse->show_objects($object_ids);
+$browse->set_type('album', $sql);
+$browse->set_simple_browse(true);
+$browse->show_objects();
 $browse->store();
 
-$object_ids = Stats::get_top('artist');
+$sql = Stats::get_top_sql('artist');
 $browse = new Browse();
-$browse->set_type('artist');
-$browse->show_objects($object_ids);
+$browse->set_type('artist', $sql);
+$browse->set_simple_browse(true);
+$browse->show_objects();
 $browse->store();
 
 UI::show_box_bottom();

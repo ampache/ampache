@@ -78,6 +78,7 @@ switch ($_REQUEST['action']) {
         $browse2->store();
         require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php';
         UI::show_box_bottom();
+        $type = $browse2->get_type();
         require_once Config::get('prefix') . '/templates/browse_content.inc.php';
     break;
     case 'artist':

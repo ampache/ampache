@@ -20,20 +20,23 @@
  *
  */
 
-$object_ids = Userflag::get_latest('song');
+$sql = Userflag::get_latest_sql('song');
 $browse = new Browse();
-$browse->set_type('song');
-$browse->show_objects($object_ids);
+$browse->set_type('song', $sql);
+$browse->set_simple_browse(true);
+$browse->show_objects();
 $browse->store();
 
-$object_ids = Userflag::get_latest('album');
+$sql = Userflag::get_latest_sql('album');
 $browse = new Browse();
-$browse->set_type('album');
-$browse->show_objects($object_ids);
+$browse->set_type('album', $sql);
+$browse->set_simple_browse(true);
+$browse->show_objects();
 $browse->store();
 
-$object_ids = Userflag::get_latest('artist');
+$sql = Userflag::get_latest_sql('artist');
 $browse = new Browse();
-$browse->set_type('artist');
-$browse->show_objects($object_ids);
+$browse->set_type('artist', $sql);
+$browse->set_simple_browse(true);
+$browse->show_objects();
 $browse->store();

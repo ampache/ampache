@@ -165,6 +165,19 @@ class Rating extends database_object
     } // get_average_rating
 
     /**
+     * get_highest_sql
+     * Get highest sql
+     */
+    public static function get_highest_sql($type)
+    {
+        $type = Stats::validate_type($type);
+        $sql = "SELECT `object_id` as `id`, AVG(`rating`) AS `rating` FROM rating" .
+            " WHERE object_type = '" . $type . "'" .
+            " GROUP BY object_id ORDER BY `rating` ";
+        return $sql;
+    }
+    
+    /**
      * get_highest
      * Get objects with the highest average rating.
      */
@@ -181,15 +194,14 @@ class Rating extends database_object
         }
 
         /* Select Top objects counting by # of rows */
-        $sql = "SELECT `object_id`,AVG(`rating`) AS `rating` FROM rating" .
-                " WHERE object_type = ?" .
-                " GROUP BY object_id ORDER BY `rating` DESC LIMIT $limit";
+        $sql = self::get_highest_sql($type);
+        $sql .= "DESC LIMIT $limit";
         $db_results = Dba::read($sql, array($type));
 
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = $row['id'];
         }
 
         return $results;

@@ -43,7 +43,7 @@
 </div>
 <?php UI::show_box_bottom(); ?>
 <?php UI::show_box_top(T_('Access Control Entries'), 'box box_access_entries'); ?>
-<?php Ajax::start_container('browse_content'); ?>
+<?php Ajax::start_container('browse_content', 'browse_content'); ?>
 <?php if (count($list)) { ?>
 <table cellspacing="1" cellpadding="3" class="tabledata">
 <tr class="th-top">

@@ -20,14 +20,23 @@
  *
  */
 
-$object_ids = Rating::get_highest('album');
+$sql = Rating::get_highest_sql('song');
 $browse = new Browse();
-$browse->set_type('album');
-$browse->show_objects($object_ids);
+$browse->set_type('song', $sql);
+$browse->set_simple_browse(true);
+$browse->show_objects();
 $browse->store();
 
-$object_ids = Rating::get_highest('artist');
+$sql = Rating::get_highest_sql('album');
 $browse = new Browse();
-$browse->set_type('artist');
-$browse->show_objects($object_ids);
+$browse->set_type('album', $sql);
+$browse->set_simple_browse(true);
+$browse->show_objects();
+$browse->store();
+
+$sql = Rating::get_highest_sql('artist');
+$browse = new Browse();
+$browse->set_type('artist', $sql);
+$browse->set_simple_browse(true);
+$browse->show_objects();
 $browse->store();

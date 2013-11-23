@@ -872,7 +872,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     padding: 20px;
 }
 
-#browse_content {
+.browse_content {
     margin-bottom: 20px;
 }
 

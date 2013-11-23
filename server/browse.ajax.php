@@ -34,6 +34,7 @@ if (isset($_REQUEST['browse_id'])) {
     $browse_id = null;
 }
 
+$list_uid = scrub_in($_REQUEST['uid']);
 $browse = new Browse($browse_id);
 
 switch ($_REQUEST['action']) {
@@ -64,7 +65,7 @@ switch ($_REQUEST['action']) {
 
         ob_start();
                 $browse->show_objects();
-                $results['browse_content'] = ob_get_clean();
+                $results['browse_content_' . $browse->get_type()] = ob_get_clean();
     break;
 
     case 'set_sort':
@@ -75,7 +76,7 @@ switch ($_REQUEST['action']) {
 
         ob_start();
         $browse->show_objects();
-        $results['browse_content'] = ob_get_clean();
+        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
     break;
     case 'toggle_tag':
         $type = $_SESSION['tagcloud_type'] ? $_SESSION['tagcloud_type'] : 'song';
@@ -117,14 +118,14 @@ switch ($_REQUEST['action']) {
 
         ob_start();
         $browse->show_objects();
-        $results['browse_content'] = ob_get_clean();
+        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
     break;
     case 'show_art':
         Art::set_enabled();
 
         ob_start();
         $browse->show_objects();
-        $results['browse_content'] = ob_get_clean();
+        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
     break;
     case 'get_filters':
         ob_start();

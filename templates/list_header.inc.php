@@ -31,11 +31,13 @@
 $limit    = $browse->get_offset();
 $start    = $browse->get_start();
 $total    = $browse->get_total();
-$uid    = Config::get('list_header_uid');
+if (isset($_REQUEST['browse_uid'])) {
+    $uid = $_REQUEST['browse_uid']++;
+} else {
+    $uid = Config::get('list_header_uid');
+    Config::set('list_header_uid', ++$uid, true);
+}
 $sides  = 5;
-
-// ++ the uid
-Config::set('list_header_uid', $uid + 1, true);
 
 // Next
 $next_offset = $start + $limit;
@@ -79,7 +81,7 @@ if ($pages > 1) {
     // Then up
     $page = $current_page + 1;
     $i = 0;
-    while ($page <= $pages) {
+    while ($page < $pages) {
         if ($page * $limit > $total) { break; }
         if ($i == $sides) {
             $key = $pages - 1;
@@ -98,15 +100,15 @@ if ($pages > 1) {
 ?>
 <div class="list-header">
 
-  <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $prev_offset, T_('Prev'),'browse_' . $uid . 'prev','','prev'); ?>
-    <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $next_offset, T_('Next'),'browse_' . $uid . 'next','','next'); ?>
+  <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $prev_offset . '&browse_uid=' . $uid, T_('Prev'),'browse_' . $uid . 'prev','','prev'); ?>
+    <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $next_offset . '&browse_uid=' . $uid, T_('Next'),'browse_' . $uid . 'next','','next'); ?>
     <?php
         /* Echo everything below us */
         foreach ($page_data['down'] as $page => $offset) {
             if ($offset === '...') { echo '...&nbsp;'; } else {
             // Hack Alert
             $page++;
-                echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb');
+                echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $offset . '&browse_uid=' . $uid,$page,'browse_' . $uid . 'page_' . $page,'','page-nb');
             }
         } // end foreach down
 
@@ -119,7 +121,7 @@ if ($pages > 1) {
         /* Echo everything above us */
         foreach ($page_data['up'] as $page=>$offset) {
             if ($offset === '...') { echo '...&nbsp;'; } else {
-                echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $offset,$page,'browse_' . $uid . 'page_' . $page,'','page-nb');
+                echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $offset . '&browse_uid=' . $uid,$page,'browse_' . $uid . 'page_' . $page,'','page-nb');
             } // end else
         } // end foreach up
     ?>

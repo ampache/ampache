@@ -121,7 +121,7 @@ class Browse extends Query
         // Set the correct classes based on type
         $class = "box browse_" . $type;
 
-        Ajax::start_container('browse_content');
+        Ajax::start_container('browse_content_' . $type, 'browse_content');
         // Switch on the type of browsing we're doing
         switch ($type) {
             case 'song':

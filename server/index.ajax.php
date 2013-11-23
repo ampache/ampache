@@ -44,7 +44,7 @@ switch ($_REQUEST['action']) {
         $data = Song::get_recently_played();
         Song::build_cache(array_keys($data));
         if (count($data)) {
-                        require_once Config::get('prefix') . '/templates/show_recently_played.inc.php';
+            require_once Config::get('prefix') . '/templates/show_recently_played.inc.php';
         }
         $results['recently_played'] = ob_get_clean();
     break;

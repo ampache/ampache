@@ -44,7 +44,7 @@ switch ($_REQUEST['action']) {
         $browse->save_objects($flagged);
         $browse->show_objects($flagged);
         $browse->store();
-        $results['browse_content'] = ob_get_contents();
+        $results['browse_content_' . $browse->get_type()] = ob_get_contents();
         ob_end_clean();
 
     break;

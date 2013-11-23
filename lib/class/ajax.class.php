@@ -181,11 +181,15 @@ class Ajax
      * This checks to see if we're AJAXin'. If we aren't then it echoes out
      * the html needed to start a container that can be replaced by Ajax.
      */
-    public static function start_container($name)
+    public static function start_container($name, $class = '')
     {
         if (defined('AJAX_INCLUDE') && !self::$include_override) { return true; }
 
-        echo '<div id="' . scrub_out($name) . '">';
+        echo '<div id="' . scrub_out($name) . '"';
+        if (!empty($class)) {
+            echo ' class="' . scrub_out($class) . '"';
+        }
+        echo '>';
 
     } // start_container
 

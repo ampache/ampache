@@ -156,16 +156,27 @@ class Userflag extends database_object
     } // set_flag
 
     /**
+     * get_latest_sql
+     * Get the latest sql
+     */
+    public static function get_latest_sql($type, $user_id=null) {
+        if (is_null($user_id)) {
+            $user_id = $GLOBALS['user']->id;
+        }
+        $user_id = intval($user_id);
+        $type = Stats::validate_type($type);
+        
+        $sql = "SELECT `object_id` as `id` FROM user_flag" .
+                " WHERE object_type = '" . $type . "' AND `user` = '" . $user_id . "'" .
+                " ORDER BY `date` DESC ";
+        return $sql;
+    }
+    /**
      * get_latest
      * Get the latest user flagged objects
      */
     public static function get_latest($type, $user_id=null, $count='', $offset='')
     {
-        if (is_null($user_id)) {
-            $user_id = $GLOBALS['user']->id;
-        }
-        $user_id = intval($user_id);
-
         if (!$count) {
             $count = Config::get('popular_threshold');
         }
@@ -177,15 +188,14 @@ class Userflag extends database_object
         }
 
         /* Select Top objects counting by # of rows */
-        $sql = "SELECT `object_id` FROM user_flag" .
-                " WHERE object_type = ? AND `user` = ?" .
-                " ORDER BY `date` DESC LIMIT $limit";
+        $sql = self::get_latest_sql($type, $user_id);
+        $sql .= "LIMIT $limit";
         $db_results = Dba::read($sql, array($type, $user_id));
 
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = $row['id'];
         }
 
         return $results;

@@ -53,7 +53,7 @@ switch ($_REQUEST['action']) {
         $object_ids = $browse->get_objects();
         ob_start();
         $browse->show_objects($object_ids);
-        $results['browse_content'] = ob_get_clean();
+        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
         $browse->store();
         // Retrieve current objects of type based on combined filters
     break;
