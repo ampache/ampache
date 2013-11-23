@@ -33,6 +33,9 @@ switch ($_REQUEST['action']) {
         $artist->format();
         $object_ids = $artist->get_albums($_REQUEST['catalog']);
         $object_type = 'album';
+        if (Config::get('lastfm_api_key')) {
+            $biography = Recommendation::get_artist_info($artist->id);
+        }
         require_once Config::get('prefix') . '/templates/show_artist.inc.php';
         if (Config::get('show_similar')) {
             if ($object_ids = Recommendation::get_artists_like($artist->id)) {

@@ -711,6 +711,12 @@ right: expression(-this.parentNode.offsetWidth%2+"px");
 	height: 0px; 
 	margin: 0px 0px 20px 1px; 
 }
+
+#artist_biography {
+    float: right;
+    max-width: 50%;
+}
+
 /* Specific boxes */
 .box_newest_albums {
 }

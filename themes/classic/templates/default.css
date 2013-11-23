@@ -545,6 +545,11 @@ a.button{padding:1px 3px;}
 #information_actions { margin-left:5px; font-size:0.7em; float:left; } 
 #information_actions h3 { font-size:1.2em; margin:0.2em; }
 
+#artist_biography {
+    float: right;
+    max-width: 50%;
+}
+
 /* Specific boxes */
 .box_newest_albums  {}
 .box_newest_artists {clear:none;}

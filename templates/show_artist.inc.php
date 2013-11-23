@@ -27,6 +27,19 @@ $browse = new Browse();
 $browse->set_type($object_type);
 
 UI::show_box_top($artist->f_name, 'info-box');
+?>
+<?php
+if (isset($biography)) {
+?>
+<div id="artist_biography">
+    <div id="artist_summary">
+<?php echo $biography['summary']; ?>
+    </div>
+</div>
+<?php
+}
+?>
+<?php
 if (Config::get('ratings')) {
 ?>
 <div id="rating_<?php echo intval($artist->id); ?>_artist" style="display:inline;">

@@ -794,6 +794,11 @@ span.nodata {
 	color:#09c;
 }
 
+#artist_biography {
+    float: right;
+    max-width: 50%;
+}
+
 /************************************************/
 /*        Styles for the star ratings           */
 /************************************************/

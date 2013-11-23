@@ -194,5 +194,25 @@ class Recommendation
 
         return false;
     } // get_artists_like
+    
+    /**
+     * get_artist_info
+     * Returns artist information
+     */
+    public static function get_artist_info($artist_id)
+    {
+        $artist = new Artist($artist_id);
+        $artist->format();
+        $query = 'artist=' . rawurlencode($artist->f_full_name);
+
+        $xml = self::get_lastfm_results('artist.getinfo', $query);
+
+        $results = array();
+        $results['summary'] = preg_replace("#<a href=([^<]*)</a>#", "", (string)$xml->artist->bio->summary);
+        $results['placeformed'] = (string)$xml->artist->bio->placeformed;
+        $results['yearformed'] = (string)$xml->artist->bio->yearformed;
+
+        return $results;
+    } // get_artist_info
 
 } // end of recommendation class
