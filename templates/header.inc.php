@@ -50,7 +50,7 @@ if (Config::get('use_rss')) { ?>
 <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/edit-dialog.js" language="javascript" type="text/javascript"></script>
 <?php
-// If iframes, we check in javascript that parent container exist, otherwise we redirect to index. Otherwise HTML5 iframed Player will look broken.
+// If iframes, we check in javascript that parent container exist, otherwise we redirect to index. Otherwise iframed Web Player will look broken.
 if (Config::get('iframes') && $_SERVER['REQUEST_METHOD'] != 'POST') {
 ?>
 <script language="javascript" type="text/javascript">

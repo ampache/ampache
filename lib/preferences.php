@@ -173,7 +173,7 @@ function create_preference_input($name,$value)
             echo "</select>\n";
         break;
         case 'play_type':
-            if ($value == 'localplay') { $is_local = 'selected="selected"'; } elseif ($value == 'democratic') { $is_vote = 'selected="selected"'; } elseif ($value == 'html5_player') { $is_html5_player = 'selected="selected"'; } else { $is_stream = "selected=\"selected\""; }
+            if ($value == 'localplay') { $is_local = 'selected="selected"'; } elseif ($value == 'democratic') { $is_vote = 'selected="selected"'; } elseif ($value == 'web_player') { $is_web_player = 'selected="selected"'; } else { $is_stream = "selected=\"selected\""; }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"\">" . T_('None') . "</option>\n";
             if (Config::get('allow_stream_playback')) {
@@ -185,7 +185,7 @@ function create_preference_input($name,$value)
             if (Config::get('allow_localplay_playback')) {
                 echo "\t<option value=\"localplay\" $is_local>" . T_('Localplay') . "</option>\n";
             }
-            echo "\t<option value=\"html5_player\" $is_html5_player>" . _('HTML5 Player') . "</option>\n";
+            echo "\t<option value=\"web_player\" $is_web_player>" . _('Web Player') . "</option>\n";
             echo "</select>\n";
         break;
         case 'playlist_type':

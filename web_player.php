@@ -1,5 +1,5 @@
 <?php
-/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -20,21 +20,6 @@
  *
  */
 
-?>
-<html>
-<head>
-<title><?php echo Config::get('site_title'); ?></title>
-<script language="javascript" type="text/javascript">
-<!-- begin
-function PlayerPopUp(URL)
-{
-    window.open(URL, 'HTML5_player', 'width=730,height=285,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');
-    window.location = '<?php echo return_referer() ?>';
-    return false;
-}
-// end -->
-</script>
-</head>
-<body onLoad="javascript:PlayerPopUp('<?php echo Config::get('web_path')?>/html5_player.php<?php echo '?playlist_id=' . $this->id ?>')">
-</body>
-</html>
+require_once 'lib/init.php';
+
+require_once Config::get('prefix') . '/templates/show_web_player.inc.php';

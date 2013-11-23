@@ -738,9 +738,9 @@ td.lp_current a {
 } 
 
 /************************************************/
-/*             HTML5 Player                     */
+/*             Web Player                     */
 /************************************************/
-#html5_player #playlist
+#web_player #playlist
 {
 	overflow-x: hidden;
 	overflow-y: scroll;

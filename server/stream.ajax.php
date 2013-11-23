@@ -45,7 +45,7 @@ switch ($_REQUEST['action']) {
                 }
                 $new = $_POST['type'];
             break;
-            case 'html5_player':
+            case 'web_player':
                 $new = $_POST['type'];
                 // Rien a faire
             break;

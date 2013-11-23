@@ -308,7 +308,7 @@ class Update
         $update_string = '- Catalog types are plugins now.<br />';
         $version[] = array('version' => '360020', 'description' => $update_string);
 
-        $update_string = '- Add insertion date on Now Playing and option to show the current song in page title for HTML5 player.<br />';
+        $update_string = '- Add insertion date on Now Playing and option to show the current song in page title for Web player.<br />';
         $version[] = array('version' => '360021', 'description' => $update_string);
 
         return $version;
@@ -1677,7 +1677,7 @@ class Update
     /**
      * update_360021
      *
-     * Add insertion date on Now Playing and option to show the current song in page title for HTML5 player
+     * Add insertion date on Now Playing and option to show the current song in page title for Web player
      */
     public static function update_360021()
     {
@@ -1685,7 +1685,7 @@ class Update
         Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('song_page_title','0','Show current song in HTML5 player page title',25,'string','interface')";
+            "VALUES ('song_page_title','0','Show current song in Web player page title',25,'string','interface')";
         $retval = Dba::write($sql);
 
         $id = Dba::insert_id();

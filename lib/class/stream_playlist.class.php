@@ -162,7 +162,7 @@ class Stream_Playlist
             case 'download':
             case 'democratic':
             case 'localplay':
-            case 'html5_player':
+            case 'web_player':
                 // These are valid, but witchy
                 $redirect = false;
                 unset($ext);
@@ -356,19 +356,19 @@ class Stream_Playlist
     } // create_xspf
 
     /**
-     * create_html5_player
+     * create_web_player
      *
-     * Creates an html5 player.
+     * Creates an web player.
      */
-    public function create_html5_player()
+    public function create_web_player()
     {
         if (Config::get("iframes")) {
-            require Config::get('prefix') . '/templates/create_html5_player_embedded.inc.php';
+            require Config::get('prefix') . '/templates/create_web_player_embedded.inc.php';
         } else {
-            require Config::get('prefix') . '/templates/create_html5_player.inc.php';
+            require Config::get('prefix') . '/templates/create_web_player.inc.php';
         }
 
-    }  // create_html5_player
+    }  // create_web_player
 
     /**
      * create_localplay
