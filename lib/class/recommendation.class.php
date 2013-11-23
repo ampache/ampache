@@ -208,7 +208,7 @@ class Recommendation
         $xml = self::get_lastfm_results('artist.getinfo', $query);
 
         $results = array();
-        $results['summary'] = preg_replace("#<a href=([^<]*)</a>#", "", (string)$xml->artist->bio->summary);
+        $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", (string)$xml->artist->bio->summary));
         $results['placeformed'] = (string)$xml->artist->bio->placeformed;
         $results['yearformed'] = (string)$xml->artist->bio->yearformed;
 
