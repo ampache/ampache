@@ -45,15 +45,9 @@
     </td>
 </tr>
 <tr>
-    <td><?php echo T_('Frequency'); ?></td>
+    <td><?php echo T_('Codec'); ?></td>
     <td>
-        <input type="text" name="frequency" value="<?php echo scrub_out($_REQUEST['frequency']); ?>" />
-    </td>
-</tr>
-<tr>
-    <td><?php echo T_('Callsign'); ?></td>
-    <td>
-        <input type="text" name="call_sign" value="<?php echo scrub_out($_REQUEST['call_sign']); ?>" />
+        <input type="text" name="codec" value="<?php echo scrub_out($_REQUEST['codec']); ?>" />
     </td>
 </tr>
 <tr>

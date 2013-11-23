@@ -35,8 +35,7 @@ class Radio extends database_object implements media
     public $name;
     public $site_url;
     public $url;
-    public $frequency;
-    public $call_sign;
+    public $codec;
     public $catalog;
 
     /**
@@ -65,8 +64,6 @@ class Radio extends database_object implements media
         $this->f_link        = "<a href=\"$this->url\">$this->name</a>";
 
         $this->f_name_link    = "<a target=\"_blank\" href=\"$this->site_url\">$this->name</a>";
-        $this->f_callsign    = scrub_out($this->call_sign);
-        $this->f_frequency    = scrub_out($this->frequency);
 
         return true;
 
@@ -89,7 +86,7 @@ class Radio extends database_object implements media
             Error::add('general', T_('Name Required'));
         }
 
-        $allowed_array = array('https','http','mms','mmsh','mmsu','mmst','rtsp');
+        $allowed_array = array('https','http','mms','mmsh','mmsu','mmst','rtsp','rtmp');
 
         $elements = explode(":",$data['url']);
 
@@ -101,17 +98,8 @@ class Radio extends database_object implements media
             return false;
         }
 
-        // Setup the data
-        $name         = Dba::escape($data['name']);
-        $site_url    = Dba::escape($data['site_url']);
-        $url        = Dba::escape($data['url']);
-        $frequency    = Dba::escape($data['frequency']);
-        $call_sign    = Dba::escape($data['call_sign']);
-        $id        = Dba::escape($data['id']);
-
-        $sql = "UPDATE `live_stream` SET `name`='$name',`site_url`='$site_url',`url`='$url'" .
-            ",`frequency`='$frequency',`call_sign`='$call_sign' WHERE `id`='$id'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `live_stream` SET `name` = ?,`site_url` = ?,`url` = ?, codec = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $data['codec'], $data['id']));
 
         return $db_results;
 
@@ -129,9 +117,9 @@ class Radio extends database_object implements media
             Error::add('name', T_('Name Required'));
         }
 
-        $allowed_array = array('https','http','mms','mmsh','mmsu','mmst','rtsp');
+        $allowed_array = array('https','http','mms','mmsh','mmsu','mmst','rtsp','rtmp');
 
-        $elements = explode(":",$data['url']);
+        $elements = explode(":", $data['url']);
 
         if (!in_array($elements['0'],$allowed_array)) {
             Error::add('url', T_('Invalid URL must be http:// or https://'));
@@ -145,18 +133,10 @@ class Radio extends database_object implements media
 
         if (Error::occurred()) { return false; }
 
-        // Clean up the input
-        $name        = Dba::escape($data['name']);
-        $site_url    = Dba::escape($data['site_url']);
-        $url        = Dba::escape($data['url']);
-        $catalog    = $catalog->id;
-        $frequency    = Dba::escape($data['frequency']);
-        $call_sign    = Dba::escape($data['call_sign']);
-
         // If we've made it this far everything must be ok... I hope
-        $sql = "INSERT INTO `live_stream` (`name`,`site_url`,`url`,`catalog`,`frequency`,`call_sign`) " .
-            "VALUES ('$name','$site_url','$url','$catalog','$frequency','$call_sign')";
-        $db_results = Dba::write($sql);
+        $sql = "INSERT INTO `live_stream` (`name`,`site_url`,`url`,`catalog`,`codec`) " .
+            "VALUES (?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, $data['codec']));
 
         return $db_results;
 
@@ -168,10 +148,8 @@ class Radio extends database_object implements media
      */
     public function delete()
     {
-        $id = Dba::escape($this->id);
-
-        $sql = "DELETE FROM `live_stream` WHERE `id`='$id'";
-        $db_results = Dba::write($sql);
+        $sql = "DELETE FROM `live_stream` WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($this->id));
 
         return true;
 

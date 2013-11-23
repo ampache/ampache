@@ -27,8 +27,7 @@
                 <th><?php echo T_('Name'); ?></th>
                 <th><?php echo T_('Stream URL'); ?></th>
                 <th><?php echo T_('Homepage'); ?></th>
-                <th><?php echo T_('Callsign'); ?></th>
-                <th><?php echo T_('Frequency'); ?></th>
+                <th><?php echo T_('Codec'); ?></th>
                 <th>&nbsp;</th>
             </tr>
             <tr>
@@ -42,10 +41,7 @@
                     <input type="text" name="site_url" value="<?php echo scrub_out($radio->site_url); ?>" size="9" />
                 </td>
                 <td>
-                    <input type="text" name="call_sign" value="<?php echo scrub_out($radio->call_sign); ?>" size="6" />
-                </td>
-                <td>
-                    <input type="text" name="frequency" value="<?php echo scrub_out($radio->frequency); ?>" size="6" />
+                    <input type="text" name="codec" value="<?php echo scrub_out($radio->codec); ?>" size="6" />
                 </td>
                 <td>
                     <input type="hidden" name="id" value="<?php echo $radio->id; ?>" />

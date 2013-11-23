@@ -129,9 +129,11 @@ class Stream_Playlist
                     $url['author'] = $object->f_artist_full;
                 break;
                 case 'radio':
-                    $url['title'] = 'Radio - ' . $object->name .
-                        ' [' . $object->frequency .
-                        '] (' . $object->site_url . ')';
+                    $url['title'] = 'Radio - ' . $object->name;
+                    if (!empty($object->site_url)) {
+                        $url['title'] .= ' (' . $object->site_url . ')';
+                    }
+                    $url['codec'] = $object->codec;
                 break;
                 case 'random':
                     $url['title'] = 'Random URL';

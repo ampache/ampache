@@ -310,6 +310,9 @@ class Update
 
         $update_string = '- Add insertion date on Now Playing and option to show the current song in page title for Web player.<br />';
         $version[] = array('version' => '360021', 'description' => $update_string);
+        
+        $update_string = '- Remove unused live_stream fields and add codec field.<br />';
+        $version[] = array('version' => '360022', 'description' => $update_string);
 
         return $version;
 
@@ -1694,5 +1697,21 @@ class Update
         $retval = Dba::write($sql, array($id));
 
         return $retval;
+    }
+    
+    /**
+     * update_360022
+     *
+     * Remove unused live_stream fields and add codec field
+     */
+    public static function update_360022()
+    {
+        $sql = "ALTER TABLE `live_stream` ADD `codec` VARCHAR(32) NULL AFTER `catalog`, DROP `frequency`, DROP `call_sign`";
+        Dba::write($sql);
+        
+        $sql = "ALTER TABLE `stream_playlist` ADD `codec` VARCHAR(32) NULL AFTER `time`";
+        Dba::write($sql);
+        
+        return true;
     }
 }

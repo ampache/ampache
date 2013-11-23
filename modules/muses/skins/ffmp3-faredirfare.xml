@@ -1,0 +1,14 @@
+<ffmp3-skin folder="ffmp3-faredirfare">
+  <bg image="skin-bg.png" x="0" y="0" ></bg>
+  <play image="play.png" x="10" y="14" clickimage="play-click.png" />
+  <stop image="stop.png" x="31" y="24" clickimage="stop-click.png" />
+  <status imagePlay="status-play.png" imageStop="status-stop.png" x="223" y="6" />
+
+  <text x="105" y="15" width="110" height="22" color="#127f92" font="Tahoma" size="13" align="left" />
+  <volume x="55" y="14" width="40" height="22" 
+      color1="#127f92" color2="#76c4d1"
+      barwidth="2"
+      barStep="3"
+	  mode="bars"
+  />
+</ffmp3-skin>

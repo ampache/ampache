@@ -25,7 +25,7 @@
 
 class Stream_URL extends memory_object
 {
-    public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type');
+    public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type', 'codec');
 
     /**
      * parse

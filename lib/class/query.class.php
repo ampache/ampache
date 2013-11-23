@@ -1372,11 +1372,9 @@ class Query
                     case 'name':
                         $sql = "`live_stream`.`name`";
                     break;
-                    case 'call_sign':
-                        $sql = "`live_stream`.`call_sign`";
+                    case 'codec':
+                        $sql = "`live_stream`.`codec`";
                     break;
-                    case 'frequency':
-                        $sql = "`live_stream`.`frequency`";
                     break;
                 } // end switch
             break;

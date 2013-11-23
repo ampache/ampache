@@ -24,8 +24,7 @@
     <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id,'add', T_('Add'),'add_radio_' . $radio->id); ?>
 </td>
 <td class="cel_streamname"><?php echo $radio->f_name_link; ?></td>
-<td class="cel_callsign"><?php echo $radio->f_callsign; ?></td>
-<td class="cel_frequency"><?php echo $radio->f_frequency; ?></td>
+<td class="cel_codec"><?php echo $radio->codec; ?></td>
 <td class="cel_tag"><?php echo $radio->f_tag; ?></td>
 <td class="cel_action">
     <?php if (Access::check('interface','50')) { ?>
