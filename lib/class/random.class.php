@@ -51,11 +51,11 @@ class Random implements media
     public static function artist()
     {
         $sql = "SELECT `artist`.`id` FROM `artist` " .
-			"LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` " .
-			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-			"WHERE `catalog`.`enabled` = '1' " .
-			"GROUP BY `artist`.`id` " .
-			"ORDER BY RAND() LIMIT 1";
+            "LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` " .
+            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+            "WHERE `catalog`.`enabled` = '1' " .
+            "GROUP BY `artist`.`id` " .
+            "ORDER BY RAND() LIMIT 1";
         $db_results = Dba::read($sql);
 
         $results = Dba::fetch_assoc($db_results);
@@ -133,9 +133,9 @@ class Random implements media
         $results = array();
 
         $sql = "SELECT `song`.`id` FROM `song` " .
-			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-			"WHERE `catalog`.`enabled` = '1' " .
-			"ORDER BY RAND() LIMIT $limit";
+            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+            "WHERE `catalog`.`enabled` = '1' " .
+            "ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -162,9 +162,9 @@ class Random implements media
         }
 
         $sql = "SELECT `song`.`id` FROM `song` " .
-			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-			"WHERE `catalog`.`enabled` = '1' " .
-			"$where_sql ORDER BY RAND() LIMIT $limit";
+            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+            "WHERE `catalog`.`enabled` = '1' " .
+            "$where_sql ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -190,9 +190,9 @@ class Random implements media
         }
 
         $sql = "SELECT `song`.`id` FROM `song` " .
-			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-			"WHERE `catalog`.`enabled` = '1' " .
-			"$where_sql ORDER BY RAND() LIMIT $limit";
+            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+            "WHERE `catalog`.`enabled` = '1' " .
+            "$where_sql ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -234,10 +234,10 @@ class Random implements media
                     "FROM `song` ";
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
-				}
-				$sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-				$sql .= " WHERE `catalog`.`enabled` = '1'";
-				if ($search_info) {
+                }
+                $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+                $sql .= " WHERE `catalog`.`enabled` = '1'";
+                if ($search_info) {
                     $sql .= ' AND ' . $search_info['where_sql'];
                 }
             break;
@@ -248,10 +248,10 @@ class Random implements media
                 }
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
-				}
-				$sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-				$sql .= " WHERE `catalog`.`enabled` = '1'";
-				if ($search_info) {
+                }
+                $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+                $sql .= " WHERE `catalog`.`enabled` = '1'";
+                if ($search_info) {
                     $sql .= ' AND ' . $search_info['where_sql'];
                 }
                 $sql .= ' GROUP BY `album`.`id`';
@@ -263,10 +263,10 @@ class Random implements media
                 }
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
-				}
-				$sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-				$sql .= " WHERE `catalog`.`enabled` = '1'";
-				if ($search_info) {
+                }
+                $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+                $sql .= " WHERE `catalog`.`enabled` = '1'";
+                if ($search_info) {
                     $sql .= ' AND ' . $search_info['where_sql'];
                 }
                 $sql .= ' GROUP BY `artist`.`id`';

@@ -272,7 +272,7 @@ class Search extends playlist_object
                     )
                 );
             }
-            
+
             if (Config::get('show_played_times')) {
                 $this->types[] = array(
                     'name'   => 'played_times',

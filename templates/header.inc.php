@@ -68,7 +68,7 @@ function forceIframe()
   $(document).ready(function(){
     $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
   });
-  
+
   // Using the following work-around to set ajex.server.php path available from any javascript script.
   var jsAjaxUrl = "<?php echo Config::get('ajax_url') ?>";
 </script>

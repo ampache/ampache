@@ -490,7 +490,7 @@ class Tag extends database_object
         return $results;
 
     } // get_display
-    
+
     /**
      * update_tag_list
      * Update the tags list based on commated list (ex. tag1,tag2,tag3,..)
@@ -498,10 +498,10 @@ class Tag extends database_object
     public static function update_tag_list($tags_comma, $type, $object_id)
     {
         debug_event('tag.class', 'Updating tags for values {'.$tags_comma.'} type {'.$type.'} object_id {'.$object_id.'}', '5');
-        
+
         $ctags = Tag::get_top_tags($type, $object_id);
         $editedTags = explode(",", $tags_comma);
-        
+
         foreach ($ctags as $ctid => $ctv) {
             $ctag = new Tag($ctid);
             foreach ($editedTags as  $tk => $tv) {
@@ -517,14 +517,14 @@ class Tag extends database_object
                 }
             }
         }
-        
+
         // Look if we need to add some new tags
         foreach ($editedTags as  $tk => $tv) {
             debug_event('tag.class', 'Adding new tag {'.$tv.'}', '5');
             Tag::add($type, $object_id, $tv, false);
         }
     } // update_tag_list
-    
+
     /**
      * count
      * This returns the count for the all objects associated with this tag

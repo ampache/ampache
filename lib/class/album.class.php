@@ -128,10 +128,10 @@ class Album extends database_object
                 "`artist`.`id` AS `artist_id`, `song`.`album`" .
                 "FROM `song` " .
                 "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
-				"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-                "WHERE `song`.`album` IN $idlist " . 
-				"AND `catalog`.`enabled` = '1' " .
-				"GROUP BY `song`.`album`";
+                "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+                "WHERE `song`.`album` IN $idlist " .
+                "AND `catalog`.`enabled` = '1' " .
+                "GROUP BY `song`.`album`";
 
             $db_results = Dba::read($sql);
 
@@ -171,9 +171,9 @@ class Album extends database_object
             "`artist`.`id` AS `artist_id` " .
             "FROM `song` INNER JOIN `artist` " .
             "ON `artist`.`id`=`song`.`artist` " .
-			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
             "WHERE `song`.`album` = ? " .
-			"AND `catalog`.`enabled` = '1' " . 
+            "AND `catalog`.`enabled` = '1' " .
             "GROUP BY `song`.`album`";
         $db_results = Dba::read($sql, array($this->id));
 
@@ -277,14 +277,14 @@ class Album extends database_object
         $results = array();
 
         $sql = "SELECT `song`.`id` FROM `song` ";
-		$sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-		$sql .= "WHERE `song`.`album` = ? ";
+        $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        $sql .= "WHERE `song`.`album` = ? ";
         $params = array($this->id);
         if (strlen($artist)) {
             $sql .= "AND `artist` = ? ";
             $params[] = $artist;
         }
-		$sql .= "AND `catalog`.`enabled` = '1' ";
+        $sql .= "AND `catalog`.`enabled` = '1' ";
         $sql .= "ORDER BY `song`.`track`, `song`.`title`";
         if ($limit) {
             $sql .= " LIMIT " . intval($limit);
@@ -429,7 +429,7 @@ class Album extends database_object
         } // if updated
 
         Tag::update_tag_list($data['edit_tags'], 'album', $current_id);
-        
+
         return $current_id;
 
     } // update
@@ -443,16 +443,16 @@ class Album extends database_object
     {
         $results = false;
 
-		$sql = "SELECT `album`.`id` FROM `album` " .
-			"LEFT JOIN `song` ON `song`.`album` = `album`.`id` " .
-			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-		$where = "WHERE `catalog`.`enabled` = '1' ";
+        $sql = "SELECT `album`.`id` FROM `album` " .
+            "LEFT JOIN `song` ON `song`.`album` = `album`.`id` " .
+            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        $where = "WHERE `catalog`.`enabled` = '1' ";
         if ($with_art) {
             $sql .= "LEFT JOIN `image` ON (`image`.`object_type` = 'album' AND `image`.`object_id` = `album`.`id`) ";
-			$where .="AND `image`.`id` IS NOT NULL ";
+            $where .="AND `image`.`id` IS NOT NULL ";
         }
 
-		$sql .= $where;
+        $sql .= $where;
         $sql .= "ORDER BY RAND() LIMIT " . intval($count);
         $db_results = Dba::read($sql);
 

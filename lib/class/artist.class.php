@@ -146,12 +146,12 @@ class Artist extends database_object
      */
     public function get_albums($catalog = null)
     {
-		$catalog_where = "";
-		$catalog_join = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+        $catalog_where = "";
+        $catalog_join = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
         if ($catalog) {
             $catalog_where .= " AND `catalog`.`id` = '$catalog'";
         }
-		$catalog_where .= " AND `catalog`.`enabled` = '1'";
+        $catalog_where .= " AND `catalog`.`enabled` = '1'";
 
         $results = array();
 
@@ -181,7 +181,7 @@ class Artist extends database_object
     public function get_songs()
     {
         $sql = "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-			"WHERE `song`.`artist`='" . Dba::escape($this->id) . "' AND `catalog`.`enabled` = '1' ORDER BY album, track";
+            "WHERE `song`.`artist`='" . Dba::escape($this->id) . "' AND `catalog`.`enabled` = '1' ORDER BY album, track";
         $db_results = Dba::read($sql);
 
         while ($r = Dba::fetch_assoc($db_results)) {
@@ -200,8 +200,8 @@ class Artist extends database_object
     {
         $results = array();
 
-        $sql = "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " . 
-			"WHERE `song`.`artist`='$this->id' AND `catalog`.`enabled` = '1' ORDER BY RAND()";
+        $sql = "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+            "WHERE `song`.`artist`='$this->id' AND `catalog`.`enabled` = '1' ORDER BY RAND()";
         $db_results = Dba::read($sql);
 
         while ($r = Dba::fetch_assoc($db_results)) {
@@ -224,11 +224,11 @@ class Artist extends database_object
         } else {
             $uid = Dba::escape($this->id);
             $sql = "SELECT `song`.`artist`,COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-				"WHERE `song`.`artist`='$uid' ";
+                "WHERE `song`.`artist`='$uid' ";
             if ($catalog) {
                 $sql .= "AND (`song`.`catalog` = '$catalog') ";
             }
-			$sql .= " AND `catalog`.`enabled` = '1'";
+            $sql .= " AND `catalog`.`enabled` = '1'";
 
             $sql .= "GROUP BY `song`.`artist`";
 
@@ -409,7 +409,7 @@ class Artist extends database_object
             Rating::gc();
             Userflag::gc();
         } // if updated
-        
+
         Tag::update_tag_list($data['edit_tags'], 'artist', $current_id);
 
         return $current_id;

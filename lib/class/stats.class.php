@@ -116,11 +116,11 @@ class Stats
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
         $sql = "SELECT * FROM `object_count` " .
-			"LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` " .
-			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-			"WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' " .
-			"AND `catalog`.`enabled` = '1' " .
-			"ORDER BY `object_count`.`date` DESC LIMIT 1";
+            "LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` " .
+            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+            "WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' " .
+            "AND `catalog`.`enabled` = '1' " .
+            "ORDER BY `object_count`.`date` DESC LIMIT 1";
         $db_results = Dba::read($sql, array($user_id));
 
         $results = Dba::fetch_assoc($db_results);
@@ -139,10 +139,10 @@ class Stats
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
         $sql = "SELECT * FROM `object_count` " .
-			"LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` " .
-			"LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-			"WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? " .
-			"AND `catalog`.`enabled` = '1' " .
+            "LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` " .
+            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+            "WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? " .
+            "AND `catalog`.`enabled` = '1' " .
             "ORDER BY `object_count`.`date` DESC";
         $db_results = Dba::read($sql, array($user_id, $time));
 
@@ -155,12 +155,13 @@ class Stats
         return $results;
 
     } // get_object_history
-    
+
     /**
      * get_top_sql
      * This returns the get_top sql
      */
-    public static function get_top_sql($type, $threshold = '') {
+    public static function get_top_sql($type, $threshold = '')
+    {
         $type = self::validate_type($type);
         /* If they don't pass one, then use the preference */
         if (!$threshold) {
@@ -299,12 +300,13 @@ class Stats
         } // end switch
 
     } // validate_type
-    
+
     /**
      * get_newest_sql
      * This returns the get_newest sql
      */
-    public static function get_newest_sql($type) {
+    public static function get_newest_sql($type)
+    {
         $type = self::validate_type($type);
 
         $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `song` GROUP BY `$type` ORDER BY `real_atime` ";

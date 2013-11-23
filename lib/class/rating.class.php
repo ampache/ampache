@@ -176,7 +176,7 @@ class Rating extends database_object
             " GROUP BY object_id ORDER BY `rating` ";
         return $sql;
     }
-    
+
     /**
      * get_highest
      * Get objects with the highest average rating.

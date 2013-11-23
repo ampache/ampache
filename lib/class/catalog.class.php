@@ -265,8 +265,8 @@ abstract class Catalog extends database_object
 
         return true;
     }
-	
-	/**
+
+    /**
      * update_enabled
      * sets the enabled flag
      */

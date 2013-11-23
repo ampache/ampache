@@ -159,13 +159,14 @@ class Userflag extends database_object
      * get_latest_sql
      * Get the latest sql
      */
-    public static function get_latest_sql($type, $user_id=null) {
+    public static function get_latest_sql($type, $user_id=null)
+    {
         if (is_null($user_id)) {
             $user_id = $GLOBALS['user']->id;
         }
         $user_id = intval($user_id);
         $type = Stats::validate_type($type);
-        
+
         $sql = "SELECT `object_id` as `id` FROM user_flag" .
                 " WHERE object_type = '" . $type . "' AND `user` = '" . $user_id . "'" .
                 " ORDER BY `date` DESC ";

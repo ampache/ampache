@@ -83,7 +83,7 @@ switch ($page) {
     case 'index':
         require_once Config::get('prefix') . '/server/index.ajax.php';
         exit;
-	case 'catalog':
+    case 'catalog':
         require_once Config::get('prefix') . '/server/catalog.ajax.php';
         exit;
     break;
@@ -165,7 +165,7 @@ switch ($_REQUEST['action']) {
             $_POST[$key] = unhtmlentities(scrub_in($data));
             debug_event('ajax_server', $key.'='.$_POST[$key], '5');
         }
-        
+
         $level = '50';
 
         if ($_POST['type'] == 'playlist_row' || $_POST['type'] == 'playlist_title') {
