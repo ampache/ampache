@@ -26,8 +26,15 @@ UI::show_header();
 
 // Switch on Action
 switch ($_REQUEST['action']) {
-    default:
+    case 'show_lyrics':
+        $song = new Song($_REQUEST['song_id']);
+        $song->format();
+        $song->fill_ext_info();
+        $lyrics = $song->get_lyrics();
+        require_once Config::get('prefix') . '/templates/show_lyrics.inc.php';
+    break;
     case 'show_song':
+    default:
         $song = new Song($_REQUEST['song_id']);
         $song->format();
         $song->fill_ext_info();

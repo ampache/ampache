@@ -49,9 +49,7 @@
   <?php if (Config::get('show_lyrics')) {?>
   <div class="np_cell cel_lyrics">
       <label>&nbsp;</label>
-      <a title="<?php echo scrub_out($media->title); ?>" href="<?php echo $web_path; ?>/song.php?action=show_lyrics&amp;song_id=<?php echo $media->id; ?>">
-      <?php echo T_('Show Lyrics');?>
-      </a>
+      <?php echo $media->f_lyrics; ?>
   </div>
   <?php } ?>
 </div>

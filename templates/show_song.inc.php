@@ -63,7 +63,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 <?php
   $songprops[gettext_noop('Title')]   = scrub_out($song->title);
   $songprops[gettext_noop('Artist')]  = $song->f_artist_link;
-  $songprops[gettext_noop('Album')]   = $song->f_album_link . " (" . scrub_out($song->year). ")";
+  $songprops[gettext_noop('Album')]   = $song->f_album_link . ($song->year ? " (" . scrub_out($song->year). ")" : "");
   $songprops[gettext_noop('Genre')]   = $song->f_genre_link;
   $songprops[gettext_noop('Length')]  = scrub_out($song->f_time);
   $songprops[gettext_noop('Comment')] = scrub_out($song->comment);
@@ -80,6 +80,10 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
   $songprops[gettext_noop('Added')]   = date("d/m/Y H:i",$song->addition_time);
   if (Config::get('show_played_times')) {
     $songprops[gettext_noop('# Played')]   = scrub_out($song->object_cnt);
+  }
+  
+  if (Config::get('show_lyrics')) {
+     $songprops[gettext_noop('Lyrics')]   = $song->f_lyrics;
   }
 
     foreach ($songprops as $key => $value) {
