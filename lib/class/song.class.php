@@ -892,6 +892,8 @@ class Song extends database_object implements media
 
         // Format the size
         $this->f_size = UI::format_bytes($this->size);
+        
+        $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . Config::get('web_path') . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
 
         return true;
 
@@ -1100,6 +1102,22 @@ class Song extends database_object implements media
         debug_event('transcode', 'Command: ' . $cmd . ' Arguments: ' . $args, 5);
         return array('format' => $target,
             'command' => $cmd . ' ' . $args);
+    }
+    
+    public function get_lyrics() {
+        if ($this->lyrics) {
+            return array('text' => $this->lyrics);
+        }
+        
+        foreach (Plugin::get_plugins('get_lyrics') as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->load()) {
+                $lyrics = $plugin->_plugin->get_lyrics($this);
+                if ($lyrics != false) {
+                    return $lyrics;
+                }
+            }
+        }
     }
 
 } // end of song class
