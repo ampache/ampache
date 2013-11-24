@@ -47,7 +47,7 @@
         </a>
 <?php } ?>
 <?php if (Access::check('interface','50')) { ?>
-    <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '<?php echo T_('Save') ?>', '<?php echo T_('Cancel') ?>')">
+    <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '<?php echo Tag::get_display(Tag::get_tags()) ?>')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
 <?php } ?>

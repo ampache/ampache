@@ -78,6 +78,8 @@ Ampache includes some external modules that carry their own licensing.
 * [prettyPhoto](http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone/): GPL v2
 * [unofficial-google-music-api-php](http://code.google.com/p/unofficial-google-music-api-php/): GPL v3
 * [Muses Radio Player](http://www.musesradioplayer.com/): GPL v2
+* [Tag-it!] (http://aehlke.github.io/tag-it/): MIT
+
 
 Translations
 ------------

@@ -35,6 +35,7 @@ class Radio extends database_object implements media
     public $name;
     public $site_url;
     public $url;
+    public $genre;
     public $codec;
     public $catalog;
 
@@ -42,9 +43,11 @@ class Radio extends database_object implements media
      * Constructor
      * This takes a flagged.id and then pulls in the information for said flag entry
      */
-    public function __construct($id)
+    public function __construct($id = null)
     {
-        $info = $this->get_info($id,'live_stream');
+        if (!$id) { return false; }
+    
+        $info = $this->get_info($id, 'live_stream');
 
         // Set the vars
         foreach ($info as $key=>$value) {
@@ -62,8 +65,8 @@ class Radio extends database_object implements media
     {
         // Default link used on the rightbar
         $this->f_link        = "<a href=\"$this->url\">$this->name</a>";
-
         $this->f_name_link    = "<a target=\"_blank\" href=\"$this->site_url\">$this->name</a>";
+        $this->f_url_link    = "<a target=\"_blank\" href=\"$this->url\">$this->url</a>";
 
         return true;
 

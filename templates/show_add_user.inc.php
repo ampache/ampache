@@ -23,66 +23,66 @@
 <?php UI::show_box_top(T_('Adding a New User'), 'box box_add_user'); ?>
 <?php Error::display('general'); ?>
 <form name="add_user" enctype="multpart/form-data" method="post" action="<?php echo Config::get('web_path') . "/admin/users.php?action=add_user"; ?>">
-<table class="tabledata" cellspacing="0" cellpadding="0">
-<tr>
-    <td>
-        <?php echo  T_('Username'); ?>:
-    </td>
-    <td>
-        <input type="text" name="username" size="30" maxlength="128" value="<?php echo scrub_out($_POST['username']); ?>" />
-        <?php Error::display('username'); ?>
-    </td>
-</tr>
-<tr>
-    <td><?php echo  T_('Full Name'); ?>:</td>
-    <td>
-        <input type="text" name="fullname" size="30" value="<?php echo scrub_out($_POST['fullname']); ?>" />
-    </td>
-</tr>
-<tr>
-    <td>
-        <?php echo  T_('E-mail'); ?>:
-    </td>
-    <td>
-        <input type="text" name="email" size="30" value="<?php echo scrub_out($_POST['email']); ?>" />
-    </td>
-</tr>
-<tr>
-    <td>
-        <?php echo  T_('Password'); ?> :
-    </td>
-    <td>
-        <input type="password" name="password_1" size="30" value="" />
-        <?php Error::display('password'); ?>
-    </td>
-</tr>
-<tr>
-    <td>
-        <?php echo  T_('Confirm Password'); ?>:
-    </td>
-    <td>
-        <input type="password" name="password_2" size="30" value="" />
-    </td>
-</tr>
-<tr>
-    <td>
-        <?php echo  T_('User Access Level'); ?>:
-    </td>
-        <td>
-                <?php $var_name = "on_" . $client->access; ${$var_name} = 'selected="selected"'; ?>
-                <select name="access">
-                <option value="5" <?php echo $on_5; ?>><?php echo T_('Guest'); ?></option>
-                <option value="25" <?php echo $on_25; ?>><?php echo T_('User'); ?></option>
-        <option value="50" <?php echo $on_50; ?>><?php echo T_('Content Manager'); ?></option>
-        <option value="75" <?php echo $on_75; ?>><?php echo T_('Catalog Manager'); ?></option>
-                <option value="100" <?php echo $on_100; ?>><?php echo T_('Admin'); ?></option>
-                </select>
-        </td>
-</tr>
-</table>
-<div class="formValidation">
-    <?php echo Core::form_register('add_user'); ?>
-    <input type="submit" value="<?php echo T_('Add User'); ?>" />
-</div>
+    <table class="tabledata" cellspacing="0" cellpadding="0">
+        <tr>
+            <td>
+                <?php echo  T_('Username'); ?>:
+            </td>
+            <td>
+                <input type="text" name="username" maxlength="128" value="<?php echo scrub_out($_POST['username']); ?>" />
+                <?php Error::display('username'); ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo  T_('Full Name'); ?>:</td>
+            <td>
+                <input type="text" name="fullname" value="<?php echo scrub_out($_POST['fullname']); ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo  T_('E-mail'); ?>:
+            </td>
+            <td>
+                <input type="text" name="email" value="<?php echo scrub_out($_POST['email']); ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo  T_('Password'); ?> :
+            </td>
+            <td>
+                <input type="password" name="password_1" value="" />
+                <?php Error::display('password'); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo  T_('Confirm Password'); ?>:
+            </td>
+            <td>
+                <input type="password" name="password_2" value="" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo  T_('User Access Level'); ?>:
+            </td>
+                <td>
+                    <?php $var_name = "on_" . $client->access; ${$var_name} = 'selected="selected"'; ?>
+                    <select name="access">
+                        <option value="5" <?php echo $on_5; ?>><?php echo T_('Guest'); ?></option>
+                        <option value="25" <?php echo $on_25; ?>><?php echo T_('User'); ?></option>
+                        <option value="50" <?php echo $on_50; ?>><?php echo T_('Content Manager'); ?></option>
+                        <option value="75" <?php echo $on_75; ?>><?php echo T_('Catalog Manager'); ?></option>
+                        <option value="100" <?php echo $on_100; ?>><?php echo T_('Admin'); ?></option>
+                    </select>
+                </td>
+        </tr>
+    </table>
+    <div class="formValidation">
+        <?php echo Core::form_register('add_user'); ?>
+        <input type="submit" value="<?php echo T_('Add User'); ?>" />
+    </div>
 </form>
 <?php UI::show_box_bottom(); ?>

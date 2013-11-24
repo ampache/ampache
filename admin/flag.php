@@ -58,9 +58,9 @@ switch ($_REQUEST['action']) {
         $new_song->artist = Artist::check_artist(unhtmlentities($artist));
 
         /* Update this mofo, store an old copy for cleaning */
-        $old_song         = new Song();
-        $old_song->artist     = $song->artist;
-        $old_song->album    = $song->album;
+        $old_song = new Song();
+        $old_song->artist = $song->artist;
+        $old_song->album = $song->album;
         $song->update_song($song->id,$new_song);
 
         /* Now that it's been updated clean old junk entries */

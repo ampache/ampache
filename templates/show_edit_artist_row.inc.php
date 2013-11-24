@@ -22,7 +22,7 @@
 ?>
 <div>
     <form method="post" id="edit_artist_<?php echo $artist->id; ?>" class="edit_dialog_content">
-        <table>
+        <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
                 <td><input type="text" name="name" value="<?php echo scrub_out($artist->f_full_name); ?>" /></td>

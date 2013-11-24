@@ -20,6 +20,11 @@
  *
  */
 ?>
+<?php if (Config::get('directplay')) { ?>
+<td class="cel_directplay">
+    <?php echo Ajax::button('?page=stream&action=directplay&playtype=smartplaylist&playlist_id=' . $playlist->id,'play', T_('Play playlist'),'play_playlist_' . $playlist->id); ?>
+</td>
+<?php } ?>
 <td class="cel_add">
     <?php echo Ajax::button('?action=basket&type=smartplaylist&id=' . $playlist->id,'add', T_('Add'),'add_playlist_' . $playlist->id); ?>
 </td>
@@ -33,7 +38,9 @@
                 </a>
         <?php } ?>
     <?php if ($playlist->has_access()) { ?>
-        <?php echo Ajax::button('?action=show_edit_object&type=smartplaylist_row&id=' . $playlist->id,'edit', T_('Edit'),'edit_playlist_' . $playlist->id); ?>
+        <a id="<?php echo 'edit_playlist_'.$playlist->id ?>" onclick="showEditDialog('smartplaylist_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_'.$playlist->id ?>', '<?php echo T_('Smart Playlist edit') ?>', '<?php echo Tag::get_display(Tag::get_tags()) ?>')">
+            <?php echo UI::get_icon('edit', T_('Edit')); ?>
+        </a>
         <?php echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $playlist->id,'delete', T_('Delete'),'delete_playlist_' . $playlist->id); ?>
     <?php } ?>
 </td>

@@ -23,17 +23,21 @@
 <?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
-  <col id="col_add" />
-  <col id="col_playlist" />
-  <col id="col_type" />
-  <col id="col_songs" />
-  <col id="col_owner" />
-  <col id="col_action" />
+    <col id="col_directplay" />
+    <col id="col_add" />
+    <col id="col_playlist" />
+    <col id="col_type" />
+    <col id="col_songs" />
+    <col id="col_owner" />
+    <col id="col_action" />
 </colgroup>
 <tr class="th-top">
-  <th class="cel_add"><?php echo T_('Add'); ?></th>
+<?php if (Config::get('directplay')) { ?>
+    <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+<?php } ?>
+    <th class="cel_add"><?php echo T_('Add'); ?></th>
     <th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=name', T_('Playlist Name'),'playlist_sort_name'); ?></th>
-    <th class="cel_type">&nbsp;</th>
+    <th class="cel_type"><?php echo T_('Type'); ?></th>
     <th class="cel_owner"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=user', T_('Owner'),'playlist_sort_owner'); ?></th>
     <th class="cel_action"><?php echo T_('Actions'); ?></th>
 </tr>
@@ -52,9 +56,12 @@ foreach ($object_ids as $playlist_id) {
 </tr>
 <?php } ?>
 <tr class="th-bottom">
-  <th class="cel_add"><?php echo T_('Add'); ?></th>
+<?php if (Config::get('directplay')) { ?>
+    <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+<?php } ?>
+    <th class="cel_add"><?php echo T_('Add'); ?></th>
     <th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'),'playlist_sort_name_bottom'); ?></th>
-    <th class="cel_type">&nbsp;</th>
+    <th class="cel_type"><?php echo T_('Type'); ?></th>
     <th class="cel_owner"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'),'playlist_sort_owner_bottom'); ?></th>
     <th class="cel_action"><?php echo T_('Actions'); ?></th>
 </tr>

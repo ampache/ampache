@@ -22,7 +22,7 @@
 ?>
 <div>
     <form method="post" id="edit_album_<?php echo $album->id; ?>" class="edit_dialog_content">
-        <table>
+        <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
                 <td><input type="text" name="name" value="<?php echo scrub_out($album->full_name); ?>" /></td>
@@ -31,21 +31,21 @@
                 <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
                 <td>
                     <?php
-                    if ($album->artist_count == '1') {
+                    /*if ($album->artist_count == '1') {*/
                         show_artist_select('artist', $album->artist_id);
-                    } else {
+                    /*} else {
                         echo T_('Various');
-                    }
+                    }*/
                     ?>
                 </td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Year') ?></td>
-                <td><input type="text" name="year" size="3" value="<?php echo scrub_out($album->year); ?>" /></td>
+                <td><input type="text" name="year" value="<?php echo scrub_out($album->year); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Disk') ?></td>
-                <td><input type="text" name="disk" size="3" value="<?php echo scrub_out($album->disk); ?>" /></td>
+                <td><input type="text" name="disk" value="<?php echo scrub_out($album->disk); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>

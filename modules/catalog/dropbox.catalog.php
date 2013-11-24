@@ -209,7 +209,7 @@ class Catalog_dropbox extends Catalog
             echo "<input type='hidden' name='action' value='add_to_catalog' />";
             echo "<input type='hidden' name='catalogs[]' value='". $this->id ."' />";
         }
-        echo "<input type='text' name='authcode' size='30' />";
+        echo "<input type='text' name='authcode' />";
         echo "<input type='submit' value='Ok' />";
         echo "</form>";
         echo "<br />";

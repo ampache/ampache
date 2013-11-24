@@ -42,38 +42,8 @@ switch ($_REQUEST['action']) {
             $browse->save_objects($object_ids);
             $browse->show_objects($object_ids);
         $browse->store();
+        
         $results['browse_content'] = ob_get_clean();
-    break;
-    case 'edit_track':
-        $playlist = new Playlist($_REQUEST['playlist_id']);
-        if (!$playlist->has_access()) {
-            $results['rfc3514'] = '0x1';
-            break;
-        }
-
-        // They've got access, show the edit page
-        $track = $playlist->get_track($_REQUEST['track_id']);
-        $song = new Song($track['object_id']);
-        $song->format();
-        require_once Config::get('prefix') . '/templates/show_edit_playlist_song_row.inc.php';
-        $results['track_' . $track['id']] = ob_get_clean();
-    break;
-    case 'save_track':
-        $playlist = new Playlist($_REQUEST['playlist_id']);
-        if (!$playlist->has_access()) {
-            $results['rfc3514'] = '0x1';
-            break;
-        }
-        $playlist->format();
-
-        // They've got access, save this guy and re-display row
-        $playlist->update_track_number($_GET['track_id'],$_POST['track']);
-        $track = $playlist->get_track($_GET['track_id']);
-        $song = new Song($track['object_id']);
-        $song->format();
-        $playlist_track = $track['track'];
-        require Config::get('prefix') . '/templates/show_playlist_song_row.inc.php';
-        $results['track_' . $track['id']] = ob_get_clean();
     break;
     case 'create':
         if (!Access::check('interface','25')) {
@@ -101,7 +71,7 @@ switch ($_REQUEST['action']) {
         } // object_data
 
         // Add our new songs
-        $playlist->add_songs($songs,'ORDERED');
+        $playlist->add_songs($songs, 'ORDERED');
         $playlist->format();
         $object_ids = $playlist->get_items();
         ob_start();
@@ -123,20 +93,19 @@ switch ($_REQUEST['action']) {
         $songs = array();
 
         // Iterate through and add them to our new playlist
-        foreach ($objects as $element) {
-            $type = array_shift($element);
-            switch ($type) {
-                case 'song':
-                    $songs[] = array_shift($element);
-                break;
-            } // end switch
-        } // foreach
+        foreach ($objects as $object_data) {
+            // For now only allow songs on here, we'll change this later
+            $type = array_shift($object_data);
+            if ($type == 'song') {
+                $songs[] = array_shift($object_data);
+            }
+        } // object_data
 
         // Override normal include procedure
         Ajax::set_include_override(true);
 
         // Add our new songs
-        $playlist->add_songs($songs,'ORDERED');
+        $playlist->add_songs($songs, 'ORDERED');
         $playlist->format();
         $object_ids = $playlist->get_items();
         ob_start();

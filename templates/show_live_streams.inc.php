@@ -26,18 +26,22 @@ $web_path = Config::get('web_path');
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
+    <col id="col_directplay" />
     <col id="col_add" />
     <col id="col_streamname" />
+    <col id="col_streamurl" />
     <col id="col_codec" />
-    <col id="col_tag" />
     <col id="col_action" />
 </colgroup>
 <tr class="th-top">
+    <?php if (Config::get('directplay')) { ?>
+    <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+<?php } ?>
     <th class="cel_add"><?php echo T_('Add'); ?></th>
     <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
+    <th class="cel_streamurl"><?php echo T_('Stream URL'); ?></th>
     <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec');  ?></th>
-    <th class="cel_genre"><?php echo T_('Tag'); ?></th>
-    <th class="cel_action"><?php echo T_('Action'); ?> </th>
+    <th class="cel_action"><?php echo T_('Action'); ?></th>
 </tr>
 <?php
 foreach ($object_ids as $radio_id) {
@@ -54,10 +58,13 @@ foreach ($object_ids as $radio_id) {
 </tr>
 <?php } ?>
 <tr class="th-bottom">
+    <?php if (Config::get('directplay')) { ?>
+    <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+<?php } ?>
     <th class="cel_add"><?php echo T_('Add'); ?></th>
     <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name_bottom'); ?></th>
+    <th class="cel_streamurl"><?php echo T_('Stream URL'); ?></th>
     <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec_bottom');  ?></th>
-    <th class="cel_genre"><?php echo T_('Tag'); ?></th>
     <th class="cel_action"><?php echo T_('Action'); ?> </th>
 </tr>
 </table>

@@ -554,22 +554,27 @@ class Song extends database_object implements media
     public function update($data)
     {
         foreach ($data as $key=>$value) {
+            debug_event('song.class.php', $key.'='.$value, '5');
+        
             switch ($key) {
-                case 'artist':
-                    // Don't do anything if we've negative one'd this baby
-                    if ($value == '-1') {
-                        $value = Artist::check_artist($data['artist_name'], $data['mb_artistid']);
-                    }
-                case 'album':
-                    if ($value == '-1') {
-                        $value = Album::check_album($data['album_name'], $data['year'], $data['disk'], $data['mb_albumid']);
-                    }
+                case 'artist_name':
+                    // Need to create new artist according the name
+                    $new_artist_id = Artist::check($value);
+                    self::update_artist($new_artist_id, $this->id);
+                break;
+                case 'album_name':
+                    // Need to create new album according the name
+                    $new_album_id = Album::check($value);
+                    self::update_album($new_album_id, $this->id);
+                break;
                 case 'title':
                 case 'track':
+                case 'artist':
+                case 'album':
                     // Check to see if it needs to be updated
                     if ($value != $this->$key) {
                         $function = 'update_' . $key;
-                        self::$function($value,$this->id);
+                        self::$function($value, $this->id);
                         $this->$key = $value;
                         $updated = 1;
                     }
@@ -578,7 +583,6 @@ class Song extends database_object implements media
                     Tag::update_tag_list($value, 'song', $this->id);
                 break;
                 default:
-                    // Rien a faire
                 break;
             } // end whitelist
         } // end foreach
@@ -589,7 +593,6 @@ class Song extends database_object implements media
         }
 
         return true;
-
     } // update
 
     /**

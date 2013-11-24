@@ -394,7 +394,7 @@ class Album extends database_object
         $mbid        = $data['mbid'];
 
         $current_id = $this->id;
-
+        
         if ($artist != $this->artist_id AND $artist) {
             // Update every song
             $songs = $this->get_songs();

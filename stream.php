@@ -104,6 +104,15 @@ switch ($_REQUEST['action']) {
         $playlist = new Playlist($_REQUEST['playlist_id']);
         $media_ids = $playlist->get_songs($_REQUEST['song']);
     break;
+    case 'smartplaylist':
+        $playlist = new Search('song', $_REQUEST['playlist_id']);
+        $items = $playlist->get_items();
+        foreach ($items as $item) {
+            $media_ids[] = array(
+                'object_type' => $item['object_type'],
+                'object_id' => $item['object_id']);
+        }
+    break;
     case 'playlist_random':
         $playlist = new Playlist($_REQUEST['playlist_id']);
         $media_ids = $playlist->get_random_songs();
@@ -128,6 +137,16 @@ switch ($_REQUEST['action']) {
             'object_type' => 'song',
             'object_id' => scrub_in($_REQUEST['song_id'])
         );
+    break;
+    case 'live_stream':
+        $object = new Radio($_REQUEST['stream_id']);
+        if ($object->name) {
+            $media_ids[] = array(
+                'object_type' => 'radio',
+                'object_id' => scrub_in($_REQUEST['stream_id'])
+            );
+        }
+    break;
     default:
     break;
 } // end action switch

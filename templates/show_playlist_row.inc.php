@@ -40,7 +40,9 @@
                 </a>
         <?php } ?>
     <?php if ($playlist->has_access()) { ?>
-        <?php echo Ajax::button('?action=show_edit_object&type=playlist_row&id=' . $playlist->id,'edit', T_('Edit'),'edit_playlist_' . $playlist->id); ?>
+        <a id="<?php echo 'edit_playlist_'.$playlist->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_'.$playlist->id ?>', '<?php echo T_('Playlist edit') ?>', '<?php echo Tag::get_display(Tag::get_tags()) ?>')">
+            <?php echo UI::get_icon('edit', T_('Edit')); ?>
+        </a>
         <?php echo Ajax::button('?page=browse&action=delete_object&type=playlist&id=' . $playlist->id,'delete', T_('Delete'),'delete_playlist_' . $playlist->id); ?>
     <?php } ?>
 </td>

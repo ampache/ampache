@@ -23,29 +23,29 @@
 
 <?php UI::show_box_top(T_('Edit Album')); ?>
 <form name="edit_album" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/flag.php?action=edit_album">
-<table class="tabledata">
-<tr class="<?php echo UI::flip_class(); ?>">
-    <td><?php echo T_('Name'); ?></td>
-    <td>
-        <input type="text" name="name" value="<?php echo scrub_out($album->full_name); ?>">
-    </td>
-</tr>
-<tr class="<?php echo UI::flip_class(); ?>">
-    <td><?php echo T_('Year'); ?></td>
-    <td>
-        <input type="text" name="year" value="<?php echo scrub_out($album->year); ?>">
-    </td>
-</tr>
-<tr class="<?php echo UI::flip_class(); ?>">
-    <td>&nbsp;</td>
-    <td>
-        <input type="checkbox" name="flag" value="1" checked="checked" /> <?php echo T_('Flag for Retagging'); ?>
-    </td>
-</tr>
-</table>
-<div class="formValidation">
+    <table class="tabledata">
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td><?php echo T_('Name'); ?></td>
+            <td>
+                <input type="text" name="name" value="<?php echo scrub_out($album->full_name); ?>">
+            </td>
+        </tr>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td><?php echo T_('Year'); ?></td>
+            <td>
+                <input type="text" name="year" value="<?php echo scrub_out($album->year); ?>">
+            </td>
+        </tr>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td>&nbsp;</td>
+            <td>
+                <input type="checkbox" name="flag" value="1" checked="checked" /> <?php echo T_('Flag for Retagging'); ?>
+            </td>
+        </tr>
+    </table>
+    <div class="formValidation">
         <input type="hidden" name="album_id" value="<?php echo $album->id; ?>" />
         <input type="submit" value="<?php echo T_('Update Album'); ?>" />
-</div>
+    </div>
 </form>
 <?php UI::show_box_bottom(); ?>
