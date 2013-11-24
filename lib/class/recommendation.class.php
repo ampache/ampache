@@ -194,7 +194,7 @@ class Recommendation
 
         return false;
     } // get_artists_like
-    
+
     /**
      * get_artist_info
      * Returns artist information
@@ -208,9 +208,9 @@ class Recommendation
         $xml = self::get_lastfm_results('artist.getinfo', $query);
 
         $results = array();
-        $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", (string)$xml->artist->bio->summary));
-        $results['placeformed'] = (string)$xml->artist->bio->placeformed;
-        $results['yearformed'] = (string)$xml->artist->bio->yearformed;
+        $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", (string) $xml->artist->bio->summary));
+        $results['placeformed'] = (string) $xml->artist->bio->placeformed;
+        $results['yearformed'] = (string) $xml->artist->bio->yearformed;
 
         return $results;
     } // get_artist_info

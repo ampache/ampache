@@ -19,14 +19,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-  
+
  if (isset($_REQUEST['param_name'])) {
     $name = $_REQUEST['param_name'];
     if (isset($_REQUEST[$name])) {
         echo $name . ": ". $_REQUEST[$name];
     }
  }
- 
+
  if (isset($_REQUEST['error'])) {
     $error = $_REQUEST['error'];
     $error_description = $_REQUEST['error_description'];

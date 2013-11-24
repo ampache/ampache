@@ -139,8 +139,9 @@ class Catalog_soundcloud extends Catalog
 
         require_once Config::get('prefix') . '/modules/php-soundcloud/Soundcloud.php';
     }
-    
-    protected function getRedirectUri() {
+
+    protected function getRedirectUri()
+    {
         return Config::get('web_path') . "/show_get.php?param_name=code";
     }
 
@@ -175,7 +176,7 @@ class Catalog_soundcloud extends Catalog
         Dba::write($sql, array($userid, $secret, $catalog_id));
         return true;
     }
-    
+
     protected function showAuthToken()
     {
         $api = new Services_Soundcloud($this->userid, $this->secret, $this->getRedirectUri());
@@ -191,7 +192,7 @@ class Catalog_soundcloud extends Catalog
         echo "</form>";
         echo "<br />";
     }
-    
+
     protected function completeAuthToken()
     {
         $api = new Services_Soundcloud($this->userid, $this->secret, $this->getRedirectUri());
@@ -216,7 +217,7 @@ class Catalog_soundcloud extends Catalog
         if ($options != null) {
             $this->authcode = $options['authcode'];
         }
-        
+
         UI::show_box_top(T_('Running SoundCloud Remote Update') . '. . .');
         $this->update_remote_catalog();
         UI::show_box_bottom();
@@ -233,7 +234,7 @@ class Catalog_soundcloud extends Catalog
             $this->showAuthToken();
             return null;
         }
-        
+
         $api = new Services_Soundcloud($this->userid, $this->secret);
         $api->setAccessToken($this->authtoken);
 
@@ -298,8 +299,7 @@ class Catalog_soundcloud extends Catalog
                 echo "<p>" . T_('API Error: cannot connect to SoundCloud.') . "</p><hr />\n";
                 flush();
             }
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             echo "<p>" . T_('SoundCloud exception: ') . $ex->getMessage() . "</p><hr />\n";
         }
 
@@ -320,7 +320,7 @@ class Catalog_soundcloud extends Catalog
     public function clean_catalog_proc()
     {
         $dead = 0;
-        
+
         try {
             $api = $this->createClient();
             if ($api != null) {
@@ -357,14 +357,13 @@ class Catalog_soundcloud extends Catalog
                 echo "<p>" . T_('API Error: cannot connect to SoundCloud.') . "</p><hr />\n";
                 flush();
             }
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             echo "<p>" . T_('SoundCloud exception: ') . $ex->getMessage() . "</p><hr />\n";
         }
 
         return $dead;
     }
-    
+
     public function url_to_track($url)
     {
         $track = 0;
@@ -418,7 +417,7 @@ class Catalog_soundcloud extends Catalog
             if ($api != null) {
                 $track = $this->url_to_track($media->file);
                 debug_event('play', 'Starting stream - ' . $track, 5);
-                
+
                 $headers = $api->stream($track);
                 if (isset($headers['Location'])) {
                     header('Location: ' . $headers['Location']);
@@ -430,8 +429,7 @@ class Catalog_soundcloud extends Catalog
                 echo "<p>" . T_('API Error: cannot connect to SoundCloud.') . "</p><hr />\n";
                 flush();
             }
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             echo "<p>" . T_('SoundCloud exception: ') . $ex->getMessage() . "</p><hr />\n";
         }
 
