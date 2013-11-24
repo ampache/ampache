@@ -63,7 +63,6 @@ class PluginHelper {
         foreach ($lines as $key => $line) {
             if ($key == 0) { // Status line
                 if (!preg_match("/^HTTP\/(\d+)\.(\d+) (\d+) .+$/", $line, $matches)) {
-                    $this->lastHeaders = array();
                     return false;
                 }
                 else {

@@ -22,10 +22,10 @@
  
  require_once 'helper.php';
 
-class Ampachelyricwiki {
+class Ampachechartlyrics {
 
-    public $name        = 'LyricWiki';
-    public $description    = 'Get lyrics from LyricWiki';
+    public $name        = 'ChartLyrics';
+    public $description    = 'Get lyrics from ChartLyrics';
     public $url        = '';
     public $version        ='000001';
     public $min_ampache    ='360022';
@@ -72,14 +72,13 @@ class Ampachelyricwiki {
      */
     public function get_lyrics($song) {
   
-        $uri = 'http://lyrics.wikia.com/api.php?action=lyrics&artist=' . urlencode($song->f_artist) . '&song=' . urlencode($song->title) . '&fmt=xml&func=getSong';
+        $base = 'http://api.chartlyrics.com/apiv1.asmx/';
+        $uri = $base . 'SearchLyricDirect?artist=' . urlencode($song->f_artist) . '&song=' . urlencode($song->title);
         $response = PluginHelper::wsGet($uri);
-        if ($response['status'] == 200) {
+        if ($response != false && $response['status'] == 200) {
             $xml = simplexml_load_string($response['body']);
             if ($xml) {
-                if (!empty($xml->lyrics) && $xml->lyrics != "Not found") {
-                    return array('text' => nl2br($xml->lyrics), 'url' => $xml->url);
-                }
+                return array('text' => nl2br($xml->Lyric), 'url' => $xml->LyricUrl);
             }
         }
         
