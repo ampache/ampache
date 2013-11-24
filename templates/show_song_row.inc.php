@@ -42,7 +42,7 @@
 <?php } ?>
 <td class="cel_action">
     <a href="<?php echo $song->link; ?>"><?php echo UI::get_icon('preferences', T_('Song Information')); ?></a>
-    <?php if (Config::get('shoutbox')) { ?>
+    <?php if (Config::get('sociable')) { ?>
                 <a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=song&amp;id=<?php echo $song->id; ?>">
                 <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
                 </a>
