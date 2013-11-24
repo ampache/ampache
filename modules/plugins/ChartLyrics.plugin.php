@@ -78,7 +78,9 @@ class Ampachechartlyrics {
         if ($response != false && $response['status'] == 200) {
             $xml = simplexml_load_string($response['body']);
             if ($xml) {
-                return array('text' => nl2br($xml->Lyric), 'url' => $xml->LyricUrl);
+                if (!empty($xml->Lyric)) {
+                    return array('text' => nl2br($xml->Lyric), 'url' => $xml->LyricUrl);
+                }
             }
         }
         
