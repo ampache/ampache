@@ -172,7 +172,7 @@ class Stats
         /* Select Top objects counting by # of rows */
         $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count" .
             " WHERE object_type = '" . $type ."' AND date >= '" . $date . "'" .
-            " GROUP BY object_id ORDER BY `count` ";
+            " GROUP BY object_id ORDER BY `count` DESC ";
         return $sql;
     }
 
@@ -195,7 +195,7 @@ class Stats
         }
 
         $sql = self::get_top_sql($type, $threshold);
-        $sql .= "DESC LIMIT $limit";
+        $sql .= "LIMIT $limit";
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -309,7 +309,7 @@ class Stats
     {
         $type = self::validate_type($type);
 
-        $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `song` GROUP BY `$type` ORDER BY `real_atime` ";
+        $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `song` GROUP BY `$type` ORDER BY `real_atime` DESC ";
         return $sql;
     }
 
@@ -328,7 +328,7 @@ class Stats
         }
 
         $sql = self::get_newest_sql($type);
-        $sql .= "DESC LIMIT $limit";
+        $sql .= " LIMIT $limit";
         $db_results = Dba::read($sql);
 
         $items = array();

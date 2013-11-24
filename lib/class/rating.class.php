@@ -173,7 +173,7 @@ class Rating extends database_object
         $type = Stats::validate_type($type);
         $sql = "SELECT `object_id` as `id`, AVG(`rating`) AS `rating` FROM rating" .
             " WHERE object_type = '" . $type . "'" .
-            " GROUP BY object_id ORDER BY `rating` ";
+            " GROUP BY object_id ORDER BY `rating` DESC ";
         return $sql;
     }
 
@@ -195,7 +195,7 @@ class Rating extends database_object
 
         /* Select Top objects counting by # of rows */
         $sql = self::get_highest_sql($type);
-        $sql .= "DESC LIMIT $limit";
+        $sql .= "LIMIT $limit";
         $db_results = Dba::read($sql, array($type));
 
         $results = array();

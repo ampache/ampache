@@ -215,8 +215,8 @@ class Catalog_dropbox extends Catalog
         echo "<br />";
     }
 
-     protected function completeAuthToken()
-     {
+    protected function completeAuthToken()
+    {
         $webAuth = $this->getWebAuth();
         list($accessToken, $userId) = $webAuth->finish($this->authcode);
         debug_event('dropbox_catalog', 'Dropbox authentication token generated for user ' . $userId . '.', 1);
@@ -224,7 +224,7 @@ class Catalog_dropbox extends Catalog
 
         $sql = 'UPDATE `catalog_dropbox` SET `authtoken` = ? WHERE `catalog_id` = ?';
         Dba::write($sql, array($this->authtoken, $this->catalog_id));
-     }
+    }
 
     /**
      * add_to_catalog
