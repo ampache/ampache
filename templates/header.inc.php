@@ -74,7 +74,7 @@ function forceIframe()
     var jsAjaxShowEditUrl = "<?php echo Config::get('ajax_show_edit_url') ?>";
     var jsSaveTitle = "<?php echo T_('Save') ?>";
     var jsCancelTitle = "<?php echo T_('Cancel') ?>";
-  
+
 </script>
 </head>
 <body <?php echo (Config::get('iframes')) ? "onLoad='forceIframe();'" : ""; ?>>

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- 
+
  require_once Config::get('prefix') . '/modules/plugins/helper.php';
 
 /**
@@ -45,9 +45,9 @@ class Plex_Api
         header("HTTP/1.0 200 OK", true, 200);
         header("Connection: close", true);
         header("X-Plex-Protocol: 1.0");
-        
+
         header_remove("x-powered-by");
-        
+
         if (strtolower($f) == "xml") {
             header("Cache-Control: no-cache", true);
             header("Content-type: text/xml; charset=" . Config::get('site_charset'), true);
@@ -58,33 +58,32 @@ class Plex_Api
             header("Content-type: " . $f, true);
         }
     }
-    
+
     public static function apiOutput($string)
     {
-        ob_start('ob_gzhandler');    
-        echo $string;      
+        ob_start('ob_gzhandler');
+        echo $string;
         ob_end_flush();
         header("X-Plex-Compressed-Content-Length: " . ob_get_length());
         header("X-Plex-Original-Content-Length: " . strlen($string));
     }
-    
+
     public static function createError($code)
     {
         $error = "";
-        switch ($code)
-        {
+        switch ($code) {
             case 404:
                 $error = "Not Found";
                 break;
         }
         header("Content-type: text/html", true);
         header("HTTP/1.0 ". $code . " " . $error, true, $code);
-        
+
         $html = "<html><head><title>" . $error . "</title></head><body><h1>" . $code . " " . $error . "</h1></body></html>";
         self::apiOutput($html);
         exit();
     }
-    
+
     public static function root()
     {
         $r = Plex_XML_Data::createContainer();
@@ -92,7 +91,7 @@ class Plex_Api
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
-    
+
     public static function library($params)
     {
         $r = Plex_XML_Data::createLibContainer();
@@ -100,7 +99,7 @@ class Plex_Api
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
-    
+
     public static function system($params)
     {
         $r = Plex_XML_Data::createSysContainer();
@@ -108,37 +107,37 @@ class Plex_Api
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
-    
+
     public static function clients($params)
     {
         $r = Plex_XML_Data::createContainer();
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
-    
+
     public static function channels($params)
     {
         $r = Plex_XML_Data::createContainer();
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
-    
+
     public static function photos($params)
     {
         $r = Plex_XML_Data::createPluginContainer();
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
-    
+
     public static function photo($params)
     {
         if (count($params) == 2) {
             if ($params[0] == ':' && $params[1] == 'transcode') {
-                
+
                 $width = $_REQUEST['width'];
                 $height = $_REQUEST['height'];
                 $url = $_REQUEST['url'];
-                
+
                 if ($width && $height && $url) {
                     $response = PluginHelper::wsGet($url);
                     if ($response['status'] == 200) {
@@ -154,28 +153,28 @@ class Plex_Api
             }
         }
     }
-    
+
     public static function music($params)
     {
         $r = Plex_XML_Data::createPluginContainer();
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
-    
+
     public static function video($params)
     {
         $r = Plex_XML_Data::createPluginContainer();
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
-    
+
     public static function applications($params)
     {
         $r = Plex_XML_Data::createPluginContainer();
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
-    
+
     public static function library_sections($params)
     {
         $r = Plex_XML_Data::createLibContainer();
@@ -199,20 +198,20 @@ class Plex_Api
                 }
             }
         }
-        
+
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
-    
+
     public static function library_metadata($params)
     {
         $r = Plex_XML_Data::createLibContainer();
         $n = count($params);
         if ($n > 0) {
             $key = $params[0];
-            
+
             $id = Plex_XML_Data::getAmpacheId($key);
-            
+
             if ($n == 1) {
                 if (Plex_XML_Data::isArtist($key)) {
                     $artist = new Artist($id);
@@ -225,7 +224,7 @@ class Plex_Api
                 }
             } else {
                 $subact = $params[1];
-                if($subact == "children") {
+                if ($subact == "children") {
                     if (Plex_XML_Data::isArtist($key)) {
                         $artist = new Artist($id);
                         $artist->format();
@@ -253,7 +252,7 @@ class Plex_Api
 
                         if ($art != null) {
                             $art->get_db();
-                            
+
                             if (!$size) {
                                 self::setHeader($art->raw_mime);
                                 echo $art->raw;
@@ -274,15 +273,15 @@ class Plex_Api
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
-    
+
     public static function library_parts($params)
     {
         $n = count($params);
-        
+
         if ($n == 2) {
             $key = $params[0];
             $file = $params[1];
-            
+
             $id = Plex_XML_Data::getAmpacheId($key);
             $song = new Song($id);
             if ($song->id) {

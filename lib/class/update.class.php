@@ -313,7 +313,7 @@ class Update
 
         $update_string = '- Remove unused live_stream fields and add codec field.<br />';
         $version[] = array('version' => '360022', 'description' => $update_string);
-        
+
         $update_string = '- Enable/Disable SubSonic and Plex backend.<br />';
         $version[] = array('version' => '360023', 'description' => $update_string);
 
@@ -1717,7 +1717,7 @@ class Update
 
         return true;
     }
-    
+
     /**
      * update_360023
      *
@@ -1733,7 +1733,7 @@ class Update
 
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         Dba::write($sql, array($id));
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('plex_backend','0','Use Plex backend',25,'boolean','system')";
         Dba::write($sql);

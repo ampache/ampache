@@ -46,7 +46,7 @@ class Radio extends database_object implements media
     public function __construct($id = null)
     {
         if (!$id) { return false; }
-    
+
         $info = $this->get_info($id, 'live_stream');
 
         // Set the vars

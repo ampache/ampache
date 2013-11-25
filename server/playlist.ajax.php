@@ -42,7 +42,7 @@ switch ($_REQUEST['action']) {
             $browse->save_objects($object_ids);
             $browse->show_objects($object_ids);
         $browse->store();
-        
+
         $results['browse_content'] = ob_get_clean();
     break;
     case 'create':

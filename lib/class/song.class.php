@@ -555,7 +555,7 @@ class Song extends database_object implements media
     {
         foreach ($data as $key=>$value) {
             debug_event('song.class.php', $key.'='.$value, '5');
-        
+
             switch ($key) {
                 case 'artist_name':
                     // Need to create new artist according the name
@@ -895,7 +895,7 @@ class Song extends database_object implements media
 
         // Format the size
         $this->f_size = UI::format_bytes($this->size);
-        
+
         $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . Config::get('web_path') . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
 
         return true;
@@ -1106,12 +1106,13 @@ class Song extends database_object implements media
         return array('format' => $target,
             'command' => $cmd . ' ' . $args);
     }
-    
-    public function get_lyrics() {
+
+    public function get_lyrics()
+    {
         if ($this->lyrics) {
             return array('text' => $this->lyrics);
         }
-        
+
         foreach (Plugin::get_plugins('get_lyrics') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             if ($plugin->load()) {

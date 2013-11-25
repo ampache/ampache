@@ -60,12 +60,12 @@ class Plex_XML_Data
     {
         return $id + Plex_XML_Data::AMPACHEID_TRACK;
     }
-    
+
     public static function getMediaId($id)
     {
         return $id + Plex_XML_Data::AMPACHEID_MEDIA;
     }
-    
+
     public static function getPartId($id)
     {
         return $id + Plex_XML_Data::AMPACHEID_PART;
@@ -99,12 +99,12 @@ class Plex_XML_Data
     {
         return ($id >= Plex_XML_Data::AMPACHEID_TRACK  && $id < Plex_XML_Data::AMPACHEID_MEDIA);
     }
-    
+
     public static function isMedia($id)
     {
         return ($id >= Plex_XML_Data::AMPACHEID_MEDIA  && $id < Plex_XML_Data::AMPACHEID_PART);
     }
-    
+
     public static function isPart($id)
     {
         return ($id >= Plex_XML_Data::AMPACHEID_PART);
@@ -123,7 +123,7 @@ class Plex_XML_Data
         $response->addAttribute('status', 'ok');
         return $response;
     }
-    
+
     public static function createContainer()
     {
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><MediaContainer/>');
@@ -138,14 +138,14 @@ class Plex_XML_Data
         $response->addAttribute('mediaTagVersion', '1365384731');
         return $response;
     }
-    
+
     public static function createPluginContainer()
     {
         $response = self::createContainer();
         $response->addAttribute('content', 'plugins');
         return $response;
     }
-    
+
     public static function createSysContainer()
     {
         $response = self::createContainer();
@@ -159,32 +159,32 @@ class Plex_XML_Data
     {
         $container->addAttribute('size', $container->count());
     }
-    
+
     public static function setContainerTitle($container, $title)
     {
         $container->addAttribute('title1', $title);
     }
-    
+
     public static function getResourceUri($resource)
     {
         return '/resources/' . $resource;
     }
-    
+
     public static function getMetadataUri($key)
     {
         return '/library/metadata/' . $key;
     }
-    
+
     public static function getPartUri($key, $type)
     {
         return '/library/parts/' . $key . '/file.' . $type;
     }
-    
+
     public static function uuidFromKey($key)
     {
         return hash('sha1', $key);
     }
-    
+
     public static function setRootContent($xml, $catalogs)
     {
         $xml->addAttribute('friendlyName', 'Ampache');
@@ -199,7 +199,7 @@ class Plex_XML_Data
         $xml->addAttribute('transcoderVideo', '0');
         $xml->addAttribute('updatedAt', self::getLastUpdate($catalogs));
         $xml->addAttribute('version', '0.9.8.10.215-020456b');
-        
+
         $dir = $xml->addChild('Directory');
         $dir->addAttribute('count', '1');
         $dir->addAttribute('key', 'channels');
@@ -237,7 +237,7 @@ class Plex_XML_Data
         $dir->addAttribute('key', 'transcode');
         $dir->addAttribute('title', 'transcode');
     }
-    
+
     public static function getLastUpdate($catalogs)
     {
         $last_update = 0;
@@ -253,12 +253,12 @@ class Plex_XML_Data
                 $last_update = $catalog->last_clean;
             }
         }
-        
+
         return $last_update;
     }
 
     public static function setSections($xml, $catalogs)
-    {    
+    {
         foreach ($catalogs as $id) {
             $catalog = Catalog::create_from_id($id);
             $catalog->format();
@@ -274,16 +274,16 @@ class Plex_XML_Data
             self::setSectionXContent($dir, $catalog, 'title');
             //$date = new DateTime("2013-01-01");
             //$dir->addAttribute('createdAt', $date->getTimestamp());
-            
+
             $location = $dir->addChild('Location');
             $location->addAttribute('id', $id);
             $location->addAttribute('path', $catalog->f_full_info);
         }
-        
+
         $xml->addAttribute('allowSync', '0');
         self::setContainerTitle($xml, 'Plex Library');
     }
-    
+
     public static function setLibraryContent($xml)
     {
         $dir = $xml->addChild('Directory');
@@ -295,11 +295,11 @@ class Plex_XML_Data
         $dir = $xml->addChild('Directory');
         $dir->addAttribute('key', 'onDeck');
         $dir->addAttribute('title', 'On Deck Content');
-        
+
         $xml->addAttribute('allowSync', '0');
         self::setContainerTitle($xml, 'Plex Library');
     }
-    
+
     public static function setSectionContent($xml, $catalog)
     {
         $dir = $xml->addChild('Directory');
@@ -315,7 +315,7 @@ class Plex_XML_Data
         $dir = $xml->addChild('Directory');
         $dir->addAttribute('key', 'recentlyAdded');
         $dir->addAttribute('title', 'Recently Added');
-        
+
         $dir = $xml->addChild('Directory');
         $dir->addAttribute('key', 'search?type=8');
         $dir->addAttribute('prompt', 'Search for Artists');
@@ -331,7 +331,7 @@ class Plex_XML_Data
         $dir->addAttribute('prompt', 'Search for Tracks');
         $dir->addAttribute('search', '1');
         $dir->addAttribute('title', 'Search Tracks...');
-        
+
         $xml->addAttribute('allowSync', '0');
         $xml->addAttribute('content', 'secondary');
         $xml->addAttribute('nocache', '1');
@@ -339,14 +339,14 @@ class Plex_XML_Data
         $xml->addAttribute('viewMode', '65592');
         self::setSectionXContent($xml, $catalog);
     }
-    
+
     public static function setSectionXContent($xml, $catalog, $title = 'title1')
     {
         $xml->addAttribute('art', self::getResourceUri('artist-fanart.jpg'));
         $xml->addAttribute('thumb', self::getResourceUri('artist.png'));
         $xml->addAttribute($title, $catalog->name);
     }
-    
+
     public static function setSystemContent($xml)
     {
         $dir = $xml->addChild('Directory');
@@ -366,11 +366,11 @@ class Plex_XML_Data
         $dir->addAttribute('title', 'Plug-ins');
         $dir->addAttribute('name', 'Plug-ins');
     }
-    
+
     public static function setSectionAll($xml, $catalog)
     {
         $artists = Catalog::get_artists(array($catalog->id));
-        
+
         $xml->addAttribute('allowSync', '1');
         self::setSectionXContent($xml, $catalog);
         $xml->addAttribute('title2', 'All Artists');
@@ -379,16 +379,16 @@ class Plex_XML_Data
         $xml->addAttribute('viewMode', '65592');
         $xml->addAttribute('librarySectionID', $catalog->id);
         $xml->addAttribute('librarySectionUUID', self::uuidFromKey($catalog->id));
-        
-        foreach($artists as $artist) {
+
+        foreach ($artists as $artist) {
             self::addArtist($xml, $artist);
         }
     }
-    
+
     public static function setSectionAlbums($xml, $catalog)
     {
         $albums = $catalog->get_album_ids();
-        
+
         $xml->addAttribute('allowSync', '0');
         self::setSectionXContent($xml, $catalog);
         $xml->addAttribute('title2', 'By Album');
@@ -396,8 +396,8 @@ class Plex_XML_Data
         $xml->addAttribute('nocache', '1');
         $xml->addAttribute('viewGroup', 'album');
         $xml->addAttribute('viewMode', '65592');
-        
-        foreach($albums as $id) {
+
+        foreach ($albums as $id) {
             $album = new Album($id);
             $album->format();
             self::addAlbum($xml, $album);
@@ -413,7 +413,7 @@ class Plex_XML_Data
         $xdir->addAttribute('addedAt', '');
         $xdir->addAttribute('updatedAt', '');
         self::addArtistMeta($xdir, $artist);
-        
+
         $tags = Tag::get_top_tags('artist', $artist->id);
         foreach ($tags as $tag_id=>$value) {
             $tag = new Tag($tag_id);
@@ -421,7 +421,7 @@ class Plex_XML_Data
             $xgenre->addAttribute('tag', $tag->name);
         }
     }
-    
+
     public static function addArtistMeta($xml, $artist)
     {
         $id = self::getArtistId($artist->id);
@@ -430,7 +430,7 @@ class Plex_XML_Data
         $xml->addAttribute('summary', '');
         $xml->addAttribute('thumb', '');
     }
-    
+
     public static function addAlbum($xml, $album)
     {
         $xdir = $xml->addChild('Directory');
@@ -444,7 +444,7 @@ class Plex_XML_Data
         if ($album->year != 0 && $album->year != 'N/A') {
             $xdir->addAttribute('year', $album->year);
         }
-        
+
         $tags = Tag::get_top_tags('album', $album->id);
         foreach ($tags as $tag_id=>$value) {
             $tag = new Tag($tag_id);
@@ -452,7 +452,7 @@ class Plex_XML_Data
             $xgenre->addAttribute('tag', $tag->name);
         }
     }
-    
+
     public static function addAlbumMeta($xml, $album)
     {
         $id = self::getAlbumId($album->id);
@@ -475,7 +475,7 @@ class Plex_XML_Data
         $xml->addAttribute('addedAt', '');
         $xml->addAttribute('updatedAt', '');
     }
-    
+
     public static function setArtistRoot($xml, $artist)
     {
         self::addArtistMeta($xml, $artist);
@@ -487,7 +487,7 @@ class Plex_XML_Data
         $xml->addAttribute('title2', $artist->name);
         $xml->addAttribute('viewGroup', 'album');
         $xml->addAttribute('viewMode', '65592');
-        
+
         $allalbums = $artist->get_albums();
         foreach ($allalbums as $id) {
             $album = new Album($id);
@@ -511,7 +511,7 @@ class Plex_XML_Data
         }
         $xml->addAttribute('viewGroup', 'track');
         $xml->addAttribute('viewMode', '65593');
-    
+
         $allsongs = $album->get_songs();
         foreach ($allsongs as $id) {
             $song = new Song($id);
@@ -534,7 +534,7 @@ class Plex_XML_Data
         $xdir->addAttribute('type', 'track');
         $xdir->addAttribute('addedAt', '');
         $xdir->addAttribute('updatedAt', '');
-        
+
         $xmedia = $xdir->addChild('Media');
         $mediaid = self::getMediaId($song->id);
         $xmedia->addAttribute('id', $mediaid);
@@ -544,7 +544,7 @@ class Plex_XML_Data
         // Type != Codec != Container, but that's how Ampache works today...
         $xmedia->addAttribute('audioCodec', $song->type);
         $xmedia->addAttribute('container', $song->type);
-        
+
         $xpart = $xmedia->addChild('Part');
         $partid = self::getPartId($song->id);
         $xpart->addAttribute('id', $partid);

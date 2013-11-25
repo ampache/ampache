@@ -81,7 +81,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
   if (Config::get('show_played_times')) {
     $songprops[gettext_noop('# Played')]   = scrub_out($song->object_cnt);
   }
-  
+
   if (Config::get('show_lyrics')) {
      $songprops[gettext_noop('Lyrics')]   = $song->f_lyrics;
   }
