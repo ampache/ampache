@@ -510,6 +510,8 @@ class Plex_XML_Data
     public static function addArtist($xml, $artist)
     {
         $xdir = $xml->addChild('Directory');
+		$id = self::getArtistId($artist->id);
+		$xml->addAttribute('ratingKey', $id);
         $xdir->addAttribute('type', 'artist');
         $xdir->addAttribute('title', $artist->name);
         $xdir->addAttribute('index', '1');
@@ -528,7 +530,6 @@ class Plex_XML_Data
     public static function addArtistMeta($xml, $artist)
     {
         $id = self::getArtistId($artist->id);
-        $xml->addAttribute('ratingKey', $id);
         $xml->addAttribute('key', self::getMetadataUri($id) . '/children');
         $xml->addAttribute('summary', '');
         $xml->addAttribute('thumb', '');
@@ -536,8 +537,11 @@ class Plex_XML_Data
 
     public static function addAlbum($xml, $album)
     {
+		$id = self::getAlbumId($album->id);
         $xdir = $xml->addChild('Directory');
         self::addAlbumMeta($xdir, $album);
+		$xdir->addAttribute('ratingKey', $id);
+		$xdir->addAttribute('key', self::getMetadataUri($id) . '/children');
         $xdir->addAttribute('title', $album->f_title);
         $artistid = self::getArtistId($album->artist_id);
         $xdir->addAttribute('parentRatingKey', $artistid);
@@ -560,18 +564,14 @@ class Plex_XML_Data
     {
         $id = self::getAlbumId($album->id);
         $xml->addAttribute('allowSync', '1');
-        $xml->addAttribute('ratingKey', $id);
         $xml->addAttribute('librarySectionID', $album->catalog_id);
         $xml->addAttribute('librarySectionUUID', self::uuidFromkey($album->catalog_id));
-        $xml->addAttribute('key', self::getMetadataUri($id) . '/children');
         $xml->addAttribute('type', 'album');
         $xml->addAttribute('summary', '');
         $xml->addAttribute('index', '1');
-        if ($album->has_art) {
+        if ($album->has_art || $album->has_thumb) {
             $xml->addAttribute('art', self::getMetadataUri($id) . '/thumb/' . $id);
-        }
-        if ($album->has_thumb) {
-            $xml->addAttribute('thumb', self::getMetadataUri($id) . '/thumb/' . $id);
+			$xml->addAttribute('thumb', self::getMetadataUri($id) . '/thumb/' . $id);
         }
         $xml->addAttribute('parentThumb', '');
         $xml->addAttribute('originallyAvailableAt', '');
@@ -581,6 +581,8 @@ class Plex_XML_Data
 
     public static function setArtistRoot($xml, $artist)
     {
+		$id = self::getAlbumId($artist->id);
+		$xml->addAttribute('key', $id);
         self::addArtistMeta($xml, $artist);
         $xml->addAttribute('allowSync', '1');
         $xml->addAttribute('nocache', '1');
@@ -601,7 +603,9 @@ class Plex_XML_Data
 
     public static function setAlbumRoot($xml, $album)
     {
+		$id = self::getAlbumId($album->id);
         self::addAlbumMeta($xml, $album);
+		$xml->addAttribute('key', $id);
         $xml->addAttribute('grandparentTitle', $album->f_artist);
         $xml->addAttribute('title1', $album->f_artist);
         $xml->addAttribute('allowSync', '1');
@@ -616,8 +620,8 @@ class Plex_XML_Data
         $xml->addAttribute('viewMode', '65593');
 
         $allsongs = $album->get_songs();
-        foreach ($allsongs as $id) {
-            $song = new Song($id);
+        foreach ($allsongs as $sid) {
+            $song = new Song($sid);
             self::addSong($xml, $song);
         }
     }
@@ -626,6 +630,7 @@ class Plex_XML_Data
      {
         $xdir = $xml->addChild('Track');
         self::addSongMeta($xdir, $song);
+		$time = $song->time * 1000;
         $xdir->addAttribute('title', $song->title);
         $albumid = self::getAlbumId($song->album);
         $xdir->addAttribute('parentRatingKey', $albumid);
@@ -633,7 +638,7 @@ class Plex_XML_Data
         $xdir->addAttribute('originalTitle', $album->f_artist_full);
         $xdir->addAttribute('summary', '');
         $xdir->addAttribute('index', '1');
-        $xdir->addAttribute('duration', $song->time);
+        $xdir->addAttribute('duration', $time);
         $xdir->addAttribute('type', 'track');
         $xdir->addAttribute('addedAt', '');
         $xdir->addAttribute('updatedAt', '');
@@ -641,7 +646,7 @@ class Plex_XML_Data
         $xmedia = $xdir->addChild('Media');
         $mediaid = self::getMediaId($song->id);
         $xmedia->addAttribute('id', $mediaid);
-        $xmedia->addAttribute('duration', $song->time);
+        $xmedia->addAttribute('duration', $time);
         $xmedia->addAttribute('bitrate', $song->bitrate);
         $xmedia->addAttribute('audioChannels', '');
         // Type != Codec != Container, but that's how Ampache works today...
@@ -652,7 +657,7 @@ class Plex_XML_Data
         $partid = self::getPartId($song->id);
         $xpart->addAttribute('id', $partid);
         $xpart->addAttribute('key', self::getPartUri($partid, $song->type));
-        $xpart->addAttribute('duration', $song->time);
+        $xpart->addAttribute('duration', $time);
         $xpart->addAttribute('file', $song->file);
         $xpart->addAttribute('size', $song->size);
         $xpart->addAttribute('container', $song->type);
