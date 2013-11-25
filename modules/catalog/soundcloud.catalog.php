@@ -196,7 +196,8 @@ class Catalog_soundcloud extends Catalog
     protected function completeAuthToken()
     {
         $api = new Services_Soundcloud($this->userid, $this->secret, $this->getRedirectUri());
-        $this->authtoken = $api->accessToken($this->authcode)['access_token'];
+        $token = $api->accessToken($this->authcode);
+        $this->authtoken = $token['access_token'];
 
         debug_event('soundcloud_catalog', 'SoundCloud authentication token generated for userid ' . $this->userid . '.', 1);
 
