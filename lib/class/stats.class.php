@@ -305,11 +305,15 @@ class Stats
      * get_newest_sql
      * This returns the get_newest sql
      */
-    public static function get_newest_sql($type)
+    public static function get_newest_sql($type, $catalog=0)
     {
         $type = self::validate_type($type);
 
-        $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `song` GROUP BY `$type` ORDER BY `real_atime` DESC ";
+        $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `song` ";
+        if ($catalog > 0) {
+            $sql .= "WHERE `catalog` = '" . scrub_in($catalog) ."' ";
+        }
+        $sql .= "GROUP BY `$type` ORDER BY `real_atime` DESC ";
         return $sql;
     }
 
@@ -318,7 +322,7 @@ class Stats
      * This returns an array of the newest artists/albums/whatever
      * in this ampache instance
      */
-    public static function get_newest($type, $limit='', $offset='')
+    public static function get_newest($type, $limit='', $offset='', $catalog=0)
     {
         if (!$count) { $count = Config::get('popular_threshold'); }
         if (!$offset) {
@@ -327,14 +331,14 @@ class Stats
             $limit = $offset . ',' . $count;
         }
 
-        $sql = self::get_newest_sql($type);
-        $sql .= " LIMIT $limit";
+        $sql = self::get_newest_sql($type, $catalog);
+        $sql .= "LIMIT $limit";
         $db_results = Dba::read($sql);
 
         $items = array();
 
         while ($row = Dba::fetch_row($db_results)) {
-            $items[] = $row['id'];
+            $items[] = $row[0];
         } // end while results
 
         return $items;

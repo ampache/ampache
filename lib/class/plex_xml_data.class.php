@@ -109,6 +109,32 @@ class Plex_XML_Data
     {
         return ($id >= Plex_XML_Data::AMPACHEID_PART);
     }
+    
+    public static function getPlexVersion()
+    {
+        return "0.9.8.10.215-020456b";
+    }
+    
+    public static function getServerAddress()
+    {
+        return $_SERVER['SERVER_ADDR'];
+    }
+    
+    public static function getServerPort()
+    {
+        $port = $_SERVER['SERVER_PORT'];
+        return $port?:'32400';
+    }
+    
+    public static function getServerKey()
+    {
+        return self::getServerAddress();
+    }
+    
+    public static function getServerName()
+    {
+        return "Ampache";
+    }
 
     public static function createFailedResponse($version = "")
     {
@@ -174,6 +200,11 @@ class Plex_XML_Data
     {
         return '/library/metadata/' . $key;
     }
+    
+    public static function getSectionUri($key)
+    {
+        return '/library/sections/' . $key;
+    }
 
     public static function getPartUri($key, $type)
     {
@@ -187,8 +218,8 @@ class Plex_XML_Data
 
     public static function setRootContent($xml, $catalogs)
     {
-        $xml->addAttribute('friendlyName', 'Ampache');
-        $xml->addAttribute('machineIdentifier', self::uuidFromKey($_SERVER['SERVER_ADDR']));
+        $xml->addAttribute('friendlyName', self::getServerName());
+        $xml->addAttribute('machineIdentifier', self::uuidFromKey(self::getServerKey()));
         $xml->addAttribute('myPlex', '0');
         $xml->addAttribute('platform', PHP_OS);
         $xml->addAttribute('platformVersion', '');
@@ -198,7 +229,7 @@ class Plex_XML_Data
         $xml->addAttribute('transcoderAudio', '0');
         $xml->addAttribute('transcoderVideo', '0');
         $xml->addAttribute('updatedAt', self::getLastUpdate($catalogs));
-        $xml->addAttribute('version', '0.9.8.10.215-020456b');
+        $xml->addAttribute('version', self::getPlexVersion());
 
         $dir = $xml->addChild('Directory');
         $dir->addAttribute('count', '1');
@@ -256,6 +287,32 @@ class Plex_XML_Data
 
         return $last_update;
     }
+    
+    public static function setSysSections($xml, $catalogs)
+    {
+        foreach ($catalogs as $id) {
+            $catalog = Catalog::create_from_id($id);
+            $catalog->format();
+            
+            $dir = $xml->addChild('Directory');
+            $key = self::getServerKey() . '-' . $id;
+            $dir->addAttribute('key', base64_encode($key));
+            $dir->addAttribute('uuid', self::uuidFromKey($id));
+            $dir->addAttribute('name', $catalog->name);
+            $dir->addAttribute('type', 'music');
+            $dir->addAttribute('unique', '1');
+            $dir->addAttribute('serverVersion', self::getPlexVersion());
+            $dir->addAttribute('machineIdentifier', self::uuidFromKey(self::getServerKey()));
+            $dir->addAttribute('serverName', self::getServerName());
+            $dir->addAttribute('path', self::getSectionUri($id));
+            $ip = self::getServerAddress();
+            $port = self::getServerPort();
+            $dir->addAttribute('host', $ip);
+            $dir->addAttribute('local', ($ip == "127.0.0.1") ? '1' : '0');
+            $dir->addAttribute('port', $port);
+            self::setSectionXContent($dir, $catalog, 'title');
+        }
+    }
 
     public static function setSections($xml, $catalogs)
     {
@@ -308,15 +365,15 @@ class Plex_XML_Data
         $dir = $xml->addChild('Directory');
         $dir->addAttribute('key', 'albums');
         $dir->addAttribute('title', 'By Albums');
-        $dir = $xml->addChild('Directory');
+        /*$dir = $xml->addChild('Directory');
         $dir->addAttribute('key', 'genre');
         $dir->addAttribute('secondary', '1');
-        $dir->addAttribute('title', 'By Genre');
+        $dir->addAttribute('title', 'By Genre');*/
         $dir = $xml->addChild('Directory');
         $dir->addAttribute('key', 'recentlyAdded');
         $dir->addAttribute('title', 'Recently Added');
 
-        $dir = $xml->addChild('Directory');
+        /*$dir = $xml->addChild('Directory');
         $dir->addAttribute('key', 'search?type=8');
         $dir->addAttribute('prompt', 'Search for Artists');
         $dir->addAttribute('search', '1');
@@ -330,7 +387,7 @@ class Plex_XML_Data
         $dir->addAttribute('key', 'search?type=10');
         $dir->addAttribute('prompt', 'Search for Tracks');
         $dir->addAttribute('search', '1');
-        $dir->addAttribute('title', 'Search Tracks...');
+        $dir->addAttribute('title', 'Search Tracks...');*/
 
         $xml->addAttribute('allowSync', '0');
         $xml->addAttribute('content', 'secondary');
@@ -401,6 +458,52 @@ class Plex_XML_Data
             $album = new Album($id);
             $album->format();
             self::addAlbum($xml, $album);
+        }
+    }
+    
+    public static function setCustomSectionView($xml, $catalog, $albums)
+    {
+        $xml->addAttribute('allowSync', '1');
+        self::setSectionXContent($xml, $catalog);
+        $xml->addAttribute('title2', 'Recently Added');
+        $xml->addAttribute('nocache', '1');
+        $xml->addAttribute('mixedParents', '1');
+        $xml->addAttribute('viewGroup', 'album');
+        $xml->addAttribute('viewMode', '65592');
+        $xml->addAttribute('librarySectionID', $catalog->id);
+        $xml->addAttribute('librarySectionUUID', self::uuidFromKey($catalog->id));
+        self::setSectionXContent($xml, $catalog);
+        
+        $data = array();
+        $data['album'] = $albums;
+        self::_setCustomView($xml, $data);
+    }
+    
+    public static function setCustomView($xml, $data)
+    {
+        $xml->addAttribute('allowSync', '0');
+        $xml->addAttribute('mixedParents', '1');
+        self::_setCustomView($xml, $data);
+    }
+    
+    protected static function _setCustomView($xml, $data)
+    {
+        foreach($data as $key => $value) {
+            foreach ($value as $id) {
+                if ($key == 'artist') {
+                    $artist = new Artist($id);
+                    $artist->format();
+                    self::addArtist($xml, $artist);
+                } elseif ($key == 'album') {
+                    $album = new Album($id);
+                    $album->format();
+                    self::addAlbum($xml, $album);
+                } elseif ($key == 'song') {
+                    $song = new Song($id);
+                    $song->format();
+                    self::addSong($xml, $song);
+                }
+            }
         }
     }
 

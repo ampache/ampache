@@ -195,6 +195,8 @@ class Plex_Api
                     Plex_XML_Data::setSectionAll($r, $catalog);
                 } elseif ($view == "albums") {
                     Plex_XML_Data::setSectionAlbums($r, $catalog);
+                } elseif ($view == "recentlyadded") {
+                    Plex_XML_Data::setCustomSectionView($r, $catalog, Stats::get_recent('album', 25, 0, $key));
                 }
             }
         }
@@ -291,5 +293,33 @@ class Plex_Api
                 self::createError(404);
             }
         }
+    }
+    
+    public static function library_recentlyadded($params)
+    {
+        $data = array();
+        $data['album'] = Stats::get_newest('album', 25);
+        $r = Plex_XML_Data::createLibContainer();
+        Plex_XML_Data::setCustomView($r, $data);
+        Plex_XML_Data::setContainerSize($r);
+        self::apiOutput($r->asXML());
+    }
+    
+    public static function library_ondeck($params)
+    {
+        $data = array();
+        $data['album'] = Stats::get_recent('album', 25);
+        $r = Plex_XML_Data::createLibContainer();
+        Plex_XML_Data::setCustomView($r, $data);
+        Plex_XML_Data::setContainerSize($r);
+        self::apiOutput($r->asXML());
+    }
+    
+    public static function system_library_sections($params)
+    {
+        $r = Plex_XML_Data::createSysContainer();
+        Plex_XML_Data::setSysSections($r, Catalog::get_catalogs());
+        Plex_XML_Data::setContainerSize($r);
+        self::apiOutput($r->asXML());
     }
 }
