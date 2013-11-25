@@ -42,10 +42,6 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
     </li>
     <?php if ($playlist->has_access()) { ?>
     <li>
-        <?php echo Ajax::button('?action=show_edit_object&type=smartplaylist_title&id=' . $playlist->id,'edit', T_('Edit'),'edit_playlist_' . $playlist->id); ?>
-        <?php echo T_('Edit'); ?>
-    </li>
-    <li>
         <a href="<?php echo Config::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
             <?php echo UI::get_icon('delete'); ?>
         </a>

@@ -26,9 +26,9 @@ $web_path = Config::get('web_path');
 $htmllang = str_replace("_","-",Config::get('lang'));
 $location = get_location();
 ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(Config::get('lang')) ? 'rtl' : 'ltr';?>">
-
 <head>
 <link rel="shortcut icon" href="<?php echo $web_path; ?>/favicon.ico" />
 <link rel="search" type="application/opensearchdescription+xml" title="<?php echo scrub_out(Config::get('site_title')); ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor" />
@@ -65,12 +65,16 @@ function forceIframe()
 }
 ?>
 <script type="text/javascript" charset="utf-8">
-  $(document).ready(function(){
-    $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
-  });
+    $(document).ready(function(){
+        $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
+    });
 
-  // Using the following work-around to set ajex.server.php path available from any javascript script.
-  var jsAjaxUrl = "<?php echo Config::get('ajax_url') ?>";
+    // Using the following workaround to set global variable available from any javascript script.
+    var jsAjaxUrl = "<?php echo Config::get('ajax_url') ?>";
+    var jsAjaxShowEditUrl = "<?php echo Config::get('ajax_show_edit_url') ?>";
+    var jsSaveTitle = "<?php echo T_('Save') ?>";
+    var jsCancelTitle = "<?php echo T_('Cancel') ?>";
+  
 </script>
 </head>
 <body <?php echo (Config::get('iframes')) ? "onLoad='forceIframe();'" : ""; ?>>

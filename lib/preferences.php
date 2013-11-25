@@ -295,9 +295,9 @@ function create_preference_input($name,$value)
         break;
         default:
             if (preg_match('/_pass$/', $name)) {
-                echo '<input type="password" size="16" name="' . $name . '" value="******" />';
+                echo '<input type="password" name="' . $name . '" value="******" />';
             } else {
-                echo '<input type="text" size="' . $len . '" name="' . $name . '" value="' . $value .'" />';
+                echo '<input type="text" name="' . $name . '" value="' . $value .'" />';
             }
         break;
 

@@ -25,64 +25,64 @@ $catalogs     = Catalog::get_catalogs();
 
 ?>
 <?php UI::show_box_top(T_('Catalogs')); ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
-<colgroup>
-  <col id="col_name" />
-  <col id="col_action" />
-</colgroup>
-<tr class="th-top">
-    <th class="cel_name"><?php echo T_('Name'); ?></th>
-    <th class="cel_action"><?php echo T_('Action'); ?></th>
-</tr>
-<?php foreach ($catalogs as $catalog) { ?>
-<tr class="<?php echo UI::flip_class(); ?>">
-    <td class="cel_name">
-        <a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_customize_catalog&amp;catalog_id=<?php echo $catalog->id; ?>">
-        <?php echo scrub_out($catalog->name); ?></a>
-        &nbsp;&nbsp;(<?php echo scrub_out($catalog->path); ?>)
-    </td>
-    <td class="cel_action">
-        <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>">
-        <?php echo T_('Add'); ?></a>&nbsp;|&nbsp;
-        <a href="<?php echo $web_path; ?>/admin/catalog.php?action=update_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>">
-        <?php echo T_('Verify'); ?></a>&nbsp;|&nbsp;
-        <a href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>">
-        <?php echo T_('Clean'); ?></a>&nbsp;|&nbsp;
-        <a href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service&amp;catalogs[]=<?php echo $catalog->id; ?>">
-        <?php echo T_('All'); ?></a>&nbsp;|&nbsp;
-        <a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_delete_catalog&amp;catalog_id=<?php echo $catalog->id; ?>">
-        <?php echo T_('Delete'); ?></a>
-    </td>
-</tr>
-<!--
-<tr class="<?php echo UI::flip_class(); ?>">
-    <td colspan="2">
-        <?php echo T_('Fast'); ?><input type="checkbox" name="fast" value="1" />
-        <?php echo T_('Gather Art'); ?><input type="checkbox" name="gather_art" value="1" />
-    </td>
-</tr>
--->
-<?php } // end foreach ?>
-<?php if (!count($catalogs)) { ?>
-<tr>
-    <td colspan="2">
-    <?php echo T_('No Catalogs Found'); ?>
-    </td>
-</tr>
-<?php } // end if no catalogs ?>
-<tr class="th-bottom">
-    <th class="cel_name"><?php echo T_('Name'); ?></th>
-    <th class="cel_action"><?php echo T_('Action'); ?></th>
-</tr>
+<table class="tabledata" cellspacing="0" cellpadding="0">
+    <colgroup>
+      <col id="col_name" />
+      <col id="col_action" />
+    </colgroup>
+    <tr class="th-top">
+        <th class="cel_name"><?php echo T_('Name'); ?></th>
+        <th class="cel_action"><?php echo T_('Action'); ?></th>
+    </tr>
+    <?php foreach ($catalogs as $catalog) { ?>
+    <tr class="<?php echo UI::flip_class(); ?>">
+        <td class="cel_name">
+            <a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_customize_catalog&amp;catalog_id=<?php echo $catalog->id; ?>">
+            <?php echo scrub_out($catalog->name); ?></a>
+            &nbsp;&nbsp;(<?php echo scrub_out($catalog->path); ?>)
+        </td>
+        <td class="cel_action">
+            <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>">
+            <?php echo T_('Add'); ?></a>&nbsp;|&nbsp;
+            <a href="<?php echo $web_path; ?>/admin/catalog.php?action=update_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>">
+            <?php echo T_('Verify'); ?></a>&nbsp;|&nbsp;
+            <a href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>">
+            <?php echo T_('Clean'); ?></a>&nbsp;|&nbsp;
+            <a href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service&amp;catalogs[]=<?php echo $catalog->id; ?>">
+            <?php echo T_('All'); ?></a>&nbsp;|&nbsp;
+            <a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_delete_catalog&amp;catalog_id=<?php echo $catalog->id; ?>">
+            <?php echo T_('Delete'); ?></a>
+        </td>
+    </tr>
+    <!--
+    <tr class="<?php echo UI::flip_class(); ?>">
+        <td colspan="2">
+            <?php echo T_('Fast'); ?><input type="checkbox" name="fast" value="1" />
+            <?php echo T_('Gather Art'); ?><input type="checkbox" name="gather_art" value="1" />
+        </td>
+    </tr>
+    -->
+    <?php } // end foreach ?>
+    <?php if (!count($catalogs)) { ?>
+    <tr>
+        <td colspan="2">
+        <?php echo T_('No Catalogs Found'); ?>
+        </td>
+    </tr>
+    <?php } // end if no catalogs ?>
+    <tr class="th-bottom">
+        <th class="cel_name"><?php echo T_('Name'); ?></th>
+        <th class="cel_action"><?php echo T_('Action'); ?></th>
+    </tr>
 </table>
 <div>
-<a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_all_catalogs"><?php echo T_('Clean All'); ?></a>
-<a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=update_all_catalogs"><?php echo T_('Verify All'); ?></a>
-<a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_all_catalogs"><?php echo T_('Add to All'); ?></a>
-<a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service"><?php echo T_('Update All'); ?></a><hr noshade="noshade" size="3" />
-<a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo T_('Add a Catalog'); ?></a>
-<a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=show_clear_stats"><?php echo T_('Clear Catalog Stats'); ?></a>
-<a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art"><?php echo T_('Gather Album Art'); ?></a>
+    <a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_all_catalogs"><?php echo T_('Clean All'); ?></a>
+    <a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=update_all_catalogs"><?php echo T_('Verify All'); ?></a>
+    <a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_all_catalogs"><?php echo T_('Add to All'); ?></a>
+    <a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service"><?php echo T_('Update All'); ?></a><hr noshade="noshade" size="3" />
+    <a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo T_('Add a Catalog'); ?></a>
+    <a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=show_clear_stats"><?php echo T_('Clear Catalog Stats'); ?></a>
+    <a class="button" href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art"><?php echo T_('Gather Album Art'); ?></a>
 </div>
 <?php UI::show_box_bottom(); ?>
 

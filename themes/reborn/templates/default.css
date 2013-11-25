@@ -893,7 +893,7 @@ span.page-nb {
 
 table.tabledata {
 	width:100%;
-    table-layout: fixed;
+    /*table-layout: fixed;*/
 	text-align:left;
 	/*border:1px solid #bbb;*/
     font-size: 14px;

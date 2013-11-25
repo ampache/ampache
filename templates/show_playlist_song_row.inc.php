@@ -22,7 +22,7 @@
 ?>
 <?php if (Config::get('directplay')) { ?>
 <td class="cel_directplay">
-    <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play song'),'play_playlist_song_' . $songid); ?>
+    <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id, 'play', T_('Play song'),'play_playlist_song_' . $song->id); ?>
 </td>
 <?php } ?>
 <td class="cel_add"><?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'playlist_add_' . $song->id); ?></td>
@@ -30,7 +30,7 @@
 <td class="cel_song"><?php echo $song->f_link; ?></td>
 <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
 <td class="cel_album"><?php echo $song->f_album_link; ?></td>
-<td class="cel_genre"><?php echo $song->f_genre_link; ?></td>
+<td class="cel_genre"><?php echo $song->f_tags; ?></td>
 <td class="cel_track"><?php echo $song->f_track; ?></td>
 <td class="cel_time"><?php echo $song->f_time; ?></td>
 <?php if (Config::get('ratings')) { ?>
@@ -46,7 +46,6 @@
     </a>
     <?php } ?>
     <?php if ($playlist->has_access()) { ?>
-        <?php echo Ajax::button('?page=playlist&action=edit_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'],'edit', T_('Edit'),'track_edit_' . $object['track_id']); ?>
         <?php echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'],'delete', T_('Delete'),'track_del_' . $object['track_id']); ?>
     <?php } ?>
 </td>

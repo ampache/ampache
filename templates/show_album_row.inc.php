@@ -62,7 +62,7 @@ if (Art::is_enabled()) {
         </a>
     <?php } ?>
     <?php if (Access::check('interface','50')) { ?>
-        <a id="<?php echo 'edit_song_'.$song->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '<?php echo T_('Save') ?>', '<?php echo T_('Cancel') ?>')">
+        <a id="<?php echo 'edit_song_'.$song->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '<?php echo Tag::get_display(Tag::get_tags()) ?>')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
     <?php } ?>

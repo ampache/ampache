@@ -20,36 +20,27 @@
  *
  */
 ?>
-<td colspan="6">
-    <form method="post" id="edit_live_stream_<?php echo $radio->id; ?>">
-        <table class="inline-edit" cellpadding="3" cellspacing="0">
+<div>
+    <form method="post" id="edit_live_stream_<?php echo $radio->id; ?>" class="edit_dialog_content">
+        <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
-                <th><?php echo T_('Name'); ?></th>
-                <th><?php echo T_('Stream URL'); ?></th>
-                <th><?php echo T_('Homepage'); ?></th>
-                <th><?php echo T_('Codec'); ?></th>
-                <th>&nbsp;</th>
+                <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($radio->name); ?>" /></td>
             </tr>
             <tr>
-                <td>
-                    <input type="text" name="name" value="<?php echo scrub_out($radio->name); ?>" size="9" />
-                </td>
-                <td>
-                    <input type="text" name="url" value="<?php echo scrub_out($radio->url); ?>" size ="12" />
-                </td>
-                <td>
-                    <input type="text" name="site_url" value="<?php echo scrub_out($radio->site_url); ?>" size="9" />
-                </td>
-                <td>
-                    <input type="text" name="codec" value="<?php echo scrub_out($radio->codec); ?>" size="6" />
-                </td>
-                <td>
-                    <input type="hidden" name="id" value="<?php echo $radio->id; ?>" />
-                    <input type="hidden" name="type" value="live_stream_row" />
-                    <?php echo Ajax::button('?action=edit_object&id=' . $radio->id . '&type=live_stream_row','download', T_('Save Changes'),'save_live_stream_' . $radio->id,'edit_live_stream_' . $radio->id); ?>
-                    <?php echo Ajax::button('?action=cancel_edit_object&id=' . $radio->id . '&type=live_stream_row','cancel', T_('Cancel Changes'),'Cancel_live_stream_' . $radio->id,'edit_live_stream_' . $radio->id); ?>
-                </td>
+                <td class="edit_dialog_content_header"><?php echo T_('Stream URL') ?></td>
+                <td><input type="text" name="url" value="<?php echo scrub_out($radio->url); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Homepage') ?></td>
+                <td><input type="text" name="site_url" value="<?php echo scrub_out($radio->site_url); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Codec') ?></td>
+                <td><input type="text" name="codec" value="<?php echo scrub_out($radio->codec); ?>" /></td>
             </tr>
         </table>
+        <input type="hidden" name="id" value="<?php echo $radio->id; ?>" />
+        <input type="hidden" name="type" value="live_stream_row" />
     </form>
-</td>
+</div>

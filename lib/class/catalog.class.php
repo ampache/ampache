@@ -144,13 +144,13 @@ abstract class Catalog extends database_object
 
                     switch ($field['type']) {
                         case 'checkbox':
-                            echo "<input type='checkbox' size='10' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') . "/>";
+                            echo "<input type='checkbox' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') . "/>";
                             break;
                         case 'password':
-                            echo "<input type='password' size='60' name='" . $key . "' value='" . $field['value'] . "' />";
+                            echo "<input type='password' name='" . $key . "' value='" . $field['value'] . "' />";
                             break;
                         default:
-                            echo "<input type='text' size='60' name='" . $key . "' value='" . $field['value'] . "' />";
+                            echo "<input type='text' name='" . $key . "' value='" . $field['value'] . "' />";
                             break;
                     }
                     echo "</td></tr>";

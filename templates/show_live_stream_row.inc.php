@@ -20,17 +20,24 @@
  *
  */
 ?>
+<?php if (Config::get('directplay')) { ?>
+<td class="cel_directplay">
+    <?php echo Ajax::button('?page=stream&action=directplay&playtype=live_stream&stream_id=' . $radio->id, 'play', T_('Play live stream'),'play_live_stream_' . $radio->id); ?>
+</td>
+<?php } ?>
 <td class="cel_add">
     <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id,'add', T_('Add'),'add_radio_' . $radio->id); ?>
 </td>
 <td class="cel_streamname"><?php echo $radio->f_name_link; ?></td>
+<td class="cel_streamurl"><?php echo $radio->f_url_link; ?></td>
 <td class="cel_codec"><?php echo $radio->codec; ?></td>
-<td class="cel_tag"><?php echo $radio->f_tag; ?></td>
 <td class="cel_action">
     <?php if (Access::check('interface','50')) { ?>
-        <?php echo Ajax::button('?action=show_edit_object&type=live_stream_row&id=' . $radio->id,'edit', T_('Edit'),'edit_radio_' . $radio->id); ?>
+        <a id="<?php echo 'edit_live_stream_'.$radio->id ?>" onclick="showEditDialog('live_stream_row', '<?php echo $radio->id ?>', '<?php echo 'edit_live_stream_'.$radio->id ?>', '<?php echo T_('Live Stream edit') ?>', '')">
+            <?php echo UI::get_icon('edit', T_('Edit')); ?>
+        </a>
     <?php } ?>
     <?php if (Access::check('interface','75')) { ?>
-        <?php echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $radio->id,'delete', T_('Delete'),'delete_radio_' . $radio->id); ?>
+        <?php echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $radio->id,'delete', T_('Delete'),'delete_live_stream_' . $radio->id); ?>
     <?php } ?>
 </td>

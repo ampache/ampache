@@ -22,24 +22,24 @@
 ?>
 <?php UI::show_box_top(T_('Create a new playlist')); ?>
 <form name="songs" method="post" action="<?php echo Config::get('web_path'); ?>/playlist.php">
-<table>
-<tr>
-    <td><?php echo T_('Name'); ?>:</td>
-    <td><input type="text" name="playlist_name" size="20" /></td>
-</tr>
-<tr>
-    <td><?php echo T_('Type'); ?>:</td>
-    <td>
-    <select name="type">
-    <option value="private"> Private </option>
-    <option value="public"> Public </option>
-    </select>
-    </td>
-</tr>
-</table>
-<div class="formValidation">
-    <input class="button" type="submit" value="<?php echo T_('Create'); ?>" />
-    <input type="hidden" name="action" value="Create" />
-</div>
+    <table class="tabledata" cellspacing="0" cellpadding="0">
+        <tr>
+            <td><?php echo T_('Name'); ?>:</td>
+            <td><input type="text" name="playlist_name" /></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Type'); ?>:</td>
+            <td>
+                <select name="type">
+                    <option value="private"> Private </option>
+                    <option value="public"> Public </option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <div class="formValidation">
+        <input class="button" type="submit" value="<?php echo T_('Create'); ?>" />
+        <input type="hidden" name="action" value="Create" />
+    </div>
 </form>
 <?php UI::show_box_bottom(); ?>

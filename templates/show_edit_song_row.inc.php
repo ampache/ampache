@@ -22,7 +22,7 @@
 ?>
 <div>
     <form method="post" id="edit_song_<?php echo $song->id; ?>" class="edit_dialog_content">
-        <table>
+        <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Title') ?></td>
                 <td><input type="text" name="title" value="<?php echo scrub_out($song->title); ?>" /></td>
@@ -47,7 +47,7 @@
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Track') ?></td>
-                <td><input type="text" name="track" size="3" value="<?php echo scrub_out($song->track); ?>" /></td>
+                <td><input type="text" name="track" value="<?php echo scrub_out($song->track); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>

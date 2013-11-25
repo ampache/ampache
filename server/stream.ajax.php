@@ -80,7 +80,13 @@ switch ($_REQUEST['action']) {
                 $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=single_song&song_id='.$_REQUEST['song_id'];
             break;
             case 'playlist':
-                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=playlist&playlist_id='.$_REQUEST['album_id'];
+                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=playlist&playlist_id='.$_REQUEST['playlist_id'];
+            break;
+            case 'smartplaylist':
+                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=smartplaylist&playlist_id='.$_REQUEST['playlist_id'];
+            break;
+            case 'live_stream':
+                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=live_stream&stream_id='.$_REQUEST['stream_id'];
             break;
         }
         $results['rfc3514'] = '<script type="text/javascript">reloadUtil(\''.$_SESSION['iframe']['target'] . '\');</script>';

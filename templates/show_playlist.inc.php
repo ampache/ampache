@@ -62,10 +62,6 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
     </li>
 <?php if ($playlist->has_access()) { ?>
     <li>
-        <?php echo Ajax::button('?action=show_edit_object&type=playlist_title&id=' . $playlist->id,'edit', T_('Edit'),'edit_playlist_' . $playlist->id); ?>
-        <?php echo Ajax::text('?action=show_edit_object&type=playlist_title&id=' . $playlist->id, T_('Edit'),'edit_playlist_text_' . $playlist->id); ?>
-    </li>
-    <li>
         <a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>"  onclick="return confirm('<?php echo T_('Do you really want to delete the playlist?'); ?>');">
             <?php echo UI::get_icon('delete'); ?>
             <?php echo T_('Delete'); ?>
