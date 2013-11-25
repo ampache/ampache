@@ -408,6 +408,7 @@ class Catalog_soundcloud extends Catalog
     {
         parent::format();
         $this->f_info = UI::truncate($this->userid, Config::get('ellipse_threshold_title'));
+        $this->f_full_info = $this->userid;
     }
 
     public function prepare_media($media)

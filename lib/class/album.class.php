@@ -123,6 +123,7 @@ class Album extends database_object
             $sql = "SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, " .
                 "COUNT(`song`.`id`) AS `song_count`, " .
                 "SUM(`song`.`time`) as `total_duration`," .
+                "`song`.`catalog` as `catalog_id`," .
                 "`artist`.`name` AS `artist_name`, " .
                 "`artist`.`prefix` AS `artist_prefix`, " .
                 "`artist`.`id` AS `artist_id`, `song`.`album`" .
@@ -166,6 +167,7 @@ class Album extends database_object
             "COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, " .
             "COUNT(`song`.`id`) AS `song_count`, " .
             "SUM(`song`.`time`) as `total_duration`," .
+            "`song`.`catalog` as `catalog_id`,".
             "`artist`.`name` AS `artist_name`, " .
             "`artist`.`prefix` AS `artist_prefix`, " .
             "`artist`.`id` AS `artist_id` " .

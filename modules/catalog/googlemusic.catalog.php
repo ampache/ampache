@@ -349,7 +349,7 @@ class Catalog_googlemusic extends Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = UI::truncate($this->email, Config::get('ellipse_threshold_title'));
+        $this->f_full_info = $this->email;
     }
 
     public function prepare_media($media)

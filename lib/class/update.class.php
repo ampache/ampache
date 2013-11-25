@@ -313,6 +313,9 @@ class Update
 
         $update_string = '- Remove unused live_stream fields and add codec field.<br />';
         $version[] = array('version' => '360022', 'description' => $update_string);
+        
+        $update_string = '- Enable/Disable SubSonic and Plex backend.<br />';
+        $version[] = array('version' => '360023', 'description' => $update_string);
 
         return $version;
 
@@ -1688,7 +1691,7 @@ class Update
         Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('song_page_title','0','Show current song in Web player page title',25,'string','interface')";
+            "VALUES ('song_page_title','0','Show current song in Web player page title',25,'boolean','interface')";
         $retval = Dba::write($sql);
 
         $id = Dba::insert_id();
@@ -1711,6 +1714,34 @@ class Update
 
         $sql = "ALTER TABLE `stream_playlist` ADD `codec` VARCHAR(32) NULL AFTER `time`";
         Dba::write($sql);
+
+        return true;
+    }
+    
+    /**
+     * update_360023
+     *
+     * Enable/Disable SubSonic and Plex backend
+     */
+    public static function update_360023()
+    {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('subsonic_backend','0','Use SubSonic backend',25,'boolean','system')";
+        Dba::write($sql);
+
+        $id = Dba::insert_id();
+
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+        
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('plex_backend','0','Use Plex backend',25,'boolean','system')";
+        Dba::write($sql);
+
+        $id = Dba::insert_id();
+
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
 
         return true;
     }

@@ -23,6 +23,11 @@
 define('NO_SESSION','1');
 require_once '../lib/init.php';
 
+if (!Config::get('subsonic_backend')) {
+    echo "Disabled.";
+    exit;
+}
+
 $action = strtolower($_GET['action']);
 $f = $_GET['f'];
 /* Set the correct default headers */
