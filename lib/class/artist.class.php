@@ -380,7 +380,6 @@ class Artist extends database_object
     /**
      * update
      * This takes a key'd array of data and updates the current artist
-     * it will flag songs as neeed
      */
     public function update($data)
     {
@@ -402,7 +401,6 @@ class Artist extends database_object
 
         if ($updated) {
             foreach ($songs as $song_id) {
-                Flag::add($song_id,'song','retag','Interface Artist Update');
                 Song::update_utime($song_id);
             }
             Stats::gc();

@@ -516,11 +516,6 @@ class Catalog_local extends Catalog
 
             $media = new $media_type($row['id']);
 
-            if (Flag::has_flag($media->id, $type)) {
-                debug_event('verify', "$media->file is flagged, skipping", 5);
-                continue;
-            }
-
             $info = self::update_media_from_tags($media, $this->sort_pattern,$this->rename_pattern);
             if ($info['change']) {
                 $changed++;

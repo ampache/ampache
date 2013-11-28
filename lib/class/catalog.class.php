@@ -990,7 +990,6 @@ abstract class Catalog extends database_object
         Album::gc();
         Artist::gc();
         Art::gc();
-        Flag::gc();
         Stats::gc();
         Rating::gc();
         Userflag::gc();
@@ -999,7 +998,6 @@ abstract class Catalog extends database_object
         Shoutbox::gc();
         Tag::gc();
         debug_event('catalog', 'Database cleanup ended', 5);
-
     }
 
     /**

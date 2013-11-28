@@ -35,60 +35,6 @@
                 </select>
             </td>
         </tr>
-        <!--
-        <tr>
-            <td colspan="2">
-                <table>
-                    <tr>
-                        <td><?php echo T_('Catalog Statistics'); ?>:</td>
-                        <td>
-                            <input type="checkbox" name="cat_stats" value="yes" />
-                        </td>
-                        <td><?php echo T_('Most Popular Albums'); ?>:</td>
-                        <td>
-                            <input type="checkbox" name="pop_albums" value="yes" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?php echo T_('Latest Artist Additions'); ?>:</td>
-                        <td>
-                            <input type="checkbox" name="new_artists" value="yes" />
-                        </td>
-                        <td><?php echo T_('Most Popular Artists'); ?>:</td>
-                        <td>
-                            <input type="checkbox" name="pop_artists" value="yes" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?php echo T_('Latest Album Additions'); ?>:</td>
-                        <td>
-                            <input type="checkbox" name="new_albums" value="yes" />
-                        </td>
-                        <td><?php echo T_('Most Popular Songs'); ?>:</td>
-                        <td>
-                            <input type="checkbox" name="pop_songs" value="yes" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?php echo T_('Flagged Songs'); ?>:</td>
-                        <td>
-                            <input type="checkbox" name="flagged" value="yes" />
-                        </td>
-                        <td><?php echo T_('Disabled Songs'); ?>:</td>
-                        <td>
-                            <input type="checkbox" name="disabled" value="yes" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan = "2"><?php echo T_('Most Popular Threshold in days'); ?>:</td>
-                        <td>
-                            <input type="text" name="threshold" value="<?php echo Config::get('popular_threshold'); ?>" />
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        -->
         <tr>
             <td><?php echo T_('From'); ?>:</td>
             <td>

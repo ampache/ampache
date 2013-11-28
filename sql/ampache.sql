@@ -240,39 +240,6 @@ LOCK TABLES `dynamic_playlist_data` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `flagged`
---
-
-DROP TABLE IF EXISTS `flagged`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `flagged` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `object_id` int(11) unsigned NOT NULL DEFAULT '0',
-  `object_type` enum('artist','album','song') CHARACTER SET utf8 DEFAULT NULL,
-  `user` int(11) NOT NULL,
-  `flag` enum('delete','retag','reencode','other') CHARACTER SET utf8 DEFAULT NULL,
-  `date` int(11) unsigned NOT NULL DEFAULT '0',
-  `approved` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `comment` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `date` (`date`,`approved`),
-  KEY `object_id` (`object_id`),
-  KEY `object_type` (`object_type`),
-  KEY `user` (`user`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `flagged`
---
-
-LOCK TABLES `flagged` WRITE;
-/*!40000 ALTER TABLE `flagged` DISABLE KEYS */;
-/*!40000 ALTER TABLE `flagged` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `image`
 --
 

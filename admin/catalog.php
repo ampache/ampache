@@ -32,12 +32,6 @@ UI::show_header();
 
 /* Big switch statement to handle various actions */
 switch ($_REQUEST['action']) {
-    case 'fixed':
-        /* Does this use now? */
-        delete_flagged($flag);
-        $type = 'show_flagged_songs';
-        require Config::get('prefix') . '/templates/flag.inc';
-    break;
     case 'add_to_all_catalogs':
         $_REQUEST['catalogs'] = Catalog::get_catalogs();
     case 'add_to_catalog':

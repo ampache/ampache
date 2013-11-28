@@ -316,9 +316,11 @@ class Update
 
         $update_string = '- Enable/Disable SubSonic and Plex backend.<br />';
         $version[] = array('version' => '360023', 'description' => $update_string);
+        
+        $update_string = '- Drop flagged table.<br />';
+        $version[] = array('version' => '360024', 'description' => $update_string);
 
         return $version;
-
     }
 
     /**
@@ -1742,6 +1744,19 @@ class Update
 
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         Dba::write($sql, array($id));
+
+        return true;
+    }
+    
+    /**
+     * update_360024
+     *
+     * Drop unused flagged table
+     */
+    public static function update_360024()
+    {
+        $sql = "DROP TABLE `flagged`";
+        Dba::write($sql);
 
         return true;
     }

@@ -27,13 +27,11 @@
     <td class="cel_comment"><?php echo scrub_out($shout->text); ?></td>
     <td class="cel_date"><?php echo $shout->date; ?></td>
     <td class="cel_action">
-
-                <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&amp;shout_id=<?php echo $shout->id; ?>">
-                <?php echo UI::get_icon('edit', T_('Edit')); ?>
-                </a>
-
-                <a href="<?php echo $web_path; ?>/admin/shout.php?action=delete&amp;shout_id=<?php echo $shout->id; ?>">
-                <?php echo UI::get_icon('delete', T_('Delete')); ?>
-                </a>
+        <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&amp;shout_id=<?php echo $shout->id; ?>">
+            <?php echo UI::get_icon('edit', T_('Edit')); ?>
+        </a>
+        <a href="<?php echo $web_path; ?>/admin/shout.php?action=delete&amp;shout_id=<?php echo $shout->id; ?>">
+            <?php echo UI::get_icon('delete', T_('Delete')); ?>
+        </a>
     </td>
 </tr>

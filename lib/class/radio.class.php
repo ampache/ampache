@@ -180,14 +180,6 @@ class Radio extends database_object implements media
     } // play_url
 
     /**
-     * has_flag
-     * This is needed by the media interface
-     */
-    public function has_flag()
-    {
-    } // has_flag
-
-    /**
      * get_transcode_settings
      *
      * This will probably never be implemented

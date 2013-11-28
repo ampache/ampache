@@ -529,7 +529,6 @@ class Query
             case 'playlist_song':
             case 'smartplaylist':
             case 'song':
-            case 'flagged':
             case 'catalog':
             case 'album':
             case 'artist':
@@ -803,10 +802,6 @@ class Query
                 case 'smartplaylist':
                     self::set_select('`search`.`id`');
                     $sql = "SELECT %%SELECT%% FROM `search` ";
-                break;
-                case 'flagged':
-                    $this->set_select("`flagged`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `flagged` ";
                 break;
                 case 'shoutbox':
                     $this->set_select("`user_shout`.`id`");

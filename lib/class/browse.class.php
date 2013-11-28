@@ -184,11 +184,6 @@ class Browse extends Query
                 require_once Config::get('prefix') . '/templates/show_manage_shoutbox.inc.php';
                 UI::show_box_bottom();
             break;
-            case 'flagged':
-                UI::show_box_top(T_('Flagged Records'),$class);
-                require_once Config::get('prefix') . '/templates/show_flagged.inc.php';
-                UI::show_box_bottom();
-            break;
             case 'tag':
                 Tag::build_cache($tags);
                 UI::show_box_top(T_('Tag Cloud'),$class);

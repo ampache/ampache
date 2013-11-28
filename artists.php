@@ -145,20 +145,6 @@ switch ($_REQUEST['action']) {
             } // elseif different artist and id
             //if no changes, no changes
 
-            //now flag for id3tag update if selected, and something actually happaned
-            if ($ret && make_bool($_POST['update_id3'])) {
-
-                /* Set the rename information in the db */
-                foreach ($songs as $song) {
-                    $flag = new Flag();
-                    $flag->add($song->id,"song","retag","Renamed artist, retag");
-                    $flag_qstring = "REPLACE INTO flagged " .
-                        "SET type = 'setid3', song = '" . $song->id . "', date = '" . time() . "', user = '" . $GLOBALS['user']->username . "'";
-                            Dba::write($flag_qstring);
-                    }
-
-            } // end if they wanted to update
-
             // show something other than a blank screen after this
             if ($ret) {
                 show_confirmation (

@@ -22,24 +22,18 @@
 ?>
 <?php UI::show_box_top(T_('Find Duplicates'), 'box box_duplicate'); ?>
 <form name="duplicates" action="<?php echo Config::get('web_path'); ?>/admin/duplicates.php?action=find_duplicates" method="post" enctype="multipart/form-data" >
-<table cellspacing="0" cellpadding="3">
-<tr>
-    <td valign="top"><strong><?php echo T_('Search Type'); ?>:</strong></td>
-        <td>
-    <?php
-        $name = 'check_' . scrub_in($_REQUEST['search_type']);
-        ${$name} = ' checked="checked" ';
-    ?>
-    <input type="radio" name="search_type" value="title"<?php echo $check_title; ?>/><?php echo T_('Title'); ?><br />
-        <input type="radio" name="search_type" value="artist_title"<?php echo $check_artist_title; ?>/><?php echo T_('Artist and Title'); ?><br />
-        <input type="radio" name="search_type" value="artist_album_title"<?php echo $check_artist_album_title; ?>/><?php echo T_('Artist, Album and Title'); ?><br />
-        <?php if ($_REQUEST['search_disabled']) { $disabled_check = ' checked="checked"'; } ?>
-        <input type="checkbox" name="search_disabled" value="1" <?php echo $disabled_check; ?>/><?php echo T_('Search Disabled Songs'); ?><br />
-    </td>
-</tr>
-</table>
-<div class="formValidation">
-      <input type="submit" value="<?php echo T_('Find Duplicates'); ?>" />
-</div>
+    <table cellspacing="0" cellpadding="3">
+        <tr>
+            <td valign="top"><strong><?php echo T_('Search Type'); ?>:</strong></td>
+            <td>
+                <input type="radio" name="search_type" value="title" /><?php echo T_('Title'); ?><br />
+                <input type="radio" name="search_type" value="artist_title" /><?php echo T_('Artist and Title'); ?><br />
+                <input type="radio" name="search_type" value="artist_album_title" /><?php echo T_('Artist, Album and Title'); ?><br />
+            </td>
+        </tr>
+    </table>
+    <div class="formValidation">
+          <input type="submit" value="<?php echo T_('Find Duplicates'); ?>" />
+    </div>
 </form>
 <?php UI::show_box_bottom(); ?>

@@ -61,10 +61,4 @@ interface media
      */
     public function get_transcode_settings($target = null);
 
-    /**
-     * has_flag
-     *
-     */
-    public function has_flag();
-
 } // end interface

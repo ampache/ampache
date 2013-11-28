@@ -385,7 +385,7 @@ class Album extends database_object
     /**
      * update
      * This function takes a key'd array of data and updates this object
-     * as needed, and then throws down with a flag
+     * as needed
      */
     public function update($data)
     {
@@ -420,9 +420,7 @@ class Album extends database_object
         }
 
         if ($updated) {
-            // Flag all songs
             foreach ($songs as $song_id) {
-                Flag::add($song_id,'song','retag','Interface Album Update');
                 Song::update_utime($song_id);
             } // foreach song of album
             Stats::gc();

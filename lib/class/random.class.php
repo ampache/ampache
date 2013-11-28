@@ -455,7 +455,6 @@ class Random implements media
 
     public function get_stream_types() { }
     public function get_transcode_settings($target = null) { }
-    public function has_flag() { }
     public function format() { }
 
 } //end of random class

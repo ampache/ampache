@@ -464,24 +464,6 @@ class Song extends database_object implements media
     } // get_album_name
 
     /**
-     * has_flag
-     * This just returns true or false depending on if this song is flagged for something
-     * We don't care what so we limit the SELECT to 1
-     */
-    public function has_flag()
-    {
-        $sql = "SELECT `id` FROM `flagged` WHERE `object_type`='song' AND `object_id`='$this->id' LIMIT 1";
-        $db_results = Dba::read($sql);
-
-        if (Dba::fetch_assoc($db_results)) {
-            return true;
-        }
-
-        return false;
-
-    } // has_flag
-
-    /**
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played
@@ -548,8 +530,7 @@ class Song extends database_object implements media
     /**
      * update
      * This takes a key'd array of data does any cleaning it needs to
-     * do and then calls the helper functions as needed. This will also
-     * cause the song to be flagged
+     * do and then calls the helper functions as needed.
      */
     public function update($data)
     {
@@ -586,11 +567,6 @@ class Song extends database_object implements media
                 break;
             } // end whitelist
         } // end foreach
-
-        // If a field was changed then we need to flag this mofo
-        if ($updated) {
-            Flag::add($this->id, 'song', 'retag', 'Interface Update');
-        }
 
         return true;
     } // update

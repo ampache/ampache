@@ -267,8 +267,8 @@ ratings = "true"
 ; User flags
 ; This allows user flags for almost any object in ampache
 ; POSSIBLE VALUES: false true
-; DEFAULT: false
-;userflags = "false"
+; DEFAULT: true
+userflags = "true"
 
 ; Direct play
 ; This allows user to play directly a song or album
@@ -280,8 +280,8 @@ directplay = "true"
 ; This turns on / off all of the "social" features of ampache
 ; default is on, but if you don't care and just want music
 ; turn this off to disable all social features. 
-; DEFAULT: true
-sociable = "true"
+; DEFAULT: false
+;sociable = "false"
 
 ; This options will turn on/off Demo Mode
 ; If Demo mode is on you can not play songs or update your catalog

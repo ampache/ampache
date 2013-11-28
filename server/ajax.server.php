@@ -40,10 +40,6 @@ header("Pragma: no-cache");
 $page = isset($_REQUEST['page']) ? $_REQUEST['page'] : null;
 
 switch ($page) {
-    case 'flag':
-        require_once Config::get('prefix') . '/server/flag.ajax.php';
-        exit;
-    break;
     case 'stats':
         require_once Config::get('prefix') . '/server/stats.ajax.php';
         exit;
