@@ -37,7 +37,6 @@ if ($_REQUEST['action'] == 'delete_playlist') {
 
 UI::show_header();
 
-
 /* Switch on the action passed in */
 switch ($_REQUEST['action']) {
     case 'add_dyn_song':
@@ -48,8 +47,7 @@ switch ($_REQUEST['action']) {
         }
 
         $playlist->add_dyn_song();
-        $_SESSION['data']['playlist_id']        = $playlist->id;
-        show_playlist($playlist);
+        $_SESSION['data']['playlist_id'] = $playlist->id;
     break;
     case 'create_playlist':
         /* Check rights */
@@ -58,12 +56,12 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $playlist_name    = scrub_in($_REQUEST['playlist_name']);
-        $playlist_type    = scrub_in($_REQUEST['type']);
+        $playlist_name = scrub_in($_REQUEST['playlist_name']);
+        $playlist_type = scrub_in($_REQUEST['type']);
 
-        $playlist->create($playlist_name,$playlist_type);
-        $_SESSION['data']['playlist_id']        = $playlist->id;
-        show_confirmation(T_('Playlist Created'), sprintf(T_('%1$s (%2$s) has been created'), $playlist_name,  $playlist_type),'playlist.php');
+        $playlist->create($playlist_name, $playlist_type);
+        $_SESSION['data']['playlist_id'] = $playlist->id;
+        show_confirmation(T_('Playlist Created'), sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type), 'playlist.php');
     break;
     case 'delete_playlist':
         // If we made it here, we didn't have sufficient rights.
@@ -76,7 +74,6 @@ switch ($_REQUEST['action']) {
             break;
         }
         $playlist->remove_songs($_REQUEST['song']);
-        show_playlist($playlist);
     break;
     case 'show_playlist':
         $playlist = new Playlist($_REQUEST['playlist_id']);
@@ -115,20 +112,34 @@ switch ($_REQUEST['action']) {
         show_confirmation($title, $body, Config::get('web_path') . '/playlist.php?action=' . $url);
     break;
     case 'set_track_numbers':
+        debug_event('playlist', 'Set track numbers called.', '5');
+        
+        $playlist = new Playlist($_REQUEST['playlist_id']);
+    
         /* Make sure they have permission */
         if (!$playlist->has_access()) {
             UI::access_denied();
             break;
         }
-                $song_ids = scrub_in($_REQUEST['song']);
-                foreach ($song_ids as $song_id) {
-                        $track = scrub_in($_REQUEST['tr_' . $song_id]);
-                        $changes[] = array('song_id' => $song_id, 'track' => $track);
+        
+        // Retrieving final song order from url
+        foreach ($_GET as $key => $data) {
+            $_GET[$key] = unhtmlentities(scrub_in($data));
+            debug_event('playlist', $key.'='.$_GET[$key], '5');
+        }
+        
+        if (isset($_GET['order'])) {
+            $songs = explode(";", $_GET['order']);
+            $track = 1;
+            foreach ($songs as $song_id) {
+                if ($song_id != '') {
+                    $playlist->update_track_number($song_id, $track);
+                    ++$track;
                 }
-
-                $playlist->update_track_numbers($changes);
-
-                show_playlist($playlist);
+            }
+        }
+        
+        //require Config::get('prefix') . '/templates/show_playlist.inc.php';
         break;
     case 'prune_empty':
         /* Make sure they have permission */

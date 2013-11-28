@@ -95,7 +95,7 @@ function get_location()
 
     /* Sanatize the $_SERVER['PHP_SELF'] variable */
     $source = str_replace(Config::get('raw_web_path'), "", $source);
-    $location['page']     = preg_replace("/^\/(.+\.php)\/?.*/","$1",$source);
+    $location['page'] = preg_replace("/^\/(.+\.php)\/?.*/","$1",$source);
 
     switch ($location['page']) {
         case 'index.php':

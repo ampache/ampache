@@ -319,10 +319,10 @@ class Playlist extends playlist_object
      * update_track_number
      * This takes a playlist_data.id and a track (int) and updates the track value
      */
-    public function update_track_number($track_id,$track)
+    public function update_track_number($track_id, $index)
     {
-        $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ? AND `playlist` = ?";
-        $db_results = Dba::write($sql, array($track, $track_id, $this->id));
+        $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($index, $track_id));
 
     } // update_track_number
 
@@ -417,14 +417,13 @@ class Playlist extends playlist_object
         } // end while results
 
         foreach ($results as $data) {
-            $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
-            $db_results = Dba::write($sql, array($data['track'], $data['id']));
+            self::update_track_number($data['id'], $data['track']);
         } // foreach re-ordered results
 
         return true;
 
     } // normalize_tracks
-
+    
     /**
      * delete_track
      * this deletes a single track, you specify the playlist_data.id here

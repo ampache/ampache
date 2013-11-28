@@ -23,22 +23,8 @@
 $web_path = Config::get('web_path');
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
-    <colgroup>
-        <col id="col_directplay" />
-        <col id="col_add" />
-        <col id="col_track" />
-        <col id="col_song" />
-        <col id="col_artist" />
-        <col id="col_album" />
-        <col id="col_genre" />
-        <col id="col_track" />
-        <col id="col_time" />
-        <col id="col_rating" />
-        <col id="col_userflag" />
-        <col id="col_action" />
-    </colgroup>
-    <tbody id="sortableplaylist">
+<form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
+    <table id="reorder_playlist_table" class="tabledata" cellpadding="0" cellspacing="0">
         <tr class="th-top">
         <?php if (Config::get('directplay')) { ?>
             <th class="cel_directplay"><?php echo T_('Play'); ?></th>
@@ -49,7 +35,6 @@ $web_path = Config::get('web_path');
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_genre"><?php echo T_('Genre'); ?></th>
-            <th class="cel_track"><?php echo T_('Track'); ?></th>
             <th class="cel_time"><?php echo T_('Time'); ?></th>
         <?php if (Config::get('ratings')) {
             Rating::build_cache('song', array_map(create_function('$i', 'return $i[\'object_id\'];'), $object_ids));
@@ -63,16 +48,19 @@ $web_path = Config::get('web_path');
         <?php } ?>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
         </tr>
-        <?php
-        foreach ($object_ids as $object) {
-            $song = new Song($object['object_id']);
-            $song->format();
-            $playlist_track = $object['track'];
-        ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="track_<?php echo $object['track_id']; ?>">
-            <?php require Config::get('prefix') . '/templates/show_playlist_song_row.inc.php'; ?>
-        </tr>
-        <?php } ?>
+        
+        <tbody id="sortableplaylist">
+            <?php foreach ($object_ids as $object) {
+                    $song = new Song($object['object_id']);
+                    $song->format();
+                    $playlist_track = $object['track'];
+            ?>
+                    <tr class="<?php echo UI::flip_class(); ?>" id="track_<?php echo $object['track_id']; ?>">
+                        <?php require Config::get('prefix') . '/templates/show_playlist_song_row.inc.php'; ?>
+                    </tr>
+            <?php } ?>
+        </tbody>
+
         <tr class="th-bottom">
         <?php if (Config::get('directplay')) { ?>
             <th class="cel_directplay"><?php echo T_('Play'); ?></th>
@@ -83,7 +71,6 @@ $web_path = Config::get('web_path');
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_genre"><?php echo T_('Genre'); ?></th>
-            <th class="cel_track"><?php echo T_('Track'); ?></th>
             <th class="cel_time"><?php echo T_('Time'); ?></th>
         <?php if (Config::get('ratings')) { ?>
             <th class="cel_rating"><?php echo T_('Rating'); ?></th>
@@ -93,6 +80,6 @@ $web_path = Config::get('web_path');
         <?php } ?>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
         </tr>
-    </tbody>
-</table>
+    </table>
+</form>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>

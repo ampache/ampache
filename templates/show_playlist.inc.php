@@ -40,6 +40,10 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
         <a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('statistics', T_('Normalize Tracks')); ?></a>
         <?php echo T_('Normalize Tracks'); ?>
     </li>
+    <li>
+        <a onclick="submitPlaylistOrder('<?php echo Config::get('web_path'); ?>/playlist.php?action=set_track_numbers&amp;playlist_id=<?php echo $playlist->id; ?>', 'reorder_playlist_table');"><?php echo UI::get_icon('download', T_('Save Tracks Order')); ?></a>
+        <?php echo T_('Save Tracks Order'); ?>
+    </li>
 <?php if (Access::check_function('batch_download')) { ?>
     <li>
         <a href="<?php echo Config::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
