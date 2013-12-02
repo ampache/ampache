@@ -116,4 +116,9 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
     <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
 </tr>
 </table>
+<script language="javascript" type="text/javascript">
+$(document).ready(function(){
+    $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
+});
+</script>
 <?php UI::show_box_bottom(); ?>
