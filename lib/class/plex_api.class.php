@@ -81,6 +81,80 @@ class Plex_Api
         self::apiOutput($html);
         exit();
     }
+    
+    public static function validateMyPlex($myplex_username, $myplex_password, $clientUDID)
+    {
+        $options = array(
+            CURLOPT_USERPWD => $myplex_username . ':' . $myplex_password,
+            //CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+            CURLOPT_POST => true,
+        );
+        
+        $headers = array(
+            'Content-Length: 0'
+        );
+        
+        $req = array(
+            'action' => 'users/sign_in.xml',
+            'udid' => $clientUDID,
+        );
+        
+        $xml = self::myPlexRequest($req, $options, $headers);
+        return $xml['authenticationToken'];
+    }
+    
+    public static function registerMyPlex($clientUDID, $authtoken)
+    {
+        $headers = array (
+            
+        );
+        
+        $req = array(
+            'action' => 'servers.xml?auth_token=' . $authtoken,
+            'udid' => $clientUDID,
+        );
+        
+        $xml = self::myPlexRequest($req, array(), $headers, true);
+        print_r($xml);
+        exit;
+    }
+    
+    protected static function myPlexRequest($req, $curlopts = array(), $headers = array(), $debug = false)
+    {
+        $server = 'http://' . $req['address'] . ':' . $req['port'];
+        $allheaders = array(
+            'X-Plex-Client-Identifier: ' . $req['udid'],
+            'Content-length: 0',
+            'X-Plex-Product: Plex Media Server',
+            'X-Plex-Version: ' . Plex_XML_Data::getPlexVersion(),
+            'X-Plex-Platform: ' . PHP_OS,
+            'X-Plex-Client-Platform: ' . PHP_OS,
+            'X-Plex-Protocol: 1.0',
+            'X-Plex-Device: Ampache',
+            'X-Plex-Provides: server',
+            'Origin: ' . $server,
+            'Referer: ' . $server . '/web/index.html',
+        );
+        $allheaders = array_merge($allheaders, $headers);
+        
+        $url = 'https://my.plexapp.com/' . $req['action'];
+
+        $options = array(
+            CURLOPT_HEADER => $debug,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_HTTPHEADER => $allheaders,
+        );
+        $options += $curlopts;
+        
+        $ch = curl_init($url);
+        curl_setopt_array($ch, $options);
+        $r = curl_exec($ch);
+        curl_close($ch);
+        if ($debug) print_r($r);
+        return simplexml_load_string($r);
+    }
 
     public static function root()
     {
