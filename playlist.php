@@ -113,21 +113,21 @@ switch ($_REQUEST['action']) {
     break;
     case 'set_track_numbers':
         debug_event('playlist', 'Set track numbers called.', '5');
-        
+
         $playlist = new Playlist($_REQUEST['playlist_id']);
-    
+
         /* Make sure they have permission */
         if (!$playlist->has_access()) {
             UI::access_denied();
             break;
         }
-        
+
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {
             $_GET[$key] = unhtmlentities(scrub_in($data));
             debug_event('playlist', $key.'='.$_GET[$key], '5');
         }
-        
+
         if (isset($_GET['order'])) {
             $songs = explode(";", $_GET['order']);
             $track = 1;
@@ -138,7 +138,7 @@ switch ($_REQUEST['action']) {
                 }
             }
         }
-        
+
         //require Config::get('prefix') . '/templates/show_playlist.inc.php';
         break;
     case 'prune_empty':

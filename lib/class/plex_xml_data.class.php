@@ -109,28 +109,28 @@ class Plex_XML_Data
     {
         return ($id >= Plex_XML_Data::AMPACHEID_PART);
     }
-    
+
     public static function getPlexVersion()
     {
         return "0.9.8.10.215-020456b";
     }
-    
+
     public static function getServerAddress()
     {
         return $_SERVER['SERVER_ADDR'];
     }
-    
+
     public static function getServerPort()
     {
         $port = $_SERVER['SERVER_PORT'];
         return $port?:'32400';
     }
-    
+
     public static function getServerKey()
     {
         return self::getServerAddress();
     }
-    
+
     public static function getServerName()
     {
         return "Ampache";
@@ -200,7 +200,7 @@ class Plex_XML_Data
     {
         return '/library/metadata/' . $key;
     }
-    
+
     public static function getSectionUri($key)
     {
         return '/library/sections/' . $key;
@@ -287,13 +287,13 @@ class Plex_XML_Data
 
         return $last_update;
     }
-    
+
     public static function setSysSections($xml, $catalogs)
     {
         foreach ($catalogs as $id) {
             $catalog = Catalog::create_from_id($id);
             $catalog->format();
-            
+
             $dir = $xml->addChild('Directory');
             $key = self::getServerKey() . '-' . $id;
             $dir->addAttribute('key', base64_encode($key));
@@ -460,7 +460,7 @@ class Plex_XML_Data
             self::addAlbum($xml, $album);
         }
     }
-    
+
     public static function setCustomSectionView($xml, $catalog, $albums)
     {
         $xml->addAttribute('allowSync', '1');
@@ -473,22 +473,22 @@ class Plex_XML_Data
         $xml->addAttribute('librarySectionID', $catalog->id);
         $xml->addAttribute('librarySectionUUID', self::uuidFromKey($catalog->id));
         self::setSectionXContent($xml, $catalog);
-        
+
         $data = array();
         $data['album'] = $albums;
         self::_setCustomView($xml, $data);
     }
-    
+
     public static function setCustomView($xml, $data)
     {
         $xml->addAttribute('allowSync', '0');
         $xml->addAttribute('mixedParents', '1');
         self::_setCustomView($xml, $data);
     }
-    
+
     protected static function _setCustomView($xml, $data)
     {
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             foreach ($value as $id) {
                 if ($key == 'artist') {
                     $artist = new Artist($id);
@@ -510,8 +510,8 @@ class Plex_XML_Data
     public static function addArtist($xml, $artist)
     {
         $xdir = $xml->addChild('Directory');
-		$id = self::getArtistId($artist->id);
-		$xml->addAttribute('ratingKey', $id);
+        $id = self::getArtistId($artist->id);
+        $xml->addAttribute('ratingKey', $id);
         $xdir->addAttribute('type', 'artist');
         $xdir->addAttribute('title', $artist->name);
         $xdir->addAttribute('index', '1');
@@ -537,11 +537,11 @@ class Plex_XML_Data
 
     public static function addAlbum($xml, $album)
     {
-		$id = self::getAlbumId($album->id);
+        $id = self::getAlbumId($album->id);
         $xdir = $xml->addChild('Directory');
         self::addAlbumMeta($xdir, $album);
-		$xdir->addAttribute('ratingKey', $id);
-		$xdir->addAttribute('key', self::getMetadataUri($id) . '/children');
+        $xdir->addAttribute('ratingKey', $id);
+        $xdir->addAttribute('key', self::getMetadataUri($id) . '/children');
         $xdir->addAttribute('title', $album->f_title);
         $artistid = self::getArtistId($album->artist_id);
         $xdir->addAttribute('parentRatingKey', $artistid);
@@ -571,7 +571,7 @@ class Plex_XML_Data
         $xml->addAttribute('index', '1');
         if ($album->has_art || $album->has_thumb) {
             $xml->addAttribute('art', self::getMetadataUri($id) . '/thumb/' . $id);
-			$xml->addAttribute('thumb', self::getMetadataUri($id) . '/thumb/' . $id);
+            $xml->addAttribute('thumb', self::getMetadataUri($id) . '/thumb/' . $id);
         }
         $xml->addAttribute('parentThumb', '');
         $xml->addAttribute('originallyAvailableAt', '');
@@ -581,8 +581,8 @@ class Plex_XML_Data
 
     public static function setArtistRoot($xml, $artist)
     {
-		$id = self::getAlbumId($artist->id);
-		$xml->addAttribute('key', $id);
+        $id = self::getAlbumId($artist->id);
+        $xml->addAttribute('key', $id);
         self::addArtistMeta($xml, $artist);
         $xml->addAttribute('allowSync', '1');
         $xml->addAttribute('nocache', '1');
@@ -603,9 +603,9 @@ class Plex_XML_Data
 
     public static function setAlbumRoot($xml, $album)
     {
-		$id = self::getAlbumId($album->id);
+        $id = self::getAlbumId($album->id);
         self::addAlbumMeta($xml, $album);
-		$xml->addAttribute('key', $id);
+        $xml->addAttribute('key', $id);
         $xml->addAttribute('grandparentTitle', $album->f_artist);
         $xml->addAttribute('title1', $album->f_artist);
         $xml->addAttribute('allowSync', '1');
@@ -630,7 +630,7 @@ class Plex_XML_Data
      {
         $xdir = $xml->addChild('Track');
         self::addSongMeta($xdir, $song);
-		$time = $song->time * 1000;
+        $time = $song->time * 1000;
         $xdir->addAttribute('title', $song->title);
         $albumid = self::getAlbumId($song->album);
         $xdir->addAttribute('parentRatingKey', $albumid);

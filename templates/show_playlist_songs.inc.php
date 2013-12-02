@@ -48,7 +48,7 @@ $web_path = Config::get('web_path');
         <?php } ?>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
         </tr>
-        
+
         <tbody id="sortableplaylist">
             <?php foreach ($object_ids as $object) {
                     $song = new Song($object['object_id']);

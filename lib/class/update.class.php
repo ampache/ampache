@@ -316,7 +316,7 @@ class Update
 
         $update_string = '- Enable/Disable SubSonic and Plex backend.<br />';
         $version[] = array('version' => '360023', 'description' => $update_string);
-        
+
         $update_string = '- Drop flagged table.<br />';
         $version[] = array('version' => '360024', 'description' => $update_string);
 
@@ -1747,7 +1747,7 @@ class Update
 
         return true;
     }
-    
+
     /**
      * update_360024
      *

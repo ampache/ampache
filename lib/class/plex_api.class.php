@@ -294,7 +294,7 @@ class Plex_Api
             }
         }
     }
-    
+
     public static function library_recentlyadded($params)
     {
         $data = array();
@@ -304,7 +304,7 @@ class Plex_Api
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
-    
+
     public static function library_ondeck($params)
     {
         $data = array();
@@ -314,7 +314,7 @@ class Plex_Api
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
-    
+
     public static function system_library_sections($params)
     {
         $r = Plex_XML_Data::createSysContainer();
