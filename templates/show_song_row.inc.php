@@ -50,7 +50,7 @@
     <?php if (Access::check_function('download')) { ?>
     <a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a><?php } ?>
     <?php if (Access::check('interface','75')) { ?>
-        <a id="<?php echo 'edit_song_'.$song->id ?>" onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_'.$song->id ?>', '<?php echo T_('Song edit') ?>', '<?php echo Tag::get_display(Tag::get_tags()) ?>')">
+        <a id="<?php echo 'edit_song_'.$song->id ?>" onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_'.$song->id ?>', '<?php echo T_('Song edit') ?>', '<?php echo Tag::get_display(Tag::get_tags()) ?>', 'song_', 'refresh_song')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
         <?php $icon = $song->enabled ? 'disable' : 'enable'; ?>
@@ -59,4 +59,7 @@
         <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$icon, T_(ucfirst($icon)),'flip_song_' . $song->id); ?>
         </span>
     <?php } ?>
+</td>
+<td class="cel_drag">
+    <?php echo UI::get_icon('drag', T_('Reorder')); ?>
 </td>

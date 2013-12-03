@@ -25,47 +25,39 @@ $web_path = Config::get('web_path');
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
-<colgroup>
-    <col id="col_directplay" />
-    <col id="col_add" />
-    <col id="col_streamname" />
-    <col id="col_streamurl" />
-    <col id="col_codec" />
-    <col id="col_action" />
-</colgroup>
-<tr class="th-top">
-    <?php if (Config::get('directplay')) { ?>
-    <th class="cel_directplay"><?php echo T_('Play'); ?></th>
-<?php } ?>
-    <th class="cel_add"><?php echo T_('Add'); ?></th>
-    <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
-    <th class="cel_streamurl"><?php echo T_('Stream URL'); ?></th>
-    <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec');  ?></th>
-    <th class="cel_action"><?php echo T_('Action'); ?></th>
-</tr>
-<?php
-foreach ($object_ids as $radio_id) {
-    $radio = new Radio($radio_id);
-    $radio->format();
-?>
-<tr id="live_stream_<?php echo $radio->id; ?>" class="<?php echo UI::flip_class(); ?>">
-    <?php require Config::get('prefix') . '/templates/show_live_stream_row.inc.php'; ?>
-</tr>
-<?php } //end foreach ($artists as $artist) ?>
-<?php if (!count($object_ids)) { ?>
-<tr>
-    <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
-</tr>
-<?php } ?>
-<tr class="th-bottom">
-    <?php if (Config::get('directplay')) { ?>
-    <th class="cel_directplay"><?php echo T_('Play'); ?></th>
-<?php } ?>
-    <th class="cel_add"><?php echo T_('Add'); ?></th>
-    <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name_bottom'); ?></th>
-    <th class="cel_streamurl"><?php echo T_('Stream URL'); ?></th>
-    <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec_bottom');  ?></th>
-    <th class="cel_action"><?php echo T_('Action'); ?> </th>
-</tr>
+    <tr class="th-top">
+        <?php if (Config::get('directplay')) { ?>
+        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+    <?php } ?>
+        <th class="cel_add"><?php echo T_('Add'); ?></th>
+        <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
+        <th class="cel_streamurl"><?php echo T_('Stream URL'); ?></th>
+        <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec');  ?></th>
+        <th class="cel_action"><?php echo T_('Action'); ?></th>
+    </tr>
+    <?php
+    foreach ($object_ids as $radio_id) {
+        $radio = new Radio($radio_id);
+        $radio->format();
+    ?>
+    <tr id="live_stream_<?php echo $radio->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <?php require Config::get('prefix') . '/templates/show_live_stream_row.inc.php'; ?>
+    </tr>
+    <?php } //end foreach ($artists as $artist) ?>
+    <?php if (!count($object_ids)) { ?>
+    <tr>
+        <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
+    </tr>
+    <?php } ?>
+    <tr class="th-bottom">
+        <?php if (Config::get('directplay')) { ?>
+        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+    <?php } ?>
+        <th class="cel_add"><?php echo T_('Add'); ?></th>
+        <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name_bottom'); ?></th>
+        <th class="cel_streamurl"><?php echo T_('Stream URL'); ?></th>
+        <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec_bottom');  ?></th>
+        <th class="cel_action"><?php echo T_('Action'); ?> </th>
+    </tr>
 </table>
 <?php require Config::Get('prefix') . '/templates/list_header.inc.php'; ?>

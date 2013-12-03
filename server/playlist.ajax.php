@@ -37,10 +37,10 @@ switch ($_REQUEST['action']) {
         $object_ids = $playlist->get_items();
         ob_start();
         $browse = new Browse();
-            $browse->set_type('playlist_song');
-            $browse->add_supplemental_object('playlist',$playlist->id);
-            $browse->save_objects($object_ids);
-            $browse->show_objects($object_ids);
+        $browse->set_type('playlist_song');
+        $browse->add_supplemental_object('playlist',$playlist->id);
+        $browse->save_objects($object_ids);
+        $browse->show_objects($object_ids);
         $browse->store();
 
         $results['browse_content'] = ob_get_clean();

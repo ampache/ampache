@@ -25,7 +25,7 @@ ob_start();
 require Config::get('prefix') . '/templates/show_smartplaylist_title.inc.php';
 $title = ob_get_contents();
 ob_end_clean();
-UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title .
+UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
         '</div>' , 'box box_smartplaylist');
 ?>
 <div id="information_actions">

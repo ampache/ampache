@@ -160,7 +160,7 @@ class Browse extends Query
                 UI::show_box_bottom();
             break;
             case 'playlist_song':
-                UI::show_box_top(T_('Playlist Songs') . $match,$class);
+                UI::show_box_top(T_('Playlist Songs') . $match, $class);
                 require_once Config::get('prefix') . '/templates/show_playlist_songs.inc.php';
                 UI::show_box_bottom();
             break;

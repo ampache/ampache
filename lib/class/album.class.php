@@ -331,7 +331,7 @@ class Album extends database_object
         foreach ($data as $key=>$value) { $this->$key = $value; }
 
         /* Truncate the string if it's to long */
-          $this->f_name        = UI::truncate($this->full_name,Config::get('ellipse_threshold_album'));
+        $this->f_name        = UI::truncate($this->full_name,Config::get('ellipse_threshold_album'));
 
         $this->f_name_link    = "<a href=\"$web_path/albums.php?action=show&amp;album=" . scrub_out($this->id) . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
         // If we've got a disk append it

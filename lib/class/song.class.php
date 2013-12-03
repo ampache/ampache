@@ -372,7 +372,6 @@ class Song extends database_object implements media
         }
 
         return $results;
-
     }
 
     /**

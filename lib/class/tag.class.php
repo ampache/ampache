@@ -497,31 +497,37 @@ class Tag extends database_object
      */
     public static function update_tag_list($tags_comma, $type, $object_id)
     {
-        debug_event('tag.class', 'Updating tags for values {'.$tags_comma.'} type {'.$type.'} object_id {'.$object_id.'}', '5');
+        if ($tags_comma != '') {
+            debug_event('tag.class', 'Updating tags for values {'.$tags_comma.'} type {'.$type.'} object_id {'.$object_id.'}', '5');
 
-        $ctags = Tag::get_top_tags($type, $object_id);
-        $editedTags = explode(",", $tags_comma);
+            $ctags = Tag::get_top_tags($type, $object_id);
+            $editedTags = explode(",", $tags_comma);
 
-        foreach ($ctags as $ctid => $ctv) {
-            $ctag = new Tag($ctid);
-            foreach ($editedTags as  $tk => $tv) {
-                if ($ctag->name == $tv) {
-                    debug_event('tag.class', 'Tag {'.$ctag->name.'} already found. Do nothing.', '5');
-                    // Removing the tag from the new tags array
-                    unset($editedTags[$tk]);
-                    break;
-                } else {
-                    debug_event('tag.class', 'Tag {'.$ctag->name.'} not found in the new list. Delete it.', '5');
-                    $ctag->remove_map($type, $object_id);
-                    break;
+            foreach ($ctags as $ctid => $ctv) {
+                if ($ctid != '') {
+                    $ctag = new Tag($ctid);
+                    foreach ($editedTags as  $tk => $tv) {
+                        if ($ctag->name == $tv) {
+                            debug_event('tag.class', 'Tag {'.$ctag->name.'} already found. Do nothing.', '5');
+                            // Removing the tag from the new tags array
+                            unset($editedTags[$tk]);
+                            break;
+                        } else {
+                            debug_event('tag.class', 'Tag {'.$ctag->name.'} not found in the new list. Delete it.', '5');
+                            $ctag->remove_map($type, $object_id);
+                            break;
+                        }
+                    }
                 }
             }
-        }
 
-        // Look if we need to add some new tags
-        foreach ($editedTags as  $tk => $tv) {
-            debug_event('tag.class', 'Adding new tag {'.$tv.'}', '5');
-            Tag::add($type, $object_id, $tv, false);
+            // Look if we need to add some new tags
+            foreach ($editedTags as  $tk => $tv) {
+                debug_event('tag.class', 'Adding new tag {'.$tv.'}', '5');
+                if ($tv != '') {
+                    Tag::add($type, $object_id, $tv, false);
+                }
+            }
         }
     } // update_tag_list
 

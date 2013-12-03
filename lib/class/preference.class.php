@@ -427,11 +427,11 @@ class Preference
         if (strlen($results['theme_name']) > 0) {
             $results['theme_path'] = '/themes/' . $results['theme_name'];
         }
-        // Default to the fresh theme if we don't get anything from their
+        // Default theme if we don't get anything from their
         // preferences because we're going to want at least something otherwise
         // the page is going to be really ugly
         else {
-            $results['theme_path'] = '/themes/fresh';
+            $results['theme_path'] = '/themes/reborn';
         }
 
         Config::set_by_array($results, true);

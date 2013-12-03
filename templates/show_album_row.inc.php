@@ -20,6 +20,7 @@
  *
  */
 ?>
+
 <?php if (Config::get('directplay')) { ?>
 <td class="cel_directplay">
     <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id,'play', T_('Play album'),'play_album_' . $album->id); ?>
@@ -62,7 +63,7 @@ if (Art::is_enabled()) {
         </a>
     <?php } ?>
     <?php if (Access::check('interface','50')) { ?>
-        <a id="<?php echo 'edit_song_'.$song->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '<?php echo Tag::get_display(Tag::get_tags()) ?>')">
+        <a id="<?php echo 'edit_album_'.$album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '<?php echo Tag::get_display(Tag::get_tags()) ?>', 'album_', 'refresh_album')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
     <?php } ?>

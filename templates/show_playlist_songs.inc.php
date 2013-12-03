@@ -47,6 +47,7 @@ $web_path = Config::get('web_path');
             <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
         <?php } ?>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
+            <th class="cel_drag"></th>
         </tr>
 
         <tbody id="sortableplaylist">
@@ -79,6 +80,7 @@ $web_path = Config::get('web_path');
             <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
         <?php } ?>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
+            <th class="cel_drag"></th>
         </tr>
     </table>
 </form>

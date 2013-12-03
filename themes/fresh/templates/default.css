@@ -565,6 +565,15 @@ table.tabledata tbody .cel_cover img
     border: 4px double #bbb;
 }
 
+table.tabledata .cel_drag {
+	max-width: 16px;
+    width: 16px !important;
+}
+
+table.tabledata .cel_drag img:hover {
+	cursor: pointer;
+}
+
 .box_preferences h4
 {
 	font-size:15px;
@@ -814,7 +823,7 @@ span.nodata {
 .star-rating a:hover,
 .star-rating .current-rating
 {
-    background: url(../../../themes/fresh/images/ratings/star_rating.png) left -1000px repeat-x;
+    background: url(../images/ratings/star_rating.png) left -1000px repeat-x;
 }
 .star-rating ul
 {

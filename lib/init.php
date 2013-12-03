@@ -208,7 +208,7 @@ if (session_id()) {
 
 /* Add in some variables for ajax done here because we need the user */
 Config::set('ajax_url', Config::get('web_path') . '/server/ajax.server.php', true);
-Config::set('ajax_show_edit_url', Config::get('web_path') . '/server/show_edit.server.php', true);
+Config::set('ajax_server', Config::get('web_path') . '/server', true);
 
 // Load gettext mojo
 load_gettext();

@@ -63,7 +63,7 @@ switch ($_REQUEST['action']) {
         if (!Access::check('interface','25')) { UI::access_denied(); exit; }
 
         // get the Album information
-            $album = new Album($_GET['album_id']);
+        $album = new Album($_GET['album_id']);
         $album->format();
         $art = new Art($album->id,'album');
         $images = array();
@@ -163,6 +163,31 @@ switch ($_REQUEST['action']) {
         $object_id     = intval($_REQUEST['album_id']);
         $target_url    = Config::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
         require_once Config::get('prefix') . '/templates/show_update_items.inc.php';
+    break;
+    case 'set_track_numbers':
+        debug_event('albums', 'Set track numbers called.', '5');
+
+        if (!Access::check('interface','75')) {
+            UI::access_denied();
+            exit;
+        }
+
+        // Retrieving final song order from url
+        foreach ($_GET as $key => $data) {
+            $_GET[$key] = unhtmlentities(scrub_in($data));
+            debug_event('albums', $key.'='.$_GET[$key], '5');
+        }
+
+        if (isset($_GET['order'])) {
+            $songs = explode(";", $_GET['order']);
+            $track = 1;
+            foreach ($songs as $song_id) {
+                if ($song_id != '') {
+                    Song::update_track($track, $song_id);
+                    ++$track;
+                }
+            }
+        }
     break;
     // Browse by Album
     default:

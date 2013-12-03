@@ -31,13 +31,13 @@ function load_gettext()
     $lang = Config::get('lang');
     $charset = Config::get('site_charset') ?: 'UTF-8';
     $locale = $lang . '.' . $charset;
-    debug_event('i18n', 'Setting locale to ' . $locale, 5);
+    //debug_event('i18n', 'Setting locale to ' . $locale, 5);
     T_setlocale(LC_MESSAGES, $locale);
     /* Bind the Text Domain */
     T_bindtextdomain('messages', Config::get('prefix') . "/locale/");
     T_bind_textdomain_codeset('messages', $charset);
     T_textdomain('messages');
-    debug_event('i18n', 'gettext is ' . (locale_emulation() ? 'emulated' : 'native'), 5);
+    //debug_event('i18n', 'gettext is ' . (locale_emulation() ? 'emulated' : 'native'), 5);
 } // load_gettext
 
 /**

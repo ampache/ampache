@@ -382,6 +382,11 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     width: 20%;
 }
 
+#header #headerlogo img {
+    height: 64px;
+    width: 64px;
+}
+
 #header #headerbox {
 	float:left;
     width: 80%;
@@ -481,7 +486,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #loginPage #headerlogo {
     width: 256px;
     height: 256px;
-    background: url('../images/login-logo.png') no-repeat center;
+    background: url('../images/ampache.png') no-repeat center;
     background-size: contain;
     margin: auto;
 }
@@ -957,7 +962,7 @@ table.tabledata tbody .th-bottom:focus {
     color: #fff;
     background-color: #262626;
     background-image: none;
-    background-repeat: none;
+    background-repeat: no-repeat;
 }
 
 table.tabledata tbody .odd {
@@ -973,6 +978,7 @@ table.tabledata tbody .cel_directplay
 table.tabledata tbody .cel_add {
     min-width: 40px;
     width: 40px !important;
+    
 }
 
 table.tabledata tbody .cel_artist {
@@ -1003,6 +1009,15 @@ table.tabledata tbody .cel_cover img {
 table.tabledata tbody .cel_cover img:hover {
     border: 2px solid #ff9d00;
     margin: 0px;
+}
+
+table.tabledata .cel_drag {
+	max-width: 16px;
+    width: 16px !important;
+}
+
+table.tabledata .cel_drag img:hover {
+	cursor: pointer;
 }
 
 .box_preferences h4 {
@@ -1325,7 +1340,7 @@ span.fatalerror {
 .star-rating ul,
 .star-rating a:hover,
 .star-rating .current-rating {
-    background: url(../../../themes/fresh/images/ratings/star_rating.png) left -1000px repeat-x;
+    background: url(../images/ratings/star_rating.png) left -1000px repeat-x;
 }
 .star-rating ul {
     position:relative;
@@ -1447,13 +1462,6 @@ dl.song_details dd {
 #footer a:hover {
     color: #09c;
     text-decoration: underline;
-}
-
-/***********************************************
-        Import playlist                               
-***********************************************/
-div.box-content  td {
-    width: 200px;
 }
 
 /***********************************************

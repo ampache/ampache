@@ -48,3 +48,6 @@
         <?php echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'],'delete', T_('Delete'),'track_del_' . $object['track_id']); ?>
     <?php } ?>
 </td>
+<td class="cel_drag">
+    <?php echo UI::get_icon('drag', T_('Reorder')); ?>
+</td>

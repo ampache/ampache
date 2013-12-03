@@ -581,7 +581,17 @@ a.button{padding:1px 3px;}
 }
 .tabledata .even:hover, .tabledata .odd:hover { 
 	background:#9cf;
-} 
+}
+
+table.tabledata .cel_drag {
+	max-width: 16px;
+    width: 16px !important;
+}
+
+table.tabledata .cel_drag img:hover {
+	cursor: pointer;
+}
+
 .row-highlight:hover { 
 	background:#c33;
 } 

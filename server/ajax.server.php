@@ -39,6 +39,8 @@ header("Pragma: no-cache");
 
 $page = isset($_REQUEST['page']) ? $_REQUEST['page'] : null;
 
+debug_event('ajax.server.php', 'Called for page: {'.$page.'}', '5');
+
 switch ($page) {
     case 'stats':
         require_once Config::get('prefix') . '/server/stats.ajax.php';
@@ -121,7 +123,8 @@ switch ($_REQUEST['action']) {
             $results['rfc3514'] = '0x1';
             break;
         }
-
+        
+        $new_id = '';
         switch ($_POST['type']) {
             case 'album_row':
                 $key = 'album_' . $_POST['id'];
@@ -130,9 +133,6 @@ switch ($_REQUEST['action']) {
                 $new_id = $album->update($_POST);
                 if ($new_id != $_POST['id']) {
                     $album = new Album($new_id);
-                    foreach ($songs as $song_id) {
-                        Flag::add($song_id, 'song', 'retag',' Inline Album Update');
-                    }
                 }
                 $album->format();
             break;
@@ -143,16 +143,12 @@ switch ($_REQUEST['action']) {
                 $new_id = $artist->update($_POST);
                 if ($new_id != $_POST['id']) {
                     $artist = new Artist($new_id);
-                    foreach ($songs as $song_id) {
-                        Flag::add($song_id, 'song', 'retag', 'Inline Artist Update');
-                    }
                 }
                 $artist->format();
             break;
             case 'song_row':
                 $key = 'song_' . $_POST['id'];
                 $song = new Song($_POST['id']);
-                Flag::add($song->id, 'song', 'retag', 'Inline Single Song Update');
                 $song->update($_POST);
                 $song->format();
             break;
@@ -165,7 +161,7 @@ switch ($_REQUEST['action']) {
             break;
             case 'smartplaylist_row':
             case 'smartplaylist_title':
-                $key = 'playlist_row_' . $_POST['id'];
+                $key = 'smartplaylist_row_' . $_POST['id'];
                 $playlist->name = $_POST['name'];
                 $playlist->type = $_POST['pl_type'];
                 $playlist->update();
@@ -184,10 +180,7 @@ switch ($_REQUEST['action']) {
             break;
         } // end switch on type
 
-        ob_start();
-        require Config::get('prefix') . '/templates/show_' . $_POST['type'] . '.inc.php';
-        $results[$key] = ob_get_contents();
-        ob_end_clean();
+        $results['id'] = $new_id;
     break;
     case 'current_playlist':
         switch ($_REQUEST['type']) {

@@ -138,9 +138,7 @@ switch ($_REQUEST['action']) {
                 }
             }
         }
-
-        //require Config::get('prefix') . '/templates/show_playlist.inc.php';
-        break;
+    break;
     case 'prune_empty':
         /* Make sure they have permission */
         if (!$GLOBALS['user']->has_access(100)) {
