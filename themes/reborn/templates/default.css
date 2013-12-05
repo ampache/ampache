@@ -1113,6 +1113,11 @@ div.box.box_rules {
     float: left;
 }
 
+#now_playing .np_row {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
 #now_playing .np_cell {
     line-height: 15px;
     font-size: 13px;
