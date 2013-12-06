@@ -11,10 +11,18 @@ if ($iframed) {
 }
 ?>
 <script src="<?php echo Config::get('web_path'); ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo Config::get('web_path'); ?>/modules/jquery/jquery.cookie.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo Config::get('web_path'); ?>/modules/jplayer/jquery.jplayer.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo Config::get('web_path'); ?>/modules/jplayer/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function(){
+    
+        if (!isNaN($.cookie('jp_volume'))) {
+            var jp_volume = $.cookie('jp_volume');
+        } else {
+            var jp_volume = 0.80;
+        }
+    
         var myPlaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
             cssSelectorAncestor: "#jp_container_1"
@@ -35,6 +43,7 @@ if ($iframed) {
             solution: "html, flash",
             nativeSupport:true,
             oggSupport: false,
+            volume: jp_volume,
             size: {
 <?php
 if ($iframed) {
@@ -74,6 +83,10 @@ if (Config::get('song_page_title')) {
             }
         });
     });
+    
+    $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
+        $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
+    });
 });
 </script>
 </head>
@@ -111,8 +124,8 @@ if ($iframed) {
             <div class="jp-play-bar"></div>
           </div>
         </div>
-        <div class="jp-volume-bar">
-          <div class="jp-volume-bar-value"></div>
+        <div id="jquery_jplayer_1_volume_bar" class="jp-volume-bar">
+          <div id="jquery_jplayer_1_volume_bar_value" class="jp-volume-bar-value"></div>
         </div>
         <div class="jp-current-time"></div>
         <div class="jp-duration"></div>
