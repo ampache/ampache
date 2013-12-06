@@ -68,7 +68,7 @@ switch ($_REQUEST['action']) {
         $browse->set_sort('count','ASC');
         // This one's a doozy
         $browse->set_simple_browse(false);
-        $browse->save_objects(Tag::get_tags(Config::get('offset_limit'),array()));
+        $browse->save_objects(Tag::get_tags(Config::get('offset_limit')));
         $object_ids = $browse->get_saved();
         $keys = array_keys($object_ids);
         Tag::build_cache($keys);

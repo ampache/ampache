@@ -21,6 +21,7 @@
  */
 
 $web_path = Config::get('web_path');
+$tags_list = Tag::get_display(Tag::get_tags());
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table id="reorder_songs_table" class="tabledata" cellpadding="0" cellspacing="0">

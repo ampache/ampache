@@ -408,6 +408,14 @@ class Artist extends database_object
             Userflag::gc();
         } // if updated
 
+        // Update artist name (if we don't want to use the MusicBrainz name)
+        $trimmed = Catalog::trim_prefix(trim($data['name']));
+        $name = $trimmed['string'];
+        if ($name != '' && $name != $this->name) {
+            $sql = 'UPDATE `artist` SET `name` = ? WHERE `id` = ?';
+            Dba::write($sql, array($name, $current_id));
+        }
+        
         Tag::update_tag_list($data['edit_tags'], 'artist', $current_id);
 
         return $current_id;
