@@ -156,7 +156,7 @@ if (Config::get('song_page_title') && $iframed) {
 }
 </script>
 <?php
-if ($i == 1 && count($radios) > 0) {
+if ($i == 1 && count($radios) > 0 && Config::get('webplayer_flash')) {
     // Special stuff for web radio (to better handle Icecast/Shoutcast metadata ...)
     $radio = $radios[0];
     require_once Config::get('prefix') . '/templates/show_radio_player.inc.php';

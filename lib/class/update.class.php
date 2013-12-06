@@ -319,6 +319,9 @@ class Update
 
         $update_string = '- Drop flagged table.<br />';
         $version[] = array('version' => '360024', 'description' => $update_string);
+        
+        $update_string = '- Add options to enable HTML5 / Flash on web players.<br />';
+        $version[] = array('version' => '360025', 'description' => $update_string);
 
         return $version;
     }
@@ -1757,6 +1760,34 @@ class Update
     {
         $sql = "DROP TABLE `flagged`";
         Dba::write($sql);
+
+        return true;
+    }
+    
+    /**
+     * update_360025
+     *
+     * Add options to enable HTML5 / Flash on web players
+     */
+    public static function update_360025()
+    {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('webplayer_flash','0','Authorize Flash Web Player(s)',25,'boolean','streaming')";
+        Dba::write($sql);
+
+        $id = Dba::insert_id();
+
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('webplayer_html5','0','Authorize HTML5 Web Player(s)',25,'boolean','streaming')";
+        Dba::write($sql);
+
+        $id = Dba::insert_id();
+
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
 
         return true;
     }

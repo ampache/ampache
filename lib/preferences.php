@@ -168,6 +168,8 @@ function create_preference_input($name,$value)
         case 'song_page_title':
         case 'subsonic_backend':
         case 'plex_backend':
+        case 'webplayer_flash':
+        case 'webplayer_html5':
             if ($value == '1') { $is_true = "selected=\"selected\""; } else { $is_false = "selected=\"selected\""; }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";

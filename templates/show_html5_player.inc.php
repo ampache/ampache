@@ -40,7 +40,16 @@ if ($iframed) {
             swfPath: "<?php echo Config::get('web_path'); ?>/modules/jplayer/",
             supplied: "<?php echo join(",", $jtypes); ?>",
             audioFullScreen: true,
-            solution: "html, flash",
+            solution: "<?php
+$solutions = array();
+if (Config::get('webplayer_html5')) {
+    $solutions[] = 'html';
+}
+if (Config::get('webplayer_flash')) {
+    $solutions[] = 'flash';
+}
+echo implode(',', $solutions);
+?>",
             nativeSupport:true,
             oggSupport: false,
             volume: jp_volume,
