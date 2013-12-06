@@ -655,7 +655,7 @@ span.page-nb {
 }
 
 #now_playing .np_row {
-    display: inline-block;
+    display: table;
     margin-bottom: 10px;
 }
 

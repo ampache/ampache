@@ -44,7 +44,6 @@ function show_confirmation($title,$text,$next_url,$cancel=0,$form_name='confirma
     }
 
     require Config::get('prefix') . '/templates/show_confirmation.inc.php';
-
 } // show_confirmation
 
 /**

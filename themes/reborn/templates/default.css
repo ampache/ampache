@@ -1114,7 +1114,7 @@ div.box.box_rules {
 }
 
 #now_playing .np_row {
-    display: inline-block;
+    display: table;
     margin-bottom: 10px;
 }
 
