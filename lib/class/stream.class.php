@@ -284,7 +284,12 @@ class Stream
     public static function _auto_init()
     {
         // Generate the session ID.  This is slightly wasteful.
-        self::$session = Session::create(array('type' => 'stream'));
+        $data = array();
+        $data['type'] = 'stream';
+        if (isset($_REQUEST['client'])) {
+            $data['agent'] = $_REQUEST['client'];
+        }
+        self::$session = Session::create($data);
     }
 
     /**

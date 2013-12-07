@@ -197,7 +197,7 @@ class Session
         $ip = $_SERVER['REMOTE_ADDR'] ? inet_pton($_SERVER['REMOTE_ADDR']) : '0';
         $type = $data['type'];
         $value = $data['value'];
-        $agent = substr($_SERVER['HTTP_USER_AGENT'], 0, 254);
+        $agent = (!empty($data['agent'])) ? $data['agent'] : substr($_SERVER['HTTP_USER_AGENT'], 0, 254);
 
         if ($type == 'stream') {
             $expire = time() + Config::get('stream_length');

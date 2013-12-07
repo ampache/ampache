@@ -75,45 +75,47 @@ class Recommendation
 
         $xml = self::get_lastfm_results('track.getsimilar', $query);
 
-        foreach ($xml->similartracks->children() as $child) {
-            $name = $child->name;
-            $local_id = null;
+        if ($xml->similartracks) {
+            foreach ($xml->similartracks->children() as $child) {
+                $name = $child->name;
+                $local_id = null;
 
-            $artist_name = $child->artist->name;
-            $s_artist_name = Catalog::trim_prefix($artist_name);
-            $s_artist_name = Dba::escape($s_artist_name['string']);
+                $artist_name = $child->artist->name;
+                $s_artist_name = Catalog::trim_prefix($artist_name);
+                $s_artist_name = Dba::escape($s_artist_name['string']);
 
-            $sql = "SELECT `song`.`id` FROM `song` " .
-                "LEFT JOIN `artist` ON " .
-                "`song`.`artist`=`artist`.`id` WHERE " .
-                "`song`.`title`='" . Dba::escape($name) .
-                "' AND `artist`.`name`='$s_artist_name'";
+                $sql = "SELECT `song`.`id` FROM `song` " .
+                    "LEFT JOIN `artist` ON " .
+                    "`song`.`artist`=`artist`.`id` WHERE " .
+                    "`song`.`title`='" . Dba::escape($name) .
+                    "' AND `artist`.`name`='$s_artist_name'";
 
-            $db_result = Dba::read($sql);
+                $db_result = Dba::read($sql);
 
-            if ($result = Dba::fetch_assoc($db_result)) {
-                $local_id = $result['id'];
-            }
+                if ($result = Dba::fetch_assoc($db_result)) {
+                    $local_id = $result['id'];
+                }
 
-            if (is_null($local_id)) {
-                debug_event('Recommendation', "$name did not match any local song", 5);
-                if (! $local_only) {
+                if (is_null($local_id)) {
+                    debug_event('Recommendation', "$name did not match any local song", 5);
+                    if (! $local_only) {
+                        $results[] = array(
+                            'id' => null,
+                            'title' => $name,
+                            'artist' => $artist_name
+                        );
+                    }
+                } else {
+                    debug_event('Recommendation', "$name matched local song $local_id", 5);
                     $results[] = array(
-                        'id' => null,
-                        'title' => $name,
-                        'artist' => $artist_name
+                        'id' => $local_id,
+                        'title' => $name
                     );
                 }
-            } else {
-                debug_event('Recommendation', "$name matched local song $local_id", 5);
-                $results[] = array(
-                    'id' => $local_id,
-                    'title' => $name
-                );
-            }
 
-            if ($limit && count($results) >= $limit) {
-                break;
+                if ($limit && count($results) >= $limit) {
+                    break;
+                }
             }
         }
 

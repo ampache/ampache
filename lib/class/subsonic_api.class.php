@@ -777,7 +777,7 @@ class Subsonic_Api
         $maxBitRate = $input['maxBitRate']; // For video streaming. Not supported.
         $estimateContentLength = $input['estimateContentLength']; // Not supported.
 
-        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid));
+        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid)) . '&client=' . $input['c'];
         self::follow_stream($url);
     }
 
@@ -792,7 +792,7 @@ class Subsonic_Api
 
         $fileid = self::check_parameter($input, 'id', true);
 
-        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid)) . '&action=download';
+        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid)) . '&action=download' . '&client=' . $input['c'];
         self::follow_stream($url);
     }
 

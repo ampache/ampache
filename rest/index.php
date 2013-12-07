@@ -55,6 +55,10 @@ if (empty($password)) {
 $version = $_GET['v'];
 $clientapp = $_GET['c'];
 
+if (empty($_SERVER['HTTP_USER_AGENT'])) {
+    $_SERVER['HTTP_USER_AGENT'] = $clientapp;
+}
+
 if (empty($user) || empty($password) || empty($version) || empty($action) || empty($clientapp)) {
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM));
@@ -82,12 +86,11 @@ if (!$auth['success']) {
 if (!Access::check_network('init-api', $user, 5)) {
     debug_event('Access Denied','Unauthorized access attempt to Subsonic API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
     ob_end_clean();
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error'));
+    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error'));
     exit();
 }
 
 $GLOBALS['user'] = User::get_from_username($user);
-
 // Check server version
 if (version_compare(Subsonic_XML_Data::API_VERSION, $version) < 0) {
     ob_end_clean();
