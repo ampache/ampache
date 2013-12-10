@@ -32,8 +32,11 @@ UI::show_box_top($artist->f_name, 'info-box');
 if (isset($biography)) {
 ?>
 <div id="artist_biography">
+    <div class="album_art">
+        <a href="<?php echo $biography['megaphoto']; ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto']; ?>" alt="<?php echo $artist->f_name; ?>" width="128"></a>
+    </div>
     <div id="artist_summary">
-<?php echo $biography['summary']; ?>
+        <?php echo $biography['summary']; ?>
     </div>
 </div>
 <?php

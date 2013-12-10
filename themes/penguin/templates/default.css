@@ -714,7 +714,11 @@ right: expression(-this.parentNode.offsetWidth%2+"px");
 
 #artist_biography {
     float: right;
-    max-width: 50%;
+    max-width: 60%;
+}
+
+#artist_summary {
+    margin-right: 150px;
 }
 
 /* Specific boxes */

@@ -547,7 +547,11 @@ a.button{padding:1px 3px;}
 
 #artist_biography {
     float: right;
-    max-width: 50%;
+    max-width: 60%;
+}
+
+#artist_summary {
+    margin-right: 150px;
 }
 
 /* Specific boxes */

@@ -212,7 +212,9 @@ class Recommendation
         $results = array();
         $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", (string) $xml->artist->bio->summary));
         $results['placeformed'] = (string) $xml->artist->bio->placeformed;
-        $results['yearformed'] = (string) $xml->artist->bio->yearformed;
+        $results['yearformed'] = (string) $xml->artist->bio->yearformed;       
+        $results['largephoto'] = $xml->artist->image[2];
+        $results['megaphoto'] = $xml->artist->image[4];
 
         return $results;
     } // get_artist_info
