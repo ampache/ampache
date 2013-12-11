@@ -599,8 +599,8 @@ refresh_limit = "60"
 ; layout. rss exists of two parts, main and song main is the information about the feed
 ; song is the information in the feed. can be multiple items.
 ; use_rss = false (values true | false)
-;DEFAULT: use_rss = true
-use_rss = true
+;DEFAULT: use_rss = false
+;use_rss = false
 ;#####################################################
 
 ;#############################
