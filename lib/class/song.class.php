@@ -1012,7 +1012,7 @@ class Song extends database_object implements media
     {
         $user_id = Dba::escape($user_id);
 
-        $sql = "SELECT `object_id`, `user`, `object_type`, `date` " .
+        $sql = "SELECT `object_id`, `user`, `object_type`, `date`, `agent` " .
             "FROM `object_count` WHERE `object_type`='song' ";
         if ($user_id) {
             $sql .= "AND `user`='$user_id' ";

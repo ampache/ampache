@@ -76,13 +76,13 @@ class Stats
      * This inserts a new record for the specified object
      * with the specified information, amazing!
      */
-    public static function insert($type,$oid,$user)
+    public static function insert($type, $oid, $user, $agent='')
     {
-        $type     = self::validate_type($type);
+        $type = self::validate_type($type);
 
-        $sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`date`,`user`) " .
-            " VALUES (?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($type, $oid, time(), $user));
+        $sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`date`,`user`,`agent`) " .
+            " VALUES (?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($type, $oid, time(), $user, $agent));
 
         if (!$db_results) {
             debug_event('statistics','Unabled to insert statistics:' . $sql,'3');

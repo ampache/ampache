@@ -601,9 +601,9 @@ class User extends database_object
         }
 
         // Do this last so the 'last played checks are correct'
-        Stats::insert('song',$song_id,$user);
-        Stats::insert('album',$song_info->album,$user);
-        Stats::insert('artist',$song_info->artist,$user);
+        Stats::insert('song', $song_id, $user);
+        Stats::insert('album', $song_info->album, $user);
+        Stats::insert('artist', $song_info->artist, $user);
 
         return true;
 
@@ -711,7 +711,7 @@ class User extends database_object
         // Base link
         $this->f_link = '<a href="' . Config::get('web_path') . '/stats.php?action=show_user&user_id=' . $this->id . '">' . $this->fullname . '</a>';
 
-        /* Calculate their total Bandwidth Useage */
+        /* Calculate their total Bandwidth Usage */
         $sql = "SELECT `song`.`size` FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " .
             "WHERE `object_count`.`user`='$this->id' AND `object_count`.`object_type`='song'";
         $db_results = Dba::read($sql);

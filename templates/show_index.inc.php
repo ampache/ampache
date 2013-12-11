@@ -34,11 +34,11 @@ if (Art::is_enabled()) {
 <?php } ?>
 <!-- Recently Played -->
 <div id="recently_played">
-        <?php
-                $data = Song::get_recently_played();
+    <?php
+        $data = Song::get_recently_played();
         Song::build_cache(array_keys($data));
-                require_once Config::get('prefix') . '/templates/show_recently_played.inc.php';
-        ?>
+        require_once Config::get('prefix') . '/templates/show_recently_played.inc.php';
+    ?>
 </div>
 <!-- Shoutbox Objects, if shoutbox is enabled -->
 <?php if (Config::get('sociable')) { ?>

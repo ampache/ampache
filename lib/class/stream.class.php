@@ -20,7 +20,6 @@
  *
  */
 
-
 class Stream
 {
     public static $session;
@@ -87,7 +86,6 @@ class Stream
             if ($sample_rate > $user_sample_rate) {
                 $sample_rate = $user_sample_rate;
             }
-
         } // end if we've got bitrates
         else {
             $sample_rate = $user_sample_rate;
@@ -158,7 +156,6 @@ class Stream
             'stderr' => $pipes[2],
             'format' => $transcode_settings['format']
         );
-
     }
 
     /**
@@ -171,9 +168,7 @@ class Stream
         $sample_rate = 16*(floor($bitrate/16));
 
         return $sample_rate;
-
     }
-
 
     /**
      * gc_now_playing
@@ -188,7 +183,6 @@ class Stream
             "LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` " .
             "WHERE `session`.`id` IS NULL OR `now_playing`.`expire` < '" . time() . "'";
         $db_results = Dba::write($sql);
-
     }
 
     /**

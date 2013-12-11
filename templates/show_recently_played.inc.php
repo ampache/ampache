@@ -24,30 +24,23 @@ $link = Config::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
-<colgroup>
-    <col id="col_directplay" />
-    <col id="col_add" />
-    <col id="col_username" />
-    <col id="col_song" />
-    <col id="col_album" />
-    <col id="col_artist" />
-    <col id="col_lastplayed" />
-</colgroup>
-<tr class="th-top">
-<?php if (Config::get('directplay')) { ?>
-    <th class="cel_directplay"><?php echo T_('Play'); ?></th>
-<?php } ?>
-    <th class="cel_add"><?php echo T_('Add'); ?></th>
-    <th class="cel_song"><?php echo T_('Song'); ?></th>
-    <th class="cel_album"><?php echo T_('Album'); ?></th>
-    <th class="cel_artist"><?php echo T_('Artist'); ?></th>
-    <th class="cel_username"><?php echo T_('Username'); ?></th>
-    <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
-</tr>
+    <tr class="th-top">
+    <?php if (Config::get('directplay')) { ?>
+        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+    <?php } ?>
+        <th class="cel_add"><?php echo T_('Add'); ?></th>
+        <th class="cel_song"><?php echo T_('Song'); ?></th>
+        <th class="cel_album"><?php echo T_('Album'); ?></th>
+        <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+        <th class="cel_username"><?php echo T_('Username'); ?></th>
+        <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
+        <th class="cel_agent"><?php echo T_('Agent'); ?></th>
+    </tr>
 <?php foreach ($data as $row) {
     $row_user = new User($row['user']);
     $song = new Song($row['object_id']);
     $interval = intval(time() - $row['date']);
+    $agent = $row['agent'];
 
     if ($interval < 60) {
         $unit = 'seconds';
@@ -79,42 +72,44 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 
     $song->format();
 ?>
-<tr class="<?php echo UI::flip_class(); ?>">
+    <tr class="<?php echo UI::flip_class(); ?>">
     <?php if (Config::get('directplay')) { ?>
-    <td class="cel_directplay">
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play song'),'play_song_' . $song->id); ?>
-    </td>
+        <td class="cel_directplay">
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play song'),'play_song_' . $song->id); ?>
+        </td>
     <?php } ?>
-    <td class="cel_add">
-        <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'add_' . $song->id); ?>
-    </td>
-    <td class="cel_song"><?php echo $song->f_link; ?></td>
-    <td class="cel_album"><?php echo $song->f_album_link; ?></td>
-    <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
-    <td class="cel_username">
-        <a href="<?php echo Config::get('web_path'); ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
-        <?php echo scrub_out($row_user->fullname); ?>
-        </a>
-    </td>
-    <td class="cel_lastplayed"><?php echo $time_string; ?></td>
-</tr>
+        <td class="cel_add">
+            <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'add_' . $song->id); ?>
+        </td>
+        <td class="cel_song"><?php echo $song->f_link; ?></td>
+        <td class="cel_album"><?php echo $song->f_album_link; ?></td>
+        <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
+        <td class="cel_username">
+            <a href="<?php echo Config::get('web_path'); ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
+            <?php echo scrub_out($row_user->fullname); ?>
+            </a>
+        </td>
+        <td class="cel_lastplayed"><?php echo $time_string; ?></td>
+        <td class="cel_agent"><?php echo $agent; ?></td>
+    </tr>
 <?php } ?>
 <?php if (!count($data)) { ?>
-<tr>
-    <td colspan="6"><span class="nodata"><?php echo T_('No recently item found'); ?></span></td>
-</tr>
+    <tr>
+        <td colspan="6"><span class="nodata"><?php echo T_('No recently item found'); ?></span></td>
+    </tr>
 <?php } ?>
-<tr class="th-bottom">
+    <tr class="th-bottom">
 <?php if (Config::get('directplay')) { ?>
-    <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
 <?php } ?>
-    <th class="cel_add"><?php echo T_('Add'); ?></th>
-    <th class="cel_username"><?php echo T_('Username'); ?></th>
-    <th class="cel_song"><?php echo T_('Song'); ?></th>
-    <th class="cel_album"><?php echo T_('Album'); ?></th>
-    <th class="cel_artist"><?php echo T_('Artist'); ?></th>
-    <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
-</tr>
+        <th class="cel_add"><?php echo T_('Add'); ?></th>
+        <th class="cel_username"><?php echo T_('Username'); ?></th>
+        <th class="cel_song"><?php echo T_('Song'); ?></th>
+        <th class="cel_album"><?php echo T_('Album'); ?></th>
+        <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+        <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
+        <th class="cel_agent"><?php echo T_('Agent'); ?></th>
+    </tr>
 </table>
 <script language="javascript" type="text/javascript">
 $(document).ready(function(){

@@ -323,6 +323,9 @@ class Update
         $update_string = '- Add options to enable HTML5 / Flash on web players.<br />';
         $version[] = array('version' => '360025', 'description' => $update_string);
 
+        $update_string = '- Added agent to `object_count` table.<br />';
+        $version[] = array('version' => '360026','description' => $update_string);
+        
         return $version;
     }
 
@@ -1788,6 +1791,19 @@ class Update
 
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         Dba::write($sql, array($id));
+
+        return true;
+    }
+    
+    /**
+     * update_360026
+     *
+     * Add agent field in `object_count` table
+     */
+    public static function update_360026()
+    {
+        $sql = "ALTER TABLE `object_count` ADD `agent` VARCHAR(255) NULL AFTER `user`";
+        Dba::write($sql);
 
         return true;
     }
