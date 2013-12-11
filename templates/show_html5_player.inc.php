@@ -1,4 +1,3 @@
-<?php require_once Config::get('prefix') . '/templates/stylesheets.inc.php'; ?>
 <?php
 if ($iframed) {
 ?>
@@ -6,6 +5,7 @@ if ($iframed) {
 <?php
 } else {
 ?>
+<?php require_once Config::get('prefix') . '/templates/stylesheets.inc.php'; ?>
 <link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/jplayer.midnight.black.css" type="text/css" />
 <?php
 }
@@ -14,6 +14,17 @@ if ($iframed) {
 <script src="<?php echo Config::get('web_path'); ?>/modules/jquery/jquery.cookie.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo Config::get('web_path'); ?>/modules/jplayer/jquery.jplayer.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo Config::get('web_path'); ?>/modules/jplayer/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
+<?php
+if ($iframed) {
+?>
+<script type="text/javascript">
+function NavigateTo(url) {
+	window.parent.document.getElementById('frame_main').setAttribute('src', url);
+}
+</script>
+<?php
+}
+?>
 <script type="text/javascript">
     $(document).ready(function(){
     
@@ -77,9 +88,24 @@ if ($iframed) {
         $(".jp-playlist").scrollTop(pos);
         $.each(playlist, function (index, obj) {
             if (index == current) {
-                $('.playing_title').text(obj.title);
-                $('.playing_artist').text(obj.artist);
 <?php
+if ($iframed) {
+	echo "var titleobj = '<a href=\"javascript:NavigateTo(\'" . Config::get('web_path') . "/albums.php?action=show&album=' + albumids[index] + '\');\">' + obj.title + '</a>';";
+	echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . Config::get('web_path') . "/artists.php?action=show&artist=' + artistids[index] + '\');\">' + obj.artist + '</a>';";
+	echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . Config::get('web_path') . "/song.php?action=show_lyrics&song_id=' + songids[index] + '\');\">" . T_('Show Lyrics') . "</a>';";
+} else {
+	echo "var titleobj = obj.title;";
+	echo "var artistobj = obj.artist;";
+}
+?>
+                $('.playing_title').html(titleobj);
+                $('.playing_artist').html(artistobj);
+<?php
+if ($iframed && Config::get('show_lyrics')) {
+?>
+				$('.playing_lyrics').html(lyricsobj);
+<?php
+}
 if (Config::get('song_page_title')) {
     if ($iframed) {
         echo "window.parent.document";
@@ -112,6 +138,7 @@ if ($iframed) {
 <div class="playing_info">
     <div class="playing_artist"></div>
     <div class="playing_title"></div>
+	<div class="playing_lyrics"></div>
 </div>
 <div class="jp-area">
   <div id="jquery_jplayer_1" class="jp-jplayer"></div>

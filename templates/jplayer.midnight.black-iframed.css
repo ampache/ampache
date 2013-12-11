@@ -463,8 +463,29 @@ div.playing_artist {
 	font-size:0.5em;
 }
 
+div.playing_artist a {
+	color: rgb(238, 238, 238);
+	text-decoration: none;
+}
+
 div.playing_title {
 	font-size:0.7em;
+}
+
+div.playing_title a {
+	color: rgb(238, 238, 238);
+	text-decoration: none;
+}
+
+div.playing_lyrics {
+	position: absolute;
+	top: 60px;
+	font-size:0.5em;
+}
+
+div.playing_lyrics a {
+	color: rgb(238, 238, 238);
+	text-decoration: none;
 }
 
 div.jp-title,

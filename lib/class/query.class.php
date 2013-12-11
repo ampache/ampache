@@ -906,7 +906,7 @@ class Query
      */
     private function get_limit_sql()
     {
-        if (!$this->is_simple()) { return ''; }
+        if (!$this->is_simple() || $this->get_start() < 0) { return ''; }
 
         $sql = ' LIMIT ' . intval($this->get_start()) . ',' . intval($this->get_offset());
 

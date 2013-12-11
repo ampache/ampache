@@ -1775,21 +1775,21 @@ class Update
     public static function update_360025()
     {
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('webplayer_flash','0','Authorize Flash Web Player(s)',25,'boolean','streaming')";
+            "VALUES ('webplayer_flash','1','Authorize Flash Web Player(s)',25,'boolean','streaming')";
         Dba::write($sql);
 
         $id = Dba::insert_id();
 
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('webplayer_html5','0','Authorize HTML5 Web Player(s)',25,'boolean','streaming')";
+            "VALUES ('webplayer_html5','1','Authorize HTML5 Web Player(s)',25,'boolean','streaming')";
         Dba::write($sql);
 
         $id = Dba::insert_id();
 
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         Dba::write($sql, array($id));
 
         return true;
