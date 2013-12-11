@@ -22,26 +22,29 @@
 
 $web_path = Config::get('web_path');
 $tags_list = Tag::get_display(Tag::get_tags());
+$thcount = 9;
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table id="reorder_songs_table" class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-    <?php if (Config::get('directplay')) { ?>
+    <?php if (Config::get('directplay')) { ++$thcount; ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
     <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
         <th class="cel_song"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Song Title'), 'sort_song_title'); ?></th>
         <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist', T_('Artist'), 'sort_song_artist'); ?></th>
         <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album', T_('Album'), 'sort_song_album'); ?></th>
-            <th class="cel_tags"><?php echo T_('Tags'); ?></th>
+        <th class="cel_tags"><?php echo T_('Tags'); ?></th>
         <th class="cel_track"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track', T_('Track'), 'sort_song_track'); ?></th>
         <th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', T_('Time'), 'sort_song_time'); ?></th>
     <?php if (Config::get('ratings')) {
+        ++$thcount; 
         Rating::build_cache('song', $object_ids);
     ?>
         <th class="cel_rating"><?php echo T_('Rating'); ?></th>
     <?php } ?>
     <?php if (Config::get('userflags')) {
+        ++$thcount; 
         Userflag::build_cache('song', $object_ids);
     ?>
         <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
@@ -64,7 +67,7 @@ $tags_list = Tag::get_display(Tag::get_tags());
     
 <?php if (!count($object_ids)) { ?>
     <tr class="<?php echo UI::flip_class(); ?>">
-        <td colspan="10"><span class="nodata"><?php echo T_('No song found'); ?></span></td>
+        <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No song found'); ?></span></td>
     </tr>
 <?php } ?>
     

@@ -24,11 +24,12 @@ session_start();
 
 $web_path = Config::get('web_path');
 $tags_list = Tag::get_display(Tag::get_tags());
+$thcount = 7;
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-    <?php if (Config::get('directplay')) { ?>
+    <?php if (Config::get('directplay')) { ++$thcount; ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
     <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -37,10 +38,10 @@ $tags_list = Tag::get_display(Tag::get_tags());
         <th class="cel_albums"><?php echo T_('Albums'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
         <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-    <?php if (Config::get('ratings')) { ?>
+    <?php if (Config::get('ratings')) { ++$thcount; ?>
         <th class="cel_rating"><?php echo T_('Rating'); ?></th>
     <?php } ?>
-    <?php if (Config::get('userflags')) { ?>
+    <?php if (Config::get('userflags')) { ++$thcount; ?>
         <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
     <?php } ?>
         <th class="cel_action"> <?php echo T_('Action'); ?> </th>
@@ -61,7 +62,7 @@ $tags_list = Tag::get_display(Tag::get_tags());
     <?php } //end foreach ($artists as $artist) ?>
     <?php if (!count($object_ids)) { ?>
     <tr class="<?php echo UI::flip_class(); ?>">
-        <td colspan="5"><span class="nodata"><?php echo T_('No artist found'); ?></span></td>
+        <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No artist found'); ?></span></td>
     </tr>
     <?php } ?>
     <tr class="th-bottom">

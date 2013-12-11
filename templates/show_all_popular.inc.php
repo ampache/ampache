@@ -21,28 +21,32 @@
  */
 ?>
 <table class="tabledata">
-<tr>
-    <td valign="top" >
-        <?php show_info_box(T_('Most Popular Artists'), 'artist', $artists); ?>
-    </td>
-    <td valign="top">
-        <?php show_info_box(T_('Most Popular Albums'), '', $albums); ?>
-    </td>
-    <td valign="top">
-        <?php show_info_box(T_('Most Popular Genres'), '', $genres); ?>
-    </td>
-</tr>
-<tr><td colspan="2">&nbsp;</td></tr>
-<tr>
-    <td valign="top">
-        <?php show_info_box(T_('Most Popular Songs'), 'song', $songs); ?>
-    </td>
-    <td valign="top">
-        <?php show_info_box(T_('Most Popular Live Streams'),'live_stream',$live_streams); ?>
-    </td>
-    <td valign="top">
-        <?php show_info_box(T_('Most Popular Tags'),'tags',$tags); ?>
-    </td>
-</tr>
-<tr><td colspan="2">&nbsp;</td></tr>
+    <tr>
+        <td valign="top" >
+            <?php show_info_box(T_('Most Popular Artists'), 'artist', $artists); ?>
+        </td>
+        <td valign="top">
+            <?php show_info_box(T_('Most Popular Albums'), '', $albums); ?>
+        </td>
+        <td valign="top">
+            <?php show_info_box(T_('Most Popular Genres'), '', $genres); ?>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top">
+            <?php show_info_box(T_('Most Popular Songs'), 'song', $songs); ?>
+        </td>
+        <td valign="top">
+            <?php show_info_box(T_('Most Popular Live Streams'),'live_stream',$live_streams); ?>
+        </td>
+        <td valign="top">
+            <?php show_info_box(T_('Most Popular Tags'),'tags',$tags); ?>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
 </table>

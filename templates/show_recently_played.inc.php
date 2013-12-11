@@ -22,10 +22,11 @@
 
 $link = Config::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played') :  '';
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
+$thcount = 7;
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-    <?php if (Config::get('directplay')) { ?>
+    <?php if (Config::get('directplay')) { ++$thcount; ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
     <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -99,7 +100,7 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 <?php } ?>
 <?php if (!count($data)) { ?>
     <tr>
-        <td colspan="6"><span class="nodata"><?php echo T_('No recently item found'); ?></span></td>
+        <td colspan="<?php echo $thcount ?>"><span class="nodata"><?php echo T_('No recently item found'); ?></span></td>
     </tr>
 <?php } ?>
     <tr class="th-bottom">

@@ -21,12 +21,12 @@
  */
 
 $web_path = Config::get('web_path');
-
+$thcount = 5;
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-        <?php if (Config::get('directplay')) { ?>
+        <?php if (Config::get('directplay')) { ++$thcount; ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
     <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -46,7 +46,7 @@ $web_path = Config::get('web_path');
     <?php } //end foreach ($artists as $artist) ?>
     <?php if (!count($object_ids)) { ?>
     <tr>
-        <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
+        <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
     </tr>
     <?php } ?>
     <tr class="th-bottom">

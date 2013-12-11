@@ -22,15 +22,16 @@
 
 $web_path = Config::get('web_path');
 $tags_list = Tag::get_display(Tag::get_tags());
+$thcount = 7;
 ?>
 <?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-    <?php if (Config::get('directplay')) { ?>
+    <?php if (Config::get('directplay')) { ++$thcount; ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
     <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
-    <?php if (Art::is_enabled()) { ?>
+    <?php if (Art::is_enabled()) { ++$thcount; ?>
         <th class="cel_cover"><?php echo T_('Cover'); ?></th>
     <?php } ?>
         <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'),'album_sort_name'); ?></th>
@@ -38,10 +39,10 @@ $tags_list = Tag::get_display(Tag::get_tags());
         <th class="cel_songs"><?php echo T_('Songs'); ?></th>
         <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'),'album_sort_year'); ?></th>
         <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-    <?php if (Config::get('ratings')) { ?>
+    <?php if (Config::get('ratings')) { ++$thcount; ?>
         <th class="cel_rating"><?php echo T_('Rating'); ?></th>
     <?php } ?>
-    <?php if (Config::get('userflags')) { ?>
+    <?php if (Config::get('userflags')) { ++$thcount; ?>
         <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
     <?php } ?>
         <th class="cel_action"><?php echo T_('Actions'); ?></th>
@@ -61,7 +62,7 @@ $tags_list = Tag::get_display(Tag::get_tags());
     <?php } //end foreach ($albums as $album) ?>
     <?php if (!count($object_ids)) { ?>
     <tr class="<?php echo UI::flip_class(); ?>">
-        <td colspan="7"><span class="nodata"><?php echo T_('No album found'); ?></span></td>
+        <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No album found'); ?></span></td>
     </tr>
     <?php } ?>
     <tr class="th-bottom">

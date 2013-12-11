@@ -44,7 +44,7 @@ $web_path = Config::get('web_path');
     ?>
     <?php } if (!count($object_ids)) { ?>
     <tr class="<?php echo UI::flip_class(); ?>">
-        <td colspan="7" class="error"><?php echo T_('No Records Found'); ?></td>
+        <td colspan="6" class="error"><?php echo T_('No Records Found'); ?></td>
     </tr>
     <?php } ?>
     <tr class="th-bottom">

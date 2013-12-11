@@ -24,47 +24,41 @@ $web_path = Config::get('web_path');
 ?>
 <!-- Plugin we've found -->
 <table class="tabledata" cellpadding="0" cellspacing="0">
-<colgroup>
-  <col id="col_name" />
-  <col id="col_description" />
-  <col id="col_version" />
-  <col id="col_action" />
-</colgroup>
-<tr class="th-top">
-    <th class="cel_name"><?php echo T_('Name'); ?></th>
-    <th class="cel_description"><?php echo T_('Description'); ?></th>
-    <th class="cel_version"><?php echo T_('Version'); ?></th>
-    <th class="cel_action"><?php echo T_('Action'); ?></th>
-</tr>
-<?php
-foreach ($controllers as $controller) {
-    $localplay = new Localplay($controller);
-    if (!$localplay->player_loaded()) { continue; }
-    $localplay->format();
-    if (Localplay::is_enabled($controller)) {
-        $action     = 'confirm_uninstall_localplay';
-        $action_txt    = T_('Disable');
-    } else {
-        $action = 'install_localplay';
-        $action_txt    = T_('Activate');
-    }
-?>
-<tr class="<?php echo UI::flip_class(); ?>">
-    <td class="cel_name"><?php echo scrub_out($localplay->f_name); ?></td>
-    <td class="cel_description"><?php echo scrub_out($localplay->f_description); ?></td>
-    <td class="cel_version"><?php echo scrub_out($localplay->f_version); ?></td>
-    <td class="cel_action"><a href="<?php echo $web_path; ?>/admin/modules.php?action=<?php echo $action; ?>&amp;type=<?php echo urlencode($controller); ?>"><?php echo $action_txt; ?></a></td>
-</tr>
-<?php } if (!count($controllers)) { ?>
-<tr class="<?php echo UI::flip_class(); ?>">
-    <td colspan="4"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
-</tr>
-<?php } ?>
-<tr class="th-bottom">
-    <th class="cel_name"><?php echo T_('Name'); ?></th>
-    <th class="cel_description"><?php echo T_('Description'); ?></th>
-    <th class="cel_version"><?php echo T_('Version'); ?></th>
-    <th class="cel_action"><?php echo T_('Action'); ?></th>
-</tr>
+    <tr class="th-top">
+        <th class="cel_name"><?php echo T_('Name'); ?></th>
+        <th class="cel_description"><?php echo T_('Description'); ?></th>
+        <th class="cel_version"><?php echo T_('Version'); ?></th>
+        <th class="cel_action"><?php echo T_('Action'); ?></th>
+    </tr>
+    <?php
+    foreach ($controllers as $controller) {
+        $localplay = new Localplay($controller);
+        if (!$localplay->player_loaded()) { continue; }
+        $localplay->format();
+        if (Localplay::is_enabled($controller)) {
+            $action     = 'confirm_uninstall_localplay';
+            $action_txt    = T_('Disable');
+        } else {
+            $action = 'install_localplay';
+            $action_txt    = T_('Activate');
+        }
+    ?>
+    <tr class="<?php echo UI::flip_class(); ?>">
+        <td class="cel_name"><?php echo scrub_out($localplay->f_name); ?></td>
+        <td class="cel_description"><?php echo scrub_out($localplay->f_description); ?></td>
+        <td class="cel_version"><?php echo scrub_out($localplay->f_version); ?></td>
+        <td class="cel_action"><a href="<?php echo $web_path; ?>/admin/modules.php?action=<?php echo $action; ?>&amp;type=<?php echo urlencode($controller); ?>"><?php echo $action_txt; ?></a></td>
+    </tr>
+    <?php } if (!count($controllers)) { ?>
+    <tr class="<?php echo UI::flip_class(); ?>">
+        <td colspan="4"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
+    </tr>
+    <?php } ?>
+    <tr class="th-bottom">
+        <th class="cel_name"><?php echo T_('Name'); ?></th>
+        <th class="cel_description"><?php echo T_('Description'); ?></th>
+        <th class="cel_version"><?php echo T_('Version'); ?></th>
+        <th class="cel_action"><?php echo T_('Action'); ?></th>
+    </tr>
 </table>
 <br />

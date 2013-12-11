@@ -43,33 +43,31 @@ switch ($_REQUEST['action']) {
         ob_start();
         $data = Song::get_recently_played();
         Song::build_cache(array_keys($data));
-        if (count($data)) {
-            require_once Config::get('prefix') . '/templates/show_recently_played.inc.php';
-        }
+        require_once Config::get('prefix') . '/templates/show_recently_played.inc.php';
         $results['recently_played'] = ob_get_clean();
     break;
     case 'sidebar':
-                switch ($_REQUEST['button']) {
-                        case 'home':
-                        case 'modules':
-                        case 'localplay':
-                        case 'player':
-                        case 'preferences':
-                                $button = $_REQUEST['button'];
-                        break;
-                        case 'admin':
-                                if (Access::check('interface','100')) { $button = $_REQUEST['button']; } else { exit; }
-                        break;
-                        default:
-                                exit;
-                        break;
-                } // end switch on button
+        switch ($_REQUEST['button']) {
+            case 'home':
+            case 'modules':
+            case 'localplay':
+            case 'player':
+            case 'preferences':
+                $button = $_REQUEST['button'];
+            break;
+            case 'admin':
+                if (Access::check('interface','100')) { $button = $_REQUEST['button']; } else { exit; }
+            break;
+            default:
+                exit;
+            break;
+        } // end switch on button
 
-                ob_start();
-                $_SESSION['state']['sidebar_tab'] = $button;
-                require_once Config::get('prefix') . '/templates/sidebar.inc.php';
-                $results['sidebar'] = ob_get_contents();
-                ob_end_clean();
+        ob_start();
+        $_SESSION['state']['sidebar_tab'] = $button;
+        require_once Config::get('prefix') . '/templates/sidebar.inc.php';
+        $results['sidebar'] = ob_get_contents();
+        ob_end_clean();
     default:
         $results['rfc3514'] = '0x1';
     break;
