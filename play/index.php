@@ -59,7 +59,7 @@ if ($type == 'playlist') {
 
 /* This is specifically for tmp playlist requests */
 $demo_id    = scrub_in($_REQUEST['demo_id']);
-$random        = scrub_in($_REQUEST['random']);
+$random     = scrub_in($_REQUEST['random']);
 
 /* First things first, if we don't have a uid/oid stop here */
 if (empty($oid) && empty($demo_id) && empty($random)) {
@@ -252,9 +252,9 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
     $bytesStreamed = 0;
 
     if (!is_resource($fp)) {
-                debug_event('Play',"Error: Unable to open $media->file for downloading",'2');
+        debug_event('Play',"Error: Unable to open $media->file for downloading",'2');
         exit();
-        }
+    }
 
     // Check to see if we should be throttling because we can get away with it
     if (Config::get('rate_limit') > 0) {
@@ -270,8 +270,12 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
 
     // Make sure that a good chunk of the song has been played
     if ($bytesStreamed >= $media->size) {
-            debug_event('Play','Downloaded, Registering stats for ' . $media->title,'5');
-            $GLOBALS['user']->update_stats($media->id);
+        debug_event('Play', 'Downloaded, Registering stats for ' . $media->title, '5');
+        $sessionkey = Stream::$session;
+        //debug_event('play', 'Current session key {'.$sessionkey.'}', '5');
+        $agent = Session::agent($sessionkey);
+        //debug_event('play', 'Current session agent {'.$agent.'}', '5');
+        $GLOBALS['user']->update_stats($media->id, $agent);
     } // if enough bytes are streamed
 
     fclose($fp);
@@ -289,7 +293,7 @@ if (Config::get('track_user_ip')) {
 
 $force_downsample = false;
 if (Config::get('downsample_remote')) {
-    if (!Access::check_network('network', $GLOBALS['user']->id,'0')) {
+    if (!Access::check_network('network', $GLOBALS['user']->id, '0')) {
         debug_event('play', 'Downsampling enabled for non-local address ' . $_SERVER['REMOTE_ADDR'], 5);
         $force_downsample = true;
     }
@@ -358,7 +362,7 @@ if (!is_resource($fp)) {
 
 // Put this song in the now_playing table only if it's a song for now...
 if (get_class($media) == 'Song') {
-    Stream::insert_now_playing($media->id,$uid,$media->time,$sid,get_class($media));
+    Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($media));
 }
 
 // Handle Content-Range
@@ -441,8 +445,12 @@ if ($start > $target) {
 } else if ($bytes_streamed > $target) {
     // FIXME: This check looks suspicious
     if (get_class($media) == 'Song') {
-        debug_event('play', 'Registering stats for ' . $media->title, 5);
-        $GLOBALS['user']->update_stats($media->id);
+        debug_event('play', 'Registering stats for {'.$media->title.'}...', '5');
+        $sessionkey = Stream::$session;
+        //debug_event('play', 'Current session key {'.$sessionkey.'}', '5');
+        $agent = Session::agent($sessionkey);
+        //debug_event('play', 'Current session agent {'.$agent.'}', '5');
+        $GLOBALS['user']->update_stats($media->id, $agent);
         $media->set_played();
     }
 } else {

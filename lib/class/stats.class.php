@@ -36,6 +36,7 @@ class Stats
     public $object_id;
     public $date;
     public $user;
+    public $agent;
 
 
     /**

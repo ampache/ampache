@@ -575,7 +575,7 @@ a.button{padding:1px 3px;}
 
 .tableform select { 
 	width: 150px; 
-} 
+}
 
 /* table rows */
 .tabledata .odd, .tabledata .odd td,
@@ -596,10 +596,17 @@ table.tabledata .cel_drag img:hover {
 	cursor: pointer;
 }
 
+table.tabledata .cel_agent {
+    text-align: right;
+}
+
+table.tabledata .cel_agent img:hover {
+    cursor: help;
+}
+
 .row-highlight:hover { 
 	background:#c33;
-} 
-	
+}
 
 /* Misc */
 .border 	{ background: #000; }
@@ -925,12 +932,10 @@ textarea:focus{
 	background: url(../images/ajax-loader.gif) no-repeat;
 	display: none;
 	text-indent:-9999em;
-} 
+}
 
 .information,.information a { 
 	font-size: 0.9em; 
 	font-style: italic; 
 	color: #c0c0c0; 
-} 
-
-
+}

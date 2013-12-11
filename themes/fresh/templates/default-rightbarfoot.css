@@ -506,6 +506,14 @@ table.tabledata .cel_drag img:hover {
 	cursor: pointer;
 }
 
+table.tabledata .cel_agent {
+    text-align: right;
+}
+
+table.tabledata .cel_agent img:hover {
+    cursor: help;
+}
+
 .box_preferences h4
 {
 	font-size:15px;

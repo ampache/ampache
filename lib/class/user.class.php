@@ -583,12 +583,13 @@ class User extends database_object
      * update_user_stats
      * updates the playcount mojo for this specific user
      */
-    public function update_stats($song_id)
+    public function update_stats($song_id, $agent = '')
     {
+        debug_event('user.class.php', 'Updating stats for {'.$song_id.'} {'.$agent.'}...', '5');
         $song_info = new Song($song_id);
         $song_info->format();
         $user = $this->id;
-
+        
         if (!strlen($song_info->file)) { return false; }
 
         $this->set_preferences();
@@ -601,9 +602,9 @@ class User extends database_object
         }
 
         // Do this last so the 'last played checks are correct'
-        Stats::insert('song', $song_id, $user);
-        Stats::insert('album', $song_info->album, $user);
-        Stats::insert('artist', $song_info->artist, $user);
+        Stats::insert('song', $song_id, $user, $agent);
+        Stats::insert('album', $song_info->album, $user, $agent);
+        Stats::insert('artist', $song_info->artist, $user, $agent);
 
         return true;
 

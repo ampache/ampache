@@ -166,6 +166,16 @@ class Session
     {
         return self::_read($key, 'username');
     }
+    
+    /**
+     * username
+     *
+     * This returns the agent associated with a session ID, if any
+     */
+    public static function agent($key)
+    {
+        return self::_read($key, 'agent');
+    }
 
     /**
      * create
