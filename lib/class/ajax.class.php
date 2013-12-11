@@ -47,9 +47,9 @@ class Ajax
      * This returns a string with the correct and full ajax 'observe' stuff
      * from jQuery
      */
-    public static function observe($source,$method,$action,$post='')
+    public static function observe($source, $method, $action, $confirm)
     {
-        $non_quoted = array('document','window');
+        $non_quoted = array('document', 'window');
 
         if (in_array($source,$non_quoted)) {
             $source_txt = $source;
@@ -57,9 +57,14 @@ class Ajax
             $source_txt = "'#$source'";
         }
 
-        $observe    = "<script type=\"text/javascript\">";
-        $observe    .= "$($source_txt).on('$method', function(){" . $action . ";});";
-        $observe    .= "</script>";
+        $observe = "<script type=\"text/javascript\">";
+        if ($confirm) {
+            $observe .= "$($source_txt).on('$method', function(){ if(confirm(\"".$confirm."\")) { ".$action." }});";
+        }
+        else {
+            $observe .= "$($source_txt).on('$method', function(){".$action.";});";
+        }
+        $observe .= "</script>";
 
         return $observe;
 
@@ -79,7 +84,7 @@ class Ajax
      * This takes the action, the source and the post (if passed) and
      * generates the full ajax link
      */
-    public static function action($action,$source,$post='')
+    public static function action($action, $source, $post='')
     {
         $url = self::url($action);
 
@@ -106,24 +111,24 @@ class Ajax
      * This prints out an img of the specified icon with the specified alt
      * text and then sets up the required ajax for it.
      */
-    public static function button($action,$icon,$alt,$source='',$post='',$class='')
+    public static function button($action, $icon, $alt, $source='', $post='', $class='', $confirm='')
     {
         // Get the correct action
-        $ajax_string = self::action($action,$source,$post);
+        $ajax_string = self::action($action, $source, $post);
 
         // If they passed a span class
         if ($class) {
-            $class = ' class="' . $class . '"';
+            $class = ' class="'.$class.'"';
         }
 
-        $string = UI::get_icon($icon,$alt);
+        $string = UI::get_icon($icon, $alt);
 
         // Generate an <a> so that it's more compliant with older
         // browsers (ie :hover actions) and also to unify linkbuttons
         // (w/o ajax) display
         $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>".$string."</a>\n";
 
-        $string .= self::observe($source,'click',$ajax_string);
+        $string .= self::observe($source, 'click', $ajax_string, $confirm);
 
         return $string;
 
@@ -134,10 +139,10 @@ class Ajax
      * This prints out the specified text as a link and sets up the required
      * ajax for the link so it works correctly
      */
-    public static function text($action,$text,$source,$post='',$class='')
+    public static function text($action, $text, $source, $post='', $class='')
     {
         // Format the string we wanna use
-        $ajax_string = self::action($action,$source,$post);
+        $ajax_string = self::action($action, $source, $post);
 
         // If they passed a span class
         if ($class) {
@@ -147,7 +152,7 @@ class Ajax
         // If we pass a source put it in the ID
         $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>$text</a>\n";
 
-        $string .= self::observe($source,'click',$ajax_string);
+        $string .= self::observe($source, 'click', $ajax_string);
 
         return $string;
 

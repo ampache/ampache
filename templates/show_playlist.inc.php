@@ -72,11 +72,10 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         </li>
     <?php if ($playlist->has_access()) { ?>
         <li>
-            <a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>"  onclick="return confirm('<?php echo T_('Do you really want to delete the playlist?'); ?>');">
+            <a href="<?php echo Config::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete the playlist?'); ?>');">
                 <?php echo UI::get_icon('delete'); ?>
                 &nbsp;&nbsp;<?php echo T_('Delete'); ?>
             </a>
-
         </li>
     <?php } ?>
     </ul>

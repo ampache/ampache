@@ -43,6 +43,6 @@
         <a id="<?php echo 'edit_playlist_'.$playlist->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_'.$playlist->id ?>', '<?php echo T_('Playlist edit') ?>', '', 'playlist_row_', 'refresh_playlist')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
-        <?php echo Ajax::button('?page=browse&action=delete_object&type=playlist&id=' . $playlist->id,'delete', T_('Delete'),'delete_playlist_' . $playlist->id); ?>
+        <?php echo Ajax::button('?page=browse&action=delete_object&type=playlist&id='.$playlist->id, 'delete', T_('Delete'), 'delete_playlist_'.$playlist->id, '', '', T_('Do you really want to delete the playlist?')); ?>
     <?php } ?>
 </td>
