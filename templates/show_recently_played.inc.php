@@ -90,9 +90,11 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
             </a>
         </td>
         <td class="cel_lastplayed"><?php echo $time_string; ?></td>
-        <?php if ($agent != '') { ?>
-            <td class="cel_agent"><?php echo UI::get_icon('info', $agent); ?></td>
-        <?php } ?>
+        <td class="cel_agent">
+            <?php if ($agent != '') { ?>
+                <?php echo UI::get_icon('info', $agent); ?>
+            <?php } ?>
+        </td>
     </tr>
 <?php } ?>
 <?php if (!count($data)) { ?>
