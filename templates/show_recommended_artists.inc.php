@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- 
+
  $thcount = 7;
 ?>
 <?php UI::show_box_top(T_('Similar Artists'), 'info-box'); ?>

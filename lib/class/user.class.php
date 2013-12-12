@@ -589,7 +589,7 @@ class User extends database_object
         $song_info = new Song($song_id);
         $song_info->format();
         $user = $this->id;
-        
+
         if (!strlen($song_info->file)) { return false; }
 
         $this->set_preferences();

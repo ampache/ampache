@@ -18,8 +18,9 @@ if ($iframed) {
 if ($iframed) {
 ?>
 <script type="text/javascript">
-function NavigateTo(url) {
-	window.parent.document.getElementById('frame_main').setAttribute('src', url);
+function NavigateTo(url)
+{
+    window.parent.document.getElementById('frame_main').setAttribute('src', url);
 }
 </script>
 <?php
@@ -27,13 +28,13 @@ function NavigateTo(url) {
 ?>
 <script type="text/javascript">
     $(document).ready(function(){
-    
+
         if (!isNaN($.cookie('jp_volume'))) {
             var jp_volume = $.cookie('jp_volume');
         } else {
             var jp_volume = 0.80;
         }
-    
+
         var myPlaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
             cssSelectorAncestor: "#jp_container_1"
@@ -90,12 +91,12 @@ if ($iframed) {
             if (index == current) {
 <?php
 if ($iframed) {
-	echo "var titleobj = '<a href=\"javascript:NavigateTo(\'" . Config::get('web_path') . "/albums.php?action=show&album=' + albumids[index] + '\');\">' + obj.title + '</a>';";
-	echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . Config::get('web_path') . "/artists.php?action=show&artist=' + artistids[index] + '\');\">' + obj.artist + '</a>';";
-	echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . Config::get('web_path') . "/song.php?action=show_lyrics&song_id=' + songids[index] + '\');\">" . T_('Show Lyrics') . "</a>';";
+    echo "var titleobj = '<a href=\"javascript:NavigateTo(\'" . Config::get('web_path') . "/albums.php?action=show&album=' + albumids[index] + '\');\">' + obj.title + '</a>';";
+    echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . Config::get('web_path') . "/artists.php?action=show&artist=' + artistids[index] + '\');\">' + obj.artist + '</a>';";
+    echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . Config::get('web_path') . "/song.php?action=show_lyrics&song_id=' + songids[index] + '\');\">" . T_('Show Lyrics') . "</a>';";
 } else {
-	echo "var titleobj = obj.title;";
-	echo "var artistobj = obj.artist;";
+    echo "var titleobj = obj.title;";
+    echo "var artistobj = obj.artist;";
 }
 ?>
                 $('.playing_title').html(titleobj);
@@ -103,7 +104,7 @@ if ($iframed) {
 <?php
 if ($iframed && Config::get('show_lyrics')) {
 ?>
-				$('.playing_lyrics').html(lyricsobj);
+                $('.playing_lyrics').html(lyricsobj);
 <?php
 }
 if (Config::get('song_page_title')) {
@@ -118,7 +119,7 @@ if (Config::get('song_page_title')) {
             }
         });
     });
-    
+
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
         $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
     });
@@ -138,7 +139,7 @@ if ($iframed) {
 <div class="playing_info">
     <div class="playing_artist"></div>
     <div class="playing_title"></div>
-	<div class="playing_lyrics"></div>
+    <div class="playing_lyrics"></div>
 </div>
 <div class="jp-area">
   <div id="jquery_jplayer_1" class="jp-jplayer"></div>

@@ -38,13 +38,13 @@ $thcount = 9;
         <th class="cel_track"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track', T_('Track'), 'sort_song_track'); ?></th>
         <th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', T_('Time'), 'sort_song_time'); ?></th>
     <?php if (Config::get('ratings')) {
-        ++$thcount; 
+        ++$thcount;
         Rating::build_cache('song', $object_ids);
     ?>
         <th class="cel_rating"><?php echo T_('Rating'); ?></th>
     <?php } ?>
     <?php if (Config::get('userflags')) {
-        ++$thcount; 
+        ++$thcount;
         Userflag::build_cache('song', $object_ids);
     ?>
         <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
@@ -52,7 +52,7 @@ $thcount = 9;
         <th class="cel_action"><?php echo T_('Action'); ?></th>
         <th class="cel_drag"></th>
     </tr>
-    
+
     <tbody id="sortableplaylist">
     <?php
         foreach ($object_ids as $song_id) {
@@ -64,13 +64,13 @@ $thcount = 9;
         </tr>
     <?php } ?>
     </tbody>
-    
+
 <?php if (!count($object_ids)) { ?>
     <tr class="<?php echo UI::flip_class(); ?>">
         <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No song found'); ?></span></td>
     </tr>
 <?php } ?>
-    
+
     <tr class="th-bottom">
     <?php if (Config::get('directplay')) { ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>

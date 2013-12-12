@@ -415,7 +415,7 @@ class Artist extends database_object
             $sql = 'UPDATE `artist` SET `name` = ? WHERE `id` = ?';
             Dba::write($sql, array($name, $current_id));
         }
-        
+
         Tag::update_tag_list($data['edit_tags'], 'artist', $current_id);
 
         return $current_id;

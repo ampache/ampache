@@ -123,7 +123,7 @@ switch ($_REQUEST['action']) {
             $results['rfc3514'] = '0x1';
             break;
         }
-        
+
         $new_id = '';
         switch ($_POST['type']) {
             case 'album_row':

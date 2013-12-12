@@ -166,7 +166,7 @@ class Session
     {
         return self::_read($key, 'username');
     }
-    
+
     /**
      * username
      *

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- 
+
 define('AJAX_INCLUDE','1');
 
 require_once '../lib/init.php';

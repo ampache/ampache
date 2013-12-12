@@ -87,8 +87,8 @@ foreach ($playlist->urls as $item) {
     if ($urlinfo['id']) {
         $song = new Song($urlinfo['id']);
         $ftype = $song->type;
-		
-		$idsjs .= "artistids[" . $i . "] = '" . $song->artist . "'; albumids[" . $i . "] = '" . $song->album . "'; songids[" . $i . "] = '" . $song->id . "';";
+
+        $idsjs .= "artistids[" . $i . "] = '" . $song->artist . "'; albumids[" . $i . "] = '" . $song->album . "'; songids[" . $i . "] = '" . $song->id . "';";
 
         $transcode_cfg = Config::get('transcode');
         // Check transcode is required
@@ -119,7 +119,7 @@ foreach ($playlist->urls as $item) {
         }
         //$url .= "&content_length=required";
     } else {
-		$idsjs .= "artistids[" . $i . "] = ''; albumids[" . $i . "] = ''; songids[" . $i . "] = '';";
+        $idsjs .= "artistids[" . $i . "] = ''; albumids[" . $i . "] = ''; songids[" . $i . "] = '';";
         $ext = pathinfo($url, PATHINFO_EXTENSION);
         $type = $ext ?: $ftype;
 
@@ -137,8 +137,8 @@ foreach ($playlist->urls as $item) {
     $playlistjs .= $jtype.': "' . $url;
     $playlistjs .= '",' . "\n";
     $playlistjs .= 'poster: "' . $item->image_url . (!$iframed ? '&thumb=4' : '') . '" }' . "\n";
-	
-	$i++;
+
+    $i++;
 }
 ?>
 <script language="javascript" type="text/javascript">

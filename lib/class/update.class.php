@@ -319,13 +319,13 @@ class Update
 
         $update_string = '- Drop flagged table.<br />';
         $version[] = array('version' => '360024', 'description' => $update_string);
-        
+
         $update_string = '- Add options to enable HTML5 / Flash on web players.<br />';
         $version[] = array('version' => '360025', 'description' => $update_string);
 
         $update_string = '- Added agent to `object_count` table.<br />';
         $version[] = array('version' => '360026','description' => $update_string);
-        
+
         return $version;
     }
 
@@ -1766,7 +1766,7 @@ class Update
 
         return true;
     }
-    
+
     /**
      * update_360025
      *
@@ -1794,7 +1794,7 @@ class Update
 
         return true;
     }
-    
+
     /**
      * update_360026
      *

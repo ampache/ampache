@@ -59,9 +59,8 @@ class Ajax
 
         $observe = "<script type=\"text/javascript\">";
         if ($confirm) {
-            $observe .= "$($source_txt).on('$method', function(){ if(confirm(\"".$confirm."\")) { ".$action." }});";
-        }
-        else {
+            $observe .= "$($source_txt).on('$method', function(){ if (confirm(\"".$confirm."\")) { ".$action." }});";
+        } else {
             $observe .= "$($source_txt).on('$method', function(){".$action.";});";
         }
         $observe .= "</script>";

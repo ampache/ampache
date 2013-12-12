@@ -448,7 +448,7 @@ class Tag extends database_object
             //debug_event('tag.class.php', 'Tags list found into cache memory!', '5');
             return parent::get_from_cache('tags_list', 0);
         }*/
-    
+
         $sql = "SELECT `tag_map`.`tag_id`,COUNT(`tag_map`.`object_id`) AS `count` " .
             "FROM `tag_map` " .
             "LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " .
@@ -467,7 +467,7 @@ class Tag extends database_object
         }
 
         //parent::add_to_cache('tags_list', 0, $results);
-        
+
         return $results;
 
     } // get_tags

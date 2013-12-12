@@ -102,7 +102,7 @@ if ($pages > 1) {
 
     <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $prev_offset . '&browse_uid=' . $uid, T_('Prev'),'browse_' . $uid . 'prev','','prev'); ?>
     <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $next_offset . '&browse_uid=' . $uid, T_('Next'),'browse_' . $uid . 'next','','next'); ?>
-	<?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=-1&browse_uid=' . $uid, T_('All'),'browse_' . $uid . 'all','','all'); ?>
+    <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=-1&browse_uid=' . $uid, T_('All'),'browse_' . $uid . 'all','','all'); ?>
     <?php
         /* Echo everything below us */
         foreach ($page_data['down'] as $page => $offset) {
