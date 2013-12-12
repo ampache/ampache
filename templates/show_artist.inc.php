@@ -29,19 +29,14 @@ $browse->set_type($object_type);
 UI::show_box_top($artist->f_name, 'info-box');
 ?>
 <?php
-if (isset($biography)) {
+if (Config::get('lastfm_api_key')) {
+    echo Ajax::observe('window','load', Ajax::action('?page=index&action=artist_info&artist='.$artist->id, 'artist_info'));
 ?>
-<div id="artist_biography">
-    <div class="album_art">
-        <a href="<?php echo $biography['megaphoto']; ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto']; ?>" alt="<?php echo $artist->f_name; ?>" width="128"></a>
+    <div id="artist_biography">
+        <?php echo T_('Loading...'); ?>
     </div>
-    <div id="artist_summary">
-        <?php echo $biography['summary']; ?>
-    </div>
-</div>
-<?php
-}
-?>
+<?php } ?>
+
 <?php
 if (Config::get('ratings')) {
 ?>
@@ -116,3 +111,11 @@ if (Config::get('show_played_times')) {
     $browse->show_objects($object_ids);
     $browse->store();
 ?>
+<?php
+if (Config::get('show_similar')) {
+    echo Ajax::observe('window','load', Ajax::action('?page=index&action=similar_artist&artist='.$artist->id, 'similar_artist'));
+?>
+    <div id="similar_artist">
+        <?php UI::show_box_top(T_('Similar Artists'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>
+    </div>
+<?php } ?>

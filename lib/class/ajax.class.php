@@ -47,7 +47,7 @@ class Ajax
      * This returns a string with the correct and full ajax 'observe' stuff
      * from jQuery
      */
-    public static function observe($source, $method, $action, $confirm)
+    public static function observe($source, $method, $action, $confirm='')
     {
         $non_quoted = array('document', 'window');
 
@@ -58,7 +58,7 @@ class Ajax
         }
 
         $observe = "<script type=\"text/javascript\">";
-        if ($confirm) {
+        if (!empty($confirm)) {
             $observe .= "$($source_txt).on('$method', function(){ if (confirm(\"".$confirm."\")) { ".$action." }});";
         } else {
             $observe .= "$($source_txt).on('$method', function(){".$action.";});";

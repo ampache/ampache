@@ -33,18 +33,7 @@ switch ($_REQUEST['action']) {
         $artist->format();
         $object_ids = $artist->get_albums($_REQUEST['catalog']);
         $object_type = 'album';
-        if (Config::get('lastfm_api_key')) {
-            $biography = Recommendation::get_artist_info($artist->id);
-        }
         require_once Config::get('prefix') . '/templates/show_artist.inc.php';
-        if (Config::get('show_similar')) {
-            if ($object_ids = Recommendation::get_artists_like($artist->id)) {
-                // Ugly code to grab the relevant entries.
-                // Almost looks like Perl.
-                $object_ids = array_map(create_function('$i', 'return $i[\'id\'];'), $object_ids);
-                require_once Config::get('prefix') . '/templates/show_recommended_artists.inc.php';
-            }
-        }
         break;
     case 'show_all_songs':
         $artist = new Artist($_REQUEST['artist']);

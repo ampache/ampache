@@ -84,7 +84,7 @@ session_start();
         ?>
 
     </select>
-<?php echo Ajax::observe('catalog_select', 'change', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id,'catalog_select', 'catalog_choice'), true); ?>
+<?php echo Ajax::observe('catalog_select', 'change', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id,'catalog_select', 'catalog_choice')); ?>
 </form>
 <?php } ?>
 <?php if (in_array('show_art',$allowed_filters)) { ?>

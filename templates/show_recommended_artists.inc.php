@@ -20,7 +20,7 @@
  *
  */
 
- $thcount = 7;
+$thcount = 7;
 ?>
 <?php UI::show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
@@ -81,3 +81,4 @@
         <th class="cel_action"> <?php echo T_('Action'); ?> </th>
     </tr>
 </table>
+<?php UI::show_box_bottom(); ?>

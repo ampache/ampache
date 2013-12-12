@@ -36,6 +36,37 @@ switch ($_REQUEST['action']) {
             $results['random_selection'] = '<!-- None found -->';
         }
     break;
+    case 'artist_info':
+        if (Config::get('lastfm_api_key') && isset($_REQUEST['artist'])) {
+            $artist = new Artist($_REQUEST['artist']);
+            $artist->format();
+            $biography = Recommendation::get_artist_info($artist->id);
+            ob_start();
+            require_once Config::get('prefix') . '/templates/show_artist_info.inc.php';
+            $results['artist_biography'] = ob_get_clean();
+        }
+    break;
+    case 'similar_artist':
+        if (Config::get('show_similar') && isset($_REQUEST['artist'])) {
+            $artist = new Artist($_REQUEST['artist']);
+            $artist->format();
+            if ($object_ids = Recommendation::get_artists_like($artist->id)) {
+                $object_ids = array_map(create_function('$i', 'return $i[\'id\'];'), $object_ids);
+                ob_start();
+                require_once Config::get('prefix') . '/templates/show_recommended_artists.inc.php';
+                $results['similar_artist'] = ob_get_clean();
+            }
+        }
+    break;
+    case 'similar_now_playing':
+        if (Config::get('show_similar') && isset($_REQUEST['media_id']) && isset($_REQUEST['media_artist'])) {
+            $artists = Recommendation::get_artists_like($_REQUEST['media_artist'], 3, false);
+            $songs = Recommendation::get_songs_like($_REQUEST['media_id'], 3);
+            ob_start();
+            require_once Config::get('prefix') . '/templates/show_now_playing_similar.inc.php';
+            $results['similar_artist'] = ob_get_clean();
+        }
+    break;
     case 'reloadnp':
         ob_start();
         show_now_playing();

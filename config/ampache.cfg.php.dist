@@ -341,7 +341,7 @@ art_order = "db,tags,folder,musicbrainz,lastfm,google"
 
 ; Recommendations
 ; Set this to true to enable display of similar artists or albums
-; while browsing.  Currently very experimental, requires Last.FM.
+; while browsing. Requires Last.FM.
 ; DEFAULT: false
 ;show_similar = "false"
 
