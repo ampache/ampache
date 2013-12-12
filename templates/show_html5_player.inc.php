@@ -27,6 +27,8 @@ function NavigateTo(url)
 }
 ?>
 <script type="text/javascript">
+var jplaylist = null;
+
     $(document).ready(function(){
 
         if (!isNaN($.cookie('jp_volume'))) {
@@ -35,10 +37,10 @@ function NavigateTo(url)
             var jp_volume = 0.80;
         }
 
-        var myPlaylist = new jPlayerPlaylist({
+        jplaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
             cssSelectorAncestor: "#jp_container_1"
-        }, [<?php echo $playlistjs; ?>], {
+        }, [], {
             playlistOptions: {
                 autoPlay: true,
                 loopOnPrevious: false,
@@ -50,9 +52,8 @@ function NavigateTo(url)
                 shuffleTime: 'slow'
             },
             swfPath: "<?php echo Config::get('web_path'); ?>/modules/jplayer/",
-            supplied: "<?php echo join(",", $jtypes); ?>",
             audioFullScreen: true,
-			smoothPlayBar: true,
+            smoothPlayBar: true,
             solution: "<?php
 $solutions = array();
 if (Config::get('webplayer_html5')) {
@@ -84,8 +85,8 @@ if ($iframed) {
         });
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
-        var current = myPlaylist.current,
-            playlist = myPlaylist.playlist;
+        var current = jplaylist.current,
+            playlist = jplaylist.playlist;
         var pos = $(".jp-playlist-current").position().top + $(".jp-playlist").scrollTop();
         $(".jp-playlist").scrollTop(pos);
         $.each(playlist, function (index, obj) {
@@ -124,6 +125,8 @@ if (Config::get('song_page_title')) {
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
         $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
     });
+    
+<?php echo WebPlayer::add_media_js($playlist); ?>
 });
 </script>
 </head>

@@ -128,7 +128,7 @@ class Api
         // If the timestamp isn't within 30 minutes sucks to be them
         if (($timestamp < (time() - 1800)) ||
             ($timestamp > (time() + 1800))) {
-            debug_event('API', 'Login Failed: timestamp out of range', 1);
+            debug_event('API', 'Login Failed: timestamp out of range ' . $timestamp . '/' . time(), 1);
             Error::add('api', T_('Login Failed: timestamp out of range'));
             return false;
         }

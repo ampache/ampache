@@ -23,6 +23,9 @@
 <?php if (Config::get('directplay')) { ?>
 <td class="cel_directplay">
     <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id,'play', T_('Play artist'),'play_artist_' . $artist->id); ?>
+<?php if (Stream_Playlist::check_autoplay_append()) { ?>
+    <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id . '&append=true','add', T_('Add'),'addplay_artist_' . $artist->id); ?>
+<?php } ?>
 </td>
 <?php } ?>
 <td class="cel_add">

@@ -149,6 +149,12 @@ class Stream_Playlist
 
         return $urls;
     }
+    
+    public static function check_autoplay_append()
+    {
+        // For now, only iframed web player support media append in the currently played playlist
+        return (Config::get('iframes') && Config::get('play_type') == 'web_player');
+    }
 
     public function generate_playlist($type, $redirect = false)
     {

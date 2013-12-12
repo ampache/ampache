@@ -25,22 +25,36 @@
 <head>
 <title><?php echo Config::get('site_title'); ?></title>
 <script language="javascript" type="text/javascript">
-function PlayerFrame(URL)
+function PlayerFrame()
 {
     var ff = parent.parent.document.getElementById('frame_footer');
     var maindiv = parent.parent.document.getElementById('maindiv');
+    var appendmedia = false;
     if (ff.getAttribute('className') != 'frame_footer_visible') {
         ff.setAttribute('className', 'frame_footer_visible');
         ff.setAttribute('class', 'frame_footer_visible');
 
         maindiv.style.height = (parent.parent.innerHeight - 105) + "px";
+    } else {
+<?php
+if ($_REQUEST['append']) {
+?>
+        appendmedia = true;
+<?php
+}
+?>
     }
-    ff.setAttribute('src', URL);
-    window.location = '<?php echo return_referer() ?>';
+
+    if (appendmedia) {
+        <?php echo WebPlayer::add_media_js($this, "ff.contentWindow.addMedia"); ?>
+    } else {
+        ff.setAttribute('src', '<?php echo Config::get('web_path'); ?>/web_player_embedded.php?playlist_id=<?php echo $this->id; ?>');
+        window.location = '<?php echo return_referer() ?>';
+    }
     return false;
 }
 </script>
 </head>
-<body onLoad="javascript:PlayerFrame('<?php echo Config::get('web_path')?>/web_player_embedded.php<?php echo '?playlist_id=' . $this->id ?>');">
+<body onLoad="javascript:PlayerFrame();">
 </body>
 </html>

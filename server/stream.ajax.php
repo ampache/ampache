@@ -89,6 +89,9 @@ switch ($_REQUEST['action']) {
                 $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=live_stream&stream_id='.$_REQUEST['stream_id'];
             break;
         }
+        if (!empty($_REQUEST['append'])) {
+            $_SESSION['iframe']['target'] .= '&append=true';
+        }
         $results['rfc3514'] = '<script type="text/javascript">reloadUtil(\''.$_SESSION['iframe']['target'] . '\');</script>';
     break;
     case 'basket':
