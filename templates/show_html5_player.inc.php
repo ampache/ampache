@@ -52,6 +52,7 @@ function NavigateTo(url)
             swfPath: "<?php echo Config::get('web_path'); ?>/modules/jplayer/",
             supplied: "<?php echo join(",", $jtypes); ?>",
             audioFullScreen: true,
+			smoothPlayBar: true,
             solution: "<?php
 $solutions = array();
 if (Config::get('webplayer_html5')) {
