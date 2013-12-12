@@ -116,6 +116,7 @@ $thcount = 7;
         <th class="cel_agent"><?php echo T_('Agent'); ?></th>
     </tr>
 </table>
+<div id="recent_more"><a href="<?php echo Config::get('web_path'); ?>/stats.php?action=recent"><?php echo T_('More'); ?></a></div>
 <script language="javascript" type="text/javascript">
 $(document).ready(function(){
     $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});

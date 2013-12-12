@@ -56,6 +56,9 @@ switch ($_REQUEST['action']) {
     case 'userflag':
         require_once Config::get('prefix') . '/templates/show_userflag.inc.php';
     break;
+	case 'recent':
+        require_once Config::get('prefix') . '/templates/show_recent.inc.php';
+    break;
     case 'show':
     default:
         require_once Config::get('prefix') . '/templates/show_stats.inc.php';

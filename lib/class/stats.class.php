@@ -208,12 +208,26 @@ class Stats
 
     } // get_top
 
+	/**
+     * get_recent_sql
+     * This returns the get_recent sql
+     */
+    public static function get_recent_sql($type)
+    {
+        $type = self::validate_type($type);
+
+        $sql = "SELECT DISTINCT(`object_id`) as `id`, MAX(`date`) FROM object_count" .
+            " WHERE `object_type` = '" . $type ."'" .
+            " GROUP BY `object_id` ORDER BY MAX(`date`) DESC, `id` ";
+        return $sql;
+    }
+
     /**
      * get_recent
      * This returns the recent X for type Y from the
      * last stats_threshold days
     */
-    public static function get_recent($type,$count='',$threshold = '',$offset='')
+    public static function get_recent($type, $count='',$threshold = '',$offset='')
     {
         /* If they don't pass one, then use the preference */
         if (!$threshold) {
@@ -232,15 +246,13 @@ class Stats
             $limit = intval($offset) . "," . $count;
         }
 
-        /* Select Top objects counting by # of rows */
-        $sql = "SELECT DISTINCT(object_id) FROM object_count" .
-            " WHERE object_type = ?" .
-            " GROUP BY object_id ORDER BY `date` DESC LIMIT $limit";
-        $db_results = Dba::read($sql, array($type));
+		$sql = self::get_recent_sql($type);
+        $sql .= "LIMIT $limit";
+        $db_results = Dba::read($sql);
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = $row['id'];
         }
 
         return $results;
