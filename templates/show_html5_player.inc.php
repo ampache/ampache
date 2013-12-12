@@ -125,7 +125,7 @@ if (Config::get('song_page_title')) {
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
         $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
     });
-    
+
 <?php echo WebPlayer::add_media_js($playlist); ?>
 });
 </script>

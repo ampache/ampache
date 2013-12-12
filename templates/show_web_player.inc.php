@@ -39,17 +39,18 @@ var songids = new Array();
 var jplaylist = new Array();
 var jtypes = new Array();
 
-function addMedia(media) {
+function addMedia(media)
+{
     artistids.push(media['artist_id']);
     albumids.push(media['album_id']);
     songids.push(media['song_id']);
-    
+
     var jpmedia = {};
     jpmedia['title'] = media['title'];
     jpmedia['artist'] = media['artist'];
     jpmedia[media['filetype']] = media['url'];
     jpmedia['poster'] = media['poster'];
-    
+
     jplaylist.add(jpmedia);
 }
 </script>

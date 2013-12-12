@@ -208,7 +208,7 @@ class Stats
 
     } // get_top
 
-	/**
+    /**
      * get_recent_sql
      * This returns the get_recent sql
      */
@@ -246,7 +246,7 @@ class Stats
             $limit = intval($offset) . "," . $count;
         }
 
-		$sql = self::get_recent_sql($type);
+        $sql = self::get_recent_sql($type);
         $sql .= "LIMIT $limit";
         $db_results = Dba::read($sql);
 

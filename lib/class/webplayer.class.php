@@ -25,7 +25,7 @@ class WebPlayer
     public static function is_playlist_radio($playlist)
     {
         $radioas = array();
-        
+
         foreach ($playlist->urls as $item) {
             if ($item->type == "radio") {
                 $radios[] = $item;
@@ -34,7 +34,7 @@ class WebPlayer
 
         return (count($playlist->urls) == 1 && count($radios) > 0 && Config::get('webplayer_flash'));
     }
-    
+
     public static function browser_info($agent=null)
     {
         // Declare known browsers to look for
@@ -56,7 +56,7 @@ class WebPlayer
         return array($matches['browser'][$i] => $matches['version'][$i]);
 
     }
-    
+
     public static function add_media_js($playlist, $callback='addMedia')
     {
         $addjs = "";
@@ -134,10 +134,10 @@ class WebPlayer
             $js['filetype'] = $jtype;
             $js['url'] = $url;
             $js['poster'] = $item->image_url . (!$iframed ? '&thumb=4' : '');
-            
+
             $addjs .= $callback . "(" . json_encode($js) . ");";
         }
-        
+
         return $addjs;
     }
 }

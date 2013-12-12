@@ -83,7 +83,7 @@
 </div>
 <?php } ?>
 
-<?php if (Config::get('show_similar')) { 
+<?php if (Config::get('show_similar')) {
     echo Ajax::observe('window','load', Ajax::action('?page=index&action=similar_now_playing&media_id='.$media->id.'&media_artist='.$media->artist, 'similar_now_playing'));
 ?>
 <div class="np_group similars" id="similar_artist">
