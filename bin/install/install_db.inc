@@ -75,7 +75,7 @@ if (!install_check_status($configfile)) {
     }
 } 
 
-Config::set_by_array(array(
+AmpConfig::set_by_array(array(
     'web_path' => $web_path,
     'database_name' => $db_name,
     'database_username' => $db_user,
@@ -91,7 +91,7 @@ if (!install_insert_db($new_db_user, $new_db_pass, $force)) {
     exit(1); 
 } 
 
-Config::set_by_array(array(
+AmpConfig::set_by_array(array(
     'database_username' => $new_db_user ?: $db_user,
     'database_password' => $new_db_pass ?: $db_pass
 ), true);

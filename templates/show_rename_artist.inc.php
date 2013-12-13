@@ -27,7 +27,7 @@ function insert()
 }
 </script>
 <?php /* HINT: Artist Name */ UI::show_box_top(sprintf(T_('Rename %s'), $artist->name)); ?>
-<form name="rename_artist" method="post" action="<?php echo Config::get('web_path'); ?>/artists.php?action=rename&amp;artist=<?php echo $artist->id; ?>" style="Display:inline;">
+<form name="rename_artist" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=rename&amp;artist=<?php echo $artist->id; ?>" style="Display:inline;">
     <?php show_artist_pulldown($artist->id, "artist_id", 4); ?>
     <br />
     <?php echo T_('OR'); ?><br />

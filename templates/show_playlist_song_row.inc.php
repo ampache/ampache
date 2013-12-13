@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php if (Config::get('directplay')) { ?>
+<?php if (AmpConfig::get('directplay')) { ?>
 <td class="cel_directplay">
     <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id, 'play', T_('Play song'),'play_playlist_song_' . $song->id); ?>
 </td>
@@ -32,15 +32,15 @@
 <td class="cel_album"><?php echo $song->f_album_link; ?></td>
 <td class="cel_genre"><?php echo $song->f_tags; ?></td>
 <td class="cel_time"><?php echo $song->f_time; ?></td>
-<?php if (Config::get('ratings')) { ?>
+<?php if (AmpConfig::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></td>
 <?php } ?>
-<?php if (Config::get('userflags')) { ?>
+<?php if (AmpConfig::get('userflags')) { ?>
 <td class="cel_userflag" id="userflag_<?php echo $song->id; ?>_song"><?php Userflag::show($song->id,'song'); ?></td>
 <?php } ?>
 <td class="cel_action">
-    <?php if (Config::get('download')) { ?>
-    <a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>">
+    <?php if (AmpConfig::get('download')) { ?>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>">
         <?php echo UI::get_icon('download', T_('Download')); ?>
     </a>
     <?php } ?>

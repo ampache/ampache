@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
         <th class="cel_catalog"><?php echo T_('Name'); ?></th>
@@ -36,7 +36,7 @@
             $catalog->format();
     ?>
     <tr class="<?php echo UI::flip_class(); ?>" id="catalog_<?php echo $catalog->id; ?>">
-        <?php require Config::get('prefix') . '/templates/show_catalog_row.inc.php'; ?>
+        <?php require AmpConfig::get('prefix') . '/templates/show_catalog_row.inc.php'; ?>
     </tr>
     <?php } ?>
     <tr class="<?php echo UI::flip_class(); ?>">
@@ -55,4 +55,4 @@
         <th class="cel_action"><?php echo T_('Actions'); ?></th>
     </tr>
 </table>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>

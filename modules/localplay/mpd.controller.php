@@ -46,7 +46,7 @@ class AmpacheMpd extends localplay_controller
     public function __construct()
     {
         /* Do a Require Once On the needed Libraries */
-        require_once Config::get('prefix') . '/modules/mpd/mpd.class.php';
+        require_once AmpConfig::get('prefix') . '/modules/mpd/mpd.class.php';
 
     } // AmpacheMpd
 
@@ -196,7 +196,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function get_instance($instance='')
     {
-        $instance = $instance ? $instance : Config::get('mpd_active');
+        $instance = $instance ? $instance : AmpConfig::get('mpd_active');
         $instance = Dba::escape($instance);
 
         $sql = "SELECT * FROM `localplay_mpd` WHERE `id`='$instance'";
@@ -257,7 +257,7 @@ class AmpacheMpd extends localplay_controller
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
         Preference::update('mpd_active',$user_id,intval($uid));
-        Config::set('mpd_active', intval($uid), true);
+        AmpConfig::set('mpd_active', intval($uid), true);
 
         return true;
 

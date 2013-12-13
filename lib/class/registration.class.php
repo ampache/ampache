@@ -49,7 +49,7 @@ class Registration
         // We are the system
         $mailer->set_default_sender();
 
-        $mailer->subject = sprintf(T_("New User Registration at %s"), Config::get('site_title'));
+        $mailer->subject = sprintf(T_("New User Registration at %s"), AmpConfig::get('site_title'));
 
         $mailer->message = sprintf(T_("Thank you for registering\n\n
 Please keep this e-mail for your records. Your account information is as follows:
@@ -63,7 +63,7 @@ Your account is currently inactive. You cannot use it until you've visited the f
 %s
 
 Thank you for registering
-"), $username, $password, Config::get('web_path') . "/register.php?action=validate&username=$username&auth=$validation");
+"), $username, $password, AmpConfig::get('web_path') . "/register.php?action=validate&username=$username&auth=$validation");
 
         $mailer->recipient = $email;
         $mailer->recipient_name = $fullname;
@@ -71,7 +71,7 @@ Thank you for registering
         $mailer->send();
 
         // Check to see if the admin should be notified
-        if (Config::get('admin_notify_reg')) {
+        if (AmpConfig::get('admin_notify_reg')) {
             $mailer->message = sprintf(T_("A new user has registered
 The following values were entered.
 
@@ -94,7 +94,7 @@ E-mail: %s
      */
     public static function show_agreement()
     {
-        $filename = Config::get('prefix') . '/config/registration_agreement.php';
+        $filename = AmpConfig::get('prefix') . '/config/registration_agreement.php';
 
         if (!file_exists($filename)) { return false; }
 

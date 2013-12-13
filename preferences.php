@@ -69,7 +69,7 @@ switch ($_REQUEST['action']) {
         }
 
         update_preferences($_POST['user_id']);
-        header("Location: " . Config::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out($_POST['user_id']));
+        header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out($_POST['user_id']));
     break;
     case 'admin':
         // Make sure only admins here
@@ -91,7 +91,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'update_user':
         // Make sure we're a user and they came from the form
-        if (!Access::check('interface','25') OR !Config::get('use_auth')) {
+        if (!Access::check('interface','25') OR !AmpConfig::get('use_auth')) {
             UI::access_denied();
             exit;
         }
@@ -114,7 +114,7 @@ switch ($_REQUEST['action']) {
             $_REQUEST['action'] = 'confirm';
             $title = T_('Updated');
             $text = T_('Your Account has been updated');
-            $next_url = Config::get('web_path') . '/preferences.php?tab=account';
+            $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=account';
         }
     break;
     default:
@@ -134,7 +134,7 @@ switch ($_REQUEST['action']) {
     break;
     default:
         // Show the default preferences page
-        require Config::get('prefix') . '/templates/show_preferences.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_preferences.inc.php';
     break;
 } // end switch on action
 

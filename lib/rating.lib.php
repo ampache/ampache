@@ -28,7 +28,7 @@ function show_rating($object_id,$type)
 {
     $rating = new Rating($object_id,$type);
 
-    require Config::get('prefix') . '/templates/show_object_rating.inc.php';
+    require AmpConfig::get('prefix') . '/templates/show_object_rating.inc.php';
 
 } // show_rating
 

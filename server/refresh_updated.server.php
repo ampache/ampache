@@ -31,32 +31,32 @@ switch ($_REQUEST['action']) {
     case 'refresh_song':
         $song = new Song($_REQUEST['id']);
         $song->format();
-        require Config::get('prefix') . '/templates/show_song_row.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_song_row.inc.php';
     break;
     case 'refresh_album':
         $album = new Album($_REQUEST['id']);
         $album->format();
-        require Config::get('prefix') . '/templates/show_album_row.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_album_row.inc.php';
     break;
     case 'refresh_artist':
         $artist = new Artist($_REQUEST['id'], $_SESSION['catalog']);
         $artist->format();
-        require Config::get('prefix') . '/templates/show_artist_row.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_artist_row.inc.php';
     break;
     case 'refresh_playlist':
         $playlist = new Playlist($_REQUEST['id']);
         $playlist->format();
         $count = $playlist->get_song_count();
-        require Config::get('prefix') . '/templates/show_playlist_row.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_playlist_row.inc.php';
     break;
     case 'refresh_smartplaylist':
         $playlist = new Search('song', $_REQUEST['id']);
         $playlist->format();
-        require Config::get('prefix') . '/templates/show_smartplaylist_row.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_smartplaylist_row.inc.php';
     break;
     case 'refresh_livestream':
         $radio = new Radio($_REQUEST['id']);
         $radio->format();
-        require Config::get('prefix') . '/templates/show_live_stream_row.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_live_stream_row.inc.php';
     break;
 } // switch on the action

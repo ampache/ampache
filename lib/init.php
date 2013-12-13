@@ -100,10 +100,10 @@ require_once $prefix . '/modules/ampacheapi/AmpacheApi.lib.php';
 /* Temp Fixes */
 $results = Preference::fix_preferences($results);
 
-Config::set_by_array($results, true);
+AmpConfig::set_by_array($results, true);
 
 // Modules (These are conditionally included depending upon config values)
-if (Config::get('ratings')) {
+if (AmpConfig::get('ratings')) {
     require_once $prefix . '/lib/rating.lib.php';
 }
 
@@ -131,10 +131,10 @@ set_memory_limit($results['memory_limit']);
 /**** END Set PHP Vars ****/
 
 // If we want a session
-if (!defined('NO_SESSION') && Config::get('use_auth')) {
+if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     /* Verify their session */
-    if (!Session::exists('interface', $_COOKIE[Config::get('session_name')])) {
-        Auth::logout($_COOKIE[Config::get('session_name')]);
+    if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
+        Auth::logout($_COOKIE[AmpConfig::get('session_name')]);
         exit;
     }
 
@@ -145,21 +145,21 @@ if (!defined('NO_SESSION') && Config::get('use_auth')) {
     $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
 
     /* If the user ID doesn't exist deny them */
-    if (!$GLOBALS['user']->id && !Config::get('demo_mode')) {
+    if (!$GLOBALS['user']->id && !AmpConfig::get('demo_mode')) {
         Auth::logout(session_id());
         exit;
     }
 
     /* Load preferences and theme */
     $GLOBALS['user']->update_last_seen();
-} elseif (!Config::get('use_auth')) {
+} elseif (!AmpConfig::get('use_auth')) {
     $auth['success'] = 1;
     $auth['username'] = '-1';
     $auth['fullname'] = "Ampache User";
     $auth['id'] = -1;
     $auth['offset_limit'] = 50;
-    $auth['access'] = Config::get('default_auth_level') ? User::access_name_to_level(Config::get('default_auth_level')) : '100';
-    if (!Session::exists('interface', $_COOKIE[Config::get('session_name')])) {
+    $auth['access'] = AmpConfig::get('default_auth_level') ? User::access_name_to_level(AmpConfig::get('default_auth_level')) : '100';
+    if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
         Session::create_cookie();
         Session::create($auth);
         Session::check();
@@ -178,7 +178,7 @@ if (!defined('NO_SESSION') && Config::get('use_auth')) {
             $GLOBALS['user']->fullname = $auth['fullname'];
             $GLOBALS['user']->access = $auth['access'];
         }
-        if (!$GLOBALS['user']->id AND !Config::get('demo_mode')) {
+        if (!$GLOBALS['user']->id AND !AmpConfig::get('demo_mode')) {
             Auth::logout(session_id()); exit;
         }
         $GLOBALS['user']->update_last_seen();
@@ -187,7 +187,7 @@ if (!defined('NO_SESSION') && Config::get('use_auth')) {
 // If Auth, but no session is set
 else {
     if (isset($_REQUEST['sid'])) {
-        session_name(Config::get('session_name'));
+        session_name(AmpConfig::get('session_name'));
         session_id(scrub_in($_REQUEST['sid']));
         session_start();
         $GLOBALS['user'] = new User($_SESSION['userdata']['uid']);
@@ -207,14 +207,14 @@ if (session_id()) {
 }
 
 /* Add in some variables for ajax done here because we need the user */
-Config::set('ajax_url', Config::get('web_path') . '/server/ajax.server.php', true);
-Config::set('ajax_server', Config::get('web_path') . '/server', true);
+AmpConfig::set('ajax_url', AmpConfig::get('web_path') . '/server/ajax.server.php', true);
+AmpConfig::set('ajax_server', AmpConfig::get('web_path') . '/server', true);
 
 // Load gettext mojo
 load_gettext();
 
 /* Set CHARSET */
-header ("Content-Type: text/html; charset=" . Config::get('site_charset'));
+header ("Content-Type: text/html; charset=" . AmpConfig::get('site_charset'));
 
 /* Clean up a bit */
 unset($array);
@@ -223,14 +223,14 @@ unset($results);
 /* Check to see if we need to perform an update */
 if (!defined('OUTDATED_DATABASE_OK')) {
     if (Update::need_update()) {
-        header("Location: " . Config::get('web_path') . "/update.php");
+        header("Location: " . AmpConfig::get('web_path') . "/update.php");
         exit();
     }
 }
 // For the XMLRPC stuff
-$GLOBALS['xmlrpc_internalencoding'] = Config::get('site_charset');
+$GLOBALS['xmlrpc_internalencoding'] = AmpConfig::get('site_charset');
 
 // If debug is on GIMMIE DA ERRORS
-if (Config::get('debug')) {
+if (AmpConfig::get('debug')) {
     error_reporting(E_ALL);
 }

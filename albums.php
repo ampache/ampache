@@ -22,7 +22,7 @@
 
 require_once 'lib/init.php';
 
-require_once Config::get('prefix') . '/templates/header.inc.php';
+require_once AmpConfig::get('prefix') . '/templates/header.inc.php';
 
 /* Switch on Action */
 switch ($_REQUEST['action']) {
@@ -121,7 +121,7 @@ switch ($_REQUEST['action']) {
             } // end foreach
             // Store the results for further use
             $_SESSION['form']['images'] = $images;
-            require_once Config::get('prefix') . '/templates/show_album_art.inc.php';
+            require_once AmpConfig::get('prefix') . '/templates/show_album_art.inc.php';
         }
         // Else nothing
         else {
@@ -135,7 +135,7 @@ switch ($_REQUEST['action']) {
         if (!empty($_REQUEST['album_name'])) {   $albumname = scrub_in($_REQUEST['album_name']); }
         if (!empty($_REQUEST['artist_name'])) {  $artistname = scrub_in($_REQUEST['artist_name']); }
 
-        require_once Config::get('prefix') . '/templates/show_get_albumart.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_get_albumart.inc.php';
 
     break;
     case 'select_art':
@@ -150,7 +150,7 @@ switch ($_REQUEST['action']) {
 
         $art->insert($image,$mime);
 
-        header("Location:" . Config::get('web_path') . "/albums.php?action=show&album=" . $art->uid);
+        header("Location:" . AmpConfig::get('web_path') . "/albums.php?action=show&album=" . $art->uid);
     break;
     case 'update_from_tags':
         // Make sure they are a 'power' user at least
@@ -161,8 +161,8 @@ switch ($_REQUEST['action']) {
 
         $type         = 'album';
         $object_id     = intval($_REQUEST['album_id']);
-        $target_url    = Config::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
-        require_once Config::get('prefix') . '/templates/show_update_items.inc.php';
+        $target_url    = AmpConfig::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
+        require_once AmpConfig::get('prefix') . '/templates/show_update_items.inc.php';
     break;
     case 'set_track_numbers':
         debug_event('albums', 'Set track numbers called.', '5');
@@ -194,7 +194,7 @@ switch ($_REQUEST['action']) {
     case 'show':
         $album = new Album($_REQUEST['album']);
         $album->format();
-        require Config::get('prefix') . '/templates/show_album.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_album.inc.php';
 
     break;
 } // switch on view

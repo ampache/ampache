@@ -20,13 +20,13 @@
  *
  */
 
-$web_path = Config::get('web_path');
+$web_path = AmpConfig::get('web_path');
 $thcount = 5;
 ?>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-        <?php if (Config::get('directplay')) { ++$thcount; ?>
+        <?php if (AmpConfig::get('directplay')) { ++$thcount; ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
     <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -41,7 +41,7 @@ $thcount = 5;
         $radio->format();
     ?>
     <tr id="live_stream_<?php echo $radio->id; ?>" class="<?php echo UI::flip_class(); ?>">
-        <?php require Config::get('prefix') . '/templates/show_live_stream_row.inc.php'; ?>
+        <?php require AmpConfig::get('prefix') . '/templates/show_live_stream_row.inc.php'; ?>
     </tr>
     <?php } //end foreach ($artists as $artist) ?>
     <?php if (!count($object_ids)) { ?>
@@ -50,7 +50,7 @@ $thcount = 5;
     </tr>
     <?php } ?>
     <tr class="th-bottom">
-        <?php if (Config::get('directplay')) { ?>
+        <?php if (AmpConfig::get('directplay')) { ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
     <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -60,4 +60,4 @@ $thcount = 5;
         <th class="cel_action"><?php echo T_('Action'); ?> </th>
     </tr>
 </table>
-<?php require Config::Get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php require AmpConfig::Get('prefix') . '/templates/list_header.inc.php'; ?>

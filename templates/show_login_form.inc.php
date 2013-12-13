@@ -23,27 +23,27 @@
 /* Check and see if their remember me is the same or lower then local
  * if so disable the checkbox
  */
-if (Config::get('session_length') >= Config::get('remember_length')) {
+if (AmpConfig::get('session_length') >= AmpConfig::get('remember_length')) {
     $remember_disabled = 'disabled="disabled"';
 }
-$htmllang = str_replace("_","-",Config::get('lang'));
-is_rtl(Config::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
+$htmllang = str_replace("_","-",AmpConfig::get('lang'));
+is_rtl(AmpConfig::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir; ?>">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
-<link rel="shortcut icon" href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
-<link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/print.css" type="text/css" media="print" />
-<link rel="stylesheet" href="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
-<title> <?php echo scrub_out(Config::get('site_title')); ?> </title>
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
+<link rel="shortcut icon" href="<?php echo AmpConfig::get('web_path'); ?>/favicon.ico" />
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
+<title> <?php echo scrub_out(AmpConfig::get('site_title')); ?> </title>
 <script type="text/javascript" language="javascript">
 function focus(){ document.login.username.focus(); }
 </script>
 <?php
 // If iframes, we check in javascript that parent container doesn't exist, otherwise we redirect to the page without frame.
-if (Config::get('iframes')) {
+if (AmpConfig::get('iframes')) {
 ?>
 <script language="javascript" type="text/javascript">
 function forceNoframe()
@@ -58,18 +58,18 @@ function forceNoframe()
 ?>
 </head>
 
-<body id="loginPage" onload="focus();<?php echo (Config::get('iframes')) ? "forceNoframe();" : ""; ?>">
+<body id="loginPage" onload="focus();<?php echo (AmpConfig::get('iframes')) ? "forceNoframe();" : ""; ?>">
 <div id="maincontainer">
     <div id="header"><!-- This is the header -->
         <h1 id="headerlogo">
-          <a href="<?php echo Config::get('web_path'); ?>">
-            <img src="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/images/ampache.png" title="<?php echo Config::get('site_title'); ?>" alt="<?php echo Config::get('site_title'); ?>" />
+          <a href="<?php echo AmpConfig::get('web_path'); ?>">
+            <img src="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/images/ampache.png" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
           </a>
     </h1>
   </div>
     <div id="loginbox">
-        <h2><?php echo scrub_out(Config::get('site_title')); ?></h2>
-        <form name="login" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/login.php">
+        <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
+        <form name="login" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/login.php">
 
             <div class="loginfield" id="usernamefield">
         <label for="username"><?php echo  T_('Username'); ?>:</label>
@@ -83,29 +83,29 @@ function forceNoframe()
         <?php echo T_('Remember Me'); ?>&nbsp;</label><input type="checkbox" id="rememberme" name="rememberme" <?php echo $remember_disabled; ?> />
       </div>
 
-            <?php echo Config::get('login_message'); ?>
+            <?php echo AmpConfig::get('login_message'); ?>
             <?php Error::display('general'); ?>
 
         <div class="formValidation">
-            <a class="button" id="lostpasswordbutton" href="<?php echo Config::get('web_path'); ?>/lostpassword.php"><?php echo T_('Lost password'); ?></a>
+            <a class="button" id="lostpasswordbutton" href="<?php echo AmpConfig::get('web_path'); ?>/lostpassword.php"><?php echo T_('Lost password'); ?></a>
             <input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
               <input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
               <input type="hidden" name="action" value="login" />
 
-            <?php if (Config::get('allow_public_registration')) { ?>
-                <a class="button" id="registerbutton" href="<?php echo Config::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
+            <?php if (AmpConfig::get('allow_public_registration')) { ?>
+                <a class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
             <?php } // end if allow_public_registration ?>
       </div>
 
         </form>
 <?php
-if (@is_readable(Config::get('prefix') . '/config/motd.php')) {
+if (@is_readable(AmpConfig::get('prefix') . '/config/motd.php')) {
 ?>
     </div>
     <div id="motd">
     <?php
         UI::show_box_top(T_('Message of the Day'));
-        require_once Config::get('prefix') . '/config/motd.php';
+        require_once AmpConfig::get('prefix') . '/config/motd.php';
         UI::show_box_bottom();
     ?>
 <?php

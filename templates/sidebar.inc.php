@@ -32,7 +32,7 @@ $sidebar_items[] = array('id'=>'modules','title' => T_('Modules'),'icon'=>'plugi
 $sidebar_items[] = array('id'=>'admin', 'title' => T_('Admin'), 'icon'=>'admin', 'access'=>100);
 
 
-$web_path = Config::get('web_path');
+$web_path = AmpConfig::get('web_path');
 
 ?>
 <ul id="sidebar-tabs">
@@ -49,7 +49,7 @@ $web_path = Config::get('web_path');
           // so that it's generated inside its parent li
     if ($item['id']==$_SESSION['state']['sidebar_tab']) {
             ?><div id="sidebar-page"><?php
-            require_once Config::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php';
+            require_once AmpConfig::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php';
             ?></div><?php
         }
        ?></li><?php
@@ -57,7 +57,7 @@ $web_path = Config::get('web_path');
     }
 ?>
 <li id="sb_tab_logout" class="sb1">
-    <a target="_top" href="<?php echo Config::get('web_path'); ?>/logout.php" id="sidebar_logout" >
+    <a target="_top" href="<?php echo AmpConfig::get('web_path'); ?>/logout.php" id="sidebar_logout" >
     <?php echo UI::get_icon('logout', T_('Logout')); ?>
     </a>
 </li>

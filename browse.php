@@ -68,7 +68,7 @@ switch ($_REQUEST['action']) {
         $browse->set_sort('count','ASC');
         // This one's a doozy
         $browse->set_simple_browse(false);
-        $browse->save_objects(Tag::get_tags(Config::get('offset_limit')));
+        $browse->save_objects(Tag::get_tags(AmpConfig::get('offset_limit')));
         $object_ids = $browse->get_saved();
         $keys = array_keys($object_ids);
         Tag::build_cache($keys);
@@ -76,10 +76,10 @@ switch ($_REQUEST['action']) {
         $browse2 = new Browse();
         $browse2->set_type('song');
         $browse2->store();
-        require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_tagcloud.inc.php';
         UI::show_box_bottom();
         $type = $browse2->get_type();
-        require_once Config::get('prefix') . '/templates/browse_content.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/browse_content.inc.php';
     break;
     case 'artist':
         $browse->set_filter('catalog',$_SESSION['catalog']);

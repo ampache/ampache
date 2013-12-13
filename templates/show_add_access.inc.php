@@ -21,7 +21,7 @@
 ?>
 <?php UI::show_box_top(T_('Add Access Control List'), 'box box_add_access'); ?>
 <?php Error::display('general'); ?>
-<form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=add_host">
+<form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=add_host">
     <table class="tabledata" cellpadding="5" cellspacing="0">
         <tr>
             <td><?php echo T_('Name'); ?>:</td>

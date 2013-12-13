@@ -32,7 +32,7 @@ class WebPlayer
             }
         }
 
-        return (count($playlist->urls) == 1 && count($radios) > 0 && Config::get('webplayer_flash'));
+        return (count($playlist->urls) == 1 && count($radios) > 0 && AmpConfig::get('webplayer_flash'));
     }
 
     public static function browser_info($agent=null)
@@ -93,7 +93,7 @@ class WebPlayer
                 $js['album_id'] = $song->album;
                 $js['song_id'] = $song->id;
 
-                $transcode_cfg = Config::get('transcode');
+                $transcode_cfg = AmpConfig::get('transcode');
                 // Check transcode is required
                 if ($transcode_cfg == 'always' || $type != $ftype) {
                     $valid_types = Song::get_stream_types_for_type($ftype);

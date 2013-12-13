@@ -21,7 +21,7 @@
  */
 
 /* Create some variables we are going to need */
-$web_path = Config::get('web_path');
+$web_path = AmpConfig::get('web_path');
 $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id;
 $othering = false;
 $rate = $rating->get_user_rating();

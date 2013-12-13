@@ -153,7 +153,7 @@ class Stream_Playlist
     public static function check_autoplay_append()
     {
         // For now, only iframed web player support media append in the currently played playlist
-        return (Config::get('iframes') && Config::get('play_type') == 'web_player');
+        return (AmpConfig::get('iframes') && AmpConfig::get('play_type') == 'web_player');
     }
 
     public function generate_playlist($type, $redirect = false)
@@ -201,7 +201,7 @@ class Stream_Playlist
 
         if ($redirect) {
             // Our ID is the SID, so we always want to include it
-            Config::set('require_session', true, true);
+            AmpConfig::set('require_session', true, true);
             header('Location: ' . Stream::get_base_url() . 'uid=' . scrub_out($this->user) . '&type=playlist&playlist_type=' . scrub_out($type));
             exit;
         }
@@ -370,10 +370,10 @@ class Stream_Playlist
      */
     public function create_web_player()
     {
-        if (Config::get("iframes")) {
-            require Config::get('prefix') . '/templates/create_web_player_embedded.inc.php';
+        if (AmpConfig::get("iframes")) {
+            require AmpConfig::get('prefix') . '/templates/create_web_player_embedded.inc.php';
         } else {
-            require Config::get('prefix') . '/templates/create_web_player.inc.php';
+            require AmpConfig::get('prefix') . '/templates/create_web_player.inc.php';
         }
 
     }  // create_web_player
@@ -384,7 +384,7 @@ class Stream_Playlist
      */
     public function create_localplay()
     {
-        $localplay = new Localplay(Config::get('localplay_controller'));
+        $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
         foreach ($this->urls as $url) {
             $localplay->add_url($url);

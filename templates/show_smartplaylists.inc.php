@@ -23,10 +23,10 @@
 $tags_list = Tag::get_display(Tag::get_tags());
 $thcount = 5;
 ?>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>
+<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-    <?php if (Config::get('directplay')) { ++$thcount; ?>
+    <?php if (AmpConfig::get('directplay')) { ++$thcount; ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
     <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -41,7 +41,7 @@ $thcount = 5;
         $playlist->format();
     ?>
     <tr class="<?php echo UI::flip_class(); ?>" id="smartplaylist_row_<?php echo $playlist->id; ?>">
-        <?php require Config::get('prefix') . '/templates/show_smartplaylist_row.inc.php'; ?>
+        <?php require AmpConfig::get('prefix') . '/templates/show_smartplaylist_row.inc.php'; ?>
     </tr>
     <?php } // end foreach ($playlists as $playlist) ?>
     <?php if (!count($object_ids)) { ?>
@@ -50,7 +50,7 @@ $thcount = 5;
     </tr>
     <?php } ?>
     <tr class="th-bottom">
-    <?php if (Config::get('directplay')) { ?>
+    <?php if (AmpConfig::get('directplay')) { ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
     <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -60,4 +60,4 @@ $thcount = 5;
         <th class="cel_action"><?php echo T_('Actions'); ?></th>
     </tr>
 </table>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php' ?>
+<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>

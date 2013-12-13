@@ -20,13 +20,13 @@
  *
  */
 
-$link = Config::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played') :  '';
+$link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played') :  '';
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 $thcount = 7;
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-    <?php if (Config::get('directplay')) { ++$thcount; ?>
+    <?php if (AmpConfig::get('directplay')) { ++$thcount; ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
     <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -74,7 +74,7 @@ $thcount = 7;
     $song->format();
 ?>
     <tr class="<?php echo UI::flip_class(); ?>">
-    <?php if (Config::get('directplay')) { ?>
+    <?php if (AmpConfig::get('directplay')) { ?>
         <td class="cel_directplay">
             <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play song'),'play_song_' . $song->id); ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
@@ -89,7 +89,7 @@ $thcount = 7;
         <td class="cel_album"><?php echo $song->f_album_link; ?></td>
         <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
         <td class="cel_username">
-            <a href="<?php echo Config::get('web_path'); ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
             <?php echo scrub_out($row_user->fullname); ?>
             </a>
         </td>
@@ -107,7 +107,7 @@ $thcount = 7;
     </tr>
 <?php } ?>
     <tr class="th-bottom">
-<?php if (Config::get('directplay')) { ?>
+<?php if (AmpConfig::get('directplay')) { ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
 <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -119,7 +119,7 @@ $thcount = 7;
         <th class="cel_agent"><?php echo T_('Agent'); ?></th>
     </tr>
 </table>
-<div id="recent_more"><a href="<?php echo Config::get('web_path'); ?>/stats.php?action=recent"><?php echo T_('More'); ?></a></div>
+<div id="recent_more"><a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=recent"><?php echo T_('More'); ?></a></div>
 <script language="javascript" type="text/javascript">
 $(document).ready(function(){
     $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});

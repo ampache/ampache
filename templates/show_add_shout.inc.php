@@ -21,7 +21,7 @@
  */
 ?>
 <?php UI::show_box_top(T_('Post to Shoutbox'), 'box box_add_shout'); ?>
-<form method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/shout.php?action=add_shout">
+<form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=add_shout">
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <tr>
     <td><strong><?php echo T_('Comment:'); ?></strong>

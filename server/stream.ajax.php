@@ -39,7 +39,7 @@ switch ($_REQUEST['action']) {
             case 'localplay':
             case 'democratic':
                 $key = 'allow_' . $_POST['type'] . '_playback';
-                if (!Config::get($key)) {
+                if (!AmpConfig::get($key)) {
                     $results['rfc3514'] = '0x1';
                     break 2;
                 }
@@ -55,11 +55,11 @@ switch ($_REQUEST['action']) {
             break 2;
         } // end switch
 
-        $current = Config::get('play_type');
+        $current = AmpConfig::get('play_type');
 
         // Go ahead and update their preference
         if (Preference::update('play_type',$GLOBALS['user']->id,$new)) {
-            Config::set('play_type', $new, true);
+            AmpConfig::set('play_type', $new, true);
         }
 
         if (($new == 'localplay' AND $current != 'localplay') OR ($current == 'localplay' AND $new != 'localplay')) {
@@ -71,22 +71,22 @@ switch ($_REQUEST['action']) {
     case 'directplay':
         switch ($_REQUEST['playtype']) {
             case 'album':
-                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=album&album_id='.$_REQUEST['album_id'];
+                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=album&album_id='.$_REQUEST['album_id'];
             break;
             case 'artist':
-                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=artist&artist_id='.$_REQUEST['artist_id'];
+                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=artist&artist_id='.$_REQUEST['artist_id'];
             break;
             case 'song':
-                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=single_song&song_id='.$_REQUEST['song_id'];
+                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=single_song&song_id='.$_REQUEST['song_id'];
             break;
             case 'playlist':
-                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=playlist&playlist_id='.$_REQUEST['playlist_id'];
+                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=playlist&playlist_id='.$_REQUEST['playlist_id'];
             break;
             case 'smartplaylist':
-                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=smartplaylist&playlist_id='.$_REQUEST['playlist_id'];
+                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=smartplaylist&playlist_id='.$_REQUEST['playlist_id'];
             break;
             case 'live_stream':
-                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=live_stream&stream_id='.$_REQUEST['stream_id'];
+                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=live_stream&stream_id='.$_REQUEST['stream_id'];
             break;
         }
         if (!empty($_REQUEST['append'])) {
@@ -97,15 +97,15 @@ switch ($_REQUEST['action']) {
     case 'basket':
         // Go ahead and see if we should clear the playlist here or not,
         // we might not actually clear it in the session.
-        if ( ($_REQUEST['playlist_method'] == 'clear' || Config::get('playlist_method') == 'clear')) {
+        if ( ($_REQUEST['playlist_method'] == 'clear' || AmpConfig::get('playlist_method') == 'clear')) {
             define('NO_SONGS','1');
             ob_start();
-            require_once Config::get('prefix') . '/templates/rightbar.inc.php';
+            require_once AmpConfig::get('prefix') . '/templates/rightbar.inc.php';
             $results['rightbar'] = ob_get_clean();
         }
 
         // We need to set the basket up!
-        $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method']);
+        $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method']);
         $results['rfc3514'] = '<script type="text/javascript">reloadUtil(\''.$_SESSION['iframe']['target'] . '\');</script>';
     break;
     default:

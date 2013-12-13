@@ -137,7 +137,7 @@ class Preference
     public static function has_access($preference)
     {
         // Nothing for those demo thugs
-        if (Config::get('demo_mode')) { return false; }
+        if (AmpConfig::get('demo_mode')) { return false; }
 
         $preference = Dba::escape($preference);
 
@@ -348,7 +348,7 @@ class Preference
     public static function load_from_session($uid=-1)
     {
         if (is_array($_SESSION['userdata']['preferences']) AND $_SESSION['userdata']['uid'] == $uid) {
-            Config::set_by_array($_SESSION['userdata']['preferences'], true);
+            AmpConfig::set_by_array($_SESSION['userdata']['preferences'], true);
             return true;
         }
 
@@ -434,7 +434,7 @@ class Preference
             $results['theme_path'] = '/themes/reborn';
         }
 
-        Config::set_by_array($results, true);
+        AmpConfig::set_by_array($results, true);
         $_SESSION['userdata']['preferences'] = $results;
         $_SESSION['userdata']['uid'] = $user_id;
 

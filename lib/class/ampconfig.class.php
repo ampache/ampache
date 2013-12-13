@@ -33,7 +33,7 @@
  * The class should be a static var in the other classes
  *
  */
-class Config
+class AmpConfig
 {
     private $_local    = array();
     private static $_global = array();

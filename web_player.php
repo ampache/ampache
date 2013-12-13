@@ -22,4 +22,4 @@
 
 require_once 'lib/init.php';
 
-require_once Config::get('prefix') . '/templates/show_web_player.inc.php';
+require_once AmpConfig::get('prefix') . '/templates/show_web_player.inc.php';

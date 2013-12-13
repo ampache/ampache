@@ -36,7 +36,7 @@ function log_event($username, $event_name, $event_description, $log_name)
     $log_name    = $log_name ? $log_name : 'ampache';
     $username    = $username ? $username : 'ampache';
 
-    $log_filename    = Config::get('log_path') . "/$log_name.$log_day.log";
+    $log_filename    = AmpConfig::get('log_path') . "/$log_name.$log_day.log";
     $log_line    = "$log_time [$username] ($event_name) -> $event_description \n";
 
     // Do the deed
@@ -131,7 +131,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
  */
 function debug_event($type, $message, $level, $file = '', $username = '')
 {
-    if (!Config::get('debug') || $level > Config::get('debug_level')) {
+    if (!AmpConfig::get('debug') || $level > AmpConfig::get('debug_level')) {
         return false;
     }
 

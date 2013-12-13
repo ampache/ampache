@@ -24,12 +24,12 @@
  */
 
 require_once '../../lib/init.php';
-    require_once( Config::get('prefix') . "/modules/twitter/twitteroauth/twitteroauth.php");
+    require_once( AmpConfig::get('prefix') . "/modules/twitter/twitteroauth/twitteroauth.php");
 
 session_start();
 
 if(!empty($_SESSION['twitterusername'])) {
-    header('Location: ' . Config::Get('web_path') . '/modules/twitter/twitter_update.php');
+    header('Location: ' . AmpConfig::Get('web_path') . '/modules/twitter/twitter_update.php');
     debug_event("Twitter", "Twitter user has logged in this session.", "5");
 }
 
@@ -39,24 +39,24 @@ if(!empty($_GET['oauth_verifier']) && !empty($_SESSION['oauth_token']) && !empty
     if( $_SESSION['twitterCount'] < 4 ) {
         debug_event("Twitter", "Didn't get all 3 auth pieces, going to try again.  Try #" . $_SESSION['twitterCount'], "5");
         $_SESSION['twitterCount']++;
-        header('Location: ' . Config::Get('web_path') . '/modules/twitter/twitter_login.php');
+        header('Location: ' . AmpConfig::Get('web_path') . '/modules/twitter/twitter_login.php');
     } else {
         debug_event("Twitter", "Failed to auth too many times.  Giving up.", "5");
-        header('Location: ' . Config::Get('web_path') );
+        header('Location: ' . AmpConfig::Get('web_path') );
     }
 }
 
 // TwitterOAuth instance, with two new parameters we got in twitter_login.php
-$twitteroauth = new TwitterOAuth( Config::get('twitter_consumer_key'), Config::get('twitter_consumer_secret'), $_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);
+$twitteroauth = new TwitterOAuth( AmpConfig::get('twitter_consumer_key'), AmpConfig::get('twitter_consumer_secret'), $_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);
 if( !isset($twitteroauth) ) {
     debug_event("Twitter", "Couldn't create OAuth object.", "5");
-    header('Location: ' . Config::get('web_path'));
+    header('Location: ' . AmpConfig::get('web_path'));
 }
 // Let's request the access token
 $access_token = $twitteroauth->getAccessToken($_GET['oauth_verifier']);
 if( !isset($access_token) ) {
     debug_event("Twitter", "Couldn't get access token", "5");
-    header('Location: ' . Config::get('web_path'));
+    header('Location: ' . AmpConfig::get('web_path'));
 }
 // Save it in a session var
 $_SESSION['access_token'] = $access_token;
@@ -72,7 +72,7 @@ debug_event("Twitter", "access token secret:" .  $access_token['oauth_token_secr
 if( isset($user_info->error)) {
     debug_event("Twitter", "Error verifying credentials", "5");
     session_destroy();
-    header('Location: ' . Config::get('web_path'));
+    header('Location: ' . AmpConfig::get('web_path'));
 }
 else {
     
@@ -124,6 +124,6 @@ else {
         $_SESSION['oauth_token'] = $result['oauth_token'];
         $_SESSION['oauth_secret'] = $result['oauth_secret'];
 
-    header('Location: ' . Config::get('web_path') . '/modules/twitter/twitter_update.php');
+    header('Location: ' . AmpConfig::get('web_path') . '/modules/twitter/twitter_update.php');
     }
 ?>

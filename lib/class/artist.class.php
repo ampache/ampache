@@ -110,7 +110,7 @@ class Artist extends database_object
             $db_results = Dba::read($sql);
 
             while ($row = Dba::fetch_assoc($db_results)) {
-                if (Config::get('show_played_times')) {
+                if (AmpConfig::get('show_played_times')) {
                     $row['object_cnt'] = Stats::get_object_count('artist', $row['artist']);
                 }
                 parent::add_to_cache('artist_extra',$row['artist'],$row);
@@ -157,7 +157,7 @@ class Artist extends database_object
 
         $sql_sort = 'ORDER BY `album`.`name`,`album`.`disk`,`album`.`year`';
 
-        $sort_type = Config::get('album_sort');
+        $sort_type = AmpConfig::get('album_sort');
         if ($sort_type == 'year_asc') { $sql_sort = 'ORDER BY `album`.`year` ASC'; } elseif ($sort_type == 'year_desc') { $sql_sort = 'ORDER BY `album`.`year` DESC'; } elseif ($sort_type == 'name_asc') { $sql_sort = 'ORDER BY `album`.`name` ASC'; } elseif ($sort_type == 'name_desc') { $sql_sort = 'ORDER BY `album`.`name` DESC'; }
 
         $sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
@@ -234,7 +234,7 @@ class Artist extends database_object
 
             $db_results = Dba::read($sql);
             $row = Dba::fetch_assoc($db_results);
-            if (Config::get('show_played_times')) {
+            if (AmpConfig::get('show_played_times')) {
                 $row['object_cnt'] = Stats::get_object_count('artist', $row['artist']);
             }
             parent::add_to_cache('artist_extra',$row['artist'],$row);
@@ -259,7 +259,7 @@ class Artist extends database_object
     public function format()
     {
         /* Combine prefix and name, trim then add ... if needed */
-        $name = UI::truncate(trim($this->prefix . " " . $this->name),Config::get('ellipse_threshold_artist'));
+        $name = UI::truncate(trim($this->prefix . " " . $this->name),AmpConfig::get('ellipse_threshold_artist'));
         $this->f_name = $name;
         $this->f_full_name = trim(trim($this->prefix) . ' ' . trim($this->name));
 
@@ -267,11 +267,11 @@ class Artist extends database_object
         if ($this->_fake) { return true; }
 
         if ($this->catalog_id) {
-            $this->f_name_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;catalog=" . $this->catalog_id . "&amp;artist=" . $this->id . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
-            $this->f_link = Config::get('web_path') . '/artists.php?action=show&amp;catalog=' . $this->catalog_id . '&amp;artist=' . $this->id;
+            $this->f_name_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;catalog=" . $this->catalog_id . "&amp;artist=" . $this->id . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
+            $this->f_link = AmpConfig::get('web_path') . '/artists.php?action=show&amp;catalog=' . $this->catalog_id . '&amp;artist=' . $this->id;
         } else {
-            $this->f_name_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
-            $this->f_link = Config::get('web_path') . '/artists.php?action=show&amp;artist=' . $this->id;
+            $this->f_name_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->id . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
+            $this->f_link = AmpConfig::get('web_path') . '/artists.php?action=show&amp;artist=' . $this->id;
         }
         // Get the counts
         $extra_info = $this->_get_extra_info($this->catalog_id);

@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php if (Config::get('directplay')) { ?>
+<?php if (AmpConfig::get('directplay')) { ?>
 <td class="cel_directplay">
     <?php echo Ajax::button('?page=stream&action=directplay&playtype=live_stream&stream_id=' . $radio->id, 'play', T_('Play live stream'),'play_live_stream_' . $radio->id); ?>
 </td>

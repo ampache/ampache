@@ -23,7 +23,7 @@
 /* I'm cheating a little here, check to see if we want to show the
  * Apply to All button on this page
  */
-if ((Access::check('interface','100') OR !Config::get('use_auth')) AND $_REQUEST['action'] == 'admin') {
+if ((Access::check('interface','100') OR !AmpConfig::get('use_auth')) AND $_REQUEST['action'] == 'admin') {
     $is_admin = true;
 }
 ?>

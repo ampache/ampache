@@ -410,7 +410,7 @@ class Subsonic_XML_Data
         foreach ($data as $d) {
             $track = self::createSong($xplaynow, $d['media'], "entry");
             $track->addAttribute('username', $d['client']->username);
-            $track->addAttribute('minutesAgo', intval(time() - ($d['expire'] - Config::get('stream_length')) / 1000));
+            $track->addAttribute('minutesAgo', intval(time() - ($d['expire'] - AmpConfig::get('stream_length')) / 1000));
             $track->addAttribute('playerId', $d['agent']);
         }
     }

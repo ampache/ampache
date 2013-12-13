@@ -166,7 +166,7 @@ class Stats
         $type = self::validate_type($type);
         /* If they don't pass one, then use the preference */
         if (!$threshold) {
-            $threshold = Config::get('stats_threshold');
+            $threshold = AmpConfig::get('stats_threshold');
         }
         $date    = time() - (86400*$threshold);
 
@@ -185,7 +185,7 @@ class Stats
     public static function get_top($type,$count='',$threshold = '',$offset='')
     {
         if (!$count) {
-            $count = Config::get('popular_threshold');
+            $count = AmpConfig::get('popular_threshold');
         }
 
         $count    = intval($count);
@@ -231,11 +231,11 @@ class Stats
     {
         /* If they don't pass one, then use the preference */
         if (!$threshold) {
-            $threshold = Config::get('stats_threshold');
+            $threshold = AmpConfig::get('stats_threshold');
         }
 
         if (!$count) {
-            $count = Config::get('popular_threshold');
+            $count = AmpConfig::get('popular_threshold');
         }
 
         $count = intval($count);
@@ -273,7 +273,7 @@ class Stats
         if ($full) {
             $date = '0';
         } else {
-            $date = time() - (86400*Config::get('stats_threshold'));
+            $date = time() - (86400*AmpConfig::get('stats_threshold'));
         }
 
         /* Select Objects based on user */
@@ -337,7 +337,7 @@ class Stats
      */
     public static function get_newest($type, $limit='', $offset='', $catalog=0)
     {
-        if (!$count) { $count = Config::get('popular_threshold'); }
+        if (!$count) { $count = AmpConfig::get('popular_threshold'); }
         if (!$offset) {
             $limit = $count;
         } else {

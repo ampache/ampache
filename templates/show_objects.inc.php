@@ -35,7 +35,7 @@
         $object->format();
     ?>
     <tr id="object_row_<?php echo $object->id; ?>" class="<?php echo UI::flip_class(); ?>">
-        <?php require Config::get('prefix') . '/templates/show_object_row.inc.php'; ?>
+        <?php require AmpConfig::get('prefix') . '/templates/show_object_row.inc.php'; ?>
     </tr>
     <?php } ?>
     <?php if (!count($objects)) { ?>

@@ -34,7 +34,7 @@ Preference::init();
  * even want them to be able to get to the login
  * page if they aren't in the ACL
  */
-if (Config::get('access_control')) {
+if (AmpConfig::get('access_control')) {
     if (!Access::check_network('interface', '', '5')) {
         debug_event('UI::access_denied', 'Access Denied:' . $_SERVER['REMOTE_ADDR'] . ' is not in the Interface Access list', '3');
         UI::access_denied();
@@ -48,7 +48,7 @@ unset($auth);
 /* Check for posted username and password, or appropriate environment
 variable if using HTTP auth */
 if (($_POST['username'] && $_POST['password']) ||
-    (in_array('http', Config::get('auth_methods')) &&
+    (in_array('http', AmpConfig::get('auth_methods')) &&
     ($_SERVER['REMOTE_USER'] || $_SERVER['HTTP_REMOTE_USER']))) {
 
     if ($_POST['rememberme']) {
@@ -56,7 +56,7 @@ if (($_POST['username'] && $_POST['password']) ||
     }
 
     /* If we are in demo mode let's force auth success */
-    if (Config::get('demo_mode')) {
+    if (AmpConfig::get('demo_mode')) {
         $auth['success']        = true;
         $auth['info']['username']    = 'Admin - DEMO';
         $auth['info']['fullname']    = 'Administrative User';
@@ -90,7 +90,7 @@ if (($_POST['username'] && $_POST['password']) ||
             Error::add('general', T_('User Disabled please contact Admin'));
             debug_event('Login', scrub_out($username) . ' is disabled and attempted to login', '1');
         } // if user disabled
-        elseif (Config::get('prevent_multiple_logins')) {
+        elseif (AmpConfig::get('prevent_multiple_logins')) {
             $session_ip = $user->is_logged_in();
             $current_ip = inet_pton($_SERVER['REMOTE_ADDR']);
             if ($current_ip && ($current_ip != $session_ip)) {
@@ -99,12 +99,12 @@ if (($_POST['username'] && $_POST['password']) ||
                 debug_event('Login', scrub_out($username) . ' is already logged in from ' . $session_ip . ' and attempted to login from ' . $current_ip, '1');
             } // if logged in multiple times
         } // if prevent multiple logins
-        elseif (Config::get('auto_create') && $auth['success'] &&
+        elseif (AmpConfig::get('auto_create') && $auth['success'] &&
             ! $user->username) {
             /* This is run if we want to autocreate users who don't
             exist (useful for non-mysql auth) */
-            $access    = Config::get('auto_user')
-                ? User::access_name_to_level(Config::get('auto_user'))
+            $access    = AmpConfig::get('auto_user')
+                ? User::access_name_to_level(AmpConfig::get('auto_user'))
                 : '5';
             $name    = $auth['name'];
             $email    = $auth['email'];
@@ -121,7 +121,7 @@ if (($_POST['username'] && $_POST['password']) ||
 
         // This allows stealing passwords validated by external means
         // such as LDAP
-        if (Config::get('auth_password_save') && $auth['success'] && $password) {
+        if (AmpConfig::get('auth_password_save') && $auth['success'] && $password) {
             $user->update_password($password);
         }
     } // if we aren't in demo mode
@@ -139,14 +139,14 @@ if ($auth['success']) {
     $_SESSION['userdata'] = $auth;
 
     // Record the IP of this person!
-    if (Config::get('track_user_ip')) {
+    if (AmpConfig::get('track_user_ip')) {
         $user->insert_ip_history();
     }
 
     /* Make sure they are actually trying to get to this site and don't try
      * to redirect them back into an admin section
      */
-    $web_path = Config::get('web_path');
+    $web_path = AmpConfig::get('web_path');
     if ((substr($_POST['referrer'], 0, strlen($web_path)) == $web_path) &&
         strpos($_POST['referrer'], 'install.php')    === false &&
         strpos($_POST['referrer'], 'login.php')        === false &&
@@ -158,8 +158,8 @@ if ($auth['success']) {
             header('Location: ' . $_POST['referrer']);
             exit();
     } // if we've got a referrer
-    header('Location: ' . Config::get('web_path') . '/index.php');
+    header('Location: ' . AmpConfig::get('web_path') . '/index.php');
     exit();
 } // auth success
 
-require Config::get('prefix') . '/templates/show_login_form.inc.php';
+require AmpConfig::get('prefix') . '/templates/show_login_form.inc.php';

@@ -98,7 +98,7 @@ abstract class Catalog extends database_object
     {
         if (!$type) { return false; }
 
-        $filename = Config::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
+        $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
         $include = require_once $filename;
 
         if (!$include) {
@@ -175,7 +175,7 @@ abstract class Catalog extends database_object
     public static function get_catalog_types()
     {
         /* First open the dir */
-        $handle = opendir(Config::get('prefix') . '/modules/catalog');
+        $handle = opendir(AmpConfig::get('prefix') . '/modules/catalog');
 
         if (!is_resource($handle)) {
             debug_event('catalog', 'Error: Unable to read catalog types directory', '1');
@@ -202,7 +202,7 @@ abstract class Catalog extends database_object
 
     public static function is_audio_file($file)
     {
-        $pattern = "/\.(" . Config::get('catalog_file_pattern');
+        $pattern = "/\.(" . AmpConfig::get('catalog_file_pattern');
         if ($options['parse_m3u']) {
             $pattern .= "|m3u)$/i";
         } else {
@@ -213,7 +213,7 @@ abstract class Catalog extends database_object
 
     public static function is_video_file($file)
     {
-        $video_pattern = "/\.(" . Config::get('catalog_video_pattern') . ")$/i";
+        $video_pattern = "/\.(" . AmpConfig::get('catalog_video_pattern') . ")$/i";
         return preg_match($video_pattern, $file);
     }
 
@@ -308,8 +308,8 @@ abstract class Catalog extends database_object
     public function format()
     {
         $this->f_name = UI::truncate($this->name,
-            Config::get('ellipse_threshold_title'));
-        $this->f_name_link = '<a href="' . Config::get('web_path') .
+            AmpConfig::get('ellipse_threshold_title'));
+        $this->f_name_link = '<a href="' . AmpConfig::get('web_path') .
             '/admin/catalog.php?action=show_customize_catalog&catalog_id=' .
             $this->id . '" title="' . scrub_out($this->name) . '">' .
             scrub_out($this->f_name) . '</a>';
@@ -387,7 +387,7 @@ abstract class Catalog extends database_object
         $rename_pattern = $data['rename_pattern'];
         $sort_pattern = $data['sort_pattern'];
 
-        $filename = Config::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
+        $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
         $include = require_once $filename;
 
         if ($include) {
@@ -544,7 +544,7 @@ abstract class Catalog extends database_object
     public function gather_art()
     {
         // Make sure they've actually got methods
-        $art_order = Config::get('art_order');
+        $art_order = AmpConfig::get('art_order');
         if (!count($art_order)) {
             debug_event('gather_art', 'art_order not set, Catalog::gather_art aborting', 3);
             return true;
@@ -578,7 +578,7 @@ abstract class Catalog extends database_object
                 if (strlen($image) > '5') {
                     $art->insert($image, $results[0]['mime']);
                     // If they've enabled resizing of images generate a thumbnail
-                    if (Config::get('resize_images')) {
+                    if (AmpConfig::get('resize_images')) {
                         $thumb = $art->generate_thumb($image, array(
                                 'width' => 275,
                                 'height' => 275),
@@ -659,7 +659,7 @@ abstract class Catalog extends database_object
             $extension = Art::extension($art->raw_mime);
 
             // Try the preferred filename, if that fails use folder.???
-            $preferred_filename = Config::get('album_art_preferred_filename');
+            $preferred_filename = AmpConfig::get('album_art_preferred_filename');
             if (!$preferred_filename ||
                 strpos($preferred_filename, '%') !== false) {
                 $preferred_filename = "folder.$extension";
@@ -935,7 +935,7 @@ abstract class Catalog extends database_object
 
         debug_event('clean', 'Starting on ' . $this->name, 5);
 
-        require_once Config::get('prefix') . '/templates/show_clean_catalog.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_clean_catalog.inc.php';
         ob_flush();
         flush();
 
@@ -1006,7 +1006,7 @@ abstract class Catalog extends database_object
      */
     public static function trim_prefix($string)
     {
-        $prefix_pattern = '/^(' . implode('\\s|',explode('|',Config::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
+        $prefix_pattern = '/^(' . implode('\\s|',explode('|',AmpConfig::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
         preg_match($prefix_pattern, $string, $matches);
 
         if (count($matches)) {
@@ -1048,7 +1048,7 @@ abstract class Catalog extends database_object
 
         $results = explode("\n",$data);
 
-        $pattern = '/\.(' . Config::get('catalog_file_pattern') . ')$/i';
+        $pattern = '/\.(' . AmpConfig::get('catalog_file_pattern') . ')$/i';
 
         // Foreach what we're able to pull out from the file
         foreach ($results as $value) {
@@ -1070,7 +1070,7 @@ abstract class Catalog extends database_object
 
             } // if it's a file
             // Check to see if it's a url from this ampache instance
-            elseif (substr($value, 0, strlen(Config::get('web_path'))) == Config::get('web_path')) {
+            elseif (substr($value, 0, strlen(AmpConfig::get('web_path'))) == AmpConfig::get('web_path')) {
                 $data = Stream_URL::parse($value);
                 $sql = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
                 $db_results = Dba::read($sql, array($data['id']));

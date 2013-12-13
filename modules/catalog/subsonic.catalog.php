@@ -134,7 +134,7 @@ class Catalog_subsonic extends Catalog
             }
         }
 
-        require_once Config::get('prefix') . '/modules/subsonic/subsonic.client.php';
+        require_once AmpConfig::get('prefix') . '/modules/subsonic/subsonic.client.php';
     }
 
     /**
@@ -366,7 +366,7 @@ class Catalog_subsonic extends Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = UI::truncate($this->uri, Config::get('ellipse_threshold_title'));
+        $this->f_info = UI::truncate($this->uri, AmpConfig::get('ellipse_threshold_title'));
         $this->f_full_info = $this->uri;
     }
 

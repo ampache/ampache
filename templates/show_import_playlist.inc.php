@@ -21,7 +21,7 @@
  */
 ?>
 <?php UI::show_box_top(T_('Importing a Playlist from a File'), 'box box_import_playlist'); ?>
-<form method="post" name="import_playlist" action="<?php echo Config::get('web_path'); ?>/playlist.php" enctype="multipart/form-data">
+<form method="post" name="import_playlist" action="<?php echo AmpConfig::get('web_path'); ?>/playlist.php" enctype="multipart/form-data">
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <tr>
             <td>

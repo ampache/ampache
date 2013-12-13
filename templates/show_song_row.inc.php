@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php if (Config::get('directplay')) { ?>
+<?php if (AmpConfig::get('directplay')) { ?>
 <td class="cel_directplay">
     <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play song'),'play_song_' . $song->id); ?>
 <?php if (Stream_Playlist::check_autoplay_append()) { ?>
@@ -37,21 +37,21 @@
 <td class="cel_tags"><?php echo $song->f_tags; ?></td>
 <td class="cel_track"><?php echo $song->f_track; ?></td>
 <td class="cel_time"><?php echo $song->f_time; ?></td>
-<?php if (Config::get('ratings')) { ?>
+<?php if (AmpConfig::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></td>
 <?php } ?>
-<?php if (Config::get('userflags')) { ?>
+<?php if (AmpConfig::get('userflags')) { ?>
 <td class="cel_userflag" id="userflag_<?php echo $song->id; ?>_song"><?php Userflag::show($song->id,'song'); ?></td>
 <?php } ?>
 <td class="cel_action">
     <a href="<?php echo $song->link; ?>"><?php echo UI::get_icon('preferences', T_('Song Information')); ?></a>
-    <?php if (Config::get('sociable')) { ?>
-                <a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=song&amp;id=<?php echo $song->id; ?>">
+    <?php if (AmpConfig::get('sociable')) { ?>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=song&amp;id=<?php echo $song->id; ?>">
                 <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
                 </a>
     <?php } ?>
     <?php if (Access::check_function('download')) { ?>
-    <a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a><?php } ?>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a><?php } ?>
     <?php if (Access::check('interface','75')) { ?>
         <a id="<?php echo 'edit_song_'.$song->id ?>" onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_'.$song->id ?>', '<?php echo T_('Song edit') ?>', '<?php echo $tags_list ?>', 'song_', 'refresh_song')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>

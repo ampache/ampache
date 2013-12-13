@@ -22,7 +22,7 @@
 
 require_once 'lib/init.php';
 
-if (Config::get('iframes')) {
+if (AmpConfig::get('iframes')) {
     if (!isset($_GET['framed'])) {
         UI::show_mainframes();
         exit;
@@ -40,12 +40,12 @@ $_SESSION['catalog'] = 0;
  * refresh_javascript include. Must be greater then 5, I'm not
  * going to let them break their servers
  */
-if (Config::get('refresh_limit') > 5) {
-    $refresh_limit = Config::get('refresh_limit');
+if (AmpConfig::get('refresh_limit') > 5) {
+    $refresh_limit = AmpConfig::get('refresh_limit');
     $ajax_url = '?page=index&action=reloadnp';
-    require_once Config::get('prefix') . '/templates/javascript_refresh.inc.php';
+    require_once AmpConfig::get('prefix') . '/templates/javascript_refresh.inc.php';
 }
 
-require_once Config::get('prefix') . '/templates/show_index.inc.php';
+require_once AmpConfig::get('prefix') . '/templates/show_index.inc.php';
 
 UI::show_footer();

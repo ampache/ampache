@@ -29,7 +29,7 @@
 function get_themes()
 {
     /* Open the themes dir and start reading it */
-    $handle = opendir(Config::get('prefix') . '/themes');
+    $handle = opendir(AmpConfig::get('prefix') . '/themes');
 
     if (!is_resource($handle)) {
          debug_event('theme', 'Failed to open /themes directory', 2);
@@ -41,7 +41,7 @@ function get_themes()
 
     while (($f = readdir($handle)) !== false) {
         debug_event('theme', "Checking $f", 5);
-        $file = Config::get('prefix') . '/themes/' . $f;
+        $file = AmpConfig::get('prefix') . '/themes/' . $f;
         if (file_exists($file . $theme_cfg)) {
             debug_event('theme', "Loading $theme_cfg from $f", 5);
             $r = parse_ini_file($file . $theme_cfg);
@@ -68,7 +68,7 @@ function get_theme($name)
 {
     if (strlen($name) < 1) { return false; }
 
-    $config_file = Config::get('prefix') . "/themes/" . $name . "/theme.cfg.php";
+    $config_file = AmpConfig::get('prefix') . "/themes/" . $name . "/theme.cfg.php";
     $results = parse_ini_file($config_file);
     $results['path'] = $name;
     return $results;
@@ -81,7 +81,7 @@ function get_theme($name)
 */
 function get_theme_author($theme_name)
 {
-    $theme_path = Config::get('prefix') . '/themes/' . Config::get('theme_name') . '/theme.cfg.php';
+    $theme_path = AmpConfig::get('prefix') . '/themes/' . AmpConfig::get('theme_name') . '/theme.cfg.php';
     $results = read_config($theme_path);
 
     return $results['author'];
@@ -94,7 +94,7 @@ function get_theme_author($theme_name)
 */
 function theme_exists($theme_name)
 {
-    $theme_path = Config::get('prefix') . '/themes/' . $theme_name . '/theme.cfg.php';
+    $theme_path = AmpConfig::get('prefix') . '/themes/' . $theme_name . '/theme.cfg.php';
 
     if (!file_exists($theme_path)) {
         return false;

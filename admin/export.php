@@ -69,7 +69,7 @@ switch ($_REQUEST['action']) {
 
     break;
     default:
-        require_once Config::get('prefix') . '/templates/show_export.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_export.inc.php';
     break;
 } // end switch on action
 

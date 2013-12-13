@@ -26,7 +26,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 <?php UI::show_box_top($song->title . ' ' . T_('Details'), 'box box_song_details'); ?>
 <dl class="song_details">
 
-<?php if (Config::get('ratings')) { ?>
+<?php if (AmpConfig::get('ratings')) { ?>
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
@@ -35,7 +35,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     </dd>
 <?php } ?>
 
-<?php if (Config::get('userflags')) { ?>
+<?php if (AmpConfig::get('userflags')) { ?>
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Flag'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
@@ -46,13 +46,13 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 <?php $rowparity = UI::flip_class(); ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
-        <?php if (Config::get('directplay')) { ?>
+        <?php if (AmpConfig::get('directplay')) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id, 'play', T_('Play song'),'play_song_' . $song->id); ?>
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'add_song_' . $song->id); ?>
         <?php if (Access::check_function('download')) { ?>
             <a href="<?php echo Song::play_url($song->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
-            <a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php } ?>
         <?php if (Access::check('interface','75')) { ?>
             <span id="<?php echo($button_flip_state_id); ?>">
@@ -78,11 +78,11 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     $songprops[gettext_noop('Last Updated')]   = date("d/m/Y H:i",$song->update_time);
   }
   $songprops[gettext_noop('Added')]   = date("d/m/Y H:i",$song->addition_time);
-  if (Config::get('show_played_times')) {
+  if (AmpConfig::get('show_played_times')) {
     $songprops[gettext_noop('# Played')]   = scrub_out($song->object_cnt);
   }
 
-  if (Config::get('show_lyrics')) {
+  if (AmpConfig::get('show_lyrics')) {
      $songprops[gettext_noop('Lyrics')]   = $song->f_lyrics;
   }
 

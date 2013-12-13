@@ -240,10 +240,10 @@ class Dba
      */
     private static function _connect()
     {
-        $username = Config::get('database_username');
-        $hostname = Config::get('database_hostname');
-        $password = Config::get('database_password');
-        $port = Config::get('database_port');
+        $username = AmpConfig::get('database_username');
+        $hostname = AmpConfig::get('database_hostname');
+        $password = AmpConfig::get('database_password');
+        $port = AmpConfig::get('database_port');
 
         // Build the data source name
         if (strpos($hostname, '/') === 0) {
@@ -272,7 +272,7 @@ class Dba
             return false;
         }
 
-        $charset = self::translate_to_mysqlcharset(Config::get('site_charset'));
+        $charset = self::translate_to_mysqlcharset(AmpConfig::get('site_charset'));
         $charset = $charset['charset'];
         if ($dbh->exec('SET NAMES ' . $charset) === false) {
             debug_event('Dba', 'Unable to set connection charset to ' . $charset, 1);
@@ -283,7 +283,7 @@ class Dba
             debug_event('Dba', 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
         }
 
-        if (Config::get('sql_profiling')) {
+        if (AmpConfig::get('sql_profiling')) {
             $dbh->exec('SET profiling=1');
             $dbh->exec('SET profiling_history_size=50');
             $dbh->exec('SET query_cache_type=0');
@@ -339,7 +339,7 @@ class Dba
      */
     public static function show_profile()
     {
-        if (Config::get('sql_profiling')) {
+        if (AmpConfig::get('sql_profiling')) {
             print '<br/>Profiling data: <br/>';
             $res = Dba::read('SHOW PROFILES');
             print '<table>';
@@ -359,19 +359,19 @@ class Dba
     public static function dbh($database='')
     {
         if (!$database) {
-            $database = Config::get('database_name');
+            $database = AmpConfig::get('database_name');
         }
 
         // Assign the Handle name that we are going to store
         $handle = 'dbh_' . $database;
 
-        if (!is_object(Config::get($handle))) {
+        if (!is_object(AmpConfig::get($handle))) {
             $dbh = self::_connect();
             self::_setup_dbh($dbh, $database);
-            Config::set($handle, $dbh, true);
+            AmpConfig::set($handle, $dbh, true);
             return $dbh;
         } else {
-            return Config::get($handle);
+            return AmpConfig::get($handle);
         }
     }
 
@@ -383,13 +383,13 @@ class Dba
     public static function disconnect($database = '')
     {
         if (!$database) {
-            $database = Config::get('database_name');
+            $database = AmpConfig::get('database_name');
         }
 
         $handle = 'dbh_' . $database;
 
         // Nuke it
-        Config::set($handle, false, true);
+        AmpConfig::set($handle, false, true);
 
         return true;
     }
@@ -479,12 +479,12 @@ class Dba
      */
     public static function reset_db_charset()
     {
-        $translated_charset = self::translate_to_mysqlcharset(Config::get('site_charset'));
+        $translated_charset = self::translate_to_mysqlcharset(AmpConfig::get('site_charset'));
         $target_charset = $translated_charset['charset'];
         $target_collation = $translated_charset['collation'];
 
         // Alter the charset for the entire database
-        $sql = "ALTER DATABASE `" . Config::get('database_name') . "` DEFAULT CHARACTER SET $target_charset COLLATE $target_collation";
+        $sql = "ALTER DATABASE `" . AmpConfig::get('database_name') . "` DEFAULT CHARACTER SET $target_charset COLLATE $target_collation";
         $db_results = Dba::write($sql);
 
         $sql = "SHOW TABLES";

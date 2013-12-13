@@ -20,7 +20,7 @@
  *
  */
 
-$web_path = Config::get('web_path');
+$web_path = AmpConfig::get('web_path');
 $button = Ajax::button('?page=index&action=random_albums','random', T_('Refresh'),'random_refresh');
 ?>
 <?php UI::show_box_top(T_('Albums of the Moment') . ' ' . $button, 'box box_random_albums'); ?>
@@ -41,7 +41,7 @@ $button = Ajax::button('?page=index&action=random_albums','random', T_('Refresh'
                 <?php } ?>
                 </a>
                 <?php
-                if (Config::get('ratings')) {
+                if (AmpConfig::get('ratings')) {
                         echo "<div id=\"rating_" . $album->id . "_album\">";
                         show_rating($album->id, 'album');
                         echo "</div>";

@@ -74,7 +74,7 @@ function generate_password($length)
 function scrub_in($input)
 {
     if (!is_array($input)) {
-        return stripslashes(htmlspecialchars(strip_tags($input), ENT_QUOTES, Config::get('site_charset')));
+        return stripslashes(htmlspecialchars(strip_tags($input), ENT_QUOTES, AmpConfig::get('site_charset')));
     } else {
         $results = array();
         foreach ($input as $item) {
@@ -92,7 +92,7 @@ function scrub_in($input)
  */
 function scrub_out($string)
 {
-    return htmlentities($string, ENT_QUOTES, Config::get('site_charset'));
+    return htmlentities($string, ENT_QUOTES, AmpConfig::get('site_charset'));
 
 } // scrub_out
 
@@ -102,7 +102,7 @@ function scrub_out($string)
  */
 function unhtmlentities($string)
 {
-    return html_entity_decode($string, ENT_QUOTES, Config::get('site_charset'));
+    return html_entity_decode($string, ENT_QUOTES, AmpConfig::get('site_charset'));
 
 } //unhtmlentities
 
@@ -155,7 +155,7 @@ function invert_bool($value)
 function get_languages()
 {
     /* Open the locale directory */
-    $handle    = @opendir(Config::get('prefix') . '/locale');
+    $handle    = @opendir(AmpConfig::get('prefix') . '/locale');
 
     if (!is_resource($handle)) {
         debug_event('language','Error unable to open locale directory','1');
@@ -168,7 +168,7 @@ function get_languages()
 
     while ($file = readdir($handle)) {
 
-        $full_file = Config::get('prefix') . '/locale/' . $file;
+        $full_file = AmpConfig::get('prefix') . '/locale/' . $file;
 
         /* Check to see if it's a directory */
         if (is_dir($full_file) AND substr($file,0,1) != '.' AND $file != 'base') {
@@ -275,7 +275,7 @@ function translate_pattern_code($code)
 function generate_config($current)
 {
     // Start building the new config file
-    $distfile = Config::get('prefix') . '/config/ampache.cfg.php.dist';
+    $distfile = AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist';
     $handle = fopen($distfile,'r');
     $dist = fread($handle,filesize($distfile));
     fclose($handle);

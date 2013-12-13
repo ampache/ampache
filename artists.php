@@ -33,20 +33,20 @@ switch ($_REQUEST['action']) {
         $artist->format();
         $object_ids = $artist->get_albums($_REQUEST['catalog']);
         $object_type = 'album';
-        require_once Config::get('prefix') . '/templates/show_artist.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_artist.inc.php';
         break;
     case 'show_all_songs':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
         $object_type = 'song';
         $object_ids = $artist->get_songs();
-        require_once Config::get('prefix') . '/templates/show_artist.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_artist.inc.php';
         break;
     case 'update_from_tags':
         $type        = 'artist';
         $object_id    = intval($_REQUEST['artist']);
-        $target_url    = Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
-        require_once Config::get('prefix') . '/templates/show_update_items.inc.php';
+        $target_url    = AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
+        require_once AmpConfig::get('prefix') . '/templates/show_update_items.inc.php';
     break;
     case 'rename_similar':
         if (!$user->has_access('100')) { UI::access_denied(); }
@@ -74,7 +74,7 @@ switch ($_REQUEST['action']) {
             show_confirmation (
                 T_('Renamed artist(s)'),
                 sprintf(T_('%1$s artists have been merged with %2$s'), $count, $artist->name),
-                Config::get('web_path') . '/artists.php?action=show&artist=' . $artist->id
+                AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $artist->id
             );
         } else {
             $GLOBALS['error']->print_error('general');
@@ -100,7 +100,7 @@ switch ($_REQUEST['action']) {
                         make_bool($_POST['c_ignins_l']));
         $artist_id = $artist->id;
         $artist_name = $artist->name;
-        require Config::get('prefix') . '/templates/show_similar_artists.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_similar_artists.inc.php';
 
     break;
     case 'rename':
@@ -139,7 +139,7 @@ switch ($_REQUEST['action']) {
                 show_confirmation (
                     T_('Renamed artist'),
                     sprintf(T_('%1$s is now known as %2$s'), $artist->name, $newname),
-                    Config::get('web_path') . "/artists.php?action=show&artist=" . $newid
+                    AmpConfig::get('web_path') . "/artists.php?action=show&artist=" . $newid
                 );
             }
 
@@ -147,22 +147,22 @@ switch ($_REQUEST['action']) {
 
         /* Else we've got an error! But be lenient, and just show the form again */
         else {
-            require Config::get('prefix') . '/templates/show_rename_artist.inc.php';
+            require AmpConfig::get('prefix') . '/templates/show_rename_artist.inc.php';
         }
         break;
     case 'show_rename':
         $artist = new Artist($_REQUEST['artist']);
-        require Config::get('prefix') . '/templates/show_rename_artist.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_rename_artist.inc.php';
     break;
     case 'match':
     case 'Match':
         $match = scrub_in($_REQUEST['match']);
         if ($match == "Browse" || $match == "Show_all") { $chr = ""; } else { $chr = $match; }
         /* Enclose this in the purty box! */
-        require Config::get('prefix') . '/templates/show_box_top.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_box_top.inc.php';
         show_alphabet_list('artists','artists.php',$match);
         show_alphabet_form($chr, T_('Show Artists starting with'),"artists.php?action=match");
-        require Config::get('prefix') . '/templates/show_box_bottom.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_box_bottom.inc.php';
 
         if ($match === "Browse") {
             show_artists();

@@ -37,17 +37,17 @@ class Recommendation
      */
     private static function get_lastfm_results($method, $query)
     {
-        $api_key = Config::get('lastfm_api_key');
+        $api_key = AmpConfig::get('lastfm_api_key');
         $api_base = "http://ws.audioscrobbler.com/2.0/?method=";
         $url = $api_base . $method . '&api_key=' . $api_key . '&' . $query;
         debug_event('Recommendation', 'search url : ' . $url, 5);
 
         $snoopy = new Snoopy();
-        if (Config::get('proxy_host') AND Config::get('proxy_port')) {
-            $snoopy->proxy_user = Config::get('proxy_host');
-            $snoopy->proxy_port = Config::get('proxy_port');
-            $snoopy->proxy_user = Config::get('proxy_user');
-            $snoopy->proxy_pass = Config::get('proxy_pass');
+        if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
+            $snoopy->proxy_user = AmpConfig::get('proxy_host');
+            $snoopy->proxy_port = AmpConfig::get('proxy_port');
+            $snoopy->proxy_user = AmpConfig::get('proxy_user');
+            $snoopy->proxy_pass = AmpConfig::get('proxy_pass');
         }
         $snoopy->fetch($url);
         $content = $snoopy->results;

@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php if (Config::get('directplay')) { ?>
+<?php if (AmpConfig::get('directplay')) { ?>
 <td class="cel_directplay">
     <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id,'play', T_('Play artist'),'play_artist_' . $artist->id); ?>
 <?php if (Stream_Playlist::check_autoplay_append()) { ?>
@@ -37,15 +37,15 @@
 <td class="cel_albums"><?php echo $artist->albums; ?></td>
 <td class="cel_time"><?php echo $artist->f_time; ?></td>
 <td class="cel_tags"><?php echo $artist->f_tags; ?></td>
-<?php if (Config::get('ratings')) { ?>
+<?php if (AmpConfig::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $artist->id; ?>_artist"><?php Rating::show($artist->id,'artist'); ?></td>
 <?php } ?>
-<?php if (Config::get('userflags')) { ?>
+<?php if (AmpConfig::get('userflags')) { ?>
 <td class="cel_userflag" id="userflag_<?php echo $artist->id; ?>_artist"><?php Userflag::show($artist->id,'artist'); ?></td>
 <?php } ?>
 <td class="cel_action">
 <?php if (Access::check_function('batch_download')) { ?>
-    <a href="<?php echo Config::get('web_path'); ?>/batch.php?action=artist&amp;id=<?php echo $artist->id; ?>">
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=artist&amp;id=<?php echo $artist->id; ?>">
             <?php echo UI::get_icon('batch_download','', T_('Batch Download')); ?>
         </a>
 <?php } ?>

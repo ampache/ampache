@@ -1291,7 +1291,7 @@ msgstr ""
 msgid "Playlist creation error."
 msgstr "Playlist creata."
 
-#: ../../lib/class/config.class.php:113
+#: ../../lib/class/ampconfig.class.php:113
 #, php-format
 msgid "Trying to clobber '%s' without setting clobber"
 msgstr ""

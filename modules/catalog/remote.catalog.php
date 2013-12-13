@@ -360,7 +360,7 @@ class Catalog_remote extends Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = UI::truncate($this->uri, Config::get('ellipse_threshold_title'));
+        $this->f_info = UI::truncate($this->uri, AmpConfig::get('ellipse_threshold_title'));
         $this->f_full_info = $this->uri;
     }
 

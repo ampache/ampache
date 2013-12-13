@@ -77,7 +77,7 @@ function install_check_status($configfile)
       if they don't then they're cool
     */
     $results = parse_ini_file($configfile);
-    Config::set_by_array($results, true);
+    AmpConfig::set_by_array($results, true);
 
     if (!Dba::check_database()) {
         Error::add('general', T_('Unable to connect to database, check your ampache config'));
@@ -111,7 +111,7 @@ function install_check_status($configfile)
  */
 function install_insert_db($db_user = null, $db_pass = null, $overwrite = false, $use_existing_db = false)
 {
-    $database = Config::get('database_name');
+    $database = AmpConfig::get('database_name');
     // Make sure that the database name is valid
     $is_valid = preg_match('/([^\d\w\_\-])/', $database, $matches);
 
@@ -150,7 +150,7 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false,
 
     // Check to see if we should create a user here
     if (strlen($db_user) && strlen($db_pass)) {
-        $db_host = Config::get('database_hostname');
+        $db_host = AmpConfig::get('database_hostname');
         $sql = 'GRANT ALL PRIVILEGES ON `' . Dba::escape($database) . '`.* TO ' .
             "'" . Dba::escape($db_user) . "'";
         if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
@@ -163,7 +163,7 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false,
         }
     } // end if we are creating a user
 
-    $sql_file = Config::get('prefix') . '/sql/ampache.sql';
+    $sql_file = AmpConfig::get('prefix') . '/sql/ampache.sql';
 
     $query = fread(fopen($sql_file, 'r'), filesize($sql_file));
     $pieces  = split_sql($query);
@@ -177,15 +177,15 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false,
     }
 
     $sql = 'ALTER DATABASE `' . $database . '` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci';
-    $db_results = Dba::write($sql, array(Config::get('database_name')));
+    $db_results = Dba::write($sql, array(AmpConfig::get('database_name')));
 
     // If they've picked something other than English update default preferences
-    if (Config::get('lang') != 'en_US') {
+    if (AmpConfig::get('lang') != 'en_US') {
         // FIXME: 31? I hate magic.
         $sql = 'UPDATE `preference` SET `value`= ? WHERE `id` = 31';
-        $db_results = Dba::write($sql, array(Config::get('lang')));
+        $db_results = Dba::write($sql, array(AmpConfig::get('lang')));
         $sql = 'UPDATE `user_preference` SET `value` = ? WHERE `preference` = 31';
-        $db_results = Dba::write($sql, array(Config::get('lang')));
+        $db_results = Dba::write($sql, array(AmpConfig::get('lang')));
     }
 
     return true;
@@ -198,7 +198,7 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false,
  */
 function install_create_config($download = false)
 {
-    $config_file = Config::get('prefix') . '/config/ampache.cfg.php';
+    $config_file = AmpConfig::get('prefix') . '/config/ampache.cfg.php';
 
     /* Attempt to make DB connection */
     $dbh = Dba::dbh();
@@ -209,7 +209,7 @@ function install_create_config($download = false)
         return false;
     }
 
-    $final = generate_config(Config::get_all());
+    $final = generate_config(AmpConfig::get_all());
 
     // Make sure the directory is writable OR the empty config file is
     if (!$download) {

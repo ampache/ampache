@@ -80,7 +80,7 @@ class Art extends database_object
     public static function _auto_init()
     {
         if (!isset($_SESSION['art_enabled'])) {
-            $_SESSION['art_enabled'] = (Config::get('bandwidth') > 25);
+            $_SESSION['art_enabled'] = (AmpConfig::get('bandwidth') > 25);
         }
         self::$enabled = make_bool($_SESSION['art_enabled']);
     }
@@ -212,7 +212,7 @@ class Art extends database_object
             if ($results['size'] == 'original') {
                 $this->raw = $results['image'];
                 $this->raw_mime = $results['mime'];
-            } else if (Config::get('resize_images') &&
+            } else if (AmpConfig::get('resize_images') &&
                     $results['size'] == '275x275') {
                 $this->thumb = $results['image'];
                 $this->raw_mime = $results['mime'];
@@ -222,7 +222,7 @@ class Art extends database_object
         if (!$this->raw) { return false; }
 
         // If there is no thumb and we want thumbs
-        if (!$this->thumb && Config::get('resize_images')) {
+        if (!$this->thumb && AmpConfig::get('resize_images')) {
             $data = $this->generate_thumb($this->raw, array('width' => 275, 'height' => 275), $this->raw_mime);
             // If it works save it!
             if ($data) {
@@ -246,7 +246,7 @@ class Art extends database_object
     public function insert($source, $mime)
     {
         // Disabled in demo mode cause people suck and upload porn
-        if (Config::get('demo_mode')) { return false; }
+        if (AmpConfig::get('demo_mode')) { return false; }
 
         // Check to make sure we like this image
         if (!self::test_image($source)) {
@@ -465,11 +465,11 @@ class Art extends database_object
         // Check to see if it's a URL
         if (isset($data['url'])) {
             $snoopy = new Snoopy();
-                    if (Config::get('proxy_host') AND Config::get('proxy_port')) {
-                        $snoopy->proxy_user = Config::get('proxy_host');
-                        $snoopy->proxy_port = Config::get('proxy_port');
-                        $snoopy->proxy_user = Config::get('proxy_user');
-                        $snoopy->proxy_pass = Config::get('proxy_pass');
+                    if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
+                        $snoopy->proxy_user = AmpConfig::get('proxy_host');
+                        $snoopy->proxy_port = AmpConfig::get('proxy_port');
+                        $snoopy->proxy_user = AmpConfig::get('proxy_user');
+                        $snoopy->proxy_pass = AmpConfig::get('proxy_pass');
                     }
             $snoopy->fetch($data['url']);
             return $snoopy->results;
@@ -513,7 +513,7 @@ class Art extends database_object
         $type = self::validate_type($type);
 
         $key = $type . $uid;
-        if (parent::is_cached('art', $key . '275x275') && Config::get('resize_images')) {
+        if (parent::is_cached('art', $key . '275x275') && AmpConfig::get('resize_images')) {
             $row = parent::get_from_cache('art', $key . '275x275');
             $mime = $row['mime'];
         }
@@ -533,7 +533,7 @@ class Art extends database_object
                 parent::add_to_cache('art', $key . $row['size'], $row);
                 if ($row['size'] == 'original') {
                     $mime = $row['mime'];
-                } else if ($row['size'] == '275x275' && Config::get('resize_images')) {
+                } else if ($row['size'] == '275x275' && AmpConfig::get('resize_images')) {
                     $thumb_mime = $row['mime'];
                 }
             }
@@ -543,7 +543,7 @@ class Art extends database_object
         $extension = self::extension($mime);
 
         $name = 'art.' . $extension;
-        $url = Config::get('web_path') . '/image.php?id=' . scrub_out($uid) . '&object_type=' . scrub_out($type) . '&auth=' . $sid . '&name=' . $name;
+        $url = AmpConfig::get('web_path') . '/image.php?id=' . scrub_out($uid) . '&object_type=' . scrub_out($type) . '&auth=' . $sid . '&name=' . $name;
 
         return $url;
 
@@ -587,7 +587,7 @@ class Art extends database_object
             break;
         }
 
-        $config = Config::get('art_order');
+        $config = AmpConfig::get('art_order');
         $methods = get_class_methods('Art');
 
         /* If it's not set */
@@ -708,11 +708,11 @@ class Art extends database_object
                 $url = 'http://' . $base_url . '/images/P/' . $asin . '.' . $server_num . '.LZZZZZZZ.jpg';
                 debug_event('mbz-gatherart', "Evaluating Amazon URL: " . $url, '5');
                 $snoopy = new Snoopy();
-                if (Config::get('proxy_host') AND Config::get('proxy_port')) {
-                    $snoopy->proxy_user = Config::get('proxy_host');
-                    $snoopy->proxy_port = Config::get('proxy_port');
-                    $snoopy->proxy_user = Config::get('proxy_user');
-                    $snoopy->proxy_pass = Config::get('proxy_pass');
+                if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
+                    $snoopy->proxy_user = AmpConfig::get('proxy_host');
+                    $snoopy->proxy_port = AmpConfig::get('proxy_port');
+                    $snoopy->proxy_user = AmpConfig::get('proxy_user');
+                    $snoopy->proxy_pass = AmpConfig::get('proxy_pass');
                 }
                 if ($snoopy->fetch($url)) {
                     $num_found++;
@@ -838,7 +838,7 @@ class Art extends database_object
         }
 
         /* Attempt to retrieve the album art order */
-        $amazon_base_urls = Config::get('amazon_base_urls');
+        $amazon_base_urls = AmpConfig::get('amazon_base_urls');
 
         /* If it's not set */
         if (!count($amazon_base_urls)) {
@@ -849,12 +849,12 @@ class Art extends database_object
         foreach ($amazon_base_urls as $amazon_base) {
 
             // Create the Search Object
-            $amazon = new AmazonSearch(Config::get('amazon_developer_public_key'), Config::get('amazon_developer_private_key'), $amazon_base);
-                if (Config::get('proxy_host') AND Config::get('proxy_port')) {
-                    $proxyhost = Config::get('proxy_host');
-                    $proxyport = Config::get('proxy_port');
-                    $proxyuser = Config::get('proxy_user');
-                    $proxypass = Config::get('proxy_pass');
+            $amazon = new AmazonSearch(AmpConfig::get('amazon_developer_public_key'), AmpConfig::get('amazon_developer_private_key'), $amazon_base);
+                if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
+                    $proxyhost = AmpConfig::get('proxy_host');
+                    $proxyport = AmpConfig::get('proxy_port');
+                    $proxyuser = AmpConfig::get('proxy_user');
+                    $proxypass = AmpConfig::get('proxy_pass');
                     debug_event('amazon', 'setProxy', 5);
                     $amazon->setProxy($proxyhost, $proxyport, $proxyuser, $proxypass);
                 }
@@ -862,7 +862,7 @@ class Art extends database_object
             $search_results = array();
 
             /* Set up the needed variables */
-            $max_pages_to_search = max(Config::get('max_amazon_results_pages'),$amazon->_default_results_pages);
+            $max_pages_to_search = max(AmpConfig::get('max_amazon_results_pages'),$amazon->_default_results_pages);
             $pages_to_search = $max_pages_to_search; //init to max until we know better.
             // while we have pages to search
             do {
@@ -894,7 +894,7 @@ class Art extends database_object
             }
 
             /* Log this if we're doin debug */
-            debug_event('amazon-xml',"Searched using $keywords with " . Config::get('amazon_developer_key') . " as key, results: " . count($final_results), 5);
+            debug_event('amazon-xml',"Searched using $keywords with " . AmpConfig::get('amazon_developer_key') . " as key, results: " . count($final_results), 5);
 
             // If we've hit our limit
             if (!empty($limit) && count($final_results) >= $limit) {
@@ -958,7 +958,7 @@ class Art extends database_object
         $processed = array();
 
         /* See if we are looking for a specific filename */
-        $preferred_filename = Config::get('album_art_preferred_filename');
+        $preferred_filename = AmpConfig::get('album_art_preferred_filename');
 
         // Array of valid extensions
         $image_extensions = array(
@@ -1166,11 +1166,11 @@ class Art extends database_object
             break;
         }
 
-        if (Config::get('proxy_host') AND Config::get('proxy_port')) {
-            $proxyhost = Config::get('proxy_host');
-            $proxyport = Config::get('proxy_port');
-            $proxyuser = Config::get('proxy_user');
-            $proxypass = Config::get('proxy_pass');
+        if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
+            $proxyhost = AmpConfig::get('proxy_host');
+            $proxyport = AmpConfig::get('proxy_port');
+            $proxyuser = AmpConfig::get('proxy_user');
+            $proxypass = AmpConfig::get('proxy_pass');
             debug_event('LastFM', 'proxy set', 5);
             $lastfm->setProxy($proxyhost, $proxyport, $proxyuser, $proxypass);
         }

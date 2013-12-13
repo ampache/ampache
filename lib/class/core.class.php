@@ -50,7 +50,7 @@ class Core
     {
         // Ignore class with namespace, not used by Ampache
         if (strpos($class, '\\') === false) {
-            $file = Config::get('prefix') . '/lib/class/' .
+            $file = AmpConfig::get('prefix') . '/lib/class/' .
                 strtolower($class) . '.class.php';
 
             if (Core::is_readable($file)) {
@@ -76,7 +76,7 @@ class Core
     {
         // Make ourselves a nice little sid
         $sid =  md5(uniqid(rand(), true));
-        $window = Config::get('session_length');
+        $window = AmpConfig::get('session_length');
         $expire = time() + $window;
 
         // Register it

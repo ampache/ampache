@@ -33,13 +33,13 @@ define('NO_SESSION','1');
 require_once 'lib/init.php';
 
 // Check to see if they've got an interface session or a valid API session, if not GTFO
-if (!Session::exists('interface', $_COOKIE[Config::get('session_name')]) && !Session::exists('api', $_REQUEST['auth'])) {
-    debug_event('image','Access denied, checked cookie session:' . $_COOKIE[Config::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 1);
+if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !Session::exists('api', $_REQUEST['auth'])) {
+    debug_event('image','Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 1);
     exit;
 }
 
 // If we aren't resizing just trash thumb
-if (!Config::get('resize_images')) { $_GET['thumb'] = null; }
+if (!AmpConfig::get('resize_images')) { $_GET['thumb'] = null; }
 
 // FIXME: Legacy stuff - should be removed after a version or so
 if (!isset($_GET['object_type'])) {
@@ -78,7 +78,7 @@ switch ($_GET['thumb']) {
 
 switch ($_GET['type']) {
     case 'popup':
-        require_once Config::get('prefix') . '/templates/show_big_art.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_big_art.inc.php';
     break;
     // If we need to pull the data out of the session
     case 'session':
@@ -96,8 +96,8 @@ switch ($_GET['type']) {
 
         if (!$art->raw_mime) {
             $mime = 'image/jpeg';
-            $image = file_get_contents(Config::get('prefix') .
-                Config::get('theme_path') .
+            $image = file_get_contents(AmpConfig::get('prefix') .
+                AmpConfig::get('theme_path') .
                 '/images/blankalbum.jpg');
         } else {
             if ($_GET['thumb']) {

@@ -182,7 +182,7 @@ class Song extends database_object implements media
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            if (Config::get('show_played_times')) {
+            if (AmpConfig::get('show_played_times')) {
                 $row['object_cnt'] = Stats::get_object_count('song', $row['id']);
             }
             parent::add_to_cache('song', $row['id'], $row);
@@ -200,10 +200,10 @@ class Song extends database_object implements media
         Art::build_cache($albums);
 
         // If we're rating this then cache them as well
-        if (Config::get('ratings')) {
+        if (AmpConfig::get('ratings')) {
             Rating::build_cache('song', $song_ids);
         }
-        if (Config::get('userflags')) {
+        if (AmpConfig::get('userflags')) {
             Userflag::build_cache('song', $song_ids);
         }
 
@@ -238,7 +238,7 @@ class Song extends database_object implements media
 
         $results = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
-            if (Config::get('show_played_times')) {
+            if (AmpConfig::get('show_played_times')) {
                 $results['object_cnt'] = Stats::get_object_count('song', $results['id']);
             }
 
@@ -835,21 +835,21 @@ class Song extends database_object implements media
 
         // Format the album name
         $this->f_album_full = $this->get_album_name();
-        $this->f_album = UI::truncate($this->f_album_full,Config::get('ellipse_threshold_album'));
+        $this->f_album = UI::truncate($this->f_album_full,AmpConfig::get('ellipse_threshold_album'));
 
         // Format the artist name
         $this->f_artist_full = $this->get_artist_name();
-        $this->f_artist = UI::truncate($this->f_artist_full,Config::get('ellipse_threshold_artist'));
+        $this->f_artist = UI::truncate($this->f_artist_full,AmpConfig::get('ellipse_threshold_artist'));
 
         // Format the title
         $this->f_title_full = $this->title;
-        $this->f_title = UI::truncate($this->title,Config::get('ellipse_threshold_title'));
+        $this->f_title = UI::truncate($this->title,AmpConfig::get('ellipse_threshold_title'));
 
         // Create Links for the different objects
-        $this->link = Config::get('web_path') . "/song.php?action=show_song&song_id=" . $this->id;
+        $this->link = AmpConfig::get('web_path') . "/song.php?action=show_song&song_id=" . $this->id;
         $this->f_link = "<a href=\"" . scrub_out($this->link) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_title) . "</a>";
-        $this->f_album_link = "<a href=\"" . Config::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->f_album_full) . "\"> " . scrub_out($this->f_album) . "</a>";
-        $this->f_artist_link = "<a href=\"" . Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
+        $this->f_album_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->f_album_full) . "\"> " . scrub_out($this->f_album) . "</a>";
+        $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
 
         // Format the Bitrate
         $this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);
@@ -871,7 +871,7 @@ class Song extends database_object implements media
         // Format the size
         $this->f_size = UI::format_bytes($this->size);
 
-        $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . Config::get('web_path') . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
+        $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
 
         return true;
 
@@ -1025,7 +1025,7 @@ class Song extends database_object implements media
         while ($row = Dba::fetch_assoc($db_results)) {
             if (isset($results[$row['object_id']])) { continue; }
             $results[$row['object_id']] = $row;
-            if (count($results) >= Config::get('popular_threshold')) { break; }
+            if (count($results) >= AmpConfig::get('popular_threshold')) { break; }
         }
 
         return $results;
@@ -1040,7 +1040,7 @@ class Song extends database_object implements media
     public static function get_stream_types_for_type($type)
     {
         $types = array();
-        $transcode = Config::get('transcode_' . $type);
+        $transcode = AmpConfig::get('transcode_' . $type);
 
         if ($transcode != 'required') {
             $types[] = 'native';
@@ -1058,9 +1058,9 @@ class Song extends database_object implements media
 
         if ($target) {
             debug_event('transcode', 'Explicit format request', 5);
-        } else if ($target = Config::get('encode_target_' . $source)) {
+        } else if ($target = AmpConfig::get('encode_target_' . $source)) {
             debug_event('transcode', 'Defaulting to configured target format for ' . $source, 5);
-        } else if ($target = Config::get('encode_target')) {
+        } else if ($target = AmpConfig::get('encode_target')) {
             debug_event('transcode', 'Using default target format', 5);
         } else {
             $target = $source;
@@ -1069,8 +1069,8 @@ class Song extends database_object implements media
 
         debug_event('transcode', 'Transcoding from ' . $source . ' to ' . $target, 5);
 
-        $cmd = Config::get('transcode_cmd_' . $source) ?: Config::get('transcode_cmd');
-        $args = Config::get('encode_args_' . $target);
+        $cmd = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
+        $args = AmpConfig::get('encode_args_' . $target);
 
         if (!$args) {
             debug_event('transcode', 'Target format ' . $target . ' is not properly configured', 2);

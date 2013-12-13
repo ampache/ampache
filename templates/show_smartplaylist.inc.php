@@ -22,7 +22,7 @@
 ?>
 <?php
 ob_start();
-require Config::get('prefix') . '/templates/show_smartplaylist_title.inc.php';
+require AmpConfig::get('prefix') . '/templates/show_smartplaylist_title.inc.php';
 $title = ob_get_contents();
 ob_end_clean();
 UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
@@ -32,7 +32,7 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
 <ul>
         <?php if (Access::check_function('batch_download')) { ?>
     <li>
-        <a href="<?php echo Config::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
         <?php echo T_('Batch Download'); ?>
     </li>
         <?php } ?>
@@ -42,7 +42,7 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
     </li>
     <?php if ($playlist->has_access()) { ?>
     <li>
-        <a href="<?php echo Config::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
             <?php echo UI::get_icon('delete'); ?>
         </a>
         <?php echo T_('Delete'); ?>
@@ -51,9 +51,9 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
 </ul>
 </div>
 
-<form id="editplaylist" name="editplaylist" method="post" action="<?php echo Config::get('web_path'); ?>/smartplaylist.php?action=update_playlist&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
+<form id="editplaylist" name="editplaylist" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=update_playlist&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
 
-<?php require Config::get('prefix') . '/templates/show_rules.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . '/templates/show_rules.inc.php'; ?>
 
 <div class="formValidation">
     <input class="button" type="submit" value="<?php echo T_('Save Changes'); ?>" />

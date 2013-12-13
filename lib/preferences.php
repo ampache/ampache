@@ -180,13 +180,13 @@ function create_preference_input($name,$value)
             if ($value == 'localplay') { $is_local = 'selected="selected"'; } elseif ($value == 'democratic') { $is_vote = 'selected="selected"'; } elseif ($value == 'web_player') { $is_web_player = 'selected="selected"'; } else { $is_stream = "selected=\"selected\""; }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"\">" . T_('None') . "</option>\n";
-            if (Config::get('allow_stream_playback')) {
+            if (AmpConfig::get('allow_stream_playback')) {
                 echo "\t<option value=\"stream\" $is_stream>" . T_('Stream') . "</option>\n";
             }
-            if (Config::get('allow_democratic_playback')) {
+            if (AmpConfig::get('allow_democratic_playback')) {
                 echo "\t<option value=\"democratic\" $is_vote>" . T_('Democratic') . "</option>\n";
             }
-            if (Config::get('allow_localplay_playback')) {
+            if (AmpConfig::get('allow_localplay_playback')) {
                 echo "\t<option value=\"localplay\" $is_local>" . T_('Localplay') . "</option>\n";
             }
             echo "\t<option value=\"web_player\" $is_web_player>" . _('Web Player') . "</option>\n";

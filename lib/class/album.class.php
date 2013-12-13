@@ -141,7 +141,7 @@ class Album extends database_object
                 $art->get_db();
                 $row['has_art'] = make_bool($art->raw);
                 $row['has_thumb'] = make_bool($art->thumb);
-                if (Config::get('show_played_times')) {
+                if (AmpConfig::get('show_played_times')) {
                     $row['object_cnt'] = Stats::get_object_count('album', $row['album']);
                 }
                 parent::add_to_cache('album_extra',$row['album'],$row);
@@ -186,7 +186,7 @@ class Album extends database_object
         $results['has_art'] = make_bool($art->raw);
         $results['has_thumb'] = make_bool($art->thumb);
 
-        if (Config::get('show_played_times')) {
+        if (AmpConfig::get('show_played_times')) {
             $results['object_cnt'] = Stats::get_object_count('album', $this->id);
         }
 
@@ -324,14 +324,14 @@ class Album extends database_object
      */
     public function format()
     {
-        $web_path = Config::get('web_path');
+        $web_path = AmpConfig::get('web_path');
 
         /* Pull the advanced information */
         $data = $this->_get_extra_info();
         foreach ($data as $key=>$value) { $this->$key = $value; }
 
         /* Truncate the string if it's to long */
-        $this->f_name        = UI::truncate($this->full_name,Config::get('ellipse_threshold_album'));
+        $this->f_name        = UI::truncate($this->full_name,AmpConfig::get('ellipse_threshold_album'));
 
         $this->f_name_link    = "<a href=\"$web_path/albums.php?action=show&amp;album=" . scrub_out($this->id) . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
         // If we've got a disk append it
@@ -345,7 +345,7 @@ class Album extends database_object
         if ($this->artist_count == '1') {
             $artist = trim(trim($this->artist_prefix) . ' ' . trim($this->artist_name));
             $this->f_artist_name = $artist;
-            $artist = scrub_out(UI::truncate($artist), Config::get('ellipse_threshold_artist'));
+            $artist = scrub_out(UI::truncate($artist), AmpConfig::get('ellipse_threshold_artist'));
             $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
             $this->f_artist = $artist;
         } else {

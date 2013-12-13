@@ -44,7 +44,7 @@ class UI
         // Clear any buffered crap
         ob_end_clean();
         header("HTTP/1.1 403 $error");
-        require_once Config::get('prefix') . '/templates/show_denied.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_denied.inc.php';
         exit;
     }
 
@@ -57,7 +57,7 @@ class UI
     public static function ajax_include($template)
     {
         ob_start();
-        require Config::get('prefix') . '/templates/' . $template;
+        require AmpConfig::get('prefix') . '/templates/' . $template;
         $output = ob_get_contents();
         ob_end_clean();
 
@@ -233,11 +233,11 @@ class UI
         }
 
         $filename = 'icon_' . $name . '.png';
-        $path = Config::get('theme_path') . '/images/icons/';
-        if (!file_exists(Config::get('prefix') . $path . $filename)) {
+        $path = AmpConfig::get('theme_path') . '/images/icons/';
+        if (!file_exists(AmpConfig::get('prefix') . $path . $filename)) {
             $path = '/images/';
         }
-        $url = Config::get('web_path') . $path . $filename;
+        $url = AmpConfig::get('web_path') . $path . $filename;
         self::$_icon_cache[$name] = $url;
 
         return $url;
@@ -251,7 +251,7 @@ class UI
      */
     public static function show_header()
     {
-        require_once Config::get('prefix') . '/templates/header.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/header.inc.php';
     }
 
     /**
@@ -261,7 +261,7 @@ class UI
      */
     public static function show_mainframes()
     {
-        require_once Config::get('prefix') . '/templates/mainframes.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/mainframes.inc.php';
     }
 
     /**
@@ -271,7 +271,7 @@ class UI
      */
     public static function show_footer()
     {
-        require_once Config::get('prefix') . '/templates/footer.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/footer.inc.php';
         if (isset($_REQUEST['profiling'])) {
             Dba::show_profile();
         }
@@ -284,7 +284,7 @@ class UI
      */
     public static function show_box_top($title = '', $class = '')
     {
-        require Config::get('prefix') . '/templates/show_box_top.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_box_top.inc.php';
     }
 
     /**
@@ -294,7 +294,7 @@ class UI
      */
     public static function show_box_bottom()
     {
-        require Config::get('prefix') . '/templates/show_box_bottom.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_box_bottom.inc.php';
     }
 
     /**
@@ -312,7 +312,7 @@ class UI
         }
 
         if (self::check_iconv()) {
-            $charset = Config::get('site_charset');
+            $charset = AmpConfig::get('site_charset');
             if (iconv_strlen($text, $charset) > $max) {
                 $text = iconv_substr($text, 0, $max - 3, $charset);
                 $text .= iconv('ISO-8859-1', $charset, '...');

@@ -107,7 +107,7 @@ class Playlist extends playlist_object
     public function format()
     {
         parent::format();
-        $this->f_link = '<a href="' . Config::get('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id=' . $this->id . '">' . $this->f_name . '</a>';
+        $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id=' . $this->id . '">' . $this->f_name . '</a>';
 
     } // format
 

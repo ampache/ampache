@@ -20,14 +20,14 @@
  *
  */
 
-$web_path = Config::get('web_path');
+$web_path = AmpConfig::get('web_path');
 $tags_list = Tag::get_display(Tag::get_tags());
 $thcount = 9;
 ?>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table id="reorder_songs_table" class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-    <?php if (Config::get('directplay')) { ++$thcount; ?>
+    <?php if (AmpConfig::get('directplay')) { ++$thcount; ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
     <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -37,13 +37,13 @@ $thcount = 9;
         <th class="cel_tags"><?php echo T_('Tags'); ?></th>
         <th class="cel_track"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track', T_('Track'), 'sort_song_track'); ?></th>
         <th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', T_('Time'), 'sort_song_time'); ?></th>
-    <?php if (Config::get('ratings')) {
+    <?php if (AmpConfig::get('ratings')) {
         ++$thcount;
         Rating::build_cache('song', $object_ids);
     ?>
         <th class="cel_rating"><?php echo T_('Rating'); ?></th>
     <?php } ?>
-    <?php if (Config::get('userflags')) {
+    <?php if (AmpConfig::get('userflags')) {
         ++$thcount;
         Userflag::build_cache('song', $object_ids);
     ?>
@@ -60,7 +60,7 @@ $thcount = 9;
             $song->format();
     ?>
         <tr class="<?php echo UI::flip_class(); ?>" id="song_<?php echo $song->id; ?>">
-            <?php require Config::get('prefix') . '/templates/show_song_row.inc.php'; ?>
+            <?php require AmpConfig::get('prefix') . '/templates/show_song_row.inc.php'; ?>
         </tr>
     <?php } ?>
     </tbody>
@@ -72,7 +72,7 @@ $thcount = 9;
 <?php } ?>
 
     <tr class="th-bottom">
-    <?php if (Config::get('directplay')) { ?>
+    <?php if (AmpConfig::get('directplay')) { ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
     <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -82,14 +82,14 @@ $thcount = 9;
         <th class="cel_tags"><?php echo T_('Tags'); ?></th>
         <th class="cel_track"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=song&sort=track', T_('Track'),'sort_song_track_bottom'); ?></th>
         <th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=song&sort=time', T_('Time'),'sort_song_time_bottom'); ?></th>
-    <?php if (Config::get('ratings')) { ?>
+    <?php if (AmpConfig::get('ratings')) { ?>
         <th class="cel_rating"><?php echo T_('Rating'); ?></th>
     <?php } ?>
-    <?php if (Config::get('userflags')) { ?>
+    <?php if (AmpConfig::get('userflags')) { ?>
             <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
     <?php } ?>
         <th class="cel_action"><?php echo T_('Action'); ?></th>
         <th class="cel_drag"></th>
     </tr>
 </table>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>

@@ -128,7 +128,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'get_filters':
         ob_start();
-        require_once Config::get('prefix') . '/templates/browse_filters.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/browse_filters.inc.php';
         $results['browse_filters'] = ob_get_clean();
     default:
         $results['rfc3514'] = '0x1';

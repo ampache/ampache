@@ -21,7 +21,7 @@
  */
 ?>
 <?php UI::show_box_top(T_('Edit Access Control List')); ?>
-<form name="edit_access" method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/admin/access.php?action=update_record&access_id=<?php echo intval($access->id); ?>">
+<form name="edit_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=update_record&access_id=<?php echo intval($access->id); ?>">
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <tr>
             <td><?php echo T_('Name'); ?>: </td>

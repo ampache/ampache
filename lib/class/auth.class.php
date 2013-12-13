@@ -52,10 +52,10 @@ class Auth
 
         // Nuke the cookie before all else
         Session::destroy($key);
-        if ((!$relogin) && Config::get('logout_redirect')) {
-            $target = Config::get('logout_redirect');
+        if ((!$relogin) && AmpConfig::get('logout_redirect')) {
+            $target = AmpConfig::get('logout_redirect');
         } else {
-            $target = Config::get('web_path') . '/login.php';
+            $target = AmpConfig::get('web_path') . '/login.php';
         }
 
         // Do a quick check to see if this is an AJAXed logout request
@@ -65,7 +65,7 @@ class Auth
             ob_start();
 
             /* Set the correct headers */
-            header("Content-type: text/xml; charset=" . Config::get('site_charset'));
+            header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
             header("Content-Disposition: attachment; filename=ajax.xml");
             header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");
             header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
@@ -90,7 +90,7 @@ class Auth
      */
     public static function login($username, $password)
     {
-        foreach (Config::get('auth_methods') as $method) {
+        foreach (AmpConfig::get('auth_methods') as $method) {
             $function_name = $method . '_auth';
 
             if (!method_exists('Auth', $function_name)) {
@@ -184,7 +184,7 @@ class Auth
      */
     private static function external_auth($username, $password)
     {
-        $authenticator = Config::get('external_authenticator');
+        $authenticator = AmpConfig::get('external_authenticator');
         if (!$authenticator) {
             return array(
                 'success' => false,
@@ -244,22 +244,22 @@ class Auth
      */
     private static function ldap_auth($username, $password)
     {
-        $ldap_username    = Config::get('ldap_username');
-        $ldap_password    = Config::get('ldap_password');
+        $ldap_username    = AmpConfig::get('ldap_username');
+        $ldap_password    = AmpConfig::get('ldap_password');
 
-        $require_group    = Config::get('ldap_require_group');
+        $require_group    = AmpConfig::get('ldap_require_group');
 
         // This is the DN for the users (required)
-        $ldap_dn    = Config::get('ldap_search_dn');
+        $ldap_dn    = AmpConfig::get('ldap_search_dn');
 
         // This is the server url (required)
-        $ldap_url    = Config::get('ldap_url');
+        $ldap_url    = AmpConfig::get('ldap_url');
 
         // This is the ldap filter string (required)
-        $ldap_filter    = Config::get('ldap_filter');
+        $ldap_filter    = AmpConfig::get('ldap_filter');
 
         //This is the ldap objectclass (required)
-        $ldap_class    = Config::get('ldap_objectclass');
+        $ldap_class    = AmpConfig::get('ldap_objectclass');
 
         if (!($ldap_dn && $ldap_url && $ldap_filter && $ldap_class)) {
             debug_event('ldap_auth', 'Required config value missing', 1);
@@ -268,8 +268,8 @@ class Auth
             return $results;
         }
 
-        $ldap_name_field    = Config::get('ldap_name_field');
-        $ldap_email_field    = Config::get('ldap_email_field');
+        $ldap_name_field    = AmpConfig::get('ldap_name_field');
+        $ldap_email_field    = AmpConfig::get('ldap_email_field');
 
         if ($ldap_link = ldap_connect($ldap_url) ) {
 

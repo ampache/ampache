@@ -70,5 +70,5 @@ $client->format();
 <?php
     $data = Song::get_recently_played($client->id);
     Song::build_cache(array_keys($data));
-    require Config::get('prefix') . '/templates/show_recently_played.inc.php';
+    require AmpConfig::get('prefix') . '/templates/show_recently_played.inc.php';
 ?>

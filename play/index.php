@@ -86,8 +86,8 @@ if (make_bool($GLOBALS['user']->disabled)) {
 }
 
 // If require session is set then we need to make sure we're legit
-if (Config::get('require_session')) {
-    if (!Config::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
+if (AmpConfig::get('require_session')) {
+    if (!AmpConfig::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
         debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
     } else if (!Session::exists('stream', $sid)) {
         debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
@@ -105,8 +105,8 @@ if (Config::get('require_session')) {
 $GLOBALS['user']->update_last_seen();
 
 /* If we are in demo mode.. die here */
-if (Config::get('demo_mode') || (!Access::check('interface','25') )) {
-    debug_event('UI::access_denied', "Streaming Access Denied:" .Config::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
+if (AmpConfig::get('demo_mode') || (!Access::check('interface','25') )) {
+    debug_event('UI::access_denied', "Streaming Access Denied:" .AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . $GLOBALS['user']->access,'3');
     UI::access_denied();
     exit;
 }
@@ -115,7 +115,7 @@ if (Config::get('demo_mode') || (!Access::check('interface','25') )) {
    If they are using access lists let's make sure
    that they have enough access to play this mojo
 */
-if (Config::get('access_control')) {
+if (AmpConfig::get('access_control')) {
     if (!Access::check_network('stream',$GLOBALS['user']->id,'25') AND
         !Access::check_network('network',$GLOBALS['user']->id,'25')) {
         debug_event('UI::access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
@@ -196,7 +196,7 @@ if (!make_bool($media->enabled)) {
 }
 
 // If we are running in Legalize mode, don't play songs already playing
-if (Config::get('lock_songs')) {
+if (AmpConfig::get('lock_songs')) {
     if (!Stream::check_lock_media($media->id,get_class($media))) {
         exit;
     }
@@ -241,7 +241,7 @@ $browser = new Horde_Browser();
 /* If they are just trying to download make sure they have rights
  * and then present them with the download file
  */
-if ($_GET['action'] == 'download' AND Config::get('download')) {
+if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
 
     // STUPID IE
     $media->format_pattern();
@@ -257,10 +257,10 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
     }
 
     // Check to see if we should be throttling because we can get away with it
-    if (Config::get('rate_limit') > 0) {
+    if (AmpConfig::get('rate_limit') > 0) {
         while (!feof($fp)) {
-            echo fread($fp,round(Config::get('rate_limit')*1024));
-            $bytesStreamed += round(Config::get('rate_limit')*1024);
+            echo fread($fp,round(AmpConfig::get('rate_limit')*1024));
+            $bytesStreamed += round(AmpConfig::get('rate_limit')*1024);
             flush();
             sleep(1);
         }
@@ -287,12 +287,12 @@ if ($_GET['action'] == 'download' AND Config::get('download')) {
 set_time_limit(0);
 
 // We're about to start. Record this user's IP.
-if (Config::get('track_user_ip')) {
+if (AmpConfig::get('track_user_ip')) {
     $GLOBALS['user']->insert_ip_history();
 }
 
 $force_downsample = false;
-if (Config::get('downsample_remote')) {
+if (AmpConfig::get('downsample_remote')) {
     if (!Access::check_network('network', $GLOBALS['user']->id, '0')) {
         debug_event('play', 'Downsampling enabled for non-local address ' . $_SERVER['REMOTE_ADDR'], 5);
         $force_downsample = true;
@@ -301,7 +301,7 @@ if (Config::get('downsample_remote')) {
 
 // Determine whether to transcode
 $transcode = false;
-$transcode_cfg = Config::get('transcode');
+$transcode_cfg = AmpConfig::get('transcode');
 // transcode_to should only have an effect if the song is the wrong format
 $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
 $valid_types = $media->get_stream_types();

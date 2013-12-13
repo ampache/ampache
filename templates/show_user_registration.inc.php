@@ -20,16 +20,16 @@
  *
  */
 
-$htmllang = str_replace("_","-",Config::get('lang'));
-$web_path = Config::get('web_path');
+$htmllang = str_replace("_","-",AmpConfig::get('lang'));
+$web_path = AmpConfig::get('web_path');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
-<title><?php echo Config::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
-<link rel="stylesheet" href="<?php echo Config::get('web_path'); ?><?php echo Config::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
-<link rel="shortcut icon" href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
+<title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
+<link rel="shortcut icon" href="<?php echo AmpConfig::get('web_path'); ?>/favicon.ico" />
 </head>
 <body id="registerPage">
 <script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
@@ -38,7 +38,7 @@ $web_path = Config::get('web_path');
 
 <div id="maincontainer">
 <div id="header">
-<h1><?php echo scrub_out(Config::get('site_title')); ?></h1>
+<h1><?php echo scrub_out(AmpConfig::get('site_title')); ?></h1>
 <span><?php echo T_('Registration'); ?>...</span>
 </div>
 <?php
@@ -52,7 +52,7 @@ $email = scrub_in($_REQUEST['email']);
 <form name="update_user" method="post" action="<?php echo $web_path; ?>/register.php" enctype="multipart/form-data">
 <?php
 /*  If we should show the user agreement */
-if (Config::get('user_agreement')) { ?>
+if (AmpConfig::get('user_agreement')) { ?>
 <h3><?php echo T_('User Agreement'); ?></h3>
 <div class="registrationAgreement">
     <div class="agreementContent">
@@ -99,7 +99,7 @@ if (Config::get('user_agreement')) { ?>
     <span><?php echo T_('* Required fields'); ?></span>
 </div>
 
-<?php if (Config::get('captcha_public_reg')) { ?>
+<?php if (AmpConfig::get('captcha_public_reg')) { ?>
             <?php  echo captcha::form("&rarr;&nbsp;"); ?>
             <?php Error::display('captcha'); ?>
 <?php } ?>

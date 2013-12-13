@@ -200,7 +200,7 @@ class Api
 
                 echo XML_Data::keyed_array(array('auth'=>$token,
                     'api'=>self::$version,
-                    'session_expire'=>date("c",time()+Config::get('session_length')-60),
+                    'session_expire'=>date("c",time()+AmpConfig::get('session_length')-60),
                     'update'=>date("c",$row['update']),
                     'add'=>date("c",$row['add']),
                     'clean'=>date("c",$row['clean']),
@@ -227,12 +227,12 @@ class Api
      */
     public static function ping($input)
     {
-        $xmldata = array('server'=>Config::get('version'),'version'=>Api::$version,'compatible'=>'350001');
+        $xmldata = array('server'=>AmpConfig::get('version'),'version'=>Api::$version,'compatible'=>'350001');
 
         // Check and see if we should extend the api sessions (done if valid sess is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
-            $xmldata = array_merge(array('session_expire'=>date("c",time()+Config::get('session_length')-60)),$xmldata);
+            $xmldata = array_merge(array('session_expire'=>date("c",time()+AmpConfig::get('session_length')-60)),$xmldata);
         }
 
         debug_event('API','Ping Received from ' . $_SERVER['REMOTE_ADDR'] . ' :: ' . $input['auth'],'5');
@@ -627,7 +627,7 @@ class Api
     public static function localplay($input)
     {
             // Load their localplay instance
-            $localplay = new Localplay(Config::get('localplay_controller'));
+            $localplay = new Localplay(AmpConfig::get('localplay_controller'));
             $localplay->connect();
 
             switch ($input['command']) {

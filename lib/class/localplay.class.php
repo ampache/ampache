@@ -98,7 +98,7 @@ class Localplay
     {
         if (!$this->type) { return false; }
 
-        $filename = Config::get('prefix') . '/modules/localplay/' . $this->type . '.controller.php';
+        $filename = AmpConfig::get('prefix') . '/modules/localplay/' . $this->type . '.controller.php';
         $include = require_once $filename;
 
         if (!$include) {
@@ -139,7 +139,7 @@ class Localplay
     public static function get_controllers()
     {
         /* First open the dir */
-        $handle = opendir(Config::get('prefix') . '/modules/localplay');
+        $handle = opendir(AmpConfig::get('prefix') . '/modules/localplay');
 
         if (!is_resource($handle)) {
             debug_event('Localplay','Error: Unable to read localplay controller directory','1');
@@ -205,7 +205,7 @@ class Localplay
         $this->_player->uninstall();
 
         // If its our current player, reset player to nothing
-        if (Config::get('localplay_controller') == $this->type) {
+        if (AmpConfig::get('localplay_controller') == $this->type) {
             Preference::update('localplay_controller',$GLOBALS['user']->id,'');
         }
 

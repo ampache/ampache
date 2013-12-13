@@ -23,7 +23,7 @@
 ?>
 <html>
 <head>
-<title><?php echo Config::get('site_title'); ?></title>
+<title><?php echo AmpConfig::get('site_title'); ?></title>
 <script language="javascript" type="text/javascript">
 function PlayerFrame()
 {
@@ -48,7 +48,7 @@ if ($_REQUEST['append']) {
     if (appendmedia) {
         <?php echo WebPlayer::add_media_js($this, "ff.contentWindow.addMedia"); ?>
     } else {
-        ff.setAttribute('src', '<?php echo Config::get('web_path'); ?>/web_player_embedded.php?playlist_id=<?php echo $this->id; ?>');
+        ff.setAttribute('src', '<?php echo AmpConfig::get('web_path'); ?>/web_player_embedded.php?playlist_id=<?php echo $this->id; ?>');
         window.location = '<?php echo return_referer() ?>';
     }
     return false;

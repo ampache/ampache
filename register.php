@@ -24,16 +24,16 @@ define('NO_SESSION','1');
 require_once 'lib/init.php';
 
 /* Check Perms */
-if (!Config::get('allow_public_registration') || Config::get('demo_mode')) {
+if (!AmpConfig::get('allow_public_registration') || AmpConfig::get('demo_mode')) {
     debug_event('DENIED','Error Attempted registration','1');
     UI::access_denied();
     exit();
 }
 
 /* Don't even include it if we aren't going to use it */
-if (Config::get('captcha_public_reg')) {
+if (AmpConfig::get('captcha_public_reg')) {
     define ("CAPTCHA_INVERSE", 1);
-    require_once Config::get('prefix') . '/modules/captcha/captcha.php';
+    require_once AmpConfig::get('prefix') . '/modules/captcha/captcha.php';
 }
 
 
@@ -42,7 +42,7 @@ switch ($_REQUEST['action']) {
     case 'validate':
         $username     = scrub_in($_GET['username']);
         $validation    = scrub_in($_GET['auth']);
-        require_once Config::get('prefix') . '/templates/show_user_activate.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_user_activate.inc.php';
     break;
     case 'add_user':
         /**
@@ -61,7 +61,7 @@ switch ($_REQUEST['action']) {
         $pass2             = scrub_in($_POST['password_2']);
 
         /* If we're using the captcha stuff */
-        if (Config::get('captcha_public_reg')) {
+        if (AmpConfig::get('captcha_public_reg')) {
                 $captcha         = captcha::solved();
             if (!isset ($captcha)) {
                 Error::add('captcha', T_('Error Captcha Required'));
@@ -75,7 +75,7 @@ switch ($_REQUEST['action']) {
             } // end if we've got captcha
         } // end if it's enabled
 
-        if (Config::get('user_agreement')) {
+        if (AmpConfig::get('user_agreement')) {
             if (!$_POST['accept_agreement']) {
                 Error::add('user_agreement', T_("You <U>must</U> accept the user agreement"));
             }
@@ -108,13 +108,13 @@ switch ($_REQUEST['action']) {
 
         // If we've hit an error anywhere up there break!
         if (Error::occurred()) {
-            require_once Config::get('prefix') . '/templates/show_user_registration.inc.php';
+            require_once AmpConfig::get('prefix') . '/templates/show_user_registration.inc.php';
             break;
         }
 
         /* Attempt to create the new user */
         $access = '5';
-        switch (Config::get('auto_user')) {
+        switch (AmpConfig::get('auto_user')) {
             case 'admin':
                 $access = '100';
             break;
@@ -129,11 +129,11 @@ switch ($_REQUEST['action']) {
 
 
         $new_user = User::create($username, $fullname, $email, $pass1,
-            $access, Config::get('admin_enable_required'));
+            $access, AmpConfig::get('admin_enable_required'));
 
         if (!$new_user) {
             Error::add('duplicate_user', T_("Error: Insert Failed"));
-            require_once Config::get('prefix') . '/templates/show_user_registration.inc.php';
+            require_once AmpConfig::get('prefix') . '/templates/show_user_registration.inc.php';
             break;
         }
 
@@ -142,10 +142,10 @@ switch ($_REQUEST['action']) {
         $client->update_validation($validation);
 
         Registration::send_confirmation($username, $fullname, $email, $pass1, $validation);
-        require_once Config::get('prefix') . '/templates/show_registration_confirmation.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_registration_confirmation.inc.php';
     break;
     case 'show_add_user':
     default:
-        require_once Config::get('prefix') . '/templates/show_user_registration.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_user_registration.inc.php';
     break;
 } // end switch on action

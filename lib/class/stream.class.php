@@ -43,10 +43,10 @@ class Stream
 
     public static function get_allowed_bitrate($song)
     {
-        $max_bitrate = Config::get('max_bit_rate');
-        $min_bitrate = Config::get('min_bit_rate');
+        $max_bitrate = AmpConfig::get('max_bit_rate');
+        $min_bitrate = AmpConfig::get('min_bit_rate');
         // FIXME: This should be configurable for each output type
-        $user_sample_rate = Config::get('sample_rate');
+        $user_sample_rate = AmpConfig::get('sample_rate');
 
         // If the user's crazy, that's no skin off our back
         if ($user_sample_rate < $min_bitrate) {
@@ -225,7 +225,7 @@ class Stream
     {
         $sql = 'SELECT `session`.`agent`, `now_playing`.* FROM `now_playing` ' .
             'LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` ';
-        if (Config::get('now_playing_per_user')) {
+        if (AmpConfig::get('now_playing_per_user')) {
             $sql .= 'GROUP BY `now_playing`.`user` ';
             $sql .= 'ORDER BY `now_playing`.`insertion` DESC';
         } else {
@@ -299,17 +299,17 @@ class Stream
         // If this wasn't ajax included run away
         if (!defined('AJAX_INCLUDE')) { return false; }
 
-        switch (Config::get('playlist_method')) {
+        switch (AmpConfig::get('playlist_method')) {
             default:
             case 'clear':
             case 'default':
                 return true;
             break;
             case 'send':
-                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=basket';
+                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket';
             break;
             case 'send_clear':
-                $_SESSION['iframe']['target'] = Config::get('web_path') . '/stream.php?action=basket&playlist_method=clear';
+                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=clear';
             break;
         } // end switch on method
 
@@ -326,20 +326,20 @@ class Stream
      */
     public static function get_base_url()
     {
-        if (Config::get('require_session')) {
+        if (AmpConfig::get('require_session')) {
             $session_string = 'ssid=' . self::$session . '&';
         }
 
-        $web_path = Config::get('web_path');
+        $web_path = AmpConfig::get('web_path');
 
-        if (Config::get('force_http_play') OR !empty(self::$force_http)) {
+        if (AmpConfig::get('force_http_play') OR !empty(self::$force_http)) {
             $web_path = str_replace("https://", "http://",$web_path);
         }
-        if (Config::get('http_port') != '80') {
+        if (AmpConfig::get('http_port') != '80') {
             if (preg_match("/:(\d+)/",$web_path,$matches)) {
-                $web_path = str_replace(':' . $matches['1'],':' . Config::get('http_port'),$web_path);
+                $web_path = str_replace(':' . $matches['1'],':' . AmpConfig::get('http_port'),$web_path);
             } else {
-                $web_path = str_replace($_SERVER['HTTP_HOST'],$_SERVER['HTTP_HOST'] . ':' . Config::get('http_port'),$web_path);
+                $web_path = str_replace($_SERVER['HTTP_HOST'],$_SERVER['HTTP_HOST'] . ':' . AmpConfig::get('http_port'),$web_path);
             }
         }
 

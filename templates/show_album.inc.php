@@ -20,7 +20,7 @@
  *
  */
 
-$web_path = Config::get('web_path');
+$web_path = AmpConfig::get('web_path');
 
 // Title for this album
 $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')';
@@ -42,18 +42,18 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
     }
     ?>
 </div>
-<?php if (Config::get('ratings')) { ?>
+<?php if (AmpConfig::get('ratings')) { ?>
 <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
         <?php Rating::show($album->id,'album'); ?>
 </div>
 <?php } ?>
-<?php if (Config::get('userflags')) { ?>
+<?php if (AmpConfig::get('userflags')) { ?>
 <div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
         <?php Userflag::show($album->id,'album'); ?>
 </div>
 <?php } ?>
 <?php
-if (Config::get('show_played_times')) {
+if (AmpConfig::get('show_played_times')) {
 ?>
 <br />
 <div style="display:inline;"><?php echo T_('Played') . ' ' . $album->object_cnt . ' ' . T_('times'); ?></div>
@@ -63,7 +63,7 @@ if (Config::get('show_played_times')) {
 <div id="information_actions">
 <h3><?php echo T_('Actions'); ?>:</h3>
 <ul>
-    <?php if (Config::get('directplay')) { ?>
+    <?php if (AmpConfig::get('directplay')) { ?>
     <li>
         <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id,'play', T_('Play album'),'directplay_full_' . $album->id); ?>
         <?php echo Ajax::text('?page=stream&action=directplay&playtype=album&album_id=' . $album->id, T_('Play Album'),'directplay_full_text_' . $album->id); ?>
@@ -79,7 +79,7 @@ if (Config::get('show_played_times')) {
     </li>
     <li>
         <a onclick="submitNewItemsOrder('<?php echo $album->id; ?>', 'reorder_songs_table', 'song_',
-                                        '<?php echo Config::get('web_path'); ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
+                                        '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
             <?php echo UI::get_icon('download', T_('Save Tracks Order')); ?>
             &nbsp;&nbsp;<?php echo T_('Save Tracks Order'); ?>
         </a>

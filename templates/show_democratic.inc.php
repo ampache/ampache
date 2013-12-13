@@ -32,7 +32,7 @@ UI::show_box_top($string , 'info-box');
 <?php } ?>
 <?php if (Access::check('interface','75')) { ?>
 <li>
-    <a href="<?php echo Config::get('web_path'); ?>/democratic.php?action=manage"><?php echo UI::get_icon('server_lightning', T_('Configure Democratic Playlist')); ?></a>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=manage"><?php echo UI::get_icon('server_lightning', T_('Configure Democratic Playlist')); ?></a>
     <?php echo T_('Configure Democratic Playlist'); ?>
 </li>
 <?php if ($democratic->is_enabled()) { ?>

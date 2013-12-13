@@ -29,7 +29,7 @@
 <?php /* HINT: Username */ UI::show_box_top(sprintf(T_('Editing %s preferences'), $fullname),'box box_preferences'); ?>
 <?php  if ($_REQUEST['tab'] != 'account' && $_REQUEST['tab'] != 'modules') { ?>
 
-<form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
+<form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
 <?php show_preference_box($preferences[$_REQUEST['tab']]);  ?>
 <div class="formValidation">
     <input class="button" type="submit" value="<?php echo T_('Update Preferences'); ?>" />
@@ -44,7 +44,7 @@
 }  // end if not account
 if ($_REQUEST['tab'] == 'account') {
         $client = $GLOBALS['user'];
-        require Config::get('prefix') . '/templates/show_account.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_account.inc.php';
     }
 ?>
 </form>

@@ -28,7 +28,7 @@
  */
 
 if (count($results)) {
-$link = Config::get('use_rss') ? ' ' . Ampache_RSS::get_display('nowplaying') : '';
+$link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('nowplaying') : '';
 ?>
 <?php UI::show_box_top(T_('Now Playing') . $link); ?>
 <?php
@@ -42,7 +42,7 @@ foreach ($results as $item) {
     if (!$np_user->fullname) { $np_user->fullname = "Ampache User"; }
 ?>
 <div class="np_row">
-<?php require Config::get('prefix') . '/templates/show_now_playing_row.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . '/templates/show_now_playing_row.inc.php'; ?>
 </div>
 <?php
 } // end foreach

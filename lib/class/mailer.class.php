@@ -65,17 +65,17 @@ class Mailer
      */
     public function set_default_sender()
     {
-        $user = Config::get('mail_user');
+        $user = AmpConfig::get('mail_user');
         if (!$user) {
             $user = 'info';
         }
 
-        $domain = Config::get('mail_domain');
+        $domain = AmpConfig::get('mail_domain');
         if (!$domain) {
             $domain = 'example.com';
         }
 
-        $fromname = Config::get('mail_name');
+        $fromname = AmpConfig::get('mail_name');
         if (!$fromname) {
             $fromname = 'Ampache';
         }
@@ -135,7 +135,7 @@ class Mailer
      */
     public function send($phpmailer = null)
     {
-        $mailtype = Config::get('mail_type');
+        $mailtype = AmpConfig::get('mail_type');
 
         if ($phpmailer == null) {
             $mail = new PHPMailer();
@@ -149,7 +149,7 @@ class Mailer
             $mail = $phpmailer;
         }
 
-        $mail->CharSet    = Config::get('site_charset');
+        $mail->CharSet    = AmpConfig::get('site_charset');
         $mail->Encoding    = 'base64';
         $mail->From    = $this->sender;
         $mail->Sender    = $this->sender;
@@ -161,16 +161,16 @@ class Mailer
         }
         $mail->Body    = $this->message;
 
-        $sendmail       = Config::get('sendmail_path');
+        $sendmail       = AmpConfig::get('sendmail_path');
         $sendmail    = $sendmail ? $sendmail : '/usr/sbin/sendmail';
-        $mailhost    = Config::get('mail_host');
+        $mailhost    = AmpConfig::get('mail_host');
         $mailhost    = $mailhost ? $mailhost : 'localhost';
-        $mailport    = Config::get('mail_port');
+        $mailport    = AmpConfig::get('mail_port');
         $mailport    = $mailport ? $mailport : 25;
-        $mailauth    = Config::get('mail_auth');
-        $mailuser       = Config::get('mail_auth_user');
+        $mailauth    = AmpConfig::get('mail_auth');
+        $mailuser       = AmpConfig::get('mail_auth_user');
         $mailuser    = $mailuser ? $mailuser : '';
-        $mailpass       = Config::get('mail_auth_pass');
+        $mailpass       = AmpConfig::get('mail_auth_pass');
         $mailpass    = $mailpass ? $mailpass : '';
 
         switch ($mailtype) {
@@ -183,7 +183,7 @@ class Mailer
                     $mail->Username = $mailuser;
                     $mail->Password = $mailpass;
                 }
-                if ($mailsecure = Config::get('mail_secure_smtp')) {
+                if ($mailsecure = AmpConfig::get('mail_secure_smtp')) {
                     $mail->SMTPSecure = ($mailsecure == 'ssl') ? 'ssl' : 'tls';
                 }
             break;

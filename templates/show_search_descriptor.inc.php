@@ -26,10 +26,10 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 ?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
     <ShortName>Ampache</ShortName>
-    <Description><?php echo scrub_out(Config::get('site_title')); ?></Description>
+    <Description><?php echo scrub_out(AmpConfig::get('site_title')); ?></Description>
     <Url type="text/html"
         method="get"
-        template="<?php echo Config::get('web_path'); ?>/search.php">
+        template="<?php echo AmpConfig::get('web_path'); ?>/search.php">
         <Param name="s_all" value="{searchTerms}"/>
         <Param name="action" value="search"/>
     </Url>

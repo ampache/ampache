@@ -137,12 +137,12 @@ class Catalog_soundcloud extends Catalog
             }
         }
 
-        require_once Config::get('prefix') . '/modules/php-soundcloud/Soundcloud.php';
+        require_once AmpConfig::get('prefix') . '/modules/php-soundcloud/Soundcloud.php';
     }
 
     protected function getRedirectUri()
     {
-        return Config::get('web_path') . "/show_get.php?param_name=code";
+        return AmpConfig::get('web_path') . "/show_get.php?param_name=code";
     }
 
     /**
@@ -408,7 +408,7 @@ class Catalog_soundcloud extends Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = UI::truncate($this->userid, Config::get('ellipse_threshold_title'));
+        $this->f_info = UI::truncate($this->userid, AmpConfig::get('ellipse_threshold_title'));
         $this->f_full_info = $this->userid;
     }
 

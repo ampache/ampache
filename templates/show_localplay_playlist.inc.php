@@ -20,11 +20,11 @@
  *
  */
 
-$localplay = new Localplay(Config::get('localplay_controller'));
+$localplay = new Localplay(AmpConfig::get('localplay_controller'));
 $localplay->connect();
 $status = $localplay->status();
 ?>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
         <th class="cel_track"><?php echo T_('Track'); ?></th>
@@ -58,4 +58,4 @@ $status = $localplay->status();
         <th class="cel_action"><?php echo T_('Action'); ?></th>
     </tr>
 </table>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>

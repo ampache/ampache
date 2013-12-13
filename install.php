@@ -29,7 +29,7 @@ set_error_handler('ampache_error_handler');
 // Redirect if installation is already complete.
 if (!install_check_status($configfile)) {
     $redirect_url = 'login.php';
-    require_once Config::get('prefix') . '/templates/error_page.inc.php';
+    require_once AmpConfig::get('prefix') . '/templates/error_page.inc.php';
     exit;
 }
 
@@ -44,14 +44,14 @@ $database = scrub_in($_REQUEST['local_db']);
 $port = scrub_in($_REQUEST['local_port']);
 $skip_admin = $_REQUEST['skip_admin'];
 
-Config::set_by_array(array(
+AmpConfig::set_by_array(array(
     'web_path' => $web_path,
     'database_name' => $database,
     'database_hostname' => $hostname,
     'database_port' => $port
 ), true);
 if (!$skip_admin) {
-    Config::set_by_array(array(
+    AmpConfig::set_by_array(array(
         'database_username' => $username,
         'database_password' => $password
     ), true);
@@ -75,10 +75,10 @@ if (!$htmllang) {
         $htmllang = $lang;
     }
 }
-Config::set('lang', $htmllang, true);
-Config::set('site_charset', $charset ?: 'UTF-8', true);
+AmpConfig::set('lang', $htmllang, true);
+AmpConfig::set('site_charset', $charset ?: 'UTF-8', true);
 load_gettext();
-header ('Content-Type: text/html; charset=' . Config::get('site_charset'));
+header ('Content-Type: text/html; charset=' . AmpConfig::get('site_charset'));
 
 // Correct potential \ or / in the dirname
 $safe_dirname = rtrim(dirname($_SERVER['PHP_SELF']),"/\\");
@@ -108,7 +108,7 @@ switch ($_REQUEST['action']) {
         }
 
         // Now that it's inserted save the lang preference
-        Preference::update('lang', '-1', Config::get('lang'));
+        Preference::update('lang', '-1', AmpConfig::get('lang'));
 
         header ('Location: ' . $web_path . "/install.php?action=show_create_config&local_db=$database&local_host=$hostname&local_port=$port&htmllang=$htmllang&charset=$charset");
     break;
@@ -122,12 +122,12 @@ switch ($_REQUEST['action']) {
     break;
     case 'create_account':
         $results = parse_ini_file($configfile);
-        Config::set_by_array($results, true);
+        AmpConfig::set_by_array($results, true);
 
         $password2 = scrub_in($_REQUEST['local_pass2']);
 
         if (!install_create_account($username, $password, $password2)) {
-            require_once Config::get('prefix') . '/templates/show_install_account.inc.php';
+            require_once AmpConfig::get('prefix') . '/templates/show_install_account.inc.php';
             break;
         }
 
@@ -139,11 +139,11 @@ switch ($_REQUEST['action']) {
         /* Make sure we've got a valid config file */
         if (!check_config_values($results)) {
             Error::add('general', T_('Error: Config file not found or unreadable'));
-            require_once Config::get('prefix') . '/templates/show_install_config.inc.php';
+            require_once AmpConfig::get('prefix') . '/templates/show_install_config.inc.php';
             break;
         }
 
-        require_once Config::get('prefix') . '/templates/show_install_account.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_install_account.inc.php';
     break;
     case 'init':
         require_once 'templates/show_install.inc.php';

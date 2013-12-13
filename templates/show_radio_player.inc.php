@@ -10,9 +10,9 @@ if ($iframed) {
 }
 ?>
 <?php
-    $swffile = Config::get('web_path') . "/modules/muses/muses.swf";
+    $swffile = AmpConfig::get('web_path') . "/modules/muses/muses.swf";
     $flashvars = "url=" . $radio->url . "&lang=auto&codec=" . $radio->codec . "&volume=80&introurl=&tracking=true&jsevents=true&skin=" .
-        Config::get('web_path')."/modules/muses/skins/ffmp3-faredirfare.xml&title=" . urlencode($radio->title) . "&welcome=Ampache&autoplay=true";
+        AmpConfig::get('web_path')."/modules/muses/skins/ffmp3-faredirfare.xml&title=" . urlencode($radio->title) . "&welcome=Ampache&autoplay=true";
 ?>
 <div style="text-align: center;">
 <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="269" height="50" bgcolor="#343434">

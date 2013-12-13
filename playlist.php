@@ -30,7 +30,7 @@ if ($_REQUEST['action'] == 'delete_playlist') {
     if ($playlist->has_access()) {
         $playlist->delete();
         // Go elsewhere
-        header('Location: ' . Config::get('web_path') . '/browse.php?action=playlist');
+        header('Location: ' . AmpConfig::get('web_path') . '/browse.php?action=playlist');
         exit;
     }
 }
@@ -79,10 +79,10 @@ switch ($_REQUEST['action']) {
         $playlist = new Playlist($_REQUEST['playlist_id']);
         $playlist->format();
         $object_ids = $playlist->get_items();
-        require_once Config::get('prefix') . '/templates/show_playlist.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
     break;
     case 'show_import_playlist':
-        require_once Config::get('prefix') . '/templates/show_import_playlist.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_import_playlist.inc.php';
     break;
     case 'import_playlist':
         /* first we rename the file to it's original name before importing.
@@ -109,7 +109,7 @@ switch ($_REQUEST['action']) {
             $title = T_('Playlist Not Imported');
             $body = T_($result['error']);
         }
-        show_confirmation($title, $body, Config::get('web_path') . '/playlist.php?action=' . $url);
+        show_confirmation($title, $body, AmpConfig::get('web_path') . '/playlist.php?action=' . $url);
     break;
     case 'set_track_numbers':
         debug_event('playlist', 'Set track numbers called.', '5');
@@ -147,7 +147,7 @@ switch ($_REQUEST['action']) {
         }
 
         prune_empty_playlists();
-        $url = Config::get('web_path') . '/playlist.php';
+        $url = AmpConfig::get('web_path') . '/playlist.php';
         $title = T_('Empty Playlists Deleted');
         $body  = '';
         show_confirmation($title,$body,$url);
@@ -165,7 +165,7 @@ switch ($_REQUEST['action']) {
         $playlist->normalize_tracks();
         $object_ids = $playlist->get_items();
     default:
-        require_once Config::get('prefix') . '/templates/show_playlist.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
     break;
 } // switch on the action
 

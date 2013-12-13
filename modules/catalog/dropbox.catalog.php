@@ -20,7 +20,7 @@
  *
  */
 
- require_once Config::get('prefix') . '/modules/Dropbox/autoload.php';
+ require_once AmpConfig::get('prefix') . '/modules/Dropbox/autoload.php';
 
 /**
  * Dropbox Catalog Class
@@ -77,7 +77,7 @@ class Catalog_dropbox extends Catalog
             "<li>Select 'Specific file types' at 'What type of files does your app need access to?'</li>" .
             "<li>Check Videos and Audio files</li>" .
             "<li>Give a name to your application and create it</li>" .
-            //"<li>Add the following OAuth redirect URIs: <i>" . Config::get('web_path') . "/admin/catalog.php</i></li>" .
+            //"<li>Add the following OAuth redirect URIs: <i>" . AmpConfig::get('web_path') . "/admin/catalog.php</i></li>" .
             "<li>Copy your App key and App secret here</li></ul>";
         return $help;
 
@@ -473,7 +473,7 @@ class Catalog_dropbox extends Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = UI::truncate($this->apikey, Config::get('ellipse_threshold_title'));
+        $this->f_info = UI::truncate($this->apikey, AmpConfig::get('ellipse_threshold_title'));
         $this->f_full_info = $this->apikey;
     }
 

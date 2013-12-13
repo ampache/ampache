@@ -21,7 +21,7 @@
  */
 ?>
 <?php UI::show_box_top(T_('Edit Localplay Instance'), 'box box_localplay_edit_instance'); ?>
-<form method="post" action="<?php echo Config::get('web_path'); ?>/localplay.php?action=update_instance&amp;instance=<?php echo intval($_REQUEST['instance']); ?>">
+<form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/localplay.php?action=update_instance&amp;instance=<?php echo intval($_REQUEST['instance']); ?>">
 <table cellpadding="3" cellspacing="0" class="tabledata">
 <?php foreach ($fields as $key=>$field) { ?>
 <tr>

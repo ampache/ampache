@@ -20,7 +20,7 @@
  *
  */
 
-$web_path = Config::get('web_path');
+$web_path = AmpConfig::get('web_path');
 ?>
 <!-- Plugin we've found -->
 <table class="tabledata" cellpadding="0" cellspacing="0">

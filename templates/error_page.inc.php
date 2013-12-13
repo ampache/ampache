@@ -30,7 +30,7 @@
 <link rel="shortcut icon" href="<?php echo $web_path; ?>/favicon.ico" />
 <title><?php echo( T_("Ampache error page"));?></title>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/base.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo Config::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo AmpConfig::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
 </head>
 <body>
 <!-- rfc3514 implementation -->
@@ -38,9 +38,9 @@
 <div id="maincontainer">
     <div id="header">
         <div id="headerlogo">
-            <img src="<?php echo $web_path; echo Config::get('theme_path'); ?>/images/ampache.png"
-                 title="<?php echo Config::get('site_title'); ?>"
-                 alt="<?php echo Config::get('site_title'); ?>" />
+            <img src="<?php echo $web_path; echo AmpConfig::get('theme_path'); ?>/images/ampache.png"
+                 title="<?php echo AmpConfig::get('site_title'); ?>"
+                 alt="<?php echo AmpConfig::get('site_title'); ?>" />
         </div>
     </div>
     <div>&nbsp;</div>

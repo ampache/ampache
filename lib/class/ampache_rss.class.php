@@ -72,7 +72,7 @@ class Ampache_RSS
                 'latest_album' => T_('Newest Albums'),
                 'latest_artist' => T_('Newest Artists'));
 
-        return scrub_out(Config::get('site_title')) . ' - ' . $titles[$this->type];
+        return scrub_out(AmpConfig::get('site_title')) . ' - ' . $titles[$this->type];
 
     } // get_title
 
@@ -113,7 +113,7 @@ class Ampache_RSS
         // Default to now playing
         $type = self::validate_type($type);
 
-        $string = '<a href="' . Config::get('web_path') . '/rss.php?type=' . $type . '">' . UI::get_icon('feed', T_('RSS Feed')) . '</a>';
+        $string = '<a href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . '">' . UI::get_icon('feed', T_('RSS Feed')) . '</a>';
 
         return $string;
 
@@ -131,7 +131,7 @@ class Ampache_RSS
         $data = Stream::get_now_playing();
 
         $results = array();
-        $format = Config::get('rss_format') ?: '%t - %a - %A';
+        $format = AmpConfig::get('rss_format') ?: '%t - %a - %A';
         $string_map = array(
             '%t' => 'title',
             '%a' => 'artist',

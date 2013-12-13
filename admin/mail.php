@@ -32,7 +32,7 @@ UI::show_header();
 // Action switch
 switch ($_REQUEST['action']) {
     case 'send_mail':
-        if (Config::get('demo_mode')) {
+        if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
             exit;
         }
@@ -63,12 +63,12 @@ switch ($_REQUEST['action']) {
             $title     = T_('E-mail Not Sent');
             $body     = T_('Your E-mail was not sent.');
         }
-        $url = Config::get('web_path') . '/admin/mail.php';
+        $url = AmpConfig::get('web_path') . '/admin/mail.php';
         show_confirmation($title,$body,$url);
 
     break;
     default:
-        require_once Config::get('prefix') . '/templates/show_mail_users.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_mail_users.inc.php';
     break;
 } // end switch
 

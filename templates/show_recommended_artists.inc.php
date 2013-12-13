@@ -25,7 +25,7 @@ $thcount = 7;
 <?php UI::show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-    <?php if (Config::get('directplay')) { ++$thcount; ?>
+    <?php if (AmpConfig::get('directplay')) { ++$thcount; ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
     <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -34,19 +34,19 @@ $thcount = 7;
         <th class="cel_albums"><?php echo T_('Albums'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
         <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-    <?php if (Config::get('ratings')) { ++$thcount; ?>
+    <?php if (AmpConfig::get('ratings')) { ++$thcount; ?>
         <th class="cel_rating"><?php echo T_('Rating'); ?></th>
     <?php } ?>
-    <?php if (Config::get('userflags')) { ++$thcount; ?>
+    <?php if (AmpConfig::get('userflags')) { ++$thcount; ?>
         <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
     <?php } ?>
         <th class="cel_action"> <?php echo T_('Action'); ?> </th>
     </tr>
     <?php
     // Cache the ratings we are going to use
-    if (Config::get('ratings')) { Rating::build_cache('artist',$object_ids); }
+    if (AmpConfig::get('ratings')) { Rating::build_cache('artist',$object_ids); }
     // Cache the userflags we are going to use
-    if (Config::get('userflags')) { Userflag::build_cache('artist',$object_ids); }
+    if (AmpConfig::get('userflags')) { Userflag::build_cache('artist',$object_ids); }
 
     /* Foreach through every artist that has been passed to us */
     foreach ($object_ids as $artist_id) {
@@ -54,7 +54,7 @@ $thcount = 7;
             $artist->format();
     ?>
     <tr id="artist_<?php echo $artist->id; ?>" class="<?php echo UI::flip_class(); ?>">
-        <?php require Config::get('prefix') . '/templates/show_artist_row.inc.php'; ?>
+        <?php require AmpConfig::get('prefix') . '/templates/show_artist_row.inc.php'; ?>
     </tr>
     <?php } //end foreach ($artists as $artist) ?>
     <?php if (!count($object_ids)) { ?>
@@ -63,7 +63,7 @@ $thcount = 7;
     </tr>
     <?php } ?>
     <tr class="th-bottom">
-    <?php if (Config::get('directplay')) { ?>
+    <?php if (AmpConfig::get('directplay')) { ?>
         <th class="cel_directplay"><?php echo T_('Play'); ?></th>
     <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -72,10 +72,10 @@ $thcount = 7;
         <th class="cel_albums"> <?php echo T_('Albums'); ?> </th>
         <th class="cel_time"> <?php echo T_('Time'); ?> </th>
         <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-    <?php if (Config::get('ratings')) { ?>
+    <?php if (AmpConfig::get('ratings')) { ?>
         <th class="cel_rating"><?php echo T_('Rating'); ?></th>
     <?php } ?>
-    <?php if (Config::get('userflags')) { ?>
+    <?php if (AmpConfig::get('userflags')) { ?>
         <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
     <?php } ?>
         <th class="cel_action"> <?php echo T_('Action'); ?> </th>

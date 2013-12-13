@@ -135,7 +135,7 @@ class Catalog_googlemusic extends Catalog
             }
         }
 
-        require_once Config::get('prefix') . '/modules/GMApi/GMApi.php';
+        require_once AmpConfig::get('prefix') . '/modules/GMApi/GMApi.php';
     }
 
     /**
@@ -188,7 +188,7 @@ class Catalog_googlemusic extends Catalog
     public function createClient()
     {
         $api = new GMApi();
-        $api->setDebug(Config::get('debug'));
+        $api->setDebug(AmpConfig::get('debug'));
         $api->enableRestore(false);
         $api->enableMACAddressCheck(false);
         $api->enableSessionFile(false);

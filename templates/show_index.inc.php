@@ -37,16 +37,16 @@ if (Art::is_enabled()) {
     <?php
         $data = Song::get_recently_played();
         Song::build_cache(array_keys($data));
-        require_once Config::get('prefix') . '/templates/show_recently_played.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_recently_played.inc.php';
     ?>
 </div>
 <!-- Shoutbox Objects, if shoutbox is enabled -->
-<?php if (Config::get('sociable')) { ?>
+<?php if (AmpConfig::get('sociable')) { ?>
 <div id="shout_objects">
     <?php
         $shouts = Shoutbox::get_top('5');
         if (count($shouts)) {
-            require_once Config::get('prefix') . '/templates/show_shoutbox.inc.php';
+            require_once AmpConfig::get('prefix') . '/templates/show_shoutbox.inc.php';
         }
     ?>
 </div>

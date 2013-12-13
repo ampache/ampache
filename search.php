@@ -30,8 +30,8 @@ UI::show_header();
 switch ($_REQUEST['action']) {
     case 'search':
         $browse = new Browse();
-        require_once Config::get('prefix') . '/templates/show_search.inc.php';
-        require_once Config::get('prefix') . '/templates/show_search_options.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_search_options.inc.php';
         $results = Search::run($_REQUEST);
         $browse->set_type($_REQUEST['type']);
         $browse->show_objects($results);
@@ -40,19 +40,19 @@ switch ($_REQUEST['action']) {
     case 'save_as_track':
         $playlist_id = save_search($_REQUEST);
         $playlist = new Playlist($playlist_id);
-        show_confirmation(T_('Search Saved'),sprintf(T_('Your Search has been saved as a track in %s'), $playlist->name), Config::get('web_path') . "/search.php");
+        show_confirmation(T_('Search Saved'),sprintf(T_('Your Search has been saved as a track in %s'), $playlist->name), AmpConfig::get('web_path') . "/search.php");
     break;
     case 'save_as_smartplaylist':
         $playlist = new Search();
         $playlist->parse_rules(Search::clean_request($_REQUEST));
         $playlist->save();
     default:
-        require_once Config::get('prefix') . '/templates/show_search.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
     break;
     case 'descriptor':
         // This is a little special we don't want header/footers so trash what we've got in the OB
         ob_clean();
-        require_once Config::get('prefix') . '/templates/show_search_descriptor.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_search_descriptor.inc.php';
         exit;
     break;
 }

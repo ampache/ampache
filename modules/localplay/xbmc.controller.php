@@ -49,7 +49,7 @@ class AmpacheXbmc extends localplay_controller
     public function __construct()
     {
         /* Do a Require Once On the needed Libraries */
-        require_once Config::get('prefix') . '/modules/xbmc-php-rpc/TCPClient.php';
+        require_once AmpConfig::get('prefix') . '/modules/xbmc-php-rpc/TCPClient.php';
 
     } // Constructor
 
@@ -210,7 +210,7 @@ class AmpacheXbmc extends localplay_controller
     */
     public function get_instance($instance='')
     {
-        $instance = $instance ? $instance : Config::get('xbmc_active');
+        $instance = $instance ? $instance : AmpConfig::get('xbmc_active');
 
         $sql = "SELECT * FROM `localplay_xbmc` WHERE `id` = ?";
         $db_results = Dba::query($sql, array($instance));
@@ -235,7 +235,7 @@ class AmpacheXbmc extends localplay_controller
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
         Preference::update('xbmc_active', $user_id, intval($uid));
-        Config::set('xbmc_active', intval($uid), true);
+        AmpConfig::set('xbmc_active', intval($uid), true);
 
         return true;
 

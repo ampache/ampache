@@ -569,7 +569,7 @@ class Tag extends database_object
         $colors = array('#0000FF',
             '#00FF00', '#FFFF00', '#00FFFF','#FF00FF','#FF0000');
         $prefs = 'tag company';
-//        $prefs = Config::get('tags_userlist');
+//        $prefs = AmpConfig::get('tags_userlist');
 
         $ulist = explode(' ', $prefs);
         $req = '';

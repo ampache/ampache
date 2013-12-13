@@ -48,7 +48,7 @@ switch ($_REQUEST['action']) {
         Preference::update('localplay_level',$GLOBALS['user']->id,'100');
         Preference::update('localplay_controller',$GLOBALS['user']->id,$localplay->type);
 
-        header("Location:" . Config::get('web_path') . '/admin/modules.php?action=show_localplay');
+        header("Location:" . AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay');
     break;
     case 'install_catalog_type':
         $type = scrub_in($_REQUEST['type']);
@@ -62,21 +62,21 @@ switch ($_REQUEST['action']) {
         $catalog->install();
 
         /* Show Confirmation */
-        $url    = Config::get('web_path') . '/admin/modules.php?action=show_catalog_types';
+        $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_catalog_types';
         $title  = T_('Plugin Installed');
         $body   = '';
         show_confirmation($title ,$body, $url);
     break;
     case 'confirm_uninstall_localplay':
         $type = scrub_in($_REQUEST['type']);
-        $url = Config::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type;
+        $url = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type;
         $title = T_('Are you sure you want to remove this plugin?');
         $body = '';
         show_confirmation($title,$body,$url,1);
     break;
     case 'confirm_uninstall_catalog_type':
         $type = scrub_in($_REQUEST['type']);
-        $url = Config::get('web_path') . '/admin/modules.php?action=uninstall_catalog_type&amp;type=' . $type;
+        $url = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_catalog_type&amp;type=' . $type;
         $title = T_('Are you sure you want to remove this plugin?');
         $body = '';
         show_confirmation($title,$body,$url,1);
@@ -88,7 +88,7 @@ switch ($_REQUEST['action']) {
         $localplay->uninstall();
 
         /* Show Confirmation */
-        $url    = Config::get('web_path') . '/admin/modules.php?action=show_localplay';
+        $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay';
         $title  = T_('Plugin Deactivated');
         $body   = '';
         show_confirmation($title,$body,$url);
@@ -105,7 +105,7 @@ switch ($_REQUEST['action']) {
         $catalog->uninstall();
 
         /* Show Confirmation */
-        $url    = Config::get('web_path') . '/admin/modules.php?action=show_catalog_types';
+        $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_catalog_types';
         $title  = T_('Plugin Deactivated');
         $body   = '';
         show_confirmation($title, $body, $url);
@@ -120,7 +120,7 @@ switch ($_REQUEST['action']) {
         $plugin = new Plugin($_REQUEST['plugin']);
         if (!$plugin->install()) {
             debug_event('plugins','Error: Plugin Install Failed, ' . $_REQUEST['plugin'],'1');
-            $url    = Config::get('web_path') . '/admin/modules.php?action=show_plugins';
+            $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
             $title = T_('Unable to Install Plugin');
             $body = '';
             show_confirmation($title,$body,$url);
@@ -131,14 +131,14 @@ switch ($_REQUEST['action']) {
         User::rebuild_all_preferences();
 
         /* Show Confirmation */
-        $url    = Config::get('web_path') . '/admin/modules.php?action=show_plugins';
+        $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
         $title    = T_('Plugin Activated');
         $body    = '';
         show_confirmation($title,$body,$url);
     break;
     case 'confirm_uninstall_plugin':
         $plugin = scrub_in($_REQUEST['plugin']);
-        $url    = Config::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
+        $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
         $title    = T_('Are you sure you want to remove this plugin?');
         $body    = '';
         show_confirmation($title,$body,$url,1);
@@ -157,7 +157,7 @@ switch ($_REQUEST['action']) {
         User::rebuild_all_preferences();
 
         /* Show Confirmation */
-        $url    = Config::get('web_path') . '/admin/modules.php?action=show_plugins';
+        $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
         $title  = T_('Plugin Deactivated');
         $body   = '';
         show_confirmation($title,$body,$url);
@@ -172,7 +172,7 @@ switch ($_REQUEST['action']) {
         $plugin = new Plugin($_REQUEST['plugin']);
         $plugin->upgrade();
         User::rebuild_all_preferences();
-        $url    = Config::get('web_path') . '/admin/modules.php?action=show_plugins';
+        $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
         $title  = T_('Plugin Upgraded');
         $body   = '';
         show_confirmation($title, $body, $url);
@@ -180,19 +180,19 @@ switch ($_REQUEST['action']) {
     case 'show_plugins':
         $plugins = Plugin::get_plugins();
         UI::show_box_top(T_('Plugins'), 'box box_localplay_plugins');
-        require_once Config::get('prefix') . '/templates/show_plugins.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_plugins.inc.php';
         UI::show_box_bottom();
     break;
     case 'show_localplay':
         $controllers = Localplay::get_controllers();
         UI::show_box_top(T_('Localplay Controllers'), 'box box_localplay_controllers');
-        require_once Config::get('prefix') . '/templates/show_localplay_controllers.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_localplay_controllers.inc.php';
         UI::show_box_bottom();
     break;
     case 'show_catalog_types':
         $catalogs = Catalog::get_catalog_types();
         UI::show_box_top(T_('Catalog Types'), 'box box_catalog_types');
-        require_once Config::get('prefix') . '/templates/show_catalog_types.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_catalog_types.inc.php';
         UI::show_box_bottom();
     break;
     default:

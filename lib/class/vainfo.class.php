@@ -57,7 +57,7 @@ class vainfo
     {
         $this->islocal = $islocal;
         $this->filename = $file;
-        $this->encoding = $encoding ?: Config::get('site_charset');
+        $this->encoding = $encoding ?: AmpConfig::get('site_charset');
 
         /* These are needed for the filename mojo */
         $this->_file_pattern = $file_pattern;
@@ -93,8 +93,8 @@ class vainfo
                 return false;
             }
 
-            if (Config::get('mb_detect_order')) {
-                $mb_order = Config::get('mb_detect_order');
+            if (AmpConfig::get('mb_detect_order')) {
+                $mb_order = AmpConfig::get('mb_detect_order');
             } elseif (function_exists('mb_detect_order')) {
                 $mb_order = implode(", ", mb_detect_order());
             } else {
@@ -115,7 +115,7 @@ class vainfo
                 $this->encoding_id3v1 = self::_detect_encoding($tags, $mb_order);
             }
 
-            if (Config::get('getid3_detect_id3v2_encoding')) {
+            if (AmpConfig::get('getid3_detect_id3v2_encoding')) {
                 // The user has told us to be moronic, so let's do that thing
                 foreach ($test_tags as $tag) {
                     if ($value = $this->_raw['id3v2']['comments'][$tag]) {
@@ -196,7 +196,7 @@ class vainfo
         /* Figure out what type of file we are dealing with */
         $this->type = $this->_get_type();
 
-        $enabled_sources = (array) Config::get('metadata_order');
+        $enabled_sources = (array) AmpConfig::get('metadata_order');
 
         if (in_array('filename', $enabled_sources)) {
             $this->tags['filename'] = $this->_parse_filename($this->filename);
@@ -220,7 +220,7 @@ class vainfo
      */
     public static function get_tag_type($results, $config_key = 'metadata_order')
     {
-        $order = (array) Config::get($config_key);
+        $order = (array) AmpConfig::get($config_key);
 
         // Iterate through the defined key order adding them to an ordered array.
         foreach ($order as $key) {
@@ -436,7 +436,7 @@ class vainfo
      */
     private function _get_plugin_tags()
     {
-        $tag_order = Config::get('metadata_order');
+        $tag_order = AmpConfig::get('metadata_order');
         if (!is_array($tag_order)) {
             $tag_order = array($tag_order);
         }
@@ -805,7 +805,7 @@ class vainfo
     public function set_broken()
     {
         /* Pull In the config option */
-        $order = Config::get('tag_order');
+        $order = AmpConfig::get('tag_order');
 
         if (!is_array($order)) {
             $order = array($order);

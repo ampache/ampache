@@ -20,7 +20,7 @@
  *
  */
 
-$web_path = Config::get('web_path');
+$web_path = AmpConfig::get('web_path');
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
@@ -40,7 +40,7 @@ $web_path = Config::get('web_path');
             $client = new User($shout->user);
             $client->format();
 
-        require Config::get('prefix') . '/templates/show_shout_row.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_shout_row.inc.php';
     ?>
     <?php } if (!count($object_ids)) { ?>
     <tr class="<?php echo UI::flip_class(); ?>">

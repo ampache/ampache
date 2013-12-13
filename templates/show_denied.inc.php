@@ -25,7 +25,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Ampache -- Debug Page</title>
-<link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/install.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/install.css" type="text/css" media="screen" />
 </head>
 <body bgcolor="#f0f0f0">
 <div id="header">
@@ -33,7 +33,7 @@
 <p><?php echo T_('This event has been logged.'); ?></p>
 </div>
 <p class="error">
-<?php if (!Config::get('demo_mode')) { ?>
+<?php if (!AmpConfig::get('demo_mode')) { ?>
 <?php echo T_('You have been redirected to this page because you do not have access to this function.'); ?></p><p class="error">
 <?php echo T_('If you believe this is an error please contact an Ampache administrator.'); ?></p><p class="error">
 <?php echo T_('This event has been logged.'); ?>

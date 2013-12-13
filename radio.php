@@ -32,11 +32,11 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        require_once Config::get('prefix') . '/templates/show_add_live_stream.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_add_live_stream.inc.php';
 
     break;
     case 'create':
-        if (!Access::check('interface', 75) || Config::get('demo_mode')) {
+        if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
             UI::access_denied();
             exit;
         }
@@ -50,11 +50,11 @@ switch ($_REQUEST['action']) {
         $results = Radio::create($_POST);
 
         if (!$results) {
-            require_once Config::get('prefix') . '/templates/show_add_live_stream.inc.php';
+            require_once AmpConfig::get('prefix') . '/templates/show_add_live_stream.inc.php';
         } else {
             $body = T_('Radio Station Added');
             $title = '';
-            show_confirmation($title,$body,Config::get('web_path') . '/index.php');
+            show_confirmation($title,$body,AmpConfig::get('web_path') . '/index.php');
         }
     break;
 } // end data collection

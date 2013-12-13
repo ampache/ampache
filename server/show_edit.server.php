@@ -80,7 +80,7 @@ switch ($_REQUEST['action']) {
         }
 
         ob_start();
-        require Config::get('prefix') . '/templates/show_edit_' . $_GET['type'] . '.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_edit_' . $_GET['type'] . '.inc.php';
         $results = ob_get_contents();
         ob_end_clean();
     break;

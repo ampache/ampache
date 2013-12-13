@@ -136,7 +136,7 @@ abstract class database_object
      */
     public static function _auto_init()
     {
-        self::$_enabled = Config::get('memory_cache');
+        self::$_enabled = AmpConfig::get('memory_cache');
 
     } // _auto_init
 

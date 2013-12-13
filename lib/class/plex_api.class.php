@@ -21,7 +21,7 @@
  *
  */
 
- require_once Config::get('prefix') . '/modules/plugins/helper.php';
+ require_once AmpConfig::get('prefix') . '/modules/plugins/helper.php';
 
 /**
  * Plex Class
@@ -50,7 +50,7 @@ class Plex_Api
 
         if (strtolower($f) == "xml") {
             header("Cache-Control: no-cache", true);
-            header("Content-type: text/xml; charset=" . Config::get('site_charset'), true);
+            header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'), true);
         } elseif (substr(strtolower($f), 0, 6) == "image/") {
             header("Cache-Control: public, max-age=604800", true);
             header("Content-type: " . $f, true);

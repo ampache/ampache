@@ -23,7 +23,7 @@
 define('NO_SESSION','1');
 require_once '../lib/init.php';
 
-if (!Config::get('subsonic_backend')) {
+if (!AmpConfig::get('subsonic_backend')) {
     echo "Disabled.";
     exit;
 }
@@ -36,7 +36,7 @@ if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $acti
 }
 
 // If we don't even have access control on then we can't use this!
-if (!Config::get('access_control')) {
+if (!AmpConfig::get('access_control')) {
     debug_event('Access Control','Error Attempted to use Subsonic API with Access Control turned off','3');
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, T_('Access Control not Enabled')));

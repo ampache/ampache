@@ -23,15 +23,15 @@
 <?php UI::show_box_top(T_('Show Catalogs'), 'box box_manage_catalogs') ?>
 <div id="information_actions">
     <ul>
-        <li><a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=gather_album_art"><?php echo T_('Gather All Art'); ?></a></li>
-        <li><a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=add_to_all_catalogs"><?php echo T_('Add to All'); ?></a> </li>
-        <li><a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=update_all_catalogs"><?php echo T_('Verify All'); ?></a></li>
-        <li><a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=clean_all_catalogs"><?php echo T_('Clean All'); ?></a></li>
-        <li><a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=full_service"><?php echo T_('Update All'); ?></a></li>
-        <li><a href="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=clear_stats"><?php echo T_('Clear Stats'); ?></a></li>
+        <li><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=gather_album_art"><?php echo T_('Gather All Art'); ?></a></li>
+        <li><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=add_to_all_catalogs"><?php echo T_('Add to All'); ?></a> </li>
+        <li><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=update_all_catalogs"><?php echo T_('Verify All'); ?></a></li>
+        <li><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=clean_all_catalogs"><?php echo T_('Clean All'); ?></a></li>
+        <li><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=full_service"><?php echo T_('Update All'); ?></a></li>
+        <li><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=clear_stats"><?php echo T_('Clear Stats'); ?></a></li>
     </ul>
     <br/>
-    <form method="post" action="<?php echo Config::get('web_path'); ?>/admin/catalog.php?action=update_from">
+    <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=update_from">
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td><?php /* HINT: /data/myNewMusic */ ?><?php printf (T_('Add from [%s]'), '<span class="information">/data/myNewMusic</span>'); ?></td>

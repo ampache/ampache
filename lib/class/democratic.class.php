@@ -194,7 +194,7 @@ class Democratic extends Tmp_Playlist
      */
     public static function get_current_playlist()
     {
-        $democratic_id = Config::get('democratic_id');
+        $democratic_id = AmpConfig::get('democratic_id');
 
         if (!$democratic_id) {
             $level = Dba::escape($GLOBALS['user']->access);

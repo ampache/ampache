@@ -23,7 +23,7 @@
 define('NO_SESSION','1');
 require_once '../lib/init.php';
 
-if (!Config::get('plex_backend')) {
+if (!AmpConfig::get('plex_backend')) {
     echo "Disabled.";
     exit;
 }

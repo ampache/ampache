@@ -45,7 +45,7 @@
     </li>
 <?php if (Access::check_function('batch_download')) { ?>
     <li>
-    <a href="<?php echo Config::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
     </li>
@@ -71,7 +71,7 @@
       </ul>
     </li>
 </ul>
-<?php if (Config::get('play_type') == 'localplay') { require_once Config::get('prefix') . '/templates/show_localplay_control.inc.php'; } ?>
+<?php if (AmpConfig::get('play_type') == 'localplay') { require_once AmpConfig::get('prefix') . '/templates/show_localplay_control.inc.php'; } ?>
 <ul id="rb_current_playlist">
 <?php
 

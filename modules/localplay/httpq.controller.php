@@ -45,7 +45,7 @@ class AmpacheHttpq extends localplay_controller
     public function __construct()
     {
         /* Do a Require Once On the needed Libraries */
-        require_once Config::get('prefix') . '/modules/httpq/httpqplayer.class.php';
+        require_once AmpConfig::get('prefix') . '/modules/httpq/httpqplayer.class.php';
 
     } // Constructor
 
@@ -220,7 +220,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function get_instance($instance='')
     {
-        $instance = $instance ? $instance : Config::get('httpq_active');
+        $instance = $instance ? $instance : AmpConfig::get('httpq_active');
         $instance = Dba::escape($instance);
 
         $sql = "SELECT * FROM `localplay_httpq` WHERE `id`='$instance'";
@@ -246,7 +246,7 @@ class AmpacheHttpq extends localplay_controller
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
         Preference::update('httpq_active',$user_id,intval($uid));
-        Config::set('httpq_active', intval($uid), true);
+        AmpConfig::set('httpq_active', intval($uid), true);
 
         return true;
 

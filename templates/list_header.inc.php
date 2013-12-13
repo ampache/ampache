@@ -34,8 +34,8 @@ $total    = $browse->get_total();
 if (isset($_REQUEST['browse_uid'])) {
     $uid = $_REQUEST['browse_uid']++;
 } else {
-    $uid = Config::get('list_header_uid');
-    Config::set('list_header_uid', ++$uid, true);
+    $uid = AmpConfig::get('list_header_uid');
+    AmpConfig::set('list_header_uid', ++$uid, true);
 }
 $sides  = 5;
 

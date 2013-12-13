@@ -29,7 +29,7 @@ if ($_REQUEST['action'] == 'delete_playlist') {
     if ($playlist->has_access()) {
         $playlist->delete();
         // Go elsewhere
-        header('Location: ' . Config::get('web_path') . '/browse.php?action=smartplaylist');
+        header('Location: ' . AmpConfig::get('web_path') . '/browse.php?action=smartplaylist');
         exit;
     }
 }
@@ -79,7 +79,7 @@ switch ($_REQUEST['action']) {
     case 'show_playlist':
         $playlist = new Search('song', $_REQUEST['playlist_id']);
         $playlist->format();
-        require_once Config::get('prefix') . '/templates/show_smartplaylist.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_smartplaylist.inc.php';
     break;
     case 'update_playlist':
         $playlist = new Search('song', $_REQUEST['playlist_id']);
@@ -91,10 +91,10 @@ switch ($_REQUEST['action']) {
             UI::access_denied();
             break;
         }
-        require_once Config::get('prefix') . '/templates/show_smartplaylist.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_smartplaylist.inc.php';
     break;
     default:
-        require_once Config::get('prefix') . '/templates/show_smartplaylist.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_smartplaylist.inc.php';
     break;
 } // switch on the action
 

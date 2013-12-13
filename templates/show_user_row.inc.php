@@ -28,7 +28,7 @@
   <td class="cel_lastseen"><?php echo $last_seen; ?></td>
   <td class="cel_registrationdate"><?php echo $create_date; ?></td>
   <td class="cel_activity"><?php echo $client->f_useage; ?></td>
-    <?php if (Config::get('track_user_ip')) { ?>
+    <?php if (AmpConfig::get('track_user_ip')) { ?>
         <td class="cel_lastip">
         <a href="<?php echo $web_path; ?>/admin/users.php?action=show_ip_history&amp;user_id=<?php echo $client->id; ?>">
             <?php echo $client->ip_history; ?>

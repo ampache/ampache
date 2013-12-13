@@ -21,7 +21,7 @@
  */
 ?>
 <?php UI::show_box_top(T_('Create a new playlist')); ?>
-<form name="songs" method="post" action="<?php echo Config::get('web_path'); ?>/playlist.php">
+<form name="songs" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/playlist.php">
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <tr>
             <td><?php echo T_('Name'); ?>:</td>

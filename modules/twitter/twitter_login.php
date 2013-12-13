@@ -23,7 +23,7 @@
  */
 
 require_once '../../lib/init.php';
-require_once( Config::get('prefix') . "/modules/twitter/twitteroauth/twitteroauth.php");
+require_once( AmpConfig::get('prefix') . "/modules/twitter/twitteroauth/twitteroauth.php");
 session_start();
 
 if( !isset($_SESSION['twitterCount'] )) {
@@ -34,10 +34,10 @@ if( isset($_SESSION['twitterusername']) ) {
     header('Location: twitter_update.php');
 } else {
     // The TwitterOAuth instance
-    $twitteroauth = new TwitterOAuth( Config::get('twitter_consumer_key') , Config::get('twitter_consumer_secret') );
+    $twitteroauth = new TwitterOAuth( AmpConfig::get('twitter_consumer_key') , AmpConfig::get('twitter_consumer_secret') );
 
     // Requesting authentication tokens, the parameter is the URL we will be redirected to
-    $request_token = $twitteroauth->getRequestToken( Config::get('web_path') . '/modules/twitter/twitter_works.php');
+    $request_token = $twitteroauth->getRequestToken( AmpConfig::get('web_path') . '/modules/twitter/twitter_works.php');
 
     // Saving them into the session
     $_SESSION['oauth_token'] = $request_token['oauth_token'];
@@ -50,7 +50,7 @@ if( isset($_SESSION['twitterusername']) ) {
         header('Location: '. $url);
     } else {
         debug_event("Twitter", "Could not generate the URL to continue.  Going back.", "5");
-        header('Location: ' . Config::get('web_path') );
+        header('Location: ' . AmpConfig::get('web_path') );
     }
 }
 ?>

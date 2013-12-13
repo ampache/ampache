@@ -20,9 +20,9 @@
  *
  */
 
-$web_path = Config::get('web_path');
+$web_path = AmpConfig::get('web_path');
 ?>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
         <th class="cel_add"><?php echo T_('Add'); ?></th>
@@ -40,7 +40,7 @@ $web_path = Config::get('web_path');
             $video->format();
     ?>
     <tr id="video_<?php echo $video->id; ?>" class="<?php echo UI::flip_class(); ?>">
-        <?php require Config::get('prefix') . '/templates/show_video_row.inc.php'; ?>
+        <?php require AmpConfig::get('prefix') . '/templates/show_video_row.inc.php'; ?>
     </tr>
     <?php } //end foreach  ?>
     <?php if (!count($object_ids)) { ?>
@@ -58,4 +58,4 @@ $web_path = Config::get('web_path');
         <th class="cel_action"><?php echo T_('Action'); ?></th>
     </tr>
 </table>
-<?php require Config::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>

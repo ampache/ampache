@@ -22,13 +22,13 @@
 
 UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
 ?>
-<form id="search" name="search" method="post" action="<?php echo Config::get('web_path'); ?>/search.php?type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>" enctype="multipart/form-data" style="Display:inline">
+<form id="search" name="search" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata" cellpadding="3" cellspacing="0">
     <tr id="search_location">
-        <td><?php if ($_REQUEST['type'] != 'song') { ?><a href="<?php echo Config::get('web_path'); ?>/search.php?type=song"><?php echo T_('Songs'); ?></a><?php } else { echo T_('Songs'); } ?></td>
-        <td><?php if ($_REQUEST['type'] != 'album') { ?><a href="<?php echo Config::get('web_path'); ?>/search.php?type=album"><?php echo T_('Albums'); ?></a><?php } else { echo T_('Albums'); } ?></td>
-        <td><?php if ($_REQUEST['type'] != 'artist') { ?><a href="<?php echo Config::get('web_path'); ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a><?php } else { echo T_('Artists'); } ?></td>
-        <td><?php if ($_REQUEST['type'] != 'video') { ?><a href="<?php echo Config::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a><?php } else { echo T_('Videos'); } ?></td>
+        <td><?php if ($_REQUEST['type'] != 'song') { ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo T_('Songs'); ?></a><?php } else { echo T_('Songs'); } ?></td>
+        <td><?php if ($_REQUEST['type'] != 'album') { ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=album"><?php echo T_('Albums'); ?></a><?php } else { echo T_('Albums'); } ?></td>
+        <td><?php if ($_REQUEST['type'] != 'artist') { ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a><?php } else { echo T_('Artists'); } ?></td>
+        <td><?php if ($_REQUEST['type'] != 'video') { ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a><?php } else { echo T_('Videos'); } ?></td>
     </tr>
     <tr id="search_blank_line"><td>&nbsp;</td></tr>
 </table>
@@ -47,7 +47,7 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
     </tr>
 </table>
 
-<?php require Config::get('prefix') . '/templates/show_rules.inc.php'; ?>
+<?php require AmpConfig::get('prefix') . '/templates/show_rules.inc.php'; ?>
 
 <div class="formValidation">
             <input class="button" type="submit" value="<?php echo T_('Search'); ?>" />&nbsp;&nbsp;

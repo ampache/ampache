@@ -85,11 +85,11 @@ class Subsonic_Api
     public static function setHeader($f)
     {
         if (strtolower($f) == "json") {
-            header("Content-type: application/json; charset=" . Config::get('site_charset'));
+            header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
         } else if (strtolower($f) == "jsonp") {
-            header("Content-type: text/javascript; charset=" . Config::get('site_charset'));
+            header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset'));
         } else {
-            header("Content-type: text/xml; charset=" . Config::get('site_charset'));
+            header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
         }
     }
 

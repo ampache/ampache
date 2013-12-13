@@ -1,19 +1,19 @@
 <?php
 if ($iframed) {
 ?>
-<link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/jplayer.midnight.black-iframed.css" type="text/css" />
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/jplayer.midnight.black-iframed.css" type="text/css" />
 <?php
 } else {
 ?>
-<?php require_once Config::get('prefix') . '/templates/stylesheets.inc.php'; ?>
-<link rel="stylesheet" href="<?php echo Config::get('web_path'); ?>/templates/jplayer.midnight.black.css" type="text/css" />
+<?php require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php'; ?>
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/jplayer.midnight.black.css" type="text/css" />
 <?php
 }
 ?>
-<script src="<?php echo Config::get('web_path'); ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo Config::get('web_path'); ?>/modules/jquery/jquery.cookie.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo Config::get('web_path'); ?>/modules/jplayer/jquery.jplayer.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo Config::get('web_path'); ?>/modules/jplayer/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery/jquery.cookie.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jplayer/jquery.jplayer.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jplayer/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
 <?php
 if ($iframed) {
 ?>
@@ -51,15 +51,15 @@ var jplaylist = null;
                 removeTime: 'fast',
                 shuffleTime: 'slow'
             },
-            swfPath: "<?php echo Config::get('web_path'); ?>/modules/jplayer/",
+            swfPath: "<?php echo AmpConfig::get('web_path'); ?>/modules/jplayer/",
             audioFullScreen: true,
             smoothPlayBar: true,
             solution: "<?php
 $solutions = array();
-if (Config::get('webplayer_html5')) {
+if (AmpConfig::get('webplayer_html5')) {
     $solutions[] = 'html';
 }
-if (Config::get('webplayer_flash')) {
+if (AmpConfig::get('webplayer_flash')) {
     $solutions[] = 'flash';
 }
 echo implode(',', $solutions);
@@ -93,9 +93,9 @@ if ($iframed) {
             if (index == current) {
 <?php
 if ($iframed) {
-    echo "var titleobj = '<a href=\"javascript:NavigateTo(\'" . Config::get('web_path') . "/albums.php?action=show&album=' + albumids[index] + '\');\">' + obj.title + '</a>';";
-    echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . Config::get('web_path') . "/artists.php?action=show&artist=' + artistids[index] + '\');\">' + obj.artist + '</a>';";
-    echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . Config::get('web_path') . "/song.php?action=show_lyrics&song_id=' + songids[index] + '\');\">" . T_('Show Lyrics') . "</a>';";
+    echo "var titleobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + albumids[index] + '\');\">' + obj.title + '</a>';";
+    echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + artistids[index] + '\');\">' + obj.artist + '</a>';";
+    echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + songids[index] + '\');\">" . T_('Show Lyrics') . "</a>';";
 } else {
     echo "var titleobj = obj.title;";
     echo "var artistobj = obj.artist;";
@@ -104,18 +104,18 @@ if ($iframed) {
                 $('.playing_title').html(titleobj);
                 $('.playing_artist').html(artistobj);
 <?php
-if ($iframed && Config::get('show_lyrics')) {
+if ($iframed && AmpConfig::get('show_lyrics')) {
 ?>
                 $('.playing_lyrics').html(lyricsobj);
 <?php
 }
-if (Config::get('song_page_title')) {
+if (AmpConfig::get('song_page_title')) {
     if ($iframed) {
         echo "window.parent.document";
     } else {
         echo "document";
     }
-    echo ".title = obj.title + ' - ' + obj.artist + ' | " . addslashes(Config::get('site_title')) . "';";
+    echo ".title = obj.title + ' - ' + obj.artist + ' | " . addslashes(AmpConfig::get('site_title')) . "';";
 }
 ?>
             }

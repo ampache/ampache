@@ -278,7 +278,7 @@ class Catalog_local extends Catalog
             // if it was set the day before
             unset($failed_check);
 
-            if (Config::get('no_symlinks')) {
+            if (AmpConfig::get('no_symlinks')) {
                 if (is_link($full_file)) {
                     debug_event('read', "Skipping symbolic link $path", 5);
                     continue;
@@ -300,7 +300,7 @@ class Catalog_local extends Catalog
             } //it's a directory
 
             $is_audio_file = Catalog::is_audio_file($file);
-            if (!$is_audio_file AND Config::get('catalog_video_pattern')) {
+            if (!$is_audio_file AND AmpConfig::get('catalog_video_pattern')) {
                 $is_video_file = Catalog::is_video_file($file);
             }
 
@@ -326,8 +326,8 @@ class Catalog_local extends Catalog
 
                 // Check to make sure the filename is of the expected charset
                 if (function_exists('iconv')) {
-                    if (strcmp($full_file,iconv(Config::get('site_charset'),Config::get('site_charset'),$full_file)) != '0') {
-                        debug_event('read',$full_file . ' has non-' . Config::get('site_charset') . ' characters and can not be indexed, converted filename:' . iconv(Config::get('site_charset'),Config::get('site_charset'),$full_file),'1');
+                    if (strcmp($full_file,iconv(AmpConfig::get('site_charset'),AmpConfig::get('site_charset'),$full_file)) != '0') {
+                        debug_event('read',$full_file . ' has non-' . AmpConfig::get('site_charset') . ' characters and can not be indexed, converted filename:' . iconv(AmpConfig::get('site_charset'),AmpConfig::get('site_charset'),$full_file),'1');
                         /* HINT: FullFile */
                         Error::add('catalog_add', sprintf(T_('%s does not match site charset'), $full_file));
                         continue;
@@ -389,7 +389,7 @@ class Catalog_local extends Catalog
 
         $this->count = 0;
 
-        require Config::get('prefix') . '/templates/show_adds_catalog.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_adds_catalog.inc.php';
         flush();
 
         /* Set the Start time */
@@ -420,7 +420,7 @@ class Catalog_local extends Catalog
 
         if ($options['gather_art']) {
             $catalog_id = $this->id;
-            require Config::get('prefix') . '/templates/show_gather_art.inc.php';
+            require AmpConfig::get('prefix') . '/templates/show_gather_art.inc.php';
             flush();
             $this->gather_art();
         }
@@ -453,7 +453,7 @@ class Catalog_local extends Catalog
         $number = $stats['videos'] + $stats['songs'];
         $total_updated = 0;
 
-        require_once Config::get('prefix') . '/templates/show_verify_catalog.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_verify_catalog.inc.php';
 
         foreach (array('video', 'song') as $media_type) {
             $total = $stats[$media_type . 's']; // UGLY
@@ -494,7 +494,7 @@ class Catalog_local extends Catalog
             "WHERE `catalog`='$this->id' LIMIT $count,$chunk_size";
         $db_results = Dba::read($sql);
 
-        if (Config::get('memory_cache')) {
+        if (AmpConfig::get('memory_cache')) {
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $media_ids[] = $row['id'];
             }
@@ -703,7 +703,7 @@ class Catalog_local extends Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = UI::truncate($this->path, Config::get('ellipse_threshold_title'));
+        $this->f_info = UI::truncate($this->path, AmpConfig::get('ellipse_threshold_title'));
         $this->f_full_info = $this->path;
     }
 

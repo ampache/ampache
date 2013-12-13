@@ -28,7 +28,7 @@ header('Expires: ' . gmdate(DATE_RFC1123, time()-1));
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
 <head>
-<title><?php echo Config::get('site_title'); ?></title>
+<title><?php echo AmpConfig::get('site_title'); ?></title>
 <?php
 $playlist = new Stream_Playlist(scrub_in($_REQUEST['playlist_id']));
 ?>
@@ -65,8 +65,8 @@ function ExitPlayer()
 
         maindiv.style.height = parent.parent.innerHeight + "px";
 <?php
-if (Config::get('song_page_title') && $iframed) {
-    echo "window.parent.document.title = '" . addslashes(Config::get('site_title')) . "';";
+if (AmpConfig::get('song_page_title') && $iframed) {
+    echo "window.parent.document.title = '" . addslashes(AmpConfig::get('site_title')) . "';";
 }
 ?>
     }
@@ -78,8 +78,8 @@ if (Config::get('song_page_title') && $iframed) {
 if (WebPlayer::is_playlist_radio($playlist)) {
     // Special stuff for web radio (to better handle Icecast/Shoutcast metadata ...)
     $radio = $playlist->urls[0];
-    require_once Config::get('prefix') . '/templates/show_radio_player.inc.php';
+    require_once AmpConfig::get('prefix') . '/templates/show_radio_player.inc.php';
 } else {
-    require_once Config::get('prefix') . '/templates/show_html5_player.inc.php';
+    require_once AmpConfig::get('prefix') . '/templates/show_html5_player.inc.php';
 }
 ?>

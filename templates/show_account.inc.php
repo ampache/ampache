@@ -23,7 +23,7 @@
 // Because this is a reset of the persons password make the form a little more secure
 ?>
 <?php Error::display('general'); ?>
-<form method="post" name="preferences" action="<?php echo Config::get('web_path'); ?>/preferences.php?action=update_user" enctype="multipart/form-data">
+<form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_user" enctype="multipart/form-data">
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <tr>
             <td><?php echo T_('Name'); ?>:</td>

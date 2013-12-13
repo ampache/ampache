@@ -127,78 +127,78 @@ class Browse extends Query
             case 'song':
                 UI::show_box_top(T_('Songs') . $match, $class);
                 Song::build_cache($object_ids);
-                require_once Config::get('prefix') . '/templates/show_songs.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_songs.inc.php';
                 UI::show_box_bottom();
             break;
             case 'album':
                 UI::show_box_top(T_('Albums') . $match, $class);
                 Album::build_cache($object_ids,'extra');
-                require_once Config::get('prefix') . '/templates/show_albums.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_albums.inc.php';
                 UI::show_box_bottom();
             break;
             case 'user':
                 UI::show_box_top(T_('Manage Users') . $match, $class);
-                require_once Config::get('prefix') . '/templates/show_users.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_users.inc.php';
                 UI::show_box_bottom();
             break;
             case 'artist':
                 UI::show_box_top(T_('Artists') . $match, $class);
                 Artist::build_cache($object_ids,'extra');
-                require_once Config::get('prefix') . '/templates/show_artists.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_artists.inc.php';
                 UI::show_box_bottom();
             break;
             case 'live_stream':
-                require_once Config::get('prefix') . '/templates/show_live_stream.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_live_stream.inc.php';
                 UI::show_box_top(T_('Radio Stations') . $match, $class);
-                require_once Config::get('prefix') . '/templates/show_live_streams.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_live_streams.inc.php';
                 UI::show_box_bottom();
             break;
             case 'playlist':
                 Playlist::build_cache($object_ids);
                 UI::show_box_top(T_('Playlists') . $match, $class);
-                require_once Config::get('prefix') . '/templates/show_playlists.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_playlists.inc.php';
                 UI::show_box_bottom();
             break;
             case 'playlist_song':
                 UI::show_box_top(T_('Playlist Songs') . $match, $class);
-                require_once Config::get('prefix') . '/templates/show_playlist_songs.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_playlist_songs.inc.php';
                 UI::show_box_bottom();
             break;
             case 'playlist_localplay':
                 UI::show_box_top(T_('Current Playlist'));
-                require_once Config::get('prefix') . '/templates/show_localplay_playlist.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_localplay_playlist.inc.php';
                 UI::show_box_bottom();
             break;
             case 'smartplaylist':
                 UI::show_box_top(T_('Smart Playlists') . $match, $class);
-                require_once Config::get('prefix') . '/templates/show_smartplaylists.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_smartplaylists.inc.php';
                 UI::show_box_bottom();
             break;
             case 'catalog':
                 UI::show_box_top(T_('Catalogs'), $class);
-                require_once Config::get('prefix') . '/templates/show_catalogs.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_catalogs.inc.php';
                 UI::show_box_bottom();
             break;
             case 'shoutbox':
                 UI::show_box_top(T_('Shoutbox Records'),$class);
-                require_once Config::get('prefix') . '/templates/show_manage_shoutbox.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_manage_shoutbox.inc.php';
                 UI::show_box_bottom();
             break;
             case 'tag':
                 Tag::build_cache($tags);
                 UI::show_box_top(T_('Tag Cloud'),$class);
-                require_once Config::get('prefix') . '/templates/show_tagcloud.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_tagcloud.inc.php';
                 UI::show_box_bottom();
             break;
             case 'video':
                 Video::build_cache($object_ids);
                 UI::show_box_top(T_('Videos'),$class);
-                require_once Config::get('prefix') . '/templates/show_videos.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
                 UI::show_box_bottom();
             break;
             case 'democratic':
                 UI::show_box_top(T_('Democratic Playlist'),$class);
-                require_once Config::get('prefix') . '/templates/show_democratic_playlist.inc.php';
+                require_once AmpConfig::get('prefix') . '/templates/show_democratic_playlist.inc.php';
                 UI::show_box_bottom();
             default:
                 // Rien a faire

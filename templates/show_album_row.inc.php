@@ -21,7 +21,7 @@
  */
 ?>
 
-<?php if (Config::get('directplay')) { ?>
+<?php if (AmpConfig::get('directplay')) { ?>
 <td class="cel_directplay">
     <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id,'play', T_('Play album'),'play_album_' . $album->id); ?>
 <?php if (Stream_Playlist::check_autoplay_append()) { ?>
@@ -38,8 +38,8 @@ if (Art::is_enabled()) {
     $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
 ?>
 <td class="cel_cover">
-        <a href="<?php echo Config::get('web_path'); ?>/albums.php?action=show&amp;album=<?php echo $album->id; ?>">
-    <img height="75" width="75" alt="<?php echo($name) ?>" title="<?php echo($name) ?>" src="<?php echo Config::get('web_path'); ?>/image.php?id=<?php echo $album->id; ?>&amp;thumb=1" />
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=show&amp;album=<?php echo $album->id; ?>">
+    <img height="75" width="75" alt="<?php echo($name) ?>" title="<?php echo($name) ?>" src="<?php echo AmpConfig::get('web_path'); ?>/image.php?id=<?php echo $album->id; ?>&amp;thumb=1" />
         </a>
 </td>
 <?php } ?>
@@ -48,20 +48,20 @@ if (Art::is_enabled()) {
 <td class="cel_songs"><?php echo $album->song_count; ?></td>
 <td class="cel_year"><?php echo $album->year; ?></td>
 <td class="cel_tags"><?php echo $album->f_tags; ?></td>
-<?php if (Config::get('ratings')) { ?>
+<?php if (AmpConfig::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $album->id; ?>_album"><?php Rating::show($album->id,'album'); ?></td>
 <?php } ?>
-<?php if (Config::get('userflags')) { ?>
+<?php if (AmpConfig::get('userflags')) { ?>
 <td class="cel_userflag" id="userflag_<?php echo $album->id; ?>_album"><?php Userflag::show($album->id,'album'); ?></td>
 <?php } ?>
 <td class="cel_action">
-    <?php if (Config::get('sociable')) { ?>
-    <a href="<?php echo Config::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=album&amp;id=<?php echo $album->id; ?>">
+    <?php if (AmpConfig::get('sociable')) { ?>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=album&amp;id=<?php echo $album->id; ?>">
         <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
     </a>
     <?php } ?>
     <?php if (Access::check_function('batch_download')) { ?>
-        <a href="<?php echo Config::get('web_path'); ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>">
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
     <?php } ?>

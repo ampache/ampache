@@ -26,7 +26,7 @@ $name = 'catalog_' . $_REQUEST['export_catalog'];
 ${$name} = ' selected="selected"';
 
 UI::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
-<form name="duplicates" action="<?php echo Config::get('web_path'); ?>/admin/export.php?action=export" method="post" enctype="multipart/form-data" >
+<form name="duplicates" action="<?php echo AmpConfig::get('web_path'); ?>/admin/export.php?action=export" method="post" enctype="multipart/form-data" >
 <table class="tableform" cellspacing="0" cellpadding="3">
 <tr>
     <td valign="top"><strong><?php echo T_('Catalog'); ?>:</strong></td>

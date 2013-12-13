@@ -23,7 +23,7 @@
 ?>
 <html>
 <head>
-<title><?php echo Config::get('site_title'); ?></title>
+<title><?php echo AmpConfig::get('site_title'); ?></title>
 <script language="javascript" type="text/javascript">
 <!-- begin
 function PlayerPopUp(URL)
@@ -35,6 +35,6 @@ function PlayerPopUp(URL)
 // end -->
 </script>
 </head>
-<body onLoad="javascript:PlayerPopUp('<?php echo Config::get('web_path')?>/web_player.php<?php echo '?playlist_id=' . $this->id ?>')">
+<body onLoad="javascript:PlayerPopUp('<?php echo AmpConfig::get('web_path')?>/web_player.php<?php echo '?playlist_id=' . $this->id ?>')">
 </body>
 </html>

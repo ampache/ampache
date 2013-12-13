@@ -255,7 +255,7 @@ class Search extends playlist_object
                 'widget' => array('input', 'text')
             );
 
-            if (Config::get('ratings')) {
+            if (AmpConfig::get('ratings')) {
                 $this->types[] = array(
                     'name'   => 'rating',
                     'label'  => T_('Rating'),
@@ -273,7 +273,7 @@ class Search extends playlist_object
                 );
             }
 
-            if (Config::get('show_played_times')) {
+            if (AmpConfig::get('show_played_times')) {
                 $this->types[] = array(
                     'name'   => 'played_times',
                     'label'  => T_('# Played'),
@@ -382,7 +382,7 @@ class Search extends playlist_object
                 'widget' => array('input', 'text')
             );
 
-            if (Config::get('ratings')) {
+            if (AmpConfig::get('ratings')) {
                 $this->types[] = array(
                     'name'   => 'rating',
                     'label'  => T_('Rating'),
@@ -582,7 +582,7 @@ class Search extends playlist_object
     public function format()
     {
         parent::format();
-        $this->f_link = '<a href="' . Config::get('web_path') .
+        $this->f_link = '<a href="' . AmpConfig::get('web_path') .
             '/smartplaylist.php?action=show_playlist&amp;playlist_id=' .
             $this->id . '">' . $this->f_name . '</a>';
     }

@@ -22,23 +22,23 @@
 
 if (INIT_LOADED != '1') { exit; }
 
-$web_path = Config::get('web_path');
-$htmllang = str_replace("_","-",Config::get('lang'));
+$web_path = AmpConfig::get('web_path');
+$htmllang = str_replace("_","-",AmpConfig::get('lang'));
 $location = get_location();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(Config::get('lang')) ? 'rtl' : 'ltr';?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';?>">
 
 <head>
 <link rel="shortcut icon" href="<?php echo $web_path; ?>/favicon.ico" />
-<link rel="search" type="application/opensearchdescription+xml" title="<?php echo scrub_out(Config::get('site_title')); ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor" />
+<link rel="search" type="application/opensearchdescription+xml" title="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor" />
 <?php
-if (Config::get('use_rss')) { ?>
+if (AmpConfig::get('use_rss')) { ?>
 <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Now Playing'); ?>" href="<?php echo $web_path; ?>/rss.php" />
 <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recently_played" />
 <?php } ?>
-<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo Config::get('site_charset'); ?>" />
-<title><?php echo scrub_out(Config::get('site_title')); ?> - <?php echo $location['title']; ?></title>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
+<title><?php echo scrub_out(AmpConfig::get('site_title')); ?> - <?php echo $location['title']; ?></title>
 <style type="text/css">
     #wrap { position:fixed; left:0; width:100%; top:0; height:100%; }
     .frame_main_full { display: block; width:100%; height: 100%; }

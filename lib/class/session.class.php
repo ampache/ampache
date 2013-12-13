@@ -73,13 +73,13 @@ class Session
             return true;
         }
 
-        $length = Config::get('session_length');
+        $length = AmpConfig::get('session_length');
 
         // Check to see if remember me cookie is set, if so use remember
         // length, otherwise use the session length
-        $expire = isset($_COOKIE[Config::get('session_name') . '_remember'])
-            ? time() + Config::get('remember_length')
-            : time() + Config::get('session_length');
+        $expire = isset($_COOKIE[AmpConfig::get('session_name') . '_remember'])
+            ? time() + AmpConfig::get('remember_length')
+            : time() + AmpConfig::get('session_length');
 
         $sql = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         $db_results = Dba::read($sql, array($value, $expire, $key));
@@ -105,7 +105,7 @@ class Session
         debug_event('SESSION', 'Deleting Session with key:' . $key, 6);
 
         // Destroy our cookie!
-        setcookie(Config::get('session_name'), '', time() - 86400);
+        setcookie(AmpConfig::get('session_name'), '', time() - 86400);
 
         return true;
     }
@@ -210,9 +210,9 @@ class Session
         $agent = (!empty($data['agent'])) ? $data['agent'] : substr($_SERVER['HTTP_USER_AGENT'], 0, 254);
 
         if ($type == 'stream') {
-            $expire = time() + Config::get('stream_length');
+            $expire = time() + AmpConfig::get('stream_length');
         } else {
-            $expire = time() + Config::get('session_length');
+            $expire = time() + AmpConfig::get('session_length');
         }
 
         if (!strlen($value)) { $value = ' '; }
@@ -240,7 +240,7 @@ class Session
      */
     public static function check()
     {
-        $session_name = Config::get('session_name');
+        $session_name = AmpConfig::get('session_name');
 
         // No cookie no go!
         if (!isset($_COOKIE[$session_name])) { return false; }
@@ -253,10 +253,10 @@ class Session
         // Set up the cookie params before we start the session.
         // This is vital
         session_set_cookie_params(
-            Config::get('cookie_life'),
-            Config::get('cookie_path'),
-            Config::get('cookie_domain'),
-            Config::get('cookie_secure'));
+            AmpConfig::get('cookie_life'),
+            AmpConfig::get('cookie_path'),
+            AmpConfig::get('cookie_domain'),
+            AmpConfig::get('cookie_secure'));
 
         // Set name
         session_name($session_name);
@@ -291,9 +291,9 @@ class Session
             break;
             case 'interface':
                 $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?';
-                if (Config::get('use_auth')) {
+                if (AmpConfig::get('use_auth')) {
                     // Build a list of enabled authentication types
-                    $types = Config::get('auth_methods');
+                    $types = AmpConfig::get('auth_methods');
                     $enabled_types = implode("','", $types);
                     $sql .= " AND `type` IN('$enabled_types')";
                 }
@@ -320,12 +320,12 @@ class Session
     public static function extend($sid, $type = null)
     {
         $time = time();
-        $expire = isset($_COOKIE[Config::get('session_name') . '_remember'])
-            ? $time + Config::get('remember_length')
-            : $time + Config::get('session_length');
+        $expire = isset($_COOKIE[AmpConfig::get('session_name') . '_remember'])
+            ? $time + AmpConfig::get('remember_length')
+            : $time + AmpConfig::get('session_length');
 
         if ($type == 'stream') {
-            $expire = $time + Config::get('stream_length');
+            $expire = $time + AmpConfig::get('stream_length');
         }
 
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
@@ -345,7 +345,7 @@ class Session
     public static function _auto_init()
     {
         if (!function_exists('session_start')) {
-            header("Location:" . Config::get('web_path') . "/test.php");
+            header("Location:" . AmpConfig::get('web_path') . "/test.php");
             exit;
         }
 
@@ -373,14 +373,14 @@ class Session
     public static function create_cookie()
     {
         // Set up the cookie prefs before we throw down, this is very important
-        $cookie_life = Config::get('cookie_life');
-        $cookie_path = Config::get('cookie_path');
+        $cookie_life = AmpConfig::get('cookie_life');
+        $cookie_path = AmpConfig::get('cookie_path');
         $cookie_domain = false;
-        $cookie_secure = Config::get('cookie_secure');
+        $cookie_secure = AmpConfig::get('cookie_secure');
 
         session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
 
-        session_name(Config::get('session_name'));
+        session_name(AmpConfig::get('session_name'));
 
         /* Start the session */
         self::ungimp_ie();
@@ -394,10 +394,10 @@ class Session
      */
     public static function create_remember_cookie()
     {
-        $remember_length = Config::get('remember_length');
-        $session_name = Config::get('session_name');
+        $remember_length = AmpConfig::get('remember_length');
+        $session_name = AmpConfig::get('session_name');
 
-        Config::set('cookie_life', $remember_length, true);
+        AmpConfig::set('cookie_life', $remember_length, true);
         setcookie($session_name . '_remember', "Rappelez-vous, rappelez-vous le 27 mars", time() + $remember_length, '/');
     }
 

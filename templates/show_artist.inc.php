@@ -20,7 +20,7 @@
  *
  */
 
-$web_path = Config::get('web_path');
+$web_path = AmpConfig::get('web_path');
 ?>
 <?php
 $browse = new Browse();
@@ -29,7 +29,7 @@ $browse->set_type($object_type);
 UI::show_box_top($artist->f_name, 'info-box');
 ?>
 <?php
-if (Config::get('lastfm_api_key')) {
+if (AmpConfig::get('lastfm_api_key')) {
     echo Ajax::observe('window','load', Ajax::action('?page=index&action=artist_info&artist='.$artist->id, 'artist_info'));
 ?>
     <div id="artist_biography">
@@ -38,19 +38,19 @@ if (Config::get('lastfm_api_key')) {
 <?php } ?>
 
 <?php
-if (Config::get('ratings')) {
+if (AmpConfig::get('ratings')) {
 ?>
 <div id="rating_<?php echo intval($artist->id); ?>_artist" style="display:inline;">
     <?php show_rating($artist->id, 'artist'); ?>
 </div>
 <?php } ?>
-<?php if (Config::get('userflags')) { ?>
+<?php if (AmpConfig::get('userflags')) { ?>
 <div style="display:table-cell;" id="userflag_<?php echo $artist->id; ?>_artist">
         <?php Userflag::show($artist->id,'artist'); ?>
 </div>
 <?php } ?>
 <?php
-if (Config::get('show_played_times')) {
+if (AmpConfig::get('show_played_times')) {
 ?>
 <br />
 <div style="display:inline;"><?php echo T_('Played') . ' ' . $artist->object_cnt . ' ' . T_('times'); ?></div>
@@ -73,7 +73,7 @@ if (Config::get('show_played_times')) {
     <?php printf(T_("Show Albums By %s"), $artist->f_name); ?></a>
     <?php } ?>
 </li>
-<?php if (Config::get('directplay')) { ?>
+<?php if (AmpConfig::get('directplay')) { ?>
 <li>
     <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id,'play', T_('Play artist'),'directplay_full_' . $artist->id); ?>
     <?php echo Ajax::text('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id, sprintf(T_('Play All Songs By %s'), $artist->f_name),'directplay_full_text_' . $artist->id); ?>
@@ -112,7 +112,7 @@ if (Config::get('show_played_times')) {
     $browse->store();
 ?>
 <?php
-if (Config::get('show_similar')) {
+if (AmpConfig::get('show_similar')) {
     echo Ajax::observe('window','load', Ajax::action('?page=index&action=similar_artist&artist='.$artist->id, 'similar_artist'));
 ?>
     <div id="similar_artist">

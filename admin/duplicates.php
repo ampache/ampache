@@ -34,11 +34,11 @@ switch ($_REQUEST['action']) {
     case 'find_duplicates':
         $search_type = $_REQUEST['search_type'];
         $duplicates = Song::find_duplicates($search_type);
-        require_once Config::get('prefix') . '/templates/show_duplicate.inc.php';
-        require_once Config::get('prefix') . '/templates/show_duplicates.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_duplicate.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_duplicates.inc.php';
     break;
     default:
-        require_once Config::get('prefix') . '/templates/show_duplicate.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_duplicate.inc.php';
     break;
 } // end switch on action
 

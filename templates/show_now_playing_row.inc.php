@@ -28,7 +28,7 @@
         </a>
     </div>
 
-<?php if (Config::get('ratings')) { ?>
+<?php if (AmpConfig::get('ratings')) { ?>
     <div class="np_cell cel_rating">
         <label><?php echo T_('Rating'); ?></label>
         <div id="rating_<?php echo $media->id; ?>_song">
@@ -37,7 +37,7 @@
     </div>
 <?php } ?>
 
-<?php if (Config::get('userflags')) { ?>
+<?php if (AmpConfig::get('userflags')) { ?>
     <div class="np_cell cel_userflag">
         <label><?php echo T_('Flag'); ?></label>
         <div id="userflag_<?php echo $media->id; ?>_song">
@@ -46,7 +46,7 @@
     </div>
 <?php } ?>
 
-    <?php if (Config::get('show_lyrics')) {?>
+    <?php if (AmpConfig::get('show_lyrics')) {?>
     <div class="np_cell cel_lyrics">
         <label>&nbsp;</label>
         <?php echo $media->f_lyrics; ?>
@@ -83,7 +83,7 @@
 </div>
 <?php } ?>
 
-<?php if (Config::get('show_similar')) {
+<?php if (AmpConfig::get('show_similar')) {
     echo Ajax::observe('window','load', Ajax::action('?page=index&action=similar_now_playing&media_id='.$media->id.'&media_artist='.$media->artist, 'similar_now_playing'));
 ?>
 <div class="np_group similars" id="similar_artist">

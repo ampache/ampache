@@ -30,6 +30,6 @@
 <td class="cel_tags"><?php $video->f_tags; ?></td>
 <td class="cel_action">
 <?php if (Access::check_function('download')) { ?>
-    <a href="<?php echo Config::get('web_path'); ?>/stream.php?action=download&type=video&oid=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&type=video&oid=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
 <?php } ?>
 </td>

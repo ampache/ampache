@@ -37,16 +37,16 @@ if ($_REQUEST['action'] == 'update') {
     $version = Update::get_version();
 
 }
-$htmllang = str_replace("_","-",Config::get('lang'));
+$htmllang = str_replace("_","-",AmpConfig::get('lang'));
 
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
-<link rel="shortcut icon" href="<?php echo Config::get('web_path'); ?>/favicon.ico" />
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo Config::get('site_charset'); ?>" />
-<link rel="stylesheet" type="text/css" media="screen" href="<?php echo Config::get('web_path') . '/templates/install.css'; ?>" />
+<link rel="shortcut icon" href="<?php echo AmpConfig::get('web_path'); ?>/favicon.ico" />
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo AmpConfig::get('web_path') . '/templates/install.css'; ?>" />
 <title><?php echo T_('Ampache Update'); ?></title>
 </head>
 <body>
@@ -63,7 +63,7 @@ $htmllang = str_replace("_","-",Config::get('lang'));
     <div class="content">
 <?php Update::display_update(); ?>
 
-<form method="post" enctype="multipart/form-data" action="<?php echo Config::get('web_path'); ?>/update.php?action=update">
+<form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/update.php?action=update">
 <?php if (Update::need_update()) { ?><input type="submit" value="<?php echo T_('Update Now!'); ?>" /> <?php } ?>
 </form>
     </div>

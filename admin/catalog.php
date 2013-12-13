@@ -21,7 +21,7 @@
  */
 
 require_once '../lib/init.php';
-require_once Config::get('prefix') . '/modules/catalog/local.catalog.php';
+require_once AmpConfig::get('prefix') . '/modules/catalog/local.catalog.php';
 
 if (!Access::check('interface','100')) {
     UI::access_denied();
@@ -37,14 +37,14 @@ switch ($_REQUEST['action']) {
     case 'add_to_catalog':
         toggle_visible('ajax-loading');
         ob_end_flush();
-        if (Config::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) { break; }
         if ($_REQUEST['catalogs']) {
             foreach ($_REQUEST['catalogs'] as $catalog_id) {
                 $catalog = Catalog::create_from_id($catalog_id);
                 $catalog->add_to_catalog($_POST);
             }
         }
-        $url = Config::get('web_path') . '/admin/catalog.php';
+        $url = AmpConfig::get('web_path') . '/admin/catalog.php';
         $title = T_('Catalog Updated');
         $body = '';
         show_confirmation($title, $body, $url);
@@ -56,7 +56,7 @@ switch ($_REQUEST['action']) {
         toggle_visible('ajax-loading');
         ob_end_flush();
             /* If they are in demo mode stop here */
-            if (Config::get('demo_mode')) { break; }
+            if (AmpConfig::get('demo_mode')) { break; }
 
         if (isset($_REQUEST['catalogs'])) {
             foreach ($_REQUEST['catalogs'] as $catalog_id) {
@@ -64,7 +64,7 @@ switch ($_REQUEST['action']) {
                 $catalog->verify_catalog();
             }
         }
-        $url    = Config::get('web_path') . '/admin/catalog.php';
+        $url    = AmpConfig::get('web_path') . '/admin/catalog.php';
         $title    = T_('Catalog Updated');
         $body    = '';
         show_confirmation($title,$body,$url);
@@ -74,7 +74,7 @@ switch ($_REQUEST['action']) {
         toggle_visible('ajax-loading');
         ob_end_flush();
         /* Make sure they aren't in demo mode */
-        if (Config::get('demo_mode')) { UI::access_denied(); break; }
+        if (AmpConfig::get('demo_mode')) { UI::access_denied(); break; }
 
         if (!$_REQUEST['catalogs']) {
             $_REQUEST['catalogs'] = Catalog::get_catalogs();
@@ -90,7 +90,7 @@ switch ($_REQUEST['action']) {
             $catalog->add_to_catalog();
         }
         Dba::optimize_tables();
-        $url    = Config::get('web_path') . '/admin/catalog.php';
+        $url    = AmpConfig::get('web_path') . '/admin/catalog.php';
         $title    = T_('Catalog Updated');
         $body    = '';
         show_confirmation($title,$body,$url);
@@ -98,7 +98,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'delete_catalog':
         /* Make sure they aren't in demo mode */
-            if (Config::get('demo_mode')) { break; }
+            if (AmpConfig::get('demo_mode')) { break; }
 
         if (!Core::form_verify('delete_catalog')) {
             UI::access_denied();
@@ -107,17 +107,17 @@ switch ($_REQUEST['action']) {
 
         /* Delete the sucker, we don't need to check perms as thats done above */
         Catalog::delete($_GET['catalog_id']);
-        $next_url = Config::get('web_path') . '/admin/catalog.php';
+        $next_url = AmpConfig::get('web_path') . '/admin/catalog.php';
         show_confirmation(T_('Catalog Deleted'), T_('The Catalog and all associated records have been deleted'),$next_url);
     break;
     case 'show_delete_catalog':
         $catalog_id = scrub_in($_GET['catalog_id']);
 
-        $next_url = Config::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalog_id=' . scrub_out($catalog_id);
+        $next_url = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalog_id=' . scrub_out($catalog_id);
         show_confirmation(T_('Catalog Delete'), T_('Confirm Deletion Request'),$next_url,1,'delete_catalog');
     break;
     case 'remove_disabled':
-        if (Config::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) { break; }
 
         $song = $_REQUEST['song'];
 
@@ -127,7 +127,7 @@ switch ($_REQUEST['action']) {
         } else {
             $body = T_('No Songs Removed');
         }
-        $url    = Config::get('web_path') . '/admin/catalog.php';
+        $url    = AmpConfig::get('web_path') . '/admin/catalog.php';
         $title    = T_ngettext('Disabled Song Processed','Disabled Songs Processed',count($song));
         show_confirmation($title,$body,$url);
     break;
@@ -137,7 +137,7 @@ switch ($_REQUEST['action']) {
         toggle_visible('ajax-loading');
         ob_end_flush();
             /* If they are in demo mode stop them here */
-            if (Config::get('demo_mode')) { break; }
+            if (AmpConfig::get('demo_mode')) { break; }
 
         // Make sure they checked something
         if (isset($_REQUEST['catalogs'])) {
@@ -148,7 +148,7 @@ switch ($_REQUEST['action']) {
             Dba::optimize_tables();
         }
 
-        $url     = Config::get('web_path') . '/admin/catalog.php';
+        $url     = AmpConfig::get('web_path') . '/admin/catalog.php';
         $title    = T_('Catalog Cleaned');
         $body    = '';
         show_confirmation($title,$body,$url);
@@ -156,18 +156,18 @@ switch ($_REQUEST['action']) {
     break;
     case 'update_catalog_settings':
         /* No Demo Here! */
-        if (Config::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) { break; }
 
         /* Update the catalog */
         Catalog::update_settings($_POST);
 
-        $url     = Config::get('web_path') . '/admin/catalog.php';
+        $url     = AmpConfig::get('web_path') . '/admin/catalog.php';
         $title     = T_('Catalog Updated');
         $body    = '';
         show_confirmation($title,$body,$url);
     break;
     case 'update_from':
-        if (Config::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) { break; }
 
         // First see if we need to do an add
         if ($_POST['add_path'] != '/' AND strlen($_POST['add_path'])) {
@@ -189,7 +189,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'add_catalog':
         /* Wah Demo! */
-        if (Config::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) { break; }
 
         ob_end_flush();
 
@@ -212,7 +212,7 @@ switch ($_REQUEST['action']) {
             $catalog_id = Catalog::create($_POST);
 
             if (!$catalog_id) {
-                require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
+                require AmpConfig::get('prefix') . '/templates/show_add_catalog.inc.php';
                 break;
             }
 
@@ -227,55 +227,55 @@ switch ($_REQUEST['action']) {
             Error::display('catalog_add');
             UI::show_box_bottom();
 
-            show_confirmation('','', Config::get('web_path').'/admin/catalog.php');
+            show_confirmation('','', AmpConfig::get('web_path').'/admin/catalog.php');
 
         } else {
-            require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
+            require AmpConfig::get('prefix') . '/templates/show_add_catalog.inc.php';
         }
     break;
     case 'clear_stats':
-        if (Config::get('demo_mode')) { UI::access_denied(); break; }
+        if (AmpConfig::get('demo_mode')) { UI::access_denied(); break; }
         Stats::clear();
-        $url    = Config::get('web_path') . '/admin/catalog.php';
+        $url    = AmpConfig::get('web_path') . '/admin/catalog.php';
         $title    = T_('Catalog statistics cleared');
         $body    = '';
         show_confirmation($title, $body, $url);
     break;
     default:
     case 'show_catalogs':
-        require_once Config::get('prefix') . '/templates/show_manage_catalogs.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_manage_catalogs.inc.php';
     break;
     case 'show_add_catalog':
-        require Config::get('prefix') . '/templates/show_add_catalog.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_add_catalog.inc.php';
     break;
     case 'clear_now_playing':
-        if (Config::get('demo_mode')) { UI::access_denied(); break; }
+        if (AmpConfig::get('demo_mode')) { UI::access_denied(); break; }
         Stream::clear_now_playing();
-        show_confirmation(T_('Now Playing Cleared'), T_('All now playing data has been cleared'),Config::get('web_path') . '/admin/catalog.php');
+        show_confirmation(T_('Now Playing Cleared'), T_('All now playing data has been cleared'),AmpConfig::get('web_path') . '/admin/catalog.php');
     break;
     case 'show_disabled':
         /* Stop the demo hippies */
-        if (Config::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) { break; }
 
         $songs = Song::get_disabled();
         if (count($songs)) {
-            require Config::get('prefix') . '/templates/show_disabled_songs.inc.php';
+            require AmpConfig::get('prefix') . '/templates/show_disabled_songs.inc.php';
         } else {
             echo "<div class=\"error\" align=\"center\">" . T_('No Disabled songs found') . "</div>";
         }
     break;
     case 'show_delete_catalog':
         /* Stop the demo hippies */
-        if (Config::get('demo_mode')) { UI::access_denied(); break; }
+        if (AmpConfig::get('demo_mode')) { UI::access_denied(); break; }
 
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
-        $nexturl = Config::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
+        $nexturl = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
         show_confirmation(T_('Delete Catalog'), T_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)",$nexturl,1);
     break;
     case 'show_customize_catalog':
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
         $catalog->format();
-        require_once Config::get('prefix') . '/templates/show_edit_catalog.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_edit_catalog.inc.php';
     break;
     case 'gather_album_art':
         toggle_visible('ajax-loading');
@@ -286,11 +286,11 @@ switch ($_REQUEST['action']) {
         // Iterate throught the catalogs and gather as needed
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
-            require Config::get('prefix') . '/templates/show_gather_art.inc.php';
+            require AmpConfig::get('prefix') . '/templates/show_gather_art.inc.php';
             flush();
             $catalog->gather_art();
         }
-        $url     = Config::get('web_path') . '/admin/catalog.php';
+        $url     = AmpConfig::get('web_path') . '/admin/catalog.php';
         $title     = T_('Album Art Search Finished');
         $body    = '';
         show_confirmation($title,$body,$url);

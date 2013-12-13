@@ -39,7 +39,7 @@ switch ($_REQUEST['action']) {
         }
 
         $shout_id = Shoutbox::create($_POST);
-        header("Location:" . Config::get('web_path'));
+        header("Location:" . AmpConfig::get('web_path'));
     break;
     case 'show_add_shout':
         // Get our object first
@@ -52,10 +52,10 @@ switch ($_REQUEST['action']) {
         }
 
         // Now go ahead and display the page where we let them add a comment etc
-        require_once Config::get('prefix') . '/templates/show_add_shout.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_add_shout.inc.php';
     break;
     default:
-        header("Location:" . Config::get('web_path'));
+        header("Location:" . AmpConfig::get('web_path'));
     break;
 } // end switch on action
 

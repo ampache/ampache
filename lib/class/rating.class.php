@@ -184,7 +184,7 @@ class Rating extends database_object
     public static function get_highest($type, $count='', $offset='')
     {
         if (!$count) {
-            $count = Config::get('popular_threshold');
+            $count = AmpConfig::get('popular_threshold');
         }
         $count = intval($count);
         if (!$offset) {
@@ -258,14 +258,14 @@ class Rating extends database_object
     public static function show($object_id, $type, $static=false)
     {
         // If ratings aren't enabled don't do anything
-        if (!Config::get('ratings')) { return false; }
+        if (!AmpConfig::get('ratings')) { return false; }
 
         $rating = new Rating($object_id, $type);
 
         if ($static) {
-            require Config::get('prefix') . '/templates/show_static_object_rating.inc.php';
+            require AmpConfig::get('prefix') . '/templates/show_static_object_rating.inc.php';
         } else {
-            require Config::get('prefix') . '/templates/show_object_rating.inc.php';
+            require AmpConfig::get('prefix') . '/templates/show_object_rating.inc.php';
         }
 
     } // show

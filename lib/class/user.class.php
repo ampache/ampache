@@ -264,9 +264,9 @@ class User extends database_object
      */
     public function get_favorites($type)
     {
-        $web_path = Config::get('web_path');
+        $web_path = AmpConfig::get('web_path');
 
-        $results = Stats::get_user(Config::get('popular_threshold'),$type,$this->id,1);
+        $results = Stats::get_user(AmpConfig::get('popular_threshold'),$type,$this->id,1);
 
         $items = array();
 
@@ -404,7 +404,7 @@ class User extends database_object
      */
     public function has_access($needed_level)
     {
-        if (!Config::get('use_auth') || Config::get('demo_mode')) { return true; }
+        if (!AmpConfig::get('use_auth') || AmpConfig::get('demo_mode')) { return true; }
 
         if ($this->access >= $needed_level) { return true; }
 
@@ -635,7 +635,7 @@ class User extends database_object
 
         /* Clean up old records... sometimes  */
         if (rand(1,100) > 60) {
-            $date = time() - (86400*Config::get('user_ip_cardinality'));
+            $date = time() - (86400*AmpConfig::get('user_ip_cardinality'));
             $sql = "DELETE FROM `ip_history` WHERE `date` < $date";
             $db_results = Dba::write($sql);
         }
@@ -710,7 +710,7 @@ class User extends database_object
         if (!$this->create_date) { $this->f_create_date = T_('Unknown'); } else { $this->f_create_date = date("m\/d\/Y - H:i",$this->create_date); }
 
         // Base link
-        $this->f_link = '<a href="' . Config::get('web_path') . '/stats.php?action=show_user&user_id=' . $this->id . '">' . $this->fullname . '</a>';
+        $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/stats.php?action=show_user&user_id=' . $this->id . '">' . $this->fullname . '</a>';
 
         /* Calculate their total Bandwidth Usage */
         $sql = "SELECT `song`.`size` FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " .
@@ -1038,12 +1038,12 @@ class User extends database_object
     /**
      * get_ip_history
      * This returns the ip_history from the
-     * last Config::get('user_ip_cardinality') days
+     * last AmpConfig::get('user_ip_cardinality') days
      */
     public function get_ip_history($count='',$distinct='')
     {
         $username     = Dba::escape($this->id);
-        $count        = $count ? intval($count) : intval(Config::get('user_ip_cardinality'));
+        $count        = $count ? intval($count) : intval(AmpConfig::get('user_ip_cardinality'));
 
         // Make sure it's something
         if ($count < 1) { $count = '1'; }
@@ -1087,7 +1087,7 @@ class User extends database_object
     public function is_xmlrpc()
     {
         /* If we aren't using XML-RPC return true */
-        if (!Config::get('xml_rpc')) {
+        if (!AmpConfig::get('xml_rpc')) {
             return false;
         }
 

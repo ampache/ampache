@@ -23,13 +23,13 @@
 require_once 'lib/init.php';
 
 /* If we are running a demo, quick while you still can! */
-if (Config::get('demo_mode') || !Access::check('interface','25')) {
+if (AmpConfig::get('demo_mode') || !Access::check('interface','25')) {
     UI::access_denied();
     exit;
 }
 
 $media_ids = array();
-$web_path = Config::get('web_path');
+$web_path = AmpConfig::get('web_path');
 
 /**
  * action switch
@@ -40,7 +40,7 @@ switch ($_REQUEST['action']) {
         $media_ids = $GLOBALS['user']->playlist->get_items();
 
         // Check to see if 'clear' was passed if it was then we need to reset the basket
-        if ( ($_REQUEST['playlist_method'] == 'clear' || Config::get('playlist_method') == 'clear')) {
+        if ( ($_REQUEST['playlist_method'] == 'clear' || AmpConfig::get('playlist_method') == 'clear')) {
             $GLOBALS['user']->playlist->clear();
         }
     break;
@@ -159,13 +159,13 @@ switch ($_REQUEST['action']) {
     case 'democratic':
         // Don't let them loop it
         // FIXME: This looks hacky
-        if (Config::get('play_type') == 'democratic') {
-            Config::set('play_type', 'stream', true);
+        if (AmpConfig::get('play_type') == 'democratic') {
+            AmpConfig::set('play_type', 'stream', true);
         }
     default:
-        $stream_type = Config::get('play_type');
+        $stream_type = AmpConfig::get('play_type');
         if ($stream_type == 'stream') {
-            $stream_type = Config::get('playlist_type');
+            $stream_type = AmpConfig::get('playlist_type');
         }
     break;
 }

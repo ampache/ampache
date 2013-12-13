@@ -48,7 +48,7 @@ if (!function_exists('iconv')) {
 $source_encoding = iconv_get_encoding('output_encoding');
 
 // Attempt a simple translation
-$string = sprintf(T_('%s For the Love of Music'), iconv(Config::get('site_charset'),Config::get('site_charset')));
+$string = sprintf(T_('%s For the Love of Music'), iconv(AmpConfig::get('site_charset'),AmpConfig::get('site_charset')));
 echo T_('Testing Basic Translation, the two strings below should look the same');
 echo "\n";
 echo T_('Original: For the Love of Music');
@@ -123,19 +123,19 @@ function charset_directory_correct($path) {
             continue;
         }
 
-        $verify_filename = iconv(Config::get('site_charset'),Config::get('site_charset') . '//IGNORE',$full_file);
+        $verify_filename = iconv(AmpConfig::get('site_charset'),AmpConfig::get('site_charset') . '//IGNORE',$full_file);
 
         if (strcmp($full_file,$verify_filename) != '0') {
-            $translated_filename = iconv($source_encoding,Config::get('site_charset') . '//TRANSLIT',$full_file);
+            $translated_filename = iconv($source_encoding,AmpConfig::get('site_charset') . '//TRANSLIT',$full_file);
 
             // Make sure the extension stayed the same
             if (substr($translated_filename,strlen($translated_filename)-3,3) != substr($full_file,strlen($full_file)-3,3)) {
                 echo T_("Translation failure, stripping non-valid characters");
                 echo "\n";
-                $translated_filename = iconv($source_encoding,Config::get('site_charset') . '//IGNORE',$full_file);
+                $translated_filename = iconv($source_encoding,AmpConfig::get('site_charset') . '//IGNORE',$full_file);
             }
 
-            printf (T_('Attempting to Transcode to %s'), Config::get('site_charset'));
+            printf (T_('Attempting to Transcode to %s'), AmpConfig::get('site_charset'));
             echo "\n";
             echo "--------------------------------------------------------------------------------------------\n";
             printf (T_('OLD: %s has invalid chars'), $full_file);

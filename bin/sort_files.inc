@@ -267,13 +267,13 @@ function sort_move_file($song,$fullname) {
         debug_event('copy','Copied ' . $song->file . ' to ' . $fullname,'5');
 
         /* Look for the folder art and copy that as well */
-        if (!Config::get('album_art_preferred_filename') OR strstr(Config::get('album_art_preferred_filename'),"%")) {
+        if (!AmpConfig::get('album_art_preferred_filename') OR strstr(AmpConfig::get('album_art_preferred_filename'),"%")) {
             $folder_art     = $directory . '/folder.jpg';
             $old_art     = $old_dir . '/folder.jpg';
         }
         else {
-            $folder_art     = $directory . "/" . sort_clean_name(Config::get('album_art_preferred_filename'));
-            $old_art     = $old_dir . "/" . sort_clean_name(Config::get('album_art_preferred_filename'));
+            $folder_art     = $directory . "/" . sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
+            $old_art     = $old_dir . "/" . sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
         }
 
         debug_event('copy_art','Copied ' . $old_art . ' to ' . $folder_art,'5');

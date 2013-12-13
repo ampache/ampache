@@ -75,7 +75,7 @@ class Ajax
      */
     public static function url($action)
     {
-        return Config::get('ajax_url') . $action;
+        return AmpConfig::get('ajax_url') . $action;
     }
 
     /**

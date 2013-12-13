@@ -33,7 +33,7 @@ while ($i <= $rows) {
     $j=0;
     while ($j < 4) {
         $key = $i*4+$j;
-        $image_url = Config::get('web_path') . '/image.php?type=session&amp;image_index=' . $key;
+        $image_url = AmpConfig::get('web_path') . '/image.php?type=session&amp;image_index=' . $key;
         $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], 'album'));
         if (!isset($images[$key])) { echo "<td>&nbsp;</td>\n"; } else {
 ?>
@@ -46,7 +46,7 @@ while ($i <= $rows) {
                 <?php } else { ?>
                 <span class="error"><?php echo T_('Invalid'); ?></span>
                 <?php } ?>
-                [<a href="<?php echo Config::get('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $key; ?>&amp;album_id=<?php echo intval($_REQUEST['album_id']); ?>"><?php echo T_('Select'); ?></a>]
+                [<a href="<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=select_art&amp;image=<?php echo $key; ?>&amp;album_id=<?php echo intval($_REQUEST['album_id']); ?>"><?php echo T_('Select'); ?></a>]
                 </p>
             </td>
 <?php

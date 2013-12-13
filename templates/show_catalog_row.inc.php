@@ -20,7 +20,7 @@
  *
  */
 
-$web_path = Config::get('web_path');
+$web_path = AmpConfig::get('web_path');
 
 $icon = $catalog->enabled ? 'disable' : 'enable';
 $button_flip_state_id = 'button_flip_state_' . $catalog->id;

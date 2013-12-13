@@ -44,14 +44,14 @@
 <?php Ajax::end_container(); ?>
   <li><h4><?php echo T_('Playlist'); ?></h4>
     <ul class="sb3" id="sb_home_info">
-      <li id="sb_home_info_CurrentlyPlaying"><a href="<?php echo Config::get('web_path') . ((Config::get('iframes')) ? '/?framed=1' : ''); ?>"><?php echo T_('Currently Playing'); ?></a></li>
-<?php if (Config::get('allow_democratic_playback')) { ?>
+      <li id="sb_home_info_CurrentlyPlaying"><a href="<?php echo AmpConfig::get('web_path') . ((AmpConfig::get('iframes')) ? '/?framed=1' : ''); ?>"><?php echo T_('Currently Playing'); ?></a></li>
+<?php if (AmpConfig::get('allow_democratic_playback')) { ?>
       <li id="sb_home_democratic_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo T_('Democratic'); ?></a></li>
 <?php } ?>
-<?php if ($server_allow = Config::get('allow_localplay_playback') AND $controller = Config::get('localplay_controller') AND $access_check = Access::check('localplay','5')) { ?>
+<?php if ($server_allow = AmpConfig::get('allow_localplay_playback') AND $controller = AmpConfig::get('localplay_controller') AND $access_check = Access::check('localplay','5')) { ?>
 <?php
         // Little bit of work to be done here
-        $localplay = new Localplay(Config::get('localplay_controller'));
+        $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $current_instance = $localplay->current_instance();
         $class = $current_instance ? '' : ' class="active_instance"';
 ?>
@@ -73,10 +73,10 @@
       <li id="sb_home_info_Recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent"><?php echo T_('Recent'); ?></a></li>
       <li id="sb_home_info_Newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo T_('Newest'); ?></a></li>
       <li id="sb_home_info_Popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo T_('Popular'); ?></a></li>
-<?php if (Config::get('ratings')) { ?>
+<?php if (AmpConfig::get('ratings')) { ?>
       <li id="sb_home_info_Highest"><a href="<?php echo $web_path; ?>/stats.php?action=highest"><?php echo T_('Top Rated'); ?></a></li>
 <?php } ?>
-<?php if (Config::get('userflags')) { ?>
+<?php if (AmpConfig::get('userflags')) { ?>
       <li id="sb_home_info_UserFlag"><a href="<?php echo $web_path; ?>/stats.php?action=userflag"><?php echo T_('My Flags'); ?></a></li>
 <?php } ?>
       <li id="sb_home_info_Statistics"><a href="<?php echo $web_path; ?>/stats.php?action=show"><?php echo T_('Statistics'); ?></a></li>

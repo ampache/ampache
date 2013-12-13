@@ -45,7 +45,7 @@ class AmpacheVlc extends localplay_controller
     public function __construct()
     {
         /* Do a Require Once On the needed Libraries */
-        require_once Config::get('prefix') . '/modules/vlc/vlcplayer.class.php';
+        require_once AmpConfig::get('prefix') . '/modules/vlc/vlcplayer.class.php';
 
     } // Constructor
 
@@ -204,7 +204,7 @@ class AmpacheVlc extends localplay_controller
     */
     public function get_instance($instance='')
     {
-        $instance = $instance ? $instance : Config::get('vlc_active');
+        $instance = $instance ? $instance : AmpConfig::get('vlc_active');
 
         $sql = "SELECT * FROM `localplay_vlc` WHERE `id` = ?";
         $db_results = Dba::query($sql, array($instance));
@@ -229,7 +229,7 @@ class AmpacheVlc extends localplay_controller
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
         Preference::update('vlc_active',$user_id,intval($uid));
-        Config::set('vlc_active', intval($uid), true);
+        AmpConfig::set('vlc_active', intval($uid), true);
 
         return true;
 

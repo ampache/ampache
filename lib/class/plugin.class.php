@@ -53,7 +53,7 @@ class Plugin
     public function _get_info($name)
     {
         /* Require the file we want */
-        require_once Config::get('prefix') . '/modules/plugins/' . $name . '.plugin.php';
+        require_once AmpConfig::get('prefix') . '/modules/plugins/' . $name . '.plugin.php';
 
         $plugin_name = "Ampache$name";
 
@@ -76,7 +76,7 @@ class Plugin
         $results = array();
 
         // Open up the plugin dir
-        $handle = opendir(Config::get('prefix') . '/modules/plugins');
+        $handle = opendir(AmpConfig::get('prefix') . '/modules/plugins');
 
         if (!is_resource($handle)) {
             debug_event('Plugins','Unable to read plugins directory','1');

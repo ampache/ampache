@@ -32,7 +32,7 @@ UI::show_header();
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'update_user':
-        if (Config::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) { break; }
 
         if (!Core::form_verify('edit_user','post')) {
             UI::access_denied();
@@ -81,10 +81,10 @@ switch ($_REQUEST['action']) {
             $client->update_password($pass1);
         }
 
-        show_confirmation(T_('User Updated'), $client->fullname . "(" . $client->username . ")" . T_('updated'), Config::get('web_path'). '/admin/users.php');
+        show_confirmation(T_('User Updated'), $client->fullname . "(" . $client->username . ")" . T_('updated'), AmpConfig::get('web_path'). '/admin/users.php');
     break;
     case 'add_user':
-        if (Config::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) { break; }
 
         if (!Core::form_verify('add_user','post')) {
             UI::access_denied();
@@ -126,45 +126,45 @@ switch ($_REQUEST['action']) {
         if ($access == 5) { $access = T_('Guest');} elseif ($access == 25) { $access = T_('User');} elseif ($access == 100) { $access = T_('Admin');}
 
         /* HINT: %1 Username, %2 Access num */
-        show_confirmation(T_('New User Added'),sprintf(T_('%1$s has been created with an access level of %2$s'), $username, $access), Config::get('web_path').'/admin/users.php');
+        show_confirmation(T_('New User Added'),sprintf(T_('%1$s has been created with an access level of %2$s'), $username, $access), AmpConfig::get('web_path').'/admin/users.php');
     break;
     case 'enable':
         $client = new User($_REQUEST['user_id']);
         $client->enable();
-        show_confirmation(T_('User Enabled'),$client->fullname . ' (' . $client->username . ')', Config::get('web_path'). '/admin/users.php');
+        show_confirmation(T_('User Enabled'),$client->fullname . ' (' . $client->username . ')', AmpConfig::get('web_path'). '/admin/users.php');
     break;
     case 'disable':
         $client = new User($_REQUEST['user_id']);
         if ($client->disable()) {
-            show_confirmation(T_('User Disabled'),$client->fullname . ' (' . $client->username . ')', Config::get('web_path'). '/admin/users.php');
+            show_confirmation(T_('User Disabled'),$client->fullname . ' (' . $client->username . ')', AmpConfig::get('web_path'). '/admin/users.php');
         } else {
-            show_confirmation(T_('Error'), T_('Unable to Disabled last Administrator'), Config::get('web_path').'/admin/users.php');
+            show_confirmation(T_('Error'), T_('Unable to Disabled last Administrator'), AmpConfig::get('web_path').'/admin/users.php');
         }
     break;
     case 'show_edit':
-        if (Config::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) { break; }
         $client    = new User($_REQUEST['user_id']);
-        require_once Config::get('prefix') . '/templates/show_edit_user.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_edit_user.inc.php';
     break;
     case 'confirm_delete':
-        if (Config::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) { break; }
         if (!Core::form_verify('delete_user')) {
             UI::access_denied();
             exit;
         }
         $client = new User($_REQUEST['user_id']);
         if ($client->delete()) {
-            show_confirmation(T_('User Deleted'), sprintf(T_('%s has been Deleted'), $client->username), Config::get('web_path'). "/admin/users.php");
+            show_confirmation(T_('User Deleted'), sprintf(T_('%s has been Deleted'), $client->username), AmpConfig::get('web_path'). "/admin/users.php");
         } else {
-            show_confirmation(T_('Delete Error'), T_("Unable to delete last Admin User"), Config::get('web_path')."/admin/users.php");
+            show_confirmation(T_('Delete Error'), T_("Unable to delete last Admin User"), AmpConfig::get('web_path')."/admin/users.php");
         }
     break;
     case 'delete':
-        if (Config::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) { break; }
         $client = new User($_REQUEST['user_id']);
         show_confirmation(T_('Deletion Request'),
             sprintf(T_('Are you sure you want to permanently delete %s?'), $client->fullname),
-            Config::get('web_path')."/admin/users.php?action=confirm_delete&amp;user_id=" . $_REQUEST['user_id'],1,'delete_user');
+            AmpConfig::get('web_path')."/admin/users.php?action=confirm_delete&amp;user_id=" . $_REQUEST['user_id'],1,'delete_user');
     break;
     /* Show IP History for the Specified User */
     case 'show_ip_history':
@@ -176,16 +176,16 @@ switch ($_REQUEST['action']) {
         } else {
             $history    = $working_user->get_ip_history();
         }
-        require Config::get('prefix') . '/templates/show_ip_history.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_ip_history.inc.php';
     break;
     case 'show_add_user':
-            if (Config::get('demo_mode')) { break; }
-        require_once Config::get('prefix') . '/templates/show_add_user.inc.php';
+            if (AmpConfig::get('demo_mode')) { break; }
+        require_once AmpConfig::get('prefix') . '/templates/show_add_user.inc.php';
     break;
     case 'show_preferences':
         $client = new User($_REQUEST['user_id']);
         $preferences = Preference::get_all($client->id);
-        require_once Config::get('prefix') . '/templates/show_user_preferences.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_user_preferences.inc.php';
     break;
     default:
         $browse = new Browse();

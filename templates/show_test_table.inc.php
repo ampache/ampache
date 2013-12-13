@@ -138,7 +138,7 @@ if (!defined('INSTALL')) {
     <td valign="top">
     <?php
         $results = @parse_ini_file($configfile);
-        Config::set_by_array($results);
+        AmpConfig::set_by_array($results);
         echo debug_result(check_config_values($results));
     ?>
     </td>
@@ -173,7 +173,7 @@ if (!defined('INSTALL')) {
             $http_type = 'https://';
         }
 
-        $results['web_path'] = $http_type . $_SERVER['HTTP_HOST'] . Config::get('web_path');
+        $results['web_path'] = $http_type . $_SERVER['HTTP_HOST'] . AmpConfig::get('web_path');
         if (check_config_values($results)) {
             echo "&nbsp;&nbsp;&nbsp;<img src=\"" . $results['web_path'] ."/images/icon_enable.png\" />&nbsp;&nbsp;&nbsp;";
         } else {

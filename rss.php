@@ -24,13 +24,13 @@ define('NO_SESSION','1');
 require_once 'lib/init.php';
 
 /* Check Perms */
-if (!Config::get('use_rss') || Config::get('demo_mode')) {
+if (!AmpConfig::get('use_rss') || AmpConfig::get('demo_mode')) {
     UI::access_denied();
     exit;
 }
 
 // Add in our base hearder defining the content type
-header("Content-Type: application/xml; charset=" . Config::get('site_charset'));
+header("Content-Type: application/xml; charset=" . AmpConfig::get('site_charset'));
 
 $rss = new Ampache_RSS($_REQUEST['type']);
 echo $rss->get_xml();

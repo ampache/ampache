@@ -223,15 +223,15 @@ class Access
     {
         switch ($type) {
             case 'download':
-                return Config::get('download');
+                return AmpConfig::get('download');
             break ;
             case 'batch_download':
                 if (!function_exists('gzcompress')) {
                     debug_event('access', 'ZLIB extension not loaded, batch download disabled', 3);
                     return false;
                 }
-                if (Config::get('allow_zip_download') AND $GLOBALS['user']->has_access('25')) {
-                    return Config::get('download');
+                if (AmpConfig::get('allow_zip_download') AND $GLOBALS['user']->has_access('25')) {
+                    return AmpConfig::get('download');
                 }
             break;
             default:
@@ -248,7 +248,7 @@ class Access
      */
     public static function check_network($type, $user, $level, $ip=null)
     {
-        if (!Config::get('access_control')) {
+        if (!AmpConfig::get('access_control')) {
             switch ($type) {
                 case 'interface':
                 case 'stream':
@@ -314,7 +314,7 @@ class Access
      */
     public static function check($type, $level)
     {
-        if (Config::get('demo_mode')) {
+        if (AmpConfig::get('demo_mode')) {
             return true;
         }
         if (defined('INSTALL')) {
@@ -327,7 +327,7 @@ class Access
         switch ($type) {
             case 'localplay':
                 // Check their localplay_level
-                if (Config::get('localplay_level') >= $level
+                if (AmpConfig::get('localplay_level') >= $level
                     || $GLOBALS['user']->access >= 100) {
                     return true;
                 } else {

@@ -29,7 +29,7 @@ switch ($_REQUEST['action']) {
     // Show a Users "Profile" page
     case 'show_user':
         $client = new User($_REQUEST['user_id']);
-        require_once Config::get('prefix') . '/templates/show_user.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_user.inc.php';
     break;
     case 'user_stats':
         /* Get em! */
@@ -40,28 +40,28 @@ switch ($_REQUEST['action']) {
         $favorite_albums        = $working_user->get_favorites('album');
         $favorite_songs         = $working_user->get_favorites('song');
 
-        require_once Config::get('prefix') . '/templates/show_user_stats.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_user_stats.inc.php';
 
     break;
     // Show stats
     case 'newest':
-        require_once Config::get('prefix') . '/templates/show_newest.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_newest.inc.php';
     break;
     case 'popular':
-        require_once Config::get('prefix') . '/templates/show_popular.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_popular.inc.php';
     break;
     case 'highest':
-        require_once Config::get('prefix') . '/templates/show_highest.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_highest.inc.php';
     break;
     case 'userflag':
-        require_once Config::get('prefix') . '/templates/show_userflag.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_userflag.inc.php';
     break;
     case 'recent':
-        require_once Config::get('prefix') . '/templates/show_recent.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_recent.inc.php';
     break;
     case 'show':
     default:
-        require_once Config::get('prefix') . '/templates/show_stats.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_stats.inc.php';
     break;
 } // end switch on action
 

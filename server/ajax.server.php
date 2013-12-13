@@ -30,7 +30,7 @@ define('AJAX_INCLUDE','1');
 require_once '../lib/init.php';
 
 /* Set the correct headers */
-header("Content-type: text/xml; charset=" . Config::get('site_charset'));
+header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
 header("Content-Disposition: attachment; filename=ajax.xml");
 header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
@@ -43,46 +43,46 @@ debug_event('ajax.server.php', 'Called for page: {'.$page.'}', '5');
 
 switch ($page) {
     case 'stats':
-        require_once Config::get('prefix') . '/server/stats.ajax.php';
+        require_once AmpConfig::get('prefix') . '/server/stats.ajax.php';
         exit;
     break;
     case 'browse':
-        require_once Config::get('prefix') . '/server/browse.ajax.php';
+        require_once AmpConfig::get('prefix') . '/server/browse.ajax.php';
         exit;
     break;
     case 'random':
-        require_once Config::get('prefix') . '/server/random.ajax.php';
+        require_once AmpConfig::get('prefix') . '/server/random.ajax.php';
         exit;
     break;
     case 'playlist':
-        require_once Config::get('prefix') . '/server/playlist.ajax.php';
+        require_once AmpConfig::get('prefix') . '/server/playlist.ajax.php';
         exit;
     break;
     case 'localplay':
-        require_once Config::get('prefix') . '/server/localplay.ajax.php';
+        require_once AmpConfig::get('prefix') . '/server/localplay.ajax.php';
         exit;
     break;
     case 'tag':
-        require_once Config::get('prefix') . '/server/tag.ajax.php';
+        require_once AmpConfig::get('prefix') . '/server/tag.ajax.php';
         exit;
     break;
     case 'stream':
-        require_once Config::get('prefix') . '/server/stream.ajax.php';
+        require_once AmpConfig::get('prefix') . '/server/stream.ajax.php';
         exit;
     break;
     case 'song':
-        require_once Config::get('prefix') . '/server/song.ajax.php';
+        require_once AmpConfig::get('prefix') . '/server/song.ajax.php';
         exit;
     break;
     case 'democratic':
-        require_once Config::get('prefix') . '/server/democratic.ajax.php';
+        require_once AmpConfig::get('prefix') . '/server/democratic.ajax.php';
         exit;
     break;
     case 'index':
-        require_once Config::get('prefix') . '/server/index.ajax.php';
+        require_once AmpConfig::get('prefix') . '/server/index.ajax.php';
         exit;
     case 'catalog':
-        require_once Config::get('prefix') . '/server/catalog.ajax.php';
+        require_once AmpConfig::get('prefix') . '/server/catalog.ajax.php';
         exit;
     break;
     default:
@@ -119,7 +119,7 @@ switch ($_REQUEST['action']) {
         }
 
         // Make sure we've got them rights
-        if (!Access::check('interface', $level) || Config::get('demo_mode')) {
+        if (!Access::check('interface', $level) || AmpConfig::get('demo_mode')) {
             $results['rfc3514'] = '0x1';
             break;
         }

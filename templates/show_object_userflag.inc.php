@@ -21,7 +21,7 @@
  */
 
 /* Create some variables we are going to need */
-$web_path = Config::get('web_path');
+$web_path = AmpConfig::get('web_path');
 $base_url = '?action=set_userflag&userflag_type=' . $userflag->type . '&object_id=' . $userflag->id;
 $othering = false;
 $flagged = $userflag->get_flag();

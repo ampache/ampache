@@ -179,7 +179,7 @@ class Userflag extends database_object
     public static function get_latest($type, $user_id=null, $count='', $offset='')
     {
         if (!$count) {
-            $count = Config::get('popular_threshold');
+            $count = AmpConfig::get('popular_threshold');
         }
         $count = intval($count);
         if (!$offset) {
@@ -211,10 +211,10 @@ class Userflag extends database_object
     public static function show($object_id, $type)
     {
         // If user flags aren't enabled don't do anything
-        if (!Config::get('userflags')) { return false; }
+        if (!AmpConfig::get('userflags')) { return false; }
 
         $userflag = new Userflag($object_id, $type);
-        require Config::get('prefix') . '/templates/show_object_userflag.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_object_userflag.inc.php';
 
     } // show
 
