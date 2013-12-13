@@ -83,9 +83,7 @@
 </div>
 <?php } ?>
 
-<?php if (AmpConfig::get('show_similar')) {
-    echo Ajax::observe('window','load', Ajax::action('?page=index&action=similar_now_playing&media_id='.$media->id.'&media_artist='.$media->artist, 'similar_now_playing'));
-?>
+<?php if (AmpConfig::get('show_similar')) { ?>
 <div class="np_group similars" id="similar_artist">
     <div class="np_cell cel_similar">
         <label><?php echo T_('Similar Artists'); ?></label>
@@ -96,4 +94,9 @@
         <p><?php echo T_('Loading...'); ?></p>
     </div>
 </div>
+<script language="javascript" type="text/javascript">
+$(document).ready(function(){
+    <?php echo Ajax::action('?page=index&action=similar_now_playing&media_id='.$media->id.'&media_artist='.$media->artist, 'similar_now_playing'); ?>
+});
+</script>
 <?php } ?>

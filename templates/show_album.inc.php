@@ -80,7 +80,7 @@ if (AmpConfig::get('show_played_times')) {
     <li>
         <a onclick="submitNewItemsOrder('<?php echo $album->id; ?>', 'reorder_songs_table', 'song_',
                                         '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
-            <?php echo UI::get_icon('download', T_('Save Tracks Order')); ?>
+            <?php echo UI::get_icon('save', T_('Save Tracks Order')); ?>
             &nbsp;&nbsp;<?php echo T_('Save Tracks Order'); ?>
         </a>
     </li>
@@ -120,7 +120,7 @@ if (AmpConfig::get('show_played_times')) {
     $browse->set_filter('album', $album->id);
     $browse->set_sort('track', 'ASC');
     $browse->get_objects();
-    $browse->show_objects();
+    $browse->show_objects(null, true); // true argument is set to show the reorder column
     $browse->store();
 ?>
 </div>

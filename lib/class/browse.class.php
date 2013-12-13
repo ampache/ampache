@@ -75,7 +75,7 @@ class Browse extends Query
      * and requires the correct template based on the
      * type that we are currently browsing
      */
-    public function show_objects($object_ids = null)
+    public function show_objects($object_ids = null, $argument = null)
     {
         if ($this->is_simple() || ! is_array($object_ids)) {
             $object_ids = $this->get_saved();

@@ -56,10 +56,10 @@ $thcount = 7;
     <tr id="artist_<?php echo $artist->id; ?>" class="<?php echo UI::flip_class(); ?>">
         <?php require AmpConfig::get('prefix') . '/templates/show_artist_row.inc.php'; ?>
     </tr>
-    <?php } //end foreach ($artists as $artist) ?>
-    <?php if (!count($object_ids)) { ?>
+    <?php } ?>
+    <?php if (!$object_ids || !count($object_ids)) { ?>
     <tr class="<?php echo UI::flip_class(); ?>">
-        <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No recommanded artist found'); ?></span></td>
+        <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No similar artist found'); ?></span></td>
     </tr>
     <?php } ?>
     <tr class="th-bottom">

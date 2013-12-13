@@ -52,10 +52,10 @@ switch ($_REQUEST['action']) {
             $artist->format();
             if ($object_ids = Recommendation::get_artists_like($artist->id)) {
                 $object_ids = array_map(create_function('$i', 'return $i[\'id\'];'), $object_ids);
-                ob_start();
-                require_once AmpConfig::get('prefix') . '/templates/show_recommended_artists.inc.php';
-                $results['similar_artist'] = ob_get_clean();
             }
+            ob_start();
+            require_once AmpConfig::get('prefix') . '/templates/show_recommended_artists.inc.php';
+            $results['similar_artist'] = ob_get_clean();
         }
     break;
     case 'similar_now_playing':

@@ -22,7 +22,7 @@
 
 $web_path = AmpConfig::get('web_path');
 $tags_list = Tag::get_display(Tag::get_tags());
-$thcount = 9;
+$thcount = 8;
 ?>
 <?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table id="reorder_songs_table" class="tabledata" cellpadding="0" cellspacing="0">
@@ -50,7 +50,9 @@ $thcount = 9;
         <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
     <?php } ?>
         <th class="cel_action"><?php echo T_('Action'); ?></th>
+    <?php if (isset($argument) && $argument) { ++$thcount; ?>
         <th class="cel_drag"></th>
+    <?php } ?>
     </tr>
 
     <tbody id="sortableplaylist">
@@ -89,7 +91,9 @@ $thcount = 9;
             <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
     <?php } ?>
         <th class="cel_action"><?php echo T_('Action'); ?></th>
+    <?php if (isset($argument) && $argument) { ?>
         <th class="cel_drag"></th>
+    <?php } ?>
     </tr>
 </table>
 <?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>

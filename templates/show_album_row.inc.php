@@ -25,7 +25,7 @@
 <td class="cel_directplay">
     <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id,'play', T_('Play album'),'play_album_' . $album->id); ?>
 <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-    <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id . '&append=true','add', T_('Add'),'addplay_album_' . $album->id); ?>
+    <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id . '&append=true','play_add', T_('Add'),'addplay_album_' . $album->id); ?>
 <?php } ?>
 </td>
 <?php } ?>

@@ -48,7 +48,7 @@ switch ($_REQUEST['action']) {
         $browse->set_filter('album', $album->id);
         $browse->set_sort('track', 'ASC');
         $browse->get_objects();
-        $browse->show_objects();
+        $browse->show_objects(null, true);  // true argument is set to show the reorder column
         $browse->store();
     break;
 } // switch on the action
