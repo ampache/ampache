@@ -869,6 +869,22 @@ class Query
 
             $sql .= $this->sql_filter($key, $value);
         }
+        
+        // Add catalog enabled filter
+        switch ($this->get_type())
+        {
+            case "video":
+            case "song":
+                $dis = Catalog::get_enable_filter($this->get_type(), '`' . $this->get_type() . '`.`id`');
+                break;
+                
+            case "tag":
+                $dis = Catalog::get_enable_filter($this->get_type(), '`' . $this->get_type() . '`.`object_id`');
+                break;
+        }
+        if (!empty($dis)) {
+            $sql .= $dis . " AND ";
+        }
 
         $sql = rtrim($sql,'AND ') . ' ';
 

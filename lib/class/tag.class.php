@@ -422,7 +422,8 @@ class Tag extends database_object
         }
 
         $sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` " .
-            "WHERE `tag_map`.`tag_id` = ? AND `tag_map`.`object_type` = ? $limit_sql";
+            "WHERE `tag_map`.`tag_id` = ? AND `tag_map`.`object_type` = ? $limit_sql " .
+            "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
         $db_results = Dba::read($sql, array($tag_id, $type));
 
         $results = array();

@@ -237,6 +237,20 @@ abstract class Catalog extends database_object
 
         return $info;
     }
+    
+    public static function get_enable_filter($type, $id)
+    {
+        if ($type == "song" || $type == "album" || $type == "artist") {
+            if ($type == "song") $type = "id";
+            $sql = "(SELECT COUNT(`song_dis`.`id`) FROM `song` AS `song_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `song_dis`.`catalog` " .
+                "WHERE `song_dis`.`" . $type . "`=" . $id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
+        } else if ($type == "video") {
+            $sql = "(SELECT COUNT(`video_dis`.`id`) FROM `video` AS `video_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `video_dis`.`catalog` " .
+                "WHERE `video_dis`.`id`=" . $id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
+        }
+        
+        return $sql;
+    }
 
     /**
      * _create_filecache

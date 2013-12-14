@@ -172,7 +172,7 @@ class Stats
 
         /* Select Top objects counting by # of rows */
         $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count" .
-            " WHERE object_type = '" . $type ."' AND date >= '" . $date . "'" .
+            " WHERE object_type = '" . $type ."' AND date >= '" . $date . "' AND " . Catalog::get_enable_filter($type, '`object_id`') .
             " GROUP BY object_id ORDER BY `count` DESC ";
         return $sql;
     }
@@ -217,7 +217,7 @@ class Stats
         $type = self::validate_type($type);
 
         $sql = "SELECT DISTINCT(`object_id`) as `id`, MAX(`date`) FROM object_count" .
-            " WHERE `object_type` = '" . $type ."'" .
+            " WHERE `object_type` = '" . $type ."' AND " . Catalog::get_enable_filter($type, '`object_id`') .
             " GROUP BY `object_id` ORDER BY MAX(`date`) DESC, `id` ";
         return $sql;
     }
@@ -323,8 +323,10 @@ class Stats
         $type = self::validate_type($type);
 
         $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `song` ";
+        $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+                "WHERE `catalog`.`enabled` = '1' ";
         if ($catalog > 0) {
-            $sql .= "WHERE `catalog` = '" . scrub_in($catalog) ."' ";
+            $sql .= "AND `catalog` = '" . scrub_in($catalog) ."' ";
         }
         $sql .= "GROUP BY `$type` ORDER BY `real_atime` DESC ";
         return $sql;

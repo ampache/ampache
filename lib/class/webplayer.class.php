@@ -148,7 +148,7 @@ class WebPlayer
                 else
                     $kmember = $member;
 
-                $js[$kmember] = addslashes($item->$member);
+                $js[$kmember] = $item->$member;
             }
             $url = $item->url;
 

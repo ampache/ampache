@@ -825,6 +825,9 @@ class Search extends playlist_object
                 break;
             } // switch on ruletype
         } // foreach rule
+        
+        $join['song'] = true;
+        $join['catalog'] = true;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
@@ -841,6 +844,11 @@ class Search extends playlist_object
         }
         if ($join['song']) {
             $table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";
+            
+            if ($join['catalog']) {
+                $table['catalog'] = "LEFT JOIN `catalog` ON `catalog`.`id`=`song`.`catalog`";
+                $where_sql .= " AND `catalog`.`enabled` = '1'";
+            }
         }
         if ($join['rating']) {
             $userid = intval($GLOBALS['user']->id);
@@ -900,6 +908,9 @@ class Search extends playlist_object
             } // switch on ruletype
         } // foreach rule
 
+        $join['song'] = true;
+        $join['catalog'] = true;
+        
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         foreach ($join['tag'] as $key => $value) {
@@ -912,6 +923,15 @@ class Search extends playlist_object
                 "AND `tag`.`name` $value  GROUP BY `object_id`" .
                 ") AS realtag_$key " .
                 "ON `artist`.`id`=`realtag_$key`.`object_id`";
+        }
+        
+        if ($join['song']) {
+            $table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";
+            
+            if ($join['catalog']) {
+                $table['catalog'] = "LEFT JOIN `catalog` ON `catalog`.`id`=`song`.`catalog`";
+                $where_sql .= " AND `catalog`.`enabled` = '1'";
+            }
         }
 
         $table_sql = implode(' ', $table);
@@ -1032,6 +1052,8 @@ class Search extends playlist_object
                 break;
             } // switch on type
         } // foreach over rules
+        
+        $join['catalog'] = true;
 
         $where_sql = implode(" $sql_logic_operator ", $where) . $group;
 
@@ -1066,6 +1088,11 @@ class Search extends playlist_object
         if ($join['playlist_data']) {
             $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `song`.`id`=`playlist_data`.`object_id` AND `playlist_data`.`object_type`='song'";
         }
+        
+        if ($join['catalog']) {
+            $table['catalog'] = "LEFT JOIN `catalog` ON `catalog`.`id`=`song`.`catalog`";
+            $where_sql .= " AND `catalog`.`enabled` = '1'";
+        }
 
         $table_sql = implode(' ', $table);
 
@@ -1089,6 +1116,8 @@ class Search extends playlist_object
         $sql_logic_operator = $this->logic_operator;
 
         $where = array();
+        $table = array();
+        $join = array();
 
         foreach ($this->rules as $rule) {
             $type = $this->name_to_basetype($rule[0]);
@@ -1109,12 +1138,24 @@ class Search extends playlist_object
             } // switch on ruletype
         } // foreach rule
 
+        $join['catalog'] = true;
+        
         $where_sql = implode(" $sql_logic_operator ", $where);
+        
+        if ($join['catalog']) {
+            $table['catalog'] = "LEFT JOIN `catalog` ON `catalog`.`id`=`video`.`catalog`";
+            $where_sql .= " AND `catalog`.`enabled` = '1'";
+        }
+        
+        $table_sql = implode(' ', $table);
 
         return array(
             'base' => 'SELECT DISTINCT(`video`.`id`) FROM `video`',
+            'join' => $join,
             'where' => $where,
-            'where_sql' => $where_sql
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => $table_sql
         );
     }
 
