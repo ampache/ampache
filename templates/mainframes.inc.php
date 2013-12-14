@@ -57,7 +57,7 @@ if (isset($_GET['target_link'])) {
 }
 ?>"></iframe>
     </div>
-    <iframe id="frame_footer" class="frame_footer_hide" src=""></iframe>
+    <iframe id="frame_footer" class="frame_footer_hide" src="" webkitAllowFullScreen="true" mozallowfullscreen="true" allowFullScreen="true"></iframe>
 </div>
 </body>
 </html>

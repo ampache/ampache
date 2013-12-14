@@ -25,6 +25,9 @@ $web_path = AmpConfig::get('web_path');
 <?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
+        <?php if (AmpConfig::get('directplay')) { ++$thcount; ?>
+        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+        <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
         <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'),'sort_video_title'); ?></th>
         <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'),'sort_video_codec'); ?></th>

@@ -73,6 +73,12 @@ switch ($_REQUEST['action']) {
             'object_id' => scrub_in($_REQUEST['song_id'])
         );
     break;
+    case 'single_video':
+        $media_ids[] = array(
+            'object_type' => 'video',
+            'object_id' => scrub_in($_REQUEST['video_id'])
+        );
+    break;
     case 'artist':
         $artist = new Artist($_REQUEST['artist_id']);
         $songs = $artist->get_songs();

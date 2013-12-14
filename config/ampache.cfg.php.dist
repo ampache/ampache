@@ -122,7 +122,7 @@ catalog_file_pattern = "mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|s
 ; You can specify any file extension you want in here seperating them with
 ; a | but ampache may not be able to parse them
 ; DEAFULT: avi|mpg|flv|m4v
-catalog_video_pattern = "avi|mpg|flv|m4v"
+catalog_video_pattern = "avi|mpg|flv|m4v|webm"
 
 ; Prefix Pattern
 ; This defines which prefix Ampache will ignore when importing tags from

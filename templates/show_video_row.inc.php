@@ -20,6 +20,14 @@
  *
  */
 ?>
+<?php if (AmpConfig::get('directplay')) { ?>
+<td class="cel_directplay">
+    <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id,'play', T_('Play video'),'play_video_' . $video->id); ?>
+<?php if (Stream_Playlist::check_autoplay_append()) { ?>
+    <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id . '&append=true','play_add', T_('Add'),'addplay_video_' . $video->id); ?>
+<?php } ?>
+</td>
+<?php } ?>
 <td class="cel_add">
     <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id,'add', T_('Add'),'add_video_' . $video->id); ?>
 </td>

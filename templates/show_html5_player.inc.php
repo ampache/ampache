@@ -54,6 +54,7 @@ var jplaylist = null;
             swfPath: "<?php echo AmpConfig::get('web_path'); ?>/modules/jplayer/",
             audioFullScreen: true,
             smoothPlayBar: true,
+            keyEnabled: true,
             solution: "<?php
 $solutions = array();
 if (AmpConfig::get('webplayer_html5')) {
@@ -66,10 +67,27 @@ echo implode(',', $solutions);
 ?>",
             nativeSupport:true,
             oggSupport: false,
+            supplied: "<?php echo implode(", ", WebPlayer::get_supplied_types($playlist)); ?>",
             volume: jp_volume,
             size: {
 <?php
-if ($iframed) {
+if ($isVideo) {
+    if ($iframed) {
+?>
+                width: "142px",
+                height: "80px",
+<?php
+} else {
+?>
+                width: "192px",
+                height: "108px",
+<?php
+}
+?>
+                cssClass: "jp-video-360p"
+<?php
+} else {
+    if ($iframed) {
 ?>
                 width: "80px",
                 height: "80px",
@@ -79,6 +97,7 @@ if ($iframed) {
                 width: "200px",
                 height: "auto",
 <?php
+    }
 }
 ?>
             }
@@ -92,22 +111,24 @@ if ($iframed) {
         $.each(playlist, function (index, obj) {
             if (index == current) {
 <?php
-if ($iframed) {
-    echo "var titleobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + albumids[index] + '\');\">' + obj.title + '</a>';";
-    echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + artistids[index] + '\');\">' + obj.artist + '</a>';";
-    echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + songids[index] + '\');\">" . T_('Show Lyrics') . "</a>';";
-} else {
-    echo "var titleobj = obj.title;";
-    echo "var artistobj = obj.artist;";
-}
+if (!$isVideo) {
+    if ($iframed) {
+        echo "var titleobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + albumids[index] + '\');\">' + obj.title + '</a>';";
+        echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + artistids[index] + '\');\">' + obj.artist + '</a>';";
+        echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + songids[index] + '\');\">" . T_('Show Lyrics') . "</a>';";
+    } else {
+        echo "var titleobj = obj.title;";
+        echo "var artistobj = obj.artist;";
+    }
 ?>
                 $('.playing_title').html(titleobj);
                 $('.playing_artist').html(artistobj);
 <?php
-if ($iframed && AmpConfig::get('show_lyrics')) {
+    if ($iframed && AmpConfig::get('show_lyrics')) {
 ?>
                 $('.playing_lyrics').html(lyricsobj);
 <?php
+    }
 }
 if (AmpConfig::get('song_page_title')) {
     if ($iframed) {
@@ -121,6 +142,19 @@ if (AmpConfig::get('song_page_title')) {
             }
         });
     });
+   
+<?php
+if ($isVideo) {
+?>
+    $("a.jp-full-screen").on('click', function() {
+        $(".jp-playlist").css("visibility", "hidden");
+    });
+    $("a.jp-restore-screen").on('click', function() {
+        $(".jp-playlist").css("visibility", "visible");
+    });
+<?php
+}
+?>
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
         $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
@@ -140,44 +174,98 @@ if ($iframed) {
 <?php
 }
 ?>
+<?php
+if (!$isVideo) {
+    $playerClass = "jp-audio";
+?>
 <div class="playing_info">
     <div class="playing_artist"></div>
     <div class="playing_title"></div>
     <div class="playing_lyrics"></div>
 </div>
+<?php
+} else {
+    $playerClass = "jp-video jp-video-270p";
+} ?>
 <div class="jp-area">
-  <div id="jquery_jplayer_1" class="jp-jplayer"></div>
-  <div id="jp_container_1" class="jp-audio">
+  <div id="jp_container_1" class="<?php echo $playerClass; ?>">
     <div class="jp-type-playlist">
-      <div class="jp-gui jp-interface">
-        <ul class="jp-controls">
-          <li><a href="javascript:;" class="jp-previous" tabindex="1">previous</a></li>
-          <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
-          <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
-          <li><a href="javascript:;" class="jp-next" tabindex="1">next</a></li>
-          <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
-          <li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
-          <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
-          <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
-        </ul>
-        <div class="jp-progress">
-          <div class="jp-seek-bar">
-            <div class="jp-play-bar"></div>
-          </div>
+      <div id="jquery_jplayer_1" class="jp-jplayer"></div>
+      <div class="jp-gui">
+<?php
+if ($isVideo) {
+?>
+        <div class="jp-video-play">
+            <a href="javascript:;" class="jp-video-play-icon" tabindex="1">play</a>
         </div>
-        <div id="jquery_jplayer_1_volume_bar" class="jp-volume-bar">
-          <div id="jquery_jplayer_1_volume_bar_value" class="jp-volume-bar-value"></div>
+<?php } ?>
+        <div class="jp-interface">
+<?php
+if ($isVideo) {
+?>
+            <div class="jp-progress">
+                <div class="jp-seek-bar">
+                    <div class="jp-play-bar"></div>
+                </div>
+            </div>
+            <div class="jp-current-time"></div>
+            <div class="jp-duration"></div>
+            <div class="jp-title"></div>
+            <div class="jp-controls-holder">
+                <ul class="jp-controls">
+                    <li><a href="javascript:;" class="jp-previous" tabindex="1">previous</a></li>
+                    <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+                    <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+                    <li><a href="javascript:;" class="jp-next" tabindex="1">next</a></li>
+                    <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
+                    <li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
+                    <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
+                    <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
+                </ul>
+                <div class="jp-volume-bar">
+                    <div class="jp-volume-bar-value"></div>
+                </div>
+
+                <ul class="jp-toggles">
+                    <li><a href="javascript:;" class="jp-full-screen" tabindex="1" title="full screen">full screen</a></li>
+                    <li><a href="javascript:;" class="jp-restore-screen" tabindex="1" title="restore screen">restore screen</a></li>
+                    <li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="shuffle">shuffle</a></li>
+                    <li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="shuffle off">shuffle off</a></li>
+                    <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
+                    <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
+                </ul>
+            </div>
+<?php } else { ?>        
+            <ul class="jp-controls">
+              <li><a href="javascript:;" class="jp-previous" tabindex="1">previous</a></li>
+              <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+              <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+              <li><a href="javascript:;" class="jp-next" tabindex="1">next</a></li>
+              <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
+              <li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
+              <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
+              <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
+            </ul>
+            <div class="jp-progress">
+              <div class="jp-seek-bar">
+                <div class="jp-play-bar"></div>
+              </div>
+            </div>
+            <div id="jquery_jplayer_1_volume_bar" class="jp-volume-bar">
+              <div id="jquery_jplayer_1_volume_bar_value" class="jp-volume-bar-value"></div>
+            </div>
+            <div class="jp-current-time"></div>
+            <div class="jp-duration"></div>
+            <ul class="jp-toggles">        
+                <li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="shuffle">shuffle</a></li>
+                <li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="shuffle off">shuffle off</a></li>
+                <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
+                <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
+            </ul>
+<?php } ?>            
         </div>
-        <div class="jp-current-time"></div>
-        <div class="jp-duration"></div>
-        <ul class="jp-toggles">
-            <li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="shuffle">shuffle</a></li>
-            <li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="shuffle off">shuffle off</a></li>
-            <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
-            <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
-        </ul>
       </div>
-      <div class="jp-playlist">
+      <div class="jp-playlist" style="position: absolute;">
           <ul>
               <li></li>
           </ul>
