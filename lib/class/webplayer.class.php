@@ -34,7 +34,7 @@ class WebPlayer
 
         return (count($playlist->urls) == 1 && count($radios) > 0 && AmpConfig::get('webplayer_flash'));
     }
-    
+
     public static function is_playlist_video($playlist)
     {
         return (count($playlist->urls) > 0 && $playlist->urls[0]->type == "video");
@@ -61,11 +61,11 @@ class WebPlayer
         return array($matches['browser'][$i] => $matches['version'][$i]);
 
     }
-    
-    protected static function get_types($item) {
 
+    protected static function get_types($item)
+    {
         $types = array('real' => 'mp3', 'player' => '');
-    
+
         $browsers = array_keys(self::browser_info());
         if (count($browsers) > 0 ) {
             $browser = $browsers[0];
@@ -75,12 +75,12 @@ class WebPlayer
         } else {
             $types['real'] = "ogg";
         }
-        
+
         $urlinfo = Stream_URL::parse($item->url);
         if ($urlinfo['id'] && $urlinfo['type'] == 'song') {
             $song = new Song($urlinfo['id']);
             $ftype = $song->type;
-            
+
             $transcode = false;
             $transcode_cfg = AmpConfig::get('transcode');
             // Check transcode is required
@@ -103,7 +103,7 @@ class WebPlayer
 
                 }
             }
-            
+
             if (!$transcode) {
                 $types['real'] = $ftype;
             }
@@ -111,19 +111,19 @@ class WebPlayer
         } else if ($urlinfo['id'] && $urlinfo['type'] == 'video') {
             $video = new Video($urlinfo['id']);
             $types['real'] = pathinfo($video->file, PATHINFO_EXTENSION);
-            
+
             if ($types['real'] == "ogg") $types['player'] = "ogv";
             else if ($types['real'] == "webm") $types['player'] = "webmv";
         } else {
             $ext = pathinfo($url, PATHINFO_EXTENSION);
             if (!empty($ext)) $types['player'] = $ext;
         }
-        
+
         if (empty($types['player'])) $types['player'] = $types['real'];
-        
+
         return $types;
     }
-    
+
     public static function get_supplied_types($playlist)
     {
         $jptypes = array();
@@ -133,7 +133,7 @@ class WebPlayer
                 $jptypes[] = $types['player'];
             }
         }
-        
+
         return $jptypes;
     }
 
@@ -166,11 +166,11 @@ class WebPlayer
                 }
                 //$url .= "&content_length=required";
             }
-            
+
             $js['filetype'] = $types['player'];
             $js['url'] = $url;
             $js['poster'] = $item->image_url . (!$iframed ? '&thumb=4' : '');
-            
+
             $addjs .= $callback . "(" . json_encode($js) . ");";
         }
 

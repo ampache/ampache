@@ -142,7 +142,7 @@ if (AmpConfig::get('song_page_title')) {
             }
         });
     });
-   
+
 <?php
 if ($isVideo) {
 ?>
@@ -235,7 +235,7 @@ if ($isVideo) {
                     <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
                 </ul>
             </div>
-<?php } else { ?>        
+<?php } else { ?>
             <ul class="jp-controls">
               <li><a href="javascript:;" class="jp-previous" tabindex="1">previous</a></li>
               <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
@@ -256,13 +256,13 @@ if ($isVideo) {
             </div>
             <div class="jp-current-time"></div>
             <div class="jp-duration"></div>
-            <ul class="jp-toggles">        
+            <ul class="jp-toggles">
                 <li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="shuffle">shuffle</a></li>
                 <li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="shuffle off">shuffle off</a></li>
                 <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
                 <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
             </ul>
-<?php } ?>            
+<?php } ?>
         </div>
       </div>
       <div class="jp-playlist" style="position: absolute;">

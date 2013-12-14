@@ -825,7 +825,7 @@ class Search extends playlist_object
                 break;
             } // switch on ruletype
         } // foreach rule
-        
+
         $join['song'] = true;
         $join['catalog'] = true;
 
@@ -844,7 +844,7 @@ class Search extends playlist_object
         }
         if ($join['song']) {
             $table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";
-            
+
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` ON `catalog`.`id`=`song`.`catalog`";
                 $where_sql .= " AND `catalog`.`enabled` = '1'";
@@ -910,7 +910,7 @@ class Search extends playlist_object
 
         $join['song'] = true;
         $join['catalog'] = true;
-        
+
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         foreach ($join['tag'] as $key => $value) {
@@ -924,10 +924,10 @@ class Search extends playlist_object
                 ") AS realtag_$key " .
                 "ON `artist`.`id`=`realtag_$key`.`object_id`";
         }
-        
+
         if ($join['song']) {
             $table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";
-            
+
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` ON `catalog`.`id`=`song`.`catalog`";
                 $where_sql .= " AND `catalog`.`enabled` = '1'";
@@ -1052,7 +1052,7 @@ class Search extends playlist_object
                 break;
             } // switch on type
         } // foreach over rules
-        
+
         $join['catalog'] = true;
 
         $where_sql = implode(" $sql_logic_operator ", $where) . $group;
@@ -1088,7 +1088,7 @@ class Search extends playlist_object
         if ($join['playlist_data']) {
             $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `song`.`id`=`playlist_data`.`object_id` AND `playlist_data`.`object_type`='song'";
         }
-        
+
         if ($join['catalog']) {
             $table['catalog'] = "LEFT JOIN `catalog` ON `catalog`.`id`=`song`.`catalog`";
             $where_sql .= " AND `catalog`.`enabled` = '1'";
@@ -1139,14 +1139,14 @@ class Search extends playlist_object
         } // foreach rule
 
         $join['catalog'] = true;
-        
+
         $where_sql = implode(" $sql_logic_operator ", $where);
-        
+
         if ($join['catalog']) {
             $table['catalog'] = "LEFT JOIN `catalog` ON `catalog`.`id`=`video`.`catalog`";
             $where_sql .= " AND `catalog`.`enabled` = '1'";
         }
-        
+
         $table_sql = implode(' ', $table);
 
         return array(
