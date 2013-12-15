@@ -108,7 +108,12 @@ switch ($_REQUEST['action']) {
     break;
     case 'playlist':
         $playlist = new Playlist($_REQUEST['playlist_id']);
-        $media_ids = $playlist->get_songs($_REQUEST['song']);
+        $songs = $playlist->get_songs($_REQUEST['song']);
+        foreach ($songs as $song) {
+            $media_ids[] = array(
+                'object_type' => 'song',
+                'object_id' => $song);
+        }
     break;
     case 'smartplaylist':
         $playlist = new Search('song', $_REQUEST['playlist_id']);
