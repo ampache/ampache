@@ -72,7 +72,7 @@ function forceIframe()
     // Using the following workaround to set global variable available from any javascript script.
     var jsAjaxUrl = "<?php echo AmpConfig::get('ajax_url') ?>";
     var jsWebPath = "<?php echo AmpConfig::get('web_path') ?>";
-    var jsPrefix = "<?php echo AmpConfig::get('prefix') ?>";
+    var jsPrefix = "<?php echo addslashes(AmpConfig::get('prefix')) ?>";
     var jsAjaxServer = "<?php echo AmpConfig::get('ajax_server') ?>";
     var jsSaveTitle = "<?php echo T_('Save') ?>";
     var jsCancelTitle = "<?php echo T_('Cancel') ?>";
