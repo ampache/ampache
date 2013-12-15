@@ -108,12 +108,14 @@ class WebPlayer
                 $types['real'] = $ftype;
             }
             if ($types['real'] == "flac" || $types['real'] == "ogg") $types['player'] = "oga";
+            else if ($types['real'] == "mp4") $types['player'] = "m4a";
         } else if ($urlinfo['id'] && $urlinfo['type'] == 'video') {
             $video = new Video($urlinfo['id']);
             $types['real'] = pathinfo($video->file, PATHINFO_EXTENSION);
 
             if ($types['real'] == "ogg") $types['player'] = "ogv";
             else if ($types['real'] == "webm") $types['player'] = "webmv";
+            else if ($types['real'] == "mp4") $types['player'] = "m4v";
         } else {
             $ext = pathinfo($url, PATHINFO_EXTENSION);
             if (!empty($ext)) $types['player'] = $ext;
