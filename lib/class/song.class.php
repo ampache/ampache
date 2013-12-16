@@ -1015,7 +1015,16 @@ class Song extends database_object implements media
         $sql = "SELECT `object_id`, `user`, `object_type`, `date`, `agent` " .
             "FROM `object_count` WHERE `object_type`='song' AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
         if ($user_id) {
+            // If user is not empty, we're looking directly to user personal info (admin view)
             $sql .= "AND `user`='$user_id' ";
+        }
+        else if (!Access::check('interface','100')) {
+            // If user identifier is empty, we need to retrieve only users which have allowed view of personnal info
+            $personal_info_id = Preference::id_from_name('allow_personal_info');
+            if ($personal_info_id) {
+                $current_user = $GLOBALS['user']->id;
+                $sql .= "AND `user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user') ";
+            }
         }
         $sql .= "ORDER BY `date` DESC ";
         $db_results = Dba::read($sql);

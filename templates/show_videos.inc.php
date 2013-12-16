@@ -21,8 +21,9 @@
  */
 
 $web_path = AmpConfig::get('web_path');
+require AmpConfig::get('prefix') . '/templates/list_header.inc.php';
+$thcount = 7;
 ?>
-<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
         <?php if (AmpConfig::get('directplay')) { ++$thcount; ?>
@@ -48,10 +49,13 @@ $web_path = AmpConfig::get('web_path');
     <?php } //end foreach  ?>
     <?php if (!count($object_ids)) { ?>
     <tr class="<?php echo UI::flip_class(); ?>">
-        <td colspan="7"><span class="nodata"><?php echo T_('No video found'); ?></span></td>
+        <td colspan="<?php echo $thcount ?>"><span class="nodata"><?php echo T_('No video found'); ?></span></td>
     </tr>
     <?php } ?>
     <tr class="th-bottom">
+        <?php if (AmpConfig::get('directplay')) { ?>
+        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
+        <?php } ?>
         <th class="cel_add"><?php echo T_('Add'); ?></th>
         <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'),'sort_video_title'); ?></th>
         <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'),'sort_video_codec'); ?></th>

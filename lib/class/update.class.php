@@ -325,6 +325,9 @@ class Update
 
         $update_string = '- Added agent to `object_count` table.<br />';
         $version[] = array('version' => '360026','description' => $update_string);
+        
+        $update_string = '- Add option to allow/disallow to show personnal information to other users (now playing and recently played).<br />';
+        $version[] = array('version' => '360027','description' => $update_string);
 
         return $version;
     }
@@ -1610,7 +1613,7 @@ class Update
     /**
      * update_360018
      *
-     * This inserts the Album default sort preference...
+     * Add Album default sort preference...
      */
     public static function update_360018()
     {
@@ -1804,6 +1807,25 @@ class Update
     {
         $sql = "ALTER TABLE `object_count` ADD `agent` VARCHAR(255) NULL AFTER `user`";
         Dba::write($sql);
+
+        return true;
+    }
+    
+    /**
+     * update_360027
+     *
+     * This inserts the Album default sort preference...
+     */
+    public static function update_360027()
+    {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('allow_personal_info','1','Allow to show my personal info to other users (now playing, recently played)',25,'boolean','interface')";
+        Dba::write($sql);
+
+        $id = Dba::insert_id();
+
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        Dba::write($sql, array($id));
 
         return true;
     }
