@@ -23,6 +23,9 @@
 <?php if (AmpConfig::get('directplay')) { ?>
 <td class="cel_directplay">
     <?php echo Ajax::button('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id,'play', T_('Play playlist'),'play_playlist_' . $playlist->id); ?>
+    <?php if (Stream_Playlist::check_autoplay_append()) { ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id . '&append=true','play_add', T_('Play add playlist'),'addplay_playlist_' . $playlist->id); ?>
+    <?php } ?>
 </td>
 <?php } ?>
 <td class="cel_add">

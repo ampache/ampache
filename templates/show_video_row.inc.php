@@ -24,7 +24,7 @@
 <td class="cel_directplay">
     <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id,'play', T_('Play video'),'play_video_' . $video->id); ?>
 <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-    <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id . '&append=true','play_add', T_('Add'),'addplay_video_' . $video->id); ?>
+    <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id . '&append=true','play_add', T_('Play add video'),'addplay_video_' . $video->id); ?>
 <?php } ?>
 </td>
 <?php } ?>

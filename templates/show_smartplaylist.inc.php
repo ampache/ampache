@@ -25,40 +25,36 @@ ob_start();
 require AmpConfig::get('prefix') . '/templates/show_smartplaylist_title.inc.php';
 $title = ob_get_contents();
 ob_end_clean();
-UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
-        '</div>' , 'box box_smartplaylist');
+UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>' , 'box box_smartplaylist');
 ?>
 <div id="information_actions">
-<ul>
+    <ul>
         <?php if (Access::check_function('batch_download')) { ?>
-    <li>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
-        <?php echo T_('Batch Download'); ?>
-    </li>
+        <li>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
+            <?php echo T_('Batch Download'); ?>
+        </li>
+            <?php } ?>
+        <li>
+            <?php echo Ajax::button('?action=basket&type=smartplaylist&id=' . $playlist->id,'add', T_('Add All'),'play_playlist'); ?>
+            <?php echo T_('Add All'); ?>
+        </li>
+        <?php if ($playlist->has_access()) { ?>
+        <li>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
+                <?php echo UI::get_icon('delete'); ?>
+            </a>
+            <?php echo T_('Delete'); ?>
+        </li>
         <?php } ?>
-    <li>
-        <?php echo Ajax::button('?action=basket&type=smartplaylist&id=' . $playlist->id,'add', T_('Add All'),'play_playlist'); ?>
-        <?php echo T_('Add All'); ?>
-    </li>
-    <?php if ($playlist->has_access()) { ?>
-    <li>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
-            <?php echo UI::get_icon('delete'); ?>
-        </a>
-        <?php echo T_('Delete'); ?>
-    </li>
-    <?php } ?>
-</ul>
+    </ul>
 </div>
 
 <form id="editplaylist" name="editplaylist" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=update_playlist&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
-
-<?php require AmpConfig::get('prefix') . '/templates/show_rules.inc.php'; ?>
-
-<div class="formValidation">
-    <input class="button" type="submit" value="<?php echo T_('Save Changes'); ?>" />
-</div>
-
+    <?php require AmpConfig::get('prefix') . '/templates/show_rules.inc.php'; ?>
+    <div class="formValidation">
+        <input class="button" type="submit" value="<?php echo T_('Save Changes'); ?>" />
+    </div>
 </form>
 
 <?php UI::show_box_bottom(); ?>

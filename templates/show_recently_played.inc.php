@@ -78,7 +78,7 @@ $thcount = 7;
         <td class="cel_directplay">
             <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play song'),'play_song_' . $song->id); ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true','play_add', T_('Add'),'addplay_song_' . $song->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true','play_add', T_('Play add song'),'addplay_song_' . $song->id); ?>
             <?php } ?>
         </td>
     <?php } ?>
