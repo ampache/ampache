@@ -21,8 +21,6 @@
  *
  */
 
- require_once AmpConfig::get('prefix') . '/modules/plugins/helper.php';
-
 /**
  * Plex Class
  *

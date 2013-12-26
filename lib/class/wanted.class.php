@@ -131,11 +131,19 @@ class Wanted extends database_object
         Dba::write($sql, $params);
     }
 
-    public static function accept($mbid)
+    public function accept()
     {
         if ($GLOBALS['user']->has_access('75')) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
-            Dba::write($sql, array( $mbid ));
+            Dba::write($sql, array( $this->mbid ));
+            $this->accepted = 1;
+            
+            foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->load()) {
+                    $plugin->_plugin->process_wanted($this);
+                }
+            }
         }
     }
 

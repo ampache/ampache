@@ -118,9 +118,9 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('wanted') && isset($_REQUEST['mbid'])) {
             $mbid = $_REQUEST['mbid'];
 
-            Wanted::accept($mbid);
-            ob_start();
             $walbum = new Wanted(Wanted::get_wanted($mbid));
+            $walbum->accept();
+            ob_start();
             $walbum->show_action_buttons();
             $results['wanted_action_' . $mbid] = ob_get_clean();
         }

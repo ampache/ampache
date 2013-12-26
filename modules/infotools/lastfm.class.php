@@ -97,7 +97,7 @@ class LastFMSearch {
         }
 
 		debug_event("lastfm", "Start get from url", "5");
-		$request = Request::get($url, array(), $options);
+		$request = Requests::get($url, array(), $options);
 		$contents = $request->body;
 
 		if ($contents == 'Artist not found') { 

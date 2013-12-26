@@ -84,8 +84,8 @@ class AmpacheMusicBrainz {
 
         $results = array();
 
-        if (count($track->artist-credit) > 0) {
-            $artist = $track->artist-credit[0];
+        if (count($track->{'artist-credit'}) > 0) {
+            $artist = $track->{'artist-credit'}[0];
             $results['mb_artistid'] = $artist->id;
             $results['artist'] = $artist->name;
             $results['title'] = $track->title;
