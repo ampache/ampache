@@ -150,7 +150,7 @@ class Query
                 'starts_with',
                 'exact_match',
                 'alpha_match'
-            )
+            ),
         );
 
         if (Access::check('interface','50')) {
@@ -215,7 +215,14 @@ class Query
                 'username',
                 'last_seen',
                 'create_date'
-            )
+            ),
+            'wanted' => array(
+                'user',
+                'accepted',
+                'artist',
+                'name',
+                'year'
+            ),
         );
     }
 
@@ -537,6 +544,7 @@ class Query
             case 'shoutbox':
             case 'live_stream':
             case 'democratic':
+            case 'wanted':
                 // Set it
                 $this->_state['type'] = $type;
                 $this->set_base_sql(true, $custom_base);
@@ -816,6 +824,10 @@ class Query
                     $this->set_join('left', 'tag_map', '`tag_map`.`tag_id`', '`tag`.`id`', 1);
                     $sql = "SELECT %%SELECT%% FROM `tag` ";
                 break;
+                case 'wanted':
+                    $this->set_select("DISTINCT(`wanted`.`id`)");
+                    $sql = "SELECT %%SELECT%% FROM `wanted` ";
+                    break;
                 case 'playlist_song':
                 case 'song':
                 default:
@@ -1424,6 +1436,25 @@ class Query
                     break;
                     case 'codec':
                         $sql = "`video`.`video_codec`";
+                    break;
+                } // end switch
+            break;
+            case 'wanted':
+                switch ($field) {
+                    case 'name':
+                        $sql = "`wanted`.`name`";
+                    break;
+                    case 'artist':
+                        $sql = "`wanted`.`artist`";
+                    break;
+                    case 'year':
+                        $sql = "`wanted`.`year`";
+                    break;
+                    case 'user':
+                        $sql = "`wanted`.`user`";
+                    break;
+                    case 'accepted':
+                        $sql = "`wanted`.`accepted`";
                     break;
                 } // end switch on field
             break;

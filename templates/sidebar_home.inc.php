@@ -79,6 +79,9 @@
 <?php if (AmpConfig::get('userflags')) { ?>
       <li id="sb_home_info_UserFlag"><a href="<?php echo $web_path; ?>/stats.php?action=userflag"><?php echo T_('My Flags'); ?></a></li>
 <?php } ?>
+<?php if (AmpConfig::get('wanted')) { ?>
+      <li id="sb_home_info_Wanted"><a href="<?php echo $web_path; ?>/stats.php?action=wanted"><?php echo T_('Wanted List'); ?></a></li>
+<?php } ?>
       <li id="sb_home_info_Statistics"><a href="<?php echo $web_path; ?>/stats.php?action=show"><?php echo T_('Statistics'); ?></a></li>
     </ul>
   </li>

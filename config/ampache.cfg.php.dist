@@ -350,6 +350,22 @@ art_order = "db,tags,folder,musicbrainz,lastfm,google"
 ; recommendations.
 ;lastfm_api_key = ""
 
+; Wanted
+; Set this to true to enable display missing albums and the
+; possibility for users to mark it as wanted.
+; DEFAULT: false
+;wanted = "false"
+
+; Wanted types
+; Set the allowed types of wanted releases (album,compilation,single,ep,live,remix,promotion,official)
+; DEFAULT: album,official
+wanted_types = "album,official"
+
+; Wanted Auto Accept
+; Mark wanted requests as accepted by default (no content manager agreement required)
+; DEFAULT: false
+;wanted_auto_accept = "false"
+
 ; Amazon base urls
 ; An array of Amazon sites to search.
 ; NOTE: This will search each of these sites in turn so don't expect it

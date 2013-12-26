@@ -328,6 +328,9 @@ class Update
         
         $update_string = '- Add option to allow/disallow to show personnal information to other users (now playing and recently played).<br />';
         $version[] = array('version' => '360027','description' => $update_string);
+        
+        $update_string = '- Add new table to store wanted releases.<br />';
+        $version[] = array('version' => '360028','description' => $update_string);
 
         return $version;
     }
@@ -1828,5 +1831,26 @@ class Update
         Dba::write($sql, array($id));
 
         return true;
+    }
+    
+    /**
+     * update_360028
+     *
+     * New table to store wanted releases
+     */
+    public static function update_360028()
+    {
+        $sql = "CREATE TABLE `wanted` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`user` int(11) NOT NULL," .
+            "`artist` int(11) NOT NULL," .
+            "`mbid` varchar(36) CHARACTER SET utf8 NULL," .
+            "`name` varchar(255) CHARACTER SET utf8 NOT NULL," .
+            "`year` int(4) NULL," .
+            "`date` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "`accepted` tinyint(1) NOT NULL DEFAULT '0'," .
+            "PRIMARY KEY (`id`)," .
+            "UNIQUE KEY `unique_wanted` (`user`, `artist`,`mbid`))";
+        return Dba::write($sql);
     }
 }

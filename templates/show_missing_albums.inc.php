@@ -20,6 +20,20 @@
  *
  */
 ?>
-<?php UI::show_box_top(T_('User Flags')); ?>
-<?php require_once AmpConfig::get('prefix') . '/templates/show_stats_userflag.inc.php'; ?>
+<table class="tabledata" cellpadding="0" cellspacing="0">
+    <tr class="th-top">
+        <th class="cel_album"><?php echo T_('Album'); ?></th>
+        <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+        <th class="cel_year"><?php echo T_('Year'); ?></th>
+        <th class="cel_user"><?php echo T_('User'); ?></th>
+        <th class="cel_action"><?php echo T_('Actions'); ?></th>
+    </tr>
+    <?php
+    foreach ($walbums as $walbum) {
+    ?>
+    <tr id="walbum_<?php echo $walbum->mbid; ?>" class="<?php echo UI::flip_class(); ?>">
+        <?php require AmpConfig::get('prefix') . '/templates/show_wanted_album_row.inc.php'; ?>
+    </tr>
+    <?php } ?>
+</table>
 <?php UI::show_box_bottom(); ?>

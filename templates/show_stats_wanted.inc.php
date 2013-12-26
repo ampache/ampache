@@ -19,7 +19,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-?>
-<?php UI::show_box_top(T_('User Flags')); ?>
-<?php require_once AmpConfig::get('prefix') . '/templates/show_stats_userflag.inc.php'; ?>
-<?php UI::show_box_bottom(); ?>
+
+$object_ids = Wanted::get_wanted_list();
+$browse = new Browse();
+$browse->set_type('wanted');
+$browse->set_static_content(true);
+$browse->save_objects($object_ids);
+$browse->show_objects($object_ids);
+$browse->store();

@@ -200,6 +200,12 @@ class Browse extends Query
                 UI::show_box_top(T_('Democratic Playlist'),$class);
                 require_once AmpConfig::get('prefix') . '/templates/show_democratic_playlist.inc.php';
                 UI::show_box_bottom();
+                break;
+            case 'wanted':
+                UI::show_box_top(T_('Wanted Albums'),$class);
+                require_once AmpConfig::get('prefix') . '/templates/show_wanted_albums.inc.php';
+                UI::show_box_bottom();
+                break;
             default:
                 // Rien a faire
             break;

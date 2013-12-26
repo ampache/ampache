@@ -119,6 +119,12 @@ if (AmpConfig::get('show_played_times')) {
     $browse->store();
 ?>
 <?php
+if (AmpConfig::get('wanted')) {
+    echo Ajax::observe('window','load', Ajax::action('?page=index&action=wanted_missing_albums&artist='.$artist->id, 'missing_albums'));
+?>
+    <div id="missing_albums"></div>
+<?php } ?>
+<?php
 if (AmpConfig::get('show_similar')) {
     echo Ajax::observe('window','load', Ajax::action('?page=index&action=similar_artist&artist='.$artist->id, 'similar_artist'));
 ?>

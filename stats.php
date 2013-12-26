@@ -59,6 +59,9 @@ switch ($_REQUEST['action']) {
     case 'recent':
         require_once AmpConfig::get('prefix') . '/templates/show_recent.inc.php';
     break;
+    case 'wanted':
+        require_once AmpConfig::get('prefix') . '/templates/show_wanted.inc.php';
+    break;
     case 'show':
     default:
         require_once AmpConfig::get('prefix') . '/templates/show_stats.inc.php';
