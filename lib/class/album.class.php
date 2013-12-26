@@ -262,7 +262,7 @@ class Album extends database_object
         if (!$db_results) {
             return null;
         }
-        
+
         // Remove from wanted album list if any request on it
         if (!empty($mbid)) {
             Wanted::delete_wanted($mbid);

@@ -137,7 +137,7 @@ class Wanted extends database_object
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
             Dba::write($sql, array( $this->mbid ));
             $this->accepted = 1;
-            
+
             foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->load()) {
