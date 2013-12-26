@@ -185,7 +185,7 @@ class Core
             return true;
         }
 
-        $handle = fopen($path, 'rb');
+        $handle = @fopen($path, 'rb');
         if ($handle === false) {
             return false;
         }

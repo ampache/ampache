@@ -44,6 +44,9 @@ AmpConfig::set('prefix', $prefix);
 // Register the autoloader
 spl_autoload_register(array('Core', 'autoload'), true, true);
 
+require_once $prefix . '/modules/requests/Requests.php';
+Requests::register_autoloader();
+
 // Check to see if this is http or https
 if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' )
     || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')) {
