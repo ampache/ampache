@@ -84,14 +84,18 @@
 <?php } ?>
 
 <?php if (AmpConfig::get('show_similar')) { ?>
-<div class="np_group similars" id="similar_artist">
-    <div class="np_cell cel_similar">
-        <label><?php echo T_('Similar Artists'); ?></label>
-        <p><?php echo T_('Loading...'); ?></p>
+<div class="np_group similars" id="similar_items">
+    <div class="np_group similars">
+        <div class="np_cell cel_similar">
+            <label><?php echo T_('Similar Artists'); ?></label>
+            <p><?php echo T_('Loading...'); ?></p>
+        </div>
     </div>
-    <div class="np_cell cel_similar">
-        <label><?php echo T_('Similar Songs'); ?></label>
-        <p><?php echo T_('Loading...'); ?></p>
+    <div class="np_group similars">
+        <div class="np_cell cel_similar">
+            <label><?php echo T_('Similar Songs'); ?></label>
+            <p><?php echo T_('Loading...'); ?></p>
+        </div>
     </div>
 </div>
 <script language="javascript" type="text/javascript">

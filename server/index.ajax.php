@@ -64,7 +64,7 @@ switch ($_REQUEST['action']) {
             $songs = Recommendation::get_songs_like($_REQUEST['media_id'], 3);
             ob_start();
             require_once AmpConfig::get('prefix') . '/templates/show_now_playing_similar.inc.php';
-            $results['similar_artist'] = ob_get_clean();
+            $results['similar_items'] = ob_get_clean();
         }
     break;
     case 'reloadnp':
