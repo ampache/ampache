@@ -20,6 +20,7 @@
  *
  */
 ?>
+<?php UI::show_box_top(T_('Missing Albums'), 'info-box'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
         <th class="cel_album"><?php echo T_('Album'); ?></th>
