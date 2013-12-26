@@ -64,7 +64,7 @@ switch ($_REQUEST['action']) {
             $songs = Recommendation::get_songs_like($_REQUEST['media_id'], 3);
             ob_start();
             require_once AmpConfig::get('prefix') . '/templates/show_now_playing_similar.inc.php';
-            $results['similar_artist'] = ob_get_clean();
+            $results['similar_items'] = ob_get_clean();
         }
     break;
     case 'wanted_missing_albums':
@@ -89,7 +89,7 @@ switch ($_REQUEST['action']) {
             $artist = $_REQUEST['artist'];
             $name = $_REQUEST['name'];
             $year = $_REQUEST['year'];
-            
+
             if (!Wanted::has_wanted($mbid)) {
                 Wanted::add_wanted($mbid, $artist, $name, $year);
                 ob_start();
@@ -104,7 +104,7 @@ switch ($_REQUEST['action']) {
     case 'remove_wanted':
         if (AmpConfig::get('wanted') && isset($_REQUEST['mbid'])) {
             $mbid = $_REQUEST['mbid'];
-            
+
             $walbum = new Wanted(Wanted::get_wanted($mbid));
             Wanted::delete_wanted($mbid);
             ob_start();
@@ -117,7 +117,7 @@ switch ($_REQUEST['action']) {
     case 'accept_wanted':
         if (AmpConfig::get('wanted') && isset($_REQUEST['mbid'])) {
             $mbid = $_REQUEST['mbid'];
-            
+
             Wanted::accept($mbid);
             ob_start();
             $walbum = new Wanted(Wanted::get_wanted($mbid));

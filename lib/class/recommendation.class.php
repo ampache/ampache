@@ -46,8 +46,7 @@ class Recommendation
         if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
             $proxy = array();
             $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
-            if(AmpConfig::get('proxy_user'))
-            {
+            if (AmpConfig::get('proxy_user')) {
                 $proxy[] = AmpConfig::get('proxy_user');
                 $proxy[] = AmpConfig::get('proxy_pass');
             }

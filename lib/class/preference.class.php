@@ -27,7 +27,7 @@
  * This handles all of the preference stuff for Ampache
  *
  */
-class Preference
+class Preference extends database_object
 {
     /**
      * __constructor
@@ -38,6 +38,32 @@ class Preference
         // Rien a faire
 
     } // __construct
+
+    /**
+     * get_by_user
+     * Return a preference for specific user identifier
+     */
+    public static function get_by_user($user_id, $pref_name)
+    {
+        //debug_event('preference.class.php', 'Getting preference {'.$pref_name.'} for user identifier {'.$user_id.'}...', '5');
+        $user_id = Dba::escape($user_id);
+        $pref_name = Dba::escape($pref_name);
+        $id = self::id_from_name($pref_name);
+
+        if (parent::is_cached('get_by_user', $user_id)) {
+            return parent::get_from_cache('get_by_user', $user_id);
+        }
+
+        $sql = "SELECT `value` FROM `user_preference` WHERE `preference`='$id' AND `user`='$user_id'";
+        $db_results = Dba::read($sql);
+        $data = Dba::fetch_assoc($db_results);
+
+        parent::add_to_cache('get_by_user', $user_id, $data['value']);
+
+        return $data['value'];
+
+    } // get_by_user
+
 
     /**
      * update
@@ -61,15 +87,17 @@ class Preference
 
         // Now do
         if (self::has_access($name)) {
-            $value         = Dba::escape($value);
-            $user_id    = Dba::escape($user_id);
-            $sql = "UPDATE `user_preference` SET `value`='$value' " .
-                "WHERE `preference`='$id'$user_check";
+            $value = Dba::escape($value);
+            $user_id = Dba::escape($user_id);
+            $sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$id'$user_check";
             $db_results = Dba::write($sql);
             Preference::clear_from_session();
+
+            parent::remove_from_cache('get_by_user', user_id);
+
             return true;
         } else {
-            debug_event('denied',$GLOBALS['user']->username . ' attempted to update ' . $name . ' but does not have sufficient permissions','3');
+            debug_event('denied', $GLOBALS['user']->username . ' attempted to update ' . $name . ' but does not have sufficient permissions','3');
         }
 
         return false;
@@ -88,8 +116,8 @@ class Preference
             $preference_id = $preference;
         }
 
-        $preference_id     = Dba::escape($preference_id);
-        $level        = Dba::escape($level);
+        $preference_id = Dba::escape($preference_id);
+        $level = Dba::escape($level);
 
         $sql = "UPDATE `preference` SET `level`='$level' WHERE `id`='$preference_id'";
         $db_results = Dba::write($sql);
@@ -104,11 +132,13 @@ class Preference
      */
     public static function update_all($preference_id,$value)
     {
-        $preference_id    = Dba::escape($preference_id);
-        $value        = Dba::escape($value);
+        $preference_id = Dba::escape($preference_id);
+        $value = Dba::escape($value);
 
         $sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$preference_id'";
         $db_results = Dba::write($sql);
+
+        parent::clear_cache();
 
         return true;
 
@@ -161,10 +191,15 @@ class Preference
     {
         $name = Dba::escape($name);
 
+        if (parent::is_cached('id_from_name', $name)) {
+            return parent::get_from_cache('id_from_name', $name);
+        }
+
         $sql = "SELECT `id` FROM `preference` WHERE `name`='$name'";
         $db_results = Dba::read($sql);
-
         $row = Dba::fetch_assoc($db_results);
+
+        parent::add_to_cache('id_from_name', $name, $row['id']);
 
         return $row['id'];
 
@@ -226,8 +261,8 @@ class Preference
             " INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
             " WHERE `user_preference`.`user`='$user_id' AND `preference`.`catagory` != 'internal' $user_limit " .
             " ORDER BY `preference`.`description`";
-        $db_results = Dba::read($sql);
 
+        $db_results = Dba::read($sql);
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -241,17 +276,17 @@ class Preference
     /**
      * insert
      * This inserts a new preference into the preference table
-     * it does NOT sync up the users, that should be done independtly
+     * it does NOT sync up the users, that should be done independently
      */
     public static function insert($name,$description,$default,$level,$type,$catagory)
     {
         // Clean em up
-        $name        = Dba::escape($name);
-        $description    = Dba::escape($description);
-        $default    = Dba::escape($default);
-        $level        = Dba::escape($level);
-        $type        = Dba::escape($type);
-        $catagory    = Dba::escape($catagory);
+        $name = Dba::escape($name);
+        $description = Dba::escape($description);
+        $default = Dba::escape($default);
+        $level = Dba::escape($level);
+        $type = Dba::escape($type);
+        $catagory = Dba::escape($catagory);
 
         $sql = "INSERT INTO `preference` (`name`,`description`,`value`,`level`,`type`,`catagory`) " .
             "VALUES ('$name','$description','$default','$level','$type','$catagory')";
@@ -332,8 +367,8 @@ class Preference
 
         foreach ($results as $key=>$data) {
             if (!is_array($data)) {
-            if (strcasecmp($data,"true") == "0") { $results[$key] = 1; }
-            if (strcasecmp($data,"false") == "0") { $results[$key] = 0; }
+                if (strcasecmp($data,"true") == "0") { $results[$key] = 1; }
+                if (strcasecmp($data,"false") == "0") { $results[$key] = 0; }
             }
         }
 

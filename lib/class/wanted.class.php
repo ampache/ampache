@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- 
+
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\Clients\RequestsMbClient;
 
@@ -31,7 +31,7 @@ class Wanted extends database_object
     public function __construct($id=0)
     {
         if (!$id) { return true; }
-        
+
         /* Get the information from the db */
         $info = $this->get_info($id);
 
@@ -39,7 +39,7 @@ class Wanted extends database_object
         foreach ($info as $key=>$value) {
             $this->$key = $value;
         }
-        
+
         return true;
     } //constructor
 
@@ -54,14 +54,13 @@ class Wanted extends database_object
             'release-groups'
         );
         $types = explode(',', AmpConfig::get('wanted_types'));
-        
+
         try {
             $martist = $mb->lookup('artist', $artist->mbid, $includes);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
-        
+
         $owngroups = array();
         $albums = $artist->get_albums();
         foreach ($albums as $id) {
@@ -75,16 +74,16 @@ class Wanted extends database_object
                 }
             }
         }
-        
+
         $results = array();
         foreach ($martist->{'release-groups'} as $group) {
             if (in_array(strtolower($group->{'primary-type'}), $types)) {
                 $add = true;
-                
+
                 for ($i = 0; $i < count($group->{'secondary-types'}) && $add; ++$i) {
                     $add = in_array(strtolower($group->{'secondary-types'}[$i]), $types);
                 }
-                
+
                 if ($add) {
                     if (!in_array($group->id, $owngroups)) {
                         $wantedid = self::get_wanted($group->id);
@@ -105,10 +104,10 @@ class Wanted extends database_object
                 }
             }
         }
-        
+
         return $results;
     } // get_missing_albums
-    
+
     public static function get_wanted($mbid)
     {
         $sql = "SELECT `id` FROM `wanted` WHERE `mbid` = ?";
@@ -116,10 +115,10 @@ class Wanted extends database_object
         if ($row = Dba::fetch_assoc($db_results)) {
             return $row['id'];
         }
-        
+
         return false;
     }
-    
+
     public static function delete_wanted($mbid)
     {
         $sql = "DELETE FROM `wanted` WHERE `mbid` = ?";
@@ -128,10 +127,10 @@ class Wanted extends database_object
             $sql .= " AND `user` = ?";
             $params[] = $GLOBALS['user']->id;
         }
-        
+
         Dba::write($sql, $params);
     }
-    
+
     public static function accept($mbid)
     {
         if ($GLOBALS['user']->has_access('75')) {
@@ -139,24 +138,24 @@ class Wanted extends database_object
             Dba::write($sql, array( $mbid ));
         }
     }
-    
+
     public static function has_wanted($mbid, $userid = 0)
     {
         if ($userid == 0) {
             $userid = $GLOBALS['user']->id;
         }
-        
+
         $sql = "SELECT `id` FROM `wanted` WHERE `mbid` = ? AND `user` = ?";
         $db_results = Dba::read($sql, array($mbid, $userid));
-        
+
         if ($row = Dba::fetch_assoc($db_results)) {
             return $row['id'];
         }
-        
+
         return false;
-        
+
     }
-    
+
     public static function add_wanted($mbid, $artist, $name, $year)
     {
         $sql = "INSERT INTO `wanted` (`user`, `artist`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -164,8 +163,9 @@ class Wanted extends database_object
         $params = array($GLOBALS['user']->id, $artist, $mbid, $name, $year, time(), ($accept ? '1' : '0'));
         Dba::write($sql, $params);
     }
-    
-    public function show_action_buttons() {
+
+    public function show_action_buttons()
+    {
         if ($this->id) {
             if (!$this->accepted) {
                 if ($GLOBALS['user']->has_access('75')) {
@@ -179,9 +179,9 @@ class Wanted extends database_object
             echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . '&artist=' . $this->artist . '&name=' . urlencode($this->name) . '&year=' . $this->year,'add_wanted', T_('Add to wanted list'),'wanted_add_' . $this->mbid);
         }
     }
-    
-    public function format() {
-        
+
+    public function format()
+    {
         if ($this->id) {
             $artist = new Artist($this->artist);
             $artist->format();
@@ -189,28 +189,30 @@ class Wanted extends database_object
             $user = new User($this->user);
             $this->f_user = $user->fullname;
         }
-        
+
     }
-    
-    public static function get_wanted_list_sql() {
+
+    public static function get_wanted_list_sql()
+    {
         $sql = "SELECT `id` FROM `wanted` ";
-        
+
         if (!$GLOBALS['user']->has_access('75')) {
             $sql .= "WHERE `user` = '" . scrub_in($GLOBALS['user']->id) . "'";
         }
-        
+
         return $sql;
     }
-    
-    public static function get_wanted_list() {
+
+    public static function get_wanted_list()
+    {
         $sql = self::get_wanted_list_sql();
         $db_results = Dba::read($sql);
         $results = array();
-        
+
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
-        
+
         return $results;
     }
 

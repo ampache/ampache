@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- 
+
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\Clients\RequestsMbClient;
 
@@ -471,8 +471,7 @@ class Art extends database_object
             if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
                 $proxy = array();
                 $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
-                if(AmpConfig::get('proxy_user'))
-                {
+                if (AmpConfig::get('proxy_user')) {
                     $proxy[] = AmpConfig::get('proxy_user');
                     $proxy[] = AmpConfig::get('proxy_pass');
                 }
@@ -720,8 +719,7 @@ class Art extends database_object
                 if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
                     $proxy = array();
                     $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
-                    if(AmpConfig::get('proxy_user'))
-                    {
+                    if (AmpConfig::get('proxy_user')) {
                         $proxy[] = AmpConfig::get('proxy_user');
                         $proxy[] = AmpConfig::get('proxy_pass');
                     }
