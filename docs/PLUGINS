@@ -29,5 +29,5 @@ should be implemented as a public method:
     save_rating(Rating $rating, int $new_value)
     save_songplay(Song $song)
     get_lyrics(Song $song)
-    process_wanted(string $mbid)
+    process_wanted(Wanted $wanted)
 
