@@ -228,7 +228,7 @@ class Stream
         
         if (!Access::check('interface','100')) {
             // We need to check only for users which have allowed view of personnal info
-            $personal_info_id = Preference::id_from_name('allow_personal_info');
+            $personal_info_id = Preference::id_from_name('allow_personal_info_now');
             if ($personal_info_id) {
                 $current_user = $GLOBALS['user']->id;
                 $sql .= "WHERE (`now_playing`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user')) ";

@@ -328,6 +328,11 @@ class Update
         
         $update_string = '- Add option to allow/disallow to show personnal information to other users (now playing and recently played).<br />';
         $version[] = array('version' => '360027','description' => $update_string);
+        
+        $update_string = '- Personnal information: allow/disallow to show in now playing.<br />'.
+                '- Personnal information: allow/disallow to show in recently played.<br />'.
+                '- Personnal information: allow/disallow to show time and/or agent in recently played.<br />';
+        $version[] = array('version' => '360028','description' => $update_string);
 
         return $version;
     }
@@ -1814,7 +1819,7 @@ class Update
     /**
      * update_360027
      *
-     * This inserts the Album default sort preference...
+     * Personal information: allow/disallow to show my personal information into now playing and recently played lists.
      */
     public static function update_360027()
     {
@@ -1829,4 +1834,44 @@ class Update
 
         return true;
     }
+    
+    /**
+     * update_360028
+     *
+     *  Personal information: allow/disallow to show in now playing.
+     *  Personal information: allow/disallow to show in recently played.
+     *  Personal information: allow/disallow to show time and/or agent in recently played.
+     */
+    public static function update_360028()
+    {
+        // Update previous update preference
+        $sql = "UPDATE `preference` SET `name`='allow_personal_info_now', `description`='Personal information visibility - Now playing' WHERE `name`='allow_personal_info'";
+        Dba::write($sql);
+        
+        // Insert new recently played preference
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('allow_personal_info_recent','1','Personal information visibility - Recently played',25,'boolean','interface')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        Dba::write($sql, array($id));
+        
+        // Insert streaming time preference
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('allow_personal_info_time','1','Personal information visibility - Recently played - Allow to show streaming date/time',25,'boolean','interface')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        Dba::write($sql, array($id));
+        
+        // Insert streaming agent preference
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('allow_personal_info_agent','1','Personal information visibility - Recently played - Allow to show streaming agent',25,'boolean','interface')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        Dba::write($sql, array($id));
+
+        return true;
+    }    
 }

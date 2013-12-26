@@ -40,37 +40,51 @@ $thcount = 7;
 <?php foreach ($data as $row) {
     $row_user = new User($row['user']);
     $song = new Song($row['object_id']);
-    $interval = intval(time() - $row['date']);
-    $agent = $row['agent'];
-
-    if ($interval < 60) {
-        $unit = 'seconds';
-    } else if ($interval < 3600) {
-        $interval = floor($interval / 60);
-        $unit = 'minutes';
-    } else if ($interval < 86400) {
-        $interval = floor($interval / 3600);
-        $unit = 'hours';
-    } else if ($interval < 604800) {
-        $interval = floor($interval / 86400);
-        $unit = 'days';
-    } else if ($interval < 2592000) {
-        $interval = floor($interval / 604800);
-        $unit = 'weeks';
-    } else if ($interval < 31556926) {
-        $interval = floor($interval / 2592000);
-        $unit = 'months';
-    } else if ($interval < 631138519) {
-        $interval = floor($interval / 31556926);
-        $unit = 'years';
-    } else {
-        $interval = floor($interval / 315569260);
-        $unit = 'decades';
+    
+    $agent = '';
+    $time_string = '-';
+    
+    $is_allowed = Access::check('interface', '100') || $GLOBALS['user']->id == $row_user->id;
+    if (!$is_allowed) {
+        $has_allowed_time = Preference::get_by_user($row_user->id, 'allow_personal_info_time'); 
+        $has_allowed_agent = Preference::get_by_user($row_user->id, 'allow_personal_info_agent');
     }
+    
+    if ($is_allowed || $has_allowed_agent) {
+        $agent = $row['agent'];
+    }
+    
+    if ($is_allowed || $has_allowed_time) {
+        $interval = intval(time() - $row['date']);
 
-    // I wonder how smart gettext is?
-    $time_string = sprintf(T_ngettext('%d ' . rtrim($unit, 's') . ' ago', '%d ' . $unit . ' ago', $interval), $interval);
+        if ($interval < 60) {
+            $unit = 'seconds';
+        } else if ($interval < 3600) {
+            $interval = floor($interval / 60);
+            $unit = 'minutes';
+        } else if ($interval < 86400) {
+            $interval = floor($interval / 3600);
+            $unit = 'hours';
+        } else if ($interval < 604800) {
+            $interval = floor($interval / 86400);
+            $unit = 'days';
+        } else if ($interval < 2592000) {
+            $interval = floor($interval / 604800);
+            $unit = 'weeks';
+        } else if ($interval < 31556926) {
+            $interval = floor($interval / 2592000);
+            $unit = 'months';
+        } else if ($interval < 631138519) {
+            $interval = floor($interval / 31556926);
+            $unit = 'years';
+        } else {
+            $interval = floor($interval / 315569260);
+            $unit = 'decades';
+        }
 
+        // I wonder how smart gettext is?
+        $time_string = sprintf(T_ngettext('%d ' . rtrim($unit, 's') . ' ago', '%d ' . $unit . ' ago', $interval), $interval);
+    }
     $song->format();
 ?>
     <tr class="<?php echo UI::flip_class(); ?>">
@@ -95,9 +109,9 @@ $thcount = 7;
         </td>
         <td class="cel_lastplayed"><?php echo $time_string; ?></td>
         <td class="cel_agent">
-            <?php if ($agent != '') { ?>
-                <?php echo UI::get_icon('info', $agent); ?>
-            <?php } ?>
+            <?php if (!empty($agent)) {
+                echo UI::get_icon('info', $agent);
+            } ?>
         </td>
     </tr>
 <?php } ?>
