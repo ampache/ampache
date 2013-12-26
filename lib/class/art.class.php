@@ -19,6 +19,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+ 
+use MusicBrainz\MusicBrainz;
+use MusicBrainz\Clients\RequestsMbClient;
 
 /**
  * Art Class
@@ -464,15 +467,19 @@ class Art extends database_object
 
         // Check to see if it's a URL
         if (isset($data['url'])) {
-            $snoopy = new Snoopy();
-                    if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
-                        $snoopy->proxy_user = AmpConfig::get('proxy_host');
-                        $snoopy->proxy_port = AmpConfig::get('proxy_port');
-                        $snoopy->proxy_user = AmpConfig::get('proxy_user');
-                        $snoopy->proxy_pass = AmpConfig::get('proxy_pass');
-                    }
-            $snoopy->fetch($data['url']);
-            return $snoopy->results;
+            $options = array();
+            if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
+                $proxy = array();
+                $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
+                if(AmpConfig::get('proxy_user'))
+                {
+                    $proxy[] = AmpConfig::get('proxy_user');
+                    $proxy[] = AmpConfig::get('proxy_pass');
+                }
+                $options['proxy'] = $proxy;
+            }
+            $request = Requests::get($data['url'], array(), $options);
+            return $request->body;
         }
 
         // Check to see if it's a FILE
@@ -684,15 +691,17 @@ class Art extends database_object
             return $images;
         }
 
-        $mbquery = new MusicBrainzQuery();
-        $includes = new mbReleaseIncludes();
+        $mb = new MusicBrainz(new RequestsMbClient());
+        $includes = array(
+            'url-rels'
+        );
         try {
-            $release = $mbquery->getReleaseByID($album->mbid, $includes->urlRelations());
+            $release = $mb->lookup('release', $album->mbid, $includes);
         } catch (Exception $e) {
             return $images;
         }
 
-        $asin = $release->getAsin();
+        $asin = $release->asin;
 
         if ($asin) {
             debug_event('mbz-gatherart', "Found ASIN: " . $asin, '5');
@@ -707,14 +716,19 @@ class Art extends database_object
                 // to avoid complicating things even further, we only look for large cover art
                 $url = 'http://' . $base_url . '/images/P/' . $asin . '.' . $server_num . '.LZZZZZZZ.jpg';
                 debug_event('mbz-gatherart', "Evaluating Amazon URL: " . $url, '5');
-                $snoopy = new Snoopy();
+                $options = array();
                 if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
-                    $snoopy->proxy_user = AmpConfig::get('proxy_host');
-                    $snoopy->proxy_port = AmpConfig::get('proxy_port');
-                    $snoopy->proxy_user = AmpConfig::get('proxy_user');
-                    $snoopy->proxy_pass = AmpConfig::get('proxy_pass');
+                    $proxy = array();
+                    $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
+                    if(AmpConfig::get('proxy_user'))
+                    {
+                        $proxy[] = AmpConfig::get('proxy_user');
+                        $proxy[] = AmpConfig::get('proxy_pass');
+                    }
+                    $options['proxy'] = $proxy;
                 }
-                if ($snoopy->fetch($url)) {
+                $request = Requests::get($url, array(), $options);
+                if ($request->status_code == 200) {
                     $num_found++;
                     debug_event('mbz-gatherart', "Amazon URL added: " . $url, '5');
                     $images[] = array(

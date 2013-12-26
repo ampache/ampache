@@ -73,9 +73,9 @@ class Ampachelyricwiki {
     public function get_lyrics($song) {
   
         $uri = 'http://lyrics.wikia.com/api.php?action=lyrics&artist=' . urlencode($song->f_artist) . '&song=' . urlencode($song->title) . '&fmt=xml&func=getSong';
-        $response = PluginHelper::wsGet($uri);
-        if ($response['status'] == 200) {
-            $xml = simplexml_load_string($response['body']);
+        $request = Requests::get($uri);
+        if ($request->status_code == 200) {
+            $xml = simplexml_load_string($request->body);
             if ($xml) {
                 if (!empty($xml->lyrics) && $xml->lyrics != "Not found") {
                     return array('text' => nl2br($xml->lyrics), 'url' => $xml->url);

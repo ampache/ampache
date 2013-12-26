@@ -595,9 +595,13 @@ class User extends database_object
         $this->set_preferences();
 
         foreach (Plugin::get_plugins('save_songplay') as $plugin_name) {
-            $plugin = new Plugin($plugin_name);
-            if ($plugin->load()) {
-                $plugin->_plugin->save_songplay($song_info);
+            try {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->load()) {
+                    $plugin->_plugin->save_songplay($song_info);
+                }
+            } catch (Exeption $e) {
+                debug_event('user.class.php', 'Stats plugin error: ' . $e->getMessage(), '1');
             }
         }
 

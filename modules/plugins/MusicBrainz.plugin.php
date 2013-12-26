@@ -70,11 +70,13 @@ class AmpacheMusicBrainz {
             return null;
         }
 
-        $mbquery = new MusicBrainzQuery();
-        $includes = new mbTrackIncludes();
-        $includes = $includes->artist()->releases();
+        $mb = new MusicBrainz(new RequestsMbClient());
+        $includes = array(
+            'artists',
+            'releases'
+        );
         try {
-            $track = $mbquery->getTrackById($mbid, $includes);
+            $track = $mb->lookup('recording', $mbid, $includes);
         }
         catch (Exception $e) {
             return null;
@@ -82,15 +84,16 @@ class AmpacheMusicBrainz {
 
         $results = array();
 
-        $results['mb_artistid'] = $track->getArtist()->getId();
-        $results['artist'] = $track->getArtist()->getName();
-        $results['title'] = $track->getTitle();
-        if ($track->getNumReleases() == 1) {
-            $release = $track->getReleases();
-            $release = $release[0];
-            $results['album'] = $release->getTitle();
+        if (count($track->artist-credit) > 0) {
+            $artist = $track->artist-credit[0];
+            $results['mb_artistid'] = $artist->id;
+            $results['artist'] = $artist->name;
+            $results['title'] = $track->title;
+            if (count($track->releases) == 1) {
+                $release = $track->releases[0];
+                $results['album'] = $release->title;
+            }
         }
-
         return $results;
     } // get_metadata
 

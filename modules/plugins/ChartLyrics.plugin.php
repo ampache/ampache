@@ -74,9 +74,9 @@ class Ampachechartlyrics {
   
         $base = 'http://api.chartlyrics.com/apiv1.asmx/';
         $uri = $base . 'SearchLyricDirect?artist=' . urlencode($song->f_artist) . '&song=' . urlencode($song->title);
-        $response = PluginHelper::wsGet($uri);
-        if ($response != false && $response['status'] == 200) {
-            $xml = simplexml_load_string($response['body']);
+        $request = Requests::get($uri);
+        if ($request->status_code == 200) {
+            $xml = simplexml_load_string($request->body);
             if ($xml) {
                 if (!empty($xml->Lyric)) {
                     return array('text' => nl2br($xml->Lyric), 'url' => $xml->LyricUrl);

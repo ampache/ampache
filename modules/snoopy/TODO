@@ -1,9 +1,0 @@
-* fetch other types of protocols such as ftp, nntp, gopher, etc.
-* post forms with http file upload (I didn't have this need,
-  but it should be fairly straightforward)
-* expand links, image tags, and form actions to fully
-  qualified URLs
-
-Bugs
-----
-* none known

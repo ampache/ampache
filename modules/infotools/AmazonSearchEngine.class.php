@@ -83,7 +83,7 @@ class AmazonSearch {
 	 * Set the class up to search through an http proxy.
 	 * The parameters are the proxy's hostname or IP address (a string)
 	 * port, username, and password. These are passed directly to the
-	 * Snoopy class when the search is done.
+	 * Requests class when the search is done.
 	 */
 	function setProxy($host='', $port='', $user='', $pass='') {
 		if($host) $this->_proxy_host = $host;
@@ -118,18 +118,21 @@ class AmazonSearch {
 		/* Create the Parser */
 		$this->create_parser();
 	
-		$snoopy = new Snoopy;
+		$options = array();
 		if($this->_proxy_host)
-			$snoopy->proxy_host = $this->_proxy_host;
-		if($this->_proxy_port)
-			$snoopy->proxy_port = $this->_proxy_port;
-		if($this->_proxy_user)
-			$snoopy->proxy_user = $this->_proxy_user;
-		if($this->_proxy_pass)
-			$snoopy->proxy_pass = $this->_proxy_pass;
+        {
+            $proxy = array();
+            $proxy[] = $this->_proxy_host . ( $this->_proxy_port ? ':' . $this->_proxy_port : '');
+            if($this->_proxy_user)
+            {
+                $proxy[] = $this->_proxy_user;
+                $proxy[] = $this->_proxy_pass;
+            }
+            $options['proxy'] = $proxy;
+        }
 
-		$snoopy->fetch($url);
-		$contents = $snoopy->results;
+		$request = Requests::get($url, array(), $options);
+		$contents = $request->body;
 	
 		if (!xml_parse($this->_parser, $contents)) {
 			debug_event('amazon-search-results','Error:' . sprintf('XML error: %s at line %d',xml_error_string(xml_get_error_code($this->_parser)),xml_get_current_line_number($this->_parser)),'1');

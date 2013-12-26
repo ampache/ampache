@@ -28,4 +28,5 @@ should be implemented as a public method:
         The passed array contains the best metadata we've got.
     save_rating(Rating $rating, int $new_value)
     save_songplay(Song $song)
+    get_lyrics(Song $song)
 

@@ -139,12 +139,12 @@ class Plex_Api
                 $url = $_REQUEST['url'];
 
                 if ($width && $height && $url) {
-                    $response = PluginHelper::wsGet($url);
-                    if ($response['status'] == 200) {
-                        $mime = $response['headers']['Content-Type'];
+                    $request = Requests::get($url);
+                    if ($request->status_code == 200) {
+                        $mime = $request->headers['content-type'];
                         self::setHeader($mime);
                         $art = new Art(0);
-                        $art->raw = $response['body'];
+                        $art->raw = $request->body;
                         $thumb = $art->generate_thumb($art->raw, array('width' => $width, 'height' => $height), $mime);
                         echo $thumb['thumb'];
                         exit();

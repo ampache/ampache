@@ -42,15 +42,19 @@ class Recommendation
         $url = $api_base . $method . '&api_key=' . $api_key . '&' . $query;
         debug_event('Recommendation', 'search url : ' . $url, 5);
 
-        $snoopy = new Snoopy();
+        $options = array();
         if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
-            $snoopy->proxy_user = AmpConfig::get('proxy_host');
-            $snoopy->proxy_port = AmpConfig::get('proxy_port');
-            $snoopy->proxy_user = AmpConfig::get('proxy_user');
-            $snoopy->proxy_pass = AmpConfig::get('proxy_pass');
+            $proxy = array();
+            $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
+            if(AmpConfig::get('proxy_user'))
+            {
+                $proxy[] = AmpConfig::get('proxy_user');
+                $proxy[] = AmpConfig::get('proxy_pass');
+            }
+            $options['proxy'] = $proxy;
         }
-        $snoopy->fetch($url);
-        $content = $snoopy->results;
+        $request = Requests::get($url, array(), $options);
+        $content = $request->body;
 
         return simplexml_load_string($content);
     } // get_lastfm_results
@@ -173,7 +177,8 @@ class Recommendation
                 if (! $local_only) {
                     $results[] = array(
                         'id' => null,
-                        'name' => $name
+                        'name' => $name,
+                        'mbid' => $mbid
                     );
                 }
             } else {
