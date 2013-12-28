@@ -218,7 +218,7 @@ class Wanted extends database_object
                             $song['session'] = session_id();
                             $song['album_mbid'] = $this->mbid;
                             if (AmpConfig::get('echonest_api_key')) {
-                                $echonest = new EchoNest_Client();
+                                $echonest = new EchoNest_Client(new EchoNest_HttpClient_Requests());
                                 $echonest->authenticate(AmpConfig::get('echonest_api_key'));
                                 $enSong = null;
                                 try {

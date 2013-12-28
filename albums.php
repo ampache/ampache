@@ -190,6 +190,7 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'show_missing':
+        set_time_limit(600);
         $mbid = $_REQUEST['mbid'];
         $artistid = $_REQUEST['artist'];
         $artist = new Artist($artistid);
