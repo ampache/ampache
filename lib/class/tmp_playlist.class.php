@@ -245,12 +245,9 @@ class Tmp_Playlist extends database_object
      */
     public function update_playlist($playlist_id)
     {
-        $playlist_id     = Dba::escape($playlist_id);
-        $id        = Dba::escape($this->id);
-
         $sql = "UPDATE `tmp_playlist` SET " .
-            "`base_playlist`='$playlist_id' WHERE `id`='$id'";
-        $db_results = Dba::write($sql);
+            "`base_playlist`= ? WHERE `id`= ?";
+        $db_results = Dba::write($sql, array($playlist_id, $id));
 
         return true;
 
@@ -263,12 +260,8 @@ class Tmp_Playlist extends database_object
      */
     public static function session_clean($sessid, $id)
     {
-        $sessid = Dba::escape($sessid);
-        $id    = Dba::escape($id);
-
-        $sql = "DELETE FROM `tmp_playlist` WHERE `session`='$sessid' " .
-            "AND `id` != '$id'";
-        $db_results = Dba::write($sql);
+        $sql = "DELETE FROM `tmp_playlist` WHERE `session`= ? AND `id` != ?";
+        $db_results = Dba::write($sql, array($sessid, $id));
 
         /* Remove associated tracks */
         self::prune_tracks();
@@ -329,14 +322,10 @@ class Tmp_Playlist extends database_object
      */
     public function add_object($object_id,$object_type)
     {
-        $object_id     = Dba::escape($object_id);
-        $playlist_id     = Dba::escape($this->id);
-        $object_type    = $object_type ? Dba::escape($object_type) : 'song';
-
         $sql = "INSERT INTO `tmp_playlist_data` " .
             "(`object_id`,`tmp_playlist`,`object_type`) " .
-            " VALUES ('$object_id','$playlist_id','$object_type')";
-        $db_results = Dba::write($sql);
+            " VALUES (?, ?, ?)";
+        $db_results = Dba::write($sql, array($object_id, $this->id, $object_type));
 
         return true;
 
@@ -362,11 +351,9 @@ class Tmp_Playlist extends database_object
      */
     public function delete_track($id)
     {
-        $id     = Dba::escape($id);
-
         /* delete the track its self */
-        $sql = "DELETE FROM `tmp_playlist_data` WHERE `id`='$id'";
-        $db_results = Dba::write($sql);
+        $sql = "DELETE FROM `tmp_playlist_data` WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($id));
 
         return true;
 

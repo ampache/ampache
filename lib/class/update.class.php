@@ -337,6 +337,9 @@ class Update
         $update_string = '- Add new table to store wanted releases.<br />';
         $version[] = array('version' => '360029','description' => $update_string);
 
+        $update_string = '- New table to store song previews.<br />';
+        $version[] = array('version' => '360030','description' => $update_string);
+
         return $version;
     }
 
@@ -1896,6 +1899,28 @@ class Update
             "`accepted` tinyint(1) NOT NULL DEFAULT '0'," .
             "PRIMARY KEY (`id`)," .
             "UNIQUE KEY `unique_wanted` (`user`, `artist`,`mbid`))";
+
+        return Dba::write($sql);
+    }
+
+    /**
+     * update_360030
+     *
+     * New table to store song previews
+     */
+    public static function update_360030()
+    {
+        $sql = "CREATE TABLE `song_preview` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`session` varchar(256) CHARACTER SET utf8 NOT NULL," .
+            "`artist` int(11) NOT NULL," .
+            "`title` varchar(255) CHARACTER SET utf8 NOT NULL," .
+            "`album_mbid` varchar(36) CHARACTER SET utf8 NULL," .
+            "`mbid` varchar(36) CHARACTER SET utf8 NULL," .
+            "`disk` int(11) NULL," .
+            "`track` int(11) NULL," .
+            "`file` varchar(255) CHARACTER SET utf8 NULL," .
+            "PRIMARY KEY (`id`))";
 
         return Dba::write($sql);
     }

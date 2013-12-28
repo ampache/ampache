@@ -135,6 +135,10 @@ class Stream_Playlist
                     }
                     $url['codec'] = $object->codec;
                 break;
+                case 'song_preview':
+                    $url['title'] = $object->title;
+                    $url['author'] = $object->f_artist_full;
+                break;
                 case 'random':
                     $url['title'] = 'Random URL';
                 break;

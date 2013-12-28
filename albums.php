@@ -189,9 +189,23 @@ switch ($_REQUEST['action']) {
             }
         }
     break;
+    case 'show_missing':
+        $mbid = $_REQUEST['mbid'];
+        $artistid = $_REQUEST['artist'];
+        $artist = new Artist($artistid);
+        $walbum = new Wanted(Wanted::get_wanted($mbid));
+
+        if (!$walbum->id) {
+            $walbum->mbid = $mbid;
+            $walbum->artist = $artistid;
+        }
+        $walbum->load_all();
+        $walbum->format();
+        require AmpConfig::get('prefix') . '/templates/show_missing_album.inc.php';
+    break;
     // Browse by Album
-    default:
     case 'show':
+    default:
         $album = new Album($_REQUEST['album']);
         $album->format();
         require AmpConfig::get('prefix') . '/templates/show_album.inc.php';

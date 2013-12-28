@@ -259,8 +259,19 @@ switch ($_REQUEST['action']) {
             case 'video':
                 $GLOBALS['user']->playlist->add_object($_REQUEST['id'],'video');
             break;
-            default:
+            case 'album_preview':
+                $songs = Song_preview::get_song_previews($_REQUEST['mbid']);
+                foreach ($songs as $song) {
+                    if (!empty($song->file)) {
+                        $GLOBALS['user']->playlist->add_object($song->id, 'song_preview');
+                    }
+                }
+            break;
+            case 'song_preview':
+                $GLOBALS['user']->playlist->add_object($_REQUEST['id'],'song_preview');
+            break;
             case 'song':
+            default:
                 $GLOBALS['user']->playlist->add_object($_REQUEST['id'],'song');
             break;
         } // end switch

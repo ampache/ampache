@@ -99,6 +99,9 @@ require_once $prefix . '/modules/musicbrainz/Clients/MbClient.php';
 require_once $prefix . '/modules/musicbrainz/Clients/RequestsMbClient.php';
 require_once $prefix . '/modules/ampacheapi/AmpacheApi.lib.php';
 
+require_once $prefix . '/modules/echonest/Autoloader.php';
+EchoNest_Autoloader::register();
+
 /* Temp Fixes */
 $results = Preference::fix_preferences($results);
 

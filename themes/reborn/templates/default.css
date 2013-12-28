@@ -1109,6 +1109,12 @@ div.box.box_rules {
     margin: 30px 0 30px 0;
 }
 
+#content .missing {
+    background-image: url('../images/missing.png');
+    background-repeat: no-repeat;
+    background-position: center; 
+}
+
 /***********************************************
     Content (now playing)                 
 ***********************************************/

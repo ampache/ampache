@@ -545,6 +545,7 @@ class Query
             case 'live_stream':
             case 'democratic':
             case 'wanted':
+            case 'song_preview':
                 // Set it
                 $this->_state['type'] = $type;
                 $this->set_base_sql(true, $custom_base);

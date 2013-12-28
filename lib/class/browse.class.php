@@ -206,6 +206,11 @@ class Browse extends Query
                 require_once AmpConfig::get('prefix') . '/templates/show_wanted_albums.inc.php';
                 UI::show_box_bottom();
                 break;
+            case 'song_preview':
+                UI::show_box_top(T_('Songs'),$class);
+                require_once AmpConfig::get('prefix') . '/templates/show_song_previews.inc.php';
+                UI::show_box_bottom();
+                break;
             default:
                 // Rien a faire
             break;

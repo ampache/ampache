@@ -96,6 +96,7 @@ class Wanted extends database_object
                             $wanted->name = $group->title;
                             $wanted->year = date("Y", strtotime($group->{'first-release-date'}));
                             $wanted->accepted = false;
+                            $wanted->f_name_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&amp;mbid=" . $group->id . "&amp;artist=" . $wanted->artist . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
                             $wanted->f_artist_link = $artist->f_name_link;
                             $wanted->f_user = $GLOBALS['user']->fullname;
                         }
@@ -188,11 +189,88 @@ class Wanted extends database_object
         }
     }
 
+    public function load_all()
+    {
+        $mb = new MusicBrainz(new RequestsMbClient());
+        $this->songs = array();
+
+        try {
+            $group = $mb->lookup('release-group', $this->mbid, array( 'releases' ));
+            // Set fresh data
+            $this->name = $group->title;
+            $this->year = date("Y", strtotime($group->{'first-release-date'}));
+
+            // Load from database if already cached
+            $this->songs = Song_preview::get_song_previews($this->mbid);
+
+            if (count($this->songs) == 0) {
+                // Use the first release as reference for track content
+                if (count($group->releases) > 0) {
+                    $release = $mb->lookup('release', $group->releases[0]->id, array( 'recordings' ));
+                    foreach ($release->media as $media) {
+                        foreach ($media->tracks as $track) {
+                            $song = array();
+                            $song['disk'] = $media->position;
+                            $song['track'] = $track->number;
+                            $song['title'] = $track->title;
+                            $song['mbid'] = $track->id;
+                            $song['artist'] = $this->artist;
+                            $song['session'] = session_id();
+                            $song['album_mbid'] = $this->mbid;
+                            if (AmpConfig::get('echonest_api_key')) {
+                                $echonest = new EchoNest_Client();
+                                $echonest->authenticate(AmpConfig::get('echonest_api_key'));
+                                $enSong = null;
+                                try {
+                                    $enProfile = $echonest->getTrackApi()->profile('musicbrainz:track:' . $track->id);
+                                    $enSong = $echonest->getSongApi()->profile($enProfile['song_id'], array( 'id:7digital-US', 'audio_summary', 'tracks'));
+                                } catch (Exception $e) {
+                                    debug_event('echonest', 'EchoNest track error on `' . $track->id . '` (' . $track->title . '): ' . $e->getMessage(), '1');
+                                }
+
+                                // Wans't able to get the song with MusicBrainz ID, try a search
+                                if ($enSong == null) {
+                                    $artist = new Artist($this->artist);
+                                    try {
+                                        $enSong = $echonest->getSongApi()->search(array(
+                                            'results' => '1',
+                                            'artist' => $artist->name,
+                                            'title' => $track->title,
+                                            'bucket' => array( 'id:7digital-US', 'audio_summary', 'tracks'),
+                                        ));
+
+
+                                    } catch (Exception $e) {
+                                        debug_event('echonest', 'EchoNest song search error: ' . $e->getMessage(), '1');
+                                    }
+                                }
+
+                                if ($enSong != null) {
+                                    $song['file'] = $enSong[0]['tracks'][0]['preview_url'];
+                                    debug_event('echonest', 'EchoNest `' . $track->title . '` preview: ' . $song['file'], '1');
+                                }
+                            }
+                            $this->songs[] = new Song_Preview(Song_preview::insert($song));
+                        }
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $this->songs = array();
+        }
+
+        foreach ($this->songs as $song) {
+            $song->f_album = $this->name;
+            $song->format();
+        }
+    }
+
     public function format()
     {
-        if ($this->id) {
+        if ($this->artist) {
             $artist = new Artist($this->artist);
             $artist->format();
+            $this->f_name_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&amp;mbid=" . $this->mbid . "&amp;artist=" . $this->artist . "\" title=\"" . $this->name . "\">" . $this->name . "</a>";
             $this->f_artist_link = $artist->f_name_link;
             $user = new User($this->user);
             $this->f_user = $user->fullname;

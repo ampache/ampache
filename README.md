@@ -79,6 +79,7 @@ Ampache includes some external modules that carry their own licensing.
 * [unofficial-google-music-api-php](http://code.google.com/p/unofficial-google-music-api-php/): GPL v3
 * [Muses Radio Player](http://www.musesradioplayer.com/): GPL v2
 * [Tag-it!] (http://aehlke.github.io/tag-it/): MIT
+* [PHP Echo Nest API] (https://github.com/bshaffer/php-echonest-api): MIT
 
 
 Translations

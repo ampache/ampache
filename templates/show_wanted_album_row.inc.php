@@ -21,7 +21,7 @@
  */
 ?>
 
-<td class="cel_album"><?php echo $walbum->name; ?></td>
+<td class="cel_album"><?php echo $walbum->f_name_link; ?></td>
 <td class="cel_artist"><?php echo $walbum->f_artist_link; ?></td>
 <td class="cel_year"><?php echo $walbum->year; ?></td>
 <td class="cel_user"><?php echo $walbum->f_user; ?></td>

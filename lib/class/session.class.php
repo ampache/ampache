@@ -124,6 +124,7 @@ class Session
         Query::gc();
         Tmp_Playlist::gc();
         Stream_Playlist::gc();
+        Song_Preview::gc();
 
         return true;
     }

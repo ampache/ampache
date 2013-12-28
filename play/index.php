@@ -179,30 +179,39 @@ if ($type == 'song') {
     /* Base Checks passed create the song object */
     $media = new Song($oid);
     $media->format();
+} else if ($type == 'song_preview') {
+    $media = new Song_Preview($oid);
+    $media->format();
 } else {
     $media = new Video($oid);
     $media->format();
 }
 
-// Build up the catalog for our current object
-$catalog = Catalog::create_from_id($media->catalog);
+if ($media->catalog) {
+    // Build up the catalog for our current object
+    $catalog = Catalog::create_from_id($media->catalog);
 
-/* If the song is disabled */
-if (!make_bool($media->enabled)) {
-    debug_event('Play',"Error: $media->file is currently disabled, song skipped",'5');
-    // Check to see if this is a democratic playlist, if so remove it completely
-    if ($demo_id) { $democratic->delete_from_oid($oid,'song'); }
-    exit;
-}
-
-// If we are running in Legalize mode, don't play songs already playing
-if (AmpConfig::get('lock_songs')) {
-    if (!Stream::check_lock_media($media->id,get_class($media))) {
+    /* If the song is disabled */
+    if (!make_bool($media->enabled)) {
+        debug_event('Play',"Error: $media->file is currently disabled, song skipped",'5');
+        // Check to see if this is a democratic playlist, if so remove it completely
+        if ($demo_id) { $democratic->delete_from_oid($oid,'song'); }
         exit;
     }
-}
 
-$media = $catalog->prepare_media($media);
+    // If we are running in Legalize mode, don't play songs already playing
+    if (AmpConfig::get('lock_songs')) {
+        if (!Stream::check_lock_media($media->id,get_class($media))) {
+            exit;
+        }
+    }
+
+    $media = $catalog->prepare_media($media);
+} else {
+    // No catalog, must be song preview or something like that => just redirect to file
+    header('Location: ' . $media->file);
+    $media = null;
+}
 if ($media == null) {
     // Handle democratic removal
     if ($demo_id) {

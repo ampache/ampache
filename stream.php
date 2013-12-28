@@ -158,6 +158,22 @@ switch ($_REQUEST['action']) {
             );
         }
     break;
+    case 'album_preview':
+        $songs = Song_preview::get_song_previews($_REQUEST['mbid']);
+        foreach ($songs as $song) {
+            if (!empty($song->file)) {
+                $media_ids[] = array(
+                    'object_type' => 'song_preview',
+                    'object_id' => $song->id);
+            }
+        }
+    break;
+    case 'song_preview':
+        $media_ids[] = array(
+            'object_type' => 'song_preview',
+            'object_id' => scrub_in($_REQUEST['id'])
+        );
+    break;
     default:
     break;
 } // end action switch
