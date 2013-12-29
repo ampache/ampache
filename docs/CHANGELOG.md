@@ -5,19 +5,19 @@ CHANGELOG
 ----------
 - Added 'Song Preview' feature on missing albums tracks, with EchoNest api
 - Added 'Missing Albums' / 'Wanted List' feature
-- Upgrade to MusicBrainz api v2
-- Replace Snoopy project with Requests project
+- Upgraded to MusicBrainz api v2
+- Replaced Snoopy project with Requests project
 - Added user-agent on recently played
-- Optionally show/hide recently played, time and user-agent per user
+- Added option to show/hide recently played, time and user-agent per user
 - Updated French language
-- Iframe or popup web player mode
-- Song/Video web player with jPlayer, radio player with Muse Radio Player
-- Added `add media` to the currently played playlist on web player
+- Added option for iframe or popup web player mode
+- Improved Song/Video web player with jPlayer, Radio player with Muse Radio Player
+- Added 'add media' to the currently played playlist on web player
 - Added dedicated 'Recently Played' page
 - Added enable/disable feature on catalogs
 - Fixed Config class conflict with PEAR
 - Improved recommended artists/songs loading using ajax
-- New modern `Reborn` theme
+- New modern 'Reborn' theme
 - Improved Subsonic api backend support (json, ...)
 - Added Plex api backend support
 - Added artist art/summary when using LastFM api
@@ -36,7 +36,7 @@ CHANGELOG
 - Improved Catalogs using plug-ins
 - Added browse paging to all information pages
 - Fixed LastFM scrobbling (reported by pateretou)
-- Fixed LDAP authentication with password containing `&` (reported by bruth2)
+- Fixed LDAP authentication with password containing '&' (reported by bruth2)
 - Added directories to zip archives
 - Improved project code style and added Travis builds
 - Added number of times an artist/album/song was played
