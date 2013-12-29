@@ -10,8 +10,8 @@
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 //                                                             //
-// This extension written by Allan Hansen <ahØartemis*dk>      //
-// Table name mod by Carlo Capocasa <calroØcarlocapocasa*com>  //
+// This extension written by Allan Hansen <ahÃ˜artemis*dk>      //
+// Table name mod by Carlo Capocasa <calroÃ˜carlocapocasa*com>  //
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 

@@ -20,7 +20,7 @@ class getid3_lib
 			if ($hex) {
 				$returnstring .= str_pad(dechex(ord($string{$i})), 2, '0', STR_PAD_LEFT);
 			} else {
-				$returnstring .= ' '.(preg_match("#[\x20-\x7E]#", $string{$i}) ? $string{$i} : '¤');
+				$returnstring .= ' '.(preg_match("#[\x20-\x7E]#", $string{$i}) ? $string{$i} : 'Â¤');
 			}
 			if ($spaces) {
 				$returnstring .= ' ';
@@ -382,7 +382,7 @@ class getid3_lib
 
 
 	public static function array_merge_clobber($array1, $array2) {
-		// written by kcØhireability*com
+		// written by kcÃ˜hireability*com
 		// taken from http://www.php.net/manual/en/function.array-merge-recursive.php
 		if (!is_array($array1) || !is_array($array2)) {
 			return false;
@@ -540,7 +540,7 @@ class getid3_lib
 	}
 
 
-	// Allan Hansen <ahØartemis*dk>
+	// Allan Hansen <ahÃ˜artemis*dk>
 	// self::md5_data() - returns md5sum for a file from startuing position to absolute end position
 	public static function hash_data($file, $offset, $end, $algorithm) {
 		static $tempdir = '';

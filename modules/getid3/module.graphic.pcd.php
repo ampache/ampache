@@ -61,9 +61,9 @@ class getid3_pcd extends getid3_handler
 			for ($y = 0; $y < $PCD_height; $y += 2) {
 				// The image-data of these subtypes start at the respective offsets of 02000h, 0b800h and 30000h.
 				// To decode the YcbYr to the more usual RGB-code, three lines of data have to be read, each
-				// consisting of ‘w’ bytes, where ‘w’ is the width of the image-subtype. The first ‘w’ bytes and
-				// the first half of the third ‘w’ bytes contain data for the first RGB-line, the second ‘w’ bytes
-				// and the second half of the third ‘w’ bytes contain data for a second RGB-line.
+				// consisting of Â‘wÂ’ bytes, where Â‘wÂ’ is the width of the image-subtype. The first Â‘wÂ’ bytes and
+				// the first half of the third Â‘wÂ’ bytes contain data for the first RGB-line, the second Â‘wÂ’ bytes
+				// and the second half of the third Â‘wÂ’ bytes contain data for a second RGB-line.
 
 				$PCD_data_Y1 = fread($this->getid3->fp, $PCD_width);
 				$PCD_data_Y2 = fread($this->getid3->fp, $PCD_width);

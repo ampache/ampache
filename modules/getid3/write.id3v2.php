@@ -1793,7 +1793,7 @@ class getid3_write_id3v2
 	}
 
 	public function is_hash($var) {
-		// written by dev-nullØchristophe*vg
+		// written by dev-nullÃ˜christophe*vg
 		// taken from http://www.php.net/manual/en/function.array-merge-recursive.php
 		if (is_array($var)) {
 			$keys = array_keys($var);
@@ -1808,7 +1808,7 @@ class getid3_write_id3v2
 	}
 
 	public function array_join_merge($arr1, $arr2) {
-		// written by dev-nullØchristophe*vg
+		// written by dev-nullÃ˜christophe*vg
 		// taken from http://www.php.net/manual/en/function.array-merge-recursive.php
 		if (is_array($arr1) && is_array($arr2)) {
 			// the same -> merge

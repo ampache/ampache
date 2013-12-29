@@ -188,8 +188,8 @@ class getid3_write_apetag
 		}
 
 		// 0: Item contains text information coded in UTF-8
-		// 1: Item contains binary information �)
-		// 2: Item is a locator of external stored information 같)
+		// 1: Item contains binary information 째)
+		// 2: Item is a locator of external stored information 째째)
 		// 3: reserved
 		$APEtagFlags[3] |= ($encodingid << 1);
 

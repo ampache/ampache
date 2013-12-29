@@ -667,7 +667,7 @@ class getid3_id3v2 extends getid3_handler
 
 			if (!empty($parsedFrame['framenameshort']) && !empty($parsedFrame['data'])) {
 				// ID3v2.3 specs say that TPE1 (and others) can contain multiple artist values separated with /
-				// This of course breaks when an aritst name contains slash character, e.g. "AC/DC"
+				// This of course breaks when an artist name contains slash character, e.g. "AC/DC"
 				// MP3tag (maybe others) implement alternative system where multiple artists are null-separated, which makes more sense
 				// getID3 will split null-separated artists into multiple artists and leave slash-separated ones to the user
 				switch ($parsedFrame['encoding']) {
@@ -1327,7 +1327,7 @@ class getid3_id3v2 extends getid3_handler
 				$frame_imagetype = substr($parsedFrame['data'], $frame_offset, 3);
 				if (strtolower($frame_imagetype) == 'ima') {
 					// complete hack for mp3Rage (www.chaoticsoftware.com) that puts ID3v2.3-formatted
-					// MIME type instead of 3-char ID3v2.2-format image type  (thanks xbhoffÿpacbell*net)
+					// MIME type instead of 3-char ID3v2.2-format image type  (thanks xbhoff√òpacbell*net)
 					$frame_terminatorpos = strpos($parsedFrame['data'], "\x00", $frame_offset);
 					$frame_mimetype = substr($parsedFrame['data'], $frame_offset, $frame_terminatorpos - $frame_offset);
 					if (ord($frame_mimetype) === 0) {
@@ -2338,7 +2338,7 @@ class getid3_id3v2 extends getid3_handler
 			SOS	Somalia
 			SPL	Seborga
 			SRG	Suriname
-			STD	S„o Tome and Principe
+			STD	S√£o Tome and Principe
 			SVC	El Salvador
 			SYP	Syria
 			SZL	Swaziland
@@ -2362,13 +2362,13 @@ class getid3_id3v2 extends getid3_handler
 			VND	Viet Nam
 			VUV	Vanuatu
 			WST	Samoa
-			XAF	CommunautÈ FinanciËre Africaine
+			XAF	Communaut√© Financi√®re Africaine
 			XAG	Silver
 			XAU	Gold
 			XCD	East Caribbean
 			XDR	International Monetary Fund
 			XPD	Palladium
-			XPF	Comptoirs FranÁais du Pacifique
+			XPF	Comptoirs Fran√ßais du Pacifique
 			XPT	Platinum
 			YER	Yemen
 			YUM	Yugoslavia
@@ -2812,7 +2812,7 @@ class getid3_id3v2 extends getid3_handler
 			vai	Vai
 			ven	Venda
 			vie	Vietnamese
-			vol	Volap¸k
+			vol	Volap√ºk
 			vot	Votic
 			wak	Wakashan Languages
 			wal	Walamo

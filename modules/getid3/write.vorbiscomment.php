@@ -110,7 +110,7 @@ class getid3_write_vorbiscomment
 		// 0x7A inclusive (a-z).
 
 		// replace invalid chars with a space, return uppercase text
-		// Thanks Chris Bolt <chris-getid3Øbolt*cx> for improving this function
+		// Thanks Chris Bolt <chris-getid3Ã˜bolt*cx> for improving this function
 		// note: *reg_replace() replaces nulls with empty string (not space)
 		return strtoupper(preg_replace('#[^ -<>-}]#', ' ', str_replace("\x00", ' ', $originalcommentname)));
 

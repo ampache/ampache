@@ -52,14 +52,20 @@ class getid3_midi extends getid3_handler
 
 		for ($i = 0; $i < $thisfile_midi_raw['tracks']; $i++) {
 			while ((strlen($MIDIdata) - $offset) < 8) {
-				$MIDIdata .= fread($this->getid3->fp, $this->getid3->fread_buffer_size());
+				if ($buffer = fread($this->getid3->fp, $this->getid3->fread_buffer_size())) {
+					$MIDIdata .= $buffer;
+				} else {
+					$info['warning'][] = 'only processed '.($i - 1).' of '.$thisfile_midi_raw['tracks'].' tracks';
+					$info['error'][] = 'Unabled to read more file data at '.ftell($this->getid3->fp).' (trying to seek to : '.$offset.'), was expecting at least 8 more bytes';
+					return false;
+				}
 			}
 			$trackID = substr($MIDIdata, $offset, 4);
 			$offset += 4;
 			if ($trackID == GETID3_MIDI_MAGIC_MTRK) {
 				$tracksize = getid3_lib::BigEndian2Int(substr($MIDIdata, $offset, 4));
 				$offset += 4;
-				// $thisfile_midi['tracks'][$i]['size'] = $tracksize;
+				//$thisfile_midi['tracks'][$i]['size'] = $tracksize;
 				$trackdataarray[$i] = substr($MIDIdata, $offset, $tracksize);
 				$offset += $tracksize;
 			} else {

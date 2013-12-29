@@ -20,7 +20,7 @@ class getid3_monkey extends getid3_handler
 	public function Analyze() {
 		$info = &$this->getid3->info;
 
-		// based loosely on code from TMonkey by Jurgen Faul <jfaulØgmx*de>
+		// based loosely on code from TMonkey by Jurgen Faul <jfaulÃ˜gmx*de>
 		// http://jfaul.de/atl  or  http://j-faul.virtualave.net/atl/atl.html
 
 		$info['fileformat']            = 'mac';

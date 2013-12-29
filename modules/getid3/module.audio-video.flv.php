@@ -4,7 +4,7 @@
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
 //                                                             //
-//  FLV module by Seth Kaufman <sethÿwhirl-i-gig*com>          //
+//  FLV module by Seth Kaufman <seth√òwhirl-i-gig*com>          //
 //                                                             //
 //  * version 0.1 (26 June 2005)                               //
 //                                                             //
@@ -14,7 +14,7 @@
 //                                                             //
 //  * version 0.2 (22 February 2006)                           //
 //  Support for On2 VP6 codec and meta information             //
-//    by Steve Webster <steve.websterÿfeaturecreep*com>        //
+//    by Steve Webster <steve.webster√òfeaturecreep*com>        //
 //                                                             //
 //  * version 0.3 (15 June 2006)                               //
 //  Modified to not read entire file into memory               //
@@ -23,17 +23,17 @@
 //  * version 0.4 (07 December 2007)                           //
 //  Bugfixes for incorrectly parsed FLV dimensions             //
 //    and incorrect parsing of onMetaTag                       //
-//    by Evgeny Moysevich <moysevichÿgmail*com>                //
+//    by Evgeny Moysevich <moysevich√ògmail*com>                //
 //                                                             //
 //  * version 0.5 (21 May 2009)                                //
 //  Fixed parsing of audio tags and added additional codec     //
 //    details. The duration is now read from onMetaTag (if     //
 //    exists), rather than parsing whole file                  //
-//    by Nigel Barnes <ngbarnesÿhotmail*com>                   //
+//    by Nigel Barnes <ngbarnes√òhotmail*com>                   //
 //                                                             //
 //  * version 0.6 (24 May 2009)                                //
 //  Better parsing of files with h264 video                    //
-//    by Evgeny Moysevich <moysevichÿgmail*com>                //
+//    by Evgeny Moysevich <moysevich√ògmail*com>                //
 //                                                             //
 //  * version 0.6.1 (30 May 2011)                              //
 //    prevent infinite loops in expGolombUe()                  //
@@ -143,7 +143,7 @@ class getid3_flv extends getid3_handler
 						$FLVvideoHeader = fread($this->getid3->fp, 11);
 
 						if ($info['flv']['video']['videoCodec'] == GETID3_FLV_VIDEO_H264) {
-							// this code block contributed by: moysevichÿgmail*com
+							// this code block contributed by: moysevich√ògmail*com
 
 							$AVCPacketType = getid3_lib::BigEndian2Int(substr($FLVvideoHeader, 0, 1));
 							if ($AVCPacketType == H264_AVC_SEQUENCE_HEADER) {
@@ -169,7 +169,7 @@ class getid3_flv extends getid3_handler
 									}
 								}
 							}
-							// end: moysevichÿgmail*com
+							// end: moysevich√ògmail*com
 
 						} elseif ($info['flv']['video']['videoCodec'] == GETID3_FLV_VIDEO_H263) {
 

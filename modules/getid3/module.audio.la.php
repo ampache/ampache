@@ -112,7 +112,7 @@ class getid3_la extends getid3_handler
 				$info['la']['original_crc']         = getid3_lib::LittleEndian2Int(substr($rawdata, $offset, 4));
 				$offset += 4;
 
-				// mikeÿbevin*de
+				// mike√òbevin*de
 				// Basically, the blocksize/seekevery are 61440/19 in La0.4 and 73728/16
 				// in earlier versions. A seekpoint is added every blocksize * seekevery
 				// samples, so 4 * int(totalSamples / (blockSize * seekEvery)) should
