@@ -84,7 +84,7 @@ class scrobbler
 
         $username    = rawurlencode($this->username);
         $timestamp    = time();
-        $auth_token    = rawurlencode(md5(md5($this->password) . $timestamp));
+        $auth_token    = rawurlencode(md5($this->password . $timestamp));
 
         $get_string = "GET /?hs=true&p=1.2&c=apa&v=0.1&u=$username&t=$timestamp&a=$auth_token HTTP/1.1\r\n";
 

@@ -44,6 +44,7 @@ CHANGELOG
 - Improved project code style and added Travis builds
 - Added number of times an artist/album/song was played
 - Fixed installation process without database creation
+- Removed administrative flags
 
 3.6-FUTURE
 ----------
