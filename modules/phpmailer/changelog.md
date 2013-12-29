@@ -1,5 +1,45 @@
 # ChangeLog
 
+## Version 5.2.7 (September 12th 2013)
+* Add Ukranian translation from @Krezalis
+* Support for do_verp
+* Fix bug in CRAM-MD5 AUTH
+* Propagate Debugoutput option to SMTP class (@Reblutus)
+* Determine MIME type of attachments automatically
+* Add cross-platform, multibyte-safe pathinfo replacement (with tests) and use it
+* Add a new 'html' Debugoutput type
+* Clean up SMTP debug output, remove embedded HTML
+* Some small changes in header formatting to improve IETF msglint test results
+* Update test_script to use some recently changed features, rename to code_generator
+* Generated code actually works!
+* Update SyntaxHighlighter
+* Major overhaul and cleanup of example code
+* New PHPMailer graphic
+* msgHTML now uses RFC2392-compliant content ids
+* Add line break normalization function and use it in msgHTML
+* Don't set unnecessary reply-to addresses
+* Make fakesendmail.sh a bit cleaner and safer
+* Set a content-transfer-encoding on multiparts (fixes msglint error)
+* Fix cid generation in msgHTML (Thanks to @digitalthought)
+* Fix handling of multiple SMTP servers (Thanks to @NanoCaiordo)
+* SMTP->connect() now supports stream context options (Thanks to @stanislavdavid)
+* Add support for iCal event alternatives (Thanks to @reblutus)
+* Update to Polish language file (Thanks to Krzysztof Kowalewski)
+* Update to Norwegian language file (Thanks to @datagutten)
+* Update to Hungarian language file (Thanks to @dominicus-75)
+* Add Persian/Farsi translation from @jaii
+* Make SMTPDebug property type match type in SMTP class
+* Add unit tests for DKIM
+* Major refactor of SMTP class
+* Reformat to PSR-2 coding standard
+* Introduce autoloader
+* Allow overriding of SMTP class
+* Overhaul of PHPDocs
+* Fix broken Q-encoding
+* Czech language update (Thanks to @nemelu)
+* Removal of excess blank lines in messages
+* Added fake POP server and unit tests for POP-before-SMTP
+
 ## Version 5.2.6 (April 11th 2013)
 * Reflect move to PHPMailer GitHub organisation at https://github.com/PHPMailer/PHPMailer
 * Fix unbumped version numbers
@@ -16,8 +56,7 @@
 
 ## Version 5.2.4 (February 19, 2013)
 * Fix tag and version bug.
-* un-deprecate isSMTP(), isMail(), IsSendmail() and
-  isQmail().
+* un-deprecate isSMTP(), isMail(), IsSendmail() and isQmail().
 * Numerous translation updates
 
 ## Version 5.2.3 (February 8, 2013)
