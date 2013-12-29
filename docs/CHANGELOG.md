@@ -1,6 +1,47 @@
 CHANGELOG
 =========
 
+3.6-doped
+----------
+- Added 'Song Preview' feature on missing albums tracks, with EchoNest api
+- Added 'Missing Albums' / 'Wanted List' feature
+- Upgrade to MusicBrainz api v2
+- Replace Snoopy project with Requests project
+- Added user-agent on recently played
+- Optionally show/hide recently played, time and user-agent per user
+- Updated French language
+- Iframe or popup web player mode
+- Song/Video web player with jPlayer, radio player with Muse Radio Player
+- Added `add media` to the currently played playlist on web player
+- Added dedicated 'Recently Played' page
+- Added enable/disable feature on catalogs
+- Fixed Config class conflict with PEAR
+- Improved recommended artists/songs loading using ajax
+- New modern `Reborn` theme
+- Improved Subsonic api backend support (json, ...)
+- Added Plex api backend support
+- Added artist art/summary when using LastFM api
+- Added 'all' link when browsing
+- Added option to enable/disable web player technology (flash / html5)
+- Fixed artist/song edition
+- Improved tag edition
+- Added song re-order on album / playlists
+- Improved album art zoom with PrettyPhoto (removed popup)
+- Replaced Prototype with jQuery
+- Added 'Flagged' feature on songs/albums/artists
+- Added 'Direct Play' feature to play songs without using a playlist
+- Added Lyrics plugins (ChartLyrics and LyricWiki)
+- Fixed ShoutBox enable/disable (reported by cipriant)
+- Added SoundCloud, Dropbox, Subsonic and Google Music catalog plugins
+- Improved Catalogs using plug-ins
+- Added browse paging to all information pages
+- Fixed LastFM scrobbling (reported by pateretou)
+- Fixed LDAP authentication with password containing `&` (reported by bruth2)
+- Added directories to zip archives
+- Improved project code style and added Travis builds
+- Added number of times an artist/album/song was played
+- Fixed installation process without database creation
+
 3.6-FUTURE
 ----------
 - Fixed issue with long session IDs that affected OS X Mavericks and possibly

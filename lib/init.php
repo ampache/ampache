@@ -63,7 +63,7 @@ if (!empty($link)) {
 }
 
 /** This is the version.... fluf nothing more... **/
-$results['version']        = '3.6-alpha6+FUTURE';
+$results['version']        = '3.6-alpha6+doped';
 $results['int_config_version']    = '12';
 
 if (!empty($results['force_ssl'])) {
