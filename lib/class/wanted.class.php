@@ -140,6 +140,7 @@ class Wanted extends database_object
             $this->accepted = 1;
 
             foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
+                debug_event('wanted', 'Using Wanted Process plugin: ' . $plugin_name, '5');
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->load()) {
                     $plugin->_plugin->process_wanted($this);
@@ -169,8 +170,14 @@ class Wanted extends database_object
     {
         $sql = "INSERT INTO `wanted` (`user`, `artist`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $accept = $GLOBALS['user']->has_access('75') ? true : AmpConfig::get('wanted_auto_accept');
-        $params = array($GLOBALS['user']->id, $artist, $mbid, $name, $year, time(), ($accept ? '1' : '0'));
+        $params = array($GLOBALS['user']->id, $artist, $mbid, $name, $year, time(), '0');
         Dba::write($sql, $params);
+
+        if ($accept) {
+            $wantedid = Dba::insert_id();
+            $wanted = new Wanted($wantedid);
+            $wanted->accept();
+        }
     }
 
     public function show_action_buttons()
@@ -189,7 +196,7 @@ class Wanted extends database_object
         }
     }
 
-    public function load_all()
+    public function load_all($track_details = true)
     {
         $mb = new MusicBrainz(new RequestsMbClient());
         $this->songs = array();
@@ -203,10 +210,11 @@ class Wanted extends database_object
             // Load from database if already cached
             $this->songs = Song_preview::get_song_previews($this->mbid);
 
-            if (count($this->songs) == 0) {
-                // Use the first release as reference for track content
-                if (count($group->releases) > 0) {
-                    $release = $mb->lookup('release', $group->releases[0]->id, array( 'recordings' ));
+            if (count($group->releases) > 0) {
+                $this->release_mbid = $group->releases[0]->id;
+                if ($track_details && count($this->songs) == 0) {
+                    // Use the first release as reference for track content
+                    $release = $mb->lookup('release', $this->release_mbid, array( 'recordings' ));
                     foreach ($release->media as $media) {
                         foreach ($media->tracks as $track) {
                             $song = array();

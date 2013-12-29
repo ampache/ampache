@@ -3,6 +3,9 @@ CHANGELOG
 
 3.6-doped
 ----------
+- Added Headphones Automatic Music Downloader support as a 'Wanted Process' plugin
+- Updated PHPMailer to version 5.2.7
+- Updated getID3 to version 1.9.7
 - Added 'Song Preview' feature on missing albums tracks, with EchoNest api
 - Added 'Missing Albums' / 'Wanted List' feature
 - Upgraded to MusicBrainz api v2
@@ -17,7 +20,7 @@ CHANGELOG
 - Added enable/disable feature on catalogs
 - Fixed Config class conflict with PEAR
 - Improved recommended artists/songs loading using ajax
-- New modern 'Reborn' theme
+- Added a new modern 'Reborn' theme
 - Improved Subsonic api backend support (json, ...)
 - Added Plex api backend support
 - Added artist art/summary when using LastFM api

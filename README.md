@@ -68,7 +68,7 @@ Ampache includes some external modules that carry their own licensing.
 * [Horde_Browser](http://www.horde.org/): LGPL v2.1
 * [PHP-gettext](https://launchpad.net/php-gettext): GPL v2
 * [MusicBrainz](https://github.com/mikealmond/MusicBrainz/): MIT
-* [PHP MPD interface]: GPL v2
+* PHP MPD interface: GPL v2
 * [PHPMailer](https://github.com/PHPMailer/PHPMailer): LGPL v2.1
 * [jQuery](http://jquery.org/): MIT
 * [Requests](http://requests.ryanmccue.info/): ISC Licensed
