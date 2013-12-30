@@ -40,6 +40,7 @@ CHANGELOG
 - Fixed LDAP authentication with password containing '&' (reported by bruth2)
 - Added directories to zip archives
 - Improved project code style and added Travis builds
+- Added albums default sort preference
 - Added number of times an artist/album/song was played
 - Fixed installation process without database creation
 - Removed administrative flags

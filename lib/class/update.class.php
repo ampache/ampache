@@ -1572,12 +1572,12 @@ class Update
     public static function update_360015()
     {
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('iframes','0','Iframes',25,'boolean','interface')";
+            "VALUES ('iframes','1','Iframes',25,'boolean','interface')";
         Dba::write($sql);
 
         $id = Dba::insert_id();
 
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         Dba::write($sql, array($id));
 
         return true;
@@ -1713,12 +1713,12 @@ class Update
         Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('song_page_title','0','Show current song in Web player page title',25,'boolean','interface')";
+            "VALUES ('song_page_title','1','Show current song in Web player page title',25,'boolean','interface')";
         $retval = Dba::write($sql);
 
         $id = Dba::insert_id();
 
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         $retval = Dba::write($sql, array($id));
 
         return $retval;
