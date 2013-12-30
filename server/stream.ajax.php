@@ -101,7 +101,7 @@ switch ($_REQUEST['action']) {
         if (!empty($_REQUEST['append'])) {
             $_SESSION['iframe']['target'] .= '&append=true';
         }
-        $results['rfc3514'] = '<script type="text/javascript">reloadUtil(\''.$_SESSION['iframe']['target'] . '\');</script>';
+        $results['rfc3514'] = '<script type="text/javascript">reloadUtil(\''. AmpConfig::get('web_path') . '/util.php\');</script>';
     break;
     case 'basket':
         // Go ahead and see if we should clear the playlist here or not,

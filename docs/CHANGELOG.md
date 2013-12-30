@@ -29,7 +29,6 @@ CHANGELOG
 - Fixed artist/song edition
 - Improved tag edition
 - Added song re-order on album / playlists
-- Improved album art zoom with PrettyPhoto (removed popup)
 - Replaced Prototype with jQuery
 - Added 'Flagged' feature on songs/albums/artists
 - Added 'Direct Play' feature to play songs without using a playlist
@@ -38,7 +37,6 @@ CHANGELOG
 - Added SoundCloud, Dropbox, Subsonic and Google Music catalog plugins
 - Improved Catalogs using plug-ins
 - Added browse paging to all information pages
-- Fixed LastFM scrobbling (reported by pateretou)
 - Fixed LDAP authentication with password containing '&' (reported by bruth2)
 - Added directories to zip archives
 - Improved project code style and added Travis builds
