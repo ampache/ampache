@@ -262,8 +262,8 @@ class Album extends database_object
         if (!$db_results) {
             return null;
         }
-		
-		$id = Dba::insert_id();
+
+        $id = Dba::insert_id();
 
         // Remove from wanted album list if any request on it
         if (!empty($mbid)) {

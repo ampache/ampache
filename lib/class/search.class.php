@@ -846,8 +846,8 @@ class Search extends playlist_object
             $table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";
 
             if ($join['catalog']) {
-                $table['catalog'] = "LEFT JOIN `catalog` ON `catalog`.`id`=`song`.`catalog`";
-                $where_sql .= " AND `catalog`.`enabled` = '1'";
+                $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
+                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
             }
         }
         if ($join['rating']) {
@@ -929,8 +929,8 @@ class Search extends playlist_object
             $table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";
 
             if ($join['catalog']) {
-                $table['catalog'] = "LEFT JOIN `catalog` ON `catalog`.`id`=`song`.`catalog`";
-                $where_sql .= " AND `catalog`.`enabled` = '1'";
+                $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
+                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
             }
         }
 
@@ -1090,8 +1090,8 @@ class Search extends playlist_object
         }
 
         if ($join['catalog']) {
-            $table['catalog'] = "LEFT JOIN `catalog` ON `catalog`.`id`=`song`.`catalog`";
-            $where_sql .= " AND `catalog`.`enabled` = '1'";
+            $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
+            $where_sql .= " AND `catalog_se`.`enabled` = '1'";
         }
 
         $table_sql = implode(' ', $table);
@@ -1143,8 +1143,8 @@ class Search extends playlist_object
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         if ($join['catalog']) {
-            $table['catalog'] = "LEFT JOIN `catalog` ON `catalog`.`id`=`video`.`catalog`";
-            $where_sql .= " AND `catalog`.`enabled` = '1'";
+            $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`video`.`catalog`";
+            $where_sql .= " AND `catalog_se`.`enabled` = '1'";
         }
 
         $table_sql = implode(' ', $table);

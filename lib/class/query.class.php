@@ -999,7 +999,6 @@ class Query
              $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name` ";
         }
         $final_sql .= $order_sql . $limit_sql;
-        debug_event("Catalog", "catalog sql: " . $final_sql, "6");
 
         return $final_sql;
 
