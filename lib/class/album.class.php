@@ -339,7 +339,8 @@ class Album extends database_object
         /* Truncate the string if it's to long */
         $this->f_name        = UI::truncate($this->full_name,AmpConfig::get('ellipse_threshold_album'));
 
-        $this->f_name_link    = "<a href=\"$web_path/albums.php?action=show&amp;album=" . scrub_out($this->id) . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
+        $this->f_link_src = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
+        $this->f_name_link    = "<a href=\"" . $this->f_link_src . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
         // If we've got a disk append it
         if ($this->disk) {
             $this->f_name_link .= " <span class=\"discnb disc" .$this->disk. "\">[" . T_('Disk') . " " . $this->disk . "]</span>";

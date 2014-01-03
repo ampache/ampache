@@ -1206,7 +1206,7 @@ abstract class Catalog extends database_object
                     $xml['dict']['Play Count'] = intval($song->played);
                     $xml['dict']['Track Type'] = "URL";
                     $xml['dict']['Location'] = Song::play_url($song->id);
-                    echo xml_from_array($xml, 1, 'itunes');
+                    echo xoutput_from_array($xml, 1, 'itunes');
                     // flush output buffer
                 } // while result
                 echo xml_get_footer('itunes');

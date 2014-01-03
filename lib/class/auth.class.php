@@ -64,16 +64,10 @@ class Auth
             ob_end_clean();
             ob_start();
 
-            /* Set the correct headers */
-            header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
-            header("Content-Disposition: attachment; filename=ajax.xml");
-            header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");
-            header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-            header("Cache-Control: no-store, no-cache, must-revalidate");
-            header("Pragma: no-cache");
+            xoutput_headers();
 
             $results['rfc3514'] = '<script type="text/javascript">reloadRedirect("' . $target . '")</script>';
-            echo xml_from_array($results);
+            echo xoutput_from_array($results);
         } else {
             /* Redirect them to the login page */
             header('Location: ' . $target);

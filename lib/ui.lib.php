@@ -345,6 +345,32 @@ function show_playlist_select($name,$selected='',$style='')
 
 } // show_playlist_select
 
+function xoutput_headers()
+{
+    $output = $_REQUEST['xoutput'] ?: 'xml';
+    if ($output == 'xml') {
+        header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
+        header("Content-Disposition: attachment; filename=ajax.xml");
+    } else {
+        header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
+    }
+
+    header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");
+    header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+    header("Cache-Control: no-store, no-cache, must-revalidate");
+    header("Pragma: no-cache");
+}
+
+function xoutput_from_array($array, $callback = false, $type = '')
+{
+    $output = $_REQUEST['xoutput'] ?: 'xml';
+    if ($output == 'xml') {
+        return xml_from_array($array, $callback, $type);
+    } else {
+        return json_from_array($array, $callback, $type);
+    }
+}
+
 // FIXME: This should probably go in XML_Data
 /**
  * xml_from_array
@@ -363,7 +389,7 @@ function xml_from_array($array, $callback = false, $type = '')
     case 'itunes':
         foreach ($array as $key=>$value) {
             if (is_array($value)) {
-                $value = xml_from_array($value,1,$type);
+                $value = xoutput_from_array($value,1,$type);
                 $string .= "\t\t<$key>\n$value\t\t</$key>\n";
             } else {
                 if ($key == "key") {
@@ -385,7 +411,7 @@ function xml_from_array($array, $callback = false, $type = '')
     case 'xspf':
         foreach ($array as $key=>$value) {
             if (is_array($value)) {
-                $value = xml_from_array($value,1,$type);
+                $value = xoutput_from_array($value,1,$type);
                 $string .= "\t\t<$key>\n$value\t\t</$key>\n";
             } else {
                 if ($key == "key") {
@@ -411,7 +437,7 @@ function xml_from_array($array, $callback = false, $type = '')
 
             if (is_array($value)) {
                 // Call ourself
-                $value = xml_from_array($value, true);
+                $value = xoutput_from_array($value, true);
                 $string .= "\t<content div=\"$key\">$value</content>\n";
             } else {
                 /* We need to escape the value */
@@ -428,6 +454,11 @@ function xml_from_array($array, $callback = false, $type = '')
     break;
     }
 } // xml_from_array
+
+function json_from_array($array, $callback = false, $type = '')
+{
+    return json_encode($array);
+}
 
 /**
  * xml_get_header

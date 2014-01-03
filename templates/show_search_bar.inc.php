@@ -26,7 +26,7 @@
         <input type="hidden" name="action" value="search" />
     <input type="hidden" name="rule_1_operator" value="0" />
         <input type="hidden" name="object_type" value="song" />
-    <select name="rule_1">
+    <select name="rule_1" id="searchStringRule">
         <option value="anywhere"><?php echo T_('Anywhere')?></option>
         <option value="title"><?php echo T_('Title')?></option>
         <option value="album"><?php echo T_('Album')?></option>

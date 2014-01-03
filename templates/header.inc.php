@@ -76,6 +76,58 @@ function forceIframe()
     var jsSaveTitle = "<?php echo T_('Save') ?>";
     var jsCancelTitle = "<?php echo T_('Cancel') ?>";
 </script>
+<script type="text/javascript">
+$.widget( "custom.catcomplete", $.ui.autocomplete, {
+    _renderMenu: function( ul, items ) {
+        var that = this, currentType = "";
+        $.each( items, function( index, item ) {
+            if (item.type != currentType) {
+                ul.append( "<li class='ui-autocomplete-category'>" + item.type + "</li>" );
+                currentType = item.type;
+            }
+
+            $( "<li class='ui-menu-item'>" )
+                .append( "<a href='" + item.link + "'>" + item.label + ((item.rels == '') ? "" : " - " + item.rels)  + "</a>" )
+                .appendTo( ul );
+        });
+    }
+});
+
+$(function() {
+    $( "#searchString" )
+    // don't navigate away from the field on tab when selecting an item
+        .bind( "keydown", function( event ) {
+            if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "ui-autocomplete" ).menu.active ) {
+                event.preventDefault();
+            }
+        })
+        .catcomplete({
+            source: function( request, response ) {
+                $.getJSON( jsAjaxUrl, {
+                    page: 'search',
+                    action: 'search',
+                    target: $('#searchStringRule').val(),
+                    search: request.term,
+                    xoutput: 'json'
+                }, response );
+            },
+            search: function() {
+                // custom minLength
+                if (this.value.length < 2) {
+                    return false;
+                }
+            },
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function( event, ui ) {
+                this.value = ui.item.value
+                return false;
+            }
+        });
+});
+</script>
 </head>
 <body <?php echo (AmpConfig::get('iframes')) ? "onLoad='forceIframe();'" : ""; ?>>
 <!-- rfc3514 implementation -->

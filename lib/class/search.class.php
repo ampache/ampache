@@ -926,7 +926,7 @@ class Search extends playlist_object
         }
 
         if ($join['song']) {
-            $table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id`";
+            $table['song'] = "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id`";
 
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";

@@ -29,13 +29,7 @@ define('AJAX_INCLUDE','1');
 
 require_once '../lib/init.php';
 
-/* Set the correct headers */
-header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
-header("Content-Disposition: attachment; filename=ajax.xml");
-header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Pragma: no-cache");
+xoutput_headers();
 
 $page = isset($_REQUEST['page']) ? $_REQUEST['page'] : null;
 
@@ -83,6 +77,10 @@ switch ($page) {
         exit;
     case 'catalog':
         require_once AmpConfig::get('prefix') . '/server/catalog.ajax.php';
+        exit;
+    break;
+    case 'search':
+        require_once AmpConfig::get('prefix') . '/server/search.ajax.php';
         exit;
     break;
     default:
@@ -175,7 +173,7 @@ switch ($_REQUEST['action']) {
             break;
             default:
                 $key = 'rfc3514';
-                echo xml_from_array(array($key=>'0x1'));
+                echo xoutput_from_array(array($key=>'0x1'));
                 exit;
             break;
         } // end switch on type
@@ -304,4 +302,4 @@ switch ($_REQUEST['action']) {
 } // end switch action
 
 // Go ahead and do the echo
-echo xml_from_array($results);
+echo xoutput_from_array($results);

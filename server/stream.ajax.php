@@ -123,4 +123,4 @@ switch ($_REQUEST['action']) {
 } // switch on action;
 
 // We always do this
-echo xml_from_array($results);
+echo xoutput_from_array($results);
