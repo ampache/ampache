@@ -369,6 +369,16 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     font-size: 15px;
 }
 
+.header-float {
+}
+
+.header-fixed {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 97%;
+}
+
 #header .box-top, #header .box-bottom {
     display: none;
 }
@@ -589,16 +599,15 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Sidebar                            
 ***********************************************/
 #sidebar {
-    float: left;
-	width: 150px;
+    width: 150px;
     /*z-index: 8;*/
     margin: 20px auto auto 5px;
     padding: 10px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
     border-color: #1d1d1d;
     border: 2px solid rgba(0,0,0,0.15);
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
@@ -610,6 +619,18 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     background-color: #1a1a1a;
     border-right: 2px solid #000;
     color: #999;
+}
+
+.sidebar-float {
+    float: left;
+}
+
+.sidebar-fixed {
+    position: fixed;
+    top: 66px;
+    left: 5px;
+    height: 90%;
+    overflow: hidden;
 }
 
 /* For sidebar tabs */
@@ -631,9 +652,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 /* Tabs content */
 #sidebar-page {
-	position: absolute;
-	left: 0px;
-	width: 150px;
+    width: 150px;
     margin: 3px auto 5px 5px;
     background-color: rgba(0,0,0,0.15);
     -webkit-border-radius: 2px;
@@ -648,6 +667,19 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+.sidebar-page-float {
+    position: absolute;
+	left: 0px;
+}
+
+.sidebar-page-fixed {
+    position: absolute;
+    left: -7px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 90%;
 }
 
 #sidebar-tabs .sb2 li h4 {
@@ -856,7 +888,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -ms-transition: top .5s;
     -o-transition: top .5s;
     transition: top .5s;
-    margin: 20px 250px 0px 180px;
 	width: auto;
     max-height: 85%;
     padding: 10px;
@@ -875,6 +906,14 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     box-sizing: border-box;
     color: #fff;
     padding: 20px;
+}
+
+.content-float {
+    margin: 20px 250px 0px 180px;
+}
+
+.content-fixed {
+    margin: 86px 250px 0px 180px;
 }
 
 .browse_content {

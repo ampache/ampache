@@ -48,7 +48,7 @@ $web_path = AmpConfig::get('web_path');
           // Include subnav if it's the selected one
           // so that it's generated inside its parent li
     if ($item['id']==$_SESSION['state']['sidebar_tab']) {
-            ?><div id="sidebar-page"><?php
+            ?><div id="sidebar-page" class="sidebar-page-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><?php
             require_once AmpConfig::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php';
             ?></div><?php
         }

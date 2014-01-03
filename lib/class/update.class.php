@@ -340,6 +340,9 @@ class Update
         $update_string = '- New table to store song previews.<br />';
         $version[] = array('version' => '360030','description' => $update_string);
 
+        $update_string = '- Add option to fix header/sidebars position on compatible themes.<br />';
+        $version[] = array('version' => '360031','description' => $update_string);
+
         return $version;
     }
 
@@ -1923,5 +1926,23 @@ class Update
             "PRIMARY KEY (`id`))";
 
         return Dba::write($sql);
+    }
+
+    /**
+     * update_360031
+     *
+     * Add option to fix header/sidebars position on compatible themes
+     */
+    public static function update_360031()
+    {
+        // Insert new recently played preference
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('ui_fixed','0','Fix header/sidebars position on compatible themes',25,'boolean','interface')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        return true;
     }
 }

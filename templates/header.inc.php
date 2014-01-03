@@ -81,7 +81,7 @@ function forceIframe()
 <!-- rfc3514 implementation -->
 <div id="rfc3514" style="display:none;">0x0</div>
 <div id="maincontainer">
-    <div id="header"><!-- This is the header -->
+    <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
         <h1 id="headerlogo">
           <a href="<?php echo AmpConfig::get('web_path') . ((AmpConfig::get('iframes')) ? '/?framed=1' : ''); ?>">
             <img src="<?php echo $web_path; ?><?php echo AmpConfig::get('theme_path'); ?>/images/ampache.png" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
@@ -95,16 +95,16 @@ function forceIframe()
             <?php UI::show_box_bottom(); ?>
         </div> <!-- End headerbox -->
     </div><!-- End header -->
-    <div id="sidebar"><!-- This is the sidebar -->
+    <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the sidebar -->
         <?php require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php'; ?>
     </div><!-- End sidebar -->
-    <div id="rightbar"><!-- This is the rightbar -->
+    <div id="rightbar" class="rightbar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the rightbar -->
         <?php require_once AmpConfig::get('prefix') . '/templates/rightbar.inc.php'; ?>
     </div><!-- End rightbar -->
 <!-- Tiny little iframe, used to cheat the system -->
 <div id="ajax-loading">Loading . . .</div>
 <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo AmpConfig::get('web_path'); ?>/util.php"></iframe>
-<div id="content">
+<div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
 <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
 <div class="fatalerror">
     <?php echo T_('Error Config File Out of Date'); ?>

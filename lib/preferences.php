@@ -174,6 +174,7 @@ function create_preference_input($name,$value)
         case 'allow_personal_info_recent':
         case 'allow_personal_info_time':
         case 'allow_personal_info_agent':
+        case 'ui_fixed':
             if ($value == '1') { $is_true = "selected=\"selected\""; } else { $is_false = "selected=\"selected\""; }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";
