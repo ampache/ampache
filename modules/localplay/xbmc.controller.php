@@ -49,7 +49,7 @@ class AmpacheXbmc extends localplay_controller
     public function __construct()
     {
         /* Do a Require Once On the needed Libraries */
-        require_once AmpConfig::get('prefix') . '/modules/xbmc-php-rpc/TCPClient.php';
+        require_once AmpConfig::get('prefix') . '/modules/xbmc-php-rpc/HTTPClient.php';
 
     } // Constructor
 
@@ -618,7 +618,9 @@ class AmpacheXbmc extends localplay_controller
     {
         $options = self::get_instance();
         try {
-            $this->_xbmc = new XBMC_RPC_TCPClient($options);
+            debug_event('xbmc', 'Trying to connect xbmc instance ' . $options['host'] . ':' . $options['port'] . '.', '5');
+            $this->_xbmc = new XBMC_RPC_HTTPClient($options);
+            debug_event('xbmc', 'Connected.', '5');
             return true;
         } catch (XBMC_RPC_ConnectionException $ex) {
             debug_event('xbmc', 'xbmc connection failed: ' . $ex->getMessage(), 1);
