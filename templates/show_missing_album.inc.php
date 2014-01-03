@@ -53,13 +53,13 @@ if (count($images) > 0 && !empty($images[0]['url'])) {
     <?php if (AmpConfig::get('echonest_api_key')) { ?>
     <?php if (AmpConfig::get('directplay')) { ?>
     <li>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=album_preview&mbid=' . $walbum->mbid,'play', T_('Play Album Preview'),'directplay_full_' . $walbum->mbid); ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=album_preview&mbid=' . $walbum->mbid,'play_preview', T_('Play Album Preview'),'directplay_full_' . $walbum->mbid); ?>
         <?php echo Ajax::text('?page=stream&action=directplay&playtype=album_preview&mbid=' . $walbum->mbid, T_('Play Album Preview'),'directplay_full_text_' . $walbum->mbid); ?>
     </li>
     <?php } ?>
     <?php if (Stream_Playlist::check_autoplay_append()) { ?>
     <li>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=album_preview&mbid=' . $walbum->mbid . '&append=true','play_add', T_('Play Add Album Preview'),'addplay_album_' . $walbum->mbid); ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=album_preview&mbid=' . $walbum->mbid . '&append=true','play_add_preview', T_('Play Add Album Preview'),'addplay_album_' . $walbum->mbid); ?>
         <?php echo Ajax::text('?page=stream&action=directplay&playtype=album_preview&mbid=' . $walbum->mbid . '&append=true', T_('Play Add Album Preview'),'addplay_album_text_' . $walbum->mbid); ?>
     </li>
     <?php } ?>
