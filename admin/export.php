@@ -36,8 +36,6 @@ switch ($_REQUEST['action']) {
         // This may take a while
         set_time_limit(0);
 
-        $catalog = Catalog::create_from_id($_REQUEST['export_catalog']);
-
         // Clear everything we've done so far
         ob_end_clean();
 
@@ -55,12 +53,12 @@ switch ($_REQUEST['action']) {
             case 'itunes':
                 header("Content-Type: application/itunes+xml; charset=utf-8");
                 header("Content-Disposition: attachment; filename=\"ampache-itunes-$date.xml\"");
-                $catalog->export('itunes');
+                Catalog::export('itunes', $_REQUEST['export_catalog']);
             break;
             case 'csv':
                 header("Content-Type: application/vnd.ms-excel");
                 header("Content-Disposition: filename=\"ampache-export-$date.csv\"");
-                $catalog->export('csv');
+                Catalog::export('csv', $_REQUEST['export_catalog']);
             break;
         } // end switch on format
 

@@ -1170,15 +1170,15 @@ abstract class Catalog extends database_object
      * exports the catalog
      * it exports all songs in the database to the given export type.
      */
-    public function export($type)
+    public static function export($type, $catalog_id = '')
     {
         // Select all songs in catalog
         $params = array();
-        if ($this->id) {
+        if ($catalog_id) {
             $sql = 'SELECT `id` FROM `song` ' .
                 "WHERE `catalog`= ? " .
                 'ORDER BY `album`, `track`';
-            $params[] = $this->id;
+            $params[] = $catalog_id;
         } else {
             $sql = 'SELECT `id` FROM `song` ORDER BY `album`, `track`';
         }
