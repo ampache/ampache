@@ -8,6 +8,8 @@ CHANGELOG
 - Added option to 'lock' header/sidebars UI
 - Fixed catalog export when 'All' selected
 - Fixed XBMC Local Play (reported by nakinigit)
+- Fixed artist search
+- Fixed Random Advanced (reported by stebe)
 - Changed song preview directplay icons
 
 3.6-doped
