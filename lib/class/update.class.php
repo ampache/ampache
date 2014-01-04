@@ -343,6 +343,9 @@ class Update
         $update_string = '- Add option to fix header/sidebars position on compatible themes.<br />';
         $version[] = array('version' => '360031','description' => $update_string);
 
+        $update_string = '- Add check update automatically option.<br />';
+        $version[] = array('version' => '360032','description' => $update_string);
+
         return $version;
     }
 
@@ -1935,13 +1938,33 @@ class Update
      */
     public static function update_360031()
     {
-        // Insert new recently played preference
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('ui_fixed','0','Fix header/sidebars position on compatible themes',25,'boolean','interface')";
         Dba::write($sql);
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         Dba::write($sql, array($id));
+
+        return true;
+    }
+
+    /**
+     * update_360032
+     *
+     * Add check update automatically option
+     */
+    public static function update_360032()
+    {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('autoupdate','1','Check for Ampache updates automatically',25,'boolean','system')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        Dba::write($sql, array($id));
+
+        Preference::insert('autoupdate_lastcheck','AutoUpdate last check time','','25','string','internal');
+        Preference::insert('autoupdate_lastversion','AutoUpdate last version from last check','','25','string','internal');
+        Preference::insert('autoupdate_lastversion_new','AutoUpdate last version from last check is newer','','25','boolean','internal');
 
         return true;
     }

@@ -69,7 +69,7 @@ class Preference extends database_object
      * update
      * This updates a single preference from the given name or id
      */
-    public static function update($preference,$user_id,$value,$applytoall='')
+    public static function update($preference,$user_id,$value,$applytoall='',$applytodefault='')
     {
         // First prepare
         if (!is_numeric($preference)) {
@@ -85,9 +85,14 @@ class Preference extends database_object
             $user_check = " AND `user`='$user_id'";
         }
 
-        // Now do
+        if ($applytodefault AND Access::check('interface', '100')) {
+            $sql = "UPDATE `preference` SET `value`='$value' WHERE `id`='$id'";
+            $db_results = Dba::write($sql);
+        }
+
+        $value = Dba::escape($value);
+
         if (self::has_access($name)) {
-            $value = Dba::escape($value);
             $user_id = Dba::escape($user_id);
             $sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$id'$user_check";
             $db_results = Dba::write($sql);
