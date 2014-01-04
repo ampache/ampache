@@ -22,8 +22,7 @@
 ?>
 <?php
 $boxtitle = T_('Post to Shoutbox') . ' ' . T_('on') . ' ' . $object->f_title;
-if ($data)
-{
+if ($data) {
     $boxtitle .= ' (' . $data . ')';
 }
 UI::show_box_top($boxtitle, 'box box_add_shout');

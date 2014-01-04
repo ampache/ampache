@@ -514,7 +514,7 @@ div.waveform-time {
     display: block;
     height: 100%;
     width: 0px;
-    border: 1px solid #ffcaca;
+    border-left: 1px solid #ffcaca;
     left: 0px;
 }
 

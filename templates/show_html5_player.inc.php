@@ -145,7 +145,7 @@ if (!$isVideo) {
 ?>
                 $('.waveform').html(waveformobj);
 <?php
-        }        
+        }
     }
 }
 if (AmpConfig::get('song_page_title')) {
@@ -175,13 +175,12 @@ if ($isVideo) {
 ?>
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, function (event) {
-        if (event.jPlayer.status.duration > 0)
-        {
+        if (event.jPlayer.status.duration > 0) {
             var leftpos = 400 * (event.jPlayer.status.currentTime / event.jPlayer.status.duration);
             $(".waveform-time").css({left: leftpos});
         }
     });
-    
+
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
         $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
     });
@@ -189,12 +188,13 @@ if ($isVideo) {
 <?php echo WebPlayer::add_media_js($playlist); ?>
 });
 
-function clickTimeOffset(e) {
+function clickTimeOffset(e)
+{
     var parrentOffset = $(".waveform").offset().left;
     var offset = e.pageX - parrentOffset;
     var duration = $("#jquery_jplayer_1").data("jPlayer").status.duration;
     var time = duration * (offset / 400);
-    
+
     return time;
 }
 </script>
@@ -298,7 +298,7 @@ if ($isVideo) {
                 <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
                 <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
             </ul>
-<?php if (AmpConfig::get('waveform')) { ?>            
+<?php if (AmpConfig::get('waveform')) { ?>
             <div class="waveform"></div>
 <?php } ?>
 <?php } ?>

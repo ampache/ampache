@@ -345,7 +345,7 @@ class Update
 
         $update_string = '- Add check update automatically option.<br />';
         $version[] = array('version' => '360032','description' => $update_string);
-        
+
         $update_string = '- Add song waveform as song data.<br />';
         $version[] = array('version' => '360033','description' => $update_string);
 
@@ -1971,7 +1971,7 @@ class Update
 
         return true;
     }
-    
+
     /**
      * update_360033
      *
@@ -1981,7 +1981,7 @@ class Update
     {
         $sql = "ALTER TABLE `song_data` ADD `waveform` MEDIUMBLOB NULL AFTER `language`";
         Dba::write($sql);
-        
+
         $sql = "ALTER TABLE `user_shout` ADD `data` VARCHAR(256) NULL AFTER `object_type`";
         Dba::write($sql);
 

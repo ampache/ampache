@@ -33,8 +33,7 @@ if (!AmpConfig::get('waveform')) exit();
 
 $id = $_REQUEST['song_id'];
 $waveform = Waveform::get($id);
-if ($waveform)
-{
+if ($waveform) {
     header('Content-type: image/png');
     echo $waveform;
 }

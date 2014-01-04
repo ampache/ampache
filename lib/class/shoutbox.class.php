@@ -221,18 +221,17 @@ class Shoutbox
         $db_results = Dba::write($sql);
 
     } // delete
-    
+
     public static function get_shouts($object_type, $object_id)
     {
         $sql = "SELECT * FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, array($object_type, $object_id));
         $results = array();
-        
-        while ($row = Dba::fetch_assoc($db_results))
-        {
+
+        while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row;
         }
-        
+
         return $results;
     }
 

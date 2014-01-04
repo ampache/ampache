@@ -50,10 +50,9 @@ switch ($_REQUEST['action']) {
             Error::display('general');
             break;
         }
-        
+
         $object->format();
-        if (strtolower(get_class($object)) == 'song')
-        {
+        if (strtolower(get_class($object)) == 'song') {
             $data = $_REQUEST['offset'];
         }
 
