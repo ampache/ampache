@@ -90,7 +90,7 @@ class WebPlayer
             $transcode = false;
             $transcode_cfg = AmpConfig::get('transcode');
             // Check transcode is required
-            if ($transcode_cfg == 'always' || $types['real'] != $ftype) {
+            if ($transcode_cfg == 'always' || ($types['real'] != $ftype && !AmpConfig::get('webplayer_flash'))) {
                 $valid_types = Song::get_stream_types_for_type($ftype);
                 if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                     // Transcode only if excepted type available
