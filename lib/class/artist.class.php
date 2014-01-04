@@ -267,7 +267,7 @@ class Artist extends database_object
         if ($this->_fake) { return true; }
 
         if ($this->catalog_id) {
-            $this->f_link = AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&amp;artist=' . $this->id;
+            $this->f_link = AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id;
             $this->f_name_link = "<a href=\"" . $this->f_link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
         } else {
             $this->f_link = AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
