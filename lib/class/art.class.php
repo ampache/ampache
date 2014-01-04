@@ -799,8 +799,8 @@ class Art extends database_object
             'imguri' => '$matches[1]',
             'releaseuri' => '',
         );
-        foreach ($release->getRelations(mbRelation::TO_URL) as $ar) {
-            $arurl = $ar->getTargetId();
+        foreach ($release->relations as $ar) {
+            $arurl = $ar->url->resource;
             debug_event('mbz-gatherart', "Found URL AR: " . $arurl , '5');
             foreach ($coverartsites as $casite) {
                 if (strpos($arurl, $casite['domain']) !== false) {
