@@ -84,7 +84,7 @@ class AutoUpdate
             if (self::is_develop()) {
                 $commits = self::github_request('/commits/develop');
                 if (!empty($commits)) {
-                    $lastversion = $commits[0]->sha;
+                    $lastversion = $commits->sha;
                     Preference::update('autoupdate_lastversion', $GLOBALS['user']->id, $lastversion);
                     AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                     $time = time();
