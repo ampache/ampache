@@ -78,6 +78,12 @@ function forceIframe()
 </script>
 <script type="text/javascript">
 $.widget( "custom.catcomplete", $.ui.autocomplete, {
+    _renderItem: function( ul, item ) {
+            return $( "<li class='ui-menu-item'>" )
+                .data("ui-autocomplete-item", item)
+                .append( "<a href='" + item.link + "'>" + item.label + ((item.rels == '') ? "" : " - " + item.rels)  + "</a>" )
+                .appendTo( ul );
+    },
     _renderMenu: function( ul, items ) {
         var that = this, currentType = "";
         $.each( items, function( index, item ) {
@@ -86,9 +92,7 @@ $.widget( "custom.catcomplete", $.ui.autocomplete, {
                 currentType = item.type;
             }
 
-            $( "<li class='ui-menu-item'>" )
-                .append( "<a href='" + item.link + "'>" + item.label + ((item.rels == '') ? "" : " - " + item.rels)  + "</a>" )
-                .appendTo( ul );
+            that._renderItem( ul, item );
         });
     }
 });
@@ -122,7 +126,9 @@ $(function() {
                 return false;
             },
             select: function( event, ui ) {
-                this.value = ui.item.value
+                if (ui.item != null) {
+                    $(this).val(ui.item.value);
+                }
                 return false;
             }
         });
