@@ -266,8 +266,8 @@ class Album extends database_object
         $id = Dba::insert_id();
 
         // Remove from wanted album list if any request on it
-        if (!empty($mbid)) {
-            Wanted::delete_wanted($mbid);
+        if (!empty($mbid) && Config::get('wanted')) {
+            Wanted::delete_wanted_release($mbid);
         }
 
         self::$_mapcache[$name][$year][$disk][$mbid] = $id;

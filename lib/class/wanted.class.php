@@ -109,6 +109,17 @@ class Wanted extends database_object
         return $results;
     } // get_missing_albums
 
+    public static function get_accepted_wanted_count()
+    {
+        $sql = "SELECT COUNT(`id`) AS `wanted_cnt` FROM `wanted` WHERE `accepted` = 1";
+        $db_results = Dba::read($sql);
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return $row['wanted_cnt'];
+        }
+
+        return 0;
+    }
+
     public static function get_wanted($mbid)
     {
         $sql = "SELECT `id` FROM `wanted` WHERE `mbid` = ?";
@@ -124,6 +135,29 @@ class Wanted extends database_object
     {
         $sql = "DELETE FROM `wanted` WHERE `mbid` = ?";
         $params = array( $mbid );
+        if (!$GLOBALS['user']->has_access('75')) {
+            $sql .= " AND `user` = ?";
+            $params[] = $GLOBALS['user']->id;
+        }
+
+        Dba::write($sql, $params);
+    }
+
+    public static function delete_wanted_release($mbid)
+    {
+        if (self::get_accepted_wanted_count() > 0) {
+            $mb = new MusicBrainz(new RequestsMbClient());
+            $malbum = $mb->lookup('release', $mbid, array('release-groups'));
+            if ($malbum->{'release-group'}) {
+                self::delete_wanted($malbum->{'release-group'}->id);
+            }
+        }
+    }
+
+    public static function delete_wanted($artist, $album_name, $year)
+    {
+        $sql = "DELETE FROM `wanted` WHERE `artist` = ? AND `name` = ? AND `year` = ?";
+        $params = array( $artist, $album_name, $year );
         if (!$GLOBALS['user']->has_access('75')) {
             $sql .= " AND `user` = ?";
             $params[] = $GLOBALS['user']->id;
