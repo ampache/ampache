@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+3.7
+----------
+- Added AutoUpdate Ampache version check
+- Added auto-completion in global Ampache search
+- Added option to 'lock' header/sidebars UI
+- Fixed catalog export when 'All' selected
+- Fixed XBMC Local Play (reported by nakinigit)
+- Changed song preview directplay icons
+
 3.6-doped
 ----------
 - Added Headphones Automatic Music Downloader support as a 'Wanted Process' plugin
