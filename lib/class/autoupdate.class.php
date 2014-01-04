@@ -173,7 +173,7 @@ class AutoUpdate
         echo T_('A new Ampache version is available');
         echo ' (' . self::get_latest_version() . ').<br />';
 
-        echo T_('See') . ' <a href="https://github.com/ampache-doped/ampache/' . (self::is_develop() ? 'compare/' . self::get_latest_version() . '...' . self::get_current_version() : 'blob/master/docs/CHANGELOG.md') . '" target="_blank">' . T_('ChangeLog') . '</a> ';
+        echo T_('See') . ' <a href="https://github.com/ampache-doped/ampache/' . (self::is_develop() ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/master/docs/CHANGELOG.md') . '" target="_blank">' . T_('changes') . '</a> ';
         echo T_('or') . ' <a href="https://github.com/ampache-doped/ampache/archive/' . (self::is_develop() ? 'develop.zip' : self::get_latest_version() . '.zip') . '" target="_blank"><b>' . T_('download') . '</b></a>.';
         echo '</div>';
     }
