@@ -56,12 +56,12 @@ if (Art::is_enabled()) {
 <?php } ?>
 <td class="cel_action">
     <?php if (AmpConfig::get('sociable')) { ?>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&amp;type=album&amp;id=<?php echo $album->id; ?>">
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&amp;id=<?php echo $album->id; ?>">
         <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
     </a>
     <?php } ?>
     <?php if (Access::check_function('batch_download')) { ?>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>">
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=album&id=<?php echo $album->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
     <?php } ?>

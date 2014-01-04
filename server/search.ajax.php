@@ -54,8 +54,8 @@ switch ($_REQUEST['action']) {
                 $results[] = array(
                     'type' => T_('Artists'),
                     'link' => $artist->f_link,
-                    'label' => $artist->f_name,
-                    'value' => $artist->f_name,
+                    'label' => $artist->name,
+                    'value' => $artist->name,
                     'rels' => '',
                 );
             }

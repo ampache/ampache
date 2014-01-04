@@ -345,6 +345,9 @@ class Update
 
         $update_string = '- Add check update automatically option.<br />';
         $version[] = array('version' => '360032','description' => $update_string);
+        
+        $update_string = '- Add song waveform as song data.<br />';
+        $version[] = array('version' => '360033','description' => $update_string);
 
         return $version;
     }
@@ -1965,6 +1968,22 @@ class Update
         Preference::insert('autoupdate_lastcheck','AutoUpdate last check time','','25','string','internal');
         Preference::insert('autoupdate_lastversion','AutoUpdate last version from last check','','25','string','internal');
         Preference::insert('autoupdate_lastversion_new','AutoUpdate last version from last check is newer','','25','boolean','internal');
+
+        return true;
+    }
+    
+    /**
+     * update_360033
+     *
+     * Add song waveform as song data
+     */
+    public static function update_360033()
+    {
+        $sql = "ALTER TABLE `song_data` ADD `waveform` MEDIUMBLOB NULL AFTER `language`";
+        Dba::write($sql);
+        
+        $sql = "ALTER TABLE `user_shout` ADD `data` VARCHAR(256) NULL AFTER `object_type`";
+        Dba::write($sql);
 
         return true;
     }

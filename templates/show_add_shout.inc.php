@@ -20,7 +20,14 @@
  *
  */
 ?>
-<?php UI::show_box_top(T_('Post to Shoutbox'), 'box box_add_shout'); ?>
+<?php
+$boxtitle = T_('Post to Shoutbox') . ' ' . T_('on') . ' ' . $object->f_title;
+if ($data)
+{
+    $boxtitle .= ' (' . $data . ')';
+}
+UI::show_box_top($boxtitle, 'box box_add_shout');
+?>
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=add_shout">
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <tr>
@@ -31,7 +38,7 @@
 </tr>
 <?php if (Access::check('interface','50')) { ?>
 <tr>
-    <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Make Sticky'); ?></strong></td>
+    <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Stick to homepage'); ?></strong></td>
 </tr>
 <?php } ?>
 <tr>
@@ -39,6 +46,7 @@
         <?php echo Core::form_register('add_shout'); ?>
         <input type="hidden" name="object_id" value="<?php echo $object->id; ?>" />
         <input type="hidden" name="object_type" value="<?php echo strtolower(get_class($object)); ?>" />
+        <input type="hidden" name="data" value="<?php echo $data; ?>" />
         <input type="submit" value="<?php echo T_('Create'); ?>" />
     </td>
 </tr>

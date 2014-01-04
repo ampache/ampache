@@ -28,6 +28,7 @@ function NavigateTo(url)
 ?>
 <script type="text/javascript">
 var jplaylist = null;
+var timeoffset = 0;
 
     $(document).ready(function(){
 
@@ -116,6 +117,13 @@ if (!$isVideo) {
         echo "var titleobj = (albumids[index] != null) ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + albumids[index] + '\');\">' + obj.title + '</a>' : obj.title;";
         echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + artistids[index] + '\');\">' + obj.artist + '</a>';";
         echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + songids[index] + '\');\">" . T_('Show Lyrics') . "</a>';";
+        echo "var actionsobj = '|';";
+        if (AmpConfig::get('sociable')) {
+            echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + songids[index] + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>';";
+        }
+        if (AmpConfig::get('sociable')) {
+            echo "waveformobj = '<a href=\"#\" title=\"" . T_('Post Shout') . "\" onClick=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + songids[index] + '&offset=\' + clickTimeOffset(event));\"><div class=\"waveform-time\"></div><img src=\"" . AmpConfig::get('web_path') . "/waveform.php?song_id=' + songids[index] + '\"></a>';";
+        }
     } else {
         echo "var titleobj = obj.title;";
         echo "var artistobj = obj.artist;";
@@ -124,10 +132,20 @@ if (!$isVideo) {
                 $('.playing_title').html(titleobj);
                 $('.playing_artist').html(artistobj);
 <?php
-    if ($iframed && AmpConfig::get('show_lyrics')) {
+    if ($iframed) {
+?>
+                $('.playing_actions').html(actionsobj);
+<?php
+        if (AmpConfig::get('show_lyrics')) {
 ?>
                 $('.playing_lyrics').html(lyricsobj);
 <?php
+        }
+        if (AmpConfig::get('waveform')) {
+?>
+                $('.waveform').html(waveformobj);
+<?php
+        }        
     }
 }
 if (AmpConfig::get('song_page_title')) {
@@ -156,12 +174,29 @@ if ($isVideo) {
 }
 ?>
 
+    $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, function (event) {
+        if (event.jPlayer.status.duration > 0)
+        {
+            var leftpos = 400 * (event.jPlayer.status.currentTime / event.jPlayer.status.duration);
+            $(".waveform-time").css({left: leftpos});
+        }
+    });
+    
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
         $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
     });
 
 <?php echo WebPlayer::add_media_js($playlist); ?>
 });
+
+function clickTimeOffset(e) {
+    var parrentOffset = $(".waveform").offset().left;
+    var offset = e.pageX - parrentOffset;
+    var duration = $("#jquery_jplayer_1").data("jPlayer").status.duration;
+    var time = duration * (offset / 400);
+    
+    return time;
+}
 </script>
 </head>
 <body>
@@ -182,12 +217,13 @@ if (!$isVideo) {
     <div class="playing_artist"></div>
     <div class="playing_title"></div>
     <div class="playing_lyrics"></div>
+    <div class="playing_actions"></div>
 </div>
 <?php
 } else {
     $playerClass = "jp-video jp-video-270p";
 } ?>
-<div class="jp-area">
+<div class="jp-area <?php if(!AmpConfig::get('waveform')) echo "jp-area-center"; ?>">
   <div id="jp_container_1" class="<?php echo $playerClass; ?>">
     <div class="jp-type-playlist">
       <div id="jquery_jplayer_1" class="jp-jplayer"></div>
@@ -262,6 +298,9 @@ if ($isVideo) {
                 <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
                 <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
             </ul>
+<?php if (AmpConfig::get('waveform')) { ?>            
+            <div class="waveform"></div>
+<?php } ?>
 <?php } ?>
         </div>
       </div>

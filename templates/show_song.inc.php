@@ -43,6 +43,15 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
         </div>
     </dd>
 <?php } ?>
+<?php if (AmpConfig::get('waveform')) { ?>
+    <?php $rowparity = UI::flip_class(); ?>
+    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Waveform'); ?></dt>
+    <dd class="<?php echo $rowparity; ?>">
+        <div id="waveform_<?php echo $song->id; ?>">
+            <img src="<?php echo AmpConfig::get('web_path'); ?>/waveform.php?song_id=<?php echo $song->id; ?>" />
+        </div>
+    </dd>
+<?php } ?>
 <?php $rowparity = UI::flip_class(); ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
@@ -53,6 +62,11 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
             <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true','play_add', T_('Play add song'),'addplay_song_' . $song->id); ?>
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'add_song_' . $song->id); ?>
+        <?php if (AmpConfig::get('sociable')) { ?>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=song&id=<?php echo $song->id; ?>">
+            <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
+            </a>
+        <?php } ?>
         <?php if (Access::check_function('download')) { ?>
             <a href="<?php echo Song::play_url($song->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>

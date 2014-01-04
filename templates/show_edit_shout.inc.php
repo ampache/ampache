@@ -34,7 +34,7 @@
     <td><textarea rows="5" cols="70" name="comment"><?php echo $shout->text; ?></textarea></td>
 </tr>
 <tr>
-    <td><input type="checkbox" name="sticky" <?php if ($shout->sticky == "1") { echo "checked"; } ?>/> <strong><?php echo T_('Make Sticky'); ?></strong></td>
+    <td><input type="checkbox" name="sticky" <?php if ($shout->sticky == "1") { echo "checked"; } ?>/> <strong><?php echo T_('Stick to homepage'); ?></strong></td>
 </tr>
 <tr>
     <td>

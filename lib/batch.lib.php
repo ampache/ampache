@@ -65,14 +65,14 @@ function send_zip( $name, $song_files )
 {
     // Check if they want to save it to a file, if so then make sure they've
     // got a defined path as well and that it's writable.
-    if (AmpConfig::get('file_zip_download') && AmpConfig::get('file_zip_path')) {
+    if (AmpConfig::get('file_zip_download') && AmpConfig::get('tmp_dir_path')) {
         // Check writeable
-        if (!is_writable(AmpConfig::get('file_zip_path'))) {
+        if (!is_writable(AmpConfig::get('tmp_dir_path'))) {
             $in_memory = '1';
-            debug_event('Error','File Zip Path:' . AmpConfig::get('file_zip_path') . ' is not writable','1');
+            debug_event('Error','File Zip Path:' . AmpConfig::get('tmp_dir_path') . ' is not writable','1');
         } else {
             $in_memory = '0';
-            $basedir = AmpConfig::get('file_zip_path');
+            $basedir = AmpConfig::get('tmp_dir_path');
         }
 
     } else {

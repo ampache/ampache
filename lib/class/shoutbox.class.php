@@ -44,10 +44,8 @@ class Shoutbox
      */
     private function _get_info($shout_id)
     {
-        $sticky_id = Dba::escape($shout_id);
-
-        $sql = "SELECT * FROM `user_shout` WHERE `id`='$shout_id'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT * FROM `user_shout` WHERE `id` = ?";
+        $db_results = Dba::read($sql, array($shout_id));
 
         $data = Dba::fetch_assoc($db_results);
 
@@ -169,16 +167,10 @@ class Shoutbox
      */
     public static function create($data)
     {
-        $user         = Dba::escape($GLOBALS['user']->id);
-        $text         = Dba::escape(strip_tags($data['comment']));
-        $date         = time();
         $sticky     = isset($data['sticky']) ? 1 : 0;
-        $object_id     = Dba::escape($data['object_id']);
-        $object_type    = Dba::escape($data['object_type']);
-
-        $sql = "INSERT INTO `user_shout` (`user`,`date`,`text`,`sticky`,`object_id`,`object_type`) " .
-            "VALUES ('$user','$date','$text','$sticky','$object_id','$object_type')";
-        $db_results = Dba::write($sql);
+        $sql = "INSERT INTO `user_shout` (`user`,`date`,`text`,`sticky`,`object_id`,`object_type`, `data`) " .
+            "VALUES (? , ?, ?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($GLOBALS['user']->id, time(), strip_tags($data['comment']), $sticky, $data['object_id'], $data['object_type'], $data['data']));
 
         $insert_id = Dba::insert_id();
 
@@ -229,5 +221,19 @@ class Shoutbox
         $db_results = Dba::write($sql);
 
     } // delete
+    
+    public static function get_shouts($object_type, $object_id)
+    {
+        $sql = "SELECT * FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?";
+        $db_results = Dba::read($sql, array($object_type, $object_id));
+        $results = array();
+        
+        while ($row = Dba::fetch_assoc($db_results))
+        {
+            $results[] = $row;
+        }
+        
+        return $results;
+    }
 
 } // Shoutbox class

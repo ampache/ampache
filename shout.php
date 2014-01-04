@@ -50,6 +50,12 @@ switch ($_REQUEST['action']) {
             Error::display('general');
             break;
         }
+        
+        $object->format();
+        if (strtolower(get_class($object)) == 'song')
+        {
+            $data = $_REQUEST['offset'];
+        }
 
         // Now go ahead and display the page where we let them add a comment etc
         require_once AmpConfig::get('prefix') . '/templates/show_add_shout.inc.php';

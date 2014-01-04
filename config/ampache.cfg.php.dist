@@ -7,7 +7,7 @@
 ; if this config file is up to date 
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 12
+config_version = 13
 
 ;###################
 ; Path Vars        #
@@ -192,22 +192,29 @@ require_localnet_session = "true"
 ; File Zip Download
 ; This settings tells Ampache to attempt to save the zip file
 ; to the filesystem instead of creating it in memory, you must
-; also set file_zip_path in order for this to work
+; also set tmp_dir_path in order for this to work
 ; DEFAULT: false
 ;file_zip_download = "false" 
-
-; File Zip Path
-; If File Zip Download is enabled this must be set to tell 
-; Ampache which directory to save the file to. Do not put a
-; trailing slash or this will not work. 
-; DEFAULT: false
-;file_zip_path = "false" 
 
 ; File Zip Comment
 ; This is an optional configuration option that adds a comment
 ; to your zip files, this only applies if you've got allow_zip_downloads
 ; DEFAULT: Ampache - Zip Batch Download
 ;file_zip_comment = "Ampache - Zip Batch Download" 
+
+; Waveform
+; This settings tells Ampache to attempt to generate a waveform
+; for each song. It requires transcode and encode_args_wav settings.
+; You must also set tmp_dir_path in order for this to work
+; DEFAULT: false
+;waveform = "false" 
+
+; Temporary Directory Path
+; If File Zip Download or Waveform is enabled this must be set to tell
+; Ampache which directory to save the temporary file to. Do not put a
+; trailing slash or this will not work.
+; DEFAULT: false
+;tmp_dir_path = "false"
 
 ; This setting throttles a persons downloading to the specified
 ; bytes per second. This is not a 100% guaranteed function, and 
@@ -613,6 +620,7 @@ refresh_limit = "60"
 ;encode_args_mp3 = "-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1"
 ;encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
 ;encode_args_m4a = "-vn -b:a %SAMPLE%K -c:a libfdk_aac -f adts pipe:1"
+;encode_args_wav = "-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1"
 
 ;######################################################
 ; these options allow you to configure your rss-feed

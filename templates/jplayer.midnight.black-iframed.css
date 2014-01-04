@@ -25,6 +25,9 @@
     margin-right: auto;
     width: 500px;
     min-width: 500px;
+ }
+ 
+div.jp-area-center {
     margin-top: 20px;
  }
 
@@ -486,6 +489,33 @@ div.playing_lyrics {
 div.playing_lyrics a {
 	color: rgb(238, 238, 238);
 	text-decoration: none;
+}
+
+div.playing_actions {
+	position: absolute;
+	top: 60px;
+    left: 80px;
+	font-size:0.5em;
+}
+
+div.waveform {
+    position: absolute;
+    top: 50px;
+    left: 40px;
+    height: 32px;
+}
+
+div.waveform a {
+    cursor: crosshair;
+}
+
+div.waveform-time {
+    position: absolute;
+    display: block;
+    height: 100%;
+    width: 0px;
+    border: 1px solid #ffcaca;
+    left: 0px;
 }
 
 div.jp-title,
