@@ -154,7 +154,7 @@ class Wanted extends database_object
         }
     }
 
-    public static function delete_wanted($artist, $album_name, $year)
+    public static function delete_wanted_by_name($artist, $album_name, $year)
     {
         $sql = "DELETE FROM `wanted` WHERE `artist` = ? AND `name` = ? AND `year` = ?";
         $params = array( $artist, $album_name, $year );
