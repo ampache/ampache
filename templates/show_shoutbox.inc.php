@@ -25,17 +25,9 @@
 <?php
   foreach ($shouts as $shout_id) {
     $shout = new Shoutbox($shout_id);
-    $object = Shoutbox::get_object($shout->object_type,$shout->object_id);
-    $object->format();
-    $client = new User($shout->user);
-    $client->format();
 ?>
 <div class="shout <?php echo UI::flip_class(); ?>">
-    <?php echo $shout->get_image(); ?>
-    <?php echo Ajax::button('?action=basket&type=' . $shout->object_type .'&id=' . $shout->object_id,'add', T_('Add'),'add_' . $shout->object_type . '_' . $shout->object_id); ?>
-    <?php echo $object->f_link; ?>
-    <span class="information"><?php echo $client->f_link; ?> <?php echo date("d/m H:i",$shout->date); ?></span>
-    <span class="shouttext"><?php echo scrub_out($shout->text); ?></span>
+    <?php echo $shout->get_display(true); ?>
 </div>
 <?php } ?>
 </div>

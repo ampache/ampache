@@ -80,6 +80,7 @@ Ampache includes some external modules that carry their own licensing.
 * [Muses Radio Player](http://www.musesradioplayer.com/): GPL v2
 * [Tag-it!] (http://aehlke.github.io/tag-it/): MIT
 * [PHP Echo Nest API] (https://github.com/bshaffer/php-echonest-api): MIT
+* [Noty] (http://ned.im/noty/): MIT
 
 
 Translations

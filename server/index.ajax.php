@@ -157,6 +157,25 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php';
         $results['sidebar'] = ob_get_contents();
         ob_end_clean();
+    break;
+    case 'shoutbox':
+        ob_start();
+        $since = $_REQUEST['since'];
+        if ($since) {
+            $shouts = Shoutbox::get_shouts_since(intval($since / 1000) - 2);
+            echo "<script language='javascript' type='text/javascript'>";
+            foreach($shouts as $id)
+            {
+                $shout = new Shoutbox($id);
+                echo "noty({text: '" . addslashes($shout->get_display()) . "',
+                    type: 'alert', layout: 'bottomRight',
+                    template: '<div class=\"noty_message noty_ampache\"><span class=\"noty_text noty_ampache\"></span><div class=\"noty_close noty_ampache\"></div></div>',
+                });";
+            }
+            echo "</script>";
+        }
+        $results['live_shoutbox'] = ob_get_clean();
+    break;
     default:
         $results['rfc3514'] = '0x1';
     break;

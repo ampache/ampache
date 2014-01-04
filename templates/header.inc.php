@@ -46,6 +46,7 @@ if (AmpConfig::get('use_rss')) { ?>
 <script src="<?php echo $web_path; ?>/modules/jquery/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/prettyPhoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/tag-it/tag-it.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/edit-dialog.js" language="javascript" type="text/javascript"></script>
@@ -136,6 +137,21 @@ $(function() {
 </script>
 </head>
 <body <?php echo (AmpConfig::get('iframes')) ? "onLoad='forceIframe();'" : ""; ?>>
+<?php if (AmpConfig::get('sociable') && AmpConfig::get('notify')) { ?>
+<script type="text/javascript" language="javascript">
+var lastrefresh = new Date().getTime();
+var refresh_sociable_interval=<?php echo AmpConfig::get('refresh_limit') ?>;
+function refresh_sociable()
+{
+    <?php echo Ajax::action('?page=index&action=shoutbox&since=\' + lastrefresh + \'', ''); ?>;
+    lastrefresh = new Date().getTime();
+}
+$(document).ready(function() {
+    window.setInterval(function(){refresh_sociable();}, refresh_sociable_interval * 1000);
+});
+</script>
+<div id="live_shoutbox"></div>
+<?php } ?>
 <!-- rfc3514 implementation -->
 <div id="rfc3514" style="display:none;">0x0</div>
 <div id="maincontainer">
