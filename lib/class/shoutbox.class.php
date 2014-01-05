@@ -273,7 +273,7 @@ class Shoutbox
 
     public static function get_shouts($object_type, $object_id)
     {
-        $sql = "SELECT * FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?";
+        $sql = "SELECT * FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC";
         $db_results = Dba::read($sql, array($object_type, $object_id));
         $results = array();
 

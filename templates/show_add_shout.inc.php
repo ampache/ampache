@@ -20,8 +20,10 @@
  *
  */
 ?>
+<div>
+<div style="float: right">
 <?php
-$boxtitle = T_('Post to Shoutbox') . ' ' . T_('on') . ' ' . $object->f_title;
+$boxtitle = T_('Post to Shoutbox');
 if ($data) {
     $boxtitle .= ' (' . $data . ')';
 }
@@ -33,18 +35,18 @@ UI::show_box_top($boxtitle, 'box box_add_shout');
     <td><strong><?php echo T_('Comment:'); ?></strong>
 </tr>
 <tr>
-    <td><textarea rows="5" cols="70" maxlength="140" name="comment"></textarea></td>
+    <td><textarea rows="5" cols="35" maxlength="140" name="comment"></textarea></td>
 </tr>
 <?php if (Access::check('interface','50')) { ?>
 <tr>
-    <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Stick to homepage'); ?></strong></td>
+    <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Stick this comment'); ?></strong></td>
 </tr>
 <?php } ?>
 <tr>
     <td>
         <?php echo Core::form_register('add_shout'); ?>
         <input type="hidden" name="object_id" value="<?php echo $object->id; ?>" />
-        <input type="hidden" name="object_type" value="<?php echo strtolower(get_class($object)); ?>" />
+        <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
         <input type="hidden" name="data" value="<?php echo $data; ?>" />
         <input type="submit" value="<?php echo T_('Create'); ?>" />
     </td>
@@ -52,3 +54,21 @@ UI::show_box_top($boxtitle, 'box box_add_shout');
 </table>
 </form>
 <?php UI::show_box_bottom(); ?>
+</div>
+<div style="display: inline;">
+<?php
+$boxtitle = $object->f_title . ' ' . T_('Shoutbox');
+UI::show_box_top($boxtitle, 'box box_add_shout');
+?>
+<?php
+$object_type = strtolower(get_class($object));
+$shouts = Shoutbox::get_shouts($object_type, $object->id);
+foreach($shouts as $sh)
+{
+    $shout = new Shoutbox($sh['id']);
+    echo "<div class='shout'>" . $shout->get_display() . "</div>";
+}
+?>
+<?php UI::show_box_bottom(); ?>
+</div>
+</div>
