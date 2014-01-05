@@ -23,6 +23,8 @@
 <div>
 <div style="float: right">
 <?php
+$object_type = strtolower(get_class($object));
+
 $boxtitle = T_('Post to Shoutbox');
 if ($data) {
     $boxtitle .= ' (' . $data . ')';
@@ -61,11 +63,9 @@ $boxtitle = $object->f_title . ' ' . T_('Shoutbox');
 UI::show_box_top($boxtitle, 'box box_add_shout');
 ?>
 <?php
-$object_type = strtolower(get_class($object));
 $shouts = Shoutbox::get_shouts($object_type, $object->id);
-foreach ($shouts as $sh) {
-    $shout = new Shoutbox($sh['id']);
-    echo "<div class='shout'>" . $shout->get_display() . "</div>";
+if (count($shouts)) {
+    require_once AmpConfig::get('prefix') . '/templates/show_shoutbox.inc.php';
 }
 ?>
 <?php UI::show_box_bottom(); ?>
