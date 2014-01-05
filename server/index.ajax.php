@@ -163,7 +163,7 @@ switch ($_REQUEST['action']) {
         ob_start();
         $since = $_REQUEST['since'];
         if ($since) {
-            $shouts = Shoutbox::get_shouts_since(intval($since / 1000) - 2);
+            $shouts = Shoutbox::get_shouts_since(intval($since / 1000));
             echo "<script language='javascript' type='text/javascript'>";
             foreach ($shouts as $id) {
                 $shout = new Shoutbox($id);

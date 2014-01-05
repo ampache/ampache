@@ -1540,10 +1540,6 @@ ol, ul, #rightbar ul {
 	list-style:none;
 }
 
-#shout_objects {
-    margin-bottom: 20px;
-}
-
 .shout {
     clear: float;
     width: 400px;
