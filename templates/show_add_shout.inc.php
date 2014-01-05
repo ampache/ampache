@@ -63,8 +63,7 @@ UI::show_box_top($boxtitle, 'box box_add_shout');
 <?php
 $object_type = strtolower(get_class($object));
 $shouts = Shoutbox::get_shouts($object_type, $object->id);
-foreach($shouts as $sh)
-{
+foreach ($shouts as $sh) {
     $shout = new Shoutbox($sh['id']);
     echo "<div class='shout'>" . $shout->get_display() . "</div>";
 }

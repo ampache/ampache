@@ -96,7 +96,7 @@ class Shoutbox
         return $shouts;
 
     } // get_top
-    
+
     public static function get_shouts_since($time)
     {
         $sql = "SELECT * FROM `user_shout` WHERE `date` > ? ORDER BY `date` DESC";
@@ -235,7 +235,7 @@ class Shoutbox
         $db_results = Dba::write($sql);
 
     } // delete
-    
+
     public function get_display($jsbuttons = false)
     {
         $object = Shoutbox::get_object($this->object_type, $this->object_id);
@@ -245,8 +245,7 @@ class Shoutbox
         $img = $this->get_image();
         $html = "<div class='shoutbox-item'>";
         $html .= "<div class='shoutbox-data'>";
-        if ($img)
-        {
+        if ($img) {
             $html .= "<div class='shoutbox-img'>" . $img . "</div>";
         }
         $html .= "<div class='shoutbox-info'>";
@@ -257,8 +256,7 @@ class Shoutbox
         $html .= "</div>";
         $html .= "<div class='shoutbox-footer'>";
         $html .= "<div class='shoutbox-actions'>";
-        if ($jsbuttons)
-        {
+        if ($jsbuttons) {
             $html .= Ajax::button('?page=stream&action=directplay&playtype=' . $this->object_type .'&' . $this->object_type . '_id=' . $this->object_id,'play', T_('Play'),'play_' . $this->object_type . '_' . $this->object_id);
             $html .= Ajax::button('?action=basket&type=' . $this->object_type .'&id=' . $this->object_id,'add', T_('Add'),'add_' . $this->object_type . '_' . $this->object_id);
         }
@@ -267,7 +265,7 @@ class Shoutbox
         $html .= "<div class='shoutbox-user'>by " . $user->f_link . "</div>";
         $html .= "</div>";
         $html .= "</div>";
-        
+
         return $html;
     }
 

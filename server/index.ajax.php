@@ -164,8 +164,7 @@ switch ($_REQUEST['action']) {
         if ($since) {
             $shouts = Shoutbox::get_shouts_since(intval($since / 1000) - 2);
             echo "<script language='javascript' type='text/javascript'>";
-            foreach($shouts as $id)
-            {
+            foreach ($shouts as $id) {
                 $shout = new Shoutbox($id);
                 echo "noty({text: '" . addslashes($shout->get_display()) . "',
                     type: 'alert', layout: 'bottomRight',
