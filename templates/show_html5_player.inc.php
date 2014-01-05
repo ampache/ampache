@@ -124,7 +124,7 @@ if (!$isVideo) {
         if (AmpConfig::get('waveform')) {
             echo "var waveformobj = '';";
             if (AmpConfig::get('waveform')) {
-                echo "waveformobj += '<a href=\"#\" title=\"" . T_('Post Shout') . "\" onClick=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + songids[index] + '&offset=\' + clickTimeOffset(event));\">';";
+                echo "waveformobj += '<a href=\"#\" title=\"" . T_('Post Shout') . "\" onClick=\"javascript:WaveformClick(' + songids[index] + ', ClickTimeOffset(event));\">';";
             }
             echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . AmpConfig::get('web_path') . "/waveform.php?song_id=' + songids[index] + '\" onLoad=\"ShowWaveform();\">';";
             if (AmpConfig::get('waveform')) {
@@ -194,7 +194,7 @@ if ($isVideo) {
             $(".waveform-time").css({left: leftpos});
         }
     });
-<?php } ?>    
+<?php } ?>
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
         $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
     });
@@ -204,7 +204,24 @@ if ($isVideo) {
 <?php
     if (AmpConfig::get('waveform')) {
 ?>
-function clickTimeOffset(e)
+var wavclicktimer = null;
+function WaveformClick(songid, time)
+{
+    // Double click
+    if (wavclicktimer != null) {
+        clearTimeout(wavclicktimer);
+        wavclicktimer = null;
+        NavigateTo('<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=song&id=' + songid + '&offset=' + time);
+    } else {
+        // Single click
+        wavclicktimer = setTimeout(function() {
+            wavclicktimer = null;
+            $("#jquery_jplayer_1").data("jPlayer").play(time);
+        }, 250);
+    }
+}
+
+function ClickTimeOffset(e)
 {
     var parrentOffset = $(".waveform").offset().left;
     var offset = e.pageX - parrentOffset;
@@ -223,7 +240,7 @@ function HideWaveform()
 {
     $('.waveform').css('visibility', 'hidden');
 }
-<?php } ?> 
+<?php } ?>
 </script>
 </head>
 <body>
