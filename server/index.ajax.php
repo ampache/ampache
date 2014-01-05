@@ -59,12 +59,13 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'similar_now_playing':
-        if (AmpConfig::get('show_similar') && isset($_REQUEST['media_id']) && isset($_REQUEST['media_artist'])) {
+        $media_id = $_REQUEST['media_id'];
+        if (AmpConfig::get('show_similar') && isset($media_id) && isset($_REQUEST['media_artist'])) {
             $artists = Recommendation::get_artists_like($_REQUEST['media_artist'], 3, false);
-            $songs = Recommendation::get_songs_like($_REQUEST['media_id'], 3);
+            $songs = Recommendation::get_songs_like($media_id, 3);
             ob_start();
             require_once AmpConfig::get('prefix') . '/templates/show_now_playing_similar.inc.php';
-            $results['similar_items'] = ob_get_clean();
+            $results['similar_items_' . $media_id] = ob_get_clean();
         }
     break;
     case 'wanted_missing_albums':

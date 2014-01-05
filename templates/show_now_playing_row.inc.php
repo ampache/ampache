@@ -27,7 +27,7 @@
             <?php echo scrub_out($np_user->fullname); ?>
         </a>
     </div>
-
+<br />
 <?php if (AmpConfig::get('ratings')) { ?>
     <div class="np_cell cel_rating">
         <label><?php echo T_('Rating'); ?></label>
@@ -45,13 +45,6 @@
         </div>
     </div>
 <?php } ?>
-
-    <?php if (AmpConfig::get('show_lyrics')) {?>
-    <div class="np_cell cel_lyrics">
-        <label>&nbsp;</label>
-        <?php echo $media->f_lyrics; ?>
-    </div>
-    <?php } ?>
 </div>
 
 <div class="np_group" id="np_group_2">
@@ -84,7 +77,7 @@
 <?php } ?>
 
 <?php if (AmpConfig::get('show_similar')) { ?>
-<div class="np_group similars" id="similar_items">
+<div class="np_group similars" id="similar_items_<?php echo $media->id; ?>">
     <div class="np_group similars">
         <div class="np_cell cel_similar">
             <label><?php echo T_('Similar Artists'); ?></label>

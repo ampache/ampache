@@ -106,6 +106,10 @@ if (AmpConfig::get('show_played_times')) {
         <a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo T_('Update from tags'); ?></a>
     </li>
     <?php  } ?>
+    <?php if (AmpConfig::get('sociable')) { ?>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo T_('Post Shout'); ?></a>
+    <?php } ?>
     <?php if (Access::check_function('batch_download')) { ?>
     <li>
         <a href="<?php echo $web_path; ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
