@@ -121,8 +121,15 @@ if (!$isVideo) {
         if (AmpConfig::get('sociable')) {
             echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + songids[index] + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>';";
         }
-        if (AmpConfig::get('sociable')) {
-            echo "waveformobj = '<a href=\"#\" title=\"" . T_('Post Shout') . "\" onClick=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + songids[index] + '&offset=\' + clickTimeOffset(event));\"><div class=\"waveform-time\"></div><img src=\"" . AmpConfig::get('web_path') . "/waveform.php?song_id=' + songids[index] + '\"></a>';";
+        if (AmpConfig::get('waveform')) {
+            echo "var waveformobj = '';";
+            if (AmpConfig::get('waveform')) {
+                echo "waveformobj += '<a href=\"#\" title=\"" . T_('Post Shout') . "\" onClick=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + songids[index] + '&offset=\' + clickTimeOffset(event));\">';";
+            }
+            echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . AmpConfig::get('web_path') . "/waveform.php?song_id=' + songids[index] + '\" onLoad=\"ShowWaveform();\">';";
+            if (AmpConfig::get('waveform')) {
+                echo "waveformobj += '</a>';";
+            }
         }
     } else {
         echo "var titleobj = obj.title;";
@@ -159,6 +166,11 @@ if (AmpConfig::get('song_page_title')) {
 ?>
             }
         });
+<?php
+    if (AmpConfig::get('waveform')) {
+?>
+        HideWaveform();
+<?php } ?>
     });
 
 <?php
@@ -173,21 +185,25 @@ if ($isVideo) {
 <?php
 }
 ?>
-
+<?php
+    if (AmpConfig::get('waveform')) {
+?>
     $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, function (event) {
         if (event.jPlayer.status.duration > 0) {
             var leftpos = 400 * (event.jPlayer.status.currentTime / event.jPlayer.status.duration);
             $(".waveform-time").css({left: leftpos});
         }
     });
-
+<?php } ?>    
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
         $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
     });
 
 <?php echo WebPlayer::add_media_js($playlist); ?>
 });
-
+<?php
+    if (AmpConfig::get('waveform')) {
+?>
 function clickTimeOffset(e)
 {
     var parrentOffset = $(".waveform").offset().left;
@@ -197,6 +213,17 @@ function clickTimeOffset(e)
 
     return time;
 }
+
+function ShowWaveform()
+{
+    $('.waveform').css('visibility', 'visible');
+}
+
+function HideWaveform()
+{
+    $('.waveform').css('visibility', 'hidden');
+}
+<?php } ?> 
 </script>
 </head>
 <body>
