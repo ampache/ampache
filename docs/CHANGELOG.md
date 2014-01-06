@@ -3,6 +3,11 @@ CHANGELOG
 
 3.7
 ----------
+- Improved Shoutbox (css fix, real time notifications...)
+- Fixed iframe basket play action reload
+- Fixed wanted album auto-remove
+- Fixed MusicBrainz get album art from releases
+- Added Waveform feature on songs
 - Added AutoUpdate Ampache version check
 - Added auto-completion in global Ampache search
 - Added option to 'lock' header/sidebars UI
