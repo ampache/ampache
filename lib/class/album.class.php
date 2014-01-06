@@ -267,7 +267,13 @@ class Album extends database_object
 
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && Config::get('wanted')) {
-            Wanted::delete_wanted_release($mbid);
+            try
+            {
+                Wanted::delete_wanted_release($mbid);
+            } catch (Exception $e)
+            {
+                debug_event('wanted', 'Cannot process wanted releases auto-removal check: ' . $e->getMessage(), '1');
+            }
         }
 
         self::$_mapcache[$name][$year][$disk][$mbid] = $id;
