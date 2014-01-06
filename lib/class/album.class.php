@@ -266,7 +266,7 @@ class Album extends database_object
         $id = Dba::insert_id();
 
         // Remove from wanted album list if any request on it
-        if (!empty($mbid) && Config::get('wanted')) {
+        if (!empty($mbid) && AmpConfig::get('wanted')) {
             try
             {
                 Wanted::delete_wanted_release($mbid);
