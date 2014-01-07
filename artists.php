@@ -43,9 +43,9 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . '/templates/show_artist.inc.php';
         break;
     case 'update_from_tags':
-        $type        = 'artist';
-        $object_id    = intval($_REQUEST['artist']);
-        $target_url    = AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
+        $type  = 'artist';
+        $object_id = intval($_REQUEST['artist']);
+        $target_url = AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
         require_once AmpConfig::get('prefix') . '/templates/show_update_items.inc.php';
     break;
     case 'rename_similar':

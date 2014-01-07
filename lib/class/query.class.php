@@ -605,11 +605,11 @@ class Query
 
     } // set_offset
 
-        public function set_catalog( $catalog_number )
-        {
-                $this->catalog = $catalog_number;
+    public function set_catalog( $catalog_number )
+    {
+        $this->catalog = $catalog_number;
         debug_event("Catalog", "set catalog id: " . $this->catalog, "5");
-        }
+    }
 
     /**
      * set_select

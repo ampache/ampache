@@ -77,7 +77,7 @@ class Browse extends Query
      */
     public function show_objects($object_ids = null, $argument = null)
     {
-        if ($this->is_simple() || ! is_array($object_ids)) {
+        if ($this->is_simple() || !is_array($object_ids)) {
             $object_ids = $this->get_saved();
         } else {
             $this->save_objects($object_ids);
@@ -94,6 +94,8 @@ class Browse extends Query
                 $this->get_offset(),
                 true
             );
+        } else if (!count($object_ids)) {
+            $this->set_total(0);
         }
 
         // Load any additional object we need for this
