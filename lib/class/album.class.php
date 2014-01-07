@@ -267,11 +267,9 @@ class Album extends database_object
 
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
-            try
-            {
+            try {
                 Wanted::delete_wanted_release($mbid);
-            } catch (Exception $e)
-            {
+            } catch (Exception $e) {
                 debug_event('wanted', 'Cannot process wanted releases auto-removal check: ' . $e->getMessage(), '1');
             }
         }

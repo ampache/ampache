@@ -209,6 +209,11 @@ require_localnet_session = "true"
 ; DEFAULT: false
 ;waveform = "false" 
 
+; Waveform color
+; The waveform color.
+; DEFAULT: #FF0000
+;waveform_color = "#FF0000" 
+
 ; Temporary Directory Path
 ; If File Zip Download or Waveform is enabled this must be set to tell
 ; Ampache which directory to save the temporary file to. Do not put a

@@ -158,7 +158,7 @@ class Waveform
         $detail = 5;
         $width = 400;
         $height = 32;
-        $foreground = '#FF0000';
+        $foreground = AmpConfig::get('waveform_color') ?: '#FF0000';
         $background = '';
         $draw_flat = true;
 
