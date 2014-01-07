@@ -57,6 +57,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . '/templates/show_userflag.inc.php';
     break;
     case 'recent':
+        $user_id = $_REQUEST['user_id'];
         require_once AmpConfig::get('prefix') . '/templates/show_recent.inc.php';
     break;
     case 'wanted':

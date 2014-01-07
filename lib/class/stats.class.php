@@ -168,7 +168,7 @@ class Stats
         if (!$threshold) {
             $threshold = AmpConfig::get('stats_threshold');
         }
-        $date    = time() - (86400*$threshold);
+        $date = time() - (86400*$threshold);
 
         /* Select Top objects counting by # of rows */
         $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count" .
@@ -212,13 +212,19 @@ class Stats
      * get_recent_sql
      * This returns the get_recent sql
      */
-    public static function get_recent_sql($type)
+    public static function get_recent_sql($type, $user_id='')
     {
         $type = self::validate_type($type);
 
+        $user_sql = '';
+        if (!empty($user_id)) {
+            $user_sql = " AND `user` = '" . $user_id . "'";
+        }
+        
         $sql = "SELECT DISTINCT(`object_id`) as `id`, MAX(`date`) FROM object_count" .
-            " WHERE `object_type` = '" . $type ."' AND " . Catalog::get_enable_filter($type, '`object_id`') .
+            " WHERE `object_type` = '" . $type ."'" . $user_sql . " AND " . Catalog::get_enable_filter($type, '`object_id`') .
             " GROUP BY `object_id` ORDER BY MAX(`date`) DESC, `id` ";
+
         return $sql;
     }
 
@@ -266,8 +272,8 @@ class Stats
      */
     public static function get_user($count,$type,$user,$full='')
     {
-        $count     = intval($count);
-        $type    = self::validate_type($type);
+        $count = intval($count);
+        $type = self::validate_type($type);
 
         /* If full then don't limit on date */
         if ($full) {

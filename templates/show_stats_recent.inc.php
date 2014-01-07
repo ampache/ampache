@@ -20,21 +20,21 @@
  *
  */
 
-$sql = Stats::get_recent_sql('album');
+$sql = Stats::get_recent_sql('album', $user_id);
 $browse = new Browse();
 $browse->set_type('album', $sql);
 $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
 
-$sql = Stats::get_recent_sql('artist');
+$sql = Stats::get_recent_sql('artist', $user_id);
 $browse = new Browse();
 $browse->set_type('artist', $sql);
 $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
 
-$sql = Stats::get_recent_sql('song');
+$sql = Stats::get_recent_sql('song', $user_id);
 $browse = new Browse();
 $browse->set_type('song', $sql);
 $browse->set_simple_browse(true);

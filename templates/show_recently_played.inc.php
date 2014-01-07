@@ -133,7 +133,15 @@ $thcount = 7;
         <th class="cel_agent"><?php echo T_('Agent'); ?></th>
     </tr>
 </table>
-<div id="recent_more"><a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=recent"><?php echo T_('More'); ?></a></div>
+<div id="recent_more">
+<?php
+    $user_id_a = '';
+    if (isset($user_id) && !empty($user_id)) {
+        $user_id_a = "&amp;user_id=" . scrub_out($user_id);
+    }
+?>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=recent<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>
+</div>
 <script language="javascript" type="text/javascript">
 $(document).ready(function(){
     $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
