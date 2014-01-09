@@ -551,6 +551,7 @@ class Song extends database_object implements media
                 case 'track':
                 case 'artist':
                 case 'album':
+                case 'mbid':
                     // Check to see if it needs to be updated
                     if ($value != $this->$key) {
                         $function = 'update_' . $key;
@@ -579,28 +580,27 @@ class Song extends database_object implements media
      */
     public static function update_song($song_id, $new_song)
     {
-        $title         = Dba::escape($new_song->title);
-        $bitrate    = Dba::escape($new_song->bitrate);
-        $rate        = Dba::escape($new_song->rate);
-        $mode        = Dba::escape($new_song->mode);
-        $size        = Dba::escape($new_song->size);
-        $time        = Dba::escape($new_song->time);
-        $track        = Dba::escape($new_song->track);
-        $mbid        = Dba::escape($new_song->mbid);
-        $artist        = Dba::escape($new_song->artist);
-        $album        = Dba::escape($new_song->album);
-        $year        = Dba::escape($new_song->year);
-        $song_id    = Dba::escape($song_id);
-        $update_time    = time();
-
+        $title = Dba::escape($new_song->title);
+        $bitrate = Dba::escape($new_song->bitrate);
+        $rate = Dba::escape($new_song->rate);
+        $mode = Dba::escape($new_song->mode);
+        $size = Dba::escape($new_song->size);
+        $time = Dba::escape($new_song->time);
+        $track = Dba::escape($new_song->track);
+        $mbid = Dba::escape($new_song->mbid);
+        $artist = Dba::escape($new_song->artist);
+        $album = Dba::escape($new_song->album);
+        $year = Dba::escape($new_song->year);
+        $song_id = Dba::escape($song_id);
+        $update_time = time();
 
         $sql = "UPDATE `song` SET `album`='$album', `year`='$year', `artist`='$artist', " .
             "`title`='$title', `bitrate`='$bitrate', `rate`='$rate', `mode`='$mode', " .
             "`size`='$size', `time`='$time', `track`='$track', " .
             "`mbid`='$mbid', " .
             "`update_time`='$update_time' WHERE `id`='$song_id'";
-        $db_results = Dba::write($sql);
 
+        $db_results = Dba::write($sql);
 
         $comment     = Dba::escape($new_song->comment);
         $language    = Dba::escape($new_song->language);
@@ -722,9 +722,9 @@ class Song extends database_object implements media
 
     } // update_track
 
-    public static function update_mbid($new_mbid,$song_id)
+    public static function update_mbid($new_mbid, $song_id)
     {
-        self::_update_item('mbid',$new_mbid,$song_id,'50');
+        self::_update_item('mbid', $new_mbid, $song_id, '50');
 
     } // update_mbid
 
@@ -794,7 +794,7 @@ class Song extends database_object implements media
 
         /* Can't update to blank */
         if (!strlen(trim($value)) && $field != 'comment') { return false; }
-
+        
         $sql = "UPDATE `song` SET `$field` = ? WHERE `id` = ?";
         $db_results = Dba::write($sql, array($value, $song_id));
 

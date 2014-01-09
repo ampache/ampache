@@ -201,8 +201,7 @@ class Album extends database_object
      *
      * Searches for an album; if none is found, insert a new one.
      */
-    public static function check($name, $year = 0, $disk = 0, $mbid = null,
-        $readonly = false) {
+    public static function check($name, $year = 0, $disk = 0, $mbid = null, $readonly = false) {
 
         if ($mbid == '') $mbid = null;
 
@@ -400,11 +399,11 @@ class Album extends database_object
      */
     public function update($data)
     {
-        $year        = $data['year'];
-        $artist      = $data['artist'];
-        $name        = $data['name'];
-        $disk        = $data['disk'];
-        $mbid        = $data['mbid'];
+        $year = $data['year'];
+        $artist = $data['artist'];
+        $name = $data['name'];
+        $disk = $data['disk'];
+        $mbid = $data['mbid'];
 
         $current_id = $this->id;
 
@@ -439,12 +438,37 @@ class Album extends database_object
             Userflag::gc();
         } // if updated
 
-        Tag::update_tag_list($data['edit_tags'], 'album', $current_id);
-
+        $override_songs = false;
+        if ($data['apply_childs'] == 'checked') {
+            $override_songs = true;
+        }
+        $this->update_tags($data['edit_tags'], $override_songs, $current_id);
+        
         return $current_id;
 
     } // update
 
+    /**
+     * update_tags
+     *
+     * Update tags of albums and/or songs
+     */
+    public function update_tags($tags_comma, $override_songs, $current_id = null)
+    {
+        if ($current_id == null) {
+            $current_id = $this->id;
+        }
+        
+        Tag::update_tag_list($tags_comma, 'album', $current_id);
+        
+        if ($override_songs) {
+            $songs = $this->get_songs();
+            foreach ($songs as $song_id) {
+                Tag::update_tag_list($tags_comma, 'song', $song_id);
+            }
+        }
+    }
+    
     /**
      * get_random
      *

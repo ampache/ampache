@@ -48,10 +48,18 @@
                 <td><input type="text" name="disk" value="<?php echo scrub_out($album->disk); ?>" /></td>
             </tr>
             <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID') ?></td>
+                <td><input type="text" name="mbid" value="<?php echo $album->mbid; ?>" /></td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>
                 <td>
                     <input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($album->tags); ?>" />
                 </td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"></td>
+                <td><input type="checkbox" name="apply_childs" value="checked" /><?php echo T_(' Apply tags to all childs (override tags for songs)') ?></td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $album->id; ?>" />

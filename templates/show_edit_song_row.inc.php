@@ -50,6 +50,10 @@
                 <td><input type="text" name="track" value="<?php echo scrub_out($song->track); ?>" /></td>
             </tr>
             <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID') ?></td>
+                <td><input type="text" name="mbid" value="<?php echo $song->mbid; ?>" /></td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>
                 <td>
                     <input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($song->tags); ?>" />

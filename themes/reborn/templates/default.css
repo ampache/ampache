@@ -309,7 +309,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     padding-bottom: 20px;
 }
 
-.edit_dialog_content input, .edit_dialog_content select {
+.edit_dialog_content input[type=text] , .edit_dialog_content select {
     width: 450px;
     height: 30px;
     color: #fff;

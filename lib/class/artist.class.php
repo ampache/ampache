@@ -386,27 +386,33 @@ class Artist extends database_object
         // Save our current ID
         $current_id = $this->id;
 
-        $artist_id = self::check($data['name'], $this->mbid);
+        // Check if name is different than current name
+        if ($this->name != $data['name']) {
+            $artist_id = self::check($data['name'], $this->mbid);
 
-        // If it's changed we need to update
-        if ($artist_id != $this->id) {
-            $songs = $this->get_songs();
-            foreach ($songs as $song_id) {
-                Song::update_artist($artist_id,$song_id);
-            }
-            $updated = 1;
-            $current_id = $artist_id;
-            self::gc();
-        } // end if it changed
+            // If it's changed we need to update
+            if ($artist_id != $this->id) {
+                $songs = $this->get_songs();
+                foreach ($songs as $song_id) {
+                    Song::update_artist($artist_id,$song_id);
+                }
+                $updated = 1;
+                $current_id = $artist_id;
+                self::gc();
+            } // end if it changed
 
-        if ($updated) {
-            foreach ($songs as $song_id) {
-                Song::update_utime($song_id);
-            }
-            Stats::gc();
-            Rating::gc();
-            Userflag::gc();
-        } // if updated
+            if ($updated) {
+                foreach ($songs as $song_id) {
+                    Song::update_utime($song_id);
+                }
+                Stats::gc();
+                Rating::gc();
+                Userflag::gc();
+            } // if updated
+        } else if ($this->mbid != $data['mbid']) {
+            $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
+            Dba::write($sql, array($data['mbid'], $current_id));
+        }
 
         // Update artist name (if we don't want to use the MusicBrainz name)
         $trimmed = Catalog::trim_prefix(trim($data['name']));
@@ -416,10 +422,36 @@ class Artist extends database_object
             Dba::write($sql, array($name, $current_id));
         }
 
-        Tag::update_tag_list($data['edit_tags'], 'artist', $current_id);
-
+        $override_childs = false;
+        if ($data['apply_childs'] == 'checked') {
+            $override_childs = true;
+        }
+        $this->update_tags($data['edit_tags'], $override_childs, $current_id);
+        
         return $current_id;
 
     } // update
+    
+    /**
+     * update_tags
+     *
+     * Update tags of artists and/or albums
+     */
+    public function update_tags($tags_comma, $override_childs, $current_id = null)
+    {
+        if ($current_id == null) {
+            $current_id = $this->id;
+        }
+        
+        Tag::update_tag_list($tags_comma, 'artist', $current_id);
+        
+        if ($override_childs) {
+            $albums = $this->get_albums();
+            foreach ($albums as $album_id) {
+                $album = new Album($album_id);
+                $album->update_tags($tags_comma, $override_childs);
+            }
+        }
+    }
 
 } // end of artist class
