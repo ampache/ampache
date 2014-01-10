@@ -92,8 +92,8 @@ class Recommendation
                     "LEFT JOIN `catalog` ON " .
                     "`song`.`catalog` = `catalog`.`id` WHERE " .
                     "`song`.`title` = ? " .
-                    "'AND `artist`.`name` = ? " .
-                    "'AND `catalog`.`enabled` = 1";
+                    "AND `artist`.`name` = ? " .
+                    "AND `catalog`.`enabled` = '1'";
 
                 $db_result = Dba::read($sql, array($name, $s_artist_name['string']));
 

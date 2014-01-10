@@ -223,25 +223,33 @@ class Stream
      */
     public static function get_now_playing()
     {
-        $sql = 'SELECT `session`.`agent`, `now_playing`.* FROM `now_playing` ';
-        $sql .= 'LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` ';
+        $maxsql = '';
+        if (AmpConfig::get('now_playing_per_user')) {
+            $maxsql = ', ';
+        }
+        $sql = 'SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` ';
+        $sql .= 'LEFT JOIN `session` ON `session`.`id` = `np`.`id` ';
+
+        if (AmpConfig::get('now_playing_per_user')) {
+            $sql .= 'INNER JOIN ( ' .
+                'SELECT MAX(`insertion`) AS `max_insertion`, `user`, `id` ' .
+                'FROM `now_playing` ' .
+                'GROUP BY `user`' .
+                ') `np2` ' .
+                'ON `np`.`user` = `np2`.`user` ' .
+                'AND `np`.`insertion` = `np2`.`max_insertion` ';
+        }
 
         if (!Access::check('interface','100')) {
             // We need to check only for users which have allowed view of personnal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
             if ($personal_info_id) {
                 $current_user = $GLOBALS['user']->id;
-                $sql .= "WHERE (`now_playing`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user')) ";
+                $sql .= "WHERE (`now_playing`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
 
-        if (AmpConfig::get('now_playing_per_user')) {
-            $sql .= 'GROUP BY `now_playing`.`user` ';
-            $sql .= 'ORDER BY `now_playing`.`insertion` DESC';
-        } else {
-            $sql .= 'ORDER BY `now_playing`.`expire` DESC';
-        }
-
+        $sql .= 'ORDER BY `np`.`expire` DESC';
         $db_results = Dba::read($sql);
 
         $results = array();
