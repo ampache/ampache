@@ -201,8 +201,8 @@ class Album extends database_object
      *
      * Searches for an album; if none is found, insert a new one.
      */
-    public static function check($name, $year = 0, $disk = 0, $mbid = null, $readonly = false) {
-
+    public static function check($name, $year = 0, $disk = 0, $mbid = null, $readonly = false)
+    {
         if ($mbid == '') $mbid = null;
 
         $trimmed = Catalog::trim_prefix(trim($name));
@@ -443,7 +443,7 @@ class Album extends database_object
             $override_songs = true;
         }
         $this->update_tags($data['edit_tags'], $override_songs, $current_id);
-        
+
         return $current_id;
 
     } // update
@@ -458,9 +458,9 @@ class Album extends database_object
         if ($current_id == null) {
             $current_id = $this->id;
         }
-        
+
         Tag::update_tag_list($tags_comma, 'album', $current_id);
-        
+
         if ($override_songs) {
             $songs = $this->get_songs();
             foreach ($songs as $song_id) {
@@ -468,7 +468,7 @@ class Album extends database_object
             }
         }
     }
-    
+
     /**
      * get_random
      *

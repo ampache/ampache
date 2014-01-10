@@ -794,7 +794,7 @@ class Song extends database_object implements media
 
         /* Can't update to blank */
         if (!strlen(trim($value)) && $field != 'comment') { return false; }
-        
+
         $sql = "UPDATE `song` SET `$field` = ? WHERE `id` = ?";
         $db_results = Dba::write($sql, array($value, $song_id));
 

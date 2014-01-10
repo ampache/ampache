@@ -220,7 +220,7 @@ class Stats
         if (!empty($user_id)) {
             $user_sql = " AND `user` = '" . $user_id . "'";
         }
-        
+
         $sql = "SELECT DISTINCT(`object_id`) as `id`, MAX(`date`) FROM object_count" .
             " WHERE `object_type` = '" . $type ."'" . $user_sql . " AND " . Catalog::get_enable_filter($type, '`object_id`') .
             " GROUP BY `object_id` ORDER BY MAX(`date`) DESC, `id` ";

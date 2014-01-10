@@ -427,11 +427,11 @@ class Artist extends database_object
             $override_childs = true;
         }
         $this->update_tags($data['edit_tags'], $override_childs, $current_id);
-        
+
         return $current_id;
 
     } // update
-    
+
     /**
      * update_tags
      *
@@ -442,9 +442,9 @@ class Artist extends database_object
         if ($current_id == null) {
             $current_id = $this->id;
         }
-        
+
         Tag::update_tag_list($tags_comma, 'artist', $current_id);
-        
+
         if ($override_childs) {
             $albums = $this->get_albums();
             foreach ($albums as $album_id) {

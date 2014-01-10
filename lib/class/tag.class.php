@@ -520,7 +520,7 @@ class Tag extends database_object
                         break;
                     }
                 }
-                
+
                 if ($found) {
                     debug_event('tag.class', 'Already found. Do nothing.', '5');
                     unset($editedTags[$tk]);
