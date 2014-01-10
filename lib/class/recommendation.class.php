@@ -85,15 +85,17 @@ class Recommendation
 
                 $artist_name = $child->artist->name;
                 $s_artist_name = Catalog::trim_prefix($artist_name);
-                $s_artist_name = Dba::escape($s_artist_name['string']);
 
                 $sql = "SELECT `song`.`id` FROM `song` " .
                     "LEFT JOIN `artist` ON " .
-                    "`song`.`artist`=`artist`.`id` WHERE " .
-                    "`song`.`title`='" . Dba::escape($name) .
-                    "' AND `artist`.`name`='$s_artist_name'";
+                    "`song`.`artist`=`artist`.`id` " .
+                    "LEFT JOIN `catalog` ON " .
+                    "`song`.`catalog` = `catalog`.`id` WHERE " .
+                    "`song`.`title` = ? " .
+                    "'AND `artist`.`name` = ? " .
+                    "'AND `catalog`.`enabled` = 1";
 
-                $db_result = Dba::read($sql);
+                $db_result = Dba::read($sql, array($name, $s_artist_name['string']));
 
                 if ($result = Dba::fetch_assoc($db_result)) {
                     $local_id = $result['id'];
@@ -150,9 +152,9 @@ class Recommendation
 
             // First we check by MBID
             if ((string) $child->mbid) {
-                $mbid = Dba::escape($child->mbid);
-                $sql = "SELECT `id` FROM `artist` WHERE `mbid`='$mbid'";
-                $db_result = Dba::read($sql);
+                $sql = "SELECT `artist`.`id` FROM `artist` WHERE `mbid` = ?";
+                $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
+                $db_result = Dba::read($sql, array($child->mbid));
                 if ($result = Dba::fetch_assoc($db_result)) {
                     $local_id = $result['id'];
                 }
@@ -163,8 +165,9 @@ class Recommendation
             if (is_null($local_id)) {
                 $searchname = Catalog::trim_prefix($name);
                 $searchname = Dba::escape($searchname['string']);
-                $sql = "SELECT `id` FROM `artist` WHERE `name`='$searchname'";
-                $db_result = Dba::read($sql);
+                $sql = "SELECT `artist`.`id` FROM `artist` WHERE `name` = ?";
+                $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
+                $db_result = Dba::read($sql, array($searchname));
                 if ($result = Dba::fetch_assoc($db_result)) {
                     $local_id = $result['id'];
                 }

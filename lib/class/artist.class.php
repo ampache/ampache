@@ -129,7 +129,7 @@ class Artist extends database_object
     public static function get_from_name($name)
     {
         $sql = "SELECT `id` FROM `artist` WHERE `name` = ?'";
-        $db_results = Dba::write($sql, array($name));
+        $db_results = Dba::read($sql, array($name));
 
         $row = Dba::fetch_assoc($db_results);
 
