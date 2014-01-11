@@ -60,6 +60,12 @@ class Subsonic_Api
 
         return $input[$parameter];
     }
+    
+    public static function output_header($ch, $header)
+    {
+        header($header);
+        return strlen($header);
+    }
 
     public static function follow_stream($url)
     {
@@ -67,8 +73,10 @@ class Subsonic_Api
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
             $ch = curl_init($url);
             curl_setopt_array($ch, array(
-                CURLOPT_HEADER => true,
+                CURLOPT_HEADER => false,
                 CURLOPT_RETURNTRANSFER => false,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HEADERFUNCTION => array('Subsonic_Api', 'output_header'),
                 // Ignore invalid certificate
                 // Default trusted chain is crap anyway and currently no custom CA option
                 CURLOPT_SSL_VERIFYPEER => false,
@@ -850,6 +858,8 @@ class Subsonic_Api
         if ($art != null) {
             $art->get_db();
             if (!$size) {
+                header('Content-type: ' . $art->raw_mime);
+                header('Content-Length: ' . strlen($art->raw));
                 echo $art->raw;
             } else {
                 $dim = array();
@@ -857,6 +867,7 @@ class Subsonic_Api
                 $dim['height'] = $size;
                 $thumb = $art->get_thumb($dim);
                 header('Content-type: ' . $thumb['thumb_mime']);
+                header('Content-Length: ' . $thumb['thumb']);
                 echo $thumb['thumb'];
             }
         }
