@@ -593,16 +593,17 @@ class User extends database_object
         if (!strlen($song_info->file)) { return false; }
 
         $this->set_preferences();
-
-        foreach (Plugin::get_plugins('save_songplay') as $plugin_name) {
-            try {
-                $plugin = new Plugin($plugin_name);
-                if ($plugin->load()) {
-                    $plugin->_plugin->save_songplay($song_info);
-                }
-            } catch (Exeption $e) {
-                debug_event('user.class.php', 'Stats plugin error: ' . $e->getMessage(), '1');
-            }
+        
+        // If pthreads available, we call save_songplay in a new thread to quickly return
+        if (class_exists("Thread", false))
+        {
+            debug_event('user.class.php', 'Calling save_songplay plugins in a new thread...', '5');
+            $thread = new scrobbler_async($song_info);
+            $thread->start();
+        }
+        else
+        {
+            User::save_songplay($song_info);
         }
 
         // Do this last so the 'last played checks are correct'
@@ -613,6 +614,20 @@ class User extends database_object
         return true;
 
     } // update_stats
+    
+    public static function save_songplay($song_info)
+    {
+        foreach (Plugin::get_plugins('save_songplay') as $plugin_name) {
+            try {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->load()) {
+                    $plugin->_plugin->save_songplay($song_info);
+                }
+            } catch (Exeption $e) {
+                debug_event('user.class.php', 'Stats plugin error: ' . $e->getMessage(), '1');
+            }
+        }
+    }
 
     /**
      * insert_ip_history
