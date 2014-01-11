@@ -94,7 +94,9 @@ class Wanted extends database_object
                             $wanted->mbid = $group->id;
                             $wanted->artist = $artist->id;
                             $wanted->name = $group->title;
-                            $wanted->year = date("Y", strtotime($group->{'first-release-date'}));
+                            if (!empty($group->{'first-release-date'})) {
+                                $wanted->year = date("Y", strtotime($group->{'first-release-date'}));
+                            }
                             $wanted->accepted = false;
                             $wanted->f_name_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&amp;mbid=" . $group->id . "&amp;artist=" . $wanted->artist . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
                             $wanted->f_artist_link = $artist->f_name_link;

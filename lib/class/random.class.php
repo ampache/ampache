@@ -98,7 +98,7 @@ class Random implements media
 
         $url = Stream::get_base_url() . "type=song&random=1&random_type=$type&uid=$uid";
 
-        return $url;
+        return Stream_URL::format($url);
 
     } // play_url
 

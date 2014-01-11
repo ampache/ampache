@@ -352,6 +352,9 @@ class Update
         $update_string = '- Add settings for confirmation when closing window and auto-pause between tabs.<br />';
         $version[] = array('version' => '360034','description' => $update_string);
 
+        $update_string = '- Add beautiful stream url setting.<br />';
+        $version[] = array('version' => '360035','description' => $update_string);
+
         return $version;
     }
 
@@ -2006,7 +2009,24 @@ class Update
         Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('webplayer_pausetabs','0','Auto-pause betweens tabs',25,'boolean','interface')";
+            "VALUES ('webplayer_pausetabs','1','Auto-pause betweens tabs',25,'boolean','interface')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        Dba::write($sql, array($id));
+
+        return true;
+    }
+
+    /**
+     * update_360035
+     *
+     * Add beautiful stream url setting
+     */
+    public static function update_360035()
+    {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('stream_beautiful_url','0','Use beautiful stream url',25,'boolean','streaming')";
         Dba::write($sql);
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";

@@ -390,6 +390,7 @@ class Stream_Playlist
     {
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
+        $localplay->delete_all();
         foreach ($this->urls as $url) {
             $localplay->add_url($url);
         }

@@ -101,7 +101,7 @@ class Video extends database_object implements media
 
         $url = Stream::get_base_url() . "type=video&uid=$uid&oid=$oid";
 
-        return $url;
+        return Stream_URL::format($url);
 
     } // play_url
 

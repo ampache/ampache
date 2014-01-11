@@ -34,6 +34,20 @@ class Stream_URL extends memory_object
      */
     public static function parse($url)
     {
+        if (AmpConfig::get('stream_beautiful_url')) {
+            $posargs = strpos($url, '/play/');
+            if ($posargs !== false) {
+                $argsstr = substr($url, $posargs + 6);
+                $url = substr($url, 0, $posargs + 6) . 'index.php?';
+                $args = explode('/', $argsstr);
+                for ($i = 0; $i < count($args); $i += 2) {
+                    if ($i > 0)
+                        $url .= '&';
+                    $url .= $args[$i] . '=' . $args[$i + 1];
+                }
+            }
+        }
+
         $query = parse_url($url, PHP_URL_QUERY);
         $elements = explode('&', $query);
         $results = array();
@@ -56,5 +70,20 @@ class Stream_URL extends memory_object
         }
 
         return $results;
+    }
+
+    /**
+     * format
+     * This format the string url according to settings.
+     */
+    public static function format($url)
+    {
+        if (AmpConfig::get('stream_beautiful_url')) {
+            $url = str_replace('index.php?', '', $url);
+            $url = str_replace('&', '/', $url);
+            $url = str_replace('=', '/', $url);
+        }
+
+        return $url;
     }
 }
