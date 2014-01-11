@@ -191,10 +191,10 @@ class Ampachelibrefm {
      * This loads up the data we need into this object, this stuff comes 
      * from the preferences.
      */
-    public function load() {
+    public function load($user) {
 
-        $GLOBALS['user']->set_preferences();
-        $data = $GLOBALS['user']->prefs;
+        $user->set_preferences();
+        $data = $user->prefs;
 
         if (strlen(trim($data['librefm_user']))) {
             $this->username = trim($data['librefm_user']);
@@ -211,7 +211,7 @@ class Ampachelibrefm {
             return false;
         }
 
-        $this->user_id = $GLOBALS['user']->id;
+        $this->user_id = $user->id;
 
         // If we don't have the other stuff try to get it before giving up
         if (!$data['librefm_host'] || !$data['librefm_port'] || !$data['librefm_url'] || !$data['librefm_challenge']) {

@@ -138,10 +138,10 @@ class AmpacheHeadphones {
      * This loads up the data we need into this object, this stuff comes 
      * from the preferences.
      */
-    public function load() {
+    public function load($user) {
 
-        $GLOBALS['user']->set_preferences();
-        $data = $GLOBALS['user']->prefs;
+        $user->set_preferences();
+        $data = $user->prefs;
 
         if (strlen(trim($data['headphones_api_url']))) {
             $this->api_url = trim($data['headphones_api_url']);

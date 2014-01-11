@@ -222,10 +222,10 @@ class Plugin
      * load
      * This calls the plugin's load function
      */
-    public function load()
+    public function load($user)
     {
-        $GLOBALS['user']->set_preferences();
-        return $this->_plugin->load();
+        $user->set_preferences();
+        return $this->_plugin->load($user);
     }
 
     /**

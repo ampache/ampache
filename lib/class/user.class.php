@@ -593,17 +593,18 @@ class User extends database_object
         if (!strlen($song_info->file)) { return false; }
 
         $this->set_preferences();
-        
+
         // If pthreads available, we call save_songplay in a new thread to quickly return
-        if (class_exists("Thread", false))
-        {
+        if (class_exists("Thread", false)) {
             debug_event('user.class.php', 'Calling save_songplay plugins in a new thread...', '5');
-            $thread = new scrobbler_async($song_info);
-            $thread->start();
-        }
-        else
-        {
-            User::save_songplay($song_info);
+            $thread = new scrobbler_async($GLOBALS['user'], $song_info);
+            if ($thread->start()) {
+                $thread->join();
+            } else {
+                debug_event('user.class.php', 'Error when starting the thread.', '1');
+            }
+        } else {
+            User::save_songplay($GLOBALS['user'], $song_info);
         }
 
         // Do this last so the 'last played checks are correct'
@@ -614,13 +615,13 @@ class User extends database_object
         return true;
 
     } // update_stats
-    
-    public static function save_songplay($song_info)
+
+    public static function save_songplay($user, $song_info)
     {
         foreach (Plugin::get_plugins('save_songplay') as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load()) {
+                if ($plugin->load($user)) {
                     $plugin->_plugin->save_songplay($song_info);
                 }
             } catch (Exeption $e) {

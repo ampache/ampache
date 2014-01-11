@@ -1098,7 +1098,7 @@ class Song extends database_object implements media
 
         foreach (Plugin::get_plugins('get_lyrics') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load()) {
+            if ($plugin->load($GLOBALS['user'])) {
                 $lyrics = $plugin->_plugin->get_lyrics($this);
                 if ($lyrics != false) {
                     return $lyrics;

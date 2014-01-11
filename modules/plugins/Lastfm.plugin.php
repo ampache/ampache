@@ -192,10 +192,10 @@ class AmpacheLastfm {
      * This loads up the data we need into this object, this stuff comes 
      * from the preferences.
      */
-    public function load() {
+    public function load($user) {
 
-        $GLOBALS['user']->set_preferences();
-        $data = $GLOBALS['user']->prefs;
+        $user->set_preferences();
+        $data = $user->prefs;
 
         if (strlen(trim($data['lastfm_user']))) {
             $this->username = trim($data['lastfm_user']);
@@ -212,7 +212,7 @@ class AmpacheLastfm {
             return false;
         }
 
-        $this->user_id = $GLOBALS['user']->id;
+        $this->user_id = $user->id;
 
         // If we don't have the other stuff try to get it before giving up
         if (!$data['lastfm_host'] || !$data['lastfm_port'] || !$data['lastfm_url'] || !$data['lastfm_challenge']) {

@@ -445,7 +445,7 @@ class vainfo
         foreach ($tag_order as $tag_source) {
             if (in_array($tag_source, $plugin_names)) {
                 $plugin = new Plugin($tag_source);
-                if ($plugin->load()) {
+                if ($plugin->load($GLOBALS['user'])) {
                     $this->tags[$tag_source] = $plugin->_plugin->get_metadata(self::clean_tag_info($this->tags, self::get_tag_type($this->tags), $this->filename));
                 }
             }

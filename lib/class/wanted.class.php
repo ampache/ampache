@@ -176,7 +176,7 @@ class Wanted extends database_object
             foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
                 debug_event('wanted', 'Using Wanted Process plugin: ' . $plugin_name, '5');
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load()) {
+                if ($plugin->load($GLOBALS['user'])) {
                     $plugin->_plugin->process_wanted($this);
                 }
             }

@@ -22,16 +22,18 @@
 
 class scrobbler_async extends Thread
 {
-    public function __construct($arg)
+    public function __construct($user, $song_info)
     {
-        $this->arg = $arg;
+        $this->user = $user;
+        $this->song_info = $song_info;
     }
 
     public function run()
     {
-        if($this->arg)
-        {
-            User::save_songplay($this->arg);
+        spl_autoload_register(array('Core', 'autoload'), true, true);
+        Requests::register_autoloader();
+        if ($this->song_info) {
+            User::save_songplay($this->user, $this->song_info);
         }
     }
 }
