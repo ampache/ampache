@@ -599,7 +599,7 @@ class User extends database_object
             debug_event('user.class.php', 'Calling save_songplay plugins in a new thread...', '5');
             $thread = new scrobbler_async($GLOBALS['user'], $song_info);
             if ($thread->start()) {
-                $thread->join();
+                //$thread->join();
             } else {
                 debug_event('user.class.php', 'Error when starting the thread.', '1');
             }
