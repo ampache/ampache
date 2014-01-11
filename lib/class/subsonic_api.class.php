@@ -96,15 +96,15 @@ class Subsonic_Api
     public static function apiOutput($input, $xml)
     {
         $f = $input['f'];
-        self::apiOutput2(strtolower($f), $xml);
+        $callback = $input['callback'];
+        self::apiOutput2(strtolower($f), $xml, $callback);
     }
 
-    public static function apiOutput2($f, $xml)
+    public static function apiOutput2($f, $xml, $callback='')
     {
         if ($f == "json") {
             echo json_encode(self::xml2json($xml), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
         } else if ($f == "jsonp") {
-            $callback = $input['callback'];
             echo $callback . '(' . json_encode(self::xml2json($xml), JSON_PRETTY_PRINT) . ')';
         } else {
             echo $xml->asXml();

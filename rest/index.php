@@ -30,6 +30,7 @@ if (!AmpConfig::get('subsonic_backend')) {
 
 $action = strtolower($_GET['action']);
 $f = $_GET['f'];
+$callback = $_GET['callback'];
 /* Set the correct default headers */
 if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $action != "download" && $action != "getavatar") {
     Subsonic_Api::setHeader($f);
@@ -39,7 +40,7 @@ if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $acti
 if (!AmpConfig::get('access_control')) {
     debug_event('Access Control','Error Attempted to use Subsonic API with Access Control turned off','3');
     ob_end_clean();
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, T_('Access Control not Enabled')));
+    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, T_('Access Control not Enabled')), $callback);
     exit;
 }
 
@@ -61,7 +62,7 @@ if (empty($_SERVER['HTTP_USER_AGENT'])) {
 
 if (empty($user) || empty($password) || empty($version) || empty($action) || empty($clientapp)) {
     ob_end_clean();
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM));
+    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM), $callback);
     exit();
 }
 
@@ -79,14 +80,14 @@ $auth = Auth::login($user, $password);
 if (!$auth['success']) {
     debug_event('Access Denied','Invalid authentication attempt to Subsonic API for user [' . $user . ']','3');
     ob_end_clean();
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_BADAUTH));
+    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_BADAUTH), $callback);
     exit();
 }
 
 if (!Access::check_network('init-api', $user, 5)) {
     debug_event('Access Denied','Unauthorized access attempt to Subsonic API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
     ob_end_clean();
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error'));
+    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error'), $callback);
     exit();
 }
 
@@ -94,7 +95,7 @@ $GLOBALS['user'] = User::get_from_username($user);
 // Check server version
 if (version_compare(Subsonic_XML_Data::API_VERSION, $version) < 0) {
     ob_end_clean();
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_APIVERSION_SERVER));
+    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_APIVERSION_SERVER), $callback);
     exit();
 }
 
