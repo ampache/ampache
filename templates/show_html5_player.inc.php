@@ -27,6 +27,8 @@ function NavigateTo(url)
 }
 ?>
 <script type="text/javascript">
+// The web player identifier. We currently use current date milliseconds as unique identifier.
+var jpuqid = (new Date()).getMilliseconds();
 var jplaylist = null;
 var timeoffset = 0;
 
@@ -104,11 +106,16 @@ if ($isVideo) {
             }
         });
 
+
     $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
         var current = jplaylist.current,
             playlist = jplaylist.playlist;
         var pos = $(".jp-playlist-current").position().top + $(".jp-playlist").scrollTop();
         $(".jp-playlist").scrollTop(pos);
+<?php if ($iframed && AmpConfig::get('webplayer_confirmclose')) { ?>
+        localStorage.setItem('ampache-current-webplayer', jpuqid);
+<?php } ?>
+
         $.each(playlist, function (index, obj) {
             if (index == current) {
 <?php
@@ -201,9 +208,7 @@ if ($isVideo) {
 
 <?php echo WebPlayer::add_media_js($playlist); ?>
 });
-<?php
-    if (AmpConfig::get('waveform')) {
-?>
+<?php if (AmpConfig::get('waveform')) { ?>
 var wavclicktimer = null;
 function WaveformClick(songid, time)
 {
@@ -240,6 +245,34 @@ function HideWaveform()
 {
     $('.waveform').css('visibility', 'hidden');
 }
+<?php } ?>
+<?php if ($iframed && AmpConfig::get('webplayer_confirmclose')) { ?>
+window.parent.onbeforeunload = function (evt) {
+    if (!$("#jquery_jplayer_1").data("jPlayer").status.paused) {
+        var message = '<?php echo T_('Media is currently playing. Are you sure you want to close') . ' ' . AmpConfig::get('site_title') . '?'; ?>';
+        if (typeof evt == 'undefined') {
+            evt = window.event;
+        }
+        if (evt) {
+            evt.returnValue = message;
+        }
+        return message;
+    }
+
+    return null;
+}
+<?php } ?>
+<?php if ($iframed && AmpConfig::get('webplayer_confirmclose')) { ?>
+window.addEventListener('storage', function (event) {
+  if (event.key == 'ampache-current-webplayer') {
+    // The latest used webplayer is not this player, pause song if playing
+    if (event.newValue != jpuqid) {
+        if (!$("#jquery_jplayer_1").data("jPlayer").status.paused) {
+            $("#jquery_jplayer_1").data("jPlayer").pause();
+        }
+    }
+  }
+});
 <?php } ?>
 </script>
 </head>

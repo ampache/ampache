@@ -349,6 +349,9 @@ class Update
         $update_string = '- Add song waveform as song data.<br />';
         $version[] = array('version' => '360033','description' => $update_string);
 
+        $update_string = '- Add settings for confirmation when closing window and auto-pause between tabs.<br />';
+        $version[] = array('version' => '360034','description' => $update_string);
+
         return $version;
     }
 
@@ -1984,6 +1987,30 @@ class Update
 
         $sql = "ALTER TABLE `user_shout` ADD `data` VARCHAR(256) NULL AFTER `object_type`";
         Dba::write($sql);
+
+        return true;
+    }
+
+    /**
+     * update_360034
+     *
+     * Add settings for confirmation when closing window and auto-pause between tabs
+     */
+    public static function update_360034()
+    {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('webplayer_confirmclose','0','Confirmation when closing current playing window',25,'boolean','interface')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('webplayer_pausetabs','0','Auto-pause betweens tabs',25,'boolean','interface')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
 
         return true;
     }

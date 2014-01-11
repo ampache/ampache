@@ -45,6 +45,10 @@ if ($_REQUEST['append']) {
 ?>
     }
 
+<?php if (AmpConfig::get('webplayer_confirmclose')) { ?>
+    parent.parent.onbeforeunload = null;
+<?php } ?>
+
     if (appendmedia) {
         <?php echo WebPlayer::add_media_js($this, "ff.contentWindow.addMedia"); ?>
     } else {

@@ -65,11 +65,12 @@ function ExitPlayer()
 
         maindiv.style.height = parent.parent.innerHeight + "px";
 <?php
-if (AmpConfig::get('song_page_title') && $iframed) {
+if (AmpConfig::get('song_page_title')) {
     echo "window.parent.document.title = '" . addslashes(AmpConfig::get('site_title')) . "';";
 }
 ?>
     }
+    window.parent.onbeforeunload = null;
     ff.setAttribute('src', '');
     return false;
 }
