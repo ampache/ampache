@@ -90,7 +90,7 @@ class Video extends database_object implements media
      * This returns a "PLAY" url for the video in question here, this currently feels a little
      * like a hack, might need to adjust it in the future
      */
-    public static function play_url($oid,$sid='',$force_http='')
+    public static function play_url($oid, $additional_params='',$sid='',$force_http='')
     {
         $video = new Video($oid);
 
@@ -101,7 +101,7 @@ class Video extends database_object implements media
 
         $url = Stream::get_base_url() . "type=video&uid=$uid&oid=$oid";
 
-        return Stream_URL::format($url);
+        return Stream_URL::format($url . $additional_params);
 
     } // play_url
 

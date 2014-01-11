@@ -451,4 +451,33 @@ class Subsonic_XML_Data
             self::addSong($xstarred, $song);
         }
     }
+    
+    public static function addUser($xml, $user)
+    {
+        $xuser = $xml->addChild('user');
+        $xuser->addAttribute('username', $user->username);
+        $xuser->addAttribute('email', $user->email);
+        $xuser->addAttribute('scrobblingEnabled', 'false');
+        $isManager = ($user->access >= 75);
+        $isAdmin = ($user->access >= 100);
+        $xuser->addAttribute('adminRole', $isAdmin ? 'true' : 'false');
+        $xuser->addAttribute('settingsRole', $isAdmin ? 'true' : 'false');
+        $xuser->addAttribute('downloadRole', Preference::get_by_user($user->id, 'download') ? 'true' : 'false');
+        $xuser->addAttribute('playlistRole', 'true');
+        $xuser->addAttribute('coverArtRole', $isManager ? 'true' : 'false');
+        $xuser->addAttribute('commentRole', 'false');
+        $xuser->addAttribute('podcastRole', 'false');
+        $xuser->addAttribute('streamRole', 'true');
+        $xuser->addAttribute('jukeboxRole', 'false');
+        $xuser->addAttribute('shareRole', 'false');
+    }
+    
+    public static function addUsers($xml, $users)
+    {
+        $xusers = $xml->addChild('users');
+        foreach ($users as $id) {
+            $user = new User($id);
+            self::addUser($xusers, $user);
+        }
+    }
 }

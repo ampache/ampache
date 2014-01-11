@@ -135,6 +135,23 @@ class User extends database_object
         $this->playlist = Tmp_Playlist::get_from_session($session_id);
 
     } // load_playlist
+    
+    /**
+     * get_valid_users
+     * This returns all valid users in database.
+     */
+    public static function get_valid_users()
+    {
+        $users = array();
+        
+        $sql = "SELECT `id` FROM `user` WHERE `disabled` = '0'";
+        $db_results = Dba::read($sql);
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $users[] = $results['id'];
+        }
+
+        return $users;
+    } // get_valid_users
 
     /**
      * get_from_username

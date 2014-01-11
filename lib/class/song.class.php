@@ -983,7 +983,7 @@ class Song extends database_object implements media
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
      */
-    public static function play_url($oid)
+    public static function play_url($oid, $additional_params='')
     {
         $song = new Song($oid);
         $user_id     = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
@@ -998,7 +998,7 @@ class Song extends database_object implements media
 
         $url = Stream::get_base_url() . "type=song&oid=$song->id&uid=$user_id&name=$song_name";
 
-        return Stream_URL::format($url);
+        return Stream_URL::format($url . $additional_params);
 
     } // play_url
 

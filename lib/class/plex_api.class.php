@@ -285,7 +285,7 @@ class Plex_Api
             $id = Plex_XML_Data::getAmpacheId($key);
             $song = new Song($id);
             if ($song->id) {
-                $url = Song::play_url($id) . '&client=Plex';
+                $url = Song::play_url($id, '&client=Plex');
                 header("Location: " . $url);
             } else {
                 self::createError(404);

@@ -171,11 +171,11 @@ class Radio extends database_object implements media
      * play_url
      * This is needed by the media interface
      */
-    public static function play_url($oid,$sid='',$force_http='')
+    public static function play_url($oid, $additional_params='',$sid='',$force_http='')
     {
         $radio = new Radio($oid);
 
-        return $radio->url;
+        return $radio->url . $additional_params;
 
     } // play_url
 

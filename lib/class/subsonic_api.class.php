@@ -775,9 +775,13 @@ class Subsonic_Api
         $timeOffset = $input['timeOffset']; // For video streaming. Not supported.
         $size = $input['size']; // For video streaming. Not supported.
         $maxBitRate = $input['maxBitRate']; // For video streaming. Not supported.
-        $estimateContentLength = $input['estimateContentLength']; // Not supported.
+        $estimateContentLength = $input['estimateContentLength']; // Force content-length guessing if transcode
 
-        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid)) . '&client=' . $input['c'];
+        $params = '&client=' . $input['c'];
+        if ($estimateContentLength == 'true') {
+            $params .= '&content_length=required';
+        }
+        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid),  $params);
         self::follow_stream($url);
     }
 
@@ -792,7 +796,7 @@ class Subsonic_Api
 
         $fileid = self::check_parameter($input, 'id', true);
 
-        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid)) . '&action=download' . '&client=' . $input['c'];
+        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . $input['c']);
         self::follow_stream($url);
     }
 
@@ -852,6 +856,7 @@ class Subsonic_Api
                 $dim['width'] = $size;
                 $dim['height'] = $size;
                 $thumb = $art->get_thumb($dim);
+                header('Content-type: ' . $thumb['thumb_mime']);
                 echo $thumb['thumb'];
             }
         }
@@ -991,6 +996,52 @@ class Subsonic_Api
         }
         self::apiOutput($input, $r);
     }
+    
+    /**
+     * getUser
+     * Get details about a given user.
+     * Takes the username in parameter.
+     * Not supported.
+     */
+    public static function getuser($input)
+    {
+        self::check_version($input, "1.3.0");
+        
+        $username = self::check_parameter($input, 'username');
+        
+        if ($GLOBALS['user']->access >= 100 || $GLOBALS['user']->username == $username) {
+            $r = Subsonic_XML_Data::createSuccessResponse();
+            if ($GLOBALS['user']->username == $username) {
+                $user = $GLOBALS['user'];
+            } else {
+                $user = User::get_from_username($username);
+            }
+            Subsonic_XML_Data::addUser($r, $user);
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, $GLOBALS['user']->username . ' is not authorized to get details for other users.');
+        }
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * getUsers
+     * Get details about a given user.
+     * Takes no parameter.
+     * Not supported.
+     */
+    public static function getusers($input)
+    {
+        self::check_version($input, "1.7.0");
+
+        if ($GLOBALS['user']->access >= 100) {
+            $r = Subsonic_XML_Data::createSuccessResponse();
+            $users = User::get_valid_users();
+            Subsonic_XML_Data::addUsers($r, $users);
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, $GLOBALS['user']->username . ' is not authorized to get details for other users.');
+        }
+        self::apiOutput($input, $r);
+    }    
 
     /****   CURRENT UNSUPPORTED FUNCTIONS   ****/
 
@@ -1011,7 +1062,7 @@ class Subsonic_Api
      * scrobble
      * Scrobbles a given music file on last.fm.
      * Takes the file id with optional time and submission parameters.
-     * Not supported.
+     * Not supported. Already done by Ampache if plugin enabled.
      */
     public static function scrobble($input)
     {
@@ -1019,6 +1070,48 @@ class Subsonic_Api
 
         // Ignore error to not break clients
         $r = Subsonic_XML_Data::createSuccessResponse();
+        self::apiOutput($input, $r);
+    }
+    
+    /**
+     * createUser
+     * Create a new user.
+     * Takes the username, password and email with optional roles in parameters.
+     * Not supported.
+     */
+    public static function createuser($input)
+    {
+        self::check_version($input, "1.1.0");
+
+        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * deleteUser
+     * Delete an existing user.
+     * Takes the username in parameter.
+     * Not supported.
+     */
+    public static function deleteuser($input)
+    {
+        self::check_version($input, "1.3.0");
+
+        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * changePassword
+     * Change the password of an existing user.
+     * Takes the username with new password in parameters.
+     * Not supported.
+     */
+    public static function changepassword($input)
+    {
+        self::check_version($input, "1.1.0");
+
+        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $r);
     }
 
@@ -1213,76 +1306,6 @@ class Subsonic_Api
     public static function addchatmessages($input)
     {
         self::check_version($input, "1.2.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * getUser
-     * Get details about a given user.
-     * Takes the username in parameter.
-     * Not supported.
-     */
-    public static function getuser($input)
-    {
-        self::check_version($input, "1.3.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * getUsers
-     * Get details about a given user.
-     * Takes no parameter.
-     * Not supported.
-     */
-    public static function getusers($input)
-    {
-        self::check_version($input, "1.7.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * createUser
-     * Create a new user.
-     * Takes the username, password and email with optional roles in parameters.
-     * Not supported.
-     */
-    public static function createuser($input)
-    {
-        self::check_version($input, "1.1.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * deleteUser
-     * Delete an existing user.
-     * Takes the username in parameter.
-     * Not supported.
-     */
-    public static function deleteuser($input)
-    {
-        self::check_version($input, "1.3.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * changePassword
-     * Change the password of an existing user.
-     * Takes the username with new password in parameters.
-     * Not supported.
-     */
-    public static function changepassword($input)
-    {
-        self::check_version($input, "1.1.0");
 
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $r);

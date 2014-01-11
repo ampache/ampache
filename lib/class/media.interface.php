@@ -49,7 +49,7 @@ interface media
      * Returns the url to stream the specified object
      *
      */
-    public static function play_url($oid);
+    public static function play_url($oid, $additional_params='');
 
     /**
      * get_transcode_settings

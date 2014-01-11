@@ -88,7 +88,7 @@ class Random implements media
      * This generates a random play url based on the passed type
      * and returns it
      */
-    public static function play_url($id)
+    public static function play_url($id, $additional_params='')
     {
         if (!$type = self::get_id_type($id)) {
             return false;
@@ -98,7 +98,7 @@ class Random implements media
 
         $url = Stream::get_base_url() . "type=song&random=1&random_type=$type&uid=$uid";
 
-        return Stream_URL::format($url);
+        return Stream_URL::format($url . $additional_params);
 
     } // play_url
 
