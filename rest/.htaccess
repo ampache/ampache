@@ -3,4 +3,5 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-s
     RewriteRule ^(.+)\.view$ index.php?action=$1 [PT,L,QSA]
+    RewriteRule ^fake/(.+)$ ../play/$1 [PT,L,QSA]
 </IfModule>

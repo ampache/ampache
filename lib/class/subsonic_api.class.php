@@ -60,7 +60,7 @@ class Subsonic_Api
 
         return $input[$parameter];
     }
-    
+
     public static function output_header($ch, $header)
     {
         header($header);
@@ -86,6 +86,10 @@ class Subsonic_Api
             curl_close($ch);
         } else {
             // Stream media using http redirect if no curl support
+
+            // Bug fix for android clients looking for /rest/ in destination url
+            // Warning: external catalogs will not work!
+            $url = str_replace('/play/', '/rest/fake/', $url);
             header("Location: " . $url);
         }
     }
@@ -1007,7 +1011,7 @@ class Subsonic_Api
         }
         self::apiOutput($input, $r);
     }
-    
+
     /**
      * getUser
      * Get details about a given user.
@@ -1017,9 +1021,9 @@ class Subsonic_Api
     public static function getuser($input)
     {
         self::check_version($input, "1.3.0");
-        
+
         $username = self::check_parameter($input, 'username');
-        
+
         if ($GLOBALS['user']->access >= 100 || $GLOBALS['user']->username == $username) {
             $r = Subsonic_XML_Data::createSuccessResponse();
             if ($GLOBALS['user']->username == $username) {
@@ -1052,7 +1056,7 @@ class Subsonic_Api
             $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, $GLOBALS['user']->username . ' is not authorized to get details for other users.');
         }
         self::apiOutput($input, $r);
-    }    
+    }
 
     /****   CURRENT UNSUPPORTED FUNCTIONS   ****/
 
@@ -1083,7 +1087,7 @@ class Subsonic_Api
         $r = Subsonic_XML_Data::createSuccessResponse();
         self::apiOutput($input, $r);
     }
-    
+
     /**
      * createUser
      * Create a new user.

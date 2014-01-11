@@ -451,7 +451,7 @@ class Subsonic_XML_Data
             self::addSong($xstarred, $song);
         }
     }
-    
+
     public static function addUser($xml, $user)
     {
         $xuser = $xml->addChild('user');
@@ -471,7 +471,7 @@ class Subsonic_XML_Data
         $xuser->addAttribute('jukeboxRole', 'false');
         $xuser->addAttribute('shareRole', 'false');
     }
-    
+
     public static function addUsers($xml, $users)
     {
         $xusers = $xml->addChild('users');
