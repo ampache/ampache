@@ -155,9 +155,8 @@ switch ($_REQUEST['action']) {
                 $browse->set_start(0);
                 if ($value) {
                     $browse->set_filter('regex_match', '^A');
-                    $browse->set_filter('regex_not_match', '');
+                    
                 } else {
-                    $browse->set_filter('regex_match', '');
                     $browse->set_filter('regex_not_match', '');
                 }
             break;
