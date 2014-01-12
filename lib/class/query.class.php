@@ -1350,7 +1350,7 @@ class Query
             } // end filter
         break;
         } // end switch on type
-debug_event('aa', $filter_sql, '5');
+
         return $filter_sql;
 
     } // sql_filter
