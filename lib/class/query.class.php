@@ -100,6 +100,8 @@ class Query
                 'starts_with',
                 'exact_match',
                 'alpha_match',
+                'regex_match',
+                'regex_not_match',
                 'catalog',
                 'catalog_enabled'
             ),
@@ -110,6 +112,8 @@ class Query
                 'update_gt',
                 'exact_match',
                 'alpha_match',
+                'regex_match',
+                'regex_not_match',
                 'starts_with',
                 'tag',
                 'catalog',
@@ -122,6 +126,8 @@ class Query
                 'update_gt',
                 'exact_match',
                 'alpha_match',
+                'regex_match',
+                'regex_not_match',
                 'starts_with',
                 'tag',
                 'catalog',
@@ -129,27 +135,37 @@ class Query
             ),
             'live_stream' => array(
                 'alpha_match',
+                'regex_match',
+                'regex_not_match',
                 'starts_with',
                 'catalog_enabled'
             ),
             'playlist' => array(
                 'alpha_match',
+                'regex_match',
+                'regex_not_match',
                 'starts_with'
             ),
             'smartplaylist' => array(
                 'alpha_match',
+                'regex_match',
+                'regex_not_match',
                 'starts_with'
             ),
             'tag' => array(
                 'tag',
                 'object_type',
                 'exact_match',
-                'alpha_match'
+                'alpha_match',
+                'regex_match',
+                'regex_not_match'
             ),
             'video' => array(
                 'starts_with',
                 'exact_match',
-                'alpha_match'
+                'alpha_match',
+                'regex_match',
+                'regex_not_match'
             ),
         );
 
@@ -333,9 +349,13 @@ class Query
             break;
             case 'exact_match':
             case 'alpha_match':
+            case 'regex_match':
+            case 'regex_not_match':
             case 'starts_with':
                 if ($this->is_static_content()) { return false; }
                 $this->_state['filter'][$key] = $value;
+                if ($key == 'regex_match') unset($this->_state['filter']['regex_not_match']);
+                if ($key == 'regex_not_match') unset($this->_state['filter']['regex_match']);
             break;
             case 'playlist_type':
                 // Must be a content manager to turn this off
@@ -1064,6 +1084,12 @@ class Query
                 case 'alpha_match':
                     $filter_sql = " `song`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
+                case 'regex_match':
+                    $filter_sql = " `song`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'regex_not_match':
+                    $filter_sql = " `song`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
                 case 'starts_with':
                     $filter_sql = " `song`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
                     if ($this->catalog != 0) {
@@ -1112,6 +1138,12 @@ class Query
                 break;
                 case 'alpha_match':
                     $filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+                case 'regex_match':
+                    $filter_sql = " `album`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'regex_not_match':
+                    $filter_sql = " `album`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'starts_with':
                     $this->set_join('left', '`song`', '`album`.`id`', '`song`.`album`', 100);
@@ -1171,6 +1203,12 @@ class Query
                 case 'alpha_match':
                     $filter_sql = " `artist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
+                case 'regex_match':
+                    $filter_sql = " `artist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'regex_not_match':
+                    $filter_sql = " `artist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
                 case 'starts_with':
                     $this->set_join('left', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
                     $filter_sql = " `artist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1209,6 +1247,12 @@ class Query
                 case 'alpha_match':
                     $filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
+                case 'regex_match':
+                    $filter_sql = " `live_stream`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'regex_not_match':
+                    $filter_sql = " `live_stream`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
                 case 'starts_with':
                     $filter_sql = " `live_stream`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
@@ -1225,6 +1269,12 @@ class Query
             switch ($filter) {
                 case 'alpha_match':
                     $filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+                case 'regex_match':
+                    $filter_sql = " `playlist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'regex_not_match':
+                    $filter_sql = " `playlist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'starts_with':
                     $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1243,6 +1293,12 @@ class Query
                 case 'alpha_match':
                     $filter_sql = " `search`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
+                case 'regex_match':
+                    $filter_sql = " `search`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'regex_not_match':
+                    $filter_sql = " `search`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
                 case 'starts_with':
                     $filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
@@ -1256,6 +1312,12 @@ class Query
             switch ($filter) {
                 case 'alpha_match':
                     $filter_sql = " `tag`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+                case 'regex_match':
+                    $filter_sql = " `tag`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'regex_not_match':
+                    $filter_sql = " `tag`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'exact_match':
                     $filter_sql = " `tag`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1273,6 +1335,12 @@ class Query
                 case 'alpha_match':
                     $filter_sql = " `video`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
+                case 'regex_match':
+                    $filter_sql = " `video`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'regex_not_match':
+                    $filter_sql = " `video`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
                 case 'starts_with':
                     $filter_sql = " `video`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
@@ -1282,7 +1350,7 @@ class Query
             } // end filter
         break;
         } // end switch on type
-
+debug_event('aa', $filter_sql, '5');
         return $filter_sql;
 
     } // sql_filter

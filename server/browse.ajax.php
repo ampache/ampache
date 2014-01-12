@@ -141,16 +141,22 @@ switch ($_REQUEST['action']) {
     break;
     case 'options':
         $option = $_REQUEST['option'];
-        $value = $_REQUEST['value'];
-
-        $browse->set_start(0);
+        $value = $_REQUEST['value'] == 'true';
 
         switch ($option) {
             case 'use_pages':
-                $browse->set_use_pages($value == 'true');
+                $browse->set_use_pages($value);
+                if ($value) {
+                    $browse->set_start(0);
+                }
             break;
             case 'use_alpha':
-                $browse->set_use_alpha($value == 'true');
+                $browse->set_use_alpha($value);
+                $browse->set_start(0);
+                $browse->reset_filters();
+                if ($value) {
+                    $browse->set_filter('regex_match', '^A');
+                }
             break;
         }
         ob_start();

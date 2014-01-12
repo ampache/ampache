@@ -76,6 +76,24 @@ if ($limit > 0 && $total > $limit) {
 }
 ?>
 <div class="list-header">
+<?php if ($browse->get_use_alpha()) { ?>
+<div class="list-header-alpha">
+<?php
+$alphastr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+$alphalist = str_split($alphastr);
+$alphalist[] = '#';
+foreach ($alphalist as $key => $value) {
+    $filter = '^';
+    if ($value == '#') {
+        $filter .= '[[:digit:]|[:punct:]]';
+    } else {
+        $filter .= $value;
+    }
+    echo Ajax::text('?page=browse&action=browse&browse_id=' . $browse->id . '&key=regex_match&multi_alpha_filter=' . $filter, $value,'browse_' . $uid . '_alpha_' . $key,'');
+}
+?>
+</div>
+<?php } ?>
 <?php
 // are there enough items to even need this view?
 if ($pages > 1 && $start > -1) {
@@ -148,16 +166,15 @@ if ($pages > 1 && $start > -1) {
             } // end else
         } // end foreach up
     ?>
-<?php } else {?>
-&nbsp;
 <?php } ?>
 <?php
 } // if stuff
 ?>
+&nbsp;
 <span class="browse-options">
     <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_pages_<?php echo $is_header; ?>" value="true" <?php echo (($browse->get_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + $('#browse_" . $browse->id . "_use_pages_" . $is_header . "').is(':checked') + '", "browse_" . $browse->id . "_use_pages_" . $is_header); ?>">Pages</span>
     <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_scroll_<?php echo $is_header; ?>" value="true" <?php echo ((!$browse->get_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + !($('#browse_" . $browse->id . "_use_scroll_" . $is_header . "').is(':checked')) + '", "browse_" . $browse->id . "_use_scroll_" . $is_header); ?>">Infinite Scroll</span>
-    <!--<span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_alpha_<?php echo $is_header; ?>" value="true" <?php echo (($browse->get_use_alpha()) ? 'checked' : ''); ?>>Alphabet</span>-->
+    <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_alpha_<?php echo $is_header; ?>" value="true" <?php echo (($browse->get_use_alpha()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_alpha&value=' + $('#browse_" . $browse->id . "_use_alpha_" . $is_header . "').is(':checked') + '", "browse_" . $browse->id . "_use_alpha_" . $is_header); ?>">Alphabet</span>
 </span>
 </div>
 <?php if (!$browse->get_use_pages() && $is_header) { ?>
