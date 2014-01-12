@@ -123,6 +123,10 @@ class Browse extends Query
             $match = ' (' . $filter_value . ')';
         } elseif ($filter_value = $this->get_filter('starts_with')) {
             $match = ' (' . $filter_value . ')';
+        /*} elseif ($filter_value = $this->get_filter('regex_match')) {
+            $match = ' (' . $filter_value . ')';
+        } elseif ($filter_value = $this->get_filter('regex_not_match')) {
+            $match = ' (' . $filter_value . ')';*/
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
             $catalog = Catalog::create_from_id($filter_value);

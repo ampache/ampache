@@ -1085,10 +1085,10 @@ class Query
                     $filter_sql = " `song`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    $filter_sql = " `song`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `song`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'regex_not_match':
-                    $filter_sql = " `song`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `song`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'starts_with':
                     $filter_sql = " `song`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1140,10 +1140,10 @@ class Query
                     $filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    $filter_sql = " `album`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `album`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'regex_not_match':
-                    $filter_sql = " `album`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `album`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'starts_with':
                     $this->set_join('left', '`song`', '`album`.`id`', '`song`.`album`', 100);
@@ -1204,10 +1204,10 @@ class Query
                     $filter_sql = " `artist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    $filter_sql = " `artist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `artist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'regex_not_match':
-                    $filter_sql = " `artist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `artist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'starts_with':
                     $this->set_join('left', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
@@ -1248,10 +1248,10 @@ class Query
                     $filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    $filter_sql = " `live_stream`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `live_stream`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'regex_not_match':
-                    $filter_sql = " `live_stream`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `live_stream`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'starts_with':
                     $filter_sql = " `live_stream`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1271,10 +1271,10 @@ class Query
                     $filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    $filter_sql = " `playlist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `playlist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'regex_not_match':
-                    $filter_sql = " `playlist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `playlist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'starts_with':
                     $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1294,10 +1294,10 @@ class Query
                     $filter_sql = " `search`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    $filter_sql = " `search`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `search`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'regex_not_match':
-                    $filter_sql = " `search`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `search`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'starts_with':
                     $filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
@@ -1314,10 +1314,10 @@ class Query
                     $filter_sql = " `tag`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    $filter_sql = " `tag`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `tag`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'regex_not_match':
-                    $filter_sql = " `tag`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `tag`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'exact_match':
                     $filter_sql = " `tag`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1336,10 +1336,10 @@ class Query
                     $filter_sql = " `video`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    $filter_sql = " `video`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `video`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'regex_not_match':
-                    $filter_sql = " `video`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `video`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'starts_with':
                     $filter_sql = " `video`.`title` LIKE '" . Dba::escape($value) . "%' AND ";

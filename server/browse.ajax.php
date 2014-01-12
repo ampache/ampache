@@ -153,9 +153,12 @@ switch ($_REQUEST['action']) {
             case 'use_alpha':
                 $browse->set_use_alpha($value);
                 $browse->set_start(0);
-                $browse->reset_filters();
                 if ($value) {
                     $browse->set_filter('regex_match', '^A');
+                    $browse->set_filter('regex_not_match', '');
+                } else {
+                    $browse->set_filter('regex_match', '');
+                    $browse->set_filter('regex_not_match', '');
                 }
             break;
         }
