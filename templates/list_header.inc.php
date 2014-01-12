@@ -178,9 +178,9 @@ if ($pages > 1 && $start > -1) {
 <?php if ($browse->get_use_pages()) { ?>
     <span>|</span>
     <span>
-        <form id="browse_<?php echo $browse->id; ?>_limit_form" method="post" action="javascript:void(0);">
-            <label id="limit_label_<?php echo $browse->id; ?>" for="multi_alpha_filter"><?php echo T_('Limit'); ?>:</label>
-            <input type="text" id="limit_value_<?php echo $browse->id; ?>" name="value" value="<?php echo $browse->get_offset(); ?>" onKeyUp="delayRun(this, '800', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=limit'); ?>', 'limit_value_<?php echo $browse->id; ?>');">
+        <form id="browse_<?php echo $browse->id; ?>_limit_form_<?php echo $is_header; ?>" method="post" action="javascript:void(0);">
+            <label id="limit_label_<?php echo $browse->id; ?>_<?php echo $is_header; ?>" for="multi_alpha_filter"><?php echo T_('Limit'); ?>:</label>
+            <input type="text" id="limit_value_<?php echo $browse->id; ?>_<?php echo $is_header; ?>" name="value" value="<?php echo $browse->get_offset(); ?>" onKeyUp="delayRun(this, '800', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=limit'); ?>', 'limit_value_<?php echo $browse->id; ?>_<?php echo $is_header; ?>');">
         </form>
     </span>
 <?php } ?>
