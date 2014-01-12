@@ -54,7 +54,7 @@ $sides  = 5;
 $('#browse_<?php echo $browse->id; ?>_scroll').jscroll({
     autoTrigger: true,
     nextSelector: 'a.jscroll-next:last',
-    autoTriggerUntil: 2,
+    autoTriggerUntil: 5,
 });
 </script>
 <?php } ?>
