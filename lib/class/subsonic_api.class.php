@@ -119,7 +119,12 @@ class Subsonic_Api
         } else if ($f == "jsonp") {
             echo $callback . '(' . json_encode(self::xml2json($xml), JSON_PRETTY_PRINT) . ')';
         } else {
-            echo $xml->asXml();
+            $xmlstr = $xml->asXml();
+            // Format xml output
+            $dom = new DOMDocument();
+            $dom->loadXML($xmlstr);
+            $dom->formatOutput = true;
+            echo $dom->saveXML();
         }
 
     }
