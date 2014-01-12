@@ -141,23 +141,31 @@ switch ($_REQUEST['action']) {
     break;
     case 'options':
         $option = $_REQUEST['option'];
-        $value = $_REQUEST['value'] == 'true';
+        $value = $_REQUEST['value'];
 
         switch ($option) {
             case 'use_pages':
+                $value = ($value == 'true');
                 $browse->set_use_pages($value);
                 if ($value) {
                     $browse->set_start(0);
                 }
             break;
             case 'use_alpha':
+                $value = ($value == 'true');
                 $browse->set_use_alpha($value);
                 $browse->set_start(0);
                 if ($value) {
                     $browse->set_filter('regex_match', '^A');
-                    
+
                 } else {
                     $browse->set_filter('regex_not_match', '');
+                }
+            break;
+            case 'limit':
+                $value = intval($value);
+                if ($value > 0) {
+                    $browse->set_offset($value);
                 }
             break;
         }

@@ -1607,6 +1607,14 @@ ol, ul, #rightbar ul {
     float: right;
 }
 
+.browse-options form {
+    display: inline;
+}
+
+.browse-options input[type=text] {
+    width: 50px;
+}
+
 .jscroll-next {
     width:50%;
     display:block;
