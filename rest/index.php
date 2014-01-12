@@ -28,9 +28,9 @@ if (!AmpConfig::get('subsonic_backend')) {
     exit;
 }
 
-$action = strtolower($_GET['action']);
-$f = $_GET['f'];
-$callback = $_GET['callback'];
+$action = strtolower($_REQUEST['action']);
+$f = $_REQUEST['f'];
+$callback = $_REQUEST['callback'];
 /* Set the correct default headers */
 if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $action != "download" && $action != "getavatar") {
     Subsonic_Api::setHeader($f);
@@ -47,14 +47,14 @@ if (!AmpConfig::get('access_control')) {
 // Authenticate the user with preemptive HTTP Basic authentication first
 $user = $_SERVER['PHP_AUTH_USER'];
 if (empty($user)) {
-    $user = $_GET['u'];
+    $user = $_REQUEST['u'];
 }
 $password = $_SERVER['PHP_AUTH_PW'];
 if (empty($password)) {
-    $password = $_GET['p'];
+    $password = $_REQUEST['p'];
 }
-$version = $_GET['v'];
-$clientapp = $_GET['c'];
+$version = $_REQUEST['v'];
+$clientapp = $_REQUEST['c'];
 
 if (empty($_SERVER['HTTP_USER_AGENT'])) {
     $_SERVER['HTTP_USER_AGENT'] = $clientapp;

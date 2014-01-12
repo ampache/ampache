@@ -181,7 +181,7 @@ class Subsonic_XML_Data
     public static function addArtistsIndexes($xml, $artists, $lastModified)
     {
         $xindexes = $xml->addChild('indexes');
-        $xindexes->addAttribute('lastModified', $lastModified);
+        $xindexes->addAttribute('lastModified', $lastModified * 1000);
         self::addArtists($xindexes, $artists);
     }
 
@@ -194,6 +194,7 @@ class Subsonic_XML_Data
     public static function addArtists($xml, $artists, $extra=false)
     {
         $xlastcat = null;
+        $xsharpcat = null;
         $xlastletter = '';
         foreach ($artists as $artist) {
             if (strlen($artist->name) > 0) {
@@ -203,8 +204,16 @@ class Subsonic_XML_Data
 
                 if ($letter != $xlastletter) {
                     $xlastletter = $letter;
-                    $xlastcat = $xml->addChild('index');
-                    $xlastcat->addAttribute('name', $xlastletter);
+                    if ($letter == '#' && $xsharpcat != null) {
+                        $xlastcat = $xsharpcat;
+                    } else {
+                        $xlastcat = $xml->addChild('index');
+                        $xlastcat->addAttribute('name', $xlastletter);
+
+                        if ($letter == '#') {
+                            $xsharpcat = $xlastcat;
+                        }
+                    }
                 }
             }
 
