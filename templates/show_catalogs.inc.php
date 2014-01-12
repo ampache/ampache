@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
         <th class="cel_catalog"><?php echo T_('Name'); ?></th>
@@ -55,4 +55,4 @@
         <th class="cel_action"><?php echo T_('Actions'); ?></th>
     </tr>
 </table>
-<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>

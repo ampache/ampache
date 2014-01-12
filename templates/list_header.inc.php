@@ -27,6 +27,12 @@
  * to layout this page.
  */
 
+ if ($is_header) {
+    $is_header = false;
+ } else {
+    $is_header = true;
+ }
+
 // Pull these variables out to allow shorthand (easier for lazy programmers)
 $limit    = $browse->get_offset();
 $start    = $browse->get_start();
@@ -38,6 +44,21 @@ if (isset($_REQUEST['browse_uid'])) {
     AmpConfig::set('list_header_uid', ++$uid, true);
 }
 $sides  = 5;
+
+?>
+<?php if (!$browse->get_use_pages() && !$is_header) { ?>
+<?php $this->show_next_link(); ?>
+</p>
+</div>
+<script type="text/javascript">
+$('#browse_<?php echo $browse->id; ?>_scroll').jscroll({
+    autoTrigger: true,
+    nextSelector: 'a.jscroll-next:last',
+    autoTriggerUntil: 2,
+});
+</script>
+<?php } ?>
+<?php
 
 // Next
 $next_offset = $start + $limit;
@@ -53,9 +74,11 @@ if ($limit > 0 && $total > $limit) {
 } else {
     $pages = 0;
 }
-
+?>
+<div class="list-header">
+<?php
 // are there enough items to even need this view?
-if ($pages > 1) {
+if ($pages > 1 && $start > -1) {
 
     /* Calculate current page and how many we have on each side */
     $page_data = array('up' => array(), 'down' => array());
@@ -98,8 +121,7 @@ if ($pages > 1) {
     ksort($page_data['up']);
     ksort($page_data['down']);
 ?>
-<div class="list-header">
-
+<?php if ($browse->get_use_pages()) { ?>
     <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $prev_offset . '&browse_uid=' . $uid, T_('Prev'),'browse_' . $uid . 'prev','','prev'); ?>
     <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $next_offset . '&browse_uid=' . $uid, T_('Next'),'browse_' . $uid . 'next','','next'); ?>
     <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=-1&browse_uid=' . $uid, T_('All'),'browse_' . $uid . 'all','','all'); ?>
@@ -126,7 +148,19 @@ if ($pages > 1) {
             } // end else
         } // end foreach up
     ?>
-</div>
+<?php } else {?>
+&nbsp;
+<?php } ?>
 <?php
 } // if stuff
 ?>
+<span class="browse-options">
+    <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_pages_<?php echo $is_header; ?>" value="true" <?php echo (($browse->get_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + $('#browse_" . $browse->id . "_use_pages_" . $is_header . "').is(':checked') + '", "browse_" . $browse->id . "_use_pages_" . $is_header); ?>">Pages</span>
+    <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_scroll_<?php echo $is_header; ?>" value="true" <?php echo ((!$browse->get_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + !($('#browse_" . $browse->id . "_use_scroll_" . $is_header . "').is(':checked')) + '", "browse_" . $browse->id . "_use_scroll_" . $is_header); ?>">Infinite Scroll</span>
+    <!--<span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_alpha_<?php echo $is_header; ?>" value="true" <?php echo (($browse->get_use_alpha()) ? 'checked' : ''); ?>>Alphabet</span>-->
+</span>
+</div>
+<?php if (!$browse->get_use_pages() && $is_header) { ?>
+<div id="browse_<?php echo $browse->id; ?>_scroll">
+<p>
+<?php } ?>

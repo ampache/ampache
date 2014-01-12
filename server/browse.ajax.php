@@ -37,6 +37,10 @@ if (isset($_REQUEST['browse_id'])) {
 $list_uid = scrub_in($_REQUEST['uid']);
 $browse = new Browse($browse_id);
 
+if ($_REQUEST['show_header']) {
+    $browse->set_show_header($_REQUEST['show_header'] == 'true');
+}
+
 debug_event('browse.ajax.php', 'Called for action: {'.$_REQUEST['action'].'}', '5');
 
 switch ($_REQUEST['action']) {
@@ -71,6 +75,10 @@ switch ($_REQUEST['action']) {
     case 'set_sort':
         if ($_REQUEST['sort']) {
             $browse->set_sort($_REQUEST['sort']);
+        }
+
+        if (!$browse->get_use_pages()) {
+            $browse->set_start(0);
         }
 
         ob_start();
@@ -130,6 +138,25 @@ switch ($_REQUEST['action']) {
         ob_start();
         require_once AmpConfig::get('prefix') . '/templates/browse_filters.inc.php';
         $results['browse_filters'] = ob_get_clean();
+    break;
+    case 'options':
+        $option = $_REQUEST['option'];
+        $value = $_REQUEST['value'];
+
+        $browse->set_start(0);
+
+        switch ($option) {
+            case 'use_pages':
+                $browse->set_use_pages($value == 'true');
+            break;
+            case 'use_alpha':
+                $browse->set_use_alpha($value == 'true');
+            break;
+        }
+        ob_start();
+        $browse->show_objects();
+        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
+    break;
     default:
         $results['rfc3514'] = '0x1';
     break;

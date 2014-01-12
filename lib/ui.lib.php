@@ -366,6 +366,9 @@ function xoutput_from_array($array, $callback = false, $type = '')
     $output = $_REQUEST['xoutput'] ?: 'xml';
     if ($output == 'xml') {
         return xml_from_array($array, $callback, $type);
+    } elseif ($output == 'raw') {
+        $outputnode = $_REQUEST['xoutputnode'];
+        return $array[$outputnode];
     } else {
         return json_from_array($array, $callback, $type);
     }

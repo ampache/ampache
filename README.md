@@ -81,6 +81,7 @@ Ampache includes some external modules that carry their own licensing.
 * [Tag-it!] (http://aehlke.github.io/tag-it/): MIT
 * [PHP Echo Nest API] (https://github.com/bshaffer/php-echonest-api): MIT
 * [Noty] (http://ned.im/noty/): MIT
+* [jScroll] (https://github.com/pklauzinski/jscroll): MIT
 
 
 Translations

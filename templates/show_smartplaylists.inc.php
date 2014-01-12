@@ -23,7 +23,7 @@
 $tags_list = Tag::get_display(Tag::get_tags());
 $thcount = 5;
 ?>
-<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
     <?php if (AmpConfig::get('directplay')) { ++$thcount; ?>
@@ -60,4 +60,4 @@ $thcount = 5;
         <th class="cel_action"><?php echo T_('Actions'); ?></th>
     </tr>
 </table>
-<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>

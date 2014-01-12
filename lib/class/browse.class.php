@@ -31,6 +31,17 @@
  */
 class Browse extends Query
 {
+    public function __construct($id = null, $cached = true)
+    {
+        parent::__construct($id, $cached);
+
+        if (!$id) {
+            $this->set_use_pages(true);
+            $this->set_use_alpha(false);
+        }
+        $this->show_header = true;
+    }
+
     /**
      * set_simple_browse
      * This sets the current browse object to a 'simple' browse method
@@ -123,107 +134,122 @@ class Browse extends Query
         // Set the correct classes based on type
         $class = "box browse_" . $type;
 
-        Ajax::start_container('browse_content_' . $type, 'browse_content');
         // Switch on the type of browsing we're doing
         switch ($type) {
             case 'song':
-                UI::show_box_top(T_('Songs') . $match, $class);
+                $box_title = T_('Songs') . $match;
                 Song::build_cache($object_ids);
-                require_once AmpConfig::get('prefix') . '/templates/show_songs.inc.php';
-                UI::show_box_bottom();
+                $box_req = AmpConfig::get('prefix') . '/templates/show_songs.inc.php';
             break;
             case 'album':
-                UI::show_box_top(T_('Albums') . $match, $class);
+                $box_title = T_('Albums') . $match;
                 Album::build_cache($object_ids,'extra');
-                require_once AmpConfig::get('prefix') . '/templates/show_albums.inc.php';
-                UI::show_box_bottom();
+                $box_req = AmpConfig::get('prefix') . '/templates/show_albums.inc.php';
             break;
             case 'user':
-                UI::show_box_top(T_('Manage Users') . $match, $class);
-                require_once AmpConfig::get('prefix') . '/templates/show_users.inc.php';
-                UI::show_box_bottom();
+                $box_title = T_('Manage Users') . $match;
+                $box_req = AmpConfig::get('prefix') . '/templates/show_users.inc.php';
             break;
             case 'artist':
-                UI::show_box_top(T_('Artists') . $match, $class);
+                $box_title = T_('Artists') . $match;
                 Artist::build_cache($object_ids,'extra');
-                require_once AmpConfig::get('prefix') . '/templates/show_artists.inc.php';
-                UI::show_box_bottom();
+                $box_req = AmpConfig::get('prefix') . '/templates/show_artists.inc.php';
             break;
             case 'live_stream':
                 require_once AmpConfig::get('prefix') . '/templates/show_live_stream.inc.php';
-                UI::show_box_top(T_('Radio Stations') . $match, $class);
-                require_once AmpConfig::get('prefix') . '/templates/show_live_streams.inc.php';
-                UI::show_box_bottom();
+                $box_title = T_('Radio Stations') . $match;
+                $box_req = AmpConfig::get('prefix') . '/templates/show_live_streams.inc.php';
             break;
             case 'playlist':
                 Playlist::build_cache($object_ids);
-                UI::show_box_top(T_('Playlists') . $match, $class);
-                require_once AmpConfig::get('prefix') . '/templates/show_playlists.inc.php';
-                UI::show_box_bottom();
+                $box_title = T_('Playlists') . $match;
+                $box_req = AmpConfig::get('prefix') . '/templates/show_playlists.inc.php';
             break;
             case 'playlist_song':
-                UI::show_box_top(T_('Playlist Songs') . $match, $class);
-                require_once AmpConfig::get('prefix') . '/templates/show_playlist_songs.inc.php';
-                UI::show_box_bottom();
+                $box_title = T_('Playlist Songs') . $match;
+                $box_req = AmpConfig::get('prefix') . '/templates/show_playlist_songs.inc.php';
             break;
             case 'playlist_localplay':
-                UI::show_box_top(T_('Current Playlist'));
-                require_once AmpConfig::get('prefix') . '/templates/show_localplay_playlist.inc.php';
+                $box_title = T_('Current Playlist');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_localplay_playlist.inc.php';
                 UI::show_box_bottom();
             break;
             case 'smartplaylist':
-                UI::show_box_top(T_('Smart Playlists') . $match, $class);
-                require_once AmpConfig::get('prefix') . '/templates/show_smartplaylists.inc.php';
-                UI::show_box_bottom();
+                $box_title = T_('Smart Playlists') . $match;
+                $box_req = AmpConfig::get('prefix') . '/templates/show_smartplaylists.inc.php';
             break;
             case 'catalog':
-                UI::show_box_top(T_('Catalogs'), $class);
-                require_once AmpConfig::get('prefix') . '/templates/show_catalogs.inc.php';
-                UI::show_box_bottom();
+                $box_title = T_('Catalogs');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_catalogs.inc.php';
             break;
             case 'shoutbox':
-                UI::show_box_top(T_('Shoutbox Records'),$class);
-                require_once AmpConfig::get('prefix') . '/templates/show_manage_shoutbox.inc.php';
-                UI::show_box_bottom();
+                $box_title = T_('Shoutbox Records');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_manage_shoutbox.inc.php';
             break;
             case 'tag':
                 Tag::build_cache($tags);
-                UI::show_box_top(T_('Tag Cloud'),$class);
-                require_once AmpConfig::get('prefix') . '/templates/show_tagcloud.inc.php';
-                UI::show_box_bottom();
+                $box_title = T_('Tag Cloud');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_tagcloud.inc.php';
             break;
             case 'video':
                 Video::build_cache($object_ids);
-                UI::show_box_top(T_('Videos'),$class);
-                require_once AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
-                UI::show_box_bottom();
+                $box_title = T_('Videos');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
             break;
             case 'democratic':
-                UI::show_box_top(T_('Democratic Playlist'),$class);
-                require_once AmpConfig::get('prefix') . '/templates/show_democratic_playlist.inc.php';
-                UI::show_box_bottom();
+                $box_title = T_('Democratic Playlist');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_democratic_playlist.inc.php';
                 break;
             case 'wanted':
-                UI::show_box_top(T_('Wanted Albums'),$class);
-                require_once AmpConfig::get('prefix') . '/templates/show_wanted_albums.inc.php';
-                UI::show_box_bottom();
+                $box_title = T_('Wanted Albums');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_wanted_albums.inc.php';
                 break;
             case 'song_preview':
-                UI::show_box_top(T_('Songs'),$class);
-                require_once AmpConfig::get('prefix') . '/templates/show_song_previews.inc.php';
-                UI::show_box_bottom();
+                $box_title = T_('Songs');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_song_previews.inc.php';
                 break;
             default:
                 // Rien a faire
             break;
         } // end switch on type
-        echo '<script type="text/javascript">';
-        echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id, '');
-        echo ';</script>';
 
+        Ajax::start_container('browse_content_' . $type, 'browse_content');
+        if ($this->get_show_header()) {
+            if ($box_req) {
+                UI::show_box_top($box_title, $class);
+            }
+        }
+
+        if ($box_req) {
+            require_once $box_req;
+        }
+
+        if ($this->get_show_header()) {
+            if ($box_req) {
+                UI::show_box_bottom();
+            }
+            echo '<script type="text/javascript">';
+            echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id, '');
+            echo ';</script>';
+        } else {
+            if (!$this->get_use_pages()) {
+                $this->show_next_link();
+            }
+        }
         Ajax::end_container();
 
     } // show_object
+
+    public function show_next_link()
+    {
+        $limit    = $this->get_offset();
+        $start    = $this->get_start();
+        $total    = $this->get_total();
+        $next_offset = $start + $limit;
+        if ($next_offset <= $total) {
+            echo '<a class="jscroll-next" href="' . AmpConfig::get('ajax_url') . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode=browse_content_' . $this->get_type() . '&show_header=false">' . T_('More') . '</a>';
+        }
+    }
 
     /**
       * set_filter_from_request
@@ -250,5 +276,35 @@ class Browse extends Query
             }
         }
     } // set_filter_from_request
+
+    public function set_use_pages($use_pages)
+    {
+        $this->_state['use_pages'] = $use_pages;
+    }
+
+    public function get_use_pages()
+    {
+        return $this->_state['use_pages'];
+    }
+
+    public function set_use_alpha($use_alpha)
+    {
+        $this->_state['use_alpha'] = $use_alpha;
+    }
+
+    public function get_use_alpha()
+    {
+        return $this->_state['use_alpha'];
+    }
+
+    public function set_show_header($show_header)
+    {
+        $this->show_header = $show_header;
+    }
+
+    public function get_show_header()
+    {
+        return $this->show_header;
+    }
 
 } // browse

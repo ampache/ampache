@@ -22,7 +22,7 @@
 
 $web_path = AmpConfig::get('web_path');
 ?>
-<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <colgroup>
   <col id="col_action" />
@@ -107,4 +107,4 @@ foreach ($object_ids as $item) {
 } // end else
 ?>
 </table>
-<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>

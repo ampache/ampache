@@ -140,6 +140,9 @@ class Ajax
      */
     public static function text($action, $text, $source, $post='', $class='')
     {
+        // Avoid duplicate id
+        $source .= '_' . time();
+
         // Format the string we wanna use
         $ajax_string = self::action($action, $source, $post);
 
@@ -148,7 +151,6 @@ class Ajax
             $class = ' class="' . $class . '"';
         }
 
-        // If we pass a source put it in the ID
         $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>$text</a>\n";
 
         $string .= self::observe($source, 'click', $ajax_string);

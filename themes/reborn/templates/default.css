@@ -1602,3 +1602,27 @@ ol, ul, #rightbar ul {
     color: #ffffff;
     background-color: #222;
 }
+
+.browse-options {
+    float: right;
+}
+
+.jscroll-next {
+    width:50%;
+    display:block;
+    border:1px solid #ccc;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
+    border-radius: 10px;
+    background-color:#eee;
+    color:#999;
+    font-weight:bold;
+    text-align:center;
+    padding:10px 0;
+    cursor:pointer;
+    margin: auto; 
+}
+
+.jscroll-next:hover  {
+    color:#666;
+}

@@ -28,11 +28,6 @@ if (!AmpConfig::get('subsonic_backend')) {
     exit;
 }
 
-$ssid = $_GET['ssid'];
-if (!empty($ssid)) {
-    print_r('test', 'found!', '5');
-}
-
 $action = strtolower($_GET['action']);
 $f = $_GET['f'];
 $callback = $_GET['callback'];

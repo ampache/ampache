@@ -24,7 +24,7 @@ $web_path = AmpConfig::get('web_path');
 $tags_list = Tag::get_display(Tag::get_tags());
 $thcount = 8;
 ?>
-<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table id="reorder_songs_table" class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
     <?php if (AmpConfig::get('directplay')) { ++$thcount; ?>
@@ -96,4 +96,4 @@ $thcount = 8;
     <?php } ?>
     </tr>
 </table>
-<?php require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
+<?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
