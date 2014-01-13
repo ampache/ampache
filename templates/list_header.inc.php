@@ -89,6 +89,9 @@ foreach ($alphalist as $key => $value) {
     } else {
         $filter .= $value;
     }
+    if ($browse->get_filter('regex_match') == $filter) {
+        $value = '<b>' . $value . '</b>';
+    }
     echo Ajax::text('?page=browse&action=browse&browse_id=' . $browse->id . '&key=regex_match&multi_alpha_filter=' . $filter, $value,'browse_' . $uid . '_alpha_' . $key,'');
 }
 ?>
