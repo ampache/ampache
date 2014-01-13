@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5 svn\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2013-12-12 18:20+0100\n"
+"POT-Creation-Date: 2014-01-13 16:24+0100\n"
 "PO-Revision-Date: 2009-02-05 11:36+0100\n"
 "Last-Translator: Retrievil Knievil <retrievil.knievil@gmail.com>\n"
 "Language-Team: Norwegian Bokmal\n"
@@ -35,7 +35,7 @@ msgid "Are you sure you want to permanently delete"
 msgstr "Er du sikker på at du vil slette permanent"
 
 #: ../../admin/access.php:72 ../../lib/class/search.class.php:319
-#: ../../templates/show_song.inc.php:80
+#: ../../templates/show_song.inc.php:97
 msgid "Added"
 msgstr "Lagt til"
 
@@ -43,7 +43,7 @@ msgstr "Lagt til"
 msgid "Your new Access Control List(s) have been created"
 msgstr "Din nye oppføring i tilgangslistene har blitt lagret"
 
-#: ../../admin/access.php:86 ../../lib/class/catalog.class.php:791
+#: ../../admin/access.php:86 ../../lib/class/catalog.class.php:805
 #: ../../lib/class/search.class.php:326 ../../preferences.php:115
 msgid "Updated"
 msgstr "Oppdatert"
@@ -220,12 +220,12 @@ msgstr ""
 "tegnsett"
 
 #: ../../admin/users.php:56 ../../admin/users.php:106
-#: ../../lib/class/user.class.php:424
+#: ../../lib/class/user.class.php:441
 msgid "Error Username Required"
 msgstr "Feil: Brukernavn nødvendig"
 
 #: ../../admin/users.php:59 ../../admin/users.php:102
-#: ../../lib/class/user.class.php:428
+#: ../../lib/class/user.class.php:445
 msgid "Error Passwords don't match"
 msgstr "Feil: Passord stemmer ikke overens"
 
@@ -254,7 +254,7 @@ msgid "Guest"
 msgstr "Gjest"
 
 #: ../../admin/users.php:126 ../../lib/class/democratic.class.php:155
-#: ../../lib/preferences.php:232 ../../templates/show_access_list.inc.php:54
+#: ../../lib/preferences.php:241 ../../templates/show_access_list.inc.php:54
 #: ../../templates/show_add_access.inc.php:42
 #: ../../templates/show_add_user.inc.php:75
 #: ../../templates/show_edit_access.inc.php:60
@@ -262,13 +262,15 @@ msgstr "Gjest"
 #: ../../templates/show_mail_users.inc.php:32
 #: ../../templates/show_manage_shoutbox.inc.php:28
 #: ../../templates/show_manage_shoutbox.inc.php:52
+#: ../../templates/show_missing_albums.inc.php:29
 #: ../../templates/show_preference_admin.inc.php:44
 #: ../../templates/show_preference_box.inc.php:60
+#: ../../templates/show_wanted_albums.inc.php:28
 msgid "User"
 msgstr "Bruker"
 
 #: ../../admin/users.php:126 ../../lib/class/democratic.class.php:164
-#: ../../lib/preferences.php:234 ../../templates/show_add_user.inc.php:78
+#: ../../lib/preferences.php:243 ../../templates/show_add_user.inc.php:78
 #: ../../templates/show_democratic_playlist.inc.php:63
 #: ../../templates/show_democratic_playlist.inc.php:103
 #: ../../templates/show_edit_user.inc.php:81
@@ -747,7 +749,7 @@ msgstr ""
 msgid "Dumps all Artists as individual playlists"
 msgstr ""
 
-#: ../../browse.php:75 ../../lib/class/browse.class.php:189
+#: ../../browse.php:75 ../../lib/class/browse.class.php:195
 #: ../../templates/sidebar_home.inc.php:36
 msgid "Tag Cloud"
 msgstr "Tag 'Sky'"
@@ -780,7 +782,7 @@ msgid "Duplicate ACL defined"
 msgstr "Duplikatspor"
 
 #: ../../lib/class/access.class.php:400 ../../lib/class/access.class.php:420
-#: ../../lib/ui.lib.php:303 ../../templates/list_header.inc.php:105
+#: ../../lib/ui.lib.php:303 ../../templates/list_header.inc.php:148
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_add_access.inc.php:55
 #: ../../templates/show_add_access.inc.php:61
@@ -841,27 +843,29 @@ msgstr "Web Grensesnitt"
 msgid "Stream Access"
 msgstr "Stream Tilgang"
 
-#: ../../lib/class/album.class.php:218 ../../lib/class/artist.class.php:310
+#: ../../lib/class/album.class.php:217 ../../lib/class/artist.class.php:310
 #: ../../templates/show_album.inc.php:35
 #: ../../templates/show_lyrics.inc.php:33
 msgid "Unknown (Orphaned)"
 msgstr "Ukjent"
 
-#: ../../lib/class/album.class.php:339 ../../templates/show_album.inc.php:28
+#: ../../lib/class/album.class.php:349 ../../templates/show_album.inc.php:28
 #: ../../templates/show_edit_album_row.inc.php:47
+#: ../../templates/show_song_previews.inc.php:35
 msgid "Disk"
 msgstr "Disk"
 
-#: ../../lib/class/album.class.php:352 ../../lib/class/browse.class.php:145
-#: ../../lib/ui.lib.php:158 ../../templates/show_random.inc.php:29
+#: ../../lib/class/album.class.php:362 ../../lib/class/browse.class.php:158
+#: ../../lib/ui.lib.php:158 ../../server/search.ajax.php:55
+#: ../../templates/show_random.inc.php:29
 #: ../../templates/show_search.inc.php:30
 #: ../../templates/show_stats.inc.php:33
 #: ../../templates/sidebar_home.inc.php:35
-#: ../../templates/sidebar_home.inc.php:89
+#: ../../templates/sidebar_home.inc.php:92
 msgid "Artists"
 msgstr "Artister"
 
-#: ../../lib/class/album.class.php:352 ../../lib/class/album.class.php:353
+#: ../../lib/class/album.class.php:362 ../../lib/class/album.class.php:363
 msgid "Various"
 msgstr "Variert"
 
@@ -919,6 +923,11 @@ msgstr "måneder siden"
 msgid "years ago"
 msgstr "år siden"
 
+#: ../../lib/class/ampconfig.class.php:79
+#, php-format
+msgid "Trying to clobber '%s' without setting clobber"
+msgstr ""
+
 #: ../../lib/class/api.class.php:124
 msgid "Login Failed: version too old"
 msgstr ""
@@ -945,11 +954,37 @@ msgstr "Ugyldig forespørsel"
 msgid "Media Object Invalid or Not Specified"
 msgstr "Mediaobjekt invalid eller feilspesifisert"
 
-#: ../../lib/class/art.class.php:988
+#: ../../lib/class/art.class.php:1000
 msgid "Error: Unable to open"
 msgstr "Feil: Kan ikke åpne"
 
-#: ../../lib/class/browse.class.php:128 ../../templates/show_albums.inc.php:39
+#: ../../lib/class/autoupdate.class.php:177
+#, fuzzy
+msgid "Update available"
+msgstr "Oppdater alle"
+
+#: ../../lib/class/autoupdate.class.php:180
+#, fuzzy
+msgid "See"
+msgstr "Tjener"
+
+#: ../../lib/class/autoupdate.class.php:180
+#, fuzzy
+msgid "changes"
+msgstr "Lagre Endringer"
+
+#: ../../lib/class/autoupdate.class.php:181
+#, fuzzy
+msgid "or"
+msgstr "Port"
+
+#: ../../lib/class/autoupdate.class.php:181
+#, fuzzy
+msgid "download"
+msgstr "Last ned"
+
+#: ../../lib/class/browse.class.php:144 ../../lib/class/browse.class.php:212
+#: ../../server/search.ajax.php:111 ../../templates/show_albums.inc.php:39
 #: ../../templates/show_albums.inc.php:78
 #: ../../templates/show_artists.inc.php:37
 #: ../../templates/show_artists.inc.php:74
@@ -959,12 +994,12 @@ msgstr "Feil: Kan ikke åpne"
 #: ../../templates/show_recommended_artists.inc.php:71
 #: ../../templates/show_search.inc.php:28
 #: ../../templates/show_stats.inc.php:34 ../../templates/show_stats.inc.php:70
-#: ../../templates/sidebar_home.inc.php:87
+#: ../../templates/sidebar_home.inc.php:90
 msgid "Songs"
 msgstr "Spor"
 
-#: ../../lib/class/browse.class.php:134 ../../lib/ui.lib.php:154
-#: ../../templates/browse_filters.inc.php:58
+#: ../../lib/class/browse.class.php:149 ../../lib/ui.lib.php:154
+#: ../../server/search.ajax.php:83 ../../templates/browse_filters.inc.php:58
 #: ../../templates/show_artists.inc.php:38
 #: ../../templates/show_artists.inc.php:75
 #: ../../templates/show_random.inc.php:28
@@ -973,84 +1008,89 @@ msgstr "Spor"
 #: ../../templates/show_search.inc.php:29
 #: ../../templates/show_stats.inc.php:32
 #: ../../templates/sidebar_home.inc.php:34
-#: ../../templates/sidebar_home.inc.php:88
+#: ../../templates/sidebar_home.inc.php:91
 msgid "Albums"
 msgstr "Album"
 
-#: ../../lib/class/browse.class.php:140
+#: ../../lib/class/browse.class.php:154
 msgid "Manage Users"
 msgstr "Behandle Brukere"
 
-#: ../../lib/class/browse.class.php:152
+#: ../../lib/class/browse.class.php:164
 #: ../../templates/sidebar_home.inc.php:39
 msgid "Radio Stations"
 msgstr "Radiostasjoner"
 
-#: ../../lib/class/browse.class.php:158
+#: ../../lib/class/browse.class.php:169
 #: ../../templates/sidebar_home.inc.php:37
 msgid "Playlists"
 msgstr "Spillelister"
 
-#: ../../lib/class/browse.class.php:163
+#: ../../lib/class/browse.class.php:173
 msgid "Playlist Songs"
 msgstr "Spilleliste Sanger"
 
-#: ../../lib/class/browse.class.php:168
+#: ../../lib/class/browse.class.php:177
 msgid "Current Playlist"
 msgstr "Nåværende Spilleliste"
 
-#: ../../lib/class/browse.class.php:173
+#: ../../lib/class/browse.class.php:182
 #: ../../templates/sidebar_home.inc.php:38
 #, fuzzy
 msgid "Smart Playlists"
 msgstr "Importer spilleliste"
 
-#: ../../lib/class/browse.class.php:178 ../../templates/show_stats.inc.php:27
+#: ../../lib/class/browse.class.php:186 ../../templates/show_stats.inc.php:27
 #: ../../templates/sidebar_admin.inc.php:24
 msgid "Catalogs"
 msgstr "Kataloger"
 
-#: ../../lib/class/browse.class.php:183
+#: ../../lib/class/browse.class.php:190
 msgid "Shoutbox Records"
 msgstr "Shoutbox Oppføringer"
 
-#: ../../lib/class/browse.class.php:195 ../../templates/show_search.inc.php:31
+#: ../../lib/class/browse.class.php:200 ../../templates/show_search.inc.php:31
 #: ../../templates/show_stats.inc.php:35 ../../templates/show_stats.inc.php:71
 #: ../../templates/sidebar_home.inc.php:40
-#: ../../templates/sidebar_home.inc.php:90
+#: ../../templates/sidebar_home.inc.php:93
 msgid "Videos"
 msgstr "Videoer"
 
-#: ../../lib/class/browse.class.php:200
+#: ../../lib/class/browse.class.php:204
 #: ../../templates/show_democratic.inc.php:23
 #, fuzzy
 msgid "Democratic Playlist"
 msgstr "Lag demokratisk spilleliste"
 
-#: ../../lib/class/catalog.class.php:318 ../../lib/class/catalog.class.php:321
-#: ../../lib/class/catalog.class.php:324 ../../lib/class/user.class.php:707
-#: ../../lib/preferences.php:275 ../../templates/show_user.inc.php:23
+#: ../../lib/class/browse.class.php:208
+#, fuzzy
+msgid "Wanted Albums"
+msgstr "Relatert Album"
+
+#: ../../lib/class/browse.class.php:254 ../../templates/rightbar.inc.php:112
+#: ../../templates/show_recently_played.inc.php:143
+msgid "More"
+msgstr "Mer"
+
+#: ../../lib/class/catalog.class.php:332 ../../lib/class/catalog.class.php:335
+#: ../../lib/class/catalog.class.php:338 ../../lib/class/user.class.php:744
+#: ../../lib/preferences.php:284 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:54
 msgid "Never"
 msgstr "Aldri"
 
-#: ../../lib/class/catalog.class.php:406
+#: ../../lib/class/catalog.class.php:420
 msgid "Catalog Insert Failed check debug logs"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:798
+#: ../../lib/class/catalog.class.php:812
 msgid "No Update Needed"
 msgstr "Ingen oppdatering nødvendig"
 
-#: ../../lib/class/catalog.class.php:971
+#: ../../lib/class/catalog.class.php:985
 #, fuzzy, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr "Katalogrensking ferdig"
-
-#: ../../lib/class/config.class.php:79
-#, php-format
-msgid "Trying to clobber '%s' without setting clobber"
-msgstr ""
 
 #: ../../lib/class/democratic.class.php:147 ../../lib/class/video.class.php:78
 #: ../../templates/show_create_democratic.inc.php:36
@@ -1083,7 +1123,7 @@ msgstr "Stoppet"
 msgid "Paused"
 msgstr "Pause"
 
-#: ../../lib/class/localplay.class.php:636 ../../lib/class/user.class.php:710
+#: ../../lib/class/localplay.class.php:636 ../../lib/class/user.class.php:747
 #: ../../lib/general.lib.php:222
 #: ../../modules/localplay/mpd.controller.php:503
 #: ../../templates/show_user.inc.php:24 ../../templates/show_users.inc.php:55
@@ -1277,8 +1317,8 @@ msgstr ""
 #: ../../templates/show_duplicate.inc.php:29
 #: ../../templates/show_edit_song_row.inc.php:27
 #: ../../templates/show_search_bar.inc.php:31
-#: ../../templates/show_song.inc.php:64 ../../templates/show_videos.inc.php:29
-#: ../../templates/show_videos.inc.php:53
+#: ../../templates/show_song.inc.php:81 ../../templates/show_videos.inc.php:33
+#: ../../templates/show_videos.inc.php:60
 msgid "Title"
 msgstr "Tittel"
 
@@ -1293,14 +1333,17 @@ msgstr "Tittel"
 #: ../../templates/show_edit_song_row.inc.php:40
 #: ../../templates/show_get_albumart.inc.php:36
 #: ../../templates/show_lyrics.inc.php:51
-#: ../../templates/show_now_playing_row.inc.php:63
+#: ../../templates/show_missing_albums.inc.php:26
+#: ../../templates/show_now_playing_row.inc.php:56
 #: ../../templates/show_playlist_songs.inc.php:36
 #: ../../templates/show_playlist_songs.inc.php:73
 #: ../../templates/show_recently_played.inc.php:34
-#: ../../templates/show_recently_played.inc.php:113
+#: ../../templates/show_recently_played.inc.php:130
 #: ../../templates/show_search_bar.inc.php:32
-#: ../../templates/show_song.inc.php:66 ../../templates/show_songs.inc.php:36
-#: ../../templates/show_songs.inc.php:81
+#: ../../templates/show_song.inc.php:83
+#: ../../templates/show_song_previews.inc.php:33
+#: ../../templates/show_songs.inc.php:36 ../../templates/show_songs.inc.php:83
+#: ../../templates/show_wanted_albums.inc.php:25
 #: ../../templates/sidebar_home.inc.php:65
 msgid "Album"
 msgstr "Album"
@@ -1321,16 +1364,19 @@ msgstr "Album"
 #: ../../templates/show_edit_song_row.inc.php:31
 #: ../../templates/show_get_albumart.inc.php:28
 #: ../../templates/show_lyrics.inc.php:58
-#: ../../templates/show_now_playing_row.inc.php:67
+#: ../../templates/show_missing_albums.inc.php:27
+#: ../../templates/show_now_playing_row.inc.php:60
 #: ../../templates/show_playlist_songs.inc.php:35
 #: ../../templates/show_playlist_songs.inc.php:72
 #: ../../templates/show_recently_played.inc.php:35
-#: ../../templates/show_recently_played.inc.php:114
+#: ../../templates/show_recently_played.inc.php:131
 #: ../../templates/show_recommended_artists.inc.php:32
 #: ../../templates/show_recommended_artists.inc.php:70
 #: ../../templates/show_search_bar.inc.php:33
-#: ../../templates/show_song.inc.php:65 ../../templates/show_songs.inc.php:35
-#: ../../templates/show_songs.inc.php:80
+#: ../../templates/show_song.inc.php:82
+#: ../../templates/show_song_previews.inc.php:32
+#: ../../templates/show_songs.inc.php:35 ../../templates/show_songs.inc.php:82
+#: ../../templates/show_wanted_albums.inc.php:26
 #: ../../templates/sidebar_home.inc.php:66
 msgid "Artist"
 msgstr "Artist"
@@ -1338,7 +1384,7 @@ msgstr "Artist"
 #: ../../lib/class/search.class.php:224
 #: ../../templates/show_manage_shoutbox.inc.php:30
 #: ../../templates/show_manage_shoutbox.inc.php:54
-#: ../../templates/show_song.inc.php:69
+#: ../../templates/show_song.inc.php:86
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -1354,7 +1400,7 @@ msgstr "Tag"
 #: ../../templates/show_duplicates.inc.php:34
 #: ../../templates/show_duplicates.inc.php:73
 #: ../../templates/show_import_playlist.inc.php:28
-#: ../../templates/show_song.inc.php:75
+#: ../../templates/show_song.inc.php:92
 msgid "Filename"
 msgstr "Filnavn"
 
@@ -1362,6 +1408,8 @@ msgstr "Filnavn"
 #: ../../templates/show_albums.inc.php:40
 #: ../../templates/show_albums.inc.php:79
 #: ../../templates/show_edit_album_row.inc.php:43
+#: ../../templates/show_missing_albums.inc.php:28
+#: ../../templates/show_wanted_albums.inc.php:27
 msgid "Year"
 msgstr "År"
 
@@ -1380,11 +1428,11 @@ msgstr ""
 #: ../../templates/show_recommended_artists.inc.php:38
 #: ../../templates/show_recommended_artists.inc.php:76
 #: ../../templates/show_song.inc.php:31 ../../templates/show_songs.inc.php:44
-#: ../../templates/show_songs.inc.php:86
+#: ../../templates/show_songs.inc.php:88
 msgid "Rating"
 msgstr "Kvalitet"
 
-#: ../../lib/class/search.class.php:279 ../../templates/show_song.inc.php:82
+#: ../../lib/class/search.class.php:279 ../../templates/show_song.inc.php:99
 #, fuzzy
 msgid "# Played"
 msgstr "Spilt"
@@ -1392,7 +1440,7 @@ msgstr "Spilt"
 #: ../../lib/class/search.class.php:287
 #: ../../templates/show_duplicates.inc.php:32
 #: ../../templates/show_duplicates.inc.php:71
-#: ../../templates/show_song.inc.php:73
+#: ../../templates/show_song.inc.php:90
 msgid "Bitrate"
 msgstr "Bitrate"
 
@@ -1448,18 +1496,96 @@ msgstr "Importer spilleliste"
 msgid "Name"
 msgstr "Navn"
 
+#: ../../lib/class/shoutbox.class.php:260 ../../templates/rightbar.inc.php:25
+#: ../../templates/show_albums.inc.php:31
+#: ../../templates/show_albums.inc.php:70
+#: ../../templates/show_artists.inc.php:33
+#: ../../templates/show_artists.inc.php:70
+#: ../../templates/show_democratic.inc.php:40
+#: ../../templates/show_live_streams.inc.php:30
+#: ../../templates/show_live_streams.inc.php:54
+#: ../../templates/show_localplay_control.inc.php:27
+#: ../../templates/show_manage_democratic.inc.php:49
+#: ../../templates/show_playlists.inc.php:27
+#: ../../templates/show_playlists.inc.php:53
+#: ../../templates/show_playlist_songs.inc.php:30
+#: ../../templates/show_playlist_songs.inc.php:67
+#: ../../templates/show_recently_played.inc.php:30
+#: ../../templates/show_recently_played.inc.php:125
+#: ../../templates/show_recommended_artists.inc.php:29
+#: ../../templates/show_recommended_artists.inc.php:67
+#: ../../templates/show_smartplaylists.inc.php:30
+#: ../../templates/show_smartplaylists.inc.php:54
+#: ../../templates/show_song_previews.inc.php:27
+#: ../../templates/show_songs.inc.php:31 ../../templates/show_songs.inc.php:78
+#: ../../templates/show_videos.inc.php:30
+#: ../../templates/show_videos.inc.php:57
+msgid "Play"
+msgstr "Spill"
+
+#. HINT: Artist Fullname
+#: ../../lib/class/shoutbox.class.php:261
+#: ../../templates/show_add_live_stream.inc.php:62
+#: ../../templates/show_album.inc.php:79
+#: ../../templates/show_album_row.inc.php:33
+#: ../../templates/show_albums.inc.php:33
+#: ../../templates/show_albums.inc.php:72
+#: ../../templates/show_artist.inc.php:90
+#: ../../templates/show_artist_row.inc.php:32
+#: ../../templates/show_artists.inc.php:35
+#: ../../templates/show_artists.inc.php:72
+#: ../../templates/show_catalog_row.inc.php:34
+#: ../../templates/show_live_stream.inc.php:27
+#: ../../templates/show_live_stream_row.inc.php:29
+#: ../../templates/show_live_streams.inc.php:32
+#: ../../templates/show_live_streams.inc.php:56
+#: ../../templates/show_playlist_row.inc.php:32
+#: ../../templates/show_playlists.inc.php:29
+#: ../../templates/show_playlists.inc.php:55
+#: ../../templates/show_playlist_song_row.inc.php:31
+#: ../../templates/show_playlist_songs.inc.php:32
+#: ../../templates/show_playlist_songs.inc.php:69
+#: ../../templates/show_recently_played.inc.php:32
+#: ../../templates/show_recently_played.inc.php:100
+#: ../../templates/show_recently_played.inc.php:127
+#: ../../templates/show_recommended_artists.inc.php:31
+#: ../../templates/show_recommended_artists.inc.php:69
+#: ../../templates/show_smartplaylist_row.inc.php:32
+#: ../../templates/show_smartplaylists.inc.php:32
+#: ../../templates/show_smartplaylists.inc.php:56
+#: ../../templates/show_song.inc.php:64
+#: ../../templates/show_song_previews.inc.php:29
+#: ../../templates/show_song_row.inc.php:32
+#: ../../templates/show_songs.inc.php:33 ../../templates/show_songs.inc.php:80
+#: ../../templates/show_video_row.inc.php:32
+#: ../../templates/show_videos.inc.php:32
+#: ../../templates/show_videos.inc.php:59
+msgid "Add"
+msgstr "Legg til"
+
+#: ../../lib/class/shoutbox.class.php:263
+#: ../../templates/show_album.inc.php:110
+#: ../../templates/show_album.inc.php:111
+#: ../../templates/show_album_row.inc.php:60
+#: ../../templates/show_html5_player.inc.php:129
+#: ../../templates/show_html5_player.inc.php:134
+#: ../../templates/show_song.inc.php:67
+#: ../../templates/show_song_row.inc.php:50
+msgid "Post Shout"
+msgstr "Lagre beskjed"
+
 #: ../../lib/class/song.class.php:874
-#: ../../templates/show_html5_player.inc.php:96
+#: ../../templates/show_html5_player.inc.php:126
 #, fuzzy
 msgid "Show Lyrics"
 msgstr "Vis spilelliste"
 
-#: ../../lib/class/update.class.php:367
+#: ../../lib/class/update.class.php:396
 #, fuzzy
 msgid "No updates needed."
 msgstr "Ingen oppdatering nødvendig"
 
-#: ../../lib/class/user.class.php:730 ../../templates/show_objects.inc.php:44
+#: ../../lib/class/user.class.php:767 ../../templates/show_objects.inc.php:44
 #: ../../templates/show_tagcloud.inc.php:34
 #: ../../templates/show_user_recommendations.inc.php:32
 #: ../../templates/show_user_recommendations.inc.php:42
@@ -1469,6 +1595,22 @@ msgstr "Ingen oppdatering nødvendig"
 #: ../../templates/show_user_stats.inc.php:58
 msgid "Not Enough Data"
 msgstr "Ikke nok data"
+
+#: ../../lib/class/wanted.class.php:228
+#, fuzzy
+msgid "Accept"
+msgstr "Jeg godtar"
+
+#: ../../lib/class/wanted.class.php:232
+#: ../../lib/javascript/search-data.php:51
+#: ../../templates/show_disabled_songs.inc.php:58
+msgid "Remove"
+msgstr "Fjern"
+
+#: ../../lib/class/wanted.class.php:235
+#, fuzzy
+msgid "Add to wanted list"
+msgstr "Legg til i spilleliste"
 
 #: ../../lib/install.lib.php:72
 msgid "Config file already exists, install is probably completed"
@@ -1548,17 +1690,12 @@ msgstr "Databasens tegnsett er oppdatert"
 msgid "Administrative user creation failed: %s"
 msgstr "Bruker aktivert"
 
-#: ../../lib/javascript/search-data.php:51
-#: ../../templates/show_disabled_songs.inc.php:58
-msgid "Remove"
-msgstr "Fjern"
-
-#: ../../lib/preferences.php:175 ../../lib/preferences.php:283
+#: ../../lib/preferences.php:184 ../../lib/preferences.php:292
 #: ../../templates/show_user_row.inc.php:44
 msgid "Enable"
 msgstr "Aktiver"
 
-#: ../../lib/preferences.php:176 ../../lib/preferences.php:284
+#: ../../lib/preferences.php:185 ../../lib/preferences.php:293
 #: ../../templates/show_catalog_types.inc.php:40
 #: ../../templates/show_duplicates.inc.php:27
 #: ../../templates/show_duplicates.inc.php:66
@@ -1567,19 +1704,19 @@ msgstr "Aktiver"
 msgid "Disable"
 msgstr "Deaktiver"
 
-#: ../../lib/preferences.php:182 ../../lib/preferences.php:219
+#: ../../lib/preferences.php:191 ../../lib/preferences.php:228
 #: ../../lib/ui.lib.php:330 ../../templates/show_adds_catalog.inc.php:27
 #: ../../templates/show_gather_art.inc.php:25
 #: ../../templates/sidebar_localplay.inc.php:45
 msgid "None"
 msgstr "Ingen"
 
-#: ../../lib/preferences.php:184 ../../templates/show_edit_user.inc.php:96
+#: ../../lib/preferences.php:193 ../../templates/show_edit_user.inc.php:96
 #: ../../templates/show_playtype_switch.inc.php:33
 msgid "Stream"
 msgstr "Stream"
 
-#: ../../lib/preferences.php:187
+#: ../../lib/preferences.php:196
 #: ../../modules/localplay/httpq.controller.php:471
 #: ../../modules/localplay/mpd.controller.php:469
 #: ../../modules/localplay/vlc.controller.php:479
@@ -1590,99 +1727,99 @@ msgstr "Stream"
 msgid "Democratic"
 msgstr "Demokratisk"
 
-#: ../../lib/preferences.php:190 ../../templates/show_edit_user.inc.php:94
+#: ../../lib/preferences.php:199 ../../templates/show_edit_user.inc.php:94
 #: ../../templates/show_playtype_switch.inc.php:35
 #: ../../templates/sidebar_home.inc.php:58 ../../templates/sidebar.inc.php:29
 #: ../../templates/sidebar_localplay.inc.php:33
 msgid "Localplay"
 msgstr "Lokalavspilling"
 
-#: ../../lib/preferences.php:192
+#: ../../lib/preferences.php:201
 #: ../../templates/show_playtype_switch.inc.php:39
 #, fuzzy
 msgid "Web Player"
 msgstr "XSPF Spiller"
 
-#: ../../lib/preferences.php:199
+#: ../../lib/preferences.php:208
 msgid "M3U"
 msgstr "M3U"
 
-#: ../../lib/preferences.php:200
+#: ../../lib/preferences.php:209
 msgid "Simple M3U"
 msgstr "Enkel M3U"
 
-#: ../../lib/preferences.php:201
+#: ../../lib/preferences.php:210
 msgid "PLS"
 msgstr "PLS"
 
-#: ../../lib/preferences.php:202
+#: ../../lib/preferences.php:211
 msgid "Asx"
 msgstr "Asx"
 
-#: ../../lib/preferences.php:203
+#: ../../lib/preferences.php:212
 msgid "RAM"
 msgstr "RAM"
 
-#: ../../lib/preferences.php:204
+#: ../../lib/preferences.php:213
 msgid "XSPF"
 msgstr "XSPF"
 
-#: ../../lib/preferences.php:231
+#: ../../lib/preferences.php:240
 msgid "Disabled"
 msgstr "Deaktivert"
 
-#: ../../lib/preferences.php:233
+#: ../../lib/preferences.php:242
 msgid "Manager"
 msgstr "Operatør"
 
-#: ../../lib/preferences.php:250
+#: ../../lib/preferences.php:259
 msgid "Send on Add"
 msgstr "Send ved Legg til"
 
-#: ../../lib/preferences.php:251
+#: ../../lib/preferences.php:260
 msgid "Send and Clear on Add"
 msgstr "Send og rensk ved Legg til"
 
-#: ../../lib/preferences.php:252
+#: ../../lib/preferences.php:261
 msgid "Clear on Send"
 msgstr "Rensk ved Send"
 
-#: ../../lib/preferences.php:253 ../../lib/preferences.php:276
-#: ../../lib/preferences.php:291
+#: ../../lib/preferences.php:262 ../../lib/preferences.php:285
+#: ../../lib/preferences.php:300
 #: ../../templates/show_manage_democratic.inc.php:30
 msgid "Default"
 msgstr "Standard"
 
-#: ../../lib/preferences.php:259 ../../lib/preferences.php:267
+#: ../../lib/preferences.php:268 ../../lib/preferences.php:276
 msgid "Low"
 msgstr ""
 
-#: ../../lib/preferences.php:260 ../../lib/preferences.php:268
+#: ../../lib/preferences.php:269 ../../lib/preferences.php:277
 msgid "Medium"
 msgstr ""
 
-#: ../../lib/preferences.php:261 ../../lib/preferences.php:269
+#: ../../lib/preferences.php:270 ../../lib/preferences.php:278
 msgid "High"
 msgstr ""
 
-#: ../../lib/preferences.php:277
+#: ../../lib/preferences.php:286
 msgid "Always"
 msgstr "Alltid"
 
-#: ../../lib/preferences.php:292
+#: ../../lib/preferences.php:301
 #, fuzzy
 msgid "Year ascending"
 msgstr "Transkoding"
 
-#: ../../lib/preferences.php:293
+#: ../../lib/preferences.php:302
 msgid "Year descending"
 msgstr ""
 
-#: ../../lib/preferences.php:294
+#: ../../lib/preferences.php:303
 msgid "Name ascending"
 msgstr ""
 
-#: ../../lib/preferences.php:295
+#: ../../lib/preferences.php:304
 msgid "Name descending"
 msgstr ""
 
@@ -1732,7 +1869,7 @@ msgstr "Tilfeldig avspilling"
 
 #: ../../lib/ui.lib.php:116 ../../templates/show_search_bar.inc.php:36
 #: ../../templates/show_search.inc.php:53
-#: ../../templates/sidebar_home.inc.php:85
+#: ../../templates/sidebar_home.inc.php:88
 msgid "Search"
 msgstr "Søk"
 
@@ -1771,7 +1908,7 @@ msgid "Browse Music"
 msgstr "Bla i musikk"
 
 #: ../../lib/ui.lib.php:162 ../../templates/show_stats.inc.php:26
-#: ../../templates/sidebar_home.inc.php:82
+#: ../../templates/sidebar_home.inc.php:85
 msgid "Statistics"
 msgstr "Statistikk"
 
@@ -1779,11 +1916,11 @@ msgstr "Statistikk"
 msgid "Add New"
 msgstr "Legg til ny"
 
-#: ../../lib/ui.lib.php:516
+#: ../../lib/ui.lib.php:550
 msgid "On"
 msgstr "På"
 
-#: ../../lib/ui.lib.php:518
+#: ../../lib/ui.lib.php:552
 msgid "Off"
 msgstr "Av"
 
@@ -2034,7 +2171,7 @@ msgstr ""
 #: ../../templates/show_login_form.inc.php:75
 #: ../../templates/show_now_playing_row.inc.php:25
 #: ../../templates/show_recently_played.inc.php:36
-#: ../../templates/show_recently_played.inc.php:111
+#: ../../templates/show_recently_played.inc.php:128
 #: ../../templates/show_user_registration.inc.php:70
 #: ../../templates/show_users.inc.php:40 ../../templates/show_users.inc.php:62
 msgid "Username"
@@ -2163,12 +2300,12 @@ msgstr "Port"
 #: ../../modules/localplay/httpq.controller.php:475
 #: ../../modules/localplay/mpd.controller.php:473
 #: ../../modules/localplay/vlc.controller.php:483
-#: ../../templates/show_album.inc.php:77
-#: ../../templates/show_album_row.inc.php:31
-#: ../../templates/show_artist.inc.php:89
-#: ../../templates/show_artist_row.inc.php:30
+#: ../../templates/show_album.inc.php:83
+#: ../../templates/show_album_row.inc.php:34
+#: ../../templates/show_artist.inc.php:95
+#: ../../templates/show_artist_row.inc.php:33
 #: ../../templates/show_localplay_status.inc.php:45
-#: ../../templates/show_playlist_row.inc.php:30
+#: ../../templates/show_playlist_row.inc.php:33
 #: ../../templates/sidebar_home.inc.php:63
 msgid "Random"
 msgstr "Tilfeldig"
@@ -2244,7 +2381,7 @@ msgstr "Du må skrive inn et passord"
 msgid "Your passwords do not match"
 msgstr "Passord stemmer ikke overens"
 
-#: ../../rest/index.php:42 ../../server/xml.server.php:43
+#: ../../rest/index.php:43 ../../server/xml.server.php:43
 #, fuzzy
 msgid "Access Control not Enabled"
 msgstr "Tilgangskontroll oppføringer"
@@ -2298,7 +2435,8 @@ msgstr "Alle spillelister"
 #: ../../templates/browse_filters.inc.php:55
 #: ../../templates/show_playlist_songs.inc.php:34
 #: ../../templates/show_playlist_songs.inc.php:71
-#: ../../templates/show_songs.inc.php:34 ../../templates/show_songs.inc.php:79
+#: ../../templates/show_song_previews.inc.php:31
+#: ../../templates/show_songs.inc.php:34 ../../templates/show_songs.inc.php:81
 msgid "Song Title"
 msgstr "Spor tittel"
 
@@ -2331,24 +2469,24 @@ msgstr "Spørringer:"
 msgid "Cache Hits:"
 msgstr "Mellomlager treff:"
 
-#: ../../templates/header.inc.php:77
+#: ../../templates/header.inc.php:78
 msgid "Save"
 msgstr ""
 
-#: ../../templates/header.inc.php:78
+#: ../../templates/header.inc.php:79
 #: ../../templates/show_confirmation.inc.php:34
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: ../../templates/header.inc.php:96
+#: ../../templates/header.inc.php:169
 msgid "Log out"
 msgstr "Logg ut"
 
-#: ../../templates/header.inc.php:112
+#: ../../templates/header.inc.php:194
 msgid "Error Config File Out of Date"
 msgstr "Feil: Konfigurasjonsfilen er i en gammel versjon"
 
-#: ../../templates/header.inc.php:113
+#: ../../templates/header.inc.php:195
 msgid "Generate New Config"
 msgstr "Lag ny konfigurasjonsfil"
 
@@ -2400,37 +2538,19 @@ msgstr ""
 "konfigurasjonen på et senere tidspunkt, redigerer du filen/config/ampache."
 "cfg.php"
 
-#: ../../templates/list_header.inc.php:103
+#: ../../templates/list_header.inc.php:146
 msgid "Prev"
 msgstr "Forrige"
 
-#: ../../templates/list_header.inc.php:104
+#: ../../templates/list_header.inc.php:147
 #: ../../templates/show_localplay_control.inc.php:28
 msgid "Next"
 msgstr "Neste"
 
-#: ../../templates/rightbar.inc.php:25 ../../templates/show_albums.inc.php:31
-#: ../../templates/show_albums.inc.php:70
-#: ../../templates/show_artists.inc.php:33
-#: ../../templates/show_artists.inc.php:70
-#: ../../templates/show_democratic.inc.php:40
-#: ../../templates/show_live_streams.inc.php:30
-#: ../../templates/show_live_streams.inc.php:54
-#: ../../templates/show_localplay_control.inc.php:27
-#: ../../templates/show_manage_democratic.inc.php:49
-#: ../../templates/show_playlists.inc.php:27
-#: ../../templates/show_playlists.inc.php:53
-#: ../../templates/show_playlist_songs.inc.php:30
-#: ../../templates/show_playlist_songs.inc.php:67
-#: ../../templates/show_recently_played.inc.php:30
-#: ../../templates/show_recently_played.inc.php:108
-#: ../../templates/show_recommended_artists.inc.php:29
-#: ../../templates/show_recommended_artists.inc.php:67
-#: ../../templates/show_smartplaylists.inc.php:30
-#: ../../templates/show_smartplaylists.inc.php:54
-#: ../../templates/show_songs.inc.php:31 ../../templates/show_songs.inc.php:76
-msgid "Play"
-msgstr "Spill"
+#: ../../templates/list_header.inc.php:185
+#, fuzzy
+msgid "Limit"
+msgstr "Størrelsesgrense"
 
 #: ../../templates/rightbar.inc.php:28
 msgid "Add to Playlist"
@@ -2441,16 +2561,16 @@ msgid "Add to New Playlist"
 msgstr "Legg til i ny spilleliste"
 
 #: ../../templates/rightbar.inc.php:49
-#: ../../templates/show_album_row.inc.php:62
-#: ../../templates/show_artist_row.inc.php:46
+#: ../../templates/show_album_row.inc.php:65
+#: ../../templates/show_artist_row.inc.php:49
 #: ../../templates/show_playlist.inc.php:54
 #: ../../templates/show_playlist.inc.php:55
-#: ../../templates/show_playlist_row.inc.php:39
+#: ../../templates/show_playlist_row.inc.php:42
 #: ../../templates/show_search_options.inc.php:32
 #: ../../templates/show_search_options.inc.php:33
+#: ../../templates/show_smartplaylist.inc.php:34
 #: ../../templates/show_smartplaylist.inc.php:35
-#: ../../templates/show_smartplaylist.inc.php:36
-#: ../../templates/show_smartplaylist_row.inc.php:37
+#: ../../templates/show_smartplaylist_row.inc.php:40
 msgid "Batch Download"
 msgstr "Samlet nedlasting"
 
@@ -2477,12 +2597,12 @@ msgstr "Relatert tag"
 #: ../../templates/show_localplay_instances.inc.php:40
 #: ../../templates/show_localplay_playlist.inc.php:47
 #: ../../templates/show_manage_democratic.inc.php:50
-#: ../../templates/show_playlist.inc.php:77
-#: ../../templates/show_playlist_row.inc.php:46
-#: ../../templates/show_playlist_song_row.inc.php:48
+#: ../../templates/show_playlist.inc.php:83
+#: ../../templates/show_playlist_row.inc.php:49
+#: ../../templates/show_playlist_song_row.inc.php:51
 #: ../../templates/show_shout_row.inc.php:34
-#: ../../templates/show_smartplaylist.inc.php:48
-#: ../../templates/show_smartplaylist_row.inc.php:44
+#: ../../templates/show_smartplaylist.inc.php:47
+#: ../../templates/show_smartplaylist_row.inc.php:47
 #: ../../templates/show_user_row.inc.php:49
 msgid "Delete"
 msgstr "Slett"
@@ -2490,11 +2610,6 @@ msgstr "Slett"
 #: ../../templates/rightbar.inc.php:108
 msgid "No items"
 msgstr ""
-
-#: ../../templates/rightbar.inc.php:112
-#: ../../templates/show_recently_played.inc.php:119
-msgid "More"
-msgstr "Mer"
 
 #: ../../templates/show_access_list.inc.php:23
 #: ../../templates/sidebar_admin.inc.php:37
@@ -2578,22 +2693,22 @@ msgstr "Type"
 #: ../../templates/show_plugins.inc.php:68
 #: ../../templates/show_recommended_artists.inc.php:43
 #: ../../templates/show_recommended_artists.inc.php:81
-#: ../../templates/show_song.inc.php:47 ../../templates/show_songs.inc.php:52
-#: ../../templates/show_songs.inc.php:91 ../../templates/show_users.inc.php:47
+#: ../../templates/show_song.inc.php:56 ../../templates/show_songs.inc.php:52
+#: ../../templates/show_songs.inc.php:93 ../../templates/show_users.inc.php:47
 #: ../../templates/show_users.inc.php:69
-#: ../../templates/show_videos.inc.php:34
-#: ../../templates/show_videos.inc.php:58
+#: ../../templates/show_videos.inc.php:38
+#: ../../templates/show_videos.inc.php:65
 msgid "Action"
 msgstr "Handling"
 
 #: ../../templates/show_access_list.inc.php:72
-#: ../../templates/show_album_row.inc.php:67
-#: ../../templates/show_artist_row.inc.php:51
+#: ../../templates/show_album_row.inc.php:70
+#: ../../templates/show_artist_row.inc.php:54
 #: ../../templates/show_live_stream_row.inc.php:37
-#: ../../templates/show_playlist_row.inc.php:44
+#: ../../templates/show_playlist_row.inc.php:47
 #: ../../templates/show_shout_row.inc.php:31
-#: ../../templates/show_smartplaylist_row.inc.php:42
-#: ../../templates/show_song_row.inc.php:54
+#: ../../templates/show_smartplaylist_row.inc.php:45
+#: ../../templates/show_song_row.inc.php:57
 #: ../../templates/show_user_row.inc.php:39
 msgid "Edit"
 msgstr "Rediger"
@@ -2773,56 +2888,17 @@ msgstr "Stream URL"
 #: ../../templates/show_edit_live_stream_row.inc.php:39
 #: ../../templates/show_live_streams.inc.php:35
 #: ../../templates/show_live_streams.inc.php:59
-#: ../../templates/show_videos.inc.php:30
-#: ../../templates/show_videos.inc.php:54
+#: ../../templates/show_videos.inc.php:34
+#: ../../templates/show_videos.inc.php:61
 msgid "Codec"
 msgstr "Kodek"
-
-#. HINT: Artist Fullname
-#: ../../templates/show_add_live_stream.inc.php:62
-#: ../../templates/show_album.inc.php:73
-#: ../../templates/show_album_row.inc.php:30
-#: ../../templates/show_albums.inc.php:33
-#: ../../templates/show_albums.inc.php:72
-#: ../../templates/show_artist.inc.php:84
-#: ../../templates/show_artist_row.inc.php:29
-#: ../../templates/show_artists.inc.php:35
-#: ../../templates/show_artists.inc.php:72
-#: ../../templates/show_catalog_row.inc.php:34
-#: ../../templates/show_live_stream.inc.php:27
-#: ../../templates/show_live_stream_row.inc.php:29
-#: ../../templates/show_live_streams.inc.php:32
-#: ../../templates/show_live_streams.inc.php:56
-#: ../../templates/show_playlist_row.inc.php:29
-#: ../../templates/show_playlists.inc.php:29
-#: ../../templates/show_playlists.inc.php:55
-#: ../../templates/show_playlist_song_row.inc.php:28
-#: ../../templates/show_playlist_songs.inc.php:32
-#: ../../templates/show_playlist_songs.inc.php:69
-#: ../../templates/show_recently_played.inc.php:32
-#: ../../templates/show_recently_played.inc.php:83
-#: ../../templates/show_recently_played.inc.php:110
-#: ../../templates/show_recommended_artists.inc.php:31
-#: ../../templates/show_recommended_artists.inc.php:69
-#: ../../templates/show_shoutbox.inc.php:35
-#: ../../templates/show_smartplaylist_row.inc.php:29
-#: ../../templates/show_smartplaylists.inc.php:32
-#: ../../templates/show_smartplaylists.inc.php:56
-#: ../../templates/show_song.inc.php:52
-#: ../../templates/show_song_row.inc.php:29
-#: ../../templates/show_songs.inc.php:33 ../../templates/show_songs.inc.php:78
-#: ../../templates/show_video_row.inc.php:24
-#: ../../templates/show_videos.inc.php:28
-#: ../../templates/show_videos.inc.php:52
-msgid "Add"
-msgstr "Legg til"
 
 #: ../../templates/show_add_playlist.inc.php:23
 msgid "Create a new playlist"
 msgstr "Lag ny spilleliste"
 
 #: ../../templates/show_add_playlist.inc.php:41
-#: ../../templates/show_add_shout.inc.php:42
+#: ../../templates/show_add_shout.inc.php:53
 msgid "Create"
 msgstr "Lag"
 
@@ -2850,19 +2926,25 @@ msgstr "Fant"
 msgid "Reading"
 msgstr "Leser"
 
-#: ../../templates/show_add_shout.inc.php:23
+#: ../../templates/show_add_shout.inc.php:28
 msgid "Post to Shoutbox"
 msgstr "Legg til i Shoutbox"
 
-#: ../../templates/show_add_shout.inc.php:27
+#: ../../templates/show_add_shout.inc.php:37
 #: ../../templates/show_edit_shout.inc.php:31
 msgid "Comment:"
 msgstr "Kommentar:"
 
-#: ../../templates/show_add_shout.inc.php:34
+#: ../../templates/show_add_shout.inc.php:44
 #: ../../templates/show_edit_shout.inc.php:37
-msgid "Make Sticky"
-msgstr "Fest til toppen"
+#, fuzzy
+msgid "Stick this comment"
+msgstr "id3 kommentar"
+
+#: ../../templates/show_add_shout.inc.php:62
+#: ../../templates/show_shoutbox.inc.php:23
+msgid "Shoutbox"
+msgstr "Shoutbox"
 
 #: ../../templates/show_add_user.inc.php:23
 msgid "Adding a New User"
@@ -2917,10 +2999,13 @@ msgstr ""
 #: ../../templates/show_artist.inc.php:61
 #: ../../templates/show_catalogs.inc.php:31
 #: ../../templates/show_catalogs.inc.php:55
+#: ../../templates/show_missing_album.inc.php:51
+#: ../../templates/show_missing_albums.inc.php:30
 #: ../../templates/show_playlists.inc.php:34
 #: ../../templates/show_playlists.inc.php:60
 #: ../../templates/show_smartplaylists.inc.php:36
 #: ../../templates/show_smartplaylists.inc.php:60
+#: ../../templates/show_wanted_albums.inc.php:29
 msgid "Actions"
 msgstr "Handlinger"
 
@@ -2931,71 +3016,77 @@ msgid "Play album"
 msgstr "Spill album"
 
 #: ../../templates/show_album.inc.php:69
-#: ../../templates/show_random_albums.inc.php:50
+#: ../../templates/show_random_albums.inc.php:49
 msgid "Play Album"
 msgstr "Spill album"
 
-#: ../../templates/show_album.inc.php:74
+#: ../../templates/show_album.inc.php:74 ../../templates/show_album.inc.php:75
+#, fuzzy
+msgid "Play Add Album"
+msgstr "Spill album"
+
+#: ../../templates/show_album.inc.php:80
 msgid "Add Album"
 msgstr "Legg til album"
 
-#: ../../templates/show_album.inc.php:78
+#: ../../templates/show_album.inc.php:84
 msgid "Add Random from Album"
 msgstr "Legg til tilfeldig fra album"
 
-#: ../../templates/show_album.inc.php:83 ../../templates/show_album.inc.php:84
+#: ../../templates/show_album.inc.php:89 ../../templates/show_album.inc.php:90
 #: ../../templates/show_playlist.inc.php:47
 #: ../../templates/show_playlist.inc.php:48
 #, fuzzy
 msgid "Save Tracks Order"
 msgstr "Set spornummer"
 
-#: ../../templates/show_album.inc.php:89 ../../templates/show_album.inc.php:90
+#: ../../templates/show_album.inc.php:95 ../../templates/show_album.inc.php:96
 #, fuzzy
 msgid "Do you really want to reset album art?"
 msgstr "Vil du virkelig slette denne katalogen?"
 
-#: ../../templates/show_album.inc.php:89 ../../templates/show_album.inc.php:90
+#: ../../templates/show_album.inc.php:95 ../../templates/show_album.inc.php:96
 msgid "Reset Album Art"
 msgstr "Reset albumbilde"
 
-#: ../../templates/show_album.inc.php:94 ../../templates/show_album.inc.php:95
+#: ../../templates/show_album.inc.php:100
+#: ../../templates/show_album.inc.php:101
 msgid "Find Album Art"
 msgstr "Finn albumbilde"
-
-#: ../../templates/show_album.inc.php:99
-#: ../../templates/show_album.inc.php:100
-#: ../../templates/show_artist.inc.php:94
-#: ../../templates/show_artist.inc.php:95
-#, fuzzy
-msgid "Do you really want to update from tags?"
-msgstr "Vil du virkelig slette denne katalogen?"
-
-#: ../../templates/show_album.inc.php:99
-#: ../../templates/show_album.inc.php:100
-#: ../../templates/show_artist.inc.php:94
-#: ../../templates/show_artist.inc.php:95
-msgid "Update from tags"
-msgstr "Oppdater fra tag-informasjon"
 
 #: ../../templates/show_album.inc.php:105
 #: ../../templates/show_album.inc.php:106
 #: ../../templates/show_artist.inc.php:100
 #: ../../templates/show_artist.inc.php:101
+#, fuzzy
+msgid "Do you really want to update from tags?"
+msgstr "Vil du virkelig slette denne katalogen?"
+
+#: ../../templates/show_album.inc.php:105
+#: ../../templates/show_album.inc.php:106
+#: ../../templates/show_artist.inc.php:100
+#: ../../templates/show_artist.inc.php:101
+msgid "Update from tags"
+msgstr "Oppdater fra tag-informasjon"
+
+#: ../../templates/show_album.inc.php:115
+#: ../../templates/show_album.inc.php:116
+#: ../../templates/show_artist.inc.php:106
+#: ../../templates/show_artist.inc.php:107
 #: ../../templates/show_install_config.inc.php:69
-#: ../../templates/show_playlist_song_row.inc.php:44
-#: ../../templates/show_song.inc.php:55
-#: ../../templates/show_song_row.inc.php:51
-#: ../../templates/show_video_row.inc.php:33
+#: ../../templates/show_playlist_song_row.inc.php:47
+#: ../../templates/show_song.inc.php:72
+#: ../../templates/show_song_row.inc.php:54
+#: ../../templates/show_video_row.inc.php:41
 msgid "Download"
 msgstr "Last ned"
 
-#: ../../templates/show_album_row.inc.php:57
-#: ../../templates/show_song_row.inc.php:47
-msgid "Post Shout"
-msgstr "Lagre beskjed"
+#: ../../templates/show_album_row.inc.php:28
+#, fuzzy
+msgid "Play add album"
+msgstr "Spill album"
 
-#: ../../templates/show_album_row.inc.php:66
+#: ../../templates/show_album_row.inc.php:69
 #, fuzzy
 msgid "Album edit"
 msgstr "Albumbilde"
@@ -3009,16 +3100,16 @@ msgstr "Omslag"
 #: ../../templates/show_albums.inc.php:80
 #: ../../templates/show_artists.inc.php:40
 #: ../../templates/show_artists.inc.php:77
-#: ../../templates/show_edit_album_row.inc.php:51
-#: ../../templates/show_edit_artist_row.inc.php:31
-#: ../../templates/show_edit_song_row.inc.php:53
-#: ../../templates/show_now_playing_row.inc.php:71
+#: ../../templates/show_edit_album_row.inc.php:55
+#: ../../templates/show_edit_artist_row.inc.php:35
+#: ../../templates/show_edit_song_row.inc.php:57
+#: ../../templates/show_now_playing_row.inc.php:64
 #: ../../templates/show_recommended_artists.inc.php:36
 #: ../../templates/show_recommended_artists.inc.php:74
-#: ../../templates/show_songs.inc.php:37 ../../templates/show_songs.inc.php:82
+#: ../../templates/show_songs.inc.php:37 ../../templates/show_songs.inc.php:84
 #: ../../templates/show_stats.inc.php:36
-#: ../../templates/show_videos.inc.php:33
-#: ../../templates/show_videos.inc.php:57
+#: ../../templates/show_videos.inc.php:37
+#: ../../templates/show_videos.inc.php:64
 msgid "Tags"
 msgstr "Tags"
 
@@ -3032,7 +3123,7 @@ msgstr "Tags"
 #: ../../templates/show_recommended_artists.inc.php:41
 #: ../../templates/show_recommended_artists.inc.php:79
 #: ../../templates/show_song.inc.php:40 ../../templates/show_songs.inc.php:50
-#: ../../templates/show_songs.inc.php:89
+#: ../../templates/show_songs.inc.php:91
 msgid "Flag"
 msgstr "Merk"
 
@@ -3068,10 +3159,10 @@ msgid "Most Popular Tags"
 msgstr "Mest populære tags"
 
 #: ../../templates/show_artist.inc.php:36
-#: ../../templates/show_artist.inc.php:119
+#: ../../templates/show_artist.inc.php:132
 #: ../../templates/show_index.inc.php:32
-#: ../../templates/show_now_playing_row.inc.php:92
-#: ../../templates/show_now_playing_row.inc.php:96
+#: ../../templates/show_now_playing_row.inc.php:84
+#: ../../templates/show_now_playing_row.inc.php:90
 msgid "Loading..."
 msgstr "Laster..."
 
@@ -3098,28 +3189,39 @@ msgstr "Spilleliste"
 msgid "Play All Songs By %s"
 msgstr "Legg til alle spor av %s"
 
+#: ../../templates/show_artist.inc.php:84
+#: ../../templates/show_artist_row.inc.php:27
+#, fuzzy
+msgid "Play add artist"
+msgstr "Spilleliste"
+
 #: ../../templates/show_artist.inc.php:85
+#, fuzzy, php-format
+msgid "Play Add All Songs By %s"
+msgstr "Legg til alle spor av %s"
+
+#: ../../templates/show_artist.inc.php:91
 #, php-format
 msgid "Add All Songs By %s"
 msgstr "Legg til alle spor av %s"
 
-#: ../../templates/show_artist.inc.php:90
+#: ../../templates/show_artist.inc.php:96
 #, php-format
 msgid "Add Random Songs By %s"
 msgstr "Legg til tilfeldige spor av %s"
 
-#: ../../templates/show_artist.inc.php:105
+#: ../../templates/show_artist.inc.php:111
 msgid "Show Art"
 msgstr "Vis bilder"
 
-#: ../../templates/show_artist.inc.php:119
-#: ../../templates/show_now_playing_row.inc.php:91
-#: ../../templates/show_now_playing_similar.inc.php:26
+#: ../../templates/show_artist.inc.php:132
+#: ../../templates/show_now_playing_row.inc.php:83
+#: ../../templates/show_now_playing_similar.inc.php:27
 #: ../../templates/show_recommended_artists.inc.php:25
 msgid "Similar Artists"
 msgstr "Lignende artister"
 
-#: ../../templates/show_artist_row.inc.php:50
+#: ../../templates/show_artist_row.inc.php:53
 #, fuzzy
 msgid "Artist edit"
 msgstr "Artist og Tittel"
@@ -3132,9 +3234,9 @@ msgstr "Artist og Tittel"
 #: ../../templates/show_playlist_songs.inc.php:75
 #: ../../templates/show_recommended_artists.inc.php:35
 #: ../../templates/show_recommended_artists.inc.php:73
-#: ../../templates/show_songs.inc.php:39 ../../templates/show_songs.inc.php:84
-#: ../../templates/show_videos.inc.php:32
-#: ../../templates/show_videos.inc.php:56
+#: ../../templates/show_songs.inc.php:39 ../../templates/show_songs.inc.php:86
+#: ../../templates/show_videos.inc.php:36
+#: ../../templates/show_videos.inc.php:63
 msgid "Time"
 msgstr "Tid"
 
@@ -3343,6 +3445,25 @@ msgstr "Nåværende konfigurasjon"
 msgid "Preference"
 msgstr "Innstilling"
 
+#: ../../templates/show_debug.inc.php:117 ../../update.php:50
+#: ../../update.php:54
+msgid "Ampache Update"
+msgstr "Ampache Oppdatering"
+
+#: ../../templates/show_debug.inc.php:118
+#, fuzzy
+msgid "Installed Ampache version"
+msgstr "Versjon"
+
+#: ../../templates/show_debug.inc.php:119
+#, fuzzy
+msgid "Latest Ampache version"
+msgstr "Installasjon av Ampache"
+
+#: ../../templates/show_debug.inc.php:120
+msgid "Force check"
+msgstr ""
+
 #: ../../templates/show_democratic.inc.php:23
 #, php-format
 msgid "%s Playlist"
@@ -3439,15 +3560,15 @@ msgstr "Duplikatspor"
 #: ../../templates/show_duplicates.inc.php:28
 #: ../../templates/show_duplicates.inc.php:67
 #: ../../templates/show_lyrics.inc.php:44
-#: ../../templates/show_now_playing_row.inc.php:59
+#: ../../templates/show_now_playing_row.inc.php:52
 #: ../../templates/show_recently_played.inc.php:33
-#: ../../templates/show_recently_played.inc.php:112
+#: ../../templates/show_recently_played.inc.php:129
 msgid "Song"
 msgstr "Spor"
 
 #: ../../templates/show_duplicates.inc.php:31
 #: ../../templates/show_duplicates.inc.php:70
-#: ../../templates/show_random.inc.php:54 ../../templates/show_song.inc.php:68
+#: ../../templates/show_random.inc.php:54 ../../templates/show_song.inc.php:85
 msgid "Length"
 msgstr "Lengde"
 
@@ -3504,6 +3625,20 @@ msgstr "Hent lagrede regler"
 msgid "Edit Access Control List"
 msgstr "Rediger lister for tilgangskontroll"
 
+#: ../../templates/show_edit_album_row.inc.php:51
+#: ../../templates/show_edit_artist_row.inc.php:31
+#: ../../templates/show_edit_song_row.inc.php:53
+msgid "MusicBrainz ID"
+msgstr ""
+
+#: ../../templates/show_edit_album_row.inc.php:62
+msgid " Apply tags to all childs (override tags for songs)"
+msgstr ""
+
+#: ../../templates/show_edit_artist_row.inc.php:40
+msgid " Apply tags to all childs (override tags for albums and songs)"
+msgstr ""
+
 #: ../../templates/show_edit_catalog.inc.php:23
 #, php-format
 msgid "Settings for %s"
@@ -3537,7 +3672,8 @@ msgstr "Laget av: %s for %s"
 #: ../../templates/show_localplay_playlist.inc.php:56
 #: ../../templates/show_playlist_songs.inc.php:33
 #: ../../templates/show_playlist_songs.inc.php:70
-#: ../../templates/show_songs.inc.php:38 ../../templates/show_songs.inc.php:83
+#: ../../templates/show_song_previews.inc.php:34
+#: ../../templates/show_songs.inc.php:38 ../../templates/show_songs.inc.php:85
 msgid "Track"
 msgstr "Spor"
 
@@ -3617,10 +3753,13 @@ msgstr "Hent albumbilde"
 #: ../../templates/show_newest.inc.php:23
 #: ../../templates/show_popular.inc.php:23
 #: ../../templates/show_recent.inc.php:23
-#: ../../templates/show_userflag.inc.php:23
 #: ../../templates/sidebar_home.inc.php:71
 msgid "Information"
 msgstr "Informasjon"
+
+#: ../../templates/show_html5_player.inc.php:252
+msgid "Media is currently playing. Are you sure you want to close"
+msgstr ""
 
 #: ../../templates/show_import_playlist.inc.php:23
 msgid "Importing a Playlist from a File"
@@ -4093,8 +4232,36 @@ msgstr "Fest"
 msgid "Date Added"
 msgstr "Lagt til dato"
 
-#: ../../templates/show_now_playing_row.inc.php:95
-#: ../../templates/show_now_playing_similar.inc.php:45
+#: ../../templates/show_missing_album.inc.php:56
+#: ../../templates/show_missing_album.inc.php:57
+#, fuzzy
+msgid "Play Album Preview"
+msgstr "Spill album"
+
+#: ../../templates/show_missing_album.inc.php:62
+#: ../../templates/show_missing_album.inc.php:63
+#, fuzzy
+msgid "Play Add Album Preview"
+msgstr "Spill album"
+
+#: ../../templates/show_missing_album.inc.php:67
+#: ../../templates/show_missing_album.inc.php:68
+#, fuzzy
+msgid "Add Album Preview"
+msgstr "Legg til album"
+
+#: ../../templates/show_missing_album.inc.php:72
+#, fuzzy
+msgid "Wanted actions"
+msgstr "Avanserte valg"
+
+#: ../../templates/show_missing_albums.inc.php:23
+#, fuzzy
+msgid "Missing Albums"
+msgstr "Album"
+
+#: ../../templates/show_now_playing_row.inc.php:89
+#: ../../templates/show_now_playing_similar.inc.php:48
 #, fuzzy
 msgid "Similar Songs"
 msgstr "Lignende artister"
@@ -4123,20 +4290,26 @@ msgstr "Normaliser spor"
 msgid "Play All"
 msgstr "Spill album"
 
-#: ../../templates/show_playlist.inc.php:66
 #: ../../templates/show_playlist.inc.php:67
+#: ../../templates/show_playlist.inc.php:68
+#, fuzzy
+msgid "Play Add Playlist"
+msgstr "Spilleliste"
+
+#: ../../templates/show_playlist.inc.php:72
+#: ../../templates/show_playlist.inc.php:73
+#: ../../templates/show_smartplaylist.inc.php:39
 #: ../../templates/show_smartplaylist.inc.php:40
-#: ../../templates/show_smartplaylist.inc.php:41
 msgid "Add All"
 msgstr "Legg til alle"
 
-#: ../../templates/show_playlist.inc.php:70
-#: ../../templates/show_playlist.inc.php:71
+#: ../../templates/show_playlist.inc.php:76
+#: ../../templates/show_playlist.inc.php:77
 msgid "Add Random"
 msgstr "Legg til tilfeldig"
 
-#: ../../templates/show_playlist.inc.php:75
-#: ../../templates/show_playlist_row.inc.php:46
+#: ../../templates/show_playlist.inc.php:81
+#: ../../templates/show_playlist_row.inc.php:49
 #, fuzzy
 msgid "Do you really want to delete the playlist?"
 msgstr "Vil du virkelig slette denne katalogen?"
@@ -4147,7 +4320,13 @@ msgstr "Vil du virkelig slette denne katalogen?"
 msgid "Play playlist"
 msgstr "Spilleliste"
 
-#: ../../templates/show_playlist_row.inc.php:43
+#: ../../templates/show_playlist_row.inc.php:27
+#: ../../templates/show_smartplaylist_row.inc.php:27
+#, fuzzy
+msgid "Play add playlist"
+msgstr "Spilleliste"
+
+#: ../../templates/show_playlist_row.inc.php:46
 #, fuzzy
 msgid "Playlist edit"
 msgstr "Metode for spilleliste"
@@ -4177,21 +4356,29 @@ msgid "No playlist found"
 msgstr "Ingen lignende artister funnet"
 
 #: ../../templates/show_playlist_song_row.inc.php:25
-#: ../../templates/show_recently_played.inc.php:79
-#: ../../templates/show_song.inc.php:50
+#: ../../templates/show_recently_played.inc.php:93
+#: ../../templates/show_song.inc.php:59
 #: ../../templates/show_song_row.inc.php:25
 #, fuzzy
 msgid "Play song"
 msgstr "Spilleliste Sanger"
 
-#: ../../templates/show_playlist_song_row.inc.php:52
-#: ../../templates/show_song_row.inc.php:64
+#: ../../templates/show_playlist_song_row.inc.php:27
+#: ../../templates/show_recently_played.inc.php:95
+#: ../../templates/show_song.inc.php:62
+#: ../../templates/show_song_row.inc.php:27
+#, fuzzy
+msgid "Play add song"
+msgstr "Spilleliste Sanger"
+
+#: ../../templates/show_playlist_song_row.inc.php:55
+#: ../../templates/show_song_row.inc.php:68
 msgid "Reorder"
 msgstr ""
 
 #: ../../templates/show_playlist_songs.inc.php:37
 #: ../../templates/show_playlist_songs.inc.php:74
-#: ../../templates/show_song.inc.php:67
+#: ../../templates/show_song.inc.php:84
 msgid "Genre"
 msgstr "Sjanger"
 
@@ -4268,16 +4455,16 @@ msgid "Enqueue"
 msgstr "Legg i kø"
 
 #: ../../templates/show_recently_played.inc.php:37
-#: ../../templates/show_recently_played.inc.php:115
+#: ../../templates/show_recently_played.inc.php:132
 msgid "Last Played"
 msgstr "Sist spilt"
 
 #: ../../templates/show_recently_played.inc.php:38
-#: ../../templates/show_recently_played.inc.php:116
+#: ../../templates/show_recently_played.inc.php:133
 msgid "Agent"
 msgstr ""
 
-#: ../../templates/show_recently_played.inc.php:103
+#: ../../templates/show_recently_played.inc.php:120
 #, fuzzy
 msgid "No recently item found"
 msgstr "Ingen deaktiverte spor funnet"
@@ -4383,15 +4570,11 @@ msgstr "Valg"
 msgid "Add Search Results"
 msgstr "Legg til søkeresultater"
 
-#: ../../templates/show_shoutbox.inc.php:23
-msgid "Shoutbox"
-msgstr "Shoutbox"
-
-#: ../../templates/show_smartplaylist.inc.php:59
+#: ../../templates/show_smartplaylist.inc.php:56
 msgid "Save Changes"
 msgstr "Lagre Endringer"
 
-#: ../../templates/show_smartplaylist_row.inc.php:41
+#: ../../templates/show_smartplaylist_row.inc.php:44
 #, fuzzy
 msgid "Smart Playlist edit"
 msgstr "Importer spilleliste"
@@ -4410,46 +4593,63 @@ msgstr "%s %s Spilleliste"
 msgid "Details"
 msgstr "Detaljer"
 
-#: ../../templates/show_song.inc.php:54
+#: ../../templates/show_song.inc.php:48
+msgid "Waveform"
+msgstr ""
+
+#: ../../templates/show_song.inc.php:71
 #, fuzzy
 msgid "Link"
 msgstr "Som"
 
-#: ../../templates/show_song.inc.php:70
+#: ../../templates/show_song.inc.php:87
 #, fuzzy
 msgid "Label"
 msgstr "Nivå"
 
-#: ../../templates/show_song.inc.php:71
+#: ../../templates/show_song.inc.php:88
 #, fuzzy
 msgid "Song Language"
 msgstr "Språk"
 
-#: ../../templates/show_song.inc.php:72
+#: ../../templates/show_song.inc.php:89
 #, fuzzy
 msgid "Catalog Number"
 msgstr "Katalognavn"
 
-#: ../../templates/show_song.inc.php:78
+#: ../../templates/show_song.inc.php:95
 #, fuzzy
 msgid "Last Updated"
 msgstr "Merking oppdatert"
 
-#: ../../templates/show_song.inc.php:86
+#: ../../templates/show_song.inc.php:103
 #, fuzzy
 msgid "Lyrics"
 msgstr "%s Sangtekster"
 
-#: ../../templates/show_song_row.inc.php:44
+#: ../../templates/show_song_preview_row.inc.php:27
+#, fuzzy
+msgid "Play song Preview"
+msgstr "Spilleliste Sanger"
+
+#: ../../templates/show_song_preview_row.inc.php:29
+msgid "Play Add Song Preview"
+msgstr ""
+
+#: ../../templates/show_song_preview_row.inc.php:36
+msgid "Add Song Preview"
+msgstr ""
+
+#: ../../templates/show_song_row.inc.php:47
 msgid "Song Information"
 msgstr "Spor informasjon"
 
-#: ../../templates/show_song_row.inc.php:53
+#: ../../templates/show_song_row.inc.php:56
 #, fuzzy
 msgid "Song edit"
 msgstr "Spor tittel"
 
-#: ../../templates/show_songs.inc.php:70
+#: ../../templates/show_songs.inc.php:72
 #, fuzzy
 msgid "No song found"
 msgstr "Ingen deaktiverte spor funnet"
@@ -4724,6 +4924,11 @@ msgstr "Velidering feilet"
 msgid "The validation key used isn't correct"
 msgstr "Valideringsnøkkelen som ble brukt er ikke korrekt"
 
+#: ../../templates/show_userflag.inc.php:23
+#, fuzzy
+msgid "User Flags"
+msgstr "Brukerverktøy"
+
 #: ../../templates/show_user.inc.php:33
 msgid "Create Date"
 msgstr "Opprettet dato"
@@ -4831,15 +5036,30 @@ msgstr "Oppdaterer katalogen %s"
 msgid "Verified"
 msgstr "Verifisert"
 
-#: ../../templates/show_videos.inc.php:31
-#: ../../templates/show_videos.inc.php:55
+#: ../../templates/show_video_row.inc.php:25
+#, fuzzy
+msgid "Play video"
+msgstr "Spilleliste Sanger"
+
+#: ../../templates/show_video_row.inc.php:27
+msgid "Play add video"
+msgstr ""
+
+#: ../../templates/show_videos.inc.php:35
+#: ../../templates/show_videos.inc.php:62
 msgid "Resolution"
 msgstr "Oppløsning"
 
-#: ../../templates/show_videos.inc.php:48
+#: ../../templates/show_videos.inc.php:52
 #, fuzzy
 msgid "No video found"
 msgstr "Ingen oppføringer funnet"
+
+#: ../../templates/show_wanted.inc.php:23
+#: ../../templates/sidebar_home.inc.php:83
+#, fuzzy
+msgid "Wanted List"
+msgstr "Relatert Artist"
 
 #: ../../templates/sidebar_admin.inc.php:31
 msgid "User Tools"
@@ -4977,10 +5197,6 @@ msgstr "Behandle spilleliste"
 msgid "Account"
 msgstr "Konto"
 
-#: ../../update.php:50 ../../update.php:54
-msgid "Ampache Update"
-msgstr "Ampache Oppdatering"
-
 #: ../../update.php:59
 #, php-format
 msgid ""
@@ -5112,6 +5328,9 @@ msgstr "Grensesnitt"
 #: Database words
 msgid "System"
 msgstr "System"
+
+#~ msgid "Make Sticky"
+#~ msgstr "Fest til toppen"
 
 #~ msgid "Song Updated"
 #~ msgstr "Spor oppdatert"
@@ -5506,10 +5725,6 @@ msgstr "System"
 #~ msgstr "Klikk for å lukke vinduet"
 
 #, fuzzy
-#~ msgid "Ampache Version"
-#~ msgstr "Installasjon av Ampache"
-
-#, fuzzy
 #~ msgid ""
 #~ "Compare that you are running a version of Ampache and currently a version "
 #~ "of Ampache."
@@ -5714,9 +5929,6 @@ msgstr "System"
 
 #~ msgid "Rename selected"
 #~ msgstr "Endre navn på valgte"
-
-#~ msgid "Advanced Options"
-#~ msgstr "Avanserte valg"
 
 #~ msgid "Search Again"
 #~ msgstr "Søk igjen"

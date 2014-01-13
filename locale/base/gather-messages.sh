@@ -80,6 +80,16 @@ case $1 in
 	    do_msgfmt $i
 	done
     ;;
+    '--allformat')
+	for i in $(ls ../ | grep -v base); do
+	    do_msgfmt $i
+	done
+    ;;
+    '--allmerge')
+	for i in $(ls ../ | grep -v base); do
+	    do_msgmerge $i
+	done
+    ;;
     '--get'|'-g'|'get')
         generate_pot
     ;;
