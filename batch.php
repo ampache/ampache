@@ -20,11 +20,13 @@
  *
  */
 
-require_once 'lib/init.php';
-ob_end_clean();
+if (!defined('NO_SESSION')) {
+    require_once 'lib/init.php';
+}
 
+ob_end_clean();
 //test that batch download is permitted
-if (!Access::check_function('batch_download')) {
+if (!defined('NO_SESSION') && !Access::check_function('batch_download')) {
     UI::access_denied();
     exit;
 }

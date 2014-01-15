@@ -189,4 +189,23 @@ class Radio extends database_object implements media
         return false;
     }
 
+    public static function get_all_radios($catalog = null)
+    {
+        $sql = "SELECT `live_stream`.`id` FROM `live_stream` JOIN `catalog` ON `catalog`.`id` = `live_stream`.`catalog` " .
+            "WHERE `catalog`.`enabled` = '1'";
+        $params = array();
+        if ($catalog) {
+            $sql .= " AND `catalog`.`id` = ?";
+            $params[] = $catalog;
+        }
+        $db_results = Dba::read($sql, $params);
+        $radios = array();
+
+        while ($results = Dba::featch_assoc($db_results)) {
+            $radios[] = $results['id'];
+        }
+
+        return $radios;
+    }
+
 } //end of radio class

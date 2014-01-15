@@ -47,6 +47,9 @@
         <?php echo UI::get_icon('download', T_('Download')); ?>
     </a>
     <?php } ?>
+    <?php if (AmpConfig::get('share')) { ?>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=show_create&type=song&id=<?php echo $song->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+    <?php } ?>
     <?php if ($playlist->has_access()) { ?>
         <?php echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'],'delete', T_('Delete'),'track_del_' . $object['track_id']); ?>
     <?php } ?>

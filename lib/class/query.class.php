@@ -239,6 +239,18 @@ class Query
                 'name',
                 'year'
             ),
+            'share' => array(
+                'object',
+                'object_type',
+                'user',
+                'creation_date',
+                'lastvisit_date',
+                'counter',
+                'max_counter',
+                'allow_stream',
+                'allow_download',
+                'expire'
+            ),
         );
     }
 
@@ -565,6 +577,7 @@ class Query
             case 'live_stream':
             case 'democratic':
             case 'wanted':
+            case 'share':
             case 'song_preview':
                 // Set it
                 $this->_state['type'] = $type;
@@ -848,6 +861,10 @@ class Query
                 case 'wanted':
                     $this->set_select("DISTINCT(`wanted`.`id`)");
                     $sql = "SELECT %%SELECT%% FROM `wanted` ";
+                    break;
+                case 'share':
+                    $this->set_select("DISTINCT(`share`.`id`)");
+                    $sql = "SELECT %%SELECT%% FROM `share` ";
                     break;
                 case 'playlist_song':
                 case 'song':
@@ -1523,6 +1540,40 @@ class Query
                     break;
                     case 'accepted':
                         $sql = "`wanted`.`accepted`";
+                    break;
+                } // end switch on field
+            break;
+            case 'share':
+                switch ($field) {
+                    case 'object':
+                        $sql = "`share`.`object_type`, `share`.`object.id`";
+                    break;
+                    case 'object_type':
+                        $sql = "`share`.`object_type`";
+                    break;
+                    case 'user':
+                        $sql = "`share`.`user`";
+                    break;
+                    case 'creation_date':
+                        $sql = "`share`.`creation_date`";
+                    break;
+                    case 'lastvisit_date':
+                        $sql = "`share`.`lastvisit_date`";
+                    break;
+                    case 'counter':
+                        $sql = "`share`.`counter`";
+                    break;
+                    case 'max_counter':
+                        $sql = "`share`.`max_counter`";
+                    break;
+                    case 'allow_stream':
+                        $sql = "`share`.`allow_stream`";
+                    break;
+                    case 'allow_download':
+                        $sql = "`share`.`allow_download`";
+                    break;
+                    case 'expire':
+                        $sql = "`share`.`expire`";
                     break;
                 } // end switch on field
             break;

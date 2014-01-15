@@ -1063,6 +1063,100 @@ class Subsonic_Api
         self::apiOutput($input, $r);
     }
 
+    /**
+     * getInternetRadioStations
+     * Get all internet radio stations
+     * Takes no parameter.
+     */
+    public static function getinternetradiostations($input)
+    {
+        self::check_version($input, "1.9.0");
+
+        $r = Subsonic_XML_Data::createSuccessResponse();
+        $radios = Radio::get_all_radios();
+        Subsonic_XML_Data::addRadios($r, $radios);
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * getShares
+     * Get information about shared media this user is allowed to manage.
+     * Takes no parameter.
+     */
+    public static function getshares($input)
+    {
+        self::check_version($input, "1.6.0");
+
+        $r = Subsonic_XML_Data::createSuccessResponse();
+        $shares = Share::get_share_list();
+        Subsonic_XML_Data::addShares($r, $shares);
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * createShare
+     * Create a public url that can be used by anyone to stream media.
+     * Takes the file id with optional description and expires parameters.
+     */
+    public static function createshare($input)
+    {
+        self::check_version($input, "1.6.0");
+
+        $id = self::check_parameter($input, 'id');
+        $description = $input['description'];
+        $expires = $input['expires'];
+
+        if (AmpConfig::get('share')) {
+            if ($expires) {
+                $expire_days = round((($expires / 1000) - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
+            } else {
+                $expire_days = AmpConfig::get('share_expire');
+            }
+
+            $object_id = Subsonic_XML_Data::getAmpacheId($id);
+            if (Subsonic_XML_Data::isAlbum($id)) {
+                $object_type = 'album';
+            } else if (Subsonic_XML_Data::isSong($id)) {
+                $object_type = 'song';
+            }
+
+            if (!empty($object_type)) {
+                $r = Subsonic_XML_Data::createSuccessResponse();
+                $shares = array();
+                $shares[] = Share::create_share($object_type, $object_id, true, Access::check_function('download'), $expire_days, Share::generate_secret(), 0, $description);
+                Subsonic_XML_Data::addShares($r, $shares);
+            } else {
+                $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+            }
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+        }
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * deleteShare
+     * Delete an existing share.
+     * Takes the share id to delete in parameters.
+     */
+    public static function deleteshare($input)
+    {
+        self::check_version($input, "1.6.0");
+
+        $id = self::check_parameter($input, 'id');
+
+        if (AmpConfig::get('share')) {
+            if (Share::delete_share($id)) {
+                $r = Subsonic_XML_Data::createSuccessResponse();
+            } else {
+                $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+            }
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+        }
+        self::apiOutput($input, $r);
+    }
+
     /****   CURRENT UNSUPPORTED FUNCTIONS   ****/
 
     /**
@@ -1073,6 +1167,20 @@ class Subsonic_Api
     public static function getlyrics($input)
     {
         self::check_version($input, "1.2.0");
+
+        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * updateShare
+     * Update the description and/or expiration date for an existing share.
+     * Takes the share id to update with optional description and expires parameters.
+     * Not supported.
+     */
+    public static function updateshare($input)
+    {
+        self::check_version($input, "1.6.0");
 
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $r);
@@ -1130,62 +1238,6 @@ class Subsonic_Api
     public static function changepassword($input)
     {
         self::check_version($input, "1.1.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * getShares
-     * Get information about shared media this user is allowed to manage.
-     * Takes no parameter.
-     * Not supported.
-     */
-    public static function getshares($input)
-    {
-        self::check_version($input, "1.6.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * createShare
-     * Create a public url that can be used by anyone to stream media.
-     * Takes the file id with optional description and expires parameters.
-     * Not supported.
-     */
-    public static function createshare($input)
-    {
-        self::check_version($input, "1.6.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * updateShare
-     * Update the description and/or expiration date for an existing share.
-     * Takes the share id to update with optional description and expires parameters.
-     * Not supported.
-     */
-    public static function updateshare($input)
-    {
-        self::check_version($input, "1.6.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * deleteShare
-     * Delete an existing share.
-     * Takes the share id to delete in parameters.
-     * Not supported.
-     */
-    public static function deleteshare($input)
-    {
-        self::check_version($input, "1.6.0");
 
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $r);
@@ -1284,20 +1336,6 @@ class Subsonic_Api
     public static function jukeboxcontrol($input)
     {
         self::check_version($input, "1.2.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * getInternetRadioStations
-     * Get all internet radio stations
-     * Takes no parameter.
-     * Not supported.
-     */
-    public static function getinternetradiostations($input)
-    {
-        self::check_version($input, "1.9.0");
 
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $r);

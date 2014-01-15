@@ -60,6 +60,9 @@ if (Art::is_enabled()) {
         <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
     </a>
     <?php } ?>
+    <?php if (AmpConfig::get('share')) { ?>
+        <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $album->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+    <?php } ?>
     <?php if (Access::check_function('batch_download')) { ?>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=album&id=<?php echo $album->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>

@@ -20,12 +20,14 @@
  *
  */
 
-require_once 'lib/init.php';
+if (!defined('NO_SESSION')) {
+    require_once 'lib/init.php';
 
-/* If we are running a demo, quick while you still can! */
-if (AmpConfig::get('demo_mode') || !Access::check('interface','25')) {
-    UI::access_denied();
-    exit;
+    /* If we are running a demo, quick while you still can! */
+    if (AmpConfig::get('demo_mode') || !Access::check('interface','25')) {
+        UI::access_denied();
+        exit;
+    }
 }
 
 $media_ids = array();

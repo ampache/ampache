@@ -83,7 +83,7 @@ class Artist extends database_object
      */
     public static function gc()
     {
-        Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `song`.`id` IS NULL');
+        Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` LEFT JOIN `wanted` ON `wanted`.`artist` = `artist`.`id` WHERE `song`.`id` IS NULL AND `wanted`.`id` IS NULL');
     }
 
     /**

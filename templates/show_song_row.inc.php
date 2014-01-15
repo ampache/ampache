@@ -50,6 +50,9 @@
                 <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
                 </a>
     <?php } ?>
+    <?php if (AmpConfig::get('share')) { ?>
+        <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=song&id=<?php echo $song->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+    <?php } ?>
     <?php if (Access::check_function('download')) { ?>
     <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a><?php } ?>
     <?php if (Access::check('interface','75')) { ?>

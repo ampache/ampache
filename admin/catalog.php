@@ -98,7 +98,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'delete_catalog':
         /* Make sure they aren't in demo mode */
-            if (AmpConfig::get('demo_mode')) { break; }
+        if (AmpConfig::get('demo_mode')) { break; }
 
         if (!Core::form_verify('delete_catalog')) {
             UI::access_denied();

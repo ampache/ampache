@@ -30,7 +30,9 @@ header('Expires: ' . gmdate(DATE_RFC1123, time()-1));
 <head>
 <title><?php echo AmpConfig::get('site_title'); ?></title>
 <?php
-$playlist = new Stream_Playlist(scrub_in($_REQUEST['playlist_id']));
+if (!$is_share) {
+    $playlist = new Stream_Playlist(scrub_in($_REQUEST['playlist_id']));
+}
 ?>
 <script language="javascript" type="text/javascript">
 var artistids = new Array();

@@ -489,4 +489,71 @@ class Subsonic_XML_Data
             self::addUser($xusers, $user);
         }
     }
+
+    public static function addRadio($xml, $radio)
+    {
+        $xradio = $xml->addChild('internetRadioStation ');
+        $xradio->addAttribute('id', $radio->id);
+        $xradio->addAttribute('name', $radio->name);
+        $xradio->addAttribute('streamUrl', $radio->url);
+        $xradio->addAttribute('homePageUrl', $radio->site_url);
+    }
+
+    public static function addRadios($xml, $radios)
+    {
+        $xradios = $xml->addChild('internetRadioStations');
+        foreach ($radios as $id) {
+            $radio = new Radio($id);
+            self::addRadio($xradios, $radio);
+        }
+    }
+
+    public static function addShare($xml, $share)
+    {
+        $xshare = $xml->addChild('share ');
+        $xshare->addAttribute('id', $share->id);
+        $xshare->addAttribute('url', $share->public_url);
+        $xshare->addAttribute('description', $share->description);
+        $user = new User($share->user);
+        $xshare->addAttribute('username', $user->username);
+        $xshare->addAttribute('created', date("c", $share->creation_date));
+        if ($share->lastvisit_date > 0) {
+            $xshare->addAttribute('lastVisited', date("c", $share->lastvisit_date));
+        }
+        if ($share->expire_days > 0) {
+            $xshare->addAttribute('expires', date("c", $share->creation_date + ($share->expire_days * 86400)));
+        }
+        $xshare->addAttribute('visitCount', $share->counter);
+
+        if ($share->object_type == 'song') {
+            $song = new Song($share->object_id);
+            self::addSong($xshare, $song, "entry");
+        } elseif ($share->object_type == 'playlist') {
+            $playlist = new Playlist($share->object_id);
+            $songs = $playlist->get_songs();
+            foreach ($songs as $id) {
+                $song = new Song($id);
+                self::addSong($xshare, $song, "entry");
+            }
+        } elseif ($share->object_type == 'album') {
+            $album = new Album($share->object_id);
+            $songs = $album->get_songs();
+            foreach ($songs as $id) {
+                $song = new Song($id);
+                self::addSong($xshare, $song, "entry");
+            }
+        }
+    }
+
+    public static function addShares($xml, $shares)
+    {
+        $xshares = $xml->addChild('shares');
+        foreach ($shares as $id) {
+            $share = new Share($id);
+            // Don't add share with max counter already reached
+            if ($share->max_counter == 0 || $share->counter < $share->max_counter) {
+                self::addShare($xshares, $share);
+            }
+        }
+    }
 }

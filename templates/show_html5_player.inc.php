@@ -5,9 +5,12 @@ if ($iframed) {
 <?php
 } else {
 ?>
-<?php require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php'; ?>
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/jplayer.midnight.black.css" type="text/css" />
 <?php
+}
+
+if (!$iframed || $is_share) {
+    require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php';
 }
 ?>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
@@ -72,6 +75,7 @@ echo implode(',', $solutions);
             oggSupport: false,
             supplied: "<?php echo implode(", ", WebPlayer::get_supplied_types($playlist)); ?>",
             volume: jp_volume,
+<?php if (!$is_share) { ?>
             size: {
 <?php
 if ($isVideo) {
@@ -104,6 +108,7 @@ if ($isVideo) {
 }
 ?>
             }
+<?php } ?>
         });
 
 
@@ -119,7 +124,7 @@ if ($isVideo) {
         $.each(playlist, function (index, obj) {
             if (index == current) {
 <?php
-if (!$isVideo) {
+if (!$isVideo && !$is_share) {
     if ($iframed) {
         echo "var titleobj = (albumids[index] != null) ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + albumids[index] + '\');\">' + obj.title + '</a>' : obj.title;";
         echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + artistids[index] + '\');\">' + obj.artist + '</a>';";
@@ -278,7 +283,7 @@ window.addEventListener('storage', function (event) {
 </head>
 <body>
 <?php
-if ($iframed) {
+if ($iframed && !$is_share) {
 ?>
   <div class="jp-close">
     <a href="javascript:ExitPlayer();" title="Close Player"><img src="images/close.png" border="0" /></a>

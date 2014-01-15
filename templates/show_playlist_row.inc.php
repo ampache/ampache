@@ -37,11 +37,14 @@
 <td class="cel_songs"><?php echo $count; ?></td>
 <td class="cel_owner"><?php echo scrub_out($playlist->f_user); ?></td>
 <td class="cel_action">
-        <?php if (Access::check_function('batch_download')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
-                        <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
-                </a>
-        <?php } ?>
+    <?php if (Access::check_function('batch_download')) { ?>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
+                    <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
+            </a>
+    <?php } ?>
+    <?php if (AmpConfig::get('share')) { ?>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+    <?php } ?>
     <?php if ($playlist->has_access()) { ?>
         <a id="<?php echo 'edit_playlist_'.$playlist->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_'.$playlist->id ?>', '<?php echo T_('Playlist edit') ?>', '', 'playlist_row_', 'refresh_playlist')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>

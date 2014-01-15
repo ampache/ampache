@@ -355,6 +355,9 @@ class Update
         $update_string = '- Add beautiful stream url setting.<br />';
         $version[] = array('version' => '360035','description' => $update_string);
 
+        $update_string = '- Add sharing features.<br />';
+        $version[] = array('version' => '360036','description' => $update_string);
+
         return $version;
     }
 
@@ -2030,6 +2033,48 @@ class Update
         Dba::write($sql);
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        return true;
+    }
+
+    /**
+     * update_360036
+     *
+     * Add sharing features
+     */
+    public static function update_360036()
+    {
+        $sql = "CREATE TABLE `share` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`user` int(11) unsigned NOT NULL," .
+            "`object_type` varchar(32) NOT NULL," .
+            "`object_id` int(11) unsigned NOT NULL," .
+            "`allow_stream` tinyint(1) unsigned NOT NULL DEFAULT '0'," .
+            "`allow_download` tinyint(1) unsigned NOT NULL DEFAULT '0'," .
+            "`expire_days` int(4) unsigned NOT NULL DEFAULT '0'," .
+            "`max_counter` int(4) unsigned NOT NULL DEFAULT '0'," .
+            "`secret` varchar(20) CHARACTER SET utf8 NULL," .
+            "`counter` int(4) unsigned NOT NULL DEFAULT '0'," .
+            "`creation_date` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "`lastvisit_date` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "`public_url` varchar(255) CHARACTER SET utf8 NULL," .
+            "`description` varchar(255) CHARACTER SET utf8 NULL," .
+            "PRIMARY KEY (`id`))";
+        Dba::write($sql);
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('share','0','Allow Share',25,'boolean','system')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('share_expire','7','Share links default expiration days (0=never)',25,'integer','system')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'7')";
         Dba::write($sql, array($id));
 
         return true;

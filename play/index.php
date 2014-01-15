@@ -32,15 +32,16 @@ require_once '../lib/init.php';
 ob_end_clean();
 
 /* These parameters had better come in on the url. */
-$uid         = scrub_in($_REQUEST['uid']);
-$oid         = $_REQUEST['oid']
-            // FIXME: Any place that doesn't use oid should be fixed
-            ? scrub_in($_REQUEST['oid'])
-            : scrub_in($_REQUEST['song']);
-$sid         = scrub_in($_REQUEST['ssid']);
-$video        = make_bool($_REQUEST['video']);
-$type        = scrub_in($_REQUEST['type']);
-$transcode_to	= scrub_in($_REQUEST['transcode_to']);
+$uid            = scrub_in($_REQUEST['uid']);
+$oid            = $_REQUEST['oid']
+                // FIXME: Any place that doesn't use oid should be fixed
+                ? scrub_in($_REQUEST['oid'])
+                : scrub_in($_REQUEST['song']);
+$sid            = scrub_in($_REQUEST['ssid']);
+$video          = make_bool($_REQUEST['video']);
+$type           = scrub_in($_REQUEST['type']);
+$transcode_to   = scrub_in($_REQUEST['transcode_to']);
+$share_id       = scrub_in($_REQUEST['share_id']);
 
 if ($video) {
     // FIXME: Compatibility hack, should eventually be removed
@@ -74,35 +75,53 @@ if (empty($uid)) {
     exit;
 }
 
-/* Misc Housework */
-$GLOBALS['user'] = new User($uid);
-Preference::init();
 
-/* If the user has been disabled (true value) */
-if (make_bool($GLOBALS['user']->disabled)) {
-    debug_event('UI::access_denied', "$user->username is currently disabled, stream access denied",'3');
-    header('HTTP/1.1 403 User Disabled');
-    exit;
-}
+if (empty($share_id)) {
+    $GLOBALS['user'] = new User($uid);
+    Preference::init();
 
-// If require session is set then we need to make sure we're legit
-if (AmpConfig::get('require_session')) {
-    if (!AmpConfig::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
-        debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
-    } else if (!Session::exists('stream', $sid)) {
-        debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
-            header('HTTP/1.1 403 Session Expired');
+    /* If the user has been disabled (true value) */
+    if (make_bool($GLOBALS['user']->disabled)) {
+        debug_event('UI::access_denied', "$user->username is currently disabled, stream access denied",'3');
+        header('HTTP/1.1 403 User Disabled');
         exit;
     }
 
-    // Now that we've confirmed the session is valid
-    // extend it
-    Session::extend($sid, 'stream');
+    // If require session is set then we need to make sure we're legit
+    if (AmpConfig::get('require_session')) {
+        if (!AmpConfig::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
+            debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
+        } else if (!Session::exists('stream', $sid)) {
+            debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
+                header('HTTP/1.1 403 Session Expired');
+            exit;
+        }
+
+        // Now that we've confirmed the session is valid
+        // extend it
+        Session::extend($sid, 'stream');
+    }
+
+
+    /* Update the users last seen information */
+    $GLOBALS['user']->update_last_seen();
+} else {
+    $secret = $_REQUEST['share_secret'];
+    $share = new Share($share_id);
+
+    if (!$share->is_valid($secret, 'stream')) {
+        header('HTTP/1.1 403 Access Unauthorized');
+        exit;
+    }
+
+    if ($type != 'song' || !$share->is_shared_song($oid)) {
+        header('HTTP/1.1 403 Access Unauthorized');
+        exit;
+    }
+
+    $GLOBALS['user'] = new User($share->user);
+    Preference::init();
 }
-
-
-/* Update the users last seen information */
-$GLOBALS['user']->update_last_seen();
 
 /* If we are in demo mode.. die here */
 if (AmpConfig::get('demo_mode') || (!Access::check('interface','25') )) {
@@ -453,7 +472,7 @@ if ($start > $target) {
     debug_event('play', 'Content-Range was more than ' . $target . ' into the file ' . $media->file . ', not collecting stats', 5);
 } else if ($bytes_streamed > $target) {
     // FIXME: This check looks suspicious
-    if (get_class($media) == 'Song') {
+    if (get_class($media) == 'Song' && empty($share_id)) {
         debug_event('play', 'Registering stats for {'.$media->title.'}...', '5');
         $sessionkey = Stream::$session;
         //debug_event('play', 'Current session key {'.$sessionkey.'}', '5');

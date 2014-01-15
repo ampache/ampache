@@ -124,7 +124,6 @@ class AmpacheHeadphones {
             $request = Requests::get($url, array(), array(
                 'timeout' => 600
             ));
-            debug_event($this->name, 'Headphones api returned: ' . $request->body, '5');
         } catch (Exception $e) {
             debug_event($this->name, 'Headphones api http exception: ' . $e->getMessage(), '1');
             return false;

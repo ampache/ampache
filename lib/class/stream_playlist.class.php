@@ -40,24 +40,26 @@ class Stream_Playlist
      */
     public function __construct($id = null)
     {
-        if ($id) {
-            Stream::set_session($id);
-        }
+        if ($id != -1) {
+            if ($id) {
+                Stream::set_session($id);
+            }
 
-        $this->id = Stream::$session;
+            $this->id = Stream::$session;
 
-        if (!Session::exists('stream', $this->id)) {
-            debug_event('stream_playlist', 'Session::exists failed', 2);
-            return false;
-        }
+            if (!Session::exists('stream', $this->id)) {
+                debug_event('stream_playlist', 'Session::exists failed', 2);
+                return false;
+            }
 
-        $this->user = intval($GLOBALS['user']->id);
+            $this->user = intval($GLOBALS['user']->id);
 
-        $sql = 'SELECT * FROM `stream_playlist` WHERE `sid` = ? ORDER BY `id`';
-        $db_results = Dba::read($sql, array($this->id));
+            $sql = 'SELECT * FROM `stream_playlist` WHERE `sid` = ? ORDER BY `id`';
+            $db_results = Dba::read($sql, array($this->id));
 
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $this->urls[] = new Stream_URL($row);
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $this->urls[] = new Stream_URL($row);
+            }
         }
 
         return true;
@@ -98,7 +100,7 @@ class Stream_Playlist
      * _media_to_urlarray
      * Formats the URL and media information and adds it to the object
      */
-    private static function _media_to_urlarray($media)
+    private static function _media_to_urlarray($media, $additional_params='')
     {
         $urls = array();
         foreach ($media as $medium) {
@@ -111,7 +113,7 @@ class Stream_Playlist
             $object = new $type($medium['object_id']);
             $object->format();
             //FIXME: play_url shouldn't be static
-            $url['url'] = $type::play_url($object->id);
+            $url['url'] = $type::play_url($object->id, $additional_params);
 
             // Set a default which can be overridden
             $url['author'] = 'Ampache';
@@ -223,9 +225,9 @@ class Stream_Playlist
      * add
      * Adds an array of media
      */
-    public function add($media = array())
+    public function add($media = array(), $additional_params = '')
     {
-        $urls = $this->_media_to_urlarray($media);
+        $urls = $this->_media_to_urlarray($media, $additional_params);
         foreach ($urls as $url) {
             $this->_add_url($url);
         }

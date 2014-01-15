@@ -82,6 +82,7 @@ Ampache includes some external modules that carry their own licensing.
 * [PHP Echo Nest API] (https://github.com/bshaffer/php-echonest-api): MIT
 * [Noty] (http://ned.im/noty/): MIT
 * [jScroll] (https://github.com/pklauzinski/jscroll): MIT
+* [jquery.qrcode] (http://jeromeetienne.github.io/jquery-qrcode/): MIT
 
 
 Translations
