@@ -354,7 +354,7 @@ class Update
 
         $update_string = '- Add beautiful stream url setting.<br />';
         $version[] = array('version' => '360035','description' => $update_string);
-        
+
         $update_string = '- Remove unused parameters.<br />';
         $version[] = array('version' => '360036','description' => $update_string);
 
@@ -2040,7 +2040,7 @@ class Update
 
         return true;
     }
-    
+
     /**
      * update_360036
      *
@@ -2050,22 +2050,22 @@ class Update
     {
         $sql = "DELETE FROM `preference` WHERE `name` LIKE 'ellipse_threshold_%'";
         Dba::write($sql);
-        
+
         $sql = "DELETE FROM `preference` WHERE `name` = 'min_object_count'";
         Dba::write($sql);
-        
+
         $sql = "DELETE FROM `preference` WHERE `name` = 'bandwidth'";
         Dba::write($sql);
 
         $sql = "DELETE FROM `preference` WHERE `name` = 'features'";
         Dba::write($sql);
-        
+
         $sql = "DELETE FROM `preference` WHERE `name` = 'tags_userlist'";
         Dba::write($sql);
-        
+
         return true;
     }
-    
+
     /**
      * update_360037
      *

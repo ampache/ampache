@@ -70,7 +70,7 @@
                     <a href="javascript:void(0)" class="to_e" style="display:block" onclick="musicbox.openCreatePlaylist(); return false;">
                         <i class="icn icon icon-playlist pull-left"></i>
                         <span>Créer une nouvelle playlist</span>
-                        <input id="input-new-title" style="display: none; height: 19px; width: 142px; border: 1px solid rgb(205, 205, 205); background-color: rgb(238, 238, 238); background-position: initial initial; background-repeat: initial initial;" type="text" class="floatl m_0 mt_5 p_0 pl_7 rad_2" value="Nouvelle playlist" onfocus="this.select();" onblur="if (this.value == '') { this.value = 'Nouvelle playlist'; }" onkeypress="if(event.keyCode == 13) { musicbox.createPlaylist($(this)); }">
+                        <input id="input-new-title" style="display: none; height: 19px; width: 142px; border: 1px solid rgb(205, 205, 205); background-color: rgb(238, 238, 238); background-position: initial initial; background-repeat: initial initial;" type="text" class="floatl m_0 mt_5 p_0 pl_7 rad_2" value="Nouvelle playlist" onfocus="this.select();" onblur="if (this.value == '') { this.value = 'Nouvelle playlist'; }" onkeypress="if (event.keyCode == 13) { musicbox.createPlaylist($(this)); }">
                     </a>
                 </li>
             </ul>

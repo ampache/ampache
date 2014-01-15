@@ -119,13 +119,13 @@ switch ($_REQUEST['action']) {
             UI::access_denied();
             break;
         }
-        
+
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {
             $_GET[$key] = unhtmlentities(scrub_in($data));
             debug_event('playlist', $key.'='.$_GET[$key], '5');
         }
-        
+
         $playlist = new Playlist($_REQUEST['playlist_id']);
         if (isset($_GET['order'])) {
             $songs = explode(";", $_GET['order']);
@@ -143,7 +143,7 @@ switch ($_REQUEST['action']) {
             UI::access_denied();
             break;
         }
-        
+
         $playlist = new Playlist($_REQUEST['playlist_id']);
         $playlist->add_songs(array($_REQUEST['song_id']));
     break;
