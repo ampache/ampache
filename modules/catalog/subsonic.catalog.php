@@ -366,7 +366,7 @@ class Catalog_subsonic extends Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = UI::truncate($this->uri, AmpConfig::get('ellipse_threshold_title'));
+        $this->f_info = $this->uri;
         $this->f_full_info = $this->uri;
     }
 

@@ -313,35 +313,6 @@ END;
     }
 
     /**
-     * truncate
-     *
-     * Limit text to a certain length; adds an ellipsis if truncation was
-     * required.
-     */
-    public static function truncate($text, $max = 27)
-    {
-        // If they want <3, we're having none of that
-        if ($max <= 3) {
-            debug_event('UI', "truncate called with $max, refusing to do stupid things to $text", 2);
-            return $text;
-        }
-
-        if (self::check_iconv()) {
-            $charset = AmpConfig::get('site_charset');
-            if (iconv_strlen($text, $charset) > $max) {
-                $text = iconv_substr($text, 0, $max - 3, $charset);
-                $text .= iconv('ISO-8859-1', $charset, '...');
-            }
-        } else {
-            if (strlen($text) > $max) {
-                $text = substr($text, 0, $max - 3) . '...';
-            }
-        }
-
-        return $text;
-    }
-
-    /**
      * update_text
      *
      * Convenience function that, if the output is going to a browser,

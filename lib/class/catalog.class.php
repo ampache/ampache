@@ -321,8 +321,7 @@ abstract class Catalog extends database_object
      */
     public function format()
     {
-        $this->f_name = UI::truncate($this->name,
-            AmpConfig::get('ellipse_threshold_title'));
+        $this->f_name = $this->name;
         $this->f_name_link = '<a href="' . AmpConfig::get('web_path') .
             '/admin/catalog.php?action=show_customize_catalog&catalog_id=' .
             $this->id . '" title="' . scrub_out($this->name) . '">' .

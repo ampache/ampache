@@ -22,19 +22,17 @@
 
 $web_path = AmpConfig::get('web_path');
 $tags_list = Tag::get_display(Tag::get_tags());
-$thcount = 7;
+$thcount = 8;
 ?>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-    <?php if (AmpConfig::get('directplay')) { ++$thcount; ?>
-        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
-    <?php } ?>
-        <th class="cel_add"><?php echo T_('Add'); ?></th>
+        <th class="cel_play"></th>
     <?php if (Art::is_enabled()) { ++$thcount; ?>
         <th class="cel_cover"><?php echo T_('Cover'); ?></th>
     <?php } ?>
         <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'),'album_sort_name'); ?></th>
+        <th class="cel_add"></th>
         <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist', T_('Artist'),'album_sort_artist'); ?></th>
         <th class="cel_songs"><?php echo T_('Songs'); ?></th>
         <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'),'album_sort_year'); ?></th>
@@ -66,14 +64,12 @@ $thcount = 7;
     </tr>
     <?php } ?>
     <tr class="th-bottom">
-    <?php if (AmpConfig::get('directplay')) { ?>
-        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
-    <?php } ?>
-        <th class="cel_add"><?php echo T_('Add'); ?></th>
+        <th class="cel_play"></th>
     <?php if (Art::is_enabled()) { ?>
         <th class="cel_cover"><?php echo T_('Cover'); ?></th>
     <?php } ?>
         <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'),'album_sort_name_bottom'); ?></th>
+        <th class="cel_add"></th>
         <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist', T_('Artist'),'album_sort_artist'); ?></th>
         <th class="cel_songs"><?php echo T_('Songs'); ?></th>
         <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'),'album_sort_year_bottom'); ?></th>

@@ -408,7 +408,7 @@ class Catalog_soundcloud extends Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = UI::truncate($this->userid, AmpConfig::get('ellipse_threshold_title'));
+        $this->f_info = $this->userid;
         $this->f_full_info = $this->userid;
     }
 

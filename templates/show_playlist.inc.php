@@ -36,12 +36,6 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
 <div id="information_actions">
     <ul>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=normalize_tracks&amp;playlist_id=<?php echo $playlist->id; ?>">
-                <?php echo UI::get_icon('statistics', T_('Normalize Tracks')); ?>
-                &nbsp;&nbsp;<?php echo T_('Normalize Tracks'); ?>
-            </a>
-        </li>
-        <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
                                             '<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', 'refresh_playlist_songs')">
                 <?php echo UI::get_icon('save', T_('Save Tracks Order')); ?>

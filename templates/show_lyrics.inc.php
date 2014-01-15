@@ -24,9 +24,9 @@
 UI::show_box_top("Song Lyrics" , 'box box_lyrics_song');
 
 /* Prepare the variables */
-$title = scrub_out(UI::truncate($song->title));
-$album = scrub_out(UI::truncate($song->f_album_full));
-$artist = scrub_out(UI::truncate($song->f_artist_full));
+$title = scrub_out($song->title);
+$album = scrub_out($song->f_album_full);
+$artist = scrub_out($song->f_artist_full);
 ?>
 <div class="album_art">
     <?php

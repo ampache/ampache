@@ -476,22 +476,27 @@ hr {
 
 table.tabledata
 {
-	width:100%;
-    table-layout: fixed;
+    width:100%;
 	text-align:left;
-	border:1px solid #bbb;
+    color: #eee;
+    margin-bottom: 20px;
 }
 
 table.tabledata th
 {
-	border:1px solid #bbb;
+	/*border:1px solid #bbb;
 	border-left:1px solid #ccc;
-	border-right:1px solid #ccc;
+	border-right:1px solid #ccc;*/
 	background:#eee;
 	font-weight:700;
 	font-size:11px;
 	color:#444;
 	padding:7px 10px;
+}
+
+table.tabledata tr
+{
+    height: 25px;
 }
 
 .browse_content table.tabledata th, .browse_content table.tabledata
@@ -510,11 +515,12 @@ table .th-bottom {
 
 table.tabledata tbody td
 {
-	vertical-align:middle;
-	white-space:nowrap;
-	overflow:hidden;
-	text-overflow:ellipsis;
-	padding:4px 10px;
+	vertical-align: middle;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 3px 10px 3px 0;
+    color: #686868;
 }
 
 .browse_content table.tabledata tbody tr:hover
@@ -527,37 +533,64 @@ table.tabledata tbody .odd
 	background:#eee;
 }
 
-table.tabledata tbody .cel_directplay
-{
-	width:14px;
-	text-align: center;
+table.tabledata tbody .cel_play {
+	max-width: 40px;
+    width: 40px !important;
+    text-align: right;
 }
 
-table.tabledata tbody .cel_add
-{
-	width:14px;
-	text-align: center;
+table.tabledata tbody .cel_play_content {
+    display: block;
 }
 
-table.tabledata tbody .cel_artist
-{
-	min-width:120px;
+table.tabledata tbody .cel_play_hover {
+    display: none;
 }
 
-table.tabledata tbody .cel_action
-{
-	width:70px;
+table.tabledata tbody tr:hover .cel_play_hover, table.tabledata tbody tr:focus .cel_play_hover {
+    display: block;
+}
+table.tabledata tbody tr:hover .cel_play_content, table.tabledata tbody tr:focus .cel_play_content {
+    display: none;
 }
 
-table.tabledata tbody td.cel_rating
-{
-	min-width:93px;
-	padding:4px 3px;
+table.tabledata tbody .cel_add {
+    max-width: 60px;
+    width: 60px !important;
+    text-align: right;
 }
 
-table.tabledata tbody .cel_tags
-{
-	max-width:250px;
+table.tabledata tbody .cel_item_add {
+    display: none;
+}
+
+table.tabledata tbody tr:hover .cel_item_add, table.tabledata tbody tr:focus .cel_item_add {
+    display: block;
+}
+
+table.tabledata tbody .cel_time {
+    min-width: 40px;
+    width: 40px !important;
+}
+
+table.tabledata tbody .cel_action {
+    width: 130px !important;
+    max-width: 130px;
+}
+
+table.tabledata tbody td.cel_rating {
+    width: 100px !important;
+    max-width: 100px;
+}
+
+table.tabledata tbody td.cel_userflag {
+    width: 40px !important;
+    max-width: 40px;
+}
+
+table.tabledata tbody .cel_tags {
+    width: 150px !important;
+	max-width: 150px;
 }
 
 table.tabledata tbody .cel_cover img
@@ -1169,4 +1202,99 @@ ins,#rightbar a
 #localplay-control span,.box-content #tag_filter span
 {
 	cursor:pointer;
+}
+
+.shout {
+    clear: float;
+    width: 400px;
+    height: auto;
+    padding-right: 40px;
+    padding-bottom: 20px;
+}
+.shoutbox-item {
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    line-height: normal;
+    position: relative;
+}
+
+.shoutbox-data {
+    min-height: 75px;
+}
+
+.shoutbox-img {
+    float: left;
+    display:inline;
+    padding-right: 10px;
+}
+
+.shoutbox-info {
+    display:inline;
+}
+
+.shoutbox-object {
+    font-weight: bold;
+}
+
+.shoutbox-date {
+    color: #D6D6D6;
+}
+
+.shoutbox-text {
+    padding-top: 10px;
+    word-wrap: break-word;
+}
+
+.shoutbox-footer {
+    width: 100%;
+    padding-top: 5px;
+}
+
+.shoutbox-actions {
+    display:inline;
+}
+
+.shoutbox-user {
+    font-size: 10px;
+    display:inline;
+    text-align: right;
+    float: right;
+}
+
+.noty_ampache {
+    color: #ffffff;
+    background-color: #222;
+}
+
+.browse-options {
+    float: right;
+}
+
+.browse-options form {
+    display: inline;
+}
+
+.browse-options input[type=text] {
+    width: 50px;
+}
+
+.jscroll-next {
+    width:50%;
+    display:block;
+    border:1px solid #ccc;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
+    border-radius: 10px;
+    background-color:#eee;
+    color:#999;
+    font-weight:bold;
+    text-align:center;
+    padding:10px 0;
+    cursor:pointer;
+    margin: auto; 
+}
+
+.jscroll-next:hover  {
+    color:#666;
 }

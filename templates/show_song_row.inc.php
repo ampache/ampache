@@ -20,22 +20,29 @@
  *
  */
 ?>
-<?php if (AmpConfig::get('directplay')) { ?>
-<td class="cel_directplay">
-    <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play song'),'play_song_' . $song->id); ?>
-<?php if (Stream_Playlist::check_autoplay_append()) { ?>
-    <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true','play_add', T_('Play add song'),'addplay_song_' . $song->id); ?>
+<td class="cel_play">
+    <span class="cel_play_content"><?php if (isset($argument) && $argument) { echo '<b>'.$song->f_track.'</b>'; } ?></span>
+    <div class="cel_play_hover">
+    <?php if (AmpConfig::get('directplay')) { ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id, 'play', T_('Play song'), 'play_song_' . $song->id); ?>
+        <?php if (Stream_Playlist::check_autoplay_append()) { ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true', 'play_add', T_('Play add song'), 'addplay_song_' . $song->id); ?>
+        <?php } ?>
 <?php } ?>
+    </div>
 </td>
-<?php } ?>
+<td class="cel_song"><?php echo $song->f_link; ?></td>
 <td class="cel_add">
-    <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add'),'add_' . $song->id); ?>
+    <span class="cel_item_add">
+        <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id,'add', T_('Add to temporary playlist'),'add_' . $song->id); ?>
+        <a id="<?php echo 'add_playlist_'.$song->id ?>" onclick="showPlaylistDialog('song', '<?php echo $song->id ?>')">
+            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+        </a>
+    </span>
 </td>
-<td class="cel_song"><?php echo $song->f_link; ?></a></td>
 <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
 <td class="cel_album"><?php echo $song->f_album_link; ?></td>
 <td class="cel_tags"><?php echo $song->f_tags; ?></td>
-<td class="cel_track"><?php echo $song->f_track; ?></td>
 <td class="cel_time"><?php echo $song->f_time; ?></td>
 <?php if (AmpConfig::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id,'song'); ?></td>

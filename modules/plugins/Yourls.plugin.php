@@ -26,7 +26,7 @@ class AmpacheYourls {
     public $description = 'Url shorteners on shared links with YOURLS';
     public $url         = 'http://yourls.org/';
     public $version     = '000001';
-    public $min_ampache = '360036';
+    public $min_ampache = '360037';
     public $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to

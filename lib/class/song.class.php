@@ -835,15 +835,15 @@ class Song extends database_object implements media
 
         // Format the album name
         $this->f_album_full = $this->get_album_name();
-        $this->f_album = UI::truncate($this->f_album_full,AmpConfig::get('ellipse_threshold_album'));
+        $this->f_album = $this->f_album_full;
 
         // Format the artist name
         $this->f_artist_full = $this->get_artist_name();
-        $this->f_artist = UI::truncate($this->f_artist_full,AmpConfig::get('ellipse_threshold_artist'));
+        $this->f_artist = $this->f_artist_full;
 
         // Format the title
         $this->f_title_full = $this->title;
-        $this->f_title = UI::truncate($this->title,AmpConfig::get('ellipse_threshold_title'));
+        $this->f_title = $this->title;
 
         // Create Links for the different objects
         $this->link = AmpConfig::get('web_path') . "/song.php?action=show_song&song_id=" . $this->id;

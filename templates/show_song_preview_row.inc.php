@@ -21,23 +21,31 @@
  */
 ?>
 <?php if (AmpConfig::get('echonest_api_key')) { ?>
-<?php if (AmpConfig::get('directplay')) { ?>
-<td class="cel_directplay">
-<?php if (!empty($song->file)) { ?>
-    <?php echo Ajax::button('?page=stream&action=directplay&playtype=song_preview&id=' . $song->id,'play_preview', T_('Play song Preview'),'play_song_' . $song->id); ?>
-<?php if (Stream_Playlist::check_autoplay_append()) { ?>
-    <?php echo Ajax::button('?page=stream&action=directplay&playtype=song_preview&id=' . $song->id . '&append=true','play_add_preview', T_('Play Add Song Preview'),'addplay_song_' . $song->id); ?>
+<td class="cel_play">
+    <span class="cel_play_content">&nbsp;</span>
+    <div class="cel_play_hover">
+    <?php if (AmpConfig::get('directplay') && !empty($song->file)) { ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=song_preview&id=' . $song->id,'play_preview', T_('Play song Preview'),'play_song_' . $song->id); ?>
+        <?php if (Stream_Playlist::check_autoplay_append()) { ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=song_preview&id=' . $song->id . '&append=true','play_add_preview', T_('Play Add Song Preview'),'addplay_song_' . $song->id); ?>
+        <?php } ?>
 <?php } ?>
-<?php } ?>
+    </div>
 </td>
 <?php } ?>
+<td class="cel_song"><?php echo $song->title; ?></td>
+<?php if (AmpConfig::get('echonest_api_key')) { ?>
 <td class="cel_add">
-    <?php if (!empty($song->file)) { ?>
-    <?php echo Ajax::button('?action=basket&type=song_preview&id=' . $song->id,'add', T_('Add Song Preview'),'add_' . $song->id); ?>
-    <?php } ?>
+    <span class="cel_item_add">
+        <?php if (!empty($song->file)) { ?>
+            <?php echo Ajax::button('?action=basket&type=song_preview&id=' . $song->id,'add', T_('Add to temporary playlist'),'add_' . $song->id); ?>
+            <a id="<?php echo 'add_playlist_'.$song->id ?>" onclick="showPlaylistDialog('song_preview', '<?php echo $song->id ?>')">
+                <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+            </a>
+        <?php } ?>
+    </span>
 </td>
 <?php } ?>
-<td class="cel_song"><?php echo $song->title; ?></a></td>
 <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
 <td class="cel_album"><?php echo $song->f_album_link; ?></td>
 <td class="cel_track"><?php echo $song->track; ?></td>

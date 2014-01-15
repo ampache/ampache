@@ -26,15 +26,12 @@ $web_path = AmpConfig::get('web_path');
 <form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
     <table id="reorder_playlist_table" class="tabledata" cellpadding="0" cellspacing="0">
         <tr class="th-top">
-        <?php if (AmpConfig::get('directplay')) { ?>
-            <th class="cel_directplay"><?php echo T_('Play'); ?></th>
-        <?php } ?>
-            <th class="cel_add"><?php echo T_('Add'); ?></th>
-            <th class="cel_track"><?php echo T_('Track'); ?></th>
+            <th class="cel_play"></th>
             <th class="cel_song"><?php echo T_('Song Title'); ?></th>
+            <th class="cel_add"></th>
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_album"><?php echo T_('Album'); ?></th>
-            <th class="cel_genre"><?php echo T_('Genre'); ?></th>
+            <th class="cel_tags"><?php echo T_('Tags'); ?></th>
             <th class="cel_time"><?php echo T_('Time'); ?></th>
         <?php if (AmpConfig::get('ratings')) {
             Rating::build_cache('song', array_map(create_function('$i', 'return $i[\'object_id\'];'), $object_ids));
@@ -63,15 +60,12 @@ $web_path = AmpConfig::get('web_path');
         </tbody>
 
         <tr class="th-bottom">
-        <?php if (AmpConfig::get('directplay')) { ?>
-            <th class="cel_directplay"><?php echo T_('Play'); ?></th>
-        <?php } ?>
-            <th class="cel_add"><?php echo T_('Add'); ?></th>
-            <th class="cel_track"><?php echo T_('Track'); ?></th>
+            <th class="cel_play"><?php echo T_('Play'); ?></th>
             <th class="cel_song"><?php echo T_('Song Title'); ?></th>
+            <th class="cel_add"></th>
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_album"><?php echo T_('Album'); ?></th>
-            <th class="cel_genre"><?php echo T_('Genre'); ?></th>
+            <th class="cel_tags"><?php echo T_('Tags'); ?></th>
             <th class="cel_time"><?php echo T_('Time'); ?></th>
         <?php if (AmpConfig::get('ratings')) { ?>
             <th class="cel_rating"><?php echo T_('Rating'); ?></th>

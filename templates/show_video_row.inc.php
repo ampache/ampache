@@ -20,18 +20,26 @@
  *
  */
 ?>
-<?php if (AmpConfig::get('directplay')) { ?>
-<td class="cel_directplay">
-    <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id,'play', T_('Play video'),'play_video_' . $video->id); ?>
-<?php if (Stream_Playlist::check_autoplay_append()) { ?>
-    <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id . '&append=true','play_add', T_('Play add video'),'addplay_video_' . $video->id); ?>
+<td class="cel_play">
+    <span class="cel_play_content">&nbsp;</span>
+    <div class="cel_play_hover">
+    <?php if (AmpConfig::get('directplay')) { ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id,'play', T_('Play video'),'play_video_' . $video->id); ?>
+        <?php if (Stream_Playlist::check_autoplay_append()) { ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id . '&append=true','play_add', T_('Play add video'),'addplay_video_' . $video->id); ?>
+        <?php } ?>
 <?php } ?>
-</td>
-<?php } ?>
-<td class="cel_add">
-    <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id,'add', T_('Add'),'add_video_' . $video->id); ?>
+    </div>
 </td>
 <td class="cel_title"><?php echo $video->f_title; ?></td>
+<td class="cel_add">
+    <span class="cel_item_add">
+        <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id,'add', T_('Add to temporary playlist'),'add_video_' . $video->id); ?>
+        <a id="<?php echo 'add_playlist_'.$video->id ?>" onclick="showPlaylistDialog('video', '<?php echo $video->id ?>')">
+            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+        </a>
+    </span>
+</td>
 <td class="cel_codec"><?php echo $video->f_codec; ?></td>
 <td class="cel_resolution"><?php echo $video->f_resolution; ?></td>
 <td class="cel_length"><?php echo $video->f_length; ?></td>

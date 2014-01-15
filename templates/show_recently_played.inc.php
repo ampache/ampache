@@ -22,15 +22,12 @@
 
 $link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played') :  '';
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
-$thcount = 7;
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-    <?php if (AmpConfig::get('directplay')) { ++$thcount; ?>
-        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
-    <?php } ?>
-        <th class="cel_add"><?php echo T_('Add'); ?></th>
+        <th class="cel_play"></th>
         <th class="cel_song"><?php echo T_('Song'); ?></th>
+        <th class="cel_add"></th>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_username"><?php echo T_('Username'); ?></th>
@@ -88,18 +85,26 @@ $thcount = 7;
     $song->format();
 ?>
     <tr class="<?php echo UI::flip_class(); ?>">
-    <?php if (AmpConfig::get('directplay')) { ?>
-        <td class="cel_directplay">
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play song'),'play_song_' . $song->id); ?>
-            <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true','play_add', T_('Play add song'),'addplay_song_' . $song->id); ?>
-            <?php } ?>
-        </td>
-    <?php } ?>
-        <td class="cel_add">
-            <?php echo Ajax::button('?action=basket&type=song&id='.$song->id, 'add', T_('Add'), 'add_'.$song->id); ?>
+        <td class="cel_play">
+            <span class="cel_play_content">&nbsp;</span>
+            <div class="cel_play_hover">
+            <?php if (AmpConfig::get('directplay')) { ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play song'),'play_song_' . $song->id); ?>
+                <?php if (Stream_Playlist::check_autoplay_append()) { ?>
+                    <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true','play_add', T_('Play add song'),'addplay_song_' . $song->id); ?>
+                <?php } ?>
+        <?php } ?>
+            </div>
         </td>
         <td class="cel_song"><?php echo $song->f_link; ?></td>
+        <td class="cel_add">
+            <span class="cel_item_add">
+                <?php echo Ajax::button('?action=basket&type=song&id='.$song->id, 'add', T_('Add to temporary playlist'), 'add_'.$song->id); ?>
+                <a id="<?php echo 'add_playlist_'.$song->id ?>" onclick="showPlaylistDialog('song', '<?php echo $song->id ?>')">
+                    <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+                </a>
+            </span>
+        </td>
         <td class="cel_album"><?php echo $song->f_album_link; ?></td>
         <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
         <td class="cel_username">
@@ -117,18 +122,16 @@ $thcount = 7;
 <?php } ?>
 <?php if (!count($data)) { ?>
     <tr>
-        <td colspan="<?php echo $thcount ?>"><span class="nodata"><?php echo T_('No recently item found'); ?></span></td>
+        <td colspan=""><span class="nodata"><?php echo T_('No recently item found'); ?></span></td>
     </tr>
 <?php } ?>
     <tr class="th-bottom">
-<?php if (AmpConfig::get('directplay')) { ?>
-        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
-<?php } ?>
-        <th class="cel_add"><?php echo T_('Add'); ?></th>
-        <th class="cel_username"><?php echo T_('Username'); ?></th>
+        <th class="cel_play"></th>
         <th class="cel_song"><?php echo T_('Song'); ?></th>
+        <th class="cel_add"></th>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+        <th class="cel_username"><?php echo T_('Username'); ?></th>
         <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
         <th class="cel_agent"><?php echo T_('Agent'); ?></th>
     </tr>
