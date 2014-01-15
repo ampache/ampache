@@ -340,7 +340,7 @@ class Album extends database_object
         foreach ($data as $key=>$value) { $this->$key = $value; }
 
         /* Truncate the string if it's to long */
-        $this->f_name        = UI::truncate($this->full_name,AmpConfig::get('ellipse_threshold_album'));
+        $this->f_name = $this->full_name;
 
         $this->f_link_src = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
         $this->f_name_link    = "<a href=\"" . $this->f_link_src . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
@@ -355,7 +355,6 @@ class Album extends database_object
         if ($this->artist_count == '1') {
             $artist = trim(trim($this->artist_prefix) . ' ' . trim($this->artist_name));
             $this->f_artist_name = $artist;
-            $artist = scrub_out(UI::truncate($artist), AmpConfig::get('ellipse_threshold_artist'));
             $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
             $this->f_artist = $artist;
         } else {

@@ -23,12 +23,12 @@
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
         <?php if (AmpConfig::get('echonest_api_key')) { ?>
-        <?php if (AmpConfig::get('directplay')) { ++$thcount; ?>
-        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
-    <?php } ?>
-        <th class="cel_add"><?php echo T_('Add'); ?></th>
+            <th class="cel_play"></th>
         <?php } ?>
         <th class="cel_song"><?php echo T_('Song Title'); ?></th>
+        <?php if (AmpConfig::get('echonest_api_key')) { ?>
+            <th class="cel_add"></th>
+        <?php } ?>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_track"><?php echo T_('Track'); ?></th>

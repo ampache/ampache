@@ -20,15 +20,23 @@
  *
  */
 ?>
-<?php if (AmpConfig::get('directplay')) { ?>
-<td class="cel_directplay">
-    <?php echo Ajax::button('?page=stream&action=directplay&playtype=live_stream&stream_id=' . $radio->id, 'play', T_('Play live stream'),'play_live_stream_' . $radio->id); ?>
-</td>
+<td class="cel_play">
+    <span class="cel_play_content">&nbsp;</span>
+    <div class="cel_play_hover">
+    <?php if (AmpConfig::get('directplay')) { ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=live_stream&stream_id=' . $radio->id, 'play', T_('Play live stream'),'play_live_stream_' . $radio->id); ?>
 <?php } ?>
-<td class="cel_add">
-    <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id,'add', T_('Add'),'add_radio_' . $radio->id); ?>
+    </div>
 </td>
 <td class="cel_streamname"><?php echo $radio->f_name_link; ?></td>
+<td class="cel_add">
+    <span class="cel_item_add">
+        <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id,'add', T_('Add to temporary playlist'),'add_radio_' . $radio->id); ?>
+        <a id="<?php echo 'add_playlist_'.$radio->id ?>" onclick="showPlaylistDialog('radio', '<?php echo $radio->id ?>')">
+            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+        </a>
+    </span>
+</td>
 <td class="cel_streamurl"><?php echo $radio->f_url_link; ?></td>
 <td class="cel_codec"><?php echo $radio->codec; ?></td>
 <td class="cel_action">

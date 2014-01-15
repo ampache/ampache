@@ -39,7 +39,7 @@ abstract class playlist_object extends database_object
      */
     public function format()
     {
-        $this->f_name =  UI::truncate($this->name,AmpConfig::get('ellipse_threshold_title'));
+        $this->f_name =  $this->name;
         $this->f_type = ($this->type == 'private') ? UI::get_icon('lock', T_('Private')) : '';
 
         $client = new User($this->user);

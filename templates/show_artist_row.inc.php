@@ -20,19 +20,27 @@
  *
  */
 ?>
-<?php if (AmpConfig::get('directplay')) { ?>
-<td class="cel_directplay">
-    <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id,'play', T_('Play artist'),'play_artist_' . $artist->id); ?>
-<?php if (Stream_Playlist::check_autoplay_append()) { ?>
-    <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id . '&append=true','play_add', T_('Play add artist'),'addplay_artist_' . $artist->id); ?>
+<td class="cel_play">
+    <span class="cel_play_content">&nbsp;</span>
+    <div class="cel_play_hover">
+    <?php if (AmpConfig::get('directplay')) { ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id,'play', T_('Play artist'),'play_artist_' . $artist->id); ?>
+        <?php if (Stream_Playlist::check_autoplay_append()) { ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id . '&append=true','play_add', T_('Play add artist'),'addplay_artist_' . $artist->id); ?>
+        <?php } ?>
 <?php } ?>
-</td>
-<?php } ?>
-<td class="cel_add">
-    <?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add', T_('Add'),'add_artist_' . $artist->id); ?>
-    <?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random', T_('Random'),'random_artist_' . $artist->id); ?>
+    </div>
 </td>
 <td class="cel_artist"><?php echo $artist->f_name_link; ?></td>
+<td class="cel_add">
+    <span class="cel_item_add">
+        <?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add', T_('Add to temporary playlist'),'add_artist_' . $artist->id); ?>
+        <?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random', T_('Random to temporary playlist'),'random_artist_' . $artist->id); ?>
+        <a id="<?php echo 'add_playlist_'.$artist->id ?>" onclick="showPlaylistDialog('artist', '<?php echo $artist->id ?>')">
+            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+        </a>
+    </span>
+</td>
 <td class="cel_songs"><?php echo $artist->songs; ?></td>
 <td class="cel_albums"><?php echo $artist->albums; ?></td>
 <td class="cel_time"><?php echo $artist->f_time; ?></td>

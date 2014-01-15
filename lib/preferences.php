@@ -262,22 +262,6 @@ function create_preference_input($name,$value)
             echo "\t<option value=\"default\"$default>" . T_('Default') . "</option>\n";
             echo "</select>\n";
         break;
-        case 'bandwidth':
-            ${"bandwidth_$value"} = ' selected="selected"';
-            echo "<select name=\"$name\">\n";
-            echo "\t<option value=\"25\"$bandwidth_25>" . T_('Low') . "</option>\n";
-            echo "\t<option value=\"50\"$bandwidth_50>" . T_('Medium') . "</option>\n";
-            echo "\t<option value=\"75\"$bandwidth_75>" . T_('High') . "</option>\n";
-            echo "</select>\n";
-        break;
-        case 'features':
-            ${"features_$value"} = ' selected="selected"';
-            echo "<select name=\"$name\">\n";
-                        echo "\t<option value=\"25\"$features_25>" . T_('Low') . "</option>\n";
-                        echo "\t<option value=\"50\"$features_50>" . T_('Medium') . "</option>\n";
-                        echo "\t<option value=\"75\"$features_75>" . T_('High') . "</option>\n";
-                        echo "</select>\n";
-        break;
         case 'transcode':
             ${$value} = ' selected="selected"';
             echo "<select name=\"$name\">\n";

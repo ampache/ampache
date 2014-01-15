@@ -114,20 +114,19 @@ switch ($_REQUEST['action']) {
     case 'set_track_numbers':
         debug_event('playlist', 'Set track numbers called.', '5');
 
-        $playlist = new Playlist($_REQUEST['playlist_id']);
-
         /* Make sure they have permission */
         if (!$playlist->has_access()) {
             UI::access_denied();
             break;
         }
-
+        
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {
             $_GET[$key] = unhtmlentities(scrub_in($data));
             debug_event('playlist', $key.'='.$_GET[$key], '5');
         }
-
+        
+        $playlist = new Playlist($_REQUEST['playlist_id']);
         if (isset($_GET['order'])) {
             $songs = explode(";", $_GET['order']);
             $track = 1;
@@ -139,8 +138,16 @@ switch ($_REQUEST['action']) {
             }
         }
     break;
+    case 'add_song':
+        if (!$playlist->has_access()) {
+            UI::access_denied();
+            break;
+        }
+        
+        $playlist = new Playlist($_REQUEST['playlist_id']);
+        $playlist->add_songs(array($_REQUEST['song_id']));
+    break;
     case 'prune_empty':
-        /* Make sure they have permission */
         if (!$GLOBALS['user']->has_access(100)) {
             UI::access_denied();
             break;
@@ -152,18 +159,6 @@ switch ($_REQUEST['action']) {
         $body  = '';
         show_confirmation($title,$body,$url);
     break;
-    case 'normalize_tracks':
-        $playlist = new Playlist($_REQUEST['playlist_id']);
-
-        /* Make sure they have permission */
-        if (!$playlist->has_access()) {
-            UI::access_denied();
-            break;
-        }
-
-        /* Normalize the tracks */
-        $playlist->normalize_tracks();
-        $object_ids = $playlist->get_items();
     default:
         require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
     break;

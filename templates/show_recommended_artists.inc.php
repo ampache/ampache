@@ -20,16 +20,14 @@
  *
  */
 
-$thcount = 7;
+$thcount = 8;
 ?>
 <?php UI::show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-    <?php if (AmpConfig::get('directplay')) { ++$thcount; ?>
-        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
-    <?php } ?>
-        <th class="cel_add"><?php echo T_('Add'); ?></th>
+        <th class="cel_play"></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+        <th class="cel_add"></th>
         <th class="cel_songs"><?php echo T_('Songs');  ?></th>
         <th class="cel_albums"><?php echo T_('Albums'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
@@ -63,11 +61,9 @@ $thcount = 7;
     </tr>
     <?php } ?>
     <tr class="th-bottom">
-    <?php if (AmpConfig::get('directplay')) { ?>
-        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
-    <?php } ?>
-        <th class="cel_add"><?php echo T_('Add'); ?></th>
+        <th class="cel_play"></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+        <th class="cel_add"></th>
         <th class="cel_songs"> <?php echo T_('Songs');  ?> </th>
         <th class="cel_albums"> <?php echo T_('Albums'); ?> </th>
         <th class="cel_time"> <?php echo T_('Time'); ?> </th>

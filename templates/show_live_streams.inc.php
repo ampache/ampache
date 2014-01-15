@@ -21,16 +21,13 @@
  */
 
 $web_path = AmpConfig::get('web_path');
-$thcount = 5;
 ?>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-        <?php if (AmpConfig::get('directplay')) { ++$thcount; ?>
-        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
-    <?php } ?>
-        <th class="cel_add"><?php echo T_('Add'); ?></th>
+        <th class="cel_play"></th>
         <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
+        <th class="cel_add"></th>
         <th class="cel_streamurl"><?php echo T_('Stream URL'); ?></th>
         <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec');  ?></th>
         <th class="cel_action"><?php echo T_('Action'); ?></th>
@@ -46,15 +43,13 @@ $thcount = 5;
     <?php } //end foreach ($artists as $artist) ?>
     <?php if (!count($object_ids)) { ?>
     <tr>
-        <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
+        <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
     </tr>
     <?php } ?>
     <tr class="th-bottom">
-        <?php if (AmpConfig::get('directplay')) { ?>
-        <th class="cel_directplay"><?php echo T_('Play'); ?></th>
-    <?php } ?>
-        <th class="cel_add"><?php echo T_('Add'); ?></th>
-        <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name_bottom'); ?></th>
+        <th class="cel_play"></th>
+        <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
+        <th class="cel_add"></th>
         <th class="cel_streamurl"><?php echo T_('Stream URL'); ?></th>
         <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec_bottom');  ?></th>
         <th class="cel_action"><?php echo T_('Action'); ?> </th>

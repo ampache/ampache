@@ -20,19 +20,27 @@
  *
  */
 ?>
-<?php if (AmpConfig::get('directplay')) { ?>
-<td class="cel_directplay">
-    <?php echo Ajax::button('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id,'play', T_('Play playlist'),'play_playlist_' . $playlist->id); ?>
-    <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id . '&append=true','play_add', T_('Play add playlist'),'addplay_playlist_' . $playlist->id); ?>
-    <?php } ?>
-</td>
+<td class="cel_play">
+    <span class="cel_play_content">&nbsp;</span>
+    <div class="cel_play_hover">
+    <?php if (AmpConfig::get('directplay')) { ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id,'play', T_('Play playlist'),'play_playlist_' . $playlist->id); ?>
+        <?php if (Stream_Playlist::check_autoplay_append()) { ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id . '&append=true','play_add', T_('Play add playlist'),'addplay_playlist_' . $playlist->id); ?>
+        <?php } ?>
 <?php } ?>
-<td class="cel_add">
-    <?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id,'add', T_('Add'),'add_playlist_' . $playlist->id); ?>
-    <?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id,'random', T_('Random'),'random_playlist_' . $playlist->id); ?>
+    </div>
 </td>
 <td class="cel_playlist"><?php echo $playlist->f_link; ?></td>
+<td class="cel_add">
+    <span class="cel_item_add">
+        <?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id,'add', T_('Add to temporary playlist'),'add_playlist_' . $playlist->id); ?>
+        <?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id,'random', T_('Random to temporary playlist'),'random_playlist_' . $playlist->id); ?>
+        <a id="<?php echo 'add_playlist_'.$playlist->id ?>" onclick="showPlaylistDialog('playlist', '<?php echo $playlist->id ?>')">
+            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+        </a>
+    </span>
+</td>
 <td class="cel_type"><?php echo $playlist->f_type; ?></td>
 <td class="cel_songs"><?php echo $count; ?></td>
 <td class="cel_owner"><?php echo scrub_out($playlist->f_user); ?></td>

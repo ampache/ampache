@@ -473,7 +473,7 @@ class Catalog_dropbox extends Catalog
     public function format()
     {
         parent::format();
-        $this->f_info = UI::truncate($this->apikey, AmpConfig::get('ellipse_threshold_title'));
+        $this->f_info = $this->apikey;
         $this->f_full_info = $this->apikey;
     }
 

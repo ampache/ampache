@@ -29,7 +29,7 @@
             <div class="np_cell cel_similar_artist">
             <?php
                 if (is_null($a['id'])) {
-                    echo scrub_out(UI::truncate($a['name']), AmpConfig::get('ellipse_threshold_artist'));
+                    echo scrub_out($a['name']);
                 } else {
                     $artist = new Artist($a['id']);
                     $artist->format();

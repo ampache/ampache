@@ -183,11 +183,11 @@ class Song_Preview extends database_object implements media
 
         // Format the artist name
         $this->f_artist_full = $this->get_artist_name();
-        $this->f_artist = UI::truncate($this->f_artist_full, AmpConfig::get('ellipse_threshold_artist'));
+        $this->f_artist = $this->f_artist_full;
 
         // Format the title
         $this->f_title_full = $this->title;
-        $this->f_title = UI::truncate($this->title, AmpConfig::get('ellipse_threshold_title'));
+        $this->f_title = $this->title;
 
         // Create Links for the different objects
         $this->link = "#";
