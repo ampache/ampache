@@ -69,13 +69,14 @@ class Song_Preview extends database_object implements media
      */
     public static function insert($results)
     {
-        $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `title`, `disk`, `track`, `mbid`, `session`) ' .
+        $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid`, `session`) ' .
             ' VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array(
             $results['file'],
             $results['album_mbid'],
             $results['artist'],
+            $results['artist_mbid'],
             $results['title'],
             $results['disk'],
             $results['track'],
@@ -108,7 +109,7 @@ class Song_Preview extends database_object implements media
         if ($idlist == '()') { return false; }
 
         // Song data cache
-        $sql = 'SELECT `id`, `file`, `album_mbid`, `artist`, `title`, `disk`, `track`, `mbid` ' .
+        $sql = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' .
             'FROM `song_preview` ' .
             "WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
@@ -135,18 +136,19 @@ class Song_Preview extends database_object implements media
             return parent::get_from_cache('song_preview', $id);
         }
 
-        $sql = 'SELECT `id`, `file`, `album_mbid`, `artist`, `title`, `disk`, `track`, `mbid` ' .
+        $sql = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' .
             'FROM `song_preview` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($id));
 
         $results = Dba::fetch_assoc($db_results);
-        if (isset($results['id'])) {
-            $sql = 'SELECT `mbid` FROM `artist` WHERE `id` = ?';
-            $db_results = Dba::read($sql, array($results['artist']));
-            if ($artist_res = Dba::fetch_assoc($db_results)) {
-                $results['artist_mbid'] = $artist_res['mbid'];
+        if (!empty($results['id'])) {
+            if (empty($results['artist_mbid'])) {
+                $sql = 'SELECT `mbid` FROM `artist` WHERE `id` = ?';
+                $db_results = Dba::read($sql, array($results['artist']));
+                if ($artist_res = Dba::fetch_assoc($db_results)) {
+                    $results['artist_mbid'] = $artist_res['mbid'];
+                }
             }
-
             parent::add_to_cache('song_preview', $id, $results);
             return $results;
         }

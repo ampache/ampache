@@ -47,7 +47,7 @@ class Wanted extends database_object
      * get_missing_albums
      * Get list of library's missing albums from MusicBrainz
      */
-    public static function get_missing_albums($artist)
+    public static function get_missing_albums($artist, $mbid='')
     {
         $mb = new MusicBrainz(new RequestsMbClient());
         $includes = array(
@@ -56,20 +56,22 @@ class Wanted extends database_object
         $types = explode(',', AmpConfig::get('wanted_types'));
 
         try {
-            $martist = $mb->lookup('artist', $artist->mbid, $includes);
+            $martist = $mb->lookup('artist', $artist ? $artist->mbid : $mbid, $includes);
         } catch (Exception $e) {
             return null;
         }
 
         $owngroups = array();
-        $albums = $artist->get_albums();
-        foreach ($albums as $id) {
-            $album = new Album($id);
-            if ($album->mbid) {
-                $malbum = $mb->lookup('release', $album->mbid, array('release-groups'));
-                if ($malbum->{'release-group'}) {
-                    if (!in_array($malbum->{'release-group'}->id, $owngroups)) {
-                        $owngroups[] = $malbum->{'release-group'}->id;
+        if ($artist) {
+            $albums = $artist->get_albums();
+            foreach ($albums as $id) {
+                $album = new Album($id);
+                if ($album->mbid) {
+                    $malbum = $mb->lookup('release', $album->mbid, array('release-groups'));
+                    if ($malbum->{'release-group'}) {
+                        if (!in_array($malbum->{'release-group'}->id, $owngroups)) {
+                            $owngroups[] = $malbum->{'release-group'}->id;
+                        }
                     }
                 }
             }
@@ -92,7 +94,11 @@ class Wanted extends database_object
                             $wanted->format();
                         } else {
                             $wanted->mbid = $group->id;
-                            $wanted->artist = $artist->id;
+                            if ($artist) {
+                                $wanted->artist = $artist->id;
+                            } else {
+                                $wanted->artist_mbid = $mbid;
+                            }
                             $wanted->name = $group->title;
                             if (!empty($group->{'first-release-date'})) {
                                 if (strlen($group->{'first-release-date'}) == 4) {
@@ -102,8 +108,14 @@ class Wanted extends database_object
                                 }
                             }
                             $wanted->accepted = false;
-                            $wanted->f_name_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&amp;mbid=" . $group->id . "&amp;artist=" . $wanted->artist . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
-                            $wanted->f_artist_link = $artist->f_name_link;
+                            $wanted->f_name_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $group->id;
+                            if ($artist) {
+                                $wanted->f_name_link .= "&artist=" . $wanted->artist;
+                            } else {
+                                $wanted->f_name_link .= "&artist_mbid=" . $mbid;
+                            }
+                            $wanted->f_name_link .= "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
+                            $wanted->f_artist_link = $artist ? $artist->f_name_link : "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show_missing&mbid=" . $mbid . "\" title=\"" . $martist->name . "\">" . $martist->name . "</a>";
                             $wanted->f_user = $GLOBALS['user']->fullname;
                         }
                         $results[] = $wanted;
@@ -114,6 +126,24 @@ class Wanted extends database_object
 
         return $results;
     } // get_missing_albums
+
+    public static function get_missing_artist($mbid)
+    {
+        $mb = new MusicBrainz(new RequestsMbClient());
+        $wartist = array();
+        $wartist['mbid'] = $mbid;
+        $wartist['name'] = T_('Unknown Artist');
+
+        try {
+            $martist = $mb->lookup('artist', $mbid);
+        } catch (Exception $e) {
+            return $wartist;
+        }
+
+        $wartist['name'] = $martist->name;
+
+        return $wartist;
+    }
 
     public static function get_accepted_wanted_count()
     {
@@ -206,11 +236,11 @@ class Wanted extends database_object
 
     }
 
-    public static function add_wanted($mbid, $artist, $name, $year)
+    public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year)
     {
-        $sql = "INSERT INTO `wanted` (`user`, `artist`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $accept = $GLOBALS['user']->has_access('75') ? true : AmpConfig::get('wanted_auto_accept');
-        $params = array($GLOBALS['user']->id, $artist, $mbid, $name, $year, time(), '0');
+        $params = array($GLOBALS['user']->id, $artist, $artist_mbid, $mbid, $name, $year, time(), '0');
         Dba::write($sql, $params);
 
         if ($accept) {
@@ -232,7 +262,7 @@ class Wanted extends database_object
                 echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid,'disable', T_('Remove'),'wanted_remove_' . $this->mbid);
             }
         } else {
-            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . '&artist=' . $this->artist . '&name=' . urlencode($this->name) . '&year=' . $this->year,'add_wanted', T_('Add to wanted list'),'wanted_add_' . $this->mbid);
+            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode($this->name) . '&year=' . $this->year,'add_wanted', T_('Add to wanted list'),'wanted_add_' . $this->mbid);
         }
     }
 
@@ -262,7 +292,10 @@ class Wanted extends database_object
                             $song['track'] = $track->number;
                             $song['title'] = $track->title;
                             $song['mbid'] = $track->id;
-                            $song['artist'] = $this->artist;
+                            if ($this->artist) {
+                                $song['artist'] = $this->artist;
+                            }
+                            $song['artist_mbid'] = $this->artist_mbid;
                             $song['session'] = session_id();
                             $song['album_mbid'] = $this->mbid;
                             if (AmpConfig::get('echonest_api_key')) {
@@ -277,7 +310,7 @@ class Wanted extends database_object
                                 }
 
                                 // Wans't able to get the song with MusicBrainz ID, try a search
-                                if ($enSong == null) {
+                                if ($enSong == null && $this->artist) {
                                     $artist = new Artist($this->artist);
                                     try {
                                         $enSong = $echonest->getSongApi()->search(array(
@@ -318,11 +351,14 @@ class Wanted extends database_object
         if ($this->artist) {
             $artist = new Artist($this->artist);
             $artist->format();
-            $this->f_name_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&amp;mbid=" . $this->mbid . "&amp;artist=" . $this->artist . "\" title=\"" . $this->name . "\">" . $this->name . "</a>";
             $this->f_artist_link = $artist->f_name_link;
-            $user = new User($this->user);
-            $this->f_user = $user->fullname;
+        } else {
+            $wartist = Wanted::get_missing_artist($this->artist_mbid);
+            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show_missing&mbid=" . $wartist['mbid'] . "\" title=\"" . $wartist['name'] . "\">" . $wartist['name'] . "</a>";
         }
+        $this->f_name_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $this->mbid . "&artist=" . $this->artist . "&artist_mbid=" . $this->artist_mbid . "\" title=\"" . $this->name . "\">" . $this->name . "</a>";
+        $user = new User($this->user);
+        $this->f_user = $user->fullname;
 
     }
 

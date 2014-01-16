@@ -37,10 +37,14 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'artist_info':
-        if (AmpConfig::get('lastfm_api_key') && isset($_REQUEST['artist'])) {
-            $artist = new Artist($_REQUEST['artist']);
-            $artist->format();
-            $biography = Recommendation::get_artist_info($artist->id);
+        if (AmpConfig::get('lastfm_api_key') && (isset($_REQUEST['artist']) || isset($_REQUEST['fullname']))) {
+            if ($_REQUEST['artist']) {
+                $artist = new Artist($_REQUEST['artist']);
+                $artist->format();
+                $biography = Recommendation::get_artist_info($artist->id);
+            } else {
+                $biography = Recommendation::get_artist_info(null, rawurldecode($_REQUEST['fullname']));
+            }
             ob_start();
             require_once AmpConfig::get('prefix') . '/templates/show_artist_info.inc.php';
             $results['artist_biography'] = ob_get_clean();
@@ -69,17 +73,22 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'wanted_missing_albums':
-        if (AmpConfig::get('wanted') && isset($_REQUEST['artist'])) {
-            $artist = new Artist($_REQUEST['artist']);
-            $artist->format();
-            ob_start();
-            if ($artist->mbid) {
-                $walbums = Wanted::get_missing_albums($artist);
-                if (count($walbums) > 0) {
-                    require_once AmpConfig::get('prefix') . '/templates/show_missing_albums.inc.php';
+        if (AmpConfig::get('wanted') && (isset($_REQUEST['artist']) || isset($_REQUEST['artist_mbid']))) {
+            if (isset($_REQUEST['artist'])) {
+                $artist = new Artist($_REQUEST['artist']);
+                $artist->format();
+                if ($artist->mbid) {
+                    $walbums = Wanted::get_missing_albums($artist);
+                } else {
+                    debug_event('wanted', 'Cannot get missing albums: MusicBrainz ID required.', '5');
                 }
             } else {
-                debug_event('wanted', 'Cannot get missing albums: MusicBrainz ID required.', '5');
+                $walbums = Wanted::get_missing_albums(null, $_REQUEST['artist_mbid']);
+            }
+
+            ob_start();
+            if (count($walbums) > 0) {
+                require_once AmpConfig::get('prefix') . '/templates/show_missing_albums.inc.php';
             }
             $results['missing_albums'] = ob_get_clean();
         }
@@ -87,12 +96,18 @@ switch ($_REQUEST['action']) {
     case 'add_wanted':
         if (AmpConfig::get('wanted') && isset($_REQUEST['mbid'])) {
             $mbid = $_REQUEST['mbid'];
-            $artist = $_REQUEST['artist'];
+            if (empty($_REQUEST['artist'])) {
+                $artist_mbid = $_REQUEST['artist_mbid'];
+            } else {
+                $artist = $_REQUEST['artist'];
+                $aobj = new Artist($artist);
+                $artist_mbid = $aobj->mbid;
+            }
             $name = $_REQUEST['name'];
             $year = $_REQUEST['year'];
 
             if (!Wanted::has_wanted($mbid)) {
-                Wanted::add_wanted($mbid, $artist, $name, $year);
+                Wanted::add_wanted($mbid, $artist, $artist_mbid, $name, $year);
                 ob_start();
                 $walbum = new Wanted(Wanted::get_wanted($mbid));
                 $walbum->show_action_buttons();

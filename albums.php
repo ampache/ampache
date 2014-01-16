@@ -192,13 +192,17 @@ switch ($_REQUEST['action']) {
     case 'show_missing':
         set_time_limit(600);
         $mbid = $_REQUEST['mbid'];
-        $artistid = $_REQUEST['artist'];
-        $artist = new Artist($artistid);
         $walbum = new Wanted(Wanted::get_wanted($mbid));
 
         if (!$walbum->id) {
             $walbum->mbid = $mbid;
-            $walbum->artist = $artistid;
+            if (isset($_REQUEST['artist'])) {
+                $artist = new Artist($_REQUEST['artist']);
+                $walbum->artist = $artist->id;
+                $walbum->artist_mbid = $artist->mbid;
+            } elseif (isset($_REQUEST['artist_mbid'])) {
+                $walbum->artist_mbid = $_REQUEST['artist_mbid'];
+            }
         }
         $walbum->load_all();
         $walbum->format();

@@ -361,6 +361,9 @@ class Update
         $update_string = '- Add sharing features.<br />';
         $version[] = array('version' => '360037','description' => $update_string);
 
+        $update_string = '- Add missing albums browse on missing artists.<br />';
+        $version[] = array('version' => '360038','description' => $update_string);
+
         return $version;
     }
 
@@ -2104,6 +2107,28 @@ class Update
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'7')";
         Dba::write($sql, array($id));
+
+        return true;
+    }
+
+    /**
+     * update_360038
+     *
+     * Add missing albums browse on missing artists
+     */
+    public static function update_360038()
+    {
+        $sql = "ALTER TABLE `wanted` ADD `artist_mbid` varchar(36) CHARACTER SET utf8 NULL AFTER `artist`";
+        Dba::write($sql);
+
+        $sql = "ALTER TABLE `wanted` MODIFY `artist` int(11) NULL";
+        Dba::write($sql);
+
+        $sql = "ALTER TABLE `song_preview` ADD `artist_mbid` varchar(36) CHARACTER SET utf8 NULL AFTER `artist`";
+        Dba::write($sql);
+
+        $sql = "ALTER TABLE `song_preview` MODIFY `artist` int(11) NULL";
+        Dba::write($sql);
 
         return true;
     }

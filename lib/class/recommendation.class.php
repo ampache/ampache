@@ -148,13 +148,14 @@ class Recommendation
 
         foreach ($xml->similarartists->children() as $child) {
             $name = $child->name;
+            $mbid = (string) $child->mbid;
             $local_id = null;
 
             // First we check by MBID
-            if ((string) $child->mbid) {
+            if ($mbid) {
                 $sql = "SELECT `artist`.`id` FROM `artist` WHERE `mbid` = ?";
                 $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
-                $db_result = Dba::read($sql, array($child->mbid));
+                $db_result = Dba::read($sql, array($mbid));
                 if ($result = Dba::fetch_assoc($db_result)) {
                     $local_id = $result['id'];
                 }
@@ -208,11 +209,14 @@ class Recommendation
      * get_artist_info
      * Returns artist information
      */
-    public static function get_artist_info($artist_id)
+    public static function get_artist_info($artist_id, $fullname='')
     {
-        $artist = new Artist($artist_id);
-        $artist->format();
-        $query = 'artist=' . rawurlencode($artist->f_full_name);
+        if ($artist_id) {
+            $artist = new Artist($artist_id);
+            $artist->format();
+            $fullname = $artist->f_full_name;
+        }
+        $query = 'artist=' . rawurlencode($fullname);
 
         $xml = self::get_lastfm_results('artist.getinfo', $query);
 
