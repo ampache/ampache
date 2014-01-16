@@ -1668,3 +1668,7 @@ ol, ul, #rightbar ul {
 .jscroll-next:hover  {
     color:#666;
 }
+
+.missing_album {
+	color: #DF4949;
+}

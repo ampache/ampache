@@ -75,6 +75,12 @@ class Wanted extends database_object
                     }
                 }
             }
+        } else {
+            $wartist = array();
+            $wartist['mbid'] = $mbid;
+            $wartist['name'] = $martist->name;
+            parent::add_to_cache('missing_artist', $mbid, $wartist);
+            $wartist = self::get_missing_artist($mbid);
         }
 
         $results = array();
@@ -115,7 +121,7 @@ class Wanted extends database_object
                                 $wanted->f_name_link .= "&artist_mbid=" . $mbid;
                             }
                             $wanted->f_name_link .= "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
-                            $wanted->f_artist_link = $artist ? $artist->f_name_link : "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show_missing&mbid=" . $mbid . "\" title=\"" . $martist->name . "\">" . $martist->name . "</a>";
+                            $wanted->f_artist_link = $artist ? $artist->f_name_link : $wartist['link'];
                             $wanted->f_user = $GLOBALS['user']->fullname;
                         }
                         $results[] = $wanted;
@@ -129,18 +135,26 @@ class Wanted extends database_object
 
     public static function get_missing_artist($mbid)
     {
-        $mb = new MusicBrainz(new RequestsMbClient());
         $wartist = array();
-        $wartist['mbid'] = $mbid;
-        $wartist['name'] = T_('Unknown Artist');
 
-        try {
-            $martist = $mb->lookup('artist', $mbid);
-        } catch (Exception $e) {
-            return $wartist;
+        if (parent::is_cached('missing_artist', $mbid) ) {
+            $wartist = parent::get_from_cache('missing_artist', $mbid);
+        } else {
+            $mb = new MusicBrainz(new RequestsMbClient());
+            $wartist['mbid'] = $mbid;
+            $wartist['name'] = T_('Unknown Artist');
+
+            try {
+                $martist = $mb->lookup('artist', $mbid);
+            } catch (Exception $e) {
+                return $wartist;
+            }
+
+            $wartist['name'] = $martist->name;
+            parent::add_to_cache('missing_artist', $mbid, $wartist);
         }
 
-        $wartist['name'] = $martist->name;
+        $wartist['link'] = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show_missing&mbid=" . $wartist['mbid'] . "\" title=\"" . $wartist['name'] . "\">" . $wartist['name'] . "</a>";
 
         return $wartist;
     }
@@ -310,12 +324,18 @@ class Wanted extends database_object
                                 }
 
                                 // Wans't able to get the song with MusicBrainz ID, try a search
-                                if ($enSong == null && $this->artist) {
-                                    $artist = new Artist($this->artist);
+                                if ($enSong == null) {
+                                    if ($this->artist) {
+                                        $artist = new Artist($this->artist);
+                                        $artist_name = $artist->name;
+                                    } else {
+                                        $wartist = Wanted::get_missing_artist($this->artist_mbid);
+                                        $artist_name = $wartist['name'];
+                                    }
                                     try {
                                         $enSong = $echonest->getSongApi()->search(array(
                                             'results' => '1',
-                                            'artist' => $artist->name,
+                                            'artist' => $artist_name,
                                             'title' => $track->title,
                                             'bucket' => array( 'id:7digital-US', 'audio_summary', 'tracks'),
                                         ));
@@ -354,7 +374,7 @@ class Wanted extends database_object
             $this->f_artist_link = $artist->f_name_link;
         } else {
             $wartist = Wanted::get_missing_artist($this->artist_mbid);
-            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show_missing&mbid=" . $wartist['mbid'] . "\" title=\"" . $wartist['name'] . "\">" . $wartist['name'] . "</a>";
+            $this->f_artist_link = $wartist['link'];
         }
         $this->f_name_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $this->mbid . "&artist=" . $this->artist . "&artist_mbid=" . $this->artist_mbid . "\" title=\"" . $this->name . "\">" . $this->name . "</a>";
         $user = new User($this->user);

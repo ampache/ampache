@@ -30,7 +30,7 @@
             <?php
                 if (is_null($a['id'])) {
                     if (AmpConfig::get('wanted') && $a['mbid']) {
-                        echo "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show_missing&mbid=" . $a['mbid'] . "\" title=\"" . scrub_out($a['name']) . "\">" . scrub_out($a['name']) . "</a>";
+                        echo "<a class=\"missing_album\" href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show_missing&mbid=" . $a['mbid'] . "\" title=\"" . scrub_out($a['name']) . "\">" . scrub_out($a['name']) . "</a>";
                     } else {
                         echo scrub_out($a['name']);
                     }

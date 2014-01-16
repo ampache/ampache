@@ -70,7 +70,7 @@ class Song_Preview extends database_object implements media
     public static function insert($results)
     {
         $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid`, `session`) ' .
-            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array(
             $results['file'],
@@ -116,7 +116,9 @@ class Song_Preview extends database_object implements media
 
         while ($row = Dba::fetch_assoc($db_results)) {
             parent::add_to_cache('song_preview', $row['id'], $row);
-            $artists[$row['artist']] = $row['artist'];
+            if ($row['artist']) {
+                $artists[$row['artist']] = $row['artist'];
+            }
         }
 
         Artist::build_cache($artists);
@@ -184,17 +186,22 @@ class Song_Preview extends database_object implements media
         $this->f_file = htmlspecialchars($short[1]);
 
         // Format the artist name
-        $this->f_artist_full = $this->get_artist_name();
+        if ($this->artist) {
+            $this->f_artist_full = $this->get_artist_name();
+            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
+        } else {
+            $wartist = Wanted::get_missing_artist($this->artist_mbid);
+            $this->f_artist_link = $wartist['link'];
+            $this->f_artist_full = $wartist['name'];
+        }
         $this->f_artist = $this->f_artist_full;
 
         // Format the title
         $this->f_title_full = $this->title;
         $this->f_title = $this->title;
 
-        // Create Links for the different objects
         $this->link = "#";
         $this->f_link = "<a href=\"" . scrub_out($this->link) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_title) . "</a>";
-        $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
         $this->f_album_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&amp;mbid=" . $this->album_mbid . "&amp;artist=" . $this->artist . "\" title=\"" . $this->f_album . "\">" . $this->f_album . "</a>";
 
         // Format the track (there isn't really anything to do here)
