@@ -49,7 +49,10 @@ if (AmpConfig::get('iframes')) {
 function forceNoframe()
 {
     if (self != top) {
-        parent.location = document.location;
+        var frame = top.document.getElementById('frame_foaoter');
+        if (frame != null) {
+            parent.location = document.location;
+        }
     }
 }
 </script>

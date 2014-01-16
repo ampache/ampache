@@ -31,18 +31,6 @@ switch ($_REQUEST['action']) {
         $client = new User($_REQUEST['user_id']);
         require_once AmpConfig::get('prefix') . '/templates/show_user.inc.php';
     break;
-    case 'user_stats':
-        /* Get em! */
-        $working_user = new User($_REQUEST['user_id']);
-
-        /* Pull favs */
-        $favorite_artists       = $working_user->get_favorites('artist');
-        $favorite_albums        = $working_user->get_favorites('album');
-        $favorite_songs         = $working_user->get_favorites('song');
-
-        require_once AmpConfig::get('prefix') . '/templates/show_user_stats.inc.php';
-
-    break;
     // Show stats
     case 'newest':
         require_once AmpConfig::get('prefix') . '/templates/show_newest.inc.php';

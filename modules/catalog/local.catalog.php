@@ -304,8 +304,10 @@ class Catalog_local extends Catalog
                 $is_video_file = Catalog::is_video_file($file);
             }
 
+            $is_playlist = ($options['parse_m3u'] AND substr($file,-3,3) == 'm3u');
+
             /* see if this is a valid audio file or playlist file */
-            if ($is_audio_file OR $is_video_file) {
+            if ($is_audio_file OR $is_video_file OR $is_playlist) {
 
                 /* Now that we're sure its a file get filesize  */
                 $file_size = filesize($full_file);
@@ -334,7 +336,8 @@ class Catalog_local extends Catalog
                     }
                 } // end if iconv
 
-                if ($options['parse_m3u'] AND substr($file,-3,3) == 'm3u') {
+                if ($is_playlist) {
+                    debug_event('read', 'Found m3u playlist to import: ' . $file, '5');
                     $this->_playlists[] = $full_file;
                 } // if it's an m3u
 
@@ -429,7 +432,7 @@ class Catalog_local extends Catalog
         $this->update_last_add();
 
         $time_diff = ($current_time - $start_time) ?: 0;
-        $rate = intval($this->count / $time_diff) ?: T_('N/A');
+        $rate = intval(($time_diff > 0) ? $this->count / $time_diff : false) ?: T_('N/A');
 
         UI::show_box_top();
         echo "\n<br />" .

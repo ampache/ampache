@@ -770,34 +770,6 @@ class User extends database_object
     } // format_user
 
     /**
-     * format_favorites
-     * takes an array of objects and formats them corrrectly
-     * and returns a simply array with just <a href values
-     */
-    public function format_favorites($items)
-    {
-        // The length of the longest item
-        $maxlen = strlen($items[0]->count);
-
-        // Go through the favs
-        foreach ($items as $data) {
-
-            // Make all number lengths equal
-            $len = strlen($data->count);
-            while ($len < $maxlen) {
-                $data->count = "0" . $data->count;
-                $len++;
-            }
-
-            $item = "[$data->count] - $data->f_name";
-            $results[]->f_name_link = $item;
-        } // end foreach items
-
-        return $results;
-
-    } // format_favorites
-
-    /**
      * format_recommendations
      * This takes an array of [object_id] = ratings
      * and displays them in a semi-pretty format

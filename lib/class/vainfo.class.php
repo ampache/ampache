@@ -748,12 +748,14 @@ class vainfo
         // Correctly detect the slash we need to use here
         if (strpos($filename, '/') !== false) {
             $slash_type = '/';
+            $slash_type_preg = $slash_type;
         } else {
             $slash_type = '\\';
+            $slash_type_preg = $slash_type . $slash_type;
         }
 
         // Combine the patterns
-        $pattern = preg_quote($this->_dir_pattern) . $slash_type . preg_quote($this->_file_pattern);
+        $pattern = preg_quote($this->_dir_pattern) . $slash_type_preg . preg_quote($this->_file_pattern);
 
         // Remove first left directories from filename to match pattern
         $cntslash = substr_count($pattern, $slash_type) + 1;
