@@ -20,7 +20,7 @@
     background-color: rgb(25, 25, 25);
  }
  
- div.jp-area {
+div.jp-area {
     margin-left: auto;
     margin-right: auto;
     width: 500px;
@@ -29,6 +29,14 @@
  
 div.jp-area-center {
     margin-top: 20px;
+ }
+ 
+ div.jp-area-embed {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    width: auto !important;
+    min-width: auto !important;
+    margin-top: 0px !important;
  }
 
 a:active, a:focus {

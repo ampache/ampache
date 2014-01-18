@@ -72,7 +72,11 @@ switch ($action) {
                 T_('You can now start sharing the following url:') . '<br />' .
                 '<a href="' . $share->public_url . '" target="_blank">' . $share->public_url . '</a><br />' .
                 '<div id="share_qrcode" style="text-align: center"></div>' .
-                '<script language="javascript" type="text/javascript">$(\'#share_qrcode\').qrcode({text: "' . $share->public_url .'", width: 128, height: 128});</script>';
+                '<script language="javascript" type="text/javascript">$(\'#share_qrcode\').qrcode({text: "' . $share->public_url .'", width: 128, height: 128});</script>' .
+                '<br /><br />' .
+                T_('You can also embed this share as a web player into your website, with the following html code:') . '<br />' .
+                '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . $share->public_url . '&embed=true"></iframe>') . '</i><br />';
+
             $title = T_('Object Shared');
             show_confirmation($title,$body,AmpConfig::get('web_path') . '/stats.php?action=share');
         }
@@ -122,8 +126,7 @@ $id = $_REQUEST['id'];
 $secret = $_REQUEST['secret'];
 
 $share = new Share($id);
-$share->format();
-if (empty($action)) {
+if (empty($action) && $share->id) {
     if ($share->allow_stream) {
         $action = 'stream';
     } elseif ($share->allow_download) {
@@ -135,6 +138,8 @@ if (!$share->is_valid($secret, $action)) {
     UI::access_denied();
     exit();
 }
+
+$share->format();
 
 $share->save_access();
 if ($action == 'download') {
