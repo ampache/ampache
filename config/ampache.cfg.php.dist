@@ -85,7 +85,7 @@ session_cookiesecure       = 0
 ; This defines which auth methods Auth will attempt to use and in which order.
 ; If auto_create isn't enabled the user must exist locally.
 ; DEFAULT: mysql
-; VALUES: mysql,ldap,http,pam,external
+; VALUES: mysql,ldap,http,pam,external,openid
 auth_methods = "mysql"
 
 ; External authentication
@@ -464,13 +464,6 @@ refresh_limit = "60"
 ; LDAP login info (optional)                             #
 ;#########################################################
 
-; This setting will silently create an ampache account
-; for anyone who can login using ldap (or any other login
-; extension). The default is to create new users as guests
-; see auto_user config option if you would like to change this
-; DEFAULT: false
-;auto_create = "false"
-
 ; LDAP filter string to use (required)
 ; For OpenLDAP use "uid" 
 ; For Microsoft Active Directory (MAD) use "sAMAccountName"
@@ -508,8 +501,24 @@ refresh_limit = "60"
 ;ldap_name_field  = "cn"
 
 ;#########################################################
+; OpenID login info (optional)                           #
+;#########################################################
+
+; Requires specific OpenID Provider Authentication Policy
+; DEFAULT: null
+; VALUES: PAPE_AUTH_MULTI_FACTOR_PHYSICAL,PAPE_AUTH_MULTI_FACTOR,PAPE_AUTH_PHISHING_RESISTANT
+;openid_required_pape = ""
+
+;#########################################################
 ; Public Registration settings, defaults to disabled     #
 ;#########################################################
+
+; This setting will silently create an ampache account
+; for anyone who can login using ldap (or any other login
+; extension). The default is to create new users as guests
+; see auto_user config option if you would like to change this
+; DEFAULT: false
+;auto_create = "false"
 
 ; This setting turns on/off public registration. It is
 ; recommended you leave this off, as it will allow anyone to

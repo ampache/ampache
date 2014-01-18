@@ -47,6 +47,7 @@ $action = scrub_in($_REQUEST['action']);
 $fullname = scrub_in($_REQUEST['fullname']);
 $username = scrub_in($_REQUEST['username']);
 $email = scrub_in($_REQUEST['email']);
+$website = scrub_in($_REQUEST['website']);
 ?>
 <div id="registerbox">
 <form name="update_user" method="post" action="<?php echo $web_path; ?>/register.php" enctype="multipart/form-data">
@@ -82,6 +83,11 @@ if (AmpConfig::get('user_agreement')) { ?>
     <label for="email"><?php echo T_('E-mail'); ?>: <span class="asterix">*</span></label>
     <input type='text' name='email' id='email' value='<?php echo scrub_out($email); ?>' />
     <?php Error::display('email'); ?>
+</div>
+<div class="registerfield require">
+    <label for="email"><?php echo T_('Website'); ?>: <span class="asterix">*</span></label>
+    <input type='text' name='website' id='website' value='<?php echo scrub_out($website); ?>' />
+    <?php Error::display('website'); ?>
 </div>
 
 <div class="registerfield require">

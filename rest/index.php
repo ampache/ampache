@@ -76,7 +76,7 @@ if ($encpwd !== false) {
 }
 
 // Check user authentication
-$auth = Auth::login($user, $password);
+$auth = Auth::login($user, $password, true);
 if (!$auth['success']) {
     debug_event('Access Denied','Invalid authentication attempt to Subsonic API for user [' . $user . ']','3');
     ob_end_clean();

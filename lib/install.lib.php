@@ -262,7 +262,7 @@ function install_create_account($username, $password, $password2)
     $username = Dba::escape($username);
     $password = Dba::escape($password);
 
-    $insert_id = User::create($username,'Administrator','',$password,'100');
+    $insert_id = User::create($username,'Administrator','','',$password,'100');
 
     if (!$insert_id) {
         Error::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));

@@ -52,6 +52,14 @@
         </tr>
         <tr>
             <td>
+                <?php echo  T_('Website'); ?>:
+            </td>
+            <td>
+                <input type="text" name="website" value="<?php echo scrub_out($client->website); ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <?php echo T_('Password'); ?> :
             </td>
             <td>

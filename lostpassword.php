@@ -51,7 +51,7 @@ function send_newpassword($email,$current_ip)
 {
     /* get the Client and set the new password */
     $client = User::get_from_email($email);
-    if ($client->email == $email) {
+    if ($client && $client->email == $email) {
         $newpassword = generate_password(6);
         $client->update_password($newpassword);
 

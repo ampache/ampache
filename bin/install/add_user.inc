@@ -31,9 +31,9 @@ $path = dirname(__FILE__);
 $prefix = realpath($path . '/../../');
 require_once $prefix . '/lib/init.php';
 
-$options = getopt('e:l:n:p:u:');
+$options = getopt('e:l:n:p:u:w:');
 if (!$options || !isset($options['u'])) { 
-    echo "Usage: add_user.inc -u <username> [ -l <access level> ] [ -p <password ] [ -e <email> ] [ -n <name> ]\n";
+    echo "Usage: add_user.inc -u <username> [ -l <access level> ] [ -p <password ] [ -e <email> ] [ -w <website> ] [ -n <name> ]\n";
     exit(1);
 }
 
@@ -43,9 +43,10 @@ $access = isset($options['l']) ? $options['l'] : AmpConfig::get('auto_user');
 $access = isset($access) ? $access : 'guest';
 $access = is_numeric($access) ? $access : User::access_name_to_level($access);
 $email = isset($options['e']) ? $options['e'] : '';
+$website = isset($options['w']) ? $options['w'] : '';
 $name = isset($options['n']) ? $options['n'] : '';
 
-if (User::create($username, $name, $email, $password, $access)) {
+if (User::create($username, $name, $email, $website, $password, $access)) {
     printf(T_('Created %s user %s with password %s'), T_($access), $username, $password);
     echo "\n";
 }

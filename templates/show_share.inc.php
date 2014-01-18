@@ -20,7 +20,9 @@
  *
  */
 
-if (!empty($embed)) {
+$embed = $_REQUEST['embed'];
+
+if (empty($embed)) {
     UI::show_box_top(T_('Shared on') . ' ' . AmpConfig::get('site_title'), 'box box_share');
     echo T_('by') . ' ' . $share->f_user . '<br />';
     echo "<a href='" . $share->public_url . "'>" . $share->public_url . "</a><br />";
@@ -34,7 +36,6 @@ if (!empty($embed)) {
 
 $is_share = true;
 $iframed = true;
-$embed = $_REQUEST['embed'];
 $playlist = $share->create_fake_playlist();
 require AmpConfig::get('prefix') . '/templates/show_web_player.inc.php';
 

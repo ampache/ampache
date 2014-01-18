@@ -57,6 +57,7 @@ switch ($_REQUEST['action']) {
         $fullname         = scrub_in($_POST['fullname']);
         $username        = scrub_in($_POST['username']);
         $email             = scrub_in($_POST['email']);
+        $website             = scrub_in($_POST['website']);
         $pass1             = scrub_in($_POST['password_1']);
         $pass2             = scrub_in($_POST['password_2']);
 
@@ -128,7 +129,7 @@ switch ($_REQUEST['action']) {
         } // auto-user level
 
 
-        $new_user = User::create($username, $fullname, $email, $pass1,
+        $new_user = User::create($username, $fullname, $email, $website, $pass1,
             $access, AmpConfig::get('admin_enable_required'));
 
         if (!$new_user) {
@@ -141,7 +142,7 @@ switch ($_REQUEST['action']) {
         $validation = md5(uniqid(rand(), true));
         $client->update_validation($validation);
 
-        Registration::send_confirmation($username, $fullname, $email, $pass1, $validation);
+        Registration::send_confirmation($username, $fullname, $email, $website, $pass1, $validation);
         require_once AmpConfig::get('prefix') . '/templates/show_registration_confirmation.inc.php';
     break;
     case 'show_add_user':

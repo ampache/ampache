@@ -40,6 +40,7 @@ class User extends database_object
     public $last_seen;
     public $create_date;
     public $validation;
+    public $website;
 
     // Constructed variables
     public $prefs = array();
@@ -179,17 +180,32 @@ class User extends database_object
      */
     public static function get_from_email($email)
     {
-        $email = Dba::escape($email);
-
-        $sql = "SELECT `id` FROM `user` WHERE `email`='$email'";
-        $db_results = Dba::read($sql);
-        $results = Dba::fetch_assoc($db_results);
-
-        $user = new User($results['id']);
+        $sql = "SELECT `id` FROM `user` WHERE `email` = ?";
+        $db_results = Dba::read($sql, array($email));
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user = new User($results['id']);
+        }
 
         return $user;
 
-    } // get_from_username
+    } // get_from_email
+
+    /**
+     * get_from_website
+     * This returns users list related to a website.
+     */
+    public static function get_from_website($website)
+    {
+        $website = rtrim($website, "/");
+        $sql = "SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1";
+        $db_results = Dba::read($sql, array($website));
+        $users = array();
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $users[] = $results['id'];
+        }
+        return $users;
+
+    } // get_from_website
 
     /**
      * get_catalogs
@@ -462,6 +478,7 @@ class User extends database_object
                 case 'email':
                 case 'username':
                 case 'fullname':
+                case 'website':
                     if ($this->$name != $value) {
                         $function = 'update_' . $name;
                         $this->$function($value);
@@ -482,10 +499,9 @@ class User extends database_object
      */
     public function update_username($new_username)
     {
-        $new_username = Dba::escape($new_username);
-        $sql = "UPDATE `user` SET `username`='$new_username' WHERE `id`='$this->id'";
+        $sql = "UPDATE `user` SET `username` = ? WHERE `id` = ?";
         $this->username = $new_username;
-        $db_results = Dba::write($sql);
+        $db_results = Dba::write($sql, array($new_username, $this->id));
 
     } // update_username
 
@@ -497,9 +513,8 @@ class User extends database_object
      */
     public function update_validation($new_validation)
     {
-        $new_validation = Dba::escape($new_validation);
-        $sql = "UPDATE `user` SET `validation`='$new_validation', `disabled`='1' WHERE `id`='" . Dba::escape($this->id) . "'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `user` SET `validation` = ?, `disabled`='1' WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($new_validation, $this->id));
         $this->validation = $new_validation;
 
         return $db_results;
@@ -512,9 +527,8 @@ class User extends database_object
      */
     public function update_fullname($new_fullname)
     {
-        $new_fullname = Dba::escape($new_fullname);
-        $sql = "UPDATE `user` SET `fullname`='$new_fullname' WHERE `id`='$this->id'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `user` SET `fullname` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($new_fullname, $this->id));
 
     } // update_fullname
 
@@ -524,11 +538,22 @@ class User extends database_object
      */
     public function update_email($new_email)
     {
-        $new_email = Dba::escape($new_email);
-        $sql = "UPDATE `user` SET `email`='$new_email' WHERE `id`='$this->id'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `user` SET `email` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($new_email, $this->id));
 
     } // update_email
+
+    /**
+     * update_website
+     * updates their website address
+     */
+    public function update_website($new_website)
+    {
+        $new_website = rtrim($new_website, "/");
+        $sql = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($new_website, $this->id));
+
+    } // update_website
 
     /**
      * disable
@@ -685,23 +710,18 @@ class User extends database_object
      * create
      * inserts a new user into ampache
      */
-    public static function create($username, $fullname, $email, $password, $access, $disabled = false)
+    public static function create($username, $fullname, $email, $website, $password, $access, $disabled = false)
     {
-        /* Lets clean up the fields... */
-        $username    = Dba::escape($username);
-        $fullname    = Dba::escape($fullname);
-        $email        = Dba::escape($email);
-        $access        = Dba::escape($access);
+        $website     = rtrim($website, "/");
         $password    = hash('sha256', $password);
         $disabled    = $disabled ? 1 : 0;
 
         /* Now Insert this new user */
         $sql = "INSERT INTO `user` (`username`, `disabled`, " .
-            "`fullname`, `email`, `password`, `access`, " .
+            "`fullname`, `email`, `website`, `password`, `access`, " .
             "`create_date`)" .
-            "VALUES('$username', '$disabled', '$fullname', " .
-            "'$email', '$password', '$access', '" . time() ."')";
-        $db_results = Dba::write($sql);
+            "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($username, $disabled, $fullname, $email, $website, $password, $access, time()));
 
         if (!$db_results) { return false; }
 
@@ -724,8 +744,8 @@ class User extends database_object
         $new_password = hash('sha256',$new_password);
 
         $new_password = Dba::escape($new_password);
-        $sql = "UPDATE `user` SET `password`='$new_password' WHERE `id`='$this->id'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `user` SET `password` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($new_password, $this->id));
 
         // Clear this (temp fix)
         if ($db_results) { unset($_SESSION['userdata']['password']); }

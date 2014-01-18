@@ -670,8 +670,10 @@ class vainfo
             foreach ($id3v2['POPM'] as $popm) {
                 if (array_key_exists('email', $popm) &&
                     $user = User::get_from_email($popm['email'])) {
-                    // Ratings are out of 255; scale it
-                    $parsed['rating'][$user->id] = $popm['rating'] / 255 * 5;
+                    if ($user) {
+                        // Ratings are out of 255; scale it
+                        $parsed['rating'][$user->id] = $popm['rating'] / 255 * 5;
+                    }
                 }
             }
         }

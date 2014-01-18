@@ -44,6 +44,7 @@ switch ($_REQUEST['action']) {
         $username     = scrub_in($_POST['username']);
         $fullname     = scrub_in($_POST['fullname']);
         $email         = scrub_in($_POST['email']);
+        $website         = scrub_in($_POST['website']);
         $access     = scrub_in($_POST['access']);
         $pass1         = $_POST['password_1'];
         $pass2         = $_POST['password_2'];
@@ -71,6 +72,9 @@ switch ($_REQUEST['action']) {
         if ($email != $client->email) {
             $client->update_email($email);
         }
+        if ($website != $client->website) {
+            $client->update_website($website);
+        }
         if ($username != $client->username) {
             $client->update_username($username);
         }
@@ -94,6 +98,7 @@ switch ($_REQUEST['action']) {
         $username    = scrub_in($_POST['username']);
         $fullname    = scrub_in($_POST['fullname']);
         $email        = scrub_in($_POST['email']);
+        $website        = scrub_in($_POST['website']);
         $access        = scrub_in($_POST['access']);
         $pass1        = $_POST['password_1'];
         $pass2        = $_POST['password_2'];
@@ -113,7 +118,7 @@ switch ($_REQUEST['action']) {
 
         if (!Error::occurred()) {
             /* Attempt to create the user */
-            $user_id = User::create($username, $fullname, $email, $pass1, $access);
+            $user_id = User::create($username, $fullname, $email, $website, $pass1, $access);
             if (!$user_id) {
                 Error::add('general', T_("Error: Insert Failed"));
             }

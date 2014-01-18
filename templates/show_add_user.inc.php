@@ -49,6 +49,14 @@
         </tr>
         <tr>
             <td>
+                <?php echo  T_('Website'); ?>:
+            </td>
+            <td>
+                <input type="text" name="website" value="<?php echo scrub_out($_POST['website']); ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <?php echo  T_('Password'); ?> :
             </td>
             <td>

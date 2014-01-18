@@ -83,6 +83,7 @@ Ampache includes some external modules that carry their own licensing.
 * [Noty] (http://ned.im/noty/): MIT
 * [jScroll] (https://github.com/pklauzinski/jscroll): MIT
 * [jquery.qrcode] (http://jeromeetienne.github.io/jquery-qrcode/): MIT
+* [PHP OpenID] (https://github.com/openid/php-openid/): Apache License
 
 
 Translations

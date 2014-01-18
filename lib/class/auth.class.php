@@ -82,7 +82,7 @@ class Auth
      * This takes a username and password and then returns the results
      * based on what happens when we try to do the auth.
      */
-    public static function login($username, $password)
+    public static function login($username, $password, $allow_ui = false)
     {
         foreach (AmpConfig::get('auth_methods') as $method) {
             $function_name = $method . '_auth';
@@ -92,7 +92,24 @@ class Auth
             }
 
             $results = self::$function_name($username, $password);
-            if ($results['success']) { break; }
+            if ($results['success'] || ($allow_ui && !empty($results['ui_required']))) { break; }
+        }
+
+        return $results;
+    }
+
+    /**
+     * login_step2
+     *
+     * This process authenticate step2 for an auth module
+     */
+    public static function login_step2($auth_mod)
+    {
+        if (in_array($auth_mod, AmpConfig::get('auth_methods'))) {
+            $function_name = $auth_mod . '_auth_2';
+            if (method_exists('Auth', $function_name)) {
+                $results = self::$function_name();
+            }
         }
 
         return $results;
@@ -360,4 +377,149 @@ class Auth
         return $results;
     } // http_auth
 
+    /**
+     * openid_auth
+     * Authenticate user with OpenID
+     */
+    private static function openid_auth($username, $password)
+    {
+        // Username contains the openid url. We don't care about password here.
+        $website = $username;
+        if (strpos($website, 'http://') === 0 || strpos($website, 'https://') === 0) {
+            $consumer = Openid::get_consumer();
+            if ($consumer) {
+                $auth_request = $consumer->begin($website);
+                if ($auth_request) {
+                    $sreg_request = Auth_OpenID_SRegRequest::build(
+                        // Required
+                        array('nickname'),
+                        // Optional
+                        array('fullname', 'email')
+                    );
+                    if ($sreg_request) {
+                        $auth_request->addExtension($sreg_request);
+                    }
+                    $pape_request = new Auth_OpenID_PAPE_Request(Openid::get_policies());
+                    if ($pape_request) {
+                        $auth_request->addExtension($pape_request);
+                    }
+
+                    // Redirect the user to the OpenID server for authentication.
+                    // Store the token for this authentication so we can verify the response.
+
+                    // For OpenID 1, send a redirect.  For OpenID 2, use a Javascript
+                    // form to send a POST request to the server.
+                    if ($auth_request->shouldSendRedirect()) {
+                        $redirect_url = $auth_request->redirectURL(AmpConfig::get('web_path'), Openid::get_return_url());
+                        if (Auth_OpenID::isFailure($redirect_url)) {
+                            $results['success'] = false;
+                            $results['error']   = 'Could not redirect to server: ' . $redirect_url->message;
+                        } else {
+                            // Send redirect.
+                            debug_event('auth', 'OpenID 1: redirecting to ' . $redirect_url, '5');
+                            header("Location: " . $redirect_url);
+                        }
+                    } else {
+                        // Generate form markup and render it.
+                        $form_id = 'openid_message';
+                        $form_html = $auth_request->htmlMarkup(AmpConfig::get('web_path'), Openid::get_return_url(), false, array('id' => $form_id));
+
+                        if (Auth_OpenID::isFailure($form_html)) {
+                            $results['success'] = false;
+                            $results['error']   = 'Could not redirect to server: ' . $redirect_url->message;
+                        } else {
+                            debug_event('auth', 'OpenID 2: javascript redirection code to OpenID form.', '5');
+                            // First step is a success, UI interaction required.
+                            $results['success'] = false;
+                            $results['ui_required'] = $form_html;
+                        }
+                    }
+                 } else {
+                    debug_event('auth', $website . ' is not a valid OpenID.', '3');
+                    $results['success'] = false;
+                    $results['error']   = 'Not a valid OpenID.';
+                 }
+            } else {
+                debug_event('auth', 'Cannot initialize OpenID resources.', '3');
+                $results['success'] = false;
+                $results['error']   = 'Cannot initialize OpenID resources.';
+            }
+        } else {
+            debug_event('auth', 'Skipped OpenID authentication: missing scheme in ' . $website . '.', '3');
+            $results['success'] = false;
+            $results['error']   = 'Missing scheme in OpenID.';
+        }
+
+        return $results;
+    }
+
+    /**
+     * openid_auth_2
+     * Authenticate user with OpenID, step 2
+     */
+    private static function openid_auth_2()
+    {
+        $results = array();
+        $results['type']    = 'openid';
+        $consumer = Openid::get_consumer();
+        if ($consumer) {
+            $response = $consumer->complete(Openid::get_return_url());
+
+            if ($response->status == Auth_OpenID_CANCEL) {
+                $results['success'] = false;
+                $results['error']   = 'OpenID verification cancelled.';
+            } else if ($response->status == Auth_OpenID_FAILURE) {
+                $results['success'] = false;
+                $results['error']   = 'OpenID authentication failed: ' . $response->message;
+            } else if ($response->status == Auth_OpenID_SUCCESS) {
+                // Extract the identity URL and Simple Registration data (if it was returned).
+                $sreg_resp = Auth_OpenID_SRegResponse::fromSuccessResponse($response);
+                $sreg = $sreg_resp->contents();
+
+                $results['website'] = $response->getDisplayIdentifier();
+                if (@$sreg['email']) {
+                    $results['email'] = $sreg['email'];
+                }
+
+                if (@$sreg['nickname']) {
+                    $results['username'] = $sreg['nickname'];
+                }
+
+                if (@$sreg['fullname']) {
+                    $results['name'] = $sreg['fullname'];
+                }
+
+                $users = User::get_from_website($results['website']);
+                if (count($users) > 0) {
+                    if (count($users) == 1) {
+                        $user = new User($users[0]);
+                        $results['success'] = true;
+                        $results['username'] = $user->username;
+                    } else {
+                        // Several users for the same website/openid? Allowed but stupid, try to get a match on username.
+                        // Should we make website field unique?
+                        foreach ($users as $id) {
+                            $user = new User($id);
+                            if ($user->username == $results['username']) {
+                                $results['success'] = true;
+                                $results['username'] = $user->username;
+                            }
+                        }
+                    }
+                } else {
+                    // Don't return success if an user already exists for this username but don't have this openid identity as website
+                    $user = User::get_from_username($results['username']);
+                    if ($user->id) {
+                        $results['success'] = false;
+                        $results['error'] = 'No user associated to this OpenID and username already taken.';
+                    } else {
+                        $results['success'] = true;
+                        $results['error'] = 'No user associated to this OpenID.';
+                    }
+                }
+            }
+        }
+
+        return $results;
+    }
 }

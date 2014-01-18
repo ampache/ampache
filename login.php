@@ -45,88 +45,102 @@ if (AmpConfig::get('access_control')) {
 /* Clean Auth values */
 unset($auth);
 
-/* Check for posted username and password, or appropriate environment
-variable if using HTTP auth */
-if (($_POST['username'] && $_POST['password']) ||
-    (in_array('http', AmpConfig::get('auth_methods')) &&
-    ($_SERVER['REMOTE_USER'] || $_SERVER['HTTP_REMOTE_USER']))) {
+if (empty($_REQUEST['step'])) {
+    /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
+    if (($_POST['username']) ||
+        (in_array('http', AmpConfig::get('auth_methods')) &&
+        ($_SERVER['REMOTE_USER'] || $_SERVER['HTTP_REMOTE_USER']))) {
 
-    if ($_POST['rememberme']) {
-        Session::create_remember_cookie();
-    }
-
-    /* If we are in demo mode let's force auth success */
-    if (AmpConfig::get('demo_mode')) {
-        $auth['success']        = true;
-        $auth['info']['username']    = 'Admin - DEMO';
-        $auth['info']['fullname']    = 'Administrative User';
-        $auth['info']['offset_limit']    = 25;
-    } else {
-        if ($_POST['username'] && $_POST['password']) {
-            $username = scrub_in($_POST['username']);
-            $password = $_POST['password'];
-        } else {
-            if ($_SERVER['REMOTE_USER']) {
-                $username = $_SERVER['REMOTE_USER'];
-            } elseif ($_SERVER['HTTP_REMOTE_USER']) {
-                $username = $_SERVER['HTTP_REMOTE_USER'];
-            }
-            $password = '';
+        if ($_POST['rememberme']) {
+            Session::create_remember_cookie();
         }
 
-        $auth = Auth::login($username, $password);
-
-        if ($auth['success']) {
-            $username = $auth['username'];
+        /* If we are in demo mode let's force auth success */
+        if (AmpConfig::get('demo_mode')) {
+            $auth['success']        = true;
+            $auth['info']['username']    = 'Admin - DEMO';
+            $auth['info']['fullname']    = 'Administrative User';
+            $auth['info']['offset_limit']    = 25;
         } else {
-            debug_event('Login', scrub_out($username) . ' attempted to login and failed', '1');
-            Error::add('general', T_('Error Username or Password incorrect, please try again'));
-        }
-
-        $user = User::get_from_username($username);
-
-        if ($user->disabled) {
-            $auth['success'] = false;
-            Error::add('general', T_('User Disabled please contact Admin'));
-            debug_event('Login', scrub_out($username) . ' is disabled and attempted to login', '1');
-        } // if user disabled
-        elseif (AmpConfig::get('prevent_multiple_logins')) {
-            $session_ip = $user->is_logged_in();
-            $current_ip = inet_pton($_SERVER['REMOTE_ADDR']);
-            if ($current_ip && ($current_ip != $session_ip)) {
-                $auth['success'] = false;
-                Error::add('general', T_('User Already Logged in'));
-                debug_event('Login', scrub_out($username) . ' is already logged in from ' . $session_ip . ' and attempted to login from ' . $current_ip, '1');
-            } // if logged in multiple times
-        } // if prevent multiple logins
-        elseif (AmpConfig::get('auto_create') && $auth['success'] &&
-            ! $user->username) {
-            /* This is run if we want to autocreate users who don't
-            exist (useful for non-mysql auth) */
-            $access    = AmpConfig::get('auto_user')
-                ? User::access_name_to_level(AmpConfig::get('auto_user'))
-                : '5';
-            $name    = $auth['name'];
-            $email    = $auth['email'];
-
-            /* Attempt to create the user */
-            if (User::create($username, $name, $email,
-                hash('sha256', mt_rand()), $access)) {
-                $user = User::get_from_username($username);
+            if ($_POST['username']) {
+                $username = scrub_in($_POST['username']);
+                $password = $_POST['password'];
             } else {
-                $auth['success'] = false;
-                Error::add('general', T_('Unable to create local account'));
+                if ($_SERVER['REMOTE_USER']) {
+                    $username = $_SERVER['REMOTE_USER'];
+                } elseif ($_SERVER['HTTP_REMOTE_USER']) {
+                    $username = $_SERVER['HTTP_REMOTE_USER'];
+                }
+                $password = '';
             }
-        } // End if auto_create
 
-        // This allows stealing passwords validated by external means
-        // such as LDAP
-        if (AmpConfig::get('auth_password_save') && $auth['success'] && $password) {
-            $user->update_password($password);
+            $auth = Auth::login($username, $password, true);
+            if ($auth['success']) {
+                $username = $auth['username'];
+            } elseif ($auth['ui_required']) {
+                echo $auth['ui_required'];
+                exit();
+            } else {
+                debug_event('Login', scrub_out($username) . ' attempted to login and failed', '1');
+                Error::add('general', T_('Error Username or Password incorrect, please try again'));
+            }
         }
-    } // if we aren't in demo mode
+    }
+} elseif ($_REQUEST['step'] == '2') {
+    $auth_mod = $_REQUEST['auth_mod'];
+    $auth = Auth::login_step2($auth_mod);
+    if ($auth['success']) {
+        $username = $auth['username'];
+    } else {
+        debug_event('Login', 'Second step authentication failed', '1');
+        Error::add('general', $auth['error']);
+    }
+}
 
-} // if they passed a username/password
+if (!empty($username)) {
+    $user = User::get_from_username($username);
+
+    if ($user->disabled) {
+        $auth['success'] = false;
+        Error::add('general', T_('User Disabled please contact Admin'));
+        debug_event('Login', scrub_out($username) . ' is disabled and attempted to login', '1');
+    } // if user disabled
+    elseif (AmpConfig::get('prevent_multiple_logins')) {
+        $session_ip = $user->is_logged_in();
+        $current_ip = inet_pton($_SERVER['REMOTE_ADDR']);
+        if ($current_ip && ($current_ip != $session_ip)) {
+            $auth['success'] = false;
+            Error::add('general', T_('User Already Logged in'));
+            debug_event('Login', scrub_out($username) . ' is already logged in from ' . $session_ip . ' and attempted to login from ' . $current_ip, '1');
+        } // if logged in multiple times
+    } // if prevent multiple logins
+    elseif (AmpConfig::get('auto_create') && $auth['success'] &&
+        ! $user->username) {
+        /* This is run if we want to autocreate users who don't
+        exist (useful for non-mysql auth) */
+        $access    = AmpConfig::get('auto_user')
+            ? User::access_name_to_level(AmpConfig::get('auto_user'))
+            : '5';
+        $name    = $auth['name'];
+        $email    = $auth['email'];
+        $website    = $auth['website'];
+
+        /* Attempt to create the user */
+        if (User::create($username, $name, $email, $website,
+            hash('sha256', mt_rand()), $access)) {
+            $user = User::get_from_username($username);
+        } else {
+            $auth['success'] = false;
+            Error::add('general', T_('Unable to create local account'));
+        }
+    } // End if auto_create
+
+    // This allows stealing passwords validated by external means
+    // such as LDAP
+    if (AmpConfig::get('auth_password_save') && $auth['success'] && $password) {
+        $user->update_password($password);
+    }
+}
 
 /* If the authentication was a success */
 if ($auth['success']) {
@@ -141,6 +155,17 @@ if ($auth['success']) {
     // Record the IP of this person!
     if (AmpConfig::get('track_user_ip')) {
         $user->insert_ip_history();
+    }
+
+    // Update data from this auth if ours are empty
+    if (empty($user->fullname) && !empty($auth['name'])) {
+        $user->update_fullname($auth['name']);
+    }
+    if (empty($user->email) && !empty($auth['email'])) {
+        $user->update_email($auth['email']);
+    }
+    if (empty($user->website) && !empty($auth['website'])) {
+        $user->update_website($auth['website']);
     }
 
     // If an admin, check for update

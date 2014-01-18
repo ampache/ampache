@@ -224,11 +224,11 @@ class Session
         $db_results = Dba::write($sql, array($key, $username, $ip, $type, $agent, $value, $expire));
 
         if (!$db_results) {
-            debug_event('session', 'Session creation failed', 1);
+            debug_event('session', 'Session creation failed', '1');
             return false;
         }
 
-        debug_event('session', 'Session created:' . $key, 5);
+        debug_event('session', 'Session created: ' . $key, '5');
 
         return $key;
     }

@@ -364,6 +364,9 @@ class Update
         $update_string = '- Add missing albums browse on missing artists.<br />';
         $version[] = array('version' => '360038','description' => $update_string);
 
+        $update_string = '- Add website field on users.<br />';
+        $version[] = array('version' => '360039','description' => $update_string);
+
         return $version;
     }
 
@@ -2128,6 +2131,19 @@ class Update
         Dba::write($sql);
 
         $sql = "ALTER TABLE `song_preview` MODIFY `artist` int(11) NULL";
+        Dba::write($sql);
+
+        return true;
+    }
+
+    /**
+     * update_360039
+     *
+     * Add website field on users
+     */
+    public static function update_360039()
+    {
+        $sql = "ALTER TABLE `user` ADD `website` varchar(255) CHARACTER SET utf8 NULL AFTER `email`";
         Dba::write($sql);
 
         return true;
