@@ -3,6 +3,17 @@ CHANGELOG
 
 3.7
 ----------
+- Added OpenID authentication
+- Improved missing/wanted albums with the capability to browse missing artists
+- Added share feature
+- Updated French translation
+- Added options per browse view (alphabetic, infinite scroll, number of items per page...)
+- Fixed several Subsonic players (SubHub, Jamstash...)
+- Added option to get beautiful stream url with url rewriting
+- Added check to use a new thread for scrobbling if available
+- Added confirmation option when closing the currently playing web player
+- Added auto-pause web player option between several browse tabs
+- Fixed similar artists list with disabled catalogs (reported by stebe)
 - Improved Shoutbox (css fix, real time notifications...)
 - Fixed iframe basket play action reload
 - Fixed wanted album auto-remove
