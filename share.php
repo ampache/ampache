@@ -75,10 +75,10 @@ switch ($action) {
                 '<script language="javascript" type="text/javascript">$(\'#share_qrcode\').qrcode({text: "' . $share->public_url .'", width: 128, height: 128});</script>' .
                 '<br /><br />' .
                 T_('You can also embed this share as a web player into your website, with the following html code:') . '<br />' .
-                '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . $share->public_url . '&embed=true"></iframe>') . '</i><br />';
+                '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url($share->id, $share->secret) . '&embed=true"></iframe>') . '</i><br />';
 
             $title = T_('Object Shared');
-            show_confirmation($title,$body,AmpConfig::get('web_path') . '/stats.php?action=share');
+            show_confirmation($title, $body, AmpConfig::get('web_path') . '/stats.php?action=share');
         }
         UI::show_footer();
         exit();

@@ -488,10 +488,15 @@ div.playing_title a {
 	text-decoration: none;
 }
 
-div.playing_lyrics {
+div.playing_features {
 	position: absolute;
 	top: 60px;
 	font-size:0.5em;
+}
+
+div.playing_lyrics {
+	position: relative;
+    display: inline;
 }
 
 div.playing_lyrics a {
@@ -500,10 +505,8 @@ div.playing_lyrics a {
 }
 
 div.playing_actions {
-	position: absolute;
-	top: 60px;
-    left: 80px;
-	font-size:0.5em;
+	position: relative;
+    display: inline;
 }
 
 div.waveform {

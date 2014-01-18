@@ -1057,6 +1057,11 @@ table.tabledata tbody .cel_action {
     max-width: 130px;
 }
 
+table.tabledata tbody .cel_action_text {
+    width: 400px !important;
+    max-width: 400px !important;
+}
+
 table.tabledata tbody td.cel_rating {
     width: 100px !important;
     max-width: 100px;

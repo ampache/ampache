@@ -28,7 +28,7 @@
         <th class="cel_lastverify"><?php echo T_('Last Verify'); ?></th>
         <th class="cel_lastadd"><?php echo T_('Last Add'); ?></th>
         <th class="cel_lastclean"><?php echo T_('Last Clean'); ?></th>
-        <th class="cel_action"><?php echo T_('Actions'); ?></th>
+        <th class="cel_action cel_action_text"><?php echo T_('Actions'); ?></th>
     </tr>
     <?php
         foreach ($object_ids as $catalog_id) {
