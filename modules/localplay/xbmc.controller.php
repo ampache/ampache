@@ -252,6 +252,10 @@ class AmpacheXbmc extends localplay_controller
 
     public function add_url(Stream_URL $url)
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
             $this->_xbmc->Playlist->Add(array(
                 'playlistid' => $this->_playlistId,
@@ -270,6 +274,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function delete_track($track)
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
             $this->_xbmc->Playlist->Remove(array(
                 'playlistid' => $this->_playlistId,
@@ -289,6 +297,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function clear_playlist()
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
             $this->_xbmc->Playlist->Clear(array(
                 'playlistid' => $this->_playlistId
@@ -308,6 +320,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function play()
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
             // XBMC requires to load a playlist to play. We don't know if this play is after a new playlist or after pause
             // So we get current status
@@ -336,6 +352,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function pause()
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
             $this->_xbmc->Player->PlayPause(array(
                 'playerid' => $this->_playerId,
@@ -356,6 +376,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function stop()
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
             $this->_xbmc->Player->Stop(array(
                 'playerid' => $this->_playerId
@@ -374,6 +398,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function skip($song)
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
             $this->_xbmc->Player->GoTo(array(
                 'playerid' => $this->_playerId,
@@ -392,6 +420,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function volume_up()
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
             $this->_xbmc->Application->SetVolume(array(
                 'volume' => 'increment'
@@ -409,6 +441,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function volume_down()
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
             $this->_xbmc->Application->SetVolume(array(
                 'volume' => 'decrement'
@@ -427,6 +463,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function next()
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
             $this->_xbmc->Player->GoTo(array(
                 'playerid' => $this->_playerId,
@@ -446,6 +486,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function prev()
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
             $this->_xbmc->Player->GoTo(array(
                 'playerid' => $this->_playerId,
@@ -465,6 +509,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function volume($volume)
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
             $this->_xbmc->Application->SetVolume(array(
                 'volume' => $volume
@@ -483,6 +531,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function repeat($state)
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
             $this->_xbmc->Player->SetRepeat(array(
                 'playerid' => $this->_playerId,
@@ -502,6 +554,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function random($onoff)
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
             $this->_xbmc->Player->SetShuffle(array(
                 'playerid' => $this->_playerId,
@@ -523,6 +579,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function get()
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         $results = array();
 
         try {
@@ -567,6 +627,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function status()
     {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         $array = array();
         try {
             $appprop = $this->_xbmc->Application->GetProperties(array(

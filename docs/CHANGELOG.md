@@ -4,6 +4,7 @@ CHANGELOG
 3.7
 ----------
 - Added OpenID authentication
+- Fixed m3u import to playlist on catalog creation (reported by jaydoes)
 - Improved missing/wanted albums with the capability to browse missing artists
 - Added share feature
 - Updated French translation
