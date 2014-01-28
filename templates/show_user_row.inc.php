@@ -22,6 +22,11 @@
 ?>
     <td class="cel_username">
         <a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $client->id; ?>">
+<?php
+if ($client->f_avatar_mini) {
+    echo $client->f_avatar_mini;
+}
+?>
             <?php echo $client->fullname; ?> (<?php echo $client->username; ?>)
         </a>
     </td>

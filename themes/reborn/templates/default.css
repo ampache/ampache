@@ -1677,3 +1677,7 @@ ol, ul, #rightbar ul {
 .missing_album {
 	color: #DF4949;
 }
+
+.user_avatar {
+    float: right;
+}

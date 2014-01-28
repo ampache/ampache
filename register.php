@@ -130,7 +130,7 @@ switch ($_REQUEST['action']) {
 
 
         $new_user = User::create($username, $fullname, $email, $website, $pass1,
-            $access, AmpConfig::get('admin_enable_required'));
+            $access, null, AmpConfig::get('admin_enable_required'));
 
         if (!$new_user) {
             Error::add('duplicate_user', T_("Error: Insert Failed"));

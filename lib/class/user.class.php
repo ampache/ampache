@@ -41,6 +41,7 @@ class User extends database_object
     public $create_date;
     public $validation;
     public $website;
+    public $avatar;
 
     // Constructed variables
     public $prefs = array();
@@ -479,6 +480,7 @@ class User extends database_object
                 case 'username':
                 case 'fullname':
                 case 'website':
+                case 'avatar':
                     if ($this->$name != $value) {
                         $function = 'update_' . $name;
                         $this->$function($value);
@@ -554,6 +556,17 @@ class User extends database_object
         $db_results = Dba::write($sql, array($new_website, $this->id));
 
     } // update_website
+
+    /**
+     * update_avatar
+     * updates their avatar
+     */
+    public function update_avatar($new_avatar)
+    {
+        $sql = "UPDATE `user` SET `avatar` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($new_avatar, $this->id));
+
+    } // update_avatar
 
     /**
      * disable
@@ -710,7 +723,7 @@ class User extends database_object
      * create
      * inserts a new user into ampache
      */
-    public static function create($username, $fullname, $email, $website, $password, $access, $disabled = false)
+    public static function create($username, $fullname, $email, $website, $password, $access, $avatar = null, $disabled = false)
     {
         $website     = rtrim($website, "/");
         $password    = hash('sha256', $password);
@@ -719,9 +732,9 @@ class User extends database_object
         /* Now Insert this new user */
         $sql = "INSERT INTO `user` (`username`, `disabled`, " .
             "`fullname`, `email`, `website`, `password`, `access`, " .
-            "`create_date`)" .
-            "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($username, $disabled, $fullname, $email, $website, $password, $access, time()));
+            "`avatar`, `create_date`)" .
+            "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($username, $disabled, $fullname, $email, $website, $password, $access, $avatar, time()));
 
         if (!$db_results) { return false; }
 
@@ -785,6 +798,14 @@ class User extends database_object
             $this->ip_history = inet_ntop($data['0']['ip']);
         } else {
             $this->ip_history = T_('Not Enough Data');
+        }
+
+        $avatar = $this->get_avatar();
+        if (!empty($avatar['url'])) {
+            $this->f_avatar = '<img src="' . $avatar['url'] . '" title="' . $avatar['title'] . '" />';
+        }
+        if (!empty($avatar['url_mini'])) {
+            $this->f_avatar_mini = '<img src="' . $avatar['url_mini'] . '" title="' . $avatar['title'] . '" />';
         }
 
     } // format_user
@@ -1095,6 +1116,38 @@ class User extends database_object
         return $results;
 
     } // get_ip_history
+
+    /**
+     * get_avatar
+     * Get the user avatar
+     */
+    public function get_avatar()
+    {
+        $avatar = array();
+
+        $avatar['title'] = T_('User avatar');
+        if ($this->avatar) {
+            $avatar['url'] = AmpConfig::get('web_path') . '/image.php?object_type=user&id=' . $this->id;
+            $avatar['url_mini'] = $avatar['url'];
+            $avatar['url'] .= '&thumb=3';
+            $avatar['url_mini'] .= '&thumb=5';
+            $avatar['data'] = $this->avatar;
+        } else {
+            foreach (Plugin::get_plugins('get_avatar_url') as $plugin_name) {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->load($GLOBALS['user'])) {
+                    $avatar['url'] = $plugin->_plugin->get_avatar_url($this);
+                    if (!empty($avatar['url'])) {
+                        $avatar['url_mini'] = $plugin->_plugin->get_avatar_url($this, 32);
+                        $avatar['title'] .= ' (' . $plugin->_plugin->name . ')';
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $avatar;
+    } // get_avatar
 
     /**
      * activate_user

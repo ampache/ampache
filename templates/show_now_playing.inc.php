@@ -35,6 +35,7 @@ $link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('nowplaying')
 foreach ($results as $item) {
     $media = $item['media'];
     $np_user = $item['client'];
+    $np_user->format();
     $agent = $item['agent'];
 
     /* If we've gotten a non-song object just skip this row */

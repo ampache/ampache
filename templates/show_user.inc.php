@@ -25,6 +25,11 @@ $create_date = $client->create_date ? date("m\/d\/y - H:i",$client->create_date)
 $client->format();
 ?>
 <?php UI::show_box_top($client->fullname); ?>
+<?php
+if ($client->f_avatar) {
+    echo '<div class="user_avatar">' . $client->f_avatar . '</div>';
+}
+?>
 <dl class="song_details">
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Full Name'); ?></dt>
