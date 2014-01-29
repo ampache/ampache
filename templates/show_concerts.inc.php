@@ -24,7 +24,7 @@
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
         <th class="cel_date"><?php echo T_('Date'); ?></th>
-        <th class="cel_room"><?php echo T_('Room'); ?></th>
+        <th class="cel_place"><?php echo T_('Place'); ?></th>
         <th class="cel_location"><?php echo T_('Location'); ?></th>
     </tr>
     <?php
