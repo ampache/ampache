@@ -36,7 +36,7 @@
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id,'add', T_('Add to temporary playlist'),'add_playlist_' . $playlist->id); ?>
         <?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id,'random', T_('Random to temporary playlist'),'random_playlist_' . $playlist->id); ?>
-        <a id="<?php echo 'add_playlist_'.$playlist->id ?>" onclick="showPlaylistDialog('playlist', '<?php echo $playlist->id ?>')">
+        <a id="<?php echo 'add_playlist_'.$playlist->id ?>" onclick="showPlaylistDialog(event, 'playlist', '<?php echo $playlist->id ?>')">
             <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
         </a>
     </span>

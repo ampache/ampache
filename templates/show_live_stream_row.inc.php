@@ -32,9 +32,6 @@
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id,'add', T_('Add to temporary playlist'),'add_radio_' . $radio->id); ?>
-        <a id="<?php echo 'add_playlist_'.$radio->id ?>" onclick="showPlaylistDialog('radio', '<?php echo $radio->id ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
-        </a>
     </span>
 </td>
 <td class="cel_streamurl"><?php echo $radio->f_url_link; ?></td>

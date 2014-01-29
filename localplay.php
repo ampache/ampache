@@ -30,7 +30,6 @@ if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface','2
     exit;
 }
 
-
 switch ($_REQUEST['action']) {
     case 'show_add_instance':
         // This requires 50 or better
@@ -82,11 +81,6 @@ switch ($_REQUEST['action']) {
         // Pull the current playlist and require the template
         $objects = $localplay->get();
         require_once AmpConfig::get('prefix') . '/templates/show_localplay_status.inc.php';
-        $browse = new Browse();
-        $browse->set_type('playlist_localplay');
-        $browse->set_static_content(true);
-        $browse->show_objects($objects);
-        $browse->store();
     break;
 } // end switch action
 

@@ -100,7 +100,7 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
         <td class="cel_add">
             <span class="cel_item_add">
                 <?php echo Ajax::button('?action=basket&type=song&id='.$song->id, 'add', T_('Add to temporary playlist'), 'add_'.$song->id); ?>
-                <a id="<?php echo 'add_playlist_'.$song->id ?>" onclick="showPlaylistDialog('song', '<?php echo $song->id ?>')">
+                <a id="<?php echo 'add_playlist_'.$song->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id ?>')">
                     <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
                 </a>
             </span>

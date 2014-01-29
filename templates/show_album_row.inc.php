@@ -46,7 +46,7 @@ if (Art::is_enabled()) {
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Add to temporary playlist'),'add_album_' . $album->id); ?>
         <?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random', T_('Random to temporary playlist'),'random_album_' . $album->id); ?>
-        <a id="<?php echo 'add_playlist_'.$album->id ?>" onclick="showPlaylistDialog('album', '<?php echo $album->id ?>')">
+        <a id="<?php echo 'add_playlist_'.$album->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id ?>')">
             <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
         </a>
     </span>

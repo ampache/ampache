@@ -35,7 +35,7 @@
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=smartplaylist&id=' . $playlist->id,'add', T_('Add to temporary playlist'),'add_playlist_' . $playlist->id); ?>
-        <a id="<?php echo 'add_playlist_'.$playlist->id ?>" onclick="showPlaylistDialog('smartplaylist', '<?php echo $playlist->id ?>')">
+        <a id="<?php echo 'add_playlist_'.$playlist->id ?>" onclick="showPlaylistDialog(event, 'smartplaylist', '<?php echo $playlist->id ?>')">
             <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
         </a>
     </span>

@@ -35,9 +35,6 @@
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id,'add', T_('Add to temporary playlist'),'add_video_' . $video->id); ?>
-        <a id="<?php echo 'add_playlist_'.$video->id ?>" onclick="showPlaylistDialog('video', '<?php echo $video->id ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
-        </a>
     </span>
 </td>
 <td class="cel_codec"><?php echo $video->f_codec; ?></td>

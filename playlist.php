@@ -145,7 +145,7 @@ switch ($_REQUEST['action']) {
         }
 
         $playlist = new Playlist($_REQUEST['playlist_id']);
-        $playlist->add_songs(array($_REQUEST['song_id']));
+        $playlist->add_songs(array($_REQUEST['song_id']), 'ORDERED');
     break;
     case 'prune_empty':
         if (!$GLOBALS['user']->has_access(100)) {

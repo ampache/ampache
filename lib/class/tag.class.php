@@ -570,8 +570,7 @@ class Tag extends database_object
      */
     public static function filter_with_prefs($l)
     {
-        $colors = array('#0000FF',
-            '#00FF00', '#FFFF00', '#00FFFF','#FF00FF','#FF0000');
+        $colors = array('#0000FF','#00FF00', '#FFFF00', '#00FFFF','#FF00FF','#FF0000');
         $prefs = 'tag company';
 
         $ulist = explode(' ', $prefs);
@@ -661,7 +660,7 @@ class Tag extends database_object
      */
     public static function clean_tag($value)
     {
-        $tag = preg_replace("/[^\w\_\-\s\&]/","",$value);
+        $tag = preg_replace("/[^\w\_\-\s\&]/u", "", $value);
 
         return $tag;
 

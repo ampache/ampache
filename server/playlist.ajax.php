@@ -45,78 +45,101 @@ switch ($_REQUEST['action']) {
 
         $results['browse_content'] = ob_get_clean();
     break;
-    case 'create':
-        if (!Access::check('interface','25')) {
-            debug_event('DENIED','Error:' . $GLOBALS['user']->username . ' does not have user access, unable to create playlist','1');
-            break;
+    case 'append_item':
+        // Only song item are supported with playlists
+        
+        debug_event('playlist', 'Appending items to playlist {'.$_REQUEST['playlist_id'].'}...', '5');
+    
+        if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
+            if (!Access::check('interface','25')) {
+                debug_event('DENIED','Error:' . $GLOBALS['user']->username . ' does not have user access, unable to create playlist','1');
+                break;
+            }
+        
+            $name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s",time());
+            $playlist_id = Playlist::create($name,'public');
+            if (!$playlist_id) {
+                break;
+            }
+            $playlist = new Playlist($playlist_id);
+        } else {
+            $playlist = new Playlist($_REQUEST['playlist_id']);
         }
 
-        // Pull the current active playlist items
-        $objects = $GLOBALS['user']->playlist->get_items();
-
-        $name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s",time());
-
-        // generate the new playlist
-        $playlist_id = Playlist::create($name,'public');
-        if (!$playlist_id) { break; }
-        $playlist = new Playlist($playlist_id);
-
-        // Iterate through and add them to our new playlist
-        foreach ($objects as $object_data) {
-            // For now only allow songs on here, we'll change this later
-            $type = array_shift($object_data);
-            if ($type == 'song') {
-                $songs[] = array_shift($object_data);
-            }
-        } // object_data
-
-        // Add our new songs
-        $playlist->add_songs($songs, 'ORDERED');
-        $playlist->format();
-        $object_ids = $playlist->get_items();
-        ob_start();
-        require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
-        $results['content'] = ob_get_clean();
-    break;
-    case 'append':
-        // Pull the current active playlist items
-        $objects = $GLOBALS['user']->playlist->get_items();
-
-        // Create the playlist object
-        $playlist = new Playlist($_REQUEST['playlist_id']);
-
-        // We need to make sure that they have access
         if (!$playlist->has_access()) {
             break;
         }
 
         $songs = array();
-
-        // Iterate through and add them to our new playlist
-        foreach ($objects as $object_data) {
-            // For now only allow songs on here, we'll change this later
-            $type = array_shift($object_data);
-            if ($type == 'song') {
-                $songs[] = array_shift($object_data);
-            }
-        } // object_data
-
-        // Override normal include procedure
-        Ajax::set_include_override(true);
-
-        // Add our new songs
-        $playlist->add_songs($songs, 'ORDERED');
-        $playlist->format();
-        $object_ids = $playlist->get_items();
-        ob_start();
-        require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
-        $results['content'] = ob_get_contents();
-        ob_end_clean();
+        $item_id = $_REQUEST['item_id'];
+        
+        switch ($_REQUEST['item_type']) {
+            case 'smartplaylist':
+                $smartplaylist = new Search('song', $item_id);
+                $items = $playlist->get_items();
+                foreach ($items as $item) {
+                    $songs[] = $item['object_id'];
+                }
+            break;
+            case 'album_preview':
+                $preview_songs = Song_preview::get_song_previews($item_id);
+                foreach ($preview_songs as $song) {
+                    if (!empty($song->file)) {
+                        $songs[] = $song->id;
+                    }
+                }
+            break;
+            case 'album':
+                debug_event('playlist', 'Adding all songs of album {'.$item_id.'}...', '5');
+                $album = new Album($item_id);
+                $songs = $album->get_songs();
+                foreach ($songs as $song_id) {
+                    $songs[] = $song_id;
+                }
+            break;
+            case 'artist':
+                debug_event('playlist', 'Adding all songs of artist {'.$item_id.'}...', '5');
+                $artist = new Artist($item_id);
+                $songs = $artist->get_songs();
+                foreach ($songs as $song_id) {
+                    $songs[] = $song_id;
+                }
+            break;
+            case 'song_preview':
+            case 'song':
+                debug_event('playlist', 'Adding song {'.$item_id.'}...', '5');
+                $songs[] = $item_id;
+            break;
+            default:
+                debug_event('playlist', 'Adding all songs of current playlist...', '5');
+                $objects = $GLOBALS['user']->playlist->get_items();
+                foreach ($objects as $object_data) {
+                    $type = array_shift($object_data);
+                    if ($type == 'song') {
+                        $songs[] = array_shift($object_data);
+                    }
+                }
+            break;
+        }
+        
+        if (count($songs) > 0) {
+            Ajax::set_include_override(true);
+            $playlist->add_songs($songs, 'ORDERED');
+            
+            /*$playlist->format();
+            $object_ids = $playlist->get_items();
+            ob_start();
+            require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
+            $results['content'] = ob_get_contents();
+            ob_end_clean();*/
+            debug_event('playlist', 'Items added successfully!', '5');
+        } else {
+            debug_event('playlist', 'No item to add. Aborting...', '5');
+        }
     break;
     default:
         $results['rfc3514'] = '0x1';
     break;
-} // switch on action;
+}
 
-// We always do this
 echo xoutput_from_array($results);
