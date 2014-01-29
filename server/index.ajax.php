@@ -72,6 +72,34 @@ switch ($_REQUEST['action']) {
             $results['similar_items_' . $media_id] = ob_get_clean();
         }
     break;
+    case 'concerts':
+        if (AmpConfig::get('show_concerts') && isset($_REQUEST['artist'])) {
+            $artist = new Artist($_REQUEST['artist']);
+            $artist->format();
+            if ($artist->id) {
+                $up_concerts = Artist_Event::get_upcoming_events($artist);
+                $past_concerts = Artist_Event::get_past_events($artist);
+                $concerts = array();
+                if ($up_concerts) {
+                    if (is_array($up_concerts->event)) {
+                        $concerts = array_merge($concerts, $up_concerts->event);
+                    } else {
+                        $concerts[] = $up_concerts->event;
+                    }
+                }
+                if ($past_concerts) {
+                    if (is_array($past_concerts->event)) {
+                        $concerts = array_merge($concerts, $past_concerts->event);
+                    } else {
+                        $concerts[] = $past_concerts->event;
+                    }
+                }
+            }
+            ob_start();
+            require_once AmpConfig::get('prefix') . '/templates/show_concerts.inc.php';
+            $results['concerts'] = ob_get_clean();
+        }
+    break;
     case 'wanted_missing_albums':
         if (AmpConfig::get('wanted') && (isset($_REQUEST['artist']) || isset($_REQUEST['artist_mbid']))) {
             if (isset($_REQUEST['artist'])) {
@@ -87,9 +115,7 @@ switch ($_REQUEST['action']) {
             }
 
             ob_start();
-            if (count($walbums) > 0) {
-                require_once AmpConfig::get('prefix') . '/templates/show_missing_albums.inc.php';
-            }
+            require_once AmpConfig::get('prefix') . '/templates/show_missing_albums.inc.php';
             $results['missing_albums'] = ob_get_clean();
         }
     break;

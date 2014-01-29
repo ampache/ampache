@@ -20,25 +20,23 @@
  *
  */
 ?>
-<?php UI::show_box_top(T_('Missing Albums'), 'info-box'); ?>
+<?php UI::show_box_top(T_('Concerts'), 'info-box'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
-        <th class="cel_album"><?php echo T_('Album'); ?></th>
-        <th class="cel_artist"><?php echo T_('Artist'); ?></th>
-        <th class="cel_year"><?php echo T_('Year'); ?></th>
-        <th class="cel_user"><?php echo T_('User'); ?></th>
-        <th class="cel_action"><?php echo T_('Actions'); ?></th>
+        <th class="cel_date"><?php echo T_('Date'); ?></th>
+        <th class="cel_room"><?php echo T_('Room'); ?></th>
+        <th class="cel_location"><?php echo T_('Location'); ?></th>
     </tr>
     <?php
-    foreach ($walbums as $walbum) {
+    foreach ($concerts as $concert) {
     ?>
-    <tr id="walbum_<?php echo $walbum->mbid; ?>" class="<?php echo UI::flip_class(); ?>">
-        <?php require AmpConfig::get('prefix') . '/templates/show_wanted_album_row.inc.php'; ?>
+    <tr id="concert_<?php echo $concert->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <?php require AmpConfig::get('prefix') . '/templates/show_concert_row.inc.php'; ?>
     </tr>
     <?php } ?>
-    <?php if (!$walbums || !count($walbums)) { ?>
+    <?php if (!$concerts || !count($concerts)) { ?>
     <tr class="<?php echo UI::flip_class(); ?>">
-        <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing album found'); ?></span></td>
+        <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No concert found'); ?></span></td>
     </tr>
     <?php } ?>
 </table>

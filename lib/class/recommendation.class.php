@@ -35,7 +35,7 @@ class Recommendation
      * get_lastfm_results
      * Runs a last.fm query and returns the parsed results
      */
-    private static function get_lastfm_results($method, $query)
+    public static function get_lastfm_results($method, $query)
     {
         $api_key = AmpConfig::get('lastfm_api_key');
         $api_base = "http://ws.audioscrobbler.com/2.0/?method=";
