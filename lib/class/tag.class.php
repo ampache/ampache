@@ -195,7 +195,7 @@ class Tag extends database_object
 
         if (!is_numeric($id)) { return false; }
 
-        $cleaned_value = self::clean_tag($value);
+        $cleaned_value = $value;
 
         if (!strlen($cleaned_value)) { return false; }
 
@@ -226,9 +226,6 @@ class Tag extends database_object
      */
     public static function add_tag($value)
     {
-        // Clean it up and make it tagish
-        $value = self::clean_tag($value);
-
         if (!strlen($value)) { return false; }
 
         $value = Dba::escape($value);
