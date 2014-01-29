@@ -47,15 +47,15 @@ switch ($_REQUEST['action']) {
     break;
     case 'append_item':
         // Only song item are supported with playlists
-        
+
         debug_event('playlist', 'Appending items to playlist {'.$_REQUEST['playlist_id'].'}...', '5');
-    
+
         if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
             if (!Access::check('interface','25')) {
                 debug_event('DENIED','Error:' . $GLOBALS['user']->username . ' does not have user access, unable to create playlist','1');
                 break;
             }
-        
+
             $name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s",time());
             $playlist_id = Playlist::create($name,'public');
             if (!$playlist_id) {
@@ -72,7 +72,7 @@ switch ($_REQUEST['action']) {
 
         $songs = array();
         $item_id = $_REQUEST['item_id'];
-        
+
         switch ($_REQUEST['item_type']) {
             case 'smartplaylist':
                 $smartplaylist = new Search('song', $item_id);
@@ -121,11 +121,11 @@ switch ($_REQUEST['action']) {
                 }
             break;
         }
-        
+
         if (count($songs) > 0) {
             Ajax::set_include_override(true);
             $playlist->add_songs($songs, 'ORDERED');
-            
+
             /*$playlist->format();
             $object_ids = $playlist->get_items();
             ob_start();

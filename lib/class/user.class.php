@@ -1131,7 +1131,6 @@ class User extends database_object
             $avatar['url_mini'] = $avatar['url'];
             $avatar['url'] .= '&thumb=3';
             $avatar['url_mini'] .= '&thumb=5';
-            $avatar['data'] = $this->avatar;
         } else {
             foreach (Plugin::get_plugins('get_avatar_url') as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
