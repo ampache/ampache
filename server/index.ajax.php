@@ -81,17 +81,17 @@ switch ($_REQUEST['action']) {
                 $past_concerts = Artist_Event::get_past_events($artist);
                 $concerts = array();
                 if ($up_concerts) {
-                    if (is_array($up_concerts->event)) {
-                        $concerts = array_merge($concerts, $up_concerts->event);
-                    } else {
-                        $concerts[] = $up_concerts->event;
+                    foreach ($up_concerts->children() as $item) {
+                        if ($item->getName() == 'event') {
+                            $concerts[] = $item;
+                        }
                     }
                 }
                 if ($past_concerts) {
-                    if (is_array($past_concerts->event)) {
-                        $concerts = array_merge($concerts, $past_concerts->event);
-                    } else {
-                        $concerts[] = $past_concerts->event;
+                    foreach ($past_concerts->children() as $item) {
+                        if ($item->getName() == 'event') {
+                            $concerts[] = $item;
+                        }
                     }
                 }
             }
