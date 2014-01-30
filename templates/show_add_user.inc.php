@@ -87,6 +87,15 @@
                     </select>
                 </td>
         </tr>
+        <tr>
+            <td>
+                <?php echo T_('Avatar'); ?>
+            </td>
+            <td>
+                <input type="file" id="avatar" name="avatar" value="" />
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
+            </td>
+        </tr>
     </table>
     <div class="formValidation">
         <?php echo Core::form_register('add_user'); ?>

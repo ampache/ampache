@@ -41,7 +41,6 @@ class User extends database_object
     public $create_date;
     public $validation;
     public $website;
-    public $avatar;
 
     // Constructed variables
     public $prefs = array();
@@ -805,7 +804,7 @@ class User extends database_object
             $this->f_avatar = '<img src="' . $avatar['url'] . '" title="' . $avatar['title'] . '" />';
         }
         if (!empty($avatar['url_mini'])) {
-            $this->f_avatar_mini = '<img src="' . $avatar['url_mini'] . '" title="' . $avatar['title'] . '" />';
+            $this->f_avatar_mini = '<img src="' . $avatar['url_mini'] . '" title="' . $avatar['title'] . '" style="width: 32px; height: 32px;" />';
         }
 
     } // format_user
@@ -1126,7 +1125,8 @@ class User extends database_object
         $avatar = array();
 
         $avatar['title'] = T_('User avatar');
-        if ($this->avatar) {
+        $upavatar = new Art($this->id, 'user');
+        if ($upavatar->get_db()) {
             $avatar['url'] = AmpConfig::get('web_path') . '/image.php?object_type=user&id=' . $this->id;
             $avatar['url_mini'] = $avatar['url'];
             $avatar['url'] .= '&thumb=3';
@@ -1147,6 +1147,27 @@ class User extends database_object
 
         return $avatar;
     } // get_avatar
+
+    public function upload_avatar()
+    {
+        if (!empty($_FILES['avatar']['tmp_name'])) {
+            $path_info = pathinfo($_FILES['avatar']['name']);
+            $upload['file'] = $_FILES['avatar']['tmp_name'];
+            $upload['mime'] = 'image/' . $path_info['extension'];
+            $image_data = Art::get_from_source($upload, 'user');
+
+            if ($image_data) {
+                $art = new Art($this->id, 'user');
+                $art->insert($image_data, $upload['0']['mime']);
+            }
+        }
+    }
+
+    public function delete_avatar()
+    {
+        $art = new Art($this->id, 'user');
+        $art->reset();
+    }
 
     /**
      * activate_user

@@ -84,6 +84,7 @@ switch ($_REQUEST['action']) {
         if ($pass1 == $pass2 && strlen($pass1)) {
             $client->update_password($pass1);
         }
+        $client->upload_avatar();
 
         show_confirmation(T_('User Updated'), $client->fullname . "(" . $client->username . ")" . T_('updated'), AmpConfig::get('web_path'). '/admin/users.php');
     break;
@@ -123,6 +124,8 @@ switch ($_REQUEST['action']) {
                 Error::add('general', T_("Error: Insert Failed"));
             }
 
+            $user = new User($user_id);
+            $user->upload_avatar();
         } // if no errors
         else {
             $_REQUEST['action'] = 'show_add_user';
@@ -170,6 +173,26 @@ switch ($_REQUEST['action']) {
         show_confirmation(T_('Deletion Request'),
             sprintf(T_('Are you sure you want to permanently delete %s?'), $client->fullname),
             AmpConfig::get('web_path')."/admin/users.php?action=confirm_delete&amp;user_id=" . $_REQUEST['user_id'],1,'delete_user');
+    break;
+    case 'show_delete_avatar':
+        $user_id = $_REQUEST['user_id'];
+
+        $next_url = AmpConfig::get('web_path') . '/admin/users.php?action=delete_avatar&user_id=' . scrub_out($user_id);
+        show_confirmation(T_('User Avatar Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_avatar');
+    break;
+    case 'delete_avatar':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        if (!Core::form_verify('delete_avatar','post')) {
+            UI::access_denied();
+            exit;
+        }
+
+        $client = new User($_REQUEST['user_id']);
+        $client->delete_avatar();
+
+        $next_url = AmpConfig::get('web_path') . '/admin/users.php';
+        show_confirmation(T_('User Avater Deleted'), T_('User Avatar has been deleted'), $next_url);
     break;
     /* Show IP History for the Specified User */
     case 'show_ip_history':

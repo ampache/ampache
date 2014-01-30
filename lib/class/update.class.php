@@ -367,9 +367,6 @@ class Update
         $update_string = '- Add website field on users.<br />';
         $version[] = array('version' => '360039','description' => $update_string);
 
-        $update_string = '- Add avatar field on users.<br />';
-        $version[] = array('version' => '360040','description' => $update_string);
-
         return $version;
     }
 
@@ -2153,15 +2150,8 @@ class Update
     }
 
     /**
-     * update_360040
-     *
-     * Add avatar field on users
+     * update_360040 skipped.
      */
-    public static function update_360040()
-    {
-        $sql = "ALTER TABLE `user` ADD `avatar` BLOB NULL AFTER `website`";
-        Dba::write($sql);
 
-        return true;
-    }
+
 }

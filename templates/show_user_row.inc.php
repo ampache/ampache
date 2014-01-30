@@ -51,7 +51,7 @@ if ($client->f_avatar_mini) {
         echo "<a href=\"".$web_path."/admin/users.php?action=disable&amp;user_id=$client->id\">" . UI::get_icon('disable', T_('Disable')) ."</a>";
     }
     ?>
-        <a href="<?php echo $web_path; ?>/admin/users.php?action=delete&amp;user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
+        <a href="<?php echo $web_path; ?>/admin/users.php?action=delete&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
     </td>
        <?php
     if (($client->is_logged_in()) AND ($client->is_online())) {

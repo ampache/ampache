@@ -123,6 +123,7 @@ class Art extends database_object
             case 'album':
             case 'artist':
             case 'video':
+            case 'user':
                 return $type;
             break;
             default:
@@ -279,12 +280,8 @@ class Art extends database_object
      */
     public function reset()
     {
-        $type = Dba::escape($this->type);
-        $uid = Dba::escape($this->uid);
-
-        $sql = "DELETE FROM `image` WHERE `object_id`='$uid' AND `object_type`='$type'";
-        $db_results = Dba::write($sql);
-
+        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ?";
+        $db_results = Dba::write($sql, array($this->uid, $this->type));
     } // reset
 
     /**
