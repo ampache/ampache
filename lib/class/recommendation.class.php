@@ -135,7 +135,7 @@ class Recommendation
      * get_artists_like
      * Returns a list of similar artists
      */
-    public static function get_artists_like($artist_id, $limit = 5, $local_only = true)
+    public static function get_artists_like($artist_id, $limit = 10, $local_only = true)
     {
         $artist = new Artist($artist_id);
 

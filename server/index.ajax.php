@@ -56,7 +56,7 @@ switch ($_REQUEST['action']) {
             $artist->format();
             $object_ids = array();
             $missing_objects = array();
-            if ($similars = Recommendation::get_artists_like($artist->id, 5, !AmpConfig::get('wanted'))) {
+            if ($similars = Recommendation::get_artists_like($artist->id, 10, !AmpConfig::get('wanted'))) {
                 foreach ($similars as $similar) {
                     if ($similar['id']) {
                         $object_ids[] = $similar['id'];
