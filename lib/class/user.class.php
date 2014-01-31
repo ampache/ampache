@@ -806,6 +806,9 @@ class User extends database_object
         if (!empty($avatar['url_mini'])) {
             $this->f_avatar_mini = '<img src="' . $avatar['url_mini'] . '" title="' . $avatar['title'] . '" style="width: 32px; height: 32px;" />';
         }
+        if (!empty($avatar['url_medium'])) {
+            $this->f_avatar_medium = '<img src="' . $avatar['url_medium'] . '" title="' . $avatar['title'] . '" style="width: 64px; height: 64px;" />';
+        }
 
     } // format_user
 
@@ -1129,8 +1132,10 @@ class User extends database_object
         if ($upavatar->get_db()) {
             $avatar['url'] = AmpConfig::get('web_path') . '/image.php?object_type=user&id=' . $this->id;
             $avatar['url_mini'] = $avatar['url'];
+            $avatar['url_medium'] = $avatar['url'];
             $avatar['url'] .= '&thumb=3';
             $avatar['url_mini'] .= '&thumb=5';
+            $avatar['url_medium'] .= '&thumb=3';
         } else {
             foreach (Plugin::get_plugins('get_avatar_url') as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
@@ -1138,6 +1143,7 @@ class User extends database_object
                     $avatar['url'] = $plugin->_plugin->get_avatar_url($this);
                     if (!empty($avatar['url'])) {
                         $avatar['url_mini'] = $plugin->_plugin->get_avatar_url($this, 32);
+                        $avatar['url_medium'] = $plugin->_plugin->get_avatar_url($this, 64);
                         $avatar['title'] .= ' (' . $plugin->_plugin->name . ')';
                         break;
                     }

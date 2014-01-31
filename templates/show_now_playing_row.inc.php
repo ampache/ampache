@@ -26,8 +26,8 @@
             <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $np_user->id; ?>">
             <?php echo scrub_out($np_user->fullname); ?>
 <?php
-if ($np_user->f_avatar) {
-    echo '<div>' . $np_user->f_avatar . '</div>';
+if ($np_user->f_avatar_medium) {
+    echo '<div>' . $np_user->f_avatar_medium . '</div>';
 }
 ?>
         </a>
