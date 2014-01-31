@@ -1733,7 +1733,7 @@ ol, ul, #rightbar ul {
 }
 
 .missing_album {
-	color: #DF4949;
+	color: #DF4949 !important;
 }
 
 .user_avatar {

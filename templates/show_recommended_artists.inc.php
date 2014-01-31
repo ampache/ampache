@@ -55,7 +55,15 @@ $thcount = 8;
         <?php require AmpConfig::get('prefix') . '/templates/show_artist_row.inc.php'; ?>
     </tr>
     <?php } ?>
-    <?php if (!$object_ids || !count($object_ids)) { ?>
+    <?php
+    /* Foreach through every missing artist that has been passed to us */
+    foreach ($missing_objects as $missing) {
+    ?>
+    <tr id="missing_artist_<?php echo $missing['mbid']; ?>" class="<?php echo UI::flip_class(); ?>">
+        <td colspan="<?php echo $thcount; ?>"><a class="missing_album" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=show_missing&mbid=<?php echo $missing['mbid']; ?>" title="<?php echo scrub_out($missing['name']); ?>"><?php echo scrub_out($missing['name']); ?></a></td>
+    </tr>
+    <?php } ?>
+    <?php if ((!$object_ids || !count($object_ids)) && (!$missing_objects || !count($missing_objects))) { ?>
     <tr class="<?php echo UI::flip_class(); ?>">
         <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No similar artist found'); ?></span></td>
     </tr>

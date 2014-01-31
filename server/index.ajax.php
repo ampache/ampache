@@ -54,8 +54,16 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('show_similar') && isset($_REQUEST['artist'])) {
             $artist = new Artist($_REQUEST['artist']);
             $artist->format();
-            if ($object_ids = Recommendation::get_artists_like($artist->id)) {
-                $object_ids = array_map(create_function('$i', 'return $i[\'id\'];'), $object_ids);
+            $object_ids = array();
+            $missing_objects = array();
+            if ($similars = Recommendation::get_artists_like($artist->id, 5, !AmpConfig::get('wanted'))) {
+                foreach ($similars as $similar) {
+                    if ($similar['id']) {
+                        $object_ids[] = $similar['id'];
+                    } else {
+                        $missing_objects[] = $similar;
+                    }
+                }
             }
             ob_start();
             require_once AmpConfig::get('prefix') . '/templates/show_recommended_artists.inc.php';
