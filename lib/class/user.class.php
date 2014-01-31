@@ -479,7 +479,6 @@ class User extends database_object
                 case 'username':
                 case 'fullname':
                 case 'website':
-                case 'avatar':
                     if ($this->$name != $value) {
                         $function = 'update_' . $name;
                         $this->$function($value);
@@ -555,17 +554,6 @@ class User extends database_object
         $db_results = Dba::write($sql, array($new_website, $this->id));
 
     } // update_website
-
-    /**
-     * update_avatar
-     * updates their avatar
-     */
-    public function update_avatar($new_avatar)
-    {
-        $sql = "UPDATE `user` SET `avatar` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($new_avatar, $this->id));
-
-    } // update_avatar
 
     /**
      * disable
@@ -722,7 +710,7 @@ class User extends database_object
      * create
      * inserts a new user into ampache
      */
-    public static function create($username, $fullname, $email, $website, $password, $access, $avatar = null, $disabled = false)
+    public static function create($username, $fullname, $email, $website, $password, $access, $disabled = false)
     {
         $website     = rtrim($website, "/");
         $password    = hash('sha256', $password);
@@ -731,9 +719,9 @@ class User extends database_object
         /* Now Insert this new user */
         $sql = "INSERT INTO `user` (`username`, `disabled`, " .
             "`fullname`, `email`, `website`, `password`, `access`, " .
-            "`avatar`, `create_date`)" .
+            "`create_date`)" .
             "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($username, $disabled, $fullname, $email, $website, $password, $access, $avatar, time()));
+        $db_results = Dba::write($sql, array($username, $disabled, $fullname, $email, $website, $password, $access, time()));
 
         if (!$db_results) { return false; }
 
