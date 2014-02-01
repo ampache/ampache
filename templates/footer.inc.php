@@ -25,8 +25,8 @@
 </div> <!-- end id="maincontainer"-->
 <div id="footer">
     <a href="https://github.com/ampache-doped/ampache#readme" target="_blank">Ampache-doped <?php echo AmpConfig::get('version'); ?></a><br />
-    Copyright © 2013 - 2014 Ampache-doped.github.io | 
-    Copyright © 2001 - 2013 Ampache.org | 
+    Copyright © 2013 - 2014 Ampache-doped.github.io |
+    Copyright © 2001 - 2013 Ampache.org |
     <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
 </div>
 </body>

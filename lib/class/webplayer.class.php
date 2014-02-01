@@ -122,6 +122,9 @@ class WebPlayer
             if ($types['real'] == "ogg") $types['player'] = "ogv";
             else if ($types['real'] == "webm") $types['player'] = "webmv";
             else if ($types['real'] == "mp4") $types['player'] = "m4v";
+        } else if ($item->type == 'radio') {
+            $types['real'] = $item->codec;
+            if ($types['real'] == "flac" || $types['real'] == "ogg") $types['player'] = "oga";
         } else {
             $ext = pathinfo($url, PATHINFO_EXTENSION);
             if (!empty($ext)) $types['player'] = $ext;
@@ -182,7 +185,9 @@ class WebPlayer
 
             $js['filetype'] = $types['player'];
             $js['url'] = $url;
-            $js['poster'] = $item->image_url . (!$iframed ? '&thumb=4' : '');
+            if ($urlinfo['type'] == 'song') {
+                $js['poster'] = $item->image_url . (!$iframed ? '&thumb=4' : '');
+            }
 
             $addjs .= $callback . "(" . json_encode($js) . ");";
         }

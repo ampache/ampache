@@ -93,6 +93,8 @@ if ($isVideo) {
 ?>
                 cssClass: "jp-video-360p"
 <?php
+} elseif ($isRadio) {
+    // No size
 } else {
     if ($iframed) {
 ?>
@@ -124,7 +126,7 @@ if ($isVideo) {
         $.each(playlist, function (index, obj) {
             if (index == current) {
 <?php
-if (!$isVideo && !$is_share) {
+if (!$isVideo && !$isRadio && !$is_share) {
     if ($iframed) {
         echo "var titleobj = (albumids[index] != null) ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + albumids[index] + '\');\">' + obj.title + '</a>' : obj.title;";
         echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + artistids[index] + '\');\">' + obj.artist + '</a>';";

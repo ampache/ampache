@@ -80,10 +80,11 @@ if (AmpConfig::get('song_page_title')) {
 <?php
 if (WebPlayer::is_playlist_radio($playlist)) {
     // Special stuff for web radio (to better handle Icecast/Shoutcast metadata ...)
+    // No special stuff for now
+    $isRadio = true;
     $radio = $playlist->urls[0];
-    require_once AmpConfig::get('prefix') . '/templates/show_radio_player.inc.php';
-} else {
-    $isVideo = WebPlayer::is_playlist_video($playlist);
-    require_once AmpConfig::get('prefix') . '/templates/show_html5_player.inc.php';
 }
+
+$isVideo = WebPlayer::is_playlist_video($playlist);
+require_once AmpConfig::get('prefix') . '/templates/show_html5_player.inc.php';
 ?>
