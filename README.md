@@ -74,7 +74,8 @@ Ampache includes some external modules that carry their own licensing.
 * [Requests](http://requests.ryanmccue.info/): ISC Licensed
 * [Whatever:hover](http://www.xs4all.nl/~peterned): LGPL v2.1
 * [xbmc-php-rpc](https://github.com/karlrixon/xbmc-php-rpc): GPL v3
-* [JPlayer](http://jplayer.org/): MIT
+* [Dropbox SDK](https://github.com/dropbox/dropbox-sdk-php): MIT
+* [jPlayer](http://jplayer.org/): MIT
 * [prettyPhoto](http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone/): GPL v2
 * [unofficial-google-music-api-php](http://code.google.com/p/unofficial-google-music-api-php/): GPL v3
 * [Tag-it!] (http://aehlke.github.io/tag-it/): MIT
