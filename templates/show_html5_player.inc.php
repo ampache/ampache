@@ -15,8 +15,8 @@ if (!$iframed || $is_share) {
 ?>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery/jquery.cookie.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jplayer/jquery.jplayer.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jplayer/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/jquery.jplayer.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
 <?php
 if ($iframed) {
 ?>
@@ -57,7 +57,7 @@ var timeoffset = 0;
                 removeTime: 'fast',
                 shuffleTime: 'slow'
             },
-            swfPath: "<?php echo AmpConfig::get('web_path'); ?>/modules/jplayer/",
+            swfPath: "<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/",
             audioFullScreen: true,
             smoothPlayBar: true,
             keyEnabled: true,

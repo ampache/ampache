@@ -40,10 +40,10 @@ if (AmpConfig::get('use_rss')) { ?>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
 <title><?php echo scrub_out(AmpConfig::get('site_title')); ?> - <?php echo $location['title']; ?></title>
 <?php require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php'; ?>
-<link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery/jquery-ui.min.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-ui/jquery-ui.min.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/tag-it/jquery.tagit.css" type="text/css" media="screen" />
 <script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo $web_path; ?>/modules/jquery/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/prettyPhoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/tag-it/tag-it.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
