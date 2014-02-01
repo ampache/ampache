@@ -128,7 +128,7 @@ if (!defined('INSTALL')) {
     <?php echo debug_result(is_readable($configfile)); ?>
     </td>
     <td width="350px">
-    <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file either is not in the correct location or is not currently readable.'); ?>
+    <?php echo T_('This test attempts to read config/ampache-doped.cfg.php. If this fails the file either is not in the correct location or is not currently readable.'); ?>
     </td>
 </tr>
 <tr>

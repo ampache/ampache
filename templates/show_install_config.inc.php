@@ -27,7 +27,7 @@ require $prefix . '/templates/install_header.inc.php';
 ?>
     <div class="content">
         <?php echo T_('Step 1 - Create the Ampache database'); ?><br />
-        <strong><?php echo T_('Step 2 - Create ampache.cfg.php'); ?></strong><br />
+        <strong><?php echo T_('Step 2 - Create ampache-doped.cfg.php'); ?></strong><br />
         <dl>
         <dd><?php printf(T_('This step takes the basic config values and generates the config file. If your config/ directory is writable, you can select "write" to have Ampache write the config file directly to the correct location. If you select "download" it will prompt you to download the config file, and you can then manually place the config file in %s'), $prefix . '/config'); ?></dd>
         </dl>
@@ -77,14 +77,14 @@ require $prefix . '/templates/install_header.inc.php';
         <br />
         <table>
 <tr>
-        <td class="align"><?php echo T_('ampache.cfg.php exists?'); ?></td>
+        <td class="align"><?php echo T_('ampache-doped.cfg.php exists?'); ?></td>
         <td>
         <?php echo debug_result(is_readable($configfile)); ?>
         </td>
 </tr>
 <tr>
         <td class="align">
-                <?php echo T_('ampache.cfg.php configured?'); ?>
+                <?php echo T_('ampache-doped.cfg.php configured?'); ?>
         </td>
         <td>
         <?php

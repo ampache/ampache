@@ -275,7 +275,7 @@ function translate_pattern_code($code)
 function generate_config($current)
 {
     // Start building the new config file
-    $distfile = AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist';
+    $distfile = AmpConfig::get('prefix') . '/config/ampache-doped.cfg.php.dist';
     $handle = fopen($distfile,'r');
     $dist = fread($handle,filesize($distfile));
     fclose($handle);

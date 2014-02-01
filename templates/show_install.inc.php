@@ -27,7 +27,7 @@ require $prefix . '/templates/install_header.inc.php';
         <dl>
             <dd><?php echo T_('This step creates and inserts the Ampache database, so please provide a MySQL account with database creation rights. This step may take some time on slower computers.'); ?></dd>
         </dl>
-        <?php echo T_('Step 2 - Create ampache.cfg.php'); ?><br />
+        <?php echo T_('Step 2 - Create ampache-doped.cfg.php'); ?><br />
         <?php echo T_('Step 3 - Set up the initial account'); ?><br />
         <br />
         <?php Error::display('general'); ?>

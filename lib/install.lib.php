@@ -198,7 +198,7 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false,
  */
 function install_create_config($download = false)
 {
-    $config_file = AmpConfig::get('prefix') . '/config/ampache.cfg.php';
+    $config_file = AmpConfig::get('prefix') . '/config/ampache-doped.cfg.php';
 
     /* Attempt to make DB connection */
     $dbh = Dba::dbh();
@@ -225,7 +225,7 @@ function install_create_config($download = false)
         }
     } else {
         $browser = new Horde_Browser();
-        $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, strlen($final));
+        $browser->downloadHeaders('ampache-doped.cfg.php', 'text/plain', false, strlen($final));
         echo $final;
         exit();
     }

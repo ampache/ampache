@@ -32,7 +32,7 @@ error_reporting(E_ERROR); // Only show fatal errors in production
 
 $ampache_path = dirname(__FILE__);
 $prefix = realpath($ampache_path . "/../");
-$configfile = $prefix . '/config/ampache.cfg.php';
+$configfile = $prefix . '/config/ampache-doped.cfg.php';
 require_once $prefix . '/lib/general.lib.php';
 require_once $prefix . '/lib/class/ampconfig.class.php';
 require_once $prefix . '/lib/class/core.class.php';

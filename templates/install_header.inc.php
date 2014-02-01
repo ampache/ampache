@@ -41,13 +41,13 @@
     <div class="notify">
         <h3><?php echo T_('Requirements'); ?></h3>
         <p>
-        <?php echo T_('This page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following prerequisites:'); ?>
+        <?php echo T_('This page handles the installation of the Ampache database and the creation of the ampache-doped.cfg.php file. Before you continue please make sure that you have the following prerequisites:'); ?>
         </p>
         <ul>
             <li><?php echo T_('A MySQL server with a username and password that can create/modify databases'); ?></li>
-                        <li><?php echo sprintf(T_('Your webserver has read access to the files %s and %s'),$prefix . '/sql/ampache.sql',$prefix . '/config/ampache.cfg.php.dist'); ?></li>
+                        <li><?php echo sprintf(T_('Your webserver has read access to the files %s and %s'),$prefix . '/sql/ampache.sql',$prefix . '/config/ampache-doped.cfg.php.dist'); ?></li>
         </ul>
         <p>
-<?php echo sprintf(T_("Once you have ensured that the above requirements are met please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your Ampache install at a later date simply edit %s"), $prefix . '/config/ampache.cfg.php'); ?>
+<?php echo sprintf(T_("Once you have ensured that the above requirements are met please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your Ampache install at a later date simply edit %s"), $prefix . '/config/ampache-doped.cfg.php'); ?>
         </p>
 </div>
