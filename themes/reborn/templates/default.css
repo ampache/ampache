@@ -1733,7 +1733,9 @@ ol, ul, #rightbar ul {
 }
 
 .missing_album {
-	color: #DF4949 !important;
+    text-decoration: none;
+    border-bottom:1px dotted;
+	/*color: #DF4949 !important;*/
 }
 
 .user_avatar {
