@@ -1201,11 +1201,7 @@ div.box.box_current_configuration {
     text-align: center;
 }
 
-#random_selection .random_album div {
-    display: inline;
-}
-
-#random_selection .random_album img {
+#random_selection .art_album img {
     vertical-align: middle;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -1213,25 +1209,27 @@ div.box.box_current_configuration {
     -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
     -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
     box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    width: 80px;
+    height: 80px;
     margin: 2px;
 }
 
-#random_selection .random_album img:hover {
+#random_selection .art_album img:hover {
     border: 2px solid #ff9d00;
     margin: 0px;
 }
 
 #random_selection .random_album .star-rating {
-    float: left;
+    margin: auto;
 }
 
 #random_selection .random_album .play_album {
-    float: left;
     margin-left: 7px;
 }
 
-#random_selection .random_album .play_album a img {
-    border: 0px;
+#random_selection .random_album .play_album img {
+    border: 0;
+    box-shadow: 0 0 0 0;
 }
 
 #random_selection .box-bottom {
@@ -1712,6 +1710,14 @@ ol, ul, #rightbar ul {
     width: 50px;
 }
 
+.browse-options-content {
+    display: none;
+}
+
+.browse-options-content span {
+    margin-right: 5px;
+}
+
 .jscroll-next {
     width:50%;
     display:block;
@@ -1733,7 +1739,9 @@ ol, ul, #rightbar ul {
 }
 
 .missing_album {
-	color: #DF4949 !important;
+    text-decoration: none;
+    border-bottom:1px dotted;
+	color: #bbb !important;
 }
 
 .user_avatar {

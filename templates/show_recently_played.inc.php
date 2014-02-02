@@ -89,9 +89,9 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
             <span class="cel_play_content">&nbsp;</span>
             <div class="cel_play_hover">
             <?php if (AmpConfig::get('directplay')) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play song'),'play_song_' . $song->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play'),'play_song_' . $song->id); ?>
                 <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                    <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true','play_add', T_('Play add song'),'addplay_song_' . $song->id); ?>
+                    <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $song->id); ?>
                 <?php } ?>
         <?php } ?>
             </div>

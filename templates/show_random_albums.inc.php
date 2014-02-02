@@ -32,13 +32,24 @@ if ($albums) {
         $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
     ?>
     <div class="random_album">
-        <a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $album_id; ?>">
-        <?php if (Art::is_enabled()) { ?>
-                <img src="<?php echo $web_path; ?>/image.php?thumb=3&amp;id=<?php echo $album_id; ?>" width="80" height="80" alt="<?php echo $name; ?>" title="<?php echo $name; ?>" />
-        <?php } else { ?>
-            <?php echo '[' . $album->f_artist . '] ' . $album->f_name; ?>
+        <div class="art_album">
+            <a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $album_id; ?>">
+            <?php if (Art::is_enabled()) { ?>
+                    <img src="<?php echo $web_path; ?>/image.php?thumb=3&amp;id=<?php echo $album_id; ?>" alt="<?php echo $name; ?>" title="<?php echo $name; ?>" />
+            <?php } else { ?>
+                <?php echo '[' . $album->f_artist . '] ' . $album->f_name; ?>
+            <?php } ?>
+            </a>
+        </div>
+        <div class="play_album">
+        <?php if (AmpConfig::get('directplay')) { ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id,'play', T_('Play'),'play_album_' . $album->id); ?>
+            <?php if (Stream_Playlist::check_autoplay_append()) { ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id . '&append=true','play_add', T_('Play last'),'addplay_album_' . $album->id); ?>
+            <?php } ?>
         <?php } ?>
-        </a>
+        <?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Add to temporary playlist'),'play_full_' . $album->id); ?>
+        </div>
         <?php
         if (AmpConfig::get('ratings')) {
             echo "<div id=\"rating_" . $album->id . "_album\">";
@@ -46,7 +57,6 @@ if ($albums) {
             echo "</div>";
         }
         ?>
-        <span class="play_album"><?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Play Album'),'play_full_' . $album->id); ?></span>
     </div>
     <?php } ?>
 <?php } ?>

@@ -24,9 +24,9 @@
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id,'play', T_('Play video'),'play_video_' . $video->id); ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id,'play', T_('Play'),'play_video_' . $video->id); ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id . '&append=true','play_add', T_('Play add video'),'addplay_video_' . $video->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id . '&append=true','play_add', T_('Play last'),'addplay_video_' . $video->id); ?>
         <?php } ?>
 <?php } ?>
     </div>
