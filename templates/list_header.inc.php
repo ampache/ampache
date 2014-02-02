@@ -77,25 +77,25 @@ if ($limit > 0 && $total > $limit) {
 ?>
 <div class="list-header">
 <?php if ($browse->get_use_alpha()) { ?>
-<div class="list-header-alpha">
-<?php
-$alphastr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-$alphalist = str_split($alphastr);
-$alphalist[] = '#';
-foreach ($alphalist as $key => $value) {
-    $filter = '^';
-    if ($value == '#') {
-        $filter .= '[[:digit:]|[:punct:]]';
-    } else {
-        $filter .= $value;
+    <div class="list-header-alpha">
+    <?php
+    $alphastr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    $alphalist = str_split($alphastr);
+    $alphalist[] = '#';
+    foreach ($alphalist as $key => $value) {
+        $filter = '^';
+        if ($value == '#') {
+            $filter .= '[[:digit:]|[:punct:]]';
+        } else {
+            $filter .= $value;
+        }
+        if ($browse->get_filter('regex_match') == $filter) {
+            $value = '<b>' . $value . '</b>';
+        }
+        echo Ajax::text('?page=browse&action=browse&browse_id=' . $browse->id . '&key=regex_match&multi_alpha_filter=' . $filter, $value,'browse_' . $uid . '_alpha_' . $key,'');
     }
-    if ($browse->get_filter('regex_match') == $filter) {
-        $value = '<b>' . $value . '</b>';
-    }
-    echo Ajax::text('?page=browse&action=browse&browse_id=' . $browse->id . '&key=regex_match&multi_alpha_filter=' . $filter, $value,'browse_' . $uid . '_alpha_' . $key,'');
-}
-?>
-</div>
+    ?>
+    </div>
 <?php } ?>
 <?php
 // are there enough items to even need this view?
@@ -173,21 +173,24 @@ if ($pages > 1 && $start > -1) {
 <?php
 } // if stuff
 ?>
-&nbsp;
-<span class="browse-options">
-    <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_pages_<?php echo $is_header; ?>" value="true" <?php echo (($browse->get_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + $('#browse_" . $browse->id . "_use_pages_" . $is_header . "').is(':checked') + '", "browse_" . $browse->id . "_use_pages_" . $is_header); ?>">Pages</span>
-    <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_scroll_<?php echo $is_header; ?>" value="true" <?php echo ((!$browse->get_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + !($('#browse_" . $browse->id . "_use_scroll_" . $is_header . "').is(':checked')) + '", "browse_" . $browse->id . "_use_scroll_" . $is_header); ?>">Infinite Scroll</span>
-    <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_alpha_<?php echo $is_header; ?>" value="true" <?php echo (($browse->get_use_alpha()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_alpha&value=' + $('#browse_" . $browse->id . "_use_alpha_" . $is_header . "').is(':checked') + '", "browse_" . $browse->id . "_use_alpha_" . $is_header); ?>">Alphabet</span>
-<?php if ($browse->get_use_pages()) { ?>
-    <span>|</span>
-    <span>
-        <form id="browse_<?php echo $browse->id; ?>_limit_form_<?php echo $is_header; ?>" method="post" action="javascript:void(0);">
-            <label id="limit_label_<?php echo $browse->id; ?>_<?php echo $is_header; ?>" for="multi_alpha_filter"><?php echo T_('Limit'); ?>:</label>
-            <input type="text" id="limit_value_<?php echo $browse->id; ?>_<?php echo $is_header; ?>" name="value" value="<?php echo $browse->get_offset(); ?>" onKeyUp="delayRun(this, '800', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=limit'); ?>', 'limit_value_<?php echo $browse->id; ?>_<?php echo $is_header; ?>');">
-        </form>
+    &nbsp;
+    <span class="browse-options">
+        <a href="#" onClick="showFilters(this);" class="browse-options-link"><?php echo T_("Filters"); ?></a>
+        <span class="browse-options-content">
+            <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_pages_<?php echo $is_header; ?>" value="true" <?php echo (($browse->get_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + $('#browse_" . $browse->id . "_use_pages_" . $is_header . "').is(':checked') + '", "browse_" . $browse->id . "_use_pages_" . $is_header); ?>">Pages</span>
+            <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_scroll_<?php echo $is_header; ?>" value="true" <?php echo ((!$browse->get_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + !($('#browse_" . $browse->id . "_use_scroll_" . $is_header . "').is(':checked')) + '", "browse_" . $browse->id . "_use_scroll_" . $is_header); ?>">Infinite Scroll</span>
+            <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_alpha_<?php echo $is_header; ?>" value="true" <?php echo (($browse->get_use_alpha()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_alpha&value=' + $('#browse_" . $browse->id . "_use_alpha_" . $is_header . "').is(':checked') + '", "browse_" . $browse->id . "_use_alpha_" . $is_header); ?>">Alphabet</span>
+        <?php if ($browse->get_use_pages()) { ?>
+            <span>|</span>
+            <span>
+                <form id="browse_<?php echo $browse->id; ?>_limit_form_<?php echo $is_header; ?>" method="post" action="javascript:void(0);">
+                    <label id="limit_label_<?php echo $browse->id; ?>_<?php echo $is_header; ?>" for="multi_alpha_filter"><?php echo T_('Limit'); ?>:</label>
+                    <input type="text" id="limit_value_<?php echo $browse->id; ?>_<?php echo $is_header; ?>" name="value" value="<?php echo $browse->get_offset(); ?>" onKeyUp="delayRun(this, '800', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=limit'); ?>', 'limit_value_<?php echo $browse->id; ?>_<?php echo $is_header; ?>');">
+                </form>
+            </span>
+        <?php } ?>
+        </span>
     </span>
-<?php } ?>
-</span>
 </div>
 <?php if (!$browse->get_use_pages() && $is_header) { ?>
 <div id="browse_<?php echo $browse->id; ?>_scroll">

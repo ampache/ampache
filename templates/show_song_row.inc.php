@@ -24,9 +24,9 @@
     <span class="cel_play_content"><?php if (isset($argument) && $argument) { echo '<b>'.$song->f_track.'</b>'; } ?></span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id, 'play', T_('Play song'), 'play_song_' . $song->id); ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id, 'play', T_('Play'), 'play_song_' . $song->id); ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true', 'play_add', T_('Play add song'), 'addplay_song_' . $song->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $song->id); ?>
         <?php } ?>
 <?php } ?>
     </div>

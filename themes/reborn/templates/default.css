@@ -1712,6 +1712,14 @@ ol, ul, #rightbar ul {
     width: 50px;
 }
 
+.browse-options-content {
+    display: none;
+}
+
+.browse-options-content span {
+    margin-right: 5px;
+}
+
 .jscroll-next {
     width:50%;
     display:block;
@@ -1735,7 +1743,7 @@ ol, ul, #rightbar ul {
 .missing_album {
     text-decoration: none;
     border-bottom:1px dotted;
-	/*color: #DF4949 !important;*/
+	color: #bbb !important;
 }
 
 .user_avatar {

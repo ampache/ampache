@@ -52,23 +52,23 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     <?php } ?>
     <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id,'play', T_('Play All'),'directplay_full_' . $playlist->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id, T_('Play All'),'directplay_full_text_' . $playlist->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id,'play', T_('Play all'),'directplay_full_' . $playlist->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id, T_('Play all'),'directplay_full_text_' . $playlist->id); ?>
         </li>
     <?php } ?>
     <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id . '&append=true','play_add', T_('Play Add Playlist'),'addplay_playlist_' . $playlist->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id . '&append=true', T_('Play Add Playlist'),'addplay_playlist_text_' . $playlist->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id . '&append=true','play_add', T_('Play all last'),'addplay_playlist_' . $playlist->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id . '&append=true', T_('Play all last'),'addplay_playlist_text_' . $playlist->id); ?>
         </li>
     <?php } ?>
         <li>
-            <?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id,'add', T_('Add All'),'play_playlist'); ?>
-            <?php echo Ajax::text('?action=basket&type=playlist&id=' . $playlist->id, T_('Add All'),'play_playlist_text'); ?>
+            <?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id,'add', T_('Add all to temporary playlist'),'play_playlist'); ?>
+            <?php echo Ajax::text('?action=basket&type=playlist&id=' . $playlist->id, T_('Add all to temporary playlist'),'play_playlist_text'); ?>
         </li>
         <li>
-            <?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id,'random', T_('Add Random'),'play_playlist_random'); ?>
-            <?php echo Ajax::text('?action=basket&type=playlist_random&id=' . $playlist->id, T_('Add Random'),'play_playlist_random_text'); ?>
+            <?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id,'random', T_('Random all to temporary playlist'),'play_playlist_random'); ?>
+            <?php echo Ajax::text('?action=basket&type=playlist_random&id=' . $playlist->id, T_('Random all to temporary playlist'),'play_playlist_random_text'); ?>
         </li>
     <?php if ($playlist->has_access()) { ?>
         <li>

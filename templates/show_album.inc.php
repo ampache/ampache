@@ -65,23 +65,23 @@ if (AmpConfig::get('show_played_times')) {
     <ul>
         <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id,'play', T_('Play album'),'directplay_full_' . $album->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=album&album_id=' . $album->id, T_('Play Album'),'directplay_full_text_' . $album->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id,'play', T_('Play'),'directplay_full_' . $album->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&playtype=album&album_id=' . $album->id, T_('Play'),'directplay_full_text_' . $album->id); ?>
         </li>
         <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id . '&append=true','play_add', T_('Play Add Album'),'addplay_album_' . $album->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=album&album_id=' . $album->id . '&append=true', T_('Play Add Album'),'addplay_album_text_' . $album->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id . '&append=true','play_add', T_('Play last'),'addplay_album_' . $album->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&playtype=album&album_id=' . $album->id . '&append=true', T_('Play last'),'addplay_album_text_' . $album->id); ?>
         </li>
         <?php } ?>
         <li>
-            <?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Add'),'play_full_' . $album->id); ?>
-            <?php echo Ajax::text('?action=basket&type=album&id=' . $album->id, T_('Add Album'), 'play_full_text_' . $album->id); ?>
+            <?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Add to temporary playlist'),'play_full_' . $album->id); ?>
+            <?php echo Ajax::text('?action=basket&type=album&id=' . $album->id, T_('Add to temporary playlist'), 'play_full_text_' . $album->id); ?>
         </li>
         <li>
-            <?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random', T_('Random'),'play_random_' . $album->id); ?>
-            <?php echo Ajax::text('?action=basket&type=album_random&id=' . $album->id, T_('Add Random from Album'), 'play_random_text_' . $album->id); ?>
+            <?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random', T_('Random to temporary playlist'),'play_random_' . $album->id); ?>
+            <?php echo Ajax::text('?action=basket&type=album_random&id=' . $album->id, T_('Random to temporary playlist'), 'play_random_text_' . $album->id); ?>
         </li>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $album->id; ?>', 'reorder_songs_table', 'song_',

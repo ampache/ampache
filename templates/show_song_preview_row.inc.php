@@ -23,9 +23,9 @@
 <?php if (AmpConfig::get('echonest_api_key')) { ?>
 <td class="cel_play">
     <?php if (AmpConfig::get('directplay') && !empty($song->file)) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=song_preview&id=' . $song->id,'play_preview', T_('Play song Preview'),'play_song_' . $song->id); ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=song_preview&id=' . $song->id,'play_preview', T_('Play'),'play_song_' . $song->id); ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=song_preview&id=' . $song->id . '&append=true','play_add_preview', T_('Play Add Song Preview'),'addplay_song_' . $song->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=song_preview&id=' . $song->id . '&append=true','play_add_preview', T_('Play last'),'addplay_song_' . $song->id); ?>
         <?php } ?>
 <?php } ?>
 </td>

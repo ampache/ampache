@@ -63,37 +63,38 @@ if (AmpConfig::get('show_played_times')) {
         <li>
             <?php if ($object_type == 'album') { ?>
             <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
-            <?php echo UI::get_icon('view', T_("Show All Songs By %s")); ?></a>
+            <?php echo UI::get_icon('view', T_("Show all")); ?></a>
             <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
-            <?php printf(T_("Show All Songs By %s"), $artist->f_name); ?></a>
+                <?php echo T_("Show all"); ?>
+            </a>
             <?php } else { ?>
             <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
-            <?php echo UI::get_icon('view', T_("Show Albums By %s")); ?></a>
+            <?php echo UI::get_icon('view', T_("Show albums")); ?></a>
             <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
-            <?php printf(T_("Show Albums By %s"), $artist->f_name); ?></a>
+            <?php echo T_("Show albums"); ?></a>
             <?php } ?>
         </li>
         <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id,'play', T_('Play artist'),'directplay_full_' . $artist->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id, sprintf(T_('Play All Songs By %s'), $artist->f_name),'directplay_full_text_' . $artist->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id,'play', T_('Play all'),'directplay_full_' . $artist->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id, T_('Play all'),'directplay_full_text_' . $artist->id); ?>
         </li>
         <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id . '&append=true','play_add', T_('Play add artist'),'addplay_artist_' . $artist->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id . '&append=true', sprintf(T_('Play Add All Songs By %s'), $artist->f_name),'addplay_artist_text_' . $artist->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id . '&append=true','play_add', T_('Play all last'),'addplay_artist_' . $artist->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id . '&append=true', T_('Play all last'),'addplay_artist_text_' . $artist->id); ?>
         </li>
         <?php } ?>
         <li>
             <?php /* HINT: Artist Fullname */ ?>
-            <?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add', T_('Add'),'add_' . $artist->id); ?>
-            <?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id, sprintf(T_('Add All Songs By %s'), $artist->f_name),'add_text_' . $artist->id); ?>
+            <?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id,'add', T_('Add all to temporary playlist'),'add_' . $artist->id); ?>
+            <?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id, T_('Add all to temporary playlist'),'add_text_' . $artist->id); ?>
         </li>
         <li>
             <?php /* HINT: Artist Fullname */ ?>
-            <?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random', T_('Random'),'random_' . $artist->id); ?>
-            <?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id, sprintf(T_('Add Random Songs By %s'), $artist->f_name),'random_text_' . $artist->id); ?>
+            <?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random', T_('Random all to temporary playlist'),'random_' . $artist->id); ?>
+            <?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id, T_('Random all to temporary playlist'),'random_text_' . $artist->id); ?>
         </li>
         <?php if (Access::check('interface','50')) { ?>
         <li>
