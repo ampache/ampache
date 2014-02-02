@@ -230,28 +230,18 @@ class Song extends database_object implements media
             return parent::get_from_cache('song', $id);
         }
 
-        $sql = 'SELECT `id`, `file`, `catalog`, `album`, `year`, `artist`,' .
-            '`title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, ' .
-            '`played`, `enabled`, `update_time`, `mbid`, `addition_time` ' .
-            'FROM `song` WHERE `id` = ?';
+        $sql = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`year`, `song`.`artist`,' .
+            '`song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, ' .
+            '`song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, ' .
+            '`album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid` ' .
+            'FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' .
+            'WHERE `song`.`id` = ?';
         $db_results = Dba::read($sql, array($id));
 
         $results = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             if (AmpConfig::get('show_played_times')) {
                 $results['object_cnt'] = Stats::get_object_count('song', $results['id']);
-            }
-
-            $sql = 'SELECT `mbid` FROM `album` WHERE `id` = ?';
-            $db_results = Dba::read($sql, array($results['album']));
-            if ($album_res = Dba::fetch_assoc($db_results)) {
-                $results['album_mbid'] = $album_res['mbid'];
-            }
-
-            $sql = 'SELECT `mbid` FROM `artist` WHERE `id` = ?';
-            $db_results = Dba::read($sql, array($results['artist']));
-            if ($artist_res = Dba::fetch_assoc($db_results)) {
-                $results['artist_mbid'] = $artist_res['mbid'];
             }
 
             parent::add_to_cache('song', $id, $results);

@@ -100,7 +100,7 @@ class Stream
      * This is a rather complex function that starts the transcoding or
      * resampling of a song and returns the opened file handle.
      */
-    public static function start_transcode($song, $type = null)
+    public static function start_transcode($song, $type = null, $bitrate=0)
     {
         $transcode_settings = $song->get_transcode_settings($type);
         // Bail out early if we're unutterably broken
@@ -109,12 +109,14 @@ class Stream
             return false;
         }
 
-        $sample_rate = self::get_allowed_bitrate($song);
-
-        debug_event('stream', 'Configured bitrate is ' . $sample_rate, 5);
-
-        // Validate the bitrate
-        $sample_rate = self::validate_bitrate($sample_rate);
+        if ($bitrate == 0) {
+            $sample_rate = self::get_allowed_bitrate($song);
+            debug_event('stream', 'Configured bitrate is ' . $sample_rate, 5);
+            // Validate the bitrate
+            $sample_rate = self::validate_bitrate($sample_rate);
+        } else {
+            $sample_rate = $bitrate;
+        }
 
         // Never upsample a song
         if ($song->type == $transcode_settings['format'] && ($sample_rate * 1000) > $song->bitrate) {

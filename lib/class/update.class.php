@@ -366,6 +366,9 @@ class Update
 
         $update_string = '- Add website field on users.<br />';
         $version[] = array('version' => '360039','description' => $update_string);
+        
+        $update_string = '- Add channels.<br />';
+        $version[] = array('version' => '360041','description' => $update_string);
 
         return $version;
     }
@@ -2153,5 +2156,35 @@ class Update
      * update_360040 skipped.
      */
 
-
+    /**
+     * update_360041
+     *
+     * Add channels
+     */
+    public static function update_360041()
+    {
+        $sql = "CREATE TABLE `channel` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`name` varchar(64) CHARACTER SET utf8 NULL," .
+            "`description` varchar(256) CHARACTER SET utf8 NULL," .
+            "`url` varchar(256) CHARACTER SET utf8 NULL," .
+            "`interface` varchar(64) CHARACTER SET utf8 NULL," .
+            "`port` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "`fixed_endpoint` tinyint(1) unsigned NOT NULL DEFAULT '0'," .
+            "`object_type` varchar(32) NOT NULL," .
+            "`object_id` int(11) unsigned NOT NULL," .
+            "`is_private` tinyint(1) unsigned NOT NULL DEFAULT '0'," .
+            "`random` tinyint(1) unsigned NOT NULL DEFAULT '0'," .
+            "`loop` tinyint(1) unsigned NOT NULL DEFAULT '0'," .
+            "`admin_password` varchar(20) CHARACTER SET utf8 NULL," .
+            "`start_date` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "`max_listeners` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "`peak_listeners` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "`listeners` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "`connections` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "`stream_type` varchar(8) CHARACTER SET utf8 NOT NULL DEFAULT 'mp3'," .
+            "`bitrate` int(11) unsigned NOT NULL DEFAULT '128'," .
+            "PRIMARY KEY (`id`))";
+        return Dba::write($sql);
+    }
 }

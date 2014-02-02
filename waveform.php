@@ -31,6 +31,8 @@ require_once 'lib/init.php';
 
 if (!AmpConfig::get('waveform')) exit();
 
+set_time_limit(300);
+
 $id = $_REQUEST['song_id'];
 $waveform = Waveform::get($id);
 if ($waveform) {

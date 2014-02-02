@@ -643,7 +643,7 @@ class Tag extends database_object
      */
     public static function validate_type($type)
     {
-        $valid_array = array('song','artist','album','video','playlist','live_stream');
+        $valid_array = array('song','artist','album','video','playlist','live_stream','channel');
 
         if (in_array($type,$valid_array)) { return $type; }
 
