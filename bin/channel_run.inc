@@ -381,7 +381,6 @@ while(true)
                     }
                 }
             }
-            echo "Read: " . $data . "\n";ob_flush();
             // Handle data parse
         }
     }
@@ -418,7 +417,7 @@ while(true)
                             $metadata .= chr(0x00);
                             $metadatalen = ceil(strlen($metadata) / 16);
                             $metadata = str_pad($metadata, $metadatalen * 16, chr(0x00), STR_PAD_RIGHT);
-                            debug_event('channel', 'Sending metadata to client...', '5');
+                            //debug_event('channel', 'Sending metadata to client...', '5');
                             fwrite($sock, chr($metadatalen) . $metadata);
                             $client['metadata_lastsong'] = $channel->media->id;
                         } else {
@@ -434,7 +433,7 @@ while(true)
                 }
                 
                 $stream_clients[$key] = $client;
-                debug_event('channel', 'Client stream current length: ' . $client['length'], '5');
+                //debug_event('channel', 'Client stream current length: ' . $client['length'], '5');
             }
         } else {
             die('No more data, stream ended.');

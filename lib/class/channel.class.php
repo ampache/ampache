@@ -26,10 +26,10 @@ class Channel extends database_object
     private $playlist;
     private $song_pos;
     private $songs;
-    public  $media;
+    public $media;
     private $media_bytes_streamed;
     private $transcoder;
-    
+
     /**
      * Constructor
      */
@@ -47,13 +47,13 @@ class Channel extends database_object
 
         return true;
     } //constructor
-    
+
     public function update_start($start_date, $address, $port)
     {
         $sql = "UPDATE `channel` SET `start_date` = ?, `interface` = ?, `port` = ?, `listeners` = '0' WHERE `id` = ?";
         Dba::write($sql, array($start_date, $address, $port, $this->id));
     }
-    
+
     public function update_listeners($listeners, $addition=false)
     {
         $sql = "UPDATE `channel` SET `listeners` = ? ";
@@ -71,7 +71,7 @@ class Channel extends database_object
         $params[] = $this->id;
         Dba::write($sql, $params);
     }
-    
+
     public function get_genre()
     {
         $tags = Tag::get_object_tags('channel', $this->id);
@@ -80,7 +80,7 @@ class Channel extends database_object
             $genre .= $tag['name'] . ' ';
         }
         $genre = trim($genre);
-        
+
         return $genre;
     }
 
@@ -109,7 +109,7 @@ class Channel extends database_object
 
     public function format()
     {
-    
+
     }
 
     public static function get_channel_list_sql()
@@ -131,13 +131,12 @@ class Channel extends database_object
 
         return $results;
     }
-    
+
     protected function init_channel_songs()
     {
         $this->song_pos = 0;
         $this->songs = array();
-        if ($this->object_type == 'playlist')
-        {
+        if ($this->object_type == 'playlist') {
             $this->playlist = new Playlist($this->object_id);
             if (!$this->random) {
                 $this->songs = $this->playlist->get_songs();
@@ -145,15 +144,15 @@ class Channel extends database_object
         }
         $this->is_init = true;
     }
-    
+
     public function get_chunk()
     {
         $chunk = null;
-        
+
         if (!$this->is_init) {
             $this->init_channel_songs();
         }
-        
+
         if ($this->is_init) {
             // Move to next song
             while ($this->media == null && ($this->random || $this->song_pos < count($this->songs))) {
@@ -164,7 +163,7 @@ class Channel extends database_object
                     $this->media = new Song($this->songs[$this->song_pos]);
                 }
                 $this->media->format();
-                
+
                 if ($this->media->catalog) {
                     $catalog = Catalog::create_from_id($this->media->catalog);
                     if (make_bool($this->media->enabled)) {
@@ -175,10 +174,10 @@ class Channel extends database_object
                             }
                         }
                     }
-                    
+
                     if ($this->media != null) {
                         $this->media = $catalog->prepare_media($this->media);
-                        
+
                         if (!$this->media->file || !Core::is_readable($this->media->file)) {
                             debug_event('channel', 'Cannot read media ' . $this->media->id . ' file, skipped.', '3');
                             $this->media = null;
@@ -196,7 +195,7 @@ class Channel extends database_object
                     debug_event('channel', 'Media ' . $this->media->id . ' doesn\'t have catalog, skipped.', '3');
                     $this->media = null;
                 }
-                
+
                 $this->song_pos++;
                 // Restart from beginning for next song if the channel is 'loop' enabled
                 // and load fresh data from database
@@ -204,19 +203,19 @@ class Channel extends database_object
                     $this->init_channel_songs();
                 }
             }
-            
+
             if ($this->media != null) {
                 // Stream not yet initialized for this media, start it
                 if (!$this->transcoder) {
                     $this->transcoder = Stream::start_transcode($this->media, $this->stream_type, $this->bitrate);
                     $this->media_bytes_streamed = 0;
                 }
-                
+
                 if (is_resource($this->transcoder['handle'])) {
-                    
+
                     $chunk = fread($this->transcoder['handle'], 4096);
                     $this->media_bytes_streamed += strlen($chunk);
-                    
+
                     // End of file, prepare to move on for next call
                     if (feof($this->transcoder['handle'])) {
                         $this->media->set_played();
@@ -226,7 +225,7 @@ class Channel extends database_object
                         }
                         fclose($this->transcoder['handle']);
                         proc_close($this->transcoder['process']);
-                        
+
                         $this->media = null;
                         $this->transcoder = null;
                     }
@@ -234,13 +233,13 @@ class Channel extends database_object
                     $this->media = null;
                     $this->transcoder = null;
                 }
-                
+
                 if (!strlen($chunk)) {
                     $chunk = $this->get_chunk();
                 }
             }
         }
-        
+
         return $chunk;
     }
 

@@ -366,7 +366,7 @@ class Update
 
         $update_string = '- Add website field on users.<br />';
         $version[] = array('version' => '360039','description' => $update_string);
-        
+
         $update_string = '- Add channels.<br />';
         $version[] = array('version' => '360041','description' => $update_string);
 
