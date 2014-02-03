@@ -2,5 +2,5 @@
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-s
-    RewriteRule ^([0-9]+)/(.*)$ /ampache/channel/index.php?channel=$1&target=$2 [PT,L,QSA]
+    RewriteRule ^([0-9]+)/(.*)$ index.php?channel=$1&target=$2 [PT,L,QSA]
 </IfModule>
