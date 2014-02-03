@@ -36,6 +36,7 @@
       <li id="sb_browse_bb_Tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag"><?php echo T_('Tag Cloud'); ?></a></li>
       <li id="sb_browse_bb_Playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo T_('Playlists'); ?></a></li>
       <li id="sb_browse_bb_SmartPlaylist"><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo T_('Smart Playlists'); ?></a></li>
+      <li id="sb_browse_bb_Channel"><a href="<?php echo $web_path; ?>/browse.php?action=channel"><?php echo T_('Channels'); ?></a></li>
       <li id="sb_browse_bb_RadioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo T_('Radio Stations'); ?></a></li>
       <li id="sb_browse_bb_Video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo T_('Videos'); ?></a></li>
     </ul>

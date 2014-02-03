@@ -70,6 +70,10 @@ switch ($_REQUEST['action']) {
                     $level = '25';
                 }
             break;
+            case 'channel_row':
+                $channel = new Channel($_GET['id']);
+                $channel->format();
+            break;
             default:
                 exit();
         } // end switch on type

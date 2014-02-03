@@ -391,7 +391,7 @@ wanted_types = "album,official"
 
 ; EchoNest API key
 ; EchoNest provides several music services. Currently used for missing song 30 seconds preview.
-; echonest_api_key = ""
+;echonest_api_key = ""
 
 ; Amazon base urls
 ; An array of Amazon sites to search.

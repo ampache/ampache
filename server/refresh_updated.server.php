@@ -59,4 +59,9 @@ switch ($_REQUEST['action']) {
         $radio->format();
         require AmpConfig::get('prefix') . '/templates/show_live_stream_row.inc.php';
     break;
+    case 'refresh_channel':
+        $channel = new Channel($_REQUEST['id']);
+        $channel->format();
+        require AmpConfig::get('prefix') . '/templates/show_channel_row.inc.php';
+    break;
 } // switch on the action

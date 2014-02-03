@@ -2184,6 +2184,7 @@ class Update
             "`connections` int(11) unsigned NOT NULL DEFAULT '0'," .
             "`stream_type` varchar(8) CHARACTER SET utf8 NOT NULL DEFAULT 'mp3'," .
             "`bitrate` int(11) unsigned NOT NULL DEFAULT '128'," .
+            "`pid` int(11) unsigned NOT NULL DEFAULT '0'," .
             "PRIMARY KEY (`id`))";
         return Dba::write($sql);
     }

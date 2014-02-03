@@ -97,6 +97,9 @@ switch ($_REQUEST['action']) {
             case 'song_preview':
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=song_preview&id='.$_REQUEST['id'];
             break;
+            case 'channel':
+                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=channel&id='.$_REQUEST['channel_id'];
+            break;
         }
         if (!empty($_REQUEST['append'])) {
             $_SESSION['iframe']['target'] .= '&append=true';

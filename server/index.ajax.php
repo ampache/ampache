@@ -225,6 +225,31 @@ switch ($_REQUEST['action']) {
         }
         $results['live_shoutbox'] = ob_get_clean();
     break;
+    case 'start_channel':
+        if (Access::check('interface','75')) {
+            ob_start();
+            $channel = new Channel($_REQUEST['id']);
+            if ($channel->id) {
+                if ($channel->check_channel()) {
+                    $channel->stop_channel();
+                }
+                $channel->start_channel();
+                echo $channel->get_channel_state();
+            }
+            $results['channel_state_' . $_REQUEST['id']] = ob_get_clean();
+        }
+    break;
+    case 'stop_channel':
+        if (Access::check('interface','75')) {
+            ob_start();
+            $channel = new Channel($_REQUEST['id']);
+            if ($channel->id) {
+                $channel->stop_channel();
+                echo $channel->get_channel_state();
+            }
+            $results['channel_state_' . $_REQUEST['id']] = ob_get_clean();
+        }
+    break;
     default:
         $results['rfc3514'] = '0x1';
     break;

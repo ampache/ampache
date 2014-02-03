@@ -203,19 +203,23 @@ class Browse extends Query
             case 'democratic':
                 $box_title = T_('Democratic Playlist');
                 $box_req = AmpConfig::get('prefix') . '/templates/show_democratic_playlist.inc.php';
-                break;
+            break;
             case 'wanted':
                 $box_title = T_('Wanted Albums');
                 $box_req = AmpConfig::get('prefix') . '/templates/show_wanted_albums.inc.php';
-                break;
+            break;
             case 'share':
                 $box_title = T_('Shared Objects');
                 $box_req = AmpConfig::get('prefix') . '/templates/show_shared_objects.inc.php';
-                break;
+            break;
             case 'song_preview':
                 $box_title = T_('Songs');
                 $box_req = AmpConfig::get('prefix') . '/templates/show_song_previews.inc.php';
-                break;
+            break;
+            case 'channel':
+                $box_title = T_('Channels');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_channels.inc.php';
+            break;
             default:
                 // Rien a faire
             break;

@@ -48,10 +48,15 @@ class Channel extends database_object
         return true;
     } //constructor
 
-    public function update_start($start_date, $address, $port)
+    public function update_start($start_date, $address, $port, $pid)
     {
-        $sql = "UPDATE `channel` SET `start_date` = ?, `interface` = ?, `port` = ?, `listeners` = '0' WHERE `id` = ?";
-        Dba::write($sql, array($start_date, $address, $port, $this->id));
+        $sql = "UPDATE `channel` SET `start_date` = ?, `interface` = ?, `port` = ?, `pid` = ?, `listeners` = '0' WHERE `id` = ?";
+        Dba::write($sql, array($start_date, $address, $port, $pid, $this->id));
+
+        $this->start_date = $start_date;
+        $this->interface = $address;
+        $this->port = $port;
+        $this->pid = $pid;
     }
 
     public function update_listeners($listeners, $addition=false)
@@ -87,29 +92,97 @@ class Channel extends database_object
     public function delete()
     {
         $sql = "DELETE FROM `channel` WHERE `id` = ?";
-        Dba::write($sql, array($this->id));
+        return Dba::write($sql, array($this->id));
+    }
+
+    public static function get_next_port()
+    {
+        $port = 8200;
+        $sql = "SELECT MAX(`port`) AS `max_port` FROM `channel`";
+        $db_results = Dba::read($sql);
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $port = $results['max_port'] + 1;
+        }
+
+        return $port;
     }
 
     public static function create($name, $description, $url, $object_type, $object_id, $interface, $port, $admin_password, $private, $max_listeners, $random, $loop, $stream_type, $bitrate)
     {
-        $sql = "INSERT INTO `channel` (`name`, `description`, `url`, `object_type`, `object_id`, `interface`, `port`, `fixed_endpoint`, `admin_password`, `is_private`, `max_listeners`, `random`, `loop`, `stream_type`, `bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $accept = $GLOBALS['user']->has_access('75') ? true : AmpConfig::get('wanted_auto_accept');
-        $params = array($name, $description, $url, $object_type, $object_id, $interface, $port, (!empty($interface) && !empty($port)), $admin_password, $private, $max_listeners, $random, $loop, $stream_type, $bitrate);
-        Dba::write($sql, $params);
+        if (!empty($name)) {
+            $sql = "INSERT INTO `channel` (`name`, `description`, `url`, `object_type`, `object_id`, `interface`, `port`, `fixed_endpoint`, `admin_password`, `is_private`, `max_listeners`, `random`, `loop`, `stream_type`, `bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $accept = $GLOBALS['user']->has_access('75') ? true : AmpConfig::get('wanted_auto_accept');
+            $params = array($name, $description, $url, $object_type, $object_id, $interface, $port, (!empty($interface) && !empty($port)), $admin_password, $private, $max_listeners, $random, $loop, $stream_type, $bitrate);
+            return Dba::write($sql, $params);
+        }
+
+        return false;
     }
 
-    public function show_action_buttons()
+    public function update($data)
+    {
+        if (isset($data['edit_tags'])) {
+            Tag::update_tag_list($data['edit_tags'], 'channel', $this->id);
+        }
+
+        $sql = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ? " .
+            "WHERE `id` = ?";
+        $params = array($data['name'], $data['description'], $data['url'], $data['interface'], $data['port'], (!empty($data['interface']) && !empty($data['port'])), $data['admin_password'], $data['private'], $data['max_listeners'], $data['random'], $data['loop'], $data['stream_type'], $data['bitrate'], $this->id);
+        return Dba::write($sql, $params);
+    }
+
+    public static function format_type($type)
+    {
+        switch ($type) {
+            case 'playlist':
+                $ftype = $type;
+            break;
+            default:
+                $ftype = '';
+            break;
+        }
+
+        return $ftype;
+    }
+
+    public function show_action_buttons($tags_list = "")
     {
         if ($this->id) {
             if ($GLOBALS['user']->has_access('75')) {
-                echo " " . Ajax::button('?page=index&action=remove_channel&id=' . $this->id,'remove', T_('Remove'),'channel_remove_' . $this->id);
+                echo Ajax::button('?page=index&action=start_channel&id=' . $this->id,'run', T_('Start Channel'),'channel_start_' . $this->id);
+                echo " " . Ajax::button('?page=index&action=stop_channel&id=' . $this->id,'stop', T_('Stop Channel'),'channel_stop_' . $this->id);
+                echo " <a id=\"edit_channel_ " . $this->id . "\" onclick=\"showEditDialog('channel_row', '" . $this->id . "', 'edit_channel_" . $this->id . "', '" . T_('Channel edit') . "', '" . $tags_list . "', 'channel_row_', 'refresh_channel')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
+                echo " <a href=\"" . AmpConfig::get('web_path') . "/channel.php?action=show_delete&id=" . $this->id ."\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
     }
 
     public function format()
     {
+        $this->tags = Tag::get_top_tags('channel',$this->id);
+        $this->f_tags = Tag::get_display($this->tags, $this->id, 'channel');
+    }
 
+    public function get_target_object()
+    {
+        $object = null;
+        if ($this->object_type == 'playlist') {
+            $object = new Playlist($this->object_id);
+            $object->format();
+        }
+
+        return $object;
+    }
+
+    public function get_stream_url()
+    {
+        return "http://" . $this->interface . ":" . $this->port . "/stream." . $this->stream_type;
+    }
+
+    public function get_stream_proxy_url()
+    {
+        return AmpConfig::get('web_path') . '/channel/' . $this->id . '/stream.' . $this->stream_type;
     }
 
     public static function get_channel_list_sql()
@@ -132,12 +205,59 @@ class Channel extends database_object
         return $results;
     }
 
+    public function start_channel()
+    {
+        exec("php " . AmpConfig::get('prefix') . '/bin/channel_run.inc -c ' . $this->id);
+    }
+
+    public function stop_channel()
+    {
+        if ($this->pid) {
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                exec("taskkill /F /PID " . $this->pid);
+            } else {
+                exec("kill -9 " . $this->pid);
+            }
+
+            $sql = "UPDATE `channel` SET `start_date` = '0', `listeners` = '0', `pid` = '0' WHERE `id` = ?";
+            Dba::write($sql, array($this->id));
+
+            $this->pid = 0;
+        }
+    }
+
+    public function check_channel()
+    {
+        $check = false;
+        if ($this->interface && $this->port) {
+            $connection = @fsockopen($this->interface, $this->port);
+            if (is_resource($connection)) {
+                $check = true;
+                fclose($connection);
+            }
+        }
+        return $check;
+    }
+
+    public function get_channel_state()
+    {
+        $state = T_("Unknown");
+
+        if ($this->check_channel()) {
+            $state = T_("Running");
+        } else {
+            $state = T_("Stopped");
+        }
+
+        return $state;
+    }
+
     protected function init_channel_songs()
     {
         $this->song_pos = 0;
         $this->songs = array();
-        if ($this->object_type == 'playlist') {
-            $this->playlist = new Playlist($this->object_id);
+        $this->playlist = $this->get_target_object();
+        if ($this->playlist) {
             if (!$this->random) {
                 $this->songs = $this->playlist->get_songs();
             }
@@ -241,6 +361,12 @@ class Channel extends database_object
         }
 
         return $chunk;
+    }
+
+    public static function play_url($oid, $additional_params='')
+    {
+        $channel = new Channel($oid);
+        return $channel->get_stream_proxy_url() . '?rt=' . time() . '&filename=' . urlencode($channel->name) . '.' . $channel->stream_type . $additional_params;
     }
 
 } // end of channel class

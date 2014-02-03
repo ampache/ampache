@@ -166,7 +166,7 @@ class Query
                 'alpha_match',
                 'regex_match',
                 'regex_not_match'
-            ),
+            )
         );
 
         if (Access::check('interface','50')) {
@@ -250,6 +250,14 @@ class Query
                 'allow_stream',
                 'allow_download',
                 'expire'
+            ),
+            'channel' => array(
+                'id',
+                'name',
+                'interface',
+                'port',
+                'max_listeners',
+                'listeners'
             ),
         );
     }
@@ -579,6 +587,7 @@ class Query
             case 'wanted':
             case 'share':
             case 'song_preview':
+            case 'channel':
                 // Set it
                 $this->_state['type'] = $type;
                 $this->set_base_sql(true, $custom_base);
@@ -861,11 +870,15 @@ class Query
                 case 'wanted':
                     $this->set_select("DISTINCT(`wanted`.`id`)");
                     $sql = "SELECT %%SELECT%% FROM `wanted` ";
-                    break;
+                break;
                 case 'share':
                     $this->set_select("DISTINCT(`share`.`id`)");
                     $sql = "SELECT %%SELECT%% FROM `share` ";
-                    break;
+                break;
+                case 'channel':
+                    $this->set_select("DISTINCT(`channel`.`id`)");
+                    $sql = "SELECT %%SELECT%% FROM `channel` ";
+                break;
                 case 'playlist_song':
                 case 'song':
                 default:
@@ -1574,6 +1587,25 @@ class Query
                     break;
                     case 'expire':
                         $sql = "`share`.`expire`";
+                    break;
+                } // end switch on field
+            break;
+            case 'channel':
+                switch ($field) {
+                    case 'name':
+                        $sql = "`channel`.`name`";
+                    break;
+                    case 'interface':
+                        $sql = "`channel`.`interface`";
+                    break;
+                    case 'port':
+                        $sql = "`channel`.`port`";
+                    break;
+                    case 'max_listeners':
+                        $sql = "`channel`.`max_listeners`";
+                    break;
+                    case 'listeners':
+                        $sql = "`channel`.`listeners`";
                     break;
                 } // end switch on field
             break;

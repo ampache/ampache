@@ -26,7 +26,6 @@
 
 // Set that this is an ajax include
 define('AJAX_INCLUDE','1');
-
 require_once '../lib/init.php';
 
 xoutput_headers();
@@ -170,6 +169,11 @@ switch ($_REQUEST['action']) {
                 Radio::update($_POST);
                 $radio = new Radio($_POST['id']);
                 $radio->format();
+            break;
+            case 'channel_row':
+                $key = 'channel_row_' . $_POST['id'];
+                $channel = new Channel($_POST['id']);
+                $channel->update($_POST);
             break;
             default:
                 $key = 'rfc3514';

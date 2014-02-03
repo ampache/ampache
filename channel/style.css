@@ -38,7 +38,7 @@ html, body {
     padding-bottom: 0px;
     padding-left: 90px;
     height: 70px;
-    background: url(/images/icecast.png) no-repeat left center;
+    background: url(images/icecast.png) no-repeat left center;
 }
 .nav {
 	font-family: Verdana, sans-serif;
@@ -74,7 +74,7 @@ html, body {
     padding-left: 90px;
     margin-top: 0px;
     margin-bottom: 10px;
-    background: url(/images/icecast.png) no-repeat left center;
+    background: url(images/icecast.png) no-repeat left center;
 }
 .main iframe {
     width: 100%;
@@ -201,13 +201,13 @@ h3 {
     padding: 8px 5px 3px 30px;
     text-decoration: none;
     margin: 0px 0px 0px 20px;
-    background: transparent url("/images/tunein.png") no-repeat left center;
+    background: transparent url("images/tunein.png") no-repeat left center;
 }
 .streamheader a.auth {
     margin: 0px;
     padding-top: 14px;
     padding-bottom: 14px;
-    background: transparent url("/images/key.png") no-repeat left center;
+    background: transparent url("images/key.png") no-repeat left center;
 }
 .newscontent a {
     font-family: Verdana, sans-serif;

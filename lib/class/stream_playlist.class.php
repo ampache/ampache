@@ -141,6 +141,9 @@ class Stream_Playlist
                     $url['title'] = $object->title;
                     $url['author'] = $object->f_artist_full;
                 break;
+                case 'channel':
+                    $url['title'] = $object->name;
+                break;
                 case 'random':
                     $url['title'] = 'Random URL';
                 break;

@@ -100,11 +100,12 @@ if ($server === false)
 {
     die("Could not bind to socket: " . $errorMessage);
 }
-$channel->update_start($start_date, $address, $port);
+$channel->update_start($start_date, $address, $port, getmypid());
 echo T_("Listening on ") . $address . ':' . $port . "\n";
 
 $stream_clients = array();
 $client_socks = array();
+$last_stream = 0;
 while(true)
 {
     //prepare readable sockets
@@ -117,7 +118,6 @@ while(true)
     //start reading and use a large timeout
     if(stream_select ( $read_socks, $write, $except, 1))
     {
-        echo "select passed ". count($read_socks) ."\n";
         //new client
         if (in_array($server, $read_socks))
         {
@@ -140,7 +140,6 @@ while(true)
         // Get new message from existing client
         foreach($read_socks as $sock)
         {
-            echo "Reading data...\n";ob_flush();
             $data = fread($sock, 1024);
             if(!$data)
             {
@@ -175,9 +174,11 @@ while(true)
                             
                             // Stream request
                             if ($options['metadata']) {
-                                fwrite($sock, "ICY 200 OK\r\n");
+                                //fwrite($sock, "ICY 200 OK\r\n");
+                                fwrite($sock, "HTTP/1.0 200 OK\r\n");
                             } else  {
                                 fwrite($sock, "HTTP/1.1 200 OK\r\n");
+                                fwrite($sock, "Cache-Control: no-store, no-cache, must-revalidate\r\n");
                             }
                             fwrite($sock, "Content-Type: " . Song::type_to_mime($transcode_to) . "\r\n");
                             fwrite($sock, "Accept-Ranges: none\r\n");
@@ -241,7 +242,7 @@ while(true)
                             // Content
                             $xsl .= "<div class=\"roundcont\">" . "\n";
                             $xsl .= "<div class=\"roundtop\">" . "\n";
-                            $xsl .= "<img src=\"/images/corner_topleft.jpg\" class=\"corner\" style=\"display: none\" alt=\"\" />" . "\n";
+                            $xsl .= "<img src=\"images/corner_topleft.jpg\" class=\"corner\" style=\"display: none\" alt=\"\" />" . "\n";
                             $xsl .= "</div>" . "\n";
                             $xsl .= "<div class=\"newscontent\">" . "\n";
                             $xsl .= "<div class=\"streamheader\">" . "\n";
@@ -251,7 +252,7 @@ while(true)
                             $xsl .= "<tr>" . "\n";
                             $xsl .= "<td><h3>Mount Point /stream." . $channel->stream_type . "</h3></td>" . "\n";
                             $xsl .= "<td align=\"right\">" . "\n";
-                            $xsl .= "<a href=\"/stream.". $channel->stream_type .".m3u\">M3U</a>" . "\n";
+                            $xsl .= "<a href=\"stream.". $channel->stream_type .".m3u\">M3U</a>" . "\n";
                             $xsl .= "</td>" . "\n";
                             $xsl .= "</tr>" . "\n";
                             $xsl .= "</table>" . "\n";
@@ -305,7 +306,7 @@ while(true)
                             $xsl .= "</table>" . "\n";
                             $xsl .= "</div>" . "\n";
                             $xsl .= "<div class=\"roundbottom\">" . "\n";
-                            $xsl .= "<img src=\"/images/corner_bottomleft.jpg\" class=\"corner\" style=\"display: none\" alt=\"\" />" . "\n";
+                            $xsl .= "<img src=\"images/corner_bottomleft.jpg\" class=\"corner\" style=\"display: none\" alt=\"\" />" . "\n";
                             $xsl .= "</div>" . "\n";
                             $xsl .= "</div>" . "\n";
                             $xsl .= "<br /><br />" . "\n";
@@ -368,7 +369,7 @@ while(true)
                             fwrite($sock, "Content-Type: audio/x-mpegurl\r\n");
                             fwrite($sock, "\r\n");
                             
-                            fwrite($sock, "http://" . $address . ":" . $port . "/stream." . $channel->stream_type . "\n");
+                            fwrite($sock, $channel->get_stream_url() . "\n");
             
                             fclose($sock);
                             unset($client_socks[array_search($sock, $client_socks)]);
@@ -386,7 +387,17 @@ while(true)
     }
     
     if ($channel->bitrate) {
-        $nb_chunks = ($channel->bitrate * 1000) / 4096;
+        $time_offset = microtime(true) - $last_stream;
+        //$mtime = ($last_stream > 0 && $time_offset < 1000000) ? $time_offset : 1;
+        $mtime = 1;
+        if ($last_stream > 0 && $time_offset < 1) {
+            usleep(1000000 - ($time_offset * 1000000));
+        } elseif ($last_stream > 0) {
+            //$mtime = $time_offset;
+        }
+        $nb_chunks = ceil(($mtime * $channel->bitrate * 1000) / 4096);
+        debug_event('channel', "($mtime * $channel->bitrate * 1000) / 4096", '5');
+        debug_event('channel', 'Time offset: ' . $time_offset . ' - Nb chunks: ' . $nb_chunks, '5');
     } else {
         $nb_chunks = 1;
     }
@@ -436,8 +447,11 @@ while(true)
                 //debug_event('channel', 'Client stream current length: ' . $client['length'], '5');
             }
         } else {
+            $channel->update_listeners(0);
             die('No more data, stream ended.');
         }
+        
+        $last_stream = microtime(true);
     }
 }
 

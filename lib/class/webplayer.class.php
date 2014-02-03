@@ -126,8 +126,8 @@ class WebPlayer
             $types['real'] = $item->codec;
             if ($types['real'] == "flac" || $types['real'] == "ogg") $types['player'] = "oga";
         } else {
-            $ext = pathinfo($url, PATHINFO_EXTENSION);
-            if (!empty($ext)) $types['player'] = $ext;
+            $ext = pathinfo($item->url, PATHINFO_EXTENSION);
+            if (!empty($ext)) $types['real'] = $ext;
         }
 
         if (empty($types['player'])) $types['player'] = $types['real'];

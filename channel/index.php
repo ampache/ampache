@@ -1,0 +1,96 @@
+<?php
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+/**
+ *
+ * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * Copyright 2001 - 2013 Ampache.org
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License v2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+
+/*
+
+ This is the wrapper for opening music streams from this server.  This script
+   will play the local version or redirect to the remote server if that be
+   the case.  Also this will update local statistics for songs as well.
+   This is also where it decides if you need to be downsampled.
+*/
+define('NO_SESSION','1');
+require_once '../lib/init.php';
+ob_end_clean();
+
+set_time_limit(0);
+
+$channel = new Channel($_REQUEST['channel']);
+if (!$channel->id) {
+    debug_event('channel', 'Unknown channel.', '1');
+    exit;
+}
+
+if (!function_exists('curl_version')) {
+    debug_event('channel', 'Error: Curl is required for this feature.', '1');
+    exit;
+}
+
+// Authenticate the user here
+if ($channel->is_private) {
+    $GLOBALS['user'] = new User($username);
+    Preference::init();
+
+    if (AmpConfig::get('access_control')) {
+        if (!Access::check_network('stream',$GLOBALS['user']->id,'25') AND
+            !Access::check_network('network',$GLOBALS['user']->id,'25')) {
+            debug_event('UI::access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
+            UI::access_denied();
+            exit;
+        }
+    }
+}
+
+$url = 'http://' . $channel->interface . ':' . $channel->port . '/' . $_REQUEST['target'];
+// Redirect request to the real channel server
+$headers = getallheaders();
+$headers['Host'] = $channel->interface;
+$reqheaders = array();
+foreach ($headers as $key => $value) {
+    $reqheaders[] = $key . ': ' . $value;
+}
+
+$ch = curl_init($url);
+curl_setopt_array($ch, array(
+    CURLOPT_HTTPHEADER => $reqheaders,
+    CURLOPT_HEADER => false,
+    CURLOPT_RETURNTRANSFER => false,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HEADERFUNCTION => 'output_header',
+    CURLOPT_NOPROGRESS => false,
+    CURLOPT_PROGRESSFUNCTION => 'progress',
+));
+curl_exec($ch);
+curl_close($ch);
+
+function progress($totaldownload, $downloaded, $us, $ud)
+{
+    ob_flush();
+}
+
+function output_header($ch, $header)
+{
+    $th = trim($header);
+    if (!empty($th)) {
+        header($th);
+    }
+    return strlen($header);
+}
