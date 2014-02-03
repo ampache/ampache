@@ -46,16 +46,34 @@ if (!function_exists('curl_version')) {
 
 // Authenticate the user here
 if ($channel->is_private) {
-    $GLOBALS['user'] = new User($username);
-    Preference::init();
+    $is_auth = false;
+    if (isset($_SERVER['PHP_AUTH_USER'])) {
+        $htusername = $_SERVER['PHP_AUTH_USER'];
+        $htpassword = $_SERVER['PHP_AUTH_PW'];
 
-    if (AmpConfig::get('access_control')) {
-        if (!Access::check_network('stream',$GLOBALS['user']->id,'25') AND
-            !Access::check_network('network',$GLOBALS['user']->id,'25')) {
-            debug_event('UI::access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
-            UI::access_denied();
-            exit;
+        $auth = Auth::login($htusername, $htpassword);
+        if ($auth['success']) {
+            $username = $auth['username'];
+            $GLOBALS['user'] = new User($username);
+            $is_auth = true;
+            Preference::init();
+
+            if (AmpConfig::get('access_control')) {
+                if (!Access::check_network('stream',$GLOBALS['user']->id,'25') AND
+                    !Access::check_network('network',$GLOBALS['user']->id,'25')) {
+                    debug_event('UI::access_denied', "Streaming Access Denied: " . $_SERVER['REMOTE_ADDR'] . " does not have stream level access",'3');
+                    UI::access_denied();
+                    exit;
+                }
+            }
         }
+    }
+
+    if (!$is_auth) {
+        header('WWW-Authenticate: Basic realm="Ampache Channel Authentication"');
+        header('HTTP/1.0 401 Unauthorized');
+        echo T_('Unauthorized.');
+        exit;
     }
 }
 
