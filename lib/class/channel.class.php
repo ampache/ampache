@@ -209,7 +209,7 @@ class Channel extends database_object
 
     public function start_channel()
     {
-        exec("php " . AmpConfig::get('prefix') . '/bin/channel_run.inc -c ' . $this->id);
+        exec("php " . AmpConfig::get('prefix') . '/bin/channel_run.inc -c ' . $this->id . ' > /dev/null &');
     }
 
     public function stop_channel()
