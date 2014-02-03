@@ -396,8 +396,6 @@ while(true)
             //$mtime = $time_offset;
         }
         $nb_chunks = ceil(($mtime * $channel->bitrate * 1000) / 4096);
-        debug_event('channel', "($mtime * $channel->bitrate * 1000) / 4096", '5');
-        debug_event('channel', 'Time offset: ' . $time_offset . ' - Nb chunks: ' . $nb_chunks, '5');
     } else {
         $nb_chunks = 1;
     }
