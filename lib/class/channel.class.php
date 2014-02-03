@@ -102,7 +102,9 @@ class Channel extends database_object
         $db_results = Dba::read($sql);
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            $port = $results['max_port'] + 1;
+            if ($results['max_port'] > 0) {
+                $port = $results['max_port'] + 1;
+            }
         }
 
         return $port;
