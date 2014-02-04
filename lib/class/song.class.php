@@ -986,7 +986,7 @@ class Song extends database_object implements media
 
         $song_name = rawurlencode($song->get_artist_name() . " - " . $song->title . "." . $type);
 
-        $url = Stream::get_base_url() . "type=song&oid=" . $song->id . "&uid=" . $user_id . "&name=" . str_replace("/", "-", rawurlencode($song_name));
+        $url = Stream::get_base_url() . "type=song&oid=" . $song->id . "&uid=" . $user_id . "&name=" . rawurlencode(str_replace("/", "-", $song_name));
 
         return Stream_URL::format($url . $additional_params);
 
