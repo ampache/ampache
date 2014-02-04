@@ -984,9 +984,12 @@ class Song extends database_object implements media
         // working player, don't report this as a bug!
         if ($song->type == 'flac') { $type = 'ogg'; }
 
-        $song_name = rawurlencode($song->get_artist_name() . " - " . $song->title . "." . $type);
+        $song_name = $song->get_artist_name() . " - " . $song->title . "." . $type;
+		$song_name = str_replace("/", "-", $song_name);
+		$song_name = str_replace("?", "", $song_name);
+		$song_name = rawurlencode($song_name);
 
-        $url = Stream::get_base_url() . "type=song&oid=" . $song->id . "&uid=" . $user_id . "&name=" . rawurlencode(str_replace("/", "-", $song_name));
+        $url = Stream::get_base_url() . "type=song&oid=" . $song->id . "&uid=" . $user_id . "&name=" . $song_name;
 
         return Stream_URL::format($url . $additional_params);
 
