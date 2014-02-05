@@ -2204,6 +2204,7 @@ class Update
             "`user` int(11) unsigned NOT NULL," .
             "`name` varchar(64) CHARACTER SET utf8 NULL," .
             "`description` varchar(256) CHARACTER SET utf8 NULL," .
+            "`is_private` tinyint(1) unsigned NOT NULL DEFAULT '0'," .
             "`song` int(11) unsigned NOT NULL DEFAULT '0'," .
             "`song_position` int(11) unsigned NOT NULL DEFAULT '0'," .
             "`started` tinyint(1) unsigned NOT NULL DEFAULT '0'," .
