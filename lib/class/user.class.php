@@ -718,10 +718,18 @@ class User extends database_object
 
         /* Now Insert this new user */
         $sql = "INSERT INTO `user` (`username`, `disabled`, " .
-            "`fullname`, `email`, `website`, `password`, `access`, " .
-            "`create_date`)" .
-            "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($username, $disabled, $fullname, $email, $website, $password, $access, time()));
+            "`fullname`, `email`, `password`, `access`, `create_date`";
+		$params = array($username, $disabled, $fullname, $email, $password, $access, time());
+		if (!empty($website)) {
+			$sql .= ", `website`";
+			$params[] = $website;
+		}
+		$sql .= ") VALUES(?, ?, ?, ?, ?, ?, ?";
+		if (!empty($website)) {
+			$sql .= ", ?";
+		}
+		$sql .= ")";
+        $db_results = Dba::write($sql, $params);
 
         if (!$db_results) { return false; }
 
