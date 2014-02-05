@@ -48,7 +48,6 @@ class Core
      */
     public static function autoload($class)
     {
-        // Ignore class with namespace, not used by Ampache
         if (strpos($class, '\\') === false) {
             $file = AmpConfig::get('prefix') . '/lib/class/' .
                 strtolower($class) . '.class.php';
@@ -63,6 +62,23 @@ class Core
                 }
             } else {
                 debug_event('autoload', "'$class' not found!", 1);
+            }
+        } else {
+            // Class with namespace are not used by Ampache but probably by modules
+            $split = explode('\\', $class);
+            $path = AmpConfig::get('prefix') . '/modules';
+            for ($i = 0; $i < count($split); ++$i) {
+                $path .= '/' . $split[$i];
+                if ($i != count($split)-1) {
+                    if (!is_dir($path)) {
+                        break;
+                    }
+                } else {
+                    $path .= '.php';
+                    if (Core::is_readable($path)) {
+                        require_once $path;
+                    }
+                }
             }
         }
     }

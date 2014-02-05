@@ -31,6 +31,7 @@ ob_end_flush();
 $metadata_interval = 16000;
 
 $start_date = time();
+$verbose = false;
 $port = 0;
 $chanid = 0;
 
@@ -44,7 +45,7 @@ if ($cargv > 1) {
         } 
         elseif ($_SERVER['argv'][$x] == "-v") {
             $operations_string .= "\n\t" . T_('- Verbose');
-            $catverify = 1;
+            $verbose = true;
         } 
         elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
             $port = intval($_SERVER['argv'][++$x]);

@@ -64,26 +64,31 @@ as published by the Free Software Foundation.
 
 Ampache includes some external modules that carry their own licensing.
 
-* [getID3](http://getid3.sourceforge.net/): GPL v2
-* [Horde_Browser](http://www.horde.org/): LGPL v2.1
+* [getID3](http://getid3.sourceforge.net): GPL v2
+* [Horde_Browser](http://www.horde.org): LGPL v2.1
 * [PHP-gettext](https://launchpad.net/php-gettext): GPL v2
-* [MusicBrainz](https://github.com/mikealmond/MusicBrainz/): MIT
+* [MusicBrainz](https://github.com/mikealmond/MusicBrainz): MIT
 * PHP MPD interface: GPL v2
 * [PHPMailer](https://github.com/PHPMailer/PHPMailer): LGPL v2.1
-* [jQuery](http://jquery.org/): MIT
-* [Requests](http://requests.ryanmccue.info/): ISC Licensed
+* [jQuery](http://jquery.org): MIT
+* [Requests](http://requests.ryanmccue.info): ISC Licensed
 * [Whatever:hover](http://www.xs4all.nl/~peterned): LGPL v2.1
 * [xbmc-php-rpc](https://github.com/karlrixon/xbmc-php-rpc): GPL v3
 * [Dropbox SDK](https://github.com/dropbox/dropbox-sdk-php): MIT
-* [jPlayer](http://jplayer.org/): MIT
-* [prettyPhoto](http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone/): GPL v2
-* [unofficial-google-music-api-php](http://code.google.com/p/unofficial-google-music-api-php/): GPL v3
-* [Tag-it!] (http://aehlke.github.io/tag-it/): MIT
+* [jPlayer](http://jplayer.org): MIT
+* [prettyPhoto](http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone): GPL v2
+* [unofficial-google-music-api-php](http://code.google.com/p/unofficial-google-music-api-php): GPL v3
+* [Tag-it!] (http://aehlke.github.io/tag-it): MIT
 * [PHP Echo Nest API] (https://github.com/bshaffer/php-echonest-api): MIT
-* [Noty] (http://ned.im/noty/): MIT
+* [Noty] (http://ned.im/noty): MIT
 * [jScroll] (https://github.com/pklauzinski/jscroll): MIT
-* [jquery.qrcode] (http://jeromeetienne.github.io/jquery-qrcode/): MIT
-* [PHP OpenID] (https://github.com/openid/php-openid/): Apache License
+* [jquery.qrcode] (http://jeromeetienne.github.io/jquery-qrcode): MIT
+* [PHP OpenID] (https://github.com/openid/php-openid): Apache License
+* [Ratchet] (http://socketo.me): MIT
+* [ReactPHP] (https://github.com/reactphp/react): MIT
+* [Guzzle] (https://github.com/guzzle/guzzle): MIT
+* [Symfony Components] (https://github.com/symfony/): MIT
+* [Evenement] (https://github.com/igorw/evenement): MIT
 
 
 Translations

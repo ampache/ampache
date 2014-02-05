@@ -370,6 +370,9 @@ class Update
         $update_string = '- Add channels.<br />';
         $version[] = array('version' => '360041','description' => $update_string);
 
+        $update_string = '- Add broadcasts and player control.<br />';
+        $version[] = array('version' => '360042','description' => $update_string);
+
         return $version;
     }
 
@@ -2186,6 +2189,39 @@ class Update
             "`bitrate` int(11) unsigned NOT NULL DEFAULT '128'," .
             "`pid` int(11) unsigned NOT NULL DEFAULT '0'," .
             "PRIMARY KEY (`id`))";
+        return Dba::write($sql);
+    }
+
+    /**
+     * update_360042
+     *
+     * Add broadcasts and player control
+     */
+    public static function update_360042()
+    {
+        $sql = "CREATE TABLE `broadcast` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`user` int(11) unsigned NOT NULL," .
+            "`name` varchar(64) CHARACTER SET utf8 NULL," .
+            "`description` varchar(256) CHARACTER SET utf8 NULL," .
+            "`song` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "`song_position` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "`started` tinyint(1) unsigned NOT NULL DEFAULT '0'," .
+            "`listeners` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "`key` varchar(32) CHARACTER SET utf8 NULL," .
+            "PRIMARY KEY (`id`))";
+        Dba::write($sql);
+
+        $sql = "CREATE TABLE `player_control` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`user` int(11) unsigned NOT NULL," .
+            "`cmd` varchar(32) CHARACTER SET utf8 NOT NULL," .
+            "`value` varchar(256) CHARACTER SET utf8 NULL," .
+            "`object_type` varchar(32) NOT NULL," .
+            "`object_id` int(11) unsigned NOT NULL," .
+            "`send_date` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "PRIMARY KEY (`id`))";
+
         return Dba::write($sql);
     }
 }
