@@ -26,7 +26,7 @@ $tags_list = Tag::get_display(Tag::get_tags());
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
         <th class="cel_play"></th>
-        <th class="cel_name"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=id', T_('#'),'channel_sort_id'); ?></th>
+        <th class="cel_id"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=id', T_('#'),'channel_sort_id'); ?></th>
         <th class="cel_name"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=name', T_('Name'),'channel_sort_name'); ?></th>
         <th class="cel_interface"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=interface', T_('Interface'),'channel_sort_interface'); ?></th>
         <th class="cel_port"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=port', T_('Port'),'channel_sort_port'); ?></th>

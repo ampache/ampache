@@ -393,6 +393,12 @@ wanted_types = "album,official"
 ; EchoNest provides several music services. Currently used for missing song 30 seconds preview.
 ;echonest_api_key = ""
 
+; Broadcasts
+; Allow users to broadcast music.
+; This feature requires advanced server configuration, please take a look on the wiki for more information.
+; DEFAULT: false
+;broadcast = "false"
+
 ; Amazon base urls
 ; An array of Amazon sites to search.
 ; NOTE: This will search each of these sites in turn so don't expect it

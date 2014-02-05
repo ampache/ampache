@@ -20,14 +20,16 @@
  *
  */
 ?>
-<div style="clear:both;"></div>
-</div> <!-- end id="content"-->
-</div> <!-- end id="maincontainer"-->
-<div id="footer">
-    <a href="https://github.com/ampache-doped/ampache#readme" target="_blank">Ampache-doped <?php echo AmpConfig::get('version'); ?></a><br />
-    Copyright © 2013 - 2014 Ampache-doped.github.io<br />
-    Copyright © 2001 - 2013 Ampache.org |
-    <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
-</div>
-</body>
-</html>
+<td class="cel_play">
+    <span class="cel_play_content">&nbsp;</span>
+    <div class="cel_play_hover">
+    <?php if (AmpConfig::get('directplay')) { ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=broadcast&broadcast_id=' . $broadcast->id,'play', T_('Play'),'play_broadcast_' . $channel->id); ?>
+<?php } ?>
+    </div>
+</td>
+<td class="cel_name"><?php echo $broadcast->name; ?></td>
+<td class="cel_genre"></td>
+<td class="cel_started"><?php echo ($broadcast->started ? T_('Yes') : T_('No')); ?></td>
+<td class="cel_listeners"><?php echo $broadcast->listeners; ?></td>
+<td class="cel_action"><?php $broadcast->show_action_buttons($tags_list); ?></td>

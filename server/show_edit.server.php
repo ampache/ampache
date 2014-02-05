@@ -74,6 +74,10 @@ switch ($_REQUEST['action']) {
                 $channel = new Channel($_GET['id']);
                 $channel->format();
             break;
+			case 'broadcast_row':
+                $broadcast = new Broadcast($_GET['id']);
+                $broadcast->format();
+            break;
             default:
                 exit();
         } // end switch on type

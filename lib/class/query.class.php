@@ -259,6 +259,12 @@ class Query
                 'max_listeners',
                 'listeners'
             ),
+			'broadcast' => array(
+                'name',
+                'user',
+				'started',
+                'listeners'
+            ),
         );
     }
 
@@ -588,6 +594,7 @@ class Query
             case 'share':
             case 'song_preview':
             case 'channel':
+			case 'broadcast':
                 // Set it
                 $this->_state['type'] = $type;
                 $this->set_base_sql(true, $custom_base);
@@ -878,6 +885,10 @@ class Query
                 case 'channel':
                     $this->set_select("DISTINCT(`channel`.`id`)");
                     $sql = "SELECT %%SELECT%% FROM `channel` ";
+                break;
+				case 'broadcast':
+                    $this->set_select("DISTINCT(`broadcast`.`id`)");
+                    $sql = "SELECT %%SELECT%% FROM `broadcast` ";
                 break;
                 case 'playlist_song':
                 case 'song':
@@ -1606,6 +1617,22 @@ class Query
                     break;
                     case 'listeners':
                         $sql = "`channel`.`listeners`";
+                    break;
+                } // end switch on field
+            break;
+			case 'broadcast':
+                switch ($field) {
+                    case 'name':
+                        $sql = "`broadcast`.`name`";
+                    break;
+                    case 'user':
+                        $sql = "`broadcast`.`user`";
+                    break;
+					case 'started':
+                        $sql = "`broadcast`.`started`";
+                    break;
+                    case 'listeners':
+                        $sql = "`broadcast`.`listeners`";
                     break;
                 } // end switch on field
             break;

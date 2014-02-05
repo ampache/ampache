@@ -48,6 +48,7 @@ switch ($_REQUEST['action']) {
     case 'video':
     case 'song':
     case 'channel':
+	case 'broadcast':
         $browse->set_type($_REQUEST['action']);
         $browse->set_simple_browse(true);
     break;
@@ -114,6 +115,10 @@ switch ($_REQUEST['action']) {
         $browse->show_objects();
     break;
     case 'channel':
+        $browse->set_sort('id', 'ASC');
+        $browse->show_objects();
+    break;
+	case 'broadcast':
         $browse->set_sort('id', 'ASC');
         $browse->show_objects();
     break;
