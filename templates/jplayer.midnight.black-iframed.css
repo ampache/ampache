@@ -812,4 +812,19 @@ a.jp-shuffle-off:hover {
     color: #CCC;
 }
 
+.broadcast {
+	position: absolute;
+	top: 2px;
+	right:350px;
+	font-size: 0.67em;
+}
+
+.broadcast-info {
+	display: none;
+}
+
+.broadcast-action {
+	display: inline;
+}
+
 /* @end */

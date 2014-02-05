@@ -390,6 +390,14 @@ if ($isVideo) {
 <?php } ?>
         </div>
       </div>
+<?php if (AmpConfig::get('broadcast')) { ?>
+	  <div class="broadcast">
+		<div class="broadcast-action">
+			<?php echo Ajax::button('?page=player&action=broadcast', 'broadcast', T_('Broadcast'), 'broadcast_action'); ?>
+		</div>
+		<div class="broadcast-info">(<span id="broadcast_listeners">0</span>)</div>
+	  </div>
+<?php } ?>
       <div class="jp-playlist" style="position: absolute;">
           <ul>
               <li></li>
