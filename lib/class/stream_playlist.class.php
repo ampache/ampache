@@ -97,10 +97,10 @@ class Stream_Playlist
     }
 
     /**
-     * _media_to_urlarray
+     * media_to_urlarray
      * Formats the URL and media information and adds it to the object
      */
-    private static function _media_to_urlarray($media, $additional_params='')
+    public static function media_to_urlarray($media, $additional_params='')
     {
         $urls = array();
         foreach ($media as $medium) {
@@ -108,6 +108,7 @@ class Stream_Playlist
             $url = array();
 
             $type = $medium['object_type'];
+            //$url['object_id'] = $medium['object_id'];
             $url['type'] = $type;
 
             $object = new $type($medium['object_id']);
@@ -230,7 +231,7 @@ class Stream_Playlist
      */
     public function add($media = array(), $additional_params = '')
     {
-        $urls = $this->_media_to_urlarray($media, $additional_params);
+        $urls = $this->media_to_urlarray($media, $additional_params);
         foreach ($urls as $url) {
             $this->_add_url($url);
         }

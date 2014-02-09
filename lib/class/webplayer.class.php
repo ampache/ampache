@@ -62,7 +62,7 @@ class WebPlayer
 
     }
 
-    protected static function get_types($item)
+    protected static function get_types($item, $force_type='')
     {
         $types = array('real' => 'mp3', 'player' => '');
 
@@ -70,10 +70,15 @@ class WebPlayer
         if (count($browsers) > 0 ) {
             $browser = $browsers[0];
         }
-        if ($browser == "msie" || $browser == "trident" || $browser == "webkit" || $browser == "safari") {
-            $types['real'] = "mp3";
+
+        if (!empty($force_type)) {
+            $types['real'] = $force_type;
         } else {
-            $types['real'] = "ogg";
+            if ($browser == "msie" || $browser == "trident" || $browser == "webkit" || $browser == "safari") {
+                $types['real'] = "mp3";
+            } else {
+                $types['real'] = "ogg";
+            }
         }
 
         $song = null;
@@ -90,7 +95,7 @@ class WebPlayer
             $transcode = false;
             $transcode_cfg = AmpConfig::get('transcode');
             // Check transcode is required
-            if ($transcode_cfg == 'always' || ($types['real'] != $ftype && !AmpConfig::get('webplayer_flash'))) {
+            if ($transcode_cfg == 'always' || !empty($force_type) || ($types['real'] != $ftype && !AmpConfig::get('webplayer_flash'))) {
                 $valid_types = Song::get_stream_types_for_type($ftype);
                 if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                     // Transcode only if excepted type available
@@ -139,7 +144,11 @@ class WebPlayer
     {
         $jptypes = array();
         foreach ($playlist->urls as $item) {
-            $types = self::get_types($item);
+            $force_type = '';
+            if ($item->type == 'broadcast') {
+                $force_type = 'mp3';
+            }
+            $types = self::get_types($item, $force_type);
             if (!in_array($types['player'], $jptypes)) {
                 $jptypes[] = $types['player'];
             }
@@ -148,50 +157,60 @@ class WebPlayer
         return $jptypes;
     }
 
-    public static function add_media_js($playlist, $callback='addMedia')
+    public static function add_media_js($playlist, $callback_container='')
     {
         $addjs = "";
         foreach ($playlist->urls as $item) {
-            $js = array();
-            foreach (array('title', 'author') as $member) {
-                if ($member == "author")
-                    $kmember = "artist";
-                else
-                    $kmember = $member;
-
-                $js[$kmember] = $item->$member;
+            if ($item->type == 'broadcast') {
+                $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
+                break;
+            } else {
+                $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item) . ");";
             }
-            $url = $item->url;
-
-            $types = self::get_types($item);
-            $song = null;
-            $urlinfo = Stream_URL::parse($url);
-            if ($urlinfo['id'] && $urlinfo['type'] == 'song') {
-                $song = new Song($urlinfo['id']);
-            } else if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
-                $song = new Song_Preview($urlinfo['id']);
-            }
-
-            if ($song != null) {
-                $js['artist_id'] = $song->artist;
-                $js['album_id'] = $song->album;
-                $js['song_id'] = $song->id;
-
-                if ($song->type != $types['real']) {
-                    $url .= '&transcode_to=' . $types['real'];
-                }
-                //$url .= "&content_length=required";
-            }
-
-            $js['filetype'] = $types['player'];
-            $js['url'] = $url;
-            if ($urlinfo['type'] == 'song') {
-                $js['poster'] = $item->image_url . (!$iframed ? '&thumb=4' : '');
-            }
-
-            $addjs .= $callback . "(" . json_encode($js) . ");";
         }
 
         return $addjs;
+    }
+
+    public static function get_media_js_param($item, $force_type='')
+    {
+        $js = array();
+        foreach (array('title', 'author') as $member) {
+            if ($member == "author")
+                $kmember = "artist";
+            else
+                $kmember = $member;
+
+            $js[$kmember] = $item->$member;
+        }
+        $url = $item->url;
+
+        $types = self::get_types($item, $force_type);
+        $song = null;
+        $urlinfo = Stream_URL::parse($url);
+        if ($urlinfo['id'] && $urlinfo['type'] == 'song') {
+            $song = new Song($urlinfo['id']);
+        } else if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
+            $song = new Song_Preview($urlinfo['id']);
+        }
+
+        if ($song != null) {
+            $js['artist_id'] = $song->artist;
+            $js['album_id'] = $song->album;
+            $js['song_id'] = $song->id;
+
+            if ($song->type != $types['real']) {
+                $url .= '&transcode_to=' . $types['real'];
+            }
+            //$url .= "&content_length=required";
+        }
+
+        $js['filetype'] = $types['player'];
+        $js['url'] = $url;
+        if ($urlinfo['type'] == 'song') {
+            $js['poster'] = $item->image_url . (!$iframed ? '&thumb=4' : '');
+        }
+
+        return json_encode($js);
     }
 }

@@ -29,7 +29,7 @@
     </div>
 </td>
 <td class="cel_name"><?php echo $broadcast->name; ?></td>
-<td class="cel_genre"></td>
+<td class="cel_genre"><?php echo $broadcast->f_tags; ?></td>
 <td class="cel_started"><?php echo ($broadcast->started ? T_('Yes') : T_('No')); ?></td>
 <td class="cel_listeners"><?php echo $broadcast->listeners; ?></td>
 <td class="cel_action"><?php $broadcast->show_action_buttons($tags_list); ?></td>

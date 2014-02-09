@@ -42,10 +42,10 @@ class Broadcast extends database_object
 
     public function update_state($started, $key='')
     {
-        $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ? `song` = '0', `song_position` = '0', `listeners` = '0' WHERE `id` = ?";
+        $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?";
         Dba::write($sql, array($started, $key, $this->id));
 
-        $this->started = $start_date;
+        $this->started = $started;
     }
 
     public function update_listeners($listeners)
@@ -54,6 +54,15 @@ class Broadcast extends database_object
             "WHERE `id` = ?";
         Dba::write($sql, array($listeners, $this->id));
         $this->listeners = $listeners;
+    }
+
+    public function update_song($song_id)
+    {
+        $sql = "UPDATE `broadcast` SET `song` = ? " .
+            "WHERE `id` = ?";
+        Dba::write($sql, array($song_id, $this->id));
+        $this->song = $song_id;
+        $this->song_position = 0;
     }
 
     public function delete()
@@ -65,7 +74,7 @@ class Broadcast extends database_object
     public static function create($name, $description='')
     {
         if (!empty($name)) {
-            $sql = "INSERT INTO `broadcast` (`user`, `name`, `description`) VALUES (?, ?, ?)";
+            $sql = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
             $params = array($GLOBALS['user']->id, $name, $description);
             Dba::write($sql, $params);
             return Dba::insert_id();
@@ -77,12 +86,12 @@ class Broadcast extends database_object
     public function update($data)
     {
         if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'channel', $this->id);
+            Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id);
         }
 
-        $sql = "UPDATE `broadcast` SET `name` = ?, `description` = ? " .
+        $sql = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? " .
             "WHERE `id` = ?";
-        $params = array($data['name'], $data['description'], $this->id);
+        $params = array($data['name'], $data['description'], !empty($data['private']), $this->id);
         return Dba::write($sql, $params);
     }
 
@@ -90,7 +99,7 @@ class Broadcast extends database_object
     {
         $this->f_name = $this->name;
         $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/broadcast.php?id=' . $this->id . '">' . scrub_out($this->f_name) . '</a>';
-        $this->tags = Tag::get_top_tags('broadcast',$this->id);
+        $this->tags = Tag::get_top_tags('broadcast', $this->id);
         $this->f_tags = Tag::get_display($this->tags, $this->id, 'broadcast');
     }
 
@@ -125,7 +134,7 @@ class Broadcast extends database_object
         $sql = "SELECT `id` FROM `broadcast` WHERE `key` = ?";
         $db_results = Dba::read($sql, array($key));
 
-        if ($results = Dba::featch_assoc($db_results)) {
+        if ($results = Dba::fetch_assoc($db_results)) {
             return new Broadcast($results['id']);
         }
 
@@ -169,6 +178,11 @@ class Broadcast extends database_object
             $broadcasts[] = $results['id'];
         }
         return $broadcasts;
+    }
+
+    public static function play_url($oid, $additional_params='')
+    {
+        return $oid;
     }
 
 } // end of broadcast class

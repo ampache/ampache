@@ -179,6 +179,11 @@ switch ($_REQUEST['action']) {
                 $channel = new Channel($_POST['id']);
                 $channel->update($_POST);
             break;
+            case 'broadcast_row':
+                $key = 'broadcast_row_' . $_POST['id'];
+                $broadcast = new Broadcast($_POST['id']);
+                $broadcast->update($_POST);
+            break;
             default:
                 $key = 'rfc3514';
                 echo xoutput_from_array(array($key=>'0x1'));

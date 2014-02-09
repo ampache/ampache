@@ -173,7 +173,7 @@ if (!defined('INSTALL')) {
             $http_type = 'https://';
         }
 
-        $results['web_path'] = $http_type . $_SERVER['HTTP_HOST'] . AmpConfig::get('web_path');
+        $results['web_path'] = $http_type . AmpConfig::get('http_host') . AmpConfig::get('web_path');
         if (check_config_values($results)) {
             echo "&nbsp;&nbsp;&nbsp;<img src=\"" . $results['web_path'] ."/images/icon_enable.png\" />&nbsp;&nbsp;&nbsp;";
         } else {

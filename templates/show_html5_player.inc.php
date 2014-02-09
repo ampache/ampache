@@ -43,6 +43,7 @@ function NavigateTo(url)
 var jpuqid = (new Date()).getMilliseconds();
 var jplaylist = null;
 var timeoffset = 0;
+var currentjpindex = 0;
 
     $(document).ready(function(){
 
@@ -122,7 +123,6 @@ if ($isVideo) {
 <?php } ?>
         });
 
-
     $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
         var current = jplaylist.current,
             playlist = jplaylist.playlist;
@@ -134,6 +134,10 @@ if ($isVideo) {
 
         $.each(playlist, function (index, obj) {
             if (index == current) {
+                currentjpindex = index;
+                if (brkey != '') {
+                    sendBroadcastMessage('SONG', songids[index]);
+                }
 <?php
 if (!$isVideo && !$isRadio && !$is_share) {
     if ($iframed) {
@@ -209,7 +213,9 @@ if ($isVideo) {
 }
 ?>
     $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, function (event) {
-        sendBroadcastMessage('SONG_POSITION', event.jPlayer.status.currentTime);
+        if (brkey != '') {
+            sendBroadcastMessage('SONG_POSITION', event.jPlayer.status.currentTime);
+        }
 <?php
     if (AmpConfig::get('waveform') && !$is_share) {
 ?>
@@ -236,10 +242,12 @@ function WaveformClick(songid, time)
         NavigateTo('<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=song&id=' + songid + '&offset=' + time);
     } else {
         // Single click
-        wavclicktimer = setTimeout(function() {
-            wavclicktimer = null;
-            $("#jquery_jplayer_1").data("jPlayer").play(time);
-        }, 250);
+        if (brconn == null) {
+            wavclicktimer = setTimeout(function() {
+                wavclicktimer = null;
+                $("#jquery_jplayer_1").data("jPlayer").play(time);
+            }, 250);
+        }
     }
 }
 
@@ -272,7 +280,33 @@ function startBroadcast(key)
     brkey = key;
 
     listenBroadcast();
-    sendBroadcastMessage('REGISTER_BROADCAST', brkey);
+    brconn.onopen = function(e) {
+        sendBroadcastMessage('AUTH_SID', '<?php echo session_id(); ?>');
+        sendBroadcastMessage('REGISTER_BROADCAST', brkey);
+        sendBroadcastMessage('SONG', songids[currentjpindex]);
+    };
+}
+
+function startBroadcastListening(broadcast_id)
+{
+    listenBroadcast();
+
+    // Hide few UI information on listening mode
+    $('.jp-previous').css('visibility', 'hidden');
+    $('.jp-play').css('visibility', 'hidden');
+    $('.jp-pause').css('visibility', 'hidden');
+    $('.jp-next').css('visibility', 'hidden');
+    $('.jp-stop').css('visibility', 'hidden');
+    $('.jp-toggles').css('visibility', 'hidden');
+    $('.jp-playlist').css('visibility', 'hidden');
+    $('#broadcast').css('visibility', 'hidden');
+
+    $('.jp-seek-bar').css('pointer-events', 'none');
+
+    brconn.onopen = function(e) {
+        sendBroadcastMessage('AUTH_SID', '<?php echo session_id(); ?>');
+        sendBroadcastMessage('REGISTER_LISTENER', broadcast_id);
+    };
 }
 
 function listenBroadcast()
@@ -290,10 +324,11 @@ function receiveBroadcastMessage(e)
     var jp = $("#jquery_jplayer_1").data("jPlayer");
     var msgs = e.data.split(';');
     for (var i = 0; i < msgs.length; ++i) {
-        var msg = msgs[i].split('=');
-        if (msg.count == 2) {
+        var msg = msgs[i].split(':');
+        if (msg.length == 2) {
             switch (msg[0]) {
                 case 'PLAY':
+                    alert('play: ' + msg[1]);
                     if (msg[1] == '1') {
                         if (jp.status.paused) {
                             jp.play();
@@ -306,15 +341,16 @@ function receiveBroadcastMessage(e)
                 break;
 
                 case 'SONG':
-
+                    addMedia($.parseJSON(atob(msg[1])));
+                    jplaylist.next();
                 break;
 
                 case 'SONG_POSITION':
-                    jp.play(msg[1]);
+                    jp.play(parseFloat(msg[1]));
                 break;
 
                 case 'NB_LISTENERS':
-                    $('#broadcast_listeners').text($msg[1]);
+                    $('#broadcast_listeners').html(msg[1]);
                 break;
 
                 case 'INFO':
@@ -324,6 +360,10 @@ function receiveBroadcastMessage(e)
                 case 'ENDED':
                     jp.stop();
                 break;
+
+                default:
+                    alert('Unknown message code.');
+                break;
             }
         }
     }
@@ -332,8 +372,8 @@ function receiveBroadcastMessage(e)
 function sendBroadcastMessage(cmd, value)
 {
     if (brconn != null) {
-        var msg = cmd + '=' + value + ';';
-        brconn.send(cmd);
+        var msg = cmd + ':' + value + ';';
+        brconn.send(msg);
     }
 }
 

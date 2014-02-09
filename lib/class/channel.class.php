@@ -114,7 +114,7 @@ class Channel extends database_object
     {
         if (!empty($name)) {
             $sql = "INSERT INTO `channel` (`name`, `description`, `url`, `object_type`, `object_id`, `interface`, `port`, `fixed_endpoint`, `admin_password`, `is_private`, `max_listeners`, `random`, `loop`, `stream_type`, `bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $params = array($name, $description, $url, $object_type, $object_id, $interface, $port, (!empty($interface) && !empty($port)), $admin_password, $private, $max_listeners, $random, $loop, $stream_type, $bitrate);
+            $params = array($name, $description, $url, $object_type, $object_id, $interface, $port, (!empty($interface) && !empty($port)), $admin_password, !empty($private), $max_listeners, $random, $loop, $stream_type, $bitrate);
             return Dba::write($sql, $params);
         }
 
@@ -129,7 +129,7 @@ class Channel extends database_object
 
         $sql = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ? " .
             "WHERE `id` = ?";
-        $params = array($data['name'], $data['description'], $data['url'], $data['interface'], $data['port'], (!empty($data['interface']) && !empty($data['port'])), $data['admin_password'], $data['private'], $data['max_listeners'], $data['random'], $data['loop'], $data['stream_type'], $data['bitrate'], $this->id);
+        $params = array($data['name'], $data['description'], $data['url'], $data['interface'], $data['port'], (!empty($data['interface']) && !empty($data['port'])), $data['admin_password'], !empty($data['private']), $data['max_listeners'], $data['random'], $data['loop'], $data['stream_type'], $data['bitrate'], $this->id);
         return Dba::write($sql, $params);
     }
 

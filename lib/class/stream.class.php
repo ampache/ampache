@@ -360,7 +360,7 @@ class Stream
             if (preg_match("/:(\d+)/",$web_path,$matches)) {
                 $web_path = str_replace(':' . $matches['1'],':' . AmpConfig::get('http_port'),$web_path);
             } else {
-                $web_path = str_replace($_SERVER['HTTP_HOST'],$_SERVER['HTTP_HOST'] . ':' . AmpConfig::get('http_port'),$web_path);
+                $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . AmpConfig::get('http_port'), $web_path);
             }
         }
 

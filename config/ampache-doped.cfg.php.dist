@@ -7,11 +7,17 @@
 ; if this config file is up to date 
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 13
+config_version = 14
 
 ;###################
 ; Path Vars        #
 ;###################
+
+; The http host of your server.
+; If not set, retrieved automatically from client request.
+; This setting is required for WebSocket server
+; DEFAULT: ""
+;http_host = "localhost"
 
 ; The path to your ampache install
 ; Do not put a trailing / on this path 

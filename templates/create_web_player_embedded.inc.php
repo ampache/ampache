@@ -50,7 +50,7 @@ if ($_REQUEST['append']) {
 <?php } ?>
 
     if (appendmedia) {
-        <?php echo WebPlayer::add_media_js($this, "ff.contentWindow.addMedia"); ?>
+        <?php echo WebPlayer::add_media_js($this, "ff.contentWindow."); ?>
     } else {
         ff.setAttribute('src', '<?php echo AmpConfig::get('web_path'); ?>/web_player_embedded.php?playlist_id=<?php echo $this->id; ?>');
         window.location = '<?php echo return_referer() ?>';

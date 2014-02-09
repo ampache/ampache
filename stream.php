@@ -182,6 +182,12 @@ switch ($_REQUEST['action']) {
             'object_id' => scrub_in($_REQUEST['id'])
         );
     break;
+    case 'broadcast':
+        $media_ids[] = array(
+            'object_type' => 'broadcast',
+            'object_id' => scrub_in($_REQUEST['id'])
+        );
+    break;
     default:
     break;
 } // end action switch

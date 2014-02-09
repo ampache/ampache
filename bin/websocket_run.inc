@@ -50,7 +50,9 @@ if ($cargv > 1) {
 }
 
 $app = new Ratchet\App('localhost', $port);
-$app->route('/broadcast', new Broadcast_Server());
+$brserver = new Broadcast_Server();
+$brserver->verbose = $verbose;
+$app->route('/broadcast', $brserver);
 $app->route('/echo', new Ratchet\Server\EchoServer, array('*'));
 $app->run();
 
