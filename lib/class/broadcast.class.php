@@ -62,15 +62,16 @@ class Broadcast extends database_object
         return Dba::write($sql, array($this->id));
     }
 
-    public static function create($name, $description)
+    public static function create($name, $description='')
     {
         if (!empty($name)) {
             $sql = "INSERT INTO `broadcast` (`user`, `name`, `description`) VALUES (?, ?, ?)";
             $params = array($GLOBALS['user']->id, $name, $description);
-            return Dba::write($sql, $params);
+            Dba::write($sql, $params);
+            return Dba::insert_id();
         }
 
-        return false;
+        return 0;
     }
 
     public function update($data)
@@ -87,7 +88,8 @@ class Broadcast extends database_object
 
     public function format()
     {
-        $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/broadcast.php?id=' . $this->id . '">' . scrub_out($this->name) . '</a>';
+        $this->f_name = $this->name;
+        $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/broadcast.php?id=' . $this->id . '">' . scrub_out($this->f_name) . '</a>';
         $this->tags = Tag::get_top_tags('broadcast',$this->id);
         $this->f_tags = Tag::get_display($this->tags, $this->id, 'broadcast');
     }
@@ -129,8 +131,8 @@ class Broadcast extends database_object
 
         return null;
     }
-	
-	public function show_action_buttons($tags_list = "")
+
+    public function show_action_buttons($tags_list = "")
     {
         if ($this->id) {
             if ($GLOBALS['user']->has_access('75')) {
@@ -138,6 +140,35 @@ class Broadcast extends database_object
                 echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id ."\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
+    }
+
+    public static function get_broadcast_link()
+    {
+        $link = "<div class=\"broadcast-action\">";
+        $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . UI::get_icon('broadcast', T_('Broadcast')) . "</a>";
+        $link .= "</div>";
+        return $link;
+    }
+
+    public static function get_unbroadcast_link($id)
+    {
+        $link = "<div class=\"broadcast-action\">";
+        $link .= Ajax::button('?page=player&action=unbroadcast&broadcast_id=' . $id, 'broadcast', T_('Unbroadcast'), 'broadcast_action');
+        $link .= "</div>";
+        $link .= "<div class=\"broadcast-info\">(<span id=\"broadcast_listeners\">0</span>)</div>";
+        return $link;
+    }
+
+    public static function get_broadcasts($user_id)
+    {
+        $sql = "SELECT `id` FROM `broadcast` WHERE `user` = ?";
+        $db_results = Dba::read($sql, array($user_id));
+
+        $broadcasts = array();
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $broadcasts[] = $results['id'];
+        }
+        return $broadcasts;
     }
 
 } // end of broadcast class

@@ -82,6 +82,10 @@ switch ($page) {
         require_once AmpConfig::get('prefix') . '/server/search.ajax.php';
         exit;
     break;
+    case 'player':
+        require_once AmpConfig::get('prefix') . '/server/player.ajax.php';
+        exit;
+    break;
     default:
         // A taste of compatibility
     break;

@@ -75,7 +75,7 @@ This variable no longer exists, all downsampling/transcoding is handled by the t
 </div>
 <div id="bottom">
 <p><strong>Ampache Debug.</strong><br />
-Pour l'Amour de la Musique.</p>
+For the love of Music.</p>
 </div>
 </body>
 </html>

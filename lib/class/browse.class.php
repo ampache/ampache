@@ -220,7 +220,7 @@ class Browse extends Query
                 $box_title = T_('Channels');
                 $box_req = AmpConfig::get('prefix') . '/templates/show_channels.inc.php';
             break;
-			case 'broadcast':
+            case 'broadcast':
                 $box_title = T_('Broadcasts');
                 $box_req = AmpConfig::get('prefix') . '/templates/show_broadcasts.inc.php';
             break;

@@ -64,7 +64,7 @@ switch ($_REQUEST['action']) {
         $channel->format();
         require AmpConfig::get('prefix') . '/templates/show_channel_row.inc.php';
     break;
-	case 'refresh_broadcast':
+    case 'refresh_broadcast':
         $broadcast = new Broadcast($_REQUEST['id']);
         $broadcast->format();
         require AmpConfig::get('prefix') . '/templates/show_broadcast_row.inc.php';

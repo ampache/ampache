@@ -23,7 +23,7 @@
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
-class Broadcast_Server extends MessageComponentInterface
+class Broadcast_Server implements MessageComponentInterface
 {
     const BROADCAST_SONG = "SONG";
     const BROADCAST_SONG_POSITION = "SONG_POSITION";
@@ -31,6 +31,8 @@ class Broadcast_Server extends MessageComponentInterface
     const BROADCAST_REGISTER_BROADCAST = "REGISTER_BROADCAST";
     const BROADCAST_REGISTER_LISTENER = "REGISTER_LISTENER";
     const BROADCAST_ENDED = "ENDED";
+    const BROADCAST_INFO = "INFO";
+    const BROADCAST_NB_LISTENERS = "NB_LISTENERS";
 
     protected $clients;
     protected $listeners;
@@ -79,71 +81,101 @@ class Broadcast_Server extends MessageComponentInterface
 
     protected function notifySong($from, $song_id)
     {
-        $broadcast = $this->getConnectionBroadcast($from);
-        if ($broadcast) {
-            if ($this->isBroadcaster($from, $broadcast)) {
-                $clients = $this->getListeners($broadcast);
-                $this->broadcastMessage($clients, self::BROADCAST_SONG, $song_id);
-            } else {
-                debug_event('broadcast', 'Action unauthorized.', '3');
-            }
+        if ($this->isBroadcaster($from)) {
+            $broadcast = $broadcasters[$from];
+            $clients = $this->getListeners($broadcast);
+            $this->broadcastMessage($clients, self::BROADCAST_SONG, $song_id);
+        } else {
+            debug_event('broadcast', 'Action unauthorized.', '3');
         }
     }
 
     protected function notifySongPosition($from, $song_position)
     {
-        $broadcast = $this->getConnectionBroadcast($from);
-        if ($broadcast) {
-            if ($this->isBroadcaster($from, $broadcast)) {
-                $clients = $this->getListeners($broadcast);
-                $this->broadcastMessage($clients, self::BROADCAST_SONG_POSITION, $song_position);
-            } else {
-                debug_event('broadcast', 'Action unauthorized.', '3');
-            }
+        if ($this->isBroadcaster($from)) {
+            $broadcast = $broadcasters[$from];
+            $clients = $this->getListeners($broadcast);
+            $this->broadcastMessage($clients, self::BROADCAST_SONG_POSITION, $song_position);
+        } else {
+            debug_event('broadcast', 'Action unauthorized.', '3');
         }
     }
 
     protected function notifyPlayerPlay($from, $play)
     {
-        $broadcast = $this->getConnectionBroadcast($from);
-        if ($broadcast) {
-            if ($this->isBroadcaster($from, $broadcast)) {
-                $clients = $this->getListeners($broadcast);
-                $this->broadcastMessage($clients, self::BROADCAST_PLAYER_PLAY, $play);
-            } else {
-                debug_event('broadcast', 'Action unauthorized.', '3');
-            }
+        if ($this->isBroadcaster($from)) {
+            $broadcast = $broadcasters[$from];
+            $clients = $this->getListeners($broadcast);
+            $this->broadcastMessage($clients, self::BROADCAST_PLAYER_PLAY, $play);
+        } else {
+            debug_event('broadcast', 'Action unauthorized.', '3');
         }
     }
 
     protected function registerBroadcast($from, $broadcast_key)
     {
+        $broadcast = Broadcast::get_broadcast($broadcast_key);
+        if ($broadcast) {
+            $broadcasters[$from] = $broadcast;
+            $listeners[$broadcast] = array();
+        }
     }
 
-    protected function unregisterBroadcast($broadcast)
+    protected function unregisterBroadcast($conn)
     {
+        $broadcast = $broadcasters[$conn];
         $clients = $this->getListeners($broadcast);
         $this->broadcastMessage($clients, self::BROADCAST_ENDED);
+
+        unset($listeners[$broadcast]);
+        unset($broadcasters[$conn]);
+    }
+
+    protected function getRunningBroadcast($broadcast_id)
+    {
+        $broadcast = null;
+        foreach ($broadcasters as $conn => $br) {
+            if ($br->id == $broadcast_id) {
+                $broadcast = $br;
+                exit;
+            }
+        }
+        return $broadcast;
     }
 
     protected function registerListener($from, $broadcast_id)
     {
+        $broadcast = $this->getRunningBroadcast();
+        $listeners[$broadcast][] = $from;
     }
 
     protected function unregisterListener($conn)
     {
+        foreach ($listeners as $broadcast => $brlisteners) {
+            $lindex = array_search($brlisteners, $conn);
+            if ($lindex) {
+                unset($brlisteners[$lindex]);
+                break;
+            }
+        }
     }
 
-    protected function getConnectionBroadcast($conn)
+    protected function notifyNbListeners($broadcast)
     {
+        $broadcaster = array_search(broadcasters, $broadcast);
+        $clients = $listeners[$broadcast];
+        $clients[] = $broadcaster;
+        $this->broadcastMessage($clients, self::BROADCAST_NB_LISTENERS, count($listeners[$broadcast]));
     }
 
     protected function getListeners($broadcast)
     {
+        return $listeners[$broadcast];
     }
 
-    protected function isBroadcaster($conn, $broadcast)
+    protected function isBroadcaster($conn)
     {
+        return bool(array_search($conn, $broadcasters));
     }
 
     protected function broadcastMessage($clients, $cmd, $value='')
@@ -156,20 +188,28 @@ class Broadcast_Server extends MessageComponentInterface
 
     public function onClose(ConnectionInterface $conn)
     {
-        $broadcast = $this->getConnectionBroadcast($conn);
-        if ($broadcast) {
-            if ($this->isBroadcaster($conn, $broadcast)) {
-                $this->unregisterBroadcast($broadcast);
-            } else {
-                $this->unregisterListener($conn);
-            }
+        if ($this->isBroadcaster($conn)) {
+            $this->unregisterBroadcast($conn);
+        } else {
+            $this->unregisterListener($conn);
         }
+
         $this->clients->detach($conn);
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
         $conn->close();
+    }
+
+    public static function get_address()
+    {
+        $websocket_address = AmpConfig::get('websocket_address');
+        if (empty($websocket_address)) {
+            $websocket_address = 'ws://' . $_SERVER['HTTP_HOST'] . ':8100';
+        }
+
+        return $websocket_address . '/broadcast';
     }
 
 } // end of broadcast_server class

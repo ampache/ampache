@@ -399,6 +399,11 @@ wanted_types = "album,official"
 ; DEFAULT: false
 ;broadcast = "false"
 
+; Web Socket address
+; Declare the web socket server address
+; DEFAULT: determined automatically
+;websocket_address = "ws://localhost:8080"
+
 ; Amazon base urls
 ; An array of Amazon sites to search.
 ; NOTE: This will search each of these sites in turn so don't expect it

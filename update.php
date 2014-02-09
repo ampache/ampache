@@ -52,7 +52,7 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
 <body>
 <div id="header">
 <h1><?php echo T_('Ampache Update'); ?></h1>
-<p>Pour l'Amour de la Musique.</p>
+<p>For the love of Music.</p>
 </div>
 <div id="text-box">
     <div class="notify">
@@ -69,7 +69,7 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
     </div>
     <div id="bottom">
         <p><b><?php echo T_('Ampache Installation.'); ?></b><br />
-        Pour l'Amour de la Musique.</p>
+        For the love of Music.</p>
    </div>
 </div>
 </body>

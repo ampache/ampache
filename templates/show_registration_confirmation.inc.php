@@ -46,7 +46,7 @@ $web_path = AmpConfig::get('web_path');
 </div><!--end <div>id="maincontainer-->
 <div id="bottom">
 <p><strong>Ampache</strong><br />
-Pour l'Amour de la Musique.</p>
+For the love of Music.</p>
 </div>
 </body>
 </html>

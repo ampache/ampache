@@ -43,7 +43,7 @@
 </p>
 <div id="bottom">
 <p><strong>Ampache</strong><br />
-Pour l'Amour de la Musique.</p>
+For the love of Music.</p>
 </div>
 </body>
 </html>

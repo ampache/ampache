@@ -85,7 +85,7 @@ require $prefix . '/templates/install_header.inc.php';
     </div>
     <div id="bottom">
         <p><strong>Ampache Installation.</strong><br />
-        Pour l'Amour de la Musique</p>
+        For the love of Music</p>
    </div>
 </div>
 

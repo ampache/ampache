@@ -774,7 +774,6 @@ a.jp-shuffle-off:hover {
 	background-position: -90px -261px;
 }
 
-
 /* @end */
 
 /* @group NO SOLUTION error feedback */
@@ -815,12 +814,13 @@ a.jp-shuffle-off:hover {
 .broadcast {
 	position: absolute;
 	top: 2px;
-	right:350px;
+    margin-right: 2px;
+	right:25%;
 	font-size: 0.67em;
 }
 
 .broadcast-info {
-	display: none;
+	display: inline;
 }
 
 .broadcast-action {
