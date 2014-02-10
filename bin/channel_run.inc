@@ -478,7 +478,7 @@ function usage()
     echo "\n-c {CHANNEL ID}\t";
     echo T_('Channel id to start');
     echo "\n-p {PORT}\t";
-    echo T_('Listening port. Default get an available port automatically');
+    echo T_('Listening port, default get an available port automatically');
     echo "\n-v\t";
     echo T_('Verbose');
     echo "\n";

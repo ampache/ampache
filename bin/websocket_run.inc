@@ -63,7 +63,7 @@ function usage()
     echo T_("Usage: websocket_run.inc [-p {PORT}|-v]");
     echo "\n\t"; 
     echo "\n-p {PORT}\t";
-    echo T_('Listening port. Default 8100.');
+    echo T_('Listening port, default 8100');
     echo "\n-v\t";
     echo T_('Verbose');
     echo "\n";
