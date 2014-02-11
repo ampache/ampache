@@ -730,4 +730,20 @@ a.jp-shuffle-off:hover {
 	font-weight: bold;
 }
 
+.broadcast {
+	position: absolute;
+	top: 2px;
+    margin-right: 2px;
+	left:210px;
+	font-size: 0.67em;
+}
+
+.broadcast-info {
+	display: inline;
+}
+
+.broadcast-action {
+	display: inline;
+}
+
 /* @end */
