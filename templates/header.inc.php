@@ -217,6 +217,7 @@ $(document).ready(function() {
 <div id="aslideshow">
     <div id="aslideshow_container">
         <div id="fslider"></div>
+        <div id="fslider_script"></div>
     </div>
 </div>
 <!-- rfc3514 implementation -->

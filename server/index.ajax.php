@@ -252,12 +252,17 @@ switch ($_REQUEST['action']) {
     break;
     case 'slideshow':
         ob_start();
+        $fsname = 'fslider_' . time();
+        echo "<div id='" . $fsname . "'>";
         $images = Slideshow::get_current_slideshow();
         foreach ($images as $image) {
-            echo "<a href=''><img src='" . $image['url'] . "' alt='' /></a>";
+            echo "<a href='#'><img src='" . $image['url'] . "' alt='' /></a>";
         }
+        echo "</div>";
+        $results['fslider'] = ob_get_clean();
+        ob_start();
         echo "<script language='javascript' type='text/javascript'>";
-        echo "$('#fslider').rhinoslider({
+        echo "$('#" . $fsname . "').rhinoslider({
             effect: 'shuffle',
             showTime: 15000,
             randomOrder: true,
@@ -270,7 +275,7 @@ switch ($_REQUEST['action']) {
             showControls: 'never'
         });";
         echo "</script>";
-        $results['fslider'] = ob_get_clean();
+        $results['fslider_script'] = ob_get_clean();
     break;
     default:
         $results['rfc3514'] = '0x1';
