@@ -34,6 +34,10 @@ function NavigateTo(url)
 {
     window.parent.document.getElementById('frame_main').setAttribute('src', url);
 }
+function NotifyOfNewSong()
+{
+    window.parent.document.getElementById('frame_main').contentWindow.refresh_slideshow();
+}
 </script>
 <?php
 }
@@ -134,7 +138,10 @@ if ($isVideo) {
 
         $.each(playlist, function (index, obj) {
             if (index == current) {
-                currentjpindex = index;
+                if (currentjpindex != index) {
+                    currentjpindex = index;
+                    NotifyOfNewSong();
+                }
                 if (brkey != '') {
                     sendBroadcastMessage('SONG', songids[index]);
                 }

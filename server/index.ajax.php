@@ -250,6 +250,28 @@ switch ($_REQUEST['action']) {
             $results['channel_state_' . $_REQUEST['id']] = ob_get_clean();
         }
     break;
+    case 'slideshow':
+        ob_start();
+        $images = Slideshow::get_current_slideshow();
+        foreach ($images as $image) {
+            echo "<a href=''><img src='" . $image['url'] . "' alt='' /></a>";
+        }
+        echo "<script language='javascript' type='text/javascript'>";
+        echo "$('#fslider').rhinoslider({
+            effect: 'shuffle',
+            showTime: 15000,
+            randomOrder: true,
+            controlsMousewheel: false,
+            controlsKeyboard: false,
+            controlsPrevNext: false,
+            controlsPlayPause: false,
+            autoPlay: true,
+            pauseOnHover: false,
+            showControls: 'never'
+        });";
+        echo "</script>";
+        $results['fslider'] = ob_get_clean();
+    break;
     default:
         $results['rfc3514'] = '0x1';
     break;

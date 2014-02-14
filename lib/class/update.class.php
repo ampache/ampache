@@ -373,6 +373,9 @@ class Update
         $update_string = '- Add broadcasts and player control.<br />';
         $version[] = array('version' => '360042','description' => $update_string);
 
+        $update_string = '- Add slideshow on currently played artist preference.<br />';
+        $version[] = array('version' => '360043','description' => $update_string);
+
         return $version;
     }
 
@@ -2223,5 +2226,22 @@ class Update
             "PRIMARY KEY (`id`))";
 
         return Dba::write($sql);
+    }
+
+    /**
+     * update_360043
+     *
+     * Add slideshow on currently played artist preference
+     */
+    public static function update_360043()
+    {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('slideshow_time','0','Artist slideshow inactivity time',25,'integer','interface')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        return true;
     }
 }

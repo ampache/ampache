@@ -50,6 +50,7 @@ if (AmpConfig::get('use_rss')) { ?>
 <script src="<?php echo $web_path; ?>/modules/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/jscroll/jquery.jscroll.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/jquery/jquery.qrcode.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/rhinoslider/rhinoslider-1.05.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
@@ -138,6 +139,64 @@ $(function() {
         });
 });
 </script>
+<script type="text/javascript">
+var lastaction = new Date().getTime();
+var refresh_slideshow_interval=<?php echo AmpConfig::get('slideshow_time') ?>;
+var iSlideshow = null;
+var tSlideshow = null;
+function init_slideshow_check()
+{
+    if (refresh_slideshow_interval > 0) {
+        if (tSlideshow != null) {
+            clearTimeout(tSlideshow);
+        }
+        tSlideshow = window.setTimeout(function(){init_slideshow_refresh();}, refresh_slideshow_interval * 1000);
+    }
+}
+function init_slideshow_refresh()
+{
+    var ff = window.parent.document.getElementById('frame_footer');
+    var maindiv = window.parent.document.getElementById('maindiv');
+    if (ff != null && ff.getAttribute('className') == 'frame_footer_visible') {
+        clearTimeout(tSlideshow);
+        tSlideshow = null;
+
+        $("#aslideshow").height($(document).height())
+          .css({'display': 'inline'})
+          .click(function(e) {
+                update_action();
+            });
+
+        iSlideshow = true;
+        refresh_slideshow();
+    }
+}
+function refresh_slideshow()
+{
+    if (iSlideshow != null) {
+        <?php echo Ajax::action('?page=index&action=slideshow', ''); ?>;
+    } else {
+        init_slideshow_check();
+    }
+}
+function update_action()
+{
+    lastaction = new Date().getTime();
+    if (iSlideshow != null) {
+        iSlideshow = null;
+        $("#aslideshow").css({'display': 'none'});
+    }
+    init_slideshow_check();
+}
+$(document).mousemove(function(e) {
+    if (iSlideshow == null) {
+        update_action();
+    }
+});
+$(document).ready(function() {
+    init_slideshow_check();
+});
+</script>
 </head>
 <body <?php echo (AmpConfig::get('iframes')) ? "onLoad='forceIframe();'" : ""; ?>>
 <?php if (AmpConfig::get('sociable') && AmpConfig::get('notify')) { ?>
@@ -155,6 +214,11 @@ $(document).ready(function() {
 </script>
 <div id="live_shoutbox"></div>
 <?php } ?>
+<div id="aslideshow">
+    <div id="aslideshow_container">
+        <div id="fslider"></div>
+    </div>
+</div>
 <!-- rfc3514 implementation -->
 <div id="rfc3514" style="display:none;">0x0</div>
 <div id="maincontainer">

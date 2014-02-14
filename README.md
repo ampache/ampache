@@ -89,6 +89,7 @@ Ampache includes some external modules that carry their own licensing.
 * [Guzzle] (https://github.com/guzzle/guzzle): MIT
 * [Symfony Components] (https://github.com/symfony/): MIT
 * [Evenement] (https://github.com/igorw/evenement): MIT
+* [RhinoSlider] (http://rhinoslider.com/): MIT
 
 
 Translations
