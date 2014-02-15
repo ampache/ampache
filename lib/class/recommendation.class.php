@@ -65,11 +65,13 @@ class Recommendation
      */
     public static function gc()
     {
-        Dba::write('DELETE FROM `recommendation` WHERE `last_update` < ?', array((time() - 2592000)));
+        Dba::write('DELETE FROM `recommendation` WHERE `last_update` < ?', array((time() - 604800)));
     }
 
     protected static function get_recommendation_cache($type, $id, $get_items = false)
     {
+        self::gc();
+        
         $sql = "SELECT `id`, `last_update` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, array($type, $id));
 
