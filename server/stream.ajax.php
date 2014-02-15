@@ -78,6 +78,9 @@ switch ($_REQUEST['action']) {
             break;
             case 'song':
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=single_song&song_id='.$_REQUEST['song_id'];
+                if ($_REQUEST['custom_play_action']) {
+                    $_SESSION['iframe']['target'] .= '&custom_play_action=' . $_REQUEST['custom_play_action'];
+                }
             break;
             case 'video':
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=single_video&video_id='.$_REQUEST['video_id'];

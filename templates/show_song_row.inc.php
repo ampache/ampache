@@ -28,7 +28,7 @@
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $song->id); ?>
         <?php } ?>
-<?php } ?>
+    <?php } ?>
     </div>
 </td>
 <td class="cel_song"><?php echo $song->f_link; ?></td>
@@ -38,6 +38,10 @@
         <a id="<?php echo 'add_playlist_'.$song->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id ?>')">
             <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
         </a>
+
+        <?php if (AmpConfig::get('directplay')) { ?>
+            <?php echo $song->show_custom_play_actions(); ?>
+        <?php } ?>
     </span>
 </td>
 <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>

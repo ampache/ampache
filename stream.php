@@ -72,7 +72,8 @@ switch ($_REQUEST['action']) {
     case 'single_song':
         $media_ids[] = array(
             'object_type' => 'song',
-            'object_id' => scrub_in($_REQUEST['song_id'])
+            'object_id' => scrub_in($_REQUEST['song_id']),
+            'custom_play_action' => $_REQUEST['custom_play_action']
         );
     break;
     case 'single_video':

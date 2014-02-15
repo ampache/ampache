@@ -989,9 +989,9 @@ class Song extends database_object implements media
         $song_name = str_replace("?", "", $song_name);
         $song_name = rawurlencode($song_name);
 
-        $url = Stream::get_base_url() . "type=song&oid=" . $song->id . "&uid=" . $user_id . "&name=" . $song_name;
+        $url = Stream::get_base_url() . "type=song&oid=" . $song->id . "&uid=" . $user_id . $additional_params . "&name=" . $song_name;
 
-        return Stream_URL::format($url . $additional_params);
+        return Stream_URL::format($url);
 
     } // play_url
 
@@ -1098,6 +1098,61 @@ class Song extends database_object implements media
                 }
             }
         }
+    }
+
+    public function run_custom_play_action($action_index)
+    {
+        $transcoder = array();
+        $actions = Song::get_custom_play_actions();
+        if ($action_index <= count($actions)) {
+            $action = $actions[$action_index - 1];
+
+            $run = str_replace("%f", $this->file, $action['run']);
+            $run = str_replace("%a", $this->f_artist, $run);
+            $run = str_replace("%A", $this->f_album, $run);
+            $run = str_replace("%t", $this->f_title, $run);
+
+            debug_event('song', "Running custom play action: " . $run, 3);
+
+            $descriptors = array(1 => array('pipe', 'w'));
+            if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+                // Windows doesn't like to provide stderr as a pipe
+                $descriptors[2] = array('pipe', 'w');
+            }
+            $process = proc_open($run, $descriptors, $pipes);
+
+            $transcoder['process'] = $process;
+            $transcoder['handle'] = $pipes[1];
+            $transcoder['stderr'] = $pipes[2];
+            $transcoder['format'] = $this->mime;
+        }
+
+        return $transcoder;
+    }
+
+    public function show_custom_play_actions()
+    {
+        $actions = Song::get_custom_play_actions();
+        foreach ($actions as $action) {
+            echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $this->id . '&custom_play_action=' . $action['index'], $action['icon'], T_($action['title']), $action['icon'] . '_song_' . $this->id);
+        }
+    }
+
+    public static function get_custom_play_actions()
+    {
+        $actions = array();
+        $i = 0;
+        while (AmpConfig::get('custom_play_action_title_' . $i)) {
+            $actions[] = array(
+                'index' => ($i + 1),
+                'title' => AmpConfig::get('custom_play_action_title_' . $i),
+                'icon' => AmpConfig::get('custom_play_action_icon_' . $i),
+                'run' => AmpConfig::get('custom_play_action_run_' . $i),
+            );
+            ++$i;
+        }
+
+        return $actions;
     }
 
 } // end of song class

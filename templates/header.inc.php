@@ -141,7 +141,7 @@ $(function() {
 </script>
 <script type="text/javascript">
 var lastaction = new Date().getTime();
-var refresh_slideshow_interval=<?php echo AmpConfig::get('slideshow_time') ?>;
+var refresh_slideshow_interval=<?php echo AmpConfig::get('slideshow_time'); ?>;
 var iSlideshow = null;
 var tSlideshow = null;
 function init_slideshow_check()

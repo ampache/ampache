@@ -327,36 +327,44 @@ if (AmpConfig::get('downsample_remote')) {
     }
 }
 
+$cpaction = $_REQUEST['custom_play_action'];
 // Determine whether to transcode
 $transcode = false;
-$transcode_cfg = AmpConfig::get('transcode');
-// transcode_to should only have an effect if the song is the wrong format
-$transcode_to = $transcode_to == $media->type ? null : $transcode_to;
-$valid_types = $media->get_stream_types();
-if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
-    if ($transcode_to) {
-        $transcode = true;
-        debug_event('play', 'Transcoding due to explicit request for ' . $transcode_to, 5);
-    } else if ($transcode_cfg == 'always') {
-        $transcode = true;
-        debug_event('play', 'Transcoding due to always', 5);
-    } else if ($force_downsample) {
-        $transcode = true;
-        debug_event('play', 'Transcoding due to downsample_remote', 5);
-    } else if (!in_array('native', $valid_types)) {
-        $transcode = true;
-        debug_event('play', 'Transcoding because native streaming is unavailable', 5);
-    } else {
-        debug_event('play', 'Decided not to transcode', 5);
+// If custom play action, do not try to transcode
+if (!$cpaction) {
+    $transcode_cfg = AmpConfig::get('transcode');
+    // transcode_to should only have an effect if the song is the wrong format
+    $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
+    $valid_types = $media->get_stream_types();
+    if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
+        if ($transcode_to) {
+            $transcode = true;
+            debug_event('play', 'Transcoding due to explicit request for ' . $transcode_to, 5);
+        } else if ($transcode_cfg == 'always') {
+            $transcode = true;
+            debug_event('play', 'Transcoding due to always', 5);
+        } else if ($force_downsample) {
+            $transcode = true;
+            debug_event('play', 'Transcoding due to downsample_remote', 5);
+        } else if (!in_array('native', $valid_types)) {
+            $transcode = true;
+            debug_event('play', 'Transcoding because native streaming is unavailable', 5);
+        } else {
+            debug_event('play', 'Decided not to transcode', 5);
+        }
+    } else if ($transcode_to) {
+        debug_event('play', 'Transcoding is impossible but we received an explicit request for ' . $transcode_to, 2);
     }
-} else if ($transcode_to) {
-    debug_event('play', 'Transcoding is impossible but we received an explicit request for ' . $transcode_to, 2);
 }
 
 if ($transcode) {
     $transcoder = Stream::start_transcode($media, $transcode_to);
     $fp = $transcoder['handle'];
     $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
+} else if ($cpaction) {
+    $transcoder = $media->run_custom_play_action($cpaction);
+    $fp = $transcoder['handle'];
+    $transcode = true;
 } else if (!in_array('native', $valid_types)) {
     debug_event('play', 'Not transcoding and native streaming is not supported, aborting', 2);
     exit();

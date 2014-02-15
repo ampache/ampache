@@ -25,6 +25,7 @@ if (!$iframed || $is_share) {
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
     var jsAjaxServer = "<?php echo AmpConfig::get('ajax_server') ?>";
+    public function update_action() { }
 </script>
 <?php
 if ($iframed) {
@@ -37,6 +38,10 @@ function NavigateTo(url)
 function NotifyOfNewSong()
 {
     window.parent.document.getElementById('frame_main').contentWindow.refresh_slideshow();
+}
+function ShowSlideshow()
+{
+    window.parent.document.getElementById('frame_main').contentWindow.init_slideshow_refresh();
 }
 </script>
 <?php
@@ -140,7 +145,9 @@ if ($isVideo) {
             if (index == current) {
                 if (currentjpindex != index) {
                     currentjpindex = index;
+<?php if ($iframed) { ?>
                     NotifyOfNewSong();
+<?php } ?>
                 }
                 if (brkey != '') {
                     sendBroadcastMessage('SONG', songids[index]);
@@ -528,11 +535,18 @@ if ($isVideo) {
 <?php } ?>
         </div>
       </div>
+      <div class="player_actions">
 <?php if (AmpConfig::get('broadcast')) { ?>
-      <div id="broadcast" class="broadcast">
-        <?php echo Broadcast::get_broadcast_link(); ?>
-      </div>
+        <div id="broadcast" class="broadcast">
+            <?php echo Broadcast::get_broadcast_link(); ?>
+        </div>
 <?php } ?>
+<?php if (AmpConfig::get('echonest_api_key') == 0 && $iframed) { ?>
+        <div id="slideshow" class="slideshow">
+            <a href="javascript:ShowSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')); ?></a>
+        </div>
+<?php } ?>
+      </div>
       <div class="jp-playlist" style="position: absolute;">
           <ul>
               <li></li>

@@ -107,6 +107,10 @@ class Stream_Playlist
             debug_event('stream_playlist', 'Adding ' . json_encode($medium), 5);
             $url = array();
 
+            if ($medium['custom_play_action']) {
+                $additional_params .= "&custom_play_action=" . $medium['custom_play_action'];
+            }
+
             $type = $medium['object_type'];
             //$url['object_id'] = $medium['object_id'];
             $url['type'] = $type;

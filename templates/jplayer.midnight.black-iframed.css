@@ -811,12 +811,25 @@ a.jp-shuffle-off:hover {
     color: #CCC;
 }
 
-.broadcast {
-	position: absolute;
-	top: 2px;
+.player_actions {
+    position: absolute;
+    top: 2px;
     margin-right: 2px;
-	right:25%;
-	font-size: 0.67em;
+    right:25%;
+    font-size: 0.67em;
+    width: 50px;
+    height: 95px;
+    text-align: right;
+    display: inline;
+    opacity: 0.3;
+}
+
+.player_actions:hover{
+    opacity: 1;
+}
+
+.broadcast {
+    display: inline-block;
 }
 
 .broadcast-info {
@@ -825,6 +838,10 @@ a.jp-shuffle-off:hover {
 
 .broadcast-action {
 	display: inline;
+}
+
+.slideshow {
+    display: inline-block;
 }
 
 /* @end */
