@@ -330,11 +330,11 @@ if (AmpConfig::get('downsample_remote')) {
 $cpaction = $_REQUEST['custom_play_action'];
 // Determine whether to transcode
 $transcode = false;
+// transcode_to should only have an effect if the song is the wrong format
+$transcode_to = $transcode_to == $media->type ? null : $transcode_to;
 // If custom play action, do not try to transcode
 if (!$cpaction) {
     $transcode_cfg = AmpConfig::get('transcode');
-    // transcode_to should only have an effect if the song is the wrong format
-    $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
     $valid_types = $media->get_stream_types();
     if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
         if ($transcode_to) {
@@ -362,7 +362,7 @@ if ($transcode) {
     $fp = $transcoder['handle'];
     $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
 } else if ($cpaction) {
-    $transcoder = $media->run_custom_play_action($cpaction);
+    $transcoder = $media->run_custom_play_action($cpaction, $transcode_to);
     $fp = $transcoder['handle'];
     $transcode = true;
 } else if (!in_array('native', $valid_types)) {

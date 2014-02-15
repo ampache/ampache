@@ -1100,14 +1100,18 @@ class Song extends database_object implements media
         }
     }
 
-    public function run_custom_play_action($action_index)
+    public function run_custom_play_action($action_index, $codec='')
     {
         $transcoder = array();
         $actions = Song::get_custom_play_actions();
         if ($action_index <= count($actions)) {
             $action = $actions[$action_index - 1];
+            if (!$codec) {
+                $codec = $this->mime;
+            }
 
             $run = str_replace("%f", $this->file, $action['run']);
+            $run = str_replace("%c", $codec, $run);
             $run = str_replace("%a", $this->f_artist, $run);
             $run = str_replace("%A", $this->f_album, $run);
             $run = str_replace("%t", $this->f_title, $run);
@@ -1124,7 +1128,7 @@ class Song extends database_object implements media
             $transcoder['process'] = $process;
             $transcoder['handle'] = $pipes[1];
             $transcoder['stderr'] = $pipes[2];
-            $transcoder['format'] = $this->mime;
+            $transcoder['format'] = $codec;
         }
 
         return $transcoder;
