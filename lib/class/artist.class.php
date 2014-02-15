@@ -454,4 +454,10 @@ class Artist extends database_object
         }
     }
 
+    public function update_artist_info($summary, $placeformed, $yearformed)
+    {
+        $sql = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ? WHERE `id` = ?";
+        return Dba::write($sql, array($summary, $placeformed, $yearformed, time(), $this->id));
+    }
+
 } // end of artist class

@@ -376,6 +376,9 @@ class Update
         $update_string = '- Add slideshow on currently played artist preference.<br />';
         $version[] = array('version' => '360043','description' => $update_string);
 
+        $update_string = '- Add artist description/recommendation external service data cache.<br />';
+        $version[] = array('version' => '360044','description' => $update_string);
+
         return $version;
     }
 
@@ -1928,7 +1931,7 @@ class Update
             "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
             "`user` int(11) NOT NULL," .
             "`artist` int(11) NOT NULL," .
-            "`mbid` varchar(36) CHARACTER SET utf8 NULL," .
+            "`mbid` varchar(1369) CHARACTER SET utf8 NULL," .
             "`name` varchar(255) CHARACTER SET utf8 NOT NULL," .
             "`year` int(4) NULL," .
             "`date` int(11) unsigned NOT NULL DEFAULT '0'," .
@@ -2130,13 +2133,13 @@ class Update
      */
     public static function update_360038()
     {
-        $sql = "ALTER TABLE `wanted` ADD `artist_mbid` varchar(36) CHARACTER SET utf8 NULL AFTER `artist`";
+        $sql = "ALTER TABLE `wanted` ADD `artist_mbid` varchar(1369) CHARACTER SET utf8 NULL AFTER `artist`";
         Dba::write($sql);
 
         $sql = "ALTER TABLE `wanted` MODIFY `artist` int(11) NULL";
         Dba::write($sql);
 
-        $sql = "ALTER TABLE `song_preview` ADD `artist_mbid` varchar(36) CHARACTER SET utf8 NULL AFTER `artist`";
+        $sql = "ALTER TABLE `song_preview` ADD `artist_mbid` varchar(1369) CHARACTER SET utf8 NULL AFTER `artist`";
         Dba::write($sql);
 
         $sql = "ALTER TABLE `song_preview` MODIFY `artist` int(11) NULL";
@@ -2241,6 +2244,40 @@ class Update
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         Dba::write($sql, array($id));
+
+        return true;
+    }
+
+    /**
+     * update_360044
+     *
+     * Add artist description/recommendation external service data cache
+     */
+    public static function update_360044()
+    {
+        $sql = "ALTER TABLE `artist` ADD `summary` TEXT CHARACTER SET utf8 NULL," .
+            "ADD `placeformed` varchar(64) NULL," .
+            "ADD `yearformed` int(4) NULL," .
+            "ADD `last_update` int(11) unsigned NOT NULL DEFAULT '0'";
+        Dba::write($sql);
+
+        $sql = "CREATE TABLE `recommendation` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`object_type` varchar(32) NOT NULL," .
+            "`object_id` int(11) unsigned NOT NULL," .
+            "`last_update` int(11) unsigned NOT NULL DEFAULT '0'," .
+            "PRIMARY KEY (`id`))";
+        Dba::write($sql);
+
+        $sql = "CREATE TABLE `recommendation_item` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`recommendation` int(11) unsigned NOT NULL," .
+            "`recommendation_id` int(11) unsigned NULL," .
+            "`name` varchar(256) NULL," .
+            "`rel` varchar(256) NULL," .
+            "`mbid` varchar(1369) NULL," .
+            "PRIMARY KEY (`id`))";
+        Dba::write($sql);
 
         return true;
     }

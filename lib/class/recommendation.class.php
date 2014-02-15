@@ -59,6 +59,61 @@ class Recommendation
     } // get_lastfm_results
 
     /**
+     * gc
+     *
+     * This cleans out old recommendations cache
+     */
+    public static function gc()
+    {
+        Dba::write('DELETE FROM `recommendation` WHERE `last_update` < ?', array((time() - 2592000)));
+    }
+
+    protected static function get_recommendation_cache($type, $id, $get_items = false)
+    {
+        $sql = "SELECT `id`, `last_update` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
+        $db_results = Dba::read($sql, array($type, $id));
+
+        if ($cache = Dba::fetch_assoc($db_results)) {
+            if ($get_items) {
+                $cache['items'] = array();
+                $sql = "SELECT `recommendation_id`, `name`, `rel`, `mbid` FROM `recommendation_item` WHERE `recommendation` = ?";
+                $db_results = Dba::read($sql, array($cache['id']));
+                while ($results = Dba::fetch_assoc($db_results)) {
+                    $cache['items'][] = array(
+                        'id' => $results['recommendation_id'],
+                        'name' => $results['name'],
+                        'rel' => $results['rel'],
+                        'mbid' => $results['mbid'],
+                    );
+                }
+            }
+        }
+
+        return $cache;
+    }
+
+    protected static function delete_recommendation_cache($type, $id)
+    {
+        $cache = self::get_recommendation_cache($type, $id);
+        if ($cache['id']) {
+            Dba::write('DELETE FROM `recommendation_item` WHERE `recommendation` = ?', array($cache['id']));
+            Dba::write('DELETE FROM `recommendation` WHERE `id` = ?', array($cache['id']));
+        }
+    }
+
+    protected static function update_recommendation_cache($type, $id, $recommendations)
+    {
+        self::delete_recommendation_cache($type, $id);
+        $sql = "INSERT INTO `recommendation` (`object_type`, `object_id`, `last_update`) VALUES (?, ?, ?)";
+        Dba::write($sql, array($type, $id, time()));
+        $insertid = Dba::insert_id();
+        foreach ($recommendations as $recommendation) {
+            $sql = "INSERT INTO `recommendation_item` (`recommendation`, `recommendation_id`, `name`, `rel`, `mbid`) VALUES (?, ?, ?, ?, ?)";
+            Dba::write($sql, array($insertid, $recommendation['id'], $recommendation['name'], $recommendation['rel'], $recommendation['mbid']));
+        }
+    }
+
+    /**
      * get_songs_like
      * Returns a list of similar songs
      */
@@ -72,50 +127,64 @@ class Recommendation
             $query = 'track=' . rawurlencode($song->title);
         }
 
-        if ($limit && !$local_only) {
-            $query .= "&limit=$limit";
-        }
+        $cache = self::get_recommendation_cache('song', $song_id, true);
+        if (!$cache['id']) {
+            $similars = array();
+            $xml = self::get_lastfm_results('track.getsimilar', $query);
 
-        $xml = self::get_lastfm_results('track.getsimilar', $query);
+            if ($xml->similartracks) {
+                foreach ($xml->similartracks->children() as $child) {
+                    $name = $child->name;
+                    $local_id = null;
 
-        if ($xml->similartracks) {
-            foreach ($xml->similartracks->children() as $child) {
-                $name = $child->name;
-                $local_id = null;
+                    $artist_name = $child->artist->name;
+                    $s_artist_name = Catalog::trim_prefix($artist_name);
 
-                $artist_name = $child->artist->name;
-                $s_artist_name = Catalog::trim_prefix($artist_name);
+                    $sql = "SELECT `song`.`id` FROM `song` " .
+                        "LEFT JOIN `artist` ON " .
+                        "`song`.`artist`=`artist`.`id` " .
+                        "LEFT JOIN `catalog` ON " .
+                        "`song`.`catalog` = `catalog`.`id` WHERE " .
+                        "`song`.`title` = ? " .
+                        "AND `artist`.`name` = ? " .
+                        "AND `catalog`.`enabled` = '1'";
 
-                $sql = "SELECT `song`.`id` FROM `song` " .
-                    "LEFT JOIN `artist` ON " .
-                    "`song`.`artist`=`artist`.`id` " .
-                    "LEFT JOIN `catalog` ON " .
-                    "`song`.`catalog` = `catalog`.`id` WHERE " .
-                    "`song`.`title` = ? " .
-                    "AND `artist`.`name` = ? " .
-                    "AND `catalog`.`enabled` = '1'";
+                    $db_result = Dba::read($sql, array($name, $s_artist_name['string']));
 
-                $db_result = Dba::read($sql, array($name, $s_artist_name['string']));
+                    if ($result = Dba::fetch_assoc($db_result)) {
+                        $local_id = $result['id'];
+                    }
 
-                if ($result = Dba::fetch_assoc($db_result)) {
-                    $local_id = $result['id'];
-                }
-
-                if (is_null($local_id)) {
-                    debug_event('Recommendation', "$name did not match any local song", 5);
-                    if (! $local_only) {
-                        $results[] = array(
+                    if (is_null($local_id)) {
+                        debug_event('Recommendation', "$name did not match any local song", 5);
+                        $similars[] = array(
                             'id' => null,
-                            'title' => $name,
-                            'artist' => $artist_name
+                            'name' => $name,
+                            'rel' => $artist_name
+                        );
+                    } else {
+                        debug_event('Recommendation', "$name matched local song $local_id", 5);
+                        $similars[] = array(
+                            'id' => $local_id,
+                            'name' => $name
                         );
                     }
-                } else {
-                    debug_event('Recommendation', "$name matched local song $local_id", 5);
-                    $results[] = array(
-                        'id' => $local_id,
-                        'title' => $name
-                    );
+                }
+
+                if (count($similars) > 0) {
+                    self::update_recommendation_cache('song', $song_id, $similars);
+                }
+            }
+        }
+
+        if (!$similars || count($similars) == 0) {
+            $similars = $cache['items'];
+        }
+        if ($similars) {
+            $results = array();
+            foreach ($similars as $similar) {
+                if (!$local_only || !is_null($similar['id'])) {
+                    $results[] = $similar;
                 }
 
                 if ($limit && count($results) >= $limit) {
@@ -139,62 +208,76 @@ class Recommendation
     {
         $artist = new Artist($artist_id);
 
-        $query = 'artist=' . rawurlencode($artist->name);
-        if ($limit && !$local_only) {
-            $query .= "&limit=$limit";
-        }
+        $cache = self::get_recommendation_cache('artist', $artist_id, true);
+        if (!$cache['id']) {
+            $similars = array();
+            $query = 'artist=' . rawurlencode($artist->name);
 
-        $xml = self::get_lastfm_results('artist.getsimilar', $query);
+            $xml = self::get_lastfm_results('artist.getsimilar', $query);
 
-        foreach ($xml->similarartists->children() as $child) {
-            $name = $child->name;
-            $mbid = (string) $child->mbid;
-            $local_id = null;
+            foreach ($xml->similarartists->children() as $child) {
+                $name = $child->name;
+                $mbid = (string) $child->mbid;
+                $local_id = null;
 
-            // First we check by MBID
-            if ($mbid) {
-                $sql = "SELECT `artist`.`id` FROM `artist` WHERE `mbid` = ?";
-                $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
-                $db_result = Dba::read($sql, array($mbid));
-                if ($result = Dba::fetch_assoc($db_result)) {
-                    $local_id = $result['id'];
+                // First we check by MBID
+                if ($mbid) {
+                    $sql = "SELECT `artist`.`id` FROM `artist` WHERE `mbid` = ?";
+                    $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
+                    $db_result = Dba::read($sql, array($mbid));
+                    if ($result = Dba::fetch_assoc($db_result)) {
+                        $local_id = $result['id'];
+                    }
                 }
-            }
 
-            // Then we fall back to the less likely to work exact
-            // name match
-            if (is_null($local_id)) {
-                $searchname = Catalog::trim_prefix($name);
-                $searchname = Dba::escape($searchname['string']);
-                $sql = "SELECT `artist`.`id` FROM `artist` WHERE `name` = ?";
-                $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
-                $db_result = Dba::read($sql, array($searchname));
-                if ($result = Dba::fetch_assoc($db_result)) {
-                    $local_id = $result['id'];
+                // Then we fall back to the less likely to work exact
+                // name match
+                if (is_null($local_id)) {
+                    $searchname = Catalog::trim_prefix($name);
+                    $searchname = Dba::escape($searchname['string']);
+                    $sql = "SELECT `artist`.`id` FROM `artist` WHERE `name` = ?";
+                    $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
+                    $db_result = Dba::read($sql, array($searchname));
+                    if ($result = Dba::fetch_assoc($db_result)) {
+                        $local_id = $result['id'];
+                    }
                 }
-            }
 
-            // Then we give up
-            if (is_null($local_id)) {
-                debug_event('Recommendation', "$name did not match any local artist", 5);
-                if (! $local_only) {
-                    $results[] = array(
+                // Then we give up
+                if (is_null($local_id)) {
+                    debug_event('Recommendation', "$name did not match any local artist", 5);
+                    $similars[] = array(
                         'id' => null,
                         'name' => $name,
                         'mbid' => $mbid
                     );
+                } else {
+                    debug_event('Recommendation', "$name matched local artist " . $local_id, 5);
+                    $similars[] = array(
+                        'id' => $local_id,
+                        'name' => $name
+                    );
                 }
-            } else {
-                debug_event('Recommendation', "$name matched local artist " . $local_id, 5);
-                $results[] = array(
-                    'id' => $local_id,
-                    'name' => $name
-                );
             }
 
-            // Don't do more work than we have to
-            if ($limit && count($results) >= $limit) {
-                break;
+            if (count($similars) > 0) {
+                self::update_recommendation_cache('artist', $artist_id, $similars);
+            }
+        }
+
+        if (!$similars || count($similars) == 0) {
+            $similars = $cache['items'];
+        }
+        if ($similars) {
+            $results = array();
+            foreach ($similars as $similar) {
+                if (!$local_only || !is_null($similar['id'])) {
+                    $results[] = $similar;
+                }
+
+                if ($limit && count($results) >= $limit) {
+                    break;
+                }
             }
         }
 
@@ -211,11 +294,24 @@ class Recommendation
      */
     public static function get_artist_info($artist_id, $fullname='')
     {
+        $artist = null;
         if ($artist_id) {
             $artist = new Artist($artist_id);
             $artist->format();
             $fullname = $artist->f_full_name;
+
+            // Data newer than 6 months, use it
+            if (($artist->last_update + 15768000) > time()) {
+                $results = array();
+                $results['summary'] = $artist->summary;
+                $results['placeformed'] = $artist->placeformed;
+                $results['yearformed'] = $artist->yearformed;
+                $results['largephoto'] = Art::url($artist->id, 'artist');
+                $results['megaphoto'] = $results['largephoto'];
+                return $results;
+            }
         }
+
         $query = 'artist=' . rawurlencode($fullname);
 
         $xml = self::get_lastfm_results('artist.getinfo', $query);
@@ -226,6 +322,21 @@ class Recommendation
         $results['yearformed'] = (string) $xml->artist->bio->yearformed;
         $results['largephoto'] = $xml->artist->image[2];
         $results['megaphoto'] = $xml->artist->image[4];
+
+        if ($artist) {
+            if (!empty($results['summary']) || !empty($results['megaphoto'])) {
+                $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
+
+                $image = Art::get_from_source(array('url' => $results['megaphoto']), 'artist');
+                $rurl = pathinfo($results['megaphoto']);
+                $mime = 'image/' . $rurl['extension'];
+                $art = new Art($artist->id, 'artist');
+                $art->reset();
+                $art->insert($image, $mime);
+                $results['largephoto'] = Art::url($artist->id, 'artist');
+                $results['megaphoto'] = $results['largephoto'];
+            }
+        }
 
         return $results;
     } // get_artist_info
