@@ -1107,7 +1107,7 @@ class Song extends database_object implements media
         if ($action_index <= count($actions)) {
             $action = $actions[$action_index - 1];
             if (!$codec) {
-                $codec = $this->mime;
+                $codec = $this->type;
             }
 
             $run = str_replace("%f", $this->file, $action['run']);
