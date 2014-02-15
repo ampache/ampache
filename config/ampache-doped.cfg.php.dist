@@ -498,7 +498,7 @@ refresh_limit = "60"
 ; Example for Karaoke playing
 ;custom_play_action_title_0 = "Karaoke"
 ;custom_play_action_icon_0 = "microphone"
-;custom_play_action_run_0 = "bin/karaoke.sh \"%f\""
+;custom_play_action_run_0 = "sox \"%f\" -p oops"
 
 ;#########################################################
 ; LDAP login info (optional)                             #

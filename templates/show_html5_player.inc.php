@@ -25,7 +25,7 @@ if (!$iframed || $is_share) {
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
     var jsAjaxServer = "<?php echo AmpConfig::get('ajax_server') ?>";
-    public function update_action() { }
+    function update_action() { }
 </script>
 <?php
 if ($iframed) {
