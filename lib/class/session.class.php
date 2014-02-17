@@ -115,7 +115,7 @@ class Session
      *
      * This function is randomly called and it cleans up the spoo
      */
-    public static function gc($maxlifetime)
+    public static function gc()
     {
         $sql = 'DELETE FROM `session` WHERE `expire` < ?';
         $db_results = Dba::write($sql, array(time()));

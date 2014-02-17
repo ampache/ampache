@@ -112,7 +112,7 @@ class Plex_XML_Data
 
     public static function getPlexVersion()
     {
-        return "0.9.8.10.215-020456b";
+        return "0.9.8.18.290-11b7fdd";
     }
 
     public static function getServerAddress()
@@ -126,14 +126,47 @@ class Plex_XML_Data
         return $port?:'32400';
     }
 
-    public static function getServerKey()
+    public static function getServerPublicAddress()
     {
-        return self::getServerAddress();
+        $address = AmpConfig::get('plex_public_address');
+        if (!$address) {
+            $address = self::getServerAddress();
+        }
+        return $address;
+    }
+
+    public static function getServerPublicPort()
+    {
+        $port = AmpConfig::get('plex_public_port');
+        if (!$port) {
+            $port = self::getServerPort();
+        }
+        return $port;
+    }
+
+    public static function getServerUri()
+    {
+        return 'http://' . self::getServerPublicAddress() . ':' . self::getServerPublicPort();
     }
 
     public static function getServerName()
     {
-        return "Ampache";
+        return AmpConfig::get('plex_servername') ?: 'Ampache Doped';
+    }
+
+    public static function getMyPlexUsername()
+    {
+        return AmpConfig::get('myplex_username');
+    }
+
+    public static function getMyPlexAuthToken()
+    {
+        return AmpConfig::get('myplex_authtoken');
+    }
+
+    public static function getMyPlexPublished()
+    {
+        return AmpConfig::get('myplex_published');
     }
 
     public static function createFailedResponse($version = "")
@@ -181,6 +214,13 @@ class Plex_XML_Data
         return $response;
     }
 
+    public static function createAccountContainer()
+    {
+        $response = self::createContainer();
+        $response->addAttribute('identifier', 'com.plexapp.system.accounts');
+        return $response;
+    }
+
     public static function setContainerSize($container)
     {
         $container->addAttribute('size', $container->count());
@@ -216,18 +256,76 @@ class Plex_XML_Data
         return hash('sha1', $key);
     }
 
+    public static function uuidFromSubKey($key)
+    {
+        return self::uuidFromKey(self::getMachineIdentifier() . '-' . $key);
+    }
+
+    public static function getMachineIdentifier()
+    {
+        $uniqid = AmpConfig::get('plex_uniqid');
+        if (!$uniqid) {
+            $uniqid = self::getServerAddress();
+        }
+        return self::uuidFromKey($uniqid);
+    }
+
+    public static function getClientIdentifier()
+    {
+        return self::getMachineIdentifier();
+    }
+
+    public static function getPlexPlatform()
+    {
+        if (PHP_OS == 'WINNT') {
+            return 'Windows';
+        } else {
+            return "Linux";
+        }
+    }
+
+    public static function getPlexPlatformVersion()
+    {
+        if (PHP_OS == 'WINNT') {
+            return '6.2 (Build 9200)';
+        } else {
+            return '(#1 SMP Debian 3.2.54-2)';
+        }
+    }
+
     public static function setRootContent($xml, $catalogs)
     {
         $xml->addAttribute('friendlyName', self::getServerName());
-        $xml->addAttribute('machineIdentifier', self::uuidFromKey(self::getServerKey()));
-        $xml->addAttribute('myPlex', '0');
-        $xml->addAttribute('platform', PHP_OS);
-        $xml->addAttribute('platformVersion', '');
+        $xml->addAttribute('machineIdentifier', self::getMachineIdentifier());
+
+        $myplex_username = self::getMyPlexUsername();
+        $myplex_authtoken = self::getMyPlexAuthToken();
+        $myplex_published = self::getMyPlexPublished();
+        if ($myplex_username) {
+            $xml->addAttribute('myPlex', '1');
+            $xml->addAttribute('myPlexUsername', $myplex_username);
+            if ($myplex_authtoken) {
+                $xml->addAttribute('myPlexSigninState', 'ok');
+                if ($myplex_published) {
+                    $xml->addAttribute('myPlexMappingState', 'mapped');
+                } else {
+                    $xml->addAttribute('myPlexMappingState', 'unknown');
+                }
+            } else {
+                $xml->addAttribute('myPlexSigninState', 'none');
+            }
+        } else {
+            $xml->addAttribute('myPlex', '0');
+        }
+
+        $xml->addAttribute('platform', self::getPlexPlatform());
+        $xml->addAttribute('platformVersion', self::getPlexPlatformVersion());
         $xml->addAttribute('requestParametersInCookie', '1');
         $xml->addAttribute('sync', '1');
         $xml->addAttribute('transcoderActiveVideoSessions', '0');
         $xml->addAttribute('transcoderAudio', '0');
         $xml->addAttribute('transcoderVideo', '0');
+
         $xml->addAttribute('updatedAt', self::getLastUpdate($catalogs));
         $xml->addAttribute('version', self::getPlexVersion());
 
@@ -245,8 +343,16 @@ class Plex_XML_Data
         $dir->addAttribute('title', 'library');
         $dir = $xml->addChild('Directory');
         $dir->addAttribute('count', '1');
+        $dir->addAttribute('key', 'music');
+        $dir->addAttribute('title', 'music');
+        $dir = $xml->addChild('Directory');
+        $dir->addAttribute('count', '1');
         $dir->addAttribute('key', 'playQueues');
         $dir->addAttribute('title', 'playQueues');
+        $dir = $xml->addChild('Directory');
+        $dir->addAttribute('count', '1');
+        $dir->addAttribute('key', 'player');
+        $dir->addAttribute('title', 'player');
         $dir = $xml->addChild('Directory');
         $dir->addAttribute('count', '1');
         $dir->addAttribute('key', 'playlists');
@@ -267,6 +373,10 @@ class Plex_XML_Data
         $dir->addAttribute('count', '1');
         $dir->addAttribute('key', 'transcode');
         $dir->addAttribute('title', 'transcode');
+        /*$dir = $xml->addChild('Directory');
+        $dir->addAttribute('count', '1');
+        $dir->addAttribute('key', 'video');
+        $dir->addAttribute('title', 'video');*/
     }
 
     public static function getLastUpdate($catalogs)
@@ -295,14 +405,14 @@ class Plex_XML_Data
             $catalog->format();
 
             $dir = $xml->addChild('Directory');
-            $key = self::getServerKey() . '-' . $id;
-            $dir->addAttribute('key', base64_encode($key));
-            $dir->addAttribute('uuid', self::uuidFromKey($id));
-            $dir->addAttribute('name', $catalog->name);
+            $key = base64_encode(self::getMachineIdentifier() . '-' . $id);
             $dir->addAttribute('type', 'music');
+            $dir->addAttribute('key', $key);
+            $dir->addAttribute('uuid', self::uuidFromSubKey($id));
+            $dir->addAttribute('name', $catalog->name);
             $dir->addAttribute('unique', '1');
             $dir->addAttribute('serverVersion', self::getPlexVersion());
-            $dir->addAttribute('machineIdentifier', self::uuidFromKey(self::getServerKey()));
+            $dir->addAttribute('machineIdentifier', self::getMachineIdentifier());
             $dir->addAttribute('serverName', self::getServerName());
             $dir->addAttribute('path', self::getSectionUri($id));
             $ip = self::getServerAddress();
@@ -324,9 +434,10 @@ class Plex_XML_Data
             $dir->addAttribute('refreshing', '0');
             $dir->addAttribute('key', $id);
             $dir->addAttribute('type', 'artist');
+            $dir->addAttribute('agent', 'com.plexapp.agents.none'); // com.plexapp.agents.lastfm
             $dir->addAttribute('scanner', 'Plex Music Scanner');
             $dir->addAttribute('language', 'en');
-            $dir->addAttribute('uuid', self::uuidFromKey($id));
+            $dir->addAttribute('uuid', self::uuidFromSubKey($id));
             $dir->addAttribute('updatedAt', self::getLastUpdate($catalogs));
             self::setSectionXContent($dir, $catalog, 'title');
             //$date = new DateTime("2013-01-01");
@@ -435,7 +546,7 @@ class Plex_XML_Data
         $xml->addAttribute('viewGroup', 'artist');
         $xml->addAttribute('viewMode', '65592');
         $xml->addAttribute('librarySectionID', $catalog->id);
-        $xml->addAttribute('librarySectionUUID', self::uuidFromKey($catalog->id));
+        $xml->addAttribute('librarySectionUUID', self::uuidFromSubKey($catalog->id));
 
         foreach ($artists as $artist) {
             self::addArtist($xml, $artist);
@@ -471,7 +582,7 @@ class Plex_XML_Data
         $xml->addAttribute('viewGroup', 'album');
         $xml->addAttribute('viewMode', '65592');
         $xml->addAttribute('librarySectionID', $catalog->id);
-        $xml->addAttribute('librarySectionUUID', self::uuidFromKey($catalog->id));
+        $xml->addAttribute('librarySectionUUID', self::uuidFromSubKey($catalog->id));
         self::setSectionXContent($xml, $catalog);
 
         $data = array();
@@ -507,16 +618,36 @@ class Plex_XML_Data
         }
     }
 
+    public static function setServerInfo($xml, $catalogs)
+    {
+        $server = $xml->addChild('Server');
+        $server->addAttribute('name', self::getServerName());
+        $server->addAttribute('host', self::getServerPublicAddress());
+        $server->addAttribute('localAddresses', self::getServerAddress());
+        $server->addAttribute('port', self::getServerPublicPort());
+        $server->addAttribute('machineIdentifier', self::getMachineIdentifier());
+        $server->addAttribute('version', self::getPlexVersion());
+
+        self::setSections($xml, $catalogs);
+    }
+
     public static function addArtist($xml, $artist)
     {
         $xdir = $xml->addChild('Directory');
         $id = self::getArtistId($artist->id);
-        $xml->addAttribute('ratingKey', $id);
+        $xdir->addAttribute('ratingKey', $id);
         $xdir->addAttribute('type', 'artist');
         $xdir->addAttribute('title', $artist->name);
         $xdir->addAttribute('index', '1');
         $xdir->addAttribute('addedAt', '');
         $xdir->addAttribute('updatedAt', '');
+
+        $rating = new Rating($artist->id, "artist");
+        $rating_value = $rating->get_average_rating();
+        if ($rating_value > 0) {
+            $xdir->addAttribute('rating', intval($rating_value * 2));
+        }
+
         self::addArtistMeta($xdir, $artist);
 
         $tags = Tag::get_top_tags('artist', $artist->id);
@@ -530,9 +661,22 @@ class Plex_XML_Data
     public static function addArtistMeta($xml, $artist)
     {
         $id = self::getArtistId($artist->id);
-        $xml->addAttribute('key', self::getMetadataUri($id) . '/children');
-        $xml->addAttribute('summary', '');
-        $xml->addAttribute('thumb', '');
+        if (!isset($xml['key'])) {
+            $xml->addAttribute('key', self::getMetadataUri($id) . '/children');
+        }
+        $xml->addAttribute('summary', $artist->summary);
+        self::addArtistThumb($xml, $artist->id);
+    }
+
+    protected static function addArtistThumb($xml, $artist_id, $attrthumb = 'thumb')
+    {
+        $id = self::getArtistId($artist_id);
+        $art = new Art($artist_id, 'artist');
+        $thumb = '';
+        if ($art->get_db()) {
+            $thumb = self::getMetadataUri($id) . '/thumb/' . $id;
+        }
+        $xml->addAttribute($attrthumb, $thumb);
     }
 
     public static function addAlbum($xml, $album)
@@ -550,6 +694,12 @@ class Plex_XML_Data
         $xdir->addAttribute('leafCount', $album->song_count);
         if ($album->year != 0 && $album->year != 'N/A') {
             $xdir->addAttribute('year', $album->year);
+        }
+
+        $rating = new Rating($album->id, "album");
+        $rating_value = $rating->get_average_rating();
+        if ($rating_value > 0) {
+            $xdir->addAttribute('rating', intval($rating_value * 2));
         }
 
         $tags = Tag::get_top_tags('album', $album->id);
@@ -573,7 +723,9 @@ class Plex_XML_Data
             $xml->addAttribute('art', self::getMetadataUri($id) . '/thumb/' . $id);
             $xml->addAttribute('thumb', self::getMetadataUri($id) . '/thumb/' . $id);
         }
-        $xml->addAttribute('parentThumb', '');
+        if ($album->artist_id) {
+            self::addArtistThumb($xml, $album->artist_id, 'parentThumb');
+        }
         $xml->addAttribute('originallyAvailableAt', '');
         $xml->addAttribute('addedAt', '');
         $xml->addAttribute('updatedAt', '');
@@ -605,10 +757,14 @@ class Plex_XML_Data
     {
         $id = self::getAlbumId($album->id);
         self::addAlbumMeta($xml, $album);
-        $xml->addAttribute('key', $id);
+        if (!isset($xml['key'])) {
+            $xml->addAttribute('key', $id);
+        }
         $xml->addAttribute('grandparentTitle', $album->f_artist);
         $xml->addAttribute('title1', $album->f_artist);
-        $xml->addAttribute('allowSync', '1');
+        if (!isset($xml['allowSync'])) {
+            $xml->addAttribute('allowSync', '1');
+        }
         $xml->addAttribute('nocache', '1');
         $xml->addAttribute('parentIndex', '1'); // ??
         $xml->addAttribute('parentTitle', $album->f_title);
@@ -637,17 +793,23 @@ class Plex_XML_Data
         $xdir->addAttribute('parentKey', self::getMetadataUri($albumid));
         $xdir->addAttribute('originalTitle', $album->f_artist_full);
         $xdir->addAttribute('summary', '');
-        $xdir->addAttribute('index', '1');
+        $xdir->addAttribute('index', $song->track);
         $xdir->addAttribute('duration', $time);
         $xdir->addAttribute('type', 'track');
         $xdir->addAttribute('addedAt', '');
         $xdir->addAttribute('updatedAt', '');
 
+        $rating = new Rating($song->id, "song");
+        $rating_value = $rating->get_average_rating();
+        if ($rating_value > 0) {
+            $xdir->addAttribute('rating', intval($rating_value * 2));
+        }
+
         $xmedia = $xdir->addChild('Media');
         $mediaid = self::getMediaId($song->id);
         $xmedia->addAttribute('id', $mediaid);
         $xmedia->addAttribute('duration', $time);
-        $xmedia->addAttribute('bitrate', $song->bitrate);
+        $xmedia->addAttribute('bitrate', intval($song->bitrate / 1000));
         $xmedia->addAttribute('audioChannels', '');
         // Type != Codec != Container, but that's how Ampache works today...
         $xmedia->addAttribute('audioCodec', $song->type);
@@ -670,5 +832,305 @@ class Plex_XML_Data
         $xml->addAttribute('key', self::getMetadataUri($id));
 
         return $xsong;
+    }
+
+    public static function createMyPlexAccount()
+    {
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><MyPlex/>');
+        $myplex_username = self::getMyPlexUsername();
+        $myplex_authtoken = self::getMyPlexAuthToken();
+        $myplex_published = self::getMyPlexPublished();
+        if ($myplex_username) {
+            $xml->addAttribute('myPlex', '1');
+            $xml->addAttribute('username', $myplex_username);
+            if ($myplex_authtoken) {
+                $xml->addAttribute('authToken', $myplex_authtoken);
+                $xml->addAttribute('signInState', 'ok');
+                if ($myplex_published) {
+                    $xml->addAttribute('mappingState', 'mapped');
+                } else {
+                    $xml->addAttribute('mappingState', 'unknown');
+                }
+            } else {
+                $xml->addAttribute('signInState', 'none');
+            }
+        } else {
+            $xml->addAttribute('signInState', 'none');
+        }
+        $xml->addAttribute('mappingError', '');
+        $xml->addAttribute('mappingErrorMessage', '1');
+
+        $xml->addAttribute('publicAddress', '1');
+        $xml->addAttribute('publicPort', self::getServerPublicPort());
+        $xml->addAttribute('privateAddress', '1');
+        $xml->addAttribute('privatePort', self::getServerPort());
+
+        $xml->addAttribute('subscriptionActive', '1');
+        $xml->addAttribute('subscriptionFeatures', 'cloudsync,pass,sync');
+        $xml->addAttribute('subscriptionState', 'Active');
+
+        return $xml;
+    }
+
+    public static function setSysAgents($xml)
+    {
+        /*$agent = $xml->addChild('Agent');
+        $agent->addAttribute('primary', '0');
+        $agent->addAttribute('hasPrefs', '0');
+        $agent->addAttribute('hasAttribution', '1');
+        $agent->addAttribute('identifier', 'com.plexapp.agents.wikipedia');*/
+
+        $agent = $xml->addChild('Agent');
+        $agent->addAttribute('primary', '1');
+        $agent->addAttribute('hasPrefs', '0');
+        $agent->addAttribute('hasAttribution', '0');
+        $agent->addAttribute('identifier', 'com.plexapp.agents.none');
+        self::addNoneAgentMediaType($agent, 'Personal Media Artists', '8');
+        self::addNoneAgentMediaType($agent, 'Personal Media', '1');
+        self::addNoneAgentMediaType($agent, 'Personal Media Shows', '2');
+        self::addNoneAgentMediaType($agent, 'Photos', '13');
+        self::addNoneAgentMediaType($agent, 'Personal Media Albums', '9');
+    }
+
+    protected static function addNoneAgentMediaType($xml, $name, $type)
+    {
+        $media = $xml->addChild('MediaType');
+        $media->addAttribute('name', $name);
+        $media->addAttribute('mediaType', $type);
+        self::addLanguages($media, 'xn');
+    }
+
+    protected static function addLanguages($xml, $languages)
+    {
+        $langs = explode(',', $languages);
+        foreach ($langs as $lang) {
+            $lg = $xml->addChild('Language');
+            $lg->addAttribute('code', $lang);
+        }
+    }
+
+    protected static function addNoneAgent($xml, $name)
+    {
+        self::addAgent($xml, $name, '0', 'com.plexapp.agents.none', true, 'xn');
+    }
+
+    protected static function addAgent($xml, $name, $hasPrefs, $identifier, $enabled = false, $langs='')
+    {
+        $agent = $xml->addChild('Agent');
+        $agent->addAttribute('name', $name);
+        if ($enabled) {
+            $agent->addAttribute('enabled', ($enabled) ? '1' : '0');
+        }
+        $agent->addAttribute('hasPrefs', $hasPrefs);
+        $agent->addAttribute('identifier', $identifier);
+        if (!empty($langs)) {
+            self::addLanguages($agent, $langs);
+        }
+        return $agent;
+    }
+
+    public static function setSysMovieAgents($xml)
+    {
+        self::addNoneAgent($xml, 'Personal Media');
+    }
+
+    public static function setSysTVShowAgents($xml)
+    {
+        self::addNoneAgent($xml, 'Personal Media Shows');
+    }
+
+    public static function setSysPhotoAgents($xml)
+    {
+        self::addNoneAgent($xml, 'Photos');
+    }
+
+    public static function setSysMusicAgents($xml, $category = 'Artists')
+    {
+        self::addNoneAgent($xml, 'Personal Media ' . $category);
+        //self::addAgent($xml, 'Last.fm', '1', 'com.plexapp.agents.lastfm', 'true', 'en,sv,fr,es,de,pl,it,pt,ja,tr,ru,zh');
+    }
+
+    public static function setAgentsContributors($xml, $mediaType, $primaryAgent)
+    {
+        if ($primaryAgent == 'com.plexapp.agents.none') {
+            $type = '';
+            switch ($mediaType) {
+                case '1':
+                    $type = 'Movies';
+                break;
+                case '2':
+                    $type = 'TV';
+                break;
+                case '13':
+                    $type = 'Photos';
+                break;
+                case '8':
+                    $type = 'Artists';
+                break;
+                case '9':
+                    $type = 'Albums';
+                break;
+            }
+
+            self::addAgent($xml, 'Local Media Assets (' . $type . ')', '0', 'com.plexapp.agents.localmedia', true);
+        }
+    }
+
+    public static function setAccounts($xml, $userid)
+    {
+        // Not sure how to handle Plex accounts vs Ampache accounts, return only 1 for now.
+
+        $account = $xml->addChild('Account');
+        $account->addAttribute('key', '/accounts/1');
+        $account->addAttribute('name', 'Administrator');
+        $account->addAttribute('defaultAudioLanguage', 'en');
+        $account->addAttribute('autoSelectAudio', '1');
+        $account->addAttribute('defaultSubtitleLanguage', 'en');
+        $account->addAttribute('subtitleMode', '0');
+    }
+
+    public static function setStatus($xml)
+    {
+        $dir = $xml->addChild('Directory');
+        $dir->addAttribute('key', 'sessions');
+        $dir->addAttribute('title', 'sessions');
+    }
+
+    public static function setPrefs($xml)
+    {
+        self::addSettings($xml, 'AcceptedEULA', 'Has the user accepted the EULA', 'false', '', 'bool', 'true', '1', '0', '');
+        //self::addSettings($xml, 'ApertureLibraryXmlPath', 'Aperture library XML path', '', '', 'text', '', '0', '1', 'channels');
+        //self::addSettings($xml, 'ApertureSharingEnabled', 'Enable Aperture sharing', 'true', '', 'bool', 'true', '0', '0', 'channels');
+        //self::addSettings($xml, 'AppCastUrl', 'AppCast URL', 'https://www.plexapp.com/appcast/mac/pms.xml', '', 'text', 'https://www.plexapp.com/appcast/mac/pms.xml', '0', '1', 'network');
+        self::addSettings($xml, 'ConfigurationUrl', 'Web Manager URL', 'http://127.0.0.1:32400/web', '', 'text', self::getServerUri() . '/web', '1', '0', 'network');
+        //self::addSettings($xml, 'DisableHlsAuthorization', 'Disable HLS authorization', 'false', '', 'bool', 'false', '1', '0', '');
+        //self::addSettings($xml, 'DlnaAnnouncementLeaseTime', 'DLNA server announcement lease time', '1800', 'Duration of DLNA Server SSDP announcement lease time, in seconds', 'int', '1800', '0', '1', 'dlna');
+        self::addSettings($xml, 'FirstRun', 'First run of PMS on this machine', 'true', '', 'bool', 'false', '1', '0', '');
+        self::addSettings($xml, 'ForceSecureAccess', 'Force secure access', 'false', 'Disallow access on the local network except to authorized users', 'bool', 'false', '1', '0', 'general');
+        self::addSettings($xml, 'FriendlyName', 'Friendly name', '', 'This name will be used to identify this media server to other computers on your network. If you leave it blank, your computer\'s name will be used instead.', 'text', self::getServerName(), '0', '0', 'general');
+        self::addSettings($xml, 'LogVerbose', 'Plex Media Server verbose logging', 'false', 'Enable Plex Media Server verbose logging', 'bool', AmpConfig::get('debug_level') == '5', '0', '1', 'general');
+        self::addSettings($xml, 'MachineIdentifier', 'A unique identifier for the machine', '', '', 'text', self::getMachineIdentifier(), '1', '0', '');
+        self::addSettings($xml, 'ManualPortMappingMode', 'Disable Automatic Port Mapping', 'false', 'When enabled, PMS is not trying to set-up a port mapping through your Router automatically', 'bool', 'false', '1', '0', '');
+        self::addSettings($xml, 'ManualPortMappingPort', 'External Port', '32400', 'When Automatic Port Mapping is disabled, you need to specify the external port that is mapped to this machine.', 'int', self::getServerPublicPort(), '1', '0', '');
+        self::addSettings($xml, 'PlexOnlineMail', 'myPlex email', '', 'The email address you use to login to myPlex.', 'text', self::getMyPlexUsername(), '1', '0', '');
+        self::addSettings($xml, 'PlexOnlineUrl', 'myPlex service URL', 'https://my.plexapp.com', 'The URL of the myPlex service', 'text', 'https://my.plexapp.com', '1', '0', '');
+        self::addSettings($xml, 'allowMediaDeletion', 'Allow clients to delete media', 'false', 'Clients will be able to delete media', 'bool', 'false', '0', '1', 'library');
+        self::addSettings($xml, 'logDebug', 'Plex Media Server debug logging', 'false', 'Enable Plex Media Server debug logging', 'bool', AmpConfig::get('debug'), '0', '1', 'general');
+    }
+
+    protected static function addSettings($xml, $id, $label, $default, $summary, $type, $value, $hidden, $advanced, $group)
+    {
+        $setting = $xml->addChild('Setting');
+        $setting->addAttribute('id', $id);
+        $setting->addAttribute('label', $label);
+        $setting->addAttribute('default', $default);
+        $setting->addAttribute('summary', $summary);
+        $setting->addAttribute('type', $type);
+        $setting->addAttribute('value', $value);
+        $setting->addAttribute('hidden', $hidden);
+        $setting->addAttribute('advanced', $advanced);
+        $setting->addAttribute('group', $group);
+    }
+
+    public static function setMusicScanners($xml)
+    {
+        $scanner = $xml->addChild('Scanner');
+        $scanner->addAttribute('name', 'Plex Music Scanner');
+    }
+
+    public static function createAppStore()
+    {
+        // Maybe we can setup our own store here? Ignore for now.
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><ASContainer/>');
+        $xml->addAttribute('art', self::getResourceUri('store-art.png'));
+        $xml->addAttribute('noCache', '1');
+        $xml->addAttribute('noHistory', '0');
+        $xml->addAttribute('title1', 'Channel Directory');
+        $xml->addAttribute('replaceParent', '0');
+        $xml->addAttribute('identifier', 'com.plexapp.system');
+
+        return $xml;
+    }
+
+    public static function setMyPlexSubscription($xml)
+    {
+        $subscription = $xml->addChild('subscription');
+        $subscription->addAttribute('active', '1');
+        $subscription->addAttribute('status', 'Active');
+        $subscription->addAttribute('plan', 'lifetime');
+        $features = array('cloudsync', 'pass', 'sync');
+        foreach ($features as $feature) {
+            $fxml = $subscription->addChild('feature');
+            $fxml->addAttribute('id', $feature);
+        }
+    }
+
+    public static function setServices($xml)
+    {
+        $dir = $xml->addChild('Directory');
+        $dir->addAttribute('key', 'browse');
+        $dir->addAttribute('title', 'browse');
+    }
+
+    protected static function getPathDelimiter()
+    {
+        if (strpos(PHP_OS, 'WIN') === 0)
+            return '\\';
+        else
+            return '/';
+    }
+
+    public static function setBrowseService($xml, $path)
+    {
+        $delim = self::getPathDelimiter();
+        if (!empty($path)) {
+            $dir = base64_decode($path);
+            debug_event('plex', 'Dir: ' . $dir, '5');
+        } else {
+            self::addDirPath($xml, AmpConfig::get('prefix') . $delim . 'plex', 'plex', true);
+
+            if ($delim == '/') {
+                $dir = '/';
+            } else {
+                $dir = '';
+                // TODO: found a better way to list Windows drive
+                $letters = str_split("CDEFGHIJ");
+                foreach ($letters as $letter) {
+                    self::addDirPath($xml, $letter . ':');
+                }
+            }
+        }
+
+        if (!empty($dir)) {
+            $dh  = opendir($dir);
+            if (is_resource($dh)) {
+                while (false !== ($filename = readdir($dh))) {
+                    $path = $dir . $delim . $filename;
+                    if ($filename != '.' && $filename != '..' && is_dir($path)) {
+                        self::addDirPath($xml, $path);
+                    }
+                }
+            }
+        }
+    }
+
+    public static function addDirPath($xml, $path, $title='', $isHome=false)
+    {
+        $delim = self::getPathDelimiter();
+        $dir = $xml->addChild('Path');
+        if ($isHome) {
+            $dir->addAttribute('isHome', '1');
+        }
+        if (empty($title)) {
+            $pp = explode($delim, $path);
+            $title = $pp[count($pp)-1];
+            if (empty($title)) {
+                $title = $path;
+            }
+        }
+        $key = '/services/browse/' . base64_encode($path);
+        $dir->addAttribute('key', $key);
+        $dir->addAttribute('title', $title);
+        $dir->addAttribute('path', $path);
     }
 }

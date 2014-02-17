@@ -563,7 +563,7 @@ function print_bool($value)
  */
 function show_now_playing()
 {
-    Session::gc(null);
+    Session::gc();
     Stream::gc_now_playing();
 
     $web_path = AmpConfig::get('web_path');

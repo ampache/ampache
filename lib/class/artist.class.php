@@ -25,6 +25,10 @@ class Artist extends database_object
     /* Variables from DB */
     public $id;
     public $name;
+    public $summary;
+    public $placeformed;
+    public $yearformed;
+    public $last_update;
     public $songs;
     public $albums;
     public $prefix;

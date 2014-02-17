@@ -70,6 +70,12 @@ if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
 }
 
+if ($ow_config) {
+    foreach ($ow_config as $key => $value) {
+        $results[$key] = $value;
+    }
+}
+
 $results['raw_web_path'] = $results['web_path'];
 if (empty($results['http_host'])) {
     $results['http_host'] = $_SERVER['HTTP_HOST'];
@@ -86,7 +92,7 @@ if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) 
 
 /* Variables needed for Auth class */
 $results['cookie_path']     = $results['raw_web_path'];
-$results['cookie_domain']    = $_SERVER['SERVER_NAME'];
+$results['cookie_domain']    = $results['http_port'];
 $results['cookie_life']        = $results['session_cookielife'];
 $results['cookie_secure']    = $results['session_cookiesecure'];
 

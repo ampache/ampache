@@ -535,7 +535,7 @@ abstract class Catalog extends database_object
             $sql_where = "WHERE `song`.`catalog` IN $catlist";
         }
 
-        $sql = "SELECT `artist`.id, `artist`.`name` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.artist ORDER BY `artist`.`name`";
+        $sql = "SELECT `artist`.id, `artist`.`name`, `artist`.`summary` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.artist ORDER BY `artist`.`name`";
 
         $results = array();
         $db_results = Dba::read($sql);

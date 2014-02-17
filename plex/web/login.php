@@ -20,8 +20,28 @@
  *
  */
 
-define('NO_SESSION', '1');
-require_once 'lib/init.php';
-require_once 'lib/login.php';
+define('NO_SESSION','1');
+require_once 'init.php';
+require_once '../../lib/login.php';
 
-require AmpConfig::get('prefix') . '/templates/show_login_form.inc.php';
+require_once('header.inc.php');
+?>
+<p class="error">Ampache authentication required.</p>
+<div class="configform">
+    <form action="" method="POST" enctype="multipart/form-data">
+        <div class="field">
+            <div class="field_label">Username:</div>
+            <div class="field_value"><input type="text" name="username" /></div>
+        </div>
+        <div class="field">
+            <div class="field_label">Password:</div>
+            <div class="field_value"><input type="password" name="password" /></div>
+        </div>
+        <div class="formbuttons">
+            <input type="submit" value="Login" />
+        </div>
+    </form>
+</div>
+<?php
+require_once('footer.inc.php');
+?>

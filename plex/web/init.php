@@ -20,8 +20,21 @@
  *
  */
 
-define('NO_SESSION', '1');
-require_once 'lib/init.php';
-require_once 'lib/login.php';
+require_once('../../lib/class/plex_xml_data.class.php');
 
-require AmpConfig::get('prefix') . '/templates/show_login_form.inc.php';
+$ow_config = array(
+    'http_host' => Plex_XML_Data::getServerAddress() . ':' . Plex_XML_Data::getServerPort(),
+    'web_path' => '/web'
+ );
+
+require_once '../../lib/init.php';
+
+if (!AmpConfig::get('plex_backend')) {
+    echo "Disabled.";
+    exit;
+}
+
+if (!defined('NO_SESSION') && !Access::check('interface', '100')) {
+    Error::add('general', T_('Unauthorized.'));
+    exit();
+}
