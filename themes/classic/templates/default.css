@@ -545,9 +545,22 @@ a.button{padding:1px 3px;}
 #information_actions { margin-left:5px; font-size:0.7em; float:left; } 
 #information_actions h3 { font-size:1.2em; margin:0.2em; }
 
-#artist_biography {
+.item_right_info {
     float: right;
     max-width: 60%;
+}
+
+.external_links {
+    text-align: right;
+    opacity: 0.3;
+}
+
+.external_links:hover {
+    opacity: 1;
+}
+
+.external_links a {
+    margin: 0px 5px 0px 0px;
 }
 
 #artist_summary {

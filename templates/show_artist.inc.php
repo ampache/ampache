@@ -32,8 +32,15 @@ UI::show_box_top($artist->f_name, 'info-box');
 if (AmpConfig::get('lastfm_api_key')) {
     echo Ajax::observe('window','load', Ajax::action('?page=index&action=artist_info&artist='.$artist->id, 'artist_info'));
 ?>
-    <div id="artist_biography">
-        <?php echo T_('Loading...'); ?>
+    <div class="item_right_info">
+        <div class="external_links">
+            <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
+            <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($artist->f_name); ?>%22&go=Go" target="_blank"><?php echo UI::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
+            <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22&type=artist" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
+        </div>
+        <div id="artist_biography">
+            <?php echo T_('Loading...'); ?>
+        </div>
     </div>
 <?php } ?>
 

@@ -30,7 +30,13 @@ if ($album->disk) {
 $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
 ?>
 <?php UI::show_box_top($title,'info-box'); ?>
-<div class="album_art">
+<div class="item_right_info">
+    <div class="external_links">
+        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
+        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($album->f_name); ?>%22&go=Go" target="_blank"><?php echo UI::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
+        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22&type=album" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
+    </div>
+    <div class="album_art">
     <?php
     if ($album->name != T_('Unknown (Orphaned)')) {
         $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
@@ -41,6 +47,7 @@ $title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
         echo "</a>\n";
     }
     ?>
+    </div>
 </div>
 <?php if (AmpConfig::get('ratings')) { ?>
 <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
