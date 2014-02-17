@@ -256,23 +256,21 @@ switch ($_REQUEST['action']) {
         echo "<div id='" . $fsname . "'>";
         $images = Slideshow::get_current_slideshow();
         foreach ($images as $image) {
-            echo "<a href='#'><img src='" . $image['url'] . "' alt='' /></a>";
+            echo "<img src='" . $image['url'] . "' alt='' onclick='update_action();' />";
         }
         echo "</div>";
         $results['fslider'] = ob_get_clean();
         ob_start();
         echo "<script language='javascript' type='text/javascript'>";
         echo "$('#" . $fsname . "').rhinoslider({
-            effect: 'shuffle',
-            showTime: 15000,
-            randomOrder: true,
-            controlsMousewheel: false,
-            controlsKeyboard: false,
-            controlsPrevNext: false,
-            controlsPlayPause: false,
-            autoPlay: true,
-            pauseOnHover: false,
-            showControls: 'never'
+                showTime: 15000,
+                effectTime: 2000,
+                randomOrder: true,
+                controlsPlayPause: false,
+                autoPlay: true,
+                showBullets: 'never',
+                showControls: 'always',
+                controlsMousewheel: false,
         });";
         echo "</script>";
         $results['fslider_script'] = ob_get_clean();
