@@ -49,7 +49,7 @@
                 </a>
         <?php } ?>
     <?php if ($playlist->has_access()) { ?>
-        <a id="<?php echo 'edit_playlist_'.$playlist->id ?>" onclick="showEditDialog('smartplaylist_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_'.$playlist->id ?>', '<?php echo T_('Smart Playlist edit') ?>', '<?php echo $tags_list ?>', 'smartplaylist_row_', 'refresh_smartplaylist')">
+        <a id="<?php echo 'edit_playlist_'.$playlist->id ?>" onclick="showEditDialog('smartplaylist_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_'.$playlist->id ?>', '<?php echo T_('Smart Playlist edit') ?>', 'smartplaylist_row_', 'refresh_smartplaylist')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
         <?php echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $playlist->id,'delete', T_('Delete'),'delete_playlist_' . $playlist->id); ?>

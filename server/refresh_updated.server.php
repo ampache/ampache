@@ -69,4 +69,8 @@ switch ($_REQUEST['action']) {
         $broadcast->format();
         require AmpConfig::get('prefix') . '/templates/show_broadcast_row.inc.php';
     break;
+    case 'refresh_tag':
+       $tag = new Tag($_REQUEST['id']);
+       echo $tag->name;
+    break;
 } // switch on the action

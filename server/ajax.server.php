@@ -97,6 +97,8 @@ switch ($_REQUEST['action']) {
     break;
     /* Controls the editing of objects */
     case 'edit_object':
+        debug_event('ajax_server', "Editing object...", '5');
+        
         // Scrub the data
         foreach ($_POST as $key => $data) {
             $_POST[$key] = unhtmlentities(scrub_in($data));
@@ -183,6 +185,10 @@ switch ($_REQUEST['action']) {
                 $key = 'broadcast_row_' . $_POST['id'];
                 $broadcast = new Broadcast($_POST['id']);
                 $broadcast->update($_POST);
+            break;
+            case 'tag_row':
+                $tag = new Tag($_POST['id']);
+                $tag->update($_POST['name']);
             break;
             default:
                 $key = 'rfc3514';

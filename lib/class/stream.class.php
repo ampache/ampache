@@ -247,7 +247,7 @@ class Stream
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
             if ($personal_info_id) {
                 $current_user = $GLOBALS['user']->id;
-                $sql .= "WHERE (`now_playing`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
+                $sql .= "WHERE (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
 

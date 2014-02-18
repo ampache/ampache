@@ -78,6 +78,9 @@ switch ($_REQUEST['action']) {
                 $broadcast = new Broadcast($_GET['id']);
                 $broadcast->format();
             break;
+            case 'tag_row':
+                $tag = new Tag($_GET['id']);
+                break;
             default:
                 exit();
         } // end switch on type

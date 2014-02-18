@@ -37,8 +37,15 @@ switch ($_REQUEST['action']) {
         debug_event('tag.ajax', 'Adding new tag by name...', '5');
         Tag::add($_GET['type'],$_GET['object_id'],$_GET['tag_name'], false);
     break;
-    case 'remove_tag':
-        debug_event('tag.ajax', 'Removing tag...', '5');
+    case 'delete':
+        debug_event('tag.ajax', 'Deleting tag...', '5');
+        $tag = new Tag($_GET['tag_id']);
+        $tag->delete();
+        header('Location: ' . AmpConfig::get('web_path') . '/browse.php?action=tag');
+        exit;
+    break;
+    case 'remove_tag_map':
+        debug_event('tag.ajax', 'Removing tag map...', '5');
         $tag = new Tag($_GET['tag_id']);
         $tag->remove_map($_GET['type'],$_GET['object_id']);
     break;

@@ -92,10 +92,7 @@ abstract class database_object
     public static function get_from_cache($index,$id)
     {
         // Check if the object is set
-        if (isset(self::$object_cache[$index])
-            && isset(self::$object_cache[$index][$id])
-            ) {
-
+        if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$id])) {
             self::$cache_hit++;
             return self::$object_cache[$index][$id];
         }
@@ -108,7 +105,7 @@ abstract class database_object
      * add_to_cache
      * This adds the specified object to the specified index in the cache
      */
-    public static function add_to_cache($index,$id,$data)
+    public static function add_to_cache($index, $id, $data)
     {
         if (!self::$_enabled) { return false; }
 

@@ -350,8 +350,8 @@ class Album extends database_object
         }
         $this->f_name_link .="</a>";
 
-        $this->f_link         = $this->f_name_link;
-        $this->f_title        = $this->full_name; // FIXME: Legacy?
+        $this->f_link = $this->f_name_link;
+        $this->f_title = $this->full_name; // FIXME: Legacy?
         if ($this->artist_count == '1') {
             $artist = trim(trim($this->artist_prefix) . ' ' . trim($this->artist_name));
             $this->f_artist_name = $artist;
@@ -367,10 +367,8 @@ class Album extends database_object
             $this->year = "N/A";
         }
 
-        $tags = Tag::get_top_tags('album',$this->id);
-        $this->tags = $tags;
-
-        $this->f_tags = Tag::get_display($tags, $this->id, 'album');
+        $this->tags = Tag::get_top_tags('album', $this->id);
+        $this->f_tags = Tag::get_display($this->tags, $this->id, 'album');
 
     } // format
 

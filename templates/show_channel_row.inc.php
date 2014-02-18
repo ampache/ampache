@@ -45,4 +45,4 @@
     <?php echo $channel->get_stream_proxy_url(); ?>
 </td>
 <td class="cel_state"><div id="channel_state_<?php echo $channel->id; ?>"><?php echo $channel->get_channel_state(); ?></div></td>
-<td class="cel_action"><?php $channel->show_action_buttons($tags_list); ?></td>
+<td class="cel_action"><?php $channel->show_action_buttons(); ?></td>

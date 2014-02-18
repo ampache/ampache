@@ -141,11 +141,11 @@ class Broadcast extends database_object
         return null;
     }
 
-    public function show_action_buttons($tags_list = "")
+    public function show_action_buttons()
     {
         if ($this->id) {
             if ($GLOBALS['user']->has_access('75')) {
-                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast edit') . "', '" . $tags_list . "', 'broadcast_row_', 'refresh_broadcast')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
+                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast edit') . "', 'broadcast_row_', 'refresh_broadcast')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id ."\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }

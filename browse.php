@@ -70,7 +70,7 @@ switch ($_REQUEST['action']) {
         $browse->set_sort('count','ASC');
         // This one's a doozy
         $browse->set_simple_browse(false);
-        $browse->save_objects(Tag::get_tags(AmpConfig::get('offset_limit')));
+        $browse->save_objects(Tag::get_tags(/*AmpConfig::get('offset_limit')*/));   // Should add a pager?
         $object_ids = $browse->get_saved();
         $keys = array_keys($object_ids);
         Tag::build_cache($keys);

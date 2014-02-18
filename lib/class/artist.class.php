@@ -288,9 +288,9 @@ class Artist extends database_object
 
         $this->f_time = ltrim($hours . ':' . $min . ':' . $sec,'0:');
 
-        $this->tags = Tag::get_top_tags('artist',$this->id);
-
-        $this->f_tags = Tag::get_display($this->tags,$this->id,'artist');
+        $this->tags = Tag::get_top_tags('artist', $this->id);
+        $this->f_tags = Tag::get_display($this->tags, $this->id, 'artist');
+        
         $this->object_cnt = $extra_info['object_cnt'];
 
         return true;

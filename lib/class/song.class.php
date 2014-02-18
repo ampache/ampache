@@ -853,10 +853,8 @@ class Song extends database_object implements media
         $this->f_track = $this->track;
 
         // Get the top tags
-        $tags = Tag::get_top_tags('song',$this->id);
-        $this->tags = $tags;
-
-        $this->f_tags = Tag::get_display($tags,$this->id,'song');
+        $this->tags = Tag::get_top_tags('song', $this->id);
+        $this->f_tags = Tag::get_display($this->tags, $this->id, 'song');
 
         // Format the size
         $this->f_size = UI::format_bytes($this->size);

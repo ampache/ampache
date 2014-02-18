@@ -20,16 +20,15 @@
  *
  */
 ?>
-<td class="cel_play">
-    <span class="cel_play_content">&nbsp;</span>
-    <div class="cel_play_hover">
-    <?php if (AmpConfig::get('directplay')) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=broadcast&broadcast_id=' . $broadcast->id,'play', T_('Play'),'play_broadcast_' . $channel->id); ?>
-<?php } ?>
-    </div>
-</td>
-<td class="cel_name"><?php echo $broadcast->name; ?></td>
-<td class="cel_genre"><?php echo $broadcast->f_tags; ?></td>
-<td class="cel_started"><?php echo ($broadcast->started ? T_('Yes') : T_('No')); ?></td>
-<td class="cel_listeners"><?php echo $broadcast->listeners; ?></td>
-<td class="cel_action"><?php $broadcast->show_action_buttons(); ?></td>
+<div>
+    <form method="post" id="edit_tag_<?php echo $tag->id; ?>" class="edit_dialog_content">
+        <table class="tabledata" cellspacing="0" cellpadding="0">
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($tag->name); ?>" /></td>
+            </tr>
+        </table>
+        <input type="hidden" name="id" value="<?php echo $tag->id; ?>" />
+        <input type="hidden" name="type" value="tag_row" />
+    </form>
+</div>

@@ -54,7 +54,7 @@
         <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
     <?php } ?>
     <?php if ($playlist->has_access()) { ?>
-        <a id="<?php echo 'edit_playlist_'.$playlist->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_'.$playlist->id ?>', '<?php echo T_('Playlist edit') ?>', '', 'playlist_row_', 'refresh_playlist')">
+        <a id="<?php echo 'edit_playlist_'.$playlist->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_'.$playlist->id ?>', '<?php echo T_('Playlist edit') ?>', 'playlist_row_', 'refresh_playlist')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
         <?php echo Ajax::button('?page=browse&action=delete_object&type=playlist&id='.$playlist->id, 'delete', T_('Delete'), 'delete_playlist_'.$playlist->id, '', '', T_('Do you really want to delete the playlist?')); ?>

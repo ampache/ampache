@@ -147,13 +147,13 @@ class Channel extends database_object
         return $ftype;
     }
 
-    public function show_action_buttons($tags_list = "")
+    public function show_action_buttons()
     {
         if ($this->id) {
             if ($GLOBALS['user']->has_access('75')) {
                 echo Ajax::button('?page=index&action=start_channel&id=' . $this->id,'run', T_('Start Channel'),'channel_start_' . $this->id);
                 echo " " . Ajax::button('?page=index&action=stop_channel&id=' . $this->id,'stop', T_('Stop Channel'),'channel_stop_' . $this->id);
-                echo " <a id=\"edit_channel_ " . $this->id . "\" onclick=\"showEditDialog('channel_row', '" . $this->id . "', 'edit_channel_" . $this->id . "', '" . T_('Channel edit') . "', '" . $tags_list . "', 'channel_row_', 'refresh_channel')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
+                echo " <a id=\"edit_channel_ " . $this->id . "\" onclick=\"showEditDialog('channel_row', '" . $this->id . "', 'edit_channel_" . $this->id . "', '" . T_('Channel edit') . "', 'channel_row_', 'refresh_channel')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo " <a href=\"" . AmpConfig::get('web_path') . "/channel.php?action=show_delete&id=" . $this->id ."\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
@@ -161,7 +161,7 @@ class Channel extends database_object
 
     public function format()
     {
-        $this->tags = Tag::get_top_tags('channel',$this->id);
+        $this->tags = Tag::get_top_tags('channel', $this->id);
         $this->f_tags = Tag::get_display($this->tags, $this->id, 'channel');
     }
 
