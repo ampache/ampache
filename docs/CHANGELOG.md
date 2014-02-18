@@ -3,6 +3,21 @@ CHANGELOG
 
 3.7
 ----------
+- Added Tag edit/delete capability
+- Added several search engine links
+- Added myPlex support on Plex API
+- Added cache on LastFM data
+- Added custom buttons play actions
+- Added artist pictures slideshow for current playing artist
+- Added Broadcast feature
+- Added Channel feature with Icecast compatibility
+- Replaced Muses Radio Player by jPlayer to keep one web player for all
+- Added missing artists in similar artists for Wanted feature
+- Added concerts information from LastFM
+- Added tabs on artist information
+- Added 'add to playlist' direct button on browse items
+- Added avatar on users and Gravatar/Libravatar plugins
+- Fixed playlist visibility (reported by stonie08)
 - Added OpenID authentication
 - Fixed m3u import to playlist on catalog creation (reported by jaydoes)
 - Improved missing/wanted albums with the capability to browse missing artists
