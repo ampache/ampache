@@ -378,6 +378,9 @@ class Update
 
         $update_string = '- Add artist description/recommendation external service data cache.<br />';
         $version[] = array('version' => '360044','description' => $update_string);
+        
+        $update_string = '- Set user field on playlists as optional.<br />';
+        $version[] = array('version' => '360045','description' => $update_string);
 
         return $version;
     }
@@ -2277,6 +2280,19 @@ class Update
             "`rel` varchar(256) NULL," .
             "`mbid` varchar(1369) NULL," .
             "PRIMARY KEY (`id`))";
+        Dba::write($sql);
+
+        return true;
+    }
+    
+    /**
+     * update_360045
+     *
+     * Set user field on playlists as optional
+     */
+    public static function update_360045()
+    {
+        $sql = "ALTER TABLE `playlist` MODIFY `user` int(11) NULL";
         Dba::write($sql);
 
         return true;
