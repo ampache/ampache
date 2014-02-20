@@ -887,45 +887,4 @@ class Plex_Api
             }
         }
     }
-
-
-    /**
-        Functions to emulate myPlex server and grant access to plexpass dynamically.
-        Use it for testing purpose only, be fair!
-     */
-
-    public static function users($params)
-    {
-        if ($params[0] == 'sign_in.xml') {
-            $curlopts = array();
-            $headers = array();
-            $res = self::myPlexRequest('users/sign_in.xml', $curlopts, $headers, true);
-
-            foreach ($res['headers'] as $header) {
-                header($header);
-            }
-
-            if ($res['status'] == '201') {
-                Plex_XML_Data::injectMyPlexSubscription($res['xml']);
-                self::apiOutput($res['xml']->asXML());
-            } else { self::createError($res['status']); }
-        }
-    }
-
-    protected static function get_users_account($authtoken='')
-    {
-        if (empty($authtoken)) {
-            $authtoken = Plex_XML_Data::getMyPlexAuthToken();
-        }
-        $action = 'users/account?auth_token=' . $authtoken;
-        $res = self::myPlexRequest($action);
-        return $res['xml'];
-    }
-
-    public static function users_account($params)
-    {
-        $xml = self::get_users_account();
-        Plex_XML_Data::injectMyPlexSubscription($xml);
-        self::apiOutput($xml->asXML());
-    }
 }
