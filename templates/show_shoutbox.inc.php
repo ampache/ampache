@@ -27,7 +27,7 @@
     $shout = new Shoutbox($shout_id);
 ?>
 <div class="shout <?php echo UI::flip_class(); ?>">
-    <?php echo $shout->get_display(true); ?>
+    <?php echo $shout->get_display(true, true); ?>
 </div>
 <?php } ?>
 </div>

@@ -1217,69 +1217,6 @@ ins,#rightbar a
 	cursor:pointer;
 }
 
-.shout {
-    clear: float;
-    width: 400px;
-    height: auto;
-    padding-right: 40px;
-    padding-bottom: 20px;
-}
-.shoutbox-item {
-    width: 100%;
-    height: 100%;
-    font-size: 12px;
-    line-height: normal;
-    position: relative;
-}
-
-.shoutbox-data {
-    min-height: 75px;
-}
-
-.shoutbox-img {
-    float: left;
-    display:inline;
-    padding-right: 10px;
-}
-
-.shoutbox-info {
-    display:inline;
-}
-
-.shoutbox-object {
-    font-weight: bold;
-}
-
-.shoutbox-date {
-    color: #D6D6D6;
-}
-
-.shoutbox-text {
-    padding-top: 10px;
-    word-wrap: break-word;
-}
-
-.shoutbox-footer {
-    width: 100%;
-    padding-top: 5px;
-}
-
-.shoutbox-actions {
-    display:inline;
-}
-
-.shoutbox-user {
-    font-size: 10px;
-    display:inline;
-    text-align: right;
-    float: right;
-}
-
-.noty_ampache {
-    color: #ffffff;
-    background-color: #222;
-}
-
 .browse-options {
     float: right;
 }

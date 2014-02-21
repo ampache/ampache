@@ -236,7 +236,7 @@ class Shoutbox
 
     } // delete
 
-    public function get_display($jsbuttons = false)
+    public function get_display($details = true, $jsbuttons = false)
     {
         $object = Shoutbox::get_object($this->object_type, $this->object_id);
         $object->format();
@@ -245,24 +245,34 @@ class Shoutbox
         $img = $this->get_image();
         $html = "<div class='shoutbox-item'>";
         $html .= "<div class='shoutbox-data'>";
-        if ($img) {
+        if ($details && $img) {
             $html .= "<div class='shoutbox-img'>" . $img . "</div>";
         }
         $html .= "<div class='shoutbox-info'>";
-        $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
-        $html .= "<div class='shoutbox-date'>".date("Y/m/d H:i:s", $this->date) . "</div>";
+        if ($details) {
+            $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
+            $html .= "<div class='shoutbox-date'>".date("Y/m/d H:i:s", $this->date) . "</div>";
+        }
         $html .= "<div class='shoutbox-text'>" . preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text) . "</div>";
         $html .= "</div>";
         $html .= "</div>";
         $html .= "<div class='shoutbox-footer'>";
-        $html .= "<div class='shoutbox-actions'>";
-        if ($jsbuttons) {
-            $html .= Ajax::button('?page=stream&action=directplay&playtype=' . $this->object_type .'&' . $this->object_type . '_id=' . $this->object_id,'play', T_('Play'),'play_' . $this->object_type . '_' . $this->object_id);
-            $html .= Ajax::button('?action=basket&type=' . $this->object_type .'&id=' . $this->object_id,'add', T_('Add'),'add_' . $this->object_type . '_' . $this->object_id);
+        if ($details) {
+            $html .= "<div class='shoutbox-actions'>";
+            if ($jsbuttons) {
+                $html .= Ajax::button('?page=stream&action=directplay&playtype=' . $this->object_type .'&' . $this->object_type . '_id=' . $this->object_id,'play', T_('Play'),'play_' . $this->object_type . '_' . $this->object_id);
+                $html .= Ajax::button('?action=basket&type=' . $this->object_type .'&id=' . $this->object_id,'add', T_('Add'),'add_' . $this->object_type . '_' . $this->object_id);
+            }
+            $html .= "<a href=\"" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $this->object_type . "&id=" . $this->object_id . "\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>";
+            $html .= "</div>";
         }
-        $html .= "<a href=\"" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $this->object_type . "&id=" . $this->object_id . "\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>";
+        $html .= "<div class='shoutbox-user'>by ";
+        if ($details) {
+            $html .= $user->f_link;
+        } else {
+            $html .= $user->username;
+        }
         $html .= "</div>";
-        $html .= "<div class='shoutbox-user'>by " . $user->f_link . "</div>";
         $html .= "</div>";
         $html .= "</div>";
 

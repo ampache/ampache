@@ -520,6 +520,10 @@ div.waveform {
 div.waveform a {
     cursor: crosshair;
 }
+.waveform-shouts {
+    float: left;
+    display:inline;
+}
 
 div.waveform-time {
     position: absolute;

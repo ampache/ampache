@@ -216,7 +216,7 @@ switch ($_REQUEST['action']) {
             echo "<script language='javascript' type='text/javascript'>";
             foreach ($shouts as $id) {
                 $shout = new Shoutbox($id);
-                echo "noty({text: '" . addslashes($shout->get_display()) . "',
+                echo "noty({text: '" . addslashes($shout->get_display(true)) . "',
                     type: 'alert', layout: 'bottomRight',
                     template: '<div class=\"noty_message noty_ampache\"><span class=\"noty_text noty_ampache\"></span><div class=\"noty_close noty_ampache\"></div></div>',
                 });";
