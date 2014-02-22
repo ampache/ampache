@@ -69,7 +69,7 @@ class AmpacheFlickr {
 
     public function get_photos($search) {
         $photos = array();
-        $url = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=30&text=" . rawurlencode($search);
+        $url = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode($search . " music");
         $request = Requests::get($url);
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);
