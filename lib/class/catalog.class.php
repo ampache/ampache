@@ -1086,8 +1086,17 @@ abstract class Catalog extends database_object
                 else {
                     // Remove file:// prefix if any
                     if (strpos($file, "file://") !== false) {
-                        $file = substr($file, 7);
+                        $file = urldecode(substr($file, 7));
+                        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                            // Removing starting / on Windows OS.
+                            if (substr($file, 0, 1) == '/') {
+                                $file = substr($file, 1);
+                            }
+                            // Restore real directory separator
+                            $file = str_replace("/", DIRECTORY_SEPARATOR, $file);
+                        }
                     }
+                    debug_event('catalog', 'Add file ' . $file . ' to playlist.', '5');
                 
                     // First, try to found the file as absolute path
                     $sql = "SELECT `id` FROM `song` WHERE `file` = ?";
@@ -1216,9 +1225,8 @@ abstract class Catalog extends database_object
     {
         $files = array();
         $xml = simplexml_load_string($data);
-        
         if ($xml) {
-            foreach ($xml->trackList as $track) {
+            foreach ($xml->trackList->track as $track) {
                 $file = trim($track->location);
                 if (!empty($file)) {
                     $files[] = $file;
