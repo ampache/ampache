@@ -40,7 +40,7 @@ UI::show_box_top(T_('Manage Democratic Playlists'));  ?>
     ?>
     <tr class="<?php echo UI::flip_class(); ?>">
         <td><?php echo scrub_out($democratic->name); ?></td>
-        <td><?php echo $playlist->f_link; ?></td>
+        <td><?php echo $playlist->f_name_link; ?></td>
         <td><?php echo $democratic->f_cooldown; ?></td>
         <td><?php echo $democratic->f_level; ?></td>
         <td><?php echo $democratic->f_primary; ?></td>

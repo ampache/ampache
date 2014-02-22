@@ -353,6 +353,13 @@ class Search extends playlist_object
                 'type'   => 'boolean_numeric',
                 'widget' => array('select', $playlists)
             );
+            
+            $this->types[] = array(
+                'name'   => 'playlist_name',
+                'label'  => T_('Playlist Name'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
 
             $playlists = array();
             foreach (Search::get_searches() as $playlistid) {
@@ -443,6 +450,14 @@ class Search extends playlist_object
                 'widget' => array('input', 'text')
             );
         break;
+        case 'playlist':
+            $this->types[] = array(
+                'name'   => 'name',
+                'label'  => T_('Name'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+        break;
         } // end switch on searchtype
 
     } // end constructor
@@ -479,6 +494,7 @@ class Search extends playlist_object
             case 'artist':
             case 'video':
             case 'song':
+            case 'playlist':
                 $request['type'] = $data['type'];
             break;
             default:
@@ -1025,6 +1041,11 @@ class Search extends playlist_object
                 case 'catalog':
                     $where[] = "`song`.`catalog` $sql_match_operator '$input'";
                 break;
+                case 'playlist_name':
+                    $join['playlist'] = true;
+                    $join['playlist_data'] = true;
+                    $where[] = "`playlist`.`name` $sql_match_operator '$input'";
+                break;
                 case 'playlist':
                     $join['playlist_data'] = true;
                     $where[] = "`playlist_data`.`playlist` $sql_match_operator '$input'";
@@ -1087,6 +1108,9 @@ class Search extends playlist_object
         }
         if ($join['playlist_data']) {
             $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `song`.`id`=`playlist_data`.`object_id` AND `playlist_data`.`object_type`='song'";
+            if ($join['playlist']) {
+                $table['playlist'] = "LEFT JOIN `playlist` ON `playlist_data`.`playlist`=`playlist`.`id`";
+            }
         }
 
         if ($join['catalog']) {
@@ -1159,4 +1183,69 @@ class Search extends playlist_object
         );
     }
 
+    /**
+     * playlist_to_sql
+     *
+     * Handles the generation of the SQL for playlist searches.
+     */
+    private function playlist_to_sql()
+    {
+        $sql_logic_operator = $this->logic_operator;
+        $where = array();
+        $table = array();
+        $join = array();
+
+        foreach ($this->rules as $rule) {
+            $type = $this->name_to_basetype($rule[0]);
+            foreach ($this->basetypes[$type] as $operator) {
+                if ($operator['name'] == $rule[1]) {
+                    break;
+                }
+            }
+            $input = $this->_mangle_data($rule[2], $type, $operator);
+            $sql_match_operator = $operator['sql'];
+
+            $where[] = "`playlist`.`type` = 'public'";
+            
+            switch ($rule[0]) {
+                case 'name':
+                    $where[] = "`playlist`.`name` $sql_match_operator '$input'";
+                break;
+                default:
+                    // Nihil
+                break;
+            } // switch on ruletype
+        } // foreach rule
+
+        $join['playlist_data'] = true;
+        $join['song'] = true;
+        $join['catalog'] = true;
+
+        $where_sql = implode(" $sql_logic_operator ", $where);
+        
+        if ($join['playlist_data']) {
+            $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id`";
+        }
+
+        if ($join['song']) {
+            $table['song'] = "LEFT JOIN `song` ON `song`.`id`=`playlist_data`.`object_id`";
+            $where_sql .= " AND `playlist_data`.`object_type` = 'song'";
+
+            if ($join['catalog']) {
+                $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
+                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+            }
+        }
+
+        $table_sql = implode(' ', $table);
+
+        return array(
+            'base' => 'SELECT DISTINCT(`playlist`.`id`) FROM `playlist`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => $table_sql
+        );
+    }
 }

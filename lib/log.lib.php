@@ -28,15 +28,23 @@ function log_event($username, $event_name, $event_description, $log_name)
 {
     /* Set it up here to make sure it's _always_ the same */
     $time        = time();
-    // Turn time into strings
-    $log_day    = date('Ymd', $time);
     $log_time    = date('Y-m-d H:i:s', $time);
 
     /* must have some name */
     $log_name    = $log_name ? $log_name : 'ampache';
     $username    = $username ? $username : 'ampache';
+    
+    $log_filename = AmpConfig::get('log_filename');
+    if (empty($log_filename)) {
+        $log_filename = "%name.%Y%m%d.log";
+    }
+    
+    $log_filename = str_replace("%name", $log_name, $log_filename);
+    $log_filename = str_replace("%Y", date('Y'), $log_filename);
+    $log_filename = str_replace("%m", date('m'), $log_filename);
+    $log_filename = str_replace("%d", date('d'), $log_filename);
 
-    $log_filename    = AmpConfig::get('log_path') . "/$log_name.$log_day.log";
+    $log_filename    = AmpConfig::get('log_path') . "/" . $log_filename;
     $log_line    = "$log_time [$username] ($event_name) -> $event_description \n";
 
     // Do the deed

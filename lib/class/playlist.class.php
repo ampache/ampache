@@ -59,6 +59,7 @@ class Playlist extends playlist_object
     public static function gc()
     {
         Dba::write("DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` WHERE `song`.`file` IS NULL AND `playlist_data`.`object_type`='song'");
+        Dba::write("DELETE FROM `playlist` USING `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` WHERE `playlist_data`.`object_id` IS NULL");
     }
 
     /**
@@ -107,7 +108,8 @@ class Playlist extends playlist_object
     public function format()
     {
         parent::format();
-        $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&amp;playlist_id=' . $this->id . '">' . $this->f_name . '</a>';
+        $this->f_link = AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
+        $this->f_name_link = '<a href="' . $this->f_link . '/playlist.php?action=show_playlist&amp;playlist_id=' . $this->id . '">' . $this->f_name . '</a>';
 
     } // format
 

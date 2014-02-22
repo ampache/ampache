@@ -116,6 +116,34 @@ switch ($_REQUEST['action']) {
                 );
             }
         }
+        
+        if ($target == 'anywhere' || $target == 'playlist') {
+            $searchreq = array(
+                'limit' => $limit,
+                'type' => 'playlist',
+                'rule_1_input' => $search,
+                'rule_1_operator' => '2',   // Starts with...
+                'rule_1' => 'name',
+            );
+            $sres = Search::run($searchreq);
+            // Litmit not reach, new search with another operator
+            if (count($sres) < $limit) {
+                $searchreq['limit'] = $limit - count($sres);
+                $searchreq['rule_1_operator'] = '0';
+                $sres = array_unique(array_merge($sres, Search::run($searchreq)));
+            }
+            foreach ($sres as $id) {
+                $playlist = new Playlist($id);
+                $playlist->format();
+                $results[] = array(
+                    'type' => T_('Playlists'),
+                    'link' => $playlist->f_link,
+                    'label' => $playlist->name,
+                    'value' => $playlist->name,
+                    'rels' => '',
+                );
+            }
+        }
 
     break;
     default:

@@ -469,6 +469,12 @@ debug_level = 5
 ; DEFAULT: NULL
 ;log_path = "/var/log/ampache"
 
+; Log filename pattern
+; This defines where the log file name pattern.
+; %name.%Y%m%d.log will create a different log file every day.
+; DEFAULT: %name.%Y%m%d.log
+log_filename = "%name.%Y%m%d.log"
+
 ; Charset of generated HTML pages
 ; Default of UTF-8 should work for most people
 ; DEFAULT: UTF-8

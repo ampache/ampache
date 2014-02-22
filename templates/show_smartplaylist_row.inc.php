@@ -31,7 +31,7 @@
 <?php } ?>
     </div>
 </td>
-<td class="cel_playlist"><?php echo $playlist->f_link; ?></td>
+<td class="cel_playlist"><?php echo $playlist->f_name_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=smartplaylist&id=' . $playlist->id,'add', T_('Add to temporary playlist'),'add_playlist_' . $playlist->id); ?>
