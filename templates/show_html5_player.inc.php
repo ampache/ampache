@@ -564,7 +564,7 @@ if ($isVideo) {
             <?php echo Broadcast::get_broadcast_link(); ?>
         </div>
 <?php } ?>
-<?php if (AmpConfig::get('echonest_api_key') == 0 && $iframed) { ?>
+<?php if ($iframed) { ?>
         <div id="slideshow" class="slideshow">
             <a href="javascript:ShowSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')); ?></a>
         </div>

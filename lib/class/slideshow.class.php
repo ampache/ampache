@@ -50,6 +50,13 @@ class Slideshow
                 debug_event('echonest', 'EchoNest artist images error: ' . $e->getMessage(), '1');
             }
         }
+        
+        foreach (Plugin::get_plugins('get_photos') as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->load($GLOBALS['user'])) {
+                $images += $plugin->_plugin->get_photos($artist_name);
+            }
+        }
 
         return $images;
     }

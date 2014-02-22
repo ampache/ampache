@@ -70,7 +70,8 @@ class AmpacheHeadphones {
 
         Preference::delete('headphones_api_url');
         Preference::delete('headphones_api_key');
-
+        
+        return true;
     } // uninstall
 
     /**

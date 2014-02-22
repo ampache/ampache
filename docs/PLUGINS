@@ -31,4 +31,5 @@ should be implemented as a public method:
     get_lyrics(Song $song)
     process_wanted(Wanted $wanted)
     shortener(string $url)
+    get_photos(string $search)
 
