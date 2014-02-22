@@ -79,7 +79,6 @@ if ($artadd == 0 && $catclean == 0 && $catverify == 0 && $catadd == 0) {    //di
     $catverify = 1;
     $catadd = 1;
     $artadd = 1;
-    $plimp = 1;
 }
 
 echo T_("Starting Catalog Operations...") . $operations_string . "\n"; 
@@ -159,7 +158,7 @@ function usage() {
     echo "\n";
     echo T_("Usage: catalog_update.inc [CATALOG NAME] [-c|-v|-a|-g|-t|-i]");
     echo "\n\t"; 
-    echo T_("Default behavior is to do all");
+    echo T_("Default behavior is to do all except playlist import");
     echo "\n-c\t";
     echo T_('Clean Catalogs');
     echo "\n-v\t";
@@ -167,7 +166,7 @@ function usage() {
     echo "\n-a\t";
     echo T_('Add to Catalogs');
     echo "\n-i\t";
-    echo T_('Import Playlists')
+    echo T_('Import Playlists');
     echo "\n-g\t";
     echo T_('Gather Art');
     echo "\n";
