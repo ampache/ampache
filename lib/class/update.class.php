@@ -381,6 +381,9 @@ class Update
         
         $update_string = '- Set user field on playlists as optional.<br />';
         $version[] = array('version' => '360045','description' => $update_string);
+        
+        $update_string = '- Add broadcast web player by default preference.<br />';
+        $version[] = array('version' => '360046','description' => $update_string);
 
         return $version;
     }
@@ -2294,6 +2297,23 @@ class Update
     {
         $sql = "ALTER TABLE `playlist` MODIFY `user` int(11) NULL";
         Dba::write($sql);
+
+        return true;
+    }
+    
+    /**
+     * update_360046
+     *
+     * Add broadcast web player by default preference
+     */
+    public static function update_360046()
+    {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('broadcast_by_default','0','Broadcast web player by default',25,'boolean','streaming')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
 
         return true;
     }

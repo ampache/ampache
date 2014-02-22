@@ -340,7 +340,7 @@ function startBroadcastListening(broadcast_id)
     $('.jp-seek-bar').css('pointer-events', 'none');
 
     brconn.onopen = function(e) {
-        sendBroadcastMessage('AUTH_SID', '<?php echo session_id(); ?>');
+        sendBroadcastMessage('AUTH_SID', '<?php echo Stream::$session; ?>');
         sendBroadcastMessage('REGISTER_LISTENER', broadcast_id);
     };
 }
@@ -407,7 +407,7 @@ function receiveBroadcastMessage(e)
 
 function sendBroadcastMessage(cmd, value)
 {
-    if (brconn != null) {
+    if (brconn != null && brconn.readyState == 1) {
         var msg = cmd + ':' + value + ';';
         brconn.send(msg);
     }
@@ -416,7 +416,9 @@ function sendBroadcastMessage(cmd, value)
 function stopBroadcast()
 {
     brkey = '';
-    brconn.close();
+    if (brconn != null && brconn.readyState == 1) {
+        brconn.close();
+    }
     brconn = null;
 }
 
@@ -561,7 +563,23 @@ if ($isVideo) {
       <div class="player_actions">
 <?php if (AmpConfig::get('broadcast')) { ?>
         <div id="broadcast" class="broadcast">
-            <?php echo Broadcast::get_broadcast_link(); ?>
+<?php
+        if (AmpConfig::get('broadcast_by_default')) {
+            $broadcasts = Broadcast::get_broadcasts($GLOBALS['user']->id);
+            if (count($broadcasts) < 1) {
+                $broadcast_id = Broadcast::create(T_('My Broadcast'));
+            } else {
+                $broadcast_id = $broadcasts[0];
+            }
+            
+            $broadcast = new Broadcast($broadcast_id);
+            $key  = Broadcast::generate_key();
+            $broadcast->update_state(true, $key);
+            echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script type="text/javascript">startBroadcast(\'' . $key . '\');</script>';
+        } else {
+            echo Broadcast::get_broadcast_link();
+        }
+?>
         </div>
 <?php } ?>
 <?php if ($iframed) { ?>

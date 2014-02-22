@@ -228,7 +228,13 @@ class Broadcast_Server implements MessageComponentInterface
 
     protected function authSid($conn, $sid)
     {
-
+        if (Session::exists('stream', $sid)) {
+            $this->sids[$conn->resourceId] = $sid;
+        } else {
+            if ($this->verbose) {
+                echo "Wrong listener session " . $sid . "\r\n";
+            }
+        }
     }
 
     protected function unregisterListener($conn)

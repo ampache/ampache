@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
         $broadcast = new Broadcast($broadcast_id);
         if ($broadcast->id) {
             $broadcast->update_state(false);
-            $results['broadcast'] = Broadcast::get_broadcast_link($broadcast_id) . '' .
+            $results['broadcast'] = Broadcast::get_broadcast_link() . '' .
                 '<script type="text/javascript">stopBroadcast();</script>';
         }
     break;
