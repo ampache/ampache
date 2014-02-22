@@ -102,7 +102,7 @@ class Preference extends database_object
 
             return true;
         } else {
-            debug_event('denied', $GLOBALS['user']->username . ' attempted to update ' . $name . ' but does not have sufficient permissions','3');
+            debug_event('denied', $GLOBALS['user'] ? $GLOBALS['user']->username : '???' . ' attempted to update ' . $name . ' but does not have sufficient permissions','3');
         }
 
         return false;

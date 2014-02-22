@@ -20,7 +20,7 @@
  *
  */
 
-class AmpacheFlickr {
+class Ampacheflickr {
 
     public $name        = 'Flickr';
     public $description = 'Artist photos from Flickr';
@@ -45,6 +45,7 @@ class AmpacheFlickr {
      * into Ampache
      */
     public function install() {
+        if (Preference::exists('flickr_api_key')) { return false; }
         Preference::insert('flickr_api_key','Flickr api key','','25','string','plugins');
         return true;
     } // install
@@ -105,5 +106,5 @@ class AmpacheFlickr {
         return true;
     } // load
 
-} // end AmpacheFlickr
+} // end Ampacheflickr
 ?>
