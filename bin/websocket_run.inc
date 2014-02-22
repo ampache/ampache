@@ -49,7 +49,13 @@ if ($cargv > 1) {
     }
 }
 
-$app = new Ratchet\App('localhost', $port);
+$urlinfo = parse_url(AmpConfig::get('websocket_address'));
+$host = $urlinfo['host'];
+if (empty($host)) {
+    $host = "localhost";
+}
+
+$app = new Ratchet\App($host, $port, '0.0.0.0');
 $brserver = new Broadcast_Server();
 $brserver->verbose = $verbose;
 $app->route('/broadcast', $brserver);
