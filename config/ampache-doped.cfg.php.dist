@@ -7,7 +7,7 @@
 ; if this config file is up to date 
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 14
+config_version = 15
 
 ;###################
 ; Path Vars        #
@@ -127,8 +127,15 @@ catalog_file_pattern = "mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|s
 ; This defines which video file types Ampache will attempt to catalog
 ; You can specify any file extension you want in here seperating them with
 ; a | but ampache may not be able to parse them
-; DEAFULT: avi|mpg|flv|m4v
+; DEAFULT: avi|mpg|flv|m4v|webm
 catalog_video_pattern = "avi|mpg|flv|m4v|webm"
+
+; Playlist Pattern
+; This defines which playlist types Ampache will attempt to catalog
+; You can specify any file extension you want in here seperating them with
+; a | but ampache may not be able to parse them
+; DEFAULT: m3u|pls|asx|xspf
+catalog_playlist_pattern = "m3u|pls|asx|xspf"
 
 ; Prefix Pattern
 ; This defines which prefix Ampache will ignore when importing tags from

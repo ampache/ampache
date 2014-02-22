@@ -300,11 +300,13 @@ class Catalog_local extends Catalog
             } //it's a directory
 
             $is_audio_file = Catalog::is_audio_file($file);
-            if (!$is_audio_file AND AmpConfig::get('catalog_video_pattern')) {
+            if (AmpConfig::get('catalog_video_pattern')) {
                 $is_video_file = Catalog::is_video_file($file);
             }
-
-            $is_playlist = ($options['parse_m3u'] AND substr($file,-3,3) == 'm3u');
+            
+            if ($options['parse_playlist'] && AmpConfig::get('catalog_playlist_pattern')) {
+                $is_playlist = Catalog::is_playlist_file($file);
+            }
 
             /* see if this is a valid audio file or playlist file */
             if ($is_audio_file OR $is_video_file OR $is_playlist) {
@@ -337,9 +339,9 @@ class Catalog_local extends Catalog
                 } // end if iconv
 
                 if ($is_playlist) {
-                    debug_event('read', 'Found m3u playlist to import: ' . $file, '5');
+                    debug_event('read', 'Found playlist file to import: ' . $file, '5');
                     $this->_playlists[] = $full_file;
-                } // if it's an m3u
+                } // if it's a playlist
 
                 else {
                     if ($is_audio_file) {
@@ -386,7 +388,7 @@ class Catalog_local extends Catalog
         if ($options == null) {
             $options = array(
                 'gather_art' => true,
-                'parse_m3u' => true
+                'parse_playlist' => true
             );
         }
 
@@ -408,10 +410,10 @@ class Catalog_local extends Catalog
         /* Get the songs and then insert them into the db */
         $this->add_files($this->path, $options);
 
-        if ($options['parse_m3u'] && count($this->_playlists)) {
+        if ($options['parse_playlist'] && count($this->_playlists)) {
             // Foreach Playlists we found
             foreach ($this->_playlists as $full_file) {
-                $result = $this->import_m3u($full_file);
+                $result = $this->import_playlist($full_file);
                 if ($result['success']) {
                     $file = basename($full_file);
                 } // end if import worked

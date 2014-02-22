@@ -60,8 +60,8 @@ $default_sort = "%a/%A";
             <td><input type="checkbox" name="gather_art" value="1" /></td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Build Playlists from m3u Files'); ?>:</td>
-            <td><input type="checkbox" name="parse_m3u" value="1" /></td>
+            <td valign="top"><?php echo T_('Build Playlists from playlist Files (m3u, asx, pls, xspf)'); ?>:</td>
+            <td><input type="checkbox" name="parse_playlist" value="1" /></td>
         </tr>
     </table>
     <div id="catalog_type_fields">

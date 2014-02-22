@@ -202,19 +202,22 @@ abstract class Catalog extends database_object
 
     public static function is_audio_file($file)
     {
-        $pattern = "/\.(" . AmpConfig::get('catalog_file_pattern');
-        if ($options['parse_m3u']) {
-            $pattern .= "|m3u)$/i";
-        } else {
-            $pattern .= ")$/i";
-        }
-        return preg_match($pattern, $file);
+        $pattern = "/\.(" . AmpConfig::get('catalog_file_pattern') . ")$/i";
+        $match = preg_match($pattern, $file);
+        
+        return $match;
     }
 
     public static function is_video_file($file)
     {
         $video_pattern = "/\.(" . AmpConfig::get('catalog_video_pattern') . ")$/i";
         return preg_match($video_pattern, $file);
+    }
+    
+    public static function is_playlist_file($file)
+    {
+        $playlist_pattern = "/\.(" . AmpConfig::get('catalog_playlist_pattern') . ")$/i";
+        return preg_match($playlist_pattern, $file);
     }
 
     public function get_info($id, $table = 'catalog')
@@ -1047,60 +1050,77 @@ abstract class Catalog extends database_object
         return $title;
 
     } // check_title
-
+    
     /**
-     * import_m3u
-     * this takes m3u filename and then attempts to create a Public Playlist based on the filenames
-     * listed in the m3u
+     * playlist_import
+     * Attempts to create a Public Playlist based on the playlist file
      */
-    public static function import_m3u($filename)
+    public static function import_playlist($playlist)
     {
-        $m3u_handle = fopen($filename,'r');
+        $data = file_get_contents($playlist);
+        if (substr($playlist, -3,3) == 'm3u') {
+            $files = self::parse_m3u($data);
+        } elseif (substr($playlist, -3,3) == 'pls') {
+            $files = self::parse_pls($data);
+        } elseif (substr($playlist, -3,3) == 'asx') {
+            $files = self::parse_asx($data);
+        } elseif (substr($playlist, -4,4) == 'xspf') {
+            $files = self::parse_xspf($data);
+        }
+        
+        $songs = array();
+        $pinfo = pathinfo($playlist);
+        if ($files) {
+            foreach ($files as $file) {
+                $file = trim($file);
+                // Check to see if it's a url from this ampache instance
+                if (substr($value, 0, strlen(AmpConfig::get('web_path'))) == AmpConfig::get('web_path')) {
+                    $data = Stream_URL::parse($value);
+                    $sql = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
+                    $db_results = Dba::read($sql, array($data['id']));
 
-        $data = fread($m3u_handle,filesize($filename));
+                    if (Dba::num_rows($db_results)) {
+                        $songs[] = $song_id;
+                    }
+                } // end if it's an http url
+                else {
+                    // Remove file:// prefix if any
+                    if (strpos($file, "file://") !== false) {
+                        $file = substr($file, 7);
+                    }
+                
+                    // First, try to found the file as absolute path
+                    $sql = "SELECT `id` FROM `song` WHERE `file` = ?";
+                    $db_results = Dba::read($sql, array($file));
+                    $results = Dba::fetch_assoc($db_results);
 
-        $results = explode("\n",$data);
+                    if (isset($results['id'])) {
+                        $songs[] = $results['id'];
+                    } else {
+                        // Not found in absolute path, create it from relative path
+                        $finfo = pathinfo($file);
+                        $file = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $file;
+                        // Normalize the file path. realpath requires the files to exists.
+                        $file = realpath($file);
+                        if ($file) {
+                            $sql = "SELECT `id` FROM `song` WHERE `file` = ?";
+                            $db_results = Dba::read($sql, array($file));
+                            $results = Dba::fetch_assoc($db_results);
 
-        $pattern = '/\.(' . AmpConfig::get('catalog_file_pattern') . ')$/i';
-
-        // Foreach what we're able to pull out from the file
-        foreach ($results as $value) {
-
-            // Remove extra whitespace
-            $value = trim($value);
-            if (preg_match($pattern,$value)) {
-
-                /* Translate from \ to / so basename works */
-                $value = str_replace("\\","/",$value);
-                $file = basename($value);
-
-                /* Search for this filename, cause it's a audio file */
-                $sql = "SELECT `id` FROM `song` WHERE `file` LIKE '%" . Dba::escape($file) . "'";
-                $db_results = Dba::read($sql);
-                $results = Dba::fetch_assoc($db_results);
-
-                if (isset($results['id'])) { $songs[] = $results['id']; }
-
-            } // if it's a file
-            // Check to see if it's a url from this ampache instance
-            elseif (substr($value, 0, strlen(AmpConfig::get('web_path'))) == AmpConfig::get('web_path')) {
-                $data = Stream_URL::parse($value);
-                $sql = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
-                $db_results = Dba::read($sql, array($data['id']));
-
-                if (Dba::num_rows($db_results)) {
-                    $songs[] = $song_id;
-                }
-
-            } // end if it's an http url
-
-        } // end foreach line
-
-        debug_event('m3u_parse', "Parsed $filename, found " . count($songs) . " songs", 5);
-
+                            if (isset($results['id'])) {
+                                $songs[] = $results['id'];
+                            }
+                        }
+                    }
+                } // if it's a file
+            }
+        }
+        
+        debug_event('import_playlist', "Parsed " . $filename . ", found " . count($songs) . " songs", 5);
+        
         if (count($songs)) {
-            $name = "M3U - " . basename($filename,'.m3u');
-            $playlist_id = Playlist::create($name,'public');
+            $name = $pinfo['extension'] . " - " . $pinfo['filename'];
+            $playlist_id = Playlist::create($name, 'public');
 
             if (!$playlist_id) {
                 return array(
@@ -1122,10 +1142,92 @@ abstract class Catalog extends database_object
 
         return array(
             'success' => false,
-            'error' => 'No valid songs found in M3U.'
+            'error' => 'No valid songs found in playlist file.'
         );
+    }
 
-    } // import_m3u
+    /**
+     * parse_m3u
+     * this takes m3u filename and then attempts to found song filenames listed in the m3u
+     */
+    public static function parse_m3u($data)
+    {
+        $files = array();
+        $results = explode("\n", $data);
+        
+        foreach ($results as $value) {
+            $value = trim($value);
+            if (!empty($value) && substr($value, 0, 1) != '#') {
+                $files[] = $value;
+            }
+        }
+
+        return $files;
+    } // parse_m3u
+    
+    /**
+     * parse_pls
+     * this takes pls filename and then attempts to found song filenames listed in the pls
+     */
+    public static function parse_pls($data)
+    {
+        $files = array();
+        $results = explode("\n", $data);
+        
+        foreach ($results as $value) {
+            $value = trim($value);
+            if (preg_match("/file[0-9]+[\s]*\=(.*)/i", $value, $matches)) {
+                $file = trim($matches[1]);
+                if (!empty($file)) {
+                    $files[] = $file;
+                }
+            }
+        }
+
+        return $files;
+    } // parse_pls
+    
+    /**
+     * parse_asx
+     * this takes asx filename and then attempts to found song filenames listed in the asx
+     */
+    public static function parse_asx($data)
+    {
+        $files = array();
+        $xml = simplexml_load_string($data);
+        
+        if ($xml) {
+            foreach ($xml->entry as $entry) {
+                $file = trim($entry->ref['href']);
+                if (!empty($file)) {
+                    $files[] = $file;
+                }
+            }
+        }
+
+        return $files;
+    } // parse_asx
+    
+    /**
+     * parse_xspf
+     * this takes xspf filename and then attempts to found song filenames listed in the xspf
+     */
+    public static function parse_xspf($data)
+    {
+        $files = array();
+        $xml = simplexml_load_string($data);
+        
+        if ($xml) {
+            foreach ($xml->trackList as $track) {
+                $file = trim($track->location);
+                if (!empty($file)) {
+                    $files[] = $file;
+                }
+            }
+        }
+
+        return $files;
+    } // parse_xspf
 
     /**
      * delete
