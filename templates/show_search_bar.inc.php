@@ -31,7 +31,7 @@
         <option value="title"><?php echo T_('Title')?></option>
         <option value="album"><?php echo T_('Album')?></option>
         <option value="artist"><?php echo T_('Artist')?></option>
-        <option value="playlist"><?php echo T_('Playlist')?></option>
+        <option value="playlist_name"><?php echo T_('Playlist')?></option>
         <option value="tag"><?php echo T_('Tag')?></option>
     </select>
         <input class="button" type="submit" value="<?php echo T_('Search'); ?>" id="searchBtn" />
