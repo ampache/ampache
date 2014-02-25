@@ -42,9 +42,9 @@ function NotifyOfNewSong()
 {
     window.parent.document.getElementById('frame_main').contentWindow.refresh_slideshow();
 }
-function ShowSlideshow()
+function SwapSlideshow()
 {
-    window.parent.document.getElementById('frame_main').contentWindow.init_slideshow_refresh();
+    window.parent.document.getElementById('frame_main').contentWindow.swap_slideshow();
 }
 </script>
 <?php
@@ -148,9 +148,12 @@ if ($isVideo) {
         $.each(playlist, function (index, obj) {
             if (index == current) {
                 if (currentjpindex != index) {
+					var previousartist = artistids[currentjpindex];
                     currentjpindex = index;
 <?php if ($iframed) { ?>
-                    NotifyOfNewSong();
+					if (previousartist != artistids[currentjpindex]) {
+						NotifyOfNewSong();
+					}
 <?php } ?>
                 }
                 if (brkey != '') {
@@ -584,7 +587,7 @@ if ($isVideo) {
 <?php } ?>
 <?php if ($iframed) { ?>
         <div id="slideshow" class="slideshow">
-            <a href="javascript:ShowSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')); ?></a>
+            <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')); ?></a>
         </div>
 <?php } ?>
       </div>
