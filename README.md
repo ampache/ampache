@@ -1,12 +1,13 @@
-Ampache
+Ampache Doped
 =======
 
 Basics
 ------
 
-Ampache is a web based audio/video streaming application and file
+Ampache Doped is a web based audio/video streaming application and file
 manager allowing you to access your music & videos from anywhere,
 using almost any internet enabled device.
+Ampache Doped is a fork of Ampache project.
 
 Ampache's usefulness is heavily dependent on being able to extract
 correct metadata from embedded tags in your files and/or the filename.
@@ -117,23 +118,7 @@ for more instructions.
 Credits
 -------
 
-Thanks to all those who have helped make Ampache awesome:
-
-* Scott Kveton: Original creator of Ampache, 2001 - 2003
-* Robert Hopson
-* Andy Morgan
-* RosenSama
-* latka
-* Lamar Hansford
-* Lacy Morrow
-* Karl Vollmer (vollmerk)
-* Paul Arthur MacIain (flowerysong)
-* Chris Slamar (cslamar)
-* Holger Brunn
-* Kevin Purdy (purdyk)
-* Charlie Smotherman (porthose)
-* Afterster
-* SUTJael
+Thanks to all those who have helped make Ampache awesome: [Credits](docs/ACKNOWLEDGEMENTS)
 
 
 Contact Us

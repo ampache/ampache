@@ -252,27 +252,29 @@ switch ($_REQUEST['action']) {
     break;
     case 'slideshow':
         ob_start();
-        $fsname = 'fslider_' . time();
-        echo "<div id='" . $fsname . "'>";
         $images = Slideshow::get_current_slideshow();
-        foreach ($images as $image) {
-            echo "<img src='" . $image['url'] . "' alt='' onclick='update_action();' />";
+        if (count($images) > 0) {
+            $fsname = 'fslider_' . time();
+            echo "<div id='" . $fsname . "'>";
+            foreach ($images as $image) {
+                echo "<img src='" . $image['url'] . "' alt='' onclick='update_action();' />";
+            }
+            echo "</div>";
+            $results['fslider'] = ob_get_clean();
+            ob_start();
+            echo "<script language='javascript' type='text/javascript'>";
+            echo "$('#" . $fsname . "').rhinoslider({
+                    showTime: 15000,
+                    effectTime: 2000,
+                    randomOrder: true,
+                    controlsPlayPause: false,
+                    autoPlay: true,
+                    showBullets: 'never',
+                    showControls: 'always',
+                    controlsMousewheel: false,
+            });";
+            echo "</script>";
         }
-        echo "</div>";
-        $results['fslider'] = ob_get_clean();
-        ob_start();
-        echo "<script language='javascript' type='text/javascript'>";
-        echo "$('#" . $fsname . "').rhinoslider({
-                showTime: 15000,
-                effectTime: 2000,
-                randomOrder: true,
-                controlsPlayPause: false,
-                autoPlay: true,
-                showBullets: 'never',
-                showControls: 'always',
-                controlsMousewheel: false,
-        });";
-        echo "</script>";
         $results['fslider_script'] = ob_get_clean();
     break;
     default:
