@@ -195,7 +195,7 @@ class Catalog_local extends Catalog
         }
 
         // Make sure this path isn't already in use by an existing catalog
-        $sql = 'SELECT `id` FROM `catalog` WHERE type=`local` AND `path` = ?';
+        $sql = 'SELECT `id` FROM `catalog_local` WHERE `path` = ?';
         $db_results = Dba::read($sql, array($path));
 
         if (Dba::num_rows($db_results)) {
@@ -630,7 +630,6 @@ class Catalog_local extends Catalog
     {
         $vainfo = new vainfo($file, '', '', '', $this->sort_pattern, $this->rename_pattern);
         $vainfo->get_info();
-
         $key = vainfo::get_tag_type($vainfo->tags);
         $results = vainfo::clean_tag_info($vainfo->tags, $key, $file);
 
