@@ -1937,7 +1937,7 @@ class Update
             "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
             "`user` int(11) NOT NULL," .
             "`artist` int(11) NOT NULL," .
-            "`mbid` varchar(1369) CHARACTER SET utf8 NULL," .
+            "`mbid` varchar(36) CHARACTER SET utf8 NULL," .
             "`name` varchar(255) CHARACTER SET utf8 NOT NULL," .
             "`year` int(4) NULL," .
             "`date` int(11) unsigned NOT NULL DEFAULT '0'," .
