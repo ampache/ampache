@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -62,8 +63,8 @@ class getid3_avr extends getid3_handler
 
 		$info['fileformat'] = 'avr';
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$AVRheader = fread($this->getid3->fp, 128);
+		$this->fseek($info['avdataoffset']);
+		$AVRheader = $this->fread(128);
 
 		$info['avr']['raw']['magic'] = substr($AVRheader,  0,  4);
 		$magic = '2BIT';

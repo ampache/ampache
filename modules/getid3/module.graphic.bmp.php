@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -36,9 +37,9 @@ class getid3_bmp extends getid3_handler
 		// WORD    bfReserved2;
 		// DWORD   bfOffBits;
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
+		$this->fseek($info['avdataoffset']);
 		$offset = 0;
-		$BMPheader = fread($this->getid3->fp, 14 + 40);
+		$BMPheader = $this->fread(14 + 40);
 
 		$thisfile_bmp_header_raw['identifier']  = substr($BMPheader, $offset, 2);
 		$offset += 2;
@@ -220,7 +221,7 @@ class getid3_bmp extends getid3_handler
 
 			if (($thisfile_bmp['type_version'] >= 4) || ($thisfile_bmp_header_raw['compression'] == 3)) {
 				// should only be v4+, but BMPs with type_version==1 and BI_BITFIELDS compression have been seen
-				$BMPheader .= fread($this->getid3->fp, 44);
+				$BMPheader .= $this->fread(44);
 
 				// BITMAPV4HEADER - [44 bytes] - http://msdn.microsoft.com/library/en-us/gdi/bitmaps_2k1e.asp
 				// Win95+, WinNT4.0+
@@ -262,7 +263,7 @@ class getid3_bmp extends getid3_handler
 			}
 
 			if ($thisfile_bmp['type_version'] >= 5) {
-				$BMPheader .= fread($this->getid3->fp, 16);
+				$BMPheader .= $this->fread(16);
 
 				// BITMAPV5HEADER - [16 bytes] - http://msdn.microsoft.com/library/en-us/gdi/bitmaps_7c36.asp
 				// Win98+, Win2000+
@@ -296,7 +297,7 @@ class getid3_bmp extends getid3_handler
 				$PaletteEntries = $thisfile_bmp_header_raw['colors_used'];
 			}
 			if ($PaletteEntries > 0) {
-				$BMPpalette = fread($this->getid3->fp, 4 * $PaletteEntries);
+				$BMPpalette = $this->fread(4 * $PaletteEntries);
 				$paletteoffset = 0;
 				for ($i = 0; $i < $PaletteEntries; $i++) {
 					// RGBQUAD          - http://msdn.microsoft.com/library/en-us/gdi/bitmaps_5f8y.asp
@@ -318,9 +319,9 @@ class getid3_bmp extends getid3_handler
 		}
 
 		if ($this->ExtractData) {
-			fseek($this->getid3->fp, $thisfile_bmp_header_raw['data_offset'], SEEK_SET);
+			$this->fseek($thisfile_bmp_header_raw['data_offset']);
 			$RowByteLength = ceil(($thisfile_bmp_header_raw['width'] * ($thisfile_bmp_header_raw['bits_per_pixel'] / 8)) / 4) * 4; // round up to nearest DWORD boundry
-			$BMPpixelData = fread($this->getid3->fp, $thisfile_bmp_header_raw['height'] * $RowByteLength);
+			$BMPpixelData = $this->fread($thisfile_bmp_header_raw['height'] * $RowByteLength);
 			$pixeldataoffset = 0;
 			$thisfile_bmp_header_raw['compression'] = (isset($thisfile_bmp_header_raw['compression']) ? $thisfile_bmp_header_raw['compression'] : '');
 			switch ($thisfile_bmp_header_raw['compression']) {

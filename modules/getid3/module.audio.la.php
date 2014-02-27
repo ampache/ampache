@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -22,8 +23,8 @@ class getid3_la extends getid3_handler
 		$info = &$this->getid3->info;
 
 		$offset = 0;
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$rawdata = fread($this->getid3->fp, $this->getid3->fread_buffer_size());
+		$this->fseek($info['avdataoffset']);
+		$rawdata = $this->fread($this->getid3->fread_buffer_size());
 
 		switch (substr($rawdata, $offset, 4)) {
 			case 'LA02':
@@ -166,8 +167,8 @@ class getid3_la extends getid3_handler
 								$RIFFdata .= substr($rawdata, 16, 24);
 							}
 							if ($info['la']['footerstart'] < $info['avdataend']) {
-								fseek($this->getid3->fp, $info['la']['footerstart'], SEEK_SET);
-								$RIFFdata .= fread($this->getid3->fp, $info['avdataend'] - $info['la']['footerstart']);
+								$this->fseek($info['la']['footerstart']);
+								$RIFFdata .= $this->fread($info['avdataend'] - $info['la']['footerstart']);
 							}
 							$RIFFdata = 'RIFF'.getid3_lib::LittleEndian2String(strlen($RIFFdata), 4, false).$RIFFdata;
 							fwrite($RIFF_fp, $RIFFdata, strlen($RIFFdata));

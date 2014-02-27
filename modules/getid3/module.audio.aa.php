@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -20,8 +21,8 @@ class getid3_aa extends getid3_handler
 	public function Analyze() {
 		$info = &$this->getid3->info;
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$AAheader  = fread($this->getid3->fp, 8);
+		$this->fseek($info['avdataoffset']);
+		$AAheader  = $this->fread(8);
 
 		$magic = "\x57\x90\x75\x36";
 		if (substr($AAheader, 4, 4) != $magic) {
@@ -31,23 +32,23 @@ class getid3_aa extends getid3_handler
 
 		// shortcut
 		$info['aa'] = array();
-		$thisfile_au = &$info['aa'];
+		$thisfile_aa = &$info['aa'];
 
 		$info['fileformat']            = 'aa';
 		$info['audio']['dataformat']   = 'aa';
 $info['error'][] = 'Audible Audiobook (.aa) parsing not enabled in this version of getID3() ['.$this->getid3->version().']';
 return false;
 		$info['audio']['bitrate_mode'] = 'cbr'; // is it?
-		$thisfile_au['encoding']       = 'ISO-8859-1';
+		$thisfile_aa['encoding']       = 'ISO-8859-1';
 
-		$thisfile_au['filesize'] = getid3_lib::BigEndian2Int(substr($AUheader,  0, 4));
-		if ($thisfile_au['filesize'] > ($info['avdataend'] - $info['avdataoffset'])) {
-			$info['warning'][] = 'Possible truncated file - expecting "'.$thisfile_au['filesize'].'" bytes of data, only found '.($info['avdataend'] - $info['avdataoffset']).' bytes"';
+		$thisfile_aa['filesize'] = getid3_lib::BigEndian2Int(substr($AUheader,  0, 4));
+		if ($thisfile_aa['filesize'] > ($info['avdataend'] - $info['avdataoffset'])) {
+			$info['warning'][] = 'Possible truncated file - expecting "'.$thisfile_aa['filesize'].'" bytes of data, only found '.($info['avdataend'] - $info['avdataoffset']).' bytes"';
 		}
 
 		$info['audio']['bits_per_sample'] = 16; // is it?
-		$info['audio']['sample_rate'] = $thisfile_au['sample_rate'];
-		$info['audio']['channels']    = $thisfile_au['channels'];
+		$info['audio']['sample_rate'] = $thisfile_aa['sample_rate'];
+		$info['audio']['channels']    = $thisfile_aa['channels'];
 
 		//$info['playtime_seconds'] = 0;
 		//$info['audio']['bitrate'] = 0;

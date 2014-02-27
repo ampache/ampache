@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -22,8 +23,8 @@ class getid3_bink extends getid3_handler
 
 $info['error'][] = 'Bink / Smacker files not properly processed by this version of getID3() ['.$this->getid3->version().']';
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$fileTypeID = fread($this->getid3->fp, 3);
+		$this->fseek($info['avdataoffset']);
+		$fileTypeID = $this->fread(3);
 		switch ($fileTypeID) {
 			case 'BIK':
 				return $this->ParseBink();
@@ -48,7 +49,7 @@ $info['error'][] = 'Bink / Smacker files not properly processed by this version 
 		$info['fileformat']          = 'bink';
 		$info['video']['dataformat'] = 'bink';
 
-		$fileData = 'BIK'.fread($this->getid3->fp, 13);
+		$fileData = 'BIK'.$this->fread(13);
 
 		$info['bink']['data_size']   = getid3_lib::LittleEndian2Int(substr($fileData, 4, 4));
 		$info['bink']['frame_count'] = getid3_lib::LittleEndian2Int(substr($fileData, 8, 2));

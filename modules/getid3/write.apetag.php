@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -67,15 +68,15 @@ class getid3_write_apetag
 				if (isset($ThisFileInfo['lyrics3']['tag_offset_start'])) {
 					$PostAPEdataOffset = max($PostAPEdataOffset, $ThisFileInfo['lyrics3']['tag_offset_start']);
 				}
-				fseek($fp, $PostAPEdataOffset, SEEK_SET);
+				fseek($fp, $PostAPEdataOffset);
 				$PostAPEdata = '';
 				if ($ThisFileInfo['filesize'] > $PostAPEdataOffset) {
 					$PostAPEdata = fread($fp, $ThisFileInfo['filesize'] - $PostAPEdataOffset);
 				}
 
-				fseek($fp, $PostAPEdataOffset, SEEK_SET);
+				fseek($fp, $PostAPEdataOffset);
 				if (isset($ThisFileInfo['ape']['tag_offset_start'])) {
-					fseek($fp, $ThisFileInfo['ape']['tag_offset_start'], SEEK_SET);
+					fseek($fp, $ThisFileInfo['ape']['tag_offset_start']);
 				}
 				ftruncate($fp, ftell($fp));
 				fwrite($fp, $APEtag, strlen($APEtag));
@@ -100,14 +101,14 @@ class getid3_write_apetag
 				flock($fp, LOCK_EX);
 				$oldignoreuserabort = ignore_user_abort(true);
 
-				fseek($fp, $ThisFileInfo['ape']['tag_offset_end'], SEEK_SET);
+				fseek($fp, $ThisFileInfo['ape']['tag_offset_end']);
 				$DataAfterAPE = '';
 				if ($ThisFileInfo['filesize'] > $ThisFileInfo['ape']['tag_offset_end']) {
 					$DataAfterAPE = fread($fp, $ThisFileInfo['filesize'] - $ThisFileInfo['ape']['tag_offset_end']);
 				}
 
 				ftruncate($fp, $ThisFileInfo['ape']['tag_offset_start']);
-				fseek($fp, $ThisFileInfo['ape']['tag_offset_start'], SEEK_SET);
+				fseek($fp, $ThisFileInfo['ape']['tag_offset_start']);
 
 				if (!empty($DataAfterAPE)) {
 					fwrite($fp, $DataAfterAPE, strlen($DataAfterAPE));

@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -25,8 +26,8 @@ class getid3_tta extends getid3_handler
 		$info['audio']['lossless']     = true;
 		$info['audio']['bitrate_mode'] = 'vbr';
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$ttaheader = fread($this->getid3->fp, 26);
+		$this->fseek($info['avdataoffset']);
+		$ttaheader = $this->fread(26);
 
 		$info['tta']['magic'] = substr($ttaheader, 0, 3);
 		$magic = 'TTA';

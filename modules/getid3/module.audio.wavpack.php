@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -20,13 +21,13 @@ class getid3_wavpack extends getid3_handler
 	public function Analyze() {
 		$info = &$this->getid3->info;
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
+		$this->fseek($info['avdataoffset']);
 
 		while (true) {
 
-			$wavpackheader = fread($this->getid3->fp, 32);
+			$wavpackheader = $this->fread(32);
 
-			if (ftell($this->getid3->fp) >= $info['avdataend']) {
+			if ($this->ftell() >= $info['avdataend']) {
 				break;
 			} elseif (feof($this->getid3->fp)) {
 				break;
@@ -40,7 +41,7 @@ class getid3_wavpack extends getid3_handler
 					break;
 			}
 
-			$blockheader_offset = ftell($this->getid3->fp) - 32;
+			$blockheader_offset = $this->ftell() - 32;
 			$blockheader_magic  =                              substr($wavpackheader,  0,  4);
 			$blockheader_size   = getid3_lib::LittleEndian2Int(substr($wavpackheader,  4,  4));
 
@@ -143,10 +144,10 @@ class getid3_wavpack extends getid3_handler
 				$info['audio']['lossless'] = !$info['wavpack']['blockheader']['flags']['hybrid'];
 			}
 
-			while (!feof($this->getid3->fp) && (ftell($this->getid3->fp) < ($blockheader_offset + $blockheader_size + 8))) {
+			while (!feof($this->getid3->fp) && ($this->ftell() < ($blockheader_offset + $blockheader_size + 8))) {
 
-				$metablock = array('offset'=>ftell($this->getid3->fp));
-				$metablockheader = fread($this->getid3->fp, 2);
+				$metablock = array('offset'=>$this->ftell());
+				$metablockheader = $this->fread(2);
 				if (feof($this->getid3->fp)) {
 					break;
 				}
@@ -166,7 +167,7 @@ class getid3_wavpack extends getid3_handler
 				$metablock['padded_data'] = (bool) ($metablock['id'] & 0x40);
 				$metablock['large_block'] = (bool) ($metablock['id'] & 0x80);
 				if ($metablock['large_block']) {
-					$metablockheader .= fread($this->getid3->fp, 2);
+					$metablockheader .= $this->fread(2);
 				}
 				$metablock['size'] = getid3_lib::LittleEndian2Int(substr($metablockheader, 1)) * 2; // size is stored in words
 				$metablock['data'] = null;
@@ -180,7 +181,7 @@ class getid3_wavpack extends getid3_handler
 						case 0x24: // ID_CUESHEET
 						case 0x25: // ID_CONFIG_BLOCK
 						case 0x26: // ID_MD5_CHECKSUM
-							$metablock['data'] = fread($this->getid3->fp, $metablock['size']);
+							$metablock['data'] = $this->fread($metablock['size']);
 
 							if ($metablock['padded_data']) {
 								// padded to the nearest even byte
@@ -203,12 +204,12 @@ class getid3_wavpack extends getid3_handler
 						case 0x0B: // ID_WVC_BITSTREAM
 						case 0x0C: // ID_WVX_BITSTREAM
 						case 0x0D: // ID_CHANNEL_INFO
-							fseek($this->getid3->fp, $metablock['offset'] + ($metablock['large_block'] ? 4 : 2) + $metablock['size'], SEEK_SET);
+							$this->fseek($metablock['offset'] + ($metablock['large_block'] ? 4 : 2) + $metablock['size']);
 							break;
 
 						default:
 							$info['warning'][] = 'Unexpected metablock type "0x'.str_pad(dechex($metablock['function_id']), 2, '0', STR_PAD_LEFT).'" at offset '.$metablock['offset'];
-							fseek($this->getid3->fp, $metablock['offset'] + ($metablock['large_block'] ? 4 : 2) + $metablock['size'], SEEK_SET);
+							$this->fseek($metablock['offset'] + ($metablock['large_block'] ? 4 : 2) + $metablock['size']);
 							break;
 					}
 
@@ -242,7 +243,7 @@ class getid3_wavpack extends getid3_handler
 							$getid3_temp = new getID3();
 							$getid3_temp->openfile($this->getid3->filename);
 							$getid3_temp->info['avdataend']  = $info['avdataend'];
-							$getid3_temp->info['fileformat'] = 'riff';
+							//$getid3_temp->info['fileformat'] = 'riff';
 							$getid3_riff = new getid3_riff($getid3_temp);
 							$metablock['riff'] = $getid3_riff->ParseRIFF($startoffset, $startoffset + $metablock['size']);
 

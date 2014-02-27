@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -36,16 +37,16 @@ class getid3_zip extends getid3_handler
 			$EOCDsearchCounter = 0;
 			while ($EOCDsearchCounter++ < 512) {
 
-				fseek($this->getid3->fp, -128 * $EOCDsearchCounter, SEEK_END);
-				$EOCDsearchData = fread($this->getid3->fp, 128).$EOCDsearchData;
+				$this->fseek(-128 * $EOCDsearchCounter, SEEK_END);
+				$EOCDsearchData = $this->fread(128).$EOCDsearchData;
 
 				if (strstr($EOCDsearchData, 'PK'."\x05\x06")) {
 
 					$EOCDposition = strpos($EOCDsearchData, 'PK'."\x05\x06");
-					fseek($this->getid3->fp, (-128 * $EOCDsearchCounter) + $EOCDposition, SEEK_END);
+					$this->fseek((-128 * $EOCDsearchCounter) + $EOCDposition, SEEK_END);
 					$info['zip']['end_central_directory'] = $this->ZIPparseEndOfCentralDirectory();
 
-					fseek($this->getid3->fp, $info['zip']['end_central_directory']['directory_offset'], SEEK_SET);
+					$this->fseek($info['zip']['end_central_directory']['directory_offset']);
 					$info['zip']['entries_count'] = 0;
 					while ($centraldirectoryentry = $this->ZIPparseCentralDirectory($this->getid3->fp)) {
 						$info['zip']['central_directory'][] = $centraldirectoryentry;
@@ -81,7 +82,7 @@ class getid3_zip extends getid3_handler
 					// secondary check - we (should) already have all the info we NEED from the Central Directory above, but scanning each
 					// Local File Header entry will
 					foreach ($info['zip']['central_directory'] as $central_directory_entry) {
-						fseek($this->getid3->fp, $central_directory_entry['entry_offset'], SEEK_SET);
+						$this->fseek($central_directory_entry['entry_offset']);
 						if ($fileentry = $this->ZIPparseLocalFileHeader()) {
 							$info['zip']['entries'][] = $fileentry;
 						} else {
@@ -199,14 +200,14 @@ class getid3_zip extends getid3_handler
 
 
 	public function ZIPparseLocalFileHeader() {
-		$LocalFileHeader['offset'] = ftell($this->getid3->fp);
+		$LocalFileHeader['offset'] = $this->ftell();
 
-		$ZIPlocalFileHeader = fread($this->getid3->fp, 30);
+		$ZIPlocalFileHeader = $this->fread(30);
 
 		$LocalFileHeader['raw']['signature']          = getid3_lib::LittleEndian2Int(substr($ZIPlocalFileHeader,  0, 4));
 		if ($LocalFileHeader['raw']['signature'] != 0x04034B50) { // "PK\x03\x04"
 			// invalid Local File Header Signature
-			fseek($this->getid3->fp, $LocalFileHeader['offset'], SEEK_SET); // seek back to where filepointer originally was so it can be handled properly
+			$this->fseek($LocalFileHeader['offset']); // seek back to where filepointer originally was so it can be handled properly
 			return false;
 		}
 		$LocalFileHeader['raw']['extract_version']    = getid3_lib::LittleEndian2Int(substr($ZIPlocalFileHeader,  4, 2));
@@ -230,7 +231,7 @@ class getid3_zip extends getid3_handler
 
 		$FilenameExtrafieldLength = $LocalFileHeader['raw']['filename_length'] + $LocalFileHeader['raw']['extra_field_length'];
 		if ($FilenameExtrafieldLength > 0) {
-			$ZIPlocalFileHeader .= fread($this->getid3->fp, $FilenameExtrafieldLength);
+			$ZIPlocalFileHeader .= $this->fread($FilenameExtrafieldLength);
 
 			if ($LocalFileHeader['raw']['filename_length'] > 0) {
 				$LocalFileHeader['filename']                = substr($ZIPlocalFileHeader, 30, $LocalFileHeader['raw']['filename_length']);
@@ -257,15 +258,15 @@ class getid3_zip extends getid3_handler
 			}
 
 		}
-		$LocalFileHeader['data_offset'] = ftell($this->getid3->fp);
-		fseek($this->getid3->fp, $LocalFileHeader['compressed_size'], SEEK_CUR); // this should (but may not) match value in $LocalFileHeader['raw']['compressed_size'] -- $LocalFileHeader['compressed_size'] could have been overwritten above with value from Central Directory
+		$LocalFileHeader['data_offset'] = $this->ftell();
+		$this->fseek($LocalFileHeader['compressed_size'], SEEK_CUR); // this should (but may not) match value in $LocalFileHeader['raw']['compressed_size'] -- $LocalFileHeader['compressed_size'] could have been overwritten above with value from Central Directory
 
 		if ($LocalFileHeader['flags']['data_descriptor_used']) {
-			$DataDescriptor = fread($this->getid3->fp, 16);
+			$DataDescriptor = $this->fread(16);
 			$LocalFileHeader['data_descriptor']['signature']         = getid3_lib::LittleEndian2Int(substr($DataDescriptor,  0, 4));
 			if ($LocalFileHeader['data_descriptor']['signature'] != 0x08074B50) { // "PK\x07\x08"
-				$this->getid3->warning[] = 'invalid Local File Header Data Descriptor Signature at offset '.(ftell($this->getid3->fp) - 16).' - expecting 08 07 4B 50, found '.getid3_lib::PrintHexBytes($LocalFileHeader['data_descriptor']['signature']);
-				fseek($this->getid3->fp, $LocalFileHeader['offset'], SEEK_SET); // seek back to where filepointer originally was so it can be handled properly
+				$this->getid3->warning[] = 'invalid Local File Header Data Descriptor Signature at offset '.($this->ftell() - 16).' - expecting 08 07 4B 50, found '.getid3_lib::PrintHexBytes($LocalFileHeader['data_descriptor']['signature']);
+				$this->fseek($LocalFileHeader['offset']); // seek back to where filepointer originally was so it can be handled properly
 				return false;
 			}
 			$LocalFileHeader['data_descriptor']['crc_32']            = getid3_lib::LittleEndian2Int(substr($DataDescriptor,  4, 4));
@@ -295,14 +296,14 @@ class getid3_zip extends getid3_handler
 
 
 	public function ZIPparseCentralDirectory() {
-		$CentralDirectory['offset'] = ftell($this->getid3->fp);
+		$CentralDirectory['offset'] = $this->ftell();
 
-		$ZIPcentralDirectory = fread($this->getid3->fp, 46);
+		$ZIPcentralDirectory = $this->fread(46);
 
 		$CentralDirectory['raw']['signature']            = getid3_lib::LittleEndian2Int(substr($ZIPcentralDirectory,  0, 4));
 		if ($CentralDirectory['raw']['signature'] != 0x02014B50) {
 			// invalid Central Directory Signature
-			fseek($this->getid3->fp, $CentralDirectory['offset'], SEEK_SET); // seek back to where filepointer originally was so it can be handled properly
+			$this->fseek($CentralDirectory['offset']); // seek back to where filepointer originally was so it can be handled properly
 			return false;
 		}
 		$CentralDirectory['raw']['create_version']       = getid3_lib::LittleEndian2Int(substr($ZIPcentralDirectory,  4, 2));
@@ -334,7 +335,7 @@ class getid3_zip extends getid3_handler
 
 		$FilenameExtrafieldCommentLength = $CentralDirectory['raw']['filename_length'] + $CentralDirectory['raw']['extra_field_length'] + $CentralDirectory['raw']['file_comment_length'];
 		if ($FilenameExtrafieldCommentLength > 0) {
-			$FilenameExtrafieldComment = fread($this->getid3->fp, $FilenameExtrafieldCommentLength);
+			$FilenameExtrafieldComment = $this->fread($FilenameExtrafieldCommentLength);
 
 			if ($CentralDirectory['raw']['filename_length'] > 0) {
 				$CentralDirectory['filename']                  = substr($FilenameExtrafieldComment, 0, $CentralDirectory['raw']['filename_length']);
@@ -351,14 +352,14 @@ class getid3_zip extends getid3_handler
 	}
 
 	public function ZIPparseEndOfCentralDirectory() {
-		$EndOfCentralDirectory['offset'] = ftell($this->getid3->fp);
+		$EndOfCentralDirectory['offset'] = $this->ftell();
 
-		$ZIPendOfCentralDirectory = fread($this->getid3->fp, 22);
+		$ZIPendOfCentralDirectory = $this->fread(22);
 
 		$EndOfCentralDirectory['signature']                   = getid3_lib::LittleEndian2Int(substr($ZIPendOfCentralDirectory,  0, 4));
 		if ($EndOfCentralDirectory['signature'] != 0x06054B50) {
 			// invalid End Of Central Directory Signature
-			fseek($this->getid3->fp, $EndOfCentralDirectory['offset'], SEEK_SET); // seek back to where filepointer originally was so it can be handled properly
+			$this->fseek($EndOfCentralDirectory['offset']); // seek back to where filepointer originally was so it can be handled properly
 			return false;
 		}
 		$EndOfCentralDirectory['disk_number_current']         = getid3_lib::LittleEndian2Int(substr($ZIPendOfCentralDirectory,  4, 2));
@@ -370,7 +371,7 @@ class getid3_zip extends getid3_handler
 		$EndOfCentralDirectory['comment_length']              = getid3_lib::LittleEndian2Int(substr($ZIPendOfCentralDirectory, 20, 2));
 
 		if ($EndOfCentralDirectory['comment_length'] > 0) {
-			$EndOfCentralDirectory['comment']                 = fread($this->getid3->fp, $EndOfCentralDirectory['comment_length']);
+			$EndOfCentralDirectory['comment']                 = $this->fread($EndOfCentralDirectory['comment_length']);
 		}
 
 		return $EndOfCentralDirectory;

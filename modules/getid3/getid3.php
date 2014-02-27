@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // Please see readme.txt for more information                  //
@@ -17,14 +18,17 @@ if (!defined('GETID3_OS_ISWINDOWS')) {
 if (!defined('GETID3_INCLUDEPATH')) {
 	define('GETID3_INCLUDEPATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
 }
+// Workaround Bug #39923 (https://bugs.php.net/bug.php?id=39923)
+if (!defined('IMG_JPG') && defined('IMAGETYPE_JPEG')) {
+	define('IMG_JPG', IMAGETYPE_JPEG);
+}
 
 // attempt to define temp dir as something flexible but reliable
 $temp_dir = ini_get('upload_tmp_dir');
 if ($temp_dir && (!is_dir($temp_dir) || !is_readable($temp_dir))) {
 	$temp_dir = '';
 }
-if (!$temp_dir && function_exists('sys_get_temp_dir')) {
-	// PHP v5.2.1+
+if (!$temp_dir) {
 	// sys_get_temp_dir() may give inaccessible temp dir, e.g. with open_basedir on virtual hosts
 	$temp_dir = sys_get_temp_dir();
 }
@@ -57,7 +61,9 @@ if (!$temp_dir) {
 	$temp_dir = '*'; // invalid directory name should force tempnam() to use system default temp dir
 }
 // $temp_dir = '/something/else/';  // feel free to override temp dir here if it works better for your system
-define('GETID3_TEMP_DIR', $temp_dir);
+if (!defined('GETID3_TEMP_DIR')) {
+	define('GETID3_TEMP_DIR', $temp_dir);
+}
 unset($open_basedir, $temp_dir);
 
 // End: Defines
@@ -97,13 +103,13 @@ class getID3
 	public $fp;                               // Filepointer to file being analysed.
 	public $info;                             // Result array.
 	public $tempdir = GETID3_TEMP_DIR;
+	public $memory_limit = 0;
 
 	// Protected variables
 	protected $startup_error   = '';
 	protected $startup_warning = '';
-	protected $memory_limit    = 0;
 
-	const VERSION           = '1.9.7-20130705';
+	const VERSION           = '1.10.0-20140221';
 	const FREAD_BUFFER_SIZE = 32768;
 
 	const ATTACHMENTS_NONE   = false;
@@ -113,7 +119,7 @@ class getID3
 	public function __construct() {
 
 		// Check for PHP version
-		$required_php_version = '5.0.5';
+		$required_php_version = '5.3.0';
 		if (version_compare(PHP_VERSION, $required_php_version, '<')) {
 			$this->startup_error .= 'getID3() requires PHP v'.$required_php_version.' or higher - you are running v'.PHP_VERSION;
 			return false;
@@ -261,16 +267,32 @@ class getID3
 			$filename = preg_replace('#(.+)'.preg_quote(DIRECTORY_SEPARATOR).'{2,}#U', '\1'.DIRECTORY_SEPARATOR, $filename);
 
 			// open local file
-			if (is_readable($filename) && is_file($filename) && ($this->fp = fopen($filename, 'rb'))) {
+			//if (is_readable($filename) && is_file($filename) && ($this->fp = fopen($filename, 'rb'))) { // see http://www.getid3.org/phpBB3/viewtopic.php?t=1720
+			if ((is_readable($filename) || file_exists($filename)) && is_file($filename) && ($this->fp = fopen($filename, 'rb'))) {
 				// great
 			} else {
-				throw new getid3_exception('Could not open "'.$filename.'" (does not exist, or is not a file)');
+				$errormessagelist = array();
+				if (!is_readable($filename)) {
+					$errormessagelist[] = '!is_readable';
+				}
+				if (!is_file($filename)) {
+					$errormessagelist[] = '!is_file';
+				}
+				if (!file_exists($filename)) {
+					$errormessagelist[] = '!file_exists';
+				}
+				if (empty($errormessagelist)) {
+					$errormessagelist[] = 'fopen failed';
+				}
+				throw new getid3_exception('Could not open "'.$filename.'" ('.implode('; ', $errormessagelist).')');
 			}
 
 			$this->info['filesize'] = filesize($filename);
 			// set redundant parameters - might be needed in some include file
-			$this->info['filename']     = basename($filename);
+			// filenames / filepaths in getID3 are always expressed with forward slashes (unix-style) for both Windows and other to try and minimize confusion
+			$filename = str_replace('\\', '/', $filename);
 			$this->info['filepath']     = str_replace('\\', '/', realpath(dirname($filename)));
+			$this->info['filename']     = getid3_lib::mb_basename($filename);
 			$this->info['filenamepath'] = $this->info['filepath'].'/'.$this->info['filename'];
 
 
@@ -352,7 +374,7 @@ class getID3
 
 			// ID3v2 detection (NOT parsing), even if ($this->option_tag_id3v2 == false) done to make fileformat easier
 			if (!$this->option_tag_id3v2) {
-				fseek($this->fp, 0, SEEK_SET);
+				fseek($this->fp, 0);
 				$header = fread($this->fp, 10);
 				if ((substr($header, 0, 3) == 'ID3') && (strlen($header) == 10)) {
 					$this->info['id3v2']['header']        = true;
@@ -363,7 +385,7 @@ class getID3
 			}
 
 			// read 32 kb file data
-			fseek($this->fp, $this->info['avdataoffset'], SEEK_SET);
+			fseek($this->fp, $this->info['avdataoffset']);
 			$formattest = fread($this->fp, 32774);
 
 			// determine format
@@ -586,6 +608,14 @@ class getID3
 							'group'     => 'audio',
 							'module'    => 'au',
 							'mime_type' => 'audio/basic',
+						),
+
+				// AMR  - audio       - Adaptive Multi Rate
+				'amr'  => array(
+							'pattern'   => '^\x23\x21AMR\x0A', // #!AMR[0A]
+							'group'     => 'audio',
+							'module'    => 'amr',
+							'mime_type' => 'audio/amr',
 						),
 
 				// AVR  - audio       - Audio Visual Research
@@ -1181,7 +1211,11 @@ class getID3
 							$value = trim($value, " \r\n\t"); // do not trim nulls from $value!! Unicode characters will get mangled if trailing nulls are removed!
 						}
 						if ($value) {
-							$this->info['tags'][trim($tag_name)][trim($tag_key)][] = $value;
+							if (!is_numeric($key)) {
+								$this->info['tags'][trim($tag_name)][trim($tag_key)][$key] = $value;
+							} else {
+								$this->info['tags'][trim($tag_name)][trim($tag_key)][]     = $value;
+							}
 						}
 					}
 					if ($tag_key == 'picture') {
@@ -1565,8 +1599,11 @@ class getID3
 }
 
 
-abstract class getid3_handler
-{
+abstract class getid3_handler {
+
+	/**
+	* @var getID3
+	*/
 	protected $getid3;                       // pointer
 
 	protected $data_string_flag     = false; // analyzing filepointer or string
@@ -1593,7 +1630,7 @@ abstract class getid3_handler
 	// Analyze from string instead
 	public function AnalyzeString($string) {
 		// Enter string mode
-	    $this->setStringMode($string);
+		$this->setStringMode($string);
 
 		// Save info
 		$saved_avdataoffset = $this->getid3->info['avdataoffset'];
@@ -1634,10 +1671,10 @@ abstract class getid3_handler
 			$this->data_string_position += $bytes;
 			return substr($this->data_string, $this->data_string_position - $bytes, $bytes);
 		}
-	    $pos = $this->ftell() + $bytes;
-	    if (!getid3_lib::intValueSupported($pos)) {
+		$pos = $this->ftell() + $bytes;
+		if (!getid3_lib::intValueSupported($pos)) {
 			throw new getid3_exception('cannot fread('.$bytes.' from '.$this->ftell().') because beyond PHP filesystem limit', 10);
-	    }
+		}
 		return fread($this->getid3->fp, $bytes);
 	}
 
@@ -1657,14 +1694,14 @@ abstract class getid3_handler
 					break;
 			}
 			return 0;
-	    } else {
-	    	$pos = $bytes;
-	    	if ($whence == SEEK_CUR) {
+		} else {
+			$pos = $bytes;
+			if ($whence == SEEK_CUR) {
 				$pos = $this->ftell() + $bytes;
-	    	} elseif ($whence == SEEK_END) {
-				$pos = $this->info['filesize'] + $bytes;
-	    	}
-	    	if (!getid3_lib::intValueSupported($pos)) {
+			} elseif ($whence == SEEK_END) {
+				$pos = $this->getid3->info['filesize'] + $bytes;
+			}
+			if (!getid3_lib::intValueSupported($pos)) {
 				throw new getid3_exception('cannot fseek('.$pos.') because beyond PHP filesystem limit', 10);
 			}
 		}
@@ -1682,20 +1719,17 @@ abstract class getid3_handler
 		return $this->dependency_to == $module;
 	}
 
-	protected function error($text)
-	{
+	protected function error($text) {
 		$this->getid3->info['error'][] = $text;
 
 		return false;
 	}
 
-	protected function warning($text)
-	{
+	protected function warning($text) {
 		return $this->getid3->warning($text);
 	}
 
-	protected function notice($text)
-	{
+	protected function notice($text) {
 		// does nothing for now
 	}
 

@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -28,10 +29,10 @@ class getid3_jpg extends getid3_handler
 		$info['video']['bits_per_sample']    = 24;
 		$info['video']['pixel_aspect_ratio'] = (float) 1;
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
+		$this->fseek($info['avdataoffset']);
 
 		$imageinfo = array();
-		//list($width, $height, $type) = getid3_lib::GetDataImageSize(fread($this->getid3->fp, $info['filesize']), $imageinfo);
+		//list($width, $height, $type) = getid3_lib::GetDataImageSize($this->fread($info['filesize']), $imageinfo);
 		list($width, $height, $type) = getimagesize($info['filenamepath'], $imageinfo); // http://www.getid3.org/phpBB3/viewtopic.php?t=1474
 
 
@@ -108,19 +109,13 @@ class getid3_jpg extends getid3_handler
 				$computed_time[3] = (isset($explodedGPSDateStamp[1]) ? $explodedGPSDateStamp[1] : '');
 				$computed_time[4] = (isset($explodedGPSDateStamp[2]) ? $explodedGPSDateStamp[2] : '');
 
-				if (function_exists('date_default_timezone_set')) {
-					date_default_timezone_set('UTC');
-				} else {
-					ini_set('date.timezone', 'UTC');
-				}
-
 				$computed_time = array(0=>0, 1=>0, 2=>0, 3=>0, 4=>0, 5=>0);
 				if (isset($info['jpg']['exif']['GPS']['GPSTimeStamp']) && is_array($info['jpg']['exif']['GPS']['GPSTimeStamp'])) {
 					foreach ($info['jpg']['exif']['GPS']['GPSTimeStamp'] as $key => $value) {
 						$computed_time[$key] = getid3_lib::DecimalizeFraction($value);
 					}
 				}
-				$info['jpg']['exif']['GPS']['computed']['timestamp'] = mktime($computed_time[0], $computed_time[1], $computed_time[2], $computed_time[3], $computed_time[4], $computed_time[5]);
+				$info['jpg']['exif']['GPS']['computed']['timestamp'] = gmmktime($computed_time[0], $computed_time[1], $computed_time[2], $computed_time[3], $computed_time[4], $computed_time[5]);
 			}
 
 			if (isset($info['jpg']['exif']['GPS']['GPSLatitude']) && is_array($info['jpg']['exif']['GPS']['GPSLatitude'])) {
@@ -149,17 +144,16 @@ class getid3_jpg extends getid3_handler
 		}
 
 
-		if (getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.tag.xmp.php', __FILE__, false)) {
-			if (isset($info['filenamepath'])) {
-				$image_xmp = new Image_XMP($info['filenamepath']);
-				$xmp_raw = $image_xmp->getAllTags();
-				foreach ($xmp_raw as $key => $value) {
-					if (strpos($key, ':')) {
-						list($subsection, $tagname) = explode(':', $key);
-						$info['xmp'][$subsection][$tagname] = $this->CastAsAppropriate($value);
-					} else {
-						$info['warning'][] = 'XMP: expecting "<subsection>:<tagname>", found "'.$key.'"';
-					}
+		getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.tag.xmp.php', __FILE__, true);
+		if (isset($info['filenamepath'])) {
+			$image_xmp = new Image_XMP($info['filenamepath']);
+			$xmp_raw = $image_xmp->getAllTags();
+			foreach ($xmp_raw as $key => $value) {
+				if (strpos($key, ':')) {
+					list($subsection, $tagname) = explode(':', $key);
+					$info['xmp'][$subsection][$tagname] = $this->CastAsAppropriate($value);
+				} else {
+					$info['warning'][] = 'XMP: expecting "<subsection>:<tagname>", found "'.$key.'"';
 				}
 			}
 		}

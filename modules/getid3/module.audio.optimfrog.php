@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -26,8 +27,8 @@ class getid3_optimfrog extends getid3_handler
 		$info['audio']['bitrate_mode'] = 'vbr';
 		$info['audio']['lossless']     = true;
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$OFRheader  = fread($this->getid3->fp, 8);
+		$this->fseek($info['avdataoffset']);
+		$OFRheader  = $this->fread(8);
 		if (substr($OFRheader, 0, 5) == '*RIFF') {
 
 			return $this->ParseOptimFROGheader42();
@@ -48,8 +49,8 @@ class getid3_optimfrog extends getid3_handler
 		// for fileformat of v4.21 and older
 
 		$info = &$this->getid3->info;
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$OptimFROGheaderData = fread($this->getid3->fp, 45);
+		$this->fseek($info['avdataoffset']);
+		$OptimFROGheaderData = $this->fread(45);
 		$info['avdataoffset'] = 45;
 
 		$OptimFROGencoderVersion_raw   = getid3_lib::LittleEndian2Int(substr($OptimFROGheaderData, 0, 1));
@@ -61,8 +62,8 @@ class getid3_optimfrog extends getid3_handler
 
 		if ($OrignalRIFFheaderSize > $OrignalRIFFdataSize) {
 			$info['avdataend'] -= ($OrignalRIFFheaderSize - $OrignalRIFFdataSize);
-			fseek($this->getid3->fp, $info['avdataend'], SEEK_SET);
-			$RIFFdata .= fread($this->getid3->fp, $OrignalRIFFheaderSize - $OrignalRIFFdataSize);
+			$this->fseek($info['avdataend']);
+			$RIFFdata .= $this->fread($OrignalRIFFheaderSize - $OrignalRIFFdataSize);
 		}
 
 		// move the data chunk after all other chunks (if any)
@@ -96,10 +97,10 @@ class getid3_optimfrog extends getid3_handler
 
 		$info = &$this->getid3->info;
 		$RIFFdata = '';
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		while (!feof($this->getid3->fp) && (ftell($this->getid3->fp) < $info['avdataend'])) {
-			$BlockOffset = ftell($this->getid3->fp);
-			$BlockData   = fread($this->getid3->fp, 8);
+		$this->fseek($info['avdataoffset']);
+		while (!feof($this->getid3->fp) && ($this->ftell() < $info['avdataend'])) {
+			$BlockOffset = $this->ftell();
+			$BlockData   = $this->fread(8);
 			$offset      = 8;
 			$BlockName   =                  substr($BlockData, 0, 4);
 			$BlockSize   = getid3_lib::LittleEndian2Int(substr($BlockData, 4, 4));
@@ -130,7 +131,7 @@ class getid3_optimfrog extends getid3_handler
 							$info['warning'][] = '"'.$BlockName.'" contains more data than expected (expected 12 or 15 bytes, found '.$BlockSize.' bytes)';
 							break;
 					}
-					$BlockData .= fread($this->getid3->fp, $BlockSize);
+					$BlockData .= $this->fread($BlockSize);
 
 					$thisfile_ofr_thisblock['total_samples']      = getid3_lib::LittleEndian2Int(substr($BlockData, $offset, 6));
 					$offset += 6;
@@ -186,8 +187,8 @@ class getid3_optimfrog extends getid3_handler
 					}
 
 					// Only interested in first 14 bytes (only first 12 needed for v4.50 alpha), not actual audio data
-					$BlockData .= fread($this->getid3->fp, 14);
-					fseek($this->getid3->fp, $BlockSize - 14, SEEK_CUR);
+					$BlockData .= $this->fread(14);
+					$this->fseek($BlockSize - 14, SEEK_CUR);
 
 					$COMPdata['crc_32']                       = getid3_lib::LittleEndian2Int(substr($BlockData, $offset, 4));
 					$offset += 4;
@@ -224,7 +225,7 @@ class getid3_optimfrog extends getid3_handler
 					$thisfile_ofr_thisblock['offset'] = $BlockOffset;
 					$thisfile_ofr_thisblock['size']   = $BlockSize;
 
-					$RIFFdata .= fread($this->getid3->fp, $BlockSize);
+					$RIFFdata .= $this->fread($BlockSize);
 					break;
 
 				case 'TAIL':
@@ -232,7 +233,7 @@ class getid3_optimfrog extends getid3_handler
 					$thisfile_ofr_thisblock['size']   = $BlockSize;
 
 					if ($BlockSize > 0) {
-						$RIFFdata .= fread($this->getid3->fp, $BlockSize);
+						$RIFFdata .= $this->fread($BlockSize);
 					}
 					break;
 
@@ -242,7 +243,7 @@ class getid3_optimfrog extends getid3_handler
 					$thisfile_ofr_thisblock['offset'] = $BlockOffset;
 					$thisfile_ofr_thisblock['size']   = $BlockSize;
 
-					fseek($this->getid3->fp, $BlockSize, SEEK_CUR);
+					$this->fseek($BlockSize, SEEK_CUR);
 					break;
 
 
@@ -253,7 +254,7 @@ class getid3_optimfrog extends getid3_handler
 					$thisfile_ofr_thisblock['size']   = $BlockSize;
 					$info['warning'][] = 'APEtag processing inside OptimFROG not supported in this version ('.$this->getid3->version().') of getID3()';
 
-					fseek($this->getid3->fp, $BlockSize, SEEK_CUR);
+					$this->fseek($BlockSize, SEEK_CUR);
 					break;
 
 
@@ -265,14 +266,14 @@ class getid3_optimfrog extends getid3_handler
 
 					if ($BlockSize == 16) {
 
-						$thisfile_ofr_thisblock['md5_binary'] = fread($this->getid3->fp, $BlockSize);
+						$thisfile_ofr_thisblock['md5_binary'] = $this->fread($BlockSize);
 						$thisfile_ofr_thisblock['md5_string'] = getid3_lib::PrintHexBytes($thisfile_ofr_thisblock['md5_binary'], true, false, false);
 						$info['md5_data_source'] = $thisfile_ofr_thisblock['md5_string'];
 
 					} else {
 
 						$info['warning'][] = 'Expecting block size of 16 in "MD5 " chunk, found '.$BlockSize.' instead';
-						fseek($this->getid3->fp, $BlockSize, SEEK_CUR);
+						$this->fseek($BlockSize, SEEK_CUR);
 
 					}
 					break;
@@ -283,7 +284,7 @@ class getid3_optimfrog extends getid3_handler
 					$thisfile_ofr_thisblock['size']   = $BlockSize;
 
 					$info['warning'][] = 'Unhandled OptimFROG block type "'.$BlockName.'" at offset '.$thisfile_ofr_thisblock['offset'];
-					fseek($this->getid3->fp, $BlockSize, SEEK_CUR);
+					$this->fseek($BlockSize, SEEK_CUR);
 					break;
 			}
 		}

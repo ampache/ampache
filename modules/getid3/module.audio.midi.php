@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -31,8 +32,8 @@ class getid3_midi extends getid3_handler
 		$info['fileformat']          = 'midi';
 		$info['audio']['dataformat'] = 'midi';
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$MIDIdata = fread($this->getid3->fp, $this->getid3->fread_buffer_size());
+		$this->fseek($info['avdataoffset']);
+		$MIDIdata = $this->fread($this->getid3->fread_buffer_size());
 		$offset = 0;
 		$MIDIheaderID = substr($MIDIdata, $offset, 4); // 'MThd'
 		if ($MIDIheaderID != GETID3_MIDI_MAGIC_MTHD) {
@@ -52,11 +53,11 @@ class getid3_midi extends getid3_handler
 
 		for ($i = 0; $i < $thisfile_midi_raw['tracks']; $i++) {
 			while ((strlen($MIDIdata) - $offset) < 8) {
-				if ($buffer = fread($this->getid3->fp, $this->getid3->fread_buffer_size())) {
+				if ($buffer = $this->fread($this->getid3->fread_buffer_size())) {
 					$MIDIdata .= $buffer;
 				} else {
 					$info['warning'][] = 'only processed '.($i - 1).' of '.$thisfile_midi_raw['tracks'].' tracks';
-					$info['error'][] = 'Unabled to read more file data at '.ftell($this->getid3->fp).' (trying to seek to : '.$offset.'), was expecting at least 8 more bytes';
+					$info['error'][] = 'Unabled to read more file data at '.$this->ftell().' (trying to seek to : '.$offset.'), was expecting at least 8 more bytes';
 					return false;
 				}
 			}

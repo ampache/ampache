@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -23,8 +24,8 @@ class getid3_iso extends getid3_handler
 		$info['fileformat'] = 'iso';
 
 		for ($i = 16; $i <= 19; $i++) {
-			fseek($this->getid3->fp, 2048 * $i, SEEK_SET);
-			$ISOheader = fread($this->getid3->fp, 2048);
+			$this->fseek(2048 * $i);
+			$ISOheader = $this->fread(2048);
 			if (substr($ISOheader, 1, 5) == 'CD001') {
 				switch (ord($ISOheader{0})) {
 					case 1:
@@ -229,8 +230,8 @@ class getid3_iso extends getid3_handler
 		}
 
 		$info['iso']['path_table']['offset'] = $PathTableLocation * 2048;
-		fseek($this->getid3->fp, $info['iso']['path_table']['offset'], SEEK_SET);
-		$info['iso']['path_table']['raw'] = fread($this->getid3->fp, $PathTableSize);
+		$this->fseek($info['iso']['path_table']['offset']);
+		$info['iso']['path_table']['raw'] = $this->fread($PathTableSize);
 
 		$offset = 0;
 		$pathcounter = 1;
@@ -275,12 +276,12 @@ class getid3_iso extends getid3_handler
 			$TextEncoding = 'ISO-8859-1'; // Latin-1
 		}
 
-		fseek($this->getid3->fp, $directorydata['location_bytes'], SEEK_SET);
-		$DirectoryRecordData = fread($this->getid3->fp, 1);
+		$this->fseek($directorydata['location_bytes']);
+		$DirectoryRecordData = $this->fread(1);
 
 		while (ord($DirectoryRecordData{0}) > 33) {
 
-			$DirectoryRecordData .= fread($this->getid3->fp, ord($DirectoryRecordData{0}) - 1);
+			$DirectoryRecordData .= $this->fread(ord($DirectoryRecordData{0}) - 1);
 
 			$ThisDirectoryRecord['raw']['length']                    = getid3_lib::LittleEndian2Int(substr($DirectoryRecordData,  0, 1));
 			$ThisDirectoryRecord['raw']['extended_attribute_length'] = getid3_lib::LittleEndian2Int(substr($DirectoryRecordData,  1, 1));
@@ -314,7 +315,7 @@ class getid3_iso extends getid3_handler
 			}
 
 			$DirectoryRecord[] = $ThisDirectoryRecord;
-			$DirectoryRecordData = fread($this->getid3->fp, 1);
+			$DirectoryRecordData = $this->fread(1);
 		}
 
 		return $DirectoryRecord;

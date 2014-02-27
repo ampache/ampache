@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -26,9 +27,9 @@ class getid3_pcd extends getid3_handler
 		$info['video']['lossless']   = false;
 
 
-		fseek($this->getid3->fp, $info['avdataoffset'] + 72, SEEK_SET);
+		$this->fseek($info['avdataoffset'] + 72);
 
-		$PCDflags = fread($this->getid3->fp, 1);
+		$PCDflags = $this->fread(1);
 		$PCDisVertical = ((ord($PCDflags) & 0x01) ? true : false);
 
 
@@ -56,7 +57,7 @@ class getid3_pcd extends getid3_handler
 
 			list($PCD_width, $PCD_height, $PCD_dataOffset) = $PCD_levels[3];
 
-			fseek($this->getid3->fp, $info['avdataoffset'] + $PCD_dataOffset, SEEK_SET);
+			$this->fseek($info['avdataoffset'] + $PCD_dataOffset);
 
 			for ($y = 0; $y < $PCD_height; $y += 2) {
 				// The image-data of these subtypes start at the respective offsets of 02000h, 0b800h and 30000h.
@@ -65,10 +66,10 @@ class getid3_pcd extends getid3_handler
 				// the first half of the third w bytes contain data for the first RGB-line, the second w bytes
 				// and the second half of the third w bytes contain data for a second RGB-line.
 
-				$PCD_data_Y1 = fread($this->getid3->fp, $PCD_width);
-				$PCD_data_Y2 = fread($this->getid3->fp, $PCD_width);
-				$PCD_data_Cb = fread($this->getid3->fp, intval(round($PCD_width / 2)));
-				$PCD_data_Cr = fread($this->getid3->fp, intval(round($PCD_width / 2)));
+				$PCD_data_Y1 = $this->fread($PCD_width);
+				$PCD_data_Y2 = $this->fread($PCD_width);
+				$PCD_data_Cb = $this->fread(intval(round($PCD_width / 2)));
+				$PCD_data_Cr = $this->fread(intval(round($PCD_width / 2)));
 
 				for ($x = 0; $x < $PCD_width; $x++) {
 					if ($PCDisVertical) {

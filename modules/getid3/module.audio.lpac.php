@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -21,8 +22,8 @@ class getid3_lpac extends getid3_handler
 	public function Analyze() {
 		$info = &$this->getid3->info;
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$LPACheader = fread($this->getid3->fp, 14);
+		$this->fseek($info['avdataoffset']);
+		$LPACheader = $this->fread(14);
 		if (substr($LPACheader, 0, 4) != 'LPAC') {
 			$info['error'][] = 'Expected "LPAC" at offset '.$info['avdataoffset'].', found "'.$StreamMarker.'"';
 			return false;

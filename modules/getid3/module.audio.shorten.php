@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -20,9 +21,9 @@ class getid3_shorten extends getid3_handler
 	public function Analyze() {
 		$info = &$this->getid3->info;
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
+		$this->fseek($info['avdataoffset']);
 
-		$ShortenHeader = fread($this->getid3->fp, 8);
+		$ShortenHeader = $this->fread(8);
 		$magic = 'ajkg';
 		if (substr($ShortenHeader, 0, 4) != $magic) {
 			$info['error'][] = 'Expecting "'.getid3_lib::PrintHexBytes($magic).'" at offset '.$info['avdataoffset'].', found "'.getid3_lib::PrintHexBytes(substr($ShortenHeader, 0, 4)).'"';
@@ -35,14 +36,14 @@ class getid3_shorten extends getid3_handler
 
 		$info['shn']['version'] = getid3_lib::LittleEndian2Int(substr($ShortenHeader, 4, 1));
 
-		fseek($this->getid3->fp, $info['avdataend'] - 12, SEEK_SET);
-		$SeekTableSignatureTest = fread($this->getid3->fp, 12);
+		$this->fseek($info['avdataend'] - 12);
+		$SeekTableSignatureTest = $this->fread(12);
 		$info['shn']['seektable']['present'] = (bool) (substr($SeekTableSignatureTest, 4, 8) == 'SHNAMPSK');
 		if ($info['shn']['seektable']['present']) {
 			$info['shn']['seektable']['length'] = getid3_lib::LittleEndian2Int(substr($SeekTableSignatureTest, 0, 4));
 			$info['shn']['seektable']['offset'] = $info['avdataend'] - $info['shn']['seektable']['length'];
-			fseek($this->getid3->fp, $info['shn']['seektable']['offset'], SEEK_SET);
-			$SeekTableMagic = fread($this->getid3->fp, 4);
+			$this->fseek($info['shn']['seektable']['offset']);
+			$SeekTableMagic = $this->fread(4);
 			$magic = 'SEEK';
 			if ($SeekTableMagic != $magic) {
 
@@ -67,7 +68,7 @@ class getid3_shorten extends getid3_handler
 				//   long Offset1[4];
 				// }TSeekEntry;
 
-				$SeekTableData = fread($this->getid3->fp, $info['shn']['seektable']['length'] - 16);
+				$SeekTableData = $this->fread($info['shn']['seektable']['length'] - 16);
 				$info['shn']['seektable']['entry_count'] = floor(strlen($SeekTableData) / 80);
 				//$info['shn']['seektable']['entries'] = array();
 				//$SeekTableOffset = 0;

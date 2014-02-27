@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -25,8 +26,8 @@ class getid3_gif extends getid3_handler
 		$info['video']['lossless']           = true;
 		$info['video']['pixel_aspect_ratio'] = (float) 1;
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$GIFheader = fread($this->getid3->fp, 13);
+		$this->fseek($info['avdataoffset']);
+		$GIFheader = $this->fread(13);
 		$offset = 0;
 
 		$info['gif']['header']['raw']['identifier']            =                              substr($GIFheader, $offset, 3);
@@ -78,7 +79,7 @@ class getid3_gif extends getid3_handler
 		}
 
 //		if ($info['gif']['header']['flags']['global_color_table']) {
-//			$GIFcolorTable = fread($this->getid3->fp, 3 * $info['gif']['header']['global_color_size']);
+//			$GIFcolorTable = $this->fread(3 * $info['gif']['header']['global_color_size']);
 //			$offset = 0;
 //			for ($i = 0; $i < $info['gif']['header']['global_color_size']; $i++) {
 //				$red   = getid3_lib::LittleEndian2Int(substr($GIFcolorTable, $offset++, 1));
@@ -90,12 +91,12 @@ class getid3_gif extends getid3_handler
 //
 //		// Image Descriptor
 //		while (!feof($this->getid3->fp)) {
-//			$NextBlockTest = fread($this->getid3->fp, 1);
+//			$NextBlockTest = $this->fread(1);
 //			switch ($NextBlockTest) {
 //
 //				case ',': // ',' - Image separator character
 //
-//					$ImageDescriptorData = $NextBlockTest.fread($this->getid3->fp, 9);
+//					$ImageDescriptorData = $NextBlockTest.$this->fread(9);
 //					$ImageDescriptor = array();
 //					$ImageDescriptor['image_left']   = getid3_lib::LittleEndian2Int(substr($ImageDescriptorData, 1, 2));
 //					$ImageDescriptor['image_top']    = getid3_lib::LittleEndian2Int(substr($ImageDescriptorData, 3, 2));
@@ -112,10 +113,10 @@ class getid3_gif extends getid3_handler
 //						return true;
 //
 //					}
-//echo 'Start of raster data: '.ftell($this->getid3->fp).'<BR>';
+//echo 'Start of raster data: '.$this->ftell().'<BR>';
 //					$RasterData = array();
-//					$RasterData['code_size']        = getid3_lib::LittleEndian2Int(fread($this->getid3->fp, 1));
-//					$RasterData['block_byte_count'] = getid3_lib::LittleEndian2Int(fread($this->getid3->fp, 1));
+//					$RasterData['code_size']        = getid3_lib::LittleEndian2Int($this->fread(1));
+//					$RasterData['block_byte_count'] = getid3_lib::LittleEndian2Int($this->fread(1));
 //					$info['gif']['raster_data'][count($info['gif']['image_descriptor']) - 1] = $RasterData;
 //
 //					$CurrentCodeSize = $RasterData['code_size'] + 1;
@@ -143,16 +144,16 @@ class getid3_gif extends getid3_handler
 //
 //				case '!':
 //					// GIF Extension Block
-//					$ExtensionBlockData = $NextBlockTest.fread($this->getid3->fp, 2);
+//					$ExtensionBlockData = $NextBlockTest.$this->fread(2);
 //					$ExtensionBlock = array();
 //					$ExtensionBlock['function_code']  = getid3_lib::LittleEndian2Int(substr($ExtensionBlockData, 1, 1));
 //					$ExtensionBlock['byte_length']    = getid3_lib::LittleEndian2Int(substr($ExtensionBlockData, 2, 1));
-//					$ExtensionBlock['data']           = fread($this->getid3->fp, $ExtensionBlock['byte_length']);
+//					$ExtensionBlock['data']           = $this->fread($ExtensionBlock['byte_length']);
 //					$info['gif']['extension_blocks'][] = $ExtensionBlock;
 //					break;
 //
 //				case ';':
-//					$info['gif']['terminator_offset'] = ftell($this->getid3->fp) - 1;
+//					$info['gif']['terminator_offset'] = $this->ftell() - 1;
 //					// GIF Terminator
 //					break;
 //
@@ -170,7 +171,7 @@ class getid3_gif extends getid3_handler
 	public function GetLSBits($bits) {
 		static $bitbuffer = '';
 		while (strlen($bitbuffer) < $bits) {
-			$bitbuffer = str_pad(decbin(ord(fread($this->getid3->fp, 1))), 8, '0', STR_PAD_LEFT).$bitbuffer;
+			$bitbuffer = str_pad(decbin(ord($this->fread(1))), 8, '0', STR_PAD_LEFT).$bitbuffer;
 		}
 		$value = bindec(substr($bitbuffer, 0 - $bits));
 		$bitbuffer = substr($bitbuffer, 0, 0 - $bits);

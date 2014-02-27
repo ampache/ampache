@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -28,8 +29,8 @@ class getid3_png extends getid3_handler
 		$info['video']['dataformat'] = 'png';
 		$info['video']['lossless']   = false;
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$PNGfiledata = fread($this->getid3->fp, $this->getid3->fread_buffer_size());
+		$this->fseek($info['avdataoffset']);
+		$PNGfiledata = $this->fread($this->getid3->fread_buffer_size());
 		$offset = 0;
 
 		$PNGidentifier = substr($PNGfiledata, $offset, 8); // $89 $50 $4E $47 $0D $0A $1A $0A
@@ -41,11 +42,11 @@ class getid3_png extends getid3_handler
 			return false;
 		}
 
-		while (((ftell($this->getid3->fp) - (strlen($PNGfiledata) - $offset)) < $info['filesize'])) {
+		while ((($this->ftell() - (strlen($PNGfiledata) - $offset)) < $info['filesize'])) {
 			$chunk['data_length'] = getid3_lib::BigEndian2Int(substr($PNGfiledata, $offset, 4));
 			$offset += 4;
-			while (((strlen($PNGfiledata) - $offset) < ($chunk['data_length'] + 4)) && (ftell($this->getid3->fp) < $info['filesize'])) {
-				$PNGfiledata .= fread($this->getid3->fp, $this->getid3->fread_buffer_size());
+			while (((strlen($PNGfiledata) - $offset) < ($chunk['data_length'] + 4)) && ($this->ftell() < $info['filesize'])) {
+				$PNGfiledata .= $this->fread($this->getid3->fread_buffer_size());
 			}
 			$chunk['type_text']   =               substr($PNGfiledata, $offset, 4);
 			$offset += 4;

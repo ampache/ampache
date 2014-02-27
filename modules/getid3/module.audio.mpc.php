@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -29,8 +30,8 @@ class getid3_mpc extends getid3_handler
 		$info['audio']['channels']        = 2;  // up to SV7 the format appears to have been hardcoded for stereo only
 		$info['audio']['lossless']        = false;
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$MPCheaderData = fread($this->getid3->fp, 4);
+		$this->fseek($info['avdataoffset']);
+		$MPCheaderData = $this->fread(4);
 		$info['mpc']['header']['preamble'] = substr($MPCheaderData, 0, 4); // should be 'MPCK' (SV8) or 'MP+' (SV7), otherwise possible stream data (SV4-SV6)
 		if (preg_match('#^MPCK#', $info['mpc']['header']['preamble'])) {
 
@@ -69,7 +70,7 @@ class getid3_mpc extends getid3_handler
 		$keyNameSize            = 2;
 		$maxHandledPacketLength = 9; // specs say: "n*8; 0 < n < 10"
 
-		$offset = ftell($this->getid3->fp);
+		$offset = $this->ftell();
 		while ($offset < $info['avdataend']) {
 			$thisPacket = array();
 			$thisPacket['offset'] = $offset;
@@ -77,7 +78,7 @@ class getid3_mpc extends getid3_handler
 
 			// Size is a variable-size field, could be 1-4 bytes (possibly more?)
 			// read enough data in and figure out the exact size later
-			$MPCheaderData = fread($this->getid3->fp, $keyNameSize + $maxHandledPacketLength);
+			$MPCheaderData = $this->fread($keyNameSize + $maxHandledPacketLength);
 			$packet_offset += $keyNameSize;
 			$thisPacket['key']      = substr($MPCheaderData, 0, $keyNameSize);
 			$thisPacket['key_name'] = $this->MPCsv8PacketName($thisPacket['key']);
@@ -98,7 +99,7 @@ class getid3_mpc extends getid3_handler
 				case 'SH': // Stream Header
 					$moreBytesToRead = $thisPacket['packet_size'] - $keyNameSize - $maxHandledPacketLength;
 					if ($moreBytesToRead > 0) {
-						$MPCheaderData .= fread($this->getid3->fp, $moreBytesToRead);
+						$MPCheaderData .= $this->fread($moreBytesToRead);
 					}
 					$thisPacket['crc']               =       getid3_lib::BigEndian2Int(substr($MPCheaderData, $packet_offset, 4));
 					$packet_offset += 4;
@@ -136,7 +137,7 @@ class getid3_mpc extends getid3_handler
 				case 'RG': // Replay Gain
 					$moreBytesToRead = $thisPacket['packet_size'] - $keyNameSize - $maxHandledPacketLength;
 					if ($moreBytesToRead > 0) {
-						$MPCheaderData .= fread($this->getid3->fp, $moreBytesToRead);
+						$MPCheaderData .= $this->fread($moreBytesToRead);
 					}
 					$thisPacket['replaygain_version']     =       getid3_lib::BigEndian2Int(substr($MPCheaderData, $packet_offset, 1));
 					$packet_offset += 1;
@@ -158,7 +159,7 @@ class getid3_mpc extends getid3_handler
 				case 'EI': // Encoder Info
 					$moreBytesToRead = $thisPacket['packet_size'] - $keyNameSize - $maxHandledPacketLength;
 					if ($moreBytesToRead > 0) {
-						$MPCheaderData .= fread($this->getid3->fp, $moreBytesToRead);
+						$MPCheaderData .= $this->fread($moreBytesToRead);
 					}
 					$profile_pns                 = getid3_lib::BigEndian2Int(substr($MPCheaderData, $packet_offset, 1));
 					$packet_offset += 1;
@@ -201,7 +202,7 @@ class getid3_mpc extends getid3_handler
 			if (!empty($thisPacket)) {
 				$info['mpc']['packets'][] = $thisPacket;
 			}
-			fseek($this->getid3->fp, $offset);
+			$this->fseek($offset);
 		}
 		$thisfile_mpc_header['size'] = $offset;
 		return true;
@@ -217,7 +218,7 @@ class getid3_mpc extends getid3_handler
 
 		$thisfile_mpc_header['size'] = 28;
 		$MPCheaderData  = $info['mpc']['header']['preamble'];
-		$MPCheaderData .= fread($this->getid3->fp, $thisfile_mpc_header['size'] - strlen($info['mpc']['header']['preamble']));
+		$MPCheaderData .= $this->fread($thisfile_mpc_header['size'] - strlen($info['mpc']['header']['preamble']));
 		$offset = strlen('MP+');
 
 		$StreamVersionByte                           = getid3_lib::LittleEndian2Int(substr($MPCheaderData, $offset, 1));
@@ -329,8 +330,8 @@ class getid3_mpc extends getid3_handler
 		$offset = 0;
 
 		$thisfile_mpc_header['size'] = 8;
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$MPCheaderData = fread($this->getid3->fp, $thisfile_mpc_header['size']);
+		$this->fseek($info['avdataoffset']);
+		$MPCheaderData = $this->fread($thisfile_mpc_header['size']);
 
 		// add size of file header to avdataoffset - calc bitrate correctly + MD5 data
 		$info['avdataoffset'] += $thisfile_mpc_header['size'];

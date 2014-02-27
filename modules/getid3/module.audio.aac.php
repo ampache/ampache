@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -18,8 +19,8 @@ class getid3_aac extends getid3_handler
 {
 	public function Analyze() {
 		$info = &$this->getid3->info;
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		if (fread($this->getid3->fp, 4) == 'ADIF') {
+		$this->fseek($info['avdataoffset']);
+		if ($this->fread(4) == 'ADIF') {
 			$this->getAACADIFheaderFilepointer();
 		} else {
 			$this->getAACADTSheaderFilepointer();
@@ -35,8 +36,8 @@ class getid3_aac extends getid3_handler
 		$info['audio']['dataformat'] = 'aac';
 		$info['audio']['lossless']   = false;
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$AACheader = fread($this->getid3->fp, 1024);
+		$this->fseek($info['avdataoffset']);
+		$AACheader = $this->fread(1024);
 		$offset    = 0;
 
 		if (substr($AACheader, 0, 4) == 'ADIF') {
@@ -310,16 +311,16 @@ class getid3_aac extends getid3_handler
 			// or MaxFramesToScan frames have been scanned
 
 			if (!getid3_lib::intValueSupported($byteoffset)) {
-				$info['warning'][] = 'Unable to parse AAC file beyond '.ftell($this->getid3->fp).' (PHP does not support file operations beyond '.round(PHP_INT_MAX / 1073741824).'GB)';
+				$info['warning'][] = 'Unable to parse AAC file beyond '.$this->ftell().' (PHP does not support file operations beyond '.round(PHP_INT_MAX / 1073741824).'GB)';
 				return false;
 			}
-			fseek($this->getid3->fp, $byteoffset, SEEK_SET);
+			$this->fseek($byteoffset);
 
 			// First get substring
-			$substring = fread($this->getid3->fp, 9); // header is 7 bytes (or 9 if CRC is present)
+			$substring = $this->fread(9); // header is 7 bytes (or 9 if CRC is present)
 			$substringlength = strlen($substring);
 			if ($substringlength != 9) {
-				$info['error'][] = 'Failed to read 7 bytes at offset '.(ftell($this->getid3->fp) - $substringlength).' (only read '.$substringlength.' bytes)';
+				$info['error'][] = 'Failed to read 7 bytes at offset '.($this->ftell() - $substringlength).' (only read '.$substringlength.' bytes)';
 				return false;
 			}
 			// this would be easier with 64-bit math, but split it up to allow for 32-bit:
@@ -329,7 +330,7 @@ class getid3_aac extends getid3_handler
 
 			$info['aac']['header']['raw']['syncword']          = ($header1 & 0xFFF0) >> 4;
 			if ($info['aac']['header']['raw']['syncword'] != 0x0FFF) {
-				$info['error'][] = 'Synch pattern (0x0FFF) not found at offset '.(ftell($this->getid3->fp) - $substringlength).' (found 0x0'.strtoupper(dechex($info['aac']['header']['raw']['syncword'])).' instead)';
+				$info['error'][] = 'Synch pattern (0x0FFF) not found at offset '.($this->ftell() - $substringlength).' (found 0x0'.strtoupper(dechex($info['aac']['header']['raw']['syncword'])).' instead)';
 				//if ($info['fileformat'] == 'aac') {
 				//	return true;
 				//}

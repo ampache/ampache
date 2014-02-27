@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -178,9 +179,7 @@ class getid3_writetags
 			switch ($tagformat) {
 				case 'ape':
 					$GETID3_ERRORARRAY = &$this->errors;
-					if (!getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'write.apetag.php', __FILE__, false)) {
-						return false;
-					}
+					getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'write.apetag.php', __FILE__, true);
 					break;
 
 				case 'id3v1':
@@ -189,9 +188,7 @@ class getid3_writetags
 				case 'metaflac':
 				case 'real':
 					$GETID3_ERRORARRAY = &$this->errors;
-					if (!getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'write.'.$tagformat.'.php', __FILE__, false)) {
-						return false;
-					}
+					getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'write.'.$tagformat.'.php', __FILE__, true);
 					break;
 
 				case 'id3v2.2':
@@ -199,9 +196,7 @@ class getid3_writetags
 				case 'id3v2.4':
 				case 'id3v2':
 					$GETID3_ERRORARRAY = &$this->errors;
-					if (!getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'write.id3v2.php', __FILE__, false)) {
-						return false;
-					}
+					getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'write.id3v2.php', __FILE__, true);
 					break;
 
 				default:

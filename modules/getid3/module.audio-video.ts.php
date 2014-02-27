@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -20,8 +21,8 @@ class getid3_ts extends getid3_handler
 	public function Analyze() {
 		$info = &$this->getid3->info;
 
-		fseek($this->getid3->fp, $info['avdataoffset'], SEEK_SET);
-		$TSheader = fread($this->getid3->fp, 19);
+		$this->fseek($info['avdataoffset']);
+		$TSheader = $this->fread(19);
 		$magic = "\x47";
 		if (substr($TSheader, 0, 1) != $magic) {
 			$info['error'][] = 'Expecting "'.getid3_lib::PrintHexBytes($magic).'" at '.$info['avdataoffset'].', found '.getid3_lib::PrintHexBytes(substr($TSheader, 0, 1)).' instead.';

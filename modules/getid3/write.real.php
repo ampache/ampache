@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -56,7 +57,7 @@ class getid3_write_real
 			$new__RMF_tag_data = $this->GenerateRMFchunk($OldThisFileInfo['real']['chunks']);
 
 			if (isset($oldChunkInfo['.RMF']['length']) && ($oldChunkInfo['.RMF']['length'] == strlen($new__RMF_tag_data))) {
-				fseek($fp_source, $oldChunkInfo['.RMF']['offset'], SEEK_SET);
+				fseek($fp_source, $oldChunkInfo['.RMF']['offset']);
 				fwrite($fp_source, $new__RMF_tag_data);
 			} else {
 				$this->errors[] = 'new .RMF tag ('.strlen($new__RMF_tag_data).' bytes) different length than old .RMF tag ('.$oldChunkInfo['.RMF']['length'].' bytes)';
@@ -65,7 +66,7 @@ class getid3_write_real
 			}
 
 			if (isset($oldChunkInfo['PROP']['length']) && ($oldChunkInfo['PROP']['length'] == strlen($new_PROP_tag_data))) {
-				fseek($fp_source, $oldChunkInfo['PROP']['offset'], SEEK_SET);
+				fseek($fp_source, $oldChunkInfo['PROP']['offset']);
 				fwrite($fp_source, $new_PROP_tag_data);
 			} else {
 				$this->errors[] = 'new PROP tag ('.strlen($new_PROP_tag_data).' bytes) different length than old PROP tag ('.$oldChunkInfo['PROP']['length'].' bytes)';
@@ -76,7 +77,7 @@ class getid3_write_real
 			if (isset($oldChunkInfo['CONT']['length']) && ($oldChunkInfo['CONT']['length'] == strlen($new_CONT_tag_data))) {
 
 				// new data length is same as old data length - just overwrite
-				fseek($fp_source, $oldChunkInfo['CONT']['offset'], SEEK_SET);
+				fseek($fp_source, $oldChunkInfo['CONT']['offset']);
 				fwrite($fp_source, $new_CONT_tag_data);
 				fclose($fp_source);
 				return true;
@@ -98,7 +99,7 @@ class getid3_write_real
 						rewind($fp_source);
 						fwrite($fp_temp, fread($fp_source, $BeforeOffset));
 						fwrite($fp_temp, $new_CONT_tag_data);
-						fseek($fp_source, $AfterOffset, SEEK_SET);
+						fseek($fp_source, $AfterOffset);
 						while ($buffer = fread($fp_source, $this->fread_buffer_size)) {
 							fwrite($fp_temp, $buffer, strlen($buffer));
 						}
@@ -245,7 +246,7 @@ class getid3_write_real
 
 					rewind($fp_source);
 					fwrite($fp_temp, fread($fp_source, $BeforeOffset));
-					fseek($fp_source, $AfterOffset, SEEK_SET);
+					fseek($fp_source, $AfterOffset);
 					while ($buffer = fread($fp_source, $this->fread_buffer_size)) {
 						fwrite($fp_temp, $buffer, strlen($buffer));
 					}
