@@ -9,9 +9,7 @@ if ($iframed) {
 <?php
 }
 
-if (!$iframed || $is_share) {
-    require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php';
-}
+require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php';
 ?>
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/jquery-editdialog.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-ui/jquery-ui.min.css" type="text/css" media="screen" />
@@ -169,6 +167,7 @@ if (!$isVideo && !$isRadio && !$is_share) {
     if ($iframed) {
         if (AmpConfig::get('sociable')) {
             echo "ajaxPut(jsAjaxUrl + '?page=song&action=shouts&object_type=song&object_id=' + currenti.attr('data-song_id'),'shouts_data');";
+			echo "ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=song&object_id=' + currenti.attr('data-song_id'));";
         }
         echo "var titleobj = (currenti.attr('data-album_id') != null) ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + currenti.attr('data-album_id') + '\');\">' + obj.title + '</a>' : obj.title;";
         echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + currenti.attr('data-artist_id') + '\');\">' + obj.artist + '</a>';";
@@ -177,6 +176,7 @@ if (!$isVideo && !$isRadio && !$is_share) {
         if (AmpConfig::get('sociable')) {
             echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-song_id') + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>';";
         }
+		echo "actionsobj += '<div id=\'action_buttons\'></div>';";
         if (AmpConfig::get('waveform')) {
             echo "var waveformobj = '';";
             if (AmpConfig::get('waveform')) {

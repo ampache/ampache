@@ -16,8 +16,9 @@
  */
  
  body {
-    background: none;
-    background-color: rgb(25, 25, 25);
+    background: none !important;
+    background-color: rgb(25, 25, 25) !important;
+	height: auto !important;
  }
  
 div.jp-area {
@@ -507,6 +508,10 @@ div.playing_lyrics a {
 div.playing_actions {
 	position: relative;
     display: inline;
+}
+
+div.playing_actions div {
+    display: inline-block;
 }
 
 div.waveform {
