@@ -35,23 +35,19 @@ if (!$is_share) {
 }
 ?>
 <script language="javascript" type="text/javascript">
-var artistids = new Array();
-var albumids = new Array();
-var songids = new Array();
 var jplaylist = new Array();
 var jtypes = new Array();
 
 function addMedia(media)
 {
-    artistids.push(media['artist_id']);
-    albumids.push(media['album_id']);
-    songids.push(media['song_id']);
-
     var jpmedia = {};
     jpmedia['title'] = media['title'];
     jpmedia['artist'] = media['artist'];
     jpmedia[media['filetype']] = media['url'];
     jpmedia['poster'] = media['poster'];
+    jpmedia['artist_id'] = media['artist_id'];
+    jpmedia['album_id'] = media['album_id'];
+    jpmedia['song_id'] = media['song_id'];
 
     jplaylist.add(jpmedia);
 }

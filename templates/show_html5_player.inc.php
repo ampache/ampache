@@ -21,6 +21,7 @@ if (!$iframed || $is_share) {
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery/jquery.cookie.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/jquery.jplayer.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/jplayer.playlist.ext.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
@@ -56,7 +57,7 @@ var jpuqid = (new Date()).getMilliseconds();
 var jplaylist = null;
 var timeoffset = 0;
 var last_int_position = 0
-var currentjpindex = 0;
+var currentjpitem = null;
 
     $(document).ready(function(){
 
@@ -145,40 +146,44 @@ if ($isVideo) {
         localStorage.setItem('ampache-current-webplayer', jpuqid);
 <?php } ?>
 
+        var currenti = $(".jp-playlist li").eq(current);
         $.each(playlist, function (index, obj) {
             if (index == current) {
-                if (currentjpindex != index) {
-					var previousartist = artistids[currentjpindex];
-                    currentjpindex = index;
+                if (currentjpitem != currenti) {
+                    var previousartist = 0;
+                    if (currentjpitem != null) {
+                        previousartist = currentjpitem.attr("data-artist_id");
+                    }
+                    currentjpitem = currenti;
 <?php if ($iframed) { ?>
-					if (previousartist != artistids[currentjpindex]) {
+					if (previousartist != currentjpitem.attr("data-artist_id")) {
 						NotifyOfNewSong();
 					}
 <?php } ?>
                 }
                 if (brkey != '') {
-                    sendBroadcastMessage('SONG', songids[index]);
+                    sendBroadcastMessage('SONG', currenti.attr("data-song_id"));
                 }
 <?php
 if (!$isVideo && !$isRadio && !$is_share) {
     if ($iframed) {
         if (AmpConfig::get('sociable')) {
-            echo "ajaxPut(jsAjaxUrl + '?page=song&action=shouts&object_type=song&object_id=' + songids[index],'shouts_data');";
+            echo "ajaxPut(jsAjaxUrl + '?page=song&action=shouts&object_type=song&object_id=' + currenti.attr('data-song_id'),'shouts_data');";
         }
-        echo "var titleobj = (albumids[index] != null) ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + albumids[index] + '\');\">' + obj.title + '</a>' : obj.title;";
-        echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + artistids[index] + '\');\">' + obj.artist + '</a>';";
-        echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + songids[index] + '\');\">" . T_('Show Lyrics') . "</a>';";
+        echo "var titleobj = (currenti.attr('data-album_id') != null) ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + currenti.attr('data-album_id') + '\');\">' + obj.title + '</a>' : obj.title;";
+        echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + currenti.attr('data-artist_id') + '\');\">' + obj.artist + '</a>';";
+        echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + currenti.attr('data-song_id') + '\');\">" . T_('Show Lyrics') . "</a>';";
         echo "var actionsobj = '|';";
         if (AmpConfig::get('sociable')) {
-            echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + songids[index] + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>';";
+            echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-song_id') + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>';";
         }
         if (AmpConfig::get('waveform')) {
             echo "var waveformobj = '';";
             if (AmpConfig::get('waveform')) {
-                echo "waveformobj += '<a href=\"#\" title=\"" . T_('Post Shout') . "\" onClick=\"javascript:WaveformClick(' + songids[index] + ', ClickTimeOffset(event));\">';";
+                echo "waveformobj += '<a href=\"#\" title=\"" . T_('Post Shout') . "\" onClick=\"javascript:WaveformClick(' + currenti.attr('data-song_id') + ', ClickTimeOffset(event));\">';";
             }
             echo "waveformobj += '<div class=\"waveform-shouts\"></div>';";
-            echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . AmpConfig::get('web_path') . "/waveform.php?song_id=' + songids[index] + '\" onLoad=\"ShowWaveform();\">';";
+            echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . AmpConfig::get('web_path') . "/waveform.php?song_id=' + currenti.attr('data-song_id') + '\" onLoad=\"ShowWaveform();\">';";
             if (AmpConfig::get('waveform')) {
                 echo "waveformobj += '</a>';";
             }
@@ -266,6 +271,12 @@ if ($isVideo) {
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
         $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
     });
+    
+    $('#jp_container_1' + ' ul:last').sortable({
+        update: function () {
+            jplaylist.scan();
+        }
+    });
 
 <?php echo WebPlayer::add_media_js($playlist); ?>
 });
@@ -322,7 +333,7 @@ function startBroadcast(key)
     brconn.onopen = function(e) {
         sendBroadcastMessage('AUTH_SID', '<?php echo session_id(); ?>');
         sendBroadcastMessage('REGISTER_BROADCAST', brkey);
-        sendBroadcastMessage('SONG', songids[currentjpindex]);
+        sendBroadcastMessage('SONG', currentjpitem.attr("data-song_id"));
     };
 }
 

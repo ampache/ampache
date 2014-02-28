@@ -10,7 +10,7 @@ jPlayerPlaylist.prototype._createListItem = function(media) {
         }
         attrClass += '" ';
 
-        var listItem = "<li" + attrClass + " name=\"" + $(myPlaylist.cssSelector.playlist + " ul li").length + "\" track_id=\"" + media.id + "\" artist_music_title_id=\"" + media.artist_music_title_id + "\"><div>";
+        var listItem = "<li" + attrClass + " name=\"" + $(jplaylist.cssSelector.playlist + " ul li").length + "\" data-song_id=\"" + media['song_id'] + "\" data-album_id=\"" + media['album_id'] + "\" data-artist_id=\"" + media['artist_id'] + "\"><div>";
 
         // Create image
         // listItem += "<img class=\"cover\" src=\"" + media.cover + "\" alt=\"" + media.title + "\"/>";
@@ -18,9 +18,9 @@ jPlayerPlaylist.prototype._createListItem = function(media) {
         // Create remove control
         listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.removeItemClass + "'>&times;</a>";
 
-        // Create settings link
-        if (media.id) {
-            listItem += "<span class=\"jp-free-media menu\"><a title=\"Track Settings\" class=\"loadModal\" href=\"/api/tracksettings/track_id/" + media.id + "/artist_music_title_id/" + media.artist_music_title_id + "\"><img src=\"/img/settings.png\"/></a></span>";
+        // Create song links
+        if (media['song_id']) {
+            listItem += "<span class=\"jp-free-media menu\"><a></a></span>";
         }
 
         // The title is given next in the HTML otherwise the float:right on the free media corrupts in IE6/7
@@ -69,10 +69,10 @@ jPlayerPlaylist.prototype.remove = function(index) {
             if (0 <= index && index < this.playlist.length) {
                 this.removing = true;
 
-                if ('playlist' === myPlaylist.type) {
+                if ('playlist' === jplaylist.type) {
                     console.log('delete track index ' + index);
                     var trackId = $($('.jp-playlist-item-remove')[index]).parent().parent().attr('track_id')
-                    myPlaylist.rmTrack(trackId, myPlaylist.name);
+                    jplaylist.rmTrack(trackId, jplaylist.name);
                 }
 
                 $(this.cssSelector.playlist + " li:nth-child(" + (index + 1) + ")").slideUp(this.options.playlistOptions.removeTime, function() {
