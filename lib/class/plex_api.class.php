@@ -80,8 +80,14 @@ class Plex_Api
             }
 
             if (empty($myplex_token)) {
-                debug_event('Access Control', 'Authentication token is missing.', '3');
-                self::createError(401);
+                // Never fail OPTIONS requests
+                if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+                    self::setPlexHeader($headers);
+                    exit();
+                } else {
+                    debug_event('Access Control', 'Authentication token is missing.', '3');
+                    self::createError(401);
+                }
             }
 
             $createSession = false;
