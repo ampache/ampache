@@ -887,4 +887,15 @@ class Plex_Api
             }
         }
     }
+    
+    protected static function get_users_account($authtoken='')
+    {
+        if (empty($authtoken)) {
+            $authtoken = Plex_XML_Data::getMyPlexAuthToken();
+        }
+        
+        $action = 'users/account?auth_token=' . $authtoken;
+        $res = self::myPlexRequest($action);
+        return $res['xml'];
+    }
 }
