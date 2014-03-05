@@ -23,7 +23,7 @@
 require_once('../../lib/class/plex_xml_data.class.php');
 
 $ow_config = array(
-    'http_host' => Plex_XML_Data::getServerAddress() . ':' . Plex_XML_Data::getServerPort(),
+    'http_host' => Plex_XML_Data::getServerPublicAddress() . ':' . Plex_XML_Data::getServerPublicPort(),
     'web_path' => '/web'
  );
 
