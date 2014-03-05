@@ -381,8 +381,22 @@ class Plex_Api
 
     public static function replay_header($ch, $header)
     {
-        header($header);
+        $rheader = trim($header);
+        $rhpart = explode(':', $rheader);
+        if (!empty($rheader) && count($rhpart) > 1) {
+            if ($rhpart[0] != "Transfer-Encoding") {
+                header($rheader);
+            }
+        }
         return strlen($header);
+    }
+    
+    public static function replay_body($ch, $data)
+    {
+        echo $data;
+        ob_flush();
+
+        return strlen($data);
     }
 
     protected static function myPlexRequest($action, $curlopts = array(), $headers = array(), $proxy = false)
@@ -485,6 +499,17 @@ class Plex_Api
                 $width = $_REQUEST['width'];
                 $height = $_REQUEST['height'];
                 $url = $_REQUEST['url'];
+                
+                // Replace 32400 request port with the real listening port
+                // *** To `Plex Inc`: ***
+                // Please allow listening port server configuration for your Plex server
+                // and fix your clients to not request resources so hard-coded on 127.0.0.1:32400. 
+                // May be ok on Apple & UPnP world but that's really ugly for a server...
+                // Yes, it's a little hack but it works.
+                $localrs = "http://127.0.0.1:32400/";
+                if (strpos($url, $localrs) !== false) {
+                    $url = "http://127.0.0.1:" . Plex_XML_Data::getServerPort() . "/" . substr($url, strlen($localrs));
+                }
 
                 if ($width && $height && $url) {
                     $request = Requests::get($url);
@@ -504,9 +529,36 @@ class Plex_Api
 
     public static function music($params)
     {
-        $r = Plex_XML_Data::createPluginContainer();
-        Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        if (count($params) > 2) {
+            if ($params[0] == ':' && $params[1] == 'transcode') {
+                if (count($params) == 3) {
+                    $format = $_REQUEST['format'] ?: pathinfo($params[2], PATHINFO_EXTENSION);
+                    $url = $_REQUEST['url'];
+                    $br = $_REQUEST['audioBitrate'];
+                    if (preg_match("/\/parts\/([0-9]+)\//", $url, $matches)) {
+                        $song_id = Plex_XML_Data::getAmpacheId($matches[1]);
+                    }
+                } elseif (count($params) == 4 && $params[2] == 'universal') {
+                    $format = pathinfo($params[3], PATHINFO_EXTENSION);
+                    $path = $_REQUEST['path'];
+                    // Should be the maximal allowed bitrate, not necessary the bitrate used but Ampache doesn't support this kind of option yet
+                    $br = $_REQUEST['maxAudioBitrate'];
+                    if (preg_match("/\/metadata\/([0-9]+)/", $path, $matches)) {
+                        $song_id = Plex_XML_Data::getAmpacheId($matches[1]);
+                    }
+                }
+                
+                if (!empty($format) && !empty($song_id)) {
+                    $urlparams = '&transcode_to=' . $format;
+                    if (!empty($br)) {
+                        $urlparams .= '&bitrate=' . $br;
+                    }
+                    
+                    $url = Song::play_url($song_id, $urlparams);
+                    self::stream_url($url);
+                }
+            }
+        }
     }
 
     public static function video($params)
@@ -626,6 +678,26 @@ class Plex_Api
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
+    
+    protected static function stream_url($url) {
+        // header("Location: " . $url);
+        set_time_limit(0);
+        
+        $ch = curl_init($url);
+        curl_setopt_array($ch, array(
+            CURLOPT_HTTPHEADER => array("User-Agent: Plex"),
+            CURLOPT_HEADER => false,
+            CURLOPT_RETURNTRANSFER => false,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_WRITEFUNCTION => array('Plex_Api', 'replay_body'),
+            CURLOPT_HEADERFUNCTION => array('Plex_Api', 'replay_header'),
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_TIMEOUT => 0
+        ));
+        curl_exec($ch);
+        curl_close($ch);
+    }
 
     public static function library_parts($params)
     {
@@ -639,19 +711,7 @@ class Plex_Api
             $song = new Song($id);
             if ($song->id) {
                 $url = Song::play_url($id);
-
-                // header("Location: " . $url);
-                $ch = curl_init($url);
-                curl_setopt_array($ch, array(
-                    CURLOPT_HEADER => false,
-                    CURLOPT_RETURNTRANSFER => false,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HEADERFUNCTION => array('Plex_Api', 'replay_header'),
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_SSL_VERIFYHOST => false
-                ));
-                curl_exec($ch);
-                curl_close($ch);
+                self::stream_url($url);
             } else {
                 self::createError(404);
             }

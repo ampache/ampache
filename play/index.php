@@ -454,6 +454,7 @@ do {
         : min(2048, $stream_size - $bytes_streamed);
     $buf = fread($fp, $read_size);
     print($buf);
+    ob_flush();
     $bytes_streamed += strlen($buf);
 } while (!feof($fp) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
 

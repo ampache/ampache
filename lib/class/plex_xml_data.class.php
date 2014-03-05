@@ -323,7 +323,7 @@ class Plex_XML_Data
         $xml->addAttribute('requestParametersInCookie', '1');
         $xml->addAttribute('sync', '1');
         $xml->addAttribute('transcoderActiveVideoSessions', '0');
-        $xml->addAttribute('transcoderAudio', '0');
+        $xml->addAttribute('transcoderAudio', '1');
         $xml->addAttribute('transcoderVideo', '0');
 
         $xml->addAttribute('updatedAt', self::getLastUpdate($catalogs));
