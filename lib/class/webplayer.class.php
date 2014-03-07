@@ -95,12 +95,13 @@ class WebPlayer
             $transcode = false;
             $transcode_cfg = AmpConfig::get('transcode');
             // Check transcode is required
-            if ($transcode_cfg == 'always' || !empty($force_type) || ($types['real'] != $ftype && !AmpConfig::get('webplayer_flash'))) {
-                $valid_types = Song::get_stream_types_for_type($ftype);
+            $ftype_transcode = AmpConfig::get('transcode_' . $ftype);
+            $valid_types = Song::get_stream_types_for_type($ftype);
+            if ($transcode_cfg == 'always' || !empty($force_type) || $ftype_transcode == 'required' || ($types['real'] != $ftype && !AmpConfig::get('webplayer_flash'))) {
                 if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                     // Transcode only if excepted type available
                     $transcode_settings = $song->get_transcode_settings($types['real']);
-                    if ($transcode_settings) {
+                    if ($transcode_settings && AmpConfig::get('transcode_player_customize')) {
                         $transcode = true;
                     } else {
                         if (!in_array('native', $valid_types)) {

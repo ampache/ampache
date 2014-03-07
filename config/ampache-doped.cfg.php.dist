@@ -7,7 +7,7 @@
 ; if this config file is up to date 
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 15
+config_version = 16
 
 ;###################
 ; Path Vars        #
@@ -654,6 +654,7 @@ refresh_limit = "60"
 ; DEFAULT: false
 ;transcode_m4a      = allowed
 ;transcode_flac     = required
+;transcode_mpc      = required
 ;transcode_mp3      = allowed
 
 ; Default output format
@@ -664,6 +665,10 @@ refresh_limit = "60"
 ; encode_target_TYPE = TYPE
 ; DEFAULT: none
 ;encode_target_flac = ogg
+
+; Allow clients to override transcode settings (output type, bitrate, codec ...)
+; DEFAULT: true
+transcode_player_customize = true
 
 ; Command configuration. Substitutions will be made as follows:
 ; %FILE% => filename

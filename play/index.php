@@ -40,7 +40,13 @@ $oid            = $_REQUEST['oid']
 $sid            = scrub_in($_REQUEST['ssid']);
 $video          = make_bool($_REQUEST['video']);
 $type           = scrub_in($_REQUEST['type']);
-$transcode_to   = scrub_in($_REQUEST['transcode_to']);
+if (AmpConfig::get('transcode_player_customize')) {
+    $transcode_to   = scrub_in($_REQUEST['transcode_to']);
+    $bitrate = intval($_REQUEST['bitrate']);
+} else {
+    $transcode_to = null;
+    $bitrate = 0;
+}
 $share_id       = scrub_in($_REQUEST['share_id']);
 
 if ($video) {
@@ -358,7 +364,7 @@ if (!$cpaction) {
 }
 
 if ($transcode) {
-    $transcoder = Stream::start_transcode($media, $transcode_to);
+    $transcoder = Stream::start_transcode($media, $transcode_to, $bitrate);
     $fp = $transcoder['handle'];
     $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
 } else if ($cpaction) {
