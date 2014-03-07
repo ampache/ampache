@@ -3,6 +3,16 @@ CHANGELOG
 
 3.7
 ----------
+- Added song action buttons (user flag, rating, ...) to the web player
+- Added sortable capability to the web player playlist
+- Added Growl notification/scrobbler plugin
+- Added artist slideshow photos plugin from Flickr
+- Added setting to change Ampache log file name
+- Added playlists to Quick and Advanced search
+- Added pls, asx and xspf playlist file format import
+- Fixed playlist import with song file absolute path (reported by ricksorensen)
+- Fixed playlist import with same song file names (reported by captainark)
+- Added shoutcast notification at specific time when playing a song with a waveform
 - Added Tag edit/delete capability
 - Added several search engine links
 - Added myPlex support on Plex API
