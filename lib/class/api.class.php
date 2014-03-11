@@ -517,10 +517,9 @@ class Api
 
             $method = $input['exact'] ? 'exact_match' : 'alpha_match';
             Api::set_filter($method,$input['filter']);
-            $browse->set_filter('playlist_type', '1');
+            self::$browse->set_filter('playlist_type', '1');
 
             $playlist_ids = self::$browse->get_objects();
-
             XML_Data::set_offset($input['offset']);
             XML_Data::set_limit($input['limit']);
 
