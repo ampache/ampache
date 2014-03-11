@@ -167,8 +167,8 @@ if (!$isVideo && !$isRadio && !$is_share) {
     if ($iframed) {
         if (AmpConfig::get('sociable')) {
             echo "ajaxPut(jsAjaxUrl + '?page=song&action=shouts&object_type=song&object_id=' + currenti.attr('data-song_id'),'shouts_data');";
-			echo "ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=song&object_id=' + currenti.attr('data-song_id'));";
         }
+        echo "ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=song&object_id=' + currenti.attr('data-song_id'));";
         echo "var titleobj = (currenti.attr('data-album_id') != null) ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + currenti.attr('data-album_id') + '\');\">' + obj.title + '</a>' : obj.title;";
         echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + currenti.attr('data-artist_id') + '\');\">' + obj.artist + '</a>';";
         echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + currenti.attr('data-song_id') + '\');\">" . T_('Show Lyrics') . "</a>';";
