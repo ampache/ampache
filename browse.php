@@ -92,7 +92,6 @@ switch ($_REQUEST['action']) {
     case 'song':
         $browse->set_filter('catalog',$_SESSION['catalog']);
         $browse->set_filter('catalog_enabled', '1');
-        $browse->set_filter('catalog_enabled', '1');
         $browse->set_sort('title','ASC');
         $browse->show_objects();
     break;

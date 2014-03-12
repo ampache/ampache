@@ -1031,6 +1031,7 @@ class Search extends playlist_object
                 case 'rating':
                     $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['rating'] = true;
+					break;
                 case 'played_times':
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = 'song'" .
