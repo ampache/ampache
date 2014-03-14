@@ -40,10 +40,13 @@
     <col id="col_php_setting">
     <col id="col_php_value">
 </colgroup>
+<thead>
 <tr class="th-top">
     <th class="cel_php_setting"><?php echo T_('Setting'); ?></th>
     <th class="cel_php_value"><?php echo T_('Value'); ?></th>
 </tr>
+</thead>
+<tbody>
 <tr class="<?php echo UI::flip_class(); ?>">
     <td><?php echo T_('Memory Limit'); ?></td>
     <td><?php echo ini_get('memory_limit'); ?></td>
@@ -80,6 +83,7 @@
     <td><?php echo T_('Gettext Support'); ?></td>
     <td><?php echo print_bool(function_exists('bindtextdomain')); ?></td>
 </tr>
+</tbody>
 </table>
 <?php UI::show_box_bottom(); ?>
 
@@ -89,10 +93,13 @@
    <col id="col_configuration">
    <col id="col_value">
 </colgroup>
+<thead>
 <tr class="th-top">
     <th class="cel_configuration"><?php echo T_('Preference'); ?></th>
     <th class="cel_value"><?php echo T_('Value'); ?></th>
 </tr>
+</thead>
+<tbody>
 <?php foreach ($configuration as $key=>$value) {
     if ($key == 'database_password' || $key == 'mysql_password') { $value = '*********'; }
     if (is_array($value)) {
@@ -110,6 +117,7 @@
     <td valign="top"><strong><?php echo $key; ?></strong></td>
     <td><?php echo $value; ?></td>
 </tr>
+</tbody>
 <?php } ?>
 </table>
 <?php UI::show_box_bottom(); ?>

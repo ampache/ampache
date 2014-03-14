@@ -26,36 +26,41 @@
 </script>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
-    <tr class="th-top">
-        <th class="cel_play"></th>
-        <th class="cel_id"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=id', T_('#'),'channel_sort_id'); ?></th>
-        <th class="cel_name"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=name', T_('Name'),'channel_sort_name'); ?></th>
-        <th class="cel_interface"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=interface', T_('Interface'),'channel_sort_interface'); ?></th>
-        <th class="cel_port"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=port', T_('Port'),'channel_sort_port'); ?></th>
-        <th class="cel_data"><?php echo T_('Stream Source'); ?></th>
-        <!--<th class="cel_random"><?php echo T_('Random'); ?></th>
-        <th class="cel_loop"><?php echo T_('Loop'); ?></th>-->
-        <th class="cel_streamtype"><?php echo T_('Stream Type'); ?></th>
-        <th class="cel_bitrate"><?php echo T_('Bitrate'); ?></th>
-        <th class="cel_startdate"><?php echo T_('Start Date'); ?></th>
-        <th class="cel_listeners"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=listeners', T_('Listeners'),'channel_sort_listeners'); ?></th>
-        <th class="cel_streamurl"><?php echo T_('Stream Url'); ?></th>
-        <th class="cel_state"><?php echo T_('State'); ?></th>
-        <th class="cel_action"><?php echo T_('Actions'); ?></th>
-    </tr>
-    <?php
-    foreach ($object_ids as $channel_id) {
-        $channel = new Channel($channel_id);
-        $channel->format();
-    ?>
-    <tr class="<?php echo UI::flip_class(); ?>" id="channel_row_<?php echo $channel->id; ?>">
-        <?php require AmpConfig::get('prefix') . '/templates/show_channel_row.inc.php'; ?>
-    </tr>
-    <?php } ?>
-    <?php if (!count($object_ids)) { ?>
-    <tr class="<?php echo UI::flip_class(); ?>">
-        <td colspan="6"><span class="nodata"><?php echo T_('No channel found'); ?></span></td>
-    </tr>
-    <?php } ?>
+    <thead>
+        <tr class="th-top">
+            <th class="cel_play essential"></th>
+            <th class="cel_id essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=id', T_('#'),'channel_sort_id'); ?></th>
+            <th class="cel_name essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=name', T_('Name'),'channel_sort_name'); ?></th>
+            <th class="cel_interface essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=interface', T_('Interface'),'channel_sort_interface'); ?></th>
+            <th class="cel_port essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=port', T_('Port'),'channel_sort_port'); ?></th>
+            <th class="cel_data optional"><?php echo T_('Stream Source'); ?></th>
+            <!--<th class="cel_random"><?php echo T_('Random'); ?></th>
+            <th class="cel_loop"><?php echo T_('Loop'); ?></th>-->
+            <th class="cel_streamtype optional"><?php echo T_('Stream Type'); ?></th>
+            <th class="cel_bitrate optional"><?php echo T_('Bitrate'); ?></th>
+            <th class="cel_startdate optional"><?php echo T_('Start Date'); ?></th>
+            <th class="cel_listeners optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=listeners', T_('Listeners'),'channel_sort_listeners'); ?></th>
+            <th class="cel_streamurl essential"><?php echo T_('Stream Url'); ?></th>
+            <th class="cel_state optional"><?php echo T_('State'); ?></th>
+            <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        foreach ($object_ids as $channel_id) {
+            $channel = new Channel($channel_id);
+            $channel->format();
+        ?>
+        <tr class="<?php echo UI::flip_class(); ?>" id="channel_row_<?php echo $channel->id; ?>">
+            <?php require AmpConfig::get('prefix') . '/templates/show_channel_row.inc.php'; ?>
+        </tr>
+        <?php } ?>
+        <?php if (!count($object_ids)) { ?>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="6"><span class="nodata"><?php echo T_('No channel found'); ?></span></td>
+        </tr>
+        <?php } ?>
+    </tbody>
 </table>
+<script language="javascript" type="text/javascript">$('.tabledata').mediaTable();</script>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>

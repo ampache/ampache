@@ -30,56 +30,63 @@ $thcount = 8;
 </script>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
-    <tr class="th-top">
-        <th class="cel_play"></th>
-        <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'),'artist_sort_name'); ?></th>
-        <th class="cel_add"></th>
-        <th class="cel_songs"><?php echo T_('Songs');  ?></th>
-        <th class="cel_albums"><?php echo T_('Albums'); ?></th>
-        <th class="cel_time"><?php echo T_('Time'); ?></th>
-        <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-    <?php if (AmpConfig::get('ratings')) { ++$thcount; ?>
-        <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-    <?php } ?>
-    <?php if (AmpConfig::get('userflags')) { ++$thcount; ?>
-        <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
-    <?php } ?>
-        <th class="cel_action"><?php echo T_('Action'); ?></th>
-    </tr>
-    <?php
-    // Cache the ratings we are going to use
-    if (AmpConfig::get('ratings')) { Rating::build_cache('artist',$object_ids); }
-    if (AmpConfig::get('userflags')) { Userflag::build_cache('artist',$object_ids); }
+    <thead>
+        <tr class="th-top">
+            <th class="cel_play"></th>
+            <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'),'artist_sort_name'); ?></th>
+            <th class="cel_add"></th>
+            <th class="cel_songs"><?php echo T_('Songs');  ?></th>
+            <th class="cel_albums"><?php echo T_('Albums'); ?></th>
+            <th class="cel_time"><?php echo T_('Time'); ?></th>
+            <th class="cel_tags"><?php echo T_('Tags'); ?></th>
+        <?php if (AmpConfig::get('ratings')) { ++$thcount; ?>
+            <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+        <?php } ?>
+        <?php if (AmpConfig::get('userflags')) { ++$thcount; ?>
+            <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
+        <?php } ?>
+            <th class="cel_action"><?php echo T_('Action'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        // Cache the ratings we are going to use
+        if (AmpConfig::get('ratings')) { Rating::build_cache('artist',$object_ids); }
+        if (AmpConfig::get('userflags')) { Userflag::build_cache('artist',$object_ids); }
 
-    /* Foreach through every artist that has been passed to us */
-    foreach ($object_ids as $artist_id) {
-            $artist = new Artist($artist_id, $_SESSION['catalog']);
-            $artist->format();
-    ?>
-    <tr id="artist_<?php echo $artist->id; ?>" class="<?php echo UI::flip_class(); ?>">
-        <?php require AmpConfig::get('prefix') . '/templates/show_artist_row.inc.php'; ?>
-    </tr>
-    <?php } //end foreach ($artists as $artist) ?>
-    <?php if (!count($object_ids)) { ?>
-    <tr class="<?php echo UI::flip_class(); ?>">
-        <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No artist found'); ?></span></td>
-    </tr>
-    <?php } ?>
-    <tr class="th-bottom">
-        <th class="cel_play"></th>
-        <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'),'artist_sort_name'); ?></th>
-        <th class="cel_add"></th>
-        <th class="cel_songs"><?php echo T_('Songs');  ?></th>
-        <th class="cel_albums"><?php echo T_('Albums'); ?></th>
-        <th class="cel_time"><?php echo T_('Time'); ?></th>
-        <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-    <?php if (AmpConfig::get('ratings')) { ?>
-        <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-    <?php } ?>
-    <?php if (AmpConfig::get('userflags')) { ?>
-        <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
-    <?php } ?>
-        <th class="cel_action"> <?php echo T_('Action'); ?> </th>
-    </tr>
+        /* Foreach through every artist that has been passed to us */
+        foreach ($object_ids as $artist_id) {
+                $artist = new Artist($artist_id, $_SESSION['catalog']);
+                $artist->format();
+        ?>
+        <tr id="artist_<?php echo $artist->id; ?>" class="<?php echo UI::flip_class(); ?>">
+            <?php require AmpConfig::get('prefix') . '/templates/show_artist_row.inc.php'; ?>
+        </tr>
+        <?php } //end foreach ($artists as $artist) ?>
+        <?php if (!count($object_ids)) { ?>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No artist found'); ?></span></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <th class="cel_play essential"></th>
+            <th class="cel_artist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'),'artist_sort_name'); ?></th>
+            <th class="cel_add essential"></th>
+            <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
+            <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
+            <th class="cel_time essential"><?php echo T_('Time'); ?></th>
+            <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
+        <?php if (AmpConfig::get('ratings')) { ?>
+            <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
+        <?php } ?>
+        <?php if (AmpConfig::get('userflags')) { ?>
+            <th class="cel_userflag optional"><?php echo T_('Flag'); ?></th>
+        <?php } ?>
+            <th class="cel_action essential"> <?php echo T_('Action'); ?> </th>
+        </tr>
+    </tfoot>
 </table>
+<script language="javascript" type="text/javascript">$('.tabledata').mediaTable();</script>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>

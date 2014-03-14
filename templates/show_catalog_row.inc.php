@@ -30,7 +30,7 @@ $button_flip_state_id = 'button_flip_state_' . $catalog->id;
 <td class="cel_lastverify"><?php echo scrub_out($catalog->f_update); ?></td>
 <td class="cel_lastadd"><?php echo scrub_out($catalog->f_add); ?></td>
 <td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>
-<td class="cel_action">
+<td class="cel_action cel_action_text">
     <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Add'); ?></a>
     | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=update_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Verify'); ?></a>
         | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Clean'); ?></a>

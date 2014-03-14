@@ -24,16 +24,19 @@ $link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_pla
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
-    <tr class="th-top">
-        <th class="cel_play"></th>
-        <th class="cel_song"><?php echo T_('Song'); ?></th>
-        <th class="cel_add"></th>
-        <th class="cel_album"><?php echo T_('Album'); ?></th>
-        <th class="cel_artist"><?php echo T_('Artist'); ?></th>
-        <th class="cel_username"><?php echo T_('Username'); ?></th>
-        <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
-        <th class="cel_agent"><?php echo T_('Agent'); ?></th>
-    </tr>
+    <thead>
+        <tr class="th-top">
+            <th class="cel_play"></th>
+            <th class="cel_song"><?php echo T_('Song'); ?></th>
+            <th class="cel_add"></th>
+            <th class="cel_album"><?php echo T_('Album'); ?></th>
+            <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+            <th class="cel_username"><?php echo T_('Username'); ?></th>
+            <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
+            <th class="cel_agent"><?php echo T_('Agent'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
 <?php foreach ($data as $row) {
     $row_user = new User($row['user']);
     $song = new Song($row['object_id']);
@@ -125,16 +128,19 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
         <td colspan=""><span class="nodata"><?php echo T_('No recently item found'); ?></span></td>
     </tr>
 <?php } ?>
-    <tr class="th-bottom">
-        <th class="cel_play"></th>
-        <th class="cel_song"><?php echo T_('Song'); ?></th>
-        <th class="cel_add"></th>
-        <th class="cel_album"><?php echo T_('Album'); ?></th>
-        <th class="cel_artist"><?php echo T_('Artist'); ?></th>
-        <th class="cel_username"><?php echo T_('Username'); ?></th>
-        <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
-        <th class="cel_agent"><?php echo T_('Agent'); ?></th>
-    </tr>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <th class="cel_play"></th>
+            <th class="cel_song"><?php echo T_('Song'); ?></th>
+            <th class="cel_add"></th>
+            <th class="cel_album"><?php echo T_('Album'); ?></th>
+            <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+            <th class="cel_username"><?php echo T_('Username'); ?></th>
+            <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
+            <th class="cel_agent"><?php echo T_('Agent'); ?></th>
+        </tr>
+    </tfoot>
 </table>
 <div id="recent_more">
 <?php

@@ -818,7 +818,7 @@ table.tabledata a:hover, table.tabledata a:focus {
     color: #ffc466;
 }
 
-table.tabledata tbody .th-top, table.tabledata tbody .th-bottom {
+table.tabledata thead .th-top, table.tabledata tfoot .th-bottom {
 	font-size: 12px;
     background-color: #262626;
     -webkit-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
@@ -826,16 +826,16 @@ table.tabledata tbody .th-top, table.tabledata tbody .th-bottom {
     box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
 }
 
-table.tabledata tbody .th-top {
+table.tabledata thead .th-top {
     border-bottom: 1px solid #0f0f0f;
 }
 
-table.tabledata tbody .th-bottom {
+table.tabledata tfoot .th-bottom {
     border-top: 1px solid #0f0f0f;
     display: none;
 }
 
-table.tabledata tbody td {
+table.tabledata td {
 	vertical-align: middle;
 	white-space: nowrap;
 	overflow: hidden;
@@ -843,11 +843,11 @@ table.tabledata tbody td {
 	padding: 3px 10px 3px 0;
 }
 
-table.tabledata tbody th a {
+table.tabledata th a {
 	color:#ff9d00;
 }
 
-table.tabledata tbody tr:hover, table.tabledata tbody tr:focus {
+table.tabledata tr:hover, table.tabledata tr:focus {
     text-shadow:none;
     background-color:#c85a00;
     background-image:-moz-linear-gradient(top,#cc6200,#c24d00);
@@ -859,10 +859,10 @@ table.tabledata tbody tr:hover, table.tabledata tbody tr:focus {
     background-repeat:repeat-x;
 }
 
-table.tabledata tbody .th-top:hover,
-table.tabledata tbody .th-bottom:hover,
-table.tabledata tbody .th-top:focus,
-table.tabledata tbody .th-bottom:focus {
+table.tabledata .th-top:hover,
+table.tabledata .th-bottom:hover,
+table.tabledata .th-top:focus,
+table.tabledata .th-bottom:focus {
     color: #fff;
     background-color: #262626;
     background-image: none;

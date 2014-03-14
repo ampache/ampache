@@ -24,35 +24,42 @@ $web_path = AmpConfig::get('web_path');
 ?>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
-    <tr class="th-top">
-        <th class="cel_play"></th>
-        <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
-        <th class="cel_add"></th>
-        <th class="cel_streamurl"><?php echo T_('Stream URL'); ?></th>
-        <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec');  ?></th>
-        <th class="cel_action"><?php echo T_('Action'); ?></th>
-    </tr>
-    <?php
-    foreach ($object_ids as $radio_id) {
-        $radio = new Radio($radio_id);
-        $radio->format();
-    ?>
-    <tr id="live_stream_<?php echo $radio->id; ?>" class="<?php echo UI::flip_class(); ?>">
-        <?php require AmpConfig::get('prefix') . '/templates/show_live_stream_row.inc.php'; ?>
-    </tr>
-    <?php } //end foreach ($artists as $artist) ?>
-    <?php if (!count($object_ids)) { ?>
-    <tr>
-        <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
-    </tr>
-    <?php } ?>
-    <tr class="th-bottom">
-        <th class="cel_play"></th>
-        <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
-        <th class="cel_add"></th>
-        <th class="cel_streamurl"><?php echo T_('Stream URL'); ?></th>
-        <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec_bottom');  ?></th>
-        <th class="cel_action"><?php echo T_('Action'); ?> </th>
-    </tr>
+    <thead>
+        <tr class="th-top">
+            <th class="cel_play essential"></th>
+            <th class="cel_streamname essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
+            <th class="cel_add essential"></th>
+            <th class="cel_streamurl optional"><?php echo T_('Stream URL'); ?></th>
+            <th class="cel_codec optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec');  ?></th>
+            <th class="cel_action essential"><?php echo T_('Action'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        foreach ($object_ids as $radio_id) {
+            $radio = new Radio($radio_id);
+            $radio->format();
+        ?>
+        <tr id="live_stream_<?php echo $radio->id; ?>" class="<?php echo UI::flip_class(); ?>">
+            <?php require AmpConfig::get('prefix') . '/templates/show_live_stream_row.inc.php'; ?>
+        </tr>
+        <?php } //end foreach ($artists as $artist) ?>
+        <?php if (!count($object_ids)) { ?>
+        <tr>
+            <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <th class="cel_play"></th>
+            <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
+            <th class="cel_add"></th>
+            <th class="cel_streamurl"><?php echo T_('Stream URL'); ?></th>
+            <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec_bottom');  ?></th>
+            <th class="cel_action"><?php echo T_('Action'); ?> </th>
+        </tr>
+    </tfoot>
 </table>
+<script language="javascript" type="text/javascript">$('.tabledata').mediaTable();</script>
 <?php if ($browse->get_show_header()) require AmpConfig::Get('prefix') . '/templates/list_header.inc.php'; ?>

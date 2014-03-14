@@ -46,15 +46,18 @@
 <?php Ajax::start_container('browse_content', 'browse_content'); ?>
 <?php if (count($list)) { ?>
 <table cellspacing="1" cellpadding="3" class="tabledata">
-<tr class="th-top">
-    <th><?php echo T_('Name'); ?></th>
-    <th><?php echo T_('Start Address'); ?></th>
-    <th><?php echo T_('End Address'); ?></th>
-    <th><?php echo T_('Level'); ?></th>
-    <th><?php echo T_('User'); ?></th>
-    <th><?php echo T_('Type'); ?></th>
-    <th><?php echo T_('Action'); ?></th>
-</tr>
+<thead>
+    <tr class="th-top">
+        <th><?php echo T_('Name'); ?></th>
+        <th><?php echo T_('Start Address'); ?></th>
+        <th><?php echo T_('End Address'); ?></th>
+        <th><?php echo T_('Level'); ?></th>
+        <th><?php echo T_('User'); ?></th>
+        <th><?php echo T_('Type'); ?></th>
+        <th><?php echo T_('Action'); ?></th>
+    </tr>
+</thead>
+<tbody>
 <?php
     /* Start foreach List Item */
     foreach ($list as $access_id) {
@@ -74,6 +77,7 @@
     </td>
 </tr>
     <?php  } // end foreach ?>
+</tbody>
 </table>
 <?php  } // end if count ?>
 <?php Ajax::end_container(); ?>
