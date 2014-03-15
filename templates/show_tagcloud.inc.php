@@ -39,7 +39,7 @@
                 <a class="tag_delete" href="<?php echo AmpConfig::get('ajax_url') ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete the tag?'); ?>');"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
             </li>
         </ul>
-    </div> 
+    </div>
     <?php } ?>
 <?php } ?>
 <?php if (!count($object_ids)) { ?>

@@ -71,6 +71,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
 
     // Create the wrapper.
     wdg.$wrap.addClass('mediaTableWrapper');
+    wdg.$wrap.attr('data-respond', '');
 
     // Place the wrapper near the table and fill with MediaTable.
     wdg.$table.before(wdg.$wrap).appendTo(wdg.$wrap);

@@ -378,10 +378,10 @@ class Update
 
         $update_string = '- Add artist description/recommendation external service data cache.<br />';
         $version[] = array('version' => '360044','description' => $update_string);
-        
+
         $update_string = '- Set user field on playlists as optional.<br />';
         $version[] = array('version' => '360045','description' => $update_string);
-        
+
         $update_string = '- Add broadcast web player by default preference.<br />';
         $version[] = array('version' => '360046','description' => $update_string);
 
@@ -2287,7 +2287,7 @@ class Update
 
         return true;
     }
-    
+
     /**
      * update_360045
      *
@@ -2300,7 +2300,7 @@ class Update
 
         return true;
     }
-    
+
     /**
      * update_360046
      *

@@ -98,7 +98,7 @@ switch ($_REQUEST['action']) {
     /* Controls the editing of objects */
     case 'edit_object':
         debug_event('ajax_server', "Editing object...", '5');
-        
+
         // Scrub the data
         foreach ($_POST as $key => $data) {
             $_POST[$key] = unhtmlentities(scrub_in($data));
@@ -315,21 +315,21 @@ switch ($_REQUEST['action']) {
         $results[$key] = ob_get_contents();
         ob_end_clean();
     break;
-	case 'action_buttons':
-		ob_start();
-		if (AmpConfig::get('ratings')) {
-			echo " <div id='rating_" . $_GET['object_id'] . "_" . $_GET['object_type'] . "'>";
-			Rating::show($_GET['object_id'], $_GET['object_type']);
-			echo "</div>";
-		}
-		if (AmpConfig::get('userflags')) {
-			echo " <div id='userflag_" . $_GET['object_id'] . "_" . $_GET['object_type'] . "'>";
-			Userflag::show($_GET['object_id'], $_GET['object_type']);
-			echo "</div>";
-		}
+    case 'action_buttons':
+        ob_start();
+        if (AmpConfig::get('ratings')) {
+            echo " <div id='rating_" . $_GET['object_id'] . "_" . $_GET['object_type'] . "'>";
+            Rating::show($_GET['object_id'], $_GET['object_type']);
+            echo "</div>";
+        }
+        if (AmpConfig::get('userflags')) {
+            echo " <div id='userflag_" . $_GET['object_id'] . "_" . $_GET['object_type'] . "'>";
+            Userflag::show($_GET['object_id'], $_GET['object_type']);
+            echo "</div>";
+        }
         $results['action_buttons'] = ob_get_contents();
         ob_end_clean();
-	break;
+    break;
     default:
         $results['rfc3514'] = '0x1';
     break;

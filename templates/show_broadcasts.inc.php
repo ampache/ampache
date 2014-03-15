@@ -21,7 +21,7 @@
  */
 
 ?>
-<script type="text/javascript"> 
+<script type="text/javascript">
     setTagsChoices('<?php echo Tag::get_display(Tag::get_tags()); ?>');
 </script>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>

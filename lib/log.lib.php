@@ -33,12 +33,12 @@ function log_event($username, $event_name, $event_description, $log_name)
     /* must have some name */
     $log_name    = $log_name ? $log_name : 'ampache';
     $username    = $username ? $username : 'ampache';
-    
+
     $log_filename = AmpConfig::get('log_filename');
     if (empty($log_filename)) {
         $log_filename = "%name.%Y%m%d.log";
     }
-    
+
     $log_filename = str_replace("%name", $log_name, $log_filename);
     $log_filename = str_replace("%Y", date('Y'), $log_filename);
     $log_filename = str_replace("%m", date('m'), $log_filename);

@@ -303,7 +303,7 @@ class Catalog_local extends Catalog
             if (AmpConfig::get('catalog_video_pattern')) {
                 $is_video_file = Catalog::is_video_file($file);
             }
-            
+
             if ($options['parse_playlist'] && AmpConfig::get('catalog_playlist_pattern')) {
                 $is_playlist = Catalog::is_playlist_file($file);
             }

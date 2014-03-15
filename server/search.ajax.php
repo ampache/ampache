@@ -116,7 +116,7 @@ switch ($_REQUEST['action']) {
                 );
             }
         }
-        
+
         if ($target == 'anywhere' || $target == 'playlist') {
             $searchreq = array(
                 'limit' => $limit,

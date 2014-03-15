@@ -48,7 +48,7 @@ switch ($_REQUEST['action']) {
         ob_start();
         $type = $_REQUEST['object_type'];
         $id = $_REQUEST['object_id'];
-        
+
         if ($type == "song") {
             $media = new Song($id);
             $shouts = Shoutbox::get_shouts($type, $id);

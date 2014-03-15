@@ -71,7 +71,7 @@ class Recommendation
     protected static function get_recommendation_cache($type, $id, $get_items = false)
     {
         self::gc();
-        
+
         $sql = "SELECT `id`, `last_update` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, array($type, $id));
 

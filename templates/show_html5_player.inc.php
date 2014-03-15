@@ -26,7 +26,7 @@ require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php';
 <script type="text/javascript" charset="utf-8">
     var jsAjaxServer = "<?php echo AmpConfig::get('ajax_server') ?>";
     var jsAjaxUrl = "<?php echo AmpConfig::get('ajax_url') ?>";
-    
+
     function update_action() { }
 </script>
 <?php
@@ -154,9 +154,9 @@ if ($isVideo) {
                     }
                     currentjpitem = currenti;
 <?php if ($iframed) { ?>
-					if (previousartist != currentjpitem.attr("data-artist_id")) {
-						NotifyOfNewSong();
-					}
+                    if (previousartist != currentjpitem.attr("data-artist_id")) {
+                        NotifyOfNewSong();
+                    }
 <?php } ?>
                 }
                 if (brkey != '') {
@@ -176,7 +176,7 @@ if (!$isVideo && !$isRadio && !$is_share) {
         if (AmpConfig::get('sociable')) {
             echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-song_id') + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>';";
         }
-		echo "actionsobj += '<div id=\'action_buttons\'></div>';";
+        echo "actionsobj += '<div id=\'action_buttons\'></div>';";
         if (AmpConfig::get('waveform')) {
             echo "var waveformobj = '';";
             if (AmpConfig::get('waveform')) {
@@ -271,7 +271,7 @@ if ($isVideo) {
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
         $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
     });
-    
+
     $('#jp_container_1' + ' ul:last').sortable({
         update: function () {
             jplaylist.scan();
@@ -585,7 +585,7 @@ if ($isVideo) {
             } else {
                 $broadcast_id = $broadcasts[0];
             }
-            
+
             $broadcast = new Broadcast($broadcast_id);
             $key  = Broadcast::generate_key();
             $broadcast->update_state(true, $key);

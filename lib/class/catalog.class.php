@@ -204,7 +204,7 @@ abstract class Catalog extends database_object
     {
         $pattern = "/\.(" . AmpConfig::get('catalog_file_pattern') . ")$/i";
         $match = preg_match($pattern, $file);
-        
+
         return $match;
     }
 
@@ -213,7 +213,7 @@ abstract class Catalog extends database_object
         $video_pattern = "/\.(" . AmpConfig::get('catalog_video_pattern') . ")$/i";
         return preg_match($video_pattern, $file);
     }
-    
+
     public static function is_playlist_file($file)
     {
         $playlist_pattern = "/\.(" . AmpConfig::get('catalog_playlist_pattern') . ")$/i";
@@ -1050,7 +1050,7 @@ abstract class Catalog extends database_object
         return $title;
 
     } // check_title
-    
+
     /**
      * playlist_import
      * Attempts to create a Public Playlist based on the playlist file
@@ -1067,7 +1067,7 @@ abstract class Catalog extends database_object
         } elseif (substr($playlist, -4,4) == 'xspf') {
             $files = self::parse_xspf($data);
         }
-        
+
         $songs = array();
         $pinfo = pathinfo($playlist);
         if ($files) {
@@ -1097,7 +1097,7 @@ abstract class Catalog extends database_object
                         }
                     }
                     debug_event('catalog', 'Add file ' . $file . ' to playlist.', '5');
-                
+
                     // First, try to found the file as absolute path
                     $sql = "SELECT `id` FROM `song` WHERE `file` = ?";
                     $db_results = Dba::read($sql, array($file));
@@ -1124,9 +1124,9 @@ abstract class Catalog extends database_object
                 } // if it's a file
             }
         }
-        
+
         debug_event('import_playlist', "Parsed " . $filename . ", found " . count($songs) . " songs", 5);
-        
+
         if (count($songs)) {
             $name = $pinfo['extension'] . " - " . $pinfo['filename'];
             $playlist_id = Playlist::create($name, 'public');
@@ -1163,7 +1163,7 @@ abstract class Catalog extends database_object
     {
         $files = array();
         $results = explode("\n", $data);
-        
+
         foreach ($results as $value) {
             $value = trim($value);
             if (!empty($value) && substr($value, 0, 1) != '#') {
@@ -1173,7 +1173,7 @@ abstract class Catalog extends database_object
 
         return $files;
     } // parse_m3u
-    
+
     /**
      * parse_pls
      * this takes pls filename and then attempts to found song filenames listed in the pls
@@ -1182,7 +1182,7 @@ abstract class Catalog extends database_object
     {
         $files = array();
         $results = explode("\n", $data);
-        
+
         foreach ($results as $value) {
             $value = trim($value);
             if (preg_match("/file[0-9]+[\s]*\=(.*)/i", $value, $matches)) {
@@ -1195,7 +1195,7 @@ abstract class Catalog extends database_object
 
         return $files;
     } // parse_pls
-    
+
     /**
      * parse_asx
      * this takes asx filename and then attempts to found song filenames listed in the asx
@@ -1204,7 +1204,7 @@ abstract class Catalog extends database_object
     {
         $files = array();
         $xml = simplexml_load_string($data);
-        
+
         if ($xml) {
             foreach ($xml->entry as $entry) {
                 $file = trim($entry->ref['href']);
@@ -1216,7 +1216,7 @@ abstract class Catalog extends database_object
 
         return $files;
     } // parse_asx
-    
+
     /**
      * parse_xspf
      * this takes xspf filename and then attempts to found song filenames listed in the xspf

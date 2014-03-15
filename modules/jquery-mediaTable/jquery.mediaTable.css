@@ -86,36 +86,12 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
 
 /* -----[[     B R E A C K      P O I N T S     ]]------------ */
 
-@media screen and (min-width: 768px) {
-	
-	.activeMediaTable th.optional, .activeMediaTable td.optional {
-		display: table-cell;
-		_display:block; /* IE6 Hack */
-	}
-	
-	/* IE7 Hack */
-	*+html .activeMediaTable th.optional, *+html .activeMediaTable td.optional { display:block }
-	
+.mediaTableWrapper.gt500 th.optional, .mediaTableWrapper.gt500 td.optional {
+    display: table-cell;
 }
-
-@media screen and (min-width: 1024px) {
-	
-	.activeMediaTable th, .activeMediaTable td {
-		display: table-cell;
-		_display:block; /* IE6 Hack */
-	}
-	
-	/* IE7 Hack */
-	*+html .activeMediaTable th, *+html .activeMediaTable td { display:block }
-	
+.mediaTableWrapper.gt700 th, .mediaTableWrapper.gt700 td {
+    display: table-cell;
 }
-
-
-
-
-
-
-
 
 /* -----[[     T H E M I N G     ]]------------ */
 

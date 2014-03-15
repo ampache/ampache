@@ -88,9 +88,11 @@ Ampache includes some external modules that carry their own licensing.
 * [Ratchet] (http://socketo.me): MIT
 * [ReactPHP] (https://github.com/reactphp/react): MIT
 * [Guzzle] (https://github.com/guzzle/guzzle): MIT
-* [Symfony Components] (https://github.com/symfony/): MIT
+* [Symfony Components] (https://github.com/symfony): MIT
 * [Evenement] (https://github.com/igorw/evenement): MIT
-* [RhinoSlider] (http://rhinoslider.com/): MIT
+* [RhinoSlider] (http://rhinoslider.com): MIT
+* [MediaTable] (https://github.com/edenspiekermann/MediaTable): MIT
+* [Responsive Elements] (https://github.com/kumailht/responsive-elements): MIT
 
 
 Translations

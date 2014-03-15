@@ -390,7 +390,7 @@ class Plex_Api
         }
         return strlen($header);
     }
-    
+
     public static function replay_body($ch, $data)
     {
         echo $data;
@@ -499,11 +499,11 @@ class Plex_Api
                 $width = $_REQUEST['width'];
                 $height = $_REQUEST['height'];
                 $url = $_REQUEST['url'];
-                
+
                 // Replace 32400 request port with the real listening port
                 // *** To `Plex Inc`: ***
                 // Please allow listening port server configuration for your Plex server
-                // and fix your clients to not request resources so hard-coded on 127.0.0.1:32400. 
+                // and fix your clients to not request resources so hard-coded on 127.0.0.1:32400.
                 // May be ok on Apple & UPnP world but that's really ugly for a server...
                 // Yes, it's a little hack but it works.
                 $localrs = "http://127.0.0.1:32400/";
@@ -547,13 +547,13 @@ class Plex_Api
                         $song_id = Plex_XML_Data::getAmpacheId($matches[1]);
                     }
                 }
-                
+
                 if (!empty($format) && !empty($song_id)) {
                     $urlparams = '&transcode_to=' . $format;
                     if (!empty($br)) {
                         $urlparams .= '&bitrate=' . $br;
                     }
-                    
+
                     $url = Song::play_url($song_id, $urlparams);
                     self::stream_url($url);
                 }
@@ -678,11 +678,12 @@ class Plex_Api
         Plex_XML_Data::setContainerSize($r);
         self::apiOutput($r->asXML());
     }
-    
-    protected static function stream_url($url) {
+
+    protected static function stream_url($url)
+    {
         // header("Location: " . $url);
         set_time_limit(0);
-        
+
         $ch = curl_init($url);
         curl_setopt_array($ch, array(
             CURLOPT_HTTPHEADER => array("User-Agent: Plex"),
@@ -953,13 +954,13 @@ class Plex_Api
             }
         }
     }
-    
+
     protected static function get_users_account($authtoken='')
     {
         if (empty($authtoken)) {
             $authtoken = Plex_XML_Data::getMyPlexAuthToken();
         }
-        
+
         $action = 'users/account?auth_token=' . $authtoken;
         $res = self::myPlexRequest($action);
         return $res['xml'];

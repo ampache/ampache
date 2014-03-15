@@ -53,6 +53,7 @@ if (AmpConfig::get('use_rss')) { ?>
 <script src="<?php echo $web_path; ?>/modules/jscroll/jquery.jscroll.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/jquery/jquery.qrcode.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/rhinoslider/js/rhinoslider-1.05.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/responsive-elements/responsive-elements.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
@@ -158,11 +159,11 @@ function init_slideshow_check()
 }
 function swap_slideshow()
 {
-	if (iSlideshow == null) {
-		init_slideshow_refresh();
-	} else {
-		stop_slideshow();
-	}
+    if (iSlideshow == null) {
+        init_slideshow_refresh();
+    } else {
+        stop_slideshow();
+    }
 }
 function init_slideshow_refresh()
 {
@@ -189,7 +190,7 @@ function refresh_slideshow()
 }
 function stop_slideshow()
 {
-	if (iSlideshow != null) {
+    if (iSlideshow != null) {
         iSlideshow = null;
         $("#aslideshow").css({'display': 'none'});
     }

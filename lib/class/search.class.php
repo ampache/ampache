@@ -353,7 +353,7 @@ class Search extends playlist_object
                 'type'   => 'boolean_numeric',
                 'widget' => array('select', $playlists)
             );
-            
+
             $this->types[] = array(
                 'name'   => 'playlist_name',
                 'label'  => T_('Playlist Name'),
@@ -1031,7 +1031,7 @@ class Search extends playlist_object
                 case 'rating':
                     $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['rating'] = true;
-					break;
+                    break;
                 case 'played_times':
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = 'song'" .
@@ -1206,7 +1206,7 @@ class Search extends playlist_object
             $sql_match_operator = $operator['sql'];
 
             $where[] = "`playlist`.`type` = 'public'";
-            
+
             switch ($rule[0]) {
                 case 'name':
                     $where[] = "`playlist`.`name` $sql_match_operator '$input'";
@@ -1222,7 +1222,7 @@ class Search extends playlist_object
         $join['catalog'] = true;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
-        
+
         if ($join['playlist_data']) {
             $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id`";
         }

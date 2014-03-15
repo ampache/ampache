@@ -25,27 +25,27 @@ session_start();
 $web_path = AmpConfig::get('web_path');
 $thcount = 8;
 ?>
-<script type="text/javascript"> 
+<script type="text/javascript">
     setTagsChoices('<?php echo Tag::get_display(Tag::get_tags()); ?>');
 </script>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <thead>
         <tr class="th-top">
-            <th class="cel_play"></th>
-            <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'),'artist_sort_name'); ?></th>
-            <th class="cel_add"></th>
-            <th class="cel_songs"><?php echo T_('Songs');  ?></th>
-            <th class="cel_albums"><?php echo T_('Albums'); ?></th>
-            <th class="cel_time"><?php echo T_('Time'); ?></th>
-            <th class="cel_tags"><?php echo T_('Tags'); ?></th>
+            <th class="cel_play essential"></th>
+            <th class="cel_artist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'),'artist_sort_name'); ?></th>
+            <th class="cel_add essential"></th>
+            <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
+            <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
+            <th class="cel_time optional"><?php echo T_('Time'); ?></th>
+            <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
         <?php if (AmpConfig::get('ratings')) { ++$thcount; ?>
-            <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+            <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
         <?php } ?>
         <?php if (AmpConfig::get('userflags')) { ++$thcount; ?>
-            <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
+            <th class="cel_userflag optional"><?php echo T_('Flag'); ?></th>
         <?php } ?>
-            <th class="cel_action"><?php echo T_('Action'); ?></th>
+            <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>
     <tbody>
