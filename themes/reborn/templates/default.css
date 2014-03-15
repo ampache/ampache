@@ -1056,6 +1056,10 @@ div.box.box_rules {
     background-position: center; 
 }
 
+.cel_song, .cel_album, .cel_artist {
+    max-width: 350px;
+}
+
 /***********************************************
     Content (now playing)                 
 ***********************************************/
