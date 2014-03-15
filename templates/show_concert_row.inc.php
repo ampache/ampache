@@ -22,5 +22,5 @@
 ?>
 
 <td class="cel_date"><a href="<?php echo $concert->url; ?>" target="_blank"><?php echo $concert->startDate; ?></a></td>
-<td class="cel_place"><a href="<?php echo $concert->venue->url ?>" target="_blank"><?php echo (count($concert->venue->image) >= 1) ? '<img src="' . $concert->venue->image[1] . '" border="0" />' : ''; ?> <?php echo $concert->venue->name; ?></a></td>
+<td class="cel_place"><a href="<?php echo $concert->venue->url ?>" target="_blank"><?php echo (count($concert->venue->image) >= 1 && !empty($concert->venue->image[1])) ? '<img src="' . $concert->venue->image[1] . '" border="0" />' : ''; ?> <?php echo $concert->venue->name; ?></a></td>
 <td class="cel_location"><?php echo $concert->venue->location->city; ?>, <?php echo $concert->venue->location->country; ?></td>

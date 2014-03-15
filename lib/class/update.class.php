@@ -387,6 +387,9 @@ class Update
         
         $update_string = '- Add apikey field on users.<br />';
         $version[] = array('version' => '360047','description' => $update_string);
+        
+        $update_string = '- Add concerts options.<br />';
+        $version[] = array('version' => '360048','description' => $update_string);
 
         return $version;
     }
@@ -2330,6 +2333,30 @@ class Update
     {
         $sql = "ALTER TABLE `user` ADD `apikey` varchar(255) CHARACTER SET utf8 NULL AFTER `website`";
         Dba::write($sql);
+
+        return true;
+    }
+    
+    /**
+     * update_360048
+     *
+     * Add concerts options
+     */
+    public static function update_360048()
+    {        
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('concerts_limit_future','0','Limit number of future events',25,'integer','interface')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+        
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('concerts_limit_past','0','Limit number of past events',25,'integer','interface')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
 
         return true;
     }

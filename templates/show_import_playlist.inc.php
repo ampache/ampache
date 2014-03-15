@@ -25,20 +25,9 @@
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <tr>
             <td>
-                <?php echo T_('Filename'); ?>:
+                <?php echo T_('Filename'); ?> (<?php echo AmpConfig::get('catalog_playlist_pattern'); ?>):
             </td>
             <td><input type="file" name="filename" value="<?php echo scrub_out($_REQUEST['filename']); ?>" /></td>
-        </tr>
-        <tr>
-            <td>
-                <?php echo T_('Playlist Type'); ?>:
-            </td>
-            <td>
-                <select name="playlist_type">
-                    <option value="m3u">M3U</option>
-                    <!--<option name="pls">PLS</option>-->
-                </select>
-            </td>
         </tr>
     </table>
     <div class="formValidation">

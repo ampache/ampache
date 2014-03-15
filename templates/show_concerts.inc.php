@@ -20,7 +20,32 @@
  *
  */
 ?>
-<?php UI::show_box_top(T_('Concerts'), 'info-box'); ?>
+<?php UI::show_box_top(T_('Coming Events'), 'info-box'); ?>
+<table class="tabledata" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr class="th-top">
+            <th class="cel_date"><?php echo T_('Date'); ?></th>
+            <th class="cel_place"><?php echo T_('Place'); ?></th>
+            <th class="cel_location"><?php echo T_('Location'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        foreach ($coming_concerts as $concert) {
+        ?>
+        <tr id="concert_<?php echo $concert->id; ?>" class="<?php echo UI::flip_class(); ?>">
+            <?php require AmpConfig::get('prefix') . '/templates/show_concert_row.inc.php'; ?>
+        </tr>
+        <?php } ?>
+        <?php if (!$coming_concerts || !count($coming_concerts)) { ?>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No coming events found'); ?></span></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+</table>
+<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_top(T_('Past Events'), 'info-box'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <thead>
         <tr class="th-top">
@@ -39,7 +64,7 @@
         <?php } ?>
         <?php if (!$concerts || !count($concerts)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No concert found'); ?></span></td>
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No past events found'); ?></span></td>
         </tr>
         <?php } ?>
     </tbody>

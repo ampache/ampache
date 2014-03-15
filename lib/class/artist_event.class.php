@@ -41,6 +41,11 @@ class Artist_Event
         } else {
             $query = 'artist=' . rawurlencode($artist->name);
         }
+        
+        $limit = AmpConfig::get('concerts_limit_future');
+        if ($limit) {
+            $query .= '&limit=' . $limit;
+        }
 
         $xml = Recommendation::get_lastfm_results('artist.getevents', $query);
 
@@ -61,6 +66,11 @@ class Artist_Event
             $query = 'mbid=' . rawurlencode($artist->mbid);
         } else {
             $query = 'artist=' . rawurlencode($artist->name);
+        }
+        
+        $limit = AmpConfig::get('concerts_limit_past');
+        if ($limit) {
+            $query .= '&limit=' . $limit;
         }
 
         $xml = Recommendation::get_lastfm_results('artist.getpastevents', $query);

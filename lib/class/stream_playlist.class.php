@@ -119,6 +119,8 @@ class Stream_Playlist
             $object->format();
             //FIXME: play_url shouldn't be static
             $url['url'] = $type::play_url($object->id, $additional_params);
+            
+            $api_session = (AmpConfig::get('require_session')) ? Stream::$session : false;
 
             // Set a default which can be overridden
             $url['author'] = 'Ampache';
@@ -128,7 +130,7 @@ class Stream_Playlist
                     $url['title'] = $object->title;
                     $url['author'] = $object->f_artist_full;
                     $url['info_url'] = $object->f_link;
-                    $url['image_url'] = Art::url($object->album, 'album');
+                    $url['image_url'] = Art::url($object->album, 'album', $api_session);
                     $url['album'] = $object->f_album_full;
                 break;
                 case 'video':

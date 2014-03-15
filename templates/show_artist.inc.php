@@ -133,7 +133,7 @@ if (AmpConfig::get('show_played_times')) {
             <li><a id="similar_artist_link" href="#similar_artist"><?php echo T_('Similar Artists'); ?></a></li>
 <?php } ?>
 <?php if (AmpConfig::get('show_concerts')) { ?>
-            <li><a id="concerts_link" href="#concerts"><?php echo T_('Concerts'); ?></a></li>
+            <li><a id="concerts_link" href="#concerts"><?php echo T_('Events'); ?></a></li>
 <?php } ?>
         </ul>
     </div>
@@ -165,7 +165,7 @@ if (AmpConfig::get('show_concerts')) {
     echo Ajax::observe('concerts_link','click', Ajax::action('?page=index&action=concerts&artist='.$artist->id, 'concerts'));
 ?>
         <div id="concerts" class="tab_content">
-        <?php UI::show_box_top(T_('Concerts'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>
+        <?php UI::show_box_top(T_('Events'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>
         </div>
 <?php } ?>
     </div>

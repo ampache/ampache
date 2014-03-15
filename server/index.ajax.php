@@ -87,11 +87,12 @@ switch ($_REQUEST['action']) {
             if ($artist->id) {
                 $up_concerts = Artist_Event::get_upcoming_events($artist);
                 $past_concerts = Artist_Event::get_past_events($artist);
+                $coming_concerts = array();
                 $concerts = array();
                 if ($up_concerts) {
                     foreach ($up_concerts->children() as $item) {
                         if ($item->getName() == 'event') {
-                            $concerts[] = $item;
+                            $coming_concerts[] = $item;
                         }
                     }
                 }
