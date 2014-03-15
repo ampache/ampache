@@ -106,8 +106,8 @@ function update_preference($user_id,$name,$pref_id,$value)
 
     /* Else make sure that the current users has the right to do this */
     if (Preference::has_access($name)) {
-        $sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$pref_id' AND `user`='$user_id'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ? AND `user` = ?";
+        $db_results = Dba::write($sql, array($value, $pref_id, $user_id));
         return true;
     }
 
@@ -121,9 +121,6 @@ function update_preference($user_id,$name,$pref_id,$value)
  */
 function create_preference_input($name,$value)
 {
-    // Escape it for output
-    $value = scrub_out($value);
-
     $len = strlen($value);
     if ($len <= 1) { $len = 8; }
 

@@ -38,7 +38,7 @@ if (AmpConfig::get('use_rss')) { ?>
 <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recently_played" />
 <?php } ?>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
-<title><?php echo scrub_out(AmpConfig::get('site_title')); ?> - <?php echo $location['title']; ?></title>
+<title><?php echo htmlspecialchars_decode(scrub_out(AmpConfig::get('site_title'), ENT_QUOTES)); ?> - <?php echo $location['title']; ?></title>
 <?php require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php'; ?>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-editdialog.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-ui/jquery-ui.min.css" type="text/css" media="screen" />
