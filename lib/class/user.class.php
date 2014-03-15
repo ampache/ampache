@@ -41,6 +41,7 @@ class User extends database_object
     public $create_date;
     public $validation;
     public $website;
+    public $apikey;
 
     // Constructed variables
     public $prefs = array();
@@ -161,10 +162,8 @@ class User extends database_object
      */
     public static function get_from_username($username)
     {
-        $username = Dba::escape($username);
-
-        $sql = "SELECT `id` FROM `user` WHERE `username`='$username'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `id` FROM `user` WHERE `username` = ?";
+        $db_results = Dba::read($sql, array($username));
         $results = Dba::fetch_assoc($db_results);
 
         $user = new User($results['id']);
@@ -172,6 +171,29 @@ class User extends database_object
         return $user;
 
     } // get_from_username
+    
+    /**
+     * get_from_apikey
+     * This returns a built user from an apikey. This is a
+     * static function so it doesn't require an instance
+     */
+    public static function get_from_apikey($apikey)
+    {
+        $user = null;
+        $apikey = trim($apikey);
+        if (!empty($apikey)) {
+            $sql = "SELECT `id` FROM `user` WHERE `apikey` = ?";
+            $db_results = Dba::read($sql, array($apikey));
+            $results = Dba::fetch_assoc($db_results);
+
+            if ($results['id']) {
+                $user = new User($results['id']);
+            }
+        }
+
+        return $user;
+
+    } // get_from_apikey
 
     /**
      * get_from_email
@@ -554,6 +576,40 @@ class User extends database_object
         $db_results = Dba::write($sql, array($new_website, $this->id));
 
     } // update_website
+    
+    /**
+     * update_apikey
+     * Updates their api key
+     */
+    public function update_apikey($new_apikey)
+    {
+        $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($new_apikey, $this->id));
+
+    } // update_website
+    
+    /**
+     * generate_apikey
+     * Generate a new user API key
+     */
+    public function generate_apikey()
+    {
+        $apikey = hash('md5', time() . $this->username . $this->get_password());
+        $this->update_apikey($apikey);
+    }
+    
+    /**
+     * get_password
+     * Get the current hashed user password from database.
+     */
+    public function get_password()
+    {
+        $sql = 'SELECT * FROM `user` WHERE `id` = ?';
+        $db_results = Dba::read($sql, array($this->id));
+        $row = Dba::fetch_assoc($db_results);
+        
+        return $row['password'];
+    }
 
     /**
      * disable

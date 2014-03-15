@@ -194,6 +194,26 @@ switch ($_REQUEST['action']) {
         $next_url = AmpConfig::get('web_path') . '/admin/users.php';
         show_confirmation(T_('User Avater Deleted'), T_('User Avatar has been deleted'), $next_url);
     break;
+    case 'show_generate_apikey':
+        $user_id = $_REQUEST['user_id'];
+
+        $next_url = AmpConfig::get('web_path') . '/admin/users.php?action=generate_apikey&user_id=' . scrub_out($user_id);
+        show_confirmation(T_('Generate new API Key'), T_('Confirm API Key Generation'), $next_url, 1, 'generate_apikey');
+    break;
+    case 'generate_apikey':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        if (!Core::form_verify('generate_apikey','post')) {
+            UI::access_denied();
+            exit;
+        }
+
+        $client = new User($_REQUEST['user_id']);
+        $client->generate_apikey();
+
+        $next_url = AmpConfig::get('web_path') . '/admin/users.php';
+        show_confirmation(T_('API Key Generated'), T_('New user API Key has been generated.'), $next_url);
+    break;
     /* Show IP History for the Specified User */
     case 'show_ip_history':
         /* get the user and their history */

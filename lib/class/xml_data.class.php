@@ -120,9 +120,15 @@ class XML_Data
      * @param    string    $string    xml data
      * @return    string    return xml
      */
-    public static function single_string($key,$string)
+    public static function single_string($key, $string='')
     {
-        $final = self::_header() . "\t<$key><![CDATA[$string]]></$key>" . self::_footer();
+        $final = self::_header();
+        if (!empty($string)) {
+            $final .= "\t<$key><![CDATA[$string]]></$key>";
+        } else {
+            $final .= "\t<$key />";
+        }
+        $final .= self::_footer();
 
         return $final;
 
@@ -282,14 +288,18 @@ class XML_Data
             $rating = new Rating($artist_id,'artist');
             $tag_string = self::tags_string($artist->tags);
 
-            $string .= "<artist id=\"$artist->id\">\n" .
-                    "\t<name><![CDATA[$artist->f_full_name]]></name>\n" .
+            $string .= "<artist id=\"" . $artist->id . "\">\n" .
+                    "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" .
                     $tag_string .
-                    "\t<albums>$artist->albums</albums>\n" .
-                    "\t<songs>$artist->songs</songs>\n" .
+                    "\t<albums>" . $artist->albums . "</albums>\n" .
+                    "\t<songs>" . $artist->songs . "</songs>\n" .
                     "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
                     "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
                     "\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
+                    "\t<mbid>" . $artist->mbid . "</mbid>\n" .
+                    "\t<summary>" . $artist->summary . "</summary>\n" .
+                    "\t<yearformed>" . $artist->summary . "</yearformed>\n" .
+                    "\t<placeformed>" . $artist->summary . "</placeformed>\n" .
                     "</artist>\n";
         } // end foreach artists
 
@@ -324,8 +334,8 @@ class XML_Data
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?id=' . $album->id . '&auth=' . scrub_out($_REQUEST['auth']);
 
-            $string .= "<album id=\"$album->id\">\n" .
-                    "\t<name><![CDATA[$album->name]]></name>\n";
+            $string .= "<album id=\"" . $album->id . "\">\n" .
+                    "\t<name><![CDATA[" . $album->name . "]]></name>\n";
 
             // Do a little check for artist stuff
             if ($album->artist_count != 1) {
@@ -334,14 +344,15 @@ class XML_Data
                 $string .= "\t<artist id=\"$album->artist_id\"><![CDATA[$album->artist_name]]></artist>\n";
             }
 
-            $string .= "\t<year>$album->year</year>\n" .
-                    "\t<tracks>$album->song_count</tracks>\n" .
-                    "\t<disk>$album->disk</disk>\n" .
+            $string .= "\t<year>" . $album->year . "</year>\n" .
+                    "\t<tracks>" . $album->song_count . "</tracks>\n" .
+                    "\t<disk>" . $album->disk . "</disk>\n" .
                     self::tags_string($album->tags) .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
                     "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
                     "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
                     "\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
+                    "\t<mbid>" . $artist->mbid . "</mbid>\n" .
                     "</album>\n";
         } // end foreach
 
@@ -417,8 +428,8 @@ class XML_Data
             $rating = new Rating($song_id, 'song');
             $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
 
-            $string .= "<song id=\"$song->id\">\n" .
-                "\t<title><![CDATA[$song->title]]></title>\n" .
+            $string .= "<song id=\"" . $song->id . "\">\n" .
+                "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
                 "\t<artist id=\"" . $song->artist .
                     '"><![CDATA[' . $song->get_artist_name() .
                     "]]></artist>\n" .
@@ -426,17 +437,18 @@ class XML_Data
                     '"><![CDATA[' . $song->get_album_name().
                     "]]></album>\n" .
                 $tag_string .
-                "\t<track>$song->track</track>\n" .
-                "\t<time>$song->time</time>\n" .
-                "\t<year>$song->year</year>\n" .
-                "\t<bitrate>$song->bitrate</bitrate>\n".
-                "\t<mode>$song->mode</mode>\n".
-                "\t<mime>$song->mime</mime>\n" .
+                "\t<filename><![CDATA[" . $song->file . "]]></filename>\n" .
+                "\t<track>" . $song->track . "</track>\n" .
+                "\t<time>" . $song->time . "</time>\n" .
+                "\t<year>" . $song->year . "</year>\n" .
+                "\t<bitrate>" . $song->bitrate . "</bitrate>\n".
+                "\t<mode>" . $song->mode . "</mode>\n".
+                "\t<mime>" . $song->mime . "</mime>\n" .
                 "\t<url><![CDATA[" . Song::play_url($song->id) . "]]></url>\n" .
-                "\t<size>$song->size</size>\n".
-                "\t<mbid>$song->mbid</mbid>\n".
-                "\t<album_mbid>$song->album_mbid</album_mbid>\n".
-                "\t<artist_mbid>$song->artist_mbid</artist_mbid>\n".
+                "\t<size>" . $song->size . "</size>\n".
+                "\t<mbid>" . $song->mbid . "</mbid>\n".
+                "\t<album_mbid>" . $song->album_mbid . "</album_mbid>\n".
+                "\t<artist_mbid>" . $song->artist_mbid . "</artist_mbid>\n".
                 "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                 "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
                 "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
@@ -469,11 +481,11 @@ class XML_Data
             $video = new Video($video_id);
             $video->format();
 
-            $string .= "<video id=\"$video->id\">\n" .
-                    "\t<title><![CDATA[$video->title]]></title>\n" .
-                    "\t<mime><![CDATA[$video->mime]]></mime>\n" .
-                    "\t<resolution>$video->f_resolution</resolution>\n" .
-                    "\t<size>$video->size</size>\n" .
+            $string .= "<video id=\"" . $video->id . "\">\n" .
+                    "\t<title><![CDATA[" . $video->title . "]]></title>\n" .
+                    "\t<mime><![CDATA[" . $video->mime . "]]></mime>\n" .
+                    "\t<resolution>" . $video->f_resolution . "</resolution>\n" .
+                    "\t<size>" . $video->size . "</size>\n" .
                     self::tags_string($video->tags) .
                     "\t<url><![CDATA[" . Video::play_url($video->id) . "]]></url>\n" .
                     "</video>\n";
@@ -520,17 +532,17 @@ class XML_Data
 
             $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
 
-            $string .= "<song id=\"$song->id\">\n" .
-                    "\t<title><![CDATA[$song->title]]></title>\n" .
-                    "\t<artist id=\"$song->artist\"><![CDATA[$song->f_artist_full]]></artist>\n" .
-                    "\t<album id=\"$song->album\"><![CDATA[$song->f_album_full]]></album>\n" .
-                    "\t<genre id=\"$song->genre\"><![CDATA[$song->f_genre]]></genre>\n" .
+            $string .= "<song id=\"" . $song->id . "\">\n" .
+                    "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
+                    "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->f_artist_full . "]]></artist>\n" .
+                    "\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->f_album_full . "]]></album>\n" .
+                    "\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" .
                     $tag_string .
-                    "\t<track>$song->track</track>\n" .
-                    "\t<time>$song->time</time>\n" .
-                    "\t<mime>$song->mime</mime>\n" .
+                    "\t<track>" . $song->track . "</track>\n" .
+                    "\t<time>" . $song->time . "</time>\n" .
+                    "\t<mime>" . $song->mime . "</mime>\n" .
                     "\t<url><![CDATA[" . Song::play_url($song->id) . "]]></url>\n" .
-                    "\t<size>$song->size</size>\n" .
+                    "\t<size>" . $song->size . "</size>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                     "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
                     "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .

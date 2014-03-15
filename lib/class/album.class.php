@@ -474,6 +474,10 @@ class Album extends database_object
     public static function get_random($count = 1, $with_art = false)
     {
         $results = false;
+        
+        if (!$count) {
+            $count = 1;
+        }
 
         $sql = "SELECT `album`.`id` FROM `album` " .
             "LEFT JOIN `song` ON `song`.`album` = `album`.`id` " .

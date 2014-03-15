@@ -104,6 +104,14 @@
             <th colspan="2"><?php echo T_('Other Options'); ?></th>
         </tr>
         <tr>
+            <td>
+                <?php echo T_('API Key'); ?>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new API Key')); ?></a>
+            </td>
+            <td>
+                <span><?php echo $client->apikey; ?></span>
+            </td>
+        <tr>
             <td><?php echo T_('Config Preset'); ?></td>
             <td>
                 <select name="preset">
