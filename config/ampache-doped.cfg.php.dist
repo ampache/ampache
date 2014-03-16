@@ -143,6 +143,12 @@ catalog_playlist_pattern = "m3u|pls|asx|xspf"
 ; DEFAULT: The|An|A|Die|Das|Ein|Eine|Les|Le|La
 catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 
+; Catalog disable
+; This defines if catalog can be disabled without removing database entries
+; WARNING: this increase sensibly sql requests and slow down Ampache a lot
+; DEFAULT: false
+;catalog_disable = "false"
+
 ; Use Access List 
 ; Toggle this on if you want ampache to pay attention to the access list
 ; and only allow streaming/downloading/api-rpc from known hosts api-rpc 

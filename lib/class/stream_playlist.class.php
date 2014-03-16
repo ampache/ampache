@@ -119,7 +119,7 @@ class Stream_Playlist
             $object->format();
             //FIXME: play_url shouldn't be static
             $url['url'] = $type::play_url($object->id, $additional_params);
-            
+
             $api_session = (AmpConfig::get('require_session')) ? Stream::$session : false;
 
             // Set a default which can be overridden

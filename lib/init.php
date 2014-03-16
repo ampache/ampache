@@ -62,6 +62,7 @@ if (!empty($link)) {
     exit();
 }
 
+$results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
 $results['version']        = '3.7-develop';
 $results['int_config_version']    = '16';

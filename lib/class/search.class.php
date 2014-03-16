@@ -841,8 +841,8 @@ class Search extends playlist_object
             } // switch on ruletype
         } // foreach rule
 
-        $join['song'] = true;
-        $join['catalog'] = true;
+        $join['song'] = $join['song'] || AmpConfig::get('catalog_disable');
+        $join['catalog'] = AmpConfig::get('catalog_disable');
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
@@ -923,8 +923,8 @@ class Search extends playlist_object
             } // switch on ruletype
         } // foreach rule
 
-        $join['song'] = true;
-        $join['catalog'] = true;
+        $join['song'] = $join['song'] || AmpConfig::get('catalog_disable');
+        $join['catalog'] = AmpConfig::get('catalog_disable');
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
@@ -1074,7 +1074,7 @@ class Search extends playlist_object
             } // switch on type
         } // foreach over rules
 
-        $join['catalog'] = true;
+        $join['catalog'] = AmpConfig::get('catalog_disable');
 
         $where_sql = implode(" $sql_logic_operator ", $where) . $group;
 
@@ -1162,7 +1162,7 @@ class Search extends playlist_object
             } // switch on ruletype
         } // foreach rule
 
-        $join['catalog'] = true;
+        $join['catalog'] = AmpConfig::get('catalog_disable');
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
@@ -1218,8 +1218,8 @@ class Search extends playlist_object
         } // foreach rule
 
         $join['playlist_data'] = true;
-        $join['song'] = true;
-        $join['catalog'] = true;
+        $join['song'] = $join['song'] || AmpConfig::get('catalog_disable');
+        $join['catalog'] = AmpConfig::get('catalog_disable');
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 

@@ -128,11 +128,15 @@ class Album extends database_object
                 "`artist`.`prefix` AS `artist_prefix`, " .
                 "`artist`.`id` AS `artist_id`, `song`.`album`" .
                 "FROM `song` " .
-                "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
-                "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-                "WHERE `song`.`album` IN $idlist " .
-                "AND `catalog`.`enabled` = '1' " .
-                "GROUP BY `song`.`album`";
+                "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` ";
+            if (AmpConfig::get('catalog_disable')) {
+                $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+            }
+            $sql .= "WHERE `song`.`album` IN $idlist ";
+            if (AmpConfig::get('catalog_disable')) {
+                $sql .= "AND `catalog`.`enabled` = '1' ";
+            }
+            $sql .= "GROUP BY `song`.`album`";
 
             $db_results = Dba::read($sql);
 
@@ -172,11 +176,15 @@ class Album extends database_object
             "`artist`.`prefix` AS `artist_prefix`, " .
             "`artist`.`id` AS `artist_id` " .
             "FROM `song` INNER JOIN `artist` " .
-            "ON `artist`.`id`=`song`.`artist` " .
-            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-            "WHERE `song`.`album` = ? " .
-            "AND `catalog`.`enabled` = '1' " .
-            "GROUP BY `song`.`album`";
+            "ON `artist`.`id`=`song`.`artist` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        }
+        $sql .= "WHERE `song`.`album` = ? ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND `catalog`.`enabled` = '1' ";
+        }
+        $sql .= "GROUP BY `song`.`album`";
         $db_results = Dba::read($sql, array($this->id));
 
         $results = Dba::fetch_assoc($db_results);
@@ -288,14 +296,18 @@ class Album extends database_object
         $results = array();
 
         $sql = "SELECT `song`.`id` FROM `song` ";
-        $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        }
         $sql .= "WHERE `song`.`album` = ? ";
         $params = array($this->id);
         if (strlen($artist)) {
             $sql .= "AND `artist` = ? ";
             $params[] = $artist;
         }
-        $sql .= "AND `catalog`.`enabled` = '1' ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND `catalog`.`enabled` = '1' ";
+        }
         $sql .= "ORDER BY `song`.`track`, `song`.`title`";
         if ($limit) {
             $sql .= " LIMIT " . intval($limit);
@@ -378,7 +390,15 @@ class Album extends database_object
      */
     public function get_random_songs()
     {
-        $sql = "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' ORDER BY RAND()";
+        $sql = "SELECT `song`.`id` FROM `song` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        }
+        $sql .= "WHERE `song`.`album` = ? ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND `catalog`.`enabled` = '1' ";
+        }
+        $sql .= "ORDER BY RAND()";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($r = Dba::fetch_row($db_results)) {
@@ -474,15 +494,19 @@ class Album extends database_object
     public static function get_random($count = 1, $with_art = false)
     {
         $results = false;
-        
+
         if (!$count) {
             $count = 1;
         }
 
         $sql = "SELECT `album`.`id` FROM `album` " .
-            "LEFT JOIN `song` ON `song`.`album` = `album`.`id` " .
-            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-        $where = "WHERE `catalog`.`enabled` = '1' ";
+            "LEFT JOIN `song` ON `song`.`album` = `album`.`id` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+            $where = "WHERE `catalog`.`enabled` = '1' ";
+        } else {
+            $where = "WHERE '1' = '1' ";
+        }
         if ($with_art) {
             $sql .= "LEFT JOIN `image` ON (`image`.`object_type` = 'album' AND `image`.`object_id` = `album`.`id`) ";
             $where .="AND `image`.`id` IS NOT NULL ";

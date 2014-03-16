@@ -191,11 +191,16 @@ class Radio extends database_object implements media
 
     public static function get_all_radios($catalog = null)
     {
-        $sql = "SELECT `live_stream`.`id` FROM `live_stream` JOIN `catalog` ON `catalog`.`id` = `live_stream`.`catalog` " .
-            "WHERE `catalog`.`enabled` = '1'";
+        $sql = "SELECT `live_stream`.`id` FROM `live_stream` JOIN `catalog` ON `catalog`.`id` = `live_stream`.`catalog` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "WHERE `catalog`.`enabled` = '1' ";
+        }
         $params = array();
         if ($catalog) {
-            $sql .= " AND `catalog`.`id` = ?";
+            if (AmpConfig::get('catalog_disable')) {
+                $sql .= "AND ";
+            }
+            $sql .= "`catalog`.`id` = ?";
             $params[] = $catalog;
         }
         $db_results = Dba::read($sql, $params);

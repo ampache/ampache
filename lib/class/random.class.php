@@ -51,10 +51,12 @@ class Random implements media
     public static function artist()
     {
         $sql = "SELECT `artist`.`id` FROM `artist` " .
-            "LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` " .
-            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-            "WHERE `catalog`.`enabled` = '1' " .
-            "GROUP BY `artist`.`id` " .
+            "LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+                "WHERE `catalog`.`enabled` = '1' ";
+        }
+        $sql .= "GROUP BY `artist`.`id` " .
             "ORDER BY RAND() LIMIT 1";
         $db_results = Dba::read($sql);
 
@@ -132,10 +134,12 @@ class Random implements media
     {
         $results = array();
 
-        $sql = "SELECT `song`.`id` FROM `song` " .
-            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-            "WHERE `catalog`.`enabled` = '1' " .
-            "ORDER BY RAND() LIMIT $limit";
+        $sql = "SELECT `song`.`id` FROM `song` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+                "WHERE `catalog`.`enabled` = '1' ";
+        }
+        $sql .= "ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -161,10 +165,14 @@ class Random implements media
             $where_sql = " AND `song`.`album`='" . $data['0'] . "' ";
         }
 
-        $sql = "SELECT `song`.`id` FROM `song` " .
-            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-            "WHERE `catalog`.`enabled` = '1' " .
-            "$where_sql ORDER BY RAND() LIMIT $limit";
+        $sql = "SELECT `song`.`id` FROM `song` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+                "WHERE `catalog`.`enabled` = '1' ";
+        } else {
+            $sql .= "WHERE '1' = '1' ";
+        }
+        $sql .= "$where_sql ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -189,10 +197,14 @@ class Random implements media
             $where_sql = " AND `song`.`artist`='" . $data['0'] . "' ";
         }
 
-        $sql = "SELECT `song`.`id` FROM `song` " .
-            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-            "WHERE `catalog`.`enabled` = '1' " .
-            "$where_sql ORDER BY RAND() LIMIT $limit";
+        $sql = "SELECT `song`.`id` FROM `song` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+                "WHERE `catalog`.`enabled` = '1' ";
+        } else {
+            $sql .= "WHERE '1' = '1' ";
+        }
+        $sql .= "$where_sql ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -235,10 +247,16 @@ class Random implements media
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
                 }
-                $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-                $sql .= " WHERE `catalog`.`enabled` = '1'";
+                if (AmpConfig::get('catalog_disable')) {
+                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+                    $sql .= " WHERE `catalog`.`enabled` = '1'";
+                }
                 if ($search_info) {
-                    $sql .= ' AND ' . $search_info['where_sql'];
+                    if (AmpConfig::get('catalog_disable')) {
+                        $sql .= ' AND ' . $search_info['where_sql'];
+                    } else {
+                        $sql .= ' WHERE ' . $search_info['where_sql'];
+                    }
                 }
             break;
             case 'album':
@@ -249,10 +267,16 @@ class Random implements media
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
                 }
-                $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-                $sql .= " WHERE `catalog`.`enabled` = '1'";
+                if (AmpConfig::get('catalog_disable')) {
+                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+                    $sql .= " WHERE `catalog`.`enabled` = '1'";
+                }
                 if ($search_info) {
-                    $sql .= ' AND ' . $search_info['where_sql'];
+                    if (AmpConfig::get('catalog_disable')) {
+                        $sql .= ' AND ' . $search_info['where_sql'];
+                    } else {
+                        $sql .= ' WHERE ' . $search_info['where_sql'];
+                    }
                 }
                 $sql .= ' GROUP BY `album`.`id`';
             break;
@@ -264,10 +288,16 @@ class Random implements media
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
                 }
-                $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-                $sql .= " WHERE `catalog`.`enabled` = '1'";
+                if (AmpConfig::get('catalog_disable')) {
+                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+                    $sql .= " WHERE `catalog`.`enabled` = '1'";
+                }
                 if ($search_info) {
-                    $sql .= ' AND ' . $search_info['where_sql'];
+                    if (AmpConfig::get('catalog_disable')) {
+                        $sql .= ' AND ' . $search_info['where_sql'];
+                    } else {
+                        $sql .= ' WHERE ' . $search_info['where_sql'];
+                    }
                 }
                 $sql .= ' GROUP BY `artist`.`id`';
             break;

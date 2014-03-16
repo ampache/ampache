@@ -117,11 +117,15 @@ class Stats
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
         $sql = "SELECT * FROM `object_count` " .
-            "LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` " .
-            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-            "WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' " .
-            "AND `catalog`.`enabled` = '1' " .
-            "ORDER BY `object_count`.`date` DESC LIMIT 1";
+            "LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        }
+        $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND `catalog`.`enabled` = '1' ";
+        }
+        $sql .= "ORDER BY `object_count`.`date` DESC LIMIT 1";
         $db_results = Dba::read($sql, array($user_id));
 
         $results = Dba::fetch_assoc($db_results);
@@ -140,11 +144,15 @@ class Stats
         $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
 
         $sql = "SELECT * FROM `object_count` " .
-            "LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` " .
-            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-            "WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? " .
-            "AND `catalog`.`enabled` = '1' " .
-            "ORDER BY `object_count`.`date` DESC";
+            "LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        }
+        $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND `catalog`.`enabled` = '1' ";
+        }
+        $sql .= "ORDER BY `object_count`.`date` DESC";
         $db_results = Dba::read($sql, array($user_id, $time));
 
         $results = array();
@@ -172,8 +180,11 @@ class Stats
 
         /* Select Top objects counting by # of rows */
         $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count" .
-            " WHERE object_type = '" . $type ."' AND date >= '" . $date . "' AND " . Catalog::get_enable_filter($type, '`object_id`') .
-            " GROUP BY object_id ORDER BY `count` DESC ";
+            " WHERE object_type = '" . $type ."' AND date >= '" . $date . "' ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND " . Catalog::get_enable_filter($type, '`object_id`');
+        }
+        $sql .= " GROUP BY object_id ORDER BY `count` DESC ";
         return $sql;
     }
 
@@ -222,8 +233,11 @@ class Stats
         }
 
         $sql = "SELECT DISTINCT(`object_id`) as `id`, MAX(`date`) FROM object_count" .
-            " WHERE `object_type` = '" . $type ."'" . $user_sql . " AND " . Catalog::get_enable_filter($type, '`object_id`') .
-            " GROUP BY `object_id` ORDER BY MAX(`date`) DESC, `id` ";
+            " WHERE `object_type` = '" . $type ."'" . $user_sql;
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
+        }
+        $sql .= " GROUP BY `object_id` ORDER BY MAX(`date`) DESC, `id` ";
 
         return $sql;
     }
@@ -329,8 +343,10 @@ class Stats
         $type = self::validate_type($type);
 
         $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `song` ";
-        $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-                "WHERE `catalog`.`enabled` = '1' ";
+        $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        if (AmpConfig::get('catalog_disable')) {
+                $sql .= "WHERE `catalog`.`enabled` = '1' ";
+        }
         if ($catalog > 0) {
             $sql .= "AND `catalog` = '" . scrub_in($catalog) ."' ";
         }

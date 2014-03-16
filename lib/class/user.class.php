@@ -171,7 +171,7 @@ class User extends database_object
         return $user;
 
     } // get_from_username
-    
+
     /**
      * get_from_apikey
      * This returns a built user from an apikey. This is a
@@ -576,7 +576,7 @@ class User extends database_object
         $db_results = Dba::write($sql, array($new_website, $this->id));
 
     } // update_website
-    
+
     /**
      * update_apikey
      * Updates their api key
@@ -587,7 +587,7 @@ class User extends database_object
         $db_results = Dba::write($sql, array($new_apikey, $this->id));
 
     } // update_website
-    
+
     /**
      * generate_apikey
      * Generate a new user API key
@@ -597,7 +597,7 @@ class User extends database_object
         $apikey = hash('md5', time() . $this->username . $this->get_password());
         $this->update_apikey($apikey);
     }
-    
+
     /**
      * get_password
      * Get the current hashed user password from database.
@@ -607,7 +607,7 @@ class User extends database_object
         $sql = 'SELECT * FROM `user` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($this->id));
         $row = Dba::fetch_assoc($db_results);
-        
+
         return $row['password'];
     }
 

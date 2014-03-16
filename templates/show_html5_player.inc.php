@@ -24,10 +24,13 @@ require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php';
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
-    var jsAjaxServer = "<?php echo AmpConfig::get('ajax_server') ?>";
-    var jsAjaxUrl = "<?php echo AmpConfig::get('ajax_url') ?>";
+var jsAjaxServer = "<?php echo AmpConfig::get('ajax_server') ?>";
+var jsAjaxUrl = "<?php echo AmpConfig::get('ajax_url') ?>";
 
-    function update_action() { }
+function update_action()
+{
+    // Stub
+}
 </script>
 <?php
 if ($iframed) {

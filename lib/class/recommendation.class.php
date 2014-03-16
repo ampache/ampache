@@ -144,12 +144,15 @@ class Recommendation
 
                     $sql = "SELECT `song`.`id` FROM `song` " .
                         "LEFT JOIN `artist` ON " .
-                        "`song`.`artist`=`artist`.`id` " .
-                        "LEFT JOIN `catalog` ON " .
-                        "`song`.`catalog` = `catalog`.`id` WHERE " .
-                        "`song`.`title` = ? " .
-                        "AND `artist`.`name` = ? " .
-                        "AND `catalog`.`enabled` = '1'";
+                        "`song`.`artist`=`artist`.`id` ";
+                    if (AmpConfig::get('catalog_disable')) {
+                        $sql .= "LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` ";
+                    }
+                    $sql .= "WHERE `song`.`title` = ? " .
+                        "AND `artist`.`name` = ? ";
+                    if (AmpConfig::get('catalog_disable')) {
+                        $sql .= "AND `catalog`.`enabled` = '1'";
+                    }
 
                     $db_result = Dba::read($sql, array($name, $s_artist_name['string']));
 
@@ -225,7 +228,9 @@ class Recommendation
                 // First we check by MBID
                 if ($mbid) {
                     $sql = "SELECT `artist`.`id` FROM `artist` WHERE `mbid` = ?";
-                    $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
+                    if (AmpConfig::get('catalog_disable')) {
+                        $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
+                    }
                     $db_result = Dba::read($sql, array($mbid));
                     if ($result = Dba::fetch_assoc($db_result)) {
                         $local_id = $result['id'];
@@ -238,7 +243,9 @@ class Recommendation
                     $searchname = Catalog::trim_prefix($name);
                     $searchname = Dba::escape($searchname['string']);
                     $sql = "SELECT `artist`.`id` FROM `artist` WHERE `name` = ?";
-                    $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
+                    if (AmpConfig::get('catalog_disable')) {
+                        $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
+                    }
                     $db_result = Dba::read($sql, array($searchname));
                     if ($result = Dba::fetch_assoc($db_result)) {
                         $local_id = $result['id'];

@@ -146,10 +146,10 @@ class Api
         debug_event('API', "Login Attempt, IP:$ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
 
         if ($user_id > 0 && Access::check_network('api', $user_id, 5, $ip)) {
-        
+
             // Authentication with user/password, we still need to check the password
             if ($username) {
-            
+
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (($timestamp < (time() - 1800)) ||
                     ($timestamp > (time() + 1800))) {
@@ -157,7 +157,7 @@ class Api
                     Error::add('api', T_('Login Failed: timestamp out of range'));
                     return false;
                 }
-            
+
                 // Now we're sure that there is an ACL line that matches
                 // this user or ALL USERS, pull the user's password and
                 // then see what we come out with
@@ -177,7 +177,7 @@ class Api
             } else {
                 $timestamp = time();
             }
-            
+
             if ($client) {
                 // Create the session
                 $data['username'] = $client->username;
@@ -578,7 +578,7 @@ class Api
         echo XML_Data::songs($songs);
 
     } // playlist_songs
-    
+
     /**
      * playlist_create
      * This create a new playlist and return it
@@ -590,11 +590,11 @@ class Api
         if ($type != 'private') {
             $type = 'public';
         }
-        
+
         $uid = Playlist::create($name, $type);
         echo XML_Data::playlists(array($uid));
     }
-    
+
     /**
      * playlist_delete
      * This delete a playlist
@@ -610,7 +610,7 @@ class Api
             echo XML_Data::single_string('success');
         }
     } // playlist_delete
-    
+
     /**
      * playlist_add_song
      * This add a song to a playlist
@@ -628,7 +628,7 @@ class Api
         }
 
     } // playlist_add_song
-    
+
     /**
      * playlist_remove_song
      * This remove a song from a playlist
@@ -791,13 +791,13 @@ class Api
         } // switch on method
 
     } // democratic
-    
+
     public static function stats($input)
     {
         $type = $input['type'];
-        $offset = $input['offset'];        
+        $offset = $input['offset'];
         $limit = $input['limit'];
-        
+
         if ($type == "newest") {
             $albums = Stats::get_newest("album", $limit, $offset);
         } else if ($type == "highest") {
@@ -814,7 +814,7 @@ class Api
             }
             $albums = Album::get_random($limit);
         }
-        
+
         ob_end_clean();
         echo XML_Data::albums($albums);
     }

@@ -168,8 +168,11 @@ class Userflag extends database_object
         $type = Stats::validate_type($type);
 
         $sql = "SELECT `object_id` as `id` FROM user_flag" .
-                " WHERE object_type = '" . $type . "' AND `user` = '" . $user_id . "' AND " . Catalog::get_enable_filter($type, '`object_id`') .
-                " ORDER BY `date` DESC ";
+                " WHERE object_type = '" . $type . "' AND `user` = '" . $user_id . "'";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
+        }
+        $sql .= " ORDER BY `date` DESC ";
         return $sql;
     }
     /**

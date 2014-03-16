@@ -30,6 +30,8 @@ if (floatval(phpversion()) < 5) {
 
 error_reporting(E_ERROR); // Only show fatal errors in production
 
+$load_time_begin = microtime(true);
+
 $ampache_path = dirname(__FILE__);
 $prefix = realpath($ampache_path . "/../");
 $configfile = $prefix . '/config/ampache-doped.cfg.php';

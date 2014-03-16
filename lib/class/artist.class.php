@@ -155,7 +155,9 @@ class Artist extends database_object
         if ($catalog) {
             $catalog_where .= " AND `catalog`.`id` = '$catalog'";
         }
-        $catalog_where .= " AND `catalog`.`enabled` = '1'";
+        if (AmpConfig::get('catalog_disable')) {
+            $catalog_where .= " AND `catalog`.`enabled` = '1'";
+        }
 
         $results = array();
 
@@ -184,8 +186,15 @@ class Artist extends database_object
      */
     public function get_songs()
     {
-        $sql = "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-            "WHERE `song`.`artist`='" . Dba::escape($this->id) . "' AND `catalog`.`enabled` = '1' ORDER BY album, track";
+        $sql = "SELECT `song`.`id` FROM `song` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        }
+        $sql .= "WHERE `song`.`artist`='" . Dba::escape($this->id) . "' ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND `catalog`.`enabled` = '1' ";
+        }
+        $sql .= "ORDER BY album, track";
         $db_results = Dba::read($sql);
 
         while ($r = Dba::fetch_assoc($db_results)) {
@@ -204,8 +213,15 @@ class Artist extends database_object
     {
         $results = array();
 
-        $sql = "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-            "WHERE `song`.`artist`='$this->id' AND `catalog`.`enabled` = '1' ORDER BY RAND()";
+        $sql = "SELECT `song`.`id` FROM `song` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        }
+        $sql .= "WHERE `song`.`artist`='$this->id' ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND `catalog`.`enabled` = '1' ";
+        }
+        $sql .= "ORDER BY RAND()";
         $db_results = Dba::read($sql);
 
         while ($r = Dba::fetch_assoc($db_results)) {
@@ -232,7 +248,9 @@ class Artist extends database_object
             if ($catalog) {
                 $sql .= "AND (`song`.`catalog` = '$catalog') ";
             }
-            $sql .= " AND `catalog`.`enabled` = '1'";
+            if (AmpConfig::get('catalog_disable')) {
+                $sql .= " AND `catalog`.`enabled` = '1'";
+            }
 
             $sql .= "GROUP BY `song`.`artist`";
 

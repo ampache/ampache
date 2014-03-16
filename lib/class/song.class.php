@@ -175,10 +175,14 @@ class Song extends database_object implements media
             '`mbid`, `addition_time` ' .
             'FROM `song` LEFT JOIN `tag_map` ' .
             'ON `tag_map`.`object_id`=`song`.`id` ' .
-            "AND `tag_map`.`object_type`='song' " .
-            "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-            "WHERE `song`.`id` IN $idlist " .
-            "AND `catalog`.`enabled` = '1' ";
+            "AND `tag_map`.`object_type`='song' ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        }
+        $sql .= "WHERE `song`.`id` IN $idlist ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND `catalog`.`enabled` = '1' ";
+        }
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1005,7 +1009,10 @@ class Song extends database_object implements media
         $user_id = Dba::escape($user_id);
 
         $sql = "SELECT `object_id`, `user`, `object_type`, `date`, `agent` " .
-            "FROM `object_count` WHERE `object_type`='song' AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
+            "FROM `object_count` WHERE `object_type`='song' ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
+        }
         if ($user_id) {
             // If user is not empty, we're looking directly to user personal info (admin view)
             $sql .= "AND `user`='$user_id' ";

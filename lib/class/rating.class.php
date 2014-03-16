@@ -172,8 +172,11 @@ class Rating extends database_object
     {
         $type = Stats::validate_type($type);
         $sql = "SELECT `object_id` as `id`, AVG(`rating`) AS `rating` FROM rating" .
-            " WHERE object_type = '" . $type . "' AND " . Catalog::get_enable_filter($type, '`object_id`') .
-            " GROUP BY object_id ORDER BY `rating` DESC ";
+            " WHERE object_type = '" . $type . "'";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
+        }
+        $sql .= " GROUP BY object_id ORDER BY `rating` DESC ";
         return $sql;
     }
 
