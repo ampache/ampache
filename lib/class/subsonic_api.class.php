@@ -438,6 +438,8 @@ class Subsonic_Api
             $albums = Stats::get_recent("album", $size, $offset);
         } else if ($type == "starred") {
             $albums = Userflag::get_latest('album');
+        } else if ($type == "alphabeticalByName") {
+            $albums = self::_getalbumlist_alphabetical($size, $offset);
         }
 
         if (count($albums)) {
@@ -448,6 +450,25 @@ class Subsonic_Api
         }
 
         self::apiOutput($input, $r);
+    }
+
+    private static function _getalbumlist_alphabetical($size = 20, $offset = 0)
+    {
+        $results = false;
+
+        if (!$size) {
+            $size = 20;
+        }
+
+        $sql = "SELECT `id` FROM `album` ";
+        $sql .= "ORDER BY `name` LIMIT " . intval($size);
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+
+        return $results;
     }
 
     /**
