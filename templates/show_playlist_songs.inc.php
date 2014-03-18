@@ -25,28 +25,29 @@ $web_path = AmpConfig::get('web_path');
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
     <table id="reorder_playlist_table" class="tabledata" cellpadding="0" cellspacing="0">
-        <tr class="th-top">
-            <th class="cel_play"></th>
-            <th class="cel_song"><?php echo T_('Song Title'); ?></th>
-            <th class="cel_add"></th>
-            <th class="cel_artist"><?php echo T_('Artist'); ?></th>
-            <th class="cel_album"><?php echo T_('Album'); ?></th>
-            <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-            <th class="cel_time"><?php echo T_('Time'); ?></th>
-        <?php if (AmpConfig::get('ratings')) {
-            Rating::build_cache('song', array_map(create_function('$i', 'return $i[\'object_id\'];'), $object_ids));
-        ?>
-            <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-        <?php } ?>
-        <?php if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('song', array_map(create_function('$i', 'return $i[\'object_id\'];'), $object_ids));
-        ?>
-            <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
-        <?php } ?>
-            <th class="cel_action"><?php echo T_('Action'); ?></th>
-            <th class="cel_drag"></th>
-        </tr>
-
+        <thead>
+            <tr class="th-top">
+                <th class="cel_play"></th>
+                <th class="cel_song"><?php echo T_('Song Title'); ?></th>
+                <th class="cel_add"></th>
+                <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+                <th class="cel_album"><?php echo T_('Album'); ?></th>
+                <th class="cel_tags"><?php echo T_('Tags'); ?></th>
+                <th class="cel_time"><?php echo T_('Time'); ?></th>
+            <?php if (AmpConfig::get('ratings')) {
+                Rating::build_cache('song', array_map(create_function('$i', 'return $i[\'object_id\'];'), $object_ids));
+            ?>
+                <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+            <?php } ?>
+            <?php if (AmpConfig::get('userflags')) {
+                Userflag::build_cache('song', array_map(create_function('$i', 'return $i[\'object_id\'];'), $object_ids));
+            ?>
+                <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
+            <?php } ?>
+                <th class="cel_action"><?php echo T_('Action'); ?></th>
+                <th class="cel_drag"></th>
+            </tr>
+        </thead>
         <tbody id="sortableplaylist">
             <?php foreach ($object_ids as $object) {
                     $song = new Song($object['object_id']);
@@ -58,24 +59,25 @@ $web_path = AmpConfig::get('web_path');
                     </tr>
             <?php } ?>
         </tbody>
-
-        <tr class="th-bottom">
-            <th class="cel_play"><?php echo T_('Play'); ?></th>
-            <th class="cel_song"><?php echo T_('Song Title'); ?></th>
-            <th class="cel_add"></th>
-            <th class="cel_artist"><?php echo T_('Artist'); ?></th>
-            <th class="cel_album"><?php echo T_('Album'); ?></th>
-            <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-            <th class="cel_time"><?php echo T_('Time'); ?></th>
-        <?php if (AmpConfig::get('ratings')) { ?>
-            <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-        <?php } ?>
-        <?php if (AmpConfig::get('userflags')) { ?>
-            <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
-        <?php } ?>
-            <th class="cel_action"><?php echo T_('Action'); ?></th>
-            <th class="cel_drag"></th>
-        </tr>
+        <tfoot>
+            <tr class="th-bottom">
+                <th class="cel_play"><?php echo T_('Play'); ?></th>
+                <th class="cel_song"><?php echo T_('Song Title'); ?></th>
+                <th class="cel_add"></th>
+                <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+                <th class="cel_album"><?php echo T_('Album'); ?></th>
+                <th class="cel_tags"><?php echo T_('Tags'); ?></th>
+                <th class="cel_time"><?php echo T_('Time'); ?></th>
+            <?php if (AmpConfig::get('ratings')) { ?>
+                <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+            <?php } ?>
+            <?php if (AmpConfig::get('userflags')) { ?>
+                <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
+            <?php } ?>
+                <th class="cel_action"><?php echo T_('Action'); ?></th>
+                <th class="cel_drag"></th>
+            </tr>
+        </tfoot>
     </table>
 </form>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>

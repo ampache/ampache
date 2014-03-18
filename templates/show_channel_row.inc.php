@@ -32,7 +32,7 @@
 <td class="cel_name"><?php echo $channel->name; ?></td>
 <td class="cel_interface"><?php echo $channel->interface; ?></td>
 <td class="cel_port"><?php echo $channel->port; ?></td>
-<td class="cel_data"><?php echo $channel->get_target_object()->f_link; ?></td>
+<td class="cel_data"><?php echo $channel->get_target_object()->f_name_link; ?></td>
 <!--<td class="cel_random"><?php echo ($channel->random ? T_('Yes') : T_('No')); ?></td>
 <td class="cel_loop"><?php echo ($channel->loop ? T_('Yes') : T_('No')); ?></td>-->
 <td class="cel_streamtype"><?php echo $channel->stream_type; ?></td>

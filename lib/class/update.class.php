@@ -1668,7 +1668,7 @@ class Update
             "`date` int(11) unsigned NOT NULL DEFAULT '0'," .
             "PRIMARY KEY (`id`)," .
             "UNIQUE KEY `unique_userflag` (`user`,`object_type`,`object_id`)," .
-            "KEY `object_id` (`object_id`))";
+            "KEY `object_id` (`object_id`)) ENGINE = MYISAM";
         return Dba::write($sql);
     }
 
@@ -1949,7 +1949,7 @@ class Update
             "`date` int(11) unsigned NOT NULL DEFAULT '0'," .
             "`accepted` tinyint(1) NOT NULL DEFAULT '0'," .
             "PRIMARY KEY (`id`)," .
-            "UNIQUE KEY `unique_wanted` (`user`, `artist`,`mbid`))";
+            "UNIQUE KEY `unique_wanted` (`user`, `artist`,`mbid`)) ENGINE = MYISAM";
 
         return Dba::write($sql);
     }
@@ -1971,7 +1971,7 @@ class Update
             "`disk` int(11) NULL," .
             "`track` int(11) NULL," .
             "`file` varchar(255) CHARACTER SET utf8 NULL," .
-            "PRIMARY KEY (`id`))";
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
 
         return Dba::write($sql);
     }
@@ -2118,7 +2118,7 @@ class Update
             "`lastvisit_date` int(11) unsigned NOT NULL DEFAULT '0'," .
             "`public_url` varchar(255) CHARACTER SET utf8 NULL," .
             "`description` varchar(255) CHARACTER SET utf8 NULL," .
-            "PRIMARY KEY (`id`))";
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
@@ -2206,7 +2206,7 @@ class Update
             "`stream_type` varchar(8) CHARACTER SET utf8 NOT NULL DEFAULT 'mp3'," .
             "`bitrate` int(11) unsigned NOT NULL DEFAULT '128'," .
             "`pid` int(11) unsigned NOT NULL DEFAULT '0'," .
-            "PRIMARY KEY (`id`))";
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         return Dba::write($sql);
     }
 
@@ -2227,7 +2227,7 @@ class Update
             "`started` tinyint(1) unsigned NOT NULL DEFAULT '0'," .
             "`listeners` int(11) unsigned NOT NULL DEFAULT '0'," .
             "`key` varchar(32) CHARACTER SET utf8 NULL," .
-            "PRIMARY KEY (`id`))";
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         Dba::write($sql);
 
         $sql = "CREATE TABLE `player_control` (" .
@@ -2238,7 +2238,7 @@ class Update
             "`object_type` varchar(32) NOT NULL," .
             "`object_id` int(11) unsigned NOT NULL," .
             "`send_date` int(11) unsigned NOT NULL DEFAULT '0'," .
-            "PRIMARY KEY (`id`))";
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
 
         return Dba::write($sql);
     }
@@ -2278,7 +2278,7 @@ class Update
             "`object_type` varchar(32) NOT NULL," .
             "`object_id` int(11) unsigned NOT NULL," .
             "`last_update` int(11) unsigned NOT NULL DEFAULT '0'," .
-            "PRIMARY KEY (`id`))";
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         Dba::write($sql);
 
         $sql = "CREATE TABLE `recommendation_item` (" .
@@ -2288,7 +2288,7 @@ class Update
             "`name` varchar(256) NULL," .
             "`rel` varchar(256) NULL," .
             "`mbid` varchar(1369) NULL," .
-            "PRIMARY KEY (`id`))";
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         Dba::write($sql);
 
         return true;
