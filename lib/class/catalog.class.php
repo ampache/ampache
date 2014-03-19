@@ -555,7 +555,7 @@ abstract class Catalog extends database_object
     *
     * Returns an array of ids of albums that have songs in the catalogs parameter
     */
-    public static function get_albums($catalogs = null, $size = 0, $offset = 0)
+    public static function get_albums($size = 0, $offset = 0, $catalogs = null)
     {
         if (is_array($catalogs) && count($catalogs)) {
             $catlist = '(' . implode(',', $catalogs) . ')';
@@ -563,6 +563,30 @@ abstract class Catalog extends database_object
         }
 
         $sql = "SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` $sql_where GROUP BY `song`.`album` ORDER BY `album`.`name`";
+
+        $db_results = Dba::read($sql);
+
+        while ($r = Dba::fetch_assoc($db_results)) {
+            $results[] = $r['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+    * get_albums_by_artist
+    *
+    * Returns an array of ids of albums that have songs in the catalogs parameter, grouped by artist
+    */
+    public static function get_albums_by_artist($size = 0, $offset = 0, $catalogs = null)
+    {
+        if (is_array($catalogs) && count($catalogs)) {
+            $catlist = '(' . implode(',', $catalogs) . ')';
+            $sql_where = "WHERE `song`.`catalog` IN $catlist";
+        }
+
+        $sql = "SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " .
+            "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.`album` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name`";
 
         $db_results = Dba::read($sql);
 

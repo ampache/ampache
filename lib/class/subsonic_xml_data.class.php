@@ -301,8 +301,12 @@ class Subsonic_XML_Data
         $xsong->addAttribute('coverArt', self::getAlbumId($album->id));
         $xsong->addAttribute('duration', $song->time);
         $xsong->addAttribute('bitRate', intval($song->bitrate / 1000));
-        $xsong->addAttribute('track', $song->track);
-        $xsong->addAttribute('year', $song->year);
+        if ($song->track > 0) {
+            $xsong->addAttribute('track', $song->track);
+        }
+        if ($song->year > 0) {
+            $xsong->addAttribute('year', $song->year);
+        }
         $tags = Tag::get_object_tags('song', $song->id);
         if (count($tags) > 0) $xsong->addAttribute('genre', $tags[0]['name']);
         $xsong->addAttribute('size', $song->size);
@@ -318,7 +322,12 @@ class Subsonic_XML_Data
 
     private static function formatAlbum($album)
     {
-        return $album->name . " [" . $album->year . "]";
+        $name = $album->name;
+        if ($album->year > 0) {
+            $name .= " [" . $album->year . "]";
+        }
+
+        return $name;
     }
 
     public static function addArtistDirectory($xml, $artist)

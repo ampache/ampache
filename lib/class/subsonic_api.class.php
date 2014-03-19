@@ -440,6 +440,8 @@ class Subsonic_Api
             $albums = Userflag::get_latest('album');
         } else if ($type == "alphabeticalByName") {
             $albums = Catalog::get_albums($size, $offset);
+        } else if ($type == "alphabeticalByArtist") {
+            $albums = Catalog::get_albums_by_artist($size, $offset);
         }
 
         if (count($albums)) {
