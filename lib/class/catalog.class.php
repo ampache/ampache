@@ -593,13 +593,26 @@ abstract class Catalog extends database_object
     */
     public static function get_albums_by_artist($size = 0, $offset = 0, $catalogs = null)
     {
+        if (!is_int($size)) $size = 0;
+        if (!is_int($offset)) $offset = 0;
+
         if (is_array($catalogs) && count($catalogs)) {
             $catlist = '(' . implode(',', $catalogs) . ')';
             $sql_where = "WHERE `song`.`catalog` IN $catlist";
         }
 
+        if ($offset > 0 && $size > 0) {
+            $sql_limit = "LIMIT $offset, $size";
+        } else if ($size > 0) {
+            $sql_limit = "LIMIT $size";
+        } else if ($offset > 0) {
+            // MySQL doesn't have notation for last row, so we have to use the largest possible BIGINT value
+            // https://dev.mysql.com/doc/refman/5.0/en/select.html
+            $sql_limit = "LIMIT $offset, 18446744073709551615";
+        }
+
         $sql = "SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " .
-            "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.`album` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name`";
+            "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.`album` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
 
