@@ -557,9 +557,6 @@ abstract class Catalog extends database_object
     */
     public static function get_albums($size = 0, $offset = 0, $catalogs = null)
     {
-        if (!is_int($size)) $size = 0;
-        if (!is_int($offset)) $offset = 0;
-
         if (is_array($catalogs) && count($catalogs)) {
             $catlist = '(' . implode(',', $catalogs) . ')';
             $sql_where = "WHERE `song`.`catalog` IN $catlist";
@@ -593,9 +590,6 @@ abstract class Catalog extends database_object
     */
     public static function get_albums_by_artist($size = 0, $offset = 0, $catalogs = null)
     {
-        if (!is_int($size)) $size = 0;
-        if (!is_int($offset)) $offset = 0;
-
         if (is_array($catalogs) && count($catalogs)) {
             $catlist = '(' . implode(',', $catalogs) . ')';
             $sql_where = "WHERE `song`.`catalog` IN $catlist";
