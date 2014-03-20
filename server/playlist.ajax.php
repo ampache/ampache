@@ -90,18 +90,21 @@ switch ($_REQUEST['action']) {
                 }
             break;
             case 'album':
-                debug_event('playlist', 'Adding all songs of album {'.$item_id.'}...', '5');
-                $album = new Album($item_id);
-                $songs = $album->get_songs();
-                foreach ($songs as $song_id) {
-                    $songs[] = $song_id;
+                debug_event('playlist', 'Adding all songs of album(s) {'.$item_id.'}...', '5');
+                $albums_array = explode(',', $item_id);
+                foreach ($albums_array as $a) {
+                    $album = new Album($a);
+                    $asongs = $album->get_songs();
+                    foreach ($asongs as $song_id) {
+                        $songs[] = $song_id;
+                    }
                 }
             break;
             case 'artist':
                 debug_event('playlist', 'Adding all songs of artist {'.$item_id.'}...', '5');
                 $artist = new Artist($item_id);
-                $songs = $artist->get_songs();
-                foreach ($songs as $song_id) {
+                $asongs = $artist->get_songs();
+                foreach ($asongs as $song_id) {
                     $songs[] = $song_id;
                 }
             break;

@@ -71,7 +71,7 @@ switch ($_REQUEST['action']) {
     case 'directplay':
         switch ($_REQUEST['playtype']) {
             case 'album':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=album&album_id='.$_REQUEST['album_id'];
+                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=album&album_id='.implode(',', $_REQUEST['album_id']);
             break;
             case 'artist':
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=artist&artist_id='.$_REQUEST['artist_id'];

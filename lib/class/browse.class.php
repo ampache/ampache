@@ -147,7 +147,8 @@ class Browse extends Query
             break;
             case 'album':
                 $box_title = T_('Albums') . $match;
-                Album::build_cache($object_ids,'extra');
+                Album::build_cache($object_ids, 'extra');
+                $allow_group_disks = $argument;
                 $box_req = AmpConfig::get('prefix') . '/templates/show_albums.inc.php';
             break;
             case 'user':
@@ -156,7 +157,7 @@ class Browse extends Query
             break;
             case 'artist':
                 $box_title = T_('Artists') . $match;
-                Artist::build_cache($object_ids,'extra');
+                Artist::build_cache($object_ids, 'extra');
                 $box_req = AmpConfig::get('prefix') . '/templates/show_artists.inc.php';
             break;
             case 'live_stream':

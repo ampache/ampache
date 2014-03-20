@@ -101,12 +101,17 @@ switch ($_REQUEST['action']) {
         $media_ids = $album->get_random_songs();
     break;
     case 'album':
-        $album = new Album($_REQUEST['album_id']);
-        $songs = $album->get_songs();
-        foreach ($songs as $song) {
-            $media_ids[] = array(
-                'object_type' => 'song',
-                'object_id' => $song);
+        debug_event('stream.php', 'Playing/Adding all songs of album(s) {'.$_REQUEST['album_id'].'}...', '5');
+        $albums_array = explode(',', $_REQUEST['album_id']);
+        
+        foreach ($albums_array as $a) {
+            $album = new Album($a);
+            $songs = $album->get_songs();
+            foreach ($songs as $song) {
+                $media_ids[] = array(
+                    'object_type' => 'song',
+                    'object_id' => $song);
+            }
         }
     break;
     case 'playlist':

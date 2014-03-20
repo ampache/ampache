@@ -24,9 +24,9 @@
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id,'play', T_('Play'),'play_album_' . $album->id); ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&' . $album->get_http_album_query_ids('album_id'), 'play', T_('Play'), 'play_album_' . $album->id); ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id . '&append=true','play_add', T_('Play last'),'addplay_album_' . $album->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&' . $album->get_http_album_query_ids('album_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $album->id); ?>
         <?php } ?>
 <?php } ?>
     </div>
@@ -44,9 +44,9 @@ if (Art::is_enabled()) {
 <td class="cel_album"><?php echo $album->f_name_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
-        <?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Add to temporary playlist'),'add_album_' . $album->id); ?>
-        <?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random', T_('Random to temporary playlist'),'random_album_' . $album->id); ?>
-        <a id="<?php echo 'add_playlist_'.$album->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id ?>')">
+        <?php echo Ajax::button('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'add_album_' . $album->id); ?>
+        <?php echo Ajax::button('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'random_album_' . $album->id); ?>
+        <a id="<?php echo 'add_playlist_'.$album->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php if (!count($album->album_suite)) { echo $album->id; } else { echo implode(',', $album->album_suite); } ?>')">
             <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
         </a>
     </span>
@@ -56,10 +56,10 @@ if (Art::is_enabled()) {
 <td class="cel_year"><?php echo $album->year; ?></td>
 <td class="cel_tags"><?php echo $album->f_tags; ?></td>
 <?php if (AmpConfig::get('ratings')) { ?>
-<td class="cel_rating" id="rating_<?php echo $album->id; ?>_album"><?php Rating::show($album->id,'album'); ?></td>
+<td class="cel_rating" id="rating_<?php echo $album->id; ?>_album"><?php Rating::show($album->id, 'album'); ?></td>
 <?php } ?>
 <?php if (AmpConfig::get('userflags')) { ?>
-<td class="cel_userflag" id="userflag_<?php echo $album->id; ?>_album"><?php Userflag::show($album->id,'album'); ?></td>
+<td class="cel_userflag" id="userflag_<?php echo $album->id; ?>_album"><?php Userflag::show($album->id, 'album'); ?></td>
 <?php } ?>
 <td class="cel_action">
     <?php if (AmpConfig::get('sociable')) { ?>
@@ -68,14 +68,14 @@ if (Art::is_enabled()) {
     </a>
     <?php } ?>
     <?php if (AmpConfig::get('share')) { ?>
-        <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $album->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+        <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
     <?php } ?>
     <?php if (Access::check_function('batch_download')) { ?>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=album&id=<?php echo $album->id; ?>">
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
     <?php } ?>
-    <?php if (Access::check('interface','50')) { ?>
+    <?php if (Access::check('interface','50') && (!$album->allow_group_disks || ($album->allow_group_disks && !count($album->album_suite)))) { ?>
         <a id="<?php echo 'edit_album_'.$album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', 'album_', 'refresh_album')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>

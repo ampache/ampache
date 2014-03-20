@@ -42,6 +42,7 @@ function get_song_files($media_ids)
             $total_size += sprintf("%.2f",($media->size/1048576));
             $media->format();
             $dirname = $media->f_album_full;
+            //debug_event('batch.lib.php', 'Songs file {'.$media->file.'}...', '5');
             if (!array_key_exists($dirname, $media_files)) {
                 $media_files[$dirname] = array();
             }

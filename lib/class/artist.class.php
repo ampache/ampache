@@ -161,13 +161,22 @@ class Artist extends database_object
 
         $results = array();
 
-        $sql_sort = 'ORDER BY `album`.`name`,`album`.`disk`,`album`.`year`';
-
         $sort_type = AmpConfig::get('album_sort');
-        if ($sort_type == 'year_asc') { $sql_sort = 'ORDER BY `album`.`year` ASC'; } elseif ($sort_type == 'year_desc') { $sql_sort = 'ORDER BY `album`.`year` DESC'; } elseif ($sort_type == 'name_asc') { $sql_sort = 'ORDER BY `album`.`name` ASC'; } elseif ($sort_type == 'name_desc') { $sql_sort = 'ORDER BY `album`.`name` DESC'; }
+        $sql_sort = '`album`.`name`,`album`.`disk`,`album`.`year`';
+        if ($sort_type == 'year_asc') {
+            $sql_sort = '`album`.`year` ASC';
+        } elseif ($sort_type == 'year_desc') {
+            $sql_sort = '`album`.`year` DESC';
+        } elseif ($sort_type == 'name_asc') {
+            $sql_sort = '`album`.`name` ASC';
+        } elseif ($sort_type == 'name_desc') {
+            $sql_sort = '`album`.`name` DESC';
+        }
+
+        $sql_group = "COALESCE(`album`.`mbid`, `album`.`id`)";
 
         $sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-            "WHERE `song`.`artist`='$this->id' $catalog_where GROUP BY `album`.`id` $sql_sort";
+            "WHERE `song`.`artist`='$this->id' $catalog_where GROUP BY $sql_group ORDER BY $sql_sort";
 
         debug_event("Artist", "$sql", "6");
         $db_results = Dba::read($sql);

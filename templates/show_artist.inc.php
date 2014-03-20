@@ -140,7 +140,7 @@ if (AmpConfig::get('show_played_times')) {
     <div id="tabs_content">
         <div id="albums" class="tab_content" style="display: block;">
 <?php
-    $browse->show_objects($object_ids);
+    $browse->show_objects($object_ids, true);   // Passing 'true' means that we allow grouping albums by disks depending on the configuration
     $browse->store();
 ?>
         </div>

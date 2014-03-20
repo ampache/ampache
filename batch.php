@@ -57,9 +57,16 @@ switch ($_REQUEST['action']) {
         $name = $search->name;
     break;
     case 'album':
-        $album = new Album($_REQUEST['id']);
-        $media_ids = $album->get_songs();
-        $name = $album->name;
+        foreach ($_REQUEST['id'] as $a) {
+            $album = new Album($a);
+            if (empty($name)) {
+                $name = $album->name;
+            }
+            $asongs = $album->get_songs();
+            foreach ($asongs as $song_id) {
+                $media_ids[] = $song_id;
+            }
+        }
     break;
     case 'artist':
         $artist = new Artist($_REQUEST['id']);

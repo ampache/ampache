@@ -57,6 +57,7 @@ $thcount = 8;
         /* Foreach through the albums */
         foreach ($object_ids as $album_id) {
             $album = new Album($album_id);
+            $album->allow_group_disks = $allow_group_disks;
             $album->format();
         ?>
         <tr id="album_<?php echo $album->id; ?>" class="<?php echo UI::flip_class(); ?>">

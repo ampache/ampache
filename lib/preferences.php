@@ -179,6 +179,7 @@ function create_preference_input($name,$value)
         case 'share':
         case 'share_social':
         case 'broadcast_by_default':
+        case 'album_group':
             if ($value == '1') { $is_true = "selected=\"selected\""; } else { $is_false = "selected=\"selected\""; }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";

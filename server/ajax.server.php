@@ -212,13 +212,21 @@ switch ($_REQUEST['action']) {
     case 'basket':
         switch ($_REQUEST['type']) {
             case 'album':
+                foreach ($_REQUEST['id'] as $i) {
+                    $object = new $_REQUEST['type']($i);
+                    $songs = $object->get_songs();
+                    foreach ($songs as $song_id) {
+                        $GLOBALS['user']->playlist->add_object($song_id, 'song');
+                    }
+                }
+            break;
             case 'artist':
             case 'tag':
                 $object = new $_REQUEST['type']($_REQUEST['id']);
                 $songs = $object->get_songs();
                 foreach ($songs as $song_id) {
                     $GLOBALS['user']->playlist->add_object($song_id,'song');
-                } // end foreach
+                }
             break;
             case 'browse_set':
                 $browse = new Browse($_REQUEST['browse_id']);
@@ -228,6 +236,16 @@ switch ($_REQUEST['action']) {
                 }
             break;
             case 'album_random':
+                $data = explode('_',$_REQUEST['type']);
+                $type = $data['0'];
+                foreach ($_REQUEST['id'] as $i) {
+                    $object = new $type($i);
+                    $songs = $object->get_random_songs();
+                    foreach ($songs as $song_id) {
+                        $GLOBALS['user']->playlist->add_object($song_id, 'song');
+                    }
+                }
+            break;
             case 'artist_random':
             case 'tag_random':
                 $data = explode('_',$_REQUEST['type']);
