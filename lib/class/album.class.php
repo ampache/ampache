@@ -43,10 +43,10 @@ class Album extends database_object
     // cached information
     public $_songs = array();
     private static $_mapcache = array();
-    
+
     public $album_suite = array();
     public $allow_group_disks = false;
-    
+
     /**
      * __construct
      * Album constructor it loads everything relating
@@ -73,7 +73,7 @@ class Album extends database_object
         if ($this->disk && !empty($this->mbid) && AmpConfig::get('album_group')) {
             $this->album_suite = $this->get_album_suite();
         }
-        
+
         return true;
 
     } // constructor
@@ -185,30 +185,30 @@ class Album extends database_object
             "`artist`.`id` AS `artist_id` " .
             "FROM `song` INNER JOIN `artist` " .
             "ON `artist`.`id`=`song`.`artist` ";
-            
+
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
-        
+
         $suite_array = $this->album_suite;
         if (!count($suite_array)) {
             $suite_array[] = $this->id;
         }
-        
+
         $idlist = '(' . implode(',', $suite_array) . ')';
         $sql .= "WHERE `song`.`album` IN $idlist ";
-        
+
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' "; 
+            $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         if (!count($this->album_suite)) {
             $sql .= "GROUP BY `song`.`album`";
         } else {
             $sql .= "GROUP BY `song`.`artist`";
         }
-        
+
         debug_event("Album", "$sql", "6");
-        
+
         $db_results = Dba::read($sql);
 
         $results = Dba::fetch_assoc($db_results);
@@ -360,10 +360,10 @@ class Album extends database_object
         } else {
             $suite_array = array ($this->id);
         }
-        
+
         return http_build_query(array($url_param_name => $suite_array));
     }
-    
+
     /**
      * get_album_suite
      * gets the album ids with the same musicbrainz identifier
@@ -371,7 +371,7 @@ class Album extends database_object
     public function get_album_suite()
     {
         $results = array();
-        
+
         $catalog_where = "";
         $catalog_join = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
         if ($catalog) {
@@ -389,11 +389,11 @@ class Album extends database_object
         while ($r = Dba::fetch_assoc($db_results)) {
             $results[] = $r['id'];
         }
-        
+
         return $results;
 
     } // get_album_suite
-    
+
     /**
      * has_track
      * This checks to see if this album has a track of the specified title
@@ -428,14 +428,14 @@ class Album extends database_object
 
         $this->f_link_src = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
         $this->f_name_link    = "<a href=\"" . $this->f_link_src . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
-        
+
         // Looking to combine disks
         if ($this->disk && (!$this->allow_group_disks || ($this->allow_group_disks && !AmpConfig::get('album_group')))) {
             $this->f_name_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
         } elseif ($this->disk && $this->allow_group_disks && AmpConfig::get('album_group') && count($this->album_suite) > 1) {
             $this->f_name_link .= " <span class=\"discnb\">[#" . count($this->album_suite) . "]</span>";
         }
-        
+
         $this->f_name_link .="</a>";
 
         $this->f_link = $this->f_name_link;

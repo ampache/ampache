@@ -35,12 +35,12 @@ $web_path = AmpConfig::get('web_path');
                 <th class="cel_tags"><?php echo T_('Tags'); ?></th>
                 <th class="cel_time"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('ratings')) {
-                Rating::build_cache('song', array_map(create_function('$i', 'return $i[\'object_id\'];'), $object_ids));
+                Rating::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
             ?>
                 <th class="cel_rating"><?php echo T_('Rating'); ?></th>
             <?php } ?>
             <?php if (AmpConfig::get('userflags')) {
-                Userflag::build_cache('song', array_map(create_function('$i', 'return $i[\'object_id\'];'), $object_ids));
+                Userflag::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
             ?>
                 <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
             <?php } ?>
@@ -50,6 +50,9 @@ $web_path = AmpConfig::get('web_path');
         </thead>
         <tbody id="sortableplaylist">
             <?php foreach ($object_ids as $object) {
+                    if (!is_array($object)) {
+                        $object = (array) $object;
+                    }
                     $song = new Song($object['object_id']);
                     $song->format();
                     $playlist_track = $object['track'];

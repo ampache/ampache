@@ -115,8 +115,9 @@ switch ($_REQUEST['action']) {
         Democratic::build_vote_cache($democratic->vote_ids);
         $browse = new Browse();
         $browse->set_type('democratic');
-        $browse->set_static_content(true);
-        $browse->show_objects($objects);
+        $browse->set_static_content(false);
+        $browse->save_objects($objects);
+        $browse->show_objects();
         $browse->store();
     break;
 } // end switch on action

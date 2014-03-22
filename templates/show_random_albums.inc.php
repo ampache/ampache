@@ -43,9 +43,9 @@ if ($albums) {
         </div>
         <div class="play_album">
         <?php if (AmpConfig::get('directplay')) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id,'play', T_('Play'),'play_album_' . $album->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id[]=' . $album->id,'play', T_('Play'),'play_album_' . $album->id); ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id . '&append=true','play_add', T_('Play last'),'addplay_album_' . $album->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id[]=' . $album->id . '&append=true','play_add', T_('Play last'),'addplay_album_' . $album->id); ?>
             <?php } ?>
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Add to temporary playlist'),'play_full_' . $album->id); ?>

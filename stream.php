@@ -103,7 +103,7 @@ switch ($_REQUEST['action']) {
     case 'album':
         debug_event('stream.php', 'Playing/Adding all songs of album(s) {'.$_REQUEST['album_id'].'}...', '5');
         $albums_array = explode(',', $_REQUEST['album_id']);
-        
+
         foreach ($albums_array as $a) {
             $album = new Album($a);
             $songs = $album->get_songs();

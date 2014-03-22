@@ -82,7 +82,7 @@ if ($show_browse) {
     $object_ids = $democratic->get_items();
     $browse = new Browse();
     $browse->set_type('democratic');
-    $browse->set_static_content(true);
+    $browse->set_static_content(false);
     $browse->show_objects($object_ids);
     $browse->store();
     $results['browse_content_' . $browse->get_type()] = ob_get_contents();

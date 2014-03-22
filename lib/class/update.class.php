@@ -393,7 +393,7 @@ class Update
 
         $update_string = '- Add album group multiple disks setting.<br />';
         $version[] = array('version' => '360049','description' => $update_string);
-        
+
         return $version;
     }
 
@@ -2363,7 +2363,7 @@ class Update
 
         return true;
     }
-    
+
     /**
      * update_360049
      *

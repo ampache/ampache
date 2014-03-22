@@ -41,9 +41,7 @@ if (!count($object_ids)) {
 ?>
 <tr>
 <td>
-    <?php echo T_('Playing from base Playlist'); ?>:
-    <a href="<?php echo $web_path; ?>/playlist.php?action=show_playlist&amp;playlist_id=<?php echo $playlist->id; ?>">
-    <?php echo scrub_out($playlist->name); ?>
+    <?php echo T_('Playing from base Playlist'); ?>.
     </a>
 </td>
 </tr>
@@ -52,21 +50,27 @@ if (!count($object_ids)) {
 /* Else we have songs */
 else {
 ?>
-<tr class="th-top">
-    <th class="cel_action"><?php echo T_('Action'); ?></th>
-    <th class="cel_votes"><?php echo T_('Votes'); ?></th>
-    <th class="cel_title"><?php echo T_('Title'); ?></th>
-    <th class="cel_album"><?php echo T_('Album'); ?></th>
-    <th class="cel_artist"><?php echo T_('Artist'); ?></th>
-    <th class="cel_time"><?php echo T_('Time'); ?></th>
-    <?php if (Access::check('interface','100')) { ?>
-    <th class="cel_admin"><?php echo T_('Admin'); ?></th>
-    <?php } ?>
-</tr>
+<thead>
+    <tr class="th-top">
+        <th class="cel_action"><?php echo T_('Action'); ?></th>
+        <th class="cel_votes"><?php echo T_('Votes'); ?></th>
+        <th class="cel_title"><?php echo T_('Title'); ?></th>
+        <th class="cel_album"><?php echo T_('Album'); ?></th>
+        <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+        <th class="cel_time"><?php echo T_('Time'); ?></th>
+        <?php if (Access::check('interface','100')) { ?>
+        <th class="cel_admin"><?php echo T_('Admin'); ?></th>
+        <?php } ?>
+    </tr>
+</thead>
+<tbody>
 <?php
 $democratic = Democratic::get_current_playlist();
 $democratic->set_parent();
 foreach ($object_ids as $item) {
+    if (!is_array($item)) {
+        $item = (array) $item;
+    }
     $media = new $item['object_type']($item['object_id']);
     $media->format();
 ?>
@@ -92,17 +96,20 @@ foreach ($object_ids as $item) {
 <?php
     } // end foreach
 ?>
-<tr class="th-bottom">
-    <th class="cel_action"><?php echo T_('Action'); ?></th>
-    <th class="cel_votes"><?php echo T_('Votes'); ?></th>
-    <th class="cel_title"><?php echo T_('Title'); ?></th>
-    <th class="cel_album"><?php echo T_('Album'); ?></th>
-    <th class="cel_artist"><?php echo T_('Artist'); ?></th>
-    <th class="cel_time"><?php echo T_('Time'); ?></th>
-    <?php if (Access::check('interface','100')) { ?>
-    <th class="cel_admin"><?php echo T_('Admin'); ?></th>
-    <?php } ?>
-</tr>
+</tbody>
+<tfoot>
+    <tr class="th-bottom">
+        <th class="cel_action"><?php echo T_('Action'); ?></th>
+        <th class="cel_votes"><?php echo T_('Votes'); ?></th>
+        <th class="cel_title"><?php echo T_('Title'); ?></th>
+        <th class="cel_album"><?php echo T_('Album'); ?></th>
+        <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+        <th class="cel_time"><?php echo T_('Time'); ?></th>
+        <?php if (Access::check('interface','100')) { ?>
+        <th class="cel_admin"><?php echo T_('Admin'); ?></th>
+        <?php } ?>
+    </tr>
+</tfoot>
 <?php
 } // end else
 ?>
