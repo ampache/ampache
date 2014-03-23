@@ -48,7 +48,7 @@ $web_path = AmpConfig::get('web_path');
                 <th class="cel_drag"></th>
             </tr>
         </thead>
-        <tbody id="sortableplaylist">
+        <tbody id="sortableplaylist_<?php echo $playlist->id; ?>">
             <?php foreach ($object_ids as $object) {
                     if (!is_array($object)) {
                         $object = (array) $object;

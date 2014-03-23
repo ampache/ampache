@@ -138,6 +138,8 @@ class Browse extends Query
         // Set the correct classes based on type
         $class = "box browse_" . $type;
 
+        debug_event('browse', 'Called for type {'.$type.'}', '5');
+        
         // Switch on the type of browsing we're doing
         switch ($type) {
             case 'song':
@@ -238,7 +240,7 @@ class Browse extends Query
         }
 
         if ($box_req) {
-            require_once $box_req;
+            require $box_req;
         }
 
         if ($this->get_show_header()) {

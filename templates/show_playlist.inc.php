@@ -89,7 +89,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     </ul>
 </div>
 <?php UI::show_box_bottom(); ?>
-<div id='reordered_list'>
+<div id='reordered_list_<?php echo $playlist->id; ?>'>
 <?php
     $browse = new Browse();
     $browse->set_type('playlist_song');

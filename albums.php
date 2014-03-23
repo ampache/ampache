@@ -212,8 +212,14 @@ switch ($_REQUEST['action']) {
     case 'show':
     default:
         $album = new Album($_REQUEST['album']);
+        $album->allow_group_disks = true;
         $album->format();
-        require AmpConfig::get('prefix') . '/templates/show_album.inc.php';
+        
+        if (!count($album->album_suite)) {
+            require AmpConfig::get('prefix') . '/templates/show_album.inc.php';
+        } else {
+            require AmpConfig::get('prefix') . '/templates/show_album_group_disks.inc.php';
+        }
 
     break;
 } // switch on view

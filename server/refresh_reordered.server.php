@@ -40,15 +40,14 @@ switch ($_REQUEST['action']) {
         $browse->store();
     break;
     case 'refresh_album_songs':
-        $album = new Album($_REQUEST['id']);
-        $album->format();
         $browse = new Browse();
+        $browse->set_show_header(false);
         $browse->set_type('song');
         $browse->set_simple_browse(true);
-        $browse->set_filter('album', $album->id);
+        $browse->set_filter('album', $_REQUEST['id']);
         $browse->set_sort('track', 'ASC');
         $browse->get_objects();
-        $browse->show_objects(null, true);  // true argument is set to show the reorder column
+        $browse->show_objects(null, true); // true argument is set to show the reorder column
         $browse->store();
     break;
 } // switch on the action

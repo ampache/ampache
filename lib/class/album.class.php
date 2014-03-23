@@ -353,15 +353,26 @@ class Album extends database_object
     public function get_http_album_query_ids($url_param_name)
     {
         if ($this->allow_group_disks) {
-            $suite_array = $this->album_suite;
-            if (!count($suite_array)) {
-                $suite_array[] = $this->id;
-            }
+            $suite_array = $this->get_group_disks_ids();
         } else {
-            $suite_array = array ($this->id);
+            $suite_array = array($this->id);
         }
 
         return http_build_query(array($url_param_name => $suite_array));
+    }
+    
+    /**
+     * get_group_disks_ids
+     * return all album suite ids or current album if no albums
+     */
+    public function get_group_disks_ids()
+    {
+        $suite_array = $this->album_suite;
+        if (!count($suite_array)) {
+            $suite_array[] = $this->id;
+        }
+
+        return $suite_array;
     }
 
     /**

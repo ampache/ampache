@@ -91,7 +91,7 @@ if (AmpConfig::get('show_played_times')) {
             <?php echo Ajax::text('?action=basket&type=album_random&id=' . $album->id, T_('Random to temporary playlist'), 'play_random_text_' . $album->id); ?>
         </li>
         <li>
-            <a onclick="submitNewItemsOrder('<?php echo $album->id; ?>', 'reorder_songs_table', 'song_',
+            <a onclick="submitNewItemsOrder('<?php echo $album->id; ?>', 'reorder_songs_table_<?php echo $album->id; ?>', 'song_',
                                             '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
                 <?php echo UI::get_icon('save', T_('Save Tracks Order')); ?>
                 &nbsp;&nbsp;<?php echo T_('Save Tracks Order'); ?>
@@ -107,12 +107,12 @@ if (AmpConfig::get('show_played_times')) {
             <a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo UI::get_icon('view', T_('Find Album Art')); ?></a>
             <a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo T_('Find Album Art'); ?></a>
         </li>
-        <?php  if ((Access::check('interface','50'))) { ?>
+        <!--<?php  if ((Access::check('interface','50'))) { ?>
         <li>
             <a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('cog', T_('Update from tags')); ?></a>
             <a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo T_('Update from tags'); ?></a>
         </li>
-        <?php  } ?>
+        <?php  } ?>-->
         <?php if (AmpConfig::get('sociable')) { ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo T_('Post Shout'); ?></a>
@@ -135,7 +135,7 @@ if (AmpConfig::get('show_played_times')) {
 <div id="additional_information">
 &nbsp;
 </div>
-<div id='reordered_list'>
+<div id='reordered_list_<?php echo $album->id; ?>'>
 <?php
     $browse = new Browse();
     $browse->set_type('song');
