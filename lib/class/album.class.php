@@ -440,17 +440,15 @@ class Album extends database_object
         $this->f_link_src = $web_path . '/albums.php?action=show&album=' . scrub_out($this->id);
         $this->f_name_link    = "<a href=\"" . $this->f_link_src . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
 
-        // Looking to combine disks
+        // Looking if we need to combine or display disks
         if ($this->disk && (!$this->allow_group_disks || ($this->allow_group_disks && !AmpConfig::get('album_group')))) {
             $this->f_name_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
-        } elseif ($this->disk && $this->allow_group_disks && AmpConfig::get('album_group') && count($this->album_suite) > 1) {
-            $this->f_name_link .= " <span class=\"discnb\">[#" . count($this->album_suite) . "]</span>";
         }
 
         $this->f_name_link .="</a>";
 
         $this->f_link = $this->f_name_link;
-        $this->f_title = $this->full_name; // FIXME: Legacy?
+        $this->f_title = $this->full_name;
         if ($this->artist_count == '1') {
             $artist = trim(trim($this->artist_prefix) . ' ' . trim($this->artist_name));
             $this->f_artist_name = $artist;

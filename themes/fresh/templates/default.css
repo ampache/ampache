@@ -854,15 +854,15 @@ span.nodata {
 
 .external_links {
     text-align: right;
-    opacity: 0.3;
-}
-
-.external_links:hover {
-    opacity: 1;
 }
 
 .external_links a {
     margin: 0px 5px 0px 0px;
+    opacity: 0.3;
+}
+
+.external_links a:hover {
+    opacity: 1;
 }
 
 #artist_summary {

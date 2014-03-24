@@ -212,7 +212,6 @@ switch ($_REQUEST['action']) {
     case 'show':
     default:
         $album = new Album($_REQUEST['album']);
-        $album->allow_group_disks = true;
         $album->format();
         
         if (!count($album->album_suite)) {

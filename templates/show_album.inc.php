@@ -72,23 +72,23 @@ if (AmpConfig::get('show_played_times')) {
     <ul>
         <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id,'play', T_('Play'),'directplay_full_' . $album->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=album&album_id=' . $album->id, T_('Play'),'directplay_full_text_' . $album->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&' . $album->get_http_album_query_ids('album_id'),'play', T_('Play'),'directplay_full_' . $album->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&playtype=album&' . $album->get_http_album_query_ids('album_id'), T_('Play'),'directplay_full_text_' . $album->id); ?>
         </li>
         <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&album_id=' . $album->id . '&append=true','play_add', T_('Play last'),'addplay_album_' . $album->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=album&album_id=' . $album->id . '&append=true', T_('Play last'),'addplay_album_text_' . $album->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&' . $album->get_http_album_query_ids('album_id') . '&append=true','play_add', T_('Play last'),'addplay_album_' . $album->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&playtype=album&' . $album->get_http_album_query_ids('album_id') . '&append=true', T_('Play last'),'addplay_album_text_' . $album->id); ?>
         </li>
         <?php } ?>
         <li>
-            <?php echo Ajax::button('?action=basket&type=album&id=' . $album->id,'add', T_('Add to temporary playlist'),'play_full_' . $album->id); ?>
-            <?php echo Ajax::text('?action=basket&type=album&id=' . $album->id, T_('Add to temporary playlist'), 'play_full_text_' . $album->id); ?>
+            <?php echo Ajax::button('?action=basket&type=album&' . $album->get_http_album_query_ids('id'),'add', T_('Add to temporary playlist'),'play_full_' . $album->id); ?>
+            <?php echo Ajax::text('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), T_('Add to temporary playlist'), 'play_full_text_' . $album->id); ?>
         </li>
         <li>
-            <?php echo Ajax::button('?action=basket&type=album_random&id=' . $album->id,'random', T_('Random to temporary playlist'),'play_random_' . $album->id); ?>
-            <?php echo Ajax::text('?action=basket&type=album_random&id=' . $album->id, T_('Random to temporary playlist'), 'play_random_text_' . $album->id); ?>
+            <?php echo Ajax::button('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'),'random', T_('Random to temporary playlist'),'play_random_' . $album->id); ?>
+            <?php echo Ajax::text('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), T_('Random to temporary playlist'), 'play_random_text_' . $album->id); ?>
         </li>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $album->id; ?>', 'reorder_songs_table_<?php echo $album->id; ?>', 'song_',
@@ -121,6 +121,16 @@ if (AmpConfig::get('show_played_times')) {
         <li>
             <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $album->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
             <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $album->id; ?>"><?php echo T_('Share'); ?></a>
+        </li>
+        <?php } ?>
+        <?php if (Access::check('interface','50')) { ?>
+        <li>
+            <a id="<?php echo 'edit_album_'.$c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '', '')">
+                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+            </a>
+            <a id="<?php echo 'edit_album_'.$c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '', '')">
+                <?php echo T_('Edit Album'); ?>
+            </a>
         </li>
         <?php } ?>
         <?php if (Access::check_function('batch_download')) { ?>

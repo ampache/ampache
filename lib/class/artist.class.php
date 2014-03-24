@@ -148,7 +148,7 @@ class Artist extends database_object
      * gets the album ids that this artist is a part
      * of
      */
-    public function get_albums($catalog = null)
+    public function get_albums($catalog = null, $ignoreAlbumGroups = false)
     {
         $catalog_where = "";
         $catalog_join = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
@@ -173,7 +173,11 @@ class Artist extends database_object
             $sql_sort = '`album`.`name` DESC';
         }
 
-        $sql_group = "COALESCE(`album`.`mbid`, `album`.`id`)";
+        $sql_group_type = '`album`.`id`';
+        if (!$ignoreAlbumGroups && AmpConfig::get('album_group')) {
+            $sql_group_type = '`album`.`mbid`';
+        }
+        $sql_group = "COALESCE($sql_group_type, `album`.`id`)";
 
         $sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
             "WHERE `song`.`artist`='$this->id' $catalog_where GROUP BY $sql_group ORDER BY $sql_sort";
@@ -477,7 +481,7 @@ class Artist extends database_object
         Tag::update_tag_list($tags_comma, 'artist', $current_id);
 
         if ($override_childs) {
-            $albums = $this->get_albums();
+            $albums = $this->get_albums(null, true);
             foreach ($albums as $album_id) {
                 $album = new Album($album_id);
                 $album->update_tags($tags_comma, $override_childs);

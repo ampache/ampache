@@ -1144,6 +1144,15 @@ div.box.box_rules {
 	width: 100%;
 }
 
+.album_group_disks_title {
+    float: left;
+    margin-right: 30px;
+}
+
+.album_group_disks_actions {
+
+}
+
 /***********************************************
     Content (Tag cloud)                
 ***********************************************/
@@ -1312,15 +1321,15 @@ span.fatalerror {
 
 .external_links {
     text-align: right;
-    opacity: 0.3;
-}
-
-.external_links:hover {
-    opacity: 1;
 }
 
 .external_links a {
-    margin: 0px 5px 0px 0px
+    margin: 0px 5px 0px 0px;
+    opacity: 0.3;
+}
+
+.external_links a:hover {
+    opacity: 1;
 }
 
 #artist_summary {

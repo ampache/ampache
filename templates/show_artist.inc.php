@@ -103,17 +103,25 @@ if (AmpConfig::get('show_played_times')) {
             <?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id,'random', T_('Random all to temporary playlist'),'random_' . $artist->id); ?>
             <?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id, T_('Random all to temporary playlist'),'random_text_' . $artist->id); ?>
         </li>
-        <?php if (Access::check('interface','50')) { ?>
+        <!--<?php if (Access::check('interface','50')) { ?>
         <li>
             <a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('cog', T_('Update from tags')); ?></a>
             <a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo T_('Update from tags'); ?></a>
         </li>
-        <?php } ?>
+        <?php } ?>-->
         <?php if (Access::check_function('batch_download')) { ?>
         <li>
             <a href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
             <a href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo T_('Download'); ?></a>
         </li>
+        <?php } ?>
+        <?php if (Access::check('interface','50')) { ?>
+            <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '', '')">
+                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+            </a>
+            <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '', '')">
+                <?php echo T_('Edit Artist'); ?>
+            </a>
         <?php } ?>
         <li>
             <input type="checkbox" id="show_artist_artCB" <?php echo $string = Art::is_enabled() ? 'checked="checked"' : ''; ?>/> <?php echo T_('Show Art'); ?>

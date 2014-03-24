@@ -70,13 +70,13 @@ $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;-&nbsp;' .
         </li>
         <?php if (Access::check('interface','75')) { ?>
         <li>
-            <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&<?php echo $album->get_http_album_query_ids('album_id'); ?>" onclick="return confirm('<?php echo T_('Do you really want to reset album art?'); ?>');"><?php echo UI::get_icon('delete', T_('Reset Album Art')); ?></a>
-            <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&<?php echo $album->get_http_album_query_ids('album_id'); ?>" onclick="return confirm('<?php echo T_('Do you really want to reset album art?'); ?>');"><?php echo T_('Reset Album Art'); ?></a>
+            <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to reset album art?'); ?>');"><?php echo UI::get_icon('delete', T_('Reset Album Art')); ?></a>
+            <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to reset album art?'); ?>');"><?php echo T_('Reset Album Art'); ?></a>
         </li>
         <?php } ?>
         <li>
-            <a href="<?php echo $web_path; ?>/albums.php?action=find_art&<?php echo $album->get_http_album_query_ids('album_id'); ?>"><?php echo UI::get_icon('view', T_('Find Album Art')); ?></a>
-            <a href="<?php echo $web_path; ?>/albums.php?action=find_art&<?php echo $album->get_http_album_query_ids('album_id'); ?>"><?php echo T_('Find Album Art'); ?></a>
+            <a href="<?php echo $web_path; ?>/albums.php?action=find_art&album_id=<?php echo $album->id; ?>"><?php echo UI::get_icon('view', T_('Find Album Art')); ?></a>
+            <a href="<?php echo $web_path; ?>/albums.php?action=find_art&album_id=<?php echo $album->id; ?>"><?php echo T_('Find Album Art'); ?></a>
         </li>
         <?php if (Access::check_function('batch_download')) { ?>
         <li>
@@ -114,13 +114,18 @@ $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;-&nbsp;' .
             <?php echo UI::get_icon('save', T_('Save Tracks Order')); ?>
         </a>
         <?php if (AmpConfig::get('sociable')) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
         <?php } ?>
         <?php if (AmpConfig::get('share')) { ?>
-            <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+            <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $c_album->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
         <?php } ?>
         <?php if (Access::check_function('batch_download')) { ?>
             <a href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
+        <?php } ?>
+        <?php if (Access::check('interface','50')) { ?>
+            <a id="<?php echo 'edit_album_'.$c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_'.$c_album->id ?>', '<?php echo T_('Album edit') ?>', '', '')">
+                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+            </a>
         <?php } ?>
     </div>
     <div id='reordered_list_<?php echo $album_id; ?>'>
@@ -135,5 +140,5 @@ $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;-&nbsp;' .
         $browse->show_objects(null, true); // true argument is set to show the reorder column
         $browse->store();
     ?>
-    </div>
+    </div><br />
 <?php } ?>

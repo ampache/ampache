@@ -62,12 +62,12 @@ if (Art::is_enabled()) {
 <td class="cel_userflag" id="userflag_<?php echo $album->id; ?>_album"><?php Userflag::show($album->id, 'album'); ?></td>
 <?php } ?>
 <td class="cel_action">
-    <?php if (AmpConfig::get('sociable')) { ?>
+    <?php if (AmpConfig::get('sociable') && (!$album->allow_group_disks || ($album->allow_group_disks && !count($album->album_suite)))) { ?>
     <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&amp;id=<?php echo $album->id; ?>">
         <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
     </a>
     <?php } ?>
-    <?php if (AmpConfig::get('share')) { ?>
+    <?php if (AmpConfig::get('share') && (!$album->allow_group_disks || ($album->allow_group_disks && !count($album->album_suite)))) { ?>
         <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
     <?php } ?>
     <?php if (Access::check_function('batch_download')) { ?>
