@@ -360,7 +360,7 @@ class Album extends database_object
 
         return http_build_query(array($url_param_name => $suite_array));
     }
-    
+
     /**
      * get_group_disks_ids
      * return all album suite ids or current album if no albums

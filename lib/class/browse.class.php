@@ -139,7 +139,7 @@ class Browse extends Query
         $class = "box browse_" . $type;
 
         debug_event('browse', 'Called for type {'.$type.'}', '5');
-        
+
         // Switch on the type of browsing we're doing
         switch ($type) {
             case 'song':

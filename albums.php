@@ -213,7 +213,7 @@ switch ($_REQUEST['action']) {
     default:
         $album = new Album($_REQUEST['album']);
         $album->format();
-        
+
         if (!count($album->album_suite)) {
             require AmpConfig::get('prefix') . '/templates/show_album.inc.php';
         } else {
