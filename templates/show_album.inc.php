@@ -99,13 +99,13 @@ if (AmpConfig::get('show_played_times')) {
         </li>
         <?php if (Access::check('interface','75')) { ?>
         <li>
-            <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to reset album art?'); ?>');"><?php echo UI::get_icon('delete', T_('Reset Album Art')); ?></a>
-            <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to reset album art?'); ?>');"><?php echo T_('Reset Album Art'); ?></a>
+            <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to reset album art?'); ?>');"><?php echo UI::get_icon('delete', T_('Reset Album Art')); ?></a>
+            <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to reset album art?'); ?>');"><?php echo T_('Reset Album Art'); ?></a>
         </li>
         <?php } ?>
         <li>
-            <a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo UI::get_icon('view', T_('Find Album Art')); ?></a>
-            <a href="<?php echo $web_path; ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>"><?php echo T_('Find Album Art'); ?></a>
+            <a href="<?php echo $web_path; ?>/albums.php?action=find_art&album_id=<?php echo $album->id; ?>"><?php echo UI::get_icon('view', T_('Find Album Art')); ?></a>
+            <a href="<?php echo $web_path; ?>/albums.php?action=find_art&album_id=<?php echo $album->id; ?>"><?php echo T_('Find Album Art'); ?></a>
         </li>
         <!--<?php  if ((Access::check('interface','50'))) { ?>
         <li>
@@ -135,8 +135,8 @@ if (AmpConfig::get('show_played_times')) {
         <?php } ?>
         <?php if (Access::check_function('batch_download')) { ?>
         <li>
-            <a href="<?php echo $web_path; ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
-            <a href="<?php echo $web_path; ?>/batch.php?action=album&amp;id=<?php echo $album->id; ?>"><?php echo T_('Download'); ?></a>
+            <a href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
+            <a href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo T_('Download'); ?></a>
         </li>
         <?php } ?>
     </ul>
