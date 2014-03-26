@@ -745,7 +745,7 @@ class Plex_XML_Data
         $xml->addAttribute('viewGroup', 'album');
         $xml->addAttribute('viewMode', '65592');
 
-        $allalbums = $artist->get_albums();
+        $allalbums = $artist->get_albums(null, true);
         foreach ($allalbums as $id) {
             $album = new Album($id);
             $album->format();

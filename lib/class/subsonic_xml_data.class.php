@@ -226,12 +226,17 @@ class Subsonic_XML_Data
         $xartist = $xml->addChild('artist');
         $xartist->addAttribute('id', self::getArtistId($artist->id));
         $xartist->addAttribute('name', $artist->name);
+        
+        $allalbums = array();
+        if ($extra || $albums) {
+            $allalbums = $artist->get_albums(null, true);
+        }
+        
         if ($extra) {
             //$xartist->addAttribute('coverArt');
-            $xartist->addAttribute('albumCount', count($artist->get_albums()));
+            $xartist->addAttribute('albumCount', count($allalbums));
         }
         if ($albums) {
-            $allalbums = $artist->get_albums();
             foreach ($allalbums as $id) {
                 $album = new Album($id);
                 self::addAlbum($xartist, $album);
@@ -257,7 +262,9 @@ class Subsonic_XML_Data
         $xalbum->addAttribute('name', $album->name);
         $xalbum->addAttribute('isDir', 'true');
         $album->format();
-        if ($album->has_art) $xalbum->addAttribute('coverArt', self::getAlbumId($album->id));
+        if ($album->has_art) {
+            $xalbum->addAttribute('coverArt', self::getAlbumId($album->id));
+        }
         $xalbum->addAttribute('songCount', $album->song_count);
         $xalbum->addAttribute('duration', $album->total_duration);
         $xalbum->addAttribute('artistId', self::getArtistId($album->artist_id));
@@ -326,6 +333,10 @@ class Subsonic_XML_Data
         if ($album->year > 0) {
             $name .= " [" . $album->year . "]";
         }
+        
+        if ($album->disk) {
+            $name .= " [" . T_('Disk') . " " . $album->disk . "]";
+        }
 
         return $name;
     }
@@ -336,7 +347,7 @@ class Subsonic_XML_Data
         $xdir->addAttribute('id', self::getArtistId($artist->id));
         $xdir->addAttribute('name', $artist->name);
 
-        $allalbums = $artist->get_albums();
+        $allalbums = $artist->get_albums(null, true);
         foreach ($allalbums as $id) {
             $album = new Album($id);
             self::addAlbum($xdir, $album, false, "child");

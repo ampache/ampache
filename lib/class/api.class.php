@@ -306,7 +306,7 @@ class Api
     {
         $artist = new Artist($input['filter']);
 
-        $albums = $artist->get_albums();
+        $albums = $artist->get_albums(null, true);
 
         // Set the offset
         XML_Data::set_offset($input['offset']);
