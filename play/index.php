@@ -308,12 +308,14 @@ if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
 
     // Make sure that a good chunk of the song has been played
     if ($bytesStreamed >= $media->size) {
-        debug_event('Play', 'Downloaded, Registering stats for ' . $media->title, '5');
-        $sessionkey = Stream::$session;
-        //debug_event('play', 'Current session key {'.$sessionkey.'}', '5');
-        $agent = Session::agent($sessionkey);
-        //debug_event('play', 'Current session agent {'.$agent.'}', '5');
-        $GLOBALS['user']->update_stats($media->id, $agent);
+        if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
+            debug_event('Play', 'Downloaded, Registering stats for ' . $media->title, '5');
+            $sessionkey = Stream::$session;
+            //debug_event('play', 'Current session key {'.$sessionkey.'}', '5');
+            $agent = Session::agent($sessionkey);
+            //debug_event('play', 'Current session agent {'.$agent.'}', '5');
+            $GLOBALS['user']->update_stats($media->id, $agent);
+        }
     } // if enough bytes are streamed
 
     fclose($fp);
@@ -492,13 +494,15 @@ if ($start > $target) {
 } else if ($bytes_streamed > $target) {
     // FIXME: This check looks suspicious
     if (get_class($media) == 'Song' && empty($share_id)) {
-        debug_event('play', 'Registering stats for {'.$media->title.'}...', '5');
-        $sessionkey = Stream::$session;
-        //debug_event('play', 'Current session key {'.$sessionkey.'}', '5');
-        $agent = Session::agent($sessionkey);
-        //debug_event('play', 'Current session agent {'.$agent.'}', '5');
-        $GLOBALS['user']->update_stats($media->id, $agent);
-        $media->set_played();
+        if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
+            debug_event('play', 'Registering stats for {'.$media->title.'}...', '5');
+            $sessionkey = Stream::$session;
+            //debug_event('play', 'Current session key {'.$sessionkey.'}', '5');
+            $agent = Session::agent($sessionkey);
+            //debug_event('play', 'Current session agent {'.$agent.'}', '5');
+            $GLOBALS['user']->update_stats($media->id, $agent);
+            $media->set_played();
+        }
     }
 } else {
     debug_event('play', $bytes_streamed .' of ' . $stream_size . ' streamed; not collecting stats', 5);
