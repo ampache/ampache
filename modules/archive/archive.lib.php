@@ -18,7 +18,7 @@ class archive {
 
 	/**
  	 * constructor
-	 * This function is the constructor for the arcive class
+	 * This function is the constructor for the archive class
 	 */
 	public function archive($name) {
 		$this->options = array (
@@ -642,6 +642,11 @@ class zip_file extends archive
 		{
             foreach ($current as $key => $value) {
                 debug_event("archive.lib.php", "Processing ".$key."[".$value."]...", "5");
+            }
+            
+            if (function_exists('iconv')) {
+                // Fix encoding issue for zip archives
+                $current['name2'] = iconv('UTF-8', 'CP852', $current['name2']);
             }
 
 			if ($current['name'] == $this->options['name'])
