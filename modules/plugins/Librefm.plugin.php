@@ -139,7 +139,7 @@ class Ampachelibrefm {
         if (!$scrobbler->submit_tracks()) {
             debug_event($this->name,'Error Submit Failed: ' . $scrobbler->error_msg,'3');
             if ($scrobbler->reset_handshake) {
-                debug_event($this->name,'Re-running Handshake due to error','3');
+                debug_event($this->name, 'Re-running Handshake due to error', '1');
                 $this->set_handshake($this->user_id);
                 // Try try again
                 if ($scrobbler->submit_tracks()) {

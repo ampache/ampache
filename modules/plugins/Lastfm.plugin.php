@@ -216,9 +216,9 @@ class AmpacheLastfm {
 
         // If we don't have the other stuff try to get it before giving up
         if (!$data['lastfm_host'] || !$data['lastfm_port'] || !$data['lastfm_url'] || !$data['lastfm_challenge']) {
-            debug_event($this->name,'Running Handshake, missing information','3');
+            debug_event($this->name, 'Running Handshake, missing information', '1');
             if (!$this->set_handshake($this->user_id)) {
-                debug_event($this->name,'Handshake failed, you lose','3');
+                debug_event($this->name, 'Handshake failed, you lose', '3');
                 return false;
             }
         }

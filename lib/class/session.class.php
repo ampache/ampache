@@ -204,10 +204,16 @@ class Session
             break;
         } // end switch on data type
 
-        $username = $data['username'];
+        $username = '';
+        if (isset($data['username'])) {
+            $username = $data['username'];
+        }
         $ip = $_SERVER['REMOTE_ADDR'] ? inet_pton($_SERVER['REMOTE_ADDR']) : '0';
         $type = $data['type'];
-        $value = $data['value'];
+        $value = '';
+        if (isset($data['value'])) {
+            $value = $data['value'];
+        }
         $agent = (!empty($data['agent'])) ? $data['agent'] : substr($_SERVER['HTTP_USER_AGENT'], 0, 254);
 
         if ($type == 'stream') {

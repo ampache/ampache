@@ -387,7 +387,7 @@ class Preference extends database_object
      */
     public static function load_from_session($uid=-1)
     {
-        if (is_array($_SESSION['userdata']['preferences']) AND $_SESSION['userdata']['uid'] == $uid) {
+        if (isset($_SESSION['userdata']['preferences']) && is_array($_SESSION['userdata']['preferences']) AND $_SESSION['userdata']['uid'] == $uid) {
             AmpConfig::set_by_array($_SESSION['userdata']['preferences'], true);
             return true;
         }

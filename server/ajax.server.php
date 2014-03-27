@@ -338,7 +338,7 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('ratings')) {
             echo " <div id='rating_" . $_GET['object_id'] . "_" . $_GET['object_type'] . "'>";
             Rating::show($_GET['object_id'], $_GET['object_type']);
-            echo "</div>";
+            echo "</div> |";
         }
         if (AmpConfig::get('userflags')) {
             echo " <div id='userflag_" . $_GET['object_id'] . "_" . $_GET['object_type'] . "'>";

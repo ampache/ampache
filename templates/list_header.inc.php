@@ -27,7 +27,7 @@
  * to layout this page.
  */
 
- if ($is_header) {
+ if (isset($is_header) && $is_header) {
     $is_header = false;
  } else {
     $is_header = true;

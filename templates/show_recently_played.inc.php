@@ -125,7 +125,7 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 <?php } ?>
 <?php if (!count($data)) { ?>
     <tr>
-        <td colspan=""><span class="nodata"><?php echo T_('No recently item found'); ?></span></td>
+        <td colspan="8"><span class="nodata"><?php echo T_('No recently item found'); ?></span></td>
     </tr>
 <?php } ?>
     </tbody>

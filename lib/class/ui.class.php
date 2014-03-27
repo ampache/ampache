@@ -243,7 +243,7 @@ END;
      */
     private static function _find_icon($name)
     {
-        if ($url = self::$_icon_cache[$name]) {
+        if (isset(self::$_icon_cache[$name]) && $url = self::$_icon_cache[$name]) {
             return $url;
         }
 

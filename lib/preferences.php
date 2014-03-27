@@ -180,24 +180,42 @@ function create_preference_input($name,$value)
         case 'share_social':
         case 'broadcast_by_default':
         case 'album_group':
-            if ($value == '1') { $is_true = "selected=\"selected\""; } else { $is_false = "selected=\"selected\""; }
+            $is_true = '';
+            $is_false = '';
+            if ($value == '1') {
+                $is_true = "selected=\"selected\""; }
+            else {
+                $is_false = "selected=\"selected\"";
+            }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";
             echo "\t<option value=\"0\" $is_false>" . T_("Disable") . "</option>\n";
             echo "</select>\n";
         break;
         case 'play_type':
-            if ($value == 'localplay') { $is_local = 'selected="selected"'; } elseif ($value == 'democratic') { $is_vote = 'selected="selected"'; } elseif ($value == 'web_player') { $is_web_player = 'selected="selected"'; } else { $is_stream = "selected=\"selected\""; }
+            $is_localplay = '';
+            $is_democratic = '';
+            $is_web_player = '';
+            $is_stream = '';
+            if ($value == 'localplay') {
+                $is_localplay = 'selected="selected"';
+            } elseif ($value == 'democratic') {
+                $is_democratic = 'selected="selected"';
+            } elseif ($value == 'web_player') {
+                $is_web_player = 'selected="selected"';
+            } else {
+                $is_stream = "selected=\"selected\"";
+            }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"\">" . T_('None') . "</option>\n";
             if (AmpConfig::get('allow_stream_playback')) {
                 echo "\t<option value=\"stream\" $is_stream>" . T_('Stream') . "</option>\n";
             }
             if (AmpConfig::get('allow_democratic_playback')) {
-                echo "\t<option value=\"democratic\" $is_vote>" . T_('Democratic') . "</option>\n";
+                echo "\t<option value=\"democratic\" $is_democratic>" . T_('Democratic') . "</option>\n";
             }
             if (AmpConfig::get('allow_localplay_playback')) {
-                echo "\t<option value=\"localplay\" $is_local>" . T_('Localplay') . "</option>\n";
+                echo "\t<option value=\"localplay\" $is_localplay>" . T_('Localplay') . "</option>\n";
             }
             echo "\t<option value=\"web_player\" $is_web_player>" . _('Web Player') . "</option>\n";
             echo "</select>\n";
@@ -236,7 +254,18 @@ function create_preference_input($name,$value)
             echo "</select>\n";
         break;
         case 'localplay_level':
-            if ($value == '25') { $is_user = 'selected="selected"'; } elseif ($value == '100') { $is_admin = 'selected="selected"'; } elseif ($value == '50') { $is_manager = 'selected="selected"'; }
+            $is_user = '';
+            $is_admin = '';
+            $is_manager = '';
+            if ($value == '25') {
+                $is_user = 'selected="selected"';
+            }
+            elseif ($value == '100') {
+                $is_admin = 'selected="selected"';
+            }
+            elseif ($value == '50') {
+                $is_manager = 'selected="selected"';
+            }
             echo "<select name=\"$name\">\n";
             echo "<option value=\"0\">" . T_('Disabled') . "</option>\n";
             echo "<option value=\"25\" $is_user>" . T_('User') . "</option>\n";
@@ -272,14 +301,35 @@ function create_preference_input($name,$value)
             echo "</select>\n";
         break;
         case 'show_lyrics':
-            if ($value == '1') { $is_true = "selected=\"selected\""; } else { $is_false = "selected=\"selected\""; }
+            $is_true = '';
+            $is_false = '';
+            if ($value == '1') {
+                $is_true = "selected=\"selected\"";
+            } else {
+                $is_false = "selected=\"selected\"";
+            }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";
             echo "\t<option value=\"0\" $is_false>" . T_("Disable") . "</option>\n";
             echo "</select>\n";
         break;
         case 'album_sort':
-            if ($value == 'year_asc') { $is_sort_year_asc = 'selected="selected"'; } elseif ($value == 'year_desc') { $is_sort_year_desc = 'selected="selected"'; } elseif ($value == 'name_asc') { $is_sort_name_asc = 'selected="selected"'; } elseif ($value == 'name_desc') { $is_sort_name_desc = 'selected="selected"'; } else { $is_sort_default = 'selected="selected"'; }
+            $is_sort_year_asc = '';
+            $is_sort_year_desc = '';
+            $is_sort_name_asc = '';
+            $is_sort_name_desc = '';
+            $is_sort_default = '';
+            if ($value == 'year_asc') {
+                $is_sort_year_asc = 'selected="selected"';
+            } elseif ($value == 'year_desc') {
+                $is_sort_year_desc = 'selected="selected"';
+            } elseif ($value == 'name_asc') {
+                $is_sort_name_asc = 'selected="selected"';
+            } elseif ($value == 'name_desc') {
+                $is_sort_name_desc = 'selected="selected"';
+            } else {
+                $is_sort_default = 'selected="selected"';
+            }
 
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"default\" $is_sort_default>" . T_('Default') . "</option>\n";

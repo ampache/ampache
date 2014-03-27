@@ -185,6 +185,10 @@ class Song extends database_object implements media
         }
         $db_results = Dba::read($sql);
 
+        $artists = array();
+        $albums = array();
+        $tags = array();
+        
         while ($row = Dba::fetch_assoc($db_results)) {
             if (AmpConfig::get('show_played_times')) {
                 $row['object_cnt'] = Stats::get_object_count('song', $row['id']);
@@ -200,7 +204,7 @@ class Song extends database_object implements media
         Artist::build_cache($artists);
         Album::build_cache($albums);
         Tag::build_cache($tags);
-        Tag::build_map_cache('song',$song_ids);
+        Tag::build_map_cache('song', $song_ids);
         Art::build_cache($albums);
 
         // If we're rating this then cache them as well
@@ -824,8 +828,10 @@ class Song extends database_object implements media
         $this->fill_ext_info();
 
         // Format the filename
-        preg_match("/^.*\/(.*?)$/",$this->file, $short);
-        $this->f_file = htmlspecialchars($short[1]);
+        preg_match("/^.*\/(.*?)$/", $this->file, $short);
+        if (is_array($short) && isset($short[1])) {
+            $this->f_file = htmlspecialchars($short[1]);
+        }
 
         // Format the album name
         $this->f_album_full = $this->get_album_name();

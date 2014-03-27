@@ -1011,7 +1011,7 @@ class Query
      */
     private function get_join_sql()
     {
-        if (!is_array($this->_state['join'])) {
+        if (!isset($this->_state['join']) || !is_array($this->_state['join'])) {
             return '';
         }
 
@@ -1033,7 +1033,7 @@ class Query
      */
     public function get_having_sql()
     {
-        $sql = $this->_state['having'];
+        $sql = isset($this->_state['having']) ? $this->_state['having'] : '';
 
         return $sql;
 
@@ -1049,7 +1049,7 @@ class Query
     {
         $sql = $this->get_base_sql();
 
-        if (!$this->_state['custom']) {
+        if (!isset($this->_state['custom']) || !$this->_state['custom']) {
             $filter_sql = $this->get_filter_sql();
             $join_sql = $this->get_join_sql();
             $having_sql = $this->get_having_sql();
@@ -1074,7 +1074,7 @@ class Query
      */
     private function post_process($data)
     {
-        $tags = $this->_state['filter']['tag'];
+        $tags = isset($this->_state['filter']['tag']) ? $this->_state['filter']['tag'] : '';
 
         if (!is_array($tags) || sizeof($tags) < 2) {
             return $data;

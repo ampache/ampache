@@ -379,13 +379,13 @@ class Album extends database_object
      * get_album_suite
      * gets the album ids with the same musicbrainz identifier
      */
-    public function get_album_suite()
+    public function get_album_suite($catalog = '')
     {
         $results = array();
 
         $catalog_where = "";
         $catalog_join = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-        if ($catalog) {
+        if (!empty($catalog)) {
             $catalog_where .= " AND `catalog`.`id` = '$catalog'";
         }
         if (AmpConfig::get('catalog_disable')) {

@@ -20,9 +20,10 @@
  *
  */
 
-if (!$_SESSION['state']['sidebar_tab']) { $_SESSION['state']['sidebar_tab'] = 'home'; }
+if (!$_SESSION['state']['sidebar_tab']) {
+    $_SESSION['state']['sidebar_tab'] = 'home';
+}
 $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
-${$class_name} = ' active';
 
 // List of buttons ( id, title, icon, access level)
 $sidebar_items[] = array('id'=>'home', 'title' => T_('Home'), 'icon'=>'home', 'access'=>5);
@@ -31,34 +32,36 @@ $sidebar_items[] = array('id'=>'preferences', 'title' => T_('Preferences'), 'ico
 $sidebar_items[] = array('id'=>'modules','title' => T_('Modules'),'icon'=>'plugin','access'=>100);
 $sidebar_items[] = array('id'=>'admin', 'title' => T_('Admin'), 'icon'=>'admin', 'access'=>100);
 
-
 $web_path = AmpConfig::get('web_path');
-
 ?>
+
 <ul id="sidebar-tabs">
 <?php
-    foreach ($sidebar_items as $item) {
-        if (Access::check('interface',$item['access'])) {
-            $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . ${'sidebar_'.$item['id'] } . "'";
-        ?><li <?php echo $li_params; ?>>
-          <?php
-        // Button
-        echo Ajax::button("?page=index&action=sidebar&button=".$item['id'],$item['icon'],$item['title'],'sidebar_'.$item['id']);
-
-          // Include subnav if it's the selected one
-          // so that it's generated inside its parent li
-    if ($item['id']==$_SESSION['state']['sidebar_tab']) {
-            ?><div id="sidebar-page" class="sidebar-page-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><?php
-            require_once AmpConfig::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php';
-            ?></div><?php
-        }
-       ?></li><?php
-     }
-    }
+foreach ($sidebar_items as $item) {
+    if (Access::check('interface', $item['access'])) {
+    
+        $active = ('sidebar_'.$item['id'] == $class_name) ? ' active' : '';
+        $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'";
 ?>
-<li id="sb_tab_logout" class="sb1">
-    <a target="_top" href="<?php echo AmpConfig::get('web_path'); ?>/logout.php" id="sidebar_logout" >
-    <?php echo UI::get_icon('logout', T_('Logout')); ?>
-    </a>
-</li>
+    <li <?php echo $li_params; ?>>
+<?php
+        echo Ajax::button("?page=index&action=sidebar&button=".$item['id'], $item['icon'], $item['title'], 'sidebar_'.$item['id']);
+        if ($item['id']==$_SESSION['state']['sidebar_tab']) {
+?>
+        <div id="sidebar-page" class="sidebar-page-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
+            <?php require_once AmpConfig::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'; ?>
+        </div>
+<?php
+        }
+?>
+    </li>
+<?php
+    }
+}
+?>
+    <li id="sb_tab_logout" class="sb1">
+        <a target="_top" href="<?php echo AmpConfig::get('web_path'); ?>/logout.php" id="sidebar_logout" >
+        <?php echo UI::get_icon('logout', T_('Logout')); ?>
+        </a>
+    </li>
 </ul>

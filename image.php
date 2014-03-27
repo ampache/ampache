@@ -81,45 +81,47 @@ switch ($_GET['thumb']) {
     break;
 } // define size based on thumbnail
 
-switch ($_GET['type']) {
-    case 'popup':
-        require_once AmpConfig::get('prefix') . '/templates/show_big_art.inc.php';
-    break;
-    // If we need to pull the data out of the session
-    case 'session':
-        Session::check();
-        $filename = scrub_in($_REQUEST['image_index']);
-        $image = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
-        $mime = $_SESSION['form']['images'][$filename]['mime'];
-    break;
-    default:
-        $media = new $type($_GET['id']);
-        $filename = $media->name;
+$image = '';
+$typeManaged = false;
+if (isset($_GET['type'])) {
+    switch ($_GET['type']) {
+        case 'popup':
+            $typeManaged = true;
+            require_once AmpConfig::get('prefix') . '/templates/show_big_art.inc.php';
+        break;
+        case 'session':
+            // If we need to pull the data out of the session
+            Session::check();
+            $filename = scrub_in($_REQUEST['image_index']);
+            $image = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
+            $mime = $_SESSION['form']['images'][$filename]['mime'];
+            $typeManaged = true;
+        break;
+    }
+}
+if (!$typeManaged) {
+    $media = new $type($_GET['id']);
+    $filename = $media->name;
 
-        $art = new Art($media->id,$type);
-        $art->get_db();
+    $art = new Art($media->id,$type);
+    $art->get_db();
 
-        if (!$art->raw_mime) {
-            $mime = 'image/jpeg';
-            $image = file_get_contents(AmpConfig::get('prefix') .
-                AmpConfig::get('theme_path') .
-                '/images/blankalbum.jpg');
-        } else {
-            if ($_GET['thumb']) {
-                $thumb_data = $art->get_thumb($size);
-            }
-
-            $mime = $thumb_data
-                ? $thumb_data['thumb_mime']
-                : $art->raw_mime;
-            $image = $thumb_data
-                ? $thumb_data['thumb']
-                : $art->raw;
+    if (!$art->raw_mime) {
+        $mime = 'image/jpeg';
+        $image = file_get_contents(AmpConfig::get('prefix') .
+            AmpConfig::get('theme_path') .
+            '/images/blankalbum.jpg');
+    } else {
+        if ($_GET['thumb']) {
+            $thumb_data = $art->get_thumb($size);
         }
-    break;
-} // end switch type
 
-if ($image) {
+        $mime = isset($thumb_data['thumb_mime']) ? $thumb_data['thumb_mime'] : $art->raw_mime;
+        $image = isset($thumb_data['thumb']) ? $thumb_data['thumb'] : $art->raw;
+    }
+}
+
+if (!empty($image)) {
     $extension = Art::extension($mime);
     $filename = scrub_out($filename . '.' . $extension);
 

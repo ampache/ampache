@@ -347,7 +347,7 @@ function show_playlist_select($name,$selected='',$style='')
 
 function xoutput_headers()
 {
-    $output = $_REQUEST['xoutput'] ?: 'xml';
+    $output = (isset($_REQUEST['xoutput']) && $_REQUEST['xoutput']) ?: 'xml';
     if ($output == 'xml') {
         header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
         header("Content-Disposition: attachment; filename=ajax.xml");
@@ -363,7 +363,7 @@ function xoutput_headers()
 
 function xoutput_from_array($array, $callback = false, $type = '')
 {
-    $output = $_REQUEST['xoutput'] ?: 'xml';
+    $output = (isset($_REQUEST['xoutput']) && $_REQUEST['xoutput']) ?: 'xml';
     if ($output == 'xml') {
         return xml_from_array($array, $callback, $type);
     } elseif ($output == 'raw') {

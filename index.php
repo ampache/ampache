@@ -32,7 +32,9 @@ UI::show_header();
 
 $action = isset($_REQUEST['action']) ? scrub_in($_REQUEST['action']) : null;
 
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 $_SESSION['catalog'] = 0;
 
 /**

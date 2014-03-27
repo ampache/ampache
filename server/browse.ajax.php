@@ -24,7 +24,10 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 require_once '../lib/init.php';
-session_start();
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 if (!defined('AJAX_INCLUDE')) { exit; }
 
@@ -34,10 +37,9 @@ if (isset($_REQUEST['browse_id'])) {
     $browse_id = null;
 }
 
-$list_uid = scrub_in($_REQUEST['uid']);
 $browse = new Browse($browse_id);
 
-if ($_REQUEST['show_header']) {
+if (isset($_REQUEST['show_header']) && $_REQUEST['show_header']) {
     $browse->set_show_header($_REQUEST['show_header'] == 'true');
 }
 
