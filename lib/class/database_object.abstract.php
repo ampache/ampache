@@ -76,7 +76,7 @@ abstract class database_object
      * is_cached
      * this checks the cache to see if the specified object is there
      */
-    public static function is_cached($index,$id)
+    public static function is_cached($index, $id)
     {
         // Make sure we've got some parents here before we dive below
         if (!isset(self::$object_cache[$index])) { return false; }
@@ -87,9 +87,9 @@ abstract class database_object
 
     /**
      * get_from_cache
-     * This attempts to retrive the specified object from the cache we've got here
+     * This attempts to retrieve the specified object from the cache we've got here
      */
-    public static function get_from_cache($index,$id)
+    public static function get_from_cache($index, $id)
     {
         // Check if the object is set
         if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$id])) {

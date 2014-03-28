@@ -113,7 +113,7 @@ switch ($_REQUEST['action']) {
 
         // If we've found anything then go for it!
         if (count($images)) {
-            // We don't want to store raw's in here so we need to strip them out into a seperate array
+            // We don't want to store raw's in here so we need to strip them out into a separate array
             foreach ($images as $index=>$image) {
                 if ($image['raw']) {
                     unset($images[$index]['raw']);
@@ -143,14 +143,19 @@ switch ($_REQUEST['action']) {
         /* Check to see if we have the image url still */
         $image_id = $_REQUEST['image'];
         $album_id = $_REQUEST['album_id'];
-        $art = new Art($album_id,'album');
-
-        $image     = Art::get_from_source($_SESSION['form']['images'][$image_id], 'album');
-        $mime    = $_SESSION['form']['images'][$image_id]['mime'];
-
-        $art->insert($image,$mime);
-
-        header("Location:" . AmpConfig::get('web_path') . "/albums.php?action=show&album=" . $art->uid);
+        
+        $album = new Album($album_id);
+        $album_groups = $album->get_group_disks_ids();
+        
+        $image = Art::get_from_source($_SESSION['form']['images'][$image_id], 'album');
+        $mime = $_SESSION['form']['images'][$image_id]['mime'];
+        
+        foreach ($album_groups as $a_id) {
+            $art = new Art($a_id, 'album');
+            $art->insert($image, $mime);
+        }
+        
+        header("Location:" . AmpConfig::get('web_path') . "/albums.php?action=show&album=" . $album_id);
     break;
     case 'update_from_tags':
         // Make sure they are a 'power' user at least

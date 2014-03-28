@@ -151,7 +151,7 @@ class Browse extends Query
             break;
             case 'album':
                 $box_title = T_('Albums') . $match;
-                Album::build_cache($object_ids, 'extra');
+                Album::build_cache($object_ids);
                 $allow_group_disks = $argument;
                 $box_req = AmpConfig::get('prefix') . '/templates/show_albums.inc.php';
             break;

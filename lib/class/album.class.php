@@ -90,8 +90,7 @@ class Album extends database_object
             $album->$key = $value;
         }
 
-        // Make sure that we tell em it's fake
-        $album->_fake = true;
+        $album->_fake = true;   // Make sure that we tell em it's fake
 
         return $album;
 
@@ -112,10 +111,12 @@ class Album extends database_object
      * This takes an array of object ids and caches all of their information
      * with a single query
      */
-    public static function build_cache($ids,$extra=false)
+    public static function build_cache($ids)
     {
         // Nothing to do if they pass us nothing
-        if (!is_array($ids) OR !count($ids)) { return false; }
+        if (!is_array($ids) OR !count($ids)) {
+            return false;
+        }
 
         $idlist = '(' . implode(',', $ids) . ')';
 
@@ -125,40 +126,6 @@ class Album extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             parent::add_to_cache('album',$row['id'],$row);
         }
-
-        // If we're extra'ing cache the extra info as well
-        if ($extra) {
-            $sql = "SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, " .
-                "COUNT(`song`.`id`) AS `song_count`, " .
-                "SUM(`song`.`time`) as `total_duration`," .
-                "`song`.`catalog` as `catalog_id`," .
-                "`artist`.`name` AS `artist_name`, " .
-                "`artist`.`prefix` AS `artist_prefix`, " .
-                "`artist`.`id` AS `artist_id`, `song`.`album`" .
-                "FROM `song` " .
-                "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` ";
-            if (AmpConfig::get('catalog_disable')) {
-                $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-            }
-            $sql .= "WHERE `song`.`album` IN $idlist ";
-            if (AmpConfig::get('catalog_disable')) {
-                $sql .= "AND `catalog`.`enabled` = '1' ";
-            }
-            $sql .= "GROUP BY `song`.`album`";
-
-            $db_results = Dba::read($sql);
-
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $art = new Art($row['album'], 'album');
-                $art->get_db();
-                $row['has_art'] = make_bool($art->raw);
-                $row['has_thumb'] = make_bool($art->thumb);
-                if (AmpConfig::get('show_played_times')) {
-                    $row['object_cnt'] = Stats::get_object_count('album', $row['album']);
-                }
-                parent::add_to_cache('album_extra',$row['album'],$row);
-            } // while rows
-        } // if extra
 
         return true;
 
@@ -190,7 +157,10 @@ class Album extends database_object
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
 
-        $suite_array = $this->album_suite;
+        $suite_array = array();
+        if ($this->allow_group_disks) {
+            $suite_array = $this->album_suite;
+        }
         if (!count($suite_array)) {
             $suite_array[] = $this->id;
         }
@@ -207,8 +177,6 @@ class Album extends database_object
             $sql .= "GROUP BY `song`.`artist`";
         }
 
-        debug_event("Album", "$sql", "6");
-
         $db_results = Dba::read($sql);
 
         $results = Dba::fetch_assoc($db_results);
@@ -222,7 +190,7 @@ class Album extends database_object
             $results['object_cnt'] = Stats::get_object_count('album', $this->id);
         }
 
-        parent::add_to_cache('album_extra',$this->id,$results);
+        parent::add_to_cache('album_extra', $this->id, $results);
 
         return $results;
 
@@ -255,8 +223,7 @@ class Album extends database_object
             return self::$_mapcache[$name][$year][$disk][$mbid];
         }
 
-        $sql = 'SELECT `id` FROM `album` WHERE `name` = ? AND `disk` = ? AND ' .
-            '`year` = ? AND `mbid` ';
+        $sql = 'SELECT `id` FROM `album` WHERE `name` = ? AND `disk` = ? AND `year` = ? AND `mbid` ';
         $params = array($name, $disk, $year);
 
         if ($mbid) {
@@ -286,8 +253,7 @@ class Album extends database_object
             return null;
         }
 
-        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`) '.
-            'VALUES (?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`) VALUES (?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid));
         if (!$db_results) {
