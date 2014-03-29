@@ -226,12 +226,12 @@ class Subsonic_XML_Data
         $xartist = $xml->addChild('artist');
         $xartist->addAttribute('id', self::getArtistId($artist->id));
         $xartist->addAttribute('name', $artist->name);
-        
+
         $allalbums = array();
         if ($extra || $albums) {
             $allalbums = $artist->get_albums(null, true);
         }
-        
+
         if ($extra) {
             //$xartist->addAttribute('coverArt');
             $xartist->addAttribute('albumCount', count($allalbums));
@@ -333,7 +333,7 @@ class Subsonic_XML_Data
         if ($album->year > 0) {
             $name .= " [" . $album->year . "]";
         }
-        
+
         if ($album->disk) {
             $name .= " [" . T_('Disk') . " " . $album->disk . "]";
         }

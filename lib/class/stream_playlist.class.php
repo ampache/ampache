@@ -169,7 +169,9 @@ class Stream_Playlist
     public static function check_autoplay_append()
     {
         // For now, only iframed web player support media append in the currently played playlist
-        return (AmpConfig::get('iframes') && AmpConfig::get('play_type') == 'web_player');
+        return ((AmpConfig::get('iframes') && AmpConfig::get('play_type') == 'web_player') ||
+            AmpConfig::get('play_type') == 'localplay'
+        );
     }
 
     public function generate_playlist($type, $redirect = false)
@@ -402,12 +404,16 @@ class Stream_Playlist
     {
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
-        $localplay->delete_all();
+        $append = $_REQUEST['append'];
+        if (!$append) {
+            $localplay->delete_all();
+        }
         foreach ($this->urls as $url) {
             $localplay->add_url($url);
         }
-
-        $localplay->play();
+        if (!$append) {
+            $localplay->play();
+        }
 
     } // create_localplay
 

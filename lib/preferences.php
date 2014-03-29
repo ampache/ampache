@@ -183,8 +183,7 @@ function create_preference_input($name,$value)
             $is_true = '';
             $is_false = '';
             if ($value == '1') {
-                $is_true = "selected=\"selected\""; }
-            else {
+                $is_true = "selected=\"selected\""; } else {
                 $is_false = "selected=\"selected\"";
             }
             echo "<select name=\"$name\">\n";
@@ -259,11 +258,9 @@ function create_preference_input($name,$value)
             $is_manager = '';
             if ($value == '25') {
                 $is_user = 'selected="selected"';
-            }
-            elseif ($value == '100') {
+            } elseif ($value == '100') {
                 $is_admin = 'selected="selected"';
-            }
-            elseif ($value == '50') {
+            } elseif ($value == '50') {
                 $is_manager = 'selected="selected"';
             }
             echo "<select name=\"$name\">\n";

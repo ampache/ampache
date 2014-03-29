@@ -39,7 +39,7 @@ $web_path = AmpConfig::get('web_path');
 <?php
 foreach ($sidebar_items as $item) {
     if (Access::check('interface', $item['access'])) {
-    
+
         $active = ('sidebar_'.$item['id'] == $class_name) ? ' active' : '';
         $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'";
 ?>

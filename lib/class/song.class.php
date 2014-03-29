@@ -188,7 +188,7 @@ class Song extends database_object implements media
         $artists = array();
         $albums = array();
         $tags = array();
-        
+
         while ($row = Dba::fetch_assoc($db_results)) {
             if (AmpConfig::get('show_played_times')) {
                 $row['object_cnt'] = Stats::get_object_count('song', $row['id']);

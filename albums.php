@@ -143,18 +143,18 @@ switch ($_REQUEST['action']) {
         /* Check to see if we have the image url still */
         $image_id = $_REQUEST['image'];
         $album_id = $_REQUEST['album_id'];
-        
+
         $album = new Album($album_id);
         $album_groups = $album->get_group_disks_ids();
-        
+
         $image = Art::get_from_source($_SESSION['form']['images'][$image_id], 'album');
         $mime = $_SESSION['form']['images'][$image_id]['mime'];
-        
+
         foreach ($album_groups as $a_id) {
             $art = new Art($a_id, 'album');
             $art->insert($image, $mime);
         }
-        
+
         header("Location:" . AmpConfig::get('web_path') . "/albums.php?action=show&album=" . $album_id);
     break;
     case 'update_from_tags':
