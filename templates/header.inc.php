@@ -233,6 +233,13 @@ $(document).ready(function() {
         <div id="fslider_script"></div>
     </div>
 </div>
+<script type="text/javascript" language="javascript">
+$("#aslideshow").click(function(e) {
+    if (!$(e.target).hasClass('rhino-btn')) {
+        update_action();
+    }
+});
+</script>
 <!-- rfc3514 implementation -->
 <div id="rfc3514" style="display:none;">0x0</div>
 <div id="maincontainer">

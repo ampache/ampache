@@ -104,7 +104,7 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 
 #aslideshow {
     background: rgba(0, 0, 0, 0.9);
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
