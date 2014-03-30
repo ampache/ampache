@@ -57,6 +57,7 @@ switch ($_REQUEST['action']) {
                     'label' => $artist->name,
                     'value' => $artist->name,
                     'rels' => '',
+                    'image' => Art::url($artist->id, 'artist'),
                 );
             }
         }
@@ -89,6 +90,7 @@ switch ($_REQUEST['action']) {
                     'label' => $a_title,
                     'value' => $album->f_title,
                     'rels' => $album->f_artist,
+                    'image' => Art::url($album->id, 'albym'),
                 );
             }
         }
@@ -117,6 +119,7 @@ switch ($_REQUEST['action']) {
                     'label' => $song->f_title_full,
                     'value' => $song->f_title_full,
                     'rels' => $song->f_artist_full,
+                    'image' => '',
                 );
             }
         }
@@ -145,6 +148,7 @@ switch ($_REQUEST['action']) {
                     'label' => $playlist->name,
                     'value' => $playlist->name,
                     'rels' => '',
+                    'image' => '',
                 );
             }
         }

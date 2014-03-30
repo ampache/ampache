@@ -191,3 +191,21 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     color: #ffffff;
     background-color: #222;
 }
+
+.searchart {
+    top: 0px;
+    left: 0px;
+    display: block;
+    height: 24px;
+    width: 24px;
+    margin: 1px 6px;
+    padding: 1px;
+    border: 1px solid #F2F2F2;
+    float: left;
+}
+
+.searchitemtxt {
+    display:inline-block;
+    vertical-align:middle;
+    height: 32px;
+}

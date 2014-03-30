@@ -88,9 +88,15 @@ function forceIframe()
 <script type="text/javascript">
 $.widget( "custom.catcomplete", $.ui.autocomplete, {
     _renderItem: function( ul, item ) {
+            var itemhtml = "<a href='" + item.link + "'>";
+            if (item.image != '') {
+                itemhtml += "<img src='" + item.image + "' class='searchart' />";
+            }
+            itemhtml += "<span class='searchitemtxt'>" + item.label + ((item.rels == '') ? "" : " - " + item.rels)  + "</span></a>"
+
             return $( "<li class='ui-menu-item'>" )
                 .data("ui-autocomplete-item", item)
-                .append( "<a href='" + item.link + "'>" + item.label + ((item.rels == '') ? "" : " - " + item.rels)  + "</a>" )
+                .append( itemhtml )
                 .appendTo( ul );
     },
     _renderMenu: function( ul, items ) {
