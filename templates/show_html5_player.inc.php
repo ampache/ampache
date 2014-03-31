@@ -13,6 +13,7 @@ require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php';
 ?>
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/jquery-editdialog.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-ui/jquery-ui.min.css" type="text/css" media="screen" />
+<link href="<?php echo AmpConfig::get('web_path'); ?>/modules/UberViz/style.css" rel="stylesheet" type="text/css">
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
@@ -40,13 +41,58 @@ function NavigateTo(url)
 {
     window.parent.document.getElementById('frame_main').setAttribute('src', url);
 }
+
 function NotifyOfNewSong()
 {
     window.parent.document.getElementById('frame_main').contentWindow.refresh_slideshow();
 }
+
 function SwapSlideshow()
 {
     window.parent.document.getElementById('frame_main').contentWindow.swap_slideshow();
+}
+
+function isVisualizerEnabled() {
+    return ($('#uberviz').css('visibility') == 'visible');
+}
+
+var vizInitialized = false;
+function ShowVisualizer()
+{
+    if (isVisualizerEnabled()) {
+        $('#uberviz').css('visibility', 'hidden');
+        $('.jp-interface').css('background-color', 'rgb(25, 25, 25)');
+        $('.player_actions').css('background-color', 'transparent');
+    } else {
+        // Resource not yet initialized? Do it.
+        if (!vizInitialized) {
+            UberVizMain.init();
+            vizInitialized = true;
+            AudioHandler.loadMediaSource(document.getElementById("jp_audio_0"));
+        }
+        
+        $('#uberviz').css('visibility', 'visible');
+        $('.jp-interface').css('background-color', 'transparent');
+        $('.player_actions').css('background-color', 'rgb(25, 25, 25)');
+    }
+}
+
+function ShowVisualizerFullScreen()
+{
+    if (!isVisualizerEnabled()) {
+        ShowVisualizer();
+    }
+    
+    var element = document.getElementById("viz");
+    if (element.requestFullScreen) {
+        element.requestFullScreen();
+    } else if(element.webkitRequestFullScreen) {
+        element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+    } else if(element.mozRequestFullScreen){
+        element.mozRequestFullScreen();
+    } else {
+        alert('Full-Screen not supported by your browser.');
+    }
 }
 </script>
 <?php
@@ -146,6 +192,10 @@ if ($isVideo) {
 <?php if ($iframed && AmpConfig::get('webplayer_confirmclose')) { ?>
         localStorage.setItem('ampache-current-webplayer', jpuqid);
 <?php } ?>
+
+        if (isVisualizerEnabled()) {
+            AudioHandler.loadMediaSource(document.getElementById("jp_audio_0"));
+        }
 
         var currenti = $(".jp-playlist li").eq(current);
         $.each(playlist, function (index, obj) {
@@ -579,7 +629,7 @@ if ($isVideo) {
       </div>
       <div class="player_actions">
 <?php if (AmpConfig::get('broadcast')) { ?>
-        <div id="broadcast" class="broadcast">
+        <div id="broadcast" class="broadcast action_button">
 <?php
         if (AmpConfig::get('broadcast_by_default')) {
             $broadcasts = Broadcast::get_broadcasts($GLOBALS['user']->id);
@@ -600,8 +650,14 @@ if ($isVideo) {
         </div>
 <?php } ?>
 <?php if ($iframed) { ?>
-        <div id="slideshow" class="slideshow">
+        <div id="slideshow" class="slideshow action_button">
             <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')); ?></a>
+        </div>
+        <div class="action_button">
+            <a href="javascript:ShowVisualizer();"><?php echo UI::get_icon('visualizer', T_('Visualizer')); ?></a>
+        </div>
+        <div class="action_button">
+            <a onClick="ShowVisualizerFullScreen();" href="#"><?php echo UI::get_icon('fullscreen', T_('Visualizer Full-Screen')); ?></a>
         </div>
 <?php } ?>
       </div>
@@ -617,5 +673,6 @@ if ($isVideo) {
     </div>
   </div>
 </div>
+<?php require_once AmpConfig::get('prefix') . '/templates/uberviz.inc.php'; ?>
 </body>
 </html>
