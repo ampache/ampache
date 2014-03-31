@@ -90,7 +90,7 @@ switch ($_REQUEST['action']) {
                     'label' => $a_title,
                     'value' => $album->f_title,
                     'rels' => $album->f_artist,
-                    'image' => Art::url($album->id, 'albym'),
+                    'image' => Art::url($album->id, 'album'),
                 );
             }
         }
@@ -119,7 +119,7 @@ switch ($_REQUEST['action']) {
                     'label' => $song->f_title_full,
                     'value' => $song->f_title_full,
                     'rels' => $song->f_artist_full,
-                    'image' => '',
+                    'image' => Art::url($song->album, 'album'),
                 );
             }
         }
