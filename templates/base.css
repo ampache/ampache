@@ -48,6 +48,10 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
  * Generic / Misc 
  *****************/
  
+.hidden {
+    visibility: hidden;
+}
+ 
 .item_on { 
     color: #347C17;
 }

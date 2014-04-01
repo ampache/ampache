@@ -275,13 +275,13 @@ if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {
     <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the sidebar -->
         <?php require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php'; ?>
     </div><!-- End sidebar -->
-    <div id="rightbar" class="rightbar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the rightbar -->
+    <div id="rightbar" class="rightbar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> hidden"><!-- This is the rightbar -->
         <?php require_once AmpConfig::get('prefix') . '/templates/rightbar.inc.php'; ?>
     </div><!-- End rightbar -->
 <!-- Tiny little iframe, used to cheat the system -->
 <div id="ajax-loading">Loading . . .</div>
 <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo AmpConfig::get('web_path'); ?>/util.php"></iframe>
-<div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
+<div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> content-wild">
 <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
 <div class="fatalerror">
     <?php echo T_('Error Config File Out of Date'); ?>

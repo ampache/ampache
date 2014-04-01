@@ -73,15 +73,26 @@
 </ul>
 <?php if (AmpConfig::get('play_type') == 'localplay') { require_once AmpConfig::get('prefix') . '/templates/show_localplay_control.inc.php'; } ?>
 <ul id="rb_current_playlist">
-<?php
 
+<?php
     $objects = array();
 
     //FIXME :: this is kludgy
     if (!defined('NO_SONGS')) {
         $objects = $GLOBALS['user']->playlist->get_items();
     }
-
+?>
+    <script type="text/javascript">
+        <?php if (count($objects)) { ?>
+            $("#rightbar").removeClass("hidden");
+            $("#content").removeClass("content-wild");
+        <?php } else { ?>
+            $("#rightbar").addClass("hidden");
+            $("#content").addClass("content-wild");
+        <?php } ?>
+    </script>
+<?php
+    
     // Limit the number of objects we show here
     if (count($objects) > 100) {
         $truncated = (count($objects) - 100);

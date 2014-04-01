@@ -777,6 +777,10 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     margin: 20px 250px 0px 180px;
 }
 
+.content-wild {
+    margin-right: 20px !important;
+}
+
 .content-fixed {
     margin: 86px 250px 0px 180px;
 }
