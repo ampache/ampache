@@ -673,7 +673,7 @@ if ($isVideo) {
             <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')); ?></a>
         </div>
         <div id="equalizerbtn" class="action_button">
-            <a href="javascript::ShowEqualizer();"><?php echo UI::get_icon('equalizer', T_('Equalizer')); ?></a>
+            <a href="javascript:ShowEqualizer();"><?php echo UI::get_icon('equalizer', T_('Equalizer')); ?></a>
         </div>
         <div class="action_button">
             <a href="javascript:ShowVisualizer();"><?php echo UI::get_icon('visualizer', T_('Visualizer')); ?></a>
