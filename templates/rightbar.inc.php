@@ -71,7 +71,11 @@
       </ul>
     </li>
 </ul>
-<?php if (AmpConfig::get('play_type') == 'localplay') { require_once AmpConfig::get('prefix') . '/templates/show_localplay_control.inc.php'; } ?>
+<?php
+    if (AmpConfig::get('play_type') == 'localplay') {
+        require_once AmpConfig::get('prefix') . '/templates/show_localplay_control.inc.php';
+    }
+?>
 <ul id="rb_current_playlist">
 
 <?php
@@ -81,9 +85,10 @@
     if (!defined('NO_SONGS')) {
         $objects = $GLOBALS['user']->playlist->get_items();
     }
+
 ?>
     <script type="text/javascript">
-        <?php if (count($objects)) { ?>
+        <?php if (count($objects) || (AmpConfig::get('play_type') == 'localplay')) { ?>
             $("#rightbar").removeClass("hidden");
             $("#content").removeClass("content-wild");
         <?php } else { ?>
@@ -92,7 +97,6 @@
         <?php } ?>
     </script>
 <?php
-    
     // Limit the number of objects we show here
     if (count($objects) > 100) {
         $truncated = (count($objects) - 100);
@@ -111,10 +115,10 @@
             $object->f_link = Random::get_type_name($type);
         }
 ?>
-<li class="<?php echo UI::flip_class(); ?>" >
-  <?php echo $object->f_link; ?>
-    <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid,'delete', T_('Delete'),'rightbar_delete_' . $uid,'','delitem'); ?>
-</li>
+    <li class="<?php echo UI::flip_class(); ?>" >
+      <?php echo $object->f_link; ?>
+        <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid,'delete', T_('Delete'),'rightbar_delete_' . $uid,'','delitem'); ?>
+    </li>
 <?php } if (!count($objects)) { ?>
     <li><span class="nodata"><?php echo T_('No items'); ?></span></li>
 <?php } ?>
@@ -124,10 +128,7 @@
     </li>
 <?php } ?>
 </ul>
-
-
 <?php
-
 // We do a little magic here to force a iframe reload depending on preference
 // We do this last because we want it to load, and we want to know if there is anything
 // to even pass
