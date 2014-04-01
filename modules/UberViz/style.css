@@ -75,4 +75,25 @@
 	border-bottom:thin dotted #999;			
 }
 
+#equalizer {
+    position: absolute;
+    z-index: 9999;
+    bottom: 1px;
+    right: 25%;
+    visibility: hidden;
+    margin-right: 5px;
+}
 
+#equalizer  .eq {
+    display: inline-block;
+    height: 45px;
+    width: 8px;
+    border: 2px solid orange;
+    background: none;
+    background-color: #000;
+}
+
+#equalizer .ui-slider-handle {
+    width: 10px;
+    height: 10px;
+}

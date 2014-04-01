@@ -36,6 +36,11 @@ var AudioHandler = function() {
 	var bpmHeight = debugH - chartH;
 	var debugSpacing = 2;
 	var gradient;
+    var gainNode;
+    var filter1;
+    var filter2;
+    var filter3;
+    var filter4;
 
 	var freqByteData; //bars - bar data is from 0 - 256 in 512 bins. no sound is 0;
 	var timeByteData; //waveform - waveform data is from 0-256 for 512 bins. no sound is 128.
@@ -79,7 +84,8 @@ var AudioHandler = function() {
 		analyser.fftSize = 1024;
 		analyser.connect(audioContext.destination);
 		binCount = analyser.frequencyBinCount; // = 512
-
+        
+        initEqualizer();
 
 		levelBins = Math.floor(binCount / levelsCount); //number of bins in each level
 
@@ -114,6 +120,126 @@ var AudioHandler = function() {
 
 
 	}
+    
+    function initEqualizer() {
+        gainNode = audioContext.createGain();
+        gainNode.gain.value = 1;
+        
+        filter1 = audioContext.createBiquadFilter();
+        filter1.type = 5;    
+        filter1.gain.value = null;    
+        filter1.Q.value = 1;                  // Change Filter type to test
+        filter1.frequency.value = 80;            // Change frequency to test
+
+        filter2 = audioContext.createBiquadFilter();
+        filter2.type = 5;    
+        filter2.gain.value = 0;    
+        filter2.Q.value = 1;                  // Change Filter type to test
+        filter2.frequency.value = 240;            // Change frequency to test
+
+        filter3 = audioContext.createBiquadFilter();
+        filter3.type = 5;    
+        filter3.gain.value = 0;    
+        filter3.Q.value = 1;                  // Change Filter type to test
+        filter3.frequency.value = 750;            // Change frequency to test
+
+        filter4 = audioContext.createBiquadFilter();
+        filter4.type = 5;    
+        filter4.gain.value = 0;    
+        filter4.Q.value = 1;                  // Change Filter type to test
+        filter4.frequency.value = 2200;            // Change frequency to test
+
+        filter5 = audioContext.createBiquadFilter();
+        filter5.type = 5;    
+        filter5.gain.value = 0;    
+        filter5.Q.value = 1;                  // Change Filter type to test
+        filter5.frequency.value = 6000;            // Change frequency to test
+        
+        var sliderParams80Hz = {
+            'orientation': "vertical",
+            'range': "min",
+            'min': -30,
+            'max': 30,
+            'animate': true,
+            'step': 0.01,
+            'slide': function(event, ui) {  
+                filter1.gain.value = ui.value;
+
+             },
+            'stop': function(event, ui) {
+                console.log(filter1.gain.value);
+            }
+        };
+        $('#filter80Hz').slider(sliderParams80Hz);
+
+        var sliderParams240Hz = {
+            'orientation': "vertical",
+            'range': "min",
+            'min': -30,
+            'max': 30,
+            'animate': true,
+            'step': 0.01,
+            'slide': function(event, ui) {  
+                filter2.gain.value = ui.value;
+         
+             },
+            'stop': function(event, ui) {
+                console.log(filter2.gain.value);
+            }
+        };
+        $('#filter240Hz').slider(sliderParams240Hz);
+
+        var sliderParams750Hz = {
+            'orientation': "vertical",
+            'range': "min",
+            'min': -30,
+            'max': 30,
+            'animate': true,
+            'step': 0.01,
+            'slide': function(event, ui) {  
+                filter3.gain.value = ui.value;
+
+             },
+            'stop': function(event, ui) {
+                console.log(filter3.gain.value);
+            }
+        };
+        $('#filter750Hz').slider(sliderParams750Hz);
+
+        var sliderParams2200Hz = {
+            'orientation': "vertical",
+            'range': "min",
+            'min': -30,
+            'max': 30,
+            'animate': true,
+            'step': 0.01,
+            'slide': function(event, ui) {  
+                filter4.gain.value = ui.value;
+
+             },
+            'stop': function(event, ui) {
+                console.log(filter4.gain.value);
+            }
+        };
+        $('#filter2200Hz').slider(sliderParams2200Hz);
+
+        var sliderParams6000Hz = {
+            'orientation': "vertical",
+            'range': "min",
+            'min': -30,
+            'max': 30,
+            'animate': true,
+            'step': 0.01,
+            'slide': function(event, ui) {  
+                filter5.gain.value = ui.value;
+
+             },
+            'stop': function(event, ui) {
+                console.log(filter5.gain.value);
+            }
+        };
+        $('#filter6000Hz').slider(sliderParams6000Hz);
+    }
 
 	function initSound(){
 		source = audioContext.createBufferSource();
@@ -133,6 +259,13 @@ var AudioHandler = function() {
             var mediaSource = audioContext.createMediaElementSource(mediaElement);
             source = mediaSource;
             source.connect(analyser);
+            analyser.connect(gainNode);
+            gainNode.connect(filter1);
+            filter1.connect(filter2);
+            filter2.connect(filter3);
+            filter3.connect(filter4);
+            filter4.connect(filter5);
+            filter5.connect(audioContext.destination);
             isPlayingAudio = true;
         }
     }

@@ -52,7 +52,8 @@ function SwapSlideshow()
     window.parent.document.getElementById('frame_main').contentWindow.swap_slideshow();
 }
 
-function isVisualizerEnabled() {
+function isVisualizerEnabled()
+{
     return ($('#uberviz').css('visibility') == 'visible');
 }
 
@@ -61,8 +62,10 @@ function ShowVisualizer()
 {
     if (isVisualizerEnabled()) {
         $('#uberviz').css('visibility', 'hidden');
+        $('#equalizer').css('visibility', 'hidden');
         $('.jp-interface').css('background-color', 'rgb(25, 25, 25)');
-        $('.player_actions').css('background-color', 'transparent');
+
+        $.removeCookie('jp_visualizer', { path: '/' });
     } else {
         // Resource not yet initialized? Do it.
         if (!vizInitialized) {
@@ -70,10 +73,11 @@ function ShowVisualizer()
             vizInitialized = true;
             AudioHandler.loadMediaSource(document.getElementById("jp_audio_0"));
         }
-        
+
         $('#uberviz').css('visibility', 'visible');
         $('.jp-interface').css('background-color', 'transparent');
-        $('.player_actions').css('background-color', 'rgb(25, 25, 25)');
+
+        $.cookie('jp_visualizer', true, { expires: 7, path: '/'});
     }
 }
 
@@ -82,16 +86,27 @@ function ShowVisualizerFullScreen()
     if (!isVisualizerEnabled()) {
         ShowVisualizer();
     }
-    
+
     var element = document.getElementById("viz");
     if (element.requestFullScreen) {
         element.requestFullScreen();
-    } else if(element.webkitRequestFullScreen) {
+    } else if (element.webkitRequestFullScreen) {
         element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-    } else if(element.mozRequestFullScreen){
+    } else if (element.mozRequestFullScreen) {
         element.mozRequestFullScreen();
     } else {
         alert('Full-Screen not supported by your browser.');
+    }
+}
+
+function ShowEqualizer()
+{
+    if (isVisualizerEnabled()) {
+        if ($('#equalizer').css('visibility') == 'visible') {
+            $('#equalizer').css('visibility', 'hidden');
+        } else {
+            $('#equalizer').css('visibility', 'visible');
+        }
     }
 }
 </script>
@@ -332,6 +347,10 @@ if ($isVideo) {
     });
 
 <?php echo WebPlayer::add_media_js($playlist); ?>
+
+    if ($.cookie('jp_visualizer') == "true") {
+        ShowVisualizer();
+    }
 });
 <?php if (AmpConfig::get('waveform') && !$is_share) { ?>
 var wavclicktimer = null;
@@ -652,6 +671,9 @@ if ($isVideo) {
 <?php if ($iframed) { ?>
         <div id="slideshow" class="slideshow action_button">
             <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')); ?></a>
+        </div>
+        <div id="equalizerbtn" class="action_button">
+            <a href="javascript:ShowEqualizer();"><?php echo UI::get_icon('equalizer', T_('Equalizer')); ?></a>
         </div>
         <div class="action_button">
             <a href="javascript:ShowVisualizer();"><?php echo UI::get_icon('visualizer', T_('Visualizer')); ?></a>
