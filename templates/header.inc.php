@@ -267,21 +267,23 @@ if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {
         AutoUpdate::show_new_version();
     }
 }
+$count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
 ?>
             </span>
             <?php UI::show_box_bottom(); ?>
         </div> <!-- End headerbox -->
     </div><!-- End header -->
-    <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the sidebar -->
+    <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
         <?php require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php'; ?>
-    </div><!-- End sidebar -->
-    <div id="rightbar" class="rightbar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> hidden"><!-- This is the rightbar -->
+    </div>
+    <div id="rightbar" class="rightbar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> <?php echo $count_temp_playlist ? '' : 'hidden' ?>">
         <?php require_once AmpConfig::get('prefix') . '/templates/rightbar.inc.php'; ?>
-    </div><!-- End rightbar -->
+    </div>
 <!-- Tiny little iframe, used to cheat the system -->
 <div id="ajax-loading">Loading . . .</div>
 <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo AmpConfig::get('web_path'); ?>/util.php"></iframe>
-<div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> content-wild">
+<div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> <?php echo $count_temp_playlist ? '' : 'content-wild'; ?>">
+
 <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
 <div class="fatalerror">
     <?php echo T_('Error Config File Out of Date'); ?>

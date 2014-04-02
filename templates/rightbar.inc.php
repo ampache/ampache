@@ -85,15 +85,15 @@
     if (!defined('NO_SONGS')) {
         $objects = $GLOBALS['user']->playlist->get_items();
     }
-
 ?>
     <script type="text/javascript">
         <?php if (count($objects) || (AmpConfig::get('play_type') == 'localplay')) { ?>
+            $("#content").removeClass("content-wild", 500);
             $("#rightbar").removeClass("hidden");
-            $("#content").removeClass("content-wild");
+            $("#rightbar").show("slow");
         <?php } else { ?>
-            $("#rightbar").addClass("hidden");
-            $("#content").addClass("content-wild");
+            $("#content").addClass("content-wild", 500);
+            $("#rightbar").hide("slow");
         <?php } ?>
     </script>
 <?php
