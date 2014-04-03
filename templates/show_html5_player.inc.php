@@ -120,6 +120,7 @@ var jplaylist = null;
 var timeoffset = 0;
 var last_int_position = 0
 var currentjpitem = null;
+var currentAudioElement = undefined;
 
     $(document).ready(function(){
 
@@ -207,10 +208,6 @@ if ($isVideo) {
 <?php if ($iframed && AmpConfig::get('webplayer_confirmclose')) { ?>
         localStorage.setItem('ampache-current-webplayer', jpuqid);
 <?php } ?>
-
-        if (isVisualizerEnabled()) {
-            AudioHandler.loadMediaSource(document.getElementById("jp_audio_0"));
-        }
 
         var currenti = $(".jp-playlist li").eq(current);
         $.each(playlist, function (index, obj) {
