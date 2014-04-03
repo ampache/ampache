@@ -683,6 +683,11 @@ span.page-nb {
 	clear:left;
 }
 
+#random_selection .art_album img {
+    width: 80px;
+    height: 80px;
+}
+
 /***********************************************
     Content (now playing)                 
 ***********************************************/

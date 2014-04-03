@@ -213,3 +213,24 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     vertical-align:middle;
     height: 32px;
 }
+
+#topmenu_container {
+	margin: 10px;
+}
+
+#topmenu li {
+	float:left;
+}
+
+#topmenu div.jqDockWrap {
+	margin: 0 auto;
+}
+
+#topmenu div.jqDock {
+	cursor: pointer;
+}
+
+#topmenu img {
+	padding:0 40px;
+	z-index: 9999;
+}

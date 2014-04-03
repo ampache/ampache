@@ -677,6 +677,11 @@ dt:hover, dt:hover + dd {background:#9cf;}
 	display:none;
 }
 
+#random_selection .art_album img {
+    width: 80px;
+    height: 80px;
+}
+
 /************************************************/
 /*          Now Playing                         */
 /************************************************/

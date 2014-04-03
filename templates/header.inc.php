@@ -55,6 +55,7 @@ if (AmpConfig::get('use_rss')) { ?>
 <script src="<?php echo $web_path; ?>/modules/rhinoslider/js/rhinoslider-1.05.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/responsive-elements/responsive-elements.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo $web_path; ?>/modules/jquery-jqDock/jquery.jqdock.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
@@ -273,6 +274,27 @@ $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
             <?php UI::show_box_bottom(); ?>
         </div> <!-- End headerbox -->
     </div><!-- End header -->
+
+<?php if (AmpConfig::get('topmenu')) { ?>
+	<div id="topmenu_container">
+		<ul id="topmenu">
+			<li><a href="<?php echo AmpConfig::get('web_path') . ((AmpConfig::get('iframes')) ? '/?framed=1' : ''); ?>"><img src="<?php echo $web_path; ?>/images/topmenu-home.png" title="<?php echo T_('Home'); ?>" /></a></li>
+			<li><a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=artist"><img src="<?php echo $web_path; ?>/images/topmenu-music.png" title="<?php echo T_('Artists'); ?>" /></a></li>
+			<li><a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=playlist"><img src="<?php echo $web_path; ?>/images/topmenu-playlist.png" title="<?php echo T_('Playlists'); ?>" /></a></li>
+			<li><a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=userflag"><img src="<?php echo $web_path; ?>/images/topmenu-flag.png" title="<?php echo T_('My Flags'); ?>" /></a></li>
+		</ul>
+	</div>
+	<script type="text/javascript" language="javascript">
+		$(document).ready(function() {
+			$("#topmenu").jqdock({
+				align: "top",
+				size: 48,
+				labels: true
+			});
+		});
+	</script>
+<?php } ?>
+
     <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
         <?php require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php'; ?>
     </div>

@@ -270,6 +270,18 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 	float:right;
     width: 100%;
 }
+ 
+#targetMenu li span.tips {
+	position: absolute;
+	display: block;
+	top: 10px;
+	left: 70px;
+	padding: 5px;
+	background-color: #F0F0F0;
+	color: #448ab0;
+	text-decoration: none;
+	font-weight: bold;
+}
 
 #sb_Subsearch , #play_type_switch {
     display: inline-block;

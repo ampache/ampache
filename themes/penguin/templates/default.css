@@ -873,6 +873,12 @@ dt:hover, dt:hover + dd {
 .random_album .play_album {
 	display:none;
 }
+
+#random_selection .art_album img {
+    width: 80px;
+    height: 80px;
+}
+
 /************************************************/
 /*          Now Playing                         */
 /************************************************/

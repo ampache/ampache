@@ -393,6 +393,9 @@ class Update
 
         $update_string = '- Add album group multiple disks setting.<br />';
         $version[] = array('version' => '360049','description' => $update_string);
+		
+		$update_string = '- Add top menu setting.<br />';
+        $version[] = array('version' => '360050','description' => $update_string);
 
         return $version;
     }
@@ -2373,6 +2376,23 @@ class Update
     {
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('album_group','0','Album - Group multiple disks',25,'boolean','interface')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        return true;
+    }
+	
+	/**
+     * update_360050
+     *
+     * Add top menu setting
+     */
+    public static function update_360050()
+    {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('topmenu','0','Top menu',25,'boolean','interface')";
         Dba::write($sql);
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";

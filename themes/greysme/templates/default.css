@@ -700,6 +700,11 @@ dt:hover, dt:hover + dd {background-color: #2b293d !important;}
   float:left;
 }
 
+#random_selection .art_album img {
+    width: 80px;
+    height: 80px;
+}
+
 /************************************************/
 /*          Now Playing                         */
 /************************************************/
