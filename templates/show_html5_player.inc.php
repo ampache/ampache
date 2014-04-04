@@ -242,7 +242,7 @@ if (!$isVideo && !$isRadio && !$is_share) {
             echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-song_id') + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a> |';";
         }
         echo "actionsobj += '<div id=\'action_buttons\'></div>';";
-        if (AmpConfig::get('waveform')) {
+        if (AmpConfig::get('waveform') && !$is_share) {
             echo "var waveformobj = '';";
             if (AmpConfig::get('waveform')) {
                 echo "waveformobj += '<a href=\"#\" title=\"" . T_('Post Shout') . "\" onClick=\"javascript:WaveformClick(' + currenti.attr('data-song_id') + ', ClickTimeOffset(event));\">';";
@@ -270,7 +270,7 @@ if (!$isVideo && !$isRadio && !$is_share) {
                 $('.playing_lyrics').html(lyricsobj);
 <?php
         }
-        if (AmpConfig::get('waveform')) {
+        if (AmpConfig::get('waveform') && !$is_share) {
 ?>
                 $('.waveform').html(waveformobj);
 <?php
@@ -637,12 +637,13 @@ if ($isVideo) {
                 <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
                 <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
             </ul>
-<?php if (AmpConfig::get('waveform')) { ?>
+<?php if (AmpConfig::get('waveform') && !$is_share) { ?>
             <div class="waveform"></div>
 <?php } ?>
 <?php } ?>
         </div>
       </div>
+<?php if (!$is_share) { ?>
       <div class="player_actions">
 <?php if (AmpConfig::get('broadcast')) { ?>
         <div id="broadcast" class="broadcast action_button">
@@ -680,6 +681,7 @@ if ($isVideo) {
         </div>
 <?php } ?>
       </div>
+<?php } ?>
       <div class="jp-playlist" style="position: absolute;">
           <ul>
               <li></li>

@@ -180,7 +180,7 @@ function create_preference_input($name,$value)
         case 'share_social':
         case 'broadcast_by_default':
         case 'album_group':
-		case 'topmenu':
+        case 'topmenu':
             $is_true = '';
             $is_false = '';
             if ($value == '1') {

@@ -393,8 +393,8 @@ class Update
 
         $update_string = '- Add album group multiple disks setting.<br />';
         $version[] = array('version' => '360049','description' => $update_string);
-		
-		$update_string = '- Add top menu setting.<br />';
+
+        $update_string = '- Add top menu setting.<br />';
         $version[] = array('version' => '360050','description' => $update_string);
 
         return $version;
@@ -2383,8 +2383,8 @@ class Update
 
         return true;
     }
-	
-	/**
+
+    /**
      * update_360050
      *
      * Add top menu setting
