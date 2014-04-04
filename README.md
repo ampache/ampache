@@ -19,7 +19,7 @@ choosing a suitable method for doing so.
 Recommended Version
 -------------------
 
-Currently, the recommended version is [git HEAD](https://github.com/ampache-doped/ampache/archive/master.tar.gz).
+Currently, the recommended version is [git HEAD](https://github.com/ampache-doped/ampache-doped/archive/master.tar.gz).
 [![Build Status](https://api.travis-ci.org/ampache-doped/ampache.png?branch=master)](https://travis-ci.org/ampache-doped/ampache)
 
 Requirements
@@ -46,7 +46,7 @@ receives the most testing:
 Installation
 ------------
 
-Please see [the wiki](https://github.com/ampache-doped/ampache/wiki/Installation)
+Please see [the wiki](https://github.com/ampache-doped/ampache-doped/wiki/Installation)
 
 Upgrading
 ---------
@@ -99,7 +99,7 @@ Ampache includes some external modules that carry their own licensing.
 Translations
 ------------
 
-Ampache is currently translated (at least partially) into the
+Ampache Doped is currently translated (at least partially) into the
 following languages. If you are interested in updating an existing
 translation or adding a new one please see /locale/base/TRANSLATIONS
 for more instructions.
@@ -121,7 +121,7 @@ for more instructions.
 Credits
 -------
 
-Thanks to all those who have helped make Ampache awesome: [Credits](docs/ACKNOWLEDGEMENTS)
+Thanks to all those who have helped make Ampache Doped awesome: [Credits](docs/ACKNOWLEDGEMENTS)
 
 
 Contact Us
@@ -132,6 +132,6 @@ more features, encounter bugs, etc.
 
 * [Public Repository](http://github.com/ampache-doped)
 * IRC: chat.freenode.net #ampache
-* [Issue Tracker](https://github.com/ampache-doped/ampache/issues)
-* [Documentation](https://github.com/ampache-doped/ampache/wiki)
+* [Issue Tracker](https://github.com/ampache-doped/ampache-doped/issues)
+* [Documentation](https://github.com/ampache-doped/ampache-doped/wiki)
 
