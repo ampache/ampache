@@ -3,6 +3,16 @@ CHANGELOG
 
 3.7
 ----------
+- Added optional top dock menu
+- Added html5 web audio api visualizer and equalizer
+- Added `Play List` to localplay mode
+- Fixed encoding issue in batch download
+- Added pagination to democratic playlists
+- Added an option to group albums discs to an unique album
+- Added alphabeticalByName and alphabeticalByArtist browse view in Subsonic API
+- Fixed album art on xspf generated playlist
+- Added stats, playlist and new authentication method to Ampache XML API
+- Added responsive tables to automatically hide optional information on small screen
 - Added song action buttons (user flag, rating, ...) to the web player
 - Added sortable capability to the web player playlist
 - Added Growl notification/scrobbler plugin

@@ -129,7 +129,7 @@ foreach ($query as $param) {
         $params[$decname] = $decvalue;
     }
 }
-//syslog(LOG_INFO, print_r($params, true));
+//debug_event('subsonic', print_r($params, true), '5');
 
 // Recurse through them and see if we're calling one of them
 foreach ($methods as $method) {
