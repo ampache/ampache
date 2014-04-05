@@ -144,6 +144,8 @@ class AutoUpdate
             return AmpConfig::get('autoupdate_lastversion_new');
         }
 
+        debug_event('autoupdate', 'Checking latest version online...', '5');
+
         $available = false;
         $current = self::get_current_version();
         $latest = self::get_latest_version();

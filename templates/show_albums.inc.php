@@ -23,9 +23,6 @@
 $web_path = AmpConfig::get('web_path');
 $thcount = 8;
 ?>
-<script type="text/javascript">
-    setTagsChoices('<?php echo Tag::get_display(Tag::get_tags()); ?>');
-</script>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <thead>

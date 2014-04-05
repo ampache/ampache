@@ -29,6 +29,10 @@ switch ($_REQUEST['action']) {
     case 'show_add_tag':
 
     break;
+    case 'get_tag_map':
+        $tags = Tag::get_display(Tag::get_tags());
+        $results['tags'] = $tags;
+    break;
     case 'add_tag':
         debug_event('tag.ajax', 'Adding new tag...', '5');
         Tag::add_tag_map($_GET['type'],$_GET['object_id'],$_GET['tag_id']);
