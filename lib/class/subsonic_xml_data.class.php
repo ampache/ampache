@@ -320,7 +320,9 @@ class Subsonic_XML_Data
         if ($album->disk > 0) $xsong->addAttribute('discNumber', $album->disk);
         $xsong->addAttribute('suffix', $song->type);
         $xsong->addAttribute('contentType', $song->mime);
-        $xsong->addAttribute('path', $song->file);
+        // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
+        $path = $artist->name . '/' . $album->name . '/' . basename($song->file);
+        $xsong->addAttribute('path', $path);
 
         //Do we need to support transcodedContentType and transcodedSuffix attributes?
 
