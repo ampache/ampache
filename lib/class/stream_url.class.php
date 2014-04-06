@@ -79,6 +79,7 @@ class Stream_URL extends memory_object
     public static function format($url)
     {
         if (AmpConfig::get('stream_beautiful_url')) {
+            $url = str_replace('index.php?&', '', $url);
             $url = str_replace('index.php?', '', $url);
             $url = str_replace('&', '/', $url);
             $url = str_replace('=', '/', $url);
