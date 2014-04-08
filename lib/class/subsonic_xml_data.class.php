@@ -323,6 +323,18 @@ class Subsonic_XML_Data
         // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
         $path = $artist->name . '/' . $album->name . '/' . basename($song->file);
         $xsong->addAttribute('path', $path);
+        
+        // Set transcoding information if required
+        $transcode_cfg = AmpConfig::get('transcode');
+        $transcode_mode = AmpConfig::get('transcode_' . $song->type);
+        if ($transcode_cfg == 'always' || $transcode_mode == 'required') {
+            $transcode_settings = $song->get_transcode_settings(null);
+            if ($transcode_settings) {
+                $transcode_type = $transcode_settings['format'];
+                $xsong->addAttribute('transcodedSuffix', $transcode_type);
+                $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
+            }
+        }
 
         //Do we need to support transcodedContentType and transcodedSuffix attributes?
 
