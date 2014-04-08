@@ -1,3 +1,4 @@
+.sprite { background: url(/themes/reborn/images/icons.sprite.png) no-repeat top left; display: inline-block; }
 .sprite-icon_add{ background-position: 0 0; width: 16px; height: 16px; }
 .sprite-icon_add12{ background-position: 0 -32px; width: 16px; height: 16px; }
 .sprite-icon_add2{ background-position: 0 -64px; width: 16px; height: 16px; }

@@ -206,6 +206,8 @@ END;
      */
     public static function get_icon($name, $title = null, $id = null)
     {
+        $bUseSprite = file_exists(AmpConfig::get('prefix') . AmpConfig::get('theme_path') . '/images/icons.sprite.png');
+
         if (is_array($name)) {
             $hover_name = $name[1];
             $name = $name[0];
@@ -217,8 +219,11 @@ END;
         if (isset($hover_name)) {
             $hover_url = self::_find_icon($hover_text);
         }
-
-        $tag = '<img src="' . $icon_url . '" ';
+        if ($bUseSprite) {
+            $tag = '<span class="sprite sprite-icon_'.$name.'"';
+        } else {
+            $tag = '<img src="' . $icon_url . '" ';
+        }
 
         if ($id) {
             $tag .= 'id="' . $id . '" ';
@@ -232,7 +237,11 @@ END;
             $tag .= 'onmouseout="this.src=\'' . $icon_url . '\'; return true;" ';
         }
 
-        $tag .= '/>';
+        if ($bUseSprite) {
+            $tag .= '></span>';
+        } else {
+            $tag .= '/>';
+        }
         return $tag;
     }
 
