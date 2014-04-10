@@ -25,7 +25,6 @@ $web_path_guess = rtrim(dirname($_SERVER['PHP_SELF']), '\/');
 
 require $prefix . '/templates/install_header.inc.php';
 ?>
-    <div class="content">
         <?php echo T_('Step 1 - Create the Ampache database'); ?><br />
         <strong><?php echo T_('Step 2 - Create ampache-doped.cfg.php'); ?></strong><br />
         <dl>
@@ -106,11 +105,4 @@ require $prefix . '/templates/install_header.inc.php';
         <input type="submit" value="<?php echo T_('Continue to Step 3'); ?>" />
         </form>
     </div>
-    <div id="bottom">
-        <p><strong>Ampache Installation.</strong><br />
-        For the love of Music.</p>
-    </div>
-</div>
-
-</body>
-</html>
+<?php require $prefix . '/templates/install_footer.inc.php'; ?>

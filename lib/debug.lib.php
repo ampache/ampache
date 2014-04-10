@@ -219,12 +219,12 @@ function check_config_writable()
  */
 function debug_result($status = false, $value = null, $comment = '')
 {
-    $class = $status ? 'ok' : 'notok';
+    $class = $status ? 'success' : 'danger';
 
     if (!$value) {
         $value = $status ? 'OK' : 'ERROR';
     }
 
-    return '[ <span class="' . $class . '">' . scrub_out($value) .
-        '</span> <em>' . $comment . '</em> ]';
+    return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .
+        '</span> <em>' . $comment . '</em></button>';
 }

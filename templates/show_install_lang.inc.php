@@ -22,39 +22,31 @@
 
 require $prefix . '/templates/install_header.inc.php';
 ?>
-<?php require_once $prefix . '/templates/show_install_check.inc.php'; ?>
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron">
+            <h1 id="headerlogo"><img src="http://zik.changi67.eu/themes/reborn/images/ampache.png" title="Ampache" alt="Ampache"><?php echo T_('Ampache Installation'); ?></h1>
+        </div>
+        <div class="page-header">
+            <h1><?php echo T_('Choose Installation Language'); ?></h1>
+        </div>
+        <p><?php Error::display('general'); ?></p>
+        <form role="form" method="post" action="<?php echo $web_path . "/install.php?action=check"; ?>" enctype="multipart/form-data" >
+            <div class="form-group">
+        <?php
+            $languages = get_languages();
+            $var_name = $value . "_lang";
+            ${$var_name} = "selected=\"selected\"";
 
-<div class="content">
-    <strong><?php echo T_('Choose Installation Language'); ?></strong>
-    <p>
-    <?php Error::display('general'); ?>
-    </p>
-<form method="post" action="<?php echo $web_path . "/install.php?action=init"; ?>" enctype="multipart/form-data" >
+            echo "<select class=\"form-control\" name=\"htmllang\">\n";
 
-<?php
-$languages = get_languages();
-$var_name = $value . "_lang";
-${$var_name} = "selected=\"selected\"";
+            foreach ($languages as $lang=>$name) {
+                $var_name = $lang . "_lang";
 
-echo "<select name=\"htmllang\">\n";
-
-foreach ($languages as $lang=>$name) {
-    $var_name = $lang . "_lang";
-
-    echo "\t<option value=\"$lang\" " . ${$var_name} . ">$name</option>\n";
-} // end foreach
-echo "</select>\n";
-?>
-
-<input type="submit" value="<?php echo T_('Start configuration'); ?>" />
-
-    </form>
-     </div>
-    <div id="bottom">
-        <p><strong>Ampache Installation.</strong><br />
-        For the love of Music.</p>
-   </div>
-</div>
-
-</body>
-</html>
+                echo "\t<option value=\"$lang\" " . ${$var_name} . ">$name</option>\n";
+            } // end foreach
+            echo "</select>\n";
+        ?>
+            </div>
+            <button type="submit" class="btn btn-default"><?php echo T_('Start configuration'); ?></button>
+        </form>
+<?php require $prefix . '/templates/install_footer.inc.php'; ?>

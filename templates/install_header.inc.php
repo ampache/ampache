@@ -26,28 +26,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
-<title>Ampache :: For the love of Music - Install</title>
-<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
-<meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>" />
+    <meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ampache :: For the love of Music - Install</title>
+    <link href="modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
+<!--    <script src="lib/javascript/base.js" language="javascript" type="text/javascript"></script>-->
 </head>
 <body>
-<script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
-<script src="lib/javascript/base.js" language="javascript" type="text/javascript"></script>
-<div id="header">
-<h1><?php echo T_('Ampache Installation'); ?></h1>
-<p>For the love of Music</p>
-</div>
-<div id="text-box">
-    <div class="notify">
-        <h3><?php echo T_('Requirements'); ?></h3>
-        <p>
-        <?php echo T_('This page handles the installation of the Ampache database and the creation of the ampache-doped.cfg.php file. Before you continue please make sure that you have the following prerequisites:'); ?>
-        </p>
-        <ul>
-            <li><?php echo T_('A MySQL server with a username and password that can create/modify databases'); ?></li>
-                        <li><?php echo sprintf(T_('Your webserver has read access to the files %s and %s'),$prefix . '/sql/ampache.sql',$prefix . '/config/ampache-doped.cfg.php.dist'); ?></li>
-        </ul>
-        <p>
-<?php echo sprintf(T_("Once you have ensured that the above requirements are met please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your Ampache install at a later date simply edit %s"), $prefix . '/config/ampache-doped.cfg.php'); ?>
-        </p>
-</div>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="themes/reborn/images/ampache.png" title="Ampache" alt="Ampache">
+                <?php echo T_('Ampache Installation'); ?> - For the love of Music
+            </a>
+        </div>
+    </div>
+    <div class="container" role="main">

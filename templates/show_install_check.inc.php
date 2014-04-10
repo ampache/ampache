@@ -19,13 +19,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+require $prefix . '/templates/install_header.inc.php';
 ?>
 <?php if (!defined('INSTALL')) { exit; } ?>
-<table class="tabledata" cellspacing="0" cellpadding="0">
+        <div class="page-header requirements">
+            <h1><?php echo T_('Requirements'); ?></h1>
+        </div>
+        <div class="well">
+            <p>
+                <?php echo T_('This page handles the installation of the Ampache database and the creation of the ampache-doped.cfg.php file. Before you continue please make sure that you have the following prerequisites:'); ?>
+            </p>
+            <ul>
+                <li><?php echo T_('A MySQL server with a username and password that can create/modify databases'); ?></li>
+                <li><?php echo sprintf(T_('Your webserver has read access to the files %s and %s'),$prefix . '/sql/ampache.sql',$prefix . '/config/ampache-doped.cfg.php.dist'); ?></li>
+            </ul>
+            <p>
+                <?php echo sprintf(T_("Once you have ensured that the above requirements are met please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your Ampache install at a later date simply edit %s"), $prefix . '/config/ampache-doped.cfg.php'); ?>
+            </p>
+        </div>
+<table class="table" cellspacing="0" cellpadding="0">
     <tr>
-        <td><font><?php echo T_('CHECK'); ?></font></td>
-        <td><font><?php echo T_('STATUS'); ?></font></td>
-        <td><font><?php echo T_('DESCRIPTION'); ?></font></td>
+        <th><?php echo T_('CHECK'); ?></th>
+        <th><?php echo T_('STATUS'); ?></th>
+        <th><?php echo T_('DESCRIPTION'); ?></th>
     </tr>
     <?php require $prefix . '/templates/show_test_table.inc.php'; ?>
     <tr>
@@ -44,3 +60,6 @@
         <td><?php echo T_('This tests whether PHP can write to config/. This is not strictly necessary, but will help streamline the installation process.'); ?></td>
     </tr>
 </table>
+<form role="form" method="post" action="<?php echo $web_path . "/install.php?action=init"; ?>" enctype="multipart/form-data" >
+    <button type="submit" class="btn btn-default"><?php echo T_('Continue'); ?></button>
+</form>

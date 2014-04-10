@@ -148,6 +148,9 @@ switch ($_REQUEST['action']) {
     case 'init':
         require_once 'templates/show_install.inc.php';
     break;
+    case 'check':
+        require_once 'templates/show_install_check.inc.php';
+    break;
     default:
         // Show the language options first
         require_once 'templates/show_install_lang.inc.php';
