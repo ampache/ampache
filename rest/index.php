@@ -130,6 +130,7 @@ foreach ($query as $param) {
     }
 }
 //debug_event('subsonic', print_r($params, true), '5');
+//debug_event('subsonic', print_r(apache_request_headers(), true), '5');
 
 // Recurse through them and see if we're calling one of them
 foreach ($methods as $method) {

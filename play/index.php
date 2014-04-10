@@ -273,6 +273,8 @@ ignore_user_abort(true);
 $media_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
 
 
+header('Access-Control-Allow-Origin: *');
+
 // Generate browser class for sending headers
 $browser = new Horde_Browser();
 
@@ -408,6 +410,7 @@ if (!is_resource($fp)) {
     exit();
 }
 
+header('ETag: ' . $media->id);
 // Put this song in the now_playing table only if it's a song for now...
 if (get_class($media) == 'Song') {
     Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($media));
@@ -429,7 +432,7 @@ if ($start > 0 || $end > 0) {
     if ($stream_size == null) {
         debug_event('play', 'Content-Range header received, which we cannot fulfill due to unknown final length (transcoding?)', 2);
     } else {
-        if ($transcoding) {
+        if ($transcode) {
             debug_event('play', 'We should transcode only for a calculated frame range, but not yet supported here.', 2);
                 $stream_size = null;
         } else {

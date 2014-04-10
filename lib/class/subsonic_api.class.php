@@ -60,15 +60,31 @@ class Subsonic_Api
 
         return $input[$parameter];
     }
+    
+    public static function output_body($ch, $data)
+    {
+        echo $data;
+        ob_flush();
+
+        return strlen($data);
+    }
 
     public static function output_header($ch, $header)
     {
-        header($header);
+        $rheader = trim($header);
+        $rhpart = explode(':', $rheader);
+        if (!empty($rheader) && count($rhpart) > 1) {
+            if ($rhpart[0] != "Transfer-Encoding") {
+                header($rheader);
+            }
+        }
         return strlen($header);
     }
 
     public static function follow_stream($url)
     {
+        set_time_limit(0);
+    
         if (function_exists('curl_version')) {
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
             $ch = curl_init($url);
@@ -76,11 +92,13 @@ class Subsonic_Api
                 CURLOPT_HEADER => false,
                 CURLOPT_RETURNTRANSFER => false,
                 CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_WRITEFUNCTION => array('Subsonic_Api', 'output_body'),
                 CURLOPT_HEADERFUNCTION => array('Subsonic_Api', 'output_header'),
                 // Ignore invalid certificate
                 // Default trusted chain is crap anyway and currently no custom CA option
                 CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_SSL_VERIFYHOST => false
+                CURLOPT_SSL_VERIFYHOST => false,
+                CURLOPT_TIMEOUT => 0
             ));
             curl_exec($ch);
             curl_close($ch);
