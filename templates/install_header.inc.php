@@ -32,7 +32,6 @@
     <link href="modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
     <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
-<!--    <script src="lib/javascript/base.js" language="javascript" type="text/javascript"></script>-->
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">

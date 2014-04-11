@@ -47,6 +47,6 @@ require $prefix . '/templates/install_header.inc.php';
             echo "</select>\n";
         ?>
             </div>
-            <button type="submit" class="btn btn-default"><?php echo T_('Start configuration'); ?></button>
+            <button type="submit" class="btn btn-warning"><?php echo T_('Start configuration'); ?></button>
         </form>
 <?php require $prefix . '/templates/install_footer.inc.php'; ?>
