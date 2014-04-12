@@ -38,18 +38,18 @@ require $prefix . '/templates/install_header.inc.php';
                 </div>
             </div>
             <p><?php echo T_('Step 1 - Create the Ampache database'); ?></p>
-				<p><strong><?php echo T_('Step 2 - Create ampache-doped.cfg.php'); ?></strong></p>
-				<dl>
-					<dd><?php printf(T_('This step takes the basic config values and generates the config file. If your config/ directory is writable, you can select "write" to have Ampache write the config file directly to the correct location. If you select "download" it will prompt you to download the config file, and you can then manually place the config file in %s'), $prefix . '/config'); ?></dd>
-				</dl>
+                <p><strong><?php echo T_('Step 2 - Create ampache-doped.cfg.php'); ?></strong></p>
+                <dl>
+                    <dd><?php printf(T_('This step takes the basic config values and generates the config file. If your config/ directory is writable, you can select "write" to have Ampache write the config file directly to the correct location. If you select "download" it will prompt you to download the config file, and you can then manually place the config file in %s'), $prefix . '/config'); ?></dd>
+                </dl>
             <ul class="list-unstyled">
                 <li><?php echo T_('Step 3 - Set up the initial account'); ?></li>
             </ul>
-			</div>
-			<?php Error::display('general'); ?>
+            </div>
+            <?php Error::display('general'); ?>
 
-			<h2><?php echo T_('Generate Config File'); ?></h2>
-			<?php Error::display('config'); ?>
+            <h2><?php echo T_('Generate Config File'); ?></h2>
+            <?php Error::display('config'); ?>
 <form method="post" action="<?php echo $web_path . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" >
 <div class="form-group">
     <label for="web_path" class="col-sm-3 control-label"><?php echo T_('Web Path'); ?></label>
@@ -92,27 +92,27 @@ require $prefix . '/templates/install_header.inc.php';
 <div class="col-sm-3">
 </div>
 <div class="col-sm-9">
-	<button type="submit" class="btn btn-warning" name="download"><?php echo T_('Download'); ?></button>
-	<button type="submit" class="btn btn-warning" name="write" <?php if (!check_config_writable()) { echo "disabled "; } ?>>
-		<?php echo T_('Write'); ?>
-	</button>
+    <button type="submit" class="btn btn-warning" name="download"><?php echo T_('Download'); ?></button>
+    <button type="submit" class="btn btn-warning" name="write" <?php if (!check_config_writable()) { echo "disabled "; } ?>>
+        <?php echo T_('Write'); ?>
+    </button>
 </div>
 </form>
 
-	<div class="col-sm-3"><?php echo T_('ampache-doped.cfg.php exists?'); ?></div>
-	<div class="col-sm-9"><?php echo debug_result(is_readable($configfile)); ?></div>
-	<div class="col-sm-3"><?php echo T_('ampache-doped.cfg.php configured?'); ?></div>
-	<div class="col-sm-9"><?php $results = @parse_ini_file($configfile); echo debug_result(check_config_values($results)); ?></div>
-	<div class="col-sm-3"></div>
-	<?php $check_url = $web_path . "/install.php?action=show_create_config&amp;htmllang=$htmllang&amp;charset=$charset&amp;local_db=" . $_REQUEST['local_db'] . "&amp;local_host=" . $_REQUEST['local_host']; ?>
-	<div class="col-sm-9">
-		<a href="<?php echo $check_url; ?>">[<?php echo T_('Recheck Config'); ?>]</a>
-	</div>
-	<form
-		method="post"
-		action="<?php echo $web_path . "/install.php?action=show_create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>"
-		enctype="multipart/form-data"
-	>
-		<button type="submit" class="btn btn-warning"><?php echo T_('Continue to Step 3'); ?></button>
-	</form>
+    <div class="col-sm-3"><?php echo T_('ampache-doped.cfg.php exists?'); ?></div>
+    <div class="col-sm-9"><?php echo debug_result(is_readable($configfile)); ?></div>
+    <div class="col-sm-3"><?php echo T_('ampache-doped.cfg.php configured?'); ?></div>
+    <div class="col-sm-9"><?php $results = @parse_ini_file($configfile); echo debug_result(check_config_values($results)); ?></div>
+    <div class="col-sm-3"></div>
+    <?php $check_url = $web_path . "/install.php?action=show_create_config&amp;htmllang=$htmllang&amp;charset=$charset&amp;local_db=" . $_REQUEST['local_db'] . "&amp;local_host=" . $_REQUEST['local_host']; ?>
+    <div class="col-sm-9">
+        <a href="<?php echo $check_url; ?>">[<?php echo T_('Recheck Config'); ?>]</a>
+    </div>
+    <form
+        method="post"
+        action="<?php echo $web_path . "/install.php?action=show_create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>"
+        enctype="multipart/form-data"
+    >
+        <button type="submit" class="btn btn-warning"><?php echo T_('Continue to Step 3'); ?></button>
+    </form>
 <?php require $prefix . '/templates/install_footer.inc.php'; ?>

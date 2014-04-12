@@ -37,7 +37,7 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
         </tr>
     </thead>
     <tbody>
-<?php 
+<?php
 $nb = 0;
 foreach ($data as $row) {
     $row_user = new User($row['user']);

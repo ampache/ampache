@@ -60,7 +60,7 @@ class Subsonic_Api
 
         return $input[$parameter];
     }
-    
+
     public static function output_body($ch, $data)
     {
         echo $data;
@@ -84,7 +84,7 @@ class Subsonic_Api
     public static function follow_stream($url)
     {
         set_time_limit(0);
-    
+
         if (function_exists('curl_version')) {
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
             $ch = curl_init($url);

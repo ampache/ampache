@@ -323,7 +323,7 @@ class Subsonic_XML_Data
         // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
         $path = $artist->name . '/' . $album->name . '/' . basename($song->file);
         $xsong->addAttribute('path', $path);
-        
+
         // Set transcoding information if required
         $transcode_cfg = AmpConfig::get('transcode');
         $transcode_mode = AmpConfig::get('transcode_' . $song->type);
