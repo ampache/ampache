@@ -161,8 +161,8 @@ class Random implements media
 
         // Get the last album playbed by us
         $data = $GLOBALS['user']->get_recently_played('1','album');
-        if ($data['0']) {
-            $where_sql = " AND `song`.`album`='" . $data['0'] . "' ";
+        if ($data[0]) {
+            $where_sql = " AND `song`.`album`='" . $data[0] . "' ";
         }
 
         $sql = "SELECT `song`.`id` FROM `song` ";
@@ -193,8 +193,8 @@ class Random implements media
         $results = array();
 
         $data = $GLOBALS['user']->get_recently_played('1','artist');
-        if ($data['0']) {
-            $where_sql = " AND `song`.`artist`='" . $data['0'] . "' ";
+        if ($data[0]) {
+            $where_sql = " AND `song`.`artist`='" . $data[0] . "' ";
         }
 
         $sql = "SELECT `song`.`id` FROM `song` ";
