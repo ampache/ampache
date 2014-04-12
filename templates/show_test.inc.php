@@ -25,28 +25,35 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Ampache -- Debug Page</title>
-        <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
+        <link href="modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
     </head>
-    <body bgcolor="#f0f0f0">
-        <div id="header">
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="themes/reborn/images/ampache.png" title="Ampache" alt="Ampache">
+                    <?php echo T_('Ampache'); ?> - For the love of Music
+                </a>
+            </div>
+        </div>
+        <div class="container" role="main">
+        <div class="page-header requirements">
             <h1><?php echo T_('Ampache Debug'); ?></h1>
+        </div>
+        <div class="well">
             <p><?php echo T_('You may have reached this page because a configuration error has occured. Debug information is below.'); ?></p>
         </div>
         <div>
-            <table align="center" cellpadding="3" cellspacing="0">
+            <table class="table" cellpadding="3" cellspacing="0">
                 <tr>
-                    <td><font><?php echo T_('CHECK'); ?></font></td>
-                    <td>
-                        <font><?php echo T_('STATUS'); ?></font>
-                    </td>
-                    <td><font><?php echo T_('DESCRIPTION'); ?></font></td>
+                    <th><?php echo T_('CHECK'); ?></th>
+                    <th><?php echo T_('STATUS'); ?></th>
+                    <th><?php echo T_('DESCRIPTION'); ?></th>
                 </tr>
                 <?php require $prefix . '/templates/show_test_table.inc.php'; ?>
             </table>
-        </div>
-        <div id="bottom">
-            <p><strong>Ampache Debug.</strong><br />
-            For the love of Music.</p>
         </div>
     </body>
 </html>
