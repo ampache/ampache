@@ -29,27 +29,28 @@
 <meta http-equiv="refresh" content="10;URL=<?php echo($redirect_url);?>" />
 <link rel="shortcut icon" href="<?php echo $web_path; ?>/favicon.ico" />
 <title><?php echo( T_("Ampache error page"));?></title>
-<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/base.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $web_path; ?><?php echo AmpConfig::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
+<link href="modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+<link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
 </head>
 <body>
 <!-- rfc3514 implementation -->
-<div id="rfc3514" style="display: none;">0x0</div>
-<div id="maincontainer">
-    <div id="header">
-        <div id="headerlogo">
-            <img src="<?php echo $web_path; echo AmpConfig::get('theme_path'); ?>/images/ampache.png"
-                 title="<?php echo AmpConfig::get('site_title'); ?>"
-                 alt="<?php echo AmpConfig::get('site_title'); ?>" />
+    <div id="rfc3514" style="display: none;">0x0</div>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="themes/reborn/images/ampache.png" title="Ampache" alt="Ampache">
+                <?php echo T_('Ampache'); ?> - For the love of Music
+            </a>
         </div>
     </div>
-    <div>&nbsp;</div>
-    <div id="errormsg">
-        <?php echo (T_("The folowing error has occured, you will automaticly be redirected after 10 seconds.") ); ?>
-        <br /><br />
-        <?php echo(T_("Error messages"));?>:<br />
+    <div class="container" role="main">
+        <div class="jumbotron">
+            <h1><?php echo T_('Error'); ?></h1>
+            <p><?php echo (T_("The folowing error has occured, you will automaticly be redirected after 10 seconds.") ); ?></p>
+        </div>
+        <h2><?php echo(T_("Error messages"));?>:</h2>
         <?php Error::display('general'); ?>
     </div>
-</div>
 </body>
 </html>
