@@ -24,7 +24,7 @@ require $prefix . '/templates/install_header.inc.php';
 ?>
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <div class="jumbotron">
-            <h1 id="headerlogo"><img src="http://zik.changi67.eu/themes/reborn/images/ampache.png" title="Ampache" alt="Ampache"><?php echo T_('Ampache Installation'); ?></h1>
+            <h1 id="headerlogo"><img src="<?php echo $web_path; ?>/themes/reborn/images/ampache.png" title="Ampache" alt="Ampache"><?php echo T_('Ampache Installation'); ?></h1>
         </div>
         <div class="page-header">
             <h1><?php echo T_('Choose Installation Language'); ?></h1>
