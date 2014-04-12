@@ -40,37 +40,42 @@ if ($_REQUEST['action'] == 'update') {
 $htmllang = str_replace("_","-",AmpConfig::get('lang'));
 
 ?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
-<link rel="shortcut icon" href="<?php echo AmpConfig::get('web_path'); ?>/favicon.ico" />
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
-<link rel="stylesheet" type="text/css" media="screen" href="<?php echo AmpConfig::get('web_path') . '/templates/install.css'; ?>" />
-<title><?php echo T_('Ampache Update'); ?></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ampache :: For the love of Music - Update</title>
+    <link href="modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
 </head>
 <body>
-<div id="header">
-<h1><?php echo T_('Ampache Update'); ?></h1>
-<p>For the love of Music.</p>
-</div>
-<div id="text-box">
-    <div class="notify">
-<?php printf(T_('This page handles all database updates to Ampache starting with <strong>3.3.3.5</strong>. According to your database your current version is: <strong>%s</strong>.'), Update::format_version($version)); ?>
-<?php echo T_('the following updates need to be performed'); ?><br /><br />
-<div style="font-size:1.2em;font-weight:bold;text-align:center;"><?php Error::display('general'); ?></div>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="themes/reborn/images/ampache.png" title="Ampache" alt="Ampache">
+                <?php echo T_('Ampache'); ?> - For the love of Music
+            </a>
+        </div>
     </div>
-    <div class="content">
-<?php Update::display_update(); ?>
-
-<form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/update.php?action=update">
-<?php if (Update::need_update()) { ?><input type="submit" value="<?php echo T_('Update Now!'); ?>" /> <?php } ?>
-</form>
+    <div class="container" role="main">
+        <div class="page-header requirements">
+            <h1><?php echo T_('Ampache Update'); ?></h1>
+        </div>
+        <div class="well">
+             <p><?php printf(T_('This page handles all database updates to Ampache starting with <strong>3.3.3.5</strong>. According to your database your current version is: <strong>%s</strong>.'), Update::format_version($version)); ?></p>
+             <p><?php echo T_('The following updates need to be performed'); ?></p>
+        </div>
+        <?php Error::display('general'); ?>
+        <div class="content">
+            <?php Update::display_update(); ?>
+        </div>
+        <?php if (Update::need_update()) { ?>
+            <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/update.php?action=update">
+                <button type="submit" class="btn btn-warning" name="update"><?php echo T_('Update Now!'); ?></button>
+            </form>
+        <?php } ?>
     </div>
-    <div id="bottom">
-        <p><b><?php echo T_('Ampache Installation.'); ?></b><br />
-        For the love of Music.</p>
-   </div>
-</div>
 </body>
 </html>
