@@ -37,7 +37,9 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
         </tr>
     </thead>
     <tbody>
-<?php foreach ($data as $row) {
+<?php 
+$nb = 0;
+foreach ($data as $row) {
     $row_user = new User($row['user']);
     $song = new Song($row['object_id']);
 
@@ -92,9 +94,9 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
             <span class="cel_play_content">&nbsp;</span>
             <div class="cel_play_hover">
             <?php if (AmpConfig::get('directplay')) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play'),'play_song_' . $song->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id,'play', T_('Play'),'play_song_' . $nb . '_' . $song->id); ?>
                 <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                    <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $song->id); ?>
+                    <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $nb . '_' . $song->id); ?>
                 <?php } ?>
         <?php } ?>
             </div>
@@ -102,8 +104,8 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
         <td class="cel_song"><?php echo $song->f_link; ?></td>
         <td class="cel_add">
             <span class="cel_item_add">
-                <?php echo Ajax::button('?action=basket&type=song&id='.$song->id, 'add', T_('Add to temporary playlist'), 'add_'.$song->id); ?>
-                <a id="<?php echo 'add_playlist_'.$song->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id ?>')">
+                <?php echo Ajax::button('?action=basket&type=song&id='.$song->id, 'add', T_('Add to temporary playlist'), 'add_' . $nb . '_'.$song->id); ?>
+                <a id="<?php echo 'add_playlist_' . $nb . '_'.$song->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id ?>')">
                     <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
                 </a>
             </span>
@@ -122,7 +124,10 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
             } ?>
         </td>
     </tr>
-<?php } ?>
+<?php
+    ++$nb;
+}
+?>
 <?php if (!count($data)) { ?>
     <tr>
         <td colspan="8"><span class="nodata"><?php echo T_('No recently item found'); ?></span></td>
