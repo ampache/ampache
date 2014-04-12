@@ -85,5 +85,10 @@ $thcount = 8;
         </tr>
     </tfoot>
 </table>
-<script language="javascript" type="text/javascript">$('.tabledata').mediaTable();</script>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+    $('.tabledata').mediaTable();
+    ResponsiveElements.init();
+});
+</script>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>

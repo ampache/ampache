@@ -61,6 +61,11 @@ function check_php_json()
     return function_exists('json_encode');
 }
 
+function check_php_curl()
+{
+    return function_exists('curl_version');
+}
+
 function check_php_session()
 {
     return function_exists('session_set_save_handler');

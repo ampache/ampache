@@ -297,9 +297,37 @@ class Browse extends Query
             }
         }
     } // set_filter_from_request
+    
+    public function set_type($type, $custom_base = '')
+    {
+        $cn = 'browse_' . $type . '_pages';
+        if (isset($_COOKIE[$cn])) {
+            $this->set_use_pages($_COOKIE[$cn] == 'true');
+        }
+        $cn = 'browse_' . $type . '_alpha';
+        if (isset($_COOKIE[$cn])) {
+            $this->set_use_alpha($_COOKIE[$cn] == 'true');
+            if ($this->get_use_alpha()) {
+                if (count($this->_state['filter']) == 0) {
+                    $this->set_filter('regex_match', '^A');
+                }
+            } else {
+                $this->set_filter('regex_not_match', '');
+            }
+        }
+    
+        parent::set_type($type, $custom_base);
+    }
+    
+    public function save_cookie_params($option, $value) {
+        if ($this->get_type()) {
+            setcookie('browse_' . $this->get_type() . '_' . $option, $value, time() + 31536000, "/");
+        }
+    }
 
     public function set_use_pages($use_pages)
     {
+        $this->save_cookie_params('pages', $use_pages ? 'true' : 'false');
         $this->_state['use_pages'] = $use_pages;
     }
 
@@ -310,6 +338,7 @@ class Browse extends Query
 
     public function set_use_alpha($use_alpha)
     {
+        $this->save_cookie_params('alpha', $use_alpha ? 'true' : 'false');
         $this->_state['use_alpha'] = $use_alpha;
     }
 

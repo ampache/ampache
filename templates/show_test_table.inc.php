@@ -93,6 +93,15 @@
     </td>
 </tr>
 <tr>
+    <td valign="top"><?php echo T_('PHP curl extension'); ?></td>
+    <td valign="top">
+    <?php echo debug_result(check_php_curl()); ?>
+    </td>
+    <td>
+    <?php echo T_('This tests whether you have the curl extension enabled.  This is not strictly necessary, but may result in a better experience.'); ?>
+    </td>
+</tr>
+<tr>
     <td valign="top"><?php echo T_('PHP safe mode disabled'); ?></td>
     <td valign="top">
     <?php echo debug_result(check_php_safemode()); ?>
@@ -169,13 +178,8 @@ if (!defined('INSTALL')) {
     <td valign="top"><?php echo T_('Web path'); ?></td>
     <td valign="top">
     <?php
-        if ($results['force_ssl']) {
-            $http_type = 'https://';
-        }
-
-        $results['web_path'] = $http_type . AmpConfig::get('http_host') . AmpConfig::get('web_path');
         if (check_config_values($results)) {
-            echo "&nbsp;&nbsp;&nbsp;<img src=\"" . $results['web_path'] ."/images/icon_enable.png\" />&nbsp;&nbsp;&nbsp;";
+            echo "&nbsp;&nbsp;&nbsp;<img src=\"" . AmpConfig::get('web_path') ."/images/icon_enable.png\" />&nbsp;&nbsp;&nbsp;";
         } else {
             echo debug_result(false);
         }
