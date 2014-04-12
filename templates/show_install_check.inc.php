@@ -61,5 +61,6 @@ require $prefix . '/templates/install_header.inc.php';
     </tr>
 </table>
 <form role="form" method="post" action="<?php echo $web_path . "/install.php?action=init"; ?>" enctype="multipart/form-data" >
+    <input type="hidden" name="htmllang" value="<?php echo $htmllang ?>"/>
     <button type="submit" class="btn btn-warning"><?php echo T_('Continue'); ?></button>
 </form>
