@@ -47,7 +47,7 @@ is_rtl(AmpConfig::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
     type="text/css" media="screen" />
 <title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
 <script type="text/javascript" language="javascript">
-function focus(){ document.login.username.focus(); }
+function focus(){ document.login.email.focus(); }
 </script>
 </head>
 
@@ -64,7 +64,7 @@ function focus(){ document.login.username.focus(); }
     <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
     <form name="login" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/lostpassword.php">
 
-    <div class="loginfield" id="email"><label for="email"><?php echo  T_('Email'); ?>:</label>
+    <div class="loginfield" id="emailfield"><label for="email"><?php echo  T_('Email'); ?>:</label>
     <input type="hidden" id="action" name="action" value="send" />
     <input class="text_input" type="text" id="email" name="email" /></div>
     <input class="button" id="lostpasswordbutton" type="submit"
