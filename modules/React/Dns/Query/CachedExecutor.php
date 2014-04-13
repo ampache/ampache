@@ -4,6 +4,7 @@ namespace React\Dns\Query;
 
 use React\Dns\Model\Message;
 use React\Dns\Model\Record;
+use React\Promise\When;
 
 class CachedExecutor implements ExecutorInterface
 {
@@ -18,14 +19,15 @@ class CachedExecutor implements ExecutorInterface
 
     public function query($nameserver, Query $query)
     {
+        $that = $this;
         $executor = $this->executor;
         $cache = $this->cache;
 
         return $this->cache
             ->lookup($query)
             ->then(
-                function ($cachedRecords) use ($query) {
-                    return $this->buildResponse($query, $cachedRecords);
+                function ($cachedRecords) use ($that, $query) {
+                    return $that->buildResponse($query, $cachedRecords);
                 },
                 function () use ($executor, $cache, $nameserver, $query) {
                     return $executor

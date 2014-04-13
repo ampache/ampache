@@ -19,16 +19,17 @@ class RetryExecutor implements ExecutorInterface
     {
         $deferred = new Deferred();
 
-        $this->tryQuery($nameserver, $query, $this->retries, $deferred);
+        $this->tryQuery($nameserver, $query, $this->retries, $deferred->resolver());
 
         return $deferred->promise();
     }
 
-    public function tryQuery($nameserver, Query $query, $retries, $deferred)
+    public function tryQuery($nameserver, Query $query, $retries, $resolver)
     {
-        $errorback = function ($error) use ($nameserver, $query, $retries, $deferred) {
+        $that = $this;
+        $errorback = function ($error) use ($nameserver, $query, $retries, $resolver, $that) {
             if (!$error instanceof TimeoutException) {
-                $deferred->reject($error);
+                $resolver->reject($error);
                 return;
             }
             if (0 >= $retries) {
@@ -37,14 +38,14 @@ class RetryExecutor implements ExecutorInterface
                     0,
                     $error
                 );
-                $deferred->reject($error);
+                $resolver->reject($error);
                 return;
             }
-            $this->tryQuery($nameserver, $query, $retries-1, $deferred);
+            $that->tryQuery($nameserver, $query, $retries-1, $resolver);
         };
 
         $this->executor
             ->query($nameserver, $query)
-            ->then(array($deferred, 'resolve'), $errorback);
+            ->then(array($resolver, 'resolve'), $errorback);
     }
 }

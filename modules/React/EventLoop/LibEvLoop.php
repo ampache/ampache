@@ -2,14 +2,9 @@
 
 namespace React\EventLoop;
 
-use libev\EventLoop;
-use libev\IOEvent;
-use libev\TimerEvent;
-use React\EventLoop\Tick\FutureTickQueue;
-use React\EventLoop\Tick\NextTickQueue;
+use SplObjectStorage;
 use React\EventLoop\Timer\Timer;
 use React\EventLoop\Timer\TimerInterface;
-use SplObjectStorage;
 
 /**
  * @see https://github.com/m4rw3r/php-libev
@@ -18,201 +13,140 @@ use SplObjectStorage;
 class LibEvLoop implements LoopInterface
 {
     private $loop;
-    private $nextTickQueue;
-    private $futureTickQueue;
-    private $timerEvents;
-    private $readEvents = [];
-    private $writeEvents = [];
-    private $running;
+    private $timers;
+    private $readEvents = array();
+    private $writeEvents = array();
 
     public function __construct()
     {
-        $this->loop = new EventLoop();
-        $this->nextTickQueue = new NextTickQueue($this);
-        $this->futureTickQueue = new FutureTickQueue($this);
-        $this->timerEvents = new SplObjectStorage();
+        $this->loop = new \libev\EventLoop();
+        $this->timers = new SplObjectStorage();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addReadStream($stream, callable $listener)
+    public function addReadStream($stream, $listener)
     {
-        $callback = function () use ($stream, $listener) {
-            call_user_func($listener, $stream, $this);
-        };
-
-        $event = new IOEvent($callback, $stream, IOEvent::READ);
-        $this->loop->add($event);
-
-        $this->readEvents[(int) $stream] = $event;
+        $this->addStream($stream, $listener, \libev\IOEvent::READ);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addWriteStream($stream, callable $listener)
+    public function addWriteStream($stream, $listener)
     {
-        $callback = function () use ($stream, $listener) {
-            call_user_func($listener, $stream, $this);
-        };
-
-        $event = new IOEvent($callback, $stream, IOEvent::WRITE);
-        $this->loop->add($event);
-
-        $this->writeEvents[(int) $stream] = $event;
+        $this->addStream($stream, $listener, \libev\IOEvent::WRITE);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeReadStream($stream)
     {
-        $key = (int) $stream;
-
-        if (isset($this->readEvents[$key])) {
-            $this->readEvents[$key]->stop();
-            unset($this->readEvents[$key]);
+        if (isset($this->readEvents[(int)$stream])) {
+            $this->readEvents[(int)$stream]->stop();
+            unset($this->readEvents[(int)$stream]);
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeWriteStream($stream)
     {
-        $key = (int) $stream;
-
-        if (isset($this->writeEvents[$key])) {
-            $this->writeEvents[$key]->stop();
-            unset($this->writeEvents[$key]);
+        if (isset($this->writeEvents[(int)$stream])) {
+            $this->writeEvents[(int)$stream]->stop();
+            unset($this->writeEvents[(int)$stream]);
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeStream($stream)
     {
         $this->removeReadStream($stream);
         $this->removeWriteStream($stream);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addTimer($interval, callable $callback)
+    private function addStream($stream, $listener, $flags)
+    {
+        $listener = $this->wrapStreamListener($stream, $listener, $flags);
+        $event = new \libev\IOEvent($listener, $stream, $flags);
+        $this->loop->add($event);
+
+        if (($flags & \libev\IOEvent::READ) === $flags) {
+            $this->readEvents[(int)$stream] = $event;
+        } elseif (($flags & \libev\IOEvent::WRITE) === $flags) {
+            $this->writeEvents[(int)$stream] = $event;
+        }
+    }
+
+    private function wrapStreamListener($stream, $listener, $flags)
+    {
+        if (($flags & \libev\IOEvent::READ) === $flags) {
+            $removeCallback = array($this, 'removeReadStream');
+        } elseif (($flags & \libev\IOEvent::WRITE) === $flags) {
+            $removeCallback = array($this, 'removeWriteStream');
+        }
+
+        return function ($event) use ($stream, $listener, $removeCallback) {
+            call_user_func($listener, $stream);
+        };
+    }
+
+    public function addTimer($interval, $callback)
     {
         $timer = new Timer($this, $interval, $callback, false);
-
-        $callback = function () use ($timer) {
-            call_user_func($timer->getCallback(), $timer);
-
-            if ($this->isTimerActive($timer)) {
-                $this->cancelTimer($timer);
-            }
-        };
-
-        $event = new TimerEvent($callback, $timer->getInterval());
-        $this->timerEvents->attach($timer, $event);
-        $this->loop->add($event);
+        $this->setupTimer($timer);
 
         return $timer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addPeriodicTimer($interval, callable $callback)
+    public function addPeriodicTimer($interval, $callback)
     {
         $timer = new Timer($this, $interval, $callback, true);
-
-        $callback = function () use ($timer) {
-            call_user_func($timer->getCallback(), $timer);
-        };
-
-        $event = new TimerEvent($callback, $interval, $interval);
-        $this->timerEvents->attach($timer, $event);
-        $this->loop->add($event);
+        $this->setupTimer($timer);
 
         return $timer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function cancelTimer(TimerInterface $timer)
     {
-        if (isset($this->timerEvents[$timer])) {
-            $this->loop->remove($this->timerEvents[$timer]);
-            $this->timerEvents->detach($timer);
+        if (isset($this->timers[$timer])) {
+            $this->loop->remove($this->timers[$timer]);
+            $this->timers->detach($timer);
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    private function setupTimer(TimerInterface $timer)
+    {
+        $dummyCallback = function () {};
+        $interval = $timer->getInterval();
+
+        if ($timer->isPeriodic()) {
+            $libevTimer = new \libev\TimerEvent($dummyCallback, $interval, $interval);
+        } else {
+            $libevTimer = new \libev\TimerEvent($dummyCallback, $interval);
+        }
+
+        $libevTimer->setCallback(function () use ($timer) {
+            call_user_func($timer->getCallback(), $timer);
+
+            if (!$timer->isPeriodic()) {
+                $timer->cancel();
+            }
+        });
+
+        $this->timers->attach($timer, $libevTimer);
+        $this->loop->add($libevTimer);
+
+        return $timer;
+    }
+
     public function isTimerActive(TimerInterface $timer)
     {
-        return $this->timerEvents->contains($timer);
+        return $this->timers->contains($timer);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function nextTick(callable $listener)
-    {
-        $this->nextTickQueue->add($listener);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function futureTick(callable $listener)
-    {
-        $this->futureTickQueue->add($listener);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function tick()
     {
-        $this->nextTickQueue->tick();
-
-        $this->futureTickQueue->tick();
-
-        $this->loop->run(EventLoop::RUN_ONCE | EventLoop::RUN_NOWAIT);
+        $this->loop->run(\libev\EventLoop::RUN_ONCE);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function run()
     {
-        $this->running = true;
-
-        while ($this->running) {
-            $this->nextTickQueue->tick();
-
-            $this->futureTickQueue->tick();
-
-            $flags = EventLoop::RUN_ONCE;
-            if (!$this->running || !$this->nextTickQueue->isEmpty() || !$this->futureTickQueue->isEmpty()) {
-                $flags |= EventLoop::RUN_NOWAIT;
-            } elseif (!$this->readEvents && !$this->writeEvents && !$this->timerEvents->count()) {
-                break;
-            }
-
-            $this->loop->run($flags);
-        }
+        $this->loop->run();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function stop()
     {
-        $this->running = false;
+        $this->loop->breakLoop();
     }
 }

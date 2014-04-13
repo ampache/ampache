@@ -2,7 +2,7 @@
 
 namespace React\Cache;
 
-use React\Promise;
+use React\Promise\When;
 
 class ArrayCache implements CacheInterface
 {
@@ -11,10 +11,10 @@ class ArrayCache implements CacheInterface
     public function get($key)
     {
         if (!isset($this->data[$key])) {
-            return Promise\reject();
+            return When::reject();
         }
 
-        return Promise\resolve($this->data[$key]);
+        return When::resolve($this->data[$key]);
     }
 
     public function set($key, $value)

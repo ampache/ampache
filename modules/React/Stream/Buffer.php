@@ -4,7 +4,6 @@ namespace React\Stream;
 
 use Evenement\EventEmitter;
 use React\EventLoop\LoopInterface;
-use React\Stream\WritableStreamInterface;
 
 /** @event full-drain */
 class Buffer extends EventEmitter implements WritableStreamInterface
@@ -21,16 +20,11 @@ class Buffer extends EventEmitter implements WritableStreamInterface
         'file'    => '',
         'line'    => 0,
     );
-    private $meta;
 
     public function __construct($stream, LoopInterface $loop)
     {
         $this->stream = $stream;
         $this->loop = $loop;
-
-        if (is_resource($stream)) {
-            $this->meta = stream_get_meta_data($stream);
-        }
     }
 
     public function isWritable()
@@ -78,13 +72,13 @@ class Buffer extends EventEmitter implements WritableStreamInterface
         $this->listening = false;
         $this->data = '';
 
-        $this->emit('close', [$this]);
+        $this->emit('close');
     }
 
     public function handleWrite()
     {
-        if (!is_resource($this->stream) || ('generic_socket' === $this->meta['stream_type'] && feof($this->stream))) {
-            $this->emit('error', array(new \RuntimeException('Tried to write to closed or invalid stream.'), $this));
+        if (!is_resource($this->stream)) {
+            $this->emit('error', array(new \RuntimeException('Tried to write to invalid stream.'), $this));
 
             return;
         }
@@ -96,23 +90,26 @@ class Buffer extends EventEmitter implements WritableStreamInterface
         restore_error_handler();
 
         if (false === $sent) {
-            $this->emit('error', array(
-                new \ErrorException(
-                    $this->lastError['message'],
-                    0,
-                    $this->lastError['number'],
-                    $this->lastError['file'],
-                    $this->lastError['line']
-                ),
-                $this
-            ));
+            $this->emit('error', array(new \ErrorException(
+                $this->lastError['message'],
+                0,
+                $this->lastError['number'],
+                $this->lastError['file'],
+                $this->lastError['line']
+            )));
+
+            return;
+        }
+
+        if (0 === $sent && feof($this->stream)) {
+            $this->emit('error', array(new \RuntimeException('Tried to write to closed stream.'), $this));
 
             return;
         }
 
         $len = strlen($this->data);
         if ($len >= $this->softLimit && $len - $sent < $this->softLimit) {
-            $this->emit('drain', [$this]);
+            $this->emit('drain');
         }
 
         $this->data = (string) substr($this->data, $sent);
@@ -121,7 +118,7 @@ class Buffer extends EventEmitter implements WritableStreamInterface
             $this->loop->removeWriteStream($this->stream);
             $this->listening = false;
 
-            $this->emit('full-drain', [$this]);
+            $this->emit('full-drain');
         }
     }
 

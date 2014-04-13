@@ -297,7 +297,7 @@ class Browse extends Query
             }
         }
     } // set_filter_from_request
-    
+
     public function set_type($type, $custom_base = '')
     {
         $cn = 'browse_' . $type . '_pages';
@@ -315,11 +315,12 @@ class Browse extends Query
                 $this->set_filter('regex_not_match', '');
             }
         }
-    
+
         parent::set_type($type, $custom_base);
     }
-    
-    public function save_cookie_params($option, $value) {
+
+    public function save_cookie_params($option, $value)
+    {
         if ($this->get_type()) {
             setcookie('browse_' . $this->get_type() . '_' . $option, $value, time() + 31536000, "/");
         }
