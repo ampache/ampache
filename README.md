@@ -22,6 +22,9 @@ Recommended Version
 Currently, the recommended version is [git HEAD](https://github.com/ampache-doped/ampache-doped/archive/master.tar.gz).
 [![Build Status](https://api.travis-ci.org/ampache-doped/ampache-doped.png?branch=master)](https://travis-ci.org/ampache-doped/ampache-doped)
 
+Latest changes but unstable is [develop branch](https://github.com/ampache-doped/ampache-doped/archive/develop.tar.gz).
+[![Build Status](https://api.travis-ci.org/ampache-doped/ampache-doped.png?branch=develop)](https://travis-ci.org/ampache-doped/ampache-doped)
+
 Requirements
 ------------
 
