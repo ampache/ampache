@@ -250,7 +250,7 @@ if ($media == null) {
 }
 
 /* If we don't have a file, or the file is not readable */
-if (!$media->file || !Core::is_readable($media->file)) {
+if (!$media->file || !Core::is_readable(Core::conv_lc_file($media->file))) {
 
     // We need to make sure this isn't democratic play, if it is then remove
     // the song from the vote list
@@ -383,7 +383,7 @@ if ($transcode) {
     debug_event('play', 'Not transcoding and native streaming is not supported, aborting', 2);
     exit();
 } else {
-    $fp = fopen($media->file, 'rb');
+    $fp = fopen(Core::conv_lc_file($media->file), 'rb');
 }
 
 if ($transcode) {

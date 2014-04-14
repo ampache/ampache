@@ -330,12 +330,26 @@ class Catalog_local extends Catalog
 
                 // Check to make sure the filename is of the expected charset
                 if (function_exists('iconv')) {
-                    if (strcmp($full_file,iconv(AmpConfig::get('site_charset'),AmpConfig::get('site_charset'),$full_file)) != '0') {
-                        debug_event('read',$full_file . ' has non-' . AmpConfig::get('site_charset') . ' characters and can not be indexed, converted filename:' . iconv(AmpConfig::get('site_charset'),AmpConfig::get('site_charset'),$full_file),'1');
+                    $convok = false;
+                    $site_charset = AmpConfig::get('site_charset');
+                    $lc_charset = $site_charset;
+                    if (AmpConfig::get('lc_charset')) {
+                        $lc_charset = AmpConfig::get('lc_charset');
+                    }
+
+                    $enc_full_file = iconv($lc_charset, $site_charset, $full_file);
+                    if ($lc_charset != $site_charset) {
+                        $convok = (strcmp($full_file, iconv($site_charset, $lc_charset, $enc_full_file)) == 0);
+                    } else {
+                        $convok = (strcmp($enc_full_file, $full_file) == 0);
+                    }
+                    if (!$convok) {
+                        debug_event('read', $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, '1');
                         /* HINT: FullFile */
                         Error::add('catalog_add', sprintf(T_('%s does not match site charset'), $full_file));
                         continue;
                     }
+                    $full_file = $enc_full_file;
                 } // end if iconv
 
                 if ($is_playlist) {
@@ -513,7 +527,7 @@ class Catalog_local extends Catalog
                 UI::update_text('verify_dir_' . $this->id, scrub_out($file));
             }
 
-            if (!Core::is_readable($row['file'])) {
+            if (!Core::is_readable(Core::conv_lc_file($row['file']))) {
                 Error::add('general', sprintf(T_('%s does not exist or is not readable'), $row['file']));
                 debug_event('read', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
@@ -613,7 +627,7 @@ class Catalog_local extends Catalog
                 $dead[] = $results['id'];
 
             } //if error
-            else if (!Core::is_readable($results['file'])) {
+            else if (!Core::is_readable(Core::conv_lc_file($results['file']))) {
                 debug_event('clean', $results['file'] . ' is not readable, but does exist', 1);
             }
         }

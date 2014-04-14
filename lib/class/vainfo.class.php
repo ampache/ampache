@@ -86,7 +86,7 @@ class vainfo
 
             // get id3tag encoding (try to work around off-spec id3v1 tags)
             try {
-                $this->_raw = $this->_getID3->analyze($file);
+                $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($file));
             } catch (Exception $error) {
                 debug_event('getID3', "Broken file detected: $file: " . $error->message, 1);
                 $this->_broken = true;
@@ -187,7 +187,7 @@ class vainfo
 
         if ($this->islocal) {
             try {
-                $this->_raw = $this->_getID3->analyze($this->filename);
+                $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
             } catch (Exception $error) {
                 debug_event('getID2', 'Unable to catalog file: ' . $error->message, 1);
             }
@@ -793,7 +793,7 @@ class vainfo
 
         $results['title'] = $results['title'] ?: basename($filename);
         if ($this->islocal) {
-            $results['size'] = filesize($origin);
+            $results['size'] = filesize(Core::conv_lc_file($origin));
         }
 
         return $results;

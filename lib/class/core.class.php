@@ -209,4 +209,23 @@ class Core
         return true;
     }
 
+    /*
+     * conv_lc_file
+     *
+     * Convert site charset filename to local charset filename for file operations
+     */
+    public static function conv_lc_file($filename)
+    {
+        $lc_filename = $filename;
+        $site_charset = AmpConfig::get('site_charset');
+        $lc_charset = AmpConfig::get('lc_charset');
+        if ($lc_charset && $lc_charset != $site_charset) {
+            if (function_exists('iconv')) {
+                $lc_filename = iconv($site_charset, $lc_charset, $filename);
+            }
+        }
+
+        return $lc_filename;
+    }
+
 } // Core
