@@ -27,9 +27,7 @@ class Slideshow
         $songs = Song::get_recently_played($GLOBALS['user']->id);
         $images = array();
         if (count($songs) > 0) {
-            reset($songs);
-            $lsinfo = key($songs);
-            $last_song = new Song($lsinfo);
+            $last_song = new Song($songs[0]['object_id']);
             $last_song->format();
             $images = self::get_images($last_song->f_artist);
         }
