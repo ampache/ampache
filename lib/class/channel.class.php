@@ -299,7 +299,7 @@ class Channel extends database_object
                     if ($this->media != null) {
                         $this->media = $catalog->prepare_media($this->media);
 
-                        if (!$this->media->file || !Core::is_readable($this->media->file)) {
+                        if (!$this->media->file || !Core::is_readable(Core::conv_lc_file($this->media->file))) {
                             debug_event('channel', 'Cannot read media ' . $this->media->id . ' file, skipped.', '3');
                             $this->media = null;
                         } else {

@@ -42,7 +42,7 @@ class Registration
       * send_confirmation
      * This sends the confirmation e-mail for the specified user
      */
-    public static function send_confirmation($username, $fullname, $email, $password, $validation)
+    public static function send_confirmation($username, $fullname, $email, $website, $password, $validation)
     {
         $mailer = new Mailer();
 
@@ -55,7 +55,6 @@ class Registration
 Please keep this e-mail for your records. Your account information is as follows:
 ----------------------
 Username: %s
-Password: %s
 ----------------------
 
 Your account is currently inactive. You cannot use it until you've visited the following link:
@@ -63,7 +62,7 @@ Your account is currently inactive. You cannot use it until you've visited the f
 %s
 
 Thank you for registering
-"), $username, $password, AmpConfig::get('web_path') . "/register.php?action=validate&username=$username&auth=$validation");
+"), $username, AmpConfig::get('web_path') . "/register.php?action=validate&username=$username&auth=$validation");
 
         $mailer->recipient = $email;
         $mailer->recipient_name = $fullname;
@@ -78,8 +77,9 @@ The following values were entered.
 Username: %s
 Fullname: %s
 E-mail: %s
+Website: %s
 
-"), $username, $fullname, $email);
+"), $username, $fullname, $email, $website);
 
             $mailer->send_to_group('admins');
         }

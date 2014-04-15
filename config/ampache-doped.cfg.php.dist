@@ -487,13 +487,12 @@ log_filename = "%name.%Y%m%d.log"
 site_charset = UTF-8
 
 ; Locale Charset 
-; In some cases this has to be different
-; in order for XHTML and other things to work
-; This is disabled by default, enabled only 
-; if needed. It's specifically needed for Russian
-; so that is the default
-; DEFAULT: cp1251
-;lc_charset = cp1251
+; Local charset (mainly for file operations) if different
+; from site_charset.
+; This is disabled by default, enable only if needed
+; (for Windows please set lc_charset to ISO8859-1)
+; DEFAULT: ISO8859-1
+;lc_charset = "ISO8859-1"
 
 ; Refresh Limit
 ; This defines the default refresh limit in seconds for 
