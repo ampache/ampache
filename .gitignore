@@ -1,4 +1,4 @@
-config/ampache-doped.cfg.php
+config/ampache.cfg.php
 *.phpproj
 *.sln
 *.v11.suo

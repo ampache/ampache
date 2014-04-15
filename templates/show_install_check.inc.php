@@ -27,14 +27,14 @@ require $prefix . '/templates/install_header.inc.php';
         </div>
         <div class="well">
             <p>
-                <?php echo T_('This page handles the installation of the Ampache database and the creation of the ampache-doped.cfg.php file. Before you continue please make sure that you have the following prerequisites:'); ?>
+                <?php echo T_('This page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following prerequisites:'); ?>
             </p>
             <ul>
                 <li><?php echo T_('A MySQL server with a username and password that can create/modify databases'); ?></li>
-                <li><?php echo sprintf(T_('Your webserver has read access to the files %s and %s'),$prefix . '/sql/ampache.sql',$prefix . '/config/ampache-doped.cfg.php.dist'); ?></li>
+                <li><?php echo sprintf(T_('Your webserver has read access to the files %s and %s'),$prefix . '/sql/ampache.sql',$prefix . '/config/ampache.cfg.php.dist'); ?></li>
             </ul>
             <p>
-                <?php echo sprintf(T_("Once you have ensured that the above requirements are met please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your Ampache install at a later date simply edit %s"), $prefix . '/config/ampache-doped.cfg.php'); ?>
+                <?php echo sprintf(T_("Once you have ensured that the above requirements are met please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your Ampache install at a later date simply edit %s"), $prefix . '/config/ampache.cfg.php'); ?>
             </p>
         </div>
 <table class="table" cellspacing="0" cellpadding="0">
@@ -45,8 +45,8 @@ require $prefix . '/templates/install_header.inc.php';
     </tr>
     <?php require $prefix . '/templates/show_test_table.inc.php'; ?>
     <tr>
-        <td><?php echo sprintf(T_('%s is readable'), 'ampache-doped.cfg.php.dist'); ?></td>
-        <td><?php echo debug_result(is_readable($prefix . '/config/ampache-doped.cfg.php.dist')); ?></td>
+        <td><?php echo sprintf(T_('%s is readable'), 'ampache.cfg.php.dist'); ?></td>
+        <td><?php echo debug_result(is_readable($prefix . '/config/ampache.cfg.php.dist')); ?></td>
         <td><?php echo T_('This tests whether the configuration template can be read.'); ?></td>
     </tr>
     <tr>
@@ -55,7 +55,7 @@ require $prefix . '/templates/install_header.inc.php';
         <td><?php echo T_('This tests whether the file needed to initialise the database structure is available.'); ?></td>
     </tr>
     <tr>
-        <td><?php echo T_('ampache-doped.cfg.php is writable'); ?></td>
+        <td><?php echo T_('ampache.cfg.php is writable'); ?></td>
         <td><?php echo debug_result(check_config_writable()); ?></td>
         <td><?php echo T_('This tests whether PHP can write to config/. This is not strictly necessary, but will help streamline the installation process.'); ?></td>
     </tr>

@@ -43,7 +43,7 @@ $translate = array('local_host'=>'database_hostname',
 
 $path = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-$old_config = file_get_contents($prefix . '/config/ampache-doped.cfg.php');
+$old_config = file_get_contents($prefix . '/config/ampache.cfg.php');
 
 $data = explode("\n",$old_config);
 
@@ -80,7 +80,7 @@ foreach ($data as $line) {
 echo T_("Parse complete, writing");
 echo "\n";
 
-$handle = fopen($prefix . '/config/ampache-doped.cfg.php','w');
+$handle = fopen($prefix . '/config/ampache.cfg.php','w');
 
 $worked = fwrite($handle,$new_config);
 

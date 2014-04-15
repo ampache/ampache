@@ -32,14 +32,14 @@ UI::show_header();
 /* Switch on action boys */
 switch ($_REQUEST['action']) {
     /* This re-generates the config file comparing
-     * /config/ampache-doped.cfg to .cfg.dist
+     * /config/ampache.cfg to .cfg.dist
      */
     case 'generate_config':
         ob_end_clean();
-        $current = parse_ini_file(AmpConfig::get('prefix') . '/config/ampache-doped.cfg.php');
+        $current = parse_ini_file(AmpConfig::get('prefix') . '/config/ampache.cfg.php');
         $final = generate_config($current);
         $browser = new Horde_Browser();
-        $browser->downloadHeaders('ampache-doped.cfg.php','text/plain',false,filesize(AmpConfig::get('prefix') . '/config/ampache-doped.cfg.php.dist'));
+        $browser->downloadHeaders('ampache.cfg.php','text/plain',false,filesize(AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist'));
         echo $final;
         exit;
     break;

@@ -48,7 +48,7 @@ function init_db()
         Preference::insert('myplex_authtoken','myPlex Auth Token','','25','string','internal');
         Preference::insert('myplex_published','Plex Server is published to myPlex','0','25','boolean','internal');
         Preference::insert('plex_uniqid','Plex Server Unique Id', uniqid(),'25','string','internal');
-        Preference::insert('plex_servername','Plex Server Name','Ampache Doped','25','string','internal');
+        Preference::insert('plex_servername','Plex Server Name','Ampache','25','string','internal');
         Preference::insert('plex_public_address','Plex Public Address','','25','string','internal');
         Preference::insert('plex_public_port','Plex Public Port','32400','25','string','internal');
         Preference::insert('plex_local_auth','myPlex authentication required on local network','0','25','boolean','internal');

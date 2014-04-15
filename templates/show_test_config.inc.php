@@ -38,16 +38,12 @@ body {
 <body bgcolor="#f0f0f0">
 <div id="header">
 <h1><?php echo T_('Ampache Debug'); ?></h1>
-<p>Ampache-doped.cfg.php error detected</p>
+<p>Ampache.cfg.php error detected</p>
 </div>
 <div id="content">
-<h3 style="color:red;">Ampache-doped.cfg.php Parse Error</h3>
-<p>You've been redirected to this page because your <strong>/config/ampache-doped.cfg.php</strong> was not parsable.
+<h3 style="color:red;">Ampache.cfg.php Parse Error</h3>
+<p>You've been redirected to this page because your <strong>/config/ampache.cfg.php</strong> was not parsable.
 If you are upgrading from 3.3.x please see the directions below.</p>
-
-<h3>Migrating from [Ampache 3.x.x - Ampache 3.6-doped] to Ampache Doped 3.7</h3>
-<p>Ampache Doped 3.7 use a new configuration file name <b>ampache-doped.cfg.php</b> instead of ampache.cfg.php to avoid conflicts with original
-Ampache project packages. Just rename your config file to ampache-doped.cfg.php and the automatic config file migration should work fine after that.</p>
 
 <h3>Migrating from 3.3.x to >= 3.4.x</h3>
 <p>Ampache 3.4 uses a different config parser that is over 10x faster then the previous version. Unfortunately the new parser is
@@ -55,7 +51,7 @@ unable to read the old config files. From inside the Ampache root directory you 
 new config file.</p>
 
 <p>The following settings will not be migrated by the <strong>migrate_config.inc</strong> script due to major changes between versions. The default
-values from the ampache-doped.cfg.php.dist file will be used.</p>
+values from the ampache.cfg.php.dist file will be used.</p>
 
 <strong>auth_methods</strong> (<i>mysql</i>)<br />
 This defines which auth methods Auth will attempt to use and in which order, if auto_create isn't enabled.

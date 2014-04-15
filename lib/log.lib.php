@@ -51,7 +51,7 @@ function log_event($username, $event_name, $event_description, $log_name)
     $log_write = error_log($log_line, 3, $log_filename);
 
     if (!$log_write) {
-        echo "Warning: Unable to write to log ($log_filename) Please check your log_path variable in ampache-doped.cfg.php";
+        echo "Warning: Unable to write to log ($log_filename) Please check your log_path variable in ampache.cfg.php";
     }
 
 } // log_event

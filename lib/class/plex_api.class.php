@@ -345,8 +345,8 @@ class Plex_Api
             'X-Plex-Platform-Version' => Plex_XML_Data::getPlexPlatformVersion(),
             'X-Plex-Client-Platform' => Plex_XML_Data::getPlexPlatform(),
             'X-Plex-Protocol' => 1.0,
-            'X-Plex-Device' => 'Ampache Doped',
-            'X-Plex-Device-Name' => 'Ampache Doped',
+            'X-Plex-Device' => 'Ampache',
+            'X-Plex-Device-Name' => 'Ampache',
             'X-Plex-Provides' => 'server'
         );
 

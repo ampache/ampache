@@ -151,7 +151,7 @@ class Plex_XML_Data
 
     public static function getServerName()
     {
-        return AmpConfig::get('plex_servername') ?: 'Ampache Doped';
+        return AmpConfig::get('plex_servername') ?: 'Ampache';
     }
 
     public static function getMyPlexUsername()

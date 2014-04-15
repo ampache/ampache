@@ -213,8 +213,8 @@ function check_override_exec_time()
 function check_config_writable()
 {
     // file eixsts && is writable, or dir is writable
-    return ((file_exists(AmpConfig::get('prefix') . '/config/ampache-doped.cfg.php') && is_writable(AmpConfig::get('prefix') . '/config/ampache-doped.cfg.php'))
-        || (!file_exists(AmpConfig::get('prefix') . '/config/ampache-doped.cfg.php') && is_writeable(AmpConfig::get('prefix') . '/config/')));
+    return ((file_exists(AmpConfig::get('prefix') . '/config/ampache.cfg.php') && is_writable(AmpConfig::get('prefix') . '/config/ampache.cfg.php'))
+        || (!file_exists(AmpConfig::get('prefix') . '/config/ampache.cfg.php') && is_writeable(AmpConfig::get('prefix') . '/config/')));
 }
 
 /**

@@ -28,7 +28,7 @@ class SubsonicClient {
     protected $_creds;
     protected $_commands;
 
-    function __construct($username, $password, $serverUrl, $port="4040", $client="Ampache-doped") {
+    function __construct($username, $password, $serverUrl, $port="4040", $client="Ampache") {
         $this->setServer($serverUrl, $port);
 
         $this->_creds = array(

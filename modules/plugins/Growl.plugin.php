@@ -128,7 +128,7 @@ class Ampachegrowl {
     public function get_growl()
     {
         $growl = new Growl($this->address, $this->password);
-        $growl->setApplication('Ampache Doped', 'Now Playing');
+        $growl->setApplication('Ampache', 'Now Playing');
         return $growl;
     }
 

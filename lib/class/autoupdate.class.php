@@ -54,7 +54,7 @@ class AutoUpdate
     public static function github_request($action)
     {
         try {
-            $url = "https://api.github.com/repos/ampache-doped/ampache-doped" . $action;
+            $url = "https://api.github.com/repos/ampache/ampache" . $action;
             $request = Requests::get($url);
 
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
@@ -179,8 +179,8 @@ class AutoUpdate
         echo '<font color="#ff0000">' . T_('Update available') . '</font>';
         echo ' (' . self::get_latest_version() . ').<br />';
 
-        echo T_('See') . ' <a href="https://github.com/ampache-doped/ampache-doped/' . (self::is_develop() ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/master/docs/CHANGELOG.md') . '" target="_blank">' . T_('changes') . '</a> ';
-        echo T_('or') . ' <a href="https://github.com/ampache-doped/ampache-doped/archive/' . (self::is_develop() ? 'develop.zip' : self::get_latest_version() . '.zip') . '" target="_blank"><b>' . T_('download') . '</b></a>.';
+        echo T_('See') . ' <a href="https://github.com/ampache/ampache/' . (self::is_develop() ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/master/docs/CHANGELOG.md') . '" target="_blank">' . T_('changes') . '</a> ';
+        echo T_('or') . ' <a href="https://github.com/ampache/ampache/archive/' . (self::is_develop() ? 'develop.zip' : self::get_latest_version() . '.zip') . '" target="_blank"><b>' . T_('download') . '</b></a>.';
         echo '</div>';
     }
 }

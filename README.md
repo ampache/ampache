@@ -1,13 +1,12 @@
-Ampache Doped
+Ampache
 =======
 
 Basics
 ------
 
-Ampache Doped is a web based audio/video streaming application and file
+Ampache is a web based audio/video streaming application and file
 manager allowing you to access your music & videos from anywhere,
 using almost any internet enabled device.
-Ampache Doped is a fork of Ampache project.
 
 Ampache's usefulness is heavily dependent on being able to extract
 correct metadata from embedded tags in your files and/or the filename.
@@ -19,11 +18,11 @@ choosing a suitable method for doing so.
 Recommended Version
 -------------------
 
-Currently, the recommended version is [git HEAD](https://github.com/ampache-doped/ampache-doped/archive/master.tar.gz).
-[![Build Status](https://api.travis-ci.org/ampache-doped/ampache-doped.png?branch=master)](https://travis-ci.org/ampache-doped/ampache-doped)
+Currently, the recommended version is [git HEAD](https://github.com/ampach/ampache/archive/master.tar.gz).
+[![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=master)](https://travis-ci.org/ampache/ampache)
 
-Latest changes but unstable is [develop branch](https://github.com/ampache-doped/ampache-doped/archive/develop.tar.gz).
-[![Build Status](https://api.travis-ci.org/ampache-doped/ampache-doped.png?branch=develop)](https://travis-ci.org/ampache-doped/ampache-doped)
+Latest changes but unstable is [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
+[![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=develop)](https://travis-ci.org/ampache/ampache)
 
 Requirements
 ------------
@@ -49,7 +48,7 @@ receives the most testing:
 Installation
 ------------
 
-Please see [the wiki](https://github.com/ampache-doped/ampache-doped/wiki/Installation)
+Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
 
 Upgrading
 ---------
@@ -103,7 +102,7 @@ Ampache includes some external modules that carry their own licensing.
 Translations
 ------------
 
-Ampache Doped is currently translated (at least partially) into the
+Ampache is currently translated (at least partially) into the
 following languages. If you are interested in updating an existing
 translation or adding a new one please see /locale/base/TRANSLATIONS
 for more instructions.
@@ -125,7 +124,7 @@ for more instructions.
 Credits
 -------
 
-Thanks to all those who have helped make Ampache Doped awesome: [Credits](docs/ACKNOWLEDGEMENTS)
+Thanks to all those who have helped make Ampache awesome: [Credits](docs/ACKNOWLEDGEMENTS)
 
 
 Contact Us
@@ -134,8 +133,8 @@ Contact Us
 Hate it? Love it? Let us know. Also let us know if you think of any
 more features, encounter bugs, etc.
 
-* [Public Repository](http://github.com/ampache-doped)
+* [Public Repository](http://github.com/ampache)
 * IRC: chat.freenode.net #ampache
-* [Issue Tracker](https://github.com/ampache-doped/ampache-doped/issues)
-* [Documentation](https://github.com/ampache-doped/ampache-doped/wiki)
+* [Issue Tracker](https://github.com/ampache/ampache/issues)
+* [Documentation](https://github.com/ampache/ampache/wiki)
 
