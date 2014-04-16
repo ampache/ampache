@@ -27,13 +27,13 @@ $web_path = AmpConfig::get('web_path');
     <table id="reorder_playlist_table" class="tabledata" cellpadding="0" cellspacing="0">
         <thead>
             <tr class="th-top">
-                <th class="cel_play"></th>
-                <th class="cel_song"><?php echo T_('Song Title'); ?></th>
-                <th class="cel_add"></th>
-                <th class="cel_artist"><?php echo T_('Artist'); ?></th>
-                <th class="cel_album"><?php echo T_('Album'); ?></th>
-                <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-                <th class="cel_time"><?php echo T_('Time'); ?></th>
+                <th class="cel_play essential"></th>
+                <th class="cel_song essential persist"><?php echo T_('Song Title'); ?></th>
+                <th class="cel_add essential"></th>
+                <th class="cel_artist essential"><?php echo T_('Artist'); ?></th>
+                <th class="cel_album optional"><?php echo T_('Album'); ?></th>
+                <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
+                <th class="cel_time optional"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('ratings')) {
                 Rating::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
             ?>
@@ -42,10 +42,10 @@ $web_path = AmpConfig::get('web_path');
             <?php if (AmpConfig::get('userflags')) {
                 Userflag::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
             ?>
-                <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
+                <th class="cel_userflag essential"><?php echo T_('Flag'); ?></th>
             <?php } ?>
-                <th class="cel_action"><?php echo T_('Action'); ?></th>
-                <th class="cel_drag"></th>
+                <th class="cel_action essential"><?php echo T_('Action'); ?></th>
+                <th class="cel_drag essential"></th>
             </tr>
         </thead>
         <tbody id="sortableplaylist_<?php echo $playlist->id; ?>">
