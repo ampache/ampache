@@ -47,10 +47,10 @@ class getid3_jpg extends getid3_handler
 					foreach ($iptc_values as $key => $value) {
 						$IPTCrecordName = $this->IPTCrecordName($iptc_record);
 						$IPTCrecordTagName = $this->IPTCrecordTagName($iptc_record, $iptc_tagkey);
-						if (isset($info['iptc'][$IPTCrecordName][$IPTCrecordTagName])) {
-							$info['iptc'][$IPTCrecordName][$IPTCrecordTagName][] = $value;
+						if (isset($info['iptc']['comments'][$IPTCrecordName][$IPTCrecordTagName])) {
+							$info['iptc']['comments'][$IPTCrecordName][$IPTCrecordTagName][] = $value;
 						} else {
-							$info['iptc'][$IPTCrecordName][$IPTCrecordTagName] = array($value);
+							$info['iptc']['comments'][$IPTCrecordName][$IPTCrecordTagName] = array($value);
 						}
 					}
 				}

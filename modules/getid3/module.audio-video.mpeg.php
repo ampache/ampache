@@ -71,7 +71,7 @@ class getid3_mpeg extends getid3_handler {
 			switch ($StartCodeValue) {
 
 				case 0x00: // picture_start_code
-					if ($info['mpeg']['video']['bitrate_mode'] == 'vbr') {
+					if (!empty($info['mpeg']['video']['bitrate_mode']) && ($info['mpeg']['video']['bitrate_mode'] == 'vbr')) {
 						$bitstream = getid3_lib::BigEndian2Bin(substr($MPEGstreamData, $StartCodeOffset + 4, 4));
 						$bitstreamoffset = 0;
 
@@ -487,7 +487,7 @@ echo $gopkey.': ('.number_format($time_prev, 2).'-'.number_format($time_this, 2)
 echo 'average_File_bitrate = '.number_format(array_sum($vbr_bitrates) / count($vbr_bitrates), 1).'<br>';
 */
 //echo '<pre>'.print_r($FramesByGOP, true).'</pre>';
-		if ($info['mpeg']['video']['bitrate_mode'] == 'vbr') {
+		if (!empty($info['mpeg']['video']['bitrate_mode']) && ($info['mpeg']['video']['bitrate_mode'] == 'vbr')) {
 			$last_GOP_id = max(array_keys($FramesByGOP));
 			$frames_in_last_GOP = count($FramesByGOP[$last_GOP_id]);
 			$gopdata = &$info['mpeg']['group_of_pictures'][$last_GOP_id];

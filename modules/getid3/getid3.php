@@ -32,7 +32,7 @@ if (!$temp_dir) {
 	// sys_get_temp_dir() may give inaccessible temp dir, e.g. with open_basedir on virtual hosts
 	$temp_dir = sys_get_temp_dir();
 }
-$temp_dir = realpath($temp_dir);
+$temp_dir = @realpath($temp_dir); // see https://github.com/JamesHeinrich/getID3/pull/10
 $open_basedir = ini_get('open_basedir');
 if ($open_basedir) {
 	// e.g. "/var/www/vhosts/getid3.org/httpdocs/:/tmp/"
@@ -109,7 +109,7 @@ class getID3
 	protected $startup_error   = '';
 	protected $startup_warning = '';
 
-	const VERSION           = '1.10.0-20140221';
+	const VERSION           = '1.10.0-20140319';
 	const FREAD_BUFFER_SIZE = 32768;
 
 	const ATTACHMENTS_NONE   = false;
@@ -1191,6 +1191,7 @@ class getID3
 				'matroska'  => array('matroska'      , 'UTF-8'),
 				'flac'      => array('vorbiscomment' , 'UTF-8'),
 				'divxtag'   => array('divx'          , 'ISO-8859-1'),
+				'iptc'      => array('iptc'          , 'ISO-8859-1'),
 			);
 		}
 
@@ -1230,14 +1231,7 @@ class getID3
 
 				if ($this->option_tags_html) {
 					foreach ($this->info['tags'][$tag_name] as $tag_key => $valuearray) {
-						foreach ($valuearray as $key => $value) {
-							if (is_string($value)) {
-								//$this->info['tags_html'][$tag_name][$tag_key][$key] = getid3_lib::MultiByteCharString2HTML($value, $encoding);
-								$this->info['tags_html'][$tag_name][$tag_key][$key] = str_replace('&#0;', '', trim(getid3_lib::MultiByteCharString2HTML($value, $encoding)));
-							} else {
-								$this->info['tags_html'][$tag_name][$tag_key][$key] = $value;
-							}
-						}
+						$this->info['tags_html'][$tag_name][$tag_key] = getid3_lib::recursiveMultiByteCharString2HTML($valuearray, $encoding);
 					}
 				}
 
@@ -1292,7 +1286,6 @@ class getID3
 		}
 		return true;
 	}
-
 
 	public function getHashdata($algorithm) {
 		switch ($algorithm) {

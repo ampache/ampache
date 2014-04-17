@@ -2,6 +2,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // changelog.txt - part of getID3()                            //
@@ -16,6 +17,14 @@
 
 Version History
 ===============
+
+1.10.0: [2014-??-??] James Heinrich
+    » Add support for AMR (Adaptive Multi-Rate audio codec)
+      new file: module.audio.amr.php
+    * Bugfix: (#1813) avoid running out of memory when parsing large
+      Quicktime files
+    * Bugfix: (#1812) potential unwanted high-ASCII characters in errors
+    * Bugfix: close potential XXE security issue (CVE-2014-2053)
 
 1.9.7: [2013-07-05] James Heinrich
     * Bugfix: [module.audio-video.quicktime.php] track languages set
