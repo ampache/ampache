@@ -95,7 +95,6 @@ Ampache includes some external modules that carry their own licensing.
 * [RhinoSlider] (http://rhinoslider.com): MIT
 * [MediaTable] (https://github.com/edenspiekermann/MediaTable): MIT
 * [Responsive Elements] (https://github.com/kumailht/responsive-elements): MIT
-* [jQuery jqDock] (http://www.wizzud.com/jqdock): MIT
 * [Bootstrap] (http://getbootstrap.com): MIT
 
 

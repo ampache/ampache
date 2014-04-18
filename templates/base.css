@@ -215,22 +215,34 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 #topmenu_container {
-	margin: 10px;
+    margin-top: 10px;
+    text-align: center;
 }
 
-#topmenu li {
-	float:left;
+#topmenu_item {
+    width: 50px;
+    height: 100%;
+    margin-right: 70px;
+    display: inline-block;
 }
 
-#topmenu div.jqDockWrap {
-	margin: 0 auto;
+#topmenu_container span {
+    font-size: 14px;
+    line-height: 2em;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-#topmenu div.jqDock {
-	cursor: pointer;
-}
-
-#topmenu img {
-	padding:0 40px;
+#topmenu_container img {
+    height: 50px;
+    width: 50px;
 	z-index: 9999;
+    margin: 2px;
+}
+
+#topmenu_container img:hover {
+    border: 2px solid #ff9d00;
+    margin: 0px;
 }

@@ -271,18 +271,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     width: 100%;
 }
 
-#targetMenu li span.tips {
-    position: absolute;
-    display: block;
-    top: 10px;
-    left: 70px;
-    padding: 5px;
-    background-color: #F0F0F0;
-    color: #448ab0;
-    text-decoration: none;
-    font-weight: bold;
-}
-
 #sb_Subsearch , #play_type_switch {
     display: inline-block;
     margin: 15px auto auto 50px;
@@ -375,7 +363,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #loginPage #headerlogo {
     width: 256px;
     height: 256px;
-    background: url('../images/ampache.png') no-repeat center;
+    background: url('../images/ampache-reborn.png') no-repeat center;
     background-size: contain;
     margin: auto;
 }
