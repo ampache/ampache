@@ -1069,7 +1069,7 @@ class Song extends database_object implements media
         $source = $this->type;
 
         if ($target) {
-            debug_event('transcode', 'Explicit format request', 5);
+            debug_event('transcode', 'Explicit format request {'.$target.'}', 5);
         } else if ($target = AmpConfig::get('encode_target_' . $source)) {
             debug_event('transcode', 'Defaulting to configured target format for ' . $source, 5);
         } else if ($target = AmpConfig::get('encode_target')) {
@@ -1090,8 +1090,7 @@ class Song extends database_object implements media
         }
 
         debug_event('transcode', 'Command: ' . $cmd . ' Arguments: ' . $args, 5);
-        return array('format' => $target,
-            'command' => $cmd . ' ' . $args);
+        return array('format' => $target, 'command' => $cmd . ' ' . $args);
     }
 
     public function get_lyrics()

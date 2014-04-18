@@ -26,6 +26,8 @@
  */
 if (!defined('AJAX_INCLUDE')) { exit; }
 
+debug_event('stream.ajax.php', 'Called for action {'.$_REQUEST['action'].'}', 5);
+
 switch ($_REQUEST['action']) {
     case 'set_play_type':
         // Make sure they have the rights to do this
@@ -69,6 +71,8 @@ switch ($_REQUEST['action']) {
         $results['rfc3514'] = '0x0';
     break;
     case 'directplay':
+    
+        debug_event('stream.ajax.php', 'Play type {'.$_REQUEST['playtype'].'}', 5);
         switch ($_REQUEST['playtype']) {
             case 'album':
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=album&album_id='.implode(',', $_REQUEST['album_id']);

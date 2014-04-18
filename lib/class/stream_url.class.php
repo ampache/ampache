@@ -68,7 +68,6 @@ class Stream_URL extends memory_object
             }
             $results[$key] = $value;
         }
-
         return $results;
     }
 

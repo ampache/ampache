@@ -20,6 +20,11 @@
  *
  */
 
+ if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
+    debug_event("stream.php", "Asked without action. Exiting...", 5);
+    exit;
+}
+ 
 if (!defined('NO_SESSION')) {
     require_once 'lib/init.php';
 
@@ -32,6 +37,8 @@ if (!defined('NO_SESSION')) {
 
 $media_ids = array();
 $web_path = AmpConfig::get('web_path');
+
+debug_event("stream.php", "Asked for {".$_REQUEST['action']."}.", 5);
 
 /**
  * action switch
@@ -218,11 +225,15 @@ switch ($_REQUEST['action']) {
 }
 
 debug_event('stream.php' , 'Stream Type: ' . $stream_type . ' Media IDs: '. json_encode($media_ids), 5);
-$playlist = new Stream_Playlist();
-$playlist->add($media_ids);
-if (isset($urls)) {
-    $playlist->add_urls($urls);
+
+if (count(media_ids)) {
+    $playlist = new Stream_Playlist();
+    $playlist->add($media_ids);
+    if (isset($urls)) {
+        $playlist->add_urls($urls);
+    }
+    // Depending on the stream type, will either generate a redirect or actually do the streaming.
+    $playlist->generate_playlist($stream_type, true);
+} else {
+    debug_event('stream.php' , 'No item. Ignoring...', 5);
 }
-// Depending on the stream type, will either generate a redirect or actually do
-// the streaming.
-$playlist->generate_playlist($stream_type, true);

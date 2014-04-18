@@ -102,6 +102,8 @@ class Stream
      */
     public static function start_transcode($song, $type = null, $bitrate=0)
     {
+        debug_event('stream.class.php', 'Starting transcode for {'.$song->file.'}. Type {'.$type.'}. Bitrate {'.$bitrate.'}...', 5);
+        
         $transcode_settings = $song->get_transcode_settings($type);
         // Bail out early if we're unutterably broken
         if ($transcode_settings == false) {
