@@ -22,6 +22,7 @@
 
 $web_path = AmpConfig::get('web_path');
 
+$album->allow_group_disks = true;
 // Title for this album
 $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;-&nbsp;' . $album->f_artist_link;
 ?>
