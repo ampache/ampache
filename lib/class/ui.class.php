@@ -267,7 +267,6 @@ END;
         return $url;
     }
 
-
     /**
      * show_header
      *
