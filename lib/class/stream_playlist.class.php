@@ -67,6 +67,8 @@ class Stream_Playlist
 
     private function _add_url($url)
     {
+        debug_event("stream_playlist.class.php", "Adding url {".json_encode($url)."}...", 5);
+        
         $this->urls[] = $url;
 
         $sql = 'INSERT INTO `stream_playlist` ';
@@ -104,7 +106,6 @@ class Stream_Playlist
     {
         $urls = array();
         foreach ($media as $medium) {
-            debug_event('stream_playlist', 'Adding ' . json_encode($medium), 5);
             $url = array();
 
             if ($medium['custom_play_action']) {
@@ -181,7 +182,7 @@ class Stream_Playlist
             return false;
         }
 
-        debug_event('stream_playlist', 'generating a ' . $type, 5);
+        debug_event('stream_playlist', 'Generating a {'.$type.'} object...', 5);
 
         $ext = $type;
         switch ($type) {
@@ -279,15 +280,14 @@ class Stream_Playlist
     /**
      * create_m3u
      * creates an m3u file, this includes the EXTINFO and as such can be
-     * large with very long playlsits
+     * large with very long playlists
      */
     public function create_m3u()
     {
         echo "#EXTM3U\n";
 
         foreach ($this->urls as $url) {
-            echo '#EXTINF:' . $url->time, ',' . $url->author .
-                ' - ' . $url->title . "\n";
+            echo '#EXTINF:' . $url->time, ',' . $url->author . ' - ' . $url->title . "\n";
             echo $url->url . "\n";
         }
 

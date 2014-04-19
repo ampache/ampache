@@ -984,14 +984,21 @@ class Song extends database_object implements media
     public static function play_url($oid, $additional_params='')
     {
         $song = new Song($oid);
-        $user_id     = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
-        $type        = $song->type;
+        $user_id = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
+        $type = $song->type;
 
-        // Required for some versions of winamp that won't work if the
-        // stream doesn't end in .ogg This will not break any properly
-        // working player, don't report this as a bug!
-        if ($song->type == 'flac') { $type = 'ogg'; }
-
+        // Checking if the song is gonna be transcoded into another type
+        // Some players doesn't allow a type streamed into another wihtout giving the good extension
+        $transcode_cfg = AmpConfig::get('transcode');
+        $transcode_mode = AmpConfig::get('transcode_' . $type);
+        if ($transcode_cfg == 'always' || $transcode_mode == 'required') {
+            $transcode_settings = $song->get_transcode_settings(null);
+            if ($transcode_settings) {
+                debug_event("song.class.php", "Changing play url type from {".$type."} to {".$transcode_settings['format']."} due to encoding settings...", 5);
+                $type = $transcode_settings['format'];
+            }
+        }
+        
         $song_name = $song->get_artist_name() . " - " . $song->title . "." . $type;
         $song_name = str_replace("/", "-", $song_name);
         $song_name = str_replace("?", "", $song_name);
@@ -1069,27 +1076,27 @@ class Song extends database_object implements media
         $source = $this->type;
 
         if ($target) {
-            debug_event('transcode', 'Explicit format request {'.$target.'}', 5);
+            debug_event('song.class.php', 'Explicit format request {'.$target.'}', 5);
         } else if ($target = AmpConfig::get('encode_target_' . $source)) {
-            debug_event('transcode', 'Defaulting to configured target format for ' . $source, 5);
+            debug_event('song.class.php', 'Defaulting to configured target format for ' . $source, 5);
         } else if ($target = AmpConfig::get('encode_target')) {
-            debug_event('transcode', 'Using default target format', 5);
+            debug_event('song.class.php', 'Using default target format', 5);
         } else {
             $target = $source;
-            debug_event('transcode', 'No default target for ' . $source . ', choosing to resample', 5);
+            debug_event('song.class.php', 'No default target for ' . $source . ', choosing to resample', 5);
         }
 
-        debug_event('transcode', 'Transcoding from ' . $source . ' to ' . $target, 5);
+        debug_event('song.class.php', 'Transcode settings: from ' . $source . ' to ' . $target, 5);
 
         $cmd = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
         $args = AmpConfig::get('encode_args_' . $target);
 
         if (!$args) {
-            debug_event('transcode', 'Target format ' . $target . ' is not properly configured', 2);
+            debug_event('song.class.php', 'Target format ' . $target . ' is not properly configured', 2);
             return false;
         }
 
-        debug_event('transcode', 'Command: ' . $cmd . ' Arguments: ' . $args, 5);
+        debug_event('song.class.php', 'Command: ' . $cmd . ' Arguments: ' . $args, 5);
         return array('format' => $target, 'command' => $cmd . ' ' . $args);
     }
 
