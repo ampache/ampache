@@ -204,6 +204,7 @@ class WebPlayer
 
             if ($song->type != $types['real']) {
                 $url .= '&transcode_to=' . $types['real'];
+                $url = Stream_URL::format($url);
             }
             //$url .= "&content_length=required";
         }

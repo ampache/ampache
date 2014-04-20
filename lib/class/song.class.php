@@ -988,10 +988,10 @@ class Song extends database_object implements media
         $type = $song->type;
 
         // Checking if the song is gonna be transcoded into another type
-        // Some players doesn't allow a type streamed into another wihtout giving the good extension
+        // Some players doesn't allow a type streamed into another without giving the right extension
         $transcode_cfg = AmpConfig::get('transcode');
         $transcode_mode = AmpConfig::get('transcode_' . $type);
-        if ($transcode_cfg == 'always' || $transcode_mode == 'required') {
+        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && $transcode_mode == 'required')) {
             $transcode_settings = $song->get_transcode_settings(null);
             if ($transcode_settings) {
                 debug_event("song.class.php", "Changing play url type from {".$type."} to {".$transcode_settings['format']."} due to encoding settings...", 5);
