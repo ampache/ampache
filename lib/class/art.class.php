@@ -76,7 +76,6 @@ class Art extends database_object
 
     } // build_cache
 
-
     /**
      * _auto_init
      * Called on creation of the class
@@ -84,10 +83,15 @@ class Art extends database_object
     public static function _auto_init()
     {
         if (!isset($_SESSION['art_enabled'])) {
-            $_SESSION['art_enabled'] = $_COOKIE['art_enabled'];
+            /*if (isset($_COOKIE['art_enabled'])) {
+                $_SESSION['art_enabled'] = $_COOKIE['art_enabled'];
+            } else {*/
+                $_SESSION['art_enabled'] = true;
+            //}
         }
-        self::$enabled = $_SESSION['art_enabled'];
-        setcookie('art_enabled', self::$enabled, time() + 31536000, "/");
+
+        self::$enabled = make_bool($_SESSION['art_enabled']);
+        //setcookie('art_enabled', self::$enabled, time() + 31536000, "/");
     }
 
     /**
@@ -109,14 +113,14 @@ class Art extends database_object
      */
     public static function set_enabled($value = null)
     {
-        if (is_null($value) || empty($value)) {
+        if (is_null($value)) {
             self::$enabled = self::$enabled ? false : true;
         } else {
             self::$enabled = make_bool($value);
         }
 
         $_SESSION['art_enabled'] = self::$enabled;
-        setcookie('art_enabled', self::$enabled, time() + 31536000, "/");
+        //setcookie('art_enabled', self::$enabled, time() + 31536000, "/");
     }
 
     /**

@@ -188,17 +188,17 @@ class WebPlayer
         $url = $item->url;
 
         $types = self::get_types($item, $force_type);
-        
+
         $song = null;
         $urlinfo = Stream_URL::parse($url);
         $url = $urlinfo['base_url'];
-        
+
         if ($urlinfo['id'] && $urlinfo['type'] == 'song') {
             $song = new Song($urlinfo['id']);
         } else if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
             $song = new Song_Preview($urlinfo['id']);
         }
-        
+
         if ($song != null) {
             $js['artist_id'] = $song->artist;
             $js['album_id'] = $song->album;

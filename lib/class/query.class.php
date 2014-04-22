@@ -385,7 +385,7 @@ class Query
             break;
             case 'playlist_type':
                 // Must be a content manager to turn this off
-                if ($this->_state['filter'][$key] AND Access::check('interface','50')) { unset($this->_state['filter'][$key]); } else { $this->_state['filter'][$key] = '1'; }
+                if (Access::check('interface','100')) { unset($this->_state['filter'][$key]); } else { $this->_state['filter'][$key] = '1'; }
             break;
             default:
                 // Rien a faire

@@ -233,7 +233,7 @@ class Core
      *
      * Universal function for checking session status.
      */
-    function is_session_started()
+    public static function is_session_started()
     {
         if (php_sapi_name() !== 'cli' ) {
             if (version_compare(phpversion(), '5.4.0', '>=') ) {

@@ -87,8 +87,16 @@ class Playlist extends playlist_object
      */
     public static function get_playlists()
     {
-        $sql = "SELECT `id` from `playlist` WHERE `type`='public' OR " .
-            "`user`='" . $GLOBALS['user']->id . "' ORDER BY `name`";
+        $sql = 'SELECT `id` from `playlist`';
+        $sql_order = ' ORDER BY `name`';
+
+        if (!Access::check('interface','100')) {
+            $sql .= " WHERE `type`='public' OR " .
+            "`user`='" . $GLOBALS['user']->id . "'";
+        }
+        
+        $sql .= $sql_order;
+        
         $db_results = Dba::read($sql);
 
         $results = array();
