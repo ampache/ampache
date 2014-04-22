@@ -73,6 +73,7 @@ class Art extends database_object
         }
 
         return true;
+
     } // build_cache
 
 
@@ -83,9 +84,10 @@ class Art extends database_object
     public static function _auto_init()
     {
         if (!isset($_SESSION['art_enabled'])) {
-            $_SESSION['art_enabled'] = true;
+            $_SESSION['art_enabled'] = $_COOKIE['art_enabled'];
         }
-        self::$enabled = make_bool($_SESSION['art_enabled']);
+        self::$enabled = $_SESSION['art_enabled'];
+        setcookie('art_enabled', self::$enabled, time() + 31536000, "/");
     }
 
     /**
@@ -107,13 +109,14 @@ class Art extends database_object
      */
     public static function set_enabled($value = null)
     {
-        if (is_null($value)) {
+        if (is_null($value) || empty($value)) {
             self::$enabled = self::$enabled ? false : true;
         } else {
             self::$enabled = make_bool($value);
         }
 
         $_SESSION['art_enabled'] = self::$enabled;
+        setcookie('art_enabled', self::$enabled, time() + 31536000, "/");
     }
 
     /**
@@ -285,6 +288,7 @@ class Art extends database_object
     {
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::write($sql, array($this->uid, $this->type));
+
     } // reset
 
     /**
@@ -341,6 +345,7 @@ class Art extends database_object
         }
 
         return $results;
+
     } // get_thumb
 
     /**
@@ -552,7 +557,6 @@ class Art extends database_object
 
     } // url
 
-
     /**
      * gc
      * This cleans up art that no longer has a corresponding object
@@ -647,7 +651,6 @@ class Art extends database_object
         return $results;
 
     } // gather
-
 
     ///////////////////////////////////////////////////////////////////////
     // Art Methods
