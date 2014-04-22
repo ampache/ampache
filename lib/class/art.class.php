@@ -83,7 +83,7 @@ class Art extends database_object
     public static function _auto_init()
     {
         if (!isset($_SESSION['art_enabled'])) {
-            $_SESSION['art_enabled'] = (AmpConfig::get('bandwidth') > 25);
+            $_SESSION['art_enabled'] = true;
         }
         self::$enabled = make_bool($_SESSION['art_enabled']);
     }
