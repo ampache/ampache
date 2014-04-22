@@ -25,7 +25,7 @@
  */
 require_once '../lib/init.php';
 
-if (session_status() == PHP_SESSION_NONE) {
+if (!Core::is_session_started()) {
     session_start();
 }
 
