@@ -309,18 +309,6 @@ if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
         fpassthru($fp);
     }
 
-    // Make sure that a good chunk of the song has been played
-    if ($bytesStreamed >= $media->size) {
-        if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
-            debug_event('Play', 'Downloaded, Registering stats for ' . $media->title, '5');
-            $sessionkey = Stream::$session;
-            //debug_event('play', 'Current session key {'.$sessionkey.'}', '5');
-            $agent = Session::agent($sessionkey);
-            //debug_event('play', 'Current session agent {'.$agent.'}', '5');
-            $GLOBALS['user']->update_stats($media->id, $agent);
-        }
-    } // if enough bytes are streamed
-
     fclose($fp);
     exit();
 
@@ -374,8 +362,10 @@ if (!$cpaction) {
         } else {
             debug_event('play', 'Decided not to transcode', 5);
         }
-    } else if ($transcode_to) {
-        debug_event('play', 'Transcoding is impossible but we received an explicit request for ' . $transcode_to, 2);
+    } else if ($transcode_cfg != 'never') {
+        debug_event('play', 'Transcoding is not enabled for this media type. Valid types: {'.json_encode($valid_types).'}', 5);
+    } else {
+        debug_event('play', 'Transcode disabled in user settings.', 5);
     }
 }
 
@@ -387,9 +377,6 @@ if ($transcode) {
     $transcoder = $media->run_custom_play_action($cpaction, $transcode_to);
     $fp = $transcoder['handle'];
     $transcode = true;
-} else if (!in_array('native', $valid_types)) {
-    debug_event('play', 'Not transcoding and native streaming is not supported, aborting', 2);
-    exit();
 } else {
     $fp = fopen(Core::conv_lc_file($media->file), 'rb');
 }
