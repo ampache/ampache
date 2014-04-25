@@ -41,7 +41,12 @@ switch ($action) {
 
         $type = Share::format_type($_REQUEST['type']);
         if (!empty($type) && !empty($_REQUEST['id'])) {
-            $object = new $type($_REQUEST['id']);
+            $oid = $_REQUEST['id'];
+            if (is_array($oid)) {
+                $oid = $oid[0];
+            }
+        
+            $object = new $type($oid);
             if ($object->id) {
                 $object->format();
                 require_once AmpConfig::get('prefix') . '/templates/show_add_share.inc.php';
