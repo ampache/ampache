@@ -99,9 +99,5 @@ msgid "Streaming"
 msgstr ""
 
 #: Database words
-msgid "Interface"
-msgstr ""
-
-#: Database words
 msgid "System"
 msgstr ""
