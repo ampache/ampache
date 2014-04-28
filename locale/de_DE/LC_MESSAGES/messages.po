@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Ampache 3.7.0-dev\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
 "POT-Creation-Date: 2014-04-27 04:24+0200\n"
-"PO-Revision-Date: 2014-04-27 21:34+0100\n"
+"PO-Revision-Date: 2014-04-28 14:41+0100\n"
 "Last-Translator: Manuel Landmann <psyvirusx@gmail.com>\n"
 "Language-Team: German <translations@ampache.org>\n"
 "Language: de_DE\n"
@@ -1195,7 +1195,7 @@ msgstr "Benutzer verwalten"
 #: ../../lib/class/browse.class.php:169
 #: ../../templates/sidebar_home.inc.php:43
 msgid "Radio Stations"
-msgstr "Radiostationen"
+msgstr "Radiosender"
 
 #: ../../lib/class/browse.class.php:174 ../../server/search.ajax.php:146
 #: ../../templates/header.inc.php:291 ../../templates/sidebar_home.inc.php:37
@@ -2780,7 +2780,7 @@ msgstr "Ampache Installation"
 
 #: ../../templates/list_header.inc.php:146
 msgid "Prev"
-msgstr "Vor"
+msgstr "Zurück"
 
 #: ../../templates/list_header.inc.php:147
 #: ../../templates/show_localplay_control.inc.php:28
@@ -2997,7 +2997,7 @@ msgstr "ACL erstellen"
 #: ../../templates/show_add_catalog.inc.php:26
 #: ../../templates/sidebar_admin.inc.php:26
 msgid "Add a Catalog"
-msgstr "Katalog hinzufügen"
+msgstr "Kataloge hinzufügen"
 
 #: ../../templates/show_add_catalog.inc.php:27
 msgid ""
@@ -4650,7 +4650,7 @@ msgstr "Sende E-Mail"
 #: ../../templates/show_manage_catalogs.inc.php:23
 #: ../../templates/sidebar_admin.inc.php:27
 msgid "Show Catalogs"
-msgstr "Zeige Kataloge"
+msgstr "Kataloge anzeigen"
 
 #: ../../templates/show_manage_catalogs.inc.php:26
 msgid "Gather All Art"
@@ -5434,7 +5434,7 @@ msgstr "Benutzerwerkzeuge"
 
 #: ../../templates/sidebar_admin.inc.php:34
 msgid "Browse Users"
-msgstr "Zeige Benutzer"
+msgstr "Benutzer anzeigen"
 
 #: ../../templates/sidebar_admin.inc.php:39
 msgid "Add ACL"
@@ -5451,11 +5451,11 @@ msgstr "Sonstige Werkzeuge"
 
 #: ../../templates/sidebar_admin.inc.php:46
 msgid "Clear Now Playing"
-msgstr "Lösche 'Momentan gespielt'"
+msgstr "Lösche 'gerade gespielt'"
 
 #: ../../templates/sidebar_admin.inc.php:49
 msgid "Manage Shoutbox"
-msgstr "Verwalte Shoutbox"
+msgstr "Shoutbox verwalten"
 
 #: ../../templates/sidebar_admin.inc.php:54
 msgid "Server Config"
