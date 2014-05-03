@@ -934,8 +934,7 @@ table.tabledata tbody .cel_action {
 }
 
 table.tabledata tbody .cel_action_text {
-    width: 400px !important;
-    max-width: 400px !important;
+    max-width: 100% !important;
 }
 
 table.tabledata tbody td.cel_rating {
