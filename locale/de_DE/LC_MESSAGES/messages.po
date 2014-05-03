@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Ampache 3.7.0-dev\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
 "POT-Creation-Date: 2014-04-27 04:24+0200\n"
-"PO-Revision-Date: 2014-04-28 14:41+0100\n"
+"PO-Revision-Date: 2014-04-28 18:33+0100\n"
 "Last-Translator: Manuel Landmann <psyvirusx@gmail.com>\n"
 "Language-Team: German <translations@ampache.org>\n"
 "Language: de_DE\n"
@@ -3511,7 +3511,7 @@ msgstr "Tags"
 #: ../../templates/show_recommended_artists.inc.php:89
 #: ../../templates/show_song.inc.php:40 ../../templates/show_songs.inc.php:47
 msgid "Flag"
-msgstr "Zu Favoriten hinzufügen"
+msgstr "Favorisieren"
 
 #: ../../templates/show_albums.inc.php:66
 msgid "No album found"
