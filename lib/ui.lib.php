@@ -331,14 +331,19 @@ function show_playlist_select($name,$selected='',$style='')
 
     $sql = "SELECT `id`,`name` FROM `playlist` ORDER BY `name`";
     $db_results = Dba::read($sql);
-
+    $nb_items = Dba::num_rows($db_results);
+    $index = 1;
+    $already_selected = false;
+    
     while ($row = Dba::fetch_assoc($db_results)) {
         $select_txt = '';
-        if ($row['id'] == $selected) {
+        if (!$already_selected && ($row['id'] == $selected || $index == $nb_items)) {
             $select_txt = 'selected="selected"';
+            $already_selected = true;
         }
-        // If they don't have a full name, revert to the username
+
         echo "\t<option value=\"" . $row['id'] . "\" $select_txt>" . scrub_out($row['name']) . "</option>\n";
+        ++$index;
     } // end while users
 
     echo "</select>\n";
