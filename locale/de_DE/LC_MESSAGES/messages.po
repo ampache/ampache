@@ -12,15 +12,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.7.0-dev\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-04-27 04:24+0200\n"
-"PO-Revision-Date: 2014-04-28 18:33+0100\n"
+"POT-Creation-Date: 2014-05-05 21:16+0200\n"
+"PO-Revision-Date: 2014-05-05 21:49+0100\n"
 "Last-Translator: Manuel Landmann <psyvirusx@gmail.com>\n"
 "Language-Team: German <translations@ampache.org>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.6.5\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: T_('\n"
 
@@ -76,7 +76,7 @@ msgid "Catalog Delete"
 msgstr "Katalog löschen"
 
 #: ../../admin/catalog.php:117 ../../admin/users.php:181
-#: ../../broadcast.php:34 ../../channel.php:71 ../../share.php:91
+#: ../../broadcast.php:34 ../../channel.php:71 ../../share.php:96
 msgid "Confirm Deletion Request"
 msgstr "Bestätige die Löschanfrage"
 
@@ -1296,7 +1296,7 @@ msgstr "Kanal bearbeiten"
 
 #: ../../lib/class/channel.class.php:245
 #: ../../lib/class/localplay.class.php:636 ../../lib/class/user.class.php:831
-#: ../../lib/general.lib.php:223
+#: ../../lib/general.lib.php:222
 #: ../../modules/localplay/mpd.controller.php:503
 #: ../../templates/show_user.inc.php:24 ../../templates/show_users.inc.php:58
 msgid "Unknown"
@@ -2133,11 +2133,11 @@ msgstr "Statistiken"
 msgid "Add New"
 msgstr "Neu hinzufügen"
 
-#: ../../lib/ui.lib.php:550
+#: ../../lib/ui.lib.php:555
 msgid "On"
 msgstr "An"
 
-#: ../../lib/ui.lib.php:552
+#: ../../lib/ui.lib.php:557
 msgid "Off"
 msgstr "Aus"
 
@@ -2639,15 +2639,15 @@ msgstr "Die Sitzung ist abgelaufen"
 msgid "Unauthorized access attempt to API - ACL Error"
 msgstr "Fehler: Nicht autorisierter Zugriff auf 'API - ACL'"
 
-#: ../../share.php:71
+#: ../../share.php:76
 msgid "Share created."
 msgstr "Die Freigabe wurde erstellt."
 
-#: ../../share.php:72
+#: ../../share.php:77
 msgid "You can now start sharing the following url:"
 msgstr "Deine Freigabe kann nun mit der folgenden URL besucht werden:"
 
-#: ../../share.php:77
+#: ../../share.php:82
 msgid ""
 "You can also embed this share as a web player into your website, with the "
 "following html code:"
@@ -2655,19 +2655,19 @@ msgstr ""
 "Du kannst Deine Freigabe, mit dem folgenden HTML-Code, auch als Webplayer in "
 "Deine Webseite integrieren."
 
-#: ../../share.php:80
+#: ../../share.php:85
 msgid "Object Shared"
 msgstr "Das Objekt wurde Freigegeben"
 
-#: ../../share.php:91
+#: ../../share.php:96
 msgid "Share Delete"
 msgstr "Freigabe löschen"
 
-#: ../../share.php:105
+#: ../../share.php:110
 msgid "Share Deleted"
 msgstr "Freigabe gelöscht"
 
-#: ../../share.php:105
+#: ../../share.php:110
 msgid "The Share has been deleted"
 msgstr "Die Freigabe wurde gelöscht"
 
@@ -2762,8 +2762,8 @@ msgid "Log out"
 msgstr "Abmelden"
 
 #: ../../templates/header.inc.php:297 ../../templates/sidebar_home.inc.php:84
-msgid "My Flags"
-msgstr "Meine Favoriten"
+msgid "Favorites"
+msgstr "Favoriten"
 
 #: ../../templates/header.inc.php:316
 msgid "Error Config File Out of Date"
@@ -3510,8 +3510,8 @@ msgstr "Tags"
 #: ../../templates/show_recommended_artists.inc.php:40
 #: ../../templates/show_recommended_artists.inc.php:89
 #: ../../templates/show_song.inc.php:40 ../../templates/show_songs.inc.php:47
-msgid "Flag"
-msgstr "Favorisieren"
+msgid "Fav."
+msgstr "Fav."
 
 #: ../../templates/show_albums.inc.php:66
 msgid "No album found"
@@ -5331,8 +5331,8 @@ msgid "The validation key used isn't correct"
 msgstr "Der Validierungsschlüssel ist ungültig"
 
 #: ../../templates/show_userflag.inc.php:23
-msgid "User Flags"
-msgstr "Von Benutzern favorisiert"
+msgid "User Favorites"
+msgstr "Deine Favoriten"
 
 #: ../../templates/show_user.inc.php:38
 msgid "Create Date"
