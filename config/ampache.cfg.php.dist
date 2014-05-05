@@ -295,8 +295,8 @@ default_auth_level = "admin"
 ; DEFAULT: true
 ratings = "true"
 
-; User flags
-; This allows user flags for almost any object in ampache
+; User flags/favorites
+; This allows user flags for almost any object in ampache as favorite
 ; POSSIBLE VALUES: false true
 ; DEFAULT: true
 userflags = "true"

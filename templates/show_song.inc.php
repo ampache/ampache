@@ -37,7 +37,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 
 <?php if (AmpConfig::get('userflags')) { ?>
     <?php $rowparity = UI::flip_class(); ?>
-    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Flag'); ?></dt>
+    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <div id="userflag_<?php echo $song->id; ?>_song"><?php Userflag::show($song->id,'song'); ?>
         </div>

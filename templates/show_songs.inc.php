@@ -44,7 +44,7 @@ $thcount = 8;
             ++$thcount;
             Userflag::build_cache('song', $object_ids);
         ?>
-            <th class="cel_userflag optional"><?php echo T_('Flag'); ?></th>
+            <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
         <?php } ?>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         <?php if (isset($argument) && $argument) { ++$thcount; ?>

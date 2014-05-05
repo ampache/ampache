@@ -37,7 +37,7 @@ $thcount = 8;
             <th class="cel_rating"><?php echo T_('Rating'); ?></th>
         <?php } ?>
         <?php if (AmpConfig::get('userflags')) { ++$thcount; ?>
-            <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
+            <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
         <?php } ?>
             <th class="cel_action"> <?php echo T_('Action'); ?> </th>
         </tr>
@@ -86,7 +86,7 @@ $thcount = 8;
             <th class="cel_rating"><?php echo T_('Rating'); ?></th>
         <?php } ?>
         <?php if (AmpConfig::get('userflags')) { ?>
-            <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
+            <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
         <?php } ?>
             <th class="cel_action"> <?php echo T_('Action'); ?> </th>
         </tr>

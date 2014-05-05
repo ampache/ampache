@@ -13,7 +13,7 @@ CHANGELOG
 - Fixed album art on xspf generated playlist
 - Added stats, playlist and new authentication method to Ampache XML API
 - Added responsive tables to automatically hide optional information on small screen
-- Added song action buttons (user flag, rating, ...) to the web player
+- Added song action buttons (user favorite, rating, ...) to the web player
 - Added sortable capability to the web player playlist
 - Added Growl notification/scrobbler plugin
 - Added artist slideshow photos plugin from Flickr
@@ -93,7 +93,7 @@ CHANGELOG
 - Improved tag edition
 - Added song re-order on album / playlists
 - Replaced Prototype with jQuery
-- Added 'Flagged' feature on songs/albums/artists
+- Added 'Favorite' feature on songs/albums/artists
 - Added 'Direct Play' feature to play songs without using a playlist
 - Added Lyrics plugins (ChartLyrics and LyricWiki)
 - Fixed ShoutBox enable/disable (reported by cipriant)

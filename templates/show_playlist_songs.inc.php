@@ -42,7 +42,7 @@ $web_path = AmpConfig::get('web_path');
             <?php if (AmpConfig::get('userflags')) {
                 Userflag::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
             ?>
-                <th class="cel_userflag essential"><?php echo T_('Flag'); ?></th>
+                <th class="cel_userflag essential"><?php echo T_('Fav.'); ?></th>
             <?php } ?>
                 <th class="cel_action essential"><?php echo T_('Action'); ?></th>
                 <th class="cel_drag essential"></th>
@@ -75,7 +75,7 @@ $web_path = AmpConfig::get('web_path');
                 <th class="cel_rating"><?php echo T_('Rating'); ?></th>
             <?php } ?>
             <?php if (AmpConfig::get('userflags')) { ?>
-                <th class="cel_userflag"><?php echo T_('Flag'); ?></th>
+                <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
             <?php } ?>
                 <th class="cel_action"><?php echo T_('Action'); ?></th>
                 <th class="cel_drag"></th>

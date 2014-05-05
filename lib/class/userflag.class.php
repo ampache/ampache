@@ -23,7 +23,7 @@
 /**
  * Userflag class
  *
- * This user flag/unflag songs, albums and artists.
+ * This user flag/unflag songs, albums and artists as favorite.
  *
  */
 class Userflag extends database_object
