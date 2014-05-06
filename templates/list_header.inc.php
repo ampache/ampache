@@ -169,8 +169,9 @@ if ($pages > 1 && $start > -1) {
             } // end else
         } // end foreach up
     ?>
-<?php } ?>
+    <input type="text" id="browse_custom_value" name="value" value="<?php echo $current_page; ?>" onKeyUp="delayRun(this, '500', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=custom'); ?>', 'browse_custom_value');">
 <?php
+    }
 } // if stuff
 ?>
     &nbsp;

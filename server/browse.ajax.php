@@ -169,6 +169,19 @@ switch ($_REQUEST['action']) {
                     $browse->set_offset($value);
                 }
             break;
+            case 'custom':
+                $value = intval($value);
+                $limit = $browse->get_offset();
+                if ($limit > 0 && $value > 0) {
+                    $total = $browse->get_total();
+                    $pages = ceil($total / $limit);
+                    
+                    if ($value <= $pages) {
+                        $offset = ($value - 1) * $limit;
+                        $browse->set_start($offset);
+                    }
+                }
+            break;
         }
         ob_start();
         $browse->show_objects();

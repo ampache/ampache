@@ -246,3 +246,11 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     border: 2px solid #ff9d00;
     margin: 0px;
 }
+
+#browse_custom_value {
+    margin-left: 5px;
+    height: 20px;
+    width: 50px;
+    text-align: center;
+    padding: 0;
+}
