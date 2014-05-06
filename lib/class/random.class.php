@@ -24,26 +24,10 @@
 /**
  * Random Class
  *
- * All of the 'random' type events, elements, voodoo done by Ampache is done
- * by this class. There isn't a table for this class so most of its functions
- * are static.
+ * All of the 'random' type events, elements
  */
-class Random implements media
+class Random
 {
-    public $type;
-    public $id;
-
-    /**
-     * Constructor
-     * nothing to see here, move along
-     */
-    public function __construct($id)
-    {
-        $this->type = Random::get_id_type($id);
-        $this->id = intval($id);
-
-    } // constructor
-
     /**
      * artist
      * This returns the ID of a random artist, nothing special here for now
@@ -85,38 +69,14 @@ class Random implements media
     } // playlist
 
     /**
-     * play_url
-     *
-     * This generates a random play url based on the passed type
-     * and returns it
-     */
-    public static function play_url($id, $additional_params='')
-    {
-        if (!$type = self::get_id_type($id)) {
-            return false;
-        }
-
-        $uid = $GLOBALS['user']->id;
-
-        $url = Stream::get_base_url() . "type=song&random=1&random_type=$type&uid=$uid";
-
-        return Stream_URL::format($url . $additional_params);
-
-    } // play_url
-
-    /**
      * get_single_song
      * This returns a single song pulled based on the passed random method
      */
     public static function get_single_song($type)
     {
-        if (!$type = self::validate_type($type)) {
-            return false;
-        }
-
         $method_name = 'get_' . $type;
 
-        if (method_exists('Random',$method_name)) {
+        if (method_exists('Random', $method_name)) {
             $song_ids = self::$method_name(1);
             $song_id = array_pop($song_ids);
         }
@@ -130,10 +90,14 @@ class Random implements media
      * This just randomly picks a song at whim from all catalogs
      * nothing special here...
      */
-    public static function get_default($limit)
+    public static function get_default($limit = '')
     {
         $results = array();
 
+        if (empty($limit)) {
+            $limit = AmpConfig::get('offset_limit') ? AmpConfig::get('offset_limit') : '25';
+        }
+        
         $sql = "SELECT `song`.`id` FROM `song` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
@@ -159,8 +123,8 @@ class Random implements media
     {
         $results = array();
 
-        // Get the last album playbed by us
-        $data = $GLOBALS['user']->get_recently_played('1','album');
+        // Get the last album played by us
+        $data = $GLOBALS['user']->get_recently_played('1', 'album');
         if ($data[0]) {
             $where_sql = " AND `song`.`album`='" . $data[0] . "' ";
         }
@@ -389,102 +353,5 @@ class Random implements media
             break;
         }
     } // advanced
-
-    /**
-     * get_type_name
-     * This returns a 'purrty' name for the different random types
-     */
-    public static function get_type_name($type)
-    {
-        switch ($type) {
-            case 'album':
-                return T_('Related Album');
-            break;
-            case 'genre':
-                return T_('Related Genre');
-            break;
-            case 'artist':
-                return T_('Related Artist');
-            break;
-            default:
-                return T_('Pure Random');
-            break;
-        } // end switch
-
-    } // get_type_name
-
-    /**
-     * get_type_id
-     * This takes random type and returns the ID
-     * MOTHER OF PEARL THIS MAKES BABY JESUS CRY
-     * HACK HACK HACK HACK HACK HACK HACK HACK
-     */
-    public static function get_type_id($type)
-    {
-        switch ($type) {
-            case 'album':
-                return '1';
-            break;
-            case 'artist':
-                return '2';
-            break;
-            case 'tag':
-                return '3';
-            break;
-            default:
-                return '4';
-            break;
-        }
-
-    } // get_type_id
-
-    /**
-     * get_id_name
-     * This takes an ID and returns the 'name' of the random dealie
-     * HACK HACK HACK HACK HACK HACK HACK
-     * Can you tell I don't like this code?
-     */
-    public static function get_id_type($id)
-    {
-        switch ($id) {
-            case '1':
-                return 'album';
-            break;
-            case '2':
-                return 'artist';
-            break;
-            case '3':
-                return 'tag';
-            break;
-            default:
-                return 'default';
-            break;
-        } // end switch
-
-    } // get_id_name
-
-    /**
-     * validate_type
-     * this validates the random type
-     */
-    public static function validate_type($type)
-    {
-        switch ($type) {
-            case 'default':
-            case 'genre':
-            case 'album':
-            case 'artist':
-            case 'rated':
-                return $type;
-            break;
-        } // end switch
-
-        return 'default';
-
-    } // validate_type
-
-    public function get_stream_types() { }
-    public function get_transcode_settings($target = null) { }
-    public function format() { }
 
 } //end of random class

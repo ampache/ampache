@@ -26,45 +26,52 @@
 if (!defined('AJAX_INCLUDE')) { exit; }
 
 switch ($_REQUEST['action']) {
-        case 'album':
-                $album_id = Album::get_random();
+    case 'song':
+        $songs = Random::get_default();
 
-        // If we don't get anything stop
+        if (!count($songs)) { $results['rfc3514'] = '0x1'; break; }
+
+        foreach ($songs as $song_id) {
+            $GLOBALS['user']->playlist->add_object($song_id, 'song');
+        }
+        $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
+    break;
+    case 'album':
+        $album_id = Album::get_random();
+
         if (!$album_id) { $results['rfc3514'] = '0x1'; break; }
 
-                $album = new Album($album_id[0]);
-                $songs = $album->get_songs();
-                foreach ($songs as $song_id) {
-                        $GLOBALS['user']->playlist->add_object($song_id,'song');
-                }
+        $album = new Album($album_id[0]);
+        $songs = $album->get_songs();
+        foreach ($songs as $song_id) {
+            $GLOBALS['user']->playlist->add_object($song_id, 'song');
+        }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
-        break;
-        case 'artist':
-                $artist_id = Random::artist();
+    break;
+    case 'artist':
+        $artist_id = Random::artist();
 
-        // If we don't get anything stop
         if (!$artist_id) { $results['rfc3514'] = '0x1'; break; }
 
-                $artist = new Artist($artist_id);
-                $songs = $artist->get_songs();
-                foreach ($songs as $song_id) {
-                        $GLOBALS['user']->playlist->add_object($song_id,'song');
-                }
+        $artist = new Artist($artist_id);
+        $songs = $artist->get_songs();
+        foreach ($songs as $song_id) {
+            $GLOBALS['user']->playlist->add_object($song_id, 'song');
+        }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
-        break;
-        case 'playlist':
-                $playlist_id = Random::playlist();
+    break;
+    case 'playlist':
+        $playlist_id = Random::playlist();
 
-        // If we don't get any results stop right here!
         if (!$playlist_id) { $results['rfc3514'] = '0x1'; break; }
 
-                $playlist = new Playlist($playlist_id);
-                $items = $playlist->get_items();
-                foreach ($items as $item) {
-                        $GLOBALS['user']->playlist->add_object($item['object_id'],$item['type']);
-                }
+        $playlist = new Playlist($playlist_id);
+        $items = $playlist->get_items();
+        foreach ($items as $item) {
+            $GLOBALS['user']->playlist->add_object($item['object_id'],$item['type']);
+        }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
-        break;
+    break;
     case 'advanced_random':
         $object_ids = Random::advanced($_POST);
 
@@ -82,7 +89,6 @@ switch ($_REQUEST['action']) {
         $browse->show_objects();
         $results['browse'] = ob_get_contents();
         ob_end_clean();
-
     break;
     default:
         $results['rfc3514'] = '0x1';

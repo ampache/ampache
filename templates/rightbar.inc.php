@@ -45,7 +45,7 @@
     </li>
 <?php if (Access::check_function('batch_download')) { ?>
     <li>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
     </li>
@@ -55,20 +55,20 @@
     </li>
     <li id="rb_add">
       <?php echo UI::get_icon('add', T_('Add Dynamic Items')); ?>
-      <ul id="rb_action_additems" class="submenu">
-       <li>
-        <?php echo Ajax::text('?action=basket&type=dynamic&random_type=default', T_('Pure Random'),'rb_add_pure_random'); ?>
-       </li>
-       <li>
-        <?php echo Ajax::text('?action=basket&type=dynamic&random_type=artist', T_('Related Artist'),'rb_add_related_artist'); ?>
-       </li>
-       <li>
-        <?php echo Ajax::text('?action=basket&type=dynamic&random_type=album', T_('Related Album'),'rb_add_related_album'); ?>
-       </li>
-       <li>
-        <?php echo Ajax::text('?action=basket&type=dynamic&random_type=tag', T_('Related Tag'),'rb_add_related_tag'); ?>
-       </li>
-      </ul>
+        <ul id="rb_action_additems" class="submenu">
+            <li>
+                <?php echo Ajax::text('?page=random&action=song', T_('Random Song'), 'rb_add_random_song'); ?>
+            </li>
+            <li>
+                <?php echo Ajax::text('?page=random&action=artist', T_('Random Artist'),'rb_add_random_artist'); ?>
+            </li>
+            <li>
+                <?php echo Ajax::text('?page=random&action=album', T_('Random Album'), 'rb_add_random_album'); ?>
+            </li>
+            <li>
+                <?php echo Ajax::text('?page=random&action=playlist', T_('Random Playlist'),'rb_add_random_playlist'); ?>
+            </li>
+        </ul>
     </li>
 </ul>
 <?php
@@ -110,9 +110,6 @@
         if (in_array($type,$normal_array)) {
             $object = new $type(array_shift($object_data));
             $object->format();
-        }
-        if ($type == 'random') {
-            $object->f_link = Random::get_type_name($type);
         }
 ?>
     <li class="<?php echo UI::flip_class(); ?>" >
