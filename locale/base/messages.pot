@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-04-27 04:24+0200\n"
+"POT-Creation-Date: 2014-05-05 21:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,7 +69,7 @@ msgid "Catalog Delete"
 msgstr ""
 
 #: ../../admin/catalog.php:117 ../../admin/users.php:181
-#: ../../broadcast.php:34 ../../channel.php:71 ../../share.php:91
+#: ../../broadcast.php:34 ../../channel.php:71 ../../share.php:96
 msgid "Confirm Deletion Request"
 msgstr ""
 
@@ -1269,7 +1269,7 @@ msgstr ""
 
 #: ../../lib/class/channel.class.php:245
 #: ../../lib/class/localplay.class.php:636 ../../lib/class/user.class.php:831
-#: ../../lib/general.lib.php:223
+#: ../../lib/general.lib.php:222
 #: ../../modules/localplay/mpd.controller.php:503
 #: ../../templates/show_user.inc.php:24 ../../templates/show_users.inc.php:58
 msgid "Unknown"
@@ -2054,11 +2054,11 @@ msgstr ""
 msgid "Add New"
 msgstr ""
 
-#: ../../lib/ui.lib.php:550
+#: ../../lib/ui.lib.php:555
 msgid "On"
 msgstr ""
 
-#: ../../lib/ui.lib.php:552
+#: ../../lib/ui.lib.php:557
 msgid "Off"
 msgstr ""
 
@@ -2530,33 +2530,33 @@ msgstr ""
 msgid "Unauthorized access attempt to API - ACL Error"
 msgstr ""
 
-#: ../../share.php:71
+#: ../../share.php:76
 msgid "Share created."
 msgstr ""
 
-#: ../../share.php:72
+#: ../../share.php:77
 msgid "You can now start sharing the following url:"
 msgstr ""
 
-#: ../../share.php:77
+#: ../../share.php:82
 msgid ""
 "You can also embed this share as a web player into your website, with the "
 "following html code:"
 msgstr ""
 
-#: ../../share.php:80
+#: ../../share.php:85
 msgid "Object Shared"
 msgstr ""
 
-#: ../../share.php:91
+#: ../../share.php:96
 msgid "Share Delete"
 msgstr ""
 
-#: ../../share.php:105
+#: ../../share.php:110
 msgid "Share Deleted"
 msgstr ""
 
-#: ../../share.php:105
+#: ../../share.php:110
 msgid "The Share has been deleted"
 msgstr ""
 
@@ -2650,7 +2650,7 @@ msgid "Log out"
 msgstr ""
 
 #: ../../templates/header.inc.php:297 ../../templates/sidebar_home.inc.php:84
-msgid "My Flags"
+msgid "Favorites"
 msgstr ""
 
 #: ../../templates/header.inc.php:316
@@ -3395,7 +3395,7 @@ msgstr ""
 #: ../../templates/show_recommended_artists.inc.php:40
 #: ../../templates/show_recommended_artists.inc.php:89
 #: ../../templates/show_song.inc.php:40 ../../templates/show_songs.inc.php:47
-msgid "Flag"
+msgid "Fav."
 msgstr ""
 
 #: ../../templates/show_albums.inc.php:66
@@ -5133,7 +5133,7 @@ msgid "The validation key used isn't correct"
 msgstr ""
 
 #: ../../templates/show_userflag.inc.php:23
-msgid "User Flags"
+msgid "User Favorites"
 msgstr ""
 
 #: ../../templates/show_user.inc.php:38
