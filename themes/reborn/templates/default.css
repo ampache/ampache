@@ -1193,6 +1193,10 @@ span.fatalerror {
     height: 32px;
 }
 
+.box-content #tag_filter .tag_container {
+    margin: 20px 0 0 15px;
+}
+
 .box-content #tag_filter .tag_button {
     margin: 20px 0 0 15px;
     font-size: 14px;
