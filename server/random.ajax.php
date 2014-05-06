@@ -68,7 +68,7 @@ switch ($_REQUEST['action']) {
         $playlist = new Playlist($playlist_id);
         $items = $playlist->get_items();
         foreach ($items as $item) {
-            $GLOBALS['user']->playlist->add_object($item['object_id'],$item['type']);
+            $GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;
