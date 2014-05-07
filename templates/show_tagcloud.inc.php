@@ -41,8 +41,8 @@
                 </li>
             </ul>
         </div>
-    </div>
     <?php } ?>
+    </div>
 <?php } ?>
 <?php if (!count($object_ids)) { ?>
 <span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span>
