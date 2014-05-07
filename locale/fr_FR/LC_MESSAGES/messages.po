@@ -9,7 +9,7 @@
 # François Jan <contribos@gmail.com>, 2007, 2008.
 # Erwan Velu <erwan.velu@free.fr>, 2008, 2009.
 # Roman Sanchez <publicite34@free.fr>, 2009.
-# Arnaud Bey <arnaud.bey@gmail.com>, 2013.
+# Arnaud Bey <arnaud.bey@gmail.com>, 2013, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
@@ -124,7 +124,7 @@ msgstr "Toutes les données sur les lectures en cours ont été effacées"
 #: ../../admin/catalog.php:264
 #, fuzzy
 msgid "No Disabled songs found"
-msgstr "Aucun morceau désactivé"
+msgstr "Aucune piste désactivée"
 
 #: ../../admin/catalog.php:273
 msgid "Delete Catalog"
@@ -168,39 +168,39 @@ msgstr "L'installation a échouée, erreur du contrôleur"
 #: ../../admin/modules.php:66
 #, fuzzy
 msgid "Plugin Installed"
-msgstr "Greffon activé"
+msgstr "Module activé"
 
 #: ../../admin/modules.php:73 ../../admin/modules.php:80
 #: ../../admin/modules.php:142
 msgid "Are you sure you want to remove this plugin?"
-msgstr "Voulez-vous vraiment supprimer ce greffon ?"
+msgstr "Voulez-vous vraiment supprimer ce module ?"
 
 #: ../../admin/modules.php:92 ../../admin/modules.php:109
 #: ../../admin/modules.php:161
 msgid "Plugin Deactivated"
-msgstr "Greffon désactivé"
+msgstr "Module désactivé"
 
 #: ../../admin/modules.php:101
 #, fuzzy
 msgid "Uninstall Failed, Catalog Error"
-msgstr "L'installation à échouée, erreur du contrôleur"
+msgstr "L'installation a échouée, erreur du contrôleur"
 
 #: ../../admin/modules.php:124
 msgid "Unable to Install Plugin"
-msgstr "Impossible d'installer le greffon"
+msgstr "Impossible d'installer le module"
 
 #: ../../admin/modules.php:135
 msgid "Plugin Activated"
-msgstr "Greffon activé"
+msgstr "Module activé"
 
 #: ../../admin/modules.php:176
 #, fuzzy
 msgid "Plugin Upgraded"
-msgstr "Greffon mis à jour"
+msgstr "Module mis à jour"
 
 #: ../../admin/modules.php:182
 msgid "Plugins"
-msgstr "Greffons"
+msgstr "Modules"
 
 #: ../../admin/modules.php:188
 msgid "Localplay Controllers"
@@ -3374,7 +3374,7 @@ msgstr ""
 #: ../../templates/show_localplay_controllers.inc.php:43
 #: ../../templates/show_plugins.inc.php:40
 msgid "Activate"
-msgstr "Activé"
+msgstr "Activer"
 
 #: ../../templates/show_catalog_types.inc.php:54
 #: ../../templates/show_disabled_songs.inc.php:45
@@ -5099,7 +5099,7 @@ msgstr "Albums favoris"
 
 #: ../../templates/show_user_stats.inc.php:55
 msgid "Favorite Songs"
-msgstr "Morceaux favoris"
+msgstr "Pistes favorites"
 
 #: ../../templates/show_verify_catalog.inc.php:23
 #, fuzzy
@@ -5183,7 +5183,7 @@ msgstr "Parcourir"
 #: ../../templates/sidebar_home.inc.php:33
 #, fuzzy
 msgid "Song Titles"
-msgstr "Titre du morceau"
+msgstr "Pistes"
 
 #: ../../templates/sidebar_home.inc.php:47
 msgid "Currently Playing"
@@ -5214,7 +5214,7 @@ msgstr "Populaire"
 #: ../../templates/sidebar_home.inc.php:77
 #, fuzzy
 msgid "Top Rated"
-msgstr "Meilleurs votés"
+msgstr "Mieux notés"
 
 #: ../../templates/sidebar_home.inc.php:80
 #, fuzzy
@@ -5261,11 +5261,11 @@ msgstr "Module de Localplay"
 #: ../../templates/sidebar_modules.inc.php:27
 #, fuzzy
 msgid "Catalog Modules"
-msgstr "Module de Catalogue"
+msgstr "Liste des modules"
 
 #: ../../templates/sidebar_modules.inc.php:28
 msgid "Available Plugins"
-msgstr "Greffons disponibles"
+msgstr "Modules disponibles"
 
 #: ../../templates/sidebar_modules.inc.php:34
 msgid "Mail Users"
@@ -5768,7 +5768,7 @@ msgstr "Système"
 #~ msgstr "Connexion à la base de données"
 
 #~ msgid "DB Inserted"
-#~ msgstr "Base de données inséré"
+#~ msgstr "Base de données insérée"
 
 #, fuzzy
 #~ msgid "day"
@@ -5843,7 +5843,7 @@ msgstr "Système"
 
 #, fuzzy
 #~ msgid "Close this window"
-#~ msgstr "Cliquer pour fermer la fenêtre"
+#~ msgstr "Fermer la fenêtre"
 
 #~ msgid ""
 #~ "Functions are disabled in the demo because previous users of the demo "
