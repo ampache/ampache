@@ -75,7 +75,6 @@ switch ($plexact) {
         $myplex_password = $_POST['myplex_password'];
         $plex_public_port = $_POST['plex_public_port'];
 
-
         if (!empty($myplex_username)) {
             // Register the server on myPlex and get auth token
             $myplex_authtoken = Plex_Api::validateMyPlex($myplex_username, $myplex_password);

@@ -70,6 +70,7 @@ if (AmpConfig::get('song_page_title')) {
     }
     window.parent.onbeforeunload = null;
     ff.setAttribute('src', '');
+
     return false;
 }
 </script>

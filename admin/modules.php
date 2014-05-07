@@ -27,7 +27,6 @@ if (!$GLOBALS['user']->has_access(100)) {
     exit();
 }
 
-
 /* Always show the header */
 UI::show_header();
 

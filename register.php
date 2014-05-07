@@ -36,7 +36,6 @@ if (AmpConfig::get('captcha_public_reg')) {
     require_once AmpConfig::get('prefix') . '/modules/captcha/captcha.php';
 }
 
-
 /* Start switch based on action passed */
 switch ($_REQUEST['action']) {
     case 'validate':
@@ -127,7 +126,6 @@ switch ($_REQUEST['action']) {
                 $access = '5';
             break;
         } // auto-user level
-
 
         $new_user = User::create($username, $fullname, $email, $website, $pass1,
             $access, AmpConfig::get('admin_enable_required'));

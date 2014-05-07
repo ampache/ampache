@@ -33,7 +33,6 @@ class AmpacheVlc extends localplay_controller
     private $version    = 'Beta 0.2';
     private $description    = 'Controls a Vlc instance';
 
-
     /* Constructed variables */
     private $_vlc;
 
@@ -79,7 +78,6 @@ class AmpacheVlc extends localplay_controller
         $db_results = Dba::query($sql);
 
         return Dba::num_rows($db_results);
-
 
         } // is_installed
 
@@ -248,6 +246,7 @@ class AmpacheVlc extends localplay_controller
     {
     if (is_null($this->_vlc->add($url->title, $url->url))) {
         debug_event('vlc', 'add_url failed to add: ' . json_encode($url), 1);
+
         return false;
     }
 
@@ -263,6 +262,7 @@ class AmpacheVlc extends localplay_controller
     {
         if (is_null($this->_vlc->delete_pos($object_id))) {
             debug_event('vlc_del','ERROR Unable to delete ' . $object_id . ' from Vlc','1');
+
             return false;
         }
 
@@ -300,6 +300,7 @@ class AmpacheVlc extends localplay_controller
         }
 
         if (is_null($this->_vlc->play())) { return false; }
+
         return true;
 
     } // play
@@ -312,6 +313,7 @@ class AmpacheVlc extends localplay_controller
     public function stop()
     {
         if (is_null($this->_vlc->stop())) { return false; }
+
         return true;
 
     } // stop
@@ -323,6 +325,7 @@ class AmpacheVlc extends localplay_controller
     public function skip($song)
     {
         if (is_null($this->_vlc->skip($song))) { return false; }
+
         return true;
 
     } // skip
@@ -333,6 +336,7 @@ class AmpacheVlc extends localplay_controller
     public function volume_up()
     {
         if (is_null($this->_vlc->volume_up())) { return false; }
+
         return true;
 
     } // volume_up
@@ -343,6 +347,7 @@ class AmpacheVlc extends localplay_controller
     public function volume_down()
     {
         if (is_null($this->_vlc->volume_down())) { return false; }
+
         return true;
 
     } // volume_down
@@ -379,6 +384,7 @@ class AmpacheVlc extends localplay_controller
     public function pause()
     {
         if (is_null($this->_vlc->pause())) { return false; }
+
         return true;
 
     } // pause
@@ -391,6 +397,7 @@ class AmpacheVlc extends localplay_controller
        public function volume($volume)
        {
                if (is_null($this->_vlc->set_volume($volume))) { return false; }
+
                return true;
 
        } // volume
@@ -402,6 +409,7 @@ class AmpacheVlc extends localplay_controller
        public function repeat($state)
        {
         if (is_null($this->_vlc->repeat($state))) { return false; }
+
                return true;
 
        } // repeat
@@ -413,6 +421,7 @@ class AmpacheVlc extends localplay_controller
        public function random($onoff)
        {
                if (is_null($this->_vlc->random($onoff))) { return false; }
+
                return true;
 
        } // random
@@ -551,6 +560,7 @@ class AmpacheVlc extends localplay_controller
             $array['track_title'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
             $array['track_artist'] =  htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
         }
+
         return $array;
 
     } // status

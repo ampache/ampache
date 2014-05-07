@@ -43,6 +43,7 @@ function check_php_version()
     if (floatval(phpversion()) < 5.3) {
         return false;
     }
+
     return true;
 }
 
@@ -148,6 +149,7 @@ function check_php_memory()
 function check_php_timelimit()
 {
     $current = intval(ini_get('max_execution_time'));
+
     return ($current >= 60 || $current == 0);
 
 } // check_php_timelimit
@@ -161,6 +163,7 @@ function check_php_safemode()
     if (ini_get('safe_mode')) {
         return false;
     }
+
     return true;
 }
 

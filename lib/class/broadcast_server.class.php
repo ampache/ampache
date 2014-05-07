@@ -203,6 +203,7 @@ class Broadcast_Server implements MessageComponentInterface
                 break;
             }
         }
+
         return $broadcast;
     }
 

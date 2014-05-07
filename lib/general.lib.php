@@ -80,6 +80,7 @@ function scrub_in($input)
         foreach ($input as $item) {
             $results[] = scrub_in($item);
         }
+
         return $results;
     }
 } // scrub_in

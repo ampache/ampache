@@ -81,6 +81,7 @@ class Shoutbox
         // If we've already got too many stop here
         if (count($shouts) > $limit) {
             $shouts = array_slice($shouts,0,$limit);
+
             return $shouts;
         }
 
@@ -218,6 +219,7 @@ class Shoutbox
     {
         $this->sticky = ($this->sticky == "0") ? 'No' : 'Yes';
         $this->date = date("m\/d\/Y - H:i", $this->date);
+
         return true;
 
     } //format

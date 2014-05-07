@@ -74,6 +74,7 @@ class UI
         if (function_exists('iconv') && function_exists('iconv_substr')) {
             return true;
         }
+
         return false;
     }
 
@@ -87,6 +88,7 @@ class UI
     {
         if (!isset(self::$_ticker) || (time() > self::$_ticker + 1)) {
             self::$_ticker = time();
+
             return true;
         }
 
@@ -141,6 +143,7 @@ END;
         } else {
             self::$_classes = array_reverse(self::$_classes);
         }
+
         return self::$_classes[0];
     }
 
@@ -242,6 +245,7 @@ END;
         } else {
             $tag .= '/>';
         }
+
         return $tag;
     }
 
@@ -330,6 +334,7 @@ END;
     {
         if (defined('CLI')) {
             echo $value . "\n";
+
             return;
         }
 

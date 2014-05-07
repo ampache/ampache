@@ -246,6 +246,7 @@ class Album extends database_object
         if ($row = Dba::fetch_assoc($db_results)) {
             $id = $row['id'];
             self::$_mapcache[$name][$year][$disk][$mbid] = $id;
+
             return $id;
         }
 
@@ -272,6 +273,7 @@ class Album extends database_object
         }
 
         self::$_mapcache[$name][$year][$disk][$mbid] = $id;
+
         return $id;
     }
 

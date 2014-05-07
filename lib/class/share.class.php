@@ -189,6 +189,7 @@ class Share extends database_object
     public function save_access()
     {
         $sql = "UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ?";
+
         return Dba::write($sql, array(time(), $this->id));
     }
 
@@ -196,36 +197,43 @@ class Share extends database_object
     {
         if (!$this->id) {
             debug_event('share', 'Access Denied: Invalid share.', '3');
+
             return false;
         }
 
         if (!AmpConfig::get('share')) {
             debug_event('share', 'Access Denied: share feature disabled.', '3');
+
             return false;
         }
 
         if ($this->expire_days > 0 && ($this->creation_date + ($this->expire_days * 86400)) < time()) {
             debug_event('share', 'Access Denied: share expired.', '3');
+
             return false;
         }
 
         if ($this->max_counter > 0 && $this->counter >= $this->max_counter) {
             debug_event('share', 'Access Denied: max counter reached.', '3');
+
             return false;
         }
 
         if (!empty($this->secret) && $secret != $this->secret) {
             debug_event('share', 'Access Denied: secret requires to access share ' . $this->id . '.', '3');
+
             return false;
         }
 
         if ($action == 'download' && (!AmpConfig::get('download') || !$this->allow_download)) {
             debug_event('share', 'Access Denied: download unauthorized.', '3');
+
             return false;
         }
 
         if ($action == 'stream' && !$this->allow_stream) {
             debug_event('share', 'Access Denied: stream unauthorized.', '3');
+
             return false;
         }
 
@@ -258,6 +266,7 @@ class Share extends database_object
         }
 
         $playlist->add($medias, '&share_id=' . $this->id . '&share_secret=' . $this->secret);
+
         return $playlist;
     }
 

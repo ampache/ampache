@@ -104,6 +104,7 @@ abstract class Catalog extends database_object
         if (!$include) {
             /* Throw Error Here */
             debug_event('catalog', 'Unable to load ' . $type . ' catalog type', '2');
+
             return false;
         } // include
         else {
@@ -115,8 +116,10 @@ abstract class Catalog extends database_object
             }
             if (!($catalog instanceof Catalog)) {
                 debug_event('catalog', $type . ' not an instance of Catalog abstract, unable to load', '1');
+
                 return false;
             }
+
             return $catalog;
         }
 
@@ -179,6 +182,7 @@ abstract class Catalog extends database_object
 
         if (!is_resource($handle)) {
             debug_event('catalog', 'Error: Unable to read catalog types directory', '1');
+
             return array();
         }
 
@@ -211,12 +215,14 @@ abstract class Catalog extends database_object
     public static function is_video_file($file)
     {
         $video_pattern = "/\.(" . AmpConfig::get('catalog_video_pattern') . ")$/i";
+
         return preg_match($video_pattern, $file);
     }
 
     public static function is_playlist_file($file)
     {
         $playlist_pattern = "/\.(" . AmpConfig::get('catalog_playlist_pattern') . ")$/i";
+
         return preg_match($playlist_pattern, $file);
     }
 
@@ -247,7 +253,7 @@ abstract class Catalog extends database_object
             if ($type == "song") $type = "id";
             $sql = "(SELECT COUNT(`song_dis`.`id`) FROM `song` AS `song_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `song_dis`.`catalog` " .
                 "WHERE `song_dis`.`" . $type . "`=" . $id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
-        } else if ($type == "video") {
+        } elseif ($type == "video") {
             $sql = "(SELECT COUNT(`video_dis`.`id`) FROM `video` AS `video_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `video_dis`.`catalog` " .
                 "WHERE `video_dis`.`id`=" . $id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
         }
@@ -421,6 +427,7 @@ abstract class Catalog extends database_object
             if (!$insert_id) {
                 Error::add('general', T_('Catalog Insert Failed check debug logs'));
                 debug_event('catalog', 'Insert failed: ' . json_encode($data), 2);
+
                 return false;
             }
 
@@ -449,6 +456,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, $id ? array($id) : null);
 
         $row = Dba::fetch_assoc($db_results);
+
         return $row[0];
     }
 
@@ -464,6 +472,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
 
         $row = Dba::fetch_row($db_results);
+
         return $row[0];
     }
 
@@ -564,9 +573,9 @@ abstract class Catalog extends database_object
 
         if ($offset > 0 && $size > 0) {
             $sql_limit = "LIMIT $offset, $size";
-        } else if ($size > 0) {
+        } elseif ($size > 0) {
             $sql_limit = "LIMIT $size";
-        } else if ($offset > 0) {
+        } elseif ($offset > 0) {
             // MySQL doesn't have notation for last row, so we have to use the largest possible BIGINT value
             // https://dev.mysql.com/doc/refman/5.0/en/select.html
             $sql_limit = "LIMIT $offset, 18446744073709551615";
@@ -597,9 +606,9 @@ abstract class Catalog extends database_object
 
         if ($offset > 0 && $size > 0) {
             $sql_limit = "LIMIT $offset, $size";
-        } else if ($size > 0) {
+        } elseif ($size > 0) {
             $sql_limit = "LIMIT $size";
-        } else if ($offset > 0) {
+        } elseif ($offset > 0) {
             // MySQL doesn't have notation for last row, so we have to use the largest possible BIGINT value
             // https://dev.mysql.com/doc/refman/5.0/en/select.html
             $sql_limit = "LIMIT $offset, 18446744073709551615";
@@ -630,6 +639,7 @@ abstract class Catalog extends database_object
         $art_order = AmpConfig::get('art_order');
         if (!count($art_order)) {
             debug_event('gather_art', 'art_order not set, Catalog::gather_art aborting', 3);
+
             return true;
         }
 

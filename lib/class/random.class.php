@@ -97,7 +97,7 @@ class Random
         if (empty($limit)) {
             $limit = AmpConfig::get('offset_limit') ? AmpConfig::get('offset_limit') : '25';
         }
-        
+
         $sql = "SELECT `song`.`id` FROM `song` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
@@ -338,6 +338,7 @@ class Random
                     $album = new Album($result);
                     $songs = array_merge($songs, $album->get_songs());
                 }
+
                 return $songs;
             break;
             case 'artist':
@@ -346,6 +347,7 @@ class Random
                     $artist = new Artist($result);
                     $songs = array_merge($songs, $artist->get_songs());
                 }
+
                 return $songs;
             break;
             default:

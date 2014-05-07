@@ -391,6 +391,7 @@ class Artist extends database_object
 
         if ($exists) {
             self::$_mapcache[$name][$mbid] = $id;
+
             return $id;
         }
 
@@ -408,6 +409,7 @@ class Artist extends database_object
         $id = Dba::insert_id();
 
         self::$_mapcache[$name][$mbid] = $id;
+
         return $id;
 
     }
@@ -444,7 +446,7 @@ class Artist extends database_object
                 Rating::gc();
                 Userflag::gc();
             } // if updated
-        } else if ($this->mbid != $data['mbid']) {
+        } elseif ($this->mbid != $data['mbid']) {
             $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
             Dba::write($sql, array($data['mbid'], $current_id));
         }
@@ -492,6 +494,7 @@ class Artist extends database_object
     public function update_artist_info($summary, $placeformed, $yearformed)
     {
         $sql = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ? WHERE `id` = ?";
+
         return Dba::write($sql, array($summary, $placeformed, $yearformed, time(), $this->id));
     }
 

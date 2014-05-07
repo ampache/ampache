@@ -83,7 +83,6 @@ class Catalog_local extends Catalog
 
         return Dba::num_rows($db_results);
 
-
     } // is_installed
 
     /**
@@ -178,12 +177,14 @@ class Catalog_local extends Catalog
 
         if (!strlen($path)) {
             Error::add('general', T_('Error: Path not specified'));
+
             return false;
         }
 
         // Make sure that there isn't a catalog with a directory above this one
         if (self::get_from_path($path)) {
             Error::add('general', T_('Error: Defined Path is inside an existing catalog'));
+
             return false;
         }
 
@@ -191,6 +192,7 @@ class Catalog_local extends Catalog
         if (!Core::is_readable($path)) {
             debug_event('catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
             Error::add('general', sprintf(T_('Error: %s is not readable or does not exist'), scrub_out($data['path'])));
+
             return false;
         }
 
@@ -201,11 +203,13 @@ class Catalog_local extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate path ' . $path, 1);
             Error::add('general', sprintf(T_('Error: Catalog with %s already exists'), $path));
+
             return false;
         }
 
         $sql = 'INSERT INTO `catalog_local` (`path`, `catalog_id`) VALUES (?, ?)';
         Dba::write($sql, array($path, $catalog_id));
+
         return true;
     }
 
@@ -240,6 +244,7 @@ class Catalog_local extends Catalog
         if (!is_resource($handle)) {
             debug_event('read', "Unable to open $path", 5);
             Error::add('catalog_add', sprintf(T_('Error: Unable to open %s'), $path));
+
             return false;
         }
 
@@ -247,6 +252,7 @@ class Catalog_local extends Catalog
         if (!chdir($path)) {
             debug_event('read', "Unable to chdir to $path", 2);
             Error::add('catalog_add', sprintf(T_('Error: Unable to change to directory %s'), $path));
+
             return false;
         }
 
@@ -543,6 +549,7 @@ class Catalog_local extends Catalog
         }
 
         UI::update_text('verify_count_' . $this->id, $count);
+
         return $changed;
 
     } // _verify_chunk
@@ -560,6 +567,7 @@ class Catalog_local extends Catalog
             debug_event('catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
             Error::add('general', T_('Catalog Root unreadable, stopping clean'));
             Error::display('general');
+
             return 0;
         }
 
@@ -591,6 +599,7 @@ class Catalog_local extends Catalog
                 $db_results = Dba::write($sql);
             }
         }
+
         return $dead_total;
     }
 
@@ -622,7 +631,6 @@ class Catalog_local extends Catalog
                 debug_event('clean', 'File not found or empty: ' . $results['file'], 5);
                 Error::add('general', sprintf(T_('Error File Not Found or 0 Bytes: %s'), $results['file']));
 
-
                 // Store it in an array we'll delete it later...
                 $dead[] = $results['id'];
 
@@ -631,6 +639,7 @@ class Catalog_local extends Catalog
                 debug_event('clean', $results['file'] . ' is not readable, but does exist', 1);
             }
         }
+
         return $dead;
 
     } //_clean_chunk
@@ -648,6 +657,7 @@ class Catalog_local extends Catalog
         $results = vainfo::clean_tag_info($vainfo->tags, $key, $file);
 
         $results['catalog'] = $this->id;
+
         return Song::insert($results);
     }
 
@@ -691,6 +701,7 @@ class Catalog_local extends Catalog
         $file_date = filemtime($full_file);
         if ($file_date < $this->last_add) {
             debug_event('Check','Skipping ' . $full_file . ' File modify time before last add run','3');
+
             return true;
         }
 
@@ -710,6 +721,7 @@ class Catalog_local extends Catalog
     {
         $info = $this->_get_info();
         $catalog_path = rtrim($info->path, "/");
+
         return( str_replace( $catalog_path . "/", "", $file_path ) );
     }
 

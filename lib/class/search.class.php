@@ -88,7 +88,6 @@ class Search extends playlist_object
             'sql'     => '<'
         );
 
-
         $this->basetypes['boolean'][] = array(
             'name'    => 'true',
             'description' => T_('is true')
@@ -98,7 +97,6 @@ class Search extends playlist_object
             'name'    => 'false',
             'description' => T_('is false')
         );
-
 
         $this->basetypes['text'][] = array(
             'name'     => 'contain',
@@ -150,7 +148,6 @@ class Search extends playlist_object
             'sql'     => 'NOT SOUNDS LIKE'
         );
 
-
         $this->basetypes['boolean_numeric'][] = array(
             'name'    => 'equal',
             'description' => T_('is'),
@@ -163,7 +160,6 @@ class Search extends playlist_object
             'sql'     => '<>'
         );
 
-
         $this->basetypes['boolean_subsearch'][] = array(
             'name'    => 'equal',
             'description' => T_('is'),
@@ -175,7 +171,6 @@ class Search extends playlist_object
             'description' => T_('is not'),
             'sql'     => 'NOT'
         );
-
 
         $this->basetypes['date'][] = array(
             'name'    => 'lt',
@@ -225,7 +220,6 @@ class Search extends playlist_object
                 'type'   => 'text',
                 'widget' => array('input', 'text')
             );
-
 
             $this->types[] = array(
                 'name'   => 'tag',
@@ -515,6 +509,7 @@ class Search extends playlist_object
         $sql = "SELECT `name` FROM `search` WHERE `id` = '$id'";
         $db_results = Dba::read($sql);
         $r = Dba::fetch_assoc($db_results);
+
         return $r['name'];
      }
 
@@ -670,6 +665,7 @@ class Search extends playlist_object
                 return $type['type'];
             }
         }
+
         return false;
     }
 
@@ -718,6 +714,7 @@ class Search extends playlist_object
         $db_results = Dba::write($sql, array($this->name, $this->type, $GLOBALS['user']->id, serialize($this->rules), $this->logic_operator));
         $insert_id = Dba::insert_id();
         $this->id = $insert_id;
+
         return $insert_id;
     }
 
@@ -734,6 +731,7 @@ class Search extends playlist_object
                 'SearchRow.add("' . $rule[0] . '","' .
                 $rule[1] . '","' . $rule[2] . '"); </script>';
         }
+
         return $js;
     }
 
@@ -760,6 +758,7 @@ class Search extends playlist_object
 
         $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `rules` = ?, `logic_operator` = ? WHERE `id` = ?";
         $db_results = Dba::write($sql, array($this->name, $this->type, serialize($this->rules), $this->logic_operator, $this->id));
+
         return $db_results;
     }
 

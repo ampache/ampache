@@ -170,6 +170,7 @@ class Auth
         if (!function_exists('pam_auth')) {
             $results['success']    = false;
             $results['error']    = 'The PAM PHP module is not installed';
+
             return $results;
         }
 
@@ -276,6 +277,7 @@ class Auth
             debug_event('ldap_auth', 'Required config value missing', 1);
             $results['success'] = false;
             $results['error'] = 'Incomplete LDAP config';
+
             return $results;
         }
 
@@ -291,6 +293,7 @@ class Auth
             if (!ldap_bind($ldap_link, $ldap_username, $ldap_password)) {
                 $results['success'] = false;
                 $results['error'] = 'Could not bind to LDAP server.';
+
                 return $results;
             } // If bind fails
 
@@ -314,6 +317,7 @@ class Auth
                             debug_event('ldap_auth', "Failure reading $require_group", 1);
                             $results['success'] = false;
                             $results['error'] = 'The LDAP group could not be read';
+
                             return $results;
                         }
 
@@ -323,6 +327,7 @@ class Auth
                             debug_event('ldap_auth', "No members found in $require_group", 1);
                             $results['success'] = false;
                             $results['error'] = 'Empty LDAP group';
+
                             return $results;
                         }
 
@@ -331,6 +336,7 @@ class Auth
                             debug_event('ldap_auth', "$user_dn is not a member of $require_group",1);
                             $results['success'] = false;
                             $results['error'] = 'LDAP login attempt failed';
+
                             return $results;
                         }
                     }
@@ -374,6 +380,7 @@ class Auth
             $results['success'] = false;
             $results['error']   = 'HTTP auth login attempt failed';
         }
+
         return $results;
     } // http_auth
 
@@ -468,10 +475,10 @@ class Auth
             if ($response->status == Auth_OpenID_CANCEL) {
                 $results['success'] = false;
                 $results['error']   = 'OpenID verification cancelled.';
-            } else if ($response->status == Auth_OpenID_FAILURE) {
+            } elseif ($response->status == Auth_OpenID_FAILURE) {
                 $results['success'] = false;
                 $results['error']   = 'OpenID authentication failed: ' . $response->message;
-            } else if ($response->status == Auth_OpenID_SUCCESS) {
+            } elseif ($response->status == Auth_OpenID_SUCCESS) {
                 // Extract the identity URL and Simple Registration data (if it was returned).
                 $sreg_resp = Auth_OpenID_SRegResponse::fromSuccessResponse($response);
                 $sreg = $sreg_resp->contents();

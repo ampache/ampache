@@ -334,7 +334,7 @@ function show_playlist_select($name,$selected='',$style='')
     $nb_items = Dba::num_rows($db_results);
     $index = 1;
     $already_selected = false;
-    
+
     while ($row = Dba::fetch_assoc($db_results)) {
         $select_txt = '';
         if (!$already_selected && ($row['id'] == $selected || $index == $nb_items)) {
@@ -373,6 +373,7 @@ function xoutput_from_array($array, $callback = false, $type = '')
         return xml_from_array($array, $callback, $type);
     } elseif ($output == 'raw') {
         $outputnode = $_REQUEST['xoutputnode'];
+
         return $array[$outputnode];
     } else {
         return json_from_array($array, $callback, $type);
@@ -488,6 +489,7 @@ function xml_get_header($type)
         "       <key>Show Content Ratings</key><true/>\n" .
         "       <key>Tracks</key>\n" .
         "       <dict>\n";
+
         return $header;
     break;
     case 'xspf':
@@ -499,10 +501,12 @@ function xml_get_header($type)
             "<annotation>" . AmpConfig::get('site_title') . "</annotation>\n" .
             "<info>". AmpConfig::get('web_path') ."</info>\n" .
             "<trackList>\n\n\n\n";
+
         return $header;
     break;
     default:
         $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+
         return $header;
     break;
     }
@@ -519,11 +523,13 @@ function xml_get_footer($type)
         $footer = "      </dict>\n" .
         "</dict>\n" .
         "</plist>\n";
+
         return $footer;
     break;
     case 'xspf':
         $footer = "      </trackList>\n" .
               "</playlist>\n";
+
         return $footer;
     break;
     default:

@@ -468,9 +468,9 @@ class Update
         // won't work.
         if ($current_version < '340002') {
             echo "<p align=\"center\">Database version too old, please upgrade to <a href=\"http://ampache.org/downloads/ampache-3.3.3.5.tar.gz\">Ampache-3.3.3.5</a> first</p>";
+
             return false;
         }
-
 
         $methods = get_class_methods('Update');
 
@@ -492,6 +492,7 @@ class Update
                         self::set_version('db_version', $version['version']);
                     } else {
                         Error::display('update');
+
                         return false;
                     }
                 }
@@ -708,6 +709,7 @@ class Update
     {
         // No matter what remove that random method preference
         Dba::write("DELETE FROM `preference` WHERE `name`='random_method'");
+
         return true;
     }
 
@@ -955,6 +957,7 @@ class Update
     public static function update_340016()
     {
         $sql = "ALTER TABLE `democratic` ADD `base_playlist` INT ( 11 ) UNSIGNED NOT NULL AFTER `name`";
+
         return Dba::write($sql);
     }
 
@@ -1455,6 +1458,7 @@ class Update
     public static function update_360004()
     {
         $sql = "CREATE UNIQUE INDEX `unique_rating` ON `rating` (`user`, `object_type`, `object_id`)";
+
         return Dba::write($sql);
     }
 
@@ -1498,6 +1502,7 @@ class Update
         `logic_operator` varchar(3) CHARACTER SET utf8 DEFAULT NULL,
         PRIMARY KEY (`id`)
         ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8";
+
         return Dba::write($sql);
     }
 
@@ -1547,6 +1552,7 @@ class Update
     public static function update_360009()
     {
         $sql = "ALTER TABLE `tmp_playlist` CHANGE `session` `session` VARCHAR(64)";
+
         return Dba::write($sql);
     }
 
@@ -1559,6 +1565,7 @@ class Update
     public static function update_360010()
     {
         $sql = 'ALTER TABLE `artist` CHANGE `mbid` `mbid` VARCHAR(1369)';
+
         return Dba::write($sql);
     }
 
@@ -1582,6 +1589,7 @@ class Update
             '`type` varchar(255) DEFAULT NULL,' .
             '`time` smallint(5) DEFAULT NULL,' .
             'PRIMARY KEY (`id`), KEY `sid` (`sid`))';
+
         return Dba::write($sql);
     }
 
@@ -1675,6 +1683,7 @@ class Update
             "PRIMARY KEY (`id`)," .
             "UNIQUE KEY `unique_userflag` (`user`,`object_type`,`object_id`)," .
             "KEY `object_id` (`object_id`)) ENGINE = MYISAM";
+
         return Dba::write($sql);
     }
 
@@ -2213,6 +2222,7 @@ class Update
             "`bitrate` int(11) unsigned NOT NULL DEFAULT '128'," .
             "`pid` int(11) unsigned NOT NULL DEFAULT '0'," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
+
         return Dba::write($sql);
     }
 

@@ -45,7 +45,7 @@ switch ($action) {
             if (is_array($oid)) {
                 $oid = $oid[0];
             }
-        
+
             $object = new $type($oid);
             if ($object->id) {
                 $object->format();

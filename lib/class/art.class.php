@@ -166,6 +166,7 @@ class Art extends database_object
     {
         if (strlen($source) < 10) {
             debug_event('Art', 'Invalid image passed', 1);
+
             return false;
         }
 
@@ -175,6 +176,7 @@ class Art extends database_object
              $image = ImageCreateFromString($source);
              if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event('Art', 'Image failed PHP-GD test',1);
+
                 return false;
             }
         }
@@ -204,7 +206,6 @@ class Art extends database_object
 
     } // get
 
-
     /**
      * get_db
      * This pulls the information out from the database, depending
@@ -223,7 +224,7 @@ class Art extends database_object
             if ($results['size'] == 'original') {
                 $this->raw = $results['image'];
                 $this->raw_mime = $results['mime'];
-            } else if (AmpConfig::get('resize_images') &&
+            } elseif (AmpConfig::get('resize_images') &&
                     $results['size'] == '275x275') {
                 $this->thumb = $results['image'];
                 $this->raw_mime = $results['mime'];
@@ -262,6 +263,7 @@ class Art extends database_object
         // Check to make sure we like this image
         if (!self::test_image($source)) {
             debug_event('Art', 'Not inserting image, invalid data passed', 1);
+
             return false;
         }
 
@@ -304,6 +306,7 @@ class Art extends database_object
         // Quick sanity check
         if (!self::test_image($source)) {
             debug_event('Art', 'Not inserting thumbnail, invalid data passed', 1);
+
             return false;
         }
 
@@ -365,29 +368,35 @@ class Art extends database_object
 
         if (!self::test_image($image)) {
             debug_event('Art', 'Not trying to generate thumbnail, invalid data passed', 1);
+
             return false;
         }
 
         if (!function_exists('gd_info')) {
             debug_event('Art','PHP-GD Not found - unable to resize art',1);
+
             return false;
         }
 
         // Check and make sure we can resize what you've asked us to
         if (($type == 'jpg' OR $type == 'jpeg') AND !(imagetypes() & IMG_JPG)) {
             debug_event('Art','PHP-GD Does not support JPGs - unable to resize',1);
+
             return false;
         }
         if ($type == 'png' AND !imagetypes() & IMG_PNG) {
             debug_event('Art','PHP-GD Does not support PNGs - unable to resize',1);
+
             return false;
         }
         if ($type == 'gif' AND !imagetypes() & IMG_GIF) {
             debug_event('Art','PHP-GD Does not support GIFs - unable to resize',1);
+
             return false;
         }
         if ($type == 'bmp' AND !imagetypes() & IMG_WBMP) {
             debug_event('Art','PHP-GD Does not support BMPs - unable to resize',1);
+
             return false;
         }
 
@@ -395,6 +404,7 @@ class Art extends database_object
 
         if (!$source) {
             debug_event('Art','Failed to create Image from string - Source Image is damaged / malformed',1);
+
             return false;
         }
 
@@ -405,6 +415,7 @@ class Art extends database_object
 
         if (!imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $size['width'], $size['height'], $source_size['width'], $source_size['height'])) {
             debug_event('Art','Unable to create resized image',1);
+
             return false;
         }
 
@@ -436,6 +447,7 @@ class Art extends database_object
 
         if (!strlen($data)) {
             debug_event('Art', 'Unknown Error resizing art', 1);
+
             return false;
         }
 
@@ -468,6 +480,7 @@ class Art extends database_object
             $sql = "SELECT * FROM `image` WHERE `object_type`='$type' AND `object_id`='$uid' AND `size`='original'";
             $db_results = Dba::read($sql);
             $row = Dba::fetch_assoc($db_results);
+
             return $row['art'];
         } // came from the db
 
@@ -484,6 +497,7 @@ class Art extends database_object
                 $options['proxy'] = $proxy;
             }
             $request = Requests::get($data['url'], array(), $options);
+
             return $request->body;
         }
 
@@ -492,6 +506,7 @@ class Art extends database_object
             $handle = fopen($data['file'],'rb');
             $image_data = fread($handle,filesize($data['file']));
             fclose($handle);
+
             return $image_data;
         }
 
@@ -545,7 +560,7 @@ class Art extends database_object
                 parent::add_to_cache('art', $key . $row['size'], $row);
                 if ($row['size'] == 'original') {
                     $mime = $row['mime'];
-                } else if ($row['size'] == '275x275' && AmpConfig::get('resize_images')) {
+                } elseif ($row['size'] == '275x275' && AmpConfig::get('resize_images')) {
                     $thumb_mime = $row['mime'];
                 }
             }
@@ -605,6 +620,7 @@ class Art extends database_object
         if (empty($config)) {
             // They don't want art!
             debug_event('Art', 'art_order is empty, skipping art gathering', 3);
+
             return array();
         } elseif (!is_array($config)) {
             $config = array($config);
@@ -669,6 +685,7 @@ class Art extends database_object
         if ($this->get_db()) {
             return array('db' => true);
         }
+
         return array();
     }
 

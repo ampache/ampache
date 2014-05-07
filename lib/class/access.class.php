@@ -102,6 +102,7 @@ class Access
 
         if (!$startn && $startp != '0.0.0.0' && $startp != '::') {
             Error::add('start', T_('Invalid IPv4 / IPv6 Address Entered'));
+
             return false;
         }
         if (!$endn) {
@@ -111,6 +112,7 @@ class Access
         if (strlen(bin2hex($startn)) != strlen(bin2hex($endn))) {
             Error::add('start', T_('IP Address Version Mismatch'));
             Error::add('end', T_('IP Address Version Mismatch'));
+
             return false;
         }
 
@@ -161,6 +163,7 @@ class Access
         if (self::exists($data)) {
             debug_event('ACL Create', 'Error: An ACL equal to the created one already exists. Not adding another one: ' . $data['start'] . ' - ' . $data['end'], 1);
             Error::add('general', T_('Duplicate ACL defined'));
+
             return false;
         }
 
@@ -228,6 +231,7 @@ class Access
             case 'batch_download':
                 if (!function_exists('gzcompress')) {
                     debug_event('access', 'ZLIB extension not loaded, batch download disabled', 3);
+
                     return false;
                 }
                 if (AmpConfig::get('allow_zip_download') AND $GLOBALS['user']->has_access('25')) {
@@ -420,6 +424,7 @@ class Access
         if ($this->user == '-1') { return T_('All'); }
 
         $user = new User($this->user);
+
         return $user->fullname . " (" . $user->username . ")";
     }
 

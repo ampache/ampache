@@ -32,7 +32,7 @@
     <?php }?>
 </div>
 <script language="javascript" type="text/javascript">
-$(document).ready(function(){
+$(document).ready(function () {
     $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
 });
 </script>

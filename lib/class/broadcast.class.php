@@ -68,6 +68,7 @@ class Broadcast extends database_object
     public function delete()
     {
         $sql = "DELETE FROM `broadcast` WHERE `id` = ?";
+
         return Dba::write($sql, array($this->id));
     }
 
@@ -77,6 +78,7 @@ class Broadcast extends database_object
             $sql = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
             $params = array($GLOBALS['user']->id, $name, $description);
             Dba::write($sql, $params);
+
             return Dba::insert_id();
         }
 
@@ -92,6 +94,7 @@ class Broadcast extends database_object
         $sql = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? " .
             "WHERE `id` = ?";
         $params = array($data['name'], $data['description'], !empty($data['private']), $this->id);
+
         return Dba::write($sql, $params);
     }
 
@@ -156,6 +159,7 @@ class Broadcast extends database_object
         $link = "<div class=\"broadcast-action\">";
         $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . UI::get_icon('broadcast', T_('Broadcast')) . "</a>";
         $link .= "</div>";
+
         return $link;
     }
 
@@ -165,6 +169,7 @@ class Broadcast extends database_object
         $link .= Ajax::button('?page=player&action=unbroadcast&broadcast_id=' . $id, 'broadcast', T_('Unbroadcast'), 'broadcast_action');
         $link .= "</div>";
         $link .= "<div class=\"broadcast-info\">(<span id=\"broadcast_listeners\">0</span>)</div>";
+
         return $link;
     }
 
@@ -177,6 +182,7 @@ class Broadcast extends database_object
         while ($results = Dba::fetch_assoc($db_results)) {
             $broadcasts[] = $results['id'];
         }
+
         return $broadcasts;
     }
 

@@ -49,6 +49,7 @@ class Stream_Playlist
 
             if (!Session::exists('stream', $this->id)) {
                 debug_event('stream_playlist', 'Session::exists failed', 2);
+
                 return false;
             }
 
@@ -68,7 +69,7 @@ class Stream_Playlist
     private function _add_url($url)
     {
         debug_event("stream_playlist.class.php", "Adding url {".json_encode($url)."}...", 5);
-        
+
         $this->urls[] = $url;
 
         $sql = 'INSERT INTO `stream_playlist` ';
@@ -95,6 +96,7 @@ class Stream_Playlist
         $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` ' .
             'LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` ' .
             'WHERE `session`.`id` IS NULL';
+
         return Dba::write($sql);
     }
 
@@ -179,6 +181,7 @@ class Stream_Playlist
     {
         if (!count($this->urls)) {
             debug_event('stream_playlist', 'Error: Empty URL array for ' . $this->id, 2);
+
             return false;
         }
 

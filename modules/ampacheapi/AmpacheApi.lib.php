@@ -134,6 +134,7 @@ class AmpacheApi
 
         if (!$results['auth']) {
             $this->set_state('error');
+
             return false;
         }
         $this->api_auth = $results['auth'];
@@ -157,6 +158,7 @@ class AmpacheApi
 
         if (!is_array($config)) {
             trigger_error('AmpacheApi::configure received a non-array value');
+
             return false;
         }
 
@@ -272,6 +274,7 @@ class AmpacheApi
         $data = file_get_contents($url);
         $this->raw_response = $data;
         $this->parse_response($data);
+
         return $this->get_response();
     }
 
@@ -309,6 +312,7 @@ class AmpacheApi
 
         xml_parser_free($this->XML_parser);
         $this->_debug('PARSE RESPONSE', json_encode($this->XML_results));
+
         return true;
     }
 
@@ -321,7 +325,6 @@ class AmpacheApi
     {
         return $this->XML_results;
     }
-
 
     ////////////////////////// XML PARSER FUNCTIONS ////////////////////////////
 
@@ -355,7 +358,6 @@ class AmpacheApi
             $this->XML_results[$this->XML_position][$this->XML_currentTag] = $cdata;
         }
 
-
     } // XML_cdata
 
     public function XML_start_element($parser,$tag,$attributes)
@@ -387,7 +389,6 @@ class AmpacheApi
             $this->XML_currentTag = false;
             $this->XML_position++;
         }
-
 
     } // end_element
 }

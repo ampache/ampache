@@ -88,6 +88,7 @@ class Waveform
                                 $tfp = fopen($tmpfile, 'wb');
                                 if (!is_resource($tfp)) {
                                     debug_event('waveform', "Failed to open " . $tmpfile, 3);
+
                                     return null;
                                 }
 
@@ -95,6 +96,7 @@ class Waveform
                                 $fp = $transcoder['handle'];
                                 if (!is_resource($fp)) {
                                     debug_event('waveform', "Failed to open " . $song->file . " for waveform.", 3);
+
                                     return null;
                                 }
 
@@ -136,6 +138,7 @@ class Waveform
     {
         $byte1 = hexdec(bin2hex($byte1));
         $byte2 = hexdec(bin2hex($byte2));
+
         return ($byte1 + ($byte2*256));
     }
 
@@ -146,6 +149,7 @@ class Waveform
     protected static function html2rgb($input)
     {
         $input=($input[0]=="#")?substr($input, 1,6):substr($input, 0,6);
+
         return array(
             hexdec(substr($input, 0, 2)),
             hexdec(substr($input, 2, 2)),
@@ -285,12 +289,14 @@ class Waveform
 
         $imgdata = ob_get_contents();
         ob_clean ();
+
         return $imgdata;
     }
 
     protected static function save_to_db($song_id, $waveform)
     {
         $sql = "UPDATE `song_data` SET `waveform` = ? WHERE `song_id` = ?";
+
         return Dba::write($sql, array($waveform, $song_id));
     }
 

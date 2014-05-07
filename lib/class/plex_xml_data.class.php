@@ -82,6 +82,7 @@ class Plex_XML_Data
         foreach ($ids as $id) {
             $ampids[] = self::getAmpacheId($id);
         }
+
         return $ampids;
     }
 
@@ -123,6 +124,7 @@ class Plex_XML_Data
     public static function getServerPort()
     {
         $port = $_SERVER['SERVER_PORT'];
+
         return $port?:'32400';
     }
 
@@ -132,6 +134,7 @@ class Plex_XML_Data
         if (!$address) {
             $address = self::getServerAddress();
         }
+
         return $address;
     }
 
@@ -141,6 +144,7 @@ class Plex_XML_Data
         if (!$port) {
             $port = self::getServerPort();
         }
+
         return $port;
     }
 
@@ -173,6 +177,7 @@ class Plex_XML_Data
     {
         $response = self::createResponse($version);
         $response->addAttribute('status', 'failed');
+
         return $response;
     }
 
@@ -180,12 +185,14 @@ class Plex_XML_Data
     {
         $response = self::createResponse($version);
         $response->addAttribute('status', 'ok');
+
         return $response;
     }
 
     public static function createContainer()
     {
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><MediaContainer/>');
+
         return $response;
     }
 
@@ -195,6 +202,7 @@ class Plex_XML_Data
         $response->addAttribute('identifier', 'com.plexapp.plugins.library');
         $response->addAttribute('mediaTagPrefix', '/system/bundle/media/flags/');
         $response->addAttribute('mediaTagVersion', '1365384731');
+
         return $response;
     }
 
@@ -202,6 +210,7 @@ class Plex_XML_Data
     {
         $response = self::createContainer();
         $response->addAttribute('content', 'plugins');
+
         return $response;
     }
 
@@ -211,6 +220,7 @@ class Plex_XML_Data
         $response->addAttribute('noHistory', '0');
         $response->addAttribute('replaceParent', '0');
         $response->addAttribute('identifier', 'com.plexapp.system');
+
         return $response;
     }
 
@@ -218,6 +228,7 @@ class Plex_XML_Data
     {
         $response = self::createContainer();
         $response->addAttribute('identifier', 'com.plexapp.system.accounts');
+
         return $response;
     }
 
@@ -267,6 +278,7 @@ class Plex_XML_Data
         if (!$uniqid) {
             $uniqid = self::getServerAddress();
         }
+
         return self::uuidFromKey($uniqid);
     }
 
@@ -926,6 +938,7 @@ class Plex_XML_Data
         if (!empty($langs)) {
             self::addLanguages($agent, $langs);
         }
+
         return $agent;
     }
 

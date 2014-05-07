@@ -117,6 +117,7 @@ class Userflag extends database_object
         }
 
         parent::add_to_cache($key, $this->id, $flagged);
+
         return $flagged;
 
     }
@@ -173,6 +174,7 @@ class Userflag extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $sql .= " ORDER BY `date` DESC ";
+
         return $sql;
     }
     /**

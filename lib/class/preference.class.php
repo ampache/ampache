@@ -389,6 +389,7 @@ class Preference extends database_object
     {
         if (isset($_SESSION['userdata']['preferences']) && is_array($_SESSION['userdata']['preferences']) AND $_SESSION['userdata']['uid'] == $uid) {
             AmpConfig::set_by_array($_SESSION['userdata']['preferences'], true);
+
             return true;
         }
 
@@ -479,6 +480,5 @@ class Preference extends database_object
         $_SESSION['userdata']['uid'] = $user_id;
 
     } // init
-
 
 } // end Preference class
