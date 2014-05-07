@@ -382,9 +382,9 @@ abstract class Catalog extends database_object
         $hours = $hours % 24;
 
         $time_text = "$days ";
-        $time_text .= T_ngettext('day','days',$days);
+        $time_text .= ngettext('day','days',$days);
         $time_text .= ", $hours ";
-        $time_text .= T_ngettext('hour','hours',$hours);
+        $time_text .= ngettext('hour','hours',$hours);
 
         $results['time_text'] = $time_text;
 
@@ -1032,7 +1032,7 @@ abstract class Catalog extends database_object
 
         UI::show_box_top();
         echo "<strong>";
-        printf (T_ngettext('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total);
+        printf (ngettext('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total);
         echo "</strong><br />\n";
         UI::show_box_bottom();
         ob_flush();
@@ -1201,7 +1201,7 @@ abstract class Catalog extends database_object
             if (!$playlist_id) {
                 return array(
                     'success' => false,
-                    'error' => 'Failed to create playlist.',
+                    'error' => T_('Failed to create playlist.'),
                 );
             }
 
@@ -1218,7 +1218,7 @@ abstract class Catalog extends database_object
 
         return array(
             'success' => false,
-            'error' => 'No valid songs found in playlist file.'
+            'error' => T_('No valid songs found in playlist file.')
         );
     }
 

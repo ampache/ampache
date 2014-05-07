@@ -123,12 +123,12 @@ switch ($_REQUEST['action']) {
 
         if (count($song)) {
             $catalog->remove_songs($song);
-            $body = T_ngettext('Song Removed', 'Songs Removed', count($song));
+            $body = ngettext('%d Song Removed', '%d Songs Removed', count($song));
         } else {
             $body = T_('No Songs Removed');
         }
         $url    = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title    = T_ngettext('Disabled Song Processed','Disabled Songs Processed',count($song));
+        $title    = ngettext('%d Disabled Song Processed', '%d Disabled Songs Processed', count($song));
         show_confirmation($title,$body,$url);
     break;
     case 'clean_all_catalogs':
