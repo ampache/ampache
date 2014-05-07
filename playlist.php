@@ -98,12 +98,7 @@ switch ($_REQUEST['action']) {
             $title = T_('Playlist Imported');
             $body  = basename($_FILES['filename']['name']);
             $body .= '<br />' .
-                sprintf(
-                T_ngettext(
-                'Successfully imported playlist with %d song.',
-                'Successfully imported playlist with %d songs.',
-                $result['count']),
-                $result['count']);
+                sprintf(ngettext('Successfully imported playlist with %d song.', 'Successfully imported playlist with %d songs.', $result['count']), $result['count']);
         } else {
             $url = 'show_import_playlist';
             $title = T_('Playlist Not Imported');

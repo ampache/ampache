@@ -58,34 +58,33 @@ foreach ($data as $row) {
 
     if ($is_allowed || $has_allowed_time) {
         $interval = intval(time() - $row['date']);
-
+		
         if ($interval < 60) {
-            $unit = 'seconds';
+            $unit = ngettext('second ago', 'seconds ago', $interval);
         } else if ($interval < 3600) {
             $interval = floor($interval / 60);
-            $unit = 'minutes';
+            $unit = ngettext('minute ago', 'minutes ago', $interval);
         } else if ($interval < 86400) {
             $interval = floor($interval / 3600);
-            $unit = 'hours';
+            $unit = ngettext('hour ago', 'hours ago', $interval);
         } else if ($interval < 604800) {
             $interval = floor($interval / 86400);
-            $unit = 'days';
+            $unit = ngettext('day ago', 'days ago', $interval);
         } else if ($interval < 2592000) {
             $interval = floor($interval / 604800);
-            $unit = 'weeks';
+            $unit = ngettext('week ago', 'weeks ago', $interval);
         } else if ($interval < 31556926) {
             $interval = floor($interval / 2592000);
-            $unit = 'months';
+            $unit = ngettext('month ago', 'months ago', $interval);
         } else if ($interval < 631138519) {
             $interval = floor($interval / 31556926);
-            $unit = 'years';
+            $unit = ngettext('year ago', 'years ago', $interval);
         } else {
             $interval = floor($interval / 315569260);
-            $unit = 'decades';
+            $unit = ngettext('decade ago', 'decades ago', $interval);
         }
 
-        // I wonder how smart gettext is?
-        $time_string = sprintf(T_ngettext('%d ' . rtrim($unit, 's') . ' ago', '%d ' . $unit . ' ago', $interval), $interval);
+        $time_string = sprintf('%d ' . (T_ngettext($unit, $unit, $interval)), $interval);
     }
     $song->format();
 ?>
