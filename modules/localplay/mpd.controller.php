@@ -532,13 +532,26 @@ class AmpacheMpd extends localplay_controller
         $array['volume']    = $this->_mpd->status['volume'];
         $array['repeat']    = $this->_mpd->status['repeat'];
         $array['random']    = $this->_mpd->status['random'];
-        $array['track']        = $track+1;
+        $array['track']     = $track + 1;
 
-        $url_data = $this->parse_url($this->_mpd->playlist[$track]['file']);
-        $song = new Song($url_data['oid']);
-        $array['track_title']     = $song->title;
-        $array['track_artist']     = $song->get_artist_name();
-        $array['track_album']    = $song->get_album_name();
+        $playlist_item = $this->_mpd->playlist[$track];
+        
+        $url_data = $this->parse_url($playlist_item['file']);
+        
+        debug_event('mdp.controller.php', 'Status result. Current song ('. $track . ') info: ' . json_encode($playlist_item), '5');
+        
+        if (count($url_data) > 0 && !empty($url_data['oid'])) {
+            $song = new Song($url_data['oid']);
+            $array['track_title'] = $song->title;
+            $array['track_artist'] = $song->get_artist_name();
+            $array['track_album'] = $song->get_album_name();
+        } else if (!empty($playlist_item['Title'])) {
+            $array['track_title'] = $playlist_item['Title'];
+        } else if (!empty($playlist_item['Name'])) {
+            $array['track_title'] = $playlist_item['Name'];
+        } else {
+            $array['track_title'] = $playlist_item['file'];
+        }
 
         return $array;
 
