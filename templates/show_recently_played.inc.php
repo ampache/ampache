@@ -84,7 +84,6 @@ foreach ($data as $row) {
             $unit = ngettext('decade ago', 'decades ago', $interval);
         }
 
-        // I wonder how smart gettext is?
         $time_string = sprintf('%d ' . (T_ngettext($unit, $unit, $interval)), $interval);
     }
     $song->format();
