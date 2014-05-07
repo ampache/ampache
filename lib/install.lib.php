@@ -50,6 +50,7 @@ function split_sql($sql)
         if (!empty($sql)) {
                 $ret[] = $sql;
         }
+
         return($ret);
 } // split_sql
 
@@ -81,6 +82,7 @@ function install_check_status($configfile)
 
     if (!Dba::check_database()) {
         Error::add('general', T_('Unable to connect to database, check your ampache config'));
+
         return false;
     }
 
@@ -89,6 +91,7 @@ function install_check_status($configfile)
 
     if (!$db_results) {
         Error::add('general', T_('Unable to query database, check your ampache config'));
+
         return false;
     }
 
@@ -96,10 +99,12 @@ function install_check_status($configfile)
         return true;
     } else {
         Error::add('general', T_('Existing Database detected, unable to continue installation'));
+
         return false;
     }
 
     /* Defaut to no */
+
     return false;
 
 } // install_check_status
@@ -117,11 +122,13 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false,
 
     if (count($matches)) {
         Error::add('general', T_('Error: Invalid database name.'));
+
         return false;
     }
 
     if (!Dba::check_database()) {
         Error::add('general', sprintf(T_('Error: Unable to make database connection: %s'), Dba::error()));
+
         return false;
     }
 
@@ -131,10 +138,11 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false,
     if ($db_exists) {
         if ($use_existing_db) {
             $create_db = false;
-        } else if ($overwrite) {
+        } elseif ($overwrite) {
             Dba::write('DROP DATABASE `' . $database . '`');
         } else {
             Error::add('general', T_('Error: Database already exists and overwrite not checked'));
+
             return false;
         }
     }
@@ -142,6 +150,7 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false,
     if ($create_db) {
         if (!Dba::write('CREATE DATABASE `' . $database . '`')) {
             Error::add('general', sprintf(T_('Error: Unable to create database: %s'), Dba::error()));
+
             return false;
         }
     }
@@ -159,6 +168,7 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false,
         $sql .= "IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";
         if (!Dba::write($sql)) {
             Error::add('general', sprintf(T_('Error: Unable to create user %1$s with permissions to %2$s on %3$s: %4$s'), $db_user, $database, $db_host, Dba::error()));
+
             return false;
         }
     } // end if we are creating a user
@@ -206,6 +216,7 @@ function install_create_config($download = false)
     // Connect to the DB
     if (!Dba::check_database()) {
         Error::add('general', T_("Database Connection Failed Check Hostname, Username and Password"));
+
         return false;
     }
 
@@ -215,11 +226,13 @@ function install_create_config($download = false)
     if (!$download) {
         if (!check_config_writable()) {
             Error::add('general', T_('Config file is not writable'));
+
             return false;
         } else {
             // Given that $final is > 0, we can ignore lazy comparison problems
             if (!file_put_contents($config_file, $final)) {
                 Error::add('general', T_('Error writing config file'));
+
                 return false;
             }
         }
@@ -241,21 +254,25 @@ function install_create_account($username, $password, $password2)
 {
     if (!strlen($username) OR !strlen($password)) {
         Error::add('general', T_('No Username/Password specified'));
+
         return false;
     }
 
     if ($password !== $password2) {
         Error::add('general', T_('Passwords do not match'));
+
         return false;
     }
 
     if (!Dba::check_database()) {
         Error::add('general', sprintf(T_('Database connection failed: %s'), Dba::error()));
+
         return false;
     }
 
     if (!Dba::check_database_inserted()) {
         Error::add('general', sprintf(T_('Database select failed: %s'), Dba::error()));
+
         return false;
     }
 
@@ -266,6 +283,7 @@ function install_create_account($username, $password, $password2)
 
     if (!$insert_id) {
         Error::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));
+
         return false;
     }
 

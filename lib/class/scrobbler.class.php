@@ -79,6 +79,7 @@ class scrobbler
         $as_socket = fsockopen($this->scrobble_host, 80, $errno, $errstr, 2);
         if (!$as_socket) {
             $this->error_msg = $errstr;
+
             return false;
         }
 
@@ -100,6 +101,7 @@ class scrobbler
         $split_response = preg_split("/\r\n\r\n/", $buffer);
         if (!isset($split_response[1])) {
             $this->error_msg = 'Did not receive a valid response';
+
             return false;
         }
         $response = explode("\n", $split_response[1]);
@@ -111,18 +113,22 @@ class scrobbler
         }
         if (substr($response[0], 0, 6) == 'FAILED') {
             $this->error_msg = substr($response[0], 7);
+
             return false;
         }
         if (substr($response[0], 0, 7) == 'BADUSER') {
             $this->error_msg = 'Invalid Username';
+
             return false;
         }
         if (substr($response[0],0,7) == 'BADTIME') {
             $this->error_msg = 'Your time is too far off from the server, or your PHP timezone is incorrect';
+
             return false;
         }
         if (substr($response[0], 0, 6) == 'UPDATE') {
             $this->error_msg = 'You need to update your client: '.substr($response[0], 7);
+
             return false;
         }
 
@@ -134,11 +140,13 @@ class scrobbler
         } else {
             $this->error_msg = "Invalid POST URL returned, unable to continue. Sent:\n$get_string\n----\nReceived:\n" . $buffer .
                 "\n---------\nExpected:" . print_r($response, true);
+
             return false;
         }
 
         // Remove any extra junk around the challenge
         $data['challenge'] = trim($response[1]);
+
         return $data;
 
     } // handshake
@@ -153,6 +161,7 @@ class scrobbler
     {
         if ($length < 30) {
             debug_event('Scrobbler',"Not queuing track, too short",'5');
+
             return false;
         }
 
@@ -165,6 +174,7 @@ class scrobbler
         $newtrack['time'] = $timestamp;
 
         $this->queued_tracks[$timestamp] = $newtrack;
+
         return true;
 
     } // queue_track
@@ -179,6 +189,7 @@ class scrobbler
         // Check and make sure that we've got some queued tracks
         if (!count($this->queued_tracks)) {
             $this->error_msg = "No tracks to submit";
+
             return false;
         }
 
@@ -199,6 +210,7 @@ class scrobbler
 
         if (!trim($this->submit_host) || !$this->submit_port) {
             $this->reset_handshake = true;
+
             return false;
         }
 
@@ -207,6 +219,7 @@ class scrobbler
         if (!$as_socket) {
             $this->error_msg = $errstr;
             $this->reset_handshake = true;
+
             return false;
         }
 
@@ -232,6 +245,7 @@ class scrobbler
         if (!isset($split_response[1])) {
             $this->error_msg = 'Did not receive a valid response';
             $this->reset_handshake = true;
+
             return false;
         }
         $response = explode("\n", $split_response[1]);
@@ -239,26 +253,31 @@ class scrobbler
             $this->error_msg = 'Unknown error submitting tracks'.
                       "\nDebug output:\n".$buffer;
             $this->reset_handshake = true;
+
             return false;
         }
         if (substr($response[0], 0, 6) == 'FAILED') {
             $this->error_msg = $response[0];
             $this->reset_handshake = true;
+
             return false;
         }
         if (substr($response[0], 0, 7) == 'BADAUTH') {
             $this->error_msg = 'Invalid username/password (' . trim($response[0]) . ')';
+
             return false;
         }
         if (substr($response[0],0,10) == 'BADSESSION') {
             $this->error_msg = 'Invalid Session passed (' . trim($response[0]) . ')';
             $this->reset_handshake = true;
+
             return false;
         }
         if (substr($response[0], 0, 2) != 'OK') {
             $this->error_msg = 'Response Not ok, unknown error'.
                       "\nDebug output:\n".$buffer;
             $this->reset_handshake = true;
+
             return false;
         }
 

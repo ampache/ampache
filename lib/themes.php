@@ -33,6 +33,7 @@ function get_themes()
 
     if (!is_resource($handle)) {
          debug_event('theme', 'Failed to open /themes directory', 2);
+
          return array();
     }
 
@@ -71,6 +72,7 @@ function get_theme($name)
     $config_file = AmpConfig::get('prefix') . "/themes/" . $name . "/theme.cfg.php";
     $results = parse_ini_file($config_file);
     $results['path'] = $name;
+
     return $results;
 
 } // get_theme

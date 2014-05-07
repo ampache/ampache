@@ -97,6 +97,7 @@ abstract class localplay_controller
         foreach ($primary_array as $pkey) {
             if ($data[$pkey]) {
                 $data['primary_key'] = $pkey;
+
                 return $data;
             }
 

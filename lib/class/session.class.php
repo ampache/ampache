@@ -46,6 +46,7 @@ class Session
     {
         if (!Dba::dbh()) {
             debug_event('session', 'Could not start session, no database connection', 1);
+
             return false;
         }
 
@@ -231,6 +232,7 @@ class Session
 
         if (!$db_results) {
             debug_event('session', 'Session creation failed', '1');
+
             return false;
         }
 

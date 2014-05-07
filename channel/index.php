@@ -110,5 +110,6 @@ function output_header($ch, $header)
     if (!empty($th)) {
         header($th);
     }
+
     return strlen($header);
 }

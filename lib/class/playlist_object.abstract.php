@@ -68,5 +68,4 @@ abstract class playlist_object extends database_object
 
     } // has_access
 
-
 } // end playlist_object

@@ -289,10 +289,12 @@ class AmpacheMpd extends localplay_controller
 
         if (!$this->_mpd->PlAdd($url->url)) {
             debug_event('mpd', 'add_url failed to add: ' . json_encode($url), 1);
+
             return false;
         }
 
         $this->_add_count++;
+
         return true;
     }
 
@@ -346,6 +348,7 @@ class AmpacheMpd extends localplay_controller
         $this->stop();
         sleep(2);
         $this->play();
+
         return true;
 
     } // skip
@@ -535,19 +538,19 @@ class AmpacheMpd extends localplay_controller
         $array['track']     = $track + 1;
 
         $playlist_item = $this->_mpd->playlist[$track];
-        
+
         $url_data = $this->parse_url($playlist_item['file']);
-        
+
         debug_event('mdp.controller.php', 'Status result. Current song ('. $track . ') info: ' . json_encode($playlist_item), '5');
-        
+
         if (count($url_data) > 0 && !empty($url_data['oid'])) {
             $song = new Song($url_data['oid']);
             $array['track_title'] = $song->title;
             $array['track_artist'] = $song->get_artist_name();
             $array['track_album'] = $song->get_album_name();
-        } else if (!empty($playlist_item['Title'])) {
+        } elseif (!empty($playlist_item['Title'])) {
             $array['track_title'] = $playlist_item['Title'];
-        } else if (!empty($playlist_item['Name'])) {
+        } elseif (!empty($playlist_item['Name'])) {
             $array['track_title'] = $playlist_item['Name'];
         } else {
             $array['track_title'] = $playlist_item['file'];

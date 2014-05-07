@@ -51,8 +51,8 @@ class XML_Data
      *
      * This takes an int and changes the offset
      *
-     * @param    integer    $offset    (description here...)
-     * @return    void
+     * @param  integer $offset (description here...)
+     * @return void
      */
     public static function set_offset($offset)
     {
@@ -66,8 +66,8 @@ class XML_Data
      *
      * This sets the limit for any ampache transactions
      *
-     * @param    integer    $limit    (description here...)
-     * @return    void
+     * @param  integer $limit (description here...)
+     * @return void
      */
     public static function set_limit($limit)
     {
@@ -83,8 +83,8 @@ class XML_Data
      *
      * This sets the type of XML_Data we are working on
      *
-     * @param    string    $type    XML_Data type
-     * @return    void
+     * @param  string $type XML_Data type
+     * @return void
      */
     public static function set_type($type)
     {
@@ -100,13 +100,14 @@ class XML_Data
      * This generates a standard XML Error message
      * nothing fancy here...
      *
-     * @param    integer    $code    Error code
-     * @param    string    $string    Error message
-     * @return    string    return error message xml
+     * @param  integer $code   Error code
+     * @param  string  $string Error message
+     * @return string  return error message xml
      */
     public static function error($code,$string)
     {
         $string = self::_header() . "\t<error code=\"$code\"><![CDATA[$string]]></error>" . self::_footer();
+
         return $string;
 
     } // error
@@ -116,9 +117,9 @@ class XML_Data
      *
      * This takes two values, first the key second the string
      *
-     * @param    string    $key    (description here...)
-     * @param    string    $string    xml data
-     * @return    string    return xml
+     * @param  string $key    (description here...)
+     * @param  string $string xml data
+     * @return string return xml
      */
     public static function single_string($key, $string='')
     {
@@ -140,7 +141,7 @@ class XML_Data
      * This returns the header
      *
      * @see    _header()
-     * @return    string    return xml
+     * @return string return xml
      */
     public static function header()
     {
@@ -154,7 +155,7 @@ class XML_Data
      * This returns the footer
      *
      * @see    _footer()
-     * @return    string    return xml
+     * @return string return xml
      */
     public static function footer()
     {
@@ -191,9 +192,9 @@ class XML_Data
      *
      * This will build an xml document from a key'd array,
      *
-     * @param    array    $array    (description here...)
-     * @param    boolean    $callback    (description here...)
-     * @return    string    return xml
+     * @param  array   $array    (description here...)
+     * @param  boolean $callback (description here...)
+     * @return string  return xml
      */
     public static function keyed_array($array,$callback='')
     {
@@ -231,8 +232,8 @@ class XML_Data
      *
      * This returns tags to the user, in a pretty xml document with the information
      *
-     * @param    array    $tags    (description here...)
-     * @return    string    return xml
+     * @param  array  $tags (description here...)
+     * @return string return xml
      */
     public static function tags($tags)
     {
@@ -268,8 +269,8 @@ class XML_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param    array    $artists    (description here...)
-     * @return    string    return xml
+     * @param  array  $artists (description here...)
+     * @return string return xml
      */
     public static function artists($artists)
     {
@@ -314,8 +315,8 @@ class XML_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param    array    $albums    (description here...)
-     * @return    string    return xml
+     * @param  array  $albums (description here...)
+     * @return string return xml
      */
     public static function albums($albums)
     {
@@ -367,8 +368,8 @@ class XML_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param    array    $playlists    (description here...)
-     * @return    string    return xml
+     * @param  array  $playlists (description here...)
+     * @return string return xml
      */
     public static function playlists($playlists)
     {
@@ -391,7 +392,6 @@ class XML_Data
                 "\t<items>$item_total</items>\n" .
                 "\t<type>$playlist->type</type>\n" .
                 "</playlist>\n";
-
 
         } // end foreach
 
@@ -466,8 +466,8 @@ class XML_Data
      *
      * This builds the xml document for displaying video objects
      *
-     * @param    array    $videos    (description here...)
-     * @return    string    return xml
+     * @param  array  $videos (description here...)
+     * @return string return xml
      */
     public static function videos($videos)
     {
@@ -504,8 +504,8 @@ class XML_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param    array    $object_ids    Object IDs
-     * @return    string    return xml
+     * @param  array  $object_ids Object IDs
+     * @return string return xml
      */
     public static function democratic($object_ids=array())
     {
@@ -563,19 +563,18 @@ class XML_Data
      *
      * (description here...)
      *
-     * @param    array    $data    (descriptiong here...)
-     * @param    string    $title    RSS feed title
-     * @param    string    $description    (not use yet?)
-     * @param    string    $date    publish date
-     * @return    string    RSS feed xml
+     * @param  array  $data        (descriptiong here...)
+     * @param  string $title       RSS feed title
+     * @param  string $description (not use yet?)
+     * @param  string $date        publish date
+     * @return string RSS feed xml
      */
     public static function rss_feed($data,$title,$description,$date)
     {
         $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t" .
             "<pubDate>" . date("r",$date) . "</pubDate>\n";
 
-        // Pass it to the keyed array xml function
-        foreach ($data as $item) {
+        // Pass it to the keyed array xml function foreach ($data as $item) {
             // We need to enclose it in an item tag
             $string .= self::keyed_array(array('item'=>$item),1);
         }
@@ -592,7 +591,7 @@ class XML_Data
      * this returns a standard header, there are a few types
      * so we allow them to pass a type if they want to
      *
-     * @return    string    Header xml tag.
+     * @return string Header xml tag.
      */
     private static function _header()
     {
@@ -640,7 +639,7 @@ class XML_Data
      *
       * this returns the footer for this document, these are pretty boring
      *
-     * @return    string    Footer xml tag.
+     * @return string Footer xml tag.
      */
     private static function _footer()
     {
@@ -658,7 +657,6 @@ class XML_Data
                 $footer = "\n</root>\n";
             break;
         } // end switch on type
-
 
         return $footer;
 

@@ -172,6 +172,7 @@ class Plugin
     public static function is_installed($plugin_name)
     {
         /* All we do is check the version */
+
         return self::get_plugin_version($plugin_name);
 
     } // is_installed
@@ -225,6 +226,7 @@ class Plugin
     public function load($user)
     {
         $user->set_preferences();
+
         return $this->_plugin->load($user);
     }
 

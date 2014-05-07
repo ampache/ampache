@@ -20,7 +20,7 @@
  *
  */
 
-require_once('../../lib/class/plex_xml_data.class.php');
+require_once '../../lib/class/plex_xml_data.class.php';
 
 $ow_config = array(
     'http_host' => Plex_XML_Data::getServerAddress() . ':' . Plex_XML_Data::getServerPort(),

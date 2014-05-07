@@ -60,6 +60,7 @@ class Query
             } else {
                 $this->id = 'nocache';
             }
+
             return true;
         }
 
@@ -72,10 +73,12 @@ class Query
 
         if ($results = Dba::fetch_assoc($db_results)) {
             $this->_state = unserialize($results['data']);
+
             return true;
         }
 
         Error::add('browse', T_('Browse not found or expired, try reloading the page'));
+
         return false;
     }
 
@@ -337,6 +340,7 @@ class Query
                 }
             }
         }
+
         return $raw;
     }
 
@@ -654,7 +658,7 @@ class Query
 
     } // set_offset
 
-    public function set_catalog( $catalog_number )
+    public function set_catalog($catalog_number)
     {
         $this->catalog = $catalog_number;
         debug_event("Catalog", "set catalog id: " . $this->catalog, "5");
@@ -775,6 +779,7 @@ class Query
             $row = Dba::fetch_assoc($db_results);
 
             $this->_cache = self::_unserialize($row['object_data']);
+
             return $this->_cache;
         } else {
             $objects = $this->get_objects();
@@ -910,6 +915,7 @@ class Query
     private function get_select()
     {
         $select_string = implode($this->_state['select'], ", ");
+
         return $select_string;
 
     } // get_select
@@ -922,6 +928,7 @@ class Query
     private function get_base_sql()
     {
         $sql = str_replace("%%SELECT%%", $this->get_select(), $this->_state['base']);
+
         return $sql;
 
     } // get_base_sql

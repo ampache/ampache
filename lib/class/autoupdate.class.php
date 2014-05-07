@@ -60,11 +60,14 @@ class AutoUpdate
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
             if ($request->status_code != 200) {
                 debug_event('autoupdate', 'Github API request ' . $url . ' failed with http code ' . $request->status_code, '1');
+
                 return;
             }
+
             return json_decode($request->body);
         } catch (Exception $e) {
             debug_event('autoupdate', 'Request error: ' . $e->getMessage(), '1');
+
             return "";
         }
     }

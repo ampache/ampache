@@ -83,7 +83,6 @@ class Catalog_googlemusic extends Catalog
 
         return Dba::num_rows($db_results);
 
-
     } // is_installed
 
     /**
@@ -110,7 +109,6 @@ class Catalog_googlemusic extends Catalog
         $fields['password']      = array('description' => T_('Password'),'type'=>'password');
         // Device ID not required for streaming access
         //$fields['deviceid']      = array('description' => T_('Device ID'),'type'=>'textbox');
-
         return $fields;
 
     }
@@ -153,6 +151,7 @@ class Catalog_googlemusic extends Catalog
 
         if (!strlen($email) OR !strlen($password)) {
             Error::add('general', T_('Error: Email and Password Required for Google Music Catalogs'));
+
             return false;
         }
 
@@ -163,11 +162,13 @@ class Catalog_googlemusic extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate email ' . $email, 1);
             Error::add('general', sprintf(T_('Error: Catalog with %s already exists'), $email));
+
             return false;
         }
 
         $sql = 'INSERT INTO `catalog_googlemusic` (`email`, `password`, `deviceid`, `catalog_id`) VALUES (?, ?, ?, ?)';
         Dba::write($sql, array($email, $password, $deviceid, $catalog_id));
+
         return true;
     }
 
@@ -195,6 +196,7 @@ class Catalog_googlemusic extends Catalog
 
         if (!$api->login($this->email, $this->password, $this->deviceid)) {
             debug_event('googlemusic_catalog', 'Google Music authentication failed.', 1);
+
             return null;
         }
 
@@ -328,6 +330,7 @@ class Catalog_googlemusic extends Catalog
     {
         $info = $this->_get_info();
         $catalog_path = rtrim($info->email, "/");
+
         return( str_replace( $catalog_path . "/", "", $file_path ) );
     }
 
@@ -338,6 +341,7 @@ class Catalog_googlemusic extends Catalog
         if (count($info) > 1) {
             $id = $info[1];
         }
+
         return $id;
     }
 

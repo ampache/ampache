@@ -127,6 +127,7 @@ class Api
         if (intval($version) < self::$auth_version) {
             debug_event('API', 'Login Failed: version too old', 1);
             Error::add('api', T_('Login Failed: version too old'));
+
             return false;
         }
 
@@ -155,6 +156,7 @@ class Api
                     ($timestamp > (time() + 1800))) {
                     debug_event('API', 'Login Failed: timestamp out of range ' . $timestamp . '/' . time(), 1);
                     Error::add('api', T_('Login Failed: timestamp out of range'));
+
                     return false;
                 }
 
@@ -166,6 +168,7 @@ class Api
                 if (!$realpwd) {
                     debug_event('API', 'Unable to find user with userid of ' . $user_id, 1);
                     Error::add('api', T_('Invalid Username/Password'));
+
                     return false;
                 }
 
@@ -226,6 +229,7 @@ class Api
                     'playlists'=>$playlist['playlist'],
                     'videos'=>$vcounts['video'],
                     'catalogs'=>$catalog['catalog']));
+
                 return true;
             } // match
 
@@ -701,7 +705,6 @@ class Api
 
         echo XML_Data::videos(array($video_id));
 
-
     } // video
 
     /**
@@ -800,13 +803,13 @@ class Api
 
         if ($type == "newest") {
             $albums = Stats::get_newest("album", $limit, $offset);
-        } else if ($type == "highest") {
+        } elseif ($type == "highest") {
             $albums = Rating::get_highest("album", $limit, $offset);
-        } else if ($type == "frequent") {
+        } elseif ($type == "frequent") {
             $albums = Stats::get_top("album", $limit, '', $offset);
-        } else if ($type == "recent") {
+        } elseif ($type == "recent") {
             $albums = Stats::get_recent("album", $limit, $offset);
-        } else if ($type == "flagged") {
+        } elseif ($type == "flagged") {
             $albums = Userflag::get_latest('album');
         } else {
             if (!$limit) {

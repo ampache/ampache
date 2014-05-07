@@ -98,11 +98,13 @@ function send_zip($name, $song_files)
 
     if (count($arc->error)) {
         debug_event('archive',"Error: unable to add songs",'3');
+
         return false;
     } // if failed to add songs
 
     if (!$arc->create_archive()) {
         debug_event('archive',"Error: unable to create archive",'3');
+
         return false;
     } // if failed to create archive
 

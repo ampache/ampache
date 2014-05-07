@@ -30,7 +30,7 @@ function refresh()
 {
     <?php echo Ajax::action($ajax_url, ''); ?>;
 }
-$(document).ready(function() {
-window.setInterval(function(){refresh();}, refreshInterval * 1000);
+$(document).ready(function () {
+window.setInterval(function () {refresh();}, refreshInterval * 1000);
 });
 </script>

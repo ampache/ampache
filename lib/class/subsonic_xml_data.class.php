@@ -81,6 +81,7 @@ class Subsonic_XML_Data
         foreach ($ids as $id) {
             $ampids[] = self::getAmpacheId($id);
         }
+
         return $ampids;
     }
 
@@ -103,6 +104,7 @@ class Subsonic_XML_Data
     {
         $response = self::createResponse($version);
         $response->addAttribute('status', 'failed');
+
         return $response;
     }
 
@@ -110,6 +112,7 @@ class Subsonic_XML_Data
     {
         $response = self::createResponse($version);
         $response->addAttribute('status', 'ok');
+
         return $response;
     }
 
@@ -119,6 +122,7 @@ class Subsonic_XML_Data
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
         $response->addAttribute('version', $version);
+
         return $response;
     }
 
@@ -127,15 +131,16 @@ class Subsonic_XML_Data
         if (empty($version)) $version = Subsonic_XML_Data::API_VERSION;
         $response = self::createFailedResponse($version);
         self::setError($response, $code, $message);
+
         return $response;
     }
 
     /**
      * Set error information.
      *
-     * @param    SimpleXMLElement   $xml    Parent node
-     * @param    integer    $code    Error code
-     * @param    string    $string    Error message
+     * @param SimpleXMLElement $xml    Parent node
+     * @param integer          $code   Error code
+     * @param string           $string Error message
      */
     public static function setError($xml, $code, $message = "")
     {

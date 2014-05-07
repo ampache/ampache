@@ -90,9 +90,9 @@ function ShowVisualizerFullScreen()
     var element = document.getElementById("viz");
     if (element.requestFullScreen) {
         element.requestFullScreen();
-    } else if (element.webkitRequestFullScreen) {
+    } elseif (element.webkitRequestFullScreen) {
         element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-    } else if (element.mozRequestFullScreen) {
+    } elseif (element.mozRequestFullScreen) {
         element.mozRequestFullScreen();
     } else {
         alert('Full-Screen not supported by your browser.');
@@ -122,7 +122,7 @@ var last_int_position = 0
 var currentjpitem = null;
 var currentAudioElement = undefined;
 
-    $(document).ready(function(){
+    $(document).ready(function () {
 
         if (!isNaN($.cookie('jp_volume'))) {
             var jp_volume = $.cookie('jp_volume');
@@ -298,10 +298,10 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
 <?php
 if ($isVideo) {
 ?>
-    $("a.jp-full-screen").on('click', function() {
+    $("a.jp-full-screen").on('click', function () {
         $(".jp-playlist").css("visibility", "hidden");
     });
-    $("a.jp-restore-screen").on('click', function() {
+    $("a.jp-restore-screen").on('click', function () {
         $(".jp-playlist").css("visibility", "visible");
     });
 <?php
@@ -318,7 +318,7 @@ if ($isVideo) {
         if (int_position != last_int_position && event.jPlayer.status.currentTime > 0) {
             last_int_position = int_position;
             if (shouts[int_position] != undefined) {
-                shouts[int_position].forEach(function(e) {
+                shouts[int_position].forEach(function (e) {
                     noty({text: e,
                             type: 'alert', layout: 'topRight',
                             template: '<div class="noty_message noty_ampache"><span class="noty_text noty_ampache"></span><div class="noty_close noty_ampache"></div></div>',
@@ -333,7 +333,7 @@ if ($isVideo) {
         }
 <?php } ?>
     });
-    $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
+    $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function (event) {
         $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
     });
 
@@ -362,7 +362,7 @@ function WaveformClick(songid, time)
     } else {
         // Single click
         if (brconn == null) {
-            wavclicktimer = setTimeout(function() {
+            wavclicktimer = setTimeout(function () {
                 wavclicktimer = null;
                 $("#jquery_jplayer_1").data("jPlayer").play(time);
             }, 250);
@@ -399,7 +399,7 @@ function startBroadcast(key)
     brkey = key;
 
     listenBroadcast();
-    brconn.onopen = function(e) {
+    brconn.onopen = function (e) {
         sendBroadcastMessage('AUTH_SID', '<?php echo session_id(); ?>');
         sendBroadcastMessage('REGISTER_BROADCAST', brkey);
         sendBroadcastMessage('SONG', currentjpitem.attr("data-song_id"));
@@ -422,7 +422,7 @@ function startBroadcastListening(broadcast_id)
 
     $('.jp-seek-bar').css('pointer-events', 'none');
 
-    brconn.onopen = function(e) {
+    brconn.onopen = function (e) {
         sendBroadcastMessage('AUTH_SID', '<?php echo Stream::$session; ?>');
         sendBroadcastMessage('REGISTER_LISTENER', broadcast_id);
     };
@@ -515,6 +515,7 @@ window.parent.onbeforeunload = function (evt) {
         if (evt) {
             evt.returnValue = message;
         }
+
         return message;
     }
 

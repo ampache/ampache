@@ -83,7 +83,6 @@ class Catalog_remote extends Catalog
 
         return Dba::num_rows($db_results);
 
-
     } // is_installed
 
     /**
@@ -150,11 +149,13 @@ class Catalog_remote extends Catalog
 
         if (substr($uri,0,7) != 'http://' && substr($uri,0,8) != 'https://') {
             Error::add('general', T_('Error: Remote selected, but path is not a URL'));
+
             return false;
         }
 
         if (!strlen($username) OR !strlen($password)) {
             Error::add('general', T_('Error: Username and Password Required for Remote Catalogs'));
+
             return false;
         }
         $password = hash('sha256', $password);
@@ -166,11 +167,13 @@ class Catalog_remote extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             Error::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
+
             return false;
         }
 
         $sql = 'INSERT INTO `catalog_remote` (`uri`, `username`, `password`, `catalog_id`) VALUES (?, ?, ?, ?)';
         Dba::write($sql, array($uri, $username, $password, $catalog_id));
+
         return true;
     }
 
@@ -207,6 +210,7 @@ class Catalog_remote extends Catalog
             Error::add('general', $e->getMessage());
             Error::display('general');
             flush();
+
             return false;
         }
 
@@ -214,6 +218,7 @@ class Catalog_remote extends Catalog
             debug_event('catalog', 'API client failed to connect', 1);
             Error::add('general', T_('Error connecting to remote server'));
             Error::display('general');
+
             return false;
         }
 
@@ -298,6 +303,7 @@ class Catalog_remote extends Catalog
         $remote_handle = $this->connect();
         if (!$remote_handle) {
             debug_event('remote-clean', 'Remote login failed', 1, 'ampache-catalog');
+
             return false;
         }
 
@@ -349,6 +355,7 @@ class Catalog_remote extends Catalog
     {
         $info = $this->_get_info();
         $catalog_path = rtrim($info->uri, "/");
+
         return( str_replace( $catalog_path . "/", "", $file_path ) );
     }
 

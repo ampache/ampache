@@ -139,6 +139,7 @@ class Core
 
         if (!isset($_SESSION['forms'][$sid])) {
             debug_event('Core', "Form $sid not found in session, rejecting request", 2);
+
             return false;
         }
 
@@ -149,6 +150,7 @@ class Core
             debug_event('Core', "Verified SID $sid for $type form $name", 5);
             if ($form['expire'] < time()) {
                 debug_event('Core', "Form $sid is expired, rejecting request", 2);
+
                 return false;
             }
 
@@ -157,6 +159,7 @@ class Core
 
         // OMG HAX0RZ
         debug_event('Core', "$type form $sid failed consistency check, rejecting request", 2);
+
         return false;
 
     } // form_verify
@@ -198,6 +201,7 @@ class Core
                 return false;
             }
             closedir($handle);
+
             return true;
         }
 
@@ -206,6 +210,7 @@ class Core
             return false;
         }
         fclose($handle);
+
         return true;
     }
 
@@ -227,7 +232,7 @@ class Core
 
         return $lc_filename;
     }
-    
+
     /*
      * is_session_started
      *
@@ -242,6 +247,7 @@ class Core
                 return session_id() === '' ? false : true;
             }
         }
+
         return false;
     }
 } // Core

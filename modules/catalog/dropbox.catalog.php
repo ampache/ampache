@@ -79,6 +79,7 @@ class Catalog_dropbox extends Catalog
             "<li>Give a name to your application and create it</li>" .
             //"<li>Add the following OAuth redirect URIs: <i>" . AmpConfig::get('web_path') . "/admin/catalog.php</i></li>" .
             "<li>Copy your App key and App secret here</li></ul>";
+
         return $help;
 
     } // get_create_help
@@ -93,7 +94,6 @@ class Catalog_dropbox extends Catalog
         $db_results = Dba::query($sql);
 
         return Dba::num_rows($db_results);
-
 
     } // is_installed
 
@@ -167,12 +167,14 @@ class Catalog_dropbox extends Catalog
 
         if (!strlen($apikey) OR !strlen($secret)) {
             Error::add('general', T_('Error: API Key and Secret Required for Dropbox Catalogs'));
+
             return false;
         }
 
         $pathError = Dropbox\Path::findError($path);
         if ($pathError !== null) {
             Error::add('general', T_('Invalid <dropbox-path>: ' . $pathError));
+
             return false;
         }
 
@@ -183,11 +185,13 @@ class Catalog_dropbox extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate key ' . $apikey, 1);
             Error::add('general', sprintf(T_('Error: Catalog with %s already exists'), $apikey));
+
             return false;
         }
 
         $sql = 'INSERT INTO `catalog_dropbox` (`apikey`, `secret`, `path`, `getchunk`, `catalog_id`) VALUES (?, ?, ?, ?, ?)';
         Dba::write($sql, array($apikey, $secret, $path, ($getchunk ? 1 : 0), $catalog_id));
+
         return true;
     }
 
@@ -254,6 +258,7 @@ class Catalog_dropbox extends Catalog
         }
         if (!$this->authtoken) {
             $this->showAuthToken();
+
             return null;
         }
 
@@ -262,6 +267,7 @@ class Catalog_dropbox extends Catalog
         } catch (Dropbox\Exception $e) {
             debug_event('dropbox_catalog', 'Dropbox authentication error: ' . $ex->getMessage(), 1);
             $this->showAuthToken();
+
             return null;
         }
     }
@@ -462,6 +468,7 @@ class Catalog_dropbox extends Catalog
         if ($p !== false) {
             $p++;
         }
+
         return substr($file_path, $p);
     }
 

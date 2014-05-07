@@ -25,10 +25,10 @@ $path = ini_get('include_path');
 $path = $openid_path . PATH_SEPARATOR . $path;
 ini_set('include_path', $path);
 
-require_once "Auth/OpenID/Consumer.php";
-require_once "Auth/OpenID/FileStore.php";
-require_once "Auth/OpenID/SReg.php";
-require_once "Auth/OpenID/PAPE.php";
+require_once 'Auth/OpenID/Consumer.php';
+require_once 'Auth/OpenID/FileStore.php';
+require_once 'Auth/OpenID/SReg.php';
+require_once 'Auth/OpenID/PAPE.php';
 
 class Openid
 {
@@ -59,6 +59,7 @@ class Openid
             debug_event('openid', 'Could not access/create the FileStore directory ' . $store_path . '. Please check the effective permissions.', '5');
         } else {
             $store = new Auth_OpenID_FileStore($store_path);
+
             return $store;
         }
 
@@ -71,6 +72,7 @@ class Openid
         if ($store) {
             $consumer = new Auth_OpenID_Consumer($store);
         }
+
         return $consumer;
     }
 

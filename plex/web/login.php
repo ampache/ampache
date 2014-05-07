@@ -24,7 +24,7 @@ define('NO_SESSION','1');
 require_once 'init.php';
 require_once '../../lib/login.php';
 
-require_once('header.inc.php');
+require_once 'header.inc.php';
 ?>
 <p class="error">Ampache authentication required.</p>
 <div class="configform">
@@ -43,5 +43,5 @@ require_once('header.inc.php');
     </form>
 </div>
 <?php
-require_once('footer.inc.php');
+require_once 'footer.inc.php';
 ?>

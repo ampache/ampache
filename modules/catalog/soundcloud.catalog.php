@@ -72,6 +72,7 @@ class Catalog_soundcloud extends Catalog
             "<li>Give a name to your application and click Register</li>" .
             "<li>Add the following OAuth redirect URIs: <i>" . $this->getRedirectUri() . "</i></li>" .
             "<li>Copy your Client ID and Secret here, and Save the app</li></ul>";
+
         return $help;
 
     } // get_create_help
@@ -86,7 +87,6 @@ class Catalog_soundcloud extends Catalog
         $db_results = Dba::query($sql);
 
         return Dba::num_rows($db_results);
-
 
     } // is_installed
 
@@ -159,6 +159,7 @@ class Catalog_soundcloud extends Catalog
 
         if (!strlen($userid) OR !strlen($secret)) {
             Error::add('general', T_('Error: UserID and Secret Required for SoundCloud Catalogs'));
+
             return false;
         }
 
@@ -169,11 +170,13 @@ class Catalog_soundcloud extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate user id ' . $userid, 1);
             Error::add('general', sprintf(T_('Error: Catalog with %s already exists'), $userid));
+
             return false;
         }
 
         $sql = 'INSERT INTO `catalog_soundcloud` (`userid`, `secret`, `catalog_id`) VALUES (?, ?, ?)';
         Dba::write($sql, array($userid, $secret, $catalog_id));
+
         return true;
     }
 
@@ -233,6 +236,7 @@ class Catalog_soundcloud extends Catalog
         }
         if (!$this->authtoken) {
             $this->showAuthToken();
+
             return null;
         }
 
@@ -372,6 +376,7 @@ class Catalog_soundcloud extends Catalog
         if (count($matches)) {
             $track = $matches[1];
         }
+
         return $track;
     }
 

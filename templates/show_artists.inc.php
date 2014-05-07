@@ -86,7 +86,7 @@ $thcount = 8;
     </tfoot>
 </table>
 <script language="javascript" type="text/javascript">
-$(document).ready(function() {
+$(document).ready(function () {
     $('.tabledata').mediaTable();
     ResponsiveElements.init();
 });

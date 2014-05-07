@@ -146,6 +146,7 @@ class Tag extends database_object
 
         if (!$tag_id) {
             debug_event('Error','Error unable to create tag value:' . $cleaned_value . ' unknown error','1');
+
             return false;
         }
 
@@ -427,6 +428,7 @@ class Tag extends database_object
         }
 
         parent::add_to_cache('tags_list', 'no_name', $results);
+
         return $results;
 
     } // get_tags

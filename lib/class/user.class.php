@@ -90,6 +90,7 @@ class User extends database_object
         $db_results = Dba::read($sql, array($time, $last_seen));
         $data = Dba::fetch_row($db_results);
         $results['connected'] = $data[0];
+
         return $results;
     }
 
@@ -110,6 +111,7 @@ class User extends database_object
             $data['username'] = 'System';
             $data['fullname'] = 'Ampache User';
             $data['access'] = '25';
+
             return $data;
         }
 
@@ -225,6 +227,7 @@ class User extends database_object
         while ($results = Dba::fetch_assoc($db_results)) {
             $users[] = $results['id'];
         }
+
         return $users;
 
     } // get_from_website
@@ -273,7 +276,6 @@ class User extends database_object
         if ($type != '0') {
             $user_limit = "AND preference.catagory = '" . Dba::escape($type) . "'";
         }
-
 
         $sql = "SELECT preference.name, preference.description, preference.catagory, preference.level, user_preference.value " .
             "FROM preference INNER JOIN user_preference ON user_preference.preference=preference.id " .
@@ -445,6 +447,7 @@ class User extends database_object
 
         if ($row = Dba::fetch_assoc($db_results)) {
             $ip = $row['ip'] ? $row['ip'] : NULL;
+
             return $ip;
         }
 
@@ -894,7 +897,6 @@ class User extends database_object
 
         } // end foreach items
 
-
         return $results;
 
      } // format_recommendations
@@ -1095,7 +1097,7 @@ class User extends database_object
      * calcs difference between now and last_seen
      * if less than delay, we consider them still online
      */
-    public function is_online( $delay = 1200 )
+    public function is_online($delay = 1200)
     {
         return time() - $this->last_seen <= $delay;
 

@@ -68,6 +68,7 @@ class Song extends database_object implements media
             $this->mime = self::type_to_mime($this->type);
         } else {
             $this->id = null;
+
             return false;
         }
 
@@ -118,6 +119,7 @@ class Song extends database_object implements media
 
         if (!$db_results) {
             debug_event('song', 'Unable to insert ' . $file, 2);
+
             return false;
         }
 
@@ -253,6 +255,7 @@ class Song extends database_object implements media
             }
 
             parent::add_to_cache('song', $id, $results);
+
             return $results;
         }
 
@@ -327,6 +330,7 @@ class Song extends database_object implements media
                 return 'audio/x-realaudio';
             break;
             case 'flac';
+
                 return 'audio/x-flac';
             break;
             case 'wv':
@@ -522,7 +526,6 @@ class Song extends database_object implements media
         return $array;
 
     } // compare_song_information
-
 
     /**
      * update
@@ -890,6 +893,7 @@ class Song extends database_object implements media
         if (!trim($catalog->rename_pattern)) {
             $this->f_pattern    = $this->title;
             $this->f_file        = $this->title . '.' . $extension;
+
             return;
         }
 
@@ -930,7 +934,6 @@ class Song extends database_object implements media
 //FIXME: These are here to keep the ideas, don't want to have to worry about them for now
 //        $fields['rating'] = true;
 //        $fields['recently Played'] = true;
-
         return $fields;
 
     } // get_fields
@@ -971,6 +974,7 @@ class Song extends database_object implements media
             $catalog_id = $info->catalog;
         }
         $catalog = Catalog::create_from_id( $catalog_id );
+
         return $catalog->get_rel_path($file_path);
 
     } // get_rel_path
@@ -998,7 +1002,7 @@ class Song extends database_object implements media
                 $type = $transcode_settings['format'];
             }
         }
-        
+
         $song_name = $song->get_artist_name() . " - " . $song->title . "." . $type;
         $song_name = str_replace("/", "-", $song_name);
         $song_name = str_replace("?", "", $song_name);
@@ -1029,7 +1033,7 @@ class Song extends database_object implements media
         if ($user_id) {
             // If user is not empty, we're looking directly to user personal info (admin view)
             $sql .= "AND `user`='$user_id' ";
-        } else if (!Access::check('interface','100')) {
+        } elseif (!Access::check('interface','100')) {
             // If user identifier is empty, we need to retrieve only users which have allowed view of personnal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_recent');
             if ($personal_info_id) {
@@ -1077,9 +1081,9 @@ class Song extends database_object implements media
 
         if ($target) {
             debug_event('song.class.php', 'Explicit format request {'.$target.'}', 5);
-        } else if ($target = AmpConfig::get('encode_target_' . $source)) {
+        } elseif ($target = AmpConfig::get('encode_target_' . $source)) {
             debug_event('song.class.php', 'Defaulting to configured target format for ' . $source, 5);
-        } else if ($target = AmpConfig::get('encode_target')) {
+        } elseif ($target = AmpConfig::get('encode_target')) {
             debug_event('song.class.php', 'Using default target format', 5);
         } else {
             $target = $source;
@@ -1093,10 +1097,12 @@ class Song extends database_object implements media
 
         if (!$args) {
             debug_event('song.class.php', 'Target format ' . $target . ' is not properly configured', 2);
+
             return false;
         }
 
         debug_event('song.class.php', 'Command: ' . $cmd . ' Arguments: ' . $args, 5);
+
         return array('format' => $target, 'command' => $cmd . ' ' . $args);
     }
 

@@ -39,7 +39,7 @@ is_rtl(AmpConfig::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
 <title> <?php echo scrub_out(AmpConfig::get('site_title')); ?> </title>
 <script type="text/javascript" language="javascript">
-function focus(){ document.login.username.focus(); }
+function focus() { document.login.username.focus(); }
 </script>
 <?php
 // If iframes, we check in javascript that parent container doesn't exist, otherwise we redirect to the page without frame.

@@ -94,9 +94,9 @@ class Playlist extends playlist_object
             $sql .= " WHERE `type`='public' OR " .
             "`user`='" . $GLOBALS['user']->id . "'";
         }
-        
+
         $sql .= $sql_order;
-        
+
         $db_results = Dba::read($sql);
 
         $results = array();

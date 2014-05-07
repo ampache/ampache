@@ -58,6 +58,7 @@ class WebPlayer
         // Opera 7,8 have a MSIE phrase), use the last one found (the right-most one
         // in the UA).  That's usually the most correct.
         $i = count($matches['browser'])-1;
+
         return array($matches['browser'][$i] => $matches['version'][$i]);
 
     }
@@ -86,7 +87,7 @@ class WebPlayer
         $urlinfo = Stream_URL::parse($item->url);
         if ($urlinfo['id'] && $urlinfo['type'] == 'song') {
             $song = new Song($urlinfo['id']);
-        } else if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
+        } elseif ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
             $song = new Song_Preview($urlinfo['id']);
         }
 
@@ -121,14 +122,14 @@ class WebPlayer
             }
             if ($types['real'] == "flac" || $types['real'] == "ogg") $types['player'] = "oga";
             else if ($types['real'] == "mp4") $types['player'] = "m4a";
-        } else if ($urlinfo['id'] && $urlinfo['type'] == 'video') {
+        } elseif ($urlinfo['id'] && $urlinfo['type'] == 'video') {
             $video = new Video($urlinfo['id']);
             $types['real'] = pathinfo($video->file, PATHINFO_EXTENSION);
 
             if ($types['real'] == "ogg") $types['player'] = "ogv";
             else if ($types['real'] == "webm") $types['player'] = "webmv";
             else if ($types['real'] == "mp4") $types['player'] = "m4v";
-        } else if ($item->type == 'radio') {
+        } elseif ($item->type == 'radio') {
             $types['real'] = $item->codec;
             if ($types['real'] == "flac" || $types['real'] == "ogg") $types['player'] = "oga";
         } else {
@@ -139,6 +140,7 @@ class WebPlayer
         if (empty($types['player'])) $types['player'] = $types['real'];
 
         debug_event("webplayer.class.php", "Types {".json_encode($types)."}", 5);
+
         return $types;
     }
 
@@ -195,7 +197,7 @@ class WebPlayer
 
         if ($urlinfo['id'] && $urlinfo['type'] == 'song') {
             $song = new Song($urlinfo['id']);
-        } else if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
+        } elseif ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
             $song = new Song_Preview($urlinfo['id']);
         }
 
@@ -217,7 +219,7 @@ class WebPlayer
         }
 
         debug_event("webplayer.class.php", "Return get_media_js_param {".json_encode($js)."}", 5);
-        
+
         return json_encode($js);
     }
 }

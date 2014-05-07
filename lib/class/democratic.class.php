@@ -110,7 +110,6 @@ class Democratic extends Tmp_Playlist
 
         $this->tmp_playlist = $row['id'];
 
-
     } // set_parent
 
     /**
@@ -287,11 +286,13 @@ class Democratic extends Tmp_Playlist
         if ($this->base_playlist) {
             $base_playlist = new Playlist($this->base_playlist);
             $data = $base_playlist->get_random_items(1);
+
             return $data[0]['object_id'];
         } else {
             $sql = "SELECT `id` FROM `song` WHERE `enabled`='1' ORDER BY RAND() LIMIT 1";
             $db_results = Dba::read($sql);
             $results = Dba::fetch_assoc($db_results);
+
             return $results['id'];
         }
 
@@ -618,6 +619,7 @@ class Democratic extends Tmp_Playlist
 
         $results = Dba::fetch_assoc($db_results);
         parent::add_to_cache('democratic_vote', $id, $results['count']);
+
         return $results['count'];
 
     } // get_vote
@@ -632,6 +634,5 @@ class Democratic extends Tmp_Playlist
         return parent::get_from_cache('democratic_voters',$object_id);
 
     } // get_voters
-
 
 } // Democratic class

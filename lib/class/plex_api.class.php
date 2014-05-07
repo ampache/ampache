@@ -265,6 +265,7 @@ class Plex_Api
         $action = 'users/sign_in.xml';
 
         $res = self::myPlexRequest($action, $options, $headers);;
+
         return $res['xml']['authenticationToken'];
     }
 
@@ -273,6 +274,7 @@ class Plex_Api
         $action = 'pms/:/ip';
 
         $res = self::myPlexRequest($action);
+
         return trim($res['raw']);
     }
 
@@ -324,6 +326,7 @@ class Plex_Api
         $action = 'servers/' . Plex_XML_Data::getMachineIdentifier() . '/access_tokens.xml?auth_token=' . Plex_XML_Data::getMyPlexAuthToken();
 
         $res = self::myPlexRequest($action);
+
         return $res['xml'];
     }
 
@@ -332,6 +335,7 @@ class Plex_Api
         $action = 'pms/friends/all?auth_token=' . Plex_XML_Data::getMyPlexAuthToken();
 
         $res = self::myPlexRequest($action);
+
         return $res['xml'];
     }
 
@@ -376,6 +380,7 @@ class Plex_Api
     public static function request_output_header($ch, $header)
     {
         self::$request_headers[] = $header;
+
         return strlen($header);
     }
 
@@ -388,6 +393,7 @@ class Plex_Api
                 header($rheader);
             }
         }
+
         return strlen($header);
     }
 
@@ -443,6 +449,7 @@ class Plex_Api
         try {
             $res['xml'] = simplexml_load_string($r);
         } catch (Exception $e) { }
+
         return $res;
     }
 
@@ -638,7 +645,7 @@ class Plex_Api
                         $artist = new Artist($id);
                         $artist->format();
                         Plex_XML_Data::setArtistRoot($r, $artist);
-                    } else if (Plex_XML_Data::isAlbum($key)) {
+                    } elseif (Plex_XML_Data::isAlbum($key)) {
                         $album = new Album($id);
                         $album->format();
                         Plex_XML_Data::setAlbumRoot($r, $album);
@@ -649,9 +656,9 @@ class Plex_Api
                         $art = null;
                         if (Plex_XML_Data::isArtist($key)) {
                             $art = new Art($id, "artist");
-                        } else if (Plex_XML_Data::isAlbum($key)) {
+                        } elseif (Plex_XML_Data::isAlbum($key)) {
                             $art = new Art($id, "album");
-                        } else if (Plex_XML_Data::isSong($key)) {
+                        } elseif (Plex_XML_Data::isSong($key)) {
                             $art = new Art($id, "song");
                         }
 
@@ -943,9 +950,9 @@ class Plex_Api
         if ($identifier == 'com.plexapp.plugins.library') {
             if (Plex_XML_Data::isArtist($id)) {
                 $robj = new Rating(Plex_XML_Data::getAmpacheId($id), "artist");
-            } else if (Plex_XML_Data::isAlbum($id)) {
+            } elseif (Plex_XML_Data::isAlbum($id)) {
                 $robj = new Rating(Plex_XML_Data::getAmpacheId($id), "album");
-            } else if (Plex_XML_Data::isSong($id)) {
+            } elseif (Plex_XML_Data::isSong($id)) {
                 $robj = new Rating(Plex_XML_Data::getAmpacheId($id), "song");
             }
 
@@ -963,6 +970,7 @@ class Plex_Api
 
         $action = 'users/account?auth_token=' . $authtoken;
         $res = self::myPlexRequest($action);
+
         return $res['xml'];
     }
 }

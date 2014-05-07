@@ -107,7 +107,7 @@ class Browse extends Query
                 $this->get_offset(),
                 true
             );
-        } else if (!count($object_ids)) {
+        } elseif (!count($object_ids)) {
             $this->set_total(0);
         }
 

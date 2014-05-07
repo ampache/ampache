@@ -185,6 +185,7 @@ class Stats
             $sql .= "AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $sql .= " GROUP BY object_id ORDER BY `count` DESC ";
+
         return $sql;
     }
 
@@ -215,6 +216,7 @@ class Stats
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
+
         return $results;
 
     } // get_top
@@ -351,6 +353,7 @@ class Stats
             $sql .= "AND `catalog` = '" . scrub_in($catalog) ."' ";
         }
         $sql .= "GROUP BY `$type` ORDER BY `real_atime` DESC ";
+
         return $sql;
     }
 

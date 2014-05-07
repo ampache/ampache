@@ -78,6 +78,7 @@ class Subsonic_Api
                 header($rheader);
             }
         }
+
         return strlen($header);
     }
 
@@ -116,7 +117,7 @@ class Subsonic_Api
     {
         if (strtolower($f) == "json") {
             header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
-        } else if (strtolower($f) == "jsonp") {
+        } elseif (strtolower($f) == "jsonp") {
             header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset'));
         } else {
             header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
@@ -134,7 +135,7 @@ class Subsonic_Api
     {
         if ($f == "json") {
             echo json_encode(self::xml2json($xml), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
-        } else if ($f == "jsonp") {
+        } elseif ($f == "jsonp") {
             echo $callback . '(' . json_encode(self::xml2json($xml), JSON_PRETTY_PRINT) . ')';
         } else {
             $xmlstr = $xml->asXml();
@@ -236,7 +237,6 @@ class Subsonic_Api
         );
     }
 
-
     /**
      * ping
      * Simple server ping to test connectivity with the server.
@@ -335,7 +335,7 @@ class Subsonic_Api
         if (Subsonic_XML_Data::isArtist($id)) {
             $artist = new Artist(Subsonic_XML_Data::getAmpacheId($id));
             Subsonic_XML_Data::addArtistDirectory($r, $artist);
-        } else if (Subsonic_XML_Data::isAlbum($id)) {
+        } elseif (Subsonic_XML_Data::isAlbum($id)) {
             $album = new Album(Subsonic_XML_Data::getAmpacheId($id));
             Subsonic_XML_Data::addAlbumDirectory($r, $album);
         }
@@ -446,19 +446,19 @@ class Subsonic_Api
         $albums = array();
         if ($type == "random") {
             $albums = Album::get_random($size);
-        } else if ($type == "newest") {
+        } elseif ($type == "newest") {
             $albums = Stats::get_newest("album", $size, $offset);
-        } else if ($type == "highest") {
+        } elseif ($type == "highest") {
             $albums = Rating::get_highest("album", $size, $offset);
-        } else if ($type == "frequent") {
+        } elseif ($type == "frequent") {
             $albums = Stats::get_top("album", $size, '', $offset);
-        } else if ($type == "recent") {
+        } elseif ($type == "recent") {
             $albums = Stats::get_recent("album", $size, $offset);
-        } else if ($type == "starred") {
+        } elseif ($type == "starred") {
             $albums = Userflag::get_latest('album');
-        } else if ($type == "alphabeticalByName") {
+        } elseif ($type == "alphabeticalByName") {
             $albums = Catalog::get_albums($size, $offset);
-        } else if ($type == "alphabeticalByArtist") {
+        } elseif ($type == "alphabeticalByArtist") {
             $albums = Catalog::get_albums_by_artist($size, $offset);
         }
 
@@ -526,7 +526,7 @@ class Subsonic_Api
                 $artist = new Artist(Subsonic_XML_Data::getAmpacheId($musicFolderId));
                 $finput = $artist->name;
                 $ftype = "artist";
-            } else if (Subsonic_XML_Data::isAlbum($musicFolderId)) {
+            } elseif (Subsonic_XML_Data::isAlbum($musicFolderId)) {
                 $album = new Album(Subsonic_XML_Data::getAmpacheId($musicFolderId));
                 $finput = $album->name;
                 $ftype = "artist";
@@ -719,7 +719,7 @@ class Subsonic_Api
         if ($playlistId) {
             self::_updatePlaylist($playlistId, $name, $songId);
             $r = Subsonic_XML_Data::createSuccessResponse();
-        } else if (!empty($name)) {
+        } elseif (!empty($name)) {
             $playlistId = Playlist::create($name, 'public');
             if (count($songId) > 0) {
                 self::_updatePlaylist($playlistId, "", $songId);
@@ -880,9 +880,9 @@ class Subsonic_Api
         $art = null;
         if (Subsonic_XML_Data::isArtist($id)) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "artist");
-        } else if (Subsonic_XML_Data::isAlbum($id)) {
+        } elseif (Subsonic_XML_Data::isAlbum($id)) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "album");
-        } else if (Subsonic_XML_Data::isSong($id)) {
+        } elseif (Subsonic_XML_Data::isSong($id)) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "song");
         }
 
@@ -919,9 +919,9 @@ class Subsonic_Api
         $robj = null;
         if (Subsonic_XML_Data::isArtist($id)) {
             $robj = new Rating(Subsonic_XML_Data::getAmpacheId($id), "artist");
-        } else if (Subsonic_XML_Data::isAlbum($id)) {
+        } elseif (Subsonic_XML_Data::isAlbum($id)) {
             $robj = new Rating(Subsonic_XML_Data::getAmpacheId($id), "album");
-        } else if (Subsonic_XML_Data::isSong($id)) {
+        } elseif (Subsonic_XML_Data::isSong($id)) {
             $robj = new Rating(Subsonic_XML_Data::getAmpacheId($id), "song");
         }
 
@@ -950,7 +950,6 @@ class Subsonic_Api
         Subsonic_XML_Data::addStarred($r, Userflag::get_latest('artist'), Userflag::get_latest('album'), Userflag::get_latest('song'), $elementName);
         self::apiOutput($input, $r);
     }
-
 
     /**
      * getStarred2
@@ -1005,14 +1004,14 @@ class Subsonic_Api
                 $aid = Subsonic_XML_Data::getAmpacheId($i);
                 if (Subsonic_XML_Data::isArtist($i)) {
                     $type = 'artist';
-                } else if (Subsonic_XML_Data::isAlbum($i)) {
+                } elseif (Subsonic_XML_Data::isAlbum($i)) {
                     $type = 'album';
-                } else if (Subsonic_XML_Data::isSong($i)) {
+                } elseif (Subsonic_XML_Data::isSong($i)) {
                     $type = 'song';
                 }
                 $ids[] = array('id' => $aid, 'type' => $type);
             }
-        } else if ($albumId) {
+        } elseif ($albumId) {
             if (!is_array($albumId)) {
                 $albumId = array($albumId);
             }
@@ -1020,7 +1019,7 @@ class Subsonic_Api
                 $aid = Subsonic_XML_Data::getAmpacheId($i);
                 $ids[] = array('id' => $aid, 'album');
             }
-        } else if ($artistId) {
+        } elseif ($artistId) {
             if (!is_array($artistId)) {
                 $artistId = array($artistId);
             }
@@ -1138,7 +1137,7 @@ class Subsonic_Api
             $object_id = Subsonic_XML_Data::getAmpacheId($id);
             if (Subsonic_XML_Data::isAlbum($id)) {
                 $object_type = 'album';
-            } else if (Subsonic_XML_Data::isSong($id)) {
+            } elseif (Subsonic_XML_Data::isSong($id)) {
                 $object_type = 'song';
             }
 

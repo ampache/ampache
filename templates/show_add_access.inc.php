@@ -53,7 +53,7 @@
                     <option value="rpc"><?php echo T_('API/RPC'); ?></option>
                     <option selected="selected" value="stream"><?php printf(T_('%s + %s'), T_('API/RPC'), T_('Stream Access')); ?></option>
                     <option value="all"><?php printf(T_('%s + %s'), T_('API/RPC'), T_('All')); ?></option>
-        <?php } else if ($action == 'show_add_local') { ?>
+        <?php } elseif ($action == 'show_add_local') { ?>
                 <input type="hidden" name="type" value="local" />
                 <select name="addtype">
                     <option value="network"><?php echo T_('Local Network Definition'); ?></option>

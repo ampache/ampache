@@ -71,7 +71,7 @@ $location = get_location();
         </script>
         <?php } ?>
         <script type="text/javascript" charset="utf-8">
-            $(document).ready(function(){
+            $(document).ready(function () {
                 $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
             });
 
@@ -84,7 +84,7 @@ $location = get_location();
         </script>
         <script type="text/javascript">
             $.widget( "custom.catcomplete", $.ui.autocomplete, {
-                _renderItem: function( ul, item ) {
+                _renderItem: function (ul, item) {
                         var itemhtml = "<a href='" + item.link + "'>";
                         if (item.image != '') {
                             itemhtml += "<img src='" + item.image + "' class='searchart' />";
@@ -96,9 +96,9 @@ $location = get_location();
                             .append( itemhtml )
                             .appendTo( ul );
                 },
-                _renderMenu: function( ul, items ) {
+                _renderMenu: function (ul, items) {
                     var that = this, currentType = "";
-                    $.each( items, function( index, item ) {
+                    $.each( items, function (index, item) {
                         if (item.type != currentType) {
                             ul.append( "<li class='ui-autocomplete-category'>" + item.type + "</li>" );
                             currentType = item.type;
@@ -109,16 +109,16 @@ $location = get_location();
                 }
             });
 
-            $(function() {
+            $(function () {
                 $( "#searchString" )
                 // don't navigate away from the field on tab when selecting an item
-                    .bind( "keydown", function( event ) {
+                    .bind( "keydown", function (event) {
                         if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "ui-autocomplete" ).menu.active ) {
                             event.preventDefault();
                         }
                     })
                     .catcomplete({
-                        source: function( request, response ) {
+                        source: function (request, response) {
                             $.getJSON( jsAjaxUrl, {
                                 page: 'search',
                                 action: 'search',
@@ -127,20 +127,21 @@ $location = get_location();
                                 xoutput: 'json'
                             }, response );
                         },
-                        search: function() {
+                        search: function () {
                             // custom minLength
                             if (this.value.length < 2) {
                                 return false;
                             }
                         },
-                        focus: function() {
+                        focus: function () {
                             // prevent value inserted on focus
                             return false;
                         },
-                        select: function( event, ui ) {
+                        select: function (event, ui) {
                             if (ui.item != null) {
                                 $(this).val(ui.item.value);
                             }
+
                             return false;
                         }
                     });
@@ -157,7 +158,7 @@ $location = get_location();
                     if (tSlideshow != null) {
                         clearTimeout(tSlideshow);
                     }
-                    tSlideshow = window.setTimeout(function(){init_slideshow_refresh();}, refresh_slideshow_interval * 1000);
+                    tSlideshow = window.setTimeout(function () {init_slideshow_refresh();}, refresh_slideshow_interval * 1000);
                 }
             }
             function swap_slideshow()
@@ -204,12 +205,12 @@ $location = get_location();
                 stop_slideshow();
                 init_slideshow_check();
             }
-            $(document).mousemove(function(e) {
+            $(document).mousemove(function (e) {
                 if (iSlideshow == null) {
                     update_action();
                 }
             });
-            $(document).ready(function() {
+            $(document).ready(function () {
                 init_slideshow_check();
             });
         </script>
@@ -224,8 +225,8 @@ $location = get_location();
                 <?php echo Ajax::action('?page=index&action=shoutbox&since=\' + lastrefresh + \'', ''); ?>;
                 lastrefresh = new Date().getTime();
             }
-            $(document).ready(function() {
-                window.setInterval(function(){refresh_sociable();}, refresh_sociable_interval * 1000);
+            $(document).ready(function () {
+                window.setInterval(function () {refresh_sociable();}, refresh_sociable_interval * 1000);
             });
         </script>
         <div id="live_shoutbox"></div>
@@ -237,7 +238,7 @@ $location = get_location();
             </div>
         </div>
         <script type="text/javascript" language="javascript">
-            $("#aslideshow").click(function(e) {
+            $("#aslideshow").click(function (e) {
                 if (!$(e.target).hasClass('rhino-btn')) {
                     update_action();
                 }

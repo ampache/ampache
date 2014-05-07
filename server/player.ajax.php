@@ -20,7 +20,6 @@
  *
  */
 
-
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */

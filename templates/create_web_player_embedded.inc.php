@@ -55,6 +55,7 @@ if ($_REQUEST['append']) {
         ff.setAttribute('src', '<?php echo AmpConfig::get('web_path'); ?>/web_player_embedded.php?playlist_id=<?php echo $this->id; ?>');
         window.location = '<?php echo return_referer() ?>';
     }
+
     return false;
 }
 </script>

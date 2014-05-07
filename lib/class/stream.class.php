@@ -103,11 +103,12 @@ class Stream
     public static function start_transcode($song, $type = null, $bitrate=0)
     {
         debug_event('stream.class.php', 'Starting transcode for {'.$song->file.'}. Type {'.$type.'}. Bitrate {'.$bitrate.'}...', 5);
-        
+
         $transcode_settings = $song->get_transcode_settings($type);
         // Bail out early if we're unutterably broken
         if ($transcode_settings == false) {
             debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);
+
             return false;
         }
 
@@ -154,6 +155,7 @@ class Stream
         }
 
         $process = proc_open($command, $descriptors, $pipes);
+
         return array(
             'process' => $process,
             'handle' => $pipes[1],
@@ -288,6 +290,7 @@ class Stream
 
         if (Dba::num_rows($db_results)) {
             debug_event('Stream', 'Unable to play media currently locked by another user', 3);
+
             return false;
         }
 

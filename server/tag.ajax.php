@@ -73,6 +73,5 @@ switch ($_REQUEST['action']) {
     break;
 } // switch on action;
 
-
 // We always do this
 echo xoutput_from_array($results);

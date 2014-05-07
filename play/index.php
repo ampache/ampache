@@ -99,7 +99,7 @@ if (empty($share_id)) {
     if (AmpConfig::get('require_session')) {
         if (!AmpConfig::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
             debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
-        } else if (!Session::exists('stream', $sid)) {
+        } elseif (!Session::exists('stream', $sid)) {
             // No valid session id given, try with cookie session from web interface
             $sid = $_COOKIE[AmpConfig::get('session_name')];
             if (!Session::exists('interface', $sid)) {
@@ -209,7 +209,7 @@ if ($type == 'song') {
     /* Base Checks passed create the song object */
     $media = new Song($oid);
     $media->format();
-} else if ($type == 'song_preview') {
+} elseif ($type == 'song_preview') {
     $media = new Song_Preview($oid);
     $media->format();
 } else {
@@ -282,7 +282,7 @@ $browser = new Horde_Browser();
  * and then present them with the download file
  */
 if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
-    
+
     debug_event('play', 'Downloading file...', 5);
     // STUPID IE
     $media->format_pattern();
@@ -350,19 +350,19 @@ if (!$cpaction) {
         if ($transcode_to) {
             $transcode = true;
             debug_event('play', 'Transcoding due to explicit request for ' . $transcode_to, 5);
-        } else if ($transcode_cfg == 'always') {
+        } elseif ($transcode_cfg == 'always') {
             $transcode = true;
             debug_event('play', 'Transcoding due to always', 5);
-        } else if ($force_downsample) {
+        } elseif ($force_downsample) {
             $transcode = true;
             debug_event('play', 'Transcoding due to downsample_remote', 5);
-        } else if (!in_array('native', $valid_types)) {
+        } elseif (!in_array('native', $valid_types)) {
             $transcode = true;
             debug_event('play', 'Transcoding because native streaming is unavailable', 5);
         } else {
             debug_event('play', 'Decided not to transcode', 5);
         }
-    } else if ($transcode_cfg != 'never') {
+    } elseif ($transcode_cfg != 'never') {
         debug_event('play', 'Transcoding is not enabled for this media type. Valid types: {'.json_encode($valid_types).'}', 5);
     } else {
         debug_event('play', 'Transcode disabled in user settings.', 5);
@@ -373,7 +373,7 @@ if ($transcode) {
     $transcoder = Stream::start_transcode($media, $transcode_to, $bitrate);
     $fp = $transcoder['handle'];
     $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
-} else if ($cpaction) {
+} elseif ($cpaction) {
     $transcoder = $media->run_custom_play_action($cpaction, $transcode_to);
     $fp = $transcoder['handle'];
     $transcode = true;
@@ -480,7 +480,7 @@ $target = 131072;
 if ($stream_size) {
     if ($stream_size > 1048576) {
         $target = 262144;
-    } else if ($stream_size < 360448) {
+    } elseif ($stream_size < 360448) {
         $target = $stream_size / 1.1;
     } else {
         $target = $stream_size / 4;
@@ -489,7 +489,7 @@ if ($stream_size) {
 
 if ($start > $target) {
     debug_event('play', 'Content-Range was more than ' . $target . ' into the file ' . $media->file . ', not collecting stats', 5);
-} else if ($bytes_streamed > $target) {
+} elseif ($bytes_streamed > $target) {
     // FIXME: This check looks suspicious
     if (get_class($media) == 'Song' && empty($share_id)) {
         if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {

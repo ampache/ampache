@@ -90,6 +90,7 @@ class vainfo
             } catch (Exception $error) {
                 debug_event('getID3', "Broken file detected: $file: " . $error->message, 1);
                 $this->_broken = true;
+
                 return false;
             }
 
@@ -167,9 +168,9 @@ class vainfo
                 return 'ISO-8859-1';
             }
         }
+
         return 'ISO-8859-1';
     }
-
 
     /**
      * get_info
@@ -182,6 +183,7 @@ class vainfo
         // time, just return their rotting carcass of a media file.
         if ($this->_broken) {
             $this->tags = $this->set_broken();
+
             return true;
         }
 
@@ -509,6 +511,7 @@ class vainfo
             default:
                 /* Log the fact that we couldn't figure it out */
                 debug_event('vainfo','Unable to determine file type from ' . $type . ' on file ' . $this->filename,'5');
+
                 return $type;
             break;
         }
@@ -552,6 +555,7 @@ class vainfo
             }
             $parsed[$tag] = $data[0];
         }
+
         return $parsed;
     }
 
@@ -804,7 +808,7 @@ class vainfo
      *
      * This fills all tag types with Unknown (Broken)
      *
-     * @return    array    Return broken title, album, artist
+     * @return array Return broken title, album, artist
      */
     public function set_broken()
     {

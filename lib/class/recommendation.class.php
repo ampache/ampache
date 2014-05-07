@@ -317,6 +317,7 @@ class Recommendation
                 $results['yearformed'] = $artist->yearformed;
                 $results['largephoto'] = Art::url($artist->id, 'artist');
                 $results['megaphoto'] = $results['largephoto'];
+
                 return $results;
             }
         }

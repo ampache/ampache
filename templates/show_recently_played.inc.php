@@ -61,22 +61,22 @@ foreach ($data as $row) {
 
         if ($interval < 60) {
             $unit = 'seconds';
-        } else if ($interval < 3600) {
+        } elseif ($interval < 3600) {
             $interval = floor($interval / 60);
             $unit = 'minutes';
-        } else if ($interval < 86400) {
+        } elseif ($interval < 86400) {
             $interval = floor($interval / 3600);
             $unit = 'hours';
-        } else if ($interval < 604800) {
+        } elseif ($interval < 604800) {
             $interval = floor($interval / 86400);
             $unit = 'days';
-        } else if ($interval < 2592000) {
+        } elseif ($interval < 2592000) {
             $interval = floor($interval / 604800);
             $unit = 'weeks';
-        } else if ($interval < 31556926) {
+        } elseif ($interval < 31556926) {
             $interval = floor($interval / 2592000);
             $unit = 'months';
-        } else if ($interval < 631138519) {
+        } elseif ($interval < 631138519) {
             $interval = floor($interval / 31556926);
             $unit = 'years';
         } else {
@@ -157,7 +157,7 @@ foreach ($data as $row) {
     <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=recent<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>
 </div>
 <script language="javascript" type="text/javascript">
-$(document).ready(function(){
+$(document).ready(function () {
     $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
 });
 </script>
