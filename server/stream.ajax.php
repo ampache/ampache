@@ -71,7 +71,7 @@ switch ($_REQUEST['action']) {
         $results['rfc3514'] = '0x0';
     break;
     case 'directplay':
-    
+
         debug_event('stream.ajax.php', 'Play type {'.$_REQUEST['playtype'].'}', 5);
         switch ($_REQUEST['playtype']) {
             case 'album':

@@ -998,7 +998,7 @@ class Song extends database_object implements media
                 $type = $transcode_settings['format'];
             }
         }
-        
+
         $song_name = $song->get_artist_name() . " - " . $song->title . "." . $type;
         $song_name = str_replace("/", "-", $song_name);
         $song_name = str_replace("?", "", $song_name);

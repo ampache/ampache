@@ -227,7 +227,7 @@ class Core
 
         return $lc_filename;
     }
-    
+
     /*
      * is_session_started
      *

@@ -175,7 +175,7 @@ switch ($_REQUEST['action']) {
                 if ($limit > 0 && $value > 0) {
                     $total = $browse->get_total();
                     $pages = ceil($total / $limit);
-                    
+
                     if ($value <= $pages) {
                         $offset = ($value - 1) * $limit;
                         $browse->set_start($offset);

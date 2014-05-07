@@ -334,7 +334,7 @@ function show_playlist_select($name,$selected='',$style='')
     $nb_items = Dba::num_rows($db_results);
     $index = 1;
     $already_selected = false;
-    
+
     while ($row = Dba::fetch_assoc($db_results)) {
         $select_txt = '';
         if (!$already_selected && ($row['id'] == $selected || $index == $nb_items)) {

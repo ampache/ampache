@@ -217,7 +217,7 @@ class WebPlayer
         }
 
         debug_event("webplayer.class.php", "Return get_media_js_param {".json_encode($js)."}", 5);
-        
+
         return json_encode($js);
     }
 }

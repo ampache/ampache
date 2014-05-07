@@ -24,7 +24,7 @@
     debug_event("stream.php", "Asked without action. Exiting...", 5);
     exit;
 }
- 
+
 if (!defined('NO_SESSION')) {
     require_once 'lib/init.php';
 

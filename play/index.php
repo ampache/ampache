@@ -282,7 +282,7 @@ $browser = new Horde_Browser();
  * and then present them with the download file
  */
 if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
-    
+
     debug_event('play', 'Downloading file...', 5);
     // STUPID IE
     $media->format_pattern();
