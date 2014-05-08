@@ -622,7 +622,7 @@ class vainfo
             switch ($tag) {
                 case 'genre':
                     // Pass the array through
-                    $parsed[$tag] = $data;
+                    $parsed['genre'] = $data;
                 break;
                 case 'part_of_a_set':
                     $elements = explode('/', $data[0]);
@@ -662,6 +662,16 @@ class vainfo
                         $parsed['mb_artistid'] = $txxx['data'];
                     break;
                 }
+            }
+        }
+
+        // Find all genre
+        if (!empty($id3v2['TCON'])) {
+            // Find the MBID for the track
+            foreach ($id3v2['TCON'] as $tcid) {
+                $genres = explode("\0", $tcid['data']);
+                $parsed['genre'] = $genres;
+                break;
             }
         }
 

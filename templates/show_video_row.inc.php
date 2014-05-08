@@ -40,7 +40,7 @@
 <td class="cel_codec"><?php echo $video->f_codec; ?></td>
 <td class="cel_resolution"><?php echo $video->f_resolution; ?></td>
 <td class="cel_length"><?php echo $video->f_length; ?></td>
-<td class="cel_tags"><?php $video->f_tags; ?></td>
+<td class="cel_tags" title="<?php echo $video->f_tags; ?>"><?php $video->f_tags; ?></td>
 <td class="cel_action">
 <?php if (Access::check_function('download')) { ?>
     <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&type=video&oid=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>

@@ -644,7 +644,9 @@ class Catalog_local extends Catalog
     {
         $vainfo = new vainfo($file, '', '', '', $this->sort_pattern, $this->rename_pattern);
         $vainfo->get_info();
+
         $key = vainfo::get_tag_type($vainfo->tags);
+
         $results = vainfo::clean_tag_info($vainfo->tags, $key, $file);
 
         $results['catalog'] = $this->id;

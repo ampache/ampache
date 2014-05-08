@@ -58,7 +58,7 @@ foreach ($data as $row) {
 
     if ($is_allowed || $has_allowed_time) {
         $interval = intval(time() - $row['date']);
-		
+
         if ($interval < 60) {
             $unit = ngettext('second ago', 'seconds ago', $interval);
         } else if ($interval < 3600) {
