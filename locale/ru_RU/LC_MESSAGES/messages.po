@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ampache\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-07 18:59+0200\n"
+"POT-Creation-Date: 2014-05-08 13:41+0200\n"
 "PO-Revision-Date: 2007-02-05 21:58-0000\n"
 "Last-Translator: Alexey Illarionov <littlesavage@orionet.ru>\n"
 "Language-Team: Russian <translations@ampache.org>\n"
@@ -1313,7 +1313,7 @@ msgid "Broadcasts"
 msgstr ""
 
 #: ../../lib/class/browse.class.php:271 ../../templates/rightbar.inc.php:124
-#: ../../templates/show_recently_played.inc.php:157
+#: ../../templates/show_recently_played.inc.php:156
 msgid "More"
 msgstr "Еще"
 
@@ -1617,7 +1617,7 @@ msgstr "Композиция"
 #: ../../templates/show_playlist_songs.inc.php:34
 #: ../../templates/show_playlist_songs.inc.php:71
 #: ../../templates/show_recently_played.inc.php:32
-#: ../../templates/show_recently_played.inc.php:142
+#: ../../templates/show_recently_played.inc.php:141
 #: ../../templates/show_search_bar.inc.php:32
 #: ../../templates/show_song.inc.php:87
 #: ../../templates/show_song_previews.inc.php:34
@@ -1648,7 +1648,7 @@ msgstr "Альбом"
 #: ../../templates/show_playlist_songs.inc.php:33
 #: ../../templates/show_playlist_songs.inc.php:70
 #: ../../templates/show_recently_played.inc.php:33
-#: ../../templates/show_recently_played.inc.php:143
+#: ../../templates/show_recently_played.inc.php:142
 #: ../../templates/show_recommended_artists.inc.php:30
 #: ../../templates/show_recommended_artists.inc.php:79
 #: ../../templates/show_search_bar.inc.php:33
@@ -1811,7 +1811,7 @@ msgstr "Имя"
 #: ../../templates/show_playlist_song_row.inc.php:27
 #: ../../templates/show_playlist_songs.inc.php:67
 #: ../../templates/show_random_albums.inc.php:46
-#: ../../templates/show_recently_played.inc.php:97
+#: ../../templates/show_recently_played.inc.php:96
 #: ../../templates/show_smartplaylist_row.inc.php:27
 #: ../../templates/show_song.inc.php:59
 #: ../../templates/show_song_preview_row.inc.php:26
@@ -2430,7 +2430,7 @@ msgstr ""
 #: ../../templates/show_login_form.inc.php:78
 #: ../../templates/show_now_playing_row.inc.php:25
 #: ../../templates/show_recently_played.inc.php:34
-#: ../../templates/show_recently_played.inc.php:144
+#: ../../templates/show_recently_played.inc.php:143
 #: ../../templates/show_user_registration.inc.php:71
 #: ../../templates/show_users.inc.php:41 ../../templates/show_users.inc.php:67
 msgid "Username"
@@ -3434,7 +3434,7 @@ msgstr "Действия"
 #: ../../templates/show_playlist_row.inc.php:29
 #: ../../templates/show_playlist_song_row.inc.php:29
 #: ../../templates/show_random_albums.inc.php:48
-#: ../../templates/show_recently_played.inc.php:99
+#: ../../templates/show_recently_played.inc.php:98
 #: ../../templates/show_smartplaylist_row.inc.php:29
 #: ../../templates/show_song.inc.php:61
 #: ../../templates/show_song_preview_row.inc.php:28
@@ -3456,7 +3456,7 @@ msgstr "Список композиций"
 #: ../../templates/show_playlist_row.inc.php:37
 #: ../../templates/show_playlist_song_row.inc.php:37
 #: ../../templates/show_random_albums.inc.php:51
-#: ../../templates/show_recently_played.inc.php:107
+#: ../../templates/show_recently_played.inc.php:106
 #: ../../templates/show_smartplaylist_row.inc.php:37
 #: ../../templates/show_song.inc.php:65
 #: ../../templates/show_song_preview_row.inc.php:38
@@ -3569,7 +3569,7 @@ msgstr "Редактировать альбом"
 #: ../../templates/show_artist_row.inc.php:40
 #: ../../templates/show_playlist_row.inc.php:40
 #: ../../templates/show_playlist_song_row.inc.php:39
-#: ../../templates/show_recently_played.inc.php:109
+#: ../../templates/show_recently_played.inc.php:108
 #: ../../templates/show_smartplaylist_row.inc.php:39
 #: ../../templates/show_song_preview_row.inc.php:40
 #: ../../templates/show_song_row.inc.php:39
@@ -4134,7 +4134,7 @@ msgstr "Дублирующиеся песни"
 #: ../../templates/show_lyrics.inc.php:44
 #: ../../templates/show_now_playing_row.inc.php:39
 #: ../../templates/show_recently_played.inc.php:30
-#: ../../templates/show_recently_played.inc.php:140
+#: ../../templates/show_recently_played.inc.php:139
 #: ../../templates/sidebar_home.inc.php:70
 msgid "Song"
 msgstr "Композиция"
@@ -5007,12 +5007,12 @@ msgid "Enqueue"
 msgstr "Добавить"
 
 #: ../../templates/show_recently_played.inc.php:35
-#: ../../templates/show_recently_played.inc.php:145
+#: ../../templates/show_recently_played.inc.php:144
 msgid "Last Played"
 msgstr "Последнее воспроизведение"
 
 #: ../../templates/show_recently_played.inc.php:36
-#: ../../templates/show_recently_played.inc.php:146
+#: ../../templates/show_recently_played.inc.php:145
 msgid "Agent"
 msgstr ""
 
@@ -5080,7 +5080,7 @@ msgstr[0] "секунд назад"
 msgstr[1] "секунд назад"
 msgstr[2] "секунд назад"
 
-#: ../../templates/show_recently_played.inc.php:133
+#: ../../templates/show_recently_played.inc.php:132
 #, fuzzy
 msgid "No recently item found"
 msgstr "Отключенных песен не найдено"
@@ -5857,6 +5857,10 @@ msgid "Transcode Bitrate"
 msgstr "Битрейд перекодирования"
 
 #: Database words
+msgid "Website Title"
+msgstr ""
+
+#: Database words
 msgid "Lock Songs"
 msgstr "Блокировать песни"
 
@@ -5869,10 +5873,6 @@ msgid "Non-Standard Http Port"
 msgstr "Нестандартный HTTP порт"
 
 #: Database words
-msgid "Localplay Type"
-msgstr "Тип локального вещания"
-
-#: Database words
 msgid "Type of Playback"
 msgstr "Тип вещания"
 
@@ -5881,28 +5881,20 @@ msgid "Language"
 msgstr "Язык"
 
 #: Database words
+msgid "Playlist Type"
+msgstr "Тип списка композиций"
+
+#: Database words
 msgid "Theme"
 msgstr "Тема"
 
 #: Database words
-msgid "Album Ellipse Threshold"
-msgstr "Ширина столбца альбома"
-
-#: Database words
-msgid "Artist Ellipse Threshold"
-msgstr "Ширина исполнителя"
-
-#: Database words
-msgid "Title Ellipse Threshold"
-msgstr "Ширина названия"
-
-#: Database words
-msgid "Offset Limit"
-msgstr "Максимальное смещение"
-
-#: Database words
 msgid "Localplay Access"
 msgstr "Доступ к локальному вещанию"
+
+#: Database words
+msgid "Localplay Type"
+msgstr "Тип локального вещания"
 
 #: Database words
 msgid "Allow Streaming"
@@ -5921,8 +5913,8 @@ msgid "Statistics Day Threshold"
 msgstr "Порог дневной статистики"
 
 #: Database words
-msgid "Min Element Count"
-msgstr "Минимальное кол-во элементов"
+msgid "Offset Limit"
+msgstr "Максимальное смещение"
 
 #: Database words
 msgid "Rate Limit"
@@ -5937,16 +5929,157 @@ msgid "Transcoding"
 msgstr "Перекодирование"
 
 #: Database words
-msgid "User to track"
-msgstr "Следить за пользователем"
+#, fuzzy
+msgid "Shoutcast Active Instance"
+msgstr "Активный элемент"
 
 #: Database words
-msgid "Streaming"
-msgstr "Вещание"
+msgid "Iframes"
+msgstr ""
 
 #: Database words
-msgid "System"
-msgstr "Система"
+#, fuzzy
+msgid "Now playing filtered per user"
+msgstr "Текущее воспроизведение очищено"
+
+#: Database words
+msgid "Album Default Sort"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Show # played"
+msgstr "Проигранный"
+
+#: Database words
+msgid "Show current song in Web player page title"
+msgstr ""
+
+#: Database words
+msgid "Use SubSonic backend"
+msgstr ""
+
+#: Database words
+msgid "Use Plex backend"
+msgstr ""
+
+#: Database words
+msgid "Authorize Flash Web Player(s)"
+msgstr ""
+
+#: Database words
+msgid "Authorize HTML5 Web Player(s)"
+msgstr ""
+
+#: Database words
+msgid "Personal information visibility - Now playing"
+msgstr ""
+
+#: Database words
+msgid "Personal information visibility - Recently played"
+msgstr ""
+
+#: Database words
+msgid ""
+"Personal information visibility - Recently played - Allow to show streaming "
+"date/time"
+msgstr ""
+
+#: Database words
+msgid ""
+"Personal information visibility - Recently played - Allow to show streaming "
+"agent"
+msgstr ""
+
+#: Database words
+msgid "Fix header/sidebars position on compatible themes"
+msgstr ""
+
+#: Database words
+msgid "Check for Ampache updates automatically"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last check time"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last version from last check"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last version from last check is newer"
+msgstr ""
+
+#: Database words
+msgid "Confirmation when closing current playing window"
+msgstr ""
+
+#: Database words
+msgid "Auto-pause betweens tabs"
+msgstr ""
+
+#: Database words
+msgid "Use beautiful stream url"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Allow Share"
+msgstr "Разрешить вещание"
+
+#: Database words
+msgid "Share links default expiration days (0=never)"
+msgstr ""
+
+#: Database words
+msgid "Artist slideshow inactivity time"
+msgstr ""
+
+#: Database words
+msgid "Broadcast web player by default"
+msgstr ""
+
+#: Database words
+msgid "Limit number of future events"
+msgstr ""
+
+#: Database words
+msgid "Limit number of past events"
+msgstr ""
+
+#: Database words
+msgid "Album - Group multiple disks"
+msgstr ""
+
+#: Database words
+msgid "Top menu"
+msgstr ""
+
+#: Database words
+msgid "Flickr api key"
+msgstr ""
+
+#~ msgid "Album Ellipse Threshold"
+#~ msgstr "Ширина столбца альбома"
+
+#~ msgid "Artist Ellipse Threshold"
+#~ msgstr "Ширина исполнителя"
+
+#~ msgid "Title Ellipse Threshold"
+#~ msgstr "Ширина названия"
+
+#~ msgid "Min Element Count"
+#~ msgstr "Минимальное кол-во элементов"
+
+#~ msgid "User to track"
+#~ msgstr "Следить за пользователем"
+
+#~ msgid "Streaming"
+#~ msgstr "Вещание"
+
+#~ msgid "System"
+#~ msgstr "Система"
 
 #~ msgid "Related Album"
 #~ msgstr "Схожий альбом"
@@ -6017,9 +6150,6 @@ msgstr "Система"
 
 #~ msgid "Add Random Songs By %s"
 #~ msgstr "Добавить случайные песни %s"
-
-#~ msgid "Playlist Type"
-#~ msgstr "Тип списка композиций"
 
 #, fuzzy
 #~ msgid "Play Album Preview"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ampache\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-07 18:59+0200\n"
+"POT-Creation-Date: 2014-05-08 13:41+0200\n"
 "PO-Revision-Date: 2009-03-24 18:04+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -1311,7 +1311,7 @@ msgid "Broadcasts"
 msgstr ""
 
 #: ../../lib/class/browse.class.php:271 ../../templates/rightbar.inc.php:124
-#: ../../templates/show_recently_played.inc.php:157
+#: ../../templates/show_recently_played.inc.php:156
 msgid "More"
 msgstr "Mer"
 
@@ -1613,7 +1613,7 @@ msgstr "Titel"
 #: ../../templates/show_playlist_songs.inc.php:34
 #: ../../templates/show_playlist_songs.inc.php:71
 #: ../../templates/show_recently_played.inc.php:32
-#: ../../templates/show_recently_played.inc.php:142
+#: ../../templates/show_recently_played.inc.php:141
 #: ../../templates/show_search_bar.inc.php:32
 #: ../../templates/show_song.inc.php:87
 #: ../../templates/show_song_previews.inc.php:34
@@ -1644,7 +1644,7 @@ msgstr "Album"
 #: ../../templates/show_playlist_songs.inc.php:33
 #: ../../templates/show_playlist_songs.inc.php:70
 #: ../../templates/show_recently_played.inc.php:33
-#: ../../templates/show_recently_played.inc.php:143
+#: ../../templates/show_recently_played.inc.php:142
 #: ../../templates/show_recommended_artists.inc.php:30
 #: ../../templates/show_recommended_artists.inc.php:79
 #: ../../templates/show_search_bar.inc.php:33
@@ -1807,7 +1807,7 @@ msgstr "Namn"
 #: ../../templates/show_playlist_song_row.inc.php:27
 #: ../../templates/show_playlist_songs.inc.php:67
 #: ../../templates/show_random_albums.inc.php:46
-#: ../../templates/show_recently_played.inc.php:97
+#: ../../templates/show_recently_played.inc.php:96
 #: ../../templates/show_smartplaylist_row.inc.php:27
 #: ../../templates/show_song.inc.php:59
 #: ../../templates/show_song_preview_row.inc.php:26
@@ -2427,7 +2427,7 @@ msgstr ""
 #: ../../templates/show_login_form.inc.php:78
 #: ../../templates/show_now_playing_row.inc.php:25
 #: ../../templates/show_recently_played.inc.php:34
-#: ../../templates/show_recently_played.inc.php:144
+#: ../../templates/show_recently_played.inc.php:143
 #: ../../templates/show_user_registration.inc.php:71
 #: ../../templates/show_users.inc.php:41 ../../templates/show_users.inc.php:67
 msgid "Username"
@@ -3430,7 +3430,7 @@ msgstr "Åtgärder"
 #: ../../templates/show_playlist_row.inc.php:29
 #: ../../templates/show_playlist_song_row.inc.php:29
 #: ../../templates/show_random_albums.inc.php:48
-#: ../../templates/show_recently_played.inc.php:99
+#: ../../templates/show_recently_played.inc.php:98
 #: ../../templates/show_smartplaylist_row.inc.php:29
 #: ../../templates/show_song.inc.php:61
 #: ../../templates/show_song_preview_row.inc.php:28
@@ -3452,7 +3452,7 @@ msgstr "Spellista"
 #: ../../templates/show_playlist_row.inc.php:37
 #: ../../templates/show_playlist_song_row.inc.php:37
 #: ../../templates/show_random_albums.inc.php:51
-#: ../../templates/show_recently_played.inc.php:107
+#: ../../templates/show_recently_played.inc.php:106
 #: ../../templates/show_smartplaylist_row.inc.php:37
 #: ../../templates/show_song.inc.php:65
 #: ../../templates/show_song_preview_row.inc.php:38
@@ -3565,7 +3565,7 @@ msgstr "Redigera album"
 #: ../../templates/show_artist_row.inc.php:40
 #: ../../templates/show_playlist_row.inc.php:40
 #: ../../templates/show_playlist_song_row.inc.php:39
-#: ../../templates/show_recently_played.inc.php:109
+#: ../../templates/show_recently_played.inc.php:108
 #: ../../templates/show_smartplaylist_row.inc.php:39
 #: ../../templates/show_song_preview_row.inc.php:40
 #: ../../templates/show_song_row.inc.php:39
@@ -4128,7 +4128,7 @@ msgstr "Dubblerade låtar"
 #: ../../templates/show_lyrics.inc.php:44
 #: ../../templates/show_now_playing_row.inc.php:39
 #: ../../templates/show_recently_played.inc.php:30
-#: ../../templates/show_recently_played.inc.php:140
+#: ../../templates/show_recently_played.inc.php:139
 #: ../../templates/sidebar_home.inc.php:70
 msgid "Song"
 msgstr "Låt"
@@ -5000,12 +5000,12 @@ msgid "Enqueue"
 msgstr "Kölägg"
 
 #: ../../templates/show_recently_played.inc.php:35
-#: ../../templates/show_recently_played.inc.php:145
+#: ../../templates/show_recently_played.inc.php:144
 msgid "Last Played"
 msgstr "Senast spelad"
 
 #: ../../templates/show_recently_played.inc.php:36
-#: ../../templates/show_recently_played.inc.php:146
+#: ../../templates/show_recently_played.inc.php:145
 msgid "Agent"
 msgstr ""
 
@@ -5065,7 +5065,7 @@ msgid_plural "decades ago"
 msgstr[0] "sekunder sedan"
 msgstr[1] "sekunder sedan"
 
-#: ../../templates/show_recently_played.inc.php:133
+#: ../../templates/show_recently_played.inc.php:132
 #, fuzzy
 msgid "No recently item found"
 msgstr "Inga inaktiverade låtar hittades"
@@ -5862,6 +5862,10 @@ msgid "Transcode Bitrate"
 msgstr "Bitfrekvens för omkodning"
 
 #: Database words
+msgid "Website Title"
+msgstr ""
+
+#: Database words
 msgid "Lock Songs"
 msgstr "Lås låtar"
 
@@ -5874,10 +5878,6 @@ msgid "Non-Standard Http Port"
 msgstr "Icke-standardport för http"
 
 #: Database words
-msgid "Localplay Type"
-msgstr "Typ av lokal uppspelning"
-
-#: Database words
 msgid "Type of Playback"
 msgstr "Typ av uppspelning"
 
@@ -5886,28 +5886,20 @@ msgid "Language"
 msgstr "Språk"
 
 #: Database words
+msgid "Playlist Type"
+msgstr "Typ av spellista"
+
+#: Database words
 msgid "Theme"
 msgstr "Tema"
 
 #: Database words
-msgid "Album Ellipse Threshold"
-msgstr "Tröskelvärde för albumellips"
-
-#: Database words
-msgid "Artist Ellipse Threshold"
-msgstr "Tröskelvärde för artistellips"
-
-#: Database words
-msgid "Title Ellipse Threshold"
-msgstr "Tröskelvärde för titelellips"
-
-#: Database words
-msgid "Offset Limit"
-msgstr "Offsetgräns"
-
-#: Database words
 msgid "Localplay Access"
 msgstr "Åtkomst till lokal uppspelning"
+
+#: Database words
+msgid "Localplay Type"
+msgstr "Typ av lokal uppspelning"
 
 #: Database words
 msgid "Allow Streaming"
@@ -5926,8 +5918,8 @@ msgid "Statistics Day Threshold"
 msgstr "Tröskelvärde för statistikdag"
 
 #: Database words
-msgid "Min Element Count"
-msgstr "Min elementantal"
+msgid "Offset Limit"
+msgstr "Offsetgräns"
 
 #: Database words
 msgid "Rate Limit"
@@ -5942,16 +5934,157 @@ msgid "Transcoding"
 msgstr "Omkodning"
 
 #: Database words
-msgid "User to track"
-msgstr "Användare att spåra"
+#, fuzzy
+msgid "Shoutcast Active Instance"
+msgstr "Aktiv instans"
 
 #: Database words
-msgid "Streaming"
-msgstr "Strömmande"
+msgid "Iframes"
+msgstr ""
 
 #: Database words
-msgid "System"
-msgstr "System"
+#, fuzzy
+msgid "Now playing filtered per user"
+msgstr "Spelar nu tömdes"
+
+#: Database words
+msgid "Album Default Sort"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Show # played"
+msgstr "Spelad"
+
+#: Database words
+msgid "Show current song in Web player page title"
+msgstr ""
+
+#: Database words
+msgid "Use SubSonic backend"
+msgstr ""
+
+#: Database words
+msgid "Use Plex backend"
+msgstr ""
+
+#: Database words
+msgid "Authorize Flash Web Player(s)"
+msgstr ""
+
+#: Database words
+msgid "Authorize HTML5 Web Player(s)"
+msgstr ""
+
+#: Database words
+msgid "Personal information visibility - Now playing"
+msgstr ""
+
+#: Database words
+msgid "Personal information visibility - Recently played"
+msgstr ""
+
+#: Database words
+msgid ""
+"Personal information visibility - Recently played - Allow to show streaming "
+"date/time"
+msgstr ""
+
+#: Database words
+msgid ""
+"Personal information visibility - Recently played - Allow to show streaming "
+"agent"
+msgstr ""
+
+#: Database words
+msgid "Fix header/sidebars position on compatible themes"
+msgstr ""
+
+#: Database words
+msgid "Check for Ampache updates automatically"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last check time"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last version from last check"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last version from last check is newer"
+msgstr ""
+
+#: Database words
+msgid "Confirmation when closing current playing window"
+msgstr ""
+
+#: Database words
+msgid "Auto-pause betweens tabs"
+msgstr ""
+
+#: Database words
+msgid "Use beautiful stream url"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Allow Share"
+msgstr "Tillåt strömmande"
+
+#: Database words
+msgid "Share links default expiration days (0=never)"
+msgstr ""
+
+#: Database words
+msgid "Artist slideshow inactivity time"
+msgstr ""
+
+#: Database words
+msgid "Broadcast web player by default"
+msgstr ""
+
+#: Database words
+msgid "Limit number of future events"
+msgstr ""
+
+#: Database words
+msgid "Limit number of past events"
+msgstr ""
+
+#: Database words
+msgid "Album - Group multiple disks"
+msgstr ""
+
+#: Database words
+msgid "Top menu"
+msgstr ""
+
+#: Database words
+msgid "Flickr api key"
+msgstr ""
+
+#~ msgid "Album Ellipse Threshold"
+#~ msgstr "Tröskelvärde för albumellips"
+
+#~ msgid "Artist Ellipse Threshold"
+#~ msgstr "Tröskelvärde för artistellips"
+
+#~ msgid "Title Ellipse Threshold"
+#~ msgstr "Tröskelvärde för titelellips"
+
+#~ msgid "Min Element Count"
+#~ msgstr "Min elementantal"
+
+#~ msgid "User to track"
+#~ msgstr "Användare att spåra"
+
+#~ msgid "Streaming"
+#~ msgstr "Strömmande"
+
+#~ msgid "System"
+#~ msgstr "System"
 
 #~ msgid "Related Album"
 #~ msgstr "Relaterat album"
@@ -6022,9 +6155,6 @@ msgstr "System"
 
 #~ msgid "Add Random Songs By %s"
 #~ msgstr "Lägg till slumpmässiga låtar av %s"
-
-#~ msgid "Playlist Type"
-#~ msgstr "Typ av spellista"
 
 #, fuzzy
 #~ msgid "Play Album Preview"

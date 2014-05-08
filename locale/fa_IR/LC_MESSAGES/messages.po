@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-07 18:59+0200\n"
+"POT-Creation-Date: 2014-05-08 13:41+0200\n"
 "PO-Revision-Date: 2010-03-16 21:20+0330\n"
 "Last-Translator: Soroush <soroush.rostami@gmail.com>\n"
 "Language-Team: Farsi <soroush.rostami@gmail.com>\n"
@@ -1356,7 +1356,7 @@ msgid "Broadcasts"
 msgstr ""
 
 #: ../../lib/class/browse.class.php:271 ../../templates/rightbar.inc.php:124
-#: ../../templates/show_recently_played.inc.php:157
+#: ../../templates/show_recently_played.inc.php:156
 msgid "More"
 msgstr "ادامه"
 
@@ -1659,7 +1659,7 @@ msgstr "عنوان"
 #: ../../templates/show_playlist_songs.inc.php:34
 #: ../../templates/show_playlist_songs.inc.php:71
 #: ../../templates/show_recently_played.inc.php:32
-#: ../../templates/show_recently_played.inc.php:142
+#: ../../templates/show_recently_played.inc.php:141
 #: ../../templates/show_search_bar.inc.php:32
 #: ../../templates/show_song.inc.php:87
 #: ../../templates/show_song_previews.inc.php:34
@@ -1690,7 +1690,7 @@ msgstr "آلبوم"
 #: ../../templates/show_playlist_songs.inc.php:33
 #: ../../templates/show_playlist_songs.inc.php:70
 #: ../../templates/show_recently_played.inc.php:33
-#: ../../templates/show_recently_played.inc.php:143
+#: ../../templates/show_recently_played.inc.php:142
 #: ../../templates/show_recommended_artists.inc.php:30
 #: ../../templates/show_recommended_artists.inc.php:79
 #: ../../templates/show_search_bar.inc.php:33
@@ -1857,7 +1857,7 @@ msgstr "نام"
 #: ../../templates/show_playlist_song_row.inc.php:27
 #: ../../templates/show_playlist_songs.inc.php:67
 #: ../../templates/show_random_albums.inc.php:46
-#: ../../templates/show_recently_played.inc.php:97
+#: ../../templates/show_recently_played.inc.php:96
 #: ../../templates/show_smartplaylist_row.inc.php:27
 #: ../../templates/show_song.inc.php:59
 #: ../../templates/show_song_preview_row.inc.php:26
@@ -2490,7 +2490,7 @@ msgstr ""
 #: ../../templates/show_login_form.inc.php:78
 #: ../../templates/show_now_playing_row.inc.php:25
 #: ../../templates/show_recently_played.inc.php:34
-#: ../../templates/show_recently_played.inc.php:144
+#: ../../templates/show_recently_played.inc.php:143
 #: ../../templates/show_user_registration.inc.php:71
 #: ../../templates/show_users.inc.php:41 ../../templates/show_users.inc.php:67
 #, fuzzy
@@ -3524,7 +3524,7 @@ msgstr "کارها"
 #: ../../templates/show_playlist_row.inc.php:29
 #: ../../templates/show_playlist_song_row.inc.php:29
 #: ../../templates/show_random_albums.inc.php:48
-#: ../../templates/show_recently_played.inc.php:99
+#: ../../templates/show_recently_played.inc.php:98
 #: ../../templates/show_smartplaylist_row.inc.php:29
 #: ../../templates/show_song.inc.php:61
 #: ../../templates/show_song_preview_row.inc.php:28
@@ -3546,7 +3546,7 @@ msgstr "لیست پخش"
 #: ../../templates/show_playlist_row.inc.php:37
 #: ../../templates/show_playlist_song_row.inc.php:37
 #: ../../templates/show_random_albums.inc.php:51
-#: ../../templates/show_recently_played.inc.php:107
+#: ../../templates/show_recently_played.inc.php:106
 #: ../../templates/show_smartplaylist_row.inc.php:37
 #: ../../templates/show_song.inc.php:65
 #: ../../templates/show_song_preview_row.inc.php:38
@@ -3659,7 +3659,7 @@ msgstr "ویرایش آلبوم"
 #: ../../templates/show_artist_row.inc.php:40
 #: ../../templates/show_playlist_row.inc.php:40
 #: ../../templates/show_playlist_song_row.inc.php:39
-#: ../../templates/show_recently_played.inc.php:109
+#: ../../templates/show_recently_played.inc.php:108
 #: ../../templates/show_smartplaylist_row.inc.php:39
 #: ../../templates/show_song_preview_row.inc.php:40
 #: ../../templates/show_song_row.inc.php:39
@@ -4243,7 +4243,7 @@ msgstr "آهنگ های تکراری"
 #: ../../templates/show_lyrics.inc.php:44
 #: ../../templates/show_now_playing_row.inc.php:39
 #: ../../templates/show_recently_played.inc.php:30
-#: ../../templates/show_recently_played.inc.php:140
+#: ../../templates/show_recently_played.inc.php:139
 #: ../../templates/sidebar_home.inc.php:70
 msgid "Song"
 msgstr "آهنگ"
@@ -5149,12 +5149,12 @@ msgid "Enqueue"
 msgstr "به صف کردن"
 
 #: ../../templates/show_recently_played.inc.php:35
-#: ../../templates/show_recently_played.inc.php:145
+#: ../../templates/show_recently_played.inc.php:144
 msgid "Last Played"
 msgstr "آخرین آهنگ های پخش شده"
 
 #: ../../templates/show_recently_played.inc.php:36
-#: ../../templates/show_recently_played.inc.php:146
+#: ../../templates/show_recently_played.inc.php:145
 msgid "Agent"
 msgstr ""
 
@@ -5206,7 +5206,7 @@ msgid "decade ago"
 msgid_plural "decades ago"
 msgstr[0] "ثانیه پیش"
 
-#: ../../templates/show_recently_played.inc.php:133
+#: ../../templates/show_recently_played.inc.php:132
 #, fuzzy
 msgid "No recently item found"
 msgstr "هیچ آهنگ غیر فعال شده ای یافت نشد"
@@ -6025,6 +6025,10 @@ msgid "Transcode Bitrate"
 msgstr "نرخ سرعت کدگذاری"
 
 #: Database words
+msgid "Website Title"
+msgstr ""
+
+#: Database words
 msgid "Lock Songs"
 msgstr "قفل کردن آهنگ ها"
 
@@ -6037,10 +6041,6 @@ msgid "Non-Standard Http Port"
 msgstr "غیر استاندارد Http درگاه"
 
 #: Database words
-msgid "Localplay Type"
-msgstr "نوع پخش محلی"
-
-#: Database words
 msgid "Type of Playback"
 msgstr "نوع پخش"
 
@@ -6049,31 +6049,21 @@ msgid "Language"
 msgstr "زبان"
 
 #: Database words
+#, fuzzy
+msgid "Playlist Type"
+msgstr "نوع لیست پخش"
+
+#: Database words
 msgid "Theme"
 msgstr "پوسته"
 
 #: Database words
-#, fuzzy
-msgid "Album Ellipse Threshold"
-msgstr "آستانه خمیدگی آلبوم"
-
-#: Database words
-#, fuzzy
-msgid "Artist Ellipse Threshold"
-msgstr "آستانه خمیدگی هنرمند"
-
-#: Database words
-msgid "Title Ellipse Threshold"
-msgstr "آستانه عنوان بیضی"
-
-#: Database words
-#, fuzzy
-msgid "Offset Limit"
-msgstr "محدودیت نقطه شروع"
-
-#: Database words
 msgid "Localplay Access"
 msgstr "دسترسی پخش محلی"
+
+#: Database words
+msgid "Localplay Type"
+msgstr "نوع پخش محلی"
 
 #: Database words
 msgid "Allow Streaming"
@@ -6092,8 +6082,9 @@ msgid "Statistics Day Threshold"
 msgstr "آستانه  آمار روزانه"
 
 #: Database words
-msgid "Min Element Count"
-msgstr "کمترین تعداد اجزا"
+#, fuzzy
+msgid "Offset Limit"
+msgstr "محدودیت نقطه شروع"
 
 #: Database words
 msgid "Rate Limit"
@@ -6110,16 +6101,159 @@ msgstr "کد گذاری"
 
 #: Database words
 #, fuzzy
-msgid "User to track"
-msgstr "کاربر به تراک"
+msgid "Shoutcast Active Instance"
+msgstr "مورد فعال"
 
 #: Database words
-msgid "Streaming"
-msgstr "پخش جریانی"
+msgid "Iframes"
+msgstr ""
 
 #: Database words
-msgid "System"
-msgstr "سیستم"
+#, fuzzy
+msgid "Now playing filtered per user"
+msgstr "لیست در حال پخش پاک شد"
+
+#: Database words
+msgid "Album Default Sort"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Show # played"
+msgstr "پخش شده"
+
+#: Database words
+msgid "Show current song in Web player page title"
+msgstr ""
+
+#: Database words
+msgid "Use SubSonic backend"
+msgstr ""
+
+#: Database words
+msgid "Use Plex backend"
+msgstr ""
+
+#: Database words
+msgid "Authorize Flash Web Player(s)"
+msgstr ""
+
+#: Database words
+msgid "Authorize HTML5 Web Player(s)"
+msgstr ""
+
+#: Database words
+msgid "Personal information visibility - Now playing"
+msgstr ""
+
+#: Database words
+msgid "Personal information visibility - Recently played"
+msgstr ""
+
+#: Database words
+msgid ""
+"Personal information visibility - Recently played - Allow to show streaming "
+"date/time"
+msgstr ""
+
+#: Database words
+msgid ""
+"Personal information visibility - Recently played - Allow to show streaming "
+"agent"
+msgstr ""
+
+#: Database words
+msgid "Fix header/sidebars position on compatible themes"
+msgstr ""
+
+#: Database words
+msgid "Check for Ampache updates automatically"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last check time"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last version from last check"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last version from last check is newer"
+msgstr ""
+
+#: Database words
+msgid "Confirmation when closing current playing window"
+msgstr ""
+
+#: Database words
+msgid "Auto-pause betweens tabs"
+msgstr ""
+
+#: Database words
+msgid "Use beautiful stream url"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Allow Share"
+msgstr "اجازه پخش جریانی"
+
+#: Database words
+msgid "Share links default expiration days (0=never)"
+msgstr ""
+
+#: Database words
+msgid "Artist slideshow inactivity time"
+msgstr ""
+
+#: Database words
+msgid "Broadcast web player by default"
+msgstr ""
+
+#: Database words
+msgid "Limit number of future events"
+msgstr ""
+
+#: Database words
+msgid "Limit number of past events"
+msgstr ""
+
+#: Database words
+msgid "Album - Group multiple disks"
+msgstr ""
+
+#: Database words
+msgid "Top menu"
+msgstr ""
+
+#: Database words
+msgid "Flickr api key"
+msgstr ""
+
+#, fuzzy
+#~ msgid "Album Ellipse Threshold"
+#~ msgstr "آستانه خمیدگی آلبوم"
+
+#, fuzzy
+#~ msgid "Artist Ellipse Threshold"
+#~ msgstr "آستانه خمیدگی هنرمند"
+
+#~ msgid "Title Ellipse Threshold"
+#~ msgstr "آستانه عنوان بیضی"
+
+#~ msgid "Min Element Count"
+#~ msgstr "کمترین تعداد اجزا"
+
+#, fuzzy
+#~ msgid "User to track"
+#~ msgstr "کاربر به تراک"
+
+#~ msgid "Streaming"
+#~ msgstr "پخش جریانی"
+
+#~ msgid "System"
+#~ msgstr "سیستم"
 
 #~ msgid "Related Album"
 #~ msgstr "آلبوم های مرتبط"
@@ -6193,10 +6327,6 @@ msgstr "سیستم"
 
 #~ msgid "Add Random Songs By %s"
 #~ msgstr "%s اضافه کردن آهنگهای تصادفی از"
-
-#, fuzzy
-#~ msgid "Playlist Type"
-#~ msgstr "نوع لیست پخش"
 
 #, fuzzy
 #~ msgid "Play Album Preview"
