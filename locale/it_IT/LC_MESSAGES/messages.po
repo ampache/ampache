@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-07 18:59+0200\n"
+"POT-Creation-Date: 2014-05-08 13:41+0200\n"
 "PO-Revision-Date: 2006-01-08 00:34+0100\n"
 "Last-Translator: Mr-miky <translate@mr-miky.com>\n"
 "Language-Team: Italian\n"
@@ -1324,7 +1324,7 @@ msgid "Broadcasts"
 msgstr ""
 
 #: ../../lib/class/browse.class.php:271 ../../templates/rightbar.inc.php:124
-#: ../../templates/show_recently_played.inc.php:157
+#: ../../templates/show_recently_played.inc.php:156
 msgid "More"
 msgstr ""
 
@@ -1605,7 +1605,7 @@ msgstr "Titolo"
 #: ../../templates/show_playlist_songs.inc.php:34
 #: ../../templates/show_playlist_songs.inc.php:71
 #: ../../templates/show_recently_played.inc.php:32
-#: ../../templates/show_recently_played.inc.php:142
+#: ../../templates/show_recently_played.inc.php:141
 #: ../../templates/show_search_bar.inc.php:32
 #: ../../templates/show_song.inc.php:87
 #: ../../templates/show_song_previews.inc.php:34
@@ -1636,7 +1636,7 @@ msgstr "Album"
 #: ../../templates/show_playlist_songs.inc.php:33
 #: ../../templates/show_playlist_songs.inc.php:70
 #: ../../templates/show_recently_played.inc.php:33
-#: ../../templates/show_recently_played.inc.php:143
+#: ../../templates/show_recently_played.inc.php:142
 #: ../../templates/show_recommended_artists.inc.php:30
 #: ../../templates/show_recommended_artists.inc.php:79
 #: ../../templates/show_search_bar.inc.php:33
@@ -1799,7 +1799,7 @@ msgstr "Nome"
 #: ../../templates/show_playlist_song_row.inc.php:27
 #: ../../templates/show_playlist_songs.inc.php:67
 #: ../../templates/show_random_albums.inc.php:46
-#: ../../templates/show_recently_played.inc.php:97
+#: ../../templates/show_recently_played.inc.php:96
 #: ../../templates/show_smartplaylist_row.inc.php:27
 #: ../../templates/show_song.inc.php:59
 #: ../../templates/show_song_preview_row.inc.php:26
@@ -2424,7 +2424,7 @@ msgstr ""
 #: ../../templates/show_login_form.inc.php:78
 #: ../../templates/show_now_playing_row.inc.php:25
 #: ../../templates/show_recently_played.inc.php:34
-#: ../../templates/show_recently_played.inc.php:144
+#: ../../templates/show_recently_played.inc.php:143
 #: ../../templates/show_user_registration.inc.php:71
 #: ../../templates/show_users.inc.php:41 ../../templates/show_users.inc.php:67
 msgid "Username"
@@ -3443,7 +3443,7 @@ msgstr "Azioni"
 #: ../../templates/show_playlist_row.inc.php:29
 #: ../../templates/show_playlist_song_row.inc.php:29
 #: ../../templates/show_random_albums.inc.php:48
-#: ../../templates/show_recently_played.inc.php:99
+#: ../../templates/show_recently_played.inc.php:98
 #: ../../templates/show_smartplaylist_row.inc.php:29
 #: ../../templates/show_song.inc.php:61
 #: ../../templates/show_song_preview_row.inc.php:28
@@ -3465,7 +3465,7 @@ msgstr "Playlist"
 #: ../../templates/show_playlist_row.inc.php:37
 #: ../../templates/show_playlist_song_row.inc.php:37
 #: ../../templates/show_random_albums.inc.php:51
-#: ../../templates/show_recently_played.inc.php:107
+#: ../../templates/show_recently_played.inc.php:106
 #: ../../templates/show_smartplaylist_row.inc.php:37
 #: ../../templates/show_song.inc.php:65
 #: ../../templates/show_song_preview_row.inc.php:38
@@ -3579,7 +3579,7 @@ msgstr "Album"
 #: ../../templates/show_artist_row.inc.php:40
 #: ../../templates/show_playlist_row.inc.php:40
 #: ../../templates/show_playlist_song_row.inc.php:39
-#: ../../templates/show_recently_played.inc.php:109
+#: ../../templates/show_recently_played.inc.php:108
 #: ../../templates/show_smartplaylist_row.inc.php:39
 #: ../../templates/show_song_preview_row.inc.php:40
 #: ../../templates/show_song_row.inc.php:39
@@ -4151,7 +4151,7 @@ msgstr "Brani duplicati"
 #: ../../templates/show_lyrics.inc.php:44
 #: ../../templates/show_now_playing_row.inc.php:39
 #: ../../templates/show_recently_played.inc.php:30
-#: ../../templates/show_recently_played.inc.php:140
+#: ../../templates/show_recently_played.inc.php:139
 #: ../../templates/sidebar_home.inc.php:70
 msgid "Song"
 msgstr "Brano"
@@ -5026,12 +5026,12 @@ msgid "Enqueue"
 msgstr "Accoda"
 
 #: ../../templates/show_recently_played.inc.php:35
-#: ../../templates/show_recently_played.inc.php:145
+#: ../../templates/show_recently_played.inc.php:144
 msgid "Last Played"
 msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:36
-#: ../../templates/show_recently_played.inc.php:146
+#: ../../templates/show_recently_played.inc.php:145
 msgid "Agent"
 msgstr ""
 
@@ -5089,7 +5089,7 @@ msgid_plural "decades ago"
 msgstr[0] "giorni"
 msgstr[1] "giorni"
 
-#: ../../templates/show_recently_played.inc.php:133
+#: ../../templates/show_recently_played.inc.php:132
 #, fuzzy
 msgid "No recently item found"
 msgstr "Mostra brani disabilitati"
@@ -5863,6 +5863,10 @@ msgid "Transcode Bitrate"
 msgstr "Bitrate min."
 
 #: Database words
+msgid "Website Title"
+msgstr ""
+
+#: Database words
 #, fuzzy
 msgid "Lock Songs"
 msgstr "N° Brani"
@@ -5877,11 +5881,6 @@ msgstr ""
 
 #: Database words
 #, fuzzy
-msgid "Localplay Type"
-msgstr "Riproduzione locale"
-
-#: Database words
-#, fuzzy
 msgid "Type of Playback"
 msgstr "Riproduzione"
 
@@ -5890,30 +5889,23 @@ msgid "Language"
 msgstr ""
 
 #: Database words
+msgid "Playlist Type"
+msgstr "Tipo playlist"
+
+#: Database words
 #, fuzzy
 msgid "Theme"
 msgstr "Durata"
 
 #: Database words
-msgid "Album Ellipse Threshold"
-msgstr ""
-
-#: Database words
-msgid "Artist Ellipse Threshold"
-msgstr ""
-
-#: Database words
-msgid "Title Ellipse Threshold"
-msgstr ""
-
-#: Database words
-msgid "Offset Limit"
-msgstr ""
-
-#: Database words
 #, fuzzy
 msgid "Localplay Access"
 msgstr "Controllo riproduzione locale"
+
+#: Database words
+#, fuzzy
+msgid "Localplay Type"
+msgstr "Riproduzione locale"
 
 #: Database words
 #, fuzzy
@@ -5934,7 +5926,7 @@ msgid "Statistics Day Threshold"
 msgstr ""
 
 #: Database words
-msgid "Min Element Count"
+msgid "Offset Limit"
 msgstr ""
 
 #: Database words
@@ -5951,16 +5943,141 @@ msgid "Transcoding"
 msgstr ""
 
 #: Database words
-msgid "User to track"
+msgid "Shoutcast Active Instance"
 msgstr ""
 
 #: Database words
-msgid "Streaming"
-msgstr "Streaming"
+msgid "Iframes"
+msgstr ""
 
 #: Database words
-msgid "System"
-msgstr "Sistema"
+#, fuzzy
+msgid "Now playing filtered per user"
+msgstr "'In esecuzione ora' cancellato"
+
+#: Database words
+msgid "Album Default Sort"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Show # played"
+msgstr "Ascoltato"
+
+#: Database words
+msgid "Show current song in Web player page title"
+msgstr ""
+
+#: Database words
+msgid "Use SubSonic backend"
+msgstr ""
+
+#: Database words
+msgid "Use Plex backend"
+msgstr ""
+
+#: Database words
+msgid "Authorize Flash Web Player(s)"
+msgstr ""
+
+#: Database words
+msgid "Authorize HTML5 Web Player(s)"
+msgstr ""
+
+#: Database words
+msgid "Personal information visibility - Now playing"
+msgstr ""
+
+#: Database words
+msgid "Personal information visibility - Recently played"
+msgstr ""
+
+#: Database words
+msgid ""
+"Personal information visibility - Recently played - Allow to show streaming "
+"date/time"
+msgstr ""
+
+#: Database words
+msgid ""
+"Personal information visibility - Recently played - Allow to show streaming "
+"agent"
+msgstr ""
+
+#: Database words
+msgid "Fix header/sidebars position on compatible themes"
+msgstr ""
+
+#: Database words
+msgid "Check for Ampache updates automatically"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last check time"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last version from last check"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last version from last check is newer"
+msgstr ""
+
+#: Database words
+msgid "Confirmation when closing current playing window"
+msgstr ""
+
+#: Database words
+msgid "Auto-pause betweens tabs"
+msgstr ""
+
+#: Database words
+msgid "Use beautiful stream url"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Allow Share"
+msgstr "Stream"
+
+#: Database words
+msgid "Share links default expiration days (0=never)"
+msgstr ""
+
+#: Database words
+msgid "Artist slideshow inactivity time"
+msgstr ""
+
+#: Database words
+msgid "Broadcast web player by default"
+msgstr ""
+
+#: Database words
+msgid "Limit number of future events"
+msgstr ""
+
+#: Database words
+msgid "Limit number of past events"
+msgstr ""
+
+#: Database words
+msgid "Album - Group multiple disks"
+msgstr ""
+
+#: Database words
+msgid "Top menu"
+msgstr ""
+
+#: Database words
+msgid "Flickr api key"
+msgstr ""
+
+#~ msgid "Streaming"
+#~ msgstr "Streaming"
+
+#~ msgid "System"
+#~ msgstr "Sistema"
 
 #, fuzzy
 #~ msgid "Play album"
@@ -6013,9 +6130,6 @@ msgstr "Sistema"
 #, fuzzy
 #~ msgid "Add Random Songs By %s"
 #~ msgstr "Riproduci a caso i brani di"
-
-#~ msgid "Playlist Type"
-#~ msgstr "Tipo playlist"
 
 #, fuzzy
 #~ msgid "Play Album Preview"

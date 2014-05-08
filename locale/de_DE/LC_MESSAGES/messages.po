@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.7.0-dev\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-07 18:59+0200\n"
-"PO-Revision-Date: 2014-05-07 19:51+0100\n"
+"POT-Creation-Date: 2014-05-08 13:41+0200\n"
+"PO-Revision-Date: 2014-05-08 14:05+0100\n"
 "Last-Translator: Manuel Landmann <psyvirusx@gmail.com>\n"
 "Language-Team: German <translations@ampache.org>\n"
 "Language: de_DE\n"
@@ -1271,7 +1271,7 @@ msgid "Broadcasts"
 msgstr "Broadcasts"
 
 #: ../../lib/class/browse.class.php:271 ../../templates/rightbar.inc.php:124
-#: ../../templates/show_recently_played.inc.php:157
+#: ../../templates/show_recently_played.inc.php:156
 msgid "More"
 msgstr "Mehr"
 
@@ -1573,7 +1573,7 @@ msgstr "Titel"
 #: ../../templates/show_playlist_songs.inc.php:34
 #: ../../templates/show_playlist_songs.inc.php:71
 #: ../../templates/show_recently_played.inc.php:32
-#: ../../templates/show_recently_played.inc.php:142
+#: ../../templates/show_recently_played.inc.php:141
 #: ../../templates/show_search_bar.inc.php:32
 #: ../../templates/show_song.inc.php:87
 #: ../../templates/show_song_previews.inc.php:34
@@ -1604,7 +1604,7 @@ msgstr "Album"
 #: ../../templates/show_playlist_songs.inc.php:33
 #: ../../templates/show_playlist_songs.inc.php:70
 #: ../../templates/show_recently_played.inc.php:33
-#: ../../templates/show_recently_played.inc.php:143
+#: ../../templates/show_recently_played.inc.php:142
 #: ../../templates/show_recommended_artists.inc.php:30
 #: ../../templates/show_recommended_artists.inc.php:79
 #: ../../templates/show_search_bar.inc.php:33
@@ -1765,7 +1765,7 @@ msgstr "Name"
 #: ../../templates/show_playlist_song_row.inc.php:27
 #: ../../templates/show_playlist_songs.inc.php:67
 #: ../../templates/show_random_albums.inc.php:46
-#: ../../templates/show_recently_played.inc.php:97
+#: ../../templates/show_recently_played.inc.php:96
 #: ../../templates/show_smartplaylist_row.inc.php:27
 #: ../../templates/show_song.inc.php:59
 #: ../../templates/show_song_preview_row.inc.php:26
@@ -2407,7 +2407,7 @@ msgstr "URI"
 #: ../../templates/show_login_form.inc.php:78
 #: ../../templates/show_now_playing_row.inc.php:25
 #: ../../templates/show_recently_played.inc.php:34
-#: ../../templates/show_recently_played.inc.php:144
+#: ../../templates/show_recently_played.inc.php:143
 #: ../../templates/show_user_registration.inc.php:71
 #: ../../templates/show_users.inc.php:41 ../../templates/show_users.inc.php:67
 msgid "Username"
@@ -3384,7 +3384,7 @@ msgstr "Aktionen"
 #: ../../templates/show_playlist_row.inc.php:29
 #: ../../templates/show_playlist_song_row.inc.php:29
 #: ../../templates/show_random_albums.inc.php:48
-#: ../../templates/show_recently_played.inc.php:99
+#: ../../templates/show_recently_played.inc.php:98
 #: ../../templates/show_smartplaylist_row.inc.php:29
 #: ../../templates/show_song.inc.php:61
 #: ../../templates/show_song_preview_row.inc.php:28
@@ -3405,7 +3405,7 @@ msgstr "Als letztes abspielen"
 #: ../../templates/show_playlist_row.inc.php:37
 #: ../../templates/show_playlist_song_row.inc.php:37
 #: ../../templates/show_random_albums.inc.php:51
-#: ../../templates/show_recently_played.inc.php:107
+#: ../../templates/show_recently_played.inc.php:106
 #: ../../templates/show_smartplaylist_row.inc.php:37
 #: ../../templates/show_song.inc.php:65
 #: ../../templates/show_song_preview_row.inc.php:38
@@ -3513,7 +3513,7 @@ msgstr "Album bearbeiten"
 #: ../../templates/show_artist_row.inc.php:40
 #: ../../templates/show_playlist_row.inc.php:40
 #: ../../templates/show_playlist_song_row.inc.php:39
-#: ../../templates/show_recently_played.inc.php:109
+#: ../../templates/show_recently_played.inc.php:108
 #: ../../templates/show_smartplaylist_row.inc.php:39
 #: ../../templates/show_song_preview_row.inc.php:40
 #: ../../templates/show_song_row.inc.php:39
@@ -4052,7 +4052,7 @@ msgstr "Doppelte Lieder anzeigen"
 #: ../../templates/show_lyrics.inc.php:44
 #: ../../templates/show_now_playing_row.inc.php:39
 #: ../../templates/show_recently_played.inc.php:30
-#: ../../templates/show_recently_played.inc.php:140
+#: ../../templates/show_recently_played.inc.php:139
 #: ../../templates/sidebar_home.inc.php:70
 msgid "Song"
 msgstr "Song"
@@ -4903,12 +4903,12 @@ msgid "Enqueue"
 msgstr "Abspielen (Warteschlange)"
 
 #: ../../templates/show_recently_played.inc.php:35
-#: ../../templates/show_recently_played.inc.php:145
+#: ../../templates/show_recently_played.inc.php:144
 msgid "Last Played"
 msgstr "zuletzt gespielt vor"
 
 #: ../../templates/show_recently_played.inc.php:36
-#: ../../templates/show_recently_played.inc.php:146
+#: ../../templates/show_recently_played.inc.php:145
 msgid "Agent"
 msgstr "Agent"
 
@@ -4960,7 +4960,7 @@ msgid_plural "decades ago"
 msgstr[0] "Dekade"
 msgstr[1] "Dekaden"
 
-#: ../../templates/show_recently_played.inc.php:133
+#: ../../templates/show_recently_played.inc.php:132
 msgid "No recently item found"
 msgstr "Kein passendes Objekt gefunden"
 
@@ -5700,6 +5700,10 @@ msgid "Transcode Bitrate"
 msgstr "Bitrate für die Umwandlung"
 
 #: Database words
+msgid "Website Title"
+msgstr "Titel der Webseite"
+
+#: Database words
 msgid "Lock Songs"
 msgstr "Sperre Lieder"
 
@@ -5712,10 +5716,6 @@ msgid "Non-Standard Http Port"
 msgstr "Nicht Standard gemäßer HTTP Port"
 
 #: Database words
-msgid "Localplay Type"
-msgstr "Methode zur lokalen Wiedergabe"
-
-#: Database words
 msgid "Type of Playback"
 msgstr "Art der Wiedergabe"
 
@@ -5724,28 +5724,20 @@ msgid "Language"
 msgstr "Sprache"
 
 #: Database words
+msgid "Playlist Type"
+msgstr "Typ der Playlist"
+
+#: Database words
 msgid "Theme"
-msgstr "Aussehen"
-
-#: Database words
-msgid "Album Ellipse Threshold"
-msgstr "Alben Schwellenwert"
-
-#: Database words
-msgid "Artist Ellipse Threshold"
-msgstr "Künstler Schwellenwert"
-
-#: Database words
-msgid "Title Ellipse Threshold"
-msgstr "Titel Schwellenwert"
-
-#: Database words
-msgid "Offset Limit"
-msgstr "Max. Versatz des Schwellenwertes"
+msgstr "Design der Benutzeroberfläche"
 
 #: Database words
 msgid "Localplay Access"
 msgstr "Zugriff auf lokale Wiedergabe"
+
+#: Database words
+msgid "Localplay Type"
+msgstr "Methode zur lokalen Wiedergabe"
 
 #: Database words
 msgid "Allow Streaming"
@@ -5764,8 +5756,8 @@ msgid "Statistics Day Threshold"
 msgstr "Statistiken für x Tage erstellen"
 
 #: Database words
-msgid "Min Element Count"
-msgstr "Mindestanzahl an Objekten"
+msgid "Offset Limit"
+msgstr "Max. Versatz des Schwellenwertes"
 
 # About the "Rate limit", the parameter is used when you want to download a song: if you have a value into "rate_limit", the content of the file to download is spitted into X packets of ("rate_limit" * 1024). Otherwise (ie "rate_limit" = 0), the whole content of the file is sent directly.
 #: Database words
@@ -5781,25 +5773,133 @@ msgid "Transcoding"
 msgstr "Umwandlung"
 
 #: Database words
-msgid "User to track"
-msgstr "Benutzer beobachten"
+msgid "Shoutcast Active Instance"
+msgstr "Aktive Shoutcast Sitzung"
 
 #: Database words
-msgid "Streaming"
-msgstr "Streaming"
+msgid "Iframes"
+msgstr "Inline Frames"
 
 #: Database words
-msgid "System"
-msgstr "System"
+msgid "Now playing filtered per user"
+msgstr "Per Benutzer anzeigen, was gerade gespielt wird"
 
-#~ msgid "Related Album"
-#~ msgstr "Zugehöriges Album"
+#: Database words
+msgid "Album Default Sort"
+msgstr "Standardanordnung der Alben"
 
-#~ msgid "Related Genre"
-#~ msgstr "Zugehöriges Genre"
+#: Database words
+msgid "Show # played"
+msgstr "Zeige # Gespielt"
 
-#~ msgid "Pure Random"
-#~ msgstr "Einfach zufällig"
+#: Database words
+msgid "Show current song in Web player page title"
+msgstr "Aktuell gespielten Songtitel im Titel des Webplayers anzeigen"
 
-#~ msgid "Related Tag"
-#~ msgstr "Ähnlicher Tag"
+#: Database words
+msgid "Use SubSonic backend"
+msgstr "SubSonic Backend benutzen"
+
+#: Database words
+msgid "Use Plex backend"
+msgstr "Plex Backend benutzen"
+
+#: Database words
+msgid "Authorize Flash Web Player(s)"
+msgstr "Erlaube die Verwendung des Flash Webplayers"
+
+#: Database words
+msgid "Authorize HTML5 Web Player(s)"
+msgstr "Erlaube die Verwendung des HTML5 Webplayers"
+
+#: Database words
+msgid "Personal information visibility - Now playing"
+msgstr "Anzeigen lassen, welchen Song Du momentan spielst"
+
+#: Database words
+msgid "Personal information visibility - Recently played"
+msgstr "Anzeigen lassen, welche Songs Du kürzlich gespielt hast"
+
+#: Database words
+msgid ""
+"Personal information visibility - Recently played - Allow to show streaming "
+"date/time"
+msgstr "Anzeigen lassen, welche Songs Du wann gespielt hast"
+
+#: Database words
+msgid ""
+"Personal information visibility - Recently played - Allow to show streaming "
+"agent"
+msgstr ""
+"Browser- und Betriebsysteminformationen im Streaming Agenten anzeigen lassen"
+
+#: Database words
+msgid "Fix header/sidebars position on compatible themes"
+msgstr "Korrektur der Header/Sidebar Position für kompatiblem Themes"
+
+#: Database words
+msgid "Check for Ampache updates automatically"
+msgstr "Automatisch nach Updates für Ampache suchen"
+
+#: Database words
+msgid "AutoUpdate last check time"
+msgstr "Autoupdate: Zuletzte nach Updates gesucht"
+
+#: Database words
+msgid "AutoUpdate last version from last check"
+msgstr "Autoupdate: Die letzte Version der letzten Überprüfung"
+
+#: Database words
+msgid "AutoUpdate last version from last check is newer"
+msgstr ""
+"Autoupdate: Die letzte Version der letzten Prüfung ist neuer als die aktuelle"
+
+#: Database words
+msgid "Confirmation when closing current playing window"
+msgstr ""
+"Einen Bestätigungsdialog anzeigen, bevor das Fenster, indem derzeit etwas "
+"abgespielt wird geschlossen wird"
+
+#: Database words
+msgid "Auto-pause betweens tabs"
+msgstr "Automatisches Pausieren der Wiedergabe zwischen Tabs"
+
+#: Database words
+msgid "Use beautiful stream url"
+msgstr "Eine schöne Stream URL verwenden"
+
+#: Database words
+msgid "Allow Share"
+msgstr "Freigaben erlauben"
+
+#: Database words
+msgid "Share links default expiration days (0=never)"
+msgstr "Ablaufdatum der Links für freigegebene Inhalte (0 = niemals)"
+
+#: Database words
+msgid "Artist slideshow inactivity time"
+msgstr "Zeit der Inaktivität für die Interpreten Slideshow"
+
+#: Database words
+msgid "Broadcast web player by default"
+msgstr "Standardmäßig über den Webplayer übertragen"
+
+#: Database words
+msgid "Limit number of future events"
+msgstr "Die Anzahl zukünftiger Ereignisse einschränken"
+
+#: Database words
+msgid "Limit number of past events"
+msgstr "Die Anzahl vergangener Ereignisse einschränken"
+
+#: Database words
+msgid "Album - Group multiple disks"
+msgstr "Gruppiere verschiedene Platten des selben Albums"
+
+#: Database words
+msgid "Top menu"
+msgstr "Top Menü"
+
+#: Database words
+msgid "Flickr api key"
+msgstr "Flickr API-Schlüssel"

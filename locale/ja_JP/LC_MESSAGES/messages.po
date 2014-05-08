@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN $Rev$\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-07 18:59+0200\n"
+"POT-Creation-Date: 2014-05-08 13:41+0200\n"
 "PO-Revision-Date: 2008-07-14 20:44+0900\n"
 "Last-Translator: momo-i <webmaster at momo-i.org>\n"
 "Language-Team: Japanese\n"
@@ -1292,7 +1292,7 @@ msgid "Broadcasts"
 msgstr ""
 
 #: ../../lib/class/browse.class.php:271 ../../templates/rightbar.inc.php:124
-#: ../../templates/show_recently_played.inc.php:157
+#: ../../templates/show_recently_played.inc.php:156
 msgid "More"
 msgstr "More"
 
@@ -1590,7 +1590,7 @@ msgstr "タイトル"
 #: ../../templates/show_playlist_songs.inc.php:34
 #: ../../templates/show_playlist_songs.inc.php:71
 #: ../../templates/show_recently_played.inc.php:32
-#: ../../templates/show_recently_played.inc.php:142
+#: ../../templates/show_recently_played.inc.php:141
 #: ../../templates/show_search_bar.inc.php:32
 #: ../../templates/show_song.inc.php:87
 #: ../../templates/show_song_previews.inc.php:34
@@ -1621,7 +1621,7 @@ msgstr "アルバム"
 #: ../../templates/show_playlist_songs.inc.php:33
 #: ../../templates/show_playlist_songs.inc.php:70
 #: ../../templates/show_recently_played.inc.php:33
-#: ../../templates/show_recently_played.inc.php:143
+#: ../../templates/show_recently_played.inc.php:142
 #: ../../templates/show_recommended_artists.inc.php:30
 #: ../../templates/show_recommended_artists.inc.php:79
 #: ../../templates/show_search_bar.inc.php:33
@@ -1783,7 +1783,7 @@ msgstr "名前"
 #: ../../templates/show_playlist_song_row.inc.php:27
 #: ../../templates/show_playlist_songs.inc.php:67
 #: ../../templates/show_random_albums.inc.php:46
-#: ../../templates/show_recently_played.inc.php:97
+#: ../../templates/show_recently_played.inc.php:96
 #: ../../templates/show_smartplaylist_row.inc.php:27
 #: ../../templates/show_song.inc.php:59
 #: ../../templates/show_song_preview_row.inc.php:26
@@ -2402,7 +2402,7 @@ msgstr ""
 #: ../../templates/show_login_form.inc.php:78
 #: ../../templates/show_now_playing_row.inc.php:25
 #: ../../templates/show_recently_played.inc.php:34
-#: ../../templates/show_recently_played.inc.php:144
+#: ../../templates/show_recently_played.inc.php:143
 #: ../../templates/show_user_registration.inc.php:71
 #: ../../templates/show_users.inc.php:41 ../../templates/show_users.inc.php:67
 msgid "Username"
@@ -3401,7 +3401,7 @@ msgstr "操作"
 #: ../../templates/show_playlist_row.inc.php:29
 #: ../../templates/show_playlist_song_row.inc.php:29
 #: ../../templates/show_random_albums.inc.php:48
-#: ../../templates/show_recently_played.inc.php:99
+#: ../../templates/show_recently_played.inc.php:98
 #: ../../templates/show_smartplaylist_row.inc.php:29
 #: ../../templates/show_song.inc.php:61
 #: ../../templates/show_song_preview_row.inc.php:28
@@ -3423,7 +3423,7 @@ msgstr "プレイリスト"
 #: ../../templates/show_playlist_row.inc.php:37
 #: ../../templates/show_playlist_song_row.inc.php:37
 #: ../../templates/show_random_albums.inc.php:51
-#: ../../templates/show_recently_played.inc.php:107
+#: ../../templates/show_recently_played.inc.php:106
 #: ../../templates/show_smartplaylist_row.inc.php:37
 #: ../../templates/show_song.inc.php:65
 #: ../../templates/show_song_preview_row.inc.php:38
@@ -3535,7 +3535,7 @@ msgstr "アルバム編集"
 #: ../../templates/show_artist_row.inc.php:40
 #: ../../templates/show_playlist_row.inc.php:40
 #: ../../templates/show_playlist_song_row.inc.php:39
-#: ../../templates/show_recently_played.inc.php:109
+#: ../../templates/show_recently_played.inc.php:108
 #: ../../templates/show_smartplaylist_row.inc.php:39
 #: ../../templates/show_song_preview_row.inc.php:40
 #: ../../templates/show_song_row.inc.php:39
@@ -4096,7 +4096,7 @@ msgstr "重複している曲"
 #: ../../templates/show_lyrics.inc.php:44
 #: ../../templates/show_now_playing_row.inc.php:39
 #: ../../templates/show_recently_played.inc.php:30
-#: ../../templates/show_recently_played.inc.php:140
+#: ../../templates/show_recently_played.inc.php:139
 #: ../../templates/sidebar_home.inc.php:70
 msgid "Song"
 msgstr "曲"
@@ -4941,12 +4941,12 @@ msgid "Enqueue"
 msgstr "エンキュー"
 
 #: ../../templates/show_recently_played.inc.php:35
-#: ../../templates/show_recently_played.inc.php:145
+#: ../../templates/show_recently_played.inc.php:144
 msgid "Last Played"
 msgstr "最後に再生した"
 
 #: ../../templates/show_recently_played.inc.php:36
-#: ../../templates/show_recently_played.inc.php:146
+#: ../../templates/show_recently_played.inc.php:145
 msgid "Agent"
 msgstr ""
 
@@ -4998,7 +4998,7 @@ msgid "decade ago"
 msgid_plural "decades ago"
 msgstr[0] "秒前"
 
-#: ../../templates/show_recently_played.inc.php:133
+#: ../../templates/show_recently_played.inc.php:132
 msgid "No recently item found"
 msgstr ""
 
@@ -5782,6 +5782,10 @@ msgid "Transcode Bitrate"
 msgstr "トランスコードのビットレート"
 
 #: Database words
+msgid "Website Title"
+msgstr ""
+
+#: Database words
 msgid "Lock Songs"
 msgstr "曲の固定"
 
@@ -5794,10 +5798,6 @@ msgid "Non-Standard Http Port"
 msgstr "非標準のHTTPポート"
 
 #: Database words
-msgid "Localplay Type"
-msgstr "ローカル再生のタイプ"
-
-#: Database words
 msgid "Type of Playback"
 msgstr "プレイバックのタイプ"
 
@@ -5806,28 +5806,20 @@ msgid "Language"
 msgstr "言語"
 
 #: Database words
+msgid "Playlist Type"
+msgstr "プレイリストタイプ"
+
+#: Database words
 msgid "Theme"
 msgstr "テーマ"
 
 #: Database words
-msgid "Album Ellipse Threshold"
-msgstr "アルバム周りの閾値"
-
-#: Database words
-msgid "Artist Ellipse Threshold"
-msgstr "アーティスト周りの閾値"
-
-#: Database words
-msgid "Title Ellipse Threshold"
-msgstr "タイトル周りの閾値"
-
-#: Database words
-msgid "Offset Limit"
-msgstr "オフセット制限"
-
-#: Database words
 msgid "Localplay Access"
 msgstr "ローカル再生アクセス"
+
+#: Database words
+msgid "Localplay Type"
+msgstr "ローカル再生のタイプ"
 
 #: Database words
 msgid "Allow Streaming"
@@ -5846,8 +5838,8 @@ msgid "Statistics Day Threshold"
 msgstr "1日の統計の閾値"
 
 #: Database words
-msgid "Min Element Count"
-msgstr "最小要素数"
+msgid "Offset Limit"
+msgstr "オフセット制限"
 
 #: Database words
 msgid "Rate Limit"
@@ -5862,16 +5854,157 @@ msgid "Transcoding"
 msgstr "トランスコーディング"
 
 #: Database words
-msgid "User to track"
-msgstr "追跡するユーザ"
+#, fuzzy
+msgid "Shoutcast Active Instance"
+msgstr "有効なインスタンス"
 
 #: Database words
-msgid "Streaming"
-msgstr "ストリーミング"
+msgid "Iframes"
+msgstr ""
 
 #: Database words
-msgid "System"
-msgstr "システム"
+#, fuzzy
+msgid "Now playing filtered per user"
+msgstr "現在再生中のものをクリアしました"
+
+#: Database words
+msgid "Album Default Sort"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Show # played"
+msgstr "再生済"
+
+#: Database words
+msgid "Show current song in Web player page title"
+msgstr ""
+
+#: Database words
+msgid "Use SubSonic backend"
+msgstr ""
+
+#: Database words
+msgid "Use Plex backend"
+msgstr ""
+
+#: Database words
+msgid "Authorize Flash Web Player(s)"
+msgstr ""
+
+#: Database words
+msgid "Authorize HTML5 Web Player(s)"
+msgstr ""
+
+#: Database words
+msgid "Personal information visibility - Now playing"
+msgstr ""
+
+#: Database words
+msgid "Personal information visibility - Recently played"
+msgstr ""
+
+#: Database words
+msgid ""
+"Personal information visibility - Recently played - Allow to show streaming "
+"date/time"
+msgstr ""
+
+#: Database words
+msgid ""
+"Personal information visibility - Recently played - Allow to show streaming "
+"agent"
+msgstr ""
+
+#: Database words
+msgid "Fix header/sidebars position on compatible themes"
+msgstr ""
+
+#: Database words
+msgid "Check for Ampache updates automatically"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last check time"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last version from last check"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last version from last check is newer"
+msgstr ""
+
+#: Database words
+msgid "Confirmation when closing current playing window"
+msgstr ""
+
+#: Database words
+msgid "Auto-pause betweens tabs"
+msgstr ""
+
+#: Database words
+msgid "Use beautiful stream url"
+msgstr ""
+
+#: Database words
+#, fuzzy
+msgid "Allow Share"
+msgstr "ストリーミングの許可"
+
+#: Database words
+msgid "Share links default expiration days (0=never)"
+msgstr ""
+
+#: Database words
+msgid "Artist slideshow inactivity time"
+msgstr ""
+
+#: Database words
+msgid "Broadcast web player by default"
+msgstr ""
+
+#: Database words
+msgid "Limit number of future events"
+msgstr ""
+
+#: Database words
+msgid "Limit number of past events"
+msgstr ""
+
+#: Database words
+msgid "Album - Group multiple disks"
+msgstr ""
+
+#: Database words
+msgid "Top menu"
+msgstr ""
+
+#: Database words
+msgid "Flickr api key"
+msgstr ""
+
+#~ msgid "Album Ellipse Threshold"
+#~ msgstr "アルバム周りの閾値"
+
+#~ msgid "Artist Ellipse Threshold"
+#~ msgstr "アーティスト周りの閾値"
+
+#~ msgid "Title Ellipse Threshold"
+#~ msgstr "タイトル周りの閾値"
+
+#~ msgid "Min Element Count"
+#~ msgstr "最小要素数"
+
+#~ msgid "User to track"
+#~ msgstr "追跡するユーザ"
+
+#~ msgid "Streaming"
+#~ msgstr "ストリーミング"
+
+#~ msgid "System"
+#~ msgstr "システム"
 
 #~ msgid "Related Album"
 #~ msgstr "関連するアルバム"
@@ -5951,9 +6084,6 @@ msgstr "システム"
 
 #~ msgid "Add Random Songs By %s"
 #~ msgstr "%sでランダム曲を追加"
-
-#~ msgid "Playlist Type"
-#~ msgstr "プレイリストタイプ"
 
 #, fuzzy
 #~ msgid "Play Album Preview"

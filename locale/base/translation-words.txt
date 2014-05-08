@@ -11,6 +11,10 @@ msgid "Transcode Bitrate"
 msgstr ""
 
 #: Database words
+msgid "Website Title"
+msgstr ""
+
+#: Database words
 msgid "Lock Songs"
 msgstr ""
 
@@ -23,10 +27,6 @@ msgid "Non-Standard Http Port"
 msgstr ""
 
 #: Database words
-msgid "Localplay Type"
-msgstr ""
-
-#: Database words
 msgid "Type of Playback"
 msgstr ""
 
@@ -35,27 +35,19 @@ msgid "Language"
 msgstr ""
 
 #: Database words
+msgid "Playlist Type"
+msgstr ""
+
+#: Database words
 msgid "Theme"
 msgstr ""
 
 #: Database words
-msgid "Album Ellipse Threshold"
-msgstr ""
-
-#: Database words
-msgid "Artist Ellipse Threshold"
-msgstr ""
-
-#: Database words
-msgid "Title Ellipse Threshold"
-msgstr ""
-
-#: Database words
-msgid "Offset Limit"
-msgstr ""
-
-#: Database words
 msgid "Localplay Access"
+msgstr ""
+
+#: Database words
+msgid "Localplay Type"
 msgstr ""
 
 #: Database words
@@ -75,7 +67,7 @@ msgid "Statistics Day Threshold"
 msgstr ""
 
 #: Database words
-msgid "Min Element Count"
+msgid "Offset Limit"
 msgstr ""
 
 #: Database words
@@ -91,13 +83,126 @@ msgid "Transcoding"
 msgstr ""
 
 #: Database words
-msgid "User to track"
+msgid "Shoutcast Active Instance"
 msgstr ""
 
 #: Database words
-msgid "Streaming"
+msgid "Iframes"
 msgstr ""
 
 #: Database words
-msgid "System"
+msgid "Now playing filtered per user"
 msgstr ""
+
+#: Database words
+msgid "Album Default Sort"
+msgstr ""
+
+#: Database words
+msgid "Show # played"
+msgstr ""
+
+#: Database words
+msgid "Show current song in Web player page title"
+msgstr ""
+
+#: Database words
+msgid "Use SubSonic backend"
+msgstr ""
+
+#: Database words
+msgid "Use Plex backend"
+msgstr ""
+
+#: Database words
+msgid "Authorize Flash Web Player(s)"
+msgstr ""
+
+#: Database words
+msgid "Authorize HTML5 Web Player(s)"
+msgstr ""
+
+#: Database words
+msgid "Personal information visibility - Now playing"
+msgstr ""
+
+#: Database words
+msgid "Personal information visibility - Recently played"
+msgstr ""
+
+#: Database words
+msgid "Personal information visibility - Recently played - Allow to show streaming date/time"
+msgstr ""
+
+#: Database words
+msgid "Personal information visibility - Recently played - Allow to show streaming agent"
+msgstr ""
+
+#: Database words
+msgid "Fix header/sidebars position on compatible themes"
+msgstr ""
+
+#: Database words
+msgid "Check for Ampache updates automatically"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last check time"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last version from last check"
+msgstr ""
+
+#: Database words
+msgid "AutoUpdate last version from last check is newer"
+msgstr ""
+
+#: Database words
+msgid "Confirmation when closing current playing window"
+msgstr ""
+
+#: Database words
+msgid "Auto-pause betweens tabs"
+msgstr ""
+
+#: Database words
+msgid "Use beautiful stream url"
+msgstr ""
+
+#: Database words
+msgid "Allow Share"
+msgstr ""
+
+#: Database words
+msgid "Share links default expiration days (0=never)"
+msgstr ""
+
+#: Database words
+msgid "Artist slideshow inactivity time"
+msgstr ""
+
+#: Database words
+msgid "Broadcast web player by default"
+msgstr ""
+
+#: Database words
+msgid "Limit number of future events"
+msgstr ""
+
+#: Database words
+msgid "Limit number of past events"
+msgstr ""
+
+#: Database words
+msgid "Album - Group multiple disks"
+msgstr ""
+
+#: Database words
+msgid "Top menu"
+msgstr ""
+
+#: Database words
+msgid "Flickr api key"
+msgstr ""
+
