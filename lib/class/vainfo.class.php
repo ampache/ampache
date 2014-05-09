@@ -669,8 +669,26 @@ class vainfo
         if (!empty($id3v2['TCON'])) {
             // Find the MBID for the track
             foreach ($id3v2['TCON'] as $tcid) {
-                $genres = explode("\0", $tcid['data']);
-                $parsed['genre'] = $genres;
+                if ($tcid['framenameshort'] == "genre") {
+                    // Removing unwanted UTF-8 charaters
+                    $tcid['data'] = str_replace("\xFF", "", $tcid['data']);
+                    $tcid['data'] = str_replace("\xFE", "", $tcid['data']);
+
+                    if (!empty($tcid['data'])) {
+                        // Parsing string with the null character
+                        $genres = explode("\0", $tcid['data']);
+                        $parsed_genres = array();
+                        foreach ($genres as $g) {
+                            if (strlen($g) > 2) {   // Only allow tags with at least 3 characters
+                                $parsed_genres[] = $g;
+                            }
+                        }
+
+                        if (count($parsed_genres)) {
+                            $parsed['genre'] = $parsed_genres;
+                        }
+                    }
+                }
                 break;
             }
         }
