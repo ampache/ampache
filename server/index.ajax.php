@@ -235,6 +235,7 @@ switch ($_REQUEST['action']) {
                     $channel->stop_channel();
                 }
                 $channel->start_channel();
+                sleep(1);
                 echo $channel->get_channel_state();
             }
             $results['channel_state_' . $_REQUEST['id']] = ob_get_clean();
@@ -246,6 +247,7 @@ switch ($_REQUEST['action']) {
             $channel = new Channel($_REQUEST['id']);
             if ($channel->id) {
                 $channel->stop_channel();
+                sleep(1);
                 echo $channel->get_channel_state();
             }
             $results['channel_state_' . $_REQUEST['id']] = ob_get_clean();
