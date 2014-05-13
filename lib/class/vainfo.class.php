@@ -652,17 +652,19 @@ class vainfo
                 }
             }
 
-            // Find the MBIDs for the album and artist
-            foreach ($id3v2['TXXX'] as $txxx) {
-                switch ($txxx['description']) {
-                    case 'MusicBrainz Album Id':
-                        $parsed['mb_albumid'] = $txxx['data'];
-                    break;
-                    case 'MusicBrainz Artist Id':
-                        $parsed['mb_artistid'] = $txxx['data'];
-                    break;
-                }
-            }
+			if (!empty($id3v2['TXXX'])) {
+				// Find the MBIDs for the album and artist
+				foreach ($id3v2['TXXX'] as $txxx) {
+					switch ($txxx['description']) {
+						case 'MusicBrainz Album Id':
+							$parsed['mb_albumid'] = $txxx['data'];
+						break;
+						case 'MusicBrainz Artist Id':
+							$parsed['mb_artistid'] = $txxx['data'];
+						break;
+					}
+				}
+			}
         }
 
         // Find all genre
