@@ -278,7 +278,7 @@ class Channel extends database_object
             // Move to next song
             while ($this->media == null && ($this->random || $this->song_pos < count($this->songs))) {
                 if ($this->random) {
-                    $randsongs = $playlist->get_random_items(1);
+                    $randsongs = $this->playlist->get_random_items(1);
                     $this->media = new Song($randsongs[0]);
                 } else {
                     $this->media = new Song($this->songs[$this->song_pos]);
