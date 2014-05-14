@@ -374,6 +374,7 @@ art_order = "db,tags,folder,musicbrainz,lastfm,google"
 ; DEFAULT: false
 ;amazon_developer_public_key = ""
 ;amazon_developer_private_key = ""
+;amazon_developer_associate_tag = ""
 
 ; Recommendations
 ; Set this to true to enable display of similar artists or albums
