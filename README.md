@@ -18,7 +18,7 @@ choosing a suitable method for doing so.
 Recommended Version
 -------------------
 
-Currently, the recommended version is [git HEAD](https://github.com/ampach/ampache/archive/master.tar.gz).
+Currently, the recommended version is [git HEAD](https://github.com/ampache/ampache/archive/master.tar.gz).
 [![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=master)](https://travis-ci.org/ampache/ampache)
 
 Latest changes but unstable is [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
