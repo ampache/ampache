@@ -865,7 +865,7 @@ class Art extends database_object
         foreach ($amazon_base_urls as $amazon_base) {
 
             // Create the Search Object
-            $amazon = new AmazonSearch(AmpConfig::get('amazon_developer_public_key'), AmpConfig::get('amazon_developer_private_key'), $amazon_base);
+            $amazon = new AmazonSearch(AmpConfig::get('amazon_developer_public_key'), AmpConfig::get('amazon_developer_private_key'), AmpConfig::get('amazon_developer_associate_tag'), $amazon_base);
                 if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
                     $proxyhost = AmpConfig::get('proxy_host');
                     $proxyport = AmpConfig::get('proxy_port');
