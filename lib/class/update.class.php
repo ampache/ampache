@@ -1648,12 +1648,12 @@ class Update
     public static function update_360016()
     {
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('now_playing_per_user','0','Now playing filtered per user',50,'boolean','interface')";
+            "VALUES ('now_playing_per_user','1','Now playing filtered per user',50,'boolean','interface')";
         Dba::write($sql);
 
         $id = Dba::insert_id();
 
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         Dba::write($sql, array($id));
 
         return true;

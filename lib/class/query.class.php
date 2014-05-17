@@ -288,7 +288,7 @@ class Query
      */
     private static function _serialize($data)
     {
-        if (count($data) > 1000) {
+        if (count($data) > 1000 && is_int($data[0])) {
             $last = -17;
             $in_range = false;
             $idx = -1;

@@ -21,7 +21,7 @@
  */
 
 require_once 'lib/init.php';
- 
+
 if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
     debug_event("stream.php", "Asked without action. Exiting...", 5);
     exit;
