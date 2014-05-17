@@ -59,5 +59,9 @@ if (isset($_GET['target_link'])) {
     </div>
     <iframe id="frame_footer" class="frame_footer_hide" src="" webkitAllowFullScreen="true" mozAllowFullScreen="true" allowFullScreen="true"></iframe>
 </div>
+<script language="javascript" type="text/javascript">
+    // This to prevent unwanted browser cache reloading
+    document.getElementById('frame_footer').setAttribute('src', '');
+</script>
 </body>
 </html>
