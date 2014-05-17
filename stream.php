@@ -20,14 +20,14 @@
  *
  */
 
- if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
+require_once 'lib/init.php';
+ 
+if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
     debug_event("stream.php", "Asked without action. Exiting...", 5);
     exit;
 }
 
 if (!defined('NO_SESSION')) {
-    require_once 'lib/init.php';
-
     /* If we are running a demo, quick while you still can! */
     if (AmpConfig::get('demo_mode') || !Access::check('interface','25')) {
         UI::access_denied();
