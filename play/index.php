@@ -475,22 +475,10 @@ if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
     $bytes_streamed = $stream_size;
 }
 
-// Make sure that a good chunk of the song has been played
-$target = 131072;
-if ($stream_size) {
-    if ($stream_size > 1048576) {
-        $target = 262144;
-    } else if ($stream_size < 360448) {
-        $target = $stream_size / 1.1;
-    } else {
-        $target = $stream_size / 4;
-    }
-}
-
-if ($start > $target) {
-    debug_event('play', 'Content-Range was more than ' . $target . ' into the file ' . $media->file . ', not collecting stats', 5);
-} else if ($bytes_streamed > $target) {
-    // FIXME: This check looks suspicious
+if ($start > 0) {
+    debug_event('play', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
+} else if ($real_bytes_streamed > 0) {
+    // FIXME: support other media types
     if (get_class($media) == 'Song' && empty($share_id)) {
         if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
             debug_event('play', 'Registering stats for {'.$media->title.'}...', '5');
@@ -502,8 +490,6 @@ if ($start > $target) {
             $media->set_played();
         }
     }
-} else {
-    debug_event('play', $bytes_streamed .' of ' . $stream_size . ' streamed; not collecting stats', 5);
 }
 
 // If this is a democratic playlist remove the entry.
