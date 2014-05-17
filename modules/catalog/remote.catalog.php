@@ -228,6 +228,8 @@ class Catalog_remote extends Catalog
      */
     public function update_remote_catalog($type = 0)
     {
+        set_time_limit(0);
+
         $remote_handle = $this->connect();
         if (!$remote_handle) {
             return false;

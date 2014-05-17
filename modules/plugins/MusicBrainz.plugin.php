@@ -20,13 +20,16 @@
  *
  */
 
+use MusicBrainz\MusicBrainz;
+use MusicBrainz\Clients\RequestsMbClient;
+
 class AmpacheMusicBrainz {
 
-    public $name        ='MusicBrainz';
-    public $description    ='MusicBrainz metadata integration';
-    public $version        ='000001';
-    public $min_ampache    ='360003';
-    public $max_ampache    ='999999';
+    public $name           = 'MusicBrainz';
+    public $description    = 'MusicBrainz metadata integration';
+    public $version        = '000001';
+    public $min_ampache    = '360003';
+    public $max_ampache    = '999999';
 
     /**
      * Constructor
