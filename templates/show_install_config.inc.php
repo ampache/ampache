@@ -21,7 +21,10 @@
  */
 
 // Try to guess the web path
-$web_path_guess = rtrim(dirname($_SERVER['PHP_SELF']), '\/');
+$web_path_guess = $_REQUEST['web_path'];
+if (empty($web_path_guess)) {
+    $web_path_guess = rtrim(dirname($_SERVER['PHP_SELF']), '\/');
+}
 
 require $prefix . '/templates/install_header.inc.php';
 ?>
@@ -38,9 +41,9 @@ require $prefix . '/templates/install_header.inc.php';
                 </div>
             </div>
             <p><?php echo T_('Step 1 - Create the Ampache database'); ?></p>
-                <p><strong><?php echo T_('Step 2 - Create ampache.cfg.php'); ?></strong></p>
+                <p><strong><?php echo T_('Step 2 - Create configuration files (ampache.cfg.php ...)'); ?></strong></p>
                 <dl>
-                    <dd><?php printf(T_('This step takes the basic config values and generates the config file. If your config/ directory is writable, you can select "write" to have Ampache write the config file directly to the correct location. If you select "download" it will prompt you to download the config file, and you can then manually place the config file in %s'), $prefix . '/config'); ?></dd>
+                    <dd><?php printf(T_('This step takes the basic config values and generates the config file. If your config/ directory is writable, you can select "write" to have Ampache write the config file directly to the correct location. If you select "download" it will prompt you to download the config file, and you can then manually place the config file in %s'), $prefix); ?></dd>
                 </dl>
             <ul class="list-unstyled">
                 <li><?php echo T_('Step 3 - Set up the initial account'); ?></li>
@@ -87,9 +90,45 @@ require $prefix . '/templates/install_header.inc.php';
         <input type="password" class="form-control" id="local_pass" name="local_pass" placeholder="Password">
     </div>
 </div>
-        <input type="hidden" name="htmllang" value="<?php echo $htmllang; ?>" />
-        <input type="hidden" name="charset" value="<?php echo $charset; ?>" />
+
+<input type="hidden" name="htmllang" value="<?php echo $htmllang; ?>" />
+<input type="hidden" name="charset" value="<?php echo $charset; ?>" />
+
+<?php if (install_check_server_apache()) { ?>
+    <div class="col-sm-3">&nbsp;</div><div class="col-sm-9">&nbsp;</div>
+    <div class="col-sm-3">
+        <?php echo T_('rest/.htaccess action'); ?>
+    </div>
+    <div class="col-sm-9">
+        <button type="submit" class="btn btn-warning" name="download_htaccess_rest"><?php echo T_('Download'); ?></button>
+        <button type="submit" class="btn btn-warning" name="write_htaccess_rest" <?php if (!check_htaccess_rest_writable()) { echo "disabled "; } ?>>
+            <?php echo T_('Write'); ?>
+        </button>
+    </div>
+    <div class="col-sm-3"><?php echo T_('rest/.htaccess exists?'); ?></div>
+    <div class="col-sm-9"><?php echo debug_result(is_readable($htaccess_rest_file)); ?></div>
+    <div class="col-sm-3"><?php echo T_('rest/.htaccess configured?'); ?></div>
+    <div class="col-sm-9"><?php echo debug_result(install_check_rewrite_rules($htaccess_rest_file, $web_path_guess)); ?></div>
+
+    <div class="col-sm-3">&nbsp;</div><div class="col-sm-9">&nbsp;</div>
+    <div class="col-sm-3">
+        <?php echo T_('play/.htaccess action'); ?>
+    </div>
+    <div class="col-sm-9">
+        <button type="submit" class="btn btn-warning" name="download_htaccess_play"><?php echo T_('Download'); ?></button>
+        <button type="submit" class="btn btn-warning" name="write_htaccess_play" <?php if (!check_htaccess_play_writable()) { echo "disabled "; } ?>>
+            <?php echo T_('Write'); ?>
+        </button>
+    </div>
+    <div class="col-sm-3"><?php echo T_('play/.htaccess exists?'); ?></div>
+    <div class="col-sm-9"><?php echo debug_result(is_readable($htaccess_play_file)); ?></div>
+    <div class="col-sm-3"><?php echo T_('play/.htaccess configured?'); ?></div>
+    <div class="col-sm-9"><?php echo debug_result(install_check_rewrite_rules($htaccess_play_file, $web_path_guess)); ?></div>
+<?php } ?>
+
+<div class="col-sm-3">&nbsp;</div><div class="col-sm-9">&nbsp;</div>
 <div class="col-sm-3">
+    <?php echo T_('config/ampache.cfg.php action'); ?>
 </div>
 <div class="col-sm-9">
     <button type="submit" class="btn btn-warning" name="download"><?php echo T_('Download'); ?></button>
@@ -97,22 +136,26 @@ require $prefix . '/templates/install_header.inc.php';
         <?php echo T_('Write'); ?>
     </button>
 </div>
+<div class="col-sm-3"><?php echo T_('config/ampache.cfg.php exists?'); ?></div>
+<div class="col-sm-9"><?php echo debug_result(is_readable($configfile)); ?></div>
+<div class="col-sm-3"><?php echo T_('config/ampache.cfg.php configured?'); ?></div>
+<div class="col-sm-9"><?php $results = @parse_ini_file($configfile); echo debug_result(check_config_values($results)); ?></div>
+<div class="col-sm-3">&nbsp;</div><div class="col-sm-9">&nbsp;</div>
+
 </form>
 
-    <div class="col-sm-3"><?php echo T_('ampache.cfg.php exists?'); ?></div>
-    <div class="col-sm-9"><?php echo debug_result(is_readable($configfile)); ?></div>
-    <div class="col-sm-3"><?php echo T_('ampache.cfg.php configured?'); ?></div>
-    <div class="col-sm-9"><?php $results = @parse_ini_file($configfile); echo debug_result(check_config_values($results)); ?></div>
-    <div class="col-sm-3"></div>
-    <?php $check_url = $web_path . "/install.php?action=show_create_config&amp;htmllang=$htmllang&amp;charset=$charset&amp;local_db=" . $_REQUEST['local_db'] . "&amp;local_host=" . $_REQUEST['local_host']; ?>
-    <div class="col-sm-9">
-        <a href="<?php echo $check_url; ?>">[<?php echo T_('Recheck Config'); ?>]</a>
-    </div>
-    <form
-        method="post"
-        action="<?php echo $web_path . "/install.php?action=show_create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>"
-        enctype="multipart/form-data"
-    >
-        <button type="submit" class="btn btn-warning"><?php echo T_('Continue to Step 3'); ?></button>
-    </form>
+<div class="col-sm-3"></div>
+<?php $check_url = $web_path . "/install.php?action=show_create_config&amp;htmllang=$htmllang&amp;charset=$charset&amp;local_db=" . $_REQUEST['local_db'] . "&amp;local_host=" . $_REQUEST['local_host']; ?>
+<div class="col-sm-9">
+    <a href="<?php echo $check_url; ?>">[<?php echo T_('Recheck Config'); ?>]</a>
+</div>
+
+<form
+    method="post"
+    action="<?php echo $web_path . "/install.php?action=show_create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>"
+    enctype="multipart/form-data"
+>
+    <button type="submit" class="btn btn-warning"><?php echo T_('Continue to Step 3'); ?></button>
+</form>
+
 <?php require $prefix . '/templates/install_footer.inc.php'; ?>

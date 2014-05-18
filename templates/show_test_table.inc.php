@@ -181,7 +181,7 @@ if (!defined('INSTALL')) {
         if (check_config_values($results)) {
             echo "&nbsp;&nbsp;&nbsp;<img src=\"" . AmpConfig::get('web_path') ."/images/icon_enable.png\" />&nbsp;&nbsp;&nbsp;";
         } else {
-            echo debug_result(false);
+            echo debug_result(false, "SKIPPED");
         }
 
     ?>

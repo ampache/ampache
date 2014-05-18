@@ -30,6 +30,7 @@
  * 1090017.
  */
 
+
 class Update
 {
     public $key;
@@ -396,6 +397,9 @@ class Update
 
         $update_string = '- Add top menu setting.<br />';
         $version[] = array('version' => '360050','description' => $update_string);
+
+        $update_string = '- Copy default .htaccess configurations.<br />';
+        $version[] = array('version' => '360051','description' => $update_string);
 
         return $version;
     }
@@ -1805,12 +1809,12 @@ class Update
     public static function update_360023()
     {
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('subsonic_backend','0','Use SubSonic backend',25,'boolean','system')";
+            "VALUES ('subsonic_backend','1','Use SubSonic backend',25,'boolean','system')";
         Dba::write($sql);
 
         $id = Dba::insert_id();
 
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
@@ -2399,5 +2403,58 @@ class Update
         Dba::write($sql, array($id));
 
         return true;
+    }
+
+    /**
+     * update_360051
+     *
+     * Copy default .htaccess configurations
+     */
+    public static function update_360051()
+    {
+        require_once AmpConfig::get('prefix') . '/lib/install.lib.php';
+
+        if (!install_check_server_apache()) {
+            debug_event('update', 'Not using Apache, update 360051 skipped.', '5');
+            return true;
+        }
+
+        $htaccess_play_file = AmpConfig::get('prefix') . '/play/.htaccess';
+        $htaccess_rest_file = AmpConfig::get('prefix') . '/rest/.htaccess';
+
+        $ret = true;
+        if (!is_readable($htaccess_play_file)) {
+            $created = false;
+            if (check_htaccess_play_writable()) {
+                if (!copy($htaccess_play_file . '.dist', $htaccess_play_file)) {
+                    Error::add('general', T_('File copy error.'));
+                } else {
+                    $created = true;
+                }
+            }
+
+            if (!$created) {
+                Error::add('general', T_('Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_play_file . '.dist</b> to <b>' . $htaccess_play_file . '</b>.');
+                $ret = false;
+            }
+        }
+
+        if (!is_readable($htaccess_rest_file)) {
+            $created = false;
+            if (check_htaccess_rest_writable()) {
+                if (!copy($htaccess_rest_file . '.dist', $htaccess_rest_file)) {
+                    Error::add('general', T_('File copy error.'));
+                } else {
+                    $created = true;
+                }
+            }
+
+            if (!$created) {
+                Error::add('general', T_('Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_rest_file . '.dist</b> to <b>' . $htaccess_rest_file . '</b>.');
+                $ret = false;
+            }
+        }
+
+        return $ret;
     }
 }

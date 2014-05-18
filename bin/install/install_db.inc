@@ -85,7 +85,7 @@ AmpConfig::set_by_array(array(
 ), true);
 
 // Install the database
-if (!install_insert_db($new_db_user, $new_db_pass, $force)) { 
+if (!install_insert_db($new_db_user, $new_db_pass, true, $force, true)) { 
     echo T_('Database creation failed'), "\n"; 
     echo Error::get('general'), "\n\n"; 
     exit(1); 

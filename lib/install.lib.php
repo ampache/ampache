@@ -104,12 +104,75 @@ function install_check_status($configfile)
 
 } // install_check_status
 
+function install_check_server_apache()
+{
+    return (strpos($_SERVER['SERVER_SOFTWARE'], "Apache/") === 0);
+}
+
+function install_check_rewrite_rules($file, $web_path, $fix = false)
+{
+    if (!is_readable($file)) {
+        $file .= '.dist';
+    }
+    $valid = true;
+    $htaccess = file_get_contents($file);
+    $new_lines = array();
+    $lines = explode("\n", $htaccess);
+    foreach ($lines as $line) {
+        $parts = explode(' ', $line);
+        for ($i = 0; $i < count($parts); $i++) {
+            // Matching url rewriting rule syntax
+            if ($parts[$i] == 'RewriteRule' && $i < (count($parts) - 2)) {
+                $reprule = $parts[$i + 2];
+                if (!empty($web_path) && strpos($reprule, $web_path) !== 0) {
+                    $reprule = $web_path . $reprule;
+                    if ($fix) {
+                        $parts[$i + 2] = $reprule;
+                        $line = implode(' ', $parts);
+                    } else {
+                        $valid = false;
+                    }
+                }
+                break;
+            }
+        }
+
+        if ($fix) {
+            $new_lines[] = $line;
+        }
+    }
+
+    if ($fix) {
+        return implode("\n", $new_lines);
+    }
+
+    return $valid;
+}
+
+function install_rewrite_rules($file, $web_path, $download)
+{
+    $final = install_check_rewrite_rules($file, $web_path, true);
+    if (!$download) {
+        if (!file_put_contents($file, $final)) {
+            Error::add('general', T_('Error writing config file'));
+            return false;
+        }
+    } else {
+        $browser = new Horde_Browser();
+        $browser->downloadHeaders(basename($file), 'text/plain', false, strlen($final));
+        echo $final;
+        exit();
+    }
+
+    return true;
+}
+
 /**
  * install_insert_db
  *
  * Inserts the database using the values from Config.
  */
-function install_insert_db($db_user = null, $db_pass = null, $overwrite = false, $use_existing_db = false)
+function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true)
 {
     $database = AmpConfig::get('database_name');
     // Make sure that the database name is valid
@@ -126,12 +189,9 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false,
     }
 
     $db_exists = Dba::read('SHOW TABLES');
-    $create_db = true;
 
-    if ($db_exists) {
-        if ($use_existing_db) {
-            $create_db = false;
-        } else if ($overwrite) {
+    if ($db_exists && $create_db) {
+        if ($overwrite) {
             Dba::write('DROP DATABASE `' . $database . '`');
         } else {
             Error::add('general', T_('Error: Database already exists and overwrite not checked'));
@@ -163,21 +223,24 @@ function install_insert_db($db_user = null, $db_pass = null, $overwrite = false,
         }
     } // end if we are creating a user
 
-    $sql_file = AmpConfig::get('prefix') . '/sql/ampache.sql';
-
-    $query = fread(fopen($sql_file, 'r'), filesize($sql_file));
-    $pieces  = split_sql($query);
-    for ($i=0; $i<count($pieces); $i++) {
-        $pieces[$i] = trim($pieces[$i]);
-        if (!empty($pieces[$i]) && $pieces[$i] != '#') {
-            if (!$result = Dba::write($pieces[$i])) {
-                $errors[] = array ( Dba::error(), $pieces[$i] );
+    if ($create_tables) {
+        $sql_file = AmpConfig::get('prefix') . '/sql/ampache.sql';
+        $query = fread(fopen($sql_file, 'r'), filesize($sql_file));
+        $pieces  = split_sql($query);
+        for ($i=0; $i<count($pieces); $i++) {
+            $pieces[$i] = trim($pieces[$i]);
+            if (!empty($pieces[$i]) && $pieces[$i] != '#') {
+                if (!$result = Dba::write($pieces[$i])) {
+                    $errors[] = array ( Dba::error(), $pieces[$i] );
+                }
             }
         }
     }
 
-    $sql = 'ALTER DATABASE `' . $database . '` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci';
-    $db_results = Dba::write($sql, array(AmpConfig::get('database_name')));
+    if ($create_db) {
+        $sql = 'ALTER DATABASE `' . $database . '` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci';
+        Dba::write($sql);
+    }
 
     // If they've picked something other than English update default preferences
     if (AmpConfig::get('lang') != 'en_US') {
@@ -203,13 +266,19 @@ function install_create_config($download = false)
     /* Attempt to make DB connection */
     $dbh = Dba::dbh();
 
+    $params = AmpConfig::get_all();
+    if (empty($params['database_username']) || empty($params['database_password'])) {
+        Error::add('general', T_("Invalid configuration settings"));
+        return false;
+    }
+
     // Connect to the DB
     if (!Dba::check_database()) {
         Error::add('general', T_("Database Connection Failed Check Hostname, Username and Password"));
         return false;
     }
 
-    $final = generate_config(AmpConfig::get_all());
+    $final = generate_config($params);
 
     // Make sure the directory is writable OR the empty config file is
     if (!$download) {

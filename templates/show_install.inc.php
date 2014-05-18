@@ -39,7 +39,7 @@ require $prefix . '/templates/install_header.inc.php';
         <dd><?php echo T_('This step creates and inserts the Ampache database, so please provide a MySQL account with database creation rights. This step may take some time on slower computers.'); ?></dd>
     </dl>
     <ul class="list-unstyled">
-        <li><?php echo T_('Step 2 - Create ampache.cfg.php'); ?></li>
+        <li><?php echo T_('Step 2 - Create configuration files (ampache.cfg.php ...)'); ?></li>
         <li><?php echo T_('Step 3 - Set up the initial account'); ?></li>
     </ul>
 </div>
@@ -77,11 +77,40 @@ require $prefix . '/templates/install_header.inc.php';
         </div>
     </div>
     <div class="form-group">
-        <label for="db_user" class="col-sm-3 control-label"><?php echo T_('Create Database User (for New Database)?'); ?></label>
+        <label for="create_db" class="col-sm-3 control-label"><?php echo T_('Create Database'); ?></label>
+        <div class="col-sm-9">
+            <input
+                type="checkbox" value="1" checked
+                id="create_db" name="create_db"
+                onclick='$("#overwrite_db_div").toggle();'
+            />
+        </div>
+    </div>
+    <div class="form-group" id="overwrite_db_div">
+        <label for="overwrite_db" class="col-sm-3 control-label"><?php echo T_('Overwrite if database already exists'); ?></label>
+        <div class="col-sm-9">
+            <input
+                type="checkbox" value="1"
+                id="overwrite_db" name="overwrite_db"
+            />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="create_tables" class="col-sm-3 control-label"><?php echo T_('Create Tables'); ?> (<a href="sql/ampache.sql">ampache.sql</a>)</label>
+        <div class="col-sm-9">
+            <input
+                type="checkbox" value="1" checked
+                id="create_tables" name="create_tables"
+            />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="db_user" class="col-sm-3 control-label"><?php echo T_('Create Database User'); ?></label>
         <div class="col-sm-9">
             <input
                 type="checkbox" value="create_db_user" name="db_user"
-                id="db_user" onclick='$("#specificuser").toggle();$("#specificpass").toggle();'
+                id="db_user"
+                onclick='$("#specificuser").toggle();$("#specificpass").toggle();'
             />
         </div>
     </div>
@@ -95,24 +124,6 @@ require $prefix . '/templates/install_header.inc.php';
         <label for="db_password" class="col-sm-3 control-label"><?php echo T_('Ampache Database User Password'); ?></label>
         <div class="col-sm-9">
             <input type="password" class="form-control" id="db_password" name="db_password" placeholder="Password">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="overwrite_db" class="col-sm-3 control-label"><?php echo T_('Overwrite Existing'); ?></label>
-        <div class="col-sm-9">
-            <input
-                type="checkbox" value="1"
-                id="overwrite_db" name="overwrite_db"
-            />
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="existing_db" class="col-sm-3 control-label"><?php echo T_('Use Existing Database'); ?></label>
-        <div class="col-sm-9">
-            <input
-                type="checkbox" value="1"
-                id="existing_db" name="existing_db"
-            />
         </div>
     </div>
     <div class="col-sm-3">

@@ -35,6 +35,9 @@ if (!install_check_status($configfile)) {
 
 define('INSTALL', 1);
 
+$htaccess_play_file = AmpConfig::get('prefix') . '/play/.htaccess';
+$htaccess_rest_file = AmpConfig::get('prefix') . '/rest/.htaccess';
+
 // Clean up incoming variables
 $web_path = scrub_in($_REQUEST['web_path']);
 $username = scrub_in($_REQUEST['local_username']);
@@ -42,7 +45,7 @@ $password = $_REQUEST['local_pass'];
 $hostname = scrub_in($_REQUEST['local_host']);
 $database = scrub_in($_REQUEST['local_db']);
 $port = scrub_in($_REQUEST['local_port']);
-$skip_admin = $_REQUEST['skip_admin'];
+$skip_admin = isset($_REQUEST['skip_admin']);
 
 AmpConfig::set_by_array(array(
     'web_path' => $web_path,
@@ -101,7 +104,7 @@ switch ($_REQUEST['action']) {
         }
 
         if (!$skip_admin) {
-            if (!install_insert_db($new_user, $new_pass, $_POST['overwrite_db'], $_REQUEST['existing_db'])) {
+            if (!install_insert_db($new_user, $new_pass, $_REQUEST['create_db'], $_REQUEST['overwrite_db'], $_REQUEST['create_tables'])) {
                 require_once 'templates/show_install.inc.php';
                 break;
             }
@@ -114,7 +117,19 @@ switch ($_REQUEST['action']) {
     break;
     case 'create_config':
         $download = (!isset($_POST['write']));
-        $created_config = install_create_config($download);
+        $download_htaccess_rest = (isset($_POST['download_htaccess_rest']));
+        $download_htaccess_play = (isset($_POST['download_htaccess_play']));
+        $write_htaccess_rest = (isset($_POST['write_htaccess_rest']));
+        $write_htaccess_play = (isset($_POST['write_htaccess_play']));
+
+        if ($write_htaccess_rest || $download_htaccess_rest) {
+            $created_config = install_rewrite_rules($htaccess_rest_file, $_POST['web_path'], $download_htaccess_rest);
+        } elseif ($write_htaccess_play || $download_htaccess_play) {
+            $created_config = install_rewrite_rules($htaccess_play_file, $_POST['web_path'], $download_htaccess_play);
+        } else {
+            $created_config = install_create_config($download);
+        }
+
         require_once 'templates/show_install_config.inc.php';
     break;
     case 'show_create_config':
