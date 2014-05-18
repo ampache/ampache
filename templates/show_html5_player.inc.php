@@ -69,15 +69,21 @@ function ShowVisualizer()
     } else {
         // Resource not yet initialized? Do it.
         if (!vizInitialized) {
-            UberVizMain.init();
-            vizInitialized = true;
-            AudioHandler.loadMediaSource(document.getElementById("jp_audio_0"));
+            if ((typeof AudioContext !== 'undefined') || (typeof webkitAudioContext !== 'undefined')) {
+                UberVizMain.init();
+                vizInitialized = true;
+                AudioHandler.loadMediaSource(document.getElementById("jp_audio_0"));
+            }
         }
 
-        $('#uberviz').css('visibility', 'visible');
-        $('.jp-interface').css('background-color', 'transparent');
+        if (vizInitialized) {
+            $('#uberviz').css('visibility', 'visible');
+            $('.jp-interface').css('background-color', 'transparent');
 
-        $.cookie('jp_visualizer', true, { expires: 7, path: '/'});
+            $.cookie('jp_visualizer', true, { expires: 7, path: '/'});
+        } else {
+            alert("<?php echo T_('Your browser doesn\'t support this feature.'); ?>");
+        }
     }
 }
 
@@ -670,6 +676,7 @@ if ($isVideo) {
         <div id="slideshow" class="slideshow action_button">
             <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')); ?></a>
         </div>
+<?php if (AmpConfig::get('webplayer_html5')) { ?>
         <div id="equalizerbtn" class="action_button">
             <a href="javascript:ShowEqualizer();"><?php echo UI::get_icon('equalizer', T_('Equalizer')); ?></a>
         </div>
@@ -679,6 +686,7 @@ if ($isVideo) {
         <div class="action_button">
             <a onClick="ShowVisualizerFullScreen();" href="#"><?php echo UI::get_icon('fullscreen', T_('Visualizer Full-Screen')); ?></a>
         </div>
+<?php } ?>
 <?php } ?>
       </div>
 <?php } ?>
