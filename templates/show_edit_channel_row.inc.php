@@ -24,6 +24,23 @@
     <form method="post" id="edit_channel_<?php echo $channel->id; ?>" class="edit_dialog_content">
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Stream Source') ?></td>
+                <td><select name="object_id">
+<?php
+                        $playlists = Playlist::get_playlists();
+                        foreach ($playlists as $playlist_id) {
+                            $playlist = new Playlist($playlist_id);
+                            $playlist->format();
+                            echo "<option value='" . $playlist->id . "'";
+                            if ($playlist->id == $channel->object_id) {
+                                echo " selected";
+                            }
+                            echo ">" . $playlist->f_name . "</option>";
+                        }
+?>
+                </select></td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
                 <td><input type="text" name="name" value="<?php echo scrub_out($channel->name); ?>" /></td>
             </tr>

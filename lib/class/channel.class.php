@@ -127,9 +127,9 @@ class Channel extends database_object
             Tag::update_tag_list($data['edit_tags'], 'channel', $this->id);
         }
 
-        $sql = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ? " .
+        $sql = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? " .
             "WHERE `id` = ?";
-        $params = array($data['name'], $data['description'], $data['url'], $data['interface'], $data['port'], (!empty($data['interface']) && !empty($data['port'])), $data['admin_password'], !empty($data['private']), $data['max_listeners'], $data['random'], $data['loop'], $data['stream_type'], $data['bitrate'], $this->id);
+        $params = array($data['name'], $data['description'], $data['url'], $data['interface'], $data['port'], (!empty($data['interface']) && !empty($data['port'])), $data['admin_password'], !empty($data['private']), $data['max_listeners'], $data['random'], $data['loop'], $data['stream_type'], $data['bitrate'], $data['object_id'], $this->id);
         return Dba::write($sql, $params);
     }
 
