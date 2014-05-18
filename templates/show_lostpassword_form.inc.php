@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2013 Ampache.org
+ * Copyright 2001 - 2014 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -72,7 +72,7 @@ function focus(){ document.login.email.focus(); }
     </div>
 </div>
 <div id="footer"><a href="http://www.ampache.org/index.php">Ampache v.<?php echo AmpConfig::get('version'); ?></a><br />
-Copyright (c) 2001 - 2009 Ampache.org <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?>
+Copyright (c) 2001 - 2014 Ampache.org <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?>
 <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
 </div>
 </body>
