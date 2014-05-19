@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-08 13:41+0200\n"
+"POT-Creation-Date: 2014-05-19 00:47+0200\n"
 "PO-Revision-Date: 2010-03-16 21:20+0330\n"
 "Last-Translator: Soroush <soroush.rostami@gmail.com>\n"
 "Language-Team: Farsi <soroush.rostami@gmail.com>\n"
@@ -947,12 +947,12 @@ msgstr "ایجاد شد"
 msgid "The Requested Playlist has been deleted."
 msgstr "لیست پخش مورد نظر حذف شده است"
 
-#: ../../install.php:97
+#: ../../install.php:100
 #, fuzzy
 msgid "Error: Ampache SQL Username or Password missing"
 msgstr "خطا: شناسه کاربری یا رمز عبور اشتباه است. لطفا دوباره امتحان کنید"
 
-#: ../../install.php:141
+#: ../../install.php:156
 #, fuzzy
 msgid "Error: Config file not found or unreadable"
 msgstr "خطا: فایل پیکربندی پیدا نشد یا در دسترس نمی باشد"
@@ -1765,7 +1765,7 @@ msgstr "پخش شده"
 #: ../../templates/show_channels.inc.php:37
 #: ../../templates/show_duplicates.inc.php:32
 #: ../../templates/show_duplicates.inc.php:71
-#: ../../templates/show_edit_channel_row.inc.php:67
+#: ../../templates/show_edit_channel_row.inc.php:84
 #: ../../templates/show_song.inc.php:94
 #, fuzzy
 msgid "Bitrate"
@@ -1821,7 +1821,7 @@ msgstr "درون‌ریزی لیست پخش"
 #: ../../templates/show_edit_artist_row.inc.php:27
 #: ../../templates/show_edit_broadcast_row.inc.php:27
 #: ../../templates/show_edit_catalog.inc.php:28
-#: ../../templates/show_edit_channel_row.inc.php:27
+#: ../../templates/show_edit_channel_row.inc.php:44
 #: ../../templates/show_edit_live_stream_row.inc.php:27
 #: ../../templates/show_edit_playlist_row.inc.php:27
 #: ../../templates/show_edit_smartplaylist_row.inc.php:27
@@ -1879,8 +1879,8 @@ msgstr "افزودن"
 #: ../../templates/show_album.inc.php:117
 #: ../../templates/show_album.inc.php:118
 #: ../../templates/show_album_row.inc.php:67
-#: ../../templates/show_html5_player.inc.php:242
 #: ../../templates/show_html5_player.inc.php:248
+#: ../../templates/show_html5_player.inc.php:254
 #: ../../templates/show_song.inc.php:68
 #: ../../templates/show_song_row.inc.php:61
 #, fuzzy
@@ -1888,14 +1888,22 @@ msgid "Post Shout"
 msgstr "پست شات"
 
 #: ../../lib/class/song.class.php:872
-#: ../../templates/show_html5_player.inc.php:239
+#: ../../templates/show_html5_player.inc.php:245
 msgid "Show Lyrics"
 msgstr " نمایش متن موزیک"
 
-#: ../../lib/class/update.class.php:438
+#: ../../lib/class/update.class.php:442
 #, fuzzy
 msgid "No updates needed."
 msgstr "به ‌روز رسانی نیاز نیست"
+
+#: ../../lib/class/update.class.php:2430 ../../lib/class/update.class.php:2446
+msgid "File copy error."
+msgstr ""
+
+#: ../../lib/class/update.class.php:2437 ../../lib/class/update.class.php:2453
+msgid "Cannot copy default .htaccess file."
+msgstr ""
 
 #: ../../lib/class/user.class.php:851 ../../templates/show_objects.inc.php:44
 #: ../../templates/show_tagcloud.inc.php:48
@@ -1945,63 +1953,68 @@ msgstr "انتخاب پایگاه داده میسر نیست. پیکربندی �
 msgid "Existing Database detected, unable to continue installation"
 msgstr "پایگاه داده از قبل موجود می باشد. ادامه نصب میسر نیست."
 
-#: ../../lib/install.lib.php:119
+#: ../../lib/install.lib.php:157 ../../lib/install.lib.php:291
+msgid "Error writing config file"
+msgstr ""
+
+#: ../../lib/install.lib.php:182
 #, fuzzy
 msgid "Error: Invalid database name."
 msgstr "خطا در برقراری ارتباط"
 
-#: ../../lib/install.lib.php:124
+#: ../../lib/install.lib.php:187
 #, fuzzy, php-format
 msgid "Error: Unable to make database connection: %s"
 msgstr "خطا: امکان ایجاد اتصال به پایگاه داده نیست"
 
-#: ../../lib/install.lib.php:137
+#: ../../lib/install.lib.php:197
 msgid "Error: Database already exists and overwrite not checked"
 msgstr ""
 
-#: ../../lib/install.lib.php:144
+#: ../../lib/install.lib.php:204
 #, fuzzy, php-format
 msgid "Error: Unable to create database: %s"
 msgstr "میسر نیست %s خطا: خواندن اندازه فایل"
 
-#: ../../lib/install.lib.php:161
+#: ../../lib/install.lib.php:221
 #, php-format
 msgid ""
 "Error: Unable to create user %1$s with permissions to %2$s on %3$s: %4$s"
 msgstr ""
 
-#: ../../lib/install.lib.php:208
+#: ../../lib/install.lib.php:271
+#, fuzzy
+msgid "Invalid configuration settings"
+msgstr "شروع پیکر بندی"
+
+#: ../../lib/install.lib.php:277
 msgid "Database Connection Failed Check Hostname, Username and Password"
 msgstr ""
 
-#: ../../lib/install.lib.php:217
+#: ../../lib/install.lib.php:286
 #, fuzzy
 msgid "Config file is not writable"
 msgstr "خطا: فایل پیکربندی پیدا نشد یا در دسترس نمی باشد"
 
-#: ../../lib/install.lib.php:222
-msgid "Error writing config file"
-msgstr ""
-
-#: ../../lib/install.lib.php:243
+#: ../../lib/install.lib.php:312
 msgid "No Username/Password specified"
 msgstr "شناسه/رمز مشخص نشده است"
 
-#: ../../lib/install.lib.php:248
+#: ../../lib/install.lib.php:317
 msgid "Passwords do not match"
 msgstr "رمز عبور تطبیق ندارد"
 
-#: ../../lib/install.lib.php:253
+#: ../../lib/install.lib.php:322
 #, fuzzy, php-format
 msgid "Database connection failed: %s"
 msgstr "کاراکتر ست پایگاه داده به روز شد"
 
-#: ../../lib/install.lib.php:258
+#: ../../lib/install.lib.php:327
 #, fuzzy, php-format
 msgid "Database select failed: %s"
 msgstr "کاراکتر ست پایگاه داده به روز شد"
 
-#: ../../lib/install.lib.php:268
+#: ../../lib/install.lib.php:337
 #, fuzzy, php-format
 msgid "Administrative user creation failed: %s"
 msgstr "کاربر فعال شد"
@@ -2376,7 +2389,7 @@ msgid "Running Google Music Remote Update"
 msgstr "اجرای به روز رسانی از راه دور"
 
 #: ../../modules/catalog/googlemusic.catalog.php:240
-#: ../../modules/catalog/remote.catalog.php:268
+#: ../../modules/catalog/remote.catalog.php:270
 #: ../../modules/catalog/soundcloud.catalog.php:280
 #: ../../modules/catalog/subsonic.catalog.php:245
 #, fuzzy, php-format
@@ -2515,12 +2528,12 @@ msgstr "اجرای به روز رسانی از راه دور"
 msgid "Error connecting to remote server"
 msgstr "خطا در اتصال"
 
-#: ../../modules/catalog/remote.catalog.php:240
+#: ../../modules/catalog/remote.catalog.php:242
 #, php-format
 msgid "%u remote catalog(s) found (%u songs)"
 msgstr ""
 
-#: ../../modules/catalog/remote.catalog.php:276
+#: ../../modules/catalog/remote.catalog.php:278
 #, fuzzy
 msgid "Completed updating remote catalog(s)."
 msgstr "به روز رسانی مجموعه های راه دور انجام شد."
@@ -2615,7 +2628,7 @@ msgstr "نام میزبان"
 #: ../../modules/localplay/xbmc.controller.php:199
 #: ../../templates/show_add_channel.inc.php:63
 #: ../../templates/show_channels.inc.php:32
-#: ../../templates/show_edit_channel_row.inc.php:43
+#: ../../templates/show_edit_channel_row.inc.php:60
 msgid "Port"
 msgstr "درگاه"
 
@@ -2624,7 +2637,7 @@ msgstr "درگاه"
 #: ../../modules/localplay/vlc.controller.php:483
 #: ../../templates/show_add_channel.inc.php:76
 #: ../../templates/show_channels.inc.php:34
-#: ../../templates/show_edit_channel_row.inc.php:52
+#: ../../templates/show_edit_channel_row.inc.php:69
 #: ../../templates/show_localplay_status.inc.php:48
 #: ../../templates/sidebar_home.inc.php:68
 #, fuzzy
@@ -2754,7 +2767,7 @@ msgid "Your Search has been saved as a track in %s"
 msgstr ""
 
 #: ../../server/player.ajax.php:41
-#: ../../templates/show_html5_player.inc.php:654
+#: ../../templates/show_html5_player.inc.php:660
 msgid "My Broadcast"
 msgstr ""
 
@@ -3256,6 +3269,7 @@ msgstr "تاریخ ایجاد"
 
 #: ../../templates/show_add_channel.inc.php:29
 #: ../../templates/show_channels.inc.php:33
+#: ../../templates/show_edit_channel_row.inc.php:27
 #, fuzzy
 msgid "Stream Source"
 msgstr "دسترسی به جریان"
@@ -3264,7 +3278,7 @@ msgstr "دسترسی به جریان"
 #: ../../templates/show_catalog_types.inc.php:30
 #: ../../templates/show_catalog_types.inc.php:64
 #: ../../templates/show_edit_broadcast_row.inc.php:31
-#: ../../templates/show_edit_channel_row.inc.php:31
+#: ../../templates/show_edit_channel_row.inc.php:48
 #: ../../templates/show_localplay_controllers.inc.php:30
 #: ../../templates/show_localplay_controllers.inc.php:64
 #: ../../templates/show_plugins.inc.php:30
@@ -3274,13 +3288,13 @@ msgid "Description"
 msgstr "توضیح"
 
 #: ../../templates/show_add_channel.inc.php:49
-#: ../../templates/show_edit_channel_row.inc.php:35
+#: ../../templates/show_edit_channel_row.inc.php:52
 msgid "Url"
 msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:56
 #: ../../templates/show_channels.inc.php:31
-#: ../../templates/show_edit_channel_row.inc.php:39
+#: ../../templates/show_edit_channel_row.inc.php:56
 #, fuzzy
 msgid "Interface"
 msgstr "رابط"
@@ -3288,24 +3302,24 @@ msgstr "رابط"
 #: ../../templates/show_add_channel.inc.php:70
 #: ../../templates/show_channel_row.inc.php:44
 #: ../../templates/show_edit_broadcast_row.inc.php:36
-#: ../../templates/show_edit_channel_row.inc.php:48
+#: ../../templates/show_edit_channel_row.inc.php:65
 msgid "Authentication Required"
 msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:82
 #: ../../templates/show_channels.inc.php:35
-#: ../../templates/show_edit_channel_row.inc.php:56
+#: ../../templates/show_edit_channel_row.inc.php:73
 msgid "Loop"
 msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:88
-#: ../../templates/show_edit_channel_row.inc.php:59
+#: ../../templates/show_edit_channel_row.inc.php:76
 msgid "Max Listeners"
 msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:95
 #: ../../templates/show_channels.inc.php:36
-#: ../../templates/show_edit_channel_row.inc.php:63
+#: ../../templates/show_edit_channel_row.inc.php:80
 #, fuzzy
 msgid "Stream Type"
 msgstr "نوع جستجو"
@@ -3595,7 +3609,9 @@ msgstr "پیدا کردن تصویر آلبوم"
 #: ../../templates/show_album.inc.php:139
 #: ../../templates/show_artist.inc.php:114
 #: ../../templates/show_artist.inc.php:115
-#: ../../templates/show_install_config.inc.php:95
+#: ../../templates/show_install_config.inc.php:103
+#: ../../templates/show_install_config.inc.php:118
+#: ../../templates/show_install_config.inc.php:134
 #: ../../templates/show_playlist_song_row.inc.php:56
 #: ../../templates/show_share.inc.php:32 ../../templates/show_share.inc.php:33
 #: ../../templates/show_song.inc.php:76
@@ -3845,7 +3861,7 @@ msgstr ""
 
 #: ../../templates/show_broadcasts.inc.php:30
 #: ../../templates/show_edit_broadcast_row.inc.php:39
-#: ../../templates/show_edit_channel_row.inc.php:71
+#: ../../templates/show_edit_channel_row.inc.php:88
 #: ../../templates/show_song.inc.php:88
 msgid "Genre"
 msgstr "ژانر"
@@ -4445,23 +4461,27 @@ msgstr "گرفتن تصویر"
 msgid "Information"
 msgstr "اطلاعات"
 
-#: ../../templates/show_html5_player.inc.php:511
+#: ../../templates/show_html5_player.inc.php:85
+msgid "Your browser doesn't support this feature."
+msgstr ""
+
+#: ../../templates/show_html5_player.inc.php:517
 msgid "Media is currently playing. Are you sure you want to close"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:671
+#: ../../templates/show_html5_player.inc.php:677
 msgid "Slideshow"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:674
+#: ../../templates/show_html5_player.inc.php:681
 msgid "Equalizer"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:677
+#: ../../templates/show_html5_player.inc.php:684
 msgid "Visualizer"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:680
+#: ../../templates/show_html5_player.inc.php:687
 msgid "Visualizer Full-Screen"
 msgstr ""
 
@@ -4481,27 +4501,27 @@ msgid "Albums of the Moment"
 msgstr "آلبوم روز"
 
 #: ../../templates/show_install_account.inc.php:26
-#: ../../templates/show_install_config.inc.php:29
+#: ../../templates/show_install_config.inc.php:32
 #: ../../templates/show_install.inc.php:26
 msgid "Install progress"
 msgstr ""
 
 #: ../../templates/show_install_account.inc.php:38
-#: ../../templates/show_install_config.inc.php:40
+#: ../../templates/show_install_config.inc.php:43
 #: ../../templates/show_install.inc.php:37
 #, fuzzy
 msgid "Step 1 - Create the Ampache database"
 msgstr "قدم 1 - ایجاد و درج پایگاه داده آمپاچی"
 
 #: ../../templates/show_install_account.inc.php:39
-#: ../../templates/show_install_config.inc.php:41
+#: ../../templates/show_install_config.inc.php:44
 #: ../../templates/show_install.inc.php:42
 #, fuzzy
-msgid "Step 2 - Create ampache.cfg.php"
+msgid "Step 2 - Create configuration files (ampache.cfg.php ...)"
 msgstr "ampache.cfg.php قدم 2 - ایجاد فایل"
 
 #: ../../templates/show_install_account.inc.php:41
-#: ../../templates/show_install_config.inc.php:46
+#: ../../templates/show_install_config.inc.php:49
 #: ../../templates/show_install.inc.php:43
 #, fuzzy
 msgid "Step 3 - Set up the initial account"
@@ -4609,7 +4629,7 @@ msgid ""
 "but will help streamline the installation process."
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:43
+#: ../../templates/show_install_config.inc.php:46
 #, fuzzy, php-format
 msgid ""
 "This step takes the basic config values and generates the config file. If "
@@ -4622,59 +4642,91 @@ msgstr ""
 "شود. اين گام از شما مي خواهد که فايل را دانلود کنيد. لطفا اين فايل را در "
 "پوشه پيکربندي قرار دهيد"
 
-#: ../../templates/show_install_config.inc.php:51
+#: ../../templates/show_install_config.inc.php:54
 msgid "Generate Config File"
 msgstr "ایجاد فایل پیکربندی"
 
-#: ../../templates/show_install_config.inc.php:55
+#: ../../templates/show_install_config.inc.php:58
 #, fuzzy
 msgid "Web Path"
 msgstr "نشانی وب"
 
-#: ../../templates/show_install_config.inc.php:61
+#: ../../templates/show_install_config.inc.php:64
 #, fuzzy
 msgid "Database Name"
 msgstr "نام پایگاه‌ داده مورد نظر"
 
-#: ../../templates/show_install_config.inc.php:67
+#: ../../templates/show_install_config.inc.php:70
 #: ../../templates/show_install.inc.php:56
 msgid "MySQL Hostname"
 msgstr "MySQL نام میزبان"
 
-#: ../../templates/show_install_config.inc.php:73
+#: ../../templates/show_install_config.inc.php:76
 #: ../../templates/show_install.inc.php:62
 msgid "MySQL port (optional)"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:79
+#: ../../templates/show_install_config.inc.php:82
 msgid "MySQL Username"
 msgstr "MySQL شناسه"
 
-#: ../../templates/show_install_config.inc.php:85
+#: ../../templates/show_install_config.inc.php:88
 msgid "MySQL Password"
 msgstr "MySQL رمز"
 
-#: ../../templates/show_install_config.inc.php:97
+#: ../../templates/show_install_config.inc.php:100
+msgid "rest/.htaccess action"
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:105
+#: ../../templates/show_install_config.inc.php:120
+#: ../../templates/show_install_config.inc.php:136
 #, fuzzy
 msgid "Write"
 msgstr "خواندن/نوشتن"
 
-#: ../../templates/show_install_config.inc.php:102
-#, fuzzy
-msgid "ampache.cfg.php exists?"
-msgstr "وجود دارد؟ Ampache.cfg.php آیا"
+#: ../../templates/show_install_config.inc.php:108
+msgid "rest/.htaccess exists?"
+msgstr ""
 
-#: ../../templates/show_install_config.inc.php:104
+#: ../../templates/show_install_config.inc.php:110
+msgid "rest/.htaccess configured?"
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:115
+msgid "play/.htaccess action"
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:123
+msgid "play/.htaccess exists?"
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:125
 #, fuzzy
-msgid "ampache.cfg.php configured?"
+msgid "play/.htaccess configured?"
 msgstr "پیکربندی شده است؟ Ampache.cfg.php آیا"
 
-#: ../../templates/show_install_config.inc.php:109
+#: ../../templates/show_install_config.inc.php:131
+#, fuzzy
+msgid "config/ampache.cfg.php action"
+msgstr "پیکربندی شده است؟ Ampache.cfg.php آیا"
+
+#: ../../templates/show_install_config.inc.php:139
+#, fuzzy
+msgid "config/ampache.cfg.php exists?"
+msgstr "وجود دارد؟ Ampache.cfg.php آیا"
+
+#: ../../templates/show_install_config.inc.php:141
+#, fuzzy
+msgid "config/ampache.cfg.php configured?"
+msgstr "پیکربندی شده است؟ Ampache.cfg.php آیا"
+
+#: ../../templates/show_install_config.inc.php:150
 #, fuzzy
 msgid "Recheck Config"
 msgstr "بررسی پیکربندی"
 
-#: ../../templates/show_install_config.inc.php:116
+#: ../../templates/show_install_config.inc.php:158
 msgid "Continue to Step 3"
 msgstr "رفتن به مرحله 3"
 
@@ -4706,30 +4758,37 @@ msgstr "MySQL رمز مدیر"
 
 #: ../../templates/show_install.inc.php:80
 #, fuzzy
-msgid "Create Database User (for New Database)?"
-msgstr "ایجاد کاربر پایگاه داده برای پایگاه داده جدید"
+msgid "Create Database"
+msgstr "تاریخ ایجاد"
 
-#: ../../templates/show_install.inc.php:89
+#: ../../templates/show_install.inc.php:90
+#, fuzzy
+msgid "Overwrite if database already exists"
+msgstr "خطا: این شناسه کاربری قبلا استفاده شده است"
+
+#: ../../templates/show_install.inc.php:99
+#, fuzzy
+msgid "Create Tables"
+msgstr "تاریخ ایجاد"
+
+#: ../../templates/show_install.inc.php:108
+#, fuzzy
+msgid "Create Database User"
+msgstr "نام کاربری (شناسه) پایگاه داده آمپاچی"
+
+#: ../../templates/show_install.inc.php:118
 msgid "Ampache Database Username"
 msgstr "نام کاربری (شناسه) پایگاه داده آمپاچی"
 
-#: ../../templates/show_install.inc.php:95
+#: ../../templates/show_install.inc.php:124
 msgid "Ampache Database User Password"
 msgstr "رمز ورود برای کاربر پایگاه داده آمپاچی"
 
-#: ../../templates/show_install.inc.php:101
-msgid "Overwrite Existing"
-msgstr "دوباره نویسی در صورت وجود"
-
-#: ../../templates/show_install.inc.php:110
-msgid "Use Existing Database"
-msgstr "استفاده از پایگاه داده موجود"
-
-#: ../../templates/show_install.inc.php:119
+#: ../../templates/show_install.inc.php:130
 msgid "Skip"
 msgstr ""
 
-#: ../../templates/show_install.inc.php:122
+#: ../../templates/show_install.inc.php:133
 msgid "Insert Database"
 msgstr "درج  پایگاه ‌داده"
 
@@ -6230,6 +6289,16 @@ msgstr ""
 #: Database words
 msgid "Flickr api key"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Create Database User (for New Database)?"
+#~ msgstr "ایجاد کاربر پایگاه داده برای پایگاه داده جدید"
+
+#~ msgid "Overwrite Existing"
+#~ msgstr "دوباره نویسی در صورت وجود"
+
+#~ msgid "Use Existing Database"
+#~ msgstr "استفاده از پایگاه داده موجود"
 
 #, fuzzy
 #~ msgid "Album Ellipse Threshold"
