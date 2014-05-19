@@ -116,7 +116,7 @@ class Error
         // Be smart about this, if no error don't print
         if (!isset(Error::$errors[$name])) { return ''; }
 
-        echo '<p class="alert alert-danger">' . Error::$errors[$name] . '</p>';
+        echo '<p class="alert alert-danger">' . T_(Error::$errors[$name]) . '</p>';
 
     } // display
 
