@@ -55,38 +55,38 @@ require $prefix . '/templates/install_header.inc.php';
             <?php Error::display('config'); ?>
 <form method="post" action="<?php echo $web_path . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" >
 <div class="form-group">
-    <label for="web_path" class="col-sm-3 control-label"><?php echo T_('Web Path'); ?></label>
-    <div class="col-sm-9">
+    <label for="web_path" class="col-sm-4 control-label"><?php echo T_('Web Path'); ?></label>
+    <div class="col-sm-8">
         <input type="text" class="form-control" id="web_path" name="web_path" value="<?php echo scrub_out($web_path_guess); ?>">
     </div>
 </div>
 <div class="form-group">
-    <label for="local_db" class="col-sm-3 control-label"><?php echo T_('Database Name'); ?></label>
-    <div class="col-sm-9">
+    <label for="local_db" class="col-sm-4 control-label"><?php echo T_('Database Name'); ?></label>
+    <div class="col-sm-8">
         <input type="text" class="form-control" id="local_db" name="local_db" value="<?php echo scrub_out($_REQUEST['local_db']); ?>">
     </div>
 </div>
 <div class="form-group">
-    <label for="local_host" class="col-sm-3 control-label"><?php echo T_('MySQL Hostname'); ?></label>
-    <div class="col-sm-9">
+    <label for="local_host" class="col-sm-4 control-label"><?php echo T_('MySQL Hostname'); ?></label>
+    <div class="col-sm-8">
         <input type="text" class="form-control" id="local_host" name="local_host" value="<?php echo scrub_out($_REQUEST['local_host']); ?>">
     </div>
 </div>
 <div class="form-group">
-    <label for="local_port" class="col-sm-3 control-label"><?php echo T_('MySQL port (optional)'); ?></label>
-    <div class="col-sm-9">
+    <label for="local_port" class="col-sm-4 control-label"><?php echo T_('MySQL port (optional)'); ?></label>
+    <div class="col-sm-8">
         <input type="text" class="form-control" id="local_port" name="local_port" value="<?php echo scrub_out($_REQUEST['local_port']);?>"/>
     </div>
 </div>
 <div class="form-group">
-    <label for="local_username" class="col-sm-3 control-label"><?php echo T_('MySQL Username'); ?></label>
-    <div class="col-sm-9">
+    <label for="local_username" class="col-sm-4 control-label"><?php echo T_('MySQL Username'); ?></label>
+    <div class="col-sm-8">
         <input type="text" class="form-control" id="local_username" name="local_username" value="<?php echo scrub_out($_REQUEST['local_username']);?>"/>
     </div>
 </div>
 <div class="form-group">
-    <label for="local_pass" class="col-sm-3 control-label"><?php echo T_('MySQL Password'); ?></label>
-    <div class="col-sm-9">
+    <label for="local_pass" class="col-sm-4 control-label"><?php echo T_('MySQL Password'); ?></label>
+    <div class="col-sm-8">
         <input type="password" class="form-control" id="local_pass" name="local_pass" placeholder="Password">
     </div>
 </div>
@@ -95,58 +95,58 @@ require $prefix . '/templates/install_header.inc.php';
 <input type="hidden" name="charset" value="<?php echo $charset; ?>" />
 
 <?php if (install_check_server_apache()) { ?>
-    <div class="col-sm-3">&nbsp;</div><div class="col-sm-9">&nbsp;</div>
-    <div class="col-sm-3">
+    <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
+    <div class="col-sm-4 control-label">
         <?php echo T_('rest/.htaccess action'); ?>
     </div>
-    <div class="col-sm-9">
+    <div class="col-sm-8">
         <button type="submit" class="btn btn-warning" name="download_htaccess_rest"><?php echo T_('Download'); ?></button>
         <button type="submit" class="btn btn-warning" name="write_htaccess_rest" <?php if (!check_htaccess_rest_writable()) { echo "disabled "; } ?>>
             <?php echo T_('Write'); ?>
         </button>
     </div>
-    <div class="col-sm-3"><?php echo T_('rest/.htaccess exists?'); ?></div>
-    <div class="col-sm-9"><?php echo debug_result(is_readable($htaccess_rest_file)); ?></div>
-    <div class="col-sm-3"><?php echo T_('rest/.htaccess configured?'); ?></div>
-    <div class="col-sm-9"><?php echo debug_result(install_check_rewrite_rules($htaccess_rest_file, $web_path_guess)); ?></div>
+    <div class="col-sm-4 control-label"><?php echo T_('rest/.htaccess exists?'); ?></div>
+    <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_rest_file)); ?></div>
+    <div class="col-sm-4 control-label"><?php echo T_('rest/.htaccess configured?'); ?></div>
+    <div class="col-sm-8"><?php echo debug_result(install_check_rewrite_rules($htaccess_rest_file, $web_path_guess)); ?></div>
 
-    <div class="col-sm-3">&nbsp;</div><div class="col-sm-9">&nbsp;</div>
-    <div class="col-sm-3">
+    <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
+    <div class="col-sm-4 control-label">
         <?php echo T_('play/.htaccess action'); ?>
     </div>
-    <div class="col-sm-9">
+    <div class="col-sm-8">
         <button type="submit" class="btn btn-warning" name="download_htaccess_play"><?php echo T_('Download'); ?></button>
         <button type="submit" class="btn btn-warning" name="write_htaccess_play" <?php if (!check_htaccess_play_writable()) { echo "disabled "; } ?>>
             <?php echo T_('Write'); ?>
         </button>
     </div>
-    <div class="col-sm-3"><?php echo T_('play/.htaccess exists?'); ?></div>
-    <div class="col-sm-9"><?php echo debug_result(is_readable($htaccess_play_file)); ?></div>
-    <div class="col-sm-3"><?php echo T_('play/.htaccess configured?'); ?></div>
-    <div class="col-sm-9"><?php echo debug_result(install_check_rewrite_rules($htaccess_play_file, $web_path_guess)); ?></div>
+    <div class="col-sm-4 control-label"><?php echo T_('play/.htaccess exists?'); ?></div>
+    <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_play_file)); ?></div>
+    <div class="col-sm-4 control-label"><?php echo T_('play/.htaccess configured?'); ?></div>
+    <div class="col-sm-8"><?php echo debug_result(install_check_rewrite_rules($htaccess_play_file, $web_path_guess)); ?></div>
 <?php } ?>
 
-<div class="col-sm-3">&nbsp;</div><div class="col-sm-9">&nbsp;</div>
-<div class="col-sm-3">
+<div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
+<div class="col-sm-4">
     <?php echo T_('config/ampache.cfg.php action'); ?>
 </div>
-<div class="col-sm-9">
+<div class="col-sm-8">
     <button type="submit" class="btn btn-warning" name="download"><?php echo T_('Download'); ?></button>
     <button type="submit" class="btn btn-warning" name="write" <?php if (!check_config_writable()) { echo "disabled "; } ?>>
         <?php echo T_('Write'); ?>
     </button>
 </div>
-<div class="col-sm-3"><?php echo T_('config/ampache.cfg.php exists?'); ?></div>
-<div class="col-sm-9"><?php echo debug_result(is_readable($configfile)); ?></div>
-<div class="col-sm-3"><?php echo T_('config/ampache.cfg.php configured?'); ?></div>
-<div class="col-sm-9"><?php $results = @parse_ini_file($configfile); echo debug_result(check_config_values($results)); ?></div>
-<div class="col-sm-3">&nbsp;</div><div class="col-sm-9">&nbsp;</div>
+<div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php exists?'); ?></div>
+<div class="col-sm-8"><?php echo debug_result(is_readable($configfile)); ?></div>
+<div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php configured?'); ?></div>
+<div class="col-sm-8"><?php $results = @parse_ini_file($configfile); echo debug_result(check_config_values($results)); ?></div>
+<div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
 
 </form>
 
-<div class="col-sm-3"></div>
+<div class="col-sm-4"></div>
 <?php $check_url = $web_path . "/install.php?action=show_create_config&amp;htmllang=$htmllang&amp;charset=$charset&amp;local_db=" . $_REQUEST['local_db'] . "&amp;local_host=" . $_REQUEST['local_host']; ?>
-<div class="col-sm-9">
+<div class="col-sm-8">
     <a href="<?php echo $check_url; ?>">[<?php echo T_('Recheck Config'); ?>]</a>
 </div>
 

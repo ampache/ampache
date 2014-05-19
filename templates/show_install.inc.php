@@ -47,38 +47,38 @@ require $prefix . '/templates/install_header.inc.php';
 <h2><?php echo T_('Insert Ampache Database'); ?></h2>
 <form role="form" class="form-horizontal" method="post" action="<?php echo $web_path . "/install.php?action=create_db&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data">
     <div class="form-group">
-        <label for="local_db" class="col-sm-3 control-label"><?php echo T_('Desired Database Name'); ?></label>
-        <div class="col-sm-9">
+        <label for="local_db" class="col-sm-4 control-label"><?php echo T_('Desired Database Name'); ?></label>
+        <div class="col-sm-8">
             <input type="text" class="form-control" id="local_db" name="local_db" value="ampache">
         </div>
     </div>
     <div class="form-group">
-        <label for="local_host" class="col-sm-3 control-label"><?php echo T_('MySQL Hostname'); ?></label>
-        <div class="col-sm-9">
+        <label for="local_host" class="col-sm-4 control-label"><?php echo T_('MySQL Hostname'); ?></label>
+        <div class="col-sm-8">
             <input type="text" class="form-control" id="local_host" name="local_host" value="localhost">
         </div>
     </div>
     <div class="form-group">
-        <label for="local_port" class="col-sm-3 control-label"><?php echo T_('MySQL port (optional)'); ?></label>
-        <div class="col-sm-9">
+        <label for="local_port" class="col-sm-4 control-label"><?php echo T_('MySQL port (optional)'); ?></label>
+        <div class="col-sm-8">
             <input type="text" class="form-control" id="local_port" name="local_port"/>
        </div>
    </div>
     <div class="form-group">
-        <label for="local_username" class="col-sm-3 control-label"><?php echo T_('MySQL Administrative Username'); ?></label>
-        <div class="col-sm-9">
+        <label for="local_username" class="col-sm-4 control-label"><?php echo T_('MySQL Administrative Username'); ?></label>
+        <div class="col-sm-8">
             <input type="text" class="form-control" id="local_username" name="local_username" value="root">
         </div>
     </div>
     <div class="form-group">
-        <label for="local_pass" class="col-sm-3 control-label"><?php echo T_('MySQL Administrative Password'); ?></label>
-        <div class="col-sm-9">
+        <label for="local_pass" class="col-sm-4 control-label"><?php echo T_('MySQL Administrative Password'); ?></label>
+        <div class="col-sm-8">
             <input type="password" class="form-control" id="local_pass" name="local_pass" placeholder="Password">
         </div>
     </div>
     <div class="form-group">
-        <label for="create_db" class="col-sm-3 control-label"><?php echo T_('Create Database'); ?></label>
-        <div class="col-sm-9">
+        <label for="create_db" class="col-sm-4 control-label"><?php echo T_('Create Database'); ?></label>
+        <div class="col-sm-8">
             <input
                 type="checkbox" value="1" checked
                 id="create_db" name="create_db"
@@ -87,8 +87,8 @@ require $prefix . '/templates/install_header.inc.php';
         </div>
     </div>
     <div class="form-group" id="overwrite_db_div">
-        <label for="overwrite_db" class="col-sm-3 control-label"><?php echo T_('Overwrite if database already exists'); ?></label>
-        <div class="col-sm-9">
+        <label for="overwrite_db" class="col-sm-4 control-label"><?php echo T_('Overwrite if database already exists'); ?></label>
+        <div class="col-sm-8">
             <input
                 type="checkbox" value="1"
                 id="overwrite_db" name="overwrite_db"
@@ -96,8 +96,8 @@ require $prefix . '/templates/install_header.inc.php';
         </div>
     </div>
     <div class="form-group">
-        <label for="create_tables" class="col-sm-3 control-label"><?php echo T_('Create Tables'); ?> (<a href="sql/ampache.sql">ampache.sql</a>)</label>
-        <div class="col-sm-9">
+        <label for="create_tables" class="col-sm-4 control-label"><?php echo T_('Create Tables'); ?> (<a href="sql/ampache.sql">ampache.sql</a>)</label>
+        <div class="col-sm-8">
             <input
                 type="checkbox" value="1" checked
                 id="create_tables" name="create_tables"
@@ -105,8 +105,8 @@ require $prefix . '/templates/install_header.inc.php';
         </div>
     </div>
     <div class="form-group">
-        <label for="db_user" class="col-sm-3 control-label"><?php echo T_('Create Database User'); ?></label>
-        <div class="col-sm-9">
+        <label for="db_user" class="col-sm-4 control-label"><?php echo T_('Create Database User'); ?></label>
+        <div class="col-sm-8">
             <input
                 type="checkbox" value="create_db_user" name="db_user"
                 id="db_user"
@@ -115,21 +115,21 @@ require $prefix . '/templates/install_header.inc.php';
         </div>
     </div>
     <div class="form-group" style="display: none;" id="specificuser">
-        <label for="db_username" class="col-sm-3 control-label"><?php echo T_('Ampache Database Username'); ?></label>
-        <div class="col-sm-9">
+        <label for="db_username" class="col-sm-4 control-label"><?php echo T_('Ampache Database Username'); ?></label>
+        <div class="col-sm-8">
             <input type="text" class="form-control" id="db_username" name="db_username" value="ampache">
         </div>
     </div>
     <div class="form-group" style="display: none;" id="specificpass">
-        <label for="db_password" class="col-sm-3 control-label"><?php echo T_('Ampache Database User Password'); ?></label>
-        <div class="col-sm-9">
+        <label for="db_password" class="col-sm-4 control-label"><?php echo T_('Ampache Database User Password'); ?></label>
+        <div class="col-sm-8">
             <input type="password" class="form-control" id="db_password" name="db_password" placeholder="Password">
         </div>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-4">
         <button type="submit" class="btn btn-warning" name="skip_admin"><?php echo T_('Skip'); ?></button>
     </div>
-    <div class="col-sm-9">
+    <div class="col-sm-8">
         <button type="submit" class="btn btn-warning"><?php echo T_('Insert Database'); ?></button>
     </div>
 </form>
