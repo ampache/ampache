@@ -135,7 +135,11 @@ class AutoUpdate
 
     public static function get_current_commit()
     {
-        return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/develop'));
+        if (self::is_git_repository()) {
+            return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/develop'));
+        }
+
+        return false;
     }
 
     public static function is_update_available($force = false)
@@ -150,7 +154,7 @@ class AutoUpdate
         $current = self::get_current_version();
         $latest = self::get_latest_version();
 
-        if ($current != $latest) {
+        if ($current != $latest && !empty($current)) {
             if (self::is_develop()) {
                 $ccommit = self::github_request('/commits/' . $current);
                 $lcommit = self::github_request('/commits/' . $latest);
