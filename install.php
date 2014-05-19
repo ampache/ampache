@@ -60,6 +60,11 @@ if (!$skip_admin) {
     ), true);
 }
 
+if (isset($_REQUEST['transcode_template'])) {
+    $mode = $_REQUEST['transcode_template'];
+    install_config_transcode_mode($mode);
+}
+
 // Charset and gettext setup
 $htmllang = $_REQUEST['htmllang'];
 $charset  = $_REQUEST['charset'];

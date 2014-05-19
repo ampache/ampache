@@ -51,6 +51,11 @@ class AutoUpdate
         return is_dir(AmpConfig::get('prefix') . '/.git');
     }
 
+    protected static function is_branch_develop_exists()
+    {
+        return is_readable(AmpConfig::get('prefix') . '/.git/refs/heads/develop');
+    }
+
     public static function github_request($action)
     {
         try {
@@ -135,7 +140,7 @@ class AutoUpdate
 
     public static function get_current_commit()
     {
-        if (self::is_git_repository()) {
+        if (self::is_branch_develop_exists()) {
             return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/develop'));
         }
 

@@ -52,6 +52,7 @@ require $prefix . '/templates/install_header.inc.php';
             <?php Error::display('general'); ?>
 
             <h2><?php echo T_('Generate Config File'); ?></h2>
+            <h3><?php echo T_('Database connection'); ?></h3>
             <?php Error::display('config'); ?>
 <form method="post" action="<?php echo $web_path . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" >
 <div class="form-group">
@@ -73,7 +74,7 @@ require $prefix . '/templates/install_header.inc.php';
     </div>
 </div>
 <div class="form-group">
-    <label for="local_port" class="col-sm-4 control-label"><?php echo T_('MySQL port (optional)'); ?></label>
+    <label for="local_port" class="col-sm-4 control-label"><?php echo T_('MySQL Port (optional)'); ?></label>
     <div class="col-sm-8">
         <input type="text" class="form-control" id="local_port" name="local_port" value="<?php echo scrub_out($_REQUEST['local_port']);?>"/>
     </div>
@@ -94,6 +95,36 @@ require $prefix . '/templates/install_header.inc.php';
 <input type="hidden" name="htmllang" value="<?php echo $htmllang; ?>" />
 <input type="hidden" name="charset" value="<?php echo $charset; ?>" />
 
+<br />
+<h3><?php echo T_('Transcoding'); ?></h3>
+<div>
+    <?php echo T_('Transcoding allows you to convert one type of file to another. Ampache supports on the fly transcoding of all file types based on user, IP address or available bandwidth. In order to transcode Ampache takes advantage of existing binary applications such as ffmpeg. In order for transcoding to work you must first install the supporting applications and ensure that they are executable by the webserver.'); ?>
+    <br />
+    <?php echo T_('This section apply default transcoding configuration according to the application you want to use. You may need to customize settings once this setup ended'); ?>. <a href="https://github.com/ampache/ampache/wiki/Transcoding" target="_blank"><?php echo T_('See wiki page'); ?>.</a>
+</div>
+<br />
+<div class="form-group">
+    <label for="transcode_template" class="col-sm-4 control-label"><?php echo T_('Template Configuration'); ?></label>
+    <div class="col-sm-8">
+        <select class="form-control" id="transcode_template" name="transcode_template">
+        <option value="">None</option>
+        <?php
+            $modes = install_get_transcode_modes();
+            foreach ($modes as $mode) {
+        ?>
+            <option value="<?php echo $mode; ?>" <?php if ($_REQUEST['transcode_template'] == $mode) echo 'selected'; ?>><?php echo $mode; ?></option>
+        <?php } ?>
+        </select>
+        <?php
+        if (count($modes) == 0) {
+        ?>
+        <label><?php echo T_('No default transcoding application found. You may need to install a popular application (ffmpeg, avconv ...) or customize transcoding settings manually after installation.'); ?></label>
+        <?php } ?>
+    </div>
+</div>
+
+<br />
+<h3><?php echo T_('Files'); ?></h3>
 <?php if (install_check_server_apache()) { ?>
     <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
     <div class="col-sm-4 control-label">

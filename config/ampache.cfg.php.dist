@@ -661,6 +661,8 @@ refresh_limit = "60"
 ;transcode_m4a      = allowed
 ;transcode_flac     = required
 ;transcode_mpc      = required
+;transcode_ogg      = required
+;transcode_wav      = required
 ;transcode_mp3      = allowed
 
 ; Default output format

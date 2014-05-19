@@ -344,3 +344,70 @@ function install_create_account($username, $password, $password2)
     return true;
 
 } // install_create_account
+
+function command_exists($command)
+{
+    if (!function_exists('proc_open')) {
+        return false;
+    }
+
+    $whereIsCommand = (PHP_OS == 'WINNT') ? 'where' : 'which';
+    $process = proc_open(
+        "$whereIsCommand $command",
+        array(
+            0 => array("pipe", "r"), //STDIN
+            1 => array("pipe", "w"), //STDOUT
+            2 => array("pipe", "w"), //STDERR
+        ),
+        $pipes
+    );
+
+    if ($process !== false) {
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        proc_close($process);
+
+        return $stdout != '';
+    }
+
+    return false;
+}
+
+/**
+ * install_get_transcode_modes
+ * get transcode modes available on this machine.
+ */
+function install_get_transcode_modes()
+{
+    $modes = array();
+
+    if (command_exists('ffmpeg')) {
+        $modes[] = 'ffmpeg';
+    }
+    if (command_exists('avconv')) {
+        $modes[] = 'avconv';
+    }
+
+    return $modes;
+} // install_get_transcode_modes
+
+function install_config_transcode_mode($mode)
+{
+    $trconfig = array(
+        'encode_target' => 'mp3',
+        'transcode_m4a' => 'required',
+        'transcode_flac' => 'required',
+        'transcode_mpc' => 'required',
+        'transcode_ogg' => 'allowed',
+        'transcode_wav' => 'required'
+    );
+    if ($mode == 'ffmpeg' || $mode == 'avconv') {
+        $trconfig['transcode_cmd'] = $mode . ' -i %FILE%';
+        $trconfig['encode_args_mp3'] = '-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1';
+        $trconfig['encode_args_ogg'] = '-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1';
+        $trconfig['encode_args_wav'] = '-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1';
+        AmpConfig::set_by_array($trconfig, true);
+    }
+}
