@@ -79,10 +79,6 @@ msgid "Playlist Method"
 msgstr ""
 
 #: Database words
-msgid "Transcoding"
-msgstr ""
-
-#: Database words
 msgid "Shoutcast Active Instance"
 msgstr ""
 
