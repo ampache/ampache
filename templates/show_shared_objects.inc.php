@@ -49,5 +49,5 @@
     <?php } ?>
     </tbody>
 </table>
-<script language="javascript" type="text/javascript">$('.tabledata').mediaTable();</script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
 <?php UI::show_box_bottom(); ?>

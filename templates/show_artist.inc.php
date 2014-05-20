@@ -143,6 +143,8 @@ if (AmpConfig::get('show_played_times')) {
 <?php if (AmpConfig::get('show_concerts')) { ?>
             <li><a id="concerts_link" href="#concerts"><?php echo T_('Events'); ?></a></li>
 <?php } ?>
+            <!-- Needed to avoid the 'only one' bug -->
+            <li></li>
         </ul>
     </div>
     <div id="tabs_content">

@@ -59,5 +59,5 @@
         <?php } ?>
     </tbody>
 </table>
-<script language="javascript" type="text/javascript">$('.tabledata').mediaTable();</script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>

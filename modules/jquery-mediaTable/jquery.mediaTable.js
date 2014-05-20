@@ -75,17 +75,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
 
     // Place the wrapper near the table and fill with MediaTable.
     wdg.$table.before(wdg.$wrap).appendTo(wdg.$wrap);
-
-
-    // Menu initialization logic.
-    if ( wdg.cfg.menu ) __initMenu( wdg );
-
-    // Columns Initialization Loop.
-    wdg.$table.find('thead th').each(function(i){ __thInit.call( this, i, wdg );  });
-
-
-
-
+    
     // Save widget context into table DOM.
     wdg.$table.data( 'MediaTable', wdg );
 
@@ -98,6 +88,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
       wdg.$menu       = $('<div />');
       wdg.$menu.$header   = $('<a />');
       wdg.$menu.$list   = $('<ul />');
+      wdg.$menu.$footer   = $('<a />');
 
       // Setup menu general properties and append to DOM.
       wdg.$menu
@@ -110,8 +101,13 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
       wdg.$wrap.addClass('mediaTableWrapperWithMenu');
 
       // Setup menu title (handler)
+      wdg.$menu.$header.attr( 'id', wdg.id + '-header' );
       wdg.$menu.$header.text(wdg.cfg.menuTitle);
       wdg.$table.before(wdg.$menu);
+      
+      // Setup menu footer
+      wdg.$menu.$footer.attr( 'id', wdg.id + '-footer' );
+      wdg.$menu.$footer.text(wdg.cfg.menuReset);
 
       // Bind screen change events to update checkbox status of displayed fields.
       $(window).bind('orientationchange resize',function(){
@@ -124,8 +120,8 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
       });
 
       wdg.$table.click(function() {
-                wdg.$menu.addClass('mediaTableMenuClosed');
-            });
+        wdg.$menu.addClass('mediaTableMenuClosed');
+      });
 
       // Toggle list visibilty when mouse go outside the list itself.
       wdg.$menu.$list.bind('mouseleave',function(e){
@@ -133,12 +129,9 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
         e.stopPropagation();
       });
 
-
-
     }; // EndOf: "__initMenu()" ###
 
     var __thInit = function( i, wdg ) {
-
       var $th   = $(this),
         id    = $th.attr('id'),
         classes = $th.attr('class');
@@ -190,7 +183,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
     var __liInitActions = function( $th, $checkbox, wdg ) {
 
       var change = function() {
-
+      
         var val   = $checkbox.val(),  // this equals the header's ID, i.e. "company"
           cols  = wdg.$table.find("#" + val + ", [headers="+ val +"]"); // so we can easily find the matching header (id="company") and cells (headers="company")
 
@@ -226,7 +219,51 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
 
 
 
+  var __analyze = function(i) {
+  
+    // Get the widget context.
+    var _this = this;
+    var wdg = $(this).data( 'MediaTable' );
+    if ( !wdg ) return;
+    
+    // Menu initialization logic.
+    if ( wdg.cfg.menu ) __initMenu( wdg );
 
+    // Columns Initialization Loop.
+    wdg.$table.find('thead th').each(function(i){ __thInit.call( this, i, wdg );  });
+
+    wdg.$menu.$list.append(wdg.$menu.$footer);
+    
+    wdg.$menu.$footer.bind('click',function(){
+        __reset.call(_this);
+      });
+
+  }
+  
+  var __reset = function() {
+    // Get the widget context.
+    var wdg = $(this).data( 'MediaTable' );
+    if ( !wdg ) return;
+    
+    wdg.$table.find('thead th').each(function(i){
+        var $th = $('#' + wdg.id + '-mediaTableCol-' + i);
+        var $checkbox = $('#toggle-col-' + wdg.id + '-' + i);
+        if ($checkbox !== undefined) {
+            $th.removeAttr('style');
+            if ( $th.is(':visible') ) {
+              $checkbox.prop("checked", true);
+            }
+            else {
+              $checkbox.prop("checked", false);
+            };
+            
+            var val = $checkbox.val();
+            var cols = wdg.$table.find("#" + val + ", [headers="+ val +"]");
+            cols.removeAttr('style');
+        }
+        
+    });
+  }
 
 
 
@@ -272,6 +309,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
       // Teach the widget to create a toggle menu to declare column's visibility
       menu:   true,
       menuTitle:  'Columns',
+      menuReset:  'Reset',
 
     t:'e'},arguments[0]);
     // -- default configuration block --
@@ -280,6 +318,12 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
 
     // Items initialization loop:
     if ( cfg !== false ) {
+    
+      // Avoid two initialization
+      if ($(this).data( 'MediaTable' )) {
+        return false;
+      }
+      
       $(this).each(function( i ){ __loop.call( this, cfg, i ); });
 
 
@@ -288,8 +332,12 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
     // Item actions loop - switch throught actions
     } else if ( arguments.length ) switch ( arguments[0] ) {
 
+      case 'analyze':
+        $(this).each(function( i ){ __analyze.call( this, i ); });
+      break;
+      
       case 'destroy':
-      $(this).each(function(){ __destroy.call( this ); });
+        $(this).each(function(){ __destroy.call( this ); });
       break;
 
     }
