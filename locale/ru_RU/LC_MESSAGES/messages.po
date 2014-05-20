@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ampache\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-19 00:47+0200\n"
+"POT-Creation-Date: 2014-05-20 02:08+0200\n"
 "PO-Revision-Date: 2007-02-05 21:58-0000\n"
 "Last-Translator: Alexey Illarionov <littlesavage@orionet.ru>\n"
 "Language-Team: Russian <translations@ampache.org>\n"
@@ -921,12 +921,12 @@ msgstr " был создан"
 msgid "The Requested Playlist has been deleted."
 msgstr "Список композиций был удален"
 
-#: ../../install.php:100
+#: ../../install.php:105
 #, fuzzy
 msgid "Error: Ampache SQL Username or Password missing"
 msgstr "Неверный пользователь или пароль. Попробуйте еще раз"
 
-#: ../../install.php:156
+#: ../../install.php:161
 #, fuzzy
 msgid "Error: Config file not found or unreadable"
 msgstr "Ошибка: конфигурационный файл не найден, или недоступен"
@@ -1132,27 +1132,27 @@ msgstr "Media Object Invalid or Not Specified"
 msgid "Error: Unable to open"
 msgstr "Ошибка: не удалось открыть "
 
-#: ../../lib/class/autoupdate.class.php:179
+#: ../../lib/class/autoupdate.class.php:188
 #, fuzzy
 msgid "Update available"
 msgstr "Обновить все"
 
-#: ../../lib/class/autoupdate.class.php:182
+#: ../../lib/class/autoupdate.class.php:191
 #, fuzzy
 msgid "See"
 msgstr "Сервер"
 
-#: ../../lib/class/autoupdate.class.php:182
+#: ../../lib/class/autoupdate.class.php:191
 #, fuzzy
 msgid "changes"
 msgstr "Сохранить изменения"
 
-#: ../../lib/class/autoupdate.class.php:183
+#: ../../lib/class/autoupdate.class.php:192
 #, fuzzy
 msgid "or"
 msgstr "Порт"
 
-#: ../../lib/class/autoupdate.class.php:183
+#: ../../lib/class/autoupdate.class.php:192
 #, fuzzy
 msgid "download"
 msgstr "Скачать"
@@ -3519,9 +3519,9 @@ msgstr "Найти обложку"
 #: ../../templates/show_album.inc.php:139
 #: ../../templates/show_artist.inc.php:114
 #: ../../templates/show_artist.inc.php:115
-#: ../../templates/show_install_config.inc.php:103
-#: ../../templates/show_install_config.inc.php:118
 #: ../../templates/show_install_config.inc.php:134
+#: ../../templates/show_install_config.inc.php:149
+#: ../../templates/show_install_config.inc.php:165
 #: ../../templates/show_playlist_song_row.inc.php:56
 #: ../../templates/show_share.inc.php:32 ../../templates/show_share.inc.php:33
 #: ../../templates/show_song.inc.php:76
@@ -4523,86 +4523,133 @@ msgstr ""
 msgid "Generate Config File"
 msgstr "Создать новый файл конфигурации"
 
-#: ../../templates/show_install_config.inc.php:58
+#: ../../templates/show_install_config.inc.php:55
+#: ../../templates/show_test_table.inc.php:159
+#, fuzzy
+msgid "Database connection"
+msgstr "Кодировка базы данных обновлена"
+
+#: ../../templates/show_install_config.inc.php:59
 msgid "Web Path"
 msgstr "Веб путь"
 
-#: ../../templates/show_install_config.inc.php:64
+#: ../../templates/show_install_config.inc.php:65
 #, fuzzy
 msgid "Database Name"
 msgstr "Желаемое имя базы данных"
 
-#: ../../templates/show_install_config.inc.php:70
+#: ../../templates/show_install_config.inc.php:71
 #: ../../templates/show_install.inc.php:56
 msgid "MySQL Hostname"
 msgstr "MySQL Хост"
 
-#: ../../templates/show_install_config.inc.php:76
-#: ../../templates/show_install.inc.php:62
-msgid "MySQL port (optional)"
+#: ../../templates/show_install_config.inc.php:77
+msgid "MySQL Port (optional)"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:82
+#: ../../templates/show_install_config.inc.php:83
 msgid "MySQL Username"
 msgstr "MySQL пользователь"
 
-#: ../../templates/show_install_config.inc.php:88
+#: ../../templates/show_install_config.inc.php:89
 msgid "MySQL Password"
 msgstr "MySQL пароль"
 
-#: ../../templates/show_install_config.inc.php:100
+#: ../../templates/show_install_config.inc.php:99
+msgid "Transcoding"
+msgstr "Перекодирование"
+
+#: ../../templates/show_install_config.inc.php:101
+msgid ""
+"Transcoding allows you to convert one type of file to another. Ampache "
+"supports on the fly transcoding of all file types based on user, IP address "
+"or available bandwidth. In order to transcode Ampache takes advantage of "
+"existing binary applications such as ffmpeg. In order for transcoding to "
+"work you must first install the supporting applications and ensure that they "
+"are executable by the webserver."
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:103
+msgid ""
+"This section apply default transcoding configuration according to the "
+"application you want to use. You may need to customize settings once this "
+"setup ended"
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:103
+msgid "See wiki page"
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:107
+#, fuzzy
+msgid "Template Configuration"
+msgstr "Создать конфигурацию"
+
+#: ../../templates/show_install_config.inc.php:121
+msgid ""
+"No default transcoding application found. You may need to install a popular "
+"application (ffmpeg, avconv ...) or customize transcoding settings manually "
+"after installation."
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:127
+#, fuzzy
+msgid "Files"
+msgstr "Файл"
+
+#: ../../templates/show_install_config.inc.php:131
 msgid "rest/.htaccess action"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:105
-#: ../../templates/show_install_config.inc.php:120
 #: ../../templates/show_install_config.inc.php:136
+#: ../../templates/show_install_config.inc.php:151
+#: ../../templates/show_install_config.inc.php:167
 #, fuzzy
 msgid "Write"
 msgstr "Чтение/Запись"
 
-#: ../../templates/show_install_config.inc.php:108
+#: ../../templates/show_install_config.inc.php:139
 msgid "rest/.htaccess exists?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:110
+#: ../../templates/show_install_config.inc.php:141
 msgid "rest/.htaccess configured?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:115
+#: ../../templates/show_install_config.inc.php:146
 msgid "play/.htaccess action"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:123
+#: ../../templates/show_install_config.inc.php:154
 msgid "play/.htaccess exists?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:125
+#: ../../templates/show_install_config.inc.php:156
 #, fuzzy
 msgid "play/.htaccess configured?"
 msgstr "Ampache.cfg.php настроен?"
 
-#: ../../templates/show_install_config.inc.php:131
+#: ../../templates/show_install_config.inc.php:162
 #, fuzzy
 msgid "config/ampache.cfg.php action"
 msgstr "Ampache.cfg.php настроен?"
 
-#: ../../templates/show_install_config.inc.php:139
+#: ../../templates/show_install_config.inc.php:170
 #, fuzzy
 msgid "config/ampache.cfg.php exists?"
 msgstr "Ampache.cfg.php существует"
 
-#: ../../templates/show_install_config.inc.php:141
+#: ../../templates/show_install_config.inc.php:172
 #, fuzzy
 msgid "config/ampache.cfg.php configured?"
 msgstr "Ampache.cfg.php настроен?"
 
-#: ../../templates/show_install_config.inc.php:150
+#: ../../templates/show_install_config.inc.php:181
 #, fuzzy
 msgid "Recheck Config"
 msgstr "Проверить конфигурацию"
 
-#: ../../templates/show_install_config.inc.php:158
+#: ../../templates/show_install_config.inc.php:189
 msgid "Continue to Step 3"
 msgstr "Перейти на шаг 3"
 
@@ -4624,6 +4671,10 @@ msgstr "Добавить базу"
 #: ../../templates/show_install.inc.php:50
 msgid "Desired Database Name"
 msgstr "Желаемое имя базы данных"
+
+#: ../../templates/show_install.inc.php:62
+msgid "MySQL port (optional)"
+msgstr ""
 
 #: ../../templates/show_install.inc.php:68
 msgid "MySQL Administrative Username"
@@ -5577,11 +5628,6 @@ msgstr ""
 "Тест на наличие необходимых параметров конфигурации, и файла конфигурации на "
 "чтение и возможность обработки"
 
-#: ../../templates/show_test_table.inc.php:159
-#, fuzzy
-msgid "Database connection"
-msgstr "Кодировка базы данных обновлена"
-
 #: ../../templates/show_test_table.inc.php:164
 #, fuzzy
 msgid ""
@@ -5982,10 +6028,6 @@ msgstr "Ограничение скорости"
 #: Database words
 msgid "Playlist Method"
 msgstr "Метод обновления плейлиста"
-
-#: Database words
-msgid "Transcoding"
-msgstr "Перекодирование"
 
 #: Database words
 #, fuzzy
@@ -6472,9 +6514,6 @@ msgstr ""
 
 #~ msgid "Edit Song"
 #~ msgstr "Редактировать композицию"
-
-#~ msgid "File"
-#~ msgstr "Файл"
 
 #~ msgid "Update Song"
 #~ msgstr "Обновить песню"
