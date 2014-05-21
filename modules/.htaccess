@@ -1,5 +1,5 @@
 Order deny,allow
 Deny from all
-<Files ~ "\.css$|\.js$|\.png$|\.gif$|\.jpg$|\.swf$|\.ttf$|\.json$|\.xml$|\.htc$">
+<Files ~ "\.css$|\.js$|\.png$|\.gif$|\.jpg$|\.swf$|\.ttf$|\.json$|\.xml$|\.htc$|\.map$">
     Allow from all
 </Files>

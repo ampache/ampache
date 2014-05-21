@@ -151,6 +151,7 @@ var currentAudioElement = undefined;
                 shuffleTime: 'slow'
             },
             swfPath: "<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/",
+            preload: 'none',
             audioFullScreen: true,
             smoothPlayBar: true,
             keyEnabled: true,
