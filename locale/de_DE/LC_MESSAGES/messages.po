@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.7.0-dev\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-20 02:08+0200\n"
-"PO-Revision-Date: 2014-05-20 03:04+0100\n"
+"POT-Creation-Date: 2014-05-21 13:55+0200\n"
+"PO-Revision-Date: 2014-05-21 15:52+0100\n"
 "Last-Translator: Manuel Landmann <psyvirusx@gmail.com>\n"
 "Language-Team: German <translations@ampache.org>\n"
 "Language: de_DE\n"
@@ -605,7 +605,7 @@ msgstr "Übersetzt: %s"
 #: ../../bin/fix_filenames.inc:59
 #, php-format
 msgid "Input Charset (%s):"
-msgstr "Quell-Zeichensatz (%s):"
+msgstr "Quellzeichensatz (%s):"
 
 #: ../../bin/fix_filenames.inc:63
 #, php-format
@@ -813,7 +813,7 @@ msgstr "Fehler: Kann Datei nicht nach '%s' kopieren!"
 
 #: ../../bin/websocket_run.inc:67
 msgid "- WebSocket server -"
-msgstr "- WebSocket Server -"
+msgstr "- Websocket Server -"
 
 #: ../../bin/websocket_run.inc:69
 msgid "Usage: websocket_run.inc [-p {PORT}|-v]"
@@ -847,7 +847,7 @@ msgstr "Erzeugt alle Playlisten als m3u Dateien"
 
 #: ../../bin/write_playlists.inc:63
 msgid "Dumps all Artists as individual playlists"
-msgstr "Erzeigt für jeden Interpreten eine Playlist"
+msgstr "Erzeugt für jeden Interpreten eine Playlist"
 
 #: ../../broadcast.php:34
 msgid "Broadcast Delete"
@@ -907,7 +907,7 @@ msgstr "Ungültige IPv4 / IPv6 Adresse Eingegeben"
 
 #: ../../lib/class/access.class.php:112 ../../lib/class/access.class.php:113
 msgid "IP Address Version Mismatch"
-msgstr "IP-Adress- Versions Fehler"
+msgstr "IP-Adress-Versions-Fehler"
 
 #: ../../lib/class/access.class.php:163
 msgid "Duplicate ACL defined"
@@ -1080,7 +1080,7 @@ msgstr ""
 
 #: ../../lib/class/api.class.php:235
 msgid "Error Invalid Handshake - "
-msgstr " Fehler: Der Handshake ist ungültig -"
+msgstr "Fehler: Der Handshake ist ungültig -"
 
 #: ../../lib/class/api.class.php:607 ../../lib/class/api.class.php:624
 #: ../../lib/class/api.class.php:642
@@ -1122,7 +1122,7 @@ msgstr "Herunterladen"
 
 #: ../../lib/class/broadcast.class.php:148
 msgid "Broadcast edit"
-msgstr "Bradcast bearbeiten"
+msgstr "Broadcast bearbeiten"
 
 #: ../../lib/class/broadcast.class.php:148
 #: ../../lib/class/channel.class.php:156
@@ -1438,7 +1438,7 @@ msgstr ""
 "Vielen Dank für die Registrierung!\n"
 "\n"
 "\n"
-"Wir empfehlen diese E-Mail zu behalten, da sie folgend wichtige "
+"Wir empfehlen diese E-Mail zu behalten, da sie folgende wichtige "
 "Benutzerdaten enthält:\n"
 "----------------------\n"
 "Benutzername: %s\n"
@@ -1449,7 +1449,7 @@ msgstr ""
 "\n"
 "%s \n"
 "\n"
-"Nochmals Danke für die Registrierung\n"
+"Nochmals Danke für die Registrierung und viel Spaß wünscht dir:\n"
 "\n"
 "Die Administration\n"
 
@@ -1786,15 +1786,15 @@ msgstr "Hinzufügen"
 #: ../../templates/show_album.inc.php:117
 #: ../../templates/show_album.inc.php:118
 #: ../../templates/show_album_row.inc.php:67
-#: ../../templates/show_html5_player.inc.php:248
-#: ../../templates/show_html5_player.inc.php:254
+#: ../../templates/show_html5_player.inc.php:249
+#: ../../templates/show_html5_player.inc.php:255
 #: ../../templates/show_song.inc.php:68
 #: ../../templates/show_song_row.inc.php:61
 msgid "Post Shout"
 msgstr "Poste Shout"
 
 #: ../../lib/class/song.class.php:872
-#: ../../templates/show_html5_player.inc.php:245
+#: ../../templates/show_html5_player.inc.php:246
 msgid "Show Lyrics"
 msgstr "Zeige Songtexte"
 
@@ -2671,7 +2671,7 @@ msgid "Your Search has been saved as a track in %s"
 msgstr "Deine Suche wurde als Track in der Playlist '%s' gespeichert"
 
 #: ../../server/player.ajax.php:41
-#: ../../templates/show_html5_player.inc.php:660
+#: ../../templates/show_html5_player.inc.php:661
 msgid "My Broadcast"
 msgstr "Mein Broadcast"
 
@@ -3577,9 +3577,9 @@ msgid "No album found"
 msgstr "Es wurde kein Album gefunden"
 
 #: ../../templates/show_artist.inc.php:42
-#: ../../templates/show_artist.inc.php:160
-#: ../../templates/show_artist.inc.php:168
-#: ../../templates/show_artist.inc.php:176
+#: ../../templates/show_artist.inc.php:162
+#: ../../templates/show_artist.inc.php:170
+#: ../../templates/show_artist.inc.php:178
 #: ../../templates/show_index.inc.php:32
 #: ../../templates/show_missing_artist.inc.php:33
 #: ../../templates/show_now_playing_row.inc.php:71
@@ -3642,13 +3642,13 @@ msgid "Show Art"
 msgstr "Zeige Cover"
 
 #: ../../templates/show_artist.inc.php:138
-#: ../../templates/show_artist.inc.php:160
+#: ../../templates/show_artist.inc.php:162
 #: ../../templates/show_missing_albums.inc.php:23
 msgid "Missing Albums"
 msgstr "Vermisste Alben"
 
 #: ../../templates/show_artist.inc.php:141
-#: ../../templates/show_artist.inc.php:168
+#: ../../templates/show_artist.inc.php:170
 #: ../../templates/show_now_playing_row.inc.php:70
 #: ../../templates/show_now_playing_similar.inc.php:27
 #: ../../templates/show_recommended_artists.inc.php:25
@@ -3656,7 +3656,7 @@ msgid "Similar Artists"
 msgstr "Ähnliche Interpreten"
 
 #: ../../templates/show_artist.inc.php:144
-#: ../../templates/show_artist.inc.php:176
+#: ../../templates/show_artist.inc.php:178
 msgid "Events"
 msgstr "Ereignisse"
 
@@ -3908,11 +3908,11 @@ msgstr "Speicherbegrenzung"
 
 #: ../../templates/show_debug.inc.php:55
 msgid "Maximum Execution Time"
-msgstr "Maximale Ausführzeit"
+msgstr "Maximale Ausführungszeit"
 
 #: ../../templates/show_debug.inc.php:59
 msgid "Override Execution Time"
-msgstr "Maximale Ausführzeit überschreiben"
+msgstr "Maximale Ausführungszeit überschreiben"
 
 #: ../../templates/show_debug.inc.php:60
 msgid "Failed"
@@ -3987,7 +3987,7 @@ msgstr "Gemeinsame Playlist wiedergeben"
 
 #: ../../templates/show_democratic_playlist.inc.php:44
 msgid "Playing from base Playlist"
-msgstr "Spiele von Hauptwiedergabeliste"
+msgstr "Spiele von Haupt-Playlist"
 
 #: ../../templates/show_democratic_playlist.inc.php:56
 #: ../../templates/show_democratic_playlist.inc.php:103
@@ -4093,7 +4093,7 @@ msgstr "Feld"
 
 #: ../../templates/show_dynamic.inc.php:27
 msgid "Operator"
-msgstr "Operant"
+msgstr "Operand"
 
 #: ../../templates/show_dynamic.inc.php:29
 msgid "Method"
@@ -4258,25 +4258,25 @@ msgstr "Information"
 msgid "Your browser doesn't support this feature."
 msgstr "Dein Browser unterstützt dieses Feature nicht."
 
-#: ../../templates/show_html5_player.inc.php:517
+#: ../../templates/show_html5_player.inc.php:518
 msgid "Media is currently playing. Are you sure you want to close"
 msgstr ""
-"Es wird grade ein Medium abgespielt! Möchtest Du das Fenster wirklich "
+"Es wird gerade ein Medium abgespielt! Möchtest Du das Fenster wirklich "
 "schließen?"
 
-#: ../../templates/show_html5_player.inc.php:677
+#: ../../templates/show_html5_player.inc.php:678
 msgid "Slideshow"
 msgstr "Diashow"
 
-#: ../../templates/show_html5_player.inc.php:681
+#: ../../templates/show_html5_player.inc.php:682
 msgid "Equalizer"
 msgstr "Equalizer"
 
-#: ../../templates/show_html5_player.inc.php:684
+#: ../../templates/show_html5_player.inc.php:685
 msgid "Visualizer"
 msgstr "Visualisierer"
 
-#: ../../templates/show_html5_player.inc.php:687
+#: ../../templates/show_html5_player.inc.php:688
 msgid "Visualizer Full-Screen"
 msgstr "Vollbild für Visualisierer"
 
@@ -4361,7 +4361,7 @@ msgstr ""
 msgid "Your webserver has read access to the files %s and %s"
 msgstr ""
 "Dein Webserver besitzt Leserechte für die Datei '%s' und zusätzlich optional "
-"noch schreibrechte für die Datei '%s'."
+"noch Schreibrechte für die Datei '%s'."
 
 #: ../../templates/show_install_check.inc.php:37
 #, php-format
@@ -4485,7 +4485,7 @@ msgid ""
 "are executable by the webserver."
 msgstr ""
 "Ampache unterstützt das sogenannte Transkodieren (Umwandeln) von Dateien "
-"wärend des Streamens. Die Umwandlungseinstellungen können per Benutzer, IP-"
+"während des Streamens. Die Umwandlungseinstellungen können per Benutzer, IP-"
 "Adressbereich und Bandbreite eingestellt werden. Damit Ampache die zu "
 "streamenden Inhalte umwandeln kann, sind Programme wie z.B. ffmpeg oder "
 "avconv notwendig. Zudem solltest du darauf achten, dass der Webserver "
@@ -4497,7 +4497,7 @@ msgid ""
 "application you want to use. You may need to customize settings once this "
 "setup ended"
 msgstr ""
-"In diesem Bereich kannst du die standard Umwandlungseinstellungen für die "
+"In diesem Bereich kannst du die Standard-Umwandlungseinstellungen für die "
 "Anwendung die du nutzen möchtest festlegen. Nachdem das Setup beendet ist, "
 "kannst du sämtliche weiterführenden Einstellungen in der Konfigurationsdatei "
 "festlegen."
@@ -4605,7 +4605,7 @@ msgstr "Administrativer<br>MySQL Benutzer"
 
 #: ../../templates/show_install.inc.php:74
 msgid "MySQL Administrative Password"
-msgstr "Passwort für Administrtiven<br>MySQL Benutzer"
+msgstr "Passwort für administrativen<br>MySQL Benutzer"
 
 #: ../../templates/show_install.inc.php:80
 msgid "Create Database"
@@ -5164,7 +5164,7 @@ msgstr "Maximale Ergebnisse"
 
 #: ../../templates/show_search.inc.php:55
 msgid "Save as Smart Playlist"
-msgstr "Als intelligente wiedergabeliste speichern"
+msgstr "Als intelligente Playlist speichern"
 
 #: ../../templates/show_search_options.inc.php:23
 msgid "Options"
@@ -5181,7 +5181,7 @@ msgstr "Objekt Typ"
 
 #: ../../templates/show_shared_objects.inc.php:29
 msgid "Creation Date"
-msgstr "Erstell am"
+msgstr "Erstellt am"
 
 #: ../../templates/show_shared_objects.inc.php:30
 msgid "Last Visit"
@@ -5223,7 +5223,7 @@ msgstr "Keine intelligente Playlist gefunden"
 #: ../../templates/show_smartplaylist_title.inc.php:24
 #, php-format
 msgid "%s %s (Smart Playlist)"
-msgstr "%s %s (Intelligente wiedergabeliste)"
+msgstr "%s %s (Intelligente Playlist)"
 
 #: ../../templates/show_song.inc.php:26
 msgid "Details"
@@ -5295,7 +5295,7 @@ msgstr "Meistgespielte Interpreten"
 
 #: ../../templates/show_tagcloud.inc.php:35
 msgid "Tag edit"
-msgstr "tag bearbeiten"
+msgstr "Tag bearbeiten"
 
 #: ../../templates/show_tagcloud.inc.php:40
 msgid "Do you really want to delete the tag?"
@@ -5336,7 +5336,7 @@ msgid ""
 "This tests whether you have the hash extension enabled. This extension is "
 "required by Ampache."
 msgstr ""
-"Mit diesem Test wird geprüft ob die notwendige hash Erweiterung für PHP "
+"Mit diesem Test wird geprüft ob die notwendige Hash-Erweiterung für PHP "
 "installiert ist. Diese ist nötig um z.B.: Passwörter zu verschlüsseln."
 
 #: ../../templates/show_test_table.inc.php:42
@@ -5434,7 +5434,7 @@ msgid ""
 "This test makes sure that PHP is not running in safe mode.  Some features of "
 "Ampache will not work correctly in safe mode."
 msgstr ""
-"Dieser Test prüft, ob PHP im safe-Modus läuft. Manche Funktionen "
+"Dieser Test prüft, ob PHP im \"Safe-Modus\" läuft. Manche Funktionen "
 "funktionieren nicht, wenn der Sicherheits-Modus aktiviert ist."
 
 #: ../../templates/show_test_table.inc.php:114
@@ -5796,7 +5796,7 @@ msgstr "Die folgenden Aktualisierungen müssen durchgeführt werden:"
 
 #: ../../update.php:76
 msgid "Update Now!"
-msgstr "Aktualisiere jetzt!"
+msgstr "Jetzt aktualisieren!"
 
 #: Database words
 msgid "Allow Downloads"
@@ -5938,7 +5938,7 @@ msgid ""
 "Personal information visibility - Recently played - Allow to show streaming "
 "agent"
 msgstr ""
-"Browser- und Betriebsysteminformationen im Streaming Agenten anzeigen lassen"
+"Browser- und Betriebssysteminformationen im Streaming Agenten anzeigen lassen"
 
 #: Database words
 msgid "Fix header/sidebars position on compatible themes"
@@ -5950,7 +5950,7 @@ msgstr "Automatisch nach Updates für Ampache suchen"
 
 #: Database words
 msgid "AutoUpdate last check time"
-msgstr "Autoupdate: Zuletzte nach Updates gesucht"
+msgstr "Autoupdate: Zuletzt nach Updates gesucht"
 
 #: Database words
 msgid "AutoUpdate last version from last check"
