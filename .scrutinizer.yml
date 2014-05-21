@@ -1,0 +1,14 @@
+filter:
+    paths: [*]
+    excluded_paths: [ 'modules/*' ]
+ 
+tools:
+    php_mess_detector: true
+    php_code_sniffer: true
+    php_pdepend: true
+    php_loc:
+        enabled: true
+        excluded_dirs: [modules]
+    php_cpd:
+        enabled: true
+        excluded_dirs: [modules]
