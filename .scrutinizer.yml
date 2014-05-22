@@ -1,14 +1,57 @@
 filter:
-    paths: [*]
-    excluded_paths: [ 'modules/*' ]
+    excluded_paths:
+        - 'modules/*'
+    paths: {  }
  
 tools:
-    php_mess_detector: true
-    php_code_sniffer: true
-    php_pdepend: true
+    php_mess_detector:
+        enabled: true
+        filter:
+            excluded_paths:
+                - 'modules/*'
+            paths: {  }
+    php_code_sniffer:
+        enabled: false
+    php_pdepend:
+        enabled: true
+        configuration_file: null
+        suffixes:
+            - php
+        excluded_dirs: {  }
+        filter:
+            excluded_paths:
+                - 'modules/*''
+            paths: {  }
+    php_analyzer:
+        enabled: true
+        extensions:
+            - php
+        dependency_paths:
+            - 'modules/*'
+        filter:
+            excluded_paths:
+                - 'modules/*'
+            paths: {  }
+        path_configs: {  }
+    php_changetracking:
+        enabled: true
+        bug_patterns:
+            - '\bfix(?:es|ed)?\b'
+        feature_patterns:
+            - '\badd(?:s|ed)?\b'
+            - '\bimplement(?:s|ed)?\b'
+        filter:
+            excluded_paths:
+                - 'modules/*'
+            paths: {  }
     php_loc:
         enabled: true
-        excluded_dirs: [modules]
+        excluded_dirs:
+            - 'modules/*'
     php_cpd:
         enabled: true
-        excluded_dirs: [modules]
+        excluded_dirs: {  }
+        filter:
+            excluded_paths:
+                - 'modules/*''
+            paths: {  }
