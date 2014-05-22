@@ -23,7 +23,7 @@
 $web_path = AmpConfig::get('web_path');
 if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php';
 ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="video">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>

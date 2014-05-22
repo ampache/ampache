@@ -21,7 +21,7 @@
  */
 ?>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="catalog">
     <thead>
         <tr class="th-top">
             <th class="cel_catalog essential persist"><?php echo T_('Name'); ?></th>

@@ -24,7 +24,7 @@ $web_path = AmpConfig::get('web_path');
 $thcount = 8;
 ?>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
-<table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata" cellpadding="0" cellspacing="0">
+<table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="song">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>

@@ -20,7 +20,7 @@ tools:
         excluded_dirs: {  }
         filter:
             excluded_paths:
-                - 'modules/*''
+                - 'modules/*'
             paths: {  }
     php_analyzer:
         enabled: true
@@ -53,5 +53,5 @@ tools:
         excluded_dirs: {  }
         filter:
             excluded_paths:
-                - 'modules/*''
+                - 'modules/*'
             paths: {  }

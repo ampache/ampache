@@ -26,6 +26,8 @@ https://github.com/thepeg/MediaTable
 http://consulenza-web.com/jquery/MediaTable/
 http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
 
+**Modified version for Ampache.**
+
 **/
 
 
@@ -133,8 +135,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
 
     var __thInit = function( i, wdg ) {
       var $th   = $(this),
-        id    = $th.attr('id'),
-        classes = $th.attr('class');
+        id    = $th.attr('id');
 
       // Set up an auto-generated ID for the column.
       // the ID is based upon widget's ID to allow multiple tables into one page.
@@ -164,50 +165,56 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
       }
 
       // Propagate column's properties to each cell.
-      $('tbody tr',wdg.$table).each(function(){ __trInit.call( this, i, id, classes ); });
+      var classes = $th.attr('class');
+      var styles = $th.attr('style');
+      $('tbody tr',wdg.$table).each(function(){ __trInit.call( this, i, id, classes, styles ); });
 
     }; // EndOf: "__thInit()" ###
 
 
-    var __trInit = function( i, id, classes ) {
+    var __trInit = function( i, id, classes, styles ) {
 
       var $cell = $(this).find('td,th').eq(i);
 
       $cell.attr( 'headers', id );
 
       if ( classes ) $cell.addClass(classes);
+      if ( styles) $cell.attr('style', styles);
 
     }; // EndOf: "__trInit()" ###
 
 
     var __liInitActions = function( $th, $checkbox, wdg ) {
 
-      var change = function() {
-      
+    var cookname = 'mt_' + wdg.$table.attr('data-objecttype') + '_' + $th.index();
+    
+    var change = function() {
         var val   = $checkbox.val(),  // this equals the header's ID, i.e. "company"
           cols  = wdg.$table.find("#" + val + ", [headers="+ val +"]"); // so we can easily find the matching header (id="company") and cells (headers="company")
 
-
-        if ( $checkbox.is(":checked")) {
+        var checked = $checkbox.is(":checked");
+        $.cookie(cookname, checked, { expires: 30, path: '/'});
+        
+        if (checked) {
           cols.show();
-
         } else {
           cols.hide();
-
         };
-
-      };
+    };
 
       var updateCheck = function() {
-
-        //if ( $th.css("display") ==  "table-cell") {
-        if ( $th.is(':visible') ) {
+      
+        if ($.cookie(cookname) !== undefined) {
+            $checkbox.prop("checked", $.cookie(cookname) === true);
+            change();
+        }
+            
+        if ($th.is(':visible')) {
           $checkbox.prop("checked", true);
         }
         else {
           $checkbox.prop("checked", false);
         };
-
       };
 
       $checkbox
@@ -248,6 +255,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
     wdg.$table.find('thead th').each(function(i){
         var $th = $('#' + wdg.id + '-mediaTableCol-' + i);
         var $checkbox = $('#toggle-col-' + wdg.id + '-' + i);
+        var cookname = 'mt_' + wdg.$table.attr('data-objecttype') + '_' + $th.index();
         if ($checkbox !== undefined) {
             $th.removeAttr('style');
             if ( $th.is(':visible') ) {
@@ -260,6 +268,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
             var val = $checkbox.val();
             var cols = wdg.$table.find("#" + val + ", [headers="+ val +"]");
             cols.removeAttr('style');
+            $.removeCookie(cookname, { path: '/' });
         }
         
     });

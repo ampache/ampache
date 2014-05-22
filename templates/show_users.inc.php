@@ -24,7 +24,7 @@ $web_path = AmpConfig::get('web_path');
 
 ?>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="user">
 <colgroup>
   <col id="col_username" />
   <col id="col_lastseen" />

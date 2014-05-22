@@ -49,6 +49,7 @@ $location = get_location();
         <script src="<?php echo $web_path; ?>/modules/prettyPhoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/tag-it/tag-it.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/modules/jquery/jquery.cookie.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jscroll/jquery.jscroll.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery/jquery.qrcode.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/rhinoslider/js/rhinoslider-1.05.min.js" language="javascript" type="text/javascript"></script>

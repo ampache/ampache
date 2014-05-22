@@ -20,7 +20,7 @@
  *
  */
 ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="share">
     <thead>
     <tr class="th-top">
             <th class="cel_object essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=object', T_('Object'),'sort_share_object'); ?></th>
