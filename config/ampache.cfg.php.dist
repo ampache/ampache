@@ -621,6 +621,10 @@ refresh_limit = "60"
 ; DEFAULT: false
 ;user_agreement = "false"
 
+; This disable email confirmation when registering.
+; DEFAULT: false
+;user_no_email_confirm = "false"
+
 ;########################################################
 ; These options control the dynamic downsampling based  #
 ; on current usage                                      #

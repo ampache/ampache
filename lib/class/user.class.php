@@ -1235,8 +1235,8 @@ class User extends database_object
     {
         $username = Dba::escape($username);
 
-        $sql = "UPDATE `user` SET `disabled`='0' WHERE `username`='$username'";
-        $db_results = Dba::write($sql);
+        $sql = "UPDATE `user` SET `disabled`='0' WHERE `username` = ?";
+        $db_results = Dba::write($sql, array($username));
 
     } // activate_user
 

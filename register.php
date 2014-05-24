@@ -138,11 +138,13 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $client = new User($new_user);
-        $validation = md5(uniqid(rand(), true));
-        $client->update_validation($validation);
+        if (!AmpConfig::get('admin_enable_required') && !AmpConfig::get('user_no_email_confirm')) {
+            $client = new User($new_user);
+            $validation = md5(uniqid(rand(), true));
+            $client->update_validation($validation);
 
-        Registration::send_confirmation($username, $fullname, $email, $website, $pass1, $validation);
+            Registration::send_confirmation($username, $fullname, $email, $website, $pass1, $validation);
+        }
         require_once AmpConfig::get('prefix') . '/templates/show_registration_confirmation.inc.php';
     break;
     case 'show_add_user':
