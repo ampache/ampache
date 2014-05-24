@@ -28,7 +28,7 @@ function log_event($username, $event_name, $event_description, $log_name)
 {
     /* Set it up here to make sure it's _always_ the same */
     $time        = time();
-    $log_time    = date('Y-m-d H:i:s', $time);
+    $log_time    = @date('Y-m-d H:i:s', $time);
 
     /* must have some name */
     $log_name    = $log_name ? $log_name : 'ampache';
