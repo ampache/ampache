@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-20 02:08+0200\n"
+"POT-Creation-Date: 2014-05-24 23:38+0200\n"
 "PO-Revision-Date: 2009-03-26 13:19+0100\n"
 "Last-Translator: Juan Jose Pablos <juanjo@apertus.es>\n"
 "Language-Team: Español <translations at ampache.org>\n"
@@ -1032,7 +1032,7 @@ msgstr "Disco"
 
 #: ../../lib/class/album.class.php:424 ../../lib/class/browse.class.php:163
 #: ../../lib/ui.lib.php:158 ../../server/search.ajax.php:55
-#: ../../templates/header.inc.php:285 ../../templates/show_random.inc.php:29
+#: ../../templates/header.inc.php:286 ../../templates/show_random.inc.php:29
 #: ../../templates/show_search.inc.php:30
 #: ../../templates/show_stats.inc.php:33
 #: ../../templates/sidebar_home.inc.php:34
@@ -1258,7 +1258,7 @@ msgid "Radio Stations"
 msgstr "Radios"
 
 #: ../../lib/class/browse.class.php:174 ../../server/search.ajax.php:146
-#: ../../templates/header.inc.php:291 ../../templates/sidebar_home.inc.php:36
+#: ../../templates/header.inc.php:292 ../../templates/sidebar_home.inc.php:36
 #: ../../templates/sidebar_home.inc.php:104
 msgid "Playlists"
 msgstr "Listas de reproducción"
@@ -1824,15 +1824,15 @@ msgstr "Anadir"
 #: ../../templates/show_album.inc.php:117
 #: ../../templates/show_album.inc.php:118
 #: ../../templates/show_album_row.inc.php:67
-#: ../../templates/show_html5_player.inc.php:248
-#: ../../templates/show_html5_player.inc.php:254
+#: ../../templates/show_html5_player.inc.php:249
+#: ../../templates/show_html5_player.inc.php:255
 #: ../../templates/show_song.inc.php:68
 #: ../../templates/show_song_row.inc.php:61
 msgid "Post Shout"
 msgstr ""
 
 #: ../../lib/class/song.class.php:872
-#: ../../templates/show_html5_player.inc.php:245
+#: ../../templates/show_html5_player.inc.php:246
 #, fuzzy
 msgid "Show Lyrics"
 msgstr "Muestra Lista"
@@ -2130,7 +2130,7 @@ msgstr "¡Totalmente loco!"
 msgid "Off the Charts!"
 msgstr "¡Super chévere!"
 
-#: ../../lib/ui.lib.php:101 ../../templates/header.inc.php:279
+#: ../../lib/ui.lib.php:101 ../../templates/header.inc.php:280
 #: ../../templates/sidebar.inc.php:29
 msgid "Home"
 msgstr "Inicio"
@@ -2696,7 +2696,7 @@ msgid "Your Search has been saved as a track in %s"
 msgstr ""
 
 #: ../../server/player.ajax.php:41
-#: ../../templates/show_html5_player.inc.php:660
+#: ../../templates/show_html5_player.inc.php:661
 msgid "My Broadcast"
 msgstr ""
 
@@ -2822,29 +2822,29 @@ msgstr ""
 msgid "Load time:"
 msgstr ""
 
-#: ../../templates/header.inc.php:82
+#: ../../templates/header.inc.php:83
 msgid "Save"
 msgstr ""
 
-#: ../../templates/header.inc.php:83
+#: ../../templates/header.inc.php:84
 #: ../../templates/show_confirmation.inc.php:34
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../../templates/header.inc.php:259
+#: ../../templates/header.inc.php:260
 msgid "Log out"
 msgstr "Salir"
 
-#: ../../templates/header.inc.php:297 ../../templates/sidebar_home.inc.php:87
+#: ../../templates/header.inc.php:298 ../../templates/sidebar_home.inc.php:87
 #, fuzzy
 msgid "Favorites"
 msgstr "Canciónes en total"
 
-#: ../../templates/header.inc.php:316
+#: ../../templates/header.inc.php:317
 msgid "Error Config File Out of Date"
 msgstr "Error Fichero de confituracion caducado "
 
-#: ../../templates/header.inc.php:317
+#: ../../templates/header.inc.php:318
 msgid "Generate New Config"
 msgstr "Generar nueva configuracion"
 
@@ -3644,9 +3644,9 @@ msgid "No album found"
 msgstr "No se han encontrado canciones desabilitadas"
 
 #: ../../templates/show_artist.inc.php:42
-#: ../../templates/show_artist.inc.php:160
-#: ../../templates/show_artist.inc.php:168
-#: ../../templates/show_artist.inc.php:176
+#: ../../templates/show_artist.inc.php:162
+#: ../../templates/show_artist.inc.php:170
+#: ../../templates/show_artist.inc.php:178
 #: ../../templates/show_index.inc.php:32
 #: ../../templates/show_missing_artist.inc.php:33
 #: ../../templates/show_now_playing_row.inc.php:71
@@ -3716,14 +3716,14 @@ msgid "Show Art"
 msgstr "Mostrar portada"
 
 #: ../../templates/show_artist.inc.php:138
-#: ../../templates/show_artist.inc.php:160
+#: ../../templates/show_artist.inc.php:162
 #: ../../templates/show_missing_albums.inc.php:23
 #, fuzzy
 msgid "Missing Albums"
 msgstr "Álbumes"
 
 #: ../../templates/show_artist.inc.php:141
-#: ../../templates/show_artist.inc.php:168
+#: ../../templates/show_artist.inc.php:170
 #: ../../templates/show_now_playing_row.inc.php:70
 #: ../../templates/show_now_playing_similar.inc.php:27
 #: ../../templates/show_recommended_artists.inc.php:25
@@ -3732,7 +3732,7 @@ msgid "Similar Artists"
 msgstr "Artistas"
 
 #: ../../templates/show_artist.inc.php:144
-#: ../../templates/show_artist.inc.php:176
+#: ../../templates/show_artist.inc.php:178
 msgid "Events"
 msgstr ""
 
@@ -4370,23 +4370,23 @@ msgstr "Informacion"
 msgid "Your browser doesn't support this feature."
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:517
+#: ../../templates/show_html5_player.inc.php:518
 msgid "Media is currently playing. Are you sure you want to close"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:677
+#: ../../templates/show_html5_player.inc.php:678
 msgid "Slideshow"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:681
+#: ../../templates/show_html5_player.inc.php:682
 msgid "Equalizer"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:684
+#: ../../templates/show_html5_player.inc.php:685
 msgid "Visualizer"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:687
+#: ../../templates/show_html5_player.inc.php:688
 msgid "Visualizer Full-Screen"
 msgstr ""
 
@@ -5238,15 +5238,25 @@ msgid "Registration Complete"
 msgstr "Registro completo"
 
 #: ../../templates/show_registration_confirmation.inc.php:43
+#, fuzzy
+msgid "Your account has been created."
+msgstr "Su cuenta ha sido actualizada"
+
+#: ../../templates/show_registration_confirmation.inc.php:46
+msgid "Please wait for an administrator to activate your account."
+msgstr ""
+
+#: ../../templates/show_registration_confirmation.inc.php:48
+#, fuzzy
 msgid ""
-"Your account has been created. An activation key has been sent to the e-mail "
-"address you provided. Please check your e-mail for further information"
+"An activation key has been sent to the e-mail address you provided. Please "
+"check your e-mail for further information."
 msgstr ""
 "Tu cuenta ha sido creada. Una clave de activacion se ha enviado a la "
 "direccion de correo electronico que has facilitado. Revisa tu correo para "
 "mas informacion."
 
-#: ../../templates/show_registration_confirmation.inc.php:45
+#: ../../templates/show_registration_confirmation.inc.php:52
 msgid "Return to Login Page"
 msgstr "Volver a la pagina de ingreso"
 

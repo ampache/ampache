@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN $Rev$\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-20 02:08+0200\n"
+"POT-Creation-Date: 2014-05-24 23:38+0200\n"
 "PO-Revision-Date: 2008-07-14 20:44+0900\n"
 "Last-Translator: momo-i <webmaster at momo-i.org>\n"
 "Language-Team: Japanese\n"
@@ -1006,7 +1006,7 @@ msgstr "ディスク"
 
 #: ../../lib/class/album.class.php:424 ../../lib/class/browse.class.php:163
 #: ../../lib/ui.lib.php:158 ../../server/search.ajax.php:55
-#: ../../templates/header.inc.php:285 ../../templates/show_random.inc.php:29
+#: ../../templates/header.inc.php:286 ../../templates/show_random.inc.php:29
 #: ../../templates/show_search.inc.php:30
 #: ../../templates/show_stats.inc.php:33
 #: ../../templates/sidebar_home.inc.php:34
@@ -1230,7 +1230,7 @@ msgid "Radio Stations"
 msgstr "ラジオステーション"
 
 #: ../../lib/class/browse.class.php:174 ../../server/search.ajax.php:146
-#: ../../templates/header.inc.php:291 ../../templates/sidebar_home.inc.php:36
+#: ../../templates/header.inc.php:292 ../../templates/sidebar_home.inc.php:36
 #: ../../templates/sidebar_home.inc.php:104
 msgid "Playlists"
 msgstr "プレイリスト"
@@ -1804,15 +1804,15 @@ msgstr "追加"
 #: ../../templates/show_album.inc.php:117
 #: ../../templates/show_album.inc.php:118
 #: ../../templates/show_album_row.inc.php:67
-#: ../../templates/show_html5_player.inc.php:248
-#: ../../templates/show_html5_player.inc.php:254
+#: ../../templates/show_html5_player.inc.php:249
+#: ../../templates/show_html5_player.inc.php:255
 #: ../../templates/show_song.inc.php:68
 #: ../../templates/show_song_row.inc.php:61
 msgid "Post Shout"
 msgstr "シャウトの投稿"
 
 #: ../../lib/class/song.class.php:872
-#: ../../templates/show_html5_player.inc.php:245
+#: ../../templates/show_html5_player.inc.php:246
 msgid "Show Lyrics"
 msgstr "歌詞の表示"
 
@@ -2112,7 +2112,7 @@ msgstr "すばらしい！"
 msgid "Off the Charts!"
 msgstr "とてつもなくすばらしい！"
 
-#: ../../lib/ui.lib.php:101 ../../templates/header.inc.php:279
+#: ../../lib/ui.lib.php:101 ../../templates/header.inc.php:280
 #: ../../templates/sidebar.inc.php:29
 msgid "Home"
 msgstr "ホーム"
@@ -2671,7 +2671,7 @@ msgid "Your Search has been saved as a track in %s"
 msgstr ""
 
 #: ../../server/player.ajax.php:41
-#: ../../templates/show_html5_player.inc.php:660
+#: ../../templates/show_html5_player.inc.php:661
 msgid "My Broadcast"
 msgstr ""
 
@@ -2793,29 +2793,29 @@ msgstr "キャッシュヒット:"
 msgid "Load time:"
 msgstr ""
 
-#: ../../templates/header.inc.php:82
+#: ../../templates/header.inc.php:83
 msgid "Save"
 msgstr ""
 
-#: ../../templates/header.inc.php:83
+#: ../../templates/header.inc.php:84
 #: ../../templates/show_confirmation.inc.php:34
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: ../../templates/header.inc.php:259
+#: ../../templates/header.inc.php:260
 msgid "Log out"
 msgstr "ログアウト"
 
-#: ../../templates/header.inc.php:297 ../../templates/sidebar_home.inc.php:87
+#: ../../templates/header.inc.php:298 ../../templates/sidebar_home.inc.php:87
 #, fuzzy
 msgid "Favorites"
 msgstr "お気に入りの曲"
 
-#: ../../templates/header.inc.php:316
+#: ../../templates/header.inc.php:317
 msgid "Error Config File Out of Date"
 msgstr "エラー: 設定ファイルは期限切れです"
 
-#: ../../templates/header.inc.php:317
+#: ../../templates/header.inc.php:318
 msgid "Generate New Config"
 msgstr "新規設定を生成"
 
@@ -3602,9 +3602,9 @@ msgid "No album found"
 msgstr "カタログは見つかりませんでした"
 
 #: ../../templates/show_artist.inc.php:42
-#: ../../templates/show_artist.inc.php:160
-#: ../../templates/show_artist.inc.php:168
-#: ../../templates/show_artist.inc.php:176
+#: ../../templates/show_artist.inc.php:162
+#: ../../templates/show_artist.inc.php:170
+#: ../../templates/show_artist.inc.php:178
 #: ../../templates/show_index.inc.php:32
 #: ../../templates/show_missing_artist.inc.php:33
 #: ../../templates/show_now_playing_row.inc.php:71
@@ -3673,14 +3673,14 @@ msgid "Show Art"
 msgstr "アート表示"
 
 #: ../../templates/show_artist.inc.php:138
-#: ../../templates/show_artist.inc.php:160
+#: ../../templates/show_artist.inc.php:162
 #: ../../templates/show_missing_albums.inc.php:23
 #, fuzzy
 msgid "Missing Albums"
 msgstr "アルバム"
 
 #: ../../templates/show_artist.inc.php:141
-#: ../../templates/show_artist.inc.php:168
+#: ../../templates/show_artist.inc.php:170
 #: ../../templates/show_now_playing_row.inc.php:70
 #: ../../templates/show_now_playing_similar.inc.php:27
 #: ../../templates/show_recommended_artists.inc.php:25
@@ -3688,7 +3688,7 @@ msgid "Similar Artists"
 msgstr "同様のアーティスト"
 
 #: ../../templates/show_artist.inc.php:144
-#: ../../templates/show_artist.inc.php:176
+#: ../../templates/show_artist.inc.php:178
 msgid "Events"
 msgstr ""
 
@@ -4304,23 +4304,23 @@ msgstr "情報"
 msgid "Your browser doesn't support this feature."
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:517
+#: ../../templates/show_html5_player.inc.php:518
 msgid "Media is currently playing. Are you sure you want to close"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:677
+#: ../../templates/show_html5_player.inc.php:678
 msgid "Slideshow"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:681
+#: ../../templates/show_html5_player.inc.php:682
 msgid "Equalizer"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:684
+#: ../../templates/show_html5_player.inc.php:685
 msgid "Visualizer"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:687
+#: ../../templates/show_html5_player.inc.php:688
 msgid "Visualizer Full-Screen"
 msgstr ""
 
@@ -5134,14 +5134,24 @@ msgid "Registration Complete"
 msgstr "登録完了"
 
 #: ../../templates/show_registration_confirmation.inc.php:43
+#, fuzzy
+msgid "Your account has been created."
+msgstr "アカウントを更新しました"
+
+#: ../../templates/show_registration_confirmation.inc.php:46
+msgid "Please wait for an administrator to activate your account."
+msgstr ""
+
+#: ../../templates/show_registration_confirmation.inc.php:48
+#, fuzzy
 msgid ""
-"Your account has been created. An activation key has been sent to the e-mail "
-"address you provided. Please check your e-mail for further information"
+"An activation key has been sent to the e-mail address you provided. Please "
+"check your e-mail for further information."
 msgstr ""
 "アカウントを作成しました。アクティベーションキーを入力したメールアドレスへ送"
 "信しました。メールをチェックしてください。"
 
-#: ../../templates/show_registration_confirmation.inc.php:45
+#: ../../templates/show_registration_confirmation.inc.php:52
 msgid "Return to Login Page"
 msgstr "ログインページへ戻る"
 

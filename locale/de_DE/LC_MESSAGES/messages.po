@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.7.0-dev\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-21 13:55+0200\n"
-"PO-Revision-Date: 2014-05-21 15:52+0100\n"
+"POT-Creation-Date: 2014-05-24 23:38+0200\n"
+"PO-Revision-Date: 2014-05-24 23:41+0100\n"
 "Last-Translator: Manuel Landmann <psyvirusx@gmail.com>\n"
 "Language-Team: German <translations@ampache.org>\n"
 "Language: de_DE\n"
@@ -994,7 +994,7 @@ msgstr "Platte"
 
 #: ../../lib/class/album.class.php:424 ../../lib/class/browse.class.php:163
 #: ../../lib/ui.lib.php:158 ../../server/search.ajax.php:55
-#: ../../templates/header.inc.php:285 ../../templates/show_random.inc.php:29
+#: ../../templates/header.inc.php:286 ../../templates/show_random.inc.php:29
 #: ../../templates/show_search.inc.php:30
 #: ../../templates/show_stats.inc.php:33
 #: ../../templates/sidebar_home.inc.php:34
@@ -1212,7 +1212,7 @@ msgid "Radio Stations"
 msgstr "Radiosender"
 
 #: ../../lib/class/browse.class.php:174 ../../server/search.ajax.php:146
-#: ../../templates/header.inc.php:291 ../../templates/sidebar_home.inc.php:36
+#: ../../templates/header.inc.php:292 ../../templates/sidebar_home.inc.php:36
 #: ../../templates/sidebar_home.inc.php:104
 msgid "Playlists"
 msgstr "Playlisten"
@@ -2104,7 +2104,7 @@ msgstr "Ist wahnsinnig"
 msgid "Off the Charts!"
 msgstr "Absoluter Wahnsinn!"
 
-#: ../../lib/ui.lib.php:101 ../../templates/header.inc.php:279
+#: ../../lib/ui.lib.php:101 ../../templates/header.inc.php:280
 #: ../../templates/sidebar.inc.php:29
 msgid "Home"
 msgstr "Hauptmenü"
@@ -2792,28 +2792,28 @@ msgstr "Cache Treffer:"
 msgid "Load time:"
 msgstr "Ladezeit:"
 
-#: ../../templates/header.inc.php:82
+#: ../../templates/header.inc.php:83
 msgid "Save"
 msgstr "Speichern"
 
-#: ../../templates/header.inc.php:83
+#: ../../templates/header.inc.php:84
 #: ../../templates/show_confirmation.inc.php:34
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ../../templates/header.inc.php:259
+#: ../../templates/header.inc.php:260
 msgid "Log out"
 msgstr "Abmelden"
 
-#: ../../templates/header.inc.php:297 ../../templates/sidebar_home.inc.php:87
+#: ../../templates/header.inc.php:298 ../../templates/sidebar_home.inc.php:87
 msgid "Favorites"
 msgstr "Favoriten"
 
-#: ../../templates/header.inc.php:316
+#: ../../templates/header.inc.php:317
 msgid "Error Config File Out of Date"
 msgstr "Fehler: Die Konfigurationsdatei 'ampache.cfg.php' ist veraltet"
 
-#: ../../templates/header.inc.php:317
+#: ../../templates/header.inc.php:318
 msgid "Generate New Config"
 msgstr "Schreibe neue Konfiguration"
 
@@ -5096,15 +5096,25 @@ msgid "Registration Complete"
 msgstr "Registrierung komplett"
 
 #: ../../templates/show_registration_confirmation.inc.php:43
+msgid "Your account has been created."
+msgstr "Dein Konto wurde erstellt."
+
+#: ../../templates/show_registration_confirmation.inc.php:46
+msgid "Please wait for an administrator to activate your account."
+msgstr ""
+"Bitte gedulde dich noch ein bisschen, bis ein Administrator dein Konto "
+"freigeschaltet hast."
+
+#: ../../templates/show_registration_confirmation.inc.php:48
 msgid ""
-"Your account has been created. An activation key has been sent to the e-mail "
-"address you provided. Please check your e-mail for further information"
+"An activation key has been sent to the e-mail address you provided. Please "
+"check your e-mail for further information."
 msgstr ""
 "Dein Benutzerkonto wurde erstellt und ein Aktivierungscode wurde schon an "
 "die angegebene E-Mail Adresse gesendet. Bitte Prüfe Dein E-Mail Postfach für "
 "weitere Informationen."
 
-#: ../../templates/show_registration_confirmation.inc.php:45
+#: ../../templates/show_registration_confirmation.inc.php:52
 msgid "Return to Login Page"
 msgstr "Zurück zur Loginseite"
 
