@@ -2426,7 +2426,7 @@ class Update
         if (!is_readable($htaccess_play_file)) {
             $created = false;
             if (check_htaccess_play_writable()) {
-                if (!copy($htaccess_play_file . '.dist', $htaccess_play_file)) {
+                if (!install_rewrite_rules($htaccess_play_file, AmpConfig::get('raw_web_path'), false)) {
                     Error::add('general', T_('File copy error.'));
                 } else {
                     $created = true;
@@ -2442,7 +2442,7 @@ class Update
         if (!is_readable($htaccess_rest_file)) {
             $created = false;
             if (check_htaccess_rest_writable()) {
-                if (!copy($htaccess_rest_file . '.dist', $htaccess_rest_file)) {
+                if (!install_rewrite_rules($htaccess_rest_file, AmpConfig::get('raw_web_path'), false)) {
                     Error::add('general', T_('File copy error.'));
                 } else {
                     $created = true;
