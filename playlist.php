@@ -116,12 +116,12 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'add_song':
+        $playlist = new Playlist($_REQUEST['playlist_id']);
         if (!$playlist->has_access()) {
             UI::access_denied();
             break;
         }
 
-        $playlist = new Playlist($_REQUEST['playlist_id']);
         $playlist->add_songs(array($_REQUEST['song_id']), 'ORDERED');
     break;
     case 'prune_empty':
