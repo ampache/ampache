@@ -107,7 +107,7 @@ require $prefix . '/templates/install_header.inc.php';
     <label for="transcode_template" class="col-sm-4 control-label"><?php echo T_('Template Configuration'); ?></label>
     <div class="col-sm-8">
         <select class="form-control" id="transcode_template" name="transcode_template">
-        <option value="">None</option>
+        <option value=""><?php echo T_('None'); ?></option>
         <?php
             $modes = install_get_transcode_modes();
             foreach ($modes as $mode) {
