@@ -24,7 +24,7 @@ Introduction:
   A) Getting the Necessary Tools
 
     Before attempting to translate Ampache into a new language we recommend
-    contacting translations@ampache.org to make sure that nobody else is
+    contacting us on IRC (chat.freenode.net #ampache) to make sure that nobody else is
     already working on a translation. Once you are ready to start your
     translation you will need to get a few tools
 
@@ -59,7 +59,7 @@ Creating a New Translation:
 
   A) Translating
 
-    I do my best to keep an up to date po file in /locale/base feel free to 
+    We do our best to keep an up to date po file in /locale/base feel free to 
     use this file rather than attempting to generate your own. If you would 
     like to gather a new PO file simply run /locale/base/gather-messages.sh 
     (Linux only)
@@ -118,10 +118,4 @@ Updating an Existing Translation:
 Questions:
 
   If you have any questions or are unable to get gettext to work for you please
-  feel free to contact us at translations@ampache.org or forums 
-  http://ampache.org/forums/f7-Translations.html. Thanks!
-  
-
-Karl Vollmer
- http://www.ampache.org
- dev@ampache.org
+  feel free to contact us. Thanks!
