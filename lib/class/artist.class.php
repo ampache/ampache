@@ -34,6 +34,15 @@ class Artist extends database_object
     public $prefix;
     public $mbid; // MusicBrainz ID
     public $catalog_id;
+    public $time;
+    
+    public $object_cnt;
+    public $f_name;
+    public $f_full_name;
+    public $f_link;
+    public $f_name_link;
+    public $f_time;
+    
 
     // Constructed vars
     public $_fake = false; // Set if construct_from_array() used
@@ -210,6 +219,7 @@ class Artist extends database_object
         $sql .= "ORDER BY album, track";
         $db_results = Dba::read($sql);
 
+        $results = array();
         while ($r = Dba::fetch_assoc($db_results)) {
             $results[] = $r['id'];
         }
@@ -350,6 +360,7 @@ class Artist extends database_object
             return self::$_mapcache[$name][$mbid];
         }
 
+        $id = 0;
         $exists = false;
 
         if ($mbid) {
@@ -425,13 +436,16 @@ class Artist extends database_object
         if ($this->name != $data['name']) {
             $artist_id = self::check($data['name'], $this->mbid);
 
+            $updated = false;
+            $songs = array();
+            
             // If it's changed we need to update
             if ($artist_id != $this->id) {
                 $songs = $this->get_songs();
                 foreach ($songs as $song_id) {
                     Song::update_artist($artist_id,$song_id);
                 }
-                $updated = 1;
+                $updated = true;
                 $current_id = $artist_id;
                 self::gc();
             } // end if it changed

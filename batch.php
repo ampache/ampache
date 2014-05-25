@@ -34,6 +34,9 @@ if (!defined('NO_SESSION') && !Access::check_function('batch_download')) {
 /* Drop the normal Time limit constraints, this can take a while */
 set_time_limit(0);
 
+$media_ids = array();
+$name = "Unknown.zip";
+
 switch ($_REQUEST['action']) {
     case 'tmp_playlist':
         $media_ids = $GLOBALS['user']->playlist->get_items();
@@ -50,7 +53,6 @@ switch ($_REQUEST['action']) {
         $sql = $sql['base'] . ' ' . $sql['table_sql'] . ' WHERE ' .
             $sql['where_sql'];
         $db_results = Dba::read($sql);
-        $media_ids = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $media_ids[] = $row['id'];
         }
@@ -77,7 +79,6 @@ switch ($_REQUEST['action']) {
         $id = scrub_in($_REQUEST['browse_id']);
         $browse = new Browse($id);
         $browse_media_ids = $browse->get_saved();
-        $media_ids = array();
         foreach ($browse_media_ids as $media_id) {
             switch ($_REQUEST['type']) {
                 case 'album':

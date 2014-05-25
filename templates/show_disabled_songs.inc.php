@@ -61,7 +61,7 @@
         </tfoot>
     </table>
     <div class="formValidation">
-        <input class="button" type="submit" value="<?php echo T_('Remove'); ?>" />&nbsp;&nbsp;
-        <input type="hidden" name="action" value="remove_disabled" />
+        <input class="button" type="submit" value="<?php echo T_('Enable'); ?>" />&nbsp;&nbsp;
+        <input type="hidden" name="action" value="enable_disabled" />
     </div>
 </form>

@@ -31,6 +31,7 @@ function get_song_files($media_ids)
 {
     $media_files = array();
 
+    $total_size = 0;
     foreach ($media_ids as $element) {
         if (is_array($element)) {
             $type = array_shift($element);
@@ -60,12 +61,13 @@ function get_song_files($media_ids)
  * zips them and sends them
  *
  * @param    string    $name    name of the zip file to be created
- * @param    string    $song_files    array of full paths to songs to zip create w/ call to get_song_files
+ * @param    array    $song_files    array of full paths to songs to zip create w/ call to get_song_files
  */
 function send_zip($name, $song_files)
 {
     // Check if they want to save it to a file, if so then make sure they've
     // got a defined path as well and that it's writable.
+    $basedir = '';
     if (AmpConfig::get('file_zip_download') && AmpConfig::get('tmp_dir_path')) {
         // Check writeable
         if (!is_writable(AmpConfig::get('tmp_dir_path'))) {

@@ -97,8 +97,10 @@ unset($safe_dirname);
 
 switch ($_REQUEST['action']) {
     case 'create_db':
+        $new_user = '';
+        $new_pass = '';
         if ($_POST['db_user'] == 'create_db_user') {
-            $new_user = scrub_in($_POST['db_username']);
+            $new_user = $_POST['db_username'];
             $new_pass = $_POST['db_password'];
 
             if (!strlen($new_user) || !strlen($new_pass)) {

@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
 
         // we didn't find anything
         if (empty($_FILES['file']['tmp_name'])) {
-            show_confirmation(T_('Album Art Not Located'), T_('Album Art could not be located at this time. This may be due to write access error, or the file is not received correctly.'),"/albums.php?action=show&amp;album=" . $album->id);
+            show_confirmation(T_('Album Art Not Located'), T_('Album Art could not be located at this time. This may be due to write access error, or the file is not received correctly.'),"/albums.php?action=show&amp;album=" . $_REQUEST['album_id']);
             break;
         }
 
@@ -94,6 +94,9 @@ switch ($_REQUEST['action']) {
         } elseif ($album->artist_count == '1') {
             $artist = $album->f_artist_name;
         }
+        else {
+            $artist = "";
+        }
         if (isset($_REQUEST['album_name'])) {
             $album_name = scrub_in($_REQUEST['album_name']);
         } else {
@@ -102,7 +105,7 @@ switch ($_REQUEST['action']) {
 
         $options['artist']     = $artist;
         $options['album_name']    = $album_name;
-        $options['keyword']    = $artist . " " . $album_name;
+        $options['keyword']    = trim($artist . " " . $album_name);
 
         // Attempt to find the art.
         $images = $art->gather($options,'6');

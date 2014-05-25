@@ -566,6 +566,7 @@ class Api
         $playlist = new Playlist($input['filter']);
         $items = $playlist->get_items();
 
+        $songs = array();
         foreach ($items as $object) {
             if ($object['object_type'] == 'song') {
                 $songs[] = $object['object_id'];

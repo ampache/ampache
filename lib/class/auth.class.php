@@ -105,6 +105,7 @@ class Auth
      */
     public static function login_step2($auth_mod)
     {
+        $results = null;
         if (in_array($auth_mod, AmpConfig::get('auth_methods'))) {
             $function_name = $auth_mod . '_auth_2';
             if (method_exists('Auth', $function_name)) {
@@ -383,6 +384,7 @@ class Auth
      */
     private static function openid_auth($username, $password)
     {
+        $results = array();
         // Username contains the openid url. We don't care about password here.
         $website = $username;
         if (strpos($website, 'http://') === 0 || strpos($website, 'https://') === 0) {
@@ -426,7 +428,7 @@ class Auth
 
                         if (Auth_OpenID::isFailure($form_html)) {
                             $results['success'] = false;
-                            $results['error']   = 'Could not redirect to server: ' . $redirect_url->message;
+                            $results['error']   = 'Could not render authentication form.';
                         } else {
                             debug_event('auth', 'OpenID 2: javascript redirection code to OpenID form.', '5');
                             // First step is a success, UI interaction required.

@@ -25,6 +25,12 @@ use MusicBrainz\Clients\RequestsMbClient;
 
 class Wanted extends database_object
 {
+    /* Variables from DB */
+    public $id;
+    public $mbid;
+    public $artist;
+    public $artist_mbid;
+    
     /**
      * Constructor
      */

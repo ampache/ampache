@@ -44,6 +44,20 @@ class Song extends database_object implements media
     public $addition_time;
     public $update_time;
     public $mbid; // MusicBrainz ID
+    public $catalog;
+    
+    public $language;
+    public $comment;
+    public $lyrics;
+    public $f_title;
+    public $f_artist;
+    public $f_album;
+    public $f_artist_full;
+    public $f_album_full;
+    public $f_time;
+    public $f_track;
+    public $f_bitrate;
+    public $link;    
 
     /* Setting Variables */
     public $_fake = false; // If this is a 'construct_from_array' object

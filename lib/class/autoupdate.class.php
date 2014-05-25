@@ -88,6 +88,7 @@ class AutoUpdate
 
     public static function get_latest_version($force = false)
     {
+        $lastversion = '';
         // Forced or last check expired, check latest version from Github
         if ($force || (self::lastcheck_expired() && AmpConfig::get('autoupdate'))) {
             // Development version, get latest commit on develop branch

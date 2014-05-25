@@ -22,6 +22,18 @@
 
 class Broadcast extends database_object
 {
+    public $id;
+    public $started;
+    public $listeners;
+    public $song;
+    public $song_position;
+    public $name;
+    
+    public $tags;
+    public $f_name;
+    public $f_link;
+    public $f_tags;
+
     /**
      * Constructor
      */
@@ -112,7 +124,7 @@ class Broadcast extends database_object
 
     public static function get_broadcast_list()
     {
-        $sql = self::get_channel_list_sql();
+        $sql = self::get_broadcast_list_sql();
         $db_results = Dba::read($sql);
         $results = array();
 

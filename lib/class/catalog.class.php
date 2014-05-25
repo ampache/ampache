@@ -29,6 +29,7 @@
  */
 abstract class Catalog extends database_object
 {
+    public $id;
     public $name;
     public $last_update;
     public $last_add;
@@ -37,6 +38,12 @@ abstract class Catalog extends database_object
     public $rename_pattern;
     public $sort_pattern;
     public $catalog_type;
+    
+    public $f_name;
+    public $f_name_link;
+    public $f_update;
+    public $f_add;
+    public $f_clean;
 
     /* This is a private var that's used during catalog builds */
     protected $_playlists = array();
@@ -243,6 +250,7 @@ abstract class Catalog extends database_object
 
     public static function get_enable_filter($type, $id)
     {
+        $sql = "";
         if ($type == "song" || $type == "album" || $type == "artist") {
             if ($type == "song") $type = "id";
             $sql = "(SELECT COUNT(`song_dis`.`id`) FROM `song` AS `song_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `song_dis`.`catalog` " .
@@ -403,6 +411,7 @@ abstract class Catalog extends database_object
         $rename_pattern = $data['rename_pattern'];
         $sort_pattern = $data['sort_pattern'];
 
+        $insert_id = 0;
         $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
         $include = require_once $filename;
 
@@ -533,6 +542,7 @@ abstract class Catalog extends database_object
     */
     public static function get_artists($catalogs = null)
     {
+        $sql_where = "";
         if (is_array($catalogs) && count($catalogs)) {
             $catlist = '(' . implode(',', $catalogs) . ')';
             $sql_where = "WHERE `song`.`catalog` IN $catlist";
@@ -557,6 +567,7 @@ abstract class Catalog extends database_object
     */
     public static function get_albums($size = 0, $offset = 0, $catalogs = null)
     {
+        $sql_where = "";
         if (is_array($catalogs) && count($catalogs)) {
             $catlist = '(' . implode(',', $catalogs) . ')';
             $sql_where = "WHERE `song`.`catalog` IN $catlist";
@@ -575,7 +586,7 @@ abstract class Catalog extends database_object
         $sql = "SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` $sql_where GROUP BY `song`.`album` ORDER BY `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
-
+        $results = array();
         while ($r = Dba::fetch_assoc($db_results)) {
             $results[] = $r['id'];
         }
@@ -636,6 +647,7 @@ abstract class Catalog extends database_object
         // Prevent the script from timing out
         set_time_limit(0);
 
+        $search_count = 0;
         $albums = $this->get_album_ids();
 
         // Run through them and get the art!
@@ -674,7 +686,6 @@ abstract class Catalog extends database_object
                 } else {
                     debug_event('gather_art', 'Image less than 5 chars, not inserting', 3);
                 }
-                $art_found++;
             }
 
             // Stupid little cutesie thing
@@ -689,7 +700,6 @@ abstract class Catalog extends database_object
 
         // One last time for good measure
         UI::update_text('count_art_' . $this->id, $search_count);
-        UI::update_text('read_art_' . $this->id, scrub_out($album->name));
     }
 
     /**
@@ -723,7 +733,8 @@ abstract class Catalog extends database_object
         $albums = $this->get_album_ids();
 
         echo "Starting Dump Album Art...\n";
-
+        $i = 0;
+        
         // Run through them and get the art!
         foreach ($albums as $album_id) {
 
@@ -1024,8 +1035,7 @@ abstract class Catalog extends database_object
 
         $dead_total = $this->clean_catalog_proc();
 
-        debug_event('clean', 'clean finished, ' . $dead_count .
-            ' removed from '. $this->name, 5);
+        debug_event('clean', 'clean finished, ' . $dead_total . ' removed from '. $this->name, 5);
 
         // Remove any orphaned artists/albums/etc.
         self::gc();
@@ -1137,17 +1147,16 @@ abstract class Catalog extends database_object
 
         $songs = array();
         $pinfo = pathinfo($playlist);
-        if ($files) {
+        if (isset($files)) {
             foreach ($files as $file) {
                 $file = trim($file);
                 // Check to see if it's a url from this ampache instance
-                if (substr($value, 0, strlen(AmpConfig::get('web_path'))) == AmpConfig::get('web_path')) {
-                    $data = Stream_URL::parse($value);
+                if (substr($file, 0, strlen(AmpConfig::get('web_path'))) == AmpConfig::get('web_path')) {
+                    $data = Stream_URL::parse($file);
                     $sql = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
                     $db_results = Dba::read($sql, array($data['id']));
-
                     if (Dba::num_rows($db_results)) {
-                        $songs[] = $song_id;
+                        $songs[] = $data['id'];
                     }
                 } // end if it's an http url
                 else {
@@ -1192,7 +1201,7 @@ abstract class Catalog extends database_object
             }
         }
 
-        debug_event('import_playlist', "Parsed " . $filename . ", found " . count($songs) . " songs", 5);
+        debug_event('import_playlist', "Parsed " . $playlist . ", found " . count($songs) . " songs", 5);
 
         if (count($songs)) {
             $name = $pinfo['extension'] . " - " . $pinfo['filename'];

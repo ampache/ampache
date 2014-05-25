@@ -45,7 +45,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . '/templates/show_edit_shout.inc.php';
         break;
     case 'delete':
-        $shout_id = Shoutbox::delete($_REQUEST['shout_id']);
+        Shoutbox::delete($_REQUEST['shout_id']);
         show_confirmation(T_('Shoutbox Post Deleted'),'',AmpConfig::get('web_path').'/admin/shout.php');
     break;
     default:

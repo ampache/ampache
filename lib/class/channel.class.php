@@ -22,6 +22,24 @@
 
 class Channel extends database_object
 {
+    public $id;
+    public $is_private;
+    public $interface;
+    public $port;
+    public $start_date;
+    public $pid;
+    public $peak_listeners;
+    public $object_type;
+    public $object_id;
+    public $stream_type;
+    public $random;
+    public $loop;
+    public $bitrate;
+    public $name;
+    
+    public $tags;
+    public $f_tags;
+    
     private $is_init;
     private $playlist;
     private $song_pos;

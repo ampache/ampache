@@ -82,6 +82,8 @@ switch ($_GET['thumb']) {
 } // define size based on thumbnail
 
 $image = '';
+$mime = '';
+$filename = '';
 $typeManaged = false;
 if (isset($_GET['type'])) {
     switch ($_GET['type']) {

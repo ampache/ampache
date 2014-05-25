@@ -24,6 +24,7 @@
 <div id="information_actions">
     <ul>
         <li><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=gather_album_art"><?php echo T_('Gather All Art'); ?></a></li>
+        <li><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=show_disabled"><?php echo T_('Show disabled songs'); ?></a></li>
         <li><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=add_to_all_catalogs"><?php echo T_('Add to All'); ?></a> </li>
         <li><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=update_all_catalogs"><?php echo T_('Verify All'); ?></a></li>
         <li><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=clean_all_catalogs"><?php echo T_('Clean All'); ?></a></li>

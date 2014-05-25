@@ -135,8 +135,10 @@ class Core
             case 'request':
                 $sid = $_REQUEST['form_validation'];
             break;
+            default:
+                return false;
         }
-
+        
         if (!isset($_SESSION['forms'][$sid])) {
             debug_event('Core', "Form $sid not found in session, rejecting request", 2);
             return false;

@@ -31,6 +31,8 @@
  */
 class Browse extends Query
 {
+    public $show_header;
+    
     public function __construct($id = null, $cached = true)
     {
         parent::__construct($id, $cached);
@@ -196,7 +198,7 @@ class Browse extends Query
                 $box_req = AmpConfig::get('prefix') . '/templates/show_manage_shoutbox.inc.php';
             break;
             case 'tag':
-                Tag::build_cache($tags);
+                Tag::build_cache($object_ids);
                 $box_title = T_('Tag Cloud');
                 $box_req = AmpConfig::get('prefix') . '/templates/show_tagcloud.inc.php';
             break;
@@ -236,7 +238,7 @@ class Browse extends Query
 
         Ajax::start_container('browse_content_' . $type, 'browse_content');
         if ($this->get_show_header()) {
-            if ($box_req) {
+            if (isset($box_req) && isset($box_title)) {
                 UI::show_box_top($box_title, $class);
             }
         }

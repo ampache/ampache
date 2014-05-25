@@ -23,6 +23,9 @@
 class Shoutbox
 {
     public $id;
+    public $object_type;
+    public $object_id;
+    public $user;
 
     /**
      * Constructor

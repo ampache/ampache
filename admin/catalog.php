@@ -116,19 +116,21 @@ switch ($_REQUEST['action']) {
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalog_id=' . scrub_out($catalog_id);
         show_confirmation(T_('Catalog Delete'), T_('Confirm Deletion Request'),$next_url,1,'delete_catalog');
     break;
-    case 'remove_disabled':
+    case 'enable_disabled':
         if (AmpConfig::get('demo_mode')) { break; }
 
-        $song = $_REQUEST['song'];
+        $songs = $_REQUEST['song'];
 
-        if (count($song)) {
-            $catalog->remove_songs($song);
-            $body = ngettext('%d Song Removed', '%d Songs Removed', count($song));
+        if (count($songs)) {
+            foreach ($songs as $song_id) {
+                Song::update_enabled(true, $song_id);
+            }
+            $body = count($songs) . ngettext(' Song Enabled', ' Songs Enabled', count($songs));
         } else {
-            $body = T_('No Songs Removed');
+            $body = T_('No Disabled Songs selected');
         }
         $url    = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title    = ngettext('%d Disabled Song Processed', '%d Disabled Songs Processed', count($song));
+        $title    = count($songs) . ngettext(' Disabled Song Processed', ' Disabled Songs Processed', count($songs));
         show_confirmation($title,$body,$url);
     break;
     case 'clean_all_catalogs':

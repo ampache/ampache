@@ -38,6 +38,12 @@ class Access
     public $user;
     public $type;
     public $enabled;
+    
+    public $f_start;
+    public $f_end;
+    public $f_user;
+    public $f_level;
+    public $f_type;
 
     /**
      * constructor

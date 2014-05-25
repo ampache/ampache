@@ -38,9 +38,23 @@ class Album extends database_object
     public $prefix;
     public $mbid; // MusicBrainz ID
 
+    public $artist_prefix;
+    public $artist_name;
+    public $artist_id;
+    public $tags;
     public $full_name; // Prefix + Name, generated
+    public $artist_count;
+    public $f_artist_name;
+    public $f_artist_link;
+    public $f_artist;
+    public $f_name;
+    public $f_name_link;
+    public $f_link_src;
+    public $f_link;
+    public $f_tags;
 
     // cached information
+    public $_fake;
     public $_songs = array();
     private static $_mapcache = array();
 
@@ -452,6 +466,7 @@ class Album extends database_object
         $sql .= "ORDER BY RAND()";
         $db_results = Dba::read($sql, array($this->id));
 
+        $results = array();
         while ($r = Dba::fetch_row($db_results)) {
             $results[] = $r['0'];
         }
@@ -475,6 +490,8 @@ class Album extends database_object
 
         $current_id = $this->id;
 
+        $updated = 0;
+        $songs = null;
         if ($artist != $this->artist_id AND $artist) {
             // Update every song
             $songs = $this->get_songs();
@@ -544,7 +561,7 @@ class Album extends database_object
      */
     public static function get_random($count = 1, $with_art = false)
     {
-        $results = false;
+        $results = array();
 
         if (!$count) {
             $count = 1;

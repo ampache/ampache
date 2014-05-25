@@ -48,61 +48,6 @@ switch ($_REQUEST['action']) {
         $target_url = AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
         require_once AmpConfig::get('prefix') . '/templates/show_update_items.inc.php';
     break;
-    case 'rename_similar':
-        if (!$user->has_access('100')) { UI::access_denied(); }
-        $count = 0;
-        if (isset($_REQUEST['artist']) && is_numeric($_REQUEST['artist']) && isset($_REQUEST['artists']) && is_array($_REQUEST['artists'])) {
-            $artist = new Artist($_REQUEST['artist']);
-            if ($artist->id)
-            foreach ($_REQUEST['artists'] as $artist_id) {
-                if (is_numeric($artist_id)) {
-                    $that_artist = new Artist($artist_id);
-                    if ($that_artist->id) {
-                        $that_artist->merge($artist->id);
-                        $count++;
-                    } else
-                        $GLOBALS['error']->add_error('general', sprintf(T_('Error: No such artist \'%s\''), $artist_id));
-                } else {
-                    $GLOBALS['error']->add_error('general', sprintf(T_('Error: \'%s\' is not a valid ID'), $artist_id));
-                }
-            } else
-                $GLOBALS['error']->add_error('general', sprintf(T_('Error: No such artist \'%s\''), $_REQUEST['artist']));
-        } else {
-            $GLOBALS['error']->add_error('general', T_("Error: Errenous request"));
-        }
-        if ($count > 0) {
-            show_confirmation (
-                T_('Renamed artist(s)'),
-                sprintf(T_('%1$s artists have been merged with %2$s'), $count, $artist->name),
-                AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $artist->id
-            );
-        } else {
-            $GLOBALS['error']->print_error('general');
-        }
-
-    break;
-    case 'show_similar':
-        if (!$GLOBALS['user']->has_access('75')) {
-            UI::access_denied();
-            exit;
-        }
-
-        $artist = new Artist($_REQUEST['artist']);
-        //options
-        $similar_artists = $artist->get_similar_artists(
-                        make_bool($_POST['n_rep_uml']),
-                        $_POST['n_filter'],
-                        $_POST['n_ignore'],
-                        $_POST['c_mode'],
-                        $_POST['c_count_w'],
-                        $_POST['c_percent_w'],
-                        $_POST['c_distance_l'],
-                        make_bool($_POST['c_ignins_l']));
-        $artist_id = $artist->id;
-        $artist_name = $artist->name;
-        require AmpConfig::get('prefix') . '/templates/show_similar_artists.inc.php';
-
-    break;
     case 'rename':
         //die if not enough permissions
         if (!$user->has_access('100')) { UI::access_denied(); }
@@ -118,6 +63,8 @@ switch ($_REQUEST['action']) {
                 $songs = $artist->get_songs();
 
             $ret = 0;
+            $newname = "";
+            $newid = 0;
             //the manual rename takes priority, but if they tested out the insert thing ignore
             if ($_POST['artist_name'] != "" && $_POST['artist_name'] != $artist->name) {
                 //then just change the name of the artist in the db
