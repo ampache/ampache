@@ -28,7 +28,7 @@ class Broadcast extends database_object
     public $song;
     public $song_position;
     public $name;
-    
+
     public $tags;
     public $f_name;
     public $f_link;

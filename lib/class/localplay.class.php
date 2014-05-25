@@ -28,7 +28,7 @@ class Localplay
     public $f_name;
     public $f_description;
     public $f_version;
-    
+
     /* Built Variables */
     private $_player;
 

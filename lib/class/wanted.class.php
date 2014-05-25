@@ -35,12 +35,12 @@ class Wanted extends database_object
     public $accepted;
     public $release_mbid;
     public $user;
-    
+
     public $f_name_link;
     public $f_artist_link;
     public $f_user;
     public $songs;
-    
+
     /**
      * Constructor
      */

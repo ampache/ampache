@@ -33,7 +33,7 @@ class Video extends database_object implements media
     public $resolution_y;
     public $time;
     public $mime;
-    
+
     public $tags;
     public $f_title;
     public $f_link;

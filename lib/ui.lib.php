@@ -188,7 +188,7 @@ function show_preference_box($preferences)
 function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
 {
     static $album_id_cnt = 0;
-    
+
     // Generate key to use for HTML element ID
     if ($song_id) {
         $key = "album_select_" . $song_id;

@@ -35,7 +35,7 @@ class Artist extends database_object
     public $mbid; // MusicBrainz ID
     public $catalog_id;
     public $time;
-    
+
     public $tags;
     public $f_tags;
     public $object_cnt;
@@ -44,7 +44,7 @@ class Artist extends database_object
     public $f_link;
     public $f_name_link;
     public $f_time;
-    
+
 
     // Constructed vars
     public $_fake = false; // Set if construct_from_array() used
@@ -440,7 +440,7 @@ class Artist extends database_object
 
             $updated = false;
             $songs = array();
-            
+
             // If it's changed we need to update
             if ($artist_id != $this->id) {
                 $songs = $this->get_songs();

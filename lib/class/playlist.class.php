@@ -32,7 +32,7 @@ class Playlist extends playlist_object
     /* Variables from the database */
     public $genre;
     public $date;
-    
+
     public $f_link;
     public $f_name_link;
 

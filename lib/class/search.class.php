@@ -34,7 +34,7 @@ class Search extends playlist_object
 
     public $basetypes;
     public $types;
-    
+
     public $f_link;
     public $f_name_link;
 

@@ -38,7 +38,7 @@ abstract class Catalog extends database_object
     public $rename_pattern;
     public $sort_pattern;
     public $catalog_type;
-    
+
     public $f_name;
     public $f_name_link;
     public $f_update;
@@ -737,7 +737,7 @@ abstract class Catalog extends database_object
 
         echo "Starting Dump Album Art...\n";
         $i = 0;
-        
+
         // Run through them and get the art!
         foreach ($albums as $album_id) {
 

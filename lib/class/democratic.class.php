@@ -35,7 +35,7 @@ class Democratic extends Tmp_Playlist
     public $user;
     public $primary;
     public $base_playlist;
-    
+
     public $f_cooldown;
     public $f_primary;
     public $f_level;

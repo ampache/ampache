@@ -430,7 +430,7 @@ class Art extends database_object
             debug_event('Art', 'Eror: No mime type found.', 1);
             return false;
         }
-        
+
         $data = ob_get_contents();
         ob_end_clean();
 
@@ -589,7 +589,7 @@ class Art extends database_object
             case 'artist':
             case 'video':
             default:
-                $allowed_methods = array();                
+                $allowed_methods = array();
             break;
         }
 
@@ -836,7 +836,7 @@ class Art extends database_object
             'MediumImage',
             'SmallImage'
         );
-        
+
         if ($this->type == 'album') {
             $album = new Album($this->uid);
         } else {

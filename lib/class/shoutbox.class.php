@@ -29,7 +29,7 @@ class Shoutbox
     public $sticky;
     public $text;
     public $data;
-    
+
     public $f_link;
 
     /**

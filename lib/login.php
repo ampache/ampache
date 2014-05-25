@@ -67,8 +67,7 @@ if (empty($_REQUEST['step'])) {
                     $username = $_SERVER['REMOTE_USER'];
                 } elseif ($_SERVER['HTTP_REMOTE_USER']) {
                     $username = $_SERVER['HTTP_REMOTE_USER'];
-                }
-                else {
+                } else {
                     $username = '';
                 }
                 $password = '';

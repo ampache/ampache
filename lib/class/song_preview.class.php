@@ -34,7 +34,7 @@ class Song_Preview extends database_object implements media
     public $mime;
     public $mbid; // MusicBrainz ID
     public $enabled = true;
-    
+
     public $f_file;
     public $f_artist;
     public $f_artist_full;

@@ -38,7 +38,7 @@ class Radio extends database_object implements media
     public $genre;
     public $codec;
     public $catalog;
-    
+
     public $f_link;
     public $f_name_link;
     public $f_url_link;

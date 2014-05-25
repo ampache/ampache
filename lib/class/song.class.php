@@ -46,7 +46,7 @@ class Song extends database_object implements media
     public $mbid; // MusicBrainz ID
     public $catalog;
     public $waveform;
-    
+
     public $tags;
     public $language;
     public $comment;
@@ -505,7 +505,7 @@ class Song extends database_object implements media
     {
         // Remove some stuff we don't care about
         unset($song->catalog,$song->played,$song->enabled,$song->addition_time,$song->update_time,$song->type);
-        
+
         $array = array();
         $string_array = array('title','comment','lyrics');
         $skip_array = array('id','tag_id','mime','mb_artistid','mbid');

@@ -32,7 +32,7 @@
 class Browse extends Query
 {
     public $show_header;
-    
+
     public function __construct($id = null, $cached = true)
     {
         parent::__construct($id, $cached);

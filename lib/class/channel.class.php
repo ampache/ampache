@@ -37,10 +37,10 @@ class Channel extends database_object
     public $loop;
     public $bitrate;
     public $name;
-    
+
     public $tags;
     public $f_tags;
-    
+
     private $is_init;
     private $playlist;
     private $song_pos;

@@ -35,14 +35,14 @@ class Share extends database_object
     public $counter;
     public $secret;
     public $public_url;
-    
+
     public $f_object_link;
     public $f_user;
     public $f_allow_stream;
     public $f_allow_download;
     public $f_creation_date;
     public $f_lastvisite_date;
-    
+
     /**
      * Constructor
      */

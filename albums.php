@@ -93,8 +93,7 @@ switch ($_REQUEST['action']) {
             $artist = scrub_in($_REQUEST['artist_name']);
         } elseif ($album->artist_count == '1') {
             $artist = $album->f_artist_name;
-        }
-        else {
+        } else {
             $artist = "";
         }
         if (isset($_REQUEST['album_name'])) {

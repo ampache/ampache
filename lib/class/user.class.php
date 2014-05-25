@@ -46,7 +46,7 @@ class User extends database_object
     // Constructed variables
     public $prefs = array();
     public $playlist;
-    
+
     public $f_last_seen;
     public $f_create_date;
     public $link;
