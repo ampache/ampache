@@ -243,9 +243,6 @@ switch ($_REQUEST['action']) {
         $body    = '';
         show_confirmation($title, $body, $url);
     break;
-    case 'show_catalogs':
-        require_once AmpConfig::get('prefix') . '/templates/show_manage_catalogs.inc.php';
-    break;
     case 'show_add_catalog':
         require AmpConfig::get('prefix') . '/templates/show_add_catalog.inc.php';
     break;
@@ -295,6 +292,10 @@ switch ($_REQUEST['action']) {
         $title     = T_('Album Art Search Finished');
         $body    = '';
         show_confirmation($title,$body,$url);
+    break;
+    case 'show_catalogs':
+    default:
+        require_once AmpConfig::get('prefix') . '/templates/show_manage_catalogs.inc.php';
     break;
 } // end switch
 

@@ -3812,7 +3812,7 @@ msgstr "Nettoyer"
 #: ../../templates/show_manage_catalogs.inc.php:45
 #: ../../templates/show_preference_admin.inc.php:57
 msgid "Update"
-msgstr "Mis à jour"
+msgstr "Mise à jour"
 
 #: ../../templates/show_catalogs.inc.php:28
 #: ../../templates/show_catalogs.inc.php:56
