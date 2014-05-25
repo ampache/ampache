@@ -92,10 +92,6 @@ class Mailer
     public static function get_users($filter)
     {
         switch ($filter) {
-            case 'all':
-            default:
-                $sql = "SELECT * FROM `user` WHERE `email` IS NOT NULL";
-            break;
             case 'users':
                 $sql = "SELECT * FROM `user` WHERE `access`='25' AND `email` IS NOT NULL";
             break;
@@ -105,6 +101,10 @@ class Mailer
             case 'inactive':
                 $inactive = time() - (30 * 86400);
                 $sql = 'SELECT * FROM `user` WHERE `last_seen` <= ? AND `email` IS NOT NULL';
+            break;
+            case 'all':
+            default:
+                $sql = "SELECT * FROM `user` WHERE `email` IS NOT NULL";
             break;
         } // end filter switch
 

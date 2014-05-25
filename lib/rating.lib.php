@@ -56,6 +56,4 @@ function get_rating_name($score)
             return T_("Off the Charts!");
     } // end switch
 
-    return true;
-
 } // get_rating_name

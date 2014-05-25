@@ -142,7 +142,7 @@ if (!empty($username) && isset($auth)) {
 }
 
 /* If the authentication was a success */
-if ($auth['success'] && isset($user)) {
+if (isset($auth) && $auth['success'] && isset($user)) {
     // $auth->info are the fields specified in the config file
     //   to retrieve for each user
     Session::create($auth);

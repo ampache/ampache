@@ -782,7 +782,7 @@ class Plex_XML_Data
         $album = new Album($song->album);
         $xdir->addAttribute('parentRatingKey', $albumid);
         $xdir->addAttribute('parentKey', self::getMetadataUri($albumid));
-        $xdir->addAttribute('originalTitle', $album->f_artist_full);
+        $xdir->addAttribute('originalTitle', $album->f_name);
         $xdir->addAttribute('summary', '');
         $xdir->addAttribute('index', $song->track);
         $xdir->addAttribute('duration', $time);

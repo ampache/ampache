@@ -319,16 +319,17 @@ class Stream
         if (!defined('AJAX_INCLUDE')) { return false; }
 
         switch (AmpConfig::get('playlist_method')) {
-            case 'clear':
-            case 'default':
-            default:
-                return true;
             case 'send':
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket';
             break;
             case 'send_clear':
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=clear';
             break;
+            case 'clear':
+            case 'default':
+            default:
+                return true;
+
         } // end switch on method
 
         // Load our javascript

@@ -240,7 +240,7 @@ class Rating extends database_object
         }
         Dba::write($sql, $params);
 
-        parent::add_to_cache('rating_' . $type . '_user' . $user_id, $id, $rating);
+        parent::add_to_cache('rating_' . $this->type . '_user' . $user_id, $this->id, $rating);
 
         foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
             $plugin = new Plugin($plugin_name);

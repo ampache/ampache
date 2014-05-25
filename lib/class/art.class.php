@@ -525,6 +525,7 @@ class Art extends database_object
         $type = self::validate_type($type);
 
         $key = $type . $uid;
+
         if (parent::is_cached('art', $key . '275x275') && AmpConfig::get('resize_images')) {
             $row = parent::get_from_cache('art', $key . '275x275');
             $mime = $row['mime'];
@@ -547,7 +548,7 @@ class Art extends database_object
             }
         }
 
-        $mime = isset($thumb_mime) ? $thumb_mime : $mime;
+        $mime = isset($thumb_mime) ? $thumb_mime : (isset($mime) ? $mime : null);
         $extension = self::extension($mime);
 
         $name = 'art.' . $extension;

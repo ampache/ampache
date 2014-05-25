@@ -41,7 +41,7 @@ class Share extends database_object
     public $f_allow_stream;
     public $f_allow_download;
     public $f_creation_date;
-    public $f_lastvisite_date;
+    public $f_lastvisit_date;
 
     /**
      * Constructor

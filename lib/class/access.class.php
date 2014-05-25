@@ -337,8 +337,6 @@ class Access
             default:
                 return false;
         }
-
-        return false;
     }
 
     /**

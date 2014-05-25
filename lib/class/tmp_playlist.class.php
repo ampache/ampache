@@ -226,7 +226,7 @@ class Tmp_Playlist extends database_object
         $id = Dba::insert_id();
 
         /* Clean any other playlists associated with this session */
-        self::session_clean($sessid, $id);
+        self::session_clean($data['session_id'], $id);
 
         return $id;
 

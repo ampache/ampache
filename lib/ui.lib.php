@@ -562,6 +562,7 @@ function show_now_playing()
     Session::gc();
     Stream::gc_now_playing();
 
+    $web_path = AmpConfig::get('web_path');
     $results = Stream::get_now_playing();
     require_once AmpConfig::get('prefix') . '/templates/show_now_playing.inc.php';
 

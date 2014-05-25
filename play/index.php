@@ -245,7 +245,7 @@ if ($media->catalog) {
 }
 if ($media == null) {
     // Handle democratic removal
-    if ($demo_id) {
+    if ($demo_id && isset($democratic)) {
         $democratic->delete_from_oid($oid, 'song');
     }
     exit;
@@ -499,7 +499,7 @@ if ($start > 0) {
 // We do this regardless of play amount.
 if ($demo_id) { $democratic->delete_from_oid($oid,'song'); }
 
-if ($transcode) {
+if ($transcode && isset($transcoder)) {
     if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
         fread($transcoder['stderr'], 8192);
         fclose($transcoder['stderr']);
