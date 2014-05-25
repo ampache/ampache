@@ -34,7 +34,6 @@ require_once $prefix . '/lib/class/session.class.php';
 Session::_auto_init();
 
 // Set up for redirection on important error cases
-$http_type = "http://";
 $path = preg_replace('#(.*)/(\w+\.php)$#', '$1', $_SERVER['PHP_SELF']);
 $path = $http_type . $_SERVER['HTTP_HOST'] . $path;
 
