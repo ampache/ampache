@@ -227,6 +227,7 @@ if ($media->catalog) {
         debug_event('Play', "Error: $media->file is currently disabled, song skipped", '5');
         // Check to see if this is a democratic playlist, if so remove it completely
         if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, 'song'); }
+        header('HTTP/1.1 404 Not Found');
         exit;
     }
 
