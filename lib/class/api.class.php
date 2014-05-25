@@ -180,6 +180,7 @@ class Api
 
             if ($client) {
                 // Create the session
+                $data = array();
                 $data['username'] = $client->username;
                 $data['type'] = 'api';
                 $data['value'] = $timestamp;
@@ -654,6 +655,7 @@ class Api
      */
     public static function search_songs($input)
     {
+        $array = array();
         $array['type'] = 'song';
         $array['rule_1'] = 'anywhere';
         $array['rule_1_input'] = $input['filter'];

@@ -379,12 +379,13 @@ class Artist extends database_object
             $sql = 'SELECT `id`, `mbid` FROM `artist` WHERE `name` LIKE ?';
             $db_results = Dba::read($sql, array($name));
 
+            $id_array = array();
             while ($row = Dba::fetch_assoc($db_results)) {
                 $key = $row['mbid'] ?: 'null';
                 $id_array[$key] = $row['id'];
             }
 
-            if (isset($id_array)) {
+            if (count($id_array)) {
                 if ($mbid) {
                     if (isset($id_array['null']) && !$readonly) {
                         $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';

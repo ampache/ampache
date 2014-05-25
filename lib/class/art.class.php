@@ -743,6 +743,7 @@ class Art extends database_object
         // that displays cover art.
         // I'm leaving in the releaseuri info for the moment, though
         // it's not going to be used.
+        $coverartsites = array();
         $coverartsites[] = array(
             'name' => "CD Baby",
             'domain' => "cdbaby.com",

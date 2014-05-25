@@ -90,7 +90,7 @@ class vainfo
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($file));
             } catch (Exception $error) {
-                debug_event('getID3', "Broken file detected: $file: " . $error->message, 1);
+                debug_event('getID3', "Broken file detected: $file: " . $error->getMessage(), 1);
                 $this->_broken = true;
                 return false;
             }
@@ -228,6 +228,7 @@ class vainfo
         $order = (array) AmpConfig::get($config_key);
 
         // Iterate through the defined key order adding them to an ordered array.
+        $returned_keys = array();
         foreach ($order as $key) {
             if ($results[$key]) {
                 $returned_keys[] = $key;
@@ -851,6 +852,8 @@ class vainfo
 
         $key = array_shift($order);
 
+        $broken = array();
+        $broken[$key] = array();
         $broken[$key]['title'] = '**BROKEN** ' . $this->filename;
         $broken[$key]['album'] = 'Unknown (Broken)';
         $broken[$key]['artist'] = 'Unknown (Broken)';

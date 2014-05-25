@@ -168,6 +168,7 @@ class Waveform
 
         $handle = fopen($filename, "r");
         // wav file header retrieval
+        $heading = array();
         $heading[] = fread($handle, 4);
         $heading[] = bin2hex(fread($handle, 4));
         $heading[] = fread($handle, 4);

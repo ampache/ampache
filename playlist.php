@@ -49,8 +49,8 @@ switch ($_REQUEST['action']) {
         $playlist_name = scrub_in($_REQUEST['playlist_name']);
         $playlist_type = scrub_in($_REQUEST['type']);
 
-        Playlist::create($playlist_name, $playlist_type);
-        $_SESSION['data']['playlist_id'] = $playlist->id;
+        $playlist_id = Playlist::create($playlist_name, $playlist_type);
+        $_SESSION['data']['playlist_id'] = $playlist_id;
         show_confirmation(T_('Playlist Created'), sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type), 'playlist.php');
     break;
     case 'delete_playlist':

@@ -506,6 +506,7 @@ abstract class Catalog extends database_object
         $data = Dba::fetch_row($db_results);
         $artists = $data[0];
 
+        $results = array();
         $results['songs'] = $songs;
         $results['albums'] = $albums;
         $results['artists'] = $artists;

@@ -76,6 +76,7 @@ class scrobbler
      */
     public function handshake()
     {
+        $data = array();
         $as_socket = fsockopen($this->scrobble_host, 80, $errno, $errstr, 2);
         if (!$as_socket) {
             $this->error_msg = $errstr;

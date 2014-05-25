@@ -91,6 +91,7 @@ class User extends database_object
         $sql = 'SELECT COUNT(`id`) FROM `user`';
         $db_results = Dba::read($sql);
         $data = Dba::fetch_row($db_results);
+        $results = array();
         $results['users'] = $data[0];
 
         $time = time();
@@ -116,6 +117,7 @@ class User extends database_object
             return parent::get_from_cache('user',$id);
         }
 
+        $data = array();
         // If the ID is -1 then
         if ($id == '-1') {
             $data['username'] = 'System';
@@ -294,6 +296,7 @@ class User extends database_object
 
         $db_results = Dba::read($sql);
         $results = array();
+        $type_array = array();
         /* Ok this is crapy, need to clean this up or improve the code FIXME */
         while ($r = Dba::fetch_assoc($db_results)) {
             $type = $r['catagory'];
@@ -354,7 +357,7 @@ class User extends database_object
             /* If its an artist */
             elseif ($type == 'artist') {
                 $data = new Artist($r['object_id']);
-                $data->count = $r['count'];
+                //$data->count = $r['count'];
                 $data->format();
                 $data->f_name = $data->f_link;
                 $items[] = $data;
@@ -388,7 +391,7 @@ class User extends database_object
 
         // Incase they only have one user
         $users = array();
-
+        $ratings = array();
         while ($r = Dba::fetch_assoc($db_results)) {
             /* Store the fact that you rated this */
             $key = $r['object_id'];
@@ -933,6 +936,7 @@ class User extends database_object
                 "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` !='system'";
             $db_results = Dba::read($sql);
             /* While through our base stuff */
+            $zero_results = array();
             while ($r = Dba::fetch_assoc($db_results)) {
                 $key = $r['preference'];
                 $zero_results[$key] = $r['value'];
@@ -1177,6 +1181,7 @@ class User extends database_object
 
     public function upload_avatar()
     {
+        $upload = array();
         if (!empty($_FILES['avatar']['tmp_name'])) {
             $path_info = pathinfo($_FILES['avatar']['name']);
             $upload['file'] = $_FILES['avatar']['tmp_name'];

@@ -262,7 +262,7 @@ if (!$media->file || !Core::is_readable(Core::conv_lc_file($media->file))) {
     }
     // FIXME: why are these separate?
     // Remove the song votes if this is a democratic song
-    if ($demo_id) { $democratic->delete_from_oid($oid, 'song'); }
+    if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, 'song'); }
 
     debug_event('play', "Song $media->file ($media->title) does not have a valid filename specified", 2);
     header('HTTP/1.1 404 Invalid song, file not found or file unreadable');

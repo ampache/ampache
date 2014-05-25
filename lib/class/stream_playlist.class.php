@@ -73,8 +73,11 @@ class Stream_Playlist
 
         $sql = 'INSERT INTO `stream_playlist` ';
 
+        $fields = array();
         $fields[] = '`sid`';
+        $values = array();
         $values[] = $this->id;
+        $holders = array();
         $holders[] = '?';
 
         foreach ($url->properties as $field) {

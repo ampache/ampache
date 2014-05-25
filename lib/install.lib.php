@@ -224,6 +224,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
         $sql_file = AmpConfig::get('prefix') . '/sql/ampache.sql';
         $query = fread(fopen($sql_file, 'r'), filesize($sql_file));
         $pieces  = split_sql($query);
+        $errors = array();
         for ($i=0; $i<count($pieces); $i++) {
             $pieces[$i] = trim($pieces[$i]);
             if (!empty($pieces[$i]) && $pieces[$i] != '#') {

@@ -66,6 +66,7 @@ class Auth
 
             xoutput_headers();
 
+            $results = array();
             $results['rfc3514'] = '<script type="text/javascript">reloadRedirect("' . $target . '")</script>';
             echo xoutput_from_array($results);
         } else {
@@ -134,6 +135,7 @@ class Auth
                 // variations of the password. Increases collision chances, but
                 // doesn't break things.
                 // FIXME: Break things in the future.
+                $hashed_password = array();
                 $hashed_password[] = hash('sha256', $password);
                 $hashed_password[] = hash('sha256',
                     Dba::escape(stripslashes(htmlspecialchars(strip_tags($password)))));
@@ -169,6 +171,7 @@ class Auth
      */
     private static function pam_auth($username, $password)
     {
+        $results = array();
         if (!function_exists('pam_auth')) {
             $results['success']    = false;
             $results['error']    = 'The PAM PHP module is not installed';
@@ -274,6 +277,7 @@ class Auth
         //This is the ldap objectclass (required)
         $ldap_class    = AmpConfig::get('ldap_objectclass');
 
+        $results = array();
         if (!($ldap_dn && $ldap_url && $ldap_filter && $ldap_class)) {
             debug_event('ldap_auth', 'Required config value missing', 1);
             $results['success'] = false;
@@ -367,6 +371,7 @@ class Auth
      */
     private static function http_auth($username, $password)
     {
+        $results = array();
         if (($_SERVER['REMOTE_USER'] == $username) ||
             ($_SERVER['HTTP_REMOTE_USER'] == $username)) {
             $results['success']    = true;

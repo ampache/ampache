@@ -120,7 +120,7 @@ class Plex_Api
                     self::createError(401);
                 }
 
-                if (empty($email)) {
+                if (empty($email) && isset($username)) {
                     $xml = self::get_users_account();
                     if ((string) $xml->username == $username) {
                         $email = (string) $xml->email;
@@ -137,7 +137,7 @@ class Plex_Api
                 if (!empty($email)) {
                     $user = User::get_from_email($email);
                 }
-                if (!$user || !$user->id) {
+                if (!isset($user) || !$user->id) {
                     debug_event('Access Denied', 'Unable to get an Ampache user match for email ' . $email, '3');
                     self::createError(401);
                 }
@@ -202,7 +202,7 @@ class Plex_Api
         }
         $ach = $reqheaders['Access-Control-Request-Headers'];
         if ($ach) {
-            $headers = self::getPlexHeaders(true, $acl);
+            $headers = self::getPlexHeaders(true, $ach);
             $headerkeys = array();
             foreach ($headers as $key => $value) {
                 $headerkeys[] = strtolower($key);
@@ -652,14 +652,14 @@ class Plex_Api
                             $art = new Art($id, "artist");
                         } else if (Plex_XML_Data::isAlbum($key)) {
                             $art = new Art($id, "album");
-                        } else if (Plex_XML_Data::isSong($key)) {
+                        } else if (Plex_XML_Data::isTrack($key)) {
                             $art = new Art($id, "song");
                         }
 
                         if ($art != null) {
                             $art->get_db();
 
-                            if (!$size) {
+                            if (!isset($size)) {
                                 self::setHeader($art->raw_mime);
                                 echo $art->raw;
                             } else {
@@ -942,6 +942,7 @@ class Plex_Api
         $rating = $_REQUEST['rating'];
 
         if ($identifier == 'com.plexapp.plugins.library') {
+            $robj = null;
             if (Plex_XML_Data::isArtist($id)) {
                 $robj = new Rating(Plex_XML_Data::getAmpacheId($id), "artist");
             } else if (Plex_XML_Data::isAlbum($id)) {
