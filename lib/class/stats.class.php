@@ -244,16 +244,10 @@ class Stats
 
     /**
      * get_recent
-     * This returns the recent X for type Y from the
-     * last stats_threshold days
+     * This returns the recent X for type Y
     */
-    public static function get_recent($type, $count='',$threshold = '',$offset='')
+    public static function get_recent($type, $count='',$offset='')
     {
-        /* If they don't pass one, then use the preference */
-        if (!$threshold) {
-            $threshold = AmpConfig::get('stats_threshold');
-        }
-
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
         }
@@ -329,7 +323,6 @@ class Stats
                 return $type;
             default:
                 return 'song';
-            break;
         } // end switch
 
     } // validate_type
@@ -359,7 +352,7 @@ class Stats
      * This returns an array of the newest artists/albums/whatever
      * in this ampache instance
      */
-    public static function get_newest($type, $limit='', $offset='', $catalog=0)
+    public static function get_newest($type, $count='', $offset='', $catalog=0)
     {
         if (!$count) { $count = AmpConfig::get('popular_threshold'); }
         if (!$offset) {

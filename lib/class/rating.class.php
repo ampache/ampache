@@ -223,7 +223,7 @@ class Rating extends database_object
         }
         $user_id = intval($user_id);
 
-        debug_event('Rating', "Setting rating for $type $id to $rating", 5);
+        debug_event('Rating', "Setting rating for $this->type $this->id to $rating", 5);
 
         // If score is -1, then remove rating
         if ($rating == '-1') {
@@ -238,7 +238,7 @@ class Rating extends database_object
             "VALUES (?, ?, ?, ?)";
             $params = array($this->id, $this->type, $rating, $user_id);
         }
-        $db_results = Dba::write($sql, $params);
+        Dba::write($sql, $params);
 
         parent::add_to_cache('rating_' . $type . '_user' . $user_id, $id, $rating);
 

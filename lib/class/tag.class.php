@@ -100,7 +100,7 @@ class Tag extends database_object
         $db_results = Dba::read($sql);
 
         $tags = array();
-
+        $tag_map = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $tags[$row['object_id']][$row['tag_id']] = array('user'=>$row['user'], 'id'=>$row['tag_id'], 'name'=>$row['name']);
             $tag_map[$row['object_id']] = array('id'=>$row['id'],'tag_id'=>$row['tag_id'],'user'=>$row['user'],'object_type'=>$type,'object_id'=>$row['object_id']);
@@ -150,8 +150,8 @@ class Tag extends database_object
         }
 
         // We've got the tag id, let's see if it's already got a map, if not then create the map and return the value
-        if (!$map_id = self::tag_map_exists($type,$id,$tag_id,$user)) {
-            $map_id = self::add_tag_map($type,$id,$tag_id,$user);
+        if (!$map_id = self::tag_map_exists($type,$id,$tag_id,$uid)) {
+            $map_id = self::add_tag_map($type,$id,$tag_id,$uid);
         }
 
         return $map_id;
@@ -169,7 +169,7 @@ class Tag extends database_object
         $value = Dba::escape($value);
 
         $sql = "REPLACE INTO `tag` SET `name`='$value'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
         $insert_id = Dba::insert_id();
 
         parent::add_to_cache('tag_name', $value, $insert_id);
@@ -209,7 +209,7 @@ class Tag extends database_object
 
         $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
             "VALUES ('$tag_id','$uid','$type','$id')";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
         $insert_id = Dba::insert_id();
 
         parent::add_to_cache('tag_map_' . $type,$insert_id,array('tag_id'=>$tag_id,'user'=>$uid,'object_type'=>$type,'object_id'=>$id));
@@ -228,24 +228,24 @@ class Tag extends database_object
     {
         $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` " .
             "WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` " .
             "WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` " .
             "WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `video` ON `video`.`id`=`tag_map`.`object_id` " .
             "WHERE `tag_map`.`object_type`='video' AND `video`.`id` IS NULL";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Now nuke the tags themselves
         $sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " .
             "WHERE `tag_map`.`id` IS NULL";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
     }
 
     /**
@@ -256,10 +256,10 @@ class Tag extends database_object
     public function delete()
     {
         $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id`='".$this->id."'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         $sql = "DELETE FROM `tag` WHERE `tag`.`id`='".$this->id."'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Call the garbage collector to clean everything
         Tag::gc();
@@ -374,6 +374,7 @@ class Tag extends database_object
     {
         if (!self::validate_type($type)) { return array(); }
 
+        $limit_sql = "";
         if ($count) {
             $limit_sql = "LIMIT ";
             if ($offset) $limit_sql .= intval($offset) . ',';
@@ -470,25 +471,27 @@ class Tag extends database_object
         $ctags = Tag::get_top_tags($type, $object_id);
         $editedTags = explode(",", $tags_comma);
 
-        foreach ($ctags as $ctid => $ctv) {
-            if ($ctv['id'] != '') {
-                $ctag = new Tag($ctv['id']);
-                debug_event('tag.class', 'Processing tag {'.$ctag->name.'}...', '5');
-                $found = false;
+        if (is_array($ctags)) {
+            foreach ($ctags as $ctid => $ctv) {
+                if ($ctv['id'] != '') {
+                    $ctag = new Tag($ctv['id']);
+                    debug_event('tag.class', 'Processing tag {'.$ctag->name.'}...', '5');
+                    $found = false;
 
-                foreach ($editedTags as  $tk => $tv) {
-                    if ($ctag->name == $tv) {
-                        $found = true;
-                        break;
+                    foreach ($editedTags as  $tk => $tv) {
+                        if ($ctag->name == $tv) {
+                            $found = true;
+                            break;
+                        }
                     }
-                }
 
-                if ($found) {
-                    debug_event('tag.class', 'Already found. Do nothing.', '5');
-                    unset($editedTags[$tk]);
-                } else {
-                    debug_event('tag.class', 'Not found in the new list. Delete it.', '5');
-                    $ctag->remove_map($type, $object_id);
+                    if ($found) {
+                        debug_event('tag.class', 'Already found. Do nothing.', '5');
+                        unset($editedTags[$tk]);
+                    } else {
+                        debug_event('tag.class', 'Not found in the new list. Delete it.', '5');
+                        $ctag->remove_map($type, $object_id);
+                    }
                 }
             }
         }
@@ -509,6 +512,7 @@ class Tag extends database_object
      */
     public function count($type='')
     {
+        $filter_sql = "";
         if ($type) {
             $filter_sql = " AND `object_type`='" . Dba::escape($type) . "'";
         }
@@ -534,13 +538,8 @@ class Tag extends database_object
     {
         if (!self::validate_type($type)) { return false; }
 
-        $type = Dba::escape($type);
-        $tag_id = Dba::escape($this->id);
-        $object_id = Dba::escape($object_id);
-        $user_id = Dba::escape($GLOBALS['user']->id);
-
-        $sql = "DELETE FROM `tag_map` WHERE `tag_id`='$tag_id' AND `object_type`='$type' AND `object_id`='$object_id' AND `user`='$user_id'";
-        $db_results = Dba::write($sql);
+        $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";
+        Dba::write($sql, array($this->id, $type, $object_id, $GLOBALS['user']->id));
 
         return true;
 

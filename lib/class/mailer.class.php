@@ -92,8 +92,8 @@ class Mailer
     public static function get_users($filter)
     {
         switch ($filter) {
-            default:
             case 'all':
+            default:
                 $sql = "SELECT * FROM `user` WHERE `email` IS NOT NULL";
             break;
             case 'users':
@@ -119,15 +119,6 @@ class Mailer
         return $results;
 
     } // get_users
-
-    /**
-     * add_statistics
-     * This should be run if we want to add some statistics to this e-mail,
-     * appends to self::$message
-     */
-    public function add_statistics($methods)
-    {
-    } // add_statistics
 
     /**
      * send

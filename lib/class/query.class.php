@@ -54,7 +54,7 @@ class Query
 
                 $sql = 'INSERT INTO `tmp_browse` (`sid`, `data`) ' .
                     'VALUES(?, ?)';
-                $db_results = Dba::write($sql, array($sid, $data));
+                Dba::write($sql, array($sid, $data));
                 $this->id = Dba::insert_id();
 
             } else {
@@ -277,7 +277,7 @@ class Query
         $sql = 'DELETE FROM `tmp_browse` USING `tmp_browse` LEFT JOIN ' .
             '`session` ON `session`.`id` = `tmp_browse`.`sid` ' .
             'WHERE `session`.`id` IS NULL';
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
     }
 
     /**
@@ -390,7 +390,6 @@ class Query
             default:
                 // Rien a faire
                 return false;
-            break;
         } // end switch
 
         // If we've set a filter we need to reset the totals
@@ -1049,6 +1048,10 @@ class Query
     {
         $sql = $this->get_base_sql();
 
+        $filter_sql = "";
+        $join_sql = "";
+        $having_sql = "";
+        $order_sql = "";
         if (!isset($this->_state['custom']) || !$this->_state['custom']) {
             $filter_sql = $this->get_filter_sql();
             $join_sql = $this->get_join_sql();
@@ -1508,7 +1511,6 @@ class Query
                     case 'codec':
                         $sql = "`live_stream`.`codec`";
                     break;
-                    break;
                 } // end switch
             break;
             case 'genre':
@@ -1643,9 +1645,9 @@ class Query
             break;
         } // end switch
 
-        if ($sql) { $sql_sort = "$sql $order,"; }
+        if (isset($sql)) { return "$sql $order,"; }
 
-        return $sql_sort;
+        return "";
 
     } // sql_sort
 
@@ -1698,6 +1700,7 @@ class Query
 
         $db_results = Dba::read($sql);
 
+        $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -1720,8 +1723,7 @@ class Query
 
             $sql = 'UPDATE `tmp_browse` SET `data` = ? ' .
                 'WHERE `sid` = ? AND `id` = ?';
-            $db_results = Dba::write($sql,
-                array($data, session_id(), $id));
+            Dba::write($sql, array($data, session_id(), $id));
         }
     }
 
@@ -1746,8 +1748,7 @@ class Query
 
                 $sql = 'UPDATE `tmp_browse` SET `object_data` = ? ' .
                     'WHERE `sid` = ? AND `id` = ?';
-                $db_results = Dba::write($sql,
-                    array($data, session_id(), $id));
+                Dba::write($sql, array($data, session_id(), $id));
             }
         }
 

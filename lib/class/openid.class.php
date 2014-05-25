@@ -43,7 +43,7 @@ class Openid
                 if (strpos(PHP_OS, 'WIN') === 0) {
                     $store_path = $_ENV['TMP'];
                     if (!isset($store_path)) {
-                        $dir = 'C:\Windows\Temp';
+                        $store_path = 'C:\Windows\Temp';
                     }
                 } else {
                     $store_path = @$_ENV['TMPDIR'];
@@ -67,6 +67,7 @@ class Openid
 
     public static function get_consumer()
     {
+        $consumer = null;
         $store = self::get_store();
         if ($store) {
             $consumer = new Auth_OpenID_Consumer($store);
@@ -76,7 +77,7 @@ class Openid
 
     public static function get_return_url()
     {
-        return $return_to = AmpConfig::get('web_path') . '/login.php?auth_mod=openid&step=2';
+        return AmpConfig::get('web_path') . '/login.php?auth_mod=openid&step=2';
     }
 
     public static function get_policies()

@@ -145,7 +145,7 @@ class Access
 
         $sql = 'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, ' .
             '`user` = ?, `name` = ?, `type` = ?, `enabled` = ? WHERE `id` = ?';
-        $db_results = Dba::write($sql,
+        Dba::write($sql,
             array($start, $end, $level, $user, $name, $type, $enabled, $this->id));
 
         return true;
@@ -180,7 +180,7 @@ class Access
 
         $sql = 'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, ' .
             '`user`,`type`,`enabled`) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        $db_results = Dba::write($sql, array($name, $level, $start, $end, $user, $type, $enabled));
+        Dba::write($sql, array($name, $level, $start, $end, $user, $type, $enabled));
 
         return true;
 
@@ -230,7 +230,6 @@ class Access
         switch ($type) {
             case 'download':
                 return AmpConfig::get('download');
-            break ;
             case 'batch_download':
                 if (!function_exists('gzcompress')) {
                     debug_event('access', 'ZLIB extension not loaded, batch download disabled', 3);
@@ -242,7 +241,6 @@ class Access
             break;
             default:
                 return false;
-            break;
         }
     }
 
@@ -259,7 +257,6 @@ class Access
                 case 'interface':
                 case 'stream':
                     return true;
-                break;
                 default:
                     return false;
             }
@@ -283,7 +280,6 @@ class Access
             break;
             default:
                 return false;
-            break;
         } // end switch on type
 
         $sql = 'SELECT `id` FROM `access_list` ' .
@@ -333,24 +329,13 @@ class Access
         switch ($type) {
             case 'localplay':
                 // Check their localplay_level
-                if (AmpConfig::get('localplay_level') >= $level
-                    || $GLOBALS['user']->access >= 100) {
-                    return true;
-                } else {
-                    return false;
-                }
-            break;
+                return (AmpConfig::get('localplay_level') >= $level
+                    || $GLOBALS['user']->access >= 100);
             case 'interface':
                 // Check their standard user level
-                if ($GLOBALS['user']->access >= $level) {
-                    return true;
-                } else {
-                    return false;
-                }
-            break;
+                return ($GLOBALS['user']->access >= $level);
             default:
                 return false;
-            break;
         }
 
         return false;
@@ -369,10 +354,8 @@ class Access
             case 'interface':
             case 'network':
                 return $type;
-            break;
             default:
                 return 'stream';
-            break;
         }
     }
 
@@ -439,17 +422,13 @@ class Access
         switch ($this->type) {
             case 'rpc':
                 return T_('API/RPC');
-            break;
             case 'network':
                 return T_('Local Network Definition');
-            break;
             case 'interface':
                 return T_('Web Interface');
-            break;
             case 'stream':
             default:
                 return T_('Stream Access');
-            break;
         }
     }
 }

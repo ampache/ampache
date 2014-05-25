@@ -596,7 +596,7 @@ class Plex_Api
                 } elseif ($view == "albums") {
                     Plex_XML_Data::setSectionAlbums($r, $catalog);
                 } elseif ($view == "recentlyadded") {
-                    Plex_XML_Data::setCustomSectionView($r, $catalog, Stats::get_recent('album', 25, 0, $key));
+                    Plex_XML_Data::setCustomSectionView($r, $catalog, Stats::get_recent('album', 25, $key));
                 }
             }
         }
@@ -945,7 +945,7 @@ class Plex_Api
                 $robj = new Rating(Plex_XML_Data::getAmpacheId($id), "artist");
             } else if (Plex_XML_Data::isAlbum($id)) {
                 $robj = new Rating(Plex_XML_Data::getAmpacheId($id), "album");
-            } else if (Plex_XML_Data::isSong($id)) {
+            } else if (Plex_XML_Data::isTrack($id)) {
                 $robj = new Rating(Plex_XML_Data::getAmpacheId($id), "song");
             }
 

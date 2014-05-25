@@ -35,7 +35,6 @@
  */
 class AmpConfig
 {
-    private $_local    = array();
     private static $_global = array();
 
     public function __construct()

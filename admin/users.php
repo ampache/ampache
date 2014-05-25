@@ -40,7 +40,7 @@ switch ($_REQUEST['action']) {
         }
 
         /* Clean up the variables */
-        $user_id    = scrub_in($_POST['user_id']);
+        $user_id    = intval($_POST['user_id']);
         $username     = scrub_in($_POST['username']);
         $fullname     = scrub_in($_POST['fullname']);
         $email         = scrub_in($_POST['email']);

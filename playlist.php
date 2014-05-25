@@ -39,16 +39,6 @@ UI::show_header();
 
 /* Switch on the action passed in */
 switch ($_REQUEST['action']) {
-    case 'add_dyn_song':
-        /* Check Rights */
-        if (!$playlist->has_access()) {
-            UI::access_denied();
-            break;
-        }
-
-        $playlist->add_dyn_song();
-        $_SESSION['data']['playlist_id'] = $playlist->id;
-    break;
     case 'create_playlist':
         /* Check rights */
         if (!Access::check('interface','25')) {
@@ -66,14 +56,6 @@ switch ($_REQUEST['action']) {
     case 'delete_playlist':
         // If we made it here, we didn't have sufficient rights.
         UI::access_denied();
-    break;
-    case 'remove_song':
-        /* Check em for rights */
-        if (!$playlist->has_access()) {
-            UI::access_denied();
-            break;
-        }
-        $playlist->remove_songs($_REQUEST['song']);
     break;
     case 'show_playlist':
         $playlist = new Playlist($_REQUEST['playlist_id']);

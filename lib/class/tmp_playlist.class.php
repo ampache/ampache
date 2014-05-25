@@ -203,11 +203,8 @@ class Tmp_Playlist extends database_object
      */
     public function clear()
     {
-        $id = Dba::escape($this->id);
-
-        $sql = "DELETE FROM `tmp_playlist_data` WHERE " .
-            "`tmp_playlist`='$id'";
-        $db_results = Dba::write($sql);
+        $sql = "DELETE FROM `tmp_playlist_data` WHERE `tmp_playlist` = ?";
+        Dba::write($sql, array($this->id));
 
         return true;
 
@@ -221,14 +218,10 @@ class Tmp_Playlist extends database_object
      */
     public static function create($data)
     {
-        $sessid     = Dba::escape($data['session_id']);
-        $type        = Dba::escape($data['type']);
-        $object_type    = Dba::escape($data['object_type']);
-
         $sql = "INSERT INTO `tmp_playlist` " .
             "(`session`,`type`,`object_type`) " .
-            " VALUES ('$sessid','$type','$object_type')";
-        $db_results = Dba::write($sql);
+            " VALUES (?, ?, ?)";
+        Dba::write($sql, array($data['session_id'], $data['type'], $data['object_type']));
 
         $id = Dba::insert_id();
 
@@ -247,7 +240,7 @@ class Tmp_Playlist extends database_object
     {
         $sql = "UPDATE `tmp_playlist` SET " .
             "`base_playlist`= ? WHERE `id`= ?";
-        $db_results = Dba::write($sql, array($playlist_id, $id));
+        Dba::write($sql, array($playlist_id, $this->id));
 
         return true;
 
@@ -261,7 +254,7 @@ class Tmp_Playlist extends database_object
     public static function session_clean($sessid, $id)
     {
         $sql = "DELETE FROM `tmp_playlist` WHERE `session`= ? AND `id` != ?";
-        $db_results = Dba::write($sql, array($sessid, $id));
+        Dba::write($sql, array($sessid, $id));
 
         /* Remove associated tracks */
         self::prune_tracks();
@@ -293,7 +286,7 @@ class Tmp_Playlist extends database_object
             "ON `session`.`id`=`tmp_playlist`.`session` " .
             "WHERE `session`.`id` IS NULL " .
             "AND `tmp_playlist`.`type` != 'vote'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
 
@@ -311,7 +304,7 @@ class Tmp_Playlist extends database_object
             "`tmp_playlist_data` LEFT JOIN `tmp_playlist` ON " .
             "`tmp_playlist_data`.`tmp_playlist`=`tmp_playlist`.`id` " .
             "WHERE `tmp_playlist`.`id` IS NULL";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
     } // prune_tracks
 
@@ -325,7 +318,7 @@ class Tmp_Playlist extends database_object
         $sql = "INSERT INTO `tmp_playlist_data` " .
             "(`object_id`,`tmp_playlist`,`object_type`) " .
             " VALUES (?, ?, ?)";
-        $db_results = Dba::write($sql, array($object_id, $this->id, $object_type));
+        Dba::write($sql, array($object_id, $this->id, $object_type));
 
         return true;
 
@@ -353,7 +346,7 @@ class Tmp_Playlist extends database_object
     {
         /* delete the track its self */
         $sql = "DELETE FROM `tmp_playlist_data` WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($id));
+        Dba::write($sql, array($id));
 
         return true;
 

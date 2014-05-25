@@ -29,8 +29,10 @@ switch ($_REQUEST['action']) {
         $object_ids = Random::advanced($_REQUEST['type'], $_POST);
 
         // We need to add them to the active playlist
-        foreach ($object_ids as $object_id) {
-            $GLOBALS['user']->playlist->add_object($object_id, 'song');
+        if (is_array($object_ids)) {
+            foreach ($object_ids as $object_id) {
+                $GLOBALS['user']->playlist->add_object($object_id, 'song');
+            }
         }
     case 'advanced':
     default:

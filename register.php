@@ -122,8 +122,8 @@ switch ($_REQUEST['action']) {
             case 'user':
                 $access = '25';
             break;
-            default:
             case 'guest':
+            default:
                 $access = '5';
             break;
         } // auto-user level

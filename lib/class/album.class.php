@@ -38,6 +38,7 @@ class Album extends database_object
     public $prefix;
     public $mbid; // MusicBrainz ID
 
+    public $song_count;
     public $artist_prefix;
     public $artist_name;
     public $artist_id;
@@ -52,6 +53,7 @@ class Album extends database_object
     public $f_link_src;
     public $f_link;
     public $f_tags;
+    public $f_title;
 
     // cached information
     public $_fake;
@@ -445,7 +447,7 @@ class Album extends database_object
         }
 
         $this->tags = Tag::get_top_tags('album', $this->id);
-        $this->f_tags = Tag::get_display($this->tags, $this->id, 'album');
+        $this->f_tags = Tag::get_display($this->tags);
 
     } // format
 
@@ -490,7 +492,7 @@ class Album extends database_object
 
         $current_id = $this->id;
 
-        $updated = 0;
+        $updated = false;
         $songs = null;
         if ($artist != $this->artist_id AND $artist) {
             // Update every song
@@ -498,7 +500,7 @@ class Album extends database_object
             foreach ($songs as $song_id) {
                 Song::update_artist($artist,$song_id);
             }
-            $updated = 1;
+            $updated = true;
             Artist::gc();
         }
 
@@ -510,11 +512,11 @@ class Album extends database_object
                 Song::update_year($year,$song_id);
             }
             $current_id = $album_id;
-            $updated = 1;
+            $updated = true;
             self::gc();
         }
 
-        if ($updated) {
+        if ($updated && is_array($songs)) {
             foreach ($songs as $song_id) {
                 Song::update_utime($song_id);
             } // foreach song of album

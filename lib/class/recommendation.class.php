@@ -182,7 +182,7 @@ class Recommendation
             }
         }
 
-        if (!$similars || count($similars) == 0) {
+        if (!isset($similars) || count($similars) == 0) {
             $similars = $cache['items'];
         }
         if ($similars) {
@@ -274,7 +274,7 @@ class Recommendation
             }
         }
 
-        if (!$similars || count($similars) == 0) {
+        if (!isset($similars) || count($similars) == 0) {
             $similars = $cache['items'];
         }
         if ($similars) {

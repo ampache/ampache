@@ -99,9 +99,6 @@ function install_check_status($configfile)
         return false;
     }
 
-    /* Defaut to no */
-    return false;
-
 } // install_check_status
 
 function install_check_server_apache()
@@ -176,7 +173,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
 {
     $database = AmpConfig::get('database_name');
     // Make sure that the database name is valid
-    $is_valid = preg_match('/([^\d\w\_\-])/', $database, $matches);
+    preg_match('/([^\d\w\_\-])/', $database, $matches);
 
     if (count($matches)) {
         Error::add('general', T_('Error: Invalid database name.'));
@@ -246,9 +243,9 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
     if (AmpConfig::get('lang') != 'en_US') {
         // FIXME: 31? I hate magic.
         $sql = 'UPDATE `preference` SET `value`= ? WHERE `id` = 31';
-        $db_results = Dba::write($sql, array(AmpConfig::get('lang')));
+        Dba::write($sql, array(AmpConfig::get('lang')));
         $sql = 'UPDATE `user_preference` SET `value` = ? WHERE `preference` = 31';
-        $db_results = Dba::write($sql, array(AmpConfig::get('lang')));
+        Dba::write($sql, array(AmpConfig::get('lang')));
     }
 
     return true;
@@ -264,7 +261,7 @@ function install_create_config($download = false)
     $config_file = AmpConfig::get('prefix') . '/config/ampache.cfg.php';
 
     /* Attempt to make DB connection */
-    $dbh = Dba::dbh();
+    Dba::dbh();
 
     $params = AmpConfig::get_all();
     if (empty($params['database_username']) || empty($params['database_password'])) {
@@ -364,7 +361,7 @@ function command_exists($command)
 
     if ($process !== false) {
         $stdout = stream_get_contents($pipes[1]);
-        $stderr = stream_get_contents($pipes[2]);
+        stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
         proc_close($process);

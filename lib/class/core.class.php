@@ -100,8 +100,8 @@ class Core
         debug_event('Core', "Registered $type form $name with SID $sid and expiration $expire ($window seconds from now)", 5);
 
         switch ($type) {
-            default:
             case 'post':
+            default:
                 $string = '<input type="hidden" name="form_validation" value="' . $sid . '" />';
             break;
             case 'get':

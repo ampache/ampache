@@ -243,12 +243,12 @@ class Browse extends Query
             }
         }
 
-        if ($box_req) {
+        if (isset($box_req)) {
             require $box_req;
         }
 
         if ($this->get_show_header()) {
-            if ($box_req) {
+            if (isset($box_req)) {
                 UI::show_box_bottom();
             }
             echo '<script type="text/javascript">';

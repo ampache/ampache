@@ -191,6 +191,7 @@ class Stream_Playlist
             case 'localplay':
             case 'web_player':
                 // These are valid, but witchy
+                $ct = "";
                 $redirect = false;
                 unset($ext);
             break;
@@ -300,6 +301,7 @@ class Stream_Playlist
     {
         echo "[playlist]\n";
         echo 'NumberOfEntries=' . count($this->urls) . "\n";
+        $i = 0;
         foreach ($this->urls as $url) {
             $i++;
             echo 'File' . $i . '='. $url->url . "\n";
@@ -343,6 +345,7 @@ class Stream_Playlist
      */
     public function create_xspf()
     {
+        $result = "";
         foreach ($this->urls as $url) {
             $xml = array();
 

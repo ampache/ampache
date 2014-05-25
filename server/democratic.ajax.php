@@ -28,6 +28,8 @@ if (!defined('AJAX_INCLUDE')) { exit; }
 $democratic = Democratic::get_current_playlist();
 $democratic->set_parent();
 
+$show_browse = false;
+$results = array();
 switch ($_REQUEST['action']) {
     case 'delete_vote':
         $democratic->remove_vote($_REQUEST['row_id']);

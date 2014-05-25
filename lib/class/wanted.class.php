@@ -30,6 +30,16 @@ class Wanted extends database_object
     public $mbid;
     public $artist;
     public $artist_mbid;
+    public $name;
+    public $year;
+    public $accepted;
+    public $release_mbid;
+    public $user;
+    
+    public $f_name_link;
+    public $f_artist_link;
+    public $f_user;
+    public $songs;
     
     /**
      * Constructor
@@ -68,6 +78,7 @@ class Wanted extends database_object
         }
 
         $owngroups = array();
+        $wartist = array();
         if ($artist) {
             $albums = $artist->get_albums();
             foreach ($albums as $id) {
@@ -82,7 +93,6 @@ class Wanted extends database_object
                 }
             }
         } else {
-            $wartist = array();
             $wartist['mbid'] = $mbid;
             $wartist['name'] = $martist->name;
             parent::add_to_cache('missing_artist', $mbid, $wartist);

@@ -34,11 +34,13 @@ require_once $prefix . '/lib/class/session.class.php';
 Session::_auto_init();
 
 // Set up for redirection on important error cases
+$http_type = "http://";
 $path = preg_replace('#(.*)/(\w+\.php)$#', '$1', $_SERVER['PHP_SELF']);
 $path = $http_type . $_SERVER['HTTP_HOST'] . $path;
 
 // Check to make sure the config file exists. If it doesn't then go ahead and
 // send them over to the install script.
+$results = array();
 if (!file_exists($configfile)) {
     $link = $path . '/install.php';
 } else {

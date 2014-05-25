@@ -68,6 +68,9 @@ if (empty($_REQUEST['step'])) {
                 } elseif ($_SERVER['HTTP_REMOTE_USER']) {
                     $username = $_SERVER['HTTP_REMOTE_USER'];
                 }
+                else {
+                    $username = '';
+                }
                 $password = '';
             }
 
@@ -94,7 +97,7 @@ if (empty($_REQUEST['step'])) {
     }
 }
 
-if (!empty($username)) {
+if (!empty($username) && isset($auth)) {
     $user = User::get_from_username($username);
 
     if ($user->disabled) {
@@ -134,13 +137,13 @@ if (!empty($username)) {
 
     // This allows stealing passwords validated by external means
     // such as LDAP
-    if (AmpConfig::get('auth_password_save') && $auth['success'] && $password) {
+    if (AmpConfig::get('auth_password_save') && $auth['success'] && isset($password)) {
         $user->update_password($password);
     }
 }
 
 /* If the authentication was a success */
-if ($auth['success']) {
+if ($auth['success'] && isset($user)) {
     // $auth->info are the fields specified in the config file
     //   to retrieve for each user
     Session::create($auth);

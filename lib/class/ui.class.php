@@ -29,7 +29,7 @@ class UI
     private static $_ticker;
     private static $_icon_cache;
 
-    public function __construct($data)
+    public function __construct()
     {
         return false;
     }
@@ -217,7 +217,7 @@ END;
 
         $icon_url = self::_find_icon($name);
         if (isset($hover_name)) {
-            $hover_url = self::_find_icon($hover_text);
+            $hover_url = self::_find_icon($hover_name);
         }
         if ($bUseSprite) {
             $tag = '<span class="sprite sprite-icon_'.$name.'"';
@@ -232,7 +232,7 @@ END;
         $tag .= 'alt="' . $title . '" ';
         $tag .= 'title="' . $title . '" ';
 
-        if (isset($hover_name)) {
+        if (isset($hover_name) && isset($hover_url)) {
             $tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
             $tag .= 'onmouseout="this.src=\'' . $icon_url . '\'; return true;" ';
         }

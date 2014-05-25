@@ -25,6 +25,7 @@
  */
 if (!defined('AJAX_INCLUDE')) { exit; }
 
+$results = array();
 switch ($_REQUEST['action']) {
     case 'random_albums':
         $albums = Album::get_random(6, true);
@@ -133,6 +134,7 @@ switch ($_REQUEST['action']) {
             $mbid = $_REQUEST['mbid'];
             if (empty($_REQUEST['artist'])) {
                 $artist_mbid = $_REQUEST['artist_mbid'];
+                $artist = null;
             } else {
                 $artist = $_REQUEST['artist'];
                 $aobj = new Artist($artist);
@@ -200,7 +202,6 @@ switch ($_REQUEST['action']) {
             break;
             default:
                 exit;
-            break;
         } // end switch on button
 
         ob_start();

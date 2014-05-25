@@ -38,54 +38,42 @@ switch ($page) {
     case 'stats':
         require_once AmpConfig::get('prefix') . '/server/stats.ajax.php';
         exit;
-    break;
     case 'browse':
         require_once AmpConfig::get('prefix') . '/server/browse.ajax.php';
         exit;
-    break;
     case 'random':
         require_once AmpConfig::get('prefix') . '/server/random.ajax.php';
         exit;
-    break;
     case 'playlist':
         require_once AmpConfig::get('prefix') . '/server/playlist.ajax.php';
         exit;
-    break;
     case 'localplay':
         require_once AmpConfig::get('prefix') . '/server/localplay.ajax.php';
         exit;
-    break;
     case 'tag':
         require_once AmpConfig::get('prefix') . '/server/tag.ajax.php';
         exit;
-    break;
     case 'stream':
         require_once AmpConfig::get('prefix') . '/server/stream.ajax.php';
         exit;
-    break;
     case 'song':
         require_once AmpConfig::get('prefix') . '/server/song.ajax.php';
         exit;
-    break;
     case 'democratic':
         require_once AmpConfig::get('prefix') . '/server/democratic.ajax.php';
         exit;
-    break;
     case 'index':
         require_once AmpConfig::get('prefix') . '/server/index.ajax.php';
         exit;
     case 'catalog':
         require_once AmpConfig::get('prefix') . '/server/catalog.ajax.php';
         exit;
-    break;
     case 'search':
         require_once AmpConfig::get('prefix') . '/server/search.ajax.php';
         exit;
-    break;
     case 'player':
         require_once AmpConfig::get('prefix') . '/server/player.ajax.php';
         exit;
-    break;
     default:
         // A taste of compatibility
     break;
@@ -115,8 +103,8 @@ switch ($_REQUEST['action']) {
         }
         if ($_POST['type'] == 'smartplaylist_row' ||
             $_POST['type'] == 'smartplaylist_title') {
-            $playlist = new Search('song', $_POST['id']);
-            if ($GLOBALS['user']->id == $playlist->user) {
+            $smartpl = new Search('song', $_POST['id']);
+            if ($GLOBALS['user']->id == $smartpl->user) {
                 $level = '25';
             }
         }
@@ -158,17 +146,21 @@ switch ($_REQUEST['action']) {
             case 'playlist_row':
             case 'playlist_title':
                 $key = 'playlist_row_' . $_POST['id'];
-                $playlist->update($_POST);
-                $playlist->format();
-                $count = $playlist->get_song_count();
+                if (isset($playlist)) {
+                    $playlist->update($_POST);
+                    $playlist->format();
+                    $count = $playlist->get_song_count();
+                }
             break;
             case 'smartplaylist_row':
             case 'smartplaylist_title':
                 $key = 'smartplaylist_row_' . $_POST['id'];
-                $playlist->name = $_POST['name'];
-                $playlist->type = $_POST['pl_type'];
-                $playlist->update();
-                $playlist->format();
+                if (isset($smartpl)) {
+                    $smartpl->name = $_POST['name'];
+                    $smartpl->type = $_POST['pl_type'];
+                    $smartpl->update();
+                    $smartpl->format();
+                }
             break;
             case 'live_stream_row':
                 $key = 'live_stream_' . $_POST['id'];
@@ -194,7 +186,6 @@ switch ($_REQUEST['action']) {
                 $key = 'rfc3514';
                 echo xoutput_from_array(array($key=>'0x1'));
                 exit;
-            break;
         } // end switch on type
 
         $results['id'] = $new_id;

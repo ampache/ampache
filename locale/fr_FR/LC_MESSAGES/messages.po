@@ -3575,7 +3575,7 @@ msgstr "Partager"
 #: ../../templates/show_album.inc.php:131
 #: ../../templates/show_album_row.inc.php:79
 msgid "Album edit"
-msgstr "Edition de l'album"
+msgstr "Edition album"
 
 #: ../../templates/show_album.inc.php:66
 #: ../../templates/show_artist.inc.php:63
@@ -3709,7 +3709,7 @@ msgstr "Tout ajouter aléatoirement à la liste de lecture temporaire"
 #: ../../templates/show_artist.inc.php:122
 #: ../../templates/show_artist_row.inc.php:61
 msgid "Artist edit"
-msgstr "Edition de l'artiste"
+msgstr "Edition artiste"
 
 #: ../../templates/show_artist.inc.php:123
 msgid "Edit Artist"

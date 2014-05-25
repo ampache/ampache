@@ -45,6 +45,17 @@ class User extends database_object
 
     // Constructed variables
     public $prefs = array();
+    public $playlist;
+    
+    public $f_last_seen;
+    public $f_create_date;
+    public $link;
+    public $f_link;
+    public $f_useage;
+    public $ip_history;
+    public $f_avatar;
+    public $f_avatar_mini;
+    public $f_avatar_medium;
 
     /**
      * Constructor
@@ -202,6 +213,7 @@ class User extends database_object
      */
     public static function get_from_email($email)
     {
+        $user = null;
         $sql = "SELECT `id` FROM `user` WHERE `email` = ?";
         $db_results = Dba::read($sql, array($email));
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -239,9 +251,10 @@ class User extends database_object
             return parent::get_from_cache('user_catalog',$this->id);
         }
 
-        $sql = "SELECT * FROM `user_catalog` WHERE `user`='$user_id'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT * FROM `user_catalog` WHERE `user` = ?";
+        $db_results = Dba::read($sql, array($this->id));
 
+        $catalogs = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalogs[] = $row['catalog'];
         }
@@ -266,11 +279,10 @@ class User extends database_object
         // Fill out the user id
         $user_id = $system ? Dba::escape(-1) : Dba::escape($this->id);
 
+        $user_limit = "";
         if (!$system) {
             $user_limit = "AND preference.catagory != 'system'";
-        }
-
-        if ($type != '0') {
+        } else if ($type != '0') {
             $user_limit = "AND preference.catagory = '" . Dba::escape($type) . "'";
         }
 
@@ -281,7 +293,7 @@ class User extends database_object
             " ORDER BY preference.catagory, preference.description";
 
         $db_results = Dba::read($sql);
-
+        $results = array();
         /* Ok this is crapy, need to clean this up or improve the code FIXME */
         while ($r = Dba::fetch_assoc($db_results)) {
             $type = $r['catagory'];
@@ -319,8 +331,6 @@ class User extends database_object
      */
     public function get_favorites($type)
     {
-        $web_path = AmpConfig::get('web_path');
-
         $results = Stats::get_user(AmpConfig::get('popular_threshold'),$type,$this->id,1);
 
         $items = array();
@@ -523,7 +533,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `username` = ? WHERE `id` = ?";
         $this->username = $new_username;
-        $db_results = Dba::write($sql, array($new_username, $this->id));
+        Dba::write($sql, array($new_username, $this->id));
 
     } // update_username
 
@@ -550,7 +560,7 @@ class User extends database_object
     public function update_fullname($new_fullname)
     {
         $sql = "UPDATE `user` SET `fullname` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($new_fullname, $this->id));
+        Dba::write($sql, array($new_fullname, $this->id));
 
     } // update_fullname
 
@@ -561,7 +571,7 @@ class User extends database_object
     public function update_email($new_email)
     {
         $sql = "UPDATE `user` SET `email` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($new_email, $this->id));
+        Dba::write($sql, array($new_email, $this->id));
 
     } // update_email
 
@@ -573,7 +583,7 @@ class User extends database_object
     {
         $new_website = rtrim($new_website, "/");
         $sql = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($new_website, $this->id));
+        Dba::write($sql, array($new_website, $this->id));
 
     } // update_website
 
@@ -584,7 +594,7 @@ class User extends database_object
     public function update_apikey($new_apikey)
     {
         $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($new_apikey, $this->id));
+        Dba::write($sql, array($new_apikey, $this->id));
 
     } // update_website
 
@@ -624,11 +634,11 @@ class User extends database_object
         if (!Dba::num_rows($db_results)) { return false; }
 
         $sql = "UPDATE `user` SET `disabled`='1' WHERE id='" . $this->id . "'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Delete any sessions they may have
         $sql = "DELETE FROM `session` WHERE `username`='" . Dba::escape($this->username) . "'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
 
@@ -641,7 +651,7 @@ class User extends database_object
     public function enable()
     {
         $sql = "UPDATE `user` SET `disabled`='0' WHERE id='" . $this->id . "'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
 
@@ -662,7 +672,7 @@ class User extends database_object
 
         $new_access = Dba::escape($new_access);
         $sql = "UPDATE `user` SET `access`='$new_access' WHERE `id`='$this->id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
     } // update_access
 
@@ -673,7 +683,7 @@ class User extends database_object
     public function update_last_seen()
     {
         $sql = "UPDATE user SET last_seen='" . time() . "' WHERE `id`='$this->id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
     } // update_last_seen
 
@@ -722,7 +732,7 @@ class User extends database_object
                 if ($plugin->load($user)) {
                     $plugin->_plugin->save_songplay($song_info);
                 }
-            } catch (Exeption $e) {
+            } catch (Exception $e) {
                 debug_event('user.class.php', 'Stats plugin error: ' . $e->getMessage(), '1');
             }
         }
@@ -749,13 +759,13 @@ class User extends database_object
         $agent = Dba::escape($_SERVER['HTTP_USER_AGENT']);
 
         $sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`,`agent`) VALUES ('$ip','$user','$date','$agent')";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         /* Clean up old records... sometimes  */
         if (rand(1,100) > 60) {
             $date = time() - (86400*AmpConfig::get('user_ip_cardinality'));
             $sql = "DELETE FROM `ip_history` WHERE `date` < $date";
-            $db_results = Dba::write($sql);
+            Dba::write($sql);
         }
 
         return true;
@@ -838,6 +848,7 @@ class User extends database_object
             "WHERE `object_count`.`user`='$this->id' AND `object_count`.`object_type`='song'";
         $db_results = Dba::read($sql);
 
+        $total = 0;
         while ($r = Dba::fetch_assoc($db_results)) {
             $total = $total + $r['size'];
         }
@@ -865,41 +876,6 @@ class User extends database_object
     } // format_user
 
     /**
-     * format_recommendations
-     * This takes an array of [object_id] = ratings
-     * and displays them in a semi-pretty format
-     */
-     function format_recommendations($items,$type)
-     {
-        foreach ($items as $object_id=>$rating) {
-
-            switch ($type) {
-                case 'artist':
-                    $object = new Artist($object_id);
-                    $object->format_artist();
-                    $name = $object->link;
-                break;
-                case 'album':
-                    $object = new Album($object_id);
-                    $object->format_album();
-                    $name = $object->f_link;
-                break;
-                case 'song':
-                    $object = new Song($object_id);
-                    $object->format_song();
-                    $name = $object->f_link;
-                break;
-            } // end switch on type
-            $results[] = "<li>$name -- " . get_rating_name($rating) . "<br />\n</li>";
-
-        } // end foreach items
-
-
-        return $results;
-
-     } // format_recommendations
-
-    /**
      * access_name_to_level
      * This takes the access name for the user and returns the level
      */
@@ -908,22 +884,15 @@ class User extends database_object
         switch ($level) {
             case 'admin':
                 return '100';
-            break;
             case 'user':
                 return '25';
-            break;
             case 'manager':
                 return '75';
-            break;
             case 'guest':
                 return '5';
-            break;
             default:
                 return '0';
-            break;
         }
-
-        return false;
 
     } // access_name_to_level
 
@@ -951,7 +920,7 @@ class User extends database_object
                 $r['value'] = Dba::escape($r['value']);
                 $sql = "DELETE FROM `user_preference` WHERE `user`='$user_id' AND `preference`='" . $r['preference'] . "' AND" .
                     " `value`='" . Dba::escape($r['value']) . "'";
-                $delete_results = Dba::write($sql);
+                Dba::write($sql);
             } // if its set
             else {
                 $results[$pref_id] = 1;
@@ -990,7 +959,7 @@ class User extends database_object
                 }
                 $value = Dba::escape($r['value']);
                 $sql = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id','$key','$value')";
-                $insert_db = Dba::write($sql);
+                Dba::write($sql);
             }
         } // while preferences
 
@@ -1008,7 +977,7 @@ class User extends database_object
 
         foreach ($results as $data) {
             $sql = "DELETE FROM user_preference WHERE user='$data'";
-            $db_results = Dba::write($sql);
+            Dba::write($sql);
         }
 
     } // fix_preferences
@@ -1034,56 +1003,56 @@ class User extends database_object
 
         // Delete their playlists
         $sql = "DELETE FROM `playlist` WHERE `user`='$this->id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Clean up the playlist data table
         $sql = "DELETE FROM `playlist_data` USING `playlist_data` " .
             "LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` " .
             "WHERE `playlist`.`id` IS NULL";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Delete any stats they have
         $sql = "DELETE FROM `object_count` WHERE `user`='$this->id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Clear the IP history for this user
         $sql = "DELETE FROM `ip_history` WHERE `user`='$this->id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Nuke any access lists that are specific to this user
         $sql = "DELETE FROM `access_list` WHERE `user`='$this->id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Delete their ratings
         $sql = "DELETE FROM `rating` WHERE `user`='$this->id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Delete their tags
         $sql = "DELETE FROM `tag_map` WHERE `user`='$this->id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Clean out the tags
         $sql = "DELETE FROM `tags` USING `tag_map` LEFT JOIN `tag_map` ON tag_map.id=tags.map_id AND tag_map.id IS NULL";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Delete their preferences
         $sql = "DELETE FROM `user_preference` WHERE `user`='$this->id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Delete their voted stuff in democratic play
         $sql = "DELETE FROM `user_vote` WHERE `user`='$this->id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Delete their shoutbox posts
         $sql = "DELETE FROM `user_shout` WHERE `user='$this->id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Delete the user itself
         $sql = "DELETE FROM `user` WHERE `id`='$this->id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         $sql = "DELETE FROM `session` WHERE `username`='" . Dba::escape($this->username) . "'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
 
@@ -1107,10 +1076,8 @@ class User extends database_object
      */
     public static function get_validation($username)
     {
-        $usename = Dba::escape($username);
-
-        $sql = "SELECT `validation` FROM `user` WHERE `username`='$username'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `validation` FROM `user` WHERE `username` = ?";
+        $db_results = Dba::read($sql, array($username));
 
         $row = Dba::fetch_assoc($db_results);
 
@@ -1131,6 +1098,7 @@ class User extends database_object
             "ORDER BY `date` DESC LIMIT $limit";
         $db_results = Dba::read($sql);
 
+        $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['object_id'];
         }
@@ -1153,6 +1121,7 @@ class User extends database_object
         if ($count < 1) { $count = '1'; }
         $limit_sql = "LIMIT " . intval($count);
 
+        $group_sql = "";
         if ($distinct) { $group_sql = "GROUP BY `ip`"; }
 
         /* Select ip history */
@@ -1236,7 +1205,7 @@ class User extends database_object
         $username = Dba::escape($username);
 
         $sql = "UPDATE `user` SET `disabled`='0' WHERE `username` = ?";
-        $db_results = Dba::write($sql, array($username));
+        Dba::write($sql, array($username));
 
     } // activate_user
 

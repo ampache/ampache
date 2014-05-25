@@ -71,8 +71,8 @@ switch ($_REQUEST['action']) {
         $fields = $localplay->get_instance_fields();
         require_once AmpConfig::get('prefix') . '/templates/show_localplay_instances.inc.php';
     break;
-    default:
     case 'show_playlist':
+    default:
         if (!Access::check('localplay','5')) { UI::access_denied(); break; }
         // Init and then connect to our localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));

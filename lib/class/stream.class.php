@@ -186,7 +186,7 @@ class Stream
         $sql = "DELETE FROM `now_playing` USING `now_playing` " .
             "LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` " .
             "WHERE `session`.`id` IS NULL OR `now_playing`.`expire` < '" . time() . "'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
     }
 
     /**
@@ -203,7 +203,7 @@ class Stream
         $sql = 'REPLACE INTO `now_playing` ' .
             '(`id`,`object_id`,`object_type`, `user`, `expire`, `insertion`) ' .
             'VALUES (?, ?, ?, ?, ?, ?)';
-        $db_result = Dba::write($sql, array($sid, $oid, $type, $uid, $time, time()));
+        Dba::write($sql, array($sid, $oid, $type, $uid, $time, time()));
     }
 
      /**
@@ -215,7 +215,7 @@ class Stream
     public static function clear_now_playing()
     {
         $sql = 'TRUNCATE `now_playing`';
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
     }
@@ -227,10 +227,6 @@ class Stream
      */
     public static function get_now_playing()
     {
-        $maxsql = '';
-        if (AmpConfig::get('now_playing_per_user')) {
-            $maxsql = ', ';
-        }
         $sql = 'SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` ';
         $sql .= 'LEFT JOIN `session` ON `session`.`id` = `np`.`id` ';
 
@@ -323,11 +319,10 @@ class Stream
         if (!defined('AJAX_INCLUDE')) { return false; }
 
         switch (AmpConfig::get('playlist_method')) {
-            default:
             case 'clear':
             case 'default':
+            default:
                 return true;
-            break;
             case 'send':
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket';
             break;
@@ -349,6 +344,7 @@ class Stream
      */
     public static function get_base_url()
     {
+        $session_string = '';
         if (AmpConfig::get('require_session')) {
             $session_string = 'ssid=' . self::$session . '&';
         }

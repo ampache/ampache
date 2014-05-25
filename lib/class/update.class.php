@@ -56,6 +56,7 @@ class Update
      */
     public static function get_version()
     {
+        $version = "";
         /* Make sure that update_info exits */
         $sql = "SHOW TABLES LIKE 'update_info'";
         $db_results = Dba::read($sql);
@@ -67,7 +68,6 @@ class Update
         if (!Dba::num_rows($db_results)) {
             // They can't upgrade, they are too old
             header("Location: test.php");
-
         } // if table isn't found
 
         else {
@@ -459,12 +459,10 @@ class Update
     {
         /* Nuke All Active session before we start the mojo */
         $sql = "TRUNCATE session";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
-
-        $methods = array();
 
         $current_version = self::get_version();
 
@@ -870,13 +868,13 @@ class Update
     {
         $sql = "DELETE FROM `preference` WHERE `name`='localplay_mpd_hostname' OR `name`='localplay_mpd_port' " .
             "OR `name`='direct_link' OR `name`='localplay_mpd_password' OR `name`='catalog_echo_count'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         $sql = "UPDATE `preference` SET `description`='Localplay Access' WHERE `name`='localplay_level'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         $sql = "UPDATE `access_list` SET `type`='rpc' WHERE `type`='xml-rpc'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // We're not manipulating the structure, so we'll pretend it always works
         return true;
@@ -944,7 +942,7 @@ class Update
             $rating = Dba::escape($row['rating']);
             $id    = Dba::escape($row['id']);
             $sql = "UPDATE `rating` SET `rating`='$rating' WHERE `id`='$id'";
-            $db_results = Dba::write($sql);
+            Dba::write($sql);
         }
 
         return $retval;
@@ -1442,7 +1440,7 @@ class Update
                     "', '" . $row['art_mime'] .
                     "', 'original', '" . $type . "', '" .
                     $row['object_id'] . "')";
-                $db_other_results = Dba::write($sql);
+                Dba::write($sql);
             }
             $sql = "DROP TABLE `" . $type . "_data`";
             $retval = Dba::write($sql) ? $retval : false;
@@ -1746,10 +1744,10 @@ class Update
         }
 
         $sql = "ALTER TABLE `catalog` DROP `path`, DROP `remote_username`, DROP `remote_password`";
-        $retval = Dba::write($sql);
+        Dba::write($sql);
 
         $sql = "ALTER TABLE `catalog` MODIFY COLUMN `catalog_type` varchar(128)";
-        $retval = Dba::write($sql);
+        Dba::write($sql);
 
         $sql = "UPDATE `artist` SET `mbid` = null WHERE `mbid` = ''";
         Dba::write($sql);
@@ -1775,14 +1773,14 @@ class Update
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('song_page_title','1','Show current song in Web player page title',25,'boolean','interface')";
-        $retval = Dba::write($sql);
+        Dba::write($sql);
 
         $id = Dba::insert_id();
 
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
-        $retval = Dba::write($sql, array($id));
+        Dba::write($sql, array($id));
 
-        return $retval;
+        return true;
     }
 
     /**

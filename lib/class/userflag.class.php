@@ -75,7 +75,7 @@ class Userflag extends database_object
             if (!isset($userflags[$id])) {
                 $userflag = 0;
             } else {
-                $userflag = intval($user_ratings[$id]);
+                $userflag = intval($userflags[$id]);
             }
             parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $id, $userflag);
         }
@@ -112,7 +112,7 @@ class Userflag extends database_object
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
         $flagged = false;
-        if ($results = Dba::fetch_assoc($db_results)) {
+        if (Dba::fetch_assoc($db_results)) {
             $flagged = true;
         }
 
@@ -147,7 +147,7 @@ class Userflag extends database_object
             "VALUES (?, ?, ?, ?)";
             $params = array($this->id, $this->type, $user_id, time());
         }
-        $db_results = Dba::write($sql, $params);
+        Dba::write($sql, $params);
 
         parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, $flagged);
 

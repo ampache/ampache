@@ -22,6 +22,10 @@
 
 require_once 'lib/init.php';
 
+$title = "";
+$text = "";
+$next_url = "";
+
 // Switch on the action
 switch ($_REQUEST['action']) {
     case 'update_preferences':
@@ -35,6 +39,7 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
+        $system = false;
         /* Reset the Theme */
         if ($_POST['method'] == 'admin') {
             $user_id = '-1';

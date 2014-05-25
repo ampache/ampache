@@ -135,10 +135,8 @@ class Art extends database_object
             case 'video':
             case 'user':
                 return $type;
-            break;
             default:
                 return 'album';
-            break;
         }
 
     } // validate_type
@@ -278,7 +276,7 @@ class Art extends database_object
 
         // Insert it!
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`) VALUES('$image', '$mime', 'original', '$type', '$uid')";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
 
@@ -291,8 +289,7 @@ class Art extends database_object
     public function reset()
     {
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ?";
-        $db_results = Dba::write($sql, array($this->uid, $this->type));
-
+        Dba::write($sql, array($this->uid, $this->type));
     } // reset
 
     /**
@@ -317,8 +314,7 @@ class Art extends database_object
         $db_results = Dba::write($sql);
 
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`) VALUES('$source', '$mime', '$size', '$type', '$uid')";
-        $db_results = Dba::write($sql);
-
+        Dba::write($sql);
     } // save_thumb
 
     /**
@@ -424,13 +420,17 @@ class Art extends database_object
             break;
             // Turn bmps into pngs
             case 'bmp':
-                $type = 'png';
             case 'png':
                 imagepng($thumbnail);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_PNG);
             break;
         } // resized
 
+        if (!isset($mime_type)) {
+            debug_event('Art', 'Eror: No mime type found.', 1);
+            return false;
+        }
+        
         $data = ob_get_contents();
         ob_end_clean();
 
@@ -533,13 +533,9 @@ class Art extends database_object
             $row = parent::get_from_cache('art', $key . 'original');
             $thumb_mime = $row['mime'];
         }
-        if (!$mime && !$thumb_mime) {
-
-            $type = Dba::escape($type);
-            $uid = Dba::escape($uid);
-
-            $sql = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type`='$type' AND `object_id`='$uid'";
-            $db_results = Dba::read($sql);
+        if (!isset($mime) && !isset($thumb_mime)) {
+            $sql = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+            $db_results = Dba::read($sql, array($type, $uid));
 
             while ($row = Dba::fetch_assoc($db_results)) {
                 parent::add_to_cache('art', $key . $row['size'], $row);
@@ -551,7 +547,7 @@ class Art extends database_object
             }
         }
 
-        $mime = $thumb_mime ? $thumb_mime : $mime;
+        $mime = isset($thumb_mime) ? $thumb_mime : $mime;
         $extension = self::extension($mime);
 
         $name = 'art.' . $extension;
@@ -573,7 +569,7 @@ class Art extends database_object
                 $type . "` ON `" . $type . "`.`id`=" .
                 "`image`.`object_id` WHERE `object_type`='" .
                 $type . "' AND `" . $type . "`.`id` IS NULL";
-            $db_results = Dba::write($sql);
+            Dba::write($sql);
         } // foreach
     }
 
@@ -591,10 +587,9 @@ class Art extends database_object
                 $allowed_methods = array('db','lastfm','folder','amazon','google','musicbrainz','tags');
             break;
             case 'artist':
-                $allowed_methods = array();
-            break;
             case 'video':
-                $allowed_methods = array();
+            default:
+                $allowed_methods = array();                
             break;
         }
 
@@ -613,8 +608,6 @@ class Art extends database_object
         debug_event('Art','Searching using:' . json_encode($config), 3);
 
         foreach ($config as $method) {
-
-            $data = array();
 
             if (!in_array($method, $allowed_methods)) {
                 debug_event('Art', "$method not in allowed_methods, skipping", 3);
@@ -843,14 +836,20 @@ class Art extends database_object
             'MediumImage',
             'SmallImage'
         );
+        
+        if ($this->type == 'album') {
+            $album = new Album($this->uid);
+        } else {
+            return $images;
+        }
 
         // Prevent the script from timing out
         set_time_limit(0);
 
         if (empty($keywords)) {
-            $keywords = $this->full_name;
+            $keywords = $album->full_name;
             /* If this isn't a various album combine with artist name */
-            if ($this->artist_count == '1') { $keywords .= ' ' . $this->artist_name; }
+            if ($album->artist_count == '1') { $keywords .= ' ' . $album->artist_name; }
         }
 
         /* Attempt to retrieve the album art order */
@@ -879,11 +878,9 @@ class Art extends database_object
 
             /* Set up the needed variables */
             $max_pages_to_search = max(AmpConfig::get('max_amazon_results_pages'),$amazon->_default_results_pages);
-            $pages_to_search = $max_pages_to_search; //init to max until we know better.
             // while we have pages to search
             do {
-                $raw_results = $amazon->search(array('artist'=>$artist,'album'=>$albumname,'keywords'=>$keywords));
-
+                $raw_results = $amazon->search(array('artist'=>'', 'album'=>'', 'keywords'=>$keywords));
                 $total = count($raw_results) + count($search_results);
 
                 // If we've gotten more then we wanted
@@ -922,9 +919,11 @@ class Art extends database_object
         /* Foreach through what we've found */
         foreach ($final_results as $result) {
 
+            $key = '';
             /* Recurse through the images found */
-            foreach ($possible_keys as $key) {
-                if (strlen($result[$key])) {
+            foreach ($possible_keys as $k) {
+                if (strlen($result[$k])) {
+                    $key = $k;
                     break;
                 }
             } // foreach
@@ -941,6 +940,7 @@ class Art extends database_object
                 continue;
             }
 
+            $data = array();
             $data['url']    = $result[$key];
             $data['mime']   = $mime;
 
@@ -987,7 +987,6 @@ class Art extends database_object
         );
 
         foreach ($songs as $song_id) {
-            $data = array();
             $song = new Song($song_id);
             $dir = dirname($song->file);
 
@@ -1165,6 +1164,7 @@ class Art extends database_object
      */
     public function gather_lastfm($limit, $options = false)
     {
+        $data = array();
         // Create the parser object
         $lastfm = new LastFMSearch();
 
@@ -1179,6 +1179,9 @@ class Art extends database_object
                     $artist = $media->artist_name;
                     $album = $media->full_name;
                 }
+            break;
+            default:
+                return $data;
             break;
         }
 

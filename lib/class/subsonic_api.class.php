@@ -530,6 +530,9 @@ class Subsonic_Api
                 $album = new Album(Subsonic_XML_Data::getAmpacheId($musicFolderId));
                 $finput = $album->name;
                 $ftype = "artist";
+            } else {
+                $finput = "";
+                $ftype = "";
             }
             $search['rule_'.$i.'_input'] = $finput;
             $search['rule_'.$i.'_operator'] = 4;
@@ -579,6 +582,8 @@ class Subsonic_Api
         $tag = Tag::construct_from_name($genre);
         if ($tag->id) {
             $songs = Tag::get_tag_objects("song", $tag->id, $count, $offset);
+        } else {
+            $songs = array();
         }
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addSongsByGenre($r, $songs);
@@ -1009,6 +1014,8 @@ class Subsonic_Api
                     $type = 'album';
                 } else if (Subsonic_XML_Data::isSong($i)) {
                     $type = 'song';
+                } else {
+                    $type = "";
                 }
                 $ids[] = array('id' => $aid, 'type' => $type);
             }

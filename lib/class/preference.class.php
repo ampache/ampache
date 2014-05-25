@@ -87,7 +87,7 @@ class Preference extends database_object
 
         if ($applytodefault AND Access::check('interface', '100')) {
             $sql = "UPDATE `preference` SET `value`='$value' WHERE `id`='$id'";
-            $db_results = Dba::write($sql);
+            Dba::write($sql);
         }
 
         $value = Dba::escape($value);
@@ -95,10 +95,10 @@ class Preference extends database_object
         if (self::has_access($name)) {
             $user_id = Dba::escape($user_id);
             $sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$id'$user_check";
-            $db_results = Dba::write($sql);
+            Dba::write($sql);
             Preference::clear_from_session();
 
-            parent::remove_from_cache('get_by_user', user_id);
+            parent::remove_from_cache('get_by_user', $user_id);
 
             return true;
         } else {
@@ -125,7 +125,7 @@ class Preference extends database_object
         $level = Dba::escape($level);
 
         $sql = "UPDATE `preference` SET `level`='$level' WHERE `id`='$preference_id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
 
@@ -141,7 +141,7 @@ class Preference extends database_object
         $value = Dba::escape($value);
 
         $sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$preference_id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         parent::clear_cache();
 
@@ -258,6 +258,7 @@ class Preference extends database_object
     {
         $user_id = Dba::escape($user_id);
 
+        $user_limit = "";
         if ($user_id != '-1') {
             $user_limit = "AND `preference`.`catagory` != 'system'";
         }
@@ -318,7 +319,7 @@ class Preference extends database_object
             $sql = "DELETE FROM `preference` WHERE `id`='$id'";
         }
 
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         self::rebuild_preferences();
 
@@ -334,7 +335,7 @@ class Preference extends database_object
         $new = Dba::escape($new);
 
         $sql = "UPDATE `preference` SET `name`='$new' WHERE `name`='$old'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
     }
 
     /**
@@ -346,10 +347,10 @@ class Preference extends database_object
         // First remove garbage
         $sql = "DELETE FROM `user_preference` USING `user_preference` LEFT JOIN `preference` ON `preference`.`id`=`user_preference`.`preference` " .
             "WHERE `preference`.`id` IS NULL";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Now add anything that we are missing back in, except System
-        $sql = "SELECT * FROM `preference` WHERE `type`!='system'";
+        //$sql = "SELECT * FROM `preference` WHERE `type`!='system'";
         //FIXME: Uhh WTF shouldn't there be something here??
 
     } // rebuild_preferences
@@ -457,6 +458,7 @@ class Preference extends database_object
             "LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user`='$user_id' AND `preference`.`catagory`!='system'";
         $db_results = Dba::read($sql);
 
+        $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $value = $row['system_value'] ? $row['system_value'] : $row['value'];
             $name = $row['name'];

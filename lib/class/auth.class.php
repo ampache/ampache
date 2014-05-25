@@ -84,6 +84,7 @@ class Auth
      */
     public static function login($username, $password, $allow_ui = false)
     {
+        $results = array();
         foreach (AmpConfig::get('auth_methods') as $method) {
             $function_name = $method . '_auth';
 

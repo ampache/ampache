@@ -100,7 +100,6 @@ switch ($_REQUEST['action']) {
     break;
     case 'artist_random':
         $artist = new Artist($_REQUEST['artist_id']);
-        $artist->get_count();
         $media_ids = $artist->get_random_songs();
     break;
     case 'album_random':
@@ -123,7 +122,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'playlist':
         $playlist = new Playlist($_REQUEST['playlist_id']);
-        $songs = $playlist->get_songs($_REQUEST['song']);
+        $songs = $playlist->get_songs();
         foreach ($songs as $song) {
             $media_ids[] = array(
                 'object_type' => 'song',
@@ -141,9 +140,10 @@ switch ($_REQUEST['action']) {
     break;
     case 'playlist_random':
         $playlist = new Playlist($_REQUEST['playlist_id']);
-        $media_ids = $playlist->get_random_songs();
+        $media_ids = $playlist->get_random_items();
     break;
     case 'random':
+        $matchlist = array();
         if ($_REQUEST['genre'][0] != '-1') {
             $matchlist['genre'] = $_REQUEST['genre'];
         }

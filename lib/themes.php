@@ -81,7 +81,7 @@ function get_theme($name)
 */
 function get_theme_author($theme_name)
 {
-    $theme_path = AmpConfig::get('prefix') . '/themes/' . AmpConfig::get('theme_name') . '/theme.cfg.php';
+    $theme_path = AmpConfig::get('prefix') . '/themes/' . $theme_name . '/theme.cfg.php';
     $results = read_config($theme_path);
 
     return $results['author'];

@@ -46,14 +46,14 @@ switch ($_REQUEST['action']) {
         $playlist = new Search();
         $playlist->parse_rules(Search::clean_request($_REQUEST));
         $playlist->save();
-    default:
-        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
     break;
     case 'descriptor':
         // This is a little special we don't want header/footers so trash what we've got in the OB
         ob_clean();
         require_once AmpConfig::get('prefix') . '/templates/show_search_descriptor.inc.php';
         exit;
+    default:
+        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
     break;
 }
 

@@ -25,6 +25,7 @@
  */
 if (!defined('AJAX_INCLUDE')) { exit; }
 
+$results = array();
 switch ($_REQUEST['action']) {
     case 'delete_track':
         // Create the object and remove the track

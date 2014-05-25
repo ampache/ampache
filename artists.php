@@ -48,59 +48,6 @@ switch ($_REQUEST['action']) {
         $target_url = AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
         require_once AmpConfig::get('prefix') . '/templates/show_update_items.inc.php';
     break;
-    case 'rename':
-        //die if not enough permissions
-        if (!$user->has_access('100')) { UI::access_denied(); }
-
-        /* Get the artist */
-        $artist = new Artist($_REQUEST['artist']);
-
-        //check if we've been given a target
-        if ((isset($_POST['artist_id']) && $_POST['artist_id'] != $artist->id ) || (isset($_POST['artist_name']) &&  $_POST['artist_name'] != "")) {
-
-            //if we want to update id3 tags, then get the array of ids now, it's too late afterwards
-            if (make_bool($_POST['update_id3']))
-                $songs = $artist->get_songs();
-
-            $ret = 0;
-            $newname = "";
-            $newid = 0;
-            //the manual rename takes priority, but if they tested out the insert thing ignore
-            if ($_POST['artist_name'] != "" && $_POST['artist_name'] != $artist->name) {
-                //then just change the name of the artist in the db
-                $ret = $artist->rename($_POST['artist_name']);
-                $newid = $ret;
-                $newname = $_POST['artist_name'];
-            }
-            //new id?
-            elseif ($_POST['artist_id'] != $artist->id) {
-                //merge with other artist
-                $ret = $artist->merge($_POST['artist_id']);
-                $newid = $_POST['artist_id'];
-                $newname = $ret;
-            } // elseif different artist and id
-            //if no changes, no changes
-
-            // show something other than a blank screen after this
-            if ($ret) {
-                show_confirmation (
-                    T_('Renamed artist'),
-                    sprintf(T_('%1$s is now known as %2$s'), $artist->name, $newname),
-                    AmpConfig::get('web_path') . "/artists.php?action=show&artist=" . $newid
-                );
-            }
-
-        }  // if we've got the needed variables
-
-        /* Else we've got an error! But be lenient, and just show the form again */
-        else {
-            require AmpConfig::get('prefix') . '/templates/show_rename_artist.inc.php';
-        }
-        break;
-    case 'show_rename':
-        $artist = new Artist($_REQUEST['artist']);
-        require AmpConfig::get('prefix') . '/templates/show_rename_artist.inc.php';
-    break;
     case 'match':
     case 'Match':
         $match = scrub_in($_REQUEST['match']);

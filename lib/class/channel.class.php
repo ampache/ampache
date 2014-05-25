@@ -28,6 +28,7 @@ class Channel extends database_object
     public $port;
     public $start_date;
     public $pid;
+    public $listeners;
     public $peak_listeners;
     public $object_type;
     public $object_id;
@@ -180,7 +181,7 @@ class Channel extends database_object
     public function format()
     {
         $this->tags = Tag::get_top_tags('channel', $this->id);
-        $this->f_tags = Tag::get_display($this->tags, $this->id, 'channel');
+        $this->f_tags = Tag::get_display($this->tags);
     }
 
     public function get_target_object()
@@ -260,8 +261,6 @@ class Channel extends database_object
 
     public function get_channel_state()
     {
-        $state = T_("Unknown");
-
         if ($this->check_channel()) {
             $state = T_("Running");
         } else {
@@ -359,7 +358,7 @@ class Channel extends database_object
                     if (feof($this->transcoder['handle'])) {
                         $this->media->set_played();
                         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-                            $stderr = fread($this->transcoder['stderr'], 4096);
+                            fread($this->transcoder['stderr'], 4096);
                             fclose($this->transcoder['stderr']);
                         }
                         fclose($this->transcoder['handle']);

@@ -282,6 +282,7 @@ function generate_config($current)
 
     $data = explode("\n",$dist);
 
+    $final = "";
     foreach ($data as $line) {
         if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/",$line,$matches)
             || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)

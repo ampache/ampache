@@ -26,6 +26,11 @@ class Shoutbox
     public $object_type;
     public $object_id;
     public $user;
+    public $sticky;
+    public $text;
+    public $data;
+    
+    public $f_link;
 
     /**
      * Constructor
@@ -170,7 +175,7 @@ class Shoutbox
                 $image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . AmpConfig::get('web_path') . "/image.php?id=" . $song->album . "&amp;thumb=1\" />";
             break;
             default:
-                // Rien a faire
+                $image_string = "";
             break;
         } // end switch
 
@@ -187,7 +192,7 @@ class Shoutbox
         $sticky     = isset($data['sticky']) ? 1 : 0;
         $sql = "INSERT INTO `user_shout` (`user`,`date`,`text`,`sticky`,`object_id`,`object_type`, `data`) " .
             "VALUES (? , ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($GLOBALS['user']->id, time(), strip_tags($data['comment']), $sticky, $data['object_id'], $data['object_type'], $data['data']));
+        Dba::write($sql, array($GLOBALS['user']->id, time(), strip_tags($data['comment']), $sticky, $data['object_id'], $data['object_type'], $data['data']));
 
         $insert_id = Dba::insert_id();
 
@@ -206,7 +211,7 @@ class Shoutbox
         $sticky     = make_bool($data['sticky']);
 
         $sql = "UPDATE `user_shout` SET `text`='$text', `sticky`='$sticky' WHERE `id`='$id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
 
@@ -235,7 +240,7 @@ class Shoutbox
         // Delete the shoutbox post
         $shout_id = Dba::escape($shout_id);
         $sql = "DELETE FROM `user_shout` WHERE `id`='$shout_id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
     } // delete
 

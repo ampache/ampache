@@ -74,6 +74,7 @@ class Random
      */
     public static function get_single_song($type)
     {
+        $song_id = 0;
         $method_name = 'get_' . $type;
 
         if (method_exists('Random', $method_name)) {
@@ -125,6 +126,7 @@ class Random
 
         // Get the last album played by us
         $data = $GLOBALS['user']->get_recently_played('1', 'album');
+        $where_sql = "";
         if ($data[0]) {
             $where_sql = " AND `song`.`album`='" . $data[0] . "' ";
         }
@@ -157,6 +159,7 @@ class Random
         $results = array();
 
         $data = $GLOBALS['user']->get_recently_played('1','artist');
+        $where_sql = "";
         if ($data[0]) {
             $where_sql = " AND `song`.`artist`='" . $data[0] . "' ";
         }
@@ -192,6 +195,7 @@ class Random
         // Generate our matchlist
 
         /* If they've passed -1 as limit then get everything */
+        $limit_sql = "";
         if ($data['random'] == "-1") { unset($data['random']); } else { $limit_sql = "LIMIT " . Dba::escape($limit); }
 
         $search_data = Search::clean_request($data);
@@ -204,6 +208,7 @@ class Random
             $search_info = $search->to_sql();
         }
 
+        $sql = "";
         switch ($type) {
             case 'song':
                 $sql = "SELECT `song`.`id`, `size`, `time` " .
@@ -272,6 +277,10 @@ class Random
         $db_results = Dba::read($sql);
         $results = array();
 
+        $size_total = 0;
+        $fuzzy_size = 0;
+        $time_total = 0;
+        $fuzzy_time = 0;
         while ($row = Dba::fetch_assoc($db_results)) {
 
             // If size limit is specified
@@ -331,7 +340,6 @@ class Random
         switch ($type) {
             case 'song':
                 return $results;
-            break;
             case 'album':
                 $songs = array();
                 foreach ($results as $result) {
@@ -339,7 +347,6 @@ class Random
                     $songs = array_merge($songs, $album->get_songs());
                 }
                 return $songs;
-            break;
             case 'artist':
                 $songs = array();
                 foreach ($results as $result) {
@@ -347,10 +354,8 @@ class Random
                     $songs = array_merge($songs, $artist->get_songs());
                 }
                 return $songs;
-            break;
             default:
                 return false;
-            break;
         }
     } // advanced
 

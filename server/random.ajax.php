@@ -25,6 +25,7 @@
  */
 if (!defined('AJAX_INCLUDE')) { exit; }
 
+$results = array();
 switch ($_REQUEST['action']) {
     case 'song':
         $songs = Random::get_default();
@@ -73,11 +74,13 @@ switch ($_REQUEST['action']) {
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;
     case 'advanced_random':
-        $object_ids = Random::advanced($_POST);
+        $object_ids = Random::advanced('song', $_POST);
 
         // First add them to the active playlist
-        foreach ($object_ids as $object_id) {
-            $GLOBALS['user']->playlist->add_object($object_id,'song');
+        if (is_array($object_ids)) {
+            foreach ($object_ids as $object_id) {
+                $GLOBALS['user']->playlist->add_object($object_id,'song');
+            }
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
 

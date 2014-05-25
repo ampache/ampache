@@ -299,8 +299,6 @@ class Democratic extends Tmp_Playlist
             return $results['id'];
         }
 
-        return null;
-
     } // get_next_object
 
     /**
@@ -411,7 +409,7 @@ class Democratic extends Tmp_Playlist
         if (!$results = Dba::fetch_assoc($db_results)) {
             $sql = "INSERT INTO `tmp_playlist_data` (`tmp_playlist`,`object_id`,`object_type`,`track`) " .
                 "VALUES ('$tmp_playlist','$object_id','$object_type',$track)";
-            $db_results = Dba::write($sql);
+            Dba::write($sql);
             $results['id'] = Dba::insert_id();
         }
 
@@ -419,7 +417,7 @@ class Democratic extends Tmp_Playlist
         $time = time();
         $sql = "INSERT INTO user_vote (`user`,`object_id`,`date`) " .
             "VALUES ('" . Dba::escape($GLOBALS['user']->id) . "','" . $results['id'] . "','$time')";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
     }
@@ -436,7 +434,7 @@ class Democratic extends Tmp_Playlist
         $user_id    = Dba::escape($GLOBALS['user']->id);
 
         $sql = "DELETE FROM `user_vote` WHERE `object_id`='$object_id' AND `user`='$user_id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         /* Clean up anything that has no votes */
         self::prune_tracks();
@@ -454,10 +452,10 @@ class Democratic extends Tmp_Playlist
         $row_id        = Dba::escape($row_id);
 
         $sql = "DELETE FROM `user_vote` WHERE `object_id`='$row_id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         $sql = "DELETE FROM `tmp_playlist_data` WHERE `id`='$row_id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
 
@@ -488,10 +486,10 @@ class Democratic extends Tmp_Playlist
         $democratic_id = Dba::escape($democratic_id);
 
         $sql = "DELETE FROM `democratic` WHERE `id`='$democratic_id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         $sql = "DELETE FROM `tmp_playlist` WHERE `session`='$democratic_id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         self::prune_tracks();
 
@@ -513,7 +511,7 @@ class Democratic extends Tmp_Playlist
         $id = Dba::escape($this->id);
 
         $sql = "UPDATE `democratic` SET `name` = ?, `base_playlist` = ?,`cooldown` = ?, `primary` = ?, `level` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($name, $base, $cool, $default, $level, $id));
+        Dba::write($sql, array($name, $base, $cool, $default, $level, $id));
 
         return true;
 
@@ -562,7 +560,7 @@ class Democratic extends Tmp_Playlist
             "LEFT JOIN `user_vote` ON `tmp_playlist_data`.`id`=`user_vote`.`object_id` " .
             "LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id`=`tmp_playlist_data`.`tmp_playlist` " .
             "WHERE `user_vote`.`object_id` IS NULL AND `tmp_playlist`.`type` = 'vote'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
 
@@ -581,7 +579,7 @@ class Democratic extends Tmp_Playlist
         $sql = "DELETE FROM `user_vote` USING `user_vote` " .
             "LEFT JOIN `tmp_playlist_data` ON `user_vote`.`object_id` = `tmp_playlist_data`.`id` " .
             "WHERE `tmp_playlist_data`.`tmp_playlist`='$tmp_id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         // Prune!
         self::prune_tracks();
@@ -602,7 +600,7 @@ class Democratic extends Tmp_Playlist
         $sql = "DELETE FROM `user_vote` USING `user_vote` " .
             "LEFT JOIN `tmp_playlist_data` ON `user_vote`.`object_id`=`tmp_playlist_data`.`id` " .
             "WHERE `tmp_playlist_data`.`id` IS NULL";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
 

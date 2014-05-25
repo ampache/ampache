@@ -28,6 +28,7 @@ if (!defined('AJAX_INCLUDE')) { exit; }
 
 debug_event('stream.ajax.php', 'Called for action {'.$_REQUEST['action'].'}', 5);
 
+$results = array();
 switch ($_REQUEST['action']) {
     case 'set_play_type':
         // Make sure they have the rights to do this

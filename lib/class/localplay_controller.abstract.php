@@ -92,15 +92,17 @@ abstract class localplay_controller
         $data = array();
 
         $variables = parse_url($url,PHP_URL_QUERY);
-        parse_str($variables,$data);
+        if ($variables) {
+            parse_str($variables,$data);
 
-        foreach ($primary_array as $pkey) {
-            if ($data[$pkey]) {
-                $data['primary_key'] = $pkey;
-                return $data;
-            }
+            foreach ($primary_array as $pkey) {
+                if ($data[$pkey]) {
+                    $data['primary_key'] = $pkey;
+                    return $data;
+                }
 
-        } // end foreach
+            } // end foreach
+        }
 
         return $data;
 

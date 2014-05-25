@@ -28,8 +28,6 @@
  */
 function update_preferences($pref_id=0)
 {
-    $pref_user = new User($pref_id);
-
     /* Get current keys */
     $sql = "SELECT `id`,`name`,`type` FROM `preference`";
 
@@ -38,6 +36,7 @@ function update_preferences($pref_id=0)
 
     $db_results = Dba::read($sql);
 
+    $results = array();
     // Collect the current possible keys
     while ($r = Dba::fetch_assoc($db_results)) {
         $results[] = array('id' => $r['id'], 'name' => $r['name'],'type' => $r['type']);
@@ -46,7 +45,6 @@ function update_preferences($pref_id=0)
     /* Foreach through possible keys and assign them */
     foreach ($results as $data) {
         /* Get the Value from POST/GET var called $data */
-        $type         = $data['type'];
         $name         = $data['name'];
         $apply_to_all    = 'check_' . $data['name'];
         $new_level    = 'level_' . $data['name'];
@@ -107,7 +105,7 @@ function update_preference($user_id,$name,$pref_id,$value)
     /* Else make sure that the current users has the right to do this */
     if (Preference::has_access($name)) {
         $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ? AND `user` = ?";
-        $db_results = Dba::write($sql, array($value, $pref_id, $user_id));
+        Dba::write($sql, array($value, $pref_id, $user_id));
         return true;
     }
 
@@ -121,9 +119,6 @@ function update_preference($user_id,$name,$pref_id,$value)
  */
 function create_preference_input($name,$value)
 {
-    $len = strlen($value);
-    if ($len <= 1) { $len = 8; }
-
     if (!Preference::has_access($name)) {
         if ($value == '1') {
             echo "Enabled";

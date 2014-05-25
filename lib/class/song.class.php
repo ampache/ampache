@@ -45,7 +45,9 @@ class Song extends database_object implements media
     public $update_time;
     public $mbid; // MusicBrainz ID
     public $catalog;
+    public $waveform;
     
+    public $tags;
     public $language;
     public $comment;
     public $lyrics;
@@ -57,7 +59,17 @@ class Song extends database_object implements media
     public $f_time;
     public $f_track;
     public $f_bitrate;
-    public $link;    
+    public $link;
+    public $f_file;
+    public $f_title_full;
+    public $f_link;
+    public $f_album_link;
+    public $f_artist_link;
+    public $f_tags;
+    public $f_size;
+    public $f_lyrics;
+    public $f_pattern;
+    public $count;
 
     /* Setting Variables */
     public $_fake = false; // If this is a 'construct_from_array' object
@@ -327,39 +339,29 @@ class Song extends database_object implements media
             case 'spx':
             case 'ogg':
                 return 'application/ogg';
-            break;
             case 'wma':
             case 'asf':
                 return 'audio/x-ms-wma';
-            break;
             case 'mp3':
             case 'mpeg3':
                 return 'audio/mpeg';
-            break;
             case 'rm':
             case 'ra':
                 return 'audio/x-realaudio';
-            break;
             case 'flac';
                 return 'audio/x-flac';
-            break;
             case 'wv':
                 return 'audio/x-wavpack';
-            break;
             case 'aac':
             case 'mp4':
             case 'm4a':
                 return 'audio/mp4';
-            break;
             case 'aacp':
                 return 'audio/aacp';
-            break;
             case 'mpc':
                 return 'audio/x-musepack';
-            break;
             default:
                 return 'audio/mpeg';
-            break;
         }
 
         return true;
@@ -423,14 +425,14 @@ class Song extends database_object implements media
     public static function get_duplicate_info($dupe, $search_type)
     {
         $sql = 'SELECT `id` FROM `song` ' .
-            "WHERE `title`='" . Dba::escape($item['title']) . "' ";
+            "WHERE `title`='" . Dba::escape($dupe['title']) . "' ";
 
         if ($search_type == 'artist_title' ||
             $search_type == 'artist_album_title') {
-            $sql .= "AND `artist`='" . Dba::escape($item['artist']) . "' ";
+            $sql .= "AND `artist`='" . Dba::escape($dupe['artist']) . "' ";
         }
         if ($search_type == 'artist_album_title') {
-            $sql .= "AND `album` = '" . Dba::escape($item['album']) . "' ";
+            $sql .= "AND `album` = '" . Dba::escape($dupe['album']) . "' ";
         }
 
         $sql .= 'ORDER BY `time`,`bitrate`,`size`';
@@ -503,7 +505,8 @@ class Song extends database_object implements media
     {
         // Remove some stuff we don't care about
         unset($song->catalog,$song->played,$song->enabled,$song->addition_time,$song->update_time,$song->type);
-
+        
+        $array = array();
         $string_array = array('title','comment','lyrics');
         $skip_array = array('id','tag_id','mime','mb_artistid','mbid');
 
@@ -569,7 +572,6 @@ class Song extends database_object implements media
                         $function = 'update_' . $key;
                         self::$function($value, $this->id);
                         $this->$key = $value;
-                        $updated = 1;
                     }
                 break;
                 case 'edit_tags':
@@ -612,7 +614,7 @@ class Song extends database_object implements media
             "`mbid`='$mbid', " .
             "`update_time`='$update_time' WHERE `id`='$song_id'";
 
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         $comment     = Dba::escape($new_song->comment);
         $language    = Dba::escape($new_song->language);
@@ -620,7 +622,7 @@ class Song extends database_object implements media
 
         $sql = "UPDATE `song_data` SET `lyrics`='$lyrics', `language`='$language', `comment`='$comment' " .
             "WHERE `song_id`='$song_id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
     } // update_song
 
@@ -808,7 +810,7 @@ class Song extends database_object implements media
         if (!strlen(trim($value)) && $field != 'comment') { return false; }
 
         $sql = "UPDATE `song` SET `$field` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($value, $song_id));
+        Dba::write($sql, array($value, $song_id));
 
         return true;
 
@@ -825,7 +827,7 @@ class Song extends database_object implements media
         if (!Access::check('interface',$level)) { return false; }
 
         $sql = "UPDATE `song_data` SET `$field` = ? WHERE `song_id` = ?";
-        $db_results = Dba::write($sql, array($value, $song_id));
+        Dba::write($sql, array($value, $song_id));
 
         return true;
 
@@ -878,7 +880,7 @@ class Song extends database_object implements media
 
         // Get the top tags
         $this->tags = Tag::get_top_tags('song', $this->id);
-        $this->f_tags = Tag::get_display($this->tags, $this->id, 'song');
+        $this->f_tags = Tag::get_display($this->tags);
 
         // Format the size
         $this->f_size = UI::format_bytes($this->size);
@@ -977,12 +979,16 @@ class Song extends database_object implements media
      */
     public function get_rel_path($file_path=0,$catalog_id=0)
     {
+        $info = null;
         if (!$file_path) {
             $info = $this->_get_info();
-            $file_path = $info->file;
+            $file_path = $info['file'];
         }
         if (!$catalog_id) {
-            $catalog_id = $info->catalog;
+            if (!is_array($info)) {
+                $info = $this->_get_info();
+            }
+            $catalog_id = $info['catalog'];
         }
         $catalog = Catalog::create_from_id( $catalog_id );
         return $catalog->get_rel_path($file_path);

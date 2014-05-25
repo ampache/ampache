@@ -45,6 +45,7 @@ if (isset($_REQUEST['show_header']) && $_REQUEST['show_header']) {
 
 debug_event('browse.ajax.php', 'Called for action: {'.$_REQUEST['action'].'}', '5');
 
+$results = array();
 switch ($_REQUEST['action']) {
     case 'browse':
         $object_ids = array();
@@ -62,7 +63,7 @@ switch ($_REQUEST['action']) {
             $browse->set_sort($_REQUEST['sort']);
         }
 
-        if ($_REQUEST['catalog_key'] || $SESSION['catalog'] != 0) {
+        if ($_REQUEST['catalog_key'] || $_SESSION['catalog'] != 0) {
             $browse->set_filter('catalog',$_REQUEST['catalog_key']);
             $_SESSION['catalog'] = $_REQUEST['catalog_key'];
         } elseif ($_REQUEST['catalog_key'] == 0) {
@@ -115,8 +116,7 @@ switch ($_REQUEST['action']) {
                 $key = 'live_stream_' . $radio->id;
             break;
             default:
-
-            break;
+                exit;
         } // end switch on type
 
         $results[$key] = '';

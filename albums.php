@@ -108,7 +108,7 @@ switch ($_REQUEST['action']) {
         $options['keyword']    = trim($artist . " " . $album_name);
 
         // Attempt to find the art.
-        $images = $art->gather($options,'6');
+        $images = $art->gather($options);
 
         if (!empty($_REQUEST['cover'])) {
             $path_info = pathinfo($_REQUEST['cover']);

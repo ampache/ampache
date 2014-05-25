@@ -387,14 +387,14 @@ class Subsonic_XML_Data
 
         foreach ($tags as $tag) {
             $otag = new Tag($tag['id']);
-            $xgenre = $xgenres->addChild('genre', $otag->name);
+            $xgenres->addChild('genre', $otag->name);
         }
     }
 
     public static function addVideos($xml)
     {
         // Not supported yet
-        $xvideos = $xml->addChild('videos');
+        $xml->addChild('videos');
     }
 
     public static function addPlaylists($xml, $playlists)

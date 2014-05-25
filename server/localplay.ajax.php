@@ -25,6 +25,7 @@
  */
 if (!defined('AJAX_INCLUDE')) { exit; }
 
+$results = array();
 switch ($_REQUEST['action']) {
     case 'set_instance':
         // Make sure they they are allowed to do this

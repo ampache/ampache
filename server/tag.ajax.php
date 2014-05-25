@@ -25,6 +25,7 @@
  */
 if (!defined('AJAX_INCLUDE')) { exit; }
 
+$results = array();
 switch ($_REQUEST['action']) {
     case 'show_add_tag':
 
@@ -47,7 +48,6 @@ switch ($_REQUEST['action']) {
         $tag->delete();
         header('Location: ' . AmpConfig::get('web_path') . '/browse.php?action=tag');
         exit;
-    break;
     case 'remove_tag_map':
         debug_event('tag.ajax', 'Removing tag map...', '5');
         $tag = new Tag($_GET['tag_id']);

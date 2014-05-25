@@ -27,6 +27,20 @@ class Video extends database_object implements media
     public $enabled;
     public $file;
     public $size;
+    public $video_codec;
+    public $audio_codec;
+    public $resolution_x;
+    public $resolution_y;
+    public $time;
+    public $mime;
+    
+    public $tags;
+    public $f_title;
+    public $f_link;
+    public $f_codec;
+    public $f_resolution;
+    public $f_tags;
+    public $f_length;
 
     /**
      * Constructor

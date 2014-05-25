@@ -40,7 +40,6 @@ class Dba
 
     private static $_sql;
     private static $_error;
-    private static $config;
 
     /**
      * constructor
@@ -93,12 +92,10 @@ class Dba
         if (!$stmt) {
             self::$_error = json_encode($dbh->errorInfo());
             debug_event('Dba', 'Error: ' . json_encode($dbh->errorInfo()), 1);
-            $dbh = null;
             self::disconnect();
         } else if ($stmt->errorCode() && $stmt->errorCode() != '00000') {
             self::$_error = json_encode($stmt->errorInfo());
             debug_event('Dba', 'Error: ' . json_encode($stmt->errorInfo()), 1);
-            $dbh = null;
             self::disconnect();
             return false;
         }
@@ -458,8 +455,8 @@ class Dba
                 $target_charset = 'koi8r';
                 $target_collation = 'koi8r_general_ci';
                 break;
-            default;
             case 'UTF-8':
+            default:
                 $target_charset = 'utf8';
                 $target_collation = 'utf8_unicode_ci';
                 break;
@@ -487,7 +484,7 @@ class Dba
 
         // Alter the charset for the entire database
         $sql = "ALTER DATABASE `" . AmpConfig::get('database_name') . "` DEFAULT CHARACTER SET $target_charset COLLATE $target_collation";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         $sql = "SHOW TABLES";
         $db_results = Dba::read($sql);
@@ -499,7 +496,7 @@ class Dba
 
             // Change the tables default charset and colliation
             $sql = "ALTER TABLE `" . $row['0'] . "`  DEFAULT CHARACTER SET $target_charset COLLATE $target_collation";
-            $alter_table = Dba::write($sql);
+            Dba::write($sql);
 
             // Iterate through the columns of the table
             while ($table = Dba::fetch_assoc($describe_results)) {
@@ -533,10 +530,10 @@ class Dba
 
         while ($row = Dba::fetch_row($db_results)) {
             $sql = "OPTIMIZE TABLE `" . $row[0] . "`";
-            $db_results_inner = Dba::write($sql);
+            Dba::write($sql);
 
             $sql = "ANALYZE TABLE `" . $row[0] . "`";
-            $db_results_inner = Dba::write($sql);
+            Dba::write($sql);
         }
     }
 }

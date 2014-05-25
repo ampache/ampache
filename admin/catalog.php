@@ -243,7 +243,6 @@ switch ($_REQUEST['action']) {
         $body    = '';
         show_confirmation($title, $body, $url);
     break;
-    default:
     case 'show_catalogs':
         require_once AmpConfig::get('prefix') . '/templates/show_manage_catalogs.inc.php';
     break;

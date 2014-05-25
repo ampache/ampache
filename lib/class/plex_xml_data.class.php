@@ -169,20 +169,6 @@ class Plex_XML_Data
         return AmpConfig::get('myplex_published');
     }
 
-    public static function createFailedResponse($version = "")
-    {
-        $response = self::createResponse($version);
-        $response->addAttribute('status', 'failed');
-        return $response;
-    }
-
-    public static function createSuccessResponse($version = "")
-    {
-        $response = self::createResponse($version);
-        $response->addAttribute('status', 'ok');
-        return $response;
-    }
-
     public static function createContainer()
     {
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><MediaContainer/>');
@@ -651,10 +637,12 @@ class Plex_XML_Data
         self::addArtistMeta($xdir, $artist);
 
         $tags = Tag::get_top_tags('artist', $artist->id);
-        foreach ($tags as $tag_id=>$value) {
-            $tag = new Tag($tag_id);
-            $xgenre = $xdir->addChild('Genre');
-            $xgenre->addAttribute('tag', $tag->name);
+        if (is_array($tags)) {
+            foreach ($tags as $tag_id=>$value) {
+                $tag = new Tag($tag_id);
+                $xgenre = $xdir->addChild('Genre');
+                $xgenre->addAttribute('tag', $tag->name);
+            }
         }
     }
 
@@ -703,10 +691,12 @@ class Plex_XML_Data
         }
 
         $tags = Tag::get_top_tags('album', $album->id);
-        foreach ($tags as $tag_id=>$value) {
-            $tag = new Tag($tag_id);
-            $xgenre = $xdir->addChild('Genre');
-            $xgenre->addAttribute('tag', $tag->name);
+        if (is_array($tags)) {
+            foreach ($tags as $tag_id=>$value) {
+                $tag = new Tag($tag_id);
+                $xgenre = $xdir->addChild('Genre');
+                $xgenre->addAttribute('tag', $tag->name);
+            }
         }
     }
 
@@ -789,6 +779,7 @@ class Plex_XML_Data
         $time = $song->time * 1000;
         $xdir->addAttribute('title', $song->title);
         $albumid = self::getAlbumId($song->album);
+        $album = new Album($song->album);
         $xdir->addAttribute('parentRatingKey', $albumid);
         $xdir->addAttribute('parentKey', self::getMetadataUri($albumid));
         $xdir->addAttribute('originalTitle', $album->f_artist_full);
@@ -831,7 +822,7 @@ class Plex_XML_Data
         $xml->addAttribute('ratingKey', $id);
         $xml->addAttribute('key', self::getMetadataUri($id));
 
-        return $xsong;
+        return $xml;
     }
 
     public static function createMyPlexAccount()

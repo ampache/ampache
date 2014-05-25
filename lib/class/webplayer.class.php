@@ -24,7 +24,7 @@ class WebPlayer
 {
     public static function is_playlist_radio($playlist)
     {
-        $radioas = array();
+        $radios = array();
 
         foreach ($playlist->urls as $item) {
             if ($item->type == "radio") {
@@ -67,6 +67,7 @@ class WebPlayer
         $types = array('real' => 'mp3', 'player' => '');
 
         $browsers = array_keys(self::browser_info());
+        $browser = '';
         if (count($browsers) > 0 ) {
             $browser = $browsers[0];
         }
@@ -229,7 +230,7 @@ class WebPlayer
         $js['filetype'] = $types['player'];
         $js['url'] = $url;
         if ($urlinfo['type'] == 'song') {
-            $js['poster'] = $item->image_url . (!$iframed ? '&thumb=4' : '');
+            $js['poster'] = $item->image_url . (!AmpConfig::get('iframes') ? '&thumb=4' : '');
         }
 
         debug_event("webplayer.class.php", "Return get_media_js_param {".json_encode($js)."}", 5);

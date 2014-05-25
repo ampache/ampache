@@ -34,6 +34,18 @@ class Song_Preview extends database_object implements media
     public $mime;
     public $mbid; // MusicBrainz ID
     public $enabled = true;
+    
+    public $f_file;
+    public $f_artist;
+    public $f_artist_full;
+    public $f_artist_link;
+    public $f_title;
+    public $f_title_full;
+    public $link;
+    public $f_link;
+    public $f_album_link;
+    public $f_album;
+    public $f_track;
 
     /**
      * Constructor
@@ -114,6 +126,7 @@ class Song_Preview extends database_object implements media
             "WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
+        $artists = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             parent::add_to_cache('song_preview', $row['id'], $row);
             if ($row['artist']) {

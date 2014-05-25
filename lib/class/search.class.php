@@ -34,6 +34,9 @@ class Search extends playlist_object
 
     public $basetypes;
     public $types;
+    
+    public $f_link;
+    public $f_name_link;
 
     /**
      * constructor
@@ -469,6 +472,7 @@ class Search extends playlist_object
      */
     public static function clean_request($data)
     {
+        $request = array();
         foreach ($data as $key => $value) {
             $prefix = substr($key, 0, 4);
             $value = trim($value);
@@ -554,8 +558,8 @@ class Search extends playlist_object
 
         // Generate BASE SQL
 
+        $limit_sql = "";
         if ($limit > 0) {
-            $limit_sql = ' LIMIT ' . $limit;
             $offset = intval($data['offset']);
             $limit_sql = ' LIMIT ';
             if ($offset) $limit_sql .= $offset . ",";
@@ -586,7 +590,7 @@ class Search extends playlist_object
     {
         $id = Dba::escape($this->id);
         $sql = "DELETE FROM `search` WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($id));
+        Dba::write($sql, array($id));
 
         return true;
     }
@@ -715,7 +719,7 @@ class Search extends playlist_object
         }
 
         $sql = "INSERT INTO `search` (`name`, `type`, `user`, `rules`, `logic_operator`) VALUES (?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($this->name, $this->type, $GLOBALS['user']->id, serialize($this->rules), $this->logic_operator));
+        Dba::write($sql, array($this->name, $this->type, $GLOBALS['user']->id, serialize($this->rules), $this->logic_operator));
         $insert_id = Dba::insert_id();
         $this->id = $insert_id;
         return $insert_id;
@@ -729,6 +733,7 @@ class Search extends playlist_object
      */
     public function to_js()
     {
+        $js = "";
         foreach ($this->rules as $rule) {
             $js .= '<script type="text/javascript">' .
                 'SearchRow.add("' . $rule[0] . '","' .
@@ -785,7 +790,7 @@ class Search extends playlist_object
         }
 
         if ($type == 'boolean') {
-            return make_bool($input);
+            return make_bool($data);
         }
 
         return $data;
@@ -807,8 +812,10 @@ class Search extends playlist_object
 
         foreach ($this->rules as $rule) {
             $type = $this->name_to_basetype($rule[0]);
-            foreach ($this->basetypes[$type] as $operator) {
-                if ($operator['name'] == $rule[1]) {
+            $operator = array();
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
                     break;
                 }
             }
@@ -1031,12 +1038,11 @@ class Search extends playlist_object
                 case 'rating':
                     $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['rating'] = true;
-                    break;
+                break;
                 case 'played_times':
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = 'song'" .
                         "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
-                    break;
                 break;
                 case 'catalog':
                     $where[] = "`song`.`catalog` $sql_match_operator '$input'";
@@ -1076,7 +1082,7 @@ class Search extends playlist_object
 
         $join['catalog'] = AmpConfig::get('catalog_disable');
 
-        $where_sql = implode(" $sql_logic_operator ", $where) . $group;
+        $where_sql = implode(" $sql_logic_operator ", $where);
 
         // now that we know which things we want to JOIN...
         if ($join['artist']) {
@@ -1145,8 +1151,10 @@ class Search extends playlist_object
 
         foreach ($this->rules as $rule) {
             $type = $this->name_to_basetype($rule[0]);
-            foreach ($this->basetypes[$type] as $operator) {
-                if ($operator['name'] == $rule[1]) {
+            $operator = array();
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
                     break;
                 }
             }

@@ -38,6 +38,10 @@ class Radio extends database_object implements media
     public $genre;
     public $codec;
     public $catalog;
+    
+    public $f_link;
+    public $f_name_link;
+    public $f_url_link;
 
     /**
      * Constructor
@@ -152,7 +156,7 @@ class Radio extends database_object implements media
     public function delete()
     {
         $sql = "DELETE FROM `live_stream` WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($this->id));
+        Dba::write($sql, array($this->id));
 
         return true;
 
@@ -206,7 +210,7 @@ class Radio extends database_object implements media
         $db_results = Dba::read($sql, $params);
         $radios = array();
 
-        while ($results = Dba::featch_assoc($db_results)) {
+        while ($results = Dba::fetch_assoc($db_results)) {
             $radios[] = $results['id'];
         }
 

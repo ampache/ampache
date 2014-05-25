@@ -68,8 +68,8 @@ if ($type == 'playlist') {
 }
 
 /* This is specifically for tmp playlist requests */
-$demo_id    = scrub_in($_REQUEST['demo_id']);
-$random     = scrub_in($_REQUEST['random']);
+$demo_id    = Dba::escape($_REQUEST['demo_id']);
+$random     = Dba::escape($_REQUEST['random']);
 
 /* First things first, if we don't have a uid/oid stop here */
 if (empty($oid) && empty($demo_id) && empty($random)) {
@@ -155,7 +155,7 @@ if (AmpConfig::get('access_control')) {
 } // access_control is enabled
 
 // Handle playlist downloads
-if ($type == 'playlist') {
+if ($type == 'playlist' && isset($playlist_type)) {
     $playlist = new Stream_Playlist($oid);
     // Some rudimentary security
     if ($uid != $playlist->user) {
@@ -181,6 +181,7 @@ if ($demo_id) {
         $oid = $democratic->get_next_object();
     } else {
         // Pull history
+        $song_cool_check = 0;
         $oid = $democratic->get_next_object($song_cool_check);
         $oids = $democratic->get_cool_songs();
         while (in_array($oid,$oids)) {
@@ -196,7 +197,7 @@ if ($demo_id) {
  * if we are doing random let's pull the random object
  */
 if ($random) {
-    if ($start < 1) {
+    if ($_REQUEST['start'] < 1) {
         $oid = Random::get_single_song($_REQUEST['random_type']);
         // Save this one in case we do a seek
         $_SESSION['random']['last'] = $oid;
@@ -225,7 +226,7 @@ if ($media->catalog) {
     if (!make_bool($media->enabled)) {
         debug_event('Play', "Error: $media->file is currently disabled, song skipped", '5');
         // Check to see if this is a democratic playlist, if so remove it completely
-        if ($demo_id) { $democratic->delete_from_oid($oid, 'song'); }
+        if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, 'song'); }
         exit;
     }
 
@@ -413,6 +414,8 @@ if (get_class($media) == 'Song') {
 
 // Handle Content-Range
 
+$start = 0;
+$end = 0;
 sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d", $start, $end);
 
 if ($start > 0 || $end > 0) {
@@ -449,7 +452,7 @@ if ($transcode) {
     header('Accept-Ranges: bytes');
 }
 
-$mime = $transcode
+$mime = ($transcode && isset($transcoder))
     ? $media->type_to_mime($transcoder['format'])
     : $media->mime;
 
@@ -498,7 +501,7 @@ if ($demo_id) { $democratic->delete_from_oid($oid,'song'); }
 
 if ($transcode) {
     if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-        $stderr = fread($transcoder['stderr'], 8192);
+        fread($transcoder['stderr'], 8192);
         fclose($transcoder['stderr']);
     }
     fclose($fp);

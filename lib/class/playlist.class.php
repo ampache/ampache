@@ -32,6 +32,9 @@ class Playlist extends playlist_object
     /* Variables from the database */
     public $genre;
     public $date;
+    
+    public $f_link;
+    public $f_name_link;
 
     /* Generated Elements */
     public $items = array();
@@ -129,7 +132,7 @@ class Playlist extends playlist_object
     public function get_track($track_id)
     {
         $sql = "SELECT * FROM `playlist_data` WHERE `id` = ? AND `playlist` = ?";
-        $db_results = Dba::read($sql, array($track_id, $playlist_id));
+        $db_results = Dba::read($sql, array($track_id, $this->id));
 
         $row = Dba::fetch_assoc($db_results);
 
@@ -202,13 +205,7 @@ class Playlist extends playlist_object
         $db_results = Dba::read($sql, array($this->id));
 
         while ($r = Dba::fetch_assoc($db_results)) {
-            if ($r['dyn_song']) {
-                $array = $this->get_dyn_songs($r['dyn_song']);
-                $results = array_merge($array,$results);
-            } else {
-                $results[] = $r['object_id'];
-            }
-
+            $results[] = $r['object_id'];
         } // end while
 
         return $results;
@@ -332,15 +329,13 @@ class Playlist extends playlist_object
     public function update_track_number($track_id, $index)
     {
         $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($index, $track_id));
+        Dba::write($sql, array($index, $track_id));
 
     } // update_track_number
 
     /**
      * add_songs
      * This takes an array of song_ids and then adds it to the playlist
-     * if you want to add a dyn_song you need to use the one shot function
-     * add_dyn_song
      */
     public function add_songs($song_ids=array(),$ordered=false)
     {
@@ -354,6 +349,7 @@ class Playlist extends playlist_object
         $base_track = $data['track'];
         debug_event('add_songs', 'Track number: '.$base_track, '5');
 
+        $i = 0;
         foreach ($song_ids as $song_id) {
             /* We need the songs track */
             $song = new Song($song_id);
@@ -370,7 +366,7 @@ class Playlist extends playlist_object
             if ($song->id) {
                 $sql = "INSERT INTO `playlist_data` (`playlist`,`object_id`,`object_type`,`track`) " .
                     " VALUES (?, ?, 'song', ?)";
-                $db_results = Dba::write($sql, array($this->id, $song->id, $track));
+                Dba::write($sql, array($this->id, $song->id, $track));
             } // if valid id
 
         } // end foreach songs
@@ -385,10 +381,9 @@ class Playlist extends playlist_object
     public static function create($name,$type)
     {
         $sql = "INSERT INTO `playlist` (`name`,`user`,`type`,`date`) VALUES (?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($name, $GLOBALS['user']->id, $type, time()));
+        Dba::write($sql, array($name, $GLOBALS['user']->id, $type, time()));
 
         $insert_id = Dba::insert_id();
-
         return $insert_id;
 
     } // create
@@ -410,7 +405,7 @@ class Playlist extends playlist_object
     public function delete_track($id)
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`id` = ? LIMIT 1";
-        $db_results = Dba::write($sql, array($this->id, $id));
+        Dba::write($sql, array($this->id, $id));
 
         return true;
 
@@ -423,7 +418,7 @@ class Playlist extends playlist_object
     public function delete_track_number($track)
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
-        $db_results = Dba::write($sql, array($this->id, $track));
+        Dba::write($sql, array($this->id, $track));
 
         return true;
 
@@ -436,13 +431,13 @@ class Playlist extends playlist_object
     public function delete()
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist` = ?";
-        $db_results = Dba::write($sql, array($this->id));
+        Dba::write($sql, array($this->id));
 
         $sql = "DELETE FROM `playlist` WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($this->id));
+        Dba::write($sql, array($this->id));
 
         $sql = "DELETE FROM `object_count` WHERE `object_type`='playlist' AND `object_id` = ?";
-        $db_results = Dba::write($sql, array($this->id));
+        Dba::write($sql, array($this->id));
 
         return true;
 

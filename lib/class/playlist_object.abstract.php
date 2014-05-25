@@ -31,6 +31,10 @@ abstract class playlist_object extends database_object
     public $name;
     public $user;
     public $type;
+    
+    public $f_type;
+    public $f_name;
+    public $f_user;
 
     /**
      * format
@@ -63,8 +67,6 @@ abstract class playlist_object extends database_object
         } else {
             return Access::check('interface','100');
         }
-
-        return false;
 
     } // has_access
 

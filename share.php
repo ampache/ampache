@@ -53,8 +53,7 @@ switch ($action) {
             }
         }
         UI::show_footer();
-        exit();
-    break;
+        exit;
     case 'create':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
@@ -86,8 +85,7 @@ switch ($action) {
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/stats.php?action=share');
         }
         UI::show_footer();
-        exit();
-    break;
+        exit;
     case 'show_delete':
         UI::show_header();
         $id = $_REQUEST['id'];
@@ -95,8 +93,7 @@ switch ($action) {
         $next_url = AmpConfig::get('web_path') . '/share.php?action=delete&id=' . scrub_out($id);
         show_confirmation(T_('Share Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_share');
         UI::show_footer();
-        exit();
-    break;
+        exit;
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
@@ -110,8 +107,7 @@ switch ($action) {
             show_confirmation(T_('Share Deleted'), T_('The Share has been deleted'), $next_url);
         }
         UI::show_footer();
-        exit();
-    break;
+        exit;
 }
 
 /**

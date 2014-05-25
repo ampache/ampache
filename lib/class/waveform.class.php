@@ -77,6 +77,7 @@ class Waveform
                 $catalog = Catalog::create_from_id($song->catalog);
                 if ($catalog->get_type() == 'local') {
                     $transcode_to = 'wav';
+                    $transcode_cfg = AmpConfig::get('transcode');
                     $valid_types = $song->get_stream_types();
 
                     if ($song->type != $transcode_to) {
@@ -221,7 +222,7 @@ class Waveform
                 // get value for 8-bit wav
                 case 1:
                   $data = self::findValues($bytes[0], $bytes[1]);
-                  break;
+                break;
                 // get value for 16-bit wav
                 case 2:
                   if(ord($bytes[1]) & 128)
@@ -230,7 +231,10 @@ class Waveform
                     $temp = 128;
                   $temp = chr((ord($bytes[1]) & 127) + $temp);
                   $data = floor(self::findValues($bytes[0], $temp) / 256);
-                  break;
+                break;
+                default:
+                    $data = 0;
+                break;
               }
 
               // skip bytes for memory optimization

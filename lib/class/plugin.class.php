@@ -272,7 +272,7 @@ class Plugin
         $version    = Dba::escape($version);
 
         $sql = "REPLACE INTO `update_info` SET `key`='$name', `value`='$version'";
-        $db_results = Dba::read($sql);
+        Dba::write($sql);
 
         return true;
 
@@ -287,7 +287,7 @@ class Plugin
         $name    = Dba::escape('Plugin_' . $this->_plugin->name);
 
         $sql = "DELETE FROM `update_info` WHERE `key`='$name'";
-        $db_results = Dba::read($sql);
+        Dba::write($sql);
 
         return true;
 

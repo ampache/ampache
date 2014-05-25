@@ -37,22 +37,6 @@ class Session
     } // __construct
 
     /**
-     * open
-     *
-     * This function is for opening a new session so we just verify that we
-     * have a database connection, nothing more is needed.
-     */
-    public static function open($save_path, $session_name)
-    {
-        if (!Dba::dbh()) {
-            debug_event('session', 'Could not start session, no database connection', 1);
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * close
      *
      * This is run on the end of a session, nothing to do here for now.
@@ -73,8 +57,6 @@ class Session
             return true;
         }
 
-        $length = AmpConfig::get('session_length');
-
         // Check to see if remember me cookie is set, if so use remember
         // length, otherwise use the session length
         $expire = isset($_COOKIE[AmpConfig::get('session_name') . '_remember'])
@@ -82,7 +64,7 @@ class Session
             : time() + AmpConfig::get('session_length');
 
         $sql = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
-        $db_results = Dba::read($sql, array($value, $expire, $key));
+        Dba::write($sql, array($value, $expire, $key));
 
         debug_event('session', 'Writing to ' . $key . ' with expiration ' . $expire, 6);
 
@@ -100,7 +82,7 @@ class Session
 
         // Remove anything and EVERYTHING
         $sql = 'DELETE FROM `session` WHERE `id` = ?';
-        $db_results = Dba::write($sql, array($key));
+        Dba::write($sql, array($key));
 
         debug_event('SESSION', 'Deleting Session with key:' . $key, 6);
 
@@ -118,7 +100,7 @@ class Session
     public static function gc()
     {
         $sql = 'DELETE FROM `session` WHERE `expire` < ?';
-        $db_results = Dba::write($sql, array(time()));
+        Dba::write($sql, array(time()));
 
         // Also clean up things that use sessions as keys
         Query::gc();
@@ -279,10 +261,10 @@ class Session
      * exists
      *
      * This checks to see if the specified session of the specified type
-     * exists, it also provides an array of keyed data that may be required
+     * exists
      * based on the type.
      */
-    public static function exists($type, $key, $data=array())
+    public static function exists($type, $key)
     {
         // Switch on the type they pass
         switch ($type) {
@@ -312,7 +294,6 @@ class Session
             break;
             default:
                 return false;
-            break;
         }
 
         // Default to false

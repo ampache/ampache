@@ -76,10 +76,10 @@ abstract class Catalog extends database_object
     public function uninstall()
     {
         $sql = "DELETE FROM `catalog` WHERE `catalog_type` = ?";
-        $db_results = Dba::query($sql, array($this->get_type()));
+        Dba::query($sql, array($this->get_type()));
 
         $sql = "DROP TABLE `catalog_" . $this->get_type() ."`";
-        $db_results = Dba::query($sql);
+        Dba::query($sql);
 
         return true;
 
@@ -319,7 +319,7 @@ abstract class Catalog extends database_object
         $value = Dba::escape($value);
 
         $sql = "UPDATE `catalog` SET `$field`='$value' WHERE `id`='$catalog_id'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         return true;
 
@@ -418,7 +418,7 @@ abstract class Catalog extends database_object
         if ($include) {
             $sql = 'INSERT INTO `catalog` (`name`, `catalog_type`, ' .
                 '`rename_pattern`, `sort_pattern`) VALUES (?, ?, ?, ?)';
-            $db_results = Dba::write($sql, array(
+            Dba::write($sql, array(
                 $name,
                 $type,
                 $rename_pattern,
@@ -466,7 +466,7 @@ abstract class Catalog extends database_object
      *
      * This returns the current number of unique tags in the database.
      */
-    public static function count_tags($id = null)
+    public static function count_tags()
     {
         // FIXME: Ignores catalog_id
         $sql = "SELECT COUNT(`id`) FROM `tag`";
@@ -573,6 +573,7 @@ abstract class Catalog extends database_object
             $sql_where = "WHERE `song`.`catalog` IN $catlist";
         }
 
+        $sql_limit = "";
         if ($offset > 0 && $size > 0) {
             $sql_limit = "LIMIT $offset, $size";
         } else if ($size > 0) {
@@ -601,11 +602,13 @@ abstract class Catalog extends database_object
     */
     public static function get_albums_by_artist($size = 0, $offset = 0, $catalogs = null)
     {
+        $sql_where = "";
         if (is_array($catalogs) && count($catalogs)) {
             $catlist = '(' . implode(',', $catalogs) . ')';
             $sql_where = "WHERE `song`.`catalog` IN $catlist";
         }
 
+        $sql_limit = "";
         if ($offset > 0 && $size > 0) {
             $sql_limit = "LIMIT $offset, $size";
         } else if ($size > 0) {
@@ -620,7 +623,7 @@ abstract class Catalog extends database_object
             "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `song`.`album` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
-
+        $results = array();
         while ($r = Dba::fetch_assoc($db_results)) {
             $results[] = $r['id'];
         }
@@ -771,8 +774,8 @@ abstract class Catalog extends database_object
                                 $meta_file = $dir . '/desktop.ini';
                                 $string = "[.ShellClassInfo]\nIconFile=$file\nIconIndex=0\nInfoTip=$album->full_name";
                                 break;
-                            default:
                             case 'linux':
+                            default:
                                 $meta_file = $dir . '/.directory';
                                 $string = "Name=$album->full_name\nIcon=$file";
                                 break;
@@ -819,7 +822,7 @@ abstract class Catalog extends database_object
     {
         $date = time();
         $sql = "UPDATE `catalog` SET `last_add` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($date, $this->id));
+        Dba::write($sql, array($date, $this->id));
 
     } // update_last_add
 
@@ -831,7 +834,7 @@ abstract class Catalog extends database_object
     {
         $date = time();
         $sql = "UPDATE `catalog` SET `last_clean` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($date, $this->id));
+        Dba::write($sql, array($date, $this->id));
 
     } // update_last_clean
 
@@ -843,7 +846,7 @@ abstract class Catalog extends database_object
     {
         $sql = "UPDATE `catalog` SET `name` = ?, `rename_pattern` = ?, `sort_pattern` = ? WHERE `id` = ?";
         $params = array($data['name'], $data['rename_pattern'], $data['sort_pattern'], $data['catalog_id']);
-        $db_results = Dba::write($sql, $params);
+        Dba::write($sql, $params);
 
         return true;
 
@@ -1008,7 +1011,7 @@ abstract class Catalog extends database_object
             debug_event('update', "$song->file : differences found, updating database", 5);
             $song->update_song($song->id,$new_song);
             // Refine our reference
-            $song = $new_song;
+            //$song = $new_song;
         } else {
             debug_event('update', "$song->file : no differences found", 5);
         }
@@ -1183,7 +1186,6 @@ abstract class Catalog extends database_object
                         $songs[] = $results['id'];
                     } else {
                         // Not found in absolute path, create it from relative path
-                        $finfo = pathinfo($file);
                         $file = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $file;
                         // Normalize the file path. realpath requires the files to exists.
                         $file = realpath($file);
@@ -1344,7 +1346,7 @@ abstract class Catalog extends database_object
 
         // Next Remove the Catalog Entry it's self
         $sql = "DELETE FROM `catalog` WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($catalog_id));
+        Dba::write($sql, array($catalog_id));
 
         // Run the cleaners...
         self::gc();

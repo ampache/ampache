@@ -38,8 +38,7 @@ switch ($_REQUEST['action']) {
             }
         }
         UI::show_footer();
-        exit();
-    break;
+        exit;
     case 'create':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
@@ -61,8 +60,7 @@ switch ($_REQUEST['action']) {
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=channel');
         }
         UI::show_footer();
-        exit();
-    break;
+        exit;
     case 'show_delete':
         UI::show_header();
         $id = $_REQUEST['id'];
@@ -70,8 +68,7 @@ switch ($_REQUEST['action']) {
         $next_url = AmpConfig::get('web_path') . '/channel.php?action=delete&id=' . scrub_out($id);
         show_confirmation(T_('Channel Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_channel');
         UI::show_footer();
-        exit();
-    break;
+        exit;
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
@@ -86,8 +83,7 @@ switch ($_REQUEST['action']) {
             show_confirmation(T_('Channel Deleted'), T_('The Channel has been deleted'), $next_url);
         }
         UI::show_footer();
-        exit();
-    break;
+        exit;
 } // switch on the action
 
 UI::show_footer();

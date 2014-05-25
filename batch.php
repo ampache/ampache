@@ -101,6 +101,8 @@ switch ($_REQUEST['action']) {
 
 // Take whatever we've got and send the zip
 $song_files = get_song_files($media_ids);
-set_memory_limit($song_files['1']+32);
-send_zip($name,$song_files['0']);
+if (is_array($song_files['0'])) {
+    set_memory_limit($song_files['1']+32);
+    send_zip($name,$song_files['0']);
+}
 exit;

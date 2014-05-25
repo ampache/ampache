@@ -26,6 +26,7 @@
  */
 if (!defined('AJAX_INCLUDE')) { exit; }
 
+$results = array();
 switch ($_REQUEST['action']) {
     case 'show_broadcasts':
         ob_start();
@@ -34,7 +35,6 @@ switch ($_REQUEST['action']) {
         ob_end_clean();
         echo $results;
         exit;
-    break;
     case 'broadcast':
         $broadcast_id = $_GET['broadcast_id'];
         if (empty($broadcast_id)) {

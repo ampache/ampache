@@ -36,6 +36,8 @@ class Artist extends database_object
     public $catalog_id;
     public $time;
     
+    public $tags;
+    public $f_tags;
     public $object_cnt;
     public $f_name;
     public $f_full_name;
@@ -330,7 +332,7 @@ class Artist extends database_object
         $this->f_time = ltrim($hours . ':' . $min . ':' . $sec,'0:');
 
         $this->tags = Tag::get_top_tags('artist', $this->id);
-        $this->f_tags = Tag::get_display($this->tags, $this->id, 'artist');
+        $this->f_tags = Tag::get_display($this->tags);
 
         $this->object_cnt = $extra_info['object_cnt'];
 

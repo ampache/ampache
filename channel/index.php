@@ -99,11 +99,17 @@ curl_setopt_array($ch, array(
 curl_exec($ch);
 curl_close($ch);
 
+/**
+ * @SuppressWarnings("unused")
+ */
 function progress($totaldownload, $downloaded, $us, $ud)
 {
     ob_flush();
 }
 
+/**
+ * @SuppressWarnings("unused")
+ */
 function output_header($ch, $header)
 {
     $th = trim($header);

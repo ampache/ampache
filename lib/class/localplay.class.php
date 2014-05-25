@@ -25,9 +25,11 @@ class Localplay
     /* Base Variables */
     public $type;
 
+    public $f_name;
+    public $f_description;
+    public $f_version;
+    
     /* Built Variables */
-    private $_template;
-    private $_preferences = array();
     private $_player;
 
     /**
@@ -625,16 +627,12 @@ class Localplay
         switch ($state) {
             case 'play':
                 return T_('Now Playing');
-            break;
             case 'stop':
                 return T_('Stopped');
-            break;
             case 'pause':
                 return T_('Paused');
-            break;
             default:
                 return T_('Unknown');
-            break;
         } // switch on state
 
     } // get_user_state

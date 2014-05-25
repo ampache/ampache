@@ -64,8 +64,6 @@ switch ($_REQUEST['action']) {
 
         // We don't want the footer so we're done here
         exit;
-
-    break;
     default:
         require_once AmpConfig::get('prefix') . '/templates/show_export.inc.php';
     break;

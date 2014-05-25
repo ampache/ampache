@@ -251,8 +251,8 @@ class XML_Data
                     "\t<artists>" . intval($counts['artist']) . "</artists>\n" .
                     "\t<songs>" . intval($counts['song']) . "</songs>\n" .
                     "\t<videos>" . intval($counts['video']) . "</videos>\n" .
-                    "\t<playlists>" . intval($count['playlist']) . "</playlists>\n" .
-                    "\t<stream>" . intval($count['live_stream']) . "</stream>\n" .
+                    "\t<playlists>" . intval($counts['playlist']) . "</playlists>\n" .
+                    "\t<stream>" . intval($counts['live_stream']) . "</stream>\n" .
                     "</tag>\n";
         } // end foreach
 
@@ -325,6 +325,7 @@ class XML_Data
 
         Rating::build_cache('album',$albums);
 
+        $string = "";
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             $album->format();
@@ -352,7 +353,7 @@ class XML_Data
                     "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
                     "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
                     "\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
-                    "\t<mbid>" . $artist->mbid . "</mbid>\n" .
+                    "\t<mbid>" . $album->mbid . "</mbid>\n" .
                     "</album>\n";
         } // end foreach
 
@@ -417,6 +418,7 @@ class XML_Data
         Song::build_cache($songs);
         Stream::set_session($_REQUEST['auth']);
 
+        $string = "";
         // Foreach the ids!
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
@@ -476,7 +478,6 @@ class XML_Data
         }
 
         $string = '';
-
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
             $video->format();
@@ -520,15 +521,13 @@ class XML_Data
             $song->format();
 
             //FIXME: This is duplicate code and so wrong, functions need to be improved
-            $tag_string = '';
-
             $tag = new Tag($song->tags['0']);
             $song->genre = $tag->id;
             $song->f_genre = $tag->name;
 
             $tag_string = self::tags_string($song->tags);
 
-            $rating = new Rating($song_id,'song');
+            $rating = new Rating($song->id,'song');
 
             $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
 

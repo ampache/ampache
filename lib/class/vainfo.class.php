@@ -35,6 +35,7 @@ class vainfo
     public $filename = '';
     public $type = '';
     public $tags = array();
+    public $islocal;
 
     protected $_raw = array();
     protected $_getID3 = '';
@@ -106,6 +107,7 @@ class vainfo
             if ($encoding_id3v1) {
                 $this->encoding_id3v1 = $encoding_id3v1;
             } else {
+                $tags = array();
                 foreach ($test_tags as $tag) {
                     if ($value = $this->_raw['id3v1'][$tag]) {
                         $tags[$tag] = $value;
@@ -117,6 +119,7 @@ class vainfo
 
             if (AmpConfig::get('getid3_detect_id3v2_encoding')) {
                 // The user has told us to be moronic, so let's do that thing
+                $tags = array();
                 foreach ($test_tags as $tag) {
                     if ($value = $this->_raw['id3v2']['comments'][$tag]) {
                         $tags[$tag] = $value;
@@ -154,6 +157,7 @@ class vainfo
 
             debug_event('vainfo', 'encoding detection: ' . json_encode($encodings), 5);
             $high = 0;
+            $encoding = '';
             foreach ($encodings as $key => $value) {
                 if ($value > $high) {
                     $encoding = $key;
@@ -189,7 +193,7 @@ class vainfo
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
             } catch (Exception $error) {
-                debug_event('getID2', 'Unable to catalog file: ' . $error->message, 1);
+                debug_event('getID2', 'Unable to catalog file: ' . $error->getMessage(), 1);
             }
         }
 
@@ -493,10 +497,8 @@ class vainfo
             case 'mp2':
             case 'mpeg3':
                 return 'mp3';
-            break;
             case 'vorbis':
                 return 'ogg';
-            break;
             case 'flac':
             case 'flv':
             case 'mpg':
@@ -510,7 +512,6 @@ class vainfo
                 /* Log the fact that we couldn't figure it out */
                 debug_event('vainfo','Unable to determine file type from ' . $type . ' on file ' . $this->filename,'5');
                 return $type;
-            break;
         }
     }
 
@@ -809,21 +810,23 @@ class vainfo
         // Pull out our actual matches
         preg_match($pattern, $filename, $matches);
 
-        // The first element is the full match text
-        $matched = array_shift($matches);
-        debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filename, 5);
+        if ($matches != null) {
+            // The first element is the full match text
+            $matched = array_shift($matches);
+            debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filename, 5);
 
-        // Iterate over what we found
-        foreach ($matches as $key => $value) {
-            $new_key = translate_pattern_code($elements['0'][$key]);
-            if ($new_key) {
-                $results[$new_key] = $value;
+            // Iterate over what we found
+            foreach ($matches as $key => $value) {
+                $new_key = translate_pattern_code($elements['0'][$key]);
+                if ($new_key) {
+                    $results[$new_key] = $value;
+                }
             }
-        }
 
-        $results['title'] = $results['title'] ?: basename($filename);
-        if ($this->islocal) {
-            $results['size'] = filesize(Core::conv_lc_file($origin));
+            $results['title'] = $results['title'] ?: basename($filename);
+            if ($this->islocal) {
+                $results['size'] = filesize(Core::conv_lc_file($origin));
+            }
         }
 
         return $results;
