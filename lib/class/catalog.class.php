@@ -1018,14 +1018,13 @@ abstract class Catalog extends database_object
 
         debug_event('clean', 'Starting on ' . $this->name, 5);
 
-        require_once AmpConfig::get('prefix') . '/templates/show_clean_catalog.inc.php';
+        require AmpConfig::get('prefix') . '/templates/show_clean_catalog.inc.php';
         ob_flush();
         flush();
 
         $dead_total = $this->clean_catalog_proc();
 
-        debug_event('clean', 'clean finished, ' . $dead_count .
-            ' removed from '. $this->name, 5);
+        debug_event('clean', 'clean finished, ' . $dead_count . ' removed from ' . $this->name, 5);
 
         // Remove any orphaned artists/albums/etc.
         self::gc();
@@ -1033,7 +1032,8 @@ abstract class Catalog extends database_object
         UI::show_box_top();
         echo "<strong>";
         printf (ngettext('Catalog Clean Done. %d file removed.', 'Catalog Clean Done. %d files removed.', $dead_total), $dead_total);
-        echo "</strong><br />\n";
+        echo "</strong><br />\n\n";
+		echo "<br />\n";
         UI::show_box_bottom();
         ob_flush();
         flush();
@@ -1047,12 +1047,18 @@ abstract class Catalog extends database_object
      */
     public function verify_catalog()
     {
+
+		require AmpConfig::get('prefix') . '/templates/show_verify_catalog.inc.php';
+        ob_flush();
+        flush();
+
         $verified = $this->verify_catalog_proc();+
 
         UI::show_box_top();
         echo '<strong>';
         printf(T_('Catalog Verify Done. %d of %d files updated.'), $verified['updated'], $verified['total']);
         echo "</strong><br />\n";
+		echo "<br />\n";
         UI::show_box_bottom();
         ob_flush();
         flush();

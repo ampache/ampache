@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-24 23:38+0200\n"
+"POT-Creation-Date: 2014-05-25 17:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -262,6 +262,7 @@ msgstr ""
 #: ../../lib/preferences.php:269 ../../templates/show_access_list.inc.php:55
 #: ../../templates/show_add_access.inc.php:42
 #: ../../templates/show_add_user.inc.php:83
+#: ../../templates/show_create_democratic.inc.php:42
 #: ../../templates/show_edit_access.inc.php:60
 #: ../../templates/show_edit_user.inc.php:86
 #: ../../templates/show_mail_users.inc.php:32
@@ -277,6 +278,7 @@ msgstr ""
 
 #: ../../admin/users.php:134 ../../lib/class/democratic.class.php:164
 #: ../../lib/preferences.php:271 ../../templates/show_add_user.inc.php:86
+#: ../../templates/show_create_democratic.inc.php:45
 #: ../../templates/show_democratic_playlist.inc.php:62
 #: ../../templates/show_democratic_playlist.inc.php:109
 #: ../../templates/show_edit_user.inc.php:89
@@ -1277,23 +1279,23 @@ msgstr ""
 msgid "No Update Needed"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1035
+#: ../../lib/class/catalog.class.php:1034
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../lib/class/catalog.class.php:1054
+#: ../../lib/class/catalog.class.php:1059
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1204
+#: ../../lib/class/catalog.class.php:1210
 msgid "Failed to create playlist."
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:1221
+#: ../../lib/class/catalog.class.php:1227
 msgid "No valid songs found in playlist file."
 msgstr ""
 
@@ -1337,6 +1339,7 @@ msgstr ""
 
 #: ../../lib/class/democratic.class.php:158
 #: ../../templates/show_add_user.inc.php:84
+#: ../../templates/show_create_democratic.inc.php:43
 #: ../../templates/show_edit_user.inc.php:87
 #: ../../templates/show_preference_box.inc.php:64
 msgid "Content Manager"
@@ -1344,6 +1347,7 @@ msgstr ""
 
 #: ../../lib/class/democratic.class.php:161
 #: ../../templates/show_add_user.inc.php:85
+#: ../../templates/show_create_democratic.inc.php:44
 #: ../../templates/show_edit_user.inc.php:88
 #: ../../templates/show_preference_box.inc.php:65
 msgid "Catalog Manager"
@@ -1703,7 +1707,7 @@ msgstr ""
 #: ../../templates/show_artist_row.inc.php:27
 #: ../../templates/show_broadcast_row.inc.php:27
 #: ../../templates/show_channel_row.inc.php:27
-#: ../../templates/show_democratic.inc.php:40
+#: ../../templates/show_democratic.inc.php:41
 #: ../../templates/show_localplay_control.inc.php:27
 #: ../../templates/show_manage_democratic.inc.php:49
 #: ../../templates/show_missing_album.inc.php:56
@@ -2748,8 +2752,8 @@ msgid "Batch Download"
 msgstr ""
 
 #: ../../templates/rightbar.inc.php:54
-#: ../../templates/show_democratic.inc.php:44
 #: ../../templates/show_democratic.inc.php:45
+#: ../../templates/show_democratic.inc.php:46
 #: ../../templates/show_localplay_status.inc.php:51
 msgid "Clear Playlist"
 msgstr ""
@@ -2817,6 +2821,7 @@ msgstr ""
 
 #: ../../templates/show_access_list.inc.php:54
 #: ../../templates/show_add_access.inc.php:33
+#: ../../templates/show_create_democratic.inc.php:39
 #: ../../templates/show_edit_access.inc.php:66
 #: ../../templates/show_manage_democratic.inc.php:29
 #: ../../templates/show_preference_admin.inc.php:33
@@ -3613,7 +3618,7 @@ msgid "Clean"
 msgstr ""
 
 #: ../../templates/show_catalog_row.inc.php:37
-#: ../../templates/show_create_democratic.inc.php:45
+#: ../../templates/show_create_democratic.inc.php:60
 #: ../../templates/show_edit_access.inc.php:78
 #: ../../templates/show_edit_shout.inc.php:41
 #: ../../templates/show_manage_catalogs.inc.php:45
@@ -3692,6 +3697,10 @@ msgstr ""
 msgid "No channel found"
 msgstr ""
 
+#: ../../templates/show_clean_catalog.inc.php:23
+msgid "Clean Catalog"
+msgstr ""
+
 #. HINT: Catalog Name
 #: ../../templates/show_clean_catalog.inc.php:25
 #, php-format
@@ -3743,7 +3752,7 @@ msgstr ""
 
 #: ../../templates/show_create_democratic.inc.php:23
 #: ../../templates/show_democratic.inc.php:35
-#: ../../templates/show_democratic.inc.php:36
+#: ../../templates/show_democratic.inc.php:37
 msgid "Configure Democratic Playlist"
 msgstr ""
 
@@ -3756,7 +3765,11 @@ msgstr ""
 msgid "Cooldown Time"
 msgstr ""
 
-#: ../../templates/show_create_democratic.inc.php:39
+#: ../../templates/show_create_democratic.inc.php:49
+msgid "Make Default"
+msgstr ""
+
+#: ../../templates/show_create_democratic.inc.php:54
 msgid "Force Democratic Play"
 msgstr ""
 
@@ -3867,7 +3880,7 @@ msgstr ""
 msgid "Cooldown"
 msgstr ""
 
-#: ../../templates/show_democratic.inc.php:41
+#: ../../templates/show_democratic.inc.php:42
 msgid "Play Democratic Playlist"
 msgstr ""
 

@@ -27,5 +27,5 @@ echo "<br />\n";
 printf(ngettext('%d item found checking tag information', '%d items found checking tag information', $number), $number);
 echo "<br />\n\n";
 echo T_('Verified') . ': <span id="verify_count_' . $this->id . '">' . $catalog_verify_found . '</span><br />';
-echo T_('Reading') . ': <span id="verify_dir_' . $this->id . '">' . $catalog_verify_directory . '</span><br />';
+echo T_('Reading') . ': <span id="verify_dir_' . $this->id . '">' . $catalog_verify_directory . '</span>';
 UI::show_box_bottom();
