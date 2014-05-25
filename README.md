@@ -80,7 +80,6 @@ Ampache includes some external modules that carry their own licensing.
 * [Dropbox SDK](https://github.com/dropbox/dropbox-sdk-php): MIT
 * [jPlayer](http://jplayer.org): MIT
 * [prettyPhoto](http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone): GPL v2
-* [unofficial-google-music-api-php](http://code.google.com/p/unofficial-google-music-api-php): GPL v3
 * [Tag-it!] (http://aehlke.github.io/tag-it): MIT
 * [PHP Echo Nest API] (https://github.com/bshaffer/php-echonest-api): MIT
 * [Noty] (http://ned.im/noty): MIT
