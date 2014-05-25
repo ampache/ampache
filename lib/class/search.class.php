@@ -910,7 +910,7 @@ class Search extends playlist_object
             $operator = array();
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
-                    $operator = $op
+                    $operator = $op;
                     break;
                 }
             }
