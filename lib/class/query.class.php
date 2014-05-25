@@ -1407,6 +1407,8 @@ class Query
      * to the sql so they have to be done after the fact
      * these should be limited as they are often intensive and
      * require additional queries per object... :(
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     private function logic_filter($object_id)
     {

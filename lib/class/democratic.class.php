@@ -123,6 +123,8 @@ class Democratic extends Tmp_Playlist
      * their play method and playlist method (clear on send) If no user is
      * passed it does it for everyone and also locks down the ability to
      * change to admins only
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function set_user_preferences($user = null)
     {

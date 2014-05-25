@@ -39,8 +39,10 @@ class Registration
     } // constructor
 
     /**
-      * send_confirmation
+     * send_confirmation
      * This sends the confirmation e-mail for the specified user
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function send_confirmation($username, $fullname, $email, $website, $password, $validation)
     {

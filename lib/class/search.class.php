@@ -907,8 +907,10 @@ class Search extends playlist_object
 
         foreach ($this->rules as $rule) {
             $type = $this->name_to_basetype($rule[0]);
-            foreach ($this->basetypes[$type] as $operator) {
-                if ($operator['name'] == $rule[1]) {
+            $operator = array();
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op
                     break;
                 }
             }
@@ -983,8 +985,10 @@ class Search extends playlist_object
 
         foreach ($this->rules as $rule) {
             $type = $this->name_to_basetype($rule[0]);
-            foreach ($this->basetypes[$type] as $operator) {
-                if ($operator['name'] == $rule[1]) {
+            $operator = array();
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
                     break;
                 }
             }
@@ -1205,8 +1209,10 @@ class Search extends playlist_object
 
         foreach ($this->rules as $rule) {
             $type = $this->name_to_basetype($rule[0]);
-            foreach ($this->basetypes[$type] as $operator) {
-                if ($operator['name'] == $rule[1]) {
+            $operator = array();
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
                     break;
                 }
             }

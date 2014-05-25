@@ -27,6 +27,7 @@
  * This class wrap Ampache to Subsonic API functions. See http://www.subsonic.org/pages/api.jsp
  * These are all static calls.
  *
+ * @SuppressWarnings("unused")
  */
 class Subsonic_Api
 {

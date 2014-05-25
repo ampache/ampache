@@ -75,6 +75,8 @@ abstract class localplay_controller
      * get_file
      * This returns the Filename for the passed object, not
      * always possible
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function get_file($object)
     {

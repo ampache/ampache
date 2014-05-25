@@ -311,7 +311,7 @@ class Art extends database_object
         $type = Dba::escape($this->type);
 
         $sql = "DELETE FROM `image` WHERE `object_id`='$uid' AND `object_type`='$type' AND `size`='$size'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`) VALUES('$source', '$mime', '$size', '$type', '$uid')";
         Dba::write($sql);
@@ -657,6 +657,8 @@ class Art extends database_object
     /**
      * gather_db
      * This function retrieves art that's already in the database
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function gather_db($limit = null)
     {
@@ -805,6 +807,7 @@ class Art extends database_object
                     debug_event('mbz-gatherart', "Matched coverart site: " . $casite['name'], '5');
                     if (preg_match($casite['regexp'], $arurl, $matches)) {
                         $num_found++;
+                        $url = '';
                         eval("\$url = \"$casite[imguri]\";");
                         debug_event('mbz-gatherart', "Generated URL added: " . $url, '5');
                         $images[] = array(
@@ -1092,7 +1095,7 @@ class Art extends database_object
             // If we find a good one, stop looking
             $getID3 = new getID3();
             try { $id3 = $getID3->analyze($song->file); } catch (Exception $error) {
-                debug_event('getid3', $error->message, 1);
+                debug_event('getid3', $error->getMessage(), 1);
             }
 
             if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
@@ -1126,6 +1129,8 @@ class Art extends database_object
     /**
      * gather_google
      * Raw google search to retrieve the art, not very reliable
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function gather_google($limit = 5)
     {
@@ -1183,7 +1188,6 @@ class Art extends database_object
             break;
             default:
                 return $data;
-            break;
         }
 
         if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {

@@ -362,6 +362,8 @@ class Auth
     /**
      * http_auth
      * This auth method relies on HTTP auth from the webserver
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     private static function http_auth($username, $password)
     {
@@ -382,6 +384,8 @@ class Auth
     /**
      * openid_auth
      * Authenticate user with OpenID
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     private static function openid_auth($username, $password)
     {

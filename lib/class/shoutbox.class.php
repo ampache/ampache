@@ -29,6 +29,7 @@ class Shoutbox
     public $sticky;
     public $text;
     public $data;
+    public $date;
 
     public $f_link;
 
@@ -167,13 +168,11 @@ class Shoutbox
             case 'album':
                 $image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . AmpConfig::get('web_path') . "/image.php?id=" . $this->object_id . "&amp;thumb=1\" />";
             break;
-            case 'artist':
-
-            break;
             case 'song':
                 $song = new Song($this->object_id);
                 $image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . AmpConfig::get('web_path') . "/image.php?id=" . $song->album . "&amp;thumb=1\" />";
             break;
+            case 'artist':
             default:
                 $image_string = "";
             break;

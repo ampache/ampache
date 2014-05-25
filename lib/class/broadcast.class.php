@@ -192,6 +192,10 @@ class Broadcast extends database_object
         return $broadcasts;
     }
 
+    /*
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public static function play_url($oid, $additional_params='')
     {
         return $oid;

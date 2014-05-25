@@ -341,13 +341,13 @@ class User extends database_object
                 $data = new Song($r['object_id']);
                 $data->count = $r['count'];
                 $data->format();
-                $data->f_name = $data->f_link;
+                $data->f_link;
                 $items[] = $data;
             }
             /* If its an album */
             elseif ($type == 'album') {
                 $data = new Album($r['object_id']);
-                $data->count = $r['count'];
+                //$data->count = $r['count'];
                 $data->format();
                 $items[] = $data;
             }
@@ -362,7 +362,7 @@ class User extends database_object
             /* If it's a genre */
             elseif ($type == 'genre') {
                 $data = new Genre($r['object_id']);
-                $data->count = $r['count'];
+                //$data->count = $r['count'];
                 $data->format();
                 $data->f_name = $data->f_link;
                 $items[] = $data;

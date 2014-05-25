@@ -9,6 +9,7 @@ tools:
         filter:
             excluded_paths:
                 - 'modules/*'
+                - 'themes/*'
             paths: {  }
     php_code_sniffer:
         enabled: false
@@ -31,6 +32,7 @@ tools:
         filter:
             excluded_paths:
                 - 'modules/*'
+                - 'themes/*'
             paths: {  }
         path_configs: {  }
     php_changetracking:

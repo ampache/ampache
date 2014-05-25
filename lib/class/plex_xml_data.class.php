@@ -967,6 +967,10 @@ class Plex_XML_Data
         }
     }
 
+    /**
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public static function setAccounts($xml, $userid)
     {
         // Not sure how to handle Plex accounts vs Ampache accounts, return only 1 for now.

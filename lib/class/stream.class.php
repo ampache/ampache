@@ -41,6 +41,10 @@ class Stream
         self::$session=$sid;
     } // set_session
 
+    /**
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public static function get_allowed_bitrate($song)
     {
         $max_bitrate = AmpConfig::get('max_bit_rate');

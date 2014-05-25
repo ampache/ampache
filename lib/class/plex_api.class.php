@@ -27,6 +27,7 @@
  * This class wrap Ampache to Plex API library functions. See http://wiki.plexapp.com/index.php/HTTP_API
  * These are all static calls.
  *
+ * @SuppressWarnings("unused")
  */
 class Plex_Api
 {

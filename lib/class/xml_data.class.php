@@ -567,6 +567,8 @@ class XML_Data
      * @param    string    $description    (not use yet?)
      * @param    string    $date    publish date
      * @return    string    RSS feed xml
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function rss_feed($data,$title,$description,$date)
     {

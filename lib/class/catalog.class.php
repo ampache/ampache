@@ -810,7 +810,7 @@ abstract class Catalog extends database_object
     {
         $date = time();
         $sql = "UPDATE `catalog` SET `last_update` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($date, $this->id));
+        Dba::write($sql, array($date, $this->id));
 
     } // update_last_update
 
@@ -940,6 +940,8 @@ abstract class Catalog extends database_object
     /**
      * update_video_from_tags
      * Updates the video info based on tags
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function update_video_from_tags($results,$video)
     {

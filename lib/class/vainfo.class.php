@@ -53,6 +53,7 @@ class vainfo
      *
      * This function just sets up the class, it doesn't pull the information.
      *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct($file, $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern = '', $file_pattern ='', $islocal = true)
     {

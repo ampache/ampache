@@ -100,7 +100,8 @@ curl_exec($ch);
 curl_close($ch);
 
 /**
- * @SuppressWarnings("unused")
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 function progress($totaldownload, $downloaded, $us, $ud)
 {
@@ -108,7 +109,8 @@ function progress($totaldownload, $downloaded, $us, $ud)
 }
 
 /**
- * @SuppressWarnings("unused")
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 function output_header($ch, $header)
 {
