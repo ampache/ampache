@@ -93,6 +93,7 @@ class Plex_Api
 
             $createSession = false;
             Session::gc();
+            $username = "";
             $email = Session::read((string) $myplex_token);
             if (empty($email)) {
                 $createSession = true;
@@ -120,7 +121,7 @@ class Plex_Api
                     self::createError(401);
                 }
 
-                if (empty($email) && isset($username)) {
+                if (empty($email)) {
                     $xml = self::get_users_account();
                     if ((string) $xml->username == $username) {
                         $email = (string) $xml->email;
@@ -140,14 +141,15 @@ class Plex_Api
                 if (!isset($user) || !$user->id) {
                     debug_event('Access Denied', 'Unable to get an Ampache user match for email ' . $email, '3');
                     self::createError(401);
+                } else {
+                    $username = $user->username;
+                    if (!Access::check_network('init-api', $username, 5)) {
+                        debug_event('Access Denied', 'Unauthorized access attempt to Plex [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
+                        self::createError(401);
+                    } else {
+                        $GLOBALS['user'] = $user;
+                    }
                 }
-                $username = $user->username;
-                if (!Access::check_network('init-api', $username, 5)) {
-                    debug_event('Access Denied', 'Unauthorized access attempt to Plex [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
-                    self::createError(401);
-                }
-
-                $GLOBALS['user'] = $user;
             } else {
                 $email = $username;
                 $username = null;
@@ -443,7 +445,9 @@ class Plex_Api
         $res['raw'] = $r;
         try {
             $res['xml'] = simplexml_load_string($r);
-        } catch (Exception $e) { }
+        } catch (Exception $e) {
+            // If exception, wrong data returned (Plex API changes?)
+        }
         return $res;
     }
 

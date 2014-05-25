@@ -29,6 +29,7 @@
 <ul class="subnavside">
 <?php
     foreach ($items as $item) {
+        $li_class = '';
         if ($item['url'] == $item['active']) {
             $li_class = "class=\"activesubmenu\"";
         }

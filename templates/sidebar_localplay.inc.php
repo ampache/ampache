@@ -22,7 +22,12 @@
 ?>
 
 <ul class="sb2" id="sb_localplay">
-<?php if ($server_allow = AmpConfig::get('allow_localplay_playback') AND $controller = AmpConfig::get('localplay_controller') AND $access_check = Access::check('localplay','5')) { ?>
+<?php
+$server_allow = AmpConfig::get('allow_localplay_playback');
+$controller = AmpConfig::get('localplay_controller');
+$access_check = Access::check('localplay','5');
+if ($server_allow && $controller && $access_check) {
+?>
 <?php
     // Little bit of work to be done here
     $localplay = new Localplay(AmpConfig::get('localplay_controller'));

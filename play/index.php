@@ -498,7 +498,7 @@ if ($start > 0) {
 
 // If this is a democratic playlist remove the entry.
 // We do this regardless of play amount.
-if ($demo_id) { $democratic->delete_from_oid($oid,'song'); }
+if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid,'song'); }
 
 if ($transcode && isset($transcoder)) {
     if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {

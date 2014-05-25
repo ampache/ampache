@@ -91,6 +91,7 @@ switch ($_REQUEST['action']) {
     case 'set_track_numbers':
         debug_event('playlist', 'Set track numbers called.', '5');
 
+        $playlist = new Playlist($_REQUEST['playlist_id']);
         /* Make sure they have permission */
         if (!$playlist->has_access()) {
             UI::access_denied();
@@ -103,7 +104,6 @@ switch ($_REQUEST['action']) {
             debug_event('playlist', $key.'='.$_GET[$key], '5');
         }
 
-        $playlist = new Playlist($_REQUEST['playlist_id']);
         if (isset($_GET['order'])) {
             $songs = explode(";", $_GET['order']);
             $track = 1;

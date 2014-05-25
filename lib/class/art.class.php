@@ -934,11 +934,11 @@ class Art extends database_object
             } // foreach
 
             // Rudimentary image type detection, only JPG and GIF allowed.
-            if (substr($result[$key], -4 == '.jpg')) {
+            if (substr($result[$key], -4) == '.jpg') {
                 $mime = "image/jpeg";
-            } elseif (substr($result[$key], -4 == '.gif')) {
+            } elseif (substr($result[$key], -4) == '.gif') {
                 $mime = "image/gif";
-            } elseif (substr($result[$key], -4 == '.png')) {
+            } elseif (substr($result[$key], -4) == '.png') {
                 $mime = "image/png";
             } else {
                 /* Just go to the next result */
