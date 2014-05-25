@@ -88,6 +88,14 @@ class WebPlayer
             $song = new Song($urlinfo['id']);
         } else if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
             $song = new Song_Preview($urlinfo['id']);
+        } else if (isset($urlinfo['demo_id'])) {
+            $democratic = new Democratic($urlinfo['demo_id']);
+            if ($democratic->id) {
+                $song_id = $democratic->get_next_object();
+                if ($song_id) {
+                    $song = new Song($song_id);
+                }
+            }
         }
 
         if ($song != null) {
@@ -197,6 +205,14 @@ class WebPlayer
             $song = new Song($urlinfo['id']);
         } else if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
             $song = new Song_Preview($urlinfo['id']);
+        } else if (isset($urlinfo['demo_id'])) {
+            $democratic = new Democratic($urlinfo['demo_id']);
+            if ($democratic->id) {
+                $song_id = $democratic->get_next_object();
+                if ($song_id) {
+                    $song = new Song($song_id);
+                }
+            }
         }
 
         if ($song != null) {

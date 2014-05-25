@@ -36,6 +36,21 @@ UI::show_box_top(T_('Configure Democratic Playlist')); ?>
             <td><input type="text" maxlength="6" name="cooldown" value="<?php echo $democratic->cooldown; ?>" />&nbsp;(<?php echo T_('minutes'); ?>)</td>
         </tr>
         <tr>
+            <td><?php echo T_('Level'); ?></td>
+            <td>
+                <select name="level">
+                    <option value="25" <?php if ($democratic->level == 25) echo "selected"; ?>><?php echo T_('User'); ?></option>
+                    <option value="50" <?php if ($democratic->level == 50) echo "selected"; ?>><?php echo T_('Content Manager'); ?></option>
+                    <option value="75" <?php if ($democratic->level == 75) echo "selected"; ?>><?php echo T_('Catalog Manager'); ?></option>
+                    <option value="100" <?php if ($democratic->level == 100) echo "selected"; ?>><?php echo T_('Admin'); ?></option>
+                </select>
+
+        <tr>
+            <td><?php echo T_('Make Default'); ?></td>
+            <td><input type="checkbox" name="make_default" value="1" <?php if ($democratic->primary) echo "checked" ?> /></td>
+        </tr>
+        <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr>
             <td><?php echo T_('Force Democratic Play'); ?></td>
             <td><input type="checkbox" value="1" name="force_democratic" /></td>
         </tr>

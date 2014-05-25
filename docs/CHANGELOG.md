@@ -3,6 +3,22 @@ CHANGELOG
 
 3.7
 ----------
+- Improved user auto-registration to optionally avoid email validation
+- Fixed date.timezone php warnings breaking Ampache API (reported by redcap1)
+- Fixed playlist browse with items > 1000 (reported by Tetram67)
+- Fixed Amazon API Image support (thanks jbrain)
+- Fixed id3v2 multiples genres (reported by Rouzax)
+- Improved democratic playlist view to select the first one by default
+- Improved German translation (thanks Psy-Virus)
+- Fixed playlist view of all users for administrator accounts (reported by stonie08)
+- Added option to regroup album disks to one album view
+- Changed Ampache logo
+- Fixed email validation on user registration (reported by redcap1)
+- Added local charset setting
+- Improved installation steps and design (thanks changi67)
+- Improved Recently Played to not filter songs to one display only
+- Fixed Subsonic transcoding support
+- Fixed Subsonic offline storage file path (reported by Tetram76)
 - Added optional top dock menu
 - Added html5 web audio api visualizer and equalizer
 - Added `Play List` to localplay mode
@@ -63,9 +79,6 @@ CHANGELOG
 - Fixed artist search
 - Fixed Random Advanced (reported by stebe)
 - Changed song preview directplay icons
-
-3.6-doped
-----------
 - Added Headphones Automatic Music Downloader support as a 'Wanted Process' plugin
 - Updated PHPMailer to version 5.2.7
 - Updated getID3 to version 1.9.7

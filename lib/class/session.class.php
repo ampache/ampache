@@ -337,7 +337,7 @@ class Session
 
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
         if ($db_results = Dba::write($sql, array($expire, $sid))) {
-            debug_event('session', $sid . ' has been extended to ' . date('r', $expire) . ' extension length ' . ($expire - $time), 5);
+            debug_event('session', $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
         }
 
         return $db_results;
