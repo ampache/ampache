@@ -62,6 +62,9 @@ switch ($_REQUEST['action']) {
         // If not a user then kick em out
         if (!Access::check('interface','25')) { UI::access_denied(); exit; }
 
+        // Prevent the script from timing out
+        set_time_limit(0);
+
         // get the Album information
         $album = new Album($_GET['album_id']);
         $album->format();
@@ -143,6 +146,9 @@ switch ($_REQUEST['action']) {
         /* Check to see if we have the image url still */
         $image_id = $_REQUEST['image'];
         $album_id = $_REQUEST['album_id'];
+
+        // Prevent the script from timing out
+        set_time_limit(0);
 
         $album = new Album($album_id);
         $album_groups = $album->get_group_disks_ids();
