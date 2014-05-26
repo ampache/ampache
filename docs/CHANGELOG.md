@@ -3,6 +3,8 @@ CHANGELOG
 
 3.7
 ----------
+- Added Scrutinizer analyze
+- Fixed playlist play with disabled songs (reported by stebe)
 - Improved user auto-registration to optionally avoid email validation
 - Fixed date.timezone php warnings breaking Ampache API (reported by redcap1)
 - Fixed playlist browse with items > 1000 (reported by Tetram67)
