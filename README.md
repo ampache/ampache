@@ -1,6 +1,6 @@
 Ampache
 =======
-[ampache.org](http://ampache.org) |
+[www.ampache.org](http://www.ampache.org) |
 [ampache.github.io](http://ampache.github.io)
 
 Basics
