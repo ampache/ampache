@@ -4144,7 +4144,7 @@ msgstr "Flash"
 
 #: ../../templates/show_edit_user.inc.php:127
 msgid "Prevent Preset Override"
-msgstr "Verhindere dass überschreiben der Standardeinstellungen"
+msgstr "Überschreiben der Standardeinstellungen verhindern"
 
 #: ../../templates/show_edit_user.inc.php:129
 msgid "This Affects all non-Admin accounts"
