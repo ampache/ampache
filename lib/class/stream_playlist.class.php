@@ -121,50 +121,54 @@ class Stream_Playlist
 
             $object = new $type($medium['object_id']);
             $object->format();
-            //FIXME: play_url shouldn't be static
-            $url['url'] = $type::play_url($object->id, $additional_params);
+            // Don't add disabled media objects to the stream playlist
+            // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
+            if (make_bool($object->enabled)) {
+                //FIXME: play_url shouldn't be static
+                $url['url'] = $type::play_url($object->id, $additional_params);
 
-            $api_session = (AmpConfig::get('require_session')) ? Stream::$session : false;
+                $api_session = (AmpConfig::get('require_session')) ? Stream::$session : false;
 
-            // Set a default which can be overridden
-            $url['author'] = 'Ampache';
-            $url['time'] = $object->time;
-            switch ($type) {
-                case 'song':
-                    $url['title'] = $object->title;
-                    $url['author'] = $object->f_artist_full;
-                    $url['info_url'] = $object->f_link;
-                    $url['image_url'] = Art::url($object->album, 'album', $api_session);
-                    $url['album'] = $object->f_album_full;
-                break;
-                case 'video':
-                    $url['title'] = 'Video - ' . $object->title;
-                    $url['author'] = $object->f_artist_full;
-                break;
-                case 'radio':
-                    $url['title'] = 'Radio - ' . $object->name;
-                    if (!empty($object->site_url)) {
-                        $url['title'] .= ' (' . $object->site_url . ')';
-                    }
-                    $url['codec'] = $object->codec;
-                break;
-                case 'song_preview':
-                    $url['title'] = $object->title;
-                    $url['author'] = $object->f_artist_full;
-                break;
-                case 'channel':
-                    $url['title'] = $object->name;
-                break;
-                case 'random':
-                    $url['title'] = 'Random URL';
-                break;
-                default:
-                    $url['title'] = 'URL-Add';
-                    $url['time'] = -1;
-                break;
+                // Set a default which can be overridden
+                $url['author'] = 'Ampache';
+                $url['time'] = $object->time;
+                switch ($type) {
+                    case 'song':
+                        $url['title'] = $object->title;
+                        $url['author'] = $object->f_artist_full;
+                        $url['info_url'] = $object->f_link;
+                        $url['image_url'] = Art::url($object->album, 'album', $api_session);
+                        $url['album'] = $object->f_album_full;
+                    break;
+                    case 'video':
+                        $url['title'] = 'Video - ' . $object->title;
+                        $url['author'] = $object->f_artist_full;
+                    break;
+                    case 'radio':
+                        $url['title'] = 'Radio - ' . $object->name;
+                        if (!empty($object->site_url)) {
+                            $url['title'] .= ' (' . $object->site_url . ')';
+                        }
+                        $url['codec'] = $object->codec;
+                    break;
+                    case 'song_preview':
+                        $url['title'] = $object->title;
+                        $url['author'] = $object->f_artist_full;
+                    break;
+                    case 'channel':
+                        $url['title'] = $object->name;
+                    break;
+                    case 'random':
+                        $url['title'] = 'Random URL';
+                    break;
+                    default:
+                        $url['title'] = 'URL-Add';
+                        $url['time'] = -1;
+                    break;
+                }
+
+                $urls[] = new Stream_URL($url);
             }
-
-            $urls[] = new Stream_URL($url);
         }
 
         return $urls;
