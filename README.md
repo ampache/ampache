@@ -1,5 +1,7 @@
 Ampache
 =======
+[ampache.org](http://ampache.org) |
+[ampache.github.io](http://ampache.github.io)
 
 Basics
 ------
