@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-26 02:21+0200\n"
+"POT-Creation-Date: 2014-05-26 12:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2122,7 +2122,6 @@ msgid "Invalid <dropbox-path>: "
 msgstr ""
 
 #: ../../modules/catalog/dropbox.catalog.php:185
-#: ../../modules/catalog/googlemusic.catalog.php:165
 #: ../../modules/catalog/local.catalog.php:203
 #: ../../modules/catalog/remote.catalog.php:168
 #: ../../modules/catalog/soundcloud.catalog.php:171
@@ -2151,60 +2150,6 @@ msgstr ""
 
 #: ../../modules/catalog/dropbox.catalog.php:324
 msgid "API Error: Cannot access file/folder at "
-msgstr ""
-
-#: ../../modules/catalog/googlemusic.catalog.php:109
-#: ../../templates/show_lostpassword_form.inc.php:67
-msgid "Email"
-msgstr ""
-
-#: ../../modules/catalog/googlemusic.catalog.php:110
-#: ../../modules/catalog/remote.catalog.php:111
-#: ../../modules/catalog/subsonic.catalog.php:111
-#: ../../modules/localplay/httpq.controller.php:211
-#: ../../modules/localplay/mpd.controller.php:240
-#: ../../modules/localplay/vlc.controller.php:195
-#: ../../modules/localplay/xbmc.controller.php:201
-#: ../../templates/show_add_user.inc.php:60
-#: ../../templates/show_edit_user.inc.php:63
-#: ../../templates/show_install_account.inc.php:57
-#: ../../templates/show_login_form.inc.php:83
-#: ../../templates/show_user_registration.inc.php:94
-msgid "Password"
-msgstr ""
-
-#: ../../modules/catalog/googlemusic.catalog.php:155
-msgid "Error: Email and Password Required for Google Music Catalogs"
-msgstr ""
-
-#: ../../modules/catalog/googlemusic.catalog.php:181
-msgid "Running Google Music Remote Update"
-msgstr ""
-
-#: ../../modules/catalog/googlemusic.catalog.php:240
-#: ../../modules/catalog/remote.catalog.php:270
-#: ../../modules/catalog/soundcloud.catalog.php:280
-#: ../../modules/catalog/subsonic.catalog.php:245
-#, php-format
-msgid "Unable to Insert Song - %s"
-msgstr ""
-
-#: ../../modules/catalog/googlemusic.catalog.php:249
-msgid "Completed updating Google Music catalog(s)."
-msgstr ""
-
-#: ../../modules/catalog/googlemusic.catalog.php:249
-#: ../../modules/catalog/soundcloud.catalog.php:290
-#: ../../modules/catalog/subsonic.catalog.php:267
-msgid "Songs added."
-msgstr ""
-
-#: ../../modules/catalog/googlemusic.catalog.php:255
-msgid "API Error: cannot connect song list."
-msgstr ""
-
-#: ../../modules/catalog/googlemusic.catalog.php:259
-msgid "API Error: cannot connect to Google Music."
 msgstr ""
 
 #: ../../modules/catalog/local.catalog.php:180
@@ -2298,6 +2243,20 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
+#: ../../modules/catalog/remote.catalog.php:111
+#: ../../modules/catalog/subsonic.catalog.php:111
+#: ../../modules/localplay/httpq.controller.php:211
+#: ../../modules/localplay/mpd.controller.php:240
+#: ../../modules/localplay/vlc.controller.php:195
+#: ../../modules/localplay/xbmc.controller.php:201
+#: ../../templates/show_add_user.inc.php:60
+#: ../../templates/show_edit_user.inc.php:63
+#: ../../templates/show_install_account.inc.php:57
+#: ../../templates/show_login_form.inc.php:83
+#: ../../templates/show_user_registration.inc.php:94
+msgid "Password"
+msgstr ""
+
 #: ../../modules/catalog/remote.catalog.php:152
 msgid "Error: Remote selected, but path is not a URL"
 msgstr ""
@@ -2319,6 +2278,13 @@ msgstr ""
 msgid "%u remote catalog(s) found (%u songs)"
 msgstr ""
 
+#: ../../modules/catalog/remote.catalog.php:270
+#: ../../modules/catalog/soundcloud.catalog.php:280
+#: ../../modules/catalog/subsonic.catalog.php:245
+#, php-format
+msgid "Unable to Insert Song - %s"
+msgstr ""
+
 #: ../../modules/catalog/remote.catalog.php:278
 msgid "Completed updating remote catalog(s)."
 msgstr ""
@@ -2337,6 +2303,11 @@ msgstr ""
 
 #: ../../modules/catalog/soundcloud.catalog.php:290
 msgid "Completed updating SoundCloud catalog(s)."
+msgstr ""
+
+#: ../../modules/catalog/soundcloud.catalog.php:290
+#: ../../modules/catalog/subsonic.catalog.php:267
+msgid "Songs added."
 msgstr ""
 
 #: ../../modules/catalog/soundcloud.catalog.php:296
@@ -3963,7 +3934,6 @@ msgid "Like"
 msgstr ""
 
 #: ../../templates/show_dynamic.inc.php:59
-#: ../../templates/show_rename_artist.inc.php:33
 msgid "OR"
 msgstr ""
 
@@ -4576,6 +4546,10 @@ msgstr ""
 msgid "Message of the Day"
 msgstr ""
 
+#: ../../templates/show_lostpassword_form.inc.php:67
+msgid "Email"
+msgstr ""
+
 #: ../../templates/show_lostpassword_form.inc.php:71
 msgid "Submit"
 msgstr ""
@@ -4928,24 +4902,6 @@ msgstr ""
 
 #: ../../templates/show_registration_confirmation.inc.php:52
 msgid "Return to Login Page"
-msgstr ""
-
-#. HINT: Artist Name
-#: ../../templates/show_rename_artist.inc.php:29
-#, php-format
-msgid "Rename %s"
-msgstr ""
-
-#: ../../templates/show_rename_artist.inc.php:35
-msgid "Insert current"
-msgstr ""
-
-#: ../../templates/show_rename_artist.inc.php:37
-msgid "Update id3 tags"
-msgstr ""
-
-#: ../../templates/show_rename_artist.inc.php:38
-msgid "Rename"
 msgstr ""
 
 #: ../../templates/show_rules.inc.php:33

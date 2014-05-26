@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.7.0-dev\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-26 02:21+0200\n"
+"POT-Creation-Date: 2014-05-26 12:19+0200\n"
 "PO-Revision-Date: 2014-05-26 02:26+0100\n"
 "Last-Translator: Manuel Landmann <psyvirusx@gmail.com>\n"
 "Language-Team: German <translations@ampache.org>\n"
@@ -2204,7 +2204,6 @@ msgid "Invalid <dropbox-path>: "
 msgstr "Ungültiger <Dropbox-Pfad>:"
 
 #: ../../modules/catalog/dropbox.catalog.php:185
-#: ../../modules/catalog/googlemusic.catalog.php:165
 #: ../../modules/catalog/local.catalog.php:203
 #: ../../modules/catalog/remote.catalog.php:168
 #: ../../modules/catalog/soundcloud.catalog.php:171
@@ -2237,64 +2236,6 @@ msgid "API Error: Cannot access file/folder at "
 msgstr ""
 "API-Fehler: Der Zugriff auf die Datei oder den Ordner in '%s' kann nicht "
 "zugegriffen werden."
-
-#: ../../modules/catalog/googlemusic.catalog.php:109
-#: ../../templates/show_lostpassword_form.inc.php:67
-msgid "Email"
-msgstr "E-Mail"
-
-#: ../../modules/catalog/googlemusic.catalog.php:110
-#: ../../modules/catalog/remote.catalog.php:111
-#: ../../modules/catalog/subsonic.catalog.php:111
-#: ../../modules/localplay/httpq.controller.php:211
-#: ../../modules/localplay/mpd.controller.php:240
-#: ../../modules/localplay/vlc.controller.php:195
-#: ../../modules/localplay/xbmc.controller.php:201
-#: ../../templates/show_add_user.inc.php:60
-#: ../../templates/show_edit_user.inc.php:63
-#: ../../templates/show_install_account.inc.php:57
-#: ../../templates/show_login_form.inc.php:83
-#: ../../templates/show_user_registration.inc.php:94
-msgid "Password"
-msgstr "Passwort"
-
-#: ../../modules/catalog/googlemusic.catalog.php:155
-msgid "Error: Email and Password Required for Google Music Catalogs"
-msgstr ""
-"Fehler: Für die Google Music Kataloge sind eine E-Mail und ein Passwort "
-"erforderlich"
-
-#: ../../modules/catalog/googlemusic.catalog.php:181
-msgid "Running Google Music Remote Update"
-msgstr "Bearbeite entfernte Google Music-Aktualisierung "
-
-#: ../../modules/catalog/googlemusic.catalog.php:240
-#: ../../modules/catalog/remote.catalog.php:270
-#: ../../modules/catalog/soundcloud.catalog.php:280
-#: ../../modules/catalog/subsonic.catalog.php:245
-#, php-format
-msgid "Unable to Insert Song - %s"
-msgstr "Beim hinzufügen des Liedes '%s' ist ein Fehler aufgetreten."
-
-#: ../../modules/catalog/googlemusic.catalog.php:249
-msgid "Completed updating Google Music catalog(s)."
-msgstr ""
-"Die Aktualisierung der/des Google Music-Kataloge(s) wurde abgeschlossen."
-
-#: ../../modules/catalog/googlemusic.catalog.php:249
-#: ../../modules/catalog/soundcloud.catalog.php:290
-#: ../../modules/catalog/subsonic.catalog.php:267
-msgid "Songs added."
-msgstr "Songs hinzugefügt."
-
-#: ../../modules/catalog/googlemusic.catalog.php:255
-msgid "API Error: cannot connect song list."
-msgstr "API-Fehler: Die Verbindung mit der Song-Liste ist fehlgeschlagen."
-
-#: ../../modules/catalog/googlemusic.catalog.php:259
-msgid "API Error: cannot connect to Google Music."
-msgstr ""
-"API-Fehler: Die Verbindung zu Google Music kann nicht aufgebaut werden."
 
 #: ../../modules/catalog/local.catalog.php:180
 msgid "Error: Path not specified"
@@ -2351,8 +2292,8 @@ msgid ""
 "Catalog Update Finished.  Total Time: [%s] Total Songs: [%s] Songs Per "
 "Second: [%s]"
 msgstr ""
-"Das Update des Kataloges wurde fertig gestellt.<br>Benötigte Zeit: "
-"[%s]<br>bearbeitete Lieder: [%s]<br>Lieder pro Sekunde: [%s]"
+"Das Update des Kataloges wurde fertig gestellt.<br>Benötigte Zeit: [%s]"
+"<br>bearbeitete Lieder: [%s]<br>Lieder pro Sekunde: [%s]"
 
 #: ../../modules/catalog/local.catalog.php:531
 #, php-format
@@ -2395,6 +2336,20 @@ msgstr "URI"
 msgid "Username"
 msgstr "Benutzername"
 
+#: ../../modules/catalog/remote.catalog.php:111
+#: ../../modules/catalog/subsonic.catalog.php:111
+#: ../../modules/localplay/httpq.controller.php:211
+#: ../../modules/localplay/mpd.controller.php:240
+#: ../../modules/localplay/vlc.controller.php:195
+#: ../../modules/localplay/xbmc.controller.php:201
+#: ../../templates/show_add_user.inc.php:60
+#: ../../templates/show_edit_user.inc.php:63
+#: ../../templates/show_install_account.inc.php:57
+#: ../../templates/show_login_form.inc.php:83
+#: ../../templates/show_user_registration.inc.php:94
+msgid "Password"
+msgstr "Passwort"
+
 #: ../../modules/catalog/remote.catalog.php:152
 msgid "Error: Remote selected, but path is not a URL"
 msgstr "Fehler: Du hast 'entfernt' gewählt, jedoch ist der Pfad keine URL"
@@ -2419,6 +2374,13 @@ msgstr ""
 msgid "%u remote catalog(s) found (%u songs)"
 msgstr "Es wurde(n) %u entfernte(r) Kataloge mit insgesamt %u Song(s) gefunden"
 
+#: ../../modules/catalog/remote.catalog.php:270
+#: ../../modules/catalog/soundcloud.catalog.php:280
+#: ../../modules/catalog/subsonic.catalog.php:245
+#, php-format
+msgid "Unable to Insert Song - %s"
+msgstr "Beim hinzufügen des Liedes '%s' ist ein Fehler aufgetreten."
+
 #: ../../modules/catalog/remote.catalog.php:278
 msgid "Completed updating remote catalog(s)."
 msgstr "Die Aktualisierung der/des entfernten Kataloge(s) ist abgeschlossen."
@@ -2441,6 +2403,11 @@ msgstr "Entfernte Aktualisierung von SoundCloud ist im Gange"
 msgid "Completed updating SoundCloud catalog(s)."
 msgstr ""
 "Die Aktualisierung der/des Kataloge(s) auf SoundCloud wurden fertiggestellt"
+
+#: ../../modules/catalog/soundcloud.catalog.php:290
+#: ../../modules/catalog/subsonic.catalog.php:267
+msgid "Songs added."
+msgstr "Songs hinzugefügt."
 
 #: ../../modules/catalog/soundcloud.catalog.php:296
 msgid "API Error: cannot get song list."
@@ -4083,7 +4050,6 @@ msgid "Like"
 msgstr "Ähnlich"
 
 #: ../../templates/show_dynamic.inc.php:59
-#: ../../templates/show_rename_artist.inc.php:33
 msgid "OR"
 msgstr "ODER"
 
@@ -4742,6 +4708,10 @@ msgstr "Registrieren"
 msgid "Message of the Day"
 msgstr "Nachricht des Tages"
 
+#: ../../templates/show_lostpassword_form.inc.php:67
+msgid "Email"
+msgstr "E-Mail"
+
 #: ../../templates/show_lostpassword_form.inc.php:71
 msgid "Submit"
 msgstr "Versenden"
@@ -5100,24 +5070,6 @@ msgstr ""
 #: ../../templates/show_registration_confirmation.inc.php:52
 msgid "Return to Login Page"
 msgstr "Zurück zur Loginseite"
-
-#. HINT: Artist Name
-#: ../../templates/show_rename_artist.inc.php:29
-#, php-format
-msgid "Rename %s"
-msgstr "%s umbenennen"
-
-#: ../../templates/show_rename_artist.inc.php:35
-msgid "Insert current"
-msgstr "Aktuellen Interpreten einfügen"
-
-#: ../../templates/show_rename_artist.inc.php:37
-msgid "Update id3 tags"
-msgstr "Aktualisieren des id3 TAGs"
-
-#: ../../templates/show_rename_artist.inc.php:38
-msgid "Rename"
-msgstr "Umbenennen"
 
 #: ../../templates/show_rules.inc.php:33
 msgid "Rules"
@@ -6003,6 +5955,37 @@ msgstr "Top Menü"
 #: Database words
 msgid "Flickr api key"
 msgstr "Flickr API-Schlüssel"
+
+#~ msgid "Error: Email and Password Required for Google Music Catalogs"
+#~ msgstr ""
+#~ "Fehler: Für die Google Music Kataloge sind eine E-Mail und ein Passwort "
+#~ "erforderlich"
+
+#~ msgid "Running Google Music Remote Update"
+#~ msgstr "Bearbeite entfernte Google Music-Aktualisierung "
+
+#~ msgid "Completed updating Google Music catalog(s)."
+#~ msgstr ""
+#~ "Die Aktualisierung der/des Google Music-Kataloge(s) wurde abgeschlossen."
+
+#~ msgid "API Error: cannot connect song list."
+#~ msgstr "API-Fehler: Die Verbindung mit der Song-Liste ist fehlgeschlagen."
+
+#~ msgid "API Error: cannot connect to Google Music."
+#~ msgstr ""
+#~ "API-Fehler: Die Verbindung zu Google Music kann nicht aufgebaut werden."
+
+#~ msgid "Rename %s"
+#~ msgstr "%s umbenennen"
+
+#~ msgid "Insert current"
+#~ msgstr "Aktuellen Interpreten einfügen"
+
+#~ msgid "Update id3 tags"
+#~ msgstr "Aktualisieren des id3 TAGs"
+
+#~ msgid "Rename"
+#~ msgstr "Umbenennen"
 
 #~ msgid "%d Song Removed"
 #~ msgid_plural "%d Songs Removed"
