@@ -109,7 +109,7 @@ if (!$typeManaged) {
     $art = new Art($media->id,$type);
     $art->get_db();
     $etag = $art->id;
-    
+
     // That means the client has a cached version of the image
     $reqheaders = getallheaders();
     if (isset($reqheaders['If-Modified-Since']) && isset($reqheaders['If-None-Match'])) {
@@ -144,14 +144,14 @@ if (!$typeManaged) {
 if (!empty($image)) {
     $extension = Art::extension($mime);
     $filename = scrub_out($filename . '.' . $extension);
-    
+
     // Send the headers and output the image
     $browser = new Horde_Browser();
     if (!empty($etag)) {
         header('ETag: ' . $etag);
+        header('Cache-Control: private');
+        header('Last-Modified: '.gmdate('D, d M Y H:i:s \G\M\T', time()));
     }
-    header('Cache-Control: private');
-    header('Last-Modified: '.gmdate('D, d M Y H:i:s \G\M\T', time()));
     $browser->downloadHeaders($filename, $mime, true);
     echo $image;
 }
