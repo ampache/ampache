@@ -316,3 +316,27 @@ function escape_ini($str)
 {
     return str_replace('"', '\"', $str);
 }
+
+// Declare apache_request_headers and getallheaders if it don't exists (PHP <= 5.3 + FastCGI)
+if (!function_exists('apache_request_headers')) {
+    function apache_request_headers()
+    {
+        $headers = array();
+        foreach ($_SERVER as $name => $value) {
+            if (substr($name, 0, 5) == 'HTTP_') {
+                $name = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
+                $headers[$name] = $value;
+            } else if ($name == "CONTENT_TYPE") {
+               $headers["Content-Type"] = $value;
+           } else if ($name == "CONTENT_LENGTH") {
+               $headers["Content-Length"] = $value;
+           }
+        }
+        return $headers;
+    }
+
+    function getallheaders()
+    {
+        return apache_request_headers();
+    }
+}
