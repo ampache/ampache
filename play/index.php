@@ -421,7 +421,7 @@ sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d", $start, $end);
 
 if ($start > 0 || $end > 0) {
     // Calculate stream size from byte range
-    if (isset($end)) {
+    if ($end > 0) {
         $end = min($end, $media->size - 1);
         $stream_size = ($end - $start) + 1;
     } else {
