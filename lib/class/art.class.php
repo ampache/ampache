@@ -32,6 +32,7 @@ use MusicBrainz\Clients\RequestsMbClient;
  */
 class Art extends database_object
 {
+    public $id;
     public $type;
     public $uid; // UID of the object not ID because it's not the ART.ID
     public $raw; // Raw art data
@@ -211,11 +212,8 @@ class Art extends database_object
      */
     public function get_db()
     {
-        $type = Dba::escape($this->type);
-        $id = Dba::escape($this->uid);
-
-        $sql = "SELECT `image`, `mime`, `size` FROM `image` WHERE `object_type`='$type' AND `object_id`='$id'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+        $db_results = Dba::read($sql, array($this->type, $this->uid));
 
         while ($results = Dba::fetch_assoc($db_results)) {
             if ($results['size'] == 'original') {
@@ -226,6 +224,7 @@ class Art extends database_object
                 $this->thumb = $results['image'];
                 $this->raw_mime = $results['mime'];
             }
+            $this->id = $results['id'];
         }
         // If we get nothing return false
         if (!$this->raw) { return false; }

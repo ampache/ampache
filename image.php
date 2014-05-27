@@ -84,6 +84,7 @@ switch ($_GET['thumb']) {
 $image = '';
 $mime = '';
 $filename = '';
+$etag = '';
 $typeManaged = false;
 if (isset($_GET['type'])) {
     switch ($_GET['type']) {
@@ -107,6 +108,22 @@ if (!$typeManaged) {
 
     $art = new Art($media->id,$type);
     $art->get_db();
+    $etag = $art->id;
+    
+    // That means the client has a cached version of the image
+    $reqheaders = getallheaders();
+    if (isset($reqheaders['If-Modified-Since']) && isset($reqheaders['If-None-Match'])) {
+        $ccontrol = $reqheaders['Cache-Control'];
+        if ($ccontrol != 'no-cache') {
+            $cetagf = explode('-', $reqheaders['If-None-Match']);
+            $cetag = $cetagf[0];
+            // Same image than the cached one? Use the cache.
+            if ($cetag == $etag) {
+                header('HTTP/1.1 304 Not Modified');
+                exit;
+            }
+        }
+    }
 
     if (!$art->raw_mime) {
         $mime = 'image/jpeg';
@@ -116,6 +133,7 @@ if (!$typeManaged) {
     } else {
         if ($_GET['thumb']) {
             $thumb_data = $art->get_thumb($size);
+            $etag .= '-' . $_GET['thumb'];
         }
 
         $mime = isset($thumb_data['thumb_mime']) ? $thumb_data['thumb_mime'] : $art->raw_mime;
@@ -126,10 +144,14 @@ if (!$typeManaged) {
 if (!empty($image)) {
     $extension = Art::extension($mime);
     $filename = scrub_out($filename . '.' . $extension);
-
+    
     // Send the headers and output the image
     $browser = new Horde_Browser();
-    header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 604800));
+    if (!empty($etag)) {
+        header('ETag: ' . $etag);
+    }
+    header('Cache-Control: private');
+    header('Last-Modified: '.gmdate('D, d M Y H:i:s \G\M\T', time()));
     $browser->downloadHeaders($filename, $mime, true);
     echo $image;
 }
