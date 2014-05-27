@@ -26,6 +26,15 @@ if (empty($web_path_guess)) {
     $web_path_guess = rtrim(dirname($_SERVER['PHP_SELF']), '\/');
 }
 
+$local_username = scrub_out($_REQUEST['local_username']);
+if (empty($local_username)) {
+    $local_username = scrub_out($_REQUEST['db_username']);
+}
+$local_pass = scrub_out($_REQUEST['local_pass']);
+if (empty($local_pass)) {
+    $local_pass = scrub_out($_REQUEST['db_password']);
+}
+
 require $prefix . '/templates/install_header.inc.php';
 ?>
         <div class="jumbotron">
@@ -54,7 +63,7 @@ require $prefix . '/templates/install_header.inc.php';
             <h2><?php echo T_('Generate Config File'); ?></h2>
             <h3><?php echo T_('Database connection'); ?></h3>
             <?php Error::display('config'); ?>
-<form method="post" action="<?php echo $web_path . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" >
+<form method="post" action="<?php echo $web_path . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" autocomplete="off">
 <div class="form-group">
     <label for="web_path" class="col-sm-4 control-label"><?php echo T_('Web Path'); ?></label>
     <div class="col-sm-8">
@@ -82,13 +91,13 @@ require $prefix . '/templates/install_header.inc.php';
 <div class="form-group">
     <label for="local_username" class="col-sm-4 control-label"><?php echo T_('MySQL Username'); ?></label>
     <div class="col-sm-8">
-        <input type="text" class="form-control" id="local_username" name="local_username" value="<?php echo scrub_out($_REQUEST['local_username']);?>"/>
+        <input type="text" class="form-control" id="local_username" name="local_username" value="<?php echo $local_username; ?>"/>
     </div>
 </div>
 <div class="form-group">
     <label for="local_pass" class="col-sm-4 control-label"><?php echo T_('MySQL Password'); ?></label>
     <div class="col-sm-8">
-        <input type="password" class="form-control" id="local_pass" name="local_pass" placeholder="Password">
+        <input type="password" class="form-control" id="local_pass" name="local_pass" value="<?php echo $local_pass; ?>" placeholder="Password">
     </div>
 </div>
 
