@@ -447,7 +447,7 @@ if ($start > 0 || $end > 0) {
     debug_event('play','Starting stream of ' . $media->file . ' with size ' . $media->size, 5);
 }
 
-if ($transcode) {
+if ($transcode || $demo_id) {
     header('Accept-Ranges: none');
 } else {
     header('Accept-Ranges: bytes');
