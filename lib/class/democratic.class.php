@@ -236,7 +236,7 @@ class Democratic extends Tmp_Playlist
             "WHERE `tmp_playlist_data`.`tmp_playlist` = '" .
             Dba::escape($this->tmp_playlist) . "' " .
             'GROUP BY 1, 2 ' .
-            'ORDER BY COUNT(*) DESC, MAX(`user_vote`.`date`) ';
+            'ORDER BY COUNT(*) DESC, MAX(`user_vote`.`date`), `tmp_playlist_data`.`id` ';
 
         if ($limit) {
             $sql .= 'LIMIT ' . intval($limit);
