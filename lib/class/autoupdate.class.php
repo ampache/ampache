@@ -149,7 +149,7 @@ class AutoUpdate
     }
 
     public static function is_update_available($force = false)
-    {
+    {return true;
         if (!$force && (!self::lastcheck_expired() || !AmpConfig::get('autoupdate'))) {
             return AmpConfig::get('autoupdate_lastversion_new');
         }
@@ -191,6 +191,19 @@ class AutoUpdate
 
         echo T_('See') . ' <a href="https://github.com/ampache/ampache/' . (self::is_develop() ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/master/docs/CHANGELOG.md') . '" target="_blank">' . T_('changes') . '</a> ';
         echo T_('or') . ' <a href="https://github.com/ampache/ampache/archive/' . (self::is_develop() ? 'develop.zip' : self::get_latest_version() . '.zip') . '" target="_blank"><b>' . T_('download') . '</b></a>.';
+        if (self::is_git_repository()) {
+            echo ' | <a href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update">.:: Update ::.</a>';
+        }
         echo '</div>';
+    }
+
+    public static function update_files()
+    {
+        echo T_('Updating Ampache sources with `git pull` ...') . '<br />';
+        ob_flush();
+        chdir(AmpConfig::get('prefix'));
+        exec('git pull https://github.com/ampache/ampache.git');
+        echo T_('Done') . '<br />';
+        ob_flush();
     }
 }

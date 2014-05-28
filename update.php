@@ -20,22 +20,34 @@
  *
  */
 
-// We need this stuff
-define('NO_SESSION', 1);
-define('OUTDATED_DATABASE_OK', 1);
+if (isset($_REQUEST['type']) && $_REQUEST['type'] != 'sources') {
+    // We need this stuff
+    define('NO_SESSION', 1);
+    define('OUTDATED_DATABASE_OK', 1);
+}
 require_once 'lib/init.php';
 
 // Get the version and format it
 $version = Update::get_version();
 
-if ($_REQUEST['action'] == 'update') {
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
+    if ($_REQUEST['type'] == 'sources') {
+        if (!Access::check('interface', '100')) {
+            UI::access_denied();
+            exit;
+        }
 
-    /* Run the Update Mojo Here */
-    Update::run_update();
+        set_time_limit(300);
+        AutoUpdate::update_files();
+        echo '<script language="javascript" type="text/javascript">window.location="' . AmpConfig::get('web_path') . '";</script>';
+        exit;
+    } else {
+        /* Run the Update Mojo Here */
+        Update::run_update();
 
-    /* Get the New Version */
-    $version = Update::get_version();
-
+        /* Get the New Version */
+        $version = Update::get_version();
+    }
 }
 $htmllang = str_replace("_","-",AmpConfig::get('lang'));
 
@@ -64,8 +76,8 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
             <h1><?php echo T_('Ampache Update'); ?></h1>
         </div>
         <div class="well">
-             <p><?php printf(T_('This page handles all database updates to Ampache starting with <strong>3.3.3.5</strong>. According to your database your current version is: <strong>%s</strong>.'), Update::format_version($version)); ?></p>
-             <p><?php echo T_('The following updates need to be performed'); ?></p>
+             <p><?php printf(T_('This page handles all database updates to Ampache starting with <strong>3.3.3.5</strong>. Your current version is <strong>%s</strong> with database version <strong>%s</strong>.'), AmpConfig::get('version'), $version); ?></p>
+             <p><?php echo T_('The following updates need to be performed:'); ?></p>
         </div>
         <?php Error::display('general'); ?>
         <div class="content">
