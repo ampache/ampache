@@ -890,6 +890,7 @@ table.tabledata tbody .odd {
 
 table.tabledata tbody .cel_play {
     max-width: 40px;
+    min-width: 40px;
     width: 40px !important;
     text-align: right;
 }
@@ -911,6 +912,7 @@ table.tabledata tbody tr:hover .cel_play_content, table.tabledata tbody tr:focus
 
 table.tabledata tbody .cel_add {
     max-width: 60px;
+    min-width: 60px;
     width: 60px !important;
     text-align: right;
 }
@@ -1072,6 +1074,7 @@ div.box.box_rules {
 
 .cel_song, .cel_album, .cel_artist {
     max-width: 350px;
+    white-space: normal !important;
 }
 
 /***********************************************
