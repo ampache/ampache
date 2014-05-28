@@ -149,7 +149,7 @@ class AutoUpdate
     }
 
     public static function is_update_available($force = false)
-    {return true;
+    {
         if (!$force && (!self::lastcheck_expired() || !AmpConfig::get('autoupdate'))) {
             return AmpConfig::get('autoupdate_lastversion_new');
         }
@@ -204,6 +204,7 @@ class AutoUpdate
         chdir(AmpConfig::get('prefix'));
         exec('git pull https://github.com/ampache/ampache.git');
         echo T_('Done') . '<br />';
+        self::get_latest_version(true);
         ob_flush();
     }
 }
