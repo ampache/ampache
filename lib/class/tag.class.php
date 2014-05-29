@@ -197,17 +197,23 @@ class Tag extends database_object
      */
     public function merge($merge_to, $is_persistent)
     {
-        debug_event('tag', 'Merging tag ' . $this->id . ' to ' . $merge_to . ' (persistent: ' . ($is_persistent ? 'yes' : 'no') . ')...', '5');
+        if ($this->id != $merge_to) {
+            debug_event('tag', 'Merging tag ' . $this->id . ' to ' . $merge_to . ' (persistent: ' . ($is_persistent ? 'yes' : 'no') . ')...', '5');
 
-        $sql = "UPDATE `tag_map` SET `tag_map`.`tag_id` = ? " .
-            "WHERE `tag_map`.`tag_id` = ?";
-        Dba::write($sql, array($merge_to, $this->id));
-
-        if ($is_persistent) {
-            $sql = 'UPDATE `tag` SET `merged_to` = ? WHERE `id` = ?';
+            $sql = "UPDATE `tag_map` SET `tag_map`.`tag_id` = ? " .
+                "WHERE `tag_map`.`tag_id` = ?";
             Dba::write($sql, array($merge_to, $this->id));
-        } else {
-            $this->delete();
+
+            $sql = "UPDATE `tag` SET `tag`.`merged_to` = ? " .
+                "WHERE `tag`.`merged_to` = ?";
+            Dba::write($sql, array($merge_to, $this->id));
+
+            if ($is_persistent) {
+                $sql = 'UPDATE `tag` SET `merged_to` = ? WHERE `id` = ?';
+                Dba::write($sql, array($merge_to, $this->id));
+            } else {
+                $this->delete();
+            }
         }
     }
 
