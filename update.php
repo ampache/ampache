@@ -20,7 +20,7 @@
  *
  */
 
-if (isset($_REQUEST['type']) && $_REQUEST['type'] != 'sources') {
+if (!isset($_REQUEST['type']) || $_REQUEST['type'] != 'sources') {
     // We need this stuff
     define('NO_SESSION', 1);
     define('OUTDATED_DATABASE_OK', 1);

@@ -401,6 +401,9 @@ class Update
         $update_string = '- Copy default .htaccess configurations.<br />';
         $version[] = array('version' => '360051','description' => $update_string);
 
+        $update_string = '- Drop unused dynamic_playlist tables and add session id to votes.<br />';
+        $version[] = array('version' => '370001','description' => $update_string);
+
         return $version;
     }
 
@@ -2454,5 +2457,30 @@ class Update
         }
 
         return $ret;
+    }
+
+    /**
+     * update_370001
+     *
+     * Drop unused dynamic_playlist tables and add session id to votes
+     */
+    public static function update_370001()
+    {
+        $sql = "DROP TABLE dynamic_playlist";
+        Dba::write($sql);
+        $sql = "DROP TABLE dynamic_playlist_data";
+        Dba::write($sql);
+
+        $sql = "ALTER TABLE `user_vote` ADD `sid` varchar(256) CHARACTER SET utf8 NULL AFTER `date`";
+        Dba::write($sql);
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('demo_clear_sessions','0','Clear democratic votes of expired user sessions',25,'boolean','playlist')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        return true;
     }
 }

@@ -204,7 +204,7 @@ class AutoUpdate
         chdir(AmpConfig::get('prefix'));
         exec('git pull https://github.com/ampache/ampache.git');
         echo T_('Done') . '<br />';
-        self::get_latest_version(true);
         ob_flush();
+        self::get_latest_version(true);
     }
 }

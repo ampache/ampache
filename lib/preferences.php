@@ -176,6 +176,7 @@ function create_preference_input($name,$value)
         case 'broadcast_by_default':
         case 'album_group':
         case 'topmenu':
+        case 'demo_clear_sessions':
             $is_true = '';
             $is_false = '';
             if ($value == '1') {
