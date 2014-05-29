@@ -27,6 +27,24 @@
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
                 <td><input type="text" name="name" value="<?php echo scrub_out($tag->name); ?>" /></td>
             </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Merge this tag to') ?></td>
+                <td>
+                    <select name="select_tags" id="select_tags">
+                        <option value=""></option>
+                        <?php
+                        if ($tag->merged_to) {
+                            echo "<option value='" . $tag->merged_to . "'>" . $tag->merged_to . "</option>";
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Persistent merge') ?></td>
+                <td><input type="checkbox" name="merge_persist" value="1" /></td>
+            </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $tag->id; ?>" />
         <input type="hidden" name="type" value="tag_row" />

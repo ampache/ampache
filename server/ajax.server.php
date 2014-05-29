@@ -181,6 +181,12 @@ switch ($_REQUEST['action']) {
             case 'tag_row':
                 $tag = new Tag($_POST['id']);
                 $tag->update($_POST['name']);
+                if ($_POST['select_tags']) {
+                    $merge_to = Tag::construct_from_name($_POST['select_tags']);
+                    if ($merge_to->id) {
+                        $tag->merge($merge_to->id, ($_POST['merge_persist'] == '1'));
+                    }
+                }
             break;
             default:
                 $key = 'rfc3514';

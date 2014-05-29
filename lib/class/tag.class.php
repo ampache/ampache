@@ -30,6 +30,7 @@ class Tag extends database_object
 {
     public $id;
     public $name;
+    public $merged_to;
 
     /**
      * constructor
@@ -166,10 +167,8 @@ class Tag extends database_object
     {
         if (!strlen($value)) { return false; }
 
-        $value = Dba::escape($value);
-
-        $sql = "REPLACE INTO `tag` SET `name`='$value'";
-        Dba::write($sql);
+        $sql = "REPLACE INTO `tag` SET `name` = ?";
+        Dba::write($sql, array($value));
         $insert_id = Dba::insert_id();
 
         parent::add_to_cache('tag_name', $value, $insert_id);
@@ -187,12 +186,48 @@ class Tag extends database_object
         //debug_event('tag.class', 'Updating tag {'.$this->id.'} with name {'.$name.'}...', '5');
         if (!strlen($name)) { return false; }
 
-        $name = Dba::escape($name);
-
         $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
         Dba::write($sql, array($name, $this->id));
 
     } // add_tag
+
+    /**
+     * merge
+     * Merge the tag to another one.
+     */
+    public function merge($merge_to, $is_persistent)
+    {
+        debug_event('tag', 'Merging tag ' . $this->id . ' to ' . $merge_to . ' (persistent: ' . ($is_persistent ? 'yes' : 'no') . ')...', '5');
+
+        $sql = "UPDATE `tag_map` SET `tag_map`.`tag_id` = ? " .
+            "WHERE `tag_map`.`tag_id` = ?";
+        Dba::write($sql, array($merge_to, $this->id));
+
+        if ($is_persistent) {
+            $sql = 'UPDATE `tag` SET `merged_to` = ? WHERE `id` = ?';
+            Dba::write($sql, array($merge_to, $this->id));
+        } else {
+            $this->delete();
+        }
+    }
+
+    /**
+     * get_merged_tags
+     * Get merged tags to this tag.
+     */
+    public function get_merged_tags()
+    {
+        $sql = "SELECT `tag`.`id`, `tag`.`name`" .
+            "FROM `tag` " .
+            "WHERE `tag`.`merged_to` = ? " .
+            "ORDER BY `tag`.`name`";
+
+        $db_results = Dba::read($sql, array($this->id));
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[$row['id']] = array('id'=>$row['id'], 'name'=>$row['name']);
+        }
+    }
 
     /**
      * add_tag_map
@@ -207,9 +242,14 @@ class Tag extends database_object
 
         if (!$tag_id || !$id) { return false; }
 
+        // If tag merged to another one, add reference to the merge destination
+        $tag = new Tag($tag_id);
+        if ($tag->merged_to) {
+            $tag_id = $tag->merged_to;
+        }
         $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
-            "VALUES ('$tag_id','$uid','$type','$id')";
-        Dba::write($sql);
+            "VALUES (?, ?, ?, ?)";
+        Dba::write($sql, array($tag_id, $uid, $type, $id));
         $insert_id = Dba::insert_id();
 
         parent::add_to_cache('tag_map_' . $type,$insert_id,array('tag_id'=>$tag_id,'user'=>$uid,'object_type'=>$type,'object_id'=>$id));
@@ -255,11 +295,11 @@ class Tag extends database_object
      */
     public function delete()
     {
-        $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id`='".$this->id."'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ?";
+        Dba::write($sql, array($this->id));
 
-        $sql = "DELETE FROM `tag` WHERE `tag`.`id`='".$this->id."'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `tag` WHERE `tag`.`id` = ? OR `tag`.`merged_to` = ?";
+        Dba::write($sql, array($this->id, $this->id));
 
         // Call the garbage collector to clean everything
         Tag::gc();
@@ -277,9 +317,8 @@ class Tag extends database_object
             return parent::get_from_cache('tag_name',$value);
         }
 
-        $value = Dba::escape($value);
-        $sql = "SELECT * FROM `tag` WHERE `name`='$value'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT * FROM `tag` WHERE `name` = ?";
+        $db_results = Dba::read($sql, array($value));
 
         $results = Dba::fetch_assoc($db_results);
 
@@ -298,13 +337,9 @@ class Tag extends database_object
     {
         if (!self::validate_type($type)) { return false; }
 
-        $object_id = Dba::escape($object_id);
-        $tag_id = Dba::escape($tag_id);
-        $user = Dba::escape($user);
-        $type = Dba::escape($type);
-
-        $sql = "SELECT * FROM `tag_map` WHERE `tag_id`='$tag_id' AND `user`='$user' AND `object_id`='$object_id' AND `object_type`='$type'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` " .
+            "WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
+        $db_results = Dba::read($sql, array($tag_id, $user, $object_id, $type));
 
         $results = Dba::fetch_assoc($db_results);
 
@@ -350,14 +385,12 @@ class Tag extends database_object
     {
         if (!self::validate_type($type)) { return array(); }
 
-        $id = Dba::escape($id);
-
         $sql = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
             "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
-            "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$id'";
+            "WHERE `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ?";
 
         $results = array();
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, array($type, $id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row;
@@ -415,6 +448,7 @@ class Tag extends database_object
         $sql = "SELECT `tag_map`.`tag_id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` " .
             "FROM `tag_map` " .
             "LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " .
+            "WHERE `tag`.`merged_to` IS NULL " .
             "GROUP BY `tag`.`name` ORDER BY `count` DESC ";
 
         if ($limit > 0) {

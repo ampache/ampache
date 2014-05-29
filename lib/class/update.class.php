@@ -404,6 +404,9 @@ class Update
         $update_string = '- Drop unused dynamic_playlist tables and add session id to votes.<br />';
         $version[] = array('version' => '370001','description' => $update_string);
 
+        $update_string = '- Add tag persistent merge reference.<br />';
+        $version[] = array('version' => '370002','description' => $update_string);
+
         return $version;
     }
 
@@ -2480,6 +2483,19 @@ class Update
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         Dba::write($sql, array($id));
+
+        return true;
+    }
+
+    /**
+     * update_370002
+     *
+     * Add tag persistent merge reference
+     */
+    public static function update_370002()
+    {
+        $sql = "ALTER TABLE `tag` ADD `merged_to` int(11) NULL AFTER `name`";
+        Dba::write($sql);
 
         return true;
     }
