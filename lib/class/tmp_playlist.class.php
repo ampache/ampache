@@ -137,8 +137,6 @@ class Tmp_Playlist extends database_object
      */
     public function get_items()
     {
-        $id = Dba::escape($this->id);
-
         /* Select all objects from this playlist */
         $sql = "SELECT `object_type`, `id`, `object_id` " .
             "FROM `tmp_playlist_data` " .

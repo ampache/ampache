@@ -569,7 +569,7 @@ class Album extends database_object
             $count = 1;
         }
 
-        $sql = "SELECT `album`.`id` FROM `album` " .
+        $sql = "SELECT DISTINCT `album`.`id` FROM `album` " .
             "LEFT JOIN `song` ON `song`.`album` = `album`.`id` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
