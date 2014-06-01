@@ -123,7 +123,7 @@ class Stream_Playlist
             $object->format();
             // Don't add disabled media objects to the stream playlist
             // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
-            if (make_bool($object->enabled)) {
+            if (!isset($object->enabled) || make_bool($object->enabled)) {
                 //FIXME: play_url shouldn't be static
                 $url['url'] = $type::play_url($object->id, $additional_params);
 

@@ -142,8 +142,8 @@ class Tmp_Playlist extends database_object
         /* Select all objects from this playlist */
         $sql = "SELECT `object_type`, `id`, `object_id` " .
             "FROM `tmp_playlist_data` " .
-            "WHERE `tmp_playlist`='$id' ORDER BY `id` ASC";
-        $db_results = Dba::read($sql);
+            "WHERE `tmp_playlist` = ? ORDER BY `id` ASC";
+        $db_results = Dba::read($sql, array($this->id));
 
         /* Define the array */
         $items = array();
@@ -271,7 +271,7 @@ class Tmp_Playlist extends database_object
     {
         self::prune_playlists();
         self::prune_tracks();
-        Dba::write("DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `song` ON `tmp_playlist_data`.`object_id` = `song`.`id` WHERE `song`.`id` IS NULL");
+        //Dba::write("DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `song` ON `tmp_playlist_data`.`object_id` = `song`.`id` WHERE `song`.`id` IS NULL");
     }
 
     /**
