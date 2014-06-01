@@ -35,7 +35,7 @@ if ($server_allow && $controller && $access_check) {
     $class = $current_instance ? '' : ' class="active_instance"';
 ?>
 <?php if (Access::check('localplay','25')) { ?>
-  <li><h4><?php echo T_('Localplay'); ?></h4>
+  <li><h4 class="header"><?php echo T_('Localplay'); ?><span class="sprite sprite-icon_all expanded" alt="Expand/Collapse" title="Expand/Collapse"></h4>
     <ul class="sb3" id="sb_localplay_info">
 <?php if (Access::check('localplay','75')) { ?>
     <li id="sb_localplay_info_add_instance"><a href="<?php echo $web_path; ?>/localplay.php?action=show_add_instance"><?php echo T_('Add Instance'); ?></a></li>
@@ -45,7 +45,7 @@ if ($server_allow && $controller && $access_check) {
     </ul>
   </li>
 <?php } ?>
-  <li><h4><?php echo T_('Active Instance'); ?></h4>
+  <li><h4 class="header"><?php echo T_('Active Instance'); ?><span class="sprite sprite-icon_all expanded" alt="Expand/Collapse" title="Expand/Collapse"></h4>
     <ul class="sb3" id="sb_localplay_instances">
     <li id="sb_localplay_instances_none"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=0', T_('None'),'localplay_instance_none');  ?></li>
     <?php
@@ -63,7 +63,7 @@ if ($server_allow && $controller && $access_check) {
     </ul>
   </li>
 <?php } else { ?>
-  <li><h4><?php echo T_('Localplay Disabled'); ?></h4></li>
+  <li><h4 class="header"><?php echo T_('Localplay Disabled'); ?><span class="sprite sprite-icon_all expanded" alt="Expand/Collapse" title="Expand/Collapse"></h4></li>
   <?php if (!$server_allow) { ?>
     <li><?php echo T_('Allow Localplay set to False'); ?></li>
   <?php } elseif (!$controller) { ?>

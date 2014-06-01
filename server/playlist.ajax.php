@@ -112,7 +112,7 @@ switch ($_REQUEST['action']) {
             case 'song_preview':
             case 'song':
                 debug_event('playlist', 'Adding song {'.$item_id.'}...', '5');
-                $songs[] = $item_id;
+                $songs = explode(',', $item_id);
             break;
             default:
                 debug_event('playlist', 'Adding all songs of current playlist...', '5');
