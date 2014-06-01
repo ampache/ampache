@@ -1031,7 +1031,7 @@ msgstr "Jahren"
 #: ../../lib/class/ampconfig.class.php:78
 #, php-format
 msgid "Trying to clobber '%s' without setting clobber"
-msgstr "Versuche %s zu überschreiben ohne dass 'überschreiben' eingestellt ist"
+msgstr "Versuche %s zu überschreiben, dabei ist 'überschreiben' deaktiviert"
 
 #: ../../lib/class/api.class.php:129
 msgid "Login Failed: version too old"
@@ -2596,7 +2596,7 @@ msgstr "Die eingegebenen Passwörter stimmen nicht überein"
 
 #: ../../rest/index.php:43 ../../server/xml.server.php:43
 msgid "Access Control not Enabled"
-msgstr "Die Zugriffskontrolle ist nicht aktiviert"
+msgstr "Die Zugriffskontrolle ist deaktiviert"
 
 #: ../../search.php:43
 msgid "Search Saved"
