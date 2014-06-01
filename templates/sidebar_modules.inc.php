@@ -21,14 +21,14 @@
  */
 ?>
 <ul class="sb2" id="sb_modules">
-<li><h4><?php echo T_('Modules'); ?></h4>
+<li><h4 class="header"><?php echo T_('Modules'); ?><span class="sprite sprite-icon_all expanded" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
         <ul class="sb3" id="sb_Modules">
         <li id="sb_preferences_mo_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo T_('Localplay Modules'); ?></a></li>
         <li id="sb_preferences_mo_catalog_types"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_catalog_types"><?php echo T_('Catalog Modules'); ?></a></li>
         <li id="sb_preferences_mo_plugins"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_plugins"><?php echo T_('Available Plugins'); ?></a></li>
         </ul>
 </li>
-  <li><h4><?php echo T_('Other Tools'); ?></h4>
+  <li><h4 class="header"><?php echo T_('Other Tools'); ?><span class="sprite sprite-icon_all expanded" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
     <ul class="sb3" id="sb_admin_ot">
       <li id="sb_admin_ot_Duplicates"><a href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo T_('Find Duplicates'); ?></a></li>
       <li id="sb_admin_ot_Mail"><a href="<?php echo $web_path; ?>/admin/mail.php"><?php echo T_('Mail Users'); ?></a></li>
