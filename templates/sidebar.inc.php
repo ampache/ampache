@@ -75,8 +75,35 @@ $(function() {
         //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
         $content.slideToggle(500, function() {
             $header.children().toggleClass("expanded collapsed");
+            if ($header.children().hasClass("collapsed")) {
+                document.cookie = $header.children().attr('id') + "=collapsed";
+            } else {
+                document.cookie = $header.children().attr('id') + "=expanded";
+            }
         });
 
     });
+});
+
+$(document).ready(function() {
+    // Get a string of all the cookies.
+    var cookieArray = document.cookie.split(";");
+    var result = new Array();
+    // Create a key/value array with the individual cookies.
+    for (var elem in cookieArray) {
+        var temp = cookieArray[elem].split("=");
+        // There is always the cookie ampache, we don't need this one.
+        if (temp[0] != "ampache") {
+            // We need to trim whitespaces.
+            result[$.trim(temp[0])] = $.trim(temp[1]);
+        }
+    }
+    // Finds the elements and if the cookie is collapsed, it
+    // collapsed the found element.
+    for (var key in result) {
+        if ($("#" + key).length && result[key] == "collapsed") {
+            $("#" + key).parent().next().slideToggle(0);
+        }
+    }
 });
 </script>
