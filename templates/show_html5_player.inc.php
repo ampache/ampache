@@ -118,7 +118,7 @@ function ShowEqualizer()
 
 function SavePlaylist()
 {
-    var url = "http://ampache.test/server/ajax.server.php?page=playlist&action=append_item&item_type=song&item_id=";
+    var url = "<?php echo AmpConfig::get('ajax_url'); ?>?page=playlist&action=append_item&item_type=song&item_id=";
     for (var i = 0; i < jplaylist['playlist'].length; i++) {
         url += "," + jplaylist['playlist'][i]["song_id"];
     }
