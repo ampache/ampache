@@ -75,11 +75,11 @@ $(function() {
         //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
         $content.slideToggle(500, function() {
             $header.children().toggleClass("expanded collapsed");
+            var sbstate = "expanded";
             if ($header.children().hasClass("collapsed")) {
-                document.cookie = $header.children().attr('id') + "=collapsed";
-            } else {
-                document.cookie = $header.children().attr('id') + "=expanded";
+                sbstate = "collapsed";
             }
+            $.cookie('sb_' + $header.children().attr('id'), sbstate, { expires: 30, path: '/'});
         });
 
     });
@@ -92,10 +92,12 @@ $(document).ready(function() {
     // Create a key/value array with the individual cookies.
     for (var elem in cookieArray) {
         var temp = cookieArray[elem].split("=");
-        // There is always the cookie ampache, we don't need this one.
-        if (temp[0] != "ampache") {
-            // We need to trim whitespaces.
-            result[$.trim(temp[0])] = $.trim(temp[1]);
+        // We need to trim whitespaces.
+        temp[0] = $.trim(temp[0]);
+        temp[1] = $.trim(temp[1]);
+        // Only take sb_* cookies (= sidebar cookies)
+        if (temp[0].substring(0, 3) == "sb_") {
+            result[temp[0].substring(3)] = temp[1];
         }
     }
     // Finds the elements and if the cookie is collapsed, it
