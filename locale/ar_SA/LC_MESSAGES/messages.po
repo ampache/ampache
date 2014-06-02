@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-26 12:19+0200\n"
+"POT-Creation-Date: 2014-05-31 16:01+0200\n"
 "PO-Revision-Date: 2009-05-19 07:38+0900\n"
 "Last-Translator: momo-i <webmaster@momo-i.org>\n"
 "Language-Team: Arabic\n"
@@ -262,7 +262,7 @@ msgid "Guest"
 msgstr "ضيف"
 
 #: ../../admin/users.php:134 ../../lib/class/democratic.class.php:161
-#: ../../lib/preferences.php:264 ../../templates/show_access_list.inc.php:55
+#: ../../lib/preferences.php:265 ../../templates/show_access_list.inc.php:55
 #: ../../templates/show_add_access.inc.php:42
 #: ../../templates/show_add_user.inc.php:83
 #: ../../templates/show_create_democratic.inc.php:42
@@ -280,7 +280,7 @@ msgid "User"
 msgstr "مستخدم"
 
 #: ../../admin/users.php:134 ../../lib/class/democratic.class.php:170
-#: ../../lib/preferences.php:266 ../../templates/show_add_user.inc.php:86
+#: ../../lib/preferences.php:267 ../../templates/show_add_user.inc.php:86
 #: ../../templates/show_create_democratic.inc.php:45
 #: ../../templates/show_democratic_playlist.inc.php:62
 #: ../../templates/show_democratic_playlist.inc.php:109
@@ -682,7 +682,7 @@ msgstr ""
 msgid "Config file creation failed"
 msgstr ""
 
-#: ../../bin/install/update_db.inc:44
+#: ../../bin/install/update_db.inc:44 ../../update.php:80
 msgid "The following updates need to be performed:"
 msgstr ""
 
@@ -1063,7 +1063,7 @@ msgstr ""
 msgid "Media Object Invalid or Not Specified"
 msgstr ""
 
-#: ../../lib/class/art.class.php:1008
+#: ../../lib/class/art.class.php:1007
 msgid "Error: Unable to open"
 msgstr ""
 
@@ -1088,6 +1088,14 @@ msgstr ""
 #, fuzzy
 msgid "download"
 msgstr "تنزيل"
+
+#: ../../lib/class/autoupdate.class.php:202
+msgid "Updating Ampache sources with `git pull` ..."
+msgstr ""
+
+#: ../../lib/class/autoupdate.class.php:206
+msgid "Done"
+msgstr ""
 
 #: ../../lib/class/broadcast.class.php:160
 #, fuzzy
@@ -1250,7 +1258,7 @@ msgstr ""
 
 #: ../../lib/class/catalog.class.php:342 ../../lib/class/catalog.class.php:345
 #: ../../lib/class/catalog.class.php:348 ../../lib/class/user.class.php:841
-#: ../../lib/preferences.php:291 ../../templates/show_user.inc.php:23
+#: ../../lib/preferences.php:292 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:57
 msgid "Never"
 msgstr "أبدا"
@@ -1751,15 +1759,15 @@ msgstr "في مرحلة ما بعد الصيحة"
 msgid "Show Lyrics"
 msgstr ""
 
-#: ../../lib/class/update.class.php:442
+#: ../../lib/class/update.class.php:448
 msgid "No updates needed."
 msgstr ""
 
-#: ../../lib/class/update.class.php:2428 ../../lib/class/update.class.php:2444
+#: ../../lib/class/update.class.php:2434 ../../lib/class/update.class.php:2450
 msgid "File copy error."
 msgstr ""
 
-#: ../../lib/class/update.class.php:2435 ../../lib/class/update.class.php:2451
+#: ../../lib/class/update.class.php:2441 ../../lib/class/update.class.php:2457
 msgid "Cannot copy default .htaccess file."
 msgstr ""
 
@@ -1889,13 +1897,13 @@ msgstr ""
 msgid "Unable to create local account"
 msgstr ""
 
-#: ../../lib/preferences.php:186 ../../lib/preferences.php:305
+#: ../../lib/preferences.php:187 ../../lib/preferences.php:306
 #: ../../templates/show_disabled_songs.inc.php:64
 #: ../../templates/show_user_row.inc.php:49
 msgid "Enable"
 msgstr "يمكن"
 
-#: ../../lib/preferences.php:187 ../../lib/preferences.php:306
+#: ../../lib/preferences.php:188 ../../lib/preferences.php:307
 #: ../../templates/show_catalog_types.inc.php:43
 #: ../../templates/show_duplicates.inc.php:27
 #: ../../templates/show_duplicates.inc.php:66
@@ -1904,20 +1912,20 @@ msgstr "يمكن"
 msgid "Disable"
 msgstr "يعطل"
 
-#: ../../lib/preferences.php:205 ../../lib/preferences.php:242
+#: ../../lib/preferences.php:206 ../../lib/preferences.php:243
 #: ../../lib/ui.lib.php:329 ../../templates/show_adds_catalog.inc.php:27
 #: ../../templates/show_gather_art.inc.php:25
-#: ../../templates/show_install_config.inc.php:110
+#: ../../templates/show_install_config.inc.php:119
 #: ../../templates/sidebar_localplay.inc.php:50
 msgid "None"
 msgstr "بلا"
 
-#: ../../lib/preferences.php:207 ../../templates/show_edit_user.inc.php:122
+#: ../../lib/preferences.php:208 ../../templates/show_edit_user.inc.php:122
 #: ../../templates/show_playtype_switch.inc.php:33
 msgid "Stream"
 msgstr "يتدفق"
 
-#: ../../lib/preferences.php:210
+#: ../../lib/preferences.php:211
 #: ../../modules/localplay/httpq.controller.php:471
 #: ../../modules/localplay/mpd.controller.php:469
 #: ../../modules/localplay/vlc.controller.php:479
@@ -1928,86 +1936,86 @@ msgstr "يتدفق"
 msgid "Democratic"
 msgstr "الديمقراطية"
 
-#: ../../lib/preferences.php:213 ../../templates/show_edit_user.inc.php:120
+#: ../../lib/preferences.php:214 ../../templates/show_edit_user.inc.php:120
 #: ../../templates/show_playtype_switch.inc.php:35
 #: ../../templates/sidebar_home.inc.php:62 ../../templates/sidebar.inc.php:30
 #: ../../templates/sidebar_localplay.inc.php:38
 msgid "Localplay"
 msgstr "لعب المحلية"
 
-#: ../../lib/preferences.php:215
+#: ../../lib/preferences.php:216
 #: ../../templates/show_playtype_switch.inc.php:39
 #, fuzzy
 msgid "Web Player"
 msgstr "الشبكة الدرب"
 
-#: ../../lib/preferences.php:222
+#: ../../lib/preferences.php:223
 msgid "M3U"
 msgstr ""
 
-#: ../../lib/preferences.php:223
+#: ../../lib/preferences.php:224
 msgid "Simple M3U"
 msgstr ""
 
-#: ../../lib/preferences.php:224
+#: ../../lib/preferences.php:225
 msgid "PLS"
 msgstr ""
 
-#: ../../lib/preferences.php:225
+#: ../../lib/preferences.php:226
 msgid "Asx"
 msgstr ""
 
-#: ../../lib/preferences.php:226
+#: ../../lib/preferences.php:227
 msgid "RAM"
 msgstr ""
 
-#: ../../lib/preferences.php:227
+#: ../../lib/preferences.php:228
 msgid "XSPF"
 msgstr ""
 
-#: ../../lib/preferences.php:263
+#: ../../lib/preferences.php:264
 msgid "Disabled"
 msgstr ""
 
-#: ../../lib/preferences.php:265
+#: ../../lib/preferences.php:266
 msgid "Manager"
 msgstr ""
 
-#: ../../lib/preferences.php:282
+#: ../../lib/preferences.php:283
 msgid "Send on Add"
 msgstr ""
 
-#: ../../lib/preferences.php:283
+#: ../../lib/preferences.php:284
 msgid "Send and Clear on Add"
 msgstr ""
 
-#: ../../lib/preferences.php:284
+#: ../../lib/preferences.php:285
 msgid "Clear on Send"
 msgstr ""
 
-#: ../../lib/preferences.php:285 ../../lib/preferences.php:292
-#: ../../lib/preferences.php:328
+#: ../../lib/preferences.php:286 ../../lib/preferences.php:293
+#: ../../lib/preferences.php:329
 #: ../../templates/show_manage_democratic.inc.php:30
 msgid "Default"
 msgstr "افتراضي"
 
-#: ../../lib/preferences.php:293
+#: ../../lib/preferences.php:294
 msgid "Always"
 msgstr ""
 
-#: ../../lib/preferences.php:329
+#: ../../lib/preferences.php:330
 msgid "Year ascending"
 msgstr ""
 
-#: ../../lib/preferences.php:330
+#: ../../lib/preferences.php:331
 msgid "Year descending"
 msgstr ""
 
-#: ../../lib/preferences.php:331
+#: ../../lib/preferences.php:332
 msgid "Name ascending"
 msgstr ""
 
-#: ../../lib/preferences.php:332
+#: ../../lib/preferences.php:333
 msgid "Name descending"
 msgstr ""
 
@@ -2650,7 +2658,7 @@ msgstr "تحديث Ampache"
 #: ../../templates/error_page.inc.php:43
 #: ../../templates/show_denied.inc.php:38
 #: ../../templates/show_mail_users.inc.php:43
-#: ../../templates/show_test.inc.php:37 ../../update.php:58
+#: ../../templates/show_test.inc.php:37 ../../update.php:70
 #, fuzzy
 msgid "Ampache"
 msgstr "Ampache التصحيح"
@@ -2704,7 +2712,7 @@ msgstr ""
 msgid "Generate New Config"
 msgstr ""
 
-#: ../../templates/install_header.inc.php:41
+#: ../../templates/install_header.inc.php:47
 #: ../../templates/show_install_lang.inc.php:27
 msgid "Ampache Installation"
 msgstr "Ampache التثبيت"
@@ -3365,9 +3373,9 @@ msgstr ""
 #: ../../templates/show_album.inc.php:139
 #: ../../templates/show_artist.inc.php:114
 #: ../../templates/show_artist.inc.php:115
-#: ../../templates/show_install_config.inc.php:134
-#: ../../templates/show_install_config.inc.php:149
-#: ../../templates/show_install_config.inc.php:165
+#: ../../templates/show_install_config.inc.php:143
+#: ../../templates/show_install_config.inc.php:158
+#: ../../templates/show_install_config.inc.php:174
 #: ../../templates/show_playlist_song_row.inc.php:56
 #: ../../templates/show_share.inc.php:32 ../../templates/show_share.inc.php:33
 #: ../../templates/show_song.inc.php:76
@@ -3888,7 +3896,7 @@ msgstr ""
 msgid "Preference"
 msgstr "الأفضلية"
 
-#: ../../templates/show_debug.inc.php:125 ../../update.php:64
+#: ../../templates/show_debug.inc.php:125 ../../update.php:76
 msgid "Ampache Update"
 msgstr "تحديث Ampache"
 
@@ -4105,6 +4113,14 @@ msgstr ""
 msgid "Track"
 msgstr ""
 
+#: ../../templates/show_edit_tag_row.inc.php:32
+msgid "Merge this tag to"
+msgstr ""
+
+#: ../../templates/show_edit_tag_row.inc.php:45
+msgid "Persistent merge"
+msgstr ""
+
 #: ../../templates/show_edit_user.inc.php:23
 msgid "Editing existing User"
 msgstr "تحرير القائمة المستخدم"
@@ -4221,28 +4237,28 @@ msgid "Albums of the Moment"
 msgstr ""
 
 #: ../../templates/show_install_account.inc.php:26
-#: ../../templates/show_install_config.inc.php:32
+#: ../../templates/show_install_config.inc.php:41
 #: ../../templates/show_install.inc.php:26
 #, fuzzy
 msgid "Install progress"
 msgstr "النسخة"
 
 #: ../../templates/show_install_account.inc.php:38
-#: ../../templates/show_install_config.inc.php:43
+#: ../../templates/show_install_config.inc.php:52
 #: ../../templates/show_install.inc.php:37
 #, fuzzy
 msgid "Step 1 - Create the Ampache database"
 msgstr "الخطوة 1 -- خلق وإدراج قاعدة بيانات Ampache"
 
 #: ../../templates/show_install_account.inc.php:39
-#: ../../templates/show_install_config.inc.php:44
+#: ../../templates/show_install_config.inc.php:53
 #: ../../templates/show_install.inc.php:42
 #, fuzzy
 msgid "Step 2 - Create configuration files (ampache.cfg.php ...)"
 msgstr "الخطوة 2 -- إنشاء ملف ampache.cfg.php"
 
 #: ../../templates/show_install_account.inc.php:41
-#: ../../templates/show_install_config.inc.php:49
+#: ../../templates/show_install_config.inc.php:58
 #: ../../templates/show_install.inc.php:43
 #, fuzzy
 msgid "Step 3 - Set up the initial account"
@@ -4349,7 +4365,7 @@ msgid ""
 "but will help streamline the installation process."
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:46
+#: ../../templates/show_install_config.inc.php:55
 #, fuzzy, php-format
 msgid ""
 "This step takes the basic config values and generates the config file. If "
@@ -4361,47 +4377,47 @@ msgstr ""
 "وتتخذ هذه الخطوات الأساسية والقيم والتهيئة يولد ملف. سوف مطالبتك لتحميل ملف. "
 "يرجى وضع تحميل ملف في /config"
 
-#: ../../templates/show_install_config.inc.php:54
+#: ../../templates/show_install_config.inc.php:63
 msgid "Generate Config File"
 msgstr "توليد ملف"
 
-#: ../../templates/show_install_config.inc.php:55
+#: ../../templates/show_install_config.inc.php:64
 #: ../../templates/show_test_table.inc.php:159
 #, fuzzy
 msgid "Database connection"
 msgstr "الديسيبل الربط"
 
-#: ../../templates/show_install_config.inc.php:59
+#: ../../templates/show_install_config.inc.php:68
 msgid "Web Path"
 msgstr "الشبكة الدرب"
 
-#: ../../templates/show_install_config.inc.php:65
+#: ../../templates/show_install_config.inc.php:74
 #, fuzzy
 msgid "Database Name"
 msgstr "اسم قاعدة البيانات المطلوبة"
 
-#: ../../templates/show_install_config.inc.php:71
+#: ../../templates/show_install_config.inc.php:80
 #: ../../templates/show_install.inc.php:56
 msgid "MySQL Hostname"
 msgstr "MySQL المضيف"
 
-#: ../../templates/show_install_config.inc.php:77
+#: ../../templates/show_install_config.inc.php:86
 msgid "MySQL Port (optional)"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:83
+#: ../../templates/show_install_config.inc.php:92
 msgid "MySQL Username"
 msgstr "MySQL اسم المستخدم"
 
-#: ../../templates/show_install_config.inc.php:89
+#: ../../templates/show_install_config.inc.php:98
 msgid "MySQL Password"
 msgstr "MySQL كلمة المرور"
 
-#: ../../templates/show_install_config.inc.php:99
+#: ../../templates/show_install_config.inc.php:108
 msgid "Transcoding"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:101
+#: ../../templates/show_install_config.inc.php:110
 msgid ""
 "Transcoding allows you to convert one type of file to another. Ampache "
 "supports on the fly transcoding of all file types based on user, IP address "
@@ -4411,87 +4427,87 @@ msgid ""
 "are executable by the webserver."
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:103
+#: ../../templates/show_install_config.inc.php:112
 msgid ""
 "This section apply default transcoding configuration according to the "
 "application you want to use. You may need to customize settings once this "
 "setup ended"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:103
+#: ../../templates/show_install_config.inc.php:112
 msgid "See wiki page"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:107
+#: ../../templates/show_install_config.inc.php:116
 #, fuzzy
 msgid "Template Configuration"
 msgstr "بدء التهيئة"
 
-#: ../../templates/show_install_config.inc.php:121
+#: ../../templates/show_install_config.inc.php:130
 msgid ""
 "No default transcoding application found. You may need to install a popular "
 "application (ffmpeg, avconv ...) or customize transcoding settings manually "
 "after installation."
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:127
+#: ../../templates/show_install_config.inc.php:136
 #, fuzzy
 msgid "Files"
 msgstr "اسم الملف"
 
-#: ../../templates/show_install_config.inc.php:131
+#: ../../templates/show_install_config.inc.php:140
 msgid "rest/.htaccess action"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:136
-#: ../../templates/show_install_config.inc.php:151
-#: ../../templates/show_install_config.inc.php:167
+#: ../../templates/show_install_config.inc.php:145
+#: ../../templates/show_install_config.inc.php:160
+#: ../../templates/show_install_config.inc.php:176
 #, fuzzy
 msgid "Write"
 msgstr "قراءة وكتابة"
 
-#: ../../templates/show_install_config.inc.php:139
+#: ../../templates/show_install_config.inc.php:148
 msgid "rest/.htaccess exists?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:141
+#: ../../templates/show_install_config.inc.php:150
 msgid "rest/.htaccess configured?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:146
+#: ../../templates/show_install_config.inc.php:155
 msgid "play/.htaccess action"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:154
+#: ../../templates/show_install_config.inc.php:163
 msgid "play/.htaccess exists?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:156
+#: ../../templates/show_install_config.inc.php:165
 #, fuzzy
 msgid "play/.htaccess configured?"
 msgstr "Ampache.cfg.php مشكل؟"
 
-#: ../../templates/show_install_config.inc.php:162
+#: ../../templates/show_install_config.inc.php:171
 #, fuzzy
 msgid "config/ampache.cfg.php action"
 msgstr "Ampache.cfg.php مشكل؟"
 
-#: ../../templates/show_install_config.inc.php:170
+#: ../../templates/show_install_config.inc.php:179
 #, fuzzy
 msgid "config/ampache.cfg.php exists?"
 msgstr "يجد Ampache.cfg.php"
 
-#: ../../templates/show_install_config.inc.php:172
+#: ../../templates/show_install_config.inc.php:181
 #, fuzzy
 msgid "config/ampache.cfg.php configured?"
 msgstr "Ampache.cfg.php مشكل؟"
 
-#: ../../templates/show_install_config.inc.php:181
+#: ../../templates/show_install_config.inc.php:190
 #, fuzzy
 msgid "Recheck Config"
 msgstr "شيك التهيئة"
 
-#: ../../templates/show_install_config.inc.php:189
+#: ../../templates/show_install_config.inc.php:198
 msgid "Continue to Step 3"
 msgstr "انتقل الى الخطوة 3"
 
@@ -5744,19 +5760,15 @@ msgstr ""
 msgid "Account"
 msgstr ""
 
-#: ../../update.php:67
+#: ../../update.php:79
 #, php-format
 msgid ""
 "This page handles all database updates to Ampache starting with "
-"<strong>3.3.3.5</strong>. According to your database your current version "
-"is: <strong>%s</strong>."
+"<strong>3.3.3.5</strong>. Your current version is <strong>%s</strong> with "
+"database version <strong>%s</strong>."
 msgstr ""
 
-#: ../../update.php:68
-msgid "The following updates need to be performed"
-msgstr ""
-
-#: ../../update.php:76
+#: ../../update.php:88
 msgid "Update Now!"
 msgstr ""
 

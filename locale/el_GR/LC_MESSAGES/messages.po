@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-26 12:19+0200\n"
+"POT-Creation-Date: 2014-05-31 16:01+0200\n"
 "PO-Revision-Date: 2008-08-25 08:43+0900\n"
 "Last-Translator: Ampache <translations at ampache.org>\n"
 "Language-Team: Greek <LL@li.org>\n"
@@ -271,7 +271,7 @@ msgid "Guest"
 msgstr "Επισκέπτης"
 
 #: ../../admin/users.php:134 ../../lib/class/democratic.class.php:161
-#: ../../lib/preferences.php:264 ../../templates/show_access_list.inc.php:55
+#: ../../lib/preferences.php:265 ../../templates/show_access_list.inc.php:55
 #: ../../templates/show_add_access.inc.php:42
 #: ../../templates/show_add_user.inc.php:83
 #: ../../templates/show_create_democratic.inc.php:42
@@ -289,7 +289,7 @@ msgid "User"
 msgstr "Χρήστης"
 
 #: ../../admin/users.php:134 ../../lib/class/democratic.class.php:170
-#: ../../lib/preferences.php:266 ../../templates/show_add_user.inc.php:86
+#: ../../lib/preferences.php:267 ../../templates/show_add_user.inc.php:86
 #: ../../templates/show_create_democratic.inc.php:45
 #: ../../templates/show_democratic_playlist.inc.php:62
 #: ../../templates/show_democratic_playlist.inc.php:109
@@ -704,7 +704,7 @@ msgstr ""
 msgid "Config file creation failed"
 msgstr ""
 
-#: ../../bin/install/update_db.inc:44
+#: ../../bin/install/update_db.inc:44 ../../update.php:80
 msgid "The following updates need to be performed:"
 msgstr ""
 
@@ -1095,7 +1095,7 @@ msgstr "Αίτημα Διαγραφής"
 msgid "Media Object Invalid or Not Specified"
 msgstr ""
 
-#: ../../lib/class/art.class.php:1008
+#: ../../lib/class/art.class.php:1007
 msgid "Error: Unable to open"
 msgstr "Σφάλμα: Αδύνατο να ανοιχτεί"
 
@@ -1123,6 +1123,14 @@ msgstr "Πόρτα"
 #, fuzzy
 msgid "download"
 msgstr "Κατέβασμα"
+
+#: ../../lib/class/autoupdate.class.php:202
+msgid "Updating Ampache sources with `git pull` ..."
+msgstr ""
+
+#: ../../lib/class/autoupdate.class.php:206
+msgid "Done"
+msgstr ""
 
 #: ../../lib/class/broadcast.class.php:160
 #, fuzzy
@@ -1288,7 +1296,7 @@ msgstr "Περισσότερα"
 
 #: ../../lib/class/catalog.class.php:342 ../../lib/class/catalog.class.php:345
 #: ../../lib/class/catalog.class.php:348 ../../lib/class/user.class.php:841
-#: ../../lib/preferences.php:291 ../../templates/show_user.inc.php:23
+#: ../../lib/preferences.php:292 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:57
 msgid "Never"
 msgstr "Ποτέ"
@@ -1794,16 +1802,16 @@ msgstr "Στείλε Shout"
 msgid "Show Lyrics"
 msgstr "Δείξε playlist"
 
-#: ../../lib/class/update.class.php:442
+#: ../../lib/class/update.class.php:448
 #, fuzzy
 msgid "No updates needed."
 msgstr "Δε χρειάζεται ενημέρωση"
 
-#: ../../lib/class/update.class.php:2428 ../../lib/class/update.class.php:2444
+#: ../../lib/class/update.class.php:2434 ../../lib/class/update.class.php:2450
 msgid "File copy error."
 msgstr ""
 
-#: ../../lib/class/update.class.php:2435 ../../lib/class/update.class.php:2451
+#: ../../lib/class/update.class.php:2441 ../../lib/class/update.class.php:2457
 msgid "Cannot copy default .htaccess file."
 msgstr ""
 
@@ -1942,13 +1950,13 @@ msgstr ""
 msgid "Unable to create local account"
 msgstr "Αδύνατο να δημιουργηθεί καινούριος λογαριασμός"
 
-#: ../../lib/preferences.php:186 ../../lib/preferences.php:305
+#: ../../lib/preferences.php:187 ../../lib/preferences.php:306
 #: ../../templates/show_disabled_songs.inc.php:64
 #: ../../templates/show_user_row.inc.php:49
 msgid "Enable"
 msgstr "Ενεργό"
 
-#: ../../lib/preferences.php:187 ../../lib/preferences.php:306
+#: ../../lib/preferences.php:188 ../../lib/preferences.php:307
 #: ../../templates/show_catalog_types.inc.php:43
 #: ../../templates/show_duplicates.inc.php:27
 #: ../../templates/show_duplicates.inc.php:66
@@ -1957,20 +1965,20 @@ msgstr "Ενεργό"
 msgid "Disable"
 msgstr "Ανενεργό"
 
-#: ../../lib/preferences.php:205 ../../lib/preferences.php:242
+#: ../../lib/preferences.php:206 ../../lib/preferences.php:243
 #: ../../lib/ui.lib.php:329 ../../templates/show_adds_catalog.inc.php:27
 #: ../../templates/show_gather_art.inc.php:25
-#: ../../templates/show_install_config.inc.php:110
+#: ../../templates/show_install_config.inc.php:119
 #: ../../templates/sidebar_localplay.inc.php:50
 msgid "None"
 msgstr "Κανένα"
 
-#: ../../lib/preferences.php:207 ../../templates/show_edit_user.inc.php:122
+#: ../../lib/preferences.php:208 ../../templates/show_edit_user.inc.php:122
 #: ../../templates/show_playtype_switch.inc.php:33
 msgid "Stream"
 msgstr "Ροή"
 
-#: ../../lib/preferences.php:210
+#: ../../lib/preferences.php:211
 #: ../../modules/localplay/httpq.controller.php:471
 #: ../../modules/localplay/mpd.controller.php:469
 #: ../../modules/localplay/vlc.controller.php:479
@@ -1981,86 +1989,86 @@ msgstr "Ροή"
 msgid "Democratic"
 msgstr "Δημοκρατική"
 
-#: ../../lib/preferences.php:213 ../../templates/show_edit_user.inc.php:120
+#: ../../lib/preferences.php:214 ../../templates/show_edit_user.inc.php:120
 #: ../../templates/show_playtype_switch.inc.php:35
 #: ../../templates/sidebar_home.inc.php:62 ../../templates/sidebar.inc.php:30
 #: ../../templates/sidebar_localplay.inc.php:38
 msgid "Localplay"
 msgstr "Τοπική Αναπαραγωγή"
 
-#: ../../lib/preferences.php:215
+#: ../../lib/preferences.php:216
 #: ../../templates/show_playtype_switch.inc.php:39
 #, fuzzy
 msgid "Web Player"
 msgstr "XSPF Player"
 
-#: ../../lib/preferences.php:222
+#: ../../lib/preferences.php:223
 msgid "M3U"
 msgstr "M3U"
 
-#: ../../lib/preferences.php:223
+#: ../../lib/preferences.php:224
 msgid "Simple M3U"
 msgstr "Απλή M3U"
 
-#: ../../lib/preferences.php:224
+#: ../../lib/preferences.php:225
 msgid "PLS"
 msgstr "PLS"
 
-#: ../../lib/preferences.php:225
+#: ../../lib/preferences.php:226
 msgid "Asx"
 msgstr "Asx"
 
-#: ../../lib/preferences.php:226
+#: ../../lib/preferences.php:227
 msgid "RAM"
 msgstr "RAM"
 
-#: ../../lib/preferences.php:227
+#: ../../lib/preferences.php:228
 msgid "XSPF"
 msgstr "XSPF"
 
-#: ../../lib/preferences.php:263
+#: ../../lib/preferences.php:264
 msgid "Disabled"
 msgstr "Απενεργοποιημένο"
 
-#: ../../lib/preferences.php:265
+#: ../../lib/preferences.php:266
 msgid "Manager"
 msgstr "Μάνατζερ"
 
-#: ../../lib/preferences.php:282
+#: ../../lib/preferences.php:283
 msgid "Send on Add"
 msgstr "Στείλε με την προσθήκη"
 
-#: ../../lib/preferences.php:283
+#: ../../lib/preferences.php:284
 msgid "Send and Clear on Add"
 msgstr "Στείλε και καθάρισε με την προσθήκη"
 
-#: ../../lib/preferences.php:284
+#: ../../lib/preferences.php:285
 msgid "Clear on Send"
 msgstr "Καθάρισε με την αποστολή"
 
-#: ../../lib/preferences.php:285 ../../lib/preferences.php:292
-#: ../../lib/preferences.php:328
+#: ../../lib/preferences.php:286 ../../lib/preferences.php:293
+#: ../../lib/preferences.php:329
 #: ../../templates/show_manage_democratic.inc.php:30
 msgid "Default"
 msgstr "Προκαθορισμένη"
 
-#: ../../lib/preferences.php:293
+#: ../../lib/preferences.php:294
 msgid "Always"
 msgstr "Πάντα"
 
-#: ../../lib/preferences.php:329
+#: ../../lib/preferences.php:330
 msgid "Year ascending"
 msgstr ""
 
-#: ../../lib/preferences.php:330
+#: ../../lib/preferences.php:331
 msgid "Year descending"
 msgstr ""
 
-#: ../../lib/preferences.php:331
+#: ../../lib/preferences.php:332
 msgid "Name ascending"
 msgstr ""
 
-#: ../../lib/preferences.php:332
+#: ../../lib/preferences.php:333
 msgid "Name descending"
 msgstr ""
 
@@ -2720,7 +2728,7 @@ msgstr "Ενημέρωση Ampache"
 #: ../../templates/error_page.inc.php:43
 #: ../../templates/show_denied.inc.php:38
 #: ../../templates/show_mail_users.inc.php:43
-#: ../../templates/show_test.inc.php:37 ../../update.php:58
+#: ../../templates/show_test.inc.php:37 ../../update.php:70
 #, fuzzy
 msgid "Ampache"
 msgstr "Ampache Debug"
@@ -2774,7 +2782,7 @@ msgstr "Σφάλμα: Παλιό Αρχείο Ρυθμίσεων"
 msgid "Generate New Config"
 msgstr "Δημιουργία νέου σετ ρυθμίσεων"
 
-#: ../../templates/install_header.inc.php:41
+#: ../../templates/install_header.inc.php:47
 #: ../../templates/show_install_lang.inc.php:27
 msgid "Ampache Installation"
 msgstr "Εγκατάσταση"
@@ -3453,9 +3461,9 @@ msgstr "Αναζήτηση εξωφύλλου"
 #: ../../templates/show_album.inc.php:139
 #: ../../templates/show_artist.inc.php:114
 #: ../../templates/show_artist.inc.php:115
-#: ../../templates/show_install_config.inc.php:134
-#: ../../templates/show_install_config.inc.php:149
-#: ../../templates/show_install_config.inc.php:165
+#: ../../templates/show_install_config.inc.php:143
+#: ../../templates/show_install_config.inc.php:158
+#: ../../templates/show_install_config.inc.php:174
 #: ../../templates/show_playlist_song_row.inc.php:56
 #: ../../templates/show_share.inc.php:32 ../../templates/show_share.inc.php:33
 #: ../../templates/show_song.inc.php:76
@@ -3982,7 +3990,7 @@ msgstr ""
 msgid "Preference"
 msgstr "Προτίμηση"
 
-#: ../../templates/show_debug.inc.php:125 ../../update.php:64
+#: ../../templates/show_debug.inc.php:125 ../../update.php:76
 msgid "Ampache Update"
 msgstr "Ενημέρωση Ampache"
 
@@ -4206,6 +4214,14 @@ msgstr ""
 msgid "Track"
 msgstr "Κομμάτι"
 
+#: ../../templates/show_edit_tag_row.inc.php:32
+msgid "Merge this tag to"
+msgstr ""
+
+#: ../../templates/show_edit_tag_row.inc.php:45
+msgid "Persistent merge"
+msgstr ""
+
 #: ../../templates/show_edit_user.inc.php:23
 msgid "Editing existing User"
 msgstr "Επεξεργασία υπάρχοντος Χρήστη"
@@ -4324,28 +4340,28 @@ msgid "Albums of the Moment"
 msgstr "Άλμπουμς της στιγμής"
 
 #: ../../templates/show_install_account.inc.php:26
-#: ../../templates/show_install_config.inc.php:32
+#: ../../templates/show_install_config.inc.php:41
 #: ../../templates/show_install.inc.php:26
 #, fuzzy
 msgid "Install progress"
 msgstr "Έκδοση"
 
 #: ../../templates/show_install_account.inc.php:38
-#: ../../templates/show_install_config.inc.php:43
+#: ../../templates/show_install_config.inc.php:52
 #: ../../templates/show_install.inc.php:37
 #, fuzzy
 msgid "Step 1 - Create the Ampache database"
 msgstr "Βήμα 1 - Δημιουργία Βάσης Δεδομένων"
 
 #: ../../templates/show_install_account.inc.php:39
-#: ../../templates/show_install_config.inc.php:44
+#: ../../templates/show_install_config.inc.php:53
 #: ../../templates/show_install.inc.php:42
 #, fuzzy
 msgid "Step 2 - Create configuration files (ampache.cfg.php ...)"
 msgstr "Βήμα 2- Δημιουργία του ampache.cfg.php αρχείου"
 
 #: ../../templates/show_install_account.inc.php:41
-#: ../../templates/show_install_config.inc.php:49
+#: ../../templates/show_install_config.inc.php:58
 #: ../../templates/show_install.inc.php:43
 #, fuzzy
 msgid "Step 3 - Set up the initial account"
@@ -4453,7 +4469,7 @@ msgid ""
 "but will help streamline the installation process."
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:46
+#: ../../templates/show_install_config.inc.php:55
 #, fuzzy, php-format
 msgid ""
 "This step takes the basic config values and generates the config file. If "
@@ -4467,47 +4483,47 @@ msgstr ""
 "κατεβάσετε το αρχείο ρυθμίσεων. Στη συνέχεια τοποθετήστε το κατεβασμένο "
 "αρχείο στο φάκελο /config"
 
-#: ../../templates/show_install_config.inc.php:54
+#: ../../templates/show_install_config.inc.php:63
 msgid "Generate Config File"
 msgstr "Δημιουργία Αρχείο Ρυθμίσεων"
 
-#: ../../templates/show_install_config.inc.php:55
+#: ../../templates/show_install_config.inc.php:64
 #: ../../templates/show_test_table.inc.php:159
 #, fuzzy
 msgid "Database connection"
 msgstr "Σύνδεση με Βάση"
 
-#: ../../templates/show_install_config.inc.php:59
+#: ../../templates/show_install_config.inc.php:68
 msgid "Web Path"
 msgstr "Διαδρομή web"
 
-#: ../../templates/show_install_config.inc.php:65
+#: ../../templates/show_install_config.inc.php:74
 #, fuzzy
 msgid "Database Name"
 msgstr "Επιθυμητό όνομα βάσης"
 
-#: ../../templates/show_install_config.inc.php:71
+#: ../../templates/show_install_config.inc.php:80
 #: ../../templates/show_install.inc.php:56
 msgid "MySQL Hostname"
 msgstr "Όνομα Εξυπηρετητή MySQL"
 
-#: ../../templates/show_install_config.inc.php:77
+#: ../../templates/show_install_config.inc.php:86
 msgid "MySQL Port (optional)"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:83
+#: ../../templates/show_install_config.inc.php:92
 msgid "MySQL Username"
 msgstr "Όνομα χρήστη MySQL"
 
-#: ../../templates/show_install_config.inc.php:89
+#: ../../templates/show_install_config.inc.php:98
 msgid "MySQL Password"
 msgstr "Κωδικός MySQL"
 
-#: ../../templates/show_install_config.inc.php:99
+#: ../../templates/show_install_config.inc.php:108
 msgid "Transcoding"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:101
+#: ../../templates/show_install_config.inc.php:110
 msgid ""
 "Transcoding allows you to convert one type of file to another. Ampache "
 "supports on the fly transcoding of all file types based on user, IP address "
@@ -4517,87 +4533,87 @@ msgid ""
 "are executable by the webserver."
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:103
+#: ../../templates/show_install_config.inc.php:112
 msgid ""
 "This section apply default transcoding configuration according to the "
 "application you want to use. You may need to customize settings once this "
 "setup ended"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:103
+#: ../../templates/show_install_config.inc.php:112
 msgid "See wiki page"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:107
+#: ../../templates/show_install_config.inc.php:116
 #, fuzzy
 msgid "Template Configuration"
 msgstr "Έναρξη ρύθμισης"
 
-#: ../../templates/show_install_config.inc.php:121
+#: ../../templates/show_install_config.inc.php:130
 msgid ""
 "No default transcoding application found. You may need to install a popular "
 "application (ffmpeg, avconv ...) or customize transcoding settings manually "
 "after installation."
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:127
+#: ../../templates/show_install_config.inc.php:136
 #, fuzzy
 msgid "Files"
 msgstr "Αρχείο"
 
-#: ../../templates/show_install_config.inc.php:131
+#: ../../templates/show_install_config.inc.php:140
 msgid "rest/.htaccess action"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:136
-#: ../../templates/show_install_config.inc.php:151
-#: ../../templates/show_install_config.inc.php:167
+#: ../../templates/show_install_config.inc.php:145
+#: ../../templates/show_install_config.inc.php:160
+#: ../../templates/show_install_config.inc.php:176
 #, fuzzy
 msgid "Write"
 msgstr "Ανάγνωση/Εγγραφή"
 
-#: ../../templates/show_install_config.inc.php:139
+#: ../../templates/show_install_config.inc.php:148
 msgid "rest/.htaccess exists?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:141
+#: ../../templates/show_install_config.inc.php:150
 msgid "rest/.htaccess configured?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:146
+#: ../../templates/show_install_config.inc.php:155
 msgid "play/.htaccess action"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:154
+#: ../../templates/show_install_config.inc.php:163
 msgid "play/.htaccess exists?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:156
+#: ../../templates/show_install_config.inc.php:165
 #, fuzzy
 msgid "play/.htaccess configured?"
 msgstr "Διαμορφώθηκε το αρχείο ampache.cfg.php;"
 
-#: ../../templates/show_install_config.inc.php:162
+#: ../../templates/show_install_config.inc.php:171
 #, fuzzy
 msgid "config/ampache.cfg.php action"
 msgstr "Διαμορφώθηκε το αρχείο ampache.cfg.php;"
 
-#: ../../templates/show_install_config.inc.php:170
+#: ../../templates/show_install_config.inc.php:179
 #, fuzzy
 msgid "config/ampache.cfg.php exists?"
 msgstr "Υπάρχει ήδη το αρχείο ρυθμίσεων ampache.cfg.php"
 
-#: ../../templates/show_install_config.inc.php:172
+#: ../../templates/show_install_config.inc.php:181
 #, fuzzy
 msgid "config/ampache.cfg.php configured?"
 msgstr "Διαμορφώθηκε το αρχείο ampache.cfg.php;"
 
-#: ../../templates/show_install_config.inc.php:181
+#: ../../templates/show_install_config.inc.php:190
 #, fuzzy
 msgid "Recheck Config"
 msgstr "Έλεγχος για αρχείο ρυθμίσεων"
 
-#: ../../templates/show_install_config.inc.php:189
+#: ../../templates/show_install_config.inc.php:198
 msgid "Continue to Step 3"
 msgstr "Συνεχίστε στο Βήμα 3"
 
@@ -5867,19 +5883,15 @@ msgstr "Διαχείριση playlist"
 msgid "Account"
 msgstr "Λογαριασμός"
 
-#: ../../update.php:67
+#: ../../update.php:79
 #, php-format
 msgid ""
 "This page handles all database updates to Ampache starting with "
-"<strong>3.3.3.5</strong>. According to your database your current version "
-"is: <strong>%s</strong>."
+"<strong>3.3.3.5</strong>. Your current version is <strong>%s</strong> with "
+"database version <strong>%s</strong>."
 msgstr ""
 
-#: ../../update.php:68
-msgid "The following updates need to be performed"
-msgstr ""
-
-#: ../../update.php:76
+#: ../../update.php:88
 #, fuzzy
 msgid "Update Now!"
 msgstr "Ενημέρωση Τραγουδιού"
@@ -6107,6 +6119,13 @@ msgstr ""
 #: Database words
 msgid "Flickr api key"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Return to main page"
+#~ msgstr "Επιστροφή στη σελίδα εισόδου"
+
+#~ msgid "Return"
+#~ msgstr "Επιστροφή"
 
 #, fuzzy
 #~ msgid "%d Song Removed"
@@ -6645,9 +6664,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Could not open the filename"
 #~ msgstr "Δε δώσατε όνομα Χρήστη"
-
-#~ msgid "Return"
-#~ msgstr "Επιστροφή"
 
 #, fuzzy
 #~ msgid "PHP putenv Support"
