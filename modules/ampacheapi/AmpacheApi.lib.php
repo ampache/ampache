@@ -304,7 +304,8 @@ class AmpacheApi
         $this->XML_create_parser();
 
         if (!xml_parse($this->XML_parser, $response)) {
-            throw new Exception('AmpacheApi::parse_response was unable to parse XML document');
+            $errorcode =  xml_get_error_code($this->XML_parser);
+            throw new Exception('AmpacheApi::parse_response was unable to parse XML document. ' . $errorcode . ':' . xml_error_string($errorcode));
         }
 
         xml_parser_free($this->XML_parser);
