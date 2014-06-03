@@ -177,6 +177,7 @@ function create_preference_input($name,$value)
         case 'album_group':
         case 'topmenu':
         case 'demo_clear_sessions':
+        case 'show_donate':
             $is_true = '';
             $is_false = '';
             if ($value == '1') {

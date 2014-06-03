@@ -407,6 +407,9 @@ class Update
         $update_string = '- Add tag persistent merge reference.<br />';
         $version[] = array('version' => '370002','description' => $update_string);
 
+        $update_string = '- Add show/hide donate button preference.<br />';
+        $version[] = array('version' => '370003','description' => $update_string);
+
         return $version;
     }
 
@@ -2496,6 +2499,23 @@ class Update
     {
         $sql = "ALTER TABLE `tag` ADD `merged_to` int(11) NULL AFTER `name`";
         Dba::write($sql);
+
+        return true;
+    }
+
+    /**
+     * update_370003
+     *
+     * Add show/hide donate button preference
+     */
+    public static function update_370003()
+    {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('show_donate','1','Show donate button in footer',25,'boolean','interface')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        Dba::write($sql, array($id));
 
         return true;
     }
