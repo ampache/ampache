@@ -309,6 +309,10 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
 ?>
         HideWaveform();
 <?php } ?>
+
+        if (brkey != '') {
+            sendBroadcastMessage('PLAYER_PLAY', 1);
+        }
     });
 
 <?php
@@ -349,6 +353,13 @@ if ($isVideo) {
         }
 <?php } ?>
     });
+
+    $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function (event) {
+        if (brkey != '') {
+            sendBroadcastMessage('PLAYER_PLAY', 0);
+        }
+    });
+
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
         $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
     });
@@ -462,8 +473,7 @@ function receiveBroadcastMessage(e)
         var msg = msgs[i].split(':');
         if (msg.length == 2) {
             switch (msg[0]) {
-                case 'PLAY':
-                    alert('play: ' + msg[1]);
+                case 'PLAYER_PLAY':
                     if (msg[1] == '1') {
                         if (jp.status.paused) {
                             jp.play();
