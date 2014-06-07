@@ -29,18 +29,18 @@
         }
         ?>
         <ul class="sb3" id="sb_browse_bb">
-            <li id="sb_browse_bb_SongTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo T_('Song Titles'); ?></a></li>
-            <li id="sb_browse_bb_Album"><a href="<?php echo $web_path; ?>/browse.php?action=album"><?php echo T_('Albums'); ?></a></li>
-            <li id="sb_browse_bb_Artist"><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo T_('Artists'); ?></a></li>
+            <li id="sb_browse_bb_SongTitle"><?php echo Ajax::text('?page=content&action=song', T_('Song Titles'), 'content_song'); ?></li>
+            <li id="sb_browse_bb_Album"><?php echo Ajax::text('?page=content&action=album', T_('Albums'), 'content_album'); ?></li>
+            <li id="sb_browse_bb_Artist"><?php echo Ajax::text('?page=content&action=artist', T_('Artists'), 'content_artist'); ?></li>
             <li id="sb_browse_bb_Tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag"><?php echo T_('Tag Cloud'); ?></a></li>
-            <li id="sb_browse_bb_Playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo T_('Playlists'); ?></a></li>
-            <li id="sb_browse_bb_SmartPlaylist"><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo T_('Smart Playlists'); ?></a></li>
-            <li id="sb_browse_bb_Channel"><a href="<?php echo $web_path; ?>/browse.php?action=channel"><?php echo T_('Channels'); ?></a></li>
+            <li id="sb_browse_bb_Playlist"><?php echo Ajax::text('?page=content&action=playlist', T_('Playlists'), 'content_playlist'); ?></li>
+            <li id="sb_browse_bb_SmartPlaylist"><?php echo Ajax::text('?page=content&action=smartplaylist', T_('Smart Playlists'), 'content_smartplaylist'); ?></li>
+            <li id="sb_browse_bb_Channel"><?php echo Ajax::text('?page=content&action=channel', T_('Channel'), 'content_channel'); ?></li>
             <?php if (AmpConfig::get('broadcast')) { ?>
-            <li id="sb_browse_bb_Broadcast"><a href="<?php echo $web_path; ?>/browse.php?action=broadcast"><?php echo T_('Broadcasts'); ?></a></li>
+            <li id="sb_browse_bb_Broadcast"><?php echo Ajax::text('?page=content&action=broadcast', T_('Broadcasts'), 'content_broadcast'); ?></li>
             <?php } ?>
-            <li id="sb_browse_bb_RadioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo T_('Radio Stations'); ?></a></li>
-            <li id="sb_browse_bb_Video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo T_('Videos'); ?></a></li>
+            <li id="sb_browse_bb_RadioStation"><?php echo Ajax::text('?page=content&action=live_stream', T_('Radio Stations'), 'content_live_stream'); ?></li>
+            <li id="sb_browse_bb_Video"><?php echo Ajax::text('?page=content&action=video', T_('Videos'), 'content_video'); ?></li>
         </ul>
     </li>
     <?php Ajax::start_container('browse_filters'); ?>

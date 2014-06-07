@@ -54,7 +54,9 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch
 
-UI::show_header();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_header();
+}
 
 switch ($_REQUEST['action']) {
     case 'file':
@@ -144,4 +146,6 @@ switch ($_REQUEST['action']) {
 $browse->store();
 
 /* Show the Footer */
-UI::show_footer();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_footer();
+}

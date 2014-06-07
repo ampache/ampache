@@ -74,6 +74,9 @@ switch ($page) {
     case 'player':
         require_once AmpConfig::get('prefix') . '/server/player.ajax.php';
         exit;
+    case 'content':
+        require_once AmpConfig::get('prefix') . '/server/content.ajax.php';
+        exit;
     default:
         // A taste of compatibility
     break;
