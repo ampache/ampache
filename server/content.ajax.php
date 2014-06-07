@@ -28,28 +28,71 @@ if (!defined('AJAX_INCLUDE')) {
 }
 
 $results = array();
-switch ($_REQUEST['action']) {
-    case 'song':
-    case 'album':
-    case 'artist':
-    case 'tag':
-    case 'playlist':
-    case 'smartplaylist':
-    case 'channel':
-    case 'broadcast':
-    case 'live_stream':
-    case 'video':
-        ob_start();
-        debug_event('content.ajax.php', 'I GET HERE', '5');
+ob_start();
+
+switch ($_REQUEST['subpage']) {
+    case 'browse':
         require_once AmpConfig::get('prefix') . '/browse.php';
-        $results[$_REQUEST['page']] = ob_get_clean();
-        ob_end_clean();
+        break;
+    case 'index':
+        require_once AmpConfig::get('prefix') . '/templates/show_index.inc.php';
+        break;
+    case 'democratic':
+        require_once AmpConfig::get('prefix') . '/democratic.php';
+        break;
+    case 'localplay':
+        require_once AmpConfig::get('prefix') . '/localplay.php';
+        break;
+    case 'playlist':
+        require_once AmpConfig::get('prefix') . '/playlist.php';
+        break;
+    case 'random':
+        require_once AmpConfig::get('prefix') . '/random.php';
+        break;
+    case 'stats':
+        require_once AmpConfig::get('prefix') . '/stats.php';
+        break;
+    case 'search':
+        require_once AmpConfig::get('prefix') . '/search.php';
+        break;
+    case 'catalog':
+        require_once AmpConfig::get('prefix') . '/admin/catalog.php';
+        break;
+    case 'users':
+        require_once AmpConfig::get('prefix') . '/admin/users.php';
+        break;
+    case 'access':
+        require_once AmpConfig::get('prefix') . '/admin/access.php';
+        break;
+    case 'system':
+        require_once AmpConfig::get('prefix') . '/admin/system.php';
+        break;
+    case 'export':
+        require_once AmpConfig::get('prefix') . '/admin/export.php';
+        break;
+    case 'shout':
+        require_once AmpConfig::get('prefix') . '/admin/shout.php';
+        break;
+    case 'preferences':
+        require_once AmpConfig::get('prefix') . '/preferences.php';
+        break;
+    case 'modules':
+        require_once AmpConfig::get('prefix') . '/admin/modules.php';
+        break;
+    case 'duplicates':
+        require_once AmpConfig::get('prefix') . '/admin/duplicates.php';
+        break;
+    case 'mail':
+        require_once AmpConfig::get('prefix') . '/admin/mail.php';
         break;
     default:
         // Ne rien faire
         break;
 
 } // switch on action
+
+$results[$_REQUEST['page']] = ob_get_clean();
+ob_end_clean();
 
 // We always do this
 echo xoutput_from_array($results);

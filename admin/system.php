@@ -27,7 +27,9 @@ if (!Access::check('interface',100) OR AmpConfig::get('demo_mode')) {
     exit();
 }
 
-UI::show_header();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_header();
+}
 
 /* Switch on action boys */
 switch ($_REQUEST['action']) {
@@ -58,4 +60,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch
 
-UI::show_footer();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_footer();
+}

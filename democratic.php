@@ -28,7 +28,9 @@ if (!AmpConfig::get('allow_democratic_playback')) {
     exit;
 }
 
-UI::show_header();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_header();
+}
 
 // Switch on their action
 switch ($_REQUEST['action']) {
@@ -122,4 +124,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch on action
 
-UI::show_footer();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_footer();
+}

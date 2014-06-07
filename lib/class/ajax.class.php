@@ -161,6 +161,28 @@ class Ajax
     } // text
 
     /**
+     * make_url
+     * This makes a string to append at the end of a URL for an ajax call. It takes multiple
+     * fields to build more organized URLs.
+     * @param  string $page    Name of the main page that will be called by ajax.server.php.
+     * @param  string $subpage Name of the sub page that will be used filtered by page.ajax.php.
+     * @param  string $action  Optional action that needs to is taken by the subpage.
+     * @param  string $type    Optional argument if the subpage needs it.
+     * @return string          The string to append at the end of the URL.
+     */
+    public static function make_url($page, $subpage, $action = '', $type = '')
+    {
+        $url = '?page=' . $page . '&subpage=' . $subpage;
+        if ($action) {
+            $url .= '&action=' . $action;
+        }
+        if ($type) {
+            $url .= '&type=' . $type;
+        }
+        return $url;
+    } // make_url
+
+    /**
      * run
      * This runs the specified action no questions asked
      */

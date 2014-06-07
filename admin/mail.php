@@ -27,7 +27,9 @@ if (!Access::check('interface','75')) {
     exit();
 }
 
-UI::show_header();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_header();
+}
 
 // Action switch
 switch ($_REQUEST['action']) {
@@ -72,4 +74,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch
 
-UI::show_footer();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_footer();
+}

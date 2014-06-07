@@ -35,7 +35,9 @@ if ($_REQUEST['action'] == 'delete_playlist') {
     }
 }
 
-UI::show_header();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_header();
+}
 
 /* Switch on the action passed in */
 switch ($_REQUEST['action']) {
@@ -141,4 +143,6 @@ switch ($_REQUEST['action']) {
     break;
 } // switch on the action
 
-UI::show_footer();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_footer();
+}

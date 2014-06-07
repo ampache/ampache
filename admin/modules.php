@@ -27,9 +27,9 @@ if (!$GLOBALS['user']->has_access(100)) {
     exit();
 }
 
-
-/* Always show the header */
-UI::show_header();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_header();
+}
 
 switch ($_REQUEST['action']) {
     case 'install_localplay':
@@ -200,4 +200,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch
 
-UI::show_footer();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_footer();
+}

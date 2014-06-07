@@ -28,7 +28,9 @@ if (!Access::check('interface','100')) {
     exit;
 }
 
-UI::show_header();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_header();
+}
 
 /* Big switch statement to handle various actions */
 switch ($_REQUEST['action']) {
@@ -300,4 +302,6 @@ switch ($_REQUEST['action']) {
 } // end switch
 
 /* Show the Footer */
-UI::show_footer();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_footer();
+}

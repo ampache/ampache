@@ -23,15 +23,15 @@
 <ul class="sb2" id="sb_modules">
 <li><h4 class="header"><?php echo T_('Modules'); ?><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_modules']) ? $_COOKIE['sb_modules'] : 'expanded'; ?>" id="modules" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
         <ul class="sb3" id="sb_Modules">
-        <li id="sb_preferences_mo_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo T_('Localplay Modules'); ?></a></li>
-        <li id="sb_preferences_mo_catalog_types"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_catalog_types"><?php echo T_('Catalog Modules'); ?></a></li>
-        <li id="sb_preferences_mo_plugins"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_plugins"><?php echo T_('Available Plugins'); ?></a></li>
+        <li id="sb_preferences_mo_localplay"><?php echo Ajax::text(Ajax::make_url('content', 'modules', 'show_localplay'), T_('Localplay Modules'), 'modules_show_localplay'); ?></li>
+        <li id="sb_preferences_mo_catalog_types"><?php echo Ajax::text(Ajax::make_url('content', 'modules', 'show_catalog_types'), T_('Catalog Modules'), 'modules_show_catalog'); ?></li>
+        <li id="sb_preferences_mo_plugins"><?php echo Ajax::text(Ajax::make_url('content', 'modules', 'show_plugins'), T_('Available Plugins'), 'modules_show_plugins'); ?></li>
         </ul>
 </li>
   <li><h4 class="header"><?php echo T_('Other Tools'); ?><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_md_other_tools']) ? $_COOKIE['sb_md_other_tools'] : 'expanded'; ?>" id="md_other_tools" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
     <ul class="sb3" id="sb_admin_ot">
-      <li id="sb_admin_ot_Duplicates"><a href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo T_('Find Duplicates'); ?></a></li>
-      <li id="sb_admin_ot_Mail"><a href="<?php echo $web_path; ?>/admin/mail.php"><?php echo T_('Mail Users'); ?></a></li>
+      <li id="sb_admin_ot_Duplicates"><?php echo Ajax::text(Ajax::make_url('content', 'duplicates'), T_('Find Duplicates'), 'modules_duplicates_'); ?></li>
+      <li id="sb_admin_ot_Mail"><?php echo Ajax::text(Ajax::make_url('content', 'mail'), T_('Mail Users'), 'modules_mail'); ?></li>
     </ul>
   </li>
 <!--
