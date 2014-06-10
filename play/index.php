@@ -98,7 +98,7 @@ if (empty($share_id)) {
 
     /* If the user has been disabled (true value) */
     if (make_bool($GLOBALS['user']->disabled)) {
-        debug_event('UI::access_denied', "$user->username is currently disabled, stream access denied",'3');
+        debug_event('UI::access_denied', $GLOBALS['user']->username . " is currently disabled, stream access denied", '3');
         header('HTTP/1.1 403 User Disabled');
         exit;
     }
