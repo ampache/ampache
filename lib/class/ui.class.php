@@ -339,4 +339,22 @@ END;
         ob_flush();
         flush();
     }
+
+    /**
+     * create_link
+     *
+     * Generates a full length Ajax URL call using Ajax::text and Ajax::make_url.
+     * @param string    $page       Name of the main page that will be called by ajax.server.php.
+     * @param string    $subpage    Name of the sub page that will be used filtered by page.ajax.php.
+     * @param array     $calls      Array of the key=>value to append in the URL in format &key=value.
+     * @param string    $text       Name of the URL to click.
+     * @param string    $source     Unique identifier for the Ajax function.
+     * @param string    $post       Optional parameter to generate the Ajax URL.
+     * @param string    $class      Optional parameter of a class for the span containing the text.
+     * @return string               Full Ajax text.
+     */
+    public static function create_link($page, $subpage, $calls = array(), $text, $source, $post = '', $class = '')
+    {
+        return Ajax::text(Ajax::make_url($page, $subpage, $calls), $text, $source, $post, $class);
+    }
 }

@@ -34,9 +34,9 @@ $catagories = Preference::get_catagories();
         if ($name == 'system') { continue; }
         $f_name = ucfirst($name);
 ?>
-      <li id="sb_preferences_sections_<?php echo $f_name; ?>"><?php echo Ajax::text(Ajax::make_url('content', 'preferences') . '&tab=' . $name, T_($f_name), 'preferences_preferences' . $name); ?></li>
+      <li id="sb_preferences_sections_<?php echo $f_name; ?>"><?php echo UI::create_link('content', 'preferences', array('tab' => $name), T_($f_name), 'preferences_preferences' . $name); ?></li>
 <?php } ?>
-      <li id="sb_preferences_sections_account"><?php echo Ajax::text(Ajax::make_url('content', 'preferences') . '&tab=account', T_('Account'), 'preferences_preferences_account'); ?></li>
+      <li id="sb_preferences_sections_account"><?php echo UI::create_link('content', 'preferences', array('tab' => 'account'), T_('Account'), 'preferences_preferences_account'); ?></li>
     </ul>
   </li>
 </ul>
