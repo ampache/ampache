@@ -70,7 +70,6 @@ class Stream_Playlist
         debug_event("stream_playlist.class.php", "Adding url {".json_encode($url)."}...", 5);
 
         $this->urls[] = $url;
-
         $sql = 'INSERT INTO `stream_playlist` ';
 
         $fields = array();

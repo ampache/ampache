@@ -122,6 +122,7 @@ class Subsonic_Api
         } else {
             header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
         }
+        header("access-control-allow-origin: *");
     }
 
     public static function apiOutput($input, $xml)
@@ -231,6 +232,9 @@ class Subsonic_Api
         $propertiesArray = !$options['autoText'] || $attributesArray || $tagsArray || ($plainText === '')
                 ? array_merge($attributesArray, $tagsArray, $textContentArray) : $plainText;
 
+        if (isset($propertiesArray['xmlns'])) {
+            unset($propertiesArray['xmlns']);
+        }
         //return node as array
         return array(
             $xml->getName() => $propertiesArray

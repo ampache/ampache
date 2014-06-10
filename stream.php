@@ -192,13 +192,13 @@ switch ($_REQUEST['action']) {
     case 'channel':
         $media_ids[] = array(
             'object_type' => 'channel',
-            'object_id' => scrub_in($_REQUEST['id'])
+            'object_id' => scrub_in($_REQUEST['channel_id'])
         );
     break;
     case 'broadcast':
         $media_ids[] = array(
             'object_type' => 'broadcast',
-            'object_id' => scrub_in($_REQUEST['id'])
+            'object_id' => scrub_in($_REQUEST['broadcast_id'])
         );
     break;
     default:
@@ -227,6 +227,10 @@ switch ($_REQUEST['action']) {
 debug_event('stream.php' , 'Stream Type: ' . $stream_type . ' Media IDs: '. json_encode($media_ids), 5);
 
 if (count(media_ids)) {
+    if ($GLOBALS['user']->id > -1) {
+        Session::update_username(Stream::$session, $GLOBALS['user']->username);
+    }
+
     $playlist = new Stream_Playlist();
     $playlist->add($media_ids);
     if (isset($urls)) {
