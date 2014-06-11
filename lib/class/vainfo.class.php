@@ -193,6 +193,7 @@ class vainfo
         if ($this->islocal) {
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
+                //debug_event('vainfo', print_r($this->_raw, true), '5');
             } catch (Exception $error) {
                 debug_event('getID2', 'Unable to catalog file: ' . $error->getMessage(), 1);
             }

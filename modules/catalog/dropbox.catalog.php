@@ -89,10 +89,10 @@ class Catalog_dropbox extends Catalog
      */
     public function is_installed()
     {
-        $sql = "DESCRIBE `catalog_dropbox`";
+        $sql = "SHOW TABLES LIKE 'catalog_dropbox'";
         $db_results = Dba::query($sql);
 
-        return Dba::num_rows($db_results);
+        return (Dba::num_rows($db_results) > 0);
 
 
     } // is_installed
