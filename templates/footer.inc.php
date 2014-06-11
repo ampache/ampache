@@ -20,21 +20,22 @@
  *
  */
 ?>
-<div style="clear:both;"></div>
-</div> <!-- end id="content"-->
-</div> <!-- end id="maincontainer"-->
-<div id="footer">
-<?php if (AmpConfig::get('show_donate')) { ?>
-    <a href="//ampache.github.io/donate.html" title="Donate"><img src="<?php echo AmpConfig::get('web_path'); ?>/images/donate.png" style="border: 0px; width: 32px; height: 32px;" /></a>
-<?php } ?>
-    <a href="https://github.com/ampache/ampache#readme" target="_blank" title="Copyright © 2001 - 2014 Ampache.org">Ampache <?php echo AmpConfig::get('version'); ?></a>
-    <br />
-    <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
-<?php
-    $load_time_end = microtime(true);
-    $load_time = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4);
-?>
-    | <?php echo T_('Load time:'); ?><?php echo $load_time; ?>
-</div>
-</body>
+                <div style="clear:both;">
+                </div>
+            </div> <!-- end id="content"-->
+        </div> <!-- end id="maincontainer"-->
+        <div id="footer">
+        <?php if (AmpConfig::get('show_donate')) { ?>
+            <a id="donate" href="//ampache.github.io/donate.html" title="Donate"><?php echo ".:: " . T_('Donate') . " ::."; ?></a> | 
+        <?php } ?>
+            <a href="https://github.com/ampache/ampache#readme" target="_blank" title="Copyright © 2001 - 2014 Ampache.org">Ampache <?php echo AmpConfig::get('version'); ?></a>
+            <br />
+            <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
+        <?php
+            $load_time_end = microtime(true);
+            $load_time = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4);
+        ?>
+            | <?php echo T_('Load time:'); ?><?php echo $load_time; ?>
+        </div>
+    </body>
 </html>
