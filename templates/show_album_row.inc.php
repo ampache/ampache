@@ -51,6 +51,9 @@ if (Art::is_enabled()) {
         </a>
     </span>
 </td>
+<?php if (AmpConfig::get('use_id3_band_tag')) {?>
+<td class="cel_album_artist"><?php echo $album->f_album_artist_link; ?></td>
+<?php } ?>
 <td class="cel_artist"><?php echo $album->f_artist_link; ?></td>
 <td class="cel_songs"><?php echo $album->song_count; ?></td>
 <td class="cel_year"><?php echo $album->year; ?></td>

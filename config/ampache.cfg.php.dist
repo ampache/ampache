@@ -268,6 +268,9 @@ getid3_tag_order = "id3v2,id3v1,vorbiscomment,quicktime,matroska,ape,asf,avi,mpe
 ; DEFAULT: getID3 filename
 metadata_order = "getID3,filename"
 
+; Use ID3 band tag as album artist.
+;use_id3_band_tag = "false"
+
 ; Un comment if don't want ampache to follow symlinks
 ; DEFAULT: false
 ;no_symlinks	= "false"

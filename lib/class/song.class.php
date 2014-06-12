@@ -26,6 +26,7 @@ class Song extends database_object implements media
     public $id;
     public $file;
     public $album; // album.id (Int)
+    public $album_artist; // artist.id (Int)
     public $artist; // artist.id (Int)
     public $title;
     public $year;
@@ -55,6 +56,7 @@ class Song extends database_object implements media
     public $f_artist;
     public $f_album;
     public $f_artist_full;
+    public $f_album_artist_full;
     public $f_album_full;
     public $f_time;
     public $f_track;
@@ -65,6 +67,7 @@ class Song extends database_object implements media
     public $f_link;
     public $f_album_link;
     public $f_artist_link;
+    public $f_album_artist_link;
     public $f_tags;
     public $f_size;
     public $f_lyrics;
@@ -113,6 +116,7 @@ class Song extends database_object implements media
         $title = trim($results['title']) ?: $file;
         $artist = $results['artist'];
         $album = $results['album'];
+        $album_artist = $results['band'] ?: null;
         $bitrate = $results['bitrate'] ?: 0;
         $rate = $results['rate'] ?: 0;
         $mode = $results['mode'];
@@ -130,17 +134,18 @@ class Song extends database_object implements media
         $lyrics = $results['lyrics'];
 
         $artist_id = Artist::check($artist, $artist_mbid);
-        $album_id = Album::check($album, $year, $disk, $album_mbid);
+        $album_artist_id = Artist::check($album_artist);
+        $album_id = Album::check($album, $year, $disk, $album_mbid,$album_artist_id);
 
         $sql = 'INSERT INTO `song` (`file`, `catalog`, `album`, `artist`, ' .
             '`title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, ' .
-            '`addition_time`, `year`, `mbid`) ' .
-            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            '`addition_time`, `year`, `mbid`, `album_artist`) ' .
+            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array(
             $file, $catalog, $album_id, $artist_id,
             $title, $bitrate, $rate, $mode, $size, $time, $track,
-            time(), $year, $track_mbid));
+            time(), $year, $track_mbid, $album_artist_id));
 
         if (!$db_results) {
             debug_event('song', 'Unable to insert ' . $file, 2);
@@ -264,7 +269,7 @@ class Song extends database_object implements media
             return parent::get_from_cache('song', $id);
         }
 
-        $sql = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`year`, `song`.`artist`,' .
+        $sql = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_artist`, `song`.`year`, `song`.`artist`,' .
             '`song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, ' .
             '`song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, ' .
             '`album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid` ' .
@@ -472,7 +477,22 @@ class Song extends database_object implements media
         else
           return $artist->name;
 
-    } // get_album_name
+    } // get_artist_name
+
+    /**
+     * get_album_artist_name
+     * gets the name of $this->album_artist, allows passing of id
+     */
+    public function get_album_artist_name($album_artist_id=0)
+    {
+        if (!$album_artist_id) { $album_artist_id = $this->album_artist; }
+        $album_artist = new Artist($album_artist_id);
+        if ($album_artist->prefix)
+          return $album_artist->prefix . " " . $album_artist->name;
+        else
+          return $album_artist->name;
+
+    } // get_album_artist_name
 
     /**
      * set_played
@@ -560,6 +580,8 @@ class Song extends database_object implements media
                     $new_album_id = Album::check($value);
                     self::update_album($new_album_id, $this->id);
                 break;
+                case 'album_artist':
+                case 'year':
                 case 'title':
                 case 'track':
                 case 'artist':
@@ -602,6 +624,7 @@ class Song extends database_object implements media
         $mbid = Dba::escape($new_song->mbid);
         $artist = Dba::escape($new_song->artist);
         $album = Dba::escape($new_song->album);
+        $album_artist = Dba::escape($new_song->album_artist);
         $year = Dba::escape($new_song->year);
         $song_id = Dba::escape($song_id);
         $update_time = time();
@@ -610,6 +633,7 @@ class Song extends database_object implements media
             "`title`='$title', `bitrate`='$bitrate', `rate`='$rate', `mode`='$mode', " .
             "`size`='$size', `time`='$time', `track`='$track', " .
             "`mbid`='$mbid', " .
+            "`album_artist`='$album_artist', " .
             "`update_time`='$update_time' WHERE `id`='$song_id'";
 
         Dba::write($sql);
@@ -673,6 +697,15 @@ class Song extends database_object implements media
         self::_update_item('title',$new_title,$song_id,'50');
 
     } // update_title
+
+    /**
+     * update_album_artist
+     * updates the album_artist field
+     */
+    public static function update_album_artist($new_album_artist,$song_id)
+    {
+        self::_update_item('band',$new_album_artist,$song_id,'50');
+    } // update_album_artist
 
     /**
      * update_bitrate
@@ -855,6 +888,9 @@ class Song extends database_object implements media
         $this->f_artist_full = $this->get_artist_name();
         $this->f_artist = $this->f_artist_full;
 
+        // Format the album_artist name
+        $this->f_album_artist_full = $this->get_album_artist_name();
+
         // Format the title
         $this->f_title_full = $this->title;
         $this->f_title = $this->title;
@@ -864,6 +900,7 @@ class Song extends database_object implements media
         $this->f_link = "<a href=\"" . scrub_out($this->link) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_title) . "</a>";
         $this->f_album_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->f_album_full) . "\"> " . scrub_out($this->f_album) . "</a>";
         $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
+        $this->f_album_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->f_album_artist_full) . "\"> " . scrub_out($this->f_album_artist_full) . "</a>";
 
         // Format the Bitrate
         $this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);

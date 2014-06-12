@@ -410,6 +410,9 @@ class Update
         $update_string = '- Add show/hide donate button preference.<br />';
         $version[] = array('version' => '370003','description' => $update_string);
 
+        $update_string = '- Add new column album_artist into table album and song.<br />';
+        $version[] = array('version' => '370004','description' => $update_string);
+
         return $version;
     }
 
@@ -2516,6 +2519,22 @@ class Update
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         Dba::write($sql, array($id));
+
+        return true;
+    }
+
+    /**
+     * update_370004
+     *
+     * Add new column album_artist into table album and song
+     */
+    public static function update_370004()
+    {
+        $sql = "ALTER TABLE `song` ADD `album_artist` int(11) unsigned DEFAULT NULL AFTER `artist`";
+        Dba::write($sql);
+
+        $sql = "ALTER TABLE `album` ADD `album_artist` int(11) unsigned DEFAULT NULL AFTER `name`";
+        Dba::write($sql);
 
         return true;
     }

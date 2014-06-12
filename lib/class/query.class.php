@@ -200,7 +200,8 @@ class Query
             'album' => array(
                 'name',
                 'year',
-                'artist'
+                'artist',
+                'album_artist'
             ),
             'playlist' => array(
                 'name',
@@ -624,6 +625,8 @@ class Query
         if (!in_array($sort, self::$allowed_sorts[$this->get_type()])) {
             return false;
         }
+
+        $this->reset_join();
 
         if ($order) {
             $order = ($order == 'DESC') ? 'DESC' : 'ASC';
@@ -1461,6 +1464,10 @@ class Query
                 switch ($field) {
                     case 'name':
                         $sql = "`album`.`name` $order, `album`.`disk`";
+                    break;
+                    case 'album_artist':
+                        $sql = "`artist`.`name`";
+                        $this->set_join('left', '`artist`', '`artist`.`id`', '`album`.`album_artist`', 100);
                     break;
                     case 'artist':
                         $sql = "`artist`.`name`";

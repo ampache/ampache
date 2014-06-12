@@ -292,6 +292,8 @@ class vainfo
 
             $info['album'] = $info['album'] ?: trim($tags['album']);
 
+            $info['band'] = $info['band'] ?: trim($tags['band']);
+
             // multiple genre support
             if ((!$info['genre']) && $tags['genre']) {
                 if (!is_array($tags['genre'])) {
