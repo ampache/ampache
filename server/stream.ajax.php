@@ -106,10 +106,10 @@ switch ($_REQUEST['action']) {
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=song_preview&id='.$_REQUEST['id'];
             break;
             case 'channel':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=channel&id='.$_REQUEST['channel_id'];
+                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=channel&channel_id='.$_REQUEST['channel_id'];
             break;
             case 'broadcast':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=broadcast&id='.$_REQUEST['broadcast_id'];
+                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=broadcast&broadcast_id='.$_REQUEST['broadcast_id'];
             break;
         }
         if (!empty($_REQUEST['append'])) {

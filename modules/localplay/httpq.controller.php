@@ -75,12 +75,10 @@ class AmpacheHttpq extends localplay_controller
          */
         public function is_installed()
         {
-        $sql = "DESCRIBE `localplay_httpq`";
-        $db_results = Dba::read($sql);
+            $sql = "SHOW TABLES LIKE 'localplay_httpq'";
+            $db_results = Dba::read($sql);
 
-        return Dba::num_rows($db_results);
-
-
+            return (Dba::num_rows($db_results) > 0);
         } // is_installed
 
         /**

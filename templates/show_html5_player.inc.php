@@ -465,10 +465,14 @@ function listenBroadcast()
     brconn.onmessage = receiveBroadcastMessage;
 }
 
+var brLoadingSong = false;
+var brBufferingSongPos = -1;
+
 function receiveBroadcastMessage(e)
 {
     var jp = $("#jquery_jplayer_1").data("jPlayer");
     var msgs = e.data.split(';');
+
     for (var i = 0; i < msgs.length; ++i) {
         var msg = msgs[i].split(':');
         if (msg.length == 2) {
@@ -487,11 +491,25 @@ function receiveBroadcastMessage(e)
 
                 case 'SONG':
                     addMedia($.parseJSON(atob(msg[1])));
+                    brLoadingSong = true;
+                    // Buffering song position in case it is asked in the next sec.
+                    // Otherwise we will move forward on the previous song instead of the new currently loading one
+                    setTimeout(function() {
+                        if (brBufferingSongPos > -1) {
+                            jp.play(brBufferingSongPos);
+                            brBufferingSongPos = -1;
+                        }
+                        brLoadingSong = false;
+                    }, 1000);
                     jplaylist.next();
                 break;
 
                 case 'SONG_POSITION':
-                    jp.play(parseFloat(msg[1]));
+                    if (brLoadingSong) {
+                        brBufferingSongPos = parseFloat(msg[1]);
+                    } else {
+                        jp.play(parseFloat(msg[1]));
+                    }
                 break;
 
                 case 'NB_LISTENERS':

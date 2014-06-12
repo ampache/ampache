@@ -78,10 +78,10 @@ class Catalog_remote extends Catalog
      */
     public function is_installed()
     {
-        $sql = "DESCRIBE `catalog_remote`";
+        $sql = "SHOW TABLES LIKE 'catalog_remote'";
         $db_results = Dba::query($sql);
 
-        return Dba::num_rows($db_results);
+        return (Dba::num_rows($db_results) > 0);
 
 
     } // is_installed

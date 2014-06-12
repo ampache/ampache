@@ -20,14 +20,21 @@
  *
  */
 ?>
-<div style="clear:both;"></div>
-</div> <!-- end id="content"-->
-</div> <!-- end id="maincontainer"-->
-<div id="footer">
-<?php if (AmpConfig::get('show_donate')) { ?>
-    <a href="//ampache.github.io/donate.html" target="_blank" title="Donate"><img src="<?php echo AmpConfig::get('web_path'); ?>/images/donate.png" style="border: 0px; width: 32px; height: 32px;" /></a>
-<?php } ?>
-    <a href="https://github.com/ampache/ampache#readme" target="_blank" title="Copyright © 2001 - 2014 Ampache.org">Ampache <?php echo AmpConfig::get('version'); ?></a>
-</div>
-</body>
+                <div style="clear:both;">
+                </div>
+            </div>
+        </div> <!-- end id="maincontainer"-->
+        <?php
+            $count_temp_playlist = 1;
+            if (!isset($_SESSION['login']) || !$_SESSION['login']) {
+                $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
+            }
+        ?>
+        <div id="footer" class="<?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'footer-wild'); ?>">
+        <?php if (AmpConfig::get('show_donate')) { ?>
+            <a id="donate" href="//ampache.github.io/donate.html" target="_blank" title="Donate"><?php echo ".:: " . T_('Donate') . " ::."; ?></a> |
+        <?php } ?>
+            <a href="https://github.com/ampache/ampache#readme" target="_blank" title="Copyright © 2001 - 2014 Ampache.org">Ampache <?php echo AmpConfig::get('version'); ?></a>
+        </div>
+    </body>
 </html>

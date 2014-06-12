@@ -202,7 +202,11 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #footer {
     width: auto;
     z-index: 5;
-    margin: 15px 270px 0px 0px;
+    margin: 15px 250px 0px 0px;
+}
+
+.footer-wild {
+    margin-right: 20px !important;
 }
 
 #ajax-loading {
@@ -473,14 +477,56 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #555;
 }
 
+#loginPage #footer #donate {
+    color: #ff9d00;
+}
+
 /***********************************************
            Sidebar
 ***********************************************/
 #sidebar {
-    width: 150px;
-    /*z-index: 8;*/
     margin: 20px auto auto 5px;
-    padding: 10px;
+    font-size: 12px;
+    color: #999;
+}
+
+.sidebar-collapsed {
+    width: 50px !important;
+}
+
+#sidebar-header {
+    height: 20px;
+    width: 150px;
+    background-color: rgba(0,0,0,0.15);
+    border: 2px solid rgba(0,0,0,0.15);
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 10px;
+}
+
+#sidebar-header:hover {
+    cursor: pointer;
+    color: #fff;
+}
+
+#sidebar-header span {
+    line-height: 15px;
+}
+
+.sidebar-header-collapsed {
+    width: 50px !important;
+    content: '>>>' !important;
+}
+
+#sidebar-content, #sidebar-content-light, #sidebar-light {
     border-radius: 2px;
     border-color: #1d1d1d;
     border: 2px solid rgba(0,0,0,0.15);
@@ -493,10 +539,38 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
     box-sizing: border-box;
-    font-size: 12px;
     background-color: #1a1a1a;
     border-right: 2px solid #000;
-    color: #999;
+    padding: 10px;
+}
+
+.sidebar-content-collapsed {
+    display: none !important;
+}
+
+#sidebar-content-light {
+    padding: 0px;
+    display: none;
+    width: 50px;
+}
+
+#sidebar-light {
+    width: 50px;
+    position: absolute;
+    left: 0px;
+    margin: 3px auto 5px 5px;
+    padding: 10px 0 10px 0;
+    text-align: center;
+}
+
+#sidebar-light img {
+    margin: auto;
+    height: 32px;
+    width: 32px;
+}
+
+.sidebar-content-light-collapsed {
+    display: block !important;
 }
 
 .sidebar-float {
@@ -525,6 +599,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #sidebar-tabs li.active {
 }
+
 #sidebar-tabs li.active img{
 }
 
@@ -570,6 +645,10 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -webkit-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
     -moz-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
     box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+}
+
+#sidebar-tabs .sb2 li h4:hover {
+    cursor: pointer;
 }
 
 #sidebar-tabs .sb2 li ul li a {
@@ -788,8 +867,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     margin: 20px 250px 0px 180px;
 }
 
-.content-wild {
+.content-right-wild {
     margin-right: 20px !important;
+}
+
+.content-left-wild {
+    margin-left: 70px !important;
 }
 
 .content-fixed {

@@ -207,7 +207,7 @@ switch ($_REQUEST['action']) {
         ob_start();
         $_SESSION['state']['sidebar_tab'] = $button;
         require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php';
-        $results['sidebar'] = ob_get_contents();
+        $results['sidebar-content'] = ob_get_contents();
         ob_end_clean();
     break;
     case 'shoutbox':
