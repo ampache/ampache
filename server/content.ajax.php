@@ -94,5 +94,12 @@ switch ($_REQUEST['subpage']) {
 $results[$_REQUEST['page']] = ob_get_clean();
 ob_end_clean();
 
+// Logs the load time and queries amount of the Ajax call.
+$load_time_end = microtime(true);
+$load_time = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4);
+debug_event('content.ajax.php', 'Queries {' . Dba::$stats['query'] . '}', '5');
+debug_event('content.ajax.php', 'Cache Hits {' . database_object::$cache_hit . '}', '5');
+debug_event('content.ajax.php', 'Load Time {' . $load_time . '}', '5');
+
 // We always do this
 echo xoutput_from_array($results);
