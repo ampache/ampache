@@ -202,7 +202,11 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #footer {
     width: auto;
     z-index: 5;
-    margin: 15px 270px 0px 0px;
+    margin: 15px 250px 0px 0px;
+}
+
+.footer-wild {
+    margin-right: 20px !important;
 }
 
 #ajax-loading {
@@ -574,6 +578,10 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -webkit-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
     -moz-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
     box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+}
+
+#sidebar-tabs .sb2 li h4:hover {
+    cursor: pointer;
 }
 
 #sidebar-tabs .sb2 li ul li a {

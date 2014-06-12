@@ -89,10 +89,12 @@
     <script type="text/javascript">
         <?php if (count($objects) || (AmpConfig::get('play_type') == 'localplay')) { ?>
             $("#content").removeClass("content-wild", 500);
+            $("#footer").removeClass("footer-wild", 500);
             $("#rightbar").removeClass("hidden");
             $("#rightbar").show("slow");
         <?php } else { ?>
             $("#content").addClass("content-wild", 500);
+            $("#footer").addClass("footer-wild", 500);
             $("#rightbar").hide("slow");
         <?php } ?>
     </script>

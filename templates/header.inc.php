@@ -25,6 +25,7 @@ if (INIT_LOADED != '1') { exit; }
 $web_path = AmpConfig::get('web_path');
 $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
 $location = get_location();
+$_SESSION['login'] = false;
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
