@@ -36,6 +36,7 @@ debug_event('show_edit.server.php', 'Called for action: {'.$_REQUEST['action'].'
 switch ($_REQUEST['action']) {
     case 'show_edit_object':
         $level = '50';
+        $levelok = false;
         switch ($_GET['type']) {
             case 'album_row':
                 $album = new Album($_GET['id']);
@@ -48,6 +49,10 @@ switch ($_REQUEST['action']) {
             case 'song_row':
                 $song = new Song($_GET['id']);
                 $song->format();
+
+                if ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit')) {
+                    $levelok = true;
+                }
             break;
             case 'live_stream_row':
                 $radio = new Radio($_GET['id']);
@@ -86,7 +91,7 @@ switch ($_REQUEST['action']) {
         } // end switch on type
 
         // Make sure they got them rights
-        if (!Access::check('interface', $level)) {
+        if (!$levelok && !Access::check('interface', $level)) {
             break;
         }
 

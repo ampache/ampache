@@ -359,7 +359,7 @@ class Catalog_local extends Catalog
 
                 else {
                     if ($is_audio_file) {
-                        $this->_insert_local_song($full_file,$file_size);
+                        $this->_insert_local_song($full_file, $file_size, $options);
                     } else { $this->insert_local_video($full_file,$file_size); }
 
                     $this->count++;
@@ -640,7 +640,7 @@ class Catalog_local extends Catalog
      *
      * Insert a song that isn't already in the database.
      */
-    private function _insert_local_song($file, $file_info)
+    private function _insert_local_song($file, $file_info, $options)
     {
         $vainfo = new vainfo($file, '', '', '', $this->sort_pattern, $this->rename_pattern);
         $vainfo->get_info();
@@ -648,8 +648,35 @@ class Catalog_local extends Catalog
         $key = vainfo::get_tag_type($vainfo->tags);
 
         $results = vainfo::clean_tag_info($vainfo->tags, $key, $file);
-
         $results['catalog'] = $this->id;
+
+        if (isset($options['user_upload'])) {
+            $results['user_upload'] = $options['user_upload'];
+
+            // Override artist information with artist's user
+            if (AmpConfig::get('upload_user_artist')) {
+                $user = new User($options['user_upload']);
+                if ($user->id) {
+                    $artists = $user->get_artists();
+                    $artist = null;
+                    // No associated artist yet, we create a default one for the user sender
+                    if (count($artists) == 0) {
+                        $artists[] = Artist::check($user->fullname);
+                        $artist = new Artist($artists[0]);
+                        $artist->update_artist_user($user->id);
+                    } else {
+                        $artist = new Artist($artists[0]);
+                    }
+                    $results['artist'] = $artist->name;
+                    $results['mb_artistid'] = $artist->mbid;
+                }
+            }
+        }
+
+        if (isset($options['license'])) {
+            $results['license'] = $options['license'];
+        }
+
         return Song::insert($results);
     }
 

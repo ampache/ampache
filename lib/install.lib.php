@@ -69,7 +69,7 @@ function install_check_status($configfile)
     if (!file_exists($configfile)) {
         return true;
     } else {
-        Error::add('general', T_('Config file already exists, install is probably completed'));
+        //Error::add('general', T_('Config file already exists, install is probably completed'));
     }
 
     /*

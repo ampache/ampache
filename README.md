@@ -99,6 +99,9 @@ Ampache includes some external modules that carry their own licensing.
 * [MediaTable] (https://github.com/edenspiekermann/MediaTable): MIT
 * [Responsive Elements] (https://github.com/kumailht/responsive-elements): MIT
 * [Bootstrap] (http://getbootstrap.com): MIT
+* [jQuery Knob] (https://github.com/aterrien/jQuery-Knob): MIT
+* [jQuery File Upload] (https://github.com/blueimp/jQuery-File-Upload): MIT
+* [jsTree] (http://www.jstree.com/): MIT
 
 
 Translations

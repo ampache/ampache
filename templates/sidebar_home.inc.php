@@ -41,6 +41,9 @@
             <?php } ?>
             <li id="sb_browse_bb_RadioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo T_('Radio Stations'); ?></a></li>
             <li id="sb_browse_bb_Video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo T_('Videos'); ?></a></li>
+            <?php if (AmpConfig::get('allow_upload')) { ?>
+            <li id="sb_browse_bb_Upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo T_('Upload'); ?></a></li>
+            <?php } ?>
         </ul>
     </li>
     <?php Ajax::start_container('browse_filters'); ?>
@@ -91,6 +94,9 @@
             <?php } ?>
             <?php if (AmpConfig::get('share')) { ?>
             <li id="sb_home_info_Share"><a href="<?php echo $web_path; ?>/stats.php?action=share"><?php echo T_('Shared Objects'); ?></a></li>
+            <?php } ?>
+            <?php if (AmpConfig::get('allow_upload')) { ?>
+            <li id="sb_browse_bb_Upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo T_('Uploads'); ?></a></li>
             <?php } ?>
             <li id="sb_home_info_Statistics"><a href="<?php echo $web_path; ?>/stats.php?action=show"><?php echo T_('Statistics'); ?></a></li>
         </ul>

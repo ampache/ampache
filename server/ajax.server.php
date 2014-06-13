@@ -94,6 +94,7 @@ switch ($_REQUEST['action']) {
         }
 
         $level = '50';
+        $levelok = false;
 
         if ($_POST['type'] == 'playlist_row' || $_POST['type'] == 'playlist_title') {
             $playlist = new Playlist($_POST['id']);
@@ -109,8 +110,17 @@ switch ($_REQUEST['action']) {
             }
         }
 
+        if ($_POST['type'] == 'song_row') {
+            $song = new Song($_POST['id']);
+            if ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface','75')) {
+                if (isset($_POST['artist'])) unset($_POST['artist']);
+                if (isset($_POST['album'])) unset($_POST['album']);
+                $levelok = true;
+            }
+        }
+
         // Make sure we've got them rights
-        if (!Access::check('interface', $level) || AmpConfig::get('demo_mode')) {
+        if (!$levelok && (!Access::check('interface', $level) || AmpConfig::get('demo_mode'))) {
             $results['rfc3514'] = '0x1';
             break;
         }
@@ -139,9 +149,10 @@ switch ($_REQUEST['action']) {
             break;
             case 'song_row':
                 $key = 'song_' . $_POST['id'];
-                $song = new Song($_POST['id']);
-                $song->update($_POST);
-                $song->format();
+                if (isset($song)) {
+                    $song->update($_POST);
+                    $song->format();
+                }
             break;
             case 'playlist_row':
             case 'playlist_title':

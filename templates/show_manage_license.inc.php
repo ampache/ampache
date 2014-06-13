@@ -22,42 +22,39 @@
 
 $web_path = AmpConfig::get('web_path');
 ?>
+<div id="information_actions">
+    <ul>
+        <li>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/license.php?action=show_create"><?php echo T_('Create new license'); ?></a>
+        </li>
+    </ul>
+</div>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <thead>
         <tr class="th-top">
-            <th class="cel_object"><?php echo T_('Object'); ?></th>
-            <th class="cel_username"><?php echo T_('User'); ?></th>
-            <th class="cel_sticky"><?php echo T_('Sticky'); ?></th>
-            <th class="cel_comment"><?php echo T_('Comment'); ?></th>
-            <th class="cel_date"><?php echo T_('Date Added'); ?></th>
+            <th class="cel_name"><?php echo T_('Name'); ?></th>
+            <th class="cel_description"><?php echo T_('Description'); ?></th>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>
     <tbody>
         <?php
-        foreach ($object_ids as $shout_id) {
-            $shout = new Shoutbox($shout_id);
-            $shout->format();
-                $object = Shoutbox::get_object($shout->object_type,$shout->object_id);
-                $object->format();
-                $client = new User($shout->user);
-                $client->format();
+        foreach ($object_ids as $license_id) {
+            $license = new License($license_id);
+            $license->format();
 
-            require AmpConfig::get('prefix') . '/templates/show_shout_row.inc.php';
+            require AmpConfig::get('prefix') . '/templates/show_license_row.inc.php';
         ?>
         <?php } if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="6" class="error"><?php echo T_('No Records Found'); ?></td>
+            <td colspan="6" class="error"><?php echo T_('No Licenses Found'); ?></td>
         </tr>
         <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
-            <th class="cel_object"><?php echo T_('Object'); ?></th>
-            <th class="cel_username"><?php echo T_('User'); ?></th>
-            <th class="cel_sticky"><?php echo T_('Sticky'); ?></th>
-            <th class="cel_comment"><?php echo T_('Comment'); ?></th>
-            <th class="cel_date"><?php echo T_('Date Added'); ?></th>
+            <th class="cel_name"><?php echo T_('Name'); ?></th>
+            <th class="cel_description"><?php echo T_('Description'); ?></th>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
         </tr>
     </tfoot>

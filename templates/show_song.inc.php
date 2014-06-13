@@ -107,6 +107,14 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
      $songprops[gettext_noop('Lyrics')]   = $song->f_lyrics;
   }
 
+    if (AmpConfig::get('licensing')) {
+        if ($song->license) {
+            $license = new License($song->license);
+            $license->format();
+            $songprops[gettext_noop('Licensing')]   = $license->f_link;
+        }
+    }
+
     foreach ($songprops as $key => $value) {
         if (trim($value)) {
               $rowparity = UI::flip_class();

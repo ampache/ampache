@@ -410,6 +410,9 @@ class Update
         $update_string = '- Add show/hide donate button preference.<br />';
         $version[] = array('version' => '370003','description' => $update_string);
 
+        $update_string = '- Add license information and user\'s artist association.<br />';
+        $version[] = array('version' => '370004','description' => $update_string);
+
         return $version;
     }
 
@@ -1843,7 +1846,7 @@ class Update
      */
     public static function update_360024()
     {
-        $sql = "DROP TABLE `flagged`";
+        $sql = "DROP TABLE IF EXISTS `flagged`";
         Dba::write($sql);
 
         return true;
@@ -2516,6 +2519,99 @@ class Update
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         Dba::write($sql, array($id));
+
+        return true;
+    }
+
+    /**
+     * update_370004
+     *
+     * Add license information and user's artist association
+     */
+    public static function update_370004()
+    {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('upload_catalog','-1','Uploads catalog destination',40,'integer','system')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'-1')";
+        Dba::write($sql, array($id));
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('allow_upload','0','Allow users to upload media',25,'boolean','system')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('upload_subdir','1','Upload: create a subdirectory per user (recommended)',25,'boolean','system')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        Dba::write($sql, array($id));
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('upload_user_artist','0','Upload: consider the user sender as the track\'s artist',25,'boolean','system')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('upload_script','','Upload: run the following script after upload (current directory = upload target directory)',25,'string','system')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
+        Dba::write($sql, array($id));
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('upload_allow_edit','1','Upload: allow users to edit uploaded songs',25,'boolean','system')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        Dba::write($sql, array($id));
+
+        $sql = "ALTER TABLE `artist` ADD `user` int(11) NULL AFTER `last_update`";
+        Dba::write($sql);
+
+        $sql = "CREATE TABLE `license` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`name` varchar(80) NOT NULL," .
+            "`description` varchar(256) NULL," .
+            "`external_link` varchar(256) NOT NULL," .
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
+        Dba::write($sql);
+
+        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY', 'https://creativecommons.org/licenses/by/3.0/')";
+        Dba::write($sql);
+        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC', 'https://creativecommons.org/licenses/by-nc/3.0/')";
+        Dba::write($sql);
+        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC ND', 'https://creativecommons.org/licenses/by-nc-nd/3.0/')";
+        Dba::write($sql);
+        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC SA', 'https://creativecommons.org/licenses/by-nc-sa/3.0/')";
+        Dba::write($sql);
+        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY ND', 'https://creativecommons.org/licenses/by-nd/3.0/')";
+        Dba::write($sql);
+        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY SA', 'https://creativecommons.org/licenses/by-sa/3.0/')";
+        Dba::write($sql);
+        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('Licence Art Libre', 'http://artlibre.org/licence/lal/')";
+        Dba::write($sql);
+        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('Yellow OpenMusic', 'http://openmusic.linuxtag.org/yellow.html')";
+        Dba::write($sql);
+        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('Green OpenMusic', 'http://openmusic.linuxtag.org/green.html')";
+        Dba::write($sql);
+        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('Gnu GPL Art', 'http://gnuart.org/english/gnugpl.html')";
+        Dba::write($sql);
+        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('WTFPL', 'https://en.wikipedia.org/wiki/WTFPL')";
+        Dba::write($sql);
+        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('FMPL', 'http://www.fmpl.org/fmpl.html')";
+        Dba::write($sql);
+        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('C Reaction', 'http://morne.free.fr/Necktar7/creaction.htm')";
+        Dba::write($sql);
+
+        $sql = "ALTER TABLE `song` ADD `user_upload` int(11) NULL AFTER `addition_time`, ADD `license` int(11) NULL AFTER `user_upload`";
+        Dba::write($sql);
 
         return true;
     }

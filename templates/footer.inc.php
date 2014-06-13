@@ -26,7 +26,7 @@
         </div> <!-- end id="maincontainer"-->
         <div id="footer">
         <?php if (AmpConfig::get('show_donate')) { ?>
-            <a id="donate" href="//ampache.github.io/donate.html" title="Donate"><?php echo ".:: " . T_('Donate') . " ::."; ?></a> | 
+            <a id="donate" href="//ampache.github.io/donate.html" title="Donate"><?php echo ".:: " . T_('Donate') . " ::."; ?></a> |
         <?php } ?>
             <a href="https://github.com/ampache/ampache#readme" target="_blank" title="Copyright © 2001 - 2014 Ampache.org">Ampache <?php echo AmpConfig::get('version'); ?></a>
             <br />

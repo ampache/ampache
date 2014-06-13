@@ -46,6 +46,8 @@ class Song extends database_object implements media
     public $mbid; // MusicBrainz ID
     public $catalog;
     public $waveform;
+    public $user_upload;
+    public $license;
 
     public $tags;
     public $language;
@@ -128,19 +130,21 @@ class Song extends database_object implements media
         $comment = $results['comment'];
         $tags = $results['genre']; // multiple genre support makes this an array
         $lyrics = $results['lyrics'];
+        $user_upload = isset($results['user_upload']) ? $results['user_upload'] : null;
+        $license = isset($results['license']) ? $results['license'] : null;
 
         $artist_id = Artist::check($artist, $artist_mbid);
         $album_id = Album::check($album, $year, $disk, $album_mbid);
 
         $sql = 'INSERT INTO `song` (`file`, `catalog`, `album`, `artist`, ' .
             '`title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, ' .
-            '`addition_time`, `year`, `mbid`) ' .
-            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            '`addition_time`, `year`, `mbid`, `user_upload`, `license`) ' .
+            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array(
             $file, $catalog, $album_id, $artist_id,
             $title, $bitrate, $rate, $mode, $size, $time, $track,
-            time(), $year, $track_mbid));
+            time(), $year, $track_mbid, $user_upload, $license));
 
         if (!$db_results) {
             debug_event('song', 'Unable to insert ' . $file, 2);
@@ -198,7 +202,7 @@ class Song extends database_object implements media
             '`year`, `artist`, `title`, `bitrate`, `rate`, ' .
             '`mode`, `size`, `time`, `track`, `played`, ' .
             '`song`.`enabled`, `update_time`, `tag_map`.`tag_id`, '.
-            '`mbid`, `addition_time` ' .
+            '`mbid`, `addition_time`, `license` ' .
             'FROM `song` LEFT JOIN `tag_map` ' .
             'ON `tag_map`.`object_id`=`song`.`id` ' .
             "AND `tag_map`.`object_type`='song' ";
@@ -266,7 +270,7 @@ class Song extends database_object implements media
 
         $sql = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`year`, `song`.`artist`,' .
             '`song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, ' .
-            '`song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, ' .
+            '`song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, ' .
             '`album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid` ' .
             'FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' .
             'WHERE `song`.`id` = ?';
@@ -565,6 +569,7 @@ class Song extends database_object implements media
                 case 'artist':
                 case 'album':
                 case 'mbid':
+                case 'license':
                     // Check to see if it needs to be updated
                     if ($value != $this->$key) {
                         $function = 'update_' . $key;
@@ -739,6 +744,12 @@ class Song extends database_object implements media
         self::_update_item('mbid', $new_mbid, $song_id, '50');
 
     } // update_mbid
+
+    public static function update_license($new_license, $song_id)
+    {
+        self::_update_item('license', $new_license, $song_id, '50');
+
+    } // update_license
 
     /**
      * update_artist
