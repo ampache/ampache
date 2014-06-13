@@ -25,6 +25,7 @@ if (INIT_LOADED != '1') { exit; }
 $web_path = AmpConfig::get('web_path');
 $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
 $location = get_location();
+$_SESSION['login'] = false;
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -83,7 +84,7 @@ $location = get_location();
 
             // Using the following workaround to set global variable available from any javascript script.
             var jsAjaxUrl = "<?php echo AmpConfig::get('ajax_url') ?>";
-            var jsWebPath = "<?php echo AmpConfig::get('web_path') ?>";
+            var jsWebPath = "<?php echo $web_path; ?>";
             var jsAjaxServer = "<?php echo AmpConfig::get('ajax_server') ?>";
             var jsSaveTitle = "<?php echo T_('Save') ?>";
             var jsCancelTitle = "<?php echo T_('Cancel') ?>";
@@ -254,7 +255,7 @@ $location = get_location();
         <div id="maincontainer">
             <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
                 <h1 id="headerlogo">
-                  <a href="<?php echo AmpConfig::get('web_path') . ((AmpConfig::get('iframes')) ? '/?framed=1' : ''); ?>">
+                  <a href="<?php echo $web_path . ((AmpConfig::get('iframes')) ? '/?framed=1' : ''); ?>">
                     <img src="<?php echo $web_path; ?><?php echo AmpConfig::get('theme_path'); ?>/images/ampache.png" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
                   </a>
                 </h1>
@@ -262,7 +263,7 @@ $location = get_location();
                     <?php UI::show_box_top('','box box_headerbox'); ?>
                     <?php require_once AmpConfig::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
                     <?php require_once AmpConfig::get('prefix') . '/templates/show_playtype_switch.inc.php'; ?>
-                    <span id="loginInfo"><a href="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?tab=account"><?php echo $GLOBALS['user']->fullname; ?></a> <a target="_top" href="<?php echo AmpConfig::get('web_path'); ?>/logout.php">[<?php echo T_('Log out'); ?>]</a></span>
+                    <span id="loginInfo"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo $GLOBALS['user']->fullname; ?></a> <a target="_top" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a></span>
                     <span id="updateInfo">
                     <?php
                     if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {
@@ -280,46 +281,88 @@ $location = get_location();
         <?php if (AmpConfig::get('topmenu')) { ?>
             <div id="topmenu_container">
                 <div id="topmenu_item">
-                    <a href="<?php echo AmpConfig::get('web_path') . ((AmpConfig::get('iframes')) ? '/?framed=1' : ''); ?>">
+                    <a href="<?php echo $web_path . ((AmpConfig::get('iframes')) ? '/?framed=1' : ''); ?>">
                         <img src="<?php echo $web_path; ?>/images/topmenu-home.png" />
                         <span><?php echo T_('Home'); ?></span>
                     </a>
                 </div>
                 <div id="topmenu_item">
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=artist">
+                    <a href="<?php echo $web_path; ?>/browse.php?action=artist">
                         <img src="<?php echo $web_path; ?>/images/topmenu-music.png" />
                         <span><?php echo T_('Artists'); ?></span>
                     </a>
                 </div>
                 <div id="topmenu_item">
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=playlist">
+                    <a href="<?php echo $web_path; ?>/browse.php?action=playlist">
                         <img src="<?php echo $web_path; ?>/images/topmenu-playlist.png" />
                         <span><?php echo T_('Playlists'); ?></span>
                     </a>
                 </div>
                 <div id="topmenu_item">
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=userflag">
+                    <a href="<?php echo $web_path; ?>/stats.php?action=userflag">
                         <img src="<?php echo $web_path; ?>/images/topmenu-favorite.png" />
                         <span><?php echo T_('Favorites'); ?></span>
                     </a>
                 </div>
             </div>
         <?php } ?>
-
+            <?php $isCollapsed = $_COOKIE['sidebar_state'] == "collapsed"; ?>
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
-                <?php require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php'; ?>
+                <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" ><span id="sidebar-header-content"><?php echo $isCollapsed ? '>>>' : '<<<'; ?></span></div>
+                <div id="sidebar-content" class="<?php echo $isCollapsed ? 'sidebar-content-collapsed' : ''; ?>" >
+                    <?php require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php'; ?>
+                </div>
+                <div id="sidebar-content-light" class="<?php echo $isCollapsed ? 'sidebar-content-light-collapsed' : ''; ?>" >
+                    <?php require_once AmpConfig::get('prefix') . '/templates/sidebar.light.inc.php'; ?>
+                </div>
             </div>
+            <!-- Handle collapsed visibility -->
+            <script type="text/javascript">
+            $('#sidebar-header').click(function(){
+                var newstate = "collapsed";
+                if ($('#sidebar-header').hasClass("sidebar-header-collapsed")) {
+                    newstate = "expanded";
+                }                
+                
+                if (newstate != "expanded") {
+                    $("#content").addClass("content-left-wild", 600);
+                } else {
+                    $("#content").removeClass("content-left-wild", 1000);
+                }
+                
+                $('#sidebar').hide(500, function() {
+                    if (newstate == "expanded") {
+                        $('#sidebar-content-light').removeClass("sidebar-content-light-collapsed");
+                        $('#sidebar-content').removeClass("sidebar-content-collapsed");
+                        $('#sidebar-header').removeClass("sidebar-header-collapsed");
+                        $('#sidebar-header-content').text('<<<');
+                    }
+                    else {
+                        $('#sidebar-content').addClass("sidebar-content-collapsed");
+                        $('#sidebar-header').addClass("sidebar-header-collapsed");
+                        $('#sidebar-content-light').addClass("sidebar-content-light-collapsed");
+                        $('#sidebar-header-content').text('>>>');
+                    }
+                    
+                    $('#sidebar').show(500);
+                });
+                
+                $.cookie('sidebar_state', newstate, { expires: 30, path: '/'});
+            });
+            </script>
+            
             <div id="rightbar" class="rightbar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> <?php echo $count_temp_playlist ? '' : 'hidden' ?>">
                 <?php require_once AmpConfig::get('prefix') . '/templates/rightbar.inc.php'; ?>
             </div>
-        <!-- Tiny little iframe, used to cheat the system -->
-        <div id="ajax-loading">Loading . . .</div>
-        <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo AmpConfig::get('web_path'); ?>/util.php"></iframe>
-        <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> <?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-wild'); ?>">
+            
+            <!-- Tiny little iframe, used to cheat the system -->
+            <div id="ajax-loading">Loading . . .</div>
+            <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
+            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> <?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
-        <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
-        <div class="fatalerror">
-            <?php echo T_('Error Config File Out of Date'); ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config'); ?></a>
-        </div>
-        <?php } ?>
+                <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
+                <div class="fatalerror">
+                    <?php echo T_('Error Config File Out of Date'); ?>
+                    <a href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config'); ?></a>
+                </div>
+                <?php } ?>

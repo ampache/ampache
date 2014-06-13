@@ -60,12 +60,13 @@ foreach ($sidebar_items as $item) {
 }
 ?>
     <li id="sb_tab_logout" class="sb1">
-        <a target="_top" href="<?php echo AmpConfig::get('web_path'); ?>/logout.php" id="sidebar_logout" >
+        <a target="_top" href="<?php echo $web_path; ?>/logout.php" id="sidebar_logout" >
         <?php echo UI::get_icon('logout', T_('Logout')); ?>
         </a>
     </li>
 </ul>
-<script>
+
+<script type="text/javascript">
 $(function() {
     $(".header").click(function () {
 
