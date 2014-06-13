@@ -25,7 +25,11 @@
 define('AJAX_INCLUDE','1');
 
 require_once '../lib/init.php';
-$rootdir = Upload::get_root(). DIRECTORY_SEPARATOR;
+$rootdir = Upload::get_root();
+if (empty($rootdir)) {
+    exit;
+}
+$rootdir .= DIRECTORY_SEPARATOR;
 ini_set('open_basedir', $rootdir);
 
 class fs

@@ -118,13 +118,16 @@ class Upload
             $username = $GLOBALS['user']->username;
         }
 
-        $rootdir = realpath($catalog->path);
-        if (!empty($rootdir)) {
-            if (AmpConfig::get('upload_subdir')) {
-                $rootdir .= DIRECTORY_SEPARATOR . $username;
-                if (!Core::is_readable($rootdir)) {
-                    debug_event('upload', 'Target user directory `' . $rootdir . '` doesn\'t exists. Creating it...', '5');
-                    mkdir($rootdir);
+        $rootdir = "";
+        if ($catalog != null && $catalog->id) {
+            $rootdir = realpath($catalog->path);
+            if (!empty($rootdir)) {
+                if (AmpConfig::get('upload_subdir')) {
+                    $rootdir .= DIRECTORY_SEPARATOR . $username;
+                    if (!Core::is_readable($rootdir)) {
+                        debug_event('upload', 'Target user directory `' . $rootdir . '` doesn\'t exists. Creating it...', '5');
+                        mkdir($rootdir);
+                    }
                 }
             }
         }
