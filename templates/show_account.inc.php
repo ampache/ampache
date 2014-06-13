@@ -26,7 +26,7 @@
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_user" enctype="multipart/form-data">
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <tr>
-            <td><?php echo T_('Name'); ?>:</td>
+            <td><?php echo T_('Full Name'); ?>:</td>
             <td>
                 <input type="text" name="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
             </td>
@@ -54,6 +54,25 @@
             <td><?php echo T_('Confirm Password'); ?>:</td>
             <td>
                 <input type="password" name="password2" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo T_('Avatar'); ?>
+            </td>
+            <td>
+                <input type="file" id="avatar" name="avatar" value="" />
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo T_('API Key'); ?>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new API Key')); ?></a>
+            </td>
+            <td>
+                <span><?php echo $client->apikey; ?></span>
             </td>
         </tr>
         <tr>

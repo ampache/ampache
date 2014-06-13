@@ -1158,7 +1158,7 @@ class User extends database_object
             $avatar['url'] = AmpConfig::get('web_path') . '/image.php?object_type=user&id=' . $this->id;
             $avatar['url_mini'] = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
-            $avatar['url'] .= '&thumb=3';
+            $avatar['url'] .= '&thumb=4';
             $avatar['url_mini'] .= '&thumb=5';
             $avatar['url_medium'] .= '&thumb=3';
         } else {
@@ -1182,7 +1182,7 @@ class User extends database_object
     public function upload_avatar()
     {
         $upload = array();
-        if (!empty($_FILES['avatar']['tmp_name'])) {
+        if (!empty($_FILES['avatar']['tmp_name']) && $_FILES['avatar']['size'] <= AmpConfig::get('max_upload_size')) {
             $path_info = pathinfo($_FILES['avatar']['name']);
             $upload['file'] = $_FILES['avatar']['tmp_name'];
             $upload['mime'] = 'image/' . $path_info['extension'];

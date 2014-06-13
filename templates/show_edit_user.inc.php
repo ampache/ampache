@@ -111,6 +111,7 @@
             <td>
                 <span><?php echo $client->apikey; ?></span>
             </td>
+        </tr>
         <tr>
             <td><?php echo T_('Config Preset'); ?></td>
             <td>
