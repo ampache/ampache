@@ -496,7 +496,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #sidebar-header {
     height: 20px;
-    width: 150px;
+    width: 175px;
     background-color: rgba(0,0,0,0.15);
     border: 2px solid rgba(0,0,0,0.15);
     -webkit-border-radius: 2px;
@@ -605,7 +605,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 /* Tabs content */
 #sidebar-page {
-    width: 150px;
+    width: 175px;
     margin: 3px auto 5px 5px;
     background-color: rgba(0,0,0,0.15);
     -webkit-border-radius: 2px;
@@ -864,7 +864,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .content-float {
-    margin: 20px 250px 0px 180px;
+    margin: 20px 250px 0px 205px;
 }
 
 .content-right-wild {
