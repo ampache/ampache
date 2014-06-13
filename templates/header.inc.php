@@ -322,39 +322,38 @@ $_SESSION['login'] = false;
                 var newstate = "collapsed";
                 if ($('#sidebar-header').hasClass("sidebar-header-collapsed")) {
                     newstate = "expanded";
-                }                
-                
+                }
+
                 if (newstate != "expanded") {
                     $("#content").addClass("content-left-wild", 600);
                 } else {
                     $("#content").removeClass("content-left-wild", 1000);
                 }
-                
+
                 $('#sidebar').hide(500, function() {
                     if (newstate == "expanded") {
                         $('#sidebar-content-light').removeClass("sidebar-content-light-collapsed");
                         $('#sidebar-content').removeClass("sidebar-content-collapsed");
                         $('#sidebar-header').removeClass("sidebar-header-collapsed");
                         $('#sidebar-header-content').text('<<<');
-                    }
-                    else {
+                    } else {
                         $('#sidebar-content').addClass("sidebar-content-collapsed");
                         $('#sidebar-header').addClass("sidebar-header-collapsed");
                         $('#sidebar-content-light').addClass("sidebar-content-light-collapsed");
                         $('#sidebar-header-content').text('>>>');
                     }
-                    
+
                     $('#sidebar').show(500);
                 });
-                
+
                 $.cookie('sidebar_state', newstate, { expires: 30, path: '/'});
             });
             </script>
-            
+
             <div id="rightbar" class="rightbar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> <?php echo $count_temp_playlist ? '' : 'hidden' ?>">
                 <?php require_once AmpConfig::get('prefix') . '/templates/rightbar.inc.php'; ?>
             </div>
-            
+
             <!-- Tiny little iframe, used to cheat the system -->
             <div id="ajax-loading">Loading . . .</div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
