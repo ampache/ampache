@@ -189,6 +189,24 @@ $(function () {
 </form>
 
 <script>
+// Helper function that formats the file sizes
+function formatFileSize(bytes)
+{
+    if (typeof bytes !== 'number') {
+        return '';
+    }
+
+    if (bytes >= 1000000000) {
+        return (bytes / 1000000000).toFixed(2) + ' GB';
+    }
+
+    if (bytes >= 1000000) {
+        return (bytes / 1000000).toFixed(2) + ' MB';
+    }
+
+    return (bytes / 1000).toFixed(2) + ' KB';
+}
+
 $(function(){
 
     var ul = $('#uploadfile ul');
@@ -265,25 +283,6 @@ $(function(){
     $(document).on('drop dragover', function (e) {
         e.preventDefault();
     });
-
-    // Helper function that formats the file sizes
-    public function formatFileSize(bytes)
-    {
-        if (typeof bytes !== 'number') {
-            return '';
-        }
-
-        if (bytes >= 1000000000) {
-            return (bytes / 1000000000).toFixed(2) + ' GB';
-        }
-
-        if (bytes >= 1000000) {
-            return (bytes / 1000000).toFixed(2) + ' MB';
-        }
-
-        return (bytes / 1000).toFixed(2) + ' KB';
-    }
-
 });
 </script>
 <?php UI::show_box_bottom(); ?>
