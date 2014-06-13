@@ -523,7 +523,6 @@ abstract class Catalog extends database_object
         }
         $user_id = intval($user_id);
 
-        $sql = "";
         switch ($type) {
             case 'song':
                 $sql = "SELECT `song`.`id` as `id` FROM `song` WHERE `song`.`user_upload` = '" . $user_id . "'";

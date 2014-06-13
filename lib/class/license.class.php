@@ -83,10 +83,6 @@ class License
      */
     public static function update($data)
     {
-        $id        = Dba::escape($data['shout_id']);
-        $text         = Dba::escape(strip_tags($data['comment']));
-        $sticky     = make_bool($data['sticky']);
-
         $sql = "UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?";
         Dba::write($sql, array($data['name'], $data['description'], $data['external_link'], $data['license_id']));
 

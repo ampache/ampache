@@ -38,7 +38,6 @@ class Upload
         if ($catalog_id > 0) {
             $catalog = Catalog::create_from_id($catalog_id);
             if ($catalog->catalog_type == "local") {
-
                 $allowed = explode('|', AmpConfig::get('catalog_file_pattern'));
 
                 if (isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {

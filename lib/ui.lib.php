@@ -308,7 +308,7 @@ function show_license_select($name='license',$license_id=0,$song_id=0)
     if ($song_id) {
         $key = "license_select_" . $song_id;
     } else {
-        $key = "license_select_c" . ++$album_id_cnt;
+        $key = "license_select_c" . ++$license_id_cnt;
     }
 
     // Added ID field so we can easily observe this element
