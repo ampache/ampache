@@ -352,7 +352,12 @@ notify = "true"
 ; Especially useful if you have a front and a back image in a folder
 ; comment out if ampache should search for any jpg,gif or png
 ; DEFAULT: folder.jpg
-;album_art_preferred_filename = "folder.jpg" 
+;album_art_preferred_filename = "folder.jpg"
+
+; Maximal upload size
+; Specify the maximal allowed upload size for images, in bytes.
+; DEFAULT: 102400
+;max_upload_size = 102400
 
 ; Resize Images * Requires PHP-GD *
 ; Set this to true if you want Ampache to resize the Album
