@@ -376,6 +376,20 @@ class Search extends playlist_object
                 'type'   => 'boolean_subsearch',
                 'widget' => array('select', $playlists)
             );
+
+            $licenses = array();
+            foreach (License::get_licenses() as $license_id) {
+                $license = new License($license_id);
+                $licenses[$license_id] = $license->name;
+            }
+            if (AmpConfig::get('licensing')) {
+                $this->types[] = array(
+                    'name'   => 'license',
+                    'label'  => T_('Music License'),
+                    'type'   => 'boolean_numeric',
+                    'widget' => array('select', $licenses)
+                );
+            }
         break;
         case 'album':
             $this->types[] = array(
@@ -1070,6 +1084,9 @@ class Search extends playlist_object
                     $tagjoin = array_merge($subsql['join']['tag'], $join['tag']);
                     $join = array_merge($subsql['join'], $join);
                     $join['tag'] = $tagjoin;
+                break;
+                case 'license':
+                    $where[] = "`song`.`license` $sql_match_operator '$input'";
                 break;
                 case 'added':
                     $input = strtotime($input);

@@ -438,11 +438,16 @@ class Democratic extends Tmp_Playlist
      */
     public function remove_vote($row_id)
     {
-        $object_id    = Dba::escape($row_id);
-        $user_id    = Dba::escape($GLOBALS['user']->id);
-
-        $sql = "DELETE FROM `user_vote` WHERE `object_id`='$object_id' AND `user`='$user_id'";
-        Dba::write($sql);
+        $sql = "DELETE FROM `user_vote` WHERE `object_id` = ? ";
+        $params = array($row_id);
+        if ($GLOBALS['user']->id > 0) {
+            $sql .= "AND `user` = ?";
+            $params[] = $GLOBALS['user']->id;
+        } else {
+            $sql .= "AND `user_vote`.`sid` = ? ";
+            $params[] = session_id();
+        }
+        Dba::write($sql, $params);
 
         /* Clean up anything that has no votes */
         self::prune_tracks();

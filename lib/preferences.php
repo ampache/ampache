@@ -178,6 +178,10 @@ function create_preference_input($name,$value)
         case 'topmenu':
         case 'demo_clear_sessions':
         case 'show_donate':
+        case 'allow_upload':
+        case 'upload_subdir':
+        case 'upload_user_artist':
+        case 'upload_allow_edit':
             $is_true = '';
             $is_false = '';
             if ($value == '1') {
@@ -188,6 +192,9 @@ function create_preference_input($name,$value)
             echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";
             echo "\t<option value=\"0\" $is_false>" . T_("Disable") . "</option>\n";
             echo "</select>\n";
+        break;
+        case 'upload_catalog':
+            show_catalog_select('upload_catalog', $value, '', true);
         break;
         case 'play_type':
             $is_localplay = '';

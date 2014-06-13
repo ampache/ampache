@@ -56,6 +56,9 @@ switch ($_REQUEST['action']) {
     case 'share':
         require_once AmpConfig::get('prefix') . '/templates/show_shares.inc.php';
     break;
+    case 'upload':
+        require_once AmpConfig::get('prefix') . '/templates/show_uploads.inc.php';
+    break;
     case 'show':
     default:
         require_once AmpConfig::get('prefix') . '/templates/show_stats.inc.php';

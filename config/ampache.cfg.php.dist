@@ -319,6 +319,11 @@ sociable = "true"
 ; DEFAULT: true
 notify = "true"
 
+; License
+; This turns on / off all licensing features on Ampache
+; DEFAULT: false
+;licensing = "false"
+
 ; This options will turn on/off Demo Mode
 ; If Demo mode is on you can not play songs or update your catalog
 ; in other words.. leave this commented out

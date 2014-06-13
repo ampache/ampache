@@ -1215,6 +1215,23 @@ class User extends database_object
     } // activate_user
 
     /**
+     * get_artists
+     * Get artists associated with the user
+     */
+    public function get_artists()
+    {
+        $sql = "SELECT `id` FROM `artist` WHERE `user` = ?";
+        $db_results = Dba::read($sql, array($this->id));
+
+        $results = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * is_xmlrpc
      * checks to see if this is a valid xmlrpc user
      */

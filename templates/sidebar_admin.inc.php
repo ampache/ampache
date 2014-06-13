@@ -48,6 +48,9 @@
       <?php if (AmpConfig::get('sociable')) { ?>
       <li id="sb_admin_ot_ManageShoutbox"><?php echo UI::create_link('content', 'shout', array(), T_('Manage Shoutbox'), 'admin_shout_manage_shoutbox'); ?></li>
       <?php } ?>
+      <?php if (AmpConfig::get('licensing')) { ?>
+      <li id="sb_admin_ot_ManageLicense"><a href="<?php echo $web_path; ?>/admin/license.php"><?php echo T_('Manage Licenses'); ?></a></li>
+      <?php } ?>
     </ul>
   </li>
 <?php if (Access::check('interface','100')) { ?>

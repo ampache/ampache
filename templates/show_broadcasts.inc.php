@@ -39,7 +39,7 @@
             $broadcast = new Broadcast($broadcast_id);
             $broadcast->format();
         ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="channel_row_<?php echo $channel->id; ?>">
+        <tr class="<?php echo UI::flip_class(); ?>" id="broadcast_row_<?php echo $broadcast->id; ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_broadcast_row.inc.php'; ?>
         </tr>
         <?php } ?>

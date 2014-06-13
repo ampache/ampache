@@ -35,6 +35,7 @@ class Artist extends database_object
     public $mbid; // MusicBrainz ID
     public $catalog_id;
     public $time;
+    public $user;
 
     public $tags;
     public $f_tags;
@@ -510,6 +511,12 @@ class Artist extends database_object
     {
         $sql = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ? WHERE `id` = ?";
         return Dba::write($sql, array($summary, $placeformed, $yearformed, time(), $this->id));
+    }
+
+    public function update_artist_user($user)
+    {
+        $sql = "UPDATE `artist` SET `user` = ? WHERE `id` = ?";
+        return Dba::write($sql, array($user, $this->id));
     }
 
 } // end of artist class

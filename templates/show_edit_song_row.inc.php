@@ -27,6 +27,7 @@
                 <td class="edit_dialog_content_header"><?php echo T_('Title') ?></td>
                 <td><input type="text" name="title" value="<?php echo scrub_out($song->title); ?>" /></td>
             </tr>
+            <?php if (Access::check('interface','75')) { ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
                 <td>
@@ -45,6 +46,7 @@
                     </div>
                 </td>
             </tr>
+            <?php } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Track') ?></td>
                 <td><input type="text" name="track" value="<?php echo scrub_out($song->track); ?>" /></td>
@@ -59,6 +61,17 @@
                     <input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($song->tags); ?>" />
                 </td>
             </tr>
+            <?php if (AmpConfig::get('licensing')) { ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
+                <td>
+                    <?php show_license_select('license', $song->license, $song->id); ?>
+                    <div id="album_select_license_<?php echo $song->license ?>">
+                        <?php echo Ajax::observe('license_select_'.$song->license, 'change', 'check_inline_song_edit("license", '.$song->id.')'); ?>
+                    </div>
+                </td>
+            </tr>
+            <?php } ?>
         </table>
         <input type="hidden" name="id" value="<?php echo $song->id; ?>" />
         <input type="hidden" name="type" value="song_row" />

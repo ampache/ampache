@@ -41,6 +41,9 @@
             <?php } ?>
             <li id="sb_browse_bb_RadioStation"><?php echo UI::create_link('content', 'browse', array('action' => 'live_stream'), T_('Radio Stations'), 'home_browse_live_stream'); ?></li>
             <li id="sb_browse_bb_Video"><?php echo UI::create_link('content', 'browse', array('action' => 'video'), T_('Videos'), 'home_browse_video'); ?></li>
+            <?php if (AmpConfig::get('allow_upload')) { ?>
+            <li id="sb_browse_bb_Upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo T_('Upload'); ?></a></li>
+            <?php } ?>
         </ul>
     </li>
     <?php Ajax::start_container('browse_filters'); ?>
@@ -92,7 +95,10 @@
             <?php if (AmpConfig::get('share')) { ?>
             <li id="sb_home_info_Share"><?php echo UI::create_link('content', 'stats', array('action' => 'share'), T_('Shared Objects'), 'home_stats_share'); ?></li>
             <?php } ?>
-            <li id="sb_home_info_Statistics"><?php echo UI::create_link('content', 'stats', array('action' => 'show'), T_('Statistics'), 'home_stats_show'); ?></li>
+            <?php if (AmpConfig::get('allow_upload')) { ?>
+            <li id="sb_browse_bb_Upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo T_('Uploads'); ?></a></li>
+            <?php } ?>
+             <li id="sb_home_info_Statistics"><?php echo UI::create_link('content', 'stats', array('action' => 'show'), T_('Statistics'), 'home_stats_show'); ?></li>
         </ul>
     </li>
     <li>
