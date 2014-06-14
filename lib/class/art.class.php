@@ -251,8 +251,8 @@ class Art extends database_object
      * This takes the string representation of an image and inserts it into
      * the database. You must also pass the mime type.
      */
-    public function insert($source, $mime)
-    {
+    public function insert($source, $mime, $insert_id3) {
+
         // Disabled in demo mode cause people suck and upload porn
         if (AmpConfig::get('demo_mode')) { return false; }
 
@@ -264,6 +264,14 @@ class Art extends database_object
 
         // Default to image/jpeg if they don't pass anything
         $mime = $mime ? $mime : 'image/jpeg';
+
+        if(true == $insert_id3 && AmpConfig::get('allow_art_change_id3')) {
+            $album = new Album($this->uid );
+            if($this->type == 'album') {
+                debug_event('Art', 'Inserting image Album: '.$album->name, 1);
+                $album->update_art($source, $mime);
+            }
+        }
 
         $image = Dba::escape($source);
         $mime = Dba::escape($mime);

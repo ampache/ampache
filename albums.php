@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
         // If we got something back insert it
         if ($image_data) {
             $art = new Art($album->id,'album');
-            $art->insert($image_data,$_FILES['file']['type']);
+            $art->insert($image_data,$_FILES['file']['type'],true);
             show_confirmation(T_('Album Art Inserted'),'',"/albums.php?action=show&amp;album=" . $album->id);
         }
         // Else it failed
@@ -160,7 +160,7 @@ switch ($_REQUEST['action']) {
 
         foreach ($album_groups as $a_id) {
             $art = new Art($a_id, 'album');
-            $art->insert($image, $mime);
+            $art->insert($image, $mime, true);
         }
 
         header("Location:" . AmpConfig::get('web_path') . "/albums.php?action=show&album=" . $album_id);
