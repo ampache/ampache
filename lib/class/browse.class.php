@@ -98,6 +98,8 @@ class Browse extends Query
             $this->save_objects($object_ids);
         }
 
+        $total_count = $this->get_total();
+
         // Limit is based on the user's preferences if this is not a
         // simple browse because we've got too much here
         if ((count($object_ids) > $this->get_start()) &&
@@ -136,6 +138,9 @@ class Browse extends Query
             $catalog = Catalog::create_from_id($filter_value);
             $match = ' (' . $catalog->name . ')';
         }
+
+        if ($total_count)
+            $match = $match.' - '.T_('Item count').': '.$total_count;
 
         $type = $this->get_type();
 
