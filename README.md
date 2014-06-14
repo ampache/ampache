@@ -59,8 +59,8 @@ Upgrading
 
 If you are upgrading from an older version of Ampache we recommend
 moving the old directory out of the way, extracting the new copy in
-its place and then copying the old config file into config/. All
-database updates will be handled by Ampache.
+its place and then copying the old config/ampache.cfg.php, /rest/.htaccess,
+and /play/.htaccess files if any. All database updates will be handled by Ampache.
 
 License
 -------
