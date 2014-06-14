@@ -265,7 +265,7 @@ class Art extends database_object
         // Default to image/jpeg if they don't pass anything
         $mime = $mime ? $mime : 'image/jpeg';
 
-        if(true == $insert_id3) {
+        if(true == $insert_id3 && AmpConfig::get('allow_art_change_id3')) {
             $album = new Album($this->uid );
             if($this->type == 'album') {
                 debug_event('Art', 'Inserting image Album: '.$album->name, 1);
