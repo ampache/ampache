@@ -85,7 +85,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
   $songprops[gettext_noop('Title')]   = scrub_out($song->title);
   $songprops[gettext_noop('Artist')]  = $song->f_artist_link;
   $songprops[gettext_noop('Album')]   = $song->f_album_link . ($song->year ? " (" . scrub_out($song->year). ")" : "");
-  $songprops[gettext_noop('Genre')]   = $song->f_genre_link;
+  $songprops[gettext_noop('Genre')]   = $song->f_tags;
   $songprops[gettext_noop('Length')]  = scrub_out($song->f_time);
   $songprops[gettext_noop('Comment')] = scrub_out($song->comment);
   $songprops[gettext_noop('Label')]   = scrub_out($song->label);
@@ -116,11 +116,37 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     }
 
     foreach ($songprops as $key => $value) {
-        if (trim($value)) {
-              $rowparity = UI::flip_class();
-              echo "<dt class=\"".$rowparity."\">" . T_($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
+        if ($key == 'Genre' and AmpConfig::get('allow_genre_change_id3'))
+            $genre_change = true;
+        else
+            $genre_change = false;
+        if (trim($value) or $genre_change) {
+            $rowparity = UI::flip_class();
+
+            if ($genre_change) {
+                    $rowparity = UI::flip_class();
+                    $box = '<form method="post" id="song_genre_form" action="javascript.void(0);">';
+                    $box .= '<select id="song_genre" name="tag_id">';
+                    $Empty_Tag = array();
+                    $Empty_Tag['id'] = "";
+                    $Empty_Tag['name'] = T_('---Empty Tag---');
+                    $tags = Tag::get_tag_names();
+                    array_unshift($tags, $Empty_Tag);
+                    foreach ($tags as $tag) {
+                        if ($tag['name'] == $value)
+                            $box .= '<option selected value="'.$tag['id'].'">'.$tag['name'].'</option>';
+                        else
+                            $box .= '<option value="'.$tag['id'].'">'.$tag['name'].'</option>';
+                    }
+                    $box .= '</select>';
+                    $box .= Ajax::observe('song_genre','change',Ajax::action('?page=tag&action=save_tag&song_id=' . $song->id ,'song_genre','song_genre_form'));
+                    $box .= '</form>';
+                    $value = $box;
+            }
+            echo "<dt class=\"".$rowparity."\">" . T_($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
+
         }
-      }
+    }
 ?>
 </dl>
 <?php UI::show_box_bottom(); ?>

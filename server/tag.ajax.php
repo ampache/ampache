@@ -68,6 +68,16 @@ switch ($_REQUEST['action']) {
         $browse->store();
         // Retrieve current objects of type based on combined filters
     break;
+    case 'save_tag':
+        $new_tag = new Tag($_POST['tag_id']);
+        $song_id = $_GET['song_id'];
+        $new_tag->update_tag_list($new_tag->name,'song', $song_id);
+        $song = new Song($_GET['song_id']);
+        $song->format();
+        $id3 = new vainfo($song->file);
+        $data['genre'] = $new_tag->name;
+        $id3->write_id3($data);
+        break;
     default:
         $results['rfc3514'] = '0x1';
     break;

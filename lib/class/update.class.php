@@ -413,6 +413,9 @@ class Update
         $update_string = '- Add license information and user\'s artist association.<br />';
         $version[] = array('version' => '370004','description' => $update_string);
 
+        $update_string = '- Add option to change genre in ID3 tag.<br />';
+        $version[] = array('version' => '370005','description' => $update_string);
+
         return $version;
     }
 
@@ -2611,6 +2614,20 @@ class Update
         Dba::write($sql);
 
         $sql = "ALTER TABLE `song` ADD `user_upload` int(11) NULL AFTER `addition_time`, ADD `license` int(11) NULL AFTER `user_upload`";
+        Dba::write($sql);
+
+        return true;
+    }
+
+    /**
+     * update_370005
+     *
+     *  Add option to change genre in ID3 tag
+     */
+    public static function update_370005()
+    {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+                "VALUES ('allow_genre_change_id3','0','ID3-Tag: Allow users to change genre in the ID3 tag',25,'boolean','system')";
         Dba::write($sql);
 
         return true;
