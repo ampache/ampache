@@ -295,7 +295,7 @@ class Subsonic_Api
         $ifModifiedSince = $input['ifModifiedSince'];
 
         $catalogs = array();
-        if (!empty($musicFolderId)) {
+        if (!empty($musicFolderId) && $musicFolderId != '-1') {
             $catalogs[] = $musicFolderId;
         } else {
             $catalogs = Catalog::get_catalogs();

@@ -217,7 +217,9 @@ class Subsonic_XML_Data
                 }
             }
 
-            self::addArtist($xlastcat, $artist, $extra);
+            if ($xlastcat != null) {
+                self::addArtist($xlastcat, $artist, $extra);
+            }
         }
     }
 
