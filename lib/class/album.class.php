@@ -166,6 +166,7 @@ class Album extends database_object
         $sql = "SELECT " .
             "COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, " .
             "COUNT(`song`.`id`) AS `song_count`, " .
+            "`song`.`album_artist` AS `album_artist`, " .
             "SUM(`song`.`time`) as `total_duration`," .
             "`song`.`catalog` as `catalog_id`,".
             "`artist`.`name` AS `artist_name`, " .
@@ -211,12 +212,6 @@ class Album extends database_object
             $results['object_cnt'] = Stats::get_object_count('album', $this->id);
         }
 
-        $Album_artist = new Artist($this->album_artist);
-        $Album_artist->format();
-        $results['album_artist_name'] = $Album_artist->f_name;
-        $results['album_artist_prefix'] = $Album_artist->prefix;
-        $results['f_album_artist_name'] = trim(trim($Album_artist->prefix) . ' ' . trim($Album_artist->f_name));
-
         parent::add_to_cache('album_extra', $this->id, $results);
 
         return $results;
@@ -251,20 +246,20 @@ class Album extends database_object
             return self::$_mapcache[$name][$year][$disk][$mbid][$album_artist];
         }
 
-        $sql = 'SELECT `id` FROM `album` WHERE `name` = ? AND `disk` = ? ';
+        $sql = 'SELECT `album.id` FROM `album` WHERE `album.name` = ? AND `album.disk` = ? ';
         $params = array($name, $disk);
 
         if ($mbid) {
-           $sql .= 'AND `mbid` = ? ';
+           $sql .= 'AND `album.mbid` = ? ';
            $params[] = $mbid;
         }
         if ($prefix) {
-           $sql .= 'AND `prefix` = ? ';
+           $sql .= 'AND `album.prefix` = ? ';
            $params[] = $prefix;
         }
         if (AmpConfig::get('use_id3_band_tag')) {
             if ($album_artist) {
-                $sql .= 'AND `album_artist` = ? ';
+                $sql .= 'AND ? IN (SELECT `song`.`album_artist` FROM `song` WHERE `song`.`album`= `album`.`id`) ';
                 $params[] = $album_artist;
             }
         } else {
@@ -286,9 +281,9 @@ class Album extends database_object
             return null;
         }
 
-        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`, `album_artist`) VALUES (?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`) VALUES (?, ?, ?, ?, ?)';
 
-        $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid, $album_artist));
+        $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid));
         if (!$db_results) {
             return null;
         }
@@ -458,6 +453,12 @@ class Album extends database_object
             $this->f_artist = T_('Various');
             $this->f_artist_name =  $this->f_artist;
         }
+
+        $Album_artist = new Artist($this->album_artist);
+        $Album_artist->format();
+        $this->album_artist_name = $Album_artist->f_name;
+        $this->album_artist_prefix = $Album_artist->prefix;
+        $this->f_album_artist_name = trim(trim($Album_artist->prefix) . ' ' . trim($Album_artist->f_name));
 
         $this->f_album_artist_name = trim(trim($this->album_artist_prefix) . ' ' . trim($this->album_artist_name));
         $this->f_album_artist_link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . $this->f_album_artist_name . "</a>";

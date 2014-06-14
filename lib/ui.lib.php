@@ -270,12 +270,16 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id
  * Yet another one of these buggers. this shows a drop down of all of your
  * catalogs.
  */
-function show_catalog_select($name='catalog',$catalog_id=0,$style='')
+function show_catalog_select($name='catalog',$catalog_id=0,$style='', $allow_none=false)
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
 
     $sql = "SELECT `id`, `name` FROM `catalog` ORDER BY `name`";
     $db_results = Dba::read($sql);
+
+    if ($allow_none) {
+        echo "\t<option value=\"-1\">" . T_('None') . "</option>\n";
+    }
 
     while ($r = Dba::fetch_assoc($db_results)) {
         $selected = '';
@@ -290,6 +294,44 @@ function show_catalog_select($name='catalog',$catalog_id=0,$style='')
     echo "</select>\n";
 
 } // show_catalog_select
+
+/**
+ * show_album_select
+ * This displays a select of every album that we've got in Ampache (which can be
+ * hella long). It's used by the Edit page and takes a $name and a $album_id
+ */
+function show_license_select($name='license',$license_id=0,$song_id=0)
+{
+    static $license_id_cnt = 0;
+
+    // Generate key to use for HTML element ID
+    if ($song_id) {
+        $key = "license_select_" . $song_id;
+    } else {
+        $key = "license_select_c" . ++$license_id_cnt;
+    }
+
+    // Added ID field so we can easily observe this element
+    echo "<select name=\"$name\" id=\"$key\">\n";
+
+    $sql = "SELECT `id`, `name` FROM `license` ORDER BY `name`";
+    $db_results = Dba::read($sql);
+
+    echo "\t<option value=\"-1\"></option>\n";
+
+    while ($r = Dba::fetch_assoc($db_results)) {
+        $selected = '';
+        if ($r['id'] == $license_id) {
+            $selected = "selected=\"selected\"";
+        }
+
+        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . $r['name'] . "</option>\n";
+
+    } // end while
+
+    echo "</select>\n";
+
+} // show_license_select
 
 /**
  * show_user_select

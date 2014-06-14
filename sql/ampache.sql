@@ -75,7 +75,6 @@ DROP TABLE IF EXISTS `album`;
 CREATE TABLE `album` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `album_artist` int(11) unsigned DEFAULT NULL,
   `prefix` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
   `mbid` varchar(36) COLLATE utf8_unicode_ci DEFAULT NULL,
   `year` int(4) unsigned NOT NULL DEFAULT '1984',
@@ -682,7 +681,6 @@ CREATE TABLE `song` (
   `album` int(11) unsigned NOT NULL DEFAULT '0',
   `year` mediumint(4) unsigned NOT NULL DEFAULT '0',
   `artist` int(11) unsigned NOT NULL DEFAULT '0',
-  `album_artist` int(11) unsigned DEFAULT NULL,
   `title` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `bitrate` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `rate` mediumint(8) unsigned NOT NULL DEFAULT '0',

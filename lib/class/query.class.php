@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -166,6 +166,12 @@ class Query
                 'alpha_match',
                 'regex_match',
                 'regex_not_match'
+            ),
+            'license' => array(
+                'alpha_match',
+                'regex_match',
+                'regex_not_match',
+                'starts_with'
             )
         );
 
@@ -265,6 +271,9 @@ class Query
                 'user',
                 'started',
                 'listeners'
+            ),
+            'license' => array(
+                'name'
             ),
         );
     }
@@ -595,6 +604,7 @@ class Query
             case 'song_preview':
             case 'channel':
             case 'broadcast':
+            case 'license':
                 // Set it
                 $this->_state['type'] = $type;
                 $this->set_base_sql(true, $custom_base);
@@ -891,6 +901,10 @@ class Query
                 case 'broadcast':
                     $this->set_select("DISTINCT(`broadcast`.`id`)");
                     $sql = "SELECT %%SELECT%% FROM `broadcast` ";
+                break;
+                case 'license':
+                    $this->set_select("`license`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `license` ";
                 break;
                 case 'playlist_song':
                 case 'song':
@@ -1398,6 +1412,25 @@ class Query
                 break;
             } // end filter
         break;
+        case 'license':
+            switch ($filter) {
+                case 'alpha_match':
+                    $filter_sql = " `license`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+                case 'regex_match':
+                    if (!empty($value)) $filter_sql = " `':`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'regex_not_match':
+                    if (!empty($value)) $filter_sql = " `':`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'exact_match':
+                    $filter_sql = " `':`.`name` = '" . Dba::escape($value) . "' AND ";
+                break;
+                default:
+                    // Rien a faire
+                break;
+            } // end filter
+        break;
         } // end switch on type
 
         return $filter_sql;
@@ -1467,7 +1500,8 @@ class Query
                     break;
                     case 'album_artist':
                         $sql = "`artist`.`name`";
-                        $this->set_join('left', '`artist`', '`artist`.`id`', '`album`.`album_artist`', 100);
+                        $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                        $this->set_join('left', '`artist`', '`song`.`album_artist`', '`artist`.`id`', 100);
                     break;
                     case 'artist':
                         $sql = "`artist`.`name`";

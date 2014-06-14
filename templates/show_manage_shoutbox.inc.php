@@ -23,36 +23,42 @@
 $web_path = AmpConfig::get('web_path');
 ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
-    <tr class="th-top">
-        <th class="cel_object"><?php echo T_('Object'); ?></th>
-        <th class="cel_username"><?php echo T_('User'); ?></th>
-        <th class="cel_sticky"><?php echo T_('Sticky'); ?></th>
-        <th class="cel_comment"><?php echo T_('Comment'); ?></th>
-        <th class="cel_date"><?php echo T_('Date Added'); ?></th>
-        <th class="cel_action"><?php echo T_('Action'); ?></th>
-    </tr>
-    <?php
-    foreach ($object_ids as $shout_id) {
-        $shout = new Shoutbox($shout_id);
-        $shout->format();
-            $object = Shoutbox::get_object($shout->object_type,$shout->object_id);
-            $object->format();
-            $client = new User($shout->user);
-            $client->format();
+    <thead>
+        <tr class="th-top">
+            <th class="cel_object"><?php echo T_('Object'); ?></th>
+            <th class="cel_username"><?php echo T_('User'); ?></th>
+            <th class="cel_sticky"><?php echo T_('Sticky'); ?></th>
+            <th class="cel_comment"><?php echo T_('Comment'); ?></th>
+            <th class="cel_date"><?php echo T_('Date Added'); ?></th>
+            <th class="cel_action"><?php echo T_('Action'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        foreach ($object_ids as $shout_id) {
+            $shout = new Shoutbox($shout_id);
+            $shout->format();
+                $object = Shoutbox::get_object($shout->object_type,$shout->object_id);
+                $object->format();
+                $client = new User($shout->user);
+                $client->format();
 
-        require AmpConfig::get('prefix') . '/templates/show_shout_row.inc.php';
-    ?>
-    <?php } if (!count($object_ids)) { ?>
-    <tr class="<?php echo UI::flip_class(); ?>">
-        <td colspan="6" class="error"><?php echo T_('No Records Found'); ?></td>
-    </tr>
-    <?php } ?>
-    <tr class="th-bottom">
-        <th class="cel_object"><?php echo T_('Object'); ?></th>
-        <th class="cel_username"><?php echo T_('User'); ?></th>
-        <th class="cel_sticky"><?php echo T_('Sticky'); ?></th>
-        <th class="cel_comment"><?php echo T_('Comment'); ?></th>
-        <th class="cel_date"><?php echo T_('Date Added'); ?></th>
-        <th class="cel_action"><?php echo T_('Action'); ?></th>
-    </tr>
+            require AmpConfig::get('prefix') . '/templates/show_shout_row.inc.php';
+        ?>
+        <?php } if (!count($object_ids)) { ?>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="6" class="error"><?php echo T_('No Records Found'); ?></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <th class="cel_object"><?php echo T_('Object'); ?></th>
+            <th class="cel_username"><?php echo T_('User'); ?></th>
+            <th class="cel_sticky"><?php echo T_('Sticky'); ?></th>
+            <th class="cel_comment"><?php echo T_('Comment'); ?></th>
+            <th class="cel_date"><?php echo T_('Date Added'); ?></th>
+            <th class="cel_action"><?php echo T_('Action'); ?></th>
+        </tr>
+    </tfoot>
 </table>

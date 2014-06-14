@@ -268,7 +268,7 @@ getid3_tag_order = "id3v2,id3v1,vorbiscomment,quicktime,matroska,ape,asf,avi,mpe
 ; DEFAULT: getID3 filename
 metadata_order = "getID3,filename"
 
-; Use ID3 band tag as album artist.
+; Use ID3 band tag as album artist
 ;use_id3_band_tag = "false"
 
 ; Un comment if don't want ampache to follow symlinks
@@ -321,6 +321,11 @@ sociable = "true"
 ; This turns on / off all Ampache notifications
 ; DEFAULT: true
 notify = "true"
+
+; License
+; This turns on / off all licensing features on Ampache
+; DEFAULT: false
+;licensing = "false"
 
 ; This options will turn on/off Demo Mode
 ; If Demo mode is on you can not play songs or update your catalog
