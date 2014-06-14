@@ -217,6 +217,86 @@ class vainfo
     } // get_info
 
     /**
+     * write_id3
+     * This function runs the various steps to gathering the metadata
+     */
+    public function write_id3($data)
+    {
+        /* Get the Raw file information */
+        $this->read_id3();
+        if (isset($this->_raw['tags']['id3v2']))
+        {
+            getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'write.php', __FILE__, true);
+            $tagWriter = new getid3_writetags();
+            $tagWriter->filename = $this->filename;
+            //'id3v2.4' doesn't saves the year;
+            $tagWriter->tagformats = array('id3v1', 'id3v2.3');
+            $tagWriter->overwrite_tags = true;
+            $tagWriter->remove_other_tags = true;
+            $tagWriter->tag_encoding = 'UTF-8';
+            $TagData = $this->_raw['tags']['id3v2'];
+            if(isset($data['APIC']))
+            {
+                $TagData['attached_picture'][0]['data'] = $data['APIC']['data'];
+                $TagData['attached_picture'][0]['picturetypeid'] = '';
+               $TagData['attached_picture'][0]['description'] = 'Cover';
+               $TagData['attached_picture'][0]['mime'] = $data['APIC']['mime'];
+            } else {
+               if($this->_raw['tags']['id3v2']['album'][0] <> '')
+                  $TagData['attached_picture'][0] = $this->_raw['id3v2']['APIC'][0];
+            }
+            if(isset($data['genre'])) {
+               if($data['genre'] == "--Empty--")
+                  $TagData['genre'][0] = "";
+               else
+                  $TagData['genre'][0] = $data['genre'];
+            }
+            if(isset($data['album'])) {
+               $TagData['album'][0] = $data['album'];
+            }
+            if(isset($data['mb_albumid'])) {
+               $TagData['mb_albumid'][0] = $data['mb_albumid'];
+            }
+            if(isset($data['year'])) {
+               $TagData['year'][0] = $data['year'];
+            }
+            if(isset($data['band'])) {
+               $TagData['band'][0] = $data['band'];
+            }
+            if(isset($data['track'])) {
+               $TagData['track'][0] = $data['track'];
+            }
+            $tagWriter->tag_data = $TagData;
+
+            if ($tagWriter->WriteTags()) {
+               debug_event('getid3' , 'write tags success', '5');
+               if (!empty($tagwriter->warnings)) {
+                  debug_event('getid3' , 'FWarnings'. implode("\n", $tagWriter->warnings) , '5');
+               }
+            } else
+               debug_event('getid3' , 'Failed to write tags!'. implode("\n", $tagWriter->errors) , '5');
+         } else {
+            debug_event('Getid3()','No id3v2','5');
+         }
+      } // write_id3
+	
+    /**
+     * read_id3
+     * This function runs the various steps to gathering the metadata
+     */
+    public function read_id3()
+    {
+        /* Get the Raw file information */
+        try {
+            $this->_raw = $this->_getID3->analyze($this->filename);
+            return $this->_raw;
+        }
+        catch (Exception $error) {
+            debug_event('Getid3()',"Unable to read file:" . $error->message,'1');
+        }
+    } // read_id3
+
+    /**
      * get_tag_type
      *
      * This takes the result set and the tag_order defined in your config

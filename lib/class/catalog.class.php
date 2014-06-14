@@ -700,7 +700,7 @@ abstract class Catalog extends database_object
                 // Pull the string representation from the source
                 $image = Art::get_from_source($results[0], 'album');
                 if (strlen($image) > '5') {
-                    $art->insert($image, $results[0]['mime']);
+                    $art->insert($image, $results[0]['mime'],false);
                     // If they've enabled resizing of images generate a thumbnail
                     if (AmpConfig::get('resize_images')) {
                         $thumb = $art->generate_thumb($image, array(

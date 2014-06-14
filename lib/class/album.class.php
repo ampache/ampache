@@ -593,4 +593,31 @@ class Album extends database_object
         return $results;
     }
 
+    /**
+     * update_art
+     */
+    public function update_art($new_image,$mime)
+    {
+        $songs = $this->get_songs();
+        foreach ($songs as $song_id) 
+        {
+            $song = new Song($song_id);
+            $id3 = new vainfo($song->file,'', '', '', '', '');
+            $data = $id3->read_id3();
+            if (isset($data['tags']['id3v2'])) {
+                $album_name = $data['tags']['id3v2']['album'][0];
+                $image_from_tag = '';
+                if (isset($data['id3v2']['APIC'][0]['data'])) {
+                    $image_from_tag = $data['id3v2']['APIC'][0]['data'];
+                }
+                if ($image_from_tag <> $new_image && $album_name <> '') {
+                    $pic_data['APIC']['data'] = $new_image;
+                    $pic_data['APIC']['mime'] = $mime;
+                    $id3->write_id3($pic_data);
+                }
+            }
+        } // foreach song of album
+
+    } // update_art
+
 } //end of album class
