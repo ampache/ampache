@@ -35,7 +35,8 @@ if (!defined('NO_SESSION') && !Access::check_function('batch_download')) {
 set_time_limit(0);
 
 $media_ids = array();
-$name = "Unknown.zip";
+$default_name = "Unknown.zip";
+$name = $default_name;
 
 switch ($_REQUEST['action']) {
     case 'tmp_playlist':
@@ -61,7 +62,7 @@ switch ($_REQUEST['action']) {
     case 'album':
         foreach ($_REQUEST['id'] as $a) {
             $album = new Album($a);
-            if (empty($name)) {
+            if ($name == $default_name) {
                 $name = $album->name;
             }
             $asongs = $album->get_songs();
