@@ -245,15 +245,15 @@ class Album extends database_object
             return self::$_mapcache[$name][$year][$disk][$mbid][$album_artist];
         }
 
-        $sql = 'SELECT `album.id` FROM `album` WHERE `album.name` = ? AND `album.disk` = ? ';
+        $sql = 'SELECT `album`.`id` FROM `album` WHERE `album`.`name` = ? AND `album`.`disk` = ? ';
         $params = array($name, $disk);
 
         if ($mbid) {
-           $sql .= 'AND `album.mbid` = ? ';
+           $sql .= 'AND `album`.`mbid` = ? ';
            $params[] = $mbid;
         }
         if ($prefix) {
-           $sql .= 'AND `album.prefix` = ? ';
+           $sql .= 'AND `album`.`prefix` = ? ';
            $params[] = $prefix;
         }
 
@@ -498,7 +498,8 @@ class Album extends database_object
     public function update($data)
     {
         $year = $data['year'];
-        $artist = $data['artist'];
+        $artist = intval($data['artist']);
+        $album_artist = intval($data['album_artist']);
         $name = $data['name'];
         $disk = $data['disk'];
         $mbid = $data['mbid'];
@@ -512,6 +513,16 @@ class Album extends database_object
             $songs = $this->get_songs();
             foreach ($songs as $song_id) {
                 Song::update_artist($artist,$song_id);
+            }
+            $updated = true;
+            Artist::gc();
+        }
+
+        if ($album_artist != $this->album_artist AND $album_artist > 0) {
+            // Update every song
+            $songs = $this->get_songs();
+            foreach ($songs as $song_id) {
+                Song::update_album_artist($album_artist, $song_id);
             }
             $updated = true;
             Artist::gc();

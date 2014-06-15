@@ -31,12 +31,18 @@
                 <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
                 <td>
                     <?php
-                    /*if ($album->artist_count == '1') {*/
+                    if ($album->artist_count == '1') {
                         show_artist_select('artist', $album->artist_id);
-                    /*} else {
+                    } else {
                         echo T_('Various');
-                    }*/
+                    }
                     ?>
+                </td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Album Artist') ?></td>
+                <td>
+                    <?php show_artist_select('album_artist', $album->album_artist, false, 0, true); ?>
                 </td>
             </tr>
             <tr>
