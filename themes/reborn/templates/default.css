@@ -616,7 +616,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #sidebar-tabs li.sb1 {
     float: left;
-    margin-right: 3px;
+    margin-right: 8px;
     height: 25px;
 }
 
