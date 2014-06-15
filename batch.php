@@ -50,12 +50,9 @@ switch ($_REQUEST['action']) {
     break;
     case 'smartplaylist':
         $search = new Search('song', $_REQUEST['id']);
-        $sql = $search->to_sql();
-        $sql = $sql['base'] . ' ' . $sql['table_sql'] . ' WHERE ' .
-            $sql['where_sql'];
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $media_ids[] = $row['id'];
+        $items = $search->get_items();
+        foreach ($items as $item) {
+            $media_ids[] = $item['object_id'];
         }
         $name = $search->name;
     break;

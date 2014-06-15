@@ -45,6 +45,7 @@ class Subsonic_XML_Data
     const AMPACHEID_ARTIST = 100000000;
     const AMPACHEID_ALBUM = 200000000;
     const AMPACHEID_SONG = 300000000;
+    const AMPACHEID_SMARTPL = 400000000;
 
     /**
      * constructor
@@ -68,6 +69,11 @@ class Subsonic_XML_Data
     public static function getSongId($id)
     {
         return $id + Subsonic_XML_Data::AMPACHEID_SONG;
+    }
+
+    public static function getSmartPlId($id)
+    {
+        return $id + Subsonic_XML_Data::AMPACHEID_SMARTPL;
     }
 
     public static function getAmpacheId($id)
@@ -97,6 +103,11 @@ class Subsonic_XML_Data
     public static function isSong($id)
     {
         return ($id >= Subsonic_XML_Data::AMPACHEID_SONG);
+    }
+
+    public static function isSmartPlaylist($id)
+    {
+        return ($id >= Subsonic_XML_Data::AMPACHEID_SMARTPL);
     }
 
     public static function createFailedResponse($version = "")
@@ -399,12 +410,16 @@ class Subsonic_XML_Data
         $xml->addChild('videos');
     }
 
-    public static function addPlaylists($xml, $playlists)
+    public static function addPlaylists($xml, $playlists, $smartplaylists = array())
     {
         $xplaylists = $xml->addChild('playlists');
         foreach ($playlists as $id) {
             $playlist = new Playlist($id);
             self::addPlaylist($xplaylists, $playlist);
+        }
+        foreach ($smartplaylists as $id) {
+            $smartplaylist = new Search('song', $id);
+            self::addSmartPlaylist($xplaylists, $smartplaylist);
         }
     }
 
@@ -424,6 +439,24 @@ class Subsonic_XML_Data
             $allsongs = $playlist->get_songs();
             foreach ($allsongs as $id) {
                 $song = new Song($id);
+                self::addSong($xplaylist, $song, "entry");
+            }
+        }
+    }
+
+    public static function addSmartPlaylist($xml, $playlist, $songs=false)
+    {
+        $xplaylist = $xml->addChild('playlist');
+        $xplaylist->addAttribute('id', self::getSmartPlId($playlist->id));
+        $xplaylist->addAttribute('name', $playlist->name);
+        $user = new User($playlist->user);
+        $xplaylist->addAttribute('owner', $user->username);
+        $xplaylist->addAttribute('public', ($playlist->type != "private") ? "true" : "false");
+
+        if ($songs) {
+            $allitems = $playlist->get_items();
+            foreach ($allitems as $item) {
+                $song = new Song($item['object_id']);
                 self::addSong($xplaylist, $song, "entry");
             }
         }

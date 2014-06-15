@@ -684,7 +684,7 @@ class Subsonic_Api
 
         // Don't allow playlist listing for another user
         if (empty($username) || $username == $GLOBALS['user']->username) {
-            Subsonic_XML_Data::addPlaylists($r, Playlist::get_playlists());
+            Subsonic_XML_Data::addPlaylists($r, Playlist::get_playlists(), Search::get_searches());
         } else {
             $user = User::get_from_username($username);
             if ($user->id) {
@@ -707,9 +707,14 @@ class Subsonic_Api
 
         $playlistid = self::check_parameter($input, 'id');
 
-        $playlist = new Playlist($playlistid);
         $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addPlaylist($r, $playlist, true);
+        if (Subsonic_XML_Data::isSmartPlaylist($playlistid)) {
+            $playlist = new Search('song', Subsonic_XML_Data::getAmpacheId($playlistid));
+            Subsonic_XML_Data::addSmartPlaylist($r, $playlist, true);
+        } else {
+            $playlist = new Playlist($playlistid);
+            Subsonic_XML_Data::addPlaylist($r, $playlist, true);
+        }
         self::apiOutput($input, $r);
     }
 
@@ -782,11 +787,15 @@ class Subsonic_Api
         $name = $input['name'];
         $comment = $input['comment'];   // Not supported.
         $public = boolean($input['public']);
-        echo $public;
-        $songIdToAdd = $input['songIdToAdd'];
-        $songIndexToRemove = $input['songIndexToRemove'];
 
-        $r = Subsonic_XML_Data::createSuccessResponse();
+        if (!Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
+            $songIdToAdd = $input['songIdToAdd'];
+            $songIndexToRemove = $input['songIndexToRemove'];
+
+            $r = Subsonic_XML_Data::createSuccessResponse();
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Cannot edit a smart playlist.');
+        }
         self::apiOutput($input, $r);
     }
 
@@ -801,8 +810,13 @@ class Subsonic_Api
 
         $playlistId = self::check_parameter($input, 'playlistId');
 
-        $playlist = new Playlist($playlistId);
-        $playlist->delete();
+        if (Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
+            $playlist = new Search('song', Subsonic_XML_Data::getAmpacheId($playlistId));
+            $playlist->delete();
+        } else {
+            $playlist = new Playlist($playlistId);
+            $playlist->delete();
+        }
 
         $r = Subsonic_XML_Data::createSuccessResponse();
         self::apiOutput($input, $r);
