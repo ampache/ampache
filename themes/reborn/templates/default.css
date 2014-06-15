@@ -509,6 +509,14 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     width: 50px !important;
 }
 
+.sidebar-header-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100px;
+    display:inline-block;
+}
+
 #sidebar-header {
     height: 20px;
     width: 150px;
