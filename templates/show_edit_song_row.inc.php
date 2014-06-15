@@ -38,6 +38,15 @@
                 </td>
             </tr>
             <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Album Artist') ?></td>
+                <td>
+                    <?php show_artist_select('album_artist', $song->album_artist, true, $song->id, true); ?>
+                    <div id="album_artist_select_song_<?php echo $song->id ?>">
+                        <?php echo Ajax::observe('album_artist_select_'.$song->id, 'change', 'check_inline_song_edit("album_artist", '.$song->id.')'); ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
                 <td>
                     <?php show_album_select('album', $song->album, true, $song->id); ?>

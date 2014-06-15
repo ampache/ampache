@@ -413,6 +413,9 @@ class Update
         $update_string = '- Add license information and user\'s artist association.<br />';
         $version[] = array('version' => '370004','description' => $update_string);
 
+        $update_string = '- Add new column album_artist into table song.<br />';
+        $version[] = array('version' => '370005','description' => $update_string);
+
         return $version;
     }
 
@@ -2613,6 +2616,19 @@ class Update
         $sql = "ALTER TABLE `song` ADD `user_upload` int(11) NULL AFTER `addition_time`, ADD `license` int(11) NULL AFTER `user_upload`";
         Dba::write($sql);
 
+        return true;
+    }
+
+    /**
+     * update_370005
+     *
+     * Add new column album_artist into table album
+     *
+     */
+    public static function update_370005()
+    {
+        $sql = "ALTER TABLE `song` ADD `album_artist` int(11) unsigned DEFAULT NULL AFTER `artist`";
+        Dba::write($sql);
         return true;
     }
 }

@@ -33,6 +33,7 @@ class Album extends database_object
     /* Variables from DB */
     public $id;
     public $name;
+    public $album_artist;
     public $disk;
     public $year;
     public $prefix;
@@ -48,6 +49,9 @@ class Album extends database_object
     public $f_artist_name;
     public $f_artist_link;
     public $f_artist;
+    public $album_artist_name;
+    public $f_album_artist_name;
+    public $f_album_artist_link;
     public $f_name;
     public $f_name_link;
     public $f_link_src;
@@ -161,6 +165,7 @@ class Album extends database_object
         $sql = "SELECT " .
             "COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, " .
             "COUNT(`song`.`id`) AS `song_count`, " .
+            "`song`.`album_artist` AS `album_artist`, " .
             "SUM(`song`.`time`) as `total_duration`," .
             "`song`.`catalog` as `catalog_id`,".
             "`artist`.`name` AS `artist_name`, " .
@@ -217,13 +222,14 @@ class Album extends database_object
      *
      * Searches for an album; if none is found, insert a new one.
      */
-    public static function check($name, $year = 0, $disk = 0, $mbid = null, $readonly = false)
+    public static function check($name, $year = 0, $disk = 0, $mbid = null, $album_artist = null,  $readonly = false)
     {
-        if ($mbid == '') $mbid = null;
 
         $trimmed = Catalog::trim_prefix(trim($name));
         $name = $trimmed['string'];
         $prefix = $trimmed['prefix'];
+        $album_artist = empty($album_artist) ? null : $album_artist;
+        $mbid = empty($mbid) ? null : $mbid;
 
         // Not even sure if these can be negative, but better safe than llama.
         $year = abs(intval($year));
@@ -233,35 +239,34 @@ class Album extends database_object
             $name = T_('Unknown (Orphaned)');
             $year = 0;
             $disk = 0;
+            $album_artist = null;
+        }
+        if (isset(self::$_mapcache[$name][$year][$disk][$mbid][$album_artist])) {
+            return self::$_mapcache[$name][$year][$disk][$mbid][$album_artist];
         }
 
-        if (isset(self::$_mapcache[$name][$year][$disk][$mbid])) {
-            return self::$_mapcache[$name][$year][$disk][$mbid];
-        }
-
-        $sql = 'SELECT `id` FROM `album` WHERE `name` = ? AND `disk` = ? AND `year` = ? AND `mbid` ';
-        $params = array($name, $disk, $year);
+        $sql = 'SELECT `album.id` FROM `album` WHERE `album.name` = ? AND `album.disk` = ? ';
+        $params = array($name, $disk);
 
         if ($mbid) {
-            $sql .= '= ? ';
-            $params[] = $mbid;
-        } else {
-            $sql .= 'IS NULL ';
+           $sql .= 'AND `album.mbid` = ? ';
+           $params[] = $mbid;
+        }
+        if ($prefix) {
+           $sql .= 'AND `album.prefix` = ? ';
+           $params[] = $prefix;
         }
 
-        $sql .= 'AND `prefix` ';
-        if ($prefix) {
-            $sql .= '= ?';
-            $params[] = $prefix;
-        } else {
-            $sql .= 'IS NULL';
+        if ($album_artist) {
+            $sql .= 'AND ? IN (SELECT `song`.`album_artist` FROM `song` WHERE `song`.`album`= `album`.`id`) ';
+            $params[] = $album_artist;
         }
 
         $db_results = Dba::read($sql, $params);
 
         if ($row = Dba::fetch_assoc($db_results)) {
             $id = $row['id'];
-            self::$_mapcache[$name][$year][$disk][$mbid] = $id;
+            self::$_mapcache[$name][$year][$disk][$mbid][$album_artist] = $id;
             return $id;
         }
 
@@ -287,7 +292,7 @@ class Album extends database_object
             }
         }
 
-        self::$_mapcache[$name][$year][$disk][$mbid] = $id;
+        self::$_mapcache[$name][$year][$disk][$mbid][$album_artist] = $id;
         return $id;
     }
 
@@ -434,12 +439,20 @@ class Album extends database_object
         if ($this->artist_count == '1') {
             $artist = trim(trim($this->artist_prefix) . ' ' . trim($this->artist_name));
             $this->f_artist_name = $artist;
-            $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
+            $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&artist=" . $this->artist_id . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
             $this->f_artist = $artist;
         } else {
             $this->f_artist_link = "<span title=\"$this->artist_count " . T_('Artists') . "\">" . T_('Various') . "</span>";
             $this->f_artist = T_('Various');
             $this->f_artist_name =  $this->f_artist;
+        }
+
+        if ($this->album_artist) {
+            $Album_artist = new Artist($this->album_artist);
+            $Album_artist->format();
+            $this->album_artist_name = $Album_artist->name;
+            $this->f_album_artist_name = $Album_artist->f_name;
+            $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . $this->f_album_artist_name . "</a>";
         }
 
         if ($this->year == '0') {

@@ -33,7 +33,7 @@ $thcount = 8;
         <?php } ?>
             <th class="cel_album essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'),'album_sort_name'); ?></th>
             <th class="cel_add essential"></th>
-            <th class="cel_artist essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist', T_('Artist'),'album_sort_artist'); ?></th>
+            <th class="cel_artist essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=generic_artist', T_('Artist'),'album_sort_artist'); ?></th>
             <th class="cel_songs optional"><?php echo T_('Songs'); ?></th>
             <th class="cel_year essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'),'album_sort_year'); ?></th>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
@@ -75,7 +75,7 @@ $thcount = 8;
         <?php } ?>
             <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'),'album_sort_name_bottom'); ?></th>
             <th class="cel_add"></th>
-            <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist', T_('Artist'),'album_sort_artist'); ?></th>
+            <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=generic_artist', T_('Artist'),'album_sort_artist_bottom'); ?></th>
             <th class="cel_songs"><?php echo T_('Songs'); ?></th>
             <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'),'album_sort_year_bottom'); ?></th>
             <th class="cel_tags"><?php echo T_('Tags'); ?></th>

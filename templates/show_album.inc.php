@@ -27,7 +27,7 @@ $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')';
 if ($album->disk) {
     $title .= "<span class=\"discnb disc" . $album->disk . "\">, " . T_('Disk') . " " . $album->disk . "</span>";
 }
-$title .= '&nbsp;-&nbsp;' . $album->f_artist_link;
+$title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
 ?>
 <?php UI::show_box_top($title,'info-box'); ?>
 <div class="item_right_info">
