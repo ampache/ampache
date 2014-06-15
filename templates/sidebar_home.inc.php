@@ -21,7 +21,7 @@
  */
 ?>
 <ul class="sb2" id="sb_home">
-    <li><h4 class="header"><span class="sidebar-header-title"><?php echo T_('Browse'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_browse']) ? $_COOKIE['sb_browse'] : 'expanded'; ?>" id="browse" lt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
+    <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Browse'); ?>"><?php echo T_('Browse'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_browse']) ? $_COOKIE['sb_browse'] : 'expanded'; ?>" id="browse" lt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
         <?php
         if (isset($_REQUEST['action'])) {
             $text = scrub_in($_REQUEST['action']) . '_ac';
@@ -49,7 +49,7 @@
     <?php Ajax::start_container('browse_filters'); ?>
     <?php Ajax::end_container(); ?>
     <li>
-        <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Playlist'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_playlist']) ? $_COOKIE['sb_playlist'] : 'expanded'; ?>" id="playlist" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
+        <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Playlist'); ?>"><?php echo T_('Playlist'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_playlist']) ? $_COOKIE['sb_playlist'] : 'expanded'; ?>" id="playlist" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
         <ul class="sb3" id="sb_home_info">
             <li id="sb_home_info_CurrentlyPlaying"><a href="<?php echo AmpConfig::get('web_path') . ((AmpConfig::get('iframes')) ? '/?framed=1' : ''); ?>"><?php echo T_('Currently Playing'); ?></a></li>
             <?php if (AmpConfig::get('allow_democratic_playback')) { ?>
@@ -68,7 +68,7 @@
         </ul>
     </li>
     <li>
-        <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Random'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_random']) ? $_COOKIE['sb_random'] : 'expanded'; ?>" id="random" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
+        <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Random'); ?>"><?php echo T_('Random'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_random']) ? $_COOKIE['sb_random'] : 'expanded'; ?>" id="random" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
         <ul class="sb3" id="sb_home_random">
             <li id="sb_home_random_album"><?php echo Ajax::text('?page=random&action=song', T_('Song'),'home_random_song'); ?></li>
             <li id="sb_home_random_album"><?php echo Ajax::text('?page=random&action=album', T_('Album'),'home_random_album'); ?></li>
@@ -78,7 +78,7 @@
         </ul>
     </li>
     <li>
-        <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Information'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_information']) ? $_COOKIE['sb_information'] : 'expanded'; ?>" id="information" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
+        <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Information'); ?>"><?php echo T_('Information'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_information']) ? $_COOKIE['sb_information'] : 'expanded'; ?>" id="information" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
         <ul class="sb3" id="sb_home_info">
             <li id="sb_home_info_Recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent"><?php echo T_('Recent'); ?></a></li>
             <li id="sb_home_info_Newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo T_('Newest'); ?></a></li>
@@ -102,7 +102,7 @@
         </ul>
     </li>
     <li>
-        <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Search'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_search']) ? $_COOKIE['sb_search'] : 'expanded'; ?>" id="search" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
+        <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Search'); ?>"><?php echo T_('Search'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_search']) ? $_COOKIE['sb_search'] : 'expanded'; ?>" id="search" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
         <ul class="sb3" id="sb_home_search">
           <li id="sb_home_search_song"><a href="<?php echo $web_path; ?>/search.php?type=song"><?php echo T_('Songs'); ?></a></li>
           <li id="sb_home_search_album"><a href="<?php echo $web_path; ?>/search.php?type=album"><?php echo T_('Albums'); ?></a></li>
