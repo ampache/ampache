@@ -140,6 +140,7 @@ class Song extends database_object implements media
         $license = isset($results['license']) ? $results['license'] : null;
 
         $artist_id = Artist::check($artist, $artist_mbid);
+        $album_artist_id = null;
         if ($album_artist) {
             $album_artist_id = Artist::check($album_artist, $album_artist_mbid);
         }
