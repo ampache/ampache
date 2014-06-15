@@ -473,6 +473,25 @@ class Tag extends database_object
     } // get_tags
 
     /**
+     * get_tag_names
+     * This is a non-object non type depedent function that just returns tags
+     * we've got, it can take filters (this is used by the tag cloud)
+     */
+    public static function get_tag_names($filters=array())
+    {
+        $sql = "SELECT `id`,`name` FROM `tag` ORDER BY `name` ASC ";
+        $db_results = Dba::read($sql);
+
+        $results = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row;
+        }
+
+        return $results;
+
+    } // get_tag_names
+
+    /**
      * get_display
      * This returns a human formated version of the tags that we are given
      * it also takes a type so that it knows how to return it, this is used
