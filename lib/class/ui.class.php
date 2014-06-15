@@ -353,8 +353,8 @@ END;
      * @param string    $class      Optional parameter of a class for the span containing the text.
      * @return string               Full Ajax text.
      */
-    public static function create_link($page, $subpage, $calls = array(), $text, $source, $post = '', $class = '')
+    public static function create_link($page, $subpage, $calls = array(), $text, $source, $post = '', $class = '', $title = '')
     {
-        return Ajax::text(Ajax::make_url($page, $subpage, $calls), $text, $source, $post, $class);
+        return Ajax::text(Ajax::make_url($page, $subpage, $calls), $text, $source, $post, $class, $title);
     }
 }

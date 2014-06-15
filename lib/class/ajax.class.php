@@ -139,7 +139,7 @@ class Ajax
      * This prints out the specified text as a link and sets up the required
      * ajax for the link so it works correctly
      */
-    public static function text($action, $text, $source, $post='', $class='')
+    public static function text($action, $text, $source, $post='', $class='', $title = '')
     {
         // Avoid duplicate id
         $source .= '_' . time();
@@ -152,7 +152,11 @@ class Ajax
             $class = ' class="' . $class . '"';
         }
 
-        $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>$text</a>\n";
+        if ($title) {
+            $title = ' title="' . $title . '"';
+        }
+
+        $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class $title>$text</a>\n";
 
         $string .= self::observe($source, 'click', $ajax_string);
 

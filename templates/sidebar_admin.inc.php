@@ -49,7 +49,7 @@
       <li id="sb_admin_ot_ManageShoutbox"><?php echo UI::create_link('content', 'shout', array(), T_('Manage Shoutbox'), 'admin_shout_manage_shoutbox'); ?></li>
       <?php } ?>
       <?php if (AmpConfig::get('licensing')) { ?>
-      <li id="sb_admin_ot_ManageLicense"><a href="<?php echo $web_path; ?>/admin/license.php"><?php echo T_('Manage Licenses'); ?></a></li>
+      <li id="sb_admin_ot_ManageLicense"><?php echo UI::create_link('content', 'license', array(), T_('Manage Licenses'), 'admin_manage_licenses'); ?></li>
       <?php } ?>
     </ul>
   </li>

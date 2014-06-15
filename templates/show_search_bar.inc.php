@@ -21,7 +21,7 @@
  */
 ?>
 <div id="sb_Subsearch">
-    <form name="search" method="post" action="<?php echo $web_path; ?>/search.php?type=song" enctype="multipart/form-data" style="Display:inline">
+    <form id="quickSearch" name="search" method="post" action="" enctype="multipart/form-data" style="Display:inline">
         <input type="text" name="rule_1_input" id="searchString"/>
         <input type="hidden" name="action" value="search" />
         <input type="hidden" name="rule_1_operator" value="0" />
@@ -35,6 +35,13 @@
             <option value="tag"><?php echo T_('Tag')?></option>
         </select>
         <input class="button" type="submit" value="<?php echo T_('Search'); ?>" id="searchBtn" />
-        <a href="<?php echo $web_path; ?>/search.php?type=song" class="button" id="advSearchBtn"><?php echo T_('Advanced Search'); ?></a>
+        <?php echo UI::create_link('content', 'search', array('action' => 'search', 'type' => 'song'), T_('Advanced Search'), 'header_search_advanced_search'); ?>
     </form>
 </div>
+<script>
+$('input#searchBtn').click( function(e) {
+    e.preventDefault();
+    update_action();
+    ajaxPost('<?php echo AmpConfig::get("web_path"); ?>/server/ajax.server.php?page=content&subpage=search&action=search&type=song', "quickSearch", 'header_search_quick_search');
+});
+</script>

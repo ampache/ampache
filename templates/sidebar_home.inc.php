@@ -32,7 +32,7 @@
             <li id="sb_browse_bb_SongTitle"><?php echo UI::create_link('content', 'browse', array('action' => 'song'), T_('Song Titles'), 'home_browse_song'); ?></li>
             <li id="sb_browse_bb_Album"><?php echo UI::create_link('content', 'browse', array('action' => 'album'), T_('Albums'), 'home_browse_album'); ?></li>
             <li id="sb_browse_bb_Artist"><?php echo UI::create_link('content', 'browse', array('action' => 'artist'), T_('Artists'), 'home_browse_artist'); ?></li>
-            <li id="sb_browse_bb_Tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag"><?php echo T_('Tag Cloud'); ?></a></li>
+            <li id="sb_browse_bb_Tags"><?php echo UI::create_link('content', 'browse', array('action' => 'tag'), T_('Tag Cloud'), 'home_browse_tag'); ?></li>
             <li id="sb_browse_bb_Playlist"><?php echo UI::create_link('content', 'browse', array('action' => 'playlist'), T_('Playlists'), 'home_browse_playlist'); ?></li>
             <li id="sb_browse_bb_SmartPlaylist"><?php echo UI::create_link('content', 'browse', array('action' => 'smartplaylist'), T_('Smart Playlists'), 'home_browse_smartplaylist'); ?></li>
             <li id="sb_browse_bb_Channel"><?php echo UI::create_link('content', 'browse', array('action' => 'channel'), T_('Channel'), 'home_browse_channel'); ?></li>
@@ -42,7 +42,7 @@
             <li id="sb_browse_bb_RadioStation"><?php echo UI::create_link('content', 'browse', array('action' => 'live_stream'), T_('Radio Stations'), 'home_browse_live_stream'); ?></li>
             <li id="sb_browse_bb_Video"><?php echo UI::create_link('content', 'browse', array('action' => 'video'), T_('Videos'), 'home_browse_video'); ?></li>
             <?php if (AmpConfig::get('allow_upload')) { ?>
-            <li id="sb_browse_bb_Upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo T_('Upload'); ?></a></li>
+            <li id="sb_browse_bb_Upload"><?php echo UI::create_link('content', 'upload', array(), T_('Upload'), 'home_upload'); ?></li>
             <?php } ?>
         </ul>
     </li>
@@ -96,7 +96,7 @@
             <li id="sb_home_info_Share"><?php echo UI::create_link('content', 'stats', array('action' => 'share'), T_('Shared Objects'), 'home_stats_share'); ?></li>
             <?php } ?>
             <?php if (AmpConfig::get('allow_upload')) { ?>
-            <li id="sb_browse_bb_Upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo T_('Uploads'); ?></a></li>
+            <li id="sb_browse_bb_Upload"><?php echo UI::create_link('content', 'stats', array('action' => 'upload'), T_('Uploads'), 'home_stats_upload'); ?></li>
             <?php } ?>
              <li id="sb_home_info_Statistics"><?php echo UI::create_link('content', 'stats', array('action' => 'show'), T_('Statistics'), 'home_stats_show'); ?></li>
         </ul>

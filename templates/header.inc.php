@@ -92,11 +92,13 @@ $_SESSION['login'] = false;
         <script type="text/javascript">
             $.widget( "custom.catcomplete", $.ui.autocomplete, {
                 _renderItem: function( ul, item ) {
-                        var itemhtml = "<a href='" + item.link + "'>";
+                        var id = "quick_search_" + item.type + "_" + new Date().getTime();
+                        var itemhtml = "<a href='javascript:void(0);' id='" + id + "'>";
                         if (item.image != '') {
                             itemhtml += "<img src='" + item.image + "' class='searchart' />";
                         }
                         itemhtml += "<span class='searchitemtxt'>" + item.label + ((item.rels == '') ? "" : " - " + item.rels)  + "</span></a>"
+                        itemhtml += "<scr"+"ipt type='text/javascript'>$('#" + id + "').on('click', function(){ update_action(); ajaxPut('" + item.link + "'); $('#" + id + "').off('ajaxComplete');});</scr"+"ipt>"
 
                         return $( "<li class='ui-menu-item'>" )
                             .data("ui-autocomplete-item", item)
@@ -255,15 +257,13 @@ $_SESSION['login'] = false;
         <div id="maincontainer">
             <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
                 <h1 id="headerlogo">
-                  <a href="<?php echo $web_path . ((AmpConfig::get('iframes')) ? '/?framed=1' : ''); ?>">
-                    <img src="<?php echo $web_path; ?><?php echo AmpConfig::get('theme_path'); ?>/images/ampache.png" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
-                  </a>
+                <?php echo UI::create_link('content', 'index', array('action' => 'currently_playing'), '<img src="' . $web_path . AmpConfig::get('theme_path') . '/images/ampache.png" title="' . AmpConfig::get('site_title') . '" alt="' . AmpConfig::get('site_title') . '" />', 'header_index_currently_playing'); ?>
                 </h1>
                 <div id="headerbox">
                     <?php UI::show_box_top('','box box_headerbox'); ?>
                     <?php require_once AmpConfig::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
                     <?php require_once AmpConfig::get('prefix') . '/templates/show_playtype_switch.inc.php'; ?>
-                    <span id="loginInfo"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo $GLOBALS['user']->fullname; ?></a> <a target="_top" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a></span>
+                    <span id="loginInfo"><?php echo UI::create_link('content', 'preferences', array('tab' => 'account'), $GLOBALS['user']->fullname, 'header_peferences_account'); ?><a target="_top" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a></span>
                     <span id="updateInfo">
                     <?php
                     if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {
@@ -281,28 +281,16 @@ $_SESSION['login'] = false;
         <?php if (AmpConfig::get('topmenu')) { ?>
             <div id="topmenu_container">
                 <div id="topmenu_item">
-                    <a href="<?php echo $web_path . ((AmpConfig::get('iframes')) ? '/?framed=1' : ''); ?>">
-                        <img src="<?php echo $web_path; ?>/images/topmenu-home.png" />
-                        <span><?php echo T_('Home'); ?></span>
-                    </a>
+                    <?php echo UI::create_link('content', 'index', array(), '<img src="' . $web_path . '/images/topmenu-home.png" /><span>' . T_('Home') . '</span>', 'header_topmenu_index_currently_playing'); ?>
                 </div>
                 <div id="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/browse.php?action=artist">
-                        <img src="<?php echo $web_path; ?>/images/topmenu-music.png" />
-                        <span><?php echo T_('Artists'); ?></span>
-                    </a>
+                    <?php echo UI::create_link('content', 'browse', array('action' => 'artist'), '<img src="' . $web_path . '/images/topmenu-music.png" /><span>' . T_('Artists') . '</span>', 'header_topmenu_browse_artist'); ?>
                 </div>
                 <div id="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/browse.php?action=playlist">
-                        <img src="<?php echo $web_path; ?>/images/topmenu-playlist.png" />
-                        <span><?php echo T_('Playlists'); ?></span>
-                    </a>
+                    <?php echo UI::create_link('content', 'browse', array('action' => 'playlist'), '<img src="' . $web_path . '/images/topmenu-playlist.png" /><span>' . T_('Playlists') . '</span>', 'header_topmenu_browse_playlist'); ?>
                 </div>
                 <div id="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/stats.php?action=userflag">
-                        <img src="<?php echo $web_path; ?>/images/topmenu-favorite.png" />
-                        <span><?php echo T_('Favorites'); ?></span>
-                    </a>
+                    <?php echo UI::create_link('content', 'stats', array('action' => 'userflag'), '<img src="' . $web_path . '/images/topmenu-favorite.png" /><span>' . T_('Favorites') . '</span>', 'header_topmenu_stats_userflag'); ?>
                 </div>
             </div>
         <?php } ?>

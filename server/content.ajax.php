@@ -85,6 +85,21 @@ switch ($_REQUEST['subpage']) {
     case 'mail':
         require_once AmpConfig::get('prefix') . '/admin/mail.php';
         break;
+    case 'upload':
+        require_once AmpConfig::get('prefix') . '/upload.php';
+        break;
+    case 'license':
+        require_once AmpConfig::get('prefix') . '/admin/license.php';
+        break;
+    case 'song':
+        require_once AmpConfig::get('prefix') . '/song.php';
+        break;
+    case 'albums':
+        require_once AmpConfig::get('prefix') . '/albums.php';
+        break;
+    case 'artists':
+        require_once AmpConfig::get('prefix') . '/artists.php';
+        break;
     default:
         // Ne rien faire
         break;

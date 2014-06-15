@@ -39,9 +39,13 @@ switch ($_REQUEST['actionp']) {
         exit;
 
     default:
-        UI::show_header();
+        if (!defined('AJAX_INCLUDE')) {
+            UI::show_header();
+        }
         require AmpConfig::get('prefix') . '/templates/show_add_upload.inc.php';
         break;
 } // switch on the action
 
-UI::show_footer();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_footer();
+}

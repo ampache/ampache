@@ -27,7 +27,9 @@ if (!Access::check('interface','100')) {
     exit;
 }
 
-UI::show_header();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_header();
+}
 
 switch ($_REQUEST['action']) {
     case 'edit':
@@ -59,4 +61,6 @@ switch ($_REQUEST['action']) {
     break;
 }
 
-UI::show_footer();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_footer();
+}
