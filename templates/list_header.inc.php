@@ -174,6 +174,7 @@ if ($pages > 1 && $start > -1) {
     }
 } // if stuff
 ?>
+    <?php echo T_('Item Count') . ': ' . $total; ?>
     &nbsp;
     <span class="browse-options">
         <a href="#" onClick="showFilters(this);" class="browse-options-link"><?php echo T_("Filters"); ?></a>
