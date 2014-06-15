@@ -51,10 +51,10 @@ if (Art::is_enabled()) {
         </a>
     </span>
 </td>
-<td class="cel_artist"><?php echo $album->f_artist_link; ?></td>
+<td class="cel_artist"><?php echo (!empty($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link); ?></td>
 <td class="cel_songs"><?php echo $album->song_count; ?></td>
 <td class="cel_year"><?php echo $album->year; ?></td>
-<td class="cel_tags" title="<?php echo $album->f_tags; ?>"><?php echo $album->f_tags; ?></td>
+<td class="cel_tags"><?php echo $album->f_tags; ?></td>
 <?php if (AmpConfig::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $album->id; ?>_album"><?php Rating::show($album->id, 'album'); ?></td>
 <?php } ?>

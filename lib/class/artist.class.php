@@ -99,7 +99,10 @@ class Artist extends database_object
      */
     public static function gc()
     {
-        Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` LEFT JOIN `wanted` ON `wanted`.`artist` = `artist`.`id` WHERE `song`.`id` IS NULL AND `wanted`.`id` IS NULL');
+        Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ' .
+            'LEFT JOIN `song` AS `song2` ON `song2`.`album_artist` = `artist`.`id` ' .
+            'LEFT JOIN `wanted` ON `wanted`.`artist` = `artist`.`id` ' .
+            'WHERE `song`.`id` IS NULL AND `song2`.`id` IS NULL AND `wanted`.`id` IS NULL');
     }
 
     /**
@@ -333,7 +336,7 @@ class Artist extends database_object
         $this->f_time = ltrim($hours . ':' . $min . ':' . $sec,'0:');
 
         $this->tags = Tag::get_top_tags('artist', $this->id);
-        $this->f_tags = Tag::get_display($this->tags);
+        $this->f_tags = Tag::get_display($this->tags, true, 'artist');
 
         $this->object_cnt = $extra_info['object_cnt'];
 

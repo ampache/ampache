@@ -31,6 +31,8 @@ class Search extends playlist_object
     public $rules;
     public $logic_operator = 'AND';
     public $type = 'public';
+    public $random = false;
+    public $limit = 0;
 
     public $basetypes;
     public $types;
@@ -633,6 +635,12 @@ class Search extends playlist_object
         $sql = $this->to_sql();
         $sql = $sql['base'] . ' ' . $sql['table_sql'] . ' WHERE ' .
             $sql['where_sql'];
+        if ($this->random) {
+            $sql .= " ORDER BY RAND()";
+        }
+        if ($this->limit > 0) {
+            $sql .= " LIMIT " . intval($this->limit);
+        }
 
         $db_results = Dba::read($sql);
 
@@ -726,14 +734,14 @@ class Search extends playlist_object
         if (! $this->name) {
             $this->name = $GLOBALS['user']->username . ' - ' . date('Y-m-d H:i:s', time());
         }
-        $sql = "SELECT `id` FROM `search` WHERE `name`='$this->name'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `id` FROM `search` WHERE `name` = ?";
+        $db_results = Dba::read($sql, array($this->name));
         if (Dba::num_rows($db_results)) {
             $this->name .= uniqid('', true);
         }
 
-        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `rules`, `logic_operator`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($this->name, $this->type, $GLOBALS['user']->id, serialize($this->rules), $this->logic_operator));
+        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `rules`, `logic_operator`, `random`, `limit`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($this->name, $this->type, $GLOBALS['user']->id, serialize($this->rules), $this->logic_operator, $this->random, $this->limit));
         $insert_id = Dba::insert_id();
         $this->id = $insert_id;
         return $insert_id;
@@ -777,8 +785,8 @@ class Search extends playlist_object
             return false;
         }
 
-        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `rules` = ?, `logic_operator` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($this->name, $this->type, serialize($this->rules), $this->logic_operator, $this->id));
+        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($this->name, $this->type, serialize($this->rules), $this->logic_operator, $this->random, $this->limit, $this->id));
         return $db_results;
     }
 

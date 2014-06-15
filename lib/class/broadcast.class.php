@@ -112,7 +112,7 @@ class Broadcast extends database_object
         $this->f_name = $this->name;
         $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/broadcast.php?id=' . $this->id . '">' . scrub_out($this->f_name) . '</a>';
         $this->tags = Tag::get_top_tags('broadcast', $this->id);
-        $this->f_tags = Tag::get_display($this->tags);
+        $this->f_tags = Tag::get_display($this->tags, true, 'broadcast');
     }
 
     public static function get_broadcast_list_sql()

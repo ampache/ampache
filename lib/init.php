@@ -86,6 +86,7 @@ $results['web_path'] = $http_type . $results['http_host'] . $results['web_path']
 $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
 $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
 $results['raw_web_path'] = $results['raw_web_path'] ?: '/';
+$results['max_upload_size'] = $results['max_upload_size'] ?: 102400;
 $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
 
 if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {

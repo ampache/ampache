@@ -41,6 +41,8 @@
     </span>
 </td>
 <td class="cel_type"><?php echo $playlist->f_type; ?></td>
+<td class="cel_random"><?php echo ($playlist->random ? T_('Yes') : T_('No')); ?></td>
+<td class="cel_limit"><?php echo (($playlist->limit > 0) ? $playlist->limit : T_('None')); ?></td>
 <td class="cel_owner"><?php echo scrub_out($playlist->f_user); ?></td>
 <td class="cel_action">
         <?php if (Access::check_function('batch_download')) { ?>

@@ -128,6 +128,15 @@
     <?php echo T_('This tests whether Ampache can override the limit on maximum execution time.  This is not strictly necessary, but may result in a better experience.'); ?>
     </td>
 </tr>
+<tr>
+    <td valign="top"><?php echo T_('PHP max upload size'); ?></td>
+    <td valign="top">
+    <?php echo debug_result(check_upload_size()); ?>
+    </td>
+    <td>
+    <?php echo T_('This tests whether Ampache can upload medium files (>= 20M).  This is not strictly necessary, but may result in a better experience.'); ?>
+    </td>
+</tr>
 <?php
 if (!defined('INSTALL')) {
 ?>

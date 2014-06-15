@@ -172,6 +172,8 @@ switch ($_REQUEST['action']) {
                 if (isset($smartpl)) {
                     $smartpl->name = $_POST['name'];
                     $smartpl->type = $_POST['pl_type'];
+                    $smartpl->random = $_POST['random'];
+                    $smartpl->limit = $_POST['limit'];
                     $smartpl->update();
                     $smartpl->format();
                 }

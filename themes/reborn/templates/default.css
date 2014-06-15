@@ -333,7 +333,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 /***********************************************
            Login
 ***********************************************/
-#loginPage #maincontainer {
+#loginPage #maincontainer, #registerPage #maincontainer {
     padding: 20px;
     background-color: #222;
     background-color: rgba(0,0,0,0.15);
@@ -351,20 +351,34 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     box-sizing: border-box;
     display: block;
     width: 800px;
-    height: 580px;
     margin: 50px auto 0 auto;
 }
 
-#loginPage #header {
+#loginPage #maincontainer {
+    height: 580px;
+}
+
+#registerPage #maincontainer {
+    height: auto;
+}
+
+#loginPage #header, #registerPage #header {
     background-color: transparent;
-    height: 254px;
     width: 254px;
     margin: auto;
     border: none;
     box-shadow: none;
 }
 
-#loginPage #headerlogo {
+#loginPage #header {
+    height: 254px;
+}
+
+#registerPage #header {
+    height: 314px;
+}
+
+#loginPage #headerlogo, #registerPage #headerlogo {
     width: 256px;
     height: 256px;
     background: url('../images/ampache-reborn.png') no-repeat center;
@@ -372,21 +386,21 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     margin: auto;
 }
 
-#loginPage #headerlogo a {
+#loginPage #headerlogo a, #registerPage #headerlogo a {
     display: none;
 }
 
-#loginPage #loginbox {
+#loginPage #loginbox, #registerPage #registerbox {
     width: 500px;
     margin: auto auto 20px auto;
     color: #999;
 }
 
-#loginPage #loginbox h2{
+#loginPage #loginbox h2, #registerPage #registerbox h2{
     display: none;
 }
 
-#loginPage #loginbox div {
+#loginPage #loginbox div, #registerPage #registerbox div {
     font-size: 18px;
     line-height: 1.5em;
     text-shadow: 0 1px 0 #000;
@@ -395,7 +409,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #loginPage #loginbox #usernamefield input,
 #loginPage #loginbox #emailfield input,
-#loginPage #loginbox #passwordfield input {
+#loginPage #loginbox #passwordfield input,
+#registerPage #registerbox input {
     float: none;
     margin-left: 0;
     width: 100%;
@@ -494,9 +509,17 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     width: 50px !important;
 }
 
+.sidebar-header-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 125px;
+    display:inline-block;
+}
+
 #sidebar-header {
     height: 20px;
-    width: 150px;
+    width: 175px;
     background-color: rgba(0,0,0,0.15);
     border: 2px solid rgba(0,0,0,0.15);
     -webkit-border-radius: 2px;
@@ -593,7 +616,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #sidebar-tabs li.sb1 {
     float: left;
-    margin-right: 3px;
+    margin-right: 8px;
     height: 25px;
 }
 
@@ -605,7 +628,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 /* Tabs content */
 #sidebar-page {
-    width: 150px;
+    width: 175px;
     margin: 3px auto 5px 5px;
     background-color: rgba(0,0,0,0.15);
     -webkit-border-radius: 2px;
@@ -864,7 +887,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .content-float {
-    margin: 20px 250px 0px 180px;
+    margin: 20px 250px 0px 205px;
 }
 
 .content-right-wild {

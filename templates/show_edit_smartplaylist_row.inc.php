@@ -38,6 +38,14 @@
                     </select>
                 </td>
             </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Random') ?></td>
+                <td><input type="checkbox" name="random" value="1" <?php if ($playlist->random) echo "checked"; ?> /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Item Limit (0 = unlimited)') ?></td>
+                <td><input type="text" name="limit" value="<?php echo scrub_out($playlist->limit); ?>" /></td>
+            </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $playlist->id; ?>" />
         <input type="hidden" name="type" value="smartplaylist_row" />

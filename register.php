@@ -21,6 +21,7 @@
  */
 
 define('NO_SESSION','1');
+$_SESSION['login'] = true;
 require_once 'lib/init.php';
 
 /* Check Perms */

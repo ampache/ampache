@@ -44,7 +44,7 @@
 <td class="cel_songs"><?php echo $artist->songs; ?></td>
 <td class="cel_albums"><?php echo $artist->albums; ?></td>
 <td class="cel_time"><?php echo $artist->f_time; ?></td>
-<td class="cel_tags" title="<?php echo $artist->f_tags; ?>"><?php echo $artist->f_tags; ?></td>
+<td class="cel_tags"><?php echo $artist->f_tags; ?></td>
 <?php if (AmpConfig::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $artist->id; ?>_artist"><?php Rating::show($artist->id,'artist'); ?></td>
 <?php } ?>

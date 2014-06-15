@@ -181,7 +181,7 @@ class Channel extends database_object
     public function format()
     {
         $this->tags = Tag::get_top_tags('channel', $this->id);
-        $this->f_tags = Tag::get_display($this->tags);
+        $this->f_tags = Tag::get_display($this->tags, true, 'channel');
     }
 
     public function get_target_object()

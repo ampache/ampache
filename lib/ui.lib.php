@@ -230,17 +230,21 @@ function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
  * This is the same as show_album_select except it's *gasp* for artists! How
  * inventive!
  */
-function show_artist_select($name='artist', $artist_id=0, $allow_add=0, $song_id=0)
+function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $song_id=0, $allow_none=false)
 {
     static $artist_id_cnt = 0;
     // Generate key to use for HTML element ID
     if ($song_id) {
-        $key = "artist_select_" . $song_id;
+        $key = $name . "_select_" . $song_id;
     } else {
-        $key = "artist_select_c" . ++$artist_id_cnt;
+        $key = $name . "_select_c" . ++$artist_id_cnt;
     }
 
     echo "<select name=\"$name\" id=\"$key\">\n";
+
+    if ($allow_none) {
+        echo "\t<option value=\"-2\"></option>\n";
+    }
 
     $sql = "SELECT `id`, `name`, `prefix` FROM `artist` ORDER BY `name`";
     $db_results = Dba::read($sql);

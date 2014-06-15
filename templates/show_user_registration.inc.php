@@ -28,6 +28,7 @@ $web_path = AmpConfig::get('web_path');
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
 <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/print.css" type="text/css" media="print" />
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/templates/default.css" type="text/css" media="screen" />
 <link rel="shortcut icon" href="<?php echo AmpConfig::get('web_path'); ?>/favicon.ico" />
 </head>
@@ -38,7 +39,11 @@ $web_path = AmpConfig::get('web_path');
 
 <div id="maincontainer">
 <div id="header">
-<h1><?php echo scrub_out(AmpConfig::get('site_title')); ?></h1>
+<h1 id="headerlogo">
+    <a href="<?php echo AmpConfig::get('web_path'); ?>">
+        <img src="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/images/ampache.png" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
+    </a>
+</h1>
 <span><?php echo T_('Registration'); ?>...</span>
 </div>
 <?php
@@ -85,7 +90,7 @@ if (AmpConfig::get('user_agreement')) { ?>
     <?php Error::display('email'); ?>
 </div>
 <div class="registerfield require">
-    <label for="email"><?php echo T_('Website'); ?>: <span class="asterix">*</span></label>
+    <label for="email"><?php echo T_('Website'); ?>:</label>
     <input type='text' name='website' id='website' value='<?php echo scrub_out($website); ?>' />
     <?php Error::display('website'); ?>
 </div>
@@ -101,6 +106,7 @@ if (AmpConfig::get('user_agreement')) { ?>
     <input type='password' name='password_2' id='password_2' />
 </div>
 
+<br />
 <div class="registerInformation">
     <span><?php echo T_('* Required fields'); ?></span>
 </div>

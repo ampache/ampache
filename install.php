@@ -119,28 +119,48 @@ switch ($_REQUEST['action']) {
 
         // Now that it's inserted save the lang preference
         Preference::update('lang', '-1', AmpConfig::get('lang'));
-
-        header ('Location: ' . $web_path . "/install.php?action=show_create_config&local_db=$database&local_host=$hostname&local_port=$port&htmllang=$htmllang&charset=$charset");
-    break;
-    case 'create_config':
-        $download = (!isset($_POST['write']));
-        $download_htaccess_rest = (isset($_POST['download_htaccess_rest']));
-        $download_htaccess_play = (isset($_POST['download_htaccess_play']));
-        $write_htaccess_rest = (isset($_POST['write_htaccess_rest']));
-        $write_htaccess_play = (isset($_POST['write_htaccess_play']));
-
-        if ($write_htaccess_rest || $download_htaccess_rest) {
-            $created_config = install_rewrite_rules($htaccess_rest_file, $_POST['web_path'], $download_htaccess_rest);
-        } elseif ($write_htaccess_play || $download_htaccess_play) {
-            $created_config = install_rewrite_rules($htaccess_play_file, $_POST['web_path'], $download_htaccess_play);
-        } else {
-            $created_config = install_create_config($download);
-        }
-
-        require_once 'templates/show_install_config.inc.php';
-    break;
     case 'show_create_config':
         require_once 'templates/show_install_config.inc.php';
+    break;
+    case 'create_config':
+        $all = (isset($_POST['create_all']));
+        $skip = (isset($_POST['skip_config']));
+        if (!$skip) {
+            $write = (isset($_POST['write']));
+            $download = (isset($_POST['download']));
+            $download_htaccess_rest = (isset($_POST['download_htaccess_rest']));
+            $download_htaccess_play = (isset($_POST['download_htaccess_play']));
+            $write_htaccess_rest = (isset($_POST['write_htaccess_rest']));
+            $write_htaccess_play = (isset($_POST['write_htaccess_play']));
+
+            $created_config = true;
+            if ($write_htaccess_rest || $download_htaccess_rest || $all) {
+                $created_config = $created_config && install_rewrite_rules($htaccess_rest_file, $_POST['web_path'], $download_htaccess_rest);
+            }
+            if ($write_htaccess_play || $download_htaccess_play || $all) {
+                $created_config = $created_config && install_rewrite_rules($htaccess_play_file, $_POST['web_path'], $download_htaccess_play);
+            }
+            if ($write || $download || $all) {
+                $created_config = $created_config && install_create_config($download);
+            }
+        }
+    case 'show_create_account':
+        $results = parse_ini_file($configfile);
+        if (!isset($created_config)) $created_config = true;
+
+        /* Make sure we've got a valid config file */
+        if (!check_config_values($results) || !$created_config) {
+            Error::add('general', T_('Error: Config files not found or unreadable'));
+            require_once AmpConfig::get('prefix') . '/templates/show_install_config.inc.php';
+            break;
+        }
+
+        // Don't try to add administrator user on existing database
+        if (install_check_status($configfile)) {
+            require_once AmpConfig::get('prefix') . '/templates/show_install_account.inc.php';
+        } else {
+            header ("Location: " . $web_path . '/login.php');
+        }
     break;
     case 'create_account':
         $results = parse_ini_file($configfile);
@@ -154,18 +174,6 @@ switch ($_REQUEST['action']) {
         }
 
         header ("Location: " . $web_path . '/login.php');
-    break;
-    case 'show_create_account':
-        $results = parse_ini_file($configfile);
-
-        /* Make sure we've got a valid config file */
-        if (!check_config_values($results)) {
-            Error::add('general', T_('Error: Config file not found or unreadable'));
-            require_once AmpConfig::get('prefix') . '/templates/show_install_config.inc.php';
-            break;
-        }
-
-        require_once AmpConfig::get('prefix') . '/templates/show_install_account.inc.php';
     break;
     case 'init':
         require_once 'templates/show_install.inc.php';
