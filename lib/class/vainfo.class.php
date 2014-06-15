@@ -193,7 +193,6 @@ class vainfo
         if ($this->islocal) {
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
-                //debug_event('vainfo', print_r($this->_raw, true), '5');
             } catch (Exception $error) {
                 debug_event('getID2', 'Unable to catalog file: ' . $error->getMessage(), 1);
             }
@@ -262,6 +261,7 @@ class vainfo
     public static function clean_tag_info($results, $keys, $filename = null)
     {
         $info = array();
+        //debug_event('vainfo', 'Clean tag info: ' . print_r($results, true), '5');
 
         $info['file'] = $filename;
 
@@ -289,6 +289,7 @@ class vainfo
             $info['totaldisks'] = $info['totaldisks'] ?: intval($tags['totaldisks']);
 
             $info['artist']    = $info['artist'] ?: trim($tags['artist']);
+            $info['albumartist']    = $info['albumartist'] ?: trim($tags['albumartist']);
 
             $info['album'] = $info['album'] ?: trim($tags['album']);
 
@@ -310,6 +311,7 @@ class vainfo
             $info['mb_trackid'] = $info['mb_trackid'] ?: trim($tags['mb_trackid']);
             $info['mb_albumid'] = $info['mb_albumid'] ?: trim($tags['mb_albumid']);
             $info['mb_artistid'] = $info['mb_artistid'] ?: trim($tags['mb_artistid']);
+            $info['mb_albumartistid'] = $info['mb_albumartistid'] ?: trim($tags['mb_albumartistid']);
 
             $info['language'] = $info['language'] ?: trim($tags['language']);
 

@@ -118,7 +118,8 @@ class Song extends database_object implements media
         $title = trim($results['title']) ?: $file;
         $artist = $results['artist'];
         $album = $results['album'];
-        $album_artist = $results['band'] ?: null;
+        $album_artist = $results['albumartist'] ?: $results['band'];
+        $album_artist = $album_artist ?: null;
         $bitrate = $results['bitrate'] ?: 0;
         $rate = $results['rate'] ?: 0;
         $mode = $results['mode'];
@@ -126,9 +127,10 @@ class Song extends database_object implements media
         $time = $results['time'] ?: 0;
         $track = $results['track'];
         $track_mbid = $results['mb_trackid'] ?: $results['mbid'];
-        if ($track_mbid == '') $track_mbid = null;
+        $track_mbid = $track_mbid ?: null;
         $album_mbid = $results['mb_albumid'];
         $artist_mbid = $results['mb_artistid'];
+        $album_artist_mbid = $results['mb_albumartistid'];
         $disk = $results['disk'] ?: 0;
         $year = $results['year'] ?: 0;
         $comment = $results['comment'];
@@ -138,7 +140,7 @@ class Song extends database_object implements media
         $license = isset($results['license']) ? $results['license'] : null;
 
         $artist_id = Artist::check($artist, $artist_mbid);
-        $album_artist_id = Artist::check($album_artist);
+        $album_artist_id = Artist::check($album_artist, $album_artist_mbid);
         $album_id = Album::check($album, $year, $disk, $album_mbid,$album_artist_id);
 
         $sql = 'INSERT INTO `song` (`file`, `catalog`, `album`, `artist`, ' .
@@ -579,6 +581,11 @@ class Song extends database_object implements media
                     $new_artist_id = Artist::check($value);
                     self::update_artist($new_artist_id, $this->id);
                 break;
+                case 'album_artist_name':
+                    // Need to create new artist according the name
+                    $new_artist_id = Artist::check($value);
+                    self::update_album_artist($new_artist_id, $this->id);
+                break;
                 case 'album_name':
                     // Need to create new album according the name
                     $new_album_id = Album::check($value);
@@ -709,7 +716,12 @@ class Song extends database_object implements media
      */
     public static function update_album_artist($new_album_artist,$song_id)
     {
-        self::_update_item('band',$new_album_artist,$song_id,'50');
+        $new_album_artist = intval($new_album_artist);
+        if ($new_album_artist <= 0) {
+            $new_album_artist = null;
+        }
+
+        self::_update_item('album_artist', $new_album_artist, $song_id, '50');
     } // update_album_artist
 
     /**
@@ -849,7 +861,7 @@ class Song extends database_object implements media
         if (!Access::check('interface',$level)) { return false; }
 
         /* Can't update to blank */
-        if (!strlen(trim($value)) && $field != 'comment') { return false; }
+        if (!strlen(trim($value)) && $field != 'comment' && $field != 'album_artist') { return false; }
 
         $sql = "UPDATE `song` SET `$field` = ? WHERE `id` = ?";
         Dba::write($sql, array($value, $song_id));

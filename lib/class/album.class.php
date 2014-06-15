@@ -50,7 +50,6 @@ class Album extends database_object
     public $f_artist_link;
     public $f_artist;
     public $album_artist_name;
-    public $album_artist_prefix;
     public $f_album_artist_name;
     public $f_album_artist_link;
     public $f_name;
@@ -257,16 +256,10 @@ class Album extends database_object
            $sql .= 'AND `album.prefix` = ? ';
            $params[] = $prefix;
         }
-        if (AmpConfig::get('use_id3_band_tag')) {
-            if ($album_artist) {
-                $sql .= 'AND ? IN (SELECT `song`.`album_artist` FROM `song` WHERE `song`.`album`= `album`.`id`) ';
-                $params[] = $album_artist;
-            }
-        } else {
-            if ($year) {
-                $sql .= 'AND `year` = ? ';
-                $params[] = $year;
-            }
+
+        if ($album_artist) {
+            $sql .= 'AND ? IN (SELECT `song`.`album_artist` FROM `song` WHERE `song`.`album`= `album`.`id`) ';
+            $params[] = $album_artist;
         }
 
         $db_results = Dba::read($sql, $params);
@@ -446,7 +439,7 @@ class Album extends database_object
         if ($this->artist_count == '1') {
             $artist = trim(trim($this->artist_prefix) . ' ' . trim($this->artist_name));
             $this->f_artist_name = $artist;
-            $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->artist_id . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
+            $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&artist=" . $this->artist_id . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
             $this->f_artist = $artist;
         } else {
             $this->f_artist_link = "<span title=\"$this->artist_count " . T_('Artists') . "\">" . T_('Various') . "</span>";
@@ -454,14 +447,13 @@ class Album extends database_object
             $this->f_artist_name =  $this->f_artist;
         }
 
-        $Album_artist = new Artist($this->album_artist);
-        $Album_artist->format();
-        $this->album_artist_name = $Album_artist->f_name;
-        $this->album_artist_prefix = $Album_artist->prefix;
-        $this->f_album_artist_name = trim(trim($Album_artist->prefix) . ' ' . trim($Album_artist->f_name));
-
-        $this->f_album_artist_name = trim(trim($this->album_artist_prefix) . ' ' . trim($this->album_artist_name));
-        $this->f_album_artist_link = "<a href=\"$web_path/artists.php?action=show&amp;artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . $this->f_album_artist_name . "</a>";
+        if ($this->album_artist) {
+            $Album_artist = new Artist($this->album_artist);
+            $Album_artist->format();
+            $this->album_artist_name = $Album_artist->name;
+            $this->f_album_artist_name = $Album_artist->f_name;
+            $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . $this->f_album_artist_name . "</a>";
+        }
 
         if ($this->year == '0') {
             $this->year = "N/A";

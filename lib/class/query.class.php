@@ -207,7 +207,8 @@ class Query
                 'name',
                 'year',
                 'artist',
-                'album_artist'
+                'album_artist',
+                'generic_artist'
             ),
             'playlist' => array(
                 'name',
@@ -1497,6 +1498,11 @@ class Query
                 switch ($field) {
                     case 'name':
                         $sql = "`album`.`name` $order, `album`.`disk`";
+                    break;
+                    case 'generic_artist':
+                        $sql = "`artist`.`name`";
+                        $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                        $this->set_join('left', '`artist`', 'COALESCE(`song`.`album_artist`, `song`.`artist`)', '`artist`.`id`', 100);
                     break;
                     case 'album_artist':
                         $sql = "`artist`.`name`";
