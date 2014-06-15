@@ -1131,7 +1131,7 @@ class Query
             switch ($filter) {
                 case 'tag':
                     $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`song`.`id`', 100);
-                    $filter_sql = " `tag_map`.`object_type`='song' AND (";
+                    $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
 
                     foreach ($value as $tag_id) {
                         $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
@@ -1193,6 +1193,15 @@ class Query
         break;
         case 'album':
             switch ($filter) {
+                case 'tag':
+                    $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`album`.`id`', 100);
+                    $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
+
+                    foreach ($value as $tag_id) {
+                        $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                    }
+                    $filter_sql = rtrim($filter_sql,'AND') . ') AND ';
+                break;
                 case 'exact_match':
                     $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";
                 break;
@@ -1250,6 +1259,15 @@ class Query
         break;
         case 'artist':
             switch ($filter) {
+                case 'tag':
+                    $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);
+                    $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
+
+                    foreach ($value as $tag_id) {
+                        $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                    }
+                    $filter_sql = rtrim($filter_sql,'AND') . ') AND ';
+                break;
                 case 'catalog':
                 if ($value != 0) {
                     $this->set_join('left','`song`','`artist`.`id`','`song`.`artist`', 100);
@@ -1392,6 +1410,15 @@ class Query
         break;
         case 'video':
             switch ($filter) {
+                case 'tag':
+                    $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`video`.`id`', 100);
+                    $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
+
+                    foreach ($value as $tag_id) {
+                        $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
+                    }
+                    $filter_sql = rtrim($filter_sql,'AND') . ') AND ';
+                break;
                 case 'alpha_match':
                     $filter_sql = " `video`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;

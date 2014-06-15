@@ -478,7 +478,7 @@ class Tag extends database_object
      * it also takes a type so that it knows how to return it, this is used
      * by the formating functions of the different objects
      */
-    public static function get_display($tags)
+    public static function get_display($tags, $link=false, $filter_type='')
     {
         //debug_event('tag.class.php', 'Get display tags called...', '5');
         if (!is_array($tags)) { return ''; }
@@ -491,7 +491,14 @@ class Tag extends database_object
             foreach ($value as $vid=>$v) {
                 debug_event('tag.class.php', $vid.' = {'.$v.'}', '5');
             }*/
-            $results .= $value['name'] . ', ';
+            if ($link) {
+                $results .= '<a href="' . AmpConfig::get('web_path') . '/browse.php?action=tag&show_tag=' . $value['id'] . (!empty($filter_type) ? '&type=' . $filter_type : '') . '" title="' . $value['name'] . '">';
+            }
+            $results .= $value['name'];
+            if ($link) {
+                $results .= '</a>';
+            }
+            $results .= ', ';
         }
 
         $results = rtrim($results, ', ');

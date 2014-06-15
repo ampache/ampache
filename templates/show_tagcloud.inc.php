@@ -44,6 +44,16 @@
     <?php } ?>
     </div>
 <?php } ?>
+<?php
+if (isset($_GET['show_tag'])) {
+    $show_tag = intval($_GET['show_tag']);
+?>
+<script>
+$(document).ready(function () {
+    <?php echo Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . $show_tag, ''); ?>
+});
+</script>
+<?php } ?>
 <?php if (!count($object_ids)) { ?>
 <span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span>
 <?php } ?>

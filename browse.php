@@ -78,7 +78,8 @@ switch ($_REQUEST['action']) {
         Tag::build_cache($keys);
         UI::show_box_top(T_('Tag Cloud'), 'box box_tag_cloud');
         $browse2 = new Browse();
-        $browse2->set_type('song');
+        $browse_type = isset($_GET['type']) ? $_GET['type'] : 'song';
+        $browse2->set_type($browse_type);
         $browse2->store();
         require_once AmpConfig::get('prefix') . '/templates/show_tagcloud.inc.php';
         UI::show_box_bottom();

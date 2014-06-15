@@ -447,7 +447,7 @@ class Album extends database_object
         }
 
         $this->tags = Tag::get_top_tags('album', $this->id);
-        $this->f_tags = Tag::get_display($this->tags);
+        $this->f_tags = Tag::get_display($this->tags, true, 'album');
 
     } // format
 
