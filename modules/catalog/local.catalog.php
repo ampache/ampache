@@ -359,8 +359,18 @@ class Catalog_local extends Catalog
 
                 else {
                     if ($is_audio_file) {
-                        $this->_insert_local_song($full_file, $file_size, $options);
-                    } else { $this->insert_local_video($full_file,$file_size); }
+                        if (count($this->get_gather_types('music')) > 0) {
+                            $this->_insert_local_song($full_file, $file_size, $options);
+                        } else {
+                            debug_event('read', $full_file] . " ignored, bad media type for this catalog.", 5);
+                        }
+                    } else {
+                        if (count($this->get_gather_types('video')) > 0) {
+                            $this->insert_local_video($full_file,$file_size);
+                        } else {
+                            debug_event('read', $full_file] . " ignored, bad media type for this catalog.", 5);
+                        }
+                    }
 
                     $this->count++;
                     $file = str_replace(array('(',')','\''),'',$full_file);
@@ -642,7 +652,7 @@ class Catalog_local extends Catalog
      */
     private function _insert_local_song($file, $file_info, $options)
     {
-        $vainfo = new vainfo($file, '', '', '', $this->sort_pattern, $this->rename_pattern);
+        $vainfo = new vainfo($file, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern);
         $vainfo->get_info();
 
         $key = vainfo::get_tag_type($vainfo->tags);
@@ -689,7 +699,8 @@ class Catalog_local extends Catalog
     public function insert_local_video($file,$filesize)
     {
         /* Create the vainfo object and get info */
-        $vainfo     = new vainfo($file,'','','',$this->sort_pattern,$this->rename_pattern);
+        $gtypes = $this->get_gather_types('video');
+        $vainfo     = new vainfo($file, $gtypes,'','','',$this->sort_pattern,$this->rename_pattern);
         $vainfo->get_info();
 
         $tag_name = vainfo::get_tag_type($vainfo->tags);
@@ -697,15 +708,15 @@ class Catalog_local extends Catalog
 
         $rezx         = intval($results['resolution_x']);
         $rezy         = intval($results['resolution_y']);
-        // UNUSED CURRENTLY
-        $comment    = $results['comment'];
-        $year        = $results['year'];
-        $disk        = $results['disk'];
+        $release_date = intval($results['release_date']);
 
-        $sql = "INSERT INTO `video` (`file`,`catalog`,`title`,`video_codec`,`audio_codec`,`resolution_x`,`resolution_y`,`size`,`time`,`mime`) " .
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $params = array($file, $this->id, $results['title'], $results['video_codec'], $results['audio_codec'], $rezx, $rezy, $filesize, $results['time'], $results['mime']);
-        $db_results = Dba::write($sql, $params);
+        $sql = "INSERT INTO `video` (`file`,`catalog`,`title`,`video_codec`,`audio_codec`,`resolution_x`,`resolution_y`,`size`,`time`,`mime`,`release_date`) " .
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $params = array($file, $this->id, $results['title'], $results['video_codec'], $results['audio_codec'], $rezx, $rezy, $filesize, $results['time'], $results['mime'], $release_date);
+        Dba::write($sql, $params);
+        $vid = Dba::insert_id();
+        
+        Catalog::insert_video($vid, $gtypes, $results);
 
         return true;
 

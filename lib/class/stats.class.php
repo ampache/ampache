@@ -320,6 +320,10 @@ class Stats
             case 'genre':
             case 'song':
             case 'video':
+            case 'tvshow':
+            case 'tvshow_season':
+            case 'tvshow_episode':
+            case 'movie':
                 return $type;
             default:
                 return 'song';

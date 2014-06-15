@@ -172,6 +172,20 @@ class Query
                 'regex_match',
                 'regex_not_match',
                 'starts_with'
+            ),
+            'tvshow' => array(
+                'alpha_match',
+                'regex_match',
+                'regex_not_match',
+                'starts_with',
+                'year_lt',
+                'year_gt',
+                'year_eq'
+            ),
+            'tvshow_season' => array(
+                'season_lt',
+                'season_lg',
+                'season_eq'
             )
         );
 
@@ -276,6 +290,28 @@ class Query
             'license' => array(
                 'name'
             ),
+            'tvshow' => array(
+                'name',
+                'year'
+            ),
+            'tvshow_season' => array(
+                'season_number',
+                'tvshow'
+            ),
+            'tvshow_episode' => array(
+                'title',
+                'resolution',
+                'length',
+                'codec',
+                'season',
+                'tvshow'
+            ),
+            'movie' => array(
+                'title',
+                'resolution',
+                'length',
+                'codec'
+            )
         );
     }
 
@@ -382,6 +418,12 @@ class Query
             case 'update_lt':
             case 'update_gt':
             case 'catalog_enabled':
+            case 'year_lt':
+            case 'year_lg':
+            case 'year_eq':
+            case 'season_lt':
+            case 'season_lg':
+            case 'season_eq':
                 $this->_state['filter'][$key] = intval($value);
             break;
             case 'exact_match':
@@ -606,6 +648,10 @@ class Query
             case 'channel':
             case 'broadcast':
             case 'license':
+            case 'tvshow':
+            case 'tvshow_season':
+            case 'tvshow_episode':
+            case 'movie':
                 // Set it
                 $this->_state['type'] = $type;
                 $this->set_base_sql(true, $custom_base);
@@ -906,6 +952,22 @@ class Query
                 case 'license':
                     $this->set_select("`license`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `license` ";
+                break;
+                case 'tvshow':
+                    $this->set_select("`tvshow`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `tvshow` ";
+                break;
+                case 'tvshow_season':
+                    $this->set_select("`tvshow_season`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `tvshow_season` ";
+                break;
+                case 'tvshow_episode':
+                    $this->set_select("`tvshow_episode`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `tvshow_episode` ";
+                break;
+                case 'movie':
+                    $this->set_select("`movie`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `movie` ";
                 break;
                 case 'playlist_song':
                 case 'song':
@@ -1446,13 +1508,57 @@ class Query
                     $filter_sql = " `license`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'regex_match':
-                    if (!empty($value)) $filter_sql = " `':`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `license`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'regex_not_match':
-                    if (!empty($value)) $filter_sql = " `':`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    if (!empty($value)) $filter_sql = " `license`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 break;
                 case 'exact_match':
-                    $filter_sql = " `':`.`name` = '" . Dba::escape($value) . "' AND ";
+                    $filter_sql = " `license`.`name` = '" . Dba::escape($value) . "' AND ";
+                break;
+                default:
+                    // Rien a faire
+                break;
+            } // end filter
+        break;
+        case 'tvshow':
+            switch ($filter) {
+                case 'alpha_match':
+                    $filter_sql = " `tvshow`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+                case 'regex_match':
+                    if (!empty($value)) $filter_sql = " `tvshow`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'regex_not_match':
+                    if (!empty($value)) $filter_sql = " `tvshow`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'exact_match':
+                    $filter_sql = " `tvshow`.`name` = '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'year_lt':
+                    $filter_sql = " `tvshow`.`year` < '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'year_gt':
+                    $filter_sql = " `tvshow`.`year` > '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'year_eq':
+                    $filter_sql = " `tvshow`.`year` = '" . Dba::escape($value) . "' AND ";
+                break;
+                default:
+                    // Rien a faire
+                break;
+            } // end filter
+        break;
+        case 'tvshow_season':
+            switch ($filter) {
+                case 'season_lt':
+                    $filter_sql = " `tvshow_season`.`season_number` < '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'season_gt':
+                    $filter_sql = " `tvshow_season`.`season_number` > '" . Dba::escape($value) . "' AND ";
+                break;
+                case 'season_eq':
+                    $filter_sql = " `tvshow_season`.`season_number` = '" . Dba::escape($value) . "' AND ";
                 break;
                 default:
                     // Rien a faire
@@ -1715,6 +1821,83 @@ class Query
                         $sql = "`broadcast`.`listeners`";
                     break;
                 } // end switch on field
+            break;
+            case 'license':
+                switch ($field) {
+                    case 'name':
+                        $sql = "`license`.`name`";
+                    break;
+                }
+            break;
+            case 'tvshow':
+                switch ($field) {
+                    case 'name':
+                        $sql = "`tvshow`.`name`";
+                    break;
+                    case 'year':
+                        $sql = "`tvshow`.`year`";
+                    break;
+                }
+            break;
+            case 'tvshow_season':
+                switch ($field) {
+                    case 'season_number':
+                        $sql = "`tvshow_season`.`season_number`";
+                    break;
+                    case 'tvshow':
+                        $sql = "`tvshow`.`name`";
+                        $this->set_join('left', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
+                    break;
+                }
+            break;
+            case 'tvshow_episode':
+                switch ($field) {
+                    case 'title':
+                        $sql = "`video`.`title`";
+                        $this->set_join('left', '`video`', '`tvshow_episode`.`id`', '`video`.`id`', 100);
+                    break;
+                    case 'resolution':
+                        $sql = "`video`.`resolution`";
+                        $this->set_join('left', '`video`', '`tvshow_episode`.`id`', '`video`.`id`', 100);
+                    break;
+                    case 'length':
+                        $sql = "`video`.`length`";
+                        $this->set_join('left', '`video`', '`tvshow_episode`.`id`', '`video`.`id`', 100);
+                    break;
+                    case 'codec':
+                        $sql = "`video`.`codec`";
+                        $this->set_join('left', '`video`', '`tvshow_episode`.`id`', '`video`.`id`', 100);
+                    break;
+                    case 'season':
+                        $sql = "`tvshow_season`.`season_number`";
+                        $this->set_join('left', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`', 100);
+                    break;
+                    case 'tvshow':
+                        $sql = "`tvshow`.`name`";
+                        $this->set_join('left', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`', 100);
+                        $this->set_join('left', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
+                    break;
+                }
+            break;
+            case 'movie':
+                switch ($field) {
+                    case 'title':
+                        $sql = "`video`.`title`";
+                        $this->set_join('left', '`video`', '`movie`.`id`', '`video`.`id`', 100);
+                    break;
+                    case 'resolution':
+                        $sql = "`video`.`resolution`";
+                        $this->set_join('left', '`video`', '`movie`.`id`', '`video`.`id`', 100);
+                    break;
+                    case 'length':
+                        $sql = "`video`.`length`";
+                        $this->set_join('left', '`video`', '`movie`.`id`', '`video`.`id`', 100);
+                    break;
+                    case 'codec':
+                        $sql = "`video`.`codec`";
+                        $this->set_join('left', '`video`', '`movie`.`id`', '`video`.`id`', 100);
+                    break;
+                }
             break;
             default:
                 // Rien a faire

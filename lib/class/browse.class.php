@@ -235,6 +235,22 @@ class Browse extends Query
                 $box_title = T_('Media Licenses');
                 $box_req = AmpConfig::get('prefix') . '/templates/show_manage_license.inc.php';
             break;
+            case 'tvshow':
+                $box_title = T_('TV Shows');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_tvshows.inc.php';
+            break;
+            case 'tvshow_season':
+                $box_title = T_('Seasons');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_tvshow_seasons.inc.php';
+            break;
+            case 'tvshow_episode':
+                $box_title = T_('Episodes');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_tvshow_episodes.inc.php';
+            break;
+            case 'movie':
+                $box_title = T_('Movies');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_movies.inc.php';
+            break;
             default:
                 // Rien a faire
             break;

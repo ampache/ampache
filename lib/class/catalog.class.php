@@ -38,6 +38,7 @@ abstract class Catalog extends database_object
     public $rename_pattern;
     public $sort_pattern;
     public $catalog_type;
+    public $gather_types;
 
     public $f_name;
     public $f_name_link;
@@ -462,6 +463,24 @@ abstract class Catalog extends database_object
         }
 
         return $insert_id;
+    }
+    
+    public static function insert_video($id, $gtypes, $results) {
+        
+        if (count($gtypes) > 0) {
+            $gtype = $gtypes[0];
+            switch ($gtype) {
+                case 'tvshow':
+                    TVShow::insert($id, $results);
+                    break;
+                case 'movie':
+                    Movie::insert($id, $results);
+                    break;
+                default:
+                    // Do nothing, video entry already created and no additional data for now
+                    break;
+            }
+        }
     }
 
     /**
@@ -985,7 +1004,7 @@ abstract class Catalog extends database_object
 
         debug_event('tag-read', 'Reading tags from ' . $media->file, 5);
 
-        $vainfo = new vainfo($media->file,'','','',$sort_pattern,$rename_pattern);
+        $vainfo = new vainfo($media->file,array('music'),'','','',$sort_pattern,$rename_pattern);
         $vainfo->get_info();
 
         $key = vainfo::get_tag_type($vainfo->tags);
@@ -1003,19 +1022,6 @@ abstract class Catalog extends database_object
         return $return;
 
     } // update_media_from_tags
-
-    /**
-     * update_video_from_tags
-     * Updates the video info based on tags
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public static function update_video_from_tags($results,$video)
-    {
-        // Pretty sweet function here
-        return $results;
-
-    } // update_video_from_tags
 
     /**
      * update_song_from_tags
@@ -1088,6 +1094,26 @@ abstract class Catalog extends database_object
         return $info;
 
     } // update_song_from_tags
+    
+    public function get_gather_types($media_type)
+    {
+        $gtypes = $this->gather_types;
+        if (empty($gtypes)) {
+            $gtypes = "music";
+        }
+        $types = explode(',', $gtypes);
+        if ($media_type == "video") {
+            unset($types['music']);
+        }
+        
+        if ($media_type == "music") {
+            unset($types['video']);
+            unset($types['movie']);
+            unset($types['tvshow']);
+        }
+        
+        return $types;
+    }
 
     /**
      * clean_catalog

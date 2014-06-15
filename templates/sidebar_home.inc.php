@@ -21,7 +21,7 @@
  */
 ?>
 <ul class="sb2" id="sb_home">
-    <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Browse'); ?>"><?php echo T_('Browse'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_browse']) ? $_COOKIE['sb_browse'] : 'expanded'; ?>" id="browse" lt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
+    <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Browse Music'); ?>"><?php echo T_('Browse Music'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_browse']) ? $_COOKIE['sb_browse'] : 'expanded'; ?>" id="browse" lt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
         <?php
         if (isset($_REQUEST['action'])) {
             $text = scrub_in($_REQUEST['action']) . '_ac';
@@ -40,12 +40,20 @@
             <li id="sb_browse_bb_Broadcast"><a href="<?php echo $web_path; ?>/browse.php?action=broadcast"><?php echo T_('Broadcasts'); ?></a></li>
             <?php } ?>
             <li id="sb_browse_bb_RadioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo T_('Radio Stations'); ?></a></li>
-            <li id="sb_browse_bb_Video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo T_('Videos'); ?></a></li>
             <?php if (AmpConfig::get('allow_upload')) { ?>
             <li id="sb_browse_bb_Upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo T_('Upload'); ?></a></li>
             <?php } ?>
         </ul>
     </li>
+    <?php if (AmpConfig::get('allow_video')) { ?>
+        <li><h4 class="header"><span class="sidebar-header-title"><?php echo T_('Browse Video'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_browse']) ? $_COOKIE['sb_browse'] : 'expanded'; ?>" id="browse" lt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
+            <ul class="sb3" id="sb_browse_bb">
+                <li id="sb_browse_bb_TVShow"><a href="<?php echo $web_path; ?>/browse.php?action=tvshow"><?php echo T_('TV Shows'); ?></a></li>
+                <li id="sb_browse_bb_Movie"><a href="<?php echo $web_path; ?>/browse.php?action=movie"><?php echo T_('Movies'); ?></a></li>
+                <li id="sb_browse_bb_Video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo T_('Other Videos'); ?></a></li>
+            </ul>
+        </li>
+    <?php } ?>
     <?php Ajax::start_container('browse_filters'); ?>
     <?php Ajax::end_container(); ?>
     <li>

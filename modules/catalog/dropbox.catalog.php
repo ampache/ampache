@@ -334,7 +334,11 @@ class Catalog_dropbox extends Catalog
             $is_audio_file = Catalog::is_audio_file($file);
 
             if ($is_audio_file) {
-                $this->insert_song($client, $file, $filesize);
+                if (count($this->get_gather_types('music')) > 0) {
+                    $this->insert_song($client, $file, $filesize);
+                } else {
+                    debug_event('read', $data['path'] . " ignored, bad media type for this catalog.", 5);
+                }
             } else {
                 debug_event('read', $data['path'] . " ignored, unknown media file type", 5);
             }
@@ -368,7 +372,7 @@ class Catalog_dropbox extends Catalog
                 $islocal = true;
             }
 
-            $vainfo = new vainfo($file, '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
+            $vainfo = new vainfo($file, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
             $vainfo->forceSize($filesize);
             $vainfo->get_info();
 

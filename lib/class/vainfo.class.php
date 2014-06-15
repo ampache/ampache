@@ -36,6 +36,7 @@ class vainfo
     public $type = '';
     public $tags = array();
     public $islocal;
+    public $gather_types = array();
 
     protected $_raw = array();
     protected $_getID3 = '';
@@ -55,10 +56,11 @@ class vainfo
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function __construct($file, $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern = '', $file_pattern ='', $islocal = true)
+    public function __construct($file, $gather_types = array(), $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern = '', $file_pattern ='', $islocal = true)
     {
         $this->islocal = $islocal;
         $this->filename = $file;
+        $this->gather_types = $gather_types;
         $this->encoding = $encoding ?: AmpConfig::get('site_charset');
 
         /* These are needed for the filename mojo */
@@ -456,8 +458,11 @@ class vainfo
         foreach ($tag_order as $tag_source) {
             if (in_array($tag_source, $plugin_names)) {
                 $plugin = new Plugin($tag_source);
-                if ($plugin->load($GLOBALS['user'])) {
-                    $this->tags[$tag_source] = $plugin->_plugin->get_metadata(self::clean_tag_info($this->tags, self::get_tag_type($this->tags), $this->filename));
+                $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
+                if ($installed_version) {
+                    if ($plugin->load($GLOBALS['user'])) {
+                        $this->tags[$tag_source] = $plugin->_plugin->get_metadata($this->gather_types, self::clean_tag_info($this->tags, self::get_tag_type($this->tags), $this->filename));
+                    }
                 }
             }
         }

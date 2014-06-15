@@ -33,9 +33,12 @@ class Video extends database_object implements media
     public $resolution_y;
     public $time;
     public $mime;
+    public $release_date;
+    public $catalog;
 
     public $tags;
     public $f_title;
+    public $link;
     public $f_link;
     public $f_codec;
     public $f_resolution;
@@ -85,13 +88,26 @@ class Video extends database_object implements media
     public function format()
     {
         $this->f_title = scrub_out($this->title);
-        $this->f_link = scrub_out($this->title);
+        $this->link = AmpConfig::get('web_path') . "/video.php?action=show_video&video_id=" . $this->id;
+        $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_title) . "\"> " . scrub_out($this->f_title) . "</a>";
         $this->f_codec = $this->video_codec . ' / ' . $this->audio_codec;
         $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
         $this->f_tags = '';
         $this->f_length = floor($this->time/60) . ' ' .  T_('minutes');
 
     } // format
+    
+    /**
+     * gc
+     *
+     * Cleans up the inherited object tables
+     */
+    public static function gc()
+    {
+        Dba::write('DELETE FROM `movie` USING `movie` LEFT JOIN `video` ON `video`.`id` = `movie`.`id` WHERE `video`.`id` IS NULL');
+        Dba::write('DELETE FROM `tvshow_episode` USING `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `video`.`id` IS NULL');
+        TVShow::gc();
+    }
 
     public function get_stream_types()
     {

@@ -49,6 +49,10 @@ switch ($_REQUEST['action']) {
     case 'song':
     case 'channel':
     case 'broadcast':
+    case 'tvshow':
+    case 'tvshow_season':
+    case 'tvshow_episode':
+    case 'movie':
         $browse->set_type($_REQUEST['action']);
         $browse->set_simple_browse(true);
     break;
@@ -131,6 +135,34 @@ switch ($_REQUEST['action']) {
         $browse->show_objects();
     break;
     case 'video':
+        if (AmpConfig::get('catalog_disable')) {
+            $browse->set_filter('catalog_enabled', '1');
+        }
+        $browse->set_sort('title','ASC');
+        $browse->show_objects();
+    break;
+    case 'tvshow':
+        if (AmpConfig::get('catalog_disable')) {
+            $browse->set_filter('catalog_enabled', '1');
+        }
+        $browse->set_sort('name','ASC');
+        $browse->show_objects();
+    break;
+    case 'tvshow_season':
+        if (AmpConfig::get('catalog_disable')) {
+            $browse->set_filter('catalog_enabled', '1');
+        }
+        $browse->set_sort('season_number','ASC');
+        $browse->show_objects();
+    break;
+    case 'tvshow_episode':
+        if (AmpConfig::get('catalog_disable')) {
+            $browse->set_filter('catalog_enabled', '1');
+        }
+        $browse->set_sort('title','ASC');
+        $browse->show_objects();
+    break;
+    case 'movie':
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }

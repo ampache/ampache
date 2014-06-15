@@ -266,7 +266,7 @@ getid3_tag_order = "id3v2,id3v1,vorbiscomment,quicktime,matroska,ape,asf,avi,mpe
 ; POSSIBLE VALUES (builtins): filename and getID3
 ; POSSIBLE VALUES (plugins): MusicBrainz, plus any others you've installed.
 ; DEFAULT: getID3 filename
-metadata_order = "getID3,filename"
+metadata_order = "getID3,filename,MusicBrainz,TMDb"
 
 ; Un comment if don't want ampache to follow symlinks
 ; DEFAULT: false
