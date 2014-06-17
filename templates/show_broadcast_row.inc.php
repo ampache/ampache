@@ -24,7 +24,7 @@
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=broadcast&broadcast_id=' . $broadcast->id,'play', T_('Play'),'play_broadcast_' . $channel->id); ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=broadcast&broadcast_id=' . $broadcast->id,'play', T_('Play'),'play_broadcast_' . $broadcast->id); ?>
 <?php } ?>
     </div>
 </td>
