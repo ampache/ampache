@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-06-15 20:40+0200\n"
+"POT-Creation-Date: 2014-06-18 20:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5903,3 +5903,34 @@ msgstr ""
 msgid "Flickr api key"
 msgstr ""
 
+#: Database words
+msgid "Clear democratic votes of expired user sessions"
+msgstr ""
+
+#: Database words
+msgid "Show donate button in footer"
+msgstr ""
+
+#: Database words
+msgid "Uploads catalog destination"
+msgstr ""
+
+#: Database words
+msgid "Allow users to upload media"
+msgstr ""
+
+#: Database words
+msgid "Upload: create a subdirectory per user (recommended)"
+msgstr ""
+
+#: Database words
+msgid "Upload: consider the user sender as the track's artist"
+msgstr ""
+
+#: Database words
+msgid "Upload: run the following script after upload (current directory = upload target directory)"
+msgstr ""
+
+#: Database words
+msgid "Upload: allow users to edit uploaded songs"
+msgstr ""
