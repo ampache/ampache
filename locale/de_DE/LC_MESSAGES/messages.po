@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.7.0-dev\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-06-15 20:40+0200\n"
-"PO-Revision-Date: 2014-06-15 20:43+0100\n"
+"POT-Creation-Date: 2014-06-18 20:32+0200\n"
+"PO-Revision-Date: 2014-06-18 20:51+0100\n"
 "Last-Translator: Manuel Landmann <psyvirusx@gmail.com>\n"
 "Language-Team: German <translations@ampache.org>\n"
 "Language: de_DE\n"
@@ -3337,7 +3337,7 @@ msgstr "Datei(en) hier hinein ziehen"
 #: ../../templates/show_add_upload.inc.php:179
 #: ../../templates/sidebar_home.inc.php:24
 msgid "Browse"
-msgstr "Durchblättern"
+msgstr "Durchsuchen"
 
 #: ../../templates/show_add_user.inc.php:23
 msgid "Adding a New User"
@@ -6130,10 +6130,38 @@ msgstr "Top Menü"
 msgid "Flickr api key"
 msgstr "Flickr API-Schlüssel"
 
-#~ msgid "Config file already exists, install is probably completed"
-#~ msgstr ""
-#~ "Die Konfigurationsdatei ist schon vorhanden, die Installation ist beinahe "
-#~ "abgeschlossen"
+#: Database words
+msgid "Clear democratic votes of expired user sessions"
+msgstr "Votes für gemeinsame Wiedergabe nach ablauf der Session löschen."
 
-#~ msgid "Continue to Step 3"
-#~ msgstr "Weiter zu Schritt 3"
+#: Database words
+msgid "Show donate button in footer"
+msgstr "Button für Spenden im Footer anzeigen."
+
+#: Database words
+msgid "Uploads catalog destination"
+msgstr "Katalogziel für Uploads"
+
+#: Database words
+msgid "Allow users to upload media"
+msgstr "Benutzern das uploaden von Medien erlauben"
+
+#: Database words
+msgid "Upload: create a subdirectory per user (recommended)"
+msgstr "Upload: Ein Unterverzeichnis für jeden Benutzer erstellen (empfohlen)"
+
+#: Database words
+msgid "Upload: consider the user sender as the track's artist"
+msgstr "Upload: Den Namen des Uploaders als Interpreten annehmen"
+
+#: Database words
+msgid ""
+"Upload: run the following script after upload (current directory = upload "
+"target directory)"
+msgstr ""
+"Upload: Das folgende Skript nach einem Upload ausführen (Momentanes "
+"Verzeichnis = Uploadzielverzeichnis)"
+
+#: Database words
+msgid "Upload: allow users to edit uploaded songs"
+msgstr "Upload: Benutzern erlauben, hoch geladene Dateien bearbeiten zu können"
