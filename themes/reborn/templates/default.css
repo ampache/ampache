@@ -661,7 +661,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #sidebar-tabs .sb2 li h4 {
     color: #fff;
     height: 23px;
-    margin: 10px 0 5px;
+    margin: 10px 0 5px 0;
     padding: 0 10px 0 20px;
     background-color: #262626;
     border-bottom: 1px solid #0f0f0f;
@@ -675,20 +675,31 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sidebar-tabs .sb2 li ul li a {
-    border-radius: 4px;
-    margin-top: 3px;
-    padding: 7px;
-    background: none!important;
-    -webkit-transition: color .1s;
-    -moz-transition: color .1s;
-    -ms-transition: color .1s;
-    -o-transition: color .1s;
-    transition: color .1s;
-    color: #999;
+	color: #999;
+	width: 100%;
+	margin: 0 0 0 5px;
+	background-color: transparent;
+	-webkit-transition: color .1s;
+	-moz-transition: color .1s;
+	-ms-transition: color .1s;
+	-o-transition: color .1s;
+	transition: color .1s;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	display:inline-block;
 }
 
 #sidebar-tabs .sb2 li ul li a:hover {
-    color: #fff;
+	color: #fff;
+	width: 100%;
+	font-weight: bold;
+	margin: 0 0 0 1px;
+	-webkit-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+	-moz-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+	-ms-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+	box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
 }
 
 #sidebar-tabs .sb2 #browse_filters li {
