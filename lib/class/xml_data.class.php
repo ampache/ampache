@@ -175,10 +175,10 @@ class XML_Data
         if (is_array($tags)) {
 
             foreach ($tags as $tag_id => $data) {
-                $tag = new Tag($tag_id);
-                $string .= "\t<tag id=\"" . $tag->id .
-                    '" count="' . count($data['users']) .
-                    '"><![CDATA[' . $tag->name . "]]></tag>\n";
+                $string .= "\t<tag id=\"" . $data['id'] . "\" " .
+                "user=\"" . $data['user'] . "\" " .
+                "ut_id=\"" . $tag_id . "\" " .
+                "><![CDATA[" . $data['name'] . "]]></tag>\n";
             }
         }
 
