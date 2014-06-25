@@ -247,7 +247,7 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     margin: 0px;
 }
 
-#browse_custom_value {
+.browse_custom_value {
     margin-left: 5px;
     height: 20px;
     width: 50px;

@@ -169,7 +169,7 @@ if ($pages > 1 && $start > -1) {
             } // end else
         } // end foreach up
     ?>
-    <input type="text" id="browse_custom_value" name="value" value="<?php echo $current_page; ?>" onKeyUp="delayRun(this, '500', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=custom'); ?>', 'browse_custom_value');">
+    <input type="text" id="browse_<?php echo $browse->id; ?>_custom_value_<?php echo $is_header; ?>" class="browse_custom_value" name="value" value="<?php echo $current_page; ?>" onKeyUp="delayRun(this, '500', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=custom'); ?>', 'browse_<?php echo $browse->id; ?>_custom_value_<?php echo $is_header; ?>');">
 <?php
     }
 } // if stuff
