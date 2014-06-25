@@ -443,4 +443,43 @@ class Playlist extends playlist_object
 
     } // delete
 
+    /**
+    * Sort the tracks and save the new position
+    */
+    public function sort_tracks()
+    {
+        /* First get all of the songs in order of their tracks */
+        $sql = "SELECT A.`id`
+                FROM `playlist_data` AS A
+           LEFT JOIN `song` AS B ON A.object_id = B.id
+           LEFT JOIN `artist` AS C ON B.artist = C.id
+           LEFT JOIN `album` AS D ON B.album = D.id
+               WHERE A.`playlist` = ?
+            ORDER BY C.`name` ASC,
+                     B.`title` ASC,
+                     D.`year` ASC,
+                     D.`name` ASC,
+                     B.`track` ASC";
+        $db_results = Dba::query($sql, array($this->id));
+
+        $i = 1;
+        $results = array();
+
+        while ($r = Dba::fetch_assoc($db_results)) {
+            $new_data = array();
+            $new_data['id']         = $r['id'];
+            $new_data['track']      = $i;
+            $results[] = $new_data;
+            $i++;
+        } // end while results
+
+        foreach ($results as $data) {
+            $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
+            $db_results = Dba::query($sql, array($data['track'], $data['id']));
+        } // foreach re-ordered results
+
+    return true;
+
+    } // sort_tracks
+
 } // class Playlist
