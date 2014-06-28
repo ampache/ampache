@@ -425,16 +425,16 @@ if (get_class($media) == 'Song') {
 
 $start = 0;
 $end = 0;
-sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d", $start, $end);
+$range_values = sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d", $start, $end);
 
-if ($start > 0 || $end > 0) {
+if ($range_values > 0 && ($start > 0 || $end > 0)) {
     // Calculate stream size from byte range
-    if ($end > 0) {
+    if ($range_values >= 2) {
         $end = min($end, $media->size - 1);
-        $stream_size = ($end - $start) + 1;
     } else {
-        $stream_size = $media->size - $start;
+        $end = $media->size - 1;
     }
+    $stream_size = ($end - $start) + 1;
 
     if ($stream_size == null) {
         debug_event('play', 'Content-Range header received, which we cannot fulfill due to unknown final length (transcoding?)', 2);
