@@ -48,9 +48,16 @@ class Daap_Api
         ob_end_clean();
 
         if (function_exists('curl_version')) {
+            $headers = apache_request_headers();
+            $reqheaders = array();
+            $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
+            if (isset($headers['Range'])) {
+                $reqheaders[] = "Range: " . $headers['Range'];
+            }
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
             $ch = curl_init($url);
             curl_setopt_array($ch, array(
+                CURLOPT_HTTPHEADER => $reqheaders,
                 CURLOPT_HEADER => false,
                 CURLOPT_RETURNTRANSFER => false,
                 CURLOPT_FOLLOWLOCATION => true,
@@ -124,7 +131,9 @@ class Daap_Api
         $o = self::tlv('dmap.status', 200);
         foreach (self::$tags as $name => $tag) {
             $entry = self::tlv('dmap.contentcodesname', $name);
-            $entry .= self::tlv('dmap.contentcodesnumber', $tag['code']);
+            $pcode = str_split($tag['code']);
+            $icode = (ord($pcode[0])<<24) + (ord($pcode[1])<<16) + (ord($pcode[2])<<8) + ord($pcode[3]);
+            $entry .= self::tlv('dmap.contentcodesnumber', $icode);
             $entry .= self::tlv('dmap.contentcodestype', self::get_type_id($tag['type']));
             $o .= self::tlv('dmap.dictionary', $entry);
         }
@@ -388,9 +397,9 @@ class Daap_Api
                     case 'dmap.itemname':
                         $o .= self::tlv($m, $song->f_title);
                     break;
-                    case 'dmap.persistentid':
+                    /*case 'dmap.persistentid':
                         $o .= self::tlv($m, $song->id);
-                    break;
+                    break;*/
                     case 'daap.songalbum':
                         $o .= self::tlv($m, $song->f_album);
                     break;
@@ -407,7 +416,9 @@ class Daap_Api
                         $o .= self::tlv($m, $song->addition_time);
                     break;
                     case 'daap.songdatemodified':
-                        $o .= self::tlv($m, $song->update_time);
+                        if ($song->update_time) {
+                            $o .= self::tlv($m, $song->update_time);
+                        }
                     break;
                     case 'daap.songdiscnumber':
                         $album = new Album($song->album);
@@ -417,7 +428,7 @@ class Daap_Api
                         $o .= self::tlv($m, $song->type);
                     break;
                     case 'daap.songgenre':
-                        $o .= self::tlv($m, $song->f_tags);
+                        $o .= self::tlv($m, Tag::get_display($song->tags, false, 'song'));
                     break;
                     case 'daap.songsamplerate':
                         $o .= self::tlv($m, $song->rate);
@@ -645,7 +656,7 @@ class Daap_Api
 
     private static function get_type_id($type)
     {
-        switch ($type_id) {
+        switch ($type) {
             case 'byte':
                 return 1;
             case 'unsigned byte':
