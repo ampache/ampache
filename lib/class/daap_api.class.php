@@ -102,8 +102,9 @@ class Daap_Api
         $o .= self::tlv('dmap.supportsindex', 0);
         $o .= self::tlv('dmap.supportsextensions', 0);
         $o .= self::tlv('dmap.timeoutinterval', 1800);
-        $mslr = AmpConfig::get('daap_pass') ? 1: 0;
-        $o .= self::tlv('dmap.loginrequired', $mslr);
+        if (AmpConfig::get('daap_pass')) {
+            $o .= self::tlv('dmap.loginrequired', 1);
+        }
         $o .= self::tlv('dmap.supportsquery', 0);
         $o .= self::tlv('dmap.itemname', 'Ampache');
         $o .= self::tlv('dmap.supportsbrowse', 0);
@@ -120,8 +121,6 @@ class Daap_Api
      */
     public static function content_codes($input)
     {
-        self::check_session('dmap.contentcodesresponse');
-
         $o = self::tlv('dmap.status', 200);
         foreach (self::$tags as $name => $tag) {
             $entry = self::tlv('dmap.contentcodesname', $name);
@@ -163,16 +162,15 @@ class Daap_Api
         self::check_auth($code);
 
         if (!isset($_GET['session-id'])) {
-            debug_event('daap', 'Missing session id.', '5');
-            self::createApiError($code, 403);
-        }
+            debug_event('daap', 'Missing session id.', '');
+        } else {
 
-        $sql = "SELECT * FROM `daap_session` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($_GET['session-id']));
+            $sql = "SELECT * FROM `daap_session` WHERE `id` = ?";
+            $db_results = Dba::read($sql, array($_GET['session-id']));
 
-        if (Dba::num_rows($db_results) == 0) {
-            debug_event('daap', 'Unknown session id.', '5');
-            self::createApiError($code, 403);
+            if (Dba::num_rows($db_results) == 0) {
+                debug_event('daap', 'Unknown session id `' . $_GET['session-id'] . '`.', '4');
+            }
         }
     }
 
@@ -719,7 +717,7 @@ class Daap_Api
         exit();
     }
 
-    public static function createApiError($tag, $code, $msg)
+    public static function createApiError($tag, $code, $msg='')
     {
         $o = self::tlv('dmap.status', $code);
         if (!empty($msg)) {
