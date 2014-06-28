@@ -368,6 +368,26 @@ abstract class Catalog extends database_object
         return $results;
     }
 
+    public static function getLastUpdate()
+    {
+        $last_update = 0;
+        $catalogs = self::get_catalogs();
+        foreach ($catalogs as $id) {
+            $catalog = Catalog::create_from_id($id);
+            if ($catalog->last_add > $last_update) {
+                $last_update = $catalog->last_add;
+            }
+            if ($catalog->last_update > $last_update) {
+                $last_update = $catalog->last_update;
+            }
+            if ($catalog->last_clean > $last_update) {
+                $last_update = $catalog->last_clean;
+            }
+        }
+
+        return $last_update;
+    }
+
     /**
      * get_stats
      *
@@ -738,13 +758,22 @@ abstract class Catalog extends database_object
      */
     public function get_songs()
     {
+        $songs = array();
         $results = array();
 
         $sql = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled`='1'";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = new Song($row['id']);
+            $songs[] = $row['id'];
+        }
+
+        if (AmpConfig::get('memory_cache')) {
+            Song::build_cache($songs);
+        }
+
+        foreach ($songs as $song_id) {
+            $results[] = new Song($song_id);
         }
 
         return $results;

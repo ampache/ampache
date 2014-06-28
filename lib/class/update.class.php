@@ -419,6 +419,9 @@ class Update
         $update_string = '- Add random and limit options to smart playlists.<br />';
         $version[] = array('version' => '370006','description' => $update_string);
 
+        $update_string = '- Add DAAP backend preference.<br />';
+        $version[] = array('version' => '370007','description' => $update_string);
+
         return $version;
     }
 
@@ -2645,6 +2648,37 @@ class Update
     {
         $sql = "ALTER TABLE `search` ADD `random` tinyint(1) unsigned NOT NULL DEFAULT '0' AFTER `logic_operator`, ADD `limit` int(11) unsigned NOT NULL DEFAULT '0' AFTER `random`";
         Dba::write($sql);
+        return true;
+    }
+
+    /**
+     * update_370007
+     *
+     * Add DAAP backend preference
+     *
+     */
+    public static function update_370007()
+    {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('daap_backend','0','Use DAAP backend',25,'boolean','system')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('daap_pass','','DAAP backend password',25,'string','system')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
+        Dba::write($sql, array($id));
+
+        $sql = "CREATE TABLE `daap_session` (" .
+            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
+            "`creationdate` int(11) unsigned NOT NULL," .
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
+        Dba::write($sql);
+
         return true;
     }
 }

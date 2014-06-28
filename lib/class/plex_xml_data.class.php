@@ -312,7 +312,7 @@ class Plex_XML_Data
         $xml->addAttribute('transcoderAudio', '1');
         $xml->addAttribute('transcoderVideo', '0');
 
-        $xml->addAttribute('updatedAt', self::getLastUpdate($catalogs));
+        $xml->addAttribute('updatedAt', Catalog::getLastUpdate($catalogs));
         $xml->addAttribute('version', self::getPlexVersion());
 
         $dir = $xml->addChild('Directory');
@@ -365,25 +365,6 @@ class Plex_XML_Data
         $dir->addAttribute('title', 'video');*/
     }
 
-    public static function getLastUpdate($catalogs)
-    {
-        $last_update = 0;
-        foreach ($catalogs as $id) {
-            $catalog = Catalog::create_from_id($id);
-            if ($catalog->last_add > $last_update) {
-                $last_update = $catalog->last_add;
-            }
-            if ($catalog->last_update > $last_update) {
-                $last_update = $catalog->last_update;
-            }
-            if ($catalog->last_clean > $last_update) {
-                $last_update = $catalog->last_clean;
-            }
-        }
-
-        return $last_update;
-    }
-
     public static function setSysSections($xml, $catalogs)
     {
         foreach ($catalogs as $id) {
@@ -424,7 +405,7 @@ class Plex_XML_Data
             $dir->addAttribute('scanner', 'Plex Music Scanner');
             $dir->addAttribute('language', 'en');
             $dir->addAttribute('uuid', self::uuidFromSubKey($id));
-            $dir->addAttribute('updatedAt', self::getLastUpdate($catalogs));
+            $dir->addAttribute('updatedAt', Catalog::getLastUpdate($catalogs));
             self::setSectionXContent($dir, $catalog, 'title');
             //$date = new DateTime("2013-01-01");
             //$dir->addAttribute('createdAt', $date->getTimestamp());
