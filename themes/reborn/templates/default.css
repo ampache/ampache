@@ -1666,3 +1666,7 @@ ol, ul, #rightbar ul {
 .user_avatar {
     float: right;
 }
+
+.user_online{background:#0f0;}
+.user_offline{background:#7f0000;}
+.user_disabled{background:#ccc;}
