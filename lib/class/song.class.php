@@ -922,11 +922,12 @@ class Song extends database_object implements media
         $this->f_title = $this->title;
 
         // Create Links for the different objects
-        $this->link = AmpConfig::get('web_path') . "/song.php?action=show_song&song_id=" . $this->id;
-        $this->f_link = "<a href=\"" . scrub_out($this->link) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_title) . "</a>";
-        $this->f_album_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->f_album_full) . "\"> " . scrub_out($this->f_album) . "</a>";
-        $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
-        $this->f_album_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->f_album_artist_full) . "\"> " . scrub_out($this->f_album_artist_full) . "</a>";
+        $this->link = AmpConfig::get('web_path') . "/server/ajax.server.php?page=content&subpage=song&action=show_song&song_id=" . $this->id;
+        $this->f_link = UI::create_link('content', 'song', array('action' => 'show_song', 'song_id' => $this->id), scrub_out($this->f_title), 'song_show_song_' . $this->id, '', '', scrub_out($this->f_artist) . " - " . scrub_out($this->title));
+        $this->f_album_link = UI::create_link('content', 'albums', array('action' => 'show', 'album'  => $this->album), scrub_out($this->f_album_full), 'song_show_album_' . $this->album, '', '', scrub_out($this->f_album_full));
+        $this->f_artist_link = UI::create_link('content', 'artists', array('action' => 'show', 'artist' => $this->artist), scrub_out($this->f_artist), 'song_show_artist_' . $this->artist, '', '', scrub_out($this->f_artist_full));
+        $this->f_album_artist_link = UI::create_link('content', 'artists', array('action' => 'show', 'artist' => $this->album_artist), scrub_out($this->f_album_artist_full), 'song_show_album_artist_' . $this->album_artist, '', '', scrub_out($this->f_album_artist_full));
+
 
         // Format the Bitrate
         $this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);

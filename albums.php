@@ -22,7 +22,9 @@
 
 require_once 'lib/init.php';
 
-require_once AmpConfig::get('prefix') . '/templates/header.inc.php';
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_header();
+}
 
 /* Switch on Action */
 switch ($_REQUEST['action']) {
@@ -236,4 +238,6 @@ switch ($_REQUEST['action']) {
     break;
 } // switch on view
 
-UI::show_footer();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_footer();
+}

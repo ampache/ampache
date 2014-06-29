@@ -26,7 +26,7 @@
 <!-- Randomly selected albums of the moment -->
 <?php
 if (Art::is_enabled()) {
-    echo Ajax::observe('window','load',Ajax::action('?page=index&action=random_albums','random_albums'));
+    echo Ajax::observe('window','load ajaxComplete',Ajax::action('?page=index&action=random_albums','random_albums'));
 ?>
 <div id="random_selection">
     <?php UI::show_box_top(T_('Albums of the Moment')); echo T_('Loading...'); UI::show_box_bottom(); ?>

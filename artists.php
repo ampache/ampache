@@ -22,7 +22,9 @@
 
 require_once 'lib/init.php';
 
-UI::show_header();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_header();
+}
 
 /**
  * Display Switch
@@ -80,4 +82,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch
 
-UI::show_footer();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_footer();
+}

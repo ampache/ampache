@@ -60,9 +60,9 @@ class Ajax
         $observe = "<script type=\"text/javascript\">";
         $methodact = (($method == 'click') ? "update_action();" : "");
         if (!empty($confirm)) {
-            $observe .= "$(".$source_txt.").on('".$method."', function(){ ".$methodact." if (confirm(\"".$confirm."\")) { ".$action." }});";
+            $observe .= "$(".$source_txt.").on('".$method."', function(){ ".$methodact." if (confirm(\"".$confirm."\")) { ".$action." }$(".$source_txt.").off('ajaxComplete');});";
         } else {
-            $observe .= "$(".$source_txt.").on('".$method."', function(){ ".$methodact." ".$action.";});";
+            $observe .= "$(".$source_txt.").on('".$method."', function(){ ".$methodact." ".$action."; $(".$source_txt.").off('ajaxComplete');});";
         }
         $observe .= "</script>";
 
@@ -139,7 +139,7 @@ class Ajax
      * This prints out the specified text as a link and sets up the required
      * ajax for the link so it works correctly
      */
-    public static function text($action, $text, $source, $post='', $class='')
+    public static function text($action, $text, $source, $post='', $class='', $title = '')
     {
         // Avoid duplicate id
         $source .= '_' . time();
@@ -152,13 +152,35 @@ class Ajax
             $class = ' class="' . $class . '"';
         }
 
-        $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>$text</a>\n";
+        if ($title) {
+            $title = ' title="' . $title . '"';
+        }
+
+        $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class $title>$text</a>\n";
 
         $string .= self::observe($source, 'click', $ajax_string);
 
         return $string;
 
     } // text
+
+    /**
+     * make_url
+     * This makes a string to append at the end of a URL for an ajax call. It takes multiple
+     * fields to build more organized URLs.
+     * @param  string $page    Name of the main page that will be called by ajax.server.php.
+     * @param  string $subpage Name of the sub page that will be used filtered by page.ajax.php.
+     * @param  array  $calls   Array of the key=>value to append in the URL in format &key=value.
+     * @return string          The string to append at the end of the URL.
+     */
+    public static function make_url($page, $subpage, $calls = array())
+    {
+        $url = '?page=' . $page . '&subpage=' . $subpage;
+        foreach ($calls as $key => $value) {
+            $url .= '&' . $key . '=' . $value;
+        }
+        return $url;
+    } // make_url
 
     /**
      * run

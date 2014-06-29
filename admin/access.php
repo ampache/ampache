@@ -27,7 +27,9 @@ if (!Access::check('interface','100')) {
     exit();
 }
 
-UI::show_header();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_header();
+}
 
 switch ($_REQUEST['action']) {
     case 'delete_record':
@@ -107,4 +109,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') .'/templates/show_access_list.inc.php';
     break;
 } // end switch on action
-UI::show_footer();
+
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_footer();
+}

@@ -22,7 +22,9 @@
 
 require_once 'lib/init.php';
 
-UI::show_header();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_header();
+}
 
 // Check to see if we've got the rights to be here
 if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface','25')) {
@@ -84,4 +86,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch action
 
-UI::show_footer();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_footer();
+}

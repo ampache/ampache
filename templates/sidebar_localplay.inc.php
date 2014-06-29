@@ -38,10 +38,10 @@ if ($server_allow && $controller && $access_check) {
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Localplay'); ?>"><?php echo T_('Localplay'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_localplay']) ? $_COOKIE['sb_localplay'] : 'expanded'; ?>" id="localplay" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></h4>
     <ul class="sb3" id="sb_localplay_info">
 <?php if (Access::check('localplay','75')) { ?>
-    <li id="sb_localplay_info_add_instance"><a href="<?php echo $web_path; ?>/localplay.php?action=show_add_instance"><?php echo T_('Add Instance'); ?></a></li>
-    <li id="sb_localplay_info_show_instances"><a href="<?php echo $web_path; ?>/localplay.php?action=show_instances"><?php echo T_('Show instances'); ?></a></li>
+    <li id="sb_localplay_info_add_instance"><?php echo UI::create_link('content', 'localplay', array('action' => 'show_add_instance'), T_('Add Instance'), 'localplay_show_add_instance'); ?></li>
+    <li id="sb_localplay_info_show_instances"><?php echo UI::create_link('content', 'localplay', array('action' => 'show_instances'), T_('Show Instances'), 'localplay_show_instances'); ?></li>
 <?php } ?>
-    <li id="sb_localplay_info_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo T_('Show Playlist'); ?></a></li>
+    <li id="sb_localplay_info_show"><?php echo UI::create_link('content', 'localplay', array('action' => 'show_playlist'), T_('Show Playlist'), 'localplay_show_playlist'); ?></li>
     </ul>
   </li>
 <?php } ?>

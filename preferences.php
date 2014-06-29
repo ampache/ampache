@@ -129,7 +129,9 @@ switch ($_REQUEST['action']) {
     break;
 } // End Switch Action
 
-UI::show_header();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_header();
+}
 
 /**
  * switch on the view
@@ -144,4 +146,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch on action
 
-UI::show_footer();
+if (!defined('AJAX_INCLUDE')) {
+    UI::show_footer();
+}

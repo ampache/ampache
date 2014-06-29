@@ -29,20 +29,20 @@
         }
         ?>
         <ul class="sb3" id="sb_browse_bb">
-            <li id="sb_browse_bb_SongTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo T_('Song Titles'); ?></a></li>
-            <li id="sb_browse_bb_Album"><a href="<?php echo $web_path; ?>/browse.php?action=album"><?php echo T_('Albums'); ?></a></li>
-            <li id="sb_browse_bb_Artist"><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo T_('Artists'); ?></a></li>
-            <li id="sb_browse_bb_Tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag"><?php echo T_('Tag Cloud'); ?></a></li>
-            <li id="sb_browse_bb_Playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo T_('Playlists'); ?></a></li>
-            <li id="sb_browse_bb_SmartPlaylist"><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo T_('Smart Playlists'); ?></a></li>
-            <li id="sb_browse_bb_Channel"><a href="<?php echo $web_path; ?>/browse.php?action=channel"><?php echo T_('Channels'); ?></a></li>
+            <li id="sb_browse_bb_SongTitle"><?php echo UI::create_link('content', 'browse', array('action' => 'song'), T_('Song Titles'), 'home_browse_song'); ?></li>
+            <li id="sb_browse_bb_Album"><?php echo UI::create_link('content', 'browse', array('action' => 'album'), T_('Albums'), 'home_browse_album'); ?></li>
+            <li id="sb_browse_bb_Artist"><?php echo UI::create_link('content', 'browse', array('action' => 'artist'), T_('Artists'), 'home_browse_artist'); ?></li>
+            <li id="sb_browse_bb_Tags"><?php echo UI::create_link('content', 'browse', array('action' => 'tag'), T_('Tag Cloud'), 'home_browse_tag'); ?></li>
+            <li id="sb_browse_bb_Playlist"><?php echo UI::create_link('content', 'browse', array('action' => 'playlist'), T_('Playlists'), 'home_browse_playlist'); ?></li>
+            <li id="sb_browse_bb_SmartPlaylist"><?php echo UI::create_link('content', 'browse', array('action' => 'smartplaylist'), T_('Smart Playlists'), 'home_browse_smartplaylist'); ?></li>
+            <li id="sb_browse_bb_Channel"><?php echo UI::create_link('content', 'browse', array('action' => 'channel'), T_('Channel'), 'home_browse_channel'); ?></li>
             <?php if (AmpConfig::get('broadcast')) { ?>
-            <li id="sb_browse_bb_Broadcast"><a href="<?php echo $web_path; ?>/browse.php?action=broadcast"><?php echo T_('Broadcasts'); ?></a></li>
+            <li id="sb_browse_bb_Broadcast"><?php echo UI::create_link('content', 'browse', array('action' => 'broadcast'), T_('Broadcasts'), 'home_browse_broadcast'); ?></li>
             <?php } ?>
-            <li id="sb_browse_bb_RadioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo T_('Radio Stations'); ?></a></li>
-            <li id="sb_browse_bb_Video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo T_('Videos'); ?></a></li>
+            <li id="sb_browse_bb_RadioStation"><?php echo UI::create_link('content', 'browse', array('action' => 'live_stream'), T_('Radio Stations'), 'home_browse_live_stream'); ?></li>
+            <li id="sb_browse_bb_Video"><?php echo UI::create_link('content', 'browse', array('action' => 'video'), T_('Videos'), 'home_browse_video'); ?></li>
             <?php if (AmpConfig::get('allow_upload')) { ?>
-            <li id="sb_browse_bb_Upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo T_('Upload'); ?></a></li>
+            <li id="sb_browse_bb_Upload"><?php echo UI::create_link('content', 'upload', array(), T_('Upload'), 'home_upload'); ?></li>
             <?php } ?>
         </ul>
     </li>
@@ -51,9 +51,9 @@
     <li>
         <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Playlist'); ?>"><?php echo T_('Playlist'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_playlist']) ? $_COOKIE['sb_playlist'] : 'expanded'; ?>" id="playlist" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
         <ul class="sb3" id="sb_home_info">
-            <li id="sb_home_info_CurrentlyPlaying"><a href="<?php echo AmpConfig::get('web_path') . ((AmpConfig::get('iframes')) ? '/?framed=1' : ''); ?>"><?php echo T_('Currently Playing'); ?></a></li>
+            <li id="sb_home_info_CurrentlyPlaying"><?php echo UI::create_link('content', 'index', array('action' => 'currently_playing'), T_('Currently Playing'), 'home_index_currently_playing'); ?></li>
             <?php if (AmpConfig::get('allow_democratic_playback')) { ?>
-            <li id="sb_home_democratic_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo T_('Democratic'); ?></a></li>
+            <li id="sb_home_democratic_playlist"><?php echo UI::create_link('content', 'democratic', array('action' => 'show_playlist'), T_('Democratic'), 'home_democratic_show_playlist'); ?></li>
             <?php } ?>
             <?php if ($server_allow = AmpConfig::get('allow_localplay_playback') AND $controller = AmpConfig::get('localplay_controller') AND $access_check = Access::check('localplay','5')) { ?>
             <?php
@@ -62,9 +62,9 @@
             $current_instance = $localplay->current_instance();
             $class = $current_instance ? '' : ' class="active_instance"';
             ?>
-            <li id="sb_localplay_info_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo T_('Localplay'); ?></a></li>
+            <li id="sb_localplay_info_show"><?php echo UI::create_link('content', 'localplay', array('action' => 'show_playlist'), T_('Localplay'), 'home_localplay_show_playlist'); ?></li>
             <?php } ?>
-            <li id="sb_browse_bb_Playlist"><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import'); ?></a></li>
+            <li id="sb_browse_bb_Playlist"><?php echo UI::create_link('content', 'playlist', array('action' => 'show_import_playlist'), T_('Import'), 'home_playlist_import_playlist'); ?></li>
         </ul>
     </li>
     <li>
@@ -74,41 +74,41 @@
             <li id="sb_home_random_album"><?php echo Ajax::text('?page=random&action=album', T_('Album'),'home_random_album'); ?></li>
             <li id="sb_home_random_artist"><?php echo Ajax::text('?page=random&action=artist', T_('Artist'),'home_random_artist'); ?></li>
             <li id="sb_home_random_playlist"><?php echo Ajax::text('?page=random&action=playlist', T_('Playlist'),'home_random_playlist'); ?></li>
-            <li id="sb_home_random_advanced"><a href="<?php echo $web_path; ?>/random.php?action=advanced&type=song"><?php echo T_('Advanced'); ?></a></li>
+            <li id="sb_home_random_advanced"><?php echo UI::create_link('content', 'random', array('action' => 'advanced', 'type' => 'song'), T_('Advanced'), 'home_random_advanced'); ?></li>
         </ul>
     </li>
     <li>
         <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Information'); ?>"><?php echo T_('Information'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_information']) ? $_COOKIE['sb_information'] : 'expanded'; ?>" id="information" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
         <ul class="sb3" id="sb_home_info">
-            <li id="sb_home_info_Recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent"><?php echo T_('Recent'); ?></a></li>
-            <li id="sb_home_info_Newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo T_('Newest'); ?></a></li>
-            <li id="sb_home_info_Popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo T_('Popular'); ?></a></li>
+            <li id="sb_home_info_Recent"><?php echo UI::create_link('content', 'stats', array('action' => 'recent'), T_('Recent'), 'home_stats_recent'); ?></li>
+            <li id="sb_home_info_Newest"><?php echo UI::create_link('content', 'stats', array('action' => 'newest'), T_('Newest'), 'home_stats_newest'); ?></li>
+            <li id="sb_home_info_Popular"><?php echo UI::create_link('content', 'stats', array('action' => 'popular'), T_('Popular'), 'home_stats_popular'); ?></li>
             <?php if (AmpConfig::get('ratings')) { ?>
-            <li id="sb_home_info_Highest"><a href="<?php echo $web_path; ?>/stats.php?action=highest"><?php echo T_('Top Rated'); ?></a></li>
+            <li id="sb_home_info_Highest"><?php echo UI::create_link('content', 'stats', array('action' => 'highest'), T_('Top Rated'), 'home_stats_highest'); ?></li>
             <?php } ?>
             <?php if (AmpConfig::get('userflags')) { ?>
-            <li id="sb_home_info_UserFlag"><a href="<?php echo $web_path; ?>/stats.php?action=userflag"><?php echo T_('Favorites'); ?></a></li>
+            <li id="sb_home_info_UserFlag"><?php echo UI::create_link('content', 'stats', array('action' => 'userflag'), T_('Favorites'), 'home_stats_userflag'); ?></li>
             <?php } ?>
             <?php if (AmpConfig::get('wanted')) { ?>
-            <li id="sb_home_info_Wanted"><a href="<?php echo $web_path; ?>/stats.php?action=wanted"><?php echo T_('Wanted List'); ?></a></li>
+            <li id="sb_home_info_Wanted"><?php echo UI::create_link('content', 'stats', array('action' => 'wanted'), T_('Wanted List'), 'home_stats_wanted'); ?></li>
             <?php } ?>
             <?php if (AmpConfig::get('share')) { ?>
-            <li id="sb_home_info_Share"><a href="<?php echo $web_path; ?>/stats.php?action=share"><?php echo T_('Shared Objects'); ?></a></li>
+            <li id="sb_home_info_Share"><?php echo UI::create_link('content', 'stats', array('action' => 'share'), T_('Shared Objects'), 'home_stats_share'); ?></li>
             <?php } ?>
             <?php if (AmpConfig::get('allow_upload')) { ?>
-            <li id="sb_browse_bb_Upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo T_('Uploads'); ?></a></li>
+            <li id="sb_browse_bb_Upload"><?php echo UI::create_link('content', 'stats', array('action' => 'upload'), T_('Uploads'), 'home_stats_upload'); ?></li>
             <?php } ?>
-            <li id="sb_home_info_Statistics"><a href="<?php echo $web_path; ?>/stats.php?action=show"><?php echo T_('Statistics'); ?></a></li>
+             <li id="sb_home_info_Statistics"><?php echo UI::create_link('content', 'stats', array('action' => 'show'), T_('Statistics'), 'home_stats_show'); ?></li>
         </ul>
     </li>
     <li>
         <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Search'); ?>"><?php echo T_('Search'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_search']) ? $_COOKIE['sb_search'] : 'expanded'; ?>" id="search" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
         <ul class="sb3" id="sb_home_search">
-          <li id="sb_home_search_song"><a href="<?php echo $web_path; ?>/search.php?type=song"><?php echo T_('Songs'); ?></a></li>
-          <li id="sb_home_search_album"><a href="<?php echo $web_path; ?>/search.php?type=album"><?php echo T_('Albums'); ?></a></li>
-          <li id="sb_home_search_artist"><a href="<?php echo $web_path; ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a></li>
-          <li id="sb_home_search_playlist"><a href="<?php echo $web_path; ?>/search.php?type=playlist"><?php echo T_('Playlists'); ?></a></li>
-          <li id="sb_home_search_video"><a href="<?php echo $web_path; ?>/search.php?type=video"><?php echo T_('Videos'); ?></a></li>
+          <li id="sb_home_search_song"><?php echo UI::create_link('content', 'search', array('action' => 'search', 'type' => 'song'), T_('Songs'), 'home_search_song'); ?></li>
+          <li id="sb_home_search_album"><?php echo UI::create_link('content', 'search', array('action' => 'search', 'type' => 'album'), T_('Albums'), 'home_search_album'); ?></li>
+          <li id="sb_home_search_artist"><?php echo UI::create_link('content', 'search', array('action' => 'search', 'type' => 'artist'), T_('Artists'), 'home_search_artist'); ?></li>
+          <li id="sb_home_search_playlist"><?php echo UI::create_link('content', 'search', array('action' => 'search', 'type' => 'playlist'), T_('Playlists'), 'home_search_playlist'); ?></li>
+          <li id="sb_home_search_video"><?php echo UI::create_link('content', 'search', array('action' => 'search', 'type' => 'video'), T_('Videos'), 'home_search_video'); ?></li>
         </ul>
     </li>
 </ul>
