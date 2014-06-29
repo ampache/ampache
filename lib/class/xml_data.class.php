@@ -173,11 +173,20 @@ class XML_Data
         $string = '';
 
         if (is_array($tags)) {
-
+        
+            $atags = array();
             foreach ($tags as $tag_id => $data) {
-                $string .= "\t<tag id=\"" . $data['id'] . "\" " .
-                "user=\"" . $data['user'] . "\" " .
-                "ut_id=\"" . $tag_id . "\" " .
+                if (array_key_exists($data['id'], $atags)) {
+                    $atags[$data['id']]['count']++;
+                } else {
+                    $atags[$data['id']] = array('name' => $data['name'],
+                        'count' => 1);
+                }
+            }
+
+            foreach ($atags as $id => $data) {
+                $string .= "\t<tag id=\"" . $id . "\" " .
+                "count=\"" . $data['count'] . "\" " .
                 "><![CDATA[" . $data['name'] . "]]></tag>\n";
             }
         }
