@@ -817,7 +817,7 @@ abstract class Catalog extends database_object
                 $preferred_filename = "folder.$extension";
             }
 
-            $file = "$dir/$preferred_filename";
+            $file = $dir . DIRECTORY_SEPARATOR . $preferred_filename;
             if ($file_handle = fopen($file,"w")) {
                 if (fwrite($file_handle, $art->raw)) {
 
