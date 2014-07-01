@@ -7,6 +7,8 @@ if (!AmpConfig::get('upnp_backend')) {
     exit;
 }
 
+set_time_limit(600);
+
 header ("Content-Type: text/html; charset=UTF-8");
 $rootMediaItems = array();
 $rootMediaItems[] = Upnp_Api::_musicMetadata('');
@@ -83,7 +85,7 @@ $rootMediaItems[] = Upnp_Api::_musicMetadata('');
 
     $totMatches = count($items);
     if ($totMatches == 0) {
-        $domDIDL = _createDIDL('');
+        $domDIDL = Upnp_Api::createDIDL('');
         $numRet = 0;
     } else {
         if ($upnpRequest['requestedcount'] == 0) {
@@ -99,4 +101,5 @@ $rootMediaItems[] = Upnp_Api::_musicMetadata('');
     $soapXML = $domSOAP->saveXML();
 
     echo $soapXML;
+    debug_event('upnp', 'Response: ' . $soapXML, '5');
 ?>

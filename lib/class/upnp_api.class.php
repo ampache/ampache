@@ -585,7 +585,7 @@ class Upnp_Api
             'childCount'	=> $album->song_count,
             'dc:title'		=> $album->f_title,
             'upnp:class'	=> 'object.container',
-            'upnp:album_art'=> $art_url,
+            //'upnp:album_art'=> $art_url,
         );
     }
 
@@ -615,6 +615,7 @@ class Upnp_Api
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::$session : false;
         $art_url = Art::url($song->album, 'album', $api_session);
+
         $fileTypesByExt = self::_getFileTypes();
         $arrFileType = $fileTypesByExt[$song->type];
 
@@ -623,7 +624,7 @@ class Upnp_Api
             'parentID'		=> $parent,
             'dc:title'		=> $song->f_title,
             'upnp:class'	=> (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
-            'upnp:album_art'=> $art_url,
+            //'upnp:album_art'=> $art_url,
             'dc:date'       => date("c", $song->addition_time),
             'res'           => Song::play_url($song->id),
             'size'          => $song->size,
