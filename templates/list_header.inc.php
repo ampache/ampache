@@ -143,14 +143,15 @@ if ($pages > 1 && $start > -1) {
     ksort($page_data['down']);
 ?>
 <?php if ($browse->get_use_pages()) { ?>
+    <span class="navmenu-border">
     <span class="navmenu-button"><?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $prev_offset . '&browse_uid=' . $uid, T_('Prev'),'browse_' . $uid . 'prev','','prev'); ?></span>
     &nbsp;
-	<?php
-		/* Echo current page */
+    <?php
+        /* Echo current page */
         $current_page++;
     ?>
-	<?php echo '&nbsp;' . T_('Page') . ':' ?>
-	<input type="text" id="browse_<?php echo $browse->id; ?>_custom_value_<?php echo $is_header; ?>" class="browse_custom_value" name="value" value="<?php echo $current_page; ?>" onKeyUp="delayRun(this, '750', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=custom'); ?>', 'browse_<?php echo $browse->id; ?>_custom_value_<?php echo $is_header; ?>');">
+    <?php echo '&nbsp;' . T_('Page') . ':' ?>
+    <input class="navmenu-input" type="text" id="browse_<?php echo $browse->id; ?>_custom_value_<?php echo $is_header; ?>" class="browse_custom_value" name="value" value="<?php echo $current_page; ?>" onKeyUp="delayRun(this, '750', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=custom'); ?>', 'browse_<?php echo $browse->id; ?>_custom_value_<?php echo $is_header; ?>');">
     <?php
         /* Echo everything above us */
         foreach ($page_data['up'] as $page=>$offset) {
@@ -161,13 +162,14 @@ if ($pages > 1 && $start > -1) {
     ?>
     &nbsp;
     <span class="navmenu-button"><?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $next_offset . '&browse_uid=' . $uid, T_('Next'),'browse_' . $uid . 'next','','next'); ?></span>
-	   &nbsp;
+    &nbsp;
     <span class="navmenu-button"><?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=-1&browse_uid=' . $uid, T_('All'),'browse_' . $uid . 'all','','all'); ?></span>
+    </span>
 <?php
     }
 } // if stuff
 ?>
-	&nbsp;
+    &nbsp;
     <?php echo T_('Item Count') . ': ' . $total; ?>
     &nbsp;
     <span class="browse-options">
