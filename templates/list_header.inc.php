@@ -43,7 +43,7 @@ if (isset($_REQUEST['browse_uid'])) {
     $uid = AmpConfig::get('list_header_uid');
     AmpConfig::set('list_header_uid', ++$uid, true);
 }
-$sides  = 5;
+$sides  = 0;
 
 ?>
 <?php if (!$browse->get_use_pages() && !$is_header) { ?>
@@ -116,7 +116,7 @@ if ($pages > 1 && $start > -1) {
     $page = $current_page;
     $i = 0;
     while ($page > 0) {
-        if ($i == $sides) { $page_data['down'][1] = '...'; $page_data['down'][0] = '0'; break; }
+        if ($i == $sides) { $page_data['down'][1] = 'of'; $page_data['down'][0] = '0'; break; }
         $i++;
         $page = $page - 1;
         $page_data['down'][$page] = $page * $limit;
@@ -129,7 +129,7 @@ if ($pages > 1 && $start > -1) {
         if ($page * $limit > $total) { break; }
         if ($i == $sides) {
             $key = $pages - 1;
-            if (!$page_data['up'][$key]) { $page_data['up'][$key] = '...'; }
+            if (!$page_data['up'][$key]) { $page_data['up'][$key] = 'of'; }
             $page_data['up'][$pages] = ($pages - 1) * $limit;
             break;
         }
@@ -143,37 +143,31 @@ if ($pages > 1 && $start > -1) {
     ksort($page_data['down']);
 ?>
 <?php if ($browse->get_use_pages()) { ?>
-    <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $prev_offset . '&browse_uid=' . $uid, T_('Prev'),'browse_' . $uid . 'prev','','prev'); ?>
-    <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $next_offset . '&browse_uid=' . $uid, T_('Next'),'browse_' . $uid . 'next','','next'); ?>
-    <?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=-1&browse_uid=' . $uid, T_('All'),'browse_' . $uid . 'all','','all'); ?>
-    <?php
-        /* Echo everything below us */
-        foreach ($page_data['down'] as $page => $offset) {
-            if ($offset === '...') { echo '...&nbsp;'; } else {
-            // Hack Alert
-            $page++;
-                echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $offset . '&browse_uid=' . $uid,$page,'browse_' . $uid . 'page_' . $page,'','page-nb');
-            }
-        } // end foreach down
-
-        /* Echo current page */
+    <span class="navmenu-button"><?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $prev_offset . '&browse_uid=' . $uid, T_('Prev'),'browse_' . $uid . 'prev','','prev'); ?></span>
+    &nbsp;
+	<?php
+		/* Echo current page */
         $current_page++;
     ?>
-    <span class="page-nb selected"><?php echo $current_page; ?></span>
+	<?php echo '&nbsp;' . T_('Page') . ':' ?>
+	<input type="text" id="browse_<?php echo $browse->id; ?>_custom_value_<?php echo $is_header; ?>" class="browse_custom_value" name="value" value="<?php echo $current_page; ?>" onKeyUp="delayRun(this, '750', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=custom'); ?>', 'browse_<?php echo $browse->id; ?>_custom_value_<?php echo $is_header; ?>');">
     <?php
-
         /* Echo everything above us */
         foreach ($page_data['up'] as $page=>$offset) {
-            if ($offset === '...') { echo '...&nbsp;'; } else {
+            if ($offset === 'of') { echo 'of&nbsp;'; } else {
                 echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $offset . '&browse_uid=' . $uid,$page,'browse_' . $uid . 'page_' . $page,'','page-nb');
             } // end else
         } // end foreach up
     ?>
-    <input type="text" id="browse_<?php echo $browse->id; ?>_custom_value_<?php echo $is_header; ?>" class="browse_custom_value" name="value" value="<?php echo $current_page; ?>" onKeyUp="delayRun(this, '500', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=options&browse_id=' . $browse->id . '&option=custom'); ?>', 'browse_<?php echo $browse->id; ?>_custom_value_<?php echo $is_header; ?>');">
+    &nbsp;
+    <span class="navmenu-button"><?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $next_offset . '&browse_uid=' . $uid, T_('Next'),'browse_' . $uid . 'next','','next'); ?></span>
+	   &nbsp;
+    <span class="navmenu-button"><?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=-1&browse_uid=' . $uid, T_('All'),'browse_' . $uid . 'all','','all'); ?></span>
 <?php
     }
 } // if stuff
 ?>
+	&nbsp;
     <?php echo T_('Item Count') . ': ' . $total; ?>
     &nbsp;
     <span class="browse-options">
