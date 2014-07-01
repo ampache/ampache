@@ -526,10 +526,22 @@ abstract class Catalog extends database_object
         $data = Dba::fetch_row($db_results);
         $artists = $data[0];
 
+        $sql = 'SELECT COUNT(`id`) FROM `search`';
+        $db_results = Dba::read($sql, $params);
+        $data = Dba::fetch_row($db_results);
+        $smartplaylists = $data[0];
+
+        $sql = 'SELECT COUNT(`id`) FROM `playlist`';
+        $db_results = Dba::read($sql, $params);
+        $data = Dba::fetch_row($db_results);
+        $playlists = $data[0];
+
         $results = array();
         $results['songs'] = $songs;
         $results['albums'] = $albums;
         $results['artists'] = $artists;
+        $results['playlists'] = $playlists;
+        $results['smartplaylists'] = $smartplaylists;
         $results['size'] = $size;
         $results['time'] = $time;
 

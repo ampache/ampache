@@ -422,6 +422,9 @@ class Update
         $update_string = '- Add DAAP backend preference.<br />';
         $version[] = array('version' => '370007','description' => $update_string);
 
+        $update_string = '- Add UPnP backend preference.<br />';
+        $version[] = array('version' => '370008','description' => $update_string);
+
         return $version;
     }
 
@@ -2678,6 +2681,24 @@ class Update
             "`creationdate` int(11) unsigned NOT NULL," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         Dba::write($sql);
+
+        return true;
+    }
+
+    /**
+     * update_370008
+     *
+     * Add UPnP backend preference
+     *
+     */
+    public static function update_370008()
+    {
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('upnp_backend','0','Use UPnP backend',25,'boolean','system')";
+        Dba::write($sql);
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        Dba::write($sql, array($id));
 
         return true;
     }
