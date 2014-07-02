@@ -25,7 +25,7 @@ $web_path = AmpConfig::get('raw_web_path');
         <modelName>Ampache</modelName>
         <modelNumber><?php echo AmpConfig::get('version'); ?></modelNumber>
         <modelURL>http://ampache.org</modelURL>
-        <UDN>uuid:2d8a2e2b-7869-4836-a9ec-76447d620734</UDN>
+        <UDN>uuid:<?php echo Upnp_Api::UUIDSTR; ?></UDN>
         <iconList>
             <icon>
                 <mimetype>image/png</mimetype>

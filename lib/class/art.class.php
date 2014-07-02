@@ -550,10 +550,17 @@ class Art extends database_object
         $mime = isset($thumb_mime) ? $thumb_mime : (isset($mime) ? $mime : null);
         $extension = self::extension($mime);
 
-        $url = AmpConfig::get('web_path') . '/image.php?id=' . scrub_out($uid) . '&object_type=' . scrub_out($type) . '&auth=' . $sid;
-        if (!empty($extension)) {
-            $name = 'art.' . $extension;
-            $url .= '&name=' . $name;
+        if (AmpConfig::get('stream_beautiful_url')) {
+            if (empty($extension)) {
+                $extension = 'jpg';
+            }
+            $url = AmpConfig::get('web_path') . '/play/art/' . $sid . '/' . scrub_out($uid) . '/thumb.' . $extension;
+        } else {
+            $url = AmpConfig::get('web_path') . '/image.php?id=' . scrub_out($uid) . '&object_type=' . scrub_out($type) . '&auth=' . $sid;
+            if (!empty($extension)) {
+                $name = 'art.' . $extension;
+                $url .= '&name=' . $name;
+            }
         }
 
         return $url;

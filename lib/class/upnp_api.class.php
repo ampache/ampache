@@ -38,6 +38,8 @@ class Upnp_Api
     # object.item.textItem
     # object.container
 
+    const UUIDSTR = '2d8a2e2b-7869-4836-a9ec-76447d620734';
+
     /**
      * constructor
      * This really isn't anything to do here, so it's private
@@ -57,7 +59,6 @@ class Upnp_Api
 
     public static function sddpSend($delay=15, $host="239.255.255.250", $port=1900)
     {
-        $uuidStr = '2d8a2e2b-7869-4836-a9ec-76447d620734';
         $strHeader  = 'NOTIFY * HTTP/1.1' . "\r\n";
         $strHeader .= 'HOST: ' . $host . ':' . $port . "\r\n";
         $strHeader .= 'LOCATION: http://' . AmpConfig::get('http_host') . ':'. AmpConfig::get('http_port') . AmpConfig::get('raw_web_path') . '/upnp/MediaServerServiceDesc.php' . "\r\n";
@@ -65,28 +66,28 @@ class Upnp_Api
         $strHeader .= 'CACHE-CONTROL: max-age=1800' . "\r\n";
         $strHeader .= 'NTS: ssdp:alive' . "\r\n";
         $rootDevice = 'NT: upnp:rootdevice' . "\r\n";
-        $rootDevice .= 'USN: uuid:' . $uuidStr . '::upnp:rootdevice' . "\r\n". "\r\n";
+        $rootDevice .= 'USN: uuid:' . self::UUIDSTR . '::upnp:rootdevice' . "\r\n". "\r\n";
 
         $buf = $strHeader . $rootDevice;
         self::udpSend($buf, $delay, $host, $port);
 
-        $uuid = 'NT: uuid:' . $uuidStr . "\r\n";
-        $uuid .= 'USN: uuid:' . $uuidStr . "\r\n". "\r\n";
+        $uuid = 'NT: uuid:' . self::UUIDSTR . "\r\n";
+        $uuid .= 'USN: uuid:' . self::UUIDSTR . "\r\n". "\r\n";
         $buf = $strHeader . $uuid;
         self::udpSend($buf, $delay, $host, $port);
 
         $deviceType = 'NT: urn:schemas-upnp-org:device:MediaServer:1' . "\r\n";
-        $deviceType .= 'USN: uuid:' . $uuidStr . '::urn:schemas-upnp-org:device:MediaServer:1' . "\r\n". "\r\n";
+        $deviceType .= 'USN: uuid:' . self::UUIDSTR . '::urn:schemas-upnp-org:device:MediaServer:1' . "\r\n". "\r\n";
         $buf = $strHeader . $deviceType;
         self::udpSend($buf, $delay, $host, $port);
 
         $serviceCM = 'NT: urn:schemas-upnp-org:service:ConnectionManager:1' . "\r\n";
-        $serviceCM .= 'USN: uuid:' . $uuidStr . '::urn:schemas-upnp-org:service:ConnectionManager:1' . "\r\n". "\r\n";
+        $serviceCM .= 'USN: uuid:' . self::UUIDSTR . '::urn:schemas-upnp-org:service:ConnectionManager:1' . "\r\n". "\r\n";
         $buf = $strHeader . $serviceCM;
         self::udpSend($buf, $delay, $host, $port);
 
         $serviceCD = 'NT: urn:schemas-upnp-org:service:ContentDirectory:1' . "\r\n";
-        $serviceCD .= 'USN: uuid:' . $uuidStr . '::urn:schemas-upnp-org:service:ContentDirectory:1' . "\r\n". "\r\n";
+        $serviceCD .= 'USN: uuid:' . self::UUIDSTR . '::urn:schemas-upnp-org:service:ContentDirectory:1' . "\r\n". "\r\n";
         $buf = $strHeader . $serviceCD;
         self::udpSend($buf, $delay, $host, $port);
     }
@@ -585,7 +586,7 @@ class Upnp_Api
             'childCount'	=> $album->song_count,
             'dc:title'		=> $album->f_title,
             'upnp:class'	=> 'object.container',
-            //'upnp:album_art'=> $art_url,
+            'upnp:album_art'=> $art_url,
         );
     }
 
@@ -624,7 +625,7 @@ class Upnp_Api
             'parentID'		=> $parent,
             'dc:title'		=> $song->f_title,
             'upnp:class'	=> (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
-            //'upnp:album_art'=> $art_url,
+            'upnp:album_art'=> $art_url,
             'dc:date'       => date("c", $song->addition_time),
             'res'           => Song::play_url($song->id),
             'size'          => $song->size,
