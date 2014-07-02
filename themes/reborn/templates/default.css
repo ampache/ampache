@@ -1670,3 +1670,41 @@ ol, ul, #rightbar ul {
 .user_online{background:#0f0;}
 .user_offline{background:#7f0000;}
 .user_disabled{background:#ccc;}
+
+.navmenu-button {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    background-color: transparent;
+    border: 2px solid #000;
+    text-align: center;
+}
+
+.navmenu-border {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    background-color: transparent;
+    border: 2px solid #000;
+}
+
+input.navmenu-input {
+    padding: 0px;
+    width: 50px;
+    height: 100%;
+    text-align: center;
+}
