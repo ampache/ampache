@@ -61,6 +61,7 @@ class Song extends database_object implements media
     public $f_album_artist_full;
     public $f_album_full;
     public $f_time;
+    public $f_time_h;
     public $f_track;
     public $f_bitrate;
     public $link;
@@ -933,8 +934,11 @@ class Song extends database_object implements media
 
         // Format the Time
         $min = floor($this->time/60);
-        $sec = sprintf("%02d", ($this->time%60) );
+        $sec = sprintf("%02d", ($this->time%60));
         $this->f_time = $min . ":" . $sec;
+        $hour = sprintf("%02d", floor($min/60));
+        $min_h = sprintf("%02d", ($min%60));
+        $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
 
         // Format the track (there isn't really anything to do here)
         $this->f_track = $this->track;

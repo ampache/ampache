@@ -81,8 +81,8 @@ $web_path = AmpConfig::get('raw_web_path');
             <service>
                 <serviceType>urn:schemas-upnp-org:service:ConnectionManager:1</serviceType>
                 <serviceId>urn:upnp-org:serviceId:ConnectionManager</serviceId>
-                <controlURL><?php echo $web_path; ?>/upnp/cmControl.xml</controlURL>
-                <eventSubURL><?php echo $web_path; ?>/upnp/event-reply.php</eventSubURL>
+                <controlURL><?php echo $web_path; ?>/upnp/cm-control-reply.php</controlURL>
+                <eventSubURL><?php echo $web_path; ?>/upnp/cm-event-reply.php</eventSubURL>
                 <SCPDURL><?php echo $web_path; ?>/upnp/MediaServerConnectionManager.xml</SCPDURL>
             </service>
         </serviceList>

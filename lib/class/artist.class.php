@@ -314,8 +314,8 @@ class Artist extends database_object
         $this->f_name = $name;
         $this->f_full_name = trim(trim($this->prefix) . ' ' . trim($this->name));
 
-        // If this is a fake object, we're done here
-        if ($this->_fake) { return true; }
+        // If this is a memory-only object, we're done here
+        if (!$this->id) { return true; }
 
         if ($this->catalog_id) {
             $this->f_link = AmpConfig::get('web_path') . '/artists.php?action=show&catalog=' . $this->catalog_id . '&artist=' . $this->id;

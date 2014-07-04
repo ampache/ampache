@@ -19,6 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
+ * This class is a derived work from UMSP project (http://wiki.wdlxtv.com/UMSP).
  */
 
 /**
@@ -156,8 +157,6 @@ class Upnp_Api
 
     public static function createDIDL($prmItems)
     {
-        # TODO: put object.container in container tags where they belong. But as long as the WDTVL doesn't mind... ;)
-        # $prmItems is an array of arrays
         $xmlDoc = new DOMDocument('1.0', 'utf-8');
         $xmlDoc->formatOutput = true;
 
@@ -168,9 +167,9 @@ class Upnp_Api
         $xmlDoc->appendChild($ndDIDL);
 
         # Return empty DIDL if no items present:
-        if ( (!isset($prmItems)) || ($prmItems == '') ) {
+        if ( (!isset($prmItems)) || (!is_array($prmItems)) ) {
             return $xmlDoc;
-        } # end if
+        }
 
         # Add each item in $prmItems array to $ndDIDL:
         foreach ($prmItems as $item) {
@@ -226,21 +225,29 @@ class Upnp_Api
                         $ndRes->setAttribute('colorDepth', $value);
                         $useRes = true;
                         break;
+                    case 'sampleFrequency':
+                        $ndRes->setAttribute('sampleFrequency', $value);
+                        $useRes = true;
+                        break;
+                    case 'nrAudioChannels':
+                        $ndRes->setAttribute('nrAudioChannels', $value);
+                        $useRes = true;
+                        break;
                     default:
                         $ndTag = $xmlDoc->createElement($key);
                         $ndItem->appendChild($ndTag);
                         # check if string is already utf-8 encoded
                         $ndTag_text = $xmlDoc->createTextNode((mb_detect_encoding($value,'auto')=='UTF-8')?$value:utf8_encode($value));
                         $ndTag->appendChild($ndTag_text);
-                } # end switch
+                }
                 if ($useRes) {
                     $ndItem->appendChild($ndRes);
                 }
-            } # end foreach
+            }
             $ndDIDL->appendChild($ndItem);
-        } # end foreach
+        }
         return $xmlDoc;
-    } # end function
+    }
 
 
     public static function createSOAPEnvelope($prmDIDL, $prmNumRet, $prmTotMatches, $prmResponseType = 'u:BrowseResponse', $prmUpdateID = '0')
@@ -259,6 +266,7 @@ class Upnp_Api
         $doc  = new DOMDocument('1.0', 'utf-8');
         $doc->formatOutput = true;
         $ndEnvelope = $doc->createElementNS('http://schemas.xmlsoap.org/soap/envelope/', 's:Envelope');
+        $ndEnvelope->setAttribute("s:encodingStyle", "http://schemas.xmlsoap.org/soap/encoding/");
         $doc->appendChild($ndEnvelope);
         $ndBody = $doc->createElement('s:Body');
         $ndEnvelope->appendChild($ndBody);
@@ -294,6 +302,7 @@ class Upnp_Api
                         $meta = array(
                             'id'			=> $root . '/artists',
                             'parentID'		=> $root,
+                            'restricted'    => '1',
                             'childCount'	=> $counts['artists'],
                             'dc:title'		=> T_('Artists'),
                             'upnp:class'	=> 'object.container',
@@ -317,6 +326,7 @@ class Upnp_Api
                         $meta = array(
                             'id'			=> $root . '/albums',
                             'parentID'		=> $root,
+                            'restricted'    => '1',
                             'childCount'	=> $counts['albums'],
                             'dc:title'		=> T_('Albums'),
                             'upnp:class'	=> 'object.container',
@@ -340,6 +350,7 @@ class Upnp_Api
                         $meta = array(
                             'id'			=> $root . '/songs',
                             'parentID'		=> $root,
+                            'restricted'    => '1',
                             'childCount'	=> $counts['songs'],
                             'dc:title'		=> T_('Songs'),
                             'upnp:class'	=> 'object.container',
@@ -363,6 +374,7 @@ class Upnp_Api
                         $meta = array(
                             'id'			=> $root . '/playlists',
                             'parentID'		=> $root,
+                            'restricted'    => '1',
                             'childCount'	=> $counts['playlists'],
                             'dc:title'		=> T_('Playlists'),
                             'upnp:class'	=> 'object.container',
@@ -386,6 +398,7 @@ class Upnp_Api
                         $meta = array(
                             'id'			=> $root . '/smartplaylists',
                             'parentID'		=> $root,
+                            'restricted'    => '1',
                             'childCount'	=> $counts['smartplaylists'],
                             'dc:title'		=> T_('Smart Playlists'),
                             'upnp:class'	=> 'object.container',
@@ -406,6 +419,7 @@ class Upnp_Api
                 $meta = array(
                     'id'			=> $root,
                     'parentID'		=> '0',
+                    'restricted'    => '1',
                     'childCount'    => '5',
                     'dc:title'		=> T_('Music'),
                     'upnp:class'	=> 'object.container',
@@ -569,9 +583,10 @@ class Upnp_Api
         return array(
             'id'			=> 'amp://music/artists/' . $artist->id,
             'parentID'		=> $parent,
+            'restricted'    => '1',
             'childCount'	=> $artist->albums,
             'dc:title'		=> $artist->f_name,
-            'upnp:class'	=> 'object.container',
+            'upnp:class'	=> 'object.container',   // object.container.person.musicArtist
         );
     }
 
@@ -581,12 +596,13 @@ class Upnp_Api
         $art_url = Art::url($album->id, 'album', $api_session);
 
         return array(
-            'id'			=> 'amp://music/albums/' . $album->id,
-            'parentID'		=> $parent,
-            'childCount'	=> $album->song_count,
-            'dc:title'		=> $album->f_title,
-            'upnp:class'	=> 'object.container',
-            'upnp:album_art'=> $art_url,
+            'id'			    => 'amp://music/albums/' . $album->id,
+            'parentID'		    => $parent,
+            'restricted'    => '1',
+            'childCount'	    => $album->song_count,
+            'dc:title'		    => $album->f_title,
+            'upnp:class'	    => 'object.container',  // object.container.album.musicAlbum
+            'upnp:albumArtURI'  => $art_url,
         );
     }
 
@@ -595,9 +611,10 @@ class Upnp_Api
         return array(
             'id'			=> 'amp://music/playlists/' . $playlist->id,
             'parentID'		=> $parent,
+            'restricted'    => '1',
             'childCount'	=> count($playlist->get_items()),
             'dc:title'		=> $playlist->f_name,
-            'upnp:class'	=> 'object.container',
+            'upnp:class'	=> 'object.container',  // object.container.playlistContainer
         );
     }
 
@@ -606,6 +623,7 @@ class Upnp_Api
         return array(
             'id'			=> 'amp://music/smartplaylists/' . $playlist->id,
             'parentID'		=> $parent,
+            'restricted'    => '1',
             'childCount'	=> count($playlist->get_items()),
             'dc:title'		=> $playlist->f_name,
             'upnp:class'	=> 'object.container',
@@ -621,15 +639,26 @@ class Upnp_Api
         $arrFileType = $fileTypesByExt[$song->type];
 
         return array(
-            'id'			=> 'amp://music/songs/' . $song->id,
-            'parentID'		=> $parent,
-            'dc:title'		=> $song->f_title,
-            'upnp:class'	=> (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
-            'upnp:album_art'=> $art_url,
-            'dc:date'       => date("c", $song->addition_time),
-            'res'           => Song::play_url($song->id),
-            'size'          => $song->size,
-            'protocolInfo'  => $arrFileType['mime'],
+            'id'			            => 'amp://music/songs/' . $song->id,
+            'parentID'		            => $parent,
+            'restricted'                => '1',
+            'dc:title'		            => $song->f_title,
+            'upnp:class'	            => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
+            'upnp:albumArtURI'          => $art_url,
+            'upnp:artist'               => $song->f_artist,
+            'upnp:album'                => $song->f_album,
+            'upnp:genre'                => Tag::get_display($song->tags, false, 'song'),
+            //'dc:date'                   => date("c", $song->addition_time),
+            'upnp:originalTrackNumber'    => $song->track,
+
+            'res'                       => Song::play_url($song->id),
+            'protocolInfo'              => $arrFileType['mime'],
+            'size'                      => $song->size,
+            'duration'                  => $song->f_time_h . '.0',
+            'bitrate'                   => $song->bitrate,
+            'sampleFrequency'           => $song->rate,
+            //'nrAudioChannels'           => '1',
+            'description'               => $song->comment,
         );
     }
 
@@ -638,219 +667,219 @@ class Upnp_Api
         return array(
             'wav' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/x-wav:*',
+                'mime' => 'http-get:*:audio/x-wav:*',
             ),
             'mpa' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/mpeg:*',
+                'mime' => 'http-get:*:audio/mpeg:*',
             ),
             '.mp1' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/mpeg:*',
+                'mime' => 'http-get:*:audio/mpeg:*',
             ),
             'mp3' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/mpeg:*',
+                'class' => 'object.item.audioItem.musicTrack',
+                'mime' => 'http-get:*:audio/mpeg:*',
             ),
             'aiff' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/x-aiff:*',
+                'mime' => 'http-get:*:audio/x-aiff:*',
             ),
             'aif' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/x-aiff:*',
+                'mime' => 'http-get:*:audio/x-aiff:*',
             ),
             'wma' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/x-ms-wma:*',
+                'mime' => 'http-get:*:audio/x-ms-wma:*',
             ),
             'lpcm' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/lpcm:*',
+                'mime' => 'http-get:*:audio/lpcm:*',
             ),
             'aac' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/x-aac:*',
+                'mime' => 'http-get:*:audio/x-aac:*',
             ),
             'm4a' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/x-m4a:*',
+                'mime' => 'http-get:*:audio/x-m4a:*',
             ),
             'ac3' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/x-ac3:*',
+                'mime' => 'http-get:*:audio/x-ac3:*',
             ),
             'pcm' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/lpcm:*',
+                'mime' => 'http-get:*:audio/lpcm:*',
             ),
             'flac' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/flac:*',
+                'mime' => 'http-get:*:audio/flac:*',
             ),
             'ogg' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:application/ogg:*',
+                'mime' => 'http-get:*:application/ogg:*',
             ),
             'mka' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/x-matroska:*',
+                'mime' => 'http-get:*:audio/x-matroska:*',
             ),
             'mp4a' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/x-m4a:*',
+                'mime' => 'http-get:*:audio/x-m4a:*',
             ),
             'mp2' => array(
                 'class' => 'object.item.audioItem',
-                'mime' => 'file-get:*:audio/mpeg:*',
+                'mime' => 'http-get:*:audio/mpeg:*',
             ),
             'gif' => array(
                 'class' => 'object.item.imageItem',
-                'mime' => 'file-get:*:image/gif:*',
+                'mime' => 'http-get:*:image/gif:*',
             ),
             'jpg' => array(
                 'class' => 'object.item.imageItem',
-                'mime' => 'file-get:*:image/jpeg:*',
+                'mime' => 'http-get:*:image/jpeg:*',
             ),
             'jpe' => array(
                 'class' => 'object.item.imageItem',
-                'mime' => 'file-get:*:image/jpeg:*',
+                'mime' => 'http-get:*:image/jpeg:*',
             ),
             'png' => array(
                 'class' => 'object.item.imageItem',
-                'mime' => 'file-get:*:image/png:*',
+                'mime' => 'http-get:*:image/png:*',
             ),
             'tiff' => array(
                 'class' => 'object.item.imageItem',
-                'mime' => 'file-get:*:image/tiff:*',
+                'mime' => 'http-get:*:image/tiff:*',
             ),
             'tif' => array(
                 'class' => 'object.item.imageItem',
-                'mime' => 'file-get:*:image/tiff:*',
+                'mime' => 'http-get:*:image/tiff:*',
             ),
             'jpeg' => array(
                 'class' => 'object.item.imageItem',
-                'mime' => 'file-get:*:image/jpeg:*',
+                'mime' => 'http-get:*:image/jpeg:*',
             ),
             'bmp' => array(
                 'class' => 'object.item.imageItem',
-                'mime' => 'file-get:*:image/bmp:*',
+                'mime' => 'http-get:*:image/bmp:*',
             ),
             'asf' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/x-ms-asf:*',
+                'mime' => 'http-get:*:video/x-ms-asf:*',
             ),
             'wmv' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/x-ms-wmv:*',
+                'mime' => 'http-get:*:video/x-ms-wmv:*',
             ),
             'mpeg2' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg2:*',
+                'mime' => 'http-get:*:video/mpeg2:*',
             ),
             'avi' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/x-msvideo:*',
+                'mime' => 'http-get:*:video/x-msvideo:*',
             ),
             'divx' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/x-msvideo:*',
+                'mime' => 'http-get:*:video/x-msvideo:*',
             ),
             'mpg' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg:*',
+                'mime' => 'http-get:*:video/mpeg:*',
             ),
             'm1v' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg:*',
+                'mime' => 'http-get:*:video/mpeg:*',
             ),
             'm2v' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg:*',
+                'mime' => 'http-get:*:video/mpeg:*',
             ),
             'mp4' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mp4:*',
+                'mime' => 'http-get:*:video/mp4:*',
             ),
             'mov' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/quicktime:*',
+                'mime' => 'http-get:*:video/quicktime:*',
             ),
             'vob' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/dvd:*',
+                'mime' => 'http-get:*:video/dvd:*',
             ),
             'dvr-ms' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/x-ms-dvr:*',
+                'mime' => 'http-get:*:video/x-ms-dvr:*',
             ),
             'dat' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg:*',
+                'mime' => 'http-get:*:video/mpeg:*',
             ),
             'mpeg' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg:*',
+                'mime' => 'http-get:*:video/mpeg:*',
             ),
             'm1s' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg:*',
+                'mime' => 'http-get:*:video/mpeg:*',
             ),
             'm2p' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg2:*',
+                'mime' => 'http-get:*:video/mpeg2:*',
             ),
             'm2t' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg2ts:*',
+                'mime' => 'http-get:*:video/mpeg2ts:*',
             ),
             'm2ts' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg2ts:*',
+                'mime' => 'http-get:*:video/mpeg2ts:*',
             ),
             'mts' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg2ts:*',
+                'mime' => 'http-get:*:video/mpeg2ts:*',
             ),
             'ts' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg2ts:*',
+                'mime' => 'http-get:*:video/mpeg2ts:*',
             ),
             'tp' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg2ts:*',
+                'mime' => 'http-get:*:video/mpeg2ts:*',
             ),
             'trp' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg2ts:*',
+                'mime' => 'http-get:*:video/mpeg2ts:*',
             ),
             'm4t' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg2ts:*',
+                'mime' => 'http-get:*:video/mpeg2ts:*',
             ),
             'm4v' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/MP4V-ES:*',
+                'mime' => 'http-get:*:video/MP4V-ES:*',
             ),
             'vbs' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg2:*',
+                'mime' => 'http-get:*:video/mpeg2:*',
             ),
             'mod' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mpeg2:*',
+                'mime' => 'http-get:*:video/mpeg2:*',
             ),
             'mkv' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/x-matroska:*',
+                'mime' => 'http-get:*:video/x-matroska:*',
             ),
             '3g2' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mp4:*',
+                'mime' => 'http-get:*:video/mp4:*',
             ),
             '3gp' => array(
                 'class' => 'object.item.videoItem',
-                'mime' => 'file-get:*:video/mp4:*',
+                'mime' => 'http-get:*:video/mp4:*',
             ),
         );
     }
