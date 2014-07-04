@@ -187,6 +187,7 @@ if ($pages > 1 && $start > -1) {
         </span>
     </span>
 </div>
+<span class="item-count"><?php echo T_('Item Count') . ': ' . $total; ?></span>
 <?php if (!$browse->get_use_pages() && $is_header) { ?>
 <div id="browse_<?php echo $browse->id; ?>_scroll">
 <p>
