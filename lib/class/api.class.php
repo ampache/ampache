@@ -781,7 +781,7 @@ class Api
                 $objects = $democratic->get_items();
                 Song::build_cache($democratic->object_ids);
                 Democratic::build_vote_cache($democratic->vote_ids);
-                XML_Data::democratic($objects);
+                echo XML_Data::democratic($objects);
             break;
             case 'play':
                 $url = $democratic->play_url();
