@@ -69,33 +69,33 @@
                 </select>
             </td>
         </tr>
-	</table>
-	&nbsp;
-	<table class="option-tabledata" cellpadding="5" cellspacing="0">
-		<tr>
+    </table>
+    &nbsp;
+    <table class="option-tabledata" cellpadding="5" cellspacing="0">
+        <tr>
             <td colspan="4"><h3><?php echo T_('IPv4 or IPv6 Addresses'); ?></h3>
                 <span class="information">(255.255.255.255) / (ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff)</span>
             </td>
         </tr>
         <tr>
             <td>
-				<?php echo T_('Start'); ?>:
-					<?php Error::display('start'); ?>
-					<input type="text" name="start" value="<?php
-				if ($action == 'show_add_current') {
-						echo scrub_out($_SERVER['REMOTE_ADDR']);
-					} else {
-						echo scrub_out($_REQUEST['start']);
-				} ?>" />
+                <?php echo T_('Start'); ?>:
+                    <?php Error::display('start'); ?>
+                    <input type="text" name="start" value="<?php
+                if ($action == 'show_add_current') {
+                        echo scrub_out($_SERVER['REMOTE_ADDR']);
+                    } else {
+                        echo scrub_out($_REQUEST['start']);
+                } ?>" />
             </td>
             <td>
                 <?php echo T_('End'); ?>:
-					<?php Error::display('end'); ?>
-					<input type="text" name="end" value="<?php 
-					if ($action == 'show_add_current') {
-						echo scrub_out($_SERVER['REMOTE_ADDR']);
-					} else {
-						echo scrub_out($_REQUEST['end']);
+                    <?php Error::display('end'); ?>
+                    <input type="text" name="end" value="<?php
+                    if ($action == 'show_add_current') {
+                        echo scrub_out($_SERVER['REMOTE_ADDR']);
+                    } else {
+                        echo scrub_out($_REQUEST['end']);
                 } ?>" />
             </td>
         </tr>
