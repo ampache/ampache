@@ -693,13 +693,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #sidebar-tabs .sb2 li ul li a:hover {
 	color: #fff;
-	width: 100%;
-	font-weight: bold;
-	margin: 0 0 0 1px;
-	-webkit-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
-	-moz-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
-	-ms-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
-	box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+	width: 95%;
+	padding-left: 5px;
 }
 
 #sidebar-tabs .sb2 #browse_filters li {
@@ -1670,3 +1665,37 @@ ol, ul, #rightbar ul {
 .user_online{background:#0f0;}
 .user_offline{background:#7f0000;}
 .user_disabled{background:#ccc;}
+
+.list-header-navmenu-border {
+	border: 1px solid rgba(0,0,0,0.15);
+	border-radius: 2px;
+	border-color: #1d1d1d;
+}
+
+input.list-header-navmenu-input {
+	padding: 0px;
+	width: 50px;
+	height: 100%;
+	text-align: center;
+}
+
+span.item-count {
+	float: left;
+	font-size: 11px;
+	color: #999;
+}
+
+a.option-list {
+	border: solid 1px;
+	border-color: transparent;
+	width: 100%;
+	margin: 0;
+	display: inline-block;
+}
+
+a.option-list:hover {
+	border: 1px solid rgba(0,0,0,0.15);
+	border-radius: 2px;
+	border-color: #1d1d1d;
+}
+	
