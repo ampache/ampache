@@ -20,10 +20,22 @@
  *
  */
 
-UI::show_box_top(T_('Starting New Media Search'), 'box box_adds_catalog');
-/* HINT: Catalog Name */
-printf(T_('Starting New Media Search on %s catalog'), "<strong>[ $this->name ]</strong>");
-echo "<br />\n";
-echo T_('Found') . ': <span id="add_count_' . $this->id . '">' . T_('None') . '</span><br />';
-echo T_('Reading') . ':<span id="add_dir_' . $this->id . '"></span><br />';
-UI::show_box_bottom();
+require_once 'lib/init.php';
+
+UI::show_header();
+
+switch ($_REQUEST['action']) {
+    case 'show_video':
+    default:
+        $type = 'Video';
+        if (isset($_REQUEST['type'])) {
+            $type = Video::validate_type($_REQUEST['type']);
+        }
+
+        $video = new $type($_REQUEST['video_id']);
+        $video->format();
+        require_once AmpConfig::get('prefix') . '/templates/show_video.inc.php';
+    break;
+}
+
+UI::show_footer();

@@ -19,11 +19,5 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-UI::show_box_top(T_('Starting New Media Search'), 'box box_adds_catalog');
-/* HINT: Catalog Name */
-printf(T_('Starting New Media Search on %s catalog'), "<strong>[ $this->name ]</strong>");
-echo "<br />\n";
-echo T_('Found') . ': <span id="add_count_' . $this->id . '">' . T_('None') . '</span><br />';
-echo T_('Reading') . ':<span id="add_dir_' . $this->id . '"></span><br />';
-UI::show_box_bottom();
+?>
+<th class="cel_artist optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=clip&sort=artist', T_('Artist'),'sort_video_artist'); ?></th>

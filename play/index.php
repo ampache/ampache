@@ -295,7 +295,6 @@ if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
 
     debug_event('play', 'Downloading file...', 5);
     // STUPID IE
-    $media->format_pattern();
     $media_name = str_replace(array('?','/','\\'),"_",$media->f_file);
 
     $browser->downloadHeaders($media_name,$media->mime,false,$media->size);

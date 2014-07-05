@@ -35,7 +35,7 @@ $button_flip_state_id = 'button_flip_state_' . $catalog->id;
     | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=update_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Verify'); ?></a>
         | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=clean_catalog&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Clean'); ?></a>
     | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=full_service&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Update'); ?></a>
-    | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_album_art&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Gather Art'); ?></a>
+    | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_media_art&amp;catalogs[]=<?php echo $catalog->id; ?>"><?php echo T_('Gather Art'); ?></a>
     | <a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_delete_catalog&amp;catalog_id=<?php echo $catalog->id; ?>"><?php echo T_('Delete'); ?></a>
 <?php if (AmpConfig::get('catalog_disable')) { ?>
     | <span id="<?php echo($button_flip_state_id); ?>">

@@ -28,8 +28,9 @@ class TVShow_Episode extends Video
     public $description;
 
     public $f_link;
-    public $f_season;
+    public $f_season_link;
     public $f_tvshow;
+    public $f_tvshow_link;
 
     /**
      * Constructor
@@ -39,30 +40,60 @@ class TVShow_Episode extends Video
     public function __construct($id)
     {
         parent::__construct($id);
-        
+
         $info = $this->get_info($id);
         foreach ($info as $key=>$value) {
             $this->$key = $value;
         }
-        
+
         return true;
 
-    } // Constructor
+    }
+
+    /**
+     * gc
+     *
+     * This cleans out unused tv shows episodes
+     */
+    public static function gc()
+    {
+        $sql = "DELETE FROM `tvshow_episode` USING `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `video`.`id` IS NULL";
+        Dba::write($sql);
+    }
+
+    /**
+     * insert
+     * Insert a new tv show episode and related entities.
+     */
+    public static function insert($data)
+    {
+        if (empty($data['tvshow'])) {
+            $data['tvshow'] = T_('Unknown');
+        }
+
+        $tvshow = TVShow::check($data['tvshow'], $data['tvshow_year']);
+        $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
+
+        $sdata = $data;
+        // Replace relation name with db ids
+        $sdata['tvshow'] = $tvshow;
+        $sdata['tvshow_season'] = $tvshow_season;
+        return self::create($sdata);
+    }
 
     /**
      * create
-     * This takes a key'd array of data as input and inserts a new tv show episode entry, it returns the auto_inc id
+     * This takes a key'd array of data as input and inserts a new tv show episode entry, it returns the record id
      */
     public static function create($data)
     {
-        $sql = "INSERT INTO `tvshow_episode` (`id`, `season`,`episode_number`,`description`) " .
-            "VALUES (?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $data['season'], $data['episode_number'], $data['description']));
-        $insert_id = Dba::insert_id();
+        $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `description`) " .
+            "VALUES (?, ?, ?, ?, ?)";
+        Dba::write($sql, array($data['id'], $data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['description']));
 
-        return $insert_id;
+        return $data['id'];
 
-    } // create
+    }
 
     /**
      * update
@@ -70,12 +101,12 @@ class TVShow_Episode extends Video
      */
     public static function update($data)
     {
-        $sql = "UPDATE `tvshow_episode` SET `season` = ?, `episode_number` = ?, `description` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['season'], $data['episode_number'], $data['description'], $data['id']));
+        $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `description` = ? WHERE `id` = ?";
+        Dba::write($sql, array($data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['description'], $data['id']));
 
         return true;
 
-    } // create
+    }
 
     /**
      * format
@@ -84,14 +115,24 @@ class TVShow_Episode extends Video
     public function format()
     {
         parent::format();
-        
+
         $season = new TVShow_Season($this->season);
         $season->format();
-        $this->f_season = $season->f_link;
-        $this->f_tvshow = $season->f_tvshow;
-        
+
+        $this->f_title = ($this->original_name ?: $this->f_title);
+        $this->f_link = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
+        $this->f_season_link = $season->f_link;
+        $this->f_tvshow = $tvshow->f_tvshow;
+        $this->f_tvshow_link = $season->f_tvshow_link;
+
+        $this->f_file = $this->f_tvshow;
+        if ($this->episode_number) {
+            $this->f_file .= ' - S'. sprintf('%02d', $season->season_number) . 'E'. sprintf('%02d', $this->episode_number);
+        }
+        $this->f_file .= ' - ' . $this->f_title;
+
         return true;
 
-    } //format
+    }
 
-} // License class
+}

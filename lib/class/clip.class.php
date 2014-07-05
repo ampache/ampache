@@ -20,16 +20,18 @@
  *
  */
 
-class Movie extends Video
+class Clip extends Video
 {
-    public $original_name;
-    public $description;
-    public $year;
+    public $artist;
+    public $song;
     public $video;
+
+    public $f_artist;
+    public $f_song;
 
     /**
      * Constructor
-     * This pulls the movie information from the database and returns
+     * This pulls the clip information from the database and returns
      * a constructed object
      */
     public function __construct($id)
@@ -48,24 +50,24 @@ class Movie extends Video
     /**
      * gc
      *
-     * This cleans out unused movies
+     * This cleans out unused clips
      */
     public static function gc()
     {
-        $sql = "DELETE FROM `movie` USING `movie` LEFT JOIN `video` ON `video`.`id` = `movie`.`id` " .
+        $sql = "DELETE FROM `clip` USING `clip` LEFT JOIN `video` ON `video`.`id` = `clip`.`id` " .
             "WHERE `video`.`id` IS NULL";
         Dba::write($sql);
     }
 
     /**
      * create
-     * This takes a key'd array of data as input and inserts a new movie entry, it returns the record id
+     * This takes a key'd array of data as input and inserts a new clip entry, it returns the record id
      */
     public static function insert($data)
     {
-        $sql = "INSERT INTO `movie` (`id`,`original_name`,`description`, `year`) " .
-            "VALUES (?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $data['original_name'], $data['description'], $data['year']));
+        $sql = "INSERT INTO `clip` (`id`,`artist`,`song`) " .
+            "VALUES (?, ?, ?)";
+        Dba::write($sql, array($data['id'], $data['artist'], $data['song']));
 
         return $data['id'];
 
@@ -73,12 +75,12 @@ class Movie extends Video
 
     /**
      * update
-     * This takes a key'd array of data as input and updates a movie entry
+     * This takes a key'd array of data as input and updates a clip entry
      */
     public static function update($data)
     {
-        $sql = "UPDATE `movie` SET `original_name` = ?, `description` = ?, `year` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['original_name'], $data['description'], $data['year'], $data['id']));
+        $sql = "UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?";
+        Dba::write($sql, array($data['artist'], $data['song'], $data['id']));
 
         return true;
 
@@ -93,10 +95,20 @@ class Movie extends Video
     {
         parent::format();
 
-        $this->f_link = '<a href="' . $this->link . '">' . ($this->original_name ?: $this->f_title) . '</a>';
+        if ($this->artist) {
+            $artist = new Artist($this->artist);
+            $artist->format();
+            $this->f_artist = $artist->f_link;
+        }
+
+        if ($this->song) {
+            $song = new Song($this->song);
+            $song->format();
+            $this->f_song = $song->f_link;
+        }
 
         return true;
 
     } //format
 
-} // Movie class
+} // Clip class

@@ -901,12 +901,6 @@ class Song extends database_object implements media
     {
         $this->fill_ext_info();
 
-        // Format the filename
-        preg_match("/^.*\/(.*?)$/", $this->file, $short);
-        if (is_array($short) && isset($short[1])) {
-            $this->f_file = htmlspecialchars($short[1]);
-        }
-
         // Format the album name
         $this->f_album_full = $this->get_album_name();
         $this->f_album = $this->f_album_full;
@@ -927,7 +921,9 @@ class Song extends database_object implements media
         $this->f_link = "<a href=\"" . scrub_out($this->link) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_title) . "</a>";
         $this->f_album_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->f_album_full) . "\"> " . scrub_out($this->f_album) . "</a>";
         $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
-        $this->f_album_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->f_album_artist_full) . "\"> " . scrub_out($this->f_album_artist_full) . "</a>";
+        if (!empty($this->album_artist)) {
+            $this->f_album_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->f_album_artist_full) . "\"> " . scrub_out($this->f_album_artist_full) . "</a>";
+        }
 
         // Format the Bitrate
         $this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);
@@ -952,47 +948,15 @@ class Song extends database_object implements media
 
         $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
 
+        $this->f_file = $this->f_artist . ' - ';
+        if ($this->track) {
+            $this->f_file .= $this->track . ' - ';
+        }
+        $this->f_file .= $this->f_title . '.' . $this->type;
+
         return true;
 
     } // format
-
-    /**
-     * format_pattern
-     * This reformats the song information based on the catalog
-     * rename patterns
-     */
-    public function format_pattern()
-    {
-        $extension = ltrim(substr($this->file,strlen($this->file)-4,4),".");
-
-        $catalog = Catalog::create_from_id($this->catalog);
-
-        // If we don't have a rename pattern then just return it
-        if (!trim($catalog->rename_pattern)) {
-            $this->f_pattern    = $this->title;
-            $this->f_file        = $this->title . '.' . $extension;
-            return;
-        }
-
-        /* Create the filename that this file should have */
-        $album  = $this->f_album_full;
-        $artist = $this->f_artist_full;
-        $track  = sprintf('%02d', $this->track);
-        $title  = $this->title;
-        $year   = $this->year;
-
-        /* Start replacing stuff */
-        $replace_array = array('%a','%A','%t','%T','%y','/','\\');
-        $content_array = array($artist,$album,$title,$track,$year,'-','-');
-
-        $rename_pattern = str_replace($replace_array,$content_array,$catalog->rename_pattern);
-
-        $rename_pattern = preg_replace("[\-\:\!]","_",$rename_pattern);
-
-        $this->f_pattern    = $rename_pattern;
-        $this->f_file         = $rename_pattern . "." . $extension;
-
-    } // format_pattern
 
     /**
      * get_fields

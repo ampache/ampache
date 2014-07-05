@@ -398,10 +398,9 @@ abstract class Catalog extends database_object
      */
     public static function get_stats($catalog_id = null)
     {
-        $results = self::count_songs($catalog_id);
+        $results = self::count_medias($catalog_id);
         $results = array_merge(User::count(), $results);
         $results['tags'] = self::count_tags();
-        $results['videos'] = self::count_videos($catalog_id);
 
         $hours = floor($results['time'] / 3600);
 
@@ -431,6 +430,7 @@ abstract class Catalog extends database_object
         $type = $data['type'];
         $rename_pattern = $data['rename_pattern'];
         $sort_pattern = $data['sort_pattern'];
+        $gather_types = $data['gather_media'];
 
         $insert_id = 0;
         $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
@@ -438,12 +438,13 @@ abstract class Catalog extends database_object
 
         if ($include) {
             $sql = 'INSERT INTO `catalog` (`name`, `catalog_type`, ' .
-                '`rename_pattern`, `sort_pattern`) VALUES (?, ?, ?, ?)';
+                '`rename_pattern`, `sort_pattern`, `gather_types`) VALUES (?, ?, ?, ?, ?)';
             Dba::write($sql, array(
                 $name,
                 $type,
                 $rename_pattern,
-                $sort_pattern
+                $sort_pattern,
+                $gather_types
             ));
 
             $insert_id = Dba::insert_id();
@@ -464,40 +465,23 @@ abstract class Catalog extends database_object
 
         return $insert_id;
     }
-    
-    public static function insert_video($id, $gtypes, $results) {
-        
+
+    public static function insert_video($gtypes, $results)
+    {
         if (count($gtypes) > 0) {
             $gtype = $gtypes[0];
             switch ($gtype) {
                 case 'tvshow':
-                    TVShow::insert($id, $results);
+                    TVShow_Episode::insert($results);
                     break;
                 case 'movie':
-                    Movie::insert($id, $results);
+                    Movie::insert($results);
                     break;
                 default:
                     // Do nothing, video entry already created and no additional data for now
                     break;
             }
         }
-    }
-
-    /**
-     * count_videos
-     *
-     * This returns the current number of video files in the database.
-     */
-    public static function count_videos($id = null)
-    {
-        $sql = 'SELECT COUNT(`id`) FROM `video` ';
-        if ($id) {
-            $sql .= 'WHERE `catalog` = ?';
-        }
-        $db_results = Dba::read($sql, $id ? array($id) : null);
-
-        $row = Dba::fetch_assoc($db_results);
-        return $row[0];
     }
 
     /**
@@ -516,24 +500,31 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * count_songs
+     * count_medias
      *
-     * This returns the current number of songs, albums, and artists
+     * This returns the current number of songs, videos, albums, and artists
      * in this catalog.
      */
-    public static function count_songs($id = null)
+    public static function count_medias($id = null)
     {
         $where_sql = $id ? 'WHERE `catalog` = ?' : '';
         $params = $id ? array($id) : null;
 
         $sql = 'SELECT COUNT(`id`), SUM(`time`), SUM(`size`) FROM `song` ' .
             $where_sql;
-
         $db_results = Dba::read($sql, $params);
         $data = Dba::fetch_row($db_results);
         $songs    = $data[0];
         $time    = $data[1];
         $size    = $data[2];
+
+        $sql = 'SELECT COUNT(`id`), SUM(`time`), SUM(`size`) FROM `video` ' .
+            $where_sql;
+        $db_results = Dba::read($sql, $params);
+        $data = Dba::fetch_row($db_results);
+        $videos    = $data[0];
+        $time    += $data[1];
+        $size    += $data[2];
 
         $sql = 'SELECT COUNT(DISTINCT(`album`)) FROM `song` ' . $where_sql;
         $db_results = Dba::read($sql, $params);
@@ -557,6 +548,7 @@ abstract class Catalog extends database_object
 
         $results = array();
         $results['songs'] = $songs;
+        $results['videos'] = $videos;
         $results['albums'] = $albums;
         $results['artists'] = $artists;
         $results['playlists'] = $playlists;
@@ -1094,7 +1086,7 @@ abstract class Catalog extends database_object
         return $info;
 
     } // update_song_from_tags
-    
+
     public function get_gather_types($media_type)
     {
         $gtypes = $this->gather_types;
@@ -1105,13 +1097,13 @@ abstract class Catalog extends database_object
         if ($media_type == "video") {
             unset($types['music']);
         }
-        
+
         if ($media_type == "music") {
             unset($types['video']);
             unset($types['movie']);
             unset($types['tvshow']);
         }
-        
+
         return $types;
     }
 
@@ -1187,6 +1179,7 @@ abstract class Catalog extends database_object
         Song::gc();
         Album::gc();
         Artist::gc();
+        Video::gc();
         Art::gc();
         Stats::gc();
         Rating::gc();

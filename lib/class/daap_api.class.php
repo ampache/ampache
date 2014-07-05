@@ -262,7 +262,7 @@ class Daap_Api
 
             $r = self::tlv('dmap.itemid', 1);
             $r .= self::tlv('dmap.itemname', 'Ampache');
-            $counts = Catalog::count_songs();
+            $counts = Catalog::count_medias();
             $r .= self::tlv('dmap.itemcount', $counts['songs']);
             $r .= self::tlv('dmap.containercount', count(Playlist::get_playlists()));
             $r = self::tlv('dmap.listingitem', $r);

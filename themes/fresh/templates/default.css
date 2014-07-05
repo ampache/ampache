@@ -991,18 +991,18 @@ span.nodata {
 /***********************************************
         Content (Track view)                                
 ***********************************************/
-dl.song_details
+dl.media_details
 {
     padding: 0.5em;
 }
 
-dl.song_details dd
+dl.media_details dd
 {
     margin: 0 0 0 95px;
     padding: 0 0 0.5em 0;
 }
 
-dl.song_details dt
+dl.media_details dt
 {
     float: left;
     clear: left;
@@ -1012,7 +1012,7 @@ dl.song_details dt
     color: #c60;
 }
 
-dl.song_details a:hover
+dl.media_details a:hover
 {
     color: #09c;
     text-decoration: underline;

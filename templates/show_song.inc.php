@@ -24,7 +24,7 @@ $icon = $song->enabled ? 'disable' : 'enable';
 $button_flip_state_id = 'button_flip_state_' . $song->id;
 ?>
 <?php UI::show_box_top($song->title . ' ' . T_('Details'), 'box box_song_details'); ?>
-<dl class="song_details">
+<dl class="media_details">
 
 <?php if (AmpConfig::get('ratings')) { ?>
     <?php $rowparity = UI::flip_class(); ?>

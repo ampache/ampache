@@ -19,11 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-UI::show_box_top(T_('Starting New Media Search'), 'box box_adds_catalog');
-/* HINT: Catalog Name */
-printf(T_('Starting New Media Search on %s catalog'), "<strong>[ $this->name ]</strong>");
-echo "<br />\n";
-echo T_('Found') . ': <span id="add_count_' . $this->id . '">' . T_('None') . '</span><br />';
-echo T_('Reading') . ':<span id="add_dir_' . $this->id . '"></span><br />';
-UI::show_box_bottom();
+?>
+<td class="cel_episode"><?php echo $video->episode_number; ?></td>
+<td class="cel_season"><?php echo $video->f_season_link; ?></td>
+<td class="cel_tvshow"><?php echo $video->f_tvshow_link; ?></td>

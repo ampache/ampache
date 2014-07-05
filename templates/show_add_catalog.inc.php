@@ -57,7 +57,7 @@ $default_sort = "%a/%A";
             <td valign="top"><input type="text" name="sort_pattern" value="<?php echo $default_sort; ?>" /></td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Gather Album Art'); ?>:</td>
+            <td valign="top"><?php echo T_('Gather Art'); ?>:</td>
             <td><input type="checkbox" name="gather_art" value="1" checked /></td>
         </tr>
         <tr>
@@ -69,9 +69,10 @@ $default_sort = "%a/%A";
             <td>
                 <input type="radio" name="gather_media" value="music" checked /> <?php echo T_('Music'); ?>
                 <?php if (AmpConfig::get('allow_video')) { ?>
+                    <input type="radio" name="gather_media" value="clip" /> <?php echo T_('Music Clip'); ?>
                     <input type="radio" name="gather_media" value="tvshow" /> <?php echo T_('TV Show'); ?>
                     <input type="radio" name="gather_media" value="movie" /> <?php echo T_('Movie'); ?>
-                    <input type="radio" name="gather_media" value="video" /> <?php echo T_('Other Video'); ?>
+                    <input type="radio" name="gather_media" value="video" /> <?php echo T_('Personal Video'); ?>
                 <?php } ?>
             </td>
         </tr>

@@ -29,6 +29,7 @@ class TVShow_Season extends database_object
 
     public $episodes;
     public $f_name;
+    public $f_tvshow;
     public $f_tvshow_link;
     public $link;
     public $f_link;
@@ -64,7 +65,9 @@ class TVShow_Season extends database_object
      */
     public static function gc()
     {
-        
+        $sql = "DELETE FROM `tvshow_season` USING `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " .
+            "WHERE `tvshow_episode`.`id` IS NULL";
+        Dba::write($sql);
     }
 
     /**
@@ -93,7 +96,7 @@ class TVShow_Season extends database_object
         return $results;
 
     } // get_episodes
-    
+
     /**
      * _get_extra info
      * This returns the extra information for the tv show season, this means totals etc
@@ -118,7 +121,7 @@ class TVShow_Season extends database_object
         return $row;
 
     } // _get_extra_info
-    
+
     /**
      * format
      * this function takes the object and reformats some values
@@ -126,17 +129,73 @@ class TVShow_Season extends database_object
     public function format()
     {
         $this->f_name = T_('Season') . ' ' . $this->season_number;
-        
+
         $tvshow = new TVShow($this->tvshow);
         $tvshow->format();
+        $this->f_tvshow = $tvshow->f_name;
         $this->f_tvshow_link = $tvshow->f_link;
-        
+
         $this->link = AmpConfig::get('web_path') . '/tvshow_seasons.php?action=show&season=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '" title="' . $tvshow->f_name . ' - ' . $this->f_name . '">' . $this->f_name . '</a>';
-        
+
         $this->_get_extra_info($this->catalog_id);
-        
+
         return true;
+    }
+
+    /**
+     * check
+     *
+     * Checks for an existing tv show season; if none exists, insert one.
+     */
+    public static function check($tvshow, $season_number, $readonly = false)
+    {
+        $name = $tvshow . '_' . $season_number;
+        // null because we don't have any unique id like mbid for now
+        if (isset(self::$_mapcache[$name]['null'])) {
+            return self::$_mapcache[$name]['null'];
+        }
+
+        $id = 0;
+        $exists = false;
+
+        if (!$exists) {
+            $sql = 'SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? AND `season_number` = ?';
+            $db_results = Dba::read($sql, array($tvshow, $season_number));
+
+            $id_array = array();
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $key = 'null';
+                $id_array[$key] = $row['id'];
+            }
+
+            if (count($id_array)) {
+                $id = array_shift($id_array);
+                $exists = true;
+            }
+        }
+
+        if ($exists) {
+            self::$_mapcache[$name]['null'] = $id;
+            return $id;
+        }
+
+        if ($readonly) {
+            return null;
+        }
+
+        $sql = 'INSERT INTO `tvshow_season` (`tvshow`, `season_number`) ' .
+            'VALUES(?, ?)';
+
+        $db_results = Dba::write($sql, array($tvshow, $season_number));
+        if (!$db_results) {
+            return null;
+        }
+        $id = Dba::insert_id();
+
+        self::$_mapcache[$name]['null'] = $id;
+        return $id;
+
     }
 
     /**
@@ -148,7 +207,7 @@ class TVShow_Season extends database_object
         $sql = 'UPDATE `tvshow_season` SET `season_number` = ? WHERE `id` = ?';
         return Dba::write($sql, array($data['season_number'], $this->id));
     } // update
-    
+
     public static function update_tvshow($tvshow_id, $season_id)
     {
         $sql = "UPDATE `tvshow_season` SET `tvshow` = ? WHERE `id` = ?";

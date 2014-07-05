@@ -280,10 +280,10 @@ class Catalog_dropbox extends Catalog
             $this->add_files($client, $this->path);
 
             echo "\n<br />" .
-            printf(T_('Catalog Update Finished.  Total Songs: [%s]'), $this->count);
+            printf(T_('Catalog Update Finished.  Total Media: [%s]'), $this->count);
             echo '<br />';
             if ($this->count == 0) {
-                echo T_('No songs updated, do you respect the patterns?') . '<br />';
+                echo T_('No media updated, do you respect the patterns?') . '<br />';
             }
             echo '<br />';
         } else {

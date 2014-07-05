@@ -44,16 +44,18 @@ class Video extends database_object implements media
     public $f_resolution;
     public $f_tags;
     public $f_length;
+    public $f_file;
+    public $f_release_date;
 
     /**
      * Constructor
-     * This pulls the shoutbox information from the database and returns
-     * a constructed object, uses user_shout table
+     * This pulls the information from the database and returns
+     * a constructed object
      */
     public function __construct($id)
     {
         // Load the data from the database
-        $info = $this->get_info($id);
+        $info = $this->get_info($id, 'video');
         foreach ($info as $key=>$value) {
             $this->$key = $value;
         }
@@ -89,14 +91,21 @@ class Video extends database_object implements media
     {
         $this->f_title = scrub_out($this->title);
         $this->link = AmpConfig::get('web_path') . "/video.php?action=show_video&video_id=" . $this->id;
+        if (strtolower(get_class($this)) != 'video') {
+            $this->link .= '&type=' . get_class($this);
+        }
         $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_title) . "\"> " . scrub_out($this->f_title) . "</a>";
         $this->f_codec = $this->video_codec . ' / ' . $this->audio_codec;
         $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
         $this->f_tags = '';
         $this->f_length = floor($this->time/60) . ' ' .  T_('minutes');
+        $this->f_file = $this->f_title . '.' . $this->type;
+        if ($this->release_date) {
+            $this->f_release_date = date('Y-m-d', $this->release_date);
+        }
 
     } // format
-    
+
     /**
      * gc
      *
@@ -104,9 +113,12 @@ class Video extends database_object implements media
      */
     public static function gc()
     {
-        Dba::write('DELETE FROM `movie` USING `movie` LEFT JOIN `video` ON `video`.`id` = `movie`.`id` WHERE `video`.`id` IS NULL');
-        Dba::write('DELETE FROM `tvshow_episode` USING `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `video`.`id` IS NULL');
+        Movie::gc();
+        TVShow_Episode::gc();
+        TVShow_Season::gc();
         TVShow::gc();
+        Personal_Video::gc();
+        Clip::gc();
     }
 
     public function get_stream_types()
@@ -143,6 +155,19 @@ class Video extends database_object implements media
     public function get_transcode_settings($target = null)
     {
         return false;
+    }
+
+    public static function validate_type($type)
+    {
+        switch (strtolower($type)) {
+            case 'tvshow_episode':
+            case 'movie':
+            case 'clip':
+            case 'personal_video':
+                return $type;
+            default:
+                return 'Video';
+        }
     }
 
 } // end Video class

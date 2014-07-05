@@ -102,7 +102,8 @@ class Artist extends database_object
         Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ' .
             'LEFT JOIN `song` AS `song2` ON `song2`.`album_artist` = `artist`.`id` ' .
             'LEFT JOIN `wanted` ON `wanted`.`artist` = `artist`.`id` ' .
-            'WHERE `song`.`id` IS NULL AND `song2`.`id` IS NULL AND `wanted`.`id` IS NULL');
+            'LEFT JOIN `clip` ON `clip`.`artist` = `artist`.`id` ' .
+            'WHERE `song`.`id` IS NULL AND `song2`.`id` IS NULL AND `wanted`.`id` IS NULL AND `clip`.`id` IS NULL');
     }
 
     /**

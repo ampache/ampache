@@ -67,7 +67,9 @@ class TVShow extends database_object
      */
     public static function gc()
     {
-        
+        $sql = "DELETE FROM `tvshow` USING `tvshow` LEFT JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` " .
+            "WHERE `tvshow_season`.`id` IS NULL";
+        Dba::write($sql);
     }
 
     /**
@@ -131,7 +133,7 @@ class TVShow extends database_object
         return $results;
 
     } // get_episodes
-    
+
     /**
      * _get_extra info
      * This returns the extra information for the tv show, this means totals etc
@@ -142,12 +144,18 @@ class TVShow extends database_object
         if (parent::is_cached('tvshow_extra', $this->id) ) {
             $row = parent::get_from_cache('tvshow_extra', $this->id);
         } else {
-            $sql = "SELECT DISTINCT(`tvshow_season`.`id`), COUNT(`tvshow_season`.`id`) AS `season_count`, COUNT(`tvshow_episode`.`id`) AS `episode_count` FROM `tvshow_season` " .
+            $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count` FROM `tvshow_season` " .
                 "LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " .
                 "WHERE `tvshow_season`.`tvshow` = ?";
-
             $db_results = Dba::read($sql, array($this->id));
             $row = Dba::fetch_assoc($db_results);
+
+            $sql = "SELECT COUNT(`tvshow_season`.`id`) AS `season_count` FROM `tvshow_season` " .
+                "WHERE `tvshow_season`.`tvshow` = ?";
+            $db_results = Dba::read($sql, array($this->id));
+            $row2 = Dba::fetch_assoc($db_results);
+            $row['season_count'] = $row2['season_count'];
+
             parent::add_to_cache('tvshow_extra',$this->id,$row);
         }
 
@@ -158,7 +166,7 @@ class TVShow extends database_object
         return $row;
 
     } // _get_extra_info
-    
+
     /**
      * format
      * this function takes the object and reformats some values
@@ -168,11 +176,11 @@ class TVShow extends database_object
         $this->f_name = $this->name;
         $this->link = AmpConfig::get('web_path') . '/tvshows.php?action=show&tvshow=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '" title="' . $this->f_name . '">' . $this->f_name . '</a>';
-        
+
         $this->_get_extra_info($this->catalog_id);
         $this->tags = Tag::get_top_tags('tvshow', $this->id);
         $this->f_tags = Tag::get_display($this->tags, true, 'tvshow');
-        
+
         return true;
     }
 

@@ -20,16 +20,17 @@
  *
  */
 
-class Movie extends Video
+class Personal_Video extends Video
 {
-    public $original_name;
+    public $location;
     public $description;
-    public $year;
     public $video;
+
+    public $f_location;
 
     /**
      * Constructor
-     * This pulls the movie information from the database and returns
+     * This pulls the personal video information from the database and returns
      * a constructed object
      */
     public function __construct($id)
@@ -48,24 +49,24 @@ class Movie extends Video
     /**
      * gc
      *
-     * This cleans out unused movies
+     * This cleans out unused personal videos
      */
     public static function gc()
     {
-        $sql = "DELETE FROM `movie` USING `movie` LEFT JOIN `video` ON `video`.`id` = `movie`.`id` " .
+        $sql = "DELETE FROM `personal_video` USING `personal_video` LEFT JOIN `video` ON `video`.`id` = `personal_video`.`id` " .
             "WHERE `video`.`id` IS NULL";
         Dba::write($sql);
     }
 
     /**
      * create
-     * This takes a key'd array of data as input and inserts a new movie entry, it returns the record id
+     * This takes a key'd array of data as input and inserts a new personal video entry, it returns the record id
      */
     public static function insert($data)
     {
-        $sql = "INSERT INTO `movie` (`id`,`original_name`,`description`, `year`) " .
-            "VALUES (?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $data['original_name'], $data['description'], $data['year']));
+        $sql = "INSERT INTO `personal_video` (`id`,`location`,`description`) " .
+            "VALUES (?, ?, ?)";
+        Dba::write($sql, array($data['id'], $data['location'], $data['description']));
 
         return $data['id'];
 
@@ -73,12 +74,12 @@ class Movie extends Video
 
     /**
      * update
-     * This takes a key'd array of data as input and updates a movie entry
+     * This takes a key'd array of data as input and updates a personal video entry
      */
     public static function update($data)
     {
-        $sql = "UPDATE `movie` SET `original_name` = ?, `description` = ?, `year` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['original_name'], $data['description'], $data['year'], $data['id']));
+        $sql = "UPDATE `personal_video` SET `location` = ?, `description` = ? WHERE `id` = ?";
+        Dba::write($sql, array($data['location'], $data['description'], $data['id']));
 
         return true;
 
@@ -93,10 +94,10 @@ class Movie extends Video
     {
         parent::format();
 
-        $this->f_link = '<a href="' . $this->link . '">' . ($this->original_name ?: $this->f_title) . '</a>';
+        $this->f_location = $this->location;
 
         return true;
 
     } //format
 
-} // Movie class
+} // Personal_Video class

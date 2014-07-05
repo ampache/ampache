@@ -298,7 +298,7 @@ class Upnp_Api
             case 'artists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_songs();
+                        $counts = Catalog::count_medias();
                         $meta = array(
                             'id'			=> $root . '/artists',
                             'parentID'		=> $root,
@@ -322,7 +322,7 @@ class Upnp_Api
             case 'albums':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_songs();
+                        $counts = Catalog::count_medias();
                         $meta = array(
                             'id'			=> $root . '/albums',
                             'parentID'		=> $root,
@@ -346,7 +346,7 @@ class Upnp_Api
             case 'songs':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_songs();
+                        $counts = Catalog::count_medias();
                         $meta = array(
                             'id'			=> $root . '/songs',
                             'parentID'		=> $root,
@@ -370,7 +370,7 @@ class Upnp_Api
             case 'playlists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_songs();
+                        $counts = Catalog::count_medias();
                         $meta = array(
                             'id'			=> $root . '/playlists',
                             'parentID'		=> $root,
@@ -394,7 +394,7 @@ class Upnp_Api
             case 'smartplaylists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_songs();
+                        $counts = Catalog::count_medias();
                         $meta = array(
                             'id'			=> $root . '/smartplaylists',
                             'parentID'		=> $root,
@@ -559,7 +559,7 @@ class Upnp_Api
             break;
 
             default:
-                $counts = Catalog::count_songs();
+                $counts = Catalog::count_medias();
 
                 $mediaItems[] = self::_musicMetadata('artists');
                 $mediaItems[] = self::_musicMetadata('albums');

@@ -159,10 +159,17 @@ switch ($_REQUEST['action']) {
         $urls = array($democratic->play_url());
     break;
     case 'download':
-        $media_ids[] = array(
-            'object_type' => 'song',
-            'object_id' => scrub_in($_REQUEST['song_id'])
-        );
+        if (isset($_REQUEST['song_id'])) {
+            $media_ids[] = array(
+                'object_type' => 'song',
+                'object_id' => scrub_in($_REQUEST['song_id'])
+            );
+        } else if (isset($_REQUEST['video_id'])) {
+            $media_ids[] = array(
+                'object_type' => 'video',
+                'object_id' => scrub_in($_REQUEST['video_id'])
+            );
+        }
     break;
     case 'live_stream':
         $object = new Radio($_REQUEST['stream_id']);

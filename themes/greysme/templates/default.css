@@ -661,15 +661,15 @@ td.cel_track {text-align:right;}
 /************************************************/
 /*          Song details                        */
 /************************************************/
-dl.song_details{font-size:1em;}
-.song_details dt {
+dl.media_details{font-size:1em;}
+.media_details dt {
    float:left;
    clear:both;
    width:20%;
    min-width:20%; /*Ie bugfix*/
    font-weight:bold;
 }
-.song_details dd {
+.media_details dd {
    float:left;
    width:79%;
    min-width:79%; /*Ie bugfix*/

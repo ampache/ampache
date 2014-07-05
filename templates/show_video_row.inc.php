@@ -31,18 +31,29 @@
 <?php } ?>
     </div>
 </td>
-<td class="cel_title"><?php echo $video->f_title; ?></td>
+<td class="cel_title"><?php echo $video->f_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id,'add', T_('Add to temporary playlist'),'add_video_' . $video->id); ?>
     </span>
 </td>
+<?php
+if (isset($video_type)) {
+    require AmpConfig::get('prefix') . '/templates/show_partial_' . $video_type . '_row.inc.php';
+}
+?>
 <td class="cel_codec"><?php echo $video->f_codec; ?></td>
 <td class="cel_resolution"><?php echo $video->f_resolution; ?></td>
 <td class="cel_length"><?php echo $video->f_length; ?></td>
 <td class="cel_tags" title="<?php echo $video->f_tags; ?>"><?php $video->f_tags; ?></td>
+<?php if (AmpConfig::get('ratings')) { ?>
+<td class="cel_rating" id="rating_<?php echo $video->id; ?>_video"><?php Rating::show($video->id, 'video'); ?></td>
+<?php } ?>
+<?php if (AmpConfig::get('userflags')) { ?>
+<td class="cel_userflag" id="userflag_<?php echo $video->id; ?>_video"><?php Userflag::show($video->id, 'video'); ?></td>
+<?php } ?>
 <td class="cel_action">
 <?php if (Access::check_function('download')) { ?>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&type=video&oid=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
 <?php } ?>
 </td>

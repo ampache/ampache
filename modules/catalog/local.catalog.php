@@ -362,13 +362,13 @@ class Catalog_local extends Catalog
                         if (count($this->get_gather_types('music')) > 0) {
                             $this->_insert_local_song($full_file, $file_size, $options);
                         } else {
-                            debug_event('read', $full_file] . " ignored, bad media type for this catalog.", 5);
+                            debug_event('read', $full_file . " ignored, bad media type for this catalog.", 5);
                         }
                     } else {
                         if (count($this->get_gather_types('video')) > 0) {
                             $this->insert_local_video($full_file,$file_size);
                         } else {
-                            debug_event('read', $full_file] . " ignored, bad media type for this catalog.", 5);
+                            debug_event('read', $full_file . " ignored, bad media type for this catalog.", 5);
                         }
                     }
 
@@ -462,7 +462,7 @@ class Catalog_local extends Catalog
 
         UI::show_box_top();
         echo "\n<br />" .
-        printf(T_('Catalog Update Finished.  Total Time: [%s] Total Songs: [%s] Songs Per Second: [%s]'),
+        printf(T_('Catalog Update Finished.  Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'),
             date('i:s', $time_diff), $this->count, $rate);
         echo '<br /><br />';
         UI::show_box_bottom();
@@ -703,7 +703,7 @@ class Catalog_local extends Catalog
         $vainfo     = new vainfo($file, $gtypes,'','','',$this->sort_pattern,$this->rename_pattern);
         $vainfo->get_info();
 
-        $tag_name = vainfo::get_tag_type($vainfo->tags);
+        $tag_name = vainfo::get_tag_type($vainfo->tags, 'metadata_order_video');
         $results = vainfo::clean_tag_info($vainfo->tags,$tag_name,$file);
 
         $rezx         = intval($results['resolution_x']);
@@ -715,8 +715,9 @@ class Catalog_local extends Catalog
         $params = array($file, $this->id, $results['title'], $results['video_codec'], $results['audio_codec'], $rezx, $rezy, $filesize, $results['time'], $results['mime'], $release_date);
         Dba::write($sql, $params);
         $vid = Dba::insert_id();
-        
-        Catalog::insert_video($vid, $gtypes, $results);
+
+        $results['id'] = $vid;
+        Catalog::insert_video($gtypes, $results);
 
         return true;
 

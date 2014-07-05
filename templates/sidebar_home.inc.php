@@ -48,9 +48,10 @@
     <?php if (AmpConfig::get('allow_video')) { ?>
         <li><h4 class="header"><span class="sidebar-header-title"><?php echo T_('Browse Video'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_browse']) ? $_COOKIE['sb_browse'] : 'expanded'; ?>" id="browse" lt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
             <ul class="sb3" id="sb_browse_bb">
+                <li id="sb_browse_bb_Clip"><a href="<?php echo $web_path; ?>/browse.php?action=clip"><?php echo T_('Music Clips'); ?></a></li>
                 <li id="sb_browse_bb_TVShow"><a href="<?php echo $web_path; ?>/browse.php?action=tvshow"><?php echo T_('TV Shows'); ?></a></li>
                 <li id="sb_browse_bb_Movie"><a href="<?php echo $web_path; ?>/browse.php?action=movie"><?php echo T_('Movies'); ?></a></li>
-                <li id="sb_browse_bb_Video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo T_('Other Videos'); ?></a></li>
+                <li id="sb_browse_bb_Video"><a href="<?php echo $web_path; ?>/browse.php?action=personal_video"><?php echo T_('Personal Videos'); ?></a></li>
             </ul>
         </li>
     <?php } ?>

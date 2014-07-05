@@ -245,11 +245,23 @@ class Browse extends Query
             break;
             case 'tvshow_episode':
                 $box_title = T_('Episodes');
-                $box_req = AmpConfig::get('prefix') . '/templates/show_tvshow_episodes.inc.php';
+                $video_type = 'TVShow_Episode';
+                $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
             break;
             case 'movie':
                 $box_title = T_('Movies');
-                $box_req = AmpConfig::get('prefix') . '/templates/show_movies.inc.php';
+                $video_type = 'Movie';
+                $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
+            break;
+            case 'clip':
+                $box_title = T_('Clips');
+                $video_type = 'Clip';
+                $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
+            break;
+            case 'personal_video':
+                $box_title = T_('Personal Videos');
+                $video_type = 'Personal_Video';
+                $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
             break;
             default:
                 // Rien a faire

@@ -70,7 +70,7 @@ class AmpacheMusicBrainz {
      */
     public function get_metadata($gather_types, $song_info) {
         // Music metadata only
-        if (!in_array($gather_types, 'music')) {
+        if (!in_array('music', $gather_types)) {
             return null;
         }
     

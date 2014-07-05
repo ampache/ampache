@@ -424,7 +424,7 @@ class Update
 
         $update_string = '- Add UPnP backend preference.<br />';
         $version[] = array('version' => '370008','description' => $update_string);
-        
+
         $update_string = '- Enhance video support with TVShows and Movies.<br />';
         $version[] = array('version' => '370009','description' => $update_string);
 
@@ -2656,7 +2656,6 @@ class Update
         Dba::write($sql);
         return true;
     }
-<<<<<<< HEAD
 
     /**
      * update_370007
@@ -2702,10 +2701,10 @@ class Update
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         Dba::write($sql, array($id));
-        
+
         return true;
     }
-    
+
     /**
      * update_370009
      *
@@ -2715,12 +2714,12 @@ class Update
     {
         $sql = "ALTER TABLE `video` ADD `release_date` int(11) unsigned NULL AFTER `enabled`";
         Dba::write($sql);
-        
+
         $sql = "CREATE TABLE `people` (" .
             "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
             "`name` varchar(256) NOT NULL," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
-            
+
         $sql = "CREATE TABLE `people_rel` (" .
             "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
             "`object_id` int(11) unsigned NOT NULL," .
@@ -2728,7 +2727,7 @@ class Update
             "`people_id` int(11) unsigned NOT NULL," .
             "`rel_type` varchar(32) NOT NULL," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
-        
+
         $sql = "CREATE TABLE `tvshow` (" .
             "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
             "`name` varchar(80) NOT NULL," .
@@ -2736,22 +2735,23 @@ class Update
             "`year` int(11) unsigned NULL," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         Dba::write($sql);
-        
+
         $sql = "CREATE TABLE `tvshow_season` (" .
             "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
             "`season_number` int(11) unsigned NOT NULL," .
             "`tvshow` int(11) unsigned NOT NULL," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         Dba::write($sql);
-        
+
         $sql = "CREATE TABLE `tvshow_episode` (" .
             "`id` int(11) unsigned NOT NULL," .
+            "`original_name` varchar(80) NULL," .
             "`season` int(11) unsigned NOT NULL," .
             "`episode_number` int(11) unsigned NOT NULL," .
             "`description` varchar(256) NULL," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         Dba::write($sql);
-        
+
         $sql = "CREATE TABLE `movie` (" .
             "`id` int(11) unsigned NOT NULL," .
             "`original_name` varchar(80) NULL," .
@@ -2759,14 +2759,28 @@ class Update
             "`year` int(11) unsigned NULL," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         Dba::write($sql);
-        
+
+        $sql = "CREATE TABLE `personal_video` (" .
+            "`id` int(11) unsigned NOT NULL," .
+            "`location` varchar(256) NULL," .
+            "`description` varchar(256) NULL," .
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
+        Dba::write($sql);
+
+        $sql = "CREATE TABLE `clip` (" .
+            "`id` int(11) unsigned NOT NULL," .
+            "`artist` int(11) NULL," .
+            "`song` int(11) NULL," .
+            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
+        Dba::write($sql);
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('allow_video','1','Allow video features',25,'integer','system')";
         Dba::write($sql);
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         Dba::write($sql, array($id));
-        
+
         return true;
     }
 }

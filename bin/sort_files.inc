@@ -65,7 +65,6 @@ while ($r = Dba::fetch_row($db_results)) {
     foreach ($songs as $song) {
         /* Find this poor song a home */
         $song->format();
-        $song->format_pattern();
         $directory     = sort_find_home($song,$catalog->sort_pattern,$catalog->path);
         $filename     = $song->f_file;
         $fullpath = $directory . "/" . $filename;

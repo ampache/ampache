@@ -24,7 +24,7 @@
 <div id="information_actions">
     <ul style="float: left;">
         <li>
-            <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=gather_album_art"><?php echo T_('Gather All Art'); ?></a>
+            <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=gather_media_art"><?php echo T_('Gather All Art'); ?></a>
         </li>
         <li>
             <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=show_disabled"><?php echo T_('Show disabled songs'); ?></a>

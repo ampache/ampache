@@ -310,7 +310,24 @@ class Query
                 'title',
                 'resolution',
                 'length',
-                'codec'
+                'codec',
+                'release_date'
+            ),
+            'clip' => array(
+                'title',
+                'artist',
+                'resolution',
+                'length',
+                'codec',
+                'release_date'
+            ),
+            'personal_video' => array(
+                'title',
+                'location',
+                'resolution',
+                'length',
+                'codec',
+                'release_date'
             )
         );
     }
@@ -652,6 +669,8 @@ class Query
             case 'tvshow_season':
             case 'tvshow_episode':
             case 'movie':
+            case 'personal_video':
+            case 'clip':
                 // Set it
                 $this->_state['type'] = $type;
                 $this->set_base_sql(true, $custom_base);
@@ -968,6 +987,14 @@ class Query
                 case 'movie':
                     $this->set_select("`movie`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `movie` ";
+                break;
+                case 'clip':
+                    $this->set_select("`clip`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `clip` ";
+                break;
+                case 'personal_video':
+                    $this->set_select("`personal_video`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM `personal_video` ";
                 break;
                 case 'playlist_song':
                 case 'song':
@@ -1720,17 +1747,8 @@ class Query
             break;
             case 'video':
                 switch ($field) {
-                    case 'title':
-                        $sql = "`video`.`title`";
-                    break;
-                    case 'resolution':
-                        $sql = "`video`.`resolution_x`";
-                    break;
-                    case 'length':
-                        $sql = "`video`.`time`";
-                    break;
-                    case 'codec':
-                        $sql = "`video`.`video_codec`";
+                    default:
+                        $sql = $this->sql_sort_video('video', $field);
                     break;
                 } // end switch
             break;
@@ -1852,22 +1870,6 @@ class Query
             break;
             case 'tvshow_episode':
                 switch ($field) {
-                    case 'title':
-                        $sql = "`video`.`title`";
-                        $this->set_join('left', '`video`', '`tvshow_episode`.`id`', '`video`.`id`', 100);
-                    break;
-                    case 'resolution':
-                        $sql = "`video`.`resolution`";
-                        $this->set_join('left', '`video`', '`tvshow_episode`.`id`', '`video`.`id`', 100);
-                    break;
-                    case 'length':
-                        $sql = "`video`.`length`";
-                        $this->set_join('left', '`video`', '`tvshow_episode`.`id`', '`video`.`id`', 100);
-                    break;
-                    case 'codec':
-                        $sql = "`video`.`codec`";
-                        $this->set_join('left', '`video`', '`tvshow_episode`.`id`', '`video`.`id`', 100);
-                    break;
                     case 'season':
                         $sql = "`tvshow_season`.`season_number`";
                         $this->set_join('left', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`', 100);
@@ -1877,25 +1879,35 @@ class Query
                         $this->set_join('left', '`tvshow_season`', '`tvshow_episode`.`season`', '`tvshow_season`.`id`', 100);
                         $this->set_join('left', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
                     break;
+                    default:
+                        $sql = $this->sql_sort_video('tvshow_episode', $field);
+                    break;
                 }
             break;
             case 'movie':
                 switch ($field) {
-                    case 'title':
-                        $sql = "`video`.`title`";
-                        $this->set_join('left', '`video`', '`movie`.`id`', '`video`.`id`', 100);
+                    default:
+                        $sql = $this->sql_sort_video('movie', $field);
                     break;
-                    case 'resolution':
-                        $sql = "`video`.`resolution`";
-                        $this->set_join('left', '`video`', '`movie`.`id`', '`video`.`id`', 100);
+                }
+            break;
+            case 'clip':
+                switch ($field) {
+                    case 'location':
+                        $sql = "`clip`.`artist`";
                     break;
-                    case 'length':
-                        $sql = "`video`.`length`";
-                        $this->set_join('left', '`video`', '`movie`.`id`', '`video`.`id`', 100);
+                    default:
+                        $sql = $this->sql_sort_video('clip', $field);
                     break;
-                    case 'codec':
-                        $sql = "`video`.`codec`";
-                        $this->set_join('left', '`video`', '`movie`.`id`', '`video`.`id`', 100);
+                }
+            break;
+            case 'personal_video':
+                switch ($field) {
+                    case 'location':
+                        $sql = "`personal_video`.`location`";
+                    break;
+                    default:
+                        $sql = $this->sql_sort_video('personal_video', $field);
                     break;
                 }
             break;
@@ -1904,11 +1916,41 @@ class Query
             break;
         } // end switch
 
-        if (isset($sql)) { return "$sql $order,"; }
+        if (isset($sql) && !empty($sql)) { return "$sql $order,"; }
 
         return "";
 
     } // sql_sort
+
+    private function sql_sort_video($field, $table)
+    {
+        $sql = "";
+        switch ($field) {
+            case 'title':
+                $sql = "`video`.`title`";
+            break;
+            case 'resolution':
+                $sql = "`video`.`resolution`";
+            break;
+            case 'length':
+                $sql = "`video`.`length`";
+            break;
+            case 'codec':
+                $sql = "`video`.`codec`";
+            break;
+            case 'release_date':
+                $sql = "`video`.`release_date`";
+            break;
+        }
+
+        if (!empty($sql)) {
+            if ($table != 'video') {
+                $this->set_join('left', '`video`', '`' . $table . '`.`id`', '`video`.`id`', 100);
+            }
+        }
+
+        return $sql;
+    }
 
     /**
      * resort_objects

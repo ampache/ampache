@@ -27,7 +27,9 @@
         <?php
             $count_temp_playlist = 1;
             if (!isset($_SESSION['login']) || !$_SESSION['login']) {
-                $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
+                if ($GLOBALS['user']->playlist) {
+                    $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
+                }
             }
         ?>
         <div id="footer" class="<?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'footer-wild'); ?>">
