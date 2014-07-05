@@ -74,6 +74,36 @@ class Stream_URL extends memory_object
     }
 
     /**
+     * add_options
+     *
+     * Add options to an existing stream url.
+     */
+    public static function add_options($url, $options)
+    {
+        if (AmpConfig::get('stream_beautiful_url')) {
+            // We probably want beautiful url to have a real mp3 filename at the end.
+            // Add the new options before the filename
+
+            $curel = explode('/', $url);
+            $newel = explode('&', $options);
+
+            if (count($curel) > 2) {
+                foreach ($newel as $el) {
+                    if (!empty($el)) {
+                        $el = explode('=', $el);
+                        array_splice($curel, count($curel) - 2, 0, $el);
+                    }
+                }
+                $url = implode('/', $curel);
+            }
+        } else {
+            $url .= $options;
+        }
+
+        return $url;
+    }
+
+    /**
      * format
      * This format the string url according to settings.
      */
