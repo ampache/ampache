@@ -19,8 +19,7 @@ use Tmdb\Client;
  * Class AbstractApi
  * @package Tmdb\Api
  */
-abstract class AbstractApi
-    implements ApiInterface
+abstract class AbstractApi implements ApiInterface
 {
     /**
      * The client
@@ -42,9 +41,9 @@ abstract class AbstractApi
     /**
      * Send a GET request
      *
-     * @param string $path
-     * @param array $parameters
-     * @param array $headers
+     * @param  string $path
+     * @param  array  $parameters
+     * @param  array  $headers
      * @return mixed
      */
     public function get($path, array $parameters = array(), $headers = array())
@@ -53,6 +52,7 @@ abstract class AbstractApi
          * @var Response $response
          */
         $response = $this->client->getHttpClient()->get($path, $parameters, $headers);
+
         return $response->json();
     }
 
@@ -60,8 +60,8 @@ abstract class AbstractApi
      * Send a HEAD request
      *
      * @param $path
-     * @param array $parameters
-     * @param array $headers
+     * @param  array $parameters
+     * @param  array $headers
      * @return mixed
      */
     public function head($path, array $parameters = array(), $headers = array())
@@ -70,6 +70,7 @@ abstract class AbstractApi
          * @var Response $response
          */
         $response = $this->client->getHttpClient()->head($path, $parameters, $headers);
+
         return $response->json();
     }
 
@@ -77,9 +78,9 @@ abstract class AbstractApi
      * Send a POST request
      *
      * @param $path
-     * @param null $postBody
-     * @param array $parameters
-     * @param array $headers
+     * @param  null  $postBody
+     * @param  array $parameters
+     * @param  array $headers
      * @return mixed
      */
     public function post($path, $postBody = null, array $parameters = array(), $headers = array())
@@ -88,6 +89,7 @@ abstract class AbstractApi
          * @var Response $response
          */
         $response = $this->client->getHttpClient()->post($path, $postBody, $parameters, $headers);
+
         return $response->json();
     }
 
@@ -95,9 +97,9 @@ abstract class AbstractApi
      * Send a POST request but json_encode the post body in the request
      *
      * @param $path
-     * @param null $postBody
-     * @param array $parameters
-     * @param array $headers
+     * @param  null  $postBody
+     * @param  array $parameters
+     * @param  array $headers
      * @return mixed
      */
     public function postJson($path, $postBody = null, array $parameters = array(), $headers = array())
@@ -110,6 +112,7 @@ abstract class AbstractApi
         }
 
         $response = $this->client->getHttpClient()->postJson($path, $postBody, $parameters, $headers);
+
         return $response->json();
     }
 
@@ -117,9 +120,9 @@ abstract class AbstractApi
      * Send a PUT request
      *
      * @param $path
-     * @param null $body
-     * @param array $parameters
-     * @param array $headers
+     * @param  null  $body
+     * @param  array $parameters
+     * @param  array $headers
      * @return mixed
      */
     public function put($path, $body = null, array $parameters = array(), $headers = array())
@@ -128,6 +131,7 @@ abstract class AbstractApi
          * @var Response $response
          */
         $response = $this->client->getHttpClient()->put($path, $body, $parameters, $headers);
+
         return $response->json();
     }
 
@@ -135,9 +139,9 @@ abstract class AbstractApi
      * Send a DELETE request
      *
      * @param $path
-     * @param null $body
-     * @param array $parameters
-     * @param array $headers
+     * @param  null  $body
+     * @param  array $parameters
+     * @param  array $headers
      * @return mixed
      */
     public function delete($path, $body = null, array $parameters = array(), $headers = array())
@@ -146,6 +150,7 @@ abstract class AbstractApi
          * @var Response $response
          */
         $response = $this->client->getHttpClient()->delete($path, $body, $parameters, $headers);
+
         return $response->json();
     }
 
@@ -153,9 +158,9 @@ abstract class AbstractApi
      * Send a PATCH request
      *
      * @param $path
-     * @param null $body
-     * @param array $parameters
-     * @param array $headers
+     * @param  null  $body
+     * @param  array $parameters
+     * @param  array $headers
      * @return mixed
      */
     public function patch($path, $body = null, array $parameters = array(), $headers = array())
@@ -164,6 +169,7 @@ abstract class AbstractApi
          * @var Response $response
          */
         $response = $this->client->getHttpClient()->patch($path, $body, $parameters, $headers);
+
         return $response->json();
     }
 }

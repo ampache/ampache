@@ -14,7 +14,6 @@ namespace Tmdb\Factory;
 
 use Tmdb\Model\Common\GenericCollection;
 use Tmdb\Model\Network;
-use Tmdb\Model\Movie;
 
 /**
  * Class NetworkFactory
@@ -43,7 +42,7 @@ class NetworkFactory extends AbstractFactory
             $data = $data['networks'];
         }
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->add(null, $this->create($item));
         }
 

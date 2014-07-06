@@ -14,6 +14,7 @@ namespace Tmdb\HttpClient\Plugin;
 
 use Guzzle\Common\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Tmdb\GuestSessionToken;
 use Tmdb\SessionToken;
 
 /**
@@ -41,7 +42,11 @@ class SessionTokenPlugin implements EventSubscriberInterface
     {
         $url = $event['request']->getUrl(true);
 
-        $url->getQuery()->set('session_id', $this->token->getToken());
+        if ($this->token instanceof GuestSessionToken) {
+            $url->getQuery()->set('guest_session_id', $this->token->getToken());
+        } else {
+            $url->getQuery()->set('session_id', $this->token->getToken());
+        }
 
         $event['request']->setUrl($url);
     }

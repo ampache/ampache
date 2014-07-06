@@ -35,7 +35,7 @@ if ($albums) {
         <div class="art_album">
             <a href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $album_id; ?>">
             <?php if (Art::is_enabled()) { ?>
-                    <img src="<?php echo $web_path; ?>/image.php?thumb=3&amp;id=<?php echo $album_id; ?>" alt="<?php echo $name; ?>" title="<?php echo $name; ?>" />
+                    <img src="<?php echo $web_path; ?>/image.php?thumb=3&object_id=<?php echo $album_id; ?>&object_type=album" alt="<?php echo $name; ?>" title="<?php echo $name; ?>" />
             <?php } else { ?>
                 <?php echo '[' . $album->f_artist . '] ' . $album->f_name; ?>
             <?php } ?>

@@ -63,7 +63,7 @@ class Clip extends Video
      * create
      * This takes a key'd array of data as input and inserts a new clip entry, it returns the record id
      */
-    public static function insert($data)
+    public static function insert($data, $options = array())
     {
         $sql = "INSERT INTO `clip` (`id`,`artist`,`song`) " .
             "VALUES (?, ?, ?)";

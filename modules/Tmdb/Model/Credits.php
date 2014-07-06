@@ -18,7 +18,8 @@ use Tmdb\Model\Credits\Media;
  * Class Credits
  * @package Tmdb\Model
  */
-class Credits extends AbstractModel {
+class Credits extends AbstractModel
+{
     /**
      * @var string
      */
@@ -57,7 +58,7 @@ class Credits extends AbstractModel {
     /**
      * @var array
      */
-    public static $_properties = array(
+    public static $properties = array(
         'credit_type',
         'department',
         'job',
@@ -71,12 +72,13 @@ class Credits extends AbstractModel {
     }
 
     /**
-     * @param string $creditType
+     * @param  string $creditType
      * @return $this
      */
     public function setCreditType($creditType)
     {
         $this->creditType = $creditType;
+
         return $this;
     }
 
@@ -89,12 +91,13 @@ class Credits extends AbstractModel {
     }
 
     /**
-     * @param string $department
+     * @param  string $department
      * @return $this
      */
     public function setDepartment($department)
     {
         $this->department = $department;
+
         return $this;
     }
 
@@ -107,12 +110,13 @@ class Credits extends AbstractModel {
     }
 
     /**
-     * @param string $id
+     * @param  string $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -125,12 +129,13 @@ class Credits extends AbstractModel {
     }
 
     /**
-     * @param string $job
+     * @param  string $job
      * @return $this
      */
     public function setJob($job)
     {
         $this->job = $job;
+
         return $this;
     }
 
@@ -143,12 +148,13 @@ class Credits extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Credits\Media $media
+     * @param  \Tmdb\Model\Credits\Media $media
      * @return $this
      */
     public function setMedia($media)
     {
         $this->media = $media;
+
         return $this;
     }
 
@@ -161,12 +167,13 @@ class Credits extends AbstractModel {
     }
 
     /**
-     * @param string $mediaType
+     * @param  string $mediaType
      * @return $this
      */
     public function setMediaType($mediaType)
     {
         $this->mediaType = $mediaType;
+
         return $this;
     }
 
@@ -179,12 +186,13 @@ class Credits extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Person $person
+     * @param  \Tmdb\Model\Person $person
      * @return $this
      */
     public function setPerson($person)
     {
         $this->person = $person;
+
         return $this;
     }
 

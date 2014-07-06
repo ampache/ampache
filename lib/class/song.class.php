@@ -375,10 +375,11 @@ class Song extends database_object implements media
                 return 'audio/aacp';
             case 'mpc':
                 return 'audio/x-musepack';
+            case 'mkv':
+                return 'audio/x-matroska';
             default:
                 return 'audio/mpeg';
         }
-
     }
 
     /**

@@ -77,12 +77,13 @@ class FindFactory extends AbstractFactory
     }
 
     /**
-     * @param \Tmdb\Factory\MovieFactory $movieFactory
+     * @param  \Tmdb\Factory\MovieFactory $movieFactory
      * @return $this
      */
     public function setMovieFactory($movieFactory)
     {
         $this->movieFactory = $movieFactory;
+
         return $this;
     }
 
@@ -95,12 +96,13 @@ class FindFactory extends AbstractFactory
     }
 
     /**
-     * @param \Tmdb\Factory\PeopleFactory $peopleFactory
+     * @param  \Tmdb\Factory\PeopleFactory $peopleFactory
      * @return $this
      */
     public function setPeopleFactory($peopleFactory)
     {
         $this->peopleFactory = $peopleFactory;
+
         return $this;
     }
 
@@ -113,12 +115,13 @@ class FindFactory extends AbstractFactory
     }
 
     /**
-     * @param \Tmdb\Factory\TvFactory $tvFactory
+     * @param  \Tmdb\Factory\TvFactory $tvFactory
      * @return $this
      */
     public function setTvFactory($tvFactory)
     {
         $this->tvFactory = $tvFactory;
+
         return $this;
     }
 
@@ -129,6 +132,4 @@ class FindFactory extends AbstractFactory
     {
         return $this->tvFactory;
     }
-
-
 }

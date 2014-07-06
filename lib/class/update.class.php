@@ -2715,19 +2715,6 @@ class Update
         $sql = "ALTER TABLE `video` ADD `release_date` int(11) unsigned NULL AFTER `enabled`";
         Dba::write($sql);
 
-        $sql = "CREATE TABLE `people` (" .
-            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
-            "`name` varchar(256) NOT NULL," .
-            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
-
-        $sql = "CREATE TABLE `people_rel` (" .
-            "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
-            "`object_id` int(11) unsigned NOT NULL," .
-            "`object_type` varchar(32) NOT NULL," .
-            "`people_id` int(11) unsigned NOT NULL," .
-            "`rel_type` varchar(32) NOT NULL," .
-            "PRIMARY KEY (`id`)) ENGINE = MYISAM";
-
         $sql = "CREATE TABLE `tvshow` (" .
             "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
             "`name` varchar(80) NOT NULL," .

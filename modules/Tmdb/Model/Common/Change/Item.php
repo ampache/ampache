@@ -18,8 +18,8 @@ use Tmdb\Model\AbstractModel;
  * Class Item
  * @package Tmdb\Model\Common\Change
  */
-class Item extends AbstractModel {
-
+class Item extends AbstractModel
+{
     /**
      * @var string
      */
@@ -40,7 +40,7 @@ class Item extends AbstractModel {
      */
     private $value;
 
-    public static $_properties = array(
+    public static $properties = array(
         'id',
         'action',
         'time',
@@ -48,12 +48,13 @@ class Item extends AbstractModel {
     );
 
     /**
-     * @param string $action
+     * @param  string $action
      * @return $this
      */
     public function setAction($action)
     {
         $this->action = $action;
+
         return $this;
     }
 
@@ -66,12 +67,13 @@ class Item extends AbstractModel {
     }
 
     /**
-     * @param string $id
+     * @param  string $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -84,7 +86,7 @@ class Item extends AbstractModel {
     }
 
     /**
-     * @param string|\DateTime $time
+     * @param  string|\DateTime $time
      * @return $this
      */
     public function setTime($time)
@@ -94,6 +96,7 @@ class Item extends AbstractModel {
         }
 
         $this->time = $time;
+
         return $this;
     }
 
@@ -106,12 +109,13 @@ class Item extends AbstractModel {
     }
 
     /**
-     * @param array $value
+     * @param  array $value
      * @return $this
      */
     public function setValue($value)
     {
         $this->value = $value;
+
         return $this;
     }
 
@@ -122,7 +126,4 @@ class Item extends AbstractModel {
     {
         return $this->value;
     }
-
-
-
 }

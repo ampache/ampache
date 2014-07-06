@@ -12,20 +12,17 @@
  */
 namespace Tmdb;
 
-use Guzzle\Http\Client as GuzzleClient;
 use Guzzle\Http\ClientInterface;
 use Tmdb\HttpClient\HttpClient;
 use Tmdb\HttpClient\HttpClientInterface;
 use Tmdb\ApiToken as Token;
-use Tmdb\HttpClient\Plugin\AcceptJsonHeaderPlugin;
-use Tmdb\HttpClient\Plugin\ApiTokenPlugin;
-use Tmdb\HttpClient\Plugin\SessionTokenPlugin;
 
 /**
  * Client wrapper for TMDB
  * @package Tmdb
  */
-class Client {
+class Client
+{
     /**
      * Base API URI
      */
@@ -70,39 +67,104 @@ class Client {
     private $httpClient;
 
     /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * Holds the log path
+     *
+     * @var string
+     */
+    private $logPath;
+
+    /**
+     * Enable logging?
+     *
+     * @var bool
+     */
+    private $logEnabled = false;
+
+    /**
+     * Stores the cache path
+     *
+     * @var string
+     */
+    private $cachePath;
+
+    /**
+     * Stores wether the cache is enabled or not
+     *
+     * @var boolean
+     */
+    private $cacheEnabled = false;
+
+    /**
      * Construct our client
      *
      * @param ClientInterface|null $httpClient
-     * @param ApiToken $token
-     * @param boolean $secure
+     * @param ApiToken             $token
+     * @param boolean              $secure
+     * @param array                $options
      */
-    public function __construct(Token $token, ClientInterface $httpClient = null, $secure = false)
+    public function __construct(
+        ApiToken $token,
+        ClientInterface $httpClient = null,
+        $secure = false,
+        $options = array()
+    )
     {
         $this->setToken($token);
         $this->setSecure($secure);
+        $this->constructHttpClient(
+            $httpClient,
+            array_merge(
+                array(
+                    'token'  => $this->getToken(),
+                    'secure' => $this->getSecure()
+                ),
+                $options
+            )
+        );
+    }
 
-        $httpClient = $httpClient ?: new GuzzleClient($this->getBaseUrl());
-
-        if ($httpClient instanceof \Guzzle\Common\HasDispatcherInterface) {
-            $apiTokenPlugin = new ApiTokenPlugin($token);
-            $httpClient->addSubscriber($apiTokenPlugin);
-
-            $acceptJsonHeaderPlugin = new AcceptJsonHeaderPlugin();
-            $httpClient->addSubscriber($acceptJsonHeaderPlugin);
-        }
-
-        $this->httpClient = new HttpClient($this->getBaseUrl(), array(), $httpClient);
+    /**
+     * Construct the http client
+     *
+     * @param  ClientInterface $httpClient
+     * @param  array           $options
+     * @return void
+     */
+    private function constructHttpClient(ClientInterface $httpClient = null, array $options)
+    {
+        $httpClient       = $httpClient ?: new \Guzzle\Http\Client($this->getBaseUrl());
+        $this->httpClient = new HttpClient(
+            $this->getBaseUrl(),
+            $options,
+            $httpClient
+        );
     }
 
     /**
      * Add the token subscriber
      *
-     * @param Token $token
+     * @return Token
+     */
+    public function getToken()
+    {
+        return $this->token !== null ? $this->token : null;
+    }
+
+    /**
+     * Add the token subscriber
+     *
+     * @param  Token $token
      * @return $this
      */
     public function setToken(Token $token)
     {
         $this->token = $token;
+
         return $this;
     }
 
@@ -283,7 +345,23 @@ class Client {
     }
 
     /**
-     * @return HttpClientInterface
+     * @return Api\Timezones
+     */
+    public function getTimezonesApi()
+    {
+        return new Api\Timezones($this);
+    }
+
+    /**
+     * @return Api\GuestSession
+     */
+    public function getGuestSessionApi()
+    {
+        return new Api\GuestSession($this);
+    }
+
+    /**
+     * @return HttpClient|HttpClientInterface
      */
     public function getHttpClient()
     {
@@ -313,12 +391,17 @@ class Client {
     }
 
     /**
-     * @param boolean $secure
+     * @param  boolean $secure
      * @return $this
      */
     public function setSecure($secure)
     {
         $this->secure = $secure;
+
+        if ($this->httpClient instanceof HttpClientInterface) {
+            $this->getHttpClient()->setBaseUrl($this->getBaseUrl());
+        }
+
         return $this;
     }
 
@@ -331,17 +414,17 @@ class Client {
     }
 
     /**
-     * @param SessionToken $sessionToken
+     * @param  SessionToken $sessionToken
      * @return $this
      */
     public function setSessionToken($sessionToken)
     {
-        if ($this->httpClient->getClient() instanceof \Guzzle\Common\HasDispatcherInterface) {
-            $sessionTokenPlugin = new SessionTokenPlugin($sessionToken);
-            $this->httpClient->getClient()->addSubscriber($sessionTokenPlugin);
+        $this->sessionToken = $sessionToken;
+
+        if ($this->httpClient instanceof HttpClientInterface) {
+            $this->getHttpClient()->setSessionToken($sessionToken);
         }
 
-        $this->sessionToken = $sessionToken;
         return $this;
     }
 
@@ -351,5 +434,106 @@ class Client {
     public function getSessionToken()
     {
         return $this->sessionToken;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getCacheEnabled()
+    {
+        return $this->cacheEnabled;
+    }
+
+    /**
+     * Set cache path
+     *
+     * Leaving the second argument out will use sys_get_temp_dir()
+     *
+     * @param  boolean $enabled
+     * @param  string  $path
+     * @return $this
+     */
+    public function setCaching($enabled = true, $path = null)
+    {
+        $this->cacheEnabled = $enabled;
+        $this->cachePath    = (null === $path) ?
+            sys_get_temp_dir() . '/php-tmdb-api' :
+            $path
+        ;
+
+        $this->getHttpClient()->setCaching(array(
+            'enabled'    => $enabled,
+            'cache_path' => $path
+        ));
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCachePath()
+    {
+        return $this->cachePath;
+    }
+
+    /**
+     * @param  \Psr\Log\LoggerInterface $logger
+     * @return $this
+     */
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
+
+    /**
+     * @return \Psr\Log\LoggerInterface
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getLogEnabled()
+    {
+        return $this->logEnabled;
+    }
+
+    /**
+     * Set log path
+     *
+     * Leaving the second argument out will use sys_get_temp_dir()
+     *
+     * @param  boolean $enabled
+     * @param  string  $path
+     * @return $this
+     */
+    public function setLogging($enabled = true, $path = null)
+    {
+        $this->logEnabled = $enabled;
+        $this->logPath    = (null === $path) ?
+            sys_get_temp_dir() . '/php-tmdb-api.log' :
+            $path
+        ;
+
+        $this->getHttpClient()->setLogging(array(
+            'enabled'  => $enabled,
+            'log_path' => $path
+        ));
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogPath()
+    {
+        return $this->logPath;
     }
 }

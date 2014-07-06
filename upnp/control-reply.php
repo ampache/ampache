@@ -12,14 +12,7 @@ set_time_limit(600);
 header ("Content-Type: text/html; charset=UTF-8");
 $rootMediaItems = array();
 $rootMediaItems[] = Upnp_Api::_musicMetadata('');
-
-/*$rootMediaItems[] = array(
-    'id'			=> 'amp://video',
-    'parentID'		=> '0',
-    'dc:title'		=> 'Video',
-    'upnp:class'	=> 'object.container',
-    'upnp:album_art'=> '',
-);*/
+$rootMediaItems[] = Upnp_Api::_videoMetadata('');
 
     // Parse the request from UPnP player
     $requestRaw = file_get_contents('php://input');
@@ -46,7 +39,7 @@ $rootMediaItems[] = Upnp_Api::_musicMetadata('');
                     $items[] = array(
                         'id'			=> '0',
                         'parentID'		=> '-1',
-                        'childCount'    => '1',
+                        'childCount'    => '2',
                         'dc:title'		=> T_('root'),
                         'upnp:class'	=> 'object.container',
                     );
@@ -74,6 +67,13 @@ $rootMediaItems[] = Upnp_Api::_musicMetadata('');
                                     $items = Upnp_Api::_musicMetadata($reqObjectURL['path'], $reqObjectURL['query']);
                                 } else {
                                     $items = Upnp_Api::_musicChilds($reqObjectURL['path'], $reqObjectURL['query']);
+                                }
+                                break;
+                            case 'video':
+                                if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
+                                    $items = Upnp_Api::_videoMetadata($reqObjectURL['path'], $reqObjectURL['query']);
+                                } else {
+                                    $items = Upnp_Api::_videoChilds($reqObjectURL['path'], $reqObjectURL['query']);
                                 }
                                 break;
                         }

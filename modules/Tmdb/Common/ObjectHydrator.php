@@ -21,12 +21,13 @@ use Tmdb\Model\AbstractModel;
  * Class ObjectHydrator
  * @package Tmdb\Common
  */
-class ObjectHydrator {
+class ObjectHydrator
+{
     /**
      * Hydrate the object with data
      *
-     * @param AbstractModel $object
-     * @param array $data
+     * @param  AbstractModel    $object
+     * @param  array            $data
      * @return AbstractModel
      * @throws RuntimeException
      */
@@ -35,7 +36,7 @@ class ObjectHydrator {
         if (!empty($data)) {
             foreach ($data as $k => $v) {
 
-                if (in_array($k, $object::$_properties)) {
+                if (in_array($k, $object::$properties)) {
 
                     $method = $this->camelize(
                         sprintf('set_%s', $k)
@@ -47,7 +48,7 @@ class ObjectHydrator {
                             $method,
                             get_class($object)
                         ));
-                    }else{
+                    } else {
                         $object->$method($v);
                     }
                 }
@@ -62,16 +63,21 @@ class ObjectHydrator {
      *
      * @see https://gist.github.com/troelskn/751517
      *
-     * @param string $candidate
+     * @param  string $candidate
      * @return string
      */
     public function camelize($candidate)
     {
         return lcfirst(
-            implode('',
-                array_map('ucfirst',
-                    array_map('strtolower',
-                        explode('_', $candidate
+            implode(
+                '',
+                array_map(
+                    'ucfirst',
+                    array_map(
+                        'strtolower',
+                        explode(
+                            '_',
+                            $candidate
                         )
                     )
                 )

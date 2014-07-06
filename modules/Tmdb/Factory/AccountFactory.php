@@ -61,17 +61,18 @@ class AccountFactory extends AbstractFactory
     /**
      * Create movie
      *
-     * @param array $data
+     * @param  array             $data
      * @return \Tmdb\Model\Movie
      */
-    public function createMovie(array $data = array()) {
+    public function createMovie(array $data = array())
+    {
         return $this->getMovieFactory()->create($data);
     }
 
     /**
      * Create list item
      *
-     * @param array $data
+     * @param  array                     $data
      * @return \Tmdb\Model\AbstractModel
      */
     public function createListItem(array $data = array())
@@ -94,12 +95,13 @@ class AccountFactory extends AbstractFactory
     }
 
     /**
-     * @param \Tmdb\Factory\MovieFactory $movieFactory
+     * @param  \Tmdb\Factory\MovieFactory $movieFactory
      * @return $this
      */
     public function setMovieFactory($movieFactory)
     {
         $this->movieFactory = $movieFactory;
+
         return $this;
     }
 
@@ -112,12 +114,13 @@ class AccountFactory extends AbstractFactory
     }
 
     /**
-     * @param \Tmdb\Factory\ImageFactory $imageFactory
+     * @param  \Tmdb\Factory\ImageFactory $imageFactory
      * @return $this
      */
     public function setImageFactory($imageFactory)
     {
         $this->imageFactory = $imageFactory;
+
         return $this;
     }
 

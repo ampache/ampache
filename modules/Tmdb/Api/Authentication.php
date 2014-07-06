@@ -12,16 +12,15 @@
  */
 namespace Tmdb\Api;
 
-use Symfony\Component\Yaml\Exception\RuntimeException;
 use Tmdb\Exception\UnauthorizedRequestTokenException;
+use Tmdb\RequestToken;
 
 /**
  * Class Authentication
  * @package Tmdb\Api
  * @see http://docs.themoviedb.apiary.io/#authentication
  */
-class Authentication
-    extends AbstractApi
+class Authentication extends AbstractApi
 {
     const REQUEST_TOKEN_URI = 'https://www.themoviedb.org/authenticate';
 
@@ -46,30 +45,93 @@ class Authentication
      */
     public function authenticateRequestToken($token)
     {
+        //@codeCoverageIgnoreStart
         header(sprintf(
             'Location: %s/%s',
             self::REQUEST_TOKEN_URI,
             $token
         ));
+        //@codeCoverageIgnoreEnd
     }
 
     /**
      * This method is used to generate a session id for user based authentication.
      * A session id is required in order to use any of the write methods.
      *
-     * @param string $requestToken
+     * @param  string                            $requestToken
      * @throws UnauthorizedRequestTokenException
      * @return mixed
      */
     public function getNewSession($requestToken)
     {
+        if ($requestToken instanceof RequestToken) {
+            $requestToken = $requestToken->getToken();
+        }
+
         try {
             return $this->get('authentication/session/new', array('request_token' => $requestToken));
-        }
-        catch(\Exception $e) {
+
+            //@codeCoverageIgnoreStart
+        } catch (\Exception $e) {
             if ($e->getCode() == 401) {
                 throw new UnauthorizedRequestTokenException("The request token has not been validated yet.");
             }
+            //@codeCoverageIgnoreEnd
+        }
+    }
+
+    /**
+     * Helper method to validate the request_token and obtain a session_token
+     *
+     * @param $requestToken
+     * @param $username
+     * @param $password
+     * @return mixed
+     * @throws \InvalidArgumentException
+     */
+    public function getSessionTokenWithLogin($requestToken, $username, $password)
+    {
+        if ($requestToken instanceof RequestToken) {
+            $requestToken = $requestToken->getToken();
+        }
+
+        $validatedRequestToken = $this->validateRequestTokenWithLogin($requestToken, $username, $password);
+
+        if (!$validatedRequestToken['success']) {
+            throw new \InvalidArgumentException('Unable to validate the request_token, please check your credentials.');
+        }
+
+        return $this->getNewSession($validatedRequestToken['request_token']);
+    }
+
+    /**
+     * This method is used to generate a session id for user based authentication.
+     * A session id is required in order to use any of the write methods.
+     *
+     * @param  string                            $requestToken
+     * @param  string                            $username
+     * @param  string                            $password
+     * @throws UnauthorizedRequestTokenException
+     * @return mixed
+     */
+    public function validateRequestTokenWithLogin($requestToken, $username, $password)
+    {
+        if ($requestToken instanceof RequestToken) {
+            $requestToken = $requestToken->getToken();
+        }
+
+        try {
+            return $this->get('authentication/token/validate_with_login', array(
+                'username'      => $username,
+                'password'      => $password,
+                'request_token' => $requestToken
+            ));
+            //@codeCoverageIgnoreStart
+        } catch (\Exception $e) {
+            if ($e->getCode() == 401) {
+                throw new UnauthorizedRequestTokenException("The request token has not been validated yet.");
+            }
+            //@codeCoverageIgnoreEnd
         }
     }
 
@@ -80,7 +142,8 @@ class Authentication
      * You should only generate a single guest session per user (or device)
      * as you will be able to attach the ratings to a TMDb user account in the future.
      *
-     * There is also IP limits in place so you should always make sure it's the end user doing the guest session actions.
+     * There is also IP limits in place so you should always make sure it's the end user
+     * doing the guest session actions.
      *
      * If a guest session is not used for the first time within 24 hours, it will be automatically discarded.
      *

@@ -19,8 +19,8 @@ use Tmdb\Model\Common\GenericCollection;
  * Class Find
  * @package Tmdb\Model
  */
-class Find extends AbstractModel {
-
+class Find extends AbstractModel
+{
     /**
      * @var GenericCollection
      */
@@ -37,12 +37,13 @@ class Find extends AbstractModel {
     private $tvResults;
 
     /**
-     * @param \Tmdb\Model\Common\GenericCollection $movieResults
+     * @param  \Tmdb\Model\Common\GenericCollection $movieResults
      * @return $this
      */
     public function setMovieResults($movieResults)
     {
         $this->movieResults = $movieResults;
+
         return $this;
     }
 
@@ -55,12 +56,13 @@ class Find extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Collection\People $personResults
+     * @param  \Tmdb\Model\Collection\People $personResults
      * @return $this
      */
     public function setPersonResults($personResults)
     {
         $this->personResults = $personResults;
+
         return $this;
     }
 
@@ -73,12 +75,13 @@ class Find extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Common\GenericCollection $tvResults
+     * @param  \Tmdb\Model\Common\GenericCollection $tvResults
      * @return $this
      */
     public function setTvResults($tvResults)
     {
         $this->tvResults = $tvResults;
+
         return $this;
     }
 
@@ -89,6 +92,4 @@ class Find extends AbstractModel {
     {
         return $this->tvResults;
     }
-
-
 }

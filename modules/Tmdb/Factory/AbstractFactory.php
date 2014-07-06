@@ -21,11 +21,12 @@ use Tmdb\Model\Common\GenericCollection;
  * Class AbstractFactory
  * @package Tmdb\Factory
  */
-abstract class AbstractFactory {
+abstract class AbstractFactory
+{
     /**
      * Convert an array to an hydrated object
      *
-     * @param array $data
+     * @param  array         $data
      * @return AbstractModel
      */
     abstract public function create(array $data = array());
@@ -33,19 +34,19 @@ abstract class AbstractFactory {
     /**
      * Convert an array with an collection of items to an hydrated object collection
      *
-     * @param array $data
+     * @param  array             $data
      * @return GenericCollection
      */
     abstract public function createCollection(array $data = array());
 
     /**
-     * Create a generic collection of data and map it on the class by it's static parameter $_properties
+     * Create a generic collection of data and map it on the class by it's static parameter $properties
      *
-     * @param array $data
+     * @param  array             $data
      * @param $class
      * @return GenericCollection
      */
-    protected function createGenericCollection(array $data = array(), $class)
+    protected function createGenericCollection($data = array(), $class)
     {
         if (is_object($class)) {
             $class = get_class($class);
@@ -53,7 +54,11 @@ abstract class AbstractFactory {
 
         $collection = new GenericCollection();
 
-        foreach($data as $item) {
+        if (null === $data) {
+            return $collection;
+        }
+
+        foreach ($data as $item) {
             $collection->add(null, $this->hydrate(new $class(), $item));
         }
 
@@ -63,13 +68,17 @@ abstract class AbstractFactory {
     /**
      * Create a result collection
      *
-     * @param array $data
-     * @param string $method
+     * @param  array            $data
+     * @param  string           $method
      * @return ResultCollection
      */
-    public function createResultCollection(array $data = array(), $method = 'create')
+    public function createResultCollection($data = array(), $method = 'create')
     {
         $collection = new ResultCollection();
+
+        if (null === $data) {
+            return $collection;
+        }
 
         if (array_key_exists('page', $data)) {
             $collection->setPage($data['page']);
@@ -87,7 +96,7 @@ abstract class AbstractFactory {
             $data = $data['results'];
         }
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->add(null, $this->$method($item));
         }
 
@@ -97,8 +106,8 @@ abstract class AbstractFactory {
     /**
      * Hydrate the object with data
      *
-     * @param AbstractModel $object
-     * @param array $data
+     * @param  AbstractModel $object
+     * @param  array         $data
      * @return AbstractModel
      */
     protected function hydrate(AbstractModel $object, $data = array())

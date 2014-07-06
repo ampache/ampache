@@ -298,19 +298,9 @@ class vainfo
             $info['album'] = $info['album'] ?: trim($tags['album']);
 
             $info['band'] = $info['band'] ?: trim($tags['band']);
+            $info['composer'] = $info['composer'] ?: trim($tags['composer']);
 
-            // multiple genre support
-            if ((!$info['genre']) && $tags['genre']) {
-                if (!is_array($tags['genre'])) {
-                    // not all tag formats will return an array, but we need one
-                    $info['genre'][] = trim($tags['genre']);
-                } else {
-                    // if we trim the array we lose everything after 1st entry
-                    foreach ($tags['genre'] as $genre) {
-                        $info['genre'][] = trim($genre);
-                    }
-                }
-            }
+            $info['genre'] = self::clean_array_tag('genre', $info, $tags);
 
             $info['mb_trackid'] = $info['mb_trackid'] ?: trim($tags['mb_trackid']);
             $info['mb_albumid'] = $info['mb_albumid'] ?: trim($tags['mb_albumid']);
@@ -330,12 +320,17 @@ class vainfo
             $info['resolution_y'] = $info['resolution_y'] ?: intval($tags['resolution_y']);
             $info['audio_codec'] = $info['audio_codec'] ?: trim($tags['audio_codec']);
             $info['video_codec'] = $info['video_codec'] ?: trim($tags['video_codec']);
+            $info['description'] = $info['description'] ?: trim($tags['description']);
 
             $info['tvshow'] = $info['tvshow'] ?: trim($tags['tvshow']);
             $info['tvshow_year'] = $info['tvshow_year'] ?: trim($tags['tvshow_year']);
             $info['tvshow_season'] = $info['tvshow_season'] ?: trim($tags['tvshow_season']);
             $info['tvshow_episode'] = $info['tvshow_episode'] ?: trim($tags['tvshow_episode']);
             $info['release_date'] = $info['release_date'] ?: trim($tags['release_date']);
+
+            $info['tvshow_art'] = $info['tvshow_art'] ?: trim($tags['tvshow_art']);
+            $info['tvshow_season_art'] = $info['tvshow_season_art'] ?: trim($tags['tvshow_season_art']);
+            $info['art'] = $info['art'] ?: trim($tags['art']);
         }
 
         // Some things set the disk number even though there aren't multiple
@@ -345,6 +340,25 @@ class vainfo
         }
 
         return $info;
+    }
+
+    private static function clean_array_tag($field, $info, $tags)
+    {
+        $arr = array();
+        if ((!$info[$field] || count($info[$field]) == 0) && $tags[$field]) {
+            if (!is_array($tags[$field])) {
+                // not all tag formats will return an array, but we need one
+                $arr[] = trim($tags[$field]);
+            } else {
+                foreach ($tags[$field] as $genre) {
+                    $arr[] = trim($genre);
+                }
+            }
+        } else {
+            $arr = $info[$field];
+        }
+
+        return $arr;
     }
 
     /**

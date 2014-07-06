@@ -53,7 +53,7 @@ class ChangesFactory extends AbstractFactory
             $data = $data['results'];
         }
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->add(null, $this->create($item));
         }
 

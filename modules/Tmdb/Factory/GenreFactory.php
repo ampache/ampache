@@ -14,7 +14,6 @@ namespace Tmdb\Factory;
 
 use Tmdb\Model\Collection\Genres;
 use Tmdb\Model\Genre;
-use Tmdb\Model\Movie;
 
 /**
  * Class GenreFactory
@@ -43,7 +42,7 @@ class GenreFactory extends AbstractFactory
             $data = $data['genres'];
         }
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->addGenre($this->create($item));
         }
 

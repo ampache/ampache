@@ -21,8 +21,8 @@ use Tmdb\Model\Image\PosterImage;
  * Class Collection
  * @package Tmdb\Model
  */
-class Collection extends AbstractModel {
-
+class Collection extends AbstractModel
+{
     /**
      * @var string
      */
@@ -68,7 +68,7 @@ class Collection extends AbstractModel {
      */
     private $poster;
 
-    public static $_properties = array(
+    public static $properties = array(
         'backdrop_path',
         'id',
         'name',
@@ -83,12 +83,13 @@ class Collection extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Image\BackdropImage $backdrop
+     * @param  \Tmdb\Model\Image\BackdropImage $backdrop
      * @return $this
      */
     public function setBackdropImage(BackdropImage $backdrop)
     {
         $this->backdrop = $backdrop;
+
         return $this;
     }
 
@@ -101,12 +102,13 @@ class Collection extends AbstractModel {
     }
 
     /**
-     * @param string $backdropPath
+     * @param  string $backdropPath
      * @return $this
      */
     public function setBackdropPath($backdropPath)
     {
         $this->backdropPath = $backdropPath;
+
         return $this;
     }
 
@@ -119,12 +121,13 @@ class Collection extends AbstractModel {
     }
 
     /**
-     * @param int $id
+     * @param  int   $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = (int) $id;
+
         return $this;
     }
 
@@ -137,12 +140,13 @@ class Collection extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Collection\Images $images
+     * @param  \Tmdb\Model\Collection\Images $images
      * @return $this
      */
     public function setImages(Images $images)
     {
         $this->images = $images;
+
         return $this;
     }
 
@@ -155,12 +159,13 @@ class Collection extends AbstractModel {
     }
 
     /**
-     * @param string $name
+     * @param  string $name
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -173,12 +178,13 @@ class Collection extends AbstractModel {
     }
 
     /**
-     * @param string $overview
+     * @param  string $overview
      * @return $this
      */
     public function setOverview($overview)
     {
         $this->overview = $overview;
+
         return $this;
     }
 
@@ -191,12 +197,13 @@ class Collection extends AbstractModel {
     }
 
     /**
-     * @param GenericCollection $parts
+     * @param  GenericCollection $parts
      * @return $this
      */
     public function setParts($parts)
     {
         $this->parts = $parts;
+
         return $this;
     }
 
@@ -209,12 +216,13 @@ class Collection extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Image\PosterImage $poster
+     * @param  \Tmdb\Model\Image\PosterImage $poster
      * @return $this
      */
     public function setPosterImage(PosterImage $poster)
     {
         $this->poster = $poster;
+
         return $this;
     }
 
@@ -227,12 +235,13 @@ class Collection extends AbstractModel {
     }
 
     /**
-     * @param string $posterPath
+     * @param  string $posterPath
      * @return $this
      */
     public function setPosterPath($posterPath)
     {
         $this->posterPath = $posterPath;
+
         return $this;
     }
 

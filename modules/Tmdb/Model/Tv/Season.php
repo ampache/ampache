@@ -15,16 +15,18 @@ namespace Tmdb\Model\Tv;
 use Tmdb\Model\AbstractModel;
 use Tmdb\Model\Collection\CreditsCollection;
 use Tmdb\Model\Collection\Images;
+use Tmdb\Model\Collection\Videos;
 use Tmdb\Model\Common\ExternalIds;
 use Tmdb\Model\Common\GenericCollection;
+use Tmdb\Model\Common\Video;
 use Tmdb\Model\Image\PosterImage;
 
 /**
  * Class Season
  * @package Tmdb\Model\Tv
  */
-class Season extends AbstractModel {
-
+class Season extends AbstractModel
+{
     /**
      * @var \DateTime
      */
@@ -87,13 +89,18 @@ class Season extends AbstractModel {
     protected $poster;
 
     /**
+     * @var Videos
+     */
+    protected $videos;
+
+    /**
      * Properties that are available in the API
      *
      * These properties are hydrated by the ObjectHydrator, all the other properties are handled by the factory.
      *
      * @var array
      */
-    public static $_properties = array(
+    public static $properties = array(
         'air_date',
         'name',
         'overview',
@@ -111,15 +118,17 @@ class Season extends AbstractModel {
         $this->externalIds = new ExternalIds();
         $this->images      = new Images();
         $this->episodes    = new GenericCollection();
+        $this->videos      = new Videos();
     }
 
     /**
-     * @param \DateTime $airDate
+     * @param  \DateTime $airDate
      * @return $this
      */
     public function setAirDate($airDate)
     {
         $this->airDate = new \DateTime($airDate);
+
         return $this;
     }
 
@@ -132,12 +141,13 @@ class Season extends AbstractModel {
     }
 
     /**
-     * @param GenericCollection $episodes
+     * @param  GenericCollection $episodes
      * @return $this
      */
     public function setEpisodes($episodes)
     {
         $this->episodes = $episodes;
+
         return $this;
     }
 
@@ -150,12 +160,13 @@ class Season extends AbstractModel {
     }
 
     /**
-     * @param int $id
+     * @param  int   $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = (int) $id;
+
         return $this;
     }
 
@@ -168,12 +179,13 @@ class Season extends AbstractModel {
     }
 
     /**
-     * @param string $name
+     * @param  string $name
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -186,12 +198,13 @@ class Season extends AbstractModel {
     }
 
     /**
-     * @param string $overview
+     * @param  string $overview
      * @return $this
      */
     public function setOverview($overview)
     {
         $this->overview = $overview;
+
         return $this;
     }
 
@@ -204,12 +217,13 @@ class Season extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Tv\Image $posterPath
+     * @param  \Tmdb\Model\Tv\Image $posterPath
      * @return $this
      */
     public function setPosterPath($posterPath)
     {
         $this->posterPath = $posterPath;
+
         return $this;
     }
 
@@ -222,12 +236,13 @@ class Season extends AbstractModel {
     }
 
     /**
-     * @param int $seasonNumber
+     * @param  int   $seasonNumber
      * @return $this
      */
     public function setSeasonNumber($seasonNumber)
     {
         $this->seasonNumber = $seasonNumber;
+
         return $this;
     }
 
@@ -240,12 +255,13 @@ class Season extends AbstractModel {
     }
 
     /**
-     * @param Credits $credits
+     * @param  Credits $credits
      * @return $this
      */
     public function setCredits($credits)
     {
         $this->credits = $credits;
+
         return $this;
     }
 
@@ -258,12 +274,13 @@ class Season extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Common\ExternalIds $externalIds
+     * @param  \Tmdb\Model\Common\ExternalIds $externalIds
      * @return $this
      */
     public function setExternalIds($externalIds)
     {
         $this->externalIds = $externalIds;
+
         return $this;
     }
 
@@ -276,12 +293,13 @@ class Season extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Collection\Images $images
+     * @param  \Tmdb\Model\Collection\Images $images
      * @return $this
      */
     public function setImages($images)
     {
         $this->images = $images;
+
         return $this;
     }
 
@@ -294,12 +312,13 @@ class Season extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Image\PosterImage $poster
+     * @param  \Tmdb\Model\Image\PosterImage $poster
      * @return $this
      */
     public function setPosterImage($poster)
     {
         $this->poster = $poster;
+
         return $this;
     }
 
@@ -309,5 +328,24 @@ class Season extends AbstractModel {
     public function getPosterImage()
     {
         return $this->poster;
+    }
+
+    /**
+     * @param  \Tmdb\Model\Collection\Videos $videos
+     * @return $this
+     */
+    public function setVideos($videos)
+    {
+        $this->videos = $videos;
+
+        return $this;
+    }
+
+    /**
+     * @return Videos|Video[]
+     */
+    public function getVideos()
+    {
+        return $this->videos;
     }
 }

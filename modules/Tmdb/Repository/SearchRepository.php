@@ -42,8 +42,8 @@ use Tmdb\Model\Tv;
  * @package Tmdb\Repository
  * @see http://docs.themoviedb.apiary.io/#search
  */
-class SearchRepository extends AbstractRepository {
-
+class SearchRepository extends AbstractRepository
+{
     /**
      * @var MovieFactory
      */
@@ -93,92 +93,98 @@ class SearchRepository extends AbstractRepository {
     }
 
     /**
-     * @param string $query
+     * @param string           $query
      * @param MovieSearchQuery $parameters
-     * @param array $headers
+     * @param array            $headers
      *
      * @return ResultCollection|Movie[]
      */
-    public function searchMovie($query, MovieSearchQuery $parameters, array $headers = array()) {
+    public function searchMovie($query, MovieSearchQuery $parameters, array $headers = array())
+    {
         $data = $this->getApi()->searchMovies($query, $this->getParameters($parameters), $headers);
 
         return $this->getMovieFactory()->createResultCollection($data);
     }
 
     /**
-     * @param string $query
+     * @param string                $query
      * @param CollectionSearchQuery $parameters
-     * @param array $headers
+     * @param array                 $headers
      *
      * @return ResultCollection|Collection[]
      */
-    public function searchCollection($query, CollectionSearchQuery $parameters, array $headers = array()) {
+    public function searchCollection($query, CollectionSearchQuery $parameters, array $headers = array())
+    {
         $data = $this->getApi()->searchCollection($query, $this->getParameters($parameters), $headers);
 
         return $this->getCollectionFactory()->createResultCollection($data);
     }
 
     /**
-     * @param string $query
+     * @param string        $query
      * @param TvSearchQuery $parameters
-     * @param array $headers
+     * @param array         $headers
      *
      * @return ResultCollection|Tv[]
      */
-    public function searchTv($query, TvSearchQuery $parameters, array $headers = array()) {
+    public function searchTv($query, TvSearchQuery $parameters, array $headers = array())
+    {
         $data = $this->getApi()->searchTv($query, $this->getParameters($parameters), $headers);
 
         return $this->getTvFactory()->createResultCollection($data);
     }
 
     /**
-     * @param string $query
+     * @param string            $query
      * @param PersonSearchQuery $parameters
-     * @param array $headers
+     * @param array             $headers
      *
      * @return ResultCollection|Person[]
      */
-    public function searchPerson($query, PersonSearchQuery $parameters, array $headers = array()) {
+    public function searchPerson($query, PersonSearchQuery $parameters, array $headers = array())
+    {
         $data = $this->getApi()->searchPersons($query, $this->getParameters($parameters), $headers);
 
         return $this->getPeopleFactory()->createResultCollection($data);
     }
 
     /**
-     * @param string $query
+     * @param string          $query
      * @param ListSearchQuery $parameters
-     * @param array $headers
+     * @param array           $headers
      *
      * @return ResultCollection
      */
-    public function searchList($query, ListSearchQuery $parameters, array $headers = array()) {
+    public function searchList($query, ListSearchQuery $parameters, array $headers = array())
+    {
         $data = $this->getApi()->searchList($query, $this->getParameters($parameters), $headers);
 
         return $this->getListitemFactory()->createResultCollection($data);
     }
 
     /**
-     * @param string $query
+     * @param string             $query
      * @param CompanySearchQuery $parameters
-     * @param array $headers
+     * @param array              $headers
      *
      * @return ResultCollection|Company[]
      */
-    public function searchCompany($query, CompanySearchQuery $parameters, array $headers = array()) {
+    public function searchCompany($query, CompanySearchQuery $parameters, array $headers = array())
+    {
         $data = $this->getApi()->searchTv($query, $this->getParameters($parameters), $headers);
 
         return $this->getCompanyFactory()->createResultCollection($data);
     }
 
-
     /**
-     * @param string $query
+     * @param string             $query
      * @param KeywordSearchQuery $parameters
-     * @param array $headers
+     * @param array              $headers
      *
      * @return ResultCollection|Keyword[]
      */
-    public function searchKeyword($query, KeywordSearchQuery $parameters, array $headers = array()) {
+    public function searchKeyword($query, KeywordSearchQuery $parameters, array $headers = array())
+    {
         $data = $this->getApi()->searchKeyword($query, $this->getParameters($parameters), $headers);
 
         return $this->getKeywordFactory()->createResultCollection($data);
@@ -187,10 +193,11 @@ class SearchRepository extends AbstractRepository {
     /**
      * Convert parameters back to an array
      *
-     * @param array $parameters
+     * @param  array $parameters
      * @return array
      */
-    private function getParameters($parameters = array()) {
+    private function getParameters($parameters = array())
+    {
         if ($parameters instanceof SearchQuery) {
             return $parameters->toArray();
         }
@@ -213,17 +220,19 @@ class SearchRepository extends AbstractRepository {
      *
      * @throws NotImplementedException
      */
-    public function getFactory(){
+    public function getFactory()
+    {
         throw new NotImplementedException('SearchRepository does not support a generic factory.');
     }
 
     /**
-     * @param \Tmdb\Factory\MovieFactory $movieFactory
+     * @param  \Tmdb\Factory\MovieFactory $movieFactory
      * @return $this
      */
     public function setMovieFactory($movieFactory)
     {
         $this->movieFactory = $movieFactory;
+
         return $this;
     }
 
@@ -236,12 +245,13 @@ class SearchRepository extends AbstractRepository {
     }
 
     /**
-     * @param \Tmdb\Factory\CollectionFactory $collectionFactory
+     * @param  \Tmdb\Factory\CollectionFactory $collectionFactory
      * @return $this
      */
     public function setCollectionFactory($collectionFactory)
     {
         $this->collectionFactory = $collectionFactory;
+
         return $this;
     }
 
@@ -254,12 +264,13 @@ class SearchRepository extends AbstractRepository {
     }
 
     /**
-     * @param \Tmdb\Factory\CompanyFactory $companyFactory
+     * @param  \Tmdb\Factory\CompanyFactory $companyFactory
      * @return $this
      */
     public function setCompanyFactory($companyFactory)
     {
         $this->companyFactory = $companyFactory;
+
         return $this;
     }
 
@@ -272,12 +283,13 @@ class SearchRepository extends AbstractRepository {
     }
 
     /**
-     * @param \Tmdb\Factory\KeywordFactory $keywordFactory
+     * @param  \Tmdb\Factory\KeywordFactory $keywordFactory
      * @return $this
      */
     public function setKeywordFactory($keywordFactory)
     {
         $this->keywordFactory = $keywordFactory;
+
         return $this;
     }
 
@@ -290,12 +302,13 @@ class SearchRepository extends AbstractRepository {
     }
 
     /**
-     * @param \Tmdb\Factory\Movie\ListItemFactory $listItemFactory
+     * @param  \Tmdb\Factory\Movie\ListItemFactory $listItemFactory
      * @return $this
      */
     public function setListItemFactory($listItemFactory)
     {
         $this->listItemFactory = $listItemFactory;
+
         return $this;
     }
 
@@ -308,12 +321,13 @@ class SearchRepository extends AbstractRepository {
     }
 
     /**
-     * @param \Tmdb\Factory\PeopleFactory $peopleFactory
+     * @param  \Tmdb\Factory\PeopleFactory $peopleFactory
      * @return $this
      */
     public function setPeopleFactory($peopleFactory)
     {
         $this->peopleFactory = $peopleFactory;
+
         return $this;
     }
 
@@ -326,12 +340,13 @@ class SearchRepository extends AbstractRepository {
     }
 
     /**
-     * @param \Tmdb\Factory\TvFactory $tvFactory
+     * @param  \Tmdb\Factory\TvFactory $tvFactory
      * @return $this
      */
     public function setTvFactory($tvFactory)
     {
         $this->tvFactory = $tvFactory;
+
         return $this;
     }
 

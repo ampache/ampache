@@ -18,8 +18,8 @@ use Tmdb\Model\AbstractModel;
  * Class CountryCertification
  * @package Tmdb\Model\Certification
  */
-class CountryCertification extends AbstractModel {
-
+class CountryCertification extends AbstractModel
+{
     /**
      * @var string
      */
@@ -35,19 +35,20 @@ class CountryCertification extends AbstractModel {
      */
     private $order;
 
-    public static $_properties = array(
+    public static $properties = array(
         'certification',
         'meaning',
         'order',
     );
 
     /**
-     * @param string $certification
+     * @param  string $certification
      * @return $this
      */
     public function setCertification($certification)
     {
         $this->certification = $certification;
+
         return $this;
     }
 
@@ -60,12 +61,13 @@ class CountryCertification extends AbstractModel {
     }
 
     /**
-     * @param string $meaning
+     * @param  string $meaning
      * @return $this
      */
     public function setMeaning($meaning)
     {
         $this->meaning = $meaning;
+
         return $this;
     }
 
@@ -78,12 +80,13 @@ class CountryCertification extends AbstractModel {
     }
 
     /**
-     * @param int $order
+     * @param  int   $order
      * @return $this
      */
     public function setOrder($order)
     {
         $this->order = $order;
+
         return $this;
     }
 
@@ -94,6 +97,4 @@ class CountryCertification extends AbstractModel {
     {
         return $this->order;
     }
-
-
 }

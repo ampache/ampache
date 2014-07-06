@@ -15,24 +15,24 @@ namespace Tmdb\Repository;
 use Tmdb\Factory\CompanyFactory;
 use Tmdb\Factory\CreditsFactory;
 use Tmdb\Model\Company;
-use Tmdb\Model\Movie;
 
 /**
  * Class CreditsRepository
  * @package Tmdb\Repository
  * @see http://docs.themoviedb.apiary.io/#credits
  */
-class CreditsRepository extends AbstractRepository {
-
+class CreditsRepository extends AbstractRepository
+{
     /**
      * Load a company with the given identifier
      *
      * @param $id
-     * @param array $parameters
-     * @param array $headers
+     * @param  array   $parameters
+     * @param  array   $headers
      * @return Company
      */
-    public function load($id, array $parameters = array(), array $headers = array()) {
+    public function load($id, array $parameters = array(), array $headers = array())
+    {
         $data = $this->getApi()->getCredit($id, $this->parseQueryParameters($parameters), $headers);
 
         return $this->getFactory()->create($data);

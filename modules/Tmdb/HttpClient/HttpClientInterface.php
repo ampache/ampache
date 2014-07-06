@@ -14,6 +14,7 @@ namespace Tmdb\HttpClient;
 
 use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\Message\Response;
+use Tmdb\SessionToken;
 
 /**
  * Interface HttpClientInterface
@@ -24,71 +25,71 @@ interface HttpClientInterface
     /**
      * Compose a GET request
      *
-     * @param  string $path       Request path
-     * @param  array  $parameters GET Parameters
-     * @param  array  $headers    Reconfigure the request headers for this call only
+     * @param string $path       Request path
+     * @param array  $parameters GET Parameters
+     * @param array  $headers    Reconfigure the request headers for this call only
      *
-     * @return Response           Data
+     * @return Response Data
      */
     public function get($path, array $parameters = array(), array $headers = array());
 
     /**
      * Compose a POST request
      *
-     * @param  string $path       Request path
-     * @param  string $postBody   The post BODY
-     * @param  array  $parameters POST Parameters
-     * @param  array  $headers    Reconfigure the request headers for this call only
+     * @param string $path       Request path
+     * @param string $postBody   The post BODY
+     * @param array  $parameters POST Parameters
+     * @param array  $headers    Reconfigure the request headers for this call only
      *
-     * @return Response              Data
+     * @return Response Data
      */
     public function post($path, $postBody, array $parameters = array(), array $headers = array());
 
     /**
      * Compose a POST request but json_encode the body
      *
-     * @param  string $path       Request path
-     * @param  array  $postBody   The post BODY
-     * @param  array  $parameters POST Parameters
-     * @param  array  $headers    Reconfigure the request headers for this call only
+     * @param string $path       Request path
+     * @param array  $postBody   The post BODY
+     * @param array  $parameters POST Parameters
+     * @param array  $headers    Reconfigure the request headers for this call only
      *
-     * @return Response              Data
+     * @return Response Data
      */
     public function postJson($path, $postBody, array $parameters = array(), array $headers = array());
 
     /**
      * Compose a PATCH request
      *
-     * @param  string $path       Request path
-     * @param  string $body       The body
-     * @param  array  $parameters PATCH Parameters
-     * @param  array  $headers    Reconfigure the request headers for this call only
+     * @param string $path       Request path
+     * @param string $body       The body
+     * @param array  $parameters PATCH Parameters
+     * @param array  $headers    Reconfigure the request headers for this call only
      *
-     * @return Response           Data
+     * @return Response Data
      */
     public function patch($path, $body = null, array $parameters = array(), array $headers = array());
 
     /**
      * Compose a PUT request
      *
-     * @param  string $path       Request path
-     * @param  string $body       The body
-     * @param  array  $parameters PUT Parameters
-     * @param  array  $headers    Reconfigure the request headers for this call only
+     * @param string $path       Request path
+     * @param string $body       The body
+     * @param array  $parameters PUT Parameters
+     * @param array  $headers    Reconfigure the request headers for this call only
      *
-     * @return Response           Data
+     * @return Response Data
      */
     public function put($path, $body = null, array $parameters = array(), array $headers = array());
 
     /**
      * Compose a DELETE request
      *
-     * @param  string $path       Request path
-     * @param  string $body       The body
-     * @param  array  $parameters DELETE Parameters
-     * @param  array  $headers    Reconfigure the request headers for this call only
+     * @param string $path       Request path
+     * @param string $body       The body
+     * @param array  $parameters DELETE Parameters
+     * @param array  $headers    Reconfigure the request headers for this call only
      *
-     * @return Response           Data
+     * @return Response Data
      */
     public function delete($path, $body = null, array $parameters = array(), array $headers = array());
 
@@ -100,4 +101,8 @@ interface HttpClientInterface
      */
     public function request(RequestInterface $request);
 
+    public function getBaseUrl();
+    public function setBaseUrl($url);
+
+    public function setSessionToken(SessionToken $sessionToken);
 }

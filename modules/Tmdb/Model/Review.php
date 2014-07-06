@@ -16,8 +16,8 @@ namespace Tmdb\Model;
  * Class Review
  * @package Tmdb\Model
  */
-class Review extends AbstractModel {
-
+class Review extends AbstractModel
+{
     private $id;
     private $author;
     private $content;
@@ -27,7 +27,7 @@ class Review extends AbstractModel {
     private $mediaType;
     private $url;
 
-    public static $_properties = array(
+    public static $properties = array(
         'id',
         'author',
         'content',
@@ -39,12 +39,13 @@ class Review extends AbstractModel {
     );
 
     /**
-     * @param mixed $author
+     * @param  mixed $author
      * @return $this
      */
     public function setAuthor($author)
     {
         $this->author = $author;
+
         return $this;
     }
 
@@ -57,12 +58,13 @@ class Review extends AbstractModel {
     }
 
     /**
-     * @param mixed $content
+     * @param  mixed $content
      * @return $this
      */
     public function setContent($content)
     {
         $this->content = $content;
+
         return $this;
     }
 
@@ -75,12 +77,13 @@ class Review extends AbstractModel {
     }
 
     /**
-     * @param mixed $id
+     * @param  mixed $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -93,12 +96,13 @@ class Review extends AbstractModel {
     }
 
     /**
-     * @param mixed $iso6391
+     * @param  mixed $iso6391
      * @return $this
      */
     public function setIso6391($iso6391)
     {
         $this->iso6391 = $iso6391;
+
         return $this;
     }
 
@@ -111,12 +115,13 @@ class Review extends AbstractModel {
     }
 
     /**
-     * @param mixed $mediaId
+     * @param  mixed $mediaId
      * @return $this
      */
     public function setMediaId($mediaId)
     {
         $this->mediaId = $mediaId;
+
         return $this;
     }
 
@@ -129,12 +134,13 @@ class Review extends AbstractModel {
     }
 
     /**
-     * @param mixed $mediaTitle
+     * @param  mixed $mediaTitle
      * @return $this
      */
     public function setMediaTitle($mediaTitle)
     {
         $this->mediaTitle = $mediaTitle;
+
         return $this;
     }
 
@@ -147,12 +153,13 @@ class Review extends AbstractModel {
     }
 
     /**
-     * @param mixed $mediaType
+     * @param  mixed $mediaType
      * @return $this
      */
     public function setMediaType($mediaType)
     {
         $this->mediaType = $mediaType;
+
         return $this;
     }
 
@@ -165,12 +172,13 @@ class Review extends AbstractModel {
     }
 
     /**
-     * @param mixed $url
+     * @param  mixed $url
      * @return $this
      */
     public function setUrl($url)
     {
         $this->url = $url;
+
         return $this;
     }
 
@@ -181,6 +189,4 @@ class Review extends AbstractModel {
     {
         return $this->url;
     }
-
-
 }

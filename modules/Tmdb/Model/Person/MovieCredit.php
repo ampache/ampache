@@ -19,8 +19,8 @@ use Tmdb\Model\Image\PosterImage;
  * Class MovieCredit
  * @package Tmdb\Model\Person
  */
-class MovieCredit extends AbstractModel {
-
+class MovieCredit extends AbstractModel
+{
     /**
      * @var bool
      */
@@ -66,7 +66,7 @@ class MovieCredit extends AbstractModel {
      */
     private $posterImage;
 
-    public static $_properties = array(
+    public static $properties = array(
         'adult',
         'character',
         'credit_id',
@@ -78,12 +78,13 @@ class MovieCredit extends AbstractModel {
     );
 
     /**
-     * @param boolean $adult
+     * @param  boolean $adult
      * @return $this
      */
     public function setAdult($adult)
     {
         $this->adult = $adult;
+
         return $this;
     }
 
@@ -96,12 +97,13 @@ class MovieCredit extends AbstractModel {
     }
 
     /**
-     * @param string $character
+     * @param  string $character
      * @return $this
      */
     public function setCharacter($character)
     {
         $this->character = $character;
+
         return $this;
     }
 
@@ -114,12 +116,13 @@ class MovieCredit extends AbstractModel {
     }
 
     /**
-     * @param string $creditId
+     * @param  string $creditId
      * @return $this
      */
     public function setCreditId($creditId)
     {
         $this->creditId = $creditId;
+
         return $this;
     }
 
@@ -132,12 +135,13 @@ class MovieCredit extends AbstractModel {
     }
 
     /**
-     * @param int $id
+     * @param  int   $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -150,12 +154,13 @@ class MovieCredit extends AbstractModel {
     }
 
     /**
-     * @param string $originalTitle
+     * @param  string $originalTitle
      * @return $this
      */
     public function setOriginalTitle($originalTitle)
     {
         $this->originalTitle = $originalTitle;
+
         return $this;
     }
 
@@ -168,12 +173,13 @@ class MovieCredit extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Image\PosterImage $posterImage
+     * @param  \Tmdb\Model\Image\PosterImage $posterImage
      * @return $this
      */
     public function setPosterImage($posterImage)
     {
         $this->posterImage = $posterImage;
+
         return $this;
     }
 
@@ -186,12 +192,13 @@ class MovieCredit extends AbstractModel {
     }
 
     /**
-     * @param string $posterPath
+     * @param  string $posterPath
      * @return $this
      */
     public function setPosterPath($posterPath)
     {
         $this->posterPath = $posterPath;
+
         return $this;
     }
 
@@ -204,7 +211,7 @@ class MovieCredit extends AbstractModel {
     }
 
     /**
-     * @param \DateTime $releaseDate
+     * @param  \DateTime $releaseDate
      * @return $this
      */
     public function setReleaseDate($releaseDate)
@@ -214,6 +221,7 @@ class MovieCredit extends AbstractModel {
         }
 
         $this->releaseDate = $releaseDate;
+
         return $this;
     }
 
@@ -226,12 +234,13 @@ class MovieCredit extends AbstractModel {
     }
 
     /**
-     * @param string $title
+     * @param  string $title
      * @return $this
      */
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -242,6 +251,4 @@ class MovieCredit extends AbstractModel {
     {
         return $this->title;
     }
-
-
 }

@@ -363,7 +363,7 @@ class Preference extends database_object
     public static function fix_preferences($results)
     {
         $arrays = array('auth_methods', 'getid3_tag_order',
-            'metadata_order', 'metadata_order_video', 'art_order', 'amazon_base_urls');
+            'metadata_order', 'metadata_order_video', 'art_order');
 
         foreach ($arrays as $item) {
             $results[$item] = trim($results[$item])

@@ -20,15 +20,16 @@ use Tmdb\Model\Configuration;
  * @package Tmdb\Repository
  * @see http://docs.themoviedb.apiary.io/#configuration
  */
-class ConfigurationRepository extends AbstractRepository {
-
+class ConfigurationRepository extends AbstractRepository
+{
     /**
      * Load up TMDB Configuration
      *
-     * @param array $headers
+     * @param  array         $headers
      * @return Configuration
      */
-    public function load(array $headers = array()) {
+    public function load(array $headers = array())
+    {
         $data = $this->getApi()->getConfiguration($headers);
 
         return $this->getFactory()->create($data);

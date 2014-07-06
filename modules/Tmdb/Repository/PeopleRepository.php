@@ -23,17 +23,18 @@ use Tmdb\Model\Person\QueryParameter\AppendToResponse;
  *
  * @todo implement the new methods
  */
-class PeopleRepository extends AbstractRepository {
+class PeopleRepository extends AbstractRepository
+{
     /**
      * Load a person with the given identifier
      *
      * @param $id
-     * @param array $parameters
-     * @param array $headers
+     * @param  array  $parameters
+     * @param  array  $headers
      * @return Person
      */
-    public function load($id, array $parameters = array(), array $headers = array()) {
-
+    public function load($id, array $parameters = array(), array $headers = array())
+    {
         if (empty($parameters) && $parameters !== false) {
             // Load a no-nonsense default set
             $parameters = array(
@@ -49,6 +50,7 @@ class PeopleRepository extends AbstractRepository {
         }
 
         $data = $this->getApi()->getPerson($id, $this->parseQueryParameters($parameters), $headers);
+
         return $this->getFactory()->create($data);
     }
 
@@ -71,7 +73,9 @@ class PeopleRepository extends AbstractRepository {
     /**
      * Get the TV credits for a specific person id.
      *
-     * To get the expanded details for each record, call the /credit method with the provided credit_id.
+     * To get the expanded details for each record,
+     * call the /credit method with the provided credit_id.
+     *
      * This will provide details about which episode and/or season the credit is for.
      *
      * @param $id
@@ -90,7 +94,9 @@ class PeopleRepository extends AbstractRepository {
     /**
      * Get the combined (movie and TV) credits for a specific person id.
      *
-     * To get the expanded details for each TV record, call the /credit method with the provided credit_id.
+     * To get the expanded details for each TV record,
+     * call the /credit method with the provided credit_id.
+     *
      * This will provide details about which episode and/or season the credit is for.
      *
      * @param $id
@@ -144,8 +150,8 @@ class PeopleRepository extends AbstractRepository {
      * The language is present on fields that are translatable.
      *
      * @param $id
-     * @param array $parameters
-     * @param array $headers
+     * @param  array                          $parameters
+     * @param  array                          $headers
      * @return null|\Tmdb\Model\AbstractModel
      */
     public function getChanges($id, array $parameters = array(), array $headers = array())
@@ -161,13 +167,14 @@ class PeopleRepository extends AbstractRepository {
      *
      * This list refreshes every day.
      *
-     * @param array $parameters
-     * @param array $headers
+     * @param  array                          $parameters
+     * @param  array                          $headers
      * @return null|\Tmdb\Model\AbstractModel
      */
     public function getPopular(array $parameters = array(), array $headers = array())
     {
         $data   = $this->getApi()->getPopular($parameters, $headers);
+
         return $this->getFactory()->createResultCollection($data);
     }
 
@@ -179,6 +186,7 @@ class PeopleRepository extends AbstractRepository {
     public function getLatest()
     {
         $data   = $this->getApi()->getLatest();
+
         return $this->getFactory()->create($data);
     }
 

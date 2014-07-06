@@ -391,12 +391,14 @@ class Catalog_dropbox extends Catalog
             if (!empty($results['artist']) && !empty($results['album'])) {
                 $results['file'] = $this->get_virtual_path($results['file']);
 
-                Song::insert($results);
                 $this->count++;
+                return Song::insert($results);
             } else {
                 debug_event('results', $results['file'] . " ignored because it is an orphan songs. Please check your catalog patterns.", 5);
             }
         }
+
+        return false;
     }
 
     public function verify_catalog_proc()

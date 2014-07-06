@@ -17,8 +17,7 @@ namespace Tmdb\Api;
  * @package Tmdb\Api
  * http://docs.themoviedb.apiary.io/#changes
  */
-class Changes
-    extends AbstractApi
+class Changes extends AbstractApi
 {
     /**
      * Get a list of movie ids that have been edited.
@@ -31,8 +30,8 @@ class Changes
      * Please note that the change log system to support this was changed
      * on October 5, 2012 and will only show movies that have been edited since.
      *
-     * @param array $parameters
-     * @param array $headers
+     * @param  array $parameters
+     * @param  array $headers
      * @return mixed
      */
     public function getMovieChanges(array $parameters = array(), array $headers = array())
@@ -51,8 +50,8 @@ class Changes
      * Please note that the change log system to support this was changed
      * on October 5, 2012 and will only show movies that have been edited since.
      *
-     * @param array $parameters
-     * @param array $headers
+     * @param  array $parameters
+     * @param  array $headers
      * @return mixed
      */
     public function getPersonChanges(array $parameters = array(), array $headers = array())

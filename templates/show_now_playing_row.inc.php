@@ -56,8 +56,8 @@
 <?php if (Art::is_enabled()) { ?>
 <div class="np_group" id="np_group_3">
   <div class="np_cell cel_albumart">
-      <a href="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>" rel="prettyPhoto">
-        <img align="middle" src="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;thumb=1" alt="<?php echo scrub_out($media->f_album_full); ?>" title="<?php echo scrub_out($media->f_album_full); ?>" height="80" width="80" />
+      <a href="<?php echo $web_path; ?>/image.php?object_id=<?php echo $media->album; ?>&object_type=album" rel="prettyPhoto">
+        <img align="middle" src="<?php echo $web_path; ?>/image.php?object_id=<?php echo $media->album; ?>&object_type=album&thumb=1" alt="<?php echo scrub_out($media->f_album_full); ?>" title="<?php echo scrub_out($media->f_album_full); ?>" height="80" width="80" />
       </a>
   </div>
 </div>

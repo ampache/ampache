@@ -18,4 +18,6 @@ use Tmdb\Model\Image;
  * Class StillImage
  * @package Tmdb\Model\Image
  */
-class StillImage extends Image {}
+class StillImage extends Image
+{
+}

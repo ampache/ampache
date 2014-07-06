@@ -16,8 +16,8 @@ namespace Tmdb\Model\Filter;
  * Interface CountryFilter
  * @package Tmdb\Model\Filter
  */
-interface CountryFilter {
-
+interface CountryFilter
+{
     /**
      * @return string
      */

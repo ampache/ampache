@@ -61,7 +61,7 @@ class Movie extends Video
      * create
      * This takes a key'd array of data as input and inserts a new movie entry, it returns the record id
      */
-    public static function insert($data)
+    public static function insert($data, $options = array())
     {
         $sql = "INSERT INTO `movie` (`id`,`original_name`,`description`, `year`) " .
             "VALUES (?, ?, ?, ?)";
@@ -93,7 +93,9 @@ class Movie extends Video
     {
         parent::format();
 
-        $this->f_link = '<a href="' . $this->link . '">' . ($this->original_name ?: $this->f_title) . '</a>';
+        $this->f_title = ($this->original_name ?: $this->f_title);
+        $this->f_full_title = $this->f_title;
+        $this->f_link = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
 
         return true;
 

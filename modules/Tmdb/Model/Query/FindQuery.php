@@ -19,6 +19,6 @@ use Tmdb\Model\Collection\QueryParametersCollection;
  * Class FindQuery
  * @package Tmdb\Model\Query
  */
-class FindQuery extends QueryParametersCollection {
-
+class FindQuery extends QueryParametersCollection
+{
 }

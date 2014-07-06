@@ -20,7 +20,8 @@ use Tmdb\Model\Network;
  * @package Tmdb\Repository
  * @see http://docs.themoviedb.apiary.io/#networks
  */
-class NetworkRepository extends AbstractRepository {
+class NetworkRepository extends AbstractRepository
+{
     /**
      * This method is used to retrieve the basic information about a TV network.
      *
@@ -28,11 +29,12 @@ class NetworkRepository extends AbstractRepository {
      * At this time we don't have much but this will be fleshed out over time.
      *
      * @param $id
-     * @param array $parameters
-     * @param array $headers
+     * @param  array   $parameters
+     * @param  array   $headers
      * @return Network
      */
-    public function load($id, array $parameters = array(), array $headers = array()) {
+    public function load($id, array $parameters = array(), array $headers = array())
+    {
         return $this->getFactory()->create(
             $this->getApi()->getNetwork($id, $parameters, $headers)
         );

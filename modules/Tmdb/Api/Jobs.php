@@ -17,14 +17,13 @@ namespace Tmdb\Api;
  * @package Tmdb\Api
  * @see http://docs.themoviedb.apiary.io/#jobs
  */
-class Jobs
-    extends AbstractApi
+class Jobs extends AbstractApi
 {
     /**
      * Get a list of valid jobs.
      *
-     * @param array $parameters
-     * @param array $headers
+     * @param  array $parameters
+     * @param  array $headers
      * @return mixed
      */
     public function getJobs(array $parameters = array(), array $headers = array())

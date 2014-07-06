@@ -18,8 +18,7 @@ namespace Tmdb\Api;
  *
  * @see http://docs.themoviedb.apiary.io/#configuration
  */
-class Configuration
-    extends AbstractApi
+class Configuration extends AbstractApi
 {
     /**
      * Get the system wide configuration information.
@@ -38,7 +37,7 @@ class Configuration
      *
      * http://d3gtl9l2a4fn1j.cloudfront.net/t/p/w500/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg
      *
-     * @param array $headers
+     * @param  array $headers
      * @return mixed
      */
     public function getConfiguration(array $headers = array())

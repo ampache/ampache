@@ -31,9 +31,9 @@ $artist = scrub_out($song->f_artist_full);
 <div class="album_art">
     <?php
     if ($album->name != T_('Unknown (Orphaned)')) {
-        $aa_url = $web_path . "/image.php?id=" . $song->album . "&amp;sid=" . session_id();
-        echo "<a href=\"$aa_url\" rel=\"prettyPhoto\">";
-        echo "<img src=\"" . $web_path . "/image.php?id=" . $song->album . "&amp;thumb=2\" alt=\"".$song->f_album_full."\" alt=\"".$song->f_album_full."\" height=\"128\" width=\"128\" />";
+        $aa_url = $web_path . "/image.php?object_id=" . $song->album . "&object_type=album&auth=" . session_id();
+        echo "<a href=\"" . $aa_url . "\" rel=\"prettyPhoto\">";
+        echo "<img src=\"" . $web_path . "/image.php?object_id=" . $song->album . "&object_type=album&thumb=2\" alt=\"".$song->f_album_full."\" alt=\"".$song->f_album_full."\" height=\"128\" width=\"128\" />";
         echo "</a>\n";
     }
     ?>

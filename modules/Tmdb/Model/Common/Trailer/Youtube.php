@@ -18,8 +18,8 @@ use Tmdb\Model\Common\AbstractTrailer;
  * Class Youtube
  * @package Tmdb\Model\Common\Trailer
  */
-class Youtube extends AbstractTrailer {
-
+class Youtube extends AbstractTrailer
+{
     const URL = 'http://www.youtube.com/watch?v=%s';
 
     private $name;
@@ -27,7 +27,7 @@ class Youtube extends AbstractTrailer {
     private $source;
     private $type;
 
-    public static $_properties = array(
+    public static $properties = array(
         'name',
         'size',
         'source',
@@ -47,12 +47,13 @@ class Youtube extends AbstractTrailer {
     }
 
     /**
-     * @param string $name
+     * @param  string $name
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -65,12 +66,13 @@ class Youtube extends AbstractTrailer {
     }
 
     /**
-     * @param string $size
+     * @param  string $size
      * @return $this
      */
     public function setSize($size)
     {
         $this->size = $size;
+
         return $this;
     }
 
@@ -83,12 +85,13 @@ class Youtube extends AbstractTrailer {
     }
 
     /**
-     * @param string $source
+     * @param  string $source
      * @return $this
      */
     public function setSource($source)
     {
         $this->source = $source;
+
         return $this;
     }
 
@@ -101,12 +104,13 @@ class Youtube extends AbstractTrailer {
     }
 
     /**
-     * @param string $type
+     * @param  string $type
      * @return $this
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 

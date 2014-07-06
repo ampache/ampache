@@ -20,7 +20,8 @@ use Tmdb\Model\Image\PosterImage;
  * Class ListItem
  * @package Tmdb\Model\Lists
  */
-class ListItem extends AbstractModel {
+class ListItem extends AbstractModel
+{
     /**
      * @var string
      */
@@ -74,7 +75,7 @@ class ListItem extends AbstractModel {
     /**
      * @var array
      */
-    public static $_properties = array(
+    public static $properties = array(
         'backdrop_path',
         'id',
         'original_title',
@@ -86,12 +87,13 @@ class ListItem extends AbstractModel {
     );
 
     /**
-     * @param \Tmdb\Model\Image\BackdropImage $backdropImage
+     * @param  \Tmdb\Model\Image\BackdropImage $backdropImage
      * @return $this
      */
     public function setBackdropImage($backdropImage)
     {
         $this->backdropImage = $backdropImage;
+
         return $this;
     }
 
@@ -104,12 +106,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param string $backdropPath
+     * @param  string $backdropPath
      * @return $this
      */
     public function setBackdropPath($backdropPath)
     {
         $this->backdropPath = $backdropPath;
+
         return $this;
     }
 
@@ -122,12 +125,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param int $id
+     * @param  int   $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -140,12 +144,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param string $originalTitle
+     * @param  string $originalTitle
      * @return $this
      */
     public function setOriginalTitle($originalTitle)
     {
         $this->originalTitle = $originalTitle;
+
         return $this;
     }
 
@@ -158,12 +163,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Image\PosterImage $posterImage
+     * @param  \Tmdb\Model\Image\PosterImage $posterImage
      * @return $this
      */
     public function setPosterImage($posterImage)
     {
         $this->posterImage = $posterImage;
+
         return $this;
     }
 
@@ -176,12 +182,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param string $posterPath
+     * @param  string $posterPath
      * @return $this
      */
     public function setPosterPath($posterPath)
     {
         $this->posterPath = $posterPath;
+
         return $this;
     }
 
@@ -194,12 +201,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param \DateTime $releaseDate
+     * @param  \DateTime $releaseDate
      * @return $this
      */
     public function setReleaseDate($releaseDate)
     {
         $this->releaseDate = $releaseDate;
+
         return $this;
     }
 
@@ -212,12 +220,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param string $title
+     * @param  string $title
      * @return $this
      */
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -230,12 +239,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param float $voteAverage
+     * @param  float $voteAverage
      * @return $this
      */
     public function setVoteAverage($voteAverage)
     {
         $this->voteAverage = $voteAverage;
+
         return $this;
     }
 
@@ -248,12 +258,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param int $voteCount
+     * @param  int   $voteCount
      * @return $this
      */
     public function setVoteCount($voteCount)
     {
         $this->voteCount = $voteCount;
+
         return $this;
     }
 

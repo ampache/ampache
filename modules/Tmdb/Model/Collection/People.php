@@ -20,8 +20,8 @@ use Tmdb\Model\Person;
  * Class People
  * @package Tmdb\Model\Collection
  */
-class People extends GenericCollection {
-
+class People extends GenericCollection
+{
     /**
      * Returns all people
      *
@@ -38,7 +38,8 @@ class People extends GenericCollection {
      * @param $id
      * @return Person
      */
-    public function getPerson($id) {
+    public function getPerson($id)
+    {
         return $this->filterId($id);
     }
 

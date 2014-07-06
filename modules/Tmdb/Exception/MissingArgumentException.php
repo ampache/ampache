@@ -16,6 +16,6 @@ namespace Tmdb\Exception;
  * Class MissingArgumentException
  * @package Tmdb\Exception
  */
-class MissingArgumentException extends \InvalidArgumentException {
-
+class MissingArgumentException extends \InvalidArgumentException
+{
 }

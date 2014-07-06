@@ -17,15 +17,14 @@ namespace Tmdb\Api;
  * @package Tmdb\Api
  * @see http://docs.themoviedb.apiary.io/#reviews
  */
-class Reviews
-    extends AbstractApi
+class Reviews extends AbstractApi
 {
     /**
      * Get the full details of a review by ID.
      *
      * @param $review_id
-     * @param array $parameters
-     * @param array $headers
+     * @param  array $parameters
+     * @param  array $headers
      * @return mixed
      */
     public function getReview($review_id, array $parameters = array(), array $headers = array())

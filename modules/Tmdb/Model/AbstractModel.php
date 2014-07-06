@@ -16,12 +16,12 @@ namespace Tmdb\Model;
  * Class AbstractModel
  * @package Tmdb\Model
  */
-class AbstractModel {
+class AbstractModel
+{
     /**
      * List of properties to populate by the ObjectHydrator
      *
      * @var array
      */
-    public static $_properties = array();
-
+    public static $properties = array();
 }

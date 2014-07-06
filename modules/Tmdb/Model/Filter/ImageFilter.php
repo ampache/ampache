@@ -16,5 +16,6 @@ namespace Tmdb\Model\Filter;
  * Interface ImageFilter
  * @package Tmdb\Model\Filter
  */
-interface ImageFilter {
+interface ImageFilter
+{
 }

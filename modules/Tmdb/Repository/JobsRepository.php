@@ -21,21 +21,23 @@ use Tmdb\Model\Job;
  * @package Tmdb\Repository
  * @see http://docs.themoviedb.apiary.io/#jobs
  */
-class JobsRepository extends AbstractRepository {
+class JobsRepository extends AbstractRepository
+{
     /**
-     * @param array $parameters
-     * @param array $headers
+     * @param  array $parameters
+     * @param  array $headers
      * @return Job
      */
-    public function load(array $parameters = array(), array $headers = array()) {
+    public function load(array $parameters = array(), array $headers = array())
+    {
         return $this->loadCollection($parameters, $headers);
     }
 
     /**
      * Get the list of jobs.
      *
-     * @param array $parameters
-     * @param array $headers
+     * @param  array      $parameters
+     * @param  array      $headers
      * @return Jobs|Job[]
      */
     public function loadCollection(array $parameters = array(), array $headers = array())
@@ -51,7 +53,8 @@ class JobsRepository extends AbstractRepository {
      * @param $data
      * @return Jobs|Job[]
      */
-    private function createCollection($data){
+    private function createCollection($data)
+    {
         return $this->getFactory()->createCollection($data);
     }
 

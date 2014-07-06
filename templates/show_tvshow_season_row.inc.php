@@ -31,6 +31,15 @@
 <?php } ?>
     </div>
 </td>
+<?php
+if (Art::is_enabled()) {
+?>
+<td class="cel_cover">
+    <a href="<?php echo $season->link; ?>">
+        <img height="150" width="100" alt="<?php echo $season->f_name; ?>" title="<?php echo $season->f_name; ?>" src="<?php echo AmpConfig::get('web_path'); ?>/image.php?object_type=tvshow_season&object_id=<?php echo $season->id; ?>&thumb=6" />
+    </a>
+</td>
+<?php } ?>
 <td class="cel_season"><?php echo $season->f_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">

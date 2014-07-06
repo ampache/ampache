@@ -40,7 +40,7 @@ class JobsFactory extends AbstractFactory
             $data = $data['jobs'];
         }
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->add(null, $this->create($item));
         }
 

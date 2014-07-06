@@ -32,7 +32,7 @@ class ChangeFactory extends AbstractFactory
         if (array_key_exists('items', $data)) {
             $items = new GenericCollection();
 
-            foreach($data['items'] as $item) {
+            foreach ($data['items'] as $item) {
                 $item = $this->createChangeItem($item);
 
                 $items->add(null, $item);
@@ -47,7 +47,7 @@ class ChangeFactory extends AbstractFactory
     /**
      * Create individual change items
      *
-     * @param array $data
+     * @param  array                     $data
      * @return \Tmdb\Model\AbstractModel
      */
     private function createChangeItem(array $data = array())
@@ -66,7 +66,7 @@ class ChangeFactory extends AbstractFactory
             $data = $data['changes'];
         }
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->add(null, $this->create($item));
         }
 

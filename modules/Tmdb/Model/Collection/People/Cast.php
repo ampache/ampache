@@ -19,7 +19,8 @@ use Tmdb\Model\Person;
  * Class Cast
  * @package Tmdb\Model\Collection\People
  */
-class Cast extends People {
+class Cast extends People
+{
     /**
      * Returns all people
      *
@@ -36,7 +37,8 @@ class Cast extends People {
      * @param $id
      * @return Person
      */
-    public function getCastMember($id) {
+    public function getCastMember($id)
+    {
         return parent::getPerson($id);
     }
 }

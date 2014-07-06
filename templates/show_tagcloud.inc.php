@@ -44,6 +44,7 @@
     <?php } ?>
     </div>
 <?php } ?>
+<br /><br /><br />
 <?php
 if (isset($_GET['show_tag'])) {
     $show_tag = intval($_GET['show_tag']);

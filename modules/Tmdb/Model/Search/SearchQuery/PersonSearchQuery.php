@@ -18,8 +18,8 @@ use Tmdb\Model\Search\SearchQuery;
  * Class PersonSearchQuery
  * @package Tmdb\Model\Search\SearchQuery
  */
-class PersonSearchQuery extends SearchQuery {
-
+class PersonSearchQuery extends SearchQuery
+{
     /**
      * Toggle the inclusion of adult titles. Expected value is: true or false
      *

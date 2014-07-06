@@ -16,7 +16,8 @@ namespace Tmdb;
  * Class RequestToken
  * @package Tmdb
  */
-class RequestToken {
+class RequestToken
+{
     /**
      * The token for obtaining a session
      *
@@ -47,12 +48,13 @@ class RequestToken {
     }
 
     /**
-     * @param null $token
+     * @param  null  $token
      * @return $this
      */
     public function setToken($token)
     {
         $this->token = $token;
+
         return $this;
     }
 
@@ -65,7 +67,7 @@ class RequestToken {
     }
 
     /**
-     * @param mixed $expiresAt
+     * @param  mixed $expiresAt
      * @return $this
      */
     public function setExpiresAt($expiresAt)
@@ -75,6 +77,7 @@ class RequestToken {
         }
 
         $this->expiresAt = $expiresAt;
+
         return $this;
     }
 
@@ -87,12 +90,13 @@ class RequestToken {
     }
 
     /**
-     * @param boolean $success
+     * @param  boolean $success
      * @return $this
      */
     public function setSuccess($success)
     {
         $this->success = $success;
+
         return $this;
     }
 

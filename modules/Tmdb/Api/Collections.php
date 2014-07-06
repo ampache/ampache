@@ -17,8 +17,7 @@ namespace Tmdb\Api;
  * @package Tmdb\Api
  * @see http://docs.themoviedb.apiary.io/#collections
  */
-class Collections
-    extends AbstractApi
+class Collections extends AbstractApi
 {
     /**
      * Get the basic collection information for a specific collection id.
@@ -30,8 +29,8 @@ class Collections
      * If you would like to sort them yourself you can use the provided release_date.
      *
      * @param $collection_id
-     * @param array $parameters
-     * @param array $headers
+     * @param  array $parameters
+     * @param  array $headers
      * @return mixed
      */
     public function getCollection($collection_id, array $parameters = array(), array $headers = array())
@@ -43,8 +42,8 @@ class Collections
      * Get all of the images for a particular collection by collection id.
      *
      * @param $collection_id
-     * @param array $parameters
-     * @param array $headers
+     * @param  array $parameters
+     * @param  array $headers
      * @return mixed
      */
     public function getImages($collection_id, array $parameters = array(), array $headers = array())

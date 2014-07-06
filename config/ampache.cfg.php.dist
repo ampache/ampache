@@ -380,24 +380,16 @@ notify = "true"
 ; methods simply leave it out. DB should be left as the first
 ; method unless you want it to overwrite what's already in the
 ; database
-; POSSIBLE VALUES: db tags folder amazon lastfm musicbrainz google
+; POSSIBLE VALUES (builtins): db tags folder lastfm musicbrainz google
+; POSSIBLE VALUES (plugins): amazon
 ; DEFAULT: db,tags,folder,musicbrainz,lastfm,google
 art_order = "db,tags,folder,musicbrainz,lastfm,google"
-
-; Amazon Developer Key
-; These are needed in order to actually use the amazon album art
-; Your public key is your 'Access Key ID'
-; Your private key is your 'Secret Access Key'
-; DEFAULT: false
-;amazon_developer_public_key = ""
-;amazon_developer_private_key = ""
-;amazon_developer_associate_tag = ""
 
 ; Recommendations
 ; Set this to true to enable display of similar artists or albums
 ; while browsing. Requires Last.FM.
 ; DEFAULT: false
-;show_similar = "false"
+show_similar = "true"
 
 ; Concerts
 ; Set this to true to enable display of artist concerts
@@ -407,14 +399,14 @@ art_order = "db,tags,folder,musicbrainz,lastfm,google"
 
 ; Last.FM API Key
 ; Set this to your Last.FM api key to actually use Last.FM for
-; recommendations.
-;lastfm_api_key = ""
+; recommendations and metadata.
+lastfm_api_key = "d5df942424c71b754e54ce1832505ae2"
 
 ; Wanted
 ; Set this to true to enable display missing albums and the
 ; possibility for users to mark it as wanted.
 ; DEFAULT: false
-;wanted = "false"
+wanted = "true"
 
 ; Wanted types
 ; Set the allowed types of wanted releases (album,compilation,single,ep,live,remix,promotion,official)
@@ -440,32 +432,6 @@ wanted_types = "album,official"
 ; Declare the web socket server address
 ; DEFAULT: determined automatically
 ;websocket_address = "ws://localhost:8100"
-
-; Amazon base urls
-; An array of Amazon sites to search.
-; NOTE: This will search each of these sites in turn so don't expect it
-; to be lightning fast!
-; It is strongly recommended that only one of these is selected at any
-; one time
-; POSSIBLE VALUES: 
-;	http://webservices.amazon.com
-;	http://webservices.amazon.co.uk
-;	http://webservices.amazon.de
-;	http://webservices.amazon.co.jp
-;	http://webservices.amazon.fr
-;	http://webservices.amazon.ca
-; Default: http://webservices.amazon.com
-amazon_base_urls = "http://webservices.amazon.com"
-
-; max_amazon_results_pages
-; The maximum number of results pages to pull from EACH amazon site
-; NOTE: The art search pages through the results returned by your search
-; up to this number of pages. As with the base_urls above, this is going
-; to take more time, the more pages you ask it to process.
-; Of course a good search will return only a few matches anyway.
-; It is strongly recommended that you do _not_ change this value
-; DEFAULT: 1 page (10 items)
-max_amazon_results_pages = 1
 
 ; Debug
 ; If this is enabled Ampache will write debugging information to the log file

@@ -18,4 +18,6 @@ use Tmdb\Model\Common\GenericCollection;
  * Class QueryParametersCollection
  * @package Tmdb\Model\Collection
  */
-class QueryParametersCollection extends GenericCollection {}
+class QueryParametersCollection extends GenericCollection
+{
+}

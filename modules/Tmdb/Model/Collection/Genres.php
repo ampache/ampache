@@ -19,8 +19,8 @@ use Tmdb\Model\Genre;
  * Class Genres
  * @package Tmdb\Model\Collection
  */
-class Genres extends GenericCollection {
-
+class Genres extends GenericCollection
+{
     /**
      * Returns all genres
      *
@@ -37,8 +37,9 @@ class Genres extends GenericCollection {
      * @param $id
      * @return Genre|null
      */
-    public function getGenre($id) {
-        foreach($this->data as $genre) {
+    public function getGenre($id)
+    {
+        foreach ($this->data as $genre) {
             if ($id === $genre->getId()) {
                 return $genre;
             }

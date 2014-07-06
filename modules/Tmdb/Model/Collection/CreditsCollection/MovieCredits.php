@@ -18,4 +18,6 @@ use Tmdb\Model\Collection\CreditsCollection;
  * Class MovieCredits
  * @package Tmdb\Model\Collection\CreditsCollection
  */
-class MovieCredits extends CreditsCollection {}
+class MovieCredits extends CreditsCollection
+{
+}

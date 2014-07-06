@@ -18,23 +18,24 @@ use Tmdb\Model\Filter\LanguageFilter;
  * Class Translation
  * @package Tmdb\Model\Common
  */
-class Translation extends SpokenLanguage implements LanguageFilter {
-
+class Translation extends SpokenLanguage implements LanguageFilter
+{
     private $englishName;
 
-    public static $_properties = array(
+    public static $properties = array(
         'iso_639_1',
         'name',
         'english_name'
     );
 
     /**
-     * @param string $englishName
+     * @param  string $englishName
      * @return $this
      */
     public function setEnglishName($englishName)
     {
         $this->englishName = $englishName;
+
         return $this;
     }
 

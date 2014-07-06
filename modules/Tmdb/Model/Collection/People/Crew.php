@@ -19,7 +19,8 @@ use Tmdb\Model\Person;
  * Class Crew
  * @package Tmdb\Model\Collection\People
  */
-class Crew extends People {
+class Crew extends People
+{
     /**
      * Returns all people
      *
@@ -36,7 +37,8 @@ class Crew extends People {
      * @param $id
      * @return Person
      */
-    public function getCrewMember($id) {
+    public function getCrewMember($id)
+    {
         return parent::getPerson($id);
     }
 }

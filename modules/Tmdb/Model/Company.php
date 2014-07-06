@@ -18,8 +18,8 @@ use Tmdb\Model\Image\LogoImage;
  * Class Company
  * @package Tmdb\Model
  */
-class Company extends AbstractModel {
-
+class Company extends AbstractModel
+{
     private $description;
     private $headquarters;
     private $homepage;
@@ -29,7 +29,7 @@ class Company extends AbstractModel {
     private $name;
     private $parentCompany;
 
-    public static $_properties = array(
+    public static $properties = array(
         'description',
         'headquarters',
         'homepage',
@@ -40,12 +40,13 @@ class Company extends AbstractModel {
     );
 
     /**
-     * @param mixed $description
+     * @param  mixed $description
      * @return $this
      */
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -58,12 +59,13 @@ class Company extends AbstractModel {
     }
 
     /**
-     * @param mixed $headquarters
+     * @param  mixed $headquarters
      * @return $this
      */
     public function setHeadquarters($headquarters)
     {
         $this->headquarters = $headquarters;
+
         return $this;
     }
 
@@ -76,12 +78,13 @@ class Company extends AbstractModel {
     }
 
     /**
-     * @param mixed $homepage
+     * @param  mixed $homepage
      * @return $this
      */
     public function setHomepage($homepage)
     {
         $this->homepage = $homepage;
+
         return $this;
     }
 
@@ -94,12 +97,13 @@ class Company extends AbstractModel {
     }
 
     /**
-     * @param mixed $id
+     * @param  mixed $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = (int) $id;
+
         return $this;
     }
 
@@ -112,12 +116,13 @@ class Company extends AbstractModel {
     }
 
     /**
-     * @param LogoImage $logo
+     * @param  LogoImage $logo
      * @return $this
      */
     public function setLogoImage(LogoImage $logo)
     {
         $this->logo = $logo;
+
         return $this;
     }
 
@@ -130,12 +135,13 @@ class Company extends AbstractModel {
     }
 
     /**
-     * @param mixed $logoPath
+     * @param  mixed $logoPath
      * @return $this
      */
     public function setLogoPath($logoPath)
     {
         $this->logoPath = $logoPath;
+
         return $this;
     }
 
@@ -148,12 +154,13 @@ class Company extends AbstractModel {
     }
 
     /**
-     * @param mixed $name
+     * @param  mixed $name
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -166,12 +173,13 @@ class Company extends AbstractModel {
     }
 
     /**
-     * @param mixed $parentCompany
+     * @param  mixed $parentCompany
      * @return $this
      */
     public function setParentCompany($parentCompany)
     {
         $this->parentCompany = $parentCompany;
+
         return $this;
     }
 

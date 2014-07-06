@@ -20,8 +20,8 @@
  *
  */
 
-UI::show_box_top(T_('Album Art Search'), 'box box_gather_art');
-echo "<strong>" . T_('Starting Album Art Search') . ". . .</strong><br />\n";
+UI::show_box_top(T_('Art Search'), 'box box_gather_art');
+echo "<strong>" . T_('Starting Art Search') . ". . .</strong><br />\n";
 echo T_('Searched') . ": <span id=\"count_art_" . $catalog_id . "\">" . T_('None') . "</span><br />";
 echo T_('Reading') . ":<span id=\"read_art_$catalog_id\"></span><br />";
 echo "<br />\n";

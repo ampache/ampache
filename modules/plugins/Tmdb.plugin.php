@@ -46,7 +46,7 @@ class AmpacheTmdb {
      */
     public function install() {
         
-        if (Preference::exists('tmdb_api_url')) { return false; }
+        if (Preference::exists('tmdb_api_key')) { return false; }
 
         Preference::insert('tmdb_api_key','Tmdb api key','','75','string','plugins');
         
@@ -99,6 +99,9 @@ class AmpacheTmdb {
         }
         $token = new \Tmdb\ApiToken($this->api_key);
         $client = new \Tmdb\Client($token);
+        $configRepository = new \Tmdb\Repository\ConfigurationRepository($client);
+        $config = $configRepository->load();
+        $imageHelper = new \Tmdb\Helper\ImageHelper($config);
         
         $title = $media_info['original_name'] ?: $media_info['title'];
         
@@ -108,13 +111,21 @@ class AmpacheTmdb {
                 if (!empty($title)) {
                     $apires = $client->getSearchApi()->searchMovies($title);
                     if (count($apires['results']) > 0) {
-                        $release = $apires['results'][0];
-                        $results['tmdb_id'] = $release['id'];
+                        $results['tmdb_id'] = $apires['results'][0]['id'];
+                        $release = $client->getMoviesApi()->getMovie($results['tmdb_id']);
+                        $results['imdb_id'] = $release['imdb_id'];
                         $results['original_name'] = $release['original_title'];
                         if (!empty($release['release_date'])) {
                             $results['release_date'] = strtotime($release['release_date']);
                             $results['year'] = date("Y", $results['release_date']);  // Production year shouldn't be the release date
                         }
+                        if ($release['poster_path']) {
+                            $results['art'] = $imageHelper->getUrl($release['poster_path']);
+                        }
+                        if ($release['backdrop_path']) {
+                            $results['background_art'] = $imageHelper->getUrl($release['backdrop_path']);
+                        }
+                        $results['genre'] = self::get_genres($release);
                     }
                 }
             }
@@ -124,25 +135,43 @@ class AmpacheTmdb {
                     $apires = $client->getSearchApi()->searchTv($media_info['tvshow']);
                     if (count($apires['results']) > 0) {
                         // Get first match
-                        $release = $apires['results'][0];
-                        $results['tmdb_tvshow_id'] = $release['id'];
+                        $results['tmdb_tvshow_id'] = $apires['results'][0]['id'];
+                        $release = $client->getTvApi()->getTvshow($results['tmdb_tvshow_id']);
                         $results['tvshow'] = $release['original_name'];
                         if (!empty($release['first_air_date'])) {
                             $results['tvshow_year'] = date("Y", strtotime($release['first_air_date']));
                         }
+                        if ($release['poster_path']) {
+                            $results['tvshow_art'] = $imageHelper->getUrl($release['poster_path']);
+                        }
+                        if ($release['backdrop_path']) {
+                            $results['tvshow_background_art'] = $imageHelper->getUrl($release['backdrop_path']);
+                        }
+                        $results['genre'] = self::get_genres($release);
                         
-                        if ($media_info['tvshow_season'] && $media_info['tvshow_episode']) {
-                            $release = $client->getTvEpisodeApi()->getEpisode($results['tmdb_tvshow_id'], $media_info['tvshow_season'], $media_info['tvshow_episode']);
+                        if ($media_info['tvshow_season']) {
+                            $release = $client->getTvSeasonApi()->getSeason($results['tmdb_tvshow_id'], $media_info['tvshow_season']);
                             if ($release['id']) {
-                                $results['tmdb_id'] = $release['id'];
-                                $results['tvshow_season'] = $release['season_number'];
-                                $results['tvshow_episode'] = $release['episode_number'];
-                                $results['original_name'] = $release['name'];
-                                if (!empty($release['air_date'])) {
-                                    $results['release_date'] = strtotime($release['release_date']);
-                                    $results['year'] = date("Y", $results['release_date']);
+                                if ($release['poster_path']) {
+                                    $results['tvshow_season_art'] = $imageHelper->getUrl($release['poster_path']);
                                 }
-                                $results['description'] = $release['overview'];
+                                if ($media_info['tvshow_episode']) {
+                                    $release = $client->getTvEpisodeApi()->getEpisode($results['tmdb_tvshow_id'], $media_info['tvshow_season'], $media_info['tvshow_episode']);
+                                    if ($release['id']) {
+                                        $results['tmdb_id'] = $release['id'];
+                                        $results['tvshow_season'] = $release['season_number'];
+                                        $results['tvshow_episode'] = $release['episode_number'];
+                                        $results['original_name'] = $release['name'];
+                                        if (!empty($release['air_date'])) {
+                                            $results['release_date'] = strtotime($release['release_date']);
+                                            $results['year'] = date("Y", $results['release_date']);
+                                        }
+                                        $results['description'] = $release['overview'];
+                                        if ($release['still_path']) {
+                                            $results['art'] = $imageHelper->getUrl($release['still_path']);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -154,6 +183,24 @@ class AmpacheTmdb {
         
         return $results;
     } // get_metadata
+    
+    public function gather_arts($type, $options = array(), $limit = 5)
+    {
+        return Art::gather_metadata_plugin($this, $type, $options);
+    }
+    
+    private static function get_genres($release)
+    {
+        $genres = array();
+        if (is_array($release['genres'])) {
+            foreach ($release['genres'] as $genre) {
+                if (!empty($genre['name'])) {
+                    $genres[] = $genre['name'];
+                }
+            }
+        }
+        return $genres;
+    }
 
 } // end AmpacheTmdb
 ?>

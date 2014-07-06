@@ -18,12 +18,12 @@ use Tmdb\Model\Collection\QueryParametersCollection;
  * Class ChangesQuery
  * @package Tmdb\Model\Query
  */
-class ChangesQuery extends QueryParametersCollection {
-
+class ChangesQuery extends QueryParametersCollection
+{
     /**
      * Set the from parameter
      *
-     * @param \DateTime $date
+     * @param  \DateTime $date
      * @return $this
      */
     public function from(\DateTime $date)
@@ -36,7 +36,7 @@ class ChangesQuery extends QueryParametersCollection {
     /**
      * Set the to parameter
      *
-     * @param \DateTime $date
+     * @param  \DateTime $date
      * @return $this
      */
     public function to(\DateTime $date)
@@ -49,10 +49,11 @@ class ChangesQuery extends QueryParametersCollection {
     /**
      * Set the page parameter
      *
-     * @param int $page
+     * @param  int   $page
      * @return $this
      */
-    public function page($page = 1) {
+    public function page($page = 1)
+    {
         $this->set('page', (int) $page);
 
         return $this;

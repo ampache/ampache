@@ -18,24 +18,27 @@ use Tmdb\Model\Common\GenericCollection;
  * Class Jobs
  * @package Tmdb\Model\Collection
  */
-class Jobs extends GenericCollection {
-
+class Jobs extends GenericCollection
+{
     /**
      * Filter by department
      *
-     * @param string $department
+     * @param  string $department
      * @return $this
      */
     public function filterByDepartment($department)
     {
         $result = $this->filter(
-            function($key, $value) use ($department) {
-                if ($value->getDepartment() == $department) { return true; }
+            function ($key, $value) use ($department) {
+                if ($value->getDepartment() == $department) {
+                    return true;
+                }
             }
         );
 
         if ($result && 1 === count($result)) {
             $results = $result->toArray();
+
             return array_shift($results);
         }
 
@@ -45,14 +48,16 @@ class Jobs extends GenericCollection {
     /**
      * Filter by department and return the jobs collection
      *
-     * @param string $department
+     * @param  string $department
      * @return $this
      */
     public function filterByDepartmentAndReturnJobsList($department)
     {
         $result = $this->filter(
-            function($key, $value) use ($department) {
-                if ($value->getDepartment() == $department) { return true; }
+            function ($key, $value) use ($department) {
+                if ($value->getDepartment() == $department) {
+                    return true;
+                }
             }
         );
 
@@ -69,23 +74,26 @@ class Jobs extends GenericCollection {
     /**
      * Filter by job
      *
-     * @param string $filterByJob
+     * @param  string $filterByJob
      * @return $this
      */
     public function filterByJob($filterByJob)
     {
         $result = $this->filter(
-            function($key, $value) use ($filterByJob) {
+            function ($key, $value) use ($filterByJob) {
                 $jobList = $value->getJobList();
 
-                foreach($jobList as $job) {
-                    if ($filterByJob == $job) { return true; }
+                foreach ($jobList as $job) {
+                    if ($filterByJob == $job) {
+                        return true;
+                    }
                 }
             }
         );
 
         if ($result && 1 === count($result)) {
             $results = $result->toArray();
+
             return array_shift($results);
         }
 

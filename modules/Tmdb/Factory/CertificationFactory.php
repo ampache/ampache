@@ -42,11 +42,11 @@ class CertificationFactory extends AbstractFactory
 
         $collection = new GenericCollection();
 
-        foreach($data as $country => $certifications) {
+        foreach ($data as $country => $certifications) {
             $certification = new Certification();
             $certification->setCountry($country);
 
-            foreach($certifications as $countryCertification) {
+            foreach ($certifications as $countryCertification) {
                 $object = $this->create($countryCertification);
 
                 $certification->getCertifications()->add(null, $object);

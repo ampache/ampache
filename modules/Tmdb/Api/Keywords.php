@@ -17,15 +17,14 @@ namespace Tmdb\Api;
  * @package Tmdb\Api
  * @see http://docs.themoviedb.apiary.io/#keywords
  */
-class Keywords
-    extends AbstractApi
+class Keywords extends AbstractApi
 {
     /**
      * Get the basic information for a specific keyword id.
      *
-     * @param int   $keyword_id
-     * @param array $parameters
-     * @param array $headers
+     * @param  int   $keyword_id
+     * @param  array $parameters
+     * @param  array $headers
      * @return mixed
      */
     public function getKeyword($keyword_id, array $parameters = array(), array $headers = array())
@@ -36,9 +35,9 @@ class Keywords
     /**
      * Get the list of movies for a particular keyword by id.
      *
-     * @param int   $keyword_id
-     * @param array $parameters
-     * @param array $headers
+     * @param  int   $keyword_id
+     * @param  array $parameters
+     * @param  array $headers
      * @return mixed
      */
     public function getMovies($keyword_id, array $parameters = array(), array $headers = array())

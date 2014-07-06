@@ -19,23 +19,24 @@ use Tmdb\Model\Filter\LanguageFilter;
  * Class SpokenLanguage
  * @package Tmdb\Model\Common
  */
-class SpokenLanguage extends AbstractModel implements LanguageFilter {
-
+class SpokenLanguage extends AbstractModel implements LanguageFilter
+{
     private $iso6391;
     private $name;
 
-    public static $_properties = array(
+    public static $properties = array(
         'iso_369_1',
         'name',
     );
 
     /**
-     * @param string $iso6391
+     * @param  string $iso6391
      * @return $this
      */
     public function setIso6391($iso6391)
     {
         $this->iso6391 = $iso6391;
+
         return $this;
     }
 
@@ -48,12 +49,13 @@ class SpokenLanguage extends AbstractModel implements LanguageFilter {
     }
 
     /**
-     * @param string $name
+     * @param  string $name
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 

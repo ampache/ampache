@@ -19,7 +19,8 @@ use Tmdb\Model\Image\PosterImage;
  * Class ListItem
  * @package Tmdb\Model\Account
  */
-class ListItem extends AbstractModel {
+class ListItem extends AbstractModel
+{
     /**
      * @var string
      */
@@ -68,7 +69,7 @@ class ListItem extends AbstractModel {
     /**
      * @var array
      */
-    public static $_properties = array(
+    public static $properties = array(
         'description',
         'favorite_count',
         'id',
@@ -80,12 +81,13 @@ class ListItem extends AbstractModel {
     );
 
     /**
-     * @param string $description
+     * @param  string $description
      * @return $this
      */
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -98,12 +100,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param int $favoriteCount
+     * @param  int   $favoriteCount
      * @return $this
      */
     public function setFavoriteCount($favoriteCount)
     {
         $this->favoriteCount = $favoriteCount;
+
         return $this;
     }
 
@@ -116,12 +119,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param string $id
+     * @param  string $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -134,12 +138,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param string $iso6391
+     * @param  string $iso6391
      * @return $this
      */
     public function setIso6391($iso6391)
     {
         $this->iso6391 = $iso6391;
+
         return $this;
     }
 
@@ -152,12 +157,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param int $itemCount
+     * @param  int   $itemCount
      * @return $this
      */
     public function setItemCount($itemCount)
     {
         $this->itemCount = $itemCount;
+
         return $this;
     }
 
@@ -170,12 +176,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param string $listType
+     * @param  string $listType
      * @return $this
      */
     public function setListType($listType)
     {
         $this->listType = $listType;
+
         return $this;
     }
 
@@ -188,12 +195,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param string $name
+     * @param  string $name
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -206,12 +214,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Image\PosterImage $posterImage
+     * @param  \Tmdb\Model\Image\PosterImage $posterImage
      * @return $this
      */
     public function setPosterImage($posterImage)
     {
         $this->posterImage = $posterImage;
+
         return $this;
     }
 
@@ -224,12 +233,13 @@ class ListItem extends AbstractModel {
     }
 
     /**
-     * @param string $posterPath
+     * @param  string $posterPath
      * @return $this
      */
     public function setPosterPath($posterPath)
     {
         $this->posterPath = $posterPath;
+
         return $this;
     }
 

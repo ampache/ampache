@@ -31,6 +31,15 @@
 <?php } ?>
     </div>
 </td>
+<?php
+if (Art::is_enabled()) {
+?>
+<td class="cel_cover">
+    <a href="<?php echo $video->link; ?>">
+        <img height="150" width="100" alt="<?php echo $video->f_title; ?>" title="<?php echo $video->f_title; ?>" src="<?php echo AmpConfig::get('web_path'); ?>/image.php?object_type=video&object_id=<?php echo $video->id; ?>&thumb=6" />
+    </a>
+</td>
+<?php } ?>
 <td class="cel_title"><?php echo $video->f_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
@@ -45,7 +54,7 @@ if (isset($video_type)) {
 <td class="cel_codec"><?php echo $video->f_codec; ?></td>
 <td class="cel_resolution"><?php echo $video->f_resolution; ?></td>
 <td class="cel_length"><?php echo $video->f_length; ?></td>
-<td class="cel_tags" title="<?php echo $video->f_tags; ?>"><?php $video->f_tags; ?></td>
+<td class="cel_tags"><?php echo $video->f_tags; ?></td>
 <?php if (AmpConfig::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $video->id; ?>_video"><?php Rating::show($video->id, 'video'); ?></td>
 <?php } ?>

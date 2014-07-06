@@ -18,8 +18,8 @@ use Tmdb\Model\Common\GenericCollection;
  * Class Certification
  * @package Tmdb\Model
  */
-class Certification extends AbstractModel {
-
+class Certification extends AbstractModel
+{
     /**
      * @var string
      */
@@ -30,7 +30,7 @@ class Certification extends AbstractModel {
      */
     private $certifications;
 
-    public static $_properties = array(
+    public static $properties = array(
         'country',
     );
 
@@ -40,12 +40,13 @@ class Certification extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Common\GenericCollection $certifications
+     * @param  \Tmdb\Model\Common\GenericCollection $certifications
      * @return $this
      */
     public function setCertifications($certifications)
     {
         $this->certifications = $certifications;
+
         return $this;
     }
 
@@ -58,12 +59,13 @@ class Certification extends AbstractModel {
     }
 
     /**
-     * @param string $country
+     * @param  string $country
      * @return $this
      */
     public function setCountry($country)
     {
         $this->country = $country;
+
         return $this;
     }
 

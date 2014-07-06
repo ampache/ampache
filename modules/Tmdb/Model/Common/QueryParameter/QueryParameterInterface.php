@@ -16,14 +16,15 @@ namespace Tmdb\Model\Common\QueryParameter;
  * Interface QueryParameterInterface
  * @package Tmdb\Model\Common\QueryParameter
  */
-interface QueryParameterInterface {
+interface QueryParameterInterface
+{
     /**
      * @return string
      */
-    function getKey();
+    public function getKey();
 
     /**
      * @return string
      */
-    function getValue();
+    public function getValue();
 }

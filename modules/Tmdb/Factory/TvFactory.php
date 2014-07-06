@@ -12,6 +12,7 @@
  */
 namespace Tmdb\Factory;
 
+use Tmdb\Factory\Common\VideoFactory;
 use Tmdb\Factory\People\CastFactory;
 use Tmdb\Factory\People\CrewFactory;
 use Tmdb\Model\Common\GenericCollection;
@@ -25,7 +26,8 @@ use Tmdb\Model\Tv;
  * Class TvFactory
  * @package Tmdb\Factory
  */
-class TvFactory extends AbstractFactory {
+class TvFactory extends AbstractFactory
+{
     /**
      * @var People\CastFactory
      */
@@ -57,6 +59,11 @@ class TvFactory extends AbstractFactory {
     private $networkFactory;
 
     /**
+     * @var Common\VideoFactory
+     */
+    private $videoFactory;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -67,6 +74,7 @@ class TvFactory extends AbstractFactory {
         $this->imageFactory    = new ImageFactory();
         $this->tvSeasonFactory = new TvSeasonFactory();
         $this->networkFactory  = new NetworkFactory();
+        $this->videoFactory    = new VideoFactory();
     }
 
     /**
@@ -84,11 +92,21 @@ class TvFactory extends AbstractFactory {
 
         if (array_key_exists('credits', $data)) {
             if (array_key_exists('cast', $data['credits'])) {
-                $tvShow->getCredits()->setCast($this->getCastFactory()->createCollection($data['credits']['cast'], new CastMember()));
+                $tvShow->getCredits()->setCast(
+                    $this->getCastFactory()->createCollection(
+                        $data['credits']['cast'],
+                        new CastMember()
+                    )
+                );
             }
 
             if (array_key_exists('crew', $data['credits'])) {
-                $tvShow->getCredits()->setCrew($this->getCrewFactory()->createCollection($data['credits']['crew'], new CrewMember()));
+                $tvShow->getCredits()->setCrew(
+                    $this->getCrewFactory()->createCollection(
+                        $data['credits']['crew'],
+                        new CrewMember()
+                    )
+                );
             }
         }
 
@@ -106,20 +124,35 @@ class TvFactory extends AbstractFactory {
 
         /** Images */
         if (array_key_exists('images', $data)) {
-            $tvShow->setImages($this->getImageFactory()->createCollectionFromTv($data['images']));
+            $tvShow->setImages(
+                $this->getImageFactory()->createCollectionFromTv($data['images'])
+            );
         }
 
         if (array_key_exists('backdrop_path', $data)) {
-            $tvShow->setBackdropImage($this->getImageFactory()->createFromPath($data['backdrop_path'], 'backdrop_path'));
+            $tvShow->setBackdropImage(
+                $this->getImageFactory()->createFromPath($data['backdrop_path'], 'backdrop_path')
+            );
         }
 
         if (array_key_exists('poster_path', $data)) {
-            $tvShow->setPosterImage($this->getImageFactory()->createFromPath($data['poster_path'], 'poster_path'));
+            $tvShow->setPosterImage(
+                $this->getImageFactory()->createFromPath($data['poster_path'], 'poster_path')
+            );
         }
 
         /** Translations */
         if (array_key_exists('translations', $data) && null !== $data['translations']) {
-            $tvShow->setTranslations($this->createGenericCollection($data['translations']['translations'], new Translation()));
+
+            if (array_key_exists('translations', $data['translations'])) {
+                $translations = $data['translations']['translations'];
+            } else {
+                $translations = $data['translations'];
+            }
+
+            $tvShow->setTranslations(
+                $this->createGenericCollection($translations, new Translation())
+            );
         }
 
         /** Seasons */
@@ -130,6 +163,10 @@ class TvFactory extends AbstractFactory {
         /** Networks */
         if (array_key_exists('networks', $data)) {
             $tvShow->setNetworks($this->getNetworkFactory()->createCollection($data['networks']));
+        }
+
+        if (array_key_exists('videos', $data)) {
+            $tvShow->setVideos($this->getVideoFactory()->createCollection($data['videos']));
         }
 
         return $this->hydrate($tvShow, $data);
@@ -146,7 +183,7 @@ class TvFactory extends AbstractFactory {
             $data = $data['results'];
         }
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->add(null, $this->create($item));
         }
 
@@ -154,12 +191,13 @@ class TvFactory extends AbstractFactory {
     }
 
     /**
-     * @param \Tmdb\Factory\People\CastFactory $castFactory
+     * @param  \Tmdb\Factory\People\CastFactory $castFactory
      * @return $this
      */
     public function setCastFactory($castFactory)
     {
         $this->castFactory = $castFactory;
+
         return $this;
     }
 
@@ -172,12 +210,13 @@ class TvFactory extends AbstractFactory {
     }
 
     /**
-     * @param \Tmdb\Factory\People\CrewFactory $crewFactory
+     * @param  \Tmdb\Factory\People\CrewFactory $crewFactory
      * @return $this
      */
     public function setCrewFactory($crewFactory)
     {
         $this->crewFactory = $crewFactory;
+
         return $this;
     }
 
@@ -190,12 +229,13 @@ class TvFactory extends AbstractFactory {
     }
 
     /**
-     * @param \Tmdb\Factory\GenreFactory $genreFactory
+     * @param  \Tmdb\Factory\GenreFactory $genreFactory
      * @return $this
      */
     public function setGenreFactory($genreFactory)
     {
         $this->genreFactory = $genreFactory;
+
         return $this;
     }
 
@@ -208,12 +248,13 @@ class TvFactory extends AbstractFactory {
     }
 
     /**
-     * @param \Tmdb\Factory\ImageFactory $imageFactory
+     * @param  \Tmdb\Factory\ImageFactory $imageFactory
      * @return $this
      */
     public function setImageFactory($imageFactory)
     {
         $this->imageFactory = $imageFactory;
+
         return $this;
     }
 
@@ -226,12 +267,13 @@ class TvFactory extends AbstractFactory {
     }
 
     /**
-     * @param \Tmdb\Factory\TvSeasonFactory $tvSeasonFactory
+     * @param  \Tmdb\Factory\TvSeasonFactory $tvSeasonFactory
      * @return $this
      */
     public function setTvSeasonFactory($tvSeasonFactory)
     {
         $this->tvSeasonFactory = $tvSeasonFactory;
+
         return $this;
     }
 
@@ -244,12 +286,13 @@ class TvFactory extends AbstractFactory {
     }
 
     /**
-     * @param \Tmdb\Factory\NetworkFactory $networkFactory
+     * @param  \Tmdb\Factory\NetworkFactory $networkFactory
      * @return $this
      */
     public function setNetworkFactory($networkFactory)
     {
         $this->networkFactory = $networkFactory;
+
         return $this;
     }
 
@@ -259,5 +302,24 @@ class TvFactory extends AbstractFactory {
     public function getNetworkFactory()
     {
         return $this->networkFactory;
+    }
+
+    /**
+     * @param  \Tmdb\Factory\Common\VideoFactory $videoFactory
+     * @return $this
+     */
+    public function setVideoFactory($videoFactory)
+    {
+        $this->videoFactory = $videoFactory;
+
+        return $this;
+    }
+
+    /**
+     * @return \Tmdb\Factory\Common\VideoFactory
+     */
+    public function getVideoFactory()
+    {
+        return $this->videoFactory;
     }
 }

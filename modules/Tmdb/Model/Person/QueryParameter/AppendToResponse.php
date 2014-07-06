@@ -18,7 +18,8 @@ use Tmdb\Model\Common\QueryParameter\AppendToResponse as BaseAppendToResponse;
  * Class AppendToResponse
  * @package Tmdb\Model\Person\QueryParameter
  */
-final class AppendToResponse extends BaseAppendToResponse {
+final class AppendToResponse extends BaseAppendToResponse
+{
     const MOVIE_CREDITS     = 'movie_credits';
     const TV_CREDITS        = 'tv_credits';
     const COMBINED_CREDITS  = 'combined_credits';

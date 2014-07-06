@@ -24,17 +24,18 @@ use Tmdb\Model\Movie;
  * @package Tmdb\Repository
  * @see http://docs.themoviedb.apiary.io/#movies
  */
-class CompanyRepository extends AbstractRepository {
-
+class CompanyRepository extends AbstractRepository
+{
     /**
      * Load a company with the given identifier
      *
      * @param $id
-     * @param array $parameters
-     * @param array $headers
+     * @param  array   $parameters
+     * @param  array   $headers
      * @return Company
      */
-    public function load($id, array $parameters = array(), array $headers = array()) {
+    public function load($id, array $parameters = array(), array $headers = array())
+    {
         $data = $this->getApi()->getCompany($id, $this->parseQueryParameters($parameters), $headers);
 
         return $this->getFactory()->create($data);
@@ -43,9 +44,9 @@ class CompanyRepository extends AbstractRepository {
     /**
      * Get the list of movies associated with a particular company.
      *
-     * @param integer $id
-     * @param array $parameters
-     * @param array $headers
+     * @param  integer                   $id
+     * @param  array                     $parameters
+     * @param  array                     $headers
      * @return GenericCollection|Movie[]
      */
     public function getMovies($id, array $parameters = array(), array $headers = array())
@@ -87,14 +88,15 @@ class CompanyRepository extends AbstractRepository {
      * @param $data
      * @return Movie[]
      */
-    public function createMovieCollection($data){
+    public function createMovieCollection($data)
+    {
         $collection = new ResultCollection();
 
         if (array_key_exists('results', $data)) {
             $data = $data['results'];
         }
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->add(null, $this->getMovieFactory()->create($item));
         }
 

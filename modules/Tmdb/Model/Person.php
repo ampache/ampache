@@ -23,8 +23,8 @@ use Tmdb\Model\Image\ProfileImage;
  * Class Person
  * @package Tmdb\Model
  */
-class Person extends AbstractModel implements PersonInterface {
-
+class Person extends AbstractModel implements PersonInterface
+{
     /**
      * @var bool
      */
@@ -117,7 +117,7 @@ class Person extends AbstractModel implements PersonInterface {
      */
     protected $externalIds;
 
-    public static $_properties = array(
+    public static $properties = array(
         'adult',
         'also_known_as',
         'biography',
@@ -147,12 +147,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param mixed $adult
+     * @param  mixed $adult
      * @return $this
      */
     public function setAdult($adult)
     {
         $this->adult = $adult;
+
         return $this;
     }
 
@@ -165,12 +166,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param mixed $alsoKnownAs
+     * @param  mixed $alsoKnownAs
      * @return $this
      */
     public function setAlsoKnownAs($alsoKnownAs)
     {
         $this->alsoKnownAs = $alsoKnownAs;
+
         return $this;
     }
 
@@ -183,12 +185,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param mixed $biography
+     * @param  mixed $biography
      * @return $this
      */
     public function setBiography($biography)
     {
         $this->biography = $biography;
+
         return $this;
     }
 
@@ -201,7 +204,7 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param mixed $birthday
+     * @param  mixed $birthday
      * @return $this
      */
     public function setBirthday($birthday)
@@ -211,6 +214,7 @@ class Person extends AbstractModel implements PersonInterface {
         }
 
         $this->birthday = $birthday;
+
         return $this;
     }
 
@@ -223,12 +227,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param mixed $changes
+     * @param  mixed $changes
      * @return $this
      */
     public function setChanges($changes)
     {
         $this->changes = $changes;
+
         return $this;
     }
 
@@ -241,12 +246,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param mixed $credits
+     * @param  mixed $credits
      * @return $this
      */
     public function setCredits($credits)
     {
         $this->credits = $credits;
+
         return $this;
     }
 
@@ -259,7 +265,7 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param mixed $deathday
+     * @param  mixed $deathday
      * @return $this
      */
     public function setDeathday($deathday)
@@ -273,6 +279,7 @@ class Person extends AbstractModel implements PersonInterface {
         }
 
         $this->deathday = $deathday;
+
         return $this;
     }
 
@@ -285,12 +292,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param mixed $homepage
+     * @param  mixed $homepage
      * @return $this
      */
     public function setHomepage($homepage)
     {
         $this->homepage = $homepage;
+
         return $this;
     }
 
@@ -303,12 +311,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param mixed $id
+     * @param  mixed $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = (int) $id;
+
         return $this;
     }
 
@@ -321,12 +330,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param Images $images
+     * @param  Images $images
      * @return $this
      */
     public function setImages($images)
     {
         $this->images = $images;
+
         return $this;
     }
 
@@ -339,12 +349,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param mixed $name
+     * @param  mixed $name
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -357,12 +368,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param mixed $placeOfBirth
+     * @param  mixed $placeOfBirth
      * @return $this
      */
     public function setPlaceOfBirth($placeOfBirth)
     {
         $this->placeOfBirth = $placeOfBirth;
+
         return $this;
     }
 
@@ -375,12 +387,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param mixed $profilePath
+     * @param  mixed $profilePath
      * @return $this
      */
     public function setProfilePath($profilePath)
     {
         $this->profilePath = $profilePath;
+
         return $this;
     }
 
@@ -393,12 +406,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param ProfileImage $profileImage
+     * @param  ProfileImage $profileImage
      * @return $this
      */
     public function setProfileImage(ProfileImage $profileImage)
     {
         $this->profileImage = $profileImage;
+
         return $this;
     }
 
@@ -411,12 +425,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param \Tmdb\Model\Collection\CreditsCollection\CombinedCredits $combinedCredits
+     * @param  \Tmdb\Model\Collection\CreditsCollection\CombinedCredits $combinedCredits
      * @return $this
      */
     public function setCombinedCredits($combinedCredits)
     {
         $this->combinedCredits = $combinedCredits;
+
         return $this;
     }
 
@@ -429,12 +444,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param \Tmdb\Model\Collection\CreditsCollection\MovieCredits $movieCredits
+     * @param  \Tmdb\Model\Collection\CreditsCollection\MovieCredits $movieCredits
      * @return $this
      */
     public function setMovieCredits($movieCredits)
     {
         $this->movieCredits = $movieCredits;
+
         return $this;
     }
 
@@ -447,12 +463,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param \Tmdb\Model\Collection\CreditsCollection\TvCredits $tvCredits
+     * @param  \Tmdb\Model\Collection\CreditsCollection\TvCredits $tvCredits
      * @return $this
      */
     public function setTvCredits($tvCredits)
     {
         $this->tvCredits = $tvCredits;
+
         return $this;
     }
 
@@ -465,12 +482,13 @@ class Person extends AbstractModel implements PersonInterface {
     }
 
     /**
-     * @param \Tmdb\Model\Common\ExternalIds $externalIds
+     * @param  \Tmdb\Model\Common\ExternalIds $externalIds
      * @return $this
      */
     public function setExternalIds($externalIds)
     {
         $this->externalIds = $externalIds;
+
         return $this;
     }
 

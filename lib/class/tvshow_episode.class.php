@@ -28,6 +28,7 @@ class TVShow_Episode extends Video
     public $description;
 
     public $f_link;
+    public $f_season;
     public $f_season_link;
     public $f_tvshow;
     public $f_tvshow_link;
@@ -65,14 +66,33 @@ class TVShow_Episode extends Video
      * insert
      * Insert a new tv show episode and related entities.
      */
-    public static function insert($data)
+    public static function insert($data, $options = array())
     {
         if (empty($data['tvshow'])) {
             $data['tvshow'] = T_('Unknown');
         }
+        $tags = $data['genre'];
 
         $tvshow = TVShow::check($data['tvshow'], $data['tvshow_year']);
+        if ($options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db($tvshow, 'tvshow')) {
+            $art = new Art($tvshow, 'tvshow');
+            $art->insert_url($data['tvshow_art']);
+        }
         $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
+        if ($options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season, 'tvshow_season')) {
+            $art = new Art($tvshow_season, 'tvshow_season');
+            $art->insert_url($data['tvshow_season_art']);
+        }
+
+        if (is_array($tags)) {
+            foreach ($tags as $tag) {
+                $tag = trim($tag);
+                if (!empty($tag)) {
+                    Tag::add('tvshow_season', $tvshow_season, $tag, false);
+                    Tag::add('tvshow', $tvshow, $tag, false);
+                }
+            }
+        }
 
         $sdata = $data;
         // Replace relation name with db ids
@@ -121,8 +141,9 @@ class TVShow_Episode extends Video
 
         $this->f_title = ($this->original_name ?: $this->f_title);
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
+        $this->f_season = $season->f_name;
         $this->f_season_link = $season->f_link;
-        $this->f_tvshow = $tvshow->f_tvshow;
+        $this->f_tvshow = $season->f_tvshow;
         $this->f_tvshow_link = $season->f_tvshow_link;
 
         $this->f_file = $this->f_tvshow;
@@ -130,6 +151,7 @@ class TVShow_Episode extends Video
             $this->f_file .= ' - S'. sprintf('%02d', $season->season_number) . 'E'. sprintf('%02d', $this->episode_number);
         }
         $this->f_file .= ' - ' . $this->f_title;
+        $this->f_full_title = $this->f_file;
 
         return true;
 

@@ -19,23 +19,24 @@ use Tmdb\Model\Filter\CountryFilter;
  * Class AlternativeTitle
  * @package Tmdb\Model\Movie
  */
-class AlternativeTitle extends AbstractModel implements CountryFilter {
-
+class AlternativeTitle extends AbstractModel implements CountryFilter
+{
     private $iso31661;
     private $title;
 
-    public static $_properties = array(
+    public static $properties = array(
         'iso_3166_1',
         'title',
     );
 
     /**
-     * @param string $iso31661
+     * @param  string $iso31661
      * @return $this
      */
     public function setIso31661($iso31661)
     {
         $this->iso31661 = $iso31661;
+
         return $this;
     }
 
@@ -48,12 +49,13 @@ class AlternativeTitle extends AbstractModel implements CountryFilter {
     }
 
     /**
-     * @param string $title
+     * @param  string $title
      * @return $this
      */
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 

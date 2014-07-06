@@ -16,6 +16,7 @@ namespace Tmdb\Model\Filter;
  * Interface AdultFilter
  * @package Tmdb\Model\Filter
  */
-interface AdultFilter {
+interface AdultFilter
+{
     public function getAdult();
 }

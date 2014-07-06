@@ -16,11 +16,12 @@ namespace Tmdb\Model\Collection\People;
  * Interface PersonInterface
  * @package Tmdb\Model\Collection\People
  */
-interface PersonInterface {
-    function getName();
+interface PersonInterface
+{
+    public function getName();
 
     /**
      * @return integer
      */
-    function getId();
+    public function getId();
 }

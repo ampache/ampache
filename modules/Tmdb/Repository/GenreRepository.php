@@ -21,24 +21,26 @@ use Tmdb\Model\Genre;
  * @package Tmdb\Repository
  * @see http://docs.themoviedb.apiary.io/#genres
  */
-class GenreRepository extends AbstractRepository {
+class GenreRepository extends AbstractRepository
+{
     /**
      * Load a genre with the given identifier
      *
      * @param $id
-     * @param array $parameters
-     * @param array $headers
+     * @param  array $parameters
+     * @param  array $headers
      * @return Genre
      */
-    public function load($id, array $parameters = array(), array $headers = array()) {
+    public function load($id, array $parameters = array(), array $headers = array())
+    {
         return $this->loadCollection($parameters, $headers)->filterId($id);
     }
 
     /**
      * Get the list of genres.
      *
-     * @param array $parameters
-     * @param array $headers
+     * @param  array             $parameters
+     * @param  array             $headers
      * @return GenericCollection
      */
     public function loadCollection(array $parameters = array(), array $headers = array())
@@ -49,14 +51,16 @@ class GenreRepository extends AbstractRepository {
     }
 
     /**
-     * Get the list of movies for a particular genre by id. By default, only movies with 10 or more votes are included.
+     * Get the list of movies for a particular genre by id.
+     * By default, only movies with 10 or more votes are included.
      *
      * @param $id
-     * @param array $parameters
-     * @param array $headers
+     * @param  array   $parameters
+     * @param  array   $headers
      * @return Genre[]
      */
-    public function getMovies($id, array $parameters = array(), array $headers = array()) {
+    public function getMovies($id, array $parameters = array(), array $headers = array())
+    {
         return $this->getFactory()->createResultCollection(
             $this->getApi()->getMovies($id, $parameters, $headers),
             'createMovie'
@@ -69,7 +73,8 @@ class GenreRepository extends AbstractRepository {
      * @param $data
      * @return GenericCollection|Genre[]
      */
-    private function createCollection($data){
+    private function createCollection($data)
+    {
         return $this->getFactory()->createCollection($data);
     }
 

@@ -12,6 +12,7 @@
  */
 namespace Tmdb\Factory;
 
+use Tmdb\Factory\Common\VideoFactory;
 use Tmdb\Factory\People\CastFactory;
 use Tmdb\Factory\People\CrewFactory;
 use Tmdb\Model\Common\GenericCollection;
@@ -24,7 +25,8 @@ use Tmdb\Model\Tv\Episode;
  * Class TvEpisodeFactory
  * @package Tmdb\Factory
  */
-class TvEpisodeFactory extends AbstractFactory {
+class TvEpisodeFactory extends AbstractFactory
+{
     /**
      * @var People\CastFactory
      */
@@ -41,6 +43,11 @@ class TvEpisodeFactory extends AbstractFactory {
     private $imageFactory;
 
     /**
+     * @var Common\VideoFactory
+     */
+    private $videoFactory;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -48,6 +55,7 @@ class TvEpisodeFactory extends AbstractFactory {
         $this->castFactory  = new CastFactory();
         $this->crewFactory  = new CrewFactory();
         $this->imageFactory = new ImageFactory();
+        $this->videoFactory = new VideoFactory();
     }
 
     /**
@@ -63,16 +71,23 @@ class TvEpisodeFactory extends AbstractFactory {
 
         if (array_key_exists('credits', $data)) {
             if (array_key_exists('cast', $data['credits'])) {
-                $tvEpisode->getCredits()->setCast(
-                    $this->getCastFactory()->createCollection($data['credits']['cast'],
-                        new CastMember())
-                );
+                $tvEpisode
+                    ->getCredits()
+                    ->setCast(
+                        $this->getCastFactory()
+                            ->createCollection(
+                                $data['credits']['cast'],
+                                new CastMember()
+                            )
+                    );
             }
 
             if (array_key_exists('crew', $data['credits'])) {
                 $tvEpisode->getCredits()->setCrew(
-                    $this->getCrewFactory()->createCollection($data['credits']['crew'],
-                    new CrewMember())
+                    $this->getCrewFactory()->createCollection(
+                        $data['credits']['crew'],
+                        new CrewMember()
+                    )
                 );
             }
         }
@@ -93,6 +108,10 @@ class TvEpisodeFactory extends AbstractFactory {
             $tvEpisode->setStillImage($this->getImageFactory()->createFromPath($data['still_path'], 'still_path'));
         }
 
+        if (array_key_exists('videos', $data)) {
+            $tvEpisode->setVideos($this->getVideoFactory()->createCollection($data['videos']));
+        }
+
         return $this->hydrate($tvEpisode, $data);
     }
 
@@ -103,7 +122,7 @@ class TvEpisodeFactory extends AbstractFactory {
     {
         $collection = new GenericCollection();
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->add(null, $this->create($item));
         }
 
@@ -111,12 +130,13 @@ class TvEpisodeFactory extends AbstractFactory {
     }
 
     /**
-     * @param \Tmdb\Factory\People\CastFactory $castFactory
+     * @param  \Tmdb\Factory\People\CastFactory $castFactory
      * @return $this
      */
     public function setCastFactory($castFactory)
     {
         $this->castFactory = $castFactory;
+
         return $this;
     }
 
@@ -129,12 +149,13 @@ class TvEpisodeFactory extends AbstractFactory {
     }
 
     /**
-     * @param \Tmdb\Factory\People\CrewFactory $crewFactory
+     * @param  \Tmdb\Factory\People\CrewFactory $crewFactory
      * @return $this
      */
     public function setCrewFactory($crewFactory)
     {
         $this->crewFactory = $crewFactory;
+
         return $this;
     }
 
@@ -147,12 +168,13 @@ class TvEpisodeFactory extends AbstractFactory {
     }
 
     /**
-     * @param \Tmdb\Factory\ImageFactory $imageFactory
+     * @param  \Tmdb\Factory\ImageFactory $imageFactory
      * @return $this
      */
     public function setImageFactory($imageFactory)
     {
         $this->imageFactory = $imageFactory;
+
         return $this;
     }
 
@@ -162,5 +184,24 @@ class TvEpisodeFactory extends AbstractFactory {
     public function getImageFactory()
     {
         return $this->imageFactory;
+    }
+
+    /**
+     * @param  \Tmdb\Factory\Common\VideoFactory $videoFactory
+     * @return $this
+     */
+    public function setVideoFactory($videoFactory)
+    {
+        $this->videoFactory = $videoFactory;
+
+        return $this;
+    }
+
+    /**
+     * @return \Tmdb\Factory\Common\VideoFactory
+     */
+    public function getVideoFactory()
+    {
+        return $this->videoFactory;
     }
 }

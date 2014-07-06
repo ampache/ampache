@@ -14,7 +14,6 @@ namespace Tmdb\Factory;
 
 use Tmdb\Model\Collection\Keywords;
 use Tmdb\Model\Keyword;
-use Tmdb\Model\Movie;
 
 /**
  * Class KeywordFactory
@@ -43,7 +42,7 @@ class KeywordFactory extends AbstractFactory
             $data = $data['keywords'];
         }
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->addKeyword($this->create($item));
         }
 

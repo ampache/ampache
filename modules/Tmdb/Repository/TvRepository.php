@@ -13,6 +13,8 @@
 namespace Tmdb\Repository;
 
 use Tmdb\Factory\TvFactory;
+use Tmdb\Model\Collection\Videos;
+use Tmdb\Model\Common\Video;
 use Tmdb\Model\Tv;
 use Tmdb\Model\Tv\QueryParameter\AppendToResponse;
 
@@ -21,14 +23,15 @@ use Tmdb\Model\Tv\QueryParameter\AppendToResponse;
  * @package Tmdb\Repository
  * @see http://docs.themoviedb.apiary.io/#tv
  */
-class TvRepository extends AbstractRepository {
-
+class TvRepository extends AbstractRepository
+{
     /**
      * Load a tv with the given identifier
      *
-     * If you want to optimize the result set/bandwidth you should define the AppendToResponse parameter
+     * If you want to optimize the result set/bandwidth you should
+     * define the AppendToResponse parameter
      *
-     * @param integer $id
+     * @param  integer                        $id
      * @param $parameters
      * @param $headers
      * @return null|\Tmdb\Model\AbstractModel
@@ -121,6 +124,22 @@ class TvRepository extends AbstractRepository {
     }
 
     /**
+     * Get the images (posters and backdrops) for a TV series.
+     *
+     * @param $id
+     * @param $parameters
+     * @param $headers
+     * @return Videos|Video[]
+     */
+    public function getVideos($id, array $parameters = array(), array $headers = array())
+    {
+        $data = $this->getApi()->getVideos($id, $this->parseQueryParameters($parameters), $headers);
+        $tv   = $this->getFactory()->create(array('videos' => $data));
+
+        return $tv->getVideos();
+    }
+
+    /**
      * Return the Tvs API Class
      *
      * @return \Tmdb\Api\Tv
@@ -141,39 +160,60 @@ class TvRepository extends AbstractRepository {
     /**
      * Get the list of popular tvs on The Tv Database. This list refreshes every day.
      *
-     * @param array $options
+     * @param  array $options
+     * @param  array $headers
      * @return Tv[]
      */
-    public function getPopular(array $options = array())
+    public function getPopular(array $options = array(), array $headers = array())
     {
         return $this->getFactory()->createResultCollection(
-            $this->getApi()->getPopular($options)
+            $this->getApi()->getPopular($options, $headers)
         );
     }
 
     /**
-     * Get the list of top rated tvs. By default, this list will only include tvs that have 10 or more votes. This list refreshes every day.
+     * Get the list of top rated tvs. By default, this list will only include tvs that have 10 or more votes.
+     * This list refreshes every day.
      *
-     * @param array $options
+     * @param  array $options
+     * @param  array $headers
      * @return Tv[]
      */
-    public function getTopRated(array $options = array())
+    public function getTopRated(array $options = array(), array $headers = array())
     {
         return $this->getFactory()->createResultCollection(
-            $this->getApi()->getTopRated($options)
+            $this->getApi()->getTopRated($options, $headers)
         );
     }
 
     /**
-     * Get the list of top rated tvs. By default, this list will only include tvs that have 10 or more votes. This list refreshes every day.
+     * Get the list of top rated tvs. By default, this list will only include tvs that have 10 or more votes.
+     * This list refreshes every day.
      *
-     * @param array $options
+     * @param  array $options
+     * @param  array $headers
      * @return Tv[]
      */
-    public function getOnTheAir(array $options = array())
+    public function getOnTheAir(array $options = array(), array $headers = array())
     {
         return $this->getFactory()->createResultCollection(
-            $this->getApi()->getTopRated($options)
+            $this->getApi()->getOnTheAir($options, $headers)
+        );
+    }
+
+    /**
+     * Get the list of TV shows that air today.
+     *
+     * Without a specified timezone, this query defaults to EST (Eastern Time UTC-05:00).
+     *
+     * @param  array $options
+     * @param  array $headers
+     * @return Tv[]
+     */
+    public function getAiringToday(array $options = array(), array $headers = array())
+    {
+        return $this->getFactory()->createResultCollection(
+            $this->getApi()->getAiringToday($options, $headers)
         );
     }
 }

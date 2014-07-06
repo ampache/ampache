@@ -104,7 +104,6 @@ require_once $prefix . '/modules/getid3/getid3.php';
 require_once $prefix . '/modules/phpmailer/class.phpmailer.php';
 require_once $prefix . '/modules/phpmailer/class.smtp.php';
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
-require_once $prefix . '/modules/infotools/lastfm.class.php';
 require_once $prefix . '/modules/musicbrainz/MusicBrainz.php';
 require_once $prefix . '/modules/musicbrainz/Exception.php';
 require_once $prefix . '/modules/musicbrainz/Clients/MbClient.php';

@@ -20,7 +20,8 @@ use Tmdb\Model\Common\GenericCollection;
  * Class CreditsCollection
  * @package Tmdb\Model\Collection
  */
-class CreditsCollection {
+class CreditsCollection
+{
     /**
      * @var Cast
      */
@@ -41,12 +42,13 @@ class CreditsCollection {
     }
 
     /**
-     * @param Cast|GenericCollection $cast
+     * @param  Cast|GenericCollection $cast
      * @return $this
      */
     public function setCast(GenericCollection $cast)
     {
         $this->cast = $cast;
+
         return $this;
     }
 
@@ -59,12 +61,13 @@ class CreditsCollection {
     }
 
     /**
-     * @param Crew|GenericCollection $crew
+     * @param  Crew|GenericCollection $crew
      * @return $this
      */
     public function setCrew(GenericCollection $crew)
     {
         $this->crew = $crew;
+
         return $this;
     }
 

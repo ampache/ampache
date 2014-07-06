@@ -20,16 +20,18 @@ use Tmdb\Model\Review;
  * @package Tmdb\Repository
  * @see http://docs.themoviedb.apiary.io/#reviews
  */
-class ReviewRepository extends AbstractRepository {
+class ReviewRepository extends AbstractRepository
+{
     /**
      * Get the full details of a review by ID.
      *
      * @param $id
-     * @param array $parameters
-     * @param array $headers
+     * @param  array  $parameters
+     * @param  array  $headers
      * @return Review
      */
-    public function load($id, array $parameters = array(), array $headers = array()) {
+    public function load($id, array $parameters = array(), array $headers = array())
+    {
         return $this->getFactory()->create(
             $this->getApi()->getReview($id, $parameters, $headers)
         );

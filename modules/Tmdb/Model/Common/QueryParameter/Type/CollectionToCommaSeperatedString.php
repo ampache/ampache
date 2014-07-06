@@ -19,7 +19,8 @@ use Tmdb\Model\Common\QueryParameter\QueryParameterInterface;
  * Class CollectionToCommaSeperatedString
  * @package Tmdb\Model\Common\QueryParameter\Type
  */
-abstract class CollectionToCommaSeperatedString extends GenericCollection implements QueryParameterInterface {
+abstract class CollectionToCommaSeperatedString extends GenericCollection implements QueryParameterInterface
+{
     /**
      * @param array $collection
      */
@@ -27,7 +28,7 @@ abstract class CollectionToCommaSeperatedString extends GenericCollection implem
     {
         $i = 0;
 
-        foreach($collection as $item) {
+        foreach ($collection as $item) {
             $this->add($i, $item);
 
             $i++;

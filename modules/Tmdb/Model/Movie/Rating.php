@@ -18,24 +18,25 @@ use Tmdb\Model\AbstractModel;
  * Class Rating
  * @package Tmdb\Model\Movie
  */
-class Rating extends AbstractModel {
-
+class Rating extends AbstractModel
+{
     /**
      * @var float
      */
     private $value;
 
-    public static $_properties = array(
+    public static $properties = array(
         'value',
     );
 
     /**
-     * @param float $value
+     * @param  float $value
      * @return $this
      */
     public function setValue($value)
     {
         $this->value = $value;
+
         return $this;
     }
 

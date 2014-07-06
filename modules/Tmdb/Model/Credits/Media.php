@@ -19,7 +19,8 @@ use Tmdb\Model\Common\GenericCollection;
  * Class Media
  * @package Tmdb\Model\Credits
  */
-class Media extends AbstractModel {
+class Media extends AbstractModel
+{
     /**
      * @var integer
      */
@@ -50,7 +51,7 @@ class Media extends AbstractModel {
      */
     private $seasons;
 
-    public static $_properties = array(
+    public static $properties = array(
         'id',
         'name',
         'original_name',
@@ -58,12 +59,13 @@ class Media extends AbstractModel {
     );
 
     /**
-     * @param string $character
+     * @param  string $character
      * @return $this
      */
     public function setCharacter($character)
     {
         $this->character = $character;
+
         return $this;
     }
 
@@ -76,12 +78,13 @@ class Media extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Common\GenericCollection $episodes
+     * @param  \Tmdb\Model\Common\GenericCollection $episodes
      * @return $this
      */
     public function setEpisodes($episodes)
     {
         $this->episodes = $episodes;
+
         return $this;
     }
 
@@ -94,12 +97,13 @@ class Media extends AbstractModel {
     }
 
     /**
-     * @param int $id
+     * @param  int   $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -112,12 +116,13 @@ class Media extends AbstractModel {
     }
 
     /**
-     * @param string $name
+     * @param  string $name
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -130,12 +135,13 @@ class Media extends AbstractModel {
     }
 
     /**
-     * @param string $originalName
+     * @param  string $originalName
      * @return $this
      */
     public function setOriginalName($originalName)
     {
         $this->originalName = $originalName;
+
         return $this;
     }
 
@@ -148,12 +154,13 @@ class Media extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Common\GenericCollection $seasons
+     * @param  \Tmdb\Model\Common\GenericCollection $seasons
      * @return $this
      */
     public function setSeasons($seasons)
     {
         $this->seasons = $seasons;
+
         return $this;
     }
 

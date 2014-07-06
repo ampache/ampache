@@ -13,19 +13,19 @@
 namespace Tmdb\Repository;
 
 use Tmdb\Factory\CertificationFactory;
-use Tmdb\Model\Collection as ApiCollection;
 
 /**
  * Class CertificationRepository
  * @package Tmdb\Repository
  * @see http://docs.themoviedb.apiary.io/#certifications
  */
-class CertificationRepository extends AbstractRepository {
-
+class CertificationRepository extends AbstractRepository
+{
     /**
      * Get the list of supported certifications for movies.
      *
-     * These can be used in conjunction with the certification_country and certification.lte parameters when using discover.
+     * These can be used in conjunction with the certification_country
+     * and certification.lte parameters when using discover.
      *
      * @param $parameters
      * @param $headers
@@ -34,6 +34,7 @@ class CertificationRepository extends AbstractRepository {
     public function getMovieList(array $parameters = array(), array $headers = array())
     {
         $data  = $this->getApi()->getMovieList($this->parseQueryParameters($parameters), $headers);
+
         return $this->getFactory()->createCollection($data);
     }
 

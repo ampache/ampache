@@ -38,9 +38,9 @@ $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;-&nbsp;' .
     if ($album->name != T_('Unknown (Orphaned)')) {
         $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
 
-        $aa_url = $web_path . "/image.php?id=" . $album->id . "&amp;sid=" . session_id();
-        echo "<a href=\"$aa_url\" rel=\"prettyPhoto\">";
-        echo "<img src=\"" . $web_path . "/image.php?id=" . $album->id . "&amp;thumb=2\" alt=\"".$name."\" alt=\"".$name."\" height=\"128\" width=\"128\" />";
+        $aa_url = $web_path . "/image.php?object_id=" . $album->id . "&object_type=album&auth=" . session_id();
+        echo "<a href=\"" . $aa_url . "\" rel=\"prettyPhoto\">";
+        echo "<img src=\"" . $web_path . "/image.php?object_id=" . $album->id . "&object_type=album&thumb=2\" alt=\"".$name."\" alt=\"".$name."\" height=\"128\" width=\"128\" />";
         echo "</a>\n";
     }
     ?>

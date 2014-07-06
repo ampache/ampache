@@ -18,9 +18,11 @@ use Tmdb\Model\Common\QueryParameter\AppendToResponse as BaseAppendToResponse;
  * Class AppendToResponse
  * @package Tmdb\Model\Tv\QueryParameter
  */
-class AppendToResponse extends BaseAppendToResponse {
+class AppendToResponse extends BaseAppendToResponse
+{
     const CREDITS       = 'credits';
     const EXTERNAL_IDS  = 'external_ids';
     const IMAGES        = 'images';
     const TRANSLATIONS  = 'translations';
+    const VIDEOS        = 'videos';
 }

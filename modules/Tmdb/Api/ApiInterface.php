@@ -4,7 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  * @package Tmdb
  * @author Michael Roterman <michael@wtfz.net>
  * @copyright (c) 2013, Michael Roterman
@@ -16,5 +16,6 @@ namespace Tmdb\Api;
  * Interface ApiInterface
  * @package Tmdb\Api
  */
-interface ApiInterface {
+interface ApiInterface
+{
 }

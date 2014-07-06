@@ -74,6 +74,11 @@ switch ($_GET['thumb']) {
         $size['height'] = 32;
         $size['width'] = 32;
     break;
+    case '6':
+        /* Video browsing size */
+        $size['height'] = 150;
+        $size['width'] = 100;
+    break;
     default:
         $size['height'] = '275';
         $size['width']    = '275';
@@ -103,10 +108,10 @@ if (isset($_GET['type'])) {
     }
 }
 if (!$typeManaged) {
-    $media = new $type($_GET['id']);
-    $filename = $media->name;
+    $item = new $type($_GET['object_id']);
+    $filename = $item->name ?: $item->title;
 
-    $art = new Art($media->id,$type);
+    $art = new Art($item->id, $type);
     $art->get_db();
     $etag = $art->id;
 
@@ -126,10 +131,20 @@ if (!$typeManaged) {
     }
 
     if (!$art->raw_mime) {
-        $mime = 'image/jpeg';
-        $image = file_get_contents(AmpConfig::get('prefix') .
-            AmpConfig::get('theme_path') .
-            '/images/blankalbum.jpg');
+        $defaultimg = AmpConfig::get('prefix') . AmpConfig::get('theme_path') . '/images/';
+        switch ($type) {
+            case 'video':
+            case 'tvshow':
+            case 'tvshow_season':
+                $mime = 'image/png';
+                $defaultimg .= "blankmovie.png";
+                break;
+            default:
+                $mime = 'image/jpeg';
+                $defaultimg .= "blankalbum.jpg";
+            break;
+        }
+        $image = file_get_contents($defaultimg);
     } else {
         if ($_GET['thumb']) {
             $thumb_data = $art->get_thumb($size);

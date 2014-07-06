@@ -18,7 +18,8 @@ use Tmdb\Model\Search\SearchQuery;
  * Class TvSearchQuery
  * @package Tmdb\Model\Search\SearchQuery
  */
-class TvSearchQuery extends SearchQuery {
+class TvSearchQuery extends SearchQuery
+{
     /**
      * ISO 639-1 code.
      *
@@ -44,7 +45,7 @@ class TvSearchQuery extends SearchQuery {
             $year = $year->format('Y');
         }
 
-        $this->set('year', (int) $year);
+        $this->set('first_air_date_year', (int) $year);
 
         return $this;
     }

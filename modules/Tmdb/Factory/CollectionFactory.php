@@ -55,15 +55,21 @@ class CollectionFactory extends AbstractFactory
         }
 
         if (array_key_exists('backdrop_path', $data)) {
-            $collection->setBackdropImage($this->getImageFactory()->createFromPath($data['backdrop_path'], 'backdrop_path'));
+            $collection->setBackdropImage(
+                $this->getImageFactory()->createFromPath($data['backdrop_path'], 'backdrop_path')
+            );
         }
 
         if (array_key_exists('images', $data)) {
-            $collection->setImages($this->getImageFactory()->createCollectionFromMovie($data['images']));
+            $collection->setImages(
+                $this->getImageFactory()->createCollectionFromMovie($data['images'])
+            );
         }
 
         if (array_key_exists('poster_path', $data)) {
-            $collection->setPosterImage($this->getImageFactory()->createFromPath($data['poster_path'], 'poster_path'));
+            $collection->setPosterImage(
+                $this->getImageFactory()->createFromPath($data['poster_path'], 'poster_path')
+            );
         }
 
         return $this->hydrate($collection, $data);
@@ -76,7 +82,7 @@ class CollectionFactory extends AbstractFactory
     {
         $collection = new GenericCollection();
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->add(null, $this->create($item));
         }
 
@@ -84,12 +90,13 @@ class CollectionFactory extends AbstractFactory
     }
 
     /**
-     * @param \Tmdb\Factory\ImageFactory $imageFactory
+     * @param  \Tmdb\Factory\ImageFactory $imageFactory
      * @return $this
      */
     public function setImageFactory($imageFactory)
     {
         $this->imageFactory = $imageFactory;
+
         return $this;
     }
 
@@ -102,12 +109,13 @@ class CollectionFactory extends AbstractFactory
     }
 
     /**
-     * @param \Tmdb\Factory\MovieFactory $movieFactory
+     * @param  \Tmdb\Factory\MovieFactory $movieFactory
      * @return $this
      */
     public function setMovieFactory($movieFactory)
     {
         $this->movieFactory = $movieFactory;
+
         return $this;
     }
 

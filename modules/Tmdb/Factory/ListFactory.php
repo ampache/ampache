@@ -16,7 +16,6 @@ use Tmdb\Factory\Lists\ListItemFactory;
 use Tmdb\Model\Common\GenericCollection;
 use Tmdb\Model\Genre;
 use Tmdb\Model\Lists;
-use Tmdb\Model\Movie;
 
 /**
  * Class ListFactory
@@ -100,7 +99,7 @@ class ListFactory extends AbstractFactory
     {
         $collection = new GenericCollection();
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->add(null, $this->create($item));
         }
 
@@ -108,12 +107,13 @@ class ListFactory extends AbstractFactory
     }
 
     /**
-     * @param \Tmdb\Factory\ImageFactory $imageFactory
+     * @param  \Tmdb\Factory\ImageFactory $imageFactory
      * @return $this
      */
     public function setImageFactory($imageFactory)
     {
         $this->imageFactory = $imageFactory;
+
         return $this;
     }
 
@@ -126,12 +126,13 @@ class ListFactory extends AbstractFactory
     }
 
     /**
-     * @param \Tmdb\Factory\Lists\ListItemFactory $listItemFactory
+     * @param  \Tmdb\Factory\Lists\ListItemFactory $listItemFactory
      * @return $this
      */
     public function setListItemFactory($listItemFactory)
     {
         $this->listItemFactory = $listItemFactory;
+
         return $this;
     }
 

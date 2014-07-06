@@ -21,7 +21,8 @@ use Tmdb\Model\Query\ChangesQuery;
  * @package Tmdb\Repository
  * @see http://docs.themoviedb.apiary.io/#changes
  */
-class ChangesRepository extends AbstractRepository {
+class ChangesRepository extends AbstractRepository
+{
     /**
      * Get a list of movie ids that have been edited.
      *
@@ -32,11 +33,12 @@ class ChangesRepository extends AbstractRepository {
      * Please note that the change log system to support this was changed on October 5, 2012
      * and will only show movies that have been edited since.
      *
-     * @param ChangesQuery $query
-     * @param array $headers
+     * @param  ChangesQuery                         $query
+     * @param  array                                $headers
      * @return \Tmdb\Model\Common\GenericCollection
      */
-    public function getMovieChanges(ChangesQuery $query, array $headers = array()) {
+    public function getMovieChanges(ChangesQuery $query, array $headers = array())
+    {
         $data = $this->getApi()->getMovieChanges($query->toArray(), $headers);
 
         return $this->getFactory()->createResultCollection($data);
@@ -52,11 +54,12 @@ class ChangesRepository extends AbstractRepository {
      * Please note that the change log system to support this was changed on October 5, 2012
      * and will only show people that have been edited since.
      *
-     * @param ChangesQuery $query
-     * @param array $headers
+     * @param  ChangesQuery $query
+     * @param  array        $headers
      * @return People
      */
-    public function getPeopleChanges(ChangesQuery $query, array $headers = array()) {
+    public function getPeopleChanges(ChangesQuery $query, array $headers = array())
+    {
         $data = $this->getApi()->getPersonChanges($query->toArray(), $headers);
 
         return $this->getFactory()->createResultCollection($data);
@@ -77,7 +80,8 @@ class ChangesRepository extends AbstractRepository {
      *
      * @return ChangesFactory
      */
-    public function getFactory(){
+    public function getFactory()
+    {
         return new ChangesFactory();
     }
 }

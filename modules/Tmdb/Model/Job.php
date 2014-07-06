@@ -16,9 +16,9 @@ namespace Tmdb\Model;
  * Class Job
  * @package Tmdb\Model
  */
-class Job extends AbstractModel {
-
-    public static $_properties = array(
+class Job extends AbstractModel
+{
+    public static $properties = array(
         'department',
         'job_list'
     );
@@ -34,7 +34,7 @@ class Job extends AbstractModel {
     private $jobList;
 
     /**
-     * @param string $department
+     * @param  string $department
      * @return $this
      */
     public function setDepartment($department)
@@ -51,7 +51,7 @@ class Job extends AbstractModel {
     }
 
     /**
-     * @param array $jobList
+     * @param  array $jobList
      * @return $this
      */
     public function setJobList(array $jobList)

@@ -20,8 +20,8 @@ use Tmdb\Model\Image;
  * Class Images
  * @package Tmdb\Model\Collection
  */
-class Images extends GenericCollection {
-
+class Images extends GenericCollection
+{
     /**
      * Returns all images
      *
@@ -38,7 +38,8 @@ class Images extends GenericCollection {
      * @param $id
      * @return null
      */
-    public function getImage($id) {
+    public function getImage($id)
+    {
         return $this->filterId($id);
     }
 
@@ -60,8 +61,10 @@ class Images extends GenericCollection {
     public function filterPosters()
     {
         return $this->filter(
-            function($key, $value) {
-                if ($value instanceof ImageFilter && $value instanceof Image\PosterImage) { return true; }
+            function ($key, $value) {
+                if ($value instanceof ImageFilter && $value instanceof Image\PosterImage) {
+                    return true;
+                }
             }
         );
     }
@@ -74,8 +77,10 @@ class Images extends GenericCollection {
     public function filterBackdrops()
     {
         return $this->filter(
-            function($key, $value) {
-                if ($value instanceof ImageFilter && $value instanceof Image\BackdropImage) { return true; }
+            function ($key, $value) {
+                if ($value instanceof ImageFilter && $value instanceof Image\BackdropImage) {
+                    return true;
+                }
             }
         );
     }
@@ -88,8 +93,10 @@ class Images extends GenericCollection {
     public function filterProfile()
     {
         return $this->filter(
-            function($key, $value) {
-                if ($value instanceof ImageFilter && $value instanceof Image\ProfileImage) { return true; }
+            function ($key, $value) {
+                if ($value instanceof ImageFilter && $value instanceof Image\ProfileImage) {
+                    return true;
+                }
             }
         );
     }
@@ -102,8 +109,10 @@ class Images extends GenericCollection {
     public function filterStills()
     {
         return $this->filter(
-            function($key, $value) {
-                if ($value instanceof ImageFilter && $value instanceof Image\StillImage) { return true; }
+            function ($key, $value) {
+                if ($value instanceof ImageFilter && $value instanceof Image\StillImage) {
+                    return true;
+                }
             }
         );
     }
@@ -117,8 +126,10 @@ class Images extends GenericCollection {
     public function filterMaxWidth($width)
     {
         return $this->filter(
-            function($key, $value) use ($width) {
-                if ($value instanceof ImageFilter && $value->getWidth() <= $width && $value->getWidth() !== null) { return true; }
+            function ($key, $value) use ($width) {
+                if ($value instanceof ImageFilter && $value->getWidth() <= $width && $value->getWidth() !== null) {
+                    return true;
+                }
             }
         );
     }
@@ -132,8 +143,10 @@ class Images extends GenericCollection {
     public function filterMinWidth($width)
     {
         return $this->filter(
-            function($key, $value) use ($width) {
-                if ($value instanceof ImageFilter && $value->getWidth() >= $width && $value->getWidth() !== null) { return true; }
+            function ($key, $value) use ($width) {
+                if ($value instanceof ImageFilter && $value->getWidth() >= $width && $value->getWidth() !== null) {
+                    return true;
+                }
             }
         );
     }
@@ -147,8 +160,12 @@ class Images extends GenericCollection {
     public function filterMaxHeight($height)
     {
         return $this->filter(
-            function($key, $value) use ($height) {
-                if ($value instanceof ImageFilter && $value->getHeight() <= $height && $value->getHeight() !== null) { return true; }
+            function ($key, $value) use ($height) {
+                if ($value instanceof ImageFilter &&
+                    $value->getHeight() <= $height && $value->getHeight() !== null
+                ) {
+                    return true;
+                }
             }
         );
     }
@@ -162,8 +179,12 @@ class Images extends GenericCollection {
     public function filterMinHeight($height)
     {
         return $this->filter(
-            function($key, $value) use ($height) {
-                if ($value instanceof ImageFilter && $value->getHeight() >= $height && $value->getHeight() !== null) { return true; }
+            function ($key, $value) use ($height) {
+                if ($value instanceof ImageFilter &&
+                    $value->getHeight() >= $height &&
+                    $value->getHeight() !== null) {
+                    return true;
+                }
             }
         );
     }
@@ -181,7 +202,7 @@ class Images extends GenericCollection {
         /**
          * @var $image Image
          */
-        foreach($this->data as $image) {
+        foreach ($this->data as $image) {
             if ($image->getVoteAverage() > $voteAverage) {
                 $voteAverage  = $image->getVoteAverage();
                 $currentImage = $image;

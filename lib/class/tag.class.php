@@ -288,6 +288,14 @@ class Tag extends database_object
             "WHERE `tag_map`.`object_type`='video' AND `video`.`id` IS NULL";
         Dba::write($sql);
 
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `tvshow` ON `tvshow`.`id`=`tag_map`.`object_id` " .
+            "WHERE `tag_map`.`object_type`='tvshow' AND `tvshow`.`id` IS NULL";
+        Dba::write($sql);
+
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `tvshow_season` ON `tvshow_season`.`id`=`tag_map`.`object_id` " .
+            "WHERE `tag_map`.`object_type`='tvshow_season' AND `tvshow_season`.`id` IS NULL";
+        Dba::write($sql);
+
         // Now nuke the tags themselves
         $sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " .
             "WHERE `tag_map`.`id` IS NULL";
@@ -599,7 +607,7 @@ class Tag extends database_object
      */
     public static function validate_type($type)
     {
-        $valid_array = array('song','artist','album','video','playlist','live_stream','channel','broadcast');
+        $valid_array = array('song','artist','album','video','tvshow','tvshow_season','playlist','live_stream','channel','broadcast');
 
         if (in_array($type,$valid_array)) { return $type; }
 

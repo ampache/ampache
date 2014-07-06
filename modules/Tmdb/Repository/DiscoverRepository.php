@@ -26,20 +26,25 @@ use Tmdb\Model\Tv;
  * @package Tmdb\Repository
  * @see http://docs.themoviedb.apiary.io/#discover
  */
-class DiscoverRepository extends AbstractRepository {
+class DiscoverRepository extends AbstractRepository
+{
     /**
-     * Discover movies by different types of data like average rating, number of votes, genres and certifications.
+     * Discover movies by different types of data like average rating,
+     * number of votes, genres and certifications.
      *
-     * @param DiscoverMoviesQuery $query
-     * @param array $headers
-     * @throws RuntimeException when certification_country is set but certification.lte is not given
+     * @param  DiscoverMoviesQuery $query
+     * @param  array               $headers
+     * @throws RuntimeException    when certification_country is set but certification.lte is not given
      * @return Movie[]
      */
-    public function discoverMovies(DiscoverMoviesQuery $query, array $headers = array()) {
+    public function discoverMovies(DiscoverMoviesQuery $query, array $headers = array())
+    {
         $query = $query->toArray();
 
         if (array_key_exists('certification_country', $query) && !array_key_exists('certification.lte', $query)) {
-            throw new RuntimeException('When the certification_country option is given the certification.lte option is required.');
+            throw new RuntimeException(
+                'When the certification_country option is given the certification.lte option is required.'
+            );
         }
 
         $data = $this->getApi()->discoverMovies($query, $headers);
@@ -48,14 +53,16 @@ class DiscoverRepository extends AbstractRepository {
     }
 
     /**
-     * Discover TV shows by different types of data like average rating, number of votes, genres, the network they aired on and air dates.
+     * Discover TV shows by different types of data like average rating,
+     * number of votes, genres, the network they aired on and air dates.
      *
-     * @param DiscoverTvQuery $query
-     * @param array $headers
+     * @param  DiscoverTvQuery                      $query
+     * @param  array                                $headers
      * @return Tv[]
      * @return \Tmdb\Model\Common\GenericCollection
      */
-    public function discoverTv(DiscoverTvQuery $query, array $headers = array()) {
+    public function discoverTv(DiscoverTvQuery $query, array $headers = array())
+    {
         $data = $this->getApi()->discoverTv($query->toArray(), $headers);
 
         return $this->getTvFactory()->createResultCollection($data);
@@ -77,7 +84,8 @@ class DiscoverRepository extends AbstractRepository {
      * @throws NotImplementedException
      * @return null|\Tmdb\Factory\FactoryInterface
      */
-    public function getFactory(){
+    public function getFactory()
+    {
         throw new NotImplementedException('Discover does not support a generic factory.');
     }
 

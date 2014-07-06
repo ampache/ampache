@@ -28,6 +28,9 @@ $thcount = 6;
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
+        <?php if (Art::is_enabled()) { ++$thcount; ?>
+            <th class="cel_cover"><?php echo T_('Art'); ?></th>
+        <?php } ?>
             <th class="cel_season essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'),'season_sort_season'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_tvshow essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=tvshow', T_('TV Show'),'season_sort_tvshow'); ?></th>
@@ -64,7 +67,7 @@ $thcount = 6;
         <tr class="th-bottom">
             <th class="cel_play"></th>
         <?php if (Art::is_enabled()) { ?>
-            <th class="cel_cover"><?php echo T_('Cover'); ?></th>
+            <th class="cel_cover"><?php echo T_('Art'); ?></th>
         <?php } ?>
             <th class="cel_season"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'),'season_sort_name_bottom'); ?></th>
             <th class="cel_add"></th>

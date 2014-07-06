@@ -32,7 +32,7 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
 <body onload="self.resizeTo(document.images[0].width+30, document.images[0].height+70)">
 <?php
 echo "<a href=\"javascript:window.close()\" title=\"" . T_('Click to close window') . "\">";
-echo "<img src=\"" . AmpConfig::get('web_path') . "/image.php?id=" . scrub_out($_GET['id']) . "&amp;sid=" . session_id() . "\" border=\"0\" alt=\"\" />";
+echo "<img src=\"" . AmpConfig::get('web_path') . "/image.php?object_id=" . scrub_out($_GET['id']) . "&object_type=album&auth=" . session_id() . "\" border=\"0\" alt=\"\" />";
 echo "</a>";
 ?>
 </body>

@@ -135,6 +135,8 @@ class Art extends database_object
             case 'artist':
             case 'video':
             case 'user':
+            case 'tvshow':
+            case 'tvshow_season':
                 return $type;
             default:
                 return 'album';
@@ -245,6 +247,27 @@ class Art extends database_object
         return true;
 
     } // get_db
+
+    public static function has_db($object_id, $object_type)
+    {
+        $sql = "SELECT COUNT(`id`) AS `nb_img` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+        $db_results = Dba::read($sql, array($object_type, $object_id));
+        $nb_img = 0;
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $nb_img = $results['nb_img'];
+        }
+
+        return ($nb_img > 0);
+    }
+
+    public function insert_url($url)
+    {
+        debug_event('art', 'Insert art from url ' . $url, '5');
+        $image = Art::get_from_source(array('url' => $url), $this->type);
+        $rurl = pathinfo($url);
+        $mime = "image/" . $rurl['extension'];
+        $this->insert($image, $mime);
+    }
 
     /**
      * insert
@@ -554,9 +577,9 @@ class Art extends database_object
             if (empty($extension)) {
                 $extension = 'jpg';
             }
-            $url = AmpConfig::get('web_path') . '/play/art/' . $sid . '/' . scrub_out($uid) . '/thumb.' . $extension;
+            $url = AmpConfig::get('web_path') . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . scrub_out($uid) . '/thumb.' . $extension;
         } else {
-            $url = AmpConfig::get('web_path') . '/image.php?id=' . scrub_out($uid) . '&object_type=' . scrub_out($type) . '&auth=' . $sid;
+            $url = AmpConfig::get('web_path') . '/image.php?object_id=' . scrub_out($uid) . '&object_type=' . scrub_out($type) . '&auth=' . $sid;
             if (!empty($extension)) {
                 $name = 'art.' . $extension;
                 $url .= '&name=' . $name;
@@ -592,15 +615,51 @@ class Art extends database_object
         // Define vars
         $results = array();
 
-        switch ($this->type) {
-            case 'album':
-                $allowed_methods = array('db','lastfm','folder','amazon','google','musicbrainz','tags');
-            break;
-            case 'artist':
-            case 'video':
-            default:
-                $allowed_methods = array();
-            break;
+        if (count($options) == 0) {
+            switch ($this->type) {
+                case 'album':
+                    $album = new Album($this->uid);
+                    $album->format();
+                    $options['artist'] = $album->f_artist;
+                    $options['album'] = $album->f_name;
+                    $options['keyword'] = $options['artist'] . ' ' . $options['album'];
+                break;
+                case 'artist':
+                    $artist = new Artist($this->uid);
+                    $artist->format();
+                    $options['artist'] = $album->f_artist;
+                    $options['keyword'] = $options['artist'];
+                break;
+                case 'tvshow':
+                    $tvshow = new TVShow($this->uid);
+                    $tvshow->format();
+                    $options['tvshow'] = $tvshow->f_name;
+                    $options['keyword'] = $options['tvshow'];
+                break;
+                case 'tvshow_season':
+                    $season = new TVShow_Season($this->uid);
+                    $season->format();
+                    $options['tvshow'] = $season->f_tvshow;
+                    $options['tvshow_season'] = $season->f_name;
+                    $options['keyword'] = $options['tvshow'];
+                break;
+                case 'tvshow_episode':
+                    $video = new TVShow_Episode($this->uid);
+                    $video->format();
+                    $options['tvshow'] = $video->f_tvshow;
+                    $options['tvshow_season'] = $video->f_tvshow_season;
+                    $options['tvshow_episode'] = $video->episode_number;
+                    $options['keyword'] = $options['tvshow'] . " " . $video->f_title;
+                break;
+                case 'video':
+                case 'clip':
+                case 'movie':
+                case 'personal_video':
+                    $video = new Video($this->uid);
+                    $video->format();
+                    $options['keyword'] = $video->f_title;
+                break;
+            }
         }
 
         $config = AmpConfig::get('art_order');
@@ -617,23 +676,29 @@ class Art extends database_object
 
         debug_event('Art','Searching using:' . json_encode($config), 3);
 
+        $plugin_names = Plugin::get_plugins('gather_arts');
         foreach ($config as $method) {
-
-            if (!in_array($method, $allowed_methods)) {
-                debug_event('Art', "$method not in allowed_methods, skipping", 3);
-                continue;
-            }
-
             $method_name = "gather_" . $method;
 
-            if (in_array($method_name, $methods)) {
+            if (in_array($method, $plugin_names)) {
+                $plugin = new Plugin($method);
+                $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
+                if ($installed_version) {
+                    if ($plugin->load($GLOBALS['user'])) {
+                        $data = $plugin->_plugin->gather_arts($this->type, $options, $limit);
+                    }
+                }
+            } else if (in_array($method_name, $methods)) {
                 debug_event('Art', "Method used: $method_name", 3);
                 // Some of these take options!
                 switch ($method_name) {
                     case 'gather_amazon':
-                        $data = $this->{$method_name}($limit, $options['keyword']);
+                        $data = $this->{$method_name}($limit, $options);
                     break;
                     case 'gather_lastfm':
+                        $data = $this->{$method_name}($limit, $options);
+                    break;
+                    case 'gather_google':
                         $data = $this->{$method_name}($limit, $options);
                     break;
                     default:
@@ -647,10 +712,8 @@ class Art extends database_object
                 if ($limit && count($results) >= $limit) {
                     return array_slice($results, 0, $limit);
                 }
-
-            } // if the method exists
-            else {
-                debug_event("Art", "$method_name not defined", 1);
+            } else {
+                debug_event("Art", $method_name . " not defined", 1);
             }
 
         } // end foreach
@@ -682,19 +745,17 @@ class Art extends database_object
      * This function retrieves art based on MusicBrainz' Advanced
      * Relationships
      */
-    public function gather_musicbrainz($limit = 5)
+    public function gather_musicbrainz($limit = 5, $data = array())
     {
         $images    = array();
         $num_found = 0;
 
-        if ($this->type == 'album') {
-            $album = new Album($this->uid);
-        } else {
+        if ($this->type != 'album') {
             return $images;
         }
 
-        if ($album->mbid) {
-            debug_event('mbz-gatherart', "Album MBID: " . $album->mbid, '5');
+        if ($data['mbid']) {
+            debug_event('mbz-gatherart', "Album MBID: " . $data['mbid'], '5');
         } else {
             return $images;
         }
@@ -704,7 +765,7 @@ class Art extends database_object
             'url-rels'
         );
         try {
-            $release = $mb->lookup('release', $album->mbid, $includes);
+            $release = $mb->lookup('release', $data['mbid'], $includes);
         } catch (Exception $e) {
             return $images;
         }
@@ -835,142 +896,6 @@ class Art extends database_object
         return $images;
 
     } // gather_musicbrainz
-
-    /**
-     * gather_amazon
-     * This takes keywords and performs a search of the Amazon website
-     * for the art. It returns an array of found objects with mime/url keys
-     */
-    public function gather_amazon($limit = 5, $keywords = '')
-    {
-        $images     = array();
-        $final_results  = array();
-        $possible_keys = array(
-            'LargeImage',
-            'MediumImage',
-            'SmallImage'
-        );
-
-        if ($this->type == 'album') {
-            $album = new Album($this->uid);
-        } else {
-            return $images;
-        }
-
-        // Prevent the script from timing out
-        set_time_limit(0);
-
-        if (empty($keywords)) {
-            $keywords = $album->full_name;
-            /* If this isn't a various album combine with artist name */
-            if ($album->artist_count == '1') { $keywords .= ' ' . $album->artist_name; }
-        }
-
-        /* Attempt to retrieve the album art order */
-        $amazon_base_urls = AmpConfig::get('amazon_base_urls');
-
-        /* If it's not set */
-        if (!count($amazon_base_urls)) {
-            $amazon_base_urls = array('http://webservices.amazon.com');
-        }
-
-        /* Foreach through the base urls that we should check */
-        foreach ($amazon_base_urls as $amazon_base) {
-
-            // Create the Search Object
-            $amazon = new AmazonSearch(AmpConfig::get('amazon_developer_public_key'), AmpConfig::get('amazon_developer_private_key'), AmpConfig::get('amazon_developer_associate_tag'), $amazon_base);
-                if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
-                    $proxyhost = AmpConfig::get('proxy_host');
-                    $proxyport = AmpConfig::get('proxy_port');
-                    $proxyuser = AmpConfig::get('proxy_user');
-                    $proxypass = AmpConfig::get('proxy_pass');
-                    debug_event('amazon', 'setProxy', 5);
-                    $amazon->setProxy($proxyhost, $proxyport, $proxyuser, $proxypass);
-                }
-
-            $search_results = array();
-
-            /* Set up the needed variables */
-            $max_pages_to_search = max(AmpConfig::get('max_amazon_results_pages'),$amazon->_default_results_pages);
-            // while we have pages to search
-            do {
-                $raw_results = $amazon->search(array('artist'=>'', 'album'=>'', 'keywords'=>$keywords));
-                $total = count($raw_results) + count($search_results);
-
-                // If we've gotten more then we wanted
-                if ($limit && $total > $limit) {
-                    $raw_results = array_slice($raw_results, 0, -($total - $limit), true);
-
-                    debug_event('amazon-xml', "Found $total, limit $limit; reducing and breaking from loop", 5);
-                    // Merge the results and BREAK!
-                    $search_results = array_merge($search_results,$raw_results);
-                    break;
-                } // if limit defined
-
-                $search_results = array_merge($search_results,$raw_results);
-                $pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
-                debug_event('amazon-xml', "Searched results page " . ($amazon->_currentPage+1) . "/" . $pages_to_search,'5');
-                $amazon->_currentPage++;
-
-            } while ($amazon->_currentPage < $pages_to_search);
-
-
-            // Only do the second search if the first actually returns something
-            if (count($search_results)) {
-                $final_results = $amazon->lookup($search_results);
-            }
-
-            /* Log this if we're doin debug */
-            debug_event('amazon-xml',"Searched using $keywords with " . AmpConfig::get('amazon_developer_key') . " as key, results: " . count($final_results), 5);
-
-            // If we've hit our limit
-            if (!empty($limit) && count($final_results) >= $limit) {
-                break;
-            }
-
-        } // end foreach
-
-        /* Foreach through what we've found */
-        foreach ($final_results as $result) {
-
-            $key = '';
-            /* Recurse through the images found */
-            foreach ($possible_keys as $k) {
-                if (strlen($result[$k])) {
-                    $key = $k;
-                    break;
-                }
-            } // foreach
-
-            // Rudimentary image type detection, only JPG and GIF allowed.
-            if (substr($result[$key], -4) == '.jpg') {
-                $mime = "image/jpeg";
-            } elseif (substr($result[$key], -4) == '.gif') {
-                $mime = "image/gif";
-            } elseif (substr($result[$key], -4) == '.png') {
-                $mime = "image/png";
-            } else {
-                /* Just go to the next result */
-                continue;
-            }
-
-            $data = array();
-            $data['url']    = $result[$key];
-            $data['mime']   = $mime;
-
-            $images[] = $data;
-
-            if (!empty($limit)) {
-                if (count($images) >= $limit) {
-                    return $images;
-                }
-            }
-
-        } // if we've got something
-
-        return $images;
-
-    } // gather_amazon
 
     /**
      * gather_folder
@@ -1142,23 +1067,16 @@ class Art extends database_object
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function gather_google($limit = 5)
+    public function gather_google($limit = 5, $data = array())
     {
         $images = array();
-        $media = new $this->type($this->uid);
-        $media->format();
-
-        $search = $media->full_name;
-
-        if ($media->artist_count == '1')
-            $search = $media->artist_name . ', ' . $search;
-
-        $search = rawurlencode($search);
+        $search = rawurlencode($data['keyword']);
 
         $size = '&imgsz=m'; // Medium
         //$size = '&imgsz=l'; // Large
 
-        $html = file_get_contents("http://images.google.com/images?source=hp&q=$search&oq=&um=1&ie=UTF-8&sa=N&tab=wi&start=0&tbo=1$size");
+        $url = "http://images.google.com/images?source=hp&q=" . $search . "&oq=&um=1&ie=UTF-8&sa=N&tab=wi&start=0&tbo=1" . $size;
+        $html = file_get_contents($url);
 
         if(preg_match_all("|\ssrc\=\"(http.+?)\"|", $html, $matches, PREG_PATTERN_ORDER))
             foreach ($matches[1] as $match) {
@@ -1178,43 +1096,20 @@ class Art extends database_object
      * This returns the art from lastfm. It doesn't currently require an
      * account but may in the future.
      */
-    public function gather_lastfm($limit, $options = false)
+    public function gather_lastfm($limit = 5, $data = array())
     {
-        $data = array();
-        // Create the parser object
-        $lastfm = new LastFMSearch();
+        $images = array();
 
-        switch ($this->type) {
-            case 'album':
-                if (is_array($options)) {
-                    $artist = $options['artist'];
-                    $album  = $options['album_name'];
-                } else {
-                    $media = new Album($this->uid);
-                    $media->format();
-                    $artist = $media->artist_name;
-                    $album = $media->full_name;
-                }
-            break;
-            default:
-                return $data;
+        if ($this->type != 'album' || empty($data['artist']) || empty($data['album'])) {
+            return $images;
         }
 
-        if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
-            $proxyhost = AmpConfig::get('proxy_host');
-            $proxyport = AmpConfig::get('proxy_port');
-            $proxyuser = AmpConfig::get('proxy_user');
-            $proxypass = AmpConfig::get('proxy_pass');
-            debug_event('LastFM', 'proxy set', 5);
-            $lastfm->setProxy($proxyhost, $proxyport, $proxyuser, $proxypass);
-        }
+        $xmldata = Recommendation::album_search($data['artist'], $data['album']);
 
-        $raw_data = $lastfm->album_search($artist, $album);
+        if (!count($xmldata)) { return array(); }
 
-        if (!count($raw_data)) { return array(); }
-
-        $coverart = $raw_data['coverart'];
-        if (!is_array($coverart)) { return array(); }
+        $coverart = (array) $xmldata->coverart;
+        if (!$coverart) { return array(); }
 
         ksort($coverart);
         foreach ($coverart as $url) {
@@ -1225,16 +1120,67 @@ class Art extends database_object
             }
 
             // HACK: we shouldn't rely on the extension to determine file type
-                $results = pathinfo($url);
+            $results = pathinfo($url);
             $mime = 'image/' . $results['extension'];
-            $data[] = array('url' => $url, 'mime' => $mime);
-            if ($limit && count($data) >= $limit) {
-                return $data;
+            $images[] = array('url' => $url, 'mime' => $mime);
+            if ($limit && count($images) >= $limit) {
+                return $images;
             }
         } // end foreach
 
-        return $data;
+        return $images;
 
     } // gather_lastfm
+
+    public static function gather_metadata_plugin($plugin, $type, $options)
+    {
+        $gtypes = array();
+        switch ($type) {
+            case 'tvshow':
+            case 'tvshow_season':
+            case 'tvshow_episode':
+                $gtypes[] = 'tvshow';
+                $media_info = array(
+                    'tvshow' => $options['tvshow'],
+                    'tvshow_season' => $options['tvshow_season'],
+                    'tvshow_episode' => $options['tvshow_episode'],
+                );
+            break;
+            default:
+                $gtypes[] = 'movie';
+                $media_info = array(
+                    'title' => $options['keyword'],
+                );
+            break;
+        }
+
+        $meta = $plugin->get_metadata($gtypes, $media_info);
+        $images = array();
+        switch ($type) {
+            case 'tvshow':
+                if ($meta['tvshow_art']) {
+                    $url = $meta['tvshow_art'];
+                    $ures = pathinfo($url);
+                    $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension']);
+                }
+            break;
+            case 'tvshow_season':
+                if ($meta['tvshow_season_art']) {
+                    $url = $meta['tvshow_season_art'];
+                    $ures = pathinfo($url);
+                    $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension']);
+                }
+            break;
+            default:
+                if ($meta['art']) {
+                    $url = $meta['art'];
+                    $ures = pathinfo($url);
+                    $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension']);
+                }
+            break;
+        }
+
+        return $images;
+    }
 
 } // Art

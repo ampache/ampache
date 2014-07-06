@@ -19,8 +19,8 @@ use Tmdb\Model\Keyword;
  * Class Keywords
  * @package Tmdb\Model\Collection
  */
-class Keywords extends GenericCollection {
-
+class Keywords extends GenericCollection
+{
     /**
      * Returns all keywords
      *
@@ -37,7 +37,8 @@ class Keywords extends GenericCollection {
      * @param $id
      * @return Keyword
      */
-    public function getKeyword($id) {
+    public function getKeyword($id)
+    {
         return $this->filterId($id);
     }
 

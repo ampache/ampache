@@ -20,18 +20,20 @@ use Tmdb\Model\Find;
  * @package Tmdb\Repository
  * @see http://docs.themoviedb.apiary.io/#find
  */
-class FindRepository extends AbstractRepository {
+class FindRepository extends AbstractRepository
+{
     /**
      * Find something
      *
      * @param $id
-     * @param array $parameters
-     * @param array $headers
+     * @param  array $parameters
+     * @param  array $headers
      * @return Find
      */
-    public function find($id, array $parameters = array(), array $headers = array()) {
+    public function find($id, array $parameters = array(), array $headers = array())
+    {
         return $this->getFactory()->create(
-            $this->getApi()->find($id,$parameters, $headers)
+            $this->getApi()->find($id, $parameters, $headers)
         );
     }
 

@@ -16,6 +16,7 @@ namespace Tmdb\Model\Filter;
  * Interface LanguageFilter
  * @package Tmdb\Model\Filter
  */
-interface LanguageFilter {
+interface LanguageFilter
+{
     public function getIso6391();
 }

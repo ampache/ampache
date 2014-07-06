@@ -31,6 +31,15 @@
 <?php } ?>
     </div>
 </td>
+<?php
+if (Art::is_enabled()) {
+?>
+<td class="cel_cover">
+    <a href="<?php echo $tvshow->link; ?>">
+        <img height="150" width="100" alt="<?php echo $tvshow->f_name; ?>" title="<?php echo $tvshow->f_name; ?>" src="<?php echo AmpConfig::get('web_path'); ?>/image.php?object_type=tvshow&object_id=<?php echo $tvshow->id; ?>&thumb=6" />
+    </a>
+</td>
+<?php } ?>
 <td class="cel_tvshow"><?php echo $tvshow->f_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">

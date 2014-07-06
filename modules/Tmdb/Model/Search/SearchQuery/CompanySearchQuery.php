@@ -18,4 +18,6 @@ use Tmdb\Model\Search\SearchQuery;
  * Class CompanySearchQuery
  * @package Tmdb\Model\Search\SearchQuery
  */
-class CompanySearchQuery extends SearchQuery {}
+class CompanySearchQuery extends SearchQuery
+{
+}

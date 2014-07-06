@@ -29,7 +29,7 @@ $thcount = 8;
         <tr class="th-top">
             <th class="cel_play essential"></th>
         <?php if (Art::is_enabled()) { ++$thcount; ?>
-            <th class="cel_cover optional"><?php echo T_('Cover'); ?></th>
+            <th class="cel_cover optional"><?php echo T_('Art'); ?></th>
         <?php } ?>
             <th class="cel_album essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'),'album_sort_name'); ?></th>
             <th class="cel_add essential"></th>
@@ -70,9 +70,9 @@ $thcount = 8;
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-        <?php if (Art::is_enabled()) { ?>
-            <th class="cel_cover"><?php echo T_('Cover'); ?></th>
-        <?php } ?>
+            <?php if (Art::is_enabled()) { ?>
+                <th class="cel_cover"><?php echo T_('Art'); ?></th>
+            <?php } ?>
             <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'),'album_sort_name_bottom'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=generic_artist', T_('Artist'),'album_sort_artist_bottom'); ?></th>

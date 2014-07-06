@@ -16,23 +16,24 @@ namespace Tmdb\Model;
  * Class Genre
  * @package Tmdb\Model
  */
-class Genre extends AbstractModel {
-
+class Genre extends AbstractModel
+{
     private $id;
     private $name;
 
-    public static $_properties = array(
+    public static $properties = array(
         'id',
         'name',
     );
 
     /**
-     * @param mixed $id
+     * @param  mixed $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = (int) $id;
+
         return $this;
     }
 
@@ -45,12 +46,13 @@ class Genre extends AbstractModel {
     }
 
     /**
-     * @param mixed $name
+     * @param  mixed $name
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 

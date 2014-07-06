@@ -16,7 +16,8 @@ namespace Tmdb;
  * Class SessionToken
  * @package Tmdb
  */
-class SessionToken {
+class SessionToken
+{
     /**
      * @var string
      */
@@ -43,12 +44,13 @@ class SessionToken {
     }
 
     /**
-     * @param null $sessionToken
+     * @param  null  $sessionToken
      * @return $this
      */
     public function setToken($sessionToken)
     {
         $this->sessionToken = $sessionToken;
+
         return $this;
     }
 
@@ -61,7 +63,7 @@ class SessionToken {
     }
 
     /**
-     * @param \DateTime $expiresAt
+     * @param  \DateTime $expiresAt
      * @return $this
      */
     public function setExpiresAt($expiresAt)
@@ -71,6 +73,7 @@ class SessionToken {
         }
 
         $this->expiresAt = $expiresAt;
+
         return $this;
     }
 
@@ -83,12 +86,13 @@ class SessionToken {
     }
 
     /**
-     * @param mixed $success
+     * @param  mixed $success
      * @return $this
      */
     public function setSuccess($success)
     {
         $this->success = $success;
+
         return $this;
     }
 

@@ -21,23 +21,24 @@ use Tmdb\Model\Common\GenericCollection;
  * Class GenericCollectionFactory
  * @package Tmdb\Factory\Common
  */
-class GenericCollectionFactory {
+class GenericCollectionFactory
+{
     /**
-     * @param array $data
+     * @param  array             $data
      * @param $class
      * @return GenericCollection
      */
-    public function create(array $data = array(), $class)
+    public function create(array $data, $class)
     {
         return $this->createCollection($data, $class);
     }
 
     /**
-     * @param array $data
+     * @param  array             $data
      * @param $class
      * @return GenericCollection
      */
-    public function createCollection(array $data = array(), $class)
+    public function createCollection(array $data, $class)
     {
         if (is_object($class)) {
             $class = get_class($class);
@@ -46,7 +47,7 @@ class GenericCollectionFactory {
         $collection     = new GenericCollection();
         $objectHydrator = new ObjectHydrator();
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->add(null, $objectHydrator->hydrate(new $class(), $item));
         }
 

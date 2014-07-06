@@ -19,25 +19,26 @@ use Tmdb\Model\Filter\CountryFilter;
  * Class Release
  * @package Tmdb\Model\Movie
  */
-class Release extends AbstractModel implements CountryFilter {
-
+class Release extends AbstractModel implements CountryFilter
+{
     private $iso31661;
     private $certification;
     private $releaseDate;
 
-    public static $_properties = array(
+    public static $properties = array(
         'iso_3166_1',
         'certification',
         'release_date'
     );
 
     /**
-     * @param mixed $certification
+     * @param  mixed $certification
      * @return $this
      */
     public function setCertification($certification)
     {
         $this->certification = $certification;
+
         return $this;
     }
 
@@ -50,12 +51,13 @@ class Release extends AbstractModel implements CountryFilter {
     }
 
     /**
-     * @param string $iso31661
+     * @param  string $iso31661
      * @return $this
      */
     public function setIso31661($iso31661)
     {
         $this->iso31661 = $iso31661;
+
         return $this;
     }
 
@@ -68,7 +70,7 @@ class Release extends AbstractModel implements CountryFilter {
     }
 
     /**
-     * @param string|\DateTime $releaseDate
+     * @param  string|\DateTime $releaseDate
      * @return $this
      */
     public function setReleaseDate($releaseDate)
@@ -78,6 +80,7 @@ class Release extends AbstractModel implements CountryFilter {
         }
 
         $this->releaseDate = $releaseDate;
+
         return $this;
     }
 

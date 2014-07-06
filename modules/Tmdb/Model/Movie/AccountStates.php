@@ -18,8 +18,8 @@ use Tmdb\Model\AbstractModel;
  * Class AccountStates
  * @package Tmdb\Model\Movie
  */
-class AccountStates extends AbstractModel {
-
+class AccountStates extends AbstractModel
+{
     /**
      * @var integer
      */
@@ -40,19 +40,20 @@ class AccountStates extends AbstractModel {
      */
     private $watchlist;
 
-    public static $_properties = array(
+    public static $properties = array(
         'id',
         'favorite',
         'watchlist',
     );
 
     /**
-     * @param boolean $favorite
+     * @param  boolean $favorite
      * @return $this
      */
     public function setFavorite($favorite)
     {
         $this->favorite = $favorite;
+
         return $this;
     }
 
@@ -65,12 +66,13 @@ class AccountStates extends AbstractModel {
     }
 
     /**
-     * @param int $id
+     * @param  int   $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -83,12 +85,13 @@ class AccountStates extends AbstractModel {
     }
 
     /**
-     * @param \Tmdb\Model\Movie\Rating $rated
+     * @param  \Tmdb\Model\Movie\Rating $rated
      * @return $this
      */
     public function setRated($rated)
     {
         $this->rated = $rated;
+
         return $this;
     }
 
@@ -101,12 +104,13 @@ class AccountStates extends AbstractModel {
     }
 
     /**
-     * @param boolean $watchlist
+     * @param  boolean $watchlist
      * @return $this
      */
     public function setWatchlist($watchlist)
     {
         $this->watchlist = $watchlist;
+
         return $this;
     }
 

@@ -36,8 +36,8 @@ if (Art::is_enabled()) {
     $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
 ?>
 <td class="cel_cover">
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=show&amp;album=<?php echo $album->id; ?>">
-        <img height="75" width="75" alt="<?php echo($name) ?>" title="<?php echo($name) ?>" src="<?php echo AmpConfig::get('web_path'); ?>/image.php?id=<?php echo $album->id; ?>&amp;thumb=1" />
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=show&album=<?php echo $album->id; ?>">
+        <img height="75" width="75" alt="<?php echo($name) ?>" title="<?php echo($name) ?>" src="<?php echo AmpConfig::get('web_path'); ?>/image.php?object_type=album&object_id=<?php echo $album->id; ?>&thumb=1" />
     </a>
 </td>
 <?php } ?>

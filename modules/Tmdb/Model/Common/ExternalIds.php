@@ -18,8 +18,8 @@ use Tmdb\Model\AbstractModel;
  * Class ExternalIds
  * @package Tmdb\Model\Common
  */
-class ExternalIds extends AbstractModel {
-
+class ExternalIds extends AbstractModel
+{
     private $imdbId;
     private $freebaseId;
     private $freebaseMid;
@@ -27,7 +27,7 @@ class ExternalIds extends AbstractModel {
     private $tvdbId;
     private $tvrageId;
 
-    public static $_properties = array(
+    public static $properties = array(
         'imdb_id',
         'freebase_id',
         'freebase_mid',
@@ -37,12 +37,13 @@ class ExternalIds extends AbstractModel {
     );
 
     /**
-     * @param mixed $freebaseId
+     * @param  mixed $freebaseId
      * @return $this
      */
     public function setFreebaseId($freebaseId)
     {
         $this->freebaseId = $freebaseId;
+
         return $this;
     }
 
@@ -55,12 +56,13 @@ class ExternalIds extends AbstractModel {
     }
 
     /**
-     * @param mixed $freebaseMid
+     * @param  mixed $freebaseMid
      * @return $this
      */
     public function setFreebaseMid($freebaseMid)
     {
         $this->freebaseMid = $freebaseMid;
+
         return $this;
     }
 
@@ -73,12 +75,13 @@ class ExternalIds extends AbstractModel {
     }
 
     /**
-     * @param mixed $id
+     * @param  mixed $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = (int) $id;
+
         return $this;
     }
 
@@ -91,12 +94,13 @@ class ExternalIds extends AbstractModel {
     }
 
     /**
-     * @param mixed $imdbId
+     * @param  mixed $imdbId
      * @return $this
      */
     public function setImdbId($imdbId)
     {
         $this->imdbId = $imdbId;
+
         return $this;
     }
 
@@ -109,12 +113,13 @@ class ExternalIds extends AbstractModel {
     }
 
     /**
-     * @param mixed $tvdbId
+     * @param  mixed $tvdbId
      * @return $this
      */
     public function setTvdbId($tvdbId)
     {
         $this->tvdbId = $tvdbId;
+
         return $this;
     }
 
@@ -127,12 +132,13 @@ class ExternalIds extends AbstractModel {
     }
 
     /**
-     * @param mixed $tvrageId
+     * @param  mixed $tvrageId
      * @return $this
      */
     public function setTvrageId($tvrageId)
     {
         $this->tvrageId = $tvrageId;
+
         return $this;
     }
 

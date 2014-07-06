@@ -19,23 +19,24 @@ use Tmdb\Model\Filter\CountryFilter;
  * Class Country
  * @package Tmdb\Model\Common
  */
-class Country extends AbstractModel implements CountryFilter {
-
+class Country extends AbstractModel implements CountryFilter
+{
     private $iso31661;
     private $name;
 
-    public static $_properties = array(
+    public static $properties = array(
         'iso_3166_1',
         'name',
     );
 
     /**
-     * @param string $iso31661
+     * @param  string $iso31661
      * @return $this
      */
     public function setIso31661($iso31661)
     {
         $this->iso31661 = $iso31661;
+
         return $this;
     }
 
@@ -48,12 +49,13 @@ class Country extends AbstractModel implements CountryFilter {
     }
 
     /**
-     * @param string $name
+     * @param  string $name
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 

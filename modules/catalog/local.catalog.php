@@ -32,6 +32,10 @@ class Catalog_local extends Catalog
     private $type           = 'local';
     private $description    = 'Local Catalog';
 
+    private $count;
+    private $added_songs_to_gather;
+    private $added_videos_to_gather;
+
     /**
      * get_description
      * This returns the description of this catalog
@@ -360,13 +364,13 @@ class Catalog_local extends Catalog
                 else {
                     if ($is_audio_file) {
                         if (count($this->get_gather_types('music')) > 0) {
-                            $this->_insert_local_song($full_file, $file_size, $options);
+                            $this->insert_local_song($full_file, $options);
                         } else {
                             debug_event('read', $full_file . " ignored, bad media type for this catalog.", 5);
                         }
                     } else {
                         if (count($this->get_gather_types('video')) > 0) {
-                            $this->insert_local_video($full_file,$file_size);
+                            $this->insert_local_video($full_file, $options);
                         } else {
                             debug_event('read', $full_file . " ignored, bad media type for this catalog.", 5);
                         }
@@ -417,6 +421,8 @@ class Catalog_local extends Catalog
         }
 
         $this->count = 0;
+        $this->added_songs_to_gather = array();
+        $this->added_videos_to_gather = array();
 
         require AmpConfig::get('prefix') . '/templates/show_adds_catalog.inc.php';
         flush();
@@ -451,7 +457,7 @@ class Catalog_local extends Catalog
             $catalog_id = $this->id;
             require AmpConfig::get('prefix') . '/templates/show_gather_art.inc.php';
             flush();
-            $this->gather_art();
+            $this->gather_art($this->added_songs_to_gather, $this->added_videos_to_gather);
         }
 
         /* Update the Catalog last_update */
@@ -646,11 +652,11 @@ class Catalog_local extends Catalog
     } //_clean_chunk
 
     /**
-     * _insert_local_song
+     * insert_local_song
      *
      * Insert a song that isn't already in the database.
      */
-    private function _insert_local_song($file, $file_info, $options)
+    private function insert_local_song($file, $options = array())
     {
         $vainfo = new vainfo($file, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern);
         $vainfo->get_info();
@@ -687,7 +693,10 @@ class Catalog_local extends Catalog
             $results['license'] = $options['license'];
         }
 
-        return Song::insert($results);
+        $id = Song::insert($results);
+        $this->added_songs_to_gather[] = $id;
+
+        return $id;
     }
 
     /**
@@ -696,7 +705,7 @@ class Catalog_local extends Catalog
      * information we can get is super sketchy so it's kind of a crap shoot
      * here
      */
-    public function insert_local_video($file,$filesize)
+    public function insert_local_video($file, $options = array())
     {
         /* Create the vainfo object and get info */
         $gtypes = $this->get_gather_types('video');
@@ -705,22 +714,17 @@ class Catalog_local extends Catalog
 
         $tag_name = vainfo::get_tag_type($vainfo->tags, 'metadata_order_video');
         $results = vainfo::clean_tag_info($vainfo->tags,$tag_name,$file);
+        $results['catalog'] = $this->id;
 
-        $rezx         = intval($results['resolution_x']);
-        $rezy         = intval($results['resolution_y']);
-        $release_date = intval($results['release_date']);
+        $id = Video::insert($results, $gtypes, $options);
+        if ($results['art']) {
+            $art = new Art($id, 'video');
+            $art->insert_url($results['art']);
+        } else {
+            $this->added_videos_to_gather[] = $id;
+        }
 
-        $sql = "INSERT INTO `video` (`file`,`catalog`,`title`,`video_codec`,`audio_codec`,`resolution_x`,`resolution_y`,`size`,`time`,`mime`,`release_date`) " .
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $params = array($file, $this->id, $results['title'], $results['video_codec'], $results['audio_codec'], $rezx, $rezy, $filesize, $results['time'], $results['mime'], $release_date);
-        Dba::write($sql, $params);
-        $vid = Dba::insert_id();
-
-        $results['id'] = $vid;
-        Catalog::insert_video($gtypes, $results);
-
-        return true;
-
+        return $id;
     } // insert_local_video
 
     /**

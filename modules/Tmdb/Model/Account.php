@@ -16,7 +16,8 @@ namespace Tmdb\Model;
  * Class Account
  * @package Tmdb\Model
  */
-class Account extends AbstractModel {
+class Account extends AbstractModel
+{
     /**
      * @var integer
      */
@@ -50,7 +51,7 @@ class Account extends AbstractModel {
     /**
      * @var array
      */
-    public static $_properties = array(
+    public static $properties = array(
         'id',
         'include_adult',
         'iso_3166_1',
@@ -60,12 +61,13 @@ class Account extends AbstractModel {
     );
 
     /**
-     * @param int $id
+     * @param  int   $id
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -78,12 +80,13 @@ class Account extends AbstractModel {
     }
 
     /**
-     * @param boolean $includeAdult
+     * @param  boolean $includeAdult
      * @return $this
      */
     public function setIncludeAdult($includeAdult)
     {
         $this->includeAdult = $includeAdult;
+
         return $this;
     }
 
@@ -96,12 +99,13 @@ class Account extends AbstractModel {
     }
 
     /**
-     * @param string $iso31661
+     * @param  string $iso31661
      * @return $this
      */
     public function setIso31661($iso31661)
     {
         $this->iso31661 = $iso31661;
+
         return $this;
     }
 
@@ -114,12 +118,13 @@ class Account extends AbstractModel {
     }
 
     /**
-     * @param string $iso6391
+     * @param  string $iso6391
      * @return $this
      */
     public function setIso6391($iso6391)
     {
         $this->iso6391 = $iso6391;
+
         return $this;
     }
 
@@ -132,12 +137,13 @@ class Account extends AbstractModel {
     }
 
     /**
-     * @param string $name
+     * @param  string $name
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -150,12 +156,13 @@ class Account extends AbstractModel {
     }
 
     /**
-     * @param string $username
+     * @param  string $username
      * @return $this
      */
     public function setUsername($username)
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -166,6 +173,4 @@ class Account extends AbstractModel {
     {
         return $this->username;
     }
-
-
 }

@@ -18,7 +18,8 @@ use Tmdb\Model\Common\GenericCollection;
  * Class ResultCollection
  * @package Tmdb\Model\Collection
  */
-class ResultCollection extends GenericCollection {
+class ResultCollection extends GenericCollection
+{
     /**
      * @var int
      */
@@ -37,19 +38,20 @@ class ResultCollection extends GenericCollection {
     /**
      * @var array
      */
-    public static $_properties = array(
+    public static $properties = array(
         'page',
         'total_pages',
         'total_results'
     );
 
     /**
-     * @param int $page
+     * @param  int   $page
      * @return $this
      */
     public function setPage($page)
     {
         $this->page = (int) $page;
+
         return $this;
     }
 
@@ -62,12 +64,13 @@ class ResultCollection extends GenericCollection {
     }
 
     /**
-     * @param int $totalPages
+     * @param  int   $totalPages
      * @return $this
      */
     public function setTotalPages($totalPages)
     {
         $this->totalPages = (int) $totalPages;
+
         return $this;
     }
 
@@ -80,12 +83,13 @@ class ResultCollection extends GenericCollection {
     }
 
     /**
-     * @param int $totalResults
+     * @param  int   $totalResults
      * @return $this
      */
     public function setTotalResults($totalResults)
     {
         $this->totalResults = (int) $totalResults;
+
         return $this;
     }
 

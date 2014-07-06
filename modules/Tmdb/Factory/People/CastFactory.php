@@ -39,12 +39,11 @@ class CastFactory extends PeopleFactory
 
         if (is_object($person)) {
             $class = get_class($person);
-        }
-        else{
+        } else {
             $class = '\Tmdb\Model\Person\CastMember';
         }
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->add(null, $this->create($item, new $class()));
         }
 

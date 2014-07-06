@@ -24,8 +24,8 @@ class ImageFactory extends AbstractFactory
     /**
      * Convert an array to an hydrated object
      *
-     * @param array $data
-     * @param string|null $key
+     * @param  array       $data
+     * @param  string|null $key
      * @return Image
      */
     public function create(array $data = array(), $key = null)
@@ -41,7 +41,7 @@ class ImageFactory extends AbstractFactory
      * '/xkQ5yWnMjpC2bGmu7GsD66AAoKO.jpg', 'backdrop_path'
      *
      * @param $path
-     * @param string $key
+     * @param  string                                                                                          $key
      * @return Image|Image\BackdropImage|Image\LogoImage|Image\PosterImage|Image\ProfileImage|Image\StillImage
      */
     public function createFromPath($path, $key)
@@ -55,12 +55,12 @@ class ImageFactory extends AbstractFactory
     /**
      * Helper function to obtain a new object for an image type
      *
-     * @param string|null $key
+     * @param  string|null                                                                                     $key
      * @return Image|Image\BackdropImage|Image\LogoImage|Image\PosterImage|Image\ProfileImage|Image\StillImage
      */
     public function resolveImageType($key = null)
     {
-        switch($key) {
+        switch ($key) {
             case 'poster':
             case 'posters':
             case 'poster_path':
@@ -103,14 +103,14 @@ class ImageFactory extends AbstractFactory
     /**
      * Create generic collection
      *
-     * @param array $data
+     * @param  array  $data
      * @return Images
      */
     public function createCollection(array $data = array())
     {
         $collection = new Images();
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->add(null, $this->create($item));
         }
 
@@ -120,21 +120,21 @@ class ImageFactory extends AbstractFactory
     /**
      * Create full collection
      *
-     * @param array $data
+     * @param  array  $data
      * @return Images
      */
     public function createImageCollection(array $data = array())
     {
         $collection = new Images();
 
-        foreach($data as $format => $formatCollection) {
+        foreach ($data as $format => $formatCollection) {
 
             if (!is_array($formatCollection)) {
                 continue;
             }
 
-            foreach($formatCollection as $item) {
-                if (array_key_exists($format, Image::$_formats)) {
+            foreach ($formatCollection as $item) {
+                if (array_key_exists($format, Image::$formats)) {
                     $item = $this->create($item, $format);
 
                     $collection->addImage($item);
@@ -148,7 +148,7 @@ class ImageFactory extends AbstractFactory
     /**
      * Create full movie collection
      *
-     * @param array $data
+     * @param  array  $data
      * @return Images
      */
     public function createCollectionFromMovie(array $data = array())
@@ -159,7 +159,7 @@ class ImageFactory extends AbstractFactory
     /**
      * Create full tv show collection
      *
-     * @param array $data
+     * @param  array  $data
      * @return Images
      */
     public function createCollectionFromTv(array $data = array())
@@ -170,7 +170,7 @@ class ImageFactory extends AbstractFactory
     /**
      * Create full tv season collection
      *
-     * @param array $data
+     * @param  array  $data
      * @return Images
      */
     public function createCollectionFromTvSeason(array $data = array())
@@ -181,7 +181,7 @@ class ImageFactory extends AbstractFactory
     /**
      * Create full tv episode collection
      *
-     * @param array $data
+     * @param  array  $data
      * @return Images
      */
     public function createCollectionFromTvEpisode(array $data = array())
@@ -192,7 +192,7 @@ class ImageFactory extends AbstractFactory
     /**
      * Create full people collection
      *
-     * @param array $data
+     * @param  array  $data
      * @return Images
      */
     public function createCollectionFromPeople(array $data = array())

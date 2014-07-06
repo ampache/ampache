@@ -14,6 +14,8 @@ namespace Tmdb\Repository;
 
 use Tmdb\Exception\RuntimeException;
 use Tmdb\Factory\TvEpisodeFactory;
+use Tmdb\Model\Collection\Videos;
+use Tmdb\Model\Common\Video;
 use Tmdb\Model\Tv\Episode\QueryParameter\AppendToResponse;
 use Tmdb\Model\Tv;
 use Tmdb\Model\Tv\Season;
@@ -24,12 +26,13 @@ use Tmdb\Model\Tv\Episode;
  * @package Tmdb\Repository
  * @see http://docs.themoviedb.apiary.io/#tvepisodes
  */
-class TvEpisodeRepository extends AbstractRepository {
-
+class TvEpisodeRepository extends AbstractRepository
+{
     /**
      * Load a tv season with the given identifier
      *
-     * If you want to optimize the result set/bandwidth you should define the AppendToResponse parameter
+     * If you want to optimize the result set/bandwidth you should
+     * define the AppendToResponse parameter
      *
      * @param $tvShow Tv|integer
      * @param $season Season|integer
@@ -67,7 +70,13 @@ class TvEpisodeRepository extends AbstractRepository {
             );
         }
 
-        $data = $this->getApi()->getEpisode($tvShow, $season, $episode, $this->parseQueryParameters($parameters), $headers);
+        $data = $this->getApi()->getEpisode(
+            $tvShow,
+            $season,
+            $episode,
+            $this->parseQueryParameters($parameters),
+            $headers
+        );
 
         return $this->getFactory()->create($data);
     }
@@ -98,7 +107,14 @@ class TvEpisodeRepository extends AbstractRepository {
             $episode = $episode->getId();
         }
 
-        $data    = $this->getApi()->getCredits($tvShow, $season, $episode, $this->parseQueryParameters($parameters), $headers);
+        $data = $this->getApi()->getCredits(
+            $tvShow,
+            $season,
+            $episode,
+            $this->parseQueryParameters($parameters),
+            $headers
+        );
+
         $episode = $this->getFactory()->create(array('credits' => $data));
 
         return $episode->getCredits();
@@ -128,7 +144,14 @@ class TvEpisodeRepository extends AbstractRepository {
             $episode = $episode->getId();
         }
 
-        $data    = $this->getApi()->getExternalIds($tvShow, $season, $episode, $this->parseQueryParameters($parameters), $headers);
+        $data = $this->getApi()->getExternalIds(
+            $tvShow,
+            $season,
+            $episode,
+            $this->parseQueryParameters($parameters),
+            $headers
+        );
+
         $episode = $this->getFactory()->create(array('external_ids' => $data));
 
         return $episode->getExternalIds();
@@ -157,13 +180,57 @@ class TvEpisodeRepository extends AbstractRepository {
         if ($episode instanceof Tv\Episode) {
             $episode = $episode->getId();
         }
-        
-        $data    = $this->getApi()->getImages($tvShow, $season, $episode, $this->parseQueryParameters($parameters), $headers);
+
+        $data = $this->getApi()->getImages(
+            $tvShow,
+            $season,
+            $episode,
+            $this->parseQueryParameters($parameters),
+            $headers
+        );
+
         $episode = $this->getFactory()->create(array('images' => $data));
 
         return $episode->getImages();
     }
-    
+
+    /**
+     * Get the videos that have been added to a TV episode (teasers, clips, etc...)
+     *
+     * @param $tvShow
+     * @param $season
+     * @param $episode
+     * @param $parameters
+     * @param $headers
+     * @return Videos|Video[]
+     */
+    public function getVideos($tvShow, $season, $episode, array $parameters = array(), array $headers = array())
+    {
+        if ($tvShow instanceof Tv) {
+            $tvShow = $tvShow->getId();
+        }
+
+        if ($season instanceof Season) {
+            $season = $season->getId();
+        }
+
+        if ($episode instanceof Tv\Episode) {
+            $episode = $episode->getId();
+        }
+
+        $data = $this->getApi()->getVideos(
+            $tvShow,
+            $season,
+            $episode,
+            $this->parseQueryParameters($parameters),
+            $headers
+        );
+
+        $episode = $this->getFactory()->create(array('videos' => $data));
+
+        return $episode->getVideos();
+    }
+
     /**
      * Return the Seasons API Class
      *

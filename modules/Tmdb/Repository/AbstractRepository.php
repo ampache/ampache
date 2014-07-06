@@ -21,8 +21,8 @@ use Tmdb\Model\Common\QueryParameter\QueryParameterInterface;
  * Class AbstractRepository
  * @package Tmdb\Repository
  */
-abstract class AbstractRepository {
-
+abstract class AbstractRepository
+{
     protected $client  = null;
     protected $api     = null;
 
@@ -52,12 +52,12 @@ abstract class AbstractRepository {
     /**
      * Process query parameters
      *
-     * @param array $parameters
+     * @param  array $parameters
      * @return array
      */
     protected function parseQueryParameters(array $parameters = array())
     {
-        foreach($parameters as $key => $candidate) {
+        foreach ($parameters as $key => $candidate) {
             if (is_a($candidate, 'Tmdb\Model\Common\QueryParameter\QueryParameterInterface')) {
                 $interfaces = class_implements($candidate);
 

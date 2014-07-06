@@ -18,11 +18,12 @@ use Tmdb\Model\Collection\QueryParametersCollection;
  * Class DiscoverTvQuery
  * @package Tmdb\Model\Query\Discover
  */
-class DiscoverTvQuery extends QueryParametersCollection {
+class DiscoverTvQuery extends QueryParametersCollection
+{
     /**
      * Minimum value is 1, expected value is an integer.
      *
-     * @param integer $page
+     * @param  integer $page
      * @return $this
      */
     public function page($page = 1)
@@ -35,7 +36,7 @@ class DiscoverTvQuery extends QueryParametersCollection {
     /**
      * ISO 639-1 code.
      *
-     * @param string $language
+     * @param  string $language
      * @return $this
      */
     public function language($language)
@@ -46,9 +47,10 @@ class DiscoverTvQuery extends QueryParametersCollection {
     }
 
     /**
-     * Available options are vote_average.desc, vote_average.asc, first_air_date.desc, first_air_date.asc, popularity.desc, popularity.asc
+     * Available options are vote_average.desc, vote_average.asc, first_air_date.desc,
+     * first_air_date.asc, popularity.desc, popularity.asc
      *
-     * @param string $option
+     * @param  string $option
      * @return $this
      */
     public function sortBy($option)
@@ -59,9 +61,10 @@ class DiscoverTvQuery extends QueryParametersCollection {
     }
 
     /**
-     * Filter the results release dates to matches that include this value. Expected value is a year.
+     * Filter the results release dates to matches that include this value.
+     * Expected value is a year.
      *
-     * @param \DateTime|integer $year
+     * @param  \DateTime|integer $year
      * @return $this
      */
     public function firstAirDateYear($year)
@@ -76,9 +79,10 @@ class DiscoverTvQuery extends QueryParametersCollection {
     }
 
     /**
-     * Only include TV shows that are equal to, or have a vote count higher than this value. Expected value is an integer.
+     * Only include TV shows that are equal to, or have a vote count higher than this value.
+     * Expected value is an integer.
      *
-     * @param integer $count
+     * @param  integer $count
      * @return $this
      */
     public function voteCountGte($count)
@@ -89,9 +93,10 @@ class DiscoverTvQuery extends QueryParametersCollection {
     }
 
     /**
-     * Only include TV shows that are equal to, or have a higher average rating than this value. Expected value is a float.
+     * Only include TV shows that are equal to, or have a higher average rating than this value.
+     * Expected value is a float.
      *
-     * @param float $average
+     * @param  float $average
      * @return $this
      */
     public function voteAverageGte($average)
@@ -102,12 +107,15 @@ class DiscoverTvQuery extends QueryParametersCollection {
     }
 
     /**
-     * Only include TV shows with the specified genres. Expected value is an integer (the id of a genre).
+     * Only include TV shows with the specified genres.
+     * Expected value is an integer (the id of a genre).
      *
      * Multiple values can be specified.
-     * Comma separated indicates an 'AND' query, while a pipe (|) separated value indicates an 'OR'.
      *
-     * @param array|string $genres
+     * Comma separated indicates an 'AND' query,
+     * while a pipe (|) separated value indicates an 'OR'.
+     *
+     * @param  array|string $genres
      * @return $this
      */
     public function withGenres($genres)
@@ -124,7 +132,7 @@ class DiscoverTvQuery extends QueryParametersCollection {
     /**
      * Creates an OR query for genres
      *
-     * @param array $genres
+     * @param  array $genres
      * @return $this
      */
     public function withGenresOr(array $genres = array())
@@ -137,7 +145,7 @@ class DiscoverTvQuery extends QueryParametersCollection {
     /**
      * Creates an AND query for genres
      *
-     * @param array $genres
+     * @param  array $genres
      * @return $this
      */
     public function withGenresAnd(array $genres = array())
@@ -150,7 +158,7 @@ class DiscoverTvQuery extends QueryParametersCollection {
     /**
      * The minimum release to include. Expected format is YYYY-MM-DD.
      *
-     * @param \DateTime|string $date
+     * @param  \DateTime|string $date
      * @return $this
      */
     public function firstAirDateGte($date)
@@ -167,7 +175,7 @@ class DiscoverTvQuery extends QueryParametersCollection {
     /**
      * The maximum release to include. Expected format is YYYY-MM-DD.
      *
-     * @param \DateTime|string $date
+     * @param  \DateTime|string $date
      * @return $this
      */
     public function firstAirDateLte($date)
@@ -181,16 +189,16 @@ class DiscoverTvQuery extends QueryParametersCollection {
         return $this;
     }
 
-
     /**
      * Filter TV shows to include a specific network.
      *
-     * Expected value is an integer (the id of a network). They can be comma separated to indicate an 'AND' query.
+     * Expected value is an integer (the id of a network).
+     * They can be comma separated to indicate an 'AND' query.
      *
      * Expected value is an integer (the id of a company).
      * They can be comma separated to indicate an 'AND' query.
      *
-     * @param array|string $networks
+     * @param  array|string $networks
      * @return $this
      */
     public function withNetworks($networks)
@@ -207,7 +215,7 @@ class DiscoverTvQuery extends QueryParametersCollection {
     /**
      * Creates an and query for networks
      *
-     * @param array $networks
+     * @param  array $networks
      * @return $this
      */
     public function withNetworksAnd(array $networks = array())

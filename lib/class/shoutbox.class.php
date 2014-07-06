@@ -166,11 +166,11 @@ class Shoutbox
     {
         switch ($this->object_type) {
             case 'album':
-                $image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . AmpConfig::get('web_path') . "/image.php?id=" . $this->object_id . "&amp;thumb=1\" />";
+                $image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . AmpConfig::get('web_path') . "/image.php?object_id=" . $this->object_id . "&object_type=" . $this->object_type . "&thumb=1\" />";
             break;
             case 'song':
                 $song = new Song($this->object_id);
-                $image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . AmpConfig::get('web_path') . "/image.php?id=" . $song->album . "&amp;thumb=1\" />";
+                $image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . AmpConfig::get('web_path') . "/image.php?object_id=" . $song->album . "&object_type=album&thumb=1\" />";
             break;
             case 'artist':
             default:

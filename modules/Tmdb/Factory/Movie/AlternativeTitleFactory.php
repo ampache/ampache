@@ -39,7 +39,7 @@ class AlternativeTitleFactory extends AbstractFactory
     {
         $collection = new GenericCollection();
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $collection->add(null, $this->create($item));
         }
 

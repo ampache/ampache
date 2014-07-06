@@ -19,8 +19,8 @@ use Tmdb\Model\Filter\LanguageFilter;
  * Class Image
  * @package Tmdb\Model
  */
-class Image extends AbstractModel implements ImageFilter, LanguageFilter {
-
+class Image extends AbstractModel implements ImageFilter, LanguageFilter
+{
     const FORMAT_POSTER   = 'poster';
     const FORMAT_BACKDROP = 'backdrop';
     const FORMAT_PROFILE  = 'profile';
@@ -38,7 +38,7 @@ class Image extends AbstractModel implements ImageFilter, LanguageFilter {
     protected $id;
     protected $type;
 
-    public static $_properties = array(
+    public static $properties = array(
         'file_path',
         'width',
         'height',
@@ -48,7 +48,7 @@ class Image extends AbstractModel implements ImageFilter, LanguageFilter {
         'vote_count'
     );
 
-    public static $_formats = array(
+    public static $formats = array(
         'posters'   => self::FORMAT_POSTER,
         'backdrops' => self::FORMAT_BACKDROP,
         'profiles'  => self::FORMAT_PROFILE,
@@ -64,18 +64,19 @@ class Image extends AbstractModel implements ImageFilter, LanguageFilter {
      */
     public static function getTypeFromCollectionName($name)
     {
-        if (array_key_exists($name, self::$_formats)) {
-            return self::$_formats[$name];
+        if (array_key_exists($name, self::$formats)) {
+            return self::$formats[$name];
         }
     }
 
     /**
-     * @param float $aspectRatio
+     * @param  float $aspectRatio
      * @return $this
      */
     public function setAspectRatio($aspectRatio)
     {
         $this->aspectRatio = (float) $aspectRatio;
+
         return $this;
     }
 
@@ -88,12 +89,13 @@ class Image extends AbstractModel implements ImageFilter, LanguageFilter {
     }
 
     /**
-     * @param mixed $filePath
+     * @param  mixed $filePath
      * @return $this
      */
     public function setFilePath($filePath)
     {
         $this->filePath = $filePath;
+
         return $this;
     }
 
@@ -106,12 +108,13 @@ class Image extends AbstractModel implements ImageFilter, LanguageFilter {
     }
 
     /**
-     * @param mixed $height
+     * @param  mixed $height
      * @return $this
      */
     public function setHeight($height)
     {
         $this->height = (int) $height;
+
         return $this;
     }
 
@@ -124,12 +127,13 @@ class Image extends AbstractModel implements ImageFilter, LanguageFilter {
     }
 
     /**
-     * @param mixed $iso6391
+     * @param  mixed $iso6391
      * @return $this
      */
     public function setIso6391($iso6391)
     {
         $this->iso6391 = $iso6391;
+
         return $this;
     }
 
@@ -142,12 +146,13 @@ class Image extends AbstractModel implements ImageFilter, LanguageFilter {
     }
 
     /**
-     * @param float $voteAverage
+     * @param  float $voteAverage
      * @return $this
      */
     public function setVoteAverage($voteAverage)
     {
         $this->voteAverage = (float) $voteAverage;
+
         return $this;
     }
 
@@ -160,12 +165,13 @@ class Image extends AbstractModel implements ImageFilter, LanguageFilter {
     }
 
     /**
-     * @param int $voteCount
+     * @param  int   $voteCount
      * @return $this
      */
     public function setVoteCount($voteCount)
     {
         $this->voteCount = (int) $voteCount;
+
         return $this;
     }
 
@@ -178,12 +184,13 @@ class Image extends AbstractModel implements ImageFilter, LanguageFilter {
     }
 
     /**
-     * @param int $width
+     * @param  int   $width
      * @return $this
      */
     public function setWidth($width)
     {
         $this->width = (int) $width;
+
         return $this;
     }
 
@@ -193,5 +200,25 @@ class Image extends AbstractModel implements ImageFilter, LanguageFilter {
     public function getWidth()
     {
         return $this->width;
+    }
+
+    /**
+     * Return the file path when casted to string
+     *
+     * @throws \Exception when the filepath is empty.
+     * @return mixed
+     */
+    public function __toString()
+    {
+        $filePath = $this->getFilePath();
+
+        if (empty($filePath)) {
+            throw new \Exception(sprintf(
+                'Trying to convert an instance of "%s" into an string, but there was no filePath found.',
+                get_class($this)
+            ));
+        }
+
+        return $this->getFilePath();
     }
 }

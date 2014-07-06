@@ -52,6 +52,7 @@
                 <li id="sb_browse_bb_TVShow"><a href="<?php echo $web_path; ?>/browse.php?action=tvshow"><?php echo T_('TV Shows'); ?></a></li>
                 <li id="sb_browse_bb_Movie"><a href="<?php echo $web_path; ?>/browse.php?action=movie"><?php echo T_('Movies'); ?></a></li>
                 <li id="sb_browse_bb_Video"><a href="<?php echo $web_path; ?>/browse.php?action=personal_video"><?php echo T_('Personal Videos'); ?></a></li>
+                <li id="sb_browse_bb_TagsVideo"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=video"><?php echo T_('Tag Cloud'); ?></a></li>
             </ul>
         </li>
     <?php } ?>

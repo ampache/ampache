@@ -18,7 +18,8 @@ use Tmdb\Model\Common\QueryParameter\Type\CollectionToCommaSeperatedString;
  * Class AppendToResponse
  * @package Tmdb\Model\Common\QueryParameter
  */
-class AppendToResponse extends CollectionToCommaSeperatedString {
+class AppendToResponse extends CollectionToCommaSeperatedString
+{
     /**
      * @return string
      */
