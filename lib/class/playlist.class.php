@@ -27,7 +27,7 @@
  * This class handles playlists in ampache. it references the playlist* tables
  *
  */
-class Playlist extends playlist_object
+class Playlist extends playlist_object implements library_item
 {
     /* Variables from the database */
     public $genre;
@@ -123,6 +123,35 @@ class Playlist extends playlist_object
         $this->f_name_link = '<a href="' . $this->f_link . '">' . $this->f_name . '</a>';
 
     } // format
+
+    public function get_keywords()
+    {
+        return array();
+    }
+
+    public function get_fullname()
+    {
+        return $this->f_name;
+    }
+
+    public function get_parent()
+    {
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        $childrens = array();
+        $items = $this->get_items();
+        foreach ($items as $item) {
+            if (!in_array($item['object_type'], $childrens)) {
+                $childrens[$item['object_type']] = array();
+            }
+            $childrens[$item['object_type']][] = $item['object_id'];
+        }
+
+        return $childrens;
+    }
 
     /**
      * get_track

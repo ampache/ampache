@@ -22,8 +22,12 @@
 
 ?>
 <?php UI::show_box_top($video->f_title . ' ' . T_('Details'), 'box box_video_details'); ?>
+<div class="item_right_info">
+<?php
+Art::display('video', $video->id, $video->f_title, 7);
+?>
+</div>
 <dl class="media_details">
-
 <?php if (AmpConfig::get('ratings')) { ?>
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>

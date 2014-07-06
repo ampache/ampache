@@ -831,11 +831,13 @@ abstract class Catalog extends database_object
             $searches['artist'] = array();
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
-                if (!in_array($song->album, $albums)) {
-                    $searches['album'][] = $song->album;
-                }
-                if (!in_array($song->artist, $albums)) {
-                    $searches['artist'][] = $song->artist;
+                if ($song->id) {
+                    if (!in_array($song->album, $searches['album'])) {
+                        $searches['album'][] = $song->album;
+                    }
+                    if (!in_array($song->artist, $searches['artist'])) {
+                        $searches['artist'][] = $song->artist;
+                    }
                 }
             }
         }

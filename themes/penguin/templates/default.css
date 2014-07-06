@@ -694,7 +694,7 @@ right: expression(-this.parentNode.offsetWidth%2+"px");
 	float:left;
 	margin-right:10px;
 }
-.album_art {
+.item_art {
 	float:left;
 	margin-right:10px;
 }
@@ -730,7 +730,7 @@ right: expression(-this.parentNode.offsetWidth%2+"px");
     opacity: 1;
 }
 
-#artist_summary {
+#item_summary {
     margin-right: 150px;
 }
 

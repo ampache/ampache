@@ -61,7 +61,7 @@ class Movie extends Video
      * create
      * This takes a key'd array of data as input and inserts a new movie entry, it returns the record id
      */
-    public static function insert($data, $options = array())
+    public static function insert($data, $gtypes = array(), $options = array())
     {
         $sql = "INSERT INTO `movie` (`id`,`original_name`,`description`, `year`) " .
             "VALUES (?, ?, ?, ?)";

@@ -20,7 +20,7 @@
  *
  */
 
-class Song extends database_object implements media
+class Song extends database_object implements media, library_item
 {
     /* Variables from DB */
     public $id;
@@ -179,7 +179,7 @@ class Song extends database_object implements media
             'VALUES(?, ?, ?)';
         Dba::write($sql, array($song_id, $comment, $lyrics));
 
-        return true;
+        return $song_id;
     }
 
     /**
@@ -958,6 +958,31 @@ class Song extends database_object implements media
         return true;
 
     } // format
+
+    public function get_keywords()
+    {
+        $keywords = array();
+        $keywords['title'] = array('important' => true,
+            'label' => T_('Title'),
+            'value' => $this->f_title);
+
+        return $keywords;
+    }
+
+    public function get_fullname()
+    {
+        return $this->f_title;
+    }
+
+    public function get_parent()
+    {
+        return array('album', $this->album);
+    }
+
+    public function get_childrens()
+    {
+        return array();
+    }
 
     /**
      * get_fields

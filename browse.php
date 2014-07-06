@@ -77,14 +77,14 @@ switch ($_REQUEST['action']) {
         //FIXME: This whole thing is ugly, even though it works.
         $browse->set_sort('count','ASC');
         // This one's a doozy
+        $browse_type = isset($_GET['type']) ? $_GET['type'] : 'song';
         $browse->set_simple_browse(false);
-        $browse->save_objects(Tag::get_tags(/*AmpConfig::get('offset_limit')*/));   // Should add a pager?
+        $browse->save_objects(Tag::get_tags($browse_type /*, AmpConfig::get('offset_limit')*/));   // Should add a pager?
         $object_ids = $browse->get_saved();
         $keys = array_keys($object_ids);
         Tag::build_cache($keys);
         UI::show_box_top(T_('Tag Cloud'), 'box box_tag_cloud');
         $browse2 = new Browse();
-        $browse_type = isset($_GET['type']) ? $_GET['type'] : 'song';
         $browse2->set_type($browse_type);
         $browse2->store();
         require_once AmpConfig::get('prefix') . '/templates/show_tagcloud.inc.php';

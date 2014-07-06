@@ -20,7 +20,7 @@
  *
  */
 
-class Video extends database_object implements media
+class Video extends database_object implements media, library_item
 {
     public $id;
     public $title;
@@ -114,9 +114,6 @@ class Video extends database_object implements media
         $this->f_title = scrub_out($this->title);
         $this->f_full_title = $this->f_title;
         $this->link = AmpConfig::get('web_path') . "/video.php?action=show_video&video_id=" . $this->id;
-        if (strtolower(get_class($this)) != 'video') {
-            $this->link .= '&type=' . get_class($this);
-        }
         $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_title) . "\"> " . scrub_out($this->f_title) . "</a>";
         $this->f_codec = $this->video_codec . ' / ' . $this->audio_codec;
         $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
@@ -140,6 +137,31 @@ class Video extends database_object implements media
         }
 
     } // format
+
+    public function get_keywords()
+    {
+        $keywords = array();
+        $keywords['title'] = array('important' => true,
+            'label' => T_('Title'),
+            'value' => $this->f_title);
+
+        return $keywords;
+    }
+
+    public function get_fullname()
+    {
+        return $this->f_title;
+    }
+
+    public function get_parent()
+    {
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        return array();
+    }
 
     /**
      * gc
@@ -272,13 +294,13 @@ class Video extends database_object implements media
             $gtype = $gtypes[0];
             switch ($gtype) {
                 case 'tvshow':
-                    return TVShow_Episode::insert($data, $options);
+                    return TVShow_Episode::insert($data, $gtypes, $options);
                 case 'movie':
-                    return Movie::insert($data, $options);
+                    return Movie::insert($data, $gtypes, $options);
                 case 'clip':
-                    return Clip::insert($data, $options);
+                    return Clip::insert($data, $gtypes, $options);
                 case 'personal_video':
-                    return Personal_Video::insert($data, $options);
+                    return Personal_Video::insert($data, $gtypes, $options);
                 default:
                     // Do nothing, video entry already created and no additional data for now
                     break;

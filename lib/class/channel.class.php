@@ -20,7 +20,7 @@
  *
  */
 
-class Channel extends database_object
+class Channel extends database_object implements library_item
 {
     public $id;
     public $is_private;
@@ -182,6 +182,26 @@ class Channel extends database_object
     {
         $this->tags = Tag::get_top_tags('channel', $this->id);
         $this->f_tags = Tag::get_display($this->tags, true, 'channel');
+    }
+
+    public function get_keywords()
+    {
+        return array();
+    }
+
+    public function get_fullname()
+    {
+        return $this->f_name;
+    }
+
+    public function get_parent()
+    {
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        return array();
     }
 
     public function get_target_object()

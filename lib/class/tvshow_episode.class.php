@@ -66,7 +66,7 @@ class TVShow_Episode extends Video
      * insert
      * Insert a new tv show episode and related entities.
      */
-    public static function insert($data, $options = array())
+    public static function insert($data, $gtypes = array(), $options = array())
     {
         if (empty($data['tvshow'])) {
             $data['tvshow'] = T_('Unknown');
@@ -154,7 +154,29 @@ class TVShow_Episode extends Video
         $this->f_full_title = $this->f_file;
 
         return true;
+    }
 
+    public function get_keywords()
+    {
+        $keywords = parent::get_keywords();
+        $keywords['tvshow'] = array('important' => true,
+            'label' => T_('TV Show'),
+            'value' => $this->f_tvshow);
+        $keywords['tvshow_season'] = array('important' => false,
+            'label' => T_('Season'),
+            'value' => $this->f_season);
+        if ($this->episode_number) {
+            $keywords['tvshow_episode'] = array('important' => false,
+                'label' => T_('Episode'),
+                'value' => $this->episode_number);
+        }
+
+        return $keywords;
+    }
+
+    public function get_parent()
+    {
+        return array('tvshow_season', $this->season);
     }
 
 }

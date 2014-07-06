@@ -449,7 +449,7 @@ class Tag extends database_object
      * This is a non-object non type dependent function that just returns tags
      * we've got, it can take filters (this is used by the tag cloud)
      */
-    public static function get_tags($limit = 0)
+    public static function get_tags($type = '', $limit = 0)
     {
         //debug_event('tag.class.php', 'Get tags list called...', '5');
         if (parent::is_cached('tags_list', 'no_name')) {
@@ -462,8 +462,11 @@ class Tag extends database_object
         $sql = "SELECT `tag_map`.`tag_id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` " .
             "FROM `tag_map` " .
             "LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " .
-            "WHERE `tag`.`merged_to` IS NULL " .
-            "GROUP BY `tag`.`name` ORDER BY `count` DESC ";
+            "WHERE `tag`.`merged_to` IS NULL ";
+        if (!empty($type)) {
+            $sql .= "AND `tag_map`.`object_type` = '" . scrub_in($type) . "' ";
+        }
+        $sql .="GROUP BY `tag`.`name` ORDER BY `count` DESC ";
 
         if ($limit > 0) {
             $sql .= " LIMIT $limit";

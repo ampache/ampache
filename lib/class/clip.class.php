@@ -63,7 +63,7 @@ class Clip extends Video
      * create
      * This takes a key'd array of data as input and inserts a new clip entry, it returns the record id
      */
-    public static function insert($data, $options = array())
+    public static function insert($data, $gtypes = array(), $options = array())
     {
         $sql = "INSERT INTO `clip` (`id`,`artist`,`song`) " .
             "VALUES (?, ?, ?)";
@@ -110,5 +110,26 @@ class Clip extends Video
         return true;
 
     } //format
+
+    public function get_keywords()
+    {
+        $keywords = parent::get_keywords();
+        if ($this->artist) {
+            $keywords['artist'] = array('important' => true,
+                'label' => T_('Artist'),
+                'value' => $this->f_artist);
+        }
+
+        return $keywords;
+    }
+
+    public function get_parent()
+    {
+        if ($this->artist) {
+            return array('artist', $this->artist);
+        }
+
+        return null;
+    }
 
 } // Clip class

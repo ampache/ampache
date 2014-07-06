@@ -25,7 +25,7 @@
  * Search-related voodoo.  Beware tentacles.
  */
 
-class Search extends playlist_object
+class Search extends playlist_object implements library_item
 {
     public $searchtype;
     public $rules;
@@ -620,6 +620,35 @@ class Search extends playlist_object
         parent::format();
         $this->f_link = AmpConfig::get('web_path') . '/smartplaylist.php?action=show_playlist&playlist_id=' . $this->id;
         $this->f_name_link = '<a href="' . $this->f_link . '">' . $this->f_name . '</a>';
+    }
+
+    public function get_keywords()
+    {
+        return array();
+    }
+
+    public function get_fullname()
+    {
+        return $this->f_name;
+    }
+
+    public function get_parent()
+    {
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        $childrens = array();
+        $items = $this->get_items();
+        foreach ($items as $item) {
+            if (!in_array($item['object_type'], $childrens)) {
+                $childrens[$item['object_type']] = array();
+            }
+            $childrens[$item['object_type']][] = $item['object_id'];
+        }
+
+        return $childrens;
     }
 
     /**

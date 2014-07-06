@@ -542,7 +542,7 @@ a.button{padding:1px 3px;}
 
 /* Specific to Info Boxes */
 .info-box { float:left;margin-right:10px; }
-.album_art { float:left; margin-right:10px; } 
+.item_art { float:left; margin-right:10px; } 
 #information_actions { margin-left:5px; font-size:0.7em; float:left; } 
 #information_actions h3 { font-size:1.2em; margin:0.2em; }
 
@@ -564,7 +564,7 @@ a.button{padding:1px 3px;}
     opacity: 1;
 }
 
-#artist_summary {
+#item_summary {
     margin-right: 150px;
 }
 

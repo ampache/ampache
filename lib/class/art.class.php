@@ -680,6 +680,7 @@ class Art extends database_object
         foreach ($config as $method) {
             $method_name = "gather_" . $method;
 
+            $data = array();
             if (in_array($method, $plugin_names)) {
                 $plugin = new Plugin($method);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
@@ -705,15 +706,15 @@ class Art extends database_object
                         $data = $this->{$method_name}($limit);
                     break;
                 }
-
-                // Add the results we got to the current set
-                $results = array_merge($results, (array) $data);
-
-                if ($limit && count($results) >= $limit) {
-                    return array_slice($results, 0, $limit);
-                }
             } else {
                 debug_event("Art", $method_name . " not defined", 1);
+            }
+
+            // Add the results we got to the current set
+            $results = array_merge((array) $data, $results);
+
+            if ($limit && count($results) >= $limit) {
+                return array_slice($results, 0, $limit);
             }
 
         } // end foreach
@@ -1181,6 +1182,87 @@ class Art extends database_object
         }
 
         return $images;
+    }
+
+    public static function get_thumb_size($thumb)
+    {
+        switch ($thumb) {
+            case '1':
+                /* This is used by the now_playing stuff */
+                $size['height'] = '75';
+                $size['width']    = '75';
+            break;
+            case '2':
+                $size['height']    = '128';
+                $size['width']    = '128';
+            break;
+            case '3':
+                /* This is used by the flash player */
+                $size['height']    = '80';
+                $size['width']    = '80';
+            break;
+            case '4':
+                /* Web Player size */
+                $size['height'] = 200;
+                $size['width'] = 200; // 200px width, set via CSS
+            break;
+            case '5':
+                /* Web Player size */
+                $size['height'] = 32;
+                $size['width'] = 32;
+            break;
+            case '6':
+                /* Video browsing size */
+                $size['height'] = 150;
+                $size['width'] = 100;
+            break;
+            case '7':
+                /* Video page size */
+                $size['height'] = 300;
+                $size['width'] = 200;
+            break;
+            default:
+                $size['height'] = '275';
+                $size['width']    = '275';
+            break;
+        }
+
+        return $size;
+    }
+
+    public static function display($object_type, $object_id, $name, $thumb, $link = null)
+    {
+        $size = self::get_thumb_size($thumb);
+        $prettyPhoto = ($link == null);
+        if ($link == null) {
+            $link = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&auth=" . session_id();
+        }
+        echo "<div class=\"item_art\">";
+        echo "<a href=\"" . $link . "\" alt=\"" . $name . "\"";
+        if ($prettyPhoto) {
+            echo " rel=\"prettyPhoto\"";
+        }
+        echo ">";
+        $imgurl = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&thumb=" . $thumb;
+        echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
+        if ($prettyPhoto) {
+            echo "<div class=\"item_art_actions\">";
+            $burl = substr($_SERVER['REQUEST_URI'], strlen(AmpConfig::get('raw_web_path')) + 1);
+            $burl = rawurlencode($burl);
+            if ($GLOBALS['user']->has_access('25')) {
+                echo "<a href=\"" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=" . $burl . "\">";
+                echo UI::get_icon('edit', T_('Edit/Find Art'));
+                echo "</a>";
+            }
+            if ($GLOBALS['user']->has_access('75')) {
+                echo "<a href=\"" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=" . $burl . "\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
+                echo UI::get_icon('delete', T_('Reset Art'));
+                echo "</a>";
+            }
+            echo"</div>";
+        }
+        echo "</a>\n";
+        echo "</div>";
     }
 
 } // Art

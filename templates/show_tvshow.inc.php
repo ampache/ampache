@@ -28,7 +28,16 @@ $browse->set_type($object_type);
 
 UI::show_box_top($tvshow->f_name, 'info-box');
 ?>
-
+<div class="item_right_info">
+    <?php
+    Art::display('tvshow', $tvshow->id, $tvshow->f_name, 6);
+    ?>
+    <?php if ($tvshow->description) { ?>
+    <div id="item_summary">
+        <?php echo $tvshow->description; ?>
+    </div>
+    <?php } ?>
+</div>
 <?php
 if (AmpConfig::get('ratings')) {
 ?>

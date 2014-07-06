@@ -20,7 +20,7 @@
  *
  */
 
-class Artist extends database_object
+class Artist extends database_object implements library_item
 {
     /* Variables from DB */
     public $id;
@@ -344,6 +344,31 @@ class Artist extends database_object
         return true;
 
     } // format
+
+    public function get_keywords()
+    {
+        $keywords = array();
+        $keywords['artist'] = array('important' => true,
+            'label' => T_('Artist'),
+            'value' => $this->f_full_name);
+
+        return $keywords;
+    }
+
+    public function get_fullname()
+    {
+        return $this->f_full_name;
+    }
+
+    public function get_parent()
+    {
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        return array('album' => $this->get_albums());
+    }
 
     /**
      * check

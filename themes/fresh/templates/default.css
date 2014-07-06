@@ -820,7 +820,7 @@ span.nodata {
      /* only showing up in album view, so strange..bug*/
 }
 
-#content .info-box .box-content .album_art
+#content .info-box .box-content .item_art
 {
     float: right;
     border: 4px double #ccc;
@@ -870,7 +870,7 @@ span.nodata {
     opacity: 1;
 }
 
-#artist_summary {
+#item_summary {
     margin-right: 150px;
 }
 

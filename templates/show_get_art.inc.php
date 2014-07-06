@@ -21,24 +21,24 @@
  */
 ?>
 <?php UI::show_box_top(T_('Customize Search'), 'box box_get_albumart'); ?>
-<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=find_art&amp;album_id=<?php echo $album->id; ?>&amp;artist_name=<?php echo urlencode($_REQUEST['artist_name']);?>&amp;album_name=<?php echo urlencode($_REQUEST['album_name']); ?>&amp;cover=<?php echo urlencode($_REQUEST['cover']); ?>" style="Display:inline;">
+<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=find_art&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo rawurlencode($burl); ?>&artist_name=<?php echo urlencode($_REQUEST['artist_name']);?>&album_name=<?php echo urlencode($_REQUEST['album_name']); ?>&cover=<?php echo urlencode($_REQUEST['cover']); ?>" style="Display:inline;">
     <table class="tabledata" cellspacing="0" cellpadding="0">
-        <tr>
-            <td>
-                <?php echo T_('Artist'); ?>&nbsp;
-            </td>
-            <td>
-                <input type="text" id="artist_name" name="artist_name" value="<?php echo scrub_out(unhtmlentities($artistname)); ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                 <?php echo T_('Album'); ?>&nbsp;
-            </td>
-            <td>
-                <input type="text" id="album_name" name="album_name" value="<?php echo scrub_out(unhtmlentities($albumname)); ?>" />
-            </td>
-        </tr>
+        <?php
+        foreach ($keywords as $key => $word) {
+            if ($key != 'keyword') {
+        ?>
+                <tr>
+                    <td>
+                        <?php echo $word['label']; ?>&nbsp;
+                    </td>
+                    <td>
+                        <input type="text" id="option_<?php echo $key; ?>" name="option_<?php echo $key; ?>" value="<?php echo scrub_out(unhtmlentities($word['value'])); ?>" />
+                    </td>
+                </tr>
+        <?php
+            }
+        }
+        ?>
         <tr>
             <td>
                 <?php echo T_('Direct URL to Image'); ?>
@@ -58,7 +58,8 @@
     </table>
     <div class="formValidation">
         <input type="hidden" name="action" value="find_art" />
-        <input type="hidden" name="album_id" value="<?php echo $album->id; ?>" />
+        <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
+        <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
         <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
         <input type="submit" value="<?php echo T_('Get Art'); ?>" />
     </div>

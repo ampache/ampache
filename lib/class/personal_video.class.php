@@ -62,7 +62,7 @@ class Personal_Video extends Video
      * create
      * This takes a key'd array of data as input and inserts a new personal video entry, it returns the record id
      */
-    public static function insert($data, $options = array())
+    public static function insert($data, $gtypes = array(), $options = array())
     {
         $sql = "INSERT INTO `personal_video` (`id`,`location`,`description`) " .
             "VALUES (?, ?, ?)";

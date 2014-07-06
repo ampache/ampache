@@ -20,38 +20,27 @@
  */
 
 /**
- * media Interface
+ * library_item Interface
  *
  * This defines how the media file classes should
  * work, this lists all required functions and the expected
  * input
  */
-interface media
+interface library_item
 {
     /**
-     * get_stream_types
+     * format
      *
-     * Returns an array of strings; current types are 'native'
-     * and 'transcode'
+     * Creates member variables for output
      */
-    public function get_stream_types();
+    public function format();
 
-    /**
-     * play_url
-     *
-     * Returns the url to stream the specified object
-     *
-     */
-    public static function play_url($oid, $additional_params='');
+    public function get_keywords();
 
-    /**
-     * get_transcode_settings
-     *
-     * Should only be called if 'transcode' was returned by get_stream_types
-     * Returns a raw transcode command for this item; the optional target
-     * parameter can be used to request a specific format instead of the
-     * default from the configuration file.
-     */
-    public function get_transcode_settings($target = null);
+    public function get_fullname();
+
+    public function get_parent();
+
+    public function get_childrens();
 
 } // end interface

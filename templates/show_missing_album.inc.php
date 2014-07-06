@@ -27,7 +27,7 @@ $title = scrub_out($walbum->name) . '&nbsp;(' . $walbum->year . ')';
 $title .= '&nbsp;-&nbsp;' . $walbum->f_artist_link;
 ?>
 <?php UI::show_box_top($title,'info-box missing'); ?>
-<div class="album_art">
+<div class="item_art">
 <?php
 // Attempt to find the art.
 $art = new Art($walbum->mbid, 'album');

@@ -97,16 +97,17 @@ class AmpacheTmdb {
             debug_event('tmdb', 'Not a valid media type, skipped.', '5');
             return null;
         }
-        $token = new \Tmdb\ApiToken($this->api_key);
-        $client = new \Tmdb\Client($token);
-        $configRepository = new \Tmdb\Repository\ConfigurationRepository($client);
-        $config = $configRepository->load();
-        $imageHelper = new \Tmdb\Helper\ImageHelper($config);
         
-        $title = $media_info['original_name'] ?: $media_info['title'];
-        
-        $results = array();
         try {
+            $token = new \Tmdb\ApiToken($this->api_key);
+            $client = new \Tmdb\Client($token);
+            $configRepository = new \Tmdb\Repository\ConfigurationRepository($client);
+            $config = $configRepository->load();
+            $imageHelper = new \Tmdb\Helper\ImageHelper($config);
+            
+            $title = $media_info['original_name'] ?: $media_info['title'];
+            
+            $results = array();
             if (in_array('movie', $gather_types)) {
                 if (!empty($title)) {
                     $apires = $client->getSearchApi()->searchMovies($title);

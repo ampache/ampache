@@ -36,18 +36,10 @@ $title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_art
         <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($album->f_name); ?>%22&go=Go" target="_blank"><?php echo UI::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
         <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22&type=album" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
     </div>
-    <div class="album_art">
     <?php
-    if ($album->name != T_('Unknown (Orphaned)')) {
         $name = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
-
-        $aa_url = $web_path . "/image.php?object_id=" . $album->id . "&object_type=album&auth=" . session_id();
-        echo "<a href=\"" . $aa_url . "\" rel=\"prettyPhoto\">";
-        echo "<img src=\"" . $web_path . "/image.php?object_id=" . $album->id . "&object_type=album&thumb=2\" alt=\"".$name."\" alt=\"".$name."\" height=\"128\" width=\"128\" />";
-        echo "</a>\n";
-    }
+        Art::display('album', $album->id, $name, 2);
     ?>
-    </div>
 </div>
 <?php if (AmpConfig::get('ratings')) { ?>
 <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
@@ -96,16 +88,6 @@ if (AmpConfig::get('show_played_times')) {
                 <?php echo UI::get_icon('save', T_('Save Tracks Order')); ?>
                 &nbsp;&nbsp;<?php echo T_('Save Tracks Order'); ?>
             </a>
-        </li>
-        <?php if (Access::check('interface','75')) { ?>
-        <li>
-            <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to reset album art?'); ?>');"><?php echo UI::get_icon('delete', T_('Reset Album Art')); ?></a>
-            <a href="<?php echo $web_path; ?>/albums.php?action=clear_art&album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to reset album art?'); ?>');"><?php echo T_('Reset Album Art'); ?></a>
-        </li>
-        <?php } ?>
-        <li>
-            <a href="<?php echo $web_path; ?>/albums.php?action=find_art&album_id=<?php echo $album->id; ?>"><?php echo UI::get_icon('view', T_('Find Album Art')); ?></a>
-            <a href="<?php echo $web_path; ?>/albums.php?action=find_art&album_id=<?php echo $album->id; ?>"><?php echo T_('Find Album Art'); ?></a>
         </li>
         <!--<?php  if ((Access::check('interface','50'))) { ?>
         <li>

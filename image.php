@@ -49,42 +49,7 @@ if (!isset($_GET['object_type'])) {
 $type = Art::validate_type($_GET['object_type']);
 
 /* Decide what size this image is */
-switch ($_GET['thumb']) {
-    case '1':
-        /* This is used by the now_playing stuff */
-        $size['height'] = '75';
-        $size['width']    = '75';
-    break;
-    case '2':
-        $size['height']    = '128';
-        $size['width']    = '128';
-    break;
-    case '3':
-        /* This is used by the flash player */
-        $size['height']    = '80';
-        $size['width']    = '80';
-    break;
-    case '4':
-        /* Web Player size */
-        $size['height'] = 200;
-        $size['width'] = 200; // 200px width, set via CSS
-    break;
-    case '5':
-        /* Web Player size */
-        $size['height'] = 32;
-        $size['width'] = 32;
-    break;
-    case '6':
-        /* Video browsing size */
-        $size['height'] = 150;
-        $size['width'] = 100;
-    break;
-    default:
-        $size['height'] = '275';
-        $size['width']    = '275';
-        if (!isset($_GET['thumb'])) { $return_raw = true; }
-    break;
-} // define size based on thumbnail
+$size = Art::get_thumb_size($_GET['thumb']);
 
 $image = '';
 $mime = '';

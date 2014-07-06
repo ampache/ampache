@@ -28,16 +28,11 @@ $title = scrub_out($song->title);
 $album = scrub_out($song->f_album_full);
 $artist = scrub_out($song->f_artist_full);
 ?>
-<div class="album_art">
-    <?php
-    if ($album->name != T_('Unknown (Orphaned)')) {
-        $aa_url = $web_path . "/image.php?object_id=" . $song->album . "&object_type=album&auth=" . session_id();
-        echo "<a href=\"" . $aa_url . "\" rel=\"prettyPhoto\">";
-        echo "<img src=\"" . $web_path . "/image.php?object_id=" . $song->album . "&object_type=album&thumb=2\" alt=\"".$song->f_album_full."\" alt=\"".$song->f_album_full."\" height=\"128\" width=\"128\" />";
-        echo "</a>\n";
-    }
-    ?>
-</div>
+<?php
+if ($album != T_('Unknown (Orphaned)')) {
+    Art::display('album', $song->album, $song->f_album_full, 2);
+}
+?>
 
 <div class="np_group">
   <div class="np_cell cel_song">

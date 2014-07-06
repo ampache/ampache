@@ -20,7 +20,7 @@
  *
  */
 
-class TVShow_Season extends database_object
+class TVShow_Season extends database_object implements library_item
 {
     /* Variables from DB */
     public $id;
@@ -141,6 +141,34 @@ class TVShow_Season extends database_object
         $this->_get_extra_info($this->catalog_id);
 
         return true;
+    }
+
+    public function get_keywords()
+    {
+        $keywords = array();
+        $keywords['tvshow'] = array('important' => true,
+            'label' => T_('TV Show'),
+            'value' => $this->f_tvshow);
+        $keywords['tvshow_season'] = array('important' => false,
+            'label' => T_('Season'),
+            'value' => $this->season_number);
+
+        return $keywords;
+    }
+
+    public function get_fullname()
+    {
+        return $this->f_name;
+    }
+
+    public function get_parent()
+    {
+        return array('tvshow', $this->tvshow);
+    }
+
+    public function get_childrens()
+    {
+        return array('tvshow_episode' => $this->get_episodes());
     }
 
     /**

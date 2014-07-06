@@ -20,7 +20,7 @@
  *
  */
 
-class TVShow extends database_object
+class TVShow extends database_object implements library_item
 {
     /* Variables from DB */
     public $id;
@@ -182,6 +182,31 @@ class TVShow extends database_object
         $this->f_tags = Tag::get_display($this->tags, true, 'tvshow');
 
         return true;
+    }
+
+    public function get_keywords()
+    {
+        $keywords = array();
+        $keywords['tvshow'] = array('important' => true,
+            'label' => T_('TV Show'),
+            'value' => $this->f_name);
+
+        return $keywords;
+    }
+
+    public function get_fullname()
+    {
+        return $this->f_name;
+    }
+
+    public function get_parent()
+    {
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        return array('tvshow_season' => $this->get_seasons());
     }
 
     /**

@@ -81,6 +81,7 @@ require_once $prefix . '/lib/class/localplay_controller.abstract.php';
 require_once $prefix . '/lib/class/database_object.abstract.php';
 require_once $prefix . '/lib/class/playlist_object.abstract.php';
 require_once $prefix . '/lib/class/media.interface.php';
+require_once $prefix . '/lib/class/library_item.interface.php';
 require_once $prefix . '/modules/horde/Browser.php';
 
 /* Set up the flip class */

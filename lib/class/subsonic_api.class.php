@@ -365,7 +365,7 @@ class Subsonic_Api
         self::check_version($input, "1.9.0");
 
         $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addGenres($r, Tag::get_tags());
+        Subsonic_XML_Data::addGenres($r, Tag::get_tags('song'));
         self::apiOutput($input, $r);
     }
 

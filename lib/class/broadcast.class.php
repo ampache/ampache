@@ -20,7 +20,7 @@
  *
  */
 
-class Broadcast extends database_object
+class Broadcast extends database_object implements library_item
 {
     public $id;
     public $started;
@@ -113,6 +113,26 @@ class Broadcast extends database_object
         $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/broadcast.php?id=' . $this->id . '">' . scrub_out($this->f_name) . '</a>';
         $this->tags = Tag::get_top_tags('broadcast', $this->id);
         $this->f_tags = Tag::get_display($this->tags, true, 'broadcast');
+    }
+
+    public function get_keywords()
+    {
+        return array();
+    }
+
+    public function get_fullname()
+    {
+        return $this->f_name;
+    }
+
+    public function get_parent()
+    {
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        return array();
     }
 
     public static function get_broadcast_list_sql()

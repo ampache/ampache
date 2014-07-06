@@ -28,7 +28,7 @@
  * this can include podcasts or what-have-you
  *
  */
-class Radio extends database_object implements media
+class Radio extends database_object implements media, library_item
 {
     /* DB based variables */
     public $id;
@@ -75,6 +75,26 @@ class Radio extends database_object implements media
         return true;
 
     } // format
+
+    public function get_keywords()
+    {
+        return array();
+    }
+
+    public function get_fullname()
+    {
+        return $this->f_name;
+    }
+
+    public function get_parent()
+    {
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        return array();
+    }
 
     /**
      * update

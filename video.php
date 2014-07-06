@@ -27,12 +27,7 @@ UI::show_header();
 switch ($_REQUEST['action']) {
     case 'show_video':
     default:
-        $type = 'Video';
-        if (isset($_REQUEST['type'])) {
-            $type = Video::validate_type($_REQUEST['type']);
-        }
-
-        $video = new $type($_REQUEST['video_id']);
+        $video = Video::create_from_id($_REQUEST['video_id']);
         $video->format();
         require_once AmpConfig::get('prefix') . '/templates/show_video.inc.php';
     break;

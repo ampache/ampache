@@ -553,7 +553,7 @@ input[type=checkbox]  { border:0;background:none; }
 
 
 /* Specific to Info Boxes */
-.info-box .album_art {float:left;margin-right:10px;}
+.info-box .item_art {float:left;margin-right:10px;}
 .info-box th {color:#8b3e38;}
 #information_actions { } 
 #information_actions h3 { color:#8b3e38; font-size:1.2em; margin:0.2em; }
@@ -576,7 +576,7 @@ input[type=checkbox]  { border:0;background:none; }
     opacity: 1;
 }
 
-#artist_summary {
+#item_summary {
     margin-right: 150px;
 }
 
