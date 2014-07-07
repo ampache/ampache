@@ -24,7 +24,6 @@ $web_path = AmpConfig::get('web_path');
 $thcount = 8;
 ?>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
-<span class="item-count"><?php echo T_('Item Count') . ': ' . $total; ?></span>
 <table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="song">
     <thead>
         <tr class="th-top">
