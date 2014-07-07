@@ -163,6 +163,11 @@ class Video extends database_object implements media, library_item
         return array();
     }
 
+    public function get_user_owner()
+    {
+        return null;
+    }
+
     /**
      * gc
      *
@@ -309,5 +314,18 @@ class Video extends database_object implements media, library_item
 
         return $data['id'];
     }
+
+    /**
+     * update
+     * This takes a key'd array of data as input and updates a video entry
+     */
+    public function update($data)
+    {
+        $sql = "UPDATE `video` SET `title` = ?, `release_date` = ? WHERE `id` = ?";
+        Dba::write($sql, array($data['title'], $data['release_date'], $this->id));
+
+        return $this->id;
+
+    } // update
 
 } // end Video class

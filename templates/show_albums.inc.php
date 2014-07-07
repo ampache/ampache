@@ -53,11 +53,11 @@ $thcount = 8;
 
         /* Foreach through the albums */
         foreach ($object_ids as $album_id) {
-            $album = new Album($album_id);
-            $album->allow_group_disks = $allow_group_disks;
-            $album->format();
+            $libitem = new Album($album_id);
+            $libitem->allow_group_disks = $allow_group_disks;
+            $libitem->format();
         ?>
-        <tr id="album_<?php echo $album->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="album_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_album_row.inc.php'; ?>
         </tr>
         <?php } //end foreach ($albums as $album) ?>

@@ -21,14 +21,14 @@
  */
 ?>
 
-<td class="cel_album"><?php echo $walbum->f_name_link; ?></td>
-<td class="cel_artist"><?php echo $walbum->f_artist_link; ?></td>
-<td class="cel_year"><?php echo $walbum->year; ?></td>
-<td class="cel_user"><?php echo $walbum->f_user; ?></td>
+<td class="cel_album"><?php echo $libitem->f_name_link; ?></td>
+<td class="cel_artist"><?php echo $libitem->f_artist_link; ?></td>
+<td class="cel_year"><?php echo $libitem->year; ?></td>
+<td class="cel_user"><?php echo $libitem->f_user; ?></td>
 <td class="cel_action">
-    <div id="wanted_action_<?php echo $walbum->mbid; ?>">
+    <div id="wanted_action_<?php echo $libitem->mbid; ?>">
     <?php
-        $walbum->show_action_buttons();
+        $libitem->show_action_buttons();
     ?>
     </div>
 </td>

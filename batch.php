@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
         $name = $playlist->name;
     break;
     case 'smartplaylist':
-        $search = new Search('song', $_REQUEST['id']);
+        $search = new Search($_REQUEST['id'], 'song');
         $items = $search->get_items();
         foreach ($items as $item) {
             $media_ids[] = $item['object_id'];

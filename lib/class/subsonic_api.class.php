@@ -717,7 +717,7 @@ class Subsonic_Api
 
         $r = Subsonic_XML_Data::createSuccessResponse();
         if (Subsonic_XML_Data::isSmartPlaylist($playlistid)) {
-            $playlist = new Search('song', Subsonic_XML_Data::getAmpacheId($playlistid));
+            $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistid), 'song');
             Subsonic_XML_Data::addSmartPlaylist($r, $playlist, true);
         } else {
             $playlist = new Playlist($playlistid);
@@ -819,7 +819,7 @@ class Subsonic_Api
         $playlistId = self::check_parameter($input, 'playlistId');
 
         if (Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
-            $playlist = new Search('song', Subsonic_XML_Data::getAmpacheId($playlistId));
+            $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistId), 'song');
             $playlist->delete();
         } else {
             $playlist = new Playlist($playlistId);
@@ -1138,7 +1138,7 @@ class Subsonic_Api
         self::check_version($input, "1.9.0");
 
         $r = Subsonic_XML_Data::createSuccessResponse();
-        $radios = Radio::get_all_radios();
+        $radios = Live_Stream::get_all_radios();
         Subsonic_XML_Data::addRadios($r, $radios);
         self::apiOutput($input, $r);
     }

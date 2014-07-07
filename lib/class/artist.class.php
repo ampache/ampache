@@ -370,6 +370,11 @@ class Artist extends database_object implements library_item
         return array('album' => $this->get_albums());
     }
 
+    public function get_user_owner()
+    {
+        return $this->user;
+    }
+
     /**
      * check
      *

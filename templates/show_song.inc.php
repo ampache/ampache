@@ -75,6 +75,11 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
             <a href="<?php echo Song::play_url($song->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php } ?>
+        <?php if (Access::check('interface','50')) { ?>
+            <a onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_'.$song->id ?>', '<?php echo T_('Edit') ?>', '')">
+                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+            </a>
+        <?php } ?>
         <?php if (Access::check('interface','75')) { ?>
             <span id="<?php echo($button_flip_state_id); ?>">
             <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$icon, T_(ucfirst($icon)),'flip_song_' . $song->id); ?>

@@ -468,10 +468,10 @@ class Album extends database_object implements library_item
         $keywords = array();
         $keywords['artist'] = array('important' => true,
             'label' => T_('Artist'),
-            'value' => (($album->artist_count == 1) ? $this->f_artist_name : ''));
+            'value' => (($album->artist_count < 2) ? $this->f_artist_name : ''));
         $keywords['album'] = array('important' => true,
             'label' => T_('Album'),
-            'value' => $this->f_full_name);
+            'value' => $this->f_name);
 
         return $keywords;
     }
@@ -493,6 +493,11 @@ class Album extends database_object implements library_item
     public function get_childrens()
     {
         return array('song' => $this->get_songs());
+    }
+
+    public function get_user_owner()
+    {
+        return null;
     }
 
     /**

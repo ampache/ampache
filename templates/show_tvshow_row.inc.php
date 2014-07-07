@@ -24,9 +24,9 @@
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=tvshow&tvshow_id=' . $tvshow->id,'play', T_('Play'),'play_tvshow_' . $tvshow->id); ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&playtype=tvshow&tvshow_id=' . $libitem->id,'play', T_('Play'),'play_tvshow_' . $libitem->id); ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=tvshow&tvshow_id=' . $tvshow->id . '&append=true','play_add', T_('Play last'),'addplay_tvshow_' . $tvshow->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&playtype=tvshow&tvshow_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_tvshow_' . $libitem->id); ?>
         <?php } ?>
 <?php } ?>
     </div>
@@ -35,30 +35,30 @@
 if (Art::is_enabled()) {
 ?>
 <td class="cel_cover">
-    <?php Art::display('tvshow', $tvshow->id, $tvshow->f_name, 6, $tvshow->link); ?>
+    <?php Art::display('tvshow', $libitem->id, $libitem->f_name, 6, $libitem->link); ?>
 </td>
 <?php } ?>
-<td class="cel_tvshow"><?php echo $tvshow->f_link; ?></td>
+<td class="cel_tvshow"><?php echo $libitem->f_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
-        <?php echo Ajax::button('?action=basket&type=tvshow&id=' . $artist->id,'add', T_('Add to temporary playlist'),'add_artist_' . $tvshow->id); ?>
-        <a id="<?php echo 'add_playlist_'.$tvshow->id ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $tvshow->id ?>')">
+        <?php echo Ajax::button('?action=basket&type=tvshow&id=' . $artist->id,'add', T_('Add to temporary playlist'),'add_artist_' . $libitem->id); ?>
+        <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $libitem->id ?>')">
             <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
         </a>
     </span>
 </td>
-<td class="cel_episodes"><?php echo $tvshow->episodes; ?></td>
-<td class="cel_seasons"><?php echo $tvshow->seasons; ?></td>
-<td class="cel_tags"><?php echo $tvshow->f_tags; ?></td>
+<td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
+<td class="cel_seasons"><?php echo $libitem->seasons; ?></td>
+<td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
 <?php if (AmpConfig::get('ratings')) { ?>
-<td class="cel_rating" id="rating_<?php echo $tvshow->id; ?>_tvshow"><?php Rating::show($tvshow->id,'tvshow'); ?></td>
+<td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_tvshow"><?php Rating::show($libitem->id,'tvshow'); ?></td>
 <?php } ?>
 <?php if (AmpConfig::get('userflags')) { ?>
-<td class="cel_userflag" id="userflag_<?php echo $tvshow->id; ?>_tvshow"><?php Userflag::show($tvshow->id,'tvshow'); ?></td>
+<td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow"><?php Userflag::show($libitem->id,'tvshow'); ?></td>
 <?php } ?>
 <td class="cel_action">
 <?php if (Access::check('interface','50')) { ?>
-    <a id="<?php echo 'edit_tvshow_'.$tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_'.$tvshow->id ?>', '<?php echo T_('TV Show edit') ?>', 'tvshow_', 'refresh_tvshow')">
+    <a id="<?php echo 'edit_tvshow_'.$libitem->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_tvshow_'.$libitem->id ?>', '<?php echo T_('TV Show edit') ?>', 'tvshow_')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
 <?php } ?>

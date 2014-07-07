@@ -107,10 +107,10 @@ if (AmpConfig::get('show_played_times')) {
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>
         <li>
-            <a id="<?php echo 'edit_album_'.$album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '', '')">
+            <a id="<?php echo 'edit_album_'.$album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
-            <a id="<?php echo 'edit_album_'.$album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '', '')">
+            <a id="<?php echo 'edit_album_'.$album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '')">
                 <?php echo T_('Edit Album'); ?>
             </a>
         </li>

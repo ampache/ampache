@@ -46,7 +46,9 @@ if (!isset($_GET['object_type'])) {
     $_GET['object_type'] = 'album';
 }
 
-$type = Art::validate_type($_GET['object_type']);
+$type = $_GET['object_type'];
+if (!Catalog::is_library_item($type))
+    exit;
 
 /* Decide what size this image is */
 $size = Art::get_thumb_size($_GET['thumb']);

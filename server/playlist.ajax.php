@@ -76,7 +76,7 @@ switch ($_REQUEST['action']) {
 
         switch ($_REQUEST['item_type']) {
             case 'smartplaylist':
-                $smartplaylist = new Search('song', $item_id);
+                $smartplaylist = new Search($item_id, 'song');
                 $items = $playlist->get_items();
                 foreach ($items as $item) {
                     $songs[] = $item['object_id'];

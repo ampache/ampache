@@ -36,12 +36,13 @@ $web_path = AmpConfig::get('web_path');
     <tbody>
         <?php
         foreach ($object_ids as $shout_id) {
-            $shout = new Shoutbox($shout_id);
-            $shout->format();
-                $object = Shoutbox::get_object($shout->object_type,$shout->object_id);
-                $object->format();
-                $client = new User($shout->user);
-                $client->format();
+            $libitem = new Shoutbox($shout_id);
+            $libitem->format();
+
+            $object = Shoutbox::get_object($libitem->object_type, $libitem->object_id);
+            $object->format();
+            $client = new User($libitem->user);
+            $client->format();
 
             require AmpConfig::get('prefix') . '/templates/show_shout_row.inc.php';
         ?>

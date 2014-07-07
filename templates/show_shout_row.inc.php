@@ -20,17 +20,17 @@
  *
  */
 ?>
-<tr id="flagged_<?php echo $shout->id; ?>" class="<?php echo UI::flip_class(); ?>">
+<tr id="flagged_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
     <td class="cel_object"><?php echo $object->f_link; ?></td>
     <td class="cel_username"><?php echo $client->f_link; ?></td>
-    <td class="cel_sticky"><?php echo $shout->sticky; ?></td>
-    <td class="cel_comment"><?php echo scrub_out($shout->text); ?></td>
-    <td class="cel_date"><?php echo $shout->date; ?></td>
+    <td class="cel_sticky"><?php echo $libitem->sticky; ?></td>
+    <td class="cel_comment"><?php echo scrub_out($libitem->text); ?></td>
+    <td class="cel_date"><?php echo $libitem->date; ?></td>
     <td class="cel_action">
-        <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&amp;shout_id=<?php echo $shout->id; ?>">
+        <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&amp;shout_id=<?php echo $libitem->id; ?>">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
-        <a href="<?php echo $web_path; ?>/admin/shout.php?action=delete&amp;shout_id=<?php echo $shout->id; ?>">
+        <a href="<?php echo $web_path; ?>/admin/shout.php?action=delete&amp;shout_id=<?php echo $libitem->id; ?>">
             <?php echo UI::get_icon('delete', T_('Delete')); ?>
         </a>
     </td>

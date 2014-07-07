@@ -525,7 +525,7 @@ class User extends database_object
             }
         }
 
-        return true;
+        return $this->id;
     }
 
     /**

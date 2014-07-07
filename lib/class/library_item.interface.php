@@ -43,4 +43,10 @@ interface library_item
 
     public function get_childrens();
 
+    public function get_user_owner();
+
+    public function update($data);
+
+    public static function gc();
+
 } // end interface

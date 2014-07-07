@@ -619,7 +619,7 @@ class Song extends database_object implements media, library_item
             } // end whitelist
         } // end foreach
 
-        return true;
+        return $this->id;
     } // update
 
     /**
@@ -982,6 +982,11 @@ class Song extends database_object implements media, library_item
     public function get_childrens()
     {
         return array();
+    }
+
+    public function get_user_owner()
+    {
+        return null;
     }
 
     /**

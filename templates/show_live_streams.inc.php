@@ -37,11 +37,11 @@ $web_path = AmpConfig::get('web_path');
     <tbody>
         <?php
         foreach ($object_ids as $radio_id) {
-            $radio = new Radio($radio_id);
-            $radio->format();
+            $libitem = new Live_Stream($radio_id);
+            $libitem->format();
         ?>
-        <tr id="live_stream_<?php echo $radio->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_live_stream_row.inc.php'; ?>
+        <tr id="live_stream_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
+            <?php require AmpConfig::get('prefix') . '/templates/show_radio_row.inc.php'; ?>
         </tr>
         <?php } //end foreach ($artists as $artist) ?>
         <?php if (!count($object_ids)) { ?>

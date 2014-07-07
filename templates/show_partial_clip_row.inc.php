@@ -20,4 +20,4 @@
  *
  */
 ?>
-<td class="cel_artist"><?php echo $video->f_artist; ?></td>
+<td class="cel_artist"><?php echo $libitem->f_artist; ?></td>

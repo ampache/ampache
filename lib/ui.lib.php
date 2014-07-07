@@ -270,6 +270,49 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
 } // show_artist_select
 
 /**
+ * show_tvshow_select
+ * This is the same as show_album_select except it's *gasp* for tvshows! How
+ * inventive!
+ */
+function show_tvshow_select($name='tvshow', $tvshow_id=0, $allow_add=false, $tvshow_id=0, $allow_none=false)
+{
+    static $tvshow_id_cnt = 0;
+    // Generate key to use for HTML element ID
+    if ($tvshow_id) {
+        $key = $name . "_select_" . $tvshow_id;
+    } else {
+        $key = $name . "_select_c" . ++$tvshow_id_cnt;
+    }
+
+    echo "<select name=\"$name\" id=\"$key\">\n";
+
+    if ($allow_none) {
+        echo "\t<option value=\"-2\"></option>\n";
+    }
+
+    $sql = "SELECT `id`, `name` FROM `tvshow` ORDER BY `name`";
+    $db_results = Dba::read($sql);
+
+    while ($r = Dba::fetch_assoc($db_results)) {
+        $selected = '';
+        if ($r['id'] == $tvshow_id) {
+            $selected = "selected=\"selected\"";
+        }
+
+        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['name']) . "</option>\n";
+
+    } // end while
+
+    if ($allow_add) {
+        // Append additional option to the end with value=-1
+        echo "\t<option value=\"-1\">Add New...</option>\n";
+    }
+
+    echo "</select>\n";
+
+} // show_tvshow_select
+
+/**
  * show_catalog_select
  * Yet another one of these buggers. this shows a drop down of all of your
  * catalogs.

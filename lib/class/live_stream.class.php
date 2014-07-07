@@ -28,7 +28,7 @@
  * this can include podcasts or what-have-you
  *
  */
-class Radio extends database_object implements media, library_item
+class Live_Stream extends database_object implements media, library_item
 {
     /* DB based variables */
     public $id;
@@ -96,19 +96,19 @@ class Radio extends database_object implements media, library_item
         return array();
     }
 
+    public function get_user_owner()
+    {
+        return null;
+    }
+
     /**
      * update
      * This is a static function that takes a key'd array for input
      * it depends on a ID element to determine which radio element it
      * should be updating
      */
-    public static function update($data)
+    public function update($data)
     {
-        // Verify the incoming data
-        if (!$data['id']) {
-            Error::add('general', T_('Missing ID'));
-        }
-
         if (!$data['name']) {
             Error::add('general', T_('Name Required'));
         }
@@ -126,9 +126,9 @@ class Radio extends database_object implements media, library_item
         }
 
         $sql = "UPDATE `live_stream` SET `name` = ?,`site_url` = ?,`url` = ?, codec = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $data['codec'], $data['id']));
+        Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $data['codec'], $this->id));
 
-        return $db_results;
+        return $this->id;
 
     } // update
 
@@ -197,7 +197,7 @@ class Radio extends database_object implements media, library_item
      */
     public static function play_url($oid, $additional_params='',$sid='',$force_http='')
     {
-        $radio = new Radio($oid);
+        $radio = new Live_Stream($oid);
 
         return $radio->url . $additional_params;
 

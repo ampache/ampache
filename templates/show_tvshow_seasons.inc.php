@@ -50,10 +50,10 @@ $thcount = 6;
         if (AmpConfig::get('userflags')) { Userflag::build_cache('album',$object_ids); }
 
         foreach ($object_ids as $season_id) {
-            $season = new TVShow_season($season_id);
-            $season->format();
+            $libitem = new TVShow_season($season_id);
+            $libitem->format();
         ?>
-        <tr id="tvshow_season_<?php echo $season->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="tvshow_season_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_tvshow_season_row.inc.php'; ?>
         </tr>
         <?php } ?>

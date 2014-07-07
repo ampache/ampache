@@ -32,7 +32,10 @@ UI::show_header();
 switch ($_REQUEST['action']) {
     case 'edit':
         if (isset($_POST['license_id'])) {
-            License::update($_POST);
+            $license = new License($_POST['license_id']);
+            if ($license->id) {
+                $license->update($_POST);
+            }
             $text = T_('License Updated');
         } else {
             License::create($_POST);

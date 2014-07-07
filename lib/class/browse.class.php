@@ -187,11 +187,11 @@ class Browse extends Query
             break;
             case 'smartplaylist':
                 $box_title = T_('Smart Playlists') . $match;
-                $box_req = AmpConfig::get('prefix') . '/templates/show_smartplaylists.inc.php';
+                $box_req = AmpConfig::get('prefix') . '/templates/show_searches.inc.php';
             break;
             case 'catalog':
                 $box_title = T_('Catalogs');
-                $box_req = AmpConfig::get('prefix') . '/templates/show_catalogs.inc.php';
+                $box_req = AmpConfig::get('prefix') . '/templates/show_searches.inc.php';
             break;
             case 'shoutbox':
                 $box_title = T_('Shoutbox Records');

@@ -20,4 +20,4 @@
  *
  */
 ?>
-<td class="cel_location"><?php echo $video->f_location; ?></td>
+<td class="cel_location"><?php echo $libitem->f_location; ?></td>

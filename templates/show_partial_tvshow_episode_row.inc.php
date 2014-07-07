@@ -20,6 +20,6 @@
  *
  */
 ?>
-<td class="cel_episode"><?php echo $video->episode_number; ?></td>
-<td class="cel_season"><?php echo $video->f_season_link; ?></td>
-<td class="cel_tvshow"><?php echo $video->f_tvshow_link; ?></td>
+<td class="cel_episode"><?php echo $libitem->episode_number; ?></td>
+<td class="cel_season"><?php echo $libitem->f_season_link; ?></td>
+<td class="cel_tvshow"><?php echo $libitem->f_tvshow_link; ?></td>

@@ -70,10 +70,10 @@ if (AmpConfig::get('ratings')) {
             <?php echo Ajax::text('?action=basket&type=tvshow&id=' . $tvshow->id, T_('Add all to temporary playlist'),'add_text_' . $tvshow->id); ?>
         </li>
         <?php if (Access::check('interface','50')) { ?>
-            <a id="<?php echo 'edit_tvshow_'.$tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_'.$tvshow->id ?>', '<?php echo T_('TV Show edit') ?>', '', '')">
+            <a id="<?php echo 'edit_tvshow_'.$tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_'.$tvshow->id ?>', '<?php echo T_('TV Show edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
-            <a id="<?php echo 'edit_tvshow_'.$tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_'.$tvshow->id ?>', '<?php echo T_('TV Show edit') ?>', '', '')">
+            <a id="<?php echo 'edit_tvshow_'.$tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_'.$tvshow->id ?>', '<?php echo T_('TV Show edit') ?>', '')">
                 <?php echo T_('Edit TV Show'); ?>
             </a>
         <?php } ?>

@@ -65,10 +65,10 @@ if (AmpConfig::get('ratings')) {
             <?php echo Ajax::text('?action=basket&type=tvshow_season&id=' . $season->id, T_('Add all to temporary playlist'),'add_text_' . $season->id); ?>
         </li>
         <?php if (Access::check('interface','50')) { ?>
-            <a id="<?php echo 'edit_tvshow_season_'.$season->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id ?>', '<?php echo 'edit_tvshow_season_'.$season->id ?>', '<?php echo T_('Season edit') ?>', '', '')">
+            <a id="<?php echo 'edit_tvshow_season_'.$season->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id ?>', '<?php echo 'edit_tvshow_season_'.$season->id ?>', '<?php echo T_('Season edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
-            <a id="<?php echo 'edit_tvshow_season_'.$season->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id ?>', '<?php echo 'edit_tvshow_season_'.$season->id ?>', '<?php echo T_('Season edit') ?>', '', '')">
+            <a id="<?php echo 'edit_tvshow_season_'.$season->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id ?>', '<?php echo 'edit_tvshow_season_'.$season->id ?>', '<?php echo T_('Season edit') ?>', '')">
                 <?php echo T_('Edit Season'); ?>
             </a>
         <?php } ?>

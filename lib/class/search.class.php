@@ -43,7 +43,7 @@ class Search extends playlist_object implements library_item
     /**
      * constructor
      */
-    public function __construct($searchtype = 'song', $id = '')
+    public function __construct($id = null, $searchtype = 'song')
     {
         $this->searchtype = $searchtype;
         if ($id) {
@@ -569,7 +569,7 @@ class Search extends playlist_object implements library_item
         $limit = intval($data['limit']);
         $data = Search::clean_request($data);
 
-        $search = new Search($data['type']);
+        $search = new Search(null, $data['type']);
         $search->parse_rules($data);
 
         // Generate BASE SQL
@@ -649,6 +649,11 @@ class Search extends playlist_object implements library_item
         }
 
         return $childrens;
+    }
+
+    public function get_user_owner()
+    {
+        return $this->user;
     }
 
     /**
@@ -808,15 +813,27 @@ class Search extends playlist_object implements library_item
      *
      * This function updates the saved version with the current settings.
      */
-    public function update()
+    public function update($data = null)
     {
+        if ($data && is_array($data)) {
+            $this->name = $data['name'];
+            $this->type = $data['pl_type'];
+            $this->random = $data['random'];
+            $this->limit = $data['limit'];
+        }
+
         if (!$this->id) {
             return false;
         }
 
         $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($this->name, $this->type, serialize($this->rules), $this->logic_operator, $this->random, $this->limit, $this->id));
-        return $db_results;
+        Dba::write($sql, array($this->name, $this->type, serialize($this->rules), $this->logic_operator, $this->random, $this->limit, $this->id));
+
+        return $this->id;
+    }
+
+    public static function gc()
+    {
     }
 
     /**
@@ -1112,7 +1129,7 @@ class Search extends playlist_object implements library_item
                     $where[] = "`playlist_data`.`playlist` $sql_match_operator '$input'";
                 break;
                 case 'smartplaylist':
-                    $subsearch = new Search('song', $input);
+                    $subsearch = new Search($input, 'song');
                     $subsql = $subsearch->to_sql();
                     $where[] = "$sql_match_operator (" . $subsql['where_sql'] . ")";
                     // HACK: array_merge would potentially lose tags, since it

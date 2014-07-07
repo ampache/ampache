@@ -50,7 +50,9 @@ class Art extends database_object
      */
     public function __construct($uid, $type = 'album')
     {
-        $this->type = Art::validate_type($type);
+        if (!Catalog::is_library_item($type))
+            return false;
+        $this->type = $type;
         $this->uid = $uid;
 
     } // constructor
@@ -123,26 +125,6 @@ class Art extends database_object
         $_SESSION['art_enabled'] = self::$enabled;
         //setcookie('art_enabled', self::$enabled, time() + 31536000, "/");
     }
-
-    /**
-     * validate_type
-     * This validates the type
-     */
-    public static function validate_type($type)
-    {
-        switch ($type) {
-            case 'album':
-            case 'artist':
-            case 'video':
-            case 'user':
-            case 'tvshow':
-            case 'tvshow_season':
-                return $type;
-            default:
-                return 'album';
-        }
-
-    } // validate_type
 
     /**
      * extension
@@ -505,8 +487,15 @@ class Art extends database_object
                 }
                 $options['proxy'] = $proxy;
             }
-            $request = Requests::get($data['url'], array(), $options);
-            return $request->body;
+            try {
+                $request = Requests::get($data['url'], array(), $options);
+                $raw = $request->body;
+            } catch (Exception $e) {
+                debug_event('Art', 'Error getting art: ' . $e->getMessage(), '1');
+                $raw = null;
+            }
+
+            return $raw;
         }
 
         // Check to see if it's a FILE
@@ -544,7 +533,8 @@ class Art extends database_object
     public static function url($uid,$type,$sid=false)
     {
         $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
-        $type = self::validate_type($type);
+        if (!Catalog::is_library_item($type))
+            return null;
 
         $key = $type . $uid;
 
@@ -711,7 +701,7 @@ class Art extends database_object
             }
 
             // Add the results we got to the current set
-            $results = array_merge((array) $data, $results);
+            $results = array_merge($results, (array) $data);
 
             if ($limit && count($results) >= $limit) {
                 return array_slice($results, 0, $limit);
@@ -803,6 +793,7 @@ class Art extends database_object
                     $images[] = array(
                         'url'  => $url,
                         'mime' => 'image/jpeg',
+                        'title' => 'MusicBrainz'
                     );
                     if ($num_found >= $limit) {
                         return $images;
@@ -885,6 +876,7 @@ class Art extends database_object
                         $images[] = array(
                             'url'  => $url,
                             'mime' => 'image/jpeg',
+                            'title' => 'MusicBrainz'
                         );
                         if ($num_found >= $limit) {
                             return $images;
@@ -906,6 +898,10 @@ class Art extends database_object
      */
     public function gather_folder($limit = 5)
     {
+        if (!$limit) {
+            $limit = 5;
+        }
+
         $media = new Album($this->uid);
         $songs = $media->get_songs();
         $results = array();
@@ -980,7 +976,8 @@ class Art extends database_object
                     debug_event('folder_art', "Found preferred image file: $file", 5);
                     $preferred[$index] = array(
                         'file' => $full_filename,
-                        'mime' => 'image/' . $extension
+                        'mime' => 'image/' . $extension,
+                        'title' => 'Folder'
                     );
                     break;
                 }
@@ -988,7 +985,8 @@ class Art extends database_object
                 debug_event('folder_art', "Found image file: $file", 5);
                 $results[$index] = array(
                     'file' => $full_filename,
-                    'mime' => 'image/' . $extension
+                    'mime' => 'image/' . $extension,
+                    'title' => 'Folder'
                 );
 
             } // end while reading dir
@@ -1018,6 +1016,10 @@ class Art extends database_object
      */
     public function gather_tags($limit = 5)
     {
+        if (!$limit) {
+            $limit = 5;
+        }
+
         // We need the filenames
         $album = new Album($this->uid);
 
@@ -1039,7 +1041,8 @@ class Art extends database_object
                 $data[] = array(
                     'song' => $song->file,
                     'raw' => $image['data'],
-                    'mime' => $image['mime']);
+                    'mime' => $image['mime'],
+                    'title' => 'ID3');
             }
 
             if (isset($id3['id3v2']['APIC'])) {
@@ -1048,7 +1051,8 @@ class Art extends database_object
                     $data[] = array(
                         'song' => $song->file,
                         'raw' => $image['data'],
-                        'mime' => $image['mime']);
+                        'mime' => $image['mime'],
+                        'title' => 'ID3');
                 }
             }
 
@@ -1070,23 +1074,40 @@ class Art extends database_object
      */
     public function gather_google($limit = 5, $data = array())
     {
+        if (!$limit) {
+            $limit = 5;
+        }
+
         $images = array();
         $search = rawurlencode($data['keyword']);
-
         $size = '&imgsz=m'; // Medium
-        //$size = '&imgsz=l'; // Large
 
         $url = "http://images.google.com/images?source=hp&q=" . $search . "&oq=&um=1&ie=UTF-8&sa=N&tab=wi&start=0&tbo=1" . $size;
-        $html = file_get_contents($url);
+        debug_event('Art', 'Search url: ' . $url, '5');
 
-        if(preg_match_all("|\ssrc\=\"(http.+?)\"|", $html, $matches, PREG_PATTERN_ORDER))
-            foreach ($matches[1] as $match) {
-                $extension = "image/jpeg";
+        try {
+            // Need this to not be considered as a bot (are we? ^^)
+            $headers = array(
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11',
+            );
+            $query = Requests::get($url, $headers);
+            $html = $query->body;
 
-                if (strrpos($extension, '.') !== false) $extension = substr($extension, strrpos($extension, '.') + 1);
+            if (preg_match_all("|imgres\?imgurl\=(http.+?)&|", $html, $matches, PREG_PATTERN_ORDER)) {
+                foreach ($matches[1] as $match) {
+                    $match = rawurldecode($match);
+                    debug_event('Art', 'Found image at: ' . $match, '5');
+                    $results = pathinfo($match);
+                    $mime = 'image/' . $results['extension'];
 
-                $images[] = array('url' => $match, 'mime' => $extension);
+                    $images[] = array('url' => $match, 'mime' => $mime, 'title' => 'Google');
+                    if ($limit > 0 && count($images) >= $limit)
+                        break;
+                }
             }
+        } catch (Exception $e) {
+            debug_event('Art', 'Error getting google images: ' . $e->getMessage(), '1');
+        }
 
         return $images;
 
@@ -1099,6 +1120,10 @@ class Art extends database_object
      */
     public function gather_lastfm($limit = 5, $data = array())
     {
+        if (!$limit) {
+            $limit = 5;
+        }
+
         $images = array();
 
         if ($this->type != 'album' || empty($data['artist']) || empty($data['album'])) {
@@ -1123,7 +1148,7 @@ class Art extends database_object
             // HACK: we shouldn't rely on the extension to determine file type
             $results = pathinfo($url);
             $mime = 'image/' . $results['extension'];
-            $images[] = array('url' => $url, 'mime' => $mime);
+            $images[] = array('url' => $url, 'mime' => $mime, 'title' => 'LastFM');
             if ($limit && count($images) >= $limit) {
                 return $images;
             }
@@ -1162,21 +1187,21 @@ class Art extends database_object
                 if ($meta['tvshow_art']) {
                     $url = $meta['tvshow_art'];
                     $ures = pathinfo($url);
-                    $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension']);
+                    $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
                 }
             break;
             case 'tvshow_season':
                 if ($meta['tvshow_season_art']) {
                     $url = $meta['tvshow_season_art'];
                     $ures = pathinfo($url);
-                    $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension']);
+                    $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
                 }
             break;
             default:
                 if ($meta['art']) {
                     $url = $meta['art'];
                     $ures = pathinfo($url);
-                    $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension']);
+                    $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
                 }
             break;
         }
@@ -1228,6 +1253,11 @@ class Art extends database_object
         }
 
         return $size;
+    }
+
+    public static function display_item($item, $thumb, $link = null)
+    {
+        return self::display($item->type, $item->id, $item->get_fullname(), $thumb, $link);
     }
 
     public static function display($object_type, $object_id, $name, $thumb, $link = null)

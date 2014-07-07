@@ -55,10 +55,10 @@ $thcount = 8;
 
         /* Foreach through every tv show that has been passed to us */
         foreach ($object_ids as $tvshow_id) {
-                $tvshow = new TVShow($tvshow_id);
-                $tvshow->format();
+                $libitem = new TVShow($tvshow_id);
+                $libitem->format();
         ?>
-        <tr id="tvshow_<?php echo $tvshow->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="tvshow_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_tvshow_row.inc.php'; ?>
         </tr>
         <?php } //end foreach ?>

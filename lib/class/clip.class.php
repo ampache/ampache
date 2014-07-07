@@ -77,12 +77,12 @@ class Clip extends Video
      * update
      * This takes a key'd array of data as input and updates a clip entry
      */
-    public static function update($data)
+    public function update($data)
     {
         $sql = "UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['artist'], $data['song'], $data['id']));
+        Dba::write($sql, array($data['artist'], $data['song'], $this->id));
 
-        return true;
+        return $this->id;
 
     } // update
 

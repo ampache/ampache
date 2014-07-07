@@ -149,7 +149,9 @@ class Channel extends database_object implements library_item
         $sql = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? " .
             "WHERE `id` = ?";
         $params = array($data['name'], $data['description'], $data['url'], $data['interface'], $data['port'], (!empty($data['interface']) && !empty($data['port'])), $data['admin_password'], !empty($data['private']), $data['max_listeners'], $data['random'], $data['loop'], $data['stream_type'], $data['bitrate'], $data['object_id'], $this->id);
-        return Dba::write($sql, $params);
+        Dba::write($sql, $params);
+
+        return $this->id;
     }
 
     public static function format_type($type)
@@ -202,6 +204,11 @@ class Channel extends database_object implements library_item
     public function get_childrens()
     {
         return array();
+    }
+
+    public function get_user_owner()
+    {
+        return null;
     }
 
     public function get_target_object()

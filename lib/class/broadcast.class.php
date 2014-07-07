@@ -28,6 +28,7 @@ class Broadcast extends database_object implements library_item
     public $song;
     public $song_position;
     public $name;
+    public $user;
 
     public $tags;
     public $f_name;
@@ -104,7 +105,9 @@ class Broadcast extends database_object implements library_item
         $sql = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? " .
             "WHERE `id` = ?";
         $params = array($data['name'], $data['description'], !empty($data['private']), $this->id);
-        return Dba::write($sql, $params);
+        Dba::write($sql, $params);
+
+        return $this->id;
     }
 
     public function format()
@@ -133,6 +136,11 @@ class Broadcast extends database_object implements library_item
     public function get_childrens()
     {
         return array();
+    }
+
+    public function get_user_owner()
+    {
+        return $this->user;
     }
 
     public static function get_broadcast_list_sql()
@@ -177,7 +185,7 @@ class Broadcast extends database_object implements library_item
     {
         if ($this->id) {
             if ($GLOBALS['user']->has_access('75')) {
-                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast edit') . "', 'broadcast_row_', 'refresh_broadcast')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
+                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast edit') . "', 'broadcast_row_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id ."\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }

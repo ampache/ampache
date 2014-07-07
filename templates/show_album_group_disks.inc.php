@@ -108,7 +108,7 @@ $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;-&nbsp;' .
             <a href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>
-            <a id="<?php echo 'edit_album_'.$c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_'.$c_album->id ?>', '<?php echo T_('Album edit') ?>', '', '')">
+            <a id="<?php echo 'edit_album_'.$c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_'.$c_album->id ?>', '<?php echo T_('Album edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php } ?>

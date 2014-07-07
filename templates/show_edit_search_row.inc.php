@@ -21,16 +21,16 @@
  */
 ?>
 <div>
-    <form method="post" id="edit_playlist_<?php echo $playlist->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_playlist_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($playlist->name); ?>" /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Type') ?></td>
                 <td>
-                    <?php $name = 'select_' . $playlist->type; ?>
+                    <?php $name = 'select_' . $libitem->type; ?>
                     <?php ${$name} = ' selected="selected"'; ?>
                     <select name="pl_type">
                         <option value="public"<?php echo $select_public; ?>><?php echo T_('Public'); ?></option>
@@ -40,14 +40,14 @@
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Random') ?></td>
-                <td><input type="checkbox" name="random" value="1" <?php if ($playlist->random) echo "checked"; ?> /></td>
+                <td><input type="checkbox" name="random" value="1" <?php if ($libitem->random) echo "checked"; ?> /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Item Limit (0 = unlimited)') ?></td>
-                <td><input type="text" name="limit" value="<?php echo scrub_out($playlist->limit); ?>" /></td>
+                <td><input type="text" name="limit" value="<?php echo scrub_out($libitem->limit); ?>" /></td>
             </tr>
         </table>
-        <input type="hidden" name="id" value="<?php echo $playlist->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
         <input type="hidden" name="type" value="smartplaylist_row" />
     </form>
 </div>

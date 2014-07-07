@@ -467,7 +467,7 @@ class Subsonic_XML_Data
             self::addPlaylist($xplaylists, $playlist);
         }
         foreach ($smartplaylists as $id) {
-            $smartplaylist = new Search('song', $id);
+            $smartplaylist = new Search($id, 'song');
             self::addSmartPlaylist($xplaylists, $smartplaylist);
         }
     }
@@ -619,7 +619,7 @@ class Subsonic_XML_Data
     {
         $xradios = $xml->addChild('internetRadioStations');
         foreach ($radios as $id) {
-            $radio = new Radio($id);
+            $radio = new Live_Stream($id);
             self::addRadio($xradios, $radio);
         }
     }

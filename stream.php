@@ -130,7 +130,7 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'smartplaylist':
-        $playlist = new Search('song', $_REQUEST['playlist_id']);
+        $playlist = new Search($_REQUEST['playlist_id'], 'song');
         $items = $playlist->get_items();
         foreach ($items as $item) {
             $media_ids[] = array(
@@ -172,10 +172,10 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'live_stream':
-        $object = new Radio($_REQUEST['stream_id']);
+        $object = new Live_Stream($_REQUEST['stream_id']);
         if ($object->name) {
             $media_ids[] = array(
-                'object_type' => 'radio',
+                'object_type' => 'live_stream',
                 'object_id' => scrub_in($_REQUEST['stream_id'])
             );
         }

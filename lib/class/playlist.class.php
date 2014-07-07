@@ -153,6 +153,11 @@ class Playlist extends playlist_object implements library_item
         return $childrens;
     }
 
+    public function get_user_owner()
+    {
+        return $this->user;
+    }
+
     /**
      * get_track
      * Returns the single item on the playlist and all of it's information, restrict
@@ -308,6 +313,7 @@ class Playlist extends playlist_object implements library_item
             $this->update_type($data['pl_type']);
         }
 
+        return $this->id;
     } // update
 
     /**

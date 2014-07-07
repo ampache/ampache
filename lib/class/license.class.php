@@ -81,12 +81,12 @@ class License
      * update
      * This takes a key'd array of data as input and updates a license entry
      */
-    public static function update($data)
+    public function update($data)
     {
         $sql = "UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['name'], $data['description'], $data['external_link'], $data['license_id']));
+        Dba::write($sql, array($data['name'], $data['description'], $data['external_link'], $this->id));
 
-        return true;
+        return $this->id;
 
     } // create
 

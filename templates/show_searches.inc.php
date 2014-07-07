@@ -38,11 +38,11 @@
     <tbody>
         <?php
         foreach ($object_ids as $playlist_id) {
-            $playlist = new Search('song', $playlist_id);
-            $playlist->format();
+            $libitem = new Search($playlist_id, 'song');
+            $libitem->format();
         ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="smartplaylist_row_<?php echo $playlist->id; ?>">
-            <?php require AmpConfig::get('prefix') . '/templates/show_smartplaylist_row.inc.php'; ?>
+        <tr class="<?php echo UI::flip_class(); ?>" id="smartplaylist_row_<?php echo $libitem->id; ?>">
+            <?php require AmpConfig::get('prefix') . '/templates/show_search_row.inc.php'; ?>
         </tr>
         <?php } // end foreach ($playlists as $playlist) ?>
         <?php if (!count($object_ids)) { ?>

@@ -55,13 +55,13 @@ if (isset($video_type)) {
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $video_id) {
                 if (isset($video_type)) {
-                    $video = new $video_type($video_id);
+                    $libitem = new $video_type($video_id);
                 } else {
-                    $video = new Video($video_id);
+                    $libitem = new Video($video_id);
                 }
-                $video->format();
+                $libitem->format();
         ?>
-        <tr id="video_<?php echo $video->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="video_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_video_row.inc.php'; ?>
         </tr>
         <?php } //end foreach  ?>

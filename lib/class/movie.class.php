@@ -75,12 +75,14 @@ class Movie extends Video
      * update
      * This takes a key'd array of data as input and updates a movie entry
      */
-    public static function update($data)
+    public function update($data)
     {
-        $sql = "UPDATE `movie` SET `original_name` = ?, `description` = ?, `year` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['original_name'], $data['description'], $data['year'], $data['id']));
+        parent::update($data);
 
-        return true;
+        $sql = "UPDATE `movie` SET `original_name` = ?, `description` = ?, `year` = ? WHERE `id` = ?";
+        Dba::write($sql, array($data['original_name'], $data['description'], $data['year'], $this->id));
+
+        return $this->id;
 
     } // update
 

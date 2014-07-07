@@ -406,7 +406,7 @@ class Upnp_Api
                     break;
 
                     case 2:
-                        $playlist = new Search('song', $pathreq[1]);
+                        $playlist = new Search($pathreq[1], 'song');
                         if ($playlist->id) {
                             $playlist->format();
                             $meta = self::_itemSmartPlaylist($playlist, $root . '/smartplaylists');
@@ -537,13 +537,13 @@ class Upnp_Api
                     case 1: // Get playlists list
                         $pl_ids = Search::get_searches();
                         foreach ($pl_ids as $pl_id) {
-                            $playlist = new Search('song', $pl_id);
+                            $playlist = new Search($pl_id, 'song');
                             $playlist->format();
                             $mediaItems[] = self::_itemPlaylist($playlist, $parent);
                         }
                     break;
                     case 2: // Get playlist's songs list
-                        $playlist = new Search('song', $pathreq[1]);
+                        $playlist = new Search($pathreq[1], 'song');
                         if ($playlist->id) {
                             $items = $playlist->get_items();
                             foreach ($items as $item) {

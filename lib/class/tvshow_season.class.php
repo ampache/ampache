@@ -171,6 +171,11 @@ class TVShow_Season extends database_object implements library_item
         return array('tvshow_episode' => $this->get_episodes());
     }
 
+    public function get_user_owner()
+    {
+        return null;
+    }
+
     /**
      * check
      *
@@ -233,7 +238,9 @@ class TVShow_Season extends database_object implements library_item
     public function update($data)
     {
         $sql = 'UPDATE `tvshow_season` SET `season_number` = ? WHERE `id` = ?';
-        return Dba::write($sql, array($data['season_number'], $this->id));
+        Dba::write($sql, array($data['season_number'], $this->id));
+
+        return $this->id;
     } // update
 
     public static function update_tvshow($tvshow_id, $season_id)

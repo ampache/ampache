@@ -42,7 +42,7 @@ function arrayToJSON($array)
 
 Header('content-type: application/x-javascript');
 
-$search = new Search($_REQUEST['type']);
+$search = new Search(null, $_REQUEST['type']);
 
 echo 'var types = ';
 echo arrayToJSON($search->types) . ";\n";
