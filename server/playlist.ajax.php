@@ -76,18 +76,10 @@ switch ($_REQUEST['action']) {
 
         switch ($_REQUEST['item_type']) {
             case 'smartplaylist':
-                $smartplaylist = new Search('song', $item_id);
+                $smartplaylist = new Search($item_id, 'song');
                 $items = $playlist->get_items();
                 foreach ($items as $item) {
                     $songs[] = $item['object_id'];
-                }
-            break;
-            case 'album_preview':
-                $preview_songs = Song_preview::get_song_previews($item_id);
-                foreach ($preview_songs as $song) {
-                    if (!empty($song->file)) {
-                        $songs[] = $song->id;
-                    }
                 }
             break;
             case 'album':

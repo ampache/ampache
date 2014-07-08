@@ -26,7 +26,7 @@
  * This class hnadles all of the tag relation operations
  *
  */
-class Tag extends database_object
+class Tag extends database_object implements library_item
 {
     public $id;
     public $name;
@@ -91,7 +91,9 @@ class Tag extends database_object
     {
         if (!is_array($ids) OR !count($ids)) { return false; }
 
-        $type = self::validate_type($type);
+        if (!Core::is_library_item($type))
+            return false;
+
         $idlist = '(' . implode(',',$ids) . ')';
 
         $sql = "SELECT `tag_map`.`id`,`tag_map`.`tag_id`, `tag`.`name`,`tag_map`.`object_id`,`tag_map`.`user` FROM `tag` " .
@@ -129,8 +131,8 @@ class Tag extends database_object
      */
     public static function add($type, $id, $value, $user=false)
     {
-        // Validate the tag type
-        if (!self::validate_type($type)) { return false; }
+        if (!Core::is_library_item($type))
+            return false;
 
         if (!is_numeric($id)) { return false; }
 
@@ -181,13 +183,22 @@ class Tag extends database_object
      * update
      * Update the name of the tag
      */
-    public function update($name)
+    public function update($data)
     {
         //debug_event('tag.class', 'Updating tag {'.$this->id.'} with name {'.$name.'}...', '5');
-        if (!strlen($name)) { return false; }
+        if (!strlen($data['name'])) { return false; }
 
         $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
-        Dba::write($sql, array($name, $this->id));
+        Dba::write($sql, array($data[name], $this->id));
+
+        if ($data['select_tags']) {
+            $merge_to = Tag::construct_from_name($data['select_tags']);
+            if ($merge_to->id) {
+                $tag->merge($merge_to->id, ($data['merge_persist'] == '1'));
+            }
+        }
+
+        return $this->id;
 
     } // add_tag
 
@@ -243,7 +254,8 @@ class Tag extends database_object
     {
         $uid = ($user == '') ? intval($GLOBALS['user']->id) : intval($user);
         $tag_id = intval($tag_id);
-        if (!self::validate_type($type)) { return false; }
+        if (!Core::is_library_item($type))
+            return false;
         $id = intval($object_id);
 
         if (!$tag_id || !$id) { return false; }
@@ -286,6 +298,14 @@ class Tag extends database_object
 
         $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `video` ON `video`.`id`=`tag_map`.`object_id` " .
             "WHERE `tag_map`.`object_type`='video' AND `video`.`id` IS NULL";
+        Dba::write($sql);
+
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `tvshow` ON `tvshow`.`id`=`tag_map`.`object_id` " .
+            "WHERE `tag_map`.`object_type`='tvshow' AND `tvshow`.`id` IS NULL";
+        Dba::write($sql);
+
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `tvshow_season` ON `tvshow_season`.`id`=`tag_map`.`object_id` " .
+            "WHERE `tag_map`.`object_type`='tvshow_season' AND `tvshow_season`.`id` IS NULL";
         Dba::write($sql);
 
         // Now nuke the tags themselves
@@ -341,7 +361,8 @@ class Tag extends database_object
      */
     public static function tag_map_exists($type,$object_id,$tag_id,$user)
     {
-        if (!self::validate_type($type)) { return false; }
+        if (!Core::is_library_item($type))
+            return false;
 
         $sql = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` " .
             "WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
@@ -359,8 +380,8 @@ class Tag extends database_object
      */
     public static function get_top_tags($type, $object_id, $limit = 10)
     {
-        //debug_event('tag.class', 'Getting tags for type {'.$type.'} object_id {'.$object_id.'}...', '5');
-        if (!self::validate_type($type)) { return false; }
+        if (!Core::is_library_item($type))
+            return false;
 
         $object_id = intval($object_id);
 
@@ -389,7 +410,8 @@ class Tag extends database_object
      */
     public static function get_object_tags($type, $id)
     {
-        if (!self::validate_type($type)) { return array(); }
+        if (!Core::is_library_item($type))
+            return false;
 
         $sql = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
             "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
@@ -411,7 +433,8 @@ class Tag extends database_object
      */
     public static function get_tag_objects($type,$tag_id,$count='',$offset='')
     {
-        if (!self::validate_type($type)) { return array(); }
+        if (!Core::is_library_item($type))
+            return false;
 
         $limit_sql = "";
         if ($count) {
@@ -441,7 +464,7 @@ class Tag extends database_object
      * This is a non-object non type dependent function that just returns tags
      * we've got, it can take filters (this is used by the tag cloud)
      */
-    public static function get_tags($limit = 0)
+    public static function get_tags($type = '', $limit = 0)
     {
         //debug_event('tag.class.php', 'Get tags list called...', '5');
         if (parent::is_cached('tags_list', 'no_name')) {
@@ -454,8 +477,11 @@ class Tag extends database_object
         $sql = "SELECT `tag_map`.`tag_id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` " .
             "FROM `tag_map` " .
             "LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " .
-            "WHERE `tag`.`merged_to` IS NULL " .
-            "GROUP BY `tag`.`name` ORDER BY `count` DESC ";
+            "WHERE `tag`.`merged_to` IS NULL ";
+        if (!empty($type)) {
+            $sql .= "AND `tag_map`.`object_type` = '" . scrub_in($type) . "' ";
+        }
+        $sql .="GROUP BY `tag`.`name` ORDER BY `count` DESC ";
 
         if ($limit > 0) {
             $sql .= " LIMIT $limit";
@@ -583,7 +609,8 @@ class Tag extends database_object
      */
     public function remove_map($type,$object_id)
     {
-        if (!self::validate_type($type)) { return false; }
+        if (!Core::is_library_item($type))
+            return false;
 
         $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";
         Dba::write($sql, array($this->id, $type, $object_id, $GLOBALS['user']->id));
@@ -592,19 +619,59 @@ class Tag extends database_object
 
     } // remove_map
 
-    /**
-     * validate_type
-     * This validates the type of the object the user wants to tag, we limit this to types
-     * we currently support
-     */
-    public static function validate_type($type)
+    public function format()
     {
-        $valid_array = array('song','artist','album','video','playlist','live_stream','channel','broadcast');
 
-        if (in_array($type,$valid_array)) { return $type; }
+    }
 
-        return false;
+    public function get_keywords()
+    {
+        $keywords = array();
+        $keywords['tag'] = array('important' => true,
+            'label' => T_('Tag'),
+            'value' => $this->name);
 
-    } // validate_type
+        return $keywords;
+    }
+
+    public function get_fullname()
+    {
+        return $this->name;
+    }
+
+    public function get_parent()
+    {
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        return array();
+    }
+
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if ($filter_type) {
+            $ids = Tag::get_tag_objects($filter_type, $this->id);
+            foreach ($ids as $id) {
+                $medias[] = array(
+                    'object_type' => $filter_type,
+                    'object_id' => $id
+                );
+            }
+        }
+        return $medias;
+    }
+
+    public function get_user_owner()
+    {
+        return null;
+    }
+
+    public function get_default_art_kind()
+    {
+        return 'default';
+    }
 
 } // end of Tag class

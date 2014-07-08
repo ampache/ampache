@@ -26,11 +26,19 @@
 <!-- Randomly selected albums of the moment -->
 <?php
 if (Art::is_enabled()) {
-    echo Ajax::observe('window','load',Ajax::action('?page=index&action=random_albums','random_albums'));
+    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums'));
 ?>
-<div id="random_selection">
+<div id="random_selection" class="random_selection">
     <?php UI::show_box_top(T_('Albums of the Moment')); echo T_('Loading...'); UI::show_box_bottom(); ?>
 </div>
+<?php
+if (AmpConfig::get('allow_video')) {
+    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_videos', 'random_videos'));
+?>
+<div id="random_video_selection" class="random_selection">
+    <?php UI::show_box_top(T_('Videos of the Moment')); echo T_('Loading...'); UI::show_box_bottom(); ?>
+</div>
+<?php } ?>
 <?php } ?>
 <!-- Recently Played -->
 <div id="recently_played">

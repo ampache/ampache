@@ -40,6 +40,12 @@ class Recommendation
         $api_key = AmpConfig::get('lastfm_api_key');
         $api_base = "http://ws.audioscrobbler.com/2.0/?method=";
         $url = $api_base . $method . '&api_key=' . $api_key . '&' . $query;
+
+        return self::query_lastfm($url);
+    }
+
+    public static function query_lastfm($url)
+    {
         debug_event('Recommendation', 'search url : ' . $url, 5);
 
         $options = array();
@@ -56,7 +62,14 @@ class Recommendation
         $content = $request->body;
 
         return simplexml_load_string($content);
-    } // get_lastfm_results
+    }
+
+    public static function album_search($artist, $album)
+    {
+        $url = 'http://ws.audioscrobbler.com/1.0/album/' . urlencode($artist) . '/' . urlencode($album) . '/info.xml';
+
+        return self::query_lastfm($url);
+    }
 
     /**
      * gc

@@ -21,26 +21,26 @@
  */
 ?>
 <div>
-    <form method="post" id="edit_broadcast_<?php echo $broadcast->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_broadcast_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($broadcast->name); ?>" /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Description') ?></td>
-                <td><input type="text" name="description" value="<?php echo scrub_out($broadcast->description); ?>" /></td>
+                <td><input type="text" name="description" value="<?php echo scrub_out($libitem->description); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="private" value="1" <?php echo ($broadcast->is_private) ? 'checked' : ''; ?> /> <?php echo T_('Authentication Required') ?></td>
+                <td><input type="checkbox" name="private" value="1" <?php echo ($libitem->is_private) ? 'checked' : ''; ?> /> <?php echo T_('Authentication Required') ?></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genre') ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($broadcast->tags); ?>" /></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
             </tr>
         </table>
-        <input type="hidden" name="id" value="<?php echo $broadcast->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
         <input type="hidden" name="type" value="broadcast_row" />
     </form>
 </div>

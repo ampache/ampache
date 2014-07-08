@@ -104,14 +104,14 @@ switch ($_REQUEST['action']) {
                 $key = 'playlist_row_' . $playlist->id;
             break;
             case 'smartplaylist':
-                $playlist = new Search('song', $_REQUEST['id']);
+                $playlist = new Search($_REQUEST['id'], 'song');
                 if (!$playlist->has_access()) { exit; }
                 $playlist->delete();
                 $key = 'smartplaylist_row_' . $playlist->id;
             break;
             case 'live_stream':
                 if (!$GLOBALS['user']->has_access('75')) { exit; }
-                $radio = new Radio($_REQUEST['id']);
+                $radio = new Live_Stream($_REQUEST['id']);
                 $radio->delete();
                 $key = 'live_stream_' . $radio->id;
             break;

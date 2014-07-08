@@ -25,14 +25,14 @@ class AmpacheBitly {
     public $name        = 'Bit.ly';
     public $description = 'Url shorteners on shared links with Bit.ly';
     public $url         = 'http://bitly.com/';
-    public $version     = '000001';
+    public $version     = '000002';
     public $min_ampache = '360037';
     public $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to
     // fill them out
     private $bitly_username;
-    private $bitly_api;
+    private $bitly_api_key;
 
     /**
      * Constructor
@@ -54,8 +54,8 @@ class AmpacheBitly {
         // Check and see if it's already installed (they've just hit refresh, those dorks)
         if (Preference::exists('bitly_username')) { return false; }
 
-        Preference::insert('bitly_username','Bit.ly username','','25','string','plugins');
-        Preference::insert('bitly_api','Bit.ly api key','','25','string','plugins');
+        Preference::insert('bitly_username','Bit.ly username','','75','string','plugins');
+        Preference::insert('bitly_api_key','Bit.ly api key','','75','string','plugins');
 
         return true;
 
@@ -69,7 +69,7 @@ class AmpacheBitly {
     public function uninstall() {
 
         Preference::delete('bitly_username');
-        Preference::delete('bitly_api');
+        Preference::delete('bitly_api_key');
 
     } // uninstall
 
@@ -83,14 +83,14 @@ class AmpacheBitly {
 
     public function shortener($url) {
         
-        if (empty($this->bitly_username) || empty($this->bitly_api)) {
+        if (empty($this->bitly_username) || empty($this->bitly_api_key)) {
             debug_event($this->name, 'Bit.ly username or api key missing', '3');
             return false;
         }
         
         $shorturl = '';
     
-        $apiurl = 'http://api.bit.ly/v3/shorten?login=' . $this->bitly_username . '&apiKey=' . $this->bitly_api . '&longUrl=' . urlencode($url) . '&format=json';
+        $apiurl = 'http://api.bit.ly/v3/shorten?login=' . $this->bitly_username . '&apiKey=' . $this->bitly_api_key . '&longUrl=' . urlencode($url) . '&format=json';
         try {
             debug_event($this->name, 'Bit.ly api call: ' . $apiurl, '5');
             $request = Requests::get($apiurl);
@@ -120,8 +120,8 @@ class AmpacheBitly {
             debug_event($this->name,'No Bit.ly username, shortener skipped','3');
             return false;
         }
-        if (strlen(trim($data['bitly_api']))) {
-            $this->bitly_api = trim($data['bitly_api']);
+        if (strlen(trim($data['bitly_api_key']))) {
+            $this->bitly_api_key = trim($data['bitly_api_key']);
         }
         else {
             debug_event($this->name,'No Bit.ly api key, shortener skipped','3');

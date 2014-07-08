@@ -40,8 +40,8 @@ $web_path = AmpConfig::get('web_path');
     <tbody>
         <?php
         foreach ($object_ids as $license_id) {
-            $license = new License($license_id);
-            $license->format();
+            $libitem = new License($license_id);
+            $libitem->format();
 
             require AmpConfig::get('prefix') . '/templates/show_license_row.inc.php';
         ?>

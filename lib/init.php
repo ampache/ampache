@@ -66,7 +66,7 @@ if (!empty($link)) {
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
 $results['version']        = '3.7.1-develop';
-$results['int_config_version']    = '16';
+$results['int_config_version']    = '17';
 
 if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
@@ -104,7 +104,6 @@ require_once $prefix . '/modules/getid3/getid3.php';
 require_once $prefix . '/modules/phpmailer/class.phpmailer.php';
 require_once $prefix . '/modules/phpmailer/class.smtp.php';
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
-require_once $prefix . '/modules/infotools/lastfm.class.php';
 require_once $prefix . '/modules/musicbrainz/MusicBrainz.php';
 require_once $prefix . '/modules/musicbrainz/Exception.php';
 require_once $prefix . '/modules/musicbrainz/Clients/MbClient.php';

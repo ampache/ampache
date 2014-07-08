@@ -187,7 +187,7 @@ class Browse extends Query
             break;
             case 'smartplaylist':
                 $box_title = T_('Smart Playlists') . $match;
-                $box_req = AmpConfig::get('prefix') . '/templates/show_smartplaylists.inc.php';
+                $box_req = AmpConfig::get('prefix') . '/templates/show_searches.inc.php';
             break;
             case 'catalog':
                 $box_title = T_('Catalogs');
@@ -204,6 +204,7 @@ class Browse extends Query
             break;
             case 'video':
                 Video::build_cache($object_ids);
+                $video_type = 'video';
                 $box_title = T_('Videos');
                 $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
             break;
@@ -234,6 +235,34 @@ class Browse extends Query
             case 'license':
                 $box_title = T_('Media Licenses');
                 $box_req = AmpConfig::get('prefix') . '/templates/show_manage_license.inc.php';
+            break;
+            case 'tvshow':
+                $box_title = T_('TV Shows');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_tvshows.inc.php';
+            break;
+            case 'tvshow_season':
+                $box_title = T_('Seasons');
+                $box_req = AmpConfig::get('prefix') . '/templates/show_tvshow_seasons.inc.php';
+            break;
+            case 'tvshow_episode':
+                $box_title = T_('Episodes');
+                $video_type = $type;
+                $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
+            break;
+            case 'movie':
+                $box_title = T_('Movies');
+                $video_type = $type;
+                $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
+            break;
+            case 'clip':
+                $box_title = T_('Clips');
+                $video_type = $type;
+                $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
+            break;
+            case 'personal_video':
+                $box_title = T_('Personal Videos');
+                $video_type = $type;
+                $box_req = AmpConfig::get('prefix') . '/templates/show_videos.inc.php';
             break;
             default:
                 // Rien a faire

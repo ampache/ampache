@@ -105,7 +105,7 @@
         $objects = array_slice($objects, 0, 100, true);
     }
 
-    $normal_array = array('radio', 'song', 'video', 'random', 'song_preview');
+    $normal_array = array('live_stream', 'song', 'video', 'random', 'song_preview');
 
     foreach ($objects as $uid=>$object_data) {
         $type = array_shift($object_data);

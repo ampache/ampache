@@ -20,7 +20,7 @@
  *
  */
 
-class Channel extends database_object
+class Channel extends database_object implements media, library_item
 {
     public $id;
     public $is_private;
@@ -149,7 +149,9 @@ class Channel extends database_object
         $sql = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? " .
             "WHERE `id` = ?";
         $params = array($data['name'], $data['description'], $data['url'], $data['interface'], $data['port'], (!empty($data['interface']) && !empty($data['port'])), $data['admin_password'], !empty($data['private']), $data['max_listeners'], $data['random'], $data['loop'], $data['stream_type'], $data['bitrate'], $data['object_id'], $this->id);
-        return Dba::write($sql, $params);
+        Dba::write($sql, $params);
+
+        return $this->id;
     }
 
     public static function format_type($type)
@@ -182,6 +184,48 @@ class Channel extends database_object
     {
         $this->tags = Tag::get_top_tags('channel', $this->id);
         $this->f_tags = Tag::get_display($this->tags, true, 'channel');
+    }
+
+    public function get_keywords()
+    {
+        return array();
+    }
+
+    public function get_fullname()
+    {
+        return $this->name;
+    }
+
+    public function get_parent()
+    {
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        return array();
+    }
+
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if (!$filter_type || $filter_type == 'channel') {
+            $medias[] = array(
+                'object_type' => 'channel',
+                'object_id' => $this->id
+            );
+        }
+        return $medias;
+    }
+
+    public function get_user_owner()
+    {
+        return null;
+    }
+
+    public function get_default_art_kind()
+    {
+        return 'default';
     }
 
     public function get_target_object()
@@ -385,6 +429,22 @@ class Channel extends database_object
     {
         $channel = new Channel($oid);
         return $channel->get_stream_proxy_url() . '?rt=' . time() . '&filename=' . urlencode($channel->name) . '.' . $channel->stream_type . $additional_params;
+    }
+
+    public function get_stream_types()
+    {
+        // Transcode is mandatory to keep a consistant stream
+        return array('transcode');
+    }
+
+    public function get_stream_name()
+    {
+        return $this->get_fullname();
+    }
+
+    public function set_played($user, $agent)
+    {
+        // Do nothing
     }
 
 } // end of channel class

@@ -342,7 +342,7 @@ class XML_Data
             $rating = new Rating($album_id,'album');
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?id=' . $album->id . '&auth=' . scrub_out($_REQUEST['auth']);
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
 
             $string .= "<album id=\"" . $album->id . "\">\n" .
                     "\t<name><![CDATA[" . $album->name . "]]></name>\n";

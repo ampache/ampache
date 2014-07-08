@@ -280,10 +280,10 @@ class Catalog_dropbox extends Catalog
             $this->add_files($client, $this->path);
 
             echo "\n<br />" .
-            printf(T_('Catalog Update Finished.  Total Songs: [%s]'), $this->count);
+            printf(T_('Catalog Update Finished.  Total Media: [%s]'), $this->count);
             echo '<br />';
             if ($this->count == 0) {
-                echo T_('No songs updated, do you respect the patterns?') . '<br />';
+                echo T_('No media updated, do you respect the patterns?') . '<br />';
             }
             echo '<br />';
         } else {
@@ -334,7 +334,11 @@ class Catalog_dropbox extends Catalog
             $is_audio_file = Catalog::is_audio_file($file);
 
             if ($is_audio_file) {
-                $this->insert_song($client, $file, $filesize);
+                if (count($this->get_gather_types('music')) > 0) {
+                    $this->insert_song($client, $file, $filesize);
+                } else {
+                    debug_event('read', $data['path'] . " ignored, bad media type for this catalog.", 5);
+                }
             } else {
                 debug_event('read', $data['path'] . " ignored, unknown media file type", 5);
             }
@@ -368,7 +372,7 @@ class Catalog_dropbox extends Catalog
                 $islocal = true;
             }
 
-            $vainfo = new vainfo($file, '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
+            $vainfo = new vainfo($file, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
             $vainfo->forceSize($filesize);
             $vainfo->get_info();
 
@@ -387,12 +391,14 @@ class Catalog_dropbox extends Catalog
             if (!empty($results['artist']) && !empty($results['album'])) {
                 $results['file'] = $this->get_virtual_path($results['file']);
 
-                Song::insert($results);
                 $this->count++;
+                return Song::insert($results);
             } else {
                 debug_event('results', $results['file'] . " ignored because it is an orphan songs. Please check your catalog patterns.", 5);
             }
         }
+
+        return false;
     }
 
     public function verify_catalog_proc()

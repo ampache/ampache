@@ -33,12 +33,8 @@ ob_end_clean();
 
 /* These parameters had better come in on the url. */
 $uid            = scrub_in($_REQUEST['uid']);
-$oid            = $_REQUEST['oid']
-                // FIXME: Any place that doesn't use oid should be fixed
-                ? scrub_in($_REQUEST['oid'])
-                : scrub_in($_REQUEST['song']);
+$oid            = scrub_in($_REQUEST['oid']);
 $sid            = scrub_in($_REQUEST['ssid']);
-$video          = make_bool($_REQUEST['video']);
 $type           = scrub_in($_REQUEST['type']);
 
 if (AmpConfig::get('transcode_player_customize')) {
@@ -50,13 +46,7 @@ if (AmpConfig::get('transcode_player_customize')) {
 }
 $share_id       = scrub_in($_REQUEST['share_id']);
 
-if ($video) {
-    // FIXME: Compatibility hack, should eventually be removed
-    $type = 'video';
-}
-
 if (!$type) {
-    // FIXME: Compatibility hack, should eventually be removed
     $type = 'song';
 }
 
@@ -222,6 +212,7 @@ if ($type == 'song') {
     $media = new Song_Preview($oid);
     $media->format();
 } else {
+    $type = 'video';
     $media = new Video($oid);
     $media->format();
 }
@@ -230,18 +221,18 @@ if ($media->catalog) {
     // Build up the catalog for our current object
     $catalog = Catalog::create_from_id($media->catalog);
 
-    /* If the song is disabled */
+    /* If the media is disabled */
     if (!make_bool($media->enabled)) {
         debug_event('Play', "Error: $media->file is currently disabled, song skipped", '5');
         // Check to see if this is a democratic playlist, if so remove it completely
-        if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, 'song'); }
+        if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, $type); }
         header('HTTP/1.1 404 File Disabled');
         exit;
     }
 
-    // If we are running in Legalize mode, don't play songs already playing
+    // If we are running in Legalize mode, don't play medias already playing
     if (AmpConfig::get('lock_songs')) {
-        if (!Stream::check_lock_media($media->id,get_class($media))) {
+        if (!Stream::check_lock_media($media->id, $type)) {
             exit;
         }
     }
@@ -255,7 +246,7 @@ if ($media->catalog) {
 if ($media == null) {
     // Handle democratic removal
     if ($demo_id && isset($democratic)) {
-        $democratic->delete_from_oid($oid, 'song');
+        $democratic->delete_from_oid($oid, $type);
     }
     exit;
 }
@@ -264,24 +255,24 @@ if ($media == null) {
 if (!$media->file || !Core::is_readable(Core::conv_lc_file($media->file))) {
 
     // We need to make sure this isn't democratic play, if it is then remove
-    // the song from the vote list
+    // the media from the vote list
     if (is_object($tmp_playlist)) {
         $tmp_playlist->delete_track($oid);
     }
     // FIXME: why are these separate?
-    // Remove the song votes if this is a democratic song
-    if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, 'song'); }
+    // Remove the media votes if this is a democratic song
+    if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, $type); }
 
-    debug_event('play', "Song $media->file ($media->title) does not have a valid filename specified", 2);
-    header('HTTP/1.1 404 Invalid song, file not found or file unreadable');
+    debug_event('play', "Media $media->file ($media->title) does not have a valid filename specified", 2);
+    header('HTTP/1.1 404 Invalid media, file not found or file unreadable');
     exit;
 }
 
-// don't abort the script if user skips this song because we need to update now_playing
+// don't abort the script if user skips this media because we need to update now_playing
 ignore_user_abort(true);
 
-// Format the song name
-$media_name = $media->f_artist_full . " - " . $media->title . "." . $media->type;
+// Format the media name
+$media_name = $media->get_stream_name() . "." . $media->type;
 
 header('Access-Control-Allow-Origin: *');
 
@@ -295,7 +286,6 @@ if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
 
     debug_event('play', 'Downloading file...', 5);
     // STUPID IE
-    $media->format_pattern();
     $media_name = str_replace(array('?','/','\\'),"_",$media->f_file);
 
     $browser->downloadHeaders($media_name,$media->mime,false,$media->size);
@@ -346,7 +336,7 @@ debug_event('play', 'Media type {'.$media->type.'}', 5);
 $cpaction = $_REQUEST['custom_play_action'];
 // Determine whether to transcode
 $transcode = false;
-// transcode_to should only have an effect if the song is the wrong format
+// transcode_to should only have an effect if the media is the wrong format
 $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
 
 debug_event('play', 'Custom play action {'.$cpaction.'}', 5);
@@ -394,8 +384,7 @@ if ($transcode) {
 if ($transcode) {
     // Content-length guessing if required by the player.
     // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
-    // Should also support video, but video implementation as to be reviewed first!
-    if (get_class($media) == 'Song' && $_REQUEST['content_length'] == 'required') {
+    if ($_REQUEST['content_length'] == 'required') {
         $max_bitrate = Stream::get_allowed_bitrate($media);
         if ($media->time > 0 && $max_bitrate > 0) {
             $stream_size = ($media->time * $max_bitrate * 1000) / 8;
@@ -416,10 +405,7 @@ if (!is_resource($fp)) {
 }
 
 header('ETag: ' . $media->id);
-// Put this song in the now_playing table only if it's a song for now...
-if (get_class($media) == 'Song') {
-    Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($media));
-}
+Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($media));
 
 // Handle Content-Range
 
@@ -455,6 +441,21 @@ if ($range_values > 0 && ($start > 0 || $end > 0)) {
     debug_event('play','Starting stream of ' . $media->file . ' with size ' . $media->size, 5);
 }
 
+// Stats registering must be done before play. Do not move it.
+// It can be slow because of scrobbler plugins (lastfm, ...)
+if ($start > 0) {
+    debug_event('play', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
+} else {
+    if (empty($share_id)) {
+        if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
+            debug_event('play', 'Registering stats for {'.$media->get_stream_name() .'}...', '5');
+            $sessionkey = Stream::$session;
+            $agent = Session::agent($sessionkey);
+            $GLOBALS['user']->update_stats($type, $media->id, $agent);
+        }
+    }
+}
+
 if ($transcode || $demo_id) {
     header('Accept-Ranges: none');
 } else {
@@ -487,26 +488,9 @@ if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
     $bytes_streamed = $stream_size;
 }
 
-if ($start > 0) {
-    debug_event('play', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
-} else if ($real_bytes_streamed > 0) {
-    // FIXME: support other media types
-    if (get_class($media) == 'Song' && empty($share_id)) {
-        if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
-            debug_event('play', 'Registering stats for {'.$media->title.'}...', '5');
-            $sessionkey = Stream::$session;
-            //debug_event('play', 'Current session key {'.$sessionkey.'}', '5');
-            $agent = Session::agent($sessionkey);
-            //debug_event('play', 'Current session agent {'.$agent.'}', '5');
-            $GLOBALS['user']->update_stats($media->id, $agent);
-            $media->set_played();
-        }
-    }
-}
-
 // If this is a democratic playlist remove the entry.
 // We do this regardless of play amount.
-if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid,'song'); }
+if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, $type); }
 
 if ($transcode && isset($transcoder)) {
     if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {

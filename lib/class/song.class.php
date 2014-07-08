@@ -20,7 +20,7 @@
  *
  */
 
-class Song extends database_object implements media
+class Song extends database_object implements media, library_item
 {
     /* Variables from DB */
     public $id;
@@ -179,7 +179,7 @@ class Song extends database_object implements media
             'VALUES(?, ?, ?)';
         Dba::write($sql, array($song_id, $comment, $lyrics));
 
-        return true;
+        return $song_id;
     }
 
     /**
@@ -375,10 +375,11 @@ class Song extends database_object implements media
                 return 'audio/aacp';
             case 'mpc':
                 return 'audio/x-musepack';
+            case 'mkv':
+                return 'audio/x-matroska';
             default:
                 return 'audio/mpeg';
         }
-
     }
 
     /**
@@ -507,16 +508,20 @@ class Song extends database_object implements media
     /**
      * set_played
      * this checks to see if the current object has been played
-     * if not then it sets it to played
+     * if not then it sets it to played. In any case it updates stats.
      */
-    public function set_played()
+    public function set_played($user, $agent)
     {
+        Stats::insert('song', $this->id, $user, $agent);
+        Stats::insert('album', $this->id, $user, $agent);
+        Stats::insert('artist', $this->id, $user, $agent);
+
         if ($this->played) {
             return true;
         }
 
         /* If it hasn't been played, set it! */
-        self::update_played('1',$this->id);
+        self::update_played('1', $this->id);
 
         return true;
 
@@ -618,7 +623,7 @@ class Song extends database_object implements media
             } // end whitelist
         } // end foreach
 
-        return true;
+        return $this->id;
     } // update
 
     /**
@@ -901,12 +906,6 @@ class Song extends database_object implements media
     {
         $this->fill_ext_info();
 
-        // Format the filename
-        preg_match("/^.*\/(.*?)$/", $this->file, $short);
-        if (is_array($short) && isset($short[1])) {
-            $this->f_file = htmlspecialchars($short[1]);
-        }
-
         // Format the album name
         $this->f_album_full = $this->get_album_name();
         $this->f_album = $this->f_album_full;
@@ -927,7 +926,9 @@ class Song extends database_object implements media
         $this->f_link = "<a href=\"" . scrub_out($this->link) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_title) . "</a>";
         $this->f_album_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->f_album_full) . "\"> " . scrub_out($this->f_album) . "</a>";
         $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
-        $this->f_album_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->f_album_artist_full) . "\"> " . scrub_out($this->f_album_artist_full) . "</a>";
+        if (!empty($this->album_artist)) {
+            $this->f_album_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->f_album_artist_full) . "\"> " . scrub_out($this->f_album_artist_full) . "</a>";
+        }
 
         // Format the Bitrate
         $this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);
@@ -952,47 +953,66 @@ class Song extends database_object implements media
 
         $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
 
+        $this->f_file = $this->f_artist . ' - ';
+        if ($this->track) {
+            $this->f_file .= $this->track . ' - ';
+        }
+        $this->f_file .= $this->f_title . '.' . $this->type;
+
         return true;
 
     } // format
 
-    /**
-     * format_pattern
-     * This reformats the song information based on the catalog
-     * rename patterns
-     */
-    public function format_pattern()
+    public function get_keywords()
     {
-        $extension = ltrim(substr($this->file,strlen($this->file)-4,4),".");
+        $keywords = array();
+        $keywords['title'] = array('important' => true,
+            'label' => T_('Title'),
+            'value' => $this->f_title);
 
-        $catalog = Catalog::create_from_id($this->catalog);
+        return $keywords;
+    }
 
-        // If we don't have a rename pattern then just return it
-        if (!trim($catalog->rename_pattern)) {
-            $this->f_pattern    = $this->title;
-            $this->f_file        = $this->title . '.' . $extension;
-            return;
+    public function get_fullname()
+    {
+        return $this->f_title;
+    }
+
+    public function get_parent()
+    {
+        return array('object_type' => 'album', 'object_id' => $this->album);
+    }
+
+    public function get_childrens()
+    {
+        return array();
+    }
+
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if (!$filter_type || $filter_type == 'song') {
+            $medias[] = array(
+                'object_type' => 'song',
+                'object_id' => $this->id
+            );
+        }
+        return $medias;
+    }
+
+    public function get_user_owner()
+    {
+        if ($this->user_upload) {
+            return $this->user_upload;
         }
 
-        /* Create the filename that this file should have */
-        $album  = $this->f_album_full;
-        $artist = $this->f_artist_full;
-        $track  = sprintf('%02d', $this->track);
-        $title  = $this->title;
-        $year   = $this->year;
+        return null;
+    }
 
-        /* Start replacing stuff */
-        $replace_array = array('%a','%A','%t','%T','%y','/','\\');
-        $content_array = array($artist,$album,$title,$track,$year,'-','-');
-
-        $rename_pattern = str_replace($replace_array,$content_array,$catalog->rename_pattern);
-
-        $rename_pattern = preg_replace("[\-\:\!]","_",$rename_pattern);
-
-        $this->f_pattern    = $rename_pattern;
-        $this->f_file         = $rename_pattern . "." . $extension;
-
-    } // format_pattern
+    public function get_default_art_kind()
+    {
+        return 'default';
+    }
 
     /**
      * get_fields
@@ -1060,6 +1080,37 @@ class Song extends database_object implements media
 
     } // get_rel_path
 
+    public static function generic_play_url($object_type, $object_id, $additional_params)
+    {
+        $media = new $object_type($object_id);
+        if (!$media->id) return null;
+
+        $uid = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
+        $type = $media->type;
+
+        // Checking if the media is gonna be transcoded into another type
+        // Some players doesn't allow a type streamed into another without giving the right extension
+        $transcode_cfg = AmpConfig::get('transcode');
+        $transcode_mode = AmpConfig::get('transcode_' . $type);
+        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && $transcode_mode == 'required')) {
+            $transcode_settings = $media->get_transcode_settings(null);
+            if ($transcode_settings) {
+                debug_event("media", "Changing play url type from {".$type."} to {".$transcode_settings['format']."} due to encoding settings...", 5);
+                $type = $transcode_settings['format'];
+            }
+        }
+
+        $media_name = $media->get_stream_name() . "." . $type;
+        $media_name = str_replace("/", "-", $media_name);
+        $media_name = str_replace("?", "", $media_name);
+        $media_name = str_replace("#", "", $media_name);
+        $media_name = rawurlencode($media_name);
+
+        $url = Stream::get_base_url() . "type=" . $object_type . "&oid=" . $object_id . "&uid=" . $uid . $additional_params . "&name=" . $media_name;
+
+        return Stream_URL::format($url);
+    }
+
     /**
      * play_url
      * This function takes all the song information and correctly formats a
@@ -1068,33 +1119,13 @@ class Song extends database_object implements media
      */
     public static function play_url($oid, $additional_params='')
     {
-        $song = new Song($oid);
-        $user_id = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
-        $type = $song->type;
+        return self::generic_play_url('song', $oid, $additional_params);
+    }
 
-        // Checking if the song is gonna be transcoded into another type
-        // Some players doesn't allow a type streamed into another without giving the right extension
-        $transcode_cfg = AmpConfig::get('transcode');
-        $transcode_mode = AmpConfig::get('transcode_' . $type);
-        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && $transcode_mode == 'required')) {
-            $transcode_settings = $song->get_transcode_settings(null);
-            if ($transcode_settings) {
-                debug_event("song.class.php", "Changing play url type from {".$type."} to {".$transcode_settings['format']."} due to encoding settings...", 5);
-                $type = $transcode_settings['format'];
-            }
-        }
-
-        $song_name = $song->get_artist_name() . " - " . $song->title . "." . $type;
-        $song_name = str_replace("/", "-", $song_name);
-        $song_name = str_replace("?", "", $song_name);
-        $song_name = str_replace("#", "", $song_name);
-        $song_name = rawurlencode($song_name);
-
-        $url = Stream::get_base_url() . "type=song&oid=" . $song->id . "&uid=" . $user_id . $additional_params . "&name=" . $song_name;
-
-        return Stream_URL::format($url);
-
-    } // play_url
+    public function get_stream_name()
+    {
+        return $this->get_artist_name() . " - " . $this->title;
+    }
 
     /**
      * get_recently_played
@@ -1139,7 +1170,7 @@ class Song extends database_object implements media
     public function get_stream_types()
     {
         return Song::get_stream_types_for_type($this->type);
-    } // end stream_types
+    }
 
     public static function get_stream_types_for_type($type)
     {
@@ -1154,35 +1185,43 @@ class Song extends database_object implements media
         }
 
         return $types;
-    } // end stream_types
+    }
 
-    public function get_transcode_settings($target = null)
+    public static function get_transcode_settings_for_media($source, $target = null, $media_type = 'song')
     {
-        $source = $this->type;
-
-        if ($target) {
-            debug_event('song.class.php', 'Explicit format request {'.$target.'}', 5);
-        } else if ($target = AmpConfig::get('encode_target_' . $source)) {
-            debug_event('song.class.php', 'Defaulting to configured target format for ' . $source, 5);
-        } else if ($target = AmpConfig::get('encode_target')) {
-            debug_event('song.class.php', 'Using default target format', 5);
-        } else {
-            $target = $source;
-            debug_event('song.class.php', 'No default target for ' . $source . ', choosing to resample', 5);
+        $setting_target = 'encode_target';
+        if ($media_type != 'song') {
+            $setting_target = 'encode_' . $media_type . '_target';
         }
 
-        debug_event('song.class.php', 'Transcode settings: from ' . $source . ' to ' . $target, 5);
+        if ($target) {
+            debug_event('media', 'Explicit format request {' . $target . '}', 5);
+        } else if ($target = AmpConfig::get('encode_target_' . $source)) {
+            debug_event('media', 'Defaulting to configured target format for ' . $source, 5);
+        } else if ($target = AmpConfig::get($setting_target)) {
+            debug_event('media', 'Using default target format', 5);
+        } else {
+            $target = $source;
+            debug_event('media', 'No default target for ' . $source . ', choosing to resample', 5);
+        }
+
+        debug_event('media', 'Transcode settings: from ' . $source . ' to ' . $target, 5);
 
         $cmd = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
         $args = AmpConfig::get('encode_args_' . $target);
 
         if (!$args) {
-            debug_event('song.class.php', 'Target format ' . $target . ' is not properly configured', 2);
+            debug_event('media', 'Target format ' . $target . ' is not properly configured', 2);
             return false;
         }
 
-        debug_event('song.class.php', 'Command: ' . $cmd . ' Arguments: ' . $args, 5);
+        debug_event('media', 'Command: ' . $cmd . ' Arguments: ' . $args, 5);
         return array('format' => $target, 'command' => $cmd . ' ' . $args);
+    }
+
+    public function get_transcode_settings($target = null)
+    {
+        return Song::get_transcode_settings_for_media($this->type, $target, 'song');
     }
 
     public function get_lyrics()
@@ -1240,7 +1279,7 @@ class Song extends database_object implements media
     {
         $actions = Song::get_custom_play_actions();
         foreach ($actions as $action) {
-            echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $this->id . '&custom_play_action=' . $action['index'], $action['icon'], T_($action['title']), $action['icon'] . '_song_' . $this->id);
+            echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $this->id . '&custom_play_action=' . $action['index'], $action['icon'], T_($action['title']), $action['icon'] . '_song_' . $this->id);
         }
     }
 

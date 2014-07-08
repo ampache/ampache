@@ -322,6 +322,13 @@ class Tmp_Playlist extends database_object
 
     } // add_object
 
+    public function add_medias($medias)
+    {
+        foreach ($medias as $media) {
+            $this->add_object($media['object_id'], $media['object_type']);
+        }
+    }
+
     /**
      * vote_active
      * This checks to see if this playlist is a voting playlist

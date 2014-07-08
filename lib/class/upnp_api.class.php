@@ -298,7 +298,7 @@ class Upnp_Api
             case 'artists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_songs();
+                        $counts = Catalog::count_medias();
                         $meta = array(
                             'id'			=> $root . '/artists',
                             'parentID'		=> $root,
@@ -322,7 +322,7 @@ class Upnp_Api
             case 'albums':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_songs();
+                        $counts = Catalog::count_medias();
                         $meta = array(
                             'id'			=> $root . '/albums',
                             'parentID'		=> $root,
@@ -346,7 +346,7 @@ class Upnp_Api
             case 'songs':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_songs();
+                        $counts = Catalog::count_medias();
                         $meta = array(
                             'id'			=> $root . '/songs',
                             'parentID'		=> $root,
@@ -370,7 +370,7 @@ class Upnp_Api
             case 'playlists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_songs();
+                        $counts = Catalog::count_medias();
                         $meta = array(
                             'id'			=> $root . '/playlists',
                             'parentID'		=> $root,
@@ -394,7 +394,7 @@ class Upnp_Api
             case 'smartplaylists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_songs();
+                        $counts = Catalog::count_medias();
                         $meta = array(
                             'id'			=> $root . '/smartplaylists',
                             'parentID'		=> $root,
@@ -406,7 +406,7 @@ class Upnp_Api
                     break;
 
                     case 2:
-                        $playlist = new Search('song', $pathreq[1]);
+                        $playlist = new Search($pathreq[1], 'song');
                         if ($playlist->id) {
                             $playlist->format();
                             $meta = self::_itemSmartPlaylist($playlist, $root . '/smartplaylists');
@@ -537,13 +537,13 @@ class Upnp_Api
                     case 1: // Get playlists list
                         $pl_ids = Search::get_searches();
                         foreach ($pl_ids as $pl_id) {
-                            $playlist = new Search('song', $pl_id);
+                            $playlist = new Search($pl_id, 'song');
                             $playlist->format();
                             $mediaItems[] = self::_itemPlaylist($playlist, $parent);
                         }
                     break;
                     case 2: // Get playlist's songs list
-                        $playlist = new Search('song', $pathreq[1]);
+                        $playlist = new Search($pathreq[1], 'song');
                         if ($playlist->id) {
                             $items = $playlist->get_items();
                             foreach ($items as $item) {
@@ -559,13 +559,244 @@ class Upnp_Api
             break;
 
             default:
-                $counts = Catalog::count_songs();
+                $counts = Catalog::count_medias();
 
                 $mediaItems[] = self::_musicMetadata('artists');
                 $mediaItems[] = self::_musicMetadata('albums');
                 $mediaItems[] = self::_musicMetadata('songs');
                 $mediaItems[] = self::_musicMetadata('playlists');
                 $mediaItems[] = self::_musicMetadata('smartplaylists');
+            break;
+        }
+
+        return $mediaItems;
+    }
+
+    public static function _videoMetadata($prmPath, $prmQuery = '')
+    {
+        $root = 'amp://video';
+        $pathreq = explode('/', $prmPath);
+        if ($pathreq[0] == '' && count($pathreq) > 0) {
+            array_shift($pathreq);
+        }
+
+        $meta = null;
+        switch ($pathreq[0]) {
+            case 'tvshows':
+                switch (count($pathreq)) {
+                    case 1:
+                        $counts = count(Catalog::get_tvshows());
+                        $meta = array(
+                            'id'			=> $root . '/tvshows',
+                            'parentID'		=> $root,
+                            'restricted'    => '1',
+                            'childCount'	=> $counts,
+                            'dc:title'		=> T_('TV Shows'),
+                            'upnp:class'	=> 'object.container',
+                        );
+                    break;
+
+                    case 2:
+                        $tvshow = new TVShow($pathreq[1]);
+                        if ($tvshow->id) {
+                            $tvshow->format();
+                            $meta = self::_itemTVShow($tvshow, $root . '/tvshows');
+                        }
+                    break;
+
+                    case 3:
+                        $season = new TVShow_Season($pathreq[2]);
+                        if ($season->id) {
+                            $season->format();
+                            $meta = self::_itemTVShowSeason($season, $root . '/tvshows/' . $pathreq[1]);
+                        }
+                    break;
+
+                    case 4:
+                        $video = new TVShow_Episode($pathreq[3]);
+                        if ($video->id) {
+                            $video->format();
+                            $meta = self::_itemVideo($video, $root . '/tvshows/' . $pathreq[1] . '/' . $pathreq[2] );
+                        }
+                    break;
+                }
+            break;
+
+            case 'clips':
+                switch (count($pathreq)) {
+                    case 1:
+                        $counts = Catalog::get_videos_count(null, 'clip');
+                        $meta = array(
+                            'id'			=> $root . '/clips',
+                            'parentID'		=> $root,
+                            'restricted'    => '1',
+                            'childCount'	=> $counts,
+                            'dc:title'		=> T_('Clips'),
+                            'upnp:class'	=> 'object.container',
+                        );
+                    break;
+
+                    case 2:
+                        $video = new Clip($pathreq[1]);
+                        if ($video->id) {
+                            $video->format();
+                            $meta = self::_itemVideo($video, $root . '/clips');
+                        }
+                    break;
+                }
+            break;
+
+            case 'movies':
+                switch (count($pathreq)) {
+                    case 1:
+                        $counts = Catalog::get_videos_count(null, 'movie');
+                        $meta = array(
+                            'id'			=> $root . '/movies',
+                            'parentID'		=> $root,
+                            'restricted'    => '1',
+                            'childCount'	=> $counts,
+                            'dc:title'		=> T_('Movies'),
+                            'upnp:class'	=> 'object.container',
+                        );
+                    break;
+
+                    case 2:
+                        $video = new Movie($pathreq[1]);
+                        if ($video->id) {
+                            $video->format();
+                            $meta = self::_itemVideo($video, $root . '/movies');
+                        }
+                    break;
+                }
+            break;
+
+            case 'personal_videos':
+                switch (count($pathreq)) {
+                    case 1:
+                        $counts = Catalog::get_videos_count(null, 'personal_video');
+                        $meta = array(
+                            'id'			=> $root . '/personal_videos',
+                            'parentID'		=> $root,
+                            'restricted'    => '1',
+                            'childCount'	=> $counts,
+                            'dc:title'		=> T_('Personal Videos'),
+                            'upnp:class'	=> 'object.container',
+                        );
+                    break;
+
+                    case 2:
+                        $video = new Personal_Video($pathreq[1]);
+                        if ($video->id) {
+                            $video->format();
+                            $meta = self::_itemVideo($video, $root . '/personal_videos');
+                        }
+                    break;
+                }
+            break;
+
+            default:
+                $meta = array(
+                    'id'			=> $root,
+                    'parentID'		=> '0',
+                    'restricted'    => '1',
+                    'childCount'    => '4',
+                    'dc:title'		=> T_('Video'),
+                    'upnp:class'	=> 'object.container',
+                );
+            break;
+        }
+
+        return $meta;
+    }
+
+    public static function _videoChilds($prmPath, $prmQuery)
+    {
+        $mediaItems = array();
+        $queryData = array();
+        parse_str($prmQuery, $queryData);
+
+        $parent = 'amp://video' . $prmPath;
+        $pathreq = explode('/', $prmPath);
+        if ($pathreq[0] == '' && count($pathreq) > 0) {
+            array_shift($pathreq);
+        }
+
+        switch ($pathreq[0]) {
+            case 'tvshows':
+                switch (count($pathreq)) {
+                    case 1: // Get tvshow list
+                        $tvshows = Catalog::get_tvshows();
+                        foreach ($tvshows as $tvshow) {
+                            $tvshow->format();
+                            $mediaItems[] = self::_itemTVShow($tvshow, $parent);
+                        }
+                    break;
+                    case 2: // Get season list
+                        $tvshow = new TVShow($pathreq[1]);
+                        if ($tvshow->id) {
+                            $season_ids = $tvshow->get_seasons();
+                            foreach ($season_ids as $season_id) {
+                                $season = new TVShow_Season($season_id);
+                                $season->format();
+                                $mediaItems[] = self::_itemTVShowSeason($season, $parent);
+                            }
+                        }
+                    break;
+                    case 3: // Get episode list
+                        $season = new TVShow_Season($pathreq[2]);
+                        if ($season->id) {
+                            $episode_ids = $season->get_episodes();
+                            foreach ($episode_ids as $episode_id) {
+                                $video = new Video($episode_id);
+                                $video->format();
+                                $mediaItems[] = self::_itemVideo($video, $parent);
+                            }
+                        }
+                    break;
+                }
+            break;
+
+            case 'clips':
+                switch (count($pathreq)) {
+                    case 1: // Get clips list
+                        $videos = Catalog::get_videos(null, 'clip');
+                        foreach ($videos as $video) {
+                            $video->format();
+                            $mediaItems[] = self::_itemVideo($video, $parent);
+                        }
+                    break;
+                }
+            break;
+
+            case 'movies':
+                switch (count($pathreq)) {
+                    case 1: // Get clips list
+                        $videos = Catalog::get_videos(null, 'movie');
+                        foreach ($videos as $video) {
+                            $video->format();
+                            $mediaItems[] = self::_itemVideo($video, $parent);
+                        }
+                    break;
+                }
+            break;
+
+            case 'personal_videos':
+                switch (count($pathreq)) {
+                    case 1: // Get clips list
+                        $videos = Catalog::get_videos(null, 'personal_video');
+                        foreach ($videos as $video) {
+                            $video->format();
+                            $mediaItems[] = self::_itemVideo($video, $parent);
+                        }
+                    break;
+                }
+            break;
+
+            default:
+                $mediaItems[] = self::_videoMetadata('clips');
+                $mediaItems[] = self::_videoMetadata('tvshows');
+                $mediaItems[] = self::_videoMetadata('movies');
+                $mediaItems[] = self::_videoMetadata('personal_videos');
             break;
         }
 
@@ -659,6 +890,54 @@ class Upnp_Api
             'sampleFrequency'           => $song->rate,
             //'nrAudioChannels'           => '1',
             'description'               => $song->comment,
+        );
+    }
+
+    private static function _itemTVShow($tvshow, $parent)
+    {
+        return array(
+            'id'			=> 'amp://video/tvshows/' . $tvshow->id,
+            'parentID'		=> $parent,
+            'restricted'    => '1',
+            'childCount'	=> count($tvshow->get_seasons()),
+            'dc:title'		=> $tvshow->f_name,
+            'upnp:class'	=> 'object.container',
+        );
+    }
+
+    private static function _itemTVShowSeason($season, $parent)
+    {
+        return array(
+            'id'			=> 'amp://video/tvshows/' . $season->tvshow . '/' . $season->id,
+            'parentID'		=> $parent,
+            'restricted'    => '1',
+            'childCount'	=> count($season->get_episodes()),
+            'dc:title'		=> $season->f_name,
+            'upnp:class'	=> 'object.container',
+        );
+    }
+
+    private static function _itemVideo($video, $parent)
+    {
+        $api_session = (AmpConfig::get('require_session')) ? Stream::$session : false;
+        $art_url = Art::url($video->id, 'video', $api_session);
+
+        $fileTypesByExt = self::_getFileTypes();
+        $arrFileType = $fileTypesByExt[$video->type];
+
+        return array(
+            'id'			            => $parent . '/' . $video->id,
+            'parentID'		            => $parent,
+            'restricted'                => '1',
+            'dc:title'		            => $video->f_title,
+            'upnp:class'	            => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
+            'upnp:albumArtURI'          => $art_url,
+            'upnp:genre'                => Tag::get_display($video->tags, false, 'video'),
+
+            'res'                       => Video::play_url($video->id),
+            'protocolInfo'              => $arrFileType['mime'],
+            'size'                      => $video->size,
+            'duration'                  => $video->f_time_h . '.0',
         );
     }
 

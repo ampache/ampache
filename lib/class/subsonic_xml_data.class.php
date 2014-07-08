@@ -46,6 +46,7 @@ class Subsonic_XML_Data
     const AMPACHEID_ALBUM = 200000000;
     const AMPACHEID_SONG = 300000000;
     const AMPACHEID_SMARTPL = 400000000;
+    const AMPACHEID_VIDEO = 500000000;
 
     /**
      * constructor
@@ -74,6 +75,11 @@ class Subsonic_XML_Data
     public static function getSmartPlId($id)
     {
         return $id + Subsonic_XML_Data::AMPACHEID_SMARTPL;
+    }
+
+    public static function getVideoId($id)
+    {
+        return $id + Subsonic_XML_Data::AMPACHEID_VIDEO;
     }
 
     public static function getAmpacheId($id)
@@ -108,6 +114,11 @@ class Subsonic_XML_Data
     public static function isSmartPlaylist($id)
     {
         return ($id >= Subsonic_XML_Data::AMPACHEID_SMARTPL);
+    }
+
+    public static function isVideo($id)
+    {
+        return ($id >= Subsonic_XML_Data::AMPACHEID_VIDEO);
     }
 
     public static function createFailedResponse($version = "")
@@ -404,10 +415,48 @@ class Subsonic_XML_Data
         }
     }
 
-    public static function addVideos($xml)
+    public static function addVideos($xml, $videos)
     {
-        // Not supported yet
-        $xml->addChild('videos');
+        $xvideos = $xml->addChild('videos');
+        foreach ($videos as $video) {
+            $video->format();
+            self::addVideo($xvideos, $video);
+        }
+    }
+
+    public static function addVideo($xml, $video)
+    {
+        $xvideo = $xml->addChild('video');
+        $xvideo->addAttribute('id', self::getVideoId($video->id));
+        $xvideo->addAttribute('title', $video->f_full_title);
+        $xvideo->addAttribute('isDir', 'false');
+        $xvideo->addAttribute('coverArt', self::getVideoId($video->id));
+        $xvideo->addAttribute('isVideo', 'true');
+        $xvideo->addAttribute('type', 'video');
+        $xvideo->addAttribute('duration', $video->time);
+        if ($video->year > 0) {
+            $xvideo->addAttribute('year', $video->year);
+        }
+        $tags = Tag::get_object_tags('video', $video->id);
+        if (count($tags) > 0) $xvideo->addAttribute('genre', $tags[0]['name']);
+        $xvideo->addAttribute('size', $video->size);
+        $xvideo->addAttribute('suffix', $video->type);
+        $xvideo->addAttribute('contentType', $video->mime);
+        // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
+        $path = basename($video->file);
+        $xvideo->addAttribute('path', $path);
+
+        // Set transcoding information if required
+        $transcode_cfg = AmpConfig::get('transcode');
+        $transcode_mode = AmpConfig::get('transcode_' . $video->type);
+        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && $transcode_mode == 'required')) {
+            $transcode_settings = $video->get_transcode_settings(null);
+            if ($transcode_settings) {
+                $transcode_type = $transcode_settings['format'];
+                $xvideo->addAttribute('transcodedSuffix', $transcode_type);
+                $xvideo->addAttribute('transcodedContentType', Video::type_to_mime($transcode_type));
+            }
+        }
     }
 
     public static function addPlaylists($xml, $playlists, $smartplaylists = array())
@@ -418,7 +467,7 @@ class Subsonic_XML_Data
             self::addPlaylist($xplaylists, $playlist);
         }
         foreach ($smartplaylists as $id) {
-            $smartplaylist = new Search('song', $id);
+            $smartplaylist = new Search($id, 'song');
             self::addSmartPlaylist($xplaylists, $smartplaylist);
         }
     }
@@ -570,7 +619,7 @@ class Subsonic_XML_Data
     {
         $xradios = $xml->addChild('internetRadioStations');
         foreach ($radios as $id) {
-            $radio = new Radio($id);
+            $radio = new Live_Stream($id);
             self::addRadio($xradios, $radio);
         }
     }

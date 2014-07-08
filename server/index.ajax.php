@@ -37,6 +37,16 @@ switch ($_REQUEST['action']) {
             $results['random_selection'] = '<!-- None found -->';
         }
     break;
+    case 'random_videos':
+        $videos = Video::get_random(6, true);
+        if (count($videos) AND is_array($videos)) {
+            ob_start();
+            require_once AmpConfig::get('prefix') . '/templates/show_random_videos.inc.php';
+            $results['random_video_selection'] = ob_get_clean();
+        } else {
+            $results['random_video_selection'] = '<!-- None found -->';
+        }
+    break;
     case 'artist_info':
         if (AmpConfig::get('lastfm_api_key') && (isset($_REQUEST['artist']) || isset($_REQUEST['fullname']))) {
             if ($_REQUEST['artist']) {

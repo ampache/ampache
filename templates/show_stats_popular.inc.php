@@ -34,5 +34,13 @@ UI::show_box_top('','info-box box_popular_artists');
 require AmpConfig::get('prefix') . '/templates/show_objects.inc.php';
 UI::show_box_bottom();
 
+if (AmpConfig::get('allow_video')) {
+    $objects = Stats::get_top('video');
+    $headers = array('f_name_link' => T_('Most Popular Videos'));
+    UI::show_box_top('','info-box box_popular_videos');
+    require AmpConfig::get('prefix') . '/templates/show_objects.inc.php';
+    UI::show_box_bottom();
+}
+
 ?>
 </div>

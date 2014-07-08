@@ -24,7 +24,7 @@ $icon = $song->enabled ? 'disable' : 'enable';
 $button_flip_state_id = 'button_flip_state_' . $song->id;
 ?>
 <?php UI::show_box_top($song->title . ' ' . T_('Details'), 'box box_song_details'); ?>
-<dl class="song_details">
+<dl class="media_details">
 
 <?php if (AmpConfig::get('ratings')) { ?>
     <?php $rowparity = UI::flip_class(); ?>
@@ -56,9 +56,9 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php if (AmpConfig::get('directplay')) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id, 'play', T_('Play'),'play_song_' . $song->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play', T_('Play'),'play_song_' . $song->id); ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $song->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $song->id); ?>
             <?php } ?>
             <?php echo $song->show_custom_play_actions(); ?>
         <?php } ?>
@@ -74,6 +74,11 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
         <?php if (Access::check_function('download')) { ?>
             <a href="<?php echo Song::play_url($song->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+        <?php } ?>
+        <?php if (Access::check('interface','50')) { ?>
+            <a onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_'.$song->id ?>', '<?php echo T_('Edit') ?>', '')">
+                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+            </a>
         <?php } ?>
         <?php if (Access::check('interface','75')) { ?>
             <span id="<?php echo($button_flip_state_id); ?>">

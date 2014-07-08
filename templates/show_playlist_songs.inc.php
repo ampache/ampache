@@ -53,8 +53,8 @@ $web_path = AmpConfig::get('web_path');
                     if (!is_array($object)) {
                         $object = (array) $object;
                     }
-                    $song = new Song($object['object_id']);
-                    $song->format();
+                    $libitem = new Song($object['object_id']);
+                    $libitem->format();
                     $playlist_track = $object['track'];
             ?>
                     <tr class="<?php echo UI::flip_class(); ?>" id="track_<?php echo $object['track_id']; ?>">

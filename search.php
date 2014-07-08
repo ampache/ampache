@@ -30,7 +30,7 @@ UI::show_header();
 switch ($_REQUEST['action']) {
     case 'search':
         $browse = new Browse();
-        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_search_form.inc.php';
         require_once AmpConfig::get('prefix') . '/templates/show_search_options.inc.php';
         $results = Search::run($_REQUEST);
         $browse->set_type($_REQUEST['type']);
@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . '/templates/show_search_descriptor.inc.php';
         exit;
     default:
-        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
+        require_once AmpConfig::get('prefix') . '/templates/show_search_form.inc.php';
     break;
 }
 

@@ -47,7 +47,7 @@ switch ($_REQUEST['action']) {
         }
 
         // Try to create the sucker
-        $results = Radio::create($_POST);
+        $results = Live_Stream::create($_POST);
 
         if (!$results) {
             require_once AmpConfig::get('prefix') . '/templates/show_add_live_stream.inc.php';

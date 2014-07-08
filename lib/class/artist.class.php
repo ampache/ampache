@@ -20,7 +20,7 @@
  *
  */
 
-class Artist extends database_object
+class Artist extends database_object implements library_item
 {
     /* Variables from DB */
     public $id;
@@ -102,7 +102,8 @@ class Artist extends database_object
         Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ' .
             'LEFT JOIN `song` AS `song2` ON `song2`.`album_artist` = `artist`.`id` ' .
             'LEFT JOIN `wanted` ON `wanted`.`artist` = `artist`.`id` ' .
-            'WHERE `song`.`id` IS NULL AND `song2`.`id` IS NULL AND `wanted`.`id` IS NULL');
+            'LEFT JOIN `clip` ON `clip`.`artist` = `artist`.`id` ' .
+            'WHERE `song`.`id` IS NULL AND `song2`.`id` IS NULL AND `wanted`.`id` IS NULL AND `clip`.`id` IS NULL');
     }
 
     /**
@@ -343,6 +344,63 @@ class Artist extends database_object
         return true;
 
     } // format
+
+    public function get_keywords()
+    {
+        $keywords = array();
+        $keywords['artist'] = array('important' => true,
+            'label' => T_('Artist'),
+            'value' => $this->f_full_name);
+
+        return $keywords;
+    }
+
+    public function get_fullname()
+    {
+        return $this->f_full_name;
+    }
+
+    public function get_parent()
+    {
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        $albums = $this->get_albums();
+        foreach ($albums as $album_id) {
+            $medias[] = array(
+                'object_type' => 'album',
+                'object_id' => $album_id
+            );
+        }
+        return array('album' => $this->get_albums());
+    }
+
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if (!$filter_type || $filter_type == 'song') {
+            $songs = $this->get_songs();
+            foreach ($songs as $song_id) {
+                $medias[] = array(
+                    'object_type' => 'song',
+                    'object_id' => $song_id
+                );
+            }
+        }
+        return $medias;
+    }
+
+    public function get_user_owner()
+    {
+        return $this->user;
+    }
+
+    public function get_default_art_kind()
+    {
+        return 'default';
+    }
 
     /**
      * check

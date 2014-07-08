@@ -542,7 +542,7 @@ a.button{padding:1px 3px;}
 
 /* Specific to Info Boxes */
 .info-box { float:left;margin-right:10px; }
-.album_art { float:left; margin-right:10px; } 
+.item_art { float:left; margin-right:10px; } 
 #information_actions { margin-left:5px; font-size:0.7em; float:left; } 
 #information_actions h3 { font-size:1.2em; margin:0.2em; }
 
@@ -564,7 +564,7 @@ a.button{padding:1px 3px;}
     opacity: 1;
 }
 
-#artist_summary {
+#item_summary {
     margin-right: 150px;
 }
 
@@ -646,15 +646,15 @@ td.cel_cover{padding:6px;}
 /************************************************/
 /*          Song details                        */
 /************************************************/
-dl.song_details{font-size:0.8em;}
-.song_details dt {
+dl.media_details{font-size:0.8em;}
+.media_details dt {
 	float:left;
 	clear:both;
 	width:20%;
 	min-width:20%; /*Ie bugfix*/
 	font-weight:bold;
 }
-.song_details dd {
+.media_details dd {
 	float:left;
 	width:79%;
 	min-width:79%; /*Ie bugfix*/

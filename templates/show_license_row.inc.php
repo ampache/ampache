@@ -20,14 +20,14 @@
  *
  */
 ?>
-<tr id="license_<?php echo $license->id; ?>" class="<?php echo UI::flip_class(); ?>">
-    <td class="cel_name"><?php echo $license->f_link; ?></td>
-    <td class="cel_description"><?php echo $license->description; ?></td>
+<tr id="license_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
+    <td class="cel_name"><?php echo $libitem->f_link; ?></td>
+    <td class="cel_description"><?php echo $libitem->description; ?></td>
     <td class="cel_action">
-        <a href="<?php echo $web_path; ?>/admin/license.php?action=show_edit&license_id=<?php echo $license->id; ?>">
+        <a href="<?php echo $web_path; ?>/admin/license.php?action=show_edit&license_id=<?php echo $libitem->id; ?>">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
-        <a href="<?php echo $web_path; ?>/admin/license.php?action=delete&license_id=<?php echo $license->id; ?>">
+        <a href="<?php echo $web_path; ?>/admin/license.php?action=delete&license_id=<?php echo $libitem->id; ?>">
             <?php echo UI::get_icon('delete', T_('Delete')); ?>
         </a>
     </td>

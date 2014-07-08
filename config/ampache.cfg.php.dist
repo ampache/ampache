@@ -7,7 +7,7 @@
 ; if this config file is up to date 
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 16
+config_version = 17
 
 ;###################
 ; Path Vars        #
@@ -120,15 +120,15 @@ auth_methods = "mysql"
 ; This defines which file types Ampache will attempt to catalog
 ; You can specify any file extension you want in here separating them
 ; with a |
-; DEFAULT: mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv
-catalog_file_pattern = "mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv"
+; DEFAULT: mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|spx|ra|ape|shn|wv
+catalog_file_pattern = "mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|spx|ra|ape|shn|wv"
 
 ; Video Pattern
 ; This defines which video file types Ampache will attempt to catalog
 ; You can specify any file extension you want in here seperating them with
 ; a | but ampache may not be able to parse them
-; DEAFULT: avi|mpg|flv|m4v|webm
-catalog_video_pattern = "avi|mpg|flv|m4v|webm"
+; DEAFULT: avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts
+catalog_video_pattern = "avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts"
 
 ; Playlist Pattern
 ; This defines which playlist types Ampache will attempt to catalog
@@ -268,6 +268,18 @@ getid3_tag_order = "id3v2,id3v1,vorbiscomment,quicktime,matroska,ape,asf,avi,mpe
 ; DEFAULT: getID3 filename
 metadata_order = "getID3,filename"
 
+; This determines the order in which metadata sources are used (and in the
+; case of plugins, checked) for video files
+; POSSIBLE VALUES (builtins): filename and getID3
+; POSSIBLE VALUES (plugins): Tmdb,Omdb plus any others you've installed.
+; DEFAULT: filename getID3
+metadata_order_video = "filename,getID3"
+
+; This determines if a preview image should be retrieved from video files
+; It requires encode_get_image transcode settings.
+; DEFAULT: false
+;generate_video_preview = "true"
+
 ; Un comment if don't want ampache to follow symlinks
 ; DEFAULT: false
 ;no_symlinks	= "false"
@@ -373,24 +385,16 @@ notify = "true"
 ; methods simply leave it out. DB should be left as the first
 ; method unless you want it to overwrite what's already in the
 ; database
-; POSSIBLE VALUES: db tags folder amazon lastfm musicbrainz google
+; POSSIBLE VALUES (builtins): db tags folder lastfm musicbrainz google
+; POSSIBLE VALUES (plugins): amazon,Tmdb,Omdb,Flickr
 ; DEFAULT: db,tags,folder,musicbrainz,lastfm,google
 art_order = "db,tags,folder,musicbrainz,lastfm,google"
-
-; Amazon Developer Key
-; These are needed in order to actually use the amazon album art
-; Your public key is your 'Access Key ID'
-; Your private key is your 'Secret Access Key'
-; DEFAULT: false
-;amazon_developer_public_key = ""
-;amazon_developer_private_key = ""
-;amazon_developer_associate_tag = ""
 
 ; Recommendations
 ; Set this to true to enable display of similar artists or albums
 ; while browsing. Requires Last.FM.
 ; DEFAULT: false
-;show_similar = "false"
+show_similar = "true"
 
 ; Concerts
 ; Set this to true to enable display of artist concerts
@@ -400,14 +404,14 @@ art_order = "db,tags,folder,musicbrainz,lastfm,google"
 
 ; Last.FM API Key
 ; Set this to your Last.FM api key to actually use Last.FM for
-; recommendations.
-;lastfm_api_key = ""
+; recommendations and metadata.
+lastfm_api_key = "d5df942424c71b754e54ce1832505ae2"
 
 ; Wanted
 ; Set this to true to enable display missing albums and the
 ; possibility for users to mark it as wanted.
 ; DEFAULT: false
-;wanted = "false"
+wanted = "true"
 
 ; Wanted types
 ; Set the allowed types of wanted releases (album,compilation,single,ep,live,remix,promotion,official)
@@ -433,32 +437,6 @@ wanted_types = "album,official"
 ; Declare the web socket server address
 ; DEFAULT: determined automatically
 ;websocket_address = "ws://localhost:8100"
-
-; Amazon base urls
-; An array of Amazon sites to search.
-; NOTE: This will search each of these sites in turn so don't expect it
-; to be lightning fast!
-; It is strongly recommended that only one of these is selected at any
-; one time
-; POSSIBLE VALUES: 
-;	http://webservices.amazon.com
-;	http://webservices.amazon.co.uk
-;	http://webservices.amazon.de
-;	http://webservices.amazon.co.jp
-;	http://webservices.amazon.fr
-;	http://webservices.amazon.ca
-; Default: http://webservices.amazon.com
-amazon_base_urls = "http://webservices.amazon.com"
-
-; max_amazon_results_pages
-; The maximum number of results pages to pull from EACH amazon site
-; NOTE: The art search pages through the results returned by your search
-; up to this number of pages. As with the base_urls above, this is going
-; to take more time, the more pages you ask it to process.
-; Of course a good search will return only a few matches anyway.
-; It is strongly recommended that you do _not_ change this value
-; DEFAULT: 1 page (10 items)
-max_amazon_results_pages = 1
 
 ; Debug
 ; If this is enabled Ampache will write debugging information to the log file
@@ -672,16 +650,40 @@ refresh_limit = "60"
 ; (e.g. if you store everything in FLAC, but don't want to ever stream that.)
 ; transcode_TYPE         = {allowed|required|false}
 ; DEFAULT: false
+;;; Audio
 ;transcode_m4a      = allowed
 ;transcode_flac     = required
 ;transcode_mpc      = required
 ;transcode_ogg      = required
+;transcode_oga      = required
 ;transcode_wav      = required
+;transcode_wma      = required
+;transcode_aif      = required
+;transcode_aiff     = required
+;transcode_ape     = required
+;transcode_shn     = required
 ;transcode_mp3      = allowed
+;;; Video
+;transcode_avi      = allowed
+;transcode_mkv      = allowed
+;transcode_mpg      = allowed
+;transcode_mpeg     = allowed
+;transcode_m4v      = allowed
+;transcode_mp4      = allowed
+;transcode_mov      = allowed
+;transcode_wmv      = allowed
+;transcode_ogv      = allowed
+;transcode_divx     = allowed
+;transcode_m2ts     = allowed
+;transcode_webm     = allowed
 
-; Default output format
+; Default audio output format
 ; DEFAULT: none
 ;encode_target = mp3
+
+; Default video output format
+; DEFAULT: none
+;encode_video_target = flv
 
 ; Override the default output format on a per-type basis
 ; encode_target_TYPE = TYPE
@@ -724,6 +726,11 @@ transcode_player_customize = true
 ;encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
 ;encode_args_m4a = "-vn -b:a %SAMPLE%K -c:a libfdk_aac -f adts pipe:1"
 ;encode_args_wav = "-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1"
+;encode_args_flv = "-b:a %SAMPLE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
+
+; Encoding arguments to retrieve an image from a single frame
+; DEFAULT: none
+;encode_get_image = "-ss %TIME% -f image2 -vframes 1 pipe:1"
 
 ;######################################################
 ; these options allow you to configure your rss-feed

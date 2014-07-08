@@ -102,13 +102,13 @@ class Stream
      * start_transcode
      *
      * This is a rather complex function that starts the transcoding or
-     * resampling of a song and returns the opened file handle.
+     * resampling of a media and returns the opened file handle.
      */
-    public static function start_transcode($song, $type = null, $bitrate=0)
+    public static function start_transcode($media, $type = null, $bitrate=0)
     {
-        debug_event('stream.class.php', 'Starting transcode for {'.$song->file.'}. Type {'.$type.'}. Bitrate {'.$bitrate.'}...', 5);
+        debug_event('stream.class.php', 'Starting transcode for {'.$media->file.'}. Type {'.$type.'}. Bitrate {'.$bitrate.'}...', 5);
 
-        $transcode_settings = $song->get_transcode_settings($type);
+        $transcode_settings = $media->get_transcode_settings($type);
         // Bail out early if we're unutterably broken
         if ($transcode_settings == false) {
             debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);
@@ -116,7 +116,7 @@ class Stream
         }
 
         if ($bitrate == 0) {
-            $sample_rate = self::get_allowed_bitrate($song);
+            $sample_rate = self::get_allowed_bitrate($media);
             debug_event('stream', 'Configured bitrate is ' . $sample_rate, 5);
             // Validate the bitrate
             $sample_rate = self::validate_bitrate($sample_rate);
@@ -124,15 +124,15 @@ class Stream
             $sample_rate = $bitrate;
         }
 
-        // Never upsample a song
-        if ($song->type == $transcode_settings['format'] && ($sample_rate * 1000) > $song->bitrate) {
+        // Never upsample a media
+        if ($media->type == $transcode_settings['format'] && ($sample_rate * 1000) > $media->bitrate) {
             debug_event('stream', 'Clamping bitrate to avoid upsampling to ' . $sample_rate, 5);
-            $sample_rate = self::validate_bitrate($song->bitrate / 1000);
+            $sample_rate = self::validate_bitrate($media->bitrate / 1000);
         }
 
         debug_event('stream', 'Final transcode bitrate is ' . $sample_rate, 5);
 
-        $song_file = scrub_arg($song->file);
+        $song_file = scrub_arg($media->file);
 
         // Finalise the command line
         $command = $transcode_settings['command'];
@@ -145,11 +145,51 @@ class Stream
         foreach ($string_map as $search => $replace) {
             $command = str_replace($search, $replace, $command, $ret);
             if (!$ret) {
-                debug_event('downsample', "$search not in downsample command", 5);
+                debug_event('stream', "$search not in transcode command", 5);
             }
         }
 
-        debug_event('downsample', "Downsample command: $command", 3);
+        return self::start_process($command, array($transcode_settings['format']));
+    }
+
+    public static function get_image_preview($media)
+    {
+        $image = null;
+        $sec = ($media->time >= 30) ? 30 : intval($media->time / 2);
+        $frame = '00:00:' . sprintf("%02d", $sec) . '.0';
+
+        if (AmpConfig::get('transcode_cmd') && AmpConfig::get('encode_get_image')) {
+
+            $command = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('encode_get_image');
+            $string_map = array(
+                '%FILE%'   => scrub_arg($media->file),
+                '%TIME%' => $frame
+            );
+            foreach ($string_map as $search => $replace) {
+                $command = str_replace($search, $replace, $command, $ret);
+                if (!$ret) {
+                    debug_event('stream', "$search not in transcode command", 5);
+                }
+            }
+            $proc = self::start_process($command);
+
+            if (is_resource($proc['handle'])) {
+                $image = '';
+                do {
+                    $image .= fread($proc['handle'], 1024);
+                } while (!feof($proc['handle']));
+                fclose($proc['handle']);
+            }
+        } else {
+            debug_event('stream', 'Missing transcode_cmd / encode_get_image parameters to generate media preview.', 3);
+        }
+
+        return $image;
+    }
+
+    private static function start_process($command, $settings = array())
+    {
+        debug_event('stream', "Transcode command: " . $command, 3);
 
         $descriptors = array(1 => array('pipe', 'w'));
         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
@@ -158,12 +198,13 @@ class Stream
         }
 
         $process = proc_open($command, $descriptors, $pipes);
-        return array(
+        $parray = array(
             'process' => $process,
             'handle' => $pipes[1],
-            'stderr' => $pipes[2],
-            'format' => $transcode_settings['format']
+            'stderr' => $pipes[2]
         );
+
+        return array_merge($parray, $settings);
     }
 
     /**

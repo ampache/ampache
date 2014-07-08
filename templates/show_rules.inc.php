@@ -59,7 +59,7 @@ $logic_operator = strtolower($logic_operator);
 if ($playlist) {
     $out = $playlist->to_js();
 } else {
-    $mysearch = new Search($_REQUEST['type']);
+    $mysearch = new Search(null, $_REQUEST['type']);
     $mysearch->parse_rules(Search::clean_request($_REQUEST));
     $out = $mysearch->to_js();
 }

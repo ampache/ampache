@@ -28,7 +28,6 @@ $web_path = AmpConfig::get('web_path');
         <tr class="th-top">
             <th class="cel_play essential"></th>
             <th class="cel_streamname essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
-            <th class="cel_add essential"></th>
             <th class="cel_streamurl optional"><?php echo T_('Stream URL'); ?></th>
             <th class="cel_codec optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec');  ?></th>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
@@ -37,10 +36,10 @@ $web_path = AmpConfig::get('web_path');
     <tbody>
         <?php
         foreach ($object_ids as $radio_id) {
-            $radio = new Radio($radio_id);
-            $radio->format();
+            $libitem = new Live_Stream($radio_id);
+            $libitem->format();
         ?>
-        <tr id="live_stream_<?php echo $radio->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="live_stream_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_live_stream_row.inc.php'; ?>
         </tr>
         <?php } //end foreach ($artists as $artist) ?>
@@ -54,7 +53,6 @@ $web_path = AmpConfig::get('web_path');
         <tr class="th-bottom">
             <th class="cel_play"></th>
             <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'),'live_stream_sort_name'); ?></th>
-            <th class="cel_add"></th>
             <th class="cel_streamurl"><?php echo T_('Stream URL'); ?></th>
             <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'),'live_stream_codec_bottom');  ?></th>
             <th class="cel_action"><?php echo T_('Action'); ?> </th>

@@ -38,6 +38,7 @@ abstract class Catalog extends database_object
     public $rename_pattern;
     public $sort_pattern;
     public $catalog_type;
+    public $gather_types;
 
     public $f_name;
     public $f_name_link;
@@ -397,10 +398,9 @@ abstract class Catalog extends database_object
      */
     public static function get_stats($catalog_id = null)
     {
-        $results = self::count_songs($catalog_id);
+        $results = self::count_medias($catalog_id);
         $results = array_merge(User::count(), $results);
         $results['tags'] = self::count_tags();
-        $results['videos'] = self::count_videos($catalog_id);
 
         $hours = floor($results['time'] / 3600);
 
@@ -430,6 +430,10 @@ abstract class Catalog extends database_object
         $type = $data['type'];
         $rename_pattern = $data['rename_pattern'];
         $sort_pattern = $data['sort_pattern'];
+        $gather_types = $data['gather_media'];
+
+        // Should it be an array? Not now.
+        if (!in_array($gather_types, array('music', 'clip', 'tvshow', 'movie', 'personal_video'))) return false;
 
         $insert_id = 0;
         $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
@@ -437,12 +441,13 @@ abstract class Catalog extends database_object
 
         if ($include) {
             $sql = 'INSERT INTO `catalog` (`name`, `catalog_type`, ' .
-                '`rename_pattern`, `sort_pattern`) VALUES (?, ?, ?, ?)';
+                '`rename_pattern`, `sort_pattern`, `gather_types`) VALUES (?, ?, ?, ?, ?)';
             Dba::write($sql, array(
                 $name,
                 $type,
                 $rename_pattern,
-                $sort_pattern
+                $sort_pattern,
+                $gather_types
             ));
 
             $insert_id = Dba::insert_id();
@@ -465,23 +470,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * count_videos
-     *
-     * This returns the current number of video files in the database.
-     */
-    public static function count_videos($id = null)
-    {
-        $sql = 'SELECT COUNT(`id`) FROM `video` ';
-        if ($id) {
-            $sql .= 'WHERE `catalog` = ?';
-        }
-        $db_results = Dba::read($sql, $id ? array($id) : null);
-
-        $row = Dba::fetch_assoc($db_results);
-        return $row[0];
-    }
-
-    /**
      * count_tags
      *
      * This returns the current number of unique tags in the database.
@@ -497,24 +485,31 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * count_songs
+     * count_medias
      *
-     * This returns the current number of songs, albums, and artists
+     * This returns the current number of songs, videos, albums, and artists
      * in this catalog.
      */
-    public static function count_songs($id = null)
+    public static function count_medias($id = null)
     {
         $where_sql = $id ? 'WHERE `catalog` = ?' : '';
         $params = $id ? array($id) : null;
 
         $sql = 'SELECT COUNT(`id`), SUM(`time`), SUM(`size`) FROM `song` ' .
             $where_sql;
-
         $db_results = Dba::read($sql, $params);
         $data = Dba::fetch_row($db_results);
         $songs    = $data[0];
         $time    = $data[1];
         $size    = $data[2];
+
+        $sql = 'SELECT COUNT(`id`), SUM(`time`), SUM(`size`) FROM `video` ' .
+            $where_sql;
+        $db_results = Dba::read($sql, $params);
+        $data = Dba::fetch_row($db_results);
+        $videos    = $data[0];
+        $time    += $data[1];
+        $size    += $data[2];
 
         $sql = 'SELECT COUNT(DISTINCT(`album`)) FROM `song` ' . $where_sql;
         $db_results = Dba::read($sql, $params);
@@ -538,6 +533,7 @@ abstract class Catalog extends database_object
 
         $results = array();
         $results['songs'] = $songs;
+        $results['videos'] = $videos;
         $results['albums'] = $albums;
         $results['artists'] = $artists;
         $results['playlists'] = $playlists;
@@ -594,9 +590,129 @@ abstract class Catalog extends database_object
     }
 
     /**
-    * get_artist
+     * get_video_ids
+     *
+     * This returns an array of ids of videos in this catalog
+     */
+    public function get_video_ids($type = '')
+    {
+        $results = array();
+
+        $sql = 'SELECT DISTINCT(`video`.`id`) FROM `video` ';
+        if (!empty($type)) {
+            $sql .= 'JOIN `' . $type . '` ON `' . $type . '`.`id` = `video`.`id`';
+        }
+        $sql .= 'WHERE `video`.`catalog` = ?';
+        $db_results = Dba::read($sql, array($this->id));
+
+        while ($r = Dba::fetch_assoc($db_results)) {
+            $results[] = $r['id'];
+        }
+
+        return $results;
+    }
+
+    public static function get_videos($catalogs = null, $type = '')
+    {
+        if (!$catalogs) {
+            $catalogs = self::get_catalogs();
+        }
+
+        $results = array();
+        foreach ($catalogs as $catalog_id) {
+            $catalog = Catalog::create_from_id($catalog_id);
+            $video_ids = $catalog->get_video_ids($type);
+            foreach ($video_ids as $video_id) {
+                $results[] = Video::create_from_id($video_id);
+            }
+        }
+
+        return $results;
+    }
+
+    public static function get_videos_count($catalog_id = null, $type = '')
+    {
+        $sql = "SELECT COUNT(`video`.`id`) AS `video_cnt` FROM `video` ";
+        if (!empty($type)) {
+            $sql .= "JOIN `" . $type . "` ON `" . $type . "`.`id` = `video`.`id` ";
+        }
+        if ($catalogs) {
+            $sql .= "WHERE `video`.`catalog` = `" . intval($catalog_id) . "`";
+        }
+        $db_results = Dba::read($sql);
+        $video_cnt = 0;
+        if ($row = Dba::fetch_row($db_results)) {
+            $video_cnt = $row[0];
+        }
+
+        return $video_cnt;
+    }
+
+    /**
+     * get_tvshow_ids
+     *
+     * This returns an array of ids of tvshows in this catalog
+     */
+    public function get_tvshow_ids()
+    {
+        $results = array();
+
+        $sql = 'SELECT DISTINCT(`tvshow`.`id`) FROM `tvshow` ';
+        $sql .= 'JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` ';
+        $sql .= 'JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` ';
+        $sql .= 'JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` ';
+        $sql .= 'WHERE `video`.`catalog` = ?';
+
+        $db_results = Dba::read($sql, array($this->id));
+        while ($r = Dba::fetch_assoc($db_results)) {
+            $results[] = $r['id'];
+        }
+
+        return $results;
+    }
+
+    public function get_tvshows($catalogs = null)
+    {
+        if (!$catalogs) {
+            $catalogs = self::get_catalogs();
+        }
+
+        $results = array();
+        foreach ($catalogs as $catalog_id) {
+            $catalog = Catalog::create_from_id($catalog_id);
+            $tvshow_ids = $catalog->get_tvshow_ids($type);
+            foreach ($tvshow_ids as $tvshow_id) {
+                $results[] = new TVShow($tvshow_id);
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_artist_ids
+     *
+     * This returns an array of ids of artist that have songs in this
+     * catalog
+     */
+    public function get_artist_ids()
+    {
+        $results = array();
+
+        $sql = 'SELECT DISTINCT(`song`.`artist`) FROM `song` WHERE `song`.`catalog` = ?';
+        $db_results = Dba::read($sql, array($this->id));
+
+        while ($r = Dba::fetch_assoc($db_results)) {
+            $results[] = $r['artist'];
+        }
+
+        return $results;
+    }
+
+    /**
+    * get_artists
     *
-    * This returns an array of ids of artists that have songs in the catalogs parameter
+    * This returns an array of artists that have songs in the catalogs parameter
     */
     public static function get_artists($catalogs = null)
     {
@@ -689,6 +805,73 @@ abstract class Catalog extends database_object
         return $results;
     }
 
+    public function gather_art_item($type, $id)
+    {
+        debug_event('gather_art', 'Gathering art for ' . $type . '/' . $id . '...', 5);
+
+        // Should be more generic !
+        if ($type == 'video') {
+            $libitem = Video::create_from_id($id);
+        } else {
+            $libitem = new $type($id);
+        }
+        $options = array();
+        $libitem->format();
+        if ($libitem->id) {
+            if (count($options) == 0) {
+                // Only search on items with default art kind as `default`.
+                if ($libitem->get_default_art_kind() == 'default') {
+                    $keywords = $libitem->get_keywords();
+                    $keyword = '';
+                    foreach ($keywords as $key => $word) {
+                        $options[$key] = $word['value'];
+                        if ($word['important']) {
+                            if (!empty($word['value'])) {
+                                $keyword .= ' ' . $word['value'];
+                            }
+                        }
+                    }
+                    $options['keyword'] = $keyword;
+                }
+
+                $parent = $libitem->get_parent();
+                if ($parent != null) {
+                    if (!Art::has_db($parent['object_id'], $parent['object_type'])) {
+                        $this->gather_art_item($parent['object_type'], $parent['object_id']);
+                    }
+                }
+            }
+        }
+
+        $art = new Art($id, $type);
+        $results = $art->gather($options, 1, true);
+
+        if (count($results)) {
+            // Pull the string representation from the source
+            $image = Art::get_from_source($results[0], $type);
+            if (strlen($image) > '5') {
+                $art->insert($image, $results[0]['mime']);
+                // If they've enabled resizing of images generate a thumbnail
+                if (AmpConfig::get('resize_images')) {
+                    $thumb = $art->generate_thumb($image, array(
+                            'width' => 275,
+                            'height' => 275),
+                        $results[0]['mime']);
+                    if (is_array($thumb)) {
+                        $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], '275x275');
+                    }
+                }
+
+            } else {
+                debug_event('gather_art', 'Image less than 5 chars, not inserting', 3);
+            }
+        }
+
+        if ($type == 'video' && AmpConfig::get('generate_video_preview')) {
+            Video::generate_preview($id);
+        }
+    }
+
     /**
      * gather_art
      *
@@ -696,7 +879,7 @@ abstract class Catalog extends database_object
      * This runs through all of the needs art albums and trys
      * to find the art for them from the mp3s
      */
-    public function gather_art()
+    public function gather_art($songs = null, $videos = null)
     {
         // Make sure they've actually got methods
         $art_order = AmpConfig::get('art_order');
@@ -709,55 +892,44 @@ abstract class Catalog extends database_object
         set_time_limit(0);
 
         $search_count = 0;
-        $albums = $this->get_album_ids();
-
-        // Run through them and get the art!
-        foreach ($albums as $album_id) {
-            $art = new Art($album_id, 'album');
-            $album = new Album($album_id);
-            // We're going to need the name here
-            $album->format();
-
-            debug_event('gather_art', 'Gathering art for ' . $album->name, 5);
-
-            $options = array(
-                'album_name' => $album->full_name,
-                'artist'     => $album->artist_name,
-                'keyword'    => $album->artist_name . ' ' . $album->full_name
-            );
-
-            $results = $art->gather($options, 1);
-
-            if (count($results)) {
-                // Pull the string representation from the source
-                $image = Art::get_from_source($results[0], 'album');
-                if (strlen($image) > '5') {
-                    $art->insert($image, $results[0]['mime']);
-                    // If they've enabled resizing of images generate a thumbnail
-                    if (AmpConfig::get('resize_images')) {
-                        $thumb = $art->generate_thumb($image, array(
-                                'width' => 275,
-                                'height' => 275),
-                            $results[0]['mime']);
-                        if (is_array($thumb)) {
-                            $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], '275x275');
-                        }
+        $searches = array();
+        if ($songs == null) {
+            $searches['album'] = $this->get_album_ids();
+            $searches['artist'] = $this->get_artist_ids();
+        } else {
+            $searches['album'] = array();
+            $searches['artist'] = array();
+            foreach ($songs as $song_id) {
+                $song = new Song($song_id);
+                if ($song->id) {
+                    if (!in_array($song->album, $searches['album'])) {
+                        $searches['album'][] = $song->album;
                     }
-
-                } else {
-                    debug_event('gather_art', 'Image less than 5 chars, not inserting', 3);
+                    if (!in_array($song->artist, $searches['artist'])) {
+                        $searches['artist'][] = $song->artist;
+                    }
                 }
             }
+        }
+        if ($videos == null) {
+            $searches['video'] = $this->get_video_ids();
+        } else {
+            $searches['video'] = $videos;
+        }
 
-            // Stupid little cutesie thing
-            $search_count++;
-            if (UI::check_ticker()) {
-                UI::update_text('count_art_' . $this->id, $search_count);
-                UI::update_text('read_art_' . $this->id, scrub_out($album->name));
+        // Run through items and get the art!
+        foreach ($searches as $key => $values) {
+            foreach ($values as $id) {
+                $this->gather_art_item($key, $id);
+
+                // Stupid little cutesie thing
+                $search_count++;
+                if (UI::check_ticker()) {
+                    UI::update_text('count_art_' . $this->id, $search_count);
+                    UI::update_text('read_art_' . $this->id, scrub_out($album->name));
+                }
             }
-
-            unset($found);
-        } // foreach albums
+        }
 
         // One last time for good measure
         UI::update_text('count_art_' . $this->id, $search_count);
@@ -985,7 +1157,7 @@ abstract class Catalog extends database_object
 
         debug_event('tag-read', 'Reading tags from ' . $media->file, 5);
 
-        $vainfo = new vainfo($media->file,'','','',$sort_pattern,$rename_pattern);
+        $vainfo = new vainfo($media->file,array('music'),'','','',$sort_pattern,$rename_pattern);
         $vainfo->get_info();
 
         $key = vainfo::get_tag_type($vainfo->tags);
@@ -1003,19 +1175,6 @@ abstract class Catalog extends database_object
         return $return;
 
     } // update_media_from_tags
-
-    /**
-     * update_video_from_tags
-     * Updates the video info based on tags
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public static function update_video_from_tags($results,$video)
-    {
-        // Pretty sweet function here
-        return $results;
-
-    } // update_video_from_tags
 
     /**
      * update_song_from_tags
@@ -1089,6 +1248,25 @@ abstract class Catalog extends database_object
 
     } // update_song_from_tags
 
+    public function get_gather_types($media_type)
+    {
+        $gtypes = $this->gather_types;
+        if (empty($gtypes)) {
+            $gtypes = "music";
+        }
+        $types = explode(',', $gtypes);
+
+        if ($media_type == "video") {
+            $types = array_diff($types, array('music'));
+        }
+
+        if ($media_type == "music") {
+            $types = array_diff($types, array('personal_video', 'movie', 'tvshow'));
+        }
+
+        return $types;
+    }
+
     /**
      * clean_catalog
      *
@@ -1161,6 +1339,7 @@ abstract class Catalog extends database_object
         Song::gc();
         Album::gc();
         Artist::gc();
+        Video::gc();
         Art::gc();
         Stats::gc();
         Rating::gc();

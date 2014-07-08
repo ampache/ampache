@@ -36,6 +36,7 @@ class vainfo
     public $type = '';
     public $tags = array();
     public $islocal;
+    public $gather_types = array();
 
     protected $_raw = array();
     protected $_getID3 = '';
@@ -55,10 +56,11 @@ class vainfo
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function __construct($file, $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern = '', $file_pattern ='', $islocal = true)
+    public function __construct($file, $gather_types = array(), $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern = '', $file_pattern ='', $islocal = true)
     {
         $this->islocal = $islocal;
         $this->filename = $file;
+        $this->gather_types = $gather_types;
         $this->encoding = $encoding ?: AmpConfig::get('site_charset');
 
         /* These are needed for the filename mojo */
@@ -201,7 +203,7 @@ class vainfo
         /* Figure out what type of file we are dealing with */
         $this->type = $this->_get_type();
 
-        $enabled_sources = (array) AmpConfig::get('metadata_order');
+        $enabled_sources = (array) $this->get_metadata_order();
 
         if (in_array('filename', $enabled_sources)) {
             $this->tags['filename'] = $this->_parse_filename($this->filename);
@@ -280,6 +282,8 @@ class vainfo
             $info['time'] = $info['time'] ?: intval($tags['time']);
             $info['channels'] = $info['channels'] ?: $tags['channels'];
 
+            // This because video title are almost always bad...
+            $info['original_name'] = $info['original_name'] ?: stripslashes(trim($tags['original_name']));
             $info['title'] = $info['title'] ?: stripslashes(trim($tags['title']));
 
             $info['year'] = $info['year'] ?: intval($tags['year']);
@@ -294,19 +298,9 @@ class vainfo
             $info['album'] = $info['album'] ?: trim($tags['album']);
 
             $info['band'] = $info['band'] ?: trim($tags['band']);
+            $info['composer'] = $info['composer'] ?: trim($tags['composer']);
 
-            // multiple genre support
-            if ((!$info['genre']) && $tags['genre']) {
-                if (!is_array($tags['genre'])) {
-                    // not all tag formats will return an array, but we need one
-                    $info['genre'][] = trim($tags['genre']);
-                } else {
-                    // if we trim the array we lose everything after 1st entry
-                    foreach ($tags['genre'] as $genre) {
-                        $info['genre'][] = trim($genre);
-                    }
-                }
-            }
+            $info['genre'] = self::clean_array_tag('genre', $info, $tags);
 
             $info['mb_trackid'] = $info['mb_trackid'] ?: trim($tags['mb_trackid']);
             $info['mb_albumid'] = $info['mb_albumid'] ?: trim($tags['mb_albumid']);
@@ -326,6 +320,17 @@ class vainfo
             $info['resolution_y'] = $info['resolution_y'] ?: intval($tags['resolution_y']);
             $info['audio_codec'] = $info['audio_codec'] ?: trim($tags['audio_codec']);
             $info['video_codec'] = $info['video_codec'] ?: trim($tags['video_codec']);
+            $info['description'] = $info['description'] ?: trim($tags['description']);
+
+            $info['tvshow'] = $info['tvshow'] ?: trim($tags['tvshow']);
+            $info['tvshow_year'] = $info['tvshow_year'] ?: trim($tags['tvshow_year']);
+            $info['tvshow_season'] = $info['tvshow_season'] ?: trim($tags['tvshow_season']);
+            $info['tvshow_episode'] = $info['tvshow_episode'] ?: trim($tags['tvshow_episode']);
+            $info['release_date'] = $info['release_date'] ?: trim($tags['release_date']);
+
+            $info['tvshow_art'] = $info['tvshow_art'] ?: trim($tags['tvshow_art']);
+            $info['tvshow_season_art'] = $info['tvshow_season_art'] ?: trim($tags['tvshow_season_art']);
+            $info['art'] = $info['art'] ?: trim($tags['art']);
         }
 
         // Some things set the disk number even though there aren't multiple
@@ -335,6 +340,25 @@ class vainfo
         }
 
         return $info;
+    }
+
+    private static function clean_array_tag($field, $info, $tags)
+    {
+        $arr = array();
+        if ((!$info[$field] || count($info[$field]) == 0) && $tags[$field]) {
+            if (!is_array($tags[$field])) {
+                // not all tag formats will return an array, but we need one
+                $arr[] = trim($tags[$field]);
+            } else {
+                foreach ($tags[$field] as $genre) {
+                    $arr[] = trim($genre);
+                }
+            }
+        } else {
+            $arr = $info[$field];
+        }
+
+        return $arr;
     }
 
     /**
@@ -440,6 +464,19 @@ class vainfo
         return $cleaned;
     }
 
+    private function get_metadata_order_key()
+    {
+        if (!in_array('music', $this->gather_types))
+            return 'metadata_order_video';
+
+        return 'metadata_order';
+    }
+
+    private function get_metadata_order()
+    {
+        return (array) AmpConfig::get($this->get_metadata_order_key());
+    }
+
     /**
      * _get_plugin_tags
      *
@@ -447,7 +484,7 @@ class vainfo
      */
     private function _get_plugin_tags()
     {
-        $tag_order = AmpConfig::get('metadata_order');
+        $tag_order = $this->get_metadata_order();
         if (!is_array($tag_order)) {
             $tag_order = array($tag_order);
         }
@@ -456,8 +493,11 @@ class vainfo
         foreach ($tag_order as $tag_source) {
             if (in_array($tag_source, $plugin_names)) {
                 $plugin = new Plugin($tag_source);
-                if ($plugin->load($GLOBALS['user'])) {
-                    $this->tags[$tag_source] = $plugin->_plugin->get_metadata(self::clean_tag_info($this->tags, self::get_tag_type($this->tags), $this->filename));
+                $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
+                if ($installed_version) {
+                    if ($plugin->load($GLOBALS['user'])) {
+                        $this->tags[$tag_source] = $plugin->_plugin->get_metadata($this->gather_types, self::clean_tag_info($this->tags, self::get_tag_type($this->tags, $this->get_metadata_order_key()), $this->filename));
+                    }
                 }
             }
         }
@@ -785,58 +825,200 @@ class vainfo
         $origin = $filename;
         $results = array();
 
-        // Correctly detect the slash we need to use here
-        if (strpos($filename, '/') !== false) {
-            $slash_type = '/';
-            $slash_type_preg = $slash_type;
-        } else {
-            $slash_type = '\\';
-            $slash_type_preg = $slash_type . $slash_type;
-        }
-
-        // Combine the patterns
-        $pattern = preg_quote($this->_dir_pattern) . $slash_type_preg . preg_quote($this->_file_pattern);
-
-        // Remove first left directories from filename to match pattern
-        $cntslash = substr_count($pattern, $slash_type) + 1;
-        $filepart = explode($slash_type, $filename);
-        if (count($filepart) > $cntslash) {
-            $filename = implode($slash_type, array_slice($filepart, count($filepart) - $cntslash));
-        }
-
-        // Pull out the pattern codes into an array
-        preg_match_all('/\%\w/', $pattern, $elements);
-
-        // Mangle the pattern by turning the codes into regex captures
-        $pattern = preg_replace('/\%[Ty]/', '([0-9]+?)', $pattern);
-        $pattern = preg_replace('/\%\w/', '(.+?)', $pattern);
-        $pattern = str_replace('/', '\/', $pattern);
-        $pattern = str_replace(' ', '\s', $pattern);
-        $pattern = '/' . $pattern . '\..+$/';
-
-        // Pull out our actual matches
-        preg_match($pattern, $filename, $matches);
-
-        if ($matches != null) {
-            // The first element is the full match text
-            $matched = array_shift($matches);
-            debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filename, 5);
-
-            // Iterate over what we found
-            foreach ($matches as $key => $value) {
-                $new_key = translate_pattern_code($elements['0'][$key]);
-                if ($new_key) {
-                    $results[$new_key] = $value;
-                }
+        if (in_array('music', $this->gather_types) || in_array('clip', $this->gather_types)) {
+            // Correctly detect the slash we need to use here
+            if (strpos($filename, '/') !== false) {
+                $slash_type = '/';
+                $slash_type_preg = $slash_type;
+            } else {
+                $slash_type = '\\';
+                $slash_type_preg = $slash_type . $slash_type;
             }
 
-            $results['title'] = $results['title'] ?: basename($filename);
-            if ($this->islocal) {
-                $results['size'] = filesize(Core::conv_lc_file($origin));
+            // Combine the patterns
+            $pattern = preg_quote($this->_dir_pattern) . $slash_type_preg . preg_quote($this->_file_pattern);
+
+            // Remove first left directories from filename to match pattern
+            $cntslash = substr_count($pattern, $slash_type) + 1;
+            $filepart = explode($slash_type, $filename);
+            if (count($filepart) > $cntslash) {
+                $filename = implode($slash_type, array_slice($filepart, count($filepart) - $cntslash));
+            }
+
+            // Pull out the pattern codes into an array
+            preg_match_all('/\%\w/', $pattern, $elements);
+
+            // Mangle the pattern by turning the codes into regex captures
+            $pattern = preg_replace('/\%[Ty]/', '([0-9]+?)', $pattern);
+            $pattern = preg_replace('/\%\w/', '(.+?)', $pattern);
+            $pattern = str_replace('/', '\/', $pattern);
+            $pattern = str_replace(' ', '\s', $pattern);
+            $pattern = '/' . $pattern . '\..+$/';
+
+            // Pull out our actual matches
+            preg_match($pattern, $filename, $matches);
+
+            if ($matches != null) {
+                // The first element is the full match text
+                $matched = array_shift($matches);
+                debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filename, 5);
+
+                // Iterate over what we found
+                foreach ($matches as $key => $value) {
+                    $new_key = translate_pattern_code($elements['0'][$key]);
+                    if ($new_key) {
+                        $results[$new_key] = $value;
+                    }
+                }
+
+                $results['title'] = $results['title'] ?: basename($filename);
+                if ($this->islocal) {
+                    $results['size'] = filesize(Core::conv_lc_file($origin));
+                }
+            }
+        }
+
+        if (in_array('tvshow', $this->gather_types)) {
+            $pathinfo = pathinfo($filename);
+            $filetitle = $pathinfo['filename'];
+
+            $results = array_merge($results, $this->parseEpisodeName($filetitle));
+            if (!$results['tvshow']) {
+                // Try to identify the show information from parent folder
+                $filetitle = basename($pathinfo['dirname']);
+                $results = array_merge($results, $this->parseEpisodeName($filetitle));
+
+                if (!$results['tvshow']) {
+                    if ($results['tvshow_season'] && $results['tvshow_episode']) {
+                        // We have season and episode, we assume parent folder is the tvshow name
+                        $pathinfo = pathinfo($pathinfo['dirname']);
+                        $filetitle = basename($pathinfo['dirname']);
+                        $results['tvshow'] = $this->fixSerieName($filetitle);
+                    } else {
+                        // Or we assume each parent folder contains one missing information
+                        if (preg_match('/[\/\\\\]([^\/\\\\]*)[\/\\\\]Season (\d{1,2})[\/\\\\]((E|Ep|Episode)\s?(\d{1,2})[\/\\\\])?/i', $filename, $matches)) {
+                            $results['tvshow'] = $this->fixSerieName($matches[1]);
+                            $results['tvshow_season'] = $matches[2];
+                            if (isset($matches[5])) {
+                                $results['tvshow_episode'] = $matches[5];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (in_array('movie', $this->gather_types)) {
+            $pathinfo = pathinfo($filename);
+            $filetitle = $pathinfo['filename'];
+            $results['title'] = $this->fixVideoReleaseName($filetitle);
+            if (!$results['title']) {
+                // Try to identify the movie information from parent folder
+                $filetitle = basename($pathinfo['dirname']);
+                $results['title'] = $this->fixVideoReleaseName($filetitle);
             }
         }
 
         return $results;
+    }
+
+    private function parseEpisodeName($filetitle)
+    {
+        $patterns = array(
+            '/(.*)s(\d\d)e(\d\d)(\D.*)/i',
+            '/(.*)s(\d\d)(\D)(.*)/i',
+            '/(.*)\D(\d{1,2})x(\d\d)(\D)(.*)/i',
+            '/(.*)\D(\d{1,2})x(\d\d)$/i',
+            '/(\D*)[\.|\-|_](\d)(\d\d)([\.|\-|_]\D.*)/i',
+            '/(\D*)(\d)[^0-9](\d\d)(\D.*)/i'
+        );
+
+        $results = array();
+        for ($i=0;$i<count($patterns);$i++) {
+            if (preg_match($patterns[$i], $filetitle, $matches)) {
+
+                $name = $this->fixSerieName($matches[1]);
+                if(empty($name))
+                    continue;
+
+                $season = floatval($matches[2]);
+                if ($season == 0)
+                    continue;
+
+                $episode = floatval($matches[3]);
+                $leftover = $matches[4];
+
+                if ($episode == 0) {
+                    // Some malformed string
+                    $leftover = $filetitle;
+                }
+
+                $results['tvshow'] = $name;
+                $results['tvshow_season'] = $season;
+                $results['tvshow_episode'] = $episode;
+                $results['title'] = $this->fixVideoReleaseName($leftover);
+                break;
+            }
+        }
+
+        return $results;
+    }
+
+    private function fixSerieName($name)
+    {
+        $name = str_replace('_', ' ', $name);
+        $name = str_replace('.', ' ', $name);
+        $name = str_replace('  ', ' ', $name);
+        $name = $this->removeStartingDashesAndSpaces($name);
+        $name = $this->removeEndingDashesAndSpaces($name);
+
+        return ucwords($name);
+    }
+
+    private function fixVideoReleaseName($name)
+    {
+        $commonabbr = array(
+            'divx', 'xvid', 'dvdrip', 'hdtv', 'lol', 'axxo', 'repack', 'xor',
+            'pdtv', 'real', 'vtv', 'caph', '2hd', 'proper', 'fqm', 'uncut',
+            'topaz', 'tvt', 'notv', 'fpn', 'fov', 'orenji', '0tv', 'omicron',
+            'dsr', 'ws', 'sys', 'crimson', 'wat', 'hiqt', 'internal', 'brrip',
+            'boheme', 'vost', 'vostfr', 'fastsub', 'addiction'
+        );
+        for ($i=0; $i<count($commonabbr); $i++) {
+            $name = preg_replace('/[\W|_]' . $commonabbr[$i] . '[\W|_](.*)/i', '.', $name);
+        }
+
+        while (strpos($name, '..') !== false) {
+            $name = preg_replace('/\.\./', '.', $name);
+        }
+        $name = preg_replace('/\.\w*$/', ' ', $name);
+        $name = preg_replace('/\[.*$/', '', $name);
+
+        return $this->fixSerieName($name);
+    }
+
+    private function removeStartingDashesAndSpaces($name)
+    {
+        if (empty($name))
+            return $name;
+
+        while (strpos($name, ' ') === 0 || strpos($name, '-') === 0) {
+            $name = preg_replace('/^ /', '', $name);
+            $name = preg_replace('/^-/', '', $name);
+        }
+        return $name;
+    }
+
+    private function removeEndingDashesAndSpaces($name)
+    {
+        if (empty($name))
+            return $name;
+
+        while (strrpos($name, ' ') === strlen($name) - 1 || strrpos($name, '-') === strlen($name) - 1) {
+            $name = preg_replace('/ $/', '', $name);
+            $name = preg_replace('/-$/', '', $name);
+        }
+        return $name;
     }
 
     /**

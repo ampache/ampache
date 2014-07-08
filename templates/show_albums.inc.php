@@ -29,7 +29,7 @@ $thcount = 8;
         <tr class="th-top">
             <th class="cel_play essential"></th>
         <?php if (Art::is_enabled()) { ++$thcount; ?>
-            <th class="cel_cover optional"><?php echo T_('Cover'); ?></th>
+            <th class="cel_cover optional"><?php echo T_('Art'); ?></th>
         <?php } ?>
             <th class="cel_album essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'),'album_sort_name'); ?></th>
             <th class="cel_add essential"></th>
@@ -53,11 +53,11 @@ $thcount = 8;
 
         /* Foreach through the albums */
         foreach ($object_ids as $album_id) {
-            $album = new Album($album_id);
-            $album->allow_group_disks = $allow_group_disks;
-            $album->format();
+            $libitem = new Album($album_id);
+            $libitem->allow_group_disks = $allow_group_disks;
+            $libitem->format();
         ?>
-        <tr id="album_<?php echo $album->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="album_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_album_row.inc.php'; ?>
         </tr>
         <?php } //end foreach ($albums as $album) ?>
@@ -70,9 +70,9 @@ $thcount = 8;
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-        <?php if (Art::is_enabled()) { ?>
-            <th class="cel_cover"><?php echo T_('Cover'); ?></th>
-        <?php } ?>
+            <?php if (Art::is_enabled()) { ?>
+                <th class="cel_cover"><?php echo T_('Art'); ?></th>
+            <?php } ?>
             <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'),'album_sort_name_bottom'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=generic_artist', T_('Artist'),'album_sort_artist_bottom'); ?></th>

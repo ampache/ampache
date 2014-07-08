@@ -694,7 +694,7 @@ right: expression(-this.parentNode.offsetWidth%2+"px");
 	float:left;
 	margin-right:10px;
 }
-.album_art {
+.item_art {
 	float:left;
 	margin-right:10px;
 }
@@ -730,7 +730,7 @@ right: expression(-this.parentNode.offsetWidth%2+"px");
     opacity: 1;
 }
 
-#artist_summary {
+#item_summary {
     margin-right: 150px;
 }
 
@@ -832,12 +832,12 @@ td.cel_cover {
 /************************************************/
 /*          Song details                        */
 /************************************************/
-dl.song_details {
+dl.media_details {
 	font-family:Verdana, Geneva, sans-serif;
 	font-size:10px;
 	width: 300px;
 }
-.song_details dt {
+.media_details dt {
 	text-transform:uppercase;
 	float:left;
 	clear:both;
@@ -848,7 +848,7 @@ dl.song_details {
 	border-right: 1px dotted #666666;
 	border-bottom: 1px dotted #666666;
 }
-.song_details dd {
+.media_details dd {
 	float:left;
 	width:79%;
 	min-width:79%; /*Ie bugfix*/

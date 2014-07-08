@@ -36,10 +36,10 @@
     <tbody>
         <?php
         foreach ($object_ids as $broadcast_id) {
-            $broadcast = new Broadcast($broadcast_id);
-            $broadcast->format();
+            $libitem = new Broadcast($broadcast_id);
+            $libitem->format();
         ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="broadcast_row_<?php echo $broadcast->id; ?>">
+        <tr class="<?php echo UI::flip_class(); ?>" id="broadcast_row_<?php echo $libitem->id; ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_broadcast_row.inc.php'; ?>
         </tr>
         <?php } ?>

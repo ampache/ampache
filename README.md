@@ -101,7 +101,8 @@ Ampache includes some external modules that carry their own licensing.
 * [Bootstrap] (http://getbootstrap.com): MIT
 * [jQuery Knob] (https://github.com/aterrien/jQuery-Knob): MIT
 * [jQuery File Upload] (https://github.com/blueimp/jQuery-File-Upload): MIT
-* [jsTree] (http://www.jstree.com/): MIT
+* [jsTree] (http://www.jstree.com): MIT
+* [php-tmdb-api] (https://github.com/wtfzdotnet/php-tmdb-api) : MIT
 
 
 Translations

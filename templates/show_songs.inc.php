@@ -55,10 +55,10 @@ $thcount = 8;
     <tbody id="sortableplaylist_<?php echo $browse->get_filter('album'); ?>">
         <?php
             foreach ($object_ids as $song_id) {
-                $song = new Song($song_id);
-                $song->format();
+                $libitem = new Song($song_id);
+                $libitem->format();
         ?>
-            <tr class="<?php echo UI::flip_class(); ?>" id="song_<?php echo $song->id; ?>">
+            <tr class="<?php echo UI::flip_class(); ?>" id="song_<?php echo $libitem->id; ?>">
                 <?php require AmpConfig::get('prefix') . '/templates/show_song_row.inc.php'; ?>
             </tr>
         <?php } ?>

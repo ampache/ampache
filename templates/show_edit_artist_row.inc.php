@@ -21,26 +21,26 @@
  */
 ?>
 <div>
-    <form method="post" id="edit_artist_<?php echo $artist->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_artist_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($artist->f_full_name); ?>" /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->f_full_name); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID') ?></td>
-                <td><input type="text" name="mbid" value="<?php echo $artist->mbid; ?>" /></td>
+                <td><input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($artist->tags); ?>" /></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
                 <td><input type="checkbox" name="apply_childs" value="checked" /><?php echo T_(' Apply tags to all childs (override tags for albums and songs)') ?></td>
             </tr>
         </table>
-        <input type="hidden" name="id" value="<?php echo $artist->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
         <input type="hidden" name="type" value="artist_row" />
     </form>
 </div>

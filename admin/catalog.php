@@ -275,7 +275,7 @@ switch ($_REQUEST['action']) {
         $catalog->format();
         require_once AmpConfig::get('prefix') . '/templates/show_edit_catalog.inc.php';
     break;
-    case 'gather_album_art':
+    case 'gather_media_art':
         toggle_visible('ajax-loading');
         ob_end_flush();
 
@@ -289,7 +289,7 @@ switch ($_REQUEST['action']) {
             $catalog->gather_art();
         }
         $url     = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title     = T_('Album Art Search Finished');
+        $title     = T_('Media Art Search Finished');
         $body    = '';
         show_confirmation($title,$body,$url);
     break;

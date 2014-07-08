@@ -145,11 +145,8 @@ class Shoutbox
      */
     public static function get_object($type,$object_id)
     {
-        $allowed_objects = array('song','genre','album','artist','radio');
-
-        if (!in_array($type,$allowed_objects)) {
+        if (!Catalog::is_library_item($type))
             return false;
-        }
 
         $object = new $type($object_id);
 
@@ -164,19 +161,10 @@ class Shoutbox
      */
     public function get_image()
     {
-        switch ($this->object_type) {
-            case 'album':
-                $image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . AmpConfig::get('web_path') . "/image.php?id=" . $this->object_id . "&amp;thumb=1\" />";
-            break;
-            case 'song':
-                $song = new Song($this->object_id);
-                $image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . AmpConfig::get('web_path') . "/image.php?id=" . $song->album . "&amp;thumb=1\" />";
-            break;
-            case 'artist':
-            default:
-                $image_string = "";
-            break;
-        } // end switch
+        $image_string = '';
+        if (Art::has_db($this->object_id, $this->object_type)) {
+            $image_string = "<img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . AmpConfig::get('web_path') . "/image.php?object_id=" . $this->object_id . "&object_type=" . $this->object_type . "&thumb=1\" />";
+        }
 
         return $image_string;
 
@@ -203,16 +191,12 @@ class Shoutbox
      * update
      * This takes a key'd array of data as input and updates a shoutbox entry
      */
-    public static function update($data)
+    public function update($data)
     {
-        $id        = Dba::escape($data['shout_id']);
-        $text         = Dba::escape(strip_tags($data['comment']));
-        $sticky     = make_bool($data['sticky']);
+        $sql = "UPDATE `user_shout` SET `text` = ?, `sticky` = ? WHERE `id` = ?";
+        Dba::write($sql, array($data['comment'], make_bool($data['sticky']), $this->id));
 
-        $sql = "UPDATE `user_shout` SET `text`='$text', `sticky`='$sticky' WHERE `id`='$id'";
-        Dba::write($sql);
-
-        return true;
+        return $this->id;
 
     } // create
 

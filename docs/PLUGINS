@@ -27,9 +27,10 @@ should be implemented as a public method:
     get_metadata(Array $metadata)
         The passed array contains the best metadata we've got.
     save_rating(Rating $rating, int $new_value)
-    save_songplay(Song $song)
+    save_mediaplay(Media $media)
     get_lyrics(Song $song)
     process_wanted(Wanted $wanted)
     shortener(string $url)
     get_photos(string $search)
+    gather_arts(string $type, array $options, int $limit)
 

@@ -46,40 +46,13 @@ if (!isset($_GET['object_type'])) {
     $_GET['object_type'] = 'album';
 }
 
-$type = Art::validate_type($_GET['object_type']);
+$type = $_GET['object_type'];
+if (!Core::is_library_item($type))
+    exit;
 
 /* Decide what size this image is */
-switch ($_GET['thumb']) {
-    case '1':
-        /* This is used by the now_playing stuff */
-        $size['height'] = '75';
-        $size['width']    = '75';
-    break;
-    case '2':
-        $size['height']    = '128';
-        $size['width']    = '128';
-    break;
-    case '3':
-        /* This is used by the flash player */
-        $size['height']    = '80';
-        $size['width']    = '80';
-    break;
-    case '4':
-        /* Web Player size */
-        $size['height'] = 200;
-        $size['width'] = 200; // 200px width, set via CSS
-    break;
-    case '5':
-        /* Web Player size */
-        $size['height'] = 32;
-        $size['width'] = 32;
-    break;
-    default:
-        $size['height'] = '275';
-        $size['width']    = '275';
-        if (!isset($_GET['thumb'])) { $return_raw = true; }
-    break;
-} // define size based on thumbnail
+$size = Art::get_thumb_size($_GET['thumb']);
+$kind = isset($_GET['kind']) ? $_GET['kind'] : 'default';
 
 $image = '';
 $mime = '';
@@ -103,10 +76,10 @@ if (isset($_GET['type'])) {
     }
 }
 if (!$typeManaged) {
-    $media = new $type($_GET['id']);
-    $filename = $media->name;
+    $item = new $type($_GET['object_id']);
+    $filename = $item->name ?: $item->title;
 
-    $art = new Art($media->id,$type);
+    $art = new Art($item->id, $type, $kind);
     $art->get_db();
     $etag = $art->id;
 
@@ -126,10 +99,20 @@ if (!$typeManaged) {
     }
 
     if (!$art->raw_mime) {
-        $mime = 'image/jpeg';
-        $image = file_get_contents(AmpConfig::get('prefix') .
-            AmpConfig::get('theme_path') .
-            '/images/blankalbum.jpg');
+        $defaultimg = AmpConfig::get('prefix') . AmpConfig::get('theme_path') . '/images/';
+        switch ($type) {
+            case 'video':
+            case 'tvshow':
+            case 'tvshow_season':
+                $mime = 'image/png';
+                $defaultimg .= "blankmovie.png";
+                break;
+            default:
+                $mime = 'image/jpeg';
+                $defaultimg .= "blankalbum.jpg";
+            break;
+        }
+        $image = file_get_contents($defaultimg);
     } else {
         if ($_GET['thumb']) {
             $thumb_data = $art->get_thumb($size);

@@ -143,7 +143,7 @@ class Stream_Playlist
                         $url['title'] = 'Video - ' . $object->title;
                         $url['author'] = $object->f_artist_full;
                     break;
-                    case 'radio':
+                    case 'live_stream':
                         $url['title'] = 'Radio - ' . $object->name;
                         if (!empty($object->site_url)) {
                             $url['title'] .= ' (' . $object->site_url . ')';

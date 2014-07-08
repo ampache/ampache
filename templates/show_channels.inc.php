@@ -45,16 +45,16 @@
     <tbody>
         <?php
         foreach ($object_ids as $channel_id) {
-            $channel = new Channel($channel_id);
-            $channel->format();
+            $libitem = new Channel($channel_id);
+            $libitem->format();
         ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="channel_row_<?php echo $channel->id; ?>">
+        <tr class="<?php echo UI::flip_class(); ?>" id="channel_row_<?php echo $libitem->id; ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_channel_row.inc.php'; ?>
         </tr>
         <?php } ?>
         <?php if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="6"><span class="nodata"><?php echo T_('No channel found'); ?></span></td>
+            <td colspan="13"><span class="nodata"><?php echo T_('No channel found'); ?></span></td>
         </tr>
         <?php } ?>
     </tbody>

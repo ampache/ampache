@@ -28,7 +28,7 @@
  * it is related to the album table in the database.
  *
  */
-class Album extends database_object
+class Album extends database_object implements library_item
 {
     /* Variables from DB */
     public $id;
@@ -224,7 +224,6 @@ class Album extends database_object
      */
     public static function check($name, $year = 0, $disk = 0, $mbid = null, $album_artist = null,  $readonly = false)
     {
-
         $trimmed = Catalog::trim_prefix(trim($name));
         $name = $trimmed['string'];
         $prefix = $trimmed['prefix'];
@@ -463,6 +462,63 @@ class Album extends database_object
         $this->f_tags = Tag::get_display($this->tags, true, 'album');
 
     } // format
+
+    public function get_keywords()
+    {
+        $keywords = array();
+        $keywords['artist'] = array('important' => true,
+            'label' => T_('Artist'),
+            'value' => (($album->artist_count < 2) ? $this->f_artist_name : ''));
+        $keywords['album'] = array('important' => true,
+            'label' => T_('Album'),
+            'value' => $this->f_name);
+
+        return $keywords;
+    }
+
+    public function get_fullname()
+    {
+        return $this->f_name;
+    }
+
+    public function get_parent()
+    {
+        if ($album->artist_count == 1) {
+            return array('object_type' => 'artist', 'object_id' => $album->artist_id);
+        }
+
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        return $this->get_medias();
+    }
+
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if (!$filter_type || $filter_type == 'song') {
+            $songs = $this->get_songs();
+            foreach ($songs as $song_id) {
+                $medias[] = array(
+                    'object_type' => 'song',
+                    'object_id' => $song_id
+                );
+            }
+        }
+        return $medias;
+    }
+
+    public function get_user_owner()
+    {
+        return null;
+    }
+
+    public function get_default_art_kind()
+    {
+        return 'default';
+    }
 
     /**
      * get_random_songs

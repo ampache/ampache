@@ -38,7 +38,7 @@ $web_path = AmpConfig::get('web_path');
         foreach ($plugins as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
-                if (! $installed_version) {
+                if (!$installed_version) {
                         $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Activate') . "</a>";
                 } else {

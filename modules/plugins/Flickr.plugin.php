@@ -46,7 +46,7 @@ class Ampacheflickr {
      */
     public function install() {
         if (Preference::exists('flickr_api_key')) { return false; }
-        Preference::insert('flickr_api_key','Flickr api key','','25','string','plugins');
+        Preference::insert('flickr_api_key','Flickr api key','','75','string','plugins');
         return true;
     } // install
 
@@ -68,14 +68,14 @@ class Ampacheflickr {
         return true;
     } // upgrade
 
-    public function get_photos($search) {
+    public function get_photos($search, $category = 'concert') {
         $photos = array();
-        $url = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode($search . " concert");
+        $url = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode(trim($search . " " . $category));
         debug_event($this->name, 'Calling ' . $url, '5');
         $request = Requests::get($url);
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);
-            if ($xml) {
+            if ($xml && $xml->photos) {
                 foreach ($xml->photos->photo as $photo) {
                     $photos[] = array(
                         'title' => $photo->title,
@@ -86,6 +86,32 @@ class Ampacheflickr {
         }
         
         return $photos;
+    }
+    
+    public function gather_arts($type, $options = array(), $limit = 5)
+    {
+        if (!$limit) {
+            $limit = 5;
+        }
+        
+        $images = $this->get_photos($options['keyword'], '');
+        $results = array();
+        foreach ($images as $image) {
+            $title = $this->name;
+            if (!empty($image['title'])) {
+                $title .= ' - ' . $image['title'];
+            }
+            $results[] = array(
+                'url' => $image['url'],
+                'mime' => 'image/jpeg',
+                'title' => $title
+            );
+            
+            if ($limit && count($results) >= $limit)
+                break;
+        }
+        
+        return $results;
     }
     
     /**

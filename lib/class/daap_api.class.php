@@ -262,7 +262,7 @@ class Daap_Api
 
             $r = self::tlv('dmap.itemid', 1);
             $r .= self::tlv('dmap.itemname', 'Ampache');
-            $counts = Catalog::count_songs();
+            $counts = Catalog::count_medias();
             $r .= self::tlv('dmap.itemcount', $counts['songs']);
             $r .= self::tlv('dmap.containercount', count(Playlist::get_playlists()));
             $r = self::tlv('dmap.listingitem', $r);
@@ -310,7 +310,7 @@ class Daap_Api
                     $l .= self::tlv_playlist($playlist);
                 }
                 foreach ($searches as $search_id) {
-                    $playlist = new Search('song', $search_id);
+                    $playlist = new Search($search_id, 'song');
                     $playlist->format();
                     $l .= self::tlv_playlist($playlist);
                 }
@@ -347,7 +347,7 @@ class Daap_Api
 
                 if ($id > Daap_Api::AMPACHEID_SMARTPL) {
                     $id -= Daap_Api::AMPACHEID_SMARTPL;
-                    $playlist = new Search('song', $id);
+                    $playlist = new Search($id, 'song');
                 } else {
                     $playlist = new Playlist($id);
                 }

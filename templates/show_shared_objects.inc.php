@@ -40,10 +40,10 @@
     <tbody>
     <?php
     foreach ($object_ids as $share_id) {
-        $share = new Share($share_id);
-        $share->format();
+        $libitem = new Share($share_id);
+        $libitem->format();
     ?>
-    <tr id="share_<?php echo $share->id; ?>" class="<?php echo UI::flip_class(); ?>">
+    <tr id="share_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
         <?php require AmpConfig::get('prefix') . '/templates/show_shared_object_row.inc.php'; ?>
     </tr>
     <?php } ?>

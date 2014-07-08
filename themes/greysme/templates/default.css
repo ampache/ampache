@@ -553,7 +553,7 @@ input[type=checkbox]  { border:0;background:none; }
 
 
 /* Specific to Info Boxes */
-.info-box .album_art {float:left;margin-right:10px;}
+.info-box .item_art {float:left;margin-right:10px;}
 .info-box th {color:#8b3e38;}
 #information_actions { } 
 #information_actions h3 { color:#8b3e38; font-size:1.2em; margin:0.2em; }
@@ -576,7 +576,7 @@ input[type=checkbox]  { border:0;background:none; }
     opacity: 1;
 }
 
-#artist_summary {
+#item_summary {
     margin-right: 150px;
 }
 
@@ -661,15 +661,15 @@ td.cel_track {text-align:right;}
 /************************************************/
 /*          Song details                        */
 /************************************************/
-dl.song_details{font-size:1em;}
-.song_details dt {
+dl.media_details{font-size:1em;}
+.media_details dt {
    float:left;
    clear:both;
    width:20%;
    min-width:20%; /*Ie bugfix*/
    font-weight:bold;
 }
-.song_details dd {
+.media_details dd {
    float:left;
    width:79%;
    min-width:79%; /*Ie bugfix*/

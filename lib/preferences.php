@@ -125,7 +125,7 @@ function create_preference_input($name,$value)
         } elseif ($value == '0') {
             echo "Disabled";
         } else {
-            if (preg_match('/_pass$/', $name)) {
+            if (preg_match('/_pass$/', $name) || preg_match('/_api_key$/', $name)) {
                 echo "******";
             } else {
                 echo $value;

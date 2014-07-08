@@ -37,6 +37,7 @@ class Art extends database_object
     public $uid; // UID of the object not ID because it's not the ART.ID
     public $raw; // Raw art data
     public $raw_mime;
+    public $kind;
 
     public $thumb;
     public $thumb_mime;
@@ -48,10 +49,13 @@ class Art extends database_object
      * Art constructor, takes the UID of the object and the
      * object type.
      */
-    public function __construct($uid, $type = 'album')
+    public function __construct($uid, $type = 'album', $kind = 'default')
     {
-        $this->type = Art::validate_type($type);
+        if (!Core::is_library_item($type))
+            return false;
+        $this->type = $type;
         $this->uid = $uid;
+        $this->kind = $kind;
 
     } // constructor
 
@@ -125,24 +129,6 @@ class Art extends database_object
     }
 
     /**
-     * validate_type
-     * This validates the type
-     */
-    public static function validate_type($type)
-    {
-        switch ($type) {
-            case 'album':
-            case 'artist':
-            case 'video':
-            case 'user':
-                return $type;
-            default:
-                return 'album';
-        }
-
-    } // validate_type
-
-    /**
      * extension
      * This returns the file extension for the currently loaded art
      */
@@ -212,8 +198,8 @@ class Art extends database_object
      */
     public function get_db()
     {
-        $sql = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-        $db_results = Dba::read($sql, array($this->type, $this->uid));
+        $sql = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
+        $db_results = Dba::read($sql, array($this->type, $this->uid, $this->kind));
 
         while ($results = Dba::fetch_assoc($db_results)) {
             if ($results['size'] == 'original') {
@@ -246,6 +232,27 @@ class Art extends database_object
 
     } // get_db
 
+    public static function has_db($object_id, $object_type, $kind = 'default')
+    {
+        $sql = "SELECT COUNT(`id`) AS `nb_img` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
+        $db_results = Dba::read($sql, array($object_type, $object_id, $kind));
+        $nb_img = 0;
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $nb_img = $results['nb_img'];
+        }
+
+        return ($nb_img > 0);
+    }
+
+    public function insert_url($url)
+    {
+        debug_event('art', 'Insert art from url ' . $url, '5');
+        $image = Art::get_from_source(array('url' => $url), $this->type);
+        $rurl = pathinfo($url);
+        $mime = "image/" . $rurl['extension'];
+        $this->insert($image, $mime);
+    }
+
     /**
      * insert
      * This takes the string representation of an image and inserts it into
@@ -264,18 +271,12 @@ class Art extends database_object
 
         // Default to image/jpeg if they don't pass anything
         $mime = $mime ? $mime : 'image/jpeg';
-
-        $image = Dba::escape($source);
-        $mime = Dba::escape($mime);
-        $uid = Dba::escape($this->uid);
-        $type = Dba::escape($this->type);
-
         // Blow it away!
         $this->reset();
 
         // Insert it!
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`) VALUES('$image', '$mime', 'original', '$type', '$uid')";
-        Dba::write($sql);
+        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) VALUES(?, ?, 'original', ?, ?, ?)";
+        Dba::write($sql, array($source, $mime, $this->type, $this->uid, $this->kind));
 
         return true;
 
@@ -287,8 +288,8 @@ class Art extends database_object
      */
     public function reset()
     {
-        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ?";
-        Dba::write($sql, array($this->uid, $this->type));
+        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
+        Dba::write($sql, array($this->uid, $this->type, $this->kind));
     } // reset
 
     /**
@@ -303,17 +304,11 @@ class Art extends database_object
             return false;
         }
 
-        $source = Dba::escape($source);
-        $mime = Dba::escape($mime);
-        $size = Dba::escape($size);
-        $uid = Dba::escape($this->uid);
-        $type = Dba::escape($this->type);
+        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
+        Dba::write($sql, array($this->uid, $this->type, $size, $this->kind));
 
-        $sql = "DELETE FROM `image` WHERE `object_id`='$uid' AND `object_type`='$type' AND `size`='$size'";
-        Dba::write($sql);
-
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`) VALUES('$source', '$mime', '$size', '$type', '$uid')";
-        Dba::write($sql);
+        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($source, $mime, $size, $this->type, $this->uid, $this->kind));
     } // save_thumb
 
     /**
@@ -324,12 +319,8 @@ class Art extends database_object
     public function get_thumb($size)
     {
         $sizetext = $size['width'] . 'x' . $size['height'];
-        $sizetext = Dba::escape($sizetext);
-        $type = Dba::escape($this->type);
-        $uid = Dba::escape($this->uid);
-
-        $sql = "SELECT `image`, `mime` FROM `image` WHERE `size`='$sizetext' AND `object_type`='$type' AND `object_id`='$uid'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `image`, `mime` FROM `image` WHERE `size` = ? AND `object_type` = ? AND `object_id` = ? AND `kind` = ?";
+        $db_results = Dba::read($sql, array($sizetext, $this->type, $this->uid, $this->kind));
 
         $results = Dba::fetch_assoc($db_results);
         if (count($results)) {
@@ -464,8 +455,8 @@ class Art extends database_object
             $uid = Dba::escape($data['db']);
             $type = Dba::escape($type);
 
-            $sql = "SELECT * FROM `image` WHERE `object_type`='$type' AND `object_id`='$uid' AND `size`='original'";
-            $db_results = Dba::read($sql);
+            $sql = "SELECT * FROM `image` WHERE `object_type` = ? AND `object_id` =? AND `size`='original'";
+            $db_results = Dba::read($sql, array($type, $data['db']));
             $row = Dba::fetch_assoc($db_results);
             return $row['art'];
         } // came from the db
@@ -482,8 +473,15 @@ class Art extends database_object
                 }
                 $options['proxy'] = $proxy;
             }
-            $request = Requests::get($data['url'], array(), $options);
-            return $request->body;
+            try {
+                $request = Requests::get($data['url'], array(), $options);
+                $raw = $request->body;
+            } catch (Exception $e) {
+                debug_event('Art', 'Error getting art: ' . $e->getMessage(), '1');
+                $raw = null;
+            }
+
+            return $raw;
         }
 
         // Check to see if it's a FILE
@@ -521,7 +519,8 @@ class Art extends database_object
     public static function url($uid,$type,$sid=false)
     {
         $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
-        $type = self::validate_type($type);
+        if (!Core::is_library_item($type))
+            return null;
 
         $key = $type . $uid;
 
@@ -554,9 +553,9 @@ class Art extends database_object
             if (empty($extension)) {
                 $extension = 'jpg';
             }
-            $url = AmpConfig::get('web_path') . '/play/art/' . $sid . '/' . scrub_out($uid) . '/thumb.' . $extension;
+            $url = AmpConfig::get('web_path') . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . scrub_out($uid) . '/thumb.' . $extension;
         } else {
-            $url = AmpConfig::get('web_path') . '/image.php?id=' . scrub_out($uid) . '&object_type=' . scrub_out($type) . '&auth=' . $sid;
+            $url = AmpConfig::get('web_path') . '/image.php?object_id=' . scrub_out($uid) . '&object_type=' . scrub_out($type) . '&auth=' . $sid;
             if (!empty($extension)) {
                 $name = 'art.' . $extension;
                 $url .= '&name=' . $name;
@@ -587,22 +586,19 @@ class Art extends database_object
      * gather
      * This tries to get the art in question
      */
-    public function gather($options = array(), $limit = false)
+    public function gather($options = array(), $limit = false, $gather_parent = false)
     {
         // Define vars
         $results = array();
-
-        switch ($this->type) {
-            case 'album':
-                $allowed_methods = array('db','lastfm','folder','amazon','google','musicbrainz','tags');
-            break;
-            case 'artist':
-            case 'video':
-            default:
-                $allowed_methods = array();
-            break;
+        $type = $this->type;
+        if (isset($options['type'])) {
+            $type = $options['type'];
         }
 
+        if (count($options) == 0) {
+            debug_event('Art', 'No options for art search, skipped.', 3);
+            return array();
+        }
         $config = AmpConfig::get('art_order');
         $methods = get_class_methods('Art');
 
@@ -617,40 +613,45 @@ class Art extends database_object
 
         debug_event('Art','Searching using:' . json_encode($config), 3);
 
+        $plugin_names = Plugin::get_plugins('gather_arts');
         foreach ($config as $method) {
-
-            if (!in_array($method, $allowed_methods)) {
-                debug_event('Art', "$method not in allowed_methods, skipping", 3);
-                continue;
-            }
-
             $method_name = "gather_" . $method;
 
-            if (in_array($method_name, $methods)) {
+            $data = array();
+            if (in_array($method, $plugin_names)) {
+                $plugin = new Plugin($method);
+                $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
+                if ($installed_version) {
+                    if ($plugin->load($GLOBALS['user'])) {
+                        $data = $plugin->_plugin->gather_arts($type, $options, $limit);
+                    }
+                }
+            } else if (in_array($method_name, $methods)) {
                 debug_event('Art', "Method used: $method_name", 3);
                 // Some of these take options!
                 switch ($method_name) {
                     case 'gather_amazon':
-                        $data = $this->{$method_name}($limit, $options['keyword']);
+                        $data = $this->{$method_name}($limit, $options);
                     break;
                     case 'gather_lastfm':
+                        $data = $this->{$method_name}($limit, $options);
+                    break;
+                    case 'gather_google':
                         $data = $this->{$method_name}($limit, $options);
                     break;
                     default:
                         $data = $this->{$method_name}($limit);
                     break;
                 }
+            } else {
+                debug_event("Art", $method_name . " not defined", 1);
+            }
 
-                // Add the results we got to the current set
-                $results = array_merge($results, (array) $data);
+            // Add the results we got to the current set
+            $results = array_merge($results, (array) $data);
 
-                if ($limit && count($results) >= $limit) {
-                    return array_slice($results, 0, $limit);
-                }
-
-            } // if the method exists
-            else {
-                debug_event("Art", "$method_name not defined", 1);
+            if ($limit && count($results) >= $limit) {
+                return array_slice($results, 0, $limit);
             }
 
         } // end foreach
@@ -682,19 +683,17 @@ class Art extends database_object
      * This function retrieves art based on MusicBrainz' Advanced
      * Relationships
      */
-    public function gather_musicbrainz($limit = 5)
+    public function gather_musicbrainz($limit = 5, $data = array())
     {
         $images    = array();
         $num_found = 0;
 
-        if ($this->type == 'album') {
-            $album = new Album($this->uid);
-        } else {
+        if ($this->type != 'album') {
             return $images;
         }
 
-        if ($album->mbid) {
-            debug_event('mbz-gatherart', "Album MBID: " . $album->mbid, '5');
+        if ($data['mbid']) {
+            debug_event('mbz-gatherart', "Album MBID: " . $data['mbid'], '5');
         } else {
             return $images;
         }
@@ -704,7 +703,7 @@ class Art extends database_object
             'url-rels'
         );
         try {
-            $release = $mb->lookup('release', $album->mbid, $includes);
+            $release = $mb->lookup('release', $data['mbid'], $includes);
         } catch (Exception $e) {
             return $images;
         }
@@ -741,6 +740,7 @@ class Art extends database_object
                     $images[] = array(
                         'url'  => $url,
                         'mime' => 'image/jpeg',
+                        'title' => 'MusicBrainz'
                     );
                     if ($num_found >= $limit) {
                         return $images;
@@ -823,6 +823,7 @@ class Art extends database_object
                         $images[] = array(
                             'url'  => $url,
                             'mime' => 'image/jpeg',
+                            'title' => 'MusicBrainz'
                         );
                         if ($num_found >= $limit) {
                             return $images;
@@ -837,142 +838,6 @@ class Art extends database_object
     } // gather_musicbrainz
 
     /**
-     * gather_amazon
-     * This takes keywords and performs a search of the Amazon website
-     * for the art. It returns an array of found objects with mime/url keys
-     */
-    public function gather_amazon($limit = 5, $keywords = '')
-    {
-        $images     = array();
-        $final_results  = array();
-        $possible_keys = array(
-            'LargeImage',
-            'MediumImage',
-            'SmallImage'
-        );
-
-        if ($this->type == 'album') {
-            $album = new Album($this->uid);
-        } else {
-            return $images;
-        }
-
-        // Prevent the script from timing out
-        set_time_limit(0);
-
-        if (empty($keywords)) {
-            $keywords = $album->full_name;
-            /* If this isn't a various album combine with artist name */
-            if ($album->artist_count == '1') { $keywords .= ' ' . $album->artist_name; }
-        }
-
-        /* Attempt to retrieve the album art order */
-        $amazon_base_urls = AmpConfig::get('amazon_base_urls');
-
-        /* If it's not set */
-        if (!count($amazon_base_urls)) {
-            $amazon_base_urls = array('http://webservices.amazon.com');
-        }
-
-        /* Foreach through the base urls that we should check */
-        foreach ($amazon_base_urls as $amazon_base) {
-
-            // Create the Search Object
-            $amazon = new AmazonSearch(AmpConfig::get('amazon_developer_public_key'), AmpConfig::get('amazon_developer_private_key'), AmpConfig::get('amazon_developer_associate_tag'), $amazon_base);
-                if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
-                    $proxyhost = AmpConfig::get('proxy_host');
-                    $proxyport = AmpConfig::get('proxy_port');
-                    $proxyuser = AmpConfig::get('proxy_user');
-                    $proxypass = AmpConfig::get('proxy_pass');
-                    debug_event('amazon', 'setProxy', 5);
-                    $amazon->setProxy($proxyhost, $proxyport, $proxyuser, $proxypass);
-                }
-
-            $search_results = array();
-
-            /* Set up the needed variables */
-            $max_pages_to_search = max(AmpConfig::get('max_amazon_results_pages'),$amazon->_default_results_pages);
-            // while we have pages to search
-            do {
-                $raw_results = $amazon->search(array('artist'=>'', 'album'=>'', 'keywords'=>$keywords));
-                $total = count($raw_results) + count($search_results);
-
-                // If we've gotten more then we wanted
-                if ($limit && $total > $limit) {
-                    $raw_results = array_slice($raw_results, 0, -($total - $limit), true);
-
-                    debug_event('amazon-xml', "Found $total, limit $limit; reducing and breaking from loop", 5);
-                    // Merge the results and BREAK!
-                    $search_results = array_merge($search_results,$raw_results);
-                    break;
-                } // if limit defined
-
-                $search_results = array_merge($search_results,$raw_results);
-                $pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
-                debug_event('amazon-xml', "Searched results page " . ($amazon->_currentPage+1) . "/" . $pages_to_search,'5');
-                $amazon->_currentPage++;
-
-            } while ($amazon->_currentPage < $pages_to_search);
-
-
-            // Only do the second search if the first actually returns something
-            if (count($search_results)) {
-                $final_results = $amazon->lookup($search_results);
-            }
-
-            /* Log this if we're doin debug */
-            debug_event('amazon-xml',"Searched using $keywords with " . AmpConfig::get('amazon_developer_key') . " as key, results: " . count($final_results), 5);
-
-            // If we've hit our limit
-            if (!empty($limit) && count($final_results) >= $limit) {
-                break;
-            }
-
-        } // end foreach
-
-        /* Foreach through what we've found */
-        foreach ($final_results as $result) {
-
-            $key = '';
-            /* Recurse through the images found */
-            foreach ($possible_keys as $k) {
-                if (strlen($result[$k])) {
-                    $key = $k;
-                    break;
-                }
-            } // foreach
-
-            // Rudimentary image type detection, only JPG and GIF allowed.
-            if (substr($result[$key], -4) == '.jpg') {
-                $mime = "image/jpeg";
-            } elseif (substr($result[$key], -4) == '.gif') {
-                $mime = "image/gif";
-            } elseif (substr($result[$key], -4) == '.png') {
-                $mime = "image/png";
-            } else {
-                /* Just go to the next result */
-                continue;
-            }
-
-            $data = array();
-            $data['url']    = $result[$key];
-            $data['mime']   = $mime;
-
-            $images[] = $data;
-
-            if (!empty($limit)) {
-                if (count($images) >= $limit) {
-                    return $images;
-                }
-            }
-
-        } // if we've got something
-
-        return $images;
-
-    } // gather_amazon
-
-    /**
      * gather_folder
      * This returns the art from the folder of the files
      * If a limit is passed or the preferred filename is found the current
@@ -980,6 +845,10 @@ class Art extends database_object
      */
     public function gather_folder($limit = 5)
     {
+        if (!$limit) {
+            $limit = 5;
+        }
+
         $media = new Album($this->uid);
         $songs = $media->get_songs();
         $results = array();
@@ -1054,7 +923,8 @@ class Art extends database_object
                     debug_event('folder_art', "Found preferred image file: $file", 5);
                     $preferred[$index] = array(
                         'file' => $full_filename,
-                        'mime' => 'image/' . $extension
+                        'mime' => 'image/' . $extension,
+                        'title' => 'Folder'
                     );
                     break;
                 }
@@ -1062,7 +932,8 @@ class Art extends database_object
                 debug_event('folder_art', "Found image file: $file", 5);
                 $results[$index] = array(
                     'file' => $full_filename,
-                    'mime' => 'image/' . $extension
+                    'mime' => 'image/' . $extension,
+                    'title' => 'Folder'
                 );
 
             } // end while reading dir
@@ -1092,6 +963,10 @@ class Art extends database_object
      */
     public function gather_tags($limit = 5)
     {
+        if (!$limit) {
+            $limit = 5;
+        }
+
         // We need the filenames
         $album = new Album($this->uid);
 
@@ -1113,7 +988,8 @@ class Art extends database_object
                 $data[] = array(
                     'song' => $song->file,
                     'raw' => $image['data'],
-                    'mime' => $image['mime']);
+                    'mime' => $image['mime'],
+                    'title' => 'ID3');
             }
 
             if (isset($id3['id3v2']['APIC'])) {
@@ -1122,7 +998,8 @@ class Art extends database_object
                     $data[] = array(
                         'song' => $song->file,
                         'raw' => $image['data'],
-                        'mime' => $image['mime']);
+                        'mime' => $image['mime'],
+                        'title' => 'ID3');
                 }
             }
 
@@ -1142,32 +1019,42 @@ class Art extends database_object
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function gather_google($limit = 5)
+    public function gather_google($limit = 5, $data = array())
     {
+        if (!$limit) {
+            $limit = 5;
+        }
+
         $images = array();
-        $media = new $this->type($this->uid);
-        $media->format();
-
-        $search = $media->full_name;
-
-        if ($media->artist_count == '1')
-            $search = $media->artist_name . ', ' . $search;
-
-        $search = rawurlencode($search);
-
+        $search = rawurlencode($data['keyword']);
         $size = '&imgsz=m'; // Medium
-        //$size = '&imgsz=l'; // Large
 
-        $html = file_get_contents("http://images.google.com/images?source=hp&q=$search&oq=&um=1&ie=UTF-8&sa=N&tab=wi&start=0&tbo=1$size");
+        $url = "http://images.google.com/images?source=hp&q=" . $search . "&oq=&um=1&ie=UTF-8&sa=N&tab=wi&start=0&tbo=1" . $size;
+        debug_event('Art', 'Search url: ' . $url, '5');
 
-        if(preg_match_all("|\ssrc\=\"(http.+?)\"|", $html, $matches, PREG_PATTERN_ORDER))
-            foreach ($matches[1] as $match) {
-                $extension = "image/jpeg";
+        try {
+            // Need this to not be considered as a bot (are we? ^^)
+            $headers = array(
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11',
+            );
+            $query = Requests::get($url, $headers);
+            $html = $query->body;
 
-                if (strrpos($extension, '.') !== false) $extension = substr($extension, strrpos($extension, '.') + 1);
+            if (preg_match_all("|imgres\?imgurl\=(http.+?)&|", $html, $matches, PREG_PATTERN_ORDER)) {
+                foreach ($matches[1] as $match) {
+                    $match = rawurldecode($match);
+                    debug_event('Art', 'Found image at: ' . $match, '5');
+                    $results = pathinfo($match);
+                    $mime = 'image/' . $results['extension'];
 
-                $images[] = array('url' => $match, 'mime' => $extension);
+                    $images[] = array('url' => $match, 'mime' => $mime, 'title' => 'Google');
+                    if ($limit > 0 && count($images) >= $limit)
+                        break;
+                }
             }
+        } catch (Exception $e) {
+            debug_event('Art', 'Error getting google images: ' . $e->getMessage(), '1');
+        }
 
         return $images;
 
@@ -1178,43 +1065,24 @@ class Art extends database_object
      * This returns the art from lastfm. It doesn't currently require an
      * account but may in the future.
      */
-    public function gather_lastfm($limit, $options = false)
+    public function gather_lastfm($limit = 5, $data = array())
     {
-        $data = array();
-        // Create the parser object
-        $lastfm = new LastFMSearch();
-
-        switch ($this->type) {
-            case 'album':
-                if (is_array($options)) {
-                    $artist = $options['artist'];
-                    $album  = $options['album_name'];
-                } else {
-                    $media = new Album($this->uid);
-                    $media->format();
-                    $artist = $media->artist_name;
-                    $album = $media->full_name;
-                }
-            break;
-            default:
-                return $data;
+        if (!$limit) {
+            $limit = 5;
         }
 
-        if (AmpConfig::get('proxy_host') AND AmpConfig::get('proxy_port')) {
-            $proxyhost = AmpConfig::get('proxy_host');
-            $proxyport = AmpConfig::get('proxy_port');
-            $proxyuser = AmpConfig::get('proxy_user');
-            $proxypass = AmpConfig::get('proxy_pass');
-            debug_event('LastFM', 'proxy set', 5);
-            $lastfm->setProxy($proxyhost, $proxyport, $proxyuser, $proxypass);
+        $images = array();
+
+        if ($this->type != 'album' || empty($data['artist']) || empty($data['album'])) {
+            return $images;
         }
 
-        $raw_data = $lastfm->album_search($artist, $album);
+        $xmldata = Recommendation::album_search($data['artist'], $data['album']);
 
-        if (!count($raw_data)) { return array(); }
+        if (!count($xmldata)) { return array(); }
 
-        $coverart = $raw_data['coverart'];
-        if (!is_array($coverart)) { return array(); }
+        $coverart = (array) $xmldata->coverart;
+        if (!$coverart) { return array(); }
 
         ksort($coverart);
         foreach ($coverart as $url) {
@@ -1225,16 +1093,175 @@ class Art extends database_object
             }
 
             // HACK: we shouldn't rely on the extension to determine file type
-                $results = pathinfo($url);
+            $results = pathinfo($url);
             $mime = 'image/' . $results['extension'];
-            $data[] = array('url' => $url, 'mime' => $mime);
-            if ($limit && count($data) >= $limit) {
-                return $data;
+            $images[] = array('url' => $url, 'mime' => $mime, 'title' => 'LastFM');
+            if ($limit && count($images) >= $limit) {
+                return $images;
             }
         } // end foreach
 
-        return $data;
+        return $images;
 
     } // gather_lastfm
+
+    public static function gather_metadata_plugin($plugin, $type, $options)
+    {
+        $gtypes = array();
+        switch ($type) {
+            case 'tvshow':
+            case 'tvshow_season':
+            case 'tvshow_episode':
+                $gtypes[] = 'tvshow';
+                $media_info = array(
+                    'tvshow' => $options['tvshow'],
+                    'tvshow_season' => $options['tvshow_season'],
+                    'tvshow_episode' => $options['tvshow_episode'],
+                );
+            break;
+            default:
+                $gtypes[] = 'movie';
+                $media_info = array(
+                    'title' => $options['keyword'],
+                );
+            break;
+        }
+
+        $meta = $plugin->get_metadata($gtypes, $media_info);
+        $images = array();
+
+        if ($meta['art']) {
+            $url = $meta['art'];
+            $ures = pathinfo($url);
+            $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
+        }
+        if ($meta['tvshow_season_art']) {
+            $url = $meta['tvshow_season_art'];
+            $ures = pathinfo($url);
+            $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
+        }
+        if ($meta['tvshow_art']) {
+            $url = $meta['tvshow_art'];
+            $ures = pathinfo($url);
+            $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
+        }
+
+        return $images;
+    }
+
+    public static function get_thumb_size($thumb)
+    {
+        switch ($thumb) {
+            case '1':
+                /* This is used by the now_playing / browse stuff */
+                $size['height'] = '100';
+                $size['width']    = '100';
+            break;
+            case '2':
+                $size['height']    = '128';
+                $size['width']    = '128';
+            break;
+            case '3':
+                /* This is used by the flash player */
+                $size['height']    = '80';
+                $size['width']    = '80';
+            break;
+            case '4':
+                /* Web Player size */
+                $size['height'] = 200;
+                $size['width'] = 200; // 200px width, set via CSS
+            break;
+            case '5':
+                /* Web Player size */
+                $size['height'] = 32;
+                $size['width'] = 32;
+            break;
+            case '6':
+                /* Video browsing size */
+                $size['height'] = 150;
+                $size['width'] = 100;
+            break;
+            case '7':
+                /* Video page size */
+                $size['height'] = 300;
+                $size['width'] = 200;
+            break;
+            case '8':
+                /* Video preview size */
+                 $size['height'] = 200;
+                 $size['width'] = 470;
+            break;
+            case '9':
+                /* Video preview size */
+                 $size['height'] = 100;
+                 $size['width'] = 235;
+            break;
+            default:
+                $size['height'] = '275';
+                $size['width']    = '275';
+            break;
+        }
+
+        return $size;
+    }
+
+    public static function display_item($item, $thumb, $link = null)
+    {
+        return self::display($item->type, $item->id, $item->get_fullname(), $thumb, $link);
+    }
+
+    public static function display($object_type, $object_id, $name, $thumb, $link = null, $show_default = true, $kind = 'default')
+    {
+        if (!$show_default) {
+            // Don't show any image if not available
+            if (!self::has_db($object_id, $object_type, $kind)) {
+                return false;
+            }
+        }
+        $size = self::get_thumb_size($thumb);
+        $prettyPhoto = ($link == null);
+        if ($link == null) {
+            $link = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&auth=" . session_id();
+            if ($kind != 'default') {
+                $link .= '&kind=' . $kind;
+            }
+        }
+        echo "<div class=\"item_art\">";
+        echo "<a href=\"" . $link . "\" title=\"" . $name . "\"";
+        if ($prettyPhoto) {
+            echo " rel=\"prettyPhoto\"";
+        }
+        echo ">";
+        $imgurl = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&thumb=" . $thumb;
+        if ($kind != 'default') {
+            $imgurl .= '&kind=' . $kind;
+        }
+        echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
+        if ($prettyPhoto) {
+            if ($size['width'] >= 150) {
+                echo "<div class=\"item_art_play\">";
+                echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id, '<span class="item_art_play_icon" title="' . T_('Play') . '" />', 'directplay_art_' . $object_type . '_' .$object_id);
+                echo "</div>";
+            }
+            echo "<div class=\"item_art_actions\">";
+            $burl = substr($_SERVER['REQUEST_URI'], strlen(AmpConfig::get('raw_web_path')) + 1);
+            $burl = rawurlencode($burl);
+            if ($GLOBALS['user']->has_access('25')) {
+                echo "<a href=\"" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=" . $burl . "\">";
+                echo UI::get_icon('edit', T_('Edit/Find Art'));
+                echo "</a>";
+            }
+            if ($GLOBALS['user']->has_access('75')) {
+                echo "<a href=\"" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=" . $burl . "\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
+                echo UI::get_icon('delete', T_('Reset Art'));
+                echo "</a>";
+            }
+            echo"</div>";
+        }
+        echo "</a>\n";
+        echo "</div>";
+
+        return true;
+    }
 
 } // Art
