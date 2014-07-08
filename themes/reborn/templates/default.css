@@ -1121,18 +1121,18 @@ div.box.box_current_configuration {
 }
 
 /* Random album (homepage) */
-#random_selection {
+.random_selection {
     margin-bottom: 20px;
 }
 
-#random_selection .random_album {
+.random_selection .random_album, .random_selection .random_video {
     float: left;
-    width: 125px;
+    width: 150px;
     margin-bottom: 10px;
     text-align: center;
 }
 
-#random_selection .art_album img {
+.random_selection .random_album .art_album img {
     vertical-align: middle;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -1140,30 +1140,43 @@ div.box.box_current_configuration {
     -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
     -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
     box-shadow: 0 0 10px rgba(0,0,0,0.75);
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     margin: 2px;
 }
 
-#random_selection .art_album img:hover {
+.random_selection .random_video .art_album img {
+    vertical-align: middle;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    width: 100px;
+    height: 150px;
+    margin: 2px;
+}
+
+.random_selection .random_album .art_album img:hover {
     border: 2px solid #ff9d00;
     margin: 0px;
 }
 
-#random_selection .random_album .star-rating {
+.random_selection .random_album .star-rating, .random_selection .random_video .star-rating {
     margin: auto;
 }
 
-#random_selection .random_album .play_album {
+.random_selection .random_album .play_album, .random_selection .random_video .play_video {
     margin-left: 7px;
 }
 
-#random_selection .random_album .play_album img {
+.random_selection .random_album .play_album img, .random_selection .random_video .play_video img {
     border: 0;
     box-shadow: 0 0 0 0;
 }
 
-#random_selection .box-bottom {
+#.random_selection .box-bottom {
     clear:left;
 }
 
@@ -1227,13 +1240,15 @@ div.box.box_rules {
     width: 140px;
 }
 
-#now_playing .cel_song, #now_playing .cel_album, #now_playing .cel_artist {
+#now_playing .cel_song, #now_playing .cel_album, #now_playing .cel_artist, #now_playing .cel_video {
     width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #now_playing .cel_albumart {
     float: left;
-    width: 90px;
+    width: 110px;
 }
 
 #now_playing .cel_albumart img {
@@ -1246,11 +1261,6 @@ div.box.box_rules {
     box-shadow: 0 0 10px rgba(0,0,0,0.75);
     float: left;
     margin: 2px;
-}
-
-#now_playing .cel_albumart img:hover {
-    border: 2px solid #ff9d00;
-    margin: 0px;
 }
 
 #now_playing .cel_lyrics {
@@ -1395,6 +1405,31 @@ span.fatalerror {
     position: relative;
 }
 
+.item_art .item_art_play {
+    display: none;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 64px;
+    height: 100%;
+    position: absolute;
+}
+
+.item_art .item_art_play .item_art_play_icon {
+    width: 64px;
+    height: 64px;
+    position: relative;
+    text-align: center;
+    background-image: url('../images/videoplay.png');
+    opacity:0.4;
+    display: block;
+    margin: 100% 0 0 0;
+}
+
+.item_art .item_art_play .item_art_play_icon:hover {
+    opacity:1;
+}
+
 .item_art .item_art_actions {
     display: none;
     position: absolute;
@@ -1425,12 +1460,16 @@ span.fatalerror {
     margin: 2px;
 }
 
-.item_art img:hover {
+.item_art:hover {
     border: 2px solid #ff9d00;
     margin: 0px;
 }
 
 .item_art:hover  .item_art_actions {
+    display: block;
+}
+
+.item_art:hover  .item_art_play {
     display: block;
 }
 
