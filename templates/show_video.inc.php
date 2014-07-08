@@ -24,8 +24,13 @@
 <?php UI::show_box_top($video->f_title . ' ' . T_('Details'), 'box box_video_details'); ?>
 <div class="item_right_info">
 <?php
-if (!Art::display('video', $video->id, $video->f_title, 7, null, false)) {
-    Art::display('video', $video->id, $video->f_title, 8, null, false, 'preview');
+$gart = false;
+// The release type is not the video itself, we probably want preview
+if (strtolower(get_class($video)) != 'movie') {
+    $gart = Art::display('video', $video->id, $video->f_title, 8, null, false, 'preview');
+}
+if (!$gart) {
+    $gart = Art::display('video', $video->id, $video->f_title, 7, null, false);
 }
 ?>
 </div>
