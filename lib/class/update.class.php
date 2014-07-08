@@ -1658,7 +1658,7 @@ class Update
     public static function update_360015()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('iframes','1','Iframes',25,'boolean','interface')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -1679,7 +1679,7 @@ class Update
     public static function update_360016()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('now_playing_per_user','1','Now playing filtered per user',50,'boolean','interface')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -1719,7 +1719,7 @@ class Update
     public static function update_360018()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('album_sort','0','Album Default Sort',25,'string','interface')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -1740,7 +1740,7 @@ class Update
     public static function update_360019()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('show_played_times','0','Show # played',25,'string','interface')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -1761,7 +1761,7 @@ class Update
     public static function update_360020()
     {
         $retval = true;
-        
+
         $sql = "SELECT `id`, `catalog_type`, `path`, `remote_username`, `remote_password` FROM `catalog`";
         $db_results = Dba::read($sql);
 
@@ -1806,7 +1806,7 @@ class Update
     public static function update_360021()
     {
         $retval = true;
-        
+
         $sql = "ALTER TABLE `now_playing` ADD `insertion` INT (11) AFTER `expire`";
         $retval = Dba::write($sql) ? $retval : false;
 
@@ -1830,7 +1830,7 @@ class Update
     public static function update_360022()
     {
         $retval = true;
-        
+
         $sql = "ALTER TABLE `live_stream` ADD `codec` VARCHAR(32) NULL AFTER `catalog`, DROP `frequency`, DROP `call_sign`";
         $retval = Dba::write($sql) ? $retval : false;
 
@@ -1848,7 +1848,7 @@ class Update
     public static function update_360023()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('subsonic_backend','1','Use SubSonic backend',25,'boolean','system')";
         $retval = Dba::write($sql) ? $retval: false;
@@ -1889,7 +1889,7 @@ class Update
     public static function update_360025()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('webplayer_flash','1','Authorize Flash Web Player(s)',25,'boolean','streaming')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -1930,7 +1930,7 @@ class Update
     public static function update_360027()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('allow_personal_info','1','Allow to show my personal info to other users (now playing, recently played)',25,'boolean','interface')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -1953,7 +1953,7 @@ class Update
     public static function update_360028()
     {
         $retval = true;
-        
+
         // Update previous update preference
         $sql = "UPDATE `preference` SET `name`='allow_personal_info_now', `description`='Personal information visibility - Now playing' WHERE `name`='allow_personal_info'";
         $retval = Dba::write($sql) ? $retval : false;
@@ -2037,7 +2037,7 @@ class Update
     public static function update_360031()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('ui_fixed','0','Fix header/sidebars position on compatible themes',25,'boolean','interface')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -2056,7 +2056,7 @@ class Update
     public static function update_360032()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('autoupdate','1','Check for Ampache updates automatically',25,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -2079,7 +2079,7 @@ class Update
     public static function update_360033()
     {
         $retval = true;
-        
+
         $sql = "ALTER TABLE `song_data` ADD `waveform` MEDIUMBLOB NULL AFTER `language`";
         $retval = Dba::write($sql) ? $retval : false;
 
@@ -2097,7 +2097,7 @@ class Update
     public static function update_360034()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('webplayer_confirmclose','0','Confirmation when closing current playing window',25,'boolean','interface')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -2123,7 +2123,7 @@ class Update
     public static function update_360035()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('stream_beautiful_url','0','Use beautiful stream url',25,'boolean','streaming')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -2142,7 +2142,7 @@ class Update
     public static function update_360036()
     {
         $retval = true;
-        
+
         $sql = "DELETE FROM `preference` WHERE `name` LIKE 'ellipse_threshold_%'";
         $retval = Dba::write($sql) ? $retval : false;
 
@@ -2169,7 +2169,7 @@ class Update
     public static function update_360037()
     {
         $retval = true;
-        
+
         $sql = "CREATE TABLE `share` (" .
             "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
             "`user` int(11) unsigned NOT NULL," .
@@ -2213,7 +2213,7 @@ class Update
     public static function update_360038()
     {
         $retval = true;
-        
+
         $sql = "ALTER TABLE `wanted` ADD `artist_mbid` varchar(1369) CHARACTER SET utf8 NULL AFTER `artist`";
         $retval = Dba::write($sql) ? $retval : false;
 
@@ -2285,7 +2285,7 @@ class Update
     public static function update_360042()
     {
         $retval = true;
-        
+
         $sql = "CREATE TABLE `broadcast` (" .
             "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
             "`user` int(11) unsigned NOT NULL," .
@@ -2309,7 +2309,7 @@ class Update
             "`send_date` int(11) unsigned NOT NULL DEFAULT '0'," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         $retval = Dba::write($sql) ? $retval : false;
-        
+
         return $retval;
     }
 
@@ -2321,7 +2321,7 @@ class Update
     public static function update_360043()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('slideshow_time','0','Artist slideshow inactivity time',25,'integer','interface')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -2340,7 +2340,7 @@ class Update
     public static function update_360044()
     {
         $retval = true;
-        
+
         $sql = "ALTER TABLE `artist` ADD `summary` TEXT CHARACTER SET utf8 NULL," .
             "ADD `placeformed` varchar(64) NULL," .
             "ADD `yearformed` int(4) NULL," .
@@ -2387,7 +2387,7 @@ class Update
     public static function update_360046()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('broadcast_by_default','0','Broadcast web player by default',25,'boolean','streaming')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -2417,7 +2417,7 @@ class Update
     public static function update_360048()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('concerts_limit_future','0','Limit number of future events',25,'integer','interface')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -2443,7 +2443,7 @@ class Update
     public static function update_360049()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('album_group','0','Album - Group multiple disks',25,'boolean','interface')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -2462,7 +2462,7 @@ class Update
     public static function update_360050()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('topmenu','0','Top menu',25,'boolean','interface')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -2534,7 +2534,7 @@ class Update
     public static function update_370001()
     {
         $retval = true;
-        
+
         $sql = "DROP TABLE dynamic_playlist";
         $retval = Dba::write($sql) ? $retval : false;
         $sql = "DROP TABLE dynamic_playlist_data";
@@ -2572,7 +2572,7 @@ class Update
     public static function update_370003()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('show_donate','1','Show donate button in footer',25,'boolean','interface')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -2591,7 +2591,7 @@ class Update
     public static function update_370004()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('upload_catalog','-1','Uploads catalog destination',25,'integer','system')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -2710,7 +2710,7 @@ class Update
     public static function update_370007()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('daap_backend','0','Use DAAP backend',25,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -2743,7 +2743,7 @@ class Update
     public static function update_370008()
     {
         $retval = true;
-        
+
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('upnp_backend','0','Use UPnP backend',25,'boolean','system')";
         $retval = Dba::write($sql) ? $retval : false;
@@ -2762,7 +2762,7 @@ class Update
     public static function update_370009()
     {
         $retval = true;
-        
+
         $sql = "ALTER TABLE `video` ADD `release_date` int(11) unsigned NULL AFTER `enabled`, " .
             "ADD `played` tinyint(1) unsigned DEFAULT '1' NOT NULL AFTER `enabled`";
         $retval = Dba::write($sql) ? $retval : false;
