@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+$media = Video::create_from_id($media->id);
+$media->format();
 ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
@@ -35,66 +37,35 @@
 </div>
 
 <div class="np_group" id="np_group_2">
-    <div class="np_cell cel_song">
-        <label><?php echo T_('Song'); ?></label>
+    <div class="np_cell cel_video">
+        <label><?php echo T_('Video'); ?></label>
         <?php echo $media->f_link; ?>
-    </div>
-    <div class="np_cell cel_album">
-        <label><?php echo T_('Album'); ?></label>
-        <?php echo $media->f_album_link; ?>
-    </div>
-    <div class="np_cell cel_artist">
-        <label><?php echo T_('Artist'); ?></label>
-        <?php echo $media->f_artist_link; ?>
-    </div>
-    <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_artist">
-        <label><?php echo T_('Tags'); ?></label>
-        <?php echo $media->f_tags; ?>
     </div>
 </div>
 
 <?php if (Art::is_enabled()) { ?>
 <div class="np_group" id="np_group_3">
   <div class="np_cell cel_albumart">
-      <?php Art::display('album', $media->album, $media->get_fullname(), 1, AmpConfig::get('web_path') . '/albums.php?action=show&album=' . $media->album); ?>
+    <?php
+        $release_art = $media->get_release_item_art();
+        Art::display($release_art['object_type'], $release_art['object_id'], $media->get_fullname(), 6, $media->link);
+    ?>
   </div>
 </div>
-<?php } ?>
-
-<?php if (AmpConfig::get('show_similar')) { ?>
-<div class="np_group similars" id="similar_items_<?php echo $media->id; ?>">
-    <div class="np_group similars">
-        <div class="np_cell cel_similar">
-            <label><?php echo T_('Similar Artists'); ?></label>
-            <p><?php echo T_('Loading...'); ?></p>
-        </div>
-    </div>
-    <div class="np_group similars">
-        <div class="np_cell cel_similar">
-            <label><?php echo T_('Similar Songs'); ?></label>
-            <p><?php echo T_('Loading...'); ?></p>
-        </div>
-    </div>
-</div>
-<script language="javascript" type="text/javascript">
-$(document).ready(function(){
-    <?php echo Ajax::action('?page=index&action=similar_now_playing&media_id='.$media->id.'&media_artist='.$media->artist, 'similar_now_playing'); ?>
-});
-</script>
 <?php } ?>
 
 <div class="np_group" id="np_group_4">
 <?php if (AmpConfig::get('ratings')) { ?>
     <div class="np_cell cel_rating">
         <label><?php echo T_('Rating'); ?></label>
-        <div id="rating_<?php echo $media->id; ?>_song">
-            <?php Rating::show($media->id,'song'); ?>
+        <div id="rating_<?php echo $media->id; ?>_video">
+            <?php Rating::show($media->id, 'video'); ?>
         </div>
     </div>
     <div class="np_cell cel_userflag">
         <label><?php echo T_('Fav.'); ?></label>
-        <div id="userflag_<?php echo $media->id; ?>_song">
-            <?php Userflag::show($media->id,'song'); ?>
+        <div id="userflag_<?php echo $media->id; ?>_video">
+            <?php Userflag::show($media->id,'video'); ?>
         </div>
     </div>
 <?php } ?>

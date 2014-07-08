@@ -274,12 +274,12 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
  * This is the same as show_album_select except it's *gasp* for tvshows! How
  * inventive!
  */
-function show_tvshow_select($name='tvshow', $tvshow_id=0, $allow_add=false, $tvshow_id=0, $allow_none=false)
+function show_tvshow_select($name='tvshow', $tvshow_id=0, $allow_add=false, $season_id=0, $allow_none=false)
 {
     static $tvshow_id_cnt = 0;
     // Generate key to use for HTML element ID
-    if ($tvshow_id) {
-        $key = $name . "_select_" . $tvshow_id;
+    if ($season_id) {
+        $key = $name . "_select_" . $season_id;
     } else {
         $key = $name . "_select_c" . ++$tvshow_id_cnt;
     }
@@ -311,6 +311,48 @@ function show_tvshow_select($name='tvshow', $tvshow_id=0, $allow_add=false, $tvs
     echo "</select>\n";
 
 } // show_tvshow_select
+
+function show_tvshow_season_select($name='tvshow_season', $season_id, $allow_add=false, $video_id=0, $allow_none=false)
+{
+    if (!$season_id)
+        return false;
+    $season = new TVShow_Season($season_id);
+    
+    static $season_id_cnt = 0;
+    // Generate key to use for HTML element ID
+    if ($video_id) {
+        $key = $name . "_select_" . $video_id;
+    } else {
+        $key = $name . "_select_c" . ++$season_id_cnt;
+    }
+
+    echo "<select name=\"$name\" id=\"$key\">\n";
+
+    if ($allow_none) {
+        echo "\t<option value=\"-2\"></option>\n";
+    }
+
+    $sql = "SELECT `id`, `season_number` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
+    $db_results = Dba::read($sql, array($season->tvshow));
+
+    while ($r = Dba::fetch_assoc($db_results)) {
+        $selected = '';
+        if ($r['id'] == $season_id) {
+            $selected = "selected=\"selected\"";
+        }
+
+        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['season_number']) . "</option>\n";
+
+    } // end while
+
+    if ($allow_add) {
+        // Append additional option to the end with value=-1
+        echo "\t<option value=\"-1\">Add New...</option>\n";
+    }
+
+    echo "</select>\n";
+
+}
 
 /**
  * show_catalog_select
@@ -653,6 +695,7 @@ function show_now_playing()
 
     $web_path = AmpConfig::get('web_path');
     $results = Stream::get_now_playing();
+    debug_event('aa',print_r($results, true), 5);
     require_once AmpConfig::get('prefix') . '/templates/show_now_playing.inc.php';
 
 } // show_now_playing

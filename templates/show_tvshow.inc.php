@@ -32,9 +32,9 @@ UI::show_box_top($tvshow->f_name, 'info-box');
     <?php
     Art::display('tvshow', $tvshow->id, $tvshow->f_name, 6);
     ?>
-    <?php if ($tvshow->description) { ?>
+    <?php if ($tvshow->summary) { ?>
     <div id="item_summary">
-        <?php echo $tvshow->description; ?>
+        <?php echo $tvshow->summary; ?>
     </div>
     <?php } ?>
 </div>
@@ -55,14 +55,14 @@ if (AmpConfig::get('ratings')) {
     <ul>
         <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=tvshow&tvshow_id=' . $tvshow->id,'play', T_('Play all'),'directplay_full_' . $tvshow->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=tvshow&tvshow_id=' . $tvshow->id, T_('Play all'),'directplay_full_text_' . $tvshow->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id,'play', T_('Play all'),'directplay_full_' . $tvshow->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id, T_('Play all'),'directplay_full_text_' . $tvshow->id); ?>
         </li>
         <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=tvshow&tvshow_id=' . $tvshow->id . '&append=true','play_add', T_('Play all last'),'addplay_tvshow_' . $tvshow->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=tvshow&tvshow_id=' . $tvshow->id . '&append=true', T_('Play all last'),'addplay_tvshow_text_' . $tvshow->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true','play_add', T_('Play all last'),'addplay_tvshow_' . $tvshow->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', T_('Play all last'),'addplay_tvshow_text_' . $tvshow->id); ?>
         </li>
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>

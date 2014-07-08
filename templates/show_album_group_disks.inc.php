@@ -45,14 +45,14 @@ $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;-&nbsp;' .
     <ul>
         <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&' . $album->get_http_album_query_ids('album_id'), 'play', T_('Play'), 'directplay_full_'); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=album&' . $album->get_http_album_query_ids('album_id'), T_('Play'), 'directplay_full_text_'); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), 'play', T_('Play'), 'directplay_full_'); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), T_('Play'), 'directplay_full_text_'); ?>
         </li>
         <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&' . $album->get_http_album_query_ids('album_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_'); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=album&' . $album->get_http_album_query_ids('album_id') . '&append=true', T_('Play last'), 'addplay_album_text_'); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_'); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', T_('Play last'), 'addplay_album_text_'); ?>
         </li>
         <?php } ?>
         <li>

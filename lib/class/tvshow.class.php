@@ -25,7 +25,7 @@ class TVShow extends database_object implements library_item
     /* Variables from DB */
     public $id;
     public $name;
-    public $description;
+    public $summary;
     public $year;
 
     public $tags;
@@ -212,6 +212,21 @@ class TVShow extends database_object implements library_item
     {
         return array('tvshow_season' => $this->get_seasons());
     }
+    
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if (!$filter_type || $filter_type == 'video') {
+            $episodes = $this->get_episodes();
+            foreach ($episodes as $episode_id) {
+                $medias[] = array(
+                    'object_type' => 'video',
+                    'object_id' => $episode_id
+                );
+            }
+        }
+        return $medias;
+    }
 
     public function get_user_owner()
     {
@@ -301,8 +316,8 @@ class TVShow extends database_object implements library_item
             } // end if it changed
         }
 
-        $sql = 'UPDATE `tvshow` SET `name` = ?, `year` = ?, `description` = ? WHERE `id` = ?';
-        Dba::write($sql, array($data['name'], $data['year'], $data['description'], $current_id));
+        $sql = 'UPDATE `tvshow` SET `name` = ?, `year` = ?, `summary` = ? WHERE `id` = ?';
+        Dba::write($sql, array($data['name'], $data['year'], $data['summary'], $current_id));
 
         $override_childs = false;
         if ($data['apply_childs'] == 'checked') {

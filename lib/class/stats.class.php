@@ -338,9 +338,15 @@ class Stats
     public static function get_newest_sql($type, $catalog=0)
     {
         $type = self::validate_type($type);
+        
+        $base_type = 'song';
+        if ($type == 'video') {
+            $base_type = $type;
+            $type = $type . '`.`id';
+        }
 
-        $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `song` ";
-        $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `" . $base_type . "` ";
+        $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
         if (AmpConfig::get('catalog_disable')) {
                 $sql .= "WHERE `catalog`.`enabled` = '1' ";
         }
@@ -348,6 +354,7 @@ class Stats
             $sql .= "AND `catalog` = '" . scrub_in($catalog) ."' ";
         }
         $sql .= "GROUP BY `$type` ORDER BY `real_atime` DESC ";
+        
         return $sql;
     }
 

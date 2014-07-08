@@ -20,7 +20,7 @@
  *
  */
 
-class Song_Preview extends database_object implements media
+class Song_Preview extends database_object implements media, playable_item
 {
     public $id;
     public $file;
@@ -219,6 +219,34 @@ class Song_Preview extends database_object implements media
         return true;
 
     } // format
+    
+    public function get_fullname()
+    {
+        return $this->f_name;
+    }
+
+    public function get_parent()
+    {
+        // Wanted album is not part of the library, cannot return it.
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        return array();
+    }
+    
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if (!$filter_type || $filter_type == 'song_preview') {
+            $medias[] = array(
+                'object_type' => 'song_preview',
+                'object_id' => $this>-id
+            );
+        }
+        return $medias;
+    }
 
     /**
      * play_url
@@ -258,6 +286,11 @@ class Song_Preview extends database_object implements media
     public function get_stream_name()
     {
         return $this->title;
+    }
+    
+    public function set_played($user, $agent)
+    {
+        // Do nothing
     }
 
     public static function get_song_previews($album_mbid)

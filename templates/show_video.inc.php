@@ -51,9 +51,9 @@ if (!Art::display('video', $video->id, $video->f_title, 7, null, false)) {
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php if (AmpConfig::get('directplay')) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id, 'play', T_('Play'),'play_video_' . $video->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id, 'play', T_('Play'),'play_video_' . $video->id); ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id . '&append=true','play_add', T_('Play last'),'addplay_video_' . $video->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true','play_add', T_('Play last'),'addplay_video_' . $video->id); ?>
             <?php } ?>
         <?php } ?>
         <?php if (AmpConfig::get('sociable')) { ?>

@@ -56,9 +56,9 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php if (AmpConfig::get('directplay')) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id, 'play', T_('Play'),'play_song_' . $song->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play', T_('Play'),'play_song_' . $song->id); ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $song->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true','play_add', T_('Play last'),'addplay_song_' . $song->id); ?>
             <?php } ?>
             <?php echo $song->show_custom_play_actions(); ?>
         <?php } ?>

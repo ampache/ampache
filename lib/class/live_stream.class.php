@@ -95,6 +95,18 @@ class Live_Stream extends database_object implements media, library_item
     {
         return array();
     }
+    
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if (!$filter_type || $filter_type == 'live_stream') {
+            $medias[] = array(
+                'object_type' => 'live_stream',
+                'object_id' => $this->id
+            );
+        }
+        return $medias;
+    }
 
     public function get_user_owner()
     {
@@ -250,6 +262,11 @@ class Live_Stream extends database_object implements media, library_item
     public static function gc()
     {
 
+    }
+    
+    public function set_played($user, $agent)
+    {
+        // Do nothing
     }
 
 } //end of radio class

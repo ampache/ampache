@@ -32,7 +32,7 @@ if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/l
         <?php } ?>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'),'sort_video_title'); ?></th>
 <?php
-if (isset($video_type)) {
+if (isset($video_type) && $video_type != 'video') {
     require AmpConfig::get('prefix') . '/templates/show_partial_' . $video_type . 's.inc.php';
 }
 ?>
@@ -78,7 +78,7 @@ if (isset($video_type)) {
         <?php } ?>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'),'sort_video_title'); ?></th>
 <?php
-if (isset($video_type)) {
+if (isset($video_type) && $video_type != 'video') {
     require AmpConfig::get('prefix') . '/templates/show_partial_' . $video_type . 's.inc.php';
 }
 ?>

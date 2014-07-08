@@ -94,102 +94,60 @@ switch ($_REQUEST['action']) {
     break;
     // Handle the users basketcases...
     case 'basket':
-        switch ($_REQUEST['type']) {
-            case 'album':
-                foreach ($_REQUEST['id'] as $i) {
-                    $object = new $_REQUEST['type']($i);
-                    $songs = $object->get_songs();
-                    foreach ($songs as $song_id) {
-                        $GLOBALS['user']->playlist->add_object($song_id, 'song');
+        $object_type = $_REQUEST['type'];
+        $object_id = $_REQUEST['id'];
+        
+        if (Core::is_playable_item($object_type)) {
+            if (!is_array($object_id)) {
+                $object_id = array($object_id);
+            }
+            foreach ($object_id as $id) {
+                $item = new $object_type($id);
+                $medias = $item->get_medias();
+                $GLOBALS['user']->playlist->add_medias($medias);
+            }
+        } else {
+            switch ($_REQUEST['type']) {
+                case 'browse_set':
+                    $browse = new Browse($_REQUEST['browse_id']);
+                    $objects = $browse->get_saved();
+                    foreach ($objects as $object_id) {
+                        $GLOBALS['user']->playlist->add_object($object_id, 'song');
                     }
-                }
-            break;
-            case 'artist':
-            case 'tag':
-                $object = new $_REQUEST['type']($_REQUEST['id']);
-                $songs = $object->get_songs();
-                foreach ($songs as $song_id) {
-                    $GLOBALS['user']->playlist->add_object($song_id,'song');
-                }
-            break;
-            case 'browse_set':
-                $browse = new Browse($_REQUEST['browse_id']);
-                $objects = $browse->get_saved();
-                foreach ($objects as $object_id) {
-                    $GLOBALS['user']->playlist->add_object($object_id,'song');
-                }
-            break;
-            case 'album_random':
-                $data = explode('_',$_REQUEST['type']);
-                $type = $data['0'];
-                foreach ($_REQUEST['id'] as $i) {
-                    $object = new $type($i);
+                break;
+                case 'album_random':
+                    $data = explode('_',$_REQUEST['type']);
+                    $type = $data['0'];
+                    foreach ($_REQUEST['id'] as $i) {
+                        $object = new $type($i);
+                        $songs = $object->get_random_songs();
+                        foreach ($songs as $song_id) {
+                            $GLOBALS['user']->playlist->add_object($song_id, 'song');
+                        }
+                    }
+                break;
+                case 'artist_random':
+                case 'tag_random':
+                    $data = explode('_',$_REQUEST['type']);
+                    $type = $data['0'];
+                    $object = new $type($_REQUEST['id']);
                     $songs = $object->get_random_songs();
                     foreach ($songs as $song_id) {
-                        $GLOBALS['user']->playlist->add_object($song_id, 'song');
+                        $GLOBALS['user']->playlist->add_object($song_id,'song');
                     }
-                }
-            break;
-            case 'artist_random':
-            case 'tag_random':
-                $data = explode('_',$_REQUEST['type']);
-                $type = $data['0'];
-                $object = new $type($_REQUEST['id']);
-                $songs = $object->get_random_songs();
-                foreach ($songs as $song_id) {
-                    $GLOBALS['user']->playlist->add_object($song_id,'song');
-                }
-            break;
-            case 'playlist':
-                $playlist = new Playlist($_REQUEST['id']);
-                $items = $playlist->get_items();
-                foreach ($items as $item) {
-                    $GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
-                }
-            break;
-            case 'playlist_random':
-                $playlist = new Playlist($_REQUEST['id']);
-                $items = $playlist->get_random_items();
-                foreach ($items as $item) {
-                    $GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
-                }
-            break;
-            case 'smartplaylist':
-                $playlist = new Search($_REQUEST['id'], 'song');
-                $items = $playlist->get_items();
-                foreach ($items as $item) {
-                    $GLOBALS['user']->playlist->add_object($item['object_id'],$item['object_type']);
-                }
-            break;
-            case 'clear_all':
-                $GLOBALS['user']->playlist->clear();
-            break;
-            case 'live_stream':
-                $object = new Live_Stream($_REQUEST['id']);
-                // Confirm its a valid ID
-                if ($object->name) {
-                    $GLOBALS['user']->playlist->add_object($object->id, 'live_stream');
-                }
-            break;
-            case 'video':
-                $GLOBALS['user']->playlist->add_object($_REQUEST['id'],'video');
-            break;
-            case 'album_preview':
-                $songs = Song_preview::get_song_previews($_REQUEST['mbid']);
-                foreach ($songs as $song) {
-                    if (!empty($song->file)) {
-                        $GLOBALS['user']->playlist->add_object($song->id, 'song_preview');
+                break;
+                case 'playlist_random':
+                    $playlist = new Playlist($_REQUEST['id']);
+                    $items = $playlist->get_random_items();
+                    foreach ($items as $item) {
+                        $GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
                     }
-                }
-            break;
-            case 'song_preview':
-                $GLOBALS['user']->playlist->add_object($_REQUEST['id'],'song_preview');
-            break;
-            case 'song':
-            default:
-                $GLOBALS['user']->playlist->add_object($_REQUEST['id'],'song');
-            break;
-        } // end switch
+                break;
+                case 'clear_all':
+                    $GLOBALS['user']->playlist->clear();
+                break;
+            }
+        }
 
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;

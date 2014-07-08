@@ -137,6 +137,19 @@ class Broadcast extends database_object implements library_item
     {
         return array();
     }
+    
+    public function get_medias($filter_type = null)
+    {
+        // Not a media, shouldn't be that
+        $medias = array();
+        if (!$filter_type || $filter_type == 'broadcast') {
+            $medias[] = array(
+                'object_type' => 'broadcast',
+                'object_id' => $this->id
+            );
+        }
+        return $medias;
+    }
 
     public function get_user_owner()
     {

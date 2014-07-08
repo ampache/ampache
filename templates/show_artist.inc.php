@@ -83,14 +83,14 @@ if (AmpConfig::get('show_played_times')) {
         </li>
         <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id,'play', T_('Play all'),'directplay_full_' . $artist->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id, T_('Play all'),'directplay_full_text_' . $artist->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id,'play', T_('Play all'),'directplay_full_' . $artist->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, T_('Play all'),'directplay_full_text_' . $artist->id); ?>
         </li>
         <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id . '&append=true','play_add', T_('Play all last'),'addplay_artist_' . $artist->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id . '&append=true', T_('Play all last'),'addplay_artist_text_' . $artist->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true','play_add', T_('Play all last'),'addplay_artist_' . $artist->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', T_('Play all last'),'addplay_artist_text_' . $artist->id); ?>
         </li>
         <?php } ?>
         <li>

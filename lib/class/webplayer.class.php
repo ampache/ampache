@@ -85,7 +85,7 @@ class WebPlayer
 
         $media = null;
         $urlinfo = Stream_URL::parse($item->url);
-        if ($urlinfo['id'] && Catalog::is_media($urlinfo['type'])) {
+        if ($urlinfo['id'] && Core::is_media($urlinfo['type'])) {
             $media = new $urlinfo['type']($urlinfo['id']);
         } else if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
             $media = new Song_Preview($urlinfo['id']);

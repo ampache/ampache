@@ -836,8 +836,8 @@ abstract class Catalog extends database_object
 
                 $parent = $libitem->get_parent();
                 if ($parent != null) {
-                    if (!Art::has_db($parent['id'], $parent['type'])) {
-                        $this->gather_art_item($parent['type'], $parent['id']);
+                    if (!Art::has_db($parent['object_id'], $parent['object_type'])) {
+                        $this->gather_art_item($parent['object_type'], $parent['object_id']);
                     }
                 }
             }
@@ -1675,24 +1675,5 @@ abstract class Catalog extends database_object
         } // end switch
 
     } // export
-
-    private static function is_class_typeof($classname, $typeofname)
-    {
-        if (class_exists($classname)) {
-            return in_array($typeofname, array_map('strtolower', class_implements($classname)));
-        }
-
-        return false;
-    }
-
-    public static function is_library_item($classname)
-    {
-        return self::is_class_typeof($classname, 'library_item');
-    }
-
-    public static function is_media($classname)
-    {
-        return self::is_class_typeof($classname, 'media');
-    }
 
 } // end of catalog class

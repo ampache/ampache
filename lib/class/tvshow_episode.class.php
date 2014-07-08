@@ -25,7 +25,7 @@ class TVShow_Episode extends Video
     public $original_name;
     public $season;
     public $episode_number;
-    public $description;
+    public $summary;
 
     public $f_link;
     public $f_season;
@@ -107,9 +107,9 @@ class TVShow_Episode extends Video
      */
     public static function create($data)
     {
-        $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `description`) " .
+        $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) " .
             "VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['description']));
+        Dba::write($sql, array($data['id'], $data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['summary']));
 
         return $data['id'];
 
@@ -122,9 +122,8 @@ class TVShow_Episode extends Video
     public function update($data)
     {
         parent::update($data);
-
-        $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `description` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['description'], $this->id));
+        $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
+        Dba::write($sql, array($data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['summary'], $this->id));
 
         return $this->id;
 
@@ -182,7 +181,13 @@ class TVShow_Episode extends Video
 
     public function get_parent()
     {
-        return array('type' => 'tvshow_season', 'id' => $this->season);
+        return array('object_type' => 'tvshow_season', 'object_id' => $this->season);
     }
 
+    public function get_release_item_art()
+    {
+        return array('object_type' => 'tvshow_season',
+            'object_id' => $this->season
+        );
+    }
 }

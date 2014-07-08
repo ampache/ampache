@@ -24,9 +24,9 @@
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=smartplaylist&playlist_id=' . $libitem->id,'play', T_('Play'),'play_playlist_' . $libitem->id); ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id,'play', T_('Play'),'play_playlist_' . $libitem->id); ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=smartplaylist&playlist_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_playlist_' . $libitem->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_playlist_' . $libitem->id); ?>
         <?php } ?>
 <?php } ?>
     </div>
@@ -34,8 +34,8 @@
 <td class="cel_playlist"><?php echo $libitem->f_name_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
-        <?php echo Ajax::button('?action=basket&type=smartplaylist&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_playlist_' . $libitem->id); ?>
-        <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'smartplaylist', '<?php echo $libitem->id ?>')">
+        <?php echo Ajax::button('?action=basket&type=search&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_playlist_' . $libitem->id); ?>
+        <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'search', '<?php echo $libitem->id ?>')">
             <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
         </a>
     </span>
@@ -46,7 +46,7 @@
 <td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>
 <td class="cel_action">
         <?php if (Access::check_function('batch_download')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=smartplaylist&amp;id=<?php echo $libitem->id; ?>">
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $libitem->id; ?>">
                         <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
                 </a>
         <?php } ?>

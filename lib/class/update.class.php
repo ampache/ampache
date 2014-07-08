@@ -2712,13 +2712,14 @@ class Update
      */
     public static function update_370009()
     {
-        $sql = "ALTER TABLE `video` ADD `release_date` int(11) unsigned NULL AFTER `enabled`";
+        $sql = "ALTER TABLE `video` ADD `release_date` int(11) unsigned NULL AFTER `enabled`, " .
+            "`played` tinyint(1) unsigned NOT NULL DEFAULT '1' AFTER `enabled`";
         Dba::write($sql);
 
         $sql = "CREATE TABLE `tvshow` (" .
             "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
             "`name` varchar(80) NOT NULL," .
-            "`description` varchar(256) NULL," .
+            "`summary` varchar(256) NULL," .
             "`year` int(11) unsigned NULL," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         Dba::write($sql);
@@ -2735,14 +2736,14 @@ class Update
             "`original_name` varchar(80) NULL," .
             "`season` int(11) unsigned NOT NULL," .
             "`episode_number` int(11) unsigned NOT NULL," .
-            "`description` varchar(256) NULL," .
+            "`summary` varchar(256) NULL," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         Dba::write($sql);
 
         $sql = "CREATE TABLE `movie` (" .
             "`id` int(11) unsigned NOT NULL," .
             "`original_name` varchar(80) NULL," .
-            "`description` varchar(256) NULL," .
+            "`summary` varchar(256) NULL," .
             "`year` int(11) unsigned NULL," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         Dba::write($sql);
@@ -2750,7 +2751,7 @@ class Update
         $sql = "CREATE TABLE `personal_video` (" .
             "`id` int(11) unsigned NOT NULL," .
             "`location` varchar(256) NULL," .
-            "`description` varchar(256) NULL," .
+            "`summary` varchar(256) NULL," .
             "PRIMARY KEY (`id`)) ENGINE = MYISAM";
         Dba::write($sql);
 

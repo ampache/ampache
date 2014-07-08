@@ -23,7 +23,7 @@
 class Personal_Video extends Video
 {
     public $location;
-    public $description;
+    public $summary;
     public $video;
 
     public $f_location;
@@ -64,9 +64,9 @@ class Personal_Video extends Video
      */
     public static function insert($data, $gtypes = array(), $options = array())
     {
-        $sql = "INSERT INTO `personal_video` (`id`,`location`,`description`) " .
+        $sql = "INSERT INTO `personal_video` (`id`,`location`,`summary`) " .
             "VALUES (?, ?, ?)";
-        Dba::write($sql, array($data['id'], $data['location'], $data['description']));
+        Dba::write($sql, array($data['id'], $data['location'], $data['summary']));
 
         return $data['id'];
 
@@ -80,8 +80,8 @@ class Personal_Video extends Video
     {
         parent::update($data);
 
-        $sql = "UPDATE `personal_video` SET `location` = ?, `description` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['location'], $data['description'], $this->id));
+        $sql = "UPDATE `personal_video` SET `location` = ?, `summary` = ? WHERE `id` = ?";
+        Dba::write($sql, array($data['location'], $data['summary'], $this->id));
 
         return $this->id;
 

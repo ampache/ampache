@@ -24,9 +24,9 @@
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $libitem->id,'play', T_('Play'),'play_artist_' . $libitem->id); ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id,'play', T_('Play'),'play_artist_' . $libitem->id); ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_artist_' . $libitem->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_artist_' . $libitem->id); ?>
         <?php } ?>
 <?php } ?>
     </div>

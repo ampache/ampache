@@ -19,14 +19,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+if (!isset($video_type)) {
+    $libitem = Video::create_from_id($libitem->id);
+    $libitem->format();
+    $video_type = strtolower(get_class($libitem));
+}
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $libitem->id,'play', T_('Play'),'play_video_' . $libitem->id); ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $libitem->id,'play', T_('Play'),'play_video_' . $libitem->id); ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_video_' . $libitem->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_video_' . $libitem->id); ?>
         <?php } ?>
 <?php } ?>
     </div>
@@ -35,14 +40,20 @@
 if (Art::is_enabled()) {
 ?>
 <td class="cel_cover">
-    <a href="<?php echo $libitem->link; ?>">
-        <img height="150" width="100" alt="<?php echo $libitem->f_title; ?>" title="<?php echo $libitem->f_title; ?>" src="<?php echo AmpConfig::get('web_path'); ?>/image.php?object_type=video&object_id=<?php echo $libitem->id; ?>&thumb=6" />
-    </a>
+    <?php
+    $art_showed = false;
+    if ($libitem->get_default_art_kind() == 'preview') {
+        $art_showed = Art::display('video', $libitem->id, $libitem->f_title, 9, $libitem->link, false, 'preview');
+    }
+    if (!$art_showed) {
+        Art::display('video', $libitem->id, $libitem->f_title, 6, $libitem->link);
+    }
+    ?>
 </td>
 <?php } ?>
 <td class="cel_title"><?php echo $libitem->f_link; ?></td>
 <?php
-if (isset($video_type)) {
+if ($video_type != 'video') {
     require AmpConfig::get('prefix') . '/templates/show_partial_' . $video_type . '_row.inc.php';
 }
 ?>

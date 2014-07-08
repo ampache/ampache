@@ -23,7 +23,7 @@
 class Movie extends Video
 {
     public $original_name;
-    public $description;
+    public $summary;
     public $year;
     public $video;
 
@@ -63,9 +63,9 @@ class Movie extends Video
      */
     public static function insert($data, $gtypes = array(), $options = array())
     {
-        $sql = "INSERT INTO `movie` (`id`,`original_name`,`description`, `year`) " .
+        $sql = "INSERT INTO `movie` (`id`,`original_name`,`summary`, `year`) " .
             "VALUES (?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $data['original_name'], $data['description'], $data['year']));
+        Dba::write($sql, array($data['id'], $data['original_name'], $data['summary'], $data['year']));
 
         return $data['id'];
 
@@ -79,8 +79,8 @@ class Movie extends Video
     {
         parent::update($data);
 
-        $sql = "UPDATE `movie` SET `original_name` = ?, `description` = ?, `year` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['original_name'], $data['description'], $data['year'], $this->id));
+        $sql = "UPDATE `movie` SET `original_name` = ?, `summary` = ?, `year` = ? WHERE `id` = ?";
+        Dba::write($sql, array($data['original_name'], $data['summary'], $data['year'], $this->id));
 
         return $this->id;
 

@@ -43,7 +43,13 @@ foreach ($results as $item) {
     if (!$np_user->fullname) { $np_user->fullname = "Ampache User"; }
 ?>
 <div class="np_row">
-<?php require AmpConfig::get('prefix') . '/templates/show_now_playing_row.inc.php'; ?>
+<?php
+if (strtolower(get_class($media)) == 'song') {
+    require AmpConfig::get('prefix') . '/templates/show_now_playing_row.inc.php';
+} else {
+    require AmpConfig::get('prefix') . '/templates/show_now_playing_video_row.inc.php';
+}
+?>
 </div>
 <?php
 } // end foreach

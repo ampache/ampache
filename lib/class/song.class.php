@@ -508,16 +508,20 @@ class Song extends database_object implements media, library_item
     /**
      * set_played
      * this checks to see if the current object has been played
-     * if not then it sets it to played
+     * if not then it sets it to played. In any case it updates stats.
      */
-    public function set_played()
+    public function set_played($user, $agent)
     {
+        Stats::insert('song', $this->id, $user, $agent);
+        Stats::insert('album', $this->id, $user, $agent);
+        Stats::insert('artist', $this->id, $user, $agent);
+        
         if ($this->played) {
             return true;
         }
 
         /* If it hasn't been played, set it! */
-        self::update_played('1',$this->id);
+        self::update_played('1', $this->id);
 
         return true;
 
@@ -976,12 +980,24 @@ class Song extends database_object implements media, library_item
 
     public function get_parent()
     {
-        return array('type' => 'album', 'id' => $this->album);
+        return array('object_type' => 'album', 'object_id' => $this->album);
     }
 
     public function get_childrens()
     {
         return array();
+    }
+    
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if (!$filter_type || $filter_type == 'song') {
+            $medias[] = array(
+                'object_type' => 'song',
+                'object_id' => $this->id
+            );
+        }
+        return $medias;
     }
 
     public function get_user_owner()
@@ -1263,7 +1279,7 @@ class Song extends database_object implements media, library_item
     {
         $actions = Song::get_custom_play_actions();
         foreach ($actions as $action) {
-            echo Ajax::button('?page=stream&action=directplay&playtype=song&song_id=' . $this->id . '&custom_play_action=' . $action['index'], $action['icon'], T_($action['title']), $action['icon'] . '_song_' . $this->id);
+            echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $this->id . '&custom_play_action=' . $action['index'], $action['icon'], T_($action['title']), $action['icon'] . '_song_' . $this->id);
         }
     }
 

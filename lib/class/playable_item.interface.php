@@ -20,22 +20,47 @@
  */
 
 /**
- * library_item Interface
+ * playable_item Interface
  *
- * This defines how the media file classes should
+ * This defines how the playable item file classes should
  * work, this lists all required functions and the expected
  * input
  */
-interface library_item extends playable_item
+interface playable_item
 {
-    public function get_keywords();
+    /**
+     * format
+     *
+     * Creates member variables for output
+     */
+    public function format();
 
-    public function get_user_owner();
+    /**
+     * get_fullname
+     *
+     * Get the item full name.
+     */
+    public function get_fullname();
 
-    public function get_default_art_kind();
+    /**
+     * get_parent
+     *
+     * Get parent. Return parent `object_type`, `object_id` ; null otherwise.
+     */
+    public function get_parent();
 
-    public function update($data);
-
-    public static function gc();
+    /**
+     * get_childrens
+     *
+     * Get direct childrens. Return an array of `object_type`, `object_id` childrens.
+     */
+    public function get_childrens();
+    
+    /*
+     * get_medias
+     *
+     * Get all medias from all childrens. Return an array of `object_type`, `object_id` medias.
+     */
+    public function get_medias($filter_type = null);
 
 } // end interface

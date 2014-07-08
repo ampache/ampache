@@ -19,33 +19,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-$sql = Userflag::get_latest_sql('song');
-$browse = new Browse();
-$browse->set_type('song', $sql);
-$browse->set_simple_browse(true);
-$browse->show_objects();
-$browse->store();
-
-$sql = Userflag::get_latest_sql('album');
-$browse = new Browse();
-$browse->set_type('album', $sql);
-$browse->set_simple_browse(true);
-$browse->show_objects();
-$browse->store();
-
-$sql = Userflag::get_latest_sql('artist');
-$browse = new Browse();
-$browse->set_type('artist', $sql);
-$browse->set_simple_browse(true);
-$browse->show_objects();
-$browse->store();
-
-if (AmpConfig::get('allow_video')) {
-    $sql = Userflag::get_latest_sql('video');
-    $browse = new Browse();
-    $browse->set_type('video', $sql);
-    $browse->set_simple_browse(true);
-    $browse->show_objects();
-    $browse->store();
-}
+?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Location') ?></td>
+                <td><input type="text" name="location" value="<?php echo scrub_out($libitem->location); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Summary') ?></td>
+                <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out($libitem->summary); ?></textarea></td>
+            </tr>

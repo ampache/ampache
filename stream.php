@@ -76,26 +76,21 @@ switch ($_REQUEST['action']) {
             break;
         } // end switch on type
     break;
-    case 'single_song':
-        $media_ids[] = array(
-            'object_type' => 'song',
-            'object_id' => scrub_in($_REQUEST['song_id']),
-            'custom_play_action' => $_REQUEST['custom_play_action']
-        );
-    break;
-    case 'single_video':
-        $media_ids[] = array(
-            'object_type' => 'video',
-            'object_id' => scrub_in($_REQUEST['video_id'])
-        );
-    break;
-    case 'artist':
-        $artist = new Artist($_REQUEST['artist_id']);
-        $songs = $artist->get_songs();
-        foreach ($songs as $song) {
-            $media_ids[] = array(
-                'object_type' => 'song',
-                'object_id' => $song);
+    case 'play_item':
+        $object_type = $_REQUEST['object_type'];
+        $object_id = $_REQUEST['object_id'];
+        
+        if (Core::is_playable_item($object_type)) {
+            $item = new $object_type($object_id);
+            $media_ids = array_merge($media_ids, $item->get_medias());
+            
+            if ($_REQUEST['custom_play_action']) {
+                foreach ($media_ids as $media_id) {
+                    if (is_array($media_id)) {
+                        $media_id['custom_play_action'] = $_REQUEST['custom_play_action'];
+                    }
+                }
+            }
         }
     break;
     case 'artist_random':
@@ -105,38 +100,6 @@ switch ($_REQUEST['action']) {
     case 'album_random':
         $album = new Album($_REQUEST['album_id']);
         $media_ids = $album->get_random_songs();
-    break;
-    case 'album':
-        debug_event('stream.php', 'Playing/Adding all songs of album(s) {'.$_REQUEST['album_id'].'}...', '5');
-        $albums_array = explode(',', $_REQUEST['album_id']);
-
-        foreach ($albums_array as $a) {
-            $album = new Album($a);
-            $songs = $album->get_songs();
-            foreach ($songs as $song) {
-                $media_ids[] = array(
-                    'object_type' => 'song',
-                    'object_id' => $song);
-            }
-        }
-    break;
-    case 'playlist':
-        $playlist = new Playlist($_REQUEST['playlist_id']);
-        $songs = $playlist->get_songs();
-        foreach ($songs as $song) {
-            $media_ids[] = array(
-                'object_type' => 'song',
-                'object_id' => $song);
-        }
-    break;
-    case 'smartplaylist':
-        $playlist = new Search($_REQUEST['playlist_id'], 'song');
-        $items = $playlist->get_items();
-        foreach ($items as $item) {
-            $media_ids[] = array(
-                'object_type' => $item['object_type'],
-                'object_id' => $item['object_id']);
-        }
     break;
     case 'playlist_random':
         $playlist = new Playlist($_REQUEST['playlist_id']);
@@ -170,43 +133,6 @@ switch ($_REQUEST['action']) {
                 'object_id' => scrub_in($_REQUEST['video_id'])
             );
         }
-    break;
-    case 'live_stream':
-        $object = new Live_Stream($_REQUEST['stream_id']);
-        if ($object->name) {
-            $media_ids[] = array(
-                'object_type' => 'live_stream',
-                'object_id' => scrub_in($_REQUEST['stream_id'])
-            );
-        }
-    break;
-    case 'album_preview':
-        $songs = Song_preview::get_song_previews($_REQUEST['mbid']);
-        foreach ($songs as $song) {
-            if (!empty($song->file)) {
-                $media_ids[] = array(
-                    'object_type' => 'song_preview',
-                    'object_id' => $song->id);
-            }
-        }
-    break;
-    case 'song_preview':
-        $media_ids[] = array(
-            'object_type' => 'song_preview',
-            'object_id' => scrub_in($_REQUEST['id'])
-        );
-    break;
-    case 'channel':
-        $media_ids[] = array(
-            'object_type' => 'channel',
-            'object_id' => scrub_in($_REQUEST['channel_id'])
-        );
-    break;
-    case 'broadcast':
-        $media_ids[] = array(
-            'object_type' => 'broadcast',
-            'object_id' => scrub_in($_REQUEST['broadcast_id'])
-        );
     break;
     default:
     break;

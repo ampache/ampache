@@ -91,7 +91,7 @@ class Tag extends database_object implements library_item
     {
         if (!is_array($ids) OR !count($ids)) { return false; }
 
-        if (!Catalog::is_library_item($type))
+        if (!Core::is_library_item($type))
             return false;
 
         $idlist = '(' . implode(',',$ids) . ')';
@@ -131,7 +131,7 @@ class Tag extends database_object implements library_item
      */
     public static function add($type, $id, $value, $user=false)
     {
-        if (!Catalog::is_library_item($type))
+        if (!Core::is_library_item($type))
             return false;
 
         if (!is_numeric($id)) { return false; }
@@ -254,7 +254,7 @@ class Tag extends database_object implements library_item
     {
         $uid = ($user == '') ? intval($GLOBALS['user']->id) : intval($user);
         $tag_id = intval($tag_id);
-        if (!Catalog::is_library_item($type))
+        if (!Core::is_library_item($type))
             return false;
         $id = intval($object_id);
 
@@ -361,7 +361,7 @@ class Tag extends database_object implements library_item
      */
     public static function tag_map_exists($type,$object_id,$tag_id,$user)
     {
-        if (!Catalog::is_library_item($type))
+        if (!Core::is_library_item($type))
             return false;
 
         $sql = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` " .
@@ -380,7 +380,7 @@ class Tag extends database_object implements library_item
      */
     public static function get_top_tags($type, $object_id, $limit = 10)
     {
-        if (!Catalog::is_library_item($type))
+        if (!Core::is_library_item($type))
             return false;
 
         $object_id = intval($object_id);
@@ -410,7 +410,7 @@ class Tag extends database_object implements library_item
      */
     public static function get_object_tags($type, $id)
     {
-        if (!Catalog::is_library_item($type))
+        if (!Core::is_library_item($type))
             return false;
 
         $sql = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
@@ -433,7 +433,7 @@ class Tag extends database_object implements library_item
      */
     public static function get_tag_objects($type,$tag_id,$count='',$offset='')
     {
-        if (!Catalog::is_library_item($type))
+        if (!Core::is_library_item($type))
             return false;
 
         $limit_sql = "";
@@ -609,7 +609,7 @@ class Tag extends database_object implements library_item
      */
     public function remove_map($type,$object_id)
     {
-        if (!Catalog::is_library_item($type))
+        if (!Core::is_library_item($type))
             return false;
 
         $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";
@@ -647,6 +647,21 @@ class Tag extends database_object implements library_item
     public function get_childrens()
     {
         return array();
+    }
+    
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if ($filter_type) {
+            $ids = Tag::get_tag_objects($filter_type, $this->id);
+            foreach ($ids as $id) {
+                $medias[] = array(
+                    'object_type' => $filter_type,
+                    'object_id' => $id
+                );
+            }
+        }
+        return $medias;
     }
 
     public function get_user_owner()

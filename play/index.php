@@ -405,10 +405,7 @@ if (!is_resource($fp)) {
 }
 
 header('ETag: ' . $media->id);
-// Put this song in the now_playing table only if it's a song for now...
-if ($type == 'song') {
-    Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($media));
-}
+Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($media));
 
 // Handle Content-Range
 
@@ -444,6 +441,21 @@ if ($range_values > 0 && ($start > 0 || $end > 0)) {
     debug_event('play','Starting stream of ' . $media->file . ' with size ' . $media->size, 5);
 }
 
+// Stats registering must be done before play. Do not move it.
+// It can be slow because of scrobbler plugins (lastfm, ...)
+if ($start > 0) {
+    debug_event('play', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
+} else {
+    if (empty($share_id)) {
+        if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
+            debug_event('play', 'Registering stats for {'.$media->get_stream_name() .'}...', '5');
+            $sessionkey = Stream::$session;
+            $agent = Session::agent($sessionkey);
+            $GLOBALS['user']->update_stats($type, $media->id, $agent);
+        }
+    }
+}
+
 if ($transcode || $demo_id) {
     header('Accept-Ranges: none');
 } else {
@@ -474,23 +486,6 @@ $real_bytes_streamed = $bytes_streamed;
 if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
     print(str_repeat(' ', $stream_size - $bytes_streamed));
     $bytes_streamed = $stream_size;
-}
-
-if ($start > 0) {
-    debug_event('play', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
-} else if ($real_bytes_streamed > 0) {
-    // FIXME: support other media types
-    if ($type == 'song' && empty($share_id)) {
-        if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
-            debug_event('play', 'Registering stats for {'.$media->title.'}...', '5');
-            $sessionkey = Stream::$session;
-            //debug_event('play', 'Current session key {'.$sessionkey.'}', '5');
-            $agent = Session::agent($sessionkey);
-            //debug_event('play', 'Current session agent {'.$agent.'}', '5');
-            $GLOBALS['user']->update_stats($media->id, $agent);
-            $media->set_played();
-        }
-    }
 }
 
 // If this is a democratic playlist remove the entry.

@@ -167,12 +167,27 @@ class TVShow_Season extends database_object implements library_item
 
     public function get_parent()
     {
-        return array('type' => 'tvshow', 'id' => $this->tvshow);
+        return array('object_type' => 'tvshow', 'object_id' => $this->tvshow);
     }
 
     public function get_childrens()
     {
         return array('tvshow_episode' => $this->get_episodes());
+    }
+    
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if (!$filter_type || $filter_type == 'video') {
+            $episodes = $this->get_episodes();
+            foreach ($episodes as $episode_id) {
+                $medias[] = array(
+                    'object_type' => 'video',
+                    'object_id' => $episode_id
+                );
+            }
+        }
+        return $medias;
     }
 
     public function get_user_owner()
@@ -246,8 +261,8 @@ class TVShow_Season extends database_object implements library_item
      */
     public function update($data)
     {
-        $sql = 'UPDATE `tvshow_season` SET `season_number` = ? WHERE `id` = ?';
-        Dba::write($sql, array($data['season_number'], $this->id));
+        $sql = 'UPDATE `tvshow_season` SET `season_number` = ?, `tvshow` = ? WHERE `id` = ?';
+        Dba::write($sql, array($data['season_number'], $data['tvshow'], $this->id));
 
         return $this->id;
     } // update

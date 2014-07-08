@@ -19,32 +19,35 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
+$libitem = Video::create_from_id($libitem->id);
+$libitem->format();
+$video_type = strtolower(get_class($libitem));
 ?>
 <div>
-    <form method="post" id="edit_tvshow_<?php echo $libitem->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_video_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" /></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Title') ?></td>
+                <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Summary') ?></td>
-                <td><textarea name="summary" cols="44" rows="4"><?php echo scrub_out($libitem->summary); ?></textarea></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Release Date') ?></td>
+                <td><input type="text" name="release_date" value="<?php echo $libitem->f_release_date; ?>" /></td>
             </tr>
-            <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Year') ?></td>
-                <td><input type="number" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
-            </tr>
+<?php
+if ($video_type != 'video') {
+    require AmpConfig::get('prefix') . '/templates/show_partial_edit_' . $video_type . '_row.inc.php';
+}
+?>            
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
-            </tr>
-            <tr>
-                <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="apply_childs" value="checked" /><?php echo T_(' Apply tags to all childs (override tags for episodes)') ?></td>
+                <td>
+                    <input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" />
+                </td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
-        <input type="hidden" name="type" value="tvshow_row" />
+        <input type="hidden" name="type" value="<?php echo $video_type; ?>_row" />
     </form>
 </div>

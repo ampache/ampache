@@ -484,7 +484,7 @@ class Album extends database_object implements library_item
     public function get_parent()
     {
         if ($album->artist_count == 1) {
-            return array('type' => 'artist', 'id' => $album->artist_id);
+            return array('object_type' => 'artist', 'object_id' => $album->artist_id);
         }
 
         return null;
@@ -492,7 +492,22 @@ class Album extends database_object implements library_item
 
     public function get_childrens()
     {
-        return array('song' => $this->get_songs());
+        return $this->get_medias();
+    }
+    
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if (!$filter_type || $filter_type == 'song') {
+            $songs = $this->get_songs();
+            foreach ($songs as $song_id) {
+                $medias[] = array(
+                    'object_type' => 'song',
+                    'object_id' => $song_id
+                );
+            }
+        }
+        return $medias;
     }
 
     public function get_user_owner()

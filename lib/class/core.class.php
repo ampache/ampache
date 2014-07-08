@@ -246,4 +246,28 @@ class Core
         }
         return false;
     }
+    
+    private static function is_class_typeof($classname, $typeofname)
+    {
+        if (class_exists($classname)) {
+            return in_array($typeofname, array_map('strtolower', class_implements($classname)));
+        }
+
+        return false;
+    }
+    
+    public static function is_playable_item($classname)
+    {
+        return self::is_class_typeof($classname, 'playable_item');
+    }
+
+    public static function is_library_item($classname)
+    {
+        return self::is_class_typeof($classname, 'library_item');
+    }
+
+    public static function is_media($classname)
+    {
+        return self::is_class_typeof($classname, 'media');
+    }
 } // Core

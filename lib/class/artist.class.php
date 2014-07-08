@@ -367,7 +367,29 @@ class Artist extends database_object implements library_item
 
     public function get_childrens()
     {
+        $albums = $this->get_albums();
+        foreach ($albums as $album_id) {
+            $medias[] = array(
+                'object_type' => 'album',
+                'object_id' => $album_id
+            );
+        }
         return array('album' => $this->get_albums());
+    }
+    
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if (!$filter_type || $filter_type == 'song') {
+            $songs = $this->get_songs();
+            foreach ($songs as $song_id) {
+                $medias[] = array(
+                    'object_type' => 'song',
+                    'object_id' => $song_id
+                );
+            }
+        }
+        return $medias;
     }
 
     public function get_user_owner()

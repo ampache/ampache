@@ -50,14 +50,14 @@ if (AmpConfig::get('ratings')) {
     <ul>
         <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=tvshow_season&season_id=' . $season->id,'play', T_('Play all'),'directplay_full_' . $season->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=tvshow_season&season_id=' . $season->id, T_('Play all'),'directplay_full_text_' . $season->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $season->id,'play', T_('Play all'),'directplay_full_' . $season->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $season->id, T_('Play all'),'directplay_full_text_' . $season->id); ?>
         </li>
         <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=season&season_id=' . $season->id . '&append=true','play_add', T_('Play all last'),'addplay_season_' . $season->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=season&season_id=' . $season->id . '&append=true', T_('Play all last'),'addplay_season_text_' . $season->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&append=true','play_add', T_('Play all last'),'addplay_season_' . $season->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&append=true', T_('Play all last'),'addplay_season_text_' . $season->id); ?>
         </li>
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>

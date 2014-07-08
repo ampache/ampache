@@ -24,6 +24,7 @@ class Video extends database_object implements media, library_item
 {
     public $id;
     public $title;
+    public $played;
     public $enabled;
     public $file;
     public $size;
@@ -161,6 +162,18 @@ class Video extends database_object implements media, library_item
     public function get_childrens()
     {
         return array();
+    }
+    
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if (!$filter_type || $filter_type == 'video') {
+            $medias[] = array(
+                'object_type' => 'video',
+                'object_id' => $this->id
+            );
+        }
+        return $medias;
     }
 
     public function get_user_owner()
@@ -332,12 +345,22 @@ class Video extends database_object implements media, library_item
      */
     public function update($data)
     {
+        $f_release_date = $data['f_release_date'];
+        $release_date = date_parse_from_format('Y-m-d', $f_release_date);
+    
         $sql = "UPDATE `video` SET `title` = ?, `release_date` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['title'], $data['release_date'], $this->id));
+        Dba::write($sql, array($data['title'], $release_date, $this->id));
 
         return $this->id;
 
     } // update
+    
+    public function get_release_item_art()
+    {
+        return array('object_type' => 'video',
+            'object_id' => $this->id
+        );
+    }
 
     /*
      * generate_preview
@@ -352,5 +375,88 @@ class Video extends database_object implements media, library_item
             $artp->insert($image, 'image/png');
         }
     }
+    
+    /**
+     * get_random
+     *
+     * This returns a number of random videos.
+     */
+    public static function get_random($count = 1)
+    {
+        $results = array();
+
+        if (!$count) {
+            $count = 1;
+        }
+
+        $sql = "SELECT DISTINCT(`video`.`id`) FROM `video` ";
+        $where = "WHERE `video`.`enabled` = '1' ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ";
+            $where .= "AND `catalog`.`enabled` = '1' ";
+        }
+
+        $sql .= $where;
+        $sql .= "ORDER BY RAND() LIMIT " . intval($count);
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+
+        return $results;
+    }
+    
+    /**
+     * set_played
+     * this checks to see if the current object has been played
+     * if not then it sets it to played. In any case it updates stats.
+     */
+    public function set_played($user, $agent)
+    {
+        Stats::insert('video', $this->id, $user, $agent);
+    
+        if ($this->played) {
+            return true;
+        }
+
+        /* If it hasn't been played, set it! */
+        Video::update_played('1', $this->id);
+
+        return true;
+
+    } // set_played
+    
+    /**
+     * update_played
+     * sets the played flag
+     */
+    public static function update_played($new_played,$song_id)
+    {
+        self::_update_item('played',$new_played,$song_id,'25');
+
+    } // update_played
+    
+    /**
+     * _update_item
+     * This is a private function that should only be called from within the video class.
+     * It takes a field, value video id and level. first and foremost it checks the level
+     * against $GLOBALS['user'] to make sure they are allowed to update this record
+     * it then updates it and sets $this->{$field} to the new value
+     */
+    private static function _update_item($field, $value, $song_id, $level)
+    {
+        /* Check them Rights! */
+        if (!Access::check('interface',$level)) { return false; }
+
+        /* Can't update to blank */
+        if (!strlen(trim($value))) { return false; }
+
+        $sql = "UPDATE `video` SET `$field` = ? WHERE `id` = ?";
+        Dba::write($sql, array($value, $song_id));
+
+        return true;
+
+    } // _update_item
 
 } // end Video class

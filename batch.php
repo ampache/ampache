@@ -38,64 +38,40 @@ $media_ids = array();
 $default_name = "Unknown.zip";
 $name = $default_name;
 
-switch ($_REQUEST['action']) {
-    case 'tmp_playlist':
-        $media_ids = $GLOBALS['user']->playlist->get_items();
-        $name = $GLOBALS['user']->username . ' - Playlist';
-    break;
-    case 'playlist':
-        $playlist = new Playlist($_REQUEST['id']);
-        $media_ids = $playlist->get_songs();
-        $name = $playlist->name;
-    break;
-    case 'smartplaylist':
-        $search = new Search($_REQUEST['id'], 'song');
-        $items = $search->get_items();
-        foreach ($items as $item) {
-            $media_ids[] = $item['object_id'];
-        }
-        $name = $search->name;
-    break;
-    case 'album':
-        foreach ($_REQUEST['id'] as $a) {
-            $album = new Album($a);
-            if ($name == $default_name) {
-                $name = $album->name;
-            }
-            $asongs = $album->get_songs();
-            foreach ($asongs as $song_id) {
-                $media_ids[] = $song_id;
-            }
-        }
-    break;
-    case 'artist':
-        $artist = new Artist($_REQUEST['id']);
-        $media_ids = $artist->get_songs();
-        $name = $artist->name;
-    break;
-    case 'browse':
-        $id = scrub_in($_REQUEST['browse_id']);
-        $browse = new Browse($id);
-        $browse_media_ids = $browse->get_saved();
-        foreach ($browse_media_ids as $media_id) {
-            switch ($_REQUEST['type']) {
-                case 'album':
-                    $album = new Album($media_id);
-                    $media_ids = array_merge($media_ids, $album->get_songs());
-                break;
-                case 'song':
-                    $media_ids[] = $media_id;
-                break;
-                case 'video':
-                    $media_ids[] = array('Video', $media_id);
-                break;
-            } // switch on type
-        } // foreach media_id
-        $name = 'Batch-' . date("dmY",time());
-    default:
-        // Rien a faire
-    break;
-} // action switch
+if (Core::is_playable_item($_REQUEST['action'])) {
+    $libitem = new $_REQUEST['action']($_REQUEST['id']);
+    $name = $libitem->get_fullname();
+    $media_ids = $libitem->get_medias();
+} else {
+    switch ($_REQUEST['action']) {
+        case 'tmp_playlist':
+            $media_ids = $GLOBALS['user']->playlist->get_items();
+            $name = $GLOBALS['user']->username . ' - Playlist';
+        break;
+        case 'browse':
+            $id = scrub_in($_REQUEST['browse_id']);
+            $browse = new Browse($id);
+            $browse_media_ids = $browse->get_saved();
+            foreach ($browse_media_ids as $media_id) {
+                switch ($_REQUEST['type']) {
+                    case 'album':
+                        $album = new Album($media_id);
+                        $media_ids = array_merge($media_ids, $album->get_songs());
+                    break;
+                    case 'song':
+                        $media_ids[] = $media_id;
+                    break;
+                    case 'video':
+                        $media_ids[] = array('Video', $media_id);
+                    break;
+                } // switch on type
+            } // foreach media_id
+            $name = 'Batch-' . date("dmY",time());
+        default:
+            // Rien a faire
+        break;
+    } // action switch
+}
 
 // Take whatever we've got and send the zip
 $song_files = get_song_files($media_ids);

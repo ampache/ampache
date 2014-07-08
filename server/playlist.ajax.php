@@ -82,14 +82,6 @@ switch ($_REQUEST['action']) {
                     $songs[] = $item['object_id'];
                 }
             break;
-            case 'album_preview':
-                $preview_songs = Song_preview::get_song_previews($item_id);
-                foreach ($preview_songs as $song) {
-                    if (!empty($song->file)) {
-                        $songs[] = $song->id;
-                    }
-                }
-            break;
             case 'album':
                 debug_event('playlist', 'Adding all songs of album(s) {'.$item_id.'}...', '5');
                 $albums_array = explode(',', $item_id);

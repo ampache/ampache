@@ -20,7 +20,7 @@
  *
  */
 
-class Channel extends database_object implements library_item
+class Channel extends database_object implements media, library_item
 {
     public $id;
     public $is_private;
@@ -193,7 +193,7 @@ class Channel extends database_object implements library_item
 
     public function get_fullname()
     {
-        return $this->f_name;
+        return $this->name;
     }
 
     public function get_parent()
@@ -204,6 +204,18 @@ class Channel extends database_object implements library_item
     public function get_childrens()
     {
         return array();
+    }
+    
+    public function get_medias($filter_type = null)
+    {
+        $medias = array();
+        if (!$filter_type || $filter_type == 'channel') {
+            $medias[] = array(
+                'object_type' => 'channel',
+                'object_id' => $this->id
+            );
+        }
+        return $medias;
     }
 
     public function get_user_owner()
@@ -417,6 +429,22 @@ class Channel extends database_object implements library_item
     {
         $channel = new Channel($oid);
         return $channel->get_stream_proxy_url() . '?rt=' . time() . '&filename=' . urlencode($channel->name) . '.' . $channel->stream_type . $additional_params;
+    }
+
+    public function get_stream_types()
+    {
+        // Transcode is mandatory to keep a consistant stream
+        return array('transcode');
+    }
+
+    public function get_stream_name()
+    {
+        return $this->get_fullname();
+    }
+    
+    public function set_played($user, $agent)
+    {
+        // Do nothing
     }
 
 } // end of channel class

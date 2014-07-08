@@ -51,7 +51,7 @@ class Art extends database_object
      */
     public function __construct($uid, $type = 'album', $kind = 'default')
     {
-        if (!Catalog::is_library_item($type))
+        if (!Core::is_library_item($type))
             return false;
         $this->type = $type;
         $this->uid = $uid;
@@ -519,7 +519,7 @@ class Art extends database_object
     public static function url($uid,$type,$sid=false)
     {
         $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
-        if (!Catalog::is_library_item($type))
+        if (!Core::is_library_item($type))
             return null;
 
         $key = $type . $uid;
@@ -1129,28 +1129,21 @@ class Art extends database_object
 
         $meta = $plugin->get_metadata($gtypes, $media_info);
         $images = array();
-        switch ($type) {
-            case 'tvshow':
-                if ($meta['tvshow_art']) {
-                    $url = $meta['tvshow_art'];
-                    $ures = pathinfo($url);
-                    $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
-                }
-            break;
-            case 'tvshow_season':
-                if ($meta['tvshow_season_art']) {
-                    $url = $meta['tvshow_season_art'];
-                    $ures = pathinfo($url);
-                    $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
-                }
-            break;
-            default:
-                if ($meta['art']) {
-                    $url = $meta['art'];
-                    $ures = pathinfo($url);
-                    $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
-                }
-            break;
+        
+        if ($meta['art']) {
+            $url = $meta['art'];
+            $ures = pathinfo($url);
+            $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
+        }
+        if ($meta['tvshow_season_art']) {
+            $url = $meta['tvshow_season_art'];
+            $ures = pathinfo($url);
+            $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
+        } 
+        if ($meta['tvshow_art']) {
+            $url = $meta['tvshow_art'];
+            $ures = pathinfo($url);
+            $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
         }
 
         return $images;
@@ -1160,9 +1153,9 @@ class Art extends database_object
     {
         switch ($thumb) {
             case '1':
-                /* This is used by the now_playing stuff */
-                $size['height'] = '75';
-                $size['width']    = '75';
+                /* This is used by the now_playing / browse stuff */
+                $size['height'] = '100';
+                $size['width']    = '100';
             break;
             case '2':
                 $size['height']    = '128';
@@ -1198,6 +1191,11 @@ class Art extends database_object
                  $size['height'] = 200;
                  $size['width'] = 470;
             break;
+            case '9':
+                /* Video preview size */
+                 $size['height'] = 100;
+                 $size['width'] = 235;
+            break;
             default:
                 $size['height'] = '275';
                 $size['width']    = '275';
@@ -1229,7 +1227,7 @@ class Art extends database_object
             }
         }
         echo "<div class=\"item_art\">";
-        echo "<a href=\"" . $link . "\" alt=\"" . $name . "\"";
+        echo "<a href=\"" . $link . "\" title=\"" . $name . "\"";
         if ($prettyPhoto) {
             echo " rel=\"prettyPhoto\"";
         }
@@ -1240,6 +1238,11 @@ class Art extends database_object
         }
         echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
         if ($prettyPhoto) {
+            if ($size['width'] >= 150) {
+                echo "<div class=\"item_art_play\">";
+                echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id, '<span class="item_art_play_icon" title="' . T_('Play') . '" />', 'directplay_art_' . $object_type . '_' .$object_id);
+                echo "</div>";
+            }
             echo "<div class=\"item_art_actions\">";
             $burl = substr($_SERVER['REQUEST_URI'], strlen(AmpConfig::get('raw_web_path')) + 1);
             $burl = rawurlencode($burl);

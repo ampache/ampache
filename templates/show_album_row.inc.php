@@ -24,9 +24,9 @@
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&' . $libitem->get_http_album_query_ids('album_id'), 'play', T_('Play'), 'play_album_' . $libitem->id); ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $libitem->get_http_album_query_ids('object_id'), 'play', T_('Play'), 'play_album_' . $libitem->id); ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=album&' . $libitem->get_http_album_query_ids('album_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $libitem->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $libitem->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $libitem->id); ?>
         <?php } ?>
 <?php } ?>
     </div>
@@ -36,9 +36,9 @@ if (Art::is_enabled()) {
     $name = '[' . $libitem->f_artist . '] ' . scrub_out($libitem->full_name);
 ?>
 <td class="cel_cover">
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=show&album=<?php echo $libitem->id; ?>">
-        <img height="75" width="75" alt="<?php echo($name) ?>" title="<?php echo($name) ?>" src="<?php echo AmpConfig::get('web_path'); ?>/image.php?object_type=album&object_id=<?php echo $libitem->id; ?>&thumb=1" />
-    </a>
+    <?php
+    Art::display('album', $libitem->id, $name, 1, AmpConfig::get('web_path') . '/albums.php?action=show&album=' . $libitem->id);
+    ?>
 </td>
 <?php } ?>
 <td class="cel_album"><?php echo $libitem->f_name_link; ?></td>

@@ -33,7 +33,11 @@ $results = '';
 
 debug_event('edit.server.php', 'Called for action: {'.$_REQUEST['action'].'}', '5');
 
-$type = $_GET['type'];
+// Post first
+$type = $_POST['type'];
+if (empty($type)) {
+    $type = $_GET['type'];
+}
 $object_id = $_GET['id'];
 
 if (empty($type)) {
@@ -42,7 +46,7 @@ if (empty($type)) {
     $object_type = implode('_', explode('_', $type, -1));
 }
 
-if (!Catalog::is_library_item($object_type)) {
+if (!Core::is_library_item($object_type)) {
     debug_event('edit.server.php', 'Type `' . $type . '` is not based on an item library.', '3');
     exit();
 }

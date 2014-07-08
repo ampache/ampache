@@ -47,7 +47,7 @@ if (!isset($_GET['object_type'])) {
 }
 
 $type = $_GET['object_type'];
-if (!Catalog::is_library_item($type))
+if (!Core::is_library_item($type))
     exit;
 
 /* Decide what size this image is */
