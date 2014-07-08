@@ -2713,7 +2713,7 @@ class Update
     public static function update_370009()
     {
         $sql = "ALTER TABLE `video` ADD `release_date` int(11) unsigned NULL AFTER `enabled`, " .
-            "`played` tinyint(1) unsigned NOT NULL DEFAULT '1' AFTER `enabled`";
+            "`ADD played` tinyint(1) unsigned DEFAULT '1' NOT NULL AFTER `enabled`";
         Dba::write($sql);
 
         $sql = "CREATE TABLE `tvshow` (" .

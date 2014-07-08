@@ -145,7 +145,7 @@ class Shoutbox
      */
     public static function get_object($type,$object_id)
     {
-        if (!Catalog::is_library_item($type))
+        if (!Core::is_library_item($type))
             return false;
 
         $object = new $type($object_id);
