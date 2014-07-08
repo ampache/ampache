@@ -72,7 +72,7 @@ $default_sort = "%a/%A";
                     <input type="radio" name="gather_media" value="clip" /> <?php echo T_('Music Clip'); ?>
                     <input type="radio" name="gather_media" value="tvshow" /> <?php echo T_('TV Show'); ?>
                     <input type="radio" name="gather_media" value="movie" /> <?php echo T_('Movie'); ?>
-                    <input type="radio" name="gather_media" value="video" /> <?php echo T_('Personal Video'); ?>
+                    <input type="radio" name="gather_media" value="personal_video" /> <?php echo T_('Personal Video'); ?>
                 <?php } ?>
             </td>
         </tr>

@@ -152,6 +152,10 @@ class TVShow_Season extends database_object implements library_item
         $keywords['tvshow_season'] = array('important' => false,
             'label' => T_('Season'),
             'value' => $this->season_number);
+        $keywords['type'] = array('important' => false,
+            'label' => null,
+            'value' => 'tvshow'
+        );
 
         return $keywords;
     }
@@ -163,7 +167,7 @@ class TVShow_Season extends database_object implements library_item
 
     public function get_parent()
     {
-        return array('tvshow', $this->tvshow);
+        return array('type' => 'tvshow', 'id' => $this->tvshow);
     }
 
     public function get_childrens()
@@ -174,6 +178,11 @@ class TVShow_Season extends database_object implements library_item
     public function get_user_owner()
     {
         return null;
+    }
+
+    public function get_default_art_kind()
+    {
+        return 'default';
     }
 
     /**

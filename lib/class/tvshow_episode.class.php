@@ -172,13 +172,17 @@ class TVShow_Episode extends Video
                 'label' => T_('Episode'),
                 'value' => $this->episode_number);
         }
+        $keywords['type'] = array('important' => false,
+            'label' => null,
+            'value' => 'tvshow'
+        );
 
         return $keywords;
     }
 
     public function get_parent()
     {
-        return array('tvshow_season', $this->season);
+        return array('type' => 'tvshow_season', 'id' => $this->season);
     }
 
 }

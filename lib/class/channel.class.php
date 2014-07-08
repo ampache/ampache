@@ -211,6 +211,11 @@ class Channel extends database_object implements library_item
         return null;
     }
 
+    public function get_default_art_kind()
+    {
+        return 'default';
+    }
+
     public function get_target_object()
     {
         $object = null;

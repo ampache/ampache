@@ -37,6 +37,7 @@ class Art extends database_object
     public $uid; // UID of the object not ID because it's not the ART.ID
     public $raw; // Raw art data
     public $raw_mime;
+    public $kind;
 
     public $thumb;
     public $thumb_mime;
@@ -48,12 +49,13 @@ class Art extends database_object
      * Art constructor, takes the UID of the object and the
      * object type.
      */
-    public function __construct($uid, $type = 'album')
+    public function __construct($uid, $type = 'album', $kind = 'default')
     {
         if (!Catalog::is_library_item($type))
             return false;
         $this->type = $type;
         $this->uid = $uid;
+        $this->kind = $kind;
 
     } // constructor
 
@@ -196,8 +198,8 @@ class Art extends database_object
      */
     public function get_db()
     {
-        $sql = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-        $db_results = Dba::read($sql, array($this->type, $this->uid));
+        $sql = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
+        $db_results = Dba::read($sql, array($this->type, $this->uid, $this->kind));
 
         while ($results = Dba::fetch_assoc($db_results)) {
             if ($results['size'] == 'original') {
@@ -230,10 +232,10 @@ class Art extends database_object
 
     } // get_db
 
-    public static function has_db($object_id, $object_type)
+    public static function has_db($object_id, $object_type, $kind = 'default')
     {
-        $sql = "SELECT COUNT(`id`) AS `nb_img` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-        $db_results = Dba::read($sql, array($object_type, $object_id));
+        $sql = "SELECT COUNT(`id`) AS `nb_img` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
+        $db_results = Dba::read($sql, array($object_type, $object_id, $kind));
         $nb_img = 0;
         if ($results = Dba::fetch_assoc($db_results)) {
             $nb_img = $results['nb_img'];
@@ -269,18 +271,12 @@ class Art extends database_object
 
         // Default to image/jpeg if they don't pass anything
         $mime = $mime ? $mime : 'image/jpeg';
-
-        $image = Dba::escape($source);
-        $mime = Dba::escape($mime);
-        $uid = Dba::escape($this->uid);
-        $type = Dba::escape($this->type);
-
         // Blow it away!
         $this->reset();
 
         // Insert it!
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`) VALUES('$image', '$mime', 'original', '$type', '$uid')";
-        Dba::write($sql);
+        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) VALUES(?, ?, 'original', ?, ?, ?)";
+        Dba::write($sql, array($source, $mime, $this->type, $this->uid, $this->kind));
 
         return true;
 
@@ -292,8 +288,8 @@ class Art extends database_object
      */
     public function reset()
     {
-        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ?";
-        Dba::write($sql, array($this->uid, $this->type));
+        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
+        Dba::write($sql, array($this->uid, $this->type, $this->kind));
     } // reset
 
     /**
@@ -308,17 +304,11 @@ class Art extends database_object
             return false;
         }
 
-        $source = Dba::escape($source);
-        $mime = Dba::escape($mime);
-        $size = Dba::escape($size);
-        $uid = Dba::escape($this->uid);
-        $type = Dba::escape($this->type);
+        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
+        Dba::write($sql, array($this->uid, $this->type, $size, $this->kind));
 
-        $sql = "DELETE FROM `image` WHERE `object_id`='$uid' AND `object_type`='$type' AND `size`='$size'";
-        Dba::write($sql);
-
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`) VALUES('$source', '$mime', '$size', '$type', '$uid')";
-        Dba::write($sql);
+        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($source, $mime, $size, $this->type, $this->uid, $this->kind));
     } // save_thumb
 
     /**
@@ -329,12 +319,8 @@ class Art extends database_object
     public function get_thumb($size)
     {
         $sizetext = $size['width'] . 'x' . $size['height'];
-        $sizetext = Dba::escape($sizetext);
-        $type = Dba::escape($this->type);
-        $uid = Dba::escape($this->uid);
-
-        $sql = "SELECT `image`, `mime` FROM `image` WHERE `size`='$sizetext' AND `object_type`='$type' AND `object_id`='$uid'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `image`, `mime` FROM `image` WHERE `size` = ? AND `object_type` = ? AND `object_id` = ? AND `kind` = ?";
+        $db_results = Dba::read($sql, array($sizetext, $this->type, $this->uid, $this->kind));
 
         $results = Dba::fetch_assoc($db_results);
         if (count($results)) {
@@ -469,8 +455,8 @@ class Art extends database_object
             $uid = Dba::escape($data['db']);
             $type = Dba::escape($type);
 
-            $sql = "SELECT * FROM `image` WHERE `object_type`='$type' AND `object_id`='$uid' AND `size`='original'";
-            $db_results = Dba::read($sql);
+            $sql = "SELECT * FROM `image` WHERE `object_type` = ? AND `object_id` =? AND `size`='original'";
+            $db_results = Dba::read($sql, array($type, $data['db']));
             $row = Dba::fetch_assoc($db_results);
             return $row['art'];
         } // came from the db
@@ -600,58 +586,19 @@ class Art extends database_object
      * gather
      * This tries to get the art in question
      */
-    public function gather($options = array(), $limit = false)
+    public function gather($options = array(), $limit = false, $gather_parent = false)
     {
         // Define vars
         $results = array();
-
-        if (count($options) == 0) {
-            switch ($this->type) {
-                case 'album':
-                    $album = new Album($this->uid);
-                    $album->format();
-                    $options['artist'] = $album->f_artist;
-                    $options['album'] = $album->f_name;
-                    $options['keyword'] = $options['artist'] . ' ' . $options['album'];
-                break;
-                case 'artist':
-                    $artist = new Artist($this->uid);
-                    $artist->format();
-                    $options['artist'] = $album->f_artist;
-                    $options['keyword'] = $options['artist'];
-                break;
-                case 'tvshow':
-                    $tvshow = new TVShow($this->uid);
-                    $tvshow->format();
-                    $options['tvshow'] = $tvshow->f_name;
-                    $options['keyword'] = $options['tvshow'];
-                break;
-                case 'tvshow_season':
-                    $season = new TVShow_Season($this->uid);
-                    $season->format();
-                    $options['tvshow'] = $season->f_tvshow;
-                    $options['tvshow_season'] = $season->f_name;
-                    $options['keyword'] = $options['tvshow'];
-                break;
-                case 'tvshow_episode':
-                    $video = new TVShow_Episode($this->uid);
-                    $video->format();
-                    $options['tvshow'] = $video->f_tvshow;
-                    $options['tvshow_season'] = $video->f_tvshow_season;
-                    $options['tvshow_episode'] = $video->episode_number;
-                    $options['keyword'] = $options['tvshow'] . " " . $video->f_title;
-                break;
-                case 'video':
-                case 'clip':
-                case 'movie':
-                case 'personal_video':
-                    $video = new Video($this->uid);
-                    $video->format();
-                    $options['keyword'] = $video->f_title;
-                break;
-            }
+        $type = $this->type;
+        if (isset($options['type'])) {
+            $type = $options['type'];
         }
 
+        if (count($options) == 0) {
+            debug_event('Art', 'No options for art search, skipped.', 3);
+            return array();
+        }
         $config = AmpConfig::get('art_order');
         $methods = get_class_methods('Art');
 
@@ -676,7 +623,7 @@ class Art extends database_object
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version) {
                     if ($plugin->load($GLOBALS['user'])) {
-                        $data = $plugin->_plugin->gather_arts($this->type, $options, $limit);
+                        $data = $plugin->_plugin->gather_arts($type, $options, $limit);
                     }
                 }
             } else if (in_array($method_name, $methods)) {
@@ -1246,6 +1193,11 @@ class Art extends database_object
                 $size['height'] = 300;
                 $size['width'] = 200;
             break;
+            case '8':
+                /* Video preview size */
+                 $size['height'] = 200;
+                 $size['width'] = 470;
+            break;
             default:
                 $size['height'] = '275';
                 $size['width']    = '275';
@@ -1260,12 +1212,21 @@ class Art extends database_object
         return self::display($item->type, $item->id, $item->get_fullname(), $thumb, $link);
     }
 
-    public static function display($object_type, $object_id, $name, $thumb, $link = null)
+    public static function display($object_type, $object_id, $name, $thumb, $link = null, $show_default = true, $kind = 'default')
     {
+        if (!$show_default) {
+            // Don't show any image if not available
+            if (!self::has_db($object_id, $object_type, $kind)) {
+                return false;
+            }
+        }
         $size = self::get_thumb_size($thumb);
         $prettyPhoto = ($link == null);
         if ($link == null) {
             $link = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&auth=" . session_id();
+            if ($kind != 'default') {
+                $link .= '&kind=' . $kind;
+            }
         }
         echo "<div class=\"item_art\">";
         echo "<a href=\"" . $link . "\" alt=\"" . $name . "\"";
@@ -1274,6 +1235,9 @@ class Art extends database_object
         }
         echo ">";
         $imgurl = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&thumb=" . $thumb;
+        if ($kind != 'default') {
+            $imgurl .= '&kind=' . $kind;
+        }
         echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
         if ($prettyPhoto) {
             echo "<div class=\"item_art_actions\">";
@@ -1293,6 +1257,8 @@ class Art extends database_object
         }
         echo "</a>\n";
         echo "</div>";
+
+        return true;
     }
 
 } // Art

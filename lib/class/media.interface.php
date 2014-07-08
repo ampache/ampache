@@ -54,4 +54,10 @@ interface media
      */
     public function get_transcode_settings($target = null);
 
+    /**
+     * get_stream_name
+     * Get the complete name to display for the stream.
+     */
+    public function get_stream_name();
+
 } // end interface

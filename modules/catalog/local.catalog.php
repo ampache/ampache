@@ -362,14 +362,14 @@ class Catalog_local extends Catalog
                 } // if it's a playlist
 
                 else {
-                    if ($is_audio_file) {
-                        if (count($this->get_gather_types('music')) > 0) {
-                            $this->insert_local_song($full_file, $options);
+                    if (count($this->get_gather_types('music')) > 0) {
+                        if ($is_audio_file) {
+                        $this->insert_local_song($full_file, $options);
                         } else {
                             debug_event('read', $full_file . " ignored, bad media type for this catalog.", 5);
                         }
-                    } else {
-                        if (count($this->get_gather_types('video')) > 0) {
+                    } else if (count($this->get_gather_types('video')) > 0) {
+                        if ($is_video_file) {
                             $this->insert_local_video($full_file, $options);
                         } else {
                             debug_event('read', $full_file . " ignored, bad media type for this catalog.", 5);
@@ -377,7 +377,7 @@ class Catalog_local extends Catalog
                     }
 
                     $this->count++;
-                    $file = str_replace(array('(',')','\''),'',$full_file);
+                    $file = str_replace(array('(', ')', '\''), '', $full_file);
                     if (UI::check_ticker()) {
                         UI::update_text('add_count_' . $this->id, $this->count);
                         UI::update_text('add_dir_' . $this->id, scrub_out($file));
@@ -720,6 +720,10 @@ class Catalog_local extends Catalog
         if ($results['art']) {
             $art = new Art($id, 'video');
             $art->insert_url($results['art']);
+
+            if (AmpConfig::get('generate_video_preview')) {
+                Video::generate_preview($id);
+            }
         } else {
             $this->added_videos_to_gather[] = $id;
         }

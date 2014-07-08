@@ -41,14 +41,9 @@ if (Art::is_enabled()) {
 </td>
 <?php } ?>
 <td class="cel_title"><?php echo $libitem->f_link; ?></td>
-<td class="cel_add">
-    <span class="cel_item_add">
-        <?php echo Ajax::button('?action=basket&type=video&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_video_' . $libitem->id); ?>
-    </span>
-</td>
 <?php
-if (isset($libitem_type)) {
-    require AmpConfig::get('prefix') . '/templates/show_partial_' . $libitem_type . '_row.inc.php';
+if (isset($video_type)) {
+    require AmpConfig::get('prefix') . '/templates/show_partial_' . $video_type . '_row.inc.php';
 }
 ?>
 <td class="cel_codec"><?php echo $libitem->f_codec; ?></td>

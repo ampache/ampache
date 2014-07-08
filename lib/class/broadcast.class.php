@@ -143,6 +143,11 @@ class Broadcast extends database_object implements library_item
         return $this->user;
     }
 
+    public function get_default_art_kind()
+    {
+        return 'default';
+    }
+
     public static function get_broadcast_list_sql()
     {
         $sql = "SELECT `id` FROM `broadcast` WHERE `started` = '1' ";
@@ -220,13 +225,9 @@ class Broadcast extends database_object implements library_item
         return $broadcasts;
     }
 
-    /*
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public static function play_url($oid, $additional_params='')
+    public static function gc()
     {
-        return $oid;
+
     }
 
 } // end of broadcast class

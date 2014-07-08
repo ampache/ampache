@@ -61,7 +61,9 @@ class Playlist extends playlist_object implements library_item
      */
     public static function gc()
     {
-        Dba::write("DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` WHERE `song`.`file` IS NULL AND `playlist_data`.`object_type`='song'");
+        foreach (array('song', 'video') as $object_type) {
+            Dba::write("DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `" . $object_type . "` ON `song`.`id` = `playlist_data`.`object_id` WHERE `song`.`file` IS NULL AND `playlist_data`.`object_type`='" . $object_type . "'");
+        }
         Dba::write("DELETE FROM `playlist` USING `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` WHERE `playlist_data`.`object_id` IS NULL");
     }
 
@@ -158,6 +160,11 @@ class Playlist extends playlist_object implements library_item
         return $this->user;
     }
 
+    public function get_default_art_kind()
+    {
+        return 'default';
+    }
+
     /**
      * get_track
      * Returns the single item on the playlist and all of it's information, restrict
@@ -176,8 +183,8 @@ class Playlist extends playlist_object implements library_item
 
     /**
      * get_items
-     * This returns an array of playlist songs that are in this playlist.
-     * Because the same song can be on the same playlist twice they are
+     * This returns an array of playlist medias that are in this playlist.
+     * Because the same meda can be on the same playlist twice they are
      * keyed by the uid from playlist_data
      */
     public function get_items()
@@ -235,7 +242,7 @@ class Playlist extends playlist_object implements library_item
     {
         $results = array();
 
-        $sql = "SELECT * FROM `playlist_data` WHERE `playlist` = ? ORDER BY `track`";
+        $sql = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' ORDER BY `track`";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($r = Dba::fetch_assoc($db_results)) {

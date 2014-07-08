@@ -126,7 +126,7 @@ class Clip extends Video
     public function get_parent()
     {
         if ($this->artist) {
-            return array('artist', $this->artist);
+            return array('type' => 'artist', 'id' => $this->artist);
         }
 
         return null;

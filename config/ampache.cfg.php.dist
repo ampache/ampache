@@ -120,15 +120,15 @@ auth_methods = "mysql"
 ; This defines which file types Ampache will attempt to catalog
 ; You can specify any file extension you want in here separating them
 ; with a |
-; DEFAULT: mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv
-catalog_file_pattern = "mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv"
+; DEFAULT: mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|spx|ra|ape|shn|wv
+catalog_file_pattern = "mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|spx|ra|ape|shn|wv"
 
 ; Video Pattern
 ; This defines which video file types Ampache will attempt to catalog
 ; You can specify any file extension you want in here seperating them with
 ; a | but ampache may not be able to parse them
-; DEAFULT: avi|mpg|flv|m4v|webm
-catalog_video_pattern = "avi|mpg|flv|m4v|webm|mkv"
+; DEAFULT: avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts
+catalog_video_pattern = "avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts"
 
 ; Playlist Pattern
 ; This defines which playlist types Ampache will attempt to catalog
@@ -271,9 +271,14 @@ metadata_order = "getID3,filename"
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked) for video files
 ; POSSIBLE VALUES (builtins): filename and getID3
-; POSSIBLE VALUES (plugins): Tmdb, plus any others you've installed.
+; POSSIBLE VALUES (plugins): Tmdb,Omdb plus any others you've installed.
 ; DEFAULT: filename getID3
 metadata_order_video = "filename,getID3"
+
+; This determines if a preview image should be retrieved from video files
+; It requires encode_get_image transcode settings.
+; DEFAULT: false
+;generate_video_preview = "true"
 
 ; Un comment if don't want ampache to follow symlinks
 ; DEFAULT: false
@@ -645,16 +650,40 @@ refresh_limit = "60"
 ; (e.g. if you store everything in FLAC, but don't want to ever stream that.)
 ; transcode_TYPE         = {allowed|required|false}
 ; DEFAULT: false
+;;; Audio
 ;transcode_m4a      = allowed
 ;transcode_flac     = required
 ;transcode_mpc      = required
 ;transcode_ogg      = required
+;transcode_oga      = required
 ;transcode_wav      = required
+;transcode_wma      = required
+;transcode_aif      = required
+;transcode_aiff     = required
+;transcode_ape     = required
+;transcode_shn     = required
 ;transcode_mp3      = allowed
+;;; Video
+;transcode_avi      = allowed
+;transcode_mkv      = allowed
+;transcode_mpg      = allowed
+;transcode_mpeg     = allowed
+;transcode_m4v      = allowed
+;transcode_mp4      = allowed
+;transcode_mov      = allowed
+;transcode_wmv      = allowed
+;transcode_ogv      = allowed
+;transcode_divx     = allowed
+;transcode_m2ts     = allowed
+;transcode_webm     = allowed
 
-; Default output format
+; Default audio output format
 ; DEFAULT: none
 ;encode_target = mp3
+
+; Default video output format
+; DEFAULT: none
+;encode_video_target = flv
 
 ; Override the default output format on a per-type basis
 ; encode_target_TYPE = TYPE
@@ -697,6 +726,11 @@ transcode_player_customize = true
 ;encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
 ;encode_args_m4a = "-vn -b:a %SAMPLE%K -c:a libfdk_aac -f adts pipe:1"
 ;encode_args_wav = "-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1"
+;encode_args_flv = "-b:a %SAMPLE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
+
+; Encoding arguments to retrieve an image from a single frame
+; DEFAULT: none
+;encode_get_image = "-ss %TIME% -f image2 -vframes 1 pipe:1"
 
 ;######################################################
 ; these options allow you to configure your rss-feed

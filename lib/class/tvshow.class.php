@@ -190,6 +190,10 @@ class TVShow extends database_object implements library_item
         $keywords['tvshow'] = array('important' => true,
             'label' => T_('TV Show'),
             'value' => $this->f_name);
+        $keywords['type'] = array('important' => false,
+            'label' => null,
+            'value' => 'tvshow'
+        );
 
         return $keywords;
     }
@@ -212,6 +216,11 @@ class TVShow extends database_object implements library_item
     public function get_user_owner()
     {
         return null;
+    }
+
+    public function get_default_art_kind()
+    {
+        return 'default';
     }
 
     /**

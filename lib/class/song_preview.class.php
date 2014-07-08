@@ -255,6 +255,11 @@ class Song_Preview extends database_object implements media
         return false;
     }
 
+    public function get_stream_name()
+    {
+        return $this->title;
+    }
+
     public static function get_song_previews($album_mbid)
     {
         $songs = array();

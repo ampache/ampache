@@ -60,10 +60,6 @@ if (AmpConfig::get('ratings')) {
             <?php echo Ajax::text('?page=stream&action=directplay&playtype=season&season_id=' . $season->id . '&append=true', T_('Play all last'),'addplay_season_text_' . $season->id); ?>
         </li>
         <?php } ?>
-        <li>
-            <?php echo Ajax::button('?action=basket&type=tvshow_season&id=' . $season->id,'add', T_('Add all to temporary playlist'),'add_' . $season->id); ?>
-            <?php echo Ajax::text('?action=basket&type=tvshow_season&id=' . $season->id, T_('Add all to temporary playlist'),'add_text_' . $season->id); ?>
-        </li>
         <?php if (Access::check('interface','50')) { ?>
             <a id="<?php echo 'edit_tvshow_season_'.$season->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id ?>', '<?php echo 'edit_tvshow_season_'.$season->id ?>', '<?php echo T_('Season edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>

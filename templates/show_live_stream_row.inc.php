@@ -29,16 +29,11 @@
     </div>
 </td>
 <td class="cel_streamname"><?php echo $libitem->f_name_link; ?></td>
-<td class="cel_add">
-    <span class="cel_item_add">
-        <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_radio_' . $libitem->id); ?>
-    </span>
-</td>
 <td class="cel_streamurl"><?php echo $libitem->f_url_link; ?></td>
 <td class="cel_codec"><?php echo $libitem->codec; ?></td>
 <td class="cel_action">
     <?php if (Access::check('interface','50')) { ?>
-        <a id="<?php echo 'edit_live_stream_'.$libitem->id ?>" onclick="showEditDialog('radio_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_live_stream_'.$libitem->id ?>', '<?php echo T_('Live Stream edit') ?>',  'live_stream_')">
+        <a id="<?php echo 'edit_live_stream_'.$libitem->id ?>" onclick="showEditDialog('live_stream_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_live_stream_'.$libitem->id ?>', '<?php echo T_('Live Stream edit') ?>',  'live_stream_')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
     <?php } ?>

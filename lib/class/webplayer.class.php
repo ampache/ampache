@@ -83,24 +83,24 @@ class WebPlayer
             }
         }
 
-        $song = null;
+        $media = null;
         $urlinfo = Stream_URL::parse($item->url);
-        if ($urlinfo['id'] && $urlinfo['type'] == 'song') {
-            $song = new Song($urlinfo['id']);
+        if ($urlinfo['id'] && Catalog::is_media($urlinfo['type'])) {
+            $media = new $urlinfo['type']($urlinfo['id']);
         } else if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
-            $song = new Song_Preview($urlinfo['id']);
+            $media = new Song_Preview($urlinfo['id']);
         } else if (isset($urlinfo['demo_id'])) {
             $democratic = new Democratic($urlinfo['demo_id']);
             if ($democratic->id) {
                 $song_id = $democratic->get_next_object();
                 if ($song_id) {
-                    $song = new Song($song_id);
+                    $media = new Song($song_id);
                 }
             }
         }
 
-        if ($song != null) {
-            $ftype = $song->type;
+        if ($media != null) {
+            $ftype = $media->type;
 
             $transcode = false;
             $transcode_cfg = AmpConfig::get('transcode');
@@ -110,12 +110,12 @@ class WebPlayer
             if ($transcode_cfg == 'always' || !empty($force_type) || $ftype_transcode == 'required' || ($types['real'] != $ftype && !AmpConfig::get('webplayer_flash'))) {
                 if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                     // Transcode only if excepted type available
-                    $transcode_settings = $song->get_transcode_settings($types['real']);
+                    $transcode_settings = $media->get_transcode_settings($types['real']);
                     if ($transcode_settings && AmpConfig::get('transcode_player_customize')) {
                         $transcode = true;
                     } else {
                         if (!in_array('native', $valid_types)) {
-                            $transcode_settings = $song->get_transcode_settings(null);
+                            $transcode_settings = $media->get_transcode_settings(null);
                             if ($transcode_settings) {
                                 $types['real'] = $transcode_settings['format'];
                                 $transcode = true;
@@ -128,16 +128,16 @@ class WebPlayer
             if (!$transcode) {
                 $types['real'] = $ftype;
             }
-            if ($types['real'] == "flac" || $types['real'] == "ogg") $types['player'] = "oga";
-            else if ($types['real'] == "mp4") $types['player'] = "m4a";
-        } else if ($urlinfo['id'] && $urlinfo['type'] == 'video') {
-            $video = new Video($urlinfo['id']);
-            $types['real'] = pathinfo($video->file, PATHINFO_EXTENSION);
 
-            if ($types['real'] == "ogg") $types['player'] = "ogv";
-            else if ($types['real'] == "webm") $types['player'] = "webmv";
-            else if ($types['real'] == "mp4") $types['player'] = "m4v";
-        } else if ($item->type == 'radio') {
+            if ($urlinfo['type'] == 'song') {
+                if ($types['real'] == "flac" || $types['real'] == "ogg") $types['player'] = "oga";
+                else if ($types['real'] == "mp4") $types['player'] = "m4a";
+            } else if ($urlinfo['type'] == 'video') {
+                if ($types['real'] == "ogg") $types['player'] = "ogv";
+                else if ($types['real'] == "webm") $types['player'] = "webmv";
+                else if ($types['real'] == "mp4") $types['player'] = "m4v";
+            }
+        } else if ($item->type == 'live_stream') {
             $types['real'] = $item->codec;
             if ($types['real'] == "flac" || $types['real'] == "ogg") $types['player'] = "oga";
         } else {

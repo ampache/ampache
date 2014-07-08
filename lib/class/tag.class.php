@@ -654,4 +654,9 @@ class Tag extends database_object implements library_item
         return null;
     }
 
+    public function get_default_art_kind()
+    {
+        return 'default';
+    }
+
 } // end of Tag class

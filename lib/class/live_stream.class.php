@@ -101,6 +101,11 @@ class Live_Stream extends database_object implements media, library_item
         return null;
     }
 
+    public function get_default_art_kind()
+    {
+        return 'default';
+    }
+
     /**
      * update
      * This is a static function that takes a key'd array for input
@@ -203,6 +208,11 @@ class Live_Stream extends database_object implements media, library_item
 
     } // play_url
 
+    public function get_stream_name()
+    {
+        return $this->get_fullname();
+    }
+
     /**
      * get_transcode_settings
      *
@@ -235,6 +245,11 @@ class Live_Stream extends database_object implements media, library_item
         }
 
         return $radios;
+    }
+
+    public static function gc()
+    {
+
     }
 
 } //end of radio class

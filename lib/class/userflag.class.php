@@ -91,7 +91,7 @@ class Userflag extends database_object
      */
     public static function gc()
     {
-        foreach (array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'tvshow_episode', 'movie') as $object_type) {
+        foreach (array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season') as $object_type) {
             Dba::write("DELETE FROM `user_flag` USING `user_flag` LEFT JOIN `$object_type` ON `$object_type`.`id` = `user_flag`.`object_id` WHERE `object_type` = '$object_type' AND `$object_type`.`id` IS NULL");
         }
     }

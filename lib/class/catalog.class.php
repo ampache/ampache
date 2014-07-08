@@ -432,6 +432,9 @@ abstract class Catalog extends database_object
         $sort_pattern = $data['sort_pattern'];
         $gather_types = $data['gather_media'];
 
+        // Should it be an array? Not now.
+        if (!in_array($gather_types, array('music', 'clip', 'tvshow', 'movie', 'personal_video'))) return false;
+
         $insert_id = 0;
         $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';
         $include = require_once $filename;
@@ -802,6 +805,73 @@ abstract class Catalog extends database_object
         return $results;
     }
 
+    public function gather_art_item($type, $id)
+    {
+        debug_event('gather_art', 'Gathering art for ' . $type . '/' . $id . '...', 5);
+
+        // Should be more generic !
+        if ($type == 'video') {
+            $libitem = Video::create_from_id($id);
+        } else {
+            $libitem = new $type($id);
+        }
+        $options = array();
+        $libitem->format();
+        if ($libitem->id) {
+            if (count($options) == 0) {
+                // Only search on items with default art kind as `default`.
+                if ($libitem->get_default_art_kind() == 'default') {
+                    $keywords = $libitem->get_keywords();
+                    $keyword = '';
+                    foreach ($keywords as $key => $word) {
+                        $options[$key] = $word['value'];
+                        if ($word['important']) {
+                            if (!empty($word['value'])) {
+                                $keyword .= ' ' . $word['value'];
+                            }
+                        }
+                    }
+                    $options['keyword'] = $keyword;
+                }
+
+                $parent = $libitem->get_parent();
+                if ($parent != null) {
+                    if (!Art::has_db($parent['id'], $parent['type'])) {
+                        $this->gather_art_item($parent['type'], $parent['id']);
+                    }
+                }
+            }
+        }
+
+        $art = new Art($id, $type);
+        $results = $art->gather($options, 1, true);
+
+        if (count($results)) {
+            // Pull the string representation from the source
+            $image = Art::get_from_source($results[0], $type);
+            if (strlen($image) > '5') {
+                $art->insert($image, $results[0]['mime']);
+                // If they've enabled resizing of images generate a thumbnail
+                if (AmpConfig::get('resize_images')) {
+                    $thumb = $art->generate_thumb($image, array(
+                            'width' => 275,
+                            'height' => 275),
+                        $results[0]['mime']);
+                    if (is_array($thumb)) {
+                        $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], '275x275');
+                    }
+                }
+
+            } else {
+                debug_event('gather_art', 'Image less than 5 chars, not inserting', 3);
+            }
+        }
+
+        if ($type == 'video' && AmpConfig::get('generate_video_preview')) {
+            Video::generate_preview($id);
+        }
+    }
+
     /**
      * gather_art
      *
@@ -850,31 +920,7 @@ abstract class Catalog extends database_object
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
             foreach ($values as $id) {
-                $art = new Art($id, $key);
-
-                debug_event('gather_art', 'Gathering art for ' . $key . '/' . $id . '...', 5);
-                $results = $art->gather(array(), 1);
-
-                if (count($results)) {
-                    // Pull the string representation from the source
-                    $image = Art::get_from_source($results[0], $key);
-                    if (strlen($image) > '5') {
-                        $art->insert($image, $results[0]['mime']);
-                        // If they've enabled resizing of images generate a thumbnail
-                        if (AmpConfig::get('resize_images')) {
-                            $thumb = $art->generate_thumb($image, array(
-                                    'width' => 275,
-                                    'height' => 275),
-                                $results[0]['mime']);
-                            if (is_array($thumb)) {
-                                $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], '275x275');
-                            }
-                        }
-
-                    } else {
-                        debug_event('gather_art', 'Image less than 5 chars, not inserting', 3);
-                    }
-                }
+                $this->gather_art_item($key, $id);
 
                 // Stupid little cutesie thing
                 $search_count++;
@@ -882,8 +928,6 @@ abstract class Catalog extends database_object
                     UI::update_text('count_art_' . $this->id, $search_count);
                     UI::update_text('read_art_' . $this->id, scrub_out($album->name));
                 }
-
-                unset($found);
             }
         }
 
@@ -1211,14 +1255,13 @@ abstract class Catalog extends database_object
             $gtypes = "music";
         }
         $types = explode(',', $gtypes);
+
         if ($media_type == "video") {
-            unset($types['music']);
+            $types = array_diff($types, array('music'));
         }
 
         if ($media_type == "music") {
-            unset($types['video']);
-            unset($types['movie']);
-            unset($types['tvshow']);
+            $types = array_diff($types, array('personal_video', 'movie', 'tvshow'));
         }
 
         return $types;

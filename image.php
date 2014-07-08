@@ -52,6 +52,7 @@ if (!Catalog::is_library_item($type))
 
 /* Decide what size this image is */
 $size = Art::get_thumb_size($_GET['thumb']);
+$kind = isset($_GET['kind']) ? $_GET['kind'] : 'default';
 
 $image = '';
 $mime = '';
@@ -78,7 +79,7 @@ if (!$typeManaged) {
     $item = new $type($_GET['object_id']);
     $filename = $item->name ?: $item->title;
 
-    $art = new Art($item->id, $type);
+    $art = new Art($item->id, $type, $kind);
     $art->get_db();
     $etag = $art->id;
 

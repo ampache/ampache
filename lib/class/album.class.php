@@ -484,7 +484,7 @@ class Album extends database_object implements library_item
     public function get_parent()
     {
         if ($album->artist_count == 1) {
-            return array('artist', $album->artist_id);
+            return array('type' => 'artist', 'id' => $album->artist_id);
         }
 
         return null;
@@ -498,6 +498,11 @@ class Album extends database_object implements library_item
     public function get_user_owner()
     {
         return null;
+    }
+
+    public function get_default_art_kind()
+    {
+        return 'default';
     }
 
     /**

@@ -168,6 +168,11 @@ class Video extends database_object implements media, library_item
         return null;
     }
 
+    public function get_default_art_kind()
+    {
+        return 'preview';
+    }
+
     /**
      * gc
      *
@@ -185,38 +190,30 @@ class Video extends database_object implements media, library_item
 
     public function get_stream_types()
     {
-        return array('native');
-
-    } // native_stream
+        return Song::get_stream_types_for_type($this->type);
+    }
 
     /**
      * play_url
      * This returns a "PLAY" url for the video in question here, this currently feels a little
      * like a hack, might need to adjust it in the future
      */
-    public static function play_url($oid, $additional_params='',$sid='',$force_http='')
+    public static function play_url($oid, $additional_params='')
     {
-        $video = new Video($oid);
+        return Song::generic_play_url('video', $oid, $additional_params);
+    }
 
-        if (!$video->id) { return false; }
-
-        $uid = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
-        $oid = intval($video->id);
-
-        $url = Stream::get_base_url() . "type=video&uid=" . $uid . "&oid=" . $oid;
-
-        return Stream_URL::format($url . $additional_params);
-
-    } // play_url
+    public function get_stream_name()
+    {
+        return $this->title;
+    }
 
     /**
      * get_transcode_settings
-     *
-     * FIXME: Video transcoding is not implemented
      */
     public function get_transcode_settings($target = null)
     {
-        return false;
+        return Song::get_transcode_settings_for_media($this->type, $target, 'video');
     }
 
     private static function get_derived_types()
@@ -249,6 +246,7 @@ class Video extends database_object implements media, library_item
             case 'avi':
                 return 'video/avi';
             case 'ogg':
+            case 'ogv':
                 return 'application/ogg';
             case 'wmv':
                 return 'audio/x-ms-wmv';
@@ -257,6 +255,19 @@ class Video extends database_object implements media, library_item
                 return 'video/mp4';
             case 'mkv':
                 return 'video/x-matroska';
+            case 'mkv':
+                return 'video/x-matroska';
+            case 'mov':
+                return 'video/quicktime';
+            case 'divx':
+                return 'video/x-divx';
+            case 'webm':
+                return 'video/webm';
+            case 'flv':
+                return 'video/x-flv';
+            case 'mpg':
+            case 'mpeg':
+            case 'm2ts':
             default:
                 return 'video/mpeg';
         }
@@ -327,5 +338,19 @@ class Video extends database_object implements media, library_item
         return $this->id;
 
     } // update
+
+    /*
+     * generate_preview
+     * Generate video preview image from a video file
+     */
+    public static function generate_preview($video_id, $overwrite = false)
+    {
+        if ($overwrite || !Art::has_db($video_id, 'video', 'preview')) {
+            $artp = new Art($video_id, 'video', 'preview');
+            $video = new Video($video_id);
+            $image = Stream::get_image_preview($video);
+            $artp->insert($image, 'image/png');
+        }
+    }
 
 } // end Video class

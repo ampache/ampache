@@ -39,14 +39,6 @@ if (Art::is_enabled()) {
 </td>
 <?php } ?>
 <td class="cel_tvshow"><?php echo $libitem->f_link; ?></td>
-<td class="cel_add">
-    <span class="cel_item_add">
-        <?php echo Ajax::button('?action=basket&type=tvshow&id=' . $artist->id,'add', T_('Add to temporary playlist'),'add_artist_' . $libitem->id); ?>
-        <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $libitem->id ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
-        </a>
-    </span>
-</td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <td class="cel_seasons"><?php echo $libitem->seasons; ?></td>
 <td class="cel_tags"><?php echo $libitem->f_tags; ?></td>

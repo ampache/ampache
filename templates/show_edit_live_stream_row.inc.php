@@ -21,7 +21,7 @@
  */
 ?>
 <div>
-    <form method="post" id="edit_radio_<?php echo $libitem->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_live_stream_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>

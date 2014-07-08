@@ -54,7 +54,7 @@
         <?php } ?>
         <?php if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="6"><span class="nodata"><?php echo T_('No channel found'); ?></span></td>
+            <td colspan="13"><span class="nodata"><?php echo T_('No channel found'); ?></span></td>
         </tr>
         <?php } ?>
     </tbody>

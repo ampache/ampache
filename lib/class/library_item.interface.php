@@ -45,6 +45,8 @@ interface library_item
 
     public function get_user_owner();
 
+    public function get_default_art_kind();
+
     public function update($data);
 
     public static function gc();

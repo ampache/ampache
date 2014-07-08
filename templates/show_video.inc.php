@@ -24,7 +24,9 @@
 <?php UI::show_box_top($video->f_title . ' ' . T_('Details'), 'box box_video_details'); ?>
 <div class="item_right_info">
 <?php
-Art::display('video', $video->id, $video->f_title, 7);
+if (!Art::display('video', $video->id, $video->f_title, 7, null, false)) {
+    Art::display('video', $video->id, $video->f_title, 8, null, false, 'preview');
+}
 ?>
 </div>
 <dl class="media_details">
@@ -54,7 +56,6 @@ Art::display('video', $video->id, $video->f_title, 7);
                 <?php echo Ajax::button('?page=stream&action=directplay&playtype=video&video_id=' . $video->id . '&append=true','play_add', T_('Play last'),'addplay_video_' . $video->id); ?>
             <?php } ?>
         <?php } ?>
-        <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id,'add', T_('Add to temporary playlist'),'add_video_' . $video->id); ?>
         <?php if (AmpConfig::get('sociable')) { ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>">
             <?php echo UI::get_icon('comment', T_('Post Shout')); ?>

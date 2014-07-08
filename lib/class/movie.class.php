@@ -103,4 +103,20 @@ class Movie extends Video
 
     } //format
 
+    public function get_keywords()
+    {
+        $keywords = parent::get_keywords();
+        $keywords['type'] = array('important' => false,
+            'label' => null,
+            'value' => 'movie'
+        );
+
+        return $keywords;
+    }
+
+    public function get_default_art_kind()
+    {
+        return 'default';
+    }
+
 } // Movie class

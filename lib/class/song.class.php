@@ -976,7 +976,7 @@ class Song extends database_object implements media, library_item
 
     public function get_parent()
     {
-        return array('album', $this->album);
+        return array('type' => 'album', 'id' => $this->album);
     }
 
     public function get_childrens()
@@ -986,7 +986,16 @@ class Song extends database_object implements media, library_item
 
     public function get_user_owner()
     {
+        if ($this->user_upload) {
+            return $this->user_upload;
+        }
+
         return null;
+    }
+
+    public function get_default_art_kind()
+    {
+        return 'default';
     }
 
     /**
@@ -1055,6 +1064,37 @@ class Song extends database_object implements media, library_item
 
     } // get_rel_path
 
+    public static function generic_play_url($object_type, $object_id, $additional_params)
+    {
+        $media = new $object_type($object_id);
+        if (!$media->id) return null;
+
+        $uid = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
+        $type = $media->type;
+
+        // Checking if the media is gonna be transcoded into another type
+        // Some players doesn't allow a type streamed into another without giving the right extension
+        $transcode_cfg = AmpConfig::get('transcode');
+        $transcode_mode = AmpConfig::get('transcode_' . $type);
+        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && $transcode_mode == 'required')) {
+            $transcode_settings = $media->get_transcode_settings(null);
+            if ($transcode_settings) {
+                debug_event("media", "Changing play url type from {".$type."} to {".$transcode_settings['format']."} due to encoding settings...", 5);
+                $type = $transcode_settings['format'];
+            }
+        }
+
+        $media_name = $media->get_stream_name() . "." . $type;
+        $media_name = str_replace("/", "-", $media_name);
+        $media_name = str_replace("?", "", $media_name);
+        $media_name = str_replace("#", "", $media_name);
+        $media_name = rawurlencode($media_name);
+
+        $url = Stream::get_base_url() . "type=" . $object_type . "&oid=" . $object_id . "&uid=" . $uid . $additional_params . "&name=" . $media_name;
+
+        return Stream_URL::format($url);
+    }
+
     /**
      * play_url
      * This function takes all the song information and correctly formats a
@@ -1063,33 +1103,13 @@ class Song extends database_object implements media, library_item
      */
     public static function play_url($oid, $additional_params='')
     {
-        $song = new Song($oid);
-        $user_id = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
-        $type = $song->type;
+        return self::generic_play_url('song', $oid, $additional_params);
+    }
 
-        // Checking if the song is gonna be transcoded into another type
-        // Some players doesn't allow a type streamed into another without giving the right extension
-        $transcode_cfg = AmpConfig::get('transcode');
-        $transcode_mode = AmpConfig::get('transcode_' . $type);
-        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && $transcode_mode == 'required')) {
-            $transcode_settings = $song->get_transcode_settings(null);
-            if ($transcode_settings) {
-                debug_event("song.class.php", "Changing play url type from {".$type."} to {".$transcode_settings['format']."} due to encoding settings...", 5);
-                $type = $transcode_settings['format'];
-            }
-        }
-
-        $song_name = $song->get_artist_name() . " - " . $song->title . "." . $type;
-        $song_name = str_replace("/", "-", $song_name);
-        $song_name = str_replace("?", "", $song_name);
-        $song_name = str_replace("#", "", $song_name);
-        $song_name = rawurlencode($song_name);
-
-        $url = Stream::get_base_url() . "type=song&oid=" . $song->id . "&uid=" . $user_id . $additional_params . "&name=" . $song_name;
-
-        return Stream_URL::format($url);
-
-    } // play_url
+    public function get_stream_name()
+    {
+        return $this->get_artist_name() . " - " . $this->title;
+    }
 
     /**
      * get_recently_played
@@ -1134,7 +1154,7 @@ class Song extends database_object implements media, library_item
     public function get_stream_types()
     {
         return Song::get_stream_types_for_type($this->type);
-    } // end stream_types
+    }
 
     public static function get_stream_types_for_type($type)
     {
@@ -1149,35 +1169,43 @@ class Song extends database_object implements media, library_item
         }
 
         return $types;
-    } // end stream_types
+    }
 
-    public function get_transcode_settings($target = null)
+    public static function get_transcode_settings_for_media($source, $target = null, $media_type = 'song')
     {
-        $source = $this->type;
-
-        if ($target) {
-            debug_event('song.class.php', 'Explicit format request {'.$target.'}', 5);
-        } else if ($target = AmpConfig::get('encode_target_' . $source)) {
-            debug_event('song.class.php', 'Defaulting to configured target format for ' . $source, 5);
-        } else if ($target = AmpConfig::get('encode_target')) {
-            debug_event('song.class.php', 'Using default target format', 5);
-        } else {
-            $target = $source;
-            debug_event('song.class.php', 'No default target for ' . $source . ', choosing to resample', 5);
+        $setting_target = 'encode_target';
+        if ($media_type != 'song') {
+            $setting_target = 'encode_' . $media_type . '_target';
         }
 
-        debug_event('song.class.php', 'Transcode settings: from ' . $source . ' to ' . $target, 5);
+        if ($target) {
+            debug_event('media', 'Explicit format request {' . $target . '}', 5);
+        } else if ($target = AmpConfig::get('encode_target_' . $source)) {
+            debug_event('media', 'Defaulting to configured target format for ' . $source, 5);
+        } else if ($target = AmpConfig::get($setting_target)) {
+            debug_event('media', 'Using default target format', 5);
+        } else {
+            $target = $source;
+            debug_event('media', 'No default target for ' . $source . ', choosing to resample', 5);
+        }
+
+        debug_event('media', 'Transcode settings: from ' . $source . ' to ' . $target, 5);
 
         $cmd = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
         $args = AmpConfig::get('encode_args_' . $target);
 
         if (!$args) {
-            debug_event('song.class.php', 'Target format ' . $target . ' is not properly configured', 2);
+            debug_event('media', 'Target format ' . $target . ' is not properly configured', 2);
             return false;
         }
 
-        debug_event('song.class.php', 'Command: ' . $cmd . ' Arguments: ' . $args, 5);
+        debug_event('media', 'Command: ' . $cmd . ' Arguments: ' . $args, 5);
         return array('format' => $target, 'command' => $cmd . ' ' . $args);
+    }
+
+    public function get_transcode_settings($target = null)
+    {
+        return Song::get_transcode_settings_for_media($this->type, $target, 'song');
     }
 
     public function get_lyrics()

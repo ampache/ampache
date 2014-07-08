@@ -191,7 +191,7 @@ class Browse extends Query
             break;
             case 'catalog':
                 $box_title = T_('Catalogs');
-                $box_req = AmpConfig::get('prefix') . '/templates/show_searches.inc.php';
+                $box_req = AmpConfig::get('prefix') . '/templates/show_catalogs.inc.php';
             break;
             case 'shoutbox':
                 $box_title = T_('Shoutbox Records');

@@ -2768,6 +2768,9 @@ class Update
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         Dba::write($sql, array($id));
 
+        $sql = "ALTER TABLE `image` ADD `kind` VARCHAR( 32 ) NULL DEFAULT 'default' AFTER `object_id`";
+        Dba::write($sql);
+
         return true;
     }
 }

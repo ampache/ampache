@@ -168,7 +168,7 @@ switch ($_REQUEST['action']) {
                 $object = new Live_Stream($_REQUEST['id']);
                 // Confirm its a valid ID
                 if ($object->name) {
-                    $GLOBALS['user']->playlist->add_object($object->id,'radio');
+                    $GLOBALS['user']->playlist->add_object($object->id, 'live_stream');
                 }
             break;
             case 'video':
