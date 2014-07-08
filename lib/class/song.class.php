@@ -515,7 +515,7 @@ class Song extends database_object implements media, library_item
         Stats::insert('song', $this->id, $user, $agent);
         Stats::insert('album', $this->id, $user, $agent);
         Stats::insert('artist', $this->id, $user, $agent);
-        
+
         if ($this->played) {
             return true;
         }
@@ -987,7 +987,7 @@ class Song extends database_object implements media, library_item
     {
         return array();
     }
-    
+
     public function get_medias($filter_type = null)
     {
         $medias = array();

@@ -174,7 +174,7 @@ class TVShow_Season extends database_object implements library_item
     {
         return array('tvshow_episode' => $this->get_episodes());
     }
-    
+
     public function get_medias($filter_type = null)
     {
         $medias = array();

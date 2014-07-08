@@ -494,7 +494,7 @@ class Album extends database_object implements library_item
     {
         return $this->get_medias();
     }
-    
+
     public function get_medias($filter_type = null)
     {
         $medias = array();

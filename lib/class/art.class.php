@@ -1129,7 +1129,7 @@ class Art extends database_object
 
         $meta = $plugin->get_metadata($gtypes, $media_info);
         $images = array();
-        
+
         if ($meta['art']) {
             $url = $meta['art'];
             $ures = pathinfo($url);
@@ -1139,7 +1139,7 @@ class Art extends database_object
             $url = $meta['tvshow_season_art'];
             $ures = pathinfo($url);
             $images[] = array('url' => $url, 'mime' => 'image/' . $ures['extension'], 'title' => $plugin->name);
-        } 
+        }
         if ($meta['tvshow_art']) {
             $url = $meta['tvshow_art'];
             $ures = pathinfo($url);

@@ -212,7 +212,7 @@ class TVShow extends database_object implements library_item
     {
         return array('tvshow_season' => $this->get_seasons());
     }
-    
+
     public function get_medias($filter_type = null)
     {
         $medias = array();

@@ -137,7 +137,7 @@ class Broadcast extends database_object implements library_item
     {
         return array();
     }
-    
+
     public function get_medias($filter_type = null)
     {
         // Not a media, shouldn't be that
@@ -241,6 +241,15 @@ class Broadcast extends database_object implements library_item
     public static function gc()
     {
 
+    }
+
+    /*
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public static function play_url($oid, $additional_params='')
+    {
+        return $oid;
     }
 
 } // end of broadcast class

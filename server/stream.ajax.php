@@ -79,7 +79,7 @@ switch ($_REQUEST['action']) {
         if (is_array($object_id)) {
             $object_id = implode(',', $object_id);
         }
-        
+
         if (Core::is_playable_item($object_type)) {
             $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=play_item&object_type=' . $object_type . '&object_id=' . $object_id;
             if ($_REQUEST['custom_play_action']) {

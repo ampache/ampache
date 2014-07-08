@@ -648,7 +648,7 @@ class Tag extends database_object implements library_item
     {
         return array();
     }
-    
+
     public function get_medias($filter_type = null)
     {
         $medias = array();

@@ -95,7 +95,7 @@ class Live_Stream extends database_object implements media, library_item
     {
         return array();
     }
-    
+
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -263,7 +263,7 @@ class Live_Stream extends database_object implements media, library_item
     {
 
     }
-    
+
     public function set_played($user, $agent)
     {
         // Do nothing

@@ -163,7 +163,7 @@ class Video extends database_object implements media, library_item
     {
         return array();
     }
-    
+
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -347,14 +347,14 @@ class Video extends database_object implements media, library_item
     {
         $f_release_date = $data['f_release_date'];
         $release_date = date_parse_from_format('Y-m-d', $f_release_date);
-    
+
         $sql = "UPDATE `video` SET `title` = ?, `release_date` = ? WHERE `id` = ?";
         Dba::write($sql, array($data['title'], $release_date, $this->id));
 
         return $this->id;
 
     } // update
-    
+
     public function get_release_item_art()
     {
         return array('object_type' => 'video',
@@ -375,7 +375,7 @@ class Video extends database_object implements media, library_item
             $artp->insert($image, 'image/png');
         }
     }
-    
+
     /**
      * get_random
      *
@@ -406,7 +406,7 @@ class Video extends database_object implements media, library_item
 
         return $results;
     }
-    
+
     /**
      * set_played
      * this checks to see if the current object has been played
@@ -415,7 +415,7 @@ class Video extends database_object implements media, library_item
     public function set_played($user, $agent)
     {
         Stats::insert('video', $this->id, $user, $agent);
-    
+
         if ($this->played) {
             return true;
         }
@@ -426,7 +426,7 @@ class Video extends database_object implements media, library_item
         return true;
 
     } // set_played
-    
+
     /**
      * update_played
      * sets the played flag
@@ -436,7 +436,7 @@ class Video extends database_object implements media, library_item
         self::_update_item('played',$new_played,$song_id,'25');
 
     } // update_played
-    
+
     /**
      * _update_item
      * This is a private function that should only be called from within the video class.

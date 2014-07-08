@@ -205,7 +205,7 @@ class Channel extends database_object implements media, library_item
     {
         return array();
     }
-    
+
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -441,7 +441,7 @@ class Channel extends database_object implements media, library_item
     {
         return $this->get_fullname();
     }
-    
+
     public function set_played($user, $agent)
     {
         // Do nothing

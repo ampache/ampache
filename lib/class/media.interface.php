@@ -59,7 +59,7 @@ interface media
      * Get the complete name to display for the stream.
      */
     public function get_stream_name();
-    
+
     public function set_played($user, $agent);
 
 } // end interface

@@ -219,7 +219,7 @@ class Song_Preview extends database_object implements media, playable_item
         return true;
 
     } // format
-    
+
     public function get_fullname()
     {
         return $this->f_name;
@@ -235,7 +235,7 @@ class Song_Preview extends database_object implements media, playable_item
     {
         return array();
     }
-    
+
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -287,7 +287,7 @@ class Song_Preview extends database_object implements media, playable_item
     {
         return $this->title;
     }
-    
+
     public function set_played($user, $agent)
     {
         // Do nothing

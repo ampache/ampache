@@ -317,7 +317,7 @@ function show_tvshow_season_select($name='tvshow_season', $season_id, $allow_add
     if (!$season_id)
         return false;
     $season = new TVShow_Season($season_id);
-    
+
     static $season_id_cnt = 0;
     // Generate key to use for HTML element ID
     if ($video_id) {
@@ -695,7 +695,6 @@ function show_now_playing()
 
     $web_path = AmpConfig::get('web_path');
     $results = Stream::get_now_playing();
-    debug_event('aa',print_r($results, true), 5);
     require_once AmpConfig::get('prefix') . '/templates/show_now_playing.inc.php';
 
 } // show_now_playing

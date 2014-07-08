@@ -321,7 +321,7 @@ class Tmp_Playlist extends database_object
         return true;
 
     } // add_object
-    
+
     public function add_medias($medias)
     {
         foreach ($medias as $media) {

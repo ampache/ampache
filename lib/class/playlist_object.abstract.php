@@ -35,8 +35,8 @@ abstract class playlist_object extends database_object implements library_item
     public $f_type;
     public $f_name;
     public $f_user;
-    
-    public abstract function get_items();
+
+    abstract public function get_items();
 
     /**
      * format
@@ -71,7 +71,7 @@ abstract class playlist_object extends database_object implements library_item
         }
 
     } // has_access
-    
+
     public function get_medias($filter_type = null)
     {
         $medias = $this->get_items();
@@ -85,7 +85,7 @@ abstract class playlist_object extends database_object implements library_item
         }
         return $medias;
     }
-    
+
     public function get_keywords()
     {
         return array();
@@ -100,7 +100,7 @@ abstract class playlist_object extends database_object implements library_item
     {
         return null;
     }
-    
+
     public function get_childrens()
     {
         $childrens = array();
@@ -114,7 +114,7 @@ abstract class playlist_object extends database_object implements library_item
 
         return $this->get_items();
     }
-    
+
     public function get_user_owner()
     {
         return $this->user;

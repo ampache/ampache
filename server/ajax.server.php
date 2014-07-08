@@ -96,7 +96,7 @@ switch ($_REQUEST['action']) {
     case 'basket':
         $object_type = $_REQUEST['type'];
         $object_id = $_REQUEST['id'];
-        
+
         if (Core::is_playable_item($object_type)) {
             if (!is_array($object_id)) {
                 $object_id = array($object_id);

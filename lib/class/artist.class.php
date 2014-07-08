@@ -376,7 +376,7 @@ class Artist extends database_object implements library_item
         }
         return array('album' => $this->get_albums());
     }
-    
+
     public function get_medias($filter_type = null)
     {
         $medias = array();

@@ -246,7 +246,7 @@ class Core
         }
         return false;
     }
-    
+
     private static function is_class_typeof($classname, $typeofname)
     {
         if (class_exists($classname)) {
@@ -255,7 +255,7 @@ class Core
 
         return false;
     }
-    
+
     public static function is_playable_item($classname)
     {
         return self::is_class_typeof($classname, 'playable_item');

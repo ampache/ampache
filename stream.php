@@ -79,11 +79,11 @@ switch ($_REQUEST['action']) {
     case 'play_item':
         $object_type = $_REQUEST['object_type'];
         $object_id = $_REQUEST['object_id'];
-        
+
         if (Core::is_playable_item($object_type)) {
             $item = new $object_type($object_id);
             $media_ids = array_merge($media_ids, $item->get_medias());
-            
+
             if ($_REQUEST['custom_play_action']) {
                 foreach ($media_ids as $media_id) {
                     if (is_array($media_id)) {
