@@ -39,9 +39,18 @@ $default_name = "Unknown.zip";
 $name = $default_name;
 
 if (Core::is_playable_item($_REQUEST['action'])) {
-    $libitem = new $_REQUEST['action']($_REQUEST['id']);
-    $name = $libitem->get_fullname();
-    $media_ids = $libitem->get_medias();
+	$id = $_REQUEST['id'];
+	if (!is_array($id)) {
+		$id = array($id);
+	}
+	$media_ids = array();
+	foreach ($id as $i) {
+		$libitem = new $_REQUEST['action']($i);
+		if ($libitem->id) {
+			$name = $libitem->get_fullname();
+			$media_ids = array_merge($media_ids, $libitem->get_medias());
+		}
+	}
 } else {
     switch ($_REQUEST['action']) {
         case 'tmp_playlist':
