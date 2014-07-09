@@ -185,7 +185,7 @@ function show_preference_box($preferences)
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
  */
-function show_album_select($name='album',$album_id=0,$allow_add=0,$song_id=0)
+function show_album_select($name='album',$album_id=0,$allow_add=false,$song_id=0)
 {
     static $album_id_cnt = 0;
 
@@ -527,7 +527,7 @@ function xml_from_array($array, $callback = false, $type = '')
     case 'itunes':
         foreach ($array as $key=>$value) {
             if (is_array($value)) {
-                $value = xoutput_from_array($value,1,$type);
+                $value = xoutput_from_array($value, true, $type);
                 $string .= "\t\t<$key>\n$value\t\t</$key>\n";
             } else {
                 if ($key == "key") {
@@ -548,7 +548,7 @@ function xml_from_array($array, $callback = false, $type = '')
     case 'xspf':
         foreach ($array as $key=>$value) {
             if (is_array($value)) {
-                $value = xoutput_from_array($value,1,$type);
+                $value = xoutput_from_array($value, true, $type);
                 $string .= "\t\t<$key>\n$value\t\t</$key>\n";
             } else {
                 if ($key == "key") {

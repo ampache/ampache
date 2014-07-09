@@ -122,7 +122,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $playlist->add_songs(array($_REQUEST['song_id']), 'ORDERED');
+        $playlist->add_songs(array($_REQUEST['song_id']), true);
     break;
     case 'prune_empty':
         if (!$GLOBALS['user']->has_access(100)) {

@@ -69,7 +69,7 @@ class Preference extends database_object
      * update
      * This updates a single preference from the given name or id
      */
-    public static function update($preference,$user_id,$value,$applytoall='',$applytodefault='')
+    public static function update($preference,$user_id,$value,$applytoall=false,$applytodefault=false)
     {
         // First prepare
         if (!is_numeric($preference)) {

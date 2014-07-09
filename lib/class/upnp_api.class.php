@@ -95,6 +95,7 @@ class Upnp_Api
 
     public static function parseUPnPRequest($prmRequest)
     {
+        $retArr = array();
         $reader = new XMLReader();
         $reader->XML($prmRequest);
         while ($reader->read()) {
@@ -559,8 +560,6 @@ class Upnp_Api
             break;
 
             default:
-                $counts = Catalog::count_medias();
-
                 $mediaItems[] = self::_musicMetadata('artists');
                 $mediaItems[] = self::_musicMetadata('albums');
                 $mediaItems[] = self::_musicMetadata('songs');

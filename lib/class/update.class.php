@@ -1867,7 +1867,7 @@ class Update
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
-        return true;
+        return $retval;
     }
 
     /**
@@ -1908,7 +1908,7 @@ class Update
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
-        return true;
+        return $retval;
     }
 
     /**
@@ -2158,7 +2158,7 @@ class Update
         $sql = "DELETE FROM `preference` WHERE `name` = 'tags_userlist'";
         $retval = Dba::write($sql) ? $retval : false;
 
-        return true;
+        return $retval;
     }
 
     /**
@@ -2550,7 +2550,7 @@ class Update
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
-        return true;
+        return $retval;
     }
 
     /**

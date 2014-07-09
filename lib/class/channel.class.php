@@ -100,10 +100,12 @@ class Channel extends database_object implements media, library_item
     {
         $tags = Tag::get_object_tags('channel', $this->id);
         $genre = "";
-        foreach ($tags as $tag) {
-            $genre .= $tag['name'] . ' ';
+        if ($tags) {
+            foreach ($tags as $tag) {
+                $genre .= $tag['name'] . ' ';
+            }
+            $genre = trim($genre);
         }
-        $genre = trim($genre);
 
         return $genre;
     }
@@ -445,6 +447,16 @@ class Channel extends database_object implements media, library_item
     public function set_played($user, $agent)
     {
         // Do nothing
+    }
+
+    public function get_transcode_settings($array, $callback = false, $type = '')
+    {
+        return false;
+    }
+
+    public static function gc()
+    {
+
     }
 
 } // end of channel class

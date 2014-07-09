@@ -120,7 +120,7 @@ switch ($_REQUEST['action']) {
 
         if (count($songs) > 0) {
             Ajax::set_include_override(true);
-            $playlist->add_songs($songs, 'ORDERED');
+            $playlist->add_songs($songs, true);
 
             /*$playlist->format();
             $object_ids = $playlist->get_items();

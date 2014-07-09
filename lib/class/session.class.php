@@ -374,7 +374,7 @@ class Session
         // Set up the cookie prefs before we throw down, this is very important
         $cookie_life = AmpConfig::get('cookie_life');
         $cookie_path = AmpConfig::get('cookie_path');
-        $cookie_domain = false;
+        $cookie_domain = null;
         $cookie_secure = AmpConfig::get('cookie_secure');
 
         session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);

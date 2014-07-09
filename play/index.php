@@ -44,7 +44,7 @@ if (AmpConfig::get('transcode_player_customize')) {
     $transcode_to = null;
     $bitrate = 0;
 }
-$share_id       = scrub_in($_REQUEST['share_id']);
+$share_id       = intval($_REQUEST['share_id']);
 
 if (!$type) {
     $type = 'song';
@@ -82,7 +82,7 @@ if (empty($uid)) {
     }
 }
 
-if (empty($share_id)) {
+if (!$share_id) {
     $GLOBALS['user'] = new User($uid);
     Preference::init();
 
@@ -446,7 +446,7 @@ if ($range_values > 0 && ($start > 0 || $end > 0)) {
 if ($start > 0) {
     debug_event('play', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
 } else {
-    if (empty($share_id)) {
+    if (!$share_id) {
         if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
             debug_event('play', 'Registering stats for {'.$media->get_stream_name() .'}...', '5');
             $sessionkey = Stream::$session;

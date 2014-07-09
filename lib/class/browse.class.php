@@ -163,7 +163,7 @@ class Browse extends Query
             break;
             case 'artist':
                 $box_title = T_('Artists') . $match;
-                Artist::build_cache($object_ids, 'extra');
+                Artist::build_cache($object_ids, true);
                 $box_req = AmpConfig::get('prefix') . '/templates/show_artists.inc.php';
             break;
             case 'live_stream':

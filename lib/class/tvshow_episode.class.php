@@ -125,6 +125,8 @@ class TVShow_Episode extends Video
         $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
         Dba::write($sql, array($data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['summary'], $this->id));
 
+        Tag::update_tag_list($data['edit_tags'], 'episode', $this->id);
+
         return $this->id;
 
     }

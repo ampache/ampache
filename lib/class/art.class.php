@@ -451,10 +451,6 @@ class Art extends database_object
 
         // If it came from the database
         if (isset($data['db'])) {
-            // Repull it
-            $uid = Dba::escape($data['db']);
-            $type = Dba::escape($type);
-
             $sql = "SELECT * FROM `image` WHERE `object_type` = ? AND `object_id` =? AND `size`='original'";
             $db_results = Dba::read($sql, array($type, $data['db']));
             $row = Dba::fetch_assoc($db_results);
@@ -586,7 +582,7 @@ class Art extends database_object
      * gather
      * This tries to get the art in question
      */
-    public function gather($options = array(), $limit = false, $gather_parent = false)
+    public function gather($options = array(), $limit = 0)
     {
         // Define vars
         $results = array();
@@ -1151,6 +1147,8 @@ class Art extends database_object
 
     public static function get_thumb_size($thumb)
     {
+        $size = array();
+
         switch ($thumb) {
             case '1':
                 /* This is used by the now_playing / browse stuff */

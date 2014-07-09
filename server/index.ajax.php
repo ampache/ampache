@@ -38,7 +38,7 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'random_videos':
-        $videos = Video::get_random(6, true);
+        $videos = Video::get_random(6);
         if (count($videos) AND is_array($videos)) {
             ob_start();
             require_once AmpConfig::get('prefix') . '/templates/show_random_videos.inc.php';

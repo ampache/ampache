@@ -369,10 +369,12 @@ abstract class Catalog extends database_object
         return $results;
     }
 
-    public static function getLastUpdate()
+    public static function getLastUpdate($catalogs = null)
     {
         $last_update = 0;
-        $catalogs = self::get_catalogs();
+        if ($catalogs == null || !is_array($catalogs)) {
+            $catalogs = self::get_catalogs();
+        }
         foreach ($catalogs as $id) {
             $catalog = Catalog::create_from_id($id);
             if ($catalog->last_add > $last_update) {
@@ -636,7 +638,7 @@ abstract class Catalog extends database_object
         if (!empty($type)) {
             $sql .= "JOIN `" . $type . "` ON `" . $type . "`.`id` = `video`.`id` ";
         }
-        if ($catalogs) {
+        if ($catalog_id) {
             $sql .= "WHERE `video`.`catalog` = `" . intval($catalog_id) . "`";
         }
         $db_results = Dba::read($sql);
@@ -680,7 +682,7 @@ abstract class Catalog extends database_object
         $results = array();
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
-            $tvshow_ids = $catalog->get_tvshow_ids($type);
+            $tvshow_ids = $catalog->get_tvshow_ids();
             foreach ($tvshow_ids as $tvshow_id) {
                 $results[] = new TVShow($tvshow_id);
             }
@@ -870,6 +872,13 @@ abstract class Catalog extends database_object
         if ($type == 'video' && AmpConfig::get('generate_video_preview')) {
             Video::generate_preview($id);
         }
+
+        // Stupid little cutesie thing
+        $search_count++;
+        if (UI::check_ticker()) {
+            UI::update_text('count_art_' . $this->id, $search_count);
+            UI::update_text('read_art_' . $this->id, $libitem->get_fullname());
+        }
     }
 
     /**
@@ -921,13 +930,6 @@ abstract class Catalog extends database_object
         foreach ($searches as $key => $values) {
             foreach ($values as $id) {
                 $this->gather_art_item($key, $id);
-
-                // Stupid little cutesie thing
-                $search_count++;
-                if (UI::check_ticker()) {
-                    UI::update_text('count_art_' . $this->id, $search_count);
-                    UI::update_text('read_art_' . $this->id, scrub_out($album->name));
-                }
             }
         }
 
@@ -1648,7 +1650,7 @@ abstract class Catalog extends database_object
                     $xml['dict']['Play Count'] = intval($song->played);
                     $xml['dict']['Track Type'] = "URL";
                     $xml['dict']['Location'] = Song::play_url($song->id);
-                    echo xoutput_from_array($xml, 1, 'itunes');
+                    echo xoutput_from_array($xml, true, 'itunes');
                     // flush output buffer
                 } // while result
                 echo xml_get_footer('itunes');

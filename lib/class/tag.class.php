@@ -194,7 +194,7 @@ class Tag extends database_object implements library_item
         if ($data['select_tags']) {
             $merge_to = Tag::construct_from_name($data['select_tags']);
             if ($merge_to->id) {
-                $tag->merge($merge_to->id, ($data['merge_persist'] == '1'));
+                $this->merge($merge_to->id, ($data['merge_persist'] == '1'));
             }
         }
 
@@ -241,9 +241,12 @@ class Tag extends database_object implements library_item
 
         $db_results = Dba::read($sql, array($this->id));
 
+        $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = array('id'=>$row['id'], 'name'=>$row['name']);
         }
+
+        return $results;
     }
 
     /**
@@ -654,11 +657,13 @@ class Tag extends database_object implements library_item
         $medias = array();
         if ($filter_type) {
             $ids = Tag::get_tag_objects($filter_type, $this->id);
-            foreach ($ids as $id) {
-                $medias[] = array(
-                    'object_type' => $filter_type,
-                    'object_id' => $id
-                );
+            if ($ids) {
+                foreach ($ids as $id) {
+                    $medias[] = array(
+                        'object_type' => $filter_type,
+                        'object_id' => $id
+                    );
+                }
             }
         }
         return $medias;

@@ -429,12 +429,13 @@ class Api
     public static function tag_artists($input)
     {
         $artists = Tag::get_tag_objects('artist',$input['filter']);
+        if ($artists) {
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-
-        ob_end_clean();
-        echo XML_Data::artists($artists);
+            ob_end_clean();
+            echo XML_Data::artists($artists);
+        }
 
     } // tag_artists
 
@@ -445,12 +446,13 @@ class Api
     public static function tag_albums($input)
     {
         $albums = Tag::get_tag_objects('album',$input['filter']);
+        if ($albums) {
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-
-        ob_end_clean();
-        echo XML_Data::albums($albums);
+            ob_end_clean();
+            echo XML_Data::albums($albums);
+        }
 
     } // tag_albums
 

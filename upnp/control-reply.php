@@ -25,6 +25,8 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
         exit;
     }
 
+    $items = array();
+    $responseType = "u:Error";
     switch ($upnpRequest['action']) {
         case 'search':
             $responseType = 'u:SearchResponse';

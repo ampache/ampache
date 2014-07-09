@@ -138,7 +138,7 @@ class TVShow_Season extends database_object implements library_item
         $this->link = AmpConfig::get('web_path') . '/tvshow_seasons.php?action=show&season=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '" title="' . $tvshow->f_name . ' - ' . $this->f_name . '">' . $this->f_name . '</a>';
 
-        $this->_get_extra_info($this->catalog_id);
+        $this->_get_extra_info();
 
         return true;
     }

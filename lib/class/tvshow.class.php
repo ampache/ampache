@@ -177,7 +177,7 @@ class TVShow extends database_object implements library_item
         $this->link = AmpConfig::get('web_path') . '/tvshows.php?action=show&tvshow=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '" title="' . $this->f_name . '">' . $this->f_name . '</a>';
 
-        $this->_get_extra_info($this->catalog_id);
+        $this->_get_extra_info();
         $this->tags = Tag::get_top_tags('tvshow', $this->id);
         $this->f_tags = Tag::get_display($this->tags, true, 'tvshow');
 
@@ -343,10 +343,9 @@ class TVShow extends database_object implements library_item
         Tag::update_tag_list($tags_comma, 'tvshow', $current_id);
 
         if ($override_childs) {
-            $seasons = $this->get_albums(null, true);
-            foreach ($seasons as $season_id) {
-                $season = new TVShow_Season($season_id);
-                $season->update_tags($tags_comma, $override_childs);
+            $episodes = $this->get_episodes();
+            foreach ($episodes as $ep_id) {
+                Tag::update_tag_list($data['edit_tags'], 'episode', $ep_id);
             }
         }
     }

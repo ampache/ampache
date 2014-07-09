@@ -222,7 +222,7 @@ class Song_Preview extends database_object implements media, playable_item
 
     public function get_fullname()
     {
-        return $this->f_name;
+        return $this->f_title;
     }
 
     public function get_parent()

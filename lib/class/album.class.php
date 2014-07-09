@@ -468,7 +468,7 @@ class Album extends database_object implements library_item
         $keywords = array();
         $keywords['artist'] = array('important' => true,
             'label' => T_('Artist'),
-            'value' => (($album->artist_count < 2) ? $this->f_artist_name : ''));
+            'value' => (($this->artist_count < 2) ? $this->f_artist_name : ''));
         $keywords['album'] = array('important' => true,
             'label' => T_('Album'),
             'value' => $this->f_name);
@@ -483,8 +483,8 @@ class Album extends database_object implements library_item
 
     public function get_parent()
     {
-        if ($album->artist_count == 1) {
-            return array('object_type' => 'artist', 'object_id' => $album->artist_id);
+        if ($this->artist_count == 1) {
+            return array('object_type' => 'artist', 'object_id' => $this->artist_id);
         }
 
         return null;

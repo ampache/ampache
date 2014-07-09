@@ -266,7 +266,7 @@ class Artist extends database_object implements library_item
      * _get_extra info
      * This returns the extra information for the artist, this means totals etc
      */
-    private function _get_extra_info($catalog=FALSE)
+    private function _get_extra_info($catalog=0)
     {
         // Try to find it in the cache and save ourselves the trouble
         if (parent::is_cached('artist_extra',$this->id) ) {
@@ -367,6 +367,7 @@ class Artist extends database_object implements library_item
 
     public function get_childrens()
     {
+        $medias = array();
         $albums = $this->get_albums();
         foreach ($albums as $album_id) {
             $medias[] = array(
@@ -374,7 +375,7 @@ class Artist extends database_object implements library_item
                 'object_id' => $album_id
             );
         }
-        return array('album' => $this->get_albums());
+        return array('album' => $medias);
     }
 
     public function get_medias($filter_type = null)

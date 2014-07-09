@@ -39,7 +39,7 @@ class vainfo
     public $gather_types = array();
 
     protected $_raw = array();
-    protected $_getID3 = '';
+    protected $_getID3 = null;
     protected $_forcedSize = 0;
 
     protected $_file_encoding = '';
@@ -169,7 +169,7 @@ class vainfo
             }
 
             if ($encoding != 'ASCII' && $encoding != '0') {
-                return $encoding;
+                return (string) $encoding;
             } else {
                 return 'ISO-8859-1';
             }
@@ -897,10 +897,12 @@ class vainfo
                     } else {
                         // Or we assume each parent folder contains one missing information
                         if (preg_match('/[\/\\\\]([^\/\\\\]*)[\/\\\\]Season (\d{1,2})[\/\\\\]((E|Ep|Episode)\s?(\d{1,2})[\/\\\\])?/i', $filename, $matches)) {
-                            $results['tvshow'] = $this->fixSerieName($matches[1]);
-                            $results['tvshow_season'] = $matches[2];
-                            if (isset($matches[5])) {
-                                $results['tvshow_episode'] = $matches[5];
+                            if ($matches != null) {
+                                $results['tvshow'] = $this->fixSerieName($matches[1]);
+                                $results['tvshow_season'] = $matches[2];
+                                if (isset($matches[5])) {
+                                    $results['tvshow_episode'] = $matches[5];
+                                }
                             }
                         }
                     }
