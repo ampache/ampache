@@ -1401,6 +1401,7 @@ span.fatalerror {
 }
 
 .item_art {
+    border: 2px solid transparent;
     display: inline-block;
     position: relative;
 }
