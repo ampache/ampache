@@ -314,7 +314,7 @@ class Video extends database_object implements media, library_item
         }
 
         $data['id'] = $vid;
-        self::insert_video_type($data, $gtypes, $options);
+        return self::insert_video_type($data, $gtypes, $options);
     }
 
     private static function insert_video_type($data, $gtypes, $options = array())
