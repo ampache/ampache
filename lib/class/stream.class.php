@@ -149,7 +149,7 @@ class Stream
             }
         }
 
-        return self::start_process($command, array($transcode_settings['format']));
+        return self::start_process($command, array('format' => $transcode_settings['format']));
     }
 
     public static function get_image_preview($media)
