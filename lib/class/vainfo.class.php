@@ -857,24 +857,21 @@ class vainfo
 
             // Pull out our actual matches
             preg_match($pattern, $filename, $matches);
+            // The first element is the full match text
+            $matched = array_shift($matches);
+            debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filename, 5);
 
-            if ($matches != null) {
-                // The first element is the full match text
-                $matched = array_shift($matches);
-                debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filename, 5);
-
-                // Iterate over what we found
-                foreach ($matches as $key => $value) {
-                    $new_key = translate_pattern_code($elements['0'][$key]);
-                    if ($new_key) {
-                        $results[$new_key] = $value;
-                    }
+            // Iterate over what we found
+            foreach ($matches as $key => $value) {
+                $new_key = translate_pattern_code($elements['0'][$key]);
+                if ($new_key) {
+                    $results[$new_key] = $value;
                 }
+            }
 
-                $results['title'] = $results['title'] ?: basename($filename);
-                if ($this->islocal) {
-                    $results['size'] = filesize(Core::conv_lc_file($origin));
-                }
+            $results['title'] = $results['title'] ?: basename($filename);
+            if ($this->islocal) {
+                $results['size'] = filesize(Core::conv_lc_file($origin));
             }
         }
 

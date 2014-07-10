@@ -83,7 +83,7 @@ class Live_Stream extends database_object implements media, library_item
 
     public function get_fullname()
     {
-        return $this->f_name;
+        return $this->name;
     }
 
     public function get_parent()

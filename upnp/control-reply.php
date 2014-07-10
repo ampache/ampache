@@ -86,13 +86,14 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
     }
 
     $totMatches = count($items);
-    if ($totMatches == 0) {
+    if ($items == null || $totMatches == 0) {
         $domDIDL = Upnp_Api::createDIDL('');
         $numRet = 0;
     } else {
         if ($upnpRequest['requestedcount'] == 0) {
             $upnpRequest['requestedcount'] = $totMatches - $upnpRequest['startingindex'];
         }
+
         $slicedItems = array_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
         $domDIDL = Upnp_Api::createDIDL($slicedItems);
         $numRet = count($slicedItems);

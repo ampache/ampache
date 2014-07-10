@@ -478,7 +478,7 @@ class Playlist extends playlist_object
 
         foreach ($results as $data) {
             $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
-            $db_results = Dba::query($sql, array($data['track'], $data['id']));
+            Dba::write($sql, array($data['track'], $data['id']));
         } // foreach re-ordered results
 
     return true;

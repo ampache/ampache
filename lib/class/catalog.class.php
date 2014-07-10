@@ -846,7 +846,7 @@ abstract class Catalog extends database_object
         }
 
         $art = new Art($id, $type);
-        $results = $art->gather($options, 1, true);
+        $results = $art->gather($options, 1);
 
         if (count($results)) {
             // Pull the string representation from the source
@@ -873,10 +873,7 @@ abstract class Catalog extends database_object
             Video::generate_preview($id);
         }
 
-        // Stupid little cutesie thing
-        $search_count++;
         if (UI::check_ticker()) {
-            UI::update_text('count_art_' . $this->id, $search_count);
             UI::update_text('read_art_' . $this->id, $libitem->get_fullname());
         }
     }
@@ -930,6 +927,12 @@ abstract class Catalog extends database_object
         foreach ($searches as $key => $values) {
             foreach ($values as $id) {
                 $this->gather_art_item($key, $id);
+
+                // Stupid little cutesie thing
+                $search_count++;
+                if (UI::check_ticker()) {
+                    UI::update_text('count_art_' . $this->id, $search_count);
+                }
             }
         }
 

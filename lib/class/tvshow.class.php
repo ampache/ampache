@@ -345,7 +345,7 @@ class TVShow extends database_object implements library_item
         if ($override_childs) {
             $episodes = $this->get_episodes();
             foreach ($episodes as $ep_id) {
-                Tag::update_tag_list($data['edit_tags'], 'episode', $ep_id);
+                Tag::update_tag_list($tags_comma, 'episode', $ep_id);
             }
         }
     }
