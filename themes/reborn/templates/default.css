@@ -1127,7 +1127,8 @@ div.box.box_current_configuration {
 
 .random_selection .random_album, .random_selection .random_video {
     float: left;
-    width: 150px;
+    width: 16%;
+    max-width: 175px;
     margin-bottom: 10px;
     text-align: center;
 }
