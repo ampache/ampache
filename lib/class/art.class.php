@@ -1073,29 +1073,33 @@ class Art extends database_object
             return $images;
         }
 
-        $xmldata = Recommendation::album_search($data['artist'], $data['album']);
+        try {
+            $xmldata = Recommendation::album_search($data['artist'], $data['album']);
 
-        if (!count($xmldata)) { return array(); }
+            if (!count($xmldata)) { return array(); }
 
-        $coverart = (array) $xmldata->coverart;
-        if (!$coverart) { return array(); }
+            $coverart = (array) $xmldata->coverart;
+            if (!$coverart) { return array(); }
 
-        ksort($coverart);
-        foreach ($coverart as $url) {
-            // We need to check the URL for the /noimage/ stuff
-            if (strpos($url, '/noimage/') !== false) {
-                debug_event('LastFM', 'Detected as noimage, skipped ' . $url, 3);
-                continue;
-            }
+            ksort($coverart);
+            foreach ($coverart as $url) {
+                // We need to check the URL for the /noimage/ stuff
+                if (strpos($url, '/noimage/') !== false) {
+                    debug_event('LastFM', 'Detected as noimage, skipped ' . $url, 3);
+                    continue;
+                }
 
-            // HACK: we shouldn't rely on the extension to determine file type
-            $results = pathinfo($url);
-            $mime = 'image/' . $results['extension'];
-            $images[] = array('url' => $url, 'mime' => $mime, 'title' => 'LastFM');
-            if ($limit && count($images) >= $limit) {
-                return $images;
-            }
-        } // end foreach
+                // HACK: we shouldn't rely on the extension to determine file type
+                $results = pathinfo($url);
+                $mime = 'image/' . $results['extension'];
+                $images[] = array('url' => $url, 'mime' => $mime, 'title' => 'LastFM');
+                if ($limit && count($images) >= $limit) {
+                    return $images;
+                }
+            } // end foreach
+        } catch (Exception $e) {
+            debug_event('art', 'LastFM error: ' . $e->getMessage(), 5);
+        }
 
         return $images;
 
