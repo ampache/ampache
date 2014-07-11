@@ -204,30 +204,32 @@ class WebPlayer
 
         $types = self::get_types($item, $force_type);
 
-        $song = null;
+        $media = null;
         $urlinfo = Stream_URL::parse($url);
         $url = $urlinfo['base_url'];
 
-        if ($urlinfo['id'] && $urlinfo['type'] == 'song') {
-            $song = new Song($urlinfo['id']);
+        if ($urlinfo['id'] && Core::is_media($urlinfo['type'])) {
+            $media = new $urlinfo['type']($urlinfo['id']);
         } else if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
-            $song = new Song_Preview($urlinfo['id']);
+            $media = new Song_Preview($urlinfo['id']);
         } else if (isset($urlinfo['demo_id'])) {
             $democratic = new Democratic($urlinfo['demo_id']);
             if ($democratic->id) {
                 $song_id = $democratic->get_next_object();
                 if ($song_id) {
-                    $song = new Song($song_id);
+                    $media = new Song($song_id);
                 }
             }
         }
 
-        if ($song != null) {
-            $js['artist_id'] = $song->artist;
-            $js['album_id'] = $song->album;
-            $js['song_id'] = $song->id;
+        if ($media != null) {
+            if ($urlinfo['type'] == 'song') {
+                $js['artist_id'] = $media->artist;
+                $js['album_id'] = $media->album;
+            }
+            $js['song_id'] = $media->id;
 
-            if ($song->type != $types['real']) {
+            if ($media->type != $types['real']) {
                 $url .= '&transcode_to=' . $types['real'];
             }
             //$url .= "&content_length=required";
