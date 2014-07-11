@@ -72,17 +72,6 @@ class WebPlayer
             $browser = $browsers[0];
         }
 
-        if (!empty($force_type)) {
-            debug_event("webplayer.class.php", "Forcing type to {".$force_type."}", 5);
-            $types['real'] = $force_type;
-        } else {
-            if ($browser == "msie" || $browser == "trident" || $browser == "webkit" || $browser == "safari") {
-                $types['real'] = "mp3";
-            } else {
-                $types['real'] = "ogg";
-            }
-        }
-
         $media = null;
         $urlinfo = Stream_URL::parse($item->url);
         if ($urlinfo['id'] && Core::is_media($urlinfo['type'])) {
@@ -99,6 +88,23 @@ class WebPlayer
             }
         }
 
+        if (!empty($force_type)) {
+            debug_event("webplayer.class.php", "Forcing type to {".$force_type."}", 5);
+            $types['real'] = $force_type;
+        } else {
+            if ($urlinfo['type'] == 'song') {
+                // For audio, get the best format according to the browser
+                if ($browser == "msie" || $browser == "trident" || $browser == "webkit" || $browser == "safari") {
+                    $types['real'] = "mp3";
+                } else {
+                    $types['real'] = "ogg";
+                }
+            } else {
+                // For video, always use webm
+                $types['real'] = "webm";
+            }
+        }
+
         if ($media != null) {
             $ftype = $media->type;
 
@@ -107,10 +113,10 @@ class WebPlayer
             // Check transcode is required
             $ftype_transcode = AmpConfig::get('transcode_' . $ftype);
             $valid_types = Song::get_stream_types_for_type($ftype);
-            if ($transcode_cfg == 'always' || !empty($force_type) || $ftype_transcode == 'required' || ($types['real'] != $ftype && !AmpConfig::get('webplayer_flash'))) {
+            if ($transcode_cfg == 'always' || !empty($force_type) || $ftype_transcode == 'required' || ($types['real'] != $ftype && (!AmpConfig::get('webplayer_flash') || $urlinfo['type'] != 'song'))) {
                 if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                     // Transcode only if excepted type available
-                    $transcode_settings = $media->get_transcode_settings($types['real']);
+                    $transcode_settings = $media->get_transcode_settings($types['real'], null, $urlinfo['type']);
                     if ($transcode_settings && AmpConfig::get('transcode_player_customize')) {
                         $transcode = true;
                     } else {

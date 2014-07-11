@@ -395,6 +395,7 @@ function install_config_transcode_mode($mode)
 {
     $trconfig = array(
         'encode_target' => 'mp3',
+        'encode_video_target' => 'webm',
         'transcode_m4a' => 'required',
         'transcode_flac' => 'required',
         'transcode_mpc' => 'required',
@@ -409,7 +410,8 @@ function install_config_transcode_mode($mode)
         $trconfig['encode_args_mp3'] = '-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1';
         $trconfig['encode_args_ogg'] = '-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1';
         $trconfig['encode_args_wav'] = '-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1';
-        $trconfig['encode_args_flv'] = '-b:a %SAMPLE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast pipe:1';
+        $trconfig['encode_args_flv'] = '-v:a %SAMPLE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast pipe:1';
+        $trconfig['encode_args_webm'] = '-v:a %SAMPLE%K -f webm -vcodec libvpx -preset superfast -threads 0 pipe:1';
         $trconfig['encode_get_image'] = '-ss %TIME% -f image2 -vframes 1 pipe:1';
         $trconfig['waveform'] = 'true';
         $trconfig['generate_video_preview'] = 'true';
