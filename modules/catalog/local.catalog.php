@@ -487,6 +487,7 @@ class Catalog_local extends Catalog
         $stats = self::get_stats($this->id);
         $number = $stats['videos'] + $stats['songs'];
         $total_updated = 0;
+        $this->count = 0;
 
         require_once AmpConfig::get('prefix') . '/templates/show_verify_catalog.inc.php';
 
@@ -581,6 +582,7 @@ class Catalog_local extends Catalog
 
         $dead_total = 0;
         $stats = self::get_stats($this->id);
+        $this->count = 0;
         foreach (array('video', 'song') as $media_type) {
             $total = $stats[$media_type . 's']; // UGLY
             if ($total == 0) {

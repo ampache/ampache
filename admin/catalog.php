@@ -84,9 +84,7 @@ switch ($_REQUEST['action']) {
         foreach ($_REQUEST['catalogs'] as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
             $catalog->clean_catalog();
-            $catalog->count = 0;
             $catalog->verify_catalog();
-            $catalog->count = 0;
             $catalog->add_to_catalog();
         }
         Dba::optimize_tables();
