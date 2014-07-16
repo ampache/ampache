@@ -40,9 +40,15 @@ function get_song_files($media_ids)
             $media = new Song($element);
         }
         if ($media->enabled) {
-            $total_size += sprintf("%.2f",($media->size/1048576));
             $media->format();
-            $dirname = $media->get_fullname();
+            $total_size += sprintf("%.2f",($media->size/1048576));
+            $dirname = '';
+            $parent = $media->get_parent();
+            if ($parent != null) {
+                $pobj = new $parent['object_type']($parent['object_id']);
+                $pobj->format();
+                $dirname = $pobj->get_fullname();
+            }
             if (!array_key_exists($dirname, $media_files)) {
                 $media_files[$dirname] = array();
             }
