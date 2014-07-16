@@ -42,7 +42,7 @@ interface media
      * Returns the url to stream the specified object
      *
      */
-    public static function play_url($oid, $additional_params='');
+    public static function play_url($oid, $additional_params='', $local=false);
 
     /**
      * get_transcode_settings
@@ -52,7 +52,7 @@ interface media
      * parameter can be used to request a specific format instead of the
      * default from the configuration file.
      */
-    public function get_transcode_settings($target = null);
+    public function get_transcode_settings($target = null, $options=array());
 
     /**
      * get_stream_name

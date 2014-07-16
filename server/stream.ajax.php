@@ -88,6 +88,13 @@ switch ($_REQUEST['action']) {
             if (!empty($_REQUEST['append'])) {
                 $_SESSION['iframe']['target'] .= '&append=true';
             }
+            if ($_REQUEST['subtitle']) {
+                $_SESSION['iframe']['subtitle'] = $_REQUEST['subtitle'];
+            } else {
+                if (isset($_SESSION['iframe']['subtitle'])) {
+                    unset($_SESSION['iframe']['subtitle']);
+                }
+            }
             $results['rfc3514'] = '<script type="text/javascript">reloadUtil(\''. AmpConfig::get('web_path') . '/util.php\');</script>';
         }
     break;

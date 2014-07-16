@@ -211,9 +211,9 @@ class Video extends database_object implements media, library_item
      * This returns a "PLAY" url for the video in question here, this currently feels a little
      * like a hack, might need to adjust it in the future
      */
-    public static function play_url($oid, $additional_params='')
+    public static function play_url($oid, $additional_params='', $local=false)
     {
-        return Song::generic_play_url('video', $oid, $additional_params);
+        return Song::generic_play_url('video', $oid, $additional_params, $local);
     }
 
     public function get_stream_name()
@@ -224,9 +224,9 @@ class Video extends database_object implements media, library_item
     /**
      * get_transcode_settings
      */
-    public function get_transcode_settings($target = null)
+    public function get_transcode_settings($target = null, $options=array())
     {
-        return Song::get_transcode_settings_for_media($this->type, $target, 'video');
+        return Song::get_transcode_settings_for_media($this->type, $target, 'video', $options);
     }
 
     private static function get_derived_types()
@@ -426,6 +426,243 @@ class Video extends database_object implements media, library_item
         return true;
 
     } // set_played
+
+    /**
+     * get_subtitles
+     * Get existing subtitles list for this video
+     */
+    public function get_subtitles()
+    {
+        $subtitles = array();
+        $pinfo = pathinfo($this->file);
+        $filter = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $pinfo['filename'] . '*.srt';
+
+        foreach (glob($filter) as $srt) {
+            $psrt = explode('.', $srt);
+            $lang_code = '__';
+            $lang_name = T_("Unknown");
+            if (count($psrt) >= 2) {
+                $lang_code = $psrt[count($psrt) - 2];
+                if (strlen($lang_code) == 2) {
+                    $lang_name = $this->get_language_name($lang_code);
+                }
+            }
+            $subtitles[] = array(
+                'file' => $pinfo['dirname'] . DIRECTORY_SEPARATOR . $srt,
+                'lang_code' => $lang_code,
+                'lang_name' => $lang_name
+            );
+        }
+
+        return $subtitles;
+    }
+
+    protected function get_language_name($code)
+    {
+        $languageCodes = array(
+         "aa" => T_("Afar"),
+         "ab" => T_("Abkhazian"),
+         "ae" => T_("Avestan"),
+         "af" => T_("Afrikaans"),
+         "ak" => T_("Akan"),
+         "am" => T_("Amharic"),
+         "an" => T_("Aragonese"),
+         "ar" => T_("Arabic"),
+         "as" => T_("Assamese"),
+         "av" => T_("Avaric"),
+         "ay" => T_("Aymara"),
+         "az" => T_("Azerbaijani"),
+         "ba" => T_("Bashkir"),
+         "be" => T_("Belarusian"),
+         "bg" => T_("Bulgarian"),
+         "bh" => T_("Bihari"),
+         "bi" => T_("Bislama"),
+         "bm" => T_("Bambara"),
+         "bn" => T_("Bengali"),
+         "bo" => T_("Tibetan"),
+         "br" => T_("Breton"),
+         "bs" => T_("Bosnian"),
+         "ca" => T_("Catalan"),
+         "ce" => T_("Chechen"),
+         "ch" => T_("Chamorro"),
+         "co" => T_("Corsican"),
+         "cr" => T_("Cree"),
+         "cs" => T_("Czech"),
+         "cu" => T_("Church Slavic"),
+         "cv" => T_("Chuvash"),
+         "cy" => T_("Welsh"),
+         "da" => T_("Danish"),
+         "de" => T_("German"),
+         "dv" => T_("Divehi"),
+         "dz" => T_("Dzongkha"),
+         "ee" => T_("Ewe"),
+         "el" => T_("Greek"),
+         "en" => T_("English"),
+         "eo" => T_("Esperanto"),
+         "es" => T_("Spanish"),
+         "et" => T_("Estonian"),
+         "eu" => T_("Basque"),
+         "fa" => T_("Persian"),
+         "ff" => T_("Fulah"),
+         "fi" => T_("Finnish"),
+         "fj" => T_("Fijian"),
+         "fo" => T_("Faroese"),
+         "fr" => T_("French"),
+         "fy" => T_("Western Frisian"),
+         "ga" => T_("Irish"),
+         "gd" => T_("Scottish Gaelic"),
+         "gl" => T_("Galician"),
+         "gn" => T_("Guarani"),
+         "gu" => T_("Gujarati"),
+         "gv" => T_("Manx"),
+         "ha" => T_("Hausa"),
+         "he" => T_("Hebrew"),
+         "hi" => T_("Hindi"),
+         "ho" => T_("Hiri Motu"),
+         "hr" => T_("Croatian"),
+         "ht" => T_("Haitian"),
+         "hu" => T_("Hungarian"),
+         "hy" => T_("Armenian"),
+         "hz" => T_("Herero"),
+         "ia" => T_("Interlingua (International Auxiliary Language Association)"),
+         "id" => T_("Indonesian"),
+         "ie" => T_("Interlingue"),
+         "ig" => T_("Igbo"),
+         "ii" => T_("Sichuan Yi"),
+         "ik" => T_("Inupiaq"),
+         "io" => T_("Ido"),
+         "is" => T_("Icelandic"),
+         "it" => T_("Italian"),
+         "iu" => T_("Inuktitut"),
+         "ja" => T_("Japanese"),
+         "jv" => T_("Javanese"),
+         "ka" => T_("Georgian"),
+         "kg" => T_("Kongo"),
+         "ki" => T_("Kikuyu"),
+         "kj" => T_("Kwanyama"),
+         "kk" => T_("Kazakh"),
+         "kl" => T_("Kalaallisut"),
+         "km" => T_("Khmer"),
+         "kn" => T_("Kannada"),
+         "ko" => T_("Korean"),
+         "kr" => T_("Kanuri"),
+         "ks" => T_("Kashmiri"),
+         "ku" => T_("Kurdish"),
+         "kv" => T_("Komi"),
+         "kw" => T_("Cornish"),
+         "ky" => T_("Kirghiz"),
+         "la" => T_("Latin"),
+         "lb" => T_("Luxembourgish"),
+         "lg" => T_("Ganda"),
+         "li" => T_("Limburgish"),
+         "ln" => T_("Lingala"),
+         "lo" => T_("Lao"),
+         "lt" => T_("Lithuanian"),
+         "lu" => T_("Luba-Katanga"),
+         "lv" => T_("Latvian"),
+         "mg" => T_("Malagasy"),
+         "mh" => T_("Marshallese"),
+         "mi" => T_("Maori"),
+         "mk" => T_("Macedonian"),
+         "ml" => T_("Malayalam"),
+         "mn" => T_("Mongolian"),
+         "mr" => T_("Marathi"),
+         "ms" => T_("Malay"),
+         "mt" => T_("Maltese"),
+         "my" => T_("Burmese"),
+         "na" => T_("Nauru"),
+         "nb" => T_("Norwegian Bokmal"),
+         "nd" => T_("North Ndebele"),
+         "ne" => T_("Nepali"),
+         "ng" => T_("Ndonga"),
+         "nl" => T_("Dutch"),
+         "nn" => T_("Norwegian Nynorsk"),
+         "no" => T_("Norwegian"),
+         "nr" => T_("South Ndebele"),
+         "nv" => T_("Navajo"),
+         "ny" => T_("Chichewa"),
+         "oc" => T_("Occitan"),
+         "oj" => T_("Ojibwa"),
+         "om" => T_("Oromo"),
+         "or" => T_("Oriya"),
+         "os" => T_("Ossetian"),
+         "pa" => T_("Panjabi"),
+         "pi" => T_("Pali"),
+         "pl" => T_("Polish"),
+         "ps" => T_("Pashto"),
+         "pt" => T_("Portuguese"),
+         "qu" => T_("Quechua"),
+         "rm" => T_("Raeto-Romance"),
+         "rn" => T_("Kirundi"),
+         "ro" => T_("Romanian"),
+         "ru" => T_("Russian"),
+         "rw" => T_("Kinyarwanda"),
+         "sa" => T_("Sanskrit"),
+         "sc" => T_("Sardinian"),
+         "sd" => T_("Sindhi"),
+         "se" => T_("Northern Sami"),
+         "sg" => T_("Sango"),
+         "si" => T_("Sinhala"),
+         "sk" => T_("Slovak"),
+         "sl" => T_("Slovenian"),
+         "sm" => T_("Samoan"),
+         "sn" => T_("Shona"),
+         "so" => T_("Somali"),
+         "sq" => T_("Albanian"),
+         "sr" => T_("Serbian"),
+         "ss" => T_("Swati"),
+         "st" => T_("Southern Sotho"),
+         "su" => T_("Sundanese"),
+         "sv" => T_("Swedish"),
+         "sw" => T_("Swahili"),
+         "ta" => T_("Tamil"),
+         "te" => T_("Telugu"),
+         "tg" => T_("Tajik"),
+         "th" => T_("Thai"),
+         "ti" => T_("Tigrinya"),
+         "tk" => T_("Turkmen"),
+         "tl" => T_("Tagalog"),
+         "tn" => T_("Tswana"),
+         "to" => T_("Tonga"),
+         "tr" => T_("Turkish"),
+         "ts" => T_("Tsonga"),
+         "tt" => T_("Tatar"),
+         "tw" => T_("Twi"),
+         "ty" => T_("Tahitian"),
+         "ug" => T_("Uighur"),
+         "uk" => T_("Ukrainian"),
+         "ur" => T_("Urdu"),
+         "uz" => T_("Uzbek"),
+         "ve" => T_("Venda"),
+         "vi" => T_("Vietnamese"),
+         "vo" => T_("Volapuk"),
+         "wa" => T_("Walloon"),
+         "wo" => T_("Wolof"),
+         "xh" => T_("Xhosa"),
+         "yi" => T_("Yiddish"),
+         "yo" => T_("Yoruba"),
+         "za" => T_("Zhuang"),
+         "zh" => T_("Chinese"),
+         "zu" => T_("Zulu")
+        );
+
+        return $languageCodes[$code];
+    }
+
+    public function get_subtitle_file($lang_code)
+    {
+        $subtitle = '';
+        if ($lang_code == '__' || $this->get_language_name($lang_code)) {
+            $pinfo = pathinfo($this->file);
+            $subtitle = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $pinfo['filename'];
+            if ($lang_code != '__') {
+                $subtitle .= '.' . $lang_code;
+            }
+            $subtitle .= '.srt';
+        }
+
+        return $subtitle;
+    }
 
     /**
      * update_played

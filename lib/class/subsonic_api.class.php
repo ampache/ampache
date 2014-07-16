@@ -95,6 +95,8 @@ class Subsonic_Api
                 $reqheaders[] = "Range: " . $headers['Range'];
             }
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
+            debug_event('subsonic', 'Stream proxy: ' . $url, 5);
+
             $ch = curl_init($url);
             curl_setopt_array($ch, array(
                 CURLOPT_HTTPHEADER => $reqheaders,
@@ -855,9 +857,9 @@ class Subsonic_Api
 
         $url = '';
         if (Subsonic_XML_Data::isVideo($fileid)) {
-            $url = Video::play_url(Subsonic_XML_Data::getAmpacheId($fileid),  $params);
+            $url = Video::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, function_exists('curl_version'));
         } else if (Subsonic_XML_Data::isSong($fileid)) {
-            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid),  $params);
+            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, function_exists('curl_version'));
         }
 
         if (!empty($url)) {
@@ -876,7 +878,7 @@ class Subsonic_Api
 
         $fileid = self::check_parameter($input, 'id', true);
 
-        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . $input['c']);
+        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . $input['c'], function_exists('curl_version'));
         self::follow_stream($url);
     }
 

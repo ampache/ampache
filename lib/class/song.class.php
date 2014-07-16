@@ -1080,7 +1080,7 @@ class Song extends database_object implements media, library_item
 
     } // get_rel_path
 
-    public static function generic_play_url($object_type, $object_id, $additional_params)
+    public static function generic_play_url($object_type, $object_id, $additional_params, $local=false)
     {
         $media = new $object_type($object_id);
         if (!$media->id) return null;
@@ -1106,7 +1106,7 @@ class Song extends database_object implements media, library_item
         $media_name = str_replace("#", "", $media_name);
         $media_name = rawurlencode($media_name);
 
-        $url = Stream::get_base_url() . "type=" . $object_type . "&oid=" . $object_id . "&uid=" . $uid . $additional_params . "&name=" . $media_name;
+        $url = Stream::get_base_url($local) . "type=" . $object_type . "&oid=" . $object_id . "&uid=" . $uid . $additional_params . "&name=" . $media_name;
 
         return Stream_URL::format($url);
     }
@@ -1117,9 +1117,9 @@ class Song extends database_object implements media, library_item
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
      */
-    public static function play_url($oid, $additional_params='')
+    public static function play_url($oid, $additional_params='', $local=false)
     {
-        return self::generic_play_url('song', $oid, $additional_params);
+        return self::generic_play_url('song', $oid, $additional_params, $local);
     }
 
     public function get_stream_name()
@@ -1187,7 +1187,7 @@ class Song extends database_object implements media, library_item
         return $types;
     }
 
-    public static function get_transcode_settings_for_media($source, $target = null, $media_type = 'song')
+    public static function get_transcode_settings_for_media($source, $target = null, $media_type = 'song', $options=array())
     {
         $setting_target = 'encode_target';
         if ($media_type != 'song') {
@@ -1215,13 +1215,17 @@ class Song extends database_object implements media, library_item
             return false;
         }
 
+        if (AmpConfig::get('encode_srt')) {
+            $args = AmpConfig::get('encode_srt') . ' ' . $args;
+        }
+
         debug_event('media', 'Command: ' . $cmd . ' Arguments: ' . $args, 5);
         return array('format' => $target, 'command' => $cmd . ' ' . $args);
     }
 
-    public function get_transcode_settings($target = null)
+    public function get_transcode_settings($target = null, $options=array())
     {
-        return Song::get_transcode_settings_for_media($this->type, $target, 'song');
+        return Song::get_transcode_settings_for_media($this->type, $target, 'song', $options);
     }
 
     public function get_lyrics()

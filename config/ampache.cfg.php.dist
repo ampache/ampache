@@ -13,13 +13,13 @@ config_version = 17
 ; Path Vars        #
 ;###################
 
-; The http host of your server.
+; The public http host of your server.
 ; If not set, retrieved automatically from client request.
 ; This setting is required for WebSocket server
 ; DEFAULT: ""
 ;http_host = "localhost"
 
-; The path to your ampache install
+; The public path to your ampache install
 ; Do not put a trailing / on this path 
 ; For example if your site is located at http://localhost
 ; than you do not need to enter anything for the web_path
@@ -27,6 +27,11 @@ config_version = 17
 ; set web_path to /music
 ; DEFAULT: ""
 ;web_path 	= ""
+
+; The local http url of your server.
+; If not set, retrieved automatically from server information.
+; DEFAULT: ""
+;local_web_path = "http://localhost/ampache"
 
 ;##############################
 ; Session and Login Variables #
@@ -732,6 +737,10 @@ transcode_player_customize = true
 ; Encoding arguments to retrieve an image from a single frame
 ; DEFAULT: none
 ;encode_get_image = "-ss %TIME% -f image2 -vframes 1 pipe:1"
+
+; Encoding argument to encrust subtitle
+; DEFAULT: none
+;encode_srt = "-vf \"subtitles='%SRTFILE%'\""
 
 ;######################################################
 ; these options allow you to configure your rss-feed

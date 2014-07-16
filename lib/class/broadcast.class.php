@@ -247,7 +247,7 @@ class Broadcast extends database_object implements library_item
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function play_url($oid, $additional_params='')
+    public static function play_url($oid, $additional_params='', $local=false)
     {
         return $oid;
     }

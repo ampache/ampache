@@ -559,7 +559,7 @@ class Plex_Api
                         $urlparams .= '&bitrate=' . $br;
                     }
 
-                    $url = Song::play_url($song_id, $urlparams);
+                    $url = Song::play_url($song_id, $urlparams, true);
                     self::stream_url($url);
                 }
             }
@@ -716,7 +716,7 @@ class Plex_Api
             $id = Plex_XML_Data::getAmpacheId($key);
             $song = new Song($id);
             if ($song->id) {
-                $url = Song::play_url($id);
+                $url = Song::play_url($id, '', true);
                 self::stream_url($url);
             } else {
                 self::createError(404);

@@ -33,6 +33,23 @@ if (!$gart) {
     $gart = Art::display('video', $video->id, $video->f_title, 7, null, false);
 }
 ?>
+<?php if (AmpConfig::get('encode_srt')) { ?>
+<div class="subtitles">
+<?php echo T_('Subtitle'); ?>:
+<select name="subtitle" id="play_setting_subtitle">
+    <option value=''><?php echo T_("None"); ?></option>
+<?php
+$subtitles = $video->get_subtitles();
+foreach ($subtitles as $subtitle) {
+    echo "<option value='" . $subtitle['lang_code'] . "' ";
+    if (isset($_SESSION['iframe']['subtitle']) && $_SESSION['iframe']['subtitle'] == $subtitle['lang_code'])
+        echo "selected";
+    echo ">" . $subtitle['lang_name'] . "</option>";
+}
+?>
+</select>
+</div>
+<?php } ?>
 </div>
 <dl class="media_details">
 <?php if (AmpConfig::get('ratings')) { ?>

@@ -45,6 +45,7 @@ if (AmpConfig::get('transcode_player_customize')) {
     $bitrate = 0;
 }
 $share_id       = intval($_REQUEST['share_id']);
+$subtitle       = '';
 
 if (!$type) {
     $type = 'song';
@@ -214,6 +215,9 @@ if ($type == 'song') {
 } else {
     $type = 'video';
     $media = new Video($oid);
+    if (isset($_REQUEST['subtitle'])) {
+        $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
+    }
     $media->format();
 }
 
@@ -359,6 +363,9 @@ if (!$cpaction) {
         } else if (!in_array('native', $valid_types)) {
             $transcode = true;
             debug_event('play', 'Transcoding because native streaming is unavailable', 5);
+        } else if (!empty($subtitle)) {
+            $transcode = true;
+            debug_event('play', 'Transcoding because subtitle requested', 5);
         } else {
             debug_event('play', 'Decided not to transcode', 5);
         }
@@ -370,7 +377,7 @@ if (!$cpaction) {
 }
 
 if ($transcode) {
-    $transcoder = Stream::start_transcode($media, $transcode_to, $bitrate);
+    $transcoder = Stream::start_transcode($media, $transcode_to, $bitrate, $subtitle);
     $fp = $transcoder['handle'];
     $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
 } else if ($cpaction) {

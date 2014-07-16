@@ -1242,7 +1242,7 @@ class Art extends database_object
         if ($prettyPhoto) {
             if ($size['width'] >= 150) {
                 echo "<div class=\"item_art_play\">";
-                echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id, '<span class="item_art_play_icon" title="' . T_('Play') . '" />', 'directplay_art_' . $object_type . '_' .$object_id);
+                echo Ajax::text('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '\' + getPagePlaySettings() + \'', '<span class="item_art_play_icon" title="' . T_('Play') . '" />', 'directplay_art_' . $object_type . '_' .$object_id);
                 echo "</div>";
             }
             echo "<div class=\"item_art_actions\">";

@@ -413,6 +413,7 @@ function install_config_transcode_mode($mode)
         $trconfig['encode_args_flv'] = '-b:v %SAMPLE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast pipe:1';
         $trconfig['encode_args_webm'] = '-b:v %SAMPLE%K -f webm -vcodec libvpx -preset superfast -threads 0 pipe:1';
         $trconfig['encode_get_image'] = '-ss %TIME% -f image2 -vframes 1 pipe:1';
+        $trconfig['encode_srt'] = '-vf "subtitles=\'%SRTFILE%\'"';
         $trconfig['waveform'] = 'true';
         $trconfig['generate_video_preview'] = 'true';
 

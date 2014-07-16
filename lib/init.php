@@ -82,6 +82,9 @@ $results['raw_web_path'] = $results['web_path'];
 if (empty($results['http_host'])) {
     $results['http_host'] = $_SERVER['HTTP_HOST'];
 }
+if (empty($results['local_web_path'])) {
+    $results['local_web_path'] = 'http://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $results['raw_web_path'];
+}
 $results['web_path'] = $http_type . $results['http_host'] . $results['web_path'];
 $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
 $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';

@@ -114,6 +114,10 @@ class Stream_Playlist
                 $additional_params .= "&custom_play_action=" . $medium['custom_play_action'];
             }
 
+            if ($_SESSION['iframe']['subtitle']) {
+                $additional_params .= "&subtitle=" . $_SESSION['iframe']['subtitle'];
+            }
+
             $type = $medium['object_type'];
             //$url['object_id'] = $medium['object_id'];
             $url['type'] = $type;

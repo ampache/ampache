@@ -104,11 +104,15 @@ class Stream
      * This is a rather complex function that starts the transcoding or
      * resampling of a media and returns the opened file handle.
      */
-    public static function start_transcode($media, $type = null, $bitrate=0)
+    public static function start_transcode($media, $type = null, $bitrate=0, $subtitle='')
     {
         debug_event('stream.class.php', 'Starting transcode for {'.$media->file.'}. Type {'.$type.'}. Bitrate {'.$bitrate.'}...', 5);
 
-        $transcode_settings = $media->get_transcode_settings($type);
+        $options = array();
+        if (empty($subtitle)) {
+            $options['subtitle'] = $subtitle;
+        }
+        $transcode_settings = $media->get_transcode_settings($type, $options);
         // Bail out early if we're unutterably broken
         if ($transcode_settings == false) {
             debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);
@@ -141,6 +145,10 @@ class Stream
             '%FILE%'   => $song_file,
             '%SAMPLE%' => $sample_rate
         );
+        if (!empty($subtitle)) {
+            // This is too specific to ffmpeg/avconv
+            $string_map['%SRTFILE%'] = str_replace(':', '\:', addslashes($subtitle));
+        }
 
         foreach ($string_map as $search => $replace) {
             $command = str_replace($search, $replace, $command, $ret);
@@ -388,14 +396,18 @@ class Stream
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
      */
-    public static function get_base_url()
+    public static function get_base_url($local=false)
     {
         $session_string = '';
         if (AmpConfig::get('require_session')) {
             $session_string = 'ssid=' . self::$session . '&';
         }
 
-        $web_path = AmpConfig::get('web_path');
+        if ($local) {
+            $web_path = AmpConfig::get('local_web_path');
+        } else {
+            $web_path = AmpConfig::get('web_path');
+        }
 
         if (AmpConfig::get('force_http_play') OR !empty(self::$force_http)) {
             $web_path = str_replace("https://", "http://",$web_path);

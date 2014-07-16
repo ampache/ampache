@@ -212,7 +212,7 @@ class Live_Stream extends database_object implements media, library_item
      * play_url
      * This is needed by the media interface
      */
-    public static function play_url($oid, $additional_params='',$sid='',$force_http='')
+    public static function play_url($oid, $additional_params='', $local=false, $sid='', $force_http='')
     {
         $radio = new Live_Stream($oid);
 
@@ -230,7 +230,7 @@ class Live_Stream extends database_object implements media, library_item
      *
      * This will probably never be implemented
      */
-    public function get_transcode_settings($target = null)
+    public function get_transcode_settings($target = null, $options=array())
     {
         return false;
     }

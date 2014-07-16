@@ -427,7 +427,7 @@ class Channel extends database_object implements media, library_item
         return $chunk;
     }
 
-    public static function play_url($oid, $additional_params='')
+    public static function play_url($oid, $additional_params='', $local=false)
     {
         $channel = new Channel($oid);
         return $channel->get_stream_proxy_url() . '?rt=' . time() . '&filename=' . urlencode($channel->name) . '.' . $channel->stream_type . $additional_params;
@@ -449,7 +449,7 @@ class Channel extends database_object implements media, library_item
         // Do nothing
     }
 
-    public function get_transcode_settings($array, $callback = false, $type = '')
+    public function get_transcode_settings($array, $options=array())
     {
         return false;
     }

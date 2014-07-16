@@ -254,7 +254,7 @@ class Song_Preview extends database_object implements media, playable_item
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
      */
-    public static function play_url($oid, $additional_params='')
+    public static function play_url($oid, $additional_params='', $local=false)
     {
         $song = new Song_Preview($oid);
         $user_id     = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
@@ -262,7 +262,7 @@ class Song_Preview extends database_object implements media, playable_item
 
         $song_name = rawurlencode($song->get_artist_name() . " - " . $song->title . "." . $type);
 
-        $url = Stream::get_base_url() . "type=song_preview&oid=$song->id&uid=$user_id&name=$song_name";
+        $url = Stream::get_base_url($local) . "type=song_preview&oid=$song->id&uid=$user_id&name=$song_name";
 
         return Stream_URL::format($url . $additional_params);
 
@@ -278,7 +278,7 @@ class Song_Preview extends database_object implements media, playable_item
      *
      * FIXME: Song Preview transcoding is not implemented
      */
-    public function get_transcode_settings($target = null)
+    public function get_transcode_settings($target = null, $options=array())
     {
         return false;
     }
