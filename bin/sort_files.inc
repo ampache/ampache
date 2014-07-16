@@ -281,8 +281,8 @@ function sort_move_file($song,$fullname) {
         if (!$results) { printf (T_('Error: Unable to copy file to %s'), $fullname); echo "\n"; return false; }
 
         /* Check the filesize */
-        $new_sum = filesize($fullname);
-        $old_sum = filesize($song->file);
+        $new_sum = Core::get_filesize($fullname);
+        $old_sum = Core::get_filesize($song->file);
 
         if ($new_sum != $old_sum OR !$new_sum) {
             printf (T_('Error: Size Inconsistency, not deleting %s'), $song->file);

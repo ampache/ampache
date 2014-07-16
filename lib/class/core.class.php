@@ -211,6 +211,34 @@ class Core
         return true;
     }
 
+    /**
+     * get_filesize
+     * Get a file size. This because filesize() doesn't work on 32-bit OS with files > 2GB
+     */
+    public static function get_filesize($filename)
+    {
+        $size = filesize($filename);
+        if ($size === false) {
+            $fp = fopen($filename, 'rb');
+            if (!$fp) {
+                return false;
+            }
+            $offset = PHP_INT_MAX - 1;
+            $size = (float) $offset;
+            if (!fseek($fp, $offset)) {
+                return false;
+            }
+            $chunksize = 8192;
+            while (!feof($fp)) {
+                $size += strlen(fread($fp, $chunksize));
+            }
+        } elseif ($size < 0) {
+            // Handle overflowed integer...
+            $size = sprintf("%u", $size);
+        }
+        return $size;
+    }
+
     /*
      * conv_lc_file
      *

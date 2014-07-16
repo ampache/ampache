@@ -216,7 +216,12 @@ function check_upload_size()
     $post_max = return_bytes(ini_get('post_max_size'));
     $mini = 20971520; // 20M
 
-    return ($upload_max >= $mini && $post_max >= $mini);
+    return (($upload_max >= $mini || $upload_max <= 0) && ($post_max >= $mini || $post_max <= 0));
+}
+
+function check_php_int_size()
+{
+    return (PHP_INT_SIZE > 4);
 }
 
 function return_bytes($val)
@@ -270,7 +275,24 @@ function debug_result($status = false, $value = null, $comment = '')
     $class = $status ? 'success' : 'danger';
 
     if (!$value) {
-        $value = $status ? 'OK' : 'ERROR';
+        $value = $status ? T_('OK') : T_('ERROR');
+    }
+
+    return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .
+        '</span> <em>' . $comment . '</em></button>';
+}
+
+/**
+ * debug_wresult
+ *
+ * Convenience function to format the output.
+ */
+function debug_wresult($status = false, $value = null, $comment = '')
+{
+    $class = $status ? 'success' : 'warning';
+
+    if (!$value) {
+        $value = $status ? T_('OK') : T_('WARNING');
     }
 
     return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .

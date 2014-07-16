@@ -521,7 +521,7 @@ class vainfo
         $parsed['bitrate'] = $tags['audio']['bitrate'];
         $parsed['channels'] = intval($tags['audio']['channels']);
         $parsed['rate'] = intval($tags['audio']['sample_rate']);
-        $parsed['size'] = $this->_forcedSize ?: intval($tags['filesize']);
+        $parsed['size'] = $this->_forcedSize ?: $tags['filesize'];
         $parsed['encoding'] = $tags['encoding'];
         $parsed['mime'] = $tags['mime_type'];
         $parsed['time'] = ($this->_forcedSize ? ((($this->_forcedSize - $tags['avdataoffset']) * 8) / $tags['bitrate']) : $tags['playtime_seconds']);
@@ -871,7 +871,7 @@ class vainfo
 
             $results['title'] = $results['title'] ?: basename($filename);
             if ($this->islocal) {
-                $results['size'] = filesize(Core::conv_lc_file($origin));
+                $results['size'] = Core::get_filesize(Core::conv_lc_file($origin));
             }
         }
 

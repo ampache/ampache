@@ -194,7 +194,7 @@ class Waveform
 
         // start putting together the initial canvas
         // $data_size = (size_of_file - header_bytes_read) / skipped_bytes + 1
-        $data_size = floor((filesize($filename) - 44) / ($ratio + $byte) + 1);
+        $data_size = floor((Core::get_filesize($filename) - 44) / ($ratio + $byte) + 1);
         $data_point = 0;
 
         // create original image width based on amount of detail

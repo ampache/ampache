@@ -316,7 +316,7 @@ class Catalog_local extends Catalog
             if ($is_audio_file OR $is_video_file OR $is_playlist) {
 
                 /* Now that we're sure its a file get filesize  */
-                $file_size = filesize($full_file);
+                $file_size = Core::get_filesize($full_file);
 
                 if (!$file_size) {
                     debug_event('read', "Unable to get filesize for $full_file", 2);
@@ -635,7 +635,7 @@ class Catalog_local extends Catalog
                 UI::update_text('clean_count_' . $this->id, $count);
                 UI::update_text('clean_dir_' . $this->id, scrub_out($file));
             }
-            $file_info = filesize($results['file']);
+            $file_info = Core::get_filesize($results['file']);
             if (!file_exists($results['file']) || $file_info < 1) {
                 debug_event('clean', 'File not found or empty: ' . $results['file'], 5);
                 Error::add('general', sprintf(T_('Error File Not Found or 0 Bytes: %s'), $results['file']));

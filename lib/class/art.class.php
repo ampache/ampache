@@ -483,7 +483,7 @@ class Art extends database_object
         // Check to see if it's a FILE
         if (isset($data['file'])) {
             $handle = fopen($data['file'],'rb');
-            $image_data = fread($handle,filesize($data['file']));
+            $image_data = fread($handle,Core::get_filesize($data['file']));
             fclose($handle);
             return $image_data;
         }
@@ -899,7 +899,7 @@ class Art extends database_object
                 $full_filename = $dir . '/' . $file;
 
                 // Make sure it's got something in it
-                if (!filesize($full_filename)) {
+                if (!Core::get_filesize($full_filename)) {
                     debug_event('folder_art', "Empty file, rejecting $file", 5);
                     continue;
                 }
