@@ -1215,7 +1215,7 @@ class Song extends database_object implements media, library_item
             return false;
         }
 
-        if (AmpConfig::get('encode_srt')) {
+        if (AmpConfig::get('encode_srt') && isset($options['subtitle'])) {
             $args = AmpConfig::get('encode_srt') . ' ' . $args;
         }
 

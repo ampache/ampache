@@ -124,7 +124,7 @@ class Artist extends database_object implements library_item
 
         // If we need to also pull the extra information, this is normally only used when we are doing the human display
         if ($extra) {
-            $sql = "SELECT `song`.`artist`, COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
+            $sql = "SELECT `song`.`artist`, COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` WHERE (`song`.`artist` IN $idlist OR `song`.`album_artist` IN $idlist) GROUP BY `song`.`artist`";
 
             debug_event("Artist", "build_cache sql: " . $sql, "6");
             $db_results = Dba::read($sql);
@@ -196,7 +196,7 @@ class Artist extends database_object implements library_item
         $sql_group = "COALESCE($sql_group_type, `album`.`id`)";
 
         $sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-            "WHERE `song`.`artist`='$this->id' $catalog_where GROUP BY $sql_group ORDER BY $sql_sort";
+            "WHERE (`song`.`artist`='$this->id' OR `song`.`album_artist`='$this->id') $catalog_where GROUP BY $sql_group ORDER BY $sql_sort";
 
         debug_event("Artist", "$sql", "6");
         $db_results = Dba::read($sql);
@@ -219,7 +219,7 @@ class Artist extends database_object implements library_item
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
-        $sql .= "WHERE `song`.`artist`='" . Dba::escape($this->id) . "' ";
+        $sql .= "WHERE (`song`.`artist`='" . Dba::escape($this->id) . "' || `song`.`album_artist`='" . Dba::escape($this->id) . "') ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
@@ -247,7 +247,7 @@ class Artist extends database_object implements library_item
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
-        $sql .= "WHERE `song`.`artist`='$this->id' ";
+        $sql .= "WHERE (`song`.`artist`='$this->id' OR `song`.`album_artist`='$this->id') ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
@@ -273,8 +273,8 @@ class Artist extends database_object implements library_item
             $row = parent::get_from_cache('artist_extra',$this->id);
         } else {
             $uid = Dba::escape($this->id);
-            $sql = "SELECT `song`.`artist`,COUNT(`song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-                "WHERE `song`.`artist`='$uid' ";
+            $sql = "SELECT `song`.`artist`,COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+                "WHERE (`song`.`artist`='$uid' || `song`.`album_artist`='$uid') ";
             if ($catalog) {
                 $sql .= "AND (`song`.`catalog` = '$catalog') ";
             }
