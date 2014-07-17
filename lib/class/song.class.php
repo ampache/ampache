@@ -623,6 +623,17 @@ class Song extends database_object implements media, library_item
             } // end whitelist
         } // end foreach
 
+        $this->format();
+
+        if (AmpConfig::get('write_id3')) {
+            $catalog = Catalog::create_from_id($this->catalog);
+            if ($catalog->get_type() == 'local') {
+                $meta = $this->get_metadata();
+                $id3 = new vainfo($this->file);
+                $id3->write_id3($meta);
+            }
+        }
+
         return $this->id;
     } // update
 
@@ -1302,6 +1313,41 @@ class Song extends database_object implements media, library_item
         }
 
         return $actions;
+    }
+
+    /*
+     * get_metadata
+     * Get an array of song metadata
+     */
+    public function get_metadata()
+    {
+        $meta = array();
+
+        $meta['file'] = $this->file;
+        $meta['bitrate'] = $this->bitrate;
+        $meta['rate'] = $this->rate;
+        $meta['mode'] = $this->mode;
+        $meta['year'] = $this->year;
+        $meta['size'] = $this->size;
+        $meta['time'] = $this->time;
+        $meta['mime'] = $this->mime;
+        $meta['title'] = $this->title;
+        $meta['album'] = $this->f_album_full;
+        $meta['artist'] = $this->f_artist_full;
+        $meta['band'] = $meta['albumartist'] = $this->f_album_artist_full;
+        $meta['mb_trackid'] = $this->mbid;
+        $meta['mb_albumid'] = $this->album_mbid;
+        $meta['mb_artistid'] = $this->artist_mbid;
+        $meta['tracknumber'] = $meta['track'] = $this->track;
+        $meta['genre'] = array();
+        foreach ($this->tags as $tag) {
+            if (!in_array($tag['name'], $meta['genre'])) {
+                $meta['genre'][] = $tag['name'];
+            }
+        }
+        $meta['genre'] = implode(',', $meta['genre']);
+
+        return $meta;
     }
 
 } // end of song class

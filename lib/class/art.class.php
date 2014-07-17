@@ -274,6 +274,33 @@ class Art extends database_object
         // Blow it away!
         $this->reset();
 
+        if (AmpConfig::get('write_id3_art')) {
+            if ($this->type == 'album') {
+                $album = new Album($this->uid );
+                debug_event('Art', 'Inserting image Album ' . $album->name . ' on songs.', 5);
+                $songs = $album->get_songs();
+                foreach ($songs as $song_id) {
+                    $song = new Song($song_id);
+                    $song->format();
+                    $id3 = new vainfo($song->file);
+                    $data = $id3->read_id3();
+                    if (isset($data['tags']['id3v2'])) {
+                        $image_from_tag = '';
+                        if (isset($data['id3v2']['APIC'][0]['data'])) {
+                            $image_from_tag = $data['id3v2']['APIC'][0]['data'];
+                        }
+                        if ($image_from_tag != $source) {
+                            $ndata = array();
+                            $ndata['APIC']['data'] = $source;
+                            $ndata['APIC']['mime'] = $mime;
+                            $ndata = array_merge($ndata, $song->get_metadata());
+                            $id3->write_id3($ndata);
+                        }
+                    }
+                }
+            }
+        }
+
         // Insert it!
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) VALUES(?, ?, 'original', ?, ?, ?)";
         Dba::write($sql, array($source, $mime, $this->type, $this->uid, $this->kind));

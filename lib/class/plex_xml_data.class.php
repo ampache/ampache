@@ -308,9 +308,8 @@ class Plex_XML_Data
         $xml->addAttribute('platformVersion', self::getPlexPlatformVersion());
         $xml->addAttribute('requestParametersInCookie', '1');
         $xml->addAttribute('sync', '1');
-        $xml->addAttribute('transcoderActiveVideoSessions', '0');
-        $xml->addAttribute('transcoderAudio', '1');
-        $xml->addAttribute('transcoderVideo', '0');
+        $xml->addAttribute('transcoderActiveVideoSessions', AmpConfig::get('allow_video') ? '1' : '0');
+        $xml->addAttribute('transcoderVideo', AmpConfig::get('allow_video') ? '1' : '0');
 
         $xml->addAttribute('updatedAt', Catalog::getLastUpdate($catalogs));
         $xml->addAttribute('version', self::getPlexVersion());

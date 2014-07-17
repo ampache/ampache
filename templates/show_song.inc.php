@@ -93,7 +93,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     $songprops[gettext_noop('Album Artist')]   = $song->f_album_artist_link;
   }
   $songprops[gettext_noop('Album')]   = $song->f_album_link . ($song->year ? " (" . scrub_out($song->year). ")" : "");
-  $songprops[gettext_noop('Genre')]   = $song->f_genre_link;
+  $songprops[gettext_noop('Genre')]   = $song->f_tags;
   $songprops[gettext_noop('Length')]  = scrub_out($song->f_time);
   $songprops[gettext_noop('Comment')] = scrub_out($song->comment);
   $songprops[gettext_noop('Label')]   = scrub_out($song->label);
