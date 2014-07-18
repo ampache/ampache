@@ -506,7 +506,6 @@ if ($transcode && isset($transcoder)) {
     }
     fclose($fp);
     proc_close($transcoder['process']);
-    debug_event('transcode_cmd', $transcoder['stderr'], 5);
 } else {
     fclose($fp);
 }
