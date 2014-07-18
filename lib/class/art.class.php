@@ -166,7 +166,7 @@ class Art extends database_object
             @imagedestroy($image);
         }
 
-        return test;
+        return $test;
     } //test_image
 
     /**
