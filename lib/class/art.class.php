@@ -154,17 +154,19 @@ class Art extends database_object
             return false;
         }
 
+        $test = true;
         // Check to make sure PHP:GD exists.  If so, we can sanity check
         // the image.
         if (function_exists('ImageCreateFromString')) {
              $image = ImageCreateFromString($source);
              if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event('Art', 'Image failed PHP-GD test',1);
-                return false;
+                $test = false;
             }
+            @imagedestroy($image);
         }
 
-        return true;
+        return test;
     } //test_image
 
     /**
@@ -418,8 +420,11 @@ class Art extends database_object
 
         if (!imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $size['width'], $size['height'], $source_size['width'], $source_size['height'])) {
             debug_event('Art','Unable to create resized image',1);
+            imagedestroy($source);
+            imagedestroy($thumbnail);
             return false;
         }
+        imagedestroy($source);
 
         // Start output buffer
         ob_start();
@@ -451,6 +456,7 @@ class Art extends database_object
         $data = ob_get_contents();
         ob_end_clean();
 
+        imagedestroy($thumbnail);
         if (!strlen($data)) {
             debug_event('Art', 'Unknown Error resizing art', 1);
             return false;
