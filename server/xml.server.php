@@ -73,6 +73,9 @@ if ($_REQUEST['action'] != 'handshake' AND $_REQUEST['action'] != 'ping') {
         $GLOBALS['user'] = User::get_from_username($username);
 }
 
+// Make sure beautiful url is disabled as it is not supported by most Ampache clients
+AmpConfig::set('stream_beautiful_url', false, true);
+
 // Get the list of possible methods for the Ampache API
 $methods = get_class_methods('api');
 

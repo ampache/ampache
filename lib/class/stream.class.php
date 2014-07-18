@@ -409,14 +409,16 @@ class Stream
             $web_path = AmpConfig::get('web_path');
         }
 
-        if (AmpConfig::get('force_http_play') OR !empty(self::$force_http)) {
+        if (AmpConfig::get('force_http_play')) {
             $web_path = str_replace("https://", "http://",$web_path);
         }
-        if (AmpConfig::get('http_port') != '80') {
+
+        $http_port = AmpConfig::get('http_port');
+        if (!empty($http_port) && $http_port != '80') {
             if (preg_match("/:(\d+)/",$web_path,$matches)) {
-                $web_path = str_replace(':' . $matches['1'],':' . AmpConfig::get('http_port'),$web_path);
+                $web_path = str_replace(':' . $matches['1'], ':' . $http_port, $web_path);
             } else {
-                $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . AmpConfig::get('http_port'), $web_path);
+                $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, $web_path);
             }
         }
 

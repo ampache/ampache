@@ -62,7 +62,7 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
 } else if (isset($_SERVER['SERVER_PORT'])) {
     $http_port = $_SERVER['SERVER_PORT'];
 }
-if (!isset($http_port) || !$http_port) {
+if (!isset($http_port) || empty($http_port)) {
     $http_port = 80;
 }
 
