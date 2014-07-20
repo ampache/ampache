@@ -741,8 +741,8 @@ transcode_player_customize = true
 ;encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
 ;encode_args_m4a = "-vn -b:a %SAMPLE%K -c:a libfdk_aac -f adts pipe:1"
 ;encode_args_wav = "-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1"
-;encode_args_flv = "-v:a %SAMPLE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
-;encode_args_webm = "-v:a %SAMPLE%K -f webm -vcodec libvpx -preset superfast -threads 0 pipe:1"
+;encode_args_flv = "-b:a %SAMPLE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
+;encode_args_webm = "-b:a %SAMPLE%K -f webm -vcodec libvpx -preset superfast -threads 0 pipe:1"
 
 ; Encoding arguments to retrieve an image from a single frame
 ; DEFAULT: none
