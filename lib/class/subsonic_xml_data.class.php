@@ -203,7 +203,7 @@ class Subsonic_XML_Data
     public static function addArtistsIndexes($xml, $artists, $lastModified)
     {
         $xindexes = $xml->addChild('indexes');
-        $xindexes->addAttribute('lastModified', $lastModified * 1000);
+        $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
         self::addArtists($xindexes, $artists);
     }
 
