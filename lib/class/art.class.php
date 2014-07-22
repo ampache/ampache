@@ -1279,8 +1279,8 @@ class Art extends database_object
                 echo "</div>";
             }
             echo "<div class=\"item_art_actions\">";
-            $burl = substr($_SERVER['REQUEST_URI'], strlen(AmpConfig::get('raw_web_path')) + 1);
-            $burl = rawurlencode($burl);
+            $burl = substr($_SERVER['REQUEST_URI'], strlen(AmpConfig::get('raw_web_path')));
+            $burl = rawurlencode(ltrim($burl, '/'));
             if ($GLOBALS['user']->has_access('25')) {
                 echo "<a href=\"" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=" . $burl . "\">";
                 echo UI::get_icon('edit', T_('Edit/Find Art'));
