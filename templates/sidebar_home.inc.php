@@ -28,7 +28,7 @@
             ${$text} = ' selected="selected"';
         }
         ?>
-        <ul class="sb3" id="sb_browse_bb">
+        <ul class="sb3" id="sb_browse_music">
             <li id="sb_browse_bb_SongTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo T_('Song Titles'); ?></a></li>
             <li id="sb_browse_bb_Album"><a href="<?php echo $web_path; ?>/browse.php?action=album"><?php echo T_('Albums'); ?></a></li>
             <li id="sb_browse_bb_Artist"><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo T_('Artists'); ?></a></li>
@@ -47,7 +47,7 @@
     </li>
     <?php if (AmpConfig::get('allow_video')) { ?>
         <li><h4 class="header"><span class="sidebar-header-title"><?php echo T_('Browse Video'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_browse']) ? $_COOKIE['sb_browse'] : 'expanded'; ?>" id="browse" lt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
-            <ul class="sb3" id="sb_browse_bb">
+            <ul class="sb3" id="sb_browse_video">
                 <li id="sb_browse_bb_Clip"><a href="<?php echo $web_path; ?>/browse.php?action=clip"><?php echo T_('Music Clips'); ?></a></li>
                 <li id="sb_browse_bb_TVShow"><a href="<?php echo $web_path; ?>/browse.php?action=tvshow"><?php echo T_('TV Shows'); ?></a></li>
                 <li id="sb_browse_bb_Movie"><a href="<?php echo $web_path; ?>/browse.php?action=movie"><?php echo T_('Movies'); ?></a></li>

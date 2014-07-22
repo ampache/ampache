@@ -466,15 +466,15 @@ class Preference extends database_object
         } // end while sys prefs
 
         /* Set the Theme mojo */
-        if (strlen($results['theme_name']) > 0) {
+        /*if (strlen($results['theme_name']) > 0) {
             $results['theme_path'] = '/themes/' . $results['theme_name'];
         }
         // Default theme if we don't get anything from their
         // preferences because we're going to want at least something otherwise
         // the page is going to be really ugly
-        else {
+        else {*/
             $results['theme_path'] = '/themes/reborn';
-        }
+        /*}*/
 
         AmpConfig::set_by_array($results, true);
         $_SESSION['userdata']['preferences'] = $results;
