@@ -349,7 +349,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #loginPage #loginbox div, #registerPage #registerbox div {
     font-size: 18px;
     line-height: 1.5em;
-    text-shadow: 0 1px 0 #000;
     text-rendering: auto;
 }
 
