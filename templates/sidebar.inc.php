@@ -105,6 +105,8 @@ $(document).ready(function() {
     // collapsed the found element.
     for (var key in result) {
         if ($("#" + key).length && result[key] == "collapsed") {
+            $("#" + key).removeClass("expanded");
+            $("#" + key).addClass("collapsed");
             $("#" + key).parent().next().slideToggle(0);
         }
     }
