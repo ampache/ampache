@@ -1,4 +1,5 @@
 config/ampache.cfg.php
+config/ampache-doped.cfg.php
 rest/.htaccess
 play/.htaccess
 *.phpproj
