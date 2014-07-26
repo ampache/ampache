@@ -102,6 +102,15 @@
     </td>
 </tr>
 <tr>
+    <td valign="top"><?php echo T_('PHP zlib extension'); ?></td>
+    <td valign="top">
+    <?php echo debug_wresult(check_php_zlib()); ?>
+    </td>
+    <td>
+    <?php echo T_('This tests whether you have the zlib extension enabled. This is not strictly necessary, but may result in a better experience (zip download).'); ?>
+    </td>
+</tr>
+<tr>
     <td valign="top"><?php echo T_('PHP safe mode disabled'); ?></td>
     <td valign="top">
     <?php echo debug_result(check_php_safemode()); ?>

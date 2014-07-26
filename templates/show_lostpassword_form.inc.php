@@ -40,7 +40,8 @@ is_rtl(AmpConfig::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
         <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/templates/dark.css" type="text/css" media="screen" />
         <title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
         <script type="text/javascript" language="javascript">
-            function focus(){
+            function focus()
+            {
                 document.login.email.focus();
             }
         </script>

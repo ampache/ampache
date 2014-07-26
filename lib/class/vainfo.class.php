@@ -253,7 +253,7 @@ class vainfo
             $tagWriter->tag_data = $TagData;
 
             if ($tagWriter->WriteTags()) {
-                if (!empty($tagwriter->warnings)) {
+                if (!empty($tagWriter->warnings)) {
                     debug_event('vainfo' , 'FWarnings ' . implode("\n", $tagWriter->warnings), 5);
                 }
             } else
@@ -273,7 +273,7 @@ class vainfo
 
             return $this->_raw;
         } catch (Exception $e) {
-            debug_event('vainfo',"Unable to read file:" . $e->message,'1');
+            debug_event('vainfo', "Unable to read file:" . $e->getMessage(), '1');
         }
     } // read_id3
 

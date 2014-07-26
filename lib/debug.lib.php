@@ -224,6 +224,11 @@ function check_php_int_size()
     return (PHP_INT_SIZE > 4);
 }
 
+function check_php_zlib()
+{
+    return function_exists('gzcompress');
+}
+
 function return_bytes($val)
 {
     $val = trim($val);
