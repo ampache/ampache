@@ -42,7 +42,7 @@
 </td>
 <td class="cel_artist"><?php echo $libitem->f_artist_link; ?></td>
 <td class="cel_album"><?php echo $libitem->f_album_link; ?></td>
-<td class="cel_tags" title="<?php echo $libitem->f_tags; ?>"><?php echo $libitem->f_tags; ?></td>
+<td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
 <td class="cel_time"><?php echo $libitem->f_time; ?></td>
 <?php if (AmpConfig::get('ratings')) { ?>
 <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_song"><?php Rating::show($libitem->id,'song'); ?></td>
@@ -59,10 +59,12 @@
     <?php if (AmpConfig::get('share')) { ?>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=show_create&type=song&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
     <?php } ?>
-    <?php if ($playlist->has_access()) { ?>
+    <?php if (get_class($playlist) == "Playlist" && $playlist->has_access()) { ?>
         <?php echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'],'delete', T_('Delete'),'track_del_' . $object['track_id']); ?>
     <?php } ?>
 </td>
+<?php if (get_class($playlist) == "Playlist") { ?>
 <td class="cel_drag">
     <?php echo UI::get_icon('drag', T_('Reorder')); ?>
 </td>
+<?php } ?>

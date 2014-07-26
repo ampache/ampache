@@ -293,7 +293,7 @@ if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
     $media_name = str_replace(array('?','/','\\'),"_",$media->f_file);
 
     $browser->downloadHeaders($media_name,$media->mime,false,$media->size);
-    $fp = fopen($media->file,'rb');
+    $fp = fopen(Core::conv_lc_file($media->file), 'rb');
     $bytesStreamed = 0;
 
     if (!is_resource($fp)) {

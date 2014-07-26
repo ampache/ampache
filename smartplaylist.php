@@ -79,6 +79,7 @@ switch ($_REQUEST['action']) {
     case 'show_playlist':
         $playlist = new Search($_REQUEST['playlist_id'], 'song');
         $playlist->format();
+        $object_ids = $playlist->get_items();
         require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
     break;
     case 'update_playlist':
@@ -91,9 +92,11 @@ switch ($_REQUEST['action']) {
             UI::access_denied();
             break;
         }
+        $object_ids = $playlist->get_items();
         require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
     break;
     default:
+        $object_ids = $playlist->get_items();
         require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
     break;
 } // switch on the action

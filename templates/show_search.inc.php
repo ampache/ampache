@@ -31,12 +31,12 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
     <ul>
         <?php if (Access::check_function('batch_download')) { ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=smartplaylist&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
             <?php echo T_('Batch Download'); ?>
         </li>
             <?php } ?>
         <li>
-            <?php echo Ajax::button('?action=basket&type=smartplaylist&id=' . $playlist->id,'add', T_('Add All'),'play_playlist'); ?>
+            <?php echo Ajax::button('?action=basket&type=search&id=' . $playlist->id,'add', T_('Add All'),'play_playlist'); ?>
             <?php echo T_('Add All'); ?>
         </li>
         <?php if ($playlist->has_access()) { ?>
@@ -58,3 +58,14 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
 </form>
 
 <?php UI::show_box_bottom(); ?>
+
+<div>
+<?php
+    $browse = new Browse();
+    $browse->set_type('playlist_song');
+    $browse->add_supplemental_object('search', $playlist->id);
+    $browse->set_static_content(false);
+    $browse->show_objects($object_ids);
+    $browse->store();
+?>
+</div>
