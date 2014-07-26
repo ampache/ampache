@@ -1339,7 +1339,7 @@ class Song extends database_object implements media, library_item
         $meta['mb_albumid'] = $this->album_mbid;
         $meta['mb_artistid'] = $this->artist_mbid;
         $meta['tracknumber'] = $meta['track'] = $this->track;
-        $meta['genre'] = array()
+        $meta['genre'] = array();
         if ($this->tags) {
             foreach ($this->tags as $tag) {
                 if (!in_array($tag['name'], $meta['genre'])) {
