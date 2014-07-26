@@ -503,6 +503,7 @@ class Art extends database_object
                 $options['proxy'] = $proxy;
             }
             try {
+                $options['timeout'] = 3;
                 $request = Requests::get($data['url'], array(), $options);
                 $raw = $request->body;
             } catch (Exception $e) {
@@ -1141,22 +1142,40 @@ class Art extends database_object
     public static function gather_metadata_plugin($plugin, $type, $options)
     {
         $gtypes = array();
+        $media_info = array();
         switch ($type) {
             case 'tvshow':
             case 'tvshow_season':
             case 'tvshow_episode':
                 $gtypes[] = 'tvshow';
-                $media_info = array(
-                    'tvshow' => $options['tvshow'],
-                    'tvshow_season' => $options['tvshow_season'],
-                    'tvshow_episode' => $options['tvshow_episode'],
-                );
+                $media_info['tvshow'] = $options['tvshow'];
+                $media_info['tvshow_season'] = $options['tvshow_season'];
+                $media_info['tvshow_episode'] = $options['tvshow_episode'];
             break;
-            default:
+            case 'song':
+                $media_info['mb_trackid'] = $options['mb_trackid'];
+                $media_info['title'] = $options['title'];
+                $media_info['artist'] = $options['artist'];
+                $media_info['album'] = $options['album'];
+                $gtypes[] = 'song';
+                break;
+            case 'album':
+                $media_info['mb_albumid'] = $options['mb_albumid'];
+                $media_info['mb_albumid_group'] = $options['mb_albumid_group'];
+                $media_info['artist'] = $options['artist'];
+                $media_info['title'] = $options['album'];
+                $gtypes[] = 'music';
+                $gtypes[] = 'album';
+                break;
+            case 'artist':
+                $media_info['mb_artistid'] = $options['mb_artistid'];
+                $media_info['title'] = $options['artist'];
+                $gtypes[] = 'music';
+                $gtypes[] = 'artist';
+                break;
+            case 'movie':
                 $gtypes[] = 'movie';
-                $media_info = array(
-                    'title' => $options['keyword'],
-                );
+                $media_info['title'] = $options['keyword'];
             break;
         }
 

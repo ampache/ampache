@@ -83,11 +83,15 @@ class Wanted extends database_object
             $albums = $artist->get_albums();
             foreach ($albums as $id) {
                 $album = new Album($id);
-                if ($album->mbid) {
-                    $malbum = $mb->lookup('release', $album->mbid, array('release-groups'));
-                    if ($malbum->{'release-group'}) {
-                        if (!in_array($malbum->{'release-group'}->id, $owngroups)) {
-                            $owngroups[] = $malbum->{'release-group'}->id;
+                if ($album->mbid_group) {
+                    $owngroups[] = $album->mbid_group;
+                } else {
+                    if ($album->mbid) {
+                        $malbum = $mb->lookup('release', $album->mbid, array('release-groups'));
+                        if ($malbum->{'release-group'}) {
+                            if (!in_array($malbum->{'release-group'}->id, $owngroups)) {
+                                $owngroups[] = $malbum->{'release-group'}->id;
+                            }
                         }
                     }
                 }

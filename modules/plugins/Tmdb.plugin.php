@@ -59,7 +59,7 @@ class AmpacheTmdb {
      */
     public function uninstall() {
     
-        Preference::delete('tmdb_api_url');
+        Preference::delete('tmdb_api_key');
         
         return true;
     } // uninstall

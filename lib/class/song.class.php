@@ -130,6 +130,7 @@ class Song extends database_object implements media, library_item
         $track_mbid = $results['mb_trackid'] ?: $results['mbid'];
         $track_mbid = $track_mbid ?: null;
         $album_mbid = $results['mb_albumid'];
+        $album_mbid_group = $results['mb_albumid_group'];
         $artist_mbid = $results['mb_artistid'];
         $album_artist_mbid = $results['mb_albumartistid'];
         $disk = $results['disk'] ?: 0;
@@ -145,7 +146,7 @@ class Song extends database_object implements media, library_item
         if ($album_artist) {
             $album_artist_id = Artist::check($album_artist, $album_artist_mbid);
         }
-        $album_id = Album::check($album, $year, $disk, $album_mbid,$album_artist_id);
+        $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $album_artist_id);
 
         $sql = 'INSERT INTO `song` (`file`, `catalog`, `album`, `artist`, ' .
             '`title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, ' .
@@ -977,6 +978,12 @@ class Song extends database_object implements media, library_item
     public function get_keywords()
     {
         $keywords = array();
+        $keywords['mb_trackid'] = array('important' => false,
+            'label' => T_('Track MusicBrainzID'),
+            'value' => $this->mbid);
+        $keywords['artist'] = array('important' => true,
+            'label' => T_('Artist'),
+            'value' => $this->f_artist);
         $keywords['title'] = array('important' => true,
             'label' => T_('Title'),
             'value' => $this->f_title);

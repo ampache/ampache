@@ -428,6 +428,9 @@ class Update
         $update_string = '- Enhance video support with TVShows and Movies.<br />';
         $version[] = array('version' => '370009','description' => $update_string);
 
+        $update_string = '- Add MusicBrainz Album Release Group identifier.<br />';
+        $version[] = array('version' => '370010','description' => $update_string);
+
         return $version;
     }
 
@@ -2824,5 +2827,16 @@ class Update
         $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;
+    }
+
+    /**
+     * update_370010
+     *
+     * Add MusicBrainz Album Release Group identifier
+     */
+    public static function update_370010()
+    {
+        $sql = "ALTER TABLE `album` ADD `mbid_group` varchar(36) CHARACTER SET utf8 NULL";
+        return Dba::write($sql);
     }
 }

@@ -103,6 +103,7 @@ Ampache includes some external modules that carry their own licensing.
 * [jQuery File Upload] (https://github.com/blueimp/jQuery-File-Upload): MIT
 * [jsTree] (http://www.jstree.com): MIT
 * [php-tmdb-api] (https://github.com/wtfzdotnet/php-tmdb-api) : MIT
+* [TvDb] (https://github.com/Moinax/TvDb) : MIT
 
 
 Translations

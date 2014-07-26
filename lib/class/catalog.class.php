@@ -1211,6 +1211,7 @@ abstract class Catalog extends database_object
         $artist_mbid        = $results['mb_artistid'];
         $album            = $results['album'];
         $album_mbid        = $results['mb_albumid'];
+        $album_mbid_group  = $results['mb_albumid_group'];
         $disk            = $results['disk'];
         $tags            = $results['genre'];    // multiple genre support makes this an array
 
@@ -1220,7 +1221,7 @@ abstract class Catalog extends database_object
         */
         $new_song->artist = Artist::check($artist, $artist_mbid);
         $new_song->f_artist = $artist;
-        $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid);
+        $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group);
         $new_song->f_album = $album . " - " . $new_song->year;
         $new_song->title = self::check_title($new_song->title,$new_song->file);
 

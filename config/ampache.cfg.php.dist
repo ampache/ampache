@@ -279,14 +279,14 @@ getid3_tag_order = "id3v2,id3v1,vorbiscomment,quicktime,matroska,ape,asf,avi,mpe
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked)
 ; POSSIBLE VALUES (builtins): filename and getID3
-; POSSIBLE VALUES (plugins): MusicBrainz, plus any others you've installed.
+; POSSIBLE VALUES (plugins): MusicBrainz,TheAudioDb, plus any others you've installed.
 ; DEFAULT: getID3 filename
 metadata_order = "getID3,filename"
 
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked) for video files
 ; POSSIBLE VALUES (builtins): filename and getID3
-; POSSIBLE VALUES (plugins): Tmdb,Omdb plus any others you've installed.
+; POSSIBLE VALUES (plugins): Tvdb,Tmdb,Omdb, plus any others you've installed.
 ; DEFAULT: filename getID3
 metadata_order_video = "filename,getID3"
 
@@ -401,7 +401,7 @@ notify = "true"
 ; method unless you want it to overwrite what's already in the
 ; database
 ; POSSIBLE VALUES (builtins): db tags folder lastfm musicbrainz google
-; POSSIBLE VALUES (plugins): amazon,Tmdb,Omdb,Flickr
+; POSSIBLE VALUES (plugins): amazon,TheAudioDb,Tmdb,Omdb,Flickr
 ; DEFAULT: db,tags,folder,musicbrainz,lastfm,google
 art_order = "db,tags,folder,musicbrainz,lastfm,google"
 

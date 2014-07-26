@@ -38,6 +38,7 @@ class Album extends database_object implements library_item
     public $year;
     public $prefix;
     public $mbid; // MusicBrainz ID
+    public $mbid_group; // MusicBrainz Release Group ID
 
     public $song_count;
     public $artist_prefix;
@@ -222,13 +223,14 @@ class Album extends database_object implements library_item
      *
      * Searches for an album; if none is found, insert a new one.
      */
-    public static function check($name, $year = 0, $disk = 0, $mbid = null, $album_artist = null,  $readonly = false)
+    public static function check($name, $year = 0, $disk = 0, $mbid = null, $mbid_group = null, $album_artist = null,  $readonly = false)
     {
         $trimmed = Catalog::trim_prefix(trim($name));
         $name = $trimmed['string'];
         $prefix = $trimmed['prefix'];
         $album_artist = empty($album_artist) ? null : $album_artist;
         $mbid = empty($mbid) ? null : $mbid;
+        $mbid_group = empty($mbid_group) ? null : $mbid_group;
 
         // Not even sure if these can be negative, but better safe than llama.
         $year = abs(intval($year));
@@ -240,8 +242,8 @@ class Album extends database_object implements library_item
             $disk = 0;
             $album_artist = null;
         }
-        if (isset(self::$_mapcache[$name][$year][$disk][$mbid][$album_artist])) {
-            return self::$_mapcache[$name][$year][$disk][$mbid][$album_artist];
+        if (isset(self::$_mapcache[$name][$disk][$mbid][$album_artist])) {
+            return self::$_mapcache[$name][$disk][$mbid][$album_artist];
         }
 
         $sql = 'SELECT `album`.`id` FROM `album` WHERE `album`.`name` = ? AND `album`.`disk` = ? ';
@@ -265,7 +267,7 @@ class Album extends database_object implements library_item
 
         if ($row = Dba::fetch_assoc($db_results)) {
             $id = $row['id'];
-            self::$_mapcache[$name][$year][$disk][$mbid][$album_artist] = $id;
+            self::$_mapcache[$name][$disk][$mbid][$album_artist] = $id;
             return $id;
         }
 
@@ -273,9 +275,9 @@ class Album extends database_object implements library_item
             return null;
         }
 
-        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`) VALUES (?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`, `mbid_group`) VALUES (?, ?, ?, ?, ?, ?)';
 
-        $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid));
+        $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid, $mbid_group));
         if (!$db_results) {
             return null;
         }
@@ -291,7 +293,7 @@ class Album extends database_object implements library_item
             }
         }
 
-        self::$_mapcache[$name][$year][$disk][$mbid][$album_artist] = $id;
+        self::$_mapcache[$name][$disk][$mbid][$album_artist] = $id;
         return $id;
     }
 
@@ -466,6 +468,12 @@ class Album extends database_object implements library_item
     public function get_keywords()
     {
         $keywords = array();
+        $keywords['mb_albumid'] = array('important' => false,
+            'label' => T_('Album MusicBrainzID'),
+            'value' => $this->mbid);
+        $keywords['mb_albumid_group'] = array('important' => false,
+            'label' => T_('Release Group MusicBrainzID'),
+            'value' => $this->mbid_group);
         $keywords['artist'] = array('important' => true,
             'label' => T_('Artist'),
             'value' => (($this->artist_count < 2) ? $this->f_artist_name : ''));
@@ -559,6 +567,7 @@ class Album extends database_object implements library_item
         $name = $data['name'];
         $disk = $data['disk'];
         $mbid = $data['mbid'];
+        $mbid_group = $data['mbid_group'];
 
         $current_id = $this->id;
 
@@ -584,7 +593,7 @@ class Album extends database_object implements library_item
             Artist::gc();
         }
 
-        $album_id = self::check($name, $year, $disk, $mbid);
+        $album_id = self::check($name, $year, $disk, $mbid, $mbid_group);
         if ($album_id != $this->id) {
             if (!is_array($songs)) { $songs = $this->get_songs(); }
             foreach ($songs as $song_id) {
@@ -594,6 +603,9 @@ class Album extends database_object implements library_item
             $current_id = $album_id;
             $updated = true;
             self::gc();
+        } else {
+            Album::update_year($year, $album_id);
+            Album::update_mbid_group($mbid_group, $album_id);
         }
 
         if ($updated && is_array($songs)) {
@@ -634,6 +646,23 @@ class Album extends database_object implements library_item
                 Tag::update_tag_list($tags_comma, 'song', $song_id);
             }
         }
+    }
+
+    public static function update_year($year, $album_id)
+    {
+        self::update_field('year', $year, $album_id);
+    }
+
+    public static function update_mbid_group($mbid_group, $album_id)
+    {
+        $mbid_group = (!empty($mbid_group)) ? $mbid_group : null;
+        self::update_field('mbid_group', $mbid_group, $album_id);
+    }
+
+    private static function update_field($field, $value, $album_id)
+    {
+        $sql = "UPDATE `album` SET `" . $field . "` = ? WHERE `id` = ?";
+        return Dba::write($sql, array($value, $album_id));
     }
 
     /**

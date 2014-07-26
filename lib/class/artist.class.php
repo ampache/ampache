@@ -348,6 +348,9 @@ class Artist extends database_object implements library_item
     public function get_keywords()
     {
         $keywords = array();
+        $keywords['mb_artistid'] = array('important' => false,
+            'label' => T_('Artist MusicBrainzID'),
+            'value' => $this->mbid);
         $keywords['artist'] = array('important' => true,
             'label' => T_('Artist'),
             'value' => $this->f_full_name);

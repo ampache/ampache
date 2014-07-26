@@ -359,11 +359,13 @@ class vainfo
 
             $info['band'] = $info['band'] ?: trim($tags['band']);
             $info['composer'] = $info['composer'] ?: trim($tags['composer']);
+            $info['performer'] = $info['performer'] ?: trim($tags['performer']);
 
             $info['genre'] = self::clean_array_tag('genre', $info, $tags);
 
             $info['mb_trackid'] = $info['mb_trackid'] ?: trim($tags['mb_trackid']);
             $info['mb_albumid'] = $info['mb_albumid'] ?: trim($tags['mb_albumid']);
+            $info['mb_albumid_group'] = $info['mb_albumid_group'] ?: trim($tags['mb_albumid_group']);
             $info['mb_artistid'] = $info['mb_artistid'] ?: trim($tags['mb_artistid']);
             $info['mb_albumartistid'] = $info['mb_albumartistid'] ?: trim($tags['mb_albumartistid']);
 
@@ -767,6 +769,9 @@ class vainfo
                         case 'MusicBrainz Album Id':
                             $parsed['mb_albumid'] = $txxx['data'];
                         break;
+                        case 'MusicBrainz Release Group Id':
+                            $parsed['mb_albumid_group'] = $txxx['data'];
+                        break;
                         case 'MusicBrainz Artist Id':
                             $parsed['mb_artistid'] = $txxx['data'];
                         break;
@@ -861,6 +866,9 @@ class vainfo
                 break;
                 case 'MusicBrainz Album Id':
                     $parsed['mb_albumid'] = $data[0];
+                break;
+                case 'MusicBrainz Release Group Id':
+                    $parsed['mb_albumid_group'] = $data[0];
                 break;
                 case 'MusicBrainz Artist Id':
                     $parsed['mb_artistid'] = $data[0];
