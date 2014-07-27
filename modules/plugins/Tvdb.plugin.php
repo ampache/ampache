@@ -119,11 +119,25 @@ class AmpacheTvdb {
                     if ($release->banner) {
                         $results['tvshow_banner_art'] = $tvdburl . '/banners/' . $release->banner;
                     }
-                    if ($release->fanArt) {
-                        $results['tvshow_art'] = $tvdburl . '/banners/' . $release->fanArt;
-                    }
                     if (count($results->genres) > 0) {
                         $results['genre'] = $results->genres;
+                    }
+                    
+                    $banners = $client->getBanners($results['tvdb_tvshow_id']);
+                    foreach ($banners as $banner) {
+                        if ($banner->language == "en") {
+                            if (!$results['tvshow_art']) {
+                                if ($banner->type == "poster") {
+                                    $results['tvshow_art'] = $tvdburl . '/banners/' . $banner->path;
+                                }
+                            }
+                            
+                            if ($media_info['tvshow_season'] && !$results['tvshow_season_art']) {
+                                if ($banner->type == "season" && $banner->season == $media_info['tvshow_season']) {
+                                    $results['tvshow_season_art'] = $tvdburl . '/banners/' . $banner->path;
+                                }
+                            }
+                        }
                     }
                     
                     if ($media_info['tvshow_season'] && $media_info['tvshow_episode']) {

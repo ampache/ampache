@@ -95,6 +95,7 @@ class Plex_Api
             Session::gc();
             $username = "";
             $email = Session::read((string) $myplex_token);
+
             if (empty($email)) {
                 $createSession = true;
                 $xml = self::get_server_authtokens();
@@ -204,10 +205,12 @@ class Plex_Api
         }
         $ach = $reqheaders['Access-Control-Request-Headers'];
         if ($ach) {
-            $headers = self::getPlexHeaders(true, $ach);
+            //$filter = explode(',', $ach);
+            $filter = null;
+            $headers = self::getPlexHeaders(true, $filter);
             $headerkeys = array();
             foreach ($headers as $key => $value) {
-                $headerkeys[] = strtolower($key);
+                $headerkeys[] = $key;
             }
             header('Access-Control-Allow-Headers: ' . implode(',', $headerkeys));
         }
@@ -218,6 +221,16 @@ class Plex_Api
             header('Access-Control-Expose-Headers: Location');
         }
     }
+
+    public static function apiOutputXml($xml)
+    {
+        // Format xml output
+        $dom = new DOMDocument();
+        $dom->loadXML($xml);
+        $dom->formatOutput = true;
+        self::apiOutput($dom->saveXML());
+    }
+
     public static function apiOutput($string)
     {
         if ($_SERVER['REQUEST_METHOD'] != 'OPTIONS') {
@@ -231,7 +244,7 @@ class Plex_Api
             }
         } else {
             header("Content-type: text/plain", true);
-            header("Content-length: 0", true);
+            //header("Content-length: 0", true);
         }
     }
 
@@ -456,7 +469,7 @@ class Plex_Api
         $r = Plex_XML_Data::createContainer();
         Plex_XML_Data::setRootContent($r, Catalog::get_catalogs());
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function library($params)
@@ -464,7 +477,7 @@ class Plex_Api
         $r = Plex_XML_Data::createLibContainer();
         Plex_XML_Data::setLibraryContent($r);
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function system($params)
@@ -472,28 +485,28 @@ class Plex_Api
         $r = Plex_XML_Data::createSysContainer();
         Plex_XML_Data::setSystemContent($r);
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function clients($params)
     {
         $r = Plex_XML_Data::createContainer();
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function channels($params)
     {
         $r = Plex_XML_Data::createPluginContainer();
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function photos($params)
     {
         $r = Plex_XML_Data::createPluginContainer();
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function photo($params)
@@ -570,14 +583,14 @@ class Plex_Api
     {
         $r = Plex_XML_Data::createPluginContainer();
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function applications($params)
     {
         $r = Plex_XML_Data::createPluginContainer();
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function library_sections($params)
@@ -607,7 +620,7 @@ class Plex_Api
         }
 
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function library_metadata($params)
@@ -681,7 +694,7 @@ class Plex_Api
             }
         }
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     protected static function stream_url($url)
@@ -731,7 +744,7 @@ class Plex_Api
         $r = Plex_XML_Data::createLibContainer();
         Plex_XML_Data::setCustomView($r, $data);
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function library_ondeck($params)
@@ -741,7 +754,7 @@ class Plex_Api
         $r = Plex_XML_Data::createLibContainer();
         Plex_XML_Data::setCustomView($r, $data);
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function system_library_sections($params)
@@ -749,7 +762,7 @@ class Plex_Api
         $r = Plex_XML_Data::createSysContainer();
         Plex_XML_Data::setSysSections($r, Catalog::get_catalogs());
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function manage_frameworks_ekspinner_resources($params)
@@ -765,7 +778,7 @@ class Plex_Api
     public static function myplex_account($params)
     {
         $r = Plex_XML_Data::createMyPlexAccount();
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function system_agents($params)
@@ -806,7 +819,7 @@ class Plex_Api
             Plex_XML_Data::setAgentsContributors($r, $mediaType, 'com.plexapp.agents.none');
         }
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function system_agents_contributors($params)
@@ -817,7 +830,7 @@ class Plex_Api
         $r = Plex_XML_Data::createSysContainer();
         Plex_XML_Data::setAgentsContributors($r, $mediaType, $primaryAgent);
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function system_agents_attribution($params)
@@ -834,7 +847,7 @@ class Plex_Api
                 $r = Plex_XML_Data::createSysContainer();
                 Plex_XML_Data::setMusicScanners($r);
                 Plex_XML_Data::setContainerSize($r);
-                self::apiOutput($r->asXML());
+                self::apiOutputXml($r->asXML());
             }
         } else {
             self::createError(404);
@@ -845,7 +858,7 @@ class Plex_Api
     {
         $r = Plex_XML_Data::createAppStore();
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function accounts($params)
@@ -860,7 +873,7 @@ class Plex_Api
         $r = Plex_XML_Data::createAccountContainer();
         Plex_XML_Data::setAccounts($r, $userid);
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function status($params)
@@ -868,7 +881,7 @@ class Plex_Api
         $r = Plex_XML_Data::createPluginContainer();
         Plex_XML_Data::setStatus($r);
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function status_sessions($params)
@@ -881,28 +894,28 @@ class Plex_Api
         $r = Plex_XML_Data::createContainer();
         Plex_XML_Data::setPrefs($r);
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function help($params)
     {
         $r = Plex_XML_Data::createPluginContainer();
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function plexonline($params)
     {
         $r = Plex_XML_Data::createPluginContainer();
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function plugins($params)
     {
         $r = Plex_XML_Data::createPluginContainer();
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function services($params)
@@ -910,7 +923,7 @@ class Plex_Api
         $r = Plex_XML_Data::createPluginContainer();
         Plex_XML_Data::setServices($r);
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function services_browse($params)
@@ -920,7 +933,7 @@ class Plex_Api
         $r = Plex_XML_Data::createContainer();
         Plex_XML_Data::setBrowseService($r, $params[0]);
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutput($r->asXML());
+        self::apiOutputXml($r->asXML());
     }
 
     public static function timeline($params)
@@ -970,5 +983,42 @@ class Plex_Api
         $action = 'users/account?auth_token=' . $authtoken;
         $res = self::myPlexRequest($action);
         return $res['xml'];
+    }
+
+    public static function users_account($params)
+    {
+        $xml = self::get_users_account();
+        Plex_XML_Data::setMyPlexSubscription($xml);
+        self::apiOutput($xml->asXML());
+    }
+
+    /**
+     myPlex server function to grant plexpass access dynamically.
+     Used for testing purpose only.
+     */
+    public static function users($params)
+    {
+        if ($params[0] == 'sign_in.xml') {
+            $curlopts = array();
+            $headers = array();
+            $res = self::myPlexRequest('users/sign_in.xml', $curlopts, $headers, true);
+
+            foreach ($res['headers'] as $header) {
+                header($header);
+            }
+
+            if ($res['status'] == '201') {
+                Plex_XML_Data::setMyPlexSubscription($res['xml']);
+                self::apiOutput($res['xml']->asXML());
+            } else { self::createError($res['status']); }
+        }
+    }
+
+    public static function servers($params)
+    {
+        $r = Plex_XML_Data::createContainer();
+        Plex_XML_Data::setLocalServerInfo($r);
+        Plex_XML_Data::setContainerSize($r);
+        self::apiOutputXml($r->asXML());
     }
 }

@@ -310,6 +310,12 @@ class Plex_XML_Data
         $xml->addAttribute('sync', '1');
         $xml->addAttribute('transcoderActiveVideoSessions', AmpConfig::get('allow_video') ? '1' : '0');
         $xml->addAttribute('transcoderVideo', AmpConfig::get('allow_video') ? '1' : '0');
+        if (AmpConfig::get('allow_video')) {
+            $xml->addAttribute('transcoderVideoBitrates', '64,96,208,320,720,1500,2000,3000,4000,8000,10000,12000,20000');
+            $xml->addAttribute('transcoderVideoQualities', '0,1,2,3,4,5,6,7,8,9,10,11,12');
+            $xml->addAttribute('transcoderVideoResolutions', '128,128,160,240,320,480,768,720,720,1080,1080,1080,1080');
+            //$xml->addAttributes('transcoderActiveVideoSessions', '0');
+        }
 
         $xml->addAttribute('updatedAt', Catalog::getLastUpdate($catalogs));
         $xml->addAttribute('version', self::getPlexVersion());
@@ -399,9 +405,25 @@ class Plex_XML_Data
             $dir->addAttribute('filters', '1');
             $dir->addAttribute('refreshing', '0');
             $dir->addAttribute('key', $id);
-            $dir->addAttribute('type', 'artist');
-            $dir->addAttribute('agent', 'com.plexapp.agents.none'); // com.plexapp.agents.lastfm
-            $dir->addAttribute('scanner', 'Plex Music Scanner');
+            $gtypes = $catalog->get_gather_types();
+            switch ($gtypes[0]) {
+                case 'movie':
+                    $dir->addAttribute('type', 'movie');
+                    $dir->addAttribute('agent', 'com.plexapp.agents.imdb');
+                    $dir->addAttribute('scanner', 'Plex Movie Scanner');
+                    break;
+                case 'tvshow':
+                    $dir->addAttribute('type', 'show');
+                    $dir->addAttribute('agent', 'com.plexapp.agents.thetvdb');
+                    $dir->addAttribute('scanner', 'Plex Series Scanner');
+                    break;
+                case 'music':
+                default:
+                    $dir->addAttribute('type', 'artist');
+                    $dir->addAttribute('agent', 'com.plexapp.agents.none'); // com.plexapp.agents.lastfm
+                    $dir->addAttribute('scanner', 'Plex Music Scanner');
+                    break;
+            }
             $dir->addAttribute('language', 'en');
             $dir->addAttribute('uuid', self::uuidFromSubKey($id));
             $dir->addAttribute('updatedAt', Catalog::getLastUpdate($catalogs));
@@ -589,12 +611,29 @@ class Plex_XML_Data
         $server = $xml->addChild('Server');
         $server->addAttribute('name', self::getServerName());
         $server->addAttribute('host', self::getServerPublicAddress());
-        $server->addAttribute('localAddresses', self::getServerAddress());
+        $localAddresses = self::getServerAddress();
+        // Plex doesn't support server not listening locally on port 32400.
+        // This is a plex hack to make it works with few clients. But better to listen on port 32400...
+        if (self::getServerPort() != 32400) {
+            $localAddresses .= ':' . self::getServerPort() . '/.hack/main';
+        }
+        $server->addAttribute('localAddresses', $localAddresses);
         $server->addAttribute('port', self::getServerPublicPort());
         $server->addAttribute('machineIdentifier', self::getMachineIdentifier());
         $server->addAttribute('version', self::getPlexVersion());
 
         self::setSections($xml, $catalogs);
+    }
+
+    public static function setLocalServerInfo($xml)
+    {
+        $server = $xml->addChild('Server');
+        $server->addAttribute('name', self::getServerName());
+        $server->addAttribute('host', '127.0.0.1');
+        $server->addAttribute('address', '127.0.0.1');
+        $server->addAttribute('port', self::getServerPort());
+        $server->addAttribute('machineIdentifier', self::getMachineIdentifier());
+        $server->addAttribute('version', self::getPlexVersion());
     }
 
     public static function addArtist($xml, $artist)

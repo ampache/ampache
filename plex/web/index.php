@@ -65,6 +65,7 @@ $myplex_published = Plex_XML_Data::getMyPlexPublished();
 $plex_servername = Plex_XML_Data::getServerName();
 $plex_public_address = Plex_XML_Data::getServerPublicAddress();
 $plex_public_port = Plex_XML_Data::getServerPublicPort();
+$plex_local_port = Plex_XML_Data::getServerPort();
 $plex_local_auth = AmpConfig::get('plex_local_auth');
 $plex_match_email = AmpConfig::get('plex_match_email');
 
@@ -85,6 +86,7 @@ switch ($plexact) {
                 Preference::update('myplex_username', -1, $myplex_username, true, true);
                 Preference::update('myplex_authtoken', -1, $myplex_authtoken, true, true);
                 Preference::update('plex_public_port', -1, $plex_public_port, true, true);
+                AmpConfig::set('plex_public_port', $plex_public_port, true);
 
                 $plex_public_address = Plex_Api::getPublicIp();
                 Preference::update('plex_public_address', -1, $plex_public_address, true, true);
@@ -175,6 +177,12 @@ switch ($plexact) {
                 <label for="plex_public_port">Public Server Port (optional):</label>
                 <input type="text" id="plex_public_port" class="field_value" name="plex_public_port" value="<?php echo $plex_public_port; ?>" />
             </div>
+            <?php if ($plex_local_port != 32400) { ?>
+            <div style="color: orange;">
+                Plex servers should locally listen on port 32400. Current local listing port for your Plex backend is <?php echo $plex_local_port; ?>. Ampache applies a small URI `hack` to work with custom port
+                as Plex server, but be aware that this will not work with all clients.
+            </div>
+            <?php } ?>
             <div class="formbuttons">
                 <input type="submit" value="Auth/Publish" />
             </div>
