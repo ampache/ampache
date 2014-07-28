@@ -670,7 +670,7 @@ class Art extends database_object
                         $data = $this->{$method_name}($limit, $options);
                     break;
                     default:
-                        $data = $this->{$method_name}($limit);
+                        $data = $this->{$method_name}($limit, $this->type);
                     break;
                 }
             } else {
@@ -991,12 +991,47 @@ class Art extends database_object
      * This looks for the art in the meta-tags of the file
      * itself
      */
-    public function gather_tags($limit = 5)
+    public function gather_tags($limit = 5, $type="artist")
     {
+    	//Is this necessary?  The $limit argument defaults to 5 if it is not passed.
         if (!$limit) {
             $limit = 5;
         }
+        
+        if ($type == "video") {
+        	$data = $this->gather_movie_tags();
+        	return $data;
+        }
+        
+        else {
+        	$data = $this->gather_song_tags($limit);
+        	return $data;
+        }
+    }
+    
+    public function gather_movie_tags($limit=1)
+    {
+    	
+    	$movie = new Video($this->uid);
+    	$getID3 = new getID3();
+    	try { $id3 = $getID3->analyze($movie->file); } catch (Exception $error) {
+    		debug_event('getid3', $error->getMessage(), 1);
+    	} 
+    	if (isset($id3['comments']['picture']['0'])) {
+    		$image = $id3['comments']['picture']['0'];
+    		$data[] = array(
+    				'movie' => $movie->file,
+    				'raw' => $image['data'],
+    				'mime' => $image['image_mime'],
+    				'title' => 'ID3');
+    		return $data;
+    	}
+    	 
+    	return array(); 
+    }
 
+    public function gather_song_tags($limit = 5) 
+    {
         // We need the filenames
         $album = new Album($this->uid);
 
@@ -1042,6 +1077,8 @@ class Art extends database_object
         return $data;
 
     } // gather_tags
+
+    
 
     /**
      * gather_google
