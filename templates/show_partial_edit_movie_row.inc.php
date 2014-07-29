@@ -22,7 +22,7 @@
 ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Original Name') ?></td>
-                <td><input type="text" name="original_name" value="<?php echo scrub_out($libitem->original_name); ?>" /></td>
+                <td><input type="text" name="original_name" value="<?php echo scrub_out($libitem->f_original_name); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Summary') ?></td>

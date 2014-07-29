@@ -25,6 +25,7 @@ class TVShow extends database_object implements library_item
     /* Variables from DB */
     public $id;
     public $name;
+    public $prefix;
     public $summary;
     public $year;
 
@@ -173,7 +174,7 @@ class TVShow extends database_object implements library_item
      */
     public function format()
     {
-        $this->f_name = $this->name;
+        $this->f_name = trim($this->prefix . " " . $this->name);
         $this->link = AmpConfig::get('web_path') . '/tvshows.php?action=show&tvshow=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '" title="' . $this->f_name . '">' . $this->f_name . '</a>';
 
@@ -253,6 +254,10 @@ class TVShow extends database_object implements library_item
         $id = 0;
         $exists = false;
 
+        $trimmed = Catalog::trim_prefix(trim($name));
+        $name = $trimmed['string'];
+        $prefix = $trimmed['prefix'];
+
         if (!$exists) {
             $sql = 'SELECT `id` FROM `tvshow` WHERE `name` LIKE ? AND `year` = ?';
             $db_results = Dba::read($sql, array($name, $year));
@@ -278,10 +283,10 @@ class TVShow extends database_object implements library_item
             return null;
         }
 
-        $sql = 'INSERT INTO `tvshow` (`name`, `year`) ' .
+        $sql = 'INSERT INTO `tvshow` (`name`, `prefix`, `year`) ' .
             'VALUES(?, ?)';
 
-        $db_results = Dba::write($sql, array($name, $year));
+        $db_results = Dba::write($sql, array($name, $prefix, $year));
         if (!$db_results) {
             return null;
         }
@@ -316,8 +321,12 @@ class TVShow extends database_object implements library_item
             } // end if it changed
         }
 
-        $sql = 'UPDATE `tvshow` SET `name` = ?, `year` = ?, `summary` = ? WHERE `id` = ?';
-        Dba::write($sql, array($data['name'], $data['year'], $data['summary'], $current_id));
+        $trimmed = Catalog::trim_prefix(trim($data['name']));
+        $name = $trimmed['string'];
+        $prefix = $trimmed['prefix'];
+
+        $sql = 'UPDATE `tvshow` SET `name` = ?, `prefix` = ?, `year` = ?, `summary` = ? WHERE `id` = ?';
+        Dba::write($sql, array($name, $prefix, $data['year'], $data['summary'], $current_id));
 
         $override_childs = false;
         if ($data['apply_childs'] == 'checked') {

@@ -581,9 +581,85 @@ class Plex_Api
 
     public static function video($params)
     {
-        $r = Plex_XML_Data::createPluginContainer();
-        Plex_XML_Data::setContainerSize($r);
-        self::apiOutputXml($r->asXML());
+        if (count($params) > 1 && $params[0] == ':' && $params[1] == 'transcode') {
+            array_shift($params);
+            array_shift($params);
+            self::video_transcode($params);
+        } else {
+            $r = Plex_XML_Data::createPluginContainer();
+            Plex_XML_Data::setContainerSize($r);
+            self::apiOutputXml($r->asXML());
+        }
+    }
+
+    private static function video_transcode($params)
+    {
+        $n = count($params);
+        if ($n == 2) {
+            $transcode_to = $params[0];
+            $action = $params[1];
+
+
+            $session = $_GET['session'];
+            if ($action == "stop") {
+                // We should kill associated transcode session here
+            } elseif ($action == "start.m3u8") {
+                $path = $_GET['path'];
+                $protocol = $_GET['protocol'];
+                $offset = $_GET['offset'];
+
+                // Several Media and Part per Video is not supported
+                //$mediaIndex = $_GET['mediaIndex'];
+                //$partIndex = $_GET['partIndex'];
+
+                // What's that?
+                //$fastSeek = $_GET['fastSeek'];
+                //$directPlay = $_GET['directPlay'];
+                //$directStream = $_GET['directStream'];
+
+                // Should be passed in transcode arguments.
+                //$videoQuality = $_GET['videoQuality'];
+                //$videoResolution = $_GET['videoResolution'];
+                //$maxVideoBitrate = $_GET['maxVideoBitrate'];
+                //$subtitleSize = $_GET['subtitleSize'];
+                //$audioBoost = $_GET['audioBoost'];
+
+                $uriroot = 'http://127.0.0.1:32400/library/metadata/';
+                $id = substr($path, strpos($path, $uriroot) + strlen($uriroot));
+
+                if ($id) {
+                    if (empty($protocol) || $protocol == "hls") {
+                        $pl = new Stream_Playlist();
+
+                        $media = null;
+                        if (Plex_XML_Data::isSong($id)) {
+                            $media = array(
+                                'object_type' => 'song',
+                                'object_id' => Plex_XML_Data::getAmpacheId($id),
+                            );
+                        } elseif (Plex_XML_Data::isVideo($id)) {
+                            $media = array(
+                                'object_type' => 'video',
+                                'object_id' => Plex_XML_Data::getAmpacheId($id),
+                            );
+                        }
+
+                        if ($media != null) {
+                            $additional_params = '';
+                            if ($transcode_to == 'universal') {
+                                if (AmpConfig::get('encode_args_webm')) {
+                                    debug_event('plex', 'Universal transcoder requested but `webm` transcode settings not configured. This will probably failed.', 3);
+                                }
+
+                                $additional_params = '&transcode_to=webm';
+                            }
+                            $pl->add(array($media));
+                        }
+                        $pl->generate_playlist('m3u');
+                    }
+                }
+            }
+        }
     }
 
     public static function applications($params)
@@ -609,12 +685,36 @@ class Plex_Api
                 Plex_XML_Data::setSectionContent($r, $catalog);
             } elseif ($n == 2) {
                 $view = $params[1];
-                if ($view == "all") {
-                    Plex_XML_Data::setSectionAll($r, $catalog);
-                } elseif ($view == "albums") {
-                    Plex_XML_Data::setSectionAlbums($r, $catalog);
-                } elseif ($view == "recentlyadded") {
-                    Plex_XML_Data::setCustomSectionView($r, $catalog, Stats::get_recent('album', 25, $key));
+                $gtypes = $catalog->get_gather_types();
+                if ($gtypes[0] == 'music') {
+                    if ($view == "all") {
+                        Plex_XML_Data::setSectionAll_Artists($r, $catalog);
+                    } elseif ($view == "albums") {
+                        Plex_XML_Data::setSectionAlbums($r, $catalog);
+                    } elseif ($view == "recentlyadded") {
+                        Plex_XML_Data::setCustomSectionView($r, $catalog, Stats::get_recent('album', 25, $key));
+                    } elseif ($view == "genre") {
+                        $type = Plex_XML_Data::getAmpacheType($_GET['type']);
+                        Plex_XML_Data::setSectionTags($r, $catalog, $type);
+                    }
+                } elseif ($gtypes[0] == "tvshow") {
+                    if ($view == "all") {
+                        Plex_XML_Data::setSectionAll_TVShows($r, $catalog);
+                    } elseif ($view == "recentlyadded") {
+                        Plex_XML_Data::setCustomSectionView($r, $catalog, Stats::get_recent('tvshow_episode', 25, $key));
+                    } elseif ($view == "genre") {
+                        $type = Plex_XML_Data::getAmpacheType($_GET['type']);
+                        Plex_XML_Data::setSectionTags($r, $catalog, $type);
+                    }
+                } elseif ($gtypes[0] == "movie") {
+                    if ($view == "all") {
+                        Plex_XML_Data::setSectionAll_Movies($r, $catalog);
+                    } elseif ($view == "recentlyadded") {
+                        Plex_XML_Data::setCustomSectionView($r, $catalog, Stats::get_recent('movie', 25, $key));
+                    } elseif ($view == "genre") {
+                        $type = Plex_XML_Data::getAmpacheType($_GET['type']);
+                        Plex_XML_Data::setSectionTags($r, $catalog, $type);
+                    }
                 }
             }
         }
@@ -648,6 +748,24 @@ class Plex_Api
                     $song = new Song($id);
                     $song->format();
                     Plex_XML_Data::addSong($r, $song);
+                } elseif (Plex_XML_Data::isTVShow($key)) {
+                    $tvshow = new TVShow($id);
+                    $tvshow->format();
+                    Plex_XML_Data::addTVShow($r, $tvshow);
+                } elseif (Plex_XML_Data::isTVShowSeason($key)) {
+                    $season = new TVShow_Season($id);
+                    $season->format();
+                    Plex_XML_Data::addTVShowSeason($r, $season);
+                } elseif (Plex_XML_Data::isVideo($key)) {
+                    $video = Video::create_from_id($id);
+                    $video->format();
+
+                    $subtype = strtolower(get_class($video));
+                    if ($subtype == 'tvshow_episode') {
+                        Plex_XML_Data::addEpisode($r, $video, true);
+                    } elseif ($subtype == 'movie') {
+                        Plex_XML_Data::addMovie($r, $video, true);
+                    }
                 }
             } else {
                 $subact = $params[1];
@@ -660,8 +778,16 @@ class Plex_Api
                         $album = new Album($id);
                         $album->format();
                         Plex_XML_Data::setAlbumRoot($r, $album);
+                    } else if (Plex_XML_Data::isTVShow($key)) {
+                        $tvshow = new TVShow($id);
+                        $tvshow->format();
+                        Plex_XML_Data::setTVShowRoot($r, $tvshow);
+                    } else if (Plex_XML_Data::isTVShowSeason($key)) {
+                        $season = new TVShow_Season($id);
+                        $season->format();
+                        Plex_XML_Data::setTVShowSeasonRoot($r, $season);
                     }
-                } elseif ($subact == "thumb") {
+                } elseif ($subact == "thumb" || $subact == "art" || $subact == "background") {
                     if ($n == 3) {
                         // Ignore thumb id as we can only have 1 thumb
                         $art = null;
@@ -671,6 +797,12 @@ class Plex_Api
                             $art = new Art($id, "album");
                         } else if (Plex_XML_Data::isTrack($key)) {
                             $art = new Art($id, "song");
+                        } else if (Plex_XML_Data::isTVShow($key)) {
+                            $art = new Art($id, "tvshow");
+                        } else if (Plex_XML_Data::isTVShowSeason($key)) {
+                            $art = new Art($id, "tvshow_season");
+                        } else if (Plex_XML_Data::isVideo($key)) {
+                            $art = new Art($id, "video");
                         }
 
                         if ($art != null) {
@@ -722,17 +854,26 @@ class Plex_Api
     {
         $n = count($params);
 
-        if ($n == 2) {
+        if ($n > 0) {
             $key = $params[0];
-            $file = $params[1];
+            if ($n == 2) {
+                $file = $params[1];
 
-            $id = Plex_XML_Data::getAmpacheId($key);
-            $song = new Song($id);
-            if ($song->id) {
-                $url = Song::play_url($id, '', true);
-                self::stream_url($url);
-            } else {
-                self::createError(404);
+                $id = Plex_XML_Data::getAmpacheId($key);
+                $song = new Song($id);
+                if ($song->id) {
+                    $url = Song::play_url($id, '', true);
+                    self::stream_url($url);
+                } else {
+                    self::createError(404);
+                }
+            } elseif ($n == 1) {
+                if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+                    if (isset($_GET['subtitleStreamID'])) {
+                        $lang_code = dechex(hex2bin(substr($_GET['subtitleStreamID'], 0, 2)));
+                        $_SESSION['iframe']['subtitle'] = $lang_code;
+                    }
+                }
             }
         }
     }

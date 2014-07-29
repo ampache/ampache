@@ -431,6 +431,9 @@ class Update
         $update_string = '- Add MusicBrainz Album Release Group identifier.<br />';
         $version[] = array('version' => '370010','description' => $update_string);
 
+        $update_string = '- Add Prefix to TVShows and Movies.<br />';
+        $version[] = array('version' => '370011','description' => $update_string);
+
         return $version;
     }
 
@@ -2838,5 +2841,23 @@ class Update
     {
         $sql = "ALTER TABLE `album` ADD `mbid_group` varchar(36) CHARACTER SET utf8 NULL";
         return Dba::write($sql);
+    }
+
+    /**
+     * update_370011
+     *
+     * Add Prefix to TVShows and Movies
+     */
+    public static function update_370011()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `tvshow` ADD `prefix` varchar(32) CHARACTER SET utf8 NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `movie` ADD `prefix` varchar(32) CHARACTER SET utf8 NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
     }
 }

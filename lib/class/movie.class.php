@@ -23,9 +23,12 @@
 class Movie extends Video
 {
     public $original_name;
+    public $prefix;
     public $summary;
     public $year;
     public $video;
+
+    public $f_original_name;
 
     /**
      * Constructor
@@ -63,9 +66,13 @@ class Movie extends Video
      */
     public static function insert($data, $gtypes = array(), $options = array())
     {
-        $sql = "INSERT INTO `movie` (`id`,`original_name`,`summary`, `year`) " .
-            "VALUES (?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $data['original_name'], $data['summary'], $data['year']));
+        $trimmed = Catalog::trim_prefix(trim($data['original_name']));
+        $name = $trimmed['string'];
+        $prefix = $trimmed['prefix'];
+
+        $sql = "INSERT INTO `movie` (`id`, `original_name`, `prefix`, `summary`, `year`) " .
+            "VALUES (?, ?, ?, ?, ?)";
+        Dba::write($sql, array($data['id'], $name, $prefix, $data['summary'], $data['year']));
 
         return $data['id'];
 
@@ -79,8 +86,12 @@ class Movie extends Video
     {
         parent::update($data);
 
-        $sql = "UPDATE `movie` SET `original_name` = ?, `summary` = ?, `year` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['original_name'], $data['summary'], $data['year'], $this->id));
+        $trimmed = Catalog::trim_prefix(trim($data['original_name']));
+        $name = $trimmed['string'];
+        $prefix = $trimmed['prefix'];
+
+        $sql = "UPDATE `movie` SET `original_name` = ?, `prefix` = ?, `summary` = ?, `year` = ? WHERE `id` = ?";
+        Dba::write($sql, array($name, $prefix, $data['summary'], $data['year'], $this->id));
 
         return $this->id;
 
@@ -95,7 +106,8 @@ class Movie extends Video
     {
         parent::format();
 
-        $this->f_title = ($this->original_name ?: $this->f_title);
+        $this->f_original_name = trim($this->prefix . " " . $this->f_title);
+        $this->f_title = ($this->f_original_name ?: $this->f_title);
         $this->f_full_title = $this->f_title;
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
 

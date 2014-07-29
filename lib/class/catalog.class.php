@@ -673,7 +673,7 @@ abstract class Catalog extends database_object
         return $results;
     }
 
-    public function get_tvshows($catalogs = null)
+    public static function get_tvshows($catalogs = null)
     {
         if (!$catalogs) {
             $catalogs = self::get_catalogs();
@@ -1254,7 +1254,7 @@ abstract class Catalog extends database_object
 
     } // update_song_from_tags
 
-    public function get_gather_types($media_type)
+    public function get_gather_types($media_type = '')
     {
         $gtypes = $this->gather_types;
         if (empty($gtypes)) {
