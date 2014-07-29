@@ -6,3 +6,5 @@ play/.htaccess
 *.sln
 *.v11.suo
 *.suo
+logs
+/nbproject/private/

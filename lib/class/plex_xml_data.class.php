@@ -320,14 +320,14 @@ class Plex_XML_Data
         $xml->addAttribute('updatedAt', Catalog::getLastUpdate($catalogs));
         $xml->addAttribute('version', self::getPlexVersion());
 
-        $dir = $xml->addChild('Directory');
+        /*$dir = $xml->addChild('Directory');
         $dir->addAttribute('count', '1');
         $dir->addAttribute('key', 'channels');
         $dir->addAttribute('title', 'channels');
         $dir = $xml->addChild('Directory');
         $dir->addAttribute('count', '1');
         $dir->addAttribute('key', 'clients');
-        $dir->addAttribute('title', 'clients');
+        $dir->addAttribute('title', 'clients');*/
         $dir = $xml->addChild('Directory');
         $dir->addAttribute('count', '1');
         $dir->addAttribute('key', 'library');
@@ -336,10 +336,10 @@ class Plex_XML_Data
         $dir->addAttribute('count', '1');
         $dir->addAttribute('key', 'music');
         $dir->addAttribute('title', 'music');
-        $dir = $xml->addChild('Directory');
+        /*$dir = $xml->addChild('Directory');
         $dir->addAttribute('count', '1');
         $dir->addAttribute('key', 'playQueues');
-        $dir->addAttribute('title', 'playQueues');
+        $dir->addAttribute('title', 'playQueues');*/
         $dir = $xml->addChild('Directory');
         $dir->addAttribute('count', '1');
         $dir->addAttribute('key', 'player');

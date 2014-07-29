@@ -1008,7 +1008,7 @@ div.box.box_current_configuration {
     box-shadow: 0 0 0 0;
 }
 
-#.random_selection .box-bottom {
+.random_selection .box-bottom {
     clear: left;
 }
 
