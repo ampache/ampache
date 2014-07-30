@@ -603,7 +603,7 @@ class Art extends database_object
     public static function gc()
     {
         // iterate over our types and delete the images
-        foreach (array('album', 'artist') as $type) {
+        foreach (array('album', 'artist','tvshow','tvshow_season','video','user') as $type) {
             $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" .
                 $type . "` ON `" . $type . "`.`id`=" .
                 "`image`.`object_id` WHERE `object_type`='" .
@@ -878,6 +878,9 @@ class Art extends database_object
         if (!$limit) {
             $limit = 5;
         }
+
+        if ($this->type != 'album')
+            return array();
 
         $media = new Album($this->uid);
         $songs = $media->get_songs();
