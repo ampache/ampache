@@ -314,8 +314,8 @@ class Song extends database_object implements media, library_item
             return parent::get_from_cache('song_data',$id);
         }
 
-        $sql = "SELECT * FROM song_data WHERE `song_id`='$id'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT * FROM song_data WHERE `song_id` = ?";
+        $db_results = Dba::read($sql, array($id));
 
         $results = Dba::fetch_assoc($db_results);
 
