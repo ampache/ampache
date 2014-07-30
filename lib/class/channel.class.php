@@ -408,7 +408,7 @@ class Channel extends database_object implements media, library_item
                             fclose($this->transcoder['stderr']);
                         }
                         fclose($this->transcoder['handle']);
-                        proc_close($this->transcoder['process']);
+                        proc_terminate($this->transcoder['process']);
 
                         $this->media = null;
                         $this->transcoder = null;
