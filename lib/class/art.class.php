@@ -1000,6 +1000,25 @@ class Art extends database_object
             $limit = 5;
         }
 
+        if ($this->type == "video") {
+            $data = $this->gather_video_tags();
+        } elseif ($this->type == 'album') {
+            $data = $this->gather_song_tags($limit);
+        } else {
+            $data = array();
+        }
+
+        return $data;
+    }
+
+    public function gather_video_tags()
+    {
+        $video = new Video($this->uid);
+        return $this->gather_media_tags($video);
+    }
+
+    public function gather_song_tags($limit = 5)
+    {
         // We need the filenames
         $album = new Album($this->uid);
 
@@ -1010,41 +1029,58 @@ class Art extends database_object
         // Foreach songs in this album
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
-            // If we find a good one, stop looking
-            $getID3 = new getID3();
-            try { $id3 = $getID3->analyze($song->file); } catch (Exception $error) {
-                debug_event('getid3', $error->getMessage(), 1);
-            }
-
-            if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
-                $image = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
-                $data[] = array(
-                    'song' => $song->file,
-                    'raw' => $image['data'],
-                    'mime' => $image['mime'],
-                    'title' => 'ID3');
-            }
-
-            if (isset($id3['id3v2']['APIC'])) {
-                // Foreach in case they have more then one
-                foreach ($id3['id3v2']['APIC'] as $image) {
-                    $data[] = array(
-                        'song' => $song->file,
-                        'raw' => $image['data'],
-                        'mime' => $image['mime'],
-                        'title' => 'ID3');
-                }
-            }
+            $data = array_merge($data, $this->gather_media_tags($song));
 
             if ($limit && count($data) >= $limit) {
                 return array_slice($data, 0, $limit);
             }
+        }
 
-        } // end foreach
+        return $data;
+    }
+
+    protected function gather_media_tags($media)
+    {
+        $mtype = strtolower(get_class($media));
+        $data = array();
+        $getID3 = new getID3();
+        try { $id3 = $getID3->analyze($media->file); } catch (Exception $error) {
+            debug_event('getid3', $error->getMessage(), 1);
+        }
+
+        if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
+            $image = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
+            $data[] = array(
+                $mtype => $media->file,
+                'raw' => $image['data'],
+                'mime' => $image['mime'],
+                'title' => 'ID3');
+        }
+
+        if (isset($id3['id3v2']['APIC'])) {
+            // Foreach in case they have more then one
+            foreach ($id3['id3v2']['APIC'] as $image) {
+                $data[] = array(
+                    $mtype => $media->file,
+                    'raw' => $image['data'],
+                    'mime' => $image['mime'],
+                    'title' => 'ID3');
+            }
+        }
+
+        if (isset($id3['comments']['picture']['0'])) {
+            $image = $id3['comments']['picture']['0'];
+            $data[] = array(
+            $mtype => $media->file,
+            'raw' => $image['data'],
+            'mime' => $image['image_mime'],
+            'title' => 'ID3');
+            return $data;
+        }
 
         return $data;
 
-    } // gather_tags
+    }
 
     /**
      * gather_google
