@@ -234,6 +234,7 @@ class Plex_Api
     public static function apiOutput($string)
     {
         if ($_SERVER['REQUEST_METHOD'] != 'OPTIONS') {
+			ob_clean();
             ob_start('ob_gzhandler');
             echo $string;
             ob_end_flush();
@@ -532,6 +533,7 @@ class Plex_Api
                 if ($width && $height && $url) {
                     $request = Requests::get($url);
                     if ($request->status_code == 200) {
+						ob_clean();
                         $mime = $request->headers['content-type'];
                         self::setHeader($mime);
                         $art = new Art(0);
@@ -808,6 +810,7 @@ class Plex_Api
                         if ($art != null) {
                             $art->get_db();
 
+							ob_clean();
                             if (!isset($size)) {
                                 self::setHeader($art->raw_mime);
                                 echo $art->raw;

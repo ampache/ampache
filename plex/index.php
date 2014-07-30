@@ -28,6 +28,11 @@ if (!AmpConfig::get('plex_backend')) {
     exit;
 }
 
+if (function_exists('apache_setenv')) {
+   @apache_setenv('no-gzip', 1);
+}
+@ini_set('zlib.output_compression', 0);
+
 $action = $_GET['action'];
 
 $headers = apache_request_headers();
