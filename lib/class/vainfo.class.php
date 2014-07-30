@@ -691,6 +691,18 @@ class vainfo
                 case 'date':
                     $parsed['year'] = $data[0];
                 break;
+                case 'musicbrainz_artistid':
+                    $parsed['mb_artistid'] = $data[0];
+                    break;
+                case 'musicbrainz_albumid':
+                    $parsed['mb_albumid'] = $data[0];
+                    break;
+                case 'musicbrainz_releasegroupid':
+                    $parsed['mb_albumid_group'] = $data[0];
+                    break;
+                case 'musicbrainz_trackid':
+                    $parsed['mb_trackid'] = $data[0];
+                    break;
                 default:
                     $parsed[$tag] = $data[0];
                 break;
