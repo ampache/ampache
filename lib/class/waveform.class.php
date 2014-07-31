@@ -106,6 +106,7 @@ class Waveform
 
                                 fclose($fp);
                                 fclose($tfp);
+                                proc_terminate($transcoder['process']);
 
                                 $waveform = self::create_waveform($tmpfile);
                                 //$waveform = self::create_waveform("C:\\tmp\\test.wav");

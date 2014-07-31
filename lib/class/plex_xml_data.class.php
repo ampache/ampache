@@ -150,7 +150,7 @@ class Plex_XML_Data
 
     public static function getPlexVersion()
     {
-        return "0.9.8.18.290-11b7fdd";
+        return "0.9.9.13.525-197d5ed";
     }
 
     public static function getServerAddress()
