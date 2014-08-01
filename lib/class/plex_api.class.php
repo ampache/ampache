@@ -1165,4 +1165,51 @@ class Plex_Api
         Plex_XML_Data::setContainerSize($r);
         self::apiOutputXml($r->asXML());
     }
+
+    public static function playlists($params)
+    {
+        $n = count($params);
+
+        if ($n == 0 || ($n == 1 && $params[0] == "all")) {
+            $r = Plex_XML_Data::createContainer();
+            Plex_XML_Data::setPlaylists($r);
+            Plex_XML_Data::setContainerSize($r);
+            self::apiOutputXml($r->asXML());
+        } elseif ($n == 1) {
+            $plid = $params[0];
+            if (Plex_XML_Data::isPlaylist($plid)) {
+                $playlist = new Playlist(Plex_XML_Data::getAmpacheId($plid));
+                if ($playlist->id) {
+                    $r = Plex_XML_Data::createContainer();
+                    Plex_XML_Data::addPlaylist($r, $playlist);
+                    Plex_XML_Data::setContainerSize($r);
+                    self::apiOutputXml($r->asXML());
+                }
+            }
+        } elseif ($n == 2) {
+            $plid = $params[0];
+            if (Plex_XML_Data::isPlaylist($plid) && $params[1] == "items") {
+                $playlist = new Playlist(Plex_XML_Data::getAmpacheId($plid));
+                if ($playlist->id) {
+                    $r = Plex_XML_Data::createContainer();
+                    Plex_XML_Data::setPlaylistItems($r, $playlist);
+                    Plex_XML_Data::setContainerSize($r);
+                    self::apiOutputXml($r->asXML());
+                }
+            }
+        }
+    }
+
+    public static function playqueues($params)
+    {
+        $type = $_GET['type'];
+        $playlistID = $_GET['playlistID'];
+        $key = $_GET['key'];
+        $shuffle = $_GET['shuffle'];
+
+        $r = Plex_XML_Data::createContainer();
+        Plex_XML_Data::setPlayQueue($r, $type, $playlistID, $key, $shuffle);
+        Plex_XML_Data::setContainerSize($r);
+        self::apiOutputXml($r->asXML());
+    }
 }
