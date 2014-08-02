@@ -23,9 +23,6 @@
 $web_path = AmpConfig::get('web_path');
 ?>
 <?php
-$browse = new Browse();
-$browse->set_type($object_type);
-
 UI::show_box_top($artist->f_name, 'info-box');
 ?>
 <?php
@@ -123,10 +120,6 @@ if (AmpConfig::get('show_played_times')) {
                 <?php echo T_('Edit Artist'); ?>
             </a>
         <?php } ?>
-        <li>
-            <input type="checkbox" id="show_artist_artCB" <?php echo $string = Art::is_enabled() ? 'checked="checked"' : ''; ?>/> <?php echo T_('Show Art'); ?>
-            <?php echo Ajax::observe('show_artist_artCB', 'click', Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id,'')); ?>
-        </li>
     </ul>
 </div>
 <?php UI::show_box_bottom(); ?>
@@ -156,6 +149,8 @@ if (AmpConfig::get('show_played_times')) {
 
     foreach ($multi_object_ids as $key => $object_ids) {
         $title = (!empty($key)) ? ucwords($key) : '';
+        $browse = new Browse();
+        $browse->set_type($object_type);
         $browse->show_objects($object_ids, array('group_disks' => true, 'title' => $title));
         $browse->store();
     }
