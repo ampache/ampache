@@ -486,7 +486,7 @@ class User extends database_object
      * calls the mini ones does all the error checking and all that
      * good stuff
      */
-    public function update($data)
+    public function update(array $data)
     {
         if (empty($data['username'])) {
             Error::add('username', T_('Error Username Required'));

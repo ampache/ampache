@@ -93,6 +93,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     $songprops[gettext_noop('Album Artist')]   = $song->f_album_artist_link;
   }
   $songprops[gettext_noop('Album')]   = $song->f_album_link . ($song->year ? " (" . scrub_out($song->year). ")" : "");
+  $songprops[gettext_noop('Composer')]   = scrub_out($song->composer);
   $songprops[gettext_noop('Genre')]   = $song->f_tags;
   $songprops[gettext_noop('Length')]  = scrub_out($song->f_time);
   $songprops[gettext_noop('Comment')] = scrub_out($song->comment);
@@ -100,6 +101,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
   $songprops[gettext_noop('Song Language')]= scrub_out($song->language);
   $songprops[gettext_noop('Catalog Number')]   = scrub_out($song->catalog_number);
   $songprops[gettext_noop('Bitrate')]   = scrub_out($song->f_bitrate);
+  $songprops[gettext_noop('Channels')]   = scrub_out($song->channels);
   if (Access::check('interface','75')) {
     $songprops[gettext_noop('Filename')]   = scrub_out($song->file) . " " . $song->f_size;
   }

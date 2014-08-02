@@ -66,7 +66,7 @@ class TVShow_Episode extends Video
      * insert
      * Insert a new tv show episode and related entities.
      */
-    public static function insert($data, $gtypes = array(), $options = array())
+    public static function insert(array $data, $gtypes = array(), $options = array())
     {
         if (empty($data['tvshow'])) {
             $data['tvshow'] = T_('Unknown');
@@ -119,7 +119,7 @@ class TVShow_Episode extends Video
      * update
      * This takes a key'd array of data as input and updates a tv show episode entry
      */
-    public function update($data)
+    public function update(array $data)
     {
         parent::update($data);
         $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";

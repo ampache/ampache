@@ -65,6 +65,14 @@
                 <td><input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" /></td>
             </tr>
             <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Composer') ?></td>
+                <td><input type="text" name="composer" value="<?php echo scrub_out($libitem->composer); ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Label') ?></td>
+                <td><input type="text" name="label" value="<?php echo scrub_out($libitem->label); ?>" /></td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>
                 <td>
                     <input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" />
@@ -81,6 +89,7 @@
                 </td>
             </tr>
             <?php } ?>
+
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
         <input type="hidden" name="type" value="song_row" />

@@ -1033,7 +1033,7 @@ class Plex_XML_Data
        $xmedia->addAttribute('id', $mediaid);
        $xmedia->addAttribute('duration', $time);
        $xmedia->addAttribute('bitrate', intval($song->bitrate / 1000));
-       $xmedia->addAttribute('audioChannels', '');
+       $xmedia->addAttribute('audioChannels', $song->channels);
        // Type != Codec != Container, but that's how Ampache works today...
        $xmedia->addAttribute('audioCodec', $song->type);
        $xmedia->addAttribute('container', $song->type);
@@ -1108,7 +1108,7 @@ class Plex_XML_Data
        $xmedia->addAttribute('id', $id); // Same ID that video => OK?
        $xmedia->addAttribute('duration', $time);
        $xmedia->addAttribute('bitrate', intval($video->bitrate / 1000));
-       $xmedia->addAttribute('audioChannels', '');
+       $xmedia->addAttribute('audioChannels', $video->channels);
        // Type != Codec != Container, but that's how Ampache works today...
        $xmedia->addAttribute('audioCodec', $video->audio_codec);
        $xmedia->addAttribute('videoCodec', $video->video_codec);

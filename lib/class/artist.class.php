@@ -23,40 +23,112 @@
 class Artist extends database_object implements library_item
 {
     /* Variables from DB */
+
+    /**
+     *  @var int $id
+     */
     public $id;
+    /**
+     *  @var string $name
+     */
     public $name;
+    /**
+     *  @var string $summary
+     */
     public $summary;
+    /**
+     *  @var string $placeformed
+     */
     public $placeformed;
+    /**
+     *  @var int $yearformed
+     */
     public $yearformed;
+    /**
+     *  @var int $last_update
+     */
     public $last_update;
+    /**
+     *  @var int $songs
+     */
     public $songs;
+    /**
+     *  @var int $albums
+     */
     public $albums;
+    /**
+     *  @var string $prefix
+     */
     public $prefix;
+    /**
+     *  @var string $mbid
+     */
     public $mbid; // MusicBrainz ID
+    /**
+     *  @var int $catalog_id
+     */
     public $catalog_id;
+    /**
+     *  @var int $time
+     */
     public $time;
+    /**
+     *  @var int $user
+     */
     public $user;
 
+    /**
+     *  @var array $tags
+     */
     public $tags;
+    /**
+     *  @var string $f_tags
+     */
     public $f_tags;
+    /**
+     *  @var int $object_cnt
+     */
     public $object_cnt;
+    /**
+     *  @var string $f_name
+     */
     public $f_name;
+    /**
+     *  @var string $f_full_name
+     */
     public $f_full_name;
+    /**
+     *  @var string $f_link
+     */
     public $f_link;
+    /**
+     *  @var string $f_name_link
+     */
     public $f_name_link;
+    /**
+     *  @var string $f_time
+     */
     public $f_time;
 
 
     // Constructed vars
+    /**
+     *  @var boolean $_fake
+     */
     public $_fake = false; // Set if construct_from_array() used
+    /**
+     *  @var array $_mapcache
+     */
     private static $_mapcache = array();
 
     /**
      * Artist
      * Artist class, for modifing a artist
      * Takes the ID of the artist and pulls the info from the db
+     * @param int|null $id
+     * @param int $catalog_init
      */
-    public function __construct($id='',$catalog_init=0)
+    public function __construct($id=null,$catalog_init=0)
     {
         /* If they failed to pass in an id, just run for it */
         if (!$id) { return false; }
@@ -77,6 +149,8 @@ class Artist extends database_object implements library_item
      * construct_from_array
      * This is used by the metadata class specifically but fills out a Artist object
      * based on a key'd array, it sets $_fake to true
+     * @param array $data
+     * @return Artist
      */
     public static function construct_from_array($data)
     {
@@ -108,6 +182,9 @@ class Artist extends database_object implements library_item
 
     /**
      * this attempts to build a cache of the data from the passed albums all in one query
+     * @param int[] $ids
+     * @param boolean $extra
+     * @return boolean
      */
     public static function build_cache($ids,$extra=false)
     {
@@ -145,6 +222,8 @@ class Artist extends database_object implements library_item
     /**
      * get_from_name
      * This gets an artist object based on the artist name
+     * @param string $name
+     * @return Artist
      */
     public static function get_from_name($name)
     {
@@ -163,13 +242,17 @@ class Artist extends database_object implements library_item
      * get_albums
      * gets the album ids that this artist is a part
      * of
+     * @param int|null $catalog
+     * @param boolean $ignoreAlbumGroups
+     * @param boolean $group_release_type
+     * @return int[]
      */
-    public function get_albums($catalog = null, $ignoreAlbumGroups = false)
+    public function get_albums($catalog = null, $ignoreAlbumGroups = false, $group_release_type = false)
     {
         $catalog_where = "";
         $catalog_join = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
         if ($catalog) {
-            $catalog_where .= " AND `catalog`.`id` = '$catalog'";
+            $catalog_where .= " AND `catalog`.`id` = '" . $catalog . "'";
         }
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= " AND `catalog`.`enabled` = '1'";
@@ -195,14 +278,23 @@ class Artist extends database_object implements library_item
         }
         $sql_group = "COALESCE($sql_group_type, `album`.`id`)";
 
-        $sql = "SELECT `album`.`id` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+        $sql = "SELECT `album`.`id`, `album`.`release_type` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
             "WHERE (`song`.`artist`='$this->id' OR `song`.`album_artist`='$this->id') $catalog_where GROUP BY $sql_group ORDER BY $sql_sort";
 
         debug_event("Artist", "$sql", "6");
         $db_results = Dba::read($sql);
 
         while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['id'];
+            if ($group_release_type) {
+                // We assume undefined release type is album
+                $rtype = $r['release_type'] ?: 'album';
+                if (!isset($results[$rtype])) {
+                    $results[$rtype] = array();
+                }
+                $results[$rtype][] = $r['id'];
+            } else {
+                $results[] = $r['id'];
+            }
         }
 
         return $results;
@@ -212,6 +304,7 @@ class Artist extends database_object implements library_item
     /**
      * get_songs
      * gets the songs for this artist
+     * @return int[]
      */
     public function get_songs()
     {
@@ -238,6 +331,7 @@ class Artist extends database_object implements library_item
     /**
      * get_random_songs
      * Gets the songs from this artist in a random order
+     * @return int[]
      */
     public function get_random_songs()
     {
@@ -265,6 +359,8 @@ class Artist extends database_object implements library_item
     /**
      * _get_extra info
      * This returns the extra information for the artist, this means totals etc
+     * @param int $catalog
+     * @return array
      */
     private function _get_extra_info($catalog=0)
     {
@@ -307,6 +403,7 @@ class Artist extends database_object implements library_item
      * information and reformats the relevent values
      * so they can be displayed in a table for example
      * it changes the title into a full link.
+     * @return boolean
       */
     public function format()
     {
@@ -345,6 +442,10 @@ class Artist extends database_object implements library_item
 
     } // format
 
+    /**
+     * Get item keywords for metadata searches.
+     * @return array
+     */
     public function get_keywords()
     {
         $keywords = array();
@@ -358,16 +459,28 @@ class Artist extends database_object implements library_item
         return $keywords;
     }
 
+    /**
+     * Get item fullname.
+     * @return string
+     */
     public function get_fullname()
     {
         return $this->f_full_name;
     }
 
+    /**
+     * Get parent item description.
+     * @return array|null
+     */
     public function get_parent()
     {
         return null;
     }
 
+    /**
+     * Get item childrens.
+     * @return array
+     */
     public function get_childrens()
     {
         $medias = array();
@@ -381,6 +494,11 @@ class Artist extends database_object implements library_item
         return array('album' => $medias);
     }
 
+    /**
+     * Get all childrens and sub-childrens medias.
+     * @param string $filter_type
+     * @return array
+     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -396,11 +514,19 @@ class Artist extends database_object implements library_item
         return $medias;
     }
 
+    /**
+     * Get item's owner.
+     * @return int|null
+     */
     public function get_user_owner()
     {
         return $this->user;
     }
 
+    /**
+     * Get default art kind for this item.
+     * @return string
+     */
     public function get_default_art_kind()
     {
         return 'default';
@@ -410,6 +536,10 @@ class Artist extends database_object implements library_item
      * check
      *
      * Checks for an existing artist; if none exists, insert one.
+     * @param string $name
+     * @param string $mbid
+     * @param boolean $readonly
+     * @return int|null
      */
     public static function check($name, $mbid = null, $readonly = false)
     {
@@ -495,8 +625,10 @@ class Artist extends database_object implements library_item
     /**
      * update
      * This takes a key'd array of data and updates the current artist
+     * @param array $data
+     * @return int
      */
-    public function update($data)
+    public function update(array $data)
     {
         // Save our current ID
         $current_id = $this->id;
@@ -554,6 +686,9 @@ class Artist extends database_object implements library_item
      * update_tags
      *
      * Update tags of artists and/or albums
+     * @param string $tags_comma
+     * @param boolean $override_childs
+     * @param int|null $current_id
      */
     public function update_tags($tags_comma, $override_childs, $current_id = null)
     {
@@ -572,12 +707,24 @@ class Artist extends database_object implements library_item
         }
     }
 
+    /**
+     * Update artist information.
+     * @param string $summary
+     * @param string $placeformed
+     * @param int $yearformed
+     * @return boolean
+     */
     public function update_artist_info($summary, $placeformed, $yearformed)
     {
         $sql = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ? WHERE `id` = ?";
         return Dba::write($sql, array($summary, $placeformed, $yearformed, time(), $this->id));
     }
 
+    /**
+     * Update artist associated user.
+     * @param int $user
+     * @return boolean
+     */
     public function update_artist_user($user)
     {
         $sql = "UPDATE `artist` SET `user` = ? WHERE `id` = ?";

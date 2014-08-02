@@ -20,3 +20,4 @@
  *
  */
 ?>
+<td class="cel_year"><?php echo $libitem->year; ?></td>

@@ -63,7 +63,7 @@ class Clip extends Video
      * create
      * This takes a key'd array of data as input and inserts a new clip entry, it returns the record id
      */
-    public static function insert($data, $gtypes = array(), $options = array())
+    public static function insert(array $data, $gtypes = array(), $options = array())
     {
         $sql = "INSERT INTO `clip` (`id`,`artist`,`song`) " .
             "VALUES (?, ?, ?)";
@@ -77,7 +77,7 @@ class Clip extends Video
      * update
      * This takes a key'd array of data as input and updates a clip entry
      */
-    public function update($data)
+    public function update(array $data)
     {
         $sql = "UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?";
         Dba::write($sql, array($data['artist'], $data['song'], $this->id));

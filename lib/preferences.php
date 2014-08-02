@@ -184,6 +184,7 @@ function create_preference_input($name,$value)
         case 'upload_allow_edit':
         case 'daap_backend':
         case 'upnp_backend':
+        case 'album_release_type':
             $is_true = '';
             $is_false = '';
             if ($value == '1') {

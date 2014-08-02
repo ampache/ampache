@@ -22,6 +22,11 @@
 
 class WebPlayer
 {
+    /**
+     * Check if the playlist is a radio playlist.
+     * @param \Playlist $playlist
+     * @return boolean
+     */
     public static function is_playlist_radio($playlist)
     {
         $radios = array();
@@ -35,11 +40,21 @@ class WebPlayer
         return (count($playlist->urls) == 1 && count($radios) > 0 && AmpConfig::get('webplayer_flash'));
     }
 
+    /**
+     * Check if the playlist is a video playlist.
+     * @param \Playlist $playlist
+     * @return boolean
+     */
     public static function is_playlist_video($playlist)
     {
         return (count($playlist->urls) > 0 && $playlist->urls[0]->type == "video");
     }
 
+    /**
+     * Get browser information.
+     * @param string $agent
+     * @return array
+     */
     public static function browser_info($agent=null)
     {
         // Declare known browsers to look for
@@ -62,6 +77,12 @@ class WebPlayer
 
     }
 
+    /**
+     * Get types information for an item.
+     * @param \playable_item $item
+     * @param string $force_type
+     * @return array
+     */
     protected static function get_types($item, $force_type='')
     {
         $types = array('real' => 'mp3', 'player' => '');
@@ -157,6 +178,11 @@ class WebPlayer
         return $types;
     }
 
+    /**
+     * Get all supplied types for a playlist.
+     * @param \Playlist $playlist
+     * @return array
+     */
     public static function get_supplied_types($playlist)
     {
         $jptypes = array();
@@ -174,6 +200,12 @@ class WebPlayer
         return $jptypes;
     }
 
+    /**
+     * Get add_media javascript.
+     * @param \Playlist $playlist
+     * @param string $callback_container
+     * @return string
+     */
     public static function add_media_js($playlist, $callback_container='')
     {
         $addjs = "";
@@ -189,6 +221,12 @@ class WebPlayer
         return $addjs;
     }
 
+    /**
+     * Get media javascript parameters.
+     * @param \playable_item $item
+     * @param string $force_type
+     * @return string
+     */
     public static function get_media_js_param($item, $force_type='')
     {
         $js = array();

@@ -272,7 +272,7 @@ class Playlist extends playlist_object
       * update
      * This function takes a key'd array of data and runs updates
      */
-    public function update($data)
+    public function update(array $data)
     {
         if ($data['name'] != $this->name) {
             $this->update_name($data['name']);

@@ -124,7 +124,7 @@ class Live_Stream extends database_object implements media, library_item
      * it depends on a ID element to determine which radio element it
      * should be updating
      */
-    public function update($data)
+    public function update(array $data)
     {
         if (!$data['name']) {
             Error::add('general', T_('Name Required'));
@@ -154,7 +154,7 @@ class Live_Stream extends database_object implements media, library_item
      * This is a static function that takes a key'd array for input
      * and if everything is good creates the object.
      */
-    public static function create($data)
+    public static function create(array $data)
     {
         // Make sure we've got a name
         if (!strlen($data['name'])) {

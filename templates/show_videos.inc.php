@@ -36,6 +36,7 @@ if (isset($video_type) && $video_type != 'video') {
     require AmpConfig::get('prefix') . '/templates/show_partial_' . $video_type . 's.inc.php';
 }
 ?>
+            <th class="cel_release_date optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'),'sort_video_release_date'); ?></th>
             <th class="cel_codec optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'),'sort_video_codec'); ?></th>
             <th class="cel_resolution optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'),'sort_video_rez'); ?></th>
             <th class="cel_length optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=length', T_('Time'),'sort_video_length'); ?></th>
@@ -82,15 +83,16 @@ if (isset($video_type) && $video_type != 'video') {
     require AmpConfig::get('prefix') . '/templates/show_partial_' . $video_type . 's.inc.php';
 }
 ?>
+            <th class="cel_release_date"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'),'sort_video_release_date'); ?></th>
             <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'),'sort_video_codec'); ?></th>
             <th class="cel_resolution"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'),'sort_video_rez'); ?></th>
             <th class="cel_length"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=length', T_('Time'),'sort_video_length'); ?></th>
             <th class="cel_tags"><?php echo T_('Tags'); ?></th>
             <?php if (AmpConfig::get('ratings')) { ?>
-                <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
+                <th class="cel_rating"><?php echo T_('Rating'); ?></th>
             <?php } ?>
             <?php if (AmpConfig::get('userflags')) { ?>
-                <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+                <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
             <?php } ?>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
         </tr>

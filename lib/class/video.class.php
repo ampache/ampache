@@ -22,40 +22,169 @@
 
 class Video extends database_object implements media, library_item
 {
+    /**
+     * @var int $id
+     */
     public $id;
+    /**
+     * @var string $title
+     */
     public $title;
+    /**
+     * @var boolean $played
+     */
     public $played;
+    /**
+     * @var boolean $enabled
+     */
     public $enabled;
+    /**
+     * @var string $file
+     */
     public $file;
+    /**
+     * @var int $size
+     */
     public $size;
+    /**
+     * @var string $video_codec
+     */
     public $video_codec;
+    /**
+     * @var string $audio_codec
+     */
     public $audio_codec;
+    /**
+     * @var int $resolution_x
+     */
     public $resolution_x;
+    /**
+     * @var int $resolution_y
+     */
     public $resolution_y;
+    /**
+     * @var int $time
+     */
     public $time;
+    /**
+     * @var string $mime
+     */
     public $mime;
+    /**
+     * @var int $release_date
+     */
     public $release_date;
+    /**
+     * @var int $catalog
+     */
     public $catalog;
+    /**
+     * @var int $bitrate
+     */
+    public $bitrate;
+    /**
+     * @var string $mode
+     */
+    public $mode;
+    /**
+     * @var int $channels
+     */
+    public $channels;
+    /**
+     * @var int $display_x
+     */
+    public $display_x;
+    /**
+     * @var int $display_x
+     */
+    public $display_y;
+    /**
+     * @var float $frame_rate
+     */
+    public $frame_rate;
+    /**
+     * @var int $video_bitrate
+     */
+    public $video_bitrate;
 
+    /**
+     * @var string $type
+     */
     public $type;
+    /**
+     * @var array $tags
+     */
     public $tags;
+    /**
+     * @var string $f_title
+     */
     public $f_title;
+    /**
+     * @var string $f_full_title
+     */
     public $f_full_title;
+    /**
+     * @var string $f_time
+     */
     public $f_time;
+    /**
+     * @var string $f_time_h
+     */
     public $f_time_h;
+    /**
+     * @var string $link
+     */
     public $link;
+    /**
+     * @var string $f_link
+     */
     public $f_link;
+    /**
+     * @var string $f_codec
+     */
     public $f_codec;
+    /**
+     * @var string $f_resolution
+     */
     public $f_resolution;
+    /**
+     * @var string $f_display
+     */
+    public $f_display;
+    /**
+     * @var string $f_bitrate
+     */
+    public $f_bitrate;
+    /**
+     * @var string $f_video_bitrate
+     */
+    public $f_video_bitrate;
+    /**
+     * @var string $f_frame_rate
+     */
+    public $f_frame_rate;
+    /**
+     * @var string $f_tags
+     */
     public $f_tags;
+    /**
+     * @var string $f_length
+     */
     public $f_length;
+    /**
+     * @var string $f_file
+     */
     public $f_file;
+    /**
+     * @var string $f_release_date
+     */
     public $f_release_date;
 
     /**
      * Constructor
      * This pulls the information from the database and returns
      * a constructed object
+     * @param int $id
      */
     public function __construct($id)
     {
@@ -72,6 +201,11 @@ class Video extends database_object implements media, library_item
 
     } // Constructor
 
+    /**
+     * Create a video strongly typed object from its id.
+     * @param int $video_id
+     * @return \Video
+     */
     public static function create_from_id($video_id)
     {
         $dtypes = self::get_derived_types();
@@ -90,6 +224,7 @@ class Video extends database_object implements media, library_item
     /**
      * build_cache
      * Build a cache based on the array of ids passed, saves lots of little queries
+     * @param int[] $ids
      */
     public static function build_cache($ids=array())
     {
@@ -117,7 +252,19 @@ class Video extends database_object implements media, library_item
         $this->link = AmpConfig::get('web_path') . "/video.php?action=show_video&video_id=" . $this->id;
         $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_title) . "\"> " . scrub_out($this->f_title) . "</a>";
         $this->f_codec = $this->video_codec . ' / ' . $this->audio_codec;
-        $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
+        if ($this->resolution_x || $this->resolution_y) {
+            $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
+        }
+        if ($this->display_x || $this->display_y) {
+            $this->f_display = $this->display_x . 'x' . $this->display_y;
+        }
+
+        // Format the Bitrate
+        $this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);
+        $this->f_video_bitrate = intval($this->video_bitrate/1000);
+        if ($this->frame_rate) {
+            $this->f_frame_rate = $this->frame_rate . ' fps';
+        }
 
         // Format the Time
         $min = floor($this->time/60);
@@ -139,6 +286,10 @@ class Video extends database_object implements media, library_item
 
     } // format
 
+    /**
+     * Get item keywords for metadata searches.
+     * @return array
+     */
     public function get_keywords()
     {
         $keywords = array();
@@ -149,21 +300,38 @@ class Video extends database_object implements media, library_item
         return $keywords;
     }
 
+    /**
+     * Get item fullname.
+     * @return string
+     */
     public function get_fullname()
     {
         return $this->f_title;
     }
 
+    /**
+     * Get parent item description.
+     * @return array|null
+     */
     public function get_parent()
     {
         return null;
     }
 
+    /**
+     * Get item childrens.
+     * @return array
+     */
     public function get_childrens()
     {
         return array();
     }
 
+    /**
+     * Get all childrens and sub-childrens medias.
+     * @param string $filter_type
+     * @return array
+     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -176,11 +344,19 @@ class Video extends database_object implements media, library_item
         return $medias;
     }
 
+    /**
+     * Get item's owner.
+     * @return int|null
+     */
     public function get_user_owner()
     {
         return null;
     }
 
+    /**
+     * Get default art kind for this item.
+     * @return string
+     */
     public function get_default_art_kind()
     {
         return 'preview';
@@ -201,6 +377,10 @@ class Video extends database_object implements media, library_item
         Clip::gc();
     }
 
+    /**
+     * Get stream types.
+     * @return array
+     */
     public function get_stream_types()
     {
         return Song::get_stream_types_for_type($this->type);
@@ -210,12 +390,20 @@ class Video extends database_object implements media, library_item
      * play_url
      * This returns a "PLAY" url for the video in question here, this currently feels a little
      * like a hack, might need to adjust it in the future
+     * @param int $oid
+     * @param string $additional_params
+     * @param boolean $local
+     * @return string
      */
     public static function play_url($oid, $additional_params='', $local=false)
     {
         return Song::generic_play_url('video', $oid, $additional_params, $local);
     }
 
+    /**
+     * Get stream name.
+     * @return string
+     */
     public function get_stream_name()
     {
         return $this->title;
@@ -223,17 +411,29 @@ class Video extends database_object implements media, library_item
 
     /**
      * get_transcode_settings
+     * @param string $target
+     * @param array $options
+     * @return array
      */
     public function get_transcode_settings($target = null, $options=array())
     {
         return Song::get_transcode_settings_for_media($this->type, $target, 'video', $options);
     }
 
+    /**
+     * Get derived video types.
+     * @return array
+     */
     private static function get_derived_types()
     {
         return array('TVShow_Episode', 'Movie', 'Clip', 'Personal_Video');
     }
 
+    /**
+     * Validate video type.
+     * @param string $type
+     * @return string
+     */
     public static function validate_type($type)
     {
         $dtypes = self::get_derived_types();
@@ -249,6 +449,8 @@ class Video extends database_object implements media, library_item
      * type_to_mime
      *
      * Returns the mime type for the specified file extension/type
+     * @param string $type
+     * @return string
      */
     public static function type_to_mime($type)
     {
@@ -286,16 +488,34 @@ class Video extends database_object implements media, library_item
         }
     }
 
-    public static function insert($data, $gtypes = array(), $options = array())
+    /**
+     * Insert new video.
+     * @param array $data
+     * @param array $gtypes
+     * @param array $options
+     * @return int
+     */
+    public static function insert(array $data, $gtypes = array(), $options = array())
     {
+        $bitrate        = intval($data['bitrate']);
+        $mode           = $data['mode'];
         $rezx           = intval($data['resolution_x']);
         $rezy           = intval($data['resolution_y']);
         $release_date   = intval($data['release_date']);
+        // No release date, then release date = production year
+        if (!$release_date && $data['year']) {
+            $release_date = strtotime($data['year'] . '01-01');
+        }
         $tags           = $data['genre'];
+        $channels       = intval($data['channels']);
+        $disx           = intval($data['display_x']);
+        $disy           = intval($data['display_y']);
+        $frame_rate     = floatval($data['frame_rate']);
+        $video_bitrate  = intval($data['video_bitrate']);
 
-        $sql = "INSERT INTO `video` (`file`,`catalog`,`title`,`video_codec`,`audio_codec`,`resolution_x`,`resolution_y`,`size`,`time`,`mime`,`release_date`,`addition_time`) " .
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $params = array($data['file'], $data['catalog'], $data['title'], $data['video_codec'], $data['audio_codec'], $rezx, $rezy, $data['size'], $data['time'], $data['mime'], $release_date, time());
+        $sql = "INSERT INTO `video` (`file`,`catalog`,`title`,`video_codec`,`audio_codec`,`resolution_x`,`resolution_y`,`size`,`time`,`mime`,`release_date`,`addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) " .
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $params = array($data['file'], $data['catalog'], $data['title'], $data['video_codec'], $data['audio_codec'], $rezx, $rezy, $data['size'], $data['time'], $data['mime'], $release_date, time(), $bitrate, $mode, $channels, $disx, $disy, $frame_rate, $video_bitrate);
         Dba::write($sql, $params);
         $vid = Dba::insert_id();
 
@@ -317,7 +537,14 @@ class Video extends database_object implements media, library_item
         return self::insert_video_type($data, $gtypes, $options);
     }
 
-    private static function insert_video_type($data, $gtypes, $options = array())
+    /**
+     * Insert video for derived type.
+     * @param array $data
+     * @param array $gtypes
+     * @param array $options
+     * @return int
+     */
+    private static function insert_video_type(array $data, $gtypes, $options = array())
     {
         if (count($gtypes) > 0) {
             $gtype = $gtypes[0];
@@ -342,11 +569,13 @@ class Video extends database_object implements media, library_item
     /**
      * update
      * This takes a key'd array of data as input and updates a video entry
+     * @param array $data
+     * @return int
      */
-    public function update($data)
+    public function update(array $data)
     {
-        $f_release_date = $data['f_release_date'];
-        $release_date = date_parse_from_format('Y-m-d', $f_release_date);
+        $f_release_date = $data['release_date'];
+        $release_date = strtotime($f_release_date);
 
         $sql = "UPDATE `video` SET `title` = ?, `release_date` = ? WHERE `id` = ?";
         Dba::write($sql, array($data['title'], $release_date, $this->id));
@@ -355,6 +584,10 @@ class Video extends database_object implements media, library_item
 
     } // update
 
+    /**
+     * Get release item art.
+     * @return array
+     */
     public function get_release_item_art()
     {
         return array('object_type' => 'video',
@@ -365,6 +598,8 @@ class Video extends database_object implements media, library_item
     /*
      * generate_preview
      * Generate video preview image from a video file
+     * @param int $video_id
+     * @param boolean $overwrite
      */
     public static function generate_preview($video_id, $overwrite = false)
     {
@@ -380,6 +615,8 @@ class Video extends database_object implements media, library_item
      * get_random
      *
      * This returns a number of random videos.
+     * @param int $count
+     * @return int[]
      */
     public static function get_random($count = 1)
     {
@@ -411,6 +648,9 @@ class Video extends database_object implements media, library_item
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
+     * @param int $user
+     * @param string $agent
+     * @return boolean
      */
     public function set_played($user, $agent)
     {
@@ -430,6 +670,7 @@ class Video extends database_object implements media, library_item
     /**
      * get_subtitles
      * Get existing subtitles list for this video
+     * @return array
      */
     public function get_subtitles()
     {
@@ -457,6 +698,11 @@ class Video extends database_object implements media, library_item
         return $subtitles;
     }
 
+    /**
+     * Get language name from code.
+     * @param string $code
+     * @return string
+     */
     protected function get_language_name($code)
     {
         $languageCodes = array(
@@ -649,6 +895,11 @@ class Video extends database_object implements media, library_item
         return $languageCodes[$code];
     }
 
+    /**
+     * Get subtitle file from language code.
+     * @param string $lang_code
+     * @return string
+     */
     public function get_subtitle_file($lang_code)
     {
         $subtitle = '';
@@ -667,8 +918,10 @@ class Video extends database_object implements media, library_item
     /**
      * update_played
      * sets the played flag
+     * @param boolean $new_played
+     * @param int $song_id
      */
-    public static function update_played($new_played,$song_id)
+    public static function update_played($new_played, $song_id)
     {
         self::_update_item('played',$new_played,$song_id,'25');
 
@@ -680,6 +933,11 @@ class Video extends database_object implements media, library_item
      * It takes a field, value video id and level. first and foremost it checks the level
      * against $GLOBALS['user'] to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
+     * @param string $field
+     * @param mixed $value
+     * @param int $song_id
+     * @param int $level
+     * @return boolean
      */
     private static function _update_item($field, $value, $song_id, $level)
     {

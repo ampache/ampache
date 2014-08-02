@@ -301,7 +301,7 @@ class TVShow extends database_object implements library_item
      * update
      * This takes a key'd array of data and updates the current tv show
      */
-    public function update($data)
+    public function update(array $data)
     {
         // Save our current ID
         $current_id = $this->id;

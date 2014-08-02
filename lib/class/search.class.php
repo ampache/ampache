@@ -225,6 +225,13 @@ class Search extends playlist_object
             );
 
             $this->types[] = array(
+                'name'   => 'composer',
+                'label'  => T_('Composer'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+
+            $this->types[] = array(
                 'name'   => 'comment',
                 'label'  =>  T_('Comment'),
                 'type'   => 'text',
@@ -779,7 +786,7 @@ class Search extends playlist_object
      *
      * This function updates the saved version with the current settings.
      */
-    public function update($data = null)
+    public function update(array $data = null)
     {
         if ($data && is_array($data)) {
             $this->name = $data['name'];
@@ -1051,6 +1058,9 @@ class Search extends playlist_object
                 case 'artist':
                     $where[] = "`artist`.`name` $sql_match_operator '$input'";
                     $join['artist'] = true;
+                break;
+                case 'composer':
+                    $where[] = "`song`.`composer` $sql_match_operator '$input'";
                 break;
                 case 'time':
                     $input = $input * 60;

@@ -183,7 +183,7 @@ class Tag extends database_object implements library_item
      * update
      * Update the name of the tag
      */
-    public function update($data)
+    public function update(array $data)
     {
         //debug_event('tag.class', 'Updating tag {'.$this->id.'} with name {'.$name.'}...', '5');
         if (!strlen($data['name'])) { return false; }

@@ -32,22 +32,52 @@ use MusicBrainz\Clients\RequestsMbClient;
  */
 class Art extends database_object
 {
+    /**
+     *  @var int $id
+     */
     public $id;
+    /**
+     *  @var string $type
+     */
     public $type;
+    /**
+     *  @var int $uid
+     */
     public $uid; // UID of the object not ID because it's not the ART.ID
+    /**
+     *  @var binary|string $raw
+     */
     public $raw; // Raw art data
+    /**
+     *  @var string $raw_mime
+     */
     public $raw_mime;
+    /**
+     *  @var string $kind
+     */
     public $kind;
 
+    /**
+     *  @var binary|string $thumb
+     */
     public $thumb;
+    /**
+     *  @var string $thumb_mime
+     */
     public $thumb_mime;
 
+    /**
+     *  @var bool $enabled
+     */
     private static $enabled;
 
     /**
      * Constructor
      * Art constructor, takes the UID of the object and the
      * object type.
+     * @param int $uid
+     * @param string $type
+     * @param string $kind
      */
     public function __construct($uid, $type = 'album', $kind = 'default')
     {
@@ -64,6 +94,8 @@ class Art extends database_object
      * This attempts to reduce # of queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point
+     * @param int[] $object_ids
+     * @return bool
      */
     public static function build_cache($object_ids)
     {
@@ -102,6 +134,7 @@ class Art extends database_object
     /**
      * is_enabled
      * Checks whether the user currently wants art
+     * @return boolean
      */
     public static function is_enabled()
     {
@@ -115,6 +148,7 @@ class Art extends database_object
     /**
      * set_enabled
      * Changes the value of enabled
+     * @param bool|null $value
      */
     public static function set_enabled($value = null)
     {
@@ -131,6 +165,8 @@ class Art extends database_object
     /**
      * extension
      * This returns the file extension for the currently loaded art
+     * @param string $mime
+     * @return string
      */
     public static function extension($mime)
     {
@@ -146,6 +182,8 @@ class Art extends database_object
     /**
      * test_image
      * Runs some sanity checks on the putative image
+     * @param binary|string $source
+     * @return boolean
      */
     public static function test_image($source)
     {
@@ -175,6 +213,8 @@ class Art extends database_object
      * look in the database and will return the thumb if it
      * exists, if it doesn't depending on settings it will try
      * to create it.
+     * @param boolean $raw
+     * @return binary|string
      */
     public function get($raw=false)
     {
@@ -197,6 +237,7 @@ class Art extends database_object
      * This pulls the information out from the database, depending
      * on if we want to resize and if there is not a thumbnail go
      * ahead and try to resize
+     * @return boolean
      */
     public function get_db()
     {
@@ -234,6 +275,13 @@ class Art extends database_object
 
     } // get_db
 
+    /**
+     * This check if an object has an associated image in db.
+     * @param int $object_id
+     * @param string $object_type
+     * @param string $kind
+     * @return boolean
+     */
     public static function has_db($object_id, $object_type, $kind = 'default')
     {
         $sql = "SELECT COUNT(`id`) AS `nb_img` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
@@ -246,6 +294,10 @@ class Art extends database_object
         return ($nb_img > 0);
     }
 
+    /**
+     * This insert art from url.
+     * @param string $url
+     */
     public function insert_url($url)
     {
         debug_event('art', 'Insert art from url ' . $url, '5');
@@ -259,6 +311,9 @@ class Art extends database_object
      * insert
      * This takes the string representation of an image and inserts it into
      * the database. You must also pass the mime type.
+     * @param binary|string $source
+     * @param string $mime
+     * @return boolean
      */
     public function insert($source, $mime)
     {
@@ -324,6 +379,9 @@ class Art extends database_object
     /**
      * save_thumb
      * This saves the thumbnail that we're passed
+     * @param binary|string $source
+     * @param string $mime
+     * @param string $size
      */
     public function save_thumb($source, $mime, $size)
     {
@@ -344,6 +402,8 @@ class Art extends database_object
      * get_thumb
      * Returns the specified resized image.  If the requested size doesn't
      * already exist, create and cache it.
+     * @param string $size
+     * @return binary|string
      */
     public function get_thumb($size)
     {
@@ -372,6 +432,10 @@ class Art extends database_object
      * Automatically resizes the image for thumbnail viewing.
      * Only works on gif/jpg/png/bmp. Fails if PHP-GD isn't available
      * or lacks support for the requested image type.
+     * @param binary|string $image
+     * @param string $size
+     * @param string $mime
+     * @return binary|string
      */
     public function generate_thumb($image,$size,$mime)
     {
@@ -474,6 +538,9 @@ class Art extends database_object
      * ['url']      = URL *** OPTIONAL ***
      * ['file']     = FILENAME *** OPTIONAL ***
      * ['raw']      = Actual Image data, already captured
+     * @param array $data
+     * @param string $type
+     * @return binary|string
      */
     public static function get_from_source($data, $type = 'album')
     {
@@ -545,8 +612,12 @@ class Art extends database_object
     /**
      * url
      * This returns the constructed URL for the art in question
+     * @param int $uid
+     * @param string $type
+     * @param string $sid
+     * @return string
      */
-    public static function url($uid,$type,$sid=false)
+    public static function url($uid,$type,$sid=null)
     {
         $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
         if (!Core::is_library_item($type))
@@ -615,6 +686,9 @@ class Art extends database_object
     /**
      * gather
      * This tries to get the art in question
+     * @param array $options
+     * @param int $limit
+     * @return array
      */
     public function gather($options = array(), $limit = 0)
     {
@@ -698,6 +772,8 @@ class Art extends database_object
      * gather_db
      * This function retrieves art that's already in the database
      *
+     * @param int|null $limit
+     * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function gather_db($limit = null)
@@ -712,6 +788,9 @@ class Art extends database_object
      * gather_musicbrainz
      * This function retrieves art based on MusicBrainz' Advanced
      * Relationships
+     * @param int $limit
+     * @param array $data
+     * @return array
      */
     public function gather_musicbrainz($limit = 5, $data = array())
     {
@@ -872,6 +951,8 @@ class Art extends database_object
      * This returns the art from the folder of the files
      * If a limit is passed or the preferred filename is found the current
      * results set is returned
+     * @param int $limit
+     * @return array
      */
     public function gather_folder($limit = 5)
     {
@@ -993,6 +1074,8 @@ class Art extends database_object
      * gather_tags
      * This looks for the art in the meta-tags of the file
      * itself
+     * @param int $limit
+     * @return array
      */
     public function gather_tags($limit = 5)
     {
@@ -1011,12 +1094,21 @@ class Art extends database_object
         return $data;
     }
 
+    /**
+     * Gather tags from video files.
+     * @return array
+     */
     public function gather_video_tags()
     {
         $video = new Video($this->uid);
         return $this->gather_media_tags($video);
     }
 
+    /**
+     * Gather tags from audio files.
+     * @param int $limit
+     * @return array
+     */
     public function gather_song_tags($limit = 5)
     {
         // We need the filenames
@@ -1039,6 +1131,11 @@ class Art extends database_object
         return $data;
     }
 
+    /**
+     * Gather tags from files.
+     * @param media $media
+     * @return array
+     */
     protected function gather_media_tags($media)
     {
         $mtype = strtolower(get_class($media));
@@ -1086,6 +1183,9 @@ class Art extends database_object
      * gather_google
      * Raw google search to retrieve the art, not very reliable
      *
+     * @param int $limit
+     * @param array $data
+     * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function gather_google($limit = 5, $data = array())
@@ -1133,6 +1233,9 @@ class Art extends database_object
      * gather_lastfm
      * This returns the art from lastfm. It doesn't currently require an
      * account but may in the future.
+     * @param int $limit
+     * @param array $data
+     * @return array
      */
     public function gather_lastfm($limit = 5, $data = array())
     {
@@ -1178,6 +1281,12 @@ class Art extends database_object
 
     } // gather_lastfm
 
+    /**
+     * Gather metadata from plugin.
+     * @param string $type
+     * @param array $options
+     * @return array
+     */
     public static function gather_metadata_plugin($plugin, $type, $options)
     {
         $gtypes = array();
@@ -1240,51 +1349,56 @@ class Art extends database_object
         return $images;
     }
 
+    /**
+     * Get thumb size from thumb type.
+     * @param int $thumb
+     * @return array
+     */
     public static function get_thumb_size($thumb)
     {
         $size = array();
 
         switch ($thumb) {
-            case '1':
+            case 1:
                 /* This is used by the now_playing / browse stuff */
                 $size['height'] = '100';
                 $size['width']    = '100';
             break;
-            case '2':
+            case 2:
                 $size['height']    = '128';
                 $size['width']    = '128';
             break;
-            case '3':
+            case 3:
                 /* This is used by the flash player */
                 $size['height']    = '80';
                 $size['width']    = '80';
             break;
-            case '4':
+            case 4:
                 /* Web Player size */
                 $size['height'] = 200;
                 $size['width'] = 200; // 200px width, set via CSS
             break;
-            case '5':
+            case 5:
                 /* Web Player size */
                 $size['height'] = 32;
                 $size['width'] = 32;
             break;
-            case '6':
+            case 6:
                 /* Video browsing size */
                 $size['height'] = 150;
                 $size['width'] = 100;
             break;
-            case '7':
+            case 7:
                 /* Video page size */
                 $size['height'] = 300;
                 $size['width'] = 200;
             break;
-            case '8':
+            case 8:
                 /* Video preview size */
                  $size['height'] = 200;
                  $size['width'] = 470;
             break;
-            case '9':
+            case 9:
                 /* Video preview size */
                  $size['height'] = 100;
                  $size['width'] = 235;
@@ -1298,11 +1412,29 @@ class Art extends database_object
         return $size;
     }
 
+    /**
+     * Display an item art.
+     * @param library_item $item
+     * @param int $thumb
+     * @param string $link
+     * @return boolean
+     */
     public static function display_item($item, $thumb, $link = null)
     {
         return self::display($item->type, $item->id, $item->get_fullname(), $thumb, $link);
     }
 
+    /**
+     * Display an item art.
+     * @param string $object_type
+     * @param int $object_id
+     * @param string $name
+     * @param int $thumb
+     * @param string $link
+     * @param boolean $show_default
+     * @param string $kind
+     * @return boolean
+     */
     public static function display($object_type, $object_id, $name, $thumb, $link = null, $show_default = true, $kind = 'default')
     {
         if (!$show_default) {

@@ -142,7 +142,7 @@ class Channel extends database_object implements media, library_item
         return false;
     }
 
-    public function update($data)
+    public function update(array $data)
     {
         if (isset($data['edit_tags'])) {
             Tag::update_tag_list($data['edit_tags'], 'channel', $this->id);

@@ -105,6 +105,11 @@ if (!strtolower(get_class($video)) != 'video') {
   $videoprops[gettext_noop('Release Date')]   = scrub_out($video->f_release_date);
   $videoprops[gettext_noop('Codec')]   = scrub_out($video->f_codec);
   $videoprops[gettext_noop('Resolution')]   = scrub_out($video->f_resolution);
+  $videoprops[gettext_noop('Display')]   = scrub_out($video->f_display);
+  $videoprops[gettext_noop('Audio Bitrate')]   = scrub_out($video->f_bitrate);
+  $videoprops[gettext_noop('Video Bitrate')]   = scrub_out($video->f_video_bitrate);
+  $videoprops[gettext_noop('Frame Rate')]   = scrub_out($video->f_frame_rate);
+  $videoprops[gettext_noop('Channels')]   = scrub_out($video->channels);
   if (Access::check('interface','75')) {
     $videoprops[gettext_noop('Filename')]   = scrub_out($video->file) . " " . $video->f_size;
   }

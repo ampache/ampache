@@ -259,7 +259,7 @@ class TVShow_Season extends database_object implements library_item
      * update
      * This takes a key'd array of data and updates the current tv show
      */
-    public function update($data)
+    public function update(array $data)
     {
         $sql = 'UPDATE `tvshow_season` SET `season_number` = ?, `tvshow` = ? WHERE `id` = ?';
         Dba::write($sql, array($data['season_number'], $data['tvshow'], $this->id));

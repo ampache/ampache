@@ -22,17 +22,33 @@
 
 class License
 {
+    /**
+     * @var int $id
+     */
     public $id;
+    /**
+     * @var string $name
+     */
     public $name;
+    /**
+     * @var string $description
+     */
     public $description;
+    /**
+     * @var string $external_link
+     */
     public $external_link;
 
+    /**
+     * @var string $f_link
+     */
     public $f_link;
 
     /**
      * Constructor
      * This pulls the license information from the database and returns
      * a constructed object
+     * @param int $id
      */
     public function __construct($id)
     {
@@ -46,6 +62,8 @@ class License
     /**
      * _get_info
      * does the db call, reads from the license table
+     * @param int $id
+     * @return boolean
      */
     private function _get_info($id)
     {
@@ -65,8 +83,10 @@ class License
     /**
      * create
      * This takes a key'd array of data as input and inserts a new license entry, it returns the auto_inc id
+     * @param array $data
+     * @return int
      */
-    public static function create($data)
+    public static function create(array $data)
     {
         $sql = "INSERT INTO `license` (`name`,`description`,`external_link`) " .
             "VALUES (? , ?, ?)";
@@ -80,8 +100,10 @@ class License
     /**
      * update
      * This takes a key'd array of data as input and updates a license entry
+     * @param array $data
+     * @return int
      */
-    public function update($data)
+    public function update(array $data)
     {
         $sql = "UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?";
         Dba::write($sql, array($data['name'], $data['description'], $data['external_link'], $this->id));
@@ -94,19 +116,16 @@ class License
      * format
      * this function takes the object and reformats some values
      */
-
     public function format()
     {
         $this->f_link = ($this->external_link) ? '<a href="' . $this->external_link . '">' . $this->name . '</a>' : $this->name;
-        return true;
-
     } //format
 
     /**
      * delete
      * this function deletes a specific license entry
+     * @param int $license_id
      */
-
     public static function delete($license_id)
     {
         $sql = "DELETE FROM `license` WHERE `id` = ?";
@@ -117,6 +136,7 @@ class License
     /**
      * get_licenses
      * Returns a list of licenses accessible by the current user.
+     * @return int[]
      */
     public static function get_licenses()
     {

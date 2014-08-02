@@ -174,7 +174,7 @@ class Shoutbox
      * create
      * This takes a key'd array of data as input and inserts a new shoutbox entry, it returns the auto_inc id
      */
-    public static function create($data)
+    public static function create(array $data)
     {
         $sticky     = isset($data['sticky']) ? 1 : 0;
         $sql = "INSERT INTO `user_shout` (`user`,`date`,`text`,`sticky`,`object_id`,`object_type`, `data`) " .
@@ -191,7 +191,7 @@ class Shoutbox
      * update
      * This takes a key'd array of data as input and updates a shoutbox entry
      */
-    public function update($data)
+    public function update(array $data)
     {
         $sql = "UPDATE `user_shout` SET `text` = ?, `sticky` = ? WHERE `id` = ?";
         Dba::write($sql, array($data['comment'], make_bool($data['sticky']), $this->id));

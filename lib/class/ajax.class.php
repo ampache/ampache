@@ -46,6 +46,11 @@ class Ajax
      * observe
      * This returns a string with the correct and full ajax 'observe' stuff
      * from jQuery
+     * @param string $source
+     * @param string $method
+     * @param string $action
+     * @param string $confirm
+     * @return string
      */
     public static function observe($source, $method, $action, $confirm='')
     {
@@ -73,6 +78,8 @@ class Ajax
     /**
      * url
      * This takes a string and makes an URL
+     * @param string $action
+     * @return string
      */
     public static function url($action)
     {
@@ -83,6 +90,10 @@ class Ajax
      * action
      * This takes the action, the source and the post (if passed) and
      * generates the full ajax link
+     * @param string $action
+     * @param string $source
+     * @param string $post
+     * @return string
      */
     public static function action($action, $source, $post='')
     {
@@ -110,6 +121,14 @@ class Ajax
      * button
      * This prints out an img of the specified icon with the specified alt
      * text and then sets up the required ajax for it.
+     * @param string $action
+     * @param string $icon
+     * @param string $alt
+     * @param string $source
+     * @param string $post
+     * @param string $class
+     * @param string $confirm
+     * @return string
      */
     public static function button($action, $icon, $alt, $source='', $post='', $class='', $confirm='')
     {
@@ -138,6 +157,12 @@ class Ajax
      * text
      * This prints out the specified text as a link and sets up the required
      * ajax for the link so it works correctly
+     * @param string $action
+     * @param string $text
+     * @param string $source
+     * @param string $port
+     * @param string $class
+     * @return string
      */
     public static function text($action, $text, $source, $post='', $class='')
     {
@@ -163,6 +188,7 @@ class Ajax
     /**
      * run
      * This runs the specified action no questions asked
+     * @param string $action
      */
     public static function run($action)
     {
@@ -176,6 +202,7 @@ class Ajax
       * set_include_override
      * This sets the including div override, used only one place. Kind of a
      * hack.
+     * @param bool $value
      */
     public static function set_include_override($value)
     {
@@ -187,6 +214,8 @@ class Ajax
       * start_container
      * This checks to see if we're AJAXin'. If we aren't then it echoes out
      * the html needed to start a container that can be replaced by Ajax.
+     * @param string $name
+     * @param string $class
      */
     public static function start_container($name, $class = '')
     {

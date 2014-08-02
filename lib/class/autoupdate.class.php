@@ -38,6 +38,10 @@ class AutoUpdate
         // static class
     }
 
+    /**
+     * Check if current version is a development version.
+     * @return boolean
+     */
     protected static function is_develop()
     {
         $version = AmpConfig::get('version');
@@ -46,16 +50,29 @@ class AutoUpdate
         return ($vspart[count($vspart) - 1] == 'develop');
     }
 
+    /**
+     * Check if current version is a git repository.
+     * @return boolean
+     */
     protected static function is_git_repository()
     {
         return is_dir(AmpConfig::get('prefix') . '/.git');
     }
 
+    /**
+     * Check if branch develop exists in git repository.
+     * @return boolean
+     */
     protected static function is_branch_develop_exists()
     {
         return is_readable(AmpConfig::get('prefix') . '/.git/refs/heads/develop');
     }
 
+    /**
+     * Perform a GitHub request.
+     * @param string $action
+     * @return string|null
+     */
     public static function github_request($action)
     {
         try {
@@ -65,15 +82,19 @@ class AutoUpdate
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
             if ($request->status_code != 200) {
                 debug_event('autoupdate', 'Github API request ' . $url . ' failed with http code ' . $request->status_code, '1');
-                return;
+                return null;
             }
             return json_decode($request->body);
         } catch (Exception $e) {
             debug_event('autoupdate', 'Request error: ' . $e->getMessage(), '1');
-            return "";
+            return null;
         }
     }
 
+    /**
+     * Check if last github check expired.
+     * @return boolean
+     */
     protected static function lastcheck_expired()
     {
         $lastcheck = AmpConfig::get('autoupdate_lastcheck');
@@ -86,6 +107,11 @@ class AutoUpdate
         return ((time() - (3600 * 3)) > $lastcheck);
     }
 
+    /**
+     * Get latest available version from GitHub.
+     * @param boolean $force
+     * @return string
+     */
     public static function get_latest_version($force = false)
     {
         $lastversion = '';
@@ -130,6 +156,10 @@ class AutoUpdate
         return $lastversion;
     }
 
+    /**
+     * Get current local version.
+     * @return string
+     */
     public static function get_current_version()
     {
         if (self::is_develop()) {
@@ -139,6 +169,10 @@ class AutoUpdate
         }
     }
 
+    /**
+     * Get current local git commit.
+     * @return string|boolean
+     */
     public static function get_current_commit()
     {
         if (self::is_branch_develop_exists()) {
@@ -148,6 +182,11 @@ class AutoUpdate
         return false;
     }
 
+    /**
+     * Check if an update is available.
+     * @param boolean $force
+     * @return boolean
+     */
     public static function is_update_available($force = false)
     {
         if (!$force && (!self::lastcheck_expired() || !AmpConfig::get('autoupdate'))) {
@@ -183,6 +222,9 @@ class AutoUpdate
         return $available;
     }
 
+    /**
+     * Display new version information and update link if possible.
+     */
     public static function show_new_version()
     {
         echo '<div>';
@@ -197,6 +239,9 @@ class AutoUpdate
         echo '</div>';
     }
 
+    /**
+     * Update local git repository.
+     */
     public static function update_files()
     {
         echo T_('Updating Ampache sources with `git pull` ...') . '<br />';

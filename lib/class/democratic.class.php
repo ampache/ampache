@@ -514,7 +514,7 @@ class Democratic extends Tmp_Playlist
      * update
      * This updates an existing democratic playlist item. It takes a key'd array just like the create
      */
-    public function update($data)
+    public function update(array $data)
     {
         $name = Dba::escape($data['name']);
         $base = Dba::escape($data['democratic']);

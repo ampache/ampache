@@ -359,7 +359,7 @@ class vainfo
 
             $info['band'] = $info['band'] ?: trim($tags['band']);
             $info['composer'] = $info['composer'] ?: trim($tags['composer']);
-            $info['performer'] = $info['performer'] ?: trim($tags['performer']);
+            $info['publisher'] = $info['publisher'] ?: trim($tags['publisher']);
 
             $info['genre'] = self::clean_array_tag('genre', $info, $tags);
 
@@ -368,6 +368,7 @@ class vainfo
             $info['mb_albumid_group'] = $info['mb_albumid_group'] ?: trim($tags['mb_albumid_group']);
             $info['mb_artistid'] = $info['mb_artistid'] ?: trim($tags['mb_artistid']);
             $info['mb_albumartistid'] = $info['mb_albumartistid'] ?: trim($tags['mb_albumartistid']);
+            $info['release_type'] = $info['release_type'] ?: trim($tags['release_type']);
 
             $info['language'] = $info['language'] ?: trim($tags['language']);
 
@@ -380,6 +381,10 @@ class vainfo
             $info['track'] = $info['track'] ?: intval($tags['track']);
             $info['resolution_x'] = $info['resolution_x'] ?: intval($tags['resolution_x']);
             $info['resolution_y'] = $info['resolution_y'] ?: intval($tags['resolution_y']);
+            $info['display_x'] = $info['display_x'] ?: intval($tags['display_x']);
+            $info['display_y'] = $info['display_y'] ?: intval($tags['display_y']);
+            $info['frame_rate'] = $info['frame_rate'] ?: floatval($tags['frame_rate']);
+            $info['video_bitrate'] = $info['video_bitrate'] ?: intval($tags['video_bitrate']);
             $info['audio_codec'] = $info['audio_codec'] ?: trim($tags['audio_codec']);
             $info['video_codec'] = $info['video_codec'] ?: trim($tags['video_codec']);
             $info['description'] = $info['description'] ?: trim($tags['description']);
@@ -587,10 +592,14 @@ class vainfo
         $parsed['encoding'] = $tags['encoding'];
         $parsed['mime'] = $tags['mime_type'];
         $parsed['time'] = ($this->_forcedSize ? ((($this->_forcedSize - $tags['avdataoffset']) * 8) / $tags['bitrate']) : $tags['playtime_seconds']);
-        $parsed['video_codec'] = $tags['video']['fourcc'];
         $parsed['audio_codec'] = $tags['audio']['dataformat'];
+        $parsed['video_codec'] = $tags['video']['dataformat'];
         $parsed['resolution_x'] = $tags['video']['resolution_x'];
         $parsed['resolution_y'] = $tags['video']['resolution_y'];
+        $parsed['display_x'] = $tags['video']['display_x'];
+        $parsed['display_y'] = $tags['video']['display_y'];
+        $parsed['frame_rate'] = $tags['video']['frame_rate'];
+        $parsed['video_bitrate'] = $tags['video']['bitrate'];
 
         return $parsed;
     }
@@ -633,11 +642,29 @@ class vainfo
     {
         $parsed = array();
         foreach ($tags as $tagname => $data) {
-            switch ($tagname) {
+            switch (strtolower($tagname)) {
                 case 'genre':
                     // Pass the array through
                     $parsed[$tagname] = $data;
                 break;
+                case 'musicbrainz_artistid':
+                    $parsed['mb_artistid'] = $data[0];
+                    break;
+                case 'musicbrainz_albumid':
+                    $parsed['mb_albumid'] = $data[0];
+                    break;
+                case 'musicbrainz_albumartistid':
+                    $parsed['mb_albumartistid'] = $data[0];
+                    break;
+                case 'musicbrainz_releasegroupid':
+                    $parsed['mb_albumid_group'] = $data[0];
+                    break;
+                case 'musicbrainz_trackid':
+                    $parsed['mb_trackid'] = $data[0];
+                    break;
+                case 'musicbrainz_albumtype':
+                    $parsed['release_type'] = $data[0];
+                    break;
                 default:
                     $parsed[$tagname] = $data[0];
                 break;
@@ -675,7 +702,7 @@ class vainfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            switch ($tag) {
+            switch (strtolower($tag)) {
                 case 'genre':
                     // Pass the array through
                     $parsed[$tag] = $data;
@@ -697,11 +724,17 @@ class vainfo
                 case 'musicbrainz_albumid':
                     $parsed['mb_albumid'] = $data[0];
                     break;
+                case 'musicbrainz_albumartistid':
+                    $parsed['mb_albumartistid'] = $data[0];
+                    break;
                 case 'musicbrainz_releasegroupid':
                     $parsed['mb_albumid_group'] = $data[0];
                     break;
                 case 'musicbrainz_trackid':
                     $parsed['mb_trackid'] = $data[0];
+                    break;
+                case 'musicbrainz_albumtype':
+                    $parsed['release_type'] = $data[0];
                     break;
                 default:
                     $parsed[$tag] = $data[0];
@@ -787,6 +820,15 @@ class vainfo
                         case 'MusicBrainz Artist Id':
                             $parsed['mb_artistid'] = $txxx['data'];
                         break;
+                        case 'MusicBrainz Album Artist Id':
+                            $parsed['mb_albumartistid'] = $txxx['data'];
+                        break;
+                        case 'MusicBrainz Album Type':
+                            $parsed['release_type'] = $txxx['data'];
+                        break;
+                        case 'CATALOGNUMBER':
+                            $parsed['catalog_number'] = $txxx['data'];
+                        break;
                     }
                 }
             }
@@ -794,7 +836,6 @@ class vainfo
 
         // Find all genre
         if (!empty($id3v2['TCON'])) {
-            // Find the MBID for the track
             foreach ($id3v2['TCON'] as $tcid) {
                 if ($tcid['framenameshort'] == "genre") {
                     // Removing unwanted UTF-8 charaters
@@ -867,9 +908,9 @@ class vainfo
         foreach ($tags as $tag => $data) {
             switch ($tag) {
                 case 'creation_date':
+                    $parsed['release_date'] = strtotime($data[0]);
                     if (strlen($data['0']) > 4) {
-                        // Weird date format, attempt to normalize it
-                        $data[0] = date('Y', strtotime($data[0]));
+                        $data[0] = date('Y', $parsed['release_date']);
                     }
                     $parsed['year'] = $data[0];
                 break;
@@ -879,11 +920,17 @@ class vainfo
                 case 'MusicBrainz Album Id':
                     $parsed['mb_albumid'] = $data[0];
                 break;
+                case 'MusicBrainz Album Artist Id':
+                    $parsed['mb_albumartistid'] = $data[0];
+                break;
                 case 'MusicBrainz Release Group Id':
                     $parsed['mb_albumid_group'] = $data[0];
                 break;
                 case 'MusicBrainz Artist Id':
                     $parsed['mb_artistid'] = $data[0];
+                break;
+                case 'MusicBrainz Album Type':
+                    $parsed['release_type'] = $data[0];
                 break;
                 default:
                     $parsed[$tag] = $data[0];

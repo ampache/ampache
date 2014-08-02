@@ -434,6 +434,9 @@ class Update
         $update_string = '- Add Prefix to TVShows and Movies.<br />';
         $version[] = array('version' => '370011','description' => $update_string);
 
+        $update_string = '- Add metadata information to albums / songs / videos.<br />';
+        $version[] = array('version' => '370012','description' => $update_string);
+
         return $version;
     }
 
@@ -2857,6 +2860,34 @@ class Update
 
         $sql = "ALTER TABLE `movie` ADD `prefix` varchar(32) CHARACTER SET utf8 NULL";
         $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update_370012
+     *
+     * Add metadata information to albums / songs / videos
+     */
+    public static function update_370012()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `album` ADD `release_type` varchar(32) CHARACTER SET utf8 NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `song` ADD `composer` varchar(256) CHARACTER SET utf8 NULL, ADD `channels` MEDIUMINT NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `video` ADD `channels` MEDIUMINT NULL, ADD `bitrate` MEDIUMINT(8) NULL, ADD `video_bitrate` MEDIUMINT(8) NULL, ADD `display_x` MEDIUMINT(8) NULL, ADD `display_y` MEDIUMINT(8) NULL, ADD `frame_rate` FLOAT NULL, ADD `mode` ENUM( 'abr', 'vbr', 'cbr' ) NULL DEFAULT 'cbr'";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('album_release_type','1','Album - Group per release type',25,'boolean','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;
     }

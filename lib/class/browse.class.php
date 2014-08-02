@@ -31,8 +31,17 @@
  */
 class Browse extends Query
 {
+    /**
+     * @var boolean $show_header
+     */
     public $show_header;
 
+    /**
+     * Constructor.
+     *
+     * @param int|null $id
+     * @param boolean $cached
+     */
     public function __construct($id = null, $cached = true)
     {
         parent::__construct($id, $cached);
@@ -48,6 +57,8 @@ class Browse extends Query
      * set_simple_browse
      * This sets the current browse object to a 'simple' browse method
      * which means use the base query provided and expand from there
+     *
+     * @param boolean $value
      */
     public function set_simple_browse($value)
     {
@@ -58,6 +69,9 @@ class Browse extends Query
     /**
      * add_supplemental_object
      * Legacy function, need to find a better way to do that
+     *
+     * @param string $class
+     * @param int $uid
      */
     public function add_supplemental_object($class, $uid)
     {
@@ -71,6 +85,8 @@ class Browse extends Query
      * get_supplemental_objects
      * This returns an array of 'class','id' for additional objects that
      * need to be created before we start this whole browsing thing.
+     *
+     * @return array
      */
     public function get_supplemental_objects()
     {
@@ -89,6 +105,8 @@ class Browse extends Query
      * This takes an array of objects
      * and requires the correct template based on the
      * type that we are currently browsing
+     *
+     * @param int[] $object_ids
      */
     public function show_objects($object_ids = null, $argument = null)
     {
@@ -152,9 +170,16 @@ class Browse extends Query
                 $box_req = AmpConfig::get('prefix') . '/templates/show_songs.inc.php';
             break;
             case 'album':
-                $box_title = T_('Albums') . $match;
                 Album::build_cache($object_ids);
-                $allow_group_disks = $argument;
+                $box_title = T_('Albums') . $match;
+                if (is_array($argument)) {
+                    $allow_group_disks = $argument['group_disks'];
+                    if ($argument['title']) {
+                        $box_title = $argument['title'];
+                    }
+                } else {
+                    $allow_group_disks = false;
+                }
                 $box_req = AmpConfig::get('prefix') . '/templates/show_albums.inc.php';
             break;
             case 'user':
@@ -310,6 +335,7 @@ class Browse extends Query
     /**
       * set_filter_from_request
      * //FIXME
+     * @param array $request
      */
     public function set_filter_from_request($request)
     {
@@ -333,6 +359,11 @@ class Browse extends Query
         }
     } // set_filter_from_request
 
+    /**
+     *
+     * @param string $type
+     * @param string $custom_base
+     */
     public function set_type($type, $custom_base = '')
     {
         $cn = 'browse_' . $type . '_pages';
@@ -354,6 +385,11 @@ class Browse extends Query
         parent::set_type($type, $custom_base);
     }
 
+    /**
+     *
+     * @param string $option
+     * @param string $value
+     */
     public function save_cookie_params($option, $value)
     {
         if ($this->get_type()) {
@@ -361,33 +397,57 @@ class Browse extends Query
         }
     }
 
+    /**
+     *
+     * @param boolean $use_pages
+     */
     public function set_use_pages($use_pages)
     {
         $this->save_cookie_params('pages', $use_pages ? 'true' : 'false');
         $this->_state['use_pages'] = $use_pages;
     }
 
+    /**
+     *
+     * @return boolean
+     */
     public function get_use_pages()
     {
         return $this->_state['use_pages'];
     }
 
+    /**
+     *
+     * @param boolean $use_alpha
+     */
     public function set_use_alpha($use_alpha)
     {
         $this->save_cookie_params('alpha', $use_alpha ? 'true' : 'false');
         $this->_state['use_alpha'] = $use_alpha;
     }
 
+    /**
+     *
+     * @return boolean
+     */
     public function get_use_alpha()
     {
         return $this->_state['use_alpha'];
     }
 
+    /**
+     *
+     * @param boolean $show_header
+     */
     public function set_show_header($show_header)
     {
         $this->show_header = $show_header;
     }
 
+    /**
+     *
+     * @return boolean
+     */
     public function get_show_header()
     {
         return $this->show_header;

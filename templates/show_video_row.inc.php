@@ -57,6 +57,7 @@ if ($video_type != 'video') {
     require AmpConfig::get('prefix') . '/templates/show_partial_' . $video_type . '_row.inc.php';
 }
 ?>
+<td class="cel_release_date"><?php echo $libitem->f_release_date; ?></td>
 <td class="cel_codec"><?php echo $libitem->f_codec; ?></td>
 <td class="cel_resolution"><?php echo $libitem->f_resolution; ?></td>
 <td class="cel_length"><?php echo $libitem->f_length; ?></td>

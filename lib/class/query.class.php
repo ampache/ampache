@@ -30,18 +30,38 @@
  */
 class Query
 {
+    /**
+     * @var int $id
+     */
     public $id;
+    /**
+     * @var int $catalog
+     */
     public $catalog;
 
+    /**
+     * @var array $_state
+     */
     protected $_state = array();
+    /**
+     * @var boolean $_cache
+     */
     protected $_cache;
 
+    /**
+     * @var array $allowed_filters
+     */
     private static $allowed_filters;
+    /**
+     * @var array $allowed_sorts
+     */
     private static $allowed_sorts;
 
     /**
      * constructor
      * This should be called
+     * @param int|null $id
+     * @param boolean $cached
      */
     public function __construct($id = null, $cached = true)
     {
@@ -83,6 +103,7 @@ class Query
      * _auto_init
      * Automatically called when the class is loaded.
      * Populate static arrays if necessary
+     * @return boolean
      */
     public static function _auto_init()
     {
@@ -131,7 +152,8 @@ class Query
                 'starts_with',
                 'tag',
                 'catalog',
-                'catalog_enabled'
+                'catalog_enabled',
+                'composer'
             ),
             'live_stream' => array(
                 'alpha_match',
@@ -330,6 +352,8 @@ class Query
                 'release_date'
             )
         );
+
+        return true;
     }
 
     /**
@@ -349,6 +373,8 @@ class Query
      *
      * Attempts to produce a more compact representation for large result
      * sets by collapsing ranges.
+     * @param array $data
+     * @return string
      */
     private static function _serialize($data)
     {
@@ -385,6 +411,8 @@ class Query
      * _unserialize
      *
      * Reverses serialization.
+     * @param string $data
+     * @return mixed
      */
     private static function _unserialize($data)
     {
@@ -407,6 +435,9 @@ class Query
     /**
      * set_filter
      * This saves the filter data we pass it.
+     * @param string $key
+     * @param mixed $value
+     * @return boolean
      */
     public function set_filter($key, $value)
     {
@@ -553,6 +584,7 @@ class Query
     /**
      * get_filter
      * returns the specified filter value
+     * @return string|boolean
      */
     public function get_filter($key)
     {
@@ -567,6 +599,7 @@ class Query
     /**
      * get_start
      * This returns the current value of the start
+     * @return int
      */
     public function get_start()
     {
@@ -577,6 +610,7 @@ class Query
     /**
      * get_offset
      * This returns the current offset
+     * @return int
      */
     public function get_offset()
     {
@@ -590,6 +624,7 @@ class Query
     /**
      * set_total
      * This sets the total number of objects
+     * @param int $total
      */
     public function set_total($total)
     {
@@ -601,6 +636,8 @@ class Query
      * This returns the total number of objects for this current sort type.
      * If it's already cached used it. if they pass us an array then use
      * that.
+     * @param array $objects
+     * @return int
      */
     public function get_total($objects = null)
     {
@@ -628,6 +665,8 @@ class Query
      * This returns an array of the allowed filters based on the type of
      * object we are working with, this is used to display the 'filter'
      * sidebar stuff.
+     * @param string $type
+     * @return array
      */
     public static function get_allowed_filters($type)
     {
@@ -641,6 +680,8 @@ class Query
      * This sets the type of object that we want to browse by
      * we do this here so we only have to maintain a single whitelist
      * and if I want to change the location I only have to do it here
+     * @param string $type
+     * @param string $custom_base
      */
     public function set_type($type, $custom_base = '')
     {
@@ -684,6 +725,7 @@ class Query
     /**
      * get_type
      * This returns the type of the browse we currently are using
+     * @return string
      */
     public function get_type()
     {
@@ -694,6 +736,8 @@ class Query
     /**
      * set_sort
      * This sets the current sort(s)
+     * @param string $sort
+     * @param string $order
      */
     public function set_sort($sort,$order='')
     {
@@ -725,6 +769,7 @@ class Query
     /**
      * set_offset
      * This sets the current offset of this query
+     * @param int $offset
      */
     public function set_offset($offset)
     {
@@ -732,6 +777,10 @@ class Query
 
     } // set_offset
 
+    /**
+     *
+     * @param int $catalog_number
+     */
     public function set_catalog( $catalog_number )
     {
         $this->catalog = $catalog_number;
@@ -743,6 +792,7 @@ class Query
      * This appends more information to the select part of the SQL
      * statement, we're going to move to the %%SELECT%% style queries, as I
      * think it's the only way to do this...
+     * @param string $field
      */
     public function set_select($field)
     {
@@ -753,6 +803,11 @@ class Query
     /**
      * set_join
      * This sets the joins for the current browse object
+     * @param string $type
+     * @param string $table
+     * @param string $source
+     * @param string $dest
+     * @param int $priority
      */
     public function set_join($type, $table, $source, $dest, $priority)
     {
@@ -764,6 +819,7 @@ class Query
      * set_having
      * This sets the "HAVING" part of the query, we can only have one..
      * god this is ugly
+     * @param string $condition
      */
     public function set_having($condition)
     {
@@ -776,6 +832,7 @@ class Query
      * This sets the start point for our show functions
      * We need to store this in the session so that it can be pulled
      * back, if they hit the back button
+     * @param int $start
      */
     public function set_start($start)
     {
@@ -791,6 +848,7 @@ class Query
      * set_is_simple
      * This sets the current browse object to a 'simple' browse method
      * which means use the base query provided and expand from there
+     * @param boolean $value
      */
     public function set_is_simple($value)
     {
@@ -804,6 +862,7 @@ class Query
      * This sets true/false if the content of this browse
      * should be static, if they are then content filtering/altering
      * methods will be skipped
+     * @param boolean $value
      */
     public function set_static_content($value)
     {
@@ -818,6 +877,10 @@ class Query
 
     } // set_static_content
 
+    /**
+     *
+     * @return boolean
+     */
     public function is_static_content()
     {
         return $this->_state['static'];
@@ -826,6 +889,7 @@ class Query
     /**
      * is_simple
      * This returns whether or not the current browse type is set to static.
+     * @return boolean
      */
     public function is_simple()
     {
@@ -837,6 +901,7 @@ class Query
      * get_savedget_saved
      * This looks in the session for the saved stuff and returns what it
      * finds.
+     * @return array
      */
     public function get_saved()
     {
@@ -867,6 +932,7 @@ class Query
      * This gets an array of the ids of the objects that we are
      * currently browsing by it applies the sql and logic based
      * filters
+     * @return array
      */
     public function get_objects()
     {
@@ -899,6 +965,8 @@ class Query
     /**
      * set_base_sql
      * This saves the base sql statement we are going to use.
+     * @param boolean $force
+     * @param string $custom_base
      */
     private function set_base_sql($force = false, $custom_base = '')
     {
@@ -1012,6 +1080,7 @@ class Query
      * get_select
      * This returns the selects in a format that is friendly for a sql
      * statement.
+     * @return string
      */
     private function get_select()
     {
@@ -1024,6 +1093,7 @@ class Query
      * get_base_sql
      * This returns the base sql statement all parsed up, this should be
      * called after all set operations.
+     * @return string
      */
     private function get_base_sql()
     {
@@ -1035,6 +1105,7 @@ class Query
     /**
      * get_filter_sql
      * This returns the filter part of the sql statement
+     * @return string
      */
     private function get_filter_sql()
     {
@@ -1076,6 +1147,7 @@ class Query
     /**
      * get_sort_sql
      * Returns the sort sql part
+     * @return string
      */
     private function get_sort_sql()
     {
@@ -1100,6 +1172,7 @@ class Query
     /**
      * get_limit_sql
      * This returns the limit part of the sql statement
+     * @return string
      */
     private function get_limit_sql()
     {
@@ -1114,6 +1187,7 @@ class Query
     /**
      * get_join_sql
      * This returns the joins that this browse may need to work correctly
+     * @return string
      */
     private function get_join_sql()
     {
@@ -1136,6 +1210,7 @@ class Query
     /**
      * get_having_sql
      * this returns the having sql stuff, if we've got anything
+     * @return string
      */
     public function get_having_sql()
     {
@@ -1150,6 +1225,8 @@ class Query
      * This returns the sql statement we are going to use this has to be run
      * every time we get the objects because it depends on the filters and
      * the type of object we are currently browsing.
+     * @param boolean $limit
+     * @return string
      */
     public function get_sql($limit = true)
     {
@@ -1181,6 +1258,8 @@ class Query
        * post_process
      * This does some additional work on the results that we've received
      * before returning them.
+     * @param array $data
+     * @return array
      */
     private function post_process($data)
     {
@@ -1214,6 +1293,9 @@ class Query
      * This takes a filter name and value and if it is possible
      * to filter by this name on this type returns the appropriate sql
      * if not returns nothing
+     * @param string $filter
+     * @param mixed $value
+     * @return string
      */
     private function sql_filter($filter, $value)
     {
@@ -1605,6 +1687,8 @@ class Query
      * these should be limited as they are often intensive and
      * require additional queries per object... :(
      *
+     * @param int $object_id
+     * @return boolean
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     private function logic_filter($object_id)
@@ -1619,6 +1703,9 @@ class Query
      * to sort the results as best we can, there is also
      * a logic based sort that will come later as that's
      * a lot more complicated
+     * @param string $filed
+     * @param string $order
+     * @return string
      */
     private function sql_sort($field, $order)
     {
@@ -1648,6 +1735,9 @@ class Query
                     case 'artist':
                         $sql = '`artist`.`name`';
                         $this->set_join('left', '`artist`', '`artist`.`id`', '`song`.`artist`', 100);
+                    break;
+                    case 'composer':
+                        $sql = "`song`.`composer`";
                     break;
                     default:
                         // Rien a faire
@@ -1922,6 +2012,12 @@ class Query
 
     } // sql_sort
 
+    /**
+     *
+     * @param string $field
+     * @param string $table
+     * @return string
+     */
     private function sql_sort_video($field, $table)
     {
         $sql = "";
@@ -1957,6 +2053,7 @@ class Query
      * This takes the existing objects, looks at the current
      * sort method and then re-sorts them This is internally
      * called by the set_sort() function
+     * @return boolean
      */
     private function resort_objects()
     {
@@ -2032,6 +2129,8 @@ class Query
      * save_objects
      * This takes the full array of object ids, often passed into show and
      * if necessary it saves them
+     * @param int[] $object_ids
+     * @return boolean
      */
     public function save_objects($object_ids)
     {
@@ -2060,6 +2159,7 @@ class Query
     /**
      * get_state
      * This is a debug only function
+     * @return array
      */
     public function get_state()
     {
