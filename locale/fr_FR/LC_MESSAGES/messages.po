@@ -5199,50 +5199,50 @@ msgstr ""
 #, fuzzy
 msgid "second ago"
 msgid_plural "seconds ago"
-msgstr[0] "il y a quelques secondes"
-msgstr[1] "il y a quelques secondes"
+msgstr[0] "seconde"
+msgstr[1] "secondes"
 
 #: ../../templates/show_recently_played.inc.php:68
 #, fuzzy
 msgid "minute ago"
 msgid_plural "minutes ago"
-msgstr[0] "il y a quelques minutes"
-msgstr[1] "il y a quelques minutes"
+msgstr[0] "minute"
+msgstr[1] "minutes"
 
 #: ../../templates/show_recently_played.inc.php:71
 #, fuzzy
 msgid "hour ago"
 msgid_plural "hours ago"
-msgstr[0] "il y a quelques heures"
-msgstr[1] "il y a quelques heures"
+msgstr[0] "heure"
+msgstr[1] "heures"
 
 #: ../../templates/show_recently_played.inc.php:74
 #, fuzzy
 msgid "day ago"
 msgid_plural "days ago"
-msgstr[0] "il y a quelques jours"
-msgstr[1] "il y a quelques jours"
+msgstr[0] "jour"
+msgstr[1] "jours"
 
 #: ../../templates/show_recently_played.inc.php:77
 #, fuzzy
 msgid "week ago"
 msgid_plural "weeks ago"
-msgstr[0] "il y a quelques semaines"
-msgstr[1] "il y a quelques semaines"
+msgstr[0] "semaine"
+msgstr[1] "semaines"
 
 #: ../../templates/show_recently_played.inc.php:80
 #, fuzzy
 msgid "month ago"
 msgid_plural "months ago"
-msgstr[0] "il y a quelques mois"
-msgstr[1] "il y a quelques mois"
+msgstr[0] "mois"
+msgstr[1] "mois"
 
 #: ../../templates/show_recently_played.inc.php:83
 #, fuzzy
 msgid "year ago"
 msgid_plural "years ago"
-msgstr[0] "il y a quelques années"
-msgstr[1] "il y a quelques années"
+msgstr[0] "année"
+msgstr[1] "années"
 
 #: ../../templates/show_recently_played.inc.php:86
 #, fuzzy
