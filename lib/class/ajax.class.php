@@ -31,6 +31,7 @@
 class Ajax
 {
     private static $include_override;
+    private static $counter = 0;
 
     /**
      * constructor
@@ -167,7 +168,7 @@ class Ajax
     public static function text($action, $text, $source, $post='', $class='')
     {
         // Avoid duplicate id
-        $source .= '_' . time();
+        $source .= '_' . time() . '_' . $counter++;
 
         // Format the string we wanna use
         $ajax_string = self::action($action, $source, $post);

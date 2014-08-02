@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
         $browse->show_objects($object_ids);
         $browse->store();
 
-        $results['browse_content_playlist_song'] = ob_get_clean();
+        $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'append_item':
         // Only song item are supported with playlists

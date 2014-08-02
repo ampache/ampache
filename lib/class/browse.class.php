@@ -294,7 +294,7 @@ class Browse extends Query
             break;
         } // end switch on type
 
-        Ajax::start_container('browse_content_' . $type, 'browse_content');
+        Ajax::start_container($this->get_content_div(), 'browse_content');
         if ($this->get_show_header()) {
             if (isset($box_req) && isset($box_title)) {
                 UI::show_box_top($box_title, $class);
@@ -328,7 +328,7 @@ class Browse extends Query
         $total    = $this->get_total();
         $next_offset = $start + $limit;
         if ($next_offset <= $total) {
-            echo '<a class="jscroll-next" href="' . AmpConfig::get('ajax_url') . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode=browse_content_' . $this->get_type() . '&show_header=false">' . T_('More') . '</a>';
+            echo '<a class="jscroll-next" href="' . AmpConfig::get('ajax_url') . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode='. $this->get_content_div() . '&show_header=false">' . T_('More') . '</a>';
         }
     }
 

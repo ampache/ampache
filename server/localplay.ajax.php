@@ -87,7 +87,7 @@ switch ($_REQUEST['action']) {
                 $browse->save_objects(array());
                 $browse->show_objects(array());
                 $browse->store();
-                $results['browse_content_' . $browse->get_type()] = ob_get_contents();
+                $results[$browse->get_content_div()] = ob_get_contents();
                 ob_end_clean();
             break;
             case 'skip':
@@ -100,7 +100,7 @@ switch ($_REQUEST['action']) {
                 $browse->save_objects($objects);
                 $browse->show_objects($objects);
                 $browse->store();
-                $results['browse_content_' . $browse->get_type()] = ob_get_contents();
+                $results[$browse->get_content_div()] = ob_get_contents();
                 ob_end_clean();
             break;
             default:
@@ -135,7 +135,7 @@ switch ($_REQUEST['action']) {
         $browse->save_objects($objects);
         $browse->show_objects($objects);
         $browse->store();
-        $results['browse_content_' . $browse->get_type()] = ob_get_contents();
+        $results[$browse->get_content_div()] = ob_get_contents();
         ob_end_clean();
 
     break;

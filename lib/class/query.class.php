@@ -2167,4 +2167,26 @@ class Query
 
     } // get_state
 
+    /**
+     * Get content div name
+     * @return string
+     */
+    public function get_content_div()
+    {
+        $key = 'browse_content_' . $this->get_type();
+        if ($this->_state['ak']) {
+            $key .= '_' . $this->_state['ak'];
+        }
+        return $key;
+    }
+
+    /**
+     * Set an additional content div key.
+     * @param string $ak
+     */
+    public function set_content_div_ak($ak)
+    {
+        $this->_state['ak'] = $ak;
+    }
+
 } // query

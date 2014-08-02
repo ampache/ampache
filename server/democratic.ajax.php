@@ -87,7 +87,7 @@ if ($show_browse) {
     $browse->set_static_content(false);
     $browse->show_objects($object_ids);
     $browse->store();
-    $results['browse_content_' . $browse->get_type()] = ob_get_contents();
+    $results[$browse->get_content_div()] = ob_get_contents();
     ob_end_clean();
 }
 

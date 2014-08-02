@@ -151,6 +151,9 @@ if (AmpConfig::get('show_played_times')) {
         $title = (!empty($key)) ? ucwords($key) : '';
         $browse = new Browse();
         $browse->set_type($object_type);
+        if (!empty($key)) {
+            $browse->set_content_div_ak($key);
+        }
         $browse->show_objects($object_ids, array('group_disks' => true, 'title' => $title));
         $browse->store();
     }
