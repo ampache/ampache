@@ -168,7 +168,7 @@ class Ajax
     public static function text($action, $text, $source, $post='', $class='')
     {
         // Avoid duplicate id
-        $source .= '_' . time() . '_' . $counter++;
+        $source .= '_' . time() . '_' . self::$counter++;
 
         // Format the string we wanna use
         $ajax_string = self::action($action, $source, $post);
