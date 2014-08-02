@@ -31,7 +31,7 @@ switch ($_REQUEST['action']) {
     case 'show':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
-        if (true) {
+        if (AmpConfig::get('album_release_type')) {
             $multi_object_ids = $artist->get_albums($_REQUEST['catalog'], false, true);
         } else {
             $object_ids = $artist->get_albums($_REQUEST['catalog']);

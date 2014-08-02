@@ -33,6 +33,8 @@ switch ($_REQUEST['action']) {
         $playlist->format();
         if ($playlist->has_access()) {
             $playlist->delete_track($_REQUEST['track_id']);
+            // This could have performance issues
+            $playlist->regenerate_track_numbers();
         }
 
         $object_ids = $playlist->get_items();

@@ -337,6 +337,19 @@ class Playlist extends playlist_object
     } // update_track_number
 
     /**
+     * Regenerate track numbers to fill gaps.
+     */
+    public function regenerate_track_numbers()
+    {
+        $items = $this->get_items();
+        $index = 1;
+        foreach ($items as $item) {
+            $this->update_track_number($item['track_id'], $index);
+            $index++;
+        }
+    }
+
+    /**
      * add_songs
      * This takes an array of song_ids and then adds it to the playlist
      */
