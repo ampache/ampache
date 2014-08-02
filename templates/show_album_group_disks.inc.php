@@ -86,10 +86,10 @@ $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;-&nbsp;' .
     <div class="album_group_disks_actions">
         <?php
             if (AmpConfig::get('directplay')) {
-                echo Ajax::button('?page=stream&action=directplay&playtype=album&' . $c_album->get_http_album_query_ids('album_id'), 'play', T_('Play'), 'directplay_full_' . $c_album->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $c_album->get_http_album_query_ids('object_id'), 'play', T_('Play'), 'directplay_full_' . $c_album->id);
             }
             if (Stream_Playlist::check_autoplay_append()) {
-                echo Ajax::button('?page=stream&action=directplay&playtype=album&' . $c_album->get_http_album_query_ids('album_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $c_album->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $c_album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $c_album->id);
             }
             echo Ajax::button('?action=basket&type=album&' . $c_album->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'play_full_' . $c_album->id);
             echo Ajax::button('?action=basket&type=album_random&' . $c_album->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'play_random_' . $c_album->id);

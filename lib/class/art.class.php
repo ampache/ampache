@@ -45,7 +45,7 @@ class Art extends database_object
      */
     public $uid; // UID of the object not ID because it's not the ART.ID
     /**
-     *  @var binary|string $raw
+     *  @var string $raw
      */
     public $raw; // Raw art data
     /**
@@ -58,7 +58,7 @@ class Art extends database_object
     public $kind;
 
     /**
-     *  @var binary|string $thumb
+     *  @var string $thumb
      */
     public $thumb;
     /**
@@ -182,7 +182,7 @@ class Art extends database_object
     /**
      * test_image
      * Runs some sanity checks on the putative image
-     * @param binary|string $source
+     * @param string $source
      * @return boolean
      */
     public static function test_image($source)
@@ -214,7 +214,7 @@ class Art extends database_object
      * exists, if it doesn't depending on settings it will try
      * to create it.
      * @param boolean $raw
-     * @return binary|string
+     * @return string
      */
     public function get($raw=false)
     {
@@ -311,7 +311,7 @@ class Art extends database_object
      * insert
      * This takes the string representation of an image and inserts it into
      * the database. You must also pass the mime type.
-     * @param binary|string $source
+     * @param string $source
      * @param string $mime
      * @return boolean
      */
@@ -379,7 +379,7 @@ class Art extends database_object
     /**
      * save_thumb
      * This saves the thumbnail that we're passed
-     * @param binary|string $source
+     * @param string $source
      * @param string $mime
      * @param string $size
      */
@@ -403,7 +403,7 @@ class Art extends database_object
      * Returns the specified resized image.  If the requested size doesn't
      * already exist, create and cache it.
      * @param string $size
-     * @return binary|string
+     * @return string
      */
     public function get_thumb($size)
     {
@@ -432,10 +432,10 @@ class Art extends database_object
      * Automatically resizes the image for thumbnail viewing.
      * Only works on gif/jpg/png/bmp. Fails if PHP-GD isn't available
      * or lacks support for the requested image type.
-     * @param binary|string $image
+     * @param string $image
      * @param string $size
      * @param string $mime
-     * @return binary|string
+     * @return string
      */
     public function generate_thumb($image,$size,$mime)
     {
@@ -540,7 +540,7 @@ class Art extends database_object
      * ['raw']      = Actual Image data, already captured
      * @param array $data
      * @param string $type
-     * @return binary|string
+     * @return string
      */
     public static function get_from_source($data, $type = 'album')
     {

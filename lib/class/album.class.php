@@ -142,6 +142,10 @@ class Album extends database_object implements library_item
      */
     public $f_tags;
     /**
+     * @var string $f_year
+     */
+    public $f_year;
+    /**
      *  @var string $f_title
      */
     public $f_title;
@@ -587,8 +591,8 @@ class Album extends database_object implements library_item
             $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . $this->f_album_artist_name . "</a>";
         }
 
-        if ($this->year == '0') {
-            $this->year = "N/A";
+        if (!$this->year) {
+            $this->f_year = "N/A";
         }
 
         $this->tags = Tag::get_top_tags('album', $this->id);

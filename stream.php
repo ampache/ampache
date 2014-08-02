@@ -78,16 +78,18 @@ switch ($_REQUEST['action']) {
     break;
     case 'play_item':
         $object_type = $_REQUEST['object_type'];
-        $object_id = $_REQUEST['object_id'];
+        $object_ids = explode(',', $_REQUEST['object_id']);
 
         if (Core::is_playable_item($object_type)) {
-            $item = new $object_type($object_id);
-            $media_ids = array_merge($media_ids, $item->get_medias());
+            foreach ($object_ids as $object_id) {
+                $item = new $object_type($object_id);
+                $media_ids = array_merge($media_ids, $item->get_medias());
 
-            if ($_REQUEST['custom_play_action']) {
-                foreach ($media_ids as $media_id) {
-                    if (is_array($media_id)) {
-                        $media_id['custom_play_action'] = $_REQUEST['custom_play_action'];
+                if ($_REQUEST['custom_play_action']) {
+                    foreach ($media_ids as $media_id) {
+                        if (is_array($media_id)) {
+                            $media_id['custom_play_action'] = $_REQUEST['custom_play_action'];
+                        }
                     }
                 }
             }

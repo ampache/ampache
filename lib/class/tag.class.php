@@ -384,7 +384,7 @@ class Tag extends database_object implements library_item
     public static function get_top_tags($type, $object_id, $limit = 10)
     {
         if (!Core::is_library_item($type))
-            return false;
+            return array();
 
         $object_id = intval($object_id);
 
