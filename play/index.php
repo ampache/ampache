@@ -412,6 +412,9 @@ if (!is_resource($fp)) {
 }
 
 header('ETag: ' . $media->id);
+if ($media->time) {
+    header('X-Content-Duration: ' . $media->time);
+}
 Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($media));
 
 // Handle Content-Range
