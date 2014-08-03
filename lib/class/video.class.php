@@ -480,6 +480,8 @@ class Video extends database_object implements media, library_item
                 return 'video/webm';
             case 'flv':
                 return 'video/x-flv';
+            case 'ts':
+                return 'video/mp2t';
             case 'mpg':
             case 'mpeg':
             case 'm2ts':

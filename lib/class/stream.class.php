@@ -104,14 +104,10 @@ class Stream
      * This is a rather complex function that starts the transcoding or
      * resampling of a media and returns the opened file handle.
      */
-    public static function start_transcode($media, $type = null, $bitrate=0, $subtitle='')
+    public static function start_transcode($media, $type = null, $options = array())
     {
-        debug_event('stream.class.php', 'Starting transcode for {'.$media->file.'}. Type {'.$type.'}. Bitrate {'.$bitrate.'}...', 5);
+        debug_event('stream.class.php', 'Starting transcode for {'.$media->file.'}. Type {'.$type.'}. Options: ' . print_r($options, true) . '}...', 5);
 
-        $options = array();
-        if (empty($subtitle)) {
-            $options['subtitle'] = $subtitle;
-        }
         $transcode_settings = $media->get_transcode_settings($type, $options);
         // Bail out early if we're unutterably broken
         if ($transcode_settings == false) {
@@ -119,13 +115,13 @@ class Stream
             return false;
         }
 
-        if ($bitrate == 0) {
+        if (!$options['bitrate']) {
             $sample_rate = self::get_allowed_bitrate($media);
             debug_event('stream', 'Configured bitrate is ' . $sample_rate, 5);
             // Validate the bitrate
             $sample_rate = self::validate_bitrate($sample_rate);
         } else {
-            $sample_rate = $bitrate;
+            $sample_rate = $options['bitrate'];
         }
 
         // Never upsample a media
@@ -145,6 +141,29 @@ class Stream
             '%FILE%'   => $song_file,
             '%SAMPLE%' => $sample_rate
         );
+        if (isset($options['maxbitrate'])) {
+            $string_map['%MAXBITRATE%'] = $options['maxbitrate'];
+        } else {
+            $string_map['%MAXBITRATE%'] = 8000;
+        }
+        if (isset($options['frame'])) {
+            $frame = gmdate("H:i:s", $options['frame']);
+            $string_map['%TIME%'] = $frame;
+        }
+        if (isset($options['duration'])) {
+            $duration = gmdate("H:i:s", $options['duration']);
+            $string_map['%DURATION%'] = $duration;
+        }
+        if (isset($options['resolution'])) {
+            $string_map['%RESOLUTION%'] = $options['resolution'];
+        } else {
+            $string_map['%RESOLUTION%'] = ($media->f_resolution) ?: '1280x720';
+        }
+        if (isset($options['quality'])) {
+            $string_map['%QUALITY%'] = (31 * (101 - $options['quality'])) / 100;
+        } else {
+            $string_map['%QUALITY%'] = 1;
+        }
         if (!empty($subtitle)) {
             // This is too specific to ffmpeg/avconv
             $string_map['%SRTFILE%'] = str_replace(':', '\:', addslashes($subtitle));
@@ -164,7 +183,7 @@ class Stream
     {
         $image = null;
         $sec = ($media->time >= 30) ? 30 : intval($media->time / 2);
-        $frame = '00:00:' . sprintf("%02d", $sec) . '.0';
+        $frame = gmdate("H:i:s", $sec);
 
         if (AmpConfig::get('transcode_cmd') && AmpConfig::get('encode_get_image')) {
 

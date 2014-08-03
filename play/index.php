@@ -31,21 +31,46 @@ define('NO_SESSION','1');
 require_once '../lib/init.php';
 ob_end_clean();
 
+//debug_event('play', print_r(apache_request_headers(), true), 5);
+
 /* These parameters had better come in on the url. */
 $uid            = scrub_in($_REQUEST['uid']);
 $oid            = scrub_in($_REQUEST['oid']);
 $sid            = scrub_in($_REQUEST['ssid']);
 $type           = scrub_in($_REQUEST['type']);
 
+$transcode_to = null;
+$bitrate = 0;
+$maxbitrate = 0;
+$resolution = '';
+$quality = 0;
+
 if (AmpConfig::get('transcode_player_customize')) {
     $transcode_to = scrub_in($_REQUEST['transcode_to']);
     $bitrate = intval($_REQUEST['bitrate']);
-} else {
-    $transcode_to = null;
-    $bitrate = 0;
+
+    // Trick to avoid LimitInternalRecursion reconfiguration
+    $vsettings = $_REQUEST['vsettings'];
+    if ($vsettings) {
+        $vparts = explode('-', $vsettings);
+        for ($i = 0; $i < count($vparts); $i += 2) {
+            switch ($vparts[$i]) {
+                case 'maxbitrate':
+                    $maxbitrate = intval($vparts[$i + 1]);
+                    break;
+                case 'resolution':
+                    $resolution = $vparts[$i + 1];
+                    break;
+                case 'quality':
+                    $quality = intval($vparts[$i + 1]);
+                    break;
+            }
+        }
+    }
 }
 $share_id       = intval($_REQUEST['share_id']);
 $subtitle       = '';
+$send_all_in_once = false;
 
 if (!$type) {
     $type = 'song';
@@ -377,7 +402,40 @@ if (!$cpaction) {
 }
 
 if ($transcode) {
-    $transcoder = Stream::start_transcode($media, $transcode_to, $bitrate, $subtitle);
+    $troptions = array();
+    if ($bitrate) {
+        $troptions['bitrate'] = $bitrate;
+    }
+    if ($maxbitrate) {
+        $troptions['maxbitrate'] = $maxbitrate;
+    }
+    if ($subtitle) {
+        $troptions['subtitle'] = $bitrate;
+    }
+    if ($resolution) {
+        $troptions['resolution'] = $resolution;
+    }
+    if ($quality) {
+        $troptions['quality'] = $quality;
+    }
+
+    if (isset($_REQUEST['frame'])) {
+        $troptions['frame'] = floatval($_REQUEST['frame']);
+        if (isset($_REQUEST['duration'])) {
+            $troptions['duration'] = floatval($_REQUEST['duration']);
+        }
+    } else {
+        if (isset($_REQUEST['segment'])) {
+            // 10 seconds segment. Should it be an option?
+            $ssize = 10;
+            $send_all_in_once = true; // Should we use temporary folder instead?
+            debug_event('play', 'Sending all data in once.', 5);
+            $troptions['frame'] = intval($_REQUEST['segment']) * $ssize;
+            $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time) ? $ssize : ($media->time - $troptions['frame']);
+        }
+    }
+
+    $transcoder = Stream::start_transcode($media, $transcode_to, $troptions);
     $fp = $transcoder['handle'];
     $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
 } else if ($cpaction) {
@@ -411,9 +469,8 @@ if (!is_resource($fp)) {
     exit();
 }
 
-header('ETag: ' . $media->id);
-if ($media->time) {
-    header('X-Content-Duration: ' . $media->time);
+if (!$transcode) {
+    header('ETag: ' . $media->id);
 }
 Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($media));
 
@@ -451,17 +508,23 @@ if ($range_values > 0 && ($start > 0 || $end > 0)) {
     debug_event('play','Starting stream of ' . $media->file . ' with size ' . $media->size, 5);
 }
 
-// Stats registering must be done before play. Do not move it.
-// It can be slow because of scrobbler plugins (lastfm, ...)
-if ($start > 0) {
-    debug_event('play', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
-} else {
-    if (!$share_id) {
-        if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
-            debug_event('play', 'Registering stats for {'.$media->get_stream_name() .'}...', '5');
-            $sessionkey = Stream::$session;
-            $agent = Session::agent($sessionkey);
-            $GLOBALS['user']->update_stats($type, $media->id, $agent);
+if (!isset($_REQUEST['segment'])) {
+    if ($media->time) {
+        header('X-Content-Duration: ' . $media->time);
+    }
+
+    // Stats registering must be done before play. Do not move it.
+    // It can be slow because of scrobbler plugins (lastfm, ...)
+    if ($start > 0) {
+        debug_event('play', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
+    } else {
+        if (!$share_id) {
+            if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
+                debug_event('play', 'Registering stats for {'.$media->get_stream_name() .'}...', '5');
+                $sessionkey = Stream::$session;
+                $agent = Session::agent($sessionkey);
+                $GLOBALS['user']->update_stats($type, $media->id, $agent);
+            }
         }
     }
 }
@@ -481,15 +544,27 @@ $browser->downloadHeaders($media_name, $mime, false, $stream_size);
 $bytes_streamed = 0;
 
 // Actually do the streaming
+$buf_all = '';
+ob_end_clean();
 do {
     $read_size = $transcode
         ? 2048
         : min(2048, $stream_size - $bytes_streamed);
     $buf = fread($fp, $read_size);
-    print($buf);
-    ob_flush();
+    if ($send_all_in_once) {
+        $buf_all .= $buf;
+    } else {
+        print($buf);
+        ob_flush();
+    }
     $bytes_streamed += strlen($buf);
 } while (!feof($fp) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
+
+if ($send_all_in_once && connection_status() == 0) {
+    header("Content-Length: " . strlen($buf_all));
+    print($buf_all);
+    ob_flush();
+}
 
 $real_bytes_streamed = $bytes_streamed;
 // Need to make sure enough bytes were sent.

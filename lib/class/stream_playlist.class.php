@@ -119,10 +119,10 @@ class Stream_Playlist
             }
 
             $type = $medium['object_type'];
-            //$url['object_id'] = $medium['object_id'];
+            $object_id = $medium['object_id'];
             $url['type'] = $type;
 
-            $object = new $type($medium['object_id']);
+            $object = new $type($object_id);
             $object->format();
             // Don't add disabled media objects to the stream playlist
             // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
@@ -146,6 +146,7 @@ class Stream_Playlist
                     case 'video':
                         $url['title'] = 'Video - ' . $object->title;
                         $url['author'] = $object->f_artist_full;
+                        $url['resolution'] = $object->f_resolution;
                     break;
                     case 'live_stream':
                         $url['title'] = 'Radio - ' . $object->name;
@@ -220,6 +221,10 @@ class Stream_Playlist
             break;
             case 'xspf':
                 $ct = 'application/xspf+xml';
+            break;
+            case 'hls':
+                $ext = 'm3u8';
+                $ct = 'application/vnd.apple.mpegurl';
             break;
             case 'm3u':
             default:
@@ -297,9 +302,11 @@ class Stream_Playlist
     {
         echo "#EXTM3U\n";
 
+        $i = 0;
         foreach ($this->urls as $url) {
             echo '#EXTINF:' . $url->time, ',' . $url->author . ' - ' . $url->title . "\n";
             echo $url->url . "\n";
+            $i++;
         }
 
     } // create_m3u
@@ -393,6 +400,48 @@ class Stream_Playlist
         echo XML_Data::footer();
 
     } // create_xspf
+
+    public function create_hls()
+    {
+        $ssize = 10;
+        echo "#EXTM3U\n";
+        echo "#EXT-X-TARGETDURATION:" . $ssize . "\n";
+        echo "#EXT-X-VERSION:1\n";
+        echo "#EXT-X-ALLOW-CACHE:NO\n";
+        echo "#EXT-X-MEDIA-SEQUENCE:0\n";
+        echo "#EXT-X-PLAYLIST-TYPE:VOD\n";   // Static list of segments
+
+        foreach ($this->urls as $url) {
+            $soffset = 0;
+            $segment = 0;
+            while ($soffset < $url->time) {
+                $type = $url->type;
+                $size = (($soffset + $ssize) <= $url->time) ? $ssize : ($url->time - $soffset);
+                $additional_params = '&transcode_to=ts&segment=' . $segment;
+                echo "#EXTINF:" . $size . ",\n";
+                $purl = Stream_URL::parse($url->url);
+                $id = $purl['id'];
+
+                unset($purl['id']);
+                unset($purl['ssid']);
+                unset($purl['type']);
+                unset($purl['base_url']);
+                unset($purl['uid']);
+                unset($purl['name']);
+
+                foreach ($purl as $key => $value) {
+                    $additional_params .= '&' . $key . '=' . $value;
+                }
+
+                $hu = $type::play_url($id, $additional_params);
+                echo $hu . "\n";
+                $soffset += $size;
+                $segment++;
+            }
+        }
+
+        echo "#EXT-X-ENDLIST\n\n";
+    }
 
     /**
      * create_web_player

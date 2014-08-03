@@ -274,6 +274,10 @@ class Album extends database_object implements library_item
      */
     private function _get_extra_info()
     {
+        if (!$this->id) {
+            return array();
+        }
+
         if (parent::is_cached('album_extra', $this->id)) {
             return parent::get_from_cache('album_extra', $this->id);
         }

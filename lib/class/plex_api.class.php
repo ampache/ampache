@@ -70,15 +70,17 @@ class Plex_Api
     public static function auth_user()
     {
         $isLocal = self::is_local();
+
+        $headers = apache_request_headers();
+        $myplex_token = $headers['X-Plex-Token'];
+        if (empty($myplex_token)) {
+            $myplex_token = $_REQUEST['X-Plex-Token'];
+        }
+
         if (!$isLocal) {
             $match_users = AmpConfig::get('plex_match_email');
 
-            $headers = apache_request_headers();
             $myplex_username = $headers['X-Plex-Username'];
-            $myplex_token = $headers['X-Plex-Token'];
-            if (empty($myplex_token)) {
-                $myplex_token = $_REQUEST['X-Plex-Token'];
-            }
 
             if (empty($myplex_token)) {
                 // Never fail OPTIONS requests
@@ -149,6 +151,7 @@ class Plex_Api
                         self::createError(401);
                     } else {
                         $GLOBALS['user'] = $user;
+                        $GLOBALS['user']->load_playlist();
                     }
                 }
             } else {
@@ -165,6 +168,30 @@ class Plex_Api
                     'value' => $email
                 ));
             }
+        } else {
+            AmpConfig::set('cookie_path', '/', true);
+            $sid = $_COOKIE[AmpConfig::get('session_name')];
+            if (!$sid) {
+                $sid = $myplex_token;
+                if ($sid) {
+                   session_id($sid);
+                   Session::create_cookie();
+                }
+            }
+            if (!empty($sid) && Session::exists('api', $sid)) {
+                Session::check();
+                $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+            } else {
+                $GLOBALS['user'] = new User();
+                $data = array(
+                    'type' => 'api',
+                    'sid' => $sid,
+                );
+                Session::create($data);
+                Session::check();
+            }
+
+            $GLOBALS['user']->load_playlist();
         }
     }
 
@@ -410,6 +437,12 @@ class Plex_Api
 
     public static function replay_body($ch, $data)
     {
+        if (connection_status() != 0) {
+            curl_close($ch);
+            debug_event('plex', 'Stream cancelled.', 5);
+            exit;
+        }
+
         echo $data;
         ob_flush();
 
@@ -601,64 +634,104 @@ class Plex_Api
             $transcode_to = $params[0];
             $action = $params[1];
 
+            $path = $_GET['path'];
+            $protocol = $_GET['protocol'];
+            $offset = $_GET['offset'];
+
+            // Transcode arguments.
+            $videoQuality = $_GET['videoQuality'];
+            $videoResolution = $_GET['videoResolution'];
+            $maxVideoBitrate = $_GET['maxVideoBitrate'];
+            $subtitleSize = $_GET['subtitleSize'];
+            $audioBoost = $_GET['audioBoost'];
+
+            $additional_params = '&vsettings=';
+            if ($videoResolution) {
+                $additional_params .= 'resolution-' . $videoResolution . '-';
+            }
+            if ($maxVideoBitrate) {
+                $additional_params .= 'maxbitrate-' . $maxVideoBitrate . '-';
+            }
+            if ($videoQuality) {
+                $additional_params .= 'quality-' . $videoQuality . '-';
+            }
+
+            if ($offset) {
+                $additional_params .= '&frame=' . $offset;
+            }
+
+            // Several Media and Part per Video is not supported
+            //$mediaIndex = $_GET['mediaIndex'];
+            //$partIndex = $_GET['partIndex'];
+
+            // What's that?
+            //$fastSeek = $_GET['fastSeek'];
+            //$directPlay = $_GET['directPlay'];
+            //$directStream = $_GET['directStream'];
+
+            $uriroot = 'http://127.0.0.1:32400/library/metadata/';
+            $id = substr($path, strpos($path, $uriroot) + strlen($uriroot));
 
             $session = $_GET['session'];
             if ($action == "stop") {
                 // We should kill associated transcode session here
-            } elseif ($action == "start.m3u8") {
-                $path = $_GET['path'];
-                $protocol = $_GET['protocol'];
-                $offset = $_GET['offset'];
+            } elseif (strpos($action, "start") === 0) {
+                if (empty($protocol) || $protocol == "hls") {
+                    header('Content-Type: application/vnd.apple.mpegurl');
 
-                // Several Media and Part per Video is not supported
-                //$mediaIndex = $_GET['mediaIndex'];
-                //$partIndex = $_GET['partIndex'];
+                    $videoResolution = $_GET['videoResolution'];
+                    $maxVideoBitrate = $_GET['maxVideoBitrate'];
+                    if (!$maxVideoBitrate)
+                        $maxVideoBitrate = 8175;
 
-                // What's that?
-                //$fastSeek = $_GET['fastSeek'];
-                //$directPlay = $_GET['directPlay'];
-                //$directStream = $_GET['directStream'];
-
-                // Should be passed in transcode arguments.
-                //$videoQuality = $_GET['videoQuality'];
-                //$videoResolution = $_GET['videoResolution'];
-                //$maxVideoBitrate = $_GET['maxVideoBitrate'];
-                //$subtitleSize = $_GET['subtitleSize'];
-                //$audioBoost = $_GET['audioBoost'];
-
-                $uriroot = 'http://127.0.0.1:32400/library/metadata/';
-                $id = substr($path, strpos($path, $uriroot) + strlen($uriroot));
-
-                if ($id) {
-                    if (empty($protocol) || $protocol == "hls") {
-                        $pl = new Stream_Playlist();
-
-                        $media = null;
-                        if (Plex_XML_Data::isSong($id)) {
-                            $media = array(
-                                'object_type' => 'song',
-                                'object_id' => Plex_XML_Data::getAmpacheId($id),
-                            );
-                        } elseif (Plex_XML_Data::isVideo($id)) {
-                            $media = array(
-                                'object_type' => 'video',
-                                'object_id' => Plex_XML_Data::getAmpacheId($id),
-                            );
-                        }
-
-                        if ($media != null) {
-                            $additional_params = '';
-                            if ($transcode_to == 'universal') {
-                                if (AmpConfig::get('encode_args_webm')) {
-                                    debug_event('plex', 'Universal transcoder requested but `webm` transcode settings not configured. This will probably failed.', 3);
-                                }
-
-                                $additional_params = '&transcode_to=webm';
-                            }
-                            $pl->add(array($media));
-                        }
-                        $pl->generate_playlist('m3u');
+                    echo "#EXTM3U\n";
+                    echo "#EXT-X-STREAM-INF:PROGRAM-ID=1";
+                    if ($maxVideoBitrate)
+                        echo ",BANDWIDTH=" . ($maxVideoBitrate * 1000);
+                    if ($videoResolution)
+                        echo ",RESOLUTION=" . $videoResolution;
+                    echo "\n";
+                    echo "hls.m3u8?" . substr($_SERVER['QUERY_STRING'], strpos($_SERVER['QUERY_STRING'], '&') + 1);
+                } elseif ($protocol == "http") {
+                    $url = null;
+                    $additional_params .= '&transcode_to=webm';
+                    if (Plex_XML_Data::isSong($id)) {
+                        $url = Song::play_url(Plex_XML_Data::getAmpacheId($id), $additional_params);
+                    } elseif (Plex_XML_Data::isVideo($id)) {
+                        $url = Video::play_url(Plex_XML_Data::getAmpacheId($id), $additional_params);
                     }
+
+                    if ($url) {
+                        self::stream_url($url);
+                    }
+                }
+            } elseif ($action == "hls.m3u8") {
+                if ($id) {
+                    $pl = new Stream_Playlist();
+
+                    $media = null;
+                    if (Plex_XML_Data::isSong($id)) {
+                        $media = array(
+                            'object_type' => 'song',
+                            'object_id' => Plex_XML_Data::getAmpacheId($id),
+                        );
+                    } elseif (Plex_XML_Data::isVideo($id)) {
+                        $media = array(
+                            'object_type' => 'video',
+                            'object_id' => Plex_XML_Data::getAmpacheId($id),
+                        );
+                    }
+
+                    if ($media != null) {
+                        if ($transcode_to == 'universal') {
+                            if (AmpConfig::get('encode_args_webm')) {
+                                debug_event('plex', 'Universal transcoder requested but `webm` transcode settings not configured. This will probably failed.', 3);
+                            }
+                        }
+                        $pl->add(array($media), $additional_params);
+                    }
+
+                    $pl->generate_playlist('hls');
                 }
             }
         }
@@ -836,10 +909,17 @@ class Plex_Api
     {
         // header("Location: " . $url);
         set_time_limit(0);
+        ob_end_clean();
+
+        $headers = apache_request_headers();
+        $reqheaders = array();
+        if (isset($headers['Range'])) {
+            $reqheaders[] = "Range: " . $headers['Range'];
+        }
 
         $ch = curl_init($url);
         curl_setopt_array($ch, array(
-            CURLOPT_HTTPHEADER => array("User-Agent: Plex"),
+            CURLOPT_HTTPHEADER => $reqheaders,
             CURLOPT_HEADER => false,
             CURLOPT_RETURNTRANSFER => false,
             CURLOPT_FOLLOWLOCATION => true,
@@ -863,12 +943,22 @@ class Plex_Api
                 $file = $params[1];
 
                 $id = Plex_XML_Data::getAmpacheId($key);
-                $song = new Song($id);
-                if ($song->id) {
-                    $url = Song::play_url($id, '', true);
-                    self::stream_url($url);
-                } else {
-                    self::createError(404);
+                if (Plex_XML_Data::isSong($key)) {
+                    $media = new Song($id);
+                    if ($media->id) {
+                        $url = Song::play_url($id, '', true);
+                        self::stream_url($url);
+                    } else {
+                        self::createError(404);
+                    }
+                } elseif (Plex_XML_Data::isVideo($key)) {
+                    $media = new Video($id);
+                    if ($media->id) {
+                        $url = Video::play_url($id, '', true);
+                        self::stream_url($url);
+                    } else {
+                        self::createError(404);
+                    }
                 }
             } elseif ($n == 1) {
                 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
@@ -1089,11 +1179,7 @@ class Plex_Api
         $duration = $_REQUEST['duration'];
 
         // Not supported right now (maybe in a future for broadcast?)
-        if ($_SERVER['REQUEST_METHOD'] != 'OPTIONS') {
-            self::apiOutput('');
-        } else {
-            self::createError(400);
-        }
+        header('Content-Type: text/html');
     }
 
     public static function rate($params)
@@ -1202,14 +1288,23 @@ class Plex_Api
 
     public static function playqueues($params)
     {
-        $type = $_GET['type'];
-        $playlistID = $_GET['playlistID'];
-        $key = $_GET['key'];
-        $shuffle = $_GET['shuffle'];
+        $n = count($params);
+        $r = Plex_XML_Data::createLibContainer();
 
-        $r = Plex_XML_Data::createContainer();
-        Plex_XML_Data::setPlayQueue($r, $type, $playlistID, $key, $shuffle);
+        if ($n == 1) {
+            $playlistID = $params[0];
+            Plex_XML_Data::setTmpPlayQueue($r, $playlistID);
+        } else {
+            $type = $_GET['type'];
+            $playlistID = $_GET['playlistID'];
+            $uri = $_GET['uri'];
+            $key = $_GET['key'];
+            $shuffle = $_GET['shuffle'];
+
+            Plex_XML_Data::setPlayQueue($r, $type, $playlistID, $uri, $key, $shuffle);
+        }
+
         Plex_XML_Data::setContainerSize($r);
-        self::apiOutputXml($r->asXML());
+            self::apiOutputXml($r->asXML());
     }
 }

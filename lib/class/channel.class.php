@@ -391,7 +391,10 @@ class Channel extends database_object implements media, library_item
             if ($this->media != null) {
                 // Stream not yet initialized for this media, start it
                 if (!$this->transcoder) {
-                    $this->transcoder = Stream::start_transcode($this->media, $this->stream_type, $this->bitrate);
+                    $options = array(
+                        'bitrate' => $this->bitrate
+                    );
+                    $this->transcoder = Stream::start_transcode($this->media, $this->stream_type, $options);
                     $this->media_bytes_streamed = 0;
                 }
 

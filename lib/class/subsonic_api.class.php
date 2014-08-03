@@ -893,7 +893,7 @@ class Subsonic_Api
 
         $fileid = self::check_parameter($input, 'id', true);
 
-        $bitRate = $input['bitRate']; // Not supported.
+        $bitRate = $input['bitRate'];
 
         $media = array();
         $media['object_type'] = 'song';
@@ -902,7 +902,12 @@ class Subsonic_Api
         $medias = array();
         $medias[] = $media;
         $stream = new Stream_Playlist();
-        $stream->add($medias);
+        $additional_params = '';
+        if ($bitrate) {
+            $additional_params .= '&bitrate=' . $bitrate;
+        }
+        //$additional_params .= '&transcode_to=ts';
+        $stream->add($medias, $additional_params);
 
         header('Content-Type: application/vnd.apple.mpegurl;');
         $stream->create_m3u();

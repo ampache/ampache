@@ -1622,19 +1622,30 @@ class Song extends database_object implements media, library_item
         debug_event('media', 'Transcode settings: from ' . $source . ' to ' . $target, 5);
 
         $cmd = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
-        $args = AmpConfig::get('encode_args_' . $target);
+        $args = '';
+        if (AmpConfig::get('encode_ss_frame') && isset($options['frame'])) {
+            $args .= ' ' . AmpConfig::get('encode_ss_frame');
+        }
+        if (AmpConfig::get('encode_ss_duration') && isset($options['duration'])) {
+            $args .= ' ' . AmpConfig::get('encode_ss_duration');
+        }
 
+        $args .= ' ' . AmpConfig::get('transcode_input');
+
+        if (AmpConfig::get('encode_srt') && $options['subtitle']) {
+            debug_event('media', 'Using subtitle ' . $options['subtitle'], 5);
+            $args .= ' ' . AmpConfig::get('encode_srt');
+        }
+
+        $argst = AmpConfig::get('encode_args_' . $target);
         if (!$args) {
             debug_event('media', 'Target format ' . $target . ' is not properly configured', 2);
             return false;
         }
+        $args .= ' ' . $argst;
 
-        if (AmpConfig::get('encode_srt') && isset($options['subtitle'])) {
-            $args = AmpConfig::get('encode_srt') . ' ' . $args;
-        }
-
-        debug_event('media', 'Command: ' . $cmd . ' Arguments: ' . $args, 5);
-        return array('format' => $target, 'command' => $cmd . ' ' . $args);
+        debug_event('media', 'Command: ' . $cmd . ' Arguments:' . $args, 5);
+        return array('format' => $target, 'command' => $cmd . $args);
     }
 
     /**

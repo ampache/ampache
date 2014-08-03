@@ -7,7 +7,7 @@
 ; if this config file is up to date 
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 17
+config_version = 18
 
 ;###################
 ; Path Vars        #
@@ -721,9 +721,12 @@ transcode_player_customize = true
 ; equivalent to the old default, but if you find that necessary you should be
 ; clever enough to figure out how on your own.
 ; DEFAULT: none
-;transcode_cmd = "ffmpeg -i %FILE%"
-;transcode_cmd = "avconv -i %FILE%"
-;transcode_cmd = "/usr/bin/neatokeen %FILE%"
+;transcode_cmd = "ffmpeg"
+;transcode_cmd = "avconv"
+;transcode_cmd = "/usr/bin/neatokeen"
+
+; Transcode input file argument
+transcode_input = "-i %FILE%"
 
 ; Specific transcode commands
 ; It shouldn't be necessary in most cases, but you can override the transcode
@@ -737,20 +740,26 @@ transcode_player_customize = true
 ; For each output format, you should provide the necessary arguments for
 ; your transcode_cmd. 
 ; encode_args_TYPE = TRANSCODE_CMD_ARGS
-;encode_args_mp3 = "-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1"
-;encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
-;encode_args_m4a = "-vn -b:a %SAMPLE%K -c:a libfdk_aac -f adts pipe:1"
-;encode_args_wav = "-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1"
-;encode_args_flv = "-b:a %SAMPLE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
-;encode_args_webm = "-b:a %SAMPLE%K -f webm -vcodec libvpx -preset superfast -threads 0 pipe:1"
+encode_args_mp3 = "-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1"
+encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
+encode_args_m4a = "-vn -b:a %SAMPLE%K -c:a libfdk_aac -f adts pipe:1"
+encode_args_wav = "-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1"
+encode_args_flv = "-b:a %SAMPLE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
+encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
+encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
 
 ; Encoding arguments to retrieve an image from a single frame
-; DEFAULT: none
-;encode_get_image = "-ss %TIME% -f image2 -vframes 1 pipe:1"
+encode_get_image = "-ss %TIME% -f image2 -vframes 1 pipe:1"
 
 ; Encoding argument to encrust subtitle
-; DEFAULT: none
-;encode_srt = "-vf \"subtitles='%SRTFILE%'\""
+encode_srt = "-vf \"subtitles='%SRTFILE%'\""
+
+; Encode segment frame argument
+encode_ss_frame = "-ss %TIME%"
+
+; Encode segment duration argument
+encode_ss_duration = "-t %DURATION%"
+
 
 ;######################################################
 ; these options allow you to configure your rss-feed
