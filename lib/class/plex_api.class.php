@@ -703,7 +703,7 @@ class Plex_Api
                             debug_event('plex', 'Universal transcoder requested but `webm` transcode settings not configured. This will probably failed.', 3);
                         }
                     }
-                    
+
                     if (Plex_XML_Data::isSong($id)) {
                         $url = Song::play_url(Plex_XML_Data::getAmpacheId($id), $additional_params);
                     } elseif (Plex_XML_Data::isVideo($id)) {
