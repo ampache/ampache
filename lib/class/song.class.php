@@ -820,16 +820,19 @@ class Song extends database_object implements media, library_item
                 case 'artist_name':
                     // Need to create new artist according the name
                     $new_artist_id = Artist::check($value);
+                    $this->artist = $new_artist_id;
                     self::update_artist($new_artist_id, $this->id);
                 break;
                 case 'album_artist_name':
                     // Need to create new artist according the name
                     $new_artist_id = Artist::check($value);
+                    $this->album_artist = $new_artist_id;
                     self::update_album_artist($new_artist_id, $this->id);
                 break;
                 case 'album_name':
                     // Need to create new album according the name
                     $new_album_id = Album::check($value);
+                    $this->album = $new_album_id;
                     self::update_album($new_album_id, $this->id);
                 break;
                 case 'album_artist':

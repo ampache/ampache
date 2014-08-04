@@ -631,11 +631,14 @@ class Artist extends database_object implements library_item
     public function update(array $data)
     {
         // Save our current ID
+        $name = $data['name'] ?: $this->name;
+        $mbid = $data['mbid'] ?: $this->mbid;
+        
         $current_id = $this->id;
 
         // Check if name is different than current name
-        if ($this->name != $data['name']) {
-            $artist_id = self::check($data['name'], $this->mbid);
+        if ($this->name != $name) {
+            $artist_id = self::check($name, $mbid);
 
             $updated = false;
             $songs = array();
@@ -659,18 +662,21 @@ class Artist extends database_object implements library_item
                 Rating::gc();
                 Userflag::gc();
             } // if updated
-        } else if ($this->mbid != $data['mbid']) {
+        } else if ($this->mbid != $mbid) {
             $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
-            Dba::write($sql, array($data['mbid'], $current_id));
+            Dba::write($sql, array($mbid, $current_id));
         }
 
         // Update artist name (if we don't want to use the MusicBrainz name)
-        $trimmed = Catalog::trim_prefix(trim($data['name']));
+        $trimmed = Catalog::trim_prefix(trim($name));
         $name = $trimmed['string'];
         if ($name != '' && $name != $this->name) {
             $sql = 'UPDATE `artist` SET `name` = ? WHERE `id` = ?';
             Dba::write($sql, array($name, $current_id));
         }
+        
+        $this->name = $name;
+        $this->mbid = $mbid;
 
         $override_childs = false;
         if ($data['apply_childs'] == 'checked') {

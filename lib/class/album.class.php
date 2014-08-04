@@ -734,14 +734,14 @@ class Album extends database_object implements library_item
      */
     public function update(array $data)
     {
-        $year = $data['year'];
+        $year = $data['year'] ?: $this->year;
         $artist = intval($data['artist']);
         $album_artist = intval($data['album_artist']);
-        $name = $data['name'];
-        $disk = $data['disk'];
-        $mbid = $data['mbid'];
-        $mbid_group = $data['mbid_group'];
-        $release_type = $data['release_type'];
+        $name = $data['name'] ?: $this->name;
+        $disk = $data['disk'] ?: $this->disk;
+        $mbid = $data['mbid'] ?: $this->mbid;
+        $mbid_group = $data['mbid_group'] ?: $this->mbid_group;
+        $release_type = $data['release_type'] ?: $this->release_type;
 
         $current_id = $this->id;
 
@@ -782,6 +782,12 @@ class Album extends database_object implements library_item
             Album::update_mbid_group($mbid_group, $album_id);
             Album::update_release_type($release_type, $album_id);
         }
+        $this->year = $year;
+        $this->mbid_group = $mbid_group;
+        $this->release_type = $release_type;
+        $this->name = $name;
+        $this->disk = $disk;
+        $this->mb_id = $mbid;
 
         if ($updated && is_array($songs)) {
             foreach ($songs as $song_id) {

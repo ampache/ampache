@@ -197,9 +197,17 @@ class Plex_Api
 
     protected static function check_access($level)
     {
-        if (!self::is_local() && $GLOBALS['user']->access < $level) {
+        if (self::is_local()) {
+            // Promote all users as content manager if local
+            if ($GLOBALS['user']->access < 50) {
+                $GLOBALS['user']->access = 50;
+            }
+        }
+        
+        if (($GLOBALS['user']->access < $level || AmpConfig::get('demo_mode'))) {
             debug_event('plex', 'User ' . $GLOBALS['user']->username . ' is unauthorized to complete the action.', '3');
             self::createError(401);
+            exit;
         }
     }
 
@@ -810,7 +818,11 @@ class Plex_Api
             $key = $params[0];
 
             $id = Plex_XML_Data::getAmpacheId($key);
-
+            $editMode = ($_SERVER['REQUEST_METHOD'] == 'PUT');
+            if ($editMode) {
+                self::check_access(50);
+            }
+            
             if ($n == 1) {
                 // Should we check that files still exists here?
                 $checkFiles = $_REQUEST['checkFiles'];
@@ -818,14 +830,34 @@ class Plex_Api
                 if (Plex_XML_Data::isArtist($key)) {
                     $artist = new Artist($id);
                     $artist->format();
+                    if ($editMode) {
+                        $dmap = array(
+                            'title' => 'name',
+                            'summary' => null,
+                        );
+                        $artist->update(self::get_data_from_map($dmap));
+                    }
                     Plex_XML_Data::addArtist($r, $artist);
                 } elseif (Plex_XML_Data::isAlbum($key)) {
                     $album = new Album($id);
                     $album->format();
+                    if ($editMode) {
+                        $dmap = array(
+                            'title' => 'name',
+                            'year' => null,
+                        );
+                        $album->update(self::get_data_from_map($dmap));
+                    }
                     Plex_XML_Data::addAlbum($r, $album);
                 } elseif (Plex_XML_Data::isTrack($key)) {
                     $song = new Song($id);
                     $song->format();
+                    if ($editMode) {
+                        $dmap = array(
+                            'title' => null,
+                        );
+                        $song->update(self::get_data_from_map($dmap));
+                    }
                     Plex_XML_Data::addSong($r, $song);
                 } elseif (Plex_XML_Data::isTVShow($key)) {
                     $tvshow = new TVShow($id);
@@ -845,6 +877,16 @@ class Plex_Api
                     } elseif ($subtype == 'movie') {
                         Plex_XML_Data::addMovie($r, $video, true);
                     }
+                } elseif (Plex_XML_Data::isPlaylist($key)) {
+                    $playlist = new Playlist($id);
+                    $playlist->format();
+                    if ($editMode) {
+                        $dmap = array(
+                            'title' => 'name',
+                        );
+                        $playlist->update(self::get_data_from_map($dmap));
+                    }
+                    Plex_XML_Data::addPlaylist($r, $playlist);
                 }
             } else {
                 $subact = $params[1];
@@ -866,9 +908,14 @@ class Plex_Api
                         $season->format();
                         Plex_XML_Data::setTVShowSeasonRoot($r, $season);
                     }
+                } elseif ($subaction == "posters") {
+                    if ($editMode) {
+                        // Upload art here
+                    }
+                    // Get arts list here
                 } elseif ($subact == "thumb" || $subact == "art" || $subact == "background") {
                     if ($n == 3) {
-                        // Ignore thumb id as we can only have 1 thumb
+                        // Ignore art id and type as we can only have 1 thumb
                         $art = null;
                         if (Plex_XML_Data::isArtist($key)) {
                             $art = new Art($id, "artist");
@@ -1259,6 +1306,12 @@ class Plex_Api
     public static function playlists($params)
     {
         $n = count($params);
+        
+        $editMode = ($_SERVER['REQUEST_METHOD'] == 'PUT');
+        $delMode = ($_SERVER['REQUEST_METHOD'] == 'DELETE');
+        if ($editMode || $delMode) {
+            self::check_access(50);
+        }
 
         if ($n == 0 || ($n == 1 && $params[0] == "all")) {
             $r = Plex_XML_Data::createContainer();
@@ -1276,15 +1329,23 @@ class Plex_Api
                     self::apiOutputXml($r->asXML());
                 }
             }
-        } elseif ($n == 2) {
+        } elseif ($n >= 2) {
             $plid = $params[0];
             if (Plex_XML_Data::isPlaylist($plid) && $params[1] == "items") {
                 $playlist = new Playlist(Plex_XML_Data::getAmpacheId($plid));
                 if ($playlist->id) {
-                    $r = Plex_XML_Data::createContainer();
-                    Plex_XML_Data::setPlaylistItems($r, $playlist);
-                    Plex_XML_Data::setContainerSize($r);
-                    self::apiOutputXml($r->asXML());
+                    if ($n == 2) {
+                        $r = Plex_XML_Data::createContainer();
+                        Plex_XML_Data::setPlaylistItems($r, $playlist);
+                        Plex_XML_Data::setContainerSize($r);
+                        self::apiOutputXml($r->asXML());
+                    } elseif ($n == 3) {
+                        $index = intval($params[2]);
+                        if ($delMode) {
+                            $playlist->delete_track_number($index);
+                            $playlist->regenerate_track_numbers();
+                        }
+                    }
                 }
             }
         }
@@ -1309,6 +1370,23 @@ class Plex_Api
         }
 
         Plex_XML_Data::setContainerSize($r);
-            self::apiOutputXml($r->asXML());
+        self::apiOutputXml($r->asXML());
+    }
+    
+    private static function get_data_from_map($dmap)
+    {
+        $data = array();
+        
+        foreach ($dmap as $key=>$value) {
+            if (isset($_GET[$key])) {
+                if ($value == null) {
+                    $value = $key;
+                }
+                
+                $data[$value] = $_GET[$key];
+            }
+        }
+            
+        return $data;
     }
 }
