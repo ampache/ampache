@@ -669,8 +669,11 @@ class Plex_Api
             //$directPlay = $_GET['directPlay'];
             //$directStream = $_GET['directStream'];
 
-            $uriroot = 'http://127.0.0.1:32400/library/metadata/';
-            $id = substr($path, strpos($path, $uriroot) + strlen($uriroot));
+            $uriroot = '/library/metadata/';
+            $upos = strrpos($path, $uriroot);
+            if ($upos !== false) {
+                $id = substr($path, $upos + strlen($uriroot));
+            }
 
             $session = $_GET['session'];
             if ($action == "stop") {
@@ -694,7 +697,13 @@ class Plex_Api
                     echo "hls.m3u8?" . substr($_SERVER['QUERY_STRING'], strpos($_SERVER['QUERY_STRING'], '&') + 1);
                 } elseif ($protocol == "http") {
                     $url = null;
-                    $additional_params .= '&transcode_to=webm';
+                    if ($transcode_to == 'universal') {
+                        $additional_params .= '&transcode_to=webm';
+                        if (AmpConfig::get('encode_args_webm')) {
+                            debug_event('plex', 'Universal transcoder requested but `webm` transcode settings not configured. This will probably failed.', 3);
+                        }
+                    }
+                    
                     if (Plex_XML_Data::isSong($id)) {
                         $url = Song::play_url(Plex_XML_Data::getAmpacheId($id), $additional_params);
                     } elseif (Plex_XML_Data::isVideo($id)) {
@@ -723,11 +732,6 @@ class Plex_Api
                     }
 
                     if ($media != null) {
-                        if ($transcode_to == 'universal') {
-                            if (AmpConfig::get('encode_args_webm')) {
-                                debug_event('plex', 'Universal transcoder requested but `webm` transcode settings not configured. This will probably failed.', 3);
-                            }
-                        }
                         $pl->add(array($media), $additional_params);
                     }
 

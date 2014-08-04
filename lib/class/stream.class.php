@@ -115,6 +115,7 @@ class Stream
             return false;
         }
 
+        $media_rate = $media->video_bitrate ?: $media->bitrate;
         if (!$options['bitrate']) {
             $sample_rate = self::get_allowed_bitrate($media);
             debug_event('stream', 'Configured bitrate is ' . $sample_rate, 5);
@@ -162,11 +163,11 @@ class Stream
         if (isset($options['quality'])) {
             $string_map['%QUALITY%'] = (31 * (101 - $options['quality'])) / 100;
         } else {
-            $string_map['%QUALITY%'] = 1;
+            $string_map['%QUALITY%'] = 10;
         }
-        if (!empty($subtitle)) {
+        if (!empty($options['subtitle'])) {
             // This is too specific to ffmpeg/avconv
-            $string_map['%SRTFILE%'] = str_replace(':', '\:', addslashes($subtitle));
+            $string_map['%SRTFILE%'] = str_replace(':', '\:', addslashes($options['subtitle']));
         }
 
         foreach ($string_map as $search => $replace) {

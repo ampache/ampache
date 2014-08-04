@@ -410,7 +410,7 @@ if ($transcode) {
         $troptions['maxbitrate'] = $maxbitrate;
     }
     if ($subtitle) {
-        $troptions['subtitle'] = $bitrate;
+        $troptions['subtitle'] = $subtitle;
     }
     if ($resolution) {
         $troptions['resolution'] = $resolution;
