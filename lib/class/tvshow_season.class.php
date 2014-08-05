@@ -27,6 +27,7 @@ class TVShow_Season extends database_object implements library_item
     public $season_number;
     public $tvshow;
 
+    public $catalog_id;
     public $episodes;
     public $f_name;
     public $f_tvshow;
@@ -107,7 +108,8 @@ class TVShow_Season extends database_object implements library_item
         if (parent::is_cached('tvshow_extra', $this->id) ) {
             $row = parent::get_from_cache('tvshow_extra', $this->id);
         } else {
-            $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count` FROM `tvshow_episode` " .
+            $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_episode` " .
+                "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " .
                 "WHERE `tvshow_episode`.`season` = ?";
 
             $db_results = Dba::read($sql, array($this->id));
@@ -117,6 +119,7 @@ class TVShow_Season extends database_object implements library_item
 
         /* Set Object Vars */
         $this->episodes = $row['episode_count'];
+        $this->catalog_id = $row['catalog_id'];
 
         return $row;
 
@@ -188,6 +191,17 @@ class TVShow_Season extends database_object implements library_item
             }
         }
         return $medias;
+    }
+
+    /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array($this->catalog_id);
     }
 
     public function get_user_owner()

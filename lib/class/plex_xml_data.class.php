@@ -44,6 +44,8 @@ class Plex_XML_Data
     const PLEX_ARTIST = 8;
     const PLEX_ALBUM = 9;
     const PLEX_TVSHOW = 2;
+    const PLEX_SEASON = 3;
+    const PLEX_EPISODE = 4;
     const PLEX_MOVIE = 1;
     const PLEX_PLAYLIST = 15;
 
@@ -173,6 +175,37 @@ class Plex_XML_Data
         return ($id >= Plex_XML_Data::AMPACHEID_PART);
     }
 
+    public static function createLibraryItem($id)
+    {
+        $item = null;
+        $oid = self::getAmpacheId($id);
+        if (self::isArtist($id)) {
+            $item = new Artist($oid);
+        } elseif (self::isAlbum($id)) {
+            $item = new Album($oid);
+        } elseif (self::isSong($id) || self::isTrack($id)) {
+            $item = new Song($oid);
+        } elseif (self::isTVShow($id)) {
+            $item = new TVShow($oid);
+        } elseif (self::isTVShowSeason($id)) {
+            $item = new TVShow_Season($oid);
+        } elseif (self::isVideo($id)) {
+            $item = Video::create_from_id($oid);
+        } elseif (self::isPlaylist($id)) {
+            $item = new Playlist($oid);
+        }
+
+        if ($item != null) {
+            if ($item->id) {
+                $item->format();
+            } else {
+                $item = null;
+            }
+        }
+
+        return $item;
+    }
+
     public static function getPlexVersion()
     {
         return "0.9.9.13.525-197d5ed";
@@ -294,6 +327,22 @@ class Plex_XML_Data
     {
         $up = '/library/metadata/';
         return substr($uri, strlen($up));
+    }
+
+    public static function getKeyFromFullUri($uri)
+    {
+        $key = '';
+        $puri = parse_url($uri);
+        if ($puri['scheme'] == 'library') {
+            // We ignore library uuid (= $puri['host'])
+            $ppath = explode('/', $puri['path']);
+            if (count($ppath) == 3) {
+                if ($ppath['1'] == 'item') {
+                    $key = rawurldecode($ppath[2]);
+                }
+            }
+        }
+        return $key;
     }
 
     public static function getSectionUri($key)
@@ -480,18 +529,18 @@ class Plex_XML_Data
                 case 'movie':
                     $dir->addAttribute('type', 'movie');
                     $dir->addAttribute('agent', 'com.plexapp.agents.imdb');
-                    $dir->addAttribute('scanner', 'Plex Movie Scanner');
+                    $dir->addAttribute('scanner', 'Ampache Movie Scanner');
                     break;
                 case 'tvshow':
                     $dir->addAttribute('type', 'show');
                     $dir->addAttribute('agent', 'com.plexapp.agents.thetvdb');
-                    $dir->addAttribute('scanner', 'Plex Series Scanner');
+                    $dir->addAttribute('scanner', 'Ampache Series Scanner');
                     break;
                 case 'music':
                 default:
                     $dir->addAttribute('type', 'artist');
                     $dir->addAttribute('agent', 'com.plexapp.agents.none'); // com.plexapp.agents.lastfm
-                    $dir->addAttribute('scanner', 'Plex Music Scanner');
+                    $dir->addAttribute('scanner', 'Ampache Music Scanner');
                     break;
             }
             $dir->addAttribute('language', 'en');
@@ -601,8 +650,7 @@ class Plex_XML_Data
         $xml->addAttribute('nocache', '1');
         $xml->addAttribute('viewGroup', $viewGroup);
         $xml->addAttribute('viewMode', '65592');
-        $xml->addAttribute('librarySectionID', $catalog->id);
-        $xml->addAttribute('librarySectionUUID', self::uuidFromSubKey($catalog->id));
+        self::addCatalogIdentity($xml, $catalog);
     }
 
     public static function setSectionAll_Artists(SimpleXMLElement $xml, Catalog $catalog)
@@ -615,6 +663,18 @@ class Plex_XML_Data
         }
     }
 
+    public static function setSectionAll_Albums(SimpleXMLElement $xml, Catalog $catalog)
+    {
+        self::setSectionAllAttributes($xml, $catalog, 'All Albums', 'album');
+
+        $albums_ids = Catalog::get_albums(0, 0, array($catalog->id));
+        foreach ($albums_ids as $album_id) {
+            $album = new Album($album_id);
+            $album->format();
+            self::addAlbum($xml, $album);
+        }
+    }
+
     public static function setSectionAll_TVShows(SimpleXMLElement $xml, Catalog $catalog)
     {
         self::setSectionAllAttributes($xml, $catalog, 'All Shows', 'show');
@@ -623,6 +683,36 @@ class Plex_XML_Data
         foreach ($shows as $show) {
             $show->format();
             self::addTVShow($xml, $show);
+        }
+    }
+
+    public static function setSectionAll_Seasons(SimpleXMLElement $xml, Catalog $catalog)
+    {
+        self::setSectionAllAttributes($xml, $catalog, 'All Seasons', 'season');
+
+        $shows = Catalog::get_tvshows(array($catalog->id));
+        foreach ($shows as $show) {
+            $seasons = $show->get_seasons();
+            foreach ($seasons as $season_id) {
+                $season = new TVShow_Season($season_id);
+                $season->format();
+                self::addTVShowSeason($xml, $season);
+            }
+        }
+    }
+
+    public static function setSectionAll_Episodes(SimpleXMLElement $xml, Catalog $catalog)
+    {
+        self::setSectionAllAttributes($xml, $catalog, 'All Episodes', 'episode');
+
+        $shows = Catalog::get_tvshows(array($catalog->id));
+        foreach ($shows as $show) {
+            $episodes = $show->get_episodes();
+            foreach ($episodes as $episode_id) {
+                $episode = new TVShow_Episode($episode_id);
+                $episode->format();
+                self::addEpisode($xml, $episode);
+            }
         }
     }
 
@@ -665,8 +755,7 @@ class Plex_XML_Data
         $xml->addAttribute('mixedParents', '1');
         $xml->addAttribute('viewGroup', 'album');
         $xml->addAttribute('viewMode', '65592');
-        $xml->addAttribute('librarySectionID', $catalog->id);
-        $xml->addAttribute('librarySectionUUID', self::uuidFromSubKey($catalog->id));
+        self::addCatalogIdentity($xml, $catalog);
         self::setSectionXContent($xml, $catalog);
 
         $data = array();
@@ -799,10 +888,9 @@ class Plex_XML_Data
 
         $tags = Tag::get_top_tags('album', $album->id);
         if (is_array($tags)) {
-            foreach ($tags as $tag_id=>$value) {
-                $tag = new Tag($tag_id);
+            foreach ($tags as $tag_id=>$tag) {
                 $xgenre = $xdir->addChild('Genre');
-                $xgenre->addAttribute('tag', $tag->name);
+                $xgenre->addAttribute('tag', $tag['name']);
             }
         }
     }
@@ -811,8 +899,6 @@ class Plex_XML_Data
     {
         $id = self::getAlbumId($album->id);
         $xml->addAttribute('allowSync', '1');
-        $xml->addAttribute('librarySectionID', $album->catalog_id);
-        $xml->addAttribute('librarySectionUUID', self::uuidFromkey($album->catalog_id));
         $xml->addAttribute('type', 'album');
         $xml->addAttribute('summary', '');
         $xml->addAttribute('index', '1');
@@ -845,7 +931,9 @@ class Plex_XML_Data
         if ($rating_value > 0) {
             $xdir->addAttribute('rating', intval($rating_value * 2));
         }
-        $xdir->addAttribute('year', $tvshow->year);
+        if ($tvshow->year) {
+            $xdir->addAttribute('year', $tvshow->year);
+        }
         //$xdir->addAttribute('duration', '');
         //$xdir->addAttribute('originallyAvailableAt', '');
         $xdir->addAttribute('leafCount', $tvshow->episodes);
@@ -1024,12 +1112,22 @@ class Plex_XML_Data
        self::addSongMeta($xdir, $song);
        $time = $song->time * 1000;
        $xdir->addAttribute('title', $song->title);
+       $id = self::getAlbumId($song->id);
        $albumid = self::getAlbumId($song->album);
+       $artistid = self::getAlbumId($song->artist);
        $album = new Album($song->album);
+       $xdir->addAttribute('grandparentRatingKey', $artistid);
        $xdir->addAttribute('parentRatingKey', $albumid);
+       $xdir->addAttribute('grandparentKey', self::getMetadataUri($albumid));
        $xdir->addAttribute('parentKey', self::getMetadataUri($albumid));
-       $xdir->addAttribute('originalTitle', $album->f_name);
+       $xdir->addAttribute('grandparentTitle', $song->f_artist);
+       $xdir->addAttribute('parentTitle', $song->f_album);
+       $xdir->addAttribute('originalTitle', $song->f_artist);
        $xdir->addAttribute('summary', '');
+       $xdir->addAttribute('art', self::getMetadataUri($id) . '/art/' . $id);
+       $xdir->addAttribute('grandparentThumb', self::getMetadataUri($artistid) . '/thumb/' . $artistid);
+       $xdir->addAttribute('parentThumb', self::getMetadataUri($albumid) . '/thumb/' . $albumid);
+       $xdir->addAttribute('thumb', self::getMetadataUri($albumid) . '/thumb/' . $albumid); // No song art, set album art
        $xdir->addAttribute('index', $song->track);
        $xdir->addAttribute('duration', $time);
        $xdir->addAttribute('type', 'track');
@@ -1078,10 +1176,13 @@ class Plex_XML_Data
         $xvid = self::addVideo($xml, $movie, $details);
         $xvid->addAttribute('type', 'movie');
         $xvid->addAttribute('summary', $movie->summary);
-        if (isset($xml['year'])) {
-            $xml['year'] = $movie->year;
-        } else {
-            $xvid->addAttribute('year', $movie->year);
+        $xvid->addAttribute('originalTitle', $movie->original_name);
+        if ($movie->year) {
+            if (isset($xml['year'])) {
+                $xml['year'] = $movie->year;
+            } else {
+                $xvid->addAttribute('year', $movie->year);
+            }
         }
         return $xvid;
     }
@@ -1119,7 +1220,10 @@ class Plex_XML_Data
         $xvid->addAttribute('key', self::getMetadataUri($id));
         $xvid->addAttribute('title', $video->f_title);
         if ($video->release_date) {
-            $xvid->addAttribute('year', date('Y', $video->release_date));
+            $year = date('Y', $video->release_date);
+            if ($year) {
+                $xvid->addAttribute('year', $year);
+            }
             $xvid->addAttribute('originallyAvailableAt', $video->f_release_date);
         }
         $rating = new Rating($video->id, "video");
@@ -1163,6 +1267,15 @@ class Plex_XML_Data
         <Writer tag="Richard Hatem" />
         <Director tag="Terry McDonough" />
         */
+
+       $tags = Tag::get_top_tags('video', $video->id);
+        if (is_array($tags)) {
+            foreach ($tags as $tag_id=>$tag) {
+                $xgenre = $xvid->addChild('Genre');
+                $xgenre->addAttribute('id', $tag['id']);
+                $xgenre->addAttribute('tag', $tag['name']);
+            }
+        }
 
        if ($details) {
            // Subtitles
@@ -1225,18 +1338,23 @@ class Plex_XML_Data
         self::addPlaylistsItems($xml, $items);
     }
 
-    private static function addPlaylistsItems(SimpleXMLElement $xml, $items, $attr = array())
+    private static function addPlaylistsItems(SimpleXMLElement $xml, $items, $itemIDName = 'playlistItemID')
     {
         foreach ($items as $item) {
+            $xitem = null;
             if ($item['object_type'] == 'song') {
-                $song = new Song($item['object_id']);
-                $song->format();
-                $xitem = self::addSong($xml, $song);
-                if (isset($item['track'])) {
-                    $xitem->addAttribute('playlistItemID', $item['track']);
-                }
-                foreach ($attr as $key => $value) {
-                    $xitem->addAttribute($key, $value);
+                $media = new Song($item['object_id']);
+                $media->format();
+                $xitem = self::addSong($xml, $media);
+            } elseif ($item['object_type'] == 'video') {
+                $media = Video::create_from_id($item['object_id']);
+                $media->format();
+                $xitem = self::addVideoExt($xml, $media);
+            }
+
+            if ($xitem != null) {
+                if (isset($item['track_id'])) {
+                    $xitem->addAttribute($itemIDName, $item['track_id']);
                 }
             }
         }
@@ -1244,108 +1362,23 @@ class Plex_XML_Data
 
     public static function setPlayQueue(SimpleXMLElement $xml, $type, $playlistID, $uri, $key, $shuffle)
     {
-        // We don't really support the queue and only have one item, always
-        $xml->addAttribute('playQueueID', '1');
-        $xml->addAttribute('playQueueSelectedItemID', '1');
-        $xml->addAttribute('playQueueSelectedItemOffset', '0');
-        $xml->addAttribute('playQueueVersion', '1');
-        $c = 0;
-
         $GLOBALS['user']->playlist->clear();
 
         $id = 0;
         if (!empty($key)) {
             $id = self::getKeyFromMetadataUri($key);
         } elseif (!empty($uri)) {
-            $puri = parse_url($uri);
-            if ($puri['scheme'] == 'library') {
-                // We ignore library uuid (= $puri['host'])
-                $ppath = explode('/', $puri['path']);
-                if (count($ppath) == 3) {
-                    if ($ppath['1'] == 'item') {
-                        $key = rawurldecode($ppath[2]);
-                        $id = self::getKeyFromMetadataUri($key);
-                    }
-                }
-            }
+            $key = self::getKeyFromFullUri($uri);
+            $id = self::getKeyFromMetadataUri($key);
         }
 
         $plmedias = array();
 
         if ($id) {
-            if ($type == 'audio') {
-                if (self::isSong($id) || self::isTrack($id)) {
-                    $media = new Song(self::getAmpacheId($id));
-                    if ($media->id) {
-                        $media->format();
-                        $plmedias[] = array('object_type' => 'song', 'object_id' => $media->id);
-                        $xitem = self::addSong($xml, $media);
-                        $xitem->addAttribute('playQueueItemID', '1');
-                        $c++;
-                    }
-                } elseif (self::isAlbum($id)) {
-                    $album = new Album(self::getAmpacheId($id));
-                    if ($album->id) {
-                        $song_ids = $album->get_songs();
-                        foreach ($song_ids as $song_id) {
-                            $media = new Song($song_id);
-                            $media->format();
-                            $plmedias[] = array('object_type' => 'song', 'object_id' => $media->id);
-                            $xitem = self::addSong($xml, $media);
-                            $xitem->addAttribute('playQueueItemID', '1');
-                            $c++;
-                        }
-                    }
-                } elseif (self::isArtist($id)) {
-                    $artist = new Artist(self::getAmpacheId($id));
-                    if ($artist->id) {
-                        $song_ids = $artist->get_songs();
-                        foreach ($song_ids as $song_id) {
-                            $media = new Song($song_id);
-                            $media->format();
-                            $plmedias[] = array('object_type' => 'song', 'object_id' => $media->id);
-                            $xitem = self::addSong($xml, $media);
-                            $xitem->addAttribute('playQueueItemID', '1');
-                            $c++;
-                        }
-                    }
-                }
-            } elseif ($type == 'video') {
-                if (self::isVideo($id)) {
-                    $media = Video::create_from_id(self::getAmpacheId($id));
-                    if ($media->id) {
-                        $media->format();
-                        $plmedias[] = array('object_type' => 'video', 'object_id' => $media->id);
-                        $xitem = self::addVideoExt($xml, $media);
-                        $xitem->addAttribute('playQueueItemID', '1');
-                        $c++;
-                    }
-                } elseif (self::isTVShow($id)) {
-                    $tvshow = new TVShow(self::getAmpacheId($id));
-                    if ($tvshow->id) {
-                        $medias = $tvshow->get_medias();
-                        $plmedias = array_merge($plmedias, $items);
-                        foreach ($medias as $mediad) {
-                            $media = Video::create_from_id($mediad['object_id']);
-                            $media->format();
-                            $xitem = self::addVideoExt($xml, $media);
-                            $xitem->addAttribute('playQueueItemID', '1');
-                            $c++;
-                        }
-                    }
-                } elseif (self::isTVShowSeason($id)) {
-                    $season = new TVShow_Season(self::getAmpacheId($id));
-                    if ($season->id) {
-                        $medias = $season->get_medias();
-                        $plmedias = array_merge($plmedias, $items);
-                        foreach ($medias as $mediad) {
-                            $media = Video::create_from_id($mediad['object_id']);
-                            $media->format();
-                            $xitem = self::addVideoExt($xml, $media);
-                            $xitem->addAttribute('playQueueItemID', '1');
-                            $c++;
-                        }
-                    }
+            if ($type == 'audio' || $type == 'video') {
+                $item = self::createLibraryItem($id);
+                if ($item != null) {
+                    $plmedias = $item->get_medias();
                 }
             }
         } else {
@@ -1353,50 +1386,39 @@ class Plex_XML_Data
             if (self::isPlaylist($playlistID)) {
                 $playlist = new Playlist(self::getAmpacheId($playlistID));
                 if ($shuffle) {
-                    $items = $playlist->get_random_items();
+                    $plmedias = $playlist->get_random_items();
                 } else {
-                    $items = $playlist->get_items();
+                    $plmedias = $playlist->get_items();
                 }
-                $plmedias = array_merge($plmedias, $items);
-                $c = count($items);
-                self::addPlaylistsItems($xml, $items, array('playQueueItemID' => '1'));
             }
         }
 
-        if (count($plmedias)) {
-            $GLOBALS['user']->playlist->add_medias($plmedias);
-        }
-
-        $xml->addAttribute('playQueueTotalCount', $c);
+        $GLOBALS['user']->playlist->add_medias($plmedias);
+        self::setTmpPlayQueue($xml, 1);
     }
 
     public static function setTmpPlayQueue(SimpleXMLElement $xml, $playlistID)
     {
+        // We only support one queue at time
         if ($playlistID != 1) {
             debug_event('plex', 'Unsupported playlist, it should be 1.', 3);
         } else {
             $xml->addAttribute('playQueueID', '1');
-            $xml->addAttribute('playQueueSelectedItemID', '1');
-            $xml->addAttribute('playQueueSelectedItemOffset', '0');
             $xml->addAttribute('playQueueVersion', '1');
-            $c = 0;
 
             $items = $GLOBALS['user']->playlist->get_items();
-            print_r($items);
-            foreach ($items as $key => $item) {
-                if ($item['object_type'] == 'song') {
-                    $media = new Song($item['object_id']);
-                    $media->format();
-                    $xitem = self::addSong($xml, $media);
-                    $xitem->addAttribute('playQueueItemID', $key);
-                    $c++;
-                } else {
-                    $media = Video::create_from_id($item['object_id']);
-                    $media->format();
-                    $xitem = self::addVideoExt($xml, $media);
-                    $xitem->addAttribute('playQueueItemID', $key);
-                    $c++;
+            $c = count($items);
+            if ($c > 0) {
+                self::addPlaylistsItems($xml, $items, 'playQueueItemID');
+
+                // TODO: This should be the real selected item.
+                // But we're missing this information in Ampache playlist
+                $currentIndex = 0;
+                $currentItem = $items[$currentIndex];
+                if (isset($currentItem['track_id'])) {
+                    $xml->addAttribute('playQueueSelectedItemID', $currentItem['track_id']);
                 }
+                $xml->addAttribute('playQueueSelectedItemOffset', $currentIndex);
             }
 
             $xml->addAttribute('playQueueTotalCount', $c);
@@ -1500,16 +1522,12 @@ class Plex_XML_Data
 
     public static function setSysMovieAgents(SimpleXMLElement $xml)
     {
-        self::addNoneAgent($xml, 'Personal Media');
-        // We should check plug-in availability and allow configuration here
-        self::addAgent($xml, "The Movie Database", false, "com.plexapp.agents.themoviedb", true, "en,cs,da,de,el,es,fi,fr,he,hr,hu,it,lv,nl,no,pl,pt,ru,sk,sv,th,tr,vi,zh,ko");
+        self::addNoneAgent($xml, 'Ampache Media Movies');
     }
 
     public static function setSysTVShowAgents(SimpleXMLElement $xml)
     {
-        self::addNoneAgent($xml, 'Personal Media Shows');
-        // We should check plug-in availability and allow configuration here
-        self::addAgent($xml, "TheTVDB", false, "com.plexapp.agents.thetvdb", true, "en,fr,zh,sv,no,da,fi,nl,de,it,es,pl,hu,el,tr,ru,he,ja,pt,cs,ko,sl");
+        self::addNoneAgent($xml, 'Ampache Media Series');
     }
 
     public static function setSysPhotoAgents(SimpleXMLElement $xml)
@@ -1519,7 +1537,7 @@ class Plex_XML_Data
 
     public static function setSysMusicAgents($xml, $category = 'Artists')
     {
-        self::addNoneAgent($xml, 'Personal Media ' . $category);
+        self::addNoneAgent($xml, 'Ampache Media ' . $category);
         //self::addAgent($xml, 'Last.fm', '1', 'com.plexapp.agents.lastfm', 'true', 'en,sv,fr,es,de,pl,it,pt,ja,tr,ru,zh');
     }
 
@@ -1530,6 +1548,10 @@ class Plex_XML_Data
                 return 'movie';
             case Plex_XML_Data::PLEX_TVSHOW:
                 return 'tvshow';
+            case Plex_XML_Data::PLEX_SEASON:
+                return 'season';
+            case Plex_XML_Data::PLEX_EPISODE:
+                return 'episode';
             case Plex_XML_Data::PLEX_ARTIST:
                 return 'artist';
             case Plex_XML_Data::PLEX_ALBUM:
@@ -1623,10 +1645,23 @@ class Plex_XML_Data
         $setting->addAttribute('group', $group);
     }
 
-    public static function setMusicScanners(SimpleXMLElement $xml)
+    public static function setScanners(SimpleXMLElement $xml, $type)
     {
         $scanner = $xml->addChild('Scanner');
-        $scanner->addAttribute('name', 'Plex Music Scanner');
+        switch ($type) {
+            case self::PLEX_ALBUM:
+            case self::PLEX_ARTIST:
+                $scanner->addAttribute('name', 'Ampache Music Scanner');
+                break;
+            case self::PLEX_TVSHOW:
+            case self::PLEX_SEASON:
+            case self::PLEX_EPISODE:
+                $scanner->addAttribute('name', 'Ampache Series Scanner');
+                break;
+            case self::PLEX_MOVIE:
+                $scanner->addAttribute('name', 'Ampache Movie Scanner');
+                break;
+        }
     }
 
     public static function createAppStore()
@@ -1723,5 +1758,60 @@ class Plex_XML_Data
         $dir->addAttribute('key', $key);
         $dir->addAttribute('title', $title);
         $dir->addAttribute('path', $path);
+    }
+
+    public static function addCatalogIdentity(SimpleXMLElement $xml, Catalog $catalog)
+    {
+        $xml->addAttribute('librarySectionID', $catalog->id);
+        $xml->addAttribute('librarySectionTitle', $catalog->name);
+        $xml->addAttribute('librarySectionUUID', self::uuidFromkey($catalog->id));
+    }
+
+    public static function getPhotoKind($type)
+    {
+        switch ($type) {
+            case 'thumb':
+            case 'thumbs':
+                return 'preview';
+            case 'art':
+            case 'arts':
+                return 'art';
+            case 'background':
+            case 'backgrounds':
+                return 'background';
+            case 'poster':
+            case 'posters':
+            default:
+                return 'default';
+        }
+    }
+
+    public static function getPhotoPlexKind($type)
+    {
+        switch ($type) {
+            case 'preview':
+                return 'thumb';
+            case 'art':
+                return 'art';
+            case 'background':
+                return 'background';
+            case 'default':
+            default:
+                return 'poster';
+        }
+    }
+
+    public static function addPhotos(SimpleXMLElement $xml, $id, $kind = 'default')
+    {
+        self::addPhoto($xml, $id, $kind);
+    }
+
+    public static function addPhoto(SimpleXMLElement $xml, $id, $kind = 'default')
+    {
+        $xart = $xml->addChild('Photo');
+        $uri = self::getMetadataUri($id) . '/' . self::getPhotoPlexKind($kind) . '/' . $id;
+        $xart->addAttribute('key', $uri);
+        $xart->addAttribute('ratingKey', $uri);
+        $xart->addAttribute('thumb', $uri);
     }
 }

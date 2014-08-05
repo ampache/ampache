@@ -1369,6 +1369,17 @@ class Song extends database_object implements media, library_item
     }
 
     /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array($this->catalog);
+    }
+
+    /**
      * Get item's owner.
      * @return int|null
      */

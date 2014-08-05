@@ -369,7 +369,7 @@ class Artist extends database_object implements library_item
             $row = parent::get_from_cache('artist_extra',$this->id);
         } else {
             $uid = Dba::escape($this->id);
-            $sql = "SELECT `song`.`artist`,COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+            $sql = "SELECT `song`.`artist`,COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time`, `song`.`catalog` as `catalog_id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
                 "WHERE (`song`.`artist`='$uid' || `song`.`album_artist`='$uid') ";
             if ($catalog) {
                 $sql .= "AND (`song`.`catalog` = '$catalog') ";
@@ -392,6 +392,7 @@ class Artist extends database_object implements library_item
         $this->songs = $row['song_count'];
         $this->albums = $row['album_count'];
         $this->time = $row['time'];
+        $this->catalog_id = $row['catalog_id'];
 
         return $row;
 
@@ -515,6 +516,17 @@ class Artist extends database_object implements library_item
     }
 
     /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array($this->catalog_id);
+    }
+
+    /**
      * Get item's owner.
      * @return int|null
      */
@@ -633,7 +645,7 @@ class Artist extends database_object implements library_item
         // Save our current ID
         $name = $data['name'] ?: $this->name;
         $mbid = $data['mbid'] ?: $this->mbid;
-        
+
         $current_id = $this->id;
 
         // Check if name is different than current name
@@ -674,7 +686,7 @@ class Artist extends database_object implements library_item
             $sql = 'UPDATE `artist` SET `name` = ? WHERE `id` = ?';
             Dba::write($sql, array($name, $current_id));
         }
-        
+
         $this->name = $name;
         $this->mbid = $mbid;
 
@@ -682,7 +694,9 @@ class Artist extends database_object implements library_item
         if ($data['apply_childs'] == 'checked') {
             $override_childs = true;
         }
-        $this->update_tags($data['edit_tags'], $override_childs, $current_id);
+        if (isset($data['edit_tags'])) {
+            $this->update_tags($data['edit_tags'], $override_childs, $current_id);
+        }
 
         return $current_id;
 

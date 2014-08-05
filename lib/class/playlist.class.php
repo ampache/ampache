@@ -274,10 +274,10 @@ class Playlist extends playlist_object
      */
     public function update(array $data)
     {
-        if ($data['name'] != $this->name) {
+        if (isset($data['name']) && $data['name'] != $this->name) {
             $this->update_name($data['name']);
         }
-        if ($data['pl_type'] != $this->type) {
+        if (isset($data['pl_type']) && $data['pl_type'] != $this->type) {
             $this->update_type($data['pl_type']);
         }
 
@@ -355,6 +355,19 @@ class Playlist extends playlist_object
      */
     public function add_songs($song_ids=array(),$ordered=false)
     {
+        $medias = array();
+        foreach ($song_ids as $song_id) {
+            $medias[] = array(
+                'object_type' => 'song',
+                'object_id' => $song_id,
+            );
+        }
+        $this->add_medias($medias);
+
+    } // add_songs
+
+    public function add_medias($medias)
+    {
         /* We need to pull the current 'end' track and then use that to
          * append, rather then integrate take end track # and add it to
          * $song->track add one to make sure it really is 'next'
@@ -363,31 +376,29 @@ class Playlist extends playlist_object
         $db_results = Dba::read($sql, array($this->id));
         $data = Dba::fetch_assoc($db_results);
         $base_track = $data['track'];
-        debug_event('add_songs', 'Track number: '.$base_track, '5');
+        debug_event('add_medias', 'Track number: '.$base_track, '5');
 
         $i = 0;
-        foreach ($song_ids as $song_id) {
-            /* We need the songs track */
-            $song = new Song($song_id);
+        foreach ($medias as $data) {
+            $media = new $data['object_type']($data['object_id']);
 
             // Based on the ordered prop we use track + base or just $i++
-            if (!$ordered) {
-                $track    = $song->track + $base_track;
+            if (!$ordered && $data['object_type'] == 'song') {
+                $track    = $media->track + $base_track;
             } else {
                 $i++;
                 $track = $base_track + $i;
             }
 
-            /* Don't insert dead songs */
-            if ($song->id) {
+            /* Don't insert dead media */
+            if ($media->id) {
                 $sql = "INSERT INTO `playlist_data` (`playlist`,`object_id`,`object_type`,`track`) " .
-                    " VALUES (?, ?, 'song', ?)";
-                Dba::write($sql, array($this->id, $song->id, $track));
+                    " VALUES (?, ?, ?, ?)";
+                Dba::write($sql, array($this->id, $data['object_id'], $data['object_type'], $track));
             } // if valid id
 
-        } // end foreach songs
-
-    } // add_songs
+        } // end foreach medias
+    }
 
     /**
      * create

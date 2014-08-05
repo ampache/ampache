@@ -70,6 +70,10 @@ class Album extends database_object implements library_item
     public $release_type;
 
     /**
+     * @var int $catalog_id
+     */
+    public $catalog_id;
+    /**
      *  @var int $song_count
      */
     public $song_count;
@@ -681,6 +685,17 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array($this->catalog_id);
+    }
+
+    /**
      * Get item's owner.
      * @return int|null
      */
@@ -735,8 +750,8 @@ class Album extends database_object implements library_item
     public function update(array $data)
     {
         $year = $data['year'] ?: $this->year;
-        $artist = intval($data['artist']);
-        $album_artist = intval($data['album_artist']);
+        $artist = $data['artist'] ? intval($data['artist']) : $this->artist;
+        $album_artist = $data['album_artist'] ? intval($data['album_artist']) : $this->album_artist;
         $name = $data['name'] ?: $this->name;
         $disk = $data['disk'] ?: $this->disk;
         $mbid = $data['mbid'] ?: $this->mbid;
@@ -802,7 +817,9 @@ class Album extends database_object implements library_item
         if ($data['apply_childs'] == 'checked') {
             $override_songs = true;
         }
-        $this->update_tags($data['edit_tags'], $override_songs, $current_id);
+        if (isset($data['edit_tags'])) {
+            $this->update_tags($data['edit_tags'], $override_songs, $current_id);
+        }
 
         return $current_id;
 

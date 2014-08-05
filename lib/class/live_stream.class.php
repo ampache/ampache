@@ -108,6 +108,17 @@ class Live_Stream extends database_object implements media, library_item
         return $medias;
     }
 
+    /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array($this->catalog);
+    }
+
     public function get_user_owner()
     {
         return null;

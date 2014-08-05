@@ -235,6 +235,17 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array();
+    }
+
+    /**
      * Get item's owner.
      * @return int|null
      */

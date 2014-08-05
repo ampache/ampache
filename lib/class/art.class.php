@@ -315,7 +315,7 @@ class Art extends database_object
      * @param string $mime
      * @return boolean
      */
-    public function insert($source, $mime)
+    public function insert($source, $mime = '')
     {
         // Disabled in demo mode cause people suck and upload porn
         if (AmpConfig::get('demo_mode')) { return false; }

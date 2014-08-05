@@ -29,6 +29,7 @@ class TVShow extends database_object implements library_item
     public $summary;
     public $year;
 
+    public $catalog_id;
     public $tags;
     public $f_tags;
     public $episodes;
@@ -118,7 +119,7 @@ class TVShow extends database_object implements library_item
             $sql .= "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` ";
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ";
         }
-        $sql .= "LEFT JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow_episode`.`season` ";
+        $sql .= "LEFT JOIN `tvshow_season` ON `tvshow_season`.`id` = `tvshow_episode`.`season` ";
         $sql .= "WHERE `tvshow_season`.`tvshow`='" . Dba::escape($this->id) . "' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
@@ -145,8 +146,9 @@ class TVShow extends database_object implements library_item
         if (parent::is_cached('tvshow_extra', $this->id) ) {
             $row = parent::get_from_cache('tvshow_extra', $this->id);
         } else {
-            $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count` FROM `tvshow_season` " .
+            $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_season` " .
                 "LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " .
+                "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " .
                 "WHERE `tvshow_season`.`tvshow` = ?";
             $db_results = Dba::read($sql, array($this->id));
             $row = Dba::fetch_assoc($db_results);
@@ -163,6 +165,7 @@ class TVShow extends database_object implements library_item
         /* Set Object Vars */
         $this->episodes = $row['episode_count'];
         $this->seasons = $row['season_count'];
+        $this->catalog_id = $row['catalog_id'];
 
         return $row;
 
@@ -227,6 +230,17 @@ class TVShow extends database_object implements library_item
             }
         }
         return $medias;
+    }
+
+    /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array($this->catalog_id);
     }
 
     public function get_user_owner()
@@ -305,10 +319,13 @@ class TVShow extends database_object implements library_item
     {
         // Save our current ID
         $current_id = $this->id;
+        $name = $data['name'] ?: $this->name;
+        $year = $data['year'] ?: $this->year;
+        $summary = $data['summary'] ?: $this->summary;
 
         // Check if name is different than current name
-        if ($this->name != $data['name'] || $this->year != $data['year']) {
-            $tvshow_id = self::check($data['name'], $data['year'], true);
+        if ($this->name != $name || $this->year != $year) {
+            $tvshow_id = self::check($name, $year, true);
 
             // If it's changed we need to update
             if ($tvshow_id != $this->id && $tvshow_id != null) {
@@ -321,18 +338,25 @@ class TVShow extends database_object implements library_item
             } // end if it changed
         }
 
-        $trimmed = Catalog::trim_prefix(trim($data['name']));
+        $trimmed = Catalog::trim_prefix(trim($name));
         $name = $trimmed['string'];
         $prefix = $trimmed['prefix'];
 
         $sql = 'UPDATE `tvshow` SET `name` = ?, `prefix` = ?, `year` = ?, `summary` = ? WHERE `id` = ?';
-        Dba::write($sql, array($name, $prefix, $data['year'], $data['summary'], $current_id));
+        Dba::write($sql, array($name, $prefix, $year, $summary, $current_id));
+
+        $this->name = $name;
+        $this->prefix = $prefix;
+        $this->year = $year;
+        $this->summary = $summary;
 
         $override_childs = false;
         if ($data['apply_childs'] == 'checked') {
             $override_childs = true;
         }
-        $this->update_tags($data['edit_tags'], $override_childs, $current_id);
+        if (isset($data['edit_tags'])) {
+            $this->update_tags($data['edit_tags'], $override_childs, $current_id);
+        }
 
         return $current_id;
 

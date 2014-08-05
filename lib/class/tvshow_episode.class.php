@@ -122,10 +122,19 @@ class TVShow_Episode extends Video
     public function update(array $data)
     {
         parent::update($data);
-        $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['summary'], $this->id));
 
-        Tag::update_tag_list($data['edit_tags'], 'episode', $this->id);
+        $original_name = $data['original_name'] ?: $this->original_name;
+        $tvshow_season = $data['tvshow_season'] ?: $this->season;
+        $tvshow_episode = $data['tvshow_episode'] ?: $this->episode_number;
+        $summary = $data['summary'] ?: $summary;
+
+        $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
+        Dba::write($sql, array($original_name, $tvshow_season, $tvshow_episode, $summary, $this->id));
+
+        $this->original_name = $originale_name;
+        $this->tvshow_season = $tvshow_season;
+        $this->tvshow_episode = $tvshow_episode;
+        $this->summary = $summary;
 
         return $this->id;
 

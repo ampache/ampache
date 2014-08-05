@@ -249,6 +249,17 @@ class Song_Preview extends database_object implements media, playable_item
     }
 
     /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array();
+    }
+
+    /**
      * play_url
      * This function takes all the song information and correctly formats a
      * a stream URL taking into account the downsmapling mojo and everything

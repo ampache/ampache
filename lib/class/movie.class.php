@@ -86,12 +86,24 @@ class Movie extends Video
     {
         parent::update($data);
 
-        $trimmed = Catalog::trim_prefix(trim($data['original_name']));
-        $name = $trimmed['string'];
-        $prefix = $trimmed['prefix'];
+        if (isset($data['original_name'])) {
+            $trimmed = Catalog::trim_prefix(trim($data['original_name']));
+            $name = $trimmed['string'];
+            $prefix = $trimmed['prefix'];
+        } else {
+            $name = $this->original_name;
+            $prefix = $this->prefix;
+        }
+        $summary = $data['summary'] ?: $this->summary;
+        $year = $data['year'] ?: $this->year;
 
         $sql = "UPDATE `movie` SET `original_name` = ?, `prefix` = ?, `summary` = ?, `year` = ? WHERE `id` = ?";
-        Dba::write($sql, array($name, $prefix, $data['summary'], $data['year'], $this->id));
+        Dba::write($sql, array($name, $prefix, $summary, $year, $this->id));
+
+        $this->original_name = $name;
+        $this->prefix = $prefix;
+        $this->summary = $summary;
+        $this->year = $year;
 
         return $this->id;
 

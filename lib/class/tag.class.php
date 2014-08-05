@@ -669,6 +669,17 @@ class Tag extends database_object implements library_item
         return $medias;
     }
 
+    /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array();
+    }
+
     public function get_user_owner()
     {
         return null;

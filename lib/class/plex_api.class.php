@@ -203,7 +203,7 @@ class Plex_Api
                 $GLOBALS['user']->access = 50;
             }
         }
-        
+
         if (($GLOBALS['user']->access < $level || AmpConfig::get('demo_mode'))) {
             debug_event('plex', 'User ' . $GLOBALS['user']->username . ' is unauthorized to complete the action.', '3');
             self::createError(401);
@@ -774,33 +774,62 @@ class Plex_Api
                 $view = $params[1];
                 $gtypes = $catalog->get_gather_types();
                 if ($gtypes[0] == 'music') {
+                    $type = 'artist';
+                    if ($_GET['type']) {
+                        $type = Plex_XML_Data::getAmpacheType($_GET['type']);
+                    }
+
                     if ($view == "all") {
-                        Plex_XML_Data::setSectionAll_Artists($r, $catalog);
+                        switch ($type) {
+                            case 'artist':
+                                Plex_XML_Data::setSectionAll_Artists($r, $catalog);
+                                break;
+                            case 'album':
+                                Plex_XML_Data::setSectionAll_Albums($r, $catalog);
+                                break;
+                        }
                     } elseif ($view == "albums") {
                         Plex_XML_Data::setSectionAlbums($r, $catalog);
                     } elseif ($view == "recentlyadded") {
                         Plex_XML_Data::setCustomSectionView($r, $catalog, Stats::get_recent('album', 25, $key));
                     } elseif ($view == "genre") {
-                        $type = Plex_XML_Data::getAmpacheType($_GET['type']);
-                        Plex_XML_Data::setSectionTags($r, $catalog, $type);
+                        Plex_XML_Data::setSectionTags($r, $catalog, 'song');
                     }
                 } elseif ($gtypes[0] == "tvshow") {
+                    $type = 'tvshow';
+                    if ($_GET['type']) {
+                        $type = Plex_XML_Data::getAmpacheType($_GET['type']);
+                    }
+
                     if ($view == "all") {
-                        Plex_XML_Data::setSectionAll_TVShows($r, $catalog);
+                        switch ($type) {
+                            case 'tvshow':
+                                Plex_XML_Data::setSectionAll_TVShows($r, $catalog);
+                                break;
+                            case 'season':
+                                Plex_XML_Data::setSectionAll_Seasons($r, $catalog);
+                                break;
+                            case 'episode':
+                                Plex_XML_Data::setSectionAll_Episodes($r, $catalog);
+                                break;
+                        }
                     } elseif ($view == "recentlyadded") {
                         Plex_XML_Data::setCustomSectionView($r, $catalog, Stats::get_recent('tvshow_episode', 25, $key));
                     } elseif ($view == "genre") {
-                        $type = Plex_XML_Data::getAmpacheType($_GET['type']);
-                        Plex_XML_Data::setSectionTags($r, $catalog, $type);
+                        Plex_XML_Data::setSectionTags($r, $catalog, 'video');
                     }
                 } elseif ($gtypes[0] == "movie") {
+                    $type = 'tvshow';
+                    if ($_GET['type']) {
+                        $type = Plex_XML_Data::getAmpacheType($_GET['type']);
+                    }
+
                     if ($view == "all") {
                         Plex_XML_Data::setSectionAll_Movies($r, $catalog);
                     } elseif ($view == "recentlyadded") {
                         Plex_XML_Data::setCustomSectionView($r, $catalog, Stats::get_recent('movie', 25, $key));
                     } elseif ($view == "genre") {
-                        $type = Plex_XML_Data::getAmpacheType($_GET['type']);
-                        Plex_XML_Data::setSectionTags($r, $catalog, $type);
+                        Plex_XML_Data::setSectionTags($r, $catalog, 'video');
                     }
                 }
             }
@@ -814,121 +843,163 @@ class Plex_Api
     {
         $r = Plex_XML_Data::createLibContainer();
         $n = count($params);
+        $litem = null;
+
+        $createMode = ($_SERVER['REQUEST_METHOD'] == 'POST');
+        $editMode = ($_SERVER['REQUEST_METHOD'] == 'PUT');
+
         if ($n > 0) {
             $key = $params[0];
 
             $id = Plex_XML_Data::getAmpacheId($key);
-            $editMode = ($_SERVER['REQUEST_METHOD'] == 'PUT');
             if ($editMode) {
                 self::check_access(50);
             }
-            
+
             if ($n == 1) {
                 // Should we check that files still exists here?
                 $checkFiles = $_REQUEST['checkFiles'];
+                $extra = $_REQUEST['includeExtra'];
 
                 if (Plex_XML_Data::isArtist($key)) {
-                    $artist = new Artist($id);
-                    $artist->format();
+                    $litem = new Artist($id);
+                    $litem->format();
                     if ($editMode) {
                         $dmap = array(
                             'title' => 'name',
                             'summary' => null,
                         );
-                        $artist->update(self::get_data_from_map($dmap));
+                        $litem->update(self::get_data_from_map($dmap));
                     }
-                    Plex_XML_Data::addArtist($r, $artist);
+                    Plex_XML_Data::addArtist($r, $litem);
                 } elseif (Plex_XML_Data::isAlbum($key)) {
-                    $album = new Album($id);
-                    $album->format();
+                    $litem = new Album($id);
+                    $litem->format();
                     if ($editMode) {
                         $dmap = array(
                             'title' => 'name',
                             'year' => null,
                         );
-                        $album->update(self::get_data_from_map($dmap));
+                        $litem->update(self::get_data_from_map($dmap));
                     }
-                    Plex_XML_Data::addAlbum($r, $album);
+                    Plex_XML_Data::addAlbum($r, $litem);
                 } elseif (Plex_XML_Data::isTrack($key)) {
-                    $song = new Song($id);
-                    $song->format();
+                    $litem = new Song($id);
+                    $litem->format();
                     if ($editMode) {
                         $dmap = array(
                             'title' => null,
                         );
-                        $song->update(self::get_data_from_map($dmap));
+                        $litem->update(self::get_data_from_map($dmap));
                     }
-                    Plex_XML_Data::addSong($r, $song);
+                    Plex_XML_Data::addSong($r, $litem);
                 } elseif (Plex_XML_Data::isTVShow($key)) {
-                    $tvshow = new TVShow($id);
-                    $tvshow->format();
-                    Plex_XML_Data::addTVShow($r, $tvshow);
+                    $litem = new TVShow($id);
+                    $litem->format();
+                    if ($editMode) {
+                        $dmap = array(
+                            'title' => 'name',
+                            'year' => null,
+                            'summary' => null,
+                        );
+                        $litem->update(self::get_data_from_map($dmap));
+                    }
+                    Plex_XML_Data::addTVShow($r, $litem);
                 } elseif (Plex_XML_Data::isTVShowSeason($key)) {
-                    $season = new TVShow_Season($id);
-                    $season->format();
-                    Plex_XML_Data::addTVShowSeason($r, $season);
+                    $litem = new TVShow_Season($id);
+                    $litem->format();
+                    Plex_XML_Data::addTVShowSeason($r, $litem);
                 } elseif (Plex_XML_Data::isVideo($key)) {
-                    $video = Video::create_from_id($id);
-                    $video->format();
+                    $litem = Video::create_from_id($id);
 
-                    $subtype = strtolower(get_class($video));
+                    if ($editMode) {
+                        $dmap = array(
+                            'title' => null,
+                            'year' => null,
+                            'originallyAvailableAt' => 'release_date',
+                            'originalTitle' => 'original_name',
+                            'summary' => null,
+                        );
+                        $litem->update(self::get_data_from_map($dmap));
+                    }
+                    $litem->format();
+
+                    $subtype = strtolower(get_class($litem));
                     if ($subtype == 'tvshow_episode') {
-                        Plex_XML_Data::addEpisode($r, $video, true);
+                        Plex_XML_Data::addEpisode($r, $litem, true);
                     } elseif ($subtype == 'movie') {
-                        Plex_XML_Data::addMovie($r, $video, true);
+                        Plex_XML_Data::addMovie($r, $litem, true);
                     }
                 } elseif (Plex_XML_Data::isPlaylist($key)) {
-                    $playlist = new Playlist($id);
-                    $playlist->format();
+                    $litem = new Playlist($id);
+                    $litem->format();
                     if ($editMode) {
                         $dmap = array(
                             'title' => 'name',
                         );
-                        $playlist->update(self::get_data_from_map($dmap));
+                        $litem->update(self::get_data_from_map($dmap));
                     }
-                    Plex_XML_Data::addPlaylist($r, $playlist);
+                    Plex_XML_Data::addPlaylist($r, $litem);
                 }
+
             } else {
                 $subact = $params[1];
                 if ($subact == "children") {
                     if (Plex_XML_Data::isArtist($key)) {
-                        $artist = new Artist($id);
-                        $artist->format();
-                        Plex_XML_Data::setArtistRoot($r, $artist);
+                        $litem = new Artist($id);
+                        $litem->format();
+                        Plex_XML_Data::setArtistRoot($r, $litem);
                     } else if (Plex_XML_Data::isAlbum($key)) {
-                        $album = new Album($id);
-                        $album->format();
-                        Plex_XML_Data::setAlbumRoot($r, $album);
+                        $litem = new Album($id);
+                        $litem->format();
+                        Plex_XML_Data::setAlbumRoot($r, $litem);
                     } else if (Plex_XML_Data::isTVShow($key)) {
-                        $tvshow = new TVShow($id);
-                        $tvshow->format();
-                        Plex_XML_Data::setTVShowRoot($r, $tvshow);
+                        $litem = new TVShow($id);
+                        $litem->format();
+                        Plex_XML_Data::setTVShowRoot($r, $litem);
                     } else if (Plex_XML_Data::isTVShowSeason($key)) {
-                        $season = new TVShow_Season($id);
-                        $season->format();
-                        Plex_XML_Data::setTVShowSeasonRoot($r, $season);
+                        $litem = new TVShow_Season($id);
+                        $litem->format();
+                        Plex_XML_Data::setTVShowSeasonRoot($r, $litem);
                     }
-                } elseif ($subaction == "posters") {
-                    if ($editMode) {
-                        // Upload art here
+                } elseif ($subact == "thumbs" || $subact == "posters" || $subact == "arts" || $subact == 'backgrounds') {
+                    $kind = Plex_XML_Data::getPhotoKind($subact);
+                    if ($createMode) {
+                        // Upload art
+                        $litem = Plex_XML_Data::createLibraryItem($key);
+                        $uri = Plex_XML_Data::getMetadataUri($key) . '/' . Plex_XML_Data::getPhotoPlexKind($kind) . '/' . $key;
+                        if (is_a($litem, 'video')) {
+                            $type = 'video';
+                        } else {
+                            $type = get_class($litem);
+                        }
+                        debug_event('aaaaaaaa', $type, 5);
+                        $art = new Art($litem->id, $type, $kind);
+                        $raw = file_get_contents("php://input");
+                        $art->insert($raw);
+
+                        header('Content-Type: text/html');
+                        echo $uri;
+                        exit;
                     }
-                    // Get arts list here
-                } elseif ($subact == "thumb" || $subact == "art" || $subact == "background") {
+                    Plex_XML_Data::addPhotos($r, $key, $kind);
+                } elseif ($subact == "thumb" || $subact == "poster" || $subact == "art" || $subact == "background") {
                     if ($n == 3) {
-                        // Ignore art id and type as we can only have 1 thumb
+                        $kind = Plex_XML_Data::getPhotoKind($subact);
+                        // Ignore art id as we can only have 1 thumb
                         $art = null;
                         if (Plex_XML_Data::isArtist($key)) {
-                            $art = new Art($id, "artist");
+                            $art = new Art($id, "artist", $kind);
                         } else if (Plex_XML_Data::isAlbum($key)) {
-                            $art = new Art($id, "album");
+                            $art = new Art($id, "album", $kind);
                         } else if (Plex_XML_Data::isTrack($key)) {
-                            $art = new Art($id, "song");
+                            $art = new Art($id, "song", $kind);
                         } else if (Plex_XML_Data::isTVShow($key)) {
-                            $art = new Art($id, "tvshow");
+                            $art = new Art($id, "tvshow", $kind);
                         } else if (Plex_XML_Data::isTVShowSeason($key)) {
-                            $art = new Art($id, "tvshow_season");
+                            $art = new Art($id, "tvshow_season", $kind);
                         } else if (Plex_XML_Data::isVideo($key)) {
-                            $art = new Art($id, "video");
+                            $art = new Art($id, "video", $kind);
                         }
 
                         if ($art != null) {
@@ -952,6 +1023,15 @@ class Plex_Api
                 }
             }
         }
+
+        if ($litem != null) {
+            $catalog_ids = $litem->get_catalogs();
+            if (count($catalog_ids) > 0) {
+                $catalog = Catalog::create_from_id($catalog_ids[0]);
+                Plex_XML_Data::addCatalogIdentity($r, $catalog);
+            }
+        }
+
         Plex_XML_Data::setContainerSize($r);
         self::apiOutputXml($r->asXML());
     }
@@ -1128,12 +1208,11 @@ class Plex_Api
     public static function system_scanners($params)
     {
         if (count($params) > 0) {
-            if ($params[0] == '8' || $params[0] == '9') {
-                $r = Plex_XML_Data::createSysContainer();
-                Plex_XML_Data::setMusicScanners($r);
-                Plex_XML_Data::setContainerSize($r);
-                self::apiOutputXml($r->asXML());
-            }
+            $type = $params[0];
+            $r = Plex_XML_Data::createSysContainer();
+            Plex_XML_Data::setScanners($r, $type);
+            Plex_XML_Data::setContainerSize($r);
+            self::apiOutputXml($r->asXML());
         } else {
             self::createError(404);
         }
@@ -1305,29 +1384,58 @@ class Plex_Api
 
     public static function playlists($params)
     {
+        $r = Plex_XML_Data::createContainer();
         $n = count($params);
-        
+
+        $createMode = ($_SERVER['REQUEST_METHOD'] == 'POST');
         $editMode = ($_SERVER['REQUEST_METHOD'] == 'PUT');
         $delMode = ($_SERVER['REQUEST_METHOD'] == 'DELETE');
-        if ($editMode || $delMode) {
+        if ($createMode || $editMode || $delMode) {
             self::check_access(50);
         }
 
-        if ($n == 0 || ($n == 1 && $params[0] == "all")) {
-            $r = Plex_XML_Data::createContainer();
-            Plex_XML_Data::setPlaylists($r);
-            Plex_XML_Data::setContainerSize($r);
-            self::apiOutputXml($r->asXML());
-        } elseif ($n == 1) {
-            $plid = $params[0];
-            if (Plex_XML_Data::isPlaylist($plid)) {
-                $playlist = new Playlist(Plex_XML_Data::getAmpacheId($plid));
-                if ($playlist->id) {
-                    $r = Plex_XML_Data::createContainer();
-                    Plex_XML_Data::addPlaylist($r, $playlist);
-                    Plex_XML_Data::setContainerSize($r);
-                    self::apiOutputXml($r->asXML());
+        if ($n <= 1) {
+            $plid = 0;
+            if ($n == 0 && $createMode) {
+                // Create a new playlist
+                //$type = $_GET['type'];
+                $title = $_GET['title'];
+                //$smart = $_GET['smart'];
+                //$summary = $_GET['summary'];
+                $uri = $_GET['uri'];
+
+                $plid = Playlist::create($title, 'public');
+                $playlist = new Playlist($plid);
+                $key = Plex_XML_Data::getKeyFromFullUri($uri);
+                $id = Plex_XML_Data::getKeyFromMetadataUri($key);
+                if ($id) {
+                    $item = Plex_XML_Data::createLibraryItem($id);
+                    $medias = $item->get_medias();
+                    $playlist->add_medias($medias);
                 }
+                $plid = Plex_XML_Data::getPlaylistId($plid);
+            } else {
+                if ($n == 1 && $params[0] != "all") {
+                    $plid = $params[0];
+                }
+            }
+
+            if ($plid) {
+                if (Plex_XML_Data::isPlaylist($plid)) {
+                    $playlist = new Playlist(Plex_XML_Data::getAmpacheId($plid));
+                    if ($playlist->id) {
+                        if ($delMode) {
+                            // Delete playlist
+                            $playlist->delete();
+                        } else {
+                            // Display playlist information
+                            Plex_XML_Data::addPlaylist($r, $playlist);
+                        }
+                    }
+                }
+            } else {
+                // List all playlists
+                Plex_XML_Data::setPlaylists($r);
             }
         } elseif ($n >= 2) {
             $plid = $params[0];
@@ -1335,20 +1443,34 @@ class Plex_Api
                 $playlist = new Playlist(Plex_XML_Data::getAmpacheId($plid));
                 if ($playlist->id) {
                     if ($n == 2) {
-                        $r = Plex_XML_Data::createContainer();
-                        Plex_XML_Data::setPlaylistItems($r, $playlist);
-                        Plex_XML_Data::setContainerSize($r);
-                        self::apiOutputXml($r->asXML());
+                        if ($editMode) {
+                            // Add a new item to playlist
+                            $uri = $_GET['uri'];
+                            $key = Plex_XML_Data::getKeyFromFullUri($uri);
+                            $id = Plex_XML_Data::getKeyFromMetadataUri($key);
+                            if ($id) {
+                                $item = Plex_XML_Data::createLibraryItem($id);
+                                $medias = $item->get_medias();
+                                $playlist->add_medias($medias);
+                                Plex_XML_Data::addPlaylist($r, $playlist);
+                            }
+                        } else {
+                            Plex_XML_Data::setPlaylistItems($r, $playlist);
+                        }
                     } elseif ($n == 3) {
                         $index = intval($params[2]);
                         if ($delMode) {
                             $playlist->delete_track_number($index);
                             $playlist->regenerate_track_numbers();
+                            exit;
                         }
                     }
                 }
             }
         }
+
+        Plex_XML_Data::setContainerSize($r);
+        self::apiOutputXml($r->asXML());
     }
 
     public static function playqueues($params)
@@ -1372,21 +1494,25 @@ class Plex_Api
         Plex_XML_Data::setContainerSize($r);
         self::apiOutputXml($r->asXML());
     }
-    
+
     private static function get_data_from_map($dmap)
     {
         $data = array();
-        
+
         foreach ($dmap as $key=>$value) {
             if (isset($_GET[$key])) {
                 if ($value == null) {
                     $value = $key;
                 }
-                
+
                 $data[$value] = $_GET[$key];
             }
         }
-            
+
+        if (isset($_GET['genre'])) {
+            $data['edit_tags'] = implode(',', $_GET['genre']);
+        }
+
         return $data;
     }
 }

@@ -345,6 +345,17 @@ class Video extends database_object implements media, library_item
     }
 
     /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array($this->catalog);
+    }
+
+    /**
      * Get item's owner.
      * @return int|null
      */
@@ -576,11 +587,23 @@ class Video extends database_object implements media, library_item
      */
     public function update(array $data)
     {
-        $f_release_date = $data['release_date'];
-        $release_date = strtotime($f_release_date);
+        if (isset($data['release_date'])) {
+            $f_release_date = $data['release_date'];
+            $release_date = strtotime($f_release_date);
+        } else {
+            $release_date = $this->release_date;
+        }
+        $title = $data['title'] ?: $this->title;
 
         $sql = "UPDATE `video` SET `title` = ?, `release_date` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['title'], $release_date, $this->id));
+        Dba::write($sql, array($title, $release_date, $this->id));
+
+        if (isset($data['edit_tags'])) {
+            Tag::update_tag_list($data['edit_tags'], 'video', $this->id);
+        }
+
+        $this->title = $title;
+        $this->release_date = $release_date;
 
         return $this->id;
 
