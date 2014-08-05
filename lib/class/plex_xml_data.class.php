@@ -175,37 +175,6 @@ class Plex_XML_Data
         return ($id >= Plex_XML_Data::AMPACHEID_PART);
     }
 
-    public static function createLibraryItem($id)
-    {
-        $item = null;
-        $oid = self::getAmpacheId($id);
-        if (self::isArtist($id)) {
-            $item = new Artist($oid);
-        } elseif (self::isAlbum($id)) {
-            $item = new Album($oid);
-        } elseif (self::isSong($id) || self::isTrack($id)) {
-            $item = new Song($oid);
-        } elseif (self::isTVShow($id)) {
-            $item = new TVShow($oid);
-        } elseif (self::isTVShowSeason($id)) {
-            $item = new TVShow_Season($oid);
-        } elseif (self::isVideo($id)) {
-            $item = Video::create_from_id($oid);
-        } elseif (self::isPlaylist($id)) {
-            $item = new Playlist($oid);
-        }
-
-        if ($item != null) {
-            if ($item->id) {
-                $item->format();
-            } else {
-                $item = null;
-            }
-        }
-
-        return $item;
-    }
-
     public static function getPlexVersion()
     {
         return "0.9.9.13.525-197d5ed";
@@ -406,6 +375,7 @@ class Plex_XML_Data
         $myplex_authtoken = self::getMyPlexAuthToken();
         $myplex_published = self::getMyPlexPublished();
         if ($myplex_username) {
+            $xml->addAttribute('multiuser', '1');
             $xml->addAttribute('myPlex', '1');
             $xml->addAttribute('myPlexUsername', $myplex_username);
             if ($myplex_authtoken) {
@@ -1559,6 +1529,54 @@ class Plex_XML_Data
         }
     }
 
+    public static function getLibraryItemType($id)
+    {
+        $type = null;
+
+        if (self::isArtist($id)) {
+            $type = 'artist';
+        } elseif (self::isAlbum($id)) {
+            $type = 'album';
+        } elseif (self::isSong($id) || self::isTrack($id)) {
+            $type = 'song';
+        } elseif (self::isTVShow($id)) {
+            $type = 'tvshow';
+        } elseif (self::isTVShowSeason($id)) {
+            $type = 'tvshow_season';
+        } elseif (self::isVideo($id)) {
+            $type = 'video';
+        } elseif (self::isPlaylist($id)) {
+            $type = 'playlist';
+        }
+
+        return $type;
+    }
+
+    public static function createLibraryItem($id)
+    {
+        $item = null;
+        $oid = self::getAmpacheId($id);
+        $type = self::getLibraryItemType($id);
+
+        if ($type) {
+            if ($type == 'video') {
+                $item = Video::create_from_id($oid);
+            } else {
+                $item = new $type($oid);
+            }
+        }
+
+        if ($item != null) {
+            if ($item->id) {
+                $item->format();
+            } else {
+                $item = null;
+            }
+        }
+
+        return $item;
+    }
+
     public static function setAgentsContributors(SimpleXMLElement $xml, $plex_type, $primaryAgent)
     {
         if ($primaryAgent == 'com.plexapp.agents.none') {
@@ -1770,15 +1788,14 @@ class Plex_XML_Data
     public static function getPhotoKind($type)
     {
         switch ($type) {
-            case 'thumb':
-            case 'thumbs':
-                return 'preview';
             case 'art':
             case 'arts':
                 return 'art';
             case 'background':
             case 'backgrounds':
                 return 'background';
+            case 'thumb':
+            case 'thumbs':
             case 'poster':
             case 'posters':
             default:

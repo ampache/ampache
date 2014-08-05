@@ -96,7 +96,7 @@ class Plex_Api
             $createSession = false;
             Session::gc();
             $username = "";
-            $email = Session::read((string) $myplex_token);
+            $email = trim(Session::read((string) $myplex_token));
 
             if (empty($email)) {
                 $createSession = true;
@@ -130,9 +130,9 @@ class Plex_Api
                         $email = (string) $xml->email;
                     } else {
                         $xml = self::get_server_friends();
-                        foreach ($xml->user as $xuser) {
-                            if ((string) $xml['username'] == $username) {
-                                $email = (string) $xml['email'];
+                        foreach ($xml->User as $xuser) {
+                            if ((string) $xuser['username'] == $username) {
+                                $email = (string) $xuser['email'];
                             }
                         }
                     }
@@ -973,7 +973,7 @@ class Plex_Api
                         } else {
                             $type = get_class($litem);
                         }
-                        debug_event('aaaaaaaa', $type, 5);
+
                         $art = new Art($litem->id, $type, $kind);
                         $raw = file_get_contents("php://input");
                         $art->insert($raw);
@@ -1319,18 +1319,8 @@ class Plex_Api
         $rating = $_REQUEST['rating'];
 
         if ($identifier == 'com.plexapp.plugins.library') {
-            $robj = null;
-            if (Plex_XML_Data::isArtist($id)) {
-                $robj = new Rating(Plex_XML_Data::getAmpacheId($id), "artist");
-            } else if (Plex_XML_Data::isAlbum($id)) {
-                $robj = new Rating(Plex_XML_Data::getAmpacheId($id), "album");
-            } else if (Plex_XML_Data::isTrack($id)) {
-                $robj = new Rating(Plex_XML_Data::getAmpacheId($id), "song");
-            }
-
-            if ($robj != null) {
-                $robj->set_rating($rating / 2);
-            }
+            $robj = new Rating(Plex_XML_Data::getAmpacheId($id), Plex_XML_Data::getLibraryItemType($id));
+            $robj->set_rating($rating / 2);
         }
     }
 
