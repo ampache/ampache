@@ -481,7 +481,7 @@ class Plex_XML_Data
             $dir->addAttribute('host', $ip);
             $dir->addAttribute('local', ($ip == "127.0.0.1") ? '1' : '0');
             $dir->addAttribute('port', $port);
-            self::setSectionXContent($dir, $catalog, 'title');
+            self::setSectionXContent($dir, $catalog, 'artist', 'title');
         }
     }
 
@@ -497,17 +497,20 @@ class Plex_XML_Data
             $gtypes = $catalog->get_gather_types();
             switch ($gtypes[0]) {
                 case 'movie':
+                    $stype = 'movie';
                     $dir->addAttribute('type', 'movie');
                     $dir->addAttribute('agent', 'com.plexapp.agents.imdb');
                     $dir->addAttribute('scanner', 'Ampache Movie Scanner');
                     break;
                 case 'tvshow':
+                    $stype = 'show';
                     $dir->addAttribute('type', 'show');
                     $dir->addAttribute('agent', 'com.plexapp.agents.thetvdb');
                     $dir->addAttribute('scanner', 'Ampache Series Scanner');
                     break;
                 case 'music':
                 default:
+                    $stype = 'artist';
                     $dir->addAttribute('type', 'artist');
                     $dir->addAttribute('agent', 'com.plexapp.agents.none'); // com.plexapp.agents.lastfm
                     $dir->addAttribute('scanner', 'Ampache Music Scanner');
@@ -516,7 +519,7 @@ class Plex_XML_Data
             $dir->addAttribute('language', 'en');
             $dir->addAttribute('uuid', self::uuidFromSubKey($id));
             $dir->addAttribute('updatedAt', Catalog::getLastUpdate($catalogs));
-            self::setSectionXContent($dir, $catalog, 'title');
+            self::setSectionXContent($dir, $catalog, $stype, 'title');
             //$date = new DateTime("2013-01-01");
             //$dir->addAttribute('createdAt', $date->getTimestamp());
 
@@ -582,13 +585,27 @@ class Plex_XML_Data
         $xml->addAttribute('nocache', '1');
         $xml->addAttribute('viewGroup', 'secondary');
         $xml->addAttribute('viewMode', '65592');
-        self::setSectionXContent($xml, $catalog);
+        self::setSectionXContent($xml, $catalog, 'artist');
     }
 
-    public static function setSectionXContent(SimpleXMLElement $xml, Catalog $catalog, $title = 'title1')
+    public static function setSectionXContent(SimpleXMLElement $xml, Catalog $catalog, $stype = 'artist', $title = 'title1')
     {
-        $xml->addAttribute('art', self::getResourceUri('artist-fanart.jpg'));
-        $xml->addAttribute('thumb', self::getResourceUri('artist.png'));
+        switch ($stype) {
+            case 'show':
+            case 'season':
+            case 'episode':
+                $type = 'show';
+                break;
+            case 'movie':
+                $type = 'movie';
+                break;
+            default:
+                $type = 'artist';
+                break;
+        }
+
+        $xml->addAttribute('art', self::getResourceUri($type . '-fanart.jpg'));
+        $xml->addAttribute('thumb', self::getResourceUri($type . '.png'));
         $xml->addAttribute($title, $catalog->name);
     }
 
@@ -615,7 +632,7 @@ class Plex_XML_Data
     protected static function setSectionAllAttributes(SimpleXMLElement $xml, Catalog $catalog, $title2, $viewGroup)
     {
         $xml->addAttribute('allowSync', '1');
-        self::setSectionXContent($xml, $catalog);
+        self::setSectionXContent($xml, $catalog, $viewGroup);
         $xml->addAttribute('title2', $title2);
         $xml->addAttribute('nocache', '1');
         $xml->addAttribute('viewGroup', $viewGroup);
@@ -702,7 +719,7 @@ class Plex_XML_Data
         $albums = $catalog->get_album_ids();
 
         $xml->addAttribute('allowSync', '0');
-        self::setSectionXContent($xml, $catalog);
+        self::setSectionXContent($xml, $catalog, 'album');
         $xml->addAttribute('title2', 'By Album');
         $xml->addAttribute('mixedParents', '1');
         $xml->addAttribute('nocache', '1');
@@ -719,14 +736,14 @@ class Plex_XML_Data
     public static function setCustomSectionView(SimpleXMLElement $xml, $catalog, $albums)
     {
         $xml->addAttribute('allowSync', '1');
-        self::setSectionXContent($xml, $catalog);
+        self::setSectionXContent($xml, $catalog, 'album');
         $xml->addAttribute('title2', 'Recently Added');
         $xml->addAttribute('nocache', '1');
         $xml->addAttribute('mixedParents', '1');
         $xml->addAttribute('viewGroup', 'album');
         $xml->addAttribute('viewMode', '65592');
         self::addCatalogIdentity($xml, $catalog);
-        self::setSectionXContent($xml, $catalog);
+        self::setSectionXContent($xml, $catalog, 'album');
 
         $data = array();
         $data['album'] = $albums;
