@@ -71,7 +71,7 @@ if (Art::is_enabled()) {
         <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
     <?php } ?>
     <?php if (Access::check_function('batch_download')) { ?>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id'); ?>">
+        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id'); ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
     <?php } ?>

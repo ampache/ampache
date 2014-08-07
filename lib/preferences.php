@@ -154,7 +154,7 @@ function create_preference_input($name,$value)
         case 'rio_track_stats':
         case 'rio_global_stats':
         case 'direct_link':
-        case 'iframes':
+        case 'ajax_load':
         case 'now_playing_per_user':
         case 'show_played_times':
         case 'song_page_title':

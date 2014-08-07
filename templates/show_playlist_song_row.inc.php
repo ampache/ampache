@@ -52,7 +52,7 @@
 <?php } ?>
 <td class="cel_action">
     <?php if (AmpConfig::get('download')) { ?>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $libitem->id; ?>">
+    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $libitem->id; ?>">
         <?php echo UI::get_icon('download', T_('Download')); ?>
     </a>
     <?php } ?>

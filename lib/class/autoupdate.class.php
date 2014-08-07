@@ -234,7 +234,7 @@ class AutoUpdate
         echo T_('See') . ' <a href="https://github.com/ampache/ampache/' . (self::is_develop() ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/master/docs/CHANGELOG.md') . '" target="_blank">' . T_('changes') . '</a> ';
         echo T_('or') . ' <a href="https://github.com/ampache/ampache/archive/' . (self::is_develop() ? 'develop.zip' : self::get_latest_version() . '.zip') . '" target="_blank"><b>' . T_('download') . '</b></a>.';
         if (self::is_git_repository()) {
-            echo ' | <a href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update">.:: Update ::.</a>';
+            echo ' | <a rel="nohtml" href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update">.:: Update ::.</a>';
         }
         echo '</div>';
     }

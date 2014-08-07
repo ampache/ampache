@@ -181,7 +181,7 @@ class Stream_Playlist
     public static function check_autoplay_append()
     {
         // For now, only iframed web player support media append in the currently played playlist
-        return ((AmpConfig::get('iframes') && AmpConfig::get('play_type') == 'web_player') ||
+        return ((AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player') ||
             AmpConfig::get('play_type') == 'localplay'
         );
     }
@@ -450,7 +450,7 @@ class Stream_Playlist
      */
     public function create_web_player()
     {
-        if (AmpConfig::get("iframes")) {
+        if (AmpConfig::get("ajax_load")) {
             require AmpConfig::get('prefix') . '/templates/create_web_player_embedded.inc.php';
         } else {
             require AmpConfig::get('prefix') . '/templates/create_web_player.inc.php';

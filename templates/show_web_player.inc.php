@@ -33,47 +33,7 @@ header('Expires: ' . gmdate(DATE_RFC1123, time()-1));
 if (!$is_share) {
     $playlist = new Stream_Playlist(scrub_in($_REQUEST['playlist_id']));
 }
-?>
-<script language="javascript" type="text/javascript">
-var jplaylist = new Array();
-var jtypes = new Array();
 
-function addMedia(media)
-{
-    var jpmedia = {};
-    jpmedia['title'] = media['title'];
-    jpmedia['artist'] = media['artist'];
-    jpmedia[media['filetype']] = media['url'];
-    jpmedia['poster'] = media['poster'];
-    jpmedia['artist_id'] = media['artist_id'];
-    jpmedia['album_id'] = media['album_id'];
-    jpmedia['song_id'] = media['song_id'];
-
-    jplaylist.add(jpmedia);
-}
-</script>
-<script language="javascript" type="text/javascript">
-function ExitPlayer()
-{
-    var ff = parent.parent.document.getElementById('frame_footer');
-    var maindiv = parent.parent.document.getElementById('maindiv');
-    if (ff.getAttribute('className') == 'frame_footer_visible') {
-        ff.setAttribute('className', 'frame_footer_hide');
-        ff.setAttribute('class', 'frame_footer_hide');
-
-        maindiv.style.height = parent.parent.innerHeight + "px";
-<?php
-if (AmpConfig::get('song_page_title')) {
-    echo "window.parent.document.title = '" . addslashes(AmpConfig::get('site_title')) . "';";
-}
-?>
-    }
-    window.parent.onbeforeunload = null;
-    ff.setAttribute('src', '');
-    return false;
-}
-</script>
-<?php
 $isRadio = false;
 $isVideo = false;
 $radio = null;

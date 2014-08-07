@@ -45,27 +45,9 @@ $_SESSION['login'] = true;
         <script type="text/javascript" language="javascript">
             function focus(){ document.login.username.focus(); }
         </script>
-        <?php
-        // If iframes, we check in javascript that parent container doesn't exist, otherwise we redirect to the page without frame.
-        if (AmpConfig::get('iframes')) {
-        ?>
-        <script language="javascript" type="text/javascript">
-            function forceNoframe()
-            {
-                if (self != top) {
-                    var frame = top.document.getElementById('frame_footer');
-                    if (frame != null) {
-                        parent.location = document.location;
-                    }
-                }
-            }
-        </script>
-        <?php
-        }
-        ?>
     </head>
 
-    <body id="loginPage" onload="focus();<?php echo (AmpConfig::get('iframes')) ? "forceNoframe();" : ""; ?>">
+    <body id="loginPage" onload="focus();">
         <div id="maincontainer">
             <div id="header"><!-- This is the header -->
                 <h1 id="headerlogo">

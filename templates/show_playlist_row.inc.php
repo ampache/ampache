@@ -46,7 +46,7 @@
 <td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>
 <td class="cel_action">
     <?php if (Access::check_function('batch_download')) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $libitem->id; ?>">
+            <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $libitem->id; ?>">
                     <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
             </a>
     <?php } ?>

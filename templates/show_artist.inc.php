@@ -27,7 +27,7 @@ UI::show_box_top($artist->f_name, 'info-box');
 ?>
 <?php
 if (AmpConfig::get('lastfm_api_key')) {
-    echo Ajax::observe('window','load', Ajax::action('?page=index&action=artist_info&artist='.$artist->id, 'artist_info'));
+    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&artist='.$artist->id, 'artist_info'));
 ?>
     <div class="item_right_info">
         <div class="external_links">
@@ -108,8 +108,8 @@ if (AmpConfig::get('show_played_times')) {
         <?php } ?>-->
         <?php if (Access::check_function('batch_download')) { ?>
         <li>
-            <a href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
-            <a href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo T_('Download'); ?></a>
+            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
+            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo T_('Download'); ?></a>
         </li>
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>

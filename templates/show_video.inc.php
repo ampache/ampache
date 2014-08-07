@@ -87,8 +87,8 @@ foreach ($subtitles as $subtitle) {
             <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=show_create&type=video&id=<?php echo $video->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
         <?php } ?>
         <?php if (Access::check_function('download')) { ?>
-            <a href="<?php echo Video::play_url($video->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+            <a rel="nohtml" href="<?php echo Video::play_url($video->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
+            <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>
             <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_'.$video->id ?>', '<?php echo T_('Edit') ?>', '')">

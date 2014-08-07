@@ -278,16 +278,6 @@ END;
     }
 
     /**
-     * show_mainframes
-     *
-     * For now this just shows the mainframes template
-     */
-    public static function show_mainframes()
-    {
-        require_once AmpConfig::get('prefix') . '/templates/mainframes.inc.php';
-    }
-
-    /**
      * show_footer
      *
      * Shows the footer template and possibly profiling info.

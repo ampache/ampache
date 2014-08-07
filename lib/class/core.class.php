@@ -298,4 +298,9 @@ class Core
     {
         return self::is_class_typeof($classname, 'media');
     }
+
+    public static function get_reloadutil()
+    {
+        return (AmpConfig::get('play_type') == "stream") ? "reloadUtil" : "reloadDivUtil";
+    }
 } // Core

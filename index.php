@@ -22,12 +22,6 @@
 
 require_once 'lib/init.php';
 
-if (AmpConfig::get('iframes')) {
-    if (!isset($_GET['framed'])) {
-        UI::show_mainframes();
-        exit;
-    }
-}
 UI::show_header();
 
 $action = isset($_REQUEST['action']) ? scrub_in($_REQUEST['action']) : null;

@@ -437,6 +437,9 @@ class Update
         $update_string = '- Add metadata information to albums / songs / videos.<br />';
         $version[] = array('version' => '370012','description' => $update_string);
 
+        $update_string = '- Replace iframe with ajax page load.<br />';
+        $version[] = array('version' => '370013','description' => $update_string);
+
         return $version;
     }
 
@@ -2884,6 +2887,28 @@ class Update
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
             "VALUES ('album_release_type','1','Album - Group per release type',25,'boolean','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update_370013
+     *
+     * Replace iframe with ajax page load
+     */
+    public static function update_370013()
+    {
+        $retval = true;
+
+        $sql = "DELETE FROM `preference` WHERE `name` = 'iframes'";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('ajax_load','1','Ajax page load',25,'boolean','interface')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";

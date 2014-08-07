@@ -72,8 +72,8 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
             <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=show_create&type=song&id=<?php echo $song->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
         <?php } ?>
         <?php if (Access::check_function('download')) { ?>
-            <a href="<?php echo Song::play_url($song->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+            <a rel="nohtml" href="<?php echo Song::play_url($song->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
+            <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>
             <a onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_'.$song->id ?>', '<?php echo T_('Edit') ?>', '')">

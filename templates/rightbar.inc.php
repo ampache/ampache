@@ -45,7 +45,7 @@
     </li>
 <?php if (Access::check_function('batch_download')) { ?>
     <li>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
+        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
     </li>
@@ -128,7 +128,7 @@
 <?php } ?>
 </ul>
 <?php
-// We do a little magic here to force a iframe reload depending on preference
+// We do a little magic here to force a reload depending on preference
 // We do this last because we want it to load, and we want to know if there is anything
 // to even pass
 if (count($objects)) {

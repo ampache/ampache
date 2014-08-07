@@ -20,6 +20,7 @@
  *
  */
 ?>
+                </div>
                 <div style="clear:both;">
                 </div>
             </div>
@@ -34,7 +35,7 @@
         ?>
         <div id="footer" class="<?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'footer-wild'); ?>">
         <?php if (AmpConfig::get('show_donate')) { ?>
-            <a id="donate" href="//ampache.github.io/donate.html" title="Donate"><?php echo ".:: " . T_('Donate') . " ::."; ?></a> |
+            <a id="donate" href="//ampache.github.io/donate.html" title="Donate" target="_blank"><?php echo ".:: " . T_('Donate') . " ::."; ?></a> |
         <?php } ?>
             <a href="https://github.com/ampache/ampache#readme" target="_blank" title="Copyright © 2001 - 2014 Ampache.org">Ampache <?php echo AmpConfig::get('version'); ?></a>
             <br />
@@ -45,5 +46,11 @@
         ?>
             | <?php echo T_('Load time:'); ?><?php echo $load_time; ?>
         </div>
+        <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>
+        <div id="webplayer"></div>
+        <?php
+            require_once AmpConfig::get('prefix') . '/templates/uberviz.inc.php';
+        }
+        ?>
     </body>
 </html>

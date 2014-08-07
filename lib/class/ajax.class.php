@@ -65,10 +65,15 @@ class Ajax
 
         $observe = "<script type=\"text/javascript\">";
         $methodact = (($method == 'click') ? "update_action();" : "");
-        if (!empty($confirm)) {
-            $observe .= "$(".$source_txt.").on('".$method."', function(){ ".$methodact." if (confirm(\"".$confirm."\")) { ".$action." }});";
+        if (AmpConfig::get('ajax_load') && $method == 'load') {
+            $source_txt = "$( document ).ready(";
         } else {
-            $observe .= "$(".$source_txt.").on('".$method."', function(){ ".$methodact." ".$action.";});";
+            $source_txt = "$(".$source_txt.").on('".$method."', ";
+        }
+        if (!empty($confirm)) {
+            $observe .= $source_txt . "function(){ ".$methodact." if (confirm(\"".$confirm."\")) { ".$action." }});";
+        } else {
+            $observe .= $source_txt . "function(){ ".$methodact." ".$action.";});";
         }
         $observe .= "</script>";
 

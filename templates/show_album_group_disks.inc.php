@@ -65,8 +65,8 @@ $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;-&nbsp;' .
         </li>
         <?php if (Access::check_function('batch_download')) { ?>
         <li>
-            <a href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
-            <a href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo T_('Download'); ?></a>
+            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
+            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo T_('Download'); ?></a>
         </li>
         <?php } ?>
     </ul>
@@ -105,7 +105,7 @@ $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;-&nbsp;' .
             <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $c_album->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
         <?php } ?>
         <?php if (Access::check_function('batch_download')) { ?>
-            <a href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
+            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>
             <a id="<?php echo 'edit_album_'.$c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_'.$c_album->id ?>', '<?php echo T_('Album edit') ?>', '')">
