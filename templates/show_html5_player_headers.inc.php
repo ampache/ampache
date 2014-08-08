@@ -56,9 +56,8 @@ function addMedia(media)
 <script language="javascript" type="text/javascript">
 function ExitPlayer()
 {
-    $webplayer = $("#webplayer");
-    $webplayer.text('');
-    $webplayer.hide();
+    $("#webplayer").text('');
+    $("#webplayer").hide();
 
 <?php
 if (AmpConfig::get('song_page_title')) {
