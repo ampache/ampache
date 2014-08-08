@@ -73,7 +73,7 @@ if ($iframed) {
 <script type="text/javascript">
 function NavigateTo(url)
 {
-    window.location.hash = url;
+    window.location.hash = url.substring(jsWebPath.length + 1);
 }
 
 function NotifyOfNewSong()
