@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.7.0-dev\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-07-31 22:08+0200\n"
-"PO-Revision-Date: 2014-08-03 16:42+0100\n"
+"POT-Creation-Date: 2014-08-09 13:29+0200\n"
+"PO-Revision-Date: 2014-08-09 14:03+0100\n"
 "Last-Translator: Manuel Landmann <psyvirusx@gmail.com>\n"
 "Language-Team: German <translations@ampache.org>\n"
 "Language: de_DE\n"
@@ -40,9 +40,9 @@ msgstr "Löschanfrage"
 msgid "Are you sure you want to permanently delete"
 msgstr "Möchtest Du die folgende Regel wirklich löschen?:"
 
-#: ../../admin/access.php:72 ../../lib/class/search.class.php:324
-#: ../../templates/show_song.inc.php:109
-#: ../../templates/show_video.inc.php:114
+#: ../../admin/access.php:72 ../../lib/class/search.class.php:331
+#: ../../templates/show_song.inc.php:111
+#: ../../templates/show_video.inc.php:119
 msgid "Added"
 msgstr "Hinzugefügt"
 
@@ -50,8 +50,8 @@ msgstr "Hinzugefügt"
 msgid "Your new Access Control List(s) have been created"
 msgstr "Deine neue(n) Zugriffskontrollliste(n) wurden erstellt"
 
-#: ../../admin/access.php:86 ../../lib/class/catalog.class.php:1132
-#: ../../lib/class/search.class.php:331 ../../preferences.php:121
+#: ../../admin/access.php:86 ../../lib/class/catalog.class.php:1330
+#: ../../lib/class/search.class.php:338 ../../preferences.php:121
 msgid "Updated"
 msgstr "Aktualisiert"
 
@@ -281,7 +281,7 @@ msgid "Guest"
 msgstr "Gast"
 
 #: ../../admin/users.php:134 ../../lib/class/democratic.class.php:161
-#: ../../lib/preferences.php:275 ../../templates/show_access_list.inc.php:51
+#: ../../lib/preferences.php:276 ../../templates/show_access_list.inc.php:51
 #: ../../templates/show_add_access.inc.php:42
 #: ../../templates/show_add_user.inc.php:83
 #: ../../templates/show_create_democratic.inc.php:42
@@ -299,7 +299,7 @@ msgid "User"
 msgstr "Benutzer"
 
 #: ../../admin/users.php:134 ../../lib/class/democratic.class.php:170
-#: ../../lib/preferences.php:277 ../../templates/show_add_user.inc.php:86
+#: ../../lib/preferences.php:278 ../../templates/show_add_user.inc.php:86
 #: ../../templates/show_create_democratic.inc.php:45
 #: ../../templates/show_democratic_playlist.inc.php:62
 #: ../../templates/show_democratic_playlist.inc.php:109
@@ -388,7 +388,7 @@ msgstr "Der API-Schlüssel wurde erstellt"
 msgid "New user API Key has been generated."
 msgstr "Ein neuer Benutzer-API-Schlüssel wurde erstellt."
 
-#: ../../artists.php:58
+#: ../../artists.php:62
 msgid "Show Artists starting with"
 msgstr "Zeige Interpreten, die anfangen mit:"
 
@@ -856,7 +856,7 @@ msgstr "Broadcast gelöscht"
 msgid "The Broadcast has been deleted"
 msgstr "Der Broadcast wurde gelöscht"
 
-#: ../../browse.php:86 ../../lib/class/browse.class.php:202
+#: ../../browse.php:86 ../../lib/class/browse.class.php:227
 #: ../../templates/sidebar_home.inc.php:35
 #: ../../templates/sidebar_home.inc.php:55
 msgid "Tag Cloud"
@@ -898,19 +898,19 @@ msgstr ""
 "Fehler: Die Konfigurationsdateien wurden nicht gefunden oder sind nicht "
 "lesbar."
 
-#: ../../lib/class/access.class.php:110 ../../lib/class/access.class.php:114
+#: ../../lib/class/access.class.php:155 ../../lib/class/access.class.php:159
 msgid "Invalid IPv4 / IPv6 Address Entered"
 msgstr "Ungültige IPv4 / IPv6 Adresse Eingegeben"
 
-#: ../../lib/class/access.class.php:118 ../../lib/class/access.class.php:119
+#: ../../lib/class/access.class.php:163 ../../lib/class/access.class.php:164
 msgid "IP Address Version Mismatch"
 msgstr "IP-Adress-Versions-Fehler"
 
-#: ../../lib/class/access.class.php:169
+#: ../../lib/class/access.class.php:218
 msgid "Duplicate ACL defined"
 msgstr "ACL ist schon vorhanden"
 
-#: ../../lib/class/access.class.php:387 ../../lib/class/access.class.php:407
+#: ../../lib/class/access.class.php:453 ../../lib/class/access.class.php:474
 #: ../../lib/ui.lib.php:433 ../../templates/list_header.inc.php:166
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_add_access.inc.php:55
@@ -922,25 +922,25 @@ msgstr "ACL ist schon vorhanden"
 msgid "All"
 msgstr "Alle"
 
-#: ../../lib/class/access.class.php:390
+#: ../../lib/class/access.class.php:456
 #: ../../templates/show_add_access.inc.php:35
 #: ../../templates/show_edit_access.inc.php:69
 msgid "View"
 msgstr "Anzeigen"
 
-#: ../../lib/class/access.class.php:393
+#: ../../lib/class/access.class.php:459
 #: ../../templates/show_add_access.inc.php:36
 #: ../../templates/show_edit_access.inc.php:70
 msgid "Read"
 msgstr "Lesen"
 
-#: ../../lib/class/access.class.php:396
+#: ../../lib/class/access.class.php:462
 #: ../../templates/show_add_access.inc.php:37
 #: ../../templates/show_edit_access.inc.php:71
 msgid "Read/Write"
 msgstr "Lesen/Schreiben"
 
-#: ../../lib/class/access.class.php:422
+#: ../../lib/class/access.class.php:490
 #: ../../templates/show_add_access.inc.php:53
 #: ../../templates/show_add_access.inc.php:54
 #: ../../templates/show_add_access.inc.php:55
@@ -949,7 +949,7 @@ msgstr "Lesen/Schreiben"
 msgid "API/RPC"
 msgstr "API/RPC"
 
-#: ../../lib/class/access.class.php:424
+#: ../../lib/class/access.class.php:492
 #: ../../templates/show_add_access.inc.php:59
 #: ../../templates/show_add_access.inc.php:60
 #: ../../templates/show_add_access.inc.php:61
@@ -958,13 +958,13 @@ msgstr "API/RPC"
 msgid "Local Network Definition"
 msgstr "Lokale Netzwerkrichtlinie"
 
-#: ../../lib/class/access.class.php:426
+#: ../../lib/class/access.class.php:494
 #: ../../templates/show_add_access.inc.php:65
 #: ../../templates/show_edit_access.inc.php:36
 msgid "Web Interface"
 msgstr "Web Oberfläche"
 
-#: ../../lib/class/access.class.php:429
+#: ../../lib/class/access.class.php:497
 #: ../../templates/show_add_access.inc.php:54
 #: ../../templates/show_add_access.inc.php:60
 #: ../../templates/show_add_access.inc.php:64
@@ -972,13 +972,13 @@ msgstr "Web Oberfläche"
 msgid "Stream Access"
 msgstr "Stream Zugriff"
 
-#: ../../lib/class/album.class.php:240 ../../lib/class/artist.class.php:423
+#: ../../lib/class/album.class.php:373 ../../lib/class/artist.class.php:565
 #: ../../templates/show_album_group_disks.inc.php:37
 #: ../../templates/show_lyrics.inc.php:32
 msgid "Unknown (Orphaned)"
 msgstr "Unbekannt (Verwaist)"
 
-#: ../../lib/class/album.class.php:433
+#: ../../lib/class/album.class.php:576
 #: ../../lib/class/subsonic_xml_data.class.php:374
 #: ../../server/search.ajax.php:85
 #: ../../templates/show_album_group_disks.inc.php:83
@@ -988,9 +988,9 @@ msgstr "Unbekannt (Verwaist)"
 msgid "Disk"
 msgstr "Platte"
 
-#: ../../lib/class/album.class.php:446 ../../lib/class/browse.class.php:165
+#: ../../lib/class/album.class.php:589 ../../lib/class/browse.class.php:190
 #: ../../lib/class/upnp_api.class.php:308 ../../lib/ui.lib.php:158
-#: ../../server/search.ajax.php:55 ../../templates/header.inc.php:292
+#: ../../server/search.ajax.php:55 ../../templates/header.inc.php:286
 #: ../../templates/show_random.inc.php:29
 #: ../../templates/show_search_form.inc.php:30
 #: ../../templates/show_stats.inc.php:34
@@ -1000,22 +1000,22 @@ msgstr "Platte"
 msgid "Artists"
 msgstr "Interpreten"
 
-#: ../../lib/class/album.class.php:446 ../../lib/class/album.class.php:447
+#: ../../lib/class/album.class.php:589 ../../lib/class/album.class.php:590
 #: ../../templates/show_edit_album_row.inc.php:37
 msgid "Various"
 msgstr "Verschiedene"
 
-#: ../../lib/class/album.class.php:472
+#: ../../lib/class/album.class.php:621
 msgid "Album MusicBrainzID"
 msgstr "MusicBrainz Album-ID"
 
-#: ../../lib/class/album.class.php:475
+#: ../../lib/class/album.class.php:624
 msgid "Release Group MusicBrainzID"
 msgstr "MusicBrainz Releasegruppen-ID"
 
-#: ../../lib/class/album.class.php:478 ../../lib/class/artist.class.php:355
+#: ../../lib/class/album.class.php:627 ../../lib/class/artist.class.php:457
 #: ../../lib/class/clip.class.php:119 ../../lib/class/search.class.php:222
-#: ../../lib/class/song.class.php:985
+#: ../../lib/class/song.class.php:1318
 #: ../../templates/browse_filters.inc.php:66
 #: ../../templates/show_albums.inc.php:36
 #: ../../templates/show_albums.inc.php:78
@@ -1050,7 +1050,7 @@ msgstr "MusicBrainz Releasegruppen-ID"
 msgid "Artist"
 msgstr "Interpret"
 
-#: ../../lib/class/album.class.php:481 ../../lib/class/search.class.php:215
+#: ../../lib/class/album.class.php:630 ../../lib/class/search.class.php:215
 #: ../../templates/show_albums.inc.php:34
 #: ../../templates/show_albums.inc.php:76
 #: ../../templates/show_democratic_playlist.inc.php:58
@@ -1076,101 +1076,99 @@ msgstr "Interpret"
 msgid "Album"
 msgstr "Album"
 
-#: ../../lib/class/ampache_rss.class.php:70
+#: ../../lib/class/ampache_rss.class.php:75
 #: ../../lib/class/localplay.class.php:629 ../../templates/header.inc.php:37
-#: ../../templates/mainframes.inc.php:37
 #: ../../templates/show_localplay_status.inc.php:31
 #: ../../templates/show_now_playing.inc.php:33
 msgid "Now Playing"
 msgstr "Aktuell wird gespielt"
 
-#: ../../lib/class/ampache_rss.class.php:71 ../../templates/header.inc.php:38
-#: ../../templates/mainframes.inc.php:38
+#: ../../lib/class/ampache_rss.class.php:76 ../../templates/header.inc.php:38
 #: ../../templates/show_recently_played.inc.php:24
 msgid "Recently Played"
 msgstr "Kürzlich gespielt"
 
-#: ../../lib/class/ampache_rss.class.php:72
+#: ../../lib/class/ampache_rss.class.php:77
 msgid "Newest Albums"
 msgstr "Neueste Alben"
 
-#: ../../lib/class/ampache_rss.class.php:73
+#: ../../lib/class/ampache_rss.class.php:78
 msgid "Newest Artists"
 msgstr "Neueste Interpreten"
 
-#: ../../lib/class/ampache_rss.class.php:116
+#: ../../lib/class/ampache_rss.class.php:126
 msgid "RSS Feed"
 msgstr "RSS Feed"
 
-#: ../../lib/class/ampache_rss.class.php:189
+#: ../../lib/class/ampache_rss.class.php:202
 msgid "seconds ago"
 msgstr "Sekunden"
 
-#: ../../lib/class/ampache_rss.class.php:189
+#: ../../lib/class/ampache_rss.class.php:202
 msgid "minutes ago"
 msgstr "Minuten"
 
-#: ../../lib/class/ampache_rss.class.php:189
+#: ../../lib/class/ampache_rss.class.php:202
 msgid "hours ago"
 msgstr "Stunden"
 
-#: ../../lib/class/ampache_rss.class.php:189
+#: ../../lib/class/ampache_rss.class.php:202
 msgid "days ago"
 msgstr "Tagen"
 
-#: ../../lib/class/ampache_rss.class.php:189
+#: ../../lib/class/ampache_rss.class.php:202
 msgid "weeks ago"
 msgstr "Wochen"
 
-#: ../../lib/class/ampache_rss.class.php:189
+#: ../../lib/class/ampache_rss.class.php:202
 msgid "months ago"
 msgstr "Monaten"
 
-#: ../../lib/class/ampache_rss.class.php:189
+#: ../../lib/class/ampache_rss.class.php:202
 msgid "years ago"
 msgstr "Jahren"
 
-#: ../../lib/class/ampconfig.class.php:78
+#: ../../lib/class/ampconfig.class.php:85
 #, php-format
 msgid "Trying to clobber '%s' without setting clobber"
 msgstr "Versuche %s zu überschreiben, dabei ist 'überschreiben' deaktiviert"
 
-#: ../../lib/class/api.class.php:129
+#: ../../lib/class/api.class.php:143
 msgid "Login Failed: version too old"
 msgstr "Anmelden fehlgeschlagen: Version ist zu alt"
 
-#: ../../lib/class/api.class.php:157
+#: ../../lib/class/api.class.php:171
 msgid "Login Failed: timestamp out of range"
 msgstr "Login gescheitert: Zeitstempel ungültig"
 
-#: ../../lib/class/api.class.php:168 ../../lib/class/api.class.php:236
+#: ../../lib/class/api.class.php:182 ../../lib/class/api.class.php:250
 msgid "Invalid Username/Password"
 msgstr ""
 "Es wurde ein falscher Benutzername oder ein Falsches Passwort eingegeben"
 
-#: ../../lib/class/api.class.php:236
+#: ../../lib/class/api.class.php:250
 msgid "Error Invalid Handshake - "
 msgstr "Fehler: Der Handshake ist ungültig -"
 
-#: ../../lib/class/api.class.php:611 ../../lib/class/api.class.php:628
-#: ../../lib/class/api.class.php:646
+#: ../../lib/class/api.class.php:647 ../../lib/class/api.class.php:665
+#: ../../lib/class/api.class.php:684
 msgid "Access denied to this playlist."
 msgstr "Der Zugriff zu dieser Playlist wurde verweigert."
 
-#: ../../lib/class/api.class.php:733 ../../lib/class/api.class.php:794
+#: ../../lib/class/api.class.php:775 ../../lib/class/api.class.php:837
 #: ../../server/xml.server.php:101
 msgid "Invalid Request"
 msgstr "Ungültige Anfrage"
 
-#: ../../lib/class/api.class.php:754 ../../lib/class/api.class.php:772
+#: ../../lib/class/api.class.php:797 ../../lib/class/api.class.php:815
 msgid "Media Object Invalid or Not Specified"
 msgstr "Medien Objekt Ungültig oder nicht Spezifiziert"
 
-#: ../../lib/class/art.class.php:919
+#: ../../lib/class/art.class.php:1000
 msgid "Error: Unable to open"
 msgstr "Fehler: Der Pfad '%s' Kann nicht geöffnet werden"
 
-#: ../../lib/class/art.class.php:1336 ../../lib/class/shoutbox.class.php:254
+#: ../../lib/class/art.class.php:1468 ../../lib/class/shoutbox.class.php:254
 #: ../../templates/rightbar.inc.php:25
 #: ../../templates/show_album_group_disks.inc.php:48
 #: ../../templates/show_album_group_disks.inc.php:49
@@ -1200,63 +1198,63 @@ msgstr "Fehler: Der Pfad '%s' Kann nicht geöffnet werden"
 msgid "Play"
 msgstr "Spielen"
 
-#: ../../lib/class/art.class.php:1344
+#: ../../lib/class/art.class.php:1476
 msgid "Edit/Find Art"
 msgstr "Cover bearbeiten/finden"
 
-#: ../../lib/class/art.class.php:1348
+#: ../../lib/class/art.class.php:1480
 msgid "Do you really want to reset art?"
 msgstr "Möchtest Du dieses Cover wirklich zurücksetzen?"
 
-#: ../../lib/class/art.class.php:1349
+#: ../../lib/class/art.class.php:1481
 msgid "Reset Art"
 msgstr "Cover zurücksetzen"
 
-#: ../../lib/class/artist.class.php:352
+#: ../../lib/class/artist.class.php:454
 msgid "Artist MusicBrainzID"
 msgstr "MusicBrainz Interpreten-ID"
 
-#: ../../lib/class/autoupdate.class.php:189
+#: ../../lib/class/autoupdate.class.php:231
 msgid "Update available"
 msgstr "Eine Aktualisierung ist verfügbar"
 
-#: ../../lib/class/autoupdate.class.php:192
+#: ../../lib/class/autoupdate.class.php:234
 msgid "See"
 msgstr "Siehe"
 
-#: ../../lib/class/autoupdate.class.php:192
+#: ../../lib/class/autoupdate.class.php:234
 msgid "changes"
 msgstr "Veränderungen"
 
-#: ../../lib/class/autoupdate.class.php:193
+#: ../../lib/class/autoupdate.class.php:235
 msgid "or"
 msgstr "oder"
 
-#: ../../lib/class/autoupdate.class.php:193
+#: ../../lib/class/autoupdate.class.php:235
 msgid "download"
 msgstr "Herunterladen"
 
-#: ../../lib/class/autoupdate.class.php:202
+#: ../../lib/class/autoupdate.class.php:247
 msgid "Updating Ampache sources with `git pull` ..."
 msgstr ""
 "Deine Installation von Ampache wird mit 'Git' auf den neusten Stand "
 "gebracht ..."
 
-#: ../../lib/class/autoupdate.class.php:206
+#: ../../lib/class/autoupdate.class.php:251
 msgid "Done"
 msgstr "Erledigt"
 
-#: ../../lib/class/broadcast.class.php:206
+#: ../../lib/class/broadcast.class.php:328
 msgid "Broadcast edit"
 msgstr "Broadcast bearbeiten"
 
-#: ../../lib/class/broadcast.class.php:206
+#: ../../lib/class/broadcast.class.php:328
 #: ../../lib/class/channel.class.php:179
 #: ../../templates/show_access_list.inc.php:71
 #: ../../templates/show_album_group_disks.inc.php:112
 #: ../../templates/show_album.inc.php:111
 #: ../../templates/show_album_row.inc.php:80
-#: ../../templates/show_artist.inc.php:120
+#: ../../templates/show_artist.inc.php:117
 #: ../../templates/show_artist_row.inc.php:62
 #: ../../templates/show_license_row.inc.php:28
 #: ../../templates/show_live_stream_row.inc.php:37
@@ -1272,11 +1270,11 @@ msgstr "Broadcast bearbeiten"
 #: ../../templates/show_tvshow_season_row.inc.php:53
 #: ../../templates/show_user_row.inc.php:44
 #: ../../templates/show_video.inc.php:94 ../../templates/show_video.inc.php:95
-#: ../../templates/show_video_row.inc.php:85
+#: ../../templates/show_video_row.inc.php:86
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: ../../lib/class/broadcast.class.php:207
+#: ../../lib/class/broadcast.class.php:329
 #: ../../lib/class/channel.class.php:180 ../../lib/class/share.class.php:191
 #: ../../templates/rightbar.inc.php:119
 #: ../../templates/show_access_list.inc.php:72
@@ -1300,15 +1298,15 @@ msgstr "Bearbeiten"
 msgid "Delete"
 msgstr "Löschen"
 
-#: ../../lib/class/broadcast.class.php:215
+#: ../../lib/class/broadcast.class.php:341
 msgid "Broadcast"
 msgstr "Broadcast"
 
-#: ../../lib/class/broadcast.class.php:223
+#: ../../lib/class/broadcast.class.php:354
 msgid "Unbroadcast"
 msgstr "Broadcast beenden"
 
-#: ../../lib/class/browse.class.php:150 ../../lib/class/browse.class.php:224
+#: ../../lib/class/browse.class.php:168 ../../lib/class/browse.class.php:249
 #: ../../lib/class/upnp_api.class.php:356 ../../server/search.ajax.php:117
 #: ../../templates/show_albums.inc.php:37
 #: ../../templates/show_albums.inc.php:79
@@ -1324,10 +1322,10 @@ msgstr "Broadcast beenden"
 msgid "Songs"
 msgstr "Songs"
 
-#: ../../lib/class/browse.class.php:155 ../../lib/class/upnp_api.class.php:332
+#: ../../lib/class/browse.class.php:174 ../../lib/class/upnp_api.class.php:332
 #: ../../lib/ui.lib.php:154 ../../server/search.ajax.php:88
 #: ../../templates/browse_filters.inc.php:63
-#: ../../templates/show_artist.inc.php:136
+#: ../../templates/show_artist.inc.php:129
 #: ../../templates/show_artists.inc.php:36
 #: ../../templates/show_artists.inc.php:75
 #: ../../templates/show_random.inc.php:28
@@ -1340,92 +1338,93 @@ msgstr "Songs"
 msgid "Albums"
 msgstr "Alben"
 
-#: ../../lib/class/browse.class.php:161
+#: ../../lib/class/browse.class.php:186
 msgid "Manage Users"
 msgstr "Benutzer verwalten"
 
-#: ../../lib/class/browse.class.php:171
+#: ../../lib/class/browse.class.php:196
 #: ../../templates/sidebar_home.inc.php:42
 msgid "Radio Stations"
 msgstr "Radiosender"
 
-#: ../../lib/class/browse.class.php:176 ../../lib/class/upnp_api.class.php:380
-#: ../../server/search.ajax.php:146 ../../templates/header.inc.php:298
+#: ../../lib/class/browse.class.php:201 ../../lib/class/upnp_api.class.php:380
+#: ../../server/search.ajax.php:146 ../../templates/header.inc.php:292
 #: ../../templates/sidebar_home.inc.php:36
 #: ../../templates/sidebar_home.inc.php:120
 #: ../../templates/sidebar.light.inc.php:29
 msgid "Playlists"
 msgstr "Playlisten"
 
-#: ../../lib/class/browse.class.php:180
+#: ../../lib/class/browse.class.php:205
 msgid "Playlist Songs"
 msgstr "Lieder der Playlist"
 
-#: ../../lib/class/browse.class.php:184
+#: ../../lib/class/browse.class.php:209
 msgid "Current Playlist"
 msgstr "Aktuelle Playlist"
 
-#: ../../lib/class/browse.class.php:189 ../../lib/class/upnp_api.class.php:404
+#: ../../lib/class/browse.class.php:214 ../../lib/class/upnp_api.class.php:404
 #: ../../templates/sidebar_home.inc.php:37
 msgid "Smart Playlists"
 msgstr "Intelligente Playlist"
 
-#: ../../lib/class/browse.class.php:193 ../../templates/show_stats.inc.php:27
+#: ../../lib/class/browse.class.php:218 ../../templates/show_stats.inc.php:27
 #: ../../templates/sidebar_admin.inc.php:24
 msgid "Catalogs"
 msgstr "Kataloge"
 
-#: ../../lib/class/browse.class.php:197
+#: ../../lib/class/browse.class.php:222
 msgid "Shoutbox Records"
 msgstr "Shoutboxeinträge"
 
-#: ../../lib/class/browse.class.php:208
+#: ../../lib/class/browse.class.php:233
 #: ../../templates/show_search_form.inc.php:31
 #: ../../templates/show_stats.inc.php:36 ../../templates/show_stats.inc.php:76
 #: ../../templates/sidebar_home.inc.php:121
 msgid "Videos"
 msgstr "Videos"
 
-#: ../../lib/class/browse.class.php:212
+#: ../../lib/class/browse.class.php:237
 #: ../../templates/show_democratic.inc.php:23
 msgid "Democratic Playlist"
 msgstr "Erstelle gemeinsame Playlist"
 
-#: ../../lib/class/browse.class.php:216
+#: ../../lib/class/browse.class.php:241
 msgid "Wanted Albums"
 msgstr "Gesuchte Alben"
 
-#: ../../lib/class/browse.class.php:220
+#: ../../lib/class/browse.class.php:245
 #: ../../templates/sidebar_home.inc.php:106
 msgid "Shared Objects"
 msgstr "Freigegebene Objekte"
 
-#: ../../lib/class/browse.class.php:228
+#: ../../lib/class/browse.class.php:253 ../../templates/show_song.inc.php:104
+#: ../../templates/show_video.inc.php:112
 #: ../../templates/sidebar_home.inc.php:38
 msgid "Channels"
 msgstr "Kanäle"
 
-#: ../../lib/class/browse.class.php:232
+#: ../../lib/class/browse.class.php:257
 #: ../../templates/sidebar_home.inc.php:40
 msgid "Broadcasts"
 msgstr "Broadcasts"
 
-#: ../../lib/class/browse.class.php:236
+#: ../../lib/class/browse.class.php:261
 msgid "Media Licenses"
 msgstr "Medienlizenz"
 
-#: ../../lib/class/browse.class.php:240 ../../lib/class/upnp_api.class.php:593
+#: ../../lib/class/browse.class.php:265 ../../lib/class/upnp_api.class.php:593
 #: ../../templates/sidebar_home.inc.php:52
 msgid "TV Shows"
 msgstr "TV Sendungen"
 
-#: ../../lib/class/browse.class.php:244 ../../templates/show_tvshow.inc.php:82
+#: ../../lib/class/browse.class.php:269 ../../templates/show_tvshow.inc.php:82
 #: ../../templates/show_tvshows.inc.php:38
 #: ../../templates/show_tvshows.inc.php:78
 msgid "Seasons"
 msgstr "Staffeln"
 
-#: ../../lib/class/browse.class.php:248
+#: ../../lib/class/browse.class.php:273
 #: ../../templates/show_tvshow_season.inc.php:77
 #: ../../templates/show_tvshow_seasons.inc.php:36
 #: ../../templates/show_tvshow_seasons.inc.php:73
@@ -1434,70 +1433,70 @@ msgstr "Staffeln"
 msgid "Episodes"
 msgstr "Episoden"
 
-#: ../../lib/class/browse.class.php:253 ../../lib/class/upnp_api.class.php:657
+#: ../../lib/class/browse.class.php:278 ../../lib/class/upnp_api.class.php:657
 #: ../../templates/sidebar_home.inc.php:53
 msgid "Movies"
 msgstr "Filme"
 
-#: ../../lib/class/browse.class.php:258 ../../lib/class/upnp_api.class.php:633
+#: ../../lib/class/browse.class.php:283 ../../lib/class/upnp_api.class.php:633
 msgid "Clips"
 msgstr "Clips"
 
-#: ../../lib/class/browse.class.php:263 ../../lib/class/upnp_api.class.php:681
+#: ../../lib/class/browse.class.php:288 ../../lib/class/upnp_api.class.php:681
 #: ../../templates/sidebar_home.inc.php:54
 msgid "Personal Videos"
 msgstr "Persönliche Videos"
 
-#: ../../lib/class/browse.class.php:306 ../../templates/rightbar.inc.php:126
+#: ../../lib/class/browse.class.php:331 ../../templates/rightbar.inc.php:126
 #: ../../templates/show_recently_played.inc.php:158
 msgid "More"
 msgstr "Mehr"
 
-#: ../../lib/class/catalog.class.php:343 ../../lib/class/catalog.class.php:346
-#: ../../lib/class/catalog.class.php:349 ../../lib/class/user.class.php:839
-#: ../../lib/preferences.php:302 ../../templates/show_user.inc.php:23
+#: ../../lib/class/catalog.class.php:477 ../../lib/class/catalog.class.php:480
+#: ../../lib/class/catalog.class.php:483 ../../lib/class/user.class.php:839
+#: ../../lib/preferences.php:303 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:57
 msgid "Never"
 msgstr "Niemals"
 
-#: ../../lib/class/catalog.class.php:415
+#: ../../lib/class/catalog.class.php:557
 msgid "day"
 msgid_plural "days"
 msgstr[0] "Tag"
 msgstr[1] "Tage"
 
-#: ../../lib/class/catalog.class.php:417
+#: ../../lib/class/catalog.class.php:559
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "Stunde"
 msgstr[1] "Stunden"
 
-#: ../../lib/class/catalog.class.php:458
+#: ../../lib/class/catalog.class.php:602
 msgid "Catalog Insert Failed check debug logs"
 msgstr "Katalog konnte nicht hinzugefügt werden, überprüfe die Log-Dateien"
 
-#: ../../lib/class/catalog.class.php:1139
+#: ../../lib/class/catalog.class.php:1337
 msgid "No Update Needed"
 msgstr "Es wird keine Aktualisierung benötigt."
 
-#: ../../lib/class/catalog.class.php:1301
+#: ../../lib/class/catalog.class.php:1511
 #, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] "Katalog wurde erfolgreich gesäubert. Eine Datei wurde entfernt."
 msgstr[1] "Katalog wurde erfolgreich gesäubert. %d Dateien wurden entfernt."
 
-#: ../../lib/class/catalog.class.php:1326
+#: ../../lib/class/catalog.class.php:1536
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr ""
 "Katalog wurde erfolgreich überprüft. %d von %d Dateien wurden aktualisiert."
 
-#: ../../lib/class/catalog.class.php:1476
+#: ../../lib/class/catalog.class.php:1692
 msgid "Failed to create playlist."
 msgstr "Beim erstellen der Playlist ist ein Fehler aufgetreten."
 
-#: ../../lib/class/catalog.class.php:1493
+#: ../../lib/class/catalog.class.php:1709
 msgid "No valid songs found in playlist file."
 msgstr "Keine gültigen Songs in der Playlist gefunden."
 
@@ -1523,7 +1522,7 @@ msgid "Stopped"
 msgstr "Gestoppt"
 
 #: ../../lib/class/democratic.class.php:153
-#: ../../lib/class/video.class.php:134
+#: ../../lib/class/video.class.php:281
 #: ../../templates/show_create_democratic.inc.php:36
 msgid "minutes"
 msgstr "Minuten"
@@ -1548,20 +1547,20 @@ msgstr "Inhaltsmanager"
 msgid "Catalog Manager"
 msgstr "Katalogmanager"
 
-#: ../../lib/class/live_stream.class.php:130
-#: ../../lib/class/live_stream.class.php:161
+#: ../../lib/class/live_stream.class.php:141
+#: ../../lib/class/live_stream.class.php:172
 msgid "Name Required"
 msgstr "Name benötigt"
 
-#: ../../lib/class/live_stream.class.php:138
+#: ../../lib/class/live_stream.class.php:149
 msgid "Invalid URL must be mms:// , https:// or http://"
 msgstr "Ungültige URL. Gültige Varianten sind: mms:// , https:// oder http://"
 
-#: ../../lib/class/live_stream.class.php:169
+#: ../../lib/class/live_stream.class.php:180
 msgid "Invalid URL must be http:// or https://"
 msgstr "Ungültige URL. Gültige Varianten sind: http:// oder https://"
 
-#: ../../lib/class/live_stream.class.php:175
+#: ../../lib/class/live_stream.class.php:186
 msgid "Invalid Catalog"
 msgstr "Ungültiger Katalog"
 
@@ -1571,7 +1570,7 @@ msgstr "Pausiert"
 
 #: ../../lib/class/localplay.class.php:635
 #: ../../lib/class/tvshow_episode.class.php:72
-#: ../../lib/class/user.class.php:842 ../../lib/class/video.class.php:443
+#: ../../lib/class/user.class.php:842 ../../lib/class/video.class.php:709
 #: ../../lib/general.lib.php:222
 #: ../../modules/localplay/mpd.controller.php:503
 #: ../../templates/show_user.inc.php:24 ../../templates/show_users.inc.php:58
@@ -1584,7 +1583,7 @@ msgstr "Unbekannt"
 msgid "Private"
 msgstr "Privat"
 
-#: ../../lib/class/query.class.php:78
+#: ../../lib/class/query.class.php:98
 msgid "Browse not found or expired, try reloading the page"
 msgstr ""
 "Die Seite wurde nicht gefunden oder ist abgelaufen. Versuche bitte die Seite "
@@ -1723,8 +1722,8 @@ msgstr "nach"
 msgid "Any searchable text"
 msgstr "Jeder durchsuchbare Text"
 
-#: ../../lib/class/search.class.php:208 ../../lib/class/search.class.php:399
-#: ../../lib/class/song.class.php:988 ../../lib/class/video.class.php:146
+#: ../../lib/class/search.class.php:208 ../../lib/class/search.class.php:406
+#: ../../lib/class/song.class.php:1321 ../../lib/class/video.class.php:297
 #: ../../templates/show_democratic_playlist.inc.php:57
 #: ../../templates/show_democratic_playlist.inc.php:104
 #: ../../templates/show_disabled_songs.inc.php:29
@@ -1735,50 +1734,58 @@ msgstr "Jeder durchsuchbare Text"
 #: ../../templates/show_search_bar.inc.php:31
 #: ../../templates/show_song.inc.php:90 ../../templates/show_video.inc.php:100
 #: ../../templates/show_videos.inc.php:33
-#: ../../templates/show_videos.inc.php:79
+#: ../../templates/show_videos.inc.php:80
 msgid "Title"
 msgstr "Titel"
 
 #: ../../lib/class/search.class.php:229
+#: ../../templates/show_edit_song_row.inc.php:68
+#: ../../templates/show_song.inc.php:96
+msgid "Composer"
+msgstr "Komponist"
+
+#: ../../lib/class/search.class.php:236
 #: ../../templates/show_manage_shoutbox.inc.php:31
 #: ../../templates/show_manage_shoutbox.inc.php:60
-#: ../../templates/show_song.inc.php:98
+#: ../../templates/show_song.inc.php:99
 msgid "Comment"
 msgstr "Kommentar"
 
-#: ../../lib/class/search.class.php:237 ../../lib/class/search.class.php:445
-#: ../../lib/class/search.class.php:467 ../../lib/class/tag.class.php:634
+#: ../../lib/class/search.class.php:244 ../../lib/class/search.class.php:452
+#: ../../lib/class/search.class.php:474 ../../lib/class/tag.class.php:634
 #: ../../templates/show_search_bar.inc.php:35
 msgid "Tag"
 msgstr "Tag"
 
-#: ../../lib/class/search.class.php:244 ../../lib/class/search.class.php:453
+#: ../../lib/class/search.class.php:251 ../../lib/class/search.class.php:460
 #: ../../templates/show_disabled_songs.inc.php:32
 #: ../../templates/show_disabled_songs.inc.php:58
 #: ../../templates/show_duplicates.inc.php:34
 #: ../../templates/show_duplicates.inc.php:73
 #: ../../templates/show_import_playlist.inc.php:28
-#: ../../templates/show_song.inc.php:104
-#: ../../templates/show_video.inc.php:109
+#: ../../templates/show_song.inc.php:106
+#: ../../templates/show_video.inc.php:114
 msgid "Filename"
 msgstr "Dateiname"
 
-#: ../../lib/class/search.class.php:251 ../../lib/class/search.class.php:406
+#: ../../lib/class/search.class.php:258 ../../lib/class/search.class.php:413
 #: ../../templates/show_albums.inc.php:38
 #: ../../templates/show_albums.inc.php:80
 #: ../../templates/show_edit_album_row.inc.php:49
 #: ../../templates/show_edit_tvshow_row.inc.php:35
 #: ../../templates/show_missing_albums.inc.php:29
 #: ../../templates/show_partial_edit_movie_row.inc.php:32
+#: ../../templates/show_partial_movie.inc.php:22
+#: ../../templates/show_partial_movies.inc.php:24
 #: ../../templates/show_wanted_albums.inc.php:28
 msgid "Year"
 msgstr "Jahr"
 
-#: ../../lib/class/search.class.php:258
+#: ../../lib/class/search.class.php:265
 msgid "Length (in minutes)"
 msgstr "Länge (in Minuten)"
 
-#: ../../lib/class/search.class.php:266 ../../lib/class/search.class.php:414
+#: ../../lib/class/search.class.php:273 ../../lib/class/search.class.php:421
 #: ../../templates/show_albums.inc.php:41
 #: ../../templates/show_albums.inc.php:83
 #: ../../templates/show_artists.inc.php:40
@@ -1796,39 +1803,39 @@ msgstr "Länge (in Minuten)"
 #: ../../templates/show_tvshows.inc.php:41
 #: ../../templates/show_tvshows.inc.php:81
 #: ../../templates/show_video.inc.php:57
-#: ../../templates/show_videos.inc.php:44
-#: ../../templates/show_videos.inc.php:90
+#: ../../templates/show_videos.inc.php:45
+#: ../../templates/show_videos.inc.php:92
 msgid "Rating"
 msgstr "Bewertung"
 
-#: ../../lib/class/search.class.php:284 ../../templates/show_song.inc.php:111
-#: ../../templates/show_video.inc.php:116
+#: ../../lib/class/search.class.php:291 ../../templates/show_song.inc.php:113
+#: ../../templates/show_video.inc.php:121
 msgid "# Played"
 msgstr "# Gespielt"
 
-#: ../../lib/class/search.class.php:292
+#: ../../lib/class/search.class.php:299
 #: ../../templates/show_add_channel.inc.php:102
 #: ../../templates/show_channels.inc.php:37
 #: ../../templates/show_duplicates.inc.php:32
 #: ../../templates/show_duplicates.inc.php:71
 #: ../../templates/show_edit_channel_row.inc.php:84
-#: ../../templates/show_song.inc.php:102
+#: ../../templates/show_song.inc.php:103
 msgid "Bitrate"
 msgstr "Bitrate"
 
-#: ../../lib/class/search.class.php:317 ../../templates/show_album.inc.php:58
-#: ../../templates/show_artist.inc.php:63
+#: ../../lib/class/search.class.php:324 ../../templates/show_album.inc.php:58
+#: ../../templates/show_artist.inc.php:60
 msgid "Played"
 msgstr "Gespielt"
 
-#: ../../lib/class/search.class.php:344 ../../lib/class/search.class.php:437
+#: ../../lib/class/search.class.php:351 ../../lib/class/search.class.php:444
 #: ../../templates/browse_filters.inc.php:72
 #: ../../templates/show_add_live_stream.inc.php:54
 #: ../../templates/show_export.inc.php:32
 msgid "Catalog"
 msgstr "Katalog"
 
-#: ../../lib/class/search.class.php:357 ../../lib/ui.lib.php:113
+#: ../../lib/class/search.class.php:364 ../../lib/ui.lib.php:113
 #: ../../templates/show_manage_democratic.inc.php:26
 #: ../../templates/show_search_bar.inc.php:34
 #: ../../templates/sidebar_home.inc.php:62
@@ -1836,7 +1843,7 @@ msgstr "Katalog"
 msgid "Playlist"
 msgstr "Playlist"
 
-#: ../../lib/class/search.class.php:364
+#: ../../lib/class/search.class.php:371
 #: ../../templates/show_playlists.inc.php:28
 #: ../../templates/show_playlists.inc.php:55
 #: ../../templates/show_searches.inc.php:29
@@ -1844,17 +1851,17 @@ msgstr "Playlist"
 msgid "Playlist Name"
 msgstr "Name der Playlist"
 
-#: ../../lib/class/search.class.php:377
+#: ../../lib/class/search.class.php:384
 msgid "Smart Playlist"
 msgstr "Intelligente Playlist"
 
-#: ../../lib/class/search.class.php:390
+#: ../../lib/class/search.class.php:397
 #: ../../templates/show_add_upload.inc.php:165
-#: ../../templates/show_edit_song_row.inc.php:75
+#: ../../templates/show_edit_song_row.inc.php:83
 msgid "Music License"
 msgstr "Musiklizenz"
 
-#: ../../lib/class/search.class.php:461 ../../lib/class/search.class.php:475
+#: ../../lib/class/search.class.php:468 ../../lib/class/search.class.php:482
 #: ../../templates/show_access_list.inc.php:47
 #: ../../templates/show_add_access.inc.php:27
 #: ../../templates/show_add_channel.inc.php:35
@@ -1903,27 +1910,27 @@ msgstr "Hinzufügen"
 #: ../../templates/show_album.inc.php:99
 #: ../../templates/show_album.inc.php:100
 #: ../../templates/show_album_row.inc.php:67
-#: ../../templates/show_html5_player.inc.php:258
-#: ../../templates/show_html5_player.inc.php:264
+#: ../../templates/show_html5_player.inc.php:133
+#: ../../templates/show_html5_player.inc.php:139
 #: ../../templates/show_song.inc.php:68
 #: ../../templates/show_song_row.inc.php:61
 #: ../../templates/show_video.inc.php:83
-#: ../../templates/show_video_row.inc.php:74
+#: ../../templates/show_video_row.inc.php:75
 msgid "Post Shout"
 msgstr "Poste Shout"
 
-#: ../../lib/class/song.class.php:966
-#: ../../templates/show_html5_player.inc.php:255
+#: ../../lib/class/song.class.php:1294
+#: ../../templates/show_html5_player.inc.php:130
 msgid "Show Lyrics"
 msgstr "Zeige Songtexte"
 
-#: ../../lib/class/song.class.php:982
+#: ../../lib/class/song.class.php:1315
 msgid "Track MusicBrainzID"
 msgstr "MusicBrainz Track-ID"
 
-#: ../../lib/class/tvshow.class.php:192
-#: ../../lib/class/tvshow_episode.class.php:166
-#: ../../lib/class/tvshow_season.class.php:150
+#: ../../lib/class/tvshow.class.php:195
+#: ../../lib/class/tvshow_episode.class.php:175
+#: ../../lib/class/tvshow_season.class.php:153
 #: ../../templates/show_add_catalog.inc.php:73
 #: ../../templates/show_edit_tvshow_season_row.inc.php:31
 #: ../../templates/show_partial_tvshow_episode.inc.php:23
@@ -1935,9 +1942,9 @@ msgstr "MusicBrainz Track-ID"
 msgid "TV Show"
 msgstr "TV Sendung"
 
-#: ../../lib/class/tvshow_episode.class.php:169
-#: ../../lib/class/tvshow_season.class.php:131
-#: ../../lib/class/tvshow_season.class.php:153
+#: ../../lib/class/tvshow_episode.class.php:178
+#: ../../lib/class/tvshow_season.class.php:134
+#: ../../lib/class/tvshow_season.class.php:156
 #: ../../templates/show_edit_tvshow_season_row.inc.php:27
 #: ../../templates/show_partial_tvshow_episode.inc.php:24
 #: ../../templates/show_partial_tvshow_episodes.inc.php:24
@@ -1946,25 +1953,25 @@ msgstr "TV Sendung"
 msgid "Season"
 msgstr "Staffel"
 
-#: ../../lib/class/tvshow_episode.class.php:173
+#: ../../lib/class/tvshow_episode.class.php:182
 #: ../../templates/show_partial_tvshow_episode.inc.php:25
 #: ../../templates/show_partial_tvshow_episodes.inc.php:23
 msgid "Episode"
 msgstr "Episode"
 
-#: ../../lib/class/update.class.php:475
+#: ../../lib/class/update.class.php:481
 msgid "No updates needed."
 msgstr "Es wird keine Aktualisierung benötigt."
 
-#: ../../lib/class/update.class.php:477
+#: ../../lib/class/update.class.php:483
 msgid "Return to main page"
 msgstr "Zurück zur Startseite"
 
-#: ../../lib/class/update.class.php:2504 ../../lib/class/update.class.php:2520
+#: ../../lib/class/update.class.php:2510 ../../lib/class/update.class.php:2526
 msgid "File copy error."
 msgstr "Fehler beim kopieren der Datei(en)."
 
-#: ../../lib/class/update.class.php:2511 ../../lib/class/update.class.php:2527
+#: ../../lib/class/update.class.php:2517 ../../lib/class/update.class.php:2533
 msgid "Cannot copy default .htaccess file."
 msgstr "Kann die Standard .htaccess Datei nicht kopieren."
 
@@ -1987,759 +1994,759 @@ msgstr "Nicht genügend Informationen"
 msgid "User avatar"
 msgstr "Profilbild"
 
-#: ../../lib/class/video.class.php:463
+#: ../../lib/class/video.class.php:734
 msgid "Afar"
 msgstr "Afar"
 
-#: ../../lib/class/video.class.php:464
+#: ../../lib/class/video.class.php:735
 msgid "Abkhazian"
 msgstr "Abchasisch"
 
-#: ../../lib/class/video.class.php:465
+#: ../../lib/class/video.class.php:736
 msgid "Avestan"
 msgstr "Awestisch"
 
-#: ../../lib/class/video.class.php:466
+#: ../../lib/class/video.class.php:737
 msgid "Afrikaans"
 msgstr "Afrikaans"
 
-#: ../../lib/class/video.class.php:467
+#: ../../lib/class/video.class.php:738
 msgid "Akan"
 msgstr "Akan"
 
-#: ../../lib/class/video.class.php:468
+#: ../../lib/class/video.class.php:739
 msgid "Amharic"
 msgstr "Amharisch"
 
-#: ../../lib/class/video.class.php:469
+#: ../../lib/class/video.class.php:740
 msgid "Aragonese"
 msgstr "Aragonesisch"
 
-#: ../../lib/class/video.class.php:470
+#: ../../lib/class/video.class.php:741
 msgid "Arabic"
 msgstr "Arabisch"
 
-#: ../../lib/class/video.class.php:471
+#: ../../lib/class/video.class.php:742
 msgid "Assamese"
 msgstr "Assamesisch"
 
-#: ../../lib/class/video.class.php:472
+#: ../../lib/class/video.class.php:743
 msgid "Avaric"
 msgstr "Awarisch"
 
-#: ../../lib/class/video.class.php:473
+#: ../../lib/class/video.class.php:744
 msgid "Aymara"
 msgstr "Aymara"
 
-#: ../../lib/class/video.class.php:474
+#: ../../lib/class/video.class.php:745
 msgid "Azerbaijani"
 msgstr "Aserbaidschanisch"
 
-#: ../../lib/class/video.class.php:475
+#: ../../lib/class/video.class.php:746
 msgid "Bashkir"
 msgstr "Baschkirisch"
 
-#: ../../lib/class/video.class.php:476
+#: ../../lib/class/video.class.php:747
 msgid "Belarusian"
 msgstr "Weißrussisch"
 
-#: ../../lib/class/video.class.php:477
+#: ../../lib/class/video.class.php:748
 msgid "Bulgarian"
 msgstr "Bulgarisch"
 
-#: ../../lib/class/video.class.php:478
+#: ../../lib/class/video.class.php:749
 msgid "Bihari"
 msgstr "Bihari"
 
-#: ../../lib/class/video.class.php:479
+#: ../../lib/class/video.class.php:750
 msgid "Bislama"
 msgstr "Bislama"
 
-#: ../../lib/class/video.class.php:480
+#: ../../lib/class/video.class.php:751
 msgid "Bambara"
 msgstr "Bambara"
 
-#: ../../lib/class/video.class.php:481
+#: ../../lib/class/video.class.php:752
 msgid "Bengali"
 msgstr "Bengalisch"
 
-#: ../../lib/class/video.class.php:482
+#: ../../lib/class/video.class.php:753
 msgid "Tibetan"
 msgstr "Tibetanisch"
 
-#: ../../lib/class/video.class.php:483
+#: ../../lib/class/video.class.php:754
 msgid "Breton"
 msgstr "Bretonisch"
 
-#: ../../lib/class/video.class.php:484
+#: ../../lib/class/video.class.php:755
 msgid "Bosnian"
 msgstr "Bosnisch"
 
-#: ../../lib/class/video.class.php:485
+#: ../../lib/class/video.class.php:756
 msgid "Catalan"
 msgstr "Katalanisch"
 
-#: ../../lib/class/video.class.php:486
+#: ../../lib/class/video.class.php:757
 msgid "Chechen"
 msgstr "Tschetschenisch"
 
-#: ../../lib/class/video.class.php:487
+#: ../../lib/class/video.class.php:758
 msgid "Chamorro"
 msgstr "Chamorro"
 
-#: ../../lib/class/video.class.php:488
+#: ../../lib/class/video.class.php:759
 msgid "Corsican"
 msgstr "Korsisch"
 
-#: ../../lib/class/video.class.php:489
+#: ../../lib/class/video.class.php:760
 msgid "Cree"
 msgstr "Cree"
 
-#: ../../lib/class/video.class.php:490
+#: ../../lib/class/video.class.php:761
 msgid "Czech"
 msgstr "Tschechisch"
 
-#: ../../lib/class/video.class.php:491
+#: ../../lib/class/video.class.php:762
 msgid "Church Slavic"
 msgstr "Kirchen Slavisch"
 
-#: ../../lib/class/video.class.php:492
+#: ../../lib/class/video.class.php:763
 msgid "Chuvash"
 msgstr "Tschuwaschisch"
 
-#: ../../lib/class/video.class.php:493
+#: ../../lib/class/video.class.php:764
 msgid "Welsh"
 msgstr "Walisisch"
 
-#: ../../lib/class/video.class.php:494
+#: ../../lib/class/video.class.php:765
 msgid "Danish"
 msgstr "Dänisch"
 
-#: ../../lib/class/video.class.php:495
+#: ../../lib/class/video.class.php:766
 msgid "German"
 msgstr "Deutsch"
 
-#: ../../lib/class/video.class.php:496
+#: ../../lib/class/video.class.php:767
 msgid "Divehi"
 msgstr "Divehi"
 
-#: ../../lib/class/video.class.php:497
+#: ../../lib/class/video.class.php:768
 msgid "Dzongkha"
 msgstr "Dzongkha"
 
-#: ../../lib/class/video.class.php:498
+#: ../../lib/class/video.class.php:769
 msgid "Ewe"
 msgstr "Ewe"
 
-#: ../../lib/class/video.class.php:499
+#: ../../lib/class/video.class.php:770
 msgid "Greek"
 msgstr "Grichisch"
 
-#: ../../lib/class/video.class.php:500
+#: ../../lib/class/video.class.php:771
 msgid "English"
 msgstr "Englisch"
 
-#: ../../lib/class/video.class.php:501
+#: ../../lib/class/video.class.php:772
 msgid "Esperanto"
 msgstr "Esperanto"
 
-#: ../../lib/class/video.class.php:502
+#: ../../lib/class/video.class.php:773
 msgid "Spanish"
 msgstr "Spanisch"
 
-#: ../../lib/class/video.class.php:503
+#: ../../lib/class/video.class.php:774
 msgid "Estonian"
 msgstr "Estnisch"
 
-#: ../../lib/class/video.class.php:504
+#: ../../lib/class/video.class.php:775
 msgid "Basque"
 msgstr "Baskisch"
 
-#: ../../lib/class/video.class.php:505
+#: ../../lib/class/video.class.php:776
 msgid "Persian"
 msgstr "Persisch"
 
-#: ../../lib/class/video.class.php:506
+#: ../../lib/class/video.class.php:777
 msgid "Fulah"
 msgstr "Fulah"
 
-#: ../../lib/class/video.class.php:507
+#: ../../lib/class/video.class.php:778
 msgid "Finnish"
 msgstr "Finnisch"
 
-#: ../../lib/class/video.class.php:508
+#: ../../lib/class/video.class.php:779
 msgid "Fijian"
 msgstr "Fidschianisch"
 
-#: ../../lib/class/video.class.php:509
+#: ../../lib/class/video.class.php:780
 msgid "Faroese"
 msgstr "Färöisch"
 
-#: ../../lib/class/video.class.php:510
+#: ../../lib/class/video.class.php:781
 msgid "French"
 msgstr "Französisch"
 
-#: ../../lib/class/video.class.php:511
+#: ../../lib/class/video.class.php:782
 msgid "Western Frisian"
 msgstr "Westfriesisch"
 
-#: ../../lib/class/video.class.php:512
+#: ../../lib/class/video.class.php:783
 msgid "Irish"
 msgstr "Irisch"
 
-#: ../../lib/class/video.class.php:513
+#: ../../lib/class/video.class.php:784
 msgid "Scottish Gaelic"
 msgstr "Schottisch-Gälisch"
 
-#: ../../lib/class/video.class.php:514
+#: ../../lib/class/video.class.php:785
 msgid "Galician"
 msgstr "Galicisch"
 
-#: ../../lib/class/video.class.php:515
+#: ../../lib/class/video.class.php:786
 msgid "Guarani"
 msgstr "Guaranitisch"
 
-#: ../../lib/class/video.class.php:516
+#: ../../lib/class/video.class.php:787
 msgid "Gujarati"
 msgstr "Gujaratisch"
 
-#: ../../lib/class/video.class.php:517
+#: ../../lib/class/video.class.php:788
 msgid "Manx"
 msgstr "Manx"
 
-#: ../../lib/class/video.class.php:518
+#: ../../lib/class/video.class.php:789
 msgid "Hausa"
 msgstr "Hausa"
 
-#: ../../lib/class/video.class.php:519
+#: ../../lib/class/video.class.php:790
 msgid "Hebrew"
 msgstr "Hebräisch"
 
-#: ../../lib/class/video.class.php:520
+#: ../../lib/class/video.class.php:791
 msgid "Hindi"
 msgstr "Hindi"
 
-#: ../../lib/class/video.class.php:521
+#: ../../lib/class/video.class.php:792
 msgid "Hiri Motu"
 msgstr "Hiri Motu"
 
-#: ../../lib/class/video.class.php:522
+#: ../../lib/class/video.class.php:793
 msgid "Croatian"
 msgstr "Kroatisch"
 
-#: ../../lib/class/video.class.php:523
+#: ../../lib/class/video.class.php:794
 msgid "Haitian"
 msgstr "Haitisch"
 
-#: ../../lib/class/video.class.php:524
+#: ../../lib/class/video.class.php:795
 msgid "Hungarian"
 msgstr "Hungarisch"
 
-#: ../../lib/class/video.class.php:525
+#: ../../lib/class/video.class.php:796
 msgid "Armenian"
 msgstr "Armenisch"
 
-#: ../../lib/class/video.class.php:526
+#: ../../lib/class/video.class.php:797
 msgid "Herero"
 msgstr "Herero"
 
 # Hey, falls du was besseres hast, ändere es ;-) Im Grunde ist es auch sinnlos es inner source zu haben. Die Sprache Wird schließlich nicht wirklich verwendet.
 # Interlingua ist eine Plansprache, die 1951 von Alexander Gode geschaffen wurde.
-#: ../../lib/class/video.class.php:527
+#: ../../lib/class/video.class.php:798
 msgid "Interlingua (International Auxiliary Language Association)"
 msgstr "Interlingua "
 
-#: ../../lib/class/video.class.php:528
+#: ../../lib/class/video.class.php:799
 msgid "Indonesian"
 msgstr "Indonesisch"
 
-#: ../../lib/class/video.class.php:529
+#: ../../lib/class/video.class.php:800
 msgid "Interlingue"
 msgstr "Interlingue"
 
-#: ../../lib/class/video.class.php:530
+#: ../../lib/class/video.class.php:801
 msgid "Igbo"
 msgstr "Igbo"
 
-#: ../../lib/class/video.class.php:531
+#: ../../lib/class/video.class.php:802
 msgid "Sichuan Yi"
 msgstr "Sichuan Yi"
 
 # Muss anderweitig adequat übersetzt werden.
-#: ../../lib/class/video.class.php:532
+#: ../../lib/class/video.class.php:803
 msgid "Inupiaq"
 msgstr "Inupiaq"
 
-#: ../../lib/class/video.class.php:533
+#: ../../lib/class/video.class.php:804
 msgid "Ido"
 msgstr "Ido"
 
-#: ../../lib/class/video.class.php:534
+#: ../../lib/class/video.class.php:805
 msgid "Icelandic"
 msgstr "Isländisch"
 
-#: ../../lib/class/video.class.php:535
+#: ../../lib/class/video.class.php:806
 msgid "Italian"
 msgstr "Italienisch"
 
-#: ../../lib/class/video.class.php:536
+#: ../../lib/class/video.class.php:807
 msgid "Inuktitut"
 msgstr "Inuktitut"
 
-#: ../../lib/class/video.class.php:537
+#: ../../lib/class/video.class.php:808
 msgid "Japanese"
 msgstr "Japanisch"
 
-#: ../../lib/class/video.class.php:538
+#: ../../lib/class/video.class.php:809
 msgid "Javanese"
 msgstr "Javanesisch"
 
-#: ../../lib/class/video.class.php:539
+#: ../../lib/class/video.class.php:810
 msgid "Georgian"
 msgstr "Georgisch"
 
-#: ../../lib/class/video.class.php:540
+#: ../../lib/class/video.class.php:811
 msgid "Kongo"
 msgstr "Kongo"
 
-#: ../../lib/class/video.class.php:541
+#: ../../lib/class/video.class.php:812
 msgid "Kikuyu"
 msgstr "Kikuyugras"
 
-#: ../../lib/class/video.class.php:542
+#: ../../lib/class/video.class.php:813
 msgid "Kwanyama"
 msgstr "Kwanyama"
 
-#: ../../lib/class/video.class.php:543
+#: ../../lib/class/video.class.php:814
 msgid "Kazakh"
 msgstr "Kasachisch"
 
-#: ../../lib/class/video.class.php:544
+#: ../../lib/class/video.class.php:815
 msgid "Kalaallisut"
 msgstr "Kalaallisut"
 
-#: ../../lib/class/video.class.php:545
+#: ../../lib/class/video.class.php:816
 msgid "Khmer"
 msgstr "Khmer"
 
-#: ../../lib/class/video.class.php:546
+#: ../../lib/class/video.class.php:817
 msgid "Kannada"
 msgstr "Kannada"
 
-#: ../../lib/class/video.class.php:547
+#: ../../lib/class/video.class.php:818
 msgid "Korean"
 msgstr "Koreanisch"
 
-#: ../../lib/class/video.class.php:548
+#: ../../lib/class/video.class.php:819
 msgid "Kanuri"
 msgstr "Kanuri"
 
-#: ../../lib/class/video.class.php:549
+#: ../../lib/class/video.class.php:820
 msgid "Kashmiri"
 msgstr "Kaschmirisch"
 
-#: ../../lib/class/video.class.php:550
+#: ../../lib/class/video.class.php:821
 msgid "Kurdish"
 msgstr "Kurdisch"
 
-#: ../../lib/class/video.class.php:551
+#: ../../lib/class/video.class.php:822
 msgid "Komi"
 msgstr "Komi"
 
-#: ../../lib/class/video.class.php:552
+#: ../../lib/class/video.class.php:823
 msgid "Cornish"
 msgstr "Kornisch"
 
-#: ../../lib/class/video.class.php:553
+#: ../../lib/class/video.class.php:824
 msgid "Kirghiz"
 msgstr "Kirgisisch"
 
-#: ../../lib/class/video.class.php:554
+#: ../../lib/class/video.class.php:825
 msgid "Latin"
 msgstr "Lateinisch"
 
-#: ../../lib/class/video.class.php:555
+#: ../../lib/class/video.class.php:826
 msgid "Luxembourgish"
 msgstr "Luxemburgisch"
 
-#: ../../lib/class/video.class.php:556
+#: ../../lib/class/video.class.php:827
 msgid "Ganda"
 msgstr "Ganda"
 
-#: ../../lib/class/video.class.php:557
+#: ../../lib/class/video.class.php:828
 msgid "Limburgish"
 msgstr "Limburgisch"
 
-#: ../../lib/class/video.class.php:558
+#: ../../lib/class/video.class.php:829
 msgid "Lingala"
 msgstr "Lingala"
 
-#: ../../lib/class/video.class.php:559
+#: ../../lib/class/video.class.php:830
 msgid "Lao"
 msgstr "Lao"
 
-#: ../../lib/class/video.class.php:560
+#: ../../lib/class/video.class.php:831
 msgid "Lithuanian"
 msgstr "Litauisch"
 
-#: ../../lib/class/video.class.php:561
+#: ../../lib/class/video.class.php:832
 msgid "Luba-Katanga"
 msgstr "Luba-Katanga"
 
-#: ../../lib/class/video.class.php:562
+#: ../../lib/class/video.class.php:833
 msgid "Latvian"
 msgstr "Lettisch"
 
-#: ../../lib/class/video.class.php:563
+#: ../../lib/class/video.class.php:834
 msgid "Malagasy"
 msgstr "Madagassisch"
 
-#: ../../lib/class/video.class.php:564
+#: ../../lib/class/video.class.php:835
 msgid "Marshallese"
 msgstr "Marshallisch"
 
-#: ../../lib/class/video.class.php:565
+#: ../../lib/class/video.class.php:836
 msgid "Maori"
 msgstr "Maorisch"
 
-#: ../../lib/class/video.class.php:566
+#: ../../lib/class/video.class.php:837
 msgid "Macedonian"
 msgstr "Mazedonisch"
 
-#: ../../lib/class/video.class.php:567
+#: ../../lib/class/video.class.php:838
 msgid "Malayalam"
 msgstr "Malayalam"
 
-#: ../../lib/class/video.class.php:568
+#: ../../lib/class/video.class.php:839
 msgid "Mongolian"
 msgstr "Mongolisch"
 
-#: ../../lib/class/video.class.php:569
+#: ../../lib/class/video.class.php:840
 msgid "Marathi"
 msgstr "Marathi"
 
-#: ../../lib/class/video.class.php:570
+#: ../../lib/class/video.class.php:841
 msgid "Malay"
 msgstr "Malaiisch"
 
-#: ../../lib/class/video.class.php:571
+#: ../../lib/class/video.class.php:842
 msgid "Maltese"
 msgstr "Maltesisch"
 
-#: ../../lib/class/video.class.php:572
+#: ../../lib/class/video.class.php:843
 msgid "Burmese"
 msgstr "Burmesisch"
 
-#: ../../lib/class/video.class.php:573
+#: ../../lib/class/video.class.php:844
 msgid "Nauru"
 msgstr "Nauru"
 
-#: ../../lib/class/video.class.php:574
+#: ../../lib/class/video.class.php:845
 msgid "Norwegian Bokmal"
 msgstr "Norwegisch Bokmal"
 
-#: ../../lib/class/video.class.php:575
+#: ../../lib/class/video.class.php:846
 msgid "North Ndebele"
 msgstr "Nord-Ndebele"
 
-#: ../../lib/class/video.class.php:576
+#: ../../lib/class/video.class.php:847
 msgid "Nepali"
 msgstr "Nepali"
 
-#: ../../lib/class/video.class.php:577
+#: ../../lib/class/video.class.php:848
 msgid "Ndonga"
 msgstr "Ndonga"
 
-#: ../../lib/class/video.class.php:578
+#: ../../lib/class/video.class.php:849
 msgid "Dutch"
 msgstr "Holländisch"
 
-#: ../../lib/class/video.class.php:579
+#: ../../lib/class/video.class.php:850
 msgid "Norwegian Nynorsk"
 msgstr "Norwegisch Nynorsk"
 
-#: ../../lib/class/video.class.php:580
+#: ../../lib/class/video.class.php:851
 msgid "Norwegian"
 msgstr "Norwegisch"
 
-#: ../../lib/class/video.class.php:581
+#: ../../lib/class/video.class.php:852
 msgid "South Ndebele"
 msgstr "Süd-Ndebele"
 
-#: ../../lib/class/video.class.php:582
+#: ../../lib/class/video.class.php:853
 msgid "Navajo"
 msgstr "Navajo"
 
-#: ../../lib/class/video.class.php:583
+#: ../../lib/class/video.class.php:854
 msgid "Chichewa"
 msgstr "Chichewa"
 
-#: ../../lib/class/video.class.php:584
+#: ../../lib/class/video.class.php:855
 msgid "Occitan"
 msgstr "Okzitanisch"
 
-#: ../../lib/class/video.class.php:585
+#: ../../lib/class/video.class.php:856
 msgid "Ojibwa"
 msgstr "Ojibwa"
 
-#: ../../lib/class/video.class.php:586
+#: ../../lib/class/video.class.php:857
 msgid "Oromo"
 msgstr "Oromo"
 
-#: ../../lib/class/video.class.php:587
+#: ../../lib/class/video.class.php:858
 msgid "Oriya"
 msgstr "Oriya"
 
-#: ../../lib/class/video.class.php:588
+#: ../../lib/class/video.class.php:859
 msgid "Ossetian"
 msgstr "Ossetisch"
 
-#: ../../lib/class/video.class.php:589
+#: ../../lib/class/video.class.php:860
 msgid "Panjabi"
 msgstr "Pandschabisch"
 
-#: ../../lib/class/video.class.php:590
+#: ../../lib/class/video.class.php:861
 msgid "Pali"
 msgstr "Pali"
 
-#: ../../lib/class/video.class.php:591
+#: ../../lib/class/video.class.php:862
 msgid "Polish"
 msgstr "Polnisch"
 
-#: ../../lib/class/video.class.php:592
+#: ../../lib/class/video.class.php:863
 msgid "Pashto"
 msgstr "Paschtu"
 
-#: ../../lib/class/video.class.php:593
+#: ../../lib/class/video.class.php:864
 msgid "Portuguese"
 msgstr "Portugiesisch"
 
-#: ../../lib/class/video.class.php:594
+#: ../../lib/class/video.class.php:865
 msgid "Quechua"
 msgstr "Quechua"
 
-#: ../../lib/class/video.class.php:595
+#: ../../lib/class/video.class.php:866
 msgid "Raeto-Romance"
 msgstr "Rätoromanisch"
 
-#: ../../lib/class/video.class.php:596
+#: ../../lib/class/video.class.php:867
 msgid "Kirundi"
 msgstr "Kirundi"
 
-#: ../../lib/class/video.class.php:597
+#: ../../lib/class/video.class.php:868
 msgid "Romanian"
 msgstr "Rumänisch"
 
-#: ../../lib/class/video.class.php:598
+#: ../../lib/class/video.class.php:869
 msgid "Russian"
 msgstr "Russisch"
 
-#: ../../lib/class/video.class.php:599
+#: ../../lib/class/video.class.php:870
 msgid "Kinyarwanda"
 msgstr "Kinyarwanda"
 
-#: ../../lib/class/video.class.php:600
+#: ../../lib/class/video.class.php:871
 msgid "Sanskrit"
 msgstr "Sanskrit"
 
-#: ../../lib/class/video.class.php:601
+#: ../../lib/class/video.class.php:872
 msgid "Sardinian"
 msgstr "Sardinisch"
 
-#: ../../lib/class/video.class.php:602
+#: ../../lib/class/video.class.php:873
 msgid "Sindhi"
 msgstr "Sindhi"
 
-#: ../../lib/class/video.class.php:603
+#: ../../lib/class/video.class.php:874
 msgid "Northern Sami"
 msgstr "Nördliches Samisch"
 
-#: ../../lib/class/video.class.php:604
+#: ../../lib/class/video.class.php:875
 msgid "Sango"
 msgstr "Sango"
 
-#: ../../lib/class/video.class.php:605
+#: ../../lib/class/video.class.php:876
 msgid "Sinhala"
 msgstr "Singhalesisch "
 
-#: ../../lib/class/video.class.php:606
+#: ../../lib/class/video.class.php:877
 msgid "Slovak"
 msgstr "Slowakisch"
 
-#: ../../lib/class/video.class.php:607
+#: ../../lib/class/video.class.php:878
 msgid "Slovenian"
 msgstr "Slowenisch"
 
-#: ../../lib/class/video.class.php:608
+#: ../../lib/class/video.class.php:879
 msgid "Samoan"
 msgstr "Samoanisch"
 
-#: ../../lib/class/video.class.php:609
+#: ../../lib/class/video.class.php:880
 msgid "Shona"
 msgstr "Shona"
 
-#: ../../lib/class/video.class.php:610
+#: ../../lib/class/video.class.php:881
 msgid "Somali"
 msgstr "Somalisch"
 
-#: ../../lib/class/video.class.php:611
+#: ../../lib/class/video.class.php:882
 msgid "Albanian"
 msgstr "Albanisch"
 
-#: ../../lib/class/video.class.php:612
+#: ../../lib/class/video.class.php:883
 msgid "Serbian"
 msgstr "Serbisch"
 
-#: ../../lib/class/video.class.php:613
+#: ../../lib/class/video.class.php:884
 msgid "Swati"
 msgstr "Swati"
 
-#: ../../lib/class/video.class.php:614
+#: ../../lib/class/video.class.php:885
 msgid "Southern Sotho"
 msgstr "Südliches Sotho"
 
-#: ../../lib/class/video.class.php:615
+#: ../../lib/class/video.class.php:886
 msgid "Sundanese"
 msgstr "Sundanese"
 
-#: ../../lib/class/video.class.php:616
+#: ../../lib/class/video.class.php:887
 msgid "Swedish"
 msgstr "Schwedisch"
 
-#: ../../lib/class/video.class.php:617
+#: ../../lib/class/video.class.php:888
 msgid "Swahili"
 msgstr "Suaheli"
 
-#: ../../lib/class/video.class.php:618
+#: ../../lib/class/video.class.php:889
 msgid "Tamil"
 msgstr "Tamilisch"
 
-#: ../../lib/class/video.class.php:619
+#: ../../lib/class/video.class.php:890
 msgid "Telugu"
 msgstr "Telugu"
 
-#: ../../lib/class/video.class.php:620
+#: ../../lib/class/video.class.php:891
 msgid "Tajik"
 msgstr "Tadschikisch"
 
-#: ../../lib/class/video.class.php:621
+#: ../../lib/class/video.class.php:892
 msgid "Thai"
 msgstr "Thailändisch"
 
-#: ../../lib/class/video.class.php:622
+#: ../../lib/class/video.class.php:893
 msgid "Tigrinya"
 msgstr "Tigrinya"
 
-#: ../../lib/class/video.class.php:623
+#: ../../lib/class/video.class.php:894
 msgid "Turkmen"
 msgstr "Turkmenisch"
 
-#: ../../lib/class/video.class.php:624
+#: ../../lib/class/video.class.php:895
 msgid "Tagalog"
 msgstr "Tagalog"
 
-#: ../../lib/class/video.class.php:625
+#: ../../lib/class/video.class.php:896
 msgid "Tswana"
 msgstr "Tswana"
 
-#: ../../lib/class/video.class.php:626
+#: ../../lib/class/video.class.php:897
 msgid "Tonga"
 msgstr "Tonga"
 
-#: ../../lib/class/video.class.php:627
+#: ../../lib/class/video.class.php:898
 msgid "Turkish"
 msgstr "Türkisch"
 
-#: ../../lib/class/video.class.php:628
+#: ../../lib/class/video.class.php:899
 msgid "Tsonga"
 msgstr "Tsonga"
 
-#: ../../lib/class/video.class.php:629
+#: ../../lib/class/video.class.php:900
 msgid "Tatar"
 msgstr "Tatarisch"
 
-#: ../../lib/class/video.class.php:630
+#: ../../lib/class/video.class.php:901
 msgid "Twi"
 msgstr "Twi"
 
-#: ../../lib/class/video.class.php:631
+#: ../../lib/class/video.class.php:902
 msgid "Tahitian"
 msgstr "Tahitisch"
 
-#: ../../lib/class/video.class.php:632
+#: ../../lib/class/video.class.php:903
 msgid "Uighur"
 msgstr "Uigurisch"
 
-#: ../../lib/class/video.class.php:633
+#: ../../lib/class/video.class.php:904
 msgid "Ukrainian"
 msgstr "Ukrainisch"
 
-#: ../../lib/class/video.class.php:634
+#: ../../lib/class/video.class.php:905
 msgid "Urdu"
 msgstr "Urdu"
 
-#: ../../lib/class/video.class.php:635
+#: ../../lib/class/video.class.php:906
 msgid "Uzbek"
 msgstr "Usbekisch"
 
-#: ../../lib/class/video.class.php:636
+#: ../../lib/class/video.class.php:907
 msgid "Venda"
 msgstr "Venda"
 
-#: ../../lib/class/video.class.php:637
+#: ../../lib/class/video.class.php:908
 msgid "Vietnamese"
 msgstr "Vietnamesisch"
 
-#: ../../lib/class/video.class.php:638
+#: ../../lib/class/video.class.php:909
 msgid "Volapuk"
 msgstr "Volapuk"
 
-#: ../../lib/class/video.class.php:639
+#: ../../lib/class/video.class.php:910
 msgid "Walloon"
 msgstr "Wallonisch"
 
-#: ../../lib/class/video.class.php:640
+#: ../../lib/class/video.class.php:911
 msgid "Wolof"
 msgstr "Wolof"
 
-#: ../../lib/class/video.class.php:641
+#: ../../lib/class/video.class.php:912
 msgid "Xhosa"
 msgstr "Xhosa"
 
-#: ../../lib/class/video.class.php:642
+#: ../../lib/class/video.class.php:913
 msgid "Yiddish"
 msgstr "Jiddisch"
 
-#: ../../lib/class/video.class.php:643
+#: ../../lib/class/video.class.php:914
 msgid "Yoruba"
 msgstr "Yoruba"
 
-#: ../../lib/class/video.class.php:644
+#: ../../lib/class/video.class.php:915
 msgid "Zhuang"
 msgstr "Zhuang"
 
-#: ../../lib/class/video.class.php:645
+#: ../../lib/class/video.class.php:916
 msgid "Chinese"
 msgstr "Chinesisch"
 
-#: ../../lib/class/video.class.php:646
+#: ../../lib/class/video.class.php:917
 msgid "Zulu"
 msgstr "Zulu"
 
-#: ../../lib/class/wanted.class.php:165
+#: ../../lib/class/wanted.class.php:214
 msgid "Unknown Artist"
 msgstr "Unbekannter Interpret"
 
-#: ../../lib/class/wanted.class.php:292
+#: ../../lib/class/wanted.class.php:384
 msgid "Accept"
 msgstr "Akzeptieren"
 
-#: ../../lib/class/wanted.class.php:296
+#: ../../lib/class/wanted.class.php:388
 #: ../../lib/javascript/search-data.php:51
 msgid "Remove"
 msgstr "Entfernen"
 
-#: ../../lib/class/wanted.class.php:299
+#: ../../lib/class/wanted.class.php:391
 msgid "Add to wanted list"
 msgstr "Zur Liste \"Gesucht\" hinzufügen"
 
@@ -2869,13 +2876,13 @@ msgstr "Der Benutzer ist schon eingeloggt."
 msgid "Unable to create local account"
 msgstr "Es ist leider nicht möglich, das Lokale Konto zu erstellen."
 
-#: ../../lib/preferences.php:194 ../../lib/preferences.php:316
+#: ../../lib/preferences.php:195 ../../lib/preferences.php:317
 #: ../../templates/show_disabled_songs.inc.php:64
 #: ../../templates/show_user_row.inc.php:49
 msgid "Enable"
 msgstr "Aktivieren"
 
-#: ../../lib/preferences.php:195 ../../lib/preferences.php:317
+#: ../../lib/preferences.php:196 ../../lib/preferences.php:318
 #: ../../templates/show_catalog_types.inc.php:43
 #: ../../templates/show_duplicates.inc.php:27
 #: ../../templates/show_duplicates.inc.php:66
@@ -2884,7 +2891,7 @@ msgstr "Aktivieren"
 msgid "Disable"
 msgstr "Deaktivieren"
 
-#: ../../lib/preferences.php:216 ../../lib/preferences.php:253
+#: ../../lib/preferences.php:217 ../../lib/preferences.php:254
 #: ../../lib/ui.lib.php:370 ../../lib/ui.lib.php:460
 #: ../../templates/show_adds_catalog.inc.php:27
 #: ../../templates/show_gather_art.inc.php:25
@@ -2895,12 +2902,12 @@ msgstr "Deaktivieren"
 msgid "None"
 msgstr "Keines"
 
-#: ../../lib/preferences.php:218 ../../templates/show_edit_user.inc.php:123
+#: ../../lib/preferences.php:219 ../../templates/show_edit_user.inc.php:123
 #: ../../templates/show_playtype_switch.inc.php:33
 msgid "Stream"
 msgstr "Stream"
 
-#: ../../lib/preferences.php:221
+#: ../../lib/preferences.php:222
 #: ../../modules/localplay/httpq.controller.php:469
 #: ../../modules/localplay/mpd.controller.php:469
 #: ../../modules/localplay/vlc.controller.php:479
@@ -2911,85 +2918,85 @@ msgstr "Stream"
 msgid "Democratic"
 msgstr "Gemeinsam"
 
-#: ../../lib/preferences.php:224 ../../templates/show_edit_user.inc.php:121
+#: ../../lib/preferences.php:225 ../../templates/show_edit_user.inc.php:121
 #: ../../templates/show_playtype_switch.inc.php:35
 #: ../../templates/sidebar_home.inc.php:75 ../../templates/sidebar.inc.php:30
 #: ../../templates/sidebar_localplay.inc.php:38
 msgid "Localplay"
 msgstr "Lokal abspielen"
 
-#: ../../lib/preferences.php:226
+#: ../../lib/preferences.php:227
 #: ../../templates/show_playtype_switch.inc.php:39
 msgid "Web Player"
 msgstr "Webplayer"
 
-#: ../../lib/preferences.php:233
+#: ../../lib/preferences.php:234
 msgid "M3U"
 msgstr "M3U"
 
-#: ../../lib/preferences.php:234
+#: ../../lib/preferences.php:235
 msgid "Simple M3U"
 msgstr "Einfache M3U"
 
-#: ../../lib/preferences.php:235
+#: ../../lib/preferences.php:236
 msgid "PLS"
 msgstr "PLS"
 
-#: ../../lib/preferences.php:236
+#: ../../lib/preferences.php:237
 msgid "Asx"
 msgstr "ASX"
 
-#: ../../lib/preferences.php:237
+#: ../../lib/preferences.php:238
 msgid "RAM"
 msgstr "RAM"
 
-#: ../../lib/preferences.php:238
+#: ../../lib/preferences.php:239
 msgid "XSPF"
 msgstr "XSPF"
 
-#: ../../lib/preferences.php:274
+#: ../../lib/preferences.php:275
 msgid "Disabled"
 msgstr "Deaktiviert"
 
-#: ../../lib/preferences.php:276
+#: ../../lib/preferences.php:277
 msgid "Manager"
 msgstr "Manager"
 
-#: ../../lib/preferences.php:293
+#: ../../lib/preferences.php:294
 msgid "Send on Add"
 msgstr "Beim senden hinzufügen"
 
-#: ../../lib/preferences.php:294
+#: ../../lib/preferences.php:295
 msgid "Send and Clear on Add"
 msgstr "Beim senden hinzufügen und löschen"
 
-#: ../../lib/preferences.php:295
+#: ../../lib/preferences.php:296
 msgid "Clear on Send"
 msgstr "Beim senden löschen"
 
-#: ../../lib/preferences.php:296 ../../lib/preferences.php:303
-#: ../../lib/preferences.php:339
+#: ../../lib/preferences.php:297 ../../lib/preferences.php:304
+#: ../../lib/preferences.php:340
 #: ../../templates/show_manage_democratic.inc.php:30
 msgid "Default"
 msgstr "Standard"
 
-#: ../../lib/preferences.php:304
+#: ../../lib/preferences.php:305
 msgid "Always"
 msgstr "Immer"
 
-#: ../../lib/preferences.php:340
+#: ../../lib/preferences.php:341
 msgid "Year ascending"
 msgstr "Aufsteigend nach Jahr"
 
-#: ../../lib/preferences.php:341
+#: ../../lib/preferences.php:342
 msgid "Year descending"
 msgstr "Absteigend nach Jahr"
 
-#: ../../lib/preferences.php:342
+#: ../../lib/preferences.php:343
 msgid "Name ascending"
 msgstr "Aufsteigend nach Name"
 
-#: ../../lib/preferences.php:343
+#: ../../lib/preferences.php:344
 msgid "Name descending"
 msgstr "Absteigend nach Name"
 
@@ -3021,7 +3028,7 @@ msgstr "Ist wahnsinnig"
 msgid "Off the Charts!"
 msgstr "Absoluter Wahnsinn!"
 
-#: ../../lib/ui.lib.php:101 ../../templates/header.inc.php:286
+#: ../../lib/ui.lib.php:101 ../../templates/header.inc.php:280
 #: ../../templates/sidebar.inc.php:29 ../../templates/sidebar.light.inc.php:27
 msgid "Home"
 msgstr "Hauptmenü"
@@ -3276,7 +3283,7 @@ msgstr "URI"
 #: ../../templates/show_add_user.inc.php:29
 #: ../../templates/show_edit_user.inc.php:32
 #: ../../templates/show_install_account.inc.php:51
-#: ../../templates/show_login_form.inc.php:81
+#: ../../templates/show_login_form.inc.php:63
 #: ../../templates/show_now_playing_row.inc.php:25
 #: ../../templates/show_now_playing_video_row.inc.php:27
 #: ../../templates/show_recently_played.inc.php:34
@@ -3295,7 +3302,7 @@ msgstr "Benutzername"
 #: ../../templates/show_add_user.inc.php:60
 #: ../../templates/show_edit_user.inc.php:63
 #: ../../templates/show_install_account.inc.php:57
-#: ../../templates/show_login_form.inc.php:85
+#: ../../templates/show_login_form.inc.php:67
 #: ../../templates/show_user_registration.inc.php:100
 msgid "Password"
 msgstr "Passwort"
@@ -3566,7 +3573,7 @@ msgid "Your Search has been saved as a Smart Playlist with name %s"
 msgstr "Deune Suche wurde in der intelligenten Playlist '%s' gespeichert"
 
 #: ../../server/player.ajax.php:41
-#: ../../templates/show_html5_player.inc.php:698
+#: ../../templates/show_html5_player.inc.php:363
 msgid "My Broadcast"
 msgstr "Mein Broadcast"
 
@@ -3673,48 +3680,48 @@ msgstr ""
 msgid "Error messages"
 msgstr "Fehlermeldungen"
 
-#: ../../templates/footer.inc.php:37
+#: ../../templates/footer.inc.php:38
 msgid "Donate"
 msgstr "Spenden"
 
-#: ../../templates/footer.inc.php:41
+#: ../../templates/footer.inc.php:42
 #: ../../templates/show_lostpassword_form.inc.php:72
 msgid "Queries:"
 msgstr "Anfragen:"
 
-#: ../../templates/footer.inc.php:41
+#: ../../templates/footer.inc.php:42
 #: ../../templates/show_lostpassword_form.inc.php:73
 msgid "Cache Hits:"
 msgstr "Cache Treffer:"
 
-#: ../../templates/footer.inc.php:46
+#: ../../templates/footer.inc.php:47
 msgid "Load time:"
 msgstr "Ladezeit:"
 
-#: ../../templates/header.inc.php:89
+#: ../../templates/header.inc.php:85
 msgid "Save"
 msgstr "Speichern"
 
-#: ../../templates/header.inc.php:90
+#: ../../templates/header.inc.php:86
 #: ../../templates/show_confirmation.inc.php:34
 #: ../../templates/show_get_art.inc.php:64
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ../../templates/header.inc.php:266
+#: ../../templates/header.inc.php:260
 msgid "Log out"
 msgstr "Abmelden"
 
-#: ../../templates/header.inc.php:304 ../../templates/sidebar_home.inc.php:100
+#: ../../templates/header.inc.php:298 ../../templates/sidebar_home.inc.php:100
 #: ../../templates/sidebar.light.inc.php:30
 msgid "Favorites"
 msgstr "Favoriten"
 
-#: ../../templates/header.inc.php:364
+#: ../../templates/header.inc.php:359
 msgid "Error Config File Out of Date"
 msgstr "Fehler: Die Konfigurationsdatei 'ampache.cfg.php' ist veraltet"
 
-#: ../../templates/header.inc.php:365
+#: ../../templates/header.inc.php:360
 msgid "Generate New Config"
 msgstr "Schreibe neue Konfiguration"
 
@@ -3755,7 +3762,7 @@ msgid "Add to Playlist"
 msgstr "Zur Playlist hinzufügen"
 
 #: ../../templates/rightbar.inc.php:31
-#: ../../templates/show_html5_player.inc.php:715
+#: ../../templates/show_html5_player.inc.php:380
 #: ../../templates/show_playlists_dialog.inc.php:27
 msgid "Add to New Playlist"
 msgstr "Zu einer neuen Playlist hinzufügen"
@@ -3891,8 +3898,8 @@ msgstr "Typ"
 #: ../../templates/show_tvshows.inc.php:86
 #: ../../templates/show_users.inc.php:48 ../../templates/show_users.inc.php:74
 #: ../../templates/show_video.inc.php:73
-#: ../../templates/show_videos.inc.php:49
-#: ../../templates/show_videos.inc.php:95
+#: ../../templates/show_videos.inc.php:50
+#: ../../templates/show_videos.inc.php:97
 msgid "Action"
 msgstr "Aktion"
 
@@ -4171,8 +4178,8 @@ msgstr "Stream URL"
 #: ../../templates/show_live_streams.inc.php:32
 #: ../../templates/show_live_streams.inc.php:57
 #: ../../templates/show_video.inc.php:106
-#: ../../templates/show_videos.inc.php:39
-#: ../../templates/show_videos.inc.php:85
+#: ../../templates/show_videos.inc.php:40
+#: ../../templates/show_videos.inc.php:87
 msgid "Codec"
 msgstr "Codec"
 
@@ -4283,19 +4290,19 @@ msgstr "Benutzer hinzufügen"
 
 #: ../../templates/show_album_group_disks.inc.php:32
 #: ../../templates/show_album.inc.php:35
-#: ../../templates/show_artist.inc.php:37
+#: ../../templates/show_artist.inc.php:34
 msgid "Search on Google ..."
 msgstr "Über Google suchen ..."
 
 #: ../../templates/show_album_group_disks.inc.php:33
 #: ../../templates/show_album.inc.php:36
-#: ../../templates/show_artist.inc.php:38
+#: ../../templates/show_artist.inc.php:35
 msgid "Search on Wikipedia ..."
 msgstr "Über Wikipedia suchen ..."
 
 #: ../../templates/show_album_group_disks.inc.php:34
 #: ../../templates/show_album.inc.php:37
-#: ../../templates/show_artist.inc.php:39
+#: ../../templates/show_artist.inc.php:36
 msgid "Search on Last.fm ..."
 msgstr "Über Last.fm suchen ..."
 
@@ -4303,7 +4310,7 @@ msgstr "Über Last.fm suchen ..."
 #: ../../templates/show_album.inc.php:63
 #: ../../templates/show_albums.inc.php:46
 #: ../../templates/show_albums.inc.php:88
-#: ../../templates/show_artist.inc.php:68
+#: ../../templates/show_artist.inc.php:65
 #: ../../templates/show_broadcasts.inc.php:33
 #: ../../templates/show_catalogs.inc.php:32
 #: ../../templates/show_catalogs.inc.php:60
@@ -4377,8 +4384,8 @@ msgstr "Zufällig zur momentanen Playlist hinzufügen"
 #: ../../templates/show_album_group_disks.inc.php:108
 #: ../../templates/show_album.inc.php:120
 #: ../../templates/show_album.inc.php:121
-#: ../../templates/show_artist.inc.php:114
-#: ../../templates/show_artist.inc.php:115
+#: ../../templates/show_artist.inc.php:111
+#: ../../templates/show_artist.inc.php:112
 #: ../../templates/show_install_config.inc.php:149
 #: ../../templates/show_install_config.inc.php:164
 #: ../../templates/show_install_config.inc.php:180
@@ -4387,7 +4394,7 @@ msgstr "Zufällig zur momentanen Playlist hinzufügen"
 #: ../../templates/show_song.inc.php:76
 #: ../../templates/show_song_row.inc.php:68
 #: ../../templates/show_video.inc.php:91
-#: ../../templates/show_video_row.inc.php:81
+#: ../../templates/show_video_row.inc.php:82
 msgid "Download"
 msgstr "Download"
 
@@ -4407,7 +4414,7 @@ msgstr "Anordnung der Songs speichern"
 #: ../../templates/show_shares.inc.php:23 ../../templates/show_song.inc.php:72
 #: ../../templates/show_song_row.inc.php:65
 #: ../../templates/show_video.inc.php:87
-#: ../../templates/show_video_row.inc.php:78
+#: ../../templates/show_video_row.inc.php:79
 msgid "Share"
 msgstr "Freigeben"
 
@@ -4419,19 +4426,19 @@ msgid "Album edit"
 msgstr "Album bearbeiten"
 
 #: ../../templates/show_album.inc.php:58
-#: ../../templates/show_artist.inc.php:63
+#: ../../templates/show_artist.inc.php:60
 msgid "times"
 msgstr "mal"
 
 #: ../../templates/show_album.inc.php:94 ../../templates/show_album.inc.php:95
-#: ../../templates/show_artist.inc.php:108
-#: ../../templates/show_artist.inc.php:109
+#: ../../templates/show_artist.inc.php:105
+#: ../../templates/show_artist.inc.php:106
 msgid "Do you really want to update from tags?"
 msgstr "Möchtest Du wirklich über die Tags Aktualisieren?"
 
 #: ../../templates/show_album.inc.php:94 ../../templates/show_album.inc.php:95
-#: ../../templates/show_artist.inc.php:108
-#: ../../templates/show_artist.inc.php:109
+#: ../../templates/show_artist.inc.php:105
+#: ../../templates/show_artist.inc.php:106
 msgid "Update from tags"
 msgstr "Über Tags aktualisieren"
 
@@ -4457,7 +4464,7 @@ msgstr "Zu einer bereits vorhandenen Playlist hinzufügen"
 #: ../../templates/show_tvshows.inc.php:34
 #: ../../templates/show_tvshows.inc.php:74
 #: ../../templates/show_videos.inc.php:31
-#: ../../templates/show_videos.inc.php:77
+#: ../../templates/show_videos.inc.php:78
 msgid "Art"
 msgstr "Cover"
 
@@ -4465,9 +4472,9 @@ msgstr "Cover"
 #: ../../templates/show_albums.inc.php:81
 #: ../../templates/show_artists.inc.php:38
 #: ../../templates/show_artists.inc.php:77
-#: ../../templates/show_edit_album_row.inc.php:65
+#: ../../templates/show_edit_album_row.inc.php:69
 #: ../../templates/show_edit_artist_row.inc.php:35
-#: ../../templates/show_edit_song_row.inc.php:68
+#: ../../templates/show_edit_song_row.inc.php:76
 #: ../../templates/show_edit_tvshow_row.inc.php:39
 #: ../../templates/show_edit_video_row.inc.php:44
 #: ../../templates/show_now_playing_row.inc.php:51
@@ -4479,8 +4486,8 @@ msgstr "Cover"
 #: ../../templates/show_stats.inc.php:37
 #: ../../templates/show_tvshows.inc.php:39
 #: ../../templates/show_tvshows.inc.php:79
-#: ../../templates/show_videos.inc.php:42
-#: ../../templates/show_videos.inc.php:88
+#: ../../templates/show_videos.inc.php:43
+#: ../../templates/show_videos.inc.php:90
 msgid "Tags"
 msgstr "Tags"
 
@@ -4500,8 +4507,8 @@ msgstr "Tags"
 #: ../../templates/show_tvshows.inc.php:44
 #: ../../templates/show_tvshows.inc.php:84
 #: ../../templates/show_video.inc.php:66
-#: ../../templates/show_videos.inc.php:47
-#: ../../templates/show_videos.inc.php:93
+#: ../../templates/show_videos.inc.php:48
+#: ../../templates/show_videos.inc.php:95
 msgid "Fav."
 msgstr "Fav."
 
@@ -4509,10 +4516,10 @@ msgstr "Fav."
 msgid "No album found"
 msgstr "Es wurde kein Album gefunden"
 
-#: ../../templates/show_artist.inc.php:42
-#: ../../templates/show_artist.inc.php:162
-#: ../../templates/show_artist.inc.php:170
-#: ../../templates/show_artist.inc.php:178
+#: ../../templates/show_artist.inc.php:39
+#: ../../templates/show_artist.inc.php:167
+#: ../../templates/show_artist.inc.php:175
+#: ../../templates/show_artist.inc.php:183
 #: ../../templates/show_index.inc.php:32 ../../templates/show_index.inc.php:39
 #: ../../templates/show_missing_artist.inc.php:33
 #: ../../templates/show_now_playing_row.inc.php:69
@@ -4520,18 +4527,18 @@ msgstr "Es wurde kein Album gefunden"
 msgid "Loading..."
 msgstr "Lade..."
 
-#: ../../templates/show_artist.inc.php:73
-#: ../../templates/show_artist.inc.php:75
+#: ../../templates/show_artist.inc.php:70
+#: ../../templates/show_artist.inc.php:72
 msgid "Show all"
 msgstr "Alles anzeigen"
 
-#: ../../templates/show_artist.inc.php:79
-#: ../../templates/show_artist.inc.php:81
+#: ../../templates/show_artist.inc.php:76
+#: ../../templates/show_artist.inc.php:78
 msgid "Show albums"
 msgstr "Alben anzeigen"
 
-#: ../../templates/show_artist.inc.php:86
-#: ../../templates/show_artist.inc.php:87
+#: ../../templates/show_artist.inc.php:83
+#: ../../templates/show_artist.inc.php:84
 #: ../../templates/show_playlist.inc.php:59
 #: ../../templates/show_playlist.inc.php:60
 #: ../../templates/show_tvshow.inc.php:58
@@ -4541,8 +4548,8 @@ msgstr "Alben anzeigen"
 msgid "Play all"
 msgstr "Alles abspielen"
 
-#: ../../templates/show_artist.inc.php:92
-#: ../../templates/show_artist.inc.php:93
+#: ../../templates/show_artist.inc.php:89
+#: ../../templates/show_artist.inc.php:90
 #: ../../templates/show_playlist.inc.php:65
 #: ../../templates/show_playlist.inc.php:66
 #: ../../templates/show_tvshow.inc.php:64
@@ -4553,51 +4560,47 @@ msgid "Play all last"
 msgstr "Alles zuletzt abspielen"
 
 #. HINT: Artist Fullname
-#: ../../templates/show_artist.inc.php:98
-#: ../../templates/show_artist.inc.php:99
+#: ../../templates/show_artist.inc.php:95
+#: ../../templates/show_artist.inc.php:96
 #: ../../templates/show_playlist.inc.php:70
 #: ../../templates/show_playlist.inc.php:71
 msgid "Add all to temporary playlist"
 msgstr "Alles zur momentanen Playlist hinzufügen"
 
 #. HINT: Artist Fullname
-#: ../../templates/show_artist.inc.php:103
-#: ../../templates/show_artist.inc.php:104
+#: ../../templates/show_artist.inc.php:100
+#: ../../templates/show_artist.inc.php:101
 #: ../../templates/show_playlist.inc.php:74
 #: ../../templates/show_playlist.inc.php:75
 msgid "Random all to temporary playlist"
 msgstr "Alle zufällig zur momentanen Playlist hinzufügen"
 
+#: ../../templates/show_artist.inc.php:116
 #: ../../templates/show_artist.inc.php:119
-#: ../../templates/show_artist.inc.php:122
 #: ../../templates/show_artist_row.inc.php:61
 msgid "Artist edit"
 msgstr "Interpreten bearbeiten"
 
-#: ../../templates/show_artist.inc.php:123
+#: ../../templates/show_artist.inc.php:120
 msgid "Edit Artist"
 msgstr "Bearbeite Interpreten"
 
-#: ../../templates/show_artist.inc.php:127
-msgid "Show Art"
-msgstr "Zeige Cover"
-
-#: ../../templates/show_artist.inc.php:138
-#: ../../templates/show_artist.inc.php:162
+#: ../../templates/show_artist.inc.php:131
+#: ../../templates/show_artist.inc.php:167
 #: ../../templates/show_missing_albums.inc.php:23
 msgid "Missing Albums"
 msgstr "Vermisste Alben"
 
-#: ../../templates/show_artist.inc.php:141
-#: ../../templates/show_artist.inc.php:170
+#: ../../templates/show_artist.inc.php:134
+#: ../../templates/show_artist.inc.php:175
 #: ../../templates/show_now_playing_row.inc.php:68
 #: ../../templates/show_now_playing_similar.inc.php:27
 #: ../../templates/show_recommended_artists.inc.php:25
 msgid "Similar Artists"
 msgstr "Ähnliche Interpreten"
 
-#: ../../templates/show_artist.inc.php:144
-#: ../../templates/show_artist.inc.php:178
+#: ../../templates/show_artist.inc.php:137
+#: ../../templates/show_artist.inc.php:183
 msgid "Events"
 msgstr "Ereignisse"
 
@@ -4610,8 +4613,8 @@ msgstr "Ereignisse"
 #: ../../templates/show_recommended_artists.inc.php:34
 #: ../../templates/show_recommended_artists.inc.php:83
 #: ../../templates/show_songs.inc.php:36 ../../templates/show_songs.inc.php:80
-#: ../../templates/show_videos.inc.php:41
-#: ../../templates/show_videos.inc.php:87
+#: ../../templates/show_videos.inc.php:42
+#: ../../templates/show_videos.inc.php:89
 msgid "Time"
 msgstr "Dauer"
 
@@ -4662,7 +4665,7 @@ msgstr "Neuer Broadcast"
 #: ../../templates/show_broadcasts.inc.php:30
 #: ../../templates/show_edit_broadcast_row.inc.php:39
 #: ../../templates/show_edit_channel_row.inc.php:88
-#: ../../templates/show_song.inc.php:96
+#: ../../templates/show_song.inc.php:97
 msgid "Genre"
 msgstr "Genre"
 
@@ -5051,7 +5054,7 @@ msgstr "Song"
 
 #: ../../templates/show_duplicates.inc.php:31
 #: ../../templates/show_duplicates.inc.php:70
-#: ../../templates/show_random.inc.php:54 ../../templates/show_song.inc.php:97
+#: ../../templates/show_random.inc.php:54 ../../templates/show_song.inc.php:98
 #: ../../templates/show_video.inc.php:101
 msgid "Length"
 msgstr "Länge"
@@ -5121,7 +5124,11 @@ msgstr "MusicBrainz ID"
 msgid "MusicBrainz Release Group ID"
 msgstr "MusicBrainz Releasegruppen-ID"
 
-#: ../../templates/show_edit_album_row.inc.php:72
+#: ../../templates/show_edit_album_row.inc.php:65
+msgid "Release Type"
+msgstr "Release Typ"
+
+#: ../../templates/show_edit_album_row.inc.php:76
 msgid " Apply tags to all childs (override tags for songs)"
 msgstr "Übernehme Tags für alle untergeordneten Lieder"
 
@@ -5184,6 +5191,11 @@ msgstr "Von %s für %s erstellt"
 msgid "Track"
 msgstr "Lied"
 
+#: ../../templates/show_edit_song_row.inc.php:72
+#: ../../templates/show_song.inc.php:100
+msgid "Label"
+msgstr "Label"
+
 #: ../../templates/show_edit_tag_row.inc.php:32
 msgid "Merge this tag to"
 msgstr "Tag zusammenführen mit:"
@@ -5239,6 +5251,8 @@ msgstr "Benutzer aktualisieren"
 
 #: ../../templates/show_edit_video_row.inc.php:35
 #: ../../templates/show_video.inc.php:105
+#: ../../templates/show_videos.inc.php:39
+#: ../../templates/show_videos.inc.php:86
 msgid "Release Date"
 msgstr "Datum der Erstellung"
 
@@ -5291,29 +5305,29 @@ msgstr "Empfange Cover"
 msgid "Information"
 msgstr "Information"
 
-#: ../../templates/show_html5_player.inc.php:85
+#: ../../templates/show_html5_player_headers.inc.php:126
 msgid "Your browser doesn't support this feature."
 msgstr "Dein Browser unterstützt dieses Feature nicht."
 
-#: ../../templates/show_html5_player.inc.php:555
+#: ../../templates/show_html5_player_headers.inc.php:349
 msgid "Media is currently playing. Are you sure you want to close"
 msgstr ""
 "Es wird gerade ein Medium abgespielt! Möchtest Du das Fenster wirklich "
 "schließen?"
 
-#: ../../templates/show_html5_player.inc.php:718
+#: ../../templates/show_html5_player.inc.php:383
 msgid "Slideshow"
 msgstr "Diashow"
 
-#: ../../templates/show_html5_player.inc.php:722
+#: ../../templates/show_html5_player.inc.php:387
 msgid "Equalizer"
 msgstr "Equalizer"
 
-#: ../../templates/show_html5_player.inc.php:725
+#: ../../templates/show_html5_player.inc.php:390
 msgid "Visualizer"
 msgstr "Visualisierer"
 
-#: ../../templates/show_html5_player.inc.php:728
+#: ../../templates/show_html5_player.inc.php:393
 msgid "Visualizer Full-Screen"
 msgstr "Vollbild für Visualisierer"
 
@@ -5782,23 +5796,23 @@ msgstr "Lautstärke"
 msgid "Repeat"
 msgstr "Wiederholen"
 
-#: ../../templates/show_login_form.inc.php:89
+#: ../../templates/show_login_form.inc.php:71
 msgid "Remember Me"
 msgstr "An mich erinnern"
 
-#: ../../templates/show_login_form.inc.php:95
+#: ../../templates/show_login_form.inc.php:77
 msgid "Lost password"
 msgstr "Passwort vergessen?"
 
-#: ../../templates/show_login_form.inc.php:96
+#: ../../templates/show_login_form.inc.php:78
 msgid "Login"
 msgstr "Login"
 
-#: ../../templates/show_login_form.inc.php:101
+#: ../../templates/show_login_form.inc.php:83
 msgid "Register"
 msgstr "Registrieren"
 
-#: ../../templates/show_login_form.inc.php:111
+#: ../../templates/show_login_form.inc.php:93
 msgid "Message of the Day"
 msgstr "Nachricht des Tages"
 
@@ -6309,28 +6323,24 @@ msgstr "Wellenform"
 msgid "Link"
 msgstr "Link"
 
-#: ../../templates/show_song.inc.php:99
-msgid "Label"
-msgstr "Label"
-
-#: ../../templates/show_song.inc.php:100
+#: ../../templates/show_song.inc.php:101
 msgid "Song Language"
 msgstr "Sprache des Liedes"
 
-#: ../../templates/show_song.inc.php:101
+#: ../../templates/show_song.inc.php:102
 msgid "Catalog Number"
 msgstr "Katalognummer"
 
-#: ../../templates/show_song.inc.php:107
-#: ../../templates/show_video.inc.php:112
+#: ../../templates/show_song.inc.php:109
+#: ../../templates/show_video.inc.php:117
 msgid "Last Updated"
 msgstr "Zuletzt aktualisiert"
 
-#: ../../templates/show_song.inc.php:115
+#: ../../templates/show_song.inc.php:117
 msgid "Lyrics"
 msgstr "Lied-Texte"
 
-#: ../../templates/show_song.inc.php:122
+#: ../../templates/show_song.inc.php:124
 msgid "Licensing"
 msgstr "Lizenzierung"
 
@@ -6796,20 +6806,36 @@ msgid "Subtitle"
 msgstr "Untertitel"
 
 #: ../../templates/show_video.inc.php:107
-#: ../../templates/show_videos.inc.php:40
-#: ../../templates/show_videos.inc.php:86
+#: ../../templates/show_videos.inc.php:41
+#: ../../templates/show_videos.inc.php:88
 msgid "Resolution"
 msgstr "Auflösung"
 
-#: ../../templates/show_video_row.inc.php:71
+#: ../../templates/show_video.inc.php:108
+msgid "Display"
+msgstr "Anzeigen"
+
+#: ../../templates/show_video.inc.php:109
+msgid "Audio Bitrate"
+msgstr "Audio Bitrate"
+
+#: ../../templates/show_video.inc.php:110
+msgid "Video Bitrate"
+msgstr "Video Bitrate"
+
+#: ../../templates/show_video.inc.php:111
+msgid "Frame Rate"
+msgstr "Framerate"
+
+#: ../../templates/show_video_row.inc.php:72
 msgid "Video Information"
 msgstr "Videoinformation"
 
-#: ../../templates/show_video_row.inc.php:84
+#: ../../templates/show_video_row.inc.php:85
 msgid "Video edit"
 msgstr "Video bearbeiten"
 
-#: ../../templates/show_videos.inc.php:69
+#: ../../templates/show_videos.inc.php:70
 msgid "No video found"
 msgstr "Es wurde kein Video gefunden."
 
@@ -7141,7 +7167,7 @@ msgstr ""
 
 #: Database words
 msgid "Fix header/sidebars position on compatible themes"
-msgstr "Korrektur der Header/Sidebar Position für kompatiblem Themes"
+msgstr "Korrektur der Header/Sidebar Position für kompatible Themes"
 
 #: Database words
 msgid "Check for Ampache updates automatically"
@@ -7245,6 +7271,33 @@ msgstr ""
 #: Database words
 msgid "Upload: allow users to edit uploaded songs"
 msgstr "Upload: Benutzern erlauben, hoch geladene Dateien bearbeiten zu können"
+
+#: Database words
+msgid "Use DAAP backend"
+msgstr "DAAP Backend verwenden"
+
+#: Database words
+msgid "DAAP backend password"
+msgstr "DAAP Backend Passwort"
+
+#: Database words
+msgid "Use UPnP backend"
+msgstr "UPnP Backend verwenden"
+
+#: Database words
+msgid "Allow video features"
+msgstr "Videofunktionen erlauben"
+
+#: Database words
+msgid "Album - Group per release type"
+msgstr "Alben nach Releasetyp gruppieren"
+
+#: Database words
+msgid "Ajax page load"
+msgstr "Seiten per Ajax laden"
+
+#~ msgid "Show Art"
+#~ msgstr "Zeige Cover"
 
 #~ msgid "Missing ID"
 #~ msgstr "ID nicht gefunden"
