@@ -27,13 +27,20 @@ if (!$rate) {
 }
 if (!$rate || $rate > 5)
     $rate = 0;
+
+$id = 'rating' . '_' . $rating->id . '_' . $rating->type . '_';
 ?>
-<span class="rating user-rating">
+<span id="<?php echo $id + 'rating'; ?>" class="rating user-rating">
     <?php
-        for ($i = 1; $i < 6; $i++) {
-            echo '<i class="star-icon glyphicon '. ($i < $rate ? 'star' : 'dislikes') .'">';
-                echo Ajax::text($base_url . '&rating=' . $i, '', 'rating' . $i . '_' . $rating->id . '_' . $rating->type, '', 'star' . $i);
-            echo '</i>';
+        for ($i = 0; $i < 5; $i++) {
+            
+            $base_value = ($i < $rate ? 'fa-star' : 'fa-star-o');
+            echo '<i id="'.$id . $i.'" class="star-icon fa '. $base_value .'"></i>';
+            echo Ajax::createAction($base_url . '&rating=' . ($i + 1), $id . $i);
+            echo Ajax::run('$("#'.$id . $i.'").mouseover(function () { handleStarIcons("'. $id .'", "'. $base_value .'", '. $i .');});');
         }
     ?>    
 </span>
+<?php
+echo Ajax::run('$("#'.$id + 'rating").mouseleave(function () { handleStarIcons("'. $id .'", "'. $base_value .'", '. -1 .');});');
+?>
