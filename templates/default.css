@@ -4379,7 +4379,7 @@ li:last-child>.card-collapsed, li.card-collapsed:last-child {
     width: auto;
     margin-left: 2px;
 }
-.rating .star-icon.dislikes {
+.rating .star-icon.fa-star-o {
     opacity: .5;
     filter: alpha(opacity=50);
 }

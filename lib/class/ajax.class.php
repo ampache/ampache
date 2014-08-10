@@ -190,6 +190,12 @@ class Ajax
         return $string;
 
     } // text
+    
+    public static function createAction($action, $source, $method='click')
+    {
+        $ajax_string = self::action($action, $source, $post);
+        return self::observe($source, $method, $ajax_string);
+    }
 
     /**
      * run
@@ -198,9 +204,9 @@ class Ajax
      */
     public static function run($action)
     {
-        echo "<script type=\"text/javascript\"><!--\n";
+        echo "<script type=\"text/javascript\">\n";
         echo "$action";
-        echo "\n--></script>";
+        echo "\n</script>";
 
     } // run
 
