@@ -20,39 +20,20 @@
  *
  */
 
-/* Create some variables we are going to need */
-$web_path = AmpConfig::get('web_path');
 $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id;
-$othering = false;
 $rate = $rating->get_user_rating();
 if (!$rate) {
     $rate = $rating->get_average_rating();
-    $othering = true;
 }
+if (!$rate || $rate > 5)
+    $rate = 0;
 ?>
-
-<div class="star-rating dynamic-star-rating<?php if ($othering) { echo ' global-star-rating'; } ?>">
-  <ul>
+<span class="rating user-rating">
     <?php
-    // decide width of rating (5 stars -> 20% per star)
-    $width = $rate * 20;
-    if ($width < 0) $width = 0;
-
-    //set the current rating background
-    echo '<li class="current-rating" style="width:' . $width . '%" >';
-    echo T_('Current rating: ');
-    if ($rate <= 0) {
-        echo T_('not rated yet') . "</li>\n";
-    } else printf(T_('%s of 5'), $rate); echo "</li>\n";
-
-    for ($i = 1; $i < 6; $i++) {
-    ?>
-      <li>
-          <?php echo Ajax::text($base_url . '&rating=' . $i, '', 'rating' . $i . '_' . $rating->id . '_' . $rating->type, '', 'star' . $i); ?>
-      </li>
-    <?php
-    }
-    ?>
-  </ul>
-       <?php echo Ajax::text($base_url . '&rating=-1', '', 'rating0_' . $rating->id . '_' . $rating->type, '', 'star0'); ?>
-</div>
+        for ($i = 1; $i < 6; $i++) {
+            echo '<i class="star-icon glyphicon '. ($i < $rate ? 'star' : 'dislikes') .'">';
+                echo Ajax::text($base_url . '&rating=' . $i, '', 'rating' . $i . '_' . $rating->id . '_' . $rating->type, '', 'star' . $i);
+            echo '</i>';
+        }
+    ?>    
+</span>

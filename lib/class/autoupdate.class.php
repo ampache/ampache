@@ -54,7 +54,7 @@ class AutoUpdate
      * Check if current version is a git repository.
      * @return boolean
      */
-    protected static function is_git_repository()
+    public static function is_git_repository()
     {
         return is_dir(AmpConfig::get('prefix') . '/.git');
     }

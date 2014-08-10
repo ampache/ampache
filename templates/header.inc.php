@@ -29,6 +29,14 @@ $_SESSION['login'] = false;
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+   _                                   _           
+  /_\   _ __ ___   _ __    __ _   ___ | |__    ___ 
+ //_\\ | '_ ` _ \ | '_ \  / _` | / __|| '_ \  / _ \
+/  _  \| | | | | || |_) || (_| || (__ | | | ||  __/
+\_/ \_/|_| |_| |_|| .__/  \__,_| \___||_| |_| \___|
+                  |_|                              
+-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';?>">
     <head>
         <link rel="shortcut icon" href="<?php echo $web_path; ?>/favicon.ico" />
@@ -40,7 +48,6 @@ $_SESSION['login'] = false;
         <?php } ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo $location['title']; ?></title>
-        <?php require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php'; ?>
         <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-editdialog.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-file-upload.css" type="text/css" media="screen" />
@@ -49,6 +56,10 @@ $_SESSION['login'] = false;
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-datetimepicker/jquery.datetimepicker.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/bootstrap/css/bootstrap.min.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/bootstrap/css/bootstrap-theme.min.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/font-awesome/css/font-awesome.min.css" type="text/css" media="screen" />
+        <?php require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php'; ?>
         <script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/prettyPhoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
@@ -64,6 +75,7 @@ $_SESSION['login'] = false;
         <script src="<?php echo $web_path; ?>/modules/jquery-knob/jquery.knob.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery-file-upload/jquery.iframe-transport.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery-file-upload/jquery.fileupload.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/modules/bootstrap/js/bootstrap.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
@@ -297,17 +309,83 @@ $_SESSION['login'] = false;
         <?php } ?>
         <!-- rfc3514 implementation -->
         <div id="rfc3514" style="display:none;">0x0</div>
-        <div id="mouse_message"></div>
-        <div id="maincontainer">
-            <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
-                <h1 id="headerlogo">
-                  <a href="<?php echo $web_path; ?>/index.php">
-                    <img src="<?php echo UI::get_logo_url(); ?>" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
-                  </a>
-                </h1>
+        <div id="maincontainer" class="application show-nav-bar show-action-bar show-breadcrumb-bar">
+            <div class="nav-bar">
+                <ul class="nav nav-bar-nav">
+                    <!--<li><a class="back-btn" href="#" data-original-title="" title=""><i class="glyphicon glyphicon-left-arrow"></i></a></li>-->
+                    <li>
+                        <a class="home-btn" href="<?php echo $web_path; ?>/index.php" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>">
+                            <i class="fa fa-home fa-lg"></i>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="nav-bar-search-container">
+                    <form id="#nav-bar-search-form" class="nav-bar-form nav-bar-left hidden-xs" method="post" action="<?php echo $web_path; ?>/search.php?type=song" enctype="multipart/form-data">
+                        <div class="form-group form-group-search">
+                            <label class="control-label-search" for="nav-bar-search">
+                                <i class="fa fa-search fa-lg"></i>
+                                <a class="clear-search-btn hidden" href="#"><i class="fa fa-times-circle"></i></a>
+                            </label>
+
+                            <input type="search" id="nav-bar-search" class="form-control form-control-search" placeholder="<?php echo T_("Search"); ?>" value="">
+                        </div>
+                    </form>
+                </div>
+
+                <ul class="nav nav-bar-nav nav-bar-right">
+                    <?php
+                    if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {
+                        if (AutoUpdate::is_update_available() && AutoUpdate::is_git_repository()) {
+                    ?>
+                    <li class="">
+                        <a class="install-updates-btn" title="<?php echo T_('Mises à jour disponibles'); ?>" data-toggle="tooltip" rel="nohtml" href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update">
+                            <i class="fa fa-up-arrow fa-lg"></i>
+                        </a>
+                    </li>
+                    <?php
+                        }
+                    }
+                    ?>
+                    
+                    <li>
+                        <a class="settings-btn" href="#!/settings" title="" data-toggle="tooltip" data-original-title="Réglages">
+                            <i class="fa fa-cogs fa-lg"></i>
+                        </a>
+                    </li>
+                    <li id="nav-dropdown" class="nav-dropdown dropdown">
+                        <a class="dropdown-toggle" href="#nav-dropdown" data-toggle="dropdown" data-original-title="" title="">
+                            <i class="fa fa-user fa-lg"></i><i class="caret-icon"></i>
+                            <span class="total-badge badge hidden">0</span>
+                        </a>
+
+                        <ul class="dropdown-menu signed-in">
+                            <li class="signed-in-item">
+                                <a class="username-btn" href="<?php echo $web_path; ?>/preferences.php?tab=account" target="_self"><?php echo $GLOBALS['user']->fullname; ?></a>
+                            </li>
+                            <li class="signed-in-item divider"></li>
+
+                            <li class="signed-in-item"><a class="friends-btn" href="#">Amis <span class="friend-requests-badge badge hidden">0</span></a></li>
+                            <li class="signed-in-item"><a href="#!/playlist/queue">File d'attente</a></li>
+                            <li class="signed-in-item"><a href="#!/playlist/recommendations">Recommandé</a></li>
+
+                            <li class="signed-in-item divider"></li>
+
+                            <li><a href="#!/announcements">Annonces <span class="announcements-badge badge hidden">0</span></a></li>
+                            <li><a href="https://plex.tv/downloads" target="_blank">Applications...</a></li>
+                            <li><a href="http://support.plex.tv/hc/en-us" target="_blank">Aide...</a></li>
+
+                            <li class="divider"></li>
+
+                            <li class="signed-out-item"><a class="sign-in-btn" href="#">Connexion</a></li>
+                            <li class="signed-in-item"><a class="sign-out-btn" rel="nohtml" href="<?php echo $web_path; ?>/logout.php"><?php echo T_('Log out'); ?></a></li>
+                        </ul>
+                    </li>
+                </ul>                
+                
+                <?php /*
                 <div id="headerbox">
                     <?php UI::show_box_top('','box box_headerbox'); ?>
-                    <?php require_once AmpConfig::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
                     <?php if (User::is_registered()) { ?>
                         <?php require_once AmpConfig::get('prefix') . '/templates/show_playtype_switch.inc.php'; ?>
                         <span id="loginInfo"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo $GLOBALS['user']->fullname; ?></a> <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a></span>
@@ -330,45 +408,15 @@ $_SESSION['login'] = false;
                     ?>
                     </span>
                     <?php UI::show_box_bottom(); ?>
-                </div> <!-- End headerbox -->
+                </div> <!-- End headerbox --> */ 
+                ?>
             </div><!-- End header -->
 
-        <?php if (AmpConfig::get('topmenu')) { ?>
-            <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
-                <div id="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/index.php">
-                        <img src="<?php echo $web_path; ?>/images/topmenu-home.png" />
-                        <span><?php echo T_('Home'); ?></span>
-                    </a>
-                </div>
-                <div id="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/browse.php?action=artist">
-                        <img src="<?php echo $web_path; ?>/images/topmenu-music.png" />
-                        <span><?php echo T_('Artists'); ?></span>
-                    </a>
-                </div>
-                <div id="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/browse.php?action=playlist">
-                        <img src="<?php echo $web_path; ?>/images/topmenu-playlist.png" />
-                        <span><?php echo T_('Playlists'); ?></span>
-                    </a>
-                </div>
-                <div id="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/stats.php?action=userflag">
-                        <img src="<?php echo $web_path; ?>/images/topmenu-favorite.png" />
-                        <span><?php echo T_('Favorites'); ?></span>
-                    </a>
-                </div>
-            </div>
-        <?php } ?>
             <?php $isCollapsed = $_COOKIE['sidebar_state'] == "collapsed"; ?>
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" ><span id="sidebar-header-content"><?php echo $isCollapsed ? '>>>' : '<<<'; ?></span></div>
                 <div id="sidebar-content" class="<?php echo $isCollapsed ? 'sidebar-content-collapsed' : ''; ?>" >
                     <?php require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php'; ?>
-                </div>
-                <div id="sidebar-content-light" class="<?php echo $isCollapsed ? 'sidebar-content-light-collapsed' : ''; ?>" >
-                    <?php require_once AmpConfig::get('prefix') . '/templates/sidebar.light.inc.php'; ?>
                 </div>
             </div>
             <!-- Handle collapsed visibility -->
@@ -413,7 +461,11 @@ $_SESSION['login'] = false;
             <div id="ajax-loading">Loading . . .</div>
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
-            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
+            
+            <div class="background-container">
+                <div class="background" style="background-image: url(blob:...);"></div>
+            </div>
+            <div id="content" class="scroll-container dark-scrollbar content-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> <?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
                 <div class="fatalerror">
