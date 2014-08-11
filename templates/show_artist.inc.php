@@ -36,13 +36,13 @@ if ($directplay_limit > 0) {
 <div class="details-container">
     <div class="artist-details-row details-row">
         <div class="details-title-container">
-            <h1 class="item-title"><?php echo $artist->f_full_name; ?></h1>
+            <h1 class="item-title"><?php echo trim($artist->f_full_name); ?></h1>
         </div>
         <div class="details-metadata-container">
             <div class="metadata-right pull-right">
                 <div class="metadata-tags">
                     <?php
-                        echo $artist->f_tags;
+                        echo trim($artist->f_tags);
                     ?>
                 </div>
             </div>
@@ -51,17 +51,22 @@ if ($directplay_limit > 0) {
             </p>
             <div class="summary-container">
                 <div class="summary">
-                    <p class="item-summary metadata-summary" style="max-height: 72px;">
-                        <?php echo $biography['summary']; ?>
-                    </p>
+                    <p class="item-summary metadata-summary" style="max-height: 72px;"><?php echo trim($biography['summary']); ?></p>
                     <div class="summary-divider">
                         <button type="button" class="summary-divider-btn"><?php echo T_("More"); ?></button>
                     </div>
+                    <?php
+                        echo Ajax::run('$(".summary-divider-btn").click(function () { toogleSummary("' . T_('More') . '", "' . T_('Less') . '", 72);});');
+                    ?>
                 </div>
             </div>
+            <?php
+                echo Ajax::run('$(window).ready(function () { resizeSummary();});');
+                echo Ajax::run('$(window).resize(function () { resizeSummary();});');
+            ?>
         </div>
         <div class="album-list-container details-list-container">
-            <div class="list album-list">
+           <!-- <div class="list album-list">
                 <div class="tabs_wrapper">
                     <div id="tabs_container">
                         <ul id="tabs">
@@ -75,7 +80,6 @@ if ($directplay_limit > 0) {
                             <?php if (AmpConfig::get('show_concerts')) { ?>
                             <li><a id="concerts_link" href="#concerts"><?php echo T_('Events'); ?></a></li>
                             <?php } ?>
-                            <!-- Needed to avoid the 'only one' bug -->
                             <li></li>
                         </ul>
                     </div>
@@ -124,7 +128,7 @@ if ($directplay_limit > 0) {
                         <?php } ?>
                     </div>
                 </div>
-            </div>    
+            </div>    -->
         </div>
         <div class="details-poster-container">
             <a class="media-poster-container" href="#">
