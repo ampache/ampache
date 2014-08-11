@@ -79,7 +79,16 @@ $_SESSION['login'] = false;
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
-
+        <script src="<?php echo $web_path; ?>/lib/javascript/user-interface.js" language="javascript" type="text/javascript"></script>
+        <?php
+        if (AmpConfig::get('ajax_load')) {
+            $iframed = true;
+        ?>
+            <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js" language="javascript" type="text/javascript"></script>
+        <?php
+            require_once AmpConfig::get('prefix') . '/templates/show_html5_player_headers.inc.php';
+        }
+        ?>
         <script type="text/javascript" charset="utf-8">
             $(document).ready(function(){
                 $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});

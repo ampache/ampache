@@ -29,18 +29,21 @@ if (!$rate || $rate > 5)
     $rate = 0;
 
 $id = 'rating' . '_' . $rating->id . '_' . $rating->type . '_';
+$id_container = $id .'rating';
 ?>
-<span id="<?php echo $id + 'rating'; ?>" class="rating user-rating">
-    <?php
-        for ($i = 0; $i < 5; $i++) {
-            
-            $base_value = ($i < $rate ? 'fa-star' : 'fa-star-o');
-            echo '<i id="'.$id . $i.'" class="star-icon fa '. $base_value .'"></i>';
-            echo Ajax::createAction($base_url . '&rating=' . ($i + 1), $id . $i);
-            echo Ajax::run('$("#'.$id . $i.'").mouseover(function () { handleStarIcons("'. $id .'", "'. $base_value .'", '. $i .');});');
-        }
-    ?>    
+<span id="<?php echo $id_container; ?>" class="rating-container rating-container-inline">
+    <span class="rating user-rating">
+        <?php
+            for ($i = 0; $i < 5; $i++) {
+                $base_value = ($i < $rate ? 'fa-star' : 'fa-star-o');
+                $save_value = ($i < $rate ? 'save-on' : '');
+                echo '<i id="'. $id . $i.'" class="star-icon fa '. $base_value .' '. $save_value . '"></i>';
+                echo Ajax::run('$("#'. $id . $i.'").click(function () { saveStarIcons("'. Ajax::url($base_url . '&rating=' . ($i + 1)) .'", "'. $id .'", '. $i .');});');
+                echo Ajax::run('$("#'. $id . $i.'").mouseover(function () { toggleStarIcons("'. $id .'", "'. $base_value .'", '. $i .');});');
+            }
+        ?>
+    </span>
 </span>
 <?php
-echo Ajax::run('$("#'.$id + 'rating").mouseleave(function () { handleStarIcons("'. $id .'", "'. $base_value .'", '. -1 .');});');
+echo Ajax::run('$("#'. $id_container . '").mouseleave(function () { resetStarIcons("'. $id .'");});');
 ?>
