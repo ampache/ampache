@@ -233,3 +233,27 @@ msgstr ""
 #: Database words
 msgid "Upload: allow users to edit uploaded songs"
 msgstr ""
+
+#: Database words
+msgid "Use DAAP backend"
+msgstr ""
+
+#: Database words
+msgid "DAAP backend password"
+msgstr ""
+
+#: Database words
+msgid "Use UPnP backend"
+msgstr ""
+
+#: Database words
+msgid "Allow video features"
+msgstr ""
+
+#: Database words
+msgid "Album - Group per release type"
+msgstr ""
+
+#: Database words
+msgid "Ajax page load"
+msgstr ""
