@@ -35,11 +35,11 @@ $id_container = $id .'rating';
     <span class="rating user-rating">
         <?php
             for ($i = 0; $i < 5; $i++) {
-                $base_value = ($i < $rate ? 'fa-star' : 'fa-star-o');
+                $current_value = ($i < $rate ? 'fa-star' : 'fa-star-o');
                 $save_value = ($i < $rate ? 'save-on' : '');
-                echo '<i id="'. $id . $i.'" class="star-icon fa '. $base_value .' '. $save_value . '"></i>';
+                echo '<i id="'. $id . $i.'" class="star-icon fa '. $current_value .' '. $save_value . '"></i>';
                 echo Ajax::run('$("#'. $id . $i.'").click(function () { saveStarIcons("'. Ajax::url($base_url . '&rating=' . ($i + 1)) .'", "'. $id .'", '. $i .');});');
-                echo Ajax::run('$("#'. $id . $i.'").mouseover(function () { toggleStarIcons("'. $id .'", "'. $base_value .'", '. $i .');});');
+                echo Ajax::run('$("#'. $id . $i.'").mouseover(function () { toggleStarIcons("'. $id .'", "'. $current_value .'", '. $i .');});');
             }
         ?>
     </span>

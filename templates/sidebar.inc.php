@@ -20,110 +20,96 @@
  *
  */
 
+$web_path = AmpConfig::get('web_path');
 ?>
-<ul id="sidebar-tabs">
-<?php
-if (User::is_registered()) {
-    if (!$_SESSION['state']['sidebar_tab']) {
-        $_SESSION['state']['sidebar_tab'] = 'home';
-    }
-    $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
-
-    // List of buttons ( id, title, icon, access level)
-    $sidebar_items[] = array('id'=>'home', 'title' => T_('Home'), 'icon'=>'home', 'access'=>5);
-    $sidebar_items[] = array('id'=>'localplay', 'title' => T_('Localplay'), 'icon'=>'volumeup', 'access'=>5);
-    $sidebar_items[] = array('id'=>'preferences', 'title' => T_('Preferences'), 'icon'=>'edit', 'access'=>5);
-    $sidebar_items[] = array('id'=>'modules','title' => T_('Modules'),'icon'=>'plugin','access'=>100);
-    $sidebar_items[] = array('id'=>'admin', 'title' => T_('Admin'), 'icon'=>'admin', 'access'=>100);
-
-    $web_path = AmpConfig::get('web_path');
-    ?>
-    <?php
-    foreach ($sidebar_items as $item) {
-        if (Access::check('interface', $item['access'])) {
-
-            $active = ('sidebar_'.$item['id'] == $class_name) ? ' active' : '';
-            $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'";
-    ?>
-        <li <?php echo $li_params; ?>>
-    <?php
-            echo Ajax::button("?page=index&action=sidebar&button=".$item['id'], $item['icon'], $item['title'], 'sidebar_'.$item['id']);
-            if ($item['id']==$_SESSION['state']['sidebar_tab']) {
-    ?>
-            <div id="sidebar-page" class="sidebar-page-float">
-                <?php require_once AmpConfig::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'; ?>
+<div id="sidebar" class="side-bar dark-scrollbar">
+    <ul class="list dashboard-server-list">
+        <li class="dashboard-server-list-item">
+            <div class="side-bar-actions pull-right">
+                <span id="music-dropdown" class="dropdown">
+                <a rel="nohtml" class="btn-gray dropdown-toggle" href="#music-dropdown" data-toggle="dropdown">
+                    <i class="fa fa-ellipsis-h"></i>
+                </a>
+                <ul class="dropdown-menu pull-right">
+                  <li><a class="song-music-btn" href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo T_('Song Titles'); ?></a></li>
+                  <li><a class="album-music-btn" href="<?php echo $web_path; ?>/browse.php?action=album"><?php echo T_('Albums'); ?></a></li>
+                  <li><a class="tag-music-btn" href="<?php echo $web_path; ?>/browse.php?action=tag"><?php echo T_('Tag Cloud'); ?></a></li>
+                  <li><a class="smart-music-btn" href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo T_('Smart Playlists'); ?></a></li>
+                  <li><a class="channel-music-btn" href="<?php echo $web_path; ?>/browse.php?action=channel"><?php echo T_('Channels'); ?></a></li>
+                  <?php if (AmpConfig::get('broadcast')) { ?>
+                  <li><a class="broadcast-music-btn" href="<?php echo $web_path; ?>/browse.php?action=broadcast"><?php echo T_('Broadcasts'); ?></a></li>
+                  <?php } ?>
+                  <?php if (AmpConfig::get('allow_upload')) { ?>
+                  <li><a class="upload-music-btn" href="<?php echo $web_path; ?>/upload.php"><?php echo T_('Upload'); ?></a></li>
+                  <?php } ?>
+                </ul>
+              </span>
             </div>
-    <?php
-            }
-    ?>
+            <h5><i class="section-icon fa fa-music"></i><?php echo T_('Browse Music'); ?></h5>
+            <ul class="list side-bar-list dashboard-section-list">
+                <li>
+                    <a class="btn-gray" href="<?php echo $web_path; ?>/browse.php?action=artist">
+                        <i class="section-icon fa fa-music"></i> <?php echo T_('Artists'); ?>
+                    </a>
+                </li>
+                <li>
+                    <a class="btn-gray" href="<?php echo $web_path; ?>/browse.php?action=playlist">
+                        <i class="section-icon fa fa-music"></i> <?php echo T_('Playlists'); ?>
+                    </a>
+                </li>
+                <li>
+                    <a class="btn-gray" href="<?php echo $web_path; ?>/browse.php?action=live_stream">
+                        <i class="section-icon fa fa-music"></i> <?php echo T_('Radio Stations'); ?>
+                    </a>
+                </li>
+            </ul>
         </li>
-    <?php
-        }
-    }
-    ?>
-        <li id="sb_tab_logout" class="sb1">
-            <a target="_top" href="<?php echo $web_path; ?>/logout.php" id="sidebar_logout" rel="nohtml" >
-            <?php echo UI::get_icon('logout', T_('Logout')); ?>
-            </a>
-        </li>
-<?php
-} else {
-?>
-        <li id="sb_tab_home" class="sb1">
-            <div id="sidebar-page" class="sidebar-page-float">
-            <?php
-                require_once AmpConfig::get('prefix') . '/templates/sidebar_home.inc.php';
-            ?>
+        <?php if (AmpConfig::get('allow_video')) { ?>
+        <li class="dashboard-server-list-item">
+            <div class="side-bar-actions pull-right">
+                <span id="movie-dropdown" class="dropdown">
+                <a rel="nohtml" class="btn-gray dropdown-toggle" href="#movie-dropdown" data-toggle="dropdown">
+                    <i class="fa fa-ellipsis-h"></i>
+                </a>
+                <ul class="dropdown-menu pull-right">
+                  <li><a class="song-music-btn" href="<?php echo $web_path; ?>/browse.php?action=tag&type=video"><?php echo T_('Tag Cloud'); ?></a></li>
+                </ul>
+              </span>
             </div>
+            <h5><i class="section-icon fa fa-film"></i><?php echo T_('Browse Movie'); ?></h5>
+            <ul class="list side-bar-list dashboard-section-list">
+                <li>
+                    <a class="btn-gray" href="<?php echo $web_path; ?>/browse.php?action=clip">
+                        <i class="section-icon fa fa-music"></i> <?php echo T_('Music Clips'); ?>
+                    </a>
+                </li>
+                <li>
+                    <a class="btn-gray" href="<?php echo $web_path; ?>/browse.php?action=tvshow">
+                        <i class="section-icon fa fa-desktop"></i> <?php echo T_('TV Shows'); ?>
+                    </a>
+                </li>
+                <li>
+                    <a class="btn-gray" href="<?php echo $web_path; ?>/browse.php?action=movie">
+                        <i class="section-icon fa fa-film"></i> <?php echo T_('Movies'); ?>
+                    </a>
+                </li>
+                <li>
+                    <a class="btn-gray" href="<?php echo $web_path; ?>/browse.php?action=personal_video">
+                        <i class="section-icon fa fa-video-camera"></i> <?php echo T_('Personal Videos'); ?>
+                    </a>
+                </li>
+            </ul>
         </li>
-<?Php
-}
-?>
-</ul>
+        <?php } ?>
+        
+        <?php Ajax::start_container('browse_filters'); ?>
+        <?php Ajax::end_container(); ?>
+        
+        <?php
+        // TODO: Add other menu and add collapse feature
+        ?>
+        
+        
+    </ul>
+</div>
 
-<script type="text/javascript">
-$(function() {
-    $(".header").click(function () {
-
-        $header = $(this);
-        //getting the next element
-        $content = $header.next();
-        //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
-        $content.slideToggle(500, function() {
-            $header.children(".header-img").toggleClass("expanded collapsed");
-            var sbstate = "expanded";
-            if ($header.children(".header-img").hasClass("collapsed")) {
-                sbstate = "collapsed";
-            }
-            $.cookie('sb_' + $header.children(".header-img").attr('id'), sbstate, { expires: 30, path: '/'});
-        });
-
-    });
-});
-
-$(document).ready(function() {
-    // Get a string of all the cookies.
-    var cookieArray = document.cookie.split(";");
-    var result = new Array();
-    // Create a key/value array with the individual cookies.
-    for (var elem in cookieArray) {
-        var temp = cookieArray[elem].split("=");
-        // We need to trim whitespaces.
-        temp[0] = $.trim(temp[0]);
-        temp[1] = $.trim(temp[1]);
-        // Only take sb_* cookies (= sidebar cookies)
-        if (temp[0].substring(0, 3) == "sb_") {
-            result[temp[0].substring(3)] = temp[1];
-        }
-    }
-    // Finds the elements and if the cookie is collapsed, it
-    // collapsed the found element.
-    for (var key in result) {
-        if ($("#" + key).length && result[key] == "collapsed") {
-            $("#" + key).removeClass("expanded");
-            $("#" + key).addClass("collapsed");
-            $("#" + key).parent().next().slideToggle(0);
-        }
-    }
-});
-</script>

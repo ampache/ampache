@@ -60,6 +60,13 @@ $_SESSION['login'] = false;
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/bootstrap/css/bootstrap-theme.min.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/font-awesome/css/font-awesome.min.css" type="text/css" media="screen" />
         <?php require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php'; ?>
+        <script type="text/javascript" charset="utf-8">
+            var jsAjaxUrl = "<?php echo AmpConfig::get('ajax_url') ?>";
+            var jsWebPath = "<?php echo $web_path; ?>";
+            var jsAjaxServer = "<?php echo AmpConfig::get('ajax_server') ?>";
+            var jsSaveTitle = "<?php echo T_('Save') ?>";
+            var jsCancelTitle = "<?php echo T_('Cancel') ?>";
+        </script>
         <script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/prettyPhoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
@@ -89,21 +96,7 @@ $_SESSION['login'] = false;
             require_once AmpConfig::get('prefix') . '/templates/show_html5_player_headers.inc.php';
         }
         ?>
-        <script type="text/javascript" charset="utf-8">
-            $(document).ready(function(){
-                $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
-                <?php if (AmpConfig::get('geolocation')) { ?>
-                    geolocate_user();
-                <?php } ?>
-            });
 
-            // Using the following workaround to set global variable available from any javascript script.
-            var jsAjaxUrl = "<?php echo AmpConfig::get('ajax_url') ?>";
-            var jsWebPath = "<?php echo $web_path; ?>";
-            var jsAjaxServer = "<?php echo AmpConfig::get('ajax_server') ?>";
-            var jsSaveTitle = "<?php echo T_('Save') ?>";
-            var jsCancelTitle = "<?php echo T_('Cancel') ?>";
-        </script>
 
         <?php
         if (AmpConfig::get('ajax_load')) {
@@ -316,165 +309,26 @@ $_SESSION['login'] = false;
             });
         </script>
         <?php } ?>
-        <!-- rfc3514 implementation -->
-        <div id="rfc3514" style="display:none;">0x0</div>
-        <div id="maincontainer" class="application show-nav-bar show-action-bar show-breadcrumb-bar">
-            <div class="nav-bar">
-                <ul class="nav nav-bar-nav">
-                    <!--<li><a class="back-btn" href="#" data-original-title="" title=""><i class="glyphicon glyphicon-left-arrow"></i></a></li>-->
-                    <li>
-                        <a class="home-btn" href="<?php echo $web_path; ?>/index.php" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>">
-                            <i class="fa fa-home fa-lg"></i>
-                        </a>
-                    </li>
-                </ul>
+<?php
+            $prefix = AmpConfig::get('prefix');
+        ?>
+        
+        <div id="maincontainer" class="application show-nav-bar show-side-bar">
+            
+            <?php 
+                require_once $prefix . '/templates/navbar.inc.php';
+                require_once $prefix . '/templates/rightbar.inc.php';
+                require_once $prefix . '/templates/sidebar.inc.php';
+            ?>
 
-                <div class="nav-bar-search-container">
-                    <form id="#nav-bar-search-form" class="nav-bar-form nav-bar-left hidden-xs" method="post" action="<?php echo $web_path; ?>/search.php?type=song" enctype="multipart/form-data">
-                        <div class="form-group form-group-search">
-                            <label class="control-label-search" for="nav-bar-search">
-                                <i class="fa fa-search fa-lg"></i>
-                                <a class="clear-search-btn hidden" href="#"><i class="fa fa-times-circle"></i></a>
-                            </label>
-
-                            <input type="search" id="nav-bar-search" class="form-control form-control-search" placeholder="<?php echo T_("Search"); ?>" value="">
-                        </div>
-                    </form>
-                </div>
-
-                <ul class="nav nav-bar-nav nav-bar-right">
-                    <?php
-                    if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {
-                        if (AutoUpdate::is_update_available() && AutoUpdate::is_git_repository()) {
-                    ?>
-                    <li class="">
-                        <a class="install-updates-btn" title="<?php echo T_('Mises à jour disponibles'); ?>" data-toggle="tooltip" rel="nohtml" href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update">
-                            <i class="fa fa-up-arrow fa-lg"></i>
-                        </a>
-                    </li>
-                    <?php
-                        }
-                    }
-                    ?>
-                    
-                    <li>
-                        <a class="settings-btn" href="#!/settings" title="" data-toggle="tooltip" data-original-title="Réglages">
-                            <i class="fa fa-cogs fa-lg"></i>
-                        </a>
-                    </li>
-                    <li id="nav-dropdown" class="nav-dropdown dropdown">
-                        <a class="dropdown-toggle" href="#nav-dropdown" data-toggle="dropdown" data-original-title="" title="">
-                            <i class="fa fa-user fa-lg"></i><i class="caret-icon"></i>
-                            <span class="total-badge badge hidden">0</span>
-                        </a>
-
-                        <ul class="dropdown-menu signed-in">
-                            <li class="signed-in-item">
-                                <a class="username-btn" href="<?php echo $web_path; ?>/preferences.php?tab=account" target="_self"><?php echo $GLOBALS['user']->fullname; ?></a>
-                            </li>
-                            <li class="signed-in-item divider"></li>
-
-                            <li class="signed-in-item"><a class="friends-btn" href="#">Amis <span class="friend-requests-badge badge hidden">0</span></a></li>
-                            <li class="signed-in-item"><a href="#!/playlist/queue">File d'attente</a></li>
-                            <li class="signed-in-item"><a href="#!/playlist/recommendations">Recommandé</a></li>
-
-                            <li class="signed-in-item divider"></li>
-
-                            <li><a href="#!/announcements">Annonces <span class="announcements-badge badge hidden">0</span></a></li>
-                            <li><a href="https://plex.tv/downloads" target="_blank">Applications...</a></li>
-                            <li><a href="http://support.plex.tv/hc/en-us" target="_blank">Aide...</a></li>
-
-                            <li class="divider"></li>
-
-                            <li class="signed-out-item"><a class="sign-in-btn" href="#">Connexion</a></li>
-                            <li class="signed-in-item"><a class="sign-out-btn" rel="nohtml" href="<?php echo $web_path; ?>/logout.php"><?php echo T_('Log out'); ?></a></li>
-                        </ul>
-                    </li>
-                </ul>                
-                
-                <?php /*
-                <div id="headerbox">
-                    <?php UI::show_box_top('','box box_headerbox'); ?>
-                    <?php if (User::is_registered()) { ?>
-                        <?php require_once AmpConfig::get('prefix') . '/templates/show_playtype_switch.inc.php'; ?>
-                        <span id="loginInfo"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo $GLOBALS['user']->fullname; ?></a> <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a></span>
-                    <?php } else { ?>
-                        <span id="loginInfo">
-                            <a href="<?php echo $web_path; ?>/login.php" rel="nohtml"><?php echo T_('Login'); ?></a>
-                            <?php if (AmpConfig::get('allow_public_registration')) { ?>
-                                / <a href="<?php echo $web_path; ?>/register.php" rel="nohtml"><?php echo T_('Register'); ?></a>
-                            <?php } ?>
-                        </span>
-                    <?php } ?>
-                    <span id="updateInfo">
-                    <?php
-                    if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {
-                        if (AutoUpdate::is_update_available()) {
-                            AutoUpdate::show_new_version();
-                        }
-                    }
-                    $count_temp_playlist = count($GLOBALS['user']->playlist->get_items());
-                    ?>
-                    </span>
-                    <?php UI::show_box_bottom(); ?>
-                </div> <!-- End headerbox --> */ 
-                ?>
-            </div><!-- End header -->
-
-            <?php $isCollapsed = $_COOKIE['sidebar_state'] == "collapsed"; ?>
-            <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
-                <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" ><span id="sidebar-header-content"><?php echo $isCollapsed ? '>>>' : '<<<'; ?></span></div>
-                <div id="sidebar-content" class="<?php echo $isCollapsed ? 'sidebar-content-collapsed' : ''; ?>" >
-                    <?php require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php'; ?>
-                </div>
-            </div>
-            <!-- Handle collapsed visibility -->
-            <script type="text/javascript">
-            $('#sidebar-header').click(function(){
-                var newstate = "collapsed";
-                if ($('#sidebar-header').hasClass("sidebar-header-collapsed")) {
-                    newstate = "expanded";
-                }
-
-                if (newstate != "expanded") {
-                    $("#content").addClass("content-left-wild", 600);
-                } else {
-                    $("#content").removeClass("content-left-wild", 1000);
-                }
-
-                $('#sidebar').hide(500, function() {
-                    if (newstate == "expanded") {
-                        $('#sidebar-content-light').removeClass("sidebar-content-light-collapsed");
-                        $('#sidebar-content').removeClass("sidebar-content-collapsed");
-                        $('#sidebar-header').removeClass("sidebar-header-collapsed");
-                        $('#sidebar-header-content').text('<<<');
-                    } else {
-                        $('#sidebar-content').addClass("sidebar-content-collapsed");
-                        $('#sidebar-header').addClass("sidebar-header-collapsed");
-                        $('#sidebar-content-light').addClass("sidebar-content-light-collapsed");
-                        $('#sidebar-header-content').text('>>>');
-                    }
-
-                    $('#sidebar').show(500);
-                });
-
-                $.cookie('sidebar_state', newstate, { expires: 30, path: '/'});
-            });
-            </script>
-
-            <div id="rightbar" class="rightbar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> <?php echo $count_temp_playlist ? '' : 'hidden' ?>">
-                <?php require_once AmpConfig::get('prefix') . '/templates/rightbar.inc.php'; ?>
-            </div>
-
-            <!-- Tiny little div, used to cheat the system -->
             <div id="ajax-loading">Loading . . .</div>
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
             
             <div class="background-container">
-                <div class="background" style="background-image: url(blob:...);"></div>
+                <div class="background" style="background-image: url(...);"></div>
             </div>
-            <div id="content" class="scroll-container dark-scrollbar content-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> <?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
+            <div id="content" class="scroll-container dark-scrollbar content-float <?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
                 <div class="fatalerror">

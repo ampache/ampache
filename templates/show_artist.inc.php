@@ -39,96 +39,98 @@ if ($directplay_limit > 0) {
             <h1 class="item-title"><?php echo trim($artist->f_full_name); ?></h1>
         </div>
         <div class="details-metadata-container">
-            <div class="metadata-right pull-right">
-                <div class="metadata-tags">
-                    <?php
-                        echo trim($artist->f_tags);
-                    ?>
-                </div>
-            </div>
-            <p class="metadata-labels">
-                <?php show_rating($artist->id, 'artist'); ?>
-            </p>
-            <div class="summary-container">
-                <div class="summary">
-                    <p class="item-summary metadata-summary" style="max-height: 72px;"><?php echo trim($biography['summary']); ?></p>
-                    <div class="summary-divider">
-                        <button type="button" class="summary-divider-btn"><?php echo T_("More"); ?></button>
-                    </div>
-                    <?php
-                        echo Ajax::run('$(".summary-divider-btn").click(function () { toogleSummary("' . T_('More') . '", "' . T_('Less') . '", 72);});');
-                    ?>
-                </div>
-            </div>
-            <?php
-                echo Ajax::run('$(window).ready(function () { resizeSummary();});');
-                echo Ajax::run('$(window).resize(function () { resizeSummary();});');
-            ?>
-        </div>
-        <div class="album-list-container details-list-container">
-           <!-- <div class="list album-list">
-                <div class="tabs_wrapper">
-                    <div id="tabs_container">
-                        <ul id="tabs">
-                            <li class="tab_active"><a href="#albums"><?php echo T_('Albums'); ?></a></li>
-                            <?php if (AmpConfig::get('wanted')) { ?>
-                            <li><a id="missing_albums_link" href="#missing_albums"><?php echo T_('Missing Albums'); ?></a></li>
-                            <?php } ?>
-                            <?php if (AmpConfig::get('show_similar')) { ?>
-                            <li><a id="similar_artist_link" href="#similar_artist"><?php echo T_('Similar Artists'); ?></a></li>
-                             <?php } ?>
-                            <?php if (AmpConfig::get('show_concerts')) { ?>
-                            <li><a id="concerts_link" href="#concerts"><?php echo T_('Events'); ?></a></li>
-                            <?php } ?>
-                            <li></li>
-                        </ul>
-                    </div>
-                    <div id="tabs_content">
-                        <div id="albums" class="tab_content" style="display: block;">
+            <div class="artist-details-metadata-container">
+                <div class="metadata-right pull-right">
+                    <div class="metadata-tags">
                         <?php
-                            if (!isset($multi_object_ids)) {
-                                $multi_object_ids = array('' => $object_ids);
-                            }
-
-                            foreach ($multi_object_ids as $key => $object_ids) {
-                                $title = (!empty($key)) ? ucwords($key) : '';
-                                $browse = new Browse();
-                                $browse->set_type($object_type);
-                                if (!empty($key)) {
-                                    $browse->set_content_div_ak($key);
+                            echo trim($artist->f_tags);
+                        ?>
+                    </div>
+                </div>
+                <p class="metadata-labels">
+                    <?php show_rating($artist->id, 'artist'); ?>
+                </p>
+                <div class="summary-container">
+                    <div class="summary">
+                        <p class="item-summary metadata-summary" style="max-height: 72px;"><?php echo trim($biography['summary']); ?></p>
+                        <div class="summary-divider">
+                            <button type="button" class="summary-divider-btn"><?php echo T_("More"); ?></button>
+                        </div>
+                        <?php
+                            echo Ajax::run('$(".summary-divider-btn").click(function () { toogleSummary("' . T_('More') . '", "' . T_('Less') . '", 72);});');
+                        ?>
+                    </div>
+                </div>
+                <?php
+                    echo Ajax::run('$(window).ready(function () { resizeSummary();});');
+                    echo Ajax::run('$(window).resize(function () { resizeSummary();});');
+                ?>
+            </div>
+            <div class="album-list-container details-list-container">
+                <div class="list album-list">
+                    <div class="tabs_wrapper">
+                        <div id="tabs_container">
+                            <ul id="tabs">
+                                <li class="tab_active"><a href="#albums"><?php echo T_('Albums'); ?></a></li>
+                                <?php if (AmpConfig::get('wanted')) { ?>
+                                <li><a id="missing_albums_link" href="#missing_albums"><?php echo T_('Missing Albums'); ?></a></li>
+                                <?php } ?>
+                                <?php if (AmpConfig::get('show_similar')) { ?>
+                                <li><a id="similar_artist_link" href="#similar_artist"><?php echo T_('Similar Artists'); ?></a></li>
+                                 <?php } ?>
+                                <?php if (AmpConfig::get('show_concerts')) { ?>
+                                <li><a id="concerts_link" href="#concerts"><?php echo T_('Events'); ?></a></li>
+                                <?php } ?>
+                                <li></li>
+                            </ul>
+                        </div>
+                        <div id="tabs_content">
+                            <div id="albums" class="tab_content" style="display: block;">
+                            <?php
+                                if (!isset($multi_object_ids)) {
+                                    $multi_object_ids = array('' => $object_ids);
                                 }
-                                $browse->show_objects($object_ids, array('group_disks' => true, 'title' => $title));
-                                $browse->store();
-                            }
-                        ?>
+
+                                foreach ($multi_object_ids as $key => $object_ids) {
+                                    $title = (!empty($key)) ? ucwords($key) : '';
+                                    $browse = new Browse();
+                                    $browse->set_type($object_type);
+                                    if (!empty($key)) {
+                                        $browse->set_content_div_ak($key);
+                                    }
+                                    $browse->show_objects($object_ids, array('group_disks' => true, 'title' => $title));
+                                    $browse->store();
+                                }
+                            ?>
+                            </div>
+                            <?php
+                            if (AmpConfig::get('wanted')) {
+                                echo Ajax::observe('missing_albums_link', 'click', Ajax::action('?page=index&action=wanted_missing_albums&artist='.$artist->id, 'missing_albums'));
+                            ?>
+                            <div id="missing_albums" class="tab_content">
+                            <?php UI::show_box_top(T_('Missing Albums'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>
+                            </div>
+                            <?php } ?>
+                            <?php
+                            if (AmpConfig::get('show_similar')) {
+                                echo Ajax::observe('similar_artist_link', 'click', Ajax::action('?page=index&action=similar_artist&artist='.$artist->id, 'similar_artist'));
+                            ?>
+                            <div id="similar_artist" class="tab_content">
+                            <?php UI::show_box_top(T_('Similar Artists'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>
+                            </div>
+                            <?php } ?>
+                            <?php
+                            if (AmpConfig::get('show_concerts')) {
+                                echo Ajax::observe('concerts_link', 'click', Ajax::action('?page=index&action=concerts&artist='.$artist->id, 'concerts'));
+                            ?>
+                            <div id="concerts" class="tab_content">
+                            <?php UI::show_box_top(T_('Events'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>
+                            </div>
+                            <?php } ?>
                         </div>
-                        <?php
-                        if (AmpConfig::get('wanted')) {
-                            echo Ajax::observe('missing_albums_link','click', Ajax::action('?page=index&action=wanted_missing_albums&artist='.$artist->id, 'missing_albums'));
-                        ?>
-                        <div id="missing_albums" class="tab_content">
-                        <?php UI::show_box_top(T_('Missing Albums'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>
-                        </div>
-                        <?php } ?>
-                        <?php
-                        if (AmpConfig::get('show_similar')) {
-                            echo Ajax::observe('similar_artist_link','click', Ajax::action('?page=index&action=similar_artist&artist='.$artist->id, 'similar_artist'));
-                        ?>
-                        <div id="similar_artist" class="tab_content">
-                        <?php UI::show_box_top(T_('Similar Artists'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>
-                        </div>
-                        <?php } ?>
-                        <?php
-                        if (AmpConfig::get('show_concerts')) {
-                            echo Ajax::observe('concerts_link','click', Ajax::action('?page=index&action=concerts&artist='.$artist->id, 'concerts'));
-                        ?>
-                        <div id="concerts" class="tab_content">
-                        <?php UI::show_box_top(T_('Events'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>
-                        </div>
-                        <?php } ?>
                     </div>
                 </div>
-            </div>    -->
+            </div>
         </div>
         <div class="details-poster-container">
             <a class="media-poster-container" href="#">
@@ -138,7 +140,8 @@ if ($directplay_limit > 0) {
                         <button class="play-btn media-poster-btn btn-link" tabindex="-1">
                             <i class="fa fa-play fa-lg">
                                 <a rel="nohtml" href="<?php echo AmpConfig::get('ajax_url') . '?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id; ?>"></a>
-                            </i></button>
+                            </i>
+                        </button>
                         <button class="edit-btn media-poster-btn btn-link" tabindex="-1">
                             <i class="fa fa-pencil fa-lg">
                                 <?php if (Access::check('interface','50')) { ?>
@@ -162,7 +165,7 @@ if ($directplay_limit > 0) {
                 </div>
             </a>
             <div class="media-actions-dropdown dropdown" style="top: 96px; left: 96px;">
-                <div class="dropdown-toggle" data-toggle="dropdown"></div>
+                <div rel="nohtml" class="dropdown-toggle" data-toggle="dropdown"></div>
                 <ul class="dropdown-menu">
                     <li>
                         <?php if ($object_type == 'album') { ?>
@@ -219,7 +222,7 @@ if (AmpConfig::get('lastfm_api_key')) {
             <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22&type=artist" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
         </div>
         <div id="artist_biography">
-            <?php echo T_('Loading...'); ?>
+            
         </div>
     </div>
 <?php } ?>
