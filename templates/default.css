@@ -22,6 +22,15 @@
 /* Base Definitions, may be overwridden by themes
 /*****************************************************************************/
 
+@font-face {
+    font-family: 'DejaVuSansCondensed';
+    src: url('fonts/dejavusanscondensed.eot');
+    src: url('fonts/dejavusanscondensed.eot') format('embedded-opentype'),
+         url('fonts/dejavusanscondensed.woff') format('woff'),
+         url('fonts/dejavusanscondensed.ttf') format('truetype'),
+         url('fonts/dejavusanscondensed.svg#DejaVuSansCondensed') format('svg');
+}
+
 /*****************
  * Tag Definitions
  *****************/
@@ -61,7 +70,7 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 #tabs_wrapper {
-	width: auto;
+    width: auto;
 }
 
 #tabs_container {
@@ -73,37 +82,36 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 #tabs li {
-	display: inline-block;
+    display: inline-block;
     font-size: 18px;
     line-height: 18px;
     margin-right: 30px;
 }
 
 #tabs li a {
-    color: #ff9d00;
     text-decoration: none;
 }
 
 #tabs li a:hover {
-    color: #ffc466;
+    color: #fff;
     outline: 0;
 }
 
 #tabs li.tab_active a {
     text-shadow: 0 0 10px rgba(255,255,255,0.5);
     padding-bottom: 10px;
-    color: #fff;
+    color: #f9be03;
     text-shadow: none;
     border-bottom: 2px solid #666;
 }
 
 #tabs_content {
-	padding: 10px;
-	width: auto;
+    padding: 10px;
+    width: auto;
 }
 
 .tab_content {
-	display: none;
+    display: none;
 }
 
 #aslideshow {
@@ -275,6 +283,145 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     transform: scaleX(-1);
 }
 
+table.tabledata {
+    width:100%;
+    /*table-layout: fixed;*/
+    text-align:left;
+    /*border:1px solid #bbb;*/
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+table.tabledata thead .th-top, table.tabledata tfoot .th-bottom {
+    font-size: 12px;
+}
+
+table.tabledata thead .th-top {
+    border-bottom: 1px solid;
+}
+
+table.tabledata tfoot .th-bottom {
+    border-top: 1px solid;
+    display: none;
+}
+
+table.tabledata td {
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 3px 10px 3px 0;
+}
+
+table.tabledata tr:hover, table.tabledata tr:focus {
+    text-shadow: none;
+    background-repeat: repeat-x;
+}
+
+table.tabledata .th-top:hover,
+table.tabledata .th-bottom:hover,
+table.tabledata .th-top:focus,
+table.tabledata .th-bottom:focus {
+    background-image: none;
+    background-repeat: no-repeat;
+}
+
+table.tabledata tbody .cel_play {
+    max-width: 40px;
+    min-width: 40px;
+    width: 40px !important;
+    text-align: right;
+}
+
+table.tabledata tbody .cel_play_content {
+    display: block;
+}
+
+table.tabledata tbody .cel_play_hover {
+    display: none;
+}
+
+table.tabledata tbody tr:hover .cel_play_hover, table.tabledata tbody tr:focus .cel_play_hover {
+    display: block;
+}
+table.tabledata tbody tr:hover .cel_play_content, table.tabledata tbody tr:focus .cel_play_content {
+    display: none;
+}
+
+table.tabledata tbody .cel_add {
+    max-width: 60px;
+    min-width: 60px;
+    width: 60px !important;
+    text-align: right;
+}
+
+table.tabledata tbody .cel_item_add {
+    display: none;
+}
+
+table.tabledata tbody tr:hover .cel_item_add, table.tabledata tbody tr:focus .cel_item_add {
+    display: block;
+}
+
+table.tabledata tbody .cel_time {
+    min-width: 40px;
+    width: 40px !important;
+}
+
+table.tabledata tbody .cel_action {
+    width: 130px !important;
+    max-width: 130px;
+}
+
+table.tabledata tbody .cel_action_text {
+    max-width: 100% !important;
+}
+
+table.tabledata tbody td.cel_rating {
+    width: 120px !important;
+    max-width: 120px;
+}
+
+table.tabledata tbody td.cel_userflag {
+    width: 40px !important;
+    max-width: 40px;
+}
+
+table.tabledata tbody .cel_tags {
+    width: 150px !important;
+    max-width: 150px;
+}
+
+table.tabledata tbody .cel_cover img {
+    vertical-align: middle;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    margin: 2px;
+}
+
+table.tabledata tbody .cel_cover img:hover {
+    border: 2px solid;
+    margin: 0px;
+}
+
+table.tabledata .cel_drag {
+    max-width: 16px;
+    width: 16px !important;
+}
+
+table.tabledata .cel_drag img:hover {
+    cursor: pointer;
+}
+
+table.tabledata .cel_agent {
+    text-align: right;
+}
+
+table.tabledata .cel_agent img:hover {
+    cursor: help;
+}
+
 /**** IMPORTED ******/
 
 .form-control:focus {
@@ -302,6 +449,9 @@ body {
     line-height: 1.71428571428571;
     color: #eee;
     background-color: #1f1f1f;
+}
+a {
+    color: #ddd;
 }
 a:hover, a:focus {
     color: #e9a049;
@@ -2202,6 +2352,9 @@ to {
 }
 .side-bar h5 {
     margin: 20px 0 5px;
+}
+.side-bar h5>.section-icon {
+    margin-right: 5px;
 }
 .side-bar-actions {
     position: absolute;
