@@ -169,6 +169,7 @@ class Api
                     ($timestamp > (time() + 1800))) {
                     debug_event('API', 'Login Failed: timestamp out of range ' . $timestamp . '/' . time(), 1);
                     Error::add('api', T_('Login Failed: timestamp out of range'));
+                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
                     return false;
                 }
 
@@ -180,6 +181,7 @@ class Api
                 if (!$realpwd) {
                     debug_event('API', 'Unable to find user with userid of ' . $user_id, 1);
                     Error::add('api', T_('Invalid Username/Password'));
+                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
                     return false;
                 }
 
@@ -247,7 +249,7 @@ class Api
         } // end while
 
         debug_event('API','Login Failed, unable to match passphrase','1');
-        XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
         return false;
     } // handshake
