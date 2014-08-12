@@ -35,10 +35,10 @@
     <tbody>
         <?php
             foreach ($object_ids as $catalog_id) {
-                $catalog = Catalog::create_from_id($catalog_id);
-                $catalog->format();
+                $libitem = Catalog::create_from_id($catalog_id);
+                $libitem->format();
         ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="catalog_<?php echo $catalog->id; ?>">
+        <tr class="<?php echo UI::flip_class(); ?>" id="catalog_<?php echo $libitem->id; ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_catalog_row.inc.php'; ?>
         </tr>
         <?php } ?>

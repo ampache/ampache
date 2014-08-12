@@ -119,7 +119,7 @@
 }
 
 .edit_dialog_content input[type=text] , .edit_dialog_content select {
-    width: 450px;
+    width: 430px;
     height: 30px;
     color: #fff;
     background: #333;

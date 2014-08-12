@@ -23,14 +23,11 @@
 $web_path = AmpConfig::get('web_path');
 ?>
 <?php
-$browse = new Browse();
-$browse->set_type($object_type);
-
 UI::show_box_top($artist->f_name, 'info-box');
 ?>
 <?php
 if (AmpConfig::get('lastfm_api_key')) {
-    echo Ajax::observe('window','load', Ajax::action('?page=index&action=artist_info&artist='.$artist->id, 'artist_info'));
+    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&artist='.$artist->id, 'artist_info'));
 ?>
     <div class="item_right_info">
         <div class="external_links">
@@ -83,14 +80,14 @@ if (AmpConfig::get('show_played_times')) {
         </li>
         <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id,'play', T_('Play all'),'directplay_full_' . $artist->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id, T_('Play all'),'directplay_full_text_' . $artist->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id,'play', T_('Play all'),'directplay_full_' . $artist->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, T_('Play all'),'directplay_full_text_' . $artist->id); ?>
         </li>
         <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id . '&append=true','play_add', T_('Play all last'),'addplay_artist_' . $artist->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=artist&artist_id=' . $artist->id . '&append=true', T_('Play all last'),'addplay_artist_text_' . $artist->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true','play_add', T_('Play all last'),'addplay_artist_' . $artist->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', T_('Play all last'),'addplay_artist_text_' . $artist->id); ?>
         </li>
         <?php } ?>
         <li>
@@ -111,22 +108,18 @@ if (AmpConfig::get('show_played_times')) {
         <?php } ?>-->
         <?php if (Access::check_function('batch_download')) { ?>
         <li>
-            <a href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
-            <a href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo T_('Download'); ?></a>
+            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
+            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo T_('Download'); ?></a>
         </li>
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>
-            <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '', '')">
+            <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
-            <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '', '')">
+            <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
                 <?php echo T_('Edit Artist'); ?>
             </a>
         <?php } ?>
-        <li>
-            <input type="checkbox" id="show_artist_artCB" <?php echo $string = Art::is_enabled() ? 'checked="checked"' : ''; ?>/> <?php echo T_('Show Art'); ?>
-            <?php echo Ajax::observe('show_artist_artCB', 'click', Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id,'')); ?>
-        </li>
     </ul>
 </div>
 <?php UI::show_box_bottom(); ?>
@@ -150,8 +143,20 @@ if (AmpConfig::get('show_played_times')) {
     <div id="tabs_content">
         <div id="albums" class="tab_content" style="display: block;">
 <?php
-    $browse->show_objects($object_ids, true);   // Passing 'true' means that we allow grouping albums by disks depending on the configuration
-    $browse->store();
+    if (!isset($multi_object_ids)) {
+        $multi_object_ids = array('' => $object_ids);
+    }
+
+    foreach ($multi_object_ids as $key => $object_ids) {
+        $title = (!empty($key)) ? ucwords($key) : '';
+        $browse = new Browse();
+        $browse->set_type($object_type);
+        if (!empty($key)) {
+            $browse->set_content_div_ak($key);
+        }
+        $browse->show_objects($object_ids, array('group_disks' => true, 'title' => $title));
+        $browse->store();
+    }
 ?>
         </div>
 <?php

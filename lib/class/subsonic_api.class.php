@@ -85,11 +85,21 @@ class Subsonic_Api
     public static function follow_stream($url)
     {
         set_time_limit(0);
+        ob_end_clean();
 
         if (function_exists('curl_version')) {
+            $headers = apache_request_headers();
+            $reqheaders = array();
+            $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
+            if (isset($headers['Range'])) {
+                $reqheaders[] = "Range: " . $headers['Range'];
+            }
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
+            debug_event('subsonic', 'Stream proxy: ' . $url, 5);
+
             $ch = curl_init($url);
             curl_setopt_array($ch, array(
+                CURLOPT_HTTPHEADER => $reqheaders,
                 CURLOPT_HEADER => false,
                 CURLOPT_RETURNTRANSFER => false,
                 CURLOPT_FOLLOWLOCATION => true,
@@ -122,6 +132,7 @@ class Subsonic_Api
         } else {
             header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
         }
+        header("access-control-allow-origin: *");
     }
 
     public static function apiOutput($input, $xml)
@@ -231,6 +242,9 @@ class Subsonic_Api
         $propertiesArray = !$options['autoText'] || $attributesArray || $tagsArray || ($plainText === '')
                 ? array_merge($attributesArray, $tagsArray, $textContentArray) : $plainText;
 
+        if (isset($propertiesArray['xmlns'])) {
+            unset($propertiesArray['xmlns']);
+        }
         //return node as array
         return array(
             $xml->getName() => $propertiesArray
@@ -291,7 +305,7 @@ class Subsonic_Api
         $ifModifiedSince = $input['ifModifiedSince'];
 
         $catalogs = array();
-        if (!empty($musicFolderId)) {
+        if (!empty($musicFolderId) && $musicFolderId != '-1') {
             $catalogs[] = $musicFolderId;
         } else {
             $catalogs = Catalog::get_catalogs();
@@ -353,7 +367,7 @@ class Subsonic_Api
         self::check_version($input, "1.9.0");
 
         $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addGenres($r, Tag::get_tags());
+        Subsonic_XML_Data::addGenres($r, Tag::get_tags('song'));
         self::apiOutput($input, $r);
     }
 
@@ -419,14 +433,14 @@ class Subsonic_Api
      * getVideos
      * Get all videos.
      * Takes no parameter.
-     * Not supported yet.
      */
     public static function getvideos($input)
     {
         self::check_version($input, "1.7.0");
 
         $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addVideos($r);
+        $videos = Catalog::get_videos();
+        Subsonic_XML_Data::addVideos($r, $videos);
         self::apiOutput($input, $r);
     }
 
@@ -680,7 +694,7 @@ class Subsonic_Api
 
         // Don't allow playlist listing for another user
         if (empty($username) || $username == $GLOBALS['user']->username) {
-            Subsonic_XML_Data::addPlaylists($r, Playlist::get_playlists());
+            Subsonic_XML_Data::addPlaylists($r, Playlist::get_playlists(), Search::get_searches());
         } else {
             $user = User::get_from_username($username);
             if ($user->id) {
@@ -703,9 +717,14 @@ class Subsonic_Api
 
         $playlistid = self::check_parameter($input, 'id');
 
-        $playlist = new Playlist($playlistid);
         $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addPlaylist($r, $playlist, true);
+        if (Subsonic_XML_Data::isSmartPlaylist($playlistid)) {
+            $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistid), 'song');
+            Subsonic_XML_Data::addSmartPlaylist($r, $playlist, true);
+        } else {
+            $playlist = new Playlist($playlistid);
+            Subsonic_XML_Data::addPlaylist($r, $playlist, true);
+        }
         self::apiOutput($input, $r);
     }
 
@@ -778,11 +797,15 @@ class Subsonic_Api
         $name = $input['name'];
         $comment = $input['comment'];   // Not supported.
         $public = boolean($input['public']);
-        echo $public;
-        $songIdToAdd = $input['songIdToAdd'];
-        $songIndexToRemove = $input['songIndexToRemove'];
 
-        $r = Subsonic_XML_Data::createSuccessResponse();
+        if (!Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
+            $songIdToAdd = $input['songIdToAdd'];
+            $songIndexToRemove = $input['songIndexToRemove'];
+
+            $r = Subsonic_XML_Data::createSuccessResponse();
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Cannot edit a smart playlist.');
+        }
         self::apiOutput($input, $r);
     }
 
@@ -797,8 +820,13 @@ class Subsonic_Api
 
         $playlistId = self::check_parameter($input, 'playlistId');
 
-        $playlist = new Playlist($playlistId);
-        $playlist->delete();
+        if (Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
+            $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistId), 'song');
+            $playlist->delete();
+        } else {
+            $playlist = new Playlist($playlistId);
+            $playlist->delete();
+        }
 
         $r = Subsonic_XML_Data::createSuccessResponse();
         self::apiOutput($input, $r);
@@ -826,8 +854,17 @@ class Subsonic_Api
         if ($estimateContentLength == 'true') {
             $params .= '&content_length=required';
         }
-        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid),  $params);
-        self::follow_stream($url);
+
+        $url = '';
+        if (Subsonic_XML_Data::isVideo($fileid)) {
+            $url = Video::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, function_exists('curl_version'));
+        } else if (Subsonic_XML_Data::isSong($fileid)) {
+            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, function_exists('curl_version'));
+        }
+
+        if (!empty($url)) {
+            self::follow_stream($url);
+        }
     }
 
     /**
@@ -841,7 +878,7 @@ class Subsonic_Api
 
         $fileid = self::check_parameter($input, 'id', true);
 
-        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . $input['c']);
+        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . $input['c'], function_exists('curl_version'));
         self::follow_stream($url);
     }
 
@@ -856,7 +893,7 @@ class Subsonic_Api
 
         $fileid = self::check_parameter($input, 'id', true);
 
-        $bitRate = $input['bitRate']; // Not supported.
+        $bitRate = $input['bitRate'];
 
         $media = array();
         $media['object_type'] = 'song';
@@ -865,7 +902,12 @@ class Subsonic_Api
         $medias = array();
         $medias[] = $media;
         $stream = new Stream_Playlist();
-        $stream->add($medias);
+        $additional_params = '';
+        if ($bitrate) {
+            $additional_params .= '&bitrate=' . $bitrate;
+        }
+        //$additional_params .= '&transcode_to=ts';
+        $stream->add($medias, $additional_params);
 
         header('Content-Type: application/vnd.apple.mpegurl;');
         $stream->create_m3u();
@@ -1103,7 +1145,7 @@ class Subsonic_Api
         self::check_version($input, "1.9.0");
 
         $r = Subsonic_XML_Data::createSuccessResponse();
-        $radios = Radio::get_all_radios();
+        $radios = Live_Stream::get_all_radios();
         Subsonic_XML_Data::addRadios($r, $radios);
         self::apiOutput($input, $r);
     }

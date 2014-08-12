@@ -43,4 +43,13 @@ $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
 
+if (AmpConfig::get('allow_video')) {
+    $sql = Stats::get_top_sql('video');
+    $browse = new Browse();
+    $browse->set_type('video', $sql);
+    $browse->set_simple_browse(true);
+    $browse->show_objects();
+    $browse->store();
+}
+
 UI::show_box_bottom();

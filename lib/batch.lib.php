@@ -21,49 +21,60 @@
  */
 
 /**
- * get_song_files
+ * get_media_files
  *
- * Takes an array of song ids and returns an array of the actual filenames
+ * Takes an array of media ids and returns an array of the actual filenames
  *
  * @param    array    $media_ids    Media IDs.
  */
-function get_song_files($media_ids)
+function get_media_files($media_ids)
 {
     $media_files = array();
 
     $total_size = 0;
     foreach ($media_ids as $element) {
         if (is_array($element)) {
-            $type = array_shift($element);
-            $media = new $type(array_shift($element));
+            if (isset($element['object_type'])) {
+                $type = $element['object_type'];
+                $id = $element['object_id'];
+            } else {
+                $type = array_shift($element);
+                $id = array_shift($element);
+            }
+            $media = new $type($id);
         } else {
             $media = new Song($element);
         }
         if ($media->enabled) {
-            $total_size += sprintf("%.2f",($media->size/1048576));
             $media->format();
-            $dirname = $media->f_album_full;
-            //debug_event('batch.lib.php', 'Songs file {'.$media->file.'}...', '5');
+            $total_size += sprintf("%.2f",($media->size/1048576));
+            $dirname = '';
+            $parent = $media->get_parent();
+            if ($parent != null) {
+                $pobj = new $parent['object_type']($parent['object_id']);
+                $pobj->format();
+                $dirname = $pobj->get_fullname();
+            }
             if (!array_key_exists($dirname, $media_files)) {
                 $media_files[$dirname] = array();
             }
-            array_push($media_files[$dirname], $media->file);
+            array_push($media_files[$dirname], Core::conv_lc_file($media->file));
         }
     }
 
     return array($media_files, $total_size);
-} //get_song_files
+} //get_media_files
 
 /**
  * send_zip
  *
- * takes array of full paths to songs
+ * takes array of full paths to medias
  * zips them and sends them
  *
  * @param    string    $name    name of the zip file to be created
- * @param    array    $song_files    array of full paths to songs to zip create w/ call to get_song_files
+ * @param    array    $media_files    array of full paths to medias to zip create w/ call to get_media_files
  */
-function send_zip($name, $song_files)
+function send_zip($name, $media_files)
 {
     // Check if they want to save it to a file, if so then make sure they've
     // got a defined path as well and that it's writable.
@@ -94,7 +105,7 @@ function send_zip($name, $song_files)
     );
 
     $arc->set_options( $options );
-    foreach ($song_files as $dir => $files) {
+    foreach ($media_files as $dir => $files) {
         $arc->add_files($files, $dir);
     }
 

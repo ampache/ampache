@@ -24,19 +24,15 @@
 <div id="information_actions" class="left-column">
 <ul>
     <li>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_current"><?php echo UI::get_icon('add_user', T_('Add Current Host')); ?></a>
-        <?php echo T_('Add Current Host'); ?>
+        <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_current"><?php echo UI::get_icon('add_user', T_('Add Current Host')); ?><?php echo T_('Add Current Host'); ?></a>
     </li>
     <li>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_rpc"><?php echo UI::get_icon('cog', T_('Add API / RPC Host')); ?></a>
-        <?php echo T_('Add API / RPC Host'); ?>
+        <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_rpc"><?php echo UI::get_icon('cog', T_('Add API / RPC Host')); ?><?php echo T_('Add API / RPC Host'); ?></a>
     </li>
     <li>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_local"><?php echo UI::get_icon('home', T_('Add Local Network Definition')); ?></a>
-        <?php echo T_('Add Local Network Definition'); ?>
+        <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_local"><?php echo UI::get_icon('home', T_('Add Local Network Definition')); ?><?php echo T_('Add Local Network Definition'); ?></a>
     <li>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_advanced"><?php echo UI::get_icon('add_key', T_('Advanced Add')); ?></a>
-        <?php echo T_('Advanced Add'); ?>
+        <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_advanced"><?php echo UI::get_icon('add_key', T_('Advanced Add')); ?><?php echo T_('Advanced Add'); ?></a>
     </li>
 
 </ul>

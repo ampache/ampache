@@ -32,7 +32,7 @@
         <div class="tag_actions">
             <ul>
                 <li>
-                    <a class="tag_edit" id="<?php echo 'edit_tag_'.$data['id'] ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id'] ?>', '<?php echo 'edit_tag_'.$data['id'] ?>', '<?php echo T_('Tag edit') ?>', 'click_tag_', 'refresh_tag')">
+                    <a class="tag_edit" id="<?php echo 'edit_tag_'.$data['id'] ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id'] ?>', '<?php echo 'edit_tag_'.$data['id'] ?>', '<?php echo T_('Tag edit') ?>', 'click_tag_')">
                         <?php echo UI::get_icon('edit', T_('Edit')); ?>
                     </a>
                 </li>
@@ -43,6 +43,17 @@
         </div>
     <?php } ?>
     </div>
+<?php } ?>
+<br /><br /><br />
+<?php
+if (isset($_GET['show_tag'])) {
+    $show_tag = intval($_GET['show_tag']);
+?>
+<script>
+$(document).ready(function () {
+    <?php echo Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . $show_tag, ''); ?>
+});
+</script>
 <?php } ?>
 <?php if (!count($object_ids)) { ?>
 <span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span>

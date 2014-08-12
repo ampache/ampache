@@ -207,6 +207,47 @@ function check_override_exec_time()
 }
 
 /**
+ * check_upload_size
+ * This checks to see if max upload size is not too small
+ */
+function check_upload_size()
+{
+    $upload_max = return_bytes(ini_get('upload_max_filesize'));
+    $post_max = return_bytes(ini_get('post_max_size'));
+    $mini = 20971520; // 20M
+
+    return (($upload_max >= $mini || $upload_max <= 0) && ($post_max >= $mini || $post_max <= 0));
+}
+
+function check_php_int_size()
+{
+    return (PHP_INT_SIZE > 4);
+}
+
+function check_php_zlib()
+{
+    return function_exists('gzcompress');
+}
+
+function return_bytes($val)
+{
+    $val = trim($val);
+    $last = strtolower($val[strlen($val)-1]);
+    switch ($last) {
+        // The 'G' modifier is available since PHP 5.1.0
+        case 'g':
+            $val *= 1024;
+        case 'm':
+            $val *= 1024;
+        case 'k':
+            $val *= 1024;
+            break;
+    }
+
+    return $val;
+}
+
+/**
  * check_config_writable
  * This checks whether we can write the config file
  */
@@ -239,7 +280,24 @@ function debug_result($status = false, $value = null, $comment = '')
     $class = $status ? 'success' : 'danger';
 
     if (!$value) {
-        $value = $status ? 'OK' : 'ERROR';
+        $value = $status ? T_('OK') : T_('ERROR');
+    }
+
+    return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .
+        '</span> <em>' . $comment . '</em></button>';
+}
+
+/**
+ * debug_wresult
+ *
+ * Convenience function to format the output.
+ */
+function debug_wresult($status = false, $value = null, $comment = '')
+{
+    $class = $status ? 'success' : 'warning';
+
+    if (!$value) {
+        $value = $status ? T_('OK') : T_('WARNING');
     }
 
     return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .

@@ -75,12 +75,10 @@ class AmpacheHttpq extends localplay_controller
          */
         public function is_installed()
         {
-        $sql = "DESCRIBE `localplay_httpq`";
-        $db_results = Dba::read($sql);
+            $sql = "SHOW TABLES LIKE 'localplay_httpq'";
+            $db_results = Dba::read($sql);
 
-        return Dba::num_rows($db_results);
-
-
+            return (Dba::num_rows($db_results) > 0);
         } // is_installed
 
         /**
@@ -480,7 +478,7 @@ class AmpacheHttpq extends localplay_controller
                                         $filename = Dba::escape($entry['file']);
                                         $sql = "SELECT `id`,'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' " .
                                                 "UNION ALL " .
-                                                "SELECT `id`,'radio' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+                                                "SELECT `id`,'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
 
                                         $db_results = Dba::read($sql);
                                         if ($row = Dba::fetch_assoc($db_results)) {
@@ -491,7 +489,7 @@ class AmpacheHttpq extends localplay_controller
                                                                 $data['name'] = $media->f_title . ' - ' . $media->f_album . ' - ' . $media->f_artist;
                                                                 $data['link'] = $media->f_link;
                                                         break;
-                                                        case 'radio':
+                                                        case 'live_stream':
                                                                 $frequency = $media->frequency ? '[' . $media->frequency . ']' : '';
                                                                 $site_url = $media->site_url ? '(' . $media->site_url . ')' : '';
                                                                 $data['name'] = "$media->name $frequency $site_url";

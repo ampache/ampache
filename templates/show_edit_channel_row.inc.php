@@ -21,7 +21,7 @@
  */
 ?>
 <div>
-    <form method="post" id="edit_channel_<?php echo $channel->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_channel_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Stream Source') ?></td>
@@ -32,7 +32,7 @@
                             $playlist = new Playlist($playlist_id);
                             $playlist->format();
                             echo "<option value='" . $playlist->id . "'";
-                            if ($playlist->id == $channel->object_id) {
+                            if ($playlist->id == $libitem->object_id) {
                                 echo " selected";
                             }
                             echo ">" . $playlist->f_name . "</option>";
@@ -42,54 +42,54 @@
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($channel->name); ?>" /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Description') ?></td>
-                <td><input type="text" name="description" value="<?php echo scrub_out($channel->description); ?>" /></td>
+                <td><input type="text" name="description" value="<?php echo scrub_out($libitem->description); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Url') ?></td>
-                <td><input type="text" name="url" value="<?php echo scrub_out($channel->url); ?>" /></td>
+                <td><input type="text" name="url" value="<?php echo scrub_out($libitem->url); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Interface') ?></td>
-                <td><input type="text" name="interface" value="<?php echo scrub_out($channel->interface); ?>" /></td>
+                <td><input type="text" name="interface" value="<?php echo scrub_out($libitem->interface); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Port') ?></td>
-                <td><input type="text" name="port" value="<?php echo scrub_out($channel->port); ?>" /></td>
+                <td><input type="text" name="port" value="<?php echo scrub_out($libitem->port); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="private" value="1" <?php echo ($channel->is_private) ? 'checked' : ''; ?> /> <?php echo T_('Authentication Required') ?></td>
+                <td><input type="checkbox" name="private" value="1" <?php echo ($libitem->is_private) ? 'checked' : ''; ?> /> <?php echo T_('Authentication Required') ?></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="random" value="1" <?php echo ($channel->random) ? 'checked' : ''; ?> /> <?php echo T_('Random') ?></td>
+                <td><input type="checkbox" name="random" value="1" <?php echo ($libitem->random) ? 'checked' : ''; ?> /> <?php echo T_('Random') ?></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="loop" value="1" <?php echo ($channel->loop) ? 'checked' : ''; ?> /> <?php echo T_('Loop') ?></td>
+                <td><input type="checkbox" name="loop" value="1" <?php echo ($libitem->loop) ? 'checked' : ''; ?> /> <?php echo T_('Loop') ?></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Max Listeners') ?></td>
-                <td><input type="text" name="max_listeners" value="<?php echo scrub_out($channel->max_listeners); ?>" /></td>
+                <td><input type="text" name="max_listeners" value="<?php echo scrub_out($libitem->max_listeners); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Stream Type') ?></td>
-                <td><input type="text" name="stream_type" value="<?php echo scrub_out($channel->stream_type); ?>" /></td>
+                <td><input type="text" name="stream_type" value="<?php echo scrub_out($libitem->stream_type); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Bitrate') ?></td>
-                <td><input type="text" name="bitrate" value="<?php echo scrub_out($channel->bitrate); ?>" /></td>
+                <td><input type="text" name="bitrate" value="<?php echo scrub_out($libitem->bitrate); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genre') ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($channel->tags); ?>" /></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
             </tr>
         </table>
-        <input type="hidden" name="id" value="<?php echo $channel->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
         <input type="hidden" name="type" value="channel_row" />
     </form>
 </div>

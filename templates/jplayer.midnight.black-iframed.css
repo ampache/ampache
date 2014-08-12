@@ -15,12 +15,6 @@
  * Date: October 2nd, 2013
  */
  
- body {
-    background: none !important;
-    background-color: rgb(25, 25, 25) !important;
-	height: auto !important;
- }
- 
 div.jp-area {
     margin-left: auto;
     margin-right: auto;
@@ -858,6 +852,16 @@ a.jp-shuffle-off:hover {
 }
 
 .slideshow {
+}
+
+#webplayer {
+    position: fixed;
+    z-index: 9999;
+    display: none;
+    bottom: 0px;
+    width: 100%;
+    height: 100px;
+    background-color: rgb(25, 25, 25) !important;
 }
 
 /* @end */

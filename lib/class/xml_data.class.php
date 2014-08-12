@@ -31,8 +31,8 @@
 class XML_Data
 {
     // This is added so that we don't pop any webservers
-    private static $limit = '5000';
-    private static $offset = '0';
+    private static $limit = 5000;
+    private static $offset = 0;
     private static $type = '';
 
     /**
@@ -174,11 +174,20 @@ class XML_Data
 
         if (is_array($tags)) {
 
+            $atags = array();
             foreach ($tags as $tag_id => $data) {
-                $tag = new Tag($tag_id);
-                $string .= "\t<tag id=\"" . $tag->id .
-                    '" count="' . count($data['users']) .
-                    '"><![CDATA[' . $tag->name . "]]></tag>\n";
+                if (array_key_exists($data['id'], $atags)) {
+                    $atags[$data['id']]['count']++;
+                } else {
+                    $atags[$data['id']] = array('name' => $data['name'],
+                        'count' => 1);
+                }
+            }
+
+            foreach ($atags as $id => $data) {
+                $string .= "\t<tag id=\"" . $id . "\" " .
+                "count=\"" . $data['count'] . "\" " .
+                "><![CDATA[" . $data['name'] . "]]></tag>\n";
             }
         }
 
@@ -333,7 +342,7 @@ class XML_Data
             $rating = new Rating($album_id,'album');
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?id=' . $album->id . '&auth=' . scrub_out($_REQUEST['auth']);
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
 
             $string .= "<album id=\"" . $album->id . "\">\n" .
                     "\t<name><![CDATA[" . $album->name . "]]></name>\n";

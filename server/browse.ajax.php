@@ -73,7 +73,7 @@ switch ($_REQUEST['action']) {
 
         ob_start();
         $browse->show_objects();
-        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
+        $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'set_sort':
         if ($_REQUEST['sort']) {
@@ -86,7 +86,7 @@ switch ($_REQUEST['action']) {
 
         ob_start();
         $browse->show_objects();
-        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
+        $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'toggle_tag':
         $type = $_SESSION['tagcloud_type'] ? $_SESSION['tagcloud_type'] : 'song';
@@ -104,14 +104,14 @@ switch ($_REQUEST['action']) {
                 $key = 'playlist_row_' . $playlist->id;
             break;
             case 'smartplaylist':
-                $playlist = new Search('song', $_REQUEST['id']);
+                $playlist = new Search($_REQUEST['id'], 'song');
                 if (!$playlist->has_access()) { exit; }
                 $playlist->delete();
                 $key = 'smartplaylist_row_' . $playlist->id;
             break;
             case 'live_stream':
                 if (!$GLOBALS['user']->has_access('75')) { exit; }
-                $radio = new Radio($_REQUEST['id']);
+                $radio = new Live_Stream($_REQUEST['id']);
                 $radio->delete();
                 $key = 'live_stream_' . $radio->id;
             break;
@@ -127,14 +127,14 @@ switch ($_REQUEST['action']) {
 
         ob_start();
         $browse->show_objects();
-        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
+        $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'show_art':
         Art::set_enabled();
 
         ob_start();
         $browse->show_objects();
-        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
+        $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'get_filters':
         ob_start();
@@ -185,7 +185,7 @@ switch ($_REQUEST['action']) {
         }
         ob_start();
         $browse->show_objects();
-        $results['browse_content_' . $browse->get_type()] = ob_get_clean();
+        $results[$browse->get_content_div()] = ob_get_clean();
     break;
     default:
         $results['rfc3514'] = '0x1';

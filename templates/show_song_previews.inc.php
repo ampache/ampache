@@ -38,9 +38,9 @@
     </thead>
     <tbody>
         <?php
-        foreach ($object_ids as $song) {
+        foreach ($object_ids as $libitem) {
         ?>
-        <tr id="song_preview_<?php echo $song->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="song_preview_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_song_preview_row.inc.php'; ?>
         </tr>
         <?php } ?>

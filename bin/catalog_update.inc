@@ -127,8 +127,8 @@ while ($row = Dba::fetch_row($db_results)) {
         $catalog->add_to_catalog($options);
         echo "----------------\n\n";
     } elseif ($artadd == 1) { 
-        // Look for album art
-        echo T_('Starting Album Art Search');
+        // Look for media art
+        echo T_('Starting Media Art Search');
         echo "\n"; 
         $catalog->gather_art();
         echo "----------------\n\n";

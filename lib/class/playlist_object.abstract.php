@@ -24,7 +24,7 @@
  * playlist_object
  * Abstracting out functionality needed by both normal and smart playlists
  */
-abstract class playlist_object extends database_object
+abstract class playlist_object extends database_object implements library_item
 {
     // Database variables
     public $id;
@@ -35,6 +35,8 @@ abstract class playlist_object extends database_object
     public $f_type;
     public $f_name;
     public $f_user;
+
+    abstract public function get_items();
 
     /**
      * format
@@ -70,5 +72,69 @@ abstract class playlist_object extends database_object
 
     } // has_access
 
+    public function get_medias($filter_type = null)
+    {
+        $medias = $this->get_items();
+        if ($filter_type) {
+            $nmedias = array();
+            foreach ($medias as $media) {
+                if ($media['object_type'] == $filter_type) {
+                    $nmedias[] = $media;
+                }
+            }
+            $medias = $nmedias;
+        }
+        return $medias;
+    }
+
+    public function get_keywords()
+    {
+        return array();
+    }
+
+    public function get_fullname()
+    {
+        return $this->f_name;
+    }
+
+    public function get_parent()
+    {
+        return null;
+    }
+
+    public function get_childrens()
+    {
+        $childrens = array();
+        $items = $this->get_items();
+        foreach ($items as $item) {
+            if (!in_array($item['object_type'], $childrens)) {
+                $childrens[$item['object_type']] = array();
+            }
+            $childrens[$item['object_type']][] = $item['object_id'];
+        }
+
+        return $this->get_items();
+    }
+
+    public function get_user_owner()
+    {
+        return $this->user;
+    }
+
+    public function get_default_art_kind()
+    {
+        return 'default';
+    }
+
+    /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array();
+    }
 
 } // end playlist_object

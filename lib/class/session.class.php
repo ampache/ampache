@@ -325,6 +325,17 @@ class Session
     }
 
     /**
+     * update_username
+     *
+     * This takes a SID and update associated username.
+     */
+    public static function update_username($sid, $username)
+    {
+        $sql = 'UPDATE `session` SET `username` = ? WHERE `id`= ?';
+        return Dba::write($sql, array($username, $sid));
+    }
+
+    /**
      * _auto_init
      *
      * This function is called when the object is included, this sets up the
@@ -363,7 +374,7 @@ class Session
         // Set up the cookie prefs before we throw down, this is very important
         $cookie_life = AmpConfig::get('cookie_life');
         $cookie_path = AmpConfig::get('cookie_path');
-        $cookie_domain = false;
+        $cookie_domain = null;
         $cookie_secure = AmpConfig::get('cookie_secure');
 
         session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);

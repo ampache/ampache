@@ -102,8 +102,10 @@ class AmpacheLastfm {
      * save_songplay
      * This takes care of queueing and then submitting the tracks.
      */
-    public function save_songplay($song) {
-
+    public function save_mediaplay($song) {
+        // Only support songs
+        if (strtolower(get_class($song)) != 'song') return false;
+        
         // Let's pull the last song submitted by this user
         $previous = Stats::get_last_song($this->user_id);
 

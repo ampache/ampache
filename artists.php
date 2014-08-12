@@ -31,7 +31,11 @@ switch ($_REQUEST['action']) {
     case 'show':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
-        $object_ids = $artist->get_albums($_REQUEST['catalog']);
+        if (AmpConfig::get('album_release_type')) {
+            $multi_object_ids = $artist->get_albums($_REQUEST['catalog'], false, true);
+        } else {
+            $object_ids = $artist->get_albums($_REQUEST['catalog']);
+        }
         $object_type = 'album';
         require_once AmpConfig::get('prefix') . '/templates/show_artist.inc.php';
         break;

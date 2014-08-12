@@ -20,11 +20,12 @@
  *
  */
 
-$default_rename = "%a - %T - %t";
+$default_rename = "%T - %t";
 $default_sort = "%a/%A";
 ?>
 <?php UI::show_box_top(T_('Add a Catalog'), 'box box_add_catalog'); ?>
 <p><?php echo T_("In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)"); ?></p>
+&nbsp;
 <?php Error::display('general'); ?>
 
 <form name="update_catalog" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
@@ -56,12 +57,24 @@ $default_sort = "%a/%A";
             <td valign="top"><input type="text" name="sort_pattern" value="<?php echo $default_sort; ?>" /></td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Gather Album Art'); ?>:</td>
-            <td><input type="checkbox" name="gather_art" value="1" /></td>
+            <td valign="top"><?php echo T_('Gather Art'); ?>:</td>
+            <td><input type="checkbox" name="gather_art" value="1" checked /></td>
         </tr>
         <tr>
             <td valign="top"><?php echo T_('Build Playlists from playlist Files (m3u, asx, pls, xspf)'); ?>:</td>
             <td><input type="checkbox" name="parse_playlist" value="1" /></td>
+        </tr>
+        <tr>
+            <td valign="top"><?php echo T_('Gather media types'); ?>:</td>
+            <td>
+                <input type="radio" name="gather_media" value="music" checked /> <?php echo T_('Music'); ?>
+                <?php if (AmpConfig::get('allow_video')) { ?>
+                    <input type="radio" name="gather_media" value="clip" /> <?php echo T_('Music Clip'); ?>
+                    <input type="radio" name="gather_media" value="tvshow" /> <?php echo T_('TV Show'); ?>
+                    <input type="radio" name="gather_media" value="movie" /> <?php echo T_('Movie'); ?>
+                    <input type="radio" name="gather_media" value="personal_video" /> <?php echo T_('Personal Video'); ?>
+                <?php } ?>
+            </td>
         </tr>
     </table>
     <div id="catalog_type_fields">

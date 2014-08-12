@@ -486,7 +486,7 @@ class User extends database_object
      * calls the mini ones does all the error checking and all that
      * good stuff
      */
-    public function update($data)
+    public function update(array $data)
     {
         if (empty($data['username'])) {
             Error::add('username', T_('Error Username Required'));
@@ -525,7 +525,7 @@ class User extends database_object
             }
         }
 
-        return true;
+        return $this->id;
     }
 
     /**
@@ -694,46 +694,44 @@ class User extends database_object
      * update_user_stats
      * updates the playcount mojo for this specific user
      */
-    public function update_stats($song_id, $agent = '')
+    public function update_stats($media_type, $media_id, $agent = '')
     {
-        debug_event('user.class.php', 'Updating stats for {'.$song_id.'} {'.$agent.'}...', '5');
-        $song_info = new Song($song_id);
-        $song_info->format();
+        debug_event('user.class.php', 'Updating stats for {'.$media_type.'/'.$media_id.'} {'.$agent.'}...', '5');
+        $media = new $media_type($media_id);
+        $media->format();
         $user = $this->id;
 
-        if (!strlen($song_info->file)) { return false; }
+        // We shouldn't test on file only
+        if (!strlen($media->file)) { return false; }
 
         $this->set_preferences();
 
         // If pthreads available, we call save_songplay in a new thread to quickly return
         if (class_exists("Thread", false)) {
-            debug_event('user.class.php', 'Calling save_songplay plugins in a new thread...', '5');
-            $thread = new scrobbler_async($GLOBALS['user'], $song_info);
+            debug_event('user.class.php', 'Calling save_mediaplay plugins in a new thread...', '5');
+            $thread = new scrobbler_async($GLOBALS['user'], $media);
             if ($thread->start()) {
                 //$thread->join();
             } else {
                 debug_event('user.class.php', 'Error when starting the thread.', '1');
             }
         } else {
-            User::save_songplay($GLOBALS['user'], $song_info);
+            User::save_mediaplay($GLOBALS['user'], $media);
         }
 
-        // Do this last so the 'last played checks are correct'
-        Stats::insert('song', $song_id, $user, $agent);
-        Stats::insert('album', $song_info->album, $user, $agent);
-        Stats::insert('artist', $song_info->artist, $user, $agent);
+        $media->set_played($user, $agent);
 
         return true;
 
     } // update_stats
 
-    public static function save_songplay($user, $song_info)
+    public static function save_mediaplay($user, $media)
     {
-        foreach (Plugin::get_plugins('save_songplay') as $plugin_name) {
+        foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->load($user)) {
-                    $plugin->_plugin->save_songplay($song_info);
+                    $plugin->_plugin->save_mediaplay($media);
                 }
             } catch (Exception $e) {
                 debug_event('user.class.php', 'Stats plugin error: ' . $e->getMessage(), '1');
@@ -1155,10 +1153,10 @@ class User extends database_object
         $avatar['title'] = T_('User avatar');
         $upavatar = new Art($this->id, 'user');
         if ($upavatar->get_db()) {
-            $avatar['url'] = AmpConfig::get('web_path') . '/image.php?object_type=user&id=' . $this->id;
+            $avatar['url'] = AmpConfig::get('web_path') . '/image.php?object_type=user&object_id=' . $this->id;
             $avatar['url_mini'] = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
-            $avatar['url'] .= '&thumb=3';
+            $avatar['url'] .= '&thumb=4';
             $avatar['url_mini'] .= '&thumb=5';
             $avatar['url_medium'] .= '&thumb=3';
         } else {
@@ -1182,7 +1180,7 @@ class User extends database_object
     public function upload_avatar()
     {
         $upload = array();
-        if (!empty($_FILES['avatar']['tmp_name'])) {
+        if (!empty($_FILES['avatar']['tmp_name']) && $_FILES['avatar']['size'] <= AmpConfig::get('max_upload_size')) {
             $path_info = pathinfo($_FILES['avatar']['name']);
             $upload['file'] = $_FILES['avatar']['tmp_name'];
             $upload['mime'] = 'image/' . $path_info['extension'];
@@ -1213,6 +1211,23 @@ class User extends database_object
         Dba::write($sql, array($username));
 
     } // activate_user
+
+    /**
+     * get_artists
+     * Get artists associated with the user
+     */
+    public function get_artists()
+    {
+        $sql = "SELECT `id` FROM `artist` WHERE `user` = ?";
+        $db_results = Dba::read($sql, array($this->id));
+
+        $results = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+
+        return $results;
+    }
 
     /**
      * is_xmlrpc

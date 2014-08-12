@@ -26,38 +26,38 @@
  * Tag Definitions
  *****************/
 
-.tag_size1 { 
+.tag_size1 {
     font-size:.6em;
-} 
-.tag_size2 { 
-    font-size:.8em; 
-} 
-.tag_size3 { 
-    font-size:1em; 
-} 
-.tag_size4 { 
-    font-size:1.2em; 
-} 
+}
+.tag_size2 {
+    font-size:.8em;
+}
+.tag_size3 {
+    font-size:1em;
+}
+.tag_size4 {
+    font-size:1.2em;
+}
 
-a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; } 
+a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 
-.hover-add:hover { color: #347C17; } 
-.hover-remove:hover { color: #FF0000; } 
+.hover-add:hover { color: #347C17; }
+.hover-remove:hover { color: #FF0000; }
 
 /*****************
- * Generic / Misc 
+ * Generic / Misc
  *****************/
- 
+
 .hidden {
     visibility: hidden;
 }
- 
-.item_on { 
+
+.item_on {
     color: #347C17;
 }
 
-.item_off { 
-    color: #FF0000; 
+.item_off {
+    color: #FF0000;
 }
 
 #tabs_wrapper {
@@ -247,10 +247,30 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     margin: 0px;
 }
 
-#browse_custom_value {
+.browse_custom_value {
     margin-left: 5px;
     height: 20px;
     width: 50px;
     text-align: center;
     padding: 0;
+}
+
+.expanded {
+    float: right;
+    margin-top: 5px;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+}
+
+.collapsed {
+    float: right;
+    margin-top: 5px;
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
 }

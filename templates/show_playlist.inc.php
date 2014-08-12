@@ -42,9 +42,13 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
                 &nbsp;&nbsp;<?php echo T_('Save Tracks Order'); ?>
             </a>
         </li>
+        <li>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=sort_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('statistics',_('Sort Tracks by Artist, Album, Song')); ?>
+            &nbsp;&nbsp;<?php echo T_('Sort Tracks by Artist, Album, Song'); ?></a>
+        </li>
     <?php if (Access::check_function('batch_download')) { ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
+            <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
                 <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
                 &nbsp;&nbsp;<?php echo T_('Batch Download'); ?>
             </a>
@@ -52,14 +56,14 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     <?php } ?>
     <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id,'play', T_('Play all'),'directplay_full_' . $playlist->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id, T_('Play all'),'directplay_full_text_' . $playlist->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id,'play', T_('Play all'),'directplay_full_' . $playlist->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id, T_('Play all'),'directplay_full_text_' . $playlist->id); ?>
         </li>
     <?php } ?>
     <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id . '&append=true','play_add', T_('Play all last'),'addplay_playlist_' . $playlist->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&playtype=playlist&playlist_id=' . $playlist->id . '&append=true', T_('Play all last'),'addplay_playlist_text_' . $playlist->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true','play_add', T_('Play all last'),'addplay_playlist_' . $playlist->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', T_('Play all last'),'addplay_playlist_text_' . $playlist->id); ?>
         </li>
     <?php } ?>
         <li>

@@ -52,12 +52,12 @@ $web_path = AmpConfig::get('web_path');
 <tbody>
 <?php
 foreach ($object_ids as $user_id) {
-    $client = new User($user_id);
-    $client->format();
-        $last_seen     = $client->last_seen ? date("m\/d\/Y - H:i",$client->last_seen) : T_('Never');
-        $create_date    = $client->create_date ? date("m\/d\/Y - H:i",$client->create_date) : T_('Unknown');
+    $libitem = new User($user_id);
+    $libitem->format();
+    $last_seen     = $libitem->last_seen ? date("m\/d\/Y - H:i",$libitem->last_seen) : T_('Never');
+    $create_date    = $libitem->create_date ? date("m\/d\/Y - H:i",$libitem->create_date) : T_('Unknown');
 ?>
-<tr class="<?php echo UI::flip_class(); ?>" id="admin_user_<?php echo $client->id; ?>">
+<tr class="<?php echo UI::flip_class(); ?>" id="admin_user_<?php echo $libitem->id; ?>">
     <?php require AmpConfig::get('prefix') . '/templates/show_user_row.inc.php'; ?>
 </tr>
 <?php } //end foreach users ?>

@@ -111,7 +111,7 @@
         $browse->save_objects($object_ids);
         $browse->show_objects();
         $browse->store();
-        echo Ajax::observe('window','load',Ajax::action('?action=refresh_rightbar','playlist_refresh_load'));
+        echo Ajax::observe('window', 'load',Ajax::action('?action=refresh_rightbar','playlist_refresh_load'));
     }
 ?>
 </div>

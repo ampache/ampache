@@ -114,6 +114,7 @@ switch ($_REQUEST['action']) {
         $_POST['username'] = $GLOBALS['user']->username;
 
         if (!$GLOBALS['user']->update($_POST)) {
+            $GLOBALS['user']->upload_avatar();
             Error::add('general', T_('Error Update Failed'));
         } else {
             $_REQUEST['action'] = 'confirm';

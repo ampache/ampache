@@ -211,6 +211,34 @@ class Core
         return true;
     }
 
+    /**
+     * get_filesize
+     * Get a file size. This because filesize() doesn't work on 32-bit OS with files > 2GB
+     */
+    public static function get_filesize($filename)
+    {
+        $size = filesize($filename);
+        if ($size === false) {
+            $fp = fopen($filename, 'rb');
+            if (!$fp) {
+                return false;
+            }
+            $offset = PHP_INT_MAX - 1;
+            $size = (float) $offset;
+            if (!fseek($fp, $offset)) {
+                return false;
+            }
+            $chunksize = 8192;
+            while (!feof($fp)) {
+                $size += strlen(fread($fp, $chunksize));
+            }
+        } elseif ($size < 0) {
+            // Handle overflowed integer...
+            $size = sprintf("%u", $size);
+        }
+        return $size;
+    }
+
     /*
      * conv_lc_file
      *
@@ -245,5 +273,34 @@ class Core
             }
         }
         return false;
+    }
+
+    private static function is_class_typeof($classname, $typeofname)
+    {
+        if (class_exists($classname)) {
+            return in_array($typeofname, array_map('strtolower', class_implements($classname)));
+        }
+
+        return false;
+    }
+
+    public static function is_playable_item($classname)
+    {
+        return self::is_class_typeof($classname, 'playable_item');
+    }
+
+    public static function is_library_item($classname)
+    {
+        return self::is_class_typeof($classname, 'library_item');
+    }
+
+    public static function is_media($classname)
+    {
+        return self::is_class_typeof($classname, 'media');
+    }
+
+    public static function get_reloadutil()
+    {
+        return (AmpConfig::get('play_type') == "stream") ? "reloadUtil" : "reloadDivUtil";
     }
 } // Core

@@ -69,7 +69,7 @@ class Preference extends database_object
      * update
      * This updates a single preference from the given name or id
      */
-    public static function update($preference,$user_id,$value,$applytoall='',$applytodefault='')
+    public static function update($preference,$user_id,$value,$applytoall=false,$applytodefault=false)
     {
         // First prepare
         if (!is_numeric($preference)) {
@@ -363,7 +363,7 @@ class Preference extends database_object
     public static function fix_preferences($results)
     {
         $arrays = array('auth_methods', 'getid3_tag_order',
-            'metadata_order', 'art_order', 'amazon_base_urls');
+            'metadata_order', 'metadata_order_video', 'art_order');
 
         foreach ($arrays as $item) {
             $results[$item] = trim($results[$item])
@@ -466,15 +466,15 @@ class Preference extends database_object
         } // end while sys prefs
 
         /* Set the Theme mojo */
-        if (strlen($results['theme_name']) > 0) {
+        /*if (strlen($results['theme_name']) > 0) {
             $results['theme_path'] = '/themes/' . $results['theme_name'];
         }
         // Default theme if we don't get anything from their
         // preferences because we're going to want at least something otherwise
         // the page is going to be really ugly
-        else {
+        else {*/
             $results['theme_path'] = '/themes/reborn';
-        }
+        /*}*/
 
         AmpConfig::set_by_array($results, true);
         $_SESSION['userdata']['preferences'] = $results;

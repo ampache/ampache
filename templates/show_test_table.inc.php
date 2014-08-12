@@ -95,10 +95,19 @@
 <tr>
     <td valign="top"><?php echo T_('PHP curl extension'); ?></td>
     <td valign="top">
-    <?php echo debug_result(check_php_curl()); ?>
+    <?php echo debug_wresult(check_php_curl()); ?>
     </td>
     <td>
-    <?php echo T_('This tests whether you have the curl extension enabled.  This is not strictly necessary, but may result in a better experience.'); ?>
+    <?php echo T_('This tests whether you have the curl extension enabled. This is not strictly necessary, but may result in a better experience.'); ?>
+    </td>
+</tr>
+<tr>
+    <td valign="top"><?php echo T_('PHP zlib extension'); ?></td>
+    <td valign="top">
+    <?php echo debug_wresult(check_php_zlib()); ?>
+    </td>
+    <td>
+    <?php echo T_('This tests whether you have the zlib extension enabled. This is not strictly necessary, but may result in a better experience (zip download).'); ?>
     </td>
 </tr>
 <tr>
@@ -107,25 +116,43 @@
     <?php echo debug_result(check_php_safemode()); ?>
     </td>
     <td>
-    <?php echo T_('This test makes sure that PHP is not running in safe mode.  Some features of Ampache will not work correctly in safe mode.'); ?>
+    <?php echo T_('This test makes sure that PHP is not running in safe mode. Some features of Ampache will not work correctly in safe mode.'); ?>
     </td>
 </tr>
 <tr>
     <td valign="top"><?php echo T_('PHP memory limit override'); ?></td>
     <td valign="top">
-    <?php echo debug_result(check_override_memory()); ?>
+    <?php echo debug_wresult(check_override_memory()); ?>
     </td>
     <td>
-    <?php echo T_('This tests whether Ampache can override the memory limit.  This is not strictly necessary, but may result in a better experience.'); ?>
+    <?php echo T_('This tests whether Ampache can override the memory limit. This is not strictly necessary, but may result in a better experience.'); ?>
     </td>
 </tr>
 <tr>
     <td valign="top"><?php echo T_('PHP execution time override'); ?></td>
     <td valign="top">
-    <?php echo debug_result(check_override_exec_time()); ?>
+    <?php echo debug_wresult(check_override_exec_time()); ?>
     </td>
     <td>
-    <?php echo T_('This tests whether Ampache can override the limit on maximum execution time.  This is not strictly necessary, but may result in a better experience.'); ?>
+    <?php echo T_('This tests whether Ampache can override the limit on maximum execution time. This is not strictly necessary, but may result in a better experience.'); ?>
+    </td>
+</tr>
+<tr>
+    <td valign="top"><?php echo T_('PHP max upload size'); ?></td>
+    <td valign="top">
+    <?php echo debug_wresult(check_upload_size()); ?>
+    </td>
+    <td>
+    <?php echo T_('This tests whether Ampache can upload medium files (>= 20M). This is not strictly necessary, but may result in a better experience.'); ?>
+    </td>
+</tr>
+<tr>
+    <td valign="top"><?php echo T_('PHP Integer Size'); ?></td>
+    <td valign="top">
+    <?php echo debug_wresult(check_php_int_size()); ?>
+    </td>
+    <td>
+    <?php echo T_('This tests whether Ampache can manage large files (> 2GB). This is not strictly necessary, but may result in a better experience. This generally requires 64-bit operating system.'); ?>
     </td>
 </tr>
 <?php

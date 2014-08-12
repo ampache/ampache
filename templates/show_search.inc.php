@@ -19,42 +19,53 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
 ?>
-<form id="search" name="search" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>" enctype="multipart/form-data" style="Display:inline">
-<table class="tabledata" cellpadding="3" cellspacing="0">
-    <tr id="search_location">
-        <td><?php if ($_REQUEST['type'] != 'song') { ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo T_('Songs'); ?></a><?php } else { echo T_('Songs'); } ?></td>
-        <td><?php if ($_REQUEST['type'] != 'album') { ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=album"><?php echo T_('Albums'); ?></a><?php } else { echo T_('Albums'); } ?></td>
-        <td><?php if ($_REQUEST['type'] != 'artist') { ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a><?php } else { echo T_('Artists'); } ?></td>
-        <td><?php if ($_REQUEST['type'] != 'video') { ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a><?php } else { echo T_('Videos'); } ?></td>
-    </tr>
-    <tr id="search_blank_line"><td>&nbsp;</td></tr>
-</table>
-<table class="tabledata" cellpadding="3" cellspacing="0">
-    <tr id="search_max_results">
-    <td><?php echo T_('Maximum Results'); ?></td>
-        <td>
-                <select name="limit">
-                        <option value="0"><?php echo T_('Unlimited'); ?></option>
-                        <option value="25" <?php if($_REQUEST['limit']=="25") echo "selected=\"selected\""?>>25</option>
-                        <option value="50" <?php if($_REQUEST['limit']=="50") echo "selected=\"selected\""?>>50</option>
-                        <option value="100" <?php if($_REQUEST['limit']=="100") echo "selected=\"selected\""?>>100</option>
-                        <option value="500" <?php if($_REQUEST['limit']=="500") echo "selected=\"selected\""?>>500</option>
-                </select>
-        </td>
-    </tr>
-</table>
-
-<?php require AmpConfig::get('prefix') . '/templates/show_rules.inc.php'; ?>
-
-<div class="formValidation">
-            <input class="button" type="submit" value="<?php echo T_('Search'); ?>" />&nbsp;&nbsp;
-<?php if ($_REQUEST['type'] == 'song' || ! $_REQUEST['type']) { ?>
-        <input id="savesearchbutton" class="button" type="submit" value="<?php echo T_('Save as Smart Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_smartplaylist');" />&nbsp;&nbsp;
-<?php } ?>
-            <input type="hidden" id="hiddenaction" name="action" value="search" />
+<?php
+ob_start();
+require AmpConfig::get('prefix') . '/templates/show_search_title.inc.php';
+$title = ob_get_contents();
+ob_end_clean();
+UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>' , 'box box_smartplaylist');
+?>
+<div id="information_actions">
+    <ul>
+        <?php if (Access::check_function('batch_download')) { ?>
+        <li>
+            <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
+            <?php echo T_('Batch Download'); ?>
+        </li>
+            <?php } ?>
+        <li>
+            <?php echo Ajax::button('?action=basket&type=search&id=' . $playlist->id,'add', T_('Add All'),'play_playlist'); ?>
+            <?php echo T_('Add All'); ?>
+        </li>
+        <?php if ($playlist->has_access()) { ?>
+        <li>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
+                <?php echo UI::get_icon('delete'); ?>
+            </a>
+            <?php echo T_('Delete'); ?>
+        </li>
+        <?php } ?>
+    </ul>
 </div>
+
+<form id="editplaylist" name="editplaylist" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=update_playlist&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
+    <?php require AmpConfig::get('prefix') . '/templates/show_rules.inc.php'; ?>
+    <div class="formValidation">
+        <input class="button" type="submit" value="<?php echo T_('Save Changes'); ?>" />
+    </div>
 </form>
+
 <?php UI::show_box_bottom(); ?>
+
+<div>
+<?php
+    $browse = new Browse();
+    $browse->set_type('playlist_song');
+    $browse->add_supplemental_object('search', $playlist->id);
+    $browse->set_static_content(false);
+    $browse->show_objects($object_ids);
+    $browse->store();
+?>
+</div>

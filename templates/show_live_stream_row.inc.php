@@ -24,25 +24,20 @@
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) { ?>
-        <?php echo Ajax::button('?page=stream&action=directplay&playtype=live_stream&stream_id=' . $radio->id, 'play', T_('Play live stream'),'play_live_stream_' . $radio->id); ?>
+        <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id, 'play', T_('Play live stream'),'play_live_stream_' . $libitem->id); ?>
 <?php } ?>
     </div>
 </td>
-<td class="cel_streamname"><?php echo $radio->f_name_link; ?></td>
-<td class="cel_add">
-    <span class="cel_item_add">
-        <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id,'add', T_('Add to temporary playlist'),'add_radio_' . $radio->id); ?>
-    </span>
-</td>
-<td class="cel_streamurl"><?php echo $radio->f_url_link; ?></td>
-<td class="cel_codec"><?php echo $radio->codec; ?></td>
+<td class="cel_streamname"><?php echo $libitem->f_name_link; ?></td>
+<td class="cel_streamurl"><?php echo $libitem->f_url_link; ?></td>
+<td class="cel_codec"><?php echo $libitem->codec; ?></td>
 <td class="cel_action">
     <?php if (Access::check('interface','50')) { ?>
-        <a id="<?php echo 'edit_live_stream_'.$radio->id ?>" onclick="showEditDialog('live_stream_row', '<?php echo $radio->id ?>', '<?php echo 'edit_live_stream_'.$radio->id ?>', '<?php echo T_('Live Stream edit') ?>',  'live_stream_', 'refresh_livestream')">
+        <a id="<?php echo 'edit_live_stream_'.$libitem->id ?>" onclick="showEditDialog('live_stream_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_live_stream_'.$libitem->id ?>', '<?php echo T_('Live Stream edit') ?>',  'live_stream_')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
     <?php } ?>
     <?php if (Access::check('interface','75')) { ?>
-        <?php echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $radio->id,'delete', T_('Delete'),'delete_live_stream_' . $radio->id); ?>
+        <?php echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->id,'delete', T_('Delete'),'delete_live_stream_' . $libitem->id); ?>
     <?php } ?>
 </td>

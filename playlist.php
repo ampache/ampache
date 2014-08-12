@@ -122,7 +122,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $playlist->add_songs(array($_REQUEST['song_id']), 'ORDERED');
+        $playlist->add_songs(array($_REQUEST['song_id']), true);
     break;
     case 'prune_empty':
         if (!$GLOBALS['user']->has_access(100)) {
@@ -136,6 +136,16 @@ switch ($_REQUEST['action']) {
         $body  = '';
         show_confirmation($title,$body,$url);
     break;
+    case 'sort_tracks':
+        $playlist = new Playlist($_REQUEST['playlist_id']);
+        if (!$playlist->has_access()) {
+                access_denied();
+                break;
+        }
+
+        /* Sort the tracks */
+        $playlist->sort_tracks();
+        $object_ids = $playlist->get_items();
     default:
         require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
     break;

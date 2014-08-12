@@ -27,6 +27,9 @@
  */
 class Ampache_RSS
 {
+    /**
+     *  @var string $type
+     */
     private $type;
     public $data;
 
@@ -44,6 +47,7 @@ class Ampache_RSS
      * get_xml
      * This returns the xmldocument for the current rss type, it calls a sub function that gathers the data
      * and then uses the xmlDATA class to build the document
+     * @return string
      */
     public function get_xml()
     {
@@ -64,6 +68,7 @@ class Ampache_RSS
     /**
      * get_title
      * This returns the standardized title for the rss feed based on this->type
+     * @return string
      */
     public function get_title()
     {
@@ -79,6 +84,7 @@ class Ampache_RSS
     /**
      * get_description
      * This returns the standardized description for the rss feed based on this->type
+     * @return string
      */
     public function get_description()
     {
@@ -90,6 +96,8 @@ class Ampache_RSS
     /**
      * validate_type
      * this returns a valid type for an rss feed, if the specified type is invalid it returns a default value
+     * @param string $type
+     * @return string
      */
     public static function validate_type($type)
     {
@@ -107,6 +115,8 @@ class Ampache_RSS
     /**
       * get_display
      * This dumps out some html and an icon for the type of rss that we specify
+     * @param string $type
+     * @return string
      */
     public static function get_display($type='now_playing')
     {
@@ -125,6 +135,7 @@ class Ampache_RSS
      * load_now_playing
      * This loads in the now playing information. This is just the raw data with key=>value pairs that could be turned
      * into an xml document if we so wished
+     * @return array
      */
     public static function load_now_playing()
     {
@@ -166,6 +177,7 @@ class Ampache_RSS
      * pubdate_now_playing
      * this is the pub date we should use for the now playing information,
      * this is a little specific as it uses the 'newest' expire we can find
+     * @return int
      */
     public static function pubdate_now_playing()
     {
@@ -181,6 +193,7 @@ class Ampache_RSS
     /**
      * load_recently_played
      * This loads in the recently played information and formats it up real nice like
+     * @return array
      */
     public static function load_recently_played()
     {
@@ -240,6 +253,7 @@ class Ampache_RSS
     /**
      * pubdate_recently_played
      * This just returns the 'newest' recently played entry
+     * @return int
      */
     public static function pubdate_recently_played()
     {

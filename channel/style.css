@@ -76,10 +76,6 @@ html, body {
     margin-bottom: 10px;
     background: url(images/icecast.png) no-repeat left center;
 }
-.main iframe {
-    width: 100%;
-    border: 0;
-}
 .news {
     font-family: Verdana, sans-serif;
     text-decoration: none;

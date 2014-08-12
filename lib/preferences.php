@@ -125,7 +125,7 @@ function create_preference_input($name,$value)
         } elseif ($value == '0') {
             echo "Disabled";
         } else {
-            if (preg_match('/_pass$/', $name)) {
+            if (preg_match('/_pass$/', $name) || preg_match('/_api_key$/', $name)) {
                 echo "******";
             } else {
                 echo $value;
@@ -154,7 +154,7 @@ function create_preference_input($name,$value)
         case 'rio_track_stats':
         case 'rio_global_stats':
         case 'direct_link':
-        case 'iframes':
+        case 'ajax_load':
         case 'now_playing_per_user':
         case 'show_played_times':
         case 'song_page_title':
@@ -176,6 +176,15 @@ function create_preference_input($name,$value)
         case 'broadcast_by_default':
         case 'album_group':
         case 'topmenu':
+        case 'demo_clear_sessions':
+        case 'show_donate':
+        case 'allow_upload':
+        case 'upload_subdir':
+        case 'upload_user_artist':
+        case 'upload_allow_edit':
+        case 'daap_backend':
+        case 'upnp_backend':
+        case 'album_release_type':
             $is_true = '';
             $is_false = '';
             if ($value == '1') {
@@ -186,6 +195,9 @@ function create_preference_input($name,$value)
             echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";
             echo "\t<option value=\"0\" $is_false>" . T_("Disable") . "</option>\n";
             echo "</select>\n";
+        break;
+        case 'upload_catalog':
+            show_catalog_select('upload_catalog', $value, '', true);
         break;
         case 'play_type':
             $is_localplay = '';

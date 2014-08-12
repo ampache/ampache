@@ -68,7 +68,12 @@ class AmpacheMusicBrainz {
      * get_metadata
      * Returns song metadata for what we're passed in.
      */
-    public function get_metadata($song_info) {
+    public function get_metadata($gather_types, $song_info) {
+        // Music metadata only
+        if (!in_array('music', $gather_types)) {
+            return null;
+        }
+    
         if (!$mbid = $song_info['mb_trackid']) {
             return null;
         }
@@ -89,6 +94,7 @@ class AmpacheMusicBrainz {
 
         if (count($track->{'artist-credit'}) > 0) {
             $artist = $track->{'artist-credit'}[0];
+            $artist = $artist->artist;
             $results['mb_artistid'] = $artist->id;
             $results['artist'] = $artist->name;
             $results['title'] = $track->title;

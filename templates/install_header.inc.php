@@ -28,10 +28,18 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+    <meta http-equiv="pragma" content="no-cache" />
+
     <title>Ampache :: For the love of Music - Install</title>
     <link href="modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="modules/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
     <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
+    <script src="modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
+    <script src="modules/bootstrap/js/bootstrap.min.js" language="javascript" type="text/javascript"></script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">

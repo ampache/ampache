@@ -28,21 +28,16 @@ $title = scrub_out($song->title);
 $album = scrub_out($song->f_album_full);
 $artist = scrub_out($song->f_artist_full);
 ?>
-<div class="album_art">
-    <?php
-    if ($album->name != T_('Unknown (Orphaned)')) {
-        $aa_url = $web_path . "/image.php?id=" . $song->album . "&amp;sid=" . session_id();
-        echo "<a href=\"$aa_url\" rel=\"prettyPhoto\">";
-        echo "<img src=\"" . $web_path . "/image.php?id=" . $song->album . "&amp;thumb=2\" alt=\"".$song->f_album_full."\" alt=\"".$song->f_album_full."\" height=\"128\" width=\"128\" />";
-        echo "</a>\n";
-    }
-    ?>
-</div>
+<?php
+if ($album != T_('Unknown (Orphaned)')) {
+    Art::display('album', $song->album, $song->f_album_full, 2);
+}
+?>
 
 <div class="np_group">
   <div class="np_cell cel_song">
       <label><?php echo T_('Song'); ?>:</label>
-      <a title="<?php echo scrub_out($song->title); ?>" href="<?php echo $web_path; ?>/stream.php?action=single_song&amp;song_id=<?php echo $song->id; ?>">
+      <a rel="nohtml" title="<?php echo scrub_out($song->title); ?>" href="<?php echo $web_path; ?>/stream.php?action=play_item&object_type=song&object_id=<?php echo $song->id; ?>">
           <?php echo $title; ?>
       </a>
   </div>

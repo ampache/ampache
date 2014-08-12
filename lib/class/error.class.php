@@ -64,18 +64,18 @@ class Error
         // Make sure its set first
         if (!isset(Error::$errors[$name])) {
             Error::$errors[$name] = $message;
-            Error::$state = 1;
+            Error::$state = true;
             $_SESSION['errors'][$name] = $message;
         }
         // They want us to clobber it
         elseif ($clobber) {
-            Error::$state = 1;
+            Error::$state = true;
             Error::$errors[$name] = $message;
             $_SESSION['errors'][$name] = $message;
         }
         // They want us to append the error, add a BR\n and then the message
         else {
-            Error::$state = 1;
+            Error::$state = true;
             Error::$errors[$name] .= "<br />\n" . $message;
             $_SESSION['errors'][$name] .=  "<br />\n" . $message;
         }

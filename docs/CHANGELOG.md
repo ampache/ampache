@@ -1,7 +1,46 @@
 CHANGELOG
 =========
 
-3.7
+3.7.1
+----------
+- Fixed Google arts to use real arts and not the small size preview
+- Added Tmdb metadata plugin
+- Added Omdb metadata plugin
+- Added Music Clips, Movies and TV Shows support
+- Added media type information on catalog
+- Fixed get SmartPlaylist in XML-API (thanks opencrf)
+- Added beautiful url on arts
+- Improved browse list header (thanks Psy-Virus)
+- Fixed user online/offline information on Reborn theme (thanks thorsforge)
+- Added UPnP backend
+- Added DAAP backend
+- Added sort options on playlists (thanks Shdwdrgn)
+- Fixed XML-API tag information (thanks jcwmoore)
+- Fixed multiple broadcast play (thanks uk3gaus)
+- Added SmartPlaylists to Subsonic API
+- Added limit option on SmartPlaylists
+- Added random option on SmartPlaylists
+- Added 'item count' on browse
+- Added direct typed links on items tags
+- Fixed SubSonic API compatibility with few players requesting information on library -1
+- Added license information on songs
+- Added upload feature on web interface
+- Added albumartist information on songs (thanks tsquare66)
+- Fixed errors on sql table exists check
+- Fixed play/pause on broadcasts (thanks uk3gaus)
+- Added donation button
+- Added democratic page automatic refresh
+- Fixed distinct random albums
+- Added collapsing menu (thanks Kaivo)
+- Added 'save to playlist' feature on web player (thanks Kaivo)
+- Added tag merge feature
+- Fixed democratic vote with automatic logins (thanks M4DM4NZ)
+- Added git pull update from web interface for development versions
+- Fixed http-rang requests on streaming (thanks thejk)
+- Improved installation process
+- Improved German translation (thanks Psy-Virus and meandor)
+
+3.7.0
 ----------
 - Added Scrutinizer analyze
 - Fixed playlist play with disabled songs (reported by stebe)

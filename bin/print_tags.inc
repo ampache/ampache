@@ -53,7 +53,7 @@ $catalog = Catalog::create_from_id($results['id']);
 $dir_pattern = $catalog->sort_pattern;
 $file_pattern = $catalog->rename_pattern;
 
-$info = new vainfo($filename, '', '', '', $dir_pattern, $file_pattern);
+$info = new vainfo($filename, array('music'), '', '', '', $dir_pattern, $file_pattern);
 if(isset($dir_pattern) || isset($file_pattern)) {
     printf(T_('Using: %s AND %s for file pattern matching'), $dir_pattern, $file_pattern);
     print "\n";

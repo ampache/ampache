@@ -35,6 +35,9 @@
  */
 class AmpConfig
 {
+    /**
+     *  @var array $_global
+     */
     private static $_global = array();
 
     public function __construct()
@@ -46,6 +49,7 @@ class AmpConfig
      * get
      *
      * This returns a config value.
+     * @param string $name
      */
     public static function get($name)
     {
@@ -60,6 +64,7 @@ class AmpConfig
      * get_all
      *
      * This returns all of the current config variables as an array.
+     * @return array
      */
     public static function get_all()
     {
@@ -70,6 +75,8 @@ class AmpConfig
      * set
      *
      * This sets config values.
+     * @param string $name
+     * @param boolean $clobber
      */
     public static function set($name, $value, $clobber = false)
     {
@@ -87,6 +94,8 @@ class AmpConfig
      *
      * This is the same as the set function except it takes an array as
      * input.
+     * @param array $array
+     * @param boolean $clobber
      */
     public static function set_by_array($array, $clobber = false)
     {

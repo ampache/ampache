@@ -33,8 +33,10 @@ class Artist_Event
     /**
      * get_upcoming_events
      * Returns a list of upcoming events
+     * @param Artist $artist
+     * @return array|boolean
      */
-    public static function get_upcoming_events($artist)
+    public static function get_upcoming_events(Artist $artist)
     {
         if (isset($artist->mbid)) {
             $query = 'mbid=' . rawurlencode($artist->mbid);
@@ -59,8 +61,10 @@ class Artist_Event
     /**
      * get_past_events
      * Returns a list of past events
+     * @param Artist $artist
+     * @return array|boolean
      */
-    public static function get_past_events($artist)
+    public static function get_past_events(Artist $artist)
     {
         if (isset($artist->mbid)) {
             $query = 'mbid=' . rawurlencode($artist->mbid);

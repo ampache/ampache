@@ -320,6 +320,10 @@ class Stats
             case 'genre':
             case 'song':
             case 'video':
+            case 'tvshow':
+            case 'tvshow_season':
+            case 'tvshow_episode':
+            case 'movie':
                 return $type;
             default:
                 return 'song';
@@ -335,8 +339,14 @@ class Stats
     {
         $type = self::validate_type($type);
 
-        $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `song` ";
-        $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        $base_type = 'song';
+        if ($type == 'video') {
+            $base_type = $type;
+            $type = $type . '`.`id';
+        }
+
+        $sql = "SELECT DISTINCT(`$type`) as `id`, MIN(`addition_time`) AS `real_atime` FROM `" . $base_type . "` ";
+        $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
         if (AmpConfig::get('catalog_disable')) {
                 $sql .= "WHERE `catalog`.`enabled` = '1' ";
         }
@@ -344,6 +354,7 @@ class Stats
             $sql .= "AND `catalog` = '" . scrub_in($catalog) ."' ";
         }
         $sql .= "GROUP BY `$type` ORDER BY `real_atime` DESC ";
+
         return $sql;
     }
 

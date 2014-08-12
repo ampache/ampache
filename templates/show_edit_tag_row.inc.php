@@ -21,14 +21,32 @@
  */
 ?>
 <div>
-    <form method="post" id="edit_tag_<?php echo $tag->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_tag_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($tag->name); ?>" /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" /></td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Merge this tag to') ?></td>
+                <td>
+                    <select name="select_tags" id="select_tags">
+                        <option value=""></option>
+                        <?php
+                        if ($libitem->merged_to) {
+                            echo "<option value='" . $libitem->merged_to . "'>" . $libitem->merged_to . "</option>";
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Persistent merge') ?></td>
+                <td><input type="checkbox" name="merge_persist" value="1" /></td>
             </tr>
         </table>
-        <input type="hidden" name="id" value="<?php echo $tag->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
         <input type="hidden" name="type" value="tag_row" />
     </form>
 </div>

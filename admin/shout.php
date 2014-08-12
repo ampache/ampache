@@ -32,8 +32,10 @@ UI::show_header();
 // Switch on the incomming action
 switch ($_REQUEST['action']) {
     case 'edit_shout':
-        $shout_id = $_POST['shout_id'];
-        $update = Shoutbox::update($_POST);
+        $shout = new Shoutbox($_REQUEST['shout_id']);
+        if ($shout->id) {
+            $shout->update($_POST);
+        }
         show_confirmation(T_('Shoutbox Post Updated'),'',AmpConfig::get('web_path').'/admin/shout.php');
     break;
     case 'show_edit':

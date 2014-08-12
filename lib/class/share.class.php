@@ -261,7 +261,7 @@ class Share extends database_object
             case 'album':
             case 'playlist':
                 $object = new $this->object_type($this->object_id);
-                $songs = $object->get_songs();
+                $songs = $object->get_songs('song');
                 foreach ($songs as $id) {
                     $medias[] = array(
                         'object_type' => 'song',

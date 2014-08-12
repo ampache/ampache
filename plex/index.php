@@ -28,6 +28,11 @@ if (!AmpConfig::get('plex_backend')) {
     exit;
 }
 
+if (function_exists('apache_setenv')) {
+   @apache_setenv('no-gzip', 1);
+}
+@ini_set('zlib.output_compression', 0);
+
 $action = $_GET['action'];
 
 $headers = apache_request_headers();
@@ -44,32 +49,46 @@ $methods = get_class_methods('plex_api');
 // Define list of internal functions that should be skipped
 $internal_functions = array('setHeader', 'root', 'apiOutput', 'createError', 'validateMyPlex', 'getPublicIp', 'registerMyPlex', 'publishDeviceConnection', 'unregisterMyPlex');
 
+$show_index = true;
 $params = array_filter(explode('/', $action), 'strlen');
 if (count($params) > 0) {
-    // Recurse through them and see if we're calling one of them
-    for ($i = count($params); $i > 0; $i--) {
-        $act = strtolower(implode('_', array_slice($params, 0, $i)));
-        foreach ($methods as $method) {
-            if (in_array($method, $internal_functions)) { continue; }
+    // Hack to listen locally on port != 32400
+    if (count($params) >= 2 && $params[0] == '.hack' && $params[1] == 'main:32400') {
+        array_shift($params);
+        array_shift($params);
+        if (count($params) > 0 && $params[0] == ':') {
+            array_shift($params);
+        }
+    }
 
-            // If the method is the same as the action being called
-            // Then let's call this function!
-            if ($act == $method) {
+    if (count($params) > 0) {
+        $show_index = false;
+        // Recurse through them and see if we're calling one of them
+        for ($i = count($params); $i > 0; $i--) {
+            $act = strtolower(implode('_', array_slice($params, 0, $i)));
+            foreach ($methods as $method) {
+                if (in_array($method, $internal_functions)) { continue; }
 
-                if ($act != 'users' && $act != 'users_account' && $act != 'manage_frameworks_ekspinner_resources') {
-                    Plex_Api::auth_user();
+                // If the method is the same as the action being called
+                // Then let's call this function!
+                if ($act == $method) {
+                    if ($act != 'users' && $act != 'users_account' && $act != 'manage_frameworks_ekspinner_resources') {
+                        Plex_Api::auth_user();
+                    }
+
+                    Plex_Api::setHeader('xml');
+                    Plex_Api::setPlexHeader($headers);
+                    call_user_func(array('plex_api', $method), array_slice($params, $i, count($params) - $i));
+                    // We only allow a single function to be called, and we assume it's cleaned up!
+                    exit();
                 }
 
-                Plex_Api::setHeader('xml');
-                Plex_Api::setPlexHeader($headers);
-                call_user_func(array('plex_api', $method), array_slice($params, $i, count($params) - $i));
-                // We only allow a single function to be called, and we assume it's cleaned up!
-                exit();
-            }
-
-        } // end foreach methods in API
+            } // end foreach methods in API
+        }
     }
-} else {
+}
+
+if ($show_index) {
     Plex_Api::auth_user();
     Plex_Api::setHeader('xml');
     Plex_Api::setPlexHeader($headers);

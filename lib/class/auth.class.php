@@ -44,6 +44,8 @@ class Auth
      * This is called when you want to log out and nuke your session.
      * This is the function used for the Ajax logouts, if no id is passed
      * it tries to find one from the session,
+     * @param string $key
+     * @param boolean $relogin
      */
     public static function logout($key='', $relogin = true)
     {
@@ -82,6 +84,10 @@ class Auth
      *
      * This takes a username and password and then returns the results
      * based on what happens when we try to do the auth.
+     * @param string $username
+     * @param string $password
+     * @param boolean $allow_ui
+     * @return array
      */
     public static function login($username, $password, $allow_ui = false)
     {
@@ -104,6 +110,8 @@ class Auth
      * login_step2
      *
      * This process authenticate step2 for an auth module
+     * @param string $auth_mod
+     * @return array
      */
     public static function login_step2($auth_mod)
     {
@@ -122,6 +130,9 @@ class Auth
      * mysql_auth
      *
      * This is the core function of our built-in authentication.
+     * @param string $username
+     * @param string $password
+     * @return array
      */
     private static function mysql_auth($username, $password)
     {
@@ -168,6 +179,9 @@ class Auth
      *
      * Check to make sure the pam_auth function is implemented (module is
      * installed), then check the credentials.
+     * @param string $username
+     * @param string $password
+     * @return array
      */
     private static function pam_auth($username, $password)
     {
@@ -197,6 +211,9 @@ class Auth
      *
      * Calls an external program compatible with mod_authnz_external
      * such as pwauth.
+     * @param string $username
+     * @param string $password
+     * @return array
      */
     private static function external_auth($username, $password)
     {
@@ -257,6 +274,9 @@ class Auth
      *        the DN fetched from the LDAP directory"
      *      * require-attribute "an attribute fetched from the LDAP
      *        directory matches the given value"
+     * @param string $username
+     * @param string $password
+     * @return array
      */
     private static function ldap_auth($username, $password)
     {
@@ -367,6 +387,9 @@ class Auth
      * http_auth
      * This auth method relies on HTTP auth from the webserver
      *
+     * @param string $username
+     * @param string $password
+     * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     private static function http_auth($username, $password)
@@ -390,6 +413,9 @@ class Auth
      * openid_auth
      * Authenticate user with OpenID
      *
+     * @param string $username
+     * @param string $password
+     * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     private static function openid_auth($username, $password)
@@ -468,6 +494,7 @@ class Auth
     /**
      * openid_auth_2
      * Authenticate user with OpenID, step 2
+     * @return array
      */
     private static function openid_auth_2()
     {

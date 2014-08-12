@@ -329,7 +329,7 @@ class archive {
 
             $full_arc_name = $this->options['basedir']."/".$this->options['tmpname'];
 			if (file_exists($full_arc_name)) {
-                $fsize = filesize($full_arc_name);
+                $fsize = Core::get_filesize($full_arc_name);
 
                 //Send some headers which can be useful...
                 $header = "Content-Disposition: attachment; filename=\"";
@@ -625,7 +625,7 @@ class zip_file extends archive
 		if (!empty ($this->options['sfx']))
 			if ($fp = @fopen($this->options['sfx'], "rb"))
 			{
-				$temp = fread($fp, filesize($this->options['sfx']));
+				$temp = fread($fp, Core::get_filesize($this->options['sfx']));
 				fclose($fp);
 				$this->add_data($temp);
 				$offset += strlen($temp);

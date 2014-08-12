@@ -20,22 +20,57 @@
  *
  */
 
-class Broadcast extends database_object
+class Broadcast extends database_object implements library_item
 {
+    /**
+     *  @var int $id
+     */
     public $id;
+    /**
+     *  @var boolean $started
+     */
     public $started;
+    /**
+     *  @var int $listeners
+     */
     public $listeners;
+    /**
+     *  @var int $song
+     */
     public $song;
+    /**
+     *  @var int $song_position
+     */
     public $song_position;
+    /**
+     *  @var string $name
+     */
     public $name;
+    /**
+     *  @var int $user
+     */
+    public $user;
 
+    /**
+     *  @var array $tags
+     */
     public $tags;
+    /**
+     *  @var string $f_name
+     */
     public $f_name;
+    /**
+     *  @var string $f_link
+     */
     public $f_link;
+    /**
+     *  @var string $f_tags
+     */
     public $f_tags;
 
     /**
      * Constructor
+     * @param int $id
      */
     public function __construct($id=0)
     {
@@ -52,6 +87,11 @@ class Broadcast extends database_object
         return true;
     } //constructor
 
+    /**
+     * Update broadcast state.
+     * @param boolean $started
+     * @param string $key
+     */
     public function update_state($started, $key='')
     {
         $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?";
@@ -60,6 +100,10 @@ class Broadcast extends database_object
         $this->started = $started;
     }
 
+    /**
+     * Update broadcast listeners.
+     * @param int $listeners
+     */
     public function update_listeners($listeners)
     {
         $sql = "UPDATE `broadcast` SET `listeners` = ? " .
@@ -68,6 +112,10 @@ class Broadcast extends database_object
         $this->listeners = $listeners;
     }
 
+    /**
+     * Update broadcast current song.
+     * @param int $song_id
+     */
     public function update_song($song_id)
     {
         $sql = "UPDATE `broadcast` SET `song` = ? " .
@@ -77,12 +125,22 @@ class Broadcast extends database_object
         $this->song_position = 0;
     }
 
+    /**
+     * Delete the broadcast.
+     * @return boolean
+     */
     public function delete()
     {
         $sql = "DELETE FROM `broadcast` WHERE `id` = ?";
         return Dba::write($sql, array($this->id));
     }
 
+    /**
+     * Create a broadcast
+     * @param string $name
+     * @param string $description
+     * @return int
+     */
     public static function create($name, $description='')
     {
         if (!empty($name)) {
@@ -95,7 +153,12 @@ class Broadcast extends database_object
         return 0;
     }
 
-    public function update($data)
+    /**
+     * Update a broadcast from data array.
+     * @param array $data
+     * @return int
+     */
+    public function update(array $data)
     {
         if (isset($data['edit_tags'])) {
             Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id);
@@ -104,7 +167,9 @@ class Broadcast extends database_object
         $sql = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? " .
             "WHERE `id` = ?";
         $params = array($data['name'], $data['description'], !empty($data['private']), $this->id);
-        return Dba::write($sql, $params);
+        Dba::write($sql, $params);
+
+        return $this->id;
     }
 
     public function format()
@@ -112,9 +177,96 @@ class Broadcast extends database_object
         $this->f_name = $this->name;
         $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/broadcast.php?id=' . $this->id . '">' . scrub_out($this->f_name) . '</a>';
         $this->tags = Tag::get_top_tags('broadcast', $this->id);
-        $this->f_tags = Tag::get_display($this->tags);
+        $this->f_tags = Tag::get_display($this->tags, true, 'broadcast');
     }
 
+    /**
+     * Get item keywords for metadata searches.
+     * @return array
+     */
+    public function get_keywords()
+    {
+        return array();
+    }
+
+    /**
+     * Get item fullname.
+     * @return string
+     */
+    public function get_fullname()
+    {
+        return $this->f_name;
+    }
+
+    /**
+     * Get parent item description.
+     * @return array|null
+     */
+    public function get_parent()
+    {
+        return null;
+    }
+
+    /**
+     * Get item childrens.
+     * @return array
+     */
+    public function get_childrens()
+    {
+        return array();
+    }
+
+    /**
+     * Get all childrens and sub-childrens medias.
+     * @param string $filter_type
+     * @return array
+     */
+    public function get_medias($filter_type = null)
+    {
+        // Not a media, shouldn't be that
+        $medias = array();
+        if (!$filter_type || $filter_type == 'broadcast') {
+            $medias[] = array(
+                'object_type' => 'broadcast',
+                'object_id' => $this->id
+            );
+        }
+        return $medias;
+    }
+
+    /**
+     * get_catalogs
+     *
+     * Get all catalog ids related to this item.
+     * @return int[]
+     */
+    public function get_catalogs()
+    {
+        return array();
+    }
+
+    /**
+     * Get item's owner.
+     * @return int|null
+     */
+    public function get_user_owner()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Get default art kind for this item.
+     * @return string
+     */
+    public function get_default_art_kind()
+    {
+        return 'default';
+    }
+
+    /**
+     * Get all broadcasts sql query.
+     * @return string
+     */
     public static function get_broadcast_list_sql()
     {
         $sql = "SELECT `id` FROM `broadcast` WHERE `started` = '1' ";
@@ -122,6 +274,10 @@ class Broadcast extends database_object
         return $sql;
     }
 
+    /**
+     * Get all broadcasts.
+     * @return int[]
+     */
     public static function get_broadcast_list()
     {
         $sql = self::get_broadcast_list_sql();
@@ -135,12 +291,21 @@ class Broadcast extends database_object
         return $results;
     }
 
+    /**
+     * Generate a new broadcast key.
+     * @return string
+     */
     public static function generate_key()
     {
         // Should be improved for security reasons!
         return md5(uniqid(rand(), true));
     }
 
+    /**
+     * Get broadcast from its key.
+     * @param string $key
+     * @return Broadcast|null
+     */
     public static function get_broadcast($key)
     {
         $sql = "SELECT `id` FROM `broadcast` WHERE `key` = ?";
@@ -153,16 +318,23 @@ class Broadcast extends database_object
         return null;
     }
 
+    /**
+     * Show action buttons.
+     */
     public function show_action_buttons()
     {
         if ($this->id) {
             if ($GLOBALS['user']->has_access('75')) {
-                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast edit') . "', 'broadcast_row_', 'refresh_broadcast')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
+                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast edit') . "', 'broadcast_row_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id ."\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
     }
 
+    /**
+     * Get broadcast link.
+     * @return string
+     */
     public static function get_broadcast_link()
     {
         $link = "<div class=\"broadcast-action\">";
@@ -171,6 +343,11 @@ class Broadcast extends database_object
         return $link;
     }
 
+    /**
+     * Get unbroadcast link.
+     * @param int $id
+     * @return string
+     */
     public static function get_unbroadcast_link($id)
     {
         $link = "<div class=\"broadcast-action\">";
@@ -180,6 +357,11 @@ class Broadcast extends database_object
         return $link;
     }
 
+    /**
+     * Get broadcasts from an user.
+     * @param int $user_id
+     * @return int[]
+     */
     public static function get_broadcasts($user_id)
     {
         $sql = "SELECT `id` FROM `broadcast` WHERE `user` = ?";
@@ -192,11 +374,21 @@ class Broadcast extends database_object
         return $broadcasts;
     }
 
+    public static function gc()
+    {
+
+    }
+
     /*
+     * Get play url.
      *
+     * @param int $oid
+     * @param string $additional_params
+     * @param boolean $local
+     * @return string
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function play_url($oid, $additional_params='')
+    public static function play_url($oid, $additional_params='', $local=false)
     {
         return $oid;
     }

@@ -96,6 +96,7 @@ class Dba
         } else if ($stmt->errorCode() && $stmt->errorCode() != '00000') {
             self::$_error = json_encode($stmt->errorInfo());
             debug_event('Dba', 'Error: ' . json_encode($stmt->errorInfo()), 1);
+            self::finish($stmt);
             self::disconnect();
             return false;
         }
@@ -255,6 +256,7 @@ class Dba
         }
 
         try {
+            debug_event('Dba', 'Database connection...', 6);
             $dbh = new PDO($dsn, $username, $password);
         } catch (PDOException $e) {
             self::$_error = $e->getMessage();
@@ -388,6 +390,7 @@ class Dba
         $handle = 'dbh_' . $database;
 
         // Nuke it
+        debug_event('Dba', 'Database disconnection.', 6);
         AmpConfig::set($handle, null, true);
 
         return true;

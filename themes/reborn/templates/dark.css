@@ -1,0 +1,539 @@
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/**
+ *
+ * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * Copyright 2001 - 2014 Ampache.org
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License v2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+
+/***********************************************
+           General style rules
+***********************************************/
+
+body {
+    color: #fff;
+    background-color: #222;
+    height: 90%;
+}
+
+.error {
+    color: #c33;
+}
+
+a {
+    color: #ff9d00;
+}
+
+a:hover {
+    color: #ffc466;
+}
+
+hr {
+  border-top-color: #bbb;
+  border-top-color: #eee;
+}
+
+input[type=password], input[type=text], textarea {
+    background-color: #f5f5f5;
+    background-image: -moz-linear-gradient(top,#eee,#fff);
+    background-image: -ms-linear-gradient(top,#eee,#fff);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#eee),to(#fff));
+    background-image: -webkit-linear-gradient(top,#eee,#fff);
+    background-image: -o-linear-gradient(top,#eee,#fff);
+    background-image: linear-gradient(top,#eee,#fff);
+    border-color: #fff;
+}
+
+input[type=button], input[type=submit] {
+    background-image: -moz-linear-gradient(top,#ff9d00,#cc6200);
+    background-image: -ms-linear-gradient(top,#ff9d00,#cc6200);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#ff9d00),to(#cc6200));
+    background-image: -webkit-linear-gradient(top,#ff9d00,#cc6200);
+    background-image: -o-linear-gradient(top,#ff9d00,#cc6200);
+    background-image: linear-gradient(top,#ff9d00,#cc6200);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.2);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.2);
+    color: #fff;
+}
+
+input[type=button]:hover, input[type=button]:focus, input[type=submit]:hover, input[type=submit]:focus {
+    background-color: #cc6200;
+}
+
+input[type=button]:focus:active, input[type=submit]:focus:active {
+    -webkit-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255,255,255,0.1);
+    -moz-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255,255,255,0.1);
+    box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255,255,255,0.1);
+}
+
+/***********************************************
+           Main
+***********************************************/
+#ajax-loading {
+    color: #ff9d00;
+    background-image: url(../images/ajax-loader.gif);
+}
+
+/***********************************************
+           Header
+***********************************************/
+#header {
+    background-color: #000;
+    border-bottom: 2px solid #2d2d2d;
+    -webkit-box-shadow: 0 18px 18px rgba(30,30,30,0.7);
+    -moz-box-shadow: 0 18px 18px rgba(30,30,30,0.7);
+    box-shadow: 0 18px 18px rgba(30,30,30,0.7);
+}
+
+#sb_Subsearch input[type=text] {
+    border-color: #444;
+}
+
+#sb_Subsearch input[type=text]:focus {
+    color: #555;
+    background: rgba(255,255,255,0.9);
+    border-color:#ff9d00;
+}
+
+#headerbox  select {
+    color: #555;
+}
+
+/***********************************************
+           Login
+***********************************************/
+#loginPage #maincontainer, #registerPage #maincontainer {
+    background-color: rgba(0,0,0,0.15);
+    border: 2px solid rgba(0,0,0,0.15);
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+}
+
+#loginPage #headerlogo, #registerPage #headerlogo {
+    background-image: url('../images/ampache-reborn.png');
+}
+
+#loginPage #loginbox, #registerPage #registerbox {
+    color: #999;
+}
+
+#loginPage #loginbox div, #registerPage #registerbox div {
+    text-shadow: 0 1px 0 #000;
+}
+
+#loginPage #loginbox #usernamefield input:focus,
+#loginPage #loginbox #emailfield input:focus,
+#loginPage #loginbox #passwordfield input:focus {
+    border-color: #f1b720;
+    box-shadow: 0 0 10px #9ecaed;
+}
+
+#loginPage #loginbox #remembermefield {
+    color: #eee;
+}
+
+.formValidation input {
+    color: #fff;
+}
+
+#loginPage span.error {
+    background: #ff9999;
+    border-color: #cc3333;
+    color: #990000;
+}
+
+#loginPage #footer {
+    color: #888;
+}
+
+#loginPage #footer a {
+    color: #555;
+}
+
+#loginPage #footer #donate {
+    color: #ff9d00;
+}
+
+/***********************************************
+           Sidebar
+***********************************************/
+#sidebar {
+    color: #999;
+}
+
+#sidebar-header {
+    background-color: rgba(0,0,0,0.15);
+    border-color: rgba(0,0,0,0.15);
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+}
+
+#sidebar-header:hover {
+    color: #fff;
+}
+
+#sidebar-content, #sidebar-content-light, #sidebar-light {
+    border-color: rgba(0,0,0,0.15);
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    background-color: #1a1a1a;
+    border-right-color: #000;
+}
+
+/* Tabs content */
+#sidebar-page {
+    background-color: rgba(0,0,0,0.15);
+    border-color: rgba(0,0,0,0.15);
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+}
+
+#sidebar-tabs .sb2 li h4 {
+    color: #fff;
+    background-color: #262626;
+    border-bottom-color: #0f0f0f;
+    -webkit-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+    -moz-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+    box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+}
+
+#sidebar-tabs .sb2 li ul li a {
+	color: #999;
+}
+
+#sidebar-tabs .sb2 li ul li a:hover {
+	color: #fff;
+}
+
+#sidebar-tabs .sb2 #browse_filters #multi_alpha_filter {
+    border-color: #bbb;
+}
+
+/* Localplay */
+.active_instance {
+    border-color: #fff;
+}
+
+/***********************************************
+                  Rightbar
+***********************************************/
+#rightbar {
+    background-color: rgba(0,0,0,0.15);
+    border-color: gba(0,0,0,0.15);
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    color: #fff;
+}
+
+#rightbar #rb_current_playlist li {
+    color: #fff;
+}
+
+#rightbar #rb_current_playlist li a {
+    color: #eee;
+}
+
+#rightbar #rb_current_playlist li a:hover, #rightbar #rb_current_playlist li a:focus {
+    color: #fff;
+    background-color: #c85a00;
+    background-image: -moz-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -ms-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
+    background-image: -webkit-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -o-linear-gradient(top,#cc6200,#c24d00);
+    background-image: linear-gradient(top,#cc6200,#c24d00);
+}
+
+#rightbar #rb_current_playlist li.odd {
+    background-color: rgba(255,255,255,0.1);
+}
+
+#rightbar .submenu {
+    background-color: #222;
+    border-color: silver;
+}
+
+#rightbar .submenu a {
+    border-bottom-color: #ddd;
+    color: #eee;
+}
+
+#rightbar .submenu a:hover {
+    color: #ff9d00;
+}
+
+/***********************************************
+           Content
+***********************************************/
+#content {
+    background-color: rgba(0,0,0,0.15);
+    border-color: rgba(0,0,0,0.15);
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    color: #fff;
+}
+
+.list-header, .list-header a {
+    color: #999;
+}
+
+.list-header a:hover, .list-header a:focus {
+    color: #fff;
+}
+
+span.page-nb {
+    color: #ff9d00;
+ }
+
+table.tabledata {
+    color: #eee;
+}
+
+table.tabledata a {
+    color: #eee;
+}
+
+table.tabledata a:hover, table.tabledata a:focus {
+    color: #ffc466;
+}
+
+table.tabledata thead .th-top, table.tabledata tfoot .th-bottom {
+    background-color: #262626;
+    -webkit-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+    -moz-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+    box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+}
+
+table.tabledata thead .th-top {
+    border-bottom-color: #0f0f0f;
+}
+
+table.tabledata tfoot .th-bottom {
+    border-top-color: #0f0f0f;
+}
+
+table.tabledata th a {
+    color: #ff9d00;
+}
+
+table.tabledata tr:hover, table.tabledata tr:focus {
+    background-color: #c85a00;
+    background-image: -moz-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -ms-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
+    background-image: -webkit-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -o-linear-gradient(top,#cc6200,#c24d00);
+    background-image: linear-gradient(top,#cc6200,#c24d00);
+}
+
+table.tabledata .th-top:hover,
+table.tabledata .th-bottom:hover,
+table.tabledata .th-top:focus,
+table.tabledata .th-bottom:focus {
+    color: #fff;
+    background-color: #262626;
+}
+
+table.tabledata tbody .odd {
+    background-color: rgba(255,255,255,0.1);
+}
+
+table.tabledata tbody .cel_cover img {
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+}
+
+table.tabledata tbody .cel_cover img:hover {
+    border-color: #ff9d00;
+}
+
+/***********************************************
+           Content (info-box)
+***********************************************/
+.random_selection .random_album .art_album img {
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+}
+
+.random_selection .random_video .art_album img {
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+}
+
+.random_selection .random_album .art_album img:hover {
+    border-color: #ff9d00;
+}
+
+#content .missing {
+    background-image: url('../images/missing.png');
+}
+
+/***********************************************
+    Content (now playing)
+***********************************************/
+#now_playing .cel_albumart img {
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+}
+
+#now_playing .cel_lyrics a:hover {
+    color: #0099CC;
+}
+
+/***********************************************
+    Content (Tag cloud)
+***********************************************/
+span.fatalerror {
+    color: #c60;
+}
+
+.box-content #tag_filter .tag_button {
+    color: #fff;
+}
+
+.box-content #tag_filter .tag_button span {
+    background-color: #5f5f5f;
+    background-image: -moz-linear-gradient(top,#6d6d6d,#4a4a4a);
+    background-image: -ms-linear-gradient(top,#6d6d6d,#4a4a4a);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#6d6d6d),to(#4a4a4a));
+    background-image: -webkit-linear-gradient(top,#6d6d6d,#4a4a4a);
+    background-image: -o-linear-gradient(top,#6d6d6d,#4a4a4a);
+    background-image: linear-gradient(top,#6d6d6d,#4a4a4a);
+    border-bottom-color: #b3b3b3;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
+}
+
+.box-content #tag_filter .tag_button span:hover {
+    background-color: #c85a00;
+    background-image: -moz-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -ms-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
+    background-image: -webkit-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -o-linear-gradient(top,#cc6200,#c24d00);
+    background-image: linear-gradient(top,#cc6200,#c24d00);
+}
+
+/***********************************************
+    Content (information-actions)
+***********************************************/
+.item_art .item_art_play .item_art_play_icon {
+    background-image: url('../images/videoplay.png');
+}
+
+.item_art .item_art_actions {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.item_art img {
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+}
+
+.item_art:hover {
+    border-color: #ff9d00;
+}
+
+#information_actions ul li{
+    color: #999;
+}
+
+#information_actions a:hover, #information_actions li:hover {
+    color: #fff;/*#ffc466;*/
+}
+
+/************************************************/
+/*        Styles for user flags                 */
+/************************************************/
+.userflag a.userflag_true {
+    background: url(../../../images/icon_flag.png) left top;
+}
+
+.userflag a:hover.userflag_true {
+    background: url(../../../images/icon_flag_off.png) left top;
+}
+
+.userflag a.userflag_false {
+    background: url(../../../images/icon_flag_off.png) left top;
+}
+
+.userflag a:hover.userflag_false {
+    background: url(../../../images/icon_flag.png) left top;
+}
+
+/***********************************************
+        Content (Track view)
+***********************************************/
+dl.media_details dt {
+    color: #c60;
+}
+
+/***********************************************
+        Footer
+***********************************************/
+#footer a:hover {
+    color: #09c;
+}
+
+/***********************************************
+        Other
+***********************************************/
+.jscroll-next {
+    border-color: #ccc;
+    background-color: #eee;
+    color: #999;
+}
+
+.missing_album {
+    color: #bbb !important;
+}
+
+.user_online {
+    background: #0f0;
+}
+
+.user_offline {
+    background: #7f0000;
+}
+
+.user_disabled {
+    background: #ccc;
+}
+
+.list-header-navmenu-border {
+	border-color: #1d1d1d;
+}
+
+span.item-count {
+	color: #999;
+}
+
+a.option-list:hover {
+	border-color: #1d1d1d;
+}

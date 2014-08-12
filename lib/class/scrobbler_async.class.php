@@ -33,7 +33,7 @@ class scrobbler_async extends Thread
         spl_autoload_register(array('Core', 'autoload'), true, true);
         Requests::register_autoloader();
         if ($this->song_info) {
-            User::save_songplay($this->user, $this->song_info);
+            User::save_mediaplay($this->user, $this->song_info);
         }
     }
 }

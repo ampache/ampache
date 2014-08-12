@@ -59,8 +59,8 @@ Upgrading
 
 If you are upgrading from an older version of Ampache we recommend
 moving the old directory out of the way, extracting the new copy in
-its place and then copying the old config file into config/. All
-database updates will be handled by Ampache.
+its place and then copying the old config/ampache.cfg.php, /rest/.htaccess,
+and /play/.htaccess files if any. All database updates will be handled by Ampache.
 
 License
 -------
@@ -99,6 +99,11 @@ Ampache includes some external modules that carry their own licensing.
 * [MediaTable] (https://github.com/edenspiekermann/MediaTable): MIT
 * [Responsive Elements] (https://github.com/kumailht/responsive-elements): MIT
 * [Bootstrap] (http://getbootstrap.com): MIT
+* [jQuery Knob] (https://github.com/aterrien/jQuery-Knob): MIT
+* [jQuery File Upload] (https://github.com/blueimp/jQuery-File-Upload): MIT
+* [jsTree] (http://www.jstree.com): MIT
+* [php-tmdb-api] (https://github.com/wtfzdotnet/php-tmdb-api) : MIT
+* [TvDb] (https://github.com/Moinax/TvDb) : MIT
 
 
 Translations

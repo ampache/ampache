@@ -33,6 +33,8 @@ switch ($_REQUEST['action']) {
         $playlist->format();
         if ($playlist->has_access()) {
             $playlist->delete_track($_REQUEST['track_id']);
+            // This could have performance issues
+            $playlist->regenerate_track_numbers();
         }
 
         $object_ids = $playlist->get_items();
@@ -44,7 +46,7 @@ switch ($_REQUEST['action']) {
         $browse->show_objects($object_ids);
         $browse->store();
 
-        $results['browse_content_playlist_song'] = ob_get_clean();
+        $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'append_item':
         // Only song item are supported with playlists
@@ -76,18 +78,10 @@ switch ($_REQUEST['action']) {
 
         switch ($_REQUEST['item_type']) {
             case 'smartplaylist':
-                $smartplaylist = new Search('song', $item_id);
+                $smartplaylist = new Search($item_id, 'song');
                 $items = $playlist->get_items();
                 foreach ($items as $item) {
                     $songs[] = $item['object_id'];
-                }
-            break;
-            case 'album_preview':
-                $preview_songs = Song_preview::get_song_previews($item_id);
-                foreach ($preview_songs as $song) {
-                    if (!empty($song->file)) {
-                        $songs[] = $song->id;
-                    }
                 }
             break;
             case 'album':
@@ -112,7 +106,7 @@ switch ($_REQUEST['action']) {
             case 'song_preview':
             case 'song':
                 debug_event('playlist', 'Adding song {'.$item_id.'}...', '5');
-                $songs[] = $item_id;
+                $songs = explode(',', $item_id);
             break;
             default:
                 debug_event('playlist', 'Adding all songs of current playlist...', '5');
@@ -128,7 +122,7 @@ switch ($_REQUEST['action']) {
 
         if (count($songs) > 0) {
             Ajax::set_include_override(true);
-            $playlist->add_songs($songs, 'ORDERED');
+            $playlist->add_songs($songs, true);
 
             /*$playlist->format();
             $object_ids = $playlist->get_items();

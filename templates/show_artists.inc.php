@@ -53,10 +53,10 @@ $thcount = 8;
 
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $artist_id) {
-                $artist = new Artist($artist_id, $_SESSION['catalog']);
-                $artist->format();
+                $libitem = new Artist($artist_id, $_SESSION['catalog']);
+                $libitem->format();
         ?>
-        <tr id="artist_<?php echo $artist->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="artist_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_artist_row.inc.php'; ?>
         </tr>
         <?php } //end foreach ($artists as $artist) ?>

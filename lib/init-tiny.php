@@ -62,7 +62,7 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
 } else if (isset($_SERVER['SERVER_PORT'])) {
     $http_port = $_SERVER['SERVER_PORT'];
 }
-if (!isset($http_port) || !$http_port) {
+if (!isset($http_port) || empty($http_port)) {
     $http_port = 80;
 }
 
@@ -79,8 +79,10 @@ require_once $prefix . '/lib/batch.lib.php';
 require_once $prefix . '/lib/themes.php';
 require_once $prefix . '/lib/class/localplay_controller.abstract.php';
 require_once $prefix . '/lib/class/database_object.abstract.php';
-require_once $prefix . '/lib/class/playlist_object.abstract.php';
 require_once $prefix . '/lib/class/media.interface.php';
+require_once $prefix . '/lib/class/playable_item.interface.php';
+require_once $prefix . '/lib/class/library_item.interface.php';
+require_once $prefix . '/lib/class/playlist_object.abstract.php';
 require_once $prefix . '/modules/horde/Browser.php';
 
 /* Set up the flip class */

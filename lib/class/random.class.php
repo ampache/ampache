@@ -203,7 +203,7 @@ class Random
         $search_info = false;
 
         if (count($search_data) > 1) {
-            $search = new Search($type);
+            $search = new Search(null, $type);
             $search->parse_rules($search_data);
             $search_info = $search->to_sql();
         }

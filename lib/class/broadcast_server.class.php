@@ -36,9 +36,21 @@ class Broadcast_Server implements MessageComponentInterface
     const BROADCAST_AUTH_SID = "AUTH_SID";
 
     public $verbose;
+    /**
+     * @var ConnectionInterface[] $clients
+     */
     protected $clients;
+    /**
+     * @var string[] $sids
+     */
     protected $sids;
+    /**
+     * @var ConnectionInterface[] $listeners
+     */
     protected $listeners;
+    /**
+     * @var Broadcast[] $broadcasters
+     */
     protected $broadcasters;
 
     public function __construct()
@@ -50,11 +62,20 @@ class Broadcast_Server implements MessageComponentInterface
         $this->broadcasters = array();
     }
 
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $conn
+     */
     public function onOpen(ConnectionInterface $conn)
     {
         $this->clients[$conn->resourceId] = $conn;
     }
 
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $from
+     * @param string $msg
+     */
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $commands = explode(';', $msg);
@@ -101,6 +122,11 @@ class Broadcast_Server implements MessageComponentInterface
         }
     }
 
+    /**
+     *
+     * @param int $song_id
+     * @return string
+     */
     protected function getSongJS($song_id)
     {
         $media = array();
@@ -113,7 +139,12 @@ class Broadcast_Server implements MessageComponentInterface
         return WebPlayer::get_media_js_param($item[0]);
     }
 
-    protected function notifySong($from, $song_id)
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $from
+     * @param int $song_id
+     */
+    protected function notifySong(ConnectionInterface $from, $song_id)
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
@@ -132,7 +163,12 @@ class Broadcast_Server implements MessageComponentInterface
         }
     }
 
-    protected function notifySongPosition($from, $song_position)
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $from
+     * @param int $song_position
+     */
+    protected function notifySongPosition(ConnectionInterface $from, $song_position)
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
@@ -151,7 +187,12 @@ class Broadcast_Server implements MessageComponentInterface
         }
     }
 
-    protected function notifyPlayerPlay($from, $play)
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $from
+     * @param boolean $play
+     */
+    protected function notifyPlayerPlay(ConnectionInterface $from, $play)
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
@@ -166,7 +207,12 @@ class Broadcast_Server implements MessageComponentInterface
         }
     }
 
-    protected function registerBroadcast($from, $broadcast_key)
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $from
+     * @param string $broadcast_key
+     */
+    protected function registerBroadcast(ConnectionInterface $from, $broadcast_key)
     {
         $broadcast = Broadcast::get_broadcast($broadcast_key);
         if ($broadcast) {
@@ -179,7 +225,11 @@ class Broadcast_Server implements MessageComponentInterface
         }
     }
 
-    protected function unregisterBroadcast($conn)
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $conn
+     */
+    protected function unregisterBroadcast(ConnectionInterface $conn)
     {
         $broadcast = $this->broadcasters[$conn->resourceId];
         $clients = $this->getListeners($broadcast);
@@ -194,6 +244,11 @@ class Broadcast_Server implements MessageComponentInterface
         }
     }
 
+    /**
+     *
+     * @param int $broadcast_id
+     * @return Broadcast
+     */
     protected function getRunningBroadcast($broadcast_id)
     {
         $broadcast = null;
@@ -206,7 +261,12 @@ class Broadcast_Server implements MessageComponentInterface
         return $broadcast;
     }
 
-    protected function registerListener($from, $broadcast_id)
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $from
+     * @param int $broadcast_id
+     */
+    protected function registerListener(ConnectionInterface $from, $broadcast_id)
     {
         $broadcast = $this->getRunningBroadcast($broadcast_id);
 
@@ -226,7 +286,12 @@ class Broadcast_Server implements MessageComponentInterface
         }
     }
 
-    protected function authSid($conn, $sid)
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $conn
+     * @param string $sid
+     */
+    protected function authSid(ConnectionInterface $conn, $sid)
     {
         if (Session::exists('stream', $sid)) {
             $this->sids[$conn->resourceId] = $sid;
@@ -237,7 +302,11 @@ class Broadcast_Server implements MessageComponentInterface
         }
     }
 
-    protected function unregisterListener($conn)
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $conn
+     */
+    protected function unregisterListener(ConnectionInterface $conn)
     {
         foreach ($this->listeners as $broadcast_id => $brlisteners) {
             $lindex = array_search($conn, $brlisteners);
@@ -257,7 +326,11 @@ class Broadcast_Server implements MessageComponentInterface
         }
     }
 
-    protected function notifyNbListeners($broadcast)
+    /**
+     *
+     * @param Broadcast $broadcast
+     */
+    protected function notifyNbListeners(Broadcast $broadcast)
     {
         $broadcaster_id = array_search($broadcast, $this->broadcasters);
         if ($broadcaster_id) {
@@ -269,16 +342,32 @@ class Broadcast_Server implements MessageComponentInterface
         }
     }
 
-    protected function getListeners($broadcast)
+    /**
+     *
+     * @param Broadcast $broadcast
+     * @return \Ratchet\ConnectionInterface
+     */
+    protected function getListeners(Broadcast $broadcast)
     {
         return $this->listeners[$broadcast->id];
     }
 
-    protected function isBroadcaster($conn)
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $conn
+     * @return boolean
+     */
+    protected function isBroadcaster(ConnectionInterface $conn)
     {
         return array_key_exists($conn->resourceId, $this->broadcasters);
     }
 
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface[] $clients
+     * @param string $cmd
+     * @param string $value
+     */
     protected function broadcastMessage($clients, $cmd, $value='')
     {
         $msg = $cmd . ':' . $value . ';';
@@ -291,6 +380,10 @@ class Broadcast_Server implements MessageComponentInterface
         }
     }
 
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $conn
+     */
     public function onClose(ConnectionInterface $conn)
     {
         if ($this->isBroadcaster($conn)) {
@@ -303,11 +396,20 @@ class Broadcast_Server implements MessageComponentInterface
         unset($this->sids[$conn->resourceId]);
     }
 
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $conn
+     * @param \Exception $e
+     */
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
         $conn->close();
     }
 
+    /**
+     *
+     * @return string
+     */
     public static function get_address()
     {
         $websocket_address = AmpConfig::get('websocket_address');

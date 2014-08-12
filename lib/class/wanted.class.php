@@ -26,23 +26,64 @@ use MusicBrainz\Clients\RequestsMbClient;
 class Wanted extends database_object
 {
     /* Variables from DB */
+
+    /**
+     * @var int $id
+     */
     public $id;
+    /**
+     * @var string $mbid
+     */
     public $mbid;
+    /**
+     * @var int $artist
+     */
     public $artist;
+    /**
+     * @var string $artist_mbid
+     */
     public $artist_mbid;
+    /**
+     * @var string $name
+     */
     public $name;
+    /**
+     * @var int $year
+     */
     public $year;
+    /**
+     * @var boolean $accepted
+     */
     public $accepted;
+    /**
+     * @var string $release_mbid
+     */
     public $release_mbid;
+    /**
+     * @var int $user
+     */
     public $user;
 
+    /**
+     * @var string $f_name_link
+     */
     public $f_name_link;
+    /**
+     * @var string $f_artist_link
+     */
     public $f_artist_link;
+    /**
+     * @var string $f_user
+     */
     public $f_user;
+    /**
+     * @var int $songs
+     */
     public $songs;
 
     /**
      * Constructor
+     * @param int $id
      */
     public function __construct($id=0)
     {
@@ -62,6 +103,9 @@ class Wanted extends database_object
     /**
      * get_missing_albums
      * Get list of library's missing albums from MusicBrainz
+     * @param int $artist
+     * @param string $mbid
+     * @return array
      */
     public static function get_missing_albums($artist, $mbid='')
     {
@@ -83,11 +127,15 @@ class Wanted extends database_object
             $albums = $artist->get_albums();
             foreach ($albums as $id) {
                 $album = new Album($id);
-                if ($album->mbid) {
-                    $malbum = $mb->lookup('release', $album->mbid, array('release-groups'));
-                    if ($malbum->{'release-group'}) {
-                        if (!in_array($malbum->{'release-group'}->id, $owngroups)) {
-                            $owngroups[] = $malbum->{'release-group'}->id;
+                if ($album->mbid_group) {
+                    $owngroups[] = $album->mbid_group;
+                } else {
+                    if ($album->mbid) {
+                        $malbum = $mb->lookup('release', $album->mbid, array('release-groups'));
+                        if ($malbum->{'release-group'}) {
+                            if (!in_array($malbum->{'release-group'}->id, $owngroups)) {
+                                $owngroups[] = $malbum->{'release-group'}->id;
+                            }
                         }
                     }
                 }
@@ -149,6 +197,11 @@ class Wanted extends database_object
         return $results;
     } // get_missing_albums
 
+    /**
+     * Get missing artist data.
+     * @param string $mbid
+     * @return array
+     */
     public static function get_missing_artist($mbid)
     {
         $wartist = array();
@@ -175,6 +228,10 @@ class Wanted extends database_object
         return $wartist;
     }
 
+    /**
+     * Get accepted wanted release count.
+     * @return int
+     */
     public static function get_accepted_wanted_count()
     {
         $sql = "SELECT COUNT(`id`) AS `wanted_cnt` FROM `wanted` WHERE `accepted` = 1";
@@ -186,6 +243,11 @@ class Wanted extends database_object
         return 0;
     }
 
+    /**
+     * Get wanted release by mbid.
+     * @param string $mbid
+     * @return boolean
+     */
     public static function get_wanted($mbid)
     {
         $sql = "SELECT `id` FROM `wanted` WHERE `mbid` = ?";
@@ -197,6 +259,10 @@ class Wanted extends database_object
         return false;
     }
 
+    /**
+     * Delete wanted release.
+     * @param string $mbid
+     */
     public static function delete_wanted($mbid)
     {
         $sql = "DELETE FROM `wanted` WHERE `mbid` = ?";
@@ -209,6 +275,10 @@ class Wanted extends database_object
         Dba::write($sql, $params);
     }
 
+    /**
+     * Delete a wanted release by mbid.
+     * @param string $mbid
+     */
     public static function delete_wanted_release($mbid)
     {
         if (self::get_accepted_wanted_count() > 0) {
@@ -220,6 +290,12 @@ class Wanted extends database_object
         }
     }
 
+    /**
+     * Delete a wanted release by name.
+     * @param int $artist
+     * @param string $album_name
+     * @param int $year
+     */
     public static function delete_wanted_by_name($artist, $album_name, $year)
     {
         $sql = "DELETE FROM `wanted` WHERE `artist` = ? AND `name` = ? AND `year` = ?";
@@ -232,6 +308,9 @@ class Wanted extends database_object
         Dba::write($sql, $params);
     }
 
+    /**
+     * Accept a wanted request.
+     */
     public function accept()
     {
         if ($GLOBALS['user']->has_access('75')) {
@@ -249,6 +328,12 @@ class Wanted extends database_object
         }
     }
 
+    /**
+     * Check if a release mbid is already marked as wanted
+     * @param string $mbid
+     * @param int $userid
+     * @return boolean
+     */
     public static function has_wanted($mbid, $userid = 0)
     {
         if ($userid == 0) {
@@ -266,6 +351,14 @@ class Wanted extends database_object
 
     }
 
+    /**
+     * Add a new wanted release.
+     * @param string $mbid
+     * @param int $artist
+     * @param string $artist_mbid
+     * @param string $name
+     * @param int $year
+     */
     public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year)
     {
         $sql = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -280,6 +373,9 @@ class Wanted extends database_object
         }
     }
 
+    /**
+     * Show action buttons.
+     */
     public function show_action_buttons()
     {
         if ($this->id) {
@@ -296,6 +392,10 @@ class Wanted extends database_object
         }
     }
 
+    /**
+     * Load wanted release data.
+     * @param boolean $track_details
+     */
     public function load_all($track_details = true)
     {
         $mb = new MusicBrainz(new RequestsMbClient());
@@ -382,6 +482,9 @@ class Wanted extends database_object
         }
     }
 
+    /**
+     * Format data.
+     */
     public function format()
     {
         if ($this->artist) {
@@ -398,6 +501,10 @@ class Wanted extends database_object
 
     }
 
+    /**
+     * Get wanted list sql.
+     * @return string
+     */
     public static function get_wanted_list_sql()
     {
         $sql = "SELECT `id` FROM `wanted` ";
@@ -409,6 +516,10 @@ class Wanted extends database_object
         return $sql;
     }
 
+    /**
+     * Get wanted list.
+     * @return int[]
+     */
     public static function get_wanted_list()
     {
         $sql = self::get_wanted_list_sql();

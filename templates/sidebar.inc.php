@@ -60,8 +60,55 @@ foreach ($sidebar_items as $item) {
 }
 ?>
     <li id="sb_tab_logout" class="sb1">
-        <a target="_top" href="<?php echo AmpConfig::get('web_path'); ?>/logout.php" id="sidebar_logout" >
+        <a target="_top" href="<?php echo $web_path; ?>/logout.php" id="sidebar_logout" >
         <?php echo UI::get_icon('logout', T_('Logout')); ?>
         </a>
     </li>
 </ul>
+
+<script type="text/javascript">
+$(function() {
+    $(".header").click(function () {
+
+        $header = $(this);
+        //getting the next element
+        $content = $header.next();
+        //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
+        $content.slideToggle(500, function() {
+            $header.children(".sprite").toggleClass("expanded collapsed");
+            var sbstate = "expanded";
+            if ($header.children(".sprite").hasClass("collapsed")) {
+                sbstate = "collapsed";
+            }
+            $.cookie('sb_' + $header.children(".sprite").attr('id'), sbstate, { expires: 30, path: '/'});
+        });
+
+    });
+});
+
+$(document).ready(function() {
+    // Get a string of all the cookies.
+    var cookieArray = document.cookie.split(";");
+    var result = new Array();
+    // Create a key/value array with the individual cookies.
+    for (var elem in cookieArray) {
+        var temp = cookieArray[elem].split("=");
+        // We need to trim whitespaces.
+        temp[0] = $.trim(temp[0]);
+        temp[1] = $.trim(temp[1]);
+        // Only take sb_* cookies (= sidebar cookies)
+        if (temp[0].substring(0, 3) == "sb_") {
+            result[temp[0].substring(3)] = temp[1];
+        }
+    }
+    // Finds the elements and if the cookie is collapsed, it
+    // collapsed the found element.
+    for (var key in result) {
+        if ($("#" + key).length && result[key] == "collapsed") {
+            $("#" + key).removeClass("expanded");
+            $("#" + key).addClass("collapsed");
+            $("#" + key).parent().next().slideToggle(0);
+        }
+    }
+});
+</script>

@@ -20,9 +20,9 @@
  *
  */
 
-UI::show_box_top(T_('Starting New Song Search'), 'box box_adds_catalog');
+UI::show_box_top(T_('Starting New Media Search'), 'box box_adds_catalog');
 /* HINT: Catalog Name */
-printf(T_('Starting New Song Search on %s catalog'), "<strong>[ $this->name ]</strong>");
+printf(T_('Starting New Media Search on %s catalog'), "<strong>[ $this->name ]</strong>");
 echo "<br />\n";
 echo T_('Found') . ': <span id="add_count_' . $this->id . '">' . T_('None') . '</span><br />';
 echo T_('Reading') . ':<span id="add_dir_' . $this->id . '"></span><br />';

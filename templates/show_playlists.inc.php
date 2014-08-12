@@ -36,11 +36,10 @@
     <tbody>
         <?php
         foreach ($object_ids as $playlist_id) {
-            $playlist = new Playlist($playlist_id);
-            $playlist->format();
-            $count = $playlist->get_song_count();
+            $libitem = new Playlist($playlist_id);
+            $libitem->format();
         ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="playlist_row_<?php echo $playlist->id; ?>">
+        <tr class="<?php echo UI::flip_class(); ?>" id="playlist_row_<?php echo $libitem->id; ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_playlist_row.inc.php'; ?>
         </tr>
         <?php } // end foreach ($playlists as $playlist) ?>

@@ -23,7 +23,7 @@
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
         <label><?php echo T_('Username'); ?></label>
-        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $np_user->id; ?>">
+        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id; ?>">
         <?php echo scrub_out($np_user->fullname); ?>
 <?php
         if ($np_user->f_avatar_medium) {
@@ -56,9 +56,7 @@
 <?php if (Art::is_enabled()) { ?>
 <div class="np_group" id="np_group_3">
   <div class="np_cell cel_albumart">
-      <a href="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>" rel="prettyPhoto">
-        <img align="middle" src="<?php echo $web_path; ?>/image.php?id=<?php echo $media->album; ?>&amp;thumb=1" alt="<?php echo scrub_out($media->f_album_full); ?>" title="<?php echo scrub_out($media->f_album_full); ?>" height="80" width="80" />
-      </a>
+      <?php Art::display('album', $media->album, $media->get_fullname(), 1, AmpConfig::get('web_path') . '/albums.php?action=show&album=' . $media->album); ?>
   </div>
 </div>
 <?php } ?>

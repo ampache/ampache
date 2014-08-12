@@ -31,6 +31,8 @@ class Search extends playlist_object
     public $rules;
     public $logic_operator = 'AND';
     public $type = 'public';
+    public $random = false;
+    public $limit = 0;
 
     public $basetypes;
     public $types;
@@ -41,7 +43,7 @@ class Search extends playlist_object
     /**
      * constructor
      */
-    public function __construct($searchtype = 'song', $id = '')
+    public function __construct($id = null, $searchtype = 'song')
     {
         $this->searchtype = $searchtype;
         if ($id) {
@@ -223,6 +225,13 @@ class Search extends playlist_object
             );
 
             $this->types[] = array(
+                'name'   => 'composer',
+                'label'  => T_('Composer'),
+                'type'   => 'text',
+                'widget' => array('input', 'text')
+            );
+
+            $this->types[] = array(
                 'name'   => 'comment',
                 'label'  =>  T_('Comment'),
                 'type'   => 'text',
@@ -376,6 +385,20 @@ class Search extends playlist_object
                 'type'   => 'boolean_subsearch',
                 'widget' => array('select', $playlists)
             );
+
+            $licenses = array();
+            foreach (License::get_licenses() as $license_id) {
+                $license = new License($license_id);
+                $licenses[$license_id] = $license->name;
+            }
+            if (AmpConfig::get('licensing')) {
+                $this->types[] = array(
+                    'name'   => 'license',
+                    'label'  => T_('Music License'),
+                    'type'   => 'boolean_numeric',
+                    'widget' => array('select', $licenses)
+                );
+            }
         break;
         case 'album':
             $this->types[] = array(
@@ -553,7 +576,7 @@ class Search extends playlist_object
         $limit = intval($data['limit']);
         $data = Search::clean_request($data);
 
-        $search = new Search($data['type']);
+        $search = new Search(null, $data['type']);
         $search->parse_rules($data);
 
         // Generate BASE SQL
@@ -619,6 +642,12 @@ class Search extends playlist_object
         $sql = $this->to_sql();
         $sql = $sql['base'] . ' ' . $sql['table_sql'] . ' WHERE ' .
             $sql['where_sql'];
+        if ($this->random) {
+            $sql .= " ORDER BY RAND()";
+        }
+        if ($this->limit > 0) {
+            $sql .= " LIMIT " . intval($this->limit);
+        }
 
         $db_results = Dba::read($sql);
 
@@ -712,14 +741,14 @@ class Search extends playlist_object
         if (! $this->name) {
             $this->name = $GLOBALS['user']->username . ' - ' . date('Y-m-d H:i:s', time());
         }
-        $sql = "SELECT `id` FROM `search` WHERE `name`='$this->name'";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `id` FROM `search` WHERE `name` = ?";
+        $db_results = Dba::read($sql, array($this->name));
         if (Dba::num_rows($db_results)) {
             $this->name .= uniqid('', true);
         }
 
-        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `rules`, `logic_operator`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($this->name, $this->type, $GLOBALS['user']->id, serialize($this->rules), $this->logic_operator));
+        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `rules`, `logic_operator`, `random`, `limit`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($this->name, $this->type, $GLOBALS['user']->id, serialize($this->rules), $this->logic_operator, $this->random, $this->limit));
         $insert_id = Dba::insert_id();
         $this->id = $insert_id;
         return $insert_id;
@@ -757,15 +786,27 @@ class Search extends playlist_object
      *
      * This function updates the saved version with the current settings.
      */
-    public function update()
+    public function update(array $data = null)
     {
+        if ($data && is_array($data)) {
+            $this->name = $data['name'];
+            $this->type = $data['pl_type'];
+            $this->random = $data['random'];
+            $this->limit = $data['limit'];
+        }
+
         if (!$this->id) {
             return false;
         }
 
-        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `rules` = ?, `logic_operator` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($this->name, $this->type, serialize($this->rules), $this->logic_operator, $this->id));
-        return $db_results;
+        $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ? WHERE `id` = ?";
+        Dba::write($sql, array($this->name, $this->type, serialize($this->rules), $this->logic_operator, $this->random, $this->limit, $this->id));
+
+        return $this->id;
+    }
+
+    public static function gc()
+    {
     }
 
     /**
@@ -1018,6 +1059,9 @@ class Search extends playlist_object
                     $where[] = "`artist`.`name` $sql_match_operator '$input'";
                     $join['artist'] = true;
                 break;
+                case 'composer':
+                    $where[] = "`song`.`composer` $sql_match_operator '$input'";
+                break;
                 case 'time':
                     $input = $input * 60;
                     $where[] = "`song`.`time` $sql_match_operator '$input'";
@@ -1061,7 +1105,7 @@ class Search extends playlist_object
                     $where[] = "`playlist_data`.`playlist` $sql_match_operator '$input'";
                 break;
                 case 'smartplaylist':
-                    $subsearch = new Search('song', $input);
+                    $subsearch = new Search($input, 'song');
                     $subsql = $subsearch->to_sql();
                     $where[] = "$sql_match_operator (" . $subsql['where_sql'] . ")";
                     // HACK: array_merge would potentially lose tags, since it
@@ -1070,6 +1114,9 @@ class Search extends playlist_object
                     $tagjoin = array_merge($subsql['join']['tag'], $join['tag']);
                     $join = array_merge($subsql['join'], $join);
                     $join['tag'] = $tagjoin;
+                break;
+                case 'license':
+                    $where[] = "`song`.`license` $sql_match_operator '$input'";
                 break;
                 case 'added':
                     $input = strtotime($input);

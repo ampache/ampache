@@ -84,9 +84,7 @@ switch ($_REQUEST['action']) {
         foreach ($_REQUEST['catalogs'] as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
             $catalog->clean_catalog();
-            $catalog->count = 0;
             $catalog->verify_catalog();
-            $catalog->count = 0;
             $catalog->add_to_catalog();
         }
         Dba::optimize_tables();
@@ -275,7 +273,7 @@ switch ($_REQUEST['action']) {
         $catalog->format();
         require_once AmpConfig::get('prefix') . '/templates/show_edit_catalog.inc.php';
     break;
-    case 'gather_album_art':
+    case 'gather_media_art':
         toggle_visible('ajax-loading');
         ob_end_flush();
 
@@ -289,7 +287,7 @@ switch ($_REQUEST['action']) {
             $catalog->gather_art();
         }
         $url     = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title     = T_('Album Art Search Finished');
+        $title     = T_('Media Art Search Finished');
         $body    = '';
         show_confirmation($title,$body,$url);
     break;

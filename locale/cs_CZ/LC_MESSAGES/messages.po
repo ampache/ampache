@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-05-26 12:19+0200\n"
+"POT-Creation-Date: 2014-06-14 19:50+0200\n"
 "PO-Revision-Date: 2009-05-05 17:43+0200\n"
 "Last-Translator: Martin Hasoň <martin.hason@seznam.cz>\n"
 "Language-Team: Czech\n"
@@ -43,8 +43,8 @@ msgstr "Přidáno"
 msgid "Your new Access Control List(s) have been created"
 msgstr "Nový seznam přístupů byl vytvořen"
 
-#: ../../admin/access.php:86 ../../lib/class/catalog.class.php:889
-#: ../../lib/class/search.class.php:329 ../../preferences.php:120
+#: ../../admin/access.php:86 ../../lib/class/catalog.class.php:914
+#: ../../lib/class/search.class.php:329 ../../preferences.php:121
 msgid "Updated"
 msgstr "Aktualizováno"
 
@@ -143,6 +143,21 @@ msgstr "Opravdu chcete smazat tento katalog?"
 #: ../../admin/catalog.php:292
 msgid "Album Art Search Finished"
 msgstr "Vyhledávání obalů dokončeno"
+
+#: ../../admin/license.php:36
+#, fuzzy
+msgid "License Updated"
+msgstr "Uživatel byl aktualizován"
+
+#: ../../admin/license.php:39
+#, fuzzy
+msgid "License Created"
+msgstr "Katalog byl vytvořen"
+
+#: ../../admin/license.php:50
+#, fuzzy
+msgid "License Deleted"
+msgstr "Uživatel byl smazán"
 
 #: ../../admin/mail.php:60
 msgid "E-mail Sent"
@@ -255,11 +270,11 @@ msgstr "Uživatel byl aktualizován"
 msgid "updated"
 msgstr "aktualizováno"
 
-#: ../../admin/users.php:117 ../../register.php:107
+#: ../../admin/users.php:117 ../../register.php:108
 msgid "Error Username already exists"
 msgstr "Chyba: Stejné uživatelské jméno již existuje"
 
-#: ../../admin/users.php:124 ../../register.php:136
+#: ../../admin/users.php:124 ../../register.php:137
 msgid "Error: Insert Failed"
 msgstr "Chyba: Přidání se nepodařilo"
 
@@ -272,15 +287,15 @@ msgid "Guest"
 msgstr "Návštěvník"
 
 #: ../../admin/users.php:134 ../../lib/class/democratic.class.php:161
-#: ../../lib/preferences.php:264 ../../templates/show_access_list.inc.php:55
+#: ../../lib/preferences.php:273 ../../templates/show_access_list.inc.php:55
 #: ../../templates/show_add_access.inc.php:42
 #: ../../templates/show_add_user.inc.php:83
 #: ../../templates/show_create_democratic.inc.php:42
 #: ../../templates/show_edit_access.inc.php:60
 #: ../../templates/show_edit_user.inc.php:86
 #: ../../templates/show_mail_users.inc.php:32
-#: ../../templates/show_manage_shoutbox.inc.php:28
-#: ../../templates/show_manage_shoutbox.inc.php:52
+#: ../../templates/show_manage_shoutbox.inc.php:29
+#: ../../templates/show_manage_shoutbox.inc.php:57
 #: ../../templates/show_missing_albums.inc.php:30
 #: ../../templates/show_preference_admin.inc.php:44
 #: ../../templates/show_preference_box.inc.php:63
@@ -290,7 +305,7 @@ msgid "User"
 msgstr "Uživatel"
 
 #: ../../admin/users.php:134 ../../lib/class/democratic.class.php:170
-#: ../../lib/preferences.php:266 ../../templates/show_add_user.inc.php:86
+#: ../../lib/preferences.php:275 ../../templates/show_add_user.inc.php:86
 #: ../../templates/show_create_democratic.inc.php:45
 #: ../../templates/show_democratic_playlist.inc.php:62
 #: ../../templates/show_democratic_playlist.inc.php:109
@@ -365,7 +380,8 @@ msgstr "Uživatel byl smazán"
 msgid "User Avatar has been deleted"
 msgstr " byl vytvořen"
 
-#: ../../admin/users.php:201 ../../templates/show_edit_user.inc.php:109
+#: ../../admin/users.php:201 ../../templates/show_account.inc.php:72
+#: ../../templates/show_edit_user.inc.php:109
 #, fuzzy
 msgid "Generate new API Key"
 msgstr "Vytvořit nové nastavení"
@@ -706,7 +722,7 @@ msgstr "Kódování databáze bylo aktualizováno"
 msgid "Config file creation failed"
 msgstr ""
 
-#: ../../bin/install/update_db.inc:44
+#: ../../bin/install/update_db.inc:44 ../../update.php:80
 #, fuzzy
 msgid "The following updates need to be performed:"
 msgstr "je nutné provést následující aktualizace"
@@ -896,9 +912,9 @@ msgid "Error: Ampache SQL Username or Password missing"
 msgstr ""
 "Chyba: Uživatelské jméno nebo heslo je neplatné. Zkuste to prosím znovu."
 
-#: ../../install.php:163
+#: ../../install.php:153
 #, fuzzy
-msgid "Error: Config file not found or unreadable"
+msgid "Error: Config files not found or unreadable"
 msgstr "Chyba: Konfigurační soubor nebyl nalezen nebo není dostupný"
 
 #: ../../lib/class/access.class.php:110 ../../lib/class/access.class.php:114
@@ -915,7 +931,7 @@ msgid "Duplicate ACL defined"
 msgstr "Duplicitní skladby"
 
 #: ../../lib/class/access.class.php:387 ../../lib/class/access.class.php:407
-#: ../../lib/ui.lib.php:302 ../../templates/list_header.inc.php:148
+#: ../../lib/ui.lib.php:344 ../../templates/list_header.inc.php:148
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_add_access.inc.php:55
 #: ../../templates/show_add_access.inc.php:61
@@ -976,7 +992,7 @@ msgstr "Webové rozhraní"
 msgid "Stream Access"
 msgstr "Oprávnění k síťovému vysílání (stream)"
 
-#: ../../lib/class/album.class.php:233 ../../lib/class/artist.class.php:357
+#: ../../lib/class/album.class.php:233 ../../lib/class/artist.class.php:358
 #: ../../templates/show_album_group_disks.inc.php:38
 #: ../../templates/show_album.inc.php:41
 #: ../../templates/show_lyrics.inc.php:33
@@ -984,7 +1000,7 @@ msgid "Unknown (Orphaned)"
 msgstr "Neznámý (chybí)"
 
 #: ../../lib/class/album.class.php:427
-#: ../../lib/class/subsonic_xml_data.class.php:350
+#: ../../lib/class/subsonic_xml_data.class.php:352
 #: ../../server/search.ajax.php:85
 #: ../../templates/show_album_group_disks.inc.php:99
 #: ../../templates/show_album.inc.php:28
@@ -995,11 +1011,12 @@ msgstr "Disk"
 
 #: ../../lib/class/album.class.php:440 ../../lib/class/browse.class.php:165
 #: ../../lib/ui.lib.php:158 ../../server/search.ajax.php:55
-#: ../../templates/header.inc.php:286 ../../templates/show_random.inc.php:29
+#: ../../templates/header.inc.php:292 ../../templates/show_random.inc.php:29
 #: ../../templates/show_search.inc.php:30
-#: ../../templates/show_stats.inc.php:33
+#: ../../templates/show_stats.inc.php:34
 #: ../../templates/sidebar_home.inc.php:34
-#: ../../templates/sidebar_home.inc.php:103
+#: ../../templates/sidebar_home.inc.php:109
+#: ../../templates/sidebar.light.inc.php:28
 msgid "Artists"
 msgstr "Umělci"
 
@@ -1008,14 +1025,14 @@ msgid "Various"
 msgstr "Různé"
 
 #: ../../lib/class/ampache_rss.class.php:70
-#: ../../lib/class/localplay.class.php:629 ../../templates/header.inc.php:36
+#: ../../lib/class/localplay.class.php:629 ../../templates/header.inc.php:37
 #: ../../templates/mainframes.inc.php:37
 #: ../../templates/show_localplay_status.inc.php:31
 #: ../../templates/show_now_playing.inc.php:33
 msgid "Now Playing"
 msgstr "Nyní hraje"
 
-#: ../../lib/class/ampache_rss.class.php:71 ../../templates/header.inc.php:37
+#: ../../lib/class/ampache_rss.class.php:71 ../../templates/header.inc.php:38
 #: ../../templates/mainframes.inc.php:38
 #: ../../templates/show_recently_played.inc.php:24
 msgid "Recently Played"
@@ -1098,7 +1115,7 @@ msgstr "Neplatný požadavek"
 msgid "Media Object Invalid or Not Specified"
 msgstr "Multimediální objekt je neplatný nebo není definován"
 
-#: ../../lib/class/art.class.php:1008
+#: ../../lib/class/art.class.php:1010
 msgid "Error: Unable to open"
 msgstr "Chyba: Nemohu otevřít"
 
@@ -1127,6 +1144,14 @@ msgstr "Port"
 msgid "download"
 msgstr "Stáhnout"
 
+#: ../../lib/class/autoupdate.class.php:202
+msgid "Updating Ampache sources with `git pull` ..."
+msgstr ""
+
+#: ../../lib/class/autoupdate.class.php:206
+msgid "Done"
+msgstr ""
+
 #: ../../lib/class/broadcast.class.php:160
 #, fuzzy
 msgid "Broadcast edit"
@@ -1140,6 +1165,7 @@ msgstr "Umělec a název"
 #: ../../templates/show_album_row.inc.php:80
 #: ../../templates/show_artist.inc.php:120
 #: ../../templates/show_artist_row.inc.php:62
+#: ../../templates/show_license_row.inc.php:28
 #: ../../templates/show_live_stream_row.inc.php:42
 #: ../../templates/show_playlist_row.inc.php:58
 #: ../../templates/show_shout_row.inc.php:31
@@ -1152,11 +1178,13 @@ msgstr "Upravit"
 
 #: ../../lib/class/broadcast.class.php:161
 #: ../../lib/class/channel.class.php:176 ../../lib/class/share.class.php:191
-#: ../../templates/rightbar.inc.php:117
+#: ../../templates/rightbar.inc.php:119
 #: ../../templates/show_access_list.inc.php:76
+#: ../../templates/show_account.inc.php:65
 #: ../../templates/show_catalog_row.inc.php:39
 #: ../../templates/show_democratic_playlist.inc.php:92
 #: ../../templates/show_edit_user.inc.php:99
+#: ../../templates/show_license_row.inc.php:31
 #: ../../templates/show_live_stream_row.inc.php:46
 #: ../../templates/show_localplay_instances.inc.php:40
 #: ../../templates/show_localplay_playlist.inc.php:50
@@ -1190,8 +1218,8 @@ msgstr ""
 #: ../../templates/show_recommended_artists.inc.php:32
 #: ../../templates/show_recommended_artists.inc.php:81
 #: ../../templates/show_search.inc.php:28
-#: ../../templates/show_stats.inc.php:34 ../../templates/show_stats.inc.php:70
-#: ../../templates/sidebar_home.inc.php:101
+#: ../../templates/show_stats.inc.php:35 ../../templates/show_stats.inc.php:75
+#: ../../templates/sidebar_home.inc.php:107
 msgid "Songs"
 msgstr "Skladby"
 
@@ -1204,9 +1232,9 @@ msgstr "Skladby"
 #: ../../templates/show_recommended_artists.inc.php:33
 #: ../../templates/show_recommended_artists.inc.php:82
 #: ../../templates/show_search.inc.php:29
-#: ../../templates/show_stats.inc.php:32
+#: ../../templates/show_stats.inc.php:33
 #: ../../templates/sidebar_home.inc.php:33
-#: ../../templates/sidebar_home.inc.php:102
+#: ../../templates/sidebar_home.inc.php:108
 msgid "Albums"
 msgstr "Alba"
 
@@ -1220,8 +1248,9 @@ msgid "Radio Stations"
 msgstr "Internetová rádia"
 
 #: ../../lib/class/browse.class.php:176 ../../server/search.ajax.php:146
-#: ../../templates/header.inc.php:292 ../../templates/sidebar_home.inc.php:36
-#: ../../templates/sidebar_home.inc.php:104
+#: ../../templates/header.inc.php:298 ../../templates/sidebar_home.inc.php:36
+#: ../../templates/sidebar_home.inc.php:110
+#: ../../templates/sidebar.light.inc.php:29
 msgid "Playlists"
 msgstr "Seznamy skladeb"
 
@@ -1249,9 +1278,9 @@ msgid "Shoutbox Records"
 msgstr "Záznamy na chatu"
 
 #: ../../lib/class/browse.class.php:207 ../../templates/show_search.inc.php:31
-#: ../../templates/show_stats.inc.php:35 ../../templates/show_stats.inc.php:71
+#: ../../templates/show_stats.inc.php:36 ../../templates/show_stats.inc.php:76
 #: ../../templates/sidebar_home.inc.php:43
-#: ../../templates/sidebar_home.inc.php:105
+#: ../../templates/sidebar_home.inc.php:111
 msgid "Videos"
 msgstr "Videa"
 
@@ -1266,7 +1295,7 @@ msgid "Wanted Albums"
 msgstr "Podobná alba"
 
 #: ../../lib/class/browse.class.php:219
-#: ../../templates/sidebar_home.inc.php:93
+#: ../../templates/sidebar_home.inc.php:96
 #, fuzzy
 msgid "Shared Objects"
 msgstr "Objekt"
@@ -1282,14 +1311,18 @@ msgstr "Uložit změny"
 msgid "Broadcasts"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:273 ../../templates/rightbar.inc.php:124
+#: ../../lib/class/browse.class.php:235
+msgid "Media Licenses"
+msgstr ""
+
+#: ../../lib/class/browse.class.php:277 ../../templates/rightbar.inc.php:126
 #: ../../templates/show_recently_played.inc.php:158
 msgid "More"
 msgstr "Více"
 
 #: ../../lib/class/catalog.class.php:342 ../../lib/class/catalog.class.php:345
 #: ../../lib/class/catalog.class.php:348 ../../lib/class/user.class.php:841
-#: ../../lib/preferences.php:291 ../../templates/show_user.inc.php:23
+#: ../../lib/preferences.php:300 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:57
 msgid "Never"
 msgstr "Nikdy"
@@ -1312,11 +1345,11 @@ msgstr[2] "hodin"
 msgid "Catalog Insert Failed check debug logs"
 msgstr ""
 
-#: ../../lib/class/catalog.class.php:896
+#: ../../lib/class/catalog.class.php:921
 msgid "No Update Needed"
 msgstr "Aktualizace není nutná"
 
-#: ../../lib/class/catalog.class.php:1051
+#: ../../lib/class/catalog.class.php:1076
 #, fuzzy, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
@@ -1324,17 +1357,17 @@ msgstr[0] "Čištění katalogu je dokončeno"
 msgstr[1] "Čištění katalogu je dokončeno"
 msgstr[2] "Čištění katalogu je dokončeno"
 
-#: ../../lib/class/catalog.class.php:1076
+#: ../../lib/class/catalog.class.php:1101
 #, fuzzy, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr "Čištění katalogu je dokončeno"
 
-#: ../../lib/class/catalog.class.php:1225
+#: ../../lib/class/catalog.class.php:1250
 #, fuzzy
 msgid "Failed to create playlist."
 msgstr "Nelze vytvořit nový účet"
 
-#: ../../lib/class/catalog.class.php:1242
+#: ../../lib/class/catalog.class.php:1267
 msgid "No valid songs found in playlist file."
 msgstr ""
 
@@ -1555,7 +1588,7 @@ msgstr ""
 msgid "Any searchable text"
 msgstr ""
 
-#: ../../lib/class/search.class.php:206 ../../lib/class/search.class.php:383
+#: ../../lib/class/search.class.php:206 ../../lib/class/search.class.php:397
 #: ../../templates/show_democratic_playlist.inc.php:57
 #: ../../templates/show_democratic_playlist.inc.php:104
 #: ../../templates/show_disabled_songs.inc.php:29
@@ -1576,7 +1609,7 @@ msgstr "Název"
 #: ../../templates/show_disabled_songs.inc.php:56
 #: ../../templates/show_duplicates.inc.php:30
 #: ../../templates/show_duplicates.inc.php:69
-#: ../../templates/show_edit_song_row.inc.php:40
+#: ../../templates/show_edit_song_row.inc.php:41
 #: ../../templates/show_get_albumart.inc.php:36
 #: ../../templates/show_lyrics.inc.php:51
 #: ../../templates/show_missing_albums.inc.php:27
@@ -1590,7 +1623,7 @@ msgstr "Název"
 #: ../../templates/show_song_previews.inc.php:34
 #: ../../templates/show_songs.inc.php:34 ../../templates/show_songs.inc.php:78
 #: ../../templates/show_wanted_albums.inc.php:26
-#: ../../templates/sidebar_home.inc.php:71
+#: ../../templates/sidebar_home.inc.php:74
 msgid "Album"
 msgstr "Album"
 
@@ -1607,7 +1640,7 @@ msgstr "Album"
 #: ../../templates/show_duplicates.inc.php:29
 #: ../../templates/show_duplicates.inc.php:68
 #: ../../templates/show_edit_album_row.inc.php:31
-#: ../../templates/show_edit_song_row.inc.php:31
+#: ../../templates/show_edit_song_row.inc.php:32
 #: ../../templates/show_get_albumart.inc.php:28
 #: ../../templates/show_lyrics.inc.php:58
 #: ../../templates/show_missing_albums.inc.php:28
@@ -1623,24 +1656,24 @@ msgstr "Album"
 #: ../../templates/show_song_previews.inc.php:33
 #: ../../templates/show_songs.inc.php:33 ../../templates/show_songs.inc.php:77
 #: ../../templates/show_wanted_albums.inc.php:27
-#: ../../templates/sidebar_home.inc.php:72
+#: ../../templates/sidebar_home.inc.php:75
 msgid "Artist"
 msgstr "Umělec"
 
 #: ../../lib/class/search.class.php:227
-#: ../../templates/show_manage_shoutbox.inc.php:30
-#: ../../templates/show_manage_shoutbox.inc.php:54
+#: ../../templates/show_manage_shoutbox.inc.php:31
+#: ../../templates/show_manage_shoutbox.inc.php:59
 #: ../../templates/show_song.inc.php:90
 msgid "Comment"
 msgstr "Komentář"
 
-#: ../../lib/class/search.class.php:235 ../../lib/class/search.class.php:429
-#: ../../lib/class/search.class.php:451
+#: ../../lib/class/search.class.php:235 ../../lib/class/search.class.php:443
+#: ../../lib/class/search.class.php:465
 #: ../../templates/show_search_bar.inc.php:35
 msgid "Tag"
 msgstr "Žánr"
 
-#: ../../lib/class/search.class.php:242 ../../lib/class/search.class.php:437
+#: ../../lib/class/search.class.php:242 ../../lib/class/search.class.php:451
 #: ../../templates/show_disabled_songs.inc.php:32
 #: ../../templates/show_disabled_songs.inc.php:58
 #: ../../templates/show_duplicates.inc.php:34
@@ -1650,7 +1683,7 @@ msgstr "Žánr"
 msgid "Filename"
 msgstr "Soubor"
 
-#: ../../lib/class/search.class.php:249 ../../lib/class/search.class.php:390
+#: ../../lib/class/search.class.php:249 ../../lib/class/search.class.php:404
 #: ../../templates/show_albums.inc.php:38
 #: ../../templates/show_albums.inc.php:80
 #: ../../templates/show_edit_album_row.inc.php:43
@@ -1663,7 +1696,7 @@ msgstr "Rok"
 msgid "Length (in minutes)"
 msgstr ""
 
-#: ../../lib/class/search.class.php:264 ../../lib/class/search.class.php:398
+#: ../../lib/class/search.class.php:264 ../../lib/class/search.class.php:412
 #: ../../templates/show_albums.inc.php:41
 #: ../../templates/show_albums.inc.php:83
 #: ../../templates/show_artists.inc.php:40
@@ -1698,7 +1731,7 @@ msgstr "Datový tok"
 msgid "Played"
 msgstr "Přehráno"
 
-#: ../../lib/class/search.class.php:342 ../../lib/class/search.class.php:421
+#: ../../lib/class/search.class.php:342 ../../lib/class/search.class.php:435
 #: ../../templates/browse_filters.inc.php:72
 #: ../../templates/show_add_live_stream.inc.php:54
 #: ../../templates/show_export.inc.php:32
@@ -1708,8 +1741,8 @@ msgstr "Katalog"
 #: ../../lib/class/search.class.php:355 ../../lib/ui.lib.php:113
 #: ../../templates/show_manage_democratic.inc.php:26
 #: ../../templates/show_search_bar.inc.php:34
-#: ../../templates/sidebar_home.inc.php:49
-#: ../../templates/sidebar_home.inc.php:73
+#: ../../templates/sidebar_home.inc.php:52
+#: ../../templates/sidebar_home.inc.php:76
 msgid "Playlist"
 msgstr "Seznam skladeb"
 
@@ -1726,9 +1759,14 @@ msgstr "Název seznamu skladeb"
 msgid "Smart Playlist"
 msgstr "Načíst seznam skladeb"
 
-#: ../../lib/class/search.class.php:445 ../../lib/class/search.class.php:459
+#: ../../lib/class/search.class.php:388
+#: ../../templates/show_add_upload.inc.php:165
+#: ../../templates/show_edit_song_row.inc.php:66
+msgid "Music License"
+msgstr ""
+
+#: ../../lib/class/search.class.php:459 ../../lib/class/search.class.php:473
 #: ../../templates/show_access_list.inc.php:51
-#: ../../templates/show_account.inc.php:29
 #: ../../templates/show_add_access.inc.php:27
 #: ../../templates/show_add_channel.inc.php:35
 #: ../../templates/show_add_live_stream.inc.php:27
@@ -1744,6 +1782,7 @@ msgstr "Načíst seznam skladeb"
 #: ../../templates/show_edit_broadcast_row.inc.php:27
 #: ../../templates/show_edit_catalog.inc.php:28
 #: ../../templates/show_edit_channel_row.inc.php:44
+#: ../../templates/show_edit_license.inc.php:30
 #: ../../templates/show_edit_live_stream_row.inc.php:27
 #: ../../templates/show_edit_playlist_row.inc.php:27
 #: ../../templates/show_edit_smartplaylist_row.inc.php:27
@@ -1754,9 +1793,11 @@ msgstr "Načíst seznam skladeb"
 #: ../../templates/show_localplay_controllers.inc.php:63
 #: ../../templates/show_localplay_playlist.inc.php:32
 #: ../../templates/show_localplay_playlist.inc.php:62
+#: ../../templates/show_manage_license.inc.php:35
+#: ../../templates/show_manage_license.inc.php:56
 #: ../../templates/show_plugins.inc.php:29
 #: ../../templates/show_plugins.inc.php:69
-#: ../../templates/show_stats.inc.php:65
+#: ../../templates/show_stats.inc.php:70
 msgid "Name"
 msgstr "Jméno"
 
@@ -1799,28 +1840,33 @@ msgstr "Přidat do seznamu skladeb"
 #: ../../templates/show_album.inc.php:117
 #: ../../templates/show_album.inc.php:118
 #: ../../templates/show_album_row.inc.php:67
-#: ../../templates/show_html5_player.inc.php:249
-#: ../../templates/show_html5_player.inc.php:255
+#: ../../templates/show_html5_player.inc.php:258
+#: ../../templates/show_html5_player.inc.php:264
 #: ../../templates/show_song.inc.php:68
 #: ../../templates/show_song_row.inc.php:61
 msgid "Post Shout"
 msgstr "Přidat komentář"
 
-#: ../../lib/class/song.class.php:886
-#: ../../templates/show_html5_player.inc.php:246
+#: ../../lib/class/song.class.php:897
+#: ../../templates/show_html5_player.inc.php:255
 msgid "Show Lyrics"
 msgstr "Zobrazit texty"
 
-#: ../../lib/class/update.class.php:442
+#: ../../lib/class/update.class.php:454
 #, fuzzy
 msgid "No updates needed."
 msgstr "Aktualizace není nutná"
 
-#: ../../lib/class/update.class.php:2428 ../../lib/class/update.class.php:2444
+#: ../../lib/class/update.class.php:456
+#, fuzzy
+msgid "Return to main page"
+msgstr "Zpět na přihlašovací stránku"
+
+#: ../../lib/class/update.class.php:2440 ../../lib/class/update.class.php:2456
 msgid "File copy error."
 msgstr ""
 
-#: ../../lib/class/update.class.php:2435 ../../lib/class/update.class.php:2451
+#: ../../lib/class/update.class.php:2447 ../../lib/class/update.class.php:2463
 msgid "Cannot copy default .htaccess file."
 msgstr ""
 
@@ -1853,10 +1899,6 @@ msgstr "Odstranit"
 #, fuzzy
 msgid "Add to wanted list"
 msgstr "Přidat do seznamu skladeb"
-
-#: ../../lib/install.lib.php:72
-msgid "Config file already exists, install is probably completed"
-msgstr ""
 
 #: ../../lib/install.lib.php:83
 msgid "Unable to connect to database, check your ampache config"
@@ -1955,13 +1997,13 @@ msgstr "Uživatel je již přihlášen"
 msgid "Unable to create local account"
 msgstr "Nelze vytvořit nový účet"
 
-#: ../../lib/preferences.php:186 ../../lib/preferences.php:305
+#: ../../lib/preferences.php:192 ../../lib/preferences.php:314
 #: ../../templates/show_disabled_songs.inc.php:64
 #: ../../templates/show_user_row.inc.php:49
 msgid "Enable"
 msgstr "Povolit"
 
-#: ../../lib/preferences.php:187 ../../lib/preferences.php:306
+#: ../../lib/preferences.php:193 ../../lib/preferences.php:315
 #: ../../templates/show_catalog_types.inc.php:43
 #: ../../templates/show_duplicates.inc.php:27
 #: ../../templates/show_duplicates.inc.php:66
@@ -1970,111 +2012,112 @@ msgstr "Povolit"
 msgid "Disable"
 msgstr "Zakázat"
 
-#: ../../lib/preferences.php:205 ../../lib/preferences.php:242
-#: ../../lib/ui.lib.php:329 ../../templates/show_adds_catalog.inc.php:27
+#: ../../lib/preferences.php:214 ../../lib/preferences.php:251
+#: ../../lib/ui.lib.php:281 ../../lib/ui.lib.php:371
+#: ../../templates/show_adds_catalog.inc.php:27
 #: ../../templates/show_gather_art.inc.php:25
-#: ../../templates/show_install_config.inc.php:110
+#: ../../templates/show_install_config.inc.php:119
 #: ../../templates/sidebar_localplay.inc.php:50
 msgid "None"
 msgstr "Nic"
 
-#: ../../lib/preferences.php:207 ../../templates/show_edit_user.inc.php:122
+#: ../../lib/preferences.php:216 ../../templates/show_edit_user.inc.php:123
 #: ../../templates/show_playtype_switch.inc.php:33
 msgid "Stream"
 msgstr "Síťové vysílání"
 
-#: ../../lib/preferences.php:210
-#: ../../modules/localplay/httpq.controller.php:471
+#: ../../lib/preferences.php:219
+#: ../../modules/localplay/httpq.controller.php:469
 #: ../../modules/localplay/mpd.controller.php:469
 #: ../../modules/localplay/vlc.controller.php:479
-#: ../../templates/show_edit_user.inc.php:119
+#: ../../templates/show_edit_user.inc.php:120
 #: ../../templates/show_playtype_switch.inc.php:37
-#: ../../templates/sidebar_home.inc.php:53
+#: ../../templates/sidebar_home.inc.php:56
 #: ../../templates/sidebar_modules.inc.php:39
 msgid "Democratic"
 msgstr "Veřejné vysílání"
 
-#: ../../lib/preferences.php:213 ../../templates/show_edit_user.inc.php:120
+#: ../../lib/preferences.php:222 ../../templates/show_edit_user.inc.php:121
 #: ../../templates/show_playtype_switch.inc.php:35
-#: ../../templates/sidebar_home.inc.php:62 ../../templates/sidebar.inc.php:30
+#: ../../templates/sidebar_home.inc.php:65 ../../templates/sidebar.inc.php:30
 #: ../../templates/sidebar_localplay.inc.php:38
 msgid "Localplay"
 msgstr "Místní přehrávání"
 
-#: ../../lib/preferences.php:215
+#: ../../lib/preferences.php:224
 #: ../../templates/show_playtype_switch.inc.php:39
 #, fuzzy
 msgid "Web Player"
 msgstr "Přehrávač XSPF"
 
-#: ../../lib/preferences.php:222
+#: ../../lib/preferences.php:231
 msgid "M3U"
 msgstr "M3U"
 
-#: ../../lib/preferences.php:223
+#: ../../lib/preferences.php:232
 msgid "Simple M3U"
 msgstr "Jednoduché M3U"
 
-#: ../../lib/preferences.php:224
+#: ../../lib/preferences.php:233
 msgid "PLS"
 msgstr "PLS"
 
-#: ../../lib/preferences.php:225
+#: ../../lib/preferences.php:234
 msgid "Asx"
 msgstr "Asx"
 
-#: ../../lib/preferences.php:226
+#: ../../lib/preferences.php:235
 msgid "RAM"
 msgstr "RAM"
 
-#: ../../lib/preferences.php:227
+#: ../../lib/preferences.php:236
 msgid "XSPF"
 msgstr "XSPF"
 
-#: ../../lib/preferences.php:263
+#: ../../lib/preferences.php:272
 msgid "Disabled"
 msgstr "Zakázáno"
 
-#: ../../lib/preferences.php:265
+#: ../../lib/preferences.php:274
 msgid "Manager"
 msgstr "Správce"
 
-#: ../../lib/preferences.php:282
+#: ../../lib/preferences.php:291
 msgid "Send on Add"
 msgstr "Poslat po přidání"
 
-#: ../../lib/preferences.php:283
+#: ../../lib/preferences.php:292
 msgid "Send and Clear on Add"
 msgstr "Poslat a smazat po přidání"
 
-#: ../../lib/preferences.php:284
+#: ../../lib/preferences.php:293
 msgid "Clear on Send"
 msgstr "Smazat po odeslání"
 
-#: ../../lib/preferences.php:285 ../../lib/preferences.php:292
-#: ../../lib/preferences.php:328
+#: ../../lib/preferences.php:294 ../../lib/preferences.php:301
+#: ../../lib/preferences.php:337
 #: ../../templates/show_manage_democratic.inc.php:30
 msgid "Default"
 msgstr "Výchozí"
 
-#: ../../lib/preferences.php:293
+#: ../../lib/preferences.php:302
 msgid "Always"
 msgstr "Vždy"
 
-#: ../../lib/preferences.php:329
+#: ../../lib/preferences.php:338
 #, fuzzy
 msgid "Year ascending"
 msgstr "Dekódování"
 
-#: ../../lib/preferences.php:330
+#: ../../lib/preferences.php:339
 msgid "Year descending"
 msgstr ""
 
-#: ../../lib/preferences.php:331
+#: ../../lib/preferences.php:340
 msgid "Name ascending"
 msgstr ""
 
-#: ../../lib/preferences.php:332
+#: ../../lib/preferences.php:341
 msgid "Name descending"
 msgstr ""
 
@@ -2106,12 +2149,13 @@ msgstr "Úžasné"
 msgid "Off the Charts!"
 msgstr "Ohodnotit!"
 
-#: ../../lib/ui.lib.php:101 ../../templates/header.inc.php:280
-#: ../../templates/sidebar.inc.php:29
+#: ../../lib/ui.lib.php:101 ../../templates/header.inc.php:286
+#: ../../templates/sidebar.inc.php:29 ../../templates/sidebar.light.inc.php:27
 msgid "Home"
 msgstr "Domů"
 
-#: ../../lib/ui.lib.php:104
+#: ../../lib/ui.lib.php:104 ../../templates/show_add_upload.inc.php:26
+#: ../../templates/sidebar_home.inc.php:45
 msgid "Upload"
 msgstr "Nahrát"
 
@@ -2125,7 +2169,7 @@ msgstr "Náhodné přehrávání"
 
 #: ../../lib/ui.lib.php:116 ../../templates/show_search_bar.inc.php:37
 #: ../../templates/show_search.inc.php:53
-#: ../../templates/sidebar_home.inc.php:99
+#: ../../templates/sidebar_home.inc.php:105
 msgid "Search"
 msgstr "Hledat"
 
@@ -2164,7 +2208,7 @@ msgid "Browse Music"
 msgstr "Prohlížet hudbu"
 
 #: ../../lib/ui.lib.php:162 ../../templates/show_stats.inc.php:26
-#: ../../templates/sidebar_home.inc.php:95
+#: ../../templates/sidebar_home.inc.php:101
 msgid "Statistics"
 msgstr "Statistiky"
 
@@ -2172,11 +2216,11 @@ msgstr "Statistiky"
 msgid "Add New"
 msgstr "Přidat nový"
 
-#: ../../lib/ui.lib.php:546
+#: ../../lib/ui.lib.php:588
 msgid "On"
 msgstr "Zapnuto"
 
-#: ../../lib/ui.lib.php:548
+#: ../../lib/ui.lib.php:590
 msgid "Off"
 msgstr "Vypnuto"
 
@@ -2206,6 +2250,7 @@ msgid "The password has been set to: %s"
 msgstr ""
 
 #: ../../modules/catalog/dropbox.catalog.php:122
+#: ../../templates/show_account.inc.php:71
 #: ../../templates/show_edit_user.inc.php:108
 msgid "API Key"
 msgstr ""
@@ -2218,7 +2263,7 @@ msgstr ""
 
 #: ../../modules/catalog/dropbox.catalog.php:124
 #: ../../modules/catalog/local.catalog.php:107
-#: ../../templates/show_stats.inc.php:66
+#: ../../templates/show_stats.inc.php:71
 msgid "Path"
 msgstr "Cesta"
 
@@ -2349,26 +2394,26 @@ msgstr ""
 #: ../../templates/show_add_user.inc.php:29
 #: ../../templates/show_edit_user.inc.php:32
 #: ../../templates/show_install_account.inc.php:51
-#: ../../templates/show_login_form.inc.php:79
+#: ../../templates/show_login_form.inc.php:80
 #: ../../templates/show_now_playing_row.inc.php:25
 #: ../../templates/show_recently_played.inc.php:34
 #: ../../templates/show_recently_played.inc.php:145
-#: ../../templates/show_user_registration.inc.php:71
+#: ../../templates/show_user_registration.inc.php:76
 #: ../../templates/show_users.inc.php:41 ../../templates/show_users.inc.php:67
 msgid "Username"
 msgstr "Uživatelské jméno"
 
 #: ../../modules/catalog/remote.catalog.php:111
 #: ../../modules/catalog/subsonic.catalog.php:111
-#: ../../modules/localplay/httpq.controller.php:211
+#: ../../modules/localplay/httpq.controller.php:209
 #: ../../modules/localplay/mpd.controller.php:240
 #: ../../modules/localplay/vlc.controller.php:195
 #: ../../modules/localplay/xbmc.controller.php:201
 #: ../../templates/show_add_user.inc.php:60
 #: ../../templates/show_edit_user.inc.php:63
 #: ../../templates/show_install_account.inc.php:57
-#: ../../templates/show_login_form.inc.php:83
-#: ../../templates/show_user_registration.inc.php:94
+#: ../../templates/show_login_form.inc.php:84
+#: ../../templates/show_user_registration.inc.php:99
 msgid "Password"
 msgstr "Heslo"
 
@@ -2483,21 +2528,21 @@ msgstr "Aktualizace vzdálených katalogů dokončena"
 msgid "Artist Error."
 msgstr "Uložit nastavení"
 
-#: ../../modules/localplay/httpq.controller.php:208
+#: ../../modules/localplay/httpq.controller.php:206
 #: ../../modules/localplay/mpd.controller.php:237
 #: ../../modules/localplay/vlc.controller.php:192
 #: ../../modules/localplay/xbmc.controller.php:197
 msgid "Instance Name"
 msgstr "Název položky"
 
-#: ../../modules/localplay/httpq.controller.php:209
+#: ../../modules/localplay/httpq.controller.php:207
 #: ../../modules/localplay/mpd.controller.php:238
 #: ../../modules/localplay/vlc.controller.php:193
 #: ../../modules/localplay/xbmc.controller.php:198
 msgid "Hostname"
 msgstr "Jméno počítače"
 
-#: ../../modules/localplay/httpq.controller.php:210
+#: ../../modules/localplay/httpq.controller.php:208
 #: ../../modules/localplay/mpd.controller.php:239
 #: ../../modules/localplay/vlc.controller.php:194
 #: ../../modules/localplay/xbmc.controller.php:199
@@ -2507,14 +2552,14 @@ msgstr "Jméno počítače"
 msgid "Port"
 msgstr "Port"
 
-#: ../../modules/localplay/httpq.controller.php:475
+#: ../../modules/localplay/httpq.controller.php:473
 #: ../../modules/localplay/mpd.controller.php:473
 #: ../../modules/localplay/vlc.controller.php:483
 #: ../../templates/show_add_channel.inc.php:76
 #: ../../templates/show_channels.inc.php:34
 #: ../../templates/show_edit_channel_row.inc.php:69
 #: ../../templates/show_localplay_status.inc.php:48
-#: ../../templates/sidebar_home.inc.php:68
+#: ../../templates/sidebar_home.inc.php:71
 msgid "Random"
 msgstr "Přidat v náhodném pořadí"
 
@@ -2577,11 +2622,11 @@ msgstr ""
 msgid "Server"
 msgstr "Server"
 
-#: ../../preferences.php:117
+#: ../../preferences.php:118
 msgid "Error Update Failed"
 msgstr "Chyba aktualizace"
 
-#: ../../preferences.php:121
+#: ../../preferences.php:122
 msgid "Your Account has been updated"
 msgstr "Váš účet byl aktualizován"
 
@@ -2589,36 +2634,36 @@ msgstr "Váš účet byl aktualizován"
 msgid "Radio Station Added"
 msgstr "Internetové rádio bylo přidáno"
 
-#: ../../register.php:68
+#: ../../register.php:69
 msgid "Error Captcha Required"
 msgstr "Chyba: Vyžadovaná captcha"
 
-#: ../../register.php:74
+#: ../../register.php:75
 msgid "Error Captcha Failed"
 msgstr "Chyba: Neúspěšné ověření captcha"
 
-#: ../../register.php:81
+#: ../../register.php:82
 msgid "You <U>must</U> accept the user agreement"
 msgstr "<U>Musíte</U> akceptovat licenční ujednání"
 
-#: ../../register.php:86
+#: ../../register.php:87
 msgid "You did not enter a username"
 msgstr "Nezadali jste své uživatelské jméno"
 
-#: ../../register.php:90
+#: ../../register.php:91
 msgid "Please fill in your full name (Firstname Lastname)"
 msgstr "Vyplňte prosím Vaše jméno a příjmení"
 
-#: ../../register.php:95
+#: ../../register.php:96
 #, fuzzy
 msgid "Invalid email address"
 msgstr "Neplatný požadavek"
 
-#: ../../register.php:99
+#: ../../register.php:100
 msgid "You must enter a password"
 msgstr "Musíte zadat heslo"
 
-#: ../../register.php:103
+#: ../../register.php:104
 msgid "Your passwords do not match"
 msgstr "Vaše hesla se neshodují"
 
@@ -2638,7 +2683,7 @@ msgid "Your Search has been saved as a track in %s"
 msgstr ""
 
 #: ../../server/player.ajax.php:41
-#: ../../templates/show_html5_player.inc.php:661
+#: ../../templates/show_html5_player.inc.php:698
 msgid "My Broadcast"
 msgstr ""
 
@@ -2733,7 +2778,7 @@ msgstr "Aktualizace Ampache"
 #: ../../templates/error_page.inc.php:43
 #: ../../templates/show_denied.inc.php:38
 #: ../../templates/show_mail_users.inc.php:43
-#: ../../templates/show_test.inc.php:37 ../../update.php:58
+#: ../../templates/show_test.inc.php:37 ../../update.php:70
 #, fuzzy
 msgid "Ampache"
 msgstr "Ladění Ampache"
@@ -2748,47 +2793,52 @@ msgstr ""
 msgid "Error messages"
 msgstr ""
 
-#: ../../templates/footer.inc.php:28
+#: ../../templates/footer.inc.php:35
+msgid "Donate"
+msgstr ""
+
+#: ../../templates/footer.inc.php:39
 #: ../../templates/show_lostpassword_form.inc.php:75
 msgid "Queries:"
 msgstr "Dotazy:"
 
-#: ../../templates/footer.inc.php:28
+#: ../../templates/footer.inc.php:39
 #: ../../templates/show_lostpassword_form.inc.php:76
 msgid "Cache Hits:"
 msgstr "Záznamů ve vyrovnávací paměti:"
 
-#: ../../templates/footer.inc.php:33
+#: ../../templates/footer.inc.php:44
 msgid "Load time:"
 msgstr ""
 
-#: ../../templates/header.inc.php:83
+#: ../../templates/header.inc.php:89
 msgid "Save"
 msgstr ""
 
-#: ../../templates/header.inc.php:84
+#: ../../templates/header.inc.php:90
 #: ../../templates/show_confirmation.inc.php:34
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: ../../templates/header.inc.php:260
+#: ../../templates/header.inc.php:266
 msgid "Log out"
 msgstr "Odhlásit"
 
-#: ../../templates/header.inc.php:298 ../../templates/sidebar_home.inc.php:87
+#: ../../templates/header.inc.php:304 ../../templates/sidebar_home.inc.php:90
+#: ../../templates/sidebar.light.inc.php:30
 #, fuzzy
 msgid "Favorites"
 msgstr "Oblíbené písně"
 
-#: ../../templates/header.inc.php:317
+#: ../../templates/header.inc.php:364
 msgid "Error Config File Out of Date"
 msgstr "Chyba: Konfigurační soubor je zastaralý"
 
-#: ../../templates/header.inc.php:318
+#: ../../templates/header.inc.php:365
 msgid "Generate New Config"
 msgstr "Vytvořit nové nastavení"
 
-#: ../../templates/install_header.inc.php:41
+#: ../../templates/install_header.inc.php:49
 #: ../../templates/show_install_lang.inc.php:27
 msgid "Ampache Installation"
 msgstr "Instalace Ampache"
@@ -2812,6 +2862,7 @@ msgid "Add to Playlist"
 msgstr "Přidat do seznamu skladeb"
 
 #: ../../templates/rightbar.inc.php:31
+#: ../../templates/show_html5_player.inc.php:715
 #: ../../templates/show_playlists_dialog.inc.php:27
 msgid "Add to New Playlist"
 msgstr "Přidat do nového seznamu skladeb"
@@ -2861,7 +2912,7 @@ msgstr "Přidat písně z alba v náhodném pořadí"
 msgid "Random Playlist"
 msgstr "Náhodné přehrávání"
 
-#: ../../templates/rightbar.inc.php:120
+#: ../../templates/rightbar.inc.php:122
 msgid "No items"
 msgstr ""
 
@@ -2940,8 +2991,10 @@ msgstr "Typ"
 #: ../../templates/show_localplay_playlist.inc.php:33
 #: ../../templates/show_localplay_playlist.inc.php:63
 #: ../../templates/show_manage_democratic.inc.php:32
-#: ../../templates/show_manage_shoutbox.inc.php:32
-#: ../../templates/show_manage_shoutbox.inc.php:56
+#: ../../templates/show_manage_license.inc.php:37
+#: ../../templates/show_manage_license.inc.php:58
+#: ../../templates/show_manage_shoutbox.inc.php:33
+#: ../../templates/show_manage_shoutbox.inc.php:61
 #: ../../templates/show_playlist_songs.inc.php:47
 #: ../../templates/show_playlist_songs.inc.php:80
 #: ../../templates/show_plugins.inc.php:33
@@ -2955,17 +3008,25 @@ msgstr "Typ"
 msgid "Action"
 msgstr "Akce"
 
+#: ../../templates/show_account.inc.php:29
+#: ../../templates/show_add_user.inc.php:37
+#: ../../templates/show_edit_user.inc.php:40
+#: ../../templates/show_user.inc.php:35
+#: ../../templates/show_user_registration.inc.php:82
+msgid "Full Name"
+msgstr "Jméno"
+
 #: ../../templates/show_account.inc.php:35
 #: ../../templates/show_add_user.inc.php:44
 #: ../../templates/show_edit_user.inc.php:47
-#: ../../templates/show_user_registration.inc.php:83
+#: ../../templates/show_user_registration.inc.php:88
 msgid "E-mail"
 msgstr "E-mail"
 
 #: ../../templates/show_account.inc.php:41
 #: ../../templates/show_add_user.inc.php:52
 #: ../../templates/show_edit_user.inc.php:55
-#: ../../templates/show_user_registration.inc.php:88
+#: ../../templates/show_user_registration.inc.php:93
 msgid "Website"
 msgstr ""
 
@@ -2977,17 +3038,23 @@ msgstr "Nové heslo"
 #: ../../templates/show_add_user.inc.php:69
 #: ../../templates/show_edit_user.inc.php:72
 #: ../../templates/show_install_account.inc.php:63
-#: ../../templates/show_user_registration.inc.php:100
+#: ../../templates/show_user_registration.inc.php:105
 msgid "Confirm Password"
 msgstr "Potvrzení hesla"
 
-#: ../../templates/show_account.inc.php:60
-#: ../../templates/show_edit_user.inc.php:133
+#: ../../templates/show_account.inc.php:61
+#: ../../templates/show_add_user.inc.php:92
+#: ../../templates/show_edit_user.inc.php:95
+msgid "Avatar"
+msgstr ""
+
+#: ../../templates/show_account.inc.php:79
+#: ../../templates/show_edit_user.inc.php:134
 #: ../../templates/show_manage_catalogs.inc.php:32
 msgid "Clear Stats"
 msgstr "Vyčistit statistiky"
 
-#: ../../templates/show_account.inc.php:70
+#: ../../templates/show_account.inc.php:89
 msgid "Update Account"
 msgstr "Aktualizovat účet"
 
@@ -3136,6 +3203,8 @@ msgstr "Oprávnění k síťovému vysílání (stream)"
 #: ../../templates/show_edit_channel_row.inc.php:48
 #: ../../templates/show_localplay_controllers.inc.php:30
 #: ../../templates/show_localplay_controllers.inc.php:64
+#: ../../templates/show_manage_license.inc.php:36
+#: ../../templates/show_manage_license.inc.php:57
 #: ../../templates/show_plugins.inc.php:30
 #: ../../templates/show_plugins.inc.php:70
 msgid "Description"
@@ -3290,26 +3359,33 @@ msgstr "id3 komentář"
 msgid "Shoutbox"
 msgstr "Chat"
 
+#: ../../templates/show_add_upload.inc.php:35
+msgid "Target folder"
+msgstr ""
+
+#: ../../templates/show_add_upload.inc.php:175
+#: ../../templates/show_install_config.inc.php:139
+#, fuzzy
+msgid "Files"
+msgstr "Soubor"
+
+#: ../../templates/show_add_upload.inc.php:178
+msgid "Drop File Here"
+msgstr ""
+
+#: ../../templates/show_add_upload.inc.php:179
+#: ../../templates/sidebar_home.inc.php:24
+msgid "Browse"
+msgstr "Prohlížet"
+
 #: ../../templates/show_add_user.inc.php:23
 msgid "Adding a New User"
 msgstr "Přidat nového uživatele"
-
-#: ../../templates/show_add_user.inc.php:37
-#: ../../templates/show_edit_user.inc.php:40
-#: ../../templates/show_user.inc.php:35
-#: ../../templates/show_user_registration.inc.php:77
-msgid "Full Name"
-msgstr "Jméno"
 
 #: ../../templates/show_add_user.inc.php:77
 #: ../../templates/show_edit_user.inc.php:80
 msgid "User Access Level"
 msgstr "Stupeň přístupových práv"
-
-#: ../../templates/show_add_user.inc.php:92
-#: ../../templates/show_edit_user.inc.php:95
-msgid "Avatar"
-msgstr ""
 
 #: ../../templates/show_add_user.inc.php:102
 #: ../../templates/sidebar_admin.inc.php:33
@@ -3456,9 +3532,9 @@ msgstr "Hledat obal"
 #: ../../templates/show_album.inc.php:139
 #: ../../templates/show_artist.inc.php:114
 #: ../../templates/show_artist.inc.php:115
-#: ../../templates/show_install_config.inc.php:134
 #: ../../templates/show_install_config.inc.php:149
-#: ../../templates/show_install_config.inc.php:165
+#: ../../templates/show_install_config.inc.php:164
+#: ../../templates/show_install_config.inc.php:180
 #: ../../templates/show_playlist_song_row.inc.php:56
 #: ../../templates/show_share.inc.php:32 ../../templates/show_share.inc.php:33
 #: ../../templates/show_song.inc.php:76
@@ -3541,14 +3617,14 @@ msgstr "Obal"
 #: ../../templates/show_artists.inc.php:77
 #: ../../templates/show_edit_album_row.inc.php:55
 #: ../../templates/show_edit_artist_row.inc.php:35
-#: ../../templates/show_edit_song_row.inc.php:57
+#: ../../templates/show_edit_song_row.inc.php:59
 #: ../../templates/show_now_playing_row.inc.php:51
 #: ../../templates/show_playlist_songs.inc.php:35
 #: ../../templates/show_playlist_songs.inc.php:72
 #: ../../templates/show_recommended_artists.inc.php:35
 #: ../../templates/show_recommended_artists.inc.php:84
 #: ../../templates/show_songs.inc.php:35 ../../templates/show_songs.inc.php:79
-#: ../../templates/show_stats.inc.php:36
+#: ../../templates/show_stats.inc.php:37
 #: ../../templates/show_videos.inc.php:35
 #: ../../templates/show_videos.inc.php:64
 msgid "Tags"
@@ -3748,19 +3824,19 @@ msgstr ""
 
 #: ../../templates/show_catalogs.inc.php:29
 #: ../../templates/show_catalogs.inc.php:57
-#: ../../templates/show_stats.inc.php:67
+#: ../../templates/show_stats.inc.php:72
 msgid "Last Verify"
 msgstr "Naposledy zkontrolované"
 
 #: ../../templates/show_catalogs.inc.php:30
 #: ../../templates/show_catalogs.inc.php:58
-#: ../../templates/show_stats.inc.php:68
+#: ../../templates/show_stats.inc.php:73
 msgid "Last Add"
 msgstr "Naposledy přidané"
 
 #: ../../templates/show_catalogs.inc.php:31
 #: ../../templates/show_catalogs.inc.php:59
-#: ../../templates/show_stats.inc.php:69
+#: ../../templates/show_stats.inc.php:74
 msgid "Last Clean"
 msgstr "Naposledy vyčištěné"
 
@@ -3788,7 +3864,7 @@ msgstr "Aktivovat"
 #: ../../templates/show_disabled_songs.inc.php:48
 #: ../../templates/show_localplay_controllers.inc.php:57
 #: ../../templates/show_localplay_playlist.inc.php:55
-#: ../../templates/show_manage_shoutbox.inc.php:47
+#: ../../templates/show_manage_shoutbox.inc.php:50
 #: ../../templates/show_plugins.inc.php:63
 msgid "No Records Found"
 msgstr "Nenalezeny žádné záznamy"
@@ -3979,7 +4055,7 @@ msgstr "Aktuální nastavení"
 msgid "Preference"
 msgstr "Nastavení"
 
-#: ../../templates/show_debug.inc.php:125 ../../update.php:64
+#: ../../templates/show_debug.inc.php:125 ../../update.php:76
 msgid "Ampache Update"
 msgstr "Aktualizace Ampache"
 
@@ -4010,6 +4086,10 @@ msgstr "Opakovat přehrávání"
 #: ../../templates/show_democratic.inc.php:42
 msgid "Play Democratic Playlist"
 msgstr "Přehrát skladby ze seznamu pro veřejné vysílání"
+
+#: ../../templates/show_democratic.inc.php:70
+msgid "Reload this page automatically"
+msgstr ""
 
 #: ../../templates/show_democratic_playlist.inc.php:44
 msgid "Playing from base Playlist"
@@ -4096,7 +4176,7 @@ msgstr "Duplicitní skladby"
 #: ../../templates/show_now_playing_row.inc.php:39
 #: ../../templates/show_recently_played.inc.php:30
 #: ../../templates/show_recently_played.inc.php:141
-#: ../../templates/sidebar_home.inc.php:70
+#: ../../templates/sidebar_home.inc.php:73
 msgid "Song"
 msgstr "Skladba"
 
@@ -4157,7 +4237,7 @@ msgstr "Upravit seznam přístupů"
 
 #: ../../templates/show_edit_album_row.inc.php:51
 #: ../../templates/show_edit_artist_row.inc.php:31
-#: ../../templates/show_edit_song_row.inc.php:53
+#: ../../templates/show_edit_song_row.inc.php:55
 msgid "MusicBrainz ID"
 msgstr ""
 
@@ -4182,6 +4262,25 @@ msgstr "Šablona názvu souboru"
 msgid "Save Catalog Settings"
 msgstr "Uložit nastavení katalogu"
 
+#: ../../templates/show_edit_license.inc.php:23
+#, fuzzy
+msgid "Configure License"
+msgstr "Upravit nastavení"
+
+#: ../../templates/show_edit_license.inc.php:34
+#, fuzzy
+msgid "Description:"
+msgstr "Popis"
+
+#: ../../templates/show_edit_license.inc.php:38
+msgid "External Link"
+msgstr ""
+
+#: ../../templates/show_edit_license.inc.php:43
+#, fuzzy
+msgid "Confirm"
+msgstr "Potvrzení hesla"
+
 #: ../../templates/show_edit_playlist_row.inc.php:36
 #: ../../templates/show_edit_smartplaylist_row.inc.php:36
 msgid "Public"
@@ -4197,12 +4296,20 @@ msgstr "Upravit zprávu na chatu"
 msgid "Created by: %s for %s"
 msgstr "Vytvořil %s pro %s"
 
-#: ../../templates/show_edit_song_row.inc.php:49
+#: ../../templates/show_edit_song_row.inc.php:51
 #: ../../templates/show_localplay_playlist.inc.php:31
 #: ../../templates/show_localplay_playlist.inc.php:61
 #: ../../templates/show_song_previews.inc.php:35
 msgid "Track"
 msgstr "Stopa"
+
+#: ../../templates/show_edit_tag_row.inc.php:32
+msgid "Merge this tag to"
+msgstr ""
+
+#: ../../templates/show_edit_tag_row.inc.php:45
+msgid "Persistent merge"
+msgstr ""
 
 #: ../../templates/show_edit_user.inc.php:23
 msgid "Editing existing User"
@@ -4216,23 +4323,23 @@ msgstr "Uživatelské nastavení"
 msgid "Other Options"
 msgstr "Ostatní volby"
 
-#: ../../templates/show_edit_user.inc.php:115
+#: ../../templates/show_edit_user.inc.php:116
 msgid "Config Preset"
 msgstr "Upravit nastavení"
 
-#: ../../templates/show_edit_user.inc.php:121
+#: ../../templates/show_edit_user.inc.php:122
 msgid "Flash"
 msgstr "Flash"
 
-#: ../../templates/show_edit_user.inc.php:127
+#: ../../templates/show_edit_user.inc.php:128
 msgid "Prevent Preset Override"
 msgstr "Zabránit přepsání nastavení"
 
-#: ../../templates/show_edit_user.inc.php:129
+#: ../../templates/show_edit_user.inc.php:130
 msgid "This Affects all non-Admin accounts"
 msgstr "Budou ovlivněny všechny účty kromě administrátorského"
 
-#: ../../templates/show_edit_user.inc.php:141
+#: ../../templates/show_edit_user.inc.php:142
 msgid "Update User"
 msgstr "Aktualizovat uživatele"
 
@@ -4278,7 +4385,7 @@ msgstr "Získat obal"
 #: ../../templates/show_newest.inc.php:23
 #: ../../templates/show_popular.inc.php:23
 #: ../../templates/show_recent.inc.php:23
-#: ../../templates/sidebar_home.inc.php:78
+#: ../../templates/sidebar_home.inc.php:81
 msgid "Information"
 msgstr "Informace"
 
@@ -4286,23 +4393,23 @@ msgstr "Informace"
 msgid "Your browser doesn't support this feature."
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:518
+#: ../../templates/show_html5_player.inc.php:555
 msgid "Media is currently playing. Are you sure you want to close"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:678
+#: ../../templates/show_html5_player.inc.php:718
 msgid "Slideshow"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:682
+#: ../../templates/show_html5_player.inc.php:722
 msgid "Equalizer"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:685
+#: ../../templates/show_html5_player.inc.php:725
 msgid "Visualizer"
 msgstr ""
 
-#: ../../templates/show_html5_player.inc.php:688
+#: ../../templates/show_html5_player.inc.php:728
 msgid "Visualizer Full-Screen"
 msgstr ""
 
@@ -4320,28 +4427,28 @@ msgid "Albums of the Moment"
 msgstr "Právě přehrávaná alba"
 
 #: ../../templates/show_install_account.inc.php:26
-#: ../../templates/show_install_config.inc.php:32
+#: ../../templates/show_install_config.inc.php:41
 #: ../../templates/show_install.inc.php:26
 #, fuzzy
 msgid "Install progress"
 msgstr "Verze"
 
 #: ../../templates/show_install_account.inc.php:38
-#: ../../templates/show_install_config.inc.php:43
+#: ../../templates/show_install_config.inc.php:52
 #: ../../templates/show_install.inc.php:37
 #, fuzzy
 msgid "Step 1 - Create the Ampache database"
 msgstr "Krok 1 - Vytvoření a vložení databáze Ampache"
 
 #: ../../templates/show_install_account.inc.php:39
-#: ../../templates/show_install_config.inc.php:44
+#: ../../templates/show_install_config.inc.php:53
 #: ../../templates/show_install.inc.php:42
 #, fuzzy
 msgid "Step 2 - Create configuration files (ampache.cfg.php ...)"
 msgstr "Krok 2 - Vytvořit soubor ampache.cfg.php"
 
 #: ../../templates/show_install_account.inc.php:41
-#: ../../templates/show_install_config.inc.php:49
+#: ../../templates/show_install_config.inc.php:58
 #: ../../templates/show_install.inc.php:43
 #, fuzzy
 msgid "Step 3 - Set up the initial account"
@@ -4448,7 +4555,7 @@ msgid ""
 "but will help streamline the installation process."
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:46
+#: ../../templates/show_install_config.inc.php:55
 #, fuzzy, php-format
 msgid ""
 "This step takes the basic config values and generates the config file. If "
@@ -4461,47 +4568,47 @@ msgstr ""
 "Budete vyzvání k uložení tohoto souboru. Po stažení souboru ho prosím "
 "umístěte do adresáře /config"
 
-#: ../../templates/show_install_config.inc.php:54
+#: ../../templates/show_install_config.inc.php:63
 msgid "Generate Config File"
 msgstr "Vytvořit konfigurační soubor"
 
-#: ../../templates/show_install_config.inc.php:55
-#: ../../templates/show_test_table.inc.php:159
+#: ../../templates/show_install_config.inc.php:64
+#: ../../templates/show_test_table.inc.php:168
 #, fuzzy
 msgid "Database connection"
 msgstr "Kódování databáze bylo aktualizováno"
 
-#: ../../templates/show_install_config.inc.php:59
+#: ../../templates/show_install_config.inc.php:68
 msgid "Web Path"
 msgstr "Cesta k webu"
 
-#: ../../templates/show_install_config.inc.php:65
+#: ../../templates/show_install_config.inc.php:74
 #, fuzzy
 msgid "Database Name"
 msgstr "Název databáze"
 
-#: ../../templates/show_install_config.inc.php:71
+#: ../../templates/show_install_config.inc.php:80
 #: ../../templates/show_install.inc.php:56
 msgid "MySQL Hostname"
 msgstr "MySQL server"
 
-#: ../../templates/show_install_config.inc.php:77
+#: ../../templates/show_install_config.inc.php:86
 msgid "MySQL Port (optional)"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:83
+#: ../../templates/show_install_config.inc.php:92
 msgid "MySQL Username"
 msgstr "MySQL Uživatel"
 
-#: ../../templates/show_install_config.inc.php:89
+#: ../../templates/show_install_config.inc.php:98
 msgid "MySQL Password"
 msgstr "MySQL Heslo"
 
-#: ../../templates/show_install_config.inc.php:99
+#: ../../templates/show_install_config.inc.php:108
 msgid "Transcoding"
 msgstr "Dekódování"
 
-#: ../../templates/show_install_config.inc.php:101
+#: ../../templates/show_install_config.inc.php:110
 msgid ""
 "Transcoding allows you to convert one type of file to another. Ampache "
 "supports on the fly transcoding of all file types based on user, IP address "
@@ -4511,89 +4618,90 @@ msgid ""
 "are executable by the webserver."
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:103
+#: ../../templates/show_install_config.inc.php:112
 msgid ""
 "This section apply default transcoding configuration according to the "
 "application you want to use. You may need to customize settings once this "
 "setup ended"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:103
+#: ../../templates/show_install_config.inc.php:112
 msgid "See wiki page"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:107
+#: ../../templates/show_install_config.inc.php:116
 #, fuzzy
 msgid "Template Configuration"
 msgstr "Vytvořit nastavení"
 
-#: ../../templates/show_install_config.inc.php:121
+#: ../../templates/show_install_config.inc.php:130
 msgid ""
 "No default transcoding application found. You may need to install a popular "
 "application (ffmpeg, avconv ...) or customize transcoding settings manually "
 "after installation."
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:127
-#, fuzzy
-msgid "Files"
-msgstr "Soubor"
-
-#: ../../templates/show_install_config.inc.php:131
+#: ../../templates/show_install_config.inc.php:146
 msgid "rest/.htaccess action"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:136
 #: ../../templates/show_install_config.inc.php:151
-#: ../../templates/show_install_config.inc.php:167
+#: ../../templates/show_install_config.inc.php:166
+#: ../../templates/show_install_config.inc.php:182
 #, fuzzy
 msgid "Write"
 msgstr "Číst/Psát"
 
-#: ../../templates/show_install_config.inc.php:139
+#: ../../templates/show_install_config.inc.php:154
 msgid "rest/.htaccess exists?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:141
+#: ../../templates/show_install_config.inc.php:156
 msgid "rest/.htaccess configured?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:146
+#: ../../templates/show_install_config.inc.php:161
 msgid "play/.htaccess action"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:154
+#: ../../templates/show_install_config.inc.php:169
 msgid "play/.htaccess exists?"
 msgstr ""
 
-#: ../../templates/show_install_config.inc.php:156
+#: ../../templates/show_install_config.inc.php:171
 #, fuzzy
 msgid "play/.htaccess configured?"
 msgstr "Je nakonfigurován Ampache.cfg.php?"
 
-#: ../../templates/show_install_config.inc.php:162
+#: ../../templates/show_install_config.inc.php:177
 #, fuzzy
 msgid "config/ampache.cfg.php action"
 msgstr "Je nakonfigurován Ampache.cfg.php?"
 
-#: ../../templates/show_install_config.inc.php:170
+#: ../../templates/show_install_config.inc.php:185
 #, fuzzy
 msgid "config/ampache.cfg.php exists?"
 msgstr "Soubor Ampache.cfg.php existuje"
 
-#: ../../templates/show_install_config.inc.php:172
+#: ../../templates/show_install_config.inc.php:187
 #, fuzzy
 msgid "config/ampache.cfg.php configured?"
 msgstr "Je nakonfigurován Ampache.cfg.php?"
 
-#: ../../templates/show_install_config.inc.php:181
+#: ../../templates/show_install_config.inc.php:194
 #, fuzzy
 msgid "Recheck Config"
 msgstr "Kontrola nastavení"
 
-#: ../../templates/show_install_config.inc.php:189
-msgid "Continue to Step 3"
-msgstr "Pokračovat"
+#: ../../templates/show_install_config.inc.php:202
+#: ../../templates/show_install.inc.php:130
+msgid "Skip"
+msgstr ""
+
+#: ../../templates/show_install_config.inc.php:205
+#, fuzzy
+msgid "Create config"
+msgstr "Vytvořit účet"
 
 #: ../../templates/show_install.inc.php:39
 #, fuzzy
@@ -4653,10 +4761,6 @@ msgstr "Uživatelské jméno pro databázi Ampache"
 #: ../../templates/show_install.inc.php:124
 msgid "Ampache Database User Password"
 msgstr "Uživatelské heslo pro databázi Ampache"
-
-#: ../../templates/show_install.inc.php:130
-msgid "Skip"
-msgstr ""
 
 #: ../../templates/show_install.inc.php:133
 msgid "Insert Database"
@@ -4769,7 +4873,7 @@ msgstr "Hlasitost"
 msgid "Repeat"
 msgstr "Opakovat"
 
-#: ../../templates/show_login_form.inc.php:87
+#: ../../templates/show_login_form.inc.php:88
 msgid "Remember Me"
 msgstr "Pamatovat si mě"
 
@@ -4786,7 +4890,7 @@ msgstr "Přihlásit"
 msgid "Register"
 msgstr "Registrovat se"
 
-#: ../../templates/show_login_form.inc.php:111
+#: ../../templates/show_login_form.inc.php:110
 msgid "Message of the Day"
 msgstr "Zpráva dne"
 
@@ -4897,19 +5001,29 @@ msgstr "Nebyl nalezen žádný lokální účet"
 msgid "Create New Playlist"
 msgstr "Vytvořit nový seznam skladeb"
 
-#: ../../templates/show_manage_shoutbox.inc.php:27
-#: ../../templates/show_manage_shoutbox.inc.php:51
+#: ../../templates/show_manage_license.inc.php:28
+#, fuzzy
+msgid "Create new license"
+msgstr "Vytvořit nový seznam skladeb"
+
+#: ../../templates/show_manage_license.inc.php:50
+#, fuzzy
+msgid "No Licenses Found"
+msgstr "Nenalezeny žádné záznamy"
+
+#: ../../templates/show_manage_shoutbox.inc.php:28
+#: ../../templates/show_manage_shoutbox.inc.php:56
 #: ../../templates/show_shared_objects.inc.php:26
 msgid "Object"
 msgstr "Objekt"
 
-#: ../../templates/show_manage_shoutbox.inc.php:29
-#: ../../templates/show_manage_shoutbox.inc.php:53
+#: ../../templates/show_manage_shoutbox.inc.php:30
+#: ../../templates/show_manage_shoutbox.inc.php:58
 msgid "Sticky"
 msgstr "Připojené"
 
-#: ../../templates/show_manage_shoutbox.inc.php:31
-#: ../../templates/show_manage_shoutbox.inc.php:55
+#: ../../templates/show_manage_shoutbox.inc.php:32
+#: ../../templates/show_manage_shoutbox.inc.php:60
 msgid "Date Added"
 msgstr "Datum přidání"
 
@@ -5156,24 +5270,24 @@ msgstr "Žádný podobný umělec nebyl nalezen"
 #: ../../templates/show_user_activate.inc.php:30
 #: ../../templates/show_user_activate.inc.php:37
 #: ../../templates/show_user_registration.inc.php:30
-#: ../../templates/show_user_registration.inc.php:42
+#: ../../templates/show_user_registration.inc.php:47
 msgid "Registration"
 msgstr "Registrace"
 
-#: ../../templates/show_registration_confirmation.inc.php:37
+#: ../../templates/show_registration_confirmation.inc.php:41
 msgid "Registration Complete"
 msgstr "Registrace dokončena"
 
-#: ../../templates/show_registration_confirmation.inc.php:43
+#: ../../templates/show_registration_confirmation.inc.php:47
 #, fuzzy
 msgid "Your account has been created."
 msgstr "Váš účet byl aktualizován"
 
-#: ../../templates/show_registration_confirmation.inc.php:46
+#: ../../templates/show_registration_confirmation.inc.php:50
 msgid "Please wait for an administrator to activate your account."
 msgstr ""
 
-#: ../../templates/show_registration_confirmation.inc.php:48
+#: ../../templates/show_registration_confirmation.inc.php:52
 #, fuzzy
 msgid ""
 "An activation key has been sent to the e-mail address you provided. Please "
@@ -5182,7 +5296,7 @@ msgstr ""
 "Váš účet byl vytvořen. Aktivační klíč byl odeslán na Vámi zadanou e-mailovou "
 "adresu. Přečtěte si prosím e-mail k získání více informací."
 
-#: ../../templates/show_registration_confirmation.inc.php:52
+#: ../../templates/show_registration_confirmation.inc.php:56
 msgid "Return to Login Page"
 msgstr "Zpět na přihlašovací stránku"
 
@@ -5333,6 +5447,10 @@ msgstr "Hlášení aktualizována"
 msgid "Lyrics"
 msgstr "Texty skladby %s"
 
+#: ../../templates/show_song.inc.php:114
+msgid "Licensing"
+msgstr ""
+
 #: ../../templates/show_song_row.inc.php:58
 msgid "Song Information"
 msgstr "Informace o skladbě"
@@ -5347,19 +5465,19 @@ msgstr "Skladba"
 msgid "No song found"
 msgstr "Nebyly nalezeny žádné zakázané skladby"
 
-#: ../../templates/show_stats.inc.php:30
+#: ../../templates/show_stats.inc.php:31
 msgid "Connected Users"
 msgstr "Připojení uživatelé"
 
-#: ../../templates/show_stats.inc.php:31
+#: ../../templates/show_stats.inc.php:32
 msgid "Total Users"
 msgstr "Celkový počet uživatelů"
 
-#: ../../templates/show_stats.inc.php:37 ../../templates/show_stats.inc.php:72
+#: ../../templates/show_stats.inc.php:38 ../../templates/show_stats.inc.php:77
 msgid "Catalog Size"
 msgstr "Velikost katalogu"
 
-#: ../../templates/show_stats.inc.php:38
+#: ../../templates/show_stats.inc.php:39
 msgid "Catalog Time"
 msgstr "Celková doba skladeb v katalogu"
 
@@ -5554,11 +5672,24 @@ msgid ""
 "time.  This is not strictly necessary, but may result in a better experience."
 msgstr ""
 
-#: ../../templates/show_test_table.inc.php:135
+#: ../../templates/show_test_table.inc.php:132
+msgid "PHP max upload size"
+msgstr ""
+
+#: ../../templates/show_test_table.inc.php:137
+#, fuzzy
+msgid ""
+"This tests whether Ampache can upload medium files (>= 20M).  This is not "
+"strictly necessary, but may result in a better experience."
+msgstr ""
+"Kontrola přítomnosti PHP rozšíření pro práci s MySQL databází, která je "
+"nutná pro chod Ampache."
+
+#: ../../templates/show_test_table.inc.php:144
 msgid "Configuration file readability"
 msgstr ""
 
-#: ../../templates/show_test_table.inc.php:140
+#: ../../templates/show_test_table.inc.php:149
 #, fuzzy
 msgid ""
 "This test attempts to read config/ampache.cfg.php. If this fails the file "
@@ -5568,12 +5699,12 @@ msgstr ""
 "soubor ampache.cfg.php umístěn ve správném adresáři nebo\n"
 "\tnejsou dobře nastavena přístupová práva k souboru pro webový server."
 
-#: ../../templates/show_test_table.inc.php:145
+#: ../../templates/show_test_table.inc.php:154
 #, fuzzy
 msgid "Configuration file validity"
 msgstr "Nastavit seznam skladeb pro veřejné vysílání"
 
-#: ../../templates/show_test_table.inc.php:155
+#: ../../templates/show_test_table.inc.php:164
 #, fuzzy
 msgid ""
 "This test makes sure that you have set all of the required configuration "
@@ -5582,7 +5713,7 @@ msgstr ""
 "Kontrola zda jsou nastaveny všechny potřebné konfigurační proměnné a zda je "
 "v pořádku Váš konfigurační soubor"
 
-#: ../../templates/show_test_table.inc.php:164
+#: ../../templates/show_test_table.inc.php:173
 #, fuzzy
 msgid ""
 "This attempts to connect to your database using the values read from your "
@@ -5591,12 +5722,12 @@ msgstr ""
 "Pokus o připojení k databázi na základě údajů uvedených ve Vašem "
 "konfiguračním souboru ampache.cfg.php"
 
-#: ../../templates/show_test_table.inc.php:168
+#: ../../templates/show_test_table.inc.php:177
 #, fuzzy
 msgid "Database tables"
 msgstr "Název databáze"
 
-#: ../../templates/show_test_table.inc.php:173
+#: ../../templates/show_test_table.inc.php:182
 #, fuzzy
 msgid ""
 "This checks a few key tables to make sure that you have successfully "
@@ -5605,12 +5736,12 @@ msgstr ""
 "Kontrola zda byly vytvořeny důležité tabulky v databázi ampache a zda má k "
 "této databázi uživatel přístup"
 
-#: ../../templates/show_test_table.inc.php:178
+#: ../../templates/show_test_table.inc.php:187
 #, fuzzy
 msgid "Web path"
 msgstr "Cesta k webu"
 
-#: ../../templates/show_test_table.inc.php:190
+#: ../../templates/show_test_table.inc.php:199
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -5626,6 +5757,12 @@ msgstr "Spustit aktualizaci z tagů"
 #: ../../templates/show_update_items.inc.php:27
 msgid "Update from Tags Complete"
 msgstr "Aktualizace z tagů dokončena"
+
+#: ../../templates/show_uploads.inc.php:23
+#: ../../templates/sidebar_home.inc.php:99
+#, fuzzy
+msgid "Uploads"
+msgstr "Nahrát"
 
 #: ../../templates/show_user_activate.inc.php:49
 msgid "User Activated"
@@ -5680,24 +5817,24 @@ msgstr "Uživatel je odpojen"
 msgid "Active Playlist"
 msgstr "Aktivní seznam skladeb"
 
-#: ../../templates/show_user_registration.inc.php:57
+#: ../../templates/show_user_registration.inc.php:62
 msgid "User Agreement"
 msgstr "Licenční ujednání"
 
-#: ../../templates/show_user_registration.inc.php:64
+#: ../../templates/show_user_registration.inc.php:69
 msgid "I Accept"
 msgstr "Přijmout"
 
-#: ../../templates/show_user_registration.inc.php:69
+#: ../../templates/show_user_registration.inc.php:74
 msgid "User Information"
 msgstr "Informace o uživateli"
 
-#: ../../templates/show_user_registration.inc.php:105
+#: ../../templates/show_user_registration.inc.php:111
 #, fuzzy
 msgid "* Required fields"
 msgstr "Vyžadováno"
 
-#: ../../templates/show_user_registration.inc.php:115
+#: ../../templates/show_user_registration.inc.php:121
 msgid "Register User"
 msgstr "Registrovat uživatele"
 
@@ -5752,10 +5889,29 @@ msgid "No video found"
 msgstr "Nenalezeny žádné záznamy"
 
 #: ../../templates/show_wanted.inc.php:23
-#: ../../templates/sidebar_home.inc.php:90
+#: ../../templates/sidebar_home.inc.php:93
 #, fuzzy
 msgid "Wanted List"
 msgstr "Podobný umělec"
+
+#: ../../templates/sidebar_admin.inc.php:24
+#: ../../templates/sidebar_admin.inc.php:31
+#: ../../templates/sidebar_admin.inc.php:37
+#: ../../templates/sidebar_admin.inc.php:43
+#: ../../templates/sidebar_admin.inc.php:57
+#: ../../templates/sidebar_home.inc.php:24
+#: ../../templates/sidebar_home.inc.php:52
+#: ../../templates/sidebar_home.inc.php:71
+#: ../../templates/sidebar_home.inc.php:81
+#: ../../templates/sidebar_home.inc.php:105
+#: ../../templates/sidebar_localplay.inc.php:38
+#: ../../templates/sidebar_localplay.inc.php:48
+#: ../../templates/sidebar_localplay.inc.php:66
+#: ../../templates/sidebar_modules.inc.php:24
+#: ../../templates/sidebar_modules.inc.php:31
+#: ../../templates/sidebar_preferences.inc.php:30
+msgid "Expand/Collapse"
+msgstr ""
 
 #: ../../templates/sidebar_admin.inc.php:31
 msgid "User Tools"
@@ -5786,44 +5942,45 @@ msgstr "Vyčistit právě přehrávaný seznam skladeb"
 msgid "Manage Shoutbox"
 msgstr "Spravovat chat"
 
-#: ../../templates/sidebar_admin.inc.php:54
+#: ../../templates/sidebar_admin.inc.php:52
+#, fuzzy
+msgid "Manage Licenses"
+msgstr "Spravovat uživatele"
+
+#: ../../templates/sidebar_admin.inc.php:57
 msgid "Server Config"
 msgstr "Nastavení serveru"
-
-#: ../../templates/sidebar_home.inc.php:24
-msgid "Browse"
-msgstr "Prohlížet"
 
 #: ../../templates/sidebar_home.inc.php:32
 #, fuzzy
 msgid "Song Titles"
 msgstr "Skladba"
 
-#: ../../templates/sidebar_home.inc.php:51
+#: ../../templates/sidebar_home.inc.php:54
 msgid "Currently Playing"
 msgstr "Nyní hraje"
 
-#: ../../templates/sidebar_home.inc.php:64
+#: ../../templates/sidebar_home.inc.php:67
 msgid "Import"
 msgstr "Načíst"
 
-#: ../../templates/sidebar_home.inc.php:74
+#: ../../templates/sidebar_home.inc.php:77
 msgid "Advanced"
 msgstr "Možnosti"
 
-#: ../../templates/sidebar_home.inc.php:80
+#: ../../templates/sidebar_home.inc.php:83
 msgid "Recent"
 msgstr ""
 
-#: ../../templates/sidebar_home.inc.php:81
+#: ../../templates/sidebar_home.inc.php:84
 msgid "Newest"
 msgstr "Nejnovější"
 
-#: ../../templates/sidebar_home.inc.php:82
+#: ../../templates/sidebar_home.inc.php:85
 msgid "Popular"
 msgstr "Nejoblíbenější"
 
-#: ../../templates/sidebar_home.inc.php:84
+#: ../../templates/sidebar_home.inc.php:87
 #, fuzzy
 msgid "Top Rated"
 msgstr "Hodnoceno"
@@ -5886,23 +6043,18 @@ msgstr "Spravovat seznamy skladeb"
 msgid "Account"
 msgstr "Účet"
 
-#: ../../update.php:67
-#, php-format
+#: ../../update.php:79
+#, fuzzy, php-format
 msgid ""
 "This page handles all database updates to Ampache starting with "
-"<strong>3.3.3.5</strong>. According to your database your current version "
-"is: <strong>%s</strong>."
+"<strong>3.3.3.5</strong>. Your current version is <strong>%s</strong> with "
+"database version <strong>%s</strong>."
 msgstr ""
 "Tato stránka je určena pro aktualizaci Ampache databáze od verze "
 "<strong>3.3.3.5</strong>. Podle údajů obsažených ve Vaší databázi, je Vaše "
 "současná verze databáze: <strong>%s</strong>."
 
-#: ../../update.php:68
-#, fuzzy
-msgid "The following updates need to be performed"
-msgstr "je nutné provést následující aktualizace"
-
-#: ../../update.php:76
+#: ../../update.php:88
 msgid "Update Now!"
 msgstr "Aktualizovat nyní!"
 
@@ -6117,6 +6269,13 @@ msgstr ""
 #: Database words
 msgid "Flickr api key"
 msgstr ""
+
+#~ msgid "Continue to Step 3"
+#~ msgstr "Pokračovat"
+
+#, fuzzy
+#~ msgid "The following updates need to be performed"
+#~ msgstr "je nutné provést následující aktualizace"
 
 #, fuzzy
 #~ msgid "%d Song Removed"

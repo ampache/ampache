@@ -30,27 +30,68 @@
 class Access
 {
     // Variables from DB
+
+    /**
+     *  @var int $id
+     */
     public $id;
+    /**
+     *  @var string $name
+     */
     public $name;
+    /**
+     *  @var string $start
+     */
     public $start;
+    /**
+     *  @var string $end
+     */
     public $end;
+    /**
+     *  @var int $level
+     */
     public $level;
+    /**
+     *  @var int $user
+     */
     public $user;
+    /**
+     *  @var string $type
+     */
     public $type;
+    /**
+     *  @var boolean $enabled
+     */
     public $enabled;
 
+    /**
+     *  @var string $f_start
+     */
     public $f_start;
+    /**
+     *  @var string $f_end
+     */
     public $f_end;
+    /**
+     *  @var string $f_user
+     */
     public $f_user;
+    /**
+     *  @var string $f_level
+     */
     public $f_level;
+    /**
+     *  @var string $f_type
+     */
     public $f_type;
 
     /**
      * constructor
      *
      * Takes an ID of the access_id dealie :)
+     * @param int|null $access_id
      */
-    public function __construct($access_id = '')
+    public function __construct($access_id = null)
     {
         if (!$access_id) { return false; }
 
@@ -69,6 +110,7 @@ class Access
      * _get_info
      *
      * Gets the vars for $this out of the database.
+     * @return array
      */
     private function _get_info()
     {
@@ -100,6 +142,9 @@ class Access
      * _verify_range
      *
      * This outputs an error if the IP range is bad.
+     * @param string $startp
+     * @param string $endp
+     * @return boolean
      */
     private static function _verify_range($startp, $endp)
     {
@@ -128,8 +173,10 @@ class Access
      *
      * This function takes a named array as a datasource and updates the current
      * access list entry.
+     * @param array $data
+     * @return boolean
      */
-    public function update($data)
+    public function update(array $data)
     {
         if (!self::_verify_range($data['start'], $data['end'])) {
             return false;
@@ -156,8 +203,10 @@ class Access
      *
      * This takes a keyed array of data and trys to insert it as a
      * new ACL entry
+     * @param array $data
+     * @return boolean
      */
-    public static function create($data)
+    public static function create(array $data)
     {
         if (!self::_verify_range($data['start'], $data['end'])) {
             return false;
@@ -191,8 +240,10 @@ class Access
      *
      * This sees if the ACL that we've specified already exists in order to
      * prevent duplicates. The name is ignored.
+     * @param array $data
+     * @return boolean
      */
-    public static function exists($data)
+    public static function exists(array $data)
     {
         $start = inet_pton($data['start']);
         $end = inet_pton($data['end']);
@@ -214,6 +265,7 @@ class Access
      * delete
      *
      * deletes the specified access_list entry
+     * @param int $id
      */
     public static function delete($id)
     {
@@ -224,6 +276,8 @@ class Access
      * check_function
      *
      * This checks if specific functionality is enabled.
+     * @param string $type
+     * @return boolean|string
      */
     public static function check_function($type)
     {
@@ -249,6 +303,11 @@ class Access
      *
      * This takes a type, ip, user, level and key and then returns whether they
      * are allowed. The IP is passed as a dotted quad.
+     * @param string $type
+     * @param int|string $user
+     * @param int $level
+     * @param string $ip
+     * @return boolean
      */
     public static function check_network($type, $user, $level, $ip=null)
     {
@@ -313,6 +372,9 @@ class Access
      *
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
      * always used.
+     * @param string $type
+     * @param int $level
+     * @return boolean
      */
     public static function check($type, $level)
     {
@@ -344,6 +406,8 @@ class Access
      *
      * This validates the specified type; it will always return a valid type,
      * even if you pass in an invalid one.
+     * @param string $type
+     * @return string
      */
     public static function validate_type($type)
     {
@@ -360,6 +424,7 @@ class Access
     /**
      * get_access_lists
      * returns a full listing of all access rules on this server
+     * @return array
      */
     public static function get_access_lists()
     {
@@ -380,6 +445,7 @@ class Access
      * get_level_name
      *
      * take the int level and return a named level
+     * @return string
      */
     public function get_level_name()
     {
@@ -401,6 +467,7 @@ class Access
      * get_user_name
      *
      * Return a name for the users covered by this ACL.
+     * @return string
      */
     public function get_user_name()
     {
@@ -414,6 +481,7 @@ class Access
      * get_type_name
      *
      * This function returns the pretty name for our current type.
+     * @return string
      */
     public function get_type_name()
     {

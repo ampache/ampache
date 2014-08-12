@@ -65,7 +65,6 @@ while ($r = Dba::fetch_row($db_results)) {
     foreach ($songs as $song) {
         /* Find this poor song a home */
         $song->format();
-        $song->format_pattern();
         $directory     = sort_find_home($song,$catalog->sort_pattern,$catalog->path);
         $filename     = $song->f_file;
         $fullpath = $directory . "/" . $filename;
@@ -268,12 +267,12 @@ function sort_move_file($song,$fullname) {
 
         /* Look for the folder art and copy that as well */
         if (!AmpConfig::get('album_art_preferred_filename') OR strstr(AmpConfig::get('album_art_preferred_filename'),"%")) {
-            $folder_art     = $directory . '/folder.jpg';
-            $old_art     = $old_dir . '/folder.jpg';
+            $folder_art     = $directory . DIRECTORY_SEPARATOR . 'folder.jpg';
+            $old_art     = $old_dir . DIRECTORY_SEPARATOR . 'folder.jpg';
         }
         else {
-            $folder_art     = $directory . "/" . sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
-            $old_art     = $old_dir . "/" . sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
+            $folder_art     = $directory . DIRECTORY_SEPARATOR . sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
+            $old_art     = $old_dir . DIRECTORY_SEPARATOR . sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
         }
 
         debug_event('copy_art','Copied ' . $old_art . ' to ' . $folder_art,'5');
@@ -282,8 +281,8 @@ function sort_move_file($song,$fullname) {
         if (!$results) { printf (T_('Error: Unable to copy file to %s'), $fullname); echo "\n"; return false; }
 
         /* Check the filesize */
-        $new_sum = filesize($fullname);
-        $old_sum = filesize($song->file);
+        $new_sum = Core::get_filesize($fullname);
+        $old_sum = Core::get_filesize($song->file);
 
         if ($new_sum != $old_sum OR !$new_sum) {
             printf (T_('Error: Size Inconsistency, not deleting %s'), $song->file);
