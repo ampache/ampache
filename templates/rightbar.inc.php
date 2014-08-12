@@ -107,7 +107,8 @@
 
     $normal_array = array('live_stream', 'song', 'video', 'random', 'song_preview');
 
-    foreach ($objects as $uid=>$object_data) {
+    foreach ($objects as $object_data) {
+        $uid = $object_data['track_id'];
         $type = array_shift($object_data);
         if (in_array($type,$normal_array)) {
             $object = new $type(array_shift($object_data));
