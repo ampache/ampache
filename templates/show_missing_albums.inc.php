@@ -41,7 +41,7 @@
         <?php } ?>
         <?php if (!$walbums || !count($walbums)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing album found'); ?></span></td>
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing albums found'); ?></span></td>
         </tr>
         <?php } ?>
     </tbody>
