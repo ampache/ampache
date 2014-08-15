@@ -5072,7 +5072,7 @@ msgstr "Agregado"
 
 #: ../../templates/show_missing_albums.inc.php:44
 #, fuzzy
-msgid "No missing album found"
+msgid "No missing albums found"
 msgstr "No se han encontrado canciones desabilitadas"
 
 #: ../../templates/show_now_playing_row.inc.php:76

@@ -5946,7 +5946,7 @@ msgid "Wanted actions"
 msgstr "Wunsch-Aktionen"
 
 #: ../../templates/show_missing_albums.inc.php:44
-msgid "No missing album found"
+msgid "No missing albums found"
 msgstr "Keine vermissten Alben gefunden"
 
 #: ../../templates/show_now_playing_row.inc.php:74

@@ -5039,7 +5039,7 @@ msgstr "Opcions avançades"
 
 #: ../../templates/show_missing_albums.inc.php:44
 #, fuzzy
-msgid "No missing album found"
+msgid "No missing albums found"
 msgstr "No s'han trobat cançons desactivades"
 
 #: ../../templates/show_now_playing_row.inc.php:76
