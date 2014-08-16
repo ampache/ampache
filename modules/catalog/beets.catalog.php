@@ -24,7 +24,7 @@
 /**
  * Beets Catalog Class
  *
- * This class handles all actual work in regards to remote Subsonic catalogs.
+ * This class handles all actual work in regards to local Beets catalogs.
  *
  */
 class Catalog_beets extends Catalog {
@@ -112,7 +112,9 @@ class Catalog_beets extends Catalog {
      * Doesent seems like we need this...
      * @param string $file_path
      */
-    public function get_rel_path($file_path) {}
+    public function get_rel_path($file_path) {
+        
+    }
 
     /**
      * Constructor
@@ -312,5 +314,3 @@ class Catalog_beets extends Catalog {
     }
 
 }
-
-// end of catalog class
