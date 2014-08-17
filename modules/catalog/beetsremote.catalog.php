@@ -41,6 +41,7 @@ class Catalog_beetsremote extends Catalog {
     private $addedSongs = 0;
     private $verifiedSongs = 0;
     private $songs;
+    private $cleanCounter = 0;
 
     /**
      * get_description
@@ -183,7 +184,7 @@ class Catalog_beetsremote extends Catalog {
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
             if ($this->insertSong($song)) {
-                $this->updateCounter($song);
+                $this->updateUi('add', ++$this->addedSongs, $song, true);
             }
         }
     }
@@ -228,6 +229,7 @@ class Catalog_beetsremote extends Catalog {
         $parser = $this->getParser();
         $parser->setHandler($this, 'addSong');
         $parser->start('item');
+        $this->updateUi('add', $this->addedSongs, null, true);
 
         UI::show_box_bottom();
     }
@@ -245,6 +247,7 @@ class Catalog_beetsremote extends Catalog {
         $parser->start('item');
         $count = count($this->songs);
         $this->deleteSongs($this->songs);
+        $this->updateUi('clean', $this->cleanCounter, null, true);
         return $count;
     }
 
@@ -257,8 +260,18 @@ class Catalog_beetsremote extends Catalog {
 
     public function removeFromDeleteList($song) {
         $key = array_search($song['file'], $this->songs, true);
+        $this->updateUi('clean', ++$this->cleanCounter, $song);
         if ($key) {
             unset($this->songs[$key]);
+        }
+    }
+    
+    protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false) {
+        if ($ignoreTicker || UI::check_ticker()) {
+            UI::update_text($prefix . '_count_' . $this->id, $count);
+            if (isset($song)) {
+                UI::update_text($prefix . '_dir_' . $this->id, scrub_out($this->getVirtualSongPath($song)));
+            }
         }
     }
 
@@ -269,29 +282,24 @@ class Catalog_beetsremote extends Catalog {
         $parser = $this->getParser();
         $parser->setHandler($this, 'verifySong');
         $parser->start('item');
-        return $this->verifiedSongs;
+        $this->updateUi('verify', $this->verifiedSongs, null, true);
+        return array('updated' => $this->verifiedSongs, 'total' => $this->verifiedSongs);
     }
 
     public function verifySong($beetsSong) {
         $song = new Song($this->getIdFromPath($beetsSong['file']));
         if ($song->id) {
             $song->update($beetsSong);
-            $this->verifiedSongs++;
-            $this->verifyUpdateUi($beetsSong);
+            $this->updateUi('verify', ++$this->verifiedSongs, $beetsSong);
         }
     }
 
-    protected function verifyUpdateUi($song) {
-        if (UI::check_ticker()) {
-            UI::update_text('verify_count_' . $this->id, $this->verifiedSongs);
-            UI::update_text('verify_dir_' . $this->id, $song->file);
-        }
-    }
-
-    protected function updateCounter($song) {
-        $this->addedSongs++;
-        UI::update_text('add_count_' . $this->id, $this->addedSongs);
-        UI::update_text('add_dir_' . $this->id, scrub_out($song['file']));
+    protected function getVirtualSongPath($song) {
+        return implode('/', array(
+            $song['artist'],
+            $song['album'],
+            $song['title']
+        ));
     }
 
     protected function getIdFromPath($path) {
