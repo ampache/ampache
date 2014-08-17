@@ -270,7 +270,7 @@ class Subsonic_XML_Data
 
     public static function addAlbumList($xml, $albums, $elementName="albumList")
     {
-          $xlist = $xml->addChild($elementName);
+          $xlist = $xml->addChild(htmlspecialchars($elementName));
           foreach ($albums as $id) {
             $album = new Album($id);
             self::addAlbum($xlist, $album);
@@ -279,7 +279,7 @@ class Subsonic_XML_Data
 
     public static function addAlbum($xml, $album, $songs=false, $elementName="album")
     {
-        $xalbum = $xml->addChild($elementName);
+        $xalbum = $xml->addChild(htmlspecialchars($elementName));
         $xalbum->addAttribute('id', self::getAlbumId($album->id));
         $xalbum->addAttribute('album', $album->name);
         $xalbum->addAttribute('title', self::formatAlbum($album));
@@ -315,7 +315,7 @@ class Subsonic_XML_Data
 
     public static function createSong($xml, $song, $elementName='song')
     {
-        $xsong = $xml->addChild($elementName);
+        $xsong = $xml->addChild(htmlspecialchars($elementName));
         $xsong->addAttribute('id', self::getSongId($song->id));
         $xsong->addAttribute('parent', self::getAlbumId($song->album));
         //$xsong->addAttribute('created', );
@@ -411,7 +411,7 @@ class Subsonic_XML_Data
 
         foreach ($tags as $tag) {
             $otag = new Tag($tag['id']);
-            $xgenres->addChild('genre', $otag->name);
+            $xgenres->addChild('genre', htmlspecialchars($otag->name));
         }
     }
 
@@ -542,7 +542,7 @@ class Subsonic_XML_Data
 
     public static function addSearchResult($xml, $artists, $albums, $songs, $elementName = "searchResult2")
     {
-        $xresult = $xml->addChild($elementName);
+        $xresult = $xml->addChild(htmlspecialchars($elementName));
         foreach ($artists as $id) {
             $artist = new Artist($id);
             self::addArtist($xresult, $artist);
@@ -559,7 +559,7 @@ class Subsonic_XML_Data
 
     public static function addStarred($xml, $artists, $albums, $songs, $elementName="starred")
     {
-        $xstarred = $xml->addChild($elementName);
+        $xstarred = $xml->addChild(htmlspecialchars($elementName));
 
         foreach ($artists as $id) {
             $artist = new Artist($id);
