@@ -149,7 +149,9 @@ class CliHandler extends Handler {
         $item = str_replace($this->itemEnd, '', $item);
         $values = explode($this->seperator, $item);
         $song = array_combine($this->fields, $values);
-        return $this->mapFields($song);
+        $mappedSong = $this->mapFields($song);
+        $mappedSong['size'] = filesize($mappedSong['file']);
+        return $mappedSong;
     }
 
     /**
