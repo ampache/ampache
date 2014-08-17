@@ -5039,7 +5039,7 @@ msgstr "Zaawansowane opcje"
 
 #: ../../templates/show_missing_albums.inc.php:44
 #, fuzzy
-msgid "No missing album found"
+msgid "No missing albums found"
 msgstr "Nie znaleziono zablokowanych utworów"
 
 #: ../../templates/show_now_playing_row.inc.php:76
