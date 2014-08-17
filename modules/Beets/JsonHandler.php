@@ -170,8 +170,7 @@ class JsonHandler extends Handler {
             $this->uri,
             'item',
             $song['id'],
-            'file',
-            '#.' . strtolower($song['format'])
+            'file' . '#.' . strtolower($song['format'])
         );
         return implode('/', $parts);
     }
