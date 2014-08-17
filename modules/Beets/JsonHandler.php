@@ -24,31 +24,31 @@
 namespace Beets;
 
 /**
- * Description of JsonHandler
+ * Parse Json while loading and create the songs
  *
  * @author raziel
  */
-class JsonHandler {
+class JsonHandler extends Handler {
 
-    private $uri;
+    protected $uri;
 
     /**
      *
-     * @var \Catalog_beetsremote
+     * @var Catalog
      */
-    private $handler;
+    protected $handler;
 
     /**
      * string handler command to do whatever we need
      * @var
      */
-    private $handlerCommand;
+    protected $handlerCommand;
 
     /**
      * Defines the differences between beets and ampache fields
      * @var array Defines the differences between beets and ampache fields
      */
-    private $fieldMapping = array(
+    protected $fieldMapping = array(
         'disc' => array('disk', '%d'),
         'length' => array('time', '%d'),
         'comments' => array('comment', '%s'),
@@ -59,11 +59,10 @@ class JsonHandler {
         $this->uri = $uri;
     }
 
-    public function setHandler(\Catalog_beetsremote $handler, $command) {
-        $this->handler = $handler;
-        $this->handlerCommand = $command;
-    }
-
+    /**
+     * Starts a command
+     * @param string $command
+     */
     public function start($command) {
         $handle = fopen($this->assembleUri($command), 'r');
         if ($handle) {
@@ -71,7 +70,12 @@ class JsonHandler {
         }
     }
 
+    /**
+     * Iterate over the input and create a song if one is found
+     * @param resource $handle
+     */
     public function iterateItems($handle) {
+        $item = '';
         while (!feof($handle)) {
             $item .= $char = fgetc($handle);
             // Check for the brace prevents unneded call of itemIsComlete() which saves a whole lot of time
@@ -84,38 +88,70 @@ class JsonHandler {
         }
     }
 
+    /**
+     * Assemble the URI from the different parts
+     * @param string $command
+     * @return string
+     */
     protected function assembleUri($command) {
         $uriParts = array(
             $this->uri,
             $command
         );
 
-        return implode('/', $uriParts) . '/query/nightwish';
+        return implode('/', $uriParts) . '/'; // The last Slash is important! The Server would redirect without it, but fopen would not follow.
     }
 
+    /**
+     * Check if the Json is complete to get a song
+     * @param string $item
+     * @return boolean
+     */
     public function itemIsComlete($item) {
         $item = $this->removeUnwantedStrings($item);
         return $this->compareBraces($item);
     }
 
+    /**
+     * Remove the beginning and the end of the json string so we can access the object in it.
+     * @param string $item
+     * @return string
+     */
     public function removeUnwantedStrings($item) {
         $toRemove = array(
+            '{"items":[',
             '{"results":[',
             ']}'
         );
         return str_replace($toRemove, '', $item);
     }
 
+    /**
+     * Compare the braces to ensure that we have a complete song object
+     * @param string $item
+     * @return boolean
+     */
     public function compareBraces($item) {
         $start = $this->countChar('{', $item);
         $end = $this->countChar('}', $item);
         return $start !== 0 && $start === $end;
     }
 
+    /**
+     *
+     * @param string $char
+     * @param string $string
+     * @return type
+     */
     public function countChar($char, $string) {
-        return preg_match_all('/' . $char . '/', $string);
+        return substr_count($string, $char);
     }
 
+    /**
+     * convert the json string into a song array
+     * @param string $item
+     * @return array
+     */
     public function parse($item) {
         $item = $this->removeUnwantedStrings($item);
         $song = json_decode($item, true);
@@ -124,29 +160,11 @@ class JsonHandler {
     }
 
     /**
-     * Call function from the dispatcher e.g. to store the new song
-     * @param mixed $data
-     * @return mixed
+     * Create the Url to access the file
+     * Have to do some magic with the file ending so ampache can detect the type
+     * @param array $song
+     * @return string
      */
-    protected function dispatch($data) {
-        return call_user_func(array($this->handler, $this->handlerCommand), $data);
-    }
-
-    /**
-     * Resolves the differences between Beets and Ampache properties
-     * @param type $song
-     * @return type
-     */
-    protected function mapFields($song) {
-        foreach ($this->fieldMapping as $from => $to) {
-            list($key, $format) = $to;
-            $song[$key] = sprintf($format, $song[$from]);
-        }
-        $song['genre'] = explode(',', $song['genre']);
-
-        return $song;
-    }
-
     public function createFileUrl($song) {
         $parts = array(
             $this->uri,

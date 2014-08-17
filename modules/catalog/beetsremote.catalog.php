@@ -24,48 +24,22 @@
 /**
  * Beets Catalog Class
  *
- * This class handles all actual work in regards to local Beets catalogs.
+ * This class handles all actual work in regards to remote Beets catalogs.
  *
  */
-class Catalog_beetsremote extends Catalog {
+class Catalog_beetsremote extends Beets\Catalog {
 
-    private $version = '000001';
-    private $type = 'beetsremote';
-    private $description = 'Beets Remote Catalog';
+    protected $version = '000001';
+    protected $type = 'beetsremote';
+    protected $description = 'Beets Remote Catalog';
+
+    protected $listCommand = 'item';
 
     /**
      *
-     * @var string Beets Database File 
+     * @var string Beets Database File
      */
-    private $uri;
-    private $addedSongs = 0;
-    private $verifiedSongs = 0;
-    private $songs;
-    private $cleanCounter = 0;
-
-    /**
-     * get_description
-     * This returns the description of this catalog
-     */
-    public function get_description() {
-        return $this->description;
-    }
-
-    /**
-     * get_version
-     * This returns the current version
-     */
-    public function get_version() {
-        return $this->version;
-    }
-
-    /**
-     * get_type
-     * This returns the current catalog type
-     */
-    public function get_type() {
-        return $this->type;
-    }
+    protected $uri;
 
     /**
      * get_create_help
@@ -73,8 +47,9 @@ class Catalog_beetsremote extends Catalog {
      */
     public function get_create_help() {
         $help = "<ul>" .
-                "<li></li>" .
-                "<li></li></ul>";
+                "<li>Install Beets web plugin: http://beets.readthedocs.org/en/latest/plugins/web.html</li>" .
+                "<li>Start Beets web server</li>" .
+                "<li>Specify URI including port (like http://localhost:8337). It will be shown when starting Beets web in console.</li></ul>";
         return $help;
     }
 
@@ -110,30 +85,6 @@ class Catalog_beetsremote extends Catalog {
     }
 
     /**
-     * Doesent seems like we need this...
-     * @param string $file_path
-     */
-    public function get_rel_path($file_path) {
-        
-    }
-
-    /**
-     * Constructor
-     *
-     * Catalog class constructor, pulls catalog information
-     */
-    public function __construct($catalog_id = null) { // TODO: Basic constructer should be provided from parent
-        if ($catalog_id) {
-            $this->id = intval($catalog_id);
-            $info = $this->get_info($catalog_id);
-
-            foreach ($info as $key => $value) {
-                $this->$key = $value;
-            }
-        }
-    }
-
-    /**
      * create_type
      *
      * This creates a new catalog type entry for a catalog
@@ -163,47 +114,8 @@ class Catalog_beetsremote extends Catalog {
         return true;
     }
 
-    /**
-     * format
-     *
-     * This makes the object human-readable.
-     */
-    public function format() {
-        parent::format();
-    }
-
-    public function prepare_media($media) {
-        debug_event('play', 'Started remote stream - ' . $media->file, 5);
-        return $media;
-    }
-
-    public function addSong($song) {
-        $song['catalog'] = $this->id;
-
-        if ($this->checkSong($song)) {
-            debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
-        } else {
-            if ($this->insertSong($song)) {
-                $this->updateUi('add', ++$this->addedSongs, $song, true);
-            }
-        }
-    }
-
     protected function getParser() {
         return new Beets\JsonHandler($this->uri);
-    }
-
-    private function insertSong($song) {
-        $inserted = Song::insert($song);
-        if ($inserted) {
-            debug_event('beets_catalog', 'Adding song ' . $song['file'], 5, 'ampache-catalog');
-        } else {
-            debug_event('beets_catalog', 'Insert failed for ' . $song['file'], 1);
-            Error::add('general', T_('Unable to Insert Song - %s'), $song['file']);
-            Error::display('general');
-        }
-        flush();
-        return $inserted;
     }
 
     /**
@@ -218,107 +130,6 @@ class Catalog_beetsremote extends Catalog {
         }
 
         return (boolean) $this->getIdFromPath($song['file']);
-    }
-
-    public function add_to_catalog($options = null) {
-        require AmpConfig::get('prefix') . '/templates/show_adds_catalog.inc.php';
-        flush();
-        set_time_limit(0);
-
-        UI::show_box_top(T_('Running Beets Update') . '. . .');
-        $parser = $this->getParser();
-        $parser->setHandler($this, 'addSong');
-        $parser->start('item');
-        $this->updateUi('add', $this->addedSongs, null, true);
-
-        UI::show_box_bottom();
-    }
-
-    /**
-     * Cleans the Catalog.
-     * This way is a little fishy, but if we start beets for every single file, it may take horribly long.
-     * So first we get the difference between our and the beets database and then clean up the rest.
-     * @return integer
-     */
-    public function clean_catalog_proc() {
-        $parser = $this->getParser();
-        $this->songs = $this->getAllSongfiles();
-        $parser->setHandler($this, 'removeFromDeleteList');
-        $parser->start('item');
-        $count = count($this->songs);
-        $this->deleteSongs($this->songs);
-        $this->updateUi('clean', $this->cleanCounter, null, true);
-        return $count;
-    }
-
-    protected function deleteSongs($songs) {
-        $ids = implode(',', array_keys($songs));
-        $sql = "DELETE FROM `song` WHERE `id` IN " .
-                '(' . $ids . ')';
-        Dba::write($sql);
-    }
-
-    public function removeFromDeleteList($song) {
-        $key = array_search($song['file'], $this->songs, true);
-        $this->updateUi('clean', ++$this->cleanCounter, $song);
-        if ($key) {
-            unset($this->songs[$key]);
-        }
-    }
-    
-    protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false) {
-        if ($ignoreTicker || UI::check_ticker()) {
-            UI::update_text($prefix . '_count_' . $this->id, $count);
-            if (isset($song)) {
-                UI::update_text($prefix . '_dir_' . $this->id, scrub_out($this->getVirtualSongPath($song)));
-            }
-        }
-    }
-
-    public function verify_catalog_proc() {
-        debug_event('verify', 'Starting on ' . $this->name, 5);
-        set_time_limit(0);
-
-        $parser = $this->getParser();
-        $parser->setHandler($this, 'verifySong');
-        $parser->start('item');
-        $this->updateUi('verify', $this->verifiedSongs, null, true);
-        return array('updated' => $this->verifiedSongs, 'total' => $this->verifiedSongs);
-    }
-
-    public function verifySong($beetsSong) {
-        $song = new Song($this->getIdFromPath($beetsSong['file']));
-        if ($song->id) {
-            $song->update($beetsSong);
-            $this->updateUi('verify', ++$this->verifiedSongs, $beetsSong);
-        }
-    }
-
-    protected function getVirtualSongPath($song) {
-        return implode('/', array(
-            $song['artist'],
-            $song['album'],
-            $song['title']
-        ));
-    }
-
-    protected function getIdFromPath($path) {
-        $sql = "SELECT `id` FROM `song` WHERE `file` = ?";
-        $db_results = Dba::read($sql, array($path));
-
-        $row = Dba::fetch_row($db_results);
-        return $row[0];
-    }
-
-    public function getAllSongfiles() {
-        $sql = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?";
-        $db_results = Dba::read($sql, array($this->id));
-
-        $files = array();
-        while ($row = Dba::fetch_row($db_results)) {
-            $files[$row[0]] = $row[1];
-        }
-        return $files;
     }
 
 }

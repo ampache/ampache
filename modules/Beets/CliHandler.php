@@ -28,61 +28,61 @@ namespace Beets;
  *
  * @author raziel
  */
-class CliHandler {
+class CliHandler extends Handler {
 
     /**
      *
-     * @var \Catalog_beets
+     * @var Catalog
      */
-    private $handler;
+    protected $handler;
 
     /**
      * string handler command to do whatever we need
      * @var
      */
-    private $handlerCommand;
+    protected $handlerCommand;
 
     /**
      * Field seperator for beets field format
      * @var string
      */
-    private $seperator = '###';
+    protected $seperator = '###';
 
     /**
      * Custom limiter of beets song because we may have multi line output
      * @var string
      */
-    private $itemEnd = '//EOS';
+    protected $itemEnd = '//EOS';
 
     /**
      * Format string for the '-f' argument from 'beet ls'
      * @var string
      */
-    private $fieldFormat;
+    protected $fieldFormat;
 
     /**
      * Choose whether the -f argument from beets is applied. May be needed to use other commands than 'beet ls'
      * @var boolean
      */
-    private $useCustomFields = true;
+    protected $useCustomFields = true;
 
     /**
      * All stored beets fields
      * @var array
      */
-    private $fields = array();
+    protected $fields = array();
 
     /**
      * Beets command
      * @var string
      */
-    private $beetsCommand = '/usr/bin/beet';
+    protected $beetsCommand = '/usr/bin/beet';
 
     /**
      * Defines the differences between beets and ampache fields
      * @var array Defines the differences between beets and ampache fields
      */
-    private $fieldMapping = array(
+    protected $fieldMapping = array(
         'disc' => array('disk', '%d'),
         'path' => array('file', '%s'),
         'length' => array('time', '%d'),
@@ -90,13 +90,18 @@ class CliHandler {
         'bitrate' => array('bitrate', '%d')
     );
 
-    public function setHandler(\Catalog_beets $handler, $command) {
-        $this->handler = $handler;
-        $this->handlerCommand = $command;
-    }
-
+    /**
+     * Starts a command
+     * @param string $command
+     */
     public function start($command) {
         $handle = popen($this->assembleCommand($command), 'r');
+        if ($handle) {
+            $this->iterateItems($handle);
+        }
+    }
+
+    public function iterateItems($handle) {
         $item = '';
         while (!feof($handle)) {
             $item .= fgets($handle);
@@ -127,7 +132,7 @@ class CliHandler {
     }
 
     /**
-     * 
+     *
      * @param string $item
      * @return boolean
      */
@@ -148,15 +153,6 @@ class CliHandler {
     }
 
     /**
-     * Call function from the dispatcher e.g. to store the new song
-     * @param mixed $data
-     * @return mixed
-     */
-    protected function dispatch($data) {
-        return call_user_func(array($this->handler, $this->handlerCommand), $data);
-    }
-
-    /**
      * Create the format string for beet ls -f
      * @return string
      */
@@ -169,7 +165,7 @@ class CliHandler {
     }
 
     /**
-     * 
+     *
      * @return array
      */
     protected function getFields() {
@@ -184,21 +180,6 @@ class CliHandler {
         }
 
         return $processedFields;
-    }
-
-    /**
-     * Resolves the differences between Beets and Ampache properties
-     * @param type $song
-     * @return type
-     */
-    protected function mapFields($song) {
-        foreach ($this->fieldMapping as $from => $to) {
-            list($key, $format) = $to;
-            $song[$key] = sprintf($format, $song[$from]);
-        }
-        $song['genre'] = explode(',', $song['genre']);
-
-        return $song;
     }
 
 }
