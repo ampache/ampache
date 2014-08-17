@@ -28,11 +28,12 @@ namespace Beets;
  *
  * @author raziel
  */
-abstract class Handler {
-
+abstract class Handler
+{
     abstract protected function start($command);
 
-    public function setHandler(Catalog $handler, $command) {
+    public function setHandler(Catalog $handler, $command)
+    {
         $this->handler = $handler;
         $this->handlerCommand = $command;
     }
@@ -42,7 +43,8 @@ abstract class Handler {
      * @param mixed $data
      * @return mixed
      */
-    protected function dispatch($data) {
+    protected function dispatch($data)
+    {
         return call_user_func(array($this->handler, $this->handlerCommand), $data);
     }
 
@@ -52,7 +54,8 @@ abstract class Handler {
      * @param type $song
      * @return type
      */
-    protected function mapFields($song) {
+    protected function mapFields($song)
+    {
         foreach ($this->fieldMapping as $from => $to) {
             list($key, $format) = $to;
             $song[$key] = sprintf($format, $song[$from]);

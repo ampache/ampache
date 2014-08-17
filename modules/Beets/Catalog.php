@@ -33,8 +33,8 @@ use Song;
  *
  * @author raziel
  */
-abstract class Catalog extends \Catalog {
-
+abstract class Catalog extends \Catalog
+{
     /**
      * Added Songs counter
      * @var integer
@@ -76,23 +76,25 @@ abstract class Catalog extends \Catalog {
     }
 
     /**
-     * 
+     *
      * @param \media $media
      * @return \media
      */
-    public function prepare_media($media) {
+    public function prepare_media($media)
+    {
         debug_event('play', 'Started remote stream - ' . $media->file, 5);
         return $media;
     }
 
     /**
-     * 
+     *
      * @param string $prefix Prefix like add, updated, verify and clean
      * @param integer $count song count
      * @param array $song Song array
      * @param boolean $ignoreTicker ignoring the ticker for the last update
      */
-    protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false) {
+    protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false)
+    {
         if ($ignoreTicker || UI::check_ticker()) {
             UI::update_text($prefix . '_count_' . $this->id, $count);
             if (isset($song)) {
@@ -105,7 +107,8 @@ abstract class Catalog extends \Catalog {
      * Adds new songs to the catalog
      * @param array $options
      */
-    public function add_to_catalog($options = null) {
+    public function add_to_catalog($options = null)
+    {
         require AmpConfig::get('prefix') . '/templates/show_adds_catalog.inc.php';
         flush();
         set_time_limit(0);
@@ -123,7 +126,8 @@ abstract class Catalog extends \Catalog {
      * Add $song to ampache if it isn't already
      * @param array $song
      */
-    public function addSong($song) {
+    public function addSong($song)
+    {
         $song['catalog'] = $this->id;
 
         if ($this->checkSong($song)) {
@@ -140,7 +144,8 @@ abstract class Catalog extends \Catalog {
      * @param array $song
      * @return integer
      */
-    protected function insertSong($song) {
+    protected function insertSong($song)
+    {
         $inserted = Song::insert($song);
         if ($inserted) {
             debug_event('beets_catalog', 'Adding song ' . $song['file'], 5, 'ampache-catalog');
@@ -157,7 +162,8 @@ abstract class Catalog extends \Catalog {
      * Verify songs.
      * @return array
      */
-    public function verify_catalog_proc() {
+    public function verify_catalog_proc()
+    {
         debug_event('verify', 'Starting on ' . $this->name, 5);
         set_time_limit(0);
 
@@ -172,7 +178,8 @@ abstract class Catalog extends \Catalog {
      * Verify and update a song
      * @param array $beetsSong
      */
-    public function verifySong($beetsSong) {
+    public function verifySong($beetsSong)
+    {
         $song = new Song($this->getIdFromPath($beetsSong['file']));
         if ($song->id) {
             $song->update($beetsSong);
@@ -186,7 +193,8 @@ abstract class Catalog extends \Catalog {
      * So first we get the difference between our and the beets database and then clean up the rest.
      * @return integer
      */
-    public function clean_catalog_proc() {
+    public function clean_catalog_proc()
+    {
         $parser = $this->getParser();
         $this->songs = $this->getAllSongfiles();
         $parser->setHandler($this, 'removeFromDeleteList');
@@ -201,7 +209,8 @@ abstract class Catalog extends \Catalog {
      * Remove a song from the "to be deleted"-list if it was found.
      * @param array $song
      */
-    public function removeFromDeleteList($song) {
+    public function removeFromDeleteList($song)
+    {
         $key = array_search($song['file'], $this->songs, true);
         $this->updateUi('clean', ++$this->cleanCounter, $song);
         if ($key) {
@@ -213,7 +222,8 @@ abstract class Catalog extends \Catalog {
      * Delete Song from DB
      * @param array $songs
      */
-    protected function deleteSongs($songs) {
+    protected function deleteSongs($songs)
+    {
         $ids = implode(',', array_keys($songs));
         $sql = "DELETE FROM `song` WHERE `id` IN " .
                 '(' . $ids . ')';
@@ -221,11 +231,12 @@ abstract class Catalog extends \Catalog {
     }
 
     /**
-     * 
+     *
      * @param string $path
      * @return integer|boolean
      */
-    protected function getIdFromPath($path) {
+    protected function getIdFromPath($path)
+    {
         $sql = "SELECT `id` FROM `song` WHERE `file` = ?";
         $db_results = Dba::read($sql, array($path));
 
@@ -237,7 +248,8 @@ abstract class Catalog extends \Catalog {
      * Get all songs from the DB into a array
      * @return array array(id => file)
      */
-    public function getAllSongfiles() {
+    public function getAllSongfiles()
+    {
         $sql = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?";
         $db_results = Dba::read($sql, array($this->id));
 
@@ -253,7 +265,8 @@ abstract class Catalog extends \Catalog {
      * @param array $song
      * @return string
      */
-    protected function getVirtualSongPath($song) {
+    protected function getVirtualSongPath($song)
+    {
         return implode('/', array(
             $song['artist'],
             $song['album'],
@@ -265,7 +278,8 @@ abstract class Catalog extends \Catalog {
      * get_description
      * This returns the description of this catalog
      */
-    public function get_description() {
+    public function get_description()
+    {
         return $this->description;
     }
 
@@ -273,7 +287,8 @@ abstract class Catalog extends \Catalog {
      * get_version
      * This returns the current version
      */
-    public function get_version() {
+    public function get_version()
+    {
         return $this->version;
     }
 
@@ -281,7 +296,8 @@ abstract class Catalog extends \Catalog {
      * get_type
      * This returns the current catalog type
      */
-    public function get_type() {
+    public function get_type()
+    {
         return $this->type;
     }
 
@@ -289,8 +305,8 @@ abstract class Catalog extends \Catalog {
      * Doesent seems like we need this...
      * @param string $file_path
      */
-    public function get_rel_path($file_path) {
-        
+    public function get_rel_path($file_path)
+    {
     }
 
     /**
@@ -298,7 +314,8 @@ abstract class Catalog extends \Catalog {
      *
      * This makes the object human-readable.
      */
-    public function format() {
+    public function format()
+    {
         parent::format();
     }
 

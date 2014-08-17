@@ -27,8 +27,8 @@
  * This class handles all actual work in regards to local Beets catalogs.
  *
  */
-class Catalog_beets extends Beets\Catalog {
-
+class Catalog_beets extends Beets\Catalog
+{
     protected $version = '000001';
     protected $type = 'beets';
     protected $description = 'Beets Catalog';
@@ -45,7 +45,8 @@ class Catalog_beets extends Beets\Catalog {
      * get_create_help
      * This returns hints on catalog creation
      */
-    public function get_create_help() {
+    public function get_create_help()
+    {
         $help = "<ul>" .
                 "<li>Fetch songs from beets command over CLI.</li>" .
                 "<li>You have to ensure that the beets command ( /usr/bin/beet ), the music directories and the Database file are accessable by the Webserver.</li></ul>";
@@ -56,7 +57,8 @@ class Catalog_beets extends Beets\Catalog {
      * is_installed
      * This returns true or false if remote catalog is installed
      */
-    public function is_installed() {
+    public function is_installed()
+    {
         $sql = "SHOW TABLES LIKE 'catalog_beets'";
         $db_results = Dba::query($sql);
 
@@ -67,7 +69,8 @@ class Catalog_beets extends Beets\Catalog {
      * install
      * This function installs the remote catalog
      */
-    public function install() {
+    public function install()
+    {
         $sql = "CREATE TABLE `catalog_beets` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
                 "`beetsdb` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
                 "`catalog_id` INT( 11 ) NOT NULL" .
@@ -77,7 +80,8 @@ class Catalog_beets extends Beets\Catalog {
         return true;
     }
 
-    public function catalog_fields() {
+    public function catalog_fields()
+    {
         $fields['beetsdb'] = array('description' => T_('Beets Database File'), 'type' => 'textbox');
 
         return $fields;
@@ -113,7 +117,8 @@ class Catalog_beets extends Beets\Catalog {
         return true;
     }
 
-    protected function getParser() {
+    protected function getParser()
+    {
         return new Beets\CliHandler();
     }
 
@@ -122,7 +127,8 @@ class Catalog_beets extends Beets\Catalog {
      * @param array $song
      * @return boolean
      */
-    public function checkSong($song) {
+    public function checkSong($song)
+    {
         $date = new DateTime($song['added']);
         if ($date->format('U') < $this->last_add) {
             debug_event('Check', 'Skipping ' . $song['file'] . ' File modify time before last add run', '3');
@@ -132,7 +138,8 @@ class Catalog_beets extends Beets\Catalog {
         return (boolean) $this->getIdFromPath($song['file']);
     }
 
-    public function getBeetsDb() {
+    public function getBeetsDb()
+    {
         return $this->beetsdb;
     }
 

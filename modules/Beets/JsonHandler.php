@@ -28,8 +28,8 @@ namespace Beets;
  *
  * @author raziel
  */
-class JsonHandler extends Handler {
-
+class JsonHandler extends Handler
+{
     protected $uri;
 
     /**
@@ -55,7 +55,8 @@ class JsonHandler extends Handler {
         'bitrate' => array('bitrate', '%d')
     );
 
-    public function __construct($uri) {
+    public function __construct($uri)
+    {
         $this->uri = $uri;
     }
 
@@ -63,7 +64,8 @@ class JsonHandler extends Handler {
      * Starts a command
      * @param string $command
      */
-    public function start($command) {
+    public function start($command)
+    {
         $handle = fopen($this->assembleUri($command), 'r');
         if ($handle) {
             $this->iterateItems($handle);
@@ -74,7 +76,8 @@ class JsonHandler extends Handler {
      * Iterate over the input and create a song if one is found
      * @param resource $handle
      */
-    public function iterateItems($handle) {
+    public function iterateItems($handle)
+    {
         $item = '';
         while (!feof($handle)) {
             $item .= $char = fgetc($handle);
@@ -93,7 +96,8 @@ class JsonHandler extends Handler {
      * @param string $command
      * @return string
      */
-    protected function assembleUri($command) {
+    protected function assembleUri($command)
+    {
         $uriParts = array(
             $this->uri,
             $command
@@ -107,7 +111,8 @@ class JsonHandler extends Handler {
      * @param string $item
      * @return boolean
      */
-    public function itemIsComlete($item) {
+    public function itemIsComlete($item)
+    {
         $item = $this->removeUnwantedStrings($item);
         return $this->compareBraces($item);
     }
@@ -117,7 +122,8 @@ class JsonHandler extends Handler {
      * @param string $item
      * @return string
      */
-    public function removeUnwantedStrings($item) {
+    public function removeUnwantedStrings($item)
+    {
         $toRemove = array(
             '{"items":[',
             '{"results":[',
@@ -131,7 +137,8 @@ class JsonHandler extends Handler {
      * @param string $item
      * @return boolean
      */
-    public function compareBraces($item) {
+    public function compareBraces($item)
+    {
         $start = $this->countChar('{', $item);
         $end = $this->countChar('}', $item);
         return $start !== 0 && $start === $end;
@@ -143,7 +150,8 @@ class JsonHandler extends Handler {
      * @param string $string
      * @return type
      */
-    public function countChar($char, $string) {
+    public function countChar($char, $string)
+    {
         return substr_count($string, $char);
     }
 
@@ -152,7 +160,8 @@ class JsonHandler extends Handler {
      * @param string $item
      * @return array
      */
-    public function parse($item) {
+    public function parse($item)
+    {
         $item = $this->removeUnwantedStrings($item);
         $song = json_decode($item, true);
         $song['file'] = $this->createFileUrl($song);
@@ -165,7 +174,8 @@ class JsonHandler extends Handler {
      * @param array $song
      * @return string
      */
-    public function createFileUrl($song) {
+    public function createFileUrl($song)
+    {
         $parts = array(
             $this->uri,
             'item',

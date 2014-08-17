@@ -27,8 +27,8 @@
  * This class handles all actual work in regards to remote Beets catalogs.
  *
  */
-class Catalog_beetsremote extends Beets\Catalog {
-
+class Catalog_beetsremote extends Beets\Catalog
+{
     protected $version = '000001';
     protected $type = 'beetsremote';
     protected $description = 'Beets Remote Catalog';
@@ -45,7 +45,8 @@ class Catalog_beetsremote extends Beets\Catalog {
      * get_create_help
      * This returns hints on catalog creation
      */
-    public function get_create_help() {
+    public function get_create_help()
+    {
         $help = "<ul>" .
                 "<li>Install Beets web plugin: http://beets.readthedocs.org/en/latest/plugins/web.html</li>" .
                 "<li>Start Beets web server</li>" .
@@ -57,7 +58,8 @@ class Catalog_beetsremote extends Beets\Catalog {
      * is_installed
      * This returns true or false if remote catalog is installed
      */
-    public function is_installed() {
+    public function is_installed()
+    {
         $sql = "SHOW TABLES LIKE 'catalog_beetsremote'";
         $db_results = Dba::query($sql);
 
@@ -68,7 +70,8 @@ class Catalog_beetsremote extends Beets\Catalog {
      * install
      * This function installs the remote catalog
      */
-    public function install() {
+    public function install()
+    {
         $sql = "CREATE TABLE `catalog_beetsremote` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
                 "`uri` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
                 "`catalog_id` INT( 11 ) NOT NULL" .
@@ -78,7 +81,8 @@ class Catalog_beetsremote extends Beets\Catalog {
         return true;
     }
 
-    public function catalog_fields() {
+    public function catalog_fields()
+    {
         $fields['uri'] = array('description' => T_('Beets Server URI'), 'type' => 'textbox');
 
         return $fields;
@@ -114,7 +118,8 @@ class Catalog_beetsremote extends Beets\Catalog {
         return true;
     }
 
-    protected function getParser() {
+    protected function getParser()
+    {
         return new Beets\JsonHandler($this->uri);
     }
 
@@ -123,7 +128,8 @@ class Catalog_beetsremote extends Beets\Catalog {
      * @param array $song
      * @return boolean
      */
-    public function checkSong($song) {
+    public function checkSong($song)
+    {
         if ($song['added'] < $this->last_add) {
             debug_event('Check', 'Skipping ' . $song['file'] . ' File modify time before last add run', '3');
             return true;

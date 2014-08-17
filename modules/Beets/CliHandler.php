@@ -28,8 +28,8 @@ namespace Beets;
  *
  * @author raziel
  */
-class CliHandler extends Handler {
-
+class CliHandler extends Handler
+{
     /**
      *
      * @var Catalog
@@ -94,14 +94,16 @@ class CliHandler extends Handler {
      * Starts a command
      * @param string $command
      */
-    public function start($command) {
+    public function start($command)
+    {
         $handle = popen($this->assembleCommand($command), 'r');
         if ($handle) {
             $this->iterateItems($handle);
         }
     }
 
-    public function iterateItems($handle) {
+    public function iterateItems($handle)
+    {
         $item = '';
         while (!feof($handle)) {
             $item .= fgets($handle);
@@ -119,7 +121,8 @@ class CliHandler extends Handler {
      * @param boolean $disableCostomFields disables the -f switch for this time
      * @return type
      */
-    protected function assembleCommand($command, $disableCostomFields = false) {
+    protected function assembleCommand($command, $disableCostomFields = false)
+    {
         $commandParts = array(
             escapeshellcmd($this->beetsCommand),
             ' -l ' . escapeshellarg($this->handler->getBeetsDb()),
@@ -136,7 +139,8 @@ class CliHandler extends Handler {
      * @param string $item
      * @return boolean
      */
-    protected function itemIsComlete($item) {
+    protected function itemIsComlete($item)
+    {
         return strrpos($item, $this->itemEnd, strlen($this->itemEnd)) !== false;
     }
 
@@ -145,7 +149,8 @@ class CliHandler extends Handler {
      * @param string $item
      * @return array
      */
-    protected function parse($item) {
+    protected function parse($item)
+    {
         $item = str_replace($this->itemEnd, '', $item);
         $values = explode($this->seperator, $item);
         $song = array_combine($this->fields, $values);
@@ -158,7 +163,8 @@ class CliHandler extends Handler {
      * Create the format string for beet ls -f
      * @return string
      */
-    protected function getFieldFormat() {
+    protected function getFieldFormat()
+    {
         if (!isset($this->fieldFormat)) {
             $this->fields = $this->getFields();
             $this->fieldFormat = '$' . implode($this->seperator . '$', $this->fields) . $this->itemEnd;
@@ -170,7 +176,8 @@ class CliHandler extends Handler {
      *
      * @return array
      */
-    protected function getFields() {
+    protected function getFields()
+    {
         $fields = null;
         $processedFields = array();
         exec($this->assembleCommand('fields', true), $fields);
