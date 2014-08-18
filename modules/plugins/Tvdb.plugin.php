@@ -149,8 +149,8 @@ class AmpacheTvdb {
                             $results['original_name'] = $release->name;
                             $results['imdb_id'] = $release->imdbId ;
                             if ($release->firstAired) {
-                                $results['release_date'] = $release->firstAired->getTimestamp();
-                                $results['year'] = $release->firstAired->format('Y');;
+                                $results['release_date'] = $release->firstAired;
+                            	$results['year'] = $release->firstAired->format('Y');;
                             }
                             $results['description'] = $release->overview;
                             if ($release->thumbnail) {

@@ -281,7 +281,7 @@ class Video extends database_object implements media, library_item
         $this->f_length = floor($this->time/60) . ' ' .  T_('minutes');
         $this->f_file = $this->f_title . '.' . $this->type;
         if ($this->release_date) {
-            $this->f_release_date = date('Y-m-d', $this->release_date);
+            $this->f_release_date = $this->release_date;
         }
 
     } // format
@@ -514,10 +514,10 @@ class Video extends database_object implements media, library_item
         $mode           = $data['mode'];
         $rezx           = intval($data['resolution_x']);
         $rezy           = intval($data['resolution_y']);
-        $release_date   = intval($data['release_date']);
-        // No release date, then release date = production year
+        $release_date   = $data['release_date'];
+                // No release date, then release date = production year
         if (!$release_date && $data['year']) {
-            $release_date = strtotime($data['year'] . '01-01');
+            $release_date = $data['year'] . '-01-01';
         }
         $tags           = $data['genre'];
         $channels       = intval($data['channels']);
@@ -588,8 +588,7 @@ class Video extends database_object implements media, library_item
     public function update(array $data)
     {
         if (isset($data['release_date'])) {
-            $f_release_date = $data['release_date'];
-            $release_date = strtotime($f_release_date);
+            $release_date = $data['release_date'];
         } else {
             $release_date = $this->release_date;
         }

@@ -2775,9 +2775,9 @@ class Update
     {
         $retval = true;
 
-        $sql = "ALTER TABLE `video` ADD `release_date` int(11) unsigned NULL AFTER `enabled`, " .
-            "ADD `played` tinyint(1) unsigned DEFAULT '1' NOT NULL AFTER `enabled`";
-        $retval = Dba::write($sql) ? $retval : false;
+       $sql = "ALTER TABLE `video` ADD `release_date` date NULL AFTER `enabled`, " .
+             "ADD `played` tinyint(1) unsigned DEFAULT '1' NOT NULL AFTER `enabled`";
+       $retval = Dba::write($sql) ? $retval : false;
 
         $sql = "CREATE TABLE `tvshow` (" .
             "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
