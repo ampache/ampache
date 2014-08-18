@@ -8,3 +8,7 @@ play/.htaccess
 *.suo
 logs
 /nbproject/private/
+.buildpath
+.project
+.settings/
+
