@@ -117,8 +117,8 @@ class AmpacheTmdb {
                         $results['imdb_id'] = $release['imdb_id'];
                         $results['original_name'] = $release['original_title'];
                         if (!empty($release['release_date'])) {
-                            $results['release_date'] = strtotime($release['release_date']);
-                            $results['year'] = date("Y", $results['release_date']);  // Production year shouldn't be the release date
+                             $results['release_date'] = $release['release_date'];
+                             $results['year'] = date("Y", strtotime($results['release_date']));  // Production year shouldn't be the release date
                         }
                         if ($release['poster_path']) {
                             $results['art'] = $imageHelper->getUrl($release['poster_path']);
@@ -164,8 +164,8 @@ class AmpacheTmdb {
                                         $results['tvshow_episode'] = $release['episode_number'];
                                         $results['original_name'] = $release['name'];
                                         if (!empty($release['air_date'])) {
-                                            $results['release_date'] = strtotime($release['release_date']);
-                                            $results['year'] = date("Y", $results['release_date']);
+                                            $results['release_date'] = $release['release_date'];
+                                            $results['year'] = date("Y", strtotime($results['release_date']));
                                         }
                                         $results['description'] = $release['overview'];
                                         if ($release['still_path']) {

@@ -908,12 +908,16 @@ class vainfo
         foreach ($tags as $tag => $data) {
             switch ($tag) {
                 case 'creation_date':
-                    $parsed['release_date'] = strtotime($data[0]);
-                    if (strlen($data['0']) > 4) {
-                        $data[0] = date('Y', $parsed['release_date']);
+                	if (strlen($data['0']) > 4) {
+                        $date=date_create($data[0]);
+                		$parsed['release_date']= $data[0];
                     }
-                    $parsed['year'] = $data[0];
-                break;
+                    elseif (strlen($data['0']) > 0) {
+                        $date=date_create($data['0'].'-'.'01'.'-'.'01');
+                		$parsed['release_date']= $data['0'].'-'.'01'.'-'.'01';
+                    }
+                    $parsed['year']=date("Y", strtotime($parsed['release_date']));;
+                    break;
                 case 'MusicBrainz Track Id':
                     $parsed['mb_trackid'] = $data[0];
                 break;
