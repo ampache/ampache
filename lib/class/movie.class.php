@@ -118,7 +118,7 @@ class Movie extends Video
     {
         parent::format();
 
-        $this->f_original_name = trim($this->prefix . " " . $this->f_title);
+        $this->f_original_name = trim($this->prefix . " " . $this->original_name);
         $this->f_title = ($this->f_original_name ?: $this->f_title);
         $this->f_full_title = $this->f_title;
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
