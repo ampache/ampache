@@ -3902,6 +3902,15 @@ to {
 .media-poster-container.selected .media-poster-actions {
     display: none;
 }
+.media-poster-container .media-poster-actions {
+    -webkit-transition: opacity 0.3s ease-in-out;
+    -moz-transition: opacity 0.3s ease-in-out;
+    -ms-transition: opacity 0.3s ease-in-out;
+    -o-transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
+    filter: alpha(opacity=0);
+    opacity: 0;
+}
 .media-poster-container.selected .media-progress {
     display: none;
 }
@@ -3916,9 +3925,8 @@ to {
     filter: alpha(opacity=100);
 }
 .force-hover .media-poster-container .media-poster-actions, .media-poster-container:hover .media-poster-actions {
-    -webkit-transform: translate(0, -50px);
-    -ms-transform: translate(0, -50px);
-    transform: translate(0, -50px);
+    filter: alpha(opacity=100);
+    opacity: 1;
 }
 .media-poster-container.selected .media-poster-overlay {
     top: 2px;
@@ -3966,8 +3974,8 @@ to {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000',  endColorstr='#ff000000',  GradientType=0);
     opacity: 0;
     filter: alpha(opacity=0);
-    -webkit-transition: opacity .2s;
-    transition: opacity .2s;
+    -webkit-transition: opacity .3s;
+    transition: opacity .3s;
 }
 .media-poster-top-overlay {
     display: block;
@@ -4026,7 +4034,7 @@ to {
 .media-poster-actions {
     position: absolute;
     right: 0;
-    bottom: -50px;
+    bottom: 0;
     left: 0;
     font-size: 0;
     text-align: center;

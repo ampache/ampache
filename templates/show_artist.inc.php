@@ -133,79 +133,79 @@ if ($directplay_limit > 0) {
             </div>
         </div>
         <div class="details-poster-container">
-            <a class="media-poster-container" href="#">
+            <div class="media-poster-container" href="#">
                 <div class="artist-poster media-poster" style="background-image: url(<?php echo $biography['largephoto']; ?>);">
                     <div class="media-poster-overlay"></div>
-                    <div class="media-poster-actions">
-                        <button class="play-btn media-poster-btn btn-link" tabindex="-1">
-                            <i class="fa fa-play fa-lg">
-                                <a rel="nohtml" href="<?php echo AmpConfig::get('ajax_url') . '?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id; ?>"></a>
-                            </i>
-                        </button>
-                        <button class="edit-btn media-poster-btn btn-link" tabindex="-1">
-                            <i class="fa fa-pencil fa-lg">
-                                <?php if (Access::check('interface','50')) { ?>
-                                <a rel="nohtml" id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
-                                </a>
-                                <?php } else { ?>
-                                <a rel="nohtml" class="disabled" href="#"></a>
-                                <?php } ?>
-                            </i>
-                        </button>
-                        <button class="more-btn media-poster-btn btn-link" tabindex="-1">
-                            <i class="fa fa-ellipsis-h fa-lg">
-                            </i>
-                        </button>
-                    </div>
-                    <?php 
-                        if (AmpConfig::get('show_played_times')) {
-                            echo '<span class="unwatched-count-badge badge badge-lg">'.$artist->object_cnt.'</span>';
-                        }
-                    ?>
                 </div>
-            </a>
-            <div class="media-actions-dropdown dropdown" style="top: 96px; left: 96px;">
-                <div rel="nohtml" class="dropdown-toggle" data-toggle="dropdown"></div>
-                <ul class="dropdown-menu">
-                    <li>
-                        <?php if ($object_type == 'album') { ?>
-                        <a rel="nohtml" class="show-all-songs-btn" href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
-                            <?php echo T_("Show all"); ?>
+                <div class="media-poster-actions">
+                    <button class="play-btn media-poster-btn btn-link" tabindex="-1">
+                        <a rel="nohtml" href="<?php echo AmpConfig::get('ajax_url') . '?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id; ?>">
+                            <i class="fa fa-play fa-lg"></i>
+                        </a>
+                    </button>
+                    <button class="edit-btn media-poster-btn btn-link" tabindex="-1">
+                        <?php if (Access::check('interface','50')) { ?>
+                        <a rel="nohtml" id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
+                            <i class="fa fa-pencil fa-lg"></i>
                         </a>
                         <?php } else { ?>
-                        <a rel="nohtml" class="show-all-albums-btn" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
-                            <?php echo T_("Show albums"); ?>
+                        <a rel="nohtml" class="disabled" href="#">
+                            <i class="fa fa-pencil fa-lg"></i>
                         </a>
                         <?php } ?>
-                    </li>
-                    <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                    <li>
-                        <a rel="nohtml" class="add-to-up-next-btn" href="<?php echo AmpConfig::get('ajax_url') . '?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true'; ?>" tabindex="-1">
-                            <?php echo T_('Play next'); ?>
+                    </button>
+                    <button class="more-btn media-poster-btn btn-link nav-dropdown dropdown" tabindex="-1">
+                        <a rel="nohtml" class="dropdown-toggle" href="#media-actions-dropdown" data-toggle="dropdown" data-original-title="" title="<?php echo T_('More'); ?>">
+                            <i class="fa fa-ellipsis-h fa-lg"></i>
                         </a>
-                    </li>
-                    <?php } ?>
-                    <li>
-                        <a rel="nohtml" class="add-to-playlist-btn" href="<?php echo AmpConfig::get('ajax_url') . '?action=basket&type=artist&id=' . $artist->id; ?>" tabindex="-1">
-                            <?php echo T_('Add to temporary playlist'); ?>
-                        </a>
-                    </li>
-                    <li>
-                        <a rel="nohtml" class="random-to-playlist-btn" href="<?php echo AmpConfig::get('ajax_url') . '?action=basket&type=artist_random&id=' . $artist->id; ?>" tabindex="-1">
-                            <?php echo T_('Random to temporary playlist'); ?>
-                        </a>
-                    </li>
-                    
-                    <li class="divider"></li>
-                    
-                    <?php if (Access::check_function('batch_download')) { ?>
-                    <li>
-                        <a rel="nohtml" class="add-to-up-next-btn" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>" tabindex="-1">
-                            <?php echo T_('Download'); ?>
-                        </a>
-                    </li>
-                    <?php } ?>
-                </ul>
+                        <ul class="media-actions-dropdown dropdown-menu">
+                            <li>
+                                <?php if ($object_type == 'album') { ?>
+                                <a rel="nohtml" class="show-all-songs-btn" href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
+                                    <?php echo T_("Show all"); ?>
+                                </a>
+                                <?php } else { ?>
+                                <a rel="nohtml" class="show-all-albums-btn" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
+                                    <?php echo T_("Show albums"); ?>
+                                </a>
+                                <?php } ?>
+                            </li>
+                            <?php if (Stream_Playlist::check_autoplay_append()) { ?>
+                            <li>
+                                <a rel="nohtml" class="add-to-up-next-btn" href="<?php echo AmpConfig::get('ajax_url') . '?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true'; ?>" tabindex="-1">
+                                    <?php echo T_('Play next'); ?>
+                                </a>
+                            </li>
+                            <?php } ?>
+                            <li>
+                                <a rel="nohtml" class="add-to-playlist-btn" href="<?php echo AmpConfig::get('ajax_url') . '?action=basket&type=artist&id=' . $artist->id; ?>" tabindex="-1">
+                                    <?php echo T_('Add to temporary playlist'); ?>
+                                </a>
+                            </li>
+                            <li>
+                                <a rel="nohtml" class="random-to-playlist-btn" href="<?php echo AmpConfig::get('ajax_url') . '?action=basket&type=artist_random&id=' . $artist->id; ?>" tabindex="-1">
+                                    <?php echo T_('Random to temporary playlist'); ?>
+                                </a>
+                            </li>
+
+                            <?php if (Access::check_function('batch_download')) { ?>
+                            
+                            <li class="divider"></li>
+                            
+                            <li>
+                                <a rel="nohtml" class="add-to-up-next-btn" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>" tabindex="-1">
+                                    <?php echo T_('Download'); ?>
+                                </a>
+                            </li>
+                            <?php } ?>
+                        </ul>
+                    </button>
+                </div>
+                <?php 
+                    if (AmpConfig::get('show_played_times')) {
+                        echo '<span class="unwatched-count-badge badge badge-lg">'.$artist->object_cnt.'</span>';
+                    }
+                ?>
             </div>
         </div>
     </div>
