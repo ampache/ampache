@@ -440,6 +440,9 @@ class Update
         $update_string = '- Replace iframe with ajax page load.<br />';
         $version[] = array('version' => '370013','description' => $update_string);
 
+        $update_string = '- Modified release_date in video table to signed int.<br />';
+        $version[] = array('version' => '370014','description' => $update_string);
+
         return $version;
     }
 
@@ -2775,9 +2778,9 @@ class Update
     {
         $retval = true;
 
-        $sql = "ALTER TABLE `video` ADD `release_date` int(11) unsigned NULL AFTER `enabled`, " .
-            "ADD `played` tinyint(1) unsigned DEFAULT '1' NOT NULL AFTER `enabled`";
-        $retval = Dba::write($sql) ? $retval : false;
+       $sql = "ALTER TABLE `video` ADD `release_date` date NULL AFTER `enabled`, " .
+             "ADD `played` tinyint(1) unsigned DEFAULT '1' NOT NULL AFTER `enabled`";
+       $retval = Dba::write($sql) ? $retval : false;
 
         $sql = "CREATE TABLE `tvshow` (" .
             "`id` int(11) unsigned NOT NULL AUTO_INCREMENT," .
@@ -2915,5 +2918,18 @@ class Update
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;
+    }
+    
+    /**
+     * update 370014
+     *
+     * Modified release_date of table video to signed int(11).
+     */
+    public static function update_370014()
+    {
+    	$retval = true;
+    	$sql="ALTER TABLE `video` CHANGE COLUMN `release_date` `release_date` INT NULL DEFAULT NULL" ;
+    	$retval = Dba::write($sql) ? $retval : false;
+    	return $retval;
     }
 }
