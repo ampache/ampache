@@ -48,7 +48,10 @@ if ($directplay_limit > 0) {
                     </div>
                 </div>
                 <p class="metadata-labels">
-                    <?php show_rating($artist->id, 'artist'); ?>
+                    <span><?php show_rating($artist->id, 'artist'); ?></span>
+                    <?php if (AmpConfig::get('userflags')) { ?>
+                    <span><?php Userflag::show($artist->id, 'artist'); ?></span>
+                    <?php } ?>
                 </p>
                 <div class="summary-container">
                     <div class="summary">
@@ -136,6 +139,11 @@ if ($directplay_limit > 0) {
             <div class="media-poster-container" href="#">
                 <div class="artist-poster media-poster" style="background-image: url(<?php echo $biography['largephoto']; ?>);">
                     <div class="media-poster-overlay"></div>
+                    <?php 
+                        if (AmpConfig::get('show_played_times')) {
+                            echo '<span class="unwatched-count-badge badge badge-lg">'.$artist->object_cnt.'</span>';
+                        }
+                    ?>
                 </div>
                 <div class="media-poster-actions">
                     <button class="play-btn media-poster-btn btn-link" tabindex="-1">
@@ -155,7 +163,7 @@ if ($directplay_limit > 0) {
                         <?php } ?>
                     </button>
                     <button class="more-btn media-poster-btn btn-link nav-dropdown dropdown" tabindex="-1">
-                        <a rel="nohtml" class="dropdown-toggle" href="#media-actions-dropdown" data-toggle="dropdown" data-original-title="" title="<?php echo T_('More'); ?>">
+                        <a rel="nohtml" class="dropdown-toggle" data-toggle="dropdown" data-original-title="" title="<?php echo T_('More'); ?>">
                             <i class="fa fa-ellipsis-h fa-lg"></i>
                         </a>
                         <ul class="media-actions-dropdown dropdown-menu">
@@ -189,7 +197,6 @@ if ($directplay_limit > 0) {
                             </li>
 
                             <?php if (Access::check_function('batch_download')) { ?>
-                            
                             <li class="divider"></li>
                             
                             <li>
@@ -198,14 +205,21 @@ if ($directplay_limit > 0) {
                                 </a>
                             </li>
                             <?php } ?>
+                            
+                            <li class="divider"></li>
+                            
+                            <li>
+                                <a rel="nohtml" href="http://www.google.com/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo T_('Search on Google ...'); ?></a>
+                            </li>
+                            <li>
+                                <a rel="nohtml" href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($artist->f_name); ?>%22&go=Go" target="_blank"><?php echo T_('Search on Wikipedia ...'); ?></a>
+                            </li>
+                            <li>
+                                <a rel="nohtml" href="http://www.last.fm/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22&type=artist" target="_blank"><?php echo T_('Search on Last.fm ...'); ?></a>
+                            </li>
                         </ul>
                     </button>
                 </div>
-                <?php 
-                    if (AmpConfig::get('show_played_times')) {
-                        echo '<span class="unwatched-count-badge badge badge-lg">'.$artist->object_cnt.'</span>';
-                    }
-                ?>
             </div>
         </div>
     </div>
@@ -215,19 +229,10 @@ if ($directplay_limit > 0) {
 if (AmpConfig::get('lastfm_api_key')) {
     //echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&artist='.$artist->id, 'artist_info'));
 ?>
-    <div class="item_right_info">
-        <div class="external_links">
-            <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
-            <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($artist->f_name); ?>%22&go=Go" target="_blank"><?php echo UI::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-            <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22&type=artist" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
-        </div>
-        <div id="artist_biography">
-            
-        </div>
-    </div>
+
+
+
 <?php } ?>
-
-
 <?php
 if (AmpConfig::get('show_played_times')) {
 ?>

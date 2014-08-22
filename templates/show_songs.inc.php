@@ -24,7 +24,7 @@ $web_path = AmpConfig::get('web_path');
 $thcount = 8;
 ?>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
-<table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="song">
+<table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata list virtual-list media-list" cellpadding="0" cellspacing="0" data-objecttype="song">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -60,7 +60,7 @@ $thcount = 8;
                 $libitem = new Song($song_id);
                 $libitem->format();
         ?>
-            <tr class="<?php echo UI::flip_class(); ?>" id="song_<?php echo $libitem->id; ?>">
+            <tr class="striped-list-item media-list-item song" id="song_<?php echo $libitem->id; ?>">
                 <?php require AmpConfig::get('prefix') . '/templates/show_song_row.inc.php'; ?>
             </tr>
         <?php } ?>

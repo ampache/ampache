@@ -72,10 +72,11 @@ $web_path = AmpConfig::get('web_path');
             $class = $current_instance ? '' : 'active_instance';
         ?>
         <li id="nav-localplay-dropdown" class="nav-dropdown dropdown">
-            <a rel="nohtml" class="dropdown-toggle" href="#nav-localplay-dropdown" data-toggle="dropdown" data-original-title="" title="<?php echo T_('Localplay'); ?>">
+            <a rel="nohtml" class="dropdown-toggle" data-toggle="dropdown" data-original-title="" title="<?php echo T_('Localplay'); ?>">
                 <i class="fa fa-tasks fa-lg"></i><i class="caret-icon"></i>
             </a>
             <ul class="dropdown-menu menu-localplay">
+                <li role="presentation" class="dropdown-header"><?php echo T_('Localplay Settings'); ?></li>
                 <li class="menu-localplay-item">
                     <a href="<?php echo $web_path; ?>/localplay.php?action=show_add_instance"><?php echo T_('Add instance'); ?></a>
                 </li>
@@ -110,10 +111,11 @@ $web_path = AmpConfig::get('web_path');
         if (Access::check('interface','100')) {
         ?>
         <li id="nav-modules-dropdown" class="nav-dropdown dropdown">
-            <a rel="nohtml" class="dropdown-toggle" href="#nav-modules-dropdown" data-toggle="dropdown" data-original-title="" title="<?php echo T_('Modules'); ?>">
+            <a rel="nohtml" class="dropdown-toggle" data-toggle="dropdown" data-original-title="" title="<?php echo T_('Modules'); ?>">
                 <i class="fa fa-cube fa-lg"></i><i class="caret-icon"></i>
             </a>
             <ul class="dropdown-menu menu-modules">
+                <li role="presentation" class="dropdown-header"><?php echo T_('Modules Settings'); ?></li>
                 <li class="menu-modules-item">
                     <a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo T_('Localplay Modules'); ?></a>
                 </li>
@@ -141,7 +143,7 @@ $web_path = AmpConfig::get('web_path');
         if (Access::check('interface','100')) {
         ?>
         <li id="nav-admin-dropdown" class="nav-dropdown dropdown">
-            <a rel="nohtml" class="dropdown-toggle" href="#nav-admin-dropdown" data-toggle="dropdown" data-original-title="" title="<?php echo T_('Admin'); ?>">
+            <a rel="nohtml" class="dropdown-toggle" data-toggle="dropdown" data-original-title="" title="<?php echo T_('Admin'); ?>">
                 <i class="fa fa-cogs fa-lg"></i><i class="caret-icon"></i>
             </a>
             <ul class="dropdown-menu menu-admin">
@@ -179,6 +181,7 @@ $web_path = AmpConfig::get('web_path');
 
                 <?php if (Access::check('interface','100')) { ?>
                     <li class="menu-admin-item divider"></li>
+                    <li role="presentation" class="dropdown-header"><?php echo T_('Server Settings'); ?></li>
                     <?php
                         $catagories = Preference::get_catagories();
                         foreach ($catagories as $name) {
@@ -194,7 +197,7 @@ $web_path = AmpConfig::get('web_path');
         <?php } ?>
         
         <li id="nav-user-dropdown" class="nav-dropdown dropdown">
-            <a rel="nohtml" class="dropdown-toggle" href="#nav-user-dropdown" data-toggle="dropdown" data-original-title="" title="">
+            <a rel="nohtml" class="dropdown-toggle" data-toggle="dropdown" data-original-title="" title="">
                 <i class="fa fa-user fa-lg"></i><i class="caret-icon"></i>
                 <span class="total-badge badge hidden">0</span>
             </a>
@@ -214,6 +217,8 @@ $web_path = AmpConfig::get('web_path');
                 <li class="menu-user-item divider"></li>
                 <?php } ?>
 
+                <li role="presentation" class="dropdown-header"><?php echo T_('My Settings'); ?></li>
+                
                 <?php
                     $catagories = Preference::get_catagories();
                     foreach ($catagories as $name) {
