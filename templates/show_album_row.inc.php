@@ -40,7 +40,7 @@ if (Art::is_enabled()) {
 ?>
 <td class="cel_cover">
     <?php
-    Art::display('album', $libitem->id, $name, 1, AmpConfig::get('web_path') . '/albums.php?action=show&album=' . $libitem->id);
+        Art::display('album', $libitem->id, $name, 1, AmpConfig::get('web_path') . '/albums.php?action=show&album=' . $libitem->id);
     ?>
 </td>
 <?php } ?>
@@ -71,25 +71,70 @@ if (Art::is_enabled()) {
     <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_album"><?php Userflag::show($libitem->id, 'album'); ?></td>
     <?php } ?>
 <?php } ?>
-<td class="cel_action">
-    <?php if (Access::check('interface','25')) { ?>
-        <?php if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) { ?>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&amp;id=<?php echo $libitem->id; ?>">
-            <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
-        </a>
-        <?php } ?>
-        <?php if (AmpConfig::get('share') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) { ?>
-            <?php Share::display_ui('album', $libitem->id, false); ?>
-        <?php } ?>
-    <?php } ?>
-    <?php if (Access::check_function('batch_download') && check_can_zip('album')) { ?>
-        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id'); ?>">
-            <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
-        </a>
-    <?php } ?>
-    <?php if (Access::check('interface','50') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) { ?>
-        <a id="<?php echo 'edit_album_'.$libitem->id ?>" onclick="showEditDialog('album_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_album_'.$libitem->id ?>', '<?php echo T_('Album edit') ?>', 'album_')">
-            <?php echo UI::get_icon('edit', T_('Edit')); ?>
-        </a>
-    <?php } ?>
+<td class="cel_action dropdown">
+    <div class="cel_action_content">
+        <button class="play-btn media-action-btn btn-link" tabindex="-1">
+            <a rel="nohtml" href="<?php echo AmpConfig::get('ajax_url') . '?page=stream&action=directplay&object_type=album&' . $libitem->get_http_album_query_ids('object_id') ?>">
+                <i class="fa fa-play"></i>
+            </a>
+        </button>
+        <button class="play-add-btn media-action-btn btn-link" tabindex="-1">
+            <a rel="nohtml" href="<?php echo AmpConfig::get('ajax_url') . '?page=stream&action=directplay&object_type=album&' . $libitem->get_http_album_query_ids('object_id') . '&append=true' ?>">
+                <i class="fa fa-share"></i>
+            </a>
+        </button>
+        <button class="edit-btn media-action-btn btn-link" tabindex="-1">
+            <?php if (Access::check('interface','50') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) { ?>
+            <a rel="nohtml" id="<?php echo 'edit_album_'.$libitem->id ?>" onclick="showEditDialog('album_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_album_'.$libitem->id ?>', '<?php echo T_('Album edit') ?>', 'album_')">
+                <i class="fa fa-pencil"></i>
+            </a>
+            <?php } ?>
+        </button>
+        <button class="more-btn media-action-btn btn-link nav-dropdown dropdown" tabindex="-1">
+            <a rel="nohtml" class="dropdown-toggle" data-toggle="dropdown" data-original-title="" title="">
+                <i class="fa fa-ellipsis-h"></i>
+            </a>
+            <ul class="media-actions-dropdown dropdown-menu pull-right">
+                <li>
+                    <a rel="nohtml" href="<?php echo AmpConfig::get('ajax_url') . '?action=basket&type=album&' . $libitem->get_http_album_query_ids('id') ?>">
+                        <?php echo T_('Add to temporary playlist'); ?>
+                    </a>
+                </li>
+                <li>
+                    <a rel="nohtml" href="<?php echo AmpConfig::get('ajax_url') . '?action=basket&type=album_random&' . $libitem->get_http_album_query_ids('id') ?>">
+                        <?php echo T_('Random to temporary playlist'); ?>
+                    </a>
+                </li>
+                <li>
+                    <a rel="nohtml" id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php if (!count($libitem->album_suite)) { echo $libitem->id; } else { echo implode(',', $libitem->album_suite); } ?>')">
+                        <?php echo T_('Add to existing playlist'); ?>
+                    </a>
+                </li>
+
+                <li class="divider"></li>
+
+                <?php if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) { ?>
+                <li>
+                    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $libitem->id; ?>">
+                        <?php echo T_('Post Shout'); ?>
+                    </a>
+                </li>
+                <?php } ?>
+                <?php if (AmpConfig::get('share') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) { ?>
+                <li>
+                    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=show_create&type=album&id=<?php echo $libitem->id; ?>">
+                        <?php echo T_('Share'); ?>
+                    </a>
+                </li>
+                <?php } ?>
+                <?php if (Access::check_function('batch_download')) { ?>
+                <li>
+                    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id'); ?>">
+                        <?php echo T_('Batch Download'); ?>
+                    </a>
+                </li>
+                <?php } ?>
+            </ul>
+        </button>
+    </div>
 </td>

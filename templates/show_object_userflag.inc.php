@@ -20,19 +20,14 @@
  *
  */
 
-/* Create some variables we are going to need */
-$web_path = AmpConfig::get('web_path');
 $base_url = '?action=set_userflag&userflag_type=' . $userflag->type . '&object_id=' . $userflag->id;
-$othering = false;
 $flagged = $userflag->get_flag();
+$flagValue = $flagged ? '0' : '1';
 ?>
 
-<div class="userflag">
+<span class="userflag">
 <?php
-    if ($flagged) {
-        echo Ajax::text($base_url . '&userflag=0', '', 'userflag_i_' . $userflag->id . '_' . $userflag->type, '', 'userflag_true');
-    } else {
-        echo Ajax::text($base_url . '&userflag=1', '', 'userflag_i_' . $userflag->id . '_' . $userflag->type, '', 'userflag_false');
-    }
+    echo '<i id="userflag_'. $userflag->id.'" class="fa fa-heart' . (!$flagged ? '-o' : ' on') . '"></i>';
+    echo Ajax::run('$("#userflag_'. $userflag->id .'").click(function () { saveFlagIcons("'. Ajax::url($base_url . '&userflag=' . $flagValue) .'", "userflag_'. $userflag->id .'", ' . ($flagged ? 'false' : 'true') . ');});');
 ?>
-</div>
+</span>

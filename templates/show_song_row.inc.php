@@ -21,7 +21,7 @@
  */
 ?>
 <td class="cel_play">
-    <span class="cel_play_content"><?php if (isset($argument) && $argument) { echo '<b>'.$libitem->f_track.'</b>'; } ?></span>
+    <span class="cel_index"><?php if (isset($argument) && $argument) { echo '<b>'.$libitem->f_track.'</b>'; } ?></span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) { ?>
         <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $libitem->id, 'play', T_('Play'), 'play_song_' . $libitem->id); ?>

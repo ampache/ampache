@@ -326,43 +326,6 @@ table.tabledata .th-bottom:focus {
     background-repeat: no-repeat;
 }
 
-table.tabledata tbody .cel_play {
-    max-width: 40px;
-    min-width: 40px;
-    width: 40px !important;
-    text-align: right;
-}
-
-table.tabledata tbody .cel_play_content {
-    display: block;
-}
-
-table.tabledata tbody .cel_play_hover {
-    display: none;
-}
-
-table.tabledata tbody tr:hover .cel_play_hover, table.tabledata tbody tr:focus .cel_play_hover {
-    display: block;
-}
-table.tabledata tbody tr:hover .cel_play_content, table.tabledata tbody tr:focus .cel_play_content {
-    display: none;
-}
-
-table.tabledata tbody .cel_add {
-    max-width: 60px;
-    min-width: 60px;
-    width: 60px !important;
-    text-align: right;
-}
-
-table.tabledata tbody .cel_item_add {
-    display: none;
-}
-
-table.tabledata tbody tr:hover .cel_item_add, table.tabledata tbody tr:focus .cel_item_add {
-    display: block;
-}
-
 table.tabledata tbody .cel_time {
     min-width: 40px;
     width: 40px !important;
@@ -371,10 +334,19 @@ table.tabledata tbody .cel_time {
 table.tabledata tbody .cel_action {
     width: 130px !important;
     max-width: 130px;
+    overflow: visible;
 }
 
 table.tabledata tbody .cel_action_text {
     max-width: 100% !important;
+}
+
+table.tabledata tbody .cel_action_content {
+    display: none;
+}
+
+table.tabledata tbody tr:hover .cel_action>.cel_action_content, table.tabledata tbody tr:focus .cel_action>.cel_action_content {
+    display: block;
 }
 
 table.tabledata tbody td.cel_rating {
@@ -398,11 +370,11 @@ table.tabledata tbody .cel_cover img {
     -moz-border-radius: 2px;
     border-radius: 2px;
     margin: 2px;
+    border: 2px solid #333;
 }
 
 table.tabledata tbody .cel_cover img:hover {
-    border: 2px solid;
-    margin: 0px;
+    border-color: #cc7b19;
 }
 
 table.tabledata .cel_drag {
@@ -422,7 +394,70 @@ table.tabledata .cel_agent img:hover {
     cursor: help;
 }
 
-/**** IMPORTED ******/
+table.tabledata .cel_index {
+    color: #777;
+}
+
+.userflag:hover {
+    color: red;
+    cursor: pointer;
+}
+
+.userflag>.on {
+    color: red;
+}
+
+.userflag>.on:hover {
+    opacity: .8;
+    filter: alpha(opacity=80);
+}
+
+.dropdown-menu {
+    background-color: #444;
+    border: 1px solid #222;
+    border-radius: 3px;
+}
+.dropdown-menu.pull-right {
+    right: 0;
+    left: auto;
+}
+.dropdown-menu .divider {
+    margin: 11px 0;
+    height: 1px;
+    margin: 5px;
+    overflow: hidden;
+    background-color: #4f4f4f;
+}
+.dropdown-menu>li>a {
+    display: block;
+    padding: 3px 20px;
+    color: #bbb;
+}
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
+    text-decoration: none;
+    color: #fff;
+    background-image: none;
+    background-color: #555;
+}
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
+    text-decoration: none;
+    color: #fff;
+    background-image: none;
+    background-color: #555;
+}
+.dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus {
+    color: #fff;
+    text-decoration: none;
+    outline: 0;
+    background-color: #555;
+}
+.dropdown-toggle:hover {
+    cursor: pointer;
+}
+
+/********************************************************/
+/******************** IMPORTED **************************/
+/********************************************************/
 
 .form-control:focus {
     color: #555;
@@ -431,7 +466,6 @@ table.tabledata .cel_agent img:hover {
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, .5);
     box-shadow: 0 0 5px rgba(255, 255, 255, .5);
 }
-
 
 .row-padded {
     margin-top: 100px;
@@ -2702,7 +2736,7 @@ to {
 .striped-list-item:nth-child(even)>a, .striped-list-item:nth-child(even)>.striped-list-inner-item {
     background-color: rgba(0, 0, 0, .1);
 }
-.striped-list-item>a:hover, .striped-list-item>a:active, .striped-list-item>a.selected, .striped-list-item.force-hover>a {
+.striped-list-item>a:hover, .striped-list-item>a:active, .striped-list-item>a.selected, .striped-list-item.force-hover>a, .striped-list-item:hover {
     background-color: rgba(255, 255, 255, .052);
     color: #eee;
 }
