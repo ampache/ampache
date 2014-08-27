@@ -32,7 +32,7 @@
             <th class="cel_max_counter optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=max_counter', T_('Max Counter'),'sort_share_max_counter'); ?></th>
             <th class="cel_allow_stream optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=allow_stream', T_('Allow Stream'),'sort_share_allow_stream'); ?></th>
             <th class="cel_allow_download optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=allow_download', T_('Allow Download'),'sort_share_allow_download'); ?></th>
-            <th class="cel_expire optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=expire', T_('Expire Days'),'sort_share_expire'); ?></th>
+            <th class="cel_expire optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=expire', T_('Expiry Days'),'sort_share_expire'); ?></th>
             <th class="cel_public_url essential"><?php echo T_('Public Url'); ?></th>
             <th class="cel_action  essential"><?php echo T_('Actions'); ?></th>
         </tr>

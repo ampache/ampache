@@ -12,15 +12,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.7.0-dev\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-08-09 13:29+0200\n"
-"PO-Revision-Date: 2014-08-09 14:03+0100\n"
+"POT-Creation-Date: 2014-08-25 17:58+0200\n"
+"PO-Revision-Date: 2014-08-25 18:00+0100\n"
 "Last-Translator: Manuel Landmann <psyvirusx@gmail.com>\n"
 "Language-Team: German <translations@ampache.org>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.7\n"
+"X-Generator: Poedit 1.6.8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: T_('\n"
 
@@ -613,7 +613,7 @@ msgid "Checking %s (%s)"
 msgstr "Prüfe %s (%s)"
 
 #: ../../bin/fix_filenames.inc:78
-msgid "Finished checking filenames for valid chacters"
+msgid "Finished checking file names for valid characters"
 msgstr "Überprüfung der Dateinamen, auf passende Zeichen, fertig gestellt"
 
 #: ../../bin/fix_filenames.inc:104
@@ -661,8 +661,8 @@ msgstr ""
 "Fehler: Erstellen von %s ist gescheitert. Verschieben fehlgeschlagen, stoppe"
 
 #: ../../bin/fix_filenames.inc:194
-msgid "Error: Copy Failed, not deleteing old file"
-msgstr "Fehler: Kopieren fehlgeschlagen, alte Datei nicht löschen"
+msgid "Error: Copy Failed, not deleting old file"
+msgstr "Fehler: Kopieren fehlgeschlagen, die alte Datei wird nicht gelöscht"
 
 #: ../../bin/fix_filenames.inc:203 ../../bin/sort_files.inc:288
 #, php-format
@@ -820,8 +820,8 @@ msgstr "Listening-Port, Standard: 8100"
 
 #: ../../bin/write_playlists.inc:38
 #, php-format
-msgid "Error: Directory %s not writeable"
-msgstr "Fehler: In Verzeichnis '%s' kann nicht geschrieben werden"
+msgid "Error: Directory %s is not writable"
+msgstr "Fehler: Das Verzeichnis '%s' kann nicht beschrieben werden"
 
 #: ../../bin/write_playlists.inc:59
 msgid "This will dump a collection of m3u playlists based on type"
@@ -1137,30 +1137,32 @@ msgstr "Versuche %s zu überschreiben, dabei ist 'überschreiben' deaktiviert"
 msgid "Login Failed: version too old"
 msgstr "Anmelden fehlgeschlagen: Version ist zu alt"
 
-#: ../../lib/class/api.class.php:171
+#: ../../lib/class/api.class.php:171 ../../lib/class/api.class.php:172
 msgid "Login Failed: timestamp out of range"
 msgstr "Login gescheitert: Zeitstempel ungültig"
 
-#: ../../lib/class/api.class.php:182 ../../lib/class/api.class.php:250
+#: ../../lib/class/api.class.php:172 ../../lib/class/api.class.php:184
+#: ../../lib/class/api.class.php:252
+msgid "Error Invalid Handshake - "
+msgstr "Fehler: Der Handshake ist ungültig -"
+
+#: ../../lib/class/api.class.php:183 ../../lib/class/api.class.php:184
+#: ../../lib/class/api.class.php:252
 msgid "Invalid Username/Password"
 msgstr ""
 "Es wurde ein falscher Benutzername oder ein Falsches Passwort eingegeben"
 
-#: ../../lib/class/api.class.php:250
-msgid "Error Invalid Handshake - "
-msgstr "Fehler: Der Handshake ist ungültig -"
-
-#: ../../lib/class/api.class.php:647 ../../lib/class/api.class.php:665
-#: ../../lib/class/api.class.php:684
+#: ../../lib/class/api.class.php:649 ../../lib/class/api.class.php:667
+#: ../../lib/class/api.class.php:686
 msgid "Access denied to this playlist."
 msgstr "Der Zugriff zu dieser Playlist wurde verweigert."
 
-#: ../../lib/class/api.class.php:775 ../../lib/class/api.class.php:837
+#: ../../lib/class/api.class.php:777 ../../lib/class/api.class.php:839
 #: ../../server/xml.server.php:101
 msgid "Invalid Request"
 msgstr "Ungültige Anfrage"
 
-#: ../../lib/class/api.class.php:797 ../../lib/class/api.class.php:815
+#: ../../lib/class/api.class.php:799 ../../lib/class/api.class.php:817
 msgid "Media Object Invalid or Not Specified"
 msgstr "Medien Objekt Ungültig oder nicht Spezifiziert"
 
@@ -1276,7 +1278,7 @@ msgstr "Bearbeiten"
 
 #: ../../lib/class/broadcast.class.php:329
 #: ../../lib/class/channel.class.php:180 ../../lib/class/share.class.php:191
-#: ../../templates/rightbar.inc.php:119
+#: ../../templates/rightbar.inc.php:120
 #: ../../templates/show_access_list.inc.php:72
 #: ../../templates/show_account.inc.php:65
 #: ../../templates/show_catalog_row.inc.php:39
@@ -1447,7 +1449,7 @@ msgstr "Clips"
 msgid "Personal Videos"
 msgstr "Persönliche Videos"
 
-#: ../../lib/class/browse.class.php:331 ../../templates/rightbar.inc.php:126
+#: ../../lib/class/browse.class.php:331 ../../templates/rightbar.inc.php:127
 #: ../../templates/show_recently_played.inc.php:158
 msgid "More"
 msgstr "Mehr"
@@ -1959,19 +1961,19 @@ msgstr "Staffel"
 msgid "Episode"
 msgstr "Episode"
 
-#: ../../lib/class/update.class.php:481
+#: ../../lib/class/update.class.php:484
 msgid "No updates needed."
 msgstr "Es wird keine Aktualisierung benötigt."
 
-#: ../../lib/class/update.class.php:483
+#: ../../lib/class/update.class.php:486
 msgid "Return to main page"
 msgstr "Zurück zur Startseite"
 
-#: ../../lib/class/update.class.php:2510 ../../lib/class/update.class.php:2526
+#: ../../lib/class/update.class.php:2513 ../../lib/class/update.class.php:2529
 msgid "File copy error."
 msgstr "Fehler beim kopieren der Datei(en)."
 
-#: ../../lib/class/update.class.php:2517 ../../lib/class/update.class.php:2533
+#: ../../lib/class/update.class.php:2520 ../../lib/class/update.class.php:2536
 msgid "Cannot copy default .htaccess file."
 msgstr "Kann die Standard .htaccess Datei nicht kopieren."
 
@@ -3273,7 +3275,6 @@ msgid "Error File Not Found or 0 Bytes: %s"
 msgstr "Fehler: Die Datei (%s) wurde nicht gefunden oder sie ist 0 Byte groß."
 
 #: ../../modules/catalog/remote.catalog.php:109
-#: ../../modules/catalog/subsonic.catalog.php:109
 msgid "Uri"
 msgstr "URI"
 
@@ -3382,6 +3383,10 @@ msgstr ""
 #: ../../modules/catalog/soundcloud.catalog.php:435
 msgid "SoundCloud exception: "
 msgstr "SoundCloud Fehler:"
+
+#: ../../modules/catalog/subsonic.catalog.php:109
+msgid "URI"
+msgstr "URI"
 
 #: ../../modules/catalog/subsonic.catalog.php:154
 msgid "Error: Subsonic selected, but path is not a URL"
@@ -3808,7 +3813,7 @@ msgstr "Zufälliges Album"
 msgid "Random Playlist"
 msgstr "Zufällige Playlist"
 
-#: ../../templates/rightbar.inc.php:122
+#: ../../templates/rightbar.inc.php:123
 msgid "No items"
 msgstr "Nichts hier"
 
@@ -4116,7 +4121,7 @@ msgstr "Beschreibung"
 
 #: ../../templates/show_add_channel.inc.php:49
 #: ../../templates/show_edit_channel_row.inc.php:52
-msgid "Url"
+msgid "URL"
 msgstr "URL"
 
 #: ../../templates/show_add_channel.inc.php:56
@@ -4225,7 +4230,7 @@ msgstr "Max. Anzahl"
 
 #: ../../templates/show_add_share.inc.php:49
 #: ../../templates/show_shared_objects.inc.php:35
-msgid "Expire Days"
+msgid "Expiry Days"
 msgstr "Tage bis zum Ablauf"
 
 #: ../../templates/show_add_share.inc.php:55
@@ -5973,7 +5978,7 @@ msgid "Original Name"
 msgstr "Originalname"
 
 #: ../../templates/show_partial_edit_tvshow_episode_row.inc.php:24
-msgid "TVShow Season"
+msgid "TV Show Season"
 msgstr "Staffel der TV Sendung"
 
 #: ../../templates/show_partial_edit_tvshow_episode_row.inc.php:38
@@ -7295,6 +7300,9 @@ msgstr "Alben nach Releasetyp gruppieren"
 #: Database words
 msgid "Ajax page load"
 msgstr "Seiten per Ajax laden"
+
+#~ msgid "Url"
+#~ msgstr "URL"
 
 #~ msgid "Show Art"
 #~ msgstr "Zeige Cover"

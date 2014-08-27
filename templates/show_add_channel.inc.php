@@ -46,7 +46,7 @@
     </td>
 </tr>
 <tr>
-    <td><?php echo T_('Url'); ?></td>
+    <td><?php echo T_('URL'); ?></td>
     <td>
         <input type="text" name="url" value="<?php echo scrub_out($_REQUEST['url'] ?: AmpConfig::get('web_path')); ?>" />
         <?php Error::display('url'); ?>

@@ -46,7 +46,7 @@
     </td>
 </tr>
 <tr>
-    <td><?php echo T_('Expire Days'); ?></td>
+    <td><?php echo T_('Expiry Days'); ?></td>
     <td>
         <input type="text" name="expire" value="<?php echo scrub_out($_REQUEST['expire'] ?: AmpConfig::get('share_expire')); ?>" />
     </td>

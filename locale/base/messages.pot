@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-08-09 13:37+0200\n"
+"POT-Creation-Date: 2014-08-25 17:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -598,7 +598,7 @@ msgid "Checking %s (%s)"
 msgstr ""
 
 #: ../../bin/fix_filenames.inc:78
-msgid "Finished checking filenames for valid chacters"
+msgid "Finished checking file names for valid characters"
 msgstr ""
 
 #: ../../bin/fix_filenames.inc:104
@@ -644,7 +644,7 @@ msgid "Error: Unable to create %s move failed, stopping"
 msgstr ""
 
 #: ../../bin/fix_filenames.inc:194
-msgid "Error: Copy Failed, not deleteing old file"
+msgid "Error: Copy Failed, not deleting old file"
 msgstr ""
 
 #: ../../bin/fix_filenames.inc:203 ../../bin/sort_files.inc:288
@@ -800,7 +800,7 @@ msgstr ""
 
 #: ../../bin/write_playlists.inc:38
 #, php-format
-msgid "Error: Directory %s not writeable"
+msgid "Error: Directory %s is not writable"
 msgstr ""
 
 #: ../../bin/write_playlists.inc:59
@@ -1112,29 +1112,31 @@ msgstr ""
 msgid "Login Failed: version too old"
 msgstr ""
 
-#: ../../lib/class/api.class.php:171
+#: ../../lib/class/api.class.php:171 ../../lib/class/api.class.php:172
 msgid "Login Failed: timestamp out of range"
 msgstr ""
 
-#: ../../lib/class/api.class.php:182 ../../lib/class/api.class.php:250
-msgid "Invalid Username/Password"
-msgstr ""
-
-#: ../../lib/class/api.class.php:250
+#: ../../lib/class/api.class.php:172 ../../lib/class/api.class.php:184
+#: ../../lib/class/api.class.php:252
 msgid "Error Invalid Handshake - "
 msgstr ""
 
-#: ../../lib/class/api.class.php:647 ../../lib/class/api.class.php:665
-#: ../../lib/class/api.class.php:684
+#: ../../lib/class/api.class.php:183 ../../lib/class/api.class.php:184
+#: ../../lib/class/api.class.php:252
+msgid "Invalid Username/Password"
+msgstr ""
+
+#: ../../lib/class/api.class.php:649 ../../lib/class/api.class.php:667
+#: ../../lib/class/api.class.php:686
 msgid "Access denied to this playlist."
 msgstr ""
 
-#: ../../lib/class/api.class.php:775 ../../lib/class/api.class.php:837
+#: ../../lib/class/api.class.php:777 ../../lib/class/api.class.php:839
 #: ../../server/xml.server.php:101
 msgid "Invalid Request"
 msgstr ""
 
-#: ../../lib/class/api.class.php:797 ../../lib/class/api.class.php:815
+#: ../../lib/class/api.class.php:799 ../../lib/class/api.class.php:817
 msgid "Media Object Invalid or Not Specified"
 msgstr ""
 
@@ -1248,7 +1250,7 @@ msgstr ""
 
 #: ../../lib/class/broadcast.class.php:329
 #: ../../lib/class/channel.class.php:180 ../../lib/class/share.class.php:191
-#: ../../templates/rightbar.inc.php:119
+#: ../../templates/rightbar.inc.php:120
 #: ../../templates/show_access_list.inc.php:72
 #: ../../templates/show_account.inc.php:65
 #: ../../templates/show_catalog_row.inc.php:39
@@ -1419,7 +1421,7 @@ msgstr ""
 msgid "Personal Videos"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:331 ../../templates/rightbar.inc.php:126
+#: ../../lib/class/browse.class.php:331 ../../templates/rightbar.inc.php:127
 #: ../../templates/show_recently_played.inc.php:158
 msgid "More"
 msgstr ""
@@ -1903,19 +1905,19 @@ msgstr ""
 msgid "Episode"
 msgstr ""
 
-#: ../../lib/class/update.class.php:481
+#: ../../lib/class/update.class.php:484
 msgid "No updates needed."
 msgstr ""
 
-#: ../../lib/class/update.class.php:483
+#: ../../lib/class/update.class.php:486
 msgid "Return to main page"
 msgstr ""
 
-#: ../../lib/class/update.class.php:2510 ../../lib/class/update.class.php:2526
+#: ../../lib/class/update.class.php:2513 ../../lib/class/update.class.php:2529
 msgid "File copy error."
 msgstr ""
 
-#: ../../lib/class/update.class.php:2517 ../../lib/class/update.class.php:2533
+#: ../../lib/class/update.class.php:2520 ../../lib/class/update.class.php:2536
 msgid "Cannot copy default .htaccess file."
 msgstr ""
 
@@ -3176,7 +3178,6 @@ msgid "Error File Not Found or 0 Bytes: %s"
 msgstr ""
 
 #: ../../modules/catalog/remote.catalog.php:109
-#: ../../modules/catalog/subsonic.catalog.php:109
 msgid "Uri"
 msgstr ""
 
@@ -3277,6 +3278,10 @@ msgstr ""
 #: ../../modules/catalog/soundcloud.catalog.php:362
 #: ../../modules/catalog/soundcloud.catalog.php:435
 msgid "SoundCloud exception: "
+msgstr ""
+
+#: ../../modules/catalog/subsonic.catalog.php:109
+msgid "URI"
 msgstr ""
 
 #: ../../modules/catalog/subsonic.catalog.php:154
@@ -3697,7 +3702,7 @@ msgstr ""
 msgid "Random Playlist"
 msgstr ""
 
-#: ../../templates/rightbar.inc.php:122
+#: ../../templates/rightbar.inc.php:123
 msgid "No items"
 msgstr ""
 
@@ -4002,7 +4007,7 @@ msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:49
 #: ../../templates/show_edit_channel_row.inc.php:52
-msgid "Url"
+msgid "URL"
 msgstr ""
 
 #: ../../templates/show_add_channel.inc.php:56
@@ -4111,7 +4116,7 @@ msgstr ""
 
 #: ../../templates/show_add_share.inc.php:49
 #: ../../templates/show_shared_objects.inc.php:35
-msgid "Expire Days"
+msgid "Expiry Days"
 msgstr ""
 
 #: ../../templates/show_add_share.inc.php:55
@@ -5807,7 +5812,7 @@ msgid "Original Name"
 msgstr ""
 
 #: ../../templates/show_partial_edit_tvshow_episode_row.inc.php:24
-msgid "TVShow Season"
+msgid "TV Show Season"
 msgstr ""
 
 #: ../../templates/show_partial_edit_tvshow_episode_row.inc.php:38
