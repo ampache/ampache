@@ -298,7 +298,7 @@ class TVShow extends database_object implements library_item
         }
 
         $sql = 'INSERT INTO `tvshow` (`name`, `prefix`, `year`) ' .
-            'VALUES(?, ?)';
+            'VALUES(?, ?, ?)';
 
         $db_results = Dba::write($sql, array($name, $prefix, $year));
         if (!$db_results) {

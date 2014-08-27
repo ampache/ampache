@@ -68,17 +68,17 @@ class TVShow_Episode extends Video
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        if (empty($data['tvshow'])) {
-            $data['tvshow'] = T_('Unknown');
+        if (empty($data['tv_show_name'])) {
+            $data['tv_show_name'] = T_('Unknown');
         }
         $tags = $data['genre'];
 
-        $tvshow = TVShow::check($data['tvshow'], $data['tvshow_year']);
+        $tvshow = TVShow::check($data['tv_show_name'], $data['year']);
         if ($options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db($tvshow, 'tvshow')) {
             $art = new Art($tvshow, 'tvshow');
             $art->insert_url($data['tvshow_art']);
         }
-        $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
+        $tv_season_id = TVShow_Season::check($tvshow, $data['tv_season']);
         if ($options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season, 'tvshow_season')) {
             $art = new Art($tvshow_season, 'tvshow_season');
             $art->insert_url($data['tvshow_season_art']);
@@ -88,7 +88,7 @@ class TVShow_Episode extends Video
             foreach ($tags as $tag) {
                 $tag = trim($tag);
                 if (!empty($tag)) {
-                    Tag::add('tvshow_season', $tvshow_season, $tag, false);
+                    Tag::add('tvshow_season', $tv_season_id, $tag, false);
                     Tag::add('tvshow', $tvshow, $tag, false);
                 }
             }
@@ -97,7 +97,7 @@ class TVShow_Episode extends Video
         $sdata = $data;
         // Replace relation name with db ids
         $sdata['tvshow'] = $tvshow;
-        $sdata['tvshow_season'] = $tvshow_season;
+        $sdata['tv_season_id'] = $tv_season_id;
         return self::create($sdata);
     }
 
@@ -109,7 +109,7 @@ class TVShow_Episode extends Video
     {
         $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) " .
             "VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['summary']));
+        Dba::write($sql, array($data['id'], $data['original_name'], $data['tv_season_id'], $data['tv_episode'], $data['summary']));
 
         return $data['id'];
 
