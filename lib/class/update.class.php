@@ -2919,7 +2919,7 @@ class Update
 
         return $retval;
     }
-    
+
     /**
      * update 370014
      *
@@ -2927,9 +2927,9 @@ class Update
      */
     public static function update_370014()
     {
-    	$retval = true;
-    	$sql="ALTER TABLE `video` CHANGE COLUMN `release_date` `release_date` INT NULL DEFAULT NULL" ;
-    	$retval = Dba::write($sql) ? $retval : false;
-    	return $retval;
+        $retval = true;
+        $sql="ALTER TABLE `video` CHANGE COLUMN `release_date` `release_date` INT NULL DEFAULT NULL" ;
+        $retval = Dba::write($sql) ? $retval : false;
+        return $retval;
     }
 }
