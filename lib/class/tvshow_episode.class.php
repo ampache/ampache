@@ -78,7 +78,7 @@ class TVShow_Episode extends Video
             $art = new Art($tvshow, 'tvshow');
             $art->insert_url($data['tvshow_art']);
         }
-        $tvshow_season = TVShow_Season::check($tvshow, $data['tv_season']);
+        $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
         if ($options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season, 'tvshow_season')) {
             $art = new Art($tvshow_season, 'tvshow_season');
             $art->insert_url($data['tvshow_season_art']);
