@@ -106,7 +106,7 @@ class Catalog_subsonic extends Catalog
 
     public function catalog_fields()
     {
-        $fields['uri']      = array('description' => T_('Uri'),'type'=>'textbox');
+        $fields['uri']      = array('description' => T_('URI'),'type'=>'textbox');
         $fields['username']      = array('description' => T_('Username'),'type'=>'textbox');
         $fields['password']      = array('description' => T_('Password'),'type'=>'password');
 

@@ -49,7 +49,7 @@
                 <td><input type="text" name="description" value="<?php echo scrub_out($libitem->description); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Url') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('URL') ?></td>
                 <td><input type="text" name="url" value="<?php echo scrub_out($libitem->url); ?>" /></td>
             </tr>
             <tr>

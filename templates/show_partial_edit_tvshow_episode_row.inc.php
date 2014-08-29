@@ -21,7 +21,7 @@
  */
 ?>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('TVShow Season') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('TV Show Season') ?></td>
                 <td>
                     <?php show_tvshow_season_select('tvshow_season', $libitem->season); ?>
                 </td>

@@ -75,7 +75,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
 
 } // end of the catalogs
 
-echo T_('Finished checking filenames for valid chacters');
+echo T_('Finished checking file names for valid characters');
 echo "\n";
 
 /**************************************************
@@ -191,7 +191,7 @@ function charset_rename_file($full_file,$translated_filename) {
     $results = copy($full_file,$translated_filename);
 
     if (!$results) {
-        echo T_('Error: Copy Failed, not deleteing old file');
+        echo T_('Error: Copy Failed, not deleting old file');
         echo "\n";
         return false;
     }

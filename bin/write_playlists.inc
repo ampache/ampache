@@ -35,7 +35,7 @@ else {
 
 // Make sure the output dir is valid and writeable
 if (!is_writeable($dirname)) {
-    printf (T_('Error: Directory %s not writeable'), $dirname);
+    printf (T_('Error: Directory %s is not writable'), $dirname);
     echo "\n"; 
 }
 
