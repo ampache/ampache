@@ -385,6 +385,9 @@ if (!$cpaction) {
         } else if ($force_downsample) {
             $transcode = true;
             debug_event('play', 'Transcoding due to downsample_remote', 5);
+        } else if (($bitrate > 0 && ($bitrate * 100) < $media->bitrate) || ($maxbitrate > 0 && ($maxbitrate * 100) < $media->bitrate)) {
+            $transcode = true;
+            debug_event('play', 'Transcoding because explicit bitrate request', 5);
         } else if (!in_array('native', $valid_types)) {
             $transcode = true;
             debug_event('play', 'Transcoding because native streaming is unavailable', 5);

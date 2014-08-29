@@ -843,16 +843,24 @@ class Subsonic_Api
 
         $fileid = self::check_parameter($input, 'id', true);
 
-        $maxBitRate = $input['maxBitRate']; // Not supported.
-        $format = $input['format']; // mp3, flv or raw. Not supported.
-        $timeOffset = $input['timeOffset']; // For video streaming. Not supported.
+        $maxBitRate = $input['maxBitRate'];
+        $format = $input['format']; // mp3, flv or raw
+        $timeOffset = $input['timeOffset'];
         $size = $input['size']; // For video streaming. Not supported.
-        $maxBitRate = $input['maxBitRate']; // For video streaming. Not supported.
         $estimateContentLength = $input['estimateContentLength']; // Force content-length guessing if transcode
 
         $params = '&client=' . $input['c'];
         if ($estimateContentLength == 'true') {
             $params .= '&content_length=required';
+        }
+        if ($format && $format != "raw") {
+            $params .= '&transcode_to=' . $format;
+        }
+        if ($maxBitRate) {
+            $params .= '&bitrate=' . $maxBitRate;
+        }
+        if ($timeOffset) {
+            $params .= '&frame=' . $timeOffset;
         }
 
         $url = '';
