@@ -49,7 +49,7 @@ class Catalog_beets extends Beets\Catalog
     {
         $help = "<ul>" .
                 "<li>Fetch songs from beets command over CLI.</li>" .
-                "<li>You have to ensure that the beets command ( /usr/bin/beet ), the music directories and the Database file are accessable by the Webserver.</li></ul>";
+                "<li>You have to ensure that the beets command ( beet ), the music directories and the Database file are accessable by the Webserver.</li></ul>";
         return $help;
     }
 
