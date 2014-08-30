@@ -30,7 +30,7 @@ class Catalog_remote extends Catalog
 {
     private $version        = '000001';
     private $type           = 'remote';
-    private $description    = 'Remote Ampache Catalog';
+    private $description    = 'Ampache Remote Catalog';
 
     /**
      * get_description

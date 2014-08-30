@@ -30,7 +30,7 @@ class Catalog_subsonic extends Catalog
 {
     private $version        = '000001';
     private $type           = 'subsonic';
-    private $description    = 'Remote Subsonic Catalog';
+    private $description    = 'Subsonic Remote Catalog';
 
     /**
      * get_description

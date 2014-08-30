@@ -32,7 +32,7 @@ class Catalog_dropbox extends Catalog
 {
     private $version        = '000001';
     private $type           = 'dropbox';
-    private $description    = 'Remote Dropbox Catalog';
+    private $description    = 'Dropbox Remote Catalog';
 
     /**
      * get_description

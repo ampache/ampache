@@ -30,7 +30,7 @@ class Catalog_soundcloud extends Catalog
 {
     private $version        = '000001';
     private $type           = 'soundcloud';
-    private $description    = 'Remote SoundCloud Catalog';
+    private $description    = 'SoundCloud Remote Catalog';
 
     /**
      * get_description

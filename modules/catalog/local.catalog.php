@@ -635,8 +635,8 @@ class Catalog_local extends Catalog
                 UI::update_text('clean_count_' . $this->id, $count);
                 UI::update_text('clean_dir_' . $this->id, scrub_out($file));
             }
-            $file_info = Core::get_filesize($results['file']);
-            if (!file_exists($results['file']) || $file_info < 1) {
+            $file_info = Core::get_filesize(Core::conv_lc_file($results['file']));
+            if (!file_exists(Core::conv_lc_file($results['file'])) || $file_info < 1) {
                 debug_event('clean', 'File not found or empty: ' . $results['file'], 5);
                 Error::add('general', sprintf(T_('Error File Not Found or 0 Bytes: %s'), $results['file']));
 
