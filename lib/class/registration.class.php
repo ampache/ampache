@@ -69,7 +69,9 @@ Thank you for registering
         $mailer->recipient = $email;
         $mailer->recipient_name = $fullname;
 
-        $mailer->send();
+        if (!AmpConfig::get('admin_enable_required')) {
+            $mailer->send();
+        }
 
         // Check to see if the admin should be notified
         if (AmpConfig::get('admin_notify_reg')) {
