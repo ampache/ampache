@@ -275,7 +275,7 @@ $_SESSION['login'] = false;
         <?php if (AmpConfig::get('topmenu')) { ?>
             <div id="topmenu_container">
                 <div id="topmenu_item">
-                    <a href="<?php echo $web_path; ?>">
+                    <a href="<?php echo $web_path; ?>/index.php">
                         <img src="<?php echo $web_path; ?>/images/topmenu-home.png" />
                         <span><?php echo T_('Home'); ?></span>
                     </a>
