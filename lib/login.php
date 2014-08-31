@@ -48,10 +48,6 @@ if (empty($_REQUEST['step'])) {
         (in_array('http', AmpConfig::get('auth_methods')) &&
         ($_SERVER['REMOTE_USER'] || $_SERVER['HTTP_REMOTE_USER']))) {
 
-        if ($_POST['rememberme']) {
-            Session::create_remember_cookie();
-        }
-
         /* If we are in demo mode let's force auth success */
         if (AmpConfig::get('demo_mode')) {
             $auth['success']        = true;
@@ -154,6 +150,10 @@ if (isset($auth) && $auth['success'] && isset($user)) {
     // Record the IP of this person!
     if (AmpConfig::get('track_user_ip')) {
         $user->insert_ip_history();
+    }
+
+    if ($_POST['rememberme']) {
+        Session::create_remember_cookie($username);
     }
 
     // Update data from this auth if ours are empty

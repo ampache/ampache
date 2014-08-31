@@ -63,7 +63,7 @@ class Song_Preview extends database_object implements media, playable_item
                 $this->$key = $value;
             }
             $data = pathinfo($this->file);
-            $this->type = strtolower($data['extension']);
+            $this->type = strtolower($data['extension']) ?: 'mp3';
             $this->mime = Song::type_to_mime($this->type);
         } else {
             $this->id = null;
@@ -242,7 +242,7 @@ class Song_Preview extends database_object implements media, playable_item
         if (!$filter_type || $filter_type == 'song_preview') {
             $medias[] = array(
                 'object_type' => 'song_preview',
-                'object_id' => $this>-id
+                'object_id' => $this->id
             );
         }
         return $medias;
@@ -273,11 +273,25 @@ class Song_Preview extends database_object implements media, playable_item
 
         $song_name = rawurlencode($song->get_artist_name() . " - " . $song->title . "." . $type);
 
-        $url = Stream::get_base_url($local) . "type=song_preview&oid=$song->id&uid=$user_id&name=$song_name";
+        $url = Stream::get_base_url($local) . "type=song_preview&oid=" . $song->id . "&uid=" . $user_id . "&name=" . $song_name;
 
         return Stream_URL::format($url . $additional_params);
 
     } // play_url
+
+    public function stream()
+    {
+        $data = null;
+        foreach (Plugin::get_plugins('stream_song_preview') as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->load($GLOBALS['user'])) {
+                if ($plugin->_plugin->stream_song_preview($this->file))
+                    break;
+            }
+        }
+
+        return $data;
+    }
 
     public function get_stream_types()
     {

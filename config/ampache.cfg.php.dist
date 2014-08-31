@@ -7,7 +7,7 @@
 ; if this config file is up to date 
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 18
+config_version = 19
 
 ;###################
 ; Path Vars        #
@@ -58,6 +58,10 @@ database_username = username
 ; will not work
 ; DEFAULT: ""
 database_password = password
+
+; Cryptographic secret
+; This MUST BE changed with your own secret key
+secret_key = "abcdefghijklmnoprqstuvwyz0123456"
 
 ; Length that a session will last expressed in seconds. Default is
 ; one hour. 

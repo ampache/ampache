@@ -33,4 +33,5 @@ should be implemented as a public method:
     shortener(string $url)
     get_photos(string $search)
     gather_arts(string $type, array $options, int $limit)
-
+    get_song_preview($track_mbid, $artist_name, $title)
+    stream_song_preview($file)

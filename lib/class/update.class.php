@@ -443,6 +443,9 @@ class Update
         $update_string = '- Modified release_date in video table to signed int.<br />';
         $version[] = array('version' => '370014','description' => $update_string);
 
+        $update_string = '- Add session_remember table to store remember tokens.<br />';
+        $version[] = array('version' => '370015','description' => $update_string);
+
         return $version;
     }
 
@@ -2923,12 +2926,29 @@ class Update
     /**
      * update 370014
      *
-     * Modified release_date of table video to signed int(11).
+     * Modified release_date of table video to signed int(11)
      */
     public static function update_370014()
     {
         $retval = true;
         $sql="ALTER TABLE `video` CHANGE COLUMN `release_date` `release_date` INT NULL DEFAULT NULL" ;
+        $retval = Dba::write($sql) ? $retval : false;
+        return $retval;
+    }
+
+    /**
+     * update 370015
+     *
+     * Add session_remember table to store remember tokens
+     */
+    public static function update_370015()
+    {
+        $retval = true;
+        $sql = "CREATE TABLE `session_remember` (" .
+            "`username` varchar(16) NOT NULL," .
+            "`token` varchar(32) NOT NULL," .
+            "`expire` int(11) NULL," .
+            "PRIMARY KEY (`username`, `token`)) ENGINE = MYISAM";
         $retval = Dba::write($sql) ? $retval : false;
         return $retval;
     }

@@ -269,8 +269,13 @@ if ($media->catalog) {
     $media = $catalog->prepare_media($media);
 } else {
     // No catalog, must be song preview or something like that => just redirect to file
-    header('Location: ' . $media->file);
-    $media = null;
+
+    if ($type == "song_preview") {
+        $media->stream();
+    } else {
+        header('Location: ' . $media->file);
+        exit;
+    }
 }
 if ($media == null) {
     // Handle democratic removal
