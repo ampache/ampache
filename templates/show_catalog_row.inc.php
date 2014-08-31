@@ -33,14 +33,14 @@ $button_flip_state_id = 'button_flip_state_' . $libitem->id;
 <td class="cel_action cel_action_text">
 <form>
     <select name="catalog_action_menu">
-        <option value="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&amp;catalogs[]=<?php echo $libitem->id; ?>"><?php echo T_('Add'); ?></option>
-        <option value="<?php echo $web_path; ?>/admin/catalog.php?action=update_catalog&amp;catalogs[]=<?php echo $libitem->id; ?>"><?php echo T_('Verify'); ?></option>
-        <option value="<?php echo $web_path; ?>/admin/catalog.php?action=clean_catalog&amp;catalogs[]=<?php echo $libitem->id; ?>"><?php echo T_('Clean'); ?></option>
-        <option value="<?php echo $web_path; ?>/admin/catalog.php?action=full_service&amp;catalogs[]=<?php echo $libitem->id; ?>"><?php echo T_('Update'); ?></option>
-        <option value="<?php echo $web_path; ?>/admin/catalog.php?action=gather_media_art&amp;catalogs[]=<?php echo $libitem->id; ?>"><?php echo T_('Gather Art'); ?></option>
-        <option value="<?php echo $web_path; ?>/admin/catalog.php?action=show_delete_catalog&amp;catalog_id=<?php echo $libitem->id; ?>"><?php echo T_('Delete'); ?></option>
+        <option value="add_to_catalog"><?php echo T_('Add'); ?></option>
+        <option value="update_catalog"><?php echo T_('Verify'); ?></option>
+        <option value="clean_catalog"><?php echo T_('Clean'); ?></option>
+        <option value="full_service"><?php echo T_('Update'); ?></option>
+        <option value="gather_media_art"><?php echo T_('Gather Art'); ?></option>
+        <option value="show_delete_catalog"><?php echo T_('Delete'); ?></option>
     </select>
-    <input type="button" onClick="location=this.form.catalog_action_menu.options[this.form.catalog_action_menu.selectedIndex].value;" value="<?php echo T_('GO!'); ?>">
+    <input type="button" onClick="location='<?php echo $web_path; ?>/admin/catalog.php?action=' + this.form.catalog_action_menu.options[this.form.catalog_action_menu.selectedIndex].value + '&catalogs[]=<?php echo $libitem->id; ?>';" value="<?php echo T_('Go'); ?>">
     <?php if (AmpConfig::get('catalog_disable')) { ?>
         <span id="<?php echo($button_flip_state_id); ?>">
             <?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $libitem->id, $icon, T_(ucfirst($icon)),'flip_state_' . $libitem->id); ?>
