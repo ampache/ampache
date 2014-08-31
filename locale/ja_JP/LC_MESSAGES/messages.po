@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN $Rev$\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-08-25 17:58+0200\n"
+"POT-Creation-Date: 2014-08-31 16:33+0200\n"
 "PO-Revision-Date: 2008-07-14 20:44+0900\n"
 "Last-Translator: momo-i <webmaster at momo-i.org>\n"
 "Language-Team: Japanese\n"
@@ -525,7 +525,7 @@ msgstr "プレイリストをインポート"
 
 #: ../../bin/catalog_update.inc:171
 #: ../../templates/show_add_catalog.inc.php:60
-#: ../../templates/show_catalog_row.inc.php:38
+#: ../../templates/show_catalog_row.inc.php:40
 msgid "Gather Art"
 msgstr "アート収集"
 
@@ -937,7 +937,8 @@ msgid "Duplicate ACL defined"
 msgstr "重複しているACL定義"
 
 #: ../../lib/class/access.class.php:453 ../../lib/class/access.class.php:474
-#: ../../lib/ui.lib.php:433 ../../templates/list_header.inc.php:166
+#: ../../lib/ui.lib.php:433 ../../scripts/tests/list_header.inc.php:166
+#: ../../templates/list_header.inc.php:166
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_add_access.inc.php:55
 #: ../../templates/show_add_access.inc.php:61
@@ -1314,7 +1315,7 @@ msgstr "編集"
 #: ../../templates/rightbar.inc.php:120
 #: ../../templates/show_access_list.inc.php:72
 #: ../../templates/show_account.inc.php:65
-#: ../../templates/show_catalog_row.inc.php:39
+#: ../../templates/show_catalog_row.inc.php:41
 #: ../../templates/show_democratic_playlist.inc.php:92
 #: ../../templates/show_edit_user.inc.php:99
 #: ../../templates/show_license_row.inc.php:31
@@ -1667,7 +1668,7 @@ msgstr ""
 "\n"
 "登録ありがとうございました。\n"
 
-#: ../../lib/class/registration.class.php:76
+#: ../../lib/class/registration.class.php:78
 #, fuzzy, php-format
 msgid ""
 "A new user has registered\n"
@@ -1935,7 +1936,7 @@ msgstr "名前"
 
 #: ../../lib/class/shoutbox.class.php:255
 #: ../../templates/show_add_live_stream.inc.php:62
-#: ../../templates/show_catalog_row.inc.php:34
+#: ../../templates/show_catalog_row.inc.php:36
 #: ../../templates/show_live_stream.inc.php:27
 msgid "Add"
 msgstr "追加"
@@ -3161,6 +3162,48 @@ msgstr "%sからユーザは「%s：のパスワードリセットのリクエ�
 msgid "The password has been set to: %s"
 msgstr "パスワードを%sへ設定しました"
 
+#: ../../modules/Beets/Catalog.php:116
+#, fuzzy
+msgid "Running Beets Update"
+msgstr "リモート更新実行中"
+
+#: ../../modules/Beets/Catalog.php:154
+#: ../../modules/catalog/remote.catalog.php:270
+#: ../../modules/catalog/soundcloud.catalog.php:280
+#: ../../modules/catalog/subsonic.catalog.php:245
+#, fuzzy, php-format
+msgid "Unable to Insert Song - %s"
+msgstr "プラグインをインストールできませんでした"
+
+#: ../../modules/catalog/beets.catalog.php:85
+#, fuzzy
+msgid "Beets Database File"
+msgstr "データベースCharsetをセット"
+
+#: ../../modules/catalog/beets.catalog.php:101
+msgid "Error: Beets selected, but no Beets DB File provided"
+msgstr ""
+
+#: ../../modules/catalog/beets.catalog.php:111
+#: ../../modules/catalog/beetsremote.catalog.php:112
+#: ../../modules/catalog/dropbox.catalog.php:185
+#: ../../modules/catalog/local.catalog.php:207
+#: ../../modules/catalog/remote.catalog.php:168
+#: ../../modules/catalog/soundcloud.catalog.php:171
+#: ../../modules/catalog/subsonic.catalog.php:169
+#, fuzzy, php-format
+msgid "Error: Catalog with %s already exists"
+msgstr "エラー: %sはすでに存在します"
+
+#: ../../modules/catalog/beetsremote.catalog.php:86
+msgid "Beets Server URI"
+msgstr ""
+
+#: ../../modules/catalog/beetsremote.catalog.php:102
+#, fuzzy
+msgid "Error: Beets selected, but path is not a URL"
+msgstr "エラー: リモートを選択しましたが、パスがURLではありません"
+
 #: ../../modules/catalog/dropbox.catalog.php:122
 #: ../../templates/show_account.inc.php:71
 #: ../../templates/show_edit_user.inc.php:108
@@ -3191,15 +3234,6 @@ msgstr "エラー: リモートカタログにはユーザ名とパスワード�
 #: ../../modules/catalog/dropbox.catalog.php:175
 msgid "Invalid <dropbox-path>: "
 msgstr ""
-
-#: ../../modules/catalog/dropbox.catalog.php:185
-#: ../../modules/catalog/local.catalog.php:207
-#: ../../modules/catalog/remote.catalog.php:168
-#: ../../modules/catalog/soundcloud.catalog.php:171
-#: ../../modules/catalog/subsonic.catalog.php:169
-#, fuzzy, php-format
-msgid "Error: Catalog with %s already exists"
-msgstr "エラー: %sはすでに存在します"
 
 #: ../../modules/catalog/dropbox.catalog.php:243
 #, fuzzy
@@ -3351,13 +3385,6 @@ msgstr "接続中のエラー:"
 #, php-format
 msgid "%u remote catalog(s) found (%u songs)"
 msgstr ""
-
-#: ../../modules/catalog/remote.catalog.php:270
-#: ../../modules/catalog/soundcloud.catalog.php:280
-#: ../../modules/catalog/subsonic.catalog.php:245
-#, fuzzy, php-format
-msgid "Unable to Insert Song - %s"
-msgstr "プラグインをインストールできませんでした"
 
 #: ../../modules/catalog/remote.catalog.php:278
 #, fuzzy
@@ -3589,6 +3616,40 @@ msgstr "パスワードが一致しません"
 msgid "Access Control not Enabled"
 msgstr "アクセスコントロールは有効ではありません"
 
+#: ../../scripts/tests/list_header.inc.php:147
+#: ../../templates/list_header.inc.php:147
+msgid "Prev"
+msgstr "前へ"
+
+#: ../../scripts/tests/list_header.inc.php:153
+#: ../../templates/list_header.inc.php:153
+msgid "Page"
+msgstr ""
+
+#: ../../scripts/tests/list_header.inc.php:164
+#: ../../templates/list_header.inc.php:164
+#: ../../templates/show_localplay_control.inc.php:28
+msgid "Next"
+msgstr "次へ"
+
+#: ../../scripts/tests/list_header.inc.php:173
+#: ../../templates/list_header.inc.php:190
+#, fuzzy
+msgid "Item Count"
+msgstr "アイテムカウント"
+
+#: ../../scripts/tests/list_header.inc.php:176
+#: ../../templates/browse_filters.inc.php:30
+#: ../../templates/list_header.inc.php:173
+msgid "Filters"
+msgstr "フィルタ"
+
+#: ../../scripts/tests/list_header.inc.php:185
+#: ../../templates/list_header.inc.php:182
+#, fuzzy
+msgid "Limit"
+msgstr "サイズ制限"
+
 #: ../../search.php:43 ../../search.php:49
 #, fuzzy
 msgid "Search Saved"
@@ -3654,11 +3715,6 @@ msgstr "%sを削除しました"
 #: ../../shout.php:49
 msgid "Invalid Object Selected"
 msgstr "不正なオブジェクトが選択されました"
-
-#: ../../templates/browse_filters.inc.php:30
-#: ../../templates/list_header.inc.php:173
-msgid "Filters"
-msgstr "フィルタ"
 
 #: ../../templates/browse_filters.inc.php:34
 msgid "Starts With"
@@ -3769,29 +3825,6 @@ msgstr "Ampache インストール"
 #: ../../templates/list_header.inc.php:158
 msgid "of"
 msgstr ""
-
-#: ../../templates/list_header.inc.php:147
-msgid "Prev"
-msgstr "前へ"
-
-#: ../../templates/list_header.inc.php:153
-msgid "Page"
-msgstr ""
-
-#: ../../templates/list_header.inc.php:164
-#: ../../templates/show_localplay_control.inc.php:28
-msgid "Next"
-msgstr "次へ"
-
-#: ../../templates/list_header.inc.php:182
-#, fuzzy
-msgid "Limit"
-msgstr "サイズ制限"
-
-#: ../../templates/list_header.inc.php:190
-#, fuzzy
-msgid "Item Count"
-msgstr "アイテムカウント"
 
 #: ../../templates/rightbar.inc.php:28
 msgid "Add to Playlist"
@@ -4752,15 +4785,15 @@ msgstr ""
 msgid "No broadcast found"
 msgstr "カタログは見つかりませんでした"
 
-#: ../../templates/show_catalog_row.inc.php:35
+#: ../../templates/show_catalog_row.inc.php:37
 msgid "Verify"
 msgstr "確認"
 
-#: ../../templates/show_catalog_row.inc.php:36
+#: ../../templates/show_catalog_row.inc.php:38
 msgid "Clean"
 msgstr "クリーン"
 
-#: ../../templates/show_catalog_row.inc.php:37
+#: ../../templates/show_catalog_row.inc.php:39
 #: ../../templates/show_create_democratic.inc.php:60
 #: ../../templates/show_edit_access.inc.php:78
 #: ../../templates/show_edit_shout.inc.php:41
@@ -4768,6 +4801,10 @@ msgstr "クリーン"
 #: ../../templates/show_preference_admin.inc.php:57
 msgid "Update"
 msgstr "更新"
+
+#: ../../templates/show_catalog_row.inc.php:43
+msgid "GO!"
+msgstr ""
 
 #: ../../templates/show_catalogs.inc.php:28
 #: ../../templates/show_catalogs.inc.php:56
