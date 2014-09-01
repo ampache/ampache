@@ -28,12 +28,12 @@
         </tr>
         <tr>
             <td>Session</td>
-            <td>ampache</td>
+            <td><?php echo AmpConfig::get('session_name'); ?></td>
             <td><?php echo T_('Ampache session.'); ?></td>
         </tr>
         <tr>
             <td>Remember Me</td>
-            <td>ampache_remember</td>
+            <td><?php echo AmpConfig::get('session_name'); ?>_remember</td>
             <td><?php echo T_('Automatically authenticate users.'); ?></td>
         </tr>
         <tr>
