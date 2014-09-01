@@ -62,31 +62,29 @@ foreach ($data as $row) {
         $interval = intval(time() - $row['date']);
 
         if ($interval < 60) {
-            $unit = ngettext('second ago', 'seconds ago', $interval);
-        } else if ($interval < 3600) {
+            $time_string = sprintf(ngettext('%d second ago', '%d seconds ago', $interval), $interval);
+        } elseif ($interval < 3600) {
             $interval = floor($interval / 60);
-            $unit = ngettext('minute ago', 'minutes ago', $interval);
-        } else if ($interval < 86400) {
+            $time_string = sprintf(ngettext('%d minute ago', '%d minutes ago', $interval), $interval);
+        } elseif ($interval < 86400) {
             $interval = floor($interval / 3600);
-            $unit = ngettext('hour ago', 'hours ago', $interval);
-        } else if ($interval < 604800) {
+            $time_string = sprintf(ngettext('%d hour ago', '%d hours ago', $interval), $interval);
+        } elseif ($interval < 604800) {
             $interval = floor($interval / 86400);
-            $unit = ngettext('day ago', 'days ago', $interval);
-        } else if ($interval < 2592000) {
+            $time_string = sprintf(ngettext('%d day ago', '%d days ago', $interval), $interval);
+        } elseif ($interval < 2592000) {
             $interval = floor($interval / 604800);
-            $unit = ngettext('week ago', 'weeks ago', $interval);
-        } else if ($interval < 31556926) {
+            $time_string = sprintf(ngettext('%d week ago', '%d weeks ago', $interval), $interval);
+        } elseif ($interval < 31556926) {
             $interval = floor($interval / 2592000);
-            $unit = ngettext('month ago', 'months ago', $interval);
-        } else if ($interval < 631138519) {
+            $time_string = sprintf(ngettext('%d month ago', '%d months ago', $interval), $interval);
+        } elseif ($interval < 631138519) {
             $interval = floor($interval / 31556926);
-            $unit = ngettext('year ago', 'years ago', $interval);
+            $time_string = sprintf(ngettext('%d year ago', '%d years ago', $interval), $interval);
         } else {
             $interval = floor($interval / 315569260);
-            $unit = ngettext('decade ago', 'decades ago', $interval);
+            $time_string = sprintf(ngettext('%d decade ago', '%d decades ago', $interval), $interval);
         }
-
-        $time_string = sprintf('%d ' . (T_ngettext($unit, $unit, $interval)), $interval);
     }
     $song->format();
 ?>
@@ -158,7 +156,7 @@ foreach ($data as $row) {
     <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=recent<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>
 </div>
 <script language="javascript" type="text/javascript">
-$(document).ready(function(){
+$(document).ready(function () {
     $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
 });
 </script>
