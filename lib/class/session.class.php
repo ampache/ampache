@@ -425,6 +425,7 @@ class Session
                         'type' => 'mysql',
                         'username' => $username
                     ));
+                    $_SESSION['userdata']['username'] = $username;
                     $auth = true;
                 }
             }

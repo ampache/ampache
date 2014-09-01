@@ -53,7 +53,6 @@ class Auth
         $key = $key ? $key : session_id();
 
         // Nuke the cookie before all else
-        setcookie(AmpConfig::get('session_name') . '_remember', null, -1);
         Session::destroy($key);
         if ((!$relogin) && AmpConfig::get('logout_redirect')) {
             $target = AmpConfig::get('logout_redirect');

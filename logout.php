@@ -27,4 +27,5 @@
 require_once 'lib/init.php';
 
 // To end a legitimate session, just call logout.
+setcookie(AmpConfig::get('session_name') . '_remember', null, -1);
 Auth::logout('',false);
