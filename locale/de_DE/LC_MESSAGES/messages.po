@@ -6157,52 +6157,52 @@ msgid "Agent"
 msgstr "Agent"
 
 #: ../../templates/show_recently_played.inc.php:65
-msgid "second ago"
-msgid_plural "seconds ago"
-msgstr[0] "Sekunde"
-msgstr[1] "Sekunden"
+msgid "%d second ago"
+msgid_plural "%d seconds ago"
+msgstr[0] "%d Sekunde"
+msgstr[1] "%d Sekunden"
 
 #: ../../templates/show_recently_played.inc.php:68
-msgid "minute ago"
-msgid_plural "minutes ago"
-msgstr[0] "Minute"
-msgstr[1] "Minuten"
+msgid "%d minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "%d Minute"
+msgstr[1] "%d Minuten"
 
 #: ../../templates/show_recently_played.inc.php:71
-msgid "hour ago"
-msgid_plural "hours ago"
-msgstr[0] "Stunde"
-msgstr[1] "Stunden"
+msgid "%d hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "%d Stunde"
+msgstr[1] "%d Stunden"
 
 #: ../../templates/show_recently_played.inc.php:74
-msgid "day ago"
-msgid_plural "days ago"
-msgstr[0] "Tag"
-msgstr[1] "Tagen"
+msgid "%d day ago"
+msgid_plural "%d days ago"
+msgstr[0] "%d Tag"
+msgstr[1] "%d Tagen"
 
 #: ../../templates/show_recently_played.inc.php:77
-msgid "week ago"
-msgid_plural "weeks ago"
-msgstr[0] "Woche"
-msgstr[1] "Wochen"
+msgid "%d week ago"
+msgid_plural "%d weeks ago"
+msgstr[0] "%d Woche"
+msgstr[1] "%d Wochen"
 
 #: ../../templates/show_recently_played.inc.php:80
-msgid "month ago"
-msgid_plural "months ago"
-msgstr[0] "Monat"
-msgstr[1] "Monaten"
+msgid "%d month ago"
+msgid_plural "%d months ago"
+msgstr[0] "%d Monat"
+msgstr[1] "%d Monaten"
 
 #: ../../templates/show_recently_played.inc.php:83
-msgid "year ago"
-msgid_plural "years ago"
-msgstr[0] "Jahr"
-msgstr[1] "Jahren"
+msgid "%d year ago"
+msgid_plural "%d years ago"
+msgstr[0] "%d Jahr"
+msgstr[1] "%d Jahren"
 
 #: ../../templates/show_recently_played.inc.php:86
-msgid "decade ago"
-msgid_plural "decades ago"
-msgstr[0] "Dekade"
-msgstr[1] "Dekaden"
+msgid "%d decade ago"
+msgid_plural "%d decades ago"
+msgstr[0] "%d Dekade"
+msgstr[1] "%d Dekaden"
 
 #: ../../templates/show_recently_played.inc.php:134
 msgid "No recently item found"

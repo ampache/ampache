@@ -1424,11 +1424,11 @@ msgstr "épisodes"
 #: ../../lib/class/browse.class.php:278 ../../lib/class/upnp_api.class.php:657
 #: ../../templates/sidebar_home.inc.php:53
 msgid "Movies"
-msgstr "films"
+msgstr "Films"
 
 #: ../../lib/class/browse.class.php:283 ../../lib/class/upnp_api.class.php:633
 msgid "Clips"
-msgstr "clips"
+msgstr "Clips"
 
 #: ../../lib/class/browse.class.php:288 ../../lib/class/upnp_api.class.php:681
 #: ../../templates/sidebar_home.inc.php:54
@@ -4110,7 +4110,7 @@ msgstr "URL"
 #: ../../templates/show_channels.inc.php:31
 #: ../../templates/show_edit_channel_row.inc.php:56
 msgid "Interface"
-msgstr "interface"
+msgstr "Interface"
 
 #: ../../templates/show_add_channel.inc.php:70
 #: ../../templates/show_channel_row.inc.php:44
@@ -6103,52 +6103,52 @@ msgid "Agent"
 msgstr "agent"
 
 #: ../../templates/show_recently_played.inc.php:65
-msgid "second ago"
-msgid_plural "seconds ago"
-msgstr[0] "il ya seconde"
-msgstr[1] "il ya quelques secondes"
+msgid "%d second ago"
+msgid_plural "%d seconds ago"
+msgstr[0] "Il y a %d seconde"
+msgstr[1] "Il y a %d secondes"
 
 #: ../../templates/show_recently_played.inc.php:68
-msgid "minute ago"
-msgid_plural "minutes ago"
-msgstr[0] "il ya minute"
-msgstr[1] "il ya minutes"
+msgid "%d minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "Il y a %d minute"
+msgstr[1] "Il y a %d minutes"
 
 #: ../../templates/show_recently_played.inc.php:71
-msgid "hour ago"
-msgid_plural "hours ago"
-msgstr[0] "hour ago"
-msgstr[1] "il ya des heures"
+msgid "%d hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "Il y a %d heure"
+msgstr[1] "Il y a %d heures"
 
 #: ../../templates/show_recently_played.inc.php:74
-msgid "day ago"
-msgid_plural "days ago"
-msgstr[0] "Il ya jour"
-msgstr[1] "il ya jours"
+msgid "%d day ago"
+msgid_plural "%d days ago"
+msgstr[0] "Il y a %d jour"
+msgstr[1] "il y a %d jours"
 
 #: ../../templates/show_recently_played.inc.php:77
-msgid "week ago"
-msgid_plural "weeks ago"
-msgstr[0] "il y a %d semaine"
-msgstr[1] "il y a %d semaines"
+msgid "%d week ago"
+msgid_plural "%d weeks ago"
+msgstr[0] "Il y a %d semaine"
+msgstr[1] "Il y a %d semaines"
 
 #: ../../templates/show_recently_played.inc.php:80
-msgid "month ago"
-msgid_plural "months ago"
-msgstr[0] "Il ya un mois"
-msgstr[1] "il y a des mois"
+msgid "%d month ago"
+msgid_plural "%d months ago"
+msgstr[0] "Il y a %d mois"
+msgstr[1] "Il y a %d mois"
 
 #: ../../templates/show_recently_played.inc.php:83
-msgid "year ago"
-msgid_plural "years ago"
-msgstr[0] "il ya un an"
-msgstr[1] "il y a des années"
+msgid "%d year ago"
+msgid_plural "%d years ago"
+msgstr[0] "Il y a %d an"
+msgstr[1] "Il y a %d années"
 
 #: ../../templates/show_recently_played.inc.php:86
-msgid "decade ago"
-msgid_plural "decades ago"
-msgstr[0] "Il ya dix ans"
-msgstr[1] "il ya des décennies"
+msgid "%d decade ago"
+msgid_plural "%d decades ago"
+msgstr[0] "Il y a %d décennie"
+msgstr[1] "Il y a %d décennies"
 
 #: ../../templates/show_recently_played.inc.php:134
 msgid "No recently item found"
@@ -6890,11 +6890,11 @@ msgstr "Pistes"
 
 #: ../../templates/sidebar_home.inc.php:49
 msgid "Browse Video"
-msgstr "Parcourir Vidéo"
+msgstr "Parcourir les vidéos"
 
 #: ../../templates/sidebar_home.inc.php:51
 msgid "Music Clips"
-msgstr "musique Clips"
+msgstr "Clips musicaux"
 
 #: ../../templates/sidebar_home.inc.php:64
 msgid "Currently Playing"
