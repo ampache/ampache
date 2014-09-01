@@ -244,6 +244,20 @@ $_SESSION['login'] = false;
                 }
             });
         </script>
+        <?php if (!isset($_COOKIE['cookie_disclaimer'])) { ?>
+        <script type="text/javascript" language="javascript">
+            noty({text: '<?php echo T_("We have placed cookies on your computer to help make this website better. You can change your <a href=\"" . AmpConfig::get('web_path') . "/cookie_disclaimer.php\">cookie settings</a> at any time. Otherwise, we\'ll assume you\'re OK to continue.<br /><br />Click on this message do not display it again."); ?>',
+                type: 'warning',
+                layout: 'bottom',
+                timeout: false,
+                callback: {
+                    afterClose: function() {
+                        $.cookie('cookie_disclaimer', '1', { expires: 365 });
+                    }
+                },
+            });
+        </script>
+        <?php } ?>
         <!-- rfc3514 implementation -->
         <div id="rfc3514" style="display:none;">0x0</div>
         <div id="maincontainer">
