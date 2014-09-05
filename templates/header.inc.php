@@ -246,7 +246,7 @@ $_SESSION['login'] = false;
         </script>
         <?php if (AmpConfig::get('cookie_disclaimer') && !isset($_COOKIE['cookie_disclaimer'])) { ?>
         <script type="text/javascript" language="javascript">
-            noty({text: '<?php echo T_("We have placed cookies on your computer to help make this website better. You can change your <a href=\"" . AmpConfig::get('web_path') . "/cookie_disclaimer.php\">cookie settings</a> at any time. Otherwise, we\'ll assume you\'re OK to continue.<br /><br />Click on this message do not display it again."); ?>',
+            noty({text: '<?php echo T_("We have placed cookies on your computer to help make this website better. You can change your") . " <a href=\"" . AmpConfig::get('web_path') . "/cookie_disclaimer.php\">" . T_("cookie settings") . "</a> " . T_("at any time. Otherwise, we\'ll assume you\'re OK to continue.<br /><br />Click on this message do not display it again."); ?>',
                 type: 'warning',
                 layout: 'bottom',
                 timeout: false,
@@ -371,7 +371,7 @@ $_SESSION['login'] = false;
                 <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
                 <div class="fatalerror">
                     <?php echo T_('Error Config File Out of Date'); ?>
-                    <a href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config'); ?></a>
+                    <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config'); ?></a>
                 </div>
                 <?php } ?>
                 <div id="guts">
