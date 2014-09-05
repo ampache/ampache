@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache SVN\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-08-31 16:33+0200\n"
+"POT-Creation-Date: 2014-09-06 00:11+0200\n"
 "PO-Revision-Date: 2010-03-16 21:20+0330\n"
 "Last-Translator: Soroush <soroush.rostami@gmail.com>\n"
 "Language-Team: Farsi <soroush.rostami@gmail.com>\n"
@@ -63,11 +63,11 @@ msgstr "ورودی لیست دسترسی به روز شد"
 msgid "Catalog Updated"
 msgstr "مجموعه به روز شد"
 
-#: ../../admin/catalog.php:109
+#: ../../admin/catalog.php:111
 msgid "Catalog Deleted"
 msgstr "مجموعه حذف شد"
 
-#: ../../admin/catalog.php:109
+#: ../../admin/catalog.php:111
 #, fuzzy
 msgid "The Catalog and all associated records have been deleted"
 msgstr "مجموعه و تمام رکورد های مرتبط با آن حذف شدند"
@@ -269,12 +269,12 @@ msgstr ""
 "خوانی پیدا کنند"
 
 #: ../../admin/users.php:57 ../../admin/users.php:112
-#: ../../lib/class/user.class.php:492
+#: ../../lib/class/user.class.php:559
 msgid "Error Username Required"
 msgstr "خطا: شناسه کاربری نیاز است"
 
 #: ../../admin/users.php:60 ../../admin/users.php:108
-#: ../../lib/class/user.class.php:496
+#: ../../lib/class/user.class.php:563
 #, fuzzy
 msgid "Error Passwords don't match"
 msgstr "خطا رمز های عبور یکسان نیستند"
@@ -917,7 +917,7 @@ msgstr "مجموعه حذف شد"
 msgid "The Broadcast has been deleted"
 msgstr "لیست پخش مورد نظر حذف شده است"
 
-#: ../../browse.php:86 ../../lib/class/browse.class.php:227
+#: ../../browse.php:86 ../../lib/class/browse.class.php:226
 #: ../../templates/sidebar_home.inc.php:35
 #: ../../templates/sidebar_home.inc.php:55
 #, fuzzy
@@ -978,8 +978,7 @@ msgid "Duplicate ACL defined"
 msgstr "آهنگ های تکراری"
 
 #: ../../lib/class/access.class.php:453 ../../lib/class/access.class.php:474
-#: ../../lib/ui.lib.php:433 ../../scripts/tests/list_header.inc.php:166
-#: ../../templates/list_header.inc.php:166
+#: ../../lib/ui.lib.php:433 ../../templates/list_header.inc.php:166
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_add_access.inc.php:55
 #: ../../templates/show_add_access.inc.php:61
@@ -1061,9 +1060,9 @@ msgstr "ناشناخته (مجزا)"
 msgid "Disk"
 msgstr "دیسک"
 
-#: ../../lib/class/album.class.php:589 ../../lib/class/browse.class.php:190
+#: ../../lib/class/album.class.php:589 ../../lib/class/browse.class.php:189
 #: ../../lib/class/upnp_api.class.php:308 ../../lib/ui.lib.php:158
-#: ../../server/search.ajax.php:55 ../../templates/header.inc.php:286
+#: ../../server/search.ajax.php:55 ../../templates/header.inc.php:300
 #: ../../templates/show_random.inc.php:29
 #: ../../templates/show_search_form.inc.php:30
 #: ../../templates/show_stats.inc.php:34
@@ -1112,7 +1111,7 @@ msgstr ""
 #: ../../templates/show_playlist_songs.inc.php:33
 #: ../../templates/show_playlist_songs.inc.php:70
 #: ../../templates/show_recently_played.inc.php:33
-#: ../../templates/show_recently_played.inc.php:144
+#: ../../templates/show_recently_played.inc.php:142
 #: ../../templates/show_recommended_artists.inc.php:30
 #: ../../templates/show_recommended_artists.inc.php:79
 #: ../../templates/show_search_bar.inc.php:33
@@ -1140,7 +1139,7 @@ msgstr "هنرمند"
 #: ../../templates/show_playlist_songs.inc.php:34
 #: ../../templates/show_playlist_songs.inc.php:71
 #: ../../templates/show_recently_played.inc.php:32
-#: ../../templates/show_recently_played.inc.php:143
+#: ../../templates/show_recently_played.inc.php:141
 #: ../../templates/show_search_bar.inc.php:32
 #: ../../templates/show_song.inc.php:95
 #: ../../templates/show_song_previews.inc.php:34
@@ -1271,7 +1270,7 @@ msgstr "خطا: امکان باز کردن نیست"
 #: ../../templates/show_playlist_songs.inc.php:67
 #: ../../templates/show_random_albums.inc.php:46
 #: ../../templates/show_random_videos.inc.php:44
-#: ../../templates/show_recently_played.inc.php:98
+#: ../../templates/show_recently_played.inc.php:96
 #: ../../templates/show_search_row.inc.php:27
 #: ../../templates/show_song.inc.php:59
 #: ../../templates/show_song_preview_row.inc.php:26
@@ -1368,7 +1367,7 @@ msgid "Edit"
 msgstr "ویرایش"
 
 #: ../../lib/class/broadcast.class.php:329
-#: ../../lib/class/channel.class.php:180 ../../lib/class/share.class.php:191
+#: ../../lib/class/channel.class.php:180 ../../lib/class/share.class.php:192
 #: ../../templates/rightbar.inc.php:120
 #: ../../templates/show_access_list.inc.php:72
 #: ../../templates/show_account.inc.php:65
@@ -1399,7 +1398,7 @@ msgstr ""
 msgid "Unbroadcast"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:168 ../../lib/class/browse.class.php:249
+#: ../../lib/class/browse.class.php:167 ../../lib/class/browse.class.php:248
 #: ../../lib/class/upnp_api.class.php:356 ../../server/search.ajax.php:117
 #: ../../templates/show_albums.inc.php:37
 #: ../../templates/show_albums.inc.php:79
@@ -1415,7 +1414,7 @@ msgstr ""
 msgid "Songs"
 msgstr "آهنگ ها"
 
-#: ../../lib/class/browse.class.php:174 ../../lib/class/upnp_api.class.php:332
+#: ../../lib/class/browse.class.php:173 ../../lib/class/upnp_api.class.php:332
 #: ../../lib/ui.lib.php:154 ../../server/search.ajax.php:88
 #: ../../templates/browse_filters.inc.php:63
 #: ../../templates/show_artist.inc.php:129
@@ -1431,99 +1430,99 @@ msgstr "آهنگ ها"
 msgid "Albums"
 msgstr "آلبوم ها"
 
-#: ../../lib/class/browse.class.php:186
+#: ../../lib/class/browse.class.php:185
 msgid "Manage Users"
 msgstr "مدیریت کاربران"
 
-#: ../../lib/class/browse.class.php:196
+#: ../../lib/class/browse.class.php:195
 #: ../../templates/sidebar_home.inc.php:42
 msgid "Radio Stations"
 msgstr "ایستگاه های رادیویی"
 
-#: ../../lib/class/browse.class.php:201 ../../lib/class/upnp_api.class.php:380
-#: ../../server/search.ajax.php:146 ../../templates/header.inc.php:292
+#: ../../lib/class/browse.class.php:200 ../../lib/class/upnp_api.class.php:380
+#: ../../server/search.ajax.php:146 ../../templates/header.inc.php:306
 #: ../../templates/sidebar_home.inc.php:36
 #: ../../templates/sidebar_home.inc.php:120
 #: ../../templates/sidebar.light.inc.php:29
 msgid "Playlists"
 msgstr "لیست های پخش"
 
-#: ../../lib/class/browse.class.php:205
+#: ../../lib/class/browse.class.php:204
 msgid "Playlist Songs"
 msgstr "آهنگ های لیست پخش"
 
-#: ../../lib/class/browse.class.php:209
+#: ../../lib/class/browse.class.php:208
 msgid "Current Playlist"
 msgstr "لیست پخش جاری"
 
-#: ../../lib/class/browse.class.php:214 ../../lib/class/upnp_api.class.php:404
+#: ../../lib/class/browse.class.php:213 ../../lib/class/upnp_api.class.php:404
 #: ../../templates/sidebar_home.inc.php:37
 #, fuzzy
 msgid "Smart Playlists"
 msgstr "درون‌ریزی لیست پخش"
 
-#: ../../lib/class/browse.class.php:218 ../../templates/show_stats.inc.php:27
+#: ../../lib/class/browse.class.php:217 ../../templates/show_stats.inc.php:27
 #: ../../templates/sidebar_admin.inc.php:24
 msgid "Catalogs"
 msgstr "مجموعه ها"
 
-#: ../../lib/class/browse.class.php:222
+#: ../../lib/class/browse.class.php:221
 msgid "Shoutbox Records"
 msgstr "رکوردهای پیام کوتاه"
 
-#: ../../lib/class/browse.class.php:233
+#: ../../lib/class/browse.class.php:232
 #: ../../templates/show_search_form.inc.php:31
 #: ../../templates/show_stats.inc.php:36 ../../templates/show_stats.inc.php:76
 #: ../../templates/sidebar_home.inc.php:121
 msgid "Videos"
 msgstr "ویدیو ها"
 
-#: ../../lib/class/browse.class.php:237
+#: ../../lib/class/browse.class.php:236
 #: ../../templates/show_democratic.inc.php:23
 #, fuzzy
 msgid "Democratic Playlist"
 msgstr "لیست پخش دمکراتیک"
 
-#: ../../lib/class/browse.class.php:241
+#: ../../lib/class/browse.class.php:240
 #, fuzzy
 msgid "Wanted Albums"
 msgstr "آلبوم های مرتبط"
 
-#: ../../lib/class/browse.class.php:245
+#: ../../lib/class/browse.class.php:244
 #: ../../templates/sidebar_home.inc.php:106
 #, fuzzy
 msgid "Shared Objects"
 msgstr "شیئ"
 
-#: ../../lib/class/browse.class.php:253 ../../templates/show_song.inc.php:104
+#: ../../lib/class/browse.class.php:252 ../../templates/show_song.inc.php:104
 #: ../../templates/show_video.inc.php:112
 #: ../../templates/sidebar_home.inc.php:38
 #, fuzzy
 msgid "Channels"
 msgstr "ذخیره‌ تغییرات"
 
-#: ../../lib/class/browse.class.php:257
+#: ../../lib/class/browse.class.php:256
 #: ../../templates/sidebar_home.inc.php:40
 msgid "Broadcasts"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:261
+#: ../../lib/class/browse.class.php:260
 msgid "Media Licenses"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:265 ../../lib/class/upnp_api.class.php:593
+#: ../../lib/class/browse.class.php:264 ../../lib/class/upnp_api.class.php:593
 #: ../../templates/sidebar_home.inc.php:52
 msgid "TV Shows"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:269 ../../templates/show_tvshow.inc.php:82
+#: ../../lib/class/browse.class.php:268 ../../templates/show_tvshow.inc.php:82
 #: ../../templates/show_tvshows.inc.php:38
 #: ../../templates/show_tvshows.inc.php:78
 #, fuzzy
 msgid "Seasons"
 msgstr "دلیل"
 
-#: ../../lib/class/browse.class.php:273
+#: ../../lib/class/browse.class.php:272
 #: ../../templates/show_tvshow_season.inc.php:77
 #: ../../templates/show_tvshow_seasons.inc.php:36
 #: ../../templates/show_tvshow_seasons.inc.php:73
@@ -1532,27 +1531,27 @@ msgstr "دلیل"
 msgid "Episodes"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:278 ../../lib/class/upnp_api.class.php:657
+#: ../../lib/class/browse.class.php:277 ../../lib/class/upnp_api.class.php:657
 #: ../../templates/sidebar_home.inc.php:53
 msgid "Movies"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:283 ../../lib/class/upnp_api.class.php:633
+#: ../../lib/class/browse.class.php:282 ../../lib/class/upnp_api.class.php:633
 msgid "Clips"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:288 ../../lib/class/upnp_api.class.php:681
+#: ../../lib/class/browse.class.php:287 ../../lib/class/upnp_api.class.php:681
 #: ../../templates/sidebar_home.inc.php:54
 msgid "Personal Videos"
 msgstr ""
 
-#: ../../lib/class/browse.class.php:331 ../../templates/rightbar.inc.php:127
-#: ../../templates/show_recently_played.inc.php:158
+#: ../../lib/class/browse.class.php:330 ../../templates/rightbar.inc.php:127
+#: ../../templates/show_recently_played.inc.php:156
 msgid "More"
 msgstr "ادامه"
 
 #: ../../lib/class/catalog.class.php:477 ../../lib/class/catalog.class.php:480
-#: ../../lib/class/catalog.class.php:483 ../../lib/class/user.class.php:839
+#: ../../lib/class/catalog.class.php:483 ../../lib/class/user.class.php:906
 #: ../../lib/preferences.php:303 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:57
 msgid "Never"
@@ -1576,23 +1575,23 @@ msgstr ""
 msgid "No Update Needed"
 msgstr "به ‌روز رسانی نیاز نیست"
 
-#: ../../lib/class/catalog.class.php:1511
+#: ../../lib/class/catalog.class.php:1518
 #, fuzzy, php-format
 msgid "Catalog Clean Done. %d file removed."
 msgid_plural "Catalog Clean Done. %d files removed."
 msgstr[0] "پاکسازی مجموعه انجام شد"
 
-#: ../../lib/class/catalog.class.php:1536
+#: ../../lib/class/catalog.class.php:1543
 #, fuzzy, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
 msgstr "پاکسازی مجموعه انجام شد"
 
-#: ../../lib/class/catalog.class.php:1692
+#: ../../lib/class/catalog.class.php:1699
 #, fuzzy
 msgid "Failed to create playlist."
 msgstr "ایجاد حساب جدید امکان ندارد"
 
-#: ../../lib/class/catalog.class.php:1709
+#: ../../lib/class/catalog.class.php:1716
 msgid "No valid songs found in playlist file."
 msgstr ""
 
@@ -1672,7 +1671,7 @@ msgstr "متوقف شده"
 
 #: ../../lib/class/localplay.class.php:635
 #: ../../lib/class/tvshow_episode.class.php:72
-#: ../../lib/class/user.class.php:842 ../../lib/class/video.class.php:709
+#: ../../lib/class/user.class.php:909 ../../lib/class/video.class.php:709
 #: ../../lib/general.lib.php:222
 #: ../../modules/localplay/mpd.controller.php:503
 #: ../../templates/show_user.inc.php:24 ../../templates/show_users.inc.php:58
@@ -1967,6 +1966,7 @@ msgid "Music License"
 msgstr ""
 
 #: ../../lib/class/search.class.php:468 ../../lib/class/search.class.php:482
+#: ../../templates/cookie_disclaimer.inc.php:16
 #: ../../templates/show_access_list.inc.php:47
 #: ../../templates/show_add_access.inc.php:27
 #: ../../templates/show_add_channel.inc.php:35
@@ -2068,21 +2068,21 @@ msgstr "دلیل"
 msgid "Episode"
 msgstr ""
 
-#: ../../lib/class/update.class.php:484
+#: ../../lib/class/update.class.php:487
 #, fuzzy
 msgid "No updates needed."
 msgstr "به ‌روز رسانی نیاز نیست"
 
-#: ../../lib/class/update.class.php:486
+#: ../../lib/class/update.class.php:489
 #, fuzzy
 msgid "Return to main page"
 msgstr "بازگشت به صفحه ورود"
 
-#: ../../lib/class/update.class.php:2513 ../../lib/class/update.class.php:2529
+#: ../../lib/class/update.class.php:2516 ../../lib/class/update.class.php:2532
 msgid "File copy error."
 msgstr ""
 
-#: ../../lib/class/update.class.php:2520 ../../lib/class/update.class.php:2536
+#: ../../lib/class/update.class.php:2523 ../../lib/class/update.class.php:2539
 msgid "Cannot copy default .htaccess file."
 msgstr ""
 
@@ -2096,12 +2096,12 @@ msgstr ""
 msgid "Video"
 msgstr "ویدیو"
 
-#: ../../lib/class/user.class.php:863 ../../templates/show_objects.inc.php:44
+#: ../../lib/class/user.class.php:930 ../../templates/show_objects.inc.php:44
 #: ../../templates/show_tagcloud.inc.php:59
 msgid "Not Enough Data"
 msgstr "اطلاعات کافی نیست"
 
-#: ../../lib/class/user.class.php:1153
+#: ../../lib/class/user.class.php:1220
 #, fuzzy
 msgid "User avatar"
 msgstr "کاربر فعال شد"
@@ -2963,19 +2963,19 @@ msgstr "کاراکتر ست پایگاه داده به روز شد"
 msgid "Administrative user creation failed: %s"
 msgstr "کاربر فعال شد"
 
-#: ../../lib/login.php:84
+#: ../../lib/login.php:80
 msgid "Error Username or Password incorrect, please try again"
 msgstr "خطا: شناسه کاربری یا رمز عبور اشتباه است. لطفا دوباره امتحان کنید"
 
-#: ../../lib/login.php:104
+#: ../../lib/login.php:100
 msgid "User Disabled please contact Admin"
 msgstr "کاربر غیر فعال شده است، لطفا با مدیر تماس بگیرید"
 
-#: ../../lib/login.php:112
+#: ../../lib/login.php:108
 msgid "User Already Logged in"
 msgstr "کاربر قبلا وارد شده است"
 
-#: ../../lib/login.php:133
+#: ../../lib/login.php:129
 #, fuzzy
 msgid "Unable to create local account"
 msgstr "ایجاد حساب جدید امکان ندارد"
@@ -3141,7 +3141,7 @@ msgstr "جفنگه"
 msgid "Off the Charts!"
 msgstr "!نمایش نمودار ها را متوقف کن"
 
-#: ../../lib/ui.lib.php:101 ../../templates/header.inc.php:280
+#: ../../lib/ui.lib.php:101 ../../templates/header.inc.php:294
 #: ../../templates/sidebar.inc.php:29 ../../templates/sidebar.light.inc.php:27
 msgid "Home"
 msgstr "خانه"
@@ -3425,7 +3425,7 @@ msgstr ""
 #: ../../templates/show_now_playing_row.inc.php:25
 #: ../../templates/show_now_playing_video_row.inc.php:27
 #: ../../templates/show_recently_played.inc.php:34
-#: ../../templates/show_recently_played.inc.php:145
+#: ../../templates/show_recently_played.inc.php:143
 #: ../../templates/show_user_registration.inc.php:77
 #: ../../templates/show_users.inc.php:41 ../../templates/show_users.inc.php:67
 #, fuzzy
@@ -3706,40 +3706,6 @@ msgstr "رمز های عبور شما باهم یکسان نیستند"
 msgid "Access Control not Enabled"
 msgstr "ورودیهای کنترل دسترسی"
 
-#: ../../scripts/tests/list_header.inc.php:147
-#: ../../templates/list_header.inc.php:147
-msgid "Prev"
-msgstr "قبلی"
-
-#: ../../scripts/tests/list_header.inc.php:153
-#: ../../templates/list_header.inc.php:153
-msgid "Page"
-msgstr ""
-
-#: ../../scripts/tests/list_header.inc.php:164
-#: ../../templates/list_header.inc.php:164
-#: ../../templates/show_localplay_control.inc.php:28
-msgid "Next"
-msgstr "بعدی"
-
-#: ../../scripts/tests/list_header.inc.php:173
-#: ../../templates/list_header.inc.php:190
-#, fuzzy
-msgid "Item Count"
-msgstr "تعداد موارد"
-
-#: ../../scripts/tests/list_header.inc.php:176
-#: ../../templates/browse_filters.inc.php:30
-#: ../../templates/list_header.inc.php:173
-msgid "Filters"
-msgstr "فیلترها"
-
-#: ../../scripts/tests/list_header.inc.php:185
-#: ../../templates/list_header.inc.php:182
-#, fuzzy
-msgid "Limit"
-msgstr "محدودیت سایز"
-
 #: ../../search.php:43 ../../search.php:49
 #, fuzzy
 msgid "Search Saved"
@@ -3806,6 +3772,11 @@ msgstr "ایجاد شد"
 msgid "Invalid Object Selected"
 msgstr " شیء انتخاب شده نادرست است"
 
+#: ../../templates/browse_filters.inc.php:30
+#: ../../templates/list_header.inc.php:173
+msgid "Filters"
+msgstr "فیلترها"
+
 #: ../../templates/browse_filters.inc.php:34
 msgid "Starts With"
 msgstr "شروع شده با"
@@ -3838,6 +3809,67 @@ msgstr "عنوان آهنگ"
 
 #: ../../templates/browse_filters.inc.php:96
 msgid "Toggle Artwork"
+msgstr ""
+
+#: ../../templates/cookie_disclaimer.inc.php:1
+msgid "Use of cookies by Ampache"
+msgstr ""
+
+#: ../../templates/cookie_disclaimer.inc.php:4
+msgid ""
+"Cookies are small text files that are placed on your computer by websites "
+"that you visit. They are widely used in order to make websites work, or work "
+"more efficiently, as well as to provide information to the owners of the "
+"site."
+msgstr ""
+
+#: ../../templates/cookie_disclaimer.inc.php:5
+msgid "The table below explains the cookies we use and why."
+msgstr ""
+
+#: ../../templates/cookie_disclaimer.inc.php:13
+msgid "Cookie"
+msgstr ""
+
+#: ../../templates/cookie_disclaimer.inc.php:19
+msgid "Purpose"
+msgstr ""
+
+#: ../../templates/cookie_disclaimer.inc.php:27
+msgid "Hide the cookie disclaimer message."
+msgstr ""
+
+#: ../../templates/cookie_disclaimer.inc.php:32
+#, fuzzy
+msgid "Ampache session."
+msgstr "نصب آمپاچی"
+
+#: ../../templates/cookie_disclaimer.inc.php:37
+msgid "Automatically authenticate users."
+msgstr ""
+
+#: ../../templates/cookie_disclaimer.inc.php:42
+msgid "Keep latest web player volume."
+msgstr ""
+
+#: ../../templates/cookie_disclaimer.inc.php:47
+msgid "Show/Hide column [column_index] when browsing [object_type] objects."
+msgstr ""
+
+#: ../../templates/cookie_disclaimer.inc.php:52
+msgid "Use alphabet when browsing [object_type] objects."
+msgstr ""
+
+#: ../../templates/cookie_disclaimer.inc.php:57
+msgid "Use pages when browsing [object_type] objects."
+msgstr ""
+
+#: ../../templates/cookie_disclaimer.inc.php:62
+msgid "Collapse/Expand Sidebar [menu_section]."
+msgstr ""
+
+#: ../../templates/cookie_disclaimer.inc.php:67
+msgid "Collapse/Expand Sidebar."
 msgstr ""
 
 #: ../../templates/error_page.inc.php:31
@@ -3893,22 +3925,38 @@ msgstr ""
 msgid "Cancel"
 msgstr "لغو"
 
-#: ../../templates/header.inc.php:260
+#: ../../templates/header.inc.php:249
+msgid ""
+"We have placed cookies on your computer to help make this website better. "
+"You can change your"
+msgstr ""
+
+#: ../../templates/header.inc.php:249
+msgid "cookie settings"
+msgstr ""
+
+#: ../../templates/header.inc.php:249
+msgid ""
+"at any time. Otherwise, we\\'ll assume you\\'re OK to continue.<br /><br /"
+">Click on this message do not display it again."
+msgstr ""
+
+#: ../../templates/header.inc.php:274
 msgid "Log out"
 msgstr "خروج"
 
-#: ../../templates/header.inc.php:298 ../../templates/sidebar_home.inc.php:100
+#: ../../templates/header.inc.php:312 ../../templates/sidebar_home.inc.php:100
 #: ../../templates/sidebar.light.inc.php:30
 #, fuzzy
 msgid "Favorites"
 msgstr "آهنگهای مورد علاقه"
 
-#: ../../templates/header.inc.php:359
+#: ../../templates/header.inc.php:373
 #, fuzzy
 msgid "Error Config File Out of Date"
 msgstr "منقضی شده است config خطا تاریخ فایل "
 
-#: ../../templates/header.inc.php:360
+#: ../../templates/header.inc.php:374
 msgid "Generate New Config"
 msgstr "تولید پیکربندی جدید "
 
@@ -3922,6 +3970,29 @@ msgstr "نصب آمپاچی"
 #: ../../templates/list_header.inc.php:158
 msgid "of"
 msgstr ""
+
+#: ../../templates/list_header.inc.php:147
+msgid "Prev"
+msgstr "قبلی"
+
+#: ../../templates/list_header.inc.php:153
+msgid "Page"
+msgstr ""
+
+#: ../../templates/list_header.inc.php:164
+#: ../../templates/show_localplay_control.inc.php:28
+msgid "Next"
+msgstr "بعدی"
+
+#: ../../templates/list_header.inc.php:184
+#, fuzzy
+msgid "Limit"
+msgstr "محدودیت سایز"
+
+#: ../../templates/list_header.inc.php:192
+#, fuzzy
+msgid "Item Count"
+msgstr "تعداد موارد"
 
 #: ../../templates/rightbar.inc.php:28
 msgid "Add to Playlist"
@@ -4395,7 +4466,7 @@ msgstr "یافت شد"
 #: ../../templates/show_clean_catalog.inc.php:28
 #: ../../templates/show_gather_art.inc.php:26
 #: ../../templates/show_run_add_catalog.inc.php:26
-#: ../../templates/show_verify_catalog.inc.php:30
+#: ../../templates/show_verify_catalog.inc.php:28
 #, fuzzy
 msgid "Reading"
 msgstr "خواندن"
@@ -4541,7 +4612,7 @@ msgstr "کارها"
 #: ../../templates/show_playlist_song_row.inc.php:29
 #: ../../templates/show_random_albums.inc.php:48
 #: ../../templates/show_random_videos.inc.php:46
-#: ../../templates/show_recently_played.inc.php:100
+#: ../../templates/show_recently_played.inc.php:98
 #: ../../templates/show_search_row.inc.php:29
 #: ../../templates/show_song.inc.php:61
 #: ../../templates/show_song_preview_row.inc.php:28
@@ -4563,7 +4634,7 @@ msgstr "لیست پخش"
 #: ../../templates/show_playlist_row.inc.php:37
 #: ../../templates/show_playlist_song_row.inc.php:37
 #: ../../templates/show_random_albums.inc.php:51
-#: ../../templates/show_recently_played.inc.php:108
+#: ../../templates/show_recently_played.inc.php:106
 #: ../../templates/show_search_row.inc.php:37
 #: ../../templates/show_song.inc.php:65
 #: ../../templates/show_song_preview_row.inc.php:38
@@ -4593,7 +4664,7 @@ msgstr ""
 #: ../../templates/show_install_config.inc.php:164
 #: ../../templates/show_install_config.inc.php:180
 #: ../../templates/show_playlist_song_row.inc.php:56
-#: ../../templates/show_share.inc.php:32 ../../templates/show_share.inc.php:33
+#: ../../templates/show_share.inc.php:34 ../../templates/show_share.inc.php:35
 #: ../../templates/show_song.inc.php:76
 #: ../../templates/show_song_row.inc.php:68
 #: ../../templates/show_video.inc.php:91
@@ -4656,7 +4727,7 @@ msgstr "ویرایش آلبوم"
 #: ../../templates/show_artist_row.inc.php:40
 #: ../../templates/show_playlist_row.inc.php:40
 #: ../../templates/show_playlist_song_row.inc.php:39
-#: ../../templates/show_recently_played.inc.php:110
+#: ../../templates/show_recently_played.inc.php:108
 #: ../../templates/show_search_row.inc.php:39
 #: ../../templates/show_song_preview_row.inc.php:40
 #: ../../templates/show_song_row.inc.php:39
@@ -4923,7 +4994,7 @@ msgid "Update"
 msgstr "به‌ روز رسانی"
 
 #: ../../templates/show_catalog_row.inc.php:43
-msgid "GO!"
+msgid "Go"
 msgstr ""
 
 #: ../../templates/show_catalogs.inc.php:28
@@ -5304,7 +5375,7 @@ msgstr "آهنگ های تکراری"
 #: ../../templates/show_now_playing_row.inc.php:39
 #: ../../templates/show_partial_clip.inc.php:24
 #: ../../templates/show_recently_played.inc.php:30
-#: ../../templates/show_recently_played.inc.php:141
+#: ../../templates/show_recently_played.inc.php:139
 #: ../../templates/sidebar_home.inc.php:83
 msgid "Song"
 msgstr "آهنگ"
@@ -6426,64 +6497,64 @@ msgid "Enqueue"
 msgstr "به صف کردن"
 
 #: ../../templates/show_recently_played.inc.php:35
-#: ../../templates/show_recently_played.inc.php:146
+#: ../../templates/show_recently_played.inc.php:144
 msgid "Last Played"
 msgstr "آخرین آهنگ های پخش شده"
 
 #: ../../templates/show_recently_played.inc.php:36
-#: ../../templates/show_recently_played.inc.php:147
+#: ../../templates/show_recently_played.inc.php:145
 msgid "Agent"
 msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:65
-#, fuzzy
-msgid "second ago"
-msgid_plural "seconds ago"
+#, fuzzy, php-format
+msgid "%d second ago"
+msgid_plural "%d seconds ago"
 msgstr[0] "ثانیه پیش"
 
 #: ../../templates/show_recently_played.inc.php:68
-#, fuzzy
-msgid "minute ago"
-msgid_plural "minutes ago"
+#, fuzzy, php-format
+msgid "%d minute ago"
+msgid_plural "%d minutes ago"
 msgstr[0] "دقیقه پیش"
 
 #: ../../templates/show_recently_played.inc.php:71
-#, fuzzy
-msgid "hour ago"
-msgid_plural "hours ago"
+#, fuzzy, php-format
+msgid "%d hour ago"
+msgid_plural "%d hours ago"
 msgstr[0] "ساعت پیش"
 
 #: ../../templates/show_recently_played.inc.php:74
-#, fuzzy
-msgid "day ago"
-msgid_plural "days ago"
+#, fuzzy, php-format
+msgid "%d day ago"
+msgid_plural "%d days ago"
 msgstr[0] "روز پیش"
 
 #: ../../templates/show_recently_played.inc.php:77
-#, fuzzy
-msgid "week ago"
-msgid_plural "weeks ago"
+#, fuzzy, php-format
+msgid "%d week ago"
+msgid_plural "%d weeks ago"
 msgstr[0] "هفته پیش"
 
 #: ../../templates/show_recently_played.inc.php:80
-#, fuzzy
-msgid "month ago"
-msgid_plural "months ago"
+#, fuzzy, php-format
+msgid "%d month ago"
+msgid_plural "%d months ago"
 msgstr[0] "ماه پیش"
 
 #: ../../templates/show_recently_played.inc.php:83
-#, fuzzy
-msgid "year ago"
-msgid_plural "years ago"
+#, fuzzy, php-format
+msgid "%d year ago"
+msgid_plural "%d years ago"
 msgstr[0] "سال پیش"
 
 #: ../../templates/show_recently_played.inc.php:86
-#, fuzzy
-msgid "decade ago"
-msgid_plural "decades ago"
+#, fuzzy, php-format
+msgid "%d decade ago"
+msgid_plural "%d decades ago"
 msgstr[0] "ثانیه پیش"
 
-#: ../../templates/show_recently_played.inc.php:134
+#: ../../templates/show_recently_played.inc.php:132
 #, fuzzy
 msgid "No recently item found"
 msgstr "هیچ آهنگ غیر فعال شده ای یافت نشد"
@@ -6634,12 +6705,12 @@ msgstr ""
 msgid "Public Url"
 msgstr "عمومی"
 
-#: ../../templates/show_share.inc.php:26
+#: ../../templates/show_share.inc.php:28
 #, fuzzy
 msgid "Shared on"
 msgstr "بعد از اضافه کردن بفرست"
 
-#: ../../templates/show_share.inc.php:27
+#: ../../templates/show_share.inc.php:29
 msgid "by"
 msgstr ""
 
@@ -7184,12 +7255,6 @@ msgid "Updating the %s catalog"
 msgstr "%s به روز رسانی مجموعه"
 
 #: ../../templates/show_verify_catalog.inc.php:27
-#, fuzzy, php-format
-msgid "%d item found checking tag information"
-msgid_plural "%d items found checking tag information"
-msgstr[0] "مورد یافت شد. در حال بررسی اطلاعات برچسب ها %d"
-
-#: ../../templates/show_verify_catalog.inc.php:29
 #, fuzzy
 msgid "Verified"
 msgstr "تایید شده"
@@ -7714,6 +7779,11 @@ msgid "Ajax page load"
 msgstr ""
 
 #, fuzzy
+#~ msgid "%d item found checking tag information"
+#~ msgid_plural "%d items found checking tag information"
+#~ msgstr[0] "مورد یافت شد. در حال بررسی اطلاعات برچسب ها %d"
+
+#, fuzzy
 #~ msgid "Gather Album Art"
 #~ msgstr "گردآوری تصاویر آلبوم"
 
@@ -7952,9 +8022,6 @@ msgstr ""
 
 #~ msgid "the following updates need to be performed"
 #~ msgstr "اعمال به روز رسانی های زیر لازم است "
-
-#~ msgid "Ampache Installation."
-#~ msgstr "نصب آمپاچی"
 
 #, fuzzy
 #~ msgid "Make Sticky"
