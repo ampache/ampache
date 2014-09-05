@@ -66,7 +66,7 @@ if (!empty($link)) {
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
 $results['version']        = '3.7.1-develop';
-$results['int_config_version']    = '18';
+$results['int_config_version']    = '19';
 
 if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
@@ -153,8 +153,10 @@ set_memory_limit($results['memory_limit']);
 if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     /* Verify their session */
     if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
-        Auth::logout($_COOKIE[AmpConfig::get('session_name')]);
-        exit;
+        if (!Session::auth_remember()) {
+            Auth::logout($_COOKIE[AmpConfig::get('session_name')]);
+            exit;
+        }
     }
 
     // This actually is starting the session

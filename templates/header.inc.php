@@ -244,6 +244,20 @@ $_SESSION['login'] = false;
                 }
             });
         </script>
+        <?php if (AmpConfig::get('cookie_disclaimer') && !isset($_COOKIE['cookie_disclaimer'])) { ?>
+        <script type="text/javascript" language="javascript">
+            noty({text: '<?php echo T_("We have placed cookies on your computer to help make this website better. You can change your") . " <a href=\"" . AmpConfig::get('web_path') . "/cookie_disclaimer.php\">" . T_("cookie settings") . "</a> " . T_("at any time. Otherwise, we\'ll assume you\'re OK to continue.<br /><br />Click on this message do not display it again."); ?>',
+                type: 'warning',
+                layout: 'bottom',
+                timeout: false,
+                callback: {
+                    afterClose: function() {
+                        $.cookie('cookie_disclaimer', '1', { expires: 365 });
+                    }
+                },
+            });
+        </script>
+        <?php } ?>
         <!-- rfc3514 implementation -->
         <div id="rfc3514" style="display:none;">0x0</div>
         <div id="maincontainer">
@@ -275,7 +289,7 @@ $_SESSION['login'] = false;
         <?php if (AmpConfig::get('topmenu')) { ?>
             <div id="topmenu_container">
                 <div id="topmenu_item">
-                    <a href="<?php echo $web_path; ?>">
+                    <a href="<?php echo $web_path; ?>/index.php">
                         <img src="<?php echo $web_path; ?>/images/topmenu-home.png" />
                         <span><?php echo T_('Home'); ?></span>
                     </a>
@@ -357,7 +371,7 @@ $_SESSION['login'] = false;
                 <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
                 <div class="fatalerror">
                     <?php echo T_('Error Config File Out of Date'); ?>
-                    <a href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config'); ?></a>
+                    <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config'); ?></a>
                 </div>
                 <?php } ?>
                 <div id="guts">

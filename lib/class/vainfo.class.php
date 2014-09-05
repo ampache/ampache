@@ -736,6 +736,9 @@ class vainfo
                 case 'musicbrainz_albumtype':
                     $parsed['release_type'] = $data[0];
                     break;
+                case 'lyrics':
+                    $parsed['lyrics'] = $data[0];
+                    break;
                 default:
                     $parsed[$tag] = $data[0];
                 break;
@@ -789,6 +792,9 @@ class vainfo
                 break;
                 case 'comments':
                     $parsed['comment'] = $data[0];
+                break;
+                case 'unsynchronised_lyric':
+                    $parsed['lyrics'] = $data[0];
                 break;
                 default:
                     $parsed[$tag] = $data[0];

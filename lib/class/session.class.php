@@ -57,12 +57,7 @@ class Session
             return true;
         }
 
-        // Check to see if remember me cookie is set, if so use remember
-        // length, otherwise use the session length
-        $expire = isset($_COOKIE[AmpConfig::get('session_name') . '_remember'])
-            ? time() + AmpConfig::get('remember_length')
-            : time() + AmpConfig::get('session_length');
-
+        $expire = time() + AmpConfig::get('session_length');
         $sql = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
@@ -87,7 +82,7 @@ class Session
         debug_event('SESSION', 'Deleting Session with key:' . $key, 6);
 
         // Destroy our cookie!
-        setcookie(AmpConfig::get('session_name'), '', time() - 86400);
+        setcookie(AmpConfig::get('session_name'), null, -1);
 
         return true;
     }
@@ -100,6 +95,9 @@ class Session
     public static function gc()
     {
         $sql = 'DELETE FROM `session` WHERE `expire` < ?';
+        Dba::write($sql, array(time()));
+
+        $sql = 'DELETE FROM `session_remember` WHERE `expire` < ?';
         Dba::write($sql, array(time()));
 
         // Also clean up things that use sessions as keys
@@ -234,11 +232,6 @@ class Session
         // No cookie no go!
         if (!isset($_COOKIE[$session_name])) { return false; }
 
-        // Check for a remember me
-        if (isset($_COOKIE[$session_name . '_remember'])) {
-            self::create_remember_cookie();
-        }
-
         // Set up the cookie params before we start the session.
         // This is vital
         session_set_cookie_params(
@@ -307,13 +300,10 @@ class Session
      */
     public static function extend($sid, $type = null)
     {
-        $time = time();
-        $expire = isset($_COOKIE[AmpConfig::get('session_name') . '_remember'])
-            ? $time + AmpConfig::get('remember_length')
-            : $time + AmpConfig::get('session_length');
-
         if ($type == 'stream') {
-            $expire = $time + AmpConfig::get('stream_length');
+            $expire = time() + AmpConfig::get('stream_length');
+        } else {
+            $expire = time() + AmpConfig::get('session_length');
         }
 
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
@@ -391,13 +381,57 @@ class Session
      *
      * This function just creates the remember me cookie, nothing special.
      */
-    public static function create_remember_cookie()
+    public static function create_remember_cookie($username)
     {
         $remember_length = AmpConfig::get('remember_length');
         $session_name = AmpConfig::get('session_name');
 
-        AmpConfig::set('cookie_life', $remember_length, true);
-        setcookie($session_name . '_remember', "Rappelez-vous, rappelez-vous le 27 mars", time() + $remember_length, '/');
+        $token = self::generateRandomToken(); // generate a token, should be 128 - 256 bit
+        self::storeTokenForUser($username, $token, $remember_length);
+        $cookie = $username . ':' . $token;
+        $mac = hash_hmac('sha256', $cookie, AmpConfig::get('secret_key'));
+        $cookie .= ':' . $mac;
+
+        setcookie($session_name . '_remember', $cookie, time() + $remember_length);
+    }
+
+    /**
+     * Generate a random token.
+     * @return string
+     */
+    public static function generateRandomToken()
+    {
+        return md5(uniqid(mt_rand(), true));
+    }
+
+    public static function storeTokenForUser($username, $token, $remember_length)
+    {
+        $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";
+        return Dba::write($sql, array($username, $token, time() + $remember_length));
+    }
+
+    public static function auth_remember()
+    {
+        $auth = false;
+        $cname = AmpConfig::get('session_name') . '_remember';
+        if (isset($_COOKIE[$cname])) {
+            list ($username, $token, $mac) = explode(':', $_COOKIE[$cname]);
+            if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
+                $sql = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
+                $db_results = Dba::read($sql, array($username, $token, time()));
+                if (Dba::num_rows($db_results) > 0) {
+                    Session::create_cookie();
+                    self::create(array(
+                        'type' => 'mysql',
+                        'username' => $username
+                    ));
+                    $_SESSION['userdata']['username'] = $username;
+                    $auth = true;
+                }
+            }
+        }
+
+        return $auth;
     }
 
     /**

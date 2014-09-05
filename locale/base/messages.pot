@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-08-25 17:58+0200\n"
+"POT-Creation-Date: 2014-08-31 16:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -494,7 +494,7 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:171
 #: ../../templates/show_add_catalog.inc.php:60
-#: ../../templates/show_catalog_row.inc.php:38
+#: ../../templates/show_catalog_row.inc.php:40
 msgid "Gather Art"
 msgstr ""
 
@@ -886,7 +886,8 @@ msgid "Duplicate ACL defined"
 msgstr ""
 
 #: ../../lib/class/access.class.php:453 ../../lib/class/access.class.php:474
-#: ../../lib/ui.lib.php:433 ../../templates/list_header.inc.php:166
+#: ../../lib/ui.lib.php:433 ../../scripts/tests/list_header.inc.php:166
+#: ../../templates/list_header.inc.php:166
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_add_access.inc.php:55
 #: ../../templates/show_add_access.inc.php:61
@@ -1253,7 +1254,7 @@ msgstr ""
 #: ../../templates/rightbar.inc.php:120
 #: ../../templates/show_access_list.inc.php:72
 #: ../../templates/show_account.inc.php:65
-#: ../../templates/show_catalog_row.inc.php:39
+#: ../../templates/show_catalog_row.inc.php:41
 #: ../../templates/show_democratic_playlist.inc.php:92
 #: ../../templates/show_edit_user.inc.php:99
 #: ../../templates/show_license_row.inc.php:31
@@ -1585,7 +1586,7 @@ msgid ""
 "Thank you for registering\n"
 msgstr ""
 
-#: ../../lib/class/registration.class.php:76
+#: ../../lib/class/registration.class.php:78
 #, php-format
 msgid ""
 "A new user has registered\n"
@@ -1846,7 +1847,7 @@ msgstr ""
 
 #: ../../lib/class/shoutbox.class.php:255
 #: ../../templates/show_add_live_stream.inc.php:62
-#: ../../templates/show_catalog_row.inc.php:34
+#: ../../templates/show_catalog_row.inc.php:36
 #: ../../templates/show_live_stream.inc.php:27
 msgid "Add"
 msgstr ""
@@ -3045,6 +3046,45 @@ msgstr ""
 msgid "The password has been set to: %s"
 msgstr ""
 
+#: ../../modules/Beets/Catalog.php:116
+msgid "Running Beets Update"
+msgstr ""
+
+#: ../../modules/Beets/Catalog.php:154
+#: ../../modules/catalog/remote.catalog.php:270
+#: ../../modules/catalog/soundcloud.catalog.php:280
+#: ../../modules/catalog/subsonic.catalog.php:245
+#, php-format
+msgid "Unable to Insert Song - %s"
+msgstr ""
+
+#: ../../modules/catalog/beets.catalog.php:85
+msgid "Beets Database File"
+msgstr ""
+
+#: ../../modules/catalog/beets.catalog.php:101
+msgid "Error: Beets selected, but no Beets DB File provided"
+msgstr ""
+
+#: ../../modules/catalog/beets.catalog.php:111
+#: ../../modules/catalog/beetsremote.catalog.php:112
+#: ../../modules/catalog/dropbox.catalog.php:185
+#: ../../modules/catalog/local.catalog.php:207
+#: ../../modules/catalog/remote.catalog.php:168
+#: ../../modules/catalog/soundcloud.catalog.php:171
+#: ../../modules/catalog/subsonic.catalog.php:169
+#, php-format
+msgid "Error: Catalog with %s already exists"
+msgstr ""
+
+#: ../../modules/catalog/beetsremote.catalog.php:86
+msgid "Beets Server URI"
+msgstr ""
+
+#: ../../modules/catalog/beetsremote.catalog.php:102
+msgid "Error: Beets selected, but path is not a URL"
+msgstr ""
+
 #: ../../modules/catalog/dropbox.catalog.php:122
 #: ../../templates/show_account.inc.php:71
 #: ../../templates/show_edit_user.inc.php:108
@@ -3073,15 +3113,6 @@ msgstr ""
 
 #: ../../modules/catalog/dropbox.catalog.php:175
 msgid "Invalid <dropbox-path>: "
-msgstr ""
-
-#: ../../modules/catalog/dropbox.catalog.php:185
-#: ../../modules/catalog/local.catalog.php:207
-#: ../../modules/catalog/remote.catalog.php:168
-#: ../../modules/catalog/soundcloud.catalog.php:171
-#: ../../modules/catalog/subsonic.catalog.php:169
-#, php-format
-msgid "Error: Catalog with %s already exists"
 msgstr ""
 
 #: ../../modules/catalog/dropbox.catalog.php:243
@@ -3230,13 +3261,6 @@ msgstr ""
 #: ../../modules/catalog/remote.catalog.php:242
 #, php-format
 msgid "%u remote catalog(s) found (%u songs)"
-msgstr ""
-
-#: ../../modules/catalog/remote.catalog.php:270
-#: ../../modules/catalog/soundcloud.catalog.php:280
-#: ../../modules/catalog/subsonic.catalog.php:245
-#, php-format
-msgid "Unable to Insert Song - %s"
 msgstr ""
 
 #: ../../modules/catalog/remote.catalog.php:278
@@ -3455,6 +3479,38 @@ msgstr ""
 msgid "Access Control not Enabled"
 msgstr ""
 
+#: ../../scripts/tests/list_header.inc.php:147
+#: ../../templates/list_header.inc.php:147
+msgid "Prev"
+msgstr ""
+
+#: ../../scripts/tests/list_header.inc.php:153
+#: ../../templates/list_header.inc.php:153
+msgid "Page"
+msgstr ""
+
+#: ../../scripts/tests/list_header.inc.php:164
+#: ../../templates/list_header.inc.php:164
+#: ../../templates/show_localplay_control.inc.php:28
+msgid "Next"
+msgstr ""
+
+#: ../../scripts/tests/list_header.inc.php:173
+#: ../../templates/list_header.inc.php:190
+msgid "Item Count"
+msgstr ""
+
+#: ../../scripts/tests/list_header.inc.php:176
+#: ../../templates/browse_filters.inc.php:30
+#: ../../templates/list_header.inc.php:173
+msgid "Filters"
+msgstr ""
+
+#: ../../scripts/tests/list_header.inc.php:185
+#: ../../templates/list_header.inc.php:182
+msgid "Limit"
+msgstr ""
+
 #: ../../search.php:43 ../../search.php:49
 msgid "Search Saved"
 msgstr ""
@@ -3514,11 +3570,6 @@ msgstr ""
 
 #: ../../shout.php:49
 msgid "Invalid Object Selected"
-msgstr ""
-
-#: ../../templates/browse_filters.inc.php:30
-#: ../../templates/list_header.inc.php:173
-msgid "Filters"
 msgstr ""
 
 #: ../../templates/browse_filters.inc.php:34
@@ -3628,27 +3679,6 @@ msgstr ""
 #: ../../templates/list_header.inc.php:132
 #: ../../templates/list_header.inc.php:158
 msgid "of"
-msgstr ""
-
-#: ../../templates/list_header.inc.php:147
-msgid "Prev"
-msgstr ""
-
-#: ../../templates/list_header.inc.php:153
-msgid "Page"
-msgstr ""
-
-#: ../../templates/list_header.inc.php:164
-#: ../../templates/show_localplay_control.inc.php:28
-msgid "Next"
-msgstr ""
-
-#: ../../templates/list_header.inc.php:182
-msgid "Limit"
-msgstr ""
-
-#: ../../templates/list_header.inc.php:190
-msgid "Item Count"
 msgstr ""
 
 #: ../../templates/rightbar.inc.php:28
@@ -4573,21 +4603,25 @@ msgstr ""
 msgid "No broadcast found"
 msgstr ""
 
-#: ../../templates/show_catalog_row.inc.php:35
+#: ../../templates/show_catalog_row.inc.php:37
 msgid "Verify"
 msgstr ""
 
-#: ../../templates/show_catalog_row.inc.php:36
+#: ../../templates/show_catalog_row.inc.php:38
 msgid "Clean"
 msgstr ""
 
-#: ../../templates/show_catalog_row.inc.php:37
+#: ../../templates/show_catalog_row.inc.php:39
 #: ../../templates/show_create_democratic.inc.php:60
 #: ../../templates/show_edit_access.inc.php:78
 #: ../../templates/show_edit_shout.inc.php:41
 #: ../../templates/show_manage_catalogs.inc.php:59
 #: ../../templates/show_preference_admin.inc.php:57
 msgid "Update"
+msgstr ""
+
+#: ../../templates/show_catalog_row.inc.php:43
+msgid "GO!"
 msgstr ""
 
 #: ../../templates/show_catalogs.inc.php:28
@@ -5955,50 +5989,50 @@ msgid "Agent"
 msgstr ""
 
 #: ../../templates/show_recently_played.inc.php:65
-msgid "second ago"
-msgid_plural "seconds ago"
+msgid "%d second ago"
+msgid_plural "%d seconds ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:68
-msgid "minute ago"
-msgid_plural "minutes ago"
+msgid "%d minute ago"
+msgid_plural "%d minutes ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:71
-msgid "hour ago"
-msgid_plural "hours ago"
+msgid "%d hour ago"
+msgid_plural "%d hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:74
-msgid "day ago"
-msgid_plural "days ago"
+msgid "%d day ago"
+msgid_plural "%d days ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:77
-msgid "week ago"
-msgid_plural "weeks ago"
+msgid "%d week ago"
+msgid_plural "%d weeks ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:80
-msgid "month ago"
-msgid_plural "months ago"
+msgid "%d month ago"
+msgid_plural "%d months ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:83
-msgid "year ago"
-msgid_plural "years ago"
+msgid "%d year ago"
+msgid_plural "%d years ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #: ../../templates/show_recently_played.inc.php:86
-msgid "decade ago"
-msgid_plural "decades ago"
+msgid "%d decade ago"
+msgid_plural "%d decades ago"
 msgstr[0] ""
 msgstr[1] ""
 

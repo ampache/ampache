@@ -1,5 +1,5 @@
 <?php
-if (!$iframed || $is_share || true) {
+if (!$iframed) {
     require_once AmpConfig::get('prefix') . '/templates/show_html5_player_headers.inc.php';
 }
 ?>

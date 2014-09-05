@@ -428,46 +428,28 @@ class Wanted extends database_object
                             $song['artist_mbid'] = $this->artist_mbid;
                             $song['session'] = session_id();
                             $song['album_mbid'] = $this->mbid;
-                            if (AmpConfig::get('echonest_api_key')) {
-                                $echonest = new EchoNest_Client(new EchoNest_HttpClient_Requests());
-                                $echonest->authenticate(AmpConfig::get('echonest_api_key'));
-                                $enSong = null;
-                                try {
-                                    $enProfile = $echonest->getTrackApi()->profile('musicbrainz:track:' . $track->id);
-                                    $enSong = $echonest->getSongApi()->profile($enProfile['song_id'], array( 'id:7digital-US', 'audio_summary', 'tracks'));
-                                } catch (Exception $e) {
-                                    debug_event('echonest', 'EchoNest track error on `' . $track->id . '` (' . $track->title . '): ' . $e->getMessage(), '1');
-                                }
 
-                                // Wans't able to get the song with MusicBrainz ID, try a search
-                                if ($enSong == null) {
-                                    if ($this->artist) {
-                                        $artist = new Artist($this->artist);
-                                        $artist_name = $artist->name;
-                                    } else {
-                                        $wartist = Wanted::get_missing_artist($this->artist_mbid);
-                                        $artist_name = $wartist['name'];
-                                    }
-                                    try {
-                                        $enSong = $echonest->getSongApi()->search(array(
-                                            'results' => '1',
-                                            'artist' => $artist_name,
-                                            'title' => $track->title,
-                                            'bucket' => array( 'id:7digital-US', 'audio_summary', 'tracks'),
-                                        ));
+                            if ($this->artist) {
+                                $artist = new Artist($this->artist);
+                                $artist_name = $artist->name;
+                            } else {
+                                $wartist = Wanted::get_missing_artist($this->artist_mbid);
+                                $artist_name = $wartist['name'];
+                            }
 
-
-                                    } catch (Exception $e) {
-                                        debug_event('echonest', 'EchoNest song search error: ' . $e->getMessage(), '1');
-                                    }
-                                }
-
-                                if ($enSong != null) {
-                                    $song['file'] = $enSong[0]['tracks'][0]['preview_url'];
-                                    debug_event('echonest', 'EchoNest `' . $track->title . '` preview: ' . $song['file'], '1');
+                            $song['file'] = null;
+                            foreach (Plugin::get_plugins('get_song_preview') as $plugin_name) {
+                                $plugin = new Plugin($plugin_name);
+                                if ($plugin->load($GLOBALS['user'])) {
+                                    $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name, $track->title);
+                                    if ($song['file'] != null)
+                                        break;
                                 }
                             }
-                            $this->songs[] = new Song_Preview(Song_preview::insert($song));
+
+                            if ($song != null) {
+                                $this->songs[] = new Song_Preview(Song_preview::insert($song));
+                            }
                         }
                     }
                 }

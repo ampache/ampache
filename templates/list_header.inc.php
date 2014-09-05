@@ -174,7 +174,9 @@ if ($pages > 1 && $start > -1) {
         <span class="browse-options-content">
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_pages_<?php echo $is_header; ?>" value="true" <?php echo (($browse->get_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + $('#browse_" . $browse->id . "_use_pages_" . $is_header . "').is(':checked') + '", "browse_" . $browse->id . "_use_pages_" . $is_header); ?>">Pages</span>
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_scroll_<?php echo $is_header; ?>" value="true" <?php echo ((!$browse->get_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + !($('#browse_" . $browse->id . "_use_scroll_" . $is_header . "').is(':checked')) + '", "browse_" . $browse->id . "_use_scroll_" . $is_header); ?>">Infinite Scroll</span>
+            <?php if (!$browse->is_static_content()) { ?>
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_alpha_<?php echo $is_header; ?>" value="true" <?php echo (($browse->get_use_alpha()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_alpha&value=' + $('#browse_" . $browse->id . "_use_alpha_" . $is_header . "').is(':checked') + '", "browse_" . $browse->id . "_use_alpha_" . $is_header); ?>">Alphabet</span>
+            <?php } ?>
         <?php if ($browse->get_use_pages()) { ?>
             <span>|</span>
             <span>

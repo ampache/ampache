@@ -614,10 +614,6 @@ class Query
      */
     public function get_offset()
     {
-        if ($this->is_static_content()) {
-            return $this->get_total();
-        }
-
         return $this->_state['offset'];
     } // get_offset
 
@@ -837,10 +833,7 @@ class Query
     public function set_start($start)
     {
         $start = intval($start);
-
-        if (!$this->is_static_content()) {
-            $this->_state['start'] = $start;
-        }
+        $this->_state['start'] = $start;
 
     } // set_start
 
@@ -867,11 +860,6 @@ class Query
     public function set_static_content($value)
     {
         $value = make_bool($value);
-
-        // We want to start at 0 if it's static
-        if ($value) {
-            $this->set_start('0');
-        }
 
         $this->_state['static'] = $value;
 

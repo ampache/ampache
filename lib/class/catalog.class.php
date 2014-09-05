@@ -1373,7 +1373,7 @@ abstract class Catalog extends database_object
 
         // Figure out what type of object this is and call the right
         // function, giving it the stuff we've figured out above
-        $name = (get_class($media) == 'Song') ? 'song' : 'video';
+        $name = (strtolower(get_class($media)) == 'song') ? 'song' : 'video';
 
         $function = 'update_' . $name . '_from_tags';
 
@@ -1403,7 +1403,10 @@ abstract class Catalog extends database_object
         $new_song->year        = $results['year'];
         $new_song->comment    = $results['comment'];
         $new_song->language    = $results['language'];
-        $new_song->lyrics    = $results['lyrics'];
+        $new_song->lyrics    = str_replace(
+                        array("\r\n","\r","\n"),
+                        '<br />',
+                        strip_tags($results['lyrics']));
         $new_song->bitrate    = $results['bitrate'];
         $new_song->rate        = $results['rate'];
         $new_song->mode        = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
@@ -1412,8 +1415,12 @@ abstract class Catalog extends database_object
         $new_song->mime        = $results['mime'];
         $new_song->track    = intval($results['track']);
         $new_song->mbid        = $results['mb_trackid'];
+        $new_song->label    = $results['publisher'];
         $artist            = $results['artist'];
         $artist_mbid        = $results['mb_artistid'];
+        $albumartist            = $results['albumartist'] ?: $results['band'];
+        $albumartist = $albumartist ?: null;
+        $albumartist_mbid        = $results['mb_albumartistid'];
         $album            = $results['album'];
         $album_mbid        = $results['mb_albumid'];
         $album_mbid_group  = $results['mb_albumid_group'];
@@ -1425,9 +1432,10 @@ abstract class Catalog extends database_object
         * If found then add & return id, else return id
         */
         $new_song->artist = Artist::check($artist, $artist_mbid);
-        $new_song->f_artist = $artist;
+        if ($albumartist) {
+            $new_song->album_artist = Artist::check($albumartist, $albumartist_mbid);
+        }
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group);
-        $new_song->f_album = $album . " - " . $new_song->year;
         $new_song->title = self::check_title($new_song->title,$new_song->file);
 
         // Nothing to assign here this is a multi-value doodly
@@ -1445,7 +1453,6 @@ abstract class Catalog extends database_object
         $song->fill_ext_info();
 
         $info = Song::compare_song_information($song,$new_song);
-
         if ($info['change']) {
             debug_event('update', "$song->file : differences found, updating database", 5);
             $song->update_song($song->id,$new_song);

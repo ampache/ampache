@@ -97,6 +97,7 @@ class Share extends database_object
             case 'album':
             case 'song':
             case 'playlist':
+            case 'video':
                 return $type;
             default:
                 return '';
@@ -261,11 +262,11 @@ class Share extends database_object
             case 'album':
             case 'playlist':
                 $object = new $this->object_type($this->object_id);
-                $songs = $object->get_songs('song');
-                foreach ($songs as $id) {
+                $songs = $object->get_medias('song');
+                foreach ($songs as $song) {
                     $medias[] = array(
-                        'object_type' => 'song',
-                        'object_id' => $id,
+                        'object_type' => $song['object_type'],
+                        'object_id' => $song['object_id'],
                     );
                 }
             break;

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache 3.5.0\n"
 "Report-Msgid-Bugs-To: translations@ampache.org\n"
-"POT-Creation-Date: 2014-08-25 17:58+0200\n"
+"POT-Creation-Date: 2014-08-31 16:33+0200\n"
 "PO-Revision-Date: 2009-04-04 14:00+0200\n"
 "Last-Translator: Guillem Lluch Moll <glluch@ya.com>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -540,7 +540,7 @@ msgstr "Importa una llista de reproducció"
 
 #: ../../bin/catalog_update.inc:171
 #: ../../templates/show_add_catalog.inc.php:60
-#: ../../templates/show_catalog_row.inc.php:38
+#: ../../templates/show_catalog_row.inc.php:40
 msgid "Gather Art"
 msgstr "Recollir portades"
 
@@ -953,7 +953,8 @@ msgid "Duplicate ACL defined"
 msgstr "Cançons repetides"
 
 #: ../../lib/class/access.class.php:453 ../../lib/class/access.class.php:474
-#: ../../lib/ui.lib.php:433 ../../templates/list_header.inc.php:166
+#: ../../lib/ui.lib.php:433 ../../scripts/tests/list_header.inc.php:166
+#: ../../templates/list_header.inc.php:166
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_add_access.inc.php:55
 #: ../../templates/show_add_access.inc.php:61
@@ -1331,7 +1332,7 @@ msgstr "Editar"
 #: ../../templates/rightbar.inc.php:120
 #: ../../templates/show_access_list.inc.php:72
 #: ../../templates/show_account.inc.php:65
-#: ../../templates/show_catalog_row.inc.php:39
+#: ../../templates/show_catalog_row.inc.php:41
 #: ../../templates/show_democratic_playlist.inc.php:92
 #: ../../templates/show_edit_user.inc.php:99
 #: ../../templates/show_license_row.inc.php:31
@@ -1687,7 +1688,7 @@ msgstr ""
 "\n"
 "Gràcies pel teu registre\n"
 
-#: ../../lib/class/registration.class.php:76
+#: ../../lib/class/registration.class.php:78
 #, fuzzy, php-format
 msgid ""
 "A new user has registered\n"
@@ -1959,7 +1960,7 @@ msgstr "Nom"
 
 #: ../../lib/class/shoutbox.class.php:255
 #: ../../templates/show_add_live_stream.inc.php:62
-#: ../../templates/show_catalog_row.inc.php:34
+#: ../../templates/show_catalog_row.inc.php:36
 #: ../../templates/show_live_stream.inc.php:27
 msgid "Add"
 msgstr "Afegir"
@@ -3188,6 +3189,47 @@ msgstr ""
 msgid "The password has been set to: %s"
 msgstr ""
 
+#: ../../modules/Beets/Catalog.php:116
+#, fuzzy
+msgid "Running Beets Update"
+msgstr "Engegant actualització remota"
+
+#: ../../modules/Beets/Catalog.php:154
+#: ../../modules/catalog/remote.catalog.php:270
+#: ../../modules/catalog/soundcloud.catalog.php:280
+#: ../../modules/catalog/subsonic.catalog.php:245
+#, fuzzy, php-format
+msgid "Unable to Insert Song - %s"
+msgstr "Impossible instal.lar el Plugin"
+
+#: ../../modules/catalog/beets.catalog.php:85
+#, fuzzy
+msgid "Beets Database File"
+msgstr "Estableix el joc de caràcters"
+
+#: ../../modules/catalog/beets.catalog.php:101
+msgid "Error: Beets selected, but no Beets DB File provided"
+msgstr ""
+
+#: ../../modules/catalog/beets.catalog.php:111
+#: ../../modules/catalog/beetsremote.catalog.php:112
+#: ../../modules/catalog/dropbox.catalog.php:185
+#: ../../modules/catalog/local.catalog.php:207
+#: ../../modules/catalog/remote.catalog.php:168
+#: ../../modules/catalog/soundcloud.catalog.php:171
+#: ../../modules/catalog/subsonic.catalog.php:169
+#, fuzzy, php-format
+msgid "Error: Catalog with %s already exists"
+msgstr "Errada el nom d'usuari ja existeix"
+
+#: ../../modules/catalog/beetsremote.catalog.php:86
+msgid "Beets Server URI"
+msgstr ""
+
+#: ../../modules/catalog/beetsremote.catalog.php:102
+msgid "Error: Beets selected, but path is not a URL"
+msgstr ""
+
 #: ../../modules/catalog/dropbox.catalog.php:122
 #: ../../templates/show_account.inc.php:71
 #: ../../templates/show_edit_user.inc.php:108
@@ -3218,15 +3260,6 @@ msgstr "Necessari pels catàlegs remots"
 #: ../../modules/catalog/dropbox.catalog.php:175
 msgid "Invalid <dropbox-path>: "
 msgstr ""
-
-#: ../../modules/catalog/dropbox.catalog.php:185
-#: ../../modules/catalog/local.catalog.php:207
-#: ../../modules/catalog/remote.catalog.php:168
-#: ../../modules/catalog/soundcloud.catalog.php:171
-#: ../../modules/catalog/subsonic.catalog.php:169
-#, fuzzy, php-format
-msgid "Error: Catalog with %s already exists"
-msgstr "Errada el nom d'usuari ja existeix"
 
 #: ../../modules/catalog/dropbox.catalog.php:243
 #, fuzzy
@@ -3378,13 +3411,6 @@ msgstr "Error connectant a"
 #, php-format
 msgid "%u remote catalog(s) found (%u songs)"
 msgstr ""
-
-#: ../../modules/catalog/remote.catalog.php:270
-#: ../../modules/catalog/soundcloud.catalog.php:280
-#: ../../modules/catalog/subsonic.catalog.php:245
-#, fuzzy, php-format
-msgid "Unable to Insert Song - %s"
-msgstr "Impossible instal.lar el Plugin"
 
 #: ../../modules/catalog/remote.catalog.php:278
 #, fuzzy
@@ -3617,6 +3643,40 @@ msgstr "Les teves contrasenyes no coincideixen"
 msgid "Access Control not Enabled"
 msgstr "Control d'accés"
 
+#: ../../scripts/tests/list_header.inc.php:147
+#: ../../templates/list_header.inc.php:147
+msgid "Prev"
+msgstr "Previ"
+
+#: ../../scripts/tests/list_header.inc.php:153
+#: ../../templates/list_header.inc.php:153
+msgid "Page"
+msgstr ""
+
+#: ../../scripts/tests/list_header.inc.php:164
+#: ../../templates/list_header.inc.php:164
+#: ../../templates/show_localplay_control.inc.php:28
+msgid "Next"
+msgstr "Següent"
+
+#: ../../scripts/tests/list_header.inc.php:173
+#: ../../templates/list_header.inc.php:190
+#, fuzzy
+msgid "Item Count"
+msgstr "Ítems contats"
+
+#: ../../scripts/tests/list_header.inc.php:176
+#: ../../templates/browse_filters.inc.php:30
+#: ../../templates/list_header.inc.php:173
+msgid "Filters"
+msgstr "Filtres"
+
+#: ../../scripts/tests/list_header.inc.php:185
+#: ../../templates/list_header.inc.php:182
+#, fuzzy
+msgid "Limit"
+msgstr "Mida límit"
+
 #: ../../search.php:43 ../../search.php:49
 #, fuzzy
 msgid "Search Saved"
@@ -3682,11 +3742,6 @@ msgstr "s'ha creat"
 #: ../../shout.php:49
 msgid "Invalid Object Selected"
 msgstr "Objecte sel-lecionat invàlid"
-
-#: ../../templates/browse_filters.inc.php:30
-#: ../../templates/list_header.inc.php:173
-msgid "Filters"
-msgstr "Filtres"
 
 #: ../../templates/browse_filters.inc.php:34
 msgid "Starts With"
@@ -3799,29 +3854,6 @@ msgstr "Instalació de l'Ampache"
 #: ../../templates/list_header.inc.php:158
 msgid "of"
 msgstr ""
-
-#: ../../templates/list_header.inc.php:147
-msgid "Prev"
-msgstr "Previ"
-
-#: ../../templates/list_header.inc.php:153
-msgid "Page"
-msgstr ""
-
-#: ../../templates/list_header.inc.php:164
-#: ../../templates/show_localplay_control.inc.php:28
-msgid "Next"
-msgstr "Següent"
-
-#: ../../templates/list_header.inc.php:182
-#, fuzzy
-msgid "Limit"
-msgstr "Mida límit"
-
-#: ../../templates/list_header.inc.php:190
-#, fuzzy
-msgid "Item Count"
-msgstr "Ítems contats"
 
 #: ../../templates/rightbar.inc.php:28
 msgid "Add to Playlist"
@@ -4783,15 +4815,15 @@ msgstr ""
 msgid "No broadcast found"
 msgstr "No s'han trobat artistes similars"
 
-#: ../../templates/show_catalog_row.inc.php:35
+#: ../../templates/show_catalog_row.inc.php:37
 msgid "Verify"
 msgstr "Verifica"
 
-#: ../../templates/show_catalog_row.inc.php:36
+#: ../../templates/show_catalog_row.inc.php:38
 msgid "Clean"
 msgstr "Neteja"
 
-#: ../../templates/show_catalog_row.inc.php:37
+#: ../../templates/show_catalog_row.inc.php:39
 #: ../../templates/show_create_democratic.inc.php:60
 #: ../../templates/show_edit_access.inc.php:78
 #: ../../templates/show_edit_shout.inc.php:41
@@ -4799,6 +4831,10 @@ msgstr "Neteja"
 #: ../../templates/show_preference_admin.inc.php:57
 msgid "Update"
 msgstr "Actualitza"
+
+#: ../../templates/show_catalog_row.inc.php:43
+msgid "GO!"
+msgstr ""
 
 #: ../../templates/show_catalogs.inc.php:28
 #: ../../templates/show_catalogs.inc.php:56

@@ -7,7 +7,7 @@
 ; if this config file is up to date 
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 18
+config_version = 19
 
 ;###################
 ; Path Vars        #
@@ -58,6 +58,10 @@ database_username = username
 ; will not work
 ; DEFAULT: ""
 database_password = password
+
+; Cryptographic secret
+; This MUST BE changed with your own secret key
+secret_key = "abcdefghijklmnoprqstuvwyz0123456"
 
 ; Length that a session will last expressed in seconds. Default is
 ; one hour. 
@@ -619,7 +623,7 @@ refresh_limit = "60"
 ;auto_user = "guest"
 
 ; This will display the user agreement when registering
-; For agreement text, edit templates/user_agreement.php
+; For agreement text, edit config/registration_agreement.php
 ; User will need to accept the agreement before they can register
 ; DEFAULT: false
 ;user_agreement = "false"
@@ -627,6 +631,10 @@ refresh_limit = "60"
 ; This disable email confirmation when registering.
 ; DEFAULT: false
 ;user_no_email_confirm = "false"
+
+; This will display the cookie disclaimer (EU Cookie Law)
+; DEFAULT: false
+;cookie_disclaimer = "false"
 
 ;########################################################
 ; These options control the dynamic downsampling based  #

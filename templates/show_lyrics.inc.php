@@ -37,7 +37,7 @@ if ($album != T_('Unknown (Orphaned)')) {
 <div class="np_group">
   <div class="np_cell cel_song">
       <label><?php echo T_('Song'); ?>:</label>
-      <a rel="nohtml" title="<?php echo scrub_out($song->title); ?>" href="<?php echo $web_path; ?>/stream.php?action=play_item&object_type=song&object_id=<?php echo $song->id; ?>">
+      <a title="<?php echo scrub_out($song->title); ?>" href="<?php echo $web_path; ?>/song.php?action=show_song&song_id=<?php echo $song->id; ?>">
           <?php echo $title; ?>
       </a>
   </div>

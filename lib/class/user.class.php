@@ -31,30 +31,97 @@
 class User extends database_object
 {
     //Basic Componets
+    /**
+     * @var int $id
+     */
     public $id;
+    /**
+     * @var string $username
+     */
     public $username;
+    /**
+     * @var string $fullname
+     */
     public $fullname;
+    /**
+     * @var int $access
+     */
     public $access;
+    /**
+     * @var boolean $disabled
+     */
     public $disabled;
+    /**
+     * @var string $email
+     */
     public $email;
+    /**
+     * @var int $last_seen
+     */
     public $last_seen;
+    /**
+     * @var int $create_date
+     */
     public $create_date;
+    /**
+     * @var string $validation
+     */
     public $validation;
+    /**
+     * @var string $website
+     */
     public $website;
+    /**
+     * @var string $apikey
+     */
     public $apikey;
 
     // Constructed variables
+    /**
+     * @var array $prefs
+     */
     public $prefs = array();
+
+    /**
+     * @var Tmp_Playlist $playlist
+     */
     public $playlist;
 
+    /**
+     * @var string $f_last_seen
+     */
     public $f_last_seen;
+    /**
+     * @var string $f_create_date
+     */
     public $f_create_date;
+    /**
+     * @var string $link
+     */
     public $link;
+    /**
+     * @var string $f_link
+     */
     public $f_link;
+    /**
+     * @var string $f_useage
+     */
     public $f_useage;
+    /**
+     * @var string $ip_history
+     */
     public $ip_history;
+    /**
+     * @var string $f_avatar
+     */
     public $f_avatar;
+    /**
+     * @var string $f_avatar_mini
+     */
     public $f_avatar_mini;
+    /**
+     * @var string $f_avatar_medium
+     */
     public $f_avatar_medium;
 
     /**

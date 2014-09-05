@@ -20,12 +20,10 @@
  *
  */
 
-// This is the logout page. It kills any cookies you have in your browser,
-// kills your session in the database and then redirects you to the login page
-// (or your SSO logout page, if configured).
-
 require_once 'lib/init.php';
 
-// To end a legitimate session, just call logout.
-setcookie(AmpConfig::get('session_name') . '_remember', null, -1);
-Auth::logout('',false);
+UI::show_header();
+
+require_once AmpConfig::get('prefix') . '/templates/cookie_disclaimer.inc.php';
+
+UI::show_footer();

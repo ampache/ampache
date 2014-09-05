@@ -22,6 +22,8 @@
 
 $embed = $_REQUEST['embed'];
 
+require_once AmpConfig::get('prefix') . '/templates/show_html5_player_headers.inc.php';
+
 if (empty($embed)) {
     UI::show_box_top(T_('Shared on') . ' ' . AmpConfig::get('site_title'), 'box box_share');
     echo T_('by') . ' ' . $share->f_user . '<br />';
