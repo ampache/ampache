@@ -1397,35 +1397,36 @@ abstract class Catalog extends database_object
     public static function update_song_from_tags($results, Song $song)
     {
         /* Setup the vars */
-        $new_song         = new Song();
+        $new_song              = new Song();
         $new_song->file        = $results['file'];
-        $new_song->title    = $results['title'];
+        $new_song->title       = $results['title'];
         $new_song->year        = $results['year'];
-        $new_song->comment    = $results['comment'];
+        $new_song->comment     = $results['comment'];
         $new_song->language    = $results['language'];
-        $new_song->lyrics    = str_replace(
+        $new_song->lyrics      = str_replace(
                         array("\r\n","\r","\n"),
                         '<br />',
                         strip_tags($results['lyrics']));
-        $new_song->bitrate    = $results['bitrate'];
+        $new_song->bitrate     = $results['bitrate'];
         $new_song->rate        = $results['rate'];
         $new_song->mode        = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
         $new_song->size        = $results['size'];
         $new_song->time        = $results['time'];
         $new_song->mime        = $results['mime'];
-        $new_song->track    = intval($results['track']);
+        $new_song->track       = intval($results['track']);
         $new_song->mbid        = $results['mb_trackid'];
-        $new_song->label    = $results['publisher'];
-        $artist            = $results['artist'];
-        $artist_mbid        = $results['mb_artistid'];
-        $albumartist            = $results['albumartist'] ?: $results['band'];
-        $albumartist = $albumartist ?: null;
-        $albumartist_mbid        = $results['mb_albumartistid'];
-        $album            = $results['album'];
-        $album_mbid        = $results['mb_albumid'];
-        $album_mbid_group  = $results['mb_albumid_group'];
-        $disk            = $results['disk'];
-        $tags            = $results['genre'];    // multiple genre support makes this an array
+        $new_song->label       = $results['publisher'];
+        $new_song->composer    = $results['composer'];
+        $artist                = $results['artist'];
+        $artist_mbid           = $results['mb_artistid'];
+        $albumartist           = $results['albumartist'] ?: $results['band'];
+        $albumartist           = $albumartist ?: null;
+        $albumartist_mbid      = $results['mb_albumartistid'];
+        $album                 = $results['album'];
+        $album_mbid            = $results['mb_albumid'];
+        $album_mbid_group      = $results['mb_albumid_group'];
+        $disk                  = $results['disk'];
+        $tags                  = $results['genre'];    // multiple genre support makes this an array
 
         /*
         * We have the artist/genre/album name need to check it in the tables
