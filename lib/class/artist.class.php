@@ -663,6 +663,8 @@ class Artist extends database_object implements library_item
                 }
                 $updated = true;
                 $current_id = $artist_id;
+                Stats::migrate('artist', $this->id, $artist_id);
+                Art::migrate('artist', $this->id, $artist_id);
                 self::gc();
             } // end if it changed
 

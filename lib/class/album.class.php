@@ -791,6 +791,8 @@ class Album extends database_object implements library_item
             }
             $current_id = $album_id;
             $updated = true;
+            Stats::migrate('album', $this->id, $album_id);
+            Art::migrate('album', $this->id, $album_id);
             self::gc();
         } else {
             Album::update_year($year, $album_id);

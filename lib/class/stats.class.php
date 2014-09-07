@@ -73,6 +73,19 @@ class Stats
     }
 
     /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return boolean
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        $sql = "UPDATE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+    }
+
+    /**
       * insert
      * This inserts a new record for the specified object
      * with the specified information, amazing!
