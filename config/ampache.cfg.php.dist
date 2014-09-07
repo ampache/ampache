@@ -317,8 +317,8 @@ use_auth	= "true"
 ; default is administrator. This setting only takes affect
 ; if use_auth if false
 ; POSSIBLE VALUES: user, admin, manager, guest
-; DEFAULT: admin
-default_auth_level = "admin"
+; DEFAULT: user
+default_auth_level = "user"
 
 ; 5 Star Ratings
 ; This allows ratings for almost any object in ampache

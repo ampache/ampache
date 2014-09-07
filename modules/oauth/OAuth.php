@@ -1,10 +1,14 @@
 <?php
 // vim: foldmethod=marker
 
-/* Generic exception class
- */
-class OAuthException extends Exception {
-  // pass
+
+// Avoid http://php.net/manual/fr/class.oauthexception.php conflict
+if (!class_exists("OAuthException")) {
+    /* Generic exception class
+     */
+    class OAuthException extends Exception {
+      // pass
+    }
 }
 
 class OAuthConsumer {
