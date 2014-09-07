@@ -117,6 +117,11 @@ class AutoUpdate
         $lastversion = '';
         // Forced or last check expired, check latest version from Github
         if ($force || (self::lastcheck_expired() && AmpConfig::get('autoupdate'))) {
+            // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
+            $time = time();
+            Preference::update('autoupdate_lastcheck', $GLOBALS['user']->id, $time);
+            AmpConfig::set('autoupdate_lastcheck', $time, true);
+
             // Development version, get latest commit on develop branch
             if (self::is_develop()) {
                 $commits = self::github_request('/commits/develop');
@@ -124,9 +129,6 @@ class AutoUpdate
                     $lastversion = $commits->sha;
                     Preference::update('autoupdate_lastversion', $GLOBALS['user']->id, $lastversion);
                     AmpConfig::set('autoupdate_lastversion', $lastversion, true);
-                    $time = time();
-                    Preference::update('autoupdate_lastcheck', $GLOBALS['user']->id, $time);
-                    AmpConfig::set('autoupdate_lastcheck', $time, true);
                     $available = self::is_update_available(true);
                     Preference::update('autoupdate_lastversion_new', $GLOBALS['user']->id, $available);
                     AmpConfig::set('autoupdate_lastversion_new', $available, true);
@@ -139,9 +141,6 @@ class AutoUpdate
                     $lastversion = $tags[0]->name;
                     Preference::update('autoupdate_lastversion', $GLOBALS['user']->id, $lastversion);
                     AmpConfig::set('autoupdate_lastversion', $lastversion, true);
-                    $time = time();
-                    Preference::update('autoupdate_lastcheck', $GLOBALS['user']->id, $time);
-                    AmpConfig::set('autoupdate_lastcheck', $time, true);
                     $available = self::is_update_available(true);
                     Preference::update('autoupdate_lastversion_new', $GLOBALS['user']->id, $available);
                     AmpConfig::set('autoupdate_lastversion_new', $available, true);
