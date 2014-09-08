@@ -5875,7 +5875,7 @@ msgstr "Mot de passe oublié"
 
 #: ../../templates/show_login_form.inc.php:78
 msgid "Login"
-msgstr "Utilisateur"
+msgstr "Se connecter"
 
 #: ../../templates/show_login_form.inc.php:83
 msgid "Register"
