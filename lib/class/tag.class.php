@@ -530,28 +530,6 @@ class Tag extends database_object implements library_item
         return $results;
 
     } // get_tags
-
-    /**
-     * get_display_list
-     * This returns a human formated version of the tags that we are given
-     * it also takes a type so that it knows how to return it, this is used
-     * by the formating functions of the different objects
-     */
-    public static function get_display_list($tags)
-    {
-        if (!is_array($tags)) { return ''; }
-
-        $results = '<ul class="tags">';
-
-        // Iterate through the tags, format them according to type and element id
-        foreach ($tags as $tag_id=>$value) {
-            $tag = new Tag($tag_id);
-            $results .= '<li>' . $value['name'] . '</li>';
-        }
-        $results .= '</ul>';
-        return $results;
-
-    } // get_display
     
     /**
      * get_display
