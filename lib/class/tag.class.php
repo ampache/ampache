@@ -190,14 +190,14 @@ class Tag extends database_object implements library_item
 
         $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
         Dba::write($sql, array($data[name], $this->id));
-        
+
         if ($data['split_tag']) {
             $split_to = Tag::construct_from_name($data['split_tag']);
             if ($split_to->id) {
                 $this->split($split_to->id);
             }
         }
-        
+
         if ($data['merge_tag']) {
             $merge_to = Tag::construct_from_name($data['merge_tag']);
             if ($merge_to->id) {
@@ -234,7 +234,7 @@ class Tag extends database_object implements library_item
             }
         }
     }
-    
+
     /**
      * split
      * Splits this tag to two.
@@ -243,7 +243,7 @@ class Tag extends database_object implements library_item
     {
         if ($this->id != $split_to) {
             debug_event('tag', 'Splitting tag ' . $this->id . ' into ' . $split_to . ')...', '5');
-            
+
             $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
                    "SELECT ?,`user`,`object_type`,`object_id` " .
                    "FROM `tag_map` AS `tm`" .
@@ -530,7 +530,7 @@ class Tag extends database_object implements library_item
         return $results;
 
     } // get_tags
-    
+
     /**
      * get_display
      * This returns a csv formated version of the tags that we are given
