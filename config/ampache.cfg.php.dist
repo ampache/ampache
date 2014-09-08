@@ -315,7 +315,7 @@ use_auth	= "true"
 ; If use_auth is set to false then this option is used
 ; to determine the permission level of the 'default' users
 ; default is administrator. This setting only takes affect
-; if use_auth if false
+; if use_auth is false
 ; POSSIBLE VALUES: user, admin, manager, guest
 ; DEFAULT: user
 default_auth_level = "user"
