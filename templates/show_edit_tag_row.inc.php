@@ -31,7 +31,7 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Merge this tag to') ?></td>
                 <td>
-                    <select name="select_tags" id="select_tags">
+                    <select name="merge_tag" id="merge_tag">
                         <option value=""></option>
                         <?php
                         if ($libitem->merged_to) {
@@ -44,6 +44,20 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Persistent merge') ?></td>
                 <td><input type="checkbox" name="merge_persist" value="1" /></td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Split this tag into') ?></td>
+                <td>
+                    <select name="split_tag" id="split_tag">
+                        <option value=""></option>
+                        <?php
+                        if ($libitem->merged_to) {
+                            echo "<option value='" . $libitem->merged_to . "'>" . $libitem->merged_to . "</option>";
+                        }
+                        ?>
+                    </select>
+                </td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />

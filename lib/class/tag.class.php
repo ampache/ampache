@@ -191,8 +191,15 @@ class Tag extends database_object implements library_item
         $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
         Dba::write($sql, array($data[name], $this->id));
 
-        if ($data['select_tags']) {
-            $merge_to = Tag::construct_from_name($data['select_tags']);
+        if ($data['split_tag']) {
+            $split_to = Tag::construct_from_name($data['split_tag']);
+            if ($split_to->id) {
+                $this->split($split_to->id);
+            }
+        }
+
+        if ($data['merge_tag']) {
+            $merge_to = Tag::construct_from_name($data['merge_tag']);
             if ($merge_to->id) {
                 $this->merge($merge_to->id, ($data['merge_persist'] == '1'));
             }
@@ -225,6 +232,29 @@ class Tag extends database_object implements library_item
             } else {
                 $this->delete();
             }
+        }
+    }
+
+    /**
+     * split
+     * Splits this tag to two.
+     */
+    public function split($split_to)
+    {
+        if ($this->id != $split_to) {
+            debug_event('tag', 'Splitting tag ' . $this->id . ' into ' . $split_to . ')...', '5');
+
+            $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
+                   "SELECT ?,`user`,`object_type`,`object_id` " .
+                   "FROM `tag_map` AS `tm`" .
+                   "WHERE `tm`.`tag_id` = ? AND NOT EXISTS ( " .
+                       "SELECT 1 FROM `tag_map` ".
+                       "WHERE `tag_map`.`tag_id` = ? " .
+                         "AND `tag_map`.`object_id` = `tm`.`object_id` " .
+                         "AND `tag_map`.`object_type` = `tm`.`object_type` " .
+                         "AND `tag_map`.`user` = `tm`.`user`" .
+                   ")";
+            Dba::write($sql, array($split_to, $this->id, $split_to));
         }
     }
 
@@ -503,7 +533,7 @@ class Tag extends database_object implements library_item
 
     /**
      * get_display
-     * This returns a human formated version of the tags that we are given
+     * This returns a csv formated version of the tags that we are given
      * it also takes a type so that it knows how to return it, this is used
      * by the formating functions of the different objects
      */
