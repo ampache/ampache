@@ -908,7 +908,7 @@ msgstr "Liste d'accès double définie"
 #: ../../templates/show_mail_users.inc.php:31
 #: ../../templates/show_random.inc.php:48
 msgid "All"
-msgstr "Tout"
+msgstr "Tous"
 
 #: ../../lib/class/access.class.php:456
 #: ../../templates/show_add_access.inc.php:35
@@ -4068,7 +4068,7 @@ msgid ""
 "In the form below enter either a local path (i.e. /data/music) or the URL to "
 "a remote Ampache installation (i.e http://theotherampache.com)"
 msgstr ""
-"Dans le formulaire suivant, entrez soit un chemin local (ex: /data/music) , "
+"Dans le formulaire suivant, entrez soit un chemin local (ex: /data/music), "
 "soit un lien d'une installation Ampache distante (ex: http://lautreampache."
 "com)"
 
@@ -5875,7 +5875,7 @@ msgstr "Mot de passe oublié"
 
 #: ../../templates/show_login_form.inc.php:78
 msgid "Login"
-msgstr "Utilisateur"
+msgstr "Se connecter"
 
 #: ../../templates/show_login_form.inc.php:83
 msgid "Register"
@@ -6340,7 +6340,7 @@ msgstr "Enregistrer les changements"
 
 #: ../../templates/show_search_options.inc.php:23
 msgid "Options"
-msgstr "Options de"
+msgstr "Options"
 
 #: ../../templates/show_search_options.inc.php:27
 #: ../../templates/show_search_options.inc.php:28
@@ -7234,7 +7234,7 @@ msgstr ""
 #: Database words
 msgid "Fix header/sidebars position on compatible themes"
 msgstr ""
-"Vérouiller la position de l'entête et des barres latérales sur les thèmes "
+"Verrouiller la position de l'entête et des barres latérales sur les thèmes "
 "compatibles"
 
 #: Database words
