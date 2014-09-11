@@ -24,12 +24,10 @@
 <div id="information_actions">
 <ul>
 <li>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo UI::get_icon('cog', T_('Generate Configuration')); ?></a>
-    <?php echo T_('Generate Configuration'); ?>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo UI::get_icon('cog', T_('Generate Configuration')) . ' ' . T_('Generate Configuration'); ?></a>
 </li>
 <li>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=reset_db_charset"><?php echo UI::get_icon('server_lightning', T_('Set Database Charset')); ?></a>
-    <?php echo T_('Set Database Charset'); ?>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=reset_db_charset"><?php echo UI::get_icon('server_lightning', T_('Set Database Charset')) . ' ' . T_('Set Database Charset'); ?></a>
 </li>
 </ul>
 </div>
