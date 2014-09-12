@@ -191,10 +191,15 @@ class Tag extends database_object implements library_item
         $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
         Dba::write($sql, array($data[name], $this->id));
 
-        if ($data['split_tag']) {
-            $split_to = Tag::construct_from_name($data['split_tag']);
-            if ($split_to->id) {
-                $this->split($split_to->id);
+        if ($data['clone_tags']) {
+            $tag_names = explode(',', $data['clone_tags']);            
+            foreach($tag_names as $tag){
+                $split_to = Tag::construct_from_name($tag);
+                if ($split_to->id == 0) {
+                    Tag::add_tag($tag);
+                    $split_to = Tag::construct_from_name($tag);
+                }
+                $this->clone_tag($split_to->id);
             }
         }
 
@@ -236,10 +241,10 @@ class Tag extends database_object implements library_item
     }
 
     /**
-     * split
-     * Splits this tag to two.
+     * clone_tag
+     * Clones this tag to another one.
      */
-    public function split($split_to)
+    public function clone_tag($split_to)
     {
         if ($this->id != $split_to) {
             debug_event('tag', 'Splitting tag ' . $this->id . ' into ' . $split_to . ')...', '5');

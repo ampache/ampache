@@ -47,16 +47,9 @@
             </tr>
             <tr><td>&nbsp;</td></tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Split this tag into') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Clone this tag into') ?></td>
                 <td>
-                    <select name="split_tag" id="split_tag">
-                        <option value=""></option>
-                        <?php
-                        if ($libitem->merged_to) {
-                            echo "<option value='" . $libitem->merged_to . "'>" . $libitem->merged_to . "</option>";
-                        }
-                        ?>
-                    </select>
+                    <input type="text" name="clone_tags" id="clone_tags" />
                 </td>
             </tr>
         </table>
