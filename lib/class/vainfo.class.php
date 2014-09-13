@@ -378,7 +378,12 @@ class vainfo
                         '<br />',
                         strip_tags($tags['lyrics']));
 
-            $info['track'] = $info['track'] ?: intval($tags['track']);
+            if ($key == 'quicktime') {
+                $info['track'] = $info['track'] ?: intval($tags['track_number']);
+            } elseif ($key == 'getID3') {
+                $info['track'] = $info['track'] ?: intval($tags['track']);
+            }
+
             $info['resolution_x'] = $info['resolution_x'] ?: intval($tags['resolution_x']);
             $info['resolution_y'] = $info['resolution_y'] ?: intval($tags['resolution_y']);
             $info['display_x'] = $info['display_x'] ?: intval($tags['display_x']);
