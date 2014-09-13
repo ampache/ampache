@@ -938,6 +938,9 @@ class vainfo
                 case 'MusicBrainz Album Type':
                     $parsed['release_type'] = $data[0];
                 break;
+                case 'track_number':
+                    $parsed['track'] = $data[0];
+                break;
                 default:
                     $parsed[$tag] = $data[0];
                 break;
