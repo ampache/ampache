@@ -68,17 +68,17 @@ class TVShow_Episode extends Video
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        if (empty($data['tv_show_name'])) {
-            $data['tv_show_name'] = T_('Unknown');
+        if (empty($data['tvshow'])) {
+            $data['tvshow'] = T_('Unknown');
         }
         $tags = $data['genre'];
 
-        $tvshow = TVShow::check($data['tv_show_name'], $data['year']);
+        $tvshow = TVShow::check($data['tvshow'], $data['year']);
         if ($options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db($tvshow, 'tvshow')) {
             $art = new Art($tvshow, 'tvshow');
             $art->insert_url($data['tvshow_art']);
         }
-        $tvshow_season = TVShow_Season::check($tvshow, $data['tv_season']);
+        $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
         if ($options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season, 'tvshow_season')) {
             $art = new Art($tvshow_season, 'tvshow_season');
             $art->insert_url($data['tvshow_season_art']);
@@ -109,7 +109,7 @@ class TVShow_Episode extends Video
     {
         $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) " .
             "VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $data['original_name'], $data['tvshow_season'], $data['tv_episode'], $data['summary']));
+        Dba::write($sql, array($data['id'], $data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['summary']));
 
         return $data['id'];
 
@@ -124,16 +124,16 @@ class TVShow_Episode extends Video
         parent::update($data);
 
         $original_name = $data['original_name'] ?: $this->original_name;
-        $tvshow_season = $data['tv_season'] ?: $this->season;
-        $tvshow_episode = $data['tv_episode'] ?: $this->episode_number;
+        $tvshow_season = $data['tvshow_season'] ?: $this->season;
+        $tvshow_episode = $data['tvshow_episode'] ?: $this->episode_number;
         $summary = $data['summary'] ?: $summary;
 
         $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
         Dba::write($sql, array($original_name, $tvshow_season, $tvshow_episode, $summary, $this->id));
 
         $this->original_name = $originale_name;
-        $this->tv_season = $tvshow_season;
-        $this->tv_episode = $tvshow_episode;
+        $this->tvshow_season = $tvshow_season;
+        $this->tvshow_episode = $tvshow_episode;
         $this->summary = $summary;
 
         return $this->id;
@@ -201,10 +201,4 @@ class TVShow_Episode extends Video
             'object_id' => $this->season
         );
     }
-
-    public function get_default_art_kind()
-    {
-        return 'default';
-    }
-
 }
