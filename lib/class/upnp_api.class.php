@@ -172,8 +172,19 @@ class Upnp_Api
             return $xmlDoc;
         }
 
+        # sometimes here comes only one single item, not an array. Convert it to array. (TODO - UGLY)
+        if ( (count($prmItems) > 0) && (!is_array($prmItems[0])) ) {
+            $prmItems = array($prmItems);
+        }
+
         # Add each item in $prmItems array to $ndDIDL:
         foreach ($prmItems as $item) {
+            if (!is_array($item)) {
+                debug_event('upnp_class', 'item is not array', 2);
+                debug_event('upnp_class', $item, '5');
+                continue;
+            }
+
             if ($item['upnp:class']	== 'object.container') {
                 $ndItem = $xmlDoc->createElement('container');
             } else {
