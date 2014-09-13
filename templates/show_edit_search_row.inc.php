@@ -48,6 +48,6 @@
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
-        <input type="hidden" name="type" value="smartplaylist_row" />
+        <input type="hidden" name="type" value="search_row" />
     </form>
 </div>
