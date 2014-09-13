@@ -1490,7 +1490,7 @@ class Art extends database_object
                 echo "</a>";
             }
             if ($GLOBALS['user']->has_access('75')) {
-                echo "<a href=\"" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=" . $burl . "\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
+                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=" . $burl . "');\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
                 echo UI::get_icon('delete', T_('Reset Art'));
                 echo "</a>";
             }
