@@ -73,7 +73,12 @@ class Plugin
      */
     public static function get_plugins($type='')
     {
-        $results = array();
+        // make static cache for optimization when multiple call
+        static $plugins_list;
+        if (!is_null($plugins_list))
+            return $plugins_list;
+
+        $plugins_list = array();
 
         // Open up the plugin dir
         $handle = opendir(AmpConfig::get('prefix') . '/modules/plugins');
@@ -104,13 +109,13 @@ class Plugin
                 }
             }
             // It's a plugin record it
-            $results[$plugin_name] = $plugin_name;
+            $plugins_list[$plugin_name] = $plugin_name;
         } // end while
 
         // Little stupid but hey
-        ksort($results);
+        ksort($plugins_list);
 
-        return $results;
+        return $plugins_list;
 
     } // get_plugins
 
