@@ -445,6 +445,9 @@ class Update
 
         $update_string = '- Add session_remember table to store remember tokens.<br />';
         $version[] = array('version' => '370015','description' => $update_string);
+        
+        $update_string = '- Add limit of media count for direct play preference.<br />';
+        $version[] = array('version' => '370016','description' => $update_string);
 
         return $version;
     }
@@ -2950,6 +2953,25 @@ class Update
             "`expire` int(11) NULL," .
             "PRIMARY KEY (`username`, `token`)) ENGINE = MYISAM";
         $retval = Dba::write($sql) ? $retval : false;
+        return $retval;
+    }
+    
+    /**
+     * update 370016
+     *
+     * Add limit of media count for direct play preference
+     */
+    public static function update_370016()
+    {
+        $retval = true;
+
+      $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('direct_play_limit','0','Limit direct play to maximum media count',25,'integer','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
         return $retval;
     }
 }

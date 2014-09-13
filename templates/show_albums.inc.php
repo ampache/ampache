@@ -51,16 +51,27 @@ $thcount = 8;
         if (AmpConfig::get('ratings')) { Rating::build_cache('album',$object_ids); }
         if (AmpConfig::get('userflags')) { Userflag::build_cache('album',$object_ids); }
 
+        $show_direct_play_cfg = AmpConfig::get('directplay');
+        $directplay_limit = AmpConfig::get('direct_play_limit');
+        
         /* Foreach through the albums */
         foreach ($object_ids as $album_id) {
             $libitem = new Album($album_id);
             $libitem->allow_group_disks = $allow_group_disks;
             $libitem->format();
+            $show_direct_play = $show_direct_play_cfg;
+            $show_playlist_add = true;
+            if ($directplay_limit > 0) {
+                $show_playlist_add = ($libitem->song_count <= $directplay_limit);
+                if ($show_direct_play) {
+                    $show_direct_play = $show_playlist_add;
+                }
+            }
         ?>
         <tr id="album_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_album_row.inc.php'; ?>
         </tr>
-        <?php } //end foreach ($albums as $album) ?>
+        <?php }?>
         <?php if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No album found'); ?></span></td>

@@ -51,10 +51,21 @@ $thcount = 8;
         if (AmpConfig::get('ratings')) { Rating::build_cache('artist',$object_ids); }
         if (AmpConfig::get('userflags')) { Userflag::build_cache('artist',$object_ids); }
 
+        $show_direct_play_cfg = AmpConfig::get('directplay');
+        $directplay_limit = AmpConfig::get('direct_play_limit');
+        
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $artist_id) {
-                $libitem = new Artist($artist_id, $_SESSION['catalog']);
-                $libitem->format();
+            $libitem = new Artist($artist_id, $_SESSION['catalog']);
+            $libitem->format();
+            $show_direct_play = $show_direct_play_cfg;
+            $show_playlist_add = true;
+            if ($directplay_limit > 0) {
+                $show_playlist_add = ($libitem->songs <= $directplay_limit);
+                if ($show_direct_play) {
+                    $show_direct_play = $show_playlist_add;
+                }
+            }
         ?>
         <tr id="artist_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_artist_row.inc.php'; ?>

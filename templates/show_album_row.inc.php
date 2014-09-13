@@ -23,7 +23,7 @@
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
-    <?php if (AmpConfig::get('directplay')) { ?>
+    <?php if ($show_direct_play) { ?>
         <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $libitem->get_http_album_query_ids('object_id'), 'play', T_('Play'), 'play_album_' . $libitem->id); ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $libitem->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $libitem->id); ?>
@@ -44,11 +44,13 @@ if (Art::is_enabled()) {
 <td class="cel_album"><?php echo $libitem->f_name_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
-        <?php echo Ajax::button('?action=basket&type=album&' . $libitem->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'add_album_' . $libitem->id); ?>
-        <?php echo Ajax::button('?action=basket&type=album_random&' . $libitem->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'random_album_' . $libitem->id); ?>
-        <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php if (!count($libitem->album_suite)) { echo $libitem->id; } else { echo implode(',', $libitem->album_suite); } ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
-        </a>
+        <?php if ($show_playlist_add) { ?>
+            <?php echo Ajax::button('?action=basket&type=album&' . $libitem->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'add_album_' . $libitem->id); ?>
+            <?php echo Ajax::button('?action=basket&type=album_random&' . $libitem->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'random_album_' . $libitem->id); ?>
+            <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php if (!count($libitem->album_suite)) { echo $libitem->id; } else { echo implode(',', $libitem->album_suite); } ?>')">
+                <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+            </a>
+        <?php } ?>
     </span>
 </td>
 <td class="cel_artist"><?php echo (!empty($libitem->f_album_artist_link) ? $libitem->f_album_artist_link : $libitem->f_artist_link); ?></td>

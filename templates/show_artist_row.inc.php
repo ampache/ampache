@@ -23,22 +23,24 @@
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
-    <?php if (AmpConfig::get('directplay')) { ?>
+    <?php if ($show_direct_play) { ?>
         <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id,'play', T_('Play'),'play_artist_' . $libitem->id); ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_artist_' . $libitem->id); ?>
         <?php } ?>
-<?php } ?>
+    <?php } ?>
     </div>
 </td>
 <td class="cel_artist"><?php echo $libitem->f_name_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
-        <?php echo Ajax::button('?action=basket&type=artist&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_artist_' . $libitem->id); ?>
-        <?php echo Ajax::button('?action=basket&type=artist_random&id=' . $libitem->id,'random', T_('Random to temporary playlist'),'random_artist_' . $libitem->id); ?>
-        <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $libitem->id ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
-        </a>
+        <?php if ($show_playlist_add) { ?>
+            <?php echo Ajax::button('?action=basket&type=artist&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_artist_' . $libitem->id); ?>
+            <?php echo Ajax::button('?action=basket&type=artist_random&id=' . $libitem->id,'random', T_('Random to temporary playlist'),'random_artist_' . $libitem->id); ?>
+            <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $libitem->id ?>')">
+                <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+            </a>
+        <?php } ?>
     </span>
 </td>
 <td class="cel_songs"><?php echo $libitem->songs; ?></td>
