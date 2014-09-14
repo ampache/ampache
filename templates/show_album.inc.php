@@ -85,7 +85,7 @@ if (AmpConfig::get('show_played_times')) {
         </li>
             <?php } ?>
         <?php } ?>
-        
+
         <?php if ($show_playlist_add) { ?>
         <li>
             <?php echo Ajax::button('?action=basket&type=album&' . $album->get_http_album_query_ids('id'),'add', T_('Add to temporary playlist'),'play_full_' . $album->id); ?>

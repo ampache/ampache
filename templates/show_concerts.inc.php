@@ -56,9 +56,9 @@
     </thead>
     <tbody>
         <?php
-        foreach ($concerts as $concert) {
+        foreach ($concerts as $libitem) {
         ?>
-        <tr id="concert_<?php echo $concert->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="concert_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_concert_row.inc.php'; ?>
         </tr>
         <?php } ?>

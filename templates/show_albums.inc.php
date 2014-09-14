@@ -53,7 +53,7 @@ $thcount = 8;
 
         $show_direct_play_cfg = AmpConfig::get('directplay');
         $directplay_limit = AmpConfig::get('direct_play_limit');
-        
+
         /* Foreach through the albums */
         foreach ($object_ids as $album_id) {
             $libitem = new Album($album_id);

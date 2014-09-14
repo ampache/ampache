@@ -445,7 +445,7 @@ class Update
 
         $update_string = '- Add session_remember table to store remember tokens.<br />';
         $version[] = array('version' => '370015','description' => $update_string);
-        
+
         $update_string = '- Add limit of media count for direct play preference.<br />';
         $version[] = array('version' => '370016','description' => $update_string);
 
@@ -2955,7 +2955,7 @@ class Update
         $retval = Dba::write($sql) ? $retval : false;
         return $retval;
     }
-    
+
     /**
      * update 370016
      *

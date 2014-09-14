@@ -645,6 +645,9 @@ class Artist extends database_object implements library_item
         // Save our current ID
         $name = $data['name'] ?: $this->name;
         $mbid = $data['mbid'] ?: $this->mbid;
+        $summary = $data['summary'] ?: $this->summary;
+        $placeformed = $data['placeformed'] ?: $this->placeformed;
+        $yearformed = $data['yearformed'] ?: $this->yearformed;
 
         $current_id = $this->id;
 
@@ -688,6 +691,8 @@ class Artist extends database_object implements library_item
             $sql = 'UPDATE `artist` SET `name` = ? WHERE `id` = ?';
             Dba::write($sql, array($name, $current_id));
         }
+        
+        $this->update_artist_info($summary, $placeformed, $yearformed);
 
         $this->name = $name;
         $this->mbid = $mbid;
@@ -739,7 +744,13 @@ class Artist extends database_object implements library_item
     public function update_artist_info($summary, $placeformed, $yearformed)
     {
         $sql = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ? WHERE `id` = ?";
-        return Dba::write($sql, array($summary, $placeformed, $yearformed, time(), $this->id));
+        $sqlret = Dba::write($sql, array($summary, $placeformed, $yearformed, time(), $this->id));
+        
+        $this->summary = $summary;
+        $this->placeformed = $placeformed;
+        $this->yearformed = $yearformed;
+        
+        return $sqlret;
     }
 
     /**
