@@ -30,7 +30,6 @@ class Tag extends database_object implements library_item
 {
     public $id;
     public $name;
-    public $merged_to;
 
     /**
      * constructor
@@ -191,63 +190,34 @@ class Tag extends database_object implements library_item
         $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
         Dba::write($sql, array($data[name], $this->id));
 
-        if ($data['clone_tags']) {
-            $tag_names = explode(',', $data['clone_tags']);            
+        if ($data['edit_tags']) {
+            $tag_names = explode(',', $data['edit_tags']);            
             foreach($tag_names as $tag){
-                $split_to = Tag::construct_from_name($tag);
-                if ($split_to->id == 0) {
+                $merge_to = Tag::construct_from_name($tag);
+                if ($merge_to->id == 0) {
                     Tag::add_tag($tag);
-                    $split_to = Tag::construct_from_name($tag);
+                    $merge_to = Tag::construct_from_name($tag);
                 }
-                $this->clone_tag($split_to->id);
+                $this->merge($merge_to->id, $data['merge_persist'] == '1');
+            }
+            $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ? ";
+            Dba::write($sql, array($this->id));
+            if($data['merge_persist'] != '1'){
+                $this->delete();
             }
         }
-
-        if ($data['merge_tag']) {
-            $merge_to = Tag::construct_from_name($data['merge_tag']);
-            if ($merge_to->id) {
-                $this->merge($merge_to->id, ($data['merge_persist'] == '1'));
-            }
-        }
-
         return $this->id;
 
     } // add_tag
 
     /**
      * merge
-     * Merge the tag to another one.
+     * merges this tag to another one.
      */
     public function merge($merge_to, $is_persistent)
     {
         if ($this->id != $merge_to) {
-            debug_event('tag', 'Merging tag ' . $this->id . ' to ' . $merge_to . ' (persistent: ' . ($is_persistent ? 'yes' : 'no') . ')...', '5');
-
-            $sql = "UPDATE `tag_map` SET `tag_map`.`tag_id` = ? " .
-                "WHERE `tag_map`.`tag_id` = ?";
-            Dba::write($sql, array($merge_to, $this->id));
-
-            $sql = "UPDATE `tag` SET `tag`.`merged_to` = ? " .
-                "WHERE `tag`.`merged_to` = ?";
-            Dba::write($sql, array($merge_to, $this->id));
-
-            if ($is_persistent) {
-                $sql = 'UPDATE `tag` SET `merged_to` = ? WHERE `id` = ?';
-                Dba::write($sql, array($merge_to, $this->id));
-            } else {
-                $this->delete();
-            }
-        }
-    }
-
-    /**
-     * clone_tag
-     * Clones this tag to another one.
-     */
-    public function clone_tag($split_to)
-    {
-        if ($this->id != $split_to) {
-            debug_event('tag', 'Splitting tag ' . $this->id . ' into ' . $split_to . ')...', '5');
+            debug_event('tag', 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', '5');
 
             $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
                    "SELECT ?,`user`,`object_type`,`object_id` " .
@@ -259,7 +229,11 @@ class Tag extends database_object implements library_item
                          "AND `tag_map`.`object_type` = `tm`.`object_type` " .
                          "AND `tag_map`.`user` = `tm`.`user`" .
                    ")";
-            Dba::write($sql, array($split_to, $this->id, $split_to));
+            Dba::write($sql, array($merge_to, $this->id, $merge_to));
+            if ($is_persistent) {
+                $sql = 'INSERT INTO `tag_merge` (`tag_id`, `merged_to`) VALUES (?, ?)';
+                Dba::write($sql, array($this->id, $merge_to));
+            }
         }
     }
 
@@ -270,9 +244,10 @@ class Tag extends database_object implements library_item
     public function get_merged_tags()
     {
         $sql = "SELECT `tag`.`id`, `tag`.`name`" .
-            "FROM `tag` " .
-            "WHERE `tag`.`merged_to` = ? " .
-            "ORDER BY `tag`.`name`";
+            "FROM `tag_merge` " .
+            "INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` ".
+            "WHERE `tag_merge`.`tag_id` = ? " .
+            "ORDER BY `tag`.`name` ";
 
         $db_results = Dba::read($sql, array($this->id));
 
@@ -299,13 +274,16 @@ class Tag extends database_object implements library_item
         if (!$tag_id || !$id) { return false; }
 
         // If tag merged to another one, add reference to the merge destination
-        $tag = new Tag($tag_id);
-        if ($tag->merged_to) {
-            $tag_id = $tag->merged_to;
+        $parent = new Tag($tag_id);
+        $merges = $parent->get_merged_tags();
+        if(count($merges) == 0){
+            $merges[] = array('id'=>$parent['id'], 'name'=>$parent['name']);
         }
-        $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
-            "VALUES (?, ?, ?, ?)";
-        Dba::write($sql, array($tag_id, $uid, $type, $id));
+        foreach($merges as $tag) {
+            $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
+                "VALUES (?, ?, ?, ?)";
+            Dba::write($sql, array($tag['id'], $uid, $type, $id));
+        }
         $insert_id = Dba::insert_id();
 
         parent::add_to_cache('tag_map_' . $type,$insert_id,array('tag_id'=>$tag_id,'user'=>$uid,'object_type'=>$type,'object_id'=>$id));
@@ -348,7 +326,8 @@ class Tag extends database_object implements library_item
 
         // Now nuke the tags themselves
         $sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " .
-            "WHERE `tag_map`.`id` IS NULL";
+            "WHERE `tag_map`.`id` IS NULL " . 
+            "AND NOT EXISTS (SELECT 1 FROM `tag_merge` where `tag_merge`.`tag_id` = `tag`.`id`)";
         Dba::write($sql);
     }
 
@@ -361,10 +340,14 @@ class Tag extends database_object implements library_item
     {
         $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ?";
         Dba::write($sql, array($this->id));
+        
+        $sql = "DELETE FROM `tag_merge` " .
+               "WHERE `tag_merge`.`tag_id` = ?";
+        Dba::write($sql, array($this->id));
 
-        $sql = "DELETE FROM `tag` WHERE `tag`.`id` = ? OR `tag`.`merged_to` = ?";
+        $sql = "DELETE FROM `tag` WHERE `tag`.`id` = ? ";
         Dba::write($sql, array($this->id, $this->id));
-
+        
         // Call the garbage collector to clean everything
         Tag::gc();
 
@@ -402,8 +385,8 @@ class Tag extends database_object implements library_item
         if (!Core::is_library_item($type))
             return false;
 
-        $sql = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` " .
-            "WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
+        $sql = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `tag_merge` ON `tag`.`id`=`tag_merge`.`tag_id` " .
+            "WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag_merge`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
         $db_results = Dba::read($sql, array($tag_id, $user, $object_id, $type));
 
         $results = Dba::fetch_assoc($db_results);
@@ -515,7 +498,8 @@ class Tag extends database_object implements library_item
         $sql = "SELECT `tag_map`.`tag_id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` " .
             "FROM `tag_map` " .
             "LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " .
-            "WHERE `tag`.`merged_to` IS NULL ";
+            "LEFT JOIN `tag_merge` ON `tag`.`id` = `tag_merge`.`tag_id` " .
+            "WHERE `tag_merge`.`tag_id` IS NULL ";
         if (!empty($type)) {
             $sql .= "AND `tag_map`.`object_type` = '" . scrub_in($type) . "' ";
         }

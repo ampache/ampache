@@ -446,6 +446,9 @@ class Update
         $update_string = '- Add session_remember table to store remember tokens.<br />';
         $version[] = array('version' => '370015','description' => $update_string);
 
+        $update_string = '- Enhance tag persistent merge reference.<br />';
+        $version[] = array('version' => '370017','description' => $update_string);
+
         return $version;
     }
 
@@ -2950,6 +2953,34 @@ class Update
             "`expire` int(11) NULL," .
             "PRIMARY KEY (`username`, `token`)) ENGINE = MYISAM";
         $retval = Dba::write($sql) ? $retval : false;
+        return $retval;
+    }
+
+    /**
+     * update 370017
+     *
+     * Enhance tag persistent merge reference.
+     */
+    public static function update_370017()
+    {
+        $retval = true;
+        $sql = "CREATE TABLE IF NOT EXISTS `tag_merge` ( " .
+               "`tag_id` int(11) NOT NULL, " .
+               "`merged_to` int(11) NOT NULL, " .
+               "FOREIGN KEY (`tag_id`) REFERENCES `tag` (`tag_id`), " .
+               "FOREIGN KEY (`merged_to`) REFERENCES `tag` (`tag_id`), " .
+               "PRIMARY KEY (`tag_id`, `merged_to`)) ENGINE = MYISAM";
+        $retval = Dba::write($sql) ? $retval : false;
+        
+        $sql = "INSERT INTO `tag_merge` (`tag_id`, `merged_to`) " .
+               "SELECT `tag`.`id`, `tag`.`merged_to` " .
+               "FROM `tag` " .
+               "WHERE `merged_to` IS NOT NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+        
+        $sql = "ALTER TABLE `tag` DROP COLUMN `merged_to`";
+        $retval = Dba::write($sql) ? $retval : false;
+               
         return $retval;
     }
 }

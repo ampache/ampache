@@ -29,28 +29,14 @@
             </tr>
             <tr><td>&nbsp;</td></tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Merge this tag to') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Retag') ?></td>
                 <td>
-                    <select name="merge_tag" id="merge_tag">
-                        <option value=""></option>
-                        <?php
-                        if ($libitem->merged_to) {
-                            echo "<option value='" . $libitem->merged_to . "'>" . $libitem->merged_to . "</option>";
-                        }
-                        ?>
-                    </select>
+                    <input type="text" name="edit_tags" id="edit_tags" />
                 </td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Persistent merge') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Persistent') ?></td>
                 <td><input type="checkbox" name="merge_persist" value="1" /></td>
-            </tr>
-            <tr><td>&nbsp;</td></tr>
-            <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Clone this tag into') ?></td>
-                <td>
-                    <input type="text" name="clone_tags" id="clone_tags" />
-                </td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
