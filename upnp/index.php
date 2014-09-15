@@ -17,7 +17,7 @@ if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <?php
     if ($_GET['btnSendAuto']) {
-        echo '<meta http-equiv="refresh" content="10">';
+        echo '<meta http-equiv="refresh" content="1">';
     }
 ?>
 <title>Ampache UPnP</title>
@@ -41,7 +41,7 @@ body {
   <br />
   <br />
   <input type="submit" name="btnSend" id="id-btnSend" value="Send SSDP broadcast" />
-  <input type="submit" name="btnSendAuto" id="id-btnSendAuto" value="Send SSDP broadcast every 10 sec" />
+  <input type="submit" name="btnSendAuto" id="id-btnSendAuto" value="Send SSDP broadcast every second" />
 </form>
 <br />
 <?php
