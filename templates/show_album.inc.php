@@ -121,6 +121,9 @@ if (AmpConfig::get('show_played_times')) {
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>
         <li>
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?> <?php echo T_('Update from tags'); ?></a>
+        </li>
+        <li>
             <a id="<?php echo 'edit_album_'.$album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_'.$album->id ?>', '<?php echo T_('Album edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
