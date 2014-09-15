@@ -22,11 +22,15 @@
 ?>
 
 <div class="item_info">
-    <div class="item_art">
-        <?php if ($biography && is_array($biography)) { ?>
-            <a href="<?php echo $biography['megaphoto']; ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto']; ?>" alt="<?php echo $artist->f_name; ?>" width="128"></a>
-        <?php } ?>
-    </div>
+    <?php if ($biography['id']) {
+        Art::display('artist', $biography['id'], $artist->f_name, 2);
+    } else { ?>
+        <div class="item_art">
+            <?php if ($biography && is_array($biography)) { ?>
+                <a href="<?php echo $biography['megaphoto']; ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto']; ?>" alt="<?php echo $artist->f_name; ?>" width="128"></a>
+            <?php } ?>
+        </div>
+    <?php } ?>
     <div class="item_properties">
         <?php
         if ($biography && is_array($biography)) {

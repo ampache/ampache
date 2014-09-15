@@ -691,7 +691,7 @@ class Artist extends database_object implements library_item
             $sql = 'UPDATE `artist` SET `name` = ? WHERE `id` = ?';
             Dba::write($sql, array($name, $current_id));
         }
-        
+
         $this->update_artist_info($summary, $placeformed, $yearformed);
 
         $this->name = $name;
@@ -745,11 +745,11 @@ class Artist extends database_object implements library_item
     {
         $sql = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ? WHERE `id` = ?";
         $sqlret = Dba::write($sql, array($summary, $placeformed, $yearformed, time(), $this->id));
-        
+
         $this->summary = $summary;
         $this->placeformed = $placeformed;
         $this->yearformed = $yearformed;
-        
+
         return $sqlret;
     }
 

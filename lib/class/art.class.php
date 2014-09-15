@@ -1482,15 +1482,13 @@ class Art extends database_object
                 echo "</div>";
             }
             echo "<div class=\"item_art_actions\">";
-            $burl = substr($_SERVER['REQUEST_URI'], strlen(AmpConfig::get('raw_web_path')));
-            $burl = rawurlencode(ltrim($burl, '/'));
             if ($GLOBALS['user']->has_access('25')) {
-                echo "<a href=\"" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=" . $burl . "\">";
+                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo UI::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";
             }
             if ($GLOBALS['user']->has_access('75')) {
-                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=" . $burl . "');\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
+                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
                 echo UI::get_icon('delete', T_('Reset Art'));
                 echo "</a>";
             }
