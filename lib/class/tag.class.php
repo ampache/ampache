@@ -30,6 +30,7 @@ class Tag extends database_object implements library_item
 {
     public $id;
     public $name;
+    public $is_hidden;
 
     /**
      * constructor
@@ -200,10 +201,15 @@ class Tag extends database_object implements library_item
                 }
                 $this->merge($merge_to->id, $data['merge_persist'] == '1');
             }
-            $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ? ";
-            Dba::write($sql, array($this->id));
-            if($data['merge_persist'] != '1'){
-                $this->delete();
+            if($data['keep_existing'] != '1'){
+                $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ? ";
+                Dba::write($sql, array($this->id));
+                if($data['merge_persist'] != '1'){
+                    $this->delete();
+                } else {
+                    $sql = "UPDATE `tag` SET `is_hidden` = true WHERE `tag`.`tag` = ? ";
+                    Dba::write($sql, array($this->id));
+                }
             }
         }
         return $this->id;
@@ -276,7 +282,7 @@ class Tag extends database_object implements library_item
         // If tag merged to another one, add reference to the merge destination
         $parent = new Tag($tag_id);
         $merges = $parent->get_merged_tags();
-        if(count($merges) == 0){
+        if($parent->$is_hidden == false){
             $merges[] = array('id'=>$parent['id'], 'name'=>$parent['name']);
         }
         foreach($merges as $tag) {
@@ -495,11 +501,10 @@ class Tag extends database_object implements library_item
 
         $results = array();
 
-        $sql = "SELECT `tag_map`.`tag_id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` " .
+        $sql = "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` " .
             "FROM `tag_map` " .
             "LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " .
-            "LEFT JOIN `tag_merge` ON `tag`.`id` = `tag_merge`.`tag_id` " .
-            "WHERE `tag_merge`.`tag_id` IS NULL ";
+            "WHERE `tag`.`is_hidden` = false ";
         if (!empty($type)) {
             $sql .= "AND `tag_map`.`object_type` = '" . scrub_in($type) . "' ";
         }
@@ -512,7 +517,7 @@ class Tag extends database_object implements library_item
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['tag_id']] = array('id'=>$row['tag_id'], 'name'=>$row['name'], 'count'=>$row['count']);
+            $results[$row['tag_id']] = array('id'=>$row['tag_id'], 'name'=>$row['name'], 'is_hidden'=>$row['is_hidden'], 'count'=>$row['count']);
         }
 
         parent::add_to_cache('tags_list', 'no_name', $results);

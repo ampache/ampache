@@ -2980,6 +2980,9 @@ class Update
         
         $sql = "ALTER TABLE `tag` DROP COLUMN `merged_to`";
         $retval = Dba::write($sql) ? $retval : false;
+        
+        $sql = "ALTER TABLE `tag` ADD COLUMN `is_hidden` TINYINT(1) NOT NULL DEFAULT 0";
+        $retval = Dba::write($sql) ? $retval : false;
                
         return $retval;
     }
