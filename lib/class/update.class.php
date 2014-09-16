@@ -447,7 +447,7 @@ class Update
         $version[] = array('version' => '370015','description' => $update_string);
 
         $update_string = '- Enhance tag persistent merge reference.<br />';
-        $version[] = array('version' => '370017','description' => $update_string);
+        $version[] = array('version' => '370018','description' => $update_string);
 
         return $version;
     }
@@ -2957,11 +2957,11 @@ class Update
     }
 
     /**
-     * update 370017
+     * update 370018
      *
      * Enhance tag persistent merge reference.
      */
-    public static function update_370017()
+    public static function update_370018()
     {
         $retval = true;
         $sql = "CREATE TABLE IF NOT EXISTS `tag_merge` ( " .
