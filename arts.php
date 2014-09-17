@@ -28,7 +28,7 @@ $object_type = $_GET['object_type'];
 $object_id = $_GET['object_id'];
 $burl = '';
 if (isset($_GET['burl'])) {
-    $burl = rawurldecode($_GET['burl']);
+    $burl = base64_decode($_GET['burl']);
 }
 
 /* Switch on Action */

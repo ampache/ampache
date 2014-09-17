@@ -76,6 +76,15 @@ function NavigateTo(url)
     window.location.hash = url.substring(jsWebPath.length + 1);
 }
 
+function getCurrentPage()
+{
+    if (window.location.hash.length > 0) {
+        return btoa(window.location.hash.substring(1));
+    }
+
+    return btoa(window.location.href.substring(jsWebPath.length + 1));
+}
+
 function NotifyOfNewSong()
 {
     refresh_slideshow();

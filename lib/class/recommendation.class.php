@@ -325,6 +325,7 @@ class Recommendation
             // Data newer than 6 months, use it
             if (($artist->last_update + 15768000) > time()) {
                 $results = array();
+                $results['id'] = $artist_id;
                 $results['summary'] = $artist->summary;
                 $results['placeformed'] = $artist->placeformed;
                 $results['yearformed'] = $artist->yearformed;
@@ -346,6 +347,7 @@ class Recommendation
         $results['megaphoto'] = $xml->artist->image[4];
 
         if ($artist) {
+            $results['id'] = $artist->id;
             if (!empty($results['summary']) || !empty($results['megaphoto'])) {
                 $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
 

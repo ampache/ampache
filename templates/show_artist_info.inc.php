@@ -21,10 +21,32 @@
  */
 ?>
 
-<div class="item_art">
-    <?php if ($biography && is_array($biography)) { ?>
-        <a href="<?php echo $biography['megaphoto']; ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto']; ?>" alt="<?php echo $artist->f_name; ?>" width="128"></a>
-    <?php }?>
+<div class="item_info">
+    <?php if ($biography['id']) {
+        Art::display('artist', $biography['id'], $artist->f_name, 2);
+    } else { ?>
+        <div class="item_art">
+            <?php if ($biography && is_array($biography)) { ?>
+                <a href="<?php echo $biography['megaphoto']; ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto']; ?>" alt="<?php echo $artist->f_name; ?>" width="128"></a>
+            <?php } ?>
+        </div>
+    <?php } ?>
+    <div class="item_properties">
+        <?php
+        if ($biography && is_array($biography)) {
+            $dcol = array();
+            if ($biography['placeformed']) {
+                $dcol[] = $biography['placeformed'];
+            }
+            if ($biography['yearformed']) {
+                $dcol[] = $biography['yearformed'];
+            }
+            if (count($dcol) > 0) {
+                echo implode(', ', $dcol);
+            }
+        }
+        ?>
+    </div>
 </div>
 <div id="item_summary">
     <?php if ($biography && is_array($biography)) { ?>

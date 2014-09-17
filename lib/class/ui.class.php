@@ -329,4 +329,13 @@ END;
         ob_flush();
         flush();
     }
+
+    public static function get_logo_url()
+    {
+        if (AmpConfig::get('custom_logo')) {
+            return AmpConfig::get('custom_logo');
+        } else {
+            return AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache.png';
+        }
+    }
 }

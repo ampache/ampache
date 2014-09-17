@@ -26,6 +26,7 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
     }
 
     $items = array();
+    $totMatches = 0;
     $responseType = "u:Error";
     switch ($upnpRequest['action']) {
         case 'search':
@@ -34,7 +35,7 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
             break;
         case 'browse':
             $responseType = 'u:BrowseResponse';
-            $items = array();
+
             if ($upnpRequest['objectid'] == '0') {
                 // Root items
                 if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
@@ -68,14 +69,14 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
                                 if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
                                     $items = Upnp_Api::_musicMetadata($reqObjectURL['path'], $reqObjectURL['query']);
                                 } else {
-                                    $items = Upnp_Api::_musicChilds($reqObjectURL['path'], $reqObjectURL['query']);
+                                    list($totMatches, $items) = Upnp_Api::_musicChilds($reqObjectURL['path'], $reqObjectURL['query'], $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                                 }
                                 break;
                             case 'video':
                                 if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
                                     $items = Upnp_Api::_videoMetadata($reqObjectURL['path'], $reqObjectURL['query']);
                                 } else {
-                                    $items = Upnp_Api::_videoChilds($reqObjectURL['path'], $reqObjectURL['query']);
+                                    list($totMatches, $items) = Upnp_Api::_videoChilds($reqObjectURL['path'], $reqObjectURL['query'], $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                                 }
                                 break;
                         }
@@ -85,18 +86,13 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
             break;
     }
 
-    $totMatches = count($items);
+    $totMatches = ($totMatches == 0) ? count($items) : $totMatches;
     if ($items == null || $totMatches == 0) {
         $domDIDL = Upnp_Api::createDIDL('');
         $numRet = 0;
     } else {
-        if ($upnpRequest['requestedcount'] == 0) {
-            $upnpRequest['requestedcount'] = $totMatches - $upnpRequest['startingindex'];
-        }
-
-        $slicedItems = array_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
-        $domDIDL = Upnp_Api::createDIDL($slicedItems);
-        $numRet = count($slicedItems);
+        $domDIDL = Upnp_Api::createDIDL($items);
+        $numRet = count($items);
     }
 
     $xmlDIDL = $domDIDL->saveXML();

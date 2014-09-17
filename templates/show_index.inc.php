@@ -26,20 +26,23 @@
 <!-- Randomly selected albums of the moment -->
 <?php
 if (Art::is_enabled()) {
-    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums'));
+    if (AmpConfig::get('home_moment_albums')) {
+        echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums'));
 ?>
 <div id="random_selection" class="random_selection">
     <?php UI::show_box_top(T_('Albums of the Moment')); echo T_('Loading...'); UI::show_box_bottom(); ?>
 </div>
 <?php
-if (AmpConfig::get('allow_video')) {
-    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_videos', 'random_videos'));
+    }
+    if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
+        echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_videos', 'random_videos'));
 ?>
 <div id="random_video_selection" class="random_selection">
     <?php UI::show_box_top(T_('Videos of the Moment')); echo T_('Loading...'); UI::show_box_bottom(); ?>
 </div>
+    <?php } ?>
 <?php } ?>
-<?php } ?>
+<?php if (AmpConfig::get('home_recently_played')) { ?>
 <!-- Recently Played -->
 <div id="recently_played">
     <?php
@@ -48,6 +51,7 @@ if (AmpConfig::get('allow_video')) {
         require_once AmpConfig::get('prefix') . '/templates/show_recently_played.inc.php';
     ?>
 </div>
+<?php } ?>
 <!-- Shoutbox Objects, if shoutbox is enabled -->
 <?php if (AmpConfig::get('sociable')) { ?>
 <div id="shout_objects">

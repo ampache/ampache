@@ -39,7 +39,7 @@ msgstr "Demande de suppression"
 
 #: ../../admin/access.php:45
 msgid "Are you sure you want to permanently delete"
-msgstr "Etes-vous sûr de vouloir supprimer définitivement"
+msgstr "Êtes-vous sûr de vouloir supprimer définitivement"
 
 #: ../../admin/access.php:72 ../../lib/class/search.class.php:331
 #: ../../templates/show_song.inc.php:111
@@ -80,23 +80,23 @@ msgstr "Supprimé catalogue"
 #: ../../admin/catalog.php:115 ../../admin/users.php:181
 #: ../../broadcast.php:34 ../../channel.php:69 ../../share.php:94
 msgid "Confirm Deletion Request"
-msgstr "Confirmer la suppression Demande"
+msgstr "Confirmer la demande de suppression"
 
 #: ../../admin/catalog.php:126
 msgid " Song Enabled"
 msgid_plural " Songs Enabled"
-msgstr[0] "chanson Activé"
-msgstr[1] "chansons Activé"
+msgstr[0] "piste activée"
+msgstr[1] "pistes activées"
 
 #: ../../admin/catalog.php:128
 msgid "No Disabled Songs selected"
-msgstr "No Songs mobilité sélectionnés"
+msgstr "Pas de piste désactivée sélectionnée"
 
 #: ../../admin/catalog.php:131
 msgid " Disabled Song Processed"
 msgid_plural " Disabled Songs Processed"
-msgstr[0] "Chanson désactivé transformés"
-msgstr[1] "Chansons désactivé transformés"
+msgstr[0] " Piste désactivée traitée"
+msgstr[1] " Pistes désactivées traitées"
 
 #: ../../admin/catalog.php:152
 msgid "Catalog Cleaned"
@@ -112,7 +112,7 @@ msgstr "Erreur : Veuillez choisir un type de catalogue"
 
 #: ../../admin/catalog.php:201
 msgid "Error: Name not specified"
-msgstr "Erreur: Nom pas spécifié"
+msgstr "Erreur: Nom non spécifié"
 
 #: ../../admin/catalog.php:224 ../../admin/catalog.php:225
 msgid "Catalog Created"
@@ -124,7 +124,7 @@ msgstr "Statistiques des catalogues effacées"
 
 #: ../../admin/catalog.php:250
 msgid "Now Playing Cleared"
-msgstr "Lecture en cours effacée"
+msgstr "Lectures en cours effacées"
 
 #: ../../admin/catalog.php:250
 msgid "All now playing data has been cleared"
@@ -132,7 +132,7 @@ msgstr "Toutes les données sur les lectures en cours ont été effacées"
 
 #: ../../admin/catalog.php:260
 msgid "No Disabled songs found"
-msgstr "Pas de chansons désactivé trouvé"
+msgstr "Pas de piste désactivée trouvée"
 
 #: ../../admin/catalog.php:269
 msgid "Delete Catalog"
@@ -144,19 +144,19 @@ msgstr "Voulez-vous vraiment supprimer ce catalogue ?"
 
 #: ../../admin/catalog.php:290
 msgid "Media Art Search Finished"
-msgstr "Media Art Recherche fini"
+msgstr "Recherche de Media Art finie"
 
 #: ../../admin/license.php:39
 msgid "License Updated"
-msgstr "Licence Mise à jour"
+msgstr "Licence mise à jour"
 
 #: ../../admin/license.php:42
 msgid "License Created"
-msgstr "Licence Crée"
+msgstr "Licence créée"
 
 #: ../../admin/license.php:53
 msgid "License Deleted"
-msgstr "Licence supprimés"
+msgstr "Licence supprimée"
 
 #: ../../admin/mail.php:60
 msgid "E-mail Sent"
@@ -164,7 +164,7 @@ msgstr "Email envoyé"
 
 #: ../../admin/mail.php:61
 msgid "Your E-mail was successfully sent."
-msgstr "Email envoyé"
+msgstr "Email envoyé avec succès"
 
 #: ../../admin/mail.php:63
 msgid "E-mail Not Sent"
@@ -180,7 +180,7 @@ msgstr "L'installation a échouée, erreur du contrôleur"
 
 #: ../../admin/modules.php:57
 msgid "Install Failed, Catalog Error"
-msgstr "Installez Echec, Erreur catalogue"
+msgstr "Installez Echec, Erreur de catalogue"
 
 #: ../../admin/modules.php:66
 msgid "Plugin Installed"
@@ -198,7 +198,7 @@ msgstr "Module désactivé"
 
 #: ../../admin/modules.php:101
 msgid "Uninstall Failed, Catalog Error"
-msgstr "Echec de la désinstallation, Catalogue erreur"
+msgstr "Echec de la désinstallation, erreur de catalogue"
 
 #: ../../admin/modules.php:124
 msgid "Unable to Install Plugin"
@@ -230,7 +230,7 @@ msgstr "Zone de commentaires mise à jour"
 
 #: ../../admin/shout.php:51
 msgid "Shoutbox Post Deleted"
-msgstr "Zone de commentaire supprimée"
+msgstr "Zone de commentaires supprimée"
 
 #: ../../admin/system.php:47
 msgid "Database Charset Updated"
@@ -241,7 +241,7 @@ msgid ""
 "Your Database and associated tables have been updated to match your "
 "currently configured charset"
 msgstr ""
-"Votre base de données et tables associées ont été mis à jour pour "
+"Votre base de données et tables associées ont été mises à jour pour "
 "correspondre à votre jeu de caractères actuellement configuré"
 
 #: ../../admin/users.php:57 ../../admin/users.php:112
@@ -268,7 +268,7 @@ msgstr "Erreur: Nom d'utilisateur déjà existant"
 
 #: ../../admin/users.php:124 ../../register.php:137
 msgid "Error: Insert Failed"
-msgstr "Erreur : Enregistrement non effectué"
+msgstr "Erreur : Echec de l'enregistrement"
 
 #: ../../admin/users.php:134 ../../lib/class/democratic.class.php:158
 #: ../../templates/show_add_user.inc.php:82
@@ -359,15 +359,15 @@ msgstr "Etes-vous sûr de vouloir supprimer définitivement %s?"
 
 #: ../../admin/users.php:181
 msgid "User Avatar Delete"
-msgstr "Avatar de l'utilisateur Supprimer"
+msgstr "Suppression de l'avatar de l'utilisateur"
 
 #: ../../admin/users.php:195
 msgid "User Avater Deleted"
-msgstr "Utilisateur Avater supprimés"
+msgstr "Avatar de l'utilisateur supprimé"
 
 #: ../../admin/users.php:195
 msgid "User Avatar has been deleted"
-msgstr "User Avatar a été supprimé"
+msgstr "L'avatar de l'utilisateur a été supprimé"
 
 #: ../../admin/users.php:201 ../../templates/show_account.inc.php:72
 #: ../../templates/show_edit_user.inc.php:109
@@ -376,15 +376,15 @@ msgstr "Générer une nouvelle clé API"
 
 #: ../../admin/users.php:201
 msgid "Confirm API Key Generation"
-msgstr "Confirmez API de génération de clés"
+msgstr "Confirmez la génération de la clé API"
 
 #: ../../admin/users.php:215
 msgid "API Key Generated"
-msgstr "Clé API Création"
+msgstr "Clé API générée"
 
 #: ../../admin/users.php:215
 msgid "New user API Key has been generated."
-msgstr "Une nouvelle clé d'API d'utilisateur a été produite."
+msgstr "Une nouvelle clé d'API d'utilisateur a été générée."
 
 #: ../../artists.php:62
 msgid "Show Artists starting with"
@@ -392,27 +392,27 @@ msgstr "Voir les artistes commençant par"
 
 #: ../../arts.php:40
 msgid "Art Cleared"
-msgstr "art Effacé"
+msgstr "Jaquette effacée"
 
 #: ../../arts.php:40
 msgid "Art information has been removed from the database"
-msgstr "Les informations sur l'art a été supprimé de la base de données"
+msgstr "Les informations sur la jaquette ont été supprimées de la base de données"
 
 #: ../../arts.php:46 ../../arts.php:62 ../../arts.php:135
 msgid "Art Not Located"
-msgstr "Art ne se trouve pas"
+msgstr "La jaquette n'a pas été trouvée"
 
 #: ../../arts.php:46 ../../arts.php:62 ../../arts.php:135
 msgid ""
 "Art could not be located at this time. This may be due to write access "
 "error, or the file is not received correctly."
 msgstr ""
-"Art ne peut pas être situé à ce moment. Cela peut être dû à écrire erreur "
-"d'accès ou le fichier n'est pas reçu correctement."
+"La jaquette ne peut pas être trouvée actuellement. Cela peut être du à une erreur "
+"d'écriture, ou le fichier n'a pas été reçu correctement."
 
 #: ../../arts.php:58 ../../arts.php:88
 msgid "Art Inserted"
-msgstr "art inséré"
+msgstr "Jaquette insérée"
 
 #: ../../bin/broadcast.inc:32
 msgid "Starting broadcasts..."
@@ -432,23 +432,23 @@ msgstr "- Toutes les opérations de catalogue"
 
 #: ../../bin/catalog_update.inc:46
 msgid "- Catalog Clean"
-msgstr "- Catalogue propres"
+msgstr "- Nettouage de catalogue"
 
 #: ../../bin/catalog_update.inc:50
 msgid "- Catalog Verify"
-msgstr "- Catalogue Vérifier"
+msgstr "- Vérification de catalogue"
 
 #: ../../bin/catalog_update.inc:54
 msgid "- Catalog Add"
-msgstr "- Catalogue Ajouter"
+msgstr "- Ajout de catalogue"
 
 #: ../../bin/catalog_update.inc:58
 msgid "- Catalog Art Gather"
-msgstr "- Catalogue Art Rassemblez"
+msgstr "- Collecter les jaquettes"
 
 #: ../../bin/catalog_update.inc:62
 msgid "- Playlist Import"
-msgstr "- Playlist importation"
+msgstr "- Importation de playlist "
 
 #: ../../bin/catalog_update.inc:84
 msgid "Starting Catalog Operations..."
@@ -457,23 +457,23 @@ msgstr "Démarrage des opérations de catalogue ..."
 #: ../../bin/catalog_update.inc:97 ../../bin/print_tags.inc:43
 #, php-format
 msgid "Reading: %s"
-msgstr "lecture: %s"
+msgstr "Lecture: %s"
 
 #: ../../bin/catalog_update.inc:102
 msgid "- Starting Clean - "
-msgstr "- À partir Clean -"
+msgstr "- Démarrage du nettoyage -"
 
 #: ../../bin/catalog_update.inc:110
 msgid "- Starting Verify - "
-msgstr "- Vérification en cours -"
+msgstr "- Démarrage de la vérification -"
 
 #: ../../bin/catalog_update.inc:118
 msgid "- Starting Add - "
-msgstr "- Démarrage add -"
+msgstr "- Démarrage de l'ajout -"
 
 #: ../../bin/catalog_update.inc:131
 msgid "Starting Media Art Search"
-msgstr "Lancement de la recherche des arts médiatiques"
+msgstr "Démarrage de la recherche des jaquettes"
 
 #: ../../bin/catalog_update.inc:157
 msgid "- Catalog Update -"
@@ -486,23 +486,23 @@ msgstr "Utilisation: catalog_update.inc [Nom du catalogue] [-c|-v|-a|-g|-t|-i]"
 #: ../../bin/catalog_update.inc:161
 msgid "Default behavior is to do all except playlist import"
 msgstr ""
-"Le comportement par défaut est de faire tout, sauf l'importation playlist"
+"Le comportement par défaut est de faire tout, sauf l'importation de playlist"
 
 #: ../../bin/catalog_update.inc:163
 msgid "Clean Catalogs"
-msgstr "Catalogues propre"
+msgstr "Nettoyer les catalogues"
 
 #: ../../bin/catalog_update.inc:165
 msgid "Verify Catalogs"
-msgstr "Vérifiez Catalogues"
+msgstr "Vérifiez les catalogues"
 
 #: ../../bin/catalog_update.inc:167
 msgid "Add to Catalogs"
-msgstr "Ajouter au Catalogues"
+msgstr "Ajouter aux catalogues"
 
 #: ../../bin/catalog_update.inc:169
 msgid "Import Playlists"
-msgstr "importation playlists"
+msgstr "Importation de playlists"
 
 #: ../../bin/catalog_update.inc:171
 #: ../../templates/show_add_catalog.inc.php:60
@@ -532,7 +532,7 @@ msgstr "Canal inconnu"
 
 #: ../../bin/channel_run.inc:88
 msgid "Found available port "
-msgstr "Trouvé port disponible"
+msgstr "Port disponible trouvé"
 
 #: ../../bin/channel_run.inc:105
 msgid "Listening on "
@@ -540,7 +540,7 @@ msgstr "écoute sur"
 
 #: ../../bin/channel_run.inc:474
 msgid "- Channel Listening -"
-msgstr "- Écoute de la Manche -"
+msgstr "- Écoute du canal -"
 
 #: ../../bin/channel_run.inc:476
 msgid "Usage: channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]"
@@ -556,11 +556,11 @@ msgstr "Listening port, default get an available port automatically"
 
 #: ../../bin/channel_run.inc:483 ../../bin/websocket_run.inc:74
 msgid "Verbose"
-msgstr "verbeux"
+msgstr "Verbeux"
 
 #: ../../bin/delete_disabled.inc:37
 msgid "DEBUG ENABLED WILL NOT DELETE FILES!"
-msgstr "DEBUG activé feront pas supprimer les fichiers!"
+msgstr "L'activation du débogage ne supprimera pas les fichiers!"
 
 #: ../../bin/delete_disabled.inc:45
 #, php-format
@@ -574,7 +574,7 @@ msgstr "Suppression: %s"
 
 #: ../../bin/fix_filenames.inc:42
 msgid "ERROR: Iconv required for this functionality, quiting"
-msgstr "ERREUR: Iconv nécessaire pour cette fonctionnalité, quiting"
+msgstr "ERREUR: Iconv nécessaire pour cette fonctionnalité, fermeture"
 
 #: ../../bin/fix_filenames.inc:51
 #, php-format
@@ -583,7 +583,7 @@ msgstr "%s Pour l'Amour de la musique"
 
 #: ../../bin/fix_filenames.inc:52
 msgid "Testing Basic Translation, the two strings below should look the same"
-msgstr "ERREUR: Iconv nécessaire pour cette fonctionnalité, cesser"
+msgstr "Test de traduction, les deux chaines de caractères doivent être identiques"
 
 #: ../../bin/fix_filenames.inc:54
 msgid "Original: For the Love of Music"
@@ -592,7 +592,7 @@ msgstr "Original: For the Love of Music"
 #: ../../bin/fix_filenames.inc:56
 #, php-format
 msgid "Translated: %s"
-msgstr "Traduit:% s"
+msgstr "Traduit: %s"
 
 #: ../../bin/fix_filenames.inc:59
 #, php-format
@@ -602,7 +602,7 @@ msgstr "Charset d'entrée (%s):"
 #: ../../bin/fix_filenames.inc:63
 #, php-format
 msgid "Using %s as source character set"
-msgstr "En utilisant% s comme jeu de caractères source"
+msgstr "En utilisant %s comme jeu de caractères source"
 
 #: ../../bin/fix_filenames.inc:72
 #, php-format
@@ -621,11 +621,11 @@ msgstr "ERREUR : Impossible d'ouvrir %s"
 #: ../../bin/fix_filenames.inc:110
 #, php-format
 msgid "ERROR: Unable to chdir to %s"
-msgstr "ERREUR: impossible de faire un chdir à %s"
+msgstr "ERREUR: Impossible de faire un chdir à %s"
 
 #: ../../bin/fix_filenames.inc:133
 msgid "Translation failure, stripping non-valid characters"
-msgstr "Echec de la conversion, les caractères de décapage non valides"
+msgstr "Echec de la conversion, caractères d'échappement non valides"
 
 #: ../../bin/fix_filenames.inc:138
 #, php-format
@@ -635,12 +635,12 @@ msgstr "Tentative de transcoder à %s"
 #: ../../bin/fix_filenames.inc:141
 #, php-format
 msgid "OLD: %s has invalid chars"
-msgstr "Vieux: %s n'a caractères invalides"
+msgstr "Vieux: %s a des caractères invalides"
 
 #: ../../bin/fix_filenames.inc:143
 #, php-format
 msgid "NEW: %s"
-msgstr "nouveau: %s"
+msgstr "NOUVEAU: %s"
 
 #: ../../bin/fix_filenames.inc:147
 msgid "Rename File (Y/N):"
@@ -648,12 +648,12 @@ msgstr "Renommer le fichier (Y/N) :"
 
 #: ../../bin/fix_filenames.inc:150
 msgid "Not Renaming..."
-msgstr "Non Renommer ..."
+msgstr "Ne renomme pas ..."
 
 #: ../../bin/fix_filenames.inc:182
 #, php-format
 msgid "Error: Unable to create %s move failed, stopping"
-msgstr "Erreur: Impossible de créer le mouvement %s a échoué, l'arrêt"
+msgstr "Erreur: Impossible de créer %s le déplacement a échoué, arrêt en cours"
 
 #: ../../bin/fix_filenames.inc:194
 msgid "Error: Copy Failed, not deleting old file"
@@ -662,7 +662,7 @@ msgstr "Erreur: Échec de la copie, ne pas supprimer l'ancien fichier"
 #: ../../bin/fix_filenames.inc:203 ../../bin/sort_files.inc:288
 #, php-format
 msgid "Error: Size Inconsistency, not deleting %s"
-msgstr "Erreur: Taille incohérence, ne pas supprimer %s"
+msgstr "Erreur: Incohérence de taille, ne pas supprimer %s"
 
 #: ../../bin/fix_filenames.inc:210 ../../bin/sort_files.inc:295
 #, php-format
@@ -684,11 +684,11 @@ msgstr "La création de l'utilisateur a échoué"
 
 #: ../../bin/install/install_db.inc:68
 msgid "Existing Ampache installation found."
-msgstr "Existant Ampache installation qui se trouve."
+msgstr "Installation existante d'Ampache trouvée"
 
 #: ../../bin/install/install_db.inc:70
 msgid "Force specified, proceeding anyway."
-msgstr "Vigueur spécifiée, procéder de toute façon."
+msgstr "Forçage spécifié, continuer de toute façon."
 
 #: ../../bin/install/install_db.inc:73
 msgid "Exiting."
@@ -696,7 +696,7 @@ msgstr "Fermeture."
 
 #: ../../bin/install/install_db.inc:89
 msgid "Database creation failed"
-msgstr "La création de base de données n'a pas"
+msgstr "Echec de la création de la base de données"
 
 #: ../../bin/install/install_db.inc:101
 msgid "Config file creation failed"
@@ -747,7 +747,7 @@ msgstr "%s Version %s"
 
 #: ../../bin/print_tags.inc:80
 msgid "Usage:"
-msgstr "utilisation:"
+msgstr "Utilisation:"
 
 #: ../../bin/print_tags.inc:82
 msgid "php print_tags.inc <Filename>"
@@ -775,18 +775,18 @@ msgstr "Cible: %s"
 #: ../../bin/sort_files.inc:229
 #, php-format
 msgid "Making %s Directory"
-msgstr "Faire Répertoire %s"
+msgstr "Créer le répertoire %s"
 
 #: ../../bin/sort_files.inc:236
 #, php-format
 msgid "Error: Unable to create %s move failed"
-msgstr "Erreur: Impossible de créer le mouvement n'a pas %s"
+msgstr "Erreur: Impossible de créer %s , échec du déplacement"
 
 #. HINT: %1$s: file, %2$s: directory
 #: ../../bin/sort_files.inc:249
 #, php-format
 msgid "Copying %1$s to %2$s"
-msgstr "Copie %1$s à %2$s"
+msgstr "Copie %1$s vers %2$s"
 
 #: ../../bin/sort_files.inc:260
 #, php-format
@@ -796,7 +796,7 @@ msgstr "Erreur: %s existe déjà"
 #: ../../bin/sort_files.inc:281
 #, php-format
 msgid "Error: Unable to copy file to %s"
-msgstr "Erreur: Impossible de copier le fichier %s"
+msgstr "Erreur: Impossible de copier le fichier vers %s"
 
 #: ../../bin/websocket_run.inc:67
 msgid "- WebSocket server -"
@@ -817,27 +817,27 @@ msgstr "Erreur: Le répertoire %s n'est pas accessible en écriture"
 
 #: ../../bin/write_playlists.inc:59
 msgid "This will dump a collection of m3u playlists based on type"
-msgstr "Cela vider une collection de listes de lecture m3u en fonction du type"
+msgstr "Cela vide une collection de listes de lecture m3u en fonction du type"
 
 #: ../../bin/write_playlists.inc:60
 msgid "Types:"
-msgstr "types:"
+msgstr "Types:"
 
 #: ../../bin/write_playlists.inc:61
 msgid "Dumps all Albums as individual playlists"
-msgstr "Décharges tous les albums que des listes de lecture"
+msgstr "Décharge tous les albums que des listes de lecture"
 
 #: ../../bin/write_playlists.inc:62
 msgid "Dumps all of your Playlists as m3u's"
-msgstr "Décharges toutes vos listes de lecture M3U's"
+msgstr "Décharge toutes vos listes de lecture M3U's"
 
 #: ../../bin/write_playlists.inc:63
 msgid "Dumps all Artists as individual playlists"
-msgstr "Décharges tous les artistes que des listes de lecture"
+msgstr "Décharge tous les artistes que des listes de lecture"
 
 #: ../../broadcast.php:34
 msgid "Broadcast Delete"
-msgstr "Supprimer Diffusion"
+msgstr "Suppression de la diffusion"
 
 #: ../../broadcast.php:48
 msgid "Broadcast Deleted"
@@ -851,7 +851,7 @@ msgstr "La diffusion a été supprimée."
 #: ../../templates/sidebar_home.inc.php:35
 #: ../../templates/sidebar_home.inc.php:55
 msgid "Tag Cloud"
-msgstr "Étiquettes"
+msgstr "Nuage d'étiquettes"
 
 #: ../../channel/index.php:75 ../../plex/web/init.php:38
 msgid "Unauthorized."
@@ -863,7 +863,7 @@ msgstr "Canal créé"
 
 #: ../../channel.php:69
 msgid "Channel Delete"
-msgstr "Supprimer Canal"
+msgstr "Suppression du canal"
 
 #: ../../channel.php:83
 msgid "Channel Deleted"
@@ -884,7 +884,7 @@ msgstr ""
 
 #: ../../install.php:153
 msgid "Error: Config files not found or unreadable"
-msgstr "Erreur: Les fichiers de configuration introuvables ou illisible"
+msgstr "Erreur: Les fichiers de configuration sont introuvables ou illisible"
 
 #: ../../lib/class/access.class.php:155 ../../lib/class/access.class.php:159
 msgid "Invalid IPv4 / IPv6 Address Entered"
@@ -908,7 +908,7 @@ msgstr "Liste d'accès double définie"
 #: ../../templates/show_mail_users.inc.php:31
 #: ../../templates/show_random.inc.php:48
 msgid "All"
-msgstr "Tout"
+msgstr "Tous"
 
 #: ../../lib/class/access.class.php:456
 #: ../../templates/show_add_access.inc.php:35
@@ -999,7 +999,7 @@ msgstr "Album MusicBrainzID"
 
 #: ../../lib/class/album.class.php:624
 msgid "Release Group MusicBrainzID"
-msgstr "Groupe de presse MusicBrainzID"
+msgstr "Groupe de sortie MusicBrainzID"
 
 #: ../../lib/class/album.class.php:627 ../../lib/class/artist.class.php:457
 #: ../../lib/class/clip.class.php:119 ../../lib/class/search.class.php:222
@@ -1119,11 +1119,11 @@ msgstr "il y a quelques années"
 #: ../../lib/class/ampconfig.class.php:85
 #, php-format
 msgid "Trying to clobber '%s' without setting clobber"
-msgstr "Essayer de tabasser '% s' sans définir clobber"
+msgstr "Essayer de tabasser '%s' sans définir clobber"
 
 #: ../../lib/class/api.class.php:143
 msgid "Login Failed: version too old"
-msgstr "Authentification échouée : version trop ancienne"
+msgstr "Echec de l'authentification : version trop ancienne"
 
 #: ../../lib/class/api.class.php:171 ../../lib/class/api.class.php:172
 msgid "Login Failed: timestamp out of range"
@@ -1137,7 +1137,7 @@ msgstr "Erreur Negociation invalide - "
 #: ../../lib/class/api.class.php:183 ../../lib/class/api.class.php:184
 #: ../../lib/class/api.class.php:252
 msgid "Invalid Username/Password"
-msgstr "Nom d'utilisateur incorrect / Mot de passe"
+msgstr "Nom d'utilisateur / Mot de passe incorrect"
 
 #: ../../lib/class/api.class.php:649 ../../lib/class/api.class.php:667
 #: ../../lib/class/api.class.php:686
@@ -1189,15 +1189,15 @@ msgstr "Jouer"
 
 #: ../../lib/class/art.class.php:1476
 msgid "Edit/Find Art"
-msgstr "Edition / Rechercher Art"
+msgstr "Editer / Rechercher jaquette"
 
 #: ../../lib/class/art.class.php:1480
 msgid "Do you really want to reset art?"
-msgstr "Voulez-vous vraiment réinitialiser art?"
+msgstr "Voulez-vous vraiment réinitialiser la jaquette ?"
 
 #: ../../lib/class/art.class.php:1481
 msgid "Reset Art"
-msgstr "réinitialiser Art"
+msgstr "Réinitialiser la jaquette"
 
 #: ../../lib/class/artist.class.php:454
 msgid "Artist MusicBrainzID"
@@ -1209,7 +1209,7 @@ msgstr "Mise à jour disponible"
 
 #: ../../lib/class/autoupdate.class.php:234
 msgid "See"
-msgstr "voir"
+msgstr "Voir"
 
 #: ../../lib/class/autoupdate.class.php:234
 msgid "changes"
@@ -1225,7 +1225,7 @@ msgstr "téléchargement"
 
 #: ../../lib/class/autoupdate.class.php:247
 msgid "Updating Ampache sources with `git pull` ..."
-msgstr "Mise à jour de sources Ampache avec `pull` git ..."
+msgstr "Mise à jour de sources Ampache avec `git pull` ..."
 
 #: ../../lib/class/autoupdate.class.php:251
 msgid "Done"
@@ -1233,7 +1233,7 @@ msgstr "Terminé"
 
 #: ../../lib/class/broadcast.class.php:328
 msgid "Broadcast edit"
-msgstr "diffusion modifier"
+msgstr "Mofifier la diffusion"
 
 #: ../../lib/class/broadcast.class.php:328
 #: ../../lib/class/channel.class.php:179
@@ -1378,12 +1378,12 @@ msgstr "Liste de lecture démocratique"
 
 #: ../../lib/class/browse.class.php:240
 msgid "Wanted Albums"
-msgstr "Album Demandés"
+msgstr "Album demandés"
 
 #: ../../lib/class/browse.class.php:244
 #: ../../templates/sidebar_home.inc.php:106
 msgid "Shared Objects"
-msgstr "Objets Partagés"
+msgstr "Objets partagés"
 
 #: ../../lib/class/browse.class.php:252 ../../templates/show_song.inc.php:104
 #: ../../templates/show_video.inc.php:112
@@ -1409,7 +1409,7 @@ msgstr "Séries TV"
 #: ../../templates/show_tvshows.inc.php:38
 #: ../../templates/show_tvshows.inc.php:78
 msgid "Seasons"
-msgstr "saisons"
+msgstr "Saisons"
 
 #: ../../lib/class/browse.class.php:272
 #: ../../templates/show_tvshow_season.inc.php:77
@@ -1418,7 +1418,7 @@ msgstr "saisons"
 #: ../../templates/show_tvshows.inc.php:37
 #: ../../templates/show_tvshows.inc.php:77
 msgid "Episodes"
-msgstr "épisodes"
+msgstr "Episodes"
 
 #: ../../lib/class/browse.class.php:277 ../../lib/class/upnp_api.class.php:657
 #: ../../templates/sidebar_home.inc.php:53
@@ -1460,7 +1460,7 @@ msgstr[1] "heures"
 
 #: ../../lib/class/catalog.class.php:602
 msgid "Catalog Insert Failed check debug logs"
-msgstr "Insertion du catalogue échouchée. Vérifiez les logs de deboggage."
+msgstr "Echec de l'insertion du catalogue. Vérifiez les logs de deboggage."
 
 #: ../../lib/class/catalog.class.php:1337
 msgid "No Update Needed"
@@ -1476,11 +1476,11 @@ msgstr[1] "Nettoyage de catalogue terminé. %d fichiers supprimés"
 #: ../../lib/class/catalog.class.php:1543
 #, php-format
 msgid "Catalog Verify Done. %d of %d files updated."
-msgstr "Vérification du catalogue terminé. %d sur %d fichiers mis à jour."
+msgstr "Vérification du catalogue terminée. %d sur %d fichiers mis à jour."
 
 #: ../../lib/class/catalog.class.php:1699
 msgid "Failed to create playlist."
-msgstr "Erreur de création de la lise de lecture."
+msgstr "Erreur de création de la liste de lecture."
 
 #: ../../lib/class/catalog.class.php:1716
 msgid "No valid songs found in playlist file."
@@ -1488,19 +1488,19 @@ msgstr "Aucune piste valide trouvée dans le fichier de liste de lecture."
 
 #: ../../lib/class/channel.class.php:177
 msgid "Start Channel"
-msgstr "Démarrer le Canal"
+msgstr "Démarrer le canal"
 
 #: ../../lib/class/channel.class.php:178
 msgid "Stop Channel"
-msgstr "Arrêter Canal"
+msgstr "Arrêter le canal"
 
 #: ../../lib/class/channel.class.php:179
 msgid "Channel edit"
-msgstr "Edition du Canal"
+msgstr "Edition du canal"
 
 #: ../../lib/class/channel.class.php:311
 msgid "Running"
-msgstr "fonctionnement"
+msgstr "Fonctionnement"
 
 #: ../../lib/class/channel.class.php:313
 #: ../../lib/class/localplay.class.php:631
@@ -1536,7 +1536,7 @@ msgstr "Gestionnaire de catalogues"
 #: ../../lib/class/live_stream.class.php:141
 #: ../../lib/class/live_stream.class.php:172
 msgid "Name Required"
-msgstr "nom Obligatoire"
+msgstr "Nom obligatoire"
 
 #: ../../lib/class/live_stream.class.php:149
 msgid "Invalid URL must be mms:// , https:// or http://"
@@ -1606,8 +1606,8 @@ msgstr ""
 " Nom d'utilisateur: %s\n"
 " ----------------------\n"
 "\n"
-"Votre compte est actuellement inactif. Vous ne pouvez pas l'utiliser jusqu'à "
-"ce que vous avez visité le lien suivant:\n"
+"Votre compte est actuellement inactif. Vous ne pouvez pas l'utiliser tant que "
+"vous n'avez pas visité le lien suivant:\n"
 "\n"
 "%s\n"
 "\n"
@@ -1625,13 +1625,13 @@ msgid ""
 "Website: %s\n"
 "\n"
 msgstr ""
-"Un nouvel utilisateur a enregistré\n"
+"Un nouvel utilisateur s'est inscrit\n"
 "Les valeurs suivantes ont été saisies.\n"
 "\n"
-"Nom d'utilisateur:% s\n"
-"Nom complet:% s\n"
-"E-mail:% s\n"
-"Site Web:% s\n"
+"Nom d'utilisateur: %s\n"
+"Nom complet: %s\n"
+"E-mail: %s\n"
+"Site Web: %s\n"
 "\n"
 
 #: ../../lib/class/search.class.php:62
@@ -1682,7 +1682,7 @@ msgstr "débute par"
 
 #: ../../lib/class/search.class.php:134
 msgid "ends with"
-msgstr "se finir par"
+msgstr "se finit par"
 
 #: ../../lib/class/search.class.php:148
 msgid "sounds like"
@@ -1835,7 +1835,7 @@ msgstr "Nom de la liste de lecture"
 
 #: ../../lib/class/search.class.php:384
 msgid "Smart Playlist"
-msgstr "liste de lecture intelligente"
+msgstr "Liste de lecture intelligente"
 
 #: ../../lib/class/search.class.php:397
 #: ../../templates/show_add_upload.inc.php:165
@@ -1923,7 +1923,7 @@ msgstr "Suivre MusicBrainzID"
 #: ../../templates/show_tvshows.inc.php:36
 #: ../../templates/show_tvshows.inc.php:76
 msgid "TV Show"
-msgstr "TV Show"
+msgstr "Série TV"
 
 #: ../../lib/class/tvshow_episode.class.php:178
 #: ../../lib/class/tvshow_season.class.php:134
@@ -1934,13 +1934,13 @@ msgstr "TV Show"
 #: ../../templates/show_tvshow_seasons.inc.php:34
 #: ../../templates/show_tvshow_seasons.inc.php:71
 msgid "Season"
-msgstr "saison"
+msgstr "Saison"
 
 #: ../../lib/class/tvshow_episode.class.php:182
 #: ../../templates/show_partial_tvshow_episode.inc.php:25
 #: ../../templates/show_partial_tvshow_episodes.inc.php:23
 msgid "Episode"
-msgstr "épisode"
+msgstr "Episode"
 
 #: ../../lib/class/update.class.php:487
 msgid "No updates needed."
@@ -1952,7 +1952,7 @@ msgstr "Retour à la page principale"
 
 #: ../../lib/class/update.class.php:2516 ../../lib/class/update.class.php:2532
 msgid "File copy error."
-msgstr "Fichier erreur de copie."
+msgstr "Erreur de copie de fichier."
 
 #: ../../lib/class/update.class.php:2523 ../../lib/class/update.class.php:2539
 msgid "Cannot copy default .htaccess file."
@@ -1961,12 +1961,12 @@ msgstr "Vous ne pouvez pas copier le fichier .htaccess par défaut."
 #: ../../lib/class/upnp_api.class.php:425
 #: ../../templates/show_add_catalog.inc.php:70
 msgid "Music"
-msgstr "musique"
+msgstr "Musique"
 
 #: ../../lib/class/upnp_api.class.php:702
 #: ../../templates/show_now_playing_video_row.inc.php:41
 msgid "Video"
-msgstr "vidéo"
+msgstr "Vidéo"
 
 #: ../../lib/class/user.class.php:930 ../../templates/show_objects.inc.php:44
 #: ../../templates/show_tagcloud.inc.php:59
@@ -1975,7 +1975,7 @@ msgstr "Pas assez de données"
 
 #: ../../lib/class/user.class.php:1220
 msgid "User avatar"
-msgstr "Avatar Utilisateur"
+msgstr "Avatar de l'utilisateur"
 
 #: ../../lib/class/video.class.php:734
 msgid "Afar"
@@ -2715,7 +2715,7 @@ msgstr ""
 
 #: ../../lib/class/wanted.class.php:214
 msgid "Unknown Artist"
-msgstr "Artist Inconnu"
+msgstr "Artist inconnu"
 
 #: ../../lib/class/wanted.class.php:384
 msgid "Accept"
@@ -2732,7 +2732,7 @@ msgstr "Ajouter à la liste des demandes"
 
 #: ../../lib/debug.lib.php:283 ../../lib/debug.lib.php:300
 msgid "OK"
-msgstr "BIEN"
+msgstr "OK"
 
 #: ../../lib/debug.lib.php:283
 msgid "ERROR"
@@ -2817,12 +2817,12 @@ msgstr "Echec de connexion à la base de données : %s"
 #: ../../lib/install.lib.php:325
 #, php-format
 msgid "Database select failed: %s"
-msgstr "Base de données select a échoué: %s"
+msgstr "Echec de la sélection de la base de données: %s"
 
 #: ../../lib/install.lib.php:335
 #, php-format
 msgid "Administrative user creation failed: %s"
-msgstr "Création d'un utilisateur administratif a échoué: %s"
+msgstr "Echec de la création d'un administrateur: %s"
 
 #: ../../lib/login.php:80
 msgid "Error Username or Password incorrect, please try again"
@@ -2881,7 +2881,7 @@ msgstr "Stream"
 #: ../../templates/sidebar_home.inc.php:66
 #: ../../templates/sidebar_modules.inc.php:39
 msgid "Democratic"
-msgstr "Democratic"
+msgstr "Démocratique"
 
 #: ../../lib/preferences.php:225 ../../templates/show_edit_user.inc.php:121
 #: ../../templates/show_playtype_switch.inc.php:35
@@ -2955,15 +2955,15 @@ msgstr "année croissant"
 
 #: ../../lib/preferences.php:342
 msgid "Year descending"
-msgstr "Année descendante"
+msgstr "Année décroissant"
 
 #: ../../lib/preferences.php:343
 msgid "Name ascending"
-msgstr "Nom montant"
+msgstr "Nom croissant"
 
 #: ../../lib/preferences.php:344
 msgid "Name descending"
-msgstr "Nom descendant"
+msgstr "Nom décroissant"
 
 #: ../../lib/rating.lib.php:43
 msgid "Don't Play"
@@ -3049,7 +3049,7 @@ msgstr "Module de gestion"
 
 #: ../../lib/ui.lib.php:150 ../../templates/sidebar_home.inc.php:24
 msgid "Browse Music"
-msgstr "Parcourir la musique"
+msgstr "Parcourir musique"
 
 #: ../../lib/ui.lib.php:162 ../../templates/show_stats.inc.php:26
 #: ../../templates/sidebar_home.inc.php:111
@@ -3070,11 +3070,11 @@ msgstr "Inactif"
 
 #: ../../lostpassword.php:39
 msgid "Password has been sent"
-msgstr "Mot de passe a été envoyé"
+msgstr "Le mot de passe a été envoyé"
 
 #: ../../lostpassword.php:41
 msgid "Password has not been sent"
-msgstr "Mot de passe n'a pas été envoyé"
+msgstr "Le mot de passe n'a pas été envoyé"
 
 #: ../../lostpassword.php:60
 msgid "Lost Password"
@@ -3089,11 +3089,11 @@ msgstr ""
 #: ../../lostpassword.php:66
 #, php-format
 msgid "The password has been set to: %s"
-msgstr "Le mot de passe a été actualisé : %s"
+msgstr "Le mot de passe a été défini : %s"
 
 #: ../../modules/Beets/Catalog.php:116
 msgid "Running Beets Update"
-msgstr "Courir betteraves Mise à jour"
+msgstr "Mise à jour de beets"
 
 #: ../../modules/Beets/Catalog.php:154
 #: ../../modules/catalog/remote.catalog.php:270
@@ -3101,16 +3101,16 @@ msgstr "Courir betteraves Mise à jour"
 #: ../../modules/catalog/subsonic.catalog.php:245
 #, php-format
 msgid "Unable to Insert Song - %s"
-msgstr "Impossible d'insérer Song - %s"
+msgstr "Impossible d'insérer la piste - %s"
 
 #: ../../modules/catalog/beets.catalog.php:85
 msgid "Beets Database File"
-msgstr "Betteraves Database File"
+msgstr "Beets Database File"
 
 #: ../../modules/catalog/beets.catalog.php:101
 msgid "Error: Beets selected, but no Beets DB File provided"
 msgstr ""
-"Erreur: Betteraves sélectionnés, mais pas de fichier betteraves DB fournis"
+"Erreur: Beets sélectionnés, mais pas de fichier Beets DB fournis"
 
 #: ../../modules/catalog/beets.catalog.php:111
 #: ../../modules/catalog/beetsremote.catalog.php:112
@@ -3125,11 +3125,11 @@ msgstr "Erreur: Catalogue avec %s existe déjà"
 
 #: ../../modules/catalog/beetsremote.catalog.php:86
 msgid "Beets Server URI"
-msgstr "Betteraves URI du serveur"
+msgstr "Beets URI du serveur"
 
 #: ../../modules/catalog/beetsremote.catalog.php:102
 msgid "Error: Beets selected, but path is not a URL"
-msgstr "Erreur: Betteraves sélectionnés, mais le chemin n'est pas une URL"
+msgstr "Erreur: Beets sélectionné, mais le chemin n'est pas une URL"
 
 #: ../../modules/catalog/dropbox.catalog.php:122
 #: ../../templates/show_account.inc.php:71
@@ -3155,7 +3155,7 @@ msgstr "Récupérer les fichiers coupés lors de l'analyse"
 
 #: ../../modules/catalog/dropbox.catalog.php:169
 msgid "Error: API Key and Secret Required for Dropbox Catalogs"
-msgstr "Erreur: clé API et secret requis pour Dropbox Catalogues"
+msgstr "Erreur: clé API et secret requis pour les catalogues Dropbox"
 
 #: ../../modules/catalog/dropbox.catalog.php:175
 msgid "Invalid <dropbox-path>: "
@@ -3163,12 +3163,12 @@ msgstr "Chemin <dropbox-path> invalide :"
 
 #: ../../modules/catalog/dropbox.catalog.php:243
 msgid "Running Dropbox Remote Update"
-msgstr "Courir Dropbox mise à jour à distance"
+msgstr "Lancement de la mise à jour à distance de Dropbox"
 
 #: ../../modules/catalog/dropbox.catalog.php:283
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
-msgstr "Mise à jour du catalogue Terminé. Totale: [%s]"
+msgstr "Mise à jour du catalogue terminé. Total de média: [%s]"
 
 #: ../../modules/catalog/dropbox.catalog.php:286
 msgid "No media updated, do you respect the patterns?"
@@ -3189,7 +3189,7 @@ msgstr "Erreur: Chemin d'accès spécifié"
 
 #: ../../modules/catalog/local.catalog.php:190
 msgid "Error: Defined Path is inside an existing catalog"
-msgstr "Erreur: Défini le chemin est à l'intérieur d'un catalogue existant"
+msgstr "Erreur: Le chemin défini est à l'intérieur d'un catalogue existant"
 
 #: ../../modules/catalog/local.catalog.php:197
 #, php-format
@@ -3217,13 +3217,13 @@ msgstr "Erreur: Impossible d'obtenir la taille du fichier pour %s"
 #: ../../modules/catalog/local.catalog.php:331
 #, php-format
 msgid "%s is not readable by ampache"
-msgstr " %s n'est pas lisible par ampache"
+msgstr " %s n'est pas lisible par Ampache"
 
 #. HINT: FullFile
 #: ../../modules/catalog/local.catalog.php:353
 #, php-format
 msgid "%s does not match site charset"
-msgstr " %s ne correspond pas lieu charset"
+msgstr " %s ne correspond pas au charset du site"
 
 #: ../../modules/catalog/local.catalog.php:467
 msgid "N/A"
@@ -3235,7 +3235,7 @@ msgid ""
 "Catalog Update Finished.  Total Time: [%s] Total Media: [%s] Media Per "
 "Second: [%s]"
 msgstr ""
-"Mise à jour du catalogue Terminé. Durée totale: [ %s] Total Media: [ %s] des "
+"Mise à jour du catalogue terminée. Durée totale: [ %s] Total Media: [ %s] des "
 "médias par seconde: [ %s]"
 
 #: ../../modules/catalog/local.catalog.php:548
@@ -3249,12 +3249,12 @@ msgstr "Le chemin du catalogue est inaccessible, nettoyage stoppé"
 
 #: ../../modules/catalog/local.catalog.php:602
 msgid "All files would be removed. Doing nothing"
-msgstr "Tous les fichiers seront supprimés. ne rien faire"
+msgstr "Tous les fichiers seront supprimés. Ne rien faire"
 
 #: ../../modules/catalog/local.catalog.php:641
 #, php-format
 msgid "Error File Not Found or 0 Bytes: %s"
-msgstr "Erreur Fichier non Trouvé ous 0 Octets: %s"
+msgstr "Erreur Fichier non Trouvé ou 0 Octets: %s"
 
 #: ../../modules/catalog/remote.catalog.php:109
 msgid "Uri"
@@ -3317,7 +3317,7 @@ msgstr "%u catalogue(s) distant(s) trouvé(s) (%u pistes)"
 
 #: ../../modules/catalog/remote.catalog.php:278
 msgid "Completed updating remote catalog(s)."
-msgstr "Terminé la mise à jour catalogue (s) à distance."
+msgstr "Mise à jour catalogue (s) à distance terminée."
 
 #: ../../modules/catalog/soundcloud.catalog.php:113
 msgid "User ID"
@@ -3338,7 +3338,7 @@ msgstr "Mise à jour terminée catalogue SoundCloud(s)."
 #: ../../modules/catalog/soundcloud.catalog.php:290
 #: ../../modules/catalog/subsonic.catalog.php:267
 msgid "Songs added."
-msgstr "Chansons ajoutées."
+msgstr "Pistes ajoutées."
 
 #: ../../modules/catalog/soundcloud.catalog.php:296
 msgid "API Error: cannot get song list."
@@ -3377,7 +3377,7 @@ msgstr "Courir Remote Update Subsonic"
 
 #: ../../modules/catalog/subsonic.catalog.php:255
 msgid "Song Error."
-msgstr "Erreur chanson."
+msgstr "Erreur piste."
 
 #: ../../modules/catalog/subsonic.catalog.php:261
 msgid "Album Error."
@@ -3385,11 +3385,11 @@ msgstr "Erreur album."
 
 #: ../../modules/catalog/subsonic.catalog.php:267
 msgid "Completed updating Subsonic catalog(s)."
-msgstr "Terminé la mise à jour catalogue(s) Subsonic."
+msgstr "Mise à jour catalogue(s) Subsonic terminée."
 
 #: ../../modules/catalog/subsonic.catalog.php:273
 msgid "Artist Error."
-msgstr "Artiste erreur."
+msgstr "Erreur artiste."
 
 #: ../../modules/localplay/httpq.controller.php:206
 #: ../../modules/localplay/mpd.controller.php:237
@@ -3413,7 +3413,7 @@ msgstr "Nom d'hôte"
 #: ../../templates/show_channels.inc.php:32
 #: ../../templates/show_edit_channel_row.inc.php:60
 msgid "Port"
-msgstr "Port "
+msgstr "Port"
 
 #: ../../modules/localplay/httpq.controller.php:473
 #: ../../modules/localplay/mpd.controller.php:473
@@ -3446,12 +3446,12 @@ msgstr "Liste de lecture importée"
 #, php-format
 msgid "Successfully imported playlist with %d song."
 msgid_plural "Successfully imported playlist with %d songs."
-msgstr[0] "Succès importé playlist avec %d chanson."
-msgstr[1] "Succès importé playlist avec %d chansons."
+msgstr[0] "Succès de l'import de la playlist avec %d pistes."
+msgstr[1] "Succès de l'import de la playlist avec %d pistes."
 
 #: ../../playlist.php:86
 msgid "Playlist Not Imported"
-msgstr "Playlist pas importé"
+msgstr "Playlist non importée"
 
 #: ../../playlist.php:135
 msgid "Empty Playlists Deleted"
@@ -3461,16 +3461,16 @@ msgstr "Listes de lecture vide supprimées"
 msgid ""
 "Changing the server UUID could break clients connectivity. Do you confirm?"
 msgstr ""
-"Modification de la UUID de serveur pourrait briser la connectivité des "
+"La modification du UUID du serveur pourrait briser la connectivité des "
 "clients. Confirmez-vous?"
 
 #: ../../plex/web/index.php:84
 msgid "myPlex authentication completed."
-msgstr "myPlex authentification achevé."
+msgstr "Authentification myPlex terminé."
 
 #: ../../plex/web/index.php:98
 msgid "Server registration completed."
-msgstr "Enregistrement du serveur terminée."
+msgstr "Enregistrement du serveur terminé."
 
 #: ../../plex/web/index.php:101
 msgid "Cannot register the server on myPlex."
@@ -3478,11 +3478,11 @@ msgstr "Vous ne pouvez pas enregistrer le serveur sur myPlex."
 
 #: ../../plex/web/index.php:107
 msgid "Cannot authenticate on myPlex."
-msgstr "Vous ne pouvez pas s'authentifier sur myPlex."
+msgstr "Vous ne pouvez pas vous authentifier sur myPlex."
 
 #: ../../plex/web/index.php:135
 msgid "Server UUID changed."
-msgstr "UUID de serveur modifié."
+msgstr "UUID du serveur modifié."
 
 #: ../../preferences.php:47 ../../preferences.php:85
 msgid "Server"
@@ -3567,7 +3567,7 @@ msgstr "Erreur accès : Accès non autorisé à l'API"
 
 #: ../../share.php:75
 msgid "Share created."
-msgstr "Partager créé."
+msgstr "Partage créé."
 
 #: ../../share.php:76
 msgid "You can now start sharing the following url:"
@@ -3578,24 +3578,24 @@ msgid ""
 "You can also embed this share as a web player into your website, with the "
 "following html code:"
 msgstr ""
-"Vous pouvez également intégrer cette part comme un lecteur web dans votre "
+"Vous pouvez également intégrer ce partage comme un lecteur web dans votre "
 "site, avec le code HTML suivant:"
 
 #: ../../share.php:84
 msgid "Object Shared"
-msgstr "Shared Object"
+msgstr "Objet partagé"
 
 #: ../../share.php:94
 msgid "Share Delete"
-msgstr "Partager Supprimer"
+msgstr "Supprimer le partage"
 
 #: ../../share.php:107
 msgid "Share Deleted"
-msgstr "Partager supprimés"
+msgstr "Partage supprimé"
 
 #: ../../share.php:107
 msgid "The Share has been deleted"
-msgstr "La part a été supprimé"
+msgstr "Le partage a été supprimé"
 
 #: ../../shout.php:49
 msgid "Invalid Object Selected"
@@ -3651,7 +3651,7 @@ msgid ""
 msgstr ""
 "Les cookies sont de petits fichiers texte qui sont placés sur votre "
 "ordinateur par les sites Web que vous visitez. Ils sont largement utilisés "
-"dans le but de rendre les sites Web travail, ou travailler plus "
+"dans le but de faire fonctionner les sites web, ou les faire fonctionner plus "
 "efficacement, ainsi que de fournir des informations aux propriétaires du "
 "site."
 
@@ -3662,11 +3662,11 @@ msgstr ""
 
 #: ../../templates/cookie_disclaimer.inc.php:13
 msgid "Cookie"
-msgstr "gâteau"
+msgstr "Cookie"
 
 #: ../../templates/cookie_disclaimer.inc.php:19
 msgid "Purpose"
-msgstr "but"
+msgstr "But"
 
 #: ../../templates/cookie_disclaimer.inc.php:27
 msgid "Hide the cookie disclaimer message."
@@ -3674,7 +3674,7 @@ msgstr "Masquer le message d'avertissement de cookie."
 
 #: ../../templates/cookie_disclaimer.inc.php:32
 msgid "Ampache session."
-msgstr "Ampache session."
+msgstr "Session Ampache."
 
 #: ../../templates/cookie_disclaimer.inc.php:37
 msgid "Automatically authenticate users."
@@ -3731,21 +3731,21 @@ msgstr "Messages d'erreur"
 
 #: ../../templates/footer.inc.php:38
 msgid "Donate"
-msgstr "donner"
+msgstr "Faire un don"
 
 #: ../../templates/footer.inc.php:42
 #: ../../templates/show_lostpassword_form.inc.php:72
 msgid "Queries:"
-msgstr "Requêtes :"
+msgstr "Requêtes: "
 
 #: ../../templates/footer.inc.php:42
 #: ../../templates/show_lostpassword_form.inc.php:73
 msgid "Cache Hits:"
-msgstr "Requêtes en cache :"
+msgstr "Requêtes en cache: "
 
 #: ../../templates/footer.inc.php:47
 msgid "Load time:"
-msgstr "Le temps de chargement:"
+msgstr "Temps de chargement: "
 
 #: ../../templates/header.inc.php:85
 msgid "Save"
@@ -3767,7 +3767,7 @@ msgstr ""
 
 #: ../../templates/header.inc.php:249
 msgid "cookie settings"
-msgstr "les paramètres des cookies"
+msgstr "Paramètres des cookies"
 
 #: ../../templates/header.inc.php:249
 msgid ""
@@ -3863,7 +3863,7 @@ msgstr "Ajouter les éléments dynamiques"
 
 #: ../../templates/rightbar.inc.php:60
 msgid "Random Song"
-msgstr "Random Song"
+msgstr "Piste aléatoire"
 
 #: ../../templates/rightbar.inc.php:63
 msgid "Random Artist"
@@ -3871,15 +3871,15 @@ msgstr "Artiste aléatoire"
 
 #: ../../templates/rightbar.inc.php:66
 msgid "Random Album"
-msgstr "album aléatoire"
+msgstr "Album aléatoire"
 
 #: ../../templates/rightbar.inc.php:69
 msgid "Random Playlist"
-msgstr "playlist aléatoire"
+msgstr "Playlist aléatoire"
 
 #: ../../templates/rightbar.inc.php:123
 msgid "No items"
-msgstr "Aucun élèments"
+msgstr "Aucun éléments"
 
 #: ../../templates/show_access_list.inc.php:23
 #: ../../templates/sidebar_admin.inc.php:37
@@ -3888,7 +3888,7 @@ msgstr "Contrôle d'accès"
 
 #: ../../templates/show_access_list.inc.php:27
 msgid "Add Current Host"
-msgstr "Ajouter un hôte actuel"
+msgstr "Ajouter l'hôte courant"
 
 #: ../../templates/show_access_list.inc.php:30
 msgid "Add API / RPC Host"
@@ -3900,7 +3900,7 @@ msgstr "Ajouter une définition du réseau local"
 
 #: ../../templates/show_access_list.inc.php:35
 msgid "Advanced Add"
-msgstr "Ajouter avancée"
+msgstr "Ajout avancé"
 
 #: ../../templates/show_access_list.inc.php:41
 msgid "Access Control Entries"
@@ -3992,7 +3992,7 @@ msgstr "Email"
 #: ../../templates/show_edit_user.inc.php:55
 #: ../../templates/show_user_registration.inc.php:94
 msgid "Website"
-msgstr "site Web"
+msgstr "Site web"
 
 #: ../../templates/show_account.inc.php:47
 msgid "New Password"
@@ -4010,7 +4010,7 @@ msgstr "Confirmation du mot de passe"
 #: ../../templates/show_add_user.inc.php:92
 #: ../../templates/show_edit_user.inc.php:95
 msgid "Avatar"
-msgstr "avatar"
+msgstr "Avatar"
 
 #: ../../templates/show_account.inc.php:79
 #: ../../templates/show_edit_user.inc.php:134
@@ -4020,7 +4020,7 @@ msgstr "Vider les statistiques"
 
 #: ../../templates/show_account.inc.php:89
 msgid "Update Account"
-msgstr "Modifier un compte"
+msgstr "Mette à jour le compte"
 
 #: ../../templates/show_add_access.inc.php:22
 msgid "Add Access Control List"
@@ -4068,7 +4068,7 @@ msgid ""
 "In the form below enter either a local path (i.e. /data/music) or the URL to "
 "a remote Ampache installation (i.e http://theotherampache.com)"
 msgstr ""
-"Dans le formulaire suivant, entrez soit un chemin local (ex: /data/music) , "
+"Dans le formulaire suivant, entrez soit un chemin local (ex: /data/music), "
 "soit un lien d'une installation Ampache distante (ex: http://lautreampache."
 "com)"
 
@@ -4145,15 +4145,15 @@ msgstr "Rassemblez les types de médias"
 
 #: ../../templates/show_add_catalog.inc.php:72
 msgid "Music Clip"
-msgstr "clip"
+msgstr "Clip"
 
 #: ../../templates/show_add_catalog.inc.php:74
 msgid "Movie"
-msgstr "film"
+msgstr "Film"
 
 #: ../../templates/show_add_catalog.inc.php:75
 msgid "Personal Video"
-msgstr "vidéo personnel"
+msgstr "Vidéo personnelle"
 
 #: ../../templates/show_add_catalog.inc.php:85
 msgid "Add Catalog"
@@ -4161,7 +4161,7 @@ msgstr "Ajouter un catalogue"
 
 #: ../../templates/show_add_channel.inc.php:23
 msgid "Create Channel"
-msgstr "Créez canal"
+msgstr "Créer canal"
 
 #: ../../templates/show_add_channel.inc.php:29
 #: ../../templates/show_channels.inc.php:33
@@ -4181,7 +4181,7 @@ msgstr "stream Source"
 #: ../../templates/show_plugins.inc.php:30
 #: ../../templates/show_plugins.inc.php:70
 msgid "Description"
-msgstr "description"
+msgstr "Description"
 
 #: ../../templates/show_add_channel.inc.php:49
 #: ../../templates/show_edit_channel_row.inc.php:52
@@ -4199,18 +4199,18 @@ msgstr "Interface"
 #: ../../templates/show_edit_broadcast_row.inc.php:36
 #: ../../templates/show_edit_channel_row.inc.php:65
 msgid "Authentication Required"
-msgstr "authentification requise"
+msgstr "Authentification requise"
 
 #: ../../templates/show_add_channel.inc.php:82
 #: ../../templates/show_channels.inc.php:35
 #: ../../templates/show_edit_channel_row.inc.php:73
 msgid "Loop"
-msgstr "boucle"
+msgstr "Boucle"
 
 #: ../../templates/show_add_channel.inc.php:88
 #: ../../templates/show_edit_channel_row.inc.php:76
 msgid "Max Listeners"
-msgstr "auditeurs Max"
+msgstr "Auditeurs max"
 
 #: ../../templates/show_add_channel.inc.php:95
 #: ../../templates/show_channels.inc.php:36
@@ -4250,7 +4250,7 @@ msgstr "URL de flux"
 #: ../../templates/show_videos.inc.php:40
 #: ../../templates/show_videos.inc.php:87
 msgid "Codec"
-msgstr "codec"
+msgstr "Codec"
 
 #: ../../templates/show_add_playlist.inc.php:23
 msgid "Create a new playlist"
@@ -4264,7 +4264,7 @@ msgstr "Lancer une recherche de nouveaux médias"
 #: ../../templates/show_adds_catalog.inc.php:25
 #, php-format
 msgid "Starting New Media Search on %s catalog"
-msgstr "À partir des nouveaux médias Recherche sur le catalogue %s"
+msgstr "Recherche de nouveaux médias sur le catalogue %s"
 
 #: ../../templates/show_adds_catalog.inc.php:27
 #: ../../templates/show_run_add_catalog.inc.php:25
@@ -4281,21 +4281,21 @@ msgstr "Lecture"
 
 #: ../../templates/show_add_share.inc.php:23
 msgid "Create Share"
-msgstr "Créez Partager"
+msgstr "Créez un partage"
 
 #: ../../templates/show_add_share.inc.php:29
 msgid "Shared Object"
-msgstr "Shared Object"
+msgstr "Objet partagé"
 
 #: ../../templates/show_add_share.inc.php:42
 #: ../../templates/show_shared_objects.inc.php:32
 msgid "Max Counter"
-msgstr "max contre"
+msgstr "Max contre"
 
 #: ../../templates/show_add_share.inc.php:49
 #: ../../templates/show_shared_objects.inc.php:35
 msgid "Expiry Days"
-msgstr "expiration Jours"
+msgstr "Jours d'expiration"
 
 #: ../../templates/show_add_share.inc.php:55
 #: ../../templates/show_shared_objects.inc.php:33
@@ -4314,7 +4314,7 @@ msgstr "Écrire un commentaire"
 #: ../../templates/show_add_shout.inc.php:37
 #: ../../templates/show_edit_shout.inc.php:31
 msgid "Comment:"
-msgstr "commentaire:"
+msgstr "Commentaire:"
 
 #: ../../templates/show_add_shout.inc.php:44
 #: ../../templates/show_edit_shout.inc.php:37
@@ -4328,7 +4328,7 @@ msgstr "Commentaires"
 
 #: ../../templates/show_add_upload.inc.php:35
 msgid "Target folder"
-msgstr "dossier cible"
+msgstr "Dossier cible"
 
 #: ../../templates/show_add_upload.inc.php:175
 #: ../../templates/show_install_config.inc.php:139
@@ -4397,7 +4397,7 @@ msgstr "Rechercher sur Last.fm ..."
 #: ../../templates/show_tvshow_seasons.inc.php:80
 #: ../../templates/show_wanted_albums.inc.php:30
 msgid "Actions"
-msgstr "actes"
+msgstr "Actions"
 
 #: ../../templates/show_album_group_disks.inc.php:54
 #: ../../templates/show_album_group_disks.inc.php:55
@@ -4419,7 +4419,7 @@ msgstr "actes"
 #: ../../templates/show_video.inc.php:78
 #: ../../templates/show_video_row.inc.php:34
 msgid "Play last"
-msgstr "Jouez dernier"
+msgstr "Jouer en dernier"
 
 #: ../../templates/show_album_group_disks.inc.php:59
 #: ../../templates/show_album_group_disks.inc.php:60
@@ -4503,7 +4503,7 @@ msgstr "fois"
 #: ../../templates/show_artist.inc.php:105
 #: ../../templates/show_artist.inc.php:106
 msgid "Do you really want to update from tags?"
-msgstr "Voulez-vous vraiment mettre à jour à partir de mots-clés?"
+msgstr "Voulez-vous vraiment mettre à jour à partir des étiquettes ?"
 
 #: ../../templates/show_album.inc.php:94 ../../templates/show_album.inc.php:95
 #: ../../templates/show_artist.inc.php:105
@@ -4513,7 +4513,7 @@ msgstr "Mettre à jour à partir des étiquettes du fichier"
 
 #: ../../templates/show_album.inc.php:114
 msgid "Edit Album"
-msgstr "Editer l'Album"
+msgstr "Editer l'album"
 
 #: ../../templates/show_album_row.inc.php:50
 #: ../../templates/show_artist_row.inc.php:40
@@ -4535,7 +4535,7 @@ msgstr "Ajouter à une liste de lecture existante"
 #: ../../templates/show_videos.inc.php:31
 #: ../../templates/show_videos.inc.php:78
 msgid "Art"
-msgstr "art"
+msgstr "Jaquette"
 
 #: ../../templates/show_albums.inc.php:39
 #: ../../templates/show_albums.inc.php:81
@@ -4626,7 +4626,7 @@ msgstr "Tout jouer"
 #: ../../templates/show_tvshow_season.inc.php:59
 #: ../../templates/show_tvshow_season.inc.php:60
 msgid "Play all last"
-msgstr "Jouer tout dernier"
+msgstr "Jouer tout en dernier"
 
 #. HINT: Artist Fullname
 #: ../../templates/show_artist.inc.php:95
@@ -4693,7 +4693,7 @@ msgstr "Aucun artiste trouvé"
 
 #: ../../templates/show_arts.inc.php:28
 msgid "Select New Art"
-msgstr "Sélectionnez nouvel art"
+msgstr "Sélectionnez une nouvelle jaquette"
 
 #: ../../templates/show_arts.inc.php:47
 msgid "Invalid"
@@ -4736,11 +4736,11 @@ msgstr "Nouvelle diffusion"
 #: ../../templates/show_edit_channel_row.inc.php:88
 #: ../../templates/show_song.inc.php:97
 msgid "Genre"
-msgstr "genre"
+msgstr "Genre"
 
 #: ../../templates/show_broadcasts.inc.php:31
 msgid "Started"
-msgstr "commencé"
+msgstr "Commencé"
 
 #: ../../templates/show_broadcasts.inc.php:32
 #: ../../templates/show_channels.inc.php:39
@@ -4775,7 +4775,7 @@ msgstr "Aller"
 #: ../../templates/show_catalogs.inc.php:28
 #: ../../templates/show_catalogs.inc.php:56
 msgid "Info"
-msgstr "infos"
+msgstr "Infos"
 
 #: ../../templates/show_catalogs.inc.php:29
 #: ../../templates/show_catalogs.inc.php:57
@@ -4806,7 +4806,7 @@ msgstr "Aucun catalogue trouvé"
 #: ../../templates/show_plugins.inc.php:31
 #: ../../templates/show_plugins.inc.php:71
 msgid "Version"
-msgstr "version"
+msgstr "Version"
 
 #: ../../templates/show_catalog_types.inc.php:46
 #: ../../templates/show_localplay_controllers.inc.php:46
@@ -4833,7 +4833,7 @@ msgstr "Date de début"
 
 #: ../../templates/show_channels.inc.php:40
 msgid "Stream Url"
-msgstr "Stream Url"
+msgstr "Stream URL"
 
 #: ../../templates/show_channels.inc.php:41
 msgid "State"
@@ -4845,7 +4845,7 @@ msgstr "Aucun canal trouvé"
 
 #: ../../templates/show_clean_catalog.inc.php:23
 msgid "Clean Catalog"
-msgstr "nettoyer le catalogue"
+msgstr "Nettoyer le catalogue"
 
 #. HINT: Catalog Name
 #: ../../templates/show_clean_catalog.inc.php:25
@@ -4879,7 +4879,7 @@ msgstr "lieu"
 #: ../../templates/show_partial_personal_video.inc.php:23
 #: ../../templates/show_partial_personal_videos.inc.php:23
 msgid "Location"
-msgstr "emplacement"
+msgstr "Emplacement"
 
 #: ../../templates/show_concerts.inc.php:42
 msgid "No coming events found"
@@ -4887,11 +4887,11 @@ msgstr "Aucun événement à venir trouvé"
 
 #: ../../templates/show_concerts.inc.php:48
 msgid "Past Events"
-msgstr "Événements passés"
+msgstr "Évènements passés"
 
 #: ../../templates/show_concerts.inc.php:67
 msgid "No past events found"
-msgstr "Aucun événements passés trouvé"
+msgstr "Aucun évènements passés trouvé"
 
 #: ../../templates/show_confirmation.inc.php:29
 #: ../../templates/show_install_check.inc.php:65
@@ -4908,7 +4908,7 @@ msgstr "Configurez Playlist démocratique"
 #: ../../templates/show_create_democratic.inc.php:31
 #: ../../templates/show_manage_democratic.inc.php:27
 msgid "Base Playlist"
-msgstr "base de playlist"
+msgstr "Base de playlist"
 
 #: ../../templates/show_create_democratic.inc.php:35
 msgid "Cooldown Time"
@@ -4920,7 +4920,7 @@ msgstr "Rendre par défaut"
 
 #: ../../templates/show_create_democratic.inc.php:54
 msgid "Force Democratic Play"
-msgstr "Jeu forcé démocratique"
+msgstr "Forcer la lecture démocratique"
 
 #: ../../templates/show_debug.inc.php:23
 msgid "Debug Tools"
@@ -4940,7 +4940,7 @@ msgstr "Paramètres PHP"
 
 #: ../../templates/show_debug.inc.php:45
 msgid "Setting"
-msgstr "Paramètres"
+msgstr "Paramètre"
 
 #: ../../templates/show_debug.inc.php:46 ../../templates/show_debug.inc.php:99
 #: ../../templates/show_dynamic.inc.php:28
@@ -4960,15 +4960,15 @@ msgstr "Temps maximum d'exécution"
 
 #: ../../templates/show_debug.inc.php:59
 msgid "Override Execution Time"
-msgstr "Remplacer exécution Heure"
+msgstr "Remplacer temps d'exécution"
 
 #: ../../templates/show_debug.inc.php:60
 msgid "Failed"
-msgstr "manqué"
+msgstr "Echec"
 
 #: ../../templates/show_debug.inc.php:60
 msgid "Succeeded"
-msgstr "Réussi"
+msgstr "Réussite"
 
 #: ../../templates/show_debug.inc.php:63
 msgid "Safe Mode"
@@ -5009,11 +5009,11 @@ msgstr "Mise à jour d'Ampache"
 
 #: ../../templates/show_debug.inc.php:126
 msgid "Installed Ampache version"
-msgstr "Version installée Ampache"
+msgstr "Version d'Ampache installée"
 
 #: ../../templates/show_debug.inc.php:127
 msgid "Latest Ampache version"
-msgstr "Dernière version Ampache"
+msgstr "Dernière version d'Ampache"
 
 #: ../../templates/show_debug.inc.php:128
 msgid "Force check"
@@ -5031,7 +5031,7 @@ msgstr "Temps avant de rejouer la piste"
 
 #: ../../templates/show_democratic.inc.php:42
 msgid "Play Democratic Playlist"
-msgstr "Jouer Playlist démocratique"
+msgstr "Jouer liste de lecture démocratique"
 
 #: ../../templates/show_democratic.inc.php:70
 msgid "Reload this page automatically"
@@ -5123,7 +5123,7 @@ msgstr "Titres dupliqués"
 #: ../../templates/show_recently_played.inc.php:139
 #: ../../templates/sidebar_home.inc.php:83
 msgid "Song"
-msgstr "Titre"
+msgstr "Piste"
 
 #: ../../templates/show_duplicates.inc.php:31
 #: ../../templates/show_duplicates.inc.php:70
@@ -5139,11 +5139,11 @@ msgstr "Taille"
 
 #: ../../templates/show_dynamic.inc.php:23
 msgid "Advanced Random Rules"
-msgstr "Règles aléatoires avancée"
+msgstr "Règles aléatoires avancées"
 
 #: ../../templates/show_dynamic.inc.php:26
 msgid "Field"
-msgstr "domaine"
+msgstr "Domaine"
 
 #: ../../templates/show_dynamic.inc.php:27
 msgid "Operator"
@@ -5155,7 +5155,7 @@ msgstr "Méthode"
 
 #: ../../templates/show_dynamic.inc.php:51
 msgid "Like"
-msgstr "comme"
+msgstr "Comme"
 
 #: ../../templates/show_dynamic.inc.php:59
 msgid "OR"
@@ -5237,7 +5237,7 @@ msgstr "Lien externe"
 
 #: ../../templates/show_edit_license.inc.php:43
 msgid "Confirm"
-msgstr "confirmer"
+msgstr "Confirmer"
 
 #: ../../templates/show_edit_playlist_row.inc.php:36
 #: ../../templates/show_edit_search_row.inc.php:36
@@ -5276,7 +5276,7 @@ msgstr "Fusionner cette étiquette pour"
 
 #: ../../templates/show_edit_tag_row.inc.php:45
 msgid "Persistent merge"
-msgstr "fusion persistante"
+msgstr "Fusion persistante"
 
 #: ../../templates/show_edit_tvshow_row.inc.php:31
 #: ../../templates/show_partial_edit_movie_row.inc.php:28
@@ -5285,12 +5285,12 @@ msgstr "fusion persistante"
 #: ../../templates/show_partial_personal_video.inc.php:24
 #: ../../templates/show_partial_tvshow_episode.inc.php:26
 msgid "Summary"
-msgstr "résumé"
+msgstr "Résumé"
 
 #: ../../templates/show_edit_tvshow_row.inc.php:44
 msgid " Apply tags to all childs (override tags for episodes)"
 msgstr ""
-"Appliquer des balises à tous Childs (balises de remplacement pour les "
+"Appliquer des balises à tous les enfants (balises de remplacement pour les "
 "épisodes) Confirmez"
 
 #: ../../templates/show_edit_user.inc.php:23
@@ -5303,15 +5303,15 @@ msgstr "Propriétés de l'utilisateur"
 
 #: ../../templates/show_edit_user.inc.php:104
 msgid "Other Options"
-msgstr "autres options"
+msgstr "Autres options"
 
 #: ../../templates/show_edit_user.inc.php:116
 msgid "Config Preset"
-msgstr "config Preset"
+msgstr "Configuration prédéfinie"
 
 #: ../../templates/show_edit_user.inc.php:122
 msgid "Flash"
-msgstr "flash"
+msgstr "Flash"
 
 #: ../../templates/show_edit_user.inc.php:128
 msgid "Prevent Preset Override"
@@ -5319,7 +5319,7 @@ msgstr "Empêcher d'écraser les paramètres prédéfinis"
 
 #: ../../templates/show_edit_user.inc.php:130
 msgid "This Affects all non-Admin accounts"
-msgstr "Ceci affecte tous les comptes non administrateur"
+msgstr "Ceci affecte tous les comptes non-administrateur"
 
 #: ../../templates/show_edit_user.inc.php:142
 msgid "Update User"
@@ -5347,11 +5347,11 @@ msgstr "Exporter"
 
 #: ../../templates/show_gather_art.inc.php:23
 msgid "Art Search"
-msgstr "art Recherche"
+msgstr "Recherche de jaquette"
 
 #: ../../templates/show_gather_art.inc.php:24
 msgid "Starting Art Search"
-msgstr "À partir Art Recherche"
+msgstr "Démarrage de la recherche de jaquette"
 
 #: ../../templates/show_gather_art.inc.php:25
 msgid "Searched"
@@ -5363,7 +5363,7 @@ msgstr "Recherche personnalisée"
 
 #: ../../templates/show_get_art.inc.php:44
 msgid "Direct URL to Image"
-msgstr "Lien direct vers l'image"
+msgstr "URL directe vers l'image"
 
 #: ../../templates/show_get_art.inc.php:52
 msgid "Local Image"
@@ -5379,7 +5379,7 @@ msgstr "Obtenir la jaquette"
 #: ../../templates/show_recent.inc.php:23
 #: ../../templates/sidebar_home.inc.php:91
 msgid "Information"
-msgstr "informations"
+msgstr "Informations"
 
 #: ../../templates/show_html5_player_headers.inc.php:126
 msgid "Your browser doesn't support this feature."
@@ -5391,7 +5391,7 @@ msgstr "Un média est en cours de lecture. Voulez-vous vraiment fermer ?"
 
 #: ../../templates/show_html5_player.inc.php:383
 msgid "Slideshow"
-msgstr "diaporama"
+msgstr "Diaporama"
 
 #: ../../templates/show_html5_player.inc.php:387
 msgid "Equalizer"
@@ -5546,7 +5546,7 @@ msgid ""
 "This tests whether PHP can write to config/. This is not strictly necessary, "
 "but will help streamline the installation process."
 msgstr ""
-"Ce test permet d'écrire dans le répertoire config/. Ce n'est pas réellement "
+"Ce test permet de vérifier l'écriture dans le répertoire config/. Ce n'est pas réellement "
 "nécessaire, mais cela permet d'améliorer le processus d'installation."
 
 #: ../../templates/show_install_config.inc.php:55
@@ -5558,7 +5558,7 @@ msgid ""
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s"
 msgstr ""
-"Ces étapes génére le fichier de configuration. Si votre répertoire config/ "
+"Cette étape génére le fichier de configuration. Si votre répertoire config/ "
 "est accessible, vous pouvez sélectionner 'écrire' pour qu'Ampache créé le "
 "fichier dans le répertoire de destination. Si vous sélectionnez "
 "'télécharger', vous devrez télécharger le fichier de configuration et le "
@@ -5643,9 +5643,9 @@ msgid ""
 "application (ffmpeg, avconv ...) or customize transcoding settings manually "
 "after installation."
 msgstr ""
-"Aucune application de transcode trouvée par défaut.Vous pouvez installer une "
+"Aucune application de transcodage trouvée par défaut.Vous pouvez installer une "
 "application populaire (ffmpeg, avconv, ...) ou configurer les paramètres de "
-"transcode manuellement après l'installation."
+"transcodage manuellement après l'installation."
 
 #: ../../templates/show_install_config.inc.php:146
 msgid "rest/.htaccess action"
@@ -5691,7 +5691,7 @@ msgstr "config/ampache.cfg.php configuré ?"
 
 #: ../../templates/show_install_config.inc.php:194
 msgid "Recheck Config"
-msgstr "Vérifier la configuration"
+msgstr "Revérifier la configuration"
 
 #: ../../templates/show_install_config.inc.php:202
 #: ../../templates/show_install.inc.php:130
@@ -5709,7 +5709,7 @@ msgid ""
 "slower computers."
 msgstr ""
 "Cette étape créée et met à jour la base de données Ampache, pour cela donnez "
-"un compte d'accès mysql avec des droits de création de base de données. "
+"un compte d'accès MySQL avec des droits de création de base de données. "
 "Cette étape peut prendre un certain temps. Cela dépend des performances de "
 "votre ordinateur."
 
@@ -5790,7 +5790,7 @@ msgstr "Adresse IP"
 
 #: ../../templates/show_live_stream.inc.php:23
 msgid "Manage Radio Stations"
-msgstr "Gérer Stations de Radio"
+msgstr "Gérer les stations de Radio"
 
 #: ../../templates/show_live_stream_row.inc.php:27
 msgid "Play live stream"
@@ -5871,11 +5871,11 @@ msgstr "Se souvenir de moi"
 
 #: ../../templates/show_login_form.inc.php:77
 msgid "Lost password"
-msgstr "mot de passe oublié"
+msgstr "Mot de passe oublié"
 
 #: ../../templates/show_login_form.inc.php:78
 msgid "Login"
-msgstr "Utilisateur"
+msgstr "Se connecter"
 
 #: ../../templates/show_login_form.inc.php:83
 msgid "Register"
@@ -5927,7 +5927,7 @@ msgstr "Sujet"
 
 #: ../../templates/show_mail_users.inc.php:54
 msgid "Message"
-msgstr "message"
+msgstr "Message"
 
 #: ../../templates/show_mail_users.inc.php:61
 msgid "Send Mail"
@@ -5944,7 +5944,7 @@ msgstr "Collecter les jacquettes"
 
 #: ../../templates/show_manage_catalogs.inc.php:30
 msgid "Show disabled songs"
-msgstr "Afficher chansons handicapés"
+msgstr "Afficher les pistes désactivées"
 
 #: ../../templates/show_manage_catalogs.inc.php:33
 msgid "Add to All"
@@ -5992,7 +5992,7 @@ msgstr "Créer un nouveau permis"
 
 #: ../../templates/show_manage_license.inc.php:50
 msgid "No Licenses Found"
-msgstr "Aucune licence trouvés"
+msgstr "Aucune licence trouvée"
 
 #: ../../templates/show_manage_shoutbox.inc.php:28
 #: ../../templates/show_manage_shoutbox.inc.php:57
@@ -6012,7 +6012,7 @@ msgstr "Date d'ajout"
 
 #: ../../templates/show_missing_album.inc.php:54
 msgid "Wanted actions"
-msgstr "actions Recherché"
+msgstr "Actions recherchées"
 
 #: ../../templates/show_missing_albums.inc.php:44
 msgid "No missing albums found"
@@ -6043,7 +6043,7 @@ msgstr "Nom d'origine"
 
 #: ../../templates/show_partial_edit_tvshow_episode_row.inc.php:24
 msgid "TV Show Season"
-msgstr "TV Show Saison"
+msgstr "Saison de série TV"
 
 #: ../../templates/show_partial_edit_tvshow_episode_row.inc.php:38
 msgid "Episode Number"
@@ -6052,7 +6052,7 @@ msgstr "Numéro de l'épisode"
 #: ../../templates/show_playlist.inc.php:46
 #: ../../templates/show_playlist.inc.php:47
 msgid "Sort Tracks by Artist, Album, Song"
-msgstr "Trier les chansons par artiste, album, chanson"
+msgstr "Trier les pistes par artiste, album, titre"
 
 #: ../../templates/show_playlist.inc.php:81
 msgid "Create channel"
@@ -6182,7 +6182,7 @@ msgstr "Derniers joués"
 #: ../../templates/show_recently_played.inc.php:36
 #: ../../templates/show_recently_played.inc.php:145
 msgid "Agent"
-msgstr "agent"
+msgstr "Agent"
 
 #: ../../templates/show_recently_played.inc.php:65
 #, php-format
@@ -6273,12 +6273,12 @@ msgid ""
 "An activation key has been sent to the e-mail address you provided. Please "
 "check your e-mail for further information."
 msgstr ""
-"Une clé d'action a été envoyée sur votre adresse email. Merci de vérifier ce "
+"Une clé d'activation a été envoyée sur votre adresse email. Merci de vérifier ce "
 "courriel pour plus d'informations."
 
 #: ../../templates/show_registration_confirmation.inc.php:57
 msgid "Return to Login Page"
-msgstr "Retourer à la page d'identification"
+msgstr "Retourner à la page d'identification"
 
 #: ../../templates/show_rules.inc.php:33
 msgid "Rules"
@@ -6340,7 +6340,7 @@ msgstr "Enregistrer les changements"
 
 #: ../../templates/show_search_options.inc.php:23
 msgid "Options"
-msgstr "options de"
+msgstr "Options"
 
 #: ../../templates/show_search_options.inc.php:27
 #: ../../templates/show_search_options.inc.php:28
@@ -6370,11 +6370,11 @@ msgstr "Dernière visite"
 
 #: ../../templates/show_shared_objects.inc.php:31
 msgid "Counter"
-msgstr "compteur"
+msgstr "Compteur"
 
 #: ../../templates/show_shared_objects.inc.php:36
 msgid "Public Url"
-msgstr "Url Publique"
+msgstr "URL Publique"
 
 #: ../../templates/show_share.inc.php:28
 msgid "Shared on"
@@ -6390,11 +6390,11 @@ msgstr "Détails"
 
 #: ../../templates/show_song.inc.php:48
 msgid "Waveform"
-msgstr "forme d'onde"
+msgstr "Forme d'onde"
 
 #: ../../templates/show_song.inc.php:75 ../../templates/show_video.inc.php:90
 msgid "Link"
-msgstr "Liens"
+msgstr "Lien"
 
 #: ../../templates/show_song.inc.php:101
 msgid "Song Language"
@@ -6407,7 +6407,7 @@ msgstr "Numéro du catalogue"
 #: ../../templates/show_song.inc.php:109
 #: ../../templates/show_video.inc.php:117
 msgid "Last Updated"
-msgstr "Dernières mise à jour"
+msgstr "Dernière mise à jour"
 
 #: ../../templates/show_song.inc.php:117
 msgid "Lyrics"
@@ -6488,7 +6488,7 @@ msgid ""
 "This tests whether you are running at least the minimum version of PHP "
 "required by Ampache."
 msgstr ""
-"Test pour vérifier que vous utilisez une version de PHP connue pour être "
+"Cela teste si vous utilisez une version de PHP connue pour être "
 "compatible avec Ampache"
 
 #: ../../templates/show_test_table.inc.php:33
@@ -6500,7 +6500,7 @@ msgid ""
 "This tests whether you have the hash extension enabled. This extension is "
 "required by Ampache."
 msgstr ""
-"Test pour vérifier si vous avez l'extension hash chargée pour PHP. Ceci est "
+"Cela teste si vous avez l'extension hash chargée pour PHP. Ceci est "
 "un prérequis pour qu'Ampache puisse fonctionner"
 
 #: ../../templates/show_test_table.inc.php:42
@@ -6512,7 +6512,7 @@ msgid ""
 "This tests whether the hash extension supports SHA256. This algorithm is "
 "required by Ampache."
 msgstr ""
-"Test pour vérifier si vous avez l'extension SHA256 chargée pour PHP. Ceci "
+"Cela teste si vous avez l'extension SHA256 chargée pour PHP. Ceci "
 "est un prérequis pour qu'Ampache puisse fonctionner"
 
 #: ../../templates/show_test_table.inc.php:51
@@ -6524,7 +6524,7 @@ msgid ""
 "This tests whether you have the PDO extension enabled. This extension is "
 "required by Ampache."
 msgstr ""
-"Test pour vérifier si vous avez l'extension PDO chargée pour PHP. Ceci est "
+"Cela teste si vous avez l'extension PDO chargée pour PHP. Ceci est "
 "un prérequis pour qu'Ampache puisse fonctionner"
 
 #: ../../templates/show_test_table.inc.php:60
@@ -6536,7 +6536,7 @@ msgid ""
 "This tests whether the MySQL driver for PDO is enabled. This driver is "
 "required by Ampache."
 msgstr ""
-"Test pour vérifier si vous avez l'extension mysql pour PDO chargée pour PHP. "
+"Cela teste si vous avez l'extension MySQL pour PDO chargée pour PHP. "
 "Ceci est un prérequis pour qu'Ampache puisse fonctionner"
 
 #: ../../templates/show_test_table.inc.php:69
@@ -6548,7 +6548,7 @@ msgid ""
 "This tests whether you have the session extension enabled. This extension is "
 "required by Ampache."
 msgstr ""
-"Test pour s'assurer que le support de session PHP est activé. Les sessions "
+"Cela teste que le support de session PHP est activé. Les sessions "
 "sont indispensables au bon fonctionnement d'Ampache"
 
 #: ../../templates/show_test_table.inc.php:78
@@ -6560,7 +6560,7 @@ msgid ""
 "This tests whether you have the iconv extension enabled. This extension is "
 "required by Ampache."
 msgstr ""
-"Test pour vérifier si vous avez l'extension iconv chargée pour PHP. Ceci est "
+"Cela teste si vous avez l'extension iconv chargée pour PHP. Ceci est "
 "un prérequis pour qu'Ampache puisse fonctionner."
 
 #: ../../templates/show_test_table.inc.php:87
@@ -6572,7 +6572,7 @@ msgid ""
 "This tests whether you have the JSON extension enabled. This extension is "
 "required by Ampache."
 msgstr ""
-"Test pour vérifier si vous avez l'extension mysql chargée pour PHP. Ceci est "
+"Cela teste si vous avez l'extension JSON chargée pour PHP. Ceci est "
 "un prérequis pour qu'Ampache puisse fonctionner"
 
 #: ../../templates/show_test_table.inc.php:96
@@ -6584,7 +6584,7 @@ msgid ""
 "This tests whether you have the curl extension enabled. This is not strictly "
 "necessary, but may result in a better experience."
 msgstr ""
-"Ce test si vous avez activé l'extension boucle. Ce n'est pas strictement "
+"Cela teste si vous avez activé l'extension cURL. Ce n'est pas strictement "
 "nécessaire, mais peut conduire à une meilleure expérience."
 
 #: ../../templates/show_test_table.inc.php:105
@@ -6596,20 +6596,20 @@ msgid ""
 "This tests whether you have the zlib extension enabled. This is not strictly "
 "necessary, but may result in a better experience (zip download)."
 msgstr ""
-"Ce test si vous avez l'extension zlib activée. Ce n'est pas strictement "
+"Cela teste si vous avez l'extension zlib activée. Ce n'est pas strictement "
 "nécessaire, mais peut conduire à une meilleure expérience (téléchargement du "
 "fichier zip)."
 
 #: ../../templates/show_test_table.inc.php:114
 msgid "PHP safe mode disabled"
-msgstr "Mode sans échec"
+msgstr "Mode sans échec désactivé"
 
 #: ../../templates/show_test_table.inc.php:119
 msgid ""
 "This test makes sure that PHP is not running in safe mode. Some features of "
 "Ampache will not work correctly in safe mode."
 msgstr ""
-"Ce test permet de s'assurer que PHP ne fonctionne pas en mode sans échec. "
+"Cela teste si PHP ne fonctionne pas en mode sans échec. "
 "Certaines fonctionnalités de Ampache ne fonctionnera pas correctement en "
 "mode sans échec."
 
@@ -6628,27 +6628,27 @@ msgstr ""
 
 #: ../../templates/show_test_table.inc.php:132
 msgid "PHP execution time override"
-msgstr "PHP correction de temps d'exécution"
+msgstr "Surcharge du temps d'exécution PHP"
 
 #: ../../templates/show_test_table.inc.php:137
 msgid ""
 "This tests whether Ampache can override the limit on maximum execution time. "
 "This is not strictly necessary, but may result in a better experience."
 msgstr ""
-"Cela permet de tester si Ampache peut remplacer la limite de temps "
+"Cela teste si Ampache peut remplacer la limite de temps "
 "d'exécution maximale. Ce n'est pas strictement nécessaire, mais peut "
 "conduire à une meilleure expérience."
 
 #: ../../templates/show_test_table.inc.php:141
 msgid "PHP max upload size"
-msgstr "PHP taille de téléchargement max"
+msgstr "Taille d'upload max PHP"
 
 #: ../../templates/show_test_table.inc.php:146
 msgid ""
 "This tests whether Ampache can upload medium files (>= 20M). This is not "
 "strictly necessary, but may result in a better experience."
 msgstr ""
-"Ce test si Ampache peut télécharger des fichiers de taille moyenne (> = "
+"Cela teste si Ampache peut uploader des fichiers de taille moyenne (> = "
 "20M). Ce n'est pas strictement nécessaire, mais peut conduire à une "
 "meilleure expérience."
 
@@ -6662,7 +6662,7 @@ msgid ""
 "strictly necessary, but may result in a better experience. This generally "
 "requires 64-bit operating system."
 msgstr ""
-"Cela permet de tester si Ampache peut gérer de gros fichiers (> 2 Go). Ce "
+"Cela teste si Ampache peut gérer de gros fichiers (> 2 Go). Ce "
 "n'est pas strictement nécessaire, mais peut conduire à une meilleure "
 "expérience. Cela implique généralement que le système d'exploitation 64 bits."
 
@@ -6675,7 +6675,7 @@ msgid ""
 "This test attempts to read config/ampache.cfg.php. If this fails the file "
 "either is not in the correct location or is not currently readable."
 msgstr ""
-"Test la lecture du fichier /config/ampache.cfg.php. Si cela échoue, le "
+"Test de la lecture du fichier /config/ampache.cfg.php. Si cela échoue, le "
 "fichier n'est pas au bon endroit ou n'est pas lisible par votre serveur web"
 
 #: ../../templates/show_test_table.inc.php:172
@@ -6695,7 +6695,7 @@ msgid ""
 "This attempts to connect to your database using the values read from your "
 "configuration file."
 msgstr ""
-"Ceci test la connexion à votre base de données en utilisant les valeurs de "
+"Ceci teste la connexion à votre base de données en utilisant les valeurs de "
 "votre fichier de configuration."
 
 #: ../../templates/show_test_table.inc.php:195
@@ -6720,7 +6720,7 @@ msgid ""
 "we are able to get to the index page. If you do not see a check mark here "
 "then your web_path is not set correctly."
 msgstr ""
-"Ce test s'assure que la variable web_path est correctement positionnée ainsi "
+"Ce test s'assure que la variable web_path est correctement définie ainsi "
 "que la page d'index est disponible. Si la case n'est pas cochée cela "
 "signifie que la variable est incorrecte."
 
@@ -6728,29 +6728,29 @@ msgstr ""
 #: ../../templates/show_tvshow.inc.php:72
 #: ../../templates/show_tvshow_row.inc.php:53
 msgid "TV Show edit"
-msgstr "TV Show édition"
+msgstr "Edition série TV"
 
 #: ../../templates/show_tvshow.inc.php:73
 msgid "Edit TV Show"
-msgstr "Modifier TV Show"
+msgstr "Edition série TV "
 
 #: ../../templates/show_tvshow_season.inc.php:64
 #: ../../templates/show_tvshow_season.inc.php:67
 #: ../../templates/show_tvshow_season_row.inc.php:52
 msgid "Season edit"
-msgstr "saison édition"
+msgstr "Edition de saison"
 
 #: ../../templates/show_tvshow_season.inc.php:68
 msgid "Edit Season"
-msgstr "Modifier Saison"
+msgstr "Editer saison"
 
 #: ../../templates/show_tvshow_seasons.inc.php:61
 msgid "No season found"
-msgstr "Pas de saison trouvé"
+msgstr "Pas de saison trouvée"
 
 #: ../../templates/show_tvshows.inc.php:66
 msgid "No tv show found"
-msgstr "Aucune émission de télévision trouvé"
+msgstr "Aucune série TV trouvée"
 
 #: ../../templates/show_update_items.inc.php:23
 msgid "Starting Update from Tags"
@@ -6869,7 +6869,7 @@ msgstr "Vérifié"
 
 #: ../../templates/show_video.inc.php:38
 msgid "Subtitle"
-msgstr "sous-titre"
+msgstr "Sous-titre"
 
 #: ../../templates/show_video.inc.php:107
 #: ../../templates/show_videos.inc.php:41
@@ -6879,11 +6879,11 @@ msgstr "Résolution"
 
 #: ../../templates/show_video.inc.php:108
 msgid "Display"
-msgstr "affichage"
+msgstr "Affichage"
 
 #: ../../templates/show_video.inc.php:109
 msgid "Audio Bitrate"
-msgstr "bitrate audio"
+msgstr "Bitrate audio"
 
 #: ../../templates/show_video.inc.php:110
 msgid "Video Bitrate"
@@ -6891,7 +6891,7 @@ msgstr "Bitrate vidéo"
 
 #: ../../templates/show_video.inc.php:111
 msgid "Frame Rate"
-msgstr "Frame rate"
+msgstr "Image par seconde"
 
 #: ../../templates/show_video_row.inc.php:72
 msgid "Video Information"
@@ -6940,11 +6940,11 @@ msgstr "Parcourir les utilsateurs"
 
 #: ../../templates/sidebar_admin.inc.php:39
 msgid "Add ACL"
-msgstr "Ajouter un droit d'accès"
+msgstr "Ajouter ACL"
 
 #: ../../templates/sidebar_admin.inc.php:40
 msgid "Show ACL(s)"
-msgstr "Afficher les droits d'accès"
+msgstr "Afficher les ACL"
 
 #: ../../templates/sidebar_admin.inc.php:43
 #: ../../templates/sidebar_modules.inc.php:31
@@ -6961,7 +6961,7 @@ msgstr "Gérer la zone de commentaires"
 
 #: ../../templates/sidebar_admin.inc.php:52
 msgid "Manage Licenses"
-msgstr "gérer les licences"
+msgstr "Gérer les licences"
 
 #: ../../templates/sidebar_admin.inc.php:57
 msgid "Server Config"
@@ -6973,7 +6973,7 @@ msgstr "Pistes"
 
 #: ../../templates/sidebar_home.inc.php:49
 msgid "Browse Video"
-msgstr "Parcourir les vidéos"
+msgstr "Parcourir vidéos"
 
 #: ../../templates/sidebar_home.inc.php:51
 msgid "Music Clips"
@@ -7066,7 +7066,7 @@ msgstr "Compte"
 
 #: ../../tvshows.php:45
 msgid "Show TV Shows starting with"
-msgstr "Afficher télé à partir de"
+msgstr "Afficher série TV commençant par"
 
 #: ../../update.php:79
 #, php-format
@@ -7105,7 +7105,7 @@ msgstr "Titre du site web"
 
 #: Database words
 msgid "Lock Songs"
-msgstr "Vérouiller les titres"
+msgstr "Verrouiller les titres"
 
 #: Database words
 msgid "Forces Http play regardless of port"
@@ -7161,7 +7161,7 @@ msgstr "Limite d'offset"
 
 #: Database words
 msgid "Rate Limit"
-msgstr "taux limite"
+msgstr "Taux limite"
 
 #: Database words
 msgid "Playlist Method"
@@ -7234,7 +7234,7 @@ msgstr ""
 #: Database words
 msgid "Fix header/sidebars position on compatible themes"
 msgstr ""
-"Vérouiller la position de l'entête et des barres latérales sur les thèmes "
+"Verrouiller la position de l'entête et des barres latérales sur les thèmes "
 "compatibles"
 
 #: Database words
@@ -7265,7 +7265,7 @@ msgstr "Auto-pause entre les onglets"
 
 #: Database words
 msgid "Use beautiful stream url"
-msgstr "Utiliser les url de stream embellies"
+msgstr "Utiliser les URL de stream embellies"
 
 #: Database words
 msgid "Allow Share"
@@ -7301,11 +7301,11 @@ msgstr "Menu du haut"
 
 #: Database words
 msgid "Flickr api key"
-msgstr "Flickr clé API"
+msgstr "clé API Flickr "
 
 #: Database words
 msgid "Clear democratic votes of expired user sessions"
-msgstr "Votes démocratiques claires de sessions utilisateur périmés"
+msgstr "Effacer les votes démocratiques des utilisateurs dont la session a expiré"
 
 #: Database words
 msgid "Show donate button in footer"
@@ -7317,16 +7317,16 @@ msgstr "Catalogue destination ajouts"
 
 #: Database words
 msgid "Allow users to upload media"
-msgstr "Autoriser les utilisateurs à télécharger des médias"
+msgstr "Autoriser les utilisateurs à uploader des médias"
 
 #: Database words
 msgid "Upload: create a subdirectory per user (recommended)"
-msgstr "Téléchargez: créer un sous-répertoire par utilisateur (recommandé)"
+msgstr "Upload: créer un sous-répertoire par utilisateur (recommandé)"
 
 #: Database words
 msgid "Upload: consider the user sender as the track's artist"
 msgstr ""
-"Téléchargez: considérer l'utilisateur comme expéditeur de l'artiste de la "
+"Upload: considérer l'utilisateur qui upload comme l'artiste de la "
 "piste"
 
 #: Database words
@@ -7334,14 +7334,14 @@ msgid ""
 "Upload: run the following script after upload (current directory = upload "
 "target directory)"
 msgstr ""
-"Téléchargez: exécutez le script suivant après le téléchargement (répertoire "
+"Upload: exécutez le script suivant après l'upload (répertoire "
 "courant = répertoire cible téléchargement)"
 
 #: Database words
 msgid "Upload: allow users to edit uploaded songs"
 msgstr ""
-"Téléchargement: permettent aux utilisateurs d'éditer des chansons "
-"téléchargées"
+"Upload: Permettre aux utilisateurs d'éditer des pistes "
+"uploadées"
 
 #: Database words
 msgid "Use DAAP backend"
@@ -7361,11 +7361,11 @@ msgstr "Autoriser fonctions vidéo"
 
 #: Database words
 msgid "Album - Group per release type"
-msgstr "Album - Groupe par type de libération"
+msgstr "Album - Groupe par type de sortie"
 
 #: Database words
 msgid "Ajax page load"
-msgstr "Cette page Ajax charge"
+msgstr "Chargement de la page AJAX"
 
 #~ msgid "%d item found checking tag information"
 #~ msgid_plural "%d items found checking tag information"

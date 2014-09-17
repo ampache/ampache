@@ -1204,6 +1204,16 @@ span.fatalerror {
     float: right;
 }
 
+.item_info {
+    float: right;
+}
+
+.item_properties {
+    text-align: right;
+    color: #999;
+    font-size: 13px;
+}
+
 .item_art {
     border: 2px solid transparent;
     display: inline-block;
