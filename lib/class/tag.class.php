@@ -283,7 +283,7 @@ class Tag extends database_object implements library_item
         $parent = new Tag($tag_id);
         $merges = $parent->get_merged_tags();
         if ($parent->is_hidden == false) {
-            $merges[] = array('id'=>$parent['id'], 'name'=>$parent['name']);
+            $merges[] = array('id' => $parent->id, 'name' => $parent->name);
         }
         foreach ($merges as $tag) {
             $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
