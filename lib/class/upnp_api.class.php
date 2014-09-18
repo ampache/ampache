@@ -55,10 +55,10 @@ class Upnp_Api
         socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
         socket_sendto($socket, $buf, strlen($buf), 0, $host, $port);
         socket_close($socket);
-        usleep($delay*1000);
+        usleep($delay * 1000);
     }
 
-    public static function sddpSend($delay=15, $host="239.255.255.250", $port=1900)
+    public static function sddpSend($delay=15, $host="239.255.255.250", $port=1900, $prefix="NT")
     {
         $strHeader  = 'NOTIFY * HTTP/1.1' . "\r\n";
         $strHeader .= 'HOST: ' . $host . ':' . $port . "\r\n";
@@ -66,28 +66,28 @@ class Upnp_Api
         $strHeader .= 'SERVER: DLNADOC/1.50 UPnP/1.0 Ampache/3.7' . "\r\n";
         $strHeader .= 'CACHE-CONTROL: max-age=1800' . "\r\n";
         $strHeader .= 'NTS: ssdp:alive' . "\r\n";
-        $rootDevice = 'NT: upnp:rootdevice' . "\r\n";
-        $rootDevice .= 'USN: uuid:' . self::UUIDSTR . '::upnp:rootdevice' . "\r\n". "\r\n";
 
+        $rootDevice = $prefix . ': upnp:rootdevice' . "\r\n";
+        $rootDevice .= 'USN: uuid:' . self::UUIDSTR . '::upnp:rootdevice' . "\r\n". "\r\n";
         $buf = $strHeader . $rootDevice;
         self::udpSend($buf, $delay, $host, $port);
 
-        $uuid = 'NT: uuid:' . self::UUIDSTR . "\r\n";
+        $uuid = $prefix . ': uuid:' . self::UUIDSTR . "\r\n";
         $uuid .= 'USN: uuid:' . self::UUIDSTR . "\r\n". "\r\n";
         $buf = $strHeader . $uuid;
         self::udpSend($buf, $delay, $host, $port);
 
-        $deviceType = 'NT: urn:schemas-upnp-org:device:MediaServer:1' . "\r\n";
+        $deviceType = $prefix . ': urn:schemas-upnp-org:device:MediaServer:1' . "\r\n";
         $deviceType .= 'USN: uuid:' . self::UUIDSTR . '::urn:schemas-upnp-org:device:MediaServer:1' . "\r\n". "\r\n";
         $buf = $strHeader . $deviceType;
         self::udpSend($buf, $delay, $host, $port);
 
-        $serviceCM = 'NT: urn:schemas-upnp-org:service:ConnectionManager:1' . "\r\n";
+        $serviceCM = $prefix . ': urn:schemas-upnp-org:service:ConnectionManager:1' . "\r\n";
         $serviceCM .= 'USN: uuid:' . self::UUIDSTR . '::urn:schemas-upnp-org:service:ConnectionManager:1' . "\r\n". "\r\n";
         $buf = $strHeader . $serviceCM;
         self::udpSend($buf, $delay, $host, $port);
 
-        $serviceCD = 'NT: urn:schemas-upnp-org:service:ContentDirectory:1' . "\r\n";
+        $serviceCD = $prefix . ': urn:schemas-upnp-org:service:ContentDirectory:1' . "\r\n";
         $serviceCD .= 'USN: uuid:' . self::UUIDSTR . '::urn:schemas-upnp-org:service:ContentDirectory:1' . "\r\n". "\r\n";
         $buf = $strHeader . $serviceCD;
         self::udpSend($buf, $delay, $host, $port);
@@ -851,7 +851,7 @@ class Upnp_Api
     {
         debug_event('upnp_class', 'replace <<< ' . $title, 5);
         // replace non letter or digits
-        $title = preg_replace('~[^\\pL\d\.\s\(\)]+~u', '-', $title);
+        $title = preg_replace('~[^\\pL\d\.\s\(\)\.\,\'\"]+~u', '-', $title);
         debug_event('upnp_class', 'replace >>> ' . $title, 5);
 
         if ($title == "")
@@ -927,8 +927,8 @@ class Upnp_Api
             'dc:title'		            => self::_replaceSpecialSymbols($song->f_title),
             'upnp:class'	            => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI'          => $art_url,
-            'upnp:artist'               => $song->f_artist,
-            'upnp:album'                => $song->f_album,
+            'upnp:artist'               => self::_replaceSpecialSymbols($song->f_artist),
+            'upnp:album'                => self::_replaceSpecialSymbols($song->f_album),
             'upnp:genre'                => Tag::get_display($song->tags, false, 'song'),
             //'dc:date'                   => date("c", $song->addition_time),
             'upnp:originalTrackNumber'    => $song->track,
@@ -940,7 +940,7 @@ class Upnp_Api
             'bitrate'                   => $song->bitrate,
             'sampleFrequency'           => $song->rate,
             //'nrAudioChannels'           => '1',
-            'description'               => $song->comment,
+            'description'               => self::_replaceSpecialSymbols($song->comment),
         );
     }
 
