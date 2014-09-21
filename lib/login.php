@@ -76,7 +76,7 @@ if (empty($_REQUEST['step'])) {
                 echo $auth['ui_required'];
                 exit();
             } else {
-                debug_event('Login', scrub_out($username) . ' attempted to login and failed', '1');
+                debug_event('Login', scrub_out($username) . ' From ' . $_SERVER['REMOTE_ADDR'] . ' attempted to login and failed', '1');
                 Error::add('general', T_('Error Username or Password incorrect, please try again'));
             }
         }
