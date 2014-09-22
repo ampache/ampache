@@ -604,6 +604,11 @@ class vainfo
         return $parsed;
     }
 
+    private function trimAscii($string)
+    {
+        return preg_replace('/[\x00-\x1F\x80-\xFF]/', '', trim($string));
+    }
+
     /**
      * _clean_type
      * This standardizes the type that we are given into a recognized type.
@@ -815,25 +820,26 @@ class vainfo
 
             if (!empty($id3v2['TXXX'])) {
                 // Find the MBIDs for the album and artist
+                // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
                 foreach ($id3v2['TXXX'] as $txxx) {
-                    switch ($txxx['description']) {
+                    switch ($this->trimAscii($txxx['description'])) {
                         case 'MusicBrainz Album Id':
-                            $parsed['mb_albumid'] = $txxx['data'];
+                            $parsed['mb_albumid'] = $this->trimAscii($txxx['data']);
                         break;
                         case 'MusicBrainz Release Group Id':
-                            $parsed['mb_albumid_group'] = $txxx['data'];
+                            $parsed['mb_albumid_group'] = $this->trimAscii($txxx['data']);
                         break;
                         case 'MusicBrainz Artist Id':
-                            $parsed['mb_artistid'] = $txxx['data'];
+                            $parsed['mb_artistid'] = $this->trimAscii($txxx['data']);
                         break;
                         case 'MusicBrainz Album Artist Id':
-                            $parsed['mb_albumartistid'] = $txxx['data'];
+                            $parsed['mb_albumartistid'] = $this->trimAscii($txxx['data']);
                         break;
                         case 'MusicBrainz Album Type':
-                            $parsed['release_type'] = $txxx['data'];
+                            $parsed['release_type'] = $this->trimAscii($txxx['data']);
                         break;
                         case 'CATALOGNUMBER':
-                            $parsed['catalog_number'] = $txxx['data'];
+                            $parsed['catalog_number'] = $this->trimAscii($txxx['data']);
                         break;
                     }
                 }
