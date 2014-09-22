@@ -383,8 +383,10 @@ class Album extends database_object implements library_item
         $params = array($name, $disk);
 
         if ($mbid) {
-           $sql .= 'AND `album`.`mbid` = ? ';
-           $params[] = $mbid;
+            $sql .= 'AND `album`.`mbid` = ? ';
+            $params[] = $mbid;
+        } else {
+            $sql .= 'AND `album`.`mbid` IS NULL ';
         }
         if ($prefix) {
            $sql .= 'AND `album`.`prefix` = ? ';
