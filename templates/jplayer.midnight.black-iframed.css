@@ -22,6 +22,11 @@ div.jp-area {
     min-width: 500px;
  }
  
+ div.jp-area-video {
+    margin-left: auto;
+    margin-right: 45%;
+ }
+ 
 div.jp-area-center {
     margin-top: 20px;
  }
@@ -52,7 +57,6 @@ div.jp-video {
 	line-height: 1.6;
 	color: #999;
 	border:1px solid #191919;
-	background-color: #eee;
 }
 div.jp-audio {
 	width: 480px;
@@ -100,6 +104,19 @@ div.jp-video-full div.jp-interface {
 	position: absolute !important; position: relative; /* Rules for IE6 (full-screen) */
 	bottom: 0;
 	left: 0;
+}
+
+div.jp-video-float div.jp-jplayer {
+    position: fixed !important;
+    bottom: 100px;
+    border-top: 4px solid #000000;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding: 15px;
+}
+
+div.jp-video-float  div.jp-gui {
+
 }
 
 div.jp-interface {
@@ -674,9 +691,12 @@ div.jp-jplayer {
 div.jp-jplayer {
 	background-color: #000000;
     position: absolute;
+    z-index: 9999;
+}
+
+div.jp-jplayer-audio {
     top: 10px;
     left: 20px;
-    z-index: 9999;
 }
 
 
@@ -829,7 +849,6 @@ a.jp-shuffle-off:hover {
     text-align: right;
     display: inline;
     opacity: 0.4;
-    z-index: 9999;
 }
 
 .player_actions:hover{

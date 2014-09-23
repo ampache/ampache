@@ -59,8 +59,7 @@ echo implode(',', $solutions);
 if ($isVideo) {
     if ($iframed) {
 ?>
-                width: "142px",
-                height: "80px",
+                width: "640px",
 <?php
 } else {
 ?>
@@ -185,18 +184,6 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
         }
     });
 
-<?php
-if ($isVideo) {
-?>
-    $("a.jp-full-screen").on('click', function() {
-        $(".jp-playlist").css("visibility", "hidden");
-    });
-    $("a.jp-restore-screen").on('click', function() {
-        $(".jp-playlist").css("visibility", "visible");
-    });
-<?php
-}
-?>
     $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, function (event) {
         if (brkey != '') {
             sendBroadcastMessage('SONG_POSITION', event.jPlayer.status.currentTime);
@@ -234,6 +221,16 @@ if ($isVideo) {
         $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
     });
 
+    $("#jquery_jplayer_1").bind($.jPlayer.event.resize, function (event) {
+        if (event.jPlayer.options.fullScreen) {
+            $(".player_actions").hide();
+            $(".jp-playlist").hide();
+        } else {
+            $(".player_actions").show();
+            $(".jp-playlist").show();
+        }
+    });
+
     $('#jp_container_1' + ' ul:last').sortable({
         update: function () {
             jplaylist.scan();
@@ -241,6 +238,7 @@ if ($isVideo) {
     });
 
 <?php echo WebPlayer::add_media_js($playlist); ?>
+
 });
 </script>
 </head>
@@ -255,8 +253,17 @@ if ($iframed && !$is_share) {
 }
 ?>
 <?php
+$areaClass = "";
+if ((!AmpConfig::get('waveform') || $is_share) && !$embed) {
+    $areaClass .= " jp-area-center";
+}
+if ($embed) {
+    $areaClass .= " jp-area-embed";
+}
+
 if (!$isVideo) {
-    $playerClass = "jp-audio";
+    $containerClass = "jp-audio";
+    $playerClass = "jp-jplayer-audio";
 ?>
 <div class="playing_info">
     <div class="playing_artist"></div>
@@ -268,13 +275,15 @@ if (!$isVideo) {
 </div>
 <?php
 } else {
-    $playerClass = "jp-video jp-video-270p";
+    $areaClass .= " jp-area-video";
+    $containerClass = "jp-video jp-video-float jp-video-360p";
+    $playerClass = "jp-jplayer-video";
 } ?>
 <div id="shouts_data"></div>
-<div class="jp-area <?php if ((!AmpConfig::get('waveform') || $is_share) && !$embed) { echo "jp-area-center"; } ?><?php if ($embed) { echo "jp-area-embed"; } ?>">
-  <div id="jp_container_1" class="<?php echo $playerClass; ?>">
+<div class="jp-area<?php echo $areaClass; ?>">
+  <div id="jp_container_1" class="<?php echo $containerClass; ?>">
     <div class="jp-type-playlist">
-      <div id="jquery_jplayer_1" class="jp-jplayer"></div>
+      <div id="jquery_jplayer_1" class="jp-jplayer <?php echo $playerClass; ?>"></div>
       <div class="jp-gui">
 <?php
 if ($isVideo) {

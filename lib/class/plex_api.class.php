@@ -157,6 +157,9 @@ class Plex_Api
             } else {
                 $email = $username;
                 $username = null;
+
+                $GLOBALS['user'] = new User();
+                $GLOBALS['user']->load_playlist();
             }
 
             if ($createSession) {
