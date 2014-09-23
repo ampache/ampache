@@ -292,6 +292,21 @@ class Artist extends database_object implements library_item
                     $results[$rtype] = array();
                 }
                 $results[$rtype][] = $r['id'];
+
+                $sort = AmpConfig::get('album_release_type_sort');
+                if ($sort) {
+                    $results_sort = array();
+                    $asort = explode(',', $sort);
+
+                    foreach ($asort as $rtype) {
+                        if (array_key_exists($rtype, $results)) {
+                            $results_sort[$rtype] = $results[$rtype];
+                            unset($results[$rtype]);
+                        }
+                    }
+
+                    $results = array_merge($results_sort, $results);
+                }
             } else {
                 $results[] = $r['id'];
             }

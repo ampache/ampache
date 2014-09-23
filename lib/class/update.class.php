@@ -455,6 +455,9 @@ class Update
         $update_string = '- Enhance tag persistent merge reference.<br />';
         $version[] = array('version' => '370018','description' => $update_string);
 
+        $update_string = '- Add album group order setting.<br />';
+        $version[] = array('version' => '370019','description' => $update_string);
+
         return $version;
     }
 
@@ -3055,6 +3058,25 @@ class Update
 
         $sql = "ALTER TABLE `tag` ADD COLUMN `is_hidden` TINYINT(1) NOT NULL DEFAULT 0";
         $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370019
+     *
+     * Add album group order setting
+     */
+    public static function update_370019()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('album_release_type_sort','album,ep,live,single','Album - Group per release type Sort',25,'string','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'album,ep,live,single')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;
     }
