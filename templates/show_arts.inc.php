@@ -46,7 +46,7 @@ while ($i <= $rows) {
                 <?php } else { ?>
                 <span class="error"><?php echo T_('Invalid'); ?></span>
                 <?php } ?>
-                [<a href="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=select_art&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo rawurlencode($burl); ?>"><?php echo T_('Select'); ?></a>]
+                [<a href="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=select_art&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
                 </p>
             </td>
 <?php

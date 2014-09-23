@@ -301,6 +301,6 @@ class Core
 
     public static function get_reloadutil()
     {
-        return (AmpConfig::get('play_type') == "stream") ? "reloadUtil" : "reloadDivUtil";
+        return (AmpConfig::get('play_type') == "stream" || !AmpConfig::get('ajax_load')) ? "reloadUtil" : "reloadDivUtil";
     }
 } // Core

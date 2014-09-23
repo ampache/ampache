@@ -71,20 +71,6 @@ if (AmpConfig::get('song_page_title')) {
 if ($iframed) {
 ?>
 <script type="text/javascript">
-function NavigateTo(url)
-{
-    window.location.hash = url.substring(jsWebPath.length + 1);
-}
-
-function getCurrentPage()
-{
-    if (window.location.hash.length > 0) {
-        return btoa(window.location.hash.substring(1));
-    }
-
-    return btoa(window.location.href.substring(jsWebPath.length + 1));
-}
-
 function NotifyOfNewSong()
 {
     refresh_slideshow();
@@ -175,9 +161,7 @@ function SavePlaylist()
     handlePlaylistAction(url, 'rb_append_dplaylist_new');
 }
 </script>
-<?php
-}
-?>
+<?php } ?>
 <script type="text/javascript">
 <?php if (AmpConfig::get('waveform') && !$is_share) { ?>
 var wavclicktimer = null;

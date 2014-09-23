@@ -64,15 +64,7 @@ $_SESSION['login'] = false;
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
-        <?php
-        if (AmpConfig::get('ajax_load')) {
-            $iframed = true;
-        ?>
-            <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js" language="javascript" type="text/javascript"></script>
-        <?php
-            require_once AmpConfig::get('prefix') . '/templates/show_html5_player_headers.inc.php';
-        }
-        ?>
+
         <script type="text/javascript" charset="utf-8">
             $(document).ready(function(){
                 $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
@@ -85,6 +77,45 @@ $_SESSION['login'] = false;
             var jsSaveTitle = "<?php echo T_('Save') ?>";
             var jsCancelTitle = "<?php echo T_('Cancel') ?>";
         </script>
+
+        <?php
+        if (AmpConfig::get('ajax_load')) {
+            $iframed = true;
+        ?>
+            <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js" language="javascript" type="text/javascript"></script>
+        <?php
+            require_once AmpConfig::get('prefix') . '/templates/show_html5_player_headers.inc.php';
+        ?>
+        <script type="text/javascript">
+            function NavigateTo(url)
+            {
+                window.location.hash = url.substring(jsWebPath.length + 1);
+            }
+
+            function getCurrentPage()
+            {
+                if (window.location.hash.length > 0) {
+                    return btoa(window.location.hash.substring(1));
+                }
+
+                return btoa(window.location.href.substring(jsWebPath.length + 1));
+            }
+        </script>
+        <?php
+        } else {
+        ?>
+        <script type="text/javascript">
+            function NavigateTo(url)
+            {
+                window.location.href = url;
+            }
+
+            function getCurrentPage()
+            {
+                return btoa(window.location.href);
+            }
+        </script>
+        <?php } ?>
         <script type="text/javascript">
             $.widget( "custom.catcomplete", $.ui.autocomplete, {
                 _renderItem: function( ul, item ) {
