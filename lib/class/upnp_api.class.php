@@ -849,10 +849,10 @@ class Upnp_Api
 
     private static function _replaceSpecialSymbols($title)
     {
-        debug_event('upnp_class', 'replace <<< ' . $title, 5);
+        ///debug_event('upnp_class', 'replace <<< ' . $title, 5);
         // replace non letter or digits
         $title = preg_replace('~[^\\pL\d\.\s\(\)\.\,\'\"]+~u', '-', $title);
-        debug_event('upnp_class', 'replace >>> ' . $title, 5);
+        ///debug_event('upnp_class', 'replace >>> ' . $title, 5);
 
         if ($title == "")
             $title = '(no title)';
@@ -912,7 +912,7 @@ class Upnp_Api
         );
     }
 
-    private static function _itemSong($song, $parent)
+    public static function _itemSong($song, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::$session : false;
         $art_url = Art::url($song->album, 'album', $api_session);
