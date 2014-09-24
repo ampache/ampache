@@ -189,6 +189,7 @@ function create_preference_input($name,$value)
         case 'home_moment_videos':
         case 'home_recently_played':
         case 'home_now_playing':
+        case 'browser_notify':
             $is_true = '';
             $is_false = '';
             if ($value == '1') {

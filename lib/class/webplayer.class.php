@@ -265,7 +265,7 @@ class WebPlayer
                 $js['artist_id'] = $media->artist;
                 $js['album_id'] = $media->album;
             }
-            $js['song_id'] = $media->id;
+            $js['media_id'] = $media->id;
 
             if ($media->type != $types['real']) {
                 $url .= '&transcode_to=' . $types['real'];

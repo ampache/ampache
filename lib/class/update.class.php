@@ -458,6 +458,9 @@ class Update
         $update_string = '- Add album group order setting.<br />';
         $version[] = array('version' => '370019','description' => $update_string);
 
+        $update_string = '- Add webplayer browser notification settings.<br />';
+        $version[] = array('version' => '370020','description' => $update_string);
+
         return $version;
     }
 
@@ -3076,6 +3079,32 @@ class Update
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'album,ep,live,single')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370020
+     *
+     * Add webplayer browser notification settings
+     */
+    public static function update_370020()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('browser_notify','1','WebPlayer browser notifications',25,'integer','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('browser_notify_timeout','0','WebPlayer browser notifications timeout (seconds)',25,'integer','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;

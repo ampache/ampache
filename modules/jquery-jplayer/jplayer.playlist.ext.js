@@ -10,7 +10,7 @@ jPlayerPlaylist.prototype._createListItem = function(media) {
         }
         attrClass += '" ';
 
-        var listItem = "<li" + attrClass + " name=\"" + $(jplaylist.cssSelector.playlist + " ul li").length + "\" data-song_id=\"" + media['song_id'] + "\" data-album_id=\"" + media['album_id'] + "\" data-artist_id=\"" + media['artist_id'] + "\"><div>";
+        var listItem = "<li" + attrClass + " name=\"" + $(jplaylist.cssSelector.playlist + " ul li").length + "\" data-poster=\"" + media['poster'] + "\" data-media_id=\"" + media['media_id'] + "\" data-album_id=\"" + media['album_id'] + "\" data-artist_id=\"" + media['artist_id'] + "\"><div>";
 
         // Create image
         // listItem += "<img class=\"cover\" src=\"" + media.cover + "\" alt=\"" + media.title + "\"/>";
@@ -19,7 +19,7 @@ jPlayerPlaylist.prototype._createListItem = function(media) {
         listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.removeItemClass + "'>&times;</a>";
 
         // Create song links
-        if (media['song_id']) {
+        if (media['media_id']) {
             listItem += "<span class=\"jp-free-media menu\"><a></a></span>";
         }
 

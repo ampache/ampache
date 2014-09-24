@@ -110,35 +110,38 @@ if ($isVideo) {
                     currentjpitem = currenti;
 <?php if ($iframed) { ?>
                     if (previousartist != currentjpitem.attr("data-artist_id")) {
-                        NotifyOfNewSong();
+                        NotifyOfNewArtist();
                     }
+<?php } ?>
+<?php if (AmpConfig::get('browser_notify')) { ?>
+                    NotifyOfNewSong(obj.title, obj.artist, currentjpitem.attr("data-poster"));
 <?php } ?>
                 }
                 if (brkey != '') {
-                    sendBroadcastMessage('SONG', currenti.attr("data-song_id"));
+                    sendBroadcastMessage('SONG', currenti.attr("data-media_id"));
                 }
 <?php
 if (!$isVideo && !$isRadio && !$is_share) {
     if ($iframed) {
         if (AmpConfig::get('sociable')) {
-            echo "ajaxPut(jsAjaxUrl + '?page=song&action=shouts&object_type=song&object_id=' + currenti.attr('data-song_id'),'shouts_data');";
+            echo "ajaxPut(jsAjaxUrl + '?page=song&action=shouts&object_type=song&object_id=' + currenti.attr('data-media_id'),'shouts_data');";
         }
-        echo "ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=song&object_id=' + currenti.attr('data-song_id'));";
+        echo "ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=song&object_id=' + currenti.attr('data-media_id'));";
         echo "var titleobj = (currenti.attr('data-album_id') != null) ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + currenti.attr('data-album_id') + '\');\">' + obj.title + '</a>' : obj.title;";
         echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + currenti.attr('data-artist_id') + '\');\">' + obj.artist + '</a>';";
-        echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + currenti.attr('data-song_id') + '\');\">" . T_('Show Lyrics') . "</a>';";
+        echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + currenti.attr('data-media_id') + '\');\">" . T_('Show Lyrics') . "</a>';";
         echo "var actionsobj = '|';";
         if (AmpConfig::get('sociable')) {
-            echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-song_id') + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a> |';";
+            echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-media_id') + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a> |';";
         }
         echo "actionsobj += '<div id=\'action_buttons\'></div>';";
         if (AmpConfig::get('waveform') && !$is_share) {
             echo "var waveformobj = '';";
             if (AmpConfig::get('waveform')) {
-                echo "waveformobj += '<a href=\"#\" title=\"" . T_('Post Shout') . "\" onClick=\"javascript:WaveformClick(' + currenti.attr('data-song_id') + ', ClickTimeOffset(event));\">';";
+                echo "waveformobj += '<a href=\"#\" title=\"" . T_('Post Shout') . "\" onClick=\"javascript:WaveformClick(' + currenti.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
             }
             echo "waveformobj += '<div class=\"waveform-shouts\"></div>';";
-            echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . AmpConfig::get('web_path') . "/waveform.php?song_id=' + currenti.attr('data-song_id') + '\" onLoad=\"ShowWaveform();\">';";
+            echo "waveformobj += '<div class=\"waveform-time\"></div><img src=\"" . AmpConfig::get('web_path') . "/waveform.php?song_id=' + currenti.attr('data-media_id') + '\" onLoad=\"ShowWaveform();\">';";
             if (AmpConfig::get('waveform')) {
                 echo "waveformobj += '</a>';";
             }

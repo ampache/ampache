@@ -48,7 +48,7 @@ function addMedia(media)
     jpmedia['poster'] = media['poster'];
     jpmedia['artist_id'] = media['artist_id'];
     jpmedia['album_id'] = media['album_id'];
-    jpmedia['song_id'] = media['song_id'];
+    jpmedia['media_id'] = media['media_id'];
 
     jplaylist.add(jpmedia);
 }
@@ -71,7 +71,44 @@ if (AmpConfig::get('song_page_title')) {
 if ($iframed) {
 ?>
 <script type="text/javascript">
-function NotifyOfNewSong()
+function NotifyOfNewSong(title, artist, icon)
+{
+    if (!("Notification" in window)) {
+        Console.error("This browser does not support desktop notification");
+    } else {
+        if (Notification.permission !== 'denied') {
+            if (Notification.permission === 'granted') {
+                NotifyBrowser(title, artist, icon);
+            } else {
+                Notification.requestPermission(function (permission) {
+                    if (!('permission' in Notification)) {
+                        Notification.permission = permission;
+                    }
+                    NotifyBrowser(title, artist, icon);
+                });
+            }
+        } else {
+            Console.error("Desktop notification denied.");
+        }
+    }
+}
+
+function NotifyBrowser(title, artist, icon)
+{
+    var notyTimeout = <?php echo AmpConfig::get('browser_notify_timeout'); ?>;
+    var notification = new Notification(title, {
+        body: artist,
+        icon: icon
+    });
+
+    if (notyTimeout > 0) {
+        setTimeout(function(){
+            notification.close()
+        }, notyTimeout * 1000);
+    }
+}
+
+function NotifyOfNewArtist()
 {
     refresh_slideshow();
 }
@@ -156,7 +193,7 @@ function SavePlaylist()
 {
     var url = "<?php echo AmpConfig::get('ajax_url'); ?>?page=playlist&action=append_item&item_type=song&item_id=";
     for (var i = 0; i < jplaylist['playlist'].length; i++) {
-        url += "," + jplaylist['playlist'][i]["song_id"];
+        url += "," + jplaylist['playlist'][i]["media_id"];
     }
     handlePlaylistAction(url, 'rb_append_dplaylist_new');
 }
@@ -216,7 +253,7 @@ function startBroadcast(key)
     brconn.onopen = function(e) {
         sendBroadcastMessage('AUTH_SID', '<?php echo session_id(); ?>');
         sendBroadcastMessage('REGISTER_BROADCAST', brkey);
-        sendBroadcastMessage('SONG', currentjpitem.attr("data-song_id"));
+        sendBroadcastMessage('SONG', currentjpitem.attr("data-media_id"));
     };
 }
 
