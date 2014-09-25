@@ -3101,10 +3101,10 @@ class Update
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('browser_notify_timeout','0','WebPlayer browser notifications timeout (seconds)',25,'integer','interface')";
+            "VALUES ('browser_notify_timeout','10','WebPlayer browser notifications timeout (seconds)',25,'integer','interface')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'10')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;
