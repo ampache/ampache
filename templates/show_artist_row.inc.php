@@ -64,6 +64,11 @@ if (Art::is_enabled()) {
 <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist"><?php Userflag::show($libitem->id,'artist'); ?></td>
 <?php } ?>
 <td class="cel_action">
+<?php if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) { ?>
+<a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&amp;id=<?php echo $libitem->id; ?>">
+    <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
+</a>
+<?php } ?>
 <?php if (Access::check_function('batch_download')) { ?>
     <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=artist&amp;id=<?php echo $libitem->id; ?>">
             <?php echo UI::get_icon('batch_download','', T_('Batch Download')); ?>

@@ -21,7 +21,7 @@
  */
 ?>
 <tr id="flagged_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-    <td class="cel_object"><?php echo $object->f_link; ?></td>
+    <td class="cel_object"><?php echo ($object->f_name_link ?: $object->f_link); ?></td>
     <td class="cel_username"><?php echo $client->f_link; ?></td>
     <td class="cel_sticky"><?php echo $libitem->sticky; ?></td>
     <td class="cel_comment"><?php echo scrub_out($libitem->text); ?></td>

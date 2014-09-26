@@ -47,10 +47,12 @@
         <label><?php echo T_('Artist'); ?></label>
         <?php echo $media->f_artist_link; ?>
     </div>
-    <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_artist">
-        <label><?php echo T_('Tags'); ?></label>
-        <?php echo $media->f_tags; ?>
-    </div>
+    <?php if (!empty($media->f_tags)) { ?>
+        <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_artist">
+            <label><?php echo T_('Tags'); ?></label>
+            <?php echo $media->f_tags; ?>
+        </div>
+    <?php } ?>
 </div>
 
 <?php if (Art::is_enabled()) { ?>

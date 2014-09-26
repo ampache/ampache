@@ -103,12 +103,6 @@ if (AmpConfig::get('show_played_times')) {
                 &nbsp;&nbsp;<?php echo T_('Save Tracks Order'); ?>
             </a>
         </li>
-        <!--<?php  if ((Access::check('interface','50'))) { ?>
-        <li>
-            <a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('cog', T_('Update from tags')); ?></a>
-            <a href="<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo T_('Update from tags'); ?></a>
-        </li>
-        <?php  } ?>-->
         <?php if (AmpConfig::get('sociable')) { ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo T_('Post Shout'); ?></a>

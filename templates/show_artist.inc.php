@@ -112,12 +112,10 @@ if (AmpConfig::get('show_played_times')) {
             <?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id, T_('Random all to temporary playlist'),'random_text_' . $artist->id); ?>
         </li>
         <?php } ?>
-        <!--<?php if (Access::check('interface','50')) { ?>
-        <li>
-            <a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('cog', T_('Update from tags')); ?></a>
-            <a href="<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo T_('Update from tags'); ?></a>
-        </li>
-        <?php } ?>-->
+        <?php if (AmpConfig::get('sociable')) { ?>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo T_('Post Shout'); ?></a>
+        <?php } ?>
         <?php if (Access::check_function('batch_download')) { ?>
         <li>
             <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
