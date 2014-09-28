@@ -157,7 +157,8 @@ class WebPlayer
             }
 
             if ($urlinfo['type'] == 'song') {
-                if ($types['real'] == "flac" || $types['real'] == "ogg") $types['player'] = "oga";
+                if ($types['real'] == "ogg") $types['player'] = "oga";
+                else if ($types['real'] == "flac")  $types['player'] = "flac";
                 else if ($types['real'] == "mp4") $types['player'] = "m4a";
             } else if ($urlinfo['type'] == 'video') {
                 if ($types['real'] == "ogg") $types['player'] = "ogv";

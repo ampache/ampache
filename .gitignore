@@ -8,3 +8,4 @@ play/.htaccess
 *.suo
 logs
 /nbproject/private/
+.pc

@@ -475,7 +475,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy {
 
    #-- return a single .ttf font filename
    function font() {
-      $fonts = array(/*"MyUnderwood.ttf"*/);
+      $fonts = array(/*"FreeMono.ttf"*/);
       $fonts += glob(CAPTCHA_FONT_DIR."/*.ttf");
       return $fonts[rand(0,count($fonts)-1)];
    }
