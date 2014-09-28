@@ -341,7 +341,7 @@ class Update
         $update_string = '- New table to store song previews.<br />';
         $version[] = array('version' => '360030','description' => $update_string);
 
-        $update_string = '- Add option to fix header/sidebars position on compatible themes.<br />';
+        $update_string = '- Add option to fix header position on compatible themes.<br />';
         $version[] = array('version' => '360031','description' => $update_string);
 
         $update_string = '- Add check update automatically option.<br />';
@@ -2072,7 +2072,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('ui_fixed','0','Fix header/sidebars position on compatible themes',25,'boolean','interface')";
+            "VALUES ('ui_fixed','0','Fix header position on compatible themes',25,'boolean','interface')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";

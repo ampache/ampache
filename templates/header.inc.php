@@ -318,7 +318,7 @@ $_SESSION['login'] = false;
             </div><!-- End header -->
 
         <?php if (AmpConfig::get('topmenu')) { ?>
-            <div id="topmenu_container">
+            <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="topmenu_item">
                     <a href="<?php echo $web_path; ?>/index.php">
                         <img src="<?php echo $web_path; ?>/images/topmenu-home.png" />
@@ -397,7 +397,7 @@ $_SESSION['login'] = false;
             <div id="ajax-loading">Loading . . .</div>
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
-            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?> <?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
+            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo (($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
                 <div class="fatalerror">

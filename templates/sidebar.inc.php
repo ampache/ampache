@@ -48,7 +48,7 @@ foreach ($sidebar_items as $item) {
         echo Ajax::button("?page=index&action=sidebar&button=".$item['id'], $item['icon'], $item['title'], 'sidebar_'.$item['id']);
         if ($item['id']==$_SESSION['state']['sidebar_tab']) {
 ?>
-        <div id="sidebar-page" class="sidebar-page-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
+        <div id="sidebar-page" class="sidebar-page-float">
             <?php require_once AmpConfig::get('prefix') . '/templates/sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'; ?>
         </div>
 <?php
