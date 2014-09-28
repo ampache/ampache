@@ -41,7 +41,7 @@ $_SESSION['login'] = false;
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo $location['title']; ?></title>
         <?php require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php'; ?>
         <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-editdialog.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-ui/jquery-ui.min.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-file-upload.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jstree/themes/default/style.min.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/tag-it/jquery.tagit.css" type="text/css" media="screen" />
@@ -52,13 +52,13 @@ $_SESSION['login'] = false;
         <script src="<?php echo $web_path; ?>/modules/prettyPhoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/tag-it/tag-it.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery/jquery.cookie.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/modules/jquery-cookie/jquery.cookie.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jscroll/jquery.jscroll.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery/jquery.qrcode.min.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/modules/jquery-qrcode/jquery.qrcode.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/rhinoslider/js/rhinoslider-1.05.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/responsive-elements/responsive-elements.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery/jquery.knob.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/modules/jquery-knob/jquery.knob.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery-file-upload/jquery.iframe-transport.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery-file-upload/jquery.fileupload.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>

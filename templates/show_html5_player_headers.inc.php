@@ -10,11 +10,11 @@ if ($iframed) {
 require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php';
 ?>
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/jquery-editdialog.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-ui/jquery-ui.min.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery/jquery.cookie.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery/jquery-cookie.cookie.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
@@ -32,8 +32,8 @@ function update_action()
 ?>
 <link href="<?php echo AmpConfig::get('web_path'); ?>/modules/UberViz/style.css" rel="stylesheet" type="text/css">
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/jquery.jplayer.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/jplayer.playlist.ext.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/add-on/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/jplayer.playlist.ext.js" language="javascript" type="text/javascript"></script>
 
 <script language="javascript" type="text/javascript">
 var jplaylist = new Array();
