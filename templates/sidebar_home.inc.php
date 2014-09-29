@@ -61,7 +61,7 @@
     <li>
         <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Playlist'); ?>"><?php echo T_('Playlist'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_home_playlist']) ? $_COOKIE['sb_home_playlist'] : 'expanded'; ?>" id="playlist" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
         <ul class="sb3" id="sb_home_playlist">
-            <li id="sb_home_playlist_currentlyPlaying"><a href="<?php echo AmpConfig::get('web_path'); ?>"><?php echo T_('Currently Playing'); ?></a></li>
+            <li id="sb_home_playlist_currentlyPlaying"><a href="<?php echo AmpConfig::get('web_path'); ?>/index.php"><?php echo T_('Currently Playing'); ?></a></li>
             <?php if (AmpConfig::get('allow_democratic_playback')) { ?>
             <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo T_('Democratic'); ?></a></li>
             <?php } ?>
