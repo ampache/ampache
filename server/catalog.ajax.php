@@ -33,7 +33,7 @@ switch ($_REQUEST['action']) {
         }
 
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
-        $new_enabled = $catalog->enabled ? '0' : '1';
+        $new_enabled = $catalog->enabled ? false : true;
         $catalog->update_enabled($new_enabled, $catalog->id);
         $catalog->enabled = $new_enabled;
         $catalog->format();

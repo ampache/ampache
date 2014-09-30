@@ -31,7 +31,7 @@
 class Query
 {
     /**
-     * @var int $id
+     * @var int|string $id
      */
     public $id;
     /**
@@ -44,7 +44,7 @@ class Query
      */
     protected $_state = array();
     /**
-     * @var boolean $_cache
+     * @var array $_cache
      */
     protected $_cache;
 
@@ -1824,11 +1824,7 @@ class Query
                 } // end switch
             break;
             case 'video':
-                switch ($field) {
-                    default:
-                        $sql = $this->sql_sort_video('video', $field);
-                    break;
-                } // end switch
+                $sql = $this->sql_sort_video('video', $field);
             break;
             case 'wanted':
                 switch ($field) {
@@ -1963,11 +1959,7 @@ class Query
                 }
             break;
             case 'movie':
-                switch ($field) {
-                    default:
-                        $sql = $this->sql_sort_video('movie', $field);
-                    break;
-                }
+                $sql = $this->sql_sort_video('movie', $field);
             break;
             case 'clip':
                 switch ($field) {

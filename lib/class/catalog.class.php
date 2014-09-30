@@ -568,7 +568,7 @@ abstract class Catalog extends database_object
      *
      * This creates a new catalog entry and associate it to current instance
      * @param array $data
-     * @return int|boolean
+     * @return int
      */
     public static function create($data)
     {
@@ -601,7 +601,7 @@ abstract class Catalog extends database_object
             if (!$insert_id) {
                 Error::add('general', T_('Catalog Insert Failed check debug logs'));
                 debug_event('catalog', 'Insert failed: ' . json_encode($data), 2);
-                return false;
+                return 0;
             }
 
             $classname = 'Catalog_' . $type;
@@ -1721,7 +1721,7 @@ abstract class Catalog extends database_object
     /**
      * parse_m3u
      * this takes m3u filename and then attempts to found song filenames listed in the m3u
-     * @param array $data
+     * @param string $data
      * @return array
      */
     public static function parse_m3u($data)
@@ -1742,7 +1742,7 @@ abstract class Catalog extends database_object
     /**
      * parse_pls
      * this takes pls filename and then attempts to found song filenames listed in the pls
-     * @param array $data
+     * @param string $data
      * @return array
      */
     public static function parse_pls($data)
@@ -1766,7 +1766,7 @@ abstract class Catalog extends database_object
     /**
      * parse_asx
      * this takes asx filename and then attempts to found song filenames listed in the asx
-     * @param array $data
+     * @param string $data
      * @return array
      */
     public static function parse_asx($data)
@@ -1789,7 +1789,7 @@ abstract class Catalog extends database_object
     /**
      * parse_xspf
      * this takes xspf filename and then attempts to found song filenames listed in the xspf
-     * @param array $data
+     * @param string $data
      * @return array
      */
     public static function parse_xspf($data)

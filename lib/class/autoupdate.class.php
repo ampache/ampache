@@ -170,7 +170,7 @@ class AutoUpdate
 
     /**
      * Get current local git commit.
-     * @return string|boolean
+     * @return string
      */
     public static function get_current_commit()
     {
@@ -178,7 +178,7 @@ class AutoUpdate
             return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/develop'));
         }
 
-        return false;
+        return '';
     }
 
     /**

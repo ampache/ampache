@@ -66,6 +66,7 @@ class fs
         $this->base = $this->real($base);
         if (!$this->base) { throw new Exception('Base directory does not exist'); }
     }
+
     public function lst($id, $with_root = false)
     {
         $dir = $this->path($id);
@@ -87,6 +88,7 @@ class fs
         }
         return $res;
     }
+
     public function data($id)
     {
         if (strpos($id, ":")) {

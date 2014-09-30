@@ -127,6 +127,10 @@ class Movie extends Video
 
     } //format
 
+    /**
+     * Get item keywords for metadata searches.
+     * @return array
+     */
     public function get_keywords()
     {
         $keywords = parent::get_keywords();

@@ -150,7 +150,7 @@ class Browse extends Query
             $match = ' (' . $filter_value . ')';*/
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
-            $catalog = Catalog::create_from_id($filter_value);
+            $catalog = Catalog::create_from_id(intval($filter_value));
             $match = ' (' . $catalog->name . ')';
         }
 

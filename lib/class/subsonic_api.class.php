@@ -944,8 +944,8 @@ class Subsonic_Api
         $medias[] = $media;
         $stream = new Stream_Playlist();
         $additional_params = '';
-        if ($bitrate) {
-            $additional_params .= '&bitrate=' . $bitrate;
+        if ($bitRate) {
+            $additional_params .= '&bitrate=' . $bitRate;
         }
         //$additional_params .= '&transcode_to=ts';
         $stream->add($medias, $additional_params);

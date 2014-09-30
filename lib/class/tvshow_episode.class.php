@@ -126,14 +126,14 @@ class TVShow_Episode extends Video
         $original_name = $data['original_name'] ?: $this->original_name;
         $tvshow_season = $data['tvshow_season'] ?: $this->season;
         $tvshow_episode = $data['tvshow_episode'] ?: $this->episode_number;
-        $summary = $data['summary'] ?: $summary;
+        $summary = $data['summary'] ?: $this->summary;
 
         $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
         Dba::write($sql, array($original_name, $tvshow_season, $tvshow_episode, $summary, $this->id));
 
-        $this->original_name = $originale_name;
-        $this->tvshow_season = $tvshow_season;
-        $this->tvshow_episode = $tvshow_episode;
+        $this->original_name = $original_name;
+        $this->season = $tvshow_season;
+        $this->episode_number = $tvshow_episode;
         $this->summary = $summary;
 
         return $this->id;
@@ -168,6 +168,10 @@ class TVShow_Episode extends Video
         return true;
     }
 
+    /**
+     * Get item keywords for metadata searches.
+     * @return array
+     */
     public function get_keywords()
     {
         $keywords = parent::get_keywords();

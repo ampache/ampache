@@ -127,7 +127,7 @@ function scrub_arg($arg)
  */
 function make_bool($string)
 {
-    if (strcasecmp($string,'false') == 0) {
+    if (strcasecmp($string,'false') == 0 || $string == '0') {
         return false;
     }
 

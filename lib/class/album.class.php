@@ -752,7 +752,7 @@ class Album extends database_object implements library_item
     public function update(array $data)
     {
         $year = $data['year'] ?: $this->year;
-        $artist = $data['artist'] ? intval($data['artist']) : $this->artist;
+        $artist = $data['artist'] ? intval($data['artist']) : $this->artist_id;
         $album_artist = $data['album_artist'] ? intval($data['album_artist']) : $this->album_artist;
         $name = $data['name'] ?: $this->name;
         $disk = $data['disk'] ?: $this->disk;
@@ -806,7 +806,7 @@ class Album extends database_object implements library_item
         $this->release_type = $release_type;
         $this->name = $name;
         $this->disk = $disk;
-        $this->mb_id = $mbid;
+        $this->mbid = $mbid;
 
         if ($updated && is_array($songs)) {
             foreach ($songs as $song_id) {

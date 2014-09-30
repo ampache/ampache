@@ -402,7 +402,7 @@ class Art extends database_object
      * get_thumb
      * Returns the specified resized image.  If the requested size doesn't
      * already exist, create and cache it.
-     * @param string $size
+     * @param array $size
      * @return string
      */
     public function get_thumb($size)
@@ -433,11 +433,11 @@ class Art extends database_object
      * Only works on gif/jpg/png/bmp. Fails if PHP-GD isn't available
      * or lacks support for the requested image type.
      * @param string $image
-     * @param string $size
+     * @param array $size
      * @param string $mime
      * @return string
      */
-    public function generate_thumb($image,$size,$mime)
+    public function generate_thumb($image, $size, $mime)
     {
         $data = explode("/",$mime);
         $type = strtolower($data['1']);
@@ -540,7 +540,7 @@ class Art extends database_object
      * ['raw']      = Actual Image data, already captured
      * @param array $data
      * @param string $type
-     * @return string
+     * @return string|null
      */
     public static function get_from_source($data, $type = 'album')
     {
@@ -605,7 +605,7 @@ class Art extends database_object
             }
         } // if data song
 
-        return false;
+        return null;
 
     } // get_from_source
 
@@ -1374,17 +1374,17 @@ class Art extends database_object
         switch ($thumb) {
             case 1:
                 /* This is used by the now_playing / browse stuff */
-                $size['height'] = '100';
-                $size['width']    = '100';
+                $size['height'] = 100;
+                $size['width']    = 100;
             break;
             case 2:
-                $size['height']    = '128';
-                $size['width']    = '128';
+                $size['height']    = 128;
+                $size['width']    = 128;
             break;
             case 3:
                 /* This is used by the flash player */
-                $size['height']    = '80';
-                $size['width']    = '80';
+                $size['height']    = 80;
+                $size['width']    = 80;
             break;
             case 4:
                 /* Web Player size */
@@ -1417,8 +1417,8 @@ class Art extends database_object
                  $size['width'] = 235;
             break;
             default:
-                $size['height'] = '275';
-                $size['width']    = '275';
+                $size['height'] = 275;
+                $size['width']    = 275;
             break;
         }
 

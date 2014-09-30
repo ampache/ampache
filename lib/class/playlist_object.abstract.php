@@ -27,13 +27,34 @@
 abstract class playlist_object extends database_object implements library_item
 {
     // Database variables
+    /**
+     * @var int $id
+     */
     public $id;
+    /**
+     * @var string $name
+     */
     public $name;
+    /**
+     * @var int $user
+     */
     public $user;
+    /**
+     * @var string $type
+     */
     public $type;
 
+    /**
+     * @var string $f_type
+     */
     public $f_type;
+    /**
+     * @var string $f_name
+     */
     public $f_name;
+    /**
+     * @var string $f_user
+     */
     public $f_user;
 
     abstract public function get_items();

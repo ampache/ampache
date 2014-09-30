@@ -300,10 +300,11 @@ class Session
      */
     public static function extend($sid, $type = null)
     {
+        $time = time();
         if ($type == 'stream') {
-            $expire = time() + AmpConfig::get('stream_length');
+            $expire = $time + AmpConfig::get('stream_length');
         } else {
-            $expire = time() + AmpConfig::get('session_length');
+            $expire = $time + AmpConfig::get('session_length');
         }
 
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';

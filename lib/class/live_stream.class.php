@@ -31,16 +31,43 @@
 class Live_Stream extends database_object implements media, library_item
 {
     /* DB based variables */
+
+    /**
+     *  @var int $id
+     */
     public $id;
+    /**
+     *  @var string $name
+     */
     public $name;
+    /**
+     *  @var string $site_url
+     */
     public $site_url;
+    /**
+     *  @var string $url
+     */
     public $url;
-    public $genre;
+    /**
+     *  @var string $codec
+     */
     public $codec;
+    /**
+     *  @var int $catalog
+     */
     public $catalog;
 
+    /**
+     *  @var string $f_link
+     */
     public $f_link;
+    /**
+     *  @var string $f_name_link
+     */
     public $f_name_link;
+    /**
+     *  @var string $f_url_link
+     */
     public $f_url_link;
 
     /**
