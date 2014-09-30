@@ -579,7 +579,7 @@ abstract class Catalog extends database_object
         $gather_types = $data['gather_media'];
 
         // Should it be an array? Not now.
-        if (!in_array($gather_types, array('music', 'clip', 'tvshow', 'movie', 'personal_video'))) return false;
+        if (!in_array($gather_types, array('music', 'clip', 'tvshow', 'movie', 'personal_video'))) return 0;
 
         $insert_id = 0;
         $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '.catalog.php';

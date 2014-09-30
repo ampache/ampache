@@ -293,9 +293,9 @@ class Access
                     return make_bool(AmpConfig::get('download'));
                 }
             break;
-            default:
-                return false;
         }
+
+        return false;
     }
 
     /**

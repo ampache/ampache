@@ -152,7 +152,7 @@ if (isset($auth) && $auth['success'] && isset($user)) {
         $user->insert_ip_history();
     }
 
-    if ($_POST['rememberme'] && $username) {
+    if ($_POST['rememberme'] && isset($username)) {
         Session::create_remember_cookie($username);
     }
 

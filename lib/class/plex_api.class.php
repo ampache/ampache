@@ -644,6 +644,7 @@ class Plex_Api
         if ($n == 2) {
             $transcode_to = $params[0];
             $action = $params[1];
+            $id = '';
 
             $path = $_GET['path'];
             $protocol = $_GET['protocol'];

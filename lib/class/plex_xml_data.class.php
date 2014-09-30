@@ -528,7 +528,7 @@ class Plex_XML_Data
 
                 $location = $dir->addChild('Location');
                 $location->addAttribute('id', $id);
-                $location->addAttribute('path', $catalog->f_full_info);
+                $location->addAttribute('path', $catalog->f_name);
             }
         }
 

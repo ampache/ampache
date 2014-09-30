@@ -103,7 +103,7 @@ class Wanted extends database_object
     /**
      * get_missing_albums
      * Get list of library's missing albums from MusicBrainz
-     * @param Artist $artist
+     * @param Artist|null $artist
      * @param string $mbid
      * @return array
      */

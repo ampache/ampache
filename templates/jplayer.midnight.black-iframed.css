@@ -480,7 +480,7 @@ div.playing_info {
 	font-family: 'Verdana',Arial,sans-serif;
 	color: rgb(153, 153, 153);
 	width: 300px;
-    z-index: 9999;
+        z-index: 9999;
 }
 
 div.playing_artist {
@@ -494,6 +494,9 @@ div.playing_artist a {
 
 div.playing_title {
 	font-size:0.7em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 }
 
 div.playing_title a {
@@ -509,7 +512,7 @@ div.playing_features {
 
 div.playing_lyrics {
 	position: relative;
-    display: inline;
+        display: inline;
 }
 
 div.playing_lyrics a {
@@ -519,7 +522,7 @@ div.playing_lyrics a {
 
 div.playing_actions {
 	position: relative;
-    display: inline;
+        display: inline;
 }
 
 div.playing_actions div {
