@@ -30,13 +30,13 @@
 class AmpacheUPnP extends localplay_controller
 {
     /* Variables */
-    private $version = '000001';
-	
-    private $description = 'Controls a UPnP instance';
+    private $_version = '000001';
+
+    private $_description = 'Controls a UPnP instance';
 
     /* Constructed variables */
     private $_upnp;
-	
+    
 
     /**
      * Constructor
@@ -55,7 +55,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function get_description()
     {
-        return $this->description;
+        return $this->_description;
     } 
 
     /**
@@ -64,7 +64,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function get_version()
     {
-        return $this->version;
+        return $this->_version;
     } 
 
     /**
@@ -195,7 +195,7 @@ class AmpacheUPnP extends localplay_controller
         $db_results = Dba::query($sql, array($instance));
 
         $row = Dba::fetch_assoc($db_results);
-	
+    
         return $row;
     }
 
@@ -225,15 +225,15 @@ class AmpacheUPnP extends localplay_controller
      */
     public function get_active_instance()
     {
-		$instance = AmpConfig::get('upnp_active');
-		return $instance;
+        $instance = AmpConfig::get('upnp_active');
+        return $instance;
     }
 
-	
+    
     public function add_url(Stream_URL $url)
     {
         debug_event('upnp', 'add_url: ' . $url->title . " | " . $url->url, 5);
-		
+        
         if (!$this->_upnp) {
             return false;
         }
@@ -254,15 +254,13 @@ class AmpacheUPnP extends localplay_controller
     public function delete_track($track)
     {
         debug_event('upnp', 'delete_track: ' . $track, 5);
-		
+        
         if (!$this->_upnp) {
             return false;
         }
 
         try {
-            $this->_upnp->PlaylistRemove(array(
-                'position' => $track
-            ));
+            $this->_upnp->PlaylistRemove($track);
             return true;
         } catch (UPNP_Exception $ex) {
             debug_event('upnp', 'delete_track failed: ' . $ex->getMessage(), 1);
@@ -366,7 +364,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         try {
-            $this->_upnp->PlaySkip($song);
+            $this->_upnp->Skip($song);
             return true;
         } catch (UPNP_Exception $ex) {
             debug_event('upnp', 'skip failed, is the player started?: ' . $ex->getMessage(), 1);
@@ -374,46 +372,6 @@ class AmpacheUPnP extends localplay_controller
         }
     }
 
-    /**
-     * This tells upnp to increase the volume
-     */
-    public function volume_up()
-    {
-        debug_event('upnp', 'volume+', 5);
-		
-        if (!$this->_upnp) {
-            return false;
-        }
-
-        try {
-            $this->_upnp->SetVolume(array('volume' => 'increment'));
-            return true;
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'volume_up failed: ' . $ex->getMessage(), 1);
-            return false;
-        }
-    }
-	
-    /**
-     * This tells upnp to decrease the volume
-     */
-    public function volume_down()
-    {
-        debug_event('upnp', 'volume-', 5);
-		
-        if (!$this->_upnp) {
-            return false;
-        }
-
-        try {
-            $this->_upnp->SetVolume(array( 'volume' => 'decrement' ));
-            return true;
-        } catch (UPNP_Exception $ex) {
-            debug_event('upnp', 'volume_down failed: ' . $ex->getMessage(), 1);
-            return false;
-        }
-    }
-	
     /**
      * next
      * This just tells upnp to skip to the next song
@@ -463,22 +421,58 @@ class AmpacheUPnP extends localplay_controller
     public function volume($volume)
     {
         debug_event('upnp', 'volume: ' . $volume, 5);
-		
+        
         if (!$this->_upnp) {
             return false;
         }
 
         try {
-            $this->_upnp->SetVolume(array(
-                'volume' => $volume
-            ));
+            $this->_upnp->SetVolume($volume);
             return true;
         } catch (UPNP_Exception $ex) {
             debug_event('upnp', 'volume failed: ' . $ex->getMessage(), 1);
             return false;
         }
     }
-	
+
+    /**
+     * This tells upnp to increase the volume
+     */
+    public function volume_up()
+    {
+        debug_event('upnp', 'volume+', 5);
+        
+        if (!$this->_upnp) {
+            return false;
+        }
+
+        try {
+            return $this->_upnp->VolumeUp();
+        } catch (UPNP_Exception $ex) {
+            debug_event('upnp', 'volume_up failed: ' . $ex->getMessage(), 1);
+            return false;
+        }
+    }
+    
+    /**
+     * This tells upnp to decrease the volume
+     */
+    public function volume_down()
+    {
+        debug_event('upnp', 'volume-', 5);
+        
+        if (!$this->_upnp) {
+            return false;
+        }
+
+        try {
+            return $this->_upnp->VolumeDown();            
+        } catch (UPNP_Exception $ex) {
+            debug_event('upnp', 'volume_down failed: ' . $ex->getMessage(), 1);
+            return false;
+        }
+    }
+    
     /**
      * repeat
      * This tells upnp to set the repeating the playlist (i.e. loop) to either on or off
@@ -492,7 +486,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         try {
-            $this->_upnp->PlayRepeat(array(
+            $this->_upnp->Repeat(array(
                 'repeat' => ($state ? 'all' : 'off')
             ));
             return true;
@@ -501,7 +495,7 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
     }
-	
+
     /**
      * random
      * This tells upnp to turn on or off the playing of songs from the playlist in random order
@@ -522,7 +516,7 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
     }
-	
+
     /**
      * get
      * This functions returns an array containing information about
@@ -540,9 +534,7 @@ class AmpacheUPnP extends localplay_controller
         $results = array();
 
         try {
-            $playlist = $this->_upnp->GetPlyListItems(array(
-                'properties' => array('file')
-            ));
+            $playlist = $this->_upnp->GetPlayListItems();
 
             for ($i = $playlist['limits']['start']; $i < $playlist['limits']['end']; ++$i) {
                 $item = $playlist['items'][$i];
@@ -587,39 +579,19 @@ class AmpacheUPnP extends localplay_controller
 
         $array = array();
         try {
-            $appprop = $this->_upnp->GetProperties(array(
-                'properties' => array('volume')
-            ));
-            $array['volume'] = intval($appprop['volume']);
+            $array['state'] = 'play';
+            $array['volume'] = $this->_upnp->GetVolume();
+            $array['repeat'] = false;
+            $array['random'] = false;
+            $array['track'] = 'TrackName';
 
-            try {
-                $currentplay = $this->_upnp->GetPlyListItem(array('file'));
-                // We assume it's playing. No pause detection support.
-                $array['state'] = 'play';
-
-                $playprop = $this->_upnp->Player->GetProperties(array(
-                    'properties' => array('repeat', 'shuffled')
-                ));
-                $array['repeat'] = ($playprop['repeat'] != "off");
-                $array['random'] = (strtolower($playprop['shuffled']) == 1) ;
-                $array['track']  =   $currentplay['file'];
-
-                $url_data = $this->parse_url($array['track']);
-                $song = new Song($url_data['oid']);
-                if ($song->title || $song->get_artist_name() || $song->get_album_name()) {
-                    $array['track_title']  = $song->title;
-                    $array['track_artist'] = $song->get_artist_name();
-                    $array['track_album']  = $song->get_album_name();
-                }
-            } catch (UPNP_Exception $ex) {
-                debug_event('upnp', 'get current item failed, player probably stopped. ' . $ex->getMessage(), 1);
-                $array['state'] = 'stop';
-            }
+            $array['track_title'] = 'Songtitle';
+            $array['track_artist'] = 'ArtistName';
+            $array['track_album'] = 'AlbumName';
         } catch (UPNP_Exception $ex) {
             debug_event('upnp', 'status failed: ' . $ex->getMessage(), 1);
         }
         return $array;
-
     } 
 
     /**
@@ -630,8 +602,6 @@ class AmpacheUPnP extends localplay_controller
      */
     public function connect()
     {
-        debug_event('upnp', 'connect', 5);
-
         $options = self::get_instance();
         try {
             debug_event('upnp', 'Trying to connect upnp instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', '5');
