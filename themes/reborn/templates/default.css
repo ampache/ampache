@@ -185,7 +185,15 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     width: 120px;
     display: none;
     background-repeat: no-repeat;
-    background-position: center; 
+    background-position: right; 
+}
+
+#mouse_message {
+    z-index: 9999;
+    position: fixed;
+    color: #303335;
+    text-shadow: 2px 2px 9px #fff;
+    font-weight: bold;
 }
 
 /***********************************************
