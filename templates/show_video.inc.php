@@ -52,22 +52,24 @@ foreach ($subtitles as $subtitle) {
 <?php } ?>
 </div>
 <dl class="media_details">
-<?php if (AmpConfig::get('ratings')) { ?>
-    <?php $rowparity = UI::flip_class(); ?>
-    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>">
-        <div id="rating_<?php echo $video->id; ?>_video"><?php Rating::show($video->id,'video'); ?>
-        </div>
-    </dd>
-<?php } ?>
+<?php if (User::is_registered()) { ?>
+    <?php if (AmpConfig::get('ratings')) { ?>
+        <?php $rowparity = UI::flip_class(); ?>
+        <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
+        <dd class="<?php echo $rowparity; ?>">
+            <div id="rating_<?php echo $video->id; ?>_video"><?php Rating::show($video->id,'video'); ?>
+            </div>
+        </dd>
+    <?php } ?>
 
-<?php if (AmpConfig::get('userflags')) { ?>
-    <?php $rowparity = UI::flip_class(); ?>
-    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>">
-        <div id="userflag_<?php echo $video->id; ?>_video"><?php Userflag::show($video->id,'video'); ?>
-        </div>
-    </dd>
+    <?php if (AmpConfig::get('userflags')) { ?>
+        <?php $rowparity = UI::flip_class(); ?>
+        <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
+        <dd class="<?php echo $rowparity; ?>">
+            <div id="userflag_<?php echo $video->id; ?>_video"><?php Userflag::show($video->id,'video'); ?>
+            </div>
+        </dd>
+    <?php } ?>
 <?php } ?>
 <?php $rowparity = UI::flip_class(); ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
@@ -78,13 +80,13 @@ foreach ($subtitles as $subtitle) {
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true','play_add', T_('Play last'),'addplay_video_' . $video->id); ?>
             <?php } ?>
         <?php } ?>
-        <?php if (AmpConfig::get('sociable')) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>">
-            <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
-            </a>
-        <?php } ?>
-        <?php if (AmpConfig::get('share')) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=show_create&type=video&id=<?php echo $video->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+        <?php if (Access::check('interface','25')) { ?>
+            <?php if (AmpConfig::get('sociable')) { ?>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
+            <?php } ?>
+            <?php if (AmpConfig::get('share')) { ?>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=show_create&type=video&id=<?php echo $video->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+            <?php } ?>
         <?php } ?>
         <?php if (Access::check_function('download')) { ?>
             <a rel="nohtml" href="<?php echo Video::play_url($video->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>

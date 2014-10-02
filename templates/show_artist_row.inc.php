@@ -57,21 +57,25 @@ if (Art::is_enabled()) {
 <td class="cel_albums"><?php echo $libitem->albums; ?></td>
 <td class="cel_time"><?php echo $libitem->f_time; ?></td>
 <td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
-<?php if (AmpConfig::get('ratings')) { ?>
-<td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_artist"><?php Rating::show($libitem->id,'artist'); ?></td>
-<?php } ?>
-<?php if (AmpConfig::get('userflags')) { ?>
-<td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist"><?php Userflag::show($libitem->id,'artist'); ?></td>
+<?php if (User::is_registered()) { ?>
+    <?php if (AmpConfig::get('ratings')) { ?>
+    <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_artist"><?php Rating::show($libitem->id,'artist'); ?></td>
+    <?php } ?>
+    <?php if (AmpConfig::get('userflags')) { ?>
+    <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist"><?php Userflag::show($libitem->id,'artist'); ?></td>
+    <?php } ?>
 <?php } ?>
 <td class="cel_action">
-<?php if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) { ?>
-<a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&amp;id=<?php echo $libitem->id; ?>">
-    <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
-</a>
+<?php if (Access::check('interface','25')) { ?>
+    <?php if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) { ?>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&amp;id=<?php echo $libitem->id; ?>">
+        <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
+    </a>
+    <?php } ?>
 <?php } ?>
 <?php if (Access::check_function('batch_download')) { ?>
     <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=artist&amp;id=<?php echo $libitem->id; ?>">
-            <?php echo UI::get_icon('batch_download','', T_('Batch Download')); ?>
+            <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
 <?php } ?>
 <?php if (Access::check('interface','50')) { ?>

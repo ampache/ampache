@@ -461,6 +461,9 @@ class Update
         $update_string = '- Add webplayer browser notification settings.<br />';
         $version[] = array('version' => '370020','description' => $update_string);
 
+        $update_string = '- Add rating to playlists, tvshows and tvshows seasons.<br />';
+        $version[] = array('version' => '370021','description' => $update_string);
+
         return $version;
     }
 
@@ -3106,6 +3109,21 @@ class Update
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'10')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370021
+     *
+     * Add rating to playlists, tvshows and tvshows seasons
+     */
+    public static function update_370021()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `rating` CHANGE `object_type` `object_type` ENUM ('artist','album','song','stream','video','playlist','tvshow','tvshow_season') NULL";
+        $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;
     }

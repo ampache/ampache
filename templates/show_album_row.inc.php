@@ -57,20 +57,24 @@ if (Art::is_enabled()) {
 <td class="cel_songs"><?php echo $libitem->song_count; ?></td>
 <td class="cel_year"><?php echo $libitem->year; ?></td>
 <td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
-<?php if (AmpConfig::get('ratings')) { ?>
-<td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_album"><?php Rating::show($libitem->id, 'album'); ?></td>
-<?php } ?>
-<?php if (AmpConfig::get('userflags')) { ?>
-<td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_album"><?php Userflag::show($libitem->id, 'album'); ?></td>
+<?php if (User::is_registered()) { ?>
+    <?php if (AmpConfig::get('ratings')) { ?>
+    <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_album"><?php Rating::show($libitem->id, 'album'); ?></td>
+    <?php } ?>
+    <?php if (AmpConfig::get('userflags')) { ?>
+    <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_album"><?php Userflag::show($libitem->id, 'album'); ?></td>
+    <?php } ?>
 <?php } ?>
 <td class="cel_action">
-    <?php if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) { ?>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&amp;id=<?php echo $libitem->id; ?>">
-        <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
-    </a>
-    <?php } ?>
-    <?php if (AmpConfig::get('share') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) { ?>
-        <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+    <?php if (Access::check('interface','25')) { ?>
+        <?php if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) { ?>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&amp;id=<?php echo $libitem->id; ?>">
+            <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
+        </a>
+        <?php } ?>
+        <?php if (AmpConfig::get('share') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) { ?>
+            <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+        <?php } ?>
     <?php } ?>
     <?php if (Access::check_function('batch_download')) { ?>
         <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id'); ?>">

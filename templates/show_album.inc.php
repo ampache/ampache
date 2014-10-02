@@ -30,7 +30,7 @@ if ($album->disk) {
 $title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
 
 $show_direct_play = AmpConfig::get('directplay');
-$show_playlist_add = true;
+$show_playlist_add = Access::check('interface', '25');
 $directplay_limit = AmpConfig::get('direct_play_limit');
 
 if ($directplay_limit > 0) {
@@ -52,15 +52,17 @@ if ($directplay_limit > 0) {
         Art::display('album', $album->id, $name, 2);
     ?>
 </div>
-<?php if (AmpConfig::get('ratings')) { ?>
-<div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
-        <?php Rating::show($album->id,'album'); ?>
-</div>
-<?php } ?>
-<?php if (AmpConfig::get('userflags')) { ?>
-<div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
-        <?php Userflag::show($album->id,'album'); ?>
-</div>
+<?php if (User::is_registered()) { ?>
+    <?php if (AmpConfig::get('ratings')) { ?>
+    <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
+            <?php Rating::show($album->id,'album'); ?>
+    </div>
+    <?php } ?>
+    <?php if (AmpConfig::get('userflags')) { ?>
+    <div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
+            <?php Userflag::show($album->id,'album'); ?>
+    </div>
+    <?php } ?>
 <?php } ?>
 <?php
 if (AmpConfig::get('show_played_times')) {
@@ -96,6 +98,19 @@ if (AmpConfig::get('show_played_times')) {
             <?php echo Ajax::text('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), T_('Random to temporary playlist'), 'play_random_text_' . $album->id); ?>
         </li>
         <?php } ?>
+        <?php if (Access::check('interface','25')) { ?>
+            <?php if (AmpConfig::get('sociable')) { ?>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo T_('Post Shout'); ?></a>
+            <?php } ?>
+            <?php if (AmpConfig::get('share')) { ?>
+            <li>
+                <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $album->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+                <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $album->id; ?>"><?php echo T_('Share'); ?></a>
+            </li>
+            <?php } ?>
+        <?php } ?>
+        <?php if (Access::check('interface','50')) { ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $album->id; ?>', 'reorder_songs_table_<?php echo $album->id; ?>', 'song_',
                                             '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
@@ -103,17 +118,6 @@ if (AmpConfig::get('show_played_times')) {
                 &nbsp;&nbsp;<?php echo T_('Save Tracks Order'); ?>
             </a>
         </li>
-        <?php if (AmpConfig::get('sociable')) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo T_('Post Shout'); ?></a>
-        <?php } ?>
-        <?php if (AmpConfig::get('share')) { ?>
-        <li>
-            <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $album->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
-            <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $album->id; ?>"><?php echo T_('Share'); ?></a>
-        </li>
-        <?php } ?>
-        <?php if (Access::check('interface','50')) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?> <?php echo T_('Update from tags'); ?></a>
         </li>

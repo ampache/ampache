@@ -554,6 +554,24 @@ class Album extends database_object implements library_item
     } // has_track
 
     /**
+     * get_addtime_first_song
+     * Get the add date of first added song.
+     * @return int
+     */
+    public function get_addtime_first_song()
+    {
+        $time = 0;
+
+        $sql = "SELECT MIN(`addition_time`) FROM `song` WHERE `album` = ?";
+        $db_results = Dba::read($sql, array($this->id));
+        if ($data = Dba::fetch_row($db_results)) {
+            $time = $data[0];
+        }
+
+        return $time;
+    }
+
+    /**
      * format
      * This is the format function for this object. It sets cleaned up
      * album information with the base required

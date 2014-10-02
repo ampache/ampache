@@ -131,13 +131,13 @@ if (!$isVideo && !$isRadio && !$is_share) {
         echo "var artistobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + currenti.attr('data-artist_id') + '\');\" title=\"' + obj.artist + '\">' + obj.artist + '</a>';";
         echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + currenti.attr('data-media_id') + '\');\">" . T_('Show Lyrics') . "</a>';";
         echo "var actionsobj = '|';";
-        if (AmpConfig::get('sociable')) {
+        if (AmpConfig::get('sociable') && Access::check('interface','25')) {
             echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-media_id') + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a> |';";
         }
         echo "actionsobj += '<div id=\'action_buttons\'></div>';";
         if (AmpConfig::get('waveform') && !$is_share) {
             echo "var waveformobj = '';";
-            if (AmpConfig::get('waveform')) {
+            if (AmpConfig::get('sociable') && Access::check('interface','25')) {
                 echo "waveformobj += '<a href=\"#\" title=\"" . T_('Post Shout') . "\" onClick=\"javascript:WaveformClick(' + currenti.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
             }
             echo "waveformobj += '<div class=\"waveform-shouts\"></div>';";
@@ -366,7 +366,7 @@ if ($isVideo) {
       </div>
 <?php if (!$is_share) { ?>
       <div class="player_actions">
-<?php if (AmpConfig::get('broadcast')) { ?>
+<?php if (AmpConfig::get('broadcast') && Access::check('interface', '25')) { ?>
         <div id="broadcast" class="broadcast action_button">
 <?php
         if (AmpConfig::get('broadcast_by_default')) {
@@ -388,9 +388,11 @@ if ($isVideo) {
         </div>
 <?php } ?>
 <?php if ($iframed) { ?>
-        <div class="action_button">
-            <a href="javascript:SavePlaylist();"><?php echo UI::get_icon('playlist_add', T_('Add to New Playlist')); ?></a>
-        </div>
+        <?php if (Access::check('interface', '25')) { ?>
+            <div class="action_button">
+                <a href="javascript:SavePlaylist();"><?php echo UI::get_icon('playlist_add', T_('Add to New Playlist')); ?></a>
+            </div>
+        <?php } ?>
         <div id="slideshow" class="slideshow action_button">
             <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')); ?></a>
         </div>

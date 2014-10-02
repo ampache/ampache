@@ -37,12 +37,14 @@ $thcount = 8;
             <th class="cel_episodes optional"><?php echo T_('Episodes');  ?></th>
             <th class="cel_seasons optional"><?php echo T_('Seasons'); ?></th>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
-        <?php if (AmpConfig::get('ratings')) { ++$thcount; ?>
-            <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-        <?php } ?>
-        <?php if (AmpConfig::get('userflags')) { ++$thcount; ?>
-            <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
-        <?php } ?>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) { ++$thcount; ?>
+                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
+                <?php } ?>
+                <?php if (AmpConfig::get('userflags')) { ++$thcount; ?>
+                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+                <?php } ?>
+            <?php } ?>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>
@@ -77,12 +79,14 @@ $thcount = 8;
             <th class="cel_episodes optional"><?php echo T_('Episodes');  ?></th>
             <th class="cel_seasons optional"><?php echo T_('Seasons'); ?></th>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
-        <?php if (AmpConfig::get('ratings')) { ?>
-            <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-        <?php } ?>
-        <?php if (AmpConfig::get('userflags')) { ?>
-            <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
-        <?php } ?>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) { ?>
+                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
+                <?php } ?>
+                <?php if (AmpConfig::get('userflags')) { ?>
+                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+                <?php } ?>
+            <?php } ?>
             <th class="cel_action essential"> <?php echo T_('Action'); ?> </th>
         </tr>
     </tfoot>

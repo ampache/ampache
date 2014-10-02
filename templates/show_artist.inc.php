@@ -22,7 +22,7 @@
 
 $web_path = AmpConfig::get('web_path');
 $show_direct_play = AmpConfig::get('directplay');
-$show_playlist_add = true;
+$show_playlist_add = Access::check('interface', '25');
 $directplay_limit = AmpConfig::get('direct_play_limit');
 
 if ($directplay_limit > 0) {
@@ -51,17 +51,19 @@ if (AmpConfig::get('lastfm_api_key')) {
     </div>
 <?php } ?>
 
-<?php
-if (AmpConfig::get('ratings')) {
-?>
-<div id="rating_<?php echo intval($artist->id); ?>_artist" style="display:inline;">
-    <?php show_rating($artist->id, 'artist'); ?>
-</div>
-<?php } ?>
-<?php if (AmpConfig::get('userflags')) { ?>
-<div style="display:table-cell;" id="userflag_<?php echo $artist->id; ?>_artist">
-        <?php Userflag::show($artist->id,'artist'); ?>
-</div>
+<?php if (User::is_registered()) { ?>
+    <?php
+    if (AmpConfig::get('ratings')) {
+    ?>
+    <div id="rating_<?php echo intval($artist->id); ?>_artist" style="display:inline;">
+        <?php show_rating($artist->id, 'artist'); ?>
+    </div>
+    <?php } ?>
+    <?php if (AmpConfig::get('userflags')) { ?>
+    <div style="display:table-cell;" id="userflag_<?php echo $artist->id; ?>_artist">
+            <?php Userflag::show($artist->id,'artist'); ?>
+    </div>
+    <?php } ?>
 <?php } ?>
 <?php
 if (AmpConfig::get('show_played_times')) {
@@ -112,15 +114,17 @@ if (AmpConfig::get('show_played_times')) {
             <?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id, T_('Random all to temporary playlist'),'random_text_' . $artist->id); ?>
         </li>
         <?php } ?>
-        <?php if (AmpConfig::get('sociable')) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo T_('Post Shout'); ?></a>
-        <?php } ?>
-        <?php if (Access::check_function('batch_download')) { ?>
-        <li>
-            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
-            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo T_('Download'); ?></a>
-        </li>
+        <?php if (Access::check('interface','25')) { ?>
+            <?php if (AmpConfig::get('sociable')) { ?>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo T_('Post Shout'); ?></a>
+            <?php } ?>
+            <?php if (Access::check_function('batch_download')) { ?>
+            <li>
+                <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
+                <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo T_('Download'); ?></a>
+            </li>
+            <?php } ?>
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>
             <a id="<?php echo 'edit_artist_'.$artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_'.$artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">

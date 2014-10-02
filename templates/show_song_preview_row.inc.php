@@ -36,9 +36,11 @@
     <span class="cel_item_add">
         <?php if ($libitem->file) { ?>
             <?php echo Ajax::button('?action=basket&type=song_preview&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_' . $libitem->id); ?>
-            <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'song_preview', '<?php echo $libitem->id ?>')">
-                <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
-            </a>
+            <?php if (Access::check('interface', '25')) { ?>
+                <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'song_preview', '<?php echo $libitem->id ?>')">
+                    <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+                </a>
+            <?php } ?>
         <?php } ?>
     </span>
 </td>

@@ -485,6 +485,9 @@ div.playing_info {
 
 div.playing_artist {
 	font-size:0.5em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 }
 
 div.playing_artist a {

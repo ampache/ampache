@@ -27,7 +27,7 @@ $album->allow_group_disks = true;
 $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')&nbsp;-&nbsp;' . $album->f_artist_link;
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
-$show_playlist_add = true;
+$show_playlist_add = Access::check('interface', '25');
 $show_direct_play = $show_direct_play_cfg;
 $directplay_limit = AmpConfig::get('direct_play_limit');
 
@@ -96,7 +96,7 @@ if ($directplay_limit > 0) {
         $c_album->format();
         $c_title = scrub_out($c_album->name) . "&nbsp;<span class=\"discnb disc" . $c_album->disk . "\">, " . T_('Disk') . " " . $c_album->disk . "</span>";
         $show_direct_play = $show_direct_play_cfg;
-        $show_playlist_add = true;
+        $show_playlist_add = Access::check('interface', '25');
         if ($directplay_limit > 0) {
             $show_playlist_add = ($c_album->song_count <= $directplay_limit);
             if ($show_direct_play) {
@@ -118,20 +118,22 @@ if ($directplay_limit > 0) {
                 echo Ajax::button('?action=basket&type=album_random&' . $c_album->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'play_random_' . $c_album->id);
             }
         ?>
-        <a onclick="submitNewItemsOrder('<?php echo $c_album->id; ?>', 'reorder_songs_table_<?php echo $c_album->id; ?>', 'song_',
-                                        '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
-            <?php echo UI::get_icon('save', T_('Save Tracks Order')); ?>
-        </a>
-        <?php if (AmpConfig::get('sociable')) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
-        <?php } ?>
-        <?php if (AmpConfig::get('share')) { ?>
-            <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $c_album->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+        <?php if (Access::check('interface','25')) { ?>
+            <?php if (AmpConfig::get('sociable')) { ?>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
+            <?php } ?>
+            <?php if (AmpConfig::get('share')) { ?>
+                <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $c_album->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+            <?php } ?>
         <?php } ?>
         <?php if (Access::check_function('batch_download')) { ?>
             <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
         <?php } ?>
         <?php if (Access::check('interface','50')) { ?>
+            <a onclick="submitNewItemsOrder('<?php echo $c_album->id; ?>', 'reorder_songs_table_<?php echo $c_album->id; ?>', 'song_',
+                                            '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
+                <?php echo UI::get_icon('save', T_('Save Tracks Order')); ?>
+            </a>
             <a id="<?php echo 'edit_album_'.$c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_'.$c_album->id ?>', '<?php echo T_('Album edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>

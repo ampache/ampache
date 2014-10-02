@@ -1482,12 +1482,12 @@ class Art extends database_object
                 echo "</div>";
             }
             echo "<div class=\"item_art_actions\">";
-            if ($GLOBALS['user']->has_access('25')) {
+            if ($GLOBALS['user']->has_access(25)) {
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo UI::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";
             }
-            if ($GLOBALS['user']->has_access('75')) {
+            if ($GLOBALS['user']->has_access(75)) {
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
                 echo UI::get_icon('delete', T_('Reset Art'));
                 echo "</a>";

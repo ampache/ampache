@@ -131,6 +131,9 @@ switch ($_REQUEST['action']) {
             $results['content'] = ob_get_contents();
             ob_end_clean();*/
             debug_event('playlist', 'Items added successfully!', '5');
+            ob_start();
+            mouse_message(T_('Added to playlist'));
+            $results['rfc3514'] = ob_get_clean();
         } else {
             debug_event('playlist', 'No item to add. Aborting...', '5');
         }

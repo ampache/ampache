@@ -37,12 +37,14 @@ $thcount = 8;
             <th class="cel_songs optional"><?php echo T_('Songs'); ?></th>
             <th class="cel_year essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'),'album_sort_year'); ?></th>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
-        <?php if (AmpConfig::get('ratings')) { ++$thcount; ?>
-            <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-        <?php } ?>
-        <?php if (AmpConfig::get('userflags')) { ++$thcount; ?>
-            <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
-        <?php } ?>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) { ++$thcount; ?>
+                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
+                <?php } ?>
+                <?php if (AmpConfig::get('userflags')) { ++$thcount; ?>
+                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+                <?php } ?>
+            <?php } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>
@@ -60,7 +62,7 @@ $thcount = 8;
             $libitem->allow_group_disks = $allow_group_disks;
             $libitem->format();
             $show_direct_play = $show_direct_play_cfg;
-            $show_playlist_add = true;
+            $show_playlist_add = Access::check('interface', '25');
             if ($directplay_limit > 0) {
                 $show_playlist_add = ($libitem->song_count <= $directplay_limit);
                 if ($show_direct_play) {
@@ -90,12 +92,14 @@ $thcount = 8;
             <th class="cel_songs"><?php echo T_('Songs'); ?></th>
             <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'),'album_sort_year_bottom'); ?></th>
             <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-        <?php if (AmpConfig::get('ratings')) { ?>
-            <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-        <?php } ?>
-        <?php if (AmpConfig::get('userflags')) { ?>
-            <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
-        <?php } ?>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) { ?>
+                    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+                <?php } ?>
+                <?php if (AmpConfig::get('userflags')) { ?>
+                    <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
+                <?php } ?>
+            <?php } ?>
             <th class="cel_action"><?php echo T_('Actions'); ?></th>
         </tr>
     <tfoot>

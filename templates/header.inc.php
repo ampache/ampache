@@ -36,6 +36,7 @@ $_SESSION['login'] = false;
         <?php if (AmpConfig::get('use_rss')) { ?>
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Now Playing'); ?>" href="<?php echo $web_path; ?>/rss.php" />
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recently_played" />
+        <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Albums'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_album" />
         <?php } ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo $location['title']; ?></title>
@@ -302,8 +303,10 @@ $_SESSION['login'] = false;
                 <div id="headerbox">
                     <?php UI::show_box_top('','box box_headerbox'); ?>
                     <?php require_once AmpConfig::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
+                    <?php if (User::is_registered()) { ?>
                     <?php require_once AmpConfig::get('prefix') . '/templates/show_playtype_switch.inc.php'; ?>
                     <span id="loginInfo"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo $GLOBALS['user']->fullname; ?></a> <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a></span>
+                    <?php } ?>
                     <span id="updateInfo">
                     <?php
                     if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {

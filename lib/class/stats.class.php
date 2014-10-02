@@ -337,6 +337,7 @@ class Stats
             case 'tvshow_season':
             case 'tvshow_episode':
             case 'movie':
+            case 'playlist':
                 return $type;
             default:
                 return 'song';
