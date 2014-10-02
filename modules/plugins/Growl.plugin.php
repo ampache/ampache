@@ -23,8 +23,9 @@
 class Ampachegrowl {
 
     public $name           = 'Growl';
+    public $categories     = 'scrobbling';
     public $description    = 'Send your played songs notification to Growl';
-    public $url            = '';
+    public $url            = 'http://growl.info';
     public $version        ='000001';
     public $min_ampache    ='360003';
     public $max_ampache    ='999999';

@@ -23,7 +23,9 @@
 class AmpacheTmdb {
 
     public $name           = 'Tmdb';
+    public $categories     = 'metadata';
     public $description    = 'Tmdb metadata integration';
+    public $url            = 'https://www.themoviedb.org';
     public $version        = '000001';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';

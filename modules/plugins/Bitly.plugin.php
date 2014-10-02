@@ -23,8 +23,9 @@
 class AmpacheBitly {
 
     public $name        = 'Bit.ly';
+    public $categories  = 'shortener';
     public $description = 'Url shorteners on shared links with Bit.ly';
-    public $url         = 'http://bitly.com/';
+    public $url         = 'http://bitly.com';
     public $version     = '000002';
     public $min_ampache = '360037';
     public $max_ampache = '999999';

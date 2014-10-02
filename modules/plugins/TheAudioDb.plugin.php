@@ -23,7 +23,9 @@
 class AmpacheTheaudiodb {
 
     public $name           = 'TheAudioDb';
+    public $categories     = 'metadata';
     public $description    = 'TheAudioDb metadata integration';
+    public $url            = 'http://www.theaudiodb.com';
     public $version        = '000001';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';

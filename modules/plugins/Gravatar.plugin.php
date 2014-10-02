@@ -23,6 +23,7 @@
 class AmpacheGravatar {
 
     public $name        = 'Gravatar';
+    public $categories  = 'avatar';
     public $description = 'Users avatars with Gravatar';
     public $url         = 'http://gravatar.com';
     public $version     = '000001';

@@ -22,12 +22,13 @@
 
 class Ampachelibrefm {
 
-    public $name        ='Libre.FM';
-    public $description    ='Records your played songs to your Libre.FM Account';
-    public $url        ='';
-    public $version        ='000002';
-    public $min_ampache    ='360003';
-    public $max_ampache    ='999999';
+    public $name        = 'Libre.FM';
+    public $categories  = 'scrobbling';
+    public $description = 'Records your played songs to your Libre.FM Account';
+    public $url         = 'https://libre.fm';
+    public $version     = '000002';
+    public $min_ampache = '360003';
+    public $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to
     // fill them out

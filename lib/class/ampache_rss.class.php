@@ -264,11 +264,12 @@ class Ampache_RSS
             $album->format();
 
             $xml_array = array('title' => $album->f_name,
-                        'link' => $album->f_link_src,
-                        'description' => $album->f_artist_name . ' - ' . $album->f_name,
-                        'image' => Art::url($album->id, 'album'),
-                        'comments' => '',
-                        'pubDate' => $album->get_addtime_first_song());
+                    'link' => $album->f_link_src,
+                    'description' => $album->f_artist_name . ' - ' . $album->f_name,
+                    'image' => Art::url($album->id, 'album'),
+                    'comments' => '',
+                    'pubDate' => date("c", $album->get_addtime_first_song())
+            );
             $results[] = $xml_array;
 
         } // end foreach

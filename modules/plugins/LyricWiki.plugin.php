@@ -22,9 +22,10 @@
 
 class Ampachelyricwiki {
 
-    public $name        = 'LyricWiki';
+    public $name           = 'LyricWiki';
+    public $categories     = 'lyrics';
     public $description    = 'Get lyrics from LyricWiki';
-    public $url        = '';
+    public $url            = 'http://lyrics.wikia.com/Lyrics_Wiki';
     public $version        ='000001';
     public $min_ampache    ='360022';
     public $max_ampache    ='999999';

@@ -23,6 +23,7 @@
 class AmpacheLibravatar {
 
     public $name        = 'Libravatar';
+    public $categories  = 'avatar';
     public $description = 'Users avatars with Libravatar';
     public $url         = 'https://www.libravatar.org';
     public $version     = '000001';

@@ -22,12 +22,13 @@
 
 class AmpacheLastfm {
 
-    public $name        ='Last.FM';
-    public $description    ='Records your played songs to your Last.FM Account';
-    public $url        ='';
-    public $version        ='000004';
-    public $min_ampache    ='360003';
-    public $max_ampache    ='999999';
+    public $name        = 'Last.FM';
+    public $categories  = 'scrobbling';
+    public $description = 'Records your played songs to your Last.FM Account';
+    public $url         = 'http://www.lastfm.com';
+    public $version     = '000004';
+    public $min_ampache = '360003';
+    public $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to
     // fill them out

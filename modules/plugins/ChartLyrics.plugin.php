@@ -22,9 +22,10 @@
 
 class Ampachechartlyrics {
 
-    public $name        = 'ChartLyrics';
+    public $name           = 'ChartLyrics';
+    public $categories     = 'lyrics';
     public $description    = 'Get lyrics from ChartLyrics';
-    public $url        = '';
+    public $url            = 'http://www.chartlyrics.com';
     public $version        ='000001';
     public $min_ampache    ='360022';
     public $max_ampache    ='999999';

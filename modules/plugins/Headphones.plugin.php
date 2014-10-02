@@ -23,6 +23,7 @@
 class AmpacheHeadphones {
 
     public $name        = 'Headphones';
+    public $categories  = 'misc,wanted';
     public $description = 'Automatically download accepted Wanted List albums with Headphones';
     public $url         = 'https://github.com/rembo10/headphones/';
     public $version     = '000001';
