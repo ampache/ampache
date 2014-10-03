@@ -20,7 +20,7 @@
  *
  */
 
-$openid_path = AmpConfig::get('prefix') . "/modules/php-openid";
+$openid_path = AmpConfig::get('prefix') . "/modules";
 $path = ini_get('include_path');
 $path = $openid_path . PATH_SEPARATOR . $path;
 ini_set('include_path', $path);

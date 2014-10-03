@@ -353,7 +353,7 @@ class Playlist extends playlist_object
      * add_songs
      * This takes an array of song_ids and then adds it to the playlist
      */
-    public function add_songs($song_ids=array(),$ordered=false)
+    public function add_songs($song_ids=array(), $ordered=false)
     {
         $medias = array();
         foreach ($song_ids as $song_id) {
@@ -362,11 +362,11 @@ class Playlist extends playlist_object
                 'object_id' => $song_id,
             );
         }
-        $this->add_medias($medias);
+        $this->add_medias($medias, $ordered);
 
     } // add_songs
 
-    public function add_medias($medias)
+    public function add_medias($medias, $ordered=false)
     {
         /* We need to pull the current 'end' track and then use that to
          * append, rather then integrate take end track # and add it to

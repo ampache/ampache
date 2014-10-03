@@ -29,7 +29,7 @@ if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
 
 if (!defined('NO_SESSION')) {
     /* If we are running a demo, quick while you still can! */
-    if (AmpConfig::get('demo_mode') || !Access::check('interface','25')) {
+    if (AmpConfig::get('demo_mode') || (AmpConfig::get('use_auth')) && !Access::check('interface','25')) {
         UI::access_denied();
         exit;
     }
@@ -153,6 +153,7 @@ switch ($_REQUEST['action']) {
         }
     default:
         $stream_type = AmpConfig::get('play_type');
+
         if ($stream_type == 'stream') {
             $stream_type = AmpConfig::get('playlist_type');
         }

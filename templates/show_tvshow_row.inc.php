@@ -42,11 +42,13 @@ if (Art::is_enabled()) {
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <td class="cel_seasons"><?php echo $libitem->seasons; ?></td>
 <td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
-<?php if (AmpConfig::get('ratings')) { ?>
-<td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_tvshow"><?php Rating::show($libitem->id,'tvshow'); ?></td>
-<?php } ?>
-<?php if (AmpConfig::get('userflags')) { ?>
-<td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow"><?php Userflag::show($libitem->id,'tvshow'); ?></td>
+<?php if (User::is_registered()) { ?>
+    <?php if (AmpConfig::get('ratings')) { ?>
+    <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_tvshow"><?php Rating::show($libitem->id,'tvshow'); ?></td>
+    <?php } ?>
+    <?php if (AmpConfig::get('userflags')) { ?>
+    <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow"><?php Userflag::show($libitem->id,'tvshow'); ?></td>
+    <?php } ?>
 <?php } ?>
 <td class="cel_action">
 <?php if (Access::check('interface','50')) { ?>

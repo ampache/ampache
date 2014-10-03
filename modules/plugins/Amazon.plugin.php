@@ -23,7 +23,9 @@
 class AmpacheAmazon {
 
     public $name           = 'Amazon';
+    public $categories     = 'metadata';
     public $description    = 'Amazon arts';
+    public $url            = 'http://www.amazon.com';
     public $version        = '000001';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';

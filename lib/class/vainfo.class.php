@@ -604,6 +604,11 @@ class vainfo
         return $parsed;
     }
 
+    private function trimAscii($string)
+    {
+        return preg_replace('/[\x00-\x1F\x80-\xFF]/', '', trim($string));
+    }
+
     /**
      * _clean_type
      * This standardizes the type that we are given into a recognized type.
@@ -815,25 +820,26 @@ class vainfo
 
             if (!empty($id3v2['TXXX'])) {
                 // Find the MBIDs for the album and artist
+                // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
                 foreach ($id3v2['TXXX'] as $txxx) {
-                    switch ($txxx['description']) {
+                    switch ($this->trimAscii($txxx['description'])) {
                         case 'MusicBrainz Album Id':
-                            $parsed['mb_albumid'] = $txxx['data'];
+                            $parsed['mb_albumid'] = $this->trimAscii($txxx['data']);
                         break;
                         case 'MusicBrainz Release Group Id':
-                            $parsed['mb_albumid_group'] = $txxx['data'];
+                            $parsed['mb_albumid_group'] = $this->trimAscii($txxx['data']);
                         break;
                         case 'MusicBrainz Artist Id':
-                            $parsed['mb_artistid'] = $txxx['data'];
+                            $parsed['mb_artistid'] = $this->trimAscii($txxx['data']);
                         break;
                         case 'MusicBrainz Album Artist Id':
-                            $parsed['mb_albumartistid'] = $txxx['data'];
+                            $parsed['mb_albumartistid'] = $this->trimAscii($txxx['data']);
                         break;
                         case 'MusicBrainz Album Type':
-                            $parsed['release_type'] = $txxx['data'];
+                            $parsed['release_type'] = $this->trimAscii($txxx['data']);
                         break;
                         case 'CATALOGNUMBER':
-                            $parsed['catalog_number'] = $txxx['data'];
+                            $parsed['catalog_number'] = $this->trimAscii($txxx['data']);
                         break;
                     }
                 }
@@ -938,6 +944,9 @@ class vainfo
                 case 'MusicBrainz Album Type':
                     $parsed['release_type'] = $data[0];
                 break;
+                case 'track_number':
+                    $parsed['track'] = $data[0];
+                break;
                 default:
                     $parsed[$tag] = $data[0];
                 break;
@@ -990,21 +999,23 @@ class vainfo
 
             // Pull out our actual matches
             preg_match($pattern, $filename, $matches);
-            // The first element is the full match text
-            $matched = array_shift($matches);
-            debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filename, 5);
+            if ($matches != null) {
+                // The first element is the full match text
+                $matched = array_shift($matches);
+                debug_event('vainfo', $pattern . ' matched ' . $matched . ' on ' . $filename, 5);
 
-            // Iterate over what we found
-            foreach ($matches as $key => $value) {
-                $new_key = translate_pattern_code($elements['0'][$key]);
-                if ($new_key) {
-                    $results[$new_key] = $value;
+                // Iterate over what we found
+                foreach ($matches as $key => $value) {
+                    $new_key = translate_pattern_code($elements['0'][$key]);
+                    if ($new_key) {
+                        $results[$new_key] = $value;
+                    }
                 }
-            }
 
-            $results['title'] = $results['title'] ?: basename($filename);
-            if ($this->islocal) {
-                $results['size'] = Core::get_filesize(Core::conv_lc_file($origin));
+                $results['title'] = $results['title'] ?: basename($filename);
+                if ($this->islocal) {
+                    $results['size'] = Core::get_filesize(Core::conv_lc_file($origin));
+                }
             }
         }
 

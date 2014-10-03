@@ -35,9 +35,11 @@
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=song&id=' . $libitem->id,'add', T_('Add to temporary playlist'),'add_' . $libitem->id); ?>
-        <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $libitem->id ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
-        </a>
+        <?php if (Access::check('interface', '25')) { ?>
+            <a id="<?php echo 'add_playlist_'.$libitem->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $libitem->id ?>')">
+                <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+            </a>
+        <?php } ?>
 
         <?php if (AmpConfig::get('directplay')) { ?>
             <?php echo $libitem->show_custom_play_actions(); ?>
@@ -48,21 +50,23 @@
 <td class="cel_album"><?php echo $libitem->f_album_link; ?></td>
 <td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
 <td class="cel_time"><?php echo $libitem->f_time; ?></td>
-<?php if (AmpConfig::get('ratings')) { ?>
-<td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_song"><?php Rating::show($libitem->id,'song'); ?></td>
-<?php } ?>
-<?php if (AmpConfig::get('userflags')) { ?>
-<td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_song"><?php Userflag::show($libitem->id,'song'); ?></td>
+<?php if (User::is_registered()) { ?>
+    <?php if (AmpConfig::get('ratings')) { ?>
+    <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_song"><?php Rating::show($libitem->id,'song'); ?></td>
+    <?php } ?>
+    <?php if (AmpConfig::get('userflags')) { ?>
+    <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_song"><?php Userflag::show($libitem->id,'song'); ?></td>
+    <?php } ?>
 <?php } ?>
 <td class="cel_action">
     <a href="<?php echo $libitem->link; ?>"><?php echo UI::get_icon('preferences', T_('Song Information')); ?></a>
-    <?php if (AmpConfig::get('sociable')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=song&id=<?php echo $libitem->id; ?>">
-                <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
-                </a>
-    <?php } ?>
-    <?php if (AmpConfig::get('share')) { ?>
-        <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=song&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+    <?php if (Access::check('interface','25')) { ?>
+        <?php if (AmpConfig::get('sociable')) { ?>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=song&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
+        <?php } ?>
+        <?php if (AmpConfig::get('share')) { ?>
+            <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=song&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+        <?php } ?>
     <?php } ?>
     <?php if (Access::check_function('download')) { ?>
     <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&song_id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a><?php } ?>
@@ -79,7 +83,7 @@
         </span>
     <?php } ?>
 </td>
-<?php if (isset($argument) && $argument) { ?>
+<?php if (Access::check('interface', '50') && isset($argument) && $argument) { ?>
 <td class="cel_drag">
     <?php echo UI::get_icon('drag', T_('Reorder')); ?>
 </td>

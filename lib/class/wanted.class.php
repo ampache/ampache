@@ -48,7 +48,7 @@ class Wanted extends database_object
      */
     public $name;
     /**
-     * @var int $year
+     * @var string $year
      */
     public $year;
     /**
@@ -77,7 +77,7 @@ class Wanted extends database_object
      */
     public $f_user;
     /**
-     * @var int $songs
+     * @var array $songs
      */
     public $songs;
 
@@ -103,7 +103,7 @@ class Wanted extends database_object
     /**
      * get_missing_albums
      * Get list of library's missing albums from MusicBrainz
-     * @param int $artist
+     * @param Artist|null $artist
      * @param string $mbid
      * @return array
      */
@@ -246,7 +246,7 @@ class Wanted extends database_object
     /**
      * Get wanted release by mbid.
      * @param string $mbid
-     * @return boolean
+     * @return int
      */
     public static function get_wanted($mbid)
     {
@@ -256,7 +256,7 @@ class Wanted extends database_object
             return $row['id'];
         }
 
-        return false;
+        return 0;
     }
 
     /**
@@ -316,7 +316,7 @@ class Wanted extends database_object
         if ($GLOBALS['user']->has_access('75')) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
             Dba::write($sql, array( $this->mbid ));
-            $this->accepted = 1;
+            $this->accepted = true;
 
             foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
                 debug_event('wanted', 'Using Wanted Process plugin: ' . $plugin_name, '5');

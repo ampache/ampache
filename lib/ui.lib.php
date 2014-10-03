@@ -666,6 +666,13 @@ function toggle_visible($element)
 
 } // toggle_visible
 
+function mouse_message($message, $timeout = 1000)
+{
+    echo "<script type='text/javascript'>";
+    echo "mouseMessage('" . $message . "', " . $timeout . ");";
+    echo "</script>\n";
+}
+
 /**
  * print_bool
  * This function takes a boolean value and then prints out a friendly text

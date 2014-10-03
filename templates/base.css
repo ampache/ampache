@@ -215,8 +215,15 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 #topmenu_container {
-    margin-top: 10px;
     text-align: center;
+}
+
+.topmenu_container-float {
+    margin-top: 10px;
+}
+
+.topmenu_container-fixed {
+    margin-top: 70px;
 }
 
 #topmenu_item {

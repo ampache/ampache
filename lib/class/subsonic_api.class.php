@@ -475,6 +475,39 @@ class Subsonic_Api
             $albums = Catalog::get_albums($size, $offset);
         } else if ($type == "alphabeticalByArtist") {
             $albums = Catalog::get_albums_by_artist($size, $offset);
+        } else if ($type == "byYear") {
+            $fromYear = $input['fromYear'];
+            $toYear = $input['toYear'];
+
+            if ($fromYear || $toYear) {
+                $search = array();
+                $search['limit'] = $size;
+                $search['offset'] = $offset;
+                $search['type'] = "album";
+                $i = 0;
+                if ($fromYear) {
+                    $search['rule_'.$i.'_input'] = $fromYear;
+                    $search['rule_'.$i.'_operator'] = 0;
+                    $search['rule_'.$i.''] = "year";
+                    ++$i;
+                }
+                if ($toYear) {
+                    $search['rule_'.$i.'_input'] = $toYear;
+                    $search['rule_'.$i.'_operator'] = 1;
+                    $search['rule_'.$i.''] = "year";
+                    ++$i;
+                }
+
+                $query = new Search(null, 'album');
+                $albums = $query->run($search);
+            }
+        } else if ($type == "byGenre") {
+            $genre = self::check_parameter($input, 'genre');
+
+            $tag_id = Tag::tag_exists($genre);
+            if ($tag_id) {
+                $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
+            }
         }
 
         if (count($albums)) {
@@ -911,8 +944,8 @@ class Subsonic_Api
         $medias[] = $media;
         $stream = new Stream_Playlist();
         $additional_params = '';
-        if ($bitrate) {
-            $additional_params .= '&bitrate=' . $bitrate;
+        if ($bitRate) {
+            $additional_params .= '&bitrate=' . $bitRate;
         }
         //$additional_params .= '&transcode_to=ts';
         $stream->add($medias, $additional_params);

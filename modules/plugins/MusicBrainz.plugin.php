@@ -26,7 +26,9 @@ use MusicBrainz\Clients\RequestsMbClient;
 class AmpacheMusicBrainz {
 
     public $name           = 'MusicBrainz';
+    public $categories     = 'metadata';
     public $description    = 'MusicBrainz metadata integration';
+    public $url            = 'http://www.musicbrainz.org';
     public $version        = '000001';
     public $min_ampache    = '360003';
     public $max_ampache    = '999999';

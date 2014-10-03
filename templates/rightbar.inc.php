@@ -24,25 +24,27 @@
     <li>
         <?php echo Ajax::button('?page=stream&action=basket','all', T_('Play'), 'rightbar_play'); ?>
     </li>
-    <li id="pl_add">
-        <?php echo UI::get_icon('playlist_add', T_('Add to Playlist')); ?>
-        <ul id="pl_action_additems" class="submenu">
-            <li>
-                <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
-            </li>
-        <?php
-            $playlists = Playlist::get_users($GLOBALS['user']->id);
-            Playlist::build_cache($playlists);
-            foreach ($playlists as $playlist_id) {
-                $playlist = new Playlist($playlist_id);
-                $playlist->format();
-        ?>
-            <li>
-                <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id='. $playlist->id, $playlist->f_name, 'rb_append_playlist_'.$playlist->id); ?>
-            </li>
-        <?php } ?>
-        </ul>
-    </li>
+    <?php if (Access::check('interface', '25')) { ?>
+        <li id="pl_add">
+            <?php echo UI::get_icon('playlist_add', T_('Add to Playlist')); ?>
+            <ul id="pl_action_additems" class="submenu">
+                <li>
+                    <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
+                </li>
+            <?php
+                $playlists = Playlist::get_users($GLOBALS['user']->id);
+                Playlist::build_cache($playlists);
+                foreach ($playlists as $playlist_id) {
+                    $playlist = new Playlist($playlist_id);
+                    $playlist->format();
+            ?>
+                <li>
+                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id='. $playlist->id, $playlist->f_name, 'rb_append_playlist_'.$playlist->id); ?>
+                </li>
+            <?php } ?>
+            </ul>
+        </li>
+    <?php } ?>
 <?php if (Access::check_function('batch_download')) { ?>
     <li>
         <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">

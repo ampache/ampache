@@ -157,7 +157,8 @@ class WebPlayer
             }
 
             if ($urlinfo['type'] == 'song') {
-                if ($types['real'] == "flac" || $types['real'] == "ogg") $types['player'] = "oga";
+                if ($types['real'] == "ogg") $types['player'] = "oga";
+                else if ($types['real'] == "flac")  $types['player'] = "flac";
                 else if ($types['real'] == "mp4") $types['player'] = "m4a";
             } else if ($urlinfo['type'] == 'video') {
                 if ($types['real'] == "ogg") $types['player'] = "ogv";
@@ -265,7 +266,7 @@ class WebPlayer
                 $js['artist_id'] = $media->artist;
                 $js['album_id'] = $media->album;
             }
-            $js['song_id'] = $media->id;
+            $js['media_id'] = $media->id;
 
             if ($media->type != $types['real']) {
                 $url .= '&transcode_to=' . $types['real'];

@@ -34,14 +34,16 @@ $web_path = AmpConfig::get('web_path');
                 <th class="cel_album optional"><?php echo T_('Album'); ?></th>
                 <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
                 <th class="cel_time optional"><?php echo T_('Time'); ?></th>
-            <?php if (AmpConfig::get('ratings')) {
-                Rating::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
-            ?>
-                <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-            <?php } ?>
-            <?php if (AmpConfig::get('userflags')) {
-                Userflag::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
-            ?>
+                <?php if (User::is_registered()) { ?>
+                    <?php if (AmpConfig::get('ratings')) {
+                        Rating::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
+                    ?>
+                        <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+                    <?php } ?>
+                    <?php if (AmpConfig::get('userflags')) {
+                        Userflag::build_cache('song', array_map(create_function('$i', '$i=(array) $i; return $i[\'object_id\'];'), $object_ids));
+                    ?>
+                <?php } ?>
                 <th class="cel_userflag essential"><?php echo T_('Fav.'); ?></th>
             <?php } ?>
                 <th class="cel_action essential"><?php echo T_('Action'); ?></th>
@@ -71,12 +73,14 @@ $web_path = AmpConfig::get('web_path');
                 <th class="cel_album"><?php echo T_('Album'); ?></th>
                 <th class="cel_tags"><?php echo T_('Tags'); ?></th>
                 <th class="cel_time"><?php echo T_('Time'); ?></th>
-            <?php if (AmpConfig::get('ratings')) { ?>
-                <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-            <?php } ?>
-            <?php if (AmpConfig::get('userflags')) { ?>
-                <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
-            <?php } ?>
+                <?php if (User::is_registered()) { ?>
+                    <?php if (AmpConfig::get('ratings')) { ?>
+                        <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+                    <?php } ?>
+                    <?php if (AmpConfig::get('userflags')) { ?>
+                        <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
+                    <?php } ?>
+                <?php } ?>
                 <th class="cel_action"><?php echo T_('Action'); ?></th>
                 <th class="cel_drag"></th>
             </tr>

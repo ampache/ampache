@@ -41,11 +41,13 @@ if (Art::is_enabled()) {
 <td class="cel_season"><?php echo $libitem->f_link; ?></td>
 <td class="cel_tvshow"><?php echo $libitem->f_tvshow_link; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
-<?php if (AmpConfig::get('ratings')) { ?>
-<td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_tvshow_season"><?php Rating::show($libitem->id,'tvshow_season'); ?></td>
-<?php } ?>
-<?php if (AmpConfig::get('userflags')) { ?>
-<td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow_season"><?php Userflag::show($libitem->id,'tvshow_season'); ?></td>
+<?php if (User::is_registered()) { ?>
+    <?php if (AmpConfig::get('ratings')) { ?>
+    <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_tvshow_season"><?php Rating::show($libitem->id,'tvshow_season'); ?></td>
+    <?php } ?>
+    <?php if (AmpConfig::get('userflags')) { ?>
+    <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow_season"><?php Userflag::show($libitem->id,'tvshow_season'); ?></td>
+    <?php } ?>
 <?php } ?>
 <td class="cel_action">
 <?php if (Access::check('interface','50')) { ?>

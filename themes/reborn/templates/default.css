@@ -185,7 +185,15 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     width: 120px;
     display: none;
     background-repeat: no-repeat;
-    background-position: center; 
+    background-position: right; 
+}
+
+#mouse_message {
+    z-index: 9999;
+    position: fixed;
+    color: #303335;
+    text-shadow: 2px 2px 9px #fff;
+    font-weight: bold;
 }
 
 /***********************************************
@@ -429,7 +437,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Sidebar
 ***********************************************/
 #sidebar {
-    margin: 20px auto auto 5px;
     font-size: 12px;
 }
 
@@ -469,6 +476,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 .sidebar-header-collapsed {
     width: 50px !important;
+    position: fixed;
 }
 
 #sidebar-content, #sidebar-content-light, #sidebar-light {
@@ -496,9 +504,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #sidebar-light {
     width: 50px;
-    position: absolute;
+    position: fixed;
     left: 0px;
-    margin: 3px auto 5px 5px;
+    margin: 17px auto 5px 5px;
     padding: 10px 0 10px 0;
     text-align: center;
 }
@@ -514,15 +522,13 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .sidebar-float {
+    margin: 20px auto auto 5px;
     float: left;
 }
 
 .sidebar-fixed {
-    position: fixed;
-    top: 66px;
-    left: 5px;
-    height: 90%;
-    overflow: hidden;
+    margin: 0px auto auto 5px;
+    float: left;
 }
 
 /* For sidebar tabs */
@@ -560,14 +566,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 .sidebar-page-float {
     position: absolute;
     left: 0px;
-}
-
-.sidebar-page-fixed {
-    position: absolute;
-    left: -7px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    height: 90%;
 }
 
 #sidebar-tabs .sb2 li h4 {
@@ -616,6 +614,10 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     border-radius: 2px;
     padding: 4px;
     width: 130px;
+}
+
+#sidebar-page .sb2 {
+    margin-bottom: 100px;
 }
 
 #sidebar-tabs #catalog_select {
@@ -781,7 +783,11 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .content-fixed {
-    margin: 86px 250px 0px 180px;
+    margin: 86px 250px 0px 205px;
+}
+
+.content-fixed-topmenu {
+    margin: 0px 250px 0px 205px;
 }
 
 .browse_content {
@@ -1202,6 +1208,16 @@ span.fatalerror {
 
 #content .info-box .box-content .item_art {
     float: right;
+}
+
+.item_info {
+    float: right;
+}
+
+.item_properties {
+    text-align: right;
+    color: #999;
+    font-size: 13px;
 }
 
 .item_art {

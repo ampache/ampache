@@ -341,7 +341,7 @@ class Update
         $update_string = '- New table to store song previews.<br />';
         $version[] = array('version' => '360030','description' => $update_string);
 
-        $update_string = '- Add option to fix header/sidebars position on compatible themes.<br />';
+        $update_string = '- Add option to fix header position on compatible themes.<br />';
         $version[] = array('version' => '360031','description' => $update_string);
 
         $update_string = '- Add check update automatically option.<br />';
@@ -445,6 +445,24 @@ class Update
 
         $update_string = '- Add session_remember table to store remember tokens.<br />';
         $version[] = array('version' => '370015','description' => $update_string);
+
+        $update_string = '- Add limit of media count for direct play preference.<br />';
+        $version[] = array('version' => '370016','description' => $update_string);
+
+        $update_string = '- Add home display settings.<br />';
+        $version[] = array('version' => '370017','description' => $update_string);
+
+        $update_string = '- Enhance tag persistent merge reference.<br />';
+        $version[] = array('version' => '370018','description' => $update_string);
+
+        $update_string = '- Add album group order setting.<br />';
+        $version[] = array('version' => '370019','description' => $update_string);
+
+        $update_string = '- Add webplayer browser notification settings.<br />';
+        $version[] = array('version' => '370020','description' => $update_string);
+
+        $update_string = '- Add rating to playlists, tvshows and tvshows seasons.<br />';
+        $version[] = array('version' => '370021','description' => $update_string);
 
         return $version;
     }
@@ -2057,7 +2075,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('ui_fixed','0','Fix header/sidebars position on compatible themes',25,'boolean','interface')";
+            "VALUES ('ui_fixed','0','Fix header position on compatible themes',25,'boolean','interface')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
@@ -2950,6 +2968,163 @@ class Update
             "`expire` int(11) NULL," .
             "PRIMARY KEY (`username`, `token`)) ENGINE = MYISAM";
         $retval = Dba::write($sql) ? $retval : false;
+        return $retval;
+    }
+
+    /**
+     * update 370016
+     *
+     * Add limit of media count for direct play preference
+     */
+    public static function update_370016()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('direct_play_limit','0','Limit direct play to maximum media count',25,'integer','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370017
+     *
+     * Add home display settings
+     */
+    public static function update_370017()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('home_moment_albums','1','Show Albums of the moment at home page',25,'integer','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('home_moment_videos','1','Show Videos of the moment at home page',25,'integer','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('home_recently_played','1','Show Recently Played at home page',25,'integer','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('home_now_playing','1','Show Now Playing at home page',25,'integer','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('custom_logo','','Custom logo url',25,'string','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /*
+     * update 370018
+     *
+     * Enhance tag persistent merge reference.
+     */
+    public static function update_370018()
+    {
+        $retval = true;
+        $sql = "CREATE TABLE IF NOT EXISTS `tag_merge` ( " .
+               "`tag_id` int(11) NOT NULL, " .
+               "`merged_to` int(11) NOT NULL, " .
+               "FOREIGN KEY (`tag_id`) REFERENCES `tag` (`tag_id`), " .
+               "FOREIGN KEY (`merged_to`) REFERENCES `tag` (`tag_id`), " .
+               "PRIMARY KEY (`tag_id`, `merged_to`)) ENGINE = MYISAM";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "INSERT INTO `tag_merge` (`tag_id`, `merged_to`) " .
+               "SELECT `tag`.`id`, `tag`.`merged_to` " .
+               "FROM `tag` " .
+               "WHERE `merged_to` IS NOT NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `tag` DROP COLUMN `merged_to`";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `tag` ADD COLUMN `is_hidden` TINYINT(1) NOT NULL DEFAULT 0";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370019
+     *
+     * Add album group order setting
+     */
+    public static function update_370019()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('album_release_type_sort','album,ep,live,single','Album - Group per release type Sort',25,'string','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'album,ep,live,single')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370020
+     *
+     * Add webplayer browser notification settings
+     */
+    public static function update_370020()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('browser_notify','1','WebPlayer browser notifications',25,'integer','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('browser_notify_timeout','10','WebPlayer browser notifications timeout (seconds)',25,'integer','interface')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'10')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370021
+     *
+     * Add rating to playlists, tvshows and tvshows seasons
+     */
+    public static function update_370021()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `rating` CHANGE `object_type` `object_type` ENUM ('artist','album','song','stream','video','playlist','tvshow','tvshow_season') NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
         return $retval;
     }
 }

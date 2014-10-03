@@ -539,13 +539,27 @@ class User extends database_object
      */
     public function has_access($needed_level)
     {
-        if (!AmpConfig::get('use_auth') || AmpConfig::get('demo_mode')) { return true; }
+        if (AmpConfig::get('demo_mode')) { return true; }
 
         if ($this->access >= $needed_level) { return true; }
 
         return false;
 
     } // has_access
+
+    /**
+     * is_registered
+     * Check if the user is registered
+     * @return boolean
+     */
+    public static function is_registered()
+    {
+        if (!$GLOBALS['user']->id) return false;
+
+        if (!AmpConfig::get('use_auth') && $GLOBALS['user']->access <= 5) return false;
+
+        return true;
+    }
 
     /**
      * update

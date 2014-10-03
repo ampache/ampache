@@ -574,6 +574,7 @@ class Search extends playlist_object
     public static function run($data)
     {
         $limit = intval($data['limit']);
+        $offset = intval($data['offset']);
         $data = Search::clean_request($data);
 
         $search = new Search(null, $data['type']);
@@ -583,7 +584,6 @@ class Search extends playlist_object
 
         $limit_sql = "";
         if ($limit > 0) {
-            $offset = intval($data['offset']);
             $limit_sql = ' LIMIT ';
             if ($offset) $limit_sql .= $offset . ",";
             $limit_sql .= $limit;

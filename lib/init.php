@@ -187,7 +187,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
         $GLOBALS['user'] = new User($auth['username']);
         $GLOBALS['user']->username = $auth['username'];
         $GLOBALS['user']->fullname = $auth['fullname'];
-        $GLOBALS['user']->access = $auth['access'];
+        $GLOBALS['user']->access = intval($auth['access']);
     } else {
         Session::check();
         if ($_SESSION['userdata']['username']) {
@@ -197,7 +197,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
             $GLOBALS['user']->id = -1;
             $GLOBALS['user']->username = $auth['username'];
             $GLOBALS['user']->fullname = $auth['fullname'];
-            $GLOBALS['user']->access = $auth['access'];
+            $GLOBALS['user']->access = intval($auth['access']);
         }
         if (!$GLOBALS['user']->id AND !AmpConfig::get('demo_mode')) {
             Auth::logout(session_id()); exit;

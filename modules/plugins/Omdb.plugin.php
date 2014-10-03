@@ -23,7 +23,9 @@
 class AmpacheOmdb {
 
     public $name           = 'Omdb';
+    public $categories     = 'metadata';
     public $description    = 'Omdb metadata integration';
+    public $url            = 'http://www.omdbapi.com';
     public $version        = '000001';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';

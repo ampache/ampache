@@ -63,7 +63,7 @@ switch ($_REQUEST['action']) {
             break;
         } // end switch on operator
 
-        $playlist_name    = scrub_in($_REQUEST['playlist_name']);
+        $playlist_name    = (string) scrub_in($_REQUEST['playlist_name']);
 
         $playlist = new Search(null, 'song');
         $playlist->parse_rules($data);

@@ -157,6 +157,9 @@ class Plex_Api
             } else {
                 $email = $username;
                 $username = null;
+
+                $GLOBALS['user'] = new User();
+                $GLOBALS['user']->load_playlist();
             }
 
             if ($createSession) {
@@ -641,6 +644,7 @@ class Plex_Api
         if ($n == 2) {
             $transcode_to = $params[0];
             $action = $params[1];
+            $id = '';
 
             $path = $_GET['path'];
             $protocol = $_GET['protocol'];
@@ -712,14 +716,16 @@ class Plex_Api
                         }
                     }
 
-                    if (Plex_XML_Data::isSong($id)) {
-                        $url = Song::play_url(Plex_XML_Data::getAmpacheId($id), $additional_params);
-                    } elseif (Plex_XML_Data::isVideo($id)) {
-                        $url = Video::play_url(Plex_XML_Data::getAmpacheId($id), $additional_params);
-                    }
+                    if ($id) {
+                        if (Plex_XML_Data::isSong($id)) {
+                            $url = Song::play_url(Plex_XML_Data::getAmpacheId($id), $additional_params);
+                        } elseif (Plex_XML_Data::isVideo($id)) {
+                            $url = Video::play_url(Plex_XML_Data::getAmpacheId($id), $additional_params);
+                        }
 
-                    if ($url) {
-                        self::stream_url($url);
+                        if ($url) {
+                            self::stream_url($url);
+                        }
                     }
                 }
             } elseif ($action == "hls.m3u8") {
@@ -967,20 +973,22 @@ class Plex_Api
                     if ($createMode) {
                         // Upload art
                         $litem = Plex_XML_Data::createLibraryItem($key);
-                        $uri = Plex_XML_Data::getMetadataUri($key) . '/' . Plex_XML_Data::getPhotoPlexKind($kind) . '/' . $key;
-                        if (is_a($litem, 'video')) {
-                            $type = 'video';
-                        } else {
-                            $type = get_class($litem);
+                        if ($litem != null) {
+                            $uri = Plex_XML_Data::getMetadataUri($key) . '/' . Plex_XML_Data::getPhotoPlexKind($kind) . '/' . $key;
+                            if (is_a($litem, 'video')) {
+                                $type = 'video';
+                            } else {
+                                $type = get_class($litem);
+                            }
+
+                            $art = new Art($litem->id, $type, $kind);
+                            $raw = file_get_contents("php://input");
+                            $art->insert($raw);
+
+                            header('Content-Type: text/html');
+                            echo $uri;
+                            exit;
                         }
-
-                        $art = new Art($litem->id, $type, $kind);
-                        $raw = file_get_contents("php://input");
-                        $art->insert($raw);
-
-                        header('Content-Type: text/html');
-                        echo $uri;
-                        exit;
                     }
                     Plex_XML_Data::addPhotos($r, $key, $kind);
                 } elseif ($subact == "thumb" || $subact == "poster" || $subact == "art" || $subact == "background") {

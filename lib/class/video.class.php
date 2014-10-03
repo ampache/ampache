@@ -261,7 +261,7 @@ class Video extends database_object implements media, library_item
 
         // Format the Bitrate
         $this->f_bitrate = intval($this->bitrate/1000) . "-" . strtoupper($this->mode);
-        $this->f_video_bitrate = intval($this->video_bitrate/1000);
+        $this->f_video_bitrate = (string) intval($this->video_bitrate/1000);
         if ($this->frame_rate) {
             $this->f_frame_rate = $this->frame_rate . ' fps';
         }
@@ -686,7 +686,7 @@ class Video extends database_object implements media, library_item
         }
 
         /* If it hasn't been played, set it! */
-        Video::update_played('1', $this->id);
+        Video::update_played(true, $this->id);
 
         return true;
 

@@ -277,25 +277,25 @@ class Access
      *
      * This checks if specific functionality is enabled.
      * @param string $type
-     * @return boolean|string
+     * @return boolean
      */
     public static function check_function($type)
     {
         switch ($type) {
             case 'download':
-                return AmpConfig::get('download');
+                return make_bool(AmpConfig::get('download'));
             case 'batch_download':
                 if (!function_exists('gzcompress')) {
                     debug_event('access', 'ZLIB extension not loaded, batch download disabled', 3);
                     return false;
                 }
-                if (AmpConfig::get('allow_zip_download') AND $GLOBALS['user']->has_access('25')) {
-                    return AmpConfig::get('download');
+                if (AmpConfig::get('allow_zip_download') AND $GLOBALS['user']->has_access('5')) {
+                    return make_bool(AmpConfig::get('download'));
                 }
             break;
-            default:
-                return false;
         }
+
+        return false;
     }
 
     /**

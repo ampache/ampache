@@ -34,22 +34,24 @@ $thcount = 8;
             <th class="cel_album essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album', T_('Album'), 'sort_song_album'.$browse->id); ?></th>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
             <th class="cel_time optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', T_('Time'), 'sort_song_time'.$browse->id); ?></th>
-        <?php if (AmpConfig::get('ratings')) {
-            ++$thcount;
-            Rating::build_cache('song', $object_ids);
-        ?>
-            <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-        <?php } ?>
-        <?php if (AmpConfig::get('userflags')) {
-            ++$thcount;
-            Userflag::build_cache('song', $object_ids);
-        ?>
-            <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
-        <?php } ?>
-            <th class="cel_action essential"><?php echo T_('Action'); ?></th>
-        <?php if (isset($argument) && $argument) { ++$thcount; ?>
-            <th class="cel_drag essential"></th>
-        <?php } ?>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) {
+                    ++$thcount;
+                    Rating::build_cache('song', $object_ids);
+                ?>
+                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
+                <?php } ?>
+                <?php if (AmpConfig::get('userflags')) {
+                    ++$thcount;
+                    Userflag::build_cache('song', $object_ids);
+                ?>
+            <?php } ?>
+                <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+            <?php } ?>
+                <th class="cel_action essential"><?php echo T_('Action'); ?></th>
+            <?php if (isset($argument) && $argument) { ++$thcount; ?>
+                <th class="cel_drag essential"></th>
+            <?php } ?>
         </tr>
     </thead>
     <tbody id="sortableplaylist_<?php echo $browse->get_filter('album'); ?>">
@@ -78,16 +80,18 @@ $thcount = 8;
             <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album', T_('Album'), 'sort_song_album'.$browse->id); ?></th>
             <th class="cel_tags"><?php echo T_('Tags'); ?></th>
             <th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', T_('Time'), 'sort_song_time'.$browse->id); ?></th>
-        <?php if (AmpConfig::get('ratings')) { ?>
-            <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-        <?php } ?>
-        <?php if (AmpConfig::get('userflags')) { ?>
-            <th class="cel_userflag"></th>
-        <?php } ?>
-            <th class="cel_action"></th>
-        <?php if (isset($argument) && $argument) { ?>
-            <th class="cel_drag"></th>
-        <?php } ?>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) { ?>
+                    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+                <?php } ?>
+                <?php if (AmpConfig::get('userflags')) { ?>
+                    <th class="cel_userflag"></th>
+                <?php } ?>
+            <?php } ?>
+                <th class="cel_action"></th>
+            <?php if (isset($argument) && $argument) { ?>
+                <th class="cel_drag"></th>
+            <?php } ?>
         </tr>
     </tfoot>
 </table>

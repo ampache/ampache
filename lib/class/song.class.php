@@ -748,7 +748,7 @@ class Song extends database_object implements media, library_item
         }
 
         /* If it hasn't been played, set it! */
-        self::update_played('1', $this->id);
+        self::update_played(true, $this->id);
 
         return true;
 
@@ -1145,7 +1145,7 @@ class Song extends database_object implements media, library_item
      * update_album
      * updates the album field
      * @param int $new_album
-     * @param in $song_id
+     * @param int $song_id
      */
     public static function update_album($new_album,$song_id)
     {
@@ -1171,7 +1171,7 @@ class Song extends database_object implements media, library_item
      * update_played
      * sets the played flag
      * @param boolean $new_played
-     * @param in $song_id
+     * @param int $song_id
      */
     public static function update_played($new_played,$song_id)
     {
@@ -1199,8 +1199,8 @@ class Song extends database_object implements media, library_item
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
      * @param mixed $value
-     * @param in $song_id
-     * @param in $level
+     * @param int $song_id
+     * @param int $level
      * @return boolean
      */
     private static function _update_item($field, $value, $song_id, $level)
@@ -1282,7 +1282,7 @@ class Song extends database_object implements media, library_item
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
 
         // Format the track (there isn't really anything to do here)
-        $this->f_track = $this->track;
+        $this->f_track = (string) $this->track;
 
         // Get the top tags
         $this->tags = Tag::get_top_tags('song', $this->id);
@@ -1299,7 +1299,7 @@ class Song extends database_object implements media, library_item
         }
         $this->f_file .= $this->f_title . '.' . $this->type;
 
-        $this->f_publisher = $this->publisher;
+        $this->f_publisher = $this->label;
         $this->f_composer = $this->composer;
 
     } // format

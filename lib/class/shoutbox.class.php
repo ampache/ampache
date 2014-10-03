@@ -241,7 +241,7 @@ class Shoutbox
         }
         $html .= "<div class='shoutbox-info'>";
         if ($details) {
-            $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
+            $html .= "<div class='shoutbox-object'>" . ($object->f_name_link ?: $object->f_link) . "</div>";
             $html .= "<div class='shoutbox-date'>".date("Y/m/d H:i:s", $this->date) . "</div>";
         }
         $html .= "<div class='shoutbox-text'>" . preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text) . "</div>";
@@ -254,7 +254,9 @@ class Shoutbox
                 $html .= Ajax::button('?page=stream&action=directplay&playtype=' . $this->object_type .'&' . $this->object_type . '_id=' . $this->object_id,'play', T_('Play'),'play_' . $this->object_type . '_' . $this->object_id);
                 $html .= Ajax::button('?action=basket&type=' . $this->object_type .'&id=' . $this->object_id,'add', T_('Add'),'add_' . $this->object_type . '_' . $this->object_id);
             }
-            $html .= "<a href=\"" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $this->object_type . "&id=" . $this->object_id . "\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>";
+            if (Access::check('interface','25')) {
+                $html .= "<a href=\"" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $this->object_type . "&id=" . $this->object_id . "\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>";
+            }
             $html .= "</div>";
         }
         $html .= "<div class='shoutbox-user'>by ";

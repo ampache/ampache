@@ -23,8 +23,9 @@
 class AmpacheYourls {
 
     public $name        = 'YOURLS';
+    public $categories  = 'shortener';
     public $description = 'Url shorteners on shared links with YOURLS';
-    public $url         = 'http://yourls.org/';
+    public $url         = 'http://yourls.org';
     public $version     = '000002';
     public $min_ampache = '360037';
     public $max_ampache = '999999';

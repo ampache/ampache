@@ -383,8 +383,10 @@ class Album extends database_object implements library_item
         $params = array($name, $disk);
 
         if ($mbid) {
-           $sql .= 'AND `album`.`mbid` = ? ';
-           $params[] = $mbid;
+            $sql .= 'AND `album`.`mbid` = ? ';
+            $params[] = $mbid;
+        } else {
+            $sql .= 'AND `album`.`mbid` IS NULL ';
         }
         if ($prefix) {
            $sql .= 'AND `album`.`prefix` = ? ';
@@ -550,6 +552,24 @@ class Album extends database_object implements library_item
         return $data;
 
     } // has_track
+
+    /**
+     * get_addtime_first_song
+     * Get the add date of first added song.
+     * @return int
+     */
+    public function get_addtime_first_song()
+    {
+        $time = 0;
+
+        $sql = "SELECT MIN(`addition_time`) FROM `song` WHERE `album` = ?";
+        $db_results = Dba::read($sql, array($this->id));
+        if ($data = Dba::fetch_row($db_results)) {
+            $time = $data[0];
+        }
+
+        return $time;
+    }
 
     /**
      * format
@@ -750,7 +770,7 @@ class Album extends database_object implements library_item
     public function update(array $data)
     {
         $year = $data['year'] ?: $this->year;
-        $artist = $data['artist'] ? intval($data['artist']) : $this->artist;
+        $artist = $data['artist'] ? intval($data['artist']) : $this->artist_id;
         $album_artist = $data['album_artist'] ? intval($data['album_artist']) : $this->album_artist;
         $name = $data['name'] ?: $this->name;
         $disk = $data['disk'] ?: $this->disk;
@@ -804,7 +824,7 @@ class Album extends database_object implements library_item
         $this->release_type = $release_type;
         $this->name = $name;
         $this->disk = $disk;
-        $this->mb_id = $mbid;
+        $this->mbid = $mbid;
 
         if ($updated && is_array($songs)) {
             foreach ($songs as $song_id) {

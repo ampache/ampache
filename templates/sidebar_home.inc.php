@@ -58,10 +58,11 @@
     <?php } ?>
     <?php Ajax::start_container('browse_filters'); ?>
     <?php Ajax::end_container(); ?>
+    <?php if (Access::check('interface', '25')) { ?>
     <li>
         <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Playlist'); ?>"><?php echo T_('Playlist'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_home_playlist']) ? $_COOKIE['sb_home_playlist'] : 'expanded'; ?>" id="playlist" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
         <ul class="sb3" id="sb_home_playlist">
-            <li id="sb_home_playlist_currentlyPlaying"><a href="<?php echo AmpConfig::get('web_path'); ?>"><?php echo T_('Currently Playing'); ?></a></li>
+            <li id="sb_home_playlist_currentlyPlaying"><a href="<?php echo AmpConfig::get('web_path'); ?>/index.php"><?php echo T_('Currently Playing'); ?></a></li>
             <?php if (AmpConfig::get('allow_democratic_playback')) { ?>
             <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo T_('Democratic'); ?></a></li>
             <?php } ?>
@@ -77,6 +78,7 @@
             <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import'); ?></a></li>
         </ul>
     </li>
+    <?php } ?>
     <li>
         <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Random'); ?>"><?php echo T_('Random'); ?></span><span class="sprite sprite-icon_all <?php echo isset($_COOKIE['sb_home_random']) ? $_COOKIE['sb_home_random'] : 'expanded'; ?>" id="random" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>"></span></h4>
         <ul class="sb3" id="sb_home_random">
@@ -93,22 +95,24 @@
             <li id="sb_home_info_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent"><?php echo T_('Recent'); ?></a></li>
             <li id="sb_home_info_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo T_('Newest'); ?></a></li>
             <li id="sb_home_info_popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo T_('Popular'); ?></a></li>
-            <?php if (AmpConfig::get('ratings')) { ?>
-            <li id="sb_home_info_highest"><a href="<?php echo $web_path; ?>/stats.php?action=highest"><?php echo T_('Top Rated'); ?></a></li>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) { ?>
+                <li id="sb_home_info_highest"><a href="<?php echo $web_path; ?>/stats.php?action=highest"><?php echo T_('Top Rated'); ?></a></li>
+                <?php } ?>
+                <?php if (AmpConfig::get('userflags')) { ?>
+                <li id="sb_home_info_userFlag"><a href="<?php echo $web_path; ?>/stats.php?action=userflag"><?php echo T_('Favorites'); ?></a></li>
+                <?php } ?>
+                <?php if (AmpConfig::get('wanted')) { ?>
+                <li id="sb_home_info_wanted"><a href="<?php echo $web_path; ?>/stats.php?action=wanted"><?php echo T_('Wanted List'); ?></a></li>
+                <?php } ?>
+                <?php if (AmpConfig::get('share')) { ?>
+                <li id="sb_home_info_share"><a href="<?php echo $web_path; ?>/stats.php?action=share"><?php echo T_('Shared Objects'); ?></a></li>
+                <?php } ?>
+                <?php if (AmpConfig::get('allow_upload')) { ?>
+                <li id="sb_home_info_upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo T_('Uploads'); ?></a></li>
+                <?php } ?>
+                <li id="sb_home_info_statistic"><a href="<?php echo $web_path; ?>/stats.php?action=show"><?php echo T_('Statistics'); ?></a></li>
             <?php } ?>
-            <?php if (AmpConfig::get('userflags')) { ?>
-            <li id="sb_home_info_userFlag"><a href="<?php echo $web_path; ?>/stats.php?action=userflag"><?php echo T_('Favorites'); ?></a></li>
-            <?php } ?>
-            <?php if (AmpConfig::get('wanted')) { ?>
-            <li id="sb_home_info_wanted"><a href="<?php echo $web_path; ?>/stats.php?action=wanted"><?php echo T_('Wanted List'); ?></a></li>
-            <?php } ?>
-            <?php if (AmpConfig::get('share')) { ?>
-            <li id="sb_home_info_share"><a href="<?php echo $web_path; ?>/stats.php?action=share"><?php echo T_('Shared Objects'); ?></a></li>
-            <?php } ?>
-            <?php if (AmpConfig::get('allow_upload')) { ?>
-            <li id="sb_home_info_upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo T_('Uploads'); ?></a></li>
-            <?php } ?>
-            <li id="sb_home_info_statistic"><a href="<?php echo $web_path; ?>/stats.php?action=show"><?php echo T_('Statistics'); ?></a></li>
         </ul>
     </li>
     <li>

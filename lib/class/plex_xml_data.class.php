@@ -463,25 +463,27 @@ class Plex_XML_Data
     {
         foreach ($catalogs as $id) {
             $catalog = Catalog::create_from_id($id);
-            $catalog->format();
+            if ($catalog) {
+                $catalog->format();
 
-            $dir = $xml->addChild('Directory');
-            $key = base64_encode(self::getMachineIdentifier() . '-' . $id);
-            $dir->addAttribute('type', 'music');
-            $dir->addAttribute('key', $key);
-            $dir->addAttribute('uuid', self::uuidFromSubKey($id));
-            $dir->addAttribute('name', $catalog->name);
-            $dir->addAttribute('unique', '1');
-            $dir->addAttribute('serverVersion', self::getPlexVersion());
-            $dir->addAttribute('machineIdentifier', self::getMachineIdentifier());
-            $dir->addAttribute('serverName', self::getServerName());
-            $dir->addAttribute('path', self::getSectionUri($id));
-            $ip = self::getServerAddress();
-            $port = self::getServerPort();
-            $dir->addAttribute('host', $ip);
-            $dir->addAttribute('local', ($ip == "127.0.0.1") ? '1' : '0');
-            $dir->addAttribute('port', $port);
-            self::setSectionXContent($dir, $catalog, 'artist', 'title');
+                $dir = $xml->addChild('Directory');
+                $key = base64_encode(self::getMachineIdentifier() . '-' . $id);
+                $dir->addAttribute('type', 'music');
+                $dir->addAttribute('key', $key);
+                $dir->addAttribute('uuid', self::uuidFromSubKey($id));
+                $dir->addAttribute('name', $catalog->name);
+                $dir->addAttribute('unique', '1');
+                $dir->addAttribute('serverVersion', self::getPlexVersion());
+                $dir->addAttribute('machineIdentifier', self::getMachineIdentifier());
+                $dir->addAttribute('serverName', self::getServerName());
+                $dir->addAttribute('path', self::getSectionUri($id));
+                $ip = self::getServerAddress();
+                $port = self::getServerPort();
+                $dir->addAttribute('host', $ip);
+                $dir->addAttribute('local', ($ip == "127.0.0.1") ? '1' : '0');
+                $dir->addAttribute('port', $port);
+                self::setSectionXContent($dir, $catalog, 'artist', 'title');
+            }
         }
     }
 
@@ -489,43 +491,45 @@ class Plex_XML_Data
     {
         foreach ($catalogs as $id) {
             $catalog = Catalog::create_from_id($id);
-            $catalog->format();
-            $dir = $xml->addChild('Directory');
-            $dir->addAttribute('filters', '1');
-            $dir->addAttribute('refreshing', '0');
-            $dir->addAttribute('key', $id);
-            $gtypes = $catalog->get_gather_types();
-            switch ($gtypes[0]) {
-                case 'movie':
-                    $stype = 'movie';
-                    $dir->addAttribute('type', 'movie');
-                    $dir->addAttribute('agent', 'com.plexapp.agents.imdb');
-                    $dir->addAttribute('scanner', 'Ampache Movie Scanner');
-                    break;
-                case 'tvshow':
-                    $stype = 'show';
-                    $dir->addAttribute('type', 'show');
-                    $dir->addAttribute('agent', 'com.plexapp.agents.thetvdb');
-                    $dir->addAttribute('scanner', 'Ampache Series Scanner');
-                    break;
-                case 'music':
-                default:
-                    $stype = 'artist';
-                    $dir->addAttribute('type', 'artist');
-                    $dir->addAttribute('agent', 'com.plexapp.agents.none'); // com.plexapp.agents.lastfm
-                    $dir->addAttribute('scanner', 'Ampache Music Scanner');
-                    break;
-            }
-            $dir->addAttribute('language', 'en');
-            $dir->addAttribute('uuid', self::uuidFromSubKey($id));
-            $dir->addAttribute('updatedAt', Catalog::getLastUpdate($catalogs));
-            self::setSectionXContent($dir, $catalog, $stype, 'title');
-            //$date = new DateTime("2013-01-01");
-            //$dir->addAttribute('createdAt', $date->getTimestamp());
+            if ($catalog) {
+                $catalog->format();
+                $dir = $xml->addChild('Directory');
+                $dir->addAttribute('filters', '1');
+                $dir->addAttribute('refreshing', '0');
+                $dir->addAttribute('key', $id);
+                $gtypes = $catalog->get_gather_types();
+                switch ($gtypes[0]) {
+                    case 'movie':
+                        $stype = 'movie';
+                        $dir->addAttribute('type', 'movie');
+                        $dir->addAttribute('agent', 'com.plexapp.agents.imdb');
+                        $dir->addAttribute('scanner', 'Ampache Movie Scanner');
+                        break;
+                    case 'tvshow':
+                        $stype = 'show';
+                        $dir->addAttribute('type', 'show');
+                        $dir->addAttribute('agent', 'com.plexapp.agents.thetvdb');
+                        $dir->addAttribute('scanner', 'Ampache Series Scanner');
+                        break;
+                    case 'music':
+                    default:
+                        $stype = 'artist';
+                        $dir->addAttribute('type', 'artist');
+                        $dir->addAttribute('agent', 'com.plexapp.agents.none'); // com.plexapp.agents.lastfm
+                        $dir->addAttribute('scanner', 'Ampache Music Scanner');
+                        break;
+                }
+                $dir->addAttribute('language', 'en');
+                $dir->addAttribute('uuid', self::uuidFromSubKey($id));
+                $dir->addAttribute('updatedAt', Catalog::getLastUpdate($catalogs));
+                self::setSectionXContent($dir, $catalog, $stype, 'title');
+                //$date = new DateTime("2013-01-01");
+                //$dir->addAttribute('createdAt', $date->getTimestamp());
 
-            $location = $dir->addChild('Location');
-            $location->addAttribute('id', $id);
-            $location->addAttribute('path', $catalog->f_full_info);
+                $location = $dir->addChild('Location');
+                $location->addAttribute('id', $id);
+                $location->addAttribute('path', $catalog->f_name);
+            }
         }
 
         $xml->addAttribute('allowSync', '0');
@@ -889,7 +893,7 @@ class Plex_XML_Data
         $xml->addAttribute('type', 'album');
         $xml->addAttribute('summary', '');
         $xml->addAttribute('index', '1');
-        if ($album->has_art || $album->has_thumb) {
+        if (Art::has_db($album->id, 'album')) {
             $xml->addAttribute('art', self::getMetadataUri($id) . '/thumb/' . $id);
             $xml->addAttribute('thumb', self::getMetadataUri($id) . '/thumb/' . $id);
         }
@@ -1102,7 +1106,6 @@ class Plex_XML_Data
        $id = self::getAlbumId($song->id);
        $albumid = self::getAlbumId($song->album);
        $artistid = self::getAlbumId($song->artist);
-       $album = new Album($song->album);
        $xdir->addAttribute('grandparentRatingKey', $artistid);
        $xdir->addAttribute('parentRatingKey', $albumid);
        $xdir->addAttribute('grandparentKey', self::getMetadataUri($albumid));

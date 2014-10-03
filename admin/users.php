@@ -239,7 +239,7 @@ switch ($_REQUEST['action']) {
         $browse = new Browse();
         $browse->reset_filters();
         $browse->set_type('user');
-        $browse->set_simple_browse(1);
+        $browse->set_simple_browse(true);
         $browse->set_sort('name','ASC');
         $user_ids = $browse->get_objects();
         $browse->show_objects($user_ids);

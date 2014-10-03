@@ -402,7 +402,7 @@ class Art extends database_object
      * get_thumb
      * Returns the specified resized image.  If the requested size doesn't
      * already exist, create and cache it.
-     * @param string $size
+     * @param array $size
      * @return string
      */
     public function get_thumb($size)
@@ -433,11 +433,11 @@ class Art extends database_object
      * Only works on gif/jpg/png/bmp. Fails if PHP-GD isn't available
      * or lacks support for the requested image type.
      * @param string $image
-     * @param string $size
+     * @param array $size
      * @param string $mime
      * @return string
      */
-    public function generate_thumb($image,$size,$mime)
+    public function generate_thumb($image, $size, $mime)
     {
         $data = explode("/",$mime);
         $type = strtolower($data['1']);
@@ -540,7 +540,7 @@ class Art extends database_object
      * ['raw']      = Actual Image data, already captured
      * @param array $data
      * @param string $type
-     * @return string
+     * @return string|null
      */
     public static function get_from_source($data, $type = 'album')
     {
@@ -605,7 +605,7 @@ class Art extends database_object
             }
         } // if data song
 
-        return false;
+        return null;
 
     } // get_from_source
 
@@ -693,6 +693,19 @@ class Art extends database_object
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
         $sql = "UPDATE `image` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+    }
+
+    /**
+     * Duplicate an object associate images to a new object
+     * @param string $object_type
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return boolean
+     */
+    public static function duplicate($object_type, $old_object_id, $new_object_id)
+    {
+        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `mime`, `size`, `object_type`, ? as `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
 
@@ -1374,17 +1387,17 @@ class Art extends database_object
         switch ($thumb) {
             case 1:
                 /* This is used by the now_playing / browse stuff */
-                $size['height'] = '100';
-                $size['width']    = '100';
+                $size['height'] = 100;
+                $size['width']    = 100;
             break;
             case 2:
-                $size['height']    = '128';
-                $size['width']    = '128';
+                $size['height']    = 128;
+                $size['width']    = 128;
             break;
             case 3:
                 /* This is used by the flash player */
-                $size['height']    = '80';
-                $size['width']    = '80';
+                $size['height']    = 80;
+                $size['width']    = 80;
             break;
             case 4:
                 /* Web Player size */
@@ -1417,8 +1430,8 @@ class Art extends database_object
                  $size['width'] = 235;
             break;
             default:
-                $size['height'] = '275';
-                $size['width']    = '275';
+                $size['height'] = 275;
+                $size['width']    = 275;
             break;
         }
 
@@ -1482,15 +1495,13 @@ class Art extends database_object
                 echo "</div>";
             }
             echo "<div class=\"item_art_actions\">";
-            $burl = substr($_SERVER['REQUEST_URI'], strlen(AmpConfig::get('raw_web_path')));
-            $burl = rawurlencode(ltrim($burl, '/'));
-            if ($GLOBALS['user']->has_access('25')) {
-                echo "<a href=\"" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=" . $burl . "\">";
+            if ($GLOBALS['user']->has_access(25)) {
+                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo UI::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";
             }
-            if ($GLOBALS['user']->has_access('75')) {
-                echo "<a href=\"" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=" . $burl . "\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
+            if ($GLOBALS['user']->has_access(75)) {
+                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
                 echo UI::get_icon('delete', T_('Reset Art'));
                 echo "</a>";
             }
