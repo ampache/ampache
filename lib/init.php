@@ -34,7 +34,7 @@ require_once $prefix . '/lib/class/session.class.php';
 Session::_auto_init();
 
 // Set up for redirection on important error cases
-$path = preg_replace('#(.*)/(\w+\.php)$#', '$1', $_SERVER['PHP_SELF']);
+$path = dirname($_SERVER['REQUEST_URI']);
 $path = $http_type . $_SERVER['HTTP_HOST'] . $path;
 
 // Check to make sure the config file exists. If it doesn't then go ahead and

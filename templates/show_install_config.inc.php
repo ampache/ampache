@@ -23,7 +23,7 @@
 // Try to guess the web path
 $web_path_guess = $_REQUEST['web_path'];
 if (empty($web_path_guess)) {
-    $web_path_guess = rtrim(dirname($_SERVER['PHP_SELF']), '\/');
+    $web_path_guess = rtrim(dirname($_SERVER['REQUEST_URI']), '\/');
 }
 
 $local_username = scrub_out($_REQUEST['db_username']);
