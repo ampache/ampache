@@ -87,7 +87,7 @@ class AmpacheRSSView {
         if ($xml->channel) {
             UI::show_box_top($xml->channel->title);
             $i = 0;
-            echo '<table class="tabledata">';
+            echo '<div class="home_plugin"><table class="tabledata">';
             foreach ($xml->channel->item as $item) {
                 echo '<tr class="' . ((($i % 2) == 0) ? 'even' : 'odd') . '"><td>';
                 echo '<div>';
@@ -107,7 +107,7 @@ class AmpacheRSSView {
                     break;
                 }
             }
-            echo '</table>';
+            echo '</table></div>';
             UI::show_box_bottom();
         }
     }

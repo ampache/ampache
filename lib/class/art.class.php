@@ -697,6 +697,19 @@ class Art extends database_object
     }
 
     /**
+     * Duplicate an object associate images to a new object
+     * @param string $object_type
+     * @param int $old_object_id
+     * @param int $new_object_id
+     * @return boolean
+     */
+    public static function duplicate($object_type, $old_object_id, $new_object_id)
+    {
+        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `mime`, `size`, `object_type`, ? as `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+    }
+
+    /**
      * gather
      * This tries to get the art in question
      * @param array $options

@@ -1456,6 +1456,24 @@ abstract class Catalog extends database_object
         $info = Song::compare_song_information($song,$new_song);
         if ($info['change']) {
             debug_event('update', "$song->file : differences found, updating database", 5);
+
+            // Duplicate arts if required
+            if ($song->artist != $new_song->artist) {
+                if (!Art::has_db($new_song->artist, 'artist')) {
+                    Art::duplicate('artist', $song->artist, $new_song->artist);
+                }
+            }
+            if ($song->album_artist != $new_song->album_artist) {
+                if (!Art::has_db($new_song->album_artist, 'artist')) {
+                    Art::duplicate('artist', $song->album_artist, $new_song->album_artist);
+                }
+            }
+            if ($song->album != $new_song->album) {
+                if (!Art::has_db($new_song->album, 'album')) {
+                    Art::duplicate('album', $song->album, $new_song->album);
+                }
+            }
+
             $song->update_song($song->id,$new_song);
             // Refine our reference
             //$song = $new_song;

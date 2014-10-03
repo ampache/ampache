@@ -23,7 +23,7 @@
 foreach (Plugin::get_plugins('display_home') as $plugin_name) {
     $plugin = new Plugin($plugin_name);
     if ($plugin->load($GLOBALS['user'])) {
-        echo '<div class="home_plugin">' . $plugin->_plugin->display_home() . '</div>';
+        $plugin->_plugin->display_home();
     }
 }
 ?>
