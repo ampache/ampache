@@ -33,6 +33,7 @@
             <option value="artist"><?php echo T_('Artist')?></option>
             <option value="playlist_name"><?php echo T_('Playlist')?></option>
             <option value="tag"><?php echo T_('Tag')?></option>
+            <option value="missing_artist"><?php echo T_('Missing Artist')?></option>
         </select>
         <input class="button" type="submit" value="<?php echo T_('Search'); ?>" id="searchBtn" />
         <a href="<?php echo $web_path; ?>/search.php?type=song" class="button" id="advSearchBtn"><?php echo T_('Advanced Search'); ?></a>

@@ -55,6 +55,6 @@ class RequestsMbClient extends MbClient
         }
         $request = Requests::get($url, $headers, $reqopt);
 
-        return json_decode($request->body);
+        return json_decode($request->body, true);
     }
 }

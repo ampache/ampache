@@ -89,7 +89,7 @@ load_gettext();
 header ('Content-Type: text/html; charset=' . AmpConfig::get('site_charset'));
 
 // Correct potential \ or / in the dirname
-$safe_dirname = rtrim(dirname($_SERVER['REQUEST_URI']),"/\\");
+$safe_dirname = get_web_path();
 
 $web_path = $http_type . $_SERVER['HTTP_HOST'] . $safe_dirname;
 

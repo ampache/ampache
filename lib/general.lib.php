@@ -340,3 +340,17 @@ if (!function_exists('apache_request_headers')) {
         return apache_request_headers();
     }
 }
+
+function get_web_path()
+{
+    $root = '';
+    if (strlen($_SERVER['PHP_SELF'])) {
+        $root = $_SERVER['PHP_SELF'];
+    } else {
+        $root = $_SERVER['REQUEST_URI'];
+    }
+
+    //$root = rtrim(dirname($root),"/\\");
+    $root = preg_replace('#(.*)/(\w+\.php)$#', '$1', $root);
+    return $root;
+}

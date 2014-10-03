@@ -29,13 +29,17 @@ UI::show_header();
  */
 switch ($_REQUEST['action']) {
     case 'search':
-        $browse = new Browse();
-        require_once AmpConfig::get('prefix') . '/templates/show_search_form.inc.php';
-        require_once AmpConfig::get('prefix') . '/templates/show_search_options.inc.php';
-        $results = Search::run($_REQUEST);
-        $browse->set_type($_REQUEST['type']);
-        $browse->show_objects($results);
-        $browse->store();
+        if ($_REQUEST['rule_1'] != 'missing_artist') {
+            $browse = new Browse();
+            require_once AmpConfig::get('prefix') . '/templates/show_search_form.inc.php';
+            require_once AmpConfig::get('prefix') . '/templates/show_search_options.inc.php';
+            $results = Search::run($_REQUEST);
+            $browse->set_type($_REQUEST['type']);
+            $browse->show_objects($results);
+            $browse->store();
+        } else {
+            echo '<a href="http://musicbrainz.org/search?query=' . rawurlencode($_REQUEST['rule_1_input']) . '&type=artist&method=indexed" target="_blank">' . T_('Search on MusicBrainz') . '</a><br />';
+        }
     break;
     case 'save_as_track':
         $playlist_id = save_search($_REQUEST);

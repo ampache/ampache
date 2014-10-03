@@ -153,6 +153,25 @@ switch ($_REQUEST['action']) {
             }
         }
 
+        if ($target == 'missing_artist') {
+            $sres = Wanted::search_missing_artists($search);
+            $i = 0;
+            foreach ($sres as $r) {
+                $results[] = array(
+                    'type' => T_('Missing Artists'),
+                    'link' => AmpConfig::get('web_path') . '/artists.php?action=show_missing&mbid=' . $r['mbid'],
+                    'label' => $r['name'],
+                    'value' => $r['name'],
+                    'rels' => '',
+                    'image' => '',
+                );
+                $i++;
+
+                if ($i >= $limit)
+                    break;
+            }
+        }
+
     break;
     default:
         $results['rfc3514'] = '0x1';
