@@ -38,10 +38,10 @@ class Graph
                 $df = "DATE_FORMAT(FROM_UNIXTIME(`object_count`.`date`), '%Y-%m-%d %H:00:00')";
                 break;
             case 'year':
-                $df = "DATE_FORMAT(FROM_UNIXTIME(`object_count`.`date`), '%Y')";
+                $df = "DATE_FORMAT(FROM_UNIXTIME(`object_count`.`date`), '%Y-00-00')";
                 break;
             case 'month':
-                $df = "DATE_FORMAT(FROM_UNIXTIME(`object_count`.`date`), '%Y-%m')";
+                $df = "DATE_FORMAT(FROM_UNIXTIME(`object_count`.`date`), '%Y-%m-00')";
                 break;
             case 'day':
             default:
@@ -60,7 +60,7 @@ class Graph
             $end_date = intval($end_date);
         }
         if ($start_date == null) {
-            $start_date = $end_date - 2592000;
+            $start_date = $end_date - 1123200;
         } else {
             $start_date = intval($start_date);
         }
@@ -112,7 +112,7 @@ class Graph
                     if (array_key_exists($date, $user_values)) {
                         $value = $user_values[$date];
                     } else {
-                        $values = 0;
+                        $value = 0;
                     }
                     $MyData->addPoints($value, $u->username);
                 }
