@@ -90,16 +90,26 @@ class Stats
      * This inserts a new record for the specified object
      * with the specified information, amazing!
      */
-    public static function insert($type, $oid, $user, $agent='')
+    public static function insert($type, $oid, $user, $agent='', $location)
     {
         $type = self::validate_type($type);
 
-        $sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`date`,`user`,`agent`) " .
-            " VALUES (?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($type, $oid, time(), $user, $agent));
+        $latitude = null;
+        $longitude = null;
+        $geoname = null;
+        if (isset($location['latitude']))
+            $latitude = $location['latitude'];
+        if (isset($location['longitude']))
+            $longitude = $location['longitude'];
+        if (isset($location['name']))
+            $geoname = $location['name'];
+
+        $sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`date`,`user`,`agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($type, $oid, time(), $user, $agent, $latitude, $longitude, $geoname));
 
         if (!$db_results) {
-            debug_event('statistics','Unabled to insert statistics:' . $sql,'3');
+            debug_event('statistics', 'Unabled to insert statistics:' . $sql, '3');
         }
 
     } // insert
@@ -117,6 +127,17 @@ class Stats
 
         return $results['object_cnt'];
     } // get_object_count
+
+    public static function get_cached_place_name($latitude, $longitude)
+    {
+        $name = null;
+        $sql = "SELECT `geo_name` FROM `object_count` WHERE `geo_latitude` = ? AND `geo_longitude` = ? AND `geo_name` IS NOT NULL ORDER BY `id` DESC LIMIT 1";
+        $db_results = Dba::read($sql, array($latitude, $longitude));
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $name = $results['geo_name'];
+        }
+        return $name;
+    }
 
     /**
      * get_last_song

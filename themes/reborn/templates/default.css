@@ -1540,3 +1540,7 @@ a.option-list {
 a.option-list:hover {
 	border: 1px solid;
 }
+
+.stats_graph {
+    text-align: center;
+}

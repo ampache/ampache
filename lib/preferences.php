@@ -191,6 +191,7 @@ function create_preference_input($name,$value)
         case 'home_now_playing':
         case 'browser_notify':
         case 'allow_video':
+        case 'geolocation':
             $is_true = '';
             $is_false = '';
             if ($value == '1') {

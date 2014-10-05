@@ -164,7 +164,7 @@ debug_event('stream.php' , 'Stream Type: ' . $stream_type . ' Media IDs: '. json
 
 if (count(media_ids)) {
     if ($GLOBALS['user']->id > -1) {
-        Session::update_username(Stream::$session, $GLOBALS['user']->username);
+        Session::update_username(Stream::get_session(), $GLOBALS['user']->username);
     }
 
     $playlist = new Stream_Playlist();

@@ -675,11 +675,12 @@ class Video extends database_object implements media, library_item
      * if not then it sets it to played. In any case it updates stats.
      * @param int $user
      * @param string $agent
+     * @param array $location
      * @return boolean
      */
-    public function set_played($user, $agent)
+    public function set_played($user, $agent, $location)
     {
-        Stats::insert('video', $this->id, $user, $agent);
+        Stats::insert('video', $this->id, $user, $agent, $location);
 
         if ($this->played) {
             return true;

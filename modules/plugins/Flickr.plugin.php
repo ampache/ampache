@@ -30,6 +30,8 @@ class Ampacheflickr {
     public $min_ampache = '360045';
     public $max_ampache = '999999';
 
+    private $api_key;
+    
     /**
      * Constructor
      * This function does nothing...

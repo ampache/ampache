@@ -22,7 +22,7 @@
 
 class Stream
 {
-    public static $session;
+    private static $session;
 
     private function __construct()
     {
@@ -40,6 +40,38 @@ class Stream
     {
         self::$session=$sid;
     } // set_session
+
+    public static function get_session()
+    {
+        if (!self::$session) {
+            // Generate the session ID.  This is slightly wasteful.
+            $data = array();
+            $data['type'] = 'stream';
+            // This shouldn't be done here but at backend endpoint side
+            if (isset($_REQUEST['client'])) {
+                $data['agent'] = $_REQUEST['client'];
+            }
+
+            // Copy session geolocation
+            // Same thing, should be done elsewhere
+            $sid = session_id();
+            if ($sid) {
+                $location = Session::get_geolocation($sid);
+                if (isset($location['latitude'])) {
+                    $data['geo_latitude'] = $location['latitude'];
+                }
+                if (isset($location['longitude'])) {
+                    $data['geo_longitude'] = $location['longitude'];
+                }
+                if (isset($location['name'])) {
+                    $data['geo_name'] = $location['name'];
+                }
+            }
+
+            self::$session = Session::create($data);
+        }
+        return self::$session;
+    }
 
     /**
      *
@@ -364,21 +396,6 @@ class Stream
     }
 
     /**
-     * auto_init
-     * This is called on class load it sets the session
-     */
-    public static function _auto_init()
-    {
-        // Generate the session ID.  This is slightly wasteful.
-        $data = array();
-        $data['type'] = 'stream';
-        if (isset($_REQUEST['client'])) {
-            $data['agent'] = $_REQUEST['client'];
-        }
-        self::$session = Session::create($data);
-    }
-
-    /**
      * run_playlist_method
      *
      * This takes care of the different types of 'playlist methods'. The
@@ -420,7 +437,7 @@ class Stream
     {
         $session_string = '';
         if (AmpConfig::get('require_session')) {
-            $session_string = 'ssid=' . self::$session . '&';
+            $session_string = 'ssid=' . self::get_session() . '&';
         }
 
         if ($local) {

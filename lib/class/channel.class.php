@@ -405,7 +405,7 @@ class Channel extends database_object implements media, library_item
 
                     // End of file, prepare to move on for next call
                     if (feof($this->transcoder['handle'])) {
-                        $this->media->set_played();
+                        $this->media->set_played(-1, 'Ampache', array());
                         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
                             fread($this->transcoder['stderr'], 4096);
                             fclose($this->transcoder['stderr']);
@@ -458,7 +458,7 @@ class Channel extends database_object implements media, library_item
         return $this->get_fullname();
     }
 
-    public function set_played($user, $agent)
+    public function set_played($user, $agent, $location)
     {
         // Do nothing
     }

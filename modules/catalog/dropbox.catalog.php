@@ -204,7 +204,7 @@ class Catalog_dropbox extends Catalog
         $webAuth = $this->getWebAuth();
         $authurl = $webAuth->start();
         echo "<br />Go to <strong><a href='" . $authurl . "' target='_blank'>" . $authurl . "</a></strong> to generate the authorization code, then enter it bellow.<br />";
-        echo "<form action='' method='post' enctype='multipart/form-data'>";
+        echo "<form action='" . get_current_path() . "' method='post' enctype='multipart/form-data'>";
         if ($_POST['action']) {
             echo "<input type='hidden' name='action' value='add_to_catalog' />";
             echo "<input type='hidden' name='catalogs[]' value='". $this->id ."' />";

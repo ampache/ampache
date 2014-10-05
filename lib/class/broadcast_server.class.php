@@ -150,7 +150,7 @@ class Broadcast_Server implements MessageComponentInterface
             $broadcast = $this->broadcasters[$from->resourceId];
             $clients = $this->getListeners($broadcast);
 
-            Session::extend(Stream::$session, 'stream');
+            Session::extend(Stream::get_session(), 'stream');
 
             $broadcast->update_song($song_id);
             $this->broadcastMessage($clients, self::BROADCAST_SONG, base64_encode($this->getSongJS($song_id)));

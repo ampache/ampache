@@ -341,15 +341,20 @@ if (!function_exists('apache_request_headers')) {
     }
 }
 
-function get_web_path()
+function get_current_path()
 {
-    $root = '';
     if (strlen($_SERVER['PHP_SELF'])) {
         $root = $_SERVER['PHP_SELF'];
     } else {
         $root = $_SERVER['REQUEST_URI'];
     }
 
+    return $root;
+}
+
+function get_web_path()
+{
+    $root = get_current_path();
     //$root = rtrim(dirname($root),"/\\");
     $root = preg_replace('#(.*)/(\w+\.php)$#', '$1', $root);
     return $root;

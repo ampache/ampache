@@ -874,7 +874,7 @@ class Upnp_Api
 
     private static function _itemAlbum($album, $parent)
     {
-        $api_session = (AmpConfig::get('require_session')) ? Stream::$session : false;
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
         $art_url = Art::url($album->id, 'album', $api_session);
 
         return array(
@@ -914,7 +914,7 @@ class Upnp_Api
 
     private static function _itemSong($song, $parent)
     {
-        $api_session = (AmpConfig::get('require_session')) ? Stream::$session : false;
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
         $art_url = Art::url($song->album, 'album', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
@@ -970,7 +970,7 @@ class Upnp_Api
 
     private static function _itemVideo($video, $parent)
     {
-        $api_session = (AmpConfig::get('require_session')) ? Stream::$session : false;
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
         $art_url = Art::url($video->id, 'video', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();

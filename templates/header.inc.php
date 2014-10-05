@@ -48,6 +48,7 @@ $_SESSION['login'] = false;
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/tag-it/jquery.tagit.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-datetimepicker/jquery.datetimepicker.css" type="text/css" media="screen" />
         <script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/prettyPhoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
@@ -59,6 +60,7 @@ $_SESSION['login'] = false;
         <script src="<?php echo $web_path; ?>/modules/rhinoslider/js/rhinoslider-1.05.min.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/responsive-elements/responsive-elements.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/modules/jquery-datetimepicker/jquery.datetimepicker.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery-knob/jquery.knob.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery-file-upload/jquery.iframe-transport.js" language="javascript" type="text/javascript"></script>
         <script src="<?php echo $web_path; ?>/modules/jquery-file-upload/jquery.fileupload.js" language="javascript" type="text/javascript"></script>
@@ -69,6 +71,9 @@ $_SESSION['login'] = false;
         <script type="text/javascript" charset="utf-8">
             $(document).ready(function(){
                 $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
+                <?php if (AmpConfig::get('geolocation')) { ?>
+                    geolocate_user();
+                <?php } ?>
             });
 
             // Using the following workaround to set global variable available from any javascript script.

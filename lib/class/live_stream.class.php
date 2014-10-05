@@ -302,7 +302,7 @@ class Live_Stream extends database_object implements media, library_item
 
     }
 
-    public function set_played($user, $agent)
+    public function set_played($user, $agent, $location)
     {
         // Do nothing
     }

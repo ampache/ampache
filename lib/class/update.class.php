@@ -464,6 +464,9 @@ class Update
         $update_string = '- Add rating to playlists, tvshows and tvshows seasons.<br />';
         $version[] = array('version' => '370021','description' => $update_string);
 
+        $update_string = '- Add users geolocation.<br />';
+        $version[] = array('version' => '370022','description' => $update_string);
+
         return $version;
     }
 
@@ -3124,6 +3127,31 @@ class Update
 
         $sql = "ALTER TABLE `rating` CHANGE `object_type` `object_type` ENUM ('artist','album','song','stream','video','playlist','tvshow','tvshow_season') NULL";
         $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370022
+     *
+     * Add users geolocation
+     */
+    public static function update_370022()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `session` ADD COLUMN `geo_latitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_longitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_name` VARCHAR(255) NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `object_count` ADD COLUMN `geo_latitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_longitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_name` VARCHAR(255) NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('geolocation','1','Allow geolocation',25,'integer','options')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;
     }

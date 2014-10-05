@@ -56,6 +56,9 @@ foreach ($data as $row) {
 
     if ($is_allowed || $has_allowed_agent) {
         $agent = $row['agent'];
+        if (!empty($row['geo_name'])) {
+            $agent .= ' - ' . $row['geo_name'];
+        }
     }
 
     if ($is_allowed || $has_allowed_time) {

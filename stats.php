@@ -57,6 +57,14 @@ switch ($_REQUEST['action']) {
     case 'upload':
         require_once AmpConfig::get('prefix') . '/templates/show_uploads.inc.php';
     break;
+    case 'graph_user':
+        $user = $_REQUEST['user'];
+        $end_date = $_REQUEST['end_date'] ?: time();
+        $start_date = $_REQUEST['start_date'] ?: ($end_date - 2592000);
+        $zoom = $_REQUEST['zoom'] ?: 'day';
+
+        require_once AmpConfig::get('prefix') . '/templates/show_user_graph.inc.php';
+        break;
     case 'show':
     default:
         require_once AmpConfig::get('prefix') . '/templates/show_stats.inc.php';

@@ -775,7 +775,7 @@ class User extends database_object
      * update_user_stats
      * updates the playcount mojo for this specific user
      */
-    public function update_stats($media_type, $media_id, $agent = '')
+    public function update_stats($media_type, $media_id, $agent = '', $location = array())
     {
         debug_event('user.class.php', 'Updating stats for {'.$media_type.'/'.$media_id.'} {'.$agent.'}...', '5');
         $media = new $media_type($media_id);
@@ -800,7 +800,7 @@ class User extends database_object
             User::save_mediaplay($GLOBALS['user'], $media);
         }
 
-        $media->set_played($user, $agent);
+        $media->set_played($user, $agent, $location);
 
         return true;
 
@@ -1177,9 +1177,9 @@ class User extends database_object
     {
         if (!$type) { $type = 'song'; }
 
-        $sql = "SELECT * FROM `object_count` WHERE `object_type`='$type' AND `user`='$this->id' " .
-            "ORDER BY `date` DESC LIMIT $limit";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT * FROM `object_count` WHERE `object_type` = ? AND `user` = ? " .
+            "ORDER BY `date` DESC LIMIT " . $limit;
+        $db_results = Dba::read($sql, array($type, $this->id));
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {

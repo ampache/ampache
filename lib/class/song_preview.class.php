@@ -313,7 +313,7 @@ class Song_Preview extends database_object implements media, playable_item
         return $this->title;
     }
 
-    public function set_played($user, $agent)
+    public function set_played($user, $agent, $location)
     {
         // Do nothing
     }

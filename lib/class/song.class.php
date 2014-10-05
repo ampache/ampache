@@ -735,13 +735,14 @@ class Song extends database_object implements media, library_item
      * if not then it sets it to played. In any case it updates stats.
      * @param int $user
      * @param string $agent
+     * @param array $location
      * @return boolean
      */
-    public function set_played($user, $agent)
+    public function set_played($user, $agent, $location)
     {
-        Stats::insert('song', $this->id, $user, $agent);
-        Stats::insert('album', $this->album, $user, $agent);
-        Stats::insert('artist', $this->artist, $user, $agent);
+        Stats::insert('song', $this->id, $user, $agent, $location);
+        Stats::insert('album', $this->album, $user, $agent, $location);
+        Stats::insert('artist', $this->artist, $user, $agent, $location);
 
         if ($this->played) {
             return true;
@@ -1548,7 +1549,7 @@ class Song extends database_object implements media, library_item
     {
         $user_id = intval($user_id);
 
-        $sql = "SELECT `object_id`, `user`, `object_type`, `date`, `agent` " .
+        $sql = "SELECT `object_id`, `user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name` " .
             "FROM `object_count` WHERE `object_type`='song' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
@@ -1570,6 +1571,9 @@ class Song extends database_object implements media, library_item
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
+            if (empty($row['geo_name']) && $row['latitude'] && $row['longitude']) {
+                $geo_name = Stats::get_cached_place_name($row['latitude'], $row['longitude']);
+            }
             $results[] = $row;
             if (count($results) >= AmpConfig::get('popular_threshold')) { break; }
         }

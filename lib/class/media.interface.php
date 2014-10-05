@@ -60,6 +60,6 @@ interface media
      */
     public function get_stream_name();
 
-    public function set_played($user, $agent);
+    public function set_played($user, $agent, $location);
 
 } // end interface

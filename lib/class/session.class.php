@@ -202,12 +202,25 @@ class Session
             $expire = time() + AmpConfig::get('session_length');
         }
 
+        $latitude = null;
+        if (isset($data['geo_latitude'])) {
+            $latitude = $data['geo_latitude'];
+        }
+        $longitude = null;
+        if (isset($data['geo_longitude'])) {
+            $longitude = $data['geo_longitude'];
+        }
+        $geoname = null;
+        if (isset($data['geo_name'])) {
+            $geoname = $data['geo_name'];
+        }
+
         if (!strlen($value)) { $value = ' '; }
 
         /* Insert the row */
-        $sql = 'INSERT INTO `session` (`id`,`username`,`ip`,`type`,`agent`,`value`,`expire`) ' .
-            'VALUES (?, ?, ?, ?, ?, ?, ?)';
-        $db_results = Dba::write($sql, array($key, $username, $ip, $type, $agent, $value, $expire));
+        $sql = 'INSERT INTO `session` (`id`,`username`,`ip`,`type`,`agent`,`value`,`expire`,`geo_latitude`,`geo_longitude`, `geo_name`) ' .
+            'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $db_results = Dba::write($sql, array($key, $username, $ip, $type, $agent, $value, $expire, $latitude, $longitude, $geoname));
 
         if (!$db_results) {
             debug_event('session', 'Session creation failed', '1');
@@ -324,6 +337,46 @@ class Session
     {
         $sql = 'UPDATE `session` SET `username` = ? WHERE `id`= ?';
         return Dba::write($sql, array($username, $sid));
+    }
+
+    /**
+     * update_geolocation
+     * Update session geolocation.
+     * @param string $sid
+     * @param float $latitude
+     * @param float $longitude
+     */
+    public static function update_geolocation($sid, $latitude, $longitude, $name)
+    {
+        if ($sid) {
+            $sql = "UPDATE `session` SET `geo_latitude` = ?, `geo_longitude` = ?, `geo_name` = ? WHERE `id` = ?";
+            Dba::write($sql, array($latitude, $longitude, $name, $sid));
+        } else {
+            debug_event('session', 'Missing session id to update geolocation.', 3);
+        }
+    }
+
+    /**
+     * get_geolocation
+     * Get session geolocation.
+     * @param string $sid
+     * @return array
+     */
+    public static function get_geolocation($sid)
+    {
+        $location = array();
+
+        if ($sid) {
+            $sql = "SELECT `geo_latitude`, `geo_longitude`, `geo_name` FROM `session` WHERE `id` = ?";
+            $db_results = Dba::read($sql, array($sid));
+            if ($row = Dba::fetch_assoc($db_results)) {
+                $location['latitude'] = $row['geo_latitude'];
+                $location['longitude'] = $row['geo_longitude'];
+                $location['name'] = $row['geo_name'];
+            }
+        }
+
+        return $location;
     }
 
     /**

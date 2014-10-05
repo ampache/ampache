@@ -398,6 +398,12 @@ notify = "true"
 ; DEFAULT: false
 ;resize_images = "false"
 
+; Statistical Graphs * Requires PHP-GD *
+; Set this to true if you want Ampache to generate statistical
+; graphs on usages / users.
+; DEFAULT: false
+;statistical_graphs = "false"
+
 ; Art Gather Order
 ; Simply arrange the following in the order you would like
 ; ampache to search. If you want to disable one of the search

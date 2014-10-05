@@ -274,7 +274,7 @@ function startBroadcastListening(broadcast_id)
     $('.jp-seek-bar').css('pointer-events', 'none');
 
     brconn.onopen = function(e) {
-        sendBroadcastMessage('AUTH_SID', '<?php echo Stream::$session; ?>');
+        sendBroadcastMessage('AUTH_SID', '<?php echo Stream::get_session(); ?>');
         sendBroadcastMessage('REGISTER_LISTENER', broadcast_id);
     };
 }
