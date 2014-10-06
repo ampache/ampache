@@ -31,28 +31,28 @@ class Graph
         return true;
     }
 
-    protected function get_sql_date_format($zoom)
+    protected function get_sql_date_format($field, $zoom)
     {
         switch ($zoom) {
             case 'hour':
-                $df = "DATE_FORMAT(FROM_UNIXTIME(`object_count`.`date`), '%Y-%m-%d %H:00:00')";
+                $df = "DATE_FORMAT(FROM_UNIXTIME(" . $field ."), '%Y-%m-%d %H:00:00')";
                 break;
             case 'year':
-                $df = "DATE_FORMAT(FROM_UNIXTIME(`object_count`.`date`), '%Y-00-00')";
+                $df = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-01-01')";
                 break;
             case 'month':
-                $df = "DATE_FORMAT(FROM_UNIXTIME(`object_count`.`date`), '%Y-%m-00')";
+                $df = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-01')";
                 break;
             case 'day':
             default:
-                $df = "DATE_FORMAT(FROM_UNIXTIME(`object_count`.`date`), '%Y-%m-%d')";
+                $df = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d')";
                 break;
         }
 
         return "UNIX_TIMESTAMP(" . $df . ")";
     }
 
-    protected function get_sql_where($user = 0, $start_date = null, $end_date = null)
+    protected function get_user_sql_where($user = 0, $start_date = null, $end_date = null)
     {
         if ($end_date == null) {
             $end_date = time();
@@ -73,11 +73,32 @@ class Graph
         return $sql;
     }
 
-    protected function get_all_type_pts($fct, $user = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    protected function get_catalog_sql_where($type = 'song', $catalog = 0, $start_date = null, $end_date = null)
     {
-        $song_values = $this->$fct($user, $start_date, $end_date, $zoom, 'song');
+        if ($end_date == null) {
+            $end_date = time();
+        } else {
+            $end_date = intval($end_date);
+        }
+        if ($start_date == null) {
+            $start_date = $end_date - 864000;
+        } else {
+            $start_date = intval($start_date);
+        }
+
+        $sql = "WHERE `" . $type . "`.`addition_time` >= " . $start_date . " AND `" . $type . "`.`addition_time` <= " . $end_date;
+        if ($catalog > 0) {
+            $catalog = intval($catalog);
+            $sql .= " AND `" . $type . "`.`catalog` = " . $catalog;
+        }
+        return $sql;
+    }
+
+    protected function get_all_type_pts($fct, $id = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    {
+        $song_values = $this->$fct($id, $start_date, $end_date, $zoom, 'song');
         if (AmpConfig::get('allow_video')) {
-            $video_values = $this->$fct($user, $start_date, $end_date, $zoom, 'video');
+            $video_values = $this->$fct($id, $start_date, $end_date, $zoom, 'video');
         } else {
             $video_values = array();
         }
@@ -93,21 +114,29 @@ class Graph
         return $values;
     }
 
-    protected function get_all_pts($fct, pData $MyData, $user = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    protected function get_all_pts($fct, pData $MyData, $id = 0, $start_date = null, $end_date = null, $zoom = 'day', $show_total = true)
     {
-        $values = $this->get_all_type_pts($fct, $user, $start_date, $end_date, $zoom);
+        $values = $this->get_all_type_pts($fct, $id, $start_date, $end_date, $zoom);
         foreach ($values as $date => $value) {
-            $MyData->addPoints($value, "Total");
+            if ($show_total) {
+                $MyData->addPoints($value, "Total");
+            }
             $MyData->addPoints($date, "TimeStamp");
         }
+        return $values;
+    }
+
+    protected function get_user_all_pts($fct, pData $MyData, $user = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    {
+        $values = $this->get_all_pts($fct, $MyData, $user, $start_date, $end_date, $zoom);
 
         $ustats = User::count();
         // Only display other users if the graph is not for a specific user and user count is small
         if (!$user && $ustats['users'] < 10) {
             $user_ids = User::get_valid_users();
-            foreach ($user_ids as $id) {
-                $u = new User($id);
-                $user_values = $this->get_all_type_pts($fct, $id, $start_date, $end_date, $zoom);
+            foreach ($user_ids as $user_id) {
+                $u = new User($user_id);
+                $user_values = $this->get_all_type_pts($fct, $user_id, $start_date, $end_date, $zoom);
                 foreach ($values as $date => $value) {
                     if (array_key_exists($date, $user_values)) {
                         $value = $user_values[$date];
@@ -120,10 +149,34 @@ class Graph
         }
     }
 
+    protected function get_catalog_all_pts($fct, pData $MyData, $catalog = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    {
+        $values = $this->get_all_pts($fct, $MyData, $catalog, $start_date, $end_date, $zoom, false);
+
+        // Only display other users if the graph is not for a specific catalog
+        if (!$catalog) {
+            $catalog_ids = Catalog::get_catalogs();
+            foreach ($catalog_ids as $catalog_id) {
+                $c = Catalog::create_from_id($catalog_id);
+                $catalog_values = $this->get_all_type_pts($fct, $catalog_id, $start_date, $end_date, $zoom);
+                $pv = 0;
+                foreach ($values as $date => $value) {
+                    if (array_key_exists($date, $catalog_values)) {
+                        $value = $catalog_values[$date];
+                        $pv = $value;
+                    } else {
+                        $value = $pv;
+                    }
+                    $MyData->addPoints($value, $c->name);
+                }
+            }
+        }
+    }
+
     protected function get_user_hits_pts($user = 0, $start_date = null, $end_date = null, $zoom = 'day', $type = 'song')
     {
-        $df = $this->get_sql_date_format($zoom);
-        $where = $this->get_sql_where($user, $start_date, $end_date);
+        $df = $this->get_sql_date_format("`object_count`.`date`", $zoom);
+        $where = $this->get_user_sql_where($user, $start_date, $end_date);
         $sql = "SELECT " . $df . " AS `zoom_date`, COUNT(`object_count`.`id`) AS `hits` FROM `object_count` " . $where .
                 "  AND `object_count`.`object_type` = '" . $type . "'" .
                 " GROUP BY " . $df;
@@ -138,8 +191,8 @@ class Graph
 
     protected function get_user_bandwidth_pts($user = 0, $start_date = null, $end_date = null, $zoom = 'day', $type = 'song')
     {
-        $df = $this->get_sql_date_format($zoom);
-        $where = $this->get_sql_where($user, $start_date, $end_date);
+        $df = $this->get_sql_date_format("`object_count`.`date`", $zoom);
+        $where = $this->get_user_sql_where($user, $start_date, $end_date);
         $sql = "SELECT " . $df . " AS `zoom_date`, SUM(`" . $type . "`.`size`) AS `bandwith` FROM `object_count` " .
                 " JOIN `" . $type . "` ON `" . $type . "`.`id` = `object_count`.`object_id` " . $where .
                 "  AND `object_count`.`object_type` = '" . $type . "'" .
@@ -149,6 +202,40 @@ class Graph
         $values = array();
         while ($results = Dba::fetch_assoc($db_results)) {
             $values[$results['zoom_date']] = $results['bandwith'];
+        }
+        return $values;
+    }
+
+    protected function get_catalog_files_pts($catalog = 0, $start_date = null, $end_date = null, $zoom = 'day', $type = 'song')
+    {
+        $start_date = $start_date ?: ($end_date ?: time()) - 864000;
+        $df = $this->get_sql_date_format("`" . $type . "`.`addition_time`", $zoom);
+        $where = $this->get_catalog_sql_where($type, $catalog, $start_date, $end_date);
+        $sql = "SELECT " . $df . " AS `zoom_date`,  ((SELECT COUNT(`t2`.`id`) FROM `" . $type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + COUNT(`" . $type . "`.`id`)) AS `files` FROM `" . $type . "` " . $where .
+                " GROUP BY " . $df;
+        $db_results = Dba::read($sql);
+
+        debug_event('aaaaa', $sql, 5);
+
+        $values = array();
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $values[$results['zoom_date']] = $results['files'];
+        }
+        return $values;
+    }
+
+    protected function get_catalog_size_pts($catalog = 0, $start_date = null, $end_date = null, $zoom = 'day', $type = 'song')
+    {
+        $start_date = $start_date ?: ($end_date ?: time()) - 864000;
+        $df = $this->get_sql_date_format("`" . $type . "`.`addition_time`", $zoom);
+        $where = $this->get_catalog_sql_where($type, $catalog, $start_date, $end_date);
+        $sql = "SELECT " . $df . " AS `zoom_date`,  ((SELECT SUM(`t2`.`size`) FROM `" . $type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + SUM(`" . $type . "`.`size`)) AS `storage` FROM `" . $type . "` " . $where .
+                " GROUP BY " . $df;
+        $db_results = Dba::read($sql);
+
+        $values = array();
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $values[$results['zoom_date']] = $results['storage'];
         }
         return $values;
     }
@@ -223,10 +310,8 @@ class Graph
 
     public function render_user_hits($user = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
-        /* Create and populate the pData object */
         $MyData = new pData();
-
-        $this->get_all_pts('get_user_hits_pts', $MyData, $user, $start_date, $end_date, $zoom);
+        $this->get_user_all_pts('get_user_hits_pts', $MyData, $user, $start_date, $end_date, $zoom);
 
         $MyData->setAxisName(0, "Hits");
         $MyData->setAxisDisplay(0, AXIS_FORMAT_METRIC);
@@ -236,14 +321,41 @@ class Graph
 
     public function render_user_bandwidth($user = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
-        /* Create and populate the pData object */
         $MyData = new pData();
+        $this->get_user_all_pts('get_user_bandwidth_pts', $MyData, $user, $start_date, $end_date, $zoom);
 
-        $this->get_all_pts('get_user_bandwidth_pts', $MyData, $user, $start_date, $end_date, $zoom);
-
-        $MyData->setAxisName(0, "Hits");
+        $MyData->setAxisName(0, "Bandwidth");
         $MyData->setAxisDisplay(0, AXIS_FORMAT_TRAFFIC);
 
         $this->render_graph('Bandwidth', $MyData, $zoom);
     }
+
+    public function render_catalog_files($catalog = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    {
+        $MyData = new pData();
+        $this->get_catalog_all_pts('get_catalog_files_pts', $MyData, $catalog, $start_date, $end_date, $zoom);
+
+        $MyData->setAxisName(0, "Files");
+        $MyData->setAxisDisplay(0, AXIS_FORMAT_METRIC);
+
+        $this->render_graph('Files', $MyData, $zoom);
+    }
+
+    public function render_catalog_size($catalog = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    {
+        $MyData = new pData();
+        $this->get_catalog_all_pts('get_catalog_size_pts', $MyData, $catalog, $start_date, $end_date, $zoom);
+
+        $MyData->setAxisName(0, "Size");
+        $MyData->setAxisUnit(0, "B");
+        $MyData->setAxisDisplay(0, AXIS_FORMAT_CUSTOM, "pGraph_Yformat_bytes");
+
+        $this->render_graph('Size', $MyData, $zoom);
+    }
+}
+
+// Need to create a function to pass to pGraph objects
+function pGraph_Yformat_bytes($value)
+{
+    return UI::format_bytes($value);
 }

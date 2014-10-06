@@ -38,7 +38,7 @@ if (!AmpConfig::get('statistical_graphs')) {
 
 $type = $_REQUEST['type'];
 
-$user = $_REQUEST['user'];
+$oid = $_REQUEST['oid'];
 $start_date = $_REQUEST['start_date'];
 $end_date = $_REQUEST['end_date'];
 $zoom = $_REQUEST['zoom'];
@@ -47,9 +47,15 @@ $graph = new Graph();
 
 switch ($type) {
     case 'user_hits':
-        $graph->render_user_hits($user, $start_date, $end_date, $zoom);
+        $graph->render_user_hits($oid, $start_date, $end_date, $zoom);
         break;
     case 'user_bandwidth':
-        $graph->render_user_bandwidth($user, $start_date, $end_date, $zoom);
+        $graph->render_user_bandwidth($oid, $start_date, $end_date, $zoom);
+        break;
+    case 'catalog_files':
+        $graph->render_catalog_files($oid, $start_date, $end_date, $zoom);
+        break;
+    case 'catalog_size':
+        $graph->render_catalog_size($oid, $start_date, $end_date, $zoom);
         break;
 }

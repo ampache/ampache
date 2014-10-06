@@ -31,9 +31,14 @@ if ($user) {
 <div class="stats_graph">
     <?php
     $types = array('user_hits', 'user_bandwidth');
+    if (!$user) {
+        $types[] = 'catalog_files';
+        $types[] = 'catalog_size';
+    }
+
     foreach ($types as $type) {
     ?>
-        <img src="<?php echo AmpConfig::get('web_path'); ?>/graph.php?type=<?php echo $type; ?>&start_date=<?php echo $start_date; ?>&end_date=<?php echo $end_date; ?>&zoom=<?php echo $zoom; ?>&user=<?php echo $user; ?>" />
+        <img src="<?php echo AmpConfig::get('web_path'); ?>/graph.php?type=<?php echo $type; ?>&start_date=<?php echo $start_date; ?>&end_date=<?php echo $end_date; ?>&zoom=<?php echo $zoom; ?>&oid=<?php echo $oid; ?>" />
         <br /><br />
     <?php } ?>
 </div>

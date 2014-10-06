@@ -105,6 +105,6 @@ if (AmpConfig::get('statistical_graphs')) {
     $start_date = $_REQUEST['start_date'] ?: ($end_date - 864000);
     $zoom = $_REQUEST['zoom'] ?: 'day';
 
-    require_once AmpConfig::get('prefix') . '/templates/show_user_graph.inc.php';
+    require_once AmpConfig::get('prefix') . '/templates/show_graphs.inc.php';
 }
 ?>
