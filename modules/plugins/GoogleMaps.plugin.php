@@ -96,9 +96,8 @@ class AmpacheGoogleMaps {
             return false;
         }
         
-        echo '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=' . $this->api_key . '"></script>' . "\n";
         echo '<script type="text/javascript">' . "\n";
-        echo '$(document).ready(function() {' . "\n";
+        echo 'function map_ready() {' . "\n";
         echo 'var mapOptions = {' . "\n";
         if (count($pts) > 0) {
             echo 'center: { lat: ' . $pts[0]['latitude'] . ', lng: ' . $pts[0]['longitude'] . ' },' . "\n";
@@ -119,11 +118,20 @@ class AmpacheGoogleMaps {
             }
             echo 'marker = new google.maps.Marker({' . "\n";
             echo 'position: { lat: ' . $pt['latitude'] . ', lng: ' . $pt['longitude'] . ' },' . "\n";
-            echo 'title:"' . $pt['description'] . '"' . "\n";
+            echo 'title:"' . $ptdescr . '"' . "\n";
             echo '});' . "\n";
             echo 'marker.setMap(map);' . "\n";
         }
-        echo '});' . "\n";
+        echo '}' . "\n";
+        
+        echo 'function loadMapScript() {' . "\n";
+        echo 'var script = document.createElement("script");' . "\n";
+        echo 'script.type = "text/javascript";' . "\n";
+        echo 'script.src = "https://maps.googleapis.com/maps/api/js?key=' . $this->api_key . '&" + "callback=map_ready";' . "\n";
+        echo 'document.body.appendChild(script);' . "\n";
+        echo '}' . "\n";
+        echo 'loadMapScript();';
+        
         echo '</script>' . "\n";
         echo '<div id="map-canvas" style="display: inline-block; height: 300px; width:680px; margin: 0; padding: 0;"></div>' . "\n";
 
