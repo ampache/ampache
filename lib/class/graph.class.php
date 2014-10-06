@@ -215,8 +215,6 @@ class Graph
                 " GROUP BY " . $df;
         $db_results = Dba::read($sql);
 
-        debug_event('aaaaa', $sql, 5);
-
         $values = array();
         while ($results = Dba::fetch_assoc($db_results)) {
             $values[$results['zoom_date']] = $results['files'];
@@ -238,6 +236,28 @@ class Graph
             $values[$results['zoom_date']] = $results['storage'];
         }
         return $values;
+    }
+
+    protected function get_geolocation_pts($user = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    {
+        $pts = array();
+
+        $where = $this->get_user_sql_where($user, $start_date, $end_date);
+        $sql = "SELECT `geo_latitude`, `geo_longitude`, `geo_name`, MAX(`date`) AS `last_date`, COUNT(`id`) AS `hits` FROM `object_count` " .
+                $where . " AND `object_type` IN ('song', 'video') AND `geo_latitude` IS NOT NULL AND `geo_longitude` IS NOT NULL " .
+                "GROUP BY `geo_latitude`, `geo_longitude` ORDER BY `last_date` DESC";
+        $db_results = Dba::read($sql);
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $pts[] = array(
+                'latitude' => $results['geo_latitude'],
+                'longitude' => $results['geo_longitude'],
+                'name' => $results['geo_name'],
+                'last_date' => $results['last_date'],
+                'hits' => $results['hits']
+            );
+        }
+
+        return $pts;
     }
 
     protected function render_graph($title, $MyData, $zoom)
@@ -351,6 +371,20 @@ class Graph
         $MyData->setAxisDisplay(0, AXIS_FORMAT_CUSTOM, "pGraph_Yformat_bytes");
 
         $this->render_graph('Size', $MyData, $zoom);
+    }
+
+    public function display_map($user = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    {
+        $pts = $this->get_geolocation_pts($user, $start_date, $end_date, $zoom);
+
+        foreach (Plugin::get_plugins('display_map') as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->load($GLOBALS['user'])) {
+                if ($plugin->_plugin->display_map($pts)) {
+                    break;
+                }
+            }
+        }
     }
 }
 

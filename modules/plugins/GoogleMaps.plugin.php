@@ -71,7 +71,8 @@ class AmpacheGoogleMaps {
         return true;
     } // upgrade
 
-    public function get_location_name($latitude, $longitude) {
+    public function get_location_name($latitude, $longitude)
+    {
         $name = "";
         try {
             $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&sensor=false";
@@ -86,6 +87,47 @@ class AmpacheGoogleMaps {
         }
         
         return $name;
+    }
+    
+    public function display_map($pts)
+    {
+        if (!$this->api_key) {
+            debug_event('gmaps', 'Missing api key, display map plugin skipped.', 3);
+            return false;
+        }
+        
+        echo '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=' . $this->api_key . '"></script>' . "\n";
+        echo '<script type="text/javascript">' . "\n";
+        echo '$(document).ready(function() {' . "\n";
+        echo 'var mapOptions = {' . "\n";
+        if (count($pts) > 0) {
+            echo 'center: { lat: ' . $pts[0]['latitude'] . ', lng: ' . $pts[0]['longitude'] . ' },' . "\n";
+        } else {
+            // No geolocation data? Display `Paris` city.
+            echo 'center: { lat: 48.853, lng: 2.348 },' . "\n";
+        }
+        echo 'zoom: 11' . "\n";
+        echo '};' . "\n";
+        echo 'var map = new google.maps.Map(document.getElementById("map-canvas"),' . "\n";
+        echo 'mapOptions);' . "\n";
+        echo 'var marker;' . "\n";
+        foreach ($pts as $pt) {
+            $ptdescr = T_("Hits:") . " " . $pt['hits'] . "\\n";
+            $ptdescr .= T_("Last activity:") . " " . date("r", $pt['last_date']);
+            if (!empty($pt['name'])) {
+                $ptdescr = $pt['name'] . "\\n" . $ptdescr;
+            }
+            echo 'marker = new google.maps.Marker({' . "\n";
+            echo 'position: { lat: ' . $pt['latitude'] . ', lng: ' . $pt['longitude'] . ' },' . "\n";
+            echo 'title:"' . $pt['description'] . '"' . "\n";
+            echo '});' . "\n";
+            echo 'marker.setMap(map);' . "\n";
+        }
+        echo '});' . "\n";
+        echo '</script>' . "\n";
+        echo '<div id="map-canvas" style="display: inline-block; height: 300px; width:680px; margin: 0; padding: 0;"></div>' . "\n";
+
+        return true;
     }
     
     /**

@@ -21,8 +21,8 @@
  */
 
 $boxtitle = T_('Statistical Graphs');
-if ($user) {
-    $u = new User($user);
+if ($oid) {
+    $u = new User($oid);
     $u->format();
     $boxtitle .= ' - ' . $u->f_link;
 }
@@ -31,7 +31,7 @@ if ($user) {
 <div class="stats_graph">
     <?php
     $types = array('user_hits', 'user_bandwidth');
-    if (!$user) {
+    if (!$oid) {
         $types[] = 'catalog_files';
         $types[] = 'catalog_size';
     }
@@ -42,9 +42,20 @@ if ($user) {
         <br /><br />
     <?php } ?>
 </div>
-<?php if (AmpConfig::get('geolocation')) { ?>
 
-<?php } ?>
+<?php
+if (AmpConfig::get('geolocation')) {
+?>
+    <div class="stats_graph">
+    <?php
+        $graph = new Graph();
+        $graph->display_map($oid);
+    ?>
+    </div>
+<?php
+}
+?>
+
 <form action='<?php echo get_current_path(); ?>' method='post' enctype='multipart/form-data'>
     <dl class="media_details">
         <?php $rowparity = UI::flip_class(); ?>
@@ -78,8 +89,8 @@ if ($user) {
             <input type="submit" value="<?php echo T_('View'); ?>" />
         </dd>
     </dl>
-    <input type="hidden" name="user" value="<?php echo $user; ?>" />
-    <input type="hidden" name="action" value="<?php echo $action; ?>" />
+    <input type="hidden" name="oid" value="<?php echo $oid; ?>" />
+    <input type="hidden" name="action" value="<?php echo $_REQUEST['action']; ?>" />
     <input type="hidden" name="type" value="<?php echo $type; ?>" />
 </form>
 <script>

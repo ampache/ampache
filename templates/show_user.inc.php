@@ -45,7 +45,7 @@ if ($client->f_avatar) {
     <dd class="<?php echo $rowparity; ?>">
         <?php echo $client->f_useage; ?>
         <?php if (AmpConfig::get('statistical_graphs')) { ?>
-            (<a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph_user&user=<?php echo $client->id; ?>"><?php echo T_('Graphs'); ?></a>)
+            (<a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph_user&oid=<?php echo $client->id; ?>"><?php echo T_('Graphs'); ?></a>)
         <?php } ?>
     </dd>
     <?php $rowparity = UI::flip_class(); ?>
