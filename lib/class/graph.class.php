@@ -60,12 +60,12 @@ class Graph
             $end_date = intval($end_date);
         }
         if ($start_date == null) {
-            $start_date = $end_date - 1123200;
+            $start_date = $end_date - 864000;
         } else {
             $start_date = intval($start_date);
         }
 
-        $sql = "WHERE `object_count`.`date` > " . $start_date . " AND `object_count`.`date` < " . $end_date;
+        $sql = "WHERE `object_count`.`date` >= " . $start_date . " AND `object_count`.`date` <= " . $end_date;
         if ($user > 0) {
             $user = intval($user);
             $sql .= " AND `object_count`.`user` = " . $user;
@@ -103,7 +103,7 @@ class Graph
 
         $ustats = User::count();
         // Only display other users if the graph is not for a specific user and user count is small
-        if (!$user && $ustats['users'] < 20) {
+        if (!$user && $ustats['users'] < 10) {
             $user_ids = User::get_valid_users();
             foreach ($user_ids as $id) {
                 $u = new User($id);
@@ -215,7 +215,7 @@ class Graph
         $myPicture->writeLabel("Inbound",720);
 
         /* Write the chart legend */
-        $myPicture->drawLegend(580,20,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
+        $myPicture->drawLegend(280,20,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
 
         /* Render the picture (choose the best way) */
         $myPicture->autoOutput();

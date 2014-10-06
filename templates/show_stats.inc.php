@@ -102,7 +102,7 @@ $catalogs = Catalog::get_catalogs();
 if (AmpConfig::get('statistical_graphs')) {
     $user = $_REQUEST['user'];
     $end_date = $_REQUEST['end_date'] ?: time();
-    $start_date = $_REQUEST['start_date'] ?: ($end_date - 1123200);
+    $start_date = $_REQUEST['start_date'] ?: ($end_date - 864000);
     $zoom = $_REQUEST['zoom'] ?: 'day';
 
     require_once AmpConfig::get('prefix') . '/templates/show_user_graph.inc.php';
