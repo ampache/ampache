@@ -73,13 +73,13 @@ class Graph
         return $sql;
     }
 
-    protected function get_all_type_pts($fct, $user = 0, $start_date = null, $end_date = null, $zoom = 'day', $type = 'song')
+    protected function get_all_type_pts($fct, $user = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $song_values = $this->$fct($user, $start_date, $end_date, $zoom, 'song');
         if (AmpConfig::get('allow_video')) {
             $video_values = $this->$fct($user, $start_date, $end_date, $zoom, 'video');
         } else {
-            $vide_values = array();
+            $video_values = array();
         }
         $values = $song_values;
         foreach ($video_values as $date => $value) {
