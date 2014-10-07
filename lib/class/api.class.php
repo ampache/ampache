@@ -200,6 +200,15 @@ class Api
                 $data['username'] = $client->username;
                 $data['type'] = 'api';
                 $data['value'] = $timestamp;
+                if (isset($input['geo_latitude'])) {
+                    $data['geo_latitude'] = $input['geo_latitude'];
+                }
+                if (isset($input['geo_longitude'])) {
+                    $data['geo_longitude'] = $input['geo_longitude'];
+                }
+                if (isset($input['geo_name'])) {
+                    $data['geo_name'] = $input['geo_name'];
+                }
                 $token = Session::create($data);
 
                 debug_event('API', 'Login Success, passphrase matched', 1);
