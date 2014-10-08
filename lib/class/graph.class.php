@@ -276,7 +276,7 @@ class Graph
         return $pts;
     }
 
-    protected function render_graph($title, $MyData, $zoom, $width = 0, $height = 0)
+    protected function render_graph($title, pData $MyData, $zoom, $width = 0, $height = 0)
     {
         // Check graph size sanity
         $width = intval($width);
@@ -284,8 +284,8 @@ class Graph
             $width = 700;
         }
         $height = intval($height);
-        if ($height <= 50 || $height > 4096) {
-            $height = 230;
+        if ($height <= 60 || $height > 4096) {
+            $height = 260;
         }
 
         $MyData->setSerieDescription("TimeStamp","time");
@@ -331,10 +331,10 @@ class Graph
         $myPicture->setFontProperties(array("FontName"=>AmpConfig::get('prefix')."/modules/pChart/fonts/pf_arma_five.ttf","FontSize"=>6));
 
         /* Define the chart area */
-        $myPicture->setGraphArea(60,40,$width-20,$height-30);
+        $myPicture->setGraphArea(60,40,$width-20,$height-50);
 
         /* Draw the scale */
-        $scaleSettings = array("XMargin"=>10,"YMargin"=>10,"Floating"=>TRUE,"GridR"=>200,"GridG"=>200,"GridB"=>200,"RemoveSkippedAxis"=>TRUE,"DrawSubTicks"=>FALSE,"Mode"=>SCALE_MODE_START0,"LabelingMethod"=>LABELING_DIFFERENT);
+        $scaleSettings = array("XMargin"=>10,"YMargin"=>10,"Floating"=>TRUE,"GridR"=>200,"GridG"=>200,"GridB"=>200,"RemoveSkippedAxis"=>TRUE,"DrawSubTicks"=>FALSE,"Mode"=>SCALE_MODE_START0,"LabelRotation"=>45,"LabelingMethod"=>LABELING_DIFFERENT);
         $myPicture->drawScale($scaleSettings);
 
         /* Turn on Antialiasing */
@@ -350,6 +350,7 @@ class Graph
         /* Write the chart legend */
         $myPicture->drawLegend(280,20,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
 
+        header("Content-Disposition: filename=\"ampache-graph.png\""); 
         /* Render the picture (choose the best way) */
         $myPicture->autoOutput();
     }
