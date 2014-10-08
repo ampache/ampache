@@ -279,8 +279,8 @@ class Graph
     protected function render_graph($title, $MyData, $zoom, $width = 0, $height = 0)
     {
         // Check graph size sanity
-        $width = intval($width || $width > 4096);
-        if ($width <= 50) {
+        $width = intval($width);
+        if ($width <= 50 || $width > 4096) {
             $width = 700;
         }
         $height = intval($height);
