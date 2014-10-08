@@ -21,24 +21,17 @@
  */
 
 $boxtitle = T_('Statistical Graphs');
-if ($oid) {
-    $u = new User($oid);
-    $u->format();
-    $boxtitle .= ' - ' . $u->f_link;
+if ($blink) {
+    $boxtitle .= ' - ' . $blink;
 }
 ?>
 <?php UI::show_box_top($boxtitle, 'box box_graph'); ?>
 <div class="stats_graph">
     <?php
-    $types = array('user_hits', 'user_bandwidth');
-    if (!$oid) {
-        $types[] = 'catalog_files';
-        $types[] = 'catalog_size';
-    }
-
-    foreach ($types as $type) {
+    foreach ($gtypes as $gtype) {
+        $graph_link = AmpConfig::get('web_path') . "/graph.php?type=" . $gtype . "&start_date=" . $start_date . "&end_date=" . $end_date . "&zoom=" . $zoom . "&user_id=" . $user_id . "&object_type=" . $object_type . "&object_id=" . $object_id;
     ?>
-        <img src="<?php echo AmpConfig::get('web_path'); ?>/graph.php?type=<?php echo $type; ?>&start_date=<?php echo $start_date; ?>&end_date=<?php echo $end_date; ?>&zoom=<?php echo $zoom; ?>&oid=<?php echo $oid; ?>" />
+    <a href="<?php echo $graph_link; ?>&width=1400&height=690" target="_blank" title="<?php echo T_('Show large'); ?>"><img src="<?php echo $graph_link; ?>" /></a>
         <br /><br />
     <?php } ?>
 </div>
@@ -49,7 +42,7 @@ if (AmpConfig::get('geolocation')) {
     <div class="stats_graph">
     <?php
         $graph = new Graph();
-        $graph->display_map($oid);
+        $graph->display_map($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
     ?>
     </div>
 <?php
@@ -60,10 +53,10 @@ if (AmpConfig::get('geolocation')) {
     <dl class="media_details">
         <?php $rowparity = UI::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Start Date'); ?></dt>
-        <dd class="<?php echo $rowparity; ?>"><input type="text" name="start_date" id="start_date" value="<?php echo $start_date; ?>" /></dd>
+        <dd class="<?php echo $rowparity; ?>"><input type="text" name="start_date" id="start_date" value="<?php echo $f_start_date; ?>" /></dd>
         <?php $rowparity = UI::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('End Date'); ?></dt>
-        <dd class="<?php echo $rowparity; ?>"><input type="text" name="end_date" id="end_date" value="<?php echo $end_date; ?>" /></dd>
+        <dd class="<?php echo $rowparity; ?>"><input type="text" name="end_date" id="end_date" value="<?php echo $f_end_date; ?>" /></dd>
         <?php $rowparity = UI::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Zoom'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
@@ -89,16 +82,20 @@ if (AmpConfig::get('geolocation')) {
             <input type="submit" value="<?php echo T_('View'); ?>" />
         </dd>
     </dl>
-    <input type="hidden" name="oid" value="<?php echo $oid; ?>" />
+    <input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />
+    <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
+    <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
     <input type="hidden" name="action" value="<?php echo $_REQUEST['action']; ?>" />
     <input type="hidden" name="type" value="<?php echo $type; ?>" />
 </form>
 <script>
     $('#start_date').datetimepicker({
-        format: 'unixtime'
+        format: 'Y-m-d H:i',
+        theme: 'dark'
     });
     $('#end_date').datetimepicker({
-        format: 'unixtime'
+        format:'Y-m-d H:i',
+        theme: 'dark'
     });
 </script>
 <?php UI::show_box_bottom(); ?>

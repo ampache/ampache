@@ -69,7 +69,8 @@
         <?php } ?>
     <?php } ?>
     <?php if (Access::check_function('download')) { ?>
-    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&song_id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a><?php } ?>
+        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&song_id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+    <?php } ?>
     <?php if (Access::check('interface','50') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) { ?>
         <a id="<?php echo 'edit_song_'.$libitem->id ?>" onclick="showEditDialog('song_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_song_'.$libitem->id ?>', '<?php echo T_('Song edit') ?>', 'song_')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>

@@ -56,7 +56,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             </a>
         </li>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=sort_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('statistics',_('Sort Tracks by Artist, Album, Song')); ?>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=sort_tracks&amp;playlist_id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('sort',_('Sort Tracks by Artist, Album, Song')); ?>
             &nbsp;&nbsp;<?php echo T_('Sort Tracks by Artist, Album, Song'); ?></a>
         </li>
     <?php } ?>

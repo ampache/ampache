@@ -57,13 +57,8 @@ switch ($_REQUEST['action']) {
     case 'upload':
         require_once AmpConfig::get('prefix') . '/templates/show_uploads.inc.php';
     break;
-    case 'graph_user':
-        $oid = $_REQUEST['oid'];
-        $end_date = $_REQUEST['end_date'] ?: time();
-        $start_date = $_REQUEST['start_date'] ?: ($end_date - 864000);
-        $zoom = $_REQUEST['zoom'] ?: 'day';
-
-        require_once AmpConfig::get('prefix') . '/templates/show_graphs.inc.php';
+    case 'graph':
+        Graph::display_from_request();
         break;
     case 'show':
     default:

@@ -200,6 +200,9 @@ class Api
                 $data['username'] = $client->username;
                 $data['type'] = 'api';
                 $data['value'] = $timestamp;
+                if (isset($input['client'])) {
+                    $data['agent'] = $input['client'];
+                }
                 if (isset($input['geo_latitude'])) {
                     $data['geo_latitude'] = $input['geo_latitude'];
                 }

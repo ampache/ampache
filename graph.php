@@ -38,24 +38,32 @@ if (!AmpConfig::get('statistical_graphs')) {
 
 $type = $_REQUEST['type'];
 
-$oid = $_REQUEST['oid'];
-$start_date = $_REQUEST['start_date'];
-$end_date = $_REQUEST['end_date'];
-$zoom = $_REQUEST['zoom'];
+$user_id = scrub_in($_REQUEST['user_id']);
+$object_type = scrub_in($_REQUEST['object_type']);
+if (!Core::is_library_item($object_type)) {
+    $object_type = null;
+}
+$object_id = scrub_in($_REQUEST['object_id']);
+$start_date = scrub_in($_REQUEST['start_date']);
+$end_date = scrub_in($_REQUEST['end_date']);
+$zoom = scrub_in($_REQUEST['zoom']);
+
+$width = scrub_in($_REQUEST['width']);
+$height = scrub_in($_REQUEST['height']);
 
 $graph = new Graph();
 
 switch ($type) {
     case 'user_hits':
-        $graph->render_user_hits($oid, $start_date, $end_date, $zoom);
+        $graph->render_user_hits($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height);
         break;
     case 'user_bandwidth':
-        $graph->render_user_bandwidth($oid, $start_date, $end_date, $zoom);
+        $graph->render_user_bandwidth($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height);
         break;
     case 'catalog_files':
-        $graph->render_catalog_files($oid, $start_date, $end_date, $zoom);
+        $graph->render_catalog_files($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height);
         break;
     case 'catalog_size':
-        $graph->render_catalog_size($oid, $start_date, $end_date, $zoom);
+        $graph->render_catalog_size($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height);
         break;
 }
