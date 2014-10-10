@@ -350,7 +350,7 @@ class Graph
         /* Write the chart legend */
         $myPicture->drawLegend(280,20,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
 
-        header("Content-Disposition: filename=\"ampache-graph.png\""); 
+        header("Content-Disposition: filename=\"ampache-graph.png\"");
         /* Render the picture (choose the best way) */
         $myPicture->autoOutput();
     }

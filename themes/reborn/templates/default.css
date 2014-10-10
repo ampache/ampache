@@ -1276,6 +1276,10 @@ span.fatalerror {
     margin: 2px;
 }
 
+.item_art_actions img {
+    float: none;
+}
+
 .item_art:hover {
     border: 2px solid;
     margin: 0px;
