@@ -129,8 +129,8 @@ auth_methods = "mysql"
 ; This defines which file types Ampache will attempt to catalog
 ; You can specify any file extension you want in here separating them
 ; with a |
-; DEFAULT: mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|spx|ra|ape|shn|wv
-catalog_file_pattern = "mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|spx|ra|ape|shn|wv"
+; DEFAULT: mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|opus|spx|ra|ape|shn|wv
+catalog_file_pattern = "mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|opus|spx|ra|ape|shn|wv"
 
 ; Video Pattern
 ; This defines which video file types Ampache will attempt to catalog

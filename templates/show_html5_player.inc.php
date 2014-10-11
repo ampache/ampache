@@ -49,8 +49,6 @@ if (AmpConfig::get('webplayer_flash')) {
 }
 echo implode(',', $solutions);
 ?>",
-            nativeSupport:true,
-            oggSupport: false,
             supplied: "<?php echo implode(", ", WebPlayer::get_supplied_types($playlist)); ?>",
             volume: jp_volume,
 <?php if (!$is_share) { ?>

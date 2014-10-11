@@ -112,18 +112,6 @@ class WebPlayer
         if (!empty($force_type)) {
             debug_event("webplayer.class.php", "Forcing type to {".$force_type."}", 5);
             $types['real'] = $force_type;
-        } else {
-            if ($urlinfo['type'] == 'song') {
-                // For audio, get the best format according to the browser
-                if ($browser == "msie" || $browser == "trident" || $browser == "webkit" || $browser == "safari") {
-                    $types['real'] = "mp3";
-                } else {
-                    $types['real'] = "ogg";
-                }
-            } else {
-                // For video, always use webm
-                $types['real'] = "webm";
-            }
         }
 
         if ($media != null) {
@@ -158,7 +146,6 @@ class WebPlayer
 
             if ($urlinfo['type'] == 'song') {
                 if ($types['real'] == "ogg") $types['player'] = "oga";
-                else if ($types['real'] == "flac")  $types['player'] = "flac";
                 else if ($types['real'] == "mp4") $types['player'] = "m4a";
             } else if ($urlinfo['type'] == 'video') {
                 if ($types['real'] == "ogg") $types['player'] = "ogv";
@@ -167,7 +154,7 @@ class WebPlayer
             }
         } else if ($item->type == 'live_stream') {
             $types['real'] = $item->codec;
-            if ($types['real'] == "flac" || $types['real'] == "ogg") $types['player'] = "oga";
+            if ($types['real'] == "ogg") $types['player'] = "oga";
         } else {
             $ext = pathinfo($item->url, PATHINFO_EXTENSION);
             if (!empty($ext)) $types['real'] = $ext;
