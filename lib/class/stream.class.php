@@ -136,11 +136,11 @@ class Stream
      * This is a rather complex function that starts the transcoding or
      * resampling of a media and returns the opened file handle.
      */
-    public static function start_transcode($media, $type = null, $options = array())
+    public static function start_transcode($media, $type = null, $player = null, $options = array())
     {
         debug_event('stream.class.php', 'Starting transcode for {'.$media->file.'}. Type {'.$type.'}. Options: ' . print_r($options, true) . '}...', 5);
 
-        $transcode_settings = $media->get_transcode_settings($type, $options);
+        $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
         if ($transcode_settings == false) {
             debug_event('stream', 'Transcode requested, but get_transcode_settings failed', 2);

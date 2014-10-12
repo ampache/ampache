@@ -350,9 +350,9 @@ class Subsonic_XML_Data
 
         // Set transcoding information if required
         $transcode_cfg = AmpConfig::get('transcode');
-        $transcode_mode = AmpConfig::get('transcode_' . $song->type);
-        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && $transcode_mode == 'required')) {
-            $transcode_settings = $song->get_transcode_settings(null);
+        $valid_types = Song::get_stream_types_for_type($song->type, 'api');
+        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
+            $transcode_settings = $song->get_transcode_settings(null, 'api');
             if ($transcode_settings) {
                 $transcode_type = $transcode_settings['format'];
                 $xsong->addAttribute('transcodedSuffix', $transcode_type);
@@ -448,9 +448,9 @@ class Subsonic_XML_Data
 
         // Set transcoding information if required
         $transcode_cfg = AmpConfig::get('transcode');
-        $transcode_mode = AmpConfig::get('transcode_' . $video->type);
-        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && $transcode_mode == 'required')) {
-            $transcode_settings = $video->get_transcode_settings(null);
+        $valid_types = Song::get_stream_types_for_type($song->type, 'api');
+        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
+            $transcode_settings = $video->get_transcode_settings(null, 'api');
             if ($transcode_settings) {
                 $transcode_type = $transcode_settings['format'];
                 $xvideo->addAttribute('transcodedSuffix', $transcode_type);

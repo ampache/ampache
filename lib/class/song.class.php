@@ -1493,8 +1493,8 @@ class Song extends database_object implements media, library_item
         // Checking if the media is gonna be transcoded into another type
         // Some players doesn't allow a type streamed into another without giving the right extension
         $transcode_cfg = AmpConfig::get('transcode');
-        $transcode_mode = AmpConfig::get('transcode_' . $type);
-        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && $transcode_mode == 'required')) {
+        $valid_types = Song::get_stream_types_for_type($song->type, 'api');
+        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
             $transcode_settings = $media->get_transcode_settings(null);
             if ($transcode_settings) {
                 debug_event("media", "Changing play url type from {".$type."} to {".$transcode_settings['format']."} due to encoding settings...", 5);
@@ -1596,10 +1596,16 @@ class Song extends database_object implements media, library_item
      * @param string $type
      * @return string
      */
-    public static function get_stream_types_for_type($type)
+    public static function get_stream_types_for_type($type, $player = null)
     {
         $types = array();
         $transcode = AmpConfig::get('transcode_' . $type);
+        if ($player) {
+            $player_transcode = AmpConfig::get('transcode_player_' . $player .  '_' . $type);
+            if ($player_transcode) {
+                $transcode = $player_transcode;
+            }
+        }
 
         if ($transcode != 'required') {
             $types[] = 'native';
@@ -1619,11 +1625,21 @@ class Song extends database_object implements media, library_item
      * @param array $options
      * @return array|boolean
      */
-    public static function get_transcode_settings_for_media($source, $target = null, $media_type = 'song', $options=array())
+    public static function get_transcode_settings_for_media($source, $target = null, $player = null, $media_type = 'song', $options=array())
     {
         $setting_target = 'encode_target';
         if ($media_type != 'song') {
             $setting_target = 'encode_' . $media_type . '_target';
+        }
+
+        if ($player) {
+            $player_setting_target = 'encode_player_' . $player . '_target';
+            if ($media_type != 'song') {
+                $player_setting_target = 'encode_' . $media_type . '_player_' . $player . '_target';
+            }
+            if (AmpConfig::get($player_setting_target)) {
+                $setting_target = $player_setting_target;
+            }
         }
 
         if ($target) {
@@ -1672,9 +1688,9 @@ class Song extends database_object implements media, library_item
      * @param array $options
      * @return array|boolean
      */
-    public function get_transcode_settings($target = null, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options=array())
     {
-        return Song::get_transcode_settings_for_media($this->type, $target, 'song', $options);
+        return Song::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
     }
 
     /**

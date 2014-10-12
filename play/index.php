@@ -443,7 +443,7 @@ if ($transcode) {
         }
     }
 
-    $transcoder = Stream::start_transcode($media, $transcode_to, $troptions);
+    $transcoder = Stream::start_transcode($media, $transcode_to, null, $troptions);
     $fp = $transcoder['handle'];
     $media_name = $media->f_artist_full . " - " . $media->title . "." . $transcoder['format'];
 } else if ($cpaction) {

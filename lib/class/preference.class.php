@@ -468,8 +468,8 @@ class Preference extends database_object
         /* Set the Theme mojo */
         if (strlen($results['theme_name']) > 0) {
             $results['theme_path'] = '/themes/' . $results['theme_name'];
-            // In case the theme was removed            
-            if (Core::is_readable(AmpConfig::get('web_path') . $results['theme_path'])) {
+            // In case the theme was removed
+            if (Core::is_readable(AmpConfig::get('prefix') . $results['theme_path'])) {
                 unset($results['theme_path']);
             }
         }

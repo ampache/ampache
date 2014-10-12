@@ -303,7 +303,7 @@ class Song_Preview extends database_object implements media, playable_item
      *
      * FIXME: Song Preview transcoding is not implemented
      */
-    public function get_transcode_settings($target = null, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options=array())
     {
         return false;
     }

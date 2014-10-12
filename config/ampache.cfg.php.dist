@@ -719,6 +719,21 @@ refresh_limit = "60"
 ; DEFAULT: none
 ;encode_target_flac = ogg
 
+; Override the default TYPE transcoding behavior on a per-player basis
+; transcode_player_PLAYER_TYPE = TYPE
+; Valid PLAYER is: webplayer, api
+; DEFAULT: none
+;transcode_player_webplayer_m4a = required
+;transcode_player_webplayer_flac = required
+;transcode_player_webplayer_mpc = required
+
+; Override the default output format on a per-player basis
+; encode_player_PLAYER_target = TYPE
+; Valid PLAYER is: webplayer, api
+; DEFAULT: none
+;encode_player_webplayer_target = mp3
+;encode_player_api_target = mp3
+
 ; Allow clients to override transcode settings (output type, bitrate, codec ...)
 ; DEFAULT: true
 transcode_player_customize = true

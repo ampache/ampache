@@ -426,9 +426,9 @@ class Video extends database_object implements media, library_item
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options=array())
     {
-        return Song::get_transcode_settings_for_media($this->type, $target, 'video', $options);
+        return Song::get_transcode_settings_for_media($this->type, $target, $player, 'video', $options);
     }
 
     /**

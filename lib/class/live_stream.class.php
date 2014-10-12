@@ -268,7 +268,7 @@ class Live_Stream extends database_object implements media, library_item
      *
      * This will probably never be implemented
      */
-    public function get_transcode_settings($target = null, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options=array())
     {
         return false;
     }

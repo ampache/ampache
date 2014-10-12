@@ -394,7 +394,7 @@ class Channel extends database_object implements media, library_item
                     $options = array(
                         'bitrate' => $this->bitrate
                     );
-                    $this->transcoder = Stream::start_transcode($this->media, $this->stream_type, $options);
+                    $this->transcoder = Stream::start_transcode($this->media, $this->stream_type, null, $options);
                     $this->media_bytes_streamed = 0;
                 }
 
@@ -463,7 +463,7 @@ class Channel extends database_object implements media, library_item
         // Do nothing
     }
 
-    public function get_transcode_settings($array, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options=array())
     {
         return false;
     }

@@ -467,6 +467,9 @@ class Update
         $update_string = '- Add users geolocation.<br />';
         $version[] = array('version' => '370022','description' => $update_string);
 
+        $update_string = " - Add Aurora.js webplayer option<br />";
+        $version[] = array('version' => '370023','description' => $update_string);
+
         return $version;
     }
 
@@ -3150,6 +3153,27 @@ class Update
             "VALUES ('geolocation','1','Allow geolocation',25,'integer','options')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370023
+     *
+     * Add Aurora.js webplayer option
+     */
+    public static function update_370023()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('webplayer_aurora','1','Authorize JavaScript decoder (Aurora.js) in Web Player(s)',25,'boolean','streaming')";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $id = Dba::insert_id();
+
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 

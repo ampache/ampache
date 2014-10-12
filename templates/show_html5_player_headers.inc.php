@@ -31,6 +31,9 @@ function update_action()
 }
 ?>
 <link href="<?php echo AmpConfig::get('web_path'); ?>/modules/UberViz/style.css" rel="stylesheet" type="text/css">
+<?php if (AmpConfig::get('webplayer_aurora')) { ?>
+    <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/aurora.js/aurora.js" language="javascript" type="text/javascript"></script>
+<?php } ?>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/jquery.jplayer.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-jplayer/add-on/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/jplayer.playlist.ext.js" language="javascript" type="text/javascript"></script>

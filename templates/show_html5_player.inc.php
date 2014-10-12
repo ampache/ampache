@@ -47,9 +47,16 @@ if (AmpConfig::get('webplayer_html5')) {
 if (AmpConfig::get('webplayer_flash')) {
     $solutions[] = 'flash';
 }
+if (AmpConfig::get('webplayer_aurora')) {
+    $solutions[] = 'aurora';
+}
 echo implode(',', $solutions);
+
+$supplied = WebPlayer::get_supplied_types($playlist);
 ?>",
-            supplied: "<?php echo implode(", ", WebPlayer::get_supplied_types($playlist)); ?>",
+            nativeSupport:true,
+            oggSupport: false,
+            supplied: "<?php echo implode(", ", $supplied); ?>",
             volume: jp_volume,
 <?php if (!$is_share) { ?>
             size: {
@@ -242,6 +249,35 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
 
 });
 </script>
+<?php
+// Load Aurora.js scripts
+if (AmpConfig::get('webplayer_aurora')) {
+    $atypes = array();
+    foreach ($supplied as $stype) {
+        if ($stype == 'ogg') {
+            // Ogg could requires vorbis/opus codecs
+            if (!in_array('ogg', $atypes)) $atypes[] = 'ogg';
+            if (!in_array('vorbis', $atypes)) $atypes[] = 'vorbis';
+            if (!in_array('opus', $atypes)) $atypes[] = 'opus';
+        } else if ($stype == 'm4a') {
+            // m4a could requires aac / alac codecs
+            if (!in_array('aac', $atypes)) $atypes[] = 'aac';
+            if (!in_array('alac', $atypes)) $atypes[] = 'alac';
+        } else {
+            // We support that other filetypes requires a codec name matching the filetype
+            if (!in_array($stype, $atypes)) $atypes[] = $stype;
+        }
+    }
+
+    // Load only existing codec scripts
+    foreach ($atypes as $atype) {
+        $spath = '/modules/aurora.js/' . $atype . '.js';
+        if (Core::is_readable(AmpConfig::get('prefix') . $spath)) {
+            echo '<script src="' . AmpConfig::get('web_path') . $spath . '" language="javascript" type="text/javascript"></script>' . "\n";
+        }
+    }
+}
+?>
 </head>
 <body>
 <?php

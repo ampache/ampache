@@ -192,6 +192,7 @@ function create_preference_input($name,$value)
         case 'browser_notify':
         case 'allow_video':
         case 'geolocation':
+        case 'webplayer_aurora':
             $is_true = '';
             $is_false = '';
             if ($value == '1') {
