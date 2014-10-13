@@ -90,12 +90,12 @@ $(function() {
         $content = $header.next();
         //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
         $content.slideToggle(500, function() {
-            $header.children(".sprite").toggleClass("expanded collapsed");
+            $header.children(".header-img").toggleClass("expanded collapsed");
             var sbstate = "expanded";
-            if ($header.children(".sprite").hasClass("collapsed")) {
+            if ($header.children(".header-img").hasClass("collapsed")) {
                 sbstate = "collapsed";
             }
-            $.cookie('sb_' + $header.children(".sprite").attr('id'), sbstate, { expires: 30, path: '/'});
+            $.cookie('sb_' + $header.children(".header-img").attr('id'), sbstate, { expires: 30, path: '/'});
         });
 
     });
