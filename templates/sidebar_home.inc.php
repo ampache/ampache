@@ -62,7 +62,9 @@
     <li>
         <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Playlist'); ?>"><?php echo T_('Playlist'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo isset($_COOKIE['sb_home_playlist']) ? $_COOKIE['sb_home_playlist'] : 'expanded'; ?>" id="playlist" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
         <ul class="sb3" id="sb_home_playlist">
+            <?php if (AmpConfig::get('home_now_playing')) { ?>
             <li id="sb_home_playlist_currentlyPlaying"><a href="<?php echo AmpConfig::get('web_path'); ?>/index.php"><?php echo T_('Currently Playing'); ?></a></li>
+            <?php } ?>
             <?php if (AmpConfig::get('allow_democratic_playback')) { ?>
             <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo T_('Democratic'); ?></a></li>
             <?php } ?>

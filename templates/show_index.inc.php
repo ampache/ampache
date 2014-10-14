@@ -27,9 +27,11 @@ foreach (Plugin::get_plugins('display_home') as $plugin_name) {
     }
 }
 ?>
+<?php if (AmpConfig::get('home_now_playing')) { ?>
 <div id="now_playing">
     <?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
+<?php } ?>
 <!-- Randomly selected albums of the moment -->
 <?php
 if (Art::is_enabled()) {
