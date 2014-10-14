@@ -117,6 +117,7 @@ class Catalog_beets extends Beets\Catalog
         return true;
     }
 
+    
     protected function getParser()
     {
         return new Beets\CliHandler();

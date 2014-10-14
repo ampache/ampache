@@ -33,7 +33,7 @@ class Catalog_beetsremote extends Beets\Catalog
     protected $type = 'beetsremote';
     protected $description = 'Beets Remote Catalog';
 
-    protected $listCommand = 'item';
+    protected $listCommand = 'item/query';
 
     /**
      *
@@ -118,6 +118,7 @@ class Catalog_beetsremote extends Beets\Catalog
         return true;
     }
 
+    
     protected function getParser()
     {
         return new Beets\JsonHandler($this->uri);
