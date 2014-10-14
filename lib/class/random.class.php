@@ -131,7 +131,7 @@ class Random
             $where_sql = " AND `song`.`album`='" . $data[0] . "' ";
         }
 
-        $sql = "SELECT `song`.`id` FROM `song` ";
+        $sql = "SELECT DISTINCT `song`.`id` FROM `song` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
                 "WHERE `catalog`.`enabled` = '1' ";
