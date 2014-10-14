@@ -118,7 +118,6 @@ class Catalog_beetsremote extends Beets\Catalog
         return true;
     }
 
-    
     protected function getParser()
     {
         return new Beets\JsonHandler($this->uri);
