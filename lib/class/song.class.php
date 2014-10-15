@@ -1243,9 +1243,15 @@ class Song extends database_object implements media, library_item
      * and does a ton of formating on it creating f_??? variables on the current
      * object
      */
-    public function format()
+    public function format($details = true)
     {
-        $this->fill_ext_info();
+        if ($details) {
+            $this->fill_ext_info();
+
+            // Get the top tags
+            $this->tags = Tag::get_top_tags('song', $this->id);
+            $this->f_tags = Tag::get_display($this->tags, true, 'song');
+        }
 
         // Format the album name
         $this->f_album_full = $this->get_album_name();
@@ -1284,10 +1290,6 @@ class Song extends database_object implements media, library_item
 
         // Format the track (there isn't really anything to do here)
         $this->f_track = (string) $this->track;
-
-        // Get the top tags
-        $this->tags = Tag::get_top_tags('song', $this->id);
-        $this->f_tags = Tag::get_display($this->tags, true, 'song');
 
         // Format the size
         $this->f_size = UI::format_bytes($this->size);

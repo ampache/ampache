@@ -175,15 +175,17 @@ class TVShow extends database_object implements library_item
      * format
      * this function takes the object and reformats some values
      */
-    public function format()
+    public function format($details = true)
     {
         $this->f_name = trim($this->prefix . " " . $this->name);
         $this->link = AmpConfig::get('web_path') . '/tvshows.php?action=show&tvshow=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '" title="' . $this->f_name . '">' . $this->f_name . '</a>';
 
-        $this->_get_extra_info();
-        $this->tags = Tag::get_top_tags('tvshow', $this->id);
-        $this->f_tags = Tag::get_display($this->tags, true, 'tvshow');
+        if ($details) {
+            $this->_get_extra_info();
+            $this->tags = Tag::get_top_tags('tvshow', $this->id);
+            $this->f_tags = Tag::get_display($this->tags, true, 'tvshow');
+        }
 
         return true;
     }

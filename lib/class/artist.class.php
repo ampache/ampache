@@ -421,7 +421,7 @@ class Artist extends database_object implements library_item
      * it changes the title into a full link.
      * @return boolean
       */
-    public function format()
+    public function format($details = true)
     {
         /* Combine prefix and name, trim then add ... if needed */
         $name = trim($this->prefix . " " . $this->name);
@@ -438,21 +438,24 @@ class Artist extends database_object implements library_item
             $this->f_link = AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $this->id;
             $this->f_name_link = "<a href=\"" . $this->f_link . "\" title=\"" . $this->f_full_name . "\">" . $name . "</a>";
         }
-        // Get the counts
-        $extra_info = $this->_get_extra_info($this->catalog_id);
 
-        //Format the new time thingy that we just got
-        $min = sprintf("%02d",(floor($extra_info['time']/60)%60));
+        if ($details) {
+            // Get the counts
+            $extra_info = $this->_get_extra_info($this->catalog_id);
 
-        $sec = sprintf("%02d",($extra_info['time']%60));
-        $hours = floor($extra_info['time']/3600);
+            //Format the new time thingy that we just got
+            $min = sprintf("%02d",(floor($extra_info['time']/60)%60));
 
-        $this->f_time = ltrim($hours . ':' . $min . ':' . $sec,'0:');
+            $sec = sprintf("%02d",($extra_info['time']%60));
+            $hours = floor($extra_info['time']/3600);
 
-        $this->tags = Tag::get_top_tags('artist', $this->id);
-        $this->f_tags = Tag::get_display($this->tags, true, 'artist');
+            $this->f_time = ltrim($hours . ':' . $min . ':' . $sec,'0:');
 
-        $this->object_cnt = $extra_info['object_cnt'];
+            $this->tags = Tag::get_top_tags('artist', $this->id);
+            $this->f_tags = Tag::get_display($this->tags, true, 'artist');
+
+            $this->object_cnt = $extra_info['object_cnt'];
+        }
 
         return true;
 

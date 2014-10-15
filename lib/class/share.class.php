@@ -194,13 +194,15 @@ class Share extends database_object
         }
     }
 
-    public function format()
+    public function format($details = true)
     {
-        $object = new $this->object_type($this->object_id);
-        $object->format();
-        $this->f_object_link = $object->f_link;
-        $user = new User($this->user);
-        $this->f_user = $user->fullname;
+        if ($details) {
+            $object = new $this->object_type($this->object_id);
+            $object->format();
+            $this->f_object_link = $object->f_link;
+            $user = new User($this->user);
+            $this->f_user = $user->fullname;
+        }
         $this->f_allow_stream = $this->allow_stream;
         $this->f_allow_download = $this->allow_download;
         $this->f_creation_date = date("Y-m-d H:i:s", $this->creation_date);

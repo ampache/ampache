@@ -91,20 +91,22 @@ class Clip extends Video
      * this function takes the object and reformats some values
      */
 
-    public function format()
+    public function format($details = true)
     {
-        parent::format();
+        parent::format($details);
 
-        if ($this->artist) {
-            $artist = new Artist($this->artist);
-            $artist->format();
-            $this->f_artist = $artist->f_link;
-        }
+        if ($details) {
+            if ($this->artist) {
+                $artist = new Artist($this->artist);
+                $artist->format();
+                $this->f_artist = $artist->f_link;
+            }
 
-        if ($this->song) {
-            $song = new Song($this->song);
-            $song->format();
-            $this->f_song = $song->f_link;
+            if ($this->song) {
+                $song = new Song($this->song);
+                $song->format();
+                $this->f_song = $song->f_link;
+            }
         }
 
         return true;

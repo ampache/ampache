@@ -192,7 +192,7 @@ class Song_Preview extends database_object implements media, playable_item
      * and does a ton of formating on it creating f_??? variables on the current
      * object
      */
-    public function format()
+    public function format($details = true)
     {
         // Format the artist name
         if ($this->artist) {

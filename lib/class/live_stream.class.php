@@ -92,7 +92,7 @@ class Live_Stream extends database_object implements media, library_item
      * This takes the normal data from the database and makes it pretty
      * for the users, the new variables are put in f_??? and f_???_link
      */
-    public function format()
+    public function format($details = true)
     {
         // Default link used on the rightbar
         $this->f_link        = "<a href=\"$this->url\">$this->name</a>";

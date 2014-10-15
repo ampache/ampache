@@ -646,7 +646,7 @@ class Tag extends database_object implements library_item
 
     } // remove_map
 
-    public function format()
+    public function format($details = true)
     {
 
     }

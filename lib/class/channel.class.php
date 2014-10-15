@@ -182,10 +182,12 @@ class Channel extends database_object implements media, library_item
         }
     }
 
-    public function format()
+    public function format($details = true)
     {
-        $this->tags = Tag::get_top_tags('channel', $this->id);
-        $this->f_tags = Tag::get_display($this->tags, true, 'channel');
+        if ($details) {
+            $this->tags = Tag::get_top_tags('channel', $this->id);
+            $this->f_tags = Tag::get_display($this->tags, true, 'channel');
+        }
     }
 
     public function get_keywords()

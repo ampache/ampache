@@ -50,7 +50,7 @@ switch ($_REQUEST['action']) {
             }
             foreach ($sres as $id) {
                 $artist = new Artist($id);
-                $artist->format();
+                $artist->format(false);
                 $results[] = array(
                     'type' => T_('Artists'),
                     'link' => $artist->f_link,
@@ -79,7 +79,7 @@ switch ($_REQUEST['action']) {
             }
             foreach ($sres as $id) {
                 $album = new Album($id);
-                $album->format();
+                $album->format(false);
                 $a_title = $album->f_title;
                 if ($album->disk) {
                     $a_title .= " [" . T_('Disk') . " " . $album->disk . "]";
@@ -112,7 +112,7 @@ switch ($_REQUEST['action']) {
             }
             foreach ($sres as $id) {
                 $song = new Song($id);
-                $song->format();
+                $song->format(false);
                 $results[] = array(
                     'type' => T_('Songs'),
                     'link' => $song->link,
@@ -141,7 +141,7 @@ switch ($_REQUEST['action']) {
             }
             foreach ($sres as $id) {
                 $playlist = new Playlist($id);
-                $playlist->format();
+                $playlist->format(false);
                 $results[] = array(
                     'type' => T_('Playlists'),
                     'link' => $playlist->f_link,

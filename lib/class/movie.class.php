@@ -114,9 +114,9 @@ class Movie extends Video
      * this function takes the object and reformats some values
      */
 
-    public function format()
+    public function format($details = true)
     {
-        parent::format();
+        parent::format($details);
 
         $this->f_original_name = trim($this->prefix . " " . $this->f_title);
         $this->f_title = ($this->f_original_name ?: $this->f_title);

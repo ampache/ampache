@@ -144,12 +144,12 @@ class TVShow_Episode extends Video
      * format
      * this function takes the object and reformats some values
      */
-    public function format()
+    public function format($details = true)
     {
-        parent::format();
+        parent::format($details);
 
         $season = new TVShow_Season($this->season);
-        $season->format();
+        $season->format($details);
 
         $this->f_title = ($this->original_name ?: $this->f_title);
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_title . '</a>';

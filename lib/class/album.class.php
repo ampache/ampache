@@ -577,13 +577,26 @@ class Album extends database_object implements library_item
      * album information with the base required
      * f_link, f_name
      */
-    public function format()
+    public function format($details = true)
     {
         $web_path = AmpConfig::get('web_path');
 
-        /* Pull the advanced information */
-        $data = $this->_get_extra_info();
-        foreach ($data as $key=>$value) { $this->$key = $value; }
+        if ($details) {
+            /* Pull the advanced information */
+            $data = $this->_get_extra_info();
+            foreach ($data as $key=>$value) { $this->$key = $value; }
+
+            if ($this->album_artist) {
+                $Album_artist = new Artist($this->album_artist);
+                $Album_artist->format();
+                $this->album_artist_name = $Album_artist->name;
+                $this->f_album_artist_name = $Album_artist->f_name;
+                $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . $this->f_album_artist_name . "</a>";
+            }
+
+            $this->tags = Tag::get_top_tags('album', $this->id);
+            $this->f_tags = Tag::get_display($this->tags, true, 'album');
+        }
 
         /* Truncate the string if it's to long */
         $this->f_name = $this->full_name;
@@ -611,20 +624,9 @@ class Album extends database_object implements library_item
             $this->f_artist_name =  $this->f_artist;
         }
 
-        if ($this->album_artist) {
-            $Album_artist = new Artist($this->album_artist);
-            $Album_artist->format();
-            $this->album_artist_name = $Album_artist->name;
-            $this->f_album_artist_name = $Album_artist->f_name;
-            $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . $this->f_album_artist_name . "</a>";
-        }
-
         if (!$this->year) {
             $this->f_year = "N/A";
         }
-
-        $this->tags = Tag::get_top_tags('album', $this->id);
-        $this->f_tags = Tag::get_display($this->tags, true, 'album');
 
         $this->f_release_type = ucwords($this->release_type);
 

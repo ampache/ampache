@@ -92,9 +92,9 @@ class Personal_Video extends Video
      * this function takes the object and reformats some values
      */
 
-    public function format()
+    public function format($details = true)
     {
-        parent::format();
+        parent::format($details);
 
         $this->f_location = $this->location;
 

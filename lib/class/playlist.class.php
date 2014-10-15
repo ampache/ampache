@@ -118,9 +118,9 @@ class Playlist extends playlist_object
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
      */
-    public function format()
+    public function format($details = true)
     {
-        parent::format();
+        parent::format($details);
         $this->f_link = AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
         $this->f_name_link = '<a href="' . $this->f_link . '">' . $this->f_name . '</a>';
 
