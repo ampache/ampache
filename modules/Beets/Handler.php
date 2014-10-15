@@ -54,7 +54,6 @@ abstract class Handler
         return call_user_func(array($this->handler, $this->handlerCommand), $data);
     }
 
-
     /**
      * Resolves the differences between Beets and Ampache properties
      * @param type $song
@@ -79,12 +78,16 @@ abstract class Handler
      * @param integer $time
      * @return string
      */
-    public function getTimedCommand($command, $tag, $time) {
+    public function getTimedCommand($command, $tag, $time)
+    {
         $commandParts = array(
             $command
         );
-        if($time) {
+        if ($time) {
             $commandParts[] = $tag . ':' . date('Y-m-d', $time) . '..';
+        } else {
+            // Add an empty part so we get a trailing slash if needed
+            $commandParts[] = '';
         }
         return implode($this->commandSeperator, $commandParts);
     }

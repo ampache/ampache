@@ -109,7 +109,7 @@ class JsonHandler extends Handler
             $command
         );
 
-        return implode('/', $uriParts) . ''; // The last Slash is important! The Server would redirect without it, but fopen would not follow.
+        return implode('/', $uriParts);
     }
 
     /**
