@@ -45,6 +45,12 @@ class JsonHandler extends Handler
     protected $handlerCommand;
 
     /**
+     * Seperator between command and arguments
+     * @var string
+     */
+    protected $commandSeperator = '/';
+
+    /**
      * Defines the differences between beets and ampache fields
      * @var array Defines the differences between beets and ampache fields
      */
@@ -103,7 +109,7 @@ class JsonHandler extends Handler
             $command
         );
 
-        return implode('/', $uriParts) . '/'; // The last Slash is important! The Server would redirect without it, but fopen would not follow.
+        return implode('/', $uriParts);
     }
 
     /**

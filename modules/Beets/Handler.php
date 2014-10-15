@@ -30,6 +30,12 @@ namespace Beets;
  */
 abstract class Handler
 {
+    /**
+     * Seperator between command and arguments
+     * @var string
+     */
+    protected $commandSeperator;
+
     abstract protected function start($command);
 
     public function setHandler(Catalog $handler, $command)
@@ -48,7 +54,6 @@ abstract class Handler
         return call_user_func(array($this->handler, $this->handlerCommand), $data);
     }
 
-
     /**
      * Resolves the differences between Beets and Ampache properties
      * @param type $song
@@ -63,6 +68,28 @@ abstract class Handler
         $song['genre'] = explode(',', $song['genre']);
 
         return $song;
+    }
+
+    /**
+     * Get a command to get songs with a timestamp in $tag newer than $time.
+     * For example: 'ls added:2014-10-02..'
+     * @param string $command
+     * @param string $tag
+     * @param integer $time
+     * @return string
+     */
+    public function getTimedCommand($command, $tag, $time)
+    {
+        $commandParts = array(
+            $command
+        );
+        if ($time) {
+            $commandParts[] = $tag . ':' . date('Y-m-d', $time) . '..';
+        } else {
+            // Add an empty part so we get a trailing slash if needed
+            $commandParts[] = '';
+        }
+        return implode($this->commandSeperator, $commandParts);
     }
 
 }

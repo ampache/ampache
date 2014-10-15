@@ -79,6 +79,12 @@ class CliHandler extends Handler
     protected $beetsCommand = 'beet';
 
     /**
+     * Seperator between command and arguments
+     * @var string
+     */
+    protected $commandSeperator = ' ';
+
+    /**
      * Defines the differences between beets and ampache fields
      * @var array Defines the differences between beets and ampache fields
      */

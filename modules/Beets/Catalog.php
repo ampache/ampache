@@ -104,6 +104,11 @@ abstract class Catalog extends \Catalog
     }
 
     /**
+     * Get the parser class like CliHandler or JsonHandler
+     */
+    abstract protected function getParser();
+
+    /**
      * Adds new songs to the catalog
      * @param array $options
      */
@@ -112,12 +117,12 @@ abstract class Catalog extends \Catalog
         require AmpConfig::get('prefix') . '/templates/show_adds_catalog.inc.php';
         flush();
         set_time_limit(0);
-
         UI::show_box_top(T_('Running Beets Update') . '. . .');
         $parser = $this->getParser();
         $parser->setHandler($this, 'addSong');
-        $parser->start($this->listCommand);
+        $parser->start($parser->getTimedCommand($this->listCommand, 'added', $this->last_add));
         $this->updateUi('add', $this->addedSongs, null, true);
+        $this->update_last_add();
 
         UI::show_box_bottom();
     }
@@ -167,10 +172,12 @@ abstract class Catalog extends \Catalog
         debug_event('verify', 'Starting on ' . $this->name, 5);
         set_time_limit(0);
 
+        /* @var $parser Handler */
         $parser = $this->getParser();
         $parser->setHandler($this, 'verifySong');
-        $parser->start($this->listCommand);
+        $parser->start($parser->getTimedCommand($this->listCommand, 'mtime', $this->last_update));
         $this->updateUi('verify', $this->verifiedSongs, null, true);
+        $this->update_last_update();
         return array('updated' => $this->verifiedSongs, 'total' => $this->verifiedSongs);
     }
 
