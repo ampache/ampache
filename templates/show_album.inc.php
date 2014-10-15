@@ -136,7 +136,7 @@ if (AmpConfig::get('show_played_times')) {
             </a>
         </li>
         <?php } ?>
-        <?php if (Access::check_function('batch_download')) { ?>
+        <?php if (Access::check_function('batch_download') && check_can_zip('album')) { ?>
         <li>
             <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
             <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo T_('Download'); ?></a>

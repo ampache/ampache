@@ -122,3 +122,27 @@ function send_zip($name, $media_files)
     $arc->download_file();
 
 } // send_zip
+
+/**
+ * check_can_zip
+ *
+ * Check that an object type is allowed to be zipped.
+ *
+ * @param string $object_type
+ */
+function check_can_zip($object_type)
+{
+    $allowed = true;
+    if (AmpConfig::get('allow_zip_types')) {
+        $allowed = false;
+        $allowed_types = explode(',', AmpConfig::get('allow_zip_types'));
+        foreach ($allowed_types as $atype) {
+            if (trim($atype) == $object_type) {
+                $allowed = true;
+                break;
+            }
+        }
+    }
+
+    return $allowed;
+}

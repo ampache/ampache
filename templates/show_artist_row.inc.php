@@ -73,7 +73,7 @@ if (Art::is_enabled()) {
     </a>
     <?php } ?>
 <?php } ?>
-<?php if (Access::check_function('batch_download')) { ?>
+<?php if (Access::check_function('batch_download') && check_can_zip('artist')) { ?>
     <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=artist&amp;id=<?php echo $libitem->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>

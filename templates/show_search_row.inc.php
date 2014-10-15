@@ -45,7 +45,7 @@
 <td class="cel_limit"><?php echo (($libitem->limit > 0) ? $libitem->limit : T_('None')); ?></td>
 <td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>
 <td class="cel_action">
-        <?php if (Access::check_function('batch_download')) { ?>
+        <?php if (Access::check_function('batch_download') && check_can_zip('search')) { ?>
                 <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $libitem->id; ?>">
                         <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
                 </a>

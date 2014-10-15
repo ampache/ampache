@@ -29,7 +29,7 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
 ?>
 <div id="information_actions">
     <ul>
-        <?php if (Access::check_function('batch_download')) { ?>
+        <?php if (Access::check_function('batch_download') && check_can_zip('search')) { ?>
         <li>
             <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
             <?php echo T_('Batch Download'); ?>

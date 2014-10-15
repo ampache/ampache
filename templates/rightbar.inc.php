@@ -45,7 +45,7 @@
             </ul>
         </li>
     <?php } ?>
-<?php if (Access::check_function('batch_download')) { ?>
+<?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) { ?>
     <li>
         <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>

@@ -36,7 +36,18 @@ set_time_limit(0);
 
 $media_ids = array();
 $default_name = "Unknown.zip";
+$object_type = scrub_in($_REQUEST['action']);
 $name = $default_name;
+
+if ($object_type == 'browse') {
+    $object_type = $_REQUEST['type'];
+}
+
+if (!check_can_zip($object_type)) {
+    debug_event('batch', 'Object type `' . $object_type . '` is not allowed to be zipped.', 1);
+    UI::access_denied();
+    exit;
+}
 
 if (Core::is_playable_item($_REQUEST['action'])) {
     $id = $_REQUEST['id'];
@@ -45,7 +56,7 @@ if (Core::is_playable_item($_REQUEST['action'])) {
     }
     $media_ids = array();
     foreach ($id as $i) {
-        $libitem = new $_REQUEST['action']($i);
+        $libitem = new $object_type($i);
         if ($libitem->id) {
             $libitem->format();
             $name = $libitem->get_fullname();
@@ -63,7 +74,7 @@ if (Core::is_playable_item($_REQUEST['action'])) {
             $browse = new Browse($id);
             $browse_media_ids = $browse->get_saved();
             foreach ($browse_media_ids as $media_id) {
-                switch ($_REQUEST['type']) {
+                switch ($object_type) {
                     case 'album':
                         $album = new Album($media_id);
                         $media_ids = array_merge($media_ids, $album->get_songs());

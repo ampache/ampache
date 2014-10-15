@@ -7,7 +7,7 @@
 ; if this config file is up to date 
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 19
+config_version = 20
 
 ;###################
 ; Path Vars        #
@@ -216,6 +216,14 @@ require_localnet_session = "true"
 ; want to be able to use this function
 ; DEFAULT: false
 ;allow_zip_download = "false"
+
+Allow Zip Types
+; This setting allows/disallows zip download of specific object types
+; If empty, all supported object types can be zipped.
+; Otherwise, only the given object list can be zipped.
+; POSSIBLE VALUES: artist, album, playlist, search, tmp_playlist
+; DEFAULT: none
+;allow_zip_types = "album"
 
 ; File Zip Download
 ; This settings tells Ampache to attempt to save the zip file
