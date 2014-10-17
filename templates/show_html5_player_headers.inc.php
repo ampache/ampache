@@ -77,7 +77,7 @@ if ($iframed) {
 function NotifyOfNewSong(title, artist, icon)
 {
     if (!("Notification" in window)) {
-        Console.error("This browser does not support desktop notification");
+        console.error("This browser does not support desktop notification");
     } else {
         if (Notification.permission !== 'denied') {
             if (Notification.permission === 'granted') {
@@ -91,7 +91,7 @@ function NotifyOfNewSong(title, artist, icon)
                 });
             }
         } else {
-            Console.error("Desktop notification denied.");
+            console.error("Desktop notification denied.");
         }
     }
 }
