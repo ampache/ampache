@@ -1,8 +1,33 @@
 CHANGELOG
 =========
 
-3.7.1
+3.8.0
 ----------
+- Added `quick play url` to have permanent authenticated stream link without session
+- Fixed unresponsive website on batch download (thanks Rouzax)
+- Added batch download item granularity
+- Fixed 'guest' user site rendering
+- Added Aurora.js support in webplayer
+- Added Google Maps geolocation analyze plugin
+- Added statistical graphs
+- Added user geolocation
+- Added 'Missing Artist' search
+- Fixed Ampache installation with FastCGI
+- Added a new RSS Feed plugin
+- Added a new 'display home' plugin type
+- Added Favorite and Rating features to playlists
+- Added user feedback near mouse cursor on democratic votes
+- Changed header page position to be fixed
+- Added external links on song page details
+- Fixed Subsonic API getAlbumList2 byGenre and byYear order (thanks rrjk)
+- Added html5 desktop notification
+- Added album group order setting
+- Fixed unwanted album merge when one of the album doesn't have mbid
+- Changed video player to go outside the footer
+- Added ip address in authentication failure for fail2ban scripts (thanks popindavibe)
+- Added parameter to hide directplay button if number of items is above a limit
+- Added Tag split (thanks jcwmoore)
+- Fixed album/artist arts and stats migration on rename (thanks jcwmoore)
 - Fixed get lyrics from files (thanks apastuszak)
 - Fixed verify local catalog (thanks JoeDat)
 - Removed Twitter code
@@ -44,7 +69,7 @@ CHANGELOG
 - Added beautiful url on arts
 - Improved browse list header (thanks Psy-Virus)
 - Fixed user online/offline information on Reborn theme (thanks thorsforge)
-- Added UPnP backend
+- Added UPnP backend (thanks SeregaPru)
 - Added DAAP backend
 - Added sort options on playlists (thanks Shdwdrgn)
 - Fixed XML-API tag information (thanks jcwmoore)

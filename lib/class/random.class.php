@@ -77,10 +77,11 @@ class Random
         $song_id = 0;
         $method_name = 'get_' . $type;
 
-        if (method_exists('Random', $method_name)) {
-            $song_ids = self::$method_name(1);
-            $song_id = array_pop($song_ids);
+        if (!method_exists('Random', $method_name)) {
+            $method_name = 'get_default';
         }
+        $song_ids = self::$method_name(1);
+        $song_id = array_pop($song_ids);
 
         return $song_id;
 

@@ -94,6 +94,37 @@ if (empty($oid) && empty($demo_id) && empty($random)) {
     exit;
 }
 
+// Authenticate the user if specified
+$u = $_SERVER['PHP_AUTH_USER'];
+if (empty($u)) {
+    $u = $_REQUEST['u'];
+}
+$p = $_SERVER['PHP_AUTH_PW'];
+if (empty($p)) {
+    $p = $_REQUEST['p'];
+}
+$apikey = $_REQUEST['apikey'];
+
+// If explicit user authentification was passed
+$user_authenticated = false;
+if (!empty($apikey)) {
+    $user = User::get_from_apikey($apikey);
+    if ($user != null) {
+        $GLOBALS['user'] = $user;
+        $uid = $GLOBALS['user']->id;
+        Preference::init();
+        $user_authenticated = true;
+    }
+} elseif (!empty($u) && !empty($p)) {
+    $auth = Auth::login($u, $p);
+    if ($auth['success']) {
+        $GLOBALS['user'] = User::get_from_username($auth['username']);
+        $uid = $GLOBALS['user']->id;
+        Preference::init();
+        $user_authenticated = true;
+    }
+}
+
 if (empty($uid)) {
     debug_event('play', 'No user specified', 2);
     header('HTTP/1.1 400 No User Specified');
@@ -109,33 +140,36 @@ if (empty($uid)) {
 }
 
 if (!$share_id) {
-    $GLOBALS['user'] = new User($uid);
-    Preference::init();
+    // No explicit authentication, use session
+    if (!$user_authenticated) {
+        $GLOBALS['user'] = new User($uid);
+        Preference::init();
 
-    /* If the user has been disabled (true value) */
-    if (make_bool($GLOBALS['user']->disabled)) {
-        debug_event('UI::access_denied', $GLOBALS['user']->username . " is currently disabled, stream access denied", '3');
-        header('HTTP/1.1 403 User Disabled');
-        exit;
-    }
-
-    // If require session is set then we need to make sure we're legit
-    if (AmpConfig::get('require_session')) {
-        if (!AmpConfig::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
-            debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
-        } else if (!Session::exists('stream', $sid)) {
-            // No valid session id given, try with cookie session from web interface
-            $sid = $_COOKIE[AmpConfig::get('session_name')];
-            if (!Session::exists('interface', $sid)) {
-                debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
-                header('HTTP/1.1 403 Session Expired');
-                exit;
-            }
+        /* If the user has been disabled (true value) */
+        if (make_bool($GLOBALS['user']->disabled)) {
+            debug_event('UI::access_denied', $GLOBALS['user']->username . " is currently disabled, stream access denied", '3');
+            header('HTTP/1.1 403 User Disabled');
+            exit;
         }
 
-        // Now that we've confirmed the session is valid
-        // extend it
-        Session::extend($sid, 'stream');
+        // If require session is set then we need to make sure we're legit
+        if (AmpConfig::get('require_session')) {
+            if (!AmpConfig::get('require_localnet_session') AND Access::check_network('network',$GLOBALS['user']->id,'5')) {
+                debug_event('play', 'Streaming access allowed for local network IP ' . $_SERVER['REMOTE_ADDR'],'5');
+            } else if (!Session::exists('stream', $sid)) {
+                // No valid session id given, try with cookie session from web interface
+                $sid = $_COOKIE[AmpConfig::get('session_name')];
+                if (!Session::exists('interface', $sid)) {
+                    debug_event('UI::access_denied', 'Streaming access denied: ' . $GLOBALS['user']->username . "'s session has expired", 3);
+                    header('HTTP/1.1 403 Session Expired');
+                    exit;
+                }
+            }
+
+            // Now that we've confirmed the session is valid
+            // extend it
+            Session::extend($sid, 'stream');
+        }
     }
 
     /* Update the users last seen information */
@@ -222,9 +256,16 @@ if ($demo_id) {
  */
 if ($random) {
     if ($_REQUEST['start'] < 1) {
-        $oid = Random::get_single_song($_REQUEST['random_type']);
-        // Save this one in case we do a seek
-        $_SESSION['random']['last'] = $oid;
+        if (isset($_REQUEST['random_type'])) {
+            $rtype = $_REQUEST['random_type'];
+        } else {
+            $rtype = $type;
+        }
+        $oid = Random::get_single_song($rtype);
+        if ($oid) {
+            // Save this one in case we do a seek
+            $_SESSION['random']['last'] = $oid;
+        }
     } else {
         $oid = $_SESSION['random']['last'];
     }
