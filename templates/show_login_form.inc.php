@@ -50,11 +50,7 @@ $_SESSION['login'] = true;
     <body id="loginPage" onload="focus();">
         <div id="maincontainer">
             <div id="header"><!-- This is the header -->
-                <h1 id="headerlogo">
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>">
-                        <img src="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/images/ampache.png" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
-                    </a>
-                </h1>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>"><h1 id="headerlogo"></h1></a>
             </div>
             <div id="loginbox">
                 <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>

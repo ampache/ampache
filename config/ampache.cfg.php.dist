@@ -325,7 +325,7 @@ use_auth	= "true"
 ; default is administrator. This setting only takes affect
 ; if use_auth is false
 ; POSSIBLE VALUES: user, admin, manager, guest
-; DEFAULT: user
+; DEFAULT: guest
 default_auth_level = "guest"
 
 ; 5 Star Ratings

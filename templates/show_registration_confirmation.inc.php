@@ -22,6 +22,8 @@
 
 $htmllang = str_replace("_","-",AmpConfig::get('lang'));
 $web_path = AmpConfig::get('web_path');
+
+$_SESSION['login'] = true;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
@@ -36,9 +38,7 @@ $web_path = AmpConfig::get('web_path');
     <body id="registerPage">
         <div id="maincontainer">
             <div id="header">
-                <a href="<?php echo AmpConfig::get('web_path'); ?>">
-                    <img src="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/images/ampache.png" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
-                </a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>"><h1 id="headerlogo"></h1></a>
                 <span><?php echo T_('Registration Complete'); ?>.</span>
             </div>
             <script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>

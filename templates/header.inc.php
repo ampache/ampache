@@ -309,8 +309,15 @@ $_SESSION['login'] = false;
                     <?php UI::show_box_top('','box box_headerbox'); ?>
                     <?php require_once AmpConfig::get('prefix') . '/templates/show_search_bar.inc.php'; ?>
                     <?php if (User::is_registered()) { ?>
-                    <?php require_once AmpConfig::get('prefix') . '/templates/show_playtype_switch.inc.php'; ?>
-                    <span id="loginInfo"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo $GLOBALS['user']->fullname; ?></a> <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a></span>
+                        <?php require_once AmpConfig::get('prefix') . '/templates/show_playtype_switch.inc.php'; ?>
+                        <span id="loginInfo"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo $GLOBALS['user']->fullname; ?></a> <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a></span>
+                    <?php } else { ?>
+                        <span id="loginInfo">
+                            <a href="<?php echo $web_path; ?>/login.php" rel="nohtml"><?php echo T_('Login'); ?></a>
+                            <?php if (AmpConfig::get('allow_public_registration')) { ?>
+                                / <a href="<?php echo $web_path; ?>/register.php" rel="nohtml"><?php echo T_('Register'); ?></a>
+                            <?php } ?>
+                        </span>
                     <?php } ?>
                     <span id="updateInfo">
                     <?php

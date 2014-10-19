@@ -22,6 +22,8 @@
 
 $htmllang = str_replace("_","-",AmpConfig::get('lang'));
 $web_path = AmpConfig::get('web_path');
+
+$_SESSION['login'] = true;
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
@@ -41,11 +43,7 @@ $web_path = AmpConfig::get('web_path');
 
         <div id="maincontainer">
             <div id="header">
-                <h1 id="headerlogo">
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>">
-                        <img src="<?php echo AmpConfig::get('web_path'); ?><?php echo AmpConfig::get('theme_path'); ?>/images/ampache.png" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
-                    </a>
-                </h1>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>"><h1 id="headerlogo"></h1></a>
                 <span><?php echo T_('Registration'); ?>...</span>
             </div>
             <?php
@@ -91,7 +89,7 @@ $web_path = AmpConfig::get('web_path');
                         <?php Error::display('email'); ?>
                     </div>
                     <div class="registerfield require">
-                        <label for="email"><?php echo T_('Website'); ?>:</label>
+                        <label for="website"><?php echo T_('Website'); ?>:</label>
                         <input type='text' name='website' id='website' value='<?php echo scrub_out($website); ?>' />
                         <?php Error::display('website'); ?>
                     </div>
