@@ -94,6 +94,11 @@ if (Core::is_playable_item($_REQUEST['action'])) {
     } // action switch
 }
 
+// Write/close session data to release session lock for this script.
+// This to allow other pages from the same session to be processed
+// Do NOT change any session variable after this call
+session_write_close();
+
 // Take whatever we've got and send the zip
 $song_files = get_media_files($media_ids);
 if (is_array($song_files['0'])) {
