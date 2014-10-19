@@ -109,7 +109,7 @@ class getID3
 	protected $startup_error   = '';
 	protected $startup_warning = '';
 
-	const VERSION           = '1.9.8-20140511';
+	const VERSION           = '1.9.9-20140718';
 	const FREAD_BUFFER_SIZE = 32768;
 
 	const ATTACHMENTS_NONE   = false;
@@ -256,7 +256,7 @@ class getID3
 			$this->filename = $filename;
 			$this->info = array();
 			$this->info['GETID3_VERSION']   = $this->version();
-			$this->info['php_memory_limit'] = $this->memory_limit;
+			$this->info['php_memory_limit'] = (($this->memory_limit > 0) ? $this->memory_limit : false);
 
 			// remote files not supported
 			if (preg_match('/^(ht|f)tp:\/\//', $filename)) {

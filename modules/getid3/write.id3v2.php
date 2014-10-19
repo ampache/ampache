@@ -1921,6 +1921,7 @@ class getid3_write_id3v2
 			$ID3v2ShortFrameNameLookup[2]['publisher']                                        = 'TPB';
 			$ID3v2ShortFrameNameLookup[2]['isrc']                                             = 'TRC';
 			$ID3v2ShortFrameNameLookup[2]['tracknumber']                                      = 'TRK';
+			$ID3v2ShortFrameNameLookup[2]['track_number']                                     = 'TRK';
 			$ID3v2ShortFrameNameLookup[2]['size']                                             = 'TSI';
 			$ID3v2ShortFrameNameLookup[2]['encoder_settings']                                 = 'TSS';
 			$ID3v2ShortFrameNameLookup[2]['description']                                      = 'TT1';
@@ -1941,6 +1942,7 @@ class getid3_write_id3v2
 			// The following are common to ID3v2.3 and ID3v2.4
 			$ID3v2ShortFrameNameLookup[3]['audio_encryption']                                 = 'AENC';
 			$ID3v2ShortFrameNameLookup[3]['attached_picture']                                 = 'APIC';
+			$ID3v2ShortFrameNameLookup[3]['picture']                                          = 'APIC';
 			$ID3v2ShortFrameNameLookup[3]['comment']                                          = 'COMM';
 			$ID3v2ShortFrameNameLookup[3]['commercial']                                       = 'COMR';
 			$ID3v2ShortFrameNameLookup[3]['encryption_method_registration']                   = 'ENCR';
@@ -1988,6 +1990,7 @@ class getid3_write_id3v2
 			$ID3v2ShortFrameNameLookup[3]['part_of_a_set']                                    = 'TPOS';
 			$ID3v2ShortFrameNameLookup[3]['publisher']                                        = 'TPUB';
 			$ID3v2ShortFrameNameLookup[3]['tracknumber']                                      = 'TRCK';
+			$ID3v2ShortFrameNameLookup[3]['track_number']                                     = 'TRCK';
 			$ID3v2ShortFrameNameLookup[3]['internet_radio_station_name']                      = 'TRSN';
 			$ID3v2ShortFrameNameLookup[3]['internet_radio_station_owner']                     = 'TRSO';
 			$ID3v2ShortFrameNameLookup[3]['isrc']                                             = 'TSRC';
