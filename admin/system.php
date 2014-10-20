@@ -42,6 +42,10 @@ switch ($_REQUEST['action']) {
         $browser->downloadHeaders('ampache.cfg.php','text/plain',false,filesize(AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist'));
         echo $final;
         exit;
+    case 'write_config':
+        $final = write_config(AmpConfig::get('prefix') . '/config/ampache.cfg.php');
+        header('Location: '. AmpConfig::get('web_path') . '/index.php');
+        exit;
     case 'reset_db_charset':
         Dba::reset_db_charset();
         show_confirmation(T_('Database Charset Updated'), T_('Your Database and associated tables have been updated to match your currently configured charset'), AmpConfig::get('web_path').'/admin/system.php?action=show_debug');

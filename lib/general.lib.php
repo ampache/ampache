@@ -307,6 +307,21 @@ function generate_config($current)
 }
 
 /**
+ * write_config
+ *
+ * Write new configuration into the current configuration file by keeping old values.
+ */
+function write_config($current_file_path)
+{
+    $new_data = generate_config(parse_ini_file($current_file_path));
+    
+    // Start writing into the current config file
+    $handle = fopen($current_file_path, 'w+');
+    $writtenlen = fwrite($handle, $new_data, strlen($new_data));
+    fclose($handle);
+}
+
+/**
  * escape_ini
  *
  * Escape a value used for inserting into an ini file.
