@@ -92,28 +92,54 @@ class Stats
      */
     public static function insert($type, $oid, $user, $agent='', $location)
     {
-        $type = self::validate_type($type);
+        if (!self::is_already_inserted($type, $oid, $user)) {
+            $type = self::validate_type($type);
 
-        $latitude = null;
-        $longitude = null;
-        $geoname = null;
-        if (isset($location['latitude']))
-            $latitude = $location['latitude'];
-        if (isset($location['longitude']))
-            $longitude = $location['longitude'];
-        if (isset($location['name']))
-            $geoname = $location['name'];
+            $latitude = null;
+            $longitude = null;
+            $geoname = null;
+            if (isset($location['latitude']))
+                $latitude = $location['latitude'];
+            if (isset($location['longitude']))
+                $longitude = $location['longitude'];
+            if (isset($location['name']))
+                $geoname = $location['name'];
 
-        $sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`date`,`user`,`agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($type, $oid, time(), $user, $agent, $latitude, $longitude, $geoname));
+            $sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`date`,`user`,`agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $db_results = Dba::write($sql, array($type, $oid, time(), $user, $agent, $latitude, $longitude, $geoname));
 
-        if (!$db_results) {
-            debug_event('statistics', 'Unabled to insert statistics:' . $sql, '3');
+            if (!$db_results) {
+                debug_event('statistics', 'Unabled to insert statistics:' . $sql, '3');
+            }
+        } else {
+            debug_event('statistics', 'Statistics insertion ignored due to graceful delay.', '3');   
         }
-
     } // insert
 
+    /**
+      * is_already_inserted
+     * Check if the same stat has not already been inserted within a graceful delay
+     */
+    public static function is_already_inserted($type, $oid, $user)
+    {
+        $delay = time() - 10; // We look 10 seconds in the past
+
+        $sql = "SELECT `id` FROM `object_count` ";
+        $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = '" . $type ."' AND `object_count`.`object_id` = ? AND `object_count`.`date` >= ? ";
+        $sql .= "ORDER BY `object_count`.`date` DESC";
+
+        $db_results = Dba::read($sql, array($user, $oid, $delay));
+        $results = array();
+        
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+
+        return count($results) > 0;
+        
+    } // is_already_inserted
+    
     /**
       * get_object_count
      * Get count for an object
@@ -233,7 +259,7 @@ class Stats
             $count = AmpConfig::get('popular_threshold');
         }
 
-        $count    = intval($count);
+        $count = intval($count);
         if (!$offset) {
             $limit = $count;
         } else {
