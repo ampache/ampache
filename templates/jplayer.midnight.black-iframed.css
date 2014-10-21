@@ -677,7 +677,7 @@ a.jp-video-play-icon {
 	left: 50%;
 	top: 50%;
 
-	background: url("../modules/jquery-jplayer-midnight-black/jquery-jplayer.midnight.black.video.play.png") 0 0 no-repeat;
+	background: url("../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.video.play.png") 0 0 no-repeat;
 	text-indent: -9999px;
 }
 div.jp-video-play:hover a.jp-video-play-icon {
