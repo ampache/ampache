@@ -32,7 +32,7 @@ class Daap_Api
 {
     const AMPACHEID_SMARTPL = 400000000;
 
-    static $tags = array();
+    public static $tags = array();
 
     /**
      * constructor

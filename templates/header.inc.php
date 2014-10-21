@@ -418,7 +418,7 @@ $_SESSION['login'] = false;
                 <?php if (AmpConfig::get('int_config_version') != AmpConfig::get('config_version') AND $GLOBALS['user']->has_access(100)) { ?>
                 <div class="fatalerror">
                     <?php echo T_('Error Config File Out of Date'); ?>
-                    <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config'); ?></a> | 
+                    <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Generate New Config'); ?></a> |
                     <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Write New Config'); ?></a>
                 </div>
                 <?php } ?>

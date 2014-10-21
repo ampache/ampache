@@ -427,7 +427,7 @@ class Plex_Api
         return $headers;
     }
 
-    static $request_headers = array();
+    public static $request_headers = array();
     public static function request_output_header($ch, $header)
     {
         self::$request_headers[] = $header;
