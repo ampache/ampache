@@ -314,7 +314,7 @@ function generate_config($current)
 function write_config($current_file_path)
 {
     $new_data = generate_config(parse_ini_file($current_file_path));
-    
+
     // Start writing into the current config file
     $handle = fopen($current_file_path, 'w+');
     $writtenlen = fwrite($handle, $new_data, strlen($new_data));

@@ -124,12 +124,12 @@ class WebPlayer
             if ($transcode_cfg == 'always' || !empty($force_type) || !in_array('native', $valid_types) || ($types['real'] != $ftype && (!AmpConfig::get('webplayer_flash') || $urlinfo['type'] != 'song'))) {
                 if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                     // Transcode only if excepted type available
-                    $transcode_settings = $media->get_transcode_settings($types['real'], 'webplayer');
+                    $transcode_settings = $media->get_transcode_settings(null, 'webplayer');
                     if ($transcode_settings && AmpConfig::get('transcode_player_customize')) {
+                        $types['real'] = $transcode_settings['format'];
                         $transcode = true;
                     } else {
                         if (!in_array('native', $valid_types)) {
-                            $transcode_settings = $media->get_transcode_settings(null, 'webplayer');
                             if ($transcode_settings) {
                                 $types['real'] = $transcode_settings['format'];
                                 $transcode = true;

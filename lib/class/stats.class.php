@@ -113,7 +113,7 @@ class Stats
                 debug_event('statistics', 'Unabled to insert statistics:' . $sql, '3');
             }
         } else {
-            debug_event('statistics', 'Statistics insertion ignored due to graceful delay.', '3');   
+            debug_event('statistics', 'Statistics insertion ignored due to graceful delay.', '3');
         }
     } // insert
 
@@ -131,15 +131,15 @@ class Stats
 
         $db_results = Dba::read($sql, array($user, $oid, $delay));
         $results = array();
-        
+
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
 
         return count($results) > 0;
-        
+
     } // is_already_inserted
-    
+
     /**
       * get_object_count
      * Get count for an object
