@@ -3150,10 +3150,10 @@ class Update
         $retval = Dba::write($sql) ? $retval : false;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('geolocation','1','Allow geolocation',25,'integer','options')";
+            "VALUES ('geolocation','0','Allow geolocation',25,'integer','options')";
         $retval = Dba::write($sql) ? $retval : false;
         $id = Dba::insert_id();
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'0')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;

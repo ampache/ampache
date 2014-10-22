@@ -139,6 +139,9 @@ switch ($_REQUEST['action']) {
     case 'enable':
         $client = new User($_REQUEST['user_id']);
         $client->enable();
+        if (!AmpConfig::get('user_no_email_confirm')) {
+            Registration::send_account_enabled($client->username, $client->fullname, $client->email);
+        }
         show_confirmation(T_('User Enabled'),$client->fullname . ' (' . $client->username . ')', AmpConfig::get('web_path'). '/admin/users.php');
     break;
     case 'disable':

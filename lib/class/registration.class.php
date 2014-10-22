@@ -93,6 +93,27 @@ Website: %s
     } // send_confirmation
 
     /**
+     * send_account_enabled
+     * This sends the account enabled email for the specified user
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public static function send_account_enabled($username, $fullname, $email)
+    {
+        $mailer = new Mailer();
+        $mailer->set_default_sender();
+
+        $mailer->subject = sprintf(T_("Account enabled at %s"), AmpConfig::get('site_title'));
+        $mailer->message = sprintf(T_("Your account %s has been enabled\n\n
+            Please logon using %s"), $username, AmpConfig::get('web_path') . "/login.php");
+
+        $mailer->recipient = $email;
+        $mailer->recipient_name = $fullname;
+
+        $mailer->send();
+    }
+
+    /**
       * show_agreement
      * This shows the registration agreement, /config/registration_agreement.php
      */
