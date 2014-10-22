@@ -109,11 +109,6 @@ class WebPlayer
             }
         }
 
-        if (!empty($force_type)) {
-            debug_event("webplayer.class.php", "Forcing type to {".$force_type."}", 5);
-            $types['real'] = $force_type;
-        }
-
         if ($media != null) {
             $ftype = $media->type;
 
@@ -123,13 +118,21 @@ class WebPlayer
             $valid_types = Song::get_stream_types_for_type($ftype, 'webplayer');
             if ($transcode_cfg == 'always' || !empty($force_type) || !in_array('native', $valid_types) || ($types['real'] != $ftype && (!AmpConfig::get('webplayer_flash') || $urlinfo['type'] != 'song'))) {
                 if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
-                    // Transcode only if excepted type available
-                    $transcode_settings = $media->get_transcode_settings(null, 'webplayer');
-                    if ($transcode_settings && AmpConfig::get('transcode_player_customize')) {
-                        $types['real'] = $transcode_settings['format'];
-                        $transcode = true;
-                    } else {
+                    // Transcode forced from client side
+                    if (!empty($force_type) && AmpConfig::get('transcode_player_customize')) {
+                        debug_event("webplayer.class.php", "Forcing type to {".$force_type."}", 5);
+                        // Transcode only if excepted type available
+                        $transcode_settings = $media->get_transcode_settings($force_type, 'webplayer');
+                        if ($transcode_settings) {
+                            $types['real'] = $transcode_settings['format'];
+                            $transcode = true;
+                        }
+                    }
+
+                    // Transcode is not forced, transcode only if required
+                    if (!$transcode) {
                         if (!in_array('native', $valid_types)) {
+                            $transcode_settings = $media->get_transcode_settings(null, 'webplayer');
                             if ($transcode_settings) {
                                 $types['real'] = $transcode_settings['format'];
                                 $transcode = true;
