@@ -287,6 +287,12 @@ if ($type == 'song') {
     $media->format();
 }
 
+if (!User::stream_control(array(array('object_type' => $type, 'object_id' => $media->id)))) {
+    debug_event('UI::access_denied', 'Stream control failed for user ' . $GLOBALS['user']->username . ' on ' . $media->get_stream_name(), 3);
+    UI::access_denied();
+    exit;
+}
+
 if ($media->catalog) {
     // Build up the catalog for our current object
     $catalog = Catalog::create_from_id($media->catalog);
@@ -370,6 +376,16 @@ if ($_GET['action'] == 'download' AND AmpConfig::get('download')) {
     if (!is_resource($fp)) {
         debug_event('Play',"Error: Unable to open $media->file for downloading",'2');
         exit();
+    }
+
+    if (!$share_id) {
+        if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
+            debug_event('play', 'Registering download stats for {' . $media->get_stream_name() . '}...', '5');
+            $sessionkey = $sid ?: Stream::get_session();
+            $agent = Session::agent($sessionkey);
+            $location = Session::get_geolocation($sessionkey);
+            Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
+        }
     }
 
     // Check to see if we should be throttling because we can get away with it
@@ -569,7 +585,7 @@ if (!isset($_REQUEST['segment'])) {
     } else {
         if (!$share_id) {
             if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
-                debug_event('play', 'Registering stats for {'.$media->get_stream_name() .'}...', '5');
+                debug_event('play', 'Registering stream stats for {'.$media->get_stream_name() .'}...', '5');
                 $sessionkey = $sid ?: Stream::get_session();
                 $agent = Session::agent($sessionkey);
                 $location = Session::get_geolocation($sessionkey);

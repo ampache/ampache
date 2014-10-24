@@ -467,8 +467,11 @@ class Update
         $update_string = '- Add users geolocation.<br />';
         $version[] = array('version' => '370022','description' => $update_string);
 
-        $update_string = " - Add Aurora.js webplayer option<br />";
+        $update_string = " - Add Aurora.js webplayer option.<br />";
         $version[] = array('version' => '370023','description' => $update_string);
+
+        $update_string = " - Add count_type column to object_count table.<br />";
+        $version[] = array('version' => '370024','description' => $update_string);
 
         return $version;
     }
@@ -3176,6 +3179,21 @@ class Update
 
         $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
         $retval = Dba::write($sql, array($id)) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370024
+     *
+     * Add count_type column to object_count table
+     */
+    public static function update_370024()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `object_count` ADD COLUMN `count_type` VARCHAR(16) NOT NULL DEFAULT 'stream'";
+        $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;
     }

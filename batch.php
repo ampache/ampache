@@ -83,7 +83,7 @@ if (Core::is_playable_item($_REQUEST['action'])) {
                         $media_ids[] = $media_id;
                     break;
                     case 'video':
-                        $media_ids[] = array('Video', $media_id);
+                        $media_ids[] = array('object_type' => 'Video', 'object_id' => $media_id);
                     break;
                 } // switch on type
             } // foreach media_id
@@ -92,6 +92,12 @@ if (Core::is_playable_item($_REQUEST['action'])) {
             // Rien a faire
         break;
     } // action switch
+}
+
+if (!User::stream_control($media_ids)) {
+    debug_event('UI::access_denied', 'Stream control failed for user ' . $GLOBALS['user']->username, '3');
+    UI::access_denied();
+    exit;
 }
 
 // Write/close session data to release session lock for this script.

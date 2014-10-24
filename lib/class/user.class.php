@@ -1367,4 +1367,29 @@ class User extends database_object
 
     } // rebuild_all_preferences
 
+    /**
+     * stream_control
+     * Check all stream control plugins
+     * @param array $media_ids
+     * @param User $user
+     * @return boolean
+     */
+    public static function stream_control($media_ids, User $user = null)
+    {
+        if ($user == null) {
+            $user = $GLOBALS['user'];
+        }
+
+        foreach (Plugin::get_plugins('stream_control') as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->load($user)) {
+                if (!$plugin->_plugin->stream_control($media_ids)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 } //end user class

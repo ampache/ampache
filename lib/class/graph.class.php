@@ -377,6 +377,28 @@ class Graph
         $this->render_graph('Bandwidth', $MyData, $zoom, $width, $height);
     }
 
+    public function get_total_bandwidth($user = 0, $start_date = null, $end_date = null)
+    {
+        $total = 0;
+        $values = $this->get_all_type_pts('get_user_bandwidth_pts', $user, null, 0, $start_date, $end_date, 'month');
+        foreach ($values as $date => $value) {
+            $total += $value;
+        }
+
+        return $total;
+    }
+
+    public function get_total_hits($user = 0, $start_date = null, $end_date = null)
+    {
+        $total = 0;
+        $values = $this->get_all_type_pts('get_user_hits_pts', $user, null, 0, $start_date, $end_date, 'month');
+        foreach ($values as $date => $value) {
+            $total += $value;
+        }
+
+        return $total;
+    }
+
     public function render_catalog_files($catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
     {
         $MyData = new pData();

@@ -90,7 +90,7 @@ class Stats
      * This inserts a new record for the specified object
      * with the specified information, amazing!
      */
-    public static function insert($type, $oid, $user, $agent='', $location)
+    public static function insert($type, $oid, $user, $agent='', $location, $count_type = 'stream')
     {
         if (!self::is_already_inserted($type, $oid, $user)) {
             $type = self::validate_type($type);
@@ -105,9 +105,9 @@ class Stats
             if (isset($location['name']))
                 $geoname = $location['name'];
 
-            $sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`date`,`user`,`agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            $db_results = Dba::write($sql, array($type, $oid, time(), $user, $agent, $latitude, $longitude, $geoname));
+            $sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`count_type`,`date`,`user`,`agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $db_results = Dba::write($sql, array($type, $oid, $count_type, time(), $user, $agent, $latitude, $longitude, $geoname));
 
             if (!$db_results) {
                 debug_event('statistics', 'Unabled to insert statistics:' . $sql, '3');
@@ -121,15 +121,15 @@ class Stats
       * is_already_inserted
      * Check if the same stat has not already been inserted within a graceful delay
      */
-    public static function is_already_inserted($type, $oid, $user)
+    public static function is_already_inserted($type, $oid, $user, $count_type = 'stream')
     {
         $delay = time() - 10; // We look 10 seconds in the past
 
         $sql = "SELECT `id` FROM `object_count` ";
-        $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = '" . $type ."' AND `object_count`.`object_id` = ? AND `object_count`.`date` >= ? ";
+        $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`object_id` = ?  AND `object_count`.`count_type` = ? AND `object_count`.`date` >= ? ";
         $sql .= "ORDER BY `object_count`.`date` DESC";
 
-        $db_results = Dba::read($sql, array($user, $oid, $delay));
+        $db_results = Dba::read($sql, array($user, $type, $oid, $count_type, $delay));
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -144,10 +144,10 @@ class Stats
       * get_object_count
      * Get count for an object
      */
-    public static function get_object_count($object_type, $object_id)
+    public static function get_object_count($object_type, $object_id, $count_type = 'stream')
     {
-        $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ?";
-        $db_results = Dba::read($sql, array($object_type, $object_id));
+        $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
+        $db_results = Dba::read($sql, array($object_type, $object_id, $count_type));
 
         $results = Dba::fetch_assoc($db_results);
 

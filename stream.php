@@ -162,7 +162,16 @@ switch ($_REQUEST['action']) {
 
 debug_event('stream.php' , 'Stream Type: ' . $stream_type . ' Media IDs: '. json_encode($media_ids), 5);
 
-if (count(media_ids)) {
+if (count($media_ids)) {
+
+    if ($stream_type != 'democratic') {
+        if (!User::stream_control($media_ids)) {
+            debug_event('UI::access_denied', 'Stream control failed for user ' . $GLOBALS['user']->username, 3);
+            UI::access_denied();
+            exit;
+        }
+    }
+
     if ($GLOBALS['user']->id > -1) {
         Session::update_username(Stream::get_session(), $GLOBALS['user']->username);
     }
