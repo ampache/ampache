@@ -162,7 +162,7 @@ switch ($_REQUEST['action']) {
 
 debug_event('stream.php' , 'Stream Type: ' . $stream_type . ' Media IDs: '. json_encode($media_ids), 5);
 
-if (count($media_ids)) {
+if (count($media_ids) || isset($urls)) {
 
     if ($stream_type != 'democratic') {
         if (!User::stream_control($media_ids)) {
