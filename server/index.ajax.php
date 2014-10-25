@@ -214,6 +214,7 @@ switch ($_REQUEST['action']) {
                 exit;
         } // end switch on button
 
+        Ajax::set_include_override(true);
         ob_start();
         $_SESSION['state']['sidebar_tab'] = $button;
         require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php';
