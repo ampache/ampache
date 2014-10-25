@@ -203,20 +203,30 @@ class Graph
         return $values;
     }
 
-    protected function get_user_bandwidth_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    protected function get_user_object_count_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $column = 'size')
     {
         $df = $this->get_sql_date_format("`object_count`.`date`", $zoom);
         $where = $this->get_user_sql_where($user, $object_type, $object_id, $start_date, $end_date);
-        $sql = "SELECT " . $df . " AS `zoom_date`, SUM(`" . $object_type . "`.`size`) AS `bandwith` FROM `object_count` " .
+        $sql = "SELECT " . $df . " AS `zoom_date`, SUM(`" . $object_type . "`.`" . $column . "`) AS `total` FROM `object_count` " .
                 " JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `object_count`.`object_id` " . $where .
                 " GROUP BY " . $df;
         $db_results = Dba::read($sql);
 
         $values = array();
         while ($results = Dba::fetch_assoc($db_results)) {
-            $values[$results['zoom_date']] = $results['bandwith'];
+            $values[$results['zoom_date']] = $results['total'];
         }
         return $values;
+    }
+
+    protected function get_user_bandwidth_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    {
+        return $this->get_user_object_count_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom, 'size');
+    }
+
+    protected function get_user_time_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    {
+        return $this->get_user_object_count_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom, 'time');
     }
 
     protected function get_catalog_files_pts($catalog = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
@@ -381,6 +391,17 @@ class Graph
     {
         $total = 0;
         $values = $this->get_all_type_pts('get_user_bandwidth_pts', $user, null, 0, $start_date, $end_date, 'month');
+        foreach ($values as $date => $value) {
+            $total += $value;
+        }
+
+        return $total;
+    }
+
+    public function get_total_time($user = 0, $start_date = null, $end_date = null)
+    {
+        $total = 0;
+        $values = $this->get_all_type_pts('get_user_time_pts', $user, null, 0, $start_date, $end_date, 'month');
         foreach ($values as $date => $value) {
             $total += $value;
         }
