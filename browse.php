@@ -77,7 +77,7 @@ switch ($_REQUEST['action']) {
         //FIXME: This whole thing is ugly, even though it works.
         $browse->set_sort('count','ASC');
         // This one's a doozy
-        $browse_type = isset($_GET['type']) ? $_GET['type'] : 'song';
+        $browse_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'song';
         $browse->set_simple_browse(false);
         $browse->save_objects(Tag::get_tags($browse_type /*, AmpConfig::get('offset_limit')*/));   // Should add a pager?
         $object_ids = $browse->get_saved();

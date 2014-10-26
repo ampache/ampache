@@ -20,6 +20,12 @@
  *
  */
 
+$tag_types = array(
+    'song' => T_('Song'),
+    'album' => T_('Album'),
+    'artist' => T_('Artist'),
+    'video' => T_('Video'),
+);
 ?>
 <?php Ajax::start_container('tag_filter'); ?>
 <?php foreach ($object_ids as $data) { ?>
@@ -44,6 +50,23 @@
     <?php } ?>
     </div>
 <?php } ?>
+
+<form action="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=tag" method="POST">
+    <?php echo T_('View'); ?>:
+    <select name="type">
+        <?php
+        foreach ($tag_types as $tag_type => $tag_name) {
+            echo "<option value='" . $tag_type . "'";
+            if ($tag_type == $_REQUEST['type']) {
+                echo " selected";
+            }
+            echo ">" . $tag_name . "</option>";
+        }
+        ?>
+    </select>
+<input type="submit" value="Ok" />
+</form>
+
 <br /><br /><br />
 <?php
 if (isset($_GET['show_tag'])) {
