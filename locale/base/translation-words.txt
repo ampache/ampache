@@ -1,259 +1,331 @@
-#: Database words
+#: Database words id 1
 msgid "Allow Downloads"
 msgstr ""
 
-#: Database words
+#: Database words id 4
 msgid "Popular Threshold"
 msgstr ""
 
-#: Database words
+#: Database words id 19
 msgid "Transcode Bitrate"
 msgstr ""
 
-#: Database words
+#: Database words id 22
 msgid "Website Title"
 msgstr ""
 
-#: Database words
+#: Database words id 23
 msgid "Lock Songs"
 msgstr ""
 
-#: Database words
+#: Database words id 24
 msgid "Forces Http play regardless of port"
 msgstr ""
 
-#: Database words
+#: Database words id 25
 msgid "Non-Standard Http Port"
 msgstr ""
 
-#: Database words
+#: Database words id 29
 msgid "Type of Playback"
 msgstr ""
 
-#: Database words
+#: Database words id 31
 msgid "Language"
 msgstr ""
 
-#: Database words
+#: Database words id 32
 msgid "Playlist Type"
 msgstr ""
 
-#: Database words
+#: Database words id 33
 msgid "Theme"
 msgstr ""
 
-#: Database words
+#: Database words id 40
 msgid "Localplay Access"
 msgstr ""
 
-#: Database words
+#: Database words id 41
 msgid "Localplay Type"
 msgstr ""
 
-#: Database words
+#: Database words id 44
 msgid "Allow Streaming"
 msgstr ""
 
-#: Database words
+#: Database words id 45
 msgid "Allow Democratic Play"
 msgstr ""
 
-#: Database words
+#: Database words id 46
 msgid "Allow Localplay Play"
 msgstr ""
 
-#: Database words
+#: Database words id 47
 msgid "Statistics Day Threshold"
 msgstr ""
 
-#: Database words
+#: Database words id 51
 msgid "Offset Limit"
 msgstr ""
 
-#: Database words
+#: Database words id 52
 msgid "Rate Limit"
 msgstr ""
 
-#: Database words
+#: Database words id 53
 msgid "Playlist Method"
 msgstr ""
 
-#: Database words
+#: Database words id 55
+# Is already in ../../templates/show_install_config.inc.php:108
+# but to avoid confusion it's added and commented
+# msgid "Transcoding"
+# msgstr ""
+
+#: Database words id 69
+# is already in #: ../../lib/class/song.class.php:1297 and ../../templates/show_html5_player.inc.php:137
+# but to avoid confusion it's added and commented
+# msgid "Show Lyrics"
+# msgstr ""
+
+#: Database words id 72
 msgid "Shoutcast Active Instance"
 msgstr ""
 
-#: Database words
-msgid "Iframes"
-msgstr ""
-
-#: Database words
+#: Database words id 82
 msgid "Now playing filtered per user"
 msgstr ""
 
-#: Database words
+#: Database words id 83
 msgid "Album Default Sort"
 msgstr ""
 
-#: Database words
+#: Database words id 84
 msgid "Show # played"
 msgstr ""
 
-#: Database words
+#: Database words id 85
 msgid "Show current song in Web player page title"
 msgstr ""
 
-#: Database words
+#: Database words id 86
 msgid "Use SubSonic backend"
 msgstr ""
 
-#: Database words
+#: Database words id 87
 msgid "Use Plex backend"
 msgstr ""
 
-#: Database words
+#: Database words id 88
 msgid "Authorize Flash Web Player(s)"
 msgstr ""
 
-#: Database words
+#: Database words id 89
 msgid "Authorize HTML5 Web Player(s)"
 msgstr ""
 
-#: Database words
+#: Database words id 90
 msgid "Personal information visibility - Now playing"
 msgstr ""
 
-#: Database words
+#: Database words id 91
 msgid "Personal information visibility - Recently played"
 msgstr ""
 
-#: Database words
+#: Database words id 92
 msgid "Personal information visibility - Recently played - Allow to show streaming date/time"
 msgstr ""
 
-#: Database words
+#: Database words id 93
 msgid "Personal information visibility - Recently played - Allow to show streaming agent"
 msgstr ""
 
-#: Database words
+#: Database words id 94
 msgid "Fix header/sidebars position on compatible themes"
 msgstr ""
 
-#: Database words
+#: Database words id 95
 msgid "Check for Ampache updates automatically"
 msgstr ""
 
-#: Database words
+#: Database words id 96
 msgid "AutoUpdate last check time"
 msgstr ""
 
-#: Database words
+#: Database words id 97
 msgid "AutoUpdate last version from last check"
 msgstr ""
 
-#: Database words
+#: Database words id 98
 msgid "AutoUpdate last version from last check is newer"
 msgstr ""
 
-#: Database words
+#: Database words id 99
 msgid "Confirmation when closing current playing window"
 msgstr ""
 
-#: Database words
+#: Database words id 100
 msgid "Auto-pause betweens tabs"
 msgstr ""
 
-#: Database words
+#: Database words id 101
 msgid "Use beautiful stream url"
 msgstr ""
 
-#: Database words
+#: Database words id 102
 msgid "Allow Share"
 msgstr ""
 
-#: Database words
+#: Database words id 103
 msgid "Share links default expiration days (0=never)"
 msgstr ""
 
-#: Database words
+#: Database words id 104
 msgid "Artist slideshow inactivity time"
 msgstr ""
 
-#: Database words
+#: Database words id 105
 msgid "Broadcast web player by default"
 msgstr ""
 
-#: Database words
+#: Database words id 106
 msgid "Limit number of future events"
 msgstr ""
 
-#: Database words
+#: Database words id 107
 msgid "Limit number of past events"
 msgstr ""
 
-#: Database words
+#: Database words id 108
 msgid "Album - Group multiple disks"
 msgstr ""
 
-#: Database words
+#: Database words id 109
 msgid "Top menu"
 msgstr ""
 
-#: Database words
+#: Database words id 110
 msgid "Flickr api key"
 msgstr ""
 
-#: Database words
+#: Database words id 111
 msgid "Clear democratic votes of expired user sessions"
 msgstr ""
 
-#: Database words
+#: Database words id 112
 msgid "Show donate button in footer"
 msgstr ""
 
-#: Database words
+#: Database words id 113
 msgid "Uploads catalog destination"
 msgstr ""
 
-#: Database words
+#: Database words id 114
 msgid "Allow users to upload media"
 msgstr ""
 
-#: Database words
+#: Database words id 115
 msgid "Upload: create a subdirectory per user (recommended)"
 msgstr ""
 
-#: Database words
+#: Database words id 116
 msgid "Upload: consider the user sender as the track's artist"
 msgstr ""
 
-#: Database words
+#: Database words id 117
 msgid "Upload: run the following script after upload (current directory = upload target directory)"
 msgstr ""
 
-#: Database words
+#: Database words id 118
 msgid "Upload: allow users to edit uploaded songs"
 msgstr ""
 
-#: Database words
+#: Database words id 119
 msgid "Use DAAP backend"
 msgstr ""
 
-#: Database words
+#: Database words id 120
 msgid "DAAP backend password"
 msgstr ""
 
-#: Database words
+#: Database words id 121
 msgid "Use UPnP backend"
 msgstr ""
 
-#: Database words
+#: Database words id 122
 msgid "Allow video features"
 msgstr ""
 
-#: Database words
+#: Database words id 123
 msgid "Album - Group per release type"
 msgstr ""
 
-#: Database words
+#: Database words id 124
 msgid "Ajax page load"
+msgstr ""
+
+#: Database words id 125
+msgid "Amazon base url"
+msgstr ""
+
+#: Database words id 126
+msgid "Amazon max results pages"
+msgstr ""
+
+#: Database words id 127
+msgid "Amazon Access Key ID"
+msgstr ""
+
+#: Database words id 128
+msgid "Amazon Secret Access Key"
+msgstr ""
+
+#: Database words id 129
+msgid "Amazon associate tag"
+msgstr ""
+
+#: Database words id 130
+msgid "Limit direct play to maximum media count"
+msgstr ""
+
+#: Database words id 131
+msgid "Show Albums of the moment at home page"
+msgstr ""
+
+#: Database words id 132
+msgid "Show Videos of the moment at home page"
+msgstr ""
+
+#: Database words id 133
+msgid "Show Recently Played at home page"
+msgstr ""
+
+#: Database words id 134
+msgid "Show Now Playing at home page"
+msgstr ""
+
+#: Database words id 135
+msgid "Custom logo url"
+msgstr ""
+
+#: Database words id 136
+msgid "Album - Group per release type Sort"
+msgstr ""
+
+#: Database words id 137
+msgid "WebPlayer browser notifications"
+msgstr ""
+
+#: Database words id 138
+msgid "WebPlayer browser notifications timeout (seconds)"
+msgstr ""
+
+#: Database words id 139
+msgid "Allow geolocation"
+msgstr ""
+
+#: Database words id 140
+msgid "Authorize JavaScript decoder (Aurora.js) in Web Player(s)"
 msgstr ""
