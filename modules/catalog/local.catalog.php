@@ -416,7 +416,7 @@ class Catalog_local extends Catalog
         if ($options == null) {
             $options = array(
                 'gather_art' => true,
-                'parse_playlist' => true
+                'parse_playlist' => false
             );
         }
 
