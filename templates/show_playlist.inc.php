@@ -98,7 +98,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     <?php } ?>
     <?php if ($playlist->has_access()) { ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete the playlist?'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to delete the playlist?'); ?>');">
                 <?php echo UI::get_icon('delete'); ?>
                 &nbsp;&nbsp;<?php echo T_('Delete'); ?>
             </a>
