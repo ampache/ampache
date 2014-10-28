@@ -20,15 +20,17 @@
  *
  */
 
+require_once 'lib/init.php';
+
  if (isset($_REQUEST['param_name'])) {
-    $name = $_REQUEST['param_name'];
+    $name = scrub_in($_REQUEST['param_name']);
     if (isset($_REQUEST[$name])) {
-        echo $name . ": ". $_REQUEST[$name];
+        echo $name . ": ". scrub_in($_REQUEST[$name]);
     }
  }
 
  if (isset($_REQUEST['error'])) {
-    $error = $_REQUEST['error'];
-    $error_description = $_REQUEST['error_description'];
+    $error = scrub_in($_REQUEST['error']);
+    $error_description = scrub_in($_REQUEST['error_description']);
     echo $error . " error: " . $error_description;
 }
