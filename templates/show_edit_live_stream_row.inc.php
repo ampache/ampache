@@ -41,6 +41,6 @@
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
-        <input type="hidden" name="type" value="radio_row" />
+        <input type="hidden" name="type" value="live_stream_row" />
     </form>
 </div>
