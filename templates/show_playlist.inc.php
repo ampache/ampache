@@ -113,7 +113,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     $browse->set_type('playlist_song');
     $browse->add_supplemental_object('playlist', $playlist->id);
     $browse->set_static_content(true);
-    $browse->show_objects($object_ids);
+    $browse->show_objects($object_ids, true);
     $browse->store();
 ?>
 </div>
