@@ -640,9 +640,18 @@ class Search extends playlist_object
     {
         $results = array();
 
-        $sql = $this->to_sql();
-        $sql = $sql['base'] . ' ' . $sql['table_sql'] . ' WHERE ' .
-            $sql['where_sql'];
+        $sqltbl = $this->to_sql();
+        $sql = $sqltbl['base'] . ' ' . $sqltbl['table_sql'];
+        if (!empty($sqltbl['where_sql'])) {
+            $sql .= ' WHERE ' . $sqltbl['where_sql'];
+        }
+        if (!empty($sqltbl['group_sql'])) {
+            $sql .= ' GROUP BY ' . $sqltbl['group_sql'];
+        }
+        if (!empty($sqltbl['having_sql'])) {
+            $sql .= ' HAVING ' . $sqltbl['having_sql'];
+        }
+
         if ($this->random) {
             $sql .= " ORDER BY RAND()";
         }
@@ -651,7 +660,6 @@ class Search extends playlist_object
         }
 
         $db_results = Dba::read($sql);
-
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = array(
                 'object_id' => $row['id'],
@@ -672,9 +680,17 @@ class Search extends playlist_object
     {
         $results = array();
 
-        $sql = $this->to_sql();
-        $sql = $sql['base'] . ' ' . $sql['table_sql'] .
-            ' WHERE ' . $sql['where_sql'];
+        $sqltbl = $this->to_sql();
+        $sql = $sqltbl['base'] . ' ' . $sqltbl['table_sql'];
+        if (!empty($sqltbl['where_sql'])) {
+            $sql .= ' WHERE ' . $sqltbl['where_sql'];
+        }
+        if (!empty($sqltbl['group_sql'])) {
+            $sql .= ' GROUP BY ' . $sqltbl['group_sql'];
+        }
+        if (!empty($sqltbl['having_sql'])) {
+            $sql .= ' HAVING ' . $sqltbl['having_sql'];
+        }
 
         $sql .= ' ORDER BY RAND()';
         $sql .= $limit ? ' LIMIT ' . intval($limit) : '';
@@ -850,6 +866,8 @@ class Search extends playlist_object
         $where = array();
         $table = array();
         $join = array();
+        $group = array();
+        $having = array();
         $join['tag'] = array();
 
         foreach ($this->rules as $rule) {
@@ -872,7 +890,12 @@ class Search extends playlist_object
                     $where[] = "`album`.`year` $sql_match_operator '$input'";
                 break;
                 case 'rating':
-                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    if ($this->type != "public") {
+                        $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    } else {
+                        $group[] = "`album`.`id`";
+                        $having[] = "ROUND(AVG(`rating`.`rating`)) $sql_match_operator '$input'";
+                    }
                     $join['rating'] = true;
                 break;
                 case 'catalog':
@@ -916,13 +939,16 @@ class Search extends playlist_object
         }
         if ($join['rating']) {
             $userid = intval($GLOBALS['user']->id);
-            $table['rating'] = "LEFT JOIN `rating` ON " .
-                "`rating`.`object_type`='album' " .
-                "AND `rating`.`user`='$userid' " .
-                "AND `rating`.`object_id`=`album`.`id`";
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' ";
+            if ($this->type != 'public') {
+                $table['rating'] .= "AND `rating`.`user`='$userid' ";
+            }
+            $table['rating'] .= "AND `rating`.`object_id`=`album`.`id`";
         }
 
         $table_sql = implode(' ', $table);
+        $group_sql = implode(', ', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
             'base' => 'SELECT DISTINCT(`album`.`id`) FROM `album`',
@@ -930,7 +956,9 @@ class Search extends playlist_object
             'where' => $where,
             'where_sql' => $where_sql,
             'table' => $table,
-            'table_sql' => $table_sql
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql
         );
     }
 
@@ -945,6 +973,8 @@ class Search extends playlist_object
         $where = array();
         $table = array();
         $join = array();
+        $group = array();
+        $having = array();
         $join['tag'] = array();
 
         foreach ($this->rules as $rule) {
@@ -1001,6 +1031,8 @@ class Search extends playlist_object
         }
 
         $table_sql = implode(' ', $table);
+        $group_sql = implode(', ', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
             'base' => 'SELECT DISTINCT(`artist`.`id`) FROM `artist`',
@@ -1008,7 +1040,9 @@ class Search extends playlist_object
             'where' => $where,
             'where_sql' => $where_sql,
             'table' => $table,
-            'table_sql' => $table_sql
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql
         );
     }
 
@@ -1023,6 +1057,8 @@ class Search extends playlist_object
         $where = array();
         $table = array();
         $join = array();
+        $group = array();
+        $having = array();
         $join['tag'] = array();
 
         foreach ($this->rules as $rule) {
@@ -1085,7 +1121,12 @@ class Search extends playlist_object
                     $where[] = "`song`.`bitrate` $sql_match_operator '$input'";
                 break;
                 case 'rating':
-                    $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    if ($this->type != "public") {
+                        $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    } else {
+                        $group[] = "`song`.`id`";
+                        $having[] = "ROUND(AVG(`rating`.`rating`)) $sql_match_operator '$input'";
+                    }
                     $join['rating'] = true;
                 break;
                 case 'played_times':
@@ -1159,10 +1200,11 @@ class Search extends playlist_object
         }
         if ($join['rating']) {
             $userid = $GLOBALS['user']->id;
-            $table['rating'] = "LEFT JOIN `rating` ON " .
-                "`rating`.`object_type`='song' AND " .
-                "`rating`.`user`='$userid' AND " .
-                "`rating`.`object_id`=`song`.`id`";
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='song' AND ";
+            if ($this->type != "public") {
+                $table['rating'] .= "`rating`.`user`='$userid' AND ";
+            }
+            $table['rating'] .= "`rating`.`object_id`=`song`.`id`";
         }
         if ($join['playlist_data']) {
             $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `song`.`id`=`playlist_data`.`object_id` AND `playlist_data`.`object_type`='song'";
@@ -1177,6 +1219,8 @@ class Search extends playlist_object
         }
 
         $table_sql = implode(' ', $table);
+        $group_sql = implode(', ', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
             'base' => 'SELECT DISTINCT(`song`.`id`) FROM `song`',
@@ -1184,7 +1228,9 @@ class Search extends playlist_object
             'where' => $where,
             'where_sql' => $where_sql,
             'table' => $table,
-            'table_sql' => $table_sql
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql
         );
     }
 
@@ -1200,6 +1246,8 @@ class Search extends playlist_object
         $where = array();
         $table = array();
         $join = array();
+        $group = array();
+        $having = array();
 
         foreach ($this->rules as $rule) {
             $type = $this->name_to_basetype($rule[0]);
@@ -1232,6 +1280,8 @@ class Search extends playlist_object
         }
 
         $table_sql = implode(' ', $table);
+        $group_sql = implode(', ', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
             'base' => 'SELECT DISTINCT(`video`.`id`) FROM `video`',
@@ -1239,7 +1289,9 @@ class Search extends playlist_object
             'where' => $where,
             'where_sql' => $where_sql,
             'table' => $table,
-            'table_sql' => $table_sql
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql
         );
     }
 
@@ -1254,6 +1306,8 @@ class Search extends playlist_object
         $where = array();
         $table = array();
         $join = array();
+        $group = array();
+        $having = array();
 
         foreach ($this->rules as $rule) {
             $type = $this->name_to_basetype($rule[0]);
@@ -1300,6 +1354,8 @@ class Search extends playlist_object
         }
 
         $table_sql = implode(' ', $table);
+        $group_sql = implode(', ', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
             'base' => 'SELECT DISTINCT(`playlist`.`id`) FROM `playlist`',
@@ -1307,7 +1363,9 @@ class Search extends playlist_object
             'where' => $where,
             'where_sql' => $where_sql,
             'table' => $table,
-            'table_sql' => $table_sql
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql
         );
     }
 }
