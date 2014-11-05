@@ -1,1 +1,3 @@
-Allow from all
+<IfModule mod_access.c>
+	Allow from all
+</IfModule>
