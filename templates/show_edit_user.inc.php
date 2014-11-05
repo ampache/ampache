@@ -40,6 +40,7 @@
             <td><?php echo T_('Full Name'); ?>:</td>
             <td>
                 <input type="text" name="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
+                <?php Error::display('fullname'); ?>
             </td>
         </tr>
         <tr>
@@ -48,6 +49,7 @@
             </td>
             <td>
                 <input type="text" name="email" value="<?php echo scrub_out($client->email); ?>" />
+                <?php Error::display('email'); ?>
             </td>
         </tr>
         <tr>
@@ -56,6 +58,25 @@
             </td>
             <td>
                 <input type="text" name="website" value="<?php echo scrub_out($client->website); ?>" />
+                <?php Error::display('website'); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo  T_('State'); ?>:
+            </td>
+            <td>
+                <input type="text" name="state" value="<?php echo scrub_out($client->state); ?>" />
+                <?php Error::display('state'); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo  T_('City'); ?>:
+            </td>
+            <td>
+                <input type="text" name="city" value="<?php echo scrub_out($client->city); ?>" />
+                <?php Error::display('city'); ?>
             </td>
         </tr>
         <tr>

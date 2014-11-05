@@ -72,6 +72,14 @@ class User extends database_object
      */
     public $website;
     /**
+     * @var string $state
+     */
+    public $state;
+    /**
+     * @var string city
+     */
+    public $city;
+    /**
      * @var string $apikey
      */
     public $apikey;
@@ -595,6 +603,8 @@ class User extends database_object
                 case 'username':
                 case 'fullname':
                 case 'website':
+                case 'state':
+                case 'city':
                     if ($this->$name != $value) {
                         $function = 'update_' . $name;
                         $this->$function($value);
@@ -670,6 +680,26 @@ class User extends database_object
         Dba::write($sql, array($new_website, $this->id));
 
     } // update_website
+
+    /**
+     * update_state
+     * updates their state
+     */
+    public function update_state($new_state)
+    {
+        $sql = "UPDATE `user` SET `state` = ? WHERE `id` = ?";
+        Dba::write($sql, array($new_state, $this->id));
+    } // update_state
+
+    /**
+     * update_city
+     * updates their city
+     */
+    public function update_city($new_city)
+    {
+        $sql = "UPDATE `user` SET `city` = ? WHERE `id` = ?";
+        Dba::write($sql, array($new_city, $this->id));
+    } // update_city
 
     /**
      * update_apikey
@@ -858,7 +888,7 @@ class User extends database_object
      * create
      * inserts a new user into ampache
      */
-    public static function create($username, $fullname, $email, $website, $password, $access, $disabled = false)
+    public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false)
     {
         $website     = rtrim($website, "/");
         $password    = hash('sha256', $password);
@@ -868,14 +898,32 @@ class User extends database_object
         $sql = "INSERT INTO `user` (`username`, `disabled`, " .
             "`fullname`, `email`, `password`, `access`, `create_date`";
         $params = array($username, $disabled, $fullname, $email, $password, $access, time());
+
         if (!empty($website)) {
             $sql .= ", `website`";
             $params[] = $website;
         }
+        if (!empty($state)) {
+            $sql .= ", `state`";
+            $params[] = $state;
+        }
+        if (!empty($city)) {
+            $sql .= ", `city`";
+            $params[] = $city;
+        }
+
         $sql .= ") VALUES(?, ?, ?, ?, ?, ?, ?";
+
         if (!empty($website)) {
             $sql .= ", ?";
         }
+        if (!empty($state)) {
+            $sql .= ", ?";
+        }
+        if (!empty($city)) {
+            $sql .= ", ?";
+        }
+
         $sql .= ")";
         $db_results = Dba::write($sql, $params);
 

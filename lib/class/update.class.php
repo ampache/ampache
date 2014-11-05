@@ -473,6 +473,9 @@ class Update
         $update_string = " - Add count_type column to object_count table.<br />";
         $version[] = array('version' => '370024','description' => $update_string);
 
+        $update_string = " - Add state and city fields to user table.<br />";
+        $version[] = array('version' => '370025','description' => $update_string);
+
         return $version;
     }
 
@@ -3193,6 +3196,21 @@ class Update
         $retval = true;
 
         $sql = "ALTER TABLE `object_count` ADD COLUMN `count_type` VARCHAR(16) NOT NULL DEFAULT 'stream'";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370025
+     *
+     * Add state and city fields to user table
+     */
+    public static function update_370025()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `user` ADD COLUMN `state` VARCHAR(64) NULL, ADD COLUMN `city` VARCHAR(64) NULL";
         $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;

@@ -21,39 +21,61 @@
  */
 
 // Because this is a reset of the persons password make the form a little more secure
+
+$display_fields = (array) AmpConfig::get('registration_display_fields');
 ?>
 <?php Error::display('general'); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_user" enctype="multipart/form-data">
     <table class="tabledata" cellspacing="0" cellpadding="0">
-        <tr>
-            <td><?php echo T_('Full Name'); ?>:</td>
-            <td>
-                <input type="text" name="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
-            </td>
-        </tr>
+        <?php if (in_array('fullname', $display_fields)) { ?>
+            <tr>
+                <td><?php echo T_('Full Name'); ?>:</td>
+                <td>
+                    <input type="text" name="fullname" id="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
+                </td>
+            </tr>
+        <?php } ?>
         <tr>
             <td><?php echo T_('E-mail'); ?>:</td>
             <td>
-                <input type="text" name="email" value="<?php echo scrub_out($client->email); ?>" />
+                <input type="text" name="email" id="email" value="<?php echo scrub_out($client->email); ?>" />
             </td>
         </tr>
-        <tr>
-            <td><?php echo T_('Website'); ?>:</td>
-            <td>
-                <input type="text" name="website" value="<?php echo scrub_out($client->website); ?>" />
-            </td>
-        </tr>
+        <?php if (in_array('website', $display_fields)) { ?>
+            <tr>
+                <td><?php echo T_('Website'); ?>:</td>
+                <td>
+                    <input type="text" name="website" id="website" value="<?php echo scrub_out($client->website); ?>" />
+                </td>
+            </tr>
+        <?php } ?>
+        <?php if (in_array('state', $display_fields)) { ?>
+            <tr>
+                <td><?php echo T_('State'); ?>:</td>
+                <td>
+                    <input type="text" name="state" id="state" value="<?php echo scrub_out($client->state); ?>" />
+                </td>
+            </tr>
+        <?php } ?>
+        <?php if (in_array('city', $display_fields)) { ?>
+            <tr>
+                <td><?php echo T_('City'); ?>:</td>
+                <td>
+                    <input type="text" name="city" id="city" value="<?php echo scrub_out($client->city); ?>" />
+                </td>
+            </tr>
+        <?php } ?>
         <tr>
             <td><?php echo T_('New Password'); ?>:</td>
             <td>
                 <?php Error::display('password'); ?>
-                <input type="password" name="password1" />
+                <input type="password" name="password1" id="password1" />
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Confirm Password'); ?>:</td>
             <td>
-                <input type="password" name="password2" />
+                <input type="password" name="password2" id="password2" />
             </td>
         </tr>
         <tr>

@@ -40,14 +40,16 @@ switch ($_REQUEST['action']) {
         }
 
         /* Clean up the variables */
-        $user_id    = intval($_POST['user_id']);
-        $username     = scrub_in($_POST['username']);
-        $fullname     = scrub_in($_POST['fullname']);
-        $email         = scrub_in($_POST['email']);
-        $website         = scrub_in($_POST['website']);
-        $access     = scrub_in($_POST['access']);
-        $pass1         = $_POST['password_1'];
-        $pass2         = $_POST['password_2'];
+        $user_id        = intval($_POST['user_id']);
+        $username       = scrub_in($_POST['username']);
+        $fullname       = scrub_in($_POST['fullname']);
+        $email          = scrub_in($_POST['email']);
+        $website        = scrub_in($_POST['website']);
+        $access         = scrub_in($_POST['access']);
+        $pass1          = $_POST['password_1'];
+        $pass2          = $_POST['password_2'];
+        $state          = scrub_in($_POST['state']);
+        $city           = scrub_in($_POST['city']);
 
         /* Setup the temp user */
         $client = new User($user_id);
@@ -55,14 +57,25 @@ switch ($_REQUEST['action']) {
         /* Verify Input */
         if (empty($username)) {
             Error::add('username', T_("Error Username Required"));
+        } else {
+            if ($username != $client->username) {
+                if (!User::check_username($username)) {
+                    Error::add('username', T_("Error Username already exists"));
+                }
+            }
         }
         if ($pass1 !== $pass2 && !empty($pass1)) {
             Error::add('password', T_("Error Passwords don't match"));
         }
 
-        /* If we've got an error then break! */
+        // Check the mail for correct address formation.
+        if (!Mailer::validate_address($email)) {
+            Error::add('email', T_('Invalid email address'));
+        }
+
+        /* If we've got an error then show edit form! */
         if (Error::occurred()) {
-            $_REQUEST['action'] = 'show_edit';
+            require_once AmpConfig::get('prefix') . '/templates/show_edit_user.inc.php';
             break;
         } // if we've had an oops!
 
@@ -84,6 +97,12 @@ switch ($_REQUEST['action']) {
         if ($pass1 == $pass2 && strlen($pass1)) {
             $client->update_password($pass1);
         }
+        if ($state != $client->state) {
+            $client->update_state($state);
+        }
+        if ($city != $client->city) {
+            $client->update_city($city);
+        }
         $client->upload_avatar();
 
         show_confirmation(T_('User Updated'), $client->fullname . "(" . $client->username . ")" . T_('updated'), AmpConfig::get('web_path'). '/admin/users.php');
@@ -96,13 +115,15 @@ switch ($_REQUEST['action']) {
             exit;
         }
 
-        $username    = scrub_in($_POST['username']);
-        $fullname    = scrub_in($_POST['fullname']);
-        $email        = scrub_in($_POST['email']);
+        $username       = scrub_in($_POST['username']);
+        $fullname       = scrub_in($_POST['fullname']);
+        $email          = scrub_in($_POST['email']);
         $website        = scrub_in($_POST['website']);
-        $access        = scrub_in($_POST['access']);
-        $pass1        = $_POST['password_1'];
-        $pass2        = $_POST['password_2'];
+        $access         = scrub_in($_POST['access']);
+        $pass1          = $_POST['password_1'];
+        $pass2          = $_POST['password_2'];
+        $state          = scrub_in($_POST['state']);
+        $city           = scrub_in($_POST['city']);
 
         if ($pass1 !== $pass2 || !strlen($pass1)) {
             Error::add('password', T_("Error Passwords don't match"));
@@ -117,9 +138,14 @@ switch ($_REQUEST['action']) {
             Error::add('username', T_('Error Username already exists'));
         }
 
+        // Check the mail for correct address formation.
+        if (!Mailer::validate_address($email)) {
+            Error::add('email', T_('Invalid email address'));
+        }
+
         if (!Error::occurred()) {
             /* Attempt to create the user */
-            $user_id = User::create($username, $fullname, $email, $website, $pass1, $access);
+            $user_id = User::create($username, $fullname, $email, $website, $pass1, $access, $state, $city);
             if (!$user_id) {
                 Error::add('general', T_("Error: Insert Failed"));
             }

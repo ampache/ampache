@@ -7,7 +7,7 @@
 ; if this config file is up to date 
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 20
+config_version = 21
 
 ;###################
 ; Path Vars        #
@@ -609,7 +609,7 @@ refresh_limit = "60"
 ; sign up for an account on your server.
 ; REMEMBER: don't forget to set the mail from address further down in the config.
 ; DEFAULT: false
-;allow_public_registration = "false"
+allow_public_registration = "true"
 
 ; Require Captcha Text on Image confirmation
 ; Turning this on requires the user to correctly
@@ -649,6 +649,20 @@ refresh_limit = "60"
 ; This will display the cookie disclaimer (EU Cookie Law)
 ; DEFAULT: false
 ;cookie_disclaimer = "false"
+
+; The fields that will be shown on Registration page
+; If a user wants to register.
+; Username and email fields are forced.
+; POSSIBLE VALUES: fullname,website,state,city
+; DEFAULT: "fullname,website"
+registration_display_fields = "fullname,website"
+
+; The fields that will be mandatory
+; This controls which fields are mandatory for registration.
+; Username and email fields are forced mandatory.
+; POSSIBLE VALUES: fullname,website,state,city
+; DEFAULT: fullname
+registration_mandatory_fields = "fullname"
 
 ;########################################################
 ; These options control the dynamic downsampling based  #

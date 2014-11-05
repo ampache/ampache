@@ -375,6 +375,10 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     height: 32px;
 }
 
+#registerbox .require label::after {
+	content: " *";
+}
+
 #loginPage #loginbox #usernamefield input:focus,
 #loginPage #loginbox #emailfield input:focus,
 #loginPage #loginbox #passwordfield input:focus {
