@@ -609,7 +609,7 @@ refresh_limit = "60"
 ; sign up for an account on your server.
 ; REMEMBER: don't forget to set the mail from address further down in the config.
 ; DEFAULT: false
-allow_public_registration = "true"
+;allow_public_registration = "false"
 
 ; Require Captcha Text on Image confirmation
 ; Turning this on requires the user to correctly
