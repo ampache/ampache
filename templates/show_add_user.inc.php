@@ -26,7 +26,7 @@
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <tr>
             <td>
-                <?php echo  T_('Username'); ?>:
+                <?php echo  T_('Username'); ?>: *
             </td>
             <td>
                 <input type="text" name="username" maxlength="128" value="<?php echo scrub_out($_POST['username']); ?>" />
@@ -37,14 +37,16 @@
             <td><?php echo  T_('Full Name'); ?>:</td>
             <td>
                 <input type="text" name="fullname" value="<?php echo scrub_out($_POST['fullname']); ?>" />
+                <?php Error::display('fullname'); ?>
             </td>
         </tr>
         <tr>
             <td>
-                <?php echo  T_('E-mail'); ?>:
+                <?php echo  T_('E-mail'); ?>: *
             </td>
             <td>
                 <input type="text" name="email" value="<?php echo scrub_out($_POST['email']); ?>" />
+                <?php Error::display('email'); ?>
             </td>
         </tr>
         <tr>
@@ -53,11 +55,12 @@
             </td>
             <td>
                 <input type="text" name="website" value="<?php echo scrub_out($_POST['website']); ?>" />
+                <?php Error::display('website'); ?>
             </td>
         </tr>
         <tr>
             <td>
-                <?php echo  T_('Password'); ?> :
+                <?php echo  T_('Password'); ?> : *
             </td>
             <td>
                 <input type="password" name="password_1" value="" />
@@ -66,7 +69,7 @@
         </tr>
         <tr>
             <td>
-                <?php echo  T_('Confirm Password'); ?>:
+                <?php echo  T_('Confirm Password'); ?>: *
             </td>
             <td>
                 <input type="password" name="password_2" value="" />

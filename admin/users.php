@@ -77,7 +77,7 @@ switch ($_REQUEST['action']) {
         if (Error::occurred()) {
             require_once AmpConfig::get('prefix') . '/templates/show_edit_user.inc.php';
             break;
-        } // if we've had an oops!
+        }
 
         if ($access != $client->access) {
             $client->update_access($access);
@@ -143,20 +143,20 @@ switch ($_REQUEST['action']) {
             Error::add('email', T_('Invalid email address'));
         }
 
-        if (!Error::occurred()) {
-            /* Attempt to create the user */
-            $user_id = User::create($username, $fullname, $email, $website, $pass1, $access, $state, $city);
-            if (!$user_id) {
-                Error::add('general', T_("Error: Insert Failed"));
-            }
-
-            $user = new User($user_id);
-            $user->upload_avatar();
-        } // if no errors
-        else {
-            $_REQUEST['action'] = 'show_add_user';
+        /* If we've got an error then show add form! */
+        if (Error::occurred()) {
+            require_once AmpConfig::get('prefix') . '/templates/show_add_user.inc.php';
             break;
         }
+
+        /* Attempt to create the user */
+        $user_id = User::create($username, $fullname, $email, $website, $pass1, $access, $state, $city);
+        if (!$user_id) {
+            Error::add('general', T_("Error: Insert Failed"));
+        }
+        $user = new User($user_id);
+        $user->upload_avatar();
+
         if ($access == 5) { $access = T_('Guest');} elseif ($access == 25) { $access = T_('User');} elseif ($access == 100) { $access = T_('Admin');}
 
         /* HINT: %1 Username, %2 Access num */
