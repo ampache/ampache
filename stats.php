@@ -23,6 +23,7 @@
 require_once 'lib/init.php';
 
 UI::show_header();
+define('TABLE_RENDERED', 1);
 
 /* Switch on the action to be performed */
 switch ($_REQUEST['action']) {
@@ -66,4 +67,5 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch on action
 
+show_table_render(false, true);
 UI::show_footer();

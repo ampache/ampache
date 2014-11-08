@@ -90,6 +90,7 @@ if ($directplay_limit > 0) {
 &nbsp;
 </div>
 <?php
+    define('TABLE_RENDERED', 1);
     $album_suite = $album->get_group_disks_ids();
     foreach ($album_suite as $album_id) {
         $c_album = new Album($album_id);
@@ -153,3 +154,4 @@ if ($directplay_limit > 0) {
     ?>
     </div><br />
 <?php } ?>
+<?php show_table_render(true, true); ?>
