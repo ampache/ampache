@@ -323,7 +323,7 @@ $_SESSION['login'] = false;
             
             <?php 
                 require_once $prefix . '/templates/navbar.inc.php';
-                require_once $prefix . '/templates/rightbar.inc.php';
+                //require_once $prefix . '/templates/rightbar.inc.php';
                 require_once $prefix . '/templates/sidebar.inc.php';
             ?>
 
