@@ -112,6 +112,12 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
   $songprops[gettext_noop('Catalog Number')]   = scrub_out($song->catalog_number);
   $songprops[gettext_noop('Bitrate')]   = scrub_out($song->f_bitrate);
   $songprops[gettext_noop('Channels')]   = scrub_out($song->channels);
+  if ($song->replaygain_track_gain != 0) {
+      $songprops[gettext_noop('ReplayGain Track Gain')]   = scrub_out($song->replaygain_track_gain);
+  }
+  if ($song->replaygain_album_gain != 0) {
+      $songprops[gettext_noop('ReplayGain Album Gain')]   = scrub_out($song->replaygain_album_gain);
+  }
   if (Access::check('interface','75')) {
     $songprops[gettext_noop('Filename')]   = scrub_out($song->file) . " " . $song->f_size;
   }

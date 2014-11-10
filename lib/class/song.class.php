@@ -167,6 +167,22 @@ class Song extends database_object implements media, library_item
      */
     public $lyrics;
     /**
+     * @var float $replaygain_track_gain
+     */
+    public $replaygain_track_gain;
+    /**
+     * @var float $replaygain_track_peak
+     */
+    public $replaygain_track_peak;
+    /**
+     * @var float $replaygain_album_gain
+     */
+    public $replaygain_album_gain;
+    /**
+     * @var float $replaygain_album_peak
+     */
+    public $replaygain_album_peak;
+    /**
      * @var string $f_title
      */
     public $f_title;
@@ -338,6 +354,10 @@ class Song extends database_object implements media, library_item
         $language = isset($results['language']) ? $results['language'] : null;
         $channels = $results['channels'] ?: 0;
         $release_type = isset($results['release_type']) ? $results['release_type'] : null;
+        $replaygain_track_gain = isset($results['replaygain_track_gain']) ? $results['replaygain_track_gain'] : null;
+        $replaygain_track_peak = isset($results['replaygain_track_peak']) ? $results['replaygain_track_peak'] : null;
+        $replaygain_album_gain = isset($results['replaygain_album_gain']) ? $results['replaygain_album_gain'] : null;
+        $replaygain_album_peak = isset($results['replaygain_album_peak']) ? $results['replaygain_album_peak'] : null;
 
         $artist_id = Artist::check($artist, $artist_mbid);
         $album_artist_id = null;
@@ -376,9 +396,9 @@ class Song extends database_object implements media, library_item
             }
         }
 
-        $sql = 'INSERT INTO `song_data` (`song_id`, `comment`, `lyrics`, `label`, `language`, `catalog_number`) ' .
-            'VALUES(?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array($song_id, $comment, $lyrics, $label, $language, $catalog_number));
+        $sql = 'INSERT INTO `song_data` (`song_id`, `comment`, `lyrics`, `label`, `language`, `catalog_number`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`) ' .
+            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        Dba::write($sql, array($song_id, $comment, $lyrics, $label, $language, $catalog_number, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak));
 
         return $song_id;
     }
@@ -888,37 +908,22 @@ class Song extends database_object implements media, library_item
      */
     public static function update_song($song_id, Song $new_song)
     {
-        $title = Dba::escape($new_song->title);
-        $bitrate = Dba::escape($new_song->bitrate);
-        $rate = Dba::escape($new_song->rate);
-        $mode = Dba::escape($new_song->mode);
-        $size = Dba::escape($new_song->size);
-        $time = Dba::escape($new_song->time);
-        $track = Dba::escape($new_song->track);
-        $mbid = Dba::escape($new_song->mbid);
-        $artist = Dba::escape($new_song->artist);
-        $album = Dba::escape($new_song->album);
-        $album_artist = Dba::escape($new_song->album_artist);
-        $year = Dba::escape($new_song->year);
-        $song_id = Dba::escape($song_id);
         $update_time = time();
 
-        $sql = "UPDATE `song` SET `album`='$album', `year`='$year', `artist`='$artist', " .
-            "`title`='$title', `bitrate`='$bitrate', `rate`='$rate', `mode`='$mode', " .
-            "`size`='$size', `time`='$time', `track`='$track', " .
-            "`mbid`='$mbid', " .
-            "`album_artist`='$album_artist', " .
-            "`update_time`='$update_time' WHERE `id`='$song_id'";
+        $sql = "UPDATE `song` SET `album` = ?, `year` = ?, `artist` = ?, " .
+            "`title` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, " .
+            "`size` = ?, `time` = ?, `track` = ?, `mbid` = ?, " .
+            "`album_artist` = ?, " .
+            "`update_time` = ? WHERE `id` = ?";
 
-        Dba::write($sql);
+        Dba::write($sql, array($new_song->album, $new_song->year, $new_song->artist, $new_song->title, $new_song->bitrate, $new_song->rate,
+            $new_song->mode, $new_song->size, $new_song->time, $new_song->track, $new_song->mbid, $new_song->album_artist, $update_time, $song_id));
 
-        $comment     = Dba::escape($new_song->comment);
-        $language    = Dba::escape($new_song->language);
-        $lyrics        = Dba::escape($new_song->lyrics);
-
-        $sql = "UPDATE `song_data` SET `lyrics`='$lyrics', `language`='$language', `comment`='$comment' " .
-            "WHERE `song_id`='$song_id'";
-        Dba::write($sql);
+        $sql = "UPDATE `song_data` SET `lyrics` = ?, `language` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, " .
+            "`replaygain_album_gain` = ?, `replaygain_album_peak` = ?" .
+            "WHERE `song_id` = ?";
+        Dba::write($sql, array($new_song->lyrics, $new_song->language, $new_song->comment, $new_song->replaygain_track_gain,
+            $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $song_id));
 
     } // update_song
 
@@ -1816,6 +1821,10 @@ class Song extends database_object implements media, library_item
         $meta['mb_artistid'] = $this->artist_mbid;
         $meta['mb_albumartistid'] = $this->albumartist_mbid;
         $meta['tracknumber'] = $meta['track'] = $this->track;
+        $meta['replaygain_track_gain'] = $this->replaygain_track_gain;
+        $meta['replaygain_track_peak'] = $this->replaygain_track_peak;
+        $meta['replaygain_album_gain'] = $this->replaygain_album_gain;
+        $meta['replaygain_album_peak'] = $this->replaygain_album_peak;
         $meta['genre'] = array();
         if ($this->tags) {
             foreach ($this->tags as $tag) {

@@ -251,9 +251,14 @@ class WebPlayer
         }
 
         if ($media != null) {
+            $media->format();
             if ($urlinfo['type'] == 'song') {
                 $js['artist_id'] = $media->artist;
                 $js['album_id'] = $media->album;
+                $js['replaygain_track_gain'] = $media->replaygain_track_gain;
+                $js['replaygain_track_peak'] = $media->replaygain_track_peak;
+                $js['replaygain_album_gain'] = $media->replaygain_album_gain;
+                $js['replaygain_album_peak'] = $media->replaygain_album_peak;
             }
             $js['media_id'] = $media->id;
 

@@ -52,6 +52,10 @@ function addMedia(media)
     jpmedia['artist_id'] = media['artist_id'];
     jpmedia['album_id'] = media['album_id'];
     jpmedia['media_id'] = media['media_id'];
+    jpmedia['replaygain_track_gain'] = media['replaygain_track_gain'];
+    jpmedia['replaygain_track_peak'] = media['replaygain_track_peak'];
+    jpmedia['replaygain_album_gain'] = media['replaygain_album_gain'];
+    jpmedia['replaygain_album_peak'] = media['replaygain_album_peak'];
 
     jplaylist.add(jpmedia);
 }
@@ -199,6 +203,51 @@ function SavePlaylist()
         url += "," + jplaylist['playlist'][i]["media_id"];
     }
     handlePlaylistAction(url, 'rb_append_dplaylist_new');
+}
+
+var replaygainEnabled = false;
+var replaygainNode = null;
+function ToggleReplayGain()
+{
+    if (replaygainNode == null) {
+        var mediaElement = document.getElementById("jp_audio_0");
+        if (mediaElement) {
+            var audioContext = null;
+            if (typeof AudioContext !== 'undefined') {
+                audioContext = new AudioContext();
+            } else if (typeof webkitAudioContext !== 'undefined') {
+                audioContext = new webkitAudioContext();
+            } else {
+                audioContext = null;
+            }
+            if (audioContext != null) {
+                var mediaSource = audioContext.createMediaElementSource(mediaElement);
+                replaygainNode = audioContext.createGain();
+                replaygainNode.gain.value = 1;
+                mediaSource.connect(replaygainNode);
+                replaygainNode.connect(audioContext.destination);
+            }
+        }
+    }
+
+    if (replaygainNode != null) {
+        replaygainEnabled = !replaygainEnabled;
+        ApplyReplayGain();
+    }
+}
+
+function ApplyReplayGain()
+{
+    if (replaygainNode != null) {
+        var replaygain = 0;
+        if (replaygainEnabled && currentjpitem != null) {
+            var track_gain = currentjpitem.attr("data-replaygain_track_gain");
+            if (track_gain !== 'null') {
+                replaygain = parseFloat(track_gain);
+            }
+        }
+        replaygainNode.gain.value = (1 + (replaygain / 100));
+    }
 }
 </script>
 <?php } ?>

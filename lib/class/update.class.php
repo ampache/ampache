@@ -476,6 +476,9 @@ class Update
         $update_string = " - Add state and city fields to user table.<br />";
         $version[] = array('version' => '370025','description' => $update_string);
 
+        $update_string = " - Add replay gain fields to song_data table.<br />";
+        $version[] = array('version' => '370026','description' => $update_string);
+
         return $version;
     }
 
@@ -3211,6 +3214,22 @@ class Update
         $retval = true;
 
         $sql = "ALTER TABLE `user` ADD COLUMN `state` VARCHAR(64) NULL, ADD COLUMN `city` VARCHAR(64) NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update 370026
+     *
+     * Add replay gain fields to song_data table
+     */
+    public static function update_370026()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `song_data` ADD COLUMN `replaygain_track_gain` DECIMAL(10,6) NULL,  ADD COLUMN `replaygain_track_peak` DECIMAL(10,6) NULL, " .
+                "ADD COLUMN `replaygain_album_gain` DECIMAL(10,6) NULL,  ADD COLUMN `replaygain_album_peak` DECIMAL(10,6) NULL";
         $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;

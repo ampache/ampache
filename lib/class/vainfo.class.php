@@ -378,6 +378,11 @@ class vainfo
                         '<br />',
                         strip_tags($tags['lyrics']));
 
+            $info['replaygain_track_gain'] = $info['replaygain_track_gain'] ?: floatval($tags['replaygain_track_gain']);
+            $info['replaygain_track_peak'] = $info['replaygain_track_peak'] ?: floatval($tags['replaygain_track_peak']);
+            $info['replaygain_album_gain'] = $info['replaygain_album_gain'] ?: floatval($tags['replaygain_album_gain']);
+            $info['replaygain_album_peak'] = $info['replaygain_album_peak'] ?: floatval($tags['replaygain_album_peak']);
+
             $info['track'] = $info['track'] ?: intval($tags['track']);
             $info['resolution_x'] = $info['resolution_x'] ?: intval($tags['resolution_x']);
             $info['resolution_y'] = $info['resolution_y'] ?: intval($tags['resolution_y']);
@@ -840,6 +845,18 @@ class vainfo
                         break;
                         case 'CATALOGNUMBER':
                             $parsed['catalog_number'] = $this->trimAscii($txxx['data']);
+                        break;
+                        case 'REPLAYGAIN_TRACK_GAIN':
+                            $parsed['replaygain_track_gain'] = floatval($txxx['data']);
+                        break;
+                        case 'REPLAYGAIN_TRACK_PEAK':
+                            $parsed['replaygain_track_peak'] = floatval($txxx['data']);
+                        break;
+                        case 'REPLAYGAIN_ALBUM_GAIN':
+                            $parsed['replaygain_album_gain'] = floatval($txxx['data']);
+                        break;
+                        case 'REPLAYGAIN_ALBUM_PEAK':
+                            $parsed['replaygain_album_peak'] = floatval($txxx['data']);
                         break;
                     }
                 }
