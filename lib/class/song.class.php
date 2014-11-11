@@ -1181,7 +1181,7 @@ class Song extends database_object implements media, library_item
      */
     public static function update_played($new_played,$song_id)
     {
-        self::_update_item('played',$new_played,$song_id,'25');
+        self::_update_item('played', ($new_played ? 1 : 0),$song_id,'25');
 
     } // update_played
 
@@ -1193,7 +1193,7 @@ class Song extends database_object implements media, library_item
      */
     public static function update_enabled($new_enabled, $song_id)
     {
-        self::_update_item('enabled',$new_enabled,$song_id,'75');
+        self::_update_item('enabled', ($new_enabled ? 1 : 0),$song_id,'75');
 
     } // update_enabled
 

@@ -78,7 +78,7 @@
     <?php } ?>
     <?php if (Access::check('interface','75') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) { ?>
         <?php $icon = $libitem->enabled ? 'disable' : 'enable'; ?>
-        <?php $button_flip_state_id = 'button_flip_state_' . $libitem_id; ?>
+        <?php $button_flip_state_id = 'button_flip_state_' . $libitem->id; ?>
         <span id="<?php echo($button_flip_state_id); ?>">
         <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $libitem->id,$icon, T_(ucfirst($icon)),'flip_song_' . $libitem->id); ?>
         </span>
