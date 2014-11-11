@@ -1417,6 +1417,10 @@ abstract class Catalog extends database_object
         $new_song->mbid        = $results['mb_trackid'];
         $new_song->label       = $results['publisher'];
         $new_song->composer    = $results['composer'];
+        $new_song->replaygain_track_gain = floatval($results['replaygain_track_gain']);
+        $new_song->replaygain_track_peak = floatval($results['replaygain_track_peak']);
+        $new_song->replaygain_album_gain = floatval($results['replaygain_album_gain']);
+        $new_song->replaygain_album_peak = floatval($results['replaygain_album_peak']);
         $artist                = $results['artist'];
         $artist_mbid           = $results['mb_artistid'];
         $albumartist           = $results['albumartist'] ?: $results['band'];

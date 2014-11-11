@@ -920,7 +920,7 @@ class Song extends database_object implements media, library_item
             $new_song->mode, $new_song->size, $new_song->time, $new_song->track, $new_song->mbid, $new_song->album_artist, $update_time, $song_id));
 
         $sql = "UPDATE `song_data` SET `lyrics` = ?, `language` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, " .
-            "`replaygain_album_gain` = ?, `replaygain_album_peak` = ?" .
+            "`replaygain_album_gain` = ?, `replaygain_album_peak` = ? " .
             "WHERE `song_id` = ?";
         Dba::write($sql, array($new_song->lyrics, $new_song->language, $new_song->comment, $new_song->replaygain_track_gain,
             $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $song_id));
