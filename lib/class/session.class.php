@@ -83,6 +83,7 @@ class Session
 
         // Destroy our cookie!
         setcookie(AmpConfig::get('session_name'), null, -1);
+        session_destroy();
 
         return true;
     }
