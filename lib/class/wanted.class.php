@@ -128,14 +128,15 @@ class Wanted extends database_object
             $albums = $artist->get_albums();
             foreach ($albums as $id) {
                 $album = new Album($id);
-                if ($album->mbid_group) {
+                if (trim($album->mbid_group)) {
                     $owngroups[] = $album->mbid_group;
                 } else {
-                    if ($album->mbid) {
+                    if (trim($album->mbid)) {
                         $malbum = $mb->lookup('release', $album->mbid, array('release-groups'));
-                        if ($malbum->{'release-group'}) {
-                            if (!in_array($malbum->{'release-group'}->id, $owngroups)) {
-                                $owngroups[] = $malbum->{'release-group'}->id;
+                        debug_event('aaaa', print_r($malbum, true), 5);
+                        if ($malbum['release-group']) {
+                            if (!in_array($malbum['release-group']['id'], $owngroups)) {
+                                $owngroups[] = $malbum['release-group']['id'];
                             }
                         }
                     }
@@ -303,8 +304,8 @@ class Wanted extends database_object
         if (self::get_accepted_wanted_count() > 0) {
             $mb = new MusicBrainz(new RequestsMbClient());
             $malbum = $mb->lookup('release', $mbid, array('release-groups'));
-            if ($malbum->{'release-group'}) {
-                self::delete_wanted($malbum->{'release-group'}->id);
+            if ($malbum['release-group']) {
+                self::delete_wanted($malbum['release-group']);
             }
         }
     }
