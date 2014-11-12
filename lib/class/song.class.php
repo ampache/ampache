@@ -359,11 +359,11 @@ class Song extends database_object implements media, library_item
         $replaygain_album_gain = isset($results['replaygain_album_gain']) ? $results['replaygain_album_gain'] : null;
         $replaygain_album_peak = isset($results['replaygain_album_peak']) ? $results['replaygain_album_peak'] : null;
 
-        $artist_id = Artist::check($artist, $artist_mbid);
         $album_artist_id = null;
         if ($album_artist) {
             $album_artist_id = Artist::check($album_artist, $album_artist_mbid);
         }
+        $artist_id = Artist::check($artist, $artist_mbid);
         $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $album_artist_id, $release_type);
 
         $sql = 'INSERT INTO `song` (`file`, `catalog`, `album`, `artist`, ' .
