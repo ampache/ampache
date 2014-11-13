@@ -98,19 +98,21 @@ switch ($_REQUEST['action']) {
             case 'artist':
                 debug_event('playlist', 'Adding all songs of artist {'.$item_id.'}...', '5');
                 $artist = new Artist($item_id);
-                $asongs = $artist->get_songs();
-                foreach ($asongs as $song_id) {
-                    $songs[] = $song_id;
-                }
+                $songs[] = $artist->get_songs();
             break;
             case 'song_preview':
             case 'song':
                 debug_event('playlist', 'Adding song {'.$item_id.'}...', '5');
                 $songs = explode(',', $item_id);
             break;
+            case 'playlist':
+                $pl = new Playlist($item_id);
+                $songs = $pl->get_songs();
+            break;
             default:
                 debug_event('playlist', 'Adding all songs of current playlist...', '5');
                 $objects = $GLOBALS['user']->playlist->get_items();
+                
                 foreach ($objects as $object_data) {
                     $type = array_shift($object_data);
                     if ($type == 'song') {
