@@ -297,7 +297,7 @@ $_SESSION['login'] = false;
         <?php } ?>
         <!-- rfc3514 implementation -->
         <div id="rfc3514" style="display:none;">0x0</div>
-        <div id="mouse_message"></div>
+        <div id="notification" class="notification-out"><img src="<?php echo $web_path; ?>/images/icon_info.png" /><span id="notification-content"></span></div>
         <div id="maincontainer">
             <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
                 <h1 id="headerlogo">

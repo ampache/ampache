@@ -666,10 +666,10 @@ function toggle_visible($element)
 
 } // toggle_visible
 
-function mouse_message($message, $timeout = 1000)
+function display_notification($message, $timeout = 5000)
 {
     echo "<script type='text/javascript'>";
-    echo "mouseMessage('" . $message . "', " . $timeout . ");";
+    echo "displayNotification('" . $message . "', " . $timeout . ");";
     echo "</script>\n";
 }
 

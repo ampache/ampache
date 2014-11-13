@@ -497,7 +497,7 @@ class Stream_Playlist
         }
 
         $democratic->add_vote($items);
-        mouse_message(T_('Vote added'));
+        display_notification(T_('Vote added'));
     }
 
     /**

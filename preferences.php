@@ -25,6 +25,7 @@ require_once 'lib/init.php';
 $title = "";
 $text = "";
 $next_url = "";
+$notification_text = "";
 
 // Switch on the action
 switch ($_REQUEST['action']) {
@@ -60,6 +61,12 @@ switch ($_REQUEST['action']) {
         load_gettext();
 
         $preferences = $GLOBALS['user']->get_preferences($_REQUEST['tab'], $system);
+        
+        if ($_POST['method'] == 'admin') {
+            $notification_text = T_('Server preferences updated successfully');
+        } else {
+            $notification_text = T_('User preferences updated successfully');
+        }
     break;
     case 'admin_update_preferences':
         // Make sure only admins here
@@ -74,6 +81,7 @@ switch ($_REQUEST['action']) {
         }
 
         update_preferences($_POST['user_id']);
+        
         header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out($_POST['user_id']));
     break;
     case 'admin':
@@ -131,11 +139,13 @@ switch ($_REQUEST['action']) {
             $GLOBALS['user']->upload_avatar();
             Error::add('general', T_('Error Update Failed'));
         } else {
-            $_REQUEST['action'] = 'confirm';
+            //$_REQUEST['action'] = 'confirm';
             $title = T_('Updated');
             $text = T_('Your Account has been updated');
             $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=account';
         }
+        
+        $notification_text = T_('User updated successfully');
     break;
     default:
         $fullname = $GLOBALS['user']->fullname;
@@ -153,6 +163,10 @@ switch ($_REQUEST['action']) {
         show_confirmation($title,$text,$next_url,$cancel);
     break;
     default:
+        if (!empty($notification_text)) {
+            display_notification($notification_text);
+        }
+        
         // Show the default preferences page
         require AmpConfig::get('prefix') . '/templates/show_preferences.inc.php';
     break;

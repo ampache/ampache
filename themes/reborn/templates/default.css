@@ -188,12 +188,42 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     background-position: right; 
 }
 
-#mouse_message {
-    z-index: 9999;
-    position: fixed;
-    color: #303335;
-    text-shadow: 2px 2px 9px #fff;
-    font-weight: bold;
+#notification {
+	position: fixed;
+    top: auto;
+	bottom: 20px;
+	left: 50%;
+	z-index: 8888;
+	width: 50%;
+	padding: 5px 20px;
+	margin: 0;
+	background-color: #000;
+	border-radius: 10px;
+	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,.5);
+	box-shadow: 0 4px 12px rgba(0,0,0,.5);
+	-webkit-transition: all .5s;
+	transition: all .5s;
+	-webkit-transform: translate(-50%,0);
+	-ms-transform: translate(-50%,0);
+	transform: translate(-50%,0);
+}
+
+#notification.notification-out {
+	opacity: 0;
+	filter: alpha(opacity=0);
+	-webkit-transform: translate(-50%,80px);
+	-ms-transform: translate(-50%,80px);
+	transform: translate(-50%,80px);
+}
+
+#notification img {
+	height: 100%;
+	vertical-align: middle;
+	margin-top: -3px;
+}
+
+#notification-content {
+	margin-left: 10px;
 }
 
 /***********************************************
@@ -1041,6 +1071,8 @@ div.box.box_rules {
 .cel_song, .cel_album, .cel_artist {
     max-width: 350px;
     white-space: normal !important;
+    text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 /***********************************************
@@ -1361,6 +1393,7 @@ span.fatalerror {
 .dynamic-star-rating {
     width:95px;
 }
+
 .star-rating ul,
 .star-rating a:hover,
 .star-rating .current-rating {
