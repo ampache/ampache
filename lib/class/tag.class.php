@@ -598,8 +598,8 @@ class Tag extends database_object implements library_item
 
         // Look if we need to add some new tags
         foreach ($editedTags as  $tk => $tv) {
-            debug_event('tag.class', 'Adding new tag {'.$tv.'}', '5');
             if ($tv != '') {
+                debug_event('tag.class', 'Adding new tag {'.$tv.'}', '5');
                 Tag::add($type, $object_id, $tv, false);
             }
         }
@@ -634,13 +634,15 @@ class Tag extends database_object implements library_item
      * remove_map
      * This will only remove tag maps for the current user
      */
-    public function remove_map($type,$object_id)
+    public function remove_map($type, $object_id)
     {
         if (!Core::is_library_item($type))
             return false;
 
-        $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";
-        Dba::write($sql, array($this->id, $type, $object_id, $GLOBALS['user']->id));
+        // TODO: Review the tag edition per user.
+        
+        $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? "; //AND `user` = ?";
+        Dba::write($sql, array($this->id, $type, $object_id));//, $GLOBALS['user']->id));
 
         return true;
 
