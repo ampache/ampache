@@ -112,7 +112,7 @@ switch ($_REQUEST['action']) {
             default:
                 debug_event('playlist', 'Adding all songs of current playlist...', '5');
                 $objects = $GLOBALS['user']->playlist->get_items();
-                
+
                 foreach ($objects as $object_data) {
                     $type = array_shift($object_data);
                     if ($type == 'song') {

@@ -640,7 +640,7 @@ class Tag extends database_object implements library_item
             return false;
 
         // TODO: Review the tag edition per user.
-        
+
         $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? "; //AND `user` = ?";
         Dba::write($sql, array($this->id, $type, $object_id));//, $GLOBALS['user']->id));
 
