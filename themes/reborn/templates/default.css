@@ -682,7 +682,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
     box-sizing: border-box;
-    z-index: 0;
+    z-index: 10;
     overflow-y: auto;
 }
 
@@ -696,7 +696,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 .fixedrightbarsubmenu {
     position: fixed !important;
     top: 33px !important;
-    right: 70px !important;
+    right: 15px !important;
 }
 /******************************/
 
@@ -740,13 +740,15 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     display: none;
     position: fixed;
     top: 120px;
-    right: 70px;
+    right: 15px;
     border: 2px solid;
-    width: 120px;
+    width: 210px;
     padding: 0.6em;
     font-size: 12px;
     z-index: 99;
-    overflow: hidden;
+	overflow: hidden;
+    overflow-y: scroll;
+	max-height: 350px;
 }
 
 #rightbar #rb_action .submenu li {
