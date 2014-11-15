@@ -174,10 +174,10 @@ class Artist extends database_object implements library_item
     public static function gc()
     {
         Dba::write('DELETE FROM `artist` USING `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ' .
-            'LEFT JOIN `song` AS `song2` ON `song2`.`album_artist` = `artist`.`id` ' .
+            'LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` ' .
             'LEFT JOIN `wanted` ON `wanted`.`artist` = `artist`.`id` ' .
             'LEFT JOIN `clip` ON `clip`.`artist` = `artist`.`id` ' .
-            'WHERE `song`.`id` IS NULL AND `song2`.`id` IS NULL AND `wanted`.`id` IS NULL AND `clip`.`id` IS NULL');
+            'WHERE `song`.`id` IS NULL AND `album`.`id` IS NULL AND `wanted`.`id` IS NULL AND `clip`.`id` IS NULL');
     }
 
     /**
@@ -201,7 +201,7 @@ class Artist extends database_object implements library_item
 
         // If we need to also pull the extra information, this is normally only used when we are doing the human display
         if ($extra) {
-            $sql = "SELECT `song`.`artist`, COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` WHERE (`song`.`artist` IN $idlist OR `song`.`album_artist` IN $idlist) GROUP BY `song`.`artist`";
+            $sql = "SELECT `song`.`artist`, COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
 
             debug_event("Artist", "build_cache sql: " . $sql, "6");
             $db_results = Dba::read($sql);
@@ -279,7 +279,7 @@ class Artist extends database_object implements library_item
         $sql_group = "COALESCE($sql_group_type, `album`.`id`)";
 
         $sql = "SELECT `album`.`id`, `album`.`release_type` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-            "WHERE (`song`.`artist`='$this->id' OR `song`.`album_artist`='$this->id') $catalog_where GROUP BY $sql_group ORDER BY $sql_sort";
+            "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY $sql_group ORDER BY $sql_sort";
 
         debug_event("Artist", "$sql", "6");
         $db_results = Dba::read($sql);
@@ -327,12 +327,12 @@ class Artist extends database_object implements library_item
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
-        $sql .= "WHERE (`song`.`artist`='" . Dba::escape($this->id) . "' || `song`.`album_artist`='" . Dba::escape($this->id) . "') ";
+        $sql .= "WHERE `song`.`artist` = ? ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "ORDER BY album, track";
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, array($this->id));
 
         $results = array();
         while ($r = Dba::fetch_assoc($db_results)) {
@@ -356,12 +356,12 @@ class Artist extends database_object implements library_item
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
-        $sql .= "WHERE (`song`.`artist`='$this->id' OR `song`.`album_artist`='$this->id') ";
+        $sql .= "WHERE `song`.`artist` = ? ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "ORDER BY RAND()";
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, array($this->id));
 
         while ($r = Dba::fetch_assoc($db_results)) {
             $results[] = $r['id'];
@@ -385,7 +385,7 @@ class Artist extends database_object implements library_item
         } else {
             $uid = Dba::escape($this->id);
             $sql = "SELECT `song`.`artist`,COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time`, `song`.`catalog` as `catalog_id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
-                "WHERE (`song`.`artist`='$uid' || `song`.`album_artist`='$uid') ";
+                "WHERE `song`.`artist`='$uid' ";
             if ($catalog) {
                 $sql .= "AND (`song`.`catalog` = '$catalog') ";
             }
