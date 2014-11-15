@@ -465,5 +465,7 @@ if (!$iframed || $is_share) {
     require_once AmpConfig::get('prefix') . '/templates/uberviz.inc.php';
 }
 ?>
+<?php if (!$is_share) { ?>
 </body>
 </html>
+<?php } ?>

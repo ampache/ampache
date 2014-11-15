@@ -29,6 +29,10 @@ header('Expires: ' . gmdate(DATE_RFC1123, time()-1));
 <html>
 <head>
 <title><?php echo AmpConfig::get('site_title'); ?></title>
+<meta property="og:title" content="<?php echo AmpConfig::get('site_title'); ?>" />
+<meta property="og:image" content="<?php echo AmpConfig::get('web_path'); ?>/themes/reborn/images/ampache.png"/>
+<meta property="og:description" content="A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device." />
+<meta property="og:site_name" content="Ampache"/>
 <?php
 if (!$is_share) {
     $playlist = new Stream_Playlist(scrub_in($_REQUEST['playlist_id']));

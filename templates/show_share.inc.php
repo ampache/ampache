@@ -22,25 +22,24 @@
 
 $embed = $_REQUEST['embed'];
 
-require_once AmpConfig::get('prefix') . '/templates/show_html5_player_headers.inc.php';
+$is_share = true;
+$playlist = $share->create_fake_playlist();
+
+require AmpConfig::get('prefix') . '/templates/show_web_player.inc.php';
 
 if (empty($embed)) {
-    UI::show_box_top(T_('Shared on') . ' ' . AmpConfig::get('site_title'), 'box box_share');
-    echo T_('by') . ' ' . $share->f_user . '<br />';
-    echo "<a href='" . $share->public_url . "'>" . $share->public_url . "</a><br />";
-    echo "<br /><br />";
-
+    echo "<a href='" . $share->public_url . "'>" .T_('Shared by') . ' ' . $share->f_user . "</a><br />";
     if ($share->allow_download) {
         echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=download&id=" . $share->id . "&secret=" . $share->secret . "\">" . UI::get_icon('download', T_('Download')) . "</a> ";
         echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=download&id=" . $share->id . "&secret=" . $share->secret . "\">" . T_('Download') . "</a>";
     }
 }
 
-$is_share = true;
-$iframed = true;
-$playlist = $share->create_fake_playlist();
-require AmpConfig::get('prefix') . '/templates/show_web_player.inc.php';
-
 if (!empty($embed)) {
     UI::show_box_bottom();
+} else {
+?>
+</body>
+</html>
+<?php
 }

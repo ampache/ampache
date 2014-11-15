@@ -1,5 +1,5 @@
 <?php
-if ($iframed) {
+if ($iframed || $is_share) {
 ?>
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/jplayer.midnight.black-iframed.css" type="text/css" />
 <?php
@@ -7,7 +7,10 @@ if ($iframed) {
 ?>
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/jplayer.midnight.black.css" type="text/css" />
 <?php
-require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php';
+}
+
+if (!$iframed) {
+    require_once AmpConfig::get('prefix') . '/templates/stylesheets.inc.php';
 ?>
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/templates/jquery-editdialog.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
