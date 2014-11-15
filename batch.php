@@ -21,7 +21,16 @@
  */
 
 if (!defined('NO_SESSION')) {
-    require_once 'lib/init.php';
+    if (isset($_REQUEST['ssid'])) {
+        define('NO_SESSION', 1);
+        require_once 'lib/init.php';
+        if (!Session::exists('stream', $_REQUEST['ssid'])) {
+            UI::access_denied();
+            exit;
+        }
+    } else {
+        require_once 'lib/init.php';
+    }
 }
 
 ob_end_clean();

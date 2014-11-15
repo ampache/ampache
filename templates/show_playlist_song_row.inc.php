@@ -62,7 +62,7 @@
     <?php } ?>
     <?php if (Access::check('interface', '25')) { ?>
         <?php if (AmpConfig::get('share')) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=show_create&type=song&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+            <?php Share::display_ui('song', $libitem->id, false); ?>
         <?php } ?>
     <?php } ?>
     <?php if (get_class($playlist) == "Playlist" && $playlist->has_access()) { ?>

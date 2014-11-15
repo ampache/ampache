@@ -73,7 +73,7 @@ if (Art::is_enabled()) {
         </a>
         <?php } ?>
         <?php if (AmpConfig::get('share') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) { ?>
-            <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+            <?php Share::display_ui('album', $libitem->id, false); ?>
         <?php } ?>
     <?php } ?>
     <?php if (Access::check_function('batch_download') && check_can_zip('album')) { ?>

@@ -105,8 +105,7 @@ if (AmpConfig::get('show_played_times')) {
             <?php } ?>
             <?php if (AmpConfig::get('share')) { ?>
             <li>
-                <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $album->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
-                <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $album->id; ?>"><?php echo T_('Share'); ?></a>
+                <?php Share::display_ui('album', $album->id); ?>
             </li>
             <?php } ?>
         <?php } ?>

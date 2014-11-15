@@ -77,7 +77,7 @@ if ($video_type != 'video') {
         <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
     <?php } ?>
     <?php if (AmpConfig::get('share')) { ?>
-        <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=video&id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+        <?php Share::display_ui('video', $libitem->id, false); ?>
     <?php } ?>
 <?php } ?>
 <?php if (Access::check_function('download')) { ?>
