@@ -319,7 +319,7 @@ class Share extends database_object
     public static function display_ui_links($object_type, $object_id)
     {
         echo "<ul>";
-        echo "<li><a href=\"". AmpConfig::get('web_path') . "/share.php?action=show_create&type=" . $object_type . "&id=" . $object_id . "\">" . UI::get_icon('share', T_('Advanced Share')) . " &nbsp;" . T_('Advanced Share') . "</a></li>";
+        echo "<li><a onclick=\"handleShareAction('". AmpConfig::get('web_path') . "/share.php?action=show_create&type=" . $object_type . "&id=" . $object_id . "')\">" . UI::get_icon('share', T_('Advanced Share')) . " &nbsp;" . T_('Advanced Share') . "</a></li>";
         if (AmpConfig::get('download')) {
             $dllink = "";
             if ($object_type == "song" || $object_type == "video") {
@@ -340,7 +340,7 @@ class Share extends database_object
         echo "<li style='padding-top: 8px; text-align: right;'>";
         $plugins = Plugin::get_plugins('external_share');
         foreach ($plugins as $plugin_name) {
-            echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=external_share&plugin=" . $plugin_name . "&type=" . $object_type . "&id=" . $object_id . "\" target=\"_blank\">" . UI::get_icon('share_' . strtolower($plugin_name), $plugin_name) . "</a>&nbsp;";
+            echo "<a onclick=\"handleShareAction('". AmpConfig::get('web_path') . "/share.php?action=external_share&plugin=" . $plugin_name . "&type=" . $object_type . "&id=" . $object_id . "')\" target=\"_blank\">" . UI::get_icon('share_' . strtolower($plugin_name), $plugin_name) . "</a>&nbsp;";
         }
         echo "</li>";
         echo "</ul>";
