@@ -101,6 +101,35 @@ class Browse extends Query
     } // get_supplemental_objects
 
     /**
+     * update_browse_from_session
+     * Restore the previous start index from something saved into the current session.
+     */
+    public function update_browse_from_session()
+    {
+        if ($this->is_simple() && $this->get_start() == 0) {
+            $name = 'browse_current_' . $this->get_type();
+            if (isset($_SESSION[$name]) && isset($_SESSION[$name]['start']) && $_SESSION[$name]['start'] > 0) {
+
+                // Checking if value is suitable
+                $start = $_SESSION[$name]['start'];
+                if ($this->get_offset() > 0) {
+
+                    $set_page = floor($start / $this->get_offset());
+                    if ($this->get_total() > $this->get_offset()) {
+                        $total_pages = ceil($this->get_total() / $this->get_offset());
+                    } else {
+                        $total_pages = 0;
+                    }
+
+                    if ($set_page >= 0 && $set_page <= $total_pages) {
+                        $this->set_start($start);
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
      * show_objects
      * This takes an array of objects
      * and requires the correct template based on the
@@ -156,10 +185,15 @@ class Browse extends Query
 
         $type = $this->get_type();
 
+        // Update the session value only if it's allowed on the current browser
+        if ($this->get_update_session()) {
+            $_SESSION['browse_current_' . $type]['start'] = $browse->get_start();
+        }
+
         // Set the correct classes based on type
         $class = "box browse_" . $type;
 
-        debug_event('browse', 'Called for type {'.$type.'}', '5');
+        debug_event('browse', 'Show objects called for type {'.$type.'}', '5');
 
         // Switch on the type of browsing we're doing
         switch ($type) {
@@ -442,6 +476,15 @@ class Browse extends Query
     {
         $this->show_header = $show_header;
     }
+    
+    /**
+     * Allow the current page to be save into the current session
+     * @param boolean $update_session
+     */
+    public function set_update_session($update_session)
+    {
+        $this->_state['update_session'] = $update_session;
+    }
 
     /**
      *
@@ -450,6 +493,15 @@ class Browse extends Query
     public function get_show_header()
     {
         return $this->show_header;
+    }
+    
+    /**
+     *
+     * @return boolean
+     */
+    public function get_update_session()
+    {
+        return $this->_state['update_session'];
     }
 
 } // browse

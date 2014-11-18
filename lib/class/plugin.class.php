@@ -96,15 +96,15 @@ class Plugin
             if ($type != '') {
                 $plugin = new Plugin($plugin_name);
                 if (! Plugin::is_installed($plugin->_plugin->name)) {
-                    debug_event('Plugins', 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 5);
+                    debug_event('Plugins', 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
                     continue;
                 }
                 if (! $plugin->is_valid()) {
-                    debug_event('Plugins', 'Plugin ' . $plugin_name . ' is not valid, skipping', 5);
+                    debug_event('Plugins', 'Plugin ' . $plugin_name . ' is not valid, skipping', 6);
                     continue;
                 }
                 if (! method_exists($plugin->_plugin, $type)) {
-                    debug_event('Plugins', 'Plugin ' . $plugin_name . ' does not support ' . $type . ', skipping', 5);
+                    debug_event('Plugins', 'Plugin ' . $plugin_name . ' does not support ' . $type . ', skipping', 6);
                     continue;
                 }
             }

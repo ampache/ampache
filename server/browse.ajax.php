@@ -37,13 +37,13 @@ if (isset($_REQUEST['browse_id'])) {
     $browse_id = null;
 }
 
+debug_event('browse.ajax.php', 'Called for action: {'.$_REQUEST['action'].'}', '5');
+
 $browse = new Browse($browse_id);
 
 if (isset($_REQUEST['show_header']) && $_REQUEST['show_header']) {
     $browse->set_show_header($_REQUEST['show_header'] == 'true');
 }
-
-debug_event('browse.ajax.php', 'Called for action: {'.$_REQUEST['action'].'}', '5');
 
 $results = array();
 switch ($_REQUEST['action']) {
@@ -70,7 +70,7 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog', null);
             unset($_SESSION['catalog']);
         }
-
+        
         ob_start();
         $browse->show_objects();
         $results[$browse->get_content_div()] = ob_get_clean();
@@ -124,7 +124,6 @@ switch ($_REQUEST['action']) {
     break;
     case 'page':
         $browse->set_start($_REQUEST['start']);
-
         ob_start();
         $browse->show_objects();
         $results[$browse->get_content_div()] = ob_get_clean();
@@ -183,6 +182,7 @@ switch ($_REQUEST['action']) {
                 }
             break;
         }
+        
         ob_start();
         $browse->show_objects();
         $results[$browse->get_content_div()] = ob_get_clean();

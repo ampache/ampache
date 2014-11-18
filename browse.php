@@ -62,6 +62,9 @@ switch ($_REQUEST['action']) {
 
 UI::show_header();
 
+// Browser is able to save page on current session. Only applied to main menus.
+$browse->set_update_session(true);
+
 switch ($_REQUEST['action']) {
     case 'file':
     break;
@@ -71,6 +74,7 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('name','ASC');
+        $browse->update_browse_from_session();  // Update current index depending on what is in session.
         $browse->show_objects();
     break;
     case 'tag':
@@ -98,6 +102,7 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('name','ASC');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'song':
@@ -106,6 +111,7 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('title','ASC');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'live_stream':
@@ -113,6 +119,7 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('name','ASC');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'catalog':
@@ -121,19 +128,23 @@ switch ($_REQUEST['action']) {
     case 'playlist':
         $browse->set_sort('type','ASC');
         $browse->set_filter('playlist_type','1');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'smartplaylist':
         $browse->set_sort('type', 'ASC');
         $browse->set_filter('playlist_type','1');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'channel':
         $browse->set_sort('id', 'ASC');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'broadcast':
         $browse->set_sort('id', 'ASC');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'video':
@@ -141,6 +152,7 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('title','ASC');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'tvshow':
@@ -148,6 +160,7 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('name','ASC');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'tvshow_season':
@@ -155,6 +168,7 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('season_number','ASC');
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     case 'tvshow_episode':
@@ -164,6 +178,7 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }
+        $browse->update_browse_from_session();
         $browse->show_objects();
     break;
     default:

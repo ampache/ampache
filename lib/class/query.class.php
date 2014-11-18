@@ -34,6 +34,7 @@ class Query
      * @var int|string $id
      */
     public $id;
+
     /**
      * @var int $catalog
      */
@@ -43,6 +44,7 @@ class Query
      * @var array $_state
      */
     protected $_state = array();
+
     /**
      * @var array $_cache
      */
@@ -52,6 +54,7 @@ class Query
      * @var array $allowed_filters
      */
     private static $allowed_filters;
+
     /**
      * @var array $allowed_sorts
      */
@@ -67,32 +70,31 @@ class Query
     {
         $sid = session_id();
 
-        if (is_null($id)) {
-            $this->reset();
-            if ($cached) {
-                $data = serialize($this->_state);
-
-                $sql = 'INSERT INTO `tmp_browse` (`sid`, `data`) ' .
-                    'VALUES(?, ?)';
-                Dba::write($sql, array($sid, $data));
-                $this->id = Dba::insert_id();
-
-            } else {
-                $this->id = 'nocache';
-            }
+        if (!$cached) {
+            $this->id = 'nocache';
             return true;
         }
 
-        $this->id = $id;
+        if (is_null($id)) {
+            $this->reset();
+            $data = self::_serialize($this->_state);
+            
+            $sql = 'INSERT INTO `tmp_browse` (`sid`, `data`) VALUES(?, ?)';
+            Dba::write($sql, array($sid, $data));
+            $this->id = Dba::insert_id();
 
-        $sql = 'SELECT `data` FROM `tmp_browse` ' .
-            'WHERE `id` = ? AND `sid` = ?';
-
-        $db_results = Dba::read($sql, array($id, $sid));
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $this->_state = unserialize($results['data']);
             return true;
+        } else {
+            $sql = 'SELECT `data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
+
+            $db_results = Dba::read($sql, array($id, $sid));
+            if ($results = Dba::fetch_assoc($db_results)) {
+
+                $this->id = $id;
+                $this->_state = self::_unserialize($results['data']);
+                
+                return true;
+            }
         }
 
         Error::add('browse', T_('Browse not found or expired, try reloading the page'));
@@ -378,33 +380,7 @@ class Query
      */
     private static function _serialize($data)
     {
-        if (count($data) > 1000 && is_int($data[0])) {
-            $last = -17;
-            $in_range = false;
-            $idx = -1;
-            $cooked = array();
-            foreach ($data as $id) {
-                if ($id == ($last + 1)) {
-                    if ($in_range) {
-                        $cooked[$idx][1] = $id;
-                    } else {
-                        $in_range = true;
-                        $cooked[$idx] = array($last, $id);
-                    }
-                } else {
-                    $in_range = false;
-                    $idx++;
-                    $cooked[$idx] = $id;
-                }
-                $last = $id;
-            }
-            $data = json_encode($cooked);
-            debug_event('Query', 'cooked serialize length: ' . strlen($data), 5);
-        } else {
-            $data = json_encode($data);
-        }
-
-        return $data;
+        return json_encode($data);
     }
 
     /*
@@ -416,20 +392,7 @@ class Query
      */
     private static function _unserialize($data)
     {
-        $raw = array();
-        $cooked = json_decode($data);
-        if ($cooked) {
-            foreach ($cooked as $grain) {
-                if (is_array($grain)) {
-                    foreach (range($grain[0], $grain[1]) as $id) {
-                        $raw[] = $id;
-                    }
-                } else {
-                    $raw[] = $grain;
-                }
-            }
-        }
-        return $raw;
+        return json_decode($data, true);
     }
 
     /**
@@ -834,7 +797,6 @@ class Query
     {
         $start = intval($start);
         $this->_state['start'] = $start;
-
     } // set_start
 
     /**
@@ -2097,10 +2059,11 @@ class Query
     {
         $id = $this->id;
         if ($id != 'nocache') {
-            $data = serialize($this->_state);
+            $data = self::_serialize($this->_state);
 
-            $sql = 'UPDATE `tmp_browse` SET `data` = ? ' .
-                'WHERE `sid` = ? AND `id` = ?';
+            debug_event('DEBUG', 'Query Store Function called: {'.json_encode($data).'}', '5');
+            
+            $sql = 'UPDATE `tmp_browse` SET `data` = ? WHERE `sid` = ? AND `id` = ?';
             Dba::write($sql, array($data, session_id(), $id));
         }
     }
