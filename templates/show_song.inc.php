@@ -72,7 +72,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
                 </a>
             <?php } ?>
             <?php if (AmpConfig::get('share')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=show_create&type=song&id=<?php echo $song->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+                <?php Share::display_ui('song', $song->id, false); ?>
             <?php } ?>
         <?php } ?>
         <?php if (Access::check_function('download')) { ?>

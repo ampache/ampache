@@ -1702,12 +1702,11 @@ class Query
                     case 'generic_artist':
                         $sql = "`artist`.`name`";
                         $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $this->set_join('left', '`artist`', 'COALESCE(`song`.`album_artist`, `song`.`artist`)', '`artist`.`id`', 100);
+                        $this->set_join('left', '`artist`', 'COALESCE(`album`.`album_artist`, `song`.`artist`)', '`artist`.`id`', 100);
                     break;
                     case 'album_artist':
                         $sql = "`artist`.`name`";
-                        $this->set_join('left', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $this->set_join('left', '`artist`', '`song`.`album_artist`', '`artist`.`id`', 100);
+                        $this->set_join('left', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
                     break;
                     case 'artist':
                         $sql = "`artist`.`name`";

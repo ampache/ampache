@@ -108,6 +108,30 @@ switch ($action) {
         }
         UI::show_footer();
         exit;
+    case 'external_share':
+        if (AmpConfig::get('demo_mode')) {
+            UI::access_denied();
+            exit;
+        }
+
+        $plugin = new Plugin($_GET['plugin']);
+        if (!$plugin) {
+            UI::access_denied('Access Denied - Unkown external share plugin.');
+            exit;
+        }
+        $plugin->load($GLOBALS['user']);
+
+        $type = $_REQUEST['type'];
+        $id = $_REQUEST['id'];
+        $allow_download = (($type == 'song' && Access::check_function('download')) || Access::check_function('batch_download'));
+        $secret = Share::generate_secret();
+
+        $share_id = Share::create_share($type, $id, true, $allow_download, AmpConfig::get('share_expire'), $secret, 0);
+        $share = new Share($share_id);
+        $share->format(true);
+
+        header("Location: " . $plugin->_plugin->external_share($share->public_url, $share->f_name));
+        exit;
 }
 
 /**

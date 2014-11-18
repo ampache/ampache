@@ -42,7 +42,10 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Album Artist') ?></td>
                 <td>
-                    <?php show_artist_select('album_artist', $libitem->album_artist, false, 0, true); ?>
+                    <?php show_artist_select('album_artist', $libitem->album_artist, true, $libitem->id, true); ?>
+                    <div id="album_artist_select_album_<?php echo $libitem->id ?>">
+                        <?php echo Ajax::observe('album_artist_select_'.$libitem->id, 'change', 'check_inline_song_edit("album_artist", '.$libitem->id.')'); ?>
+                    </div>
                 </td>
             </tr>
             <tr>

@@ -85,7 +85,7 @@ foreach ($subtitles as $subtitle) {
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
             <?php } ?>
             <?php if (AmpConfig::get('share')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=show_create&type=video&id=<?php echo $video->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+                <?php Share::display_ui('video', $video->id, false); ?>
             <?php } ?>
         <?php } ?>
         <?php if (Access::check_function('download')) { ?>

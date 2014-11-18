@@ -125,7 +125,7 @@ if ($directplay_limit > 0) {
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
             <?php } ?>
             <?php if (AmpConfig::get('share')) { ?>
-                <a href="<?php echo $web_path; ?>/share.php?action=show_create&type=album&id=<?php echo $c_album->id; ?>"><?php echo UI::get_icon('share', T_('Share')); ?></a>
+                <?php Share::display_ui('album', $c_album->id, false); ?>
             <?php } ?>
         <?php } ?>
         <?php if (Access::check_function('batch_download') && check_can_zip('album')) { ?>

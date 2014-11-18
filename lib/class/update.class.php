@@ -479,6 +479,9 @@ class Update
         $update_string = " - Add replay gain fields to song_data table.<br />";
         $version[] = array('version' => '370026','description' => $update_string);
 
+        $update_string = " - Move column album_artist from table song to table album.<br />";
+        $version[] = array('version' => '370027','description' => $update_string);
+
         return $version;
     }
 
@@ -3230,6 +3233,28 @@ class Update
 
         $sql = "ALTER TABLE `song_data` ADD COLUMN `replaygain_track_gain` DECIMAL(10,6) NULL,  ADD COLUMN `replaygain_track_peak` DECIMAL(10,6) NULL, " .
                 "ADD COLUMN `replaygain_album_gain` DECIMAL(10,6) NULL,  ADD COLUMN `replaygain_album_peak` DECIMAL(10,6) NULL";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update_370027
+     *
+     * Move column album_artist from table song to table album
+     *
+     */
+    public static function update_370027()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `album` ADD `album_artist` int(11) unsigned DEFAULT NULL AFTER `release_type`";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "UPDATE `album` INNER JOIN `song` ON `album`.`id` = `song`.`album` SET `album`.`album_artist` = `song`.`album_artist`";
+        $retval = Dba::write($sql) ? $retval : false;
+
+        $sql = "ALTER TABLE `song` DROP COLUMN `album_artist`";
         $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;

@@ -1440,7 +1440,7 @@ abstract class Catalog extends database_object
         if ($albumartist) {
             $new_song->album_artist = Artist::check($albumartist, $albumartist_mbid);
         }
-        $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group);
+        $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group, $new_song->album_artist);
         $new_song->title = self::check_title($new_song->title,$new_song->file);
 
         // Nothing to assign here this is a multi-value doodly

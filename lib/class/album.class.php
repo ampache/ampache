@@ -289,7 +289,6 @@ class Album extends database_object implements library_item
         $sql = "SELECT " .
             "COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, " .
             "COUNT(`song`.`id`) AS `song_count`, " .
-            "`song`.`album_artist` AS `album_artist`, " .
             "SUM(`song`.`time`) as `total_duration`," .
             "`song`.`catalog` as `catalog_id`,".
             "`artist`.`name` AS `artist_name`, " .
@@ -360,7 +359,8 @@ class Album extends database_object implements library_item
         $trimmed = Catalog::trim_prefix(trim($name));
         $name = $trimmed['string'];
         $prefix = $trimmed['prefix'];
-        $album_artist = empty($album_artist) ? null : $album_artist;
+        $album_artist = intval($album_artist);
+        $album_artist = ($album_artist <= 0) ? null : $album_artist;
         $mbid = empty($mbid) ? null : $mbid;
         $mbid_group = empty($mbid_group) ? null : $mbid_group;
         $release_type = empty($release_type) ? null : $release_type;
@@ -394,7 +394,7 @@ class Album extends database_object implements library_item
         }
 
         if ($album_artist) {
-            $sql .= 'AND ? IN (SELECT `song`.`album_artist` FROM `song` WHERE `song`.`album`= `album`.`id`) ';
+            $sql .= 'AND `album`.`album_artist` = ? ';
             $params[] = $album_artist;
         }
 
@@ -410,9 +410,9 @@ class Album extends database_object implements library_item
             return null;
         }
 
-        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`, `mbid_group`, `release_type`) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`, `mbid_group`, `release_type`, `album_artist`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
-        $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid, $mbid_group, $release_type));
+        $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid, $mbid_group, $release_type, $album_artist));
         if (!$db_results) {
             return null;
         }
@@ -782,6 +782,11 @@ class Album extends database_object implements library_item
 
         $current_id = $this->id;
 
+        if (!empty($data['album_artist_name'])) {
+            // Need to create new artist according the name
+            $album_artist = Artist::check($data['album_artist_name']);
+        }
+
         $updated = false;
         $songs = null;
         if ($artist != $this->artist_id AND $artist) {
@@ -794,17 +799,7 @@ class Album extends database_object implements library_item
             Artist::gc();
         }
 
-        if ($album_artist != $this->album_artist AND $album_artist > 0) {
-            // Update every song
-            $songs = $this->get_songs();
-            foreach ($songs as $song_id) {
-                Song::update_album_artist($album_artist, $song_id);
-            }
-            $updated = true;
-            Artist::gc();
-        }
-
-        $album_id = self::check($name, $year, $disk, $mbid, $mbid_group, null, $release_type);
+        $album_id = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type);
         if ($album_id != $this->id) {
             if (!is_array($songs)) { $songs = $this->get_songs(); }
             foreach ($songs as $song_id) {
@@ -827,6 +822,7 @@ class Album extends database_object implements library_item
         $this->name = $name;
         $this->disk = $disk;
         $this->mbid = $mbid;
+        $this->album_artist = $album_artist;
 
         if ($updated && is_array($songs)) {
             foreach ($songs as $song_id) {

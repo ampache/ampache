@@ -36,3 +36,4 @@ should be implemented as a public method:
     get_song_preview(string $track_mbid, string $artist_name, string $title)
     stream_song_preview(string $file)
     display_home()
+	external_share(string $url, string $text);
