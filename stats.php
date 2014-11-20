@@ -63,7 +63,9 @@ switch ($_REQUEST['action']) {
         break;
     case 'show':
     default:
-        require_once AmpConfig::get('prefix') . '/templates/show_stats.inc.php';
+        if (Access::check('interface','50')) {
+            require_once AmpConfig::get('prefix') . '/templates/show_stats.inc.php';
+        }
     break;
 } // end switch on action
 

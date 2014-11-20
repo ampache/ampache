@@ -113,7 +113,9 @@
                 <?php if (AmpConfig::get('allow_upload')) { ?>
                 <li id="sb_home_info_upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo T_('Uploads'); ?></a></li>
                 <?php } ?>
-                <li id="sb_home_info_statistic"><a href="<?php echo $web_path; ?>/stats.php?action=show"><?php echo T_('Statistics'); ?></a></li>
+                <?php if (Access::check('interface','50')) { ?>
+                    <li id="sb_home_info_statistic"><a href="<?php echo $web_path; ?>/stats.php?action=show"><?php echo T_('Statistics'); ?></a></li>
+                <?php } ?>
             <?php } ?>
         </ul>
     </li>
