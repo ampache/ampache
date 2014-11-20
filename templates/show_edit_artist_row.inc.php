@@ -25,7 +25,7 @@
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->f_full_name); ?>" /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->f_full_name); ?>" autofocus /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID') ?></td>

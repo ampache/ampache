@@ -28,7 +28,7 @@
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-    <td><input type="text" name="name" value="<?php if (isset($license)) echo $license->name; ?>" /></td>
+    <td><input type="text" name="name" value="<?php if (isset($license)) echo $license->name; ?>" autofocus /></td>
 </tr>
 <tr>
     <td><?php echo T_('Description:'); ?></td>

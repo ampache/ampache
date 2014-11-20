@@ -25,7 +25,7 @@
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <tr>
             <td><?php echo T_('Name'); ?>: </td>
-            <td colspan="3"><input type="text" name="name" value="<?php echo scrub_out($access->name); ?>" /></td>
+            <td colspan="3"><input type="text" name="name" value="<?php echo scrub_out($access->name); ?>" autofocus /></td>
         </tr>
         <tr>
             <td><?php echo T_('ACL Type'); ?>: </td>

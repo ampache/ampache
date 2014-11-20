@@ -25,7 +25,7 @@
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Season') ?></td>
-                <td><input type="number" name="season_number" value="<?php echo scrub_out($libitem->season_number); ?>" /></td>
+                <td><input type="number" name="season_number" value="<?php echo scrub_out($libitem->season_number); ?>" autofocus /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('TV Show') ?></td>

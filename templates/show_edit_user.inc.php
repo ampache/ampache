@@ -32,7 +32,7 @@
                 <?php echo T_('Username'); ?>:
             </td>
             <td>
-                <input type="text" name="username" maxlength="128" value="<?php echo scrub_out($client->username); ?>" />
+                <input type="text" name="username" maxlength="128" value="<?php echo scrub_out($client->username); ?>" autofocus />
                 <?php Error::display('username'); ?>
             </td>
         </tr>

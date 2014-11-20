@@ -25,7 +25,7 @@
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Stream Source') ?></td>
-                <td><select name="object_id">
+                <td><select name="object_id" autofocus>
 <?php
                         $playlists = Playlist::get_playlists();
                         foreach ($playlists as $playlist_id) {
