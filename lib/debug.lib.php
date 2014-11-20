@@ -229,6 +229,11 @@ function check_php_zlib()
     return function_exists('gzcompress');
 }
 
+function check_php_simplexml()
+{
+    return function_exists('simplexml_load_string');
+}
+
 function return_bytes($val)
 {
     $val = trim($val);

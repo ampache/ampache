@@ -427,7 +427,7 @@ art_order = "db,tags,folder,musicbrainz,lastfm,google"
 ; Set this to true to enable display of similar artists or albums
 ; while browsing. Requires Last.FM.
 ; DEFAULT: false
-show_similar = "true"
+;show_similar = "false"
 
 ; Concerts
 ; Set this to true to enable display of artist concerts

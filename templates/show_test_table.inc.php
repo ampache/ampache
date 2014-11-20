@@ -111,6 +111,15 @@
     </td>
 </tr>
 <tr>
+    <td valign="top"><?php echo T_('PHP simplexml extension'); ?></td>
+    <td valign="top">
+    <?php echo debug_wresult(check_php_simplexml()); ?>
+    </td>
+    <td>
+    <?php echo T_('This tests whether you have the simplexml extension enabled. This is not strictly necessary, but may result in a better experience.'); ?>
+    </td>
+</tr>
+<tr>
     <td valign="top"><?php echo T_('PHP safe mode disabled'); ?></td>
     <td valign="top">
     <?php echo debug_result(check_php_safemode()); ?>
