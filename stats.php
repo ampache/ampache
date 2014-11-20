@@ -69,5 +69,4 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch on action
 
-show_table_render(false, true);
 UI::show_footer();

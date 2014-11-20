@@ -102,7 +102,7 @@ if ($limit > 0 && $total > $limit) {
     if ($start > 0) {
         $current_page = floor($start / $limit);
     }
-    
+
     if ($browse->get_use_pages()) {
 ?>
     <span class="list-header-navmenu-border">

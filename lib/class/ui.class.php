@@ -284,6 +284,9 @@ END;
      */
     public static function show_footer()
     {
+        if (!defined("TABLE_RENDERED")) {
+            show_table_render();
+        }
         require_once AmpConfig::get('prefix') . '/templates/footer.inc.php';
         if (isset($_REQUEST['profiling'])) {
             Dba::show_profile();

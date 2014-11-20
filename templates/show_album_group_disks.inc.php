@@ -155,4 +155,3 @@ if ($directplay_limit > 0) {
     ?>
     </div><br />
 <?php } ?>
-<?php show_table_render(true, true); ?>

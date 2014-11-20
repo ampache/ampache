@@ -70,7 +70,7 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog', null);
             unset($_SESSION['catalog']);
         }
-        
+
         ob_start();
         $browse->show_objects();
         $results[$browse->get_content_div()] = ob_get_clean();
@@ -182,7 +182,7 @@ switch ($_REQUEST['action']) {
                 }
             break;
         }
-        
+
         ob_start();
         $browse->show_objects();
         $results[$browse->get_content_div()] = ob_get_clean();

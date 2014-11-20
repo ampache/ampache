@@ -128,7 +128,7 @@ class Browse extends Query
             }
         }
     }
-    
+
     /**
      * show_objects
      * This takes an array of objects
@@ -476,7 +476,7 @@ class Browse extends Query
     {
         $this->show_header = $show_header;
     }
-    
+
     /**
      * Allow the current page to be save into the current session
      * @param boolean $update_session
@@ -494,7 +494,7 @@ class Browse extends Query
     {
         return $this->show_header;
     }
-    
+
     /**
      *
      * @return boolean

@@ -78,7 +78,7 @@ class Query
         if (is_null($id)) {
             $this->reset();
             $data = self::_serialize($this->_state);
-            
+
             $sql = 'INSERT INTO `tmp_browse` (`sid`, `data`) VALUES(?, ?)';
             Dba::write($sql, array($sid, $data));
             $this->id = Dba::insert_id();
@@ -92,7 +92,7 @@ class Query
 
                 $this->id = $id;
                 $this->_state = self::_unserialize($results['data']);
-                
+
                 return true;
             }
         }
@@ -2061,7 +2061,7 @@ class Query
             $data = self::_serialize($this->_state);
 
             debug_event('DEBUG', 'Query Store Function called: {'.json_encode($data).'}', '5');
-            
+
             $sql = 'UPDATE `tmp_browse` SET `data` = ? WHERE `sid` = ? AND `id` = ?';
             Dba::write($sql, array($data, session_id(), $id));
         }

@@ -85,5 +85,4 @@ $thcount = 6;
         </tr>
     <tfoot>
 </table>
-<?php show_table_render(); ?>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
