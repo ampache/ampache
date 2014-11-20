@@ -1165,6 +1165,8 @@ class getid3_lib
 				fwrite($tmp, $imgData);
 				fclose($tmp);
 				$GetDataImageSize = @getimagesize($tempfilename, $imageinfo);
+				$GetDataImageSize['height'] = $GetDataImageSize[0];
+				$GetDataImageSize['width']  = $GetDataImageSize[1];
 			}
 			unlink($tempfilename);
 		}

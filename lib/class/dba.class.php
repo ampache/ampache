@@ -325,8 +325,8 @@ class Dba
             return false;
         }
 
-        // Make sure the whole table is there
-        if (Dba::num_rows($db_results) != 10) {
+        // Make sure the table is there
+        if (Dba::num_rows($db_results) < 1) {
             return false;
         }
 

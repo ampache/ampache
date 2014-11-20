@@ -425,16 +425,16 @@ $info['warning'][] = 'Ogg Theora (v3) not fully supported in this version of get
 		}
 		return true;
 	}
-	
+
 	// http://tools.ietf.org/html/draft-ietf-codec-oggopus-03
 	public function ParseOpusPageHeader(&$filedata, &$filedataoffset, &$oggpageinfo) {
 		$info = &$this->getid3->info;
 		$info['audio']['dataformat']   = 'opus';
 		$info['mime_type']             = 'audio/ogg; codecs=opus';
-		
+
 		/** @todo find a usable way to detect abr (vbr that is padded to be abr) */
 		$info['audio']['bitrate_mode'] = 'vbr';
-		
+
 		$info['audio']['lossless']     = false;
 
 		$info['ogg']['pageheader']['opus']['opus_magic'] = substr($filedata, $filedataoffset, 8); // hard-coded to 'OpusHead'
@@ -460,13 +460,13 @@ $info['warning'][] = 'Ogg Theora (v3) not fully supported in this version of get
 
 		$info['ogg']['pageheader']['opus']['sample_rate'] = getid3_lib::LittleEndian2Int(substr($filedata, $filedataoffset,  4));
 		$filedataoffset += 4;
-		
+
 		//$info['ogg']['pageheader']['opus']['output_gain'] = getid3_lib::LittleEndian2Int(substr($filedata, $filedataoffset,  2));
 		//$filedataoffset += 2;
-		
+
 		//$info['ogg']['pageheader']['opus']['channel_mapping_family'] = getid3_lib::LittleEndian2Int(substr($filedata, $filedataoffset,  1));
 		//$filedataoffset += 1;
-		
+
 		$info['opus']['opus_version']      = $info['ogg']['pageheader']['opus']['version'];
 		$info['opus']['sample_rate']       = $info['ogg']['pageheader']['opus']['sample_rate'];
 		$info['opus']['out_channel_count'] = $info['ogg']['pageheader']['opus']['out_channel_count'];
@@ -694,8 +694,12 @@ $info['warning'][] = 'Ogg Theora (v3) not fully supported in this version of get
 					$ogg = new self($this->getid3);
 					$ogg->setStringMode($data);
 					$info['ogg']['comments']['picture'][] = array(
-						'image_mime' => $imageinfo['mime'],
-						'data'       => $ogg->saveAttachment('coverart', 0, strlen($data), $imageinfo['mime']),
+						'image_mime'   => $imageinfo['mime'],
+						'datalength'   => strlen($data),
+						'picturetype'  => 'cover art',
+						'image_height' => $imageinfo['height'],
+						'image_width'  => $imageinfo['width'],
+						'data'         => $ogg->saveAttachment('coverart', 0, strlen($data), $imageinfo['mime']),
 					);
 					unset($ogg);
 
