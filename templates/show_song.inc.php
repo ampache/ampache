@@ -97,8 +97,8 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 <?php
   $songprops[gettext_noop('Title')]   = scrub_out($song->title);
   $songprops[gettext_noop('Artist')]  = $song->f_artist_link;
-  if (!empty($song->f_album_artist_link)) {
-    $songprops[gettext_noop('Album Artist')]   = $song->f_album_artist_link;
+  if (!empty($song->f_albumartist_link)) {
+    $songprops[gettext_noop('Album Artist')]   = $song->f_albumartist_link;
   }
   $songprops[gettext_noop('Album')]   = $song->f_album_link . ($song->year ? " (" . scrub_out($song->year). ")" : "");
   $songprops[gettext_noop('Composer')]   = scrub_out($song->composer);
