@@ -876,19 +876,41 @@ class Song extends database_object implements media, library_item
             } // end whitelist
         } // end foreach
 
-        $this->format();
+        $this->write_id3();
 
+        return $this->id;
+    } // update
+
+    /**
+     * write_id3
+     * Write the current song id3 metadata to the file
+     */
+    public function write_id3()
+    {
         if (AmpConfig::get('write_id3')) {
             $catalog = Catalog::create_from_id($this->catalog);
             if ($catalog->get_type() == 'local') {
+                debug_event('song', 'Writing id3 metadata to file ' . $this->file, 5);
                 $meta = $this->get_metadata();
                 $id3 = new vainfo($this->file);
                 $id3->write_id3($meta);
             }
         }
+    }
 
-        return $this->id;
-    } // update
+    /**
+     * write_id3_for_song
+     * Write id3 metadata to the file for the excepted song id
+     * @param int $song_id
+     */
+    public static function write_id3_for_song($song_id)
+    {
+        $song = new Song($song_id);
+        if ($song->id) {
+            $this->format();
+            $song->write_id3();
+        }
+    }
 
     /**
      * update_song
