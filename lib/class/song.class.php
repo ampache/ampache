@@ -907,7 +907,7 @@ class Song extends database_object implements media, library_item
     {
         $song = new Song($song_id);
         if ($song->id) {
-            $this->format();
+            $song->format();
             $song->write_id3();
         }
     }
