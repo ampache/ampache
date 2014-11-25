@@ -459,7 +459,8 @@ class AmpacheHttpq extends localplay_controller
             $url_data = $this->parse_url($entry);
                         switch ($url_data['primary_key']) {
                                 case 'oid':
-                                        $song = new Song($url_data['oid']);
+                                        $data['oid'] = $url_data['oid'];
+                                        $song = new Song($data['oid']);
                                         $song->format();
                                         $data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
                                         $data['link']   = $song->f_link;
@@ -531,7 +532,7 @@ class AmpacheHttpq extends localplay_controller
         $url_data = $this->parse_url($array['track']);
 
         if (isset($url_data['oid'])) {
-            $song = new Song($url_data['oid']);
+            $song = new Song($data['oid']);
             $array['track_title']     = $song->title;
             $array['track_artist']     = $song->get_artist_name();
             $array['track_album']    = $song->get_album_name();

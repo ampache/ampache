@@ -459,7 +459,8 @@ class AmpacheMpd extends localplay_controller
 
             switch ($url_data['primary_key']) {
                 case 'oid':
-                    $song = new Song($url_data['oid']);
+                    $data['oid'] = $url_data['oid'];
+                    $song = new Song($data['oid']);
                     $song->format();
                     $data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
                     $data['link']   = $song->f_link;

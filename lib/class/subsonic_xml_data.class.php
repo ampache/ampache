@@ -30,7 +30,7 @@
  */
 class Subsonic_XML_Data
 {
-    const API_VERSION = "1.10.1";
+    const API_VERSION = "1.10.2";
 
     const SSERROR_GENERIC = 0;
     const SSERROR_MISSINGPARAM = 10;
@@ -586,7 +586,7 @@ class Subsonic_XML_Data
         $isManager = ($user->access >= 75);
         $isAdmin = ($user->access >= 100);
         $xuser->addAttribute('adminRole', $isAdmin ? 'true' : 'false');
-        $xuser->addAttribute('settingsRole', $isAdmin ? 'true' : 'false');
+        $xuser->addAttribute('settingsRole', 'true');
         $xuser->addAttribute('downloadRole', Preference::get_by_user($user->id, 'download') ? 'true' : 'false');
         $xuser->addAttribute('playlistRole', 'true');
         $xuser->addAttribute('coverArtRole', $isManager ? 'true' : 'false');
@@ -594,7 +594,7 @@ class Subsonic_XML_Data
         $xuser->addAttribute('podcastRole', 'false');
         $xuser->addAttribute('streamRole', 'true');
         $xuser->addAttribute('jukeboxRole', 'false');
-        $xuser->addAttribute('shareRole', 'false');
+        $xuser->addAttribute('shareRole', Preference::get_by_user($user->id, 'share') ? 'true' : 'false');
     }
 
     public static function addUsers($xml, $users)
@@ -626,7 +626,7 @@ class Subsonic_XML_Data
 
     public static function addShare($xml, $share)
     {
-        $xshare = $xml->addChild('share ');
+        $xshare = $xml->addChild('share');
         $xshare->addAttribute('id', $share->id);
         $xshare->addAttribute('url', $share->public_url);
         $xshare->addAttribute('description', $share->description);
@@ -671,5 +671,29 @@ class Subsonic_XML_Data
                 self::addShare($xshares, $share);
             }
         }
+    }
+
+    public static function addJukeboxPlaylist($xml, Localplay $localplay)
+    {
+        $xjbox = self::createJukeboxStatus($xml, $localplay, 'jukeboxPlaylist');
+        $tracks = $localplay->get();
+        foreach ($tracks as $track) {
+            if ($data['oid']) {
+                $song = new Song($data['oid']);
+                self::createSong($xjbox, 'entry');
+            }
+        }
+    }
+
+    public static function createJukeboxStatus($xml, Localplay $localplay, $elementName = 'jukeboxStatus')
+    {
+        $xjbox = $xml->addChild($elementName);
+        $status = $localplay->status();
+        $xjbox->addAttribute('currentIndex', 0);    // Not supported
+        $xjbox->addAttribute('playing', ($status['state'] == 'play') ? 'true' : 'false');
+        $xjbox->addAttribute('gain', $status['volume']);
+        $xjbox->addAttribute('position', 0);    // Not supported
+
+        return $xjbox;
     }
 }

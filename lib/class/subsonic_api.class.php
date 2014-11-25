@@ -62,6 +62,19 @@ class Subsonic_Api
         return $input[$parameter];
     }
 
+    public static function decrypt_password($password)
+    {
+        // Decode hex-encoded password
+        $encpwd = strpos($password, "enc:");
+        if ($encpwd !== false) {
+            $hex = substr($password, 4);
+            $decpwd = '';
+            for ($i=0; $i<strlen($hex); $i+=2) $decpwd .= chr(hexdec(substr($hex,$i,2)));
+            $password = $decpwd;
+        }
+        return $password;
+    }
+
     public static function output_body($ch, $data)
     {
         echo $data;
@@ -664,6 +677,14 @@ class Subsonic_Api
 
         $query = self::check_parameter($input, 'query');
 
+        $operator = 0;
+        if (strlen($query) > 1) {
+            if (substr($query, -1) == "*") {
+                $query = substr($query, 0, -1);
+                $operator = 2; // Start with
+            }
+        }
+
         $artistCount = $input['artistCount'];
         $artistOffset = $input['artistOffset'];
         $albumCount = $input['albumCount'];
@@ -675,7 +696,7 @@ class Subsonic_Api
         $sartist['limit'] = $artistCount;
         if ($artistOffset) $sartist['offset'] = $artistOffset;
         $sartist['rule_1_input'] = $query;
-        $sartist['rule_1_operator'] = 0;
+        $sartist['rule_1_operator'] = $operator;
         $sartist['rule_1'] = "name";
         $sartist['type'] = "artist";
         $artists = Search::run($sartist);
@@ -684,7 +705,7 @@ class Subsonic_Api
         $salbum['limit'] = $albumCount;
         if ($albumOffset) $salbum['offset'] = $albumOffset;
         $salbum['rule_1_input'] = $query;
-        $salbum['rule_1_operator'] = 0;
+        $salbum['rule_1_operator'] = $operator;
         $salbum['rule_1'] = "title";
         $salbum['type'] = "album";
         $albums = Search::run($salbum);
@@ -693,7 +714,7 @@ class Subsonic_Api
         $ssong['limit'] = $songCount;
         if ($songOffset) $ssong['offset'] = $songOffset;
         $ssong['rule_1_input'] = $query;
-        $ssong['rule_1_operator'] = 0;
+        $ssong['rule_1_operator'] = $operator;
         $ssong['rule_1'] = "anywhere";
         $ssong['type'] = "song";
         $songs = Search::run($ssong);
@@ -1270,6 +1291,211 @@ class Subsonic_Api
         self::apiOutput($input, $r);
     }
 
+    /**
+     * createUser
+     * Create a new user.
+     * Takes the username, password and email with optional roles in parameters.
+     */
+    public static function createuser($input)
+    {
+        self::check_version($input, "1.1.0");
+
+        $username = self::check_parameter($input, 'username');
+        $password = self::check_parameter($input, 'password');
+        $email = self::check_parameter($input, 'email');
+        $ldapAuthenticated = $input['ldapAuthenticated'];
+        $adminRole = ($input['adminRole'] == 'true');
+        //$settingsRole = $input['settingsRole'];
+        //$streamRole = $input['streamRole'];
+        //$jukeboxRole = $input['jukeboxRole'];
+        $downloadRole = ($input['downloadRole'] == 'true');
+        $uploadRole = ($input['uploadRole'] == 'true');
+        //$playlistRole = $input['playlistRole'];
+        $coverArtRole = ($input['coverArtRole'] == 'true');
+        //$commentRole = $input['commentRole'];
+        //$podcastRole = $input['podcastRole'];
+        $shareRole = ($input['shareRole'] == 'true');
+
+        if (Access::check('interface', 100)) {
+            $access = 25;
+            if ($adminRole) {
+                $access = 100;
+            } elseif ($coverArtRole) {
+                $access = 75;
+            }
+            $password = self::decrypt_password($password);
+            $user_id = User::create($username, $username, $email, null, $password, $access);
+            if ($user_id > 0) {
+                if ($downloadRole) {
+                    Preference::update('download', $user_id, '1');
+                }
+                if ($uploadRole) {
+                    Preference::update('allow_upload', $user_id, '1');
+                }
+                if ($shareRole) {
+                    Preference::update('share', $user_id, '1');
+                }
+                $r = Subsonic_XML_Data::createSuccessResponse();
+            } else {
+                $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+            }
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+        }
+
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * deleteUser
+     * Delete an existing user.
+     * Takes the username in parameter.
+     */
+    public static function deleteuser($input)
+    {
+        self::check_version($input, "1.3.0");
+
+        $username = self::check_parameter($input, 'username');
+        if (Access::check('interface', 100)) {
+            $user = User::get_from_username($username);
+            if ($user->id) {
+                $user->delete();
+                $r = Subsonic_XML_Data::createSuccessResponse();
+            } else {
+                $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+            }
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+        }
+
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * changePassword
+     * Change the password of an existing user.
+     * Takes the username with new password in parameters.
+     */
+    public static function changepassword($input)
+    {
+        self::check_version($input, "1.1.0");
+
+        $username = self::check_parameter($input, 'username');
+        $password = self::check_parameter($input, 'password');
+        $password = self::decrypt_password($password);
+
+        if ($GLOBALS['user']->username == $username || Access::check('interface', 100)) {
+            $user = User::get_from_username($username);
+            if ($user->id) {
+                $user->update_password($password);
+                $r = Subsonic_XML_Data::createSuccessResponse();
+            } else {
+                $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+            }
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+        }
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * jukeboxControl
+     * Control the jukebox.
+     * Takes the action with optional index, offset, song id and volume gain in parameters.
+     * Not supported.
+     */
+    public static function jukeboxcontrol($input)
+    {
+        self::check_version($input, "1.2.0");
+        $action = self::check_parameter($input, 'action');
+        $id = $input['id'];
+        $gain = $input['gain'];
+
+        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+        debug_event('subsonic', 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
+        $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+
+        if ($localplay->connect()) {
+            $ret = false;
+            switch ($action) {
+                case 'get':
+                case 'status':
+                    $ret = true;
+                    break;
+                case 'start':
+                    $ret = $localplay->play();
+                    break;
+                case 'stop':
+                    $ret = $localplay->stop();
+                    break;
+                case 'skip':
+                    if (isset($input['index'])) {
+                        if ($localplay->skip($input['index']))
+                            $ret = $localplay->play();
+                    } elseif (isset($input['offset'])) {
+                        debug_event('subsonic', 'Skip with offset is not supported on JukeboxControl.', 5);
+                    } else {
+                        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
+                    }
+                    break;
+                case 'set':
+                    $localplay->delete_all();
+                case 'add':
+                    if ($id) {
+                        if (!is_array($id)) {
+                            $rid = array();
+                            $rid[] = $id;
+                            $id = $rid;
+                        }
+
+                        foreach ($id as $i) {
+                            $url = null;
+                            if (Subsonic_XML_Data::isSong($i)) {
+                                $url = Song::generic_play_url('song', Subsonic_XML_Data::getAmpacheId($i), '');
+                            } elseif (Subsonic_XML_Data::isVideo($i)) {
+                                $url = Song::generic_play_url('video', Subsonic_XML_Data::getAmpacheId($i), '');
+                            }
+
+                            if ($url) {
+                                debug_event('subsonic', 'Adding ' . $url, 5);
+                                $stream = array();
+                                $stream['url'] = $url;
+                                $ret = $localplay->add_url(new Stream_URL($stream));
+                            }
+                        }
+                    }
+                    break;
+                case 'clear':
+                    $ret = $localplay->delete_all();
+                    break;
+                case 'remove':
+                    if (isset($input['index'])) {
+                        $ret = $localplay->delete_track($input['index']);
+                    } else {
+                        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
+                    }
+                    break;
+                case 'shuffle':
+                    $ret = $localplay->random(true);
+                    break;
+                case 'setGain':
+                    $ret = $localplay->volume_set($gain * 100);
+                    break;
+            }
+
+            if ($ret) {
+                $r = Subsonic_XML_Data::createSuccessResponse();
+                if ($action == 'get') {
+                    Subsonic_XML_Data::addJukeboxPlaylist($r, $localplay);
+                } else {
+                    Subsonic_XML_Data::createJukeboxStatus($r, $localplay);
+                }
+            }
+        }
+
+        self::apiOutput($input, $r);
+    }
+
     /****   CURRENT UNSUPPORTED FUNCTIONS   ****/
 
     /**
@@ -1311,48 +1537,6 @@ class Subsonic_Api
 
         // Ignore error to not break clients
         $r = Subsonic_XML_Data::createSuccessResponse();
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * createUser
-     * Create a new user.
-     * Takes the username, password and email with optional roles in parameters.
-     * Not supported.
-     */
-    public static function createuser($input)
-    {
-        self::check_version($input, "1.1.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * deleteUser
-     * Delete an existing user.
-     * Takes the username in parameter.
-     * Not supported.
-     */
-    public static function deleteuser($input)
-    {
-        self::check_version($input, "1.3.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * changePassword
-     * Change the password of an existing user.
-     * Takes the username with new password in parameters.
-     * Not supported.
-     */
-    public static function changepassword($input)
-    {
-        self::check_version($input, "1.1.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $r);
     }
 
@@ -1435,20 +1619,6 @@ class Subsonic_Api
     public static function downloadpodcastepisode($input)
     {
         self::check_version($input, "1.9.0");
-
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * jukeboxControl
-     * Control the jukebox.
-     * Takes the action with optional index, offset, song id and volume gain in parameters.
-     * Not supported.
-     */
-    public static function jukeboxcontrol($input)
-    {
-        self::check_version($input, "1.2.0");
 
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $r);

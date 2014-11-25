@@ -28,7 +28,11 @@ if (!AmpConfig::get('subsonic_backend')) {
     exit;
 }
 
-$action = strtolower($_REQUEST['action']);
+$action = strtolower($_REQUEST['ssaction']);
+// Compatibility reason
+if (empty($action)) {
+    $action = strtolower($_REQUEST['action']);
+}
 $f = $_REQUEST['f'];
 $callback = $_REQUEST['callback'];
 /* Set the correct default headers */
@@ -66,14 +70,7 @@ if (empty($user) || empty($password) || empty($version) || empty($action) || emp
     exit();
 }
 
-// Decode hex-encoded password
-$encpwd = strpos($password, "enc:");
-if ($encpwd !== false) {
-    $hex = substr($password, 4);
-    $decpwd = '';
-    for ($i=0; $i<strlen($hex); $i+=2) $decpwd .= chr(hexdec(substr($hex,$i,2)));
-    $password = $decpwd;
-}
+$password = Subsonic_Api::decrypt_password($password);
 
 // Check user authentication
 $auth = Auth::login($user, $password, true);
@@ -98,12 +95,13 @@ if (version_compare(Subsonic_XML_Data::API_VERSION, $version) < 0) {
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_APIVERSION_SERVER), $callback);
     exit();
 }
+Preference::init();
 
 // Get the list of possible methods for the Ampache API
 $methods = get_class_methods('subsonic_api');
 
 // Define list of internal functions that should be skipped
-$internal_functions = array('check_version', 'check_parameter', 'follow_stream', '_updatePlaylist', '_setStar', 'setHeader', 'apiOutput', 'apiOutput2', 'xml2json');
+$internal_functions = array('check_version', 'check_parameter', 'decrypt_password', 'follow_stream', '_updatePlaylist', '_setStar', 'setHeader', 'apiOutput', 'apiOutput2', 'xml2json');
 
 // We do not use $_GET because of multiple parameters with the same name
 $query_string = $_SERVER['QUERY_STRING'];
