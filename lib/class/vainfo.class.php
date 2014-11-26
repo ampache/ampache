@@ -86,6 +86,7 @@ class vainfo
             $this->_getID3->option_extra_info = true;
             $this->_getID3->option_tag_lyrics3 = true;
             $this->_getID3->option_tags_process = true;
+            $this->_getID3->option_tag_apetag = true;
             $this->_getID3->encoding = $this->encoding;
 
             // get id3tag encoding (try to work around off-spec id3v1 tags)
@@ -471,7 +472,6 @@ class vainfo
 
         // The tags can come in many different shapes and colors
         // depending on the encoding time of day and phase of the moon.
-
         if (is_array($this->_raw['tags'])) {
             foreach ($this->_raw['tags'] as $key => $tag_array) {
                 switch ($key) {
@@ -605,6 +605,21 @@ class vainfo
         $parsed['display_y'] = $tags['video']['display_y'];
         $parsed['frame_rate'] = $tags['video']['frame_rate'];
         $parsed['video_bitrate'] = $tags['video']['bitrate'];
+
+        if (isset($tags['ape'])) {
+            if (isset($tags['ape']['items'])) {
+                foreach ($tags['ape']['items'] as $key => $tag) {
+                    switch (strtolower($key)) {
+                        case 'replaygain_track_gain':
+                        case 'replaygain_track_peak':
+                        case 'replaygain_album_gain':
+                        case 'replaygain_album_peak':
+                            $parsed[$key] = floatval($tag['data'][0]);
+                            break;
+                    }
+                }
+            }
+        }
 
         return $parsed;
     }
@@ -827,35 +842,35 @@ class vainfo
                 // Find the MBIDs for the album and artist
                 // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
                 foreach ($id3v2['TXXX'] as $txxx) {
-                    switch ($this->trimAscii($txxx['description'])) {
-                        case 'MusicBrainz Album Id':
+                    switch (strtolower($this->trimAscii($txxx['description']))) {
+                        case 'musicbrainz album id':
                             $parsed['mb_albumid'] = $this->trimAscii($txxx['data']);
                         break;
-                        case 'MusicBrainz Release Group Id':
+                        case 'musicbrainz release group id':
                             $parsed['mb_albumid_group'] = $this->trimAscii($txxx['data']);
                         break;
-                        case 'MusicBrainz Artist Id':
+                        case 'musicbrainz artist id':
                             $parsed['mb_artistid'] = $this->trimAscii($txxx['data']);
                         break;
-                        case 'MusicBrainz Album Artist Id':
+                        case 'musicbrainz album artist id':
                             $parsed['mb_albumartistid'] = $this->trimAscii($txxx['data']);
                         break;
-                        case 'MusicBrainz Album Type':
+                        case 'musicbrainz album type':
                             $parsed['release_type'] = $this->trimAscii($txxx['data']);
                         break;
-                        case 'CATALOGNUMBER':
+                        case 'catalognumber':
                             $parsed['catalog_number'] = $this->trimAscii($txxx['data']);
                         break;
-                        case 'REPLAYGAIN_TRACK_GAIN':
+                        case 'replaygain_track_gain':
                             $parsed['replaygain_track_gain'] = floatval($txxx['data']);
                         break;
-                        case 'REPLAYGAIN_TRACK_PEAK':
+                        case 'replaygain_track_peak':
                             $parsed['replaygain_track_peak'] = floatval($txxx['data']);
                         break;
-                        case 'REPLAYGAIN_ALBUM_GAIN':
+                        case 'replaygain_album_gain':
                             $parsed['replaygain_album_gain'] = floatval($txxx['data']);
                         break;
-                        case 'REPLAYGAIN_ALBUM_PEAK':
+                        case 'replaygain_album_peak':
                             $parsed['replaygain_album_peak'] = floatval($txxx['data']);
                         break;
                     }

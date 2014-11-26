@@ -678,9 +678,9 @@ class Subsonic_XML_Data
         $xjbox = self::createJukeboxStatus($xml, $localplay, 'jukeboxPlaylist');
         $tracks = $localplay->get();
         foreach ($tracks as $track) {
-            if ($data['oid']) {
-                $song = new Song($data['oid']);
-                self::createSong($xjbox, 'entry');
+            if ($track['oid']) {
+                $song = new Song($track['oid']);
+                self::createSong($xjbox, $song, 'entry');
             }
         }
     }
