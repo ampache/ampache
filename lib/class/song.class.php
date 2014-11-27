@@ -792,7 +792,7 @@ class Song extends database_object implements media, library_item
 
         $array = array();
         $string_array = array('title','comment','lyrics');
-        $skip_array = array('id','tag_id','mime','artist_mbid','album_mbid','albumartist_mbid','mbid','mb_albumid_group','waveform');
+        $skip_array = array('id','tag_id','mime','artist_mbid','album_mbid','albumartist_mbid','albumartist','mbid','mb_albumid_group','waveform');
 
         // Pull out all the currently set vars
         $fields = get_object_vars($song);

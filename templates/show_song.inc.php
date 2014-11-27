@@ -147,7 +147,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
               $rowparity = UI::flip_class();
               echo "<dt class=\"".$rowparity."\">" . T_($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
         }
-      }
+    }
 ?>
 </dl>
 <?php UI::show_box_bottom(); ?>
