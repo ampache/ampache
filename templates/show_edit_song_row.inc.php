@@ -64,6 +64,10 @@
                 <td><input type="text" name="label" value="<?php echo scrub_out($libitem->label); ?>" /></td>
             </tr>
             <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Year') ?></td>
+                <td><input type="text" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>
                 <td>
                     <input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" />

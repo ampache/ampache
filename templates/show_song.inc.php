@@ -103,6 +103,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
   $songprops[gettext_noop('Album')]   = $song->f_album_link . ($song->year ? " (" . scrub_out($song->year). ")" : "");
   $songprops[gettext_noop('Composer')]   = scrub_out($song->composer);
   $songprops[gettext_noop('Genre')]   = $song->f_tags;
+  $songprops[gettext_noop('Year')]   = $song->year;
   $songprops[gettext_noop('Links')] = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
   $songprops[gettext_noop('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
   $songprops[gettext_noop('Length')]  = scrub_out($song->f_time);
