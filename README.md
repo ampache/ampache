@@ -108,6 +108,7 @@ Ampache includes some external modules that carry their own licensing.
 * [TvDb] (https://github.com/Moinax/TvDb) : MIT
 * [jQuery DateTimePicker] (https://github.com/xdan/datetimepicker) : MIT
 * [pChart] (http://www.pchart.net) : GPL v3
+* [ZipStream-PHP] (https://github.com/maennchen/ZipStream-PHP) : [ZipStream-PHP license] (modules/zipstream/COPYING)
 
 
 Translations

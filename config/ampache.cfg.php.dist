@@ -225,13 +225,6 @@ Allow Zip Types
 ; DEFAULT: none
 ;allow_zip_types = "album"
 
-; File Zip Download
-; This settings tells Ampache to attempt to save the zip file
-; to the filesystem instead of creating it in memory, you must
-; also set tmp_dir_path in order for this to work
-; DEFAULT: false
-;file_zip_download = "false" 
-
 ; File Zip Comment
 ; This is an optional configuration option that adds a comment
 ; to your zip files, this only applies if you've got allow_zip_downloads
@@ -251,7 +244,7 @@ Allow Zip Types
 ;waveform_color = "#FF0000" 
 
 ; Temporary Directory Path
-; If File Zip Download or Waveform is enabled this must be set to tell
+; If Waveform is enabled this must be set to tell
 ; Ampache which directory to save the temporary file to. Do not put a
 ; trailing slash or this will not work.
 ; DEFAULT: false
