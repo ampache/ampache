@@ -1013,7 +1013,7 @@ class vainfo
             $pattern = preg_quote($this->_dir_pattern) . $slash_type_preg . preg_quote($this->_file_pattern);
 
             // Remove first left directories from filename to match pattern
-            $cntslash = substr_count($pattern, $slash_type) + 1;
+            $cntslash = substr_count($pattern, preg_quote($slash_type)) + 1;
             $filepart = explode($slash_type, $filename);
             if (count($filepart) > $cntslash) {
                 $filename = implode($slash_type, array_slice($filepart, count($filepart) - $cntslash));
