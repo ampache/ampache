@@ -870,6 +870,7 @@ class Song extends database_object implements media, library_item
                 break;
                 case 'edit_tags':
                     Tag::update_tag_list($value, 'song', $this->id);
+                    $this->tags = Tag::get_top_tags('song', $this->id);
                 break;
                 default:
                 break;
