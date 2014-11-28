@@ -58,6 +58,9 @@ $supplied = WebPlayer::get_supplied_types($playlist);
             oggSupport: false,
             supplied: "<?php echo implode(", ", $supplied); ?>",
             volume: jp_volume,
+<?php if (AmpConfig::get('webplayer_aurora')) { ?>
+            auroraFormats: 'flac, m4a, mp3, oga, wav',
+<?php } ?>
 <?php if (!$is_share) { ?>
             size: {
 <?php
