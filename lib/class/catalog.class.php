@@ -1045,12 +1045,10 @@ abstract class Catalog extends database_object
                 $art->insert($image, $results[0]['mime']);
                 // If they've enabled resizing of images generate a thumbnail
                 if (AmpConfig::get('resize_images')) {
-                    $thumb = $art->generate_thumb($image, array(
-                            'width' => 275,
-                            'height' => 275),
-                        $results[0]['mime']);
+                    $size = array('width' => 275, 'height' => 275);
+                    $thumb = $art->generate_thumb($image,$size ,$results[0]['mime']);
                     if (is_array($thumb)) {
-                        $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], '275x275');
+                        $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], $size);
                     }
                 }
 

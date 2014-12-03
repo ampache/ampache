@@ -260,10 +260,11 @@ class Art extends database_object
 
         // If there is no thumb and we want thumbs
         if (!$this->thumb && AmpConfig::get('resize_images')) {
-            $data = $this->generate_thumb($this->raw, array('width' => 275, 'height' => 275), $this->raw_mime);
+            $size = array('width' => 275, 'height' => 275);
+            $data = $this->generate_thumb($this->raw, $size, $this->raw_mime);
             // If it works save it!
             if ($data) {
-                $this->save_thumb($data['thumb'], $data['thumb_mime'], '275x275');
+                $this->save_thumb($data['thumb'], $data['thumb_mime'], $size);
                 $this->thumb = $data['thumb'];
                 $this->thumb_mime = $data['thumb_mime'];
             } else {
@@ -358,9 +359,14 @@ class Art extends database_object
             }
         }
 
+        $dimensions = Core::image_dimensions($source);
+        $width = intval($dimensions['width']);
+        $height = intval($dimensions['height']);
+        $sizetext = 'original';
+
         // Insert it!
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) VALUES(?, ?, 'original', ?, ?, ?)";
-        Dba::write($sql, array($source, $mime, $this->type, $this->uid, $this->kind));
+        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
 
         return true;
 
@@ -391,11 +397,15 @@ class Art extends database_object
             return false;
         }
 
-        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
-        Dba::write($sql, array($this->uid, $this->type, $size, $this->kind));
+        $width = intval($size['width']);
+        $height = intval($size['height']);
+        $sizetext = $width . 'x' . $height;
 
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($source, $mime, $size, $this->type, $this->uid, $this->kind));
+        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
+        Dba::write($sql, array($this->uid, $this->type, $sizetext, $this->kind));
+
+        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
     } // save_thumb
 
     /**
@@ -420,7 +430,7 @@ class Art extends database_object
         // If we didn't get a result
         $results = $this->generate_thumb($this->raw, $size, $this->raw_mime);
         if ($results) {
-            $this->save_thumb($results['thumb'], $results['thumb_mime'], $sizetext);
+            $this->save_thumb($results['thumb'], $results['thumb_mime'], $size);
         }
 
         return $results;
