@@ -140,6 +140,7 @@ class Subsonic_XML_Data
         if (empty($version)) $version = Subsonic_XML_Data::API_VERSION;
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
+        $response->addAttribute('type', 'ampache');
         $response->addAttribute('version', $version);
         return $response;
     }
