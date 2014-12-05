@@ -1,5 +1,7 @@
 config/ampache.cfg.php
 config/ampache-doped.cfg.php
+config/motd.php
+config/registration_agreement.php
 rest/.htaccess
 play/.htaccess
 *.phpproj
