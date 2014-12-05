@@ -1060,6 +1060,7 @@ class Plex_Api
         curl_setopt_array($ch, array(
             CURLOPT_HTTPHEADER => $reqheaders,
             CURLOPT_HEADER => false,
+            CURLOPT_CONNECTTIMEOUT => 2,
             CURLOPT_RETURNTRANSFER => false,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_WRITEFUNCTION => array('Plex_Api', 'replay_body'),
@@ -1068,7 +1069,10 @@ class Plex_Api
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_TIMEOUT => 0
         ));
-        curl_exec($ch);
+	if(curl_exec($ch) === false)
+	{
+            debug_event('plex-api', 'Curl error: ' . curl_error($ch),1);
+	}
         curl_close($ch);
     }
 
