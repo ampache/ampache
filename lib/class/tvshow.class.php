@@ -355,11 +355,17 @@ class TVShow extends database_object implements library_item
         $this->summary = $summary;
 
         $override_childs = false;
-        if ($data['apply_childs'] == 'checked') {
+        if ($data['overwrite_childs'] == 'checked') {
             $override_childs = true;
         }
+
+        $add_to_childs = false;
+        if ($data['add_to_childs'] == 'checked') {
+            $add_to_childs = true;
+        }
+
         if (isset($data['edit_tags'])) {
-            $this->update_tags($data['edit_tags'], $override_childs, $current_id);
+            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, $current_id, true);
         }
 
         return $current_id;
@@ -371,18 +377,18 @@ class TVShow extends database_object implements library_item
      *
      * Update tags of tv shows
      */
-    public function update_tags($tags_comma, $override_childs, $current_id = null)
+    public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
         if ($current_id == null) {
             $current_id = $this->id;
         }
 
-        Tag::update_tag_list($tags_comma, 'tvshow', $current_id);
+        Tag::update_tag_list($tags_comma, 'tvshow', $current_id, $force_update ? true : $override_childs);
 
-        if ($override_childs) {
+        if ($override_childs || $add_to_childs) {
             $episodes = $this->get_episodes();
             foreach ($episodes as $ep_id) {
-                Tag::update_tag_list($tags_comma, 'episode', $ep_id);
+                Tag::update_tag_list($tags_comma, 'episode', $ep_id, $override_childs);
             }
         }
     }

@@ -716,11 +716,17 @@ class Artist extends database_object implements library_item
         $this->mbid = $mbid;
 
         $override_childs = false;
-        if ($data['apply_childs'] == 'checked') {
+        if ($data['overwrite_childs'] == 'checked') {
             $override_childs = true;
         }
+
+        $add_to_childs = false;
+        if ($data['add_to_childs'] == 'checked') {
+            $add_to_childs = true;
+        }
+
         if (isset($data['edit_tags'])) {
-            $this->update_tags($data['edit_tags'], $override_childs, $current_id);
+            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, $current_id, true);
         }
 
         return $current_id;
@@ -735,19 +741,19 @@ class Artist extends database_object implements library_item
      * @param boolean $override_childs
      * @param int|null $current_id
      */
-    public function update_tags($tags_comma, $override_childs, $current_id = null)
+    public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
         if ($current_id == null) {
             $current_id = $this->id;
         }
 
-        Tag::update_tag_list($tags_comma, 'artist', $current_id);
+        Tag::update_tag_list($tags_comma, 'artist', $current_id, $force_update ? true : $override_childs);
 
-        if ($override_childs) {
+        if ($override_childs || $add_to_childs) {
             $albums = $this->get_albums(null, true);
             foreach ($albums as $album_id) {
                 $album = new Album($album_id);
-                $album->update_tags($tags_comma, $override_childs);
+                $album->update_tags($tags_comma, $override_childs, $add_to_childs);
             }
         }
     }

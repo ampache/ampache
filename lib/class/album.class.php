@@ -834,12 +834,18 @@ class Album extends database_object implements library_item
             Userflag::gc();
         } // if updated
 
-        $override_songs = false;
-        if ($data['apply_childs'] == 'checked') {
-            $override_songs = true;
+        $override_childs = false;
+        if ($data['overwrite_childs'] == 'checked') {
+            $override_childs = true;
         }
+
+        $add_to_childs = false;
+        if ($data['add_to_childs'] == 'checked') {
+            $add_to_childs = true;
+        }
+
         if (isset($data['edit_tags'])) {
-            $this->update_tags($data['edit_tags'], $override_songs, $current_id);
+            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, $current_id, true);
         }
 
         return $current_id;
@@ -851,21 +857,23 @@ class Album extends database_object implements library_item
      *
      * Update tags of albums and/or songs
      * @param string $tags_comma
-     * @param boolean $override_songs
+     * @param boolean $override_childs
+     * @param boolean $add_to_childs
      * @param int|null $current_id
      */
-    public function update_tags($tags_comma, $override_songs, $current_id = null)
+    public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
         if ($current_id == null) {
             $current_id = $this->id;
         }
 
-        Tag::update_tag_list($tags_comma, 'album', $current_id);
+        // When current_id not empty we force to overwrite current object
+        Tag::update_tag_list($tags_comma, 'album', $current_id, $force_update ? true : $override_childs);
 
-        if ($override_songs) {
+        if ($override_songs || $add_to_childs) {
             $songs = $this->get_songs();
             foreach ($songs as $song_id) {
-                Tag::update_tag_list($tags_comma, 'song', $song_id);
+                Tag::update_tag_list($tags_comma, 'song', $song_id, $override_childs);
             }
         }
     }

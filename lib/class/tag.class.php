@@ -564,7 +564,7 @@ class Tag extends database_object implements library_item
      * update_tag_list
      * Update the tags list based on commated list (ex. tag1,tag2,tag3,..)
      */
-    public static function update_tag_list($tags_comma, $type, $object_id)
+    public static function update_tag_list($tags_comma, $type, $object_id, $overwrite)
     {
         debug_event('tag.class', 'Updating tags for values {'.$tags_comma.'} type {'.$type.'} object_id {'.$object_id.'}', '5');
 
@@ -588,7 +588,7 @@ class Tag extends database_object implements library_item
                     if ($found) {
                         debug_event('tag.class', 'Already found. Do nothing.', '5');
                         unset($editedTags[$tk]);
-                    } else {
+                    } else if ($overwrite) {
                         debug_event('tag.class', 'Not found in the new list. Delete it.', '5');
                         $ctag->remove_map($type, $object_id);
                     }

@@ -49,7 +49,11 @@
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>
-                <td><input type="checkbox" name="apply_childs" value="checked" /><?php echo T_(' Apply tags to all childs (override tags for albums and songs)') ?></td>
+                <td><input type="checkbox" name="overwrite_childs" value="checked" />&nbsp;<?php echo T_('Overwrite tags of sub albums and sub songs') ?></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"></td>
+                <td><input type="checkbox" name="add_to_childs" value="checked" />&nbsp;<?php echo T_('Add tags to sub albums and sub songs') ?></td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
