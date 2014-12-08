@@ -38,6 +38,9 @@ $thcount = 8;
             <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
             <th class="cel_time optional"><?php echo T_('Time'); ?></th>
+            <?php if (AmpConfig::get('show_played_times')) { ?>
+            <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+            <?php } ?>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ++$thcount; ?>
@@ -93,6 +96,9 @@ $thcount = 8;
             <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
             <th class="cel_time essential"><?php echo T_('Time'); ?></th>
+            <?php if (AmpConfig::get('show_played_times')) { ?>
+            <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+            <?php } ?>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>

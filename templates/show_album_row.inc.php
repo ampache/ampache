@@ -56,6 +56,9 @@ if (Art::is_enabled()) {
 <td class="cel_artist"><?php echo (!empty($libitem->f_album_artist_link) ? $libitem->f_album_artist_link : $libitem->f_artist_link); ?></td>
 <td class="cel_songs"><?php echo $libitem->song_count; ?></td>
 <td class="cel_year"><?php echo $libitem->year; ?></td>
+<?php if (AmpConfig::get('show_played_times')) { ?>
+<td class="cel_counter"><?php echo $libitem->object_cnt; ?></td>
+<?php } ?>
 <td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>

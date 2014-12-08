@@ -61,6 +61,9 @@ if ($video_type != 'video') {
 <td class="cel_codec"><?php echo $libitem->f_codec; ?></td>
 <td class="cel_resolution"><?php echo $libitem->f_resolution; ?></td>
 <td class="cel_length"><?php echo $libitem->f_length; ?></td>
+<?php if (AmpConfig::get('show_played_times')) { ?>
+<td class="cel_counter"><?php echo $libitem->object_cnt; ?></td>
+<?php } ?>
 <td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>

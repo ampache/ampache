@@ -50,6 +50,9 @@
 <td class="cel_album"><?php echo $libitem->f_album_link; ?></td>
 <td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
 <td class="cel_time"><?php echo $libitem->f_time; ?></td>
+<?php if (AmpConfig::get('show_played_times')) { ?>
+<td class="cel_counter"><?php echo $libitem->object_cnt; ?></td>
+<?php } ?>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
     <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_song"><?php Rating::show($libitem->id,'song'); ?></td>
