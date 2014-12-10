@@ -229,7 +229,7 @@ class Stats
      * get_top_sql
      * This returns the get_top sql
      */
-    public static function get_top_sql($type, $threshold = '')
+    public static function get_top_sql($type, $threshold = '', $count_type = 'stream')
     {
         $type = self::validate_type($type);
         /* If they don't pass one, then use the preference */
@@ -240,10 +240,11 @@ class Stats
 
         /* Select Top objects counting by # of rows */
         $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count" .
-            " WHERE object_type = '" . $type ."' AND date >= '" . $date . "' ";
+            " WHERE object_id IN (SELECT object_id FROM object_count WHERE object_type = '" . $type ."' AND date >= '" . $date . "' ";
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND " . Catalog::get_enable_filter($type, '`object_id`');
+            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
+        $sql .= " AND `count_type` = '" . $count_type . "') ";
         $sql .= " GROUP BY object_id ORDER BY `count` DESC ";
         return $sql;
     }

@@ -2060,8 +2060,6 @@ class Query
         if ($id != 'nocache') {
             $data = self::_serialize($this->_state);
 
-            debug_event('DEBUG', 'Query Store Function called: {'.json_encode($data).'}', '5');
-
             $sql = 'UPDATE `tmp_browse` SET `data` = ? WHERE `sid` = ? AND `id` = ?';
             Dba::write($sql, array($data, session_id(), $id));
         }
