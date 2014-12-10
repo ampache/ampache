@@ -195,11 +195,18 @@ class Browse extends Query
 
         debug_event('browse', 'Show objects called for type {'.$type.'}', '5');
 
+        $limit_threshold = '';
+        if (AmpConfig::get('show_played_times') && is_array($argument)) {
+            if ($argument['limit_threshold']) {
+                $limit_threshold = $argument['limit_threshold'];
+            }
+        }
+
         // Switch on the type of browsing we're doing
         switch ($type) {
             case 'song':
                 $box_title = T_('Songs') . $match;
-                Song::build_cache($object_ids);
+                Song::build_cache($object_ids, $limit_threshold);
                 $box_req = AmpConfig::get('prefix') . '/templates/show_songs.inc.php';
             break;
             case 'album':
@@ -221,7 +228,7 @@ class Browse extends Query
             break;
             case 'artist':
                 $box_title = T_('Artists') . $match;
-                Artist::build_cache($object_ids, true);
+                Artist::build_cache($object_ids, true, $limit_threshold);
                 $box_req = AmpConfig::get('prefix') . '/templates/show_artists.inc.php';
             break;
             case 'live_stream':

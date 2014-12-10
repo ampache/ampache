@@ -186,7 +186,7 @@ class Artist extends database_object implements library_item
      * @param boolean $extra
      * @return boolean
      */
-    public static function build_cache($ids,$extra=false)
+    public static function build_cache($ids, $extra=false, $limit_threshold = '')
     {
         if (!is_array($ids) OR !count($ids)) { return false; }
 
@@ -208,7 +208,7 @@ class Artist extends database_object implements library_item
 
             while ($row = Dba::fetch_assoc($db_results)) {
                 if (AmpConfig::get('show_played_times')) {
-                    $row['object_cnt'] = Stats::get_object_count('artist', $row['artist']);
+                    $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
                 }
                 parent::add_to_cache('artist_extra',$row['artist'],$row);
             }
@@ -377,7 +377,7 @@ class Artist extends database_object implements library_item
      * @param int $catalog
      * @return array
      */
-    private function _get_extra_info($catalog=0)
+    private function _get_extra_info($catalog=0, $limit_threshold ='')
     {
         // Try to find it in the cache and save ourselves the trouble
         if (parent::is_cached('artist_extra',$this->id) ) {
@@ -398,7 +398,7 @@ class Artist extends database_object implements library_item
             $db_results = Dba::read($sql);
             $row = Dba::fetch_assoc($db_results);
             if (AmpConfig::get('show_played_times')) {
-                $row['object_cnt'] = Stats::get_object_count('artist', $row['artist']);
+                $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
             }
             parent::add_to_cache('artist_extra',$row['artist'],$row);
         }
@@ -421,7 +421,7 @@ class Artist extends database_object implements library_item
      * it changes the title into a full link.
      * @return boolean
       */
-    public function format($details = true)
+    public function format($details = true, $limit_threshold = '')
     {
         /* Combine prefix and name, trim then add ... if needed */
         $name = trim($this->prefix . " " . $this->name);
@@ -441,7 +441,7 @@ class Artist extends database_object implements library_item
 
         if ($details) {
             // Get the counts
-            $extra_info = $this->_get_extra_info($this->catalog_id);
+            $extra_info = $this->_get_extra_info($this->catalog_id, $limit_threshold);
 
             //Format the new time thingy that we just got
             $min = sprintf("%02d",(floor($extra_info['time']/60)%60));

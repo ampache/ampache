@@ -263,7 +263,7 @@ class Album extends database_object implements library_item
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('album',$row['id'],$row);
+            parent::add_to_cache('album', $row['id'], $row);
         }
 
         return true;
@@ -276,7 +276,7 @@ class Album extends database_object implements library_item
      * do it
      * @return array
      */
-    private function _get_extra_info()
+    private function _get_extra_info($limit_threshold = '')
     {
         if (!$this->id) {
             return array();
@@ -331,7 +331,7 @@ class Album extends database_object implements library_item
         $results['has_thumb'] = make_bool($art->thumb);
 
         if (AmpConfig::get('show_played_times')) {
-            $results['object_cnt'] = Stats::get_object_count('album', $this->id);
+            $results['object_cnt'] = Stats::get_object_count('album', $this->id, $limit_threshold);
         }
 
         parent::add_to_cache('album_extra', $this->id, $results);
@@ -577,13 +577,13 @@ class Album extends database_object implements library_item
      * album information with the base required
      * f_link, f_name
      */
-    public function format($details = true)
+    public function format($details = true, $limit_threshold = '')
     {
         $web_path = AmpConfig::get('web_path');
 
         if ($details) {
             /* Pull the advanced information */
-            $data = $this->_get_extra_info();
+            $data = $this->_get_extra_info($limit_threshold);
             foreach ($data as $key=>$value) { $this->$key = $value; }
 
             if ($this->album_artist) {

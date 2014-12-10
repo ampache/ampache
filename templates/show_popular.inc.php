@@ -22,25 +22,29 @@
 
 UI::show_box_top(T_('Information'));
 
-$sql = Stats::get_top_sql('song');
+$thresh_value = AmpConfig::get('stats_threshold');
+
+$sql = Stats::get_top_sql('song', $thresh_value);
 $browse = new Browse();
 $browse->set_type('song', $sql);
 $browse->set_simple_browse(true);
-$browse->show_objects();
+// We limit threshold for all items otherwise the counter will not be the same that the top_sql query.
+// Example: Item '1234' => 3 counts during period with 'get_top_sql'. Without threshold, 'show_objects' would return the total which could be 24 during all time)
+$browse->show_objects(null, array('limit_threshold' => $thresh_value));
 $browse->store();
 
 $sql = Stats::get_top_sql('album');
 $browse = new Browse();
 $browse->set_type('album', $sql);
 $browse->set_simple_browse(true);
-$browse->show_objects();
+$browse->show_objects(null, array('limit_threshold' => $thresh_value));
 $browse->store();
 
 $sql = Stats::get_top_sql('artist');
 $browse = new Browse();
 $browse->set_type('artist', $sql);
 $browse->set_simple_browse(true);
-$browse->show_objects();
+$browse->show_objects(null, array('limit_threshold' => $thresh_value));
 $browse->store();
 
 if (AmpConfig::get('allow_video')) {
@@ -48,7 +52,7 @@ if (AmpConfig::get('allow_video')) {
     $browse = new Browse();
     $browse->set_type('video', $sql);
     $browse->set_simple_browse(true);
-    $browse->show_objects();
+    $browse->show_objects(null);
     $browse->store();
 }
 

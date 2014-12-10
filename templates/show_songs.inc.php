@@ -60,7 +60,7 @@ $thcount = 8;
     <tbody id="sortableplaylist_<?php echo $browse->get_filter('album'); ?>">
         <?php
             foreach ($object_ids as $song_id) {
-                $libitem = new Song($song_id);
+                $libitem = new Song($song_id, $limit_threshold);
                 $libitem->format();
         ?>
             <tr class="<?php echo UI::flip_class(); ?>" id="song_<?php echo $libitem->id; ?>">

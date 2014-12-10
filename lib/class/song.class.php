@@ -291,13 +291,13 @@ class Song extends database_object implements media, library_item
      * Song class, for modifing a song.
      * @param int|null $id
      */
-    public function __construct($id = null)
+    public function __construct($id = null, $limit_threshold = '')
     {
         if (!$id) { return false; }
 
         $this->id = intval($id);
 
-        if ($info = $this->_get_info()) {
+        if ($info = $this->_get_info($limit_threshold)) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -422,7 +422,7 @@ class Song extends database_object implements media, library_item
      * @param int[] $song_ids
      * @return boolean
      */
-    public static function build_cache($song_ids)
+    public static function build_cache($song_ids, $limit_threshold = '')
     {
         if (!is_array($song_ids) || !count($song_ids)) { return false; }
 
@@ -455,7 +455,7 @@ class Song extends database_object implements media, library_item
 
         while ($row = Dba::fetch_assoc($db_results)) {
             if (AmpConfig::get('show_played_times')) {
-                $row['object_cnt'] = Stats::get_object_count('song', $row['id']);
+                $row['object_cnt'] = Stats::get_object_count('song', $row['id'], $limit_threshold);
             }
             parent::add_to_cache('song', $row['id'], $row);
             $artists[$row['artist']] = $row['artist'];
@@ -495,7 +495,7 @@ class Song extends database_object implements media, library_item
      * _get_info
      * @return array|boolean
      */
-    private function _get_info()
+    private function _get_info($limit_threshold = '')
     {
         $id = $this->id;
 
@@ -515,7 +515,7 @@ class Song extends database_object implements media, library_item
         $results = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             if (AmpConfig::get('show_played_times')) {
-                $results['object_cnt'] = Stats::get_object_count('song', $results['id']);
+                $results['object_cnt'] = Stats::get_object_count('song', $results['id'], $limit_threshold);
             }
 
             parent::add_to_cache('song', $id, $results);

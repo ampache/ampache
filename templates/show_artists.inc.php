@@ -65,7 +65,7 @@ $thcount = 8;
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $artist_id) {
             $libitem = new Artist($artist_id, $_SESSION['catalog']);
-            $libitem->format();
+            $libitem->format(true, $limit_threshold);
             $show_direct_play = $show_direct_play_cfg;
             $show_playlist_add = Access::check('interface', '25');
             if ($directplay_limit > 0) {

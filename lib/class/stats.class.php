@@ -144,9 +144,18 @@ class Stats
       * get_object_count
      * Get count for an object
      */
-    public static function get_object_count($object_type, $object_id, $count_type = 'stream')
+    public static function get_object_count($object_type, $object_id, $threshold = '', $count_type = 'stream')
     {
+        $date = '';
+        if ($threshold) {
+            $date = time() - (86400*$threshold);
+        }
+        
         $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
+        if ($date) {
+            $sql .= "AND `date` >= '" . $date . "'";
+        }
+        
         $db_results = Dba::read($sql, array($object_type, $object_id, $count_type));
 
         $results = Dba::fetch_assoc($db_results);
@@ -240,11 +249,11 @@ class Stats
 
         /* Select Top objects counting by # of rows */
         $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count" .
-            " WHERE object_id IN (SELECT object_id FROM object_count WHERE object_type = '" . $type ."' AND date >= '" . $date . "' ";
+            " WHERE `object_type` = '" . $type ."' AND `date` >= '" . $date . "' ";
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
+            $sql .= "AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
-        $sql .= " AND `count_type` = '" . $count_type . "') ";
+        $sql .= " AND `count_type` = '" . $count_type . "'";
         $sql .= " GROUP BY object_id ORDER BY `count` DESC ";
         return $sql;
     }
