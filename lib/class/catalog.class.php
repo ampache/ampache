@@ -1554,7 +1554,6 @@ abstract class Catalog extends database_object
      */
     public function verify_catalog()
     {
-
         require AmpConfig::get('prefix') . '/templates/show_verify_catalog.inc.php';
         ob_flush();
         flush();
