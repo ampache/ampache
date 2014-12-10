@@ -195,13 +195,8 @@ class Browse extends Query
 
         debug_event('browse', 'Show objects called for type {'.$type.'}', '5');
 
-        $limit_threshold = '';
-        if (AmpConfig::get('show_played_times') && is_array($argument)) {
-            if ($argument['limit_threshold']) {
-                $limit_threshold = $argument['limit_threshold'];
-            }
-        }
-
+        $limit_threshold = $this->get_threshold();
+        
         // Switch on the type of browsing we're doing
         switch ($type) {
             case 'song':
@@ -363,9 +358,9 @@ class Browse extends Query
 
     public function show_next_link()
     {
-        $limit    = $this->get_offset();
-        $start    = $this->get_start();
-        $total    = $this->get_total();
+        $limit = $this->get_offset();
+        $start = $this->get_start();
+        $total = $this->get_total();
         $next_offset = $start + $limit;
         if ($next_offset <= $total) {
             echo '<a class="jscroll-next" href="' . AmpConfig::get('ajax_url') . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode='. $this->get_content_div() . '&show_header=false">' . T_('More') . '</a>';
@@ -509,6 +504,24 @@ class Browse extends Query
     public function get_update_session()
     {
         return $this->_state['update_session'];
+    }
+    
+    /**
+     *
+     * @param string $threshold
+     */
+    public function set_threshold($threshold)
+    {
+        $this->_state['threshold'] = $threshold;
+    }
+    
+    /**
+     *
+     * @return string
+     */
+    public function get_threshold()
+    {
+        return $this->_state['threshold'];
     }
 
 } // browse
