@@ -196,7 +196,7 @@ class Browse extends Query
         debug_event('browse', 'Show objects called for type {'.$type.'}', '5');
 
         $limit_threshold = $this->get_threshold();
-        
+
         // Switch on the type of browsing we're doing
         switch ($type) {
             case 'song':
@@ -505,7 +505,7 @@ class Browse extends Query
     {
         return $this->_state['update_session'];
     }
-    
+
     /**
      *
      * @param string $threshold
@@ -514,7 +514,7 @@ class Browse extends Query
     {
         $this->_state['threshold'] = $threshold;
     }
-    
+
     /**
      *
      * @return string

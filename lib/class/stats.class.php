@@ -150,12 +150,12 @@ class Stats
         if ($threshold) {
             $date = time() - (86400*$threshold);
         }
-        
+
         $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
         if ($date) {
             $sql .= "AND `date` >= '" . $date . "'";
         }
-        
+
         $db_results = Dba::read($sql, array($object_type, $object_id, $count_type));
 
         $results = Dba::fetch_assoc($db_results);

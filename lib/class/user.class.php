@@ -805,9 +805,9 @@ class User extends database_object
      * update_user_stats
      * updates the playcount mojo for this specific user
      */
-    public function update_stats($media_type, $media_id, $agent = '', $location = array())
+    public function update_stats($media_type, $media_id, $agent = '', $location = array(), $noscrobble = false)
     {
-        debug_event('user.class.php', 'Updating stats for {'.$media_type.'/'.$media_id.'} {'.$agent.'}...', '5');
+        debug_event('user.class.php', 'Updating stats for {'.$media_type.'/'.$media_id.'} {'.$agent.'}...', 5);
         $media = new $media_type($media_id);
         $media->format();
         $user = $this->id;
@@ -815,19 +815,22 @@ class User extends database_object
         // We shouldn't test on file only
         if (!strlen($media->file)) { return false; }
 
-        $this->set_preferences();
-
-        // If pthreads available, we call save_songplay in a new thread to quickly return
-        if (class_exists("Thread", false)) {
-            debug_event('user.class.php', 'Calling save_mediaplay plugins in a new thread...', '5');
-            $thread = new scrobbler_async($GLOBALS['user'], $media);
-            if ($thread->start()) {
-                //$thread->join();
+        if (!$noscrobble) {
+            $this->set_preferences();
+            // If pthreads available, we call save_songplay in a new thread to quickly return
+            if (class_exists("Thread", false)) {
+                debug_event('user.class.php', 'Calling save_mediaplay plugins in a new thread...', 5);
+                $thread = new scrobbler_async($GLOBALS['user'], $media);
+                if ($thread->start()) {
+                    //$thread->join();
+                } else {
+                    debug_event('user.class.php', 'Error when starting the thread.', 1);
+                }
             } else {
-                debug_event('user.class.php', 'Error when starting the thread.', '1');
+                User::save_mediaplay($GLOBALS['user'], $media);
             }
         } else {
-            User::save_mediaplay($GLOBALS['user'], $media);
+            debug_event('user.class.php', 'Scrobbling explicitly skipped', 5);
         }
 
         $media->set_played($user, $agent, $location);

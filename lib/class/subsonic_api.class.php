@@ -903,7 +903,7 @@ class Subsonic_Api
         $size = $input['size']; // For video streaming. Not supported.
         $estimateContentLength = $input['estimateContentLength']; // Force content-length guessing if transcode
 
-        $params = '&client=' . $input['c'];
+        $params = '&client=' . rawurlencode($input['c']) . '&noscrobble=1';
         if ($estimateContentLength == 'true') {
             $params .= '&content_length=required';
         }
@@ -940,7 +940,7 @@ class Subsonic_Api
 
         $fileid = self::check_parameter($input, 'id', true);
 
-        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . $input['c'], function_exists('curl_version'));
+        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&noscrobble=1', function_exists('curl_version'));
         self::follow_stream($url);
     }
 
@@ -1496,6 +1496,42 @@ class Subsonic_Api
         self::apiOutput($input, $r);
     }
 
+    /**
+     * scrobble
+     * Scrobbles a given music file on last.fm.
+     * Takes the file id with optional time and submission parameters.
+     */
+    public static function scrobble($input)
+    {
+        self::check_version($input, "1.5.0");
+
+        $id = self::check_parameter($input, 'id');
+        //$time = $input['time'];
+        //$submission = $input['submission'];
+
+        if (!is_array($id)) {
+            $rid = array();
+            $rid[] = $id;
+            $id = $rid;
+        }
+
+        foreach ($id as $i) {
+            $aid = Subsonic_XML_Data::getAmpacheId($i);
+            if (Subsonic_XML_Data::isVideo($i)) {
+                $type = 'video';
+            } else {
+                $type = 'song';
+            }
+
+            $media = new $type($aid);
+            $media->format();
+            $GLOBALS['user']->save_mediaplay($GLOBALS['user'], $media);
+        }
+
+        $r = Subsonic_XML_Data::createSuccessResponse();
+        self::apiOutput($input, $r);
+    }
+
     /****   CURRENT UNSUPPORTED FUNCTIONS   ****/
 
     /**
@@ -1522,21 +1558,6 @@ class Subsonic_Api
         self::check_version($input, "1.6.0");
 
         $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
-        self::apiOutput($input, $r);
-    }
-
-    /**
-     * scrobble
-     * Scrobbles a given music file on last.fm.
-     * Takes the file id with optional time and submission parameters.
-     * Not supported. Already done by Ampache if plugin enabled.
-     */
-    public static function scrobble($input)
-    {
-        self::check_version($input, "1.5.0");
-
-        // Ignore error to not break clients
-        $r = Subsonic_XML_Data::createSuccessResponse();
         self::apiOutput($input, $r);
     }
 

@@ -585,11 +585,11 @@ if (!isset($_REQUEST['segment'])) {
     } else {
         if (!$share_id) {
             if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
-                debug_event('play', 'Registering stream stats for {'.$media->get_stream_name() .'}...', '5');
+                debug_event('play', 'Registering stream stats for {'.$media->get_stream_name() .'}...', 5);
                 $sessionkey = $sid ?: Stream::get_session();
                 $agent = Session::agent($sessionkey);
                 $location = Session::get_geolocation($sessionkey);
-                $GLOBALS['user']->update_stats($type, $media->id, $agent, $location);
+                $GLOBALS['user']->update_stats($type, $media->id, $agent, $location, isset($_REQUEST['noscrobble']));
             }
         }
     }
