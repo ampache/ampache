@@ -887,18 +887,7 @@ class vainfo
                     $tcid['data'] = str_replace("\xFE", "", $tcid['data']);
 
                     if (!empty($tcid['data'])) {
-                        // Parsing string with the null character
-                        $genres = explode("\0", $tcid['data']);
-                        $parsed_genres = array();
-                        foreach ($genres as $g) {
-                            if (strlen($g) > 2) {   // Only allow tags with at least 3 characters
-                                $parsed_genres[] = $g;
-                            }
-                        }
-
-                        if (count($parsed_genres)) {
-                            $parsed['genre'] = $parsed_genres;
-                        }
+                        $parsed['genre'] = getid3_id3v2::ParseID3v2GenreString($tcid['data']);
                     }
                 }
                 break;
