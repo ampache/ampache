@@ -185,6 +185,24 @@ class Dba
         return $result;
     }
 
+     public static function fetch_object($resource, $class = 'stdClass', $finish = true)
+    {
+        if (!$resource) {
+            return array();
+        }
+
+        $result = $resource->fetchObject($class);
+
+        if (!$result) {
+            if ($finish) {
+                self::finish($resource);
+            }
+            return array();
+        }
+
+        return $result;
+    }
+
     /**
      * num_rows
      *
