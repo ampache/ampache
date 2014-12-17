@@ -7212,7 +7212,7 @@ msgstr "racine"
 
 #: Database words id 1
 msgid "Allow Downloads"
-msgstr "Téléchargements autorisés"
+msgstr "Autoriser les téléchargements"
 
 #: Database words id 4
 msgid "Popular Threshold"
@@ -7362,11 +7362,11 @@ msgstr "Vérifier automatiquement les mises à jour d'Ampache"
 
 #: Database words id 96
 msgid "AutoUpdate last check time"
-msgstr "Mise à jour automatique de dernière heure de départ"
+msgstr "Mise à jour automatique de l'heure de la dernière vérification"
 
 #: Database words id 97
 msgid "AutoUpdate last version from last check"
-msgstr "Mise à jour automatique dernière version de la dernière vérification"
+msgstr "Mise à jour automatique à la version de la dernière vérification"
 
 #: Database words id 98
 msgid "AutoUpdate last version from last check is newer"
@@ -7392,11 +7392,11 @@ msgstr "Autoriser le partage"
 
 #: Database words id 103
 msgid "Share links default expiration days (0=never)"
-msgstr "Jours d'expiration par défaut des liens de partage (0=jamais)"
+msgstr "Temps d'expiration (en jours) par défaut des liens de partage (0=jamais)"
 
 #: Database words id 104
 msgid "Artist slideshow inactivity time"
-msgstr "Temps d'inactivité "
+msgstr "Temps d'inactivité pour le diaporama de l'artiste"
 
 #: Database words id 105
 msgid "Broadcast web player by default"
@@ -7462,11 +7462,11 @@ msgstr "Upload: Permettre aux utilisateurs d'éditer des pistes uploadées"
 
 #: Database words id 119
 msgid "Use DAAP backend"
-msgstr "Utilisez DAAP backend"
+msgstr "Utiliser DAAP backend"
 
 #: Database words id 120
 msgid "DAAP backend password"
-msgstr "DAAP mot de passe backend"
+msgstr "Mot de passe DAAP backend"
 
 #: Database words id 121
 msgid "Use UPnP backend"
@@ -7474,15 +7474,15 @@ msgstr "Utiliser UPnP backend"
 
 #: Database words id 122
 msgid "Allow video features"
-msgstr "Autoriser fonctions vidéo"
+msgstr "Autoriser les fonctionnalités vidéo"
 
 #: Database words id 123
 msgid "Album - Group per release type"
-msgstr "Album - Groupe par type de sortie"
+msgstr "Album - Grouper par type de sortie"
 
 #: Database words id 124
 msgid "Ajax page load"
-msgstr "Chargement de la page AJAX"
+msgstr "Chargement de la page en AJAX"
 
 #: Database words id 125
 msgid "Amazon base url"
@@ -7506,47 +7506,47 @@ msgstr "Amazon associé tag"
 
 #: Database words id 130
 msgid "Limit direct play to maximum media count"
-msgstr "Limiter la lecture directe de nombre de médias maximale"
+msgstr "Limiter la lecture directe à un nombre de médias maximum"
 
 #: Database words id 131
 msgid "Show Albums of the moment at home page"
-msgstr "Voir les albums du moment à la maison pageWrite nouvelle config"
+msgstr "Voir les albums du moment en page d'accueil"
 
 #: Database words id 132
 msgid "Show Videos of the moment at home page"
-msgstr "Voir les vidéos du moment à la page d'accueil"
+msgstr "Voir les vidéos du moment en page d'accueil"
 
 #: Database words id 133
 msgid "Show Recently Played at home page"
-msgstr "Afficher récemment Joué à la page d'accueil"
+msgstr "Afficher les pistes récemment jouées en page d'accueil"
 
 #: Database words id 134
 msgid "Show Now Playing at home page"
-msgstr "Voir les jouer à la page d'accueil"
+msgstr "Afficher les pistes jouées actuellement en page d'accueil"
 
 #: Database words id 135
 msgid "Custom logo url"
-msgstr "Logo personnalisé url"
+msgstr "URL du logo personnalisé"
 
 #: Database words id 136
 msgid "Album - Group per release type Sort"
-msgstr "Album - Groupe par la libération de type Tri"
+msgstr "Album - Grouper par type de sortie"
 
 #: Database words id 137
 msgid "WebPlayer browser notifications"
-msgstr "WebPlayer notifications navigateur"
+msgstr "Notifications du navigateur pour le WebPlayer"
 
 #: Database words id 138
 msgid "WebPlayer browser notifications timeout (seconds)"
-msgstr "WebPlayer notifications navigateur timeout (secondes)"
+msgstr "Timeout des notifications du navigateur pour le WebPlayer (secondes)"
 
 #: Database words id 139
 msgid "Allow geolocation"
-msgstr "permettre la géolocalisation"
+msgstr "Permettre la géolocalisation"
 
 #: Database words id 140
 msgid "Authorize JavaScript decoder (Aurora.js) in Web Player(s)"
-msgstr "Autoriser décodeur JavaScript (Aurora.js) dans Web Player (s)"
+msgstr "Autoriser le décodeur JavaScript (Aurora.js) dans le WebPlayer"
 
 #~ msgid "Iframes"
 #~ msgstr "Iframes"
