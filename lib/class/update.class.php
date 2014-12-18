@@ -482,6 +482,9 @@ class Update
         $update_string = " - Move column album_artist from table song to table album.<br />";
         $version[] = array('version' => '370027','description' => $update_string);
 
+        $update_string = "- Add basic metadata tables<br />";
+        $version[] = array('version' => '370028','description' => $update_string);
+
         return $version;
     }
 
@@ -3258,5 +3261,35 @@ class Update
         $retval = Dba::write($sql) ? $retval : false;
 
         return $retval;
+    }
+    
+    public static function update_370028() {
+        $retval = true;
+       
+        $sql = 'CREATE TABLE IF NOT EXISTS `metadata_field` (
+            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+            `name` varchar(255) NOT NULL,
+            `public` tinyint(1) NOT NULL,
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `name` (`name`)
+           ) ENGINE=InnoDB';
+        $retval &= Dba::write($sql);
+
+        $sql = 'CREATE TABLE IF NOT EXISTS `metadata` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `object_id` int(10) unsigned NOT NULL,
+            `field` int(11) unsigned NOT NULL,
+            `data` text COLLATE utf8_unicode_ci NOT NULL,
+            `type` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+            PRIMARY KEY (`id`),
+            KEY `field` (`field`),
+            KEY `object_id` (`object_id`),
+            KEY `type` (`type`),
+            KEY `objecttype` (`object_id`,`type`),
+            KEY `objectfield` (`object_id`,`field`,`type`)
+           ) ENGINE=InnoDB';
+        $retval &= Dba::write($sql);
+
+        return (bool) $retval;
     }
 }
