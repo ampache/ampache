@@ -551,6 +551,7 @@ class Catalog_local extends Catalog
             }
 
             $media = new $media_type($row['id']);
+            $this->updateMetadata($media, $this->sort_pattern,$this->rename_pattern);
 
             $info = self::update_media_from_tags($media, $this->sort_pattern,$this->rename_pattern);
             if ($info['change']) {
@@ -569,7 +570,7 @@ class Catalog_local extends Catalog
      *
      * Removes local songs that no longer exist.
      */
-     public function clean_catalog_proc()
+    public function clean_catalog_proc()
      {
         if (!Core::is_readable($this->path)) {
             // First sanity check; no point in proceeding with an unreadable
@@ -609,6 +610,9 @@ class Catalog_local extends Catalog
                 $db_results = Dba::write($sql);
             }
         }
+        
+        \lib\Metadata\Repository\Metadata::gc();
+        \lib\Metadata\Repository\MetadataField::gc();
         return $dead_total;
     }
 
@@ -694,8 +698,13 @@ class Catalog_local extends Catalog
         if (isset($options['license'])) {
             $results['license'] = $options['license'];
         }
-
+        
         $id = Song::insert($results);
+        if($id) {
+            $song = new Song($id);
+            $this->addMetadata($song, $results);
+        }
+
         $this->added_songs_to_gather[] = $id;
 
         return $id;
@@ -780,6 +789,68 @@ class Catalog_local extends Catalog
     {
         // Do nothing, it's just file...
         return $media;
+    }
+    
+    /**
+     * Get rid of all tags found in the libraryItem
+     * @param library_item $libraryItem
+     * @param array $metadata
+     * @return array
+     */
+    protected function getCleanMetadata(library_item $libraryItem, $metadata)
+    {
+        $tags = array_diff($metadata, get_object_vars($libraryItem));
+        $keys = array_merge(
+            defined(get_class($libraryItem) . '::' . 'aliases') ? $libraryItem::aliases : array(),
+            array_keys(get_object_vars($libraryItem))
+        );
+        foreach($keys as $key) {
+            unset($tags[$key]);
+        }
+        
+        return $tags;
+    }
+
+    /**
+     * 
+     * @param library_item $libraryItem
+     * @param type $metadata
+     */
+    public function addMetadata(library_item $libraryItem, $metadata)
+    {
+        $tags = $this->getCleanMetadata($libraryItem, $metadata);
+        
+        foreach($tags as $tag => $value) {
+            $field = $libraryItem->getField($tag);
+            $libraryItem->addMetadata($field, $value);
+        }
+    }
+
+    // TODO: Get rid of duplicated code...
+    public function updateMetadata($media, $sort_pattern='', $rename_pattern='')
+    {
+        // Check for patterns
+        if (!$sort_pattern OR !$rename_pattern) {
+            $catalog = Catalog::create_from_id($media->catalog);
+            $sort_pattern = $catalog->sort_pattern;
+            $rename_pattern = $catalog->rename_pattern;
+        }
+
+        debug_event('tag-read', 'Reading tags from ' . $media->file, 5);
+
+        $vainfo = new vainfo($media->file,array('music'),'','','',$sort_pattern,$rename_pattern);
+        $vainfo->get_info();
+
+        $key = vainfo::get_tag_type($vainfo->tags);
+
+        $results = vainfo::clean_tag_info($vainfo->tags,$key,$media->file);
+        
+        $tags = $this->getCleanMetadata($media, $results);
+        
+        foreach($tags as $tag => $value) {
+            $field = $media->getField($tag);
+            $media->updateOrInsertMetadata($field, $value);
+        }
     }
 
 } // end of local catalog class

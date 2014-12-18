@@ -66,7 +66,7 @@ abstract class DatabaseObject
      * This works in constructor because the properties are here from
      * fetch_object before the constructor get called.
      */
-    public function remapCamelcase()
+    protected function remapCamelcase()
     {
         foreach(get_object_vars($this) as $key => $val) {
             if(strpos($key, '_') !== false) {
@@ -77,7 +77,7 @@ abstract class DatabaseObject
         }
     }
     
-    public function fromCamelCase($properties) {
+    protected function fromCamelCase($properties) {
         $data = array();
         foreach($properties as $propertie => $value) {
             $newPropertyKey = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $propertie));

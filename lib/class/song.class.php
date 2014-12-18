@@ -22,6 +22,9 @@
 
 class Song extends database_object implements media, library_item
 {
+
+    use \lib\Metadata\Metadata;
+    
     /* Variables from DB */
 
     /**
@@ -286,6 +289,16 @@ class Song extends database_object implements media, library_item
     public $_fake = false; // If this is a 'construct_from_array' object
 
     /**
+     * Aliases used in insert function
+     */
+    const aliases = array(
+        'mb_trackid','mbid','mb_albumid','mb_albumid_group','mb_artistid','mb_albumartistid','genre','publisher'
+    );
+    
+    
+    
+    
+    /**
      * Constructor
      *
      * Song class, for modifing a song.
@@ -308,6 +321,8 @@ class Song extends database_object implements media, library_item
             $this->id = null;
             return false;
         }
+        
+        $this->initializeMetadata();
 
         return true;
 
@@ -379,6 +394,7 @@ class Song extends database_object implements media, library_item
             $composer, $channels));
 
         if (!$db_results) {
+            var_dump(Dba::error());exit;
             debug_event('song', 'Unable to insert ' . $file, 2);
             return false;
         }
@@ -1835,6 +1851,10 @@ class Song extends database_object implements media, library_item
         $meta['genre'] = implode(',', $meta['genre']);
 
         return $meta;
+    }
+
+    public function getId() {
+        return $this->id;
     }
 
 } // end of song class

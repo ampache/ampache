@@ -32,10 +32,10 @@ class Repository
 {
     protected $modelClassName;
 
-    protected function findBy($field, $value)
+    protected function findBy($fields, $values)
     {
         $table = $this->getTableName();
-        return $this->getRecords($table, $field, $value);
+        return $this->getRecords($table, $fields, $values);
     }
 
     public function findAll()
@@ -50,25 +50,32 @@ class Repository
         return count($rows) ? reset($rows) : null;
     }
 
-    private function getRecords($className, $field = null, $value = null)
+    private function getRecords($table, $field = null, $value = null)
     {
         $data = array();
-        $sql = 'SELECT * FROM ' . $className;
-        if ($value) {
-            $sql .= ' WHERE ' . $field . ' = ?';
-        }
+        $sql = $this->assembleQuery($table, $field);
 
-        $statement = \Dba::read($sql, array($value));
+        $statement = \Dba::read($sql, is_array($value) ? $value : array($value));
         while ($object = \Dba::fetch_object($statement, $this->modelClassName)) {
             $data[$object->getId()] = $object;
         }
         return $data;
     }
 
+    /**
+     * 
+     * @param string $name
+     * @param array $arguments
+     * @return DatabaseObject
+     */
     public function __call($name, $arguments)
     {
         if (preg_match('/^findBy(.*)$/', $name, $matches)) {
-            return $this->findBy($matches[1], count($arguments) ? $arguments[0] : null);
+            $parts = explode('And', $matches[1]);
+            return $this->findBy(
+                    $parts,
+                    $this->resolveObjects($arguments)
+            );
         }
     }
 
@@ -176,6 +183,32 @@ class Repository
             }
         }
         return $properties;
+    }
+
+    /**
+     * Create query for one or multiple fields
+     * @param string $table
+     * @param array $fields
+     * @return string
+     */
+    public function assembleQuery($table, $fields)
+    {
+        $sql = 'SELECT * FROM ' . $table;
+        if($fields) {
+           $sql .= ' WHERE ';
+           $sqlParts = array();
+           foreach($fields as $field) {
+               $sqlParts[] = '`' . $this->camelCaseToUnderscore($field) . '` = ?';
+           }
+           $sql .= implode(' and ', $sqlParts);
+        }
+        
+        return $sql;
+    }
+
+    public function camelCaseToUnderscore($string)
+    {
+        return strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/','_$1', $string));
     }
 
 }

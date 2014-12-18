@@ -28,60 +28,74 @@ namespace lib\Metadata;
  *
  * @author raziel
  */
-class Metadata
-{
+trait Metadata {
+    
     /**
-     * Some kind of item
-     * @var library_item
+     *
+     * @var Repository\Metadata
      */
-    protected $object;
-
+    protected $metadataRepository;
+    
     /**
-     * Tag values
-     * @var stdClass
+     *
+     * @var Repository\MetadataField
      */
-    protected $data;
-
-    public function __construct($object)
-    {
-        $this->object = $object;
-        $this->data = new stdClass();
+    protected $metadataFieldRepository;
+    
+    protected function initializeMetadata() {
+        $this->metadataRepository = new \lib\Metadata\Repository\Metadata();
+        $this->metadataFieldRepository = new \lib\Metadata\Repository\MetadataField();
     }
-
-    public function load($tag = null)
-    {
-        $sql = 'SELECT metadata.data, metadata_field.name FROM metadata '
-                . 'JOIN metadata_field ON metadata.field = metadata_field.id';
-        if($tag) {
-            $sql .= ' WHERE metadata_field.name = ?';
+    
+    public function getMetadata() {
+        return $this->metadataRepository->findByObjectIdAndType($this->id, get_class($this));
+    }
+    
+    public function deleteMetadata() {
+        $this->metadataRepository->remove($this);
+    }
+    
+    public function addMetadata(\lib\Metadata\Model\MetadataField $field, $data) {
+        $metadata = new \lib\Metadata\Model\Metadata();
+        $metadata->setField($field);
+        $metadata->setObjectId($this->id);
+        $metadata->setType(get_class($this));
+        $metadata->setData($data);
+        $this->metadataRepository->add($metadata);
+    }
+    
+    public function updateOrInsertMetadata(\lib\Metadata\Model\MetadataField $field, $data) {
+        /* @var $metadata Model\Metadata */
+        $metadata = $this->metadataRepository->findByObjectIdAndFieldAndType($this->id, $field, get_class($this));
+        if($metadata) {
+            $object = reset($metadata);
+            $object->setData($data);
+            $this->metadataRepository->update($object);
         }
-        $statement = \Dba::read($sql, $tag);
-        while($object = \Dba::fetch_object($statement, __CLASS__)) {
-            $this->data[$object->getId()] = $object;
+        else {
+            $this->addMetadata($field, $data);
         }
-        return $this->data;
+    }
+    
+    protected function createField($name, $public) {
+        $field = new \lib\Metadata\Model\MetadataField();
+        $field->setName($name);
+        if(!$public) {
+            $field->hide();
+        }
+        $this->metadataFieldRepository->add($field);
+        return $field;
     }
 
-    public function save() {
-
-    }
-
-    public function get($tag)
+    public function getField($propertie, $public = true)
     {
-        return $this->data->$tag;
+        $fields = $this->metadataFieldRepository->findByName($propertie);
+        if(count($fields)) {
+            $field = reset($fields);
+        }
+        else {
+            $field = $this->createField($propertie, $public);
+        }
+        return $field;
     }
-
-    public function getAll() {
-        return $this->data;
-    }
-
-    public function set($tag, $data)
-    {
-        $this->data->$tag = $data;
-    }
-
-    public function setAll($tags) {
-        $this->data = (object) $tags;
-    }
-
 }
