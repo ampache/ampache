@@ -21,7 +21,7 @@
  *
  */
 
-namespace lib;
+namespace lib\Interfaces;
 
 /**
  * Description of Model
@@ -30,5 +30,9 @@ namespace lib;
  */
 interface Model
 {
-    //put your code here
+
+    /**
+     * Get ID of Database Object
+     */
+    public function getId();
 }

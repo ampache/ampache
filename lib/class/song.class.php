@@ -888,6 +888,8 @@ class Song extends database_object implements media, library_item
                     Tag::update_tag_list($value, 'song', $this->id);
                     $this->tags = Tag::get_top_tags('song', $this->id);
                 break;
+                case 'metadata':
+                    $this->updateMetadata($value);
                 default:
                 break;
             } // end whitelist
@@ -1855,6 +1857,21 @@ class Song extends database_object implements media, library_item
 
     public function getId() {
         return $this->id;
+    }
+
+    /**
+     * Update Metadata from array
+     * @param array $value
+     */
+    public function updateMetadata($value)
+    {
+        foreach($value as $metadataId => $value) {
+            $metadata = $this->metadataRepository->findById($metadataId);
+            if($value != $metadata->getData()) {
+                $metadata->setData($value);
+                $this->metadataRepository->update($metadata);
+            }
+        }
     }
 
 } // end of song class

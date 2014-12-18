@@ -28,7 +28,7 @@ namespace lib\Metadata\Model;
  *
  * @author raziel
  */
-class Metadata extends \lib\DatabaseObject
+class Metadata extends \lib\DatabaseObject implements \lib\Interfaces\Model
 {
     /**
      * Database ID
@@ -59,6 +59,15 @@ class Metadata extends \lib\DatabaseObject
      * @var string
      */
     protected $type;
+    
+    /**
+     *
+     * @var array Stores relation between SQL field name and repository class name so we
+     * can initialize objects the right way
+     */
+    protected $fieldClassRelations = array(
+        'field' => '\lib\Metadata\Repository\MetadataField'
+    );
 
     /**
      *
@@ -71,7 +80,7 @@ class Metadata extends \lib\DatabaseObject
 
     /**
      *
-     * @return Metadata_field
+     * @return MetadataField
      */
     public function getField()
     {

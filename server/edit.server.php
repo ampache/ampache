@@ -82,10 +82,14 @@ switch ($_REQUEST['action']) {
         ob_end_clean();
     break;
     case 'edit_object':
-        // Scrub the data
-        foreach ($_POST as $key => $data) {
-            $_POST[$key] = unhtmlentities(scrub_in($data));
-        }
+        // Scrub the data, walk recursive through array
+        $entities = function(&$data) use (&$entities) {
+            foreach($data as $key => $value) {
+                $data[$key] = is_array($value) ? $entities($value) : unhtmlentities(scrub_in($value));
+            }
+            return $data;
+        };
+        $entities($_POST);
 
         // this break generic layer, we should move it somewhere else
         if ($type == 'song_row') {

@@ -42,17 +42,26 @@ trait Metadata {
      */
     protected $metadataFieldRepository;
     
+    
+    /**
+     * Initialize the repository variables. Needs to be called first if the trait should do something.
+     */
     protected function initializeMetadata() {
         $this->metadataRepository = new \lib\Metadata\Repository\Metadata();
         $this->metadataFieldRepository = new \lib\Metadata\Repository\MetadataField();
     }
     
+    
     public function getMetadata() {
         return $this->metadataRepository->findByObjectIdAndType($this->id, get_class($this));
     }
     
-    public function deleteMetadata() {
-        $this->metadataRepository->remove($this);
+    /**
+     * 
+     * @param Model\Metadata $metadata
+     */
+    public function deleteMetadata(Model\Metadata $metadata) {
+        $this->metadataRepository->remove($metadata);
     }
     
     public function addMetadata(\lib\Metadata\Model\MetadataField $field, $data) {

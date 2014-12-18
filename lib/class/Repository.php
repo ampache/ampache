@@ -31,6 +31,13 @@ namespace lib;
 class Repository
 {
     protected $modelClassName;
+    
+    /**
+     *
+     * @var array Stores relation between SQL field name and class name so we
+     * can initialize objects the right way
+     */
+    protected $fieldClassRelations = array();
 
     protected function findBy($fields, $values)
     {
@@ -44,9 +51,14 @@ class Repository
         return $this->getRecords($table);
     }
 
+    /**
+     * 
+     * @param type $id
+     * @return DatabaseObject
+     */
     public function findById($id)
     {
-        $rows = $this->findBy('id', $id);
+        $rows = $this->findBy(array('id'), array($id));
         return count($rows) ? reset($rows) : null;
     }
 
@@ -105,7 +117,7 @@ class Repository
     {
         if ($object->isDirty()) {
             $properties = $object->getDirtyProperties();
-            $this->updateRecord($properties);
+            $this->updateRecord($object->getId(), $properties);
         }
     }
 
@@ -127,12 +139,12 @@ class Repository
         return \Dba::insert_id();
     }
 
-    protected function updateRecord($properties)
+    protected function updateRecord($id, $properties)
     {
-        $properties[] = $properties['id'];
         $sql = 'UPDATE ' . $this->getTableName()
                 . ' SET ' . implode(',', $this->getKeyValuePairs($properties))
                 . ' WHERE id = ?';
+        $properties[] = $id;
         \Dba::write(
                 $sql,
                 array_values($this->resolveObjects($properties))

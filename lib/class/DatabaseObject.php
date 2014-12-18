@@ -32,10 +32,18 @@ abstract class DatabaseObject
 {
     protected $id;
     //private $originalData;
+    
+    /**
+     *
+     * @var array Stores relation between SQL field name and class name so we
+     * can initialize objects the right way
+     */
+    protected $fieldClassRelations = array();
 
     public function __construct()
     {
         $this->remapCamelcase();
+        $this->initializeChildObjects();
         //$this->originalData = get_object_vars($this);
     }
 
@@ -54,10 +62,16 @@ abstract class DatabaseObject
         return true;
     }
 
+    /**
+     * Get all changed properties
+     * TODO: we get all properties for now...need more logic here...
+     * @return array
+     */
     public function getDirtyProperties()
     {
         $properties = get_object_vars($this);
         unset($properties['id']);
+        unset($properties['fieldClassRelations']);
         return $this->fromCamelCase($properties);
     }
 
@@ -84,6 +98,21 @@ abstract class DatabaseObject
             $data[$newPropertyKey] = $value;
         }
         return $data;
+    }
+
+    /**
+     * Adds child Objects based of the Model Information
+     * TODO: Someday we might need lazy loading, but for now it should be ok.
+     */
+    public function initializeChildObjects()
+    {
+        foreach($this->fieldClassRelations as $field => $repositoryName) {
+            if(class_exists($repositoryName)) {
+                /* @var $repository Repository */
+                $repository = new $repositoryName;
+                $this->$field = $repository->findById($this->$field);
+            }
+        }
     }
 
 }
