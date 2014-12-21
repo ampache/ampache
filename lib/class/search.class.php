@@ -399,6 +399,18 @@ class Search extends playlist_object
                     'widget' => array('select', $licenses)
                 );
             }
+            $metadataFieldRepository = new \lib\Metadata\Repository\MetadataField();
+            foreach($metadataFieldRepository->findAll() as $field) {
+                /* @var $field \lib\Metadata\Model\MetadataField */
+                if($field->isPublic()) {
+                    $this->types[] = array(
+                        'name' => 'metadata[' . $field->getId() . ']',
+                        'label' => $field->getName(),
+                        'type' => 'text',
+                        'widget' => array('input', 'text')
+                    );
+                }
+            }
         break;
         case 'album':
             $this->types[] = array(
@@ -1171,6 +1183,14 @@ class Search extends playlist_object
                     // NOSSINK!
                 break;
             } // switch on type
+            
+            if(preg_match('/metadata\[(\d+?)\]/', $rule[0], $matches)) {
+                // Need to create a join for every field so we can create and / or queries with only one table
+                $tableAlias = 'metadata' . $matches[1];
+                $join[$tableAlias] = true;
+                $where[] = "`$tableAlias`.`field` = {$matches[1]} AND `$tableAlias`.`data` $sql_match_operator '$input'";
+                $table[$tableAlias] = 'LEFT JOIN `metadata` AS ' . $tableAlias . ' ON `song`.`id` = `' . $tableAlias . '`.`object_id`';
+            }
         } // foreach over rules
 
         $join['catalog'] = AmpConfig::get('catalog_disable');
