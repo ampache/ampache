@@ -878,22 +878,6 @@ class vainfo
             }
         }
 
-        // Find all genre
-        if (!empty($id3v2['TCON'])) {
-            foreach ($id3v2['TCON'] as $tcid) {
-                if ($tcid['framenameshort'] == "genre") {
-                    // Removing unwanted UTF-8 charaters
-                    $tcid['data'] = str_replace("\xFF", "", $tcid['data']);
-                    $tcid['data'] = str_replace("\xFE", "", $tcid['data']);
-
-                    if (!empty($tcid['data'])) {
-                        $parsed['genre'] = getid3_id3v2::ParseID3v2GenreString($tcid['data']);
-                    }
-                }
-                break;
-            }
-        }
-
         // Find the rating
         if (is_array($id3v2['POPM'])) {
             foreach ($id3v2['POPM'] as $popm) {
