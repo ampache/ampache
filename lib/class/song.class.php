@@ -1870,7 +1870,7 @@ class Song extends database_object implements media, library_item
     {
         foreach($value as $metadataId => $value) {
             $metadata = $this->metadataRepository->findById($metadataId);
-            if($value != $metadata->getData()) {
+            if(!$metadata || $value != $metadata->getData()) {
                 $metadata->setData($value);
                 $this->metadataRepository->update($metadata);
             }

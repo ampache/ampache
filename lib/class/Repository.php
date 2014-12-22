@@ -45,6 +45,10 @@ class Repository
         return $this->getRecords($table, $fields, $values);
     }
 
+    /**
+     * 
+     * @return DatabaseObject[]
+     */
     public function findAll()
     {
         $table = $this->getTableName();

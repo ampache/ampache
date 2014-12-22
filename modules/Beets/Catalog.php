@@ -138,10 +138,43 @@ abstract class Catalog extends \Catalog
         if ($this->checkSong($song)) {
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
-            if ($this->insertSong($song)) {
+            $songId = $this->insertSong($song);
+            if ($songId) {
+                $songObj = new Song($songId);
+                $this->addMetadata($songObj, $song);
                 $this->updateUi('add', ++$this->addedSongs, $song);
             }
         }
+    }
+    
+    public function addMetadata(\library_item $libraryItem, $metadata)
+    {
+        $tags = $this->getCleanMetadata($libraryItem, $metadata);
+        
+        foreach($tags as $tag => $value) {
+            $field = $libraryItem->getField($tag);
+            $libraryItem->addMetadata($field, $value);
+        }
+    }
+    
+    /**
+     * Get rid of all tags found in the libraryItem
+     * @param \library_item $libraryItem
+     * @param array $metadata
+     * @return array
+     */
+    protected function getCleanMetadata(\library_item $libraryItem, $metadata)
+    {
+        $tags = array_diff($metadata, get_object_vars($libraryItem));
+        $keys = array_merge(
+            defined(get_class($libraryItem) . '::' . 'aliases') ? $libraryItem::aliases : array(),
+            array_keys(get_object_vars($libraryItem))
+        );
+        foreach($keys as $key) {
+            unset($tags[$key]);
+        }
+        
+        return $tags;
     }
 
     /**
@@ -190,6 +223,8 @@ abstract class Catalog extends \Catalog
         $song = new Song($this->getIdFromPath($beetsSong['file']));
         if ($song->id) {
             $song->update($beetsSong);
+            $tags = $this->getCleanMetadata($song, $beetsSong);
+            $this->updateMetadata($song, $tags);
             $this->updateUi('verify', ++$this->verifiedSongs, $beetsSong);
         }
     }
@@ -208,6 +243,8 @@ abstract class Catalog extends \Catalog
         $parser->start($this->listCommand);
         $count = count($this->songs);
         $this->deleteSongs($this->songs);
+        \lib\Metadata\Repository\Metadata::gc();
+        \lib\Metadata\Repository\MetadataField::gc();
         $this->updateUi('clean', $this->cleanCounter, null, true);
         return $count;
     }
@@ -324,6 +361,14 @@ abstract class Catalog extends \Catalog
     public function format()
     {
         parent::format();
+    }
+
+    public function updateMetadata($song, $tags)
+    {
+        foreach($tags as $tag => $value) {
+            $field = $song->getField($tag);
+            $song->updateOrInsertMetadata($field, $value);
+        }
     }
 
 }
