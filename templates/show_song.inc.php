@@ -151,6 +151,12 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
               echo "<dt class=\"".$rowparity."\">" . T_($key) . "</dt><dd class=\"".$rowparity."\">" . $value . "</dd>";
         }
     }
+    
+    foreach($song->getMetadata() as $metadata) {
+        $rowparity = UI::flip_class();
+        echo '<dt class="' . $rowparity . '">' . $metadata->getField()->getName() . '</dt>';
+        echo '<dd class="' . $rowparity . '">' . $metadata->getData() . '</dd>';
+    }
 ?>
 </dl>
 <?php UI::show_box_bottom(); ?>
