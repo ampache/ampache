@@ -52,6 +52,10 @@ trait Metadata {
     }
     
     
+    /**
+     * 
+     * @return Model\Metadata
+     */
     public function getMetadata() {
         return $this->metadataRepository->findByObjectIdAndType($this->id, get_class($this));
     }
@@ -86,6 +90,12 @@ trait Metadata {
         }
     }
     
+    /**
+     * 
+     * @param type $name
+     * @param type $public
+     * @return \lib\Metadata\Model\MetadataField
+     */
     protected function createField($name, $public) {
         $field = new \lib\Metadata\Model\MetadataField();
         $field->setName($name);
@@ -96,6 +106,12 @@ trait Metadata {
         return $field;
     }
 
+    /**
+     * 
+     * @param string $propertie
+     * @param boolean $public
+     * @return Model\MetadataField
+     */
     public function getField($propertie, $public = true)
     {
         $fields = $this->metadataFieldRepository->findByName($propertie);
