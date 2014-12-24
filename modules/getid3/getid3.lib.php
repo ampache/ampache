@@ -414,6 +414,20 @@ class getid3_lib
 		return $newarray;
 	}
 
+	public static function flipped_array_merge_noclobber($array1, $array2) {
+		if (!is_array($array1) || !is_array($array2)) {
+			return false;
+		}
+		# naturally, this only works non-recursively
+		$newarray = array_flip($array1);
+		foreach (array_flip($array2) as $key => $val) {
+			if (!isset($newarray[$key])) {
+				$newarray[$key] = count($newarray);
+			}
+		}
+		return array_flip($newarray);
+	}
+
 
 	public static function ksort_recursive(&$theArray) {
 		ksort($theArray);
