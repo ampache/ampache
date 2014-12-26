@@ -25,6 +25,9 @@ require_once 'lib/init.php';
 UI::show_header();
 define('TABLE_RENDERED', 1);
 
+// Temporary workaround to avoid sorting on custom base requests
+define('NO_BROWSE_SORTING', true);
+
 /* Switch on the action to be performed */
 switch ($_REQUEST['action']) {
     // Show a Users "Profile" page

@@ -172,20 +172,25 @@ class Ajax
      */
     public static function text($action, $text, $source, $post='', $class='')
     {
-        // Avoid duplicate id
-        $source .= '_' . time() . '_' . self::$counter++;
+        // Temporary workaround to avoid sorting on custom base requests
+        if (!defined("NO_BROWSE_SORTING")) {
+            // Avoid duplicate id
+            $source .= '_' . time() . '_' . self::$counter++;
 
-        // Format the string we wanna use
-        $ajax_string = self::action($action, $source, $post);
+            // Format the string we wanna use
+            $ajax_string = self::action($action, $source, $post);
 
-        // If they passed a span class
-        if ($class) {
-            $class = ' class="' . $class . '"';
+            // If they passed a span class
+            if ($class) {
+                $class = ' class="' . $class . '"';
+            }
+
+            $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>$text</a>\n";
+
+            $string .= self::observe($source, 'click', $ajax_string);
+        } else {
+            $string = $text;
         }
-
-        $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>$text</a>\n";
-
-        $string .= self::observe($source, 'click', $ajax_string);
 
         return $string;
 
