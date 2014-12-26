@@ -111,6 +111,10 @@ require_once $prefix . '/modules/musicbrainz/MusicBrainz.php';
 require_once $prefix . '/modules/musicbrainz/Exception.php';
 require_once $prefix . '/modules/musicbrainz/Clients/MbClient.php';
 require_once $prefix . '/modules/musicbrainz/Clients/RequestsMbClient.php';
+require_once $prefix . '/modules/musicbrainz/Artist.php';
+require_once $prefix . '/modules/musicbrainz/Filters/AbstractFilter.php';
+require_once $prefix . '/modules/musicbrainz/Filters/FilterInterface.php';
+require_once $prefix . '/modules/musicbrainz/Filters/ArtistFilter.php';
 require_once $prefix . '/modules/ampacheapi/AmpacheApi.lib.php';
 
 require_once $prefix . '/modules/EchoNest/Autoloader.php';
