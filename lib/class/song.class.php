@@ -1499,7 +1499,7 @@ class Song extends database_object implements media, library_item
         // Checking if the media is gonna be transcoded into another type
         // Some players doesn't allow a type streamed into another without giving the right extension
         $transcode_cfg = AmpConfig::get('transcode');
-        $valid_types = Song::get_stream_types_for_type($song->type, 'api');
+        $valid_types = Song::get_stream_types_for_type($type, 'api');
         if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
             $transcode_settings = $media->get_transcode_settings(null);
             if ($transcode_settings) {
