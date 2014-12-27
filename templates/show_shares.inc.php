@@ -21,5 +21,13 @@
  */
 ?>
 <?php UI::show_box_top(T_('Share')); ?>
+<div id="information_actions">
+    <ul>
+        <li>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=clean"><?php echo UI::get_icon('clean', T_('Clean')); ?> Clean expired shared objects</a>
+        </li>
+    </ul>
+</div>
+
 <?php require_once AmpConfig::get('prefix') . '/templates/show_stats_share.inc.php'; ?>
 <?php UI::show_box_bottom(); ?>

@@ -74,6 +74,12 @@ class Share extends database_object
         return Dba::write($sql, $params);
     }
 
+    public static function gc()
+    {
+        $sql = "DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < " . time() . ") OR (`max_counter` > 0 AND `counter` >= `max_counter`)";
+        Dba::write($sql);
+    }
+
     public static function delete_shares($object_type, $object_id)
     {
         $sql = "DELETE FROM `share` WHERE `object_type` = ? AND `object_id` = ?";

@@ -108,6 +108,18 @@ switch ($action) {
         }
         UI::show_footer();
         exit;
+    case 'clean':
+        if (AmpConfig::get('demo_mode')) {
+            UI::access_denied();
+            exit;
+        }
+
+        UI::show_header();
+        Share::gc();
+        $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
+        show_confirmation(T_('Shared Objects cleaned'), T_('Expired shared objects have been cleaned.'), $next_url);
+        UI::show_footer();
+        exit;
     case 'external_share':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
