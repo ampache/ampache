@@ -1399,7 +1399,7 @@ if (!empty($atom_structure['sample_description_table'][$i]['width']) && !empty($
 			case "\x00\x00\x00\x00":
 			case 'meta': // METAdata atom
 				// some kind of metacontainer, may contain a big data dump such as:
-				// mdta keys  mdtacom.apple.quicktime.make (mdtacom.apple.quicktime.creationdate ,mdtacom.apple.quicktime.location.ISO6709 $mdtacom.apple.quicktime.software !mdtacom.apple.quicktime.model ilst   data DEApple 0  (data DE2011-05-11T17:54:04+0200 2  *data DE+52.4936+013.3897+040.247/   data DE4.3.1  data DEiPhone 4
+				// mdta keys \005 mdtacom.apple.quicktime.make (mdtacom.apple.quicktime.creationdate ,mdtacom.apple.quicktime.location.ISO6709 $mdtacom.apple.quicktime.software !mdtacom.apple.quicktime.model ilst \01D \001 \015data \001DE\010Apple 0 \002 (data \001DE\0102011-05-11T17:54:04+0200 2 \003 *data \001DE\010+52.4936+013.3897+040.247/ \01D \004 \015data \001DE\0104.3.1 \005 \018data \001DE\010iPhone 4
 				// http://www.geocities.com/xhelmboyx/quicktime/formats/qti-layout.txt
 
 	            $atom_structure['version']   =          getid3_lib::BigEndian2Int(substr($atom_data, 0, 1));

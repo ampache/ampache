@@ -260,12 +260,16 @@ class getid3_apetag extends getid3_handler
 					$thisfile_ape_items_current['data_offset'] = $thisfile_ape_items_current['offset'] + strlen($thisfile_ape_items_current['filename']."\x00");
 					$thisfile_ape_items_current['data_length'] = strlen($thisfile_ape_items_current['data']);
 
-					$thisfile_ape_items_current['image_mime'] = '';
-					$imageinfo = array();
-					$imagechunkcheck = getid3_lib::GetDataImageSize($thisfile_ape_items_current['data'], $imageinfo);
-					$thisfile_ape_items_current['image_mime'] = image_type_to_mime_type($imagechunkcheck[2]);
-
 					do {
+						$thisfile_ape_items_current['image_mime'] = '';
+						$imageinfo = array();
+						$imagechunkcheck = getid3_lib::GetDataImageSize($thisfile_ape_items_current['data'], $imageinfo);
+						if (($imagechunkcheck === false) || !isset($imagechunkcheck[2])) {
+							$info['warning'][] = 'APEtag "'.$item_key.'" contains invalid image data';
+							break;
+						}
+						$thisfile_ape_items_current['image_mime'] = image_type_to_mime_type($imagechunkcheck[2]);
+
 						if ($this->inline_attachments === false) {
 							// skip entirely
 							unset($thisfile_ape_items_current['data']);
