@@ -79,7 +79,7 @@ switch ($_REQUEST['action']) {
             }
             foreach ($sres as $id) {
                 $album = new Album($id);
-                $album->format(false);
+                $album->format(true);
                 $a_title = $album->f_title;
                 if ($album->disk) {
                     $a_title .= " [" . T_('Disk') . " " . $album->disk . "]";
