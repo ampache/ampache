@@ -21,6 +21,13 @@
  */
 
 ?>
+<div id="information_actions">
+    <ul>
+        <li>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo UI::get_icon('add', T_('Add')); ?> <?php echo T_('Add Smart Playlist'); ?></a>
+        </li>
+    </ul>
+</div>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php' ?>
 <table class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="smartplaylist">
     <thead>

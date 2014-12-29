@@ -24,7 +24,7 @@
 <div id="information_actions">
     <ul>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=clean"><?php echo UI::get_icon('clean', T_('Clean')); ?> Clean expired shared objects</a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=clean"><?php echo UI::get_icon('clean', T_('Clean')); ?> <?php echo T_('Clean expired shared objects'); ?></a>
         </li>
     </ul>
 </div>
