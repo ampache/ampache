@@ -45,6 +45,8 @@ function update_action()
 var jplaylist = new Array();
 var jtypes = new Array();
 
+
+
 function addMedia(media)
 {
     var jpmedia = {};
@@ -61,6 +63,24 @@ function addMedia(media)
     jpmedia['replaygain_album_peak'] = media['replaygain_album_peak'];
 
     jplaylist.add(jpmedia);
+}
+
+function playNext(media)
+{
+    var jpmedia = {};
+    jpmedia['title'] = media['title'];
+    jpmedia['artist'] = media['artist'];
+    jpmedia[media['filetype']] = media['url'];
+    jpmedia['poster'] = media['poster'];
+    jpmedia['artist_id'] = media['artist_id'];
+    jpmedia['album_id'] = media['album_id'];
+    jpmedia['media_id'] = media['media_id'];
+    jpmedia['replaygain_track_gain'] = media['replaygain_track_gain'];
+    jpmedia['replaygain_track_peak'] = media['replaygain_track_peak'];
+    jpmedia['replaygain_album_gain'] = media['replaygain_album_gain'];
+    jpmedia['replaygain_album_peak'] = media['replaygain_album_peak'];
+
+    jplaylist.addAfter(jpmedia, jplaylist.current);
 }
 </script>
 <script language="javascript" type="text/javascript">

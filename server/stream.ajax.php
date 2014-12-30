@@ -88,6 +88,9 @@ switch ($_REQUEST['action']) {
             if (!empty($_REQUEST['append'])) {
                 $_SESSION['iframe']['target'] .= '&append=true';
             }
+            if (!empty($_REQUEST['playnext'])) {
+                $_SESSION['iframe']['target'] .= '&playnext=true';
+            }
             if ($_REQUEST['subtitle']) {
                 $_SESSION['iframe']['subtitle'] = $_REQUEST['subtitle'];
             } else {
