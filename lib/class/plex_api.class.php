@@ -1069,10 +1069,9 @@ class Plex_Api
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_TIMEOUT => 0
         ));
-	if(curl_exec($ch) === false)
-	{
+    if (curl_exec($ch) === false) {
             debug_event('plex-api', 'Curl error: ' . curl_error($ch),1);
-	}
+    }
         curl_close($ch);
     }
 
