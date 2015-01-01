@@ -20,3 +20,7 @@
 .panel-heading a.collapsed:after {
     content: "\e080";
 }
+
+body {
+    margin-bottom: 10px;
+}
