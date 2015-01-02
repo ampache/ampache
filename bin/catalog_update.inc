@@ -213,7 +213,7 @@ function usage() {
     echo T_('Optimizes Database Tables.') . " (\033[31m2\033[0m)";
     echo "\n";
     echo "----------------------------------------------------------\033[31m\n";
-    echo "1. " . T_('Use this option at your own risk! Your system could crash or become unresponsable due to huge memory consumption!') . "\n";
+    echo "1. " . T_('Use this option at your own risk! Your system could crash or become unresponsive due to huge memory consumption!') . "\n";
     echo "2. " . T_('Depending on your systems performance, this option could need a long time to finish and extremely slow down other database processes if you have big catalogs!') . "\n";
     echo "!  " . T_('The switches [-m|-i|-o] can only be used, if one of the other switches [-c|-v|-a|-g] is used.');
     echo "\033[0m\n";
