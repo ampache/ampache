@@ -6680,6 +6680,10 @@ msgstr "Λειτουργικές Μονάδες Τοπικής Αναπαραγ�
 msgid "Add Another Rule"
 msgstr "Προσθήκη όλων"
 
+#: ../../templates/show_search_bar.inc.php:25
+msgid "Search..."
+msgstr "Αναζήτηση..."
+
 #: ../../templates/show_search_bar.inc.php:30
 msgid "Anywhere"
 msgstr ""
