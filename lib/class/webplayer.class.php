@@ -222,7 +222,7 @@ class WebPlayer
         $addjs = "";
         foreach ($playlist->urls as $item) {
             if ($item->type == 'broadcast') {
-                // TODO: Figure out how this works
+                $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
                 break;
             } else {
                 $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item) . ");";

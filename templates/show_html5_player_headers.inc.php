@@ -45,9 +45,7 @@ function update_action()
 var jplaylist = new Array();
 var jtypes = new Array();
 
-
-
-function addMedia(media)
+function convertMediaToJPMedia(media)
 {
     var jpmedia = {};
     jpmedia['title'] = media['title'];
@@ -62,24 +60,18 @@ function addMedia(media)
     jpmedia['replaygain_album_gain'] = media['replaygain_album_gain'];
     jpmedia['replaygain_album_peak'] = media['replaygain_album_peak'];
 
+    return jpmedia;
+}
+
+function addMedia(media)
+{
+    var jpmedia = convertMediaToJPMedia(media);
     jplaylist.add(jpmedia);
 }
 
 function playNext(media)
 {
-    var jpmedia = {};
-    jpmedia['title'] = media['title'];
-    jpmedia['artist'] = media['artist'];
-    jpmedia[media['filetype']] = media['url'];
-    jpmedia['poster'] = media['poster'];
-    jpmedia['artist_id'] = media['artist_id'];
-    jpmedia['album_id'] = media['album_id'];
-    jpmedia['media_id'] = media['media_id'];
-    jpmedia['replaygain_track_gain'] = media['replaygain_track_gain'];
-    jpmedia['replaygain_track_peak'] = media['replaygain_track_peak'];
-    jpmedia['replaygain_album_gain'] = media['replaygain_album_gain'];
-    jpmedia['replaygain_album_peak'] = media['replaygain_album_peak'];
-
+    var jpmedia = convertMediaToJPMedia(media);
     jplaylist.addAfter(jpmedia, jplaylist.current);
 }
 </script>
