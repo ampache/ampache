@@ -72,8 +72,11 @@ class Graph
         }
 
         $object_id = intval($object_id);
-        if (Core::is_library_item($object_type) && $object_id) {
-            $sql .= " AND `object_count`.`object_type` = '" . $object_type . "' AND `object_count`.`object_id` = '" . $object_id . "'";
+        if (Core::is_library_item($object_type)) {
+            $sql .= " AND `object_count`.`object_type` = '" . $object_type . "'";
+            if ($object_id) {
+                $sql .= " AND `object_count`.`object_id` = '" . $object_id . "'";
+            }
         }
         return $sql;
     }
