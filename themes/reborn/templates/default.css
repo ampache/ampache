@@ -883,8 +883,8 @@ table.tabledata .th-bottom:focus {
 }
 
 table.tabledata tbody .cel_play {
-    max-width: 40px;
-    min-width: 40px;
+    max-width: 60px;
+    min-width: 60px;
     width: 40px !important;
     text-align: right;
 }
