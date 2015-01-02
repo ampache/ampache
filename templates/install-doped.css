@@ -1,13 +1,13 @@
 .requirements {
-	padding-top: 20px;
+    padding-top: 20px;
 }
 
 .navbar-brand {
-	padding-top: 0px;
+    padding-top: 0px;
 }
 .navbar-brand img {
-	height: 48px;
-	width: 48px;
+    height: 48px;
+    width: 48px;
 }
 
 .panel-heading a:after {
@@ -19,4 +19,8 @@
 
 .panel-heading a.collapsed:after {
     content: "\e080";
+}
+
+body {
+    margin-bottom: 10px;
 }
