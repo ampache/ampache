@@ -45,7 +45,7 @@ function update_action()
 var jplaylist = new Array();
 var jtypes = new Array();
 
-function addMedia(media)
+function convertMediaToJPMedia(media)
 {
     var jpmedia = {};
     jpmedia['title'] = media['title'];
@@ -60,7 +60,19 @@ function addMedia(media)
     jpmedia['replaygain_album_gain'] = media['replaygain_album_gain'];
     jpmedia['replaygain_album_peak'] = media['replaygain_album_peak'];
 
+    return jpmedia;
+}
+
+function addMedia(media)
+{
+    var jpmedia = convertMediaToJPMedia(media);
     jplaylist.add(jpmedia);
+}
+
+function playNext(media)
+{
+    var jpmedia = convertMediaToJPMedia(media);
+    jplaylist.addAfter(jpmedia, jplaylist.current);
 }
 </script>
 <script language="javascript" type="text/javascript">

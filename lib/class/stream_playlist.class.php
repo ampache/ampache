@@ -186,6 +186,12 @@ class Stream_Playlist
         );
     }
 
+    public static function check_autoplay_next()
+    {
+        // Currently only supported for web player
+        return (AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player');
+    }
+
     public function generate_playlist($type, $redirect = false)
     {
         if (!count($this->urls)) {

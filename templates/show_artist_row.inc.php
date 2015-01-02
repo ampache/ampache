@@ -28,6 +28,9 @@
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&append=true','play_add', T_('Play last'),'addplay_artist_' . $libitem->id); ?>
         <?php } ?>
+        <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_artist_' . $libitem->id); ?>
+        <?php } ?>
     <?php } ?>
     </div>
 </td>

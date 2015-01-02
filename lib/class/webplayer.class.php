@@ -212,6 +212,27 @@ class WebPlayer
     }
 
     /**
+     * Get play_next javascript.
+     * @param \Playlist $playlist
+     * @param string $callback_container
+     * @return string
+     */
+    public static function play_next_js($playlist, $callback_container='')
+    {
+        $addjs = "";
+        foreach ($playlist->urls as $item) {
+            if ($item->type == 'broadcast') {
+                $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
+                break;
+            } else {
+                $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item) . ");";
+            }
+        }
+
+        return $addjs;
+    }
+
+    /**
      * Get media javascript parameters.
      * @param \playable_item $item
      * @param string $force_type
