@@ -6663,6 +6663,10 @@ msgstr "Moduly pro místní přehrávání"
 msgid "Add Another Rule"
 msgstr "Přidat pravidlo"
 
+#: ../../templates/show_search_bar.inc.php:25
+msgid "Search..."
+msgstr "Hledání..."
+
 #: ../../templates/show_search_bar.inc.php:30
 msgid "Anywhere"
 msgstr ""

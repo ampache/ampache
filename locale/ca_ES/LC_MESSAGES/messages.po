@@ -6659,6 +6659,10 @@ msgstr "Mòduls de reproducció local"
 msgid "Add Another Rule"
 msgstr "Afegir regla"
 
+#: ../../templates/show_search_bar.inc.php:25
+msgid "Search..."
+msgstr "Cercar..."
+
 #: ../../templates/show_search_bar.inc.php:30
 msgid "Anywhere"
 msgstr ""

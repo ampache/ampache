@@ -6653,6 +6653,10 @@ msgstr "Moduler för lokal uppspelning"
 msgid "Add Another Rule"
 msgstr "Lägg till regel"
 
+#: ../../templates/show_search_bar.inc.php:25
+msgid "Search..."
+msgstr "Sök..."
+
 #: ../../templates/show_search_bar.inc.php:30
 msgid "Anywhere"
 msgstr ""

@@ -6666,6 +6666,10 @@ msgstr "Модули локального вещания"
 msgid "Add Another Rule"
 msgstr "Добавить правило"
 
+#: ../../templates/show_search_bar.inc.php:25
+msgid "Search..."
+msgstr "Поиск..."
+
 #: ../../templates/show_search_bar.inc.php:30
 msgid "Anywhere"
 msgstr ""

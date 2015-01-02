@@ -22,7 +22,7 @@
 ?>
 <div id="sb_Subsearch">
     <form name="search" method="post" action="<?php echo $web_path; ?>/search.php?type=song" enctype="multipart/form-data" style="Display:inline">
-        <input type="text" name="rule_1_input" id="searchString"/>
+        <input type="text" name="rule_1_input" id="searchString" placeholder="<?php echo T_('Search...'); ?>" />
         <input type="hidden" name="action" value="search" />
         <input type="hidden" name="rule_1_operator" value="0" />
         <input type="hidden" name="object_type" value="song" />
