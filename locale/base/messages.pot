@@ -6436,6 +6436,10 @@ msgstr ""
 msgid "Add Another Rule"
 msgstr ""
 
+#: ../../templates/show_search_bar.inc.php:25
+msgid "Search..."
+msgstr ""
+
 #: ../../templates/show_search_bar.inc.php:30
 msgid "Anywhere"
 msgstr ""

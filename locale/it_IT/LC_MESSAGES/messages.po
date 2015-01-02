@@ -6777,6 +6777,10 @@ msgid "Add Another Rule"
 msgstr "Aggiungi utente"
 
 #: ../../templates/show_search_bar.inc.php:30
+msgid "Search..."
+msgstr "Ricerca..."
+
+#: ../../templates/show_search_bar.inc.php:30
 msgid "Anywhere"
 msgstr ""
 

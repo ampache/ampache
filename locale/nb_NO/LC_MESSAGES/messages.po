@@ -6665,6 +6665,10 @@ msgstr "Moduler for lokalavspilling"
 msgid "Add Another Rule"
 msgstr "Legg til ny"
 
+#: ../../templates/show_search_bar.inc.php:25
+msgid "Search..."
+msgstr "Søk..."
+
 #: ../../templates/show_search_bar.inc.php:30
 msgid "Anywhere"
 msgstr ""
