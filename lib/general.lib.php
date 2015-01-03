@@ -163,9 +163,6 @@ function get_languages()
 
     $results = array();
 
-    /* Prepend English */
-    $results['en_US'] = 'English (US)';
-
     while (false !== ($file = readdir($handle))) {
 
         $full_file = AmpConfig::get('prefix') . '/locale/' . $file;
@@ -228,7 +225,12 @@ function get_languages()
 
     } // end while
 
+    // Sort the list of languages by country code
     ksort($results);
+
+    // Prepend English (US)
+    $results = array( "en_US" => "English (US)" ) + $results;
+
     return $results;
 
 } // get_languages
