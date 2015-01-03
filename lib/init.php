@@ -78,7 +78,6 @@ if ($ow_config) {
     }
 }
 
-$results['raw_web_path'] = $results['web_path'];
 if (empty($results['http_host'])) {
     $results['http_host'] = $_SERVER['HTTP_HOST'];
 }
@@ -87,8 +86,8 @@ if (empty($results['local_web_path'])) {
 }
 $results['web_path'] = $http_type . $results['http_host'] . $results['web_path'];
 $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
+$results['raw_web_path'] = (!empty($results['web_path'])) ? $results['web_path'] : '/';
 $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
-$results['raw_web_path'] = $results['raw_web_path'] ?: '/';
 $results['max_upload_size'] = $results['max_upload_size'] ?: 102400;
 $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
 
