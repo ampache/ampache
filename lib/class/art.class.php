@@ -1031,7 +1031,7 @@ class Art extends database_object
             $processed[$dir] = true;
 
             // Recurse through this dir and create the files array
-            while ($file = readdir($handle)) {
+            while (false !== ($file = readdir($handle))) {
                 $extension = pathinfo($file);
                 $extension = $extension['extension'];
 

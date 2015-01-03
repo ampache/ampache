@@ -150,7 +150,7 @@ class Localplay
 
         $results = array();
 
-        while ($file = readdir($handle)) {
+        while (false !== ($file = readdir($handle))) {
 
             if (substr($file,-14,14) != 'controller.php') { continue; }
 

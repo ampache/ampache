@@ -88,7 +88,7 @@ class Plugin
         }
 
         // Recurse the directory
-        while ($file = readdir($handle)) {
+        while (false !== ($file = readdir($handle))) {
             // Ignore non-plugin files
             if (substr($file,-10,10) != 'plugin.php') { continue; }
             if (is_dir($file)) { continue; }
