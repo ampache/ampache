@@ -293,7 +293,7 @@ abstract class Catalog extends database_object
 
         $results = array();
 
-        while ($file = readdir($handle)) {
+        while (false !== ($file = readdir($handle))) {
 
             if (substr($file, -11, 11) != 'catalog.php') { continue; }
 

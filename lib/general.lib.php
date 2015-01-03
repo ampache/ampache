@@ -166,7 +166,7 @@ function get_languages()
     /* Prepend English */
     $results['en_US'] = 'English (US)';
 
-    while ($file = readdir($handle)) {
+    while (false !== ($file = readdir($handle))) {
 
         $full_file = AmpConfig::get('prefix') . '/locale/' . $file;
 

@@ -482,7 +482,7 @@ class Auth_OpenID_FileStore extends Auth_OpenID_OpenIDStore {
         }
 
         if ($handle = opendir($dir)) {
-            while ($item = readdir($handle)) {
+            while (false !== ($item = readdir($handle))) {
                 if (!in_array($item, array('.', '..'))) {
                     if (is_dir($dir . $item)) {
 
