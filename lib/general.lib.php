@@ -228,6 +228,7 @@ function get_languages()
 
     } // end while
 
+    ksort($results);
     return $results;
 
 } // get_languages
