@@ -119,19 +119,24 @@ following languages. If you are interested in updating an existing
 translation or adding a new one please see /locale/base/TRANSLATIONS
 for more instructions.
 
-* English	(en_US)
-* German	(de_DE)
-* Spanish	(es_ES)
-* Dutch		(nl_NL)
-* Norwegian	(nb_NO)
-* UK English	(en_GB)
-* Italian	(it_IT)
-* French	(fr_FR)
-* Swedish	(sv_SE)
-* Japanese	(ja_JP) 
-* Catalan	(ca_ES)
-* Russian	(ru_RU)
-* Czech (cs_CZ)
+* English       (en_US)
+* Arabic        (ar_SA)
+* Catalan       (ca_ES)
+* Catalan       (ca_ES)
+* Czech         (cs_CZ)
+* Dutch         (nl_NL)
+* French        (fr_FR)
+* German        (de_DE)
+* Greek         (el_GR)
+* Italian       (it_IT) 
+* Japanese      (ja_JP)
+* Norwegian     (nb_NO)
+* Persian       (fa_IR)
+* Polish        (pl_PL)
+* Russian       (ru_RU)
+* Spanish       (es_ES)
+* Swedish       (sv_SE)
+* UK English    (en_GB)
 
 Credits
 -------
