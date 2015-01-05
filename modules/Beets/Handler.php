@@ -65,7 +65,7 @@ abstract class Handler
             list($key, $format) = $to;
             $song[$key] = sprintf($format, $song[$from]);
         }
-        $song['genre'] = explode(',', $song['genre']);
+        $song['genre'] = preg_split('/[\s]?[,|;][\s?]/', $song['genre']);
 
         return $song;
     }

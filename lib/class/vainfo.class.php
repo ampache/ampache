@@ -362,6 +362,10 @@ class vainfo
             $info['composer'] = $info['composer'] ?: trim($tags['composer']);
             $info['publisher'] = $info['publisher'] ?: trim($tags['publisher']);
 
+            
+            if(count($tags['genre']) == 1) {
+                $tags['genre'] = preg_split('/[\s]?[,|;][\s?]/', reset($tags['genre'])) ?: $tags['genre'];
+            }
             $info['genre'] = self::clean_array_tag('genre', $info, $tags);
 
             $info['mb_trackid'] = $info['mb_trackid'] ?: trim($tags['mb_trackid']);

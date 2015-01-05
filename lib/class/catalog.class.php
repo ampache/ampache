@@ -1421,6 +1421,11 @@ abstract class Catalog extends database_object
         $new_song->replaygain_track_peak = floatval($results['replaygain_track_peak']);
         $new_song->replaygain_album_gain = floatval($results['replaygain_album_gain']);
         $new_song->replaygain_album_peak = floatval($results['replaygain_album_peak']);
+        $tags            = Tag::get_object_tags('song', $song->id);
+        foreach($tags as $tag) {
+            $song->tags[] = $tag['name'];
+        }
+        $new_song->tags        = $results['genre'];
         $artist                = $results['artist'];
         $artist_mbid           = $results['mb_artistid'];
         $albumartist           = $results['albumartist'] ?: $results['band'];
@@ -1430,7 +1435,6 @@ abstract class Catalog extends database_object
         $album_mbid            = $results['mb_albumid'];
         $album_mbid_group      = $results['mb_albumid_group'];
         $disk                  = $results['disk'];
-        $tags                  = $results['genre'];    // multiple genre support makes this an array
 
         /*
         * We have the artist/genre/album name need to check it in the tables
@@ -1442,17 +1446,6 @@ abstract class Catalog extends database_object
         }
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group, $new_song->albumartist);
         $new_song->title = self::check_title($new_song->title,$new_song->file);
-
-        // Nothing to assign here this is a multi-value doodly
-        // multiple genre support
-        if (is_array($tags)) {
-            foreach ($tags as $tag) {
-                $tag = trim($tag);
-                //self::check_tag($tag,$song->id);
-                //self::check_tag($tag,$new_song->album,'album');
-                //self::check_tag($tag,$new_song->artist,'artist');
-            }
-        }
 
         /* Since we're doing a full compare make sure we fill the extended information */
         $song->fill_ext_info();
@@ -1479,6 +1472,10 @@ abstract class Catalog extends database_object
             }
 
             $song->update_song($song->id,$new_song);
+            
+            if($song->tags != $new_song->tags) {
+                Tag::update_tag_list(implode(',', $new_song->tags), 'song', $song->id, true);
+            }
             // Refine our reference
             //$song = $new_song;
         } else {
