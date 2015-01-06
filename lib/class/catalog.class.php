@@ -1451,7 +1451,7 @@ abstract class Catalog extends database_object
         $song->fill_ext_info();
 
         $info = Song::compare_song_information($song,$new_song);
-        if ($info['change']) {
+        if (true || $info['change']) {
             debug_event('update', "$song->file : differences found, updating database", 5);
 
             // Duplicate arts if required
@@ -1473,8 +1473,10 @@ abstract class Catalog extends database_object
 
             $song->update_song($song->id,$new_song);
             
-            if($song->tags != $new_song->tags) {
+            if(true || $song->tags != $new_song->tags) {
                 Tag::update_tag_list(implode(',', $new_song->tags), 'song', $song->id, true);
+                self::updateAlbumTags($song);
+                self::updateArtistTags($song);
             }
             // Refine our reference
             //$song = $new_song;
@@ -1933,6 +1935,49 @@ abstract class Catalog extends database_object
                 break;
         } // end switch
 
-    } // export
+    }
+    // export
 
-} // end of catalog class
+    /**
+     * Updates album tags from given song
+     * @param Song $song
+     */
+    protected static function updateAlbumTags(Song $song)
+    {
+        $tags = self::getSongTags('album', $song->album);
+        Tag::update_tag_list(implode(',', $tags), 'album', $song->album, true);
+    }
+
+    /**
+     * Updates artist tags from given song
+     * @param Song $song
+     */
+    protected static function updateArtistTags(Song $song)
+    {
+        $tags = self::getSongTags('artist', $song->artist);
+        Tag::update_tag_list(implode(',', $tags), 'artist', $song->artist, true);
+    }
+
+    /**
+     * Get all tags from all Songs from [type] (artist, album, ...)
+     * @param string $type
+     * @param integer $id
+     * @return array
+     */
+    protected static function getSongTags($type, $id)
+    {
+        $tags = array();
+        $db_results = Dba::read('SELECT tag.name FROM tag'
+                        . ' JOIN tag_map ON tag.id = tag_map.tag_id'
+                        . ' JOIN song ON tag_map.object_id = song.id'
+                        . ' WHERE song.' . $type . ' = ? AND tag_map.object_type = "song"'
+                        . ' GROUP BY tag.id', array($id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $tags[] = $row['name'];
+        }
+        return $tags;
+    }
+
+}
+
+// end of catalog class
