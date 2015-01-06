@@ -813,6 +813,9 @@ class vainfo
                         // until the genre string splits into several elements
                         $i = 0;
                         while (count($data) === 1 && $i < count($delimiters)) {
+                            if (empty($delimiters[$i])) {
+                                $delimiters[$i] = ",";
+                            }
                             $data = explode($delimiters[$i], $data[0]);
                             $i++;
                         }

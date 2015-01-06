@@ -7,7 +7,7 @@
 ; if this config file is up to date 
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 21
+config_version = 22
 
 ;###################
 ; Path Vars        #
@@ -298,8 +298,9 @@ metadata_order_video = "filename,getID3"
 ; Some taggers use delimiters other than \0 for ID3v2 fields
 ; This list specifies possible delimiters additional to \0
 ; Comma delimiters are not supported at this point
-DEFAULT: ; / // \
-additional_id3v2_genre_delimiters = ";,/,//,\"
+; Add a blank delimiter for comma delimiter
+; DEFAULT: ; / // \ | ,
+additional_id3v2_genre_delimiters = ";,/,//,\,|,"
 
 ; This determines if a preview image should be retrieved from video files
 ; It requires encode_get_image transcode settings.
