@@ -978,6 +978,10 @@ table.tabledata .cel_agent img:hover {
     cursor: help;
 }
 
+#shoutbox-input {
+    font-size: 14px;
+}
+
 .box_preferences h4 {
     font-size: 15px;
     margin-bottom: 10px;
