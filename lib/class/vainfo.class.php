@@ -804,7 +804,20 @@ class vainfo
 
             switch ($tag) {
                 case 'genre':
-                    // Pass the array through
+                    // read additional id3v2 delimiters from config
+                    $delimiters = (array) AmpConfig::get('additional_id3v2_genre_delimiters');
+                    if (isset($data) && is_array($data) &&
+                        isset($delimiters) && is_array($delimiters)) {
+                        // if there is only one element in the array,
+                        // iterate through the delimiters
+                        // until the genre string splits into several elements
+                        $i = 0;
+                        while (count($data) === 1 && $i < count($delimiters)) {
+                            $data = explode($delimiters[$i], $data[0]);
+                            $i++;
+                        }
+                    }
+                    // assign genre array
                     $parsed['genre'] = $data;
                 break;
                 case 'part_of_a_set':
