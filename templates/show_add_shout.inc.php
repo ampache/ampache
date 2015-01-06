@@ -32,7 +32,7 @@ if ($data) {
 UI::show_box_top($boxtitle, 'box box_add_shout');
 ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=add_shout">
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table id="shoutbox-input" cellpadding="0" cellspacing="0">
 <tr>
     <td><strong><?php echo T_('Comment:'); ?></strong>
 </tr>
