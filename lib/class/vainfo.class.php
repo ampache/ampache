@@ -1208,7 +1208,7 @@ class vainfo
     private function parseGenres($data)
     {
         // read additional id3v2 delimiters from config
-        $delimiters = AmpConfig::get('additional_id3v2_genre_delimiters');
+        $delimiters = AmpConfig::get('additional_genre_delimiters');
         if (isset($data) && is_array($data) && count($data) === 1 && isset($delimiters)) {
             $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
             $genres = preg_split($pattern, reset($data));
