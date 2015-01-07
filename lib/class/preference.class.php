@@ -36,7 +36,6 @@ class Preference extends database_object
     private function __construct()
     {
         // Rien a faire
-
     } // __construct
 
     /**
@@ -61,7 +60,6 @@ class Preference extends database_object
         parent::add_to_cache('get_by_user', $user_id, $data['value']);
 
         return $data['value'];
-
     } // get_by_user
 
 
@@ -128,7 +126,6 @@ class Preference extends database_object
         Dba::write($sql);
 
         return true;
-
     } // update_level
 
     /**
@@ -146,7 +143,6 @@ class Preference extends database_object
         parent::clear_cache();
 
         return true;
-
     } // update_all
 
     /**
@@ -161,7 +157,6 @@ class Preference extends database_object
         $db_results = Dba::read($sql);
 
         return Dba::num_rows($db_results);
-
     } // exists
 
     /**
@@ -172,7 +167,9 @@ class Preference extends database_object
     public static function has_access($preference)
     {
         // Nothing for those demo thugs
-        if (AmpConfig::get('demo_mode')) { return false; }
+        if (AmpConfig::get('demo_mode')) {
+            return false;
+        }
 
         $preference = Dba::escape($preference);
 
@@ -185,7 +182,6 @@ class Preference extends database_object
         }
 
         return false;
-
     } // has_access
 
     /**
@@ -207,7 +203,6 @@ class Preference extends database_object
         parent::add_to_cache('id_from_name', $name, $row['id']);
 
         return $row['id'];
-
     } // id_from_name
 
     /**
@@ -225,7 +220,6 @@ class Preference extends database_object
         $row = Dba::fetch_assoc($db_results);
 
         return $row['name'];
-
     } // name_from_id
 
     /**
@@ -247,7 +241,6 @@ class Preference extends database_object
         } // end while
 
         return $results;
-
     } // get_catagories
 
     /**
@@ -276,7 +269,6 @@ class Preference extends database_object
         }
 
         return $results;
-
     } // get_all
 
     /**
@@ -298,10 +290,11 @@ class Preference extends database_object
             "VALUES ('$name','$description','$default','$level','$type','$catagory')";
         $db_results = Dba::write($sql);
 
-        if (!$db_results) { return false; }
+        if (!$db_results) {
+            return false;
+        }
 
         return true;
-
     } // insert
 
     /**
@@ -322,7 +315,6 @@ class Preference extends database_object
         Dba::write($sql);
 
         self::rebuild_preferences();
-
     } // delete
 
     /**
@@ -352,7 +344,6 @@ class Preference extends database_object
         // Now add anything that we are missing back in, except System
         //$sql = "SELECT * FROM `preference` WHERE `type`!='system'";
         //FIXME: Uhh WTF shouldn't there be something here??
-
     } // rebuild_preferences
 
     /**
@@ -376,13 +367,16 @@ class Preference extends database_object
 
         foreach ($results as $key=>$data) {
             if (!is_array($data)) {
-                if (strcasecmp($data,"true") == "0") { $results[$key] = 1; }
-                if (strcasecmp($data,"false") == "0") { $results[$key] = 0; }
+                if (strcasecmp($data,"true") == "0") {
+                    $results[$key] = 1;
+                }
+                if (strcasecmp($data,"false") == "0") {
+                    $results[$key] = 0;
+                }
             }
         }
 
         return $results;
-
     } // fix_preferences
 
     /**
@@ -397,7 +391,6 @@ class Preference extends database_object
         }
 
         return false;
-
     } // load_from_session
 
     /**
@@ -408,7 +401,6 @@ class Preference extends database_object
     public static function clear_from_session()
     {
         unset($_SESSION['userdata']['preferences']);
-
     } // clear_from_session
 
     /**
@@ -437,7 +429,6 @@ class Preference extends database_object
         }
 
         return false;
-
     } // is_boolean
 
     /**
@@ -485,8 +476,5 @@ class Preference extends database_object
         AmpConfig::set_by_array($results, true);
         $_SESSION['userdata']['preferences'] = $results;
         $_SESSION['userdata']['uid'] = $user_id;
-
     } // init
-
-
 } // end Preference class

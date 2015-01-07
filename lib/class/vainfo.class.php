@@ -215,7 +215,6 @@ class vainfo
         }
 
         $this->_get_plugin_tags();
-
     } // get_info
 
     /*
@@ -257,8 +256,9 @@ class vainfo
                 if (!empty($tagWriter->warnings)) {
                     debug_event('vainfo' , 'FWarnings ' . implode("\n", $tagWriter->warnings), 5);
                 }
-            } else
+            } else {
                 debug_event('vainfo' , 'Failed to write tags! ' . implode("\n", $tagWriter->errors), 5);
+            }
         }
     } // write_id3
 
@@ -538,8 +538,9 @@ class vainfo
 
     private function get_metadata_order_key()
     {
-        if (!in_array('music', $this->gather_types))
+        if (!in_array('music', $this->gather_types)) {
             return 'metadata_order_video';
+        }
 
         return 'metadata_order';
     }
@@ -801,7 +802,6 @@ class vainfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-
             switch ($tag) {
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
@@ -1083,14 +1083,15 @@ class vainfo
         $results = array();
         for ($i=0;$i<count($patterns);$i++) {
             if (preg_match($patterns[$i], $filetitle, $matches)) {
-
                 $name = $this->fixSerieName($matches[1]);
-                if(empty($name))
+                if (empty($name)) {
                     continue;
+                }
 
                 $season = floatval($matches[2]);
-                if ($season == 0)
+                if ($season == 0) {
                     continue;
+                }
 
                 $episode = floatval($matches[3]);
                 $leftover = $matches[4];
@@ -1146,8 +1147,9 @@ class vainfo
 
     private function removeStartingDashesAndSpaces($name)
     {
-        if (empty($name))
+        if (empty($name)) {
             return $name;
+        }
 
         while (strpos($name, ' ') === 0 || strpos($name, '-') === 0) {
             $name = preg_replace('/^ /', '', $name);
@@ -1158,8 +1160,9 @@ class vainfo
 
     private function removeEndingDashesAndSpaces($name)
     {
-        if (empty($name))
+        if (empty($name)) {
             return $name;
+        }
 
         while (strrpos($name, ' ') === strlen($name) - 1 || strrpos($name, '-') === strlen($name) - 1) {
             $name = preg_replace('/ $/', '', $name);
@@ -1193,7 +1196,6 @@ class vainfo
         $broken[$key]['artist'] = 'Unknown (Broken)';
 
         return $broken;
-
     }
     // set_broken
 
@@ -1217,5 +1219,4 @@ class vainfo
         }
         return $data;
     }
-
 } // end class vainfo
