@@ -670,8 +670,8 @@ class vainfo
             switch (strtolower($tagname)) {
                 case 'genre':
                     // Pass the array through
-                    $parsed[$tagname] = $data;
-                break;
+                    $parsed[$tagname] = $this->parseGenres($data);
+                    break;
                 case 'musicbrainz_artistid':
                     $parsed['mb_artistid'] = $data[0];
                     break;
@@ -730,8 +730,8 @@ class vainfo
             switch (strtolower($tag)) {
                 case 'genre':
                     // Pass the array through
-                    $parsed[$tag] = $data;
-                break;
+                    $parsed[$tag] = $this->parseGenres($data);
+                    break;
                 case 'tracknumber':
                     $parsed['track'] = $data[0];
                 break;
@@ -804,25 +804,8 @@ class vainfo
 
             switch ($tag) {
                 case 'genre':
-                    // read additional id3v2 delimiters from config
-                    $delimiters = (array) AmpConfig::get('additional_id3v2_genre_delimiters');
-                    if (isset($data) && is_array($data) &&
-                        isset($delimiters) && is_array($delimiters)) {
-                        // if there is only one element in the array,
-                        // iterate through the delimiters
-                        // until the genre string splits into several elements
-                        $i = 0;
-                        while (count($data) === 1 && $i < count($delimiters)) {
-                            if (empty($delimiters[$i])) {
-                                $delimiters[$i] = ",";
-                            }
-                            $data = explode($delimiters[$i], $data[0]);
-                            $i++;
-                        }
-                    }
-                    // assign genre array
-                    $parsed['genre'] = $data;
-                break;
+                    $parsed['genre'] = $this->parseGenres($data);
+                    break;
                 case 'part_of_a_set':
                     $elements = explode('/', $data[0]);
                     $parsed['disk'] = $elements[0];
@@ -1211,6 +1194,28 @@ class vainfo
 
         return $broken;
 
-    } // set_broken
+    }
+    // set_broken
+
+    /**
+     *
+     * @param array $data
+     * @return array
+     * @throws Exception
+     */
+    private function parseGenres($data)
+    {
+        // read additional id3v2 delimiters from config
+        $delimiters = AmpConfig::get('additional_id3v2_genre_delimiters');
+        if (isset($data) && is_array($data) && count($data) === 1 && isset($delimiters)) {
+            $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
+            $genres = preg_split($pattern, reset($data));
+            if ($genres[0] === $data[0]) {
+                throw new Exception('Pattern given in additional_id3v2_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~).');
+            }
+            $data = $genres;
+        }
+        return $data;
+    }
 
 } // end class vainfo

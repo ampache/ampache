@@ -365,7 +365,7 @@ class Preference extends database_object
         $arrays = array(
             'auth_methods', 'getid3_tag_order', 'metadata_order',
             'metadata_order_video', 'art_order', 'registration_display_fields',
-            'registration_mandatory_fields', 'additional_id3v2_genre_delimiters'
+            'registration_mandatory_fields'
         );
 
         foreach ($arrays as $item) {
