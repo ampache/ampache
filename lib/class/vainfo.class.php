@@ -1212,6 +1212,9 @@ class vainfo
         if (isset($data) && is_array($data) && count($data) === 1 && isset($delimiters)) {
             $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
             $genres = preg_split($pattern, reset($data));
+            if ($genres === false) {
+                throw new Exception('Pattern given in additional_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~).');
+            }
             $data = $genres;
         }
         return $data;
