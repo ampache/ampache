@@ -215,7 +215,6 @@ class vainfo
         }
 
         $this->_get_plugin_tags();
-
     } // get_info
 
     /*
@@ -257,8 +256,9 @@ class vainfo
                 if (!empty($tagWriter->warnings)) {
                     debug_event('vainfo' , 'FWarnings ' . implode("\n", $tagWriter->warnings), 5);
                 }
-            } else
+            } else {
                 debug_event('vainfo' , 'Failed to write tags! ' . implode("\n", $tagWriter->errors), 5);
+            }
         }
     } // write_id3
 
@@ -538,8 +538,9 @@ class vainfo
 
     private function get_metadata_order_key()
     {
-        if (!in_array('music', $this->gather_types))
+        if (!in_array('music', $this->gather_types)) {
             return 'metadata_order_video';
+        }
 
         return 'metadata_order';
     }
@@ -670,8 +671,8 @@ class vainfo
             switch (strtolower($tagname)) {
                 case 'genre':
                     // Pass the array through
-                    $parsed[$tagname] = $data;
-                break;
+                    $parsed[$tagname] = $this->parseGenres($data);
+                    break;
                 case 'musicbrainz_artistid':
                     $parsed['mb_artistid'] = $data[0];
                     break;
@@ -730,8 +731,8 @@ class vainfo
             switch (strtolower($tag)) {
                 case 'genre':
                     // Pass the array through
-                    $parsed[$tag] = $data;
-                break;
+                    $parsed[$tag] = $this->parseGenres($data);
+                    break;
                 case 'tracknumber':
                     $parsed['track'] = $data[0];
                 break;
@@ -801,28 +802,10 @@ class vainfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-
             switch ($tag) {
                 case 'genre':
-                    // read additional id3v2 delimiters from config
-                    $delimiters = (array) AmpConfig::get('additional_id3v2_genre_delimiters');
-                    if (isset($data) && is_array($data) &&
-                        isset($delimiters) && is_array($delimiters)) {
-                        // if there is only one element in the array,
-                        // iterate through the delimiters
-                        // until the genre string splits into several elements
-                        $i = 0;
-                        while (count($data) === 1 && $i < count($delimiters)) {
-                            if (empty($delimiters[$i])) {
-                                $delimiters[$i] = ",";
-                            }
-                            $data = explode($delimiters[$i], $data[0]);
-                            $i++;
-                        }
-                    }
-                    // assign genre array
-                    $parsed['genre'] = $data;
-                break;
+                    $parsed['genre'] = $this->parseGenres($data);
+                    break;
                 case 'part_of_a_set':
                     $elements = explode('/', $data[0]);
                     $parsed['disk'] = $elements[0];
@@ -1100,14 +1083,15 @@ class vainfo
         $results = array();
         for ($i=0;$i<count($patterns);$i++) {
             if (preg_match($patterns[$i], $filetitle, $matches)) {
-
                 $name = $this->fixSerieName($matches[1]);
-                if(empty($name))
+                if (empty($name)) {
                     continue;
+                }
 
                 $season = floatval($matches[2]);
-                if ($season == 0)
+                if ($season == 0) {
                     continue;
+                }
 
                 $episode = floatval($matches[3]);
                 $leftover = $matches[4];
@@ -1163,8 +1147,9 @@ class vainfo
 
     private function removeStartingDashesAndSpaces($name)
     {
-        if (empty($name))
+        if (empty($name)) {
             return $name;
+        }
 
         while (strpos($name, ' ') === 0 || strpos($name, '-') === 0) {
             $name = preg_replace('/^ /', '', $name);
@@ -1175,8 +1160,9 @@ class vainfo
 
     private function removeEndingDashesAndSpaces($name)
     {
-        if (empty($name))
+        if (empty($name)) {
             return $name;
+        }
 
         while (strrpos($name, ' ') === strlen($name) - 1 || strrpos($name, '-') === strlen($name) - 1) {
             $name = preg_replace('/ $/', '', $name);
@@ -1210,7 +1196,27 @@ class vainfo
         $broken[$key]['artist'] = 'Unknown (Broken)';
 
         return $broken;
+    }
+    // set_broken
 
-    } // set_broken
-
+    /**
+     *
+     * @param array $data
+     * @return array
+     * @throws Exception
+     */
+    private function parseGenres($data)
+    {
+        // read additional id3v2 delimiters from config
+        $delimiters = AmpConfig::get('additional_genre_delimiters');
+        if (isset($data) && is_array($data) && count($data) === 1 && isset($delimiters)) {
+            $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
+            $genres = preg_split($pattern, reset($data));
+            if ($genres[0] === $data[0]) {
+                throw new Exception('Pattern given in additional_id3v2_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~).');
+            }
+            $data = $genres;
+        }
+        return $data;
+    }
 } // end class vainfo

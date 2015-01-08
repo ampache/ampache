@@ -4,10 +4,10 @@
 ;###################
 
 ; This value is used to detect quickly
-; if this config file is up to date 
+; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 22
+config_version = 23
 
 ;###################
 ; Path Vars        #
@@ -20,10 +20,10 @@ config_version = 22
 ;http_host = "localhost"
 
 ; The public path to your ampache install
-; Do not put a trailing / on this path 
+; Do not put a trailing / on this path
 ; For example if your site is located at http://localhost
 ; than you do not need to enter anything for the web_path
-; if it is located at http://localhost/music you need to 
+; if it is located at http://localhost/music you need to
 ; set web_path to /music
 ; DEFAULT: ""
 ;web_path 	= ""
@@ -64,19 +64,19 @@ database_password = password
 secret_key = "abcdefghijklmnoprqstuvwyz0123456"
 
 ; Length that a session will last expressed in seconds. Default is
-; one hour. 
+; one hour.
 ; DEFAULT: 3600
 session_length = 3600
 
 ; Length that the session for a single streaming instance will last
-; the default is two hours. With some clients, and long songs this can 
+; the default is two hours. With some clients, and long songs this can
 ; cause playback to stop, increase this value if you experience that
 ; DEFAULT: 7200
 stream_length = 7200
 
-; This length defines how long a 'remember me' session and cookie will 
+; This length defines how long a 'remember me' session and cookie will
 ; last, the default is 86400, same as length. It is up to the administrator
-; of the box to increase this, for reference 86400 = 1 day 
+; of the box to increase this, for reference 86400 = 1 day
 ; 604800 = 1 week and 2419200 = 1 month
 ; DEFAULT: 86400
 remember_length = 86400
@@ -87,16 +87,16 @@ remember_length = 86400
 session_name = ampache
 
 ; Lifetime of the Cookie, 0 == Forever (until browser close) , otherwise in terms of seconds
-; If you want cookies to last past a browser close set this to a value in seconds. 
+; If you want cookies to last past a browser close set this to a value in seconds.
 ; DEFAULT: 0
 session_cookielife = 0
 
 ; Is the cookie a "secure" cookie? This should only be set to 1 (true) if you are
-; running a secure site (HTTPS). 
+; running a secure site (HTTPS).
 ; DEFAULT: 0
 session_cookiesecure       = 0
 
-; Auth Methods 
+; Auth Methods
 ; This defines which auth methods Auth will attempt to use and in which order.
 ; If auto_create isn't enabled the user must exist locally.
 ; DEFAULT: mysql
@@ -117,7 +117,7 @@ auth_methods = "mysql"
 ;auth_password_save = "false"
 
 ; Logout redirection target
-; Defaults to our own login.php, but we can override it here if, for instance, 
+; Defaults to our own login.php, but we can override it here if, for instance,
 ; we want to redirect to an SSO provider instead.
 ; logout_redirect = "http://sso.example.com/logout"
 
@@ -158,11 +158,11 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; DEFAULT: false
 ;catalog_disable = "false"
 
-; Use Access List 
+; Use Access List
 ; Toggle this on if you want ampache to pay attention to the access list
-; and only allow streaming/downloading/api-rpc from known hosts api-rpc 
+; and only allow streaming/downloading/api-rpc from known hosts api-rpc
 ; will not work without this on.
-; NOTE: Default Behavior is DENY FROM ALL 
+; NOTE: Default Behavior is DENY FROM ALL
 ; DEFAULT: true
 access_control	= "true"
 
@@ -170,7 +170,7 @@ access_control	= "true"
 ; If this is set to true ampache will make sure that the URL passed when
 ; attempting to retrieve a song contains a valid Session ID This prevents
 ; others from guessing URL's. This setting is ignored if you have use_auth
-; disabled. 
+; disabled.
 ; DEFAULT: true
 require_session = "true"
 
@@ -179,7 +179,7 @@ require_session = "true"
 ; is passed even on hosts defined in the Local Network ACL. This setting
 ; has no effect if access_control is not enabled
 ; DEFAULT: true
-require_localnet_session = "true" 
+require_localnet_session = "true"
 
 ; Multiple Logins
 ; Added by Vlet 07/25/07
@@ -197,22 +197,22 @@ require_localnet_session = "true"
 
 ; Track User IPs
 ; If this is enabled Ampache will log the IP of every completed login
-; it will store user,ip,time at one row per login. The results are 
+; it will store user,ip,time at one row per login. The results are
 ; displayed in Admin --> Users
 ; DEFAULT: false
 ;track_user_ip = "false"
 
 ; User IP Cardinality
 ; This defines how many days worth of IP history Ampache will track
-; As it is one row per login on high volume sites you will want to 
-; clear it every now and then. 
+; As it is one row per login on high volume sites you will want to
+; clear it every now and then.
 ; DEFAULT: 42 days
 ;user_ip_cardinality = "42"
 
 ; Allow Zip Download
 ; This setting allows/disallows using zlib to zip up an entire
 ; playlist/album for download. Even if this is turned on you will
-; still need to enabled downloading for the specific user you 
+; still need to enabled downloading for the specific user you
 ; want to be able to use this function
 ; DEFAULT: false
 ;allow_zip_download = "false"
@@ -229,19 +229,19 @@ Allow Zip Types
 ; This is an optional configuration option that adds a comment
 ; to your zip files, this only applies if you've got allow_zip_downloads
 ; DEFAULT: Ampache - Zip Batch Download
-;file_zip_comment = "Ampache - Zip Batch Download" 
+;file_zip_comment = "Ampache - Zip Batch Download"
 
 ; Waveform
 ; This settings tells Ampache to attempt to generate a waveform
 ; for each song. It requires transcode and encode_args_wav settings.
 ; You must also set tmp_dir_path in order for this to work
 ; DEFAULT: false
-;waveform = "false" 
+;waveform = "false"
 
 ; Waveform color
 ; The waveform color.
 ; DEFAULT: #FF0000
-;waveform_color = "#FF0000" 
+;waveform_color = "#FF0000"
 
 ; Temporary Directory Path
 ; If Waveform is enabled this must be set to tell
@@ -251,9 +251,9 @@ Allow Zip Types
 ;tmp_dir_path = "false"
 
 ; This setting throttles a persons downloading to the specified
-; bytes per second. This is not a 100% guaranteed function, and 
+; bytes per second. This is not a 100% guaranteed function, and
 ; you should really use a server based rate limiter if you want
-; to do this correctly. 
+; to do this correctly.
 ; DEFAULT: off
 ; VALUES: any whole number (in bytes per second)
 ;throttle_download = 10
@@ -295,12 +295,11 @@ metadata_order = "getID3,filename"
 ; DEFAULT: filename getID3
 metadata_order_video = "filename,getID3"
 
-; Some taggers use delimiters other than \0 for ID3v2 fields
+; Some taggers use delimiters other than \0 for fields
 ; This list specifies possible delimiters additional to \0
-; Comma delimiters are not supported at this point
-; Add a blank delimiter for comma delimiter
-; DEFAULT: ; / // \ | ,
-additional_id3v2_genre_delimiters = ";,/,//,\,|,"
+; This setting takes a regex pattern.
+; DEFAULT: // / \ | , ;
+additional_genre_delimiters = "[/]{2}|[/|\\\\|\|,|;]"
 
 ; This determines if a preview image should be retrieved from video files
 ; It requires encode_get_image transcode settings.
@@ -349,7 +348,7 @@ directplay = "true"
 ; Sociable
 ; This turns on / off all of the "social" features of ampache
 ; default is on, but if you don't care and just want music
-; turn this off to disable all social features. 
+; turn this off to disable all social features.
 ; DEFAULT: true
 sociable = "true"
 
@@ -479,7 +478,7 @@ wanted_types = "album,official"
 ; Debug Level
 ; This should always be set in conjunction with the
 ; debug option, it defines how prolific you want the
-; debugging in ampache to be. values are 1-5. 
+; debugging in ampache to be. values are 1-5.
 ; 1 == Errors only
 ; 2 == Error + Failures (login attempts etc.)
 ; 3 == ??
@@ -508,7 +507,7 @@ log_filename = "%name.%Y%m%d.log"
 ; DEFAULT: UTF-8
 site_charset = UTF-8
 
-; Locale Charset 
+; Locale Charset
 ; Local charset (mainly for file operations) if different
 ; from site_charset.
 ; This is disabled by default, enable only if needed
@@ -517,7 +516,7 @@ site_charset = UTF-8
 ;lc_charset = "ISO8859-1"
 
 ; Refresh Limit
-; This defines the default refresh limit in seconds for 
+; This defines the default refresh limit in seconds for
 ; pages with dynamic content, such as now playing
 ; DEFAULT: 60
 ; Possible Values: Int > 5
@@ -549,7 +548,7 @@ refresh_limit = "60"
 ;#########################################################
 
 ; LDAP filter string to use (required)
-; For OpenLDAP use "uid" 
+; For OpenLDAP use "uid"
 ; For Microsoft Active Directory (MAD) use "sAMAccountName"
 ; DEFAULT: null
 ; ldap_filter = "sAMAccountName"
@@ -629,8 +628,8 @@ refresh_limit = "60"
 ; DEFAULT: false
 ;admin_enable_required = "false"
 
-; This setting will allow all registrants/ldap/http users 
-; to be auto-approved as a user. By default, they will be 
+; This setting will allow all registrants/ldap/http users
+; to be auto-approved as a user. By default, they will be
 ; added as a guest and must be promoted by the admin.
 ; POSSIBLE VALUES: guest, user, admin
 ; DEFAULT: guest
@@ -685,7 +684,7 @@ registration_mandatory_fields = "fullname"
 
 ;######################################################
 ; These are commands used to transcode non-streaming
-; formats to the target file type for streaming. 
+; formats to the target file type for streaming.
 ; This can be useful in re-encoding file types that don't stream
 ; very well, or if your player doesn't support some file types.
 ;
@@ -781,7 +780,7 @@ transcode_input = "-i %FILE%"
 
 ; Specific transcode commands
 ; It shouldn't be necessary in most cases, but you can override the transcode
-; command for specific source formats.  It still needs to accept the 
+; command for specific source formats.  It still needs to accept the
 ; encoding arguments, so the easiest approach is to use your normal command as
 ; a clearing-house.
 ; transcode_cmd_TYPE = TRANSCODE_CMD
@@ -789,7 +788,7 @@ transcode_input = "-i %FILE%"
 
 ; Encoding arguments
 ; For each output format, you should provide the necessary arguments for
-; your transcode_cmd. 
+; your transcode_cmd.
 ; encode_args_TYPE = TRANSCODE_CMD_ARGS
 encode_args_mp3 = "-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1"
 encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
@@ -846,7 +845,7 @@ encode_ss_duration = "-t %DURATION%"
 ;mail_type = "php"
 
 ;Mail domain.
-;DEFAULT: example.com 
+;DEFAULT: example.com
 ;mail_domain = "example.com"
 
 ;This will be combined with mail_domain and used as the source address for
