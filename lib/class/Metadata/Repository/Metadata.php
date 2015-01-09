@@ -30,7 +30,6 @@ namespace lib\Metadata\Repository;
  */
 class Metadata extends \lib\Repository
 {
-
     protected $modelClassName = '\lib\Metadata\Model\Metadata';
 
     public static function gc()

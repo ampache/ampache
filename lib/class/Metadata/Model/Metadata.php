@@ -124,7 +124,7 @@ class Metadata extends \lib\DatabaseObject implements \lib\Interfaces\Model
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public function getType()
@@ -133,12 +133,11 @@ class Metadata extends \lib\DatabaseObject implements \lib\Interfaces\Model
     }
 
     /**
-     * 
+     *
      * @param string $type
      */
     public function setType($type)
     {
         $this->type = $type;
     }
-
 }

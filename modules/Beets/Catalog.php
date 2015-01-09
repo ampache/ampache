@@ -64,7 +64,8 @@ abstract class Catalog extends \Catalog
      *
      * Catalog class constructor, pulls catalog information
      */
-    public function __construct($catalog_id = null) { // TODO: Basic constructer should be provided from parent
+    public function __construct($catalog_id = null)
+    { // TODO: Basic constructer should be provided from parent
         if ($catalog_id) {
             $this->id = intval($catalog_id);
             $info = $this->get_info($catalog_id);
@@ -151,7 +152,7 @@ abstract class Catalog extends \Catalog
     {
         $tags = $this->getCleanMetadata($libraryItem, $metadata);
         
-        foreach($tags as $tag => $value) {
+        foreach ($tags as $tag => $value) {
             $field = $libraryItem->getField($tag);
             $libraryItem->addMetadata($field, $value);
         }
@@ -170,7 +171,7 @@ abstract class Catalog extends \Catalog
             defined(get_class($libraryItem) . '::' . 'aliases') ? $libraryItem::aliases : array(),
             array_keys(get_object_vars($libraryItem))
         );
-        foreach($keys as $key) {
+        foreach ($keys as $key) {
             unset($tags[$key]);
         }
         
@@ -365,10 +366,9 @@ abstract class Catalog extends \Catalog
 
     public function updateMetadata($song, $tags)
     {
-        foreach($tags as $tag => $value) {
+        foreach ($tags as $tag => $value) {
             $field = $song->getField($tag);
             $song->updateOrInsertMetadata($field, $value);
         }
     }
-
 }

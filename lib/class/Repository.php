@@ -46,7 +46,7 @@ class Repository
     }
 
     /**
-     * 
+     *
      * @return DatabaseObject[]
      */
     public function findAll()
@@ -56,7 +56,7 @@ class Repository
     }
 
     /**
-     * 
+     *
      * @param type $id
      * @return DatabaseObject
      */
@@ -79,7 +79,7 @@ class Repository
     }
 
     /**
-     * 
+     *
      * @param string $name
      * @param array $arguments
      * @return DatabaseObject
@@ -193,8 +193,8 @@ class Repository
      */
     protected function resolveObjects(array $properties)
     {
-        foreach($properties as $property => $value) {
-            if(is_object($value)) {
+        foreach ($properties as $property => $value) {
+            if (is_object($value)) {
                 $properties[$property] = $value->getId();
             }
         }
@@ -210,13 +210,13 @@ class Repository
     public function assembleQuery($table, $fields)
     {
         $sql = 'SELECT * FROM ' . $table;
-        if($fields) {
-           $sql .= ' WHERE ';
-           $sqlParts = array();
-           foreach($fields as $field) {
-               $sqlParts[] = '`' . $this->camelCaseToUnderscore($field) . '` = ?';
-           }
-           $sql .= implode(' and ', $sqlParts);
+        if ($fields) {
+            $sql .= ' WHERE ';
+            $sqlParts = array();
+            foreach ($fields as $field) {
+                $sqlParts[] = '`' . $this->camelCaseToUnderscore($field) . '` = ?';
+            }
+            $sql .= implode(' and ', $sqlParts);
         }
         
         return $sql;
@@ -226,5 +226,4 @@ class Repository
     {
         return strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/','_$1', $string));
     }
-
 }

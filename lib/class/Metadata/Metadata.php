@@ -28,8 +28,8 @@ namespace lib\Metadata;
  *
  * @author raziel
  */
-trait Metadata {
-    
+trait Metadata
+{
     /**
      *
      * @var Repository\Metadata
@@ -46,29 +46,33 @@ trait Metadata {
     /**
      * Initialize the repository variables. Needs to be called first if the trait should do something.
      */
-    protected function initializeMetadata() {
+    protected function initializeMetadata()
+    {
         $this->metadataRepository = new \lib\Metadata\Repository\Metadata();
         $this->metadataFieldRepository = new \lib\Metadata\Repository\MetadataField();
     }
     
     
     /**
-     * 
+     *
      * @return Model\Metadata
      */
-    public function getMetadata() {
+    public function getMetadata()
+    {
         return $this->metadataRepository->findByObjectIdAndType($this->id, get_class($this));
     }
     
     /**
-     * 
+     *
      * @param Model\Metadata $metadata
      */
-    public function deleteMetadata(Model\Metadata $metadata) {
+    public function deleteMetadata(Model\Metadata $metadata)
+    {
         $this->metadataRepository->remove($metadata);
     }
     
-    public function addMetadata(\lib\Metadata\Model\MetadataField $field, $data) {
+    public function addMetadata(\lib\Metadata\Model\MetadataField $field, $data)
+    {
         $metadata = new \lib\Metadata\Model\Metadata();
         $metadata->setField($field);
         $metadata->setObjectId($this->id);
@@ -77,29 +81,30 @@ trait Metadata {
         $this->metadataRepository->add($metadata);
     }
     
-    public function updateOrInsertMetadata(\lib\Metadata\Model\MetadataField $field, $data) {
+    public function updateOrInsertMetadata(\lib\Metadata\Model\MetadataField $field, $data)
+    {
         /* @var $metadata Model\Metadata */
         $metadata = $this->metadataRepository->findByObjectIdAndFieldAndType($this->id, $field, get_class($this));
-        if($metadata) {
+        if ($metadata) {
             $object = reset($metadata);
             $object->setData($data);
             $this->metadataRepository->update($object);
-        }
-        else {
+        } else {
             $this->addMetadata($field, $data);
         }
     }
     
     /**
-     * 
+     *
      * @param type $name
      * @param type $public
      * @return \lib\Metadata\Model\MetadataField
      */
-    protected function createField($name, $public) {
+    protected function createField($name, $public)
+    {
         $field = new \lib\Metadata\Model\MetadataField();
         $field->setName($name);
-        if(!$public) {
+        if (!$public) {
             $field->hide();
         }
         $this->metadataFieldRepository->add($field);
@@ -107,7 +112,7 @@ trait Metadata {
     }
 
     /**
-     * 
+     *
      * @param string $propertie
      * @param boolean $public
      * @return Model\MetadataField
@@ -115,10 +120,9 @@ trait Metadata {
     public function getField($propertie, $public = true)
     {
         $fields = $this->metadataFieldRepository->findByName($propertie);
-        if(count($fields)) {
+        if (count($fields)) {
             $field = reset($fields);
-        }
-        else {
+        } else {
             $field = $this->createField($propertie, $public);
         }
         return $field;

@@ -76,18 +76,19 @@ class MetadataField extends \lib\DatabaseObject implements \lib\Interfaces\Model
     }
     
     /**
-     * 
+     *
      * @return boolean
      */
-    public function isPublic() {
+    public function isPublic()
+    {
         return $this->public;
     }
     
     /**
      * Set public to false
      */
-    public function hide() {
+    public function hide()
+    {
         $this->public = false;
     }
-
 }

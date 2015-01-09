@@ -82,8 +82,8 @@ abstract class DatabaseObject
      */
     protected function remapCamelcase()
     {
-        foreach(get_object_vars($this) as $key => $val) {
-            if(strpos($key, '_') !== false) {
+        foreach (get_object_vars($this) as $key => $val) {
+            if (strpos($key, '_') !== false) {
                 $camelCaseKey = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $key))));
                 $this->$camelCaseKey = $val;
                 unset($this->$key);
@@ -91,9 +91,10 @@ abstract class DatabaseObject
         }
     }
     
-    protected function fromCamelCase($properties) {
+    protected function fromCamelCase($properties)
+    {
         $data = array();
-        foreach($properties as $propertie => $value) {
+        foreach ($properties as $propertie => $value) {
             $newPropertyKey = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $propertie));
             $data[$newPropertyKey] = $value;
         }
@@ -106,13 +107,12 @@ abstract class DatabaseObject
      */
     public function initializeChildObjects()
     {
-        foreach($this->fieldClassRelations as $field => $repositoryName) {
-            if(class_exists($repositoryName)) {
+        foreach ($this->fieldClassRelations as $field => $repositoryName) {
+            if (class_exists($repositoryName)) {
                 /* @var $repository Repository */
                 $repository = new $repositoryName;
                 $this->$field = $repository->findById($this->$field);
             }
         }
     }
-
 }

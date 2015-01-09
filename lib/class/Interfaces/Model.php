@@ -30,7 +30,6 @@ namespace lib\Interfaces;
  */
 interface Model
 {
-
     /**
      * Get ID of Database Object
      */
