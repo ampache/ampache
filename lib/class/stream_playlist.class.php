@@ -213,7 +213,7 @@ class Stream_Playlist
                 unset($ext);
             break;
             case 'asx':
-                $ct = 'video/x-ms-wmv';
+                $ct = 'video/x-ms-asf';
             break;
             case 'pls':
                 $ct = 'audio/x-scpls';
