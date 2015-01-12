@@ -601,9 +601,14 @@ if ($transcode || $demo_id) {
     header('Accept-Ranges: bytes');
 }
 
-$mime = ($transcode && isset($transcoder))
-    ? $media->type_to_mime($transcoder['format'])
-    : $media->mime;
+$mime = $media->mime;
+if ($transcode && isset($transcoder)) {
+    $mime = $media->type_to_mime($transcoder['format']);
+    if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+        // This to avoid hang, see http://php.net/manual/es/function.proc-open.php#89338
+        fclose($transcoder['stderr']);
+    }
+};
 
 $browser->downloadHeaders($media_name, $mime, false, $stream_size);
 
@@ -611,19 +616,33 @@ $bytes_streamed = 0;
 
 // Actually do the streaming
 $buf_all = '';
-ob_end_clean();
 do {
     $read_size = $transcode
         ? 2048
         : min(2048, $stream_size - $bytes_streamed);
-    $buf = fread($fp, $read_size);
-    if ($send_all_in_once) {
-        $buf_all .= $buf;
-    } else {
-        print($buf);
-        ob_flush();
+    $r_arr = array($fp);
+    $w_arr = $e_arr = null;
+    $status = stream_select($r_arr, $w_arr, $e_arr, 2);
+    if ($status === false) {
+        break; // Error
+    } elseif ($status > 0) {
+        while ($buf = fread($fp, $read_size)) {
+            if ($send_all_in_once) {
+                $buf_all .= $buf;
+            } else {
+                if (!empty($buf)) {
+                    print($buf);
+                    if (ob_get_length()) {
+                        ob_flush();
+                        flush();
+                        ob_end_flush();
+                    }
+                    ob_start();
+                }
+            }
+            $bytes_streamed += strlen($buf);
+        }
     }
-    $bytes_streamed += strlen($buf);
 } while (!feof($fp) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
 
 if ($send_all_in_once && connection_status() == 0) {
@@ -644,10 +663,6 @@ if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
 if ($demo_id && isset($democratic)) { $democratic->delete_from_oid($oid, $type); }
 
 if ($transcode && isset($transcoder)) {
-    if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-        fread($transcoder['stderr'], 8192);
-        fclose($transcoder['stderr']);
-    }
     fclose($fp);
     proc_terminate($transcoder['process']);
 } else {
