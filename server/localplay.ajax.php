@@ -74,6 +74,7 @@ switch ($_REQUEST['action']) {
 
                 // We actually want to refresh something here
                 ob_start();
+                $objects = $localplay->get();
                 require_once AmpConfig::get('prefix') . '/templates/show_localplay_status.inc.php';
                 $results['localplay_status'] = ob_get_contents();
                 ob_end_clean();
@@ -166,6 +167,7 @@ switch ($_REQUEST['action']) {
         $localplay->repeat(make_bool($_REQUEST['value']));
 
         ob_start();
+        $objects = $localplay->get();
         require_once AmpConfig::get('prefix') . '/templates/show_localplay_status.inc.php';
         $results['localplay_status'] = ob_get_contents();
         ob_end_clean();
@@ -184,6 +186,7 @@ switch ($_REQUEST['action']) {
         $localplay->random(make_bool($_REQUEST['value']));
 
         ob_start();
+        $objects = $localplay->get();
         require_once AmpConfig::get('prefix') . '/templates/show_localplay_status.inc.php';
         $results['localplay_status'] = ob_get_contents();
         ob_end_clean();

@@ -47,6 +47,7 @@ switch ($_REQUEST['action']) {
         // Setup the object
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->add_instance($_POST);
+        header("Location:" . AmpConfig::get('web_path') . "/localplay.php?action=show_instances");
     break;
     case 'update_instance':
         // Make sure they gots them rights
