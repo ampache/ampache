@@ -101,7 +101,12 @@ $_SESSION['login'] = false;
             function getCurrentPage()
             {
                 if (window.location.hash.length > 0) {
-                    return btoa(window.location.hash.substring(1));
+                    var wpage = window.location.hash.substring(1);
+                    if (wpage !== 'prettyPhoto') {
+                        return btoa(wpage);
+                    } else {
+                        return "";
+                    }
                 }
 
                 return btoa(window.location.href.substring(jsWebPath.length + 1));
