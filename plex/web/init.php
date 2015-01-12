@@ -35,6 +35,6 @@ if (!AmpConfig::get('plex_backend')) {
 }
 
 if (!defined('NO_SESSION') && !Access::check('interface', '100')) {
-    Error::add('general', T_('Unauthorized.'));
+    echo T_('Unauthorized.');
     exit();
 }
