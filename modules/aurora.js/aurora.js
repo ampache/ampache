@@ -3879,7 +3879,7 @@ BufferSource = (function(_super) {
 
   function BufferSource(input) {
     this.loop = __bind(this.loop, this);
-    if (input instanceof AV.BufferList) {
+    if (input instanceof BufferList) {
       this.list = input;
     } else {
       this.list = new BufferList;
