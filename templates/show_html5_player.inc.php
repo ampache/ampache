@@ -435,7 +435,7 @@ if ($isVideo) {
             <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')); ?></a>
         </div>
 <?php if (AmpConfig::get('webplayer_html5')) { ?>
-        <div id="equalizerbtn" class="action_button">
+        <div id="equalizerbtn" class="action_button" style="visibility: hidden;">
             <a href="javascript:ShowEqualizer();"><?php echo UI::get_icon('equalizer', T_('Equalizer')); ?></a>
         </div>
         <div class="action_button">
