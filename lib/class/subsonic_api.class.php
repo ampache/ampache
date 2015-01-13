@@ -998,19 +998,21 @@ class Subsonic_Api
 
         if ($art != null) {
             $art->get_db();
-            if (!$size) {
-                header('Content-type: ' . $art->raw_mime);
-                header('Content-Length: ' . strlen($art->raw));
-                echo $art->raw;
-            } else {
+            if ($size) {
                 $dim = array();
                 $dim['width'] = $size;
                 $dim['height'] = $size;
                 $thumb = $art->get_thumb($dim);
-                header('Content-type: ' . $thumb['thumb_mime']);
-                header('Content-Length: ' . strlen($thumb['thumb']));
-                echo $thumb['thumb'];
+                if ($thumb) {
+                    header('Content-type: ' . $thumb['thumb_mime']);
+                    header('Content-Length: ' . strlen($thumb['thumb']));
+                    echo $thumb['thumb'];
+                }
             }
+            
+            header('Content-type: ' . $art->raw_mime);
+            header('Content-Length: ' . strlen($art->raw));
+            echo $art->raw;
         }
     }
 
