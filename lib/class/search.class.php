@@ -417,14 +417,14 @@ class Search extends playlist_object
 
             $this->types[] = array(
                 'name'   => 'image width',
-                'label'  => T_('image width'),
+                'label'  => T_('Image Width'),
                 'type'   => 'numeric',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
                 'name'   => 'image height',
-                'label'  => T_('image height'),
+                'label'  => T_('Image Height'),
                 'type'   => 'numeric',
                 'widget' => array('input', 'text')
             );

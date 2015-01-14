@@ -3289,24 +3289,6 @@ class Update
             $retval = Dba::write($sql) ? $retval : false;
         }
 
-        $sql = "SELECT `image`,`id` FROM `image`";
-        $db_results = Dba::read($sql);
-        $results = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row;
-        }
-
-        foreach ($results as $row) {
-            $source = $row['image'];
-            $id = $row['id'];
-            $dimensions = Core::image_dimensions($source);
-            $width = intval($dimensions['width']);
-            $height = intval($dimensions['height']);
-            $sql = "Update `image` SET `width`=". $width . ",`height`=".$height." WHERE `id`='".$id."'";
-            $retval = Dba::write($sql) ? $retval : false;
-        }
-
         return $retval;
 
     }
