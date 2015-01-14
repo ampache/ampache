@@ -415,6 +415,20 @@ class Search extends playlist_object
                 'widget' => array('input', 'text')
             );
 
+            $this->types[] = array(
+                'name'   => 'image width',
+                'label'  => T_('image width'),
+                'type'   => 'numeric',
+                'widget' => array('input', 'text')
+            );
+
+            $this->types[] = array(
+                'name'   => 'image height',
+                'label'  => T_('image height'),
+                'type'   => 'numeric',
+                'widget' => array('input', 'text')
+            );
+
             if (AmpConfig::get('ratings')) {
                 $this->types[] = array(
                     'name'   => 'rating',
@@ -907,6 +921,14 @@ class Search extends playlist_object
                     $where[] = "`realtag_$key`.`match` > 0";
                     $join['tag'][$key] = "$sql_match_operator '$input'";
                 break;
+                case 'image height':
+                    $where[] = "`image`.`height` $sql_match_operator '$input'";
+                    $join['image'] = true;
+                break;
+                case 'image width':
+                    $where[] = "`image`.`width` $sql_match_operator '$input'";
+                    $join['image'] = true;
+                break;
                 default:
                     // Nae laird!
                 break;
@@ -944,6 +966,11 @@ class Search extends playlist_object
                 $table['rating'] .= "AND `rating`.`user`='$userid' ";
             }
             $table['rating'] .= "AND `rating`.`object_id`=`album`.`id`";
+        }
+        if ($join['image']) {
+            $table['song'] = "LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
+            $where_sql .= " AND `image`.`object_type`='album'";
+            $where_sql .= " AND `image`.`size`='original'";
         }
 
         $table_sql = implode(' ', $table);
