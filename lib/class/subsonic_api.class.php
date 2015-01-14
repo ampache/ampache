@@ -1009,7 +1009,7 @@ class Subsonic_Api
                     echo $thumb['thumb'];
                 }
             }
-            
+
             header('Content-type: ' . $art->raw_mime);
             header('Content-Length: ' . strlen($art->raw));
             echo $art->raw;

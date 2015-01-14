@@ -482,6 +482,9 @@ class Update
         $update_string = " - Move column album_artist from table song to table album.<br />";
         $version[] = array('version' => '370027','description' => $update_string);
 
+        $update_string = " - Add width and height in table image.<br />";
+        $version[] = array('version' => '370028','description' => $update_string);
+
         return $version;
     }
 
@@ -3259,4 +3262,35 @@ class Update
 
         return $retval;
     }
+
+
+
+    /**
+     * update_370028
+     *
+     * Add width and height in table image
+     *
+     */
+    public static function update_370028()
+    {
+        $retval = true;
+
+        $sql = "select `width` from `image`";
+        $db_results = Dba::read($sql);
+        if (!$db_results) {
+            $sql = "ALTER TABLE `image` ADD `width` int(4) unsigned DEFAULT 0 AFTER `image`";
+            $retval = Dba::write($sql) ? $retval : false;
+        }
+
+        $sql = "select `height` from `image`";
+        $db_results = Dba::read($sql);
+        if (!$db_results) {
+            $sql = "ALTER TABLE `image` ADD `height` int(4) unsigned DEFAULT 0 AFTER `width`";
+            $retval = Dba::write($sql) ? $retval : false;
+        }
+
+        return $retval;
+
+    }
+
 }
