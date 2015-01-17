@@ -2,7 +2,7 @@
     <!-- /container -->
     <!-- Bootstrap core JavaScript
     ================================================== -->
-    <script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js"</script>
+    <script src="<?php echo $web_path; ?>/modules/jquery/jquery.min.js"></script>
     <script src="/modules/bootstrap/js/bootstrap.min.js"></script>
     <script src="lib/javascript/base.js" type="text/javascript"></script>
     <?php
