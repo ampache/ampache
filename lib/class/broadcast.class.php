@@ -165,7 +165,7 @@ class Broadcast extends database_object implements library_item
     public function update(array $data)
     {
         if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id);
+            Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
         }
 
         $sql = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? " .

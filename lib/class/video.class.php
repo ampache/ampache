@@ -601,7 +601,7 @@ class Video extends database_object implements media, library_item
         Dba::write($sql, array($title, $release_date, $this->id));
 
         if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'video', $this->id);
+            Tag::update_tag_list($data['edit_tags'], 'video', $this->id, true);
         }
 
         $this->title = $title;

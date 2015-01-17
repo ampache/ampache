@@ -145,7 +145,7 @@ class Channel extends database_object implements media, library_item
     public function update(array $data)
     {
         if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'channel', $this->id);
+            Tag::update_tag_list($data['edit_tags'], 'channel', $this->id, true);
         }
 
         $sql = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? " .

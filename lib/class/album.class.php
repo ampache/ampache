@@ -870,7 +870,7 @@ class Album extends database_object implements library_item
         // When current_id not empty we force to overwrite current object
         Tag::update_tag_list($tags_comma, 'album', $current_id, $force_update ? true : $override_childs);
 
-        if ($override_songs || $add_to_childs) {
+        if ($override_childs || $add_to_childs) {
             $songs = $this->get_songs();
             foreach ($songs as $song_id) {
                 Tag::update_tag_list($tags_comma, 'song', $song_id, $override_childs);
