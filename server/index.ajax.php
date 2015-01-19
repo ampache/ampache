@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -28,13 +28,23 @@ if (!defined('AJAX_INCLUDE')) { exit; }
 $results = array();
 switch ($_REQUEST['action']) {
     case 'random_albums':
-        $albums = Album::get_random(6, true);
+        $albums = Album::get_random(6);
         if (count($albums) AND is_array($albums)) {
             ob_start();
             require_once AmpConfig::get('prefix') . '/templates/show_random_albums.inc.php';
             $results['random_selection'] = ob_get_clean();
         } else {
             $results['random_selection'] = '<!-- None found -->';
+        }
+    break;
+    case 'random_videos':
+        $videos = Video::get_random(6);
+        if (count($videos) AND is_array($videos)) {
+            ob_start();
+            require_once AmpConfig::get('prefix') . '/templates/show_random_videos.inc.php';
+            $results['random_video_selection'] = ob_get_clean();
+        } else {
+            $results['random_video_selection'] = '<!-- None found -->';
         }
     break;
     case 'artist_info':
@@ -204,10 +214,11 @@ switch ($_REQUEST['action']) {
                 exit;
         } // end switch on button
 
+        Ajax::set_include_override(true);
         ob_start();
         $_SESSION['state']['sidebar_tab'] = $button;
         require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php';
-        $results['sidebar'] = ob_get_contents();
+        $results['sidebar-content'] = ob_get_contents();
         ob_end_clean();
     break;
     case 'shoutbox':

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -36,10 +36,10 @@
     <tbody>
         <?php
         foreach ($object_ids as $broadcast_id) {
-            $broadcast = new Broadcast($broadcast_id);
-            $broadcast->format();
+            $libitem = new Broadcast($broadcast_id);
+            $libitem->format();
         ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="channel_row_<?php echo $channel->id; ?>">
+        <tr class="<?php echo UI::flip_class(); ?>" id="broadcast_row_<?php echo $libitem->id; ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_broadcast_row.inc.php'; ?>
         </tr>
         <?php } ?>

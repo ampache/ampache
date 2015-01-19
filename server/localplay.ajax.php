@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -43,7 +43,7 @@ switch ($_REQUEST['action']) {
         // We should also refesh the sidebar
         ob_start();
         require_once AmpConfig::get('prefix') . '/templates/sidebar.inc.php';
-        $results['sidebar'] = ob_get_contents();
+        $results['sidebar-content'] = ob_get_contents();
         ob_end_clean();
     break;
     case 'command':
@@ -74,6 +74,7 @@ switch ($_REQUEST['action']) {
 
                 // We actually want to refresh something here
                 ob_start();
+                $objects = $localplay->get();
                 require_once AmpConfig::get('prefix') . '/templates/show_localplay_status.inc.php';
                 $results['localplay_status'] = ob_get_contents();
                 ob_end_clean();
@@ -87,7 +88,7 @@ switch ($_REQUEST['action']) {
                 $browse->save_objects(array());
                 $browse->show_objects(array());
                 $browse->store();
-                $results['browse_content_' . $browse->get_type()] = ob_get_contents();
+                $results[$browse->get_content_div()] = ob_get_contents();
                 ob_end_clean();
             break;
             case 'skip':
@@ -100,7 +101,7 @@ switch ($_REQUEST['action']) {
                 $browse->save_objects($objects);
                 $browse->show_objects($objects);
                 $browse->store();
-                $results['browse_content_' . $browse->get_type()] = ob_get_contents();
+                $results[$browse->get_content_div()] = ob_get_contents();
                 ob_end_clean();
             break;
             default:
@@ -135,7 +136,7 @@ switch ($_REQUEST['action']) {
         $browse->save_objects($objects);
         $browse->show_objects($objects);
         $browse->store();
-        $results['browse_content_' . $browse->get_type()] = ob_get_contents();
+        $results[$browse->get_content_div()] = ob_get_contents();
         ob_end_clean();
 
     break;
@@ -166,6 +167,7 @@ switch ($_REQUEST['action']) {
         $localplay->repeat(make_bool($_REQUEST['value']));
 
         ob_start();
+        $objects = $localplay->get();
         require_once AmpConfig::get('prefix') . '/templates/show_localplay_status.inc.php';
         $results['localplay_status'] = ob_get_contents();
         ob_end_clean();
@@ -184,6 +186,7 @@ switch ($_REQUEST['action']) {
         $localplay->random(make_bool($_REQUEST['value']));
 
         ob_start();
+        $objects = $localplay->get();
         require_once AmpConfig::get('prefix') . '/templates/show_localplay_status.inc.php';
         $results['localplay_status'] = ob_get_contents();
         ob_end_clean();

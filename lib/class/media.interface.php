@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -29,13 +29,6 @@
 interface media
 {
     /**
-     * format
-     *
-     * Creates the gussied-up member variables for output
-     */
-    public function format();
-
-    /**
      * get_stream_types
      *
      * Returns an array of strings; current types are 'native'
@@ -49,7 +42,7 @@ interface media
      * Returns the url to stream the specified object
      *
      */
-    public static function play_url($oid, $additional_params='');
+    public static function play_url($oid, $additional_params='', $local=false);
 
     /**
      * get_transcode_settings
@@ -59,6 +52,14 @@ interface media
      * parameter can be used to request a specific format instead of the
      * default from the configuration file.
      */
-    public function get_transcode_settings($target = null);
+    public function get_transcode_settings($target = null, $player = null, $options=array());
+
+    /**
+     * get_stream_name
+     * Get the complete name to display for the stream.
+     */
+    public function get_stream_name();
+
+    public function set_played($user, $agent, $location);
 
 } // end interface

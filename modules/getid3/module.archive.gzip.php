@@ -36,7 +36,7 @@ class getid3_gzip extends getid3_handler {
 		//|ID1|ID2|CM |FLG|     MTIME     |XFL|OS |
 		//+---+---+---+---+---+---+---+---+---+---+
 
-		if ($info['filesize'] > $info['php_memory_limit']) {
+		if ($info['php_memory_limit'] && ($info['filesize'] > $info['php_memory_limit'])) {
 			$info['error'][] = 'File is too large ('.number_format($info['filesize']).' bytes) to read into memory (limit: '.number_format($info['php_memory_limit'] / 1048576).'MB)';
 			return false;
 		}
@@ -56,7 +56,7 @@ class getid3_gzip extends getid3_handler {
 				$attr = unpack($unpack_header, substr($buf, 0, $start_length));
 				if (!$this->get_os_type(ord($attr['os']))) {
 					// Merge member with previous if wrong OS type
-					$arr_members[$i - 1] .= $buf;
+					$arr_members[($i - 1)] .= $buf;
 					$arr_members[$i] = '';
 					$is_wrong_members = true;
 					continue;

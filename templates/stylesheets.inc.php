@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -25,6 +25,7 @@ $theme_path = AmpConfig::get('theme_path') . '/templates';
 ?>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/base.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/default.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/dark.css" type="text/css" media="screen" />
 <?php
 if (file_exists(AmpConfig::get('prefix') . $theme_path . '/icons.sprite.css')) {
 ?>

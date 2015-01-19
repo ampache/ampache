@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -60,7 +60,7 @@ switch ($_REQUEST['action']) {
         }
 
         $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
-        $results['rfc3514'] = '<script type="text/javascript">reloadUtil("'.$_SESSION['iframe']['target'].'")</script>';
+        $results['rfc3514'] = '<script type="text/javascript">' . Core::get_reloadutil() . '("'.$_SESSION['iframe']['target'].'")</script>';
     break;
     case 'clear_playlist':
         if (!Access::check('interface','100')) {
@@ -87,7 +87,7 @@ if ($show_browse) {
     $browse->set_static_content(false);
     $browse->show_objects($object_ids);
     $browse->store();
-    $results['browse_content_' . $browse->get_type()] = ob_get_contents();
+    $results[$browse->get_content_div()] = ob_get_contents();
     ob_end_clean();
 }
 

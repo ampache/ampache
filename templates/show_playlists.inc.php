@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -30,17 +30,24 @@
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
             <th class="cel_songs optional"><?php echo T_('# Songs'); ?></th>
             <th class="cel_owner optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'),'playlist_sort_owner'); ?></th>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) { ?>
+                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
+                <?php } ?>
+                <?php if (AmpConfig::get('userflags')) { ?>
+                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+                <?php } ?>
+            <?php } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>
     <tbody>
         <?php
         foreach ($object_ids as $playlist_id) {
-            $playlist = new Playlist($playlist_id);
-            $playlist->format();
-            $count = $playlist->get_song_count();
+            $libitem = new Playlist($playlist_id);
+            $libitem->format();
         ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="playlist_row_<?php echo $playlist->id; ?>">
+        <tr class="<?php echo UI::flip_class(); ?>" id="playlist_row_<?php echo $libitem->id; ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_playlist_row.inc.php'; ?>
         </tr>
         <?php } // end foreach ($playlists as $playlist) ?>
@@ -58,6 +65,14 @@
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
             <th class="cel_songs optional"><?php echo T_('# Songs'); ?></th>
             <th class="cel_owner optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=user', T_('Owner'),'playlist_sort_owner_bottom'); ?></th>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) { ?>
+                    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+                <?php } ?>
+                <?php if (AmpConfig::get('userflags')) { ?>
+                    <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
+                <?php } ?>
+            <?php } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </tfoot>

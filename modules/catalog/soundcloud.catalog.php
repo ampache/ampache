@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -30,7 +30,7 @@ class Catalog_soundcloud extends Catalog
 {
     private $version        = '000001';
     private $type           = 'soundcloud';
-    private $description    = 'Remote SoundCloud Catalog';
+    private $description    = 'SoundCloud Remote Catalog';
 
     /**
      * get_description
@@ -82,10 +82,10 @@ class Catalog_soundcloud extends Catalog
      */
     public function is_installed()
     {
-        $sql = "DESCRIBE `catalog_soundcloud`";
+        $sql = "SHOW TABLES LIKE 'catalog_soundcloud'";
         $db_results = Dba::query($sql);
 
-        return Dba::num_rows($db_results);
+        return (Dba::num_rows($db_results) > 0);
 
 
     } // is_installed
@@ -182,7 +182,7 @@ class Catalog_soundcloud extends Catalog
         $api = new Services_Soundcloud($this->userid, $this->secret, $this->getRedirectUri());
         $authurl = $api->getAuthorizeUrl(array('scope' => 'non-expiring'));
         echo "<br />Go to <strong><a href='" . $authurl . "' target='_blank'>" . $authurl . "</a></strong> to generate the authorization code, then enter it bellow.<br />";
-        echo "<form action='' method='post' enctype='multipart/form-data'>";
+        echo "<form action='" . get_current_path() . "' method='post' enctype='multipart/form-data'>";
         if ($_POST['action']) {
             echo "<input type='hidden' name='action' value='add_to_catalog' />";
             echo "<input type='hidden' name='catalogs[]' value='". $this->id ."' />";

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -40,3 +40,12 @@ $browse->set_type('artist', $sql);
 $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
+
+if (AmpConfig::get('allow_video')) {
+    $sql = Rating::get_highest_sql('video');
+    $browse = new Browse();
+    $browse->set_type('video', $sql);
+    $browse->set_simple_browse(true);
+    $browse->show_objects();
+    $browse->store();
+}

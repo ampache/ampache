@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -21,21 +21,21 @@
  */
 ?>
 
-<td class="cel_object"><?php echo $share->f_object_link; ?></td>
-<td class="cel_object_type"><?php echo $share->object_type; ?></td>
-<td class="cel_user"><?php echo $share->f_user; ?></td>
-<td class="cel_creation_date"><?php echo $share->f_creation_date; ?></td>
-<td class="cel_lastvisit_date"><?php echo $share->f_lastvisit_date; ?></td>
-<td class="cel_counter"><?php echo $share->counter; ?></td>
-<td class="cel_max_counter"><?php echo $share->max_counter; ?></td>
-<td class="cel_allow_stream"><?php echo $share->f_allow_stream; ?></td>
-<td class="cel_allow_download"><?php echo $share->f_allow_download; ?></td>
-<td class="cel_expire"><?php echo $share->expire_days; ?></td>
-<td class="cel_public_url"><?php echo $share->public_url; ?></td>
+<td class="cel_object"><?php echo $libitem->f_object_link; ?></td>
+<td class="cel_object_type"><?php echo $libitem->object_type; ?></td>
+<td class="cel_user"><?php echo $libitem->f_user; ?></td>
+<td class="cel_creation_date"><?php echo $libitem->f_creation_date; ?></td>
+<td class="cel_lastvisit_date"><?php echo $libitem->f_lastvisit_date; ?></td>
+<td class="cel_counter"><?php echo $libitem->counter; ?></td>
+<td class="cel_max_counter"><?php echo $libitem->max_counter; ?></td>
+<td class="cel_allow_stream"><?php echo $libitem->f_allow_stream; ?></td>
+<td class="cel_allow_download"><?php echo $libitem->f_allow_download; ?></td>
+<td class="cel_expire"><?php echo $libitem->expire_days; ?></td>
+<td class="cel_public_url"><?php echo $libitem->public_url; ?></td>
 <td class="cel_action">
-    <div id="share_action_<?php echo $share->id; ?>">
+    <div id="share_action_<?php echo $libitem->id; ?>">
     <?php
-        $share->show_action_buttons();
+        $libitem->show_action_buttons();
     ?>
     </div>
 </td>

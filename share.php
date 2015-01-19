@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -107,6 +107,42 @@ switch ($action) {
             show_confirmation(T_('Share Deleted'), T_('The Share has been deleted'), $next_url);
         }
         UI::show_footer();
+        exit;
+    case 'clean':
+        if (AmpConfig::get('demo_mode')) {
+            UI::access_denied();
+            exit;
+        }
+
+        UI::show_header();
+        Share::gc();
+        $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
+        show_confirmation(T_('Shared Objects cleaned'), T_('Expired shared objects have been cleaned.'), $next_url);
+        UI::show_footer();
+        exit;
+    case 'external_share':
+        if (AmpConfig::get('demo_mode')) {
+            UI::access_denied();
+            exit;
+        }
+
+        $plugin = new Plugin($_GET['plugin']);
+        if (!$plugin) {
+            UI::access_denied('Access Denied - Unkown external share plugin.');
+            exit;
+        }
+        $plugin->load($GLOBALS['user']);
+
+        $type = $_REQUEST['type'];
+        $id = $_REQUEST['id'];
+        $allow_download = (($type == 'song' && Access::check_function('download')) || Access::check_function('batch_download'));
+        $secret = Share::generate_secret();
+
+        $share_id = Share::create_share($type, $id, true, $allow_download, AmpConfig::get('share_expire'), $secret, 0);
+        $share = new Share($share_id);
+        $share->format(true);
+
+        header("Location: " . $plugin->_plugin->external_share($share->public_url, $share->f_name));
         exit;
 }
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -23,8 +23,6 @@
 UI::show_box_top(T_('Verify Catalog'), 'box box_verify_catalog');
 /* HINT: Catalog Name */
 printf(T_('Updating the %s catalog'), "<strong>[ $this->name ]</strong>");
-echo "<br />\n";
-printf(ngettext('%d item found checking tag information', '%d items found checking tag information', $number), $number);
 echo "<br />\n\n";
 echo T_('Verified') . ': <span id="verify_count_' . $this->id . '">' . $catalog_verify_found . '</span><br />';
 echo T_('Reading') . ': <span id="verify_dir_' . $this->id . '">' . $catalog_verify_directory . '</span>';

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -59,7 +59,7 @@ $logic_operator = strtolower($logic_operator);
 if ($playlist) {
     $out = $playlist->to_js();
 } else {
-    $mysearch = new Search($_REQUEST['type']);
+    $mysearch = new Search(null, $_REQUEST['type']);
     $mysearch->parse_rules(Search::clean_request($_REQUEST));
     $out = $mysearch->to_js();
 }

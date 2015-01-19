@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2010 - 2013 Ampache.org
+ * Copyright 2010 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -25,7 +25,7 @@ require_once 'lib/init.php';
 // We special-case this so we can send a 302 if the delete succeeded
 if ($_REQUEST['action'] == 'delete_playlist') {
     // Check rights
-    $playlist = new Search('song', $_REQUEST['playlist_id']);
+    $playlist = new Search($_REQUEST['playlist_id'], 'song');
     if ($playlist->has_access()) {
         $playlist->delete();
         // Go elsewhere
@@ -63,9 +63,9 @@ switch ($_REQUEST['action']) {
             break;
         } // end switch on operator
 
-        $playlist_name    = scrub_in($_REQUEST['playlist_name']);
+        $playlist_name    = (string) scrub_in($_REQUEST['playlist_name']);
 
-        $playlist = new Search('song');
+        $playlist = new Search(null, 'song');
         $playlist->parse_rules($data);
         $playlist->logic_operator = $operator;
         $playlist->name = $playlist_name;
@@ -77,12 +77,13 @@ switch ($_REQUEST['action']) {
         UI::access_denied();
     break;
     case 'show_playlist':
-        $playlist = new Search('song', $_REQUEST['playlist_id']);
+        $playlist = new Search($_REQUEST['playlist_id'], 'song');
         $playlist->format();
-        require_once AmpConfig::get('prefix') . '/templates/show_smartplaylist.inc.php';
+        $object_ids = $playlist->get_items();
+        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
     break;
     case 'update_playlist':
-        $playlist = new Search('song', $_REQUEST['playlist_id']);
+        $playlist = new Search($_REQUEST['playlist_id'], 'song');
         if ($playlist->has_access()) {
             $playlist->parse_rules(Search::clean_request($_REQUEST));
             $playlist->update();
@@ -91,10 +92,12 @@ switch ($_REQUEST['action']) {
             UI::access_denied();
             break;
         }
-        require_once AmpConfig::get('prefix') . '/templates/show_smartplaylist.inc.php';
+        $object_ids = $playlist->get_items();
+        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
     break;
     default:
-        require_once AmpConfig::get('prefix') . '/templates/show_smartplaylist.inc.php';
+        $object_ids = $playlist->get_items();
+        require_once AmpConfig::get('prefix') . '/templates/show_search.inc.php';
     break;
 } // switch on the action
 

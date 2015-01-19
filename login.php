@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -22,6 +22,21 @@
 
 define('NO_SESSION', '1');
 require_once 'lib/init.php';
+// Avoid form login if still connected
+if (AmpConfig::get('use_auth') && !isset($_GET['force_display'])) {
+    $auth = false;
+    if (Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
+        $auth = true;
+    } else {
+        if (Session::auth_remember()) {
+            $auth = true;
+        }
+    }
+    if ($auth) {
+        header("Location: " . AmpConfig::get('web_path'));
+        exit;
+    }
+}
 require_once 'lib/login.php';
 
 require AmpConfig::get('prefix') . '/templates/show_login_form.inc.php';

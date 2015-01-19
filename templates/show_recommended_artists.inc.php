@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -51,10 +51,10 @@ $thcount = 8;
 
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $artist_id) {
-                $artist = new Artist($artist_id);
-                $artist->format();
+                $libitem = new Artist($artist_id);
+                $libitem->format();
         ?>
-        <tr id="artist_<?php echo $artist->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="artist_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_artist_row.inc.php'; ?>
         </tr>
         <?php } ?>

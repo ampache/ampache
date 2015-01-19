@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -42,7 +42,7 @@ function arrayToJSON($array)
 
 Header('content-type: application/x-javascript');
 
-$search = new Search($_REQUEST['type']);
+$search = new Search(null, $_REQUEST['type']);
 
 echo 'var types = ';
 echo arrayToJSON($search->types) . ";\n";

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -34,31 +34,36 @@ $thcount = 8;
             <th class="cel_album essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album', T_('Album'), 'sort_song_album'.$browse->id); ?></th>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
             <th class="cel_time optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', T_('Time'), 'sort_song_time'.$browse->id); ?></th>
-        <?php if (AmpConfig::get('ratings')) {
-            ++$thcount;
-            Rating::build_cache('song', $object_ids);
-        ?>
-            <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-        <?php } ?>
-        <?php if (AmpConfig::get('userflags')) {
-            ++$thcount;
-            Userflag::build_cache('song', $object_ids);
-        ?>
-            <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
-        <?php } ?>
-            <th class="cel_action essential"><?php echo T_('Action'); ?></th>
-        <?php if (isset($argument) && $argument) { ++$thcount; ?>
-            <th class="cel_drag essential"></th>
-        <?php } ?>
+            <?php if (AmpConfig::get('show_played_times')) { ?>
+            <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+            <?php } ?>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) {
+                    ++$thcount;
+                    Rating::build_cache('song', $object_ids);
+                ?>
+                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
+                <?php } ?>
+                <?php if (AmpConfig::get('userflags')) {
+                    ++$thcount;
+                    Userflag::build_cache('song', $object_ids);
+                ?>
+            <?php } ?>
+                <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+            <?php } ?>
+                <th class="cel_action essential"><?php echo T_('Action'); ?></th>
+            <?php if (isset($argument) && $argument) { ++$thcount; ?>
+                <th class="cel_drag essential"></th>
+            <?php } ?>
         </tr>
     </thead>
     <tbody id="sortableplaylist_<?php echo $browse->get_filter('album'); ?>">
         <?php
             foreach ($object_ids as $song_id) {
-                $song = new Song($song_id);
-                $song->format();
+                $libitem = new Song($song_id, $limit_threshold);
+                $libitem->format();
         ?>
-            <tr class="<?php echo UI::flip_class(); ?>" id="song_<?php echo $song->id; ?>">
+            <tr class="<?php echo UI::flip_class(); ?>" id="song_<?php echo $libitem->id; ?>">
                 <?php require AmpConfig::get('prefix') . '/templates/show_song_row.inc.php'; ?>
             </tr>
         <?php } ?>
@@ -78,18 +83,24 @@ $thcount = 8;
             <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album', T_('Album'), 'sort_song_album'.$browse->id); ?></th>
             <th class="cel_tags"><?php echo T_('Tags'); ?></th>
             <th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', T_('Time'), 'sort_song_time'.$browse->id); ?></th>
-        <?php if (AmpConfig::get('ratings')) { ?>
-            <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-        <?php } ?>
-        <?php if (AmpConfig::get('userflags')) { ?>
-            <th class="cel_userflag"></th>
-        <?php } ?>
-            <th class="cel_action"></th>
-        <?php if (isset($argument) && $argument) { ?>
-            <th class="cel_drag"></th>
-        <?php } ?>
+            <?php if (AmpConfig::get('show_played_times')) { ?>
+            <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+            <?php } ?>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) { ?>
+                    <th class="cel_rating"><?php echo T_('Rating'); ?></th>
+                <?php } ?>
+                <?php if (AmpConfig::get('userflags')) { ?>
+                    <th class="cel_userflag"></th>
+                <?php } ?>
+            <?php } ?>
+                <th class="cel_action"></th>
+            <?php if (isset($argument) && $argument) { ?>
+                <th class="cel_drag"></th>
+            <?php } ?>
         </tr>
     </tfoot>
 </table>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
+
+<?php show_table_render($argument); ?>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>

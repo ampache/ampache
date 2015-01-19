@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -71,6 +71,36 @@ class Stream_URL extends memory_object
             $results[$key] = $value;
         }
         return $results;
+    }
+
+    /**
+     * add_options
+     *
+     * Add options to an existing stream url.
+     */
+    public static function add_options($url, $options)
+    {
+        if (AmpConfig::get('stream_beautiful_url')) {
+            // We probably want beautiful url to have a real mp3 filename at the end.
+            // Add the new options before the filename
+
+            $curel = explode('/', $url);
+            $newel = explode('&', $options);
+
+            if (count($curel) > 2) {
+                foreach ($newel as $el) {
+                    if (!empty($el)) {
+                        $el = explode('=', $el);
+                        array_splice($curel, count($curel) - 2, 0, $el);
+                    }
+                }
+                $url = implode('/', $curel);
+            }
+        } else {
+            $url .= $options;
+        }
+
+        return $url;
     }
 
     /**

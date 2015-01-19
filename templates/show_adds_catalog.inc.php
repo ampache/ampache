@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -20,9 +20,9 @@
  *
  */
 
-UI::show_box_top(T_('Starting New Song Search'), 'box box_adds_catalog');
+UI::show_box_top(T_('Starting New Media Search'), 'box box_adds_catalog');
 /* HINT: Catalog Name */
-printf(T_('Starting New Song Search on %s catalog'), "<strong>[ $this->name ]</strong>");
+printf(T_('Starting New Media Search on %s catalog'), "<strong>[ $this->name ]</strong>");
 echo "<br />\n";
 echo T_('Found') . ': <span id="add_count_' . $this->id . '">' . T_('None') . '</span><br />';
 echo T_('Reading') . ':<span id="add_dir_' . $this->id . '"></span><br />';

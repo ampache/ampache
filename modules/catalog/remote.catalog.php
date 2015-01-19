@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -30,7 +30,7 @@ class Catalog_remote extends Catalog
 {
     private $version        = '000001';
     private $type           = 'remote';
-    private $description    = 'Remote Ampache Catalog';
+    private $description    = 'Ampache Remote Catalog';
 
     /**
      * get_description
@@ -78,10 +78,10 @@ class Catalog_remote extends Catalog
      */
     public function is_installed()
     {
-        $sql = "DESCRIBE `catalog_remote`";
+        $sql = "SHOW TABLES LIKE 'catalog_remote'";
         $db_results = Dba::query($sql);
 
-        return Dba::num_rows($db_results);
+        return (Dba::num_rows($db_results) > 0);
 
 
     } // is_installed

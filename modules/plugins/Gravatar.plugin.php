@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -23,6 +23,7 @@
 class AmpacheGravatar {
 
     public $name        = 'Gravatar';
+    public $categories  = 'avatar';
     public $description = 'Users avatars with Gravatar';
     public $url         = 'http://gravatar.com';
     public $version     = '000001';

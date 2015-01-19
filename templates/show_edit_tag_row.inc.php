@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -21,14 +21,29 @@
  */
 ?>
 <div>
-    <form method="post" id="edit_tag_<?php echo $tag->id; ?>" class="edit_dialog_content">
+    <form method="post" id="edit_tag_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata" cellspacing="0" cellpadding="0">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
-                <td><input type="text" name="name" value="<?php echo scrub_out($tag->name); ?>" /></td>
+                <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" autofocus /></td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Re-tag') ?></td>
+                <td>
+                    <input type="text" name="edit_tags" id="edit_tags" />
+                </td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Persistent') ?></td>
+                <td><input type="checkbox" name="merge_persist" value="1" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Keep Existing') ?></td>
+                <td><input type="checkbox" name="keep_existing" value="1" /></td>
             </tr>
         </table>
-        <input type="hidden" name="id" value="<?php echo $tag->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
         <input type="hidden" name="type" value="tag_row" />
     </form>
 </div>

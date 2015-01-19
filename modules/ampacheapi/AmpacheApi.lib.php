@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2012 - 2013 Ampache.org
+ * Copyright 2012 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -304,7 +304,8 @@ class AmpacheApi
         $this->XML_create_parser();
 
         if (!xml_parse($this->XML_parser, $response)) {
-            throw new Exception('AmpacheApi::parse_response was unable to parse XML document');
+            $errorcode =  xml_get_error_code($this->XML_parser);
+            throw new Exception('AmpacheApi::parse_response was unable to parse XML document. Error ' . $errorcode . ' line ' . xml_get_current_line_number($this->XML_parser) . ': ' . xml_error_string($errorcode));
         }
 
         xml_parser_free($this->XML_parser);

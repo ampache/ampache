@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -31,9 +31,9 @@
     </thead>
     <tbody>
         <?php
-        foreach ($coming_concerts as $concert) {
+        foreach ($coming_concerts as $libitem) {
         ?>
-        <tr id="concert_<?php echo $concert->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="concert_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_concert_row.inc.php'; ?>
         </tr>
         <?php } ?>
@@ -56,9 +56,9 @@
     </thead>
     <tbody>
         <?php
-        foreach ($concerts as $concert) {
+        foreach ($concerts as $libitem) {
         ?>
-        <tr id="concert_<?php echo $concert->id; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="concert_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . '/templates/show_concert_row.inc.php'; ?>
         </tr>
         <?php } ?>

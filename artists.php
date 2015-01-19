@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -31,7 +31,11 @@ switch ($_REQUEST['action']) {
     case 'show':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
-        $object_ids = $artist->get_albums($_REQUEST['catalog']);
+        if (AmpConfig::get('album_release_type')) {
+            $multi_object_ids = $artist->get_albums($_REQUEST['catalog'], false, true);
+        } else {
+            $object_ids = $artist->get_albums($_REQUEST['catalog']);
+        }
         $object_type = 'album';
         require_once AmpConfig::get('prefix') . '/templates/show_artist.inc.php';
         break;

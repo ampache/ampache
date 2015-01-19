@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -23,7 +23,7 @@
 /**
  * Userflag class
  *
- * This user flag/unflag songs, albums and artists as favorite.
+ * This user flag/unflag songs, albums, artists, videos, tvshows, movies ... as favorite.
  *
  */
 class Userflag extends database_object
@@ -91,7 +91,7 @@ class Userflag extends database_object
      */
     public static function gc()
     {
-        foreach (array('song', 'album', 'artist', 'video') as $object_type) {
+        foreach (array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season') as $object_type) {
             Dba::write("DELETE FROM `user_flag` USING `user_flag` LEFT JOIN `$object_type` ON `$object_type`.`id` = `user_flag`.`object_id` WHERE `object_type` = '$object_type' AND `$object_type`.`id` IS NULL");
         }
     }

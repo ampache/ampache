@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -84,9 +84,7 @@ switch ($_REQUEST['action']) {
         foreach ($_REQUEST['catalogs'] as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
             $catalog->clean_catalog();
-            $catalog->count = 0;
             $catalog->verify_catalog();
-            $catalog->count = 0;
             $catalog->add_to_catalog();
         }
         Dba::optimize_tables();
@@ -106,14 +104,14 @@ switch ($_REQUEST['action']) {
         }
 
         /* Delete the sucker, we don't need to check perms as thats done above */
-        Catalog::delete($_GET['catalog_id']);
+        foreach ($_REQUEST['catalogs'] as $catalog_id) {
+            Catalog::delete($catalog_id);
+        }
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php';
         show_confirmation(T_('Catalog Deleted'), T_('The Catalog and all associated records have been deleted'),$next_url);
     break;
     case 'show_delete_catalog':
-        $catalog_id = scrub_in($_GET['catalog_id']);
-
-        $next_url = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalog_id=' . scrub_out($catalog_id);
+        $next_url = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalogs[]=' . implode(',', $_REQUEST['catalogs']);
         show_confirmation(T_('Catalog Delete'), T_('Confirm Deletion Request'),$next_url,1,'delete_catalog');
     break;
     case 'enable_disabled':
@@ -275,7 +273,7 @@ switch ($_REQUEST['action']) {
         $catalog->format();
         require_once AmpConfig::get('prefix') . '/templates/show_edit_catalog.inc.php';
     break;
-    case 'gather_album_art':
+    case 'gather_media_art':
         toggle_visible('ajax-loading');
         ob_end_flush();
 
@@ -289,7 +287,7 @@ switch ($_REQUEST['action']) {
             $catalog->gather_art();
         }
         $url     = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title     = T_('Album Art Search Finished');
+        $title     = T_('Media Art Search Finished');
         $body    = '';
         show_confirmation($title,$body,$url);
     break;

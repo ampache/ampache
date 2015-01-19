@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -23,7 +23,7 @@
 /**
  * Rating class
  *
- * This tracks ratings for songs, albums and artists.
+ * This tracks ratings for songs, albums, artists, videos, tvshows, movies ...
  *
  */
 class Rating extends database_object
@@ -53,7 +53,7 @@ class Rating extends database_object
      */
     public static function gc()
     {
-        foreach (array('song', 'album', 'artist', 'video') as $object_type) {
+        foreach (array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'playlist') as $object_type) {
             Dba::write("DELETE FROM `rating` USING `rating` LEFT JOIN `$object_type` ON `$object_type`.`id` = `rating`.`object_id` WHERE `object_type` = '$object_type' AND `$object_type`.`id` IS NULL");
         }
     }

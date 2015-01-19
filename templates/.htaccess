@@ -1,5 +1,7 @@
-Order deny,allow
-Deny from all
-<Files ~ "\.css$|\.gif$">
-    Allow from all
-</Files>
+<IfModule mod_access.c>
+	Order deny,allow
+	Deny from all
+	<Files ~ "\.css$|\.gif$">
+		Allow from all
+	</Files>
+</IfModule>

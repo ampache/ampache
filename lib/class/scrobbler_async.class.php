@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -33,7 +33,7 @@ class scrobbler_async extends Thread
         spl_autoload_register(array('Core', 'autoload'), true, true);
         Requests::register_autoloader();
         if ($this->song_info) {
-            User::save_songplay($this->user, $this->song_info);
+            User::save_mediaplay($this->user, $this->song_info);
         }
     }
 }

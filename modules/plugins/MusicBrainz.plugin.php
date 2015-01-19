@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -26,7 +26,9 @@ use MusicBrainz\Clients\RequestsMbClient;
 class AmpacheMusicBrainz {
 
     public $name           = 'MusicBrainz';
+    public $categories     = 'metadata';
     public $description    = 'MusicBrainz metadata integration';
+    public $url            = 'http://www.musicbrainz.org';
     public $version        = '000001';
     public $min_ampache    = '360003';
     public $max_ampache    = '999999';
@@ -68,7 +70,12 @@ class AmpacheMusicBrainz {
      * get_metadata
      * Returns song metadata for what we're passed in.
      */
-    public function get_metadata($song_info) {
+    public function get_metadata($gather_types, $song_info) {
+        // Music metadata only
+        if (!in_array('music', $gather_types)) {
+            return null;
+        }
+    
         if (!$mbid = $song_info['mb_trackid']) {
             return null;
         }
@@ -87,14 +94,15 @@ class AmpacheMusicBrainz {
 
         $results = array();
 
-        if (count($track->{'artist-credit'}) > 0) {
-            $artist = $track->{'artist-credit'}[0];
-            $results['mb_artistid'] = $artist->id;
-            $results['artist'] = $artist->name;
-            $results['title'] = $track->title;
-            if (count($track->releases) == 1) {
-                $release = $track->releases[0];
-                $results['album'] = $release->title;
+        if (count($track['artist-credit']) > 0) {
+            $artist = $track['artist-credit'][0];
+            $artist = $artist['artist'];
+            $results['mb_artistid'] = $artist['id'];
+            $results['artist'] = $artist['name'];
+            $results['title'] = $track['title'];
+            if (count($track['releases']) == 1) {
+                $release = $track['releases'][0];
+                $results['album'] = $release['title'];
             }
         }
         return $results;

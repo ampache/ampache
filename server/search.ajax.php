@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -50,7 +50,7 @@ switch ($_REQUEST['action']) {
             }
             foreach ($sres as $id) {
                 $artist = new Artist($id);
-                $artist->format();
+                $artist->format(false);
                 $results[] = array(
                     'type' => T_('Artists'),
                     'link' => $artist->f_link,
@@ -79,7 +79,7 @@ switch ($_REQUEST['action']) {
             }
             foreach ($sres as $id) {
                 $album = new Album($id);
-                $album->format();
+                $album->format(true);
                 $a_title = $album->f_title;
                 if ($album->disk) {
                     $a_title .= " [" . T_('Disk') . " " . $album->disk . "]";
@@ -112,7 +112,7 @@ switch ($_REQUEST['action']) {
             }
             foreach ($sres as $id) {
                 $song = new Song($id);
-                $song->format();
+                $song->format(false);
                 $results[] = array(
                     'type' => T_('Songs'),
                     'link' => $song->link,
@@ -141,7 +141,7 @@ switch ($_REQUEST['action']) {
             }
             foreach ($sres as $id) {
                 $playlist = new Playlist($id);
-                $playlist->format();
+                $playlist->format(false);
                 $results[] = array(
                     'type' => T_('Playlists'),
                     'link' => $playlist->f_link,
@@ -150,6 +150,25 @@ switch ($_REQUEST['action']) {
                     'rels' => '',
                     'image' => '',
                 );
+            }
+        }
+
+        if ($target == 'missing_artist') {
+            $sres = Wanted::search_missing_artists($search);
+            $i = 0;
+            foreach ($sres as $r) {
+                $results[] = array(
+                    'type' => T_('Missing Artists'),
+                    'link' => AmpConfig::get('web_path') . '/artists.php?action=show_missing&mbid=' . $r['mbid'],
+                    'label' => $r['name'],
+                    'value' => $r['name'],
+                    'rels' => '',
+                    'image' => '',
+                );
+                $i++;
+
+                if ($i >= $limit)
+                    break;
             }
         }
 

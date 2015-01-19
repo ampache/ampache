@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -27,7 +27,7 @@ UI::show_box_top($wartist['name'], 'info-box');
 ?>
 <?php
 if (AmpConfig::get('lastfm_api_key')) {
-    echo Ajax::observe('window','load', Ajax::action('?page=index&action=artist_info&fullname=' . rawurlencode($wartist['name']), 'artist_info'));
+    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&fullname=' . rawurlencode($wartist['name']), 'artist_info'));
 ?>
     <div id="artist_biography">
         <?php echo T_('Loading...'); ?>
@@ -37,7 +37,7 @@ if (AmpConfig::get('lastfm_api_key')) {
 
 <?php
 if (AmpConfig::get('wanted')) {
-    echo Ajax::observe('window','load', Ajax::action('?page=index&action=wanted_missing_albums&artist_mbid='.$wartist['mbid'], 'missing_albums'));
+    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=wanted_missing_albums&artist_mbid='.$wartist['mbid'], 'missing_albums'));
 ?>
     <div id="missing_albums"></div>
 <?php } ?>

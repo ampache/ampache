@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -32,7 +32,7 @@ $htmllang = str_replace("_","-",AmpConfig::get('lang'));
 <body onload="self.resizeTo(document.images[0].width+30, document.images[0].height+70)">
 <?php
 echo "<a href=\"javascript:window.close()\" title=\"" . T_('Click to close window') . "\">";
-echo "<img src=\"" . AmpConfig::get('web_path') . "/image.php?id=" . scrub_out($_GET['id']) . "&amp;sid=" . session_id() . "\" border=\"0\" alt=\"\" />";
+echo "<img src=\"" . AmpConfig::get('web_path') . "/image.php?object_id=" . scrub_out($_GET['id']) . "&object_type=album&auth=" . session_id() . "\" border=\"0\" alt=\"\" />";
 echo "</a>";
 ?>
 </body>

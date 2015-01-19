@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -32,8 +32,10 @@ UI::show_header();
 // Switch on the incomming action
 switch ($_REQUEST['action']) {
     case 'edit_shout':
-        $shout_id = $_POST['shout_id'];
-        $update = Shoutbox::update($_POST);
+        $shout = new Shoutbox($_REQUEST['shout_id']);
+        if ($shout->id) {
+            $shout->update($_POST);
+        }
         show_confirmation(T_('Shoutbox Post Updated'),'',AmpConfig::get('web_path').'/admin/shout.php');
     break;
     case 'show_edit':

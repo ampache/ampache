@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU General Public License, version 2 (GPLv2)
- * Copyright 2001 - 2014 Ampache.org
+ * Copyright 2001 - 2015 Ampache.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License v2
@@ -30,7 +30,7 @@ if ($client->f_avatar) {
     echo '<div class="user_avatar">' . $client->f_avatar . '</div>';
 }
 ?>
-<dl class="song_details">
+<dl class="media_details">
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Full Name'); ?></dt>
     <dd class="<?php echo $rowparity; ?>"><?php echo $client->fullname; ?></dd>
@@ -42,7 +42,12 @@ if ($client->f_avatar) {
     <dd class="<?php echo $rowparity; ?>"><?php echo $last_seen; ?></dd>
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Activity'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>"><?php echo $client->f_useage; ?></dd>
+    <dd class="<?php echo $rowparity; ?>">
+        <?php echo $client->f_useage; ?>
+        <?php if (AmpConfig::get('statistical_graphs') && Access::check('interface','50')) { ?>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
+        <?php } ?>
+    </dd>
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Status'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
