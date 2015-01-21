@@ -328,7 +328,7 @@ class Subsonic_XML_Data
         $xsong->addAttribute('albumId', self::getAlbumId($album->id));
         $xsong->addAttribute('album', $album->name);
         $artist = new Artist($song->artist);
-        $xsong->addAttribute('artistId', self::getArtistId($album->id));
+        $xsong->addAttribute('artistId', self::getArtistId($song->artist));
         $xsong->addAttribute('artist', $artist->name);
         $xsong->addAttribute('coverArt', self::getAlbumId($album->id));
         $xsong->addAttribute('duration', $song->time);

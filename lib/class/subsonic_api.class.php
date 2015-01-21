@@ -1007,7 +1007,7 @@ class Subsonic_Api
                     header('Content-type: ' . $thumb['thumb_mime']);
                     header('Content-Length: ' . strlen($thumb['thumb']));
                     echo $thumb['thumb'];
-					return;
+                    return;
                 }
             }
 
