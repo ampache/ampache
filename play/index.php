@@ -616,17 +616,15 @@ $bytes_streamed = 0;
 
 // Actually do the streaming
 $buf_all = '';
-do {
-    $read_size = $transcode
-        ? 2048
-        : min(2048, $stream_size - $bytes_streamed);
-    $r_arr = array($fp);
-    $w_arr = $e_arr = null;
-    $status = stream_select($r_arr, $w_arr, $e_arr, 2);
-    if ($status === false) {
-        break; // Error
-    } elseif ($status > 0) {
-        while ($buf = fread($fp, $read_size)) {
+$r_arr = array($fp);
+$w_arr = $e_arr = null;
+$status = stream_select($r_arr, $w_arr, $e_arr, 2);
+if ($status === false) {
+    debug_event('play', 'stream_select failed.', 1);
+} elseif ($status > 0) {
+    do {
+        $read_size = $transcode ? 2048 : min(2048, $stream_size - $bytes_streamed);
+        if ($buf = fread($fp, $read_size)) {
             if ($send_all_in_once) {
                 $buf_all .= $buf;
             } else {
@@ -642,8 +640,8 @@ do {
             }
             $bytes_streamed += strlen($buf);
         }
-    }
-} while (!feof($fp) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
+    } while (!feof($fp) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
+}
 
 if ($send_all_in_once && connection_status() == 0) {
     header("Content-Length: " . strlen($buf_all));
