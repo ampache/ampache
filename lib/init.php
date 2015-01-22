@@ -66,7 +66,7 @@ if (!empty($link)) {
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
 $results['version']        = '3.8.0-develop';
-$results['int_config_version'] = '23';
+$results['int_config_version'] = '24';
 
 if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
@@ -89,7 +89,7 @@ $results['web_path'] = $http_type . $results['http_host'] . $results['web_path']
 $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
 $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
 $results['raw_web_path'] = $results['raw_web_path'] ?: '/';
-$results['max_upload_size'] = $results['max_upload_size'] ?: 102400;
+$results['max_upload_size'] = $results['max_upload_size'] ?: 1048576;
 $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
 
 if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {

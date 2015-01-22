@@ -84,7 +84,7 @@ class Art extends database_object
         if (!Core::is_library_item($type))
             return false;
         $this->type = $type;
-        $this->uid = $uid;
+        $this->uid = intval($uid);
         $this->kind = $kind;
 
     } // constructor
@@ -192,6 +192,12 @@ class Art extends database_object
             return false;
         }
 
+        // Check image size doesn't exceed the limit
+        if (strlen($source) > AmpConfig::get('max_upload_size')) {
+            debug_event('Art', 'Image size (' . strlen($source) . ') exceed the limit (' . AmpConfig::get('max_upload_size') . ').', 1);
+            return false;
+        }
+
         $test = true;
         // Check to make sure PHP:GD exists.  If so, we can sanity check
         // the image.
@@ -246,11 +252,18 @@ class Art extends database_object
 
         while ($results = Dba::fetch_assoc($db_results)) {
             if ($results['size'] == 'original') {
-                $this->raw = $results['image'];
+                if (AmpConfig::get('album_art_store_disk')) {
+                    $this->raw = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind);
+                } else {
+                    $this->raw = $results['image'];
+                }
                 $this->raw_mime = $results['mime'];
-            } else if (AmpConfig::get('resize_images') &&
-                    $results['size'] == '275x275') {
-                $this->thumb = $results['image'];
+            } else if (AmpConfig::get('resize_images') && $results['size'] == '275x275') {
+                if (AmpConfig::get('album_art_store_disk')) {
+                    $this->thumb = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind);
+                } else {
+                    $this->thumb = $results['image'];
+                }
                 $this->raw_mime = $results['mime'];
             }
             $this->id = $results['id'];
@@ -364,6 +377,15 @@ class Art extends database_object
         $height = intval($dimensions['height']);
         $sizetext = 'original';
 
+        if (!self::check_dimensions($dimensions)) {
+            return false;
+        }
+
+        if (AmpConfig::get('album_art_store_disk')) {
+            self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind);
+            $source = null;
+        }
+
         // Insert it!
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
@@ -372,12 +394,132 @@ class Art extends database_object
 
     } // insert
 
+    public static function check_dimensions($dimensions)
+    {
+        $w = intval($dimensions['width']);
+        $h = intval($dimensions['height']);
+
+        if ($w > 0 && $h > 0) {
+            $minw = AmpConfig::get('album_art_min_width');
+            $maxw = AmpConfig::get('album_art_max_width');
+            $minh = AmpConfig::get('album_art_min_height');
+            $maxh = AmpConfig::get('album_art_max_height');
+
+            if ($minw > 0 && ($w < $minw || $w > $maxw)) {
+                debug_event('Art', 'Image width not in range.', 1);
+                return false;
+            }
+
+            if ($minh > 0 && ($h < $minh || $h > $maxh)) {
+                debug_event('Art', 'Image height not in range.', 1);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
+    {
+        $path = AmpConfig::get('local_metadata_dir');
+        if (!$path) {
+            debug_event('Art', 'local_metadata_dir setting is required to store arts on disk.', 1);
+            return false;
+        }
+
+        // Correctly detect the slash we need to use here
+        if (strpos($path, '/') !== false) {
+            $slash_type = '/';
+        } else {
+            $slash_type = '\\';
+        }
+
+        $path .= $slash_type . $type;
+        if ($autocreate && !Core::is_readable($path)) {
+            mkdir($path);
+        }
+
+        $path .= $slash_type . $uid;
+        if ($autocreate && !Core::is_readable($path)) {
+            mkdir($path);
+        }
+
+        if (!empty($kind)) {
+            $path .= $slash_type . $kind;
+            if ($autocreate && !Core::is_readable($path)) {
+                mkdir($path);
+            }
+        }
+        $path .= $slash_type;
+
+        return $path;
+    }
+
+    private static function write_to_dir($source, $sizetext, $type, $uid, $kind)
+    {
+        $path = self::get_dir_on_disk($type, $uid, $kind, true);
+        if ($path === false) {
+            return false;
+        }
+        $path .= "art-" . $sizetext . ".jpg";
+        if (Core::is_readable($path)) {
+            unlink($path);
+        }
+        $fp = fopen($path, "wb");
+        fwrite($fp, $source);
+        fclose ($fp);
+
+        return true;
+    }
+
+    private static function read_from_dir($sizetext, $type, $uid, $kind)
+    {
+        $path = self::get_dir_on_disk($type, $uid, $kind);
+        if ($path === false) {
+            return null;
+        }
+        $path .= "art-" . $sizetext . ".jpg";
+        if (!Core::is_readable($path)) {
+            debug_event('Art', 'Local image art ' . $path . ' cannot be read.', 1);
+            return null;
+        }
+
+        $image = '';
+        $fp = fopen($path, "rb");
+        do {
+            $image .= fread($fp, 2048);
+        } while (!feof($fp));
+        fclose($fp);
+
+        return $image;
+    }
+
+    private static function delete_from_dir($type, $uid, $kind = '')
+    {
+        $path = self::get_dir_on_disk($type, $uid, $kind);
+        self::delete_rec_dir($path);
+    }
+
+    private static function delete_rec_dir($path)
+    {
+        foreach (scandir($path) as $file) {
+            if ('.' === $file || '..' === $file) continue;
+            elseif (is_dir($file)) self::delete_rec_dir($path);
+            else
+            unlink($path . $file);
+        }
+        rmdir($path);
+    }
+
     /**
      * reset
      * This resets the art in the database
      */
     public function reset()
     {
+        if (AmpConfig::get('album_art_store_disk')) {
+            self::delete_from_dir($this->type, $this->uid, $this->kind);
+        }
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
         Dba::write($sql, array($this->uid, $this->type, $this->kind));
     } // reset
@@ -404,6 +546,10 @@ class Art extends database_object
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
         Dba::write($sql, array($this->uid, $this->type, $sizetext, $this->kind));
 
+        if (AmpConfig::get('album_art_store_disk')) {
+            self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind);
+            $source = null;
+        }
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
     } // save_thumb
@@ -423,7 +569,8 @@ class Art extends database_object
 
         $results = Dba::fetch_assoc($db_results);
         if (count($results)) {
-            return array('thumb' => $results['image'],
+            return array(
+                'thumb' => (AmpConfig::get('album_art_store_disk')) ? self::read_from_dir($sizetext, $this->type, $this->uid, $this->kind) : $results['image'],
                 'thumb_mime' => $results['mime']);
         }
 
@@ -685,6 +832,16 @@ class Art extends database_object
     {
         // iterate over our types and delete the images
         foreach (array('album', 'artist','tvshow','tvshow_season','video','user') as $type) {
+            if (AmpConfig::get('album_art_store_disk')) {
+                $sql = "SELECT `image`.`object_id`, `image`.`object_type` FROM `image` USING `image` LEFT JOIN `" .
+                    $type . "` ON `" . $type . "`.`id`=" .
+                    "`image`.`object_id` WHERE `object_type`='" .
+                    $type . "' AND `" . $type . "`.`id` IS NULL";
+                $db_results = Dba::read($sql);
+                while ($row == Dba::fetch_assoc($db_results)) {
+                    self::delete_from_dir($row['object_type'], $row['object_id']);
+                }
+            }
             $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" .
                 $type . "` ON `" . $type . "`.`id`=" .
                 "`image`.`object_id` WHERE `object_type`='" .
@@ -715,6 +872,17 @@ class Art extends database_object
      */
     public static function duplicate($object_type, $old_object_id, $new_object_id)
     {
+        if (AmpConfig::get('album_art_store_disk')) {
+            $sql = "SELECT `size`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+            $db_results = Dba::read($sql, array($object_type, $old_object_id));
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $image = self::read_from_dir($row['size'], $object_type, $old_object_id, $row['kind']);
+                if ($image != null) {
+                    self::write_to_dir($image, $row['size'], $object_type, $new_object_id, $row['kind']);
+                }
+            }
+        }
+
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `mime`, `size`, `object_type`, ? as `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }

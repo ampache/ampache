@@ -35,7 +35,7 @@ while ($i <= $rows) {
         $key = $i*4+$j;
         $image_url = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $key;
         $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], $object_type));
-        if (!isset($images[$key])) { echo "<td>&nbsp;</td>\n"; } else {
+        if (!isset($images[$key]) || !Art::check_dimensions($dimensions)) { echo "<td>&nbsp;</td>\n"; } else {
 ?>
             <td align="center">
                 <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" border="0" height="175" width="175" /></a>

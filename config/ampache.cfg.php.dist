@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 23
+config_version = 24
 
 ;###################
 ; Path Vars        #
@@ -392,10 +392,41 @@ notify = "true"
 ; DEFAULT: folder.jpg
 ;album_art_preferred_filename = "folder.jpg"
 
+; Album Art Store on Disk
+; This defines if arts should be stored on disk instead of database.
+; DEFAULT: false
+;album_art_store_disk = false
+
+; Local Metadata Directory
+; This define a local metadata directory with write access where to store
+; heavy data if enabled (album arts, ...)
+; DEFAULT: none
+;local_metadata_dir = "/metadata"
+
 ; Maximal upload size
 ; Specify the maximal allowed upload size for images, in bytes.
-; DEFAULT: 102400
-;max_upload_size = 102400
+; DEFAULT: 1048576
+;max_upload_size = 1048576
+
+; Album Art Minimum Width
+; Specify the minimum width for arts (in pixel).
+; DEFAULT: none
+;album_art_min_width = 100
+
+; Album Art Maximum Width
+; Specify the maximum width for arts (in pixel).
+; DEFAULT: none
+;album_art_max_width = 1024
+
+; Album Art Minimum Height
+; Specify the minimum height for arts (in pixel).
+; DEFAULT: none
+;album_art_min_height = 100
+
+; Album Art Maximum Height
+; Specify the maximum height for arts (in pixel).
+; DEFAULT: none
+;album_art_max_height = 1024
 
 ; Resize Images * Requires PHP-GD *
 ; Set this to true if you want Ampache to resize the Album

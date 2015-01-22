@@ -485,6 +485,9 @@ class Update
         $update_string = " - Add width and height in table image.<br />";
         $version[] = array('version' => '370028','description' => $update_string);
 
+        $update_string = " - Set image column from image table as nullable.<br />";
+        $version[] = array('version' => '370029','description' => $update_string);
+
         return $version;
     }
 
@@ -3293,4 +3296,19 @@ class Update
 
     }
 
+    /**
+     * update_370029
+     *
+     * Set image column from image table as nullable.
+     *
+     */
+    public static function update_370029()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `image` CHANGE COLUMN `image` `image` MEDIUMBLOB NULL DEFAULT NULL" ;
+        $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
 }
