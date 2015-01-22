@@ -496,19 +496,23 @@ class Art extends database_object
 
     private static function delete_from_dir($type, $uid, $kind = '')
     {
-        $path = self::get_dir_on_disk($type, $uid, $kind);
-        self::delete_rec_dir($path);
+        if ($type && $uid) {
+            $path = self::get_dir_on_disk($type, $uid, $kind);
+            self::delete_rec_dir($path);
+        }
     }
 
     private static function delete_rec_dir($path)
     {
-        foreach (scandir($path) as $file) {
-            if ('.' === $file || '..' === $file) continue;
-            elseif (is_dir($file)) self::delete_rec_dir($path);
-            else
-            unlink($path . $file);
+        if (Core::is_readable($path)) {
+            foreach (scandir($path) as $file) {
+                if ('.' === $file || '..' === $file) continue;
+                elseif (is_dir($path . '/' . $file)) self::delete_rec_dir($path . '/' . $file);
+                else
+                unlink($path . '/' . $file);
+            }
+            rmdir($path);
         }
-        rmdir($path);
     }
 
     /**
@@ -833,13 +837,13 @@ class Art extends database_object
         // iterate over our types and delete the images
         foreach (array('album', 'artist','tvshow','tvshow_season','video','user') as $type) {
             if (AmpConfig::get('album_art_store_disk')) {
-                $sql = "SELECT `image`.`object_id`, `image`.`object_type` FROM `image` USING `image` LEFT JOIN `" .
+                $sql = "SELECT `image`.`object_id`, `image`.`object_type` FROM `image` LEFT JOIN `" .
                     $type . "` ON `" . $type . "`.`id`=" .
                     "`image`.`object_id` WHERE `object_type`='" .
                     $type . "' AND `" . $type . "`.`id` IS NULL";
                 $db_results = Dba::read($sql);
-                while ($row == Dba::fetch_assoc($db_results)) {
-                    self::delete_from_dir($row['object_type'], $row['object_id']);
+                while ($row == Dba::fetch_row($db_results)) {
+                    self::delete_from_dir($row[1], $row[0]);
                 }
             }
             $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" .

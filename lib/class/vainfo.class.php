@@ -374,11 +374,7 @@ class vainfo
             $info['language'] = $info['language'] ?: trim($tags['language']);
 
             $info['lyrics']    = $info['lyrics']
-                    ?: str_replace(
-                        array("\r\n","\r","\n"),
-                        '<br />',
-                        strip_tags($tags['lyrics']));
-
+                    ?: strip_tags(nl2br($tags['lyrics']), "<br>");
             $info['replaygain_track_gain'] = $info['replaygain_track_gain'] ?: floatval($tags['replaygain_track_gain']);
             $info['replaygain_track_peak'] = $info['replaygain_track_peak'] ?: floatval($tags['replaygain_track_peak']);
             $info['replaygain_album_gain'] = $info['replaygain_album_gain'] ?: floatval($tags['replaygain_album_gain']);
