@@ -947,6 +947,12 @@ class vainfo
                 case 'track_number':
                     $parsed['track'] = $data[0];
                 break;
+                case 'disc_number':
+                    $parsed['disk'] = $data[0];
+                break;
+                case 'album_artist':
+                    $parsed['albumartist'] = $data[0];
+                break;
                 default:
                     $parsed[$tag] = $data[0];
                 break;

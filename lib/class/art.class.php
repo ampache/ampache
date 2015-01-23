@@ -504,12 +504,13 @@ class Art extends database_object
 
     private static function delete_rec_dir($path)
     {
+        debug_event('Art', 'Deleting ' . $path . ' directory...', 5);
+
         if (Core::is_readable($path)) {
             foreach (scandir($path) as $file) {
                 if ('.' === $file || '..' === $file) continue;
                 elseif (is_dir($path . '/' . $file)) self::delete_rec_dir($path . '/' . $file);
-                else
-                unlink($path . '/' . $file);
+                else unlink($path . '/' . $file);
             }
             rmdir($path);
         }
