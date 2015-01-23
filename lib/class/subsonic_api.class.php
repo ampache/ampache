@@ -1535,8 +1535,6 @@ class Subsonic_Api
         self::apiOutput($input, $r);
     }
 
-    /****   CURRENT UNSUPPORTED FUNCTIONS   ****/
-
     /**
      * getLyrics
      * Searches and returns lyrics for a given song.
@@ -1546,9 +1544,44 @@ class Subsonic_Api
     {
         self::check_version($input, "1.2.0");
 
-        $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+        $artist = $input['artist'];
+        $title = $input['title'];
+
+        if (!$artist && !$title) {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
+        } else {
+            $search = array();
+            $search['limit'] = 1;
+            $search['offset'] = 0;
+            $search['type'] = "song";
+
+            $i = 0;
+            if ($artist) {
+                $search['rule_'.$i.'_input'] = $artist;
+                $search['rule_'.$i.'_operator'] = 5;
+                $search['rule_'.$i.''] = "artist";
+                ++$i;
+            }
+            if ($title) {
+                $search['rule_'.$i.'_input'] = $title;
+                $search['rule_'.$i.'_operator'] = 5;
+                $search['rule_'.$i.''] = "title";
+                ++$i;
+            }
+
+            $query = new Search(null, 'song');
+            $songs = $query->run($search);
+
+            $r = Subsonic_XML_Data::createSuccessResponse();
+            if (count($songs) > 0) {
+                Subsonic_XML_Data::addLyrics($r, $artist, $title, $songs[0]);
+            }
+        }
+
         self::apiOutput($input, $r);
     }
+
+    /****   CURRENT UNSUPPORTED FUNCTIONS   ****/
 
     /**
      * updateShare

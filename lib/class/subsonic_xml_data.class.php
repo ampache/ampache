@@ -697,4 +697,24 @@ class Subsonic_XML_Data
 
         return $xjbox;
     }
+
+    public static function addLyrics($xml, $artist, $title, $song_id)
+    {
+        $song = new Song($song_id);
+        $song->format();
+        $song->fill_ext_info();
+        $lyrics = $song->get_lyrics();
+
+        if ($lyrics && $lyrics['text']) {
+            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
+            $text = str_replace("\r", '', $text);
+            $xlyrics = $xml->addChild("lyrics", $text);
+            if ($artist) {
+                $xlyrics->addAttribute("artist", $artist);
+            }
+            if ($title) {
+                $xlyrics->addAttribute("title", $title);
+            }
+        }
+    }
 }
