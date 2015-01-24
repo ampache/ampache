@@ -330,6 +330,8 @@ class Recommendation
                 $results['placeformed'] = $artist->placeformed;
                 $results['yearformed'] = $artist->yearformed;
                 $results['largephoto'] = Art::url($artist->id, 'artist');
+                $results['smallphoto'] = $results['largephoto'];    // TODO: Change to thumb size?
+                $results['mediumphoto'] = $results['largephoto'];   // TODO: Change to thumb size?
                 $results['megaphoto'] = $results['largephoto'];
                 return $results;
             }
@@ -343,6 +345,8 @@ class Recommendation
         $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", (string) $xml->artist->bio->summary));
         $results['placeformed'] = (string) $xml->artist->bio->placeformed;
         $results['yearformed'] = (string) $xml->artist->bio->yearformed;
+        $results['smallphoto'] = $xml->artist->image[0];
+        $results['mediumphoto'] = $xml->artist->image[1];
         $results['largephoto'] = $xml->artist->image[2];
         $results['megaphoto'] = $xml->artist->image[4];
 

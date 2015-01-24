@@ -169,7 +169,6 @@ class Subsonic_Api
             $dom->formatOutput = true;
             echo $dom->saveXML();
         }
-
     }
 
     /**
@@ -470,12 +469,21 @@ class Subsonic_Api
 
         $size = $input['size'];
         $offset = $input['offset'];
+        $musicFolderId = $input['musicFolderId'] ?: 0;
+
+        // Get albums from all catalogs by default
+        // Catalog filter is not supported for all request type for now.
+        $catalogs = null;
+        if ($musicFolderId > 0) {
+            $catalogs = array();
+            $catalogs[] = $musicFolderId;
+        }
 
         $albums = array();
         if ($type == "random") {
             $albums = Album::get_random($size);
         } else if ($type == "newest") {
-            $albums = Stats::get_newest("album", $size, $offset);
+            $albums = Stats::get_newest("album", $size, $offset, $musicFolderId);
         } else if ($type == "highest") {
             $albums = Rating::get_highest("album", $size, $offset);
         } else if ($type == "frequent") {
@@ -485,9 +493,9 @@ class Subsonic_Api
         } else if ($type == "starred") {
             $albums = Userflag::get_latest('album');
         } else if ($type == "alphabeticalByName") {
-            $albums = Catalog::get_albums($size, $offset);
+            $albums = Catalog::get_albums($size, $offset, $catalogs);
         } else if ($type == "alphabeticalByArtist") {
-            $albums = Catalog::get_albums_by_artist($size, $offset);
+            $albums = Catalog::get_albums_by_artist($size, $offset, $catalogs);
         } else if ($type == "byYear") {
             $fromYear = $input['fromYear'];
             $toYear = $input['toYear'];
@@ -1579,6 +1587,77 @@ class Subsonic_Api
         }
 
         self::apiOutput($input, $r);
+    }
+
+    /**
+     * getArtistInfo
+     * Returns artist info with biography, image URLs and similar artists, using data from last.fm.
+     * Takes artist id in parameter with optional similar artist count and if not present similar artist should be returned.
+     */
+    public static function getartistinfo($input)
+    {
+        $id = self::check_parameter($input, 'id');
+        $count = $input['count'] ?: 20;
+        $includeNotPresent = ($input['includeNotPresent'] === "true");
+
+        if (Subsonic_XML_Data::isArtist($id)) {
+            $artist_id = Subsonic_XML_Data::getAmpacheId($id);
+            $info = Recommendation::get_artist_info($artist_id);
+            $similars = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
+            $r = Subsonic_XML_Data::createSuccessResponse();
+            Subsonic_XML_Data::addArtistInfo($r, $info, $similars);
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+        }
+
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * getArtistInfo2
+     * See getArtistInfo.
+     */
+    public static function getartistinfo2($input)
+    {
+        return self::getartistinfo($input);
+    }
+
+    /**
+     * getSimilarSongs
+     * Returns a random collection of songs from the given artist and similar artists, using data from last.fm. Typically used for artist radio features.
+     * Takes song/album/artist id in parameter with optional similar songs count.
+     */
+    public static function getsimilarsongs($input)
+    {
+        $id = self::check_parameter($input, 'id');
+        $count = $input['count'] ?: 50;
+
+        $songs = null;
+        if (Subsonic_XML_Data::isArtist($id)) {
+            // TODO: support similar songs for artists
+        } elseif (Subsonic_XML_Data::isAlbum($id)) {
+            // TODO: support similar songs for albums
+        } elseif (Subsonic_XML_Data::isSong($id)) {
+            $songs = Recommendation::get_songs_like(Subsonic_XML_Data::getAmpacheId($id));
+        }
+
+        if ($songs === null) {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+        } else {
+            $r = Subsonic_XML_Data::createSuccessResponse();
+            Subsonic_XML_Data::addSimilarSongs($r, $songs);
+        }
+
+        self::apiOutput($input, $r);
+    }
+
+    /**
+     * getSimilarSongs2
+     * See getSimilarSongs.
+     */
+    public static function getsimilarsongs2($input)
+    {
+        return self::getsimilarsongs($input);
     }
 
     /****   CURRENT UNSUPPORTED FUNCTIONS   ****/

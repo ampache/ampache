@@ -30,7 +30,7 @@
  */
 class Subsonic_XML_Data
 {
-    const API_VERSION = "1.10.2";
+    const API_VERSION = "1.11.0";
 
     const SSERROR_GENERIC = 0;
     const SSERROR_MISSINGPARAM = 10;
@@ -714,6 +714,39 @@ class Subsonic_XML_Data
             }
             if ($title) {
                 $xlyrics->addAttribute("title", $title);
+            }
+        }
+    }
+
+    public static function addArtistInfo($xml, $info, $similars)
+    {
+        $artist = new Artist($info['id']);
+
+        $xartist = $xml->addChild("artistInfo");
+        $xartist->addChild("biography", trim($info['summary']));
+        $xartist->addChild("musicBrainzId", $artist->mbid);
+        //$xartist->addChild("lastFmUrl", "");
+        $xartist->addChild("smallImageUrl", htmlentities($info['smallphoto']));
+        $xartist->addChild("mediumImageUrl", htmlentities($info['mediumphoto']));
+        $xartist->addChild("largeImageUrl", htmlentities($info['largephoto']));
+
+        foreach ($similars as $similar) {
+            $xsimilar = $xartist->addChild("similarArtist");
+            if ($similar['id'] !== null) {
+                $xsimilar->addAttribute("id", $similar['id']);
+            }
+            $xsimilar->addAttribute("name", $similar['name']);
+        }
+    }
+
+    public static function addSimilarSongs($xml, $similar_songs)
+    {
+        $xsimilar = $xml->addChild("similarSongs");
+        foreach ($similar_songs as $similar_song) {
+            $song = new Song($similar_song['id']);
+            $song->format();
+            if ($song->id) {
+                self::addSong($xsimilar, $song);
             }
         }
     }
