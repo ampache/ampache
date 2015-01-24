@@ -582,7 +582,7 @@ refresh_limit = "60"
 ; For OpenLDAP use "uid"
 ; For Microsoft Active Directory (MAD) use "sAMAccountName"
 ; DEFAULT: null
-; ldap_filter = "sAMAccountName"
+;ldap_filter = "sAMAccountName"
 
 ; LDAP objectclass (required)
 ; OpanLDAP objectclass = "*"
