@@ -45,6 +45,11 @@ if (isset($_REQUEST['show_header']) && $_REQUEST['show_header']) {
     $browse->set_show_header($_REQUEST['show_header'] == 'true');
 }
 
+$argument = null;
+if ($_REQUEST['argument']) {
+    $argument = scrub_in($_REQUEST['argument']);
+}
+
 $results = array();
 switch ($_REQUEST['action']) {
     case 'browse':
@@ -72,7 +77,7 @@ switch ($_REQUEST['action']) {
         }
 
         ob_start();
-        $browse->show_objects();
+        $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'set_sort':
@@ -85,7 +90,7 @@ switch ($_REQUEST['action']) {
         }
 
         ob_start();
-        $browse->show_objects();
+        $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'toggle_tag':
@@ -125,14 +130,14 @@ switch ($_REQUEST['action']) {
     case 'page':
         $browse->set_start($_REQUEST['start']);
         ob_start();
-        $browse->show_objects();
+        $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'show_art':
         Art::set_enabled();
 
         ob_start();
-        $browse->show_objects();
+        $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'get_filters':
@@ -184,7 +189,7 @@ switch ($_REQUEST['action']) {
         }
 
         ob_start();
-        $browse->show_objects();
+        $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'get_share_links':

@@ -193,6 +193,8 @@ class Browse extends Query
         // Set the correct classes based on type
         $class = "box browse_" . $type;
 
+        $argument_param = ($argument ? '&argument=' . scrub_in($argument) : '');
+
         debug_event('browse', 'Show objects called for type {'.$type.'}', '5');
 
         $limit_threshold = $this->get_threshold();
@@ -345,25 +347,25 @@ class Browse extends Query
                 UI::show_box_bottom();
             }
             echo '<script type="text/javascript">';
-            echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id, '');
+            echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
             echo ';</script>';
         } else {
             if (!$this->get_use_pages()) {
-                $this->show_next_link();
+                $this->show_next_link($argument);
             }
         }
         Ajax::end_container();
 
     } // show_object
 
-    public function show_next_link()
+    public function show_next_link($argument = null)
     {
         $limit = $this->get_offset();
         $start = $this->get_start();
         $total = $this->get_total();
         $next_offset = $start + $limit;
         if ($next_offset <= $total) {
-            echo '<a class="jscroll-next" href="' . AmpConfig::get('ajax_url') . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode='. $this->get_content_div() . '&show_header=false">' . T_('More') . '</a>';
+            echo '<a class="jscroll-next" href="' . AmpConfig::get('ajax_url') . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode='. $this->get_content_div() . '&show_header=false' . $argument_param . '">' . T_('More') . '</a>';
         }
     }
 

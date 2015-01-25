@@ -41,13 +41,15 @@ switch ($_REQUEST['action']) {
     break;
     case 'refresh_album_songs':
         $browse = new Browse();
-        $browse->set_show_header(false);
+        $browse->set_show_header(true);
         $browse->set_type('song');
         $browse->set_simple_browse(true);
         $browse->set_filter('album', $_REQUEST['id']);
         $browse->set_sort('track', 'ASC');
         $browse->get_objects();
+        echo "<div id='browse_content_song' class='browse_content'>";
         $browse->show_objects(null, true); // true argument is set to show the reorder column
         $browse->store();
+        echo "</div>";
     break;
 } // switch on the action

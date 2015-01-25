@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
 
         if (isset($_GET['order'])) {
             $songs = explode(";", $_GET['order']);
-            $track = 1;
+            $track = $_GET['offset'] ? (intval($_GET['offset']) + 1) : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
                     Song::update_track($track, $song_id);

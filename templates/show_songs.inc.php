@@ -24,16 +24,16 @@ $web_path = AmpConfig::get('web_path');
 $thcount = 8;
 ?>
 <?php if ($browse->get_show_header()) require AmpConfig::get('prefix') . '/templates/list_header.inc.php'; ?>
-<table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="song">
+<table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata" cellpadding="0" cellspacing="0" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-            <th class="cel_song essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Song Title'), 'sort_song_title'.$browse->id); ?></th>
+            <th class="cel_song essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'sort_song_title'.$browse->id); ?></th>
             <th class="cel_add essential"></th>
-            <th class="cel_artist optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist', T_('Artist'), 'sort_song_artist'.$browse->id); ?></th>
-            <th class="cel_album essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album', T_('Album'), 'sort_song_album'.$browse->id); ?></th>
+            <th class="cel_artist optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Artist'), 'sort_song_artist'.$browse->id); ?></th>
+            <th class="cel_album essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'sort_song_album'.$browse->id); ?></th>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
-            <th class="cel_time optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', T_('Time'), 'sort_song_time'.$browse->id); ?></th>
+            <th class="cel_time optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time'.$browse->id); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
             <?php } ?>
@@ -77,12 +77,12 @@ $thcount = 8;
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-            <th class="cel_song"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Song Title'), 'sort_song_title'.$browse->id); ?></th>
+            <th class="cel_song"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'sort_song_title'.$browse->id); ?></th>
             <th class="cel_add"></th>
-            <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist', T_('Artist'), 'sort_song_artist'.$browse->id); ?></th>
-            <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album', T_('Album'), 'sort_song_album'.$browse->id); ?></th>
+            <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Artist'), 'sort_song_artist'.$browse->id); ?></th>
+            <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'sort_song_album'.$browse->id); ?></th>
             <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-            <th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', T_('Time'), 'sort_song_time'.$browse->id); ?></th>
+            <th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time'.$browse->id); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
             <?php } ?>
