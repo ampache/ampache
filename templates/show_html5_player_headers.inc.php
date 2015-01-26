@@ -250,20 +250,37 @@ function ToggleReplayGain()
     if (replaygainNode != null) {
         replaygainEnabled = !replaygainEnabled;
         ApplyReplayGain();
+
+        if (replaygainEnabled) {
+            $('#replaygainbtn').css('filter', 'drop-shadow(2px -2px 1px orange)');
+        } else {
+            $('#replaygainbtn').css('filter', '');
+        }
     }
 }
 
 function ApplyReplayGain()
 {
     if (replaygainNode != null) {
+        var gainlevel = 1;
         var replaygain = 0;
+        var peakamplitude = 1;
         if (replaygainEnabled && currentjpitem != null) {
             var track_gain = currentjpitem.attr("data-replaygain_track_gain");
             if (track_gain !== 'null') {
                 replaygain = parseFloat(track_gain);
             }
+
+            if (replaygain !== 0) {
+                var track_peak = currentjpitem.attr("data-replaygain_track_peak");
+                if (track_peak !== 'null') {
+                    peakamplitude = parseFloat(track_peak);
+                }
+                gainlevel = (1 + Math.min(Math.pow(10, ((replaygain /* + Gpre-amp */) / 20)), (1 / peakamplitude)));
+            }
         }
-        replaygainNode.gain.value = (1 + (replaygain / 100));
+
+        replaygainNode.gain.value = gainlevel;
     }
 }
 </script>

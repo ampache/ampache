@@ -444,7 +444,7 @@ if ($isVideo) {
         <div class="action_button">
             <a onClick="ShowVisualizerFullScreen();" href="#"><?php echo UI::get_icon('fullscreen', T_('Visualizer Full-Screen')); ?></a>
         </div>
-        <div class="action_button">
+        <div id="replaygainbtn" class="action_button">
             <a href="javascript:ToggleReplayGain();"><?php echo UI::get_icon('replaygain', T_('ReplayGain')); ?></a>
         </div>
 <?php } ?>
