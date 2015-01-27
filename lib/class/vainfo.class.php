@@ -706,7 +706,7 @@ class vainfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            if ($tag == 'unsyncedlyrics' || $tag == 'unsynchronised lyric') {
+            if ($tag == 'unsyncedlyrics' || $tag == 'unsynced lyrics' || $tag == 'unsynchronised lyric') {
                 $tag = 'lyrics';
             }
             $parsed[$tag] = $data[0];
@@ -759,6 +759,7 @@ class vainfo
                     $parsed['release_type'] = $data[0];
                     break;
                 case 'unsyncedlyrics':
+                case 'unsynced lyrics':
                 case 'lyrics':
                     $parsed['lyrics'] = $data[0];
                     break;
