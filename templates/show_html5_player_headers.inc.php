@@ -164,7 +164,7 @@ function ShowVisualizer()
             if ((typeof AudioContext !== 'undefined') || (typeof webkitAudioContext !== 'undefined')) {
                 UberVizMain.init();
                 vizInitialized = true;
-                AudioHandler.loadMediaSource(document.getElementById("jp_audio_0"));
+                AudioHandler.loadMediaSource($('.jp-jplayer').find('audio').get(0));
             }
         }
 
@@ -227,7 +227,7 @@ var replaygainNode = null;
 function ToggleReplayGain()
 {
     if (replaygainNode == null) {
-        var mediaElement = document.getElementById("jp_audio_0");
+        var mediaElement = $('.jp-jplayer').find('audio').get(0);
         if (mediaElement) {
             var audioContext = null;
             if (typeof AudioContext !== 'undefined') {
@@ -237,7 +237,7 @@ function ToggleReplayGain()
             } else {
                 audioContext = null;
             }
-            if (audioContext != null) {
+            if (audioContext !== null) {
                 var mediaSource = audioContext.createMediaElementSource(mediaElement);
                 replaygainNode = audioContext.createGain();
                 replaygainNode.gain.value = 1;
