@@ -1209,6 +1209,41 @@ class Subsonic_Api
     }
 
     /**
+     * getAvatar
+     * Return the user avatar in bytes.
+     */
+    public static function getavatar($input)
+    {
+        $username = self::check_parameter($input, 'username');
+
+        $r = null;
+        if ($GLOBALS['user']->access >= 100 || $GLOBALS['user']->username == $username) {
+            if ($GLOBALS['user']->username == $username) {
+                $user = $GLOBALS['user'];
+            } else {
+                $user = User::get_from_username($username);
+            }
+
+            if ($user !== null) {
+                $avatar = $user->get_avatar(true);
+                if (isset($avatar['url']) && !empty($avatar['url'])) {
+                    $request = Requests::get($avatar['url']);
+                    header("Content-Type: " . $request->headers['Content-Type']);
+                    echo $request->body;
+                }
+            } else {
+                $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+            }
+        } else {
+            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, $GLOBALS['user']->username . ' is not authorized to get avatar for other users.');
+        }
+
+        if ($r != null) {
+            self::apiOutput($input, $r);
+        }
+    }
+
+    /**
      * getInternetRadioStations
      * Get all internet radio stations
      * Takes no parameter.

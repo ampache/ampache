@@ -1278,14 +1278,14 @@ class User extends database_object
      * get_avatar
      * Get the user avatar
      */
-    public function get_avatar()
+    public function get_avatar($local = false)
     {
         $avatar = array();
 
         $avatar['title'] = T_('User avatar');
         $upavatar = new Art($this->id, 'user');
         if ($upavatar->get_db()) {
-            $avatar['url'] = AmpConfig::get('web_path') . '/image.php?object_type=user&object_id=' . $this->id;
+            $avatar['url'] = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/image.php?object_type=user&object_id=' . $this->id;
             $avatar['url_mini'] = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
             $avatar['url'] .= '&thumb=4';
