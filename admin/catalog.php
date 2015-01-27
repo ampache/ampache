@@ -169,6 +169,7 @@ switch ($_REQUEST['action']) {
     case 'update_from':
         if (AmpConfig::get('demo_mode')) { break; }
 
+        $catalog_id = 0;
         // First see if we need to do an add
         if ($_POST['add_path'] != '/' AND strlen($_POST['add_path'])) {
             if ($catalog_id = Catalog_local::get_from_path($_POST['add_path'])) {
@@ -185,7 +186,12 @@ switch ($_REQUEST['action']) {
             }
         } // end if update
 
-        echo T_("Done.");
+        if ($catalog_id > 0) {
+            echo T_("Subdirectory update completed.");
+        } else {
+            echo T_("This subdirectory is not part of an existing catalog. Update cannot be processed.");
+        }
+        show_confirmation('','', AmpConfig::get('web_path').'/admin/catalog.php');
     break;
     case 'add_catalog':
         /* Wah Demo! */
