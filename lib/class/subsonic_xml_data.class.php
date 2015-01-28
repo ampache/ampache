@@ -732,7 +732,7 @@ class Subsonic_XML_Data
 
         foreach ($similars as $similar) {
             $xsimilar = $xartist->addChild("similarArtist");
-            $xsimilar->addAttribute("id", ($similar['id'] !== null ? $similar['id'] : "-1"));
+            $xsimilar->addAttribute("id", ($similar['id'] !== null ? self::getArtistId($similar['id']) : "-1"));
             $xsimilar->addAttribute("name", $similar['name']);
         }
     }
