@@ -696,6 +696,11 @@ class Catalog_local extends Catalog
         }
 
         $id = Song::insert($results);
+        // Extended metadata loading is not deferred, retrieve it now
+        if ($id && !AmpConfig::get('deferred_ext_metadata')) {
+            $song = new Song($id);
+            Recommendation::get_artist_info($song->artist);
+        }
         $this->added_songs_to_gather[] = $id;
 
         return $id;

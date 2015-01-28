@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 24
+config_version = 25
 
 ;###################
 ; Path Vars        #
@@ -294,6 +294,13 @@ metadata_order = "getID3,filename"
 ; POSSIBLE VALUES (plugins): Tvdb,Tmdb,Omdb, plus any others you've installed.
 ; DEFAULT: filename getID3
 metadata_order_video = "filename,getID3"
+
+; This determines if extended metadata grabbed from external services should be deferred.
+; If enabled, extended metadata is retrieved when browsing the library item.
+; If disabled, extended metadata is retrieved at catalog update.
+; Today, only Artist information (summary, place formed, ...) can be deferred.
+; DEFAULT: true
+deferred_ext_metadata = "true"
 
 ; Some taggers use delimiters other than \0 for fields
 ; This list specifies possible delimiters additional to \0

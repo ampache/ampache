@@ -22,9 +22,9 @@
 
 // Minimal init for use in install
 
-// Do a check for PHP5 because nothing will work without it
-if (floatval(phpversion()) < 5) {
-    echo "ERROR: Ampache requires PHP5";
+// Do a check for PHP5.4 because nothing will work without it
+if (version_compare(phpversion(), '5.4.0', '<')) {
+    echo "ERROR: Ampache requires PHP version >= 5.4";
     exit;
 }
 
