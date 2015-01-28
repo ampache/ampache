@@ -37,6 +37,16 @@ class Session
     } // __construct
 
     /**
+     * open
+     *
+     * This is run on the beginning of a session, nothing to do here for now.
+     */
+    public static function open()
+    {
+        return true;
+    }
+
+    /**
      * close
      *
      * This is run on the end of a session, nothing to do here for now.
@@ -83,7 +93,6 @@ class Session
 
         // Destroy our cookie!
         setcookie(AmpConfig::get('session_name'), null, -1);
-        session_destroy();
 
         return true;
     }
