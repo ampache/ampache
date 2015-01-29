@@ -218,9 +218,9 @@ class Stream
         $sec = ($media->time >= 30) ? 30 : intval($media->time / 2);
         $frame = gmdate("H:i:s", $sec);
 
-        if (AmpConfig::get('transcode_cmd') && AmpConfig::get('encode_get_image')) {
+        if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
 
-            $command = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('encode_get_image');
+            $command = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
             $string_map = array(
                 '%FILE%'   => scrub_arg($media->file),
                 '%TIME%' => $frame
