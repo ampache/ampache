@@ -955,6 +955,9 @@ class vainfo
                 case 'album_artist':
                     $parsed['albumartist'] = $data[0];
                 break;
+                case 'tv_episode':
+                	$parsed['tvshow_episode'] = $data[0];
+                	break;
                 default:
                     $parsed[$tag] = $data[0];
                 break;
