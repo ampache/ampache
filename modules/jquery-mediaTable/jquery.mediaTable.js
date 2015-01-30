@@ -205,7 +205,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
       var updateCheck = function() {
       
         if ($.cookie(cookname) !== undefined) {
-            $checkbox.prop("checked", $.cookie(cookname) === true);
+            $checkbox.prop("checked", $.cookie(cookname) === 'true');
             change();
         }
             
