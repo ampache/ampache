@@ -1498,7 +1498,7 @@ abstract class Catalog extends database_object
         }
 
         if ($media_type == "music") {
-            $types = array_diff($types, array('personal_video', 'movie', 'tvshow'));
+            $types = array_diff($types, array('personal_video', 'movie', 'tvshow', 'clip'));
         }
 
         return $types;

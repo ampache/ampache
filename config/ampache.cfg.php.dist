@@ -76,10 +76,10 @@ stream_length = 7200
 
 ; This length defines how long a 'remember me' session and cookie will
 ; last, the default is 86400, same as length. It is up to the administrator
-; of the box to increase this, for reference 86400 = 1 day
-; 604800 = 1 week and 2419200 = 1 month
-; DEFAULT: 86400
-remember_length = 86400
+; of the box to increase this, for reference 86400 = 1 day,
+; 604800 = 1 week, and 2419200 = 1 month
+; DEFAULT: 604800
+remember_length = 604800
 
 ; Name of the Session/Cookie that will sent to the browser
 ; default should be fine

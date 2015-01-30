@@ -364,15 +364,15 @@ class Catalog_local extends Catalog
                 else {
                     if (count($this->get_gather_types('music')) > 0) {
                         if ($is_audio_file) {
-                        $this->insert_local_song($full_file, $options);
+                            $this->insert_local_song($full_file, $options);
                         } else {
-                            debug_event('read', $full_file . " ignored, bad media type for this catalog.", 5);
+                            debug_event('read', $full_file . " ignored, bad media type for this music catalog.", 5);
                         }
                     } else if (count($this->get_gather_types('video')) > 0) {
                         if ($is_video_file) {
                             $this->insert_local_video($full_file, $options);
                         } else {
-                            debug_event('read', $full_file . " ignored, bad media type for this catalog.", 5);
+                            debug_event('read', $full_file . " ignored, bad media type for this video catalog.", 5);
                         }
                     }
 
