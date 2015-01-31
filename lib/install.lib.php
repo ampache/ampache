@@ -406,7 +406,8 @@ function install_config_transcode_mode($mode)
         'transcode_mkv' => 'allowed',
     );
     if ($mode == 'ffmpeg' || $mode == 'avconv') {
-        $trconfig['transcode_cmd'] = $mode . ' -i %FILE%';
+        $trconfig['transcode_cmd'] = $mode;
+        $trconfig['transcode_input'] = '-i %FILE%';
         $trconfig['waveform'] = 'true';
         $trconfig['generate_video_preview'] = 'true';
 
