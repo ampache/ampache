@@ -488,6 +488,9 @@ class Update
         $update_string = " - Set image column from image table as nullable.<br />";
         $version[] = array('version' => '370029','description' => $update_string);
 
+        $update_string = " - Add an option to allow users to remove uploaded songs.<br />";
+        $version[] = array('version' => '370030','description' => $update_string);
+
         return $version;
     }
 
@@ -3293,7 +3296,6 @@ class Update
         }
 
         return $retval;
-
     }
 
     /**
@@ -3308,6 +3310,25 @@ class Update
 
         $sql = "ALTER TABLE `image` CHANGE COLUMN `image` `image` MEDIUMBLOB NULL DEFAULT NULL" ;
         $retval = Dba::write($sql) ? $retval : false;
+
+        return $retval;
+    }
+
+    /**
+     * update_370030
+     *
+     * Add an option to allow users to remove uploaded songs.
+     */
+    public static function update_370030()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
+            "VALUES ('upload_allow_remove','1','Upload: allow users to remove uploaded songs',25,'boolean','system')";
+        $retval = Dba::write($sql) ? $retval : false;
+        $id = Dba::insert_id();
+        $sql = "INSERT INTO `user_preference` VALUES (-1,?,'1')";
+        $retval = Dba::write($sql, array($id)) ? $retval : false;
 
         return $retval;
     }

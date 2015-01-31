@@ -436,7 +436,7 @@ class Song extends database_object implements media, library_item
             '`year`, `artist`, `title`, `bitrate`, `rate`, ' .
             '`mode`, `size`, `time`, `track`, `played`, ' .
             '`song`.`enabled`, `update_time`, `tag_map`.`tag_id`, '.
-            '`mbid`, `addition_time`, `license`, `composer` ' .
+            '`mbid`, `addition_time`, `license`, `composer`, `user_upload` ' .
             'FROM `song` LEFT JOIN `tag_map` ' .
             'ON `tag_map`.`object_id`=`song`.`id` ' .
             "AND `tag_map`.`object_type`='song' ";
@@ -506,7 +506,7 @@ class Song extends database_object implements media, library_item
         $sql = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`,' .
             '`song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, ' .
             '`song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, ' .
-            '`song`.`composer`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` ' .
+            '`song`.`composer`, `song`.`user_upload`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` ' .
             'FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' .
             'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' .
             'WHERE `song`.`id` = ?';
@@ -1835,6 +1835,24 @@ class Song extends database_object implements media, library_item
         $meta['genre'] = implode(',', $meta['genre']);
 
         return $meta;
+    }
+
+    /**
+     * Remove the song from disk.
+     */
+    public function remove_from_disk()
+    {
+        $deleted = unlink($this->file);
+        if ($deleted === true) {
+            $sql = "DELETE FROM `song` WHERE `id` = ?";
+            Dba::write($sql, array($this->id));
+
+            Song::gc();
+        } else {
+            debug_event('song', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
+        }
+
+        return $deleted;
     }
 
 } // end of song class

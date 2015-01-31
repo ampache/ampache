@@ -104,10 +104,26 @@ require $prefix . '/templates/install_header.inc.php';
 <input type="hidden" name="htmllang" value="<?php echo $htmllang; ?>" />
 <input type="hidden" name="charset" value="<?php echo $charset; ?>" />
 
+<p>&nbsp;</p>
+<h3><?php echo T_('Installation type'); ?></h3>
+<div><?php echo T_('Configure Ampache at best for your use case, enabling / disabling features automatically.'); ?></div>
 <br />
+<div class="form-group">
+    <div class="radio">
+      <label><input type="radio" name="usecase" value="default" <?php if (!isset($_REQUEST['usecase']) || $_REQUEST['usecase'] == 'default') echo 'checked'; ?>><?php echo T_('Default'); ?> &mdash; <?php echo T_('Ampache is configured for personal use with most greatest features.'); ?></label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="usecase" value="minimalist" <?php if (isset($_REQUEST['usecase']) && $_REQUEST['usecase'] == 'minimalist') echo 'checked'; ?>><?php echo T_('Minimalist'); ?> &mdash; <?php echo T_('only essential features are enabled to stream simply your music from a web interface.'); ?></label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="usecase" value="community" <?php if (isset($_REQUEST['usecase']) && $_REQUEST['usecase'] == 'community') echo 'checked'; ?>><?php echo T_('Community'); ?> &mdash; <?php echo T_('use recommended settings when using Ampache as a frontend for a music community.'); ?></label>
+    </div>
+</div>
+
+<p>&nbsp;</p>
 <h3><?php echo T_('Transcoding'); ?></h3>
 <div>
-    <?php echo T_('Transcoding allows you to convert one type of file to another. Ampache supports on the fly transcoding of all file types based on user, IP address or available bandwidth. In order to transcode Ampache takes advantage of existing binary applications such as ffmpeg. In order for transcoding to work you must first install the supporting applications and ensure that they are executable by the webserver.'); ?>
+    <?php echo T_('Transcoding allows you to convert one type of file to another. Ampache supports on the fly transcoding of all file types based on user, player, IP address or available bandwidth. In order to transcode Ampache takes advantage of existing binary applications such as ffmpeg. In order for transcoding to work you must first install the supporting applications and ensure that they are executable by the webserver.'); ?>
     <br />
     <?php echo T_('This section apply default transcoding configuration according to the application you want to use. You may need to customize settings once this setup ended'); ?>. <a href="https://github.com/ampache/ampache/wiki/Transcoding" target="_blank"><?php echo T_('See wiki page'); ?>.</a>
 </div>
@@ -132,11 +148,37 @@ require $prefix . '/templates/install_header.inc.php';
     </div>
 </div>
 
+<p>&nbsp;</p>
+<h3><?php echo T_('Players'); ?></h3>
+<div><?php echo T_('Ampache is more than only a web interface. Several backends are implemented to ensure you can stream your media from anywhere.'); ?></div>
+<div><?php echo T_('Select backends to enable. Depending the backend, you may need to perform additional configuration.'); ?> <a href="https://github.com/ampache/ampache/wiki/API" target="_blank"><?php echo T_('See wiki page'); ?>.</a></div>
+<br />
+<div class="form-group">
+    <div class="checkbox-inline disabled">
+        <label><input type="checkbox" value="1" checked disabled>Web interface</label>
+    </div>
+    <div class="checkbox-inline disabled">
+        <label><input type="checkbox" value="1" checked disabled>Ampache API</label>
+    </div>
+    <div class="checkbox-inline">
+        <label><input type="checkbox" name="backends[]" value="subsonic" <?php if (!isset($_REQUEST['backends']) || in_array('subsonic', $_REQUEST['backends'])) echo 'checked'; ?>>Subsonic</label>
+    </div>
+    <div class="checkbox-inline">
+        <label><input type="checkbox" name="backends[]" value="plex" <?php if (isset($_REQUEST['backends']) && in_array('plex', $_REQUEST['backends'])) echo 'checked'; ?>>Plex</label>
+    </div>
+    <div class="checkbox-inline">
+        <label><input type="checkbox" name="backends[]" value="upnp" <?php if (isset($_REQUEST['backends']) && in_array('upnp', $_REQUEST['backends'])) echo 'checked'; ?>>UPnP</label>
+    </div>
+    <div class="checkbox-inline">
+        <label><input type="checkbox" name="backends[]" value="daap" <?php if (isset($_REQUEST['backends']) && in_array('daap', $_REQUEST['backends'])) echo 'checked'; ?>>DAAP (iTunes)</label>
+    </div>
+</div>
+
 <br /><br />
 <div class="panel-group" id="accordion">
     <div id="config_files" class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title"><a data-toggle="collapse" data-target="#collapseConfigFiles" href="#collapseConfigFiles"><?php echo T_('Files'); ?></a></h3>
+            <h3 class="panel-title"><a data-toggle="collapse" data-target="#collapseConfigFiles" href="#collapseConfigFiles"><?php echo T_('File Insight'); ?></a></h3>
         </div>
         <div id="collapseConfigFiles" class="panel-collapse collapse <?php if(isset($created_config) && !$created_config) echo "in"; ?>">
             <div class="panel-body">

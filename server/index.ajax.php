@@ -35,6 +35,13 @@ switch ($_REQUEST['action']) {
             $results['random_selection'] = ob_get_clean();
         } else {
             $results['random_selection'] = '<!-- None found -->';
+
+            if (Access::check('interface', '100')) {
+                $catalogs = Catalog::get_catalogs();
+                if (count($catalogs) == 0) {
+                    $results['random_selection'] = T_('No catalog configured yet. To start streaming your media, you now need to <a href="' . AmpConfig::get('web_path') . '/admin/catalog.php?action=show_add_catalog">add a catalog</a>.<br /><br />');
+                }
+            }
         }
     break;
     case 'random_videos':

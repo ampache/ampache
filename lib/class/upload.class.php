@@ -86,7 +86,7 @@ class Upload
                         if (isset($_POST['license'])) {
                             $options['license'] = $_POST['license'];
                         }
-                        $catalog->add_files($targetdir, $options);
+                        $catalog->add_file($targetfile, $options);
 
                         echo '{"status":"success"}';
                         return true;
