@@ -563,7 +563,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
 --
 
 INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `catagory`) VALUES
-(1, 'download', '0', 'Allow Downloads', 100, 'boolean', 'options'),
+(1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options'),
 (4, 'popular_threshold', '10', 'Popular Threshold', 25, 'integer', 'interface'),
 (19, 'sample_rate', '32', 'Transcode Bitrate', 25, 'string', 'streaming'),
 (22, 'site_title', 'Ampache :: For the love of Music', 'Website Title', 100, 'string', 'system'),

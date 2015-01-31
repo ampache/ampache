@@ -65,6 +65,20 @@ if (isset($_REQUEST['transcode_template'])) {
     install_config_transcode_mode($mode);
 }
 
+if (isset($_REQUEST['usecase'])) {
+    $case = $_REQUEST['usecase'];
+    if (Dba::check_database()) {
+        install_config_use_case($case);
+    }
+}
+
+if (isset($_REQUEST['backends'])) {
+    $backends = $_REQUEST['backends'];
+    if (Dba::check_database()) {
+        install_config_backends($backends);
+    }
+}
+
 // Charset and gettext setup
 $htmllang = $_REQUEST['htmllang'];
 $charset  = $_REQUEST['charset'];
@@ -173,7 +187,13 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        header ("Location: " . $web_path . '/login.php');
+        // Automatically log-in the newly created user
+        Session::create_cookie();
+        Session::create(array('type' => 'mysql', 'username' => $username));
+        $_SESSION['userdata']['username'] = $username;
+        Session::check();
+
+        header ("Location: " . $web_path . '/index.php');
     break;
     case 'init':
         require_once 'templates/show_install.inc.php';

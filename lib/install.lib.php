@@ -414,3 +414,94 @@ function install_config_transcode_mode($mode)
         AmpConfig::set_by_array($trconfig, true);
     }
 }
+
+function install_config_use_case($case)
+{
+    $trconfig = array(
+        'use_auth' => 'true',
+        'ratings' => 'true',
+        'userflags' => 'true',
+        'sociable' => 'true',
+        'notify' => 'true',
+        'licensing' => 'false',
+        'wanted' => 'true',
+        'allow_public_registration' => 'false',
+        'cookie_disclaimer' => 'false'
+    );
+
+    $dbconfig = array(
+        'download' => '1',
+        'share' => '0',
+        'allow_video' => '1',
+        'home_now_playing' => '1',
+        'home_recently_played' => '1'
+    );
+
+    switch ($case) {
+        case 'minimalist':
+            $trconfig['ratings'] = 'false';
+            $trconfig['userflags'] = 'false';
+            $trconfig['sociable'] = 'false';
+            $trconfig['notify'] = 'false';
+            $trconfig['wanted'] = 'false';
+
+            $dbconfig['download'] = '0';
+            $dbconfig['allow_video'] = '0';
+
+            // Hide sidebar by default to have a better 'minimalist first look'.
+            setcookie('sidebar_state', 'collapsed', time() + (30 * 24 * 60 * 60), '/');
+            break;
+        case 'community':
+            $trconfig['use_auth'] = 'false';
+            $trconfig['licensing'] = 'true';
+            $trconfig['wanted'] = 'false';
+            $trconfig['allow_public_registration'] = 'true';
+            $trconfig['cookie_disclaimer'] = 'true';
+
+            $dbconfig['download'] = '0';
+            $dbconfig['share'] = '1';
+            $dbconfig['home_now_playing'] = '0';
+            $dbconfig['home_recently_played'] = '0';
+            break;
+        default:
+            break;
+    }
+
+    AmpConfig::set_by_array($trconfig, true);
+    foreach ($dbconfig as $preference => $value) {
+        Preference::update($preference, -1, $value, true, true);
+    }
+}
+
+function install_config_backends(Array $backends)
+{
+    $dbconfig = array(
+        'subsonic_backend' => '0',
+        'plex_backend' => '0',
+        'daap_backend' => '0',
+        'upnp_backend' => '0',
+        'stream_beautiful_url' => '0'
+    );
+
+    foreach ($backends as $backend) {
+        switch ($backend) {
+            case 'subsonic':
+                $dbconfig['subsonic_backend'] = '1';
+                break;
+            case 'plex':
+                $dbconfig['plex_backend'] = '1';
+                break;
+            case 'upnp':
+                $dbconfig['upnp_backend'] = '1';
+                $dbconfig['stream_beautiful_url'] = '1';
+                break;
+            case 'daap':
+                $dbconfig['daap_backend'] = '1';
+                break;
+        }
+    }
+
+    foreach ($dbconfig as $preference => $value) {
+        Preference::update($preference, -1, $value, true, true);
+    }
+}
