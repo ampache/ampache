@@ -560,6 +560,13 @@ site_charset = UTF-8
 ; Possible Values: Int > 5
 refresh_limit = "60"
 
+; Footer Statistics
+; This defines whether statistics (Queries, Cache Hits, Load Time)
+; are shown in the page footer.
+; DEFAULT: false
+; Possible values: true, false
+; show_footer_statistics = false
+
 ;#########################################################
 ; Custom actions (optional)                              #
 ;#########################################################
