@@ -86,15 +86,21 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
             <?php if (AmpConfig::get('statistical_graphs')) { ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=song&object_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
             <?php } ?>
-
+        <?php } ?>
+        <?php if (Access::check('interface','50') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) { ?>
             <a onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_'.$song->id ?>', '<?php echo T_('Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php } ?>
-        <?php if (Access::check('interface','75')) { ?>
+        <?php if (Access::check('interface','75') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) { ?>
             <span id="<?php echo($button_flip_state_id); ?>">
             <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$icon, T_(ucfirst($icon)),'flip_song_' . $song->id); ?>
             </span>
+        <?php } ?>
+        <?php if ($song->user_upload > 0 && (Access::check('interface','50') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_remove')))) { ?>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/song.php?action=delete&song_id=<?php echo $song->id; ?>">
+                <?php echo UI::get_icon('delete', T_('Delete')); ?>
+            </a>
         <?php } ?>
     </dd>
 <?php

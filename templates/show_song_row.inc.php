@@ -89,6 +89,11 @@
         <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $libitem->id,$icon, T_(ucfirst($icon)),'flip_song_' . $libitem->id); ?>
         </span>
     <?php } ?>
+    <?php if ($libitem->user_upload > 0 && (Access::check('interface','50') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_remove')))) { ?>
+        <a id="<?php echo 'delete_song_'.$libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/song.php?action=delete&song_id=<?php echo $libitem->id; ?>">
+            <?php echo UI::get_icon('delete', T_('Delete')); ?>
+        </a>
+    <?php } ?>
 </td>
 <?php if (Access::check('interface', '50') && isset($argument) && $argument) { ?>
 <td class="cel_drag">

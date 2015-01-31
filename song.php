@@ -26,6 +26,38 @@ UI::show_header();
 
 // Switch on Action
 switch ($_REQUEST['action']) {
+    case 'delete':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        $song_id = scrub_in($_REQUEST['song_id']);
+        show_confirmation(
+            T_('Song Deletion'),
+            T_('Are you sure you want to permanently delete this song?'),
+            AmpConfig::get('web_path')."/song.php?action=confirm_delete&song_id=" . $song_id,
+            1,
+            'delete_song'
+        );
+        break;
+    case 'confirm_delete':
+        if (AmpConfig::get('demo_mode')) { break; }
+
+        $song = new Song($_REQUEST['song_id']);
+        if ($song->id && $song->user_upload > 0) {
+            if (Access::check('interface','50') || ($libitem->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_remove'))) {
+                if ($song->remove_from_disk()) {
+                    show_confirmation(T_('Song Deletion'), T_('Song has been deleted.'), AmpConfig::get('web_path'));
+                } else {
+                    show_confirmation(T_('Song Deletion'), T_('Cannot delete this song.'), AmpConfig::get('web_path'));
+                }
+            } else {
+                UI::access_denied();
+                exit;
+            }
+        } else {
+            UI::access_denied();
+            exit;
+        }
+        break;
     case 'show_lyrics':
         $song = new Song($_REQUEST['song_id']);
         $song->format();

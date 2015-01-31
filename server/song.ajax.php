@@ -42,7 +42,6 @@ switch ($_REQUEST['action']) {
         $id = 'button_flip_state_' . $song->id;
         $button = $song->enabled ? 'disable' : 'enable';
         $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id,$button, T_(ucfirst($button)),'flip_state_' . $song->id);
-
     break;
     case 'shouts':
         ob_start();
