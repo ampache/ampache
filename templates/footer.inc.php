@@ -19,10 +19,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
+/*
 $ampache_path = dirname(__FILE__);
 $prefix = realpath($ampache_path . "/../");
 require_once $prefix . '/lib/init.php';
+*/
 
 ?>
                 </div>
