@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
 ?>
                 </div>
                 <div style="clear:both;">
@@ -38,6 +39,7 @@
             <a id="donate" href="//ampache.github.io/donate.html" title="Donate" target="_blank"><?php echo ".:: " . T_('Donate') . " ::."; ?></a> |
         <?php } ?>
             <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="Copyright © 2001 - 2015 Ampache.org">Ampache <?php echo AmpConfig::get('version'); ?></a>
+            <?php if (AmpConfig::get('show_footer_statistics')) { ?>
             <br />
             <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
         <?php
@@ -46,6 +48,7 @@
         ?>
             | <?php echo T_('Load time:'); ?><?php echo $load_time; ?>
         </div>
+        <?php } ?>
         <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>
         <div id="webplayer"></div>
         <?php
