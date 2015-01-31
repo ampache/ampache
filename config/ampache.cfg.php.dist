@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 25
+config_version = 26
 
 ;###################
 ; Path Vars        #
@@ -559,6 +559,13 @@ site_charset = UTF-8
 ; DEFAULT: 60
 ; Possible Values: Int > 5
 refresh_limit = "60"
+
+; Footer Statistics
+; This defines whether statistics (Queries, Cache Hits, Load Time)
+; are shown in the page footer.
+; DEFAULT: false
+; Possible values: true, false
+; show_footer_statistics = false
 
 ;#########################################################
 ; Custom actions (optional)                              #
