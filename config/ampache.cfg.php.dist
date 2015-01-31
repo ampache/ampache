@@ -563,9 +563,9 @@ refresh_limit = "60"
 ; Footer Statistics
 ; This defines whether statistics (Queries, Cache Hits, Load Time)
 ; are shown in the page footer.
-; DEFAULT: false
+; DEFAULT: true
 ; Possible values: true, false
-; show_footer_statistics = false
+show_footer_statistics = true
 
 ;#########################################################
 ; Custom actions (optional)                              #
