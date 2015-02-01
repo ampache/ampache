@@ -132,7 +132,7 @@ class vainfo
                 }
 
                 $this->encoding_id3v2 = self::_detect_encoding($tags, $mb_order);
-                $this->_getID3->encoding_id3v2 = $this->encoding_id3v2;
+                $this->_getID3->encoding = $this->encoding_id3v2;
             }
 
             $this->_getID3->encoding_id3v1 = $this->encoding_id3v1;

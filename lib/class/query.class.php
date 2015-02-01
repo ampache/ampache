@@ -91,7 +91,7 @@ class Query
             if ($results = Dba::fetch_assoc($db_results)) {
 
                 $this->id = $id;
-                $this->_state = self::_unserialize($results['data']);
+                $this->_state = (array) self::_unserialize($results['data']);
 
                 return true;
             }
@@ -867,7 +867,7 @@ class Query
 
             $row = Dba::fetch_assoc($db_results);
 
-            $this->_cache = self::_unserialize($row['object_data']);
+            $this->_cache = (array) self::_unserialize($row['object_data']);
             return $this->_cache;
         } else {
             $objects = $this->get_objects();
@@ -1653,7 +1653,7 @@ class Query
      * to sort the results as best we can, there is also
      * a logic based sort that will come later as that's
      * a lot more complicated
-     * @param string $filed
+     * @param string $field
      * @param string $order
      * @return string
      */

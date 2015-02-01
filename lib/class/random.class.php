@@ -74,7 +74,6 @@ class Random
      */
     public static function get_single_song($type)
     {
-        $song_id = 0;
         $method_name = 'get_' . $type;
 
         if (!method_exists('Random', $method_name)) {

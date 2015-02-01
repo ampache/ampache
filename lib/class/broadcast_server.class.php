@@ -197,10 +197,30 @@ class Broadcast_Server implements MessageComponentInterface
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
             $clients = $this->getListeners($broadcast);
-            $this->broadcastMessage($clients, self::BROADCAST_PLAYER_PLAY, $play);
+            $this->broadcastMessage($clients, self::BROADCAST_PLAYER_PLAY, $play ? 'true' : 'false');
 
             if ($this->verbose) {
                 echo "[" . time() ."][info]Broadcast " . $broadcast->id . " player state: " . $play . "." . "\r\n";
+            }
+        } else {
+            debug_event('broadcast', 'Action unauthorized.', '3');
+        }
+    }
+
+    /**
+     *
+     * @param \Ratchet\ConnectionInterface $from
+     * @param string $broadcast_key
+     */
+    protected function notifyEnded(ConnectionInterface $from)
+    {
+        if ($this->isBroadcaster($from)) {
+            $broadcast = $this->broadcasters[$from->resourceId];
+            $clients = $this->getListeners($broadcast);
+            $this->broadcastMessage($clients, self::BROADCAST_ENDED);
+
+            if ($this->verbose) {
+                echo "[" . time() ."][info]Broadcast " . $broadcast->id . " ended." . "\r\n";
             }
         } else {
             debug_event('broadcast', 'Action unauthorized.', '3');

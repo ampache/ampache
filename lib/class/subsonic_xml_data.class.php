@@ -158,7 +158,7 @@ class Subsonic_XML_Data
      *
      * @param    SimpleXMLElement   $xml    Parent node
      * @param    integer    $code    Error code
-     * @param    string    $string    Error message
+     * @param    string     $message Error message
      */
     public static function setError($xml, $code, $message = "")
     {
@@ -449,7 +449,7 @@ class Subsonic_XML_Data
 
         // Set transcoding information if required
         $transcode_cfg = AmpConfig::get('transcode');
-        $valid_types = Song::get_stream_types_for_type($song->type, 'api');
+        $valid_types = Song::get_stream_types_for_type($video->type, 'api');
         if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
             $transcode_settings = $video->get_transcode_settings(null, 'api');
             if ($transcode_settings) {

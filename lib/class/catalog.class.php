@@ -1415,8 +1415,10 @@ abstract class Catalog extends database_object
         $new_song->replaygain_album_gain = floatval($results['replaygain_album_gain']);
         $new_song->replaygain_album_peak = floatval($results['replaygain_album_peak']);
         $tags            = Tag::get_object_tags('song', $song->id);
-        foreach ($tags as $tag) {
-            $song->tags[] = $tag['name'];
+        if ($tags) {
+            foreach ($tags as $tag) {
+                $song->tags[] = $tag['name'];
+            }
         }
         $new_song->tags        = $results['genre'];
         $artist                = $results['artist'];

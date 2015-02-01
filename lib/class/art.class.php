@@ -534,7 +534,7 @@ class Art extends database_object
      * This saves the thumbnail that we're passed
      * @param string $source
      * @param string $mime
-     * @param string $size
+     * @param array $size
      */
     public function save_thumb($source, $mime, $size)
     {
@@ -843,7 +843,7 @@ class Art extends database_object
                     "`image`.`object_id` WHERE `object_type`='" .
                     $type . "' AND `" . $type . "`.`id` IS NULL";
                 $db_results = Dba::read($sql);
-                while ($row == Dba::fetch_row($db_results)) {
+                while ($row = Dba::fetch_row($db_results)) {
                     self::delete_from_dir($row[1], $row[0]);
                 }
             }

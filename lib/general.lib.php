@@ -320,7 +320,7 @@ function write_config($current_file_path)
 
     // Start writing into the current config file
     $handle = fopen($current_file_path, 'w+');
-    $writtenlen = fwrite($handle, $new_data, strlen($new_data));
+    fwrite($handle, $new_data, strlen($new_data));
     fclose($handle);
 }
 

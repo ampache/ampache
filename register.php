@@ -61,8 +61,8 @@ switch ($_REQUEST['action']) {
         $website        = scrub_in($_POST['website']);
         $pass1          = $_POST['password_1'];
         $pass2          = $_POST['password_2'];
-        $state          = scrub_in($_POST['state']);
-        $city           = scrub_in($_POST['city']);
+        $state          = (string) scrub_in($_POST['state']);
+        $city           = (string) scrub_in($_POST['city']);
 
         /* If we're using the captcha stuff */
         if (AmpConfig::get('captcha_public_reg')) {
@@ -143,7 +143,7 @@ switch ($_REQUEST['action']) {
 
 
         $new_user = User::create($username, $fullname, $email, $website, $pass1,
-            $access, AmpConfig::get('admin_enable_required'), $state, $city);
+            $access, $state, $city, AmpConfig::get('admin_enable_required'));
 
         if (!$new_user) {
             Error::add('duplicate_user', T_("Error: Insert Failed"));

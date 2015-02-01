@@ -365,7 +365,7 @@ class Browse extends Query
         $total = $this->get_total();
         $next_offset = $start + $limit;
         if ($next_offset <= $total) {
-            echo '<a class="jscroll-next" href="' . AmpConfig::get('ajax_url') . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode='. $this->get_content_div() . '&show_header=false' . $argument_param . '">' . T_('More') . '</a>';
+            echo '<a class="jscroll-next" href="' . AmpConfig::get('ajax_url') . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode='. $this->get_content_div() . '&show_header=false' . $argument . '">' . T_('More') . '</a>';
         }
     }
 
