@@ -166,7 +166,7 @@ class Ajax
      * @param string $action
      * @param string $text
      * @param string $source
-     * @param string $port
+     * @param string $post
      * @param string $class
      * @return string
      */

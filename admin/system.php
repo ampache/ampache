@@ -43,7 +43,7 @@ switch ($_REQUEST['action']) {
         echo $final;
         exit;
     case 'write_config':
-        $final = write_config(AmpConfig::get('prefix') . '/config/ampache.cfg.php');
+        write_config(AmpConfig::get('prefix') . '/config/ampache.cfg.php');
         header('Location: '. AmpConfig::get('web_path') . '/index.php');
         exit;
     case 'reset_db_charset':

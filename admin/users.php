@@ -122,8 +122,8 @@ switch ($_REQUEST['action']) {
         $access         = scrub_in($_POST['access']);
         $pass1          = $_POST['password_1'];
         $pass2          = $_POST['password_2'];
-        $state          = scrub_in($_POST['state']);
-        $city           = scrub_in($_POST['city']);
+        $state          = (string)scrub_in($_POST['state']);
+        $city           = (string)scrub_in($_POST['city']);
 
         if ($pass1 !== $pass2 || !strlen($pass1)) {
             Error::add('password', T_("Error Passwords don't match"));
