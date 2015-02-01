@@ -210,7 +210,6 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param \Ratchet\ConnectionInterface $from
-     * @param string $broadcast_key
      */
     protected function notifyEnded(ConnectionInterface $from)
     {

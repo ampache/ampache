@@ -62,8 +62,10 @@ CREATE TABLE IF NOT EXISTS `access_list` (
 INSERT INTO `access_list` (`id`, `name`, `start`, `end`, `level`, `type`, `user`, `enabled`) VALUES
 (1, 'DEFAULTv4', '\0\0\0\0', '����', 75, 'interface', -1, 1),
 (2, 'DEFAULTv4', '\0\0\0\0', '����', 75, 'stream', -1, 1),
-(3, 'DEFAULTv6', '\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0', '����������������', 75, 'interface', -1, 1),
-(4, 'DEFAULTv6', '\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0', '����������������', 75, 'stream', -1, 1);
+(3, 'DEFAULTv4', '\0\0\0\0', '����', 75, 'rpc', -1, 1),
+(4, 'DEFAULTv6', '\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0', '����������������', 75, 'interface', -1, 1),
+(5, 'DEFAULTv6', '\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0', '����������������', 75, 'stream', -1, 1);
+(6, 'DEFAULTv6', '\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0', '����������������', 75, 'rpc', -1, 1);
 
 -- --------------------------------------------------------
 
@@ -571,7 +573,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (24, 'force_http_play', '0', 'Forces Http play regardless of port', 100, 'boolean', 'system'),
 (25, 'http_port', '80', 'Non-Standard Http Port', 100, 'integer', 'system'),
 (41, 'localplay_controller', '0', 'Localplay Type', 100, 'special', 'options'),
-(29, 'play_type', 'stream', 'Type of Playback', 25, 'special', 'streaming'),
+(29, 'play_type', 'web_player', 'Type of Playback', 25, 'special', 'streaming'),
 (31, 'lang', 'fr_FR', 'Language', 100, 'special', 'interface'),
 (32, 'playlist_type', 'm3u', 'Playlist Type', 100, 'special', 'playlist'),
 (33, 'theme_name', 'reborn', 'Theme', 0, 'special', 'interface'),
@@ -1155,7 +1157,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 24, '0'),
 (-1, 25, '80'),
 (-1, 41, 'mpd'),
-(-1, 29, 'stream'),
+(-1, 29, 'web_player'),
 (-1, 31, 'en_US'),
 (-1, 32, 'm3u'),
 (-1, 33, 'reborn'),
